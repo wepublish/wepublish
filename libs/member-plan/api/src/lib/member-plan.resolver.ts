@@ -1,5 +1,16 @@
-import { Args, Int, Query, Resolver } from '@nestjs/graphql';
-import { Public } from '@wepublish/authentication/api';
+import {
+  Args,
+  Int,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import {
+  CurrentUser,
+  Public,
+  UserSession,
+} from '@wepublish/authentication/api';
 import { GraphQLSlug, SortOrder } from '@wepublish/utils/api';
 import {
   MemberPlan,
@@ -10,6 +21,8 @@ import {
 import { MemberPlanService } from './member-plan.service';
 import { UserInputError } from '@nestjs/apollo';
 import { MemberPlanDataloader } from './member-plan.dataloader';
+import { hasPermission } from '@wepublish/permissions/api';
+import { CanGetMemberPlan, CanGetMemberPlans } from '@wepublish/permissions';
 
 @Resolver(() => MemberPlan)
 export class MemberPlanResolver {
@@ -64,5 +77,18 @@ export class MemberPlanResolver {
       skip,
       take
     );
+  }
+
+  @ResolveField(() => String, { nullable: true })
+  async externalReward(
+    @Parent() parent: MemberPlan,
+    @CurrentUser() user: UserSession | undefined
+  ) {
+    const canManage = hasPermission(
+      [CanGetMemberPlan, CanGetMemberPlans],
+      user?.roles ?? []
+    );
+
+    return canManage ? parent.externalReward : null;
   }
 }

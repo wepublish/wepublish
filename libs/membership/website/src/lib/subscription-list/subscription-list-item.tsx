@@ -21,7 +21,7 @@ import {
   formatPaymentTimeline,
 } from '../formatters/format-payment-period';
 import { Modal } from '@wepublish/website/builder';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 export const SubscriptionListItemWrapper = styled('div')`
   display: grid;
@@ -52,6 +52,11 @@ export const SubscriptionListItemMetaItem = styled('li')`
   gap: ${({ theme }) => theme.spacing(1)};
 `;
 
+// Used to hide it on demand by medias
+export const SubscriptionListItemPaymentPeriodicity = styled(
+  SubscriptionListItemMetaItem
+)``;
+
 export const SubscriptionListItemActions = styled('div')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(2)};
@@ -62,6 +67,20 @@ export const SubscriptionListItemActions = styled('div')`
   }
 `;
 
+const isURL = (string: string) => {
+  try {
+    new URL(string);
+
+    return true;
+  } catch (err) {
+    return false;
+  }
+
+  return false;
+};
+
+export const SubscriptionListItemReward = styled('div')``;
+
 export function SubscriptionListItem({
   autoRenew,
   startsAt,
@@ -69,10 +88,12 @@ export function SubscriptionListItem({
   paymentPeriodicity,
   monthlyAmount,
   deactivation,
-  memberPlan: { image, name, currency },
+  memberPlan: { image, name, currency, productType },
+  extendable,
   url,
   cancel,
   canExtend,
+  externalReward,
   extend,
   className,
 }: BuilderSubscriptionListItemProps) {
@@ -103,14 +124,23 @@ export function SubscriptionListItem({
         <SubscriptionListItemMeta>
           <SubscriptionListItemMetaItem>
             <MdCalendarMonth />
+
             <span>
-              Abgeschlossen am{' '}
-              <time
-                suppressHydrationWarning
-                dateTime={startsAt}
-              >
-                {date.format(new Date(startsAt))}
-              </time>
+              <Trans
+                i18nKey="subscription.startsAt"
+                values={{
+                  type: productType,
+                  startsAt: date.format(new Date(startsAt)),
+                }}
+                components={{
+                  time: (
+                    <time
+                      suppressHydrationWarning
+                      dateTime={startsAt}
+                    />
+                  ),
+                }}
+              />
             </span>
           </SubscriptionListItemMetaItem>
 
@@ -161,8 +191,11 @@ export function SubscriptionListItem({
 
           {!paidUntil && (
             <SubscriptionListItemMetaItem>
-              <MdOutlinePayments /> {t('subscriptionList.subscribe')}Rechnung
-              ist unbezahlt
+              <MdOutlinePayments />
+
+              {t('subscription.unpaid', {
+                type: productType,
+              })}
             </SubscriptionListItemMetaItem>
           )}
 
@@ -173,14 +206,15 @@ export function SubscriptionListItem({
           )}
 
           {!autoRenew && (
-            <SubscriptionListItemMetaItem>
+            <SubscriptionListItemPaymentPeriodicity>
               <MdTimelapse /> Gültig für {subscriptionDuration}
-            </SubscriptionListItemMetaItem>
+            </SubscriptionListItemPaymentPeriodicity>
           )}
 
           <SubscriptionListItemMetaItem>
             <MdAttachMoney /> Kostet{' '}
-            {formatCurrency(monthlyAmount / 100, currency, locale)} pro Monat
+            {formatCurrency(monthlyAmount / 100, currency, locale)}{' '}
+            {extendable ? 'pro Monat' : ''}
           </SubscriptionListItemMetaItem>
 
           <SubscriptionListItemMetaItem>
@@ -188,18 +222,44 @@ export function SubscriptionListItem({
           </SubscriptionListItemMetaItem>
         </SubscriptionListItemMeta>
 
+        {externalReward && (
+          <SubscriptionListItemReward>
+            <Alert severity="info">
+              {isURL(externalReward) ?
+                <Link
+                  href={externalReward}
+                  target="_blank"
+                >
+                  {t('subscription.externalReward', {
+                    isLink: true,
+                    externalReward,
+                  })}
+                </Link>
+              : t('subscription.externalReward', {
+                  isLink: false,
+                  externalReward,
+                })
+              }
+            </Alert>
+          </SubscriptionListItemReward>
+        )}
+
         {error && <Alert severity="error">{error.message}</Alert>}
 
         {!deactivation && (
           <SubscriptionListItemActions>
-            <Button
-              onClick={() => setConfirmCancel(true)}
-              disabled={loading}
-              variant="text"
-              color="secondary"
-            >
-              Abo kündigen
-            </Button>
+            {(extendable || !paidUntil) && (
+              <Button
+                onClick={() => setConfirmCancel(true)}
+                disabled={loading}
+                variant="text"
+                color="secondary"
+              >
+                {t('subscription.cancel', {
+                  type: productType,
+                })}
+              </Button>
+            )}
 
             {canExtend && (
               <Button
@@ -220,12 +280,16 @@ export function SubscriptionListItem({
           await callAction(cancel)();
         }}
         onCancel={() => setConfirmCancel(false)}
-        submitText={t('subscription.cancelSubscription')}
+        submitText={t('subscription.cancel', {
+          type: productType,
+        })}
       >
         <H5 component="h1">{name} wirklich kündigen?</H5>
 
         <Paragraph gutterBottom={false}>
-          {t('subscription.cancelSubscriptionConfirmationText')}
+          {t('subscription.cancelConfirmation', {
+            type: productType,
+          })}
         </Paragraph>
       </Modal>
 
@@ -238,10 +302,14 @@ export function SubscriptionListItem({
         }}
         submitText={`Jetzt um ${subscriptionDuration} verlängern`}
       >
-        <H5 component="h1">Abo frühzeitig verlängern?</H5>
+        <H5 component="h1">
+          {t('subscription.extendEarly', {
+            type: productType,
+          })}
+        </H5>
 
         <Paragraph gutterBottom={false}>
-          {t('subscription.renewSubscriptionConfirmationText', {
+          {t('subscription.extendEarlyConfirmation', {
             subscriptionDuration,
           })}
         </Paragraph>

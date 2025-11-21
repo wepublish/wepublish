@@ -5,11 +5,12 @@ import {
   CommentBlockCommentFragment,
   EditorBlockType,
   FullBlockFragment,
-  FullCrowdfundingWithActiveGoalFragment,
+  FullCrowdfundingFragment,
   FullEventFragment,
   FullImageFragment,
   FullTeaserFragment,
   PageWithoutBlocksFragment,
+  SubscribeBlockField,
   TeaserInput,
   TeaserListBlockSort,
   TeaserSlotsAutofillConfigInput,
@@ -66,17 +67,17 @@ export interface HTMLBlockValue extends BaseBlockValue {
   html: string;
 }
 
-export type SubscribeBlockValue = BaseBlockValue;
+export interface SubscribeBlockValue extends BaseBlockValue {
+  memberPlanIds: string[];
+  fields: SubscribeBlockField[];
+}
 
 export interface PollBlockValue extends BaseBlockValue {
   poll: Pick<FullPoll, 'id' | 'question'> | null | undefined;
 }
 
 export interface CrowdfundingBlockValue extends BaseBlockValue {
-  crowdfunding:
-    | Partial<FullCrowdfundingWithActiveGoalFragment>
-    | null
-    | undefined;
+  crowdfunding: Partial<FullCrowdfundingFragment> | null | undefined;
 }
 
 export interface EventBlockValue extends BaseBlockValue {
@@ -113,6 +114,7 @@ export interface LinkPageBreakBlockValue extends BaseBlockValue {
 }
 
 export enum EmbedType {
+  StreamableVideo = 'streamableVideo',
   FacebookPost = 'facebookPost',
   FacebookVideo = 'facebookVideo',
   InstagramPost = 'instagramPost',
@@ -135,6 +137,11 @@ interface FacebookPostEmbed extends BaseBlockValue {
 interface FacebookVideoEmbed extends BaseBlockValue {
   type: EmbedType.FacebookVideo;
   userID: string | null | undefined;
+  videoID: string | null | undefined;
+}
+
+interface StreamableVideoEmbed extends BaseBlockValue {
+  type: EmbedType.StreamableVideo;
   videoID: string | null | undefined;
 }
 
@@ -199,6 +206,7 @@ export type EmbedBlockValue =
   | YouTubeVideoEmbed
   | SoundCloudTrackEmbed
   | PolisConversationEmbed
+  | StreamableVideoEmbed
   | TikTokVideoEmbed
   | BildwurfAdEmbed
   | OtherEmbed;
@@ -464,6 +472,8 @@ export function mapBlockValueToBlockInput(
       return {
         subscribe: {
           blockStyle: block.value.blockStyle,
+          memberPlanIds: block.value.memberPlanIds ?? [],
+          fields: block.value.fields,
         },
       };
 
@@ -561,6 +571,14 @@ export function mapBlockValueToBlockInput(
           return {
             facebookVideo: {
               userID: value.userID,
+              videoID: value.videoID,
+              blockStyle: block.value.blockStyle,
+            },
+          };
+
+        case EmbedType.StreamableVideo:
+          return {
+            streamableVideo: {
               videoID: value.videoID,
               blockStyle: block.value.blockStyle,
             },
@@ -890,6 +908,17 @@ export function blockForQueryBlock(
         },
       };
 
+    case 'StreamableVideoBlock':
+      return {
+        key,
+        type: EditorBlockType.Embed,
+        value: {
+          blockStyle: block.blockStyle,
+          type: EmbedType.StreamableVideo,
+          videoID: block.videoID,
+        },
+      };
+
     case 'InstagramPostBlock':
       return {
         key,
@@ -1012,6 +1041,8 @@ export function blockForQueryBlock(
         type: EditorBlockType.Subscribe,
         value: {
           blockStyle: block.blockStyle,
+          fields: block.fields ?? [],
+          memberPlanIds: block.memberPlanIds ?? [],
         },
       };
 

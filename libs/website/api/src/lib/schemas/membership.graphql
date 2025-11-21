@@ -37,7 +37,7 @@ fragment FullMemberPlan on MemberPlan {
     ...FullAvailablePaymentMethod
   }
   extendable
-
+  productType
   successPageId
   # successPage {
   #   url
@@ -79,6 +79,7 @@ fragment FullSubscription on PublicSubscription {
   autoRenew
   startsAt
   extendable
+  externalReward
 
   paidUntil
   paymentMethod {
@@ -98,6 +99,7 @@ fragment FullSubscription on PublicSubscription {
   }
 
   canExtend
+  isActive
 }
 
 fragment FullInvoiceItem on InvoiceItem {
@@ -208,7 +210,11 @@ mutation PayInvoice(
   }
 }
 
-mutation PaySubscription($subscriptionId: String!, $successURL: String, $failureURL: String) {
+mutation PaySubscription(
+  $subscriptionId: String!
+  $successURL: String
+  $failureURL: String
+) {
   createPaymentFromSubscription(
     subscriptionId: $subscriptionId
     successURL: $successURL
@@ -224,7 +230,11 @@ mutation CancelSubscription($subscriptionId: String!) {
   }
 }
 
-mutation ExtendSubscription($subscriptionId: String!, $successURL: String, $failureURL: String) {
+mutation ExtendSubscription(
+  $subscriptionId: String!
+  $successURL: String
+  $failureURL: String
+) {
   extendSubscription(
     subscriptionId: $subscriptionId
     successURL: $successURL

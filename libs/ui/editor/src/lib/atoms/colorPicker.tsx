@@ -19,6 +19,7 @@ export function ColorPicker({
   disabled,
 }: ColorPickerProps) {
   const id = nanoid();
+
   return (
     <>
       {label && <label htmlFor={id}>{label}</label>}

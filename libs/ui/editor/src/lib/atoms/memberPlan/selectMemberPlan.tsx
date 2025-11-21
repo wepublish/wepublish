@@ -109,7 +109,10 @@ export function SelectMemberPlans({
       cacheData={cacheData}
       onSearch={word => {
         refetch({
-          filter: word,
+          filter: word ? { name: word } : undefined,
+          sort: MemberPlanSort.CreatedAt,
+          order: SortOrder.Ascending,
+          take: 50,
         });
       }}
       onSelect={(value, item, event) => {

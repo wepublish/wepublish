@@ -56,7 +56,9 @@ export const HauptstadtArticle = createWithTheme(
     }
 
     ${({ data }) =>
-      data?.article.latest.properties.find(prop => prop.key === 'opinion') &&
+      data?.article.latest.properties.find(
+        prop => prop.key === 'type' && prop.value === 'opinion'
+      ) &&
       css`
         ${TitleBlockLead} {
           font-style: italic;

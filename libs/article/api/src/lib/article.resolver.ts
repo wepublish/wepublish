@@ -15,7 +15,7 @@ import {
   PaginatedArticles,
   UpdateArticleInput,
 } from './article.model';
-import { Tag, TagService } from '@wepublish/tag/api';
+import { ArticleTagDataloader, Tag } from '@wepublish/tag/api';
 import { ArticleService } from './article.service';
 import { ArticleRevisionDataloaderService } from './article-revision-dataloader.service';
 import { URLAdapter } from '@wepublish/nest-modules';
@@ -33,7 +33,10 @@ import {
   Public,
   UserSession,
 } from '@wepublish/authentication/api';
-import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
+import {
+  TrackingPixelDataloader,
+  TrackingPixelService,
+} from '@wepublish/tracking-pixel/api';
 import { SettingDataloaderService, SettingName } from '@wepublish/settings/api';
 
 @Resolver(() => Article)
@@ -45,7 +48,8 @@ export class ArticleResolver {
     private trackingPixelService: TrackingPixelService,
     private urlAdapter: URLAdapter,
     private settings: SettingDataloaderService,
-    private tagService: TagService
+    private trackingPixelDataloader: TrackingPixelDataloader,
+    private tagDataLoader: ArticleTagDataloader
   ) {}
 
   @Public()
@@ -242,12 +246,11 @@ export class ArticleResolver {
 
   @ResolveField(() => [Tag])
   async tags(@Parent() parent: PArticle) {
-    const { id: articleId } = parent;
-    return this.tagService.getTagsByArticleId(articleId);
+    return this.tagDataLoader.load(parent.id);
   }
 
   @ResolveField(() => String, { nullable: true })
   async trackingPixels(@Parent() { id }: PArticle) {
-    return this.articleService.getTrackingPixels(id);
+    return this.trackingPixelDataloader.load(id);
   }
 }

@@ -14,6 +14,7 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
+  initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
   withJwtHandler,
@@ -29,9 +30,6 @@ import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import deTranlations from '@wepublish/website/translations/de.json';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
-import i18next from 'i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import ICU from 'i18next-icu';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
@@ -39,7 +37,6 @@ import Head from 'next/head';
 import Script from 'next/script';
 import { useEffect } from 'react';
 import { AdConfig } from 'react-ad-manager';
-import { initReactI18next } from 'react-i18next';
 import { FaBluesky, FaInstagram, FaTiktok } from 'react-icons/fa6';
 import { MdFacebook, MdSearch } from 'react-icons/md';
 import OneSignal from 'react-onesignal';
@@ -60,16 +57,12 @@ import { MannschaftRichtextBlock } from '../src/mannschaft-richtext-block';
 import { MannschaftTeaser } from '../src/mannschaft-teaser';
 import { MannschaftTeaserGrid } from '../src/mannschaft-teaser-grid';
 import theme from '../src/theme';
-import Mitmachen from './mitmachen';
 
 setDefaultOptions({
   locale: de,
 });
 
-i18next
-  .use(ICU)
-  .use(LanguageDetector)
-  .use(initReactI18next)
+initWePublishTranslator()
   .use(resourcesToBackend(() => deTranlations))
   .init({
     partialBundledLanguages: true,
@@ -152,7 +145,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             TeaserGrid: MannschaftTeaserGrid,
             Break: MannschaftBreakBlock,
             RichText: MannschaftRichtextBlock,
-            Subscribe: Mitmachen,
           }}
           blockStyles={{
             FocusTeaser: MannschaftFocusTeaser,

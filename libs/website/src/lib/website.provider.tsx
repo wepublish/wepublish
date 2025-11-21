@@ -37,6 +37,7 @@ import {
   PolisConversationBlock,
   PollBlock,
   CrowdfundingBlock,
+  SubscribeBlock,
   QuoteBlock,
   RichTextBlock,
   SoundCloudTrackBlock,
@@ -51,6 +52,7 @@ import {
   TitleBlock,
   TwitterTweetBlock,
   VimeoVideoBlock,
+  StreamableVideoBlock,
   YouTubeVideoBlock,
   AlternatingTeaserGridBlock,
   AlternatingTeaserListBlock,
@@ -257,6 +259,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
             Crowdfunding: CrowdfundingBlock,
             RichText: RichTextBlock,
             Event: EventBlock,
+            Subscribe: SubscribeBlock,
             Listicle: ListicleBlock,
             TeaserGridFlex: TeaserGridFlexBlock,
             TeaserGrid: TeaserGridBlock,
@@ -274,6 +277,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
             TikTokVideo: TikTokVideoBlock,
             TwitterTweet: TwitterTweetBlock,
             VimeoVideo: VimeoVideoBlock,
+            StreamableVideo: StreamableVideoBlock,
             YouTubeVideo: YouTubeVideoBlock,
           }}
           blockStyles={{

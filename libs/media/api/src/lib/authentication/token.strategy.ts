@@ -11,9 +11,7 @@ export type TokenConfig = {
 @Injectable()
 export class TokenStrategy extends PassportStrategy(Strategy, 'token') {
   constructor(@Inject(TOKEN_MODULE_OPTIONS) private config: TokenConfig) {
-    super({
-      session: false, // would use a cookie if set to true
-    });
+    super();
   }
 
   public async validate(token: string) {

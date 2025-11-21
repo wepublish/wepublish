@@ -1,5 +1,4 @@
 import { PageContainer } from '@wepublish/page/website';
-import { getPagePathsBasedOnPage } from '@wepublish/utils/website';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -26,8 +25,10 @@ export default function PageBySlugOrId() {
   return <PageContainer {...containerProps} />;
 }
 
-export const getStaticPaths = getPagePathsBasedOnPage('');
-
+export const getStaticPaths = () => ({
+  paths: [],
+  fallback: 'blocking',
+});
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { slug, id } = params || {};
   const { publicRuntimeConfig } = getConfig();
@@ -56,6 +57,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   if (is404) {
     return {
       notFound: true,
+      revalidate: 1,
     };
   }
 
@@ -63,6 +65,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props,
-    revalidate: !page.data?.page ? 1 : 60, // every 60 seconds
+    revalidate: 60, // every 60 seconds
   };
 };

@@ -266,6 +266,15 @@ export type BaseBlock = {
   type: BlockType;
 };
 
+export type BaseCrowdfundingGoal = {
+  amount: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  title: Scalars['String'];
+};
+
 export type BaseNavigationLink = {
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
@@ -297,7 +306,7 @@ export type BildwurfAdBlockInput = {
   zoneID?: InputMaybe<Scalars['String']>;
 };
 
-export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockContentInput = {
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
@@ -318,6 +327,7 @@ export type BlockContentInput = {
   quote?: InputMaybe<QuoteBlockInput>;
   richText?: InputMaybe<RichTextBlockInput>;
   soundCloudTrack?: InputMaybe<SoundCloudTrackBlockInput>;
+  streamableVideo?: InputMaybe<StreamableVideoBlockInput>;
   subscribe?: InputMaybe<SubscribeBlockInput>;
   teaserGrid?: InputMaybe<TeaserGridBlockInput>;
   teaserGridFlex?: InputMaybe<TeaserGridFlexBlockInput>;
@@ -358,6 +368,7 @@ export enum BlockType {
   Quote = 'Quote',
   RichText = 'RichText',
   SoundCloudTrack = 'SoundCloudTrack',
+  StreamableVideo = 'StreamableVideo',
   Subscribe = 'Subscribe',
   TeaserGrid = 'TeaserGrid',
   TeaserGridFlex = 'TeaserGridFlex',
@@ -594,6 +605,7 @@ export type CreateCrowdfundingInput = {
   additionalRevenue?: InputMaybe<Scalars['Float']>;
   countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>;
   countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']>;
+  goalType: CrowdfundingGoalType;
   goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>;
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
   name: Scalars['String'];
@@ -605,23 +617,26 @@ export type CreateCrowdfundingMemberPlan = {
 
 export type Crowdfunding = {
   __typename?: 'Crowdfunding';
+  activeGoal?: Maybe<CrowdfundingGoalWithProgress>;
   additionalRevenue?: Maybe<Scalars['Float']>;
   countSubscriptionsFrom?: Maybe<Scalars['DateTime']>;
   countSubscriptionsUntil?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
+  goalType: CrowdfundingGoalType;
   goals: Array<CrowdfundingGoal>;
   id: Scalars['String'];
-  memberPlans: Array<CrowdfundingMemberPlan>;
+  memberPlans: Array<MemberPlan>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   revenue?: Maybe<Scalars['Float']>;
+  subscriptions?: Maybe<Scalars['Int']>;
 };
 
 export type CrowdfundingBlock = BaseBlock & HasOptionalCrowdfunding & {
   __typename?: 'CrowdfundingBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
-  crowdfunding?: Maybe<CrowdfundingWithActiveGoal>;
+  crowdfunding?: Maybe<Crowdfunding>;
   crowdfundingId?: Maybe<Scalars['String']>;
   type: BlockType;
 };
@@ -632,7 +647,7 @@ export type CrowdfundingBlockInput = {
   crowdfundingId?: InputMaybe<Scalars['String']>;
 };
 
-export type CrowdfundingGoal = {
+export type CrowdfundingGoal = BaseCrowdfundingGoal & {
   __typename?: 'CrowdfundingGoal';
   amount: Scalars['Float'];
   createdAt: Scalars['DateTime'];
@@ -642,7 +657,12 @@ export type CrowdfundingGoal = {
   title: Scalars['String'];
 };
 
-export type CrowdfundingGoalWithProgress = {
+export enum CrowdfundingGoalType {
+  Revenue = 'Revenue',
+  Subscription = 'Subscription'
+}
+
+export type CrowdfundingGoalWithProgress = BaseCrowdfundingGoal & {
   __typename?: 'CrowdfundingGoalWithProgress';
   amount: Scalars['Float'];
   createdAt: Scalars['DateTime'];
@@ -651,27 +671,6 @@ export type CrowdfundingGoalWithProgress = {
   modifiedAt: Scalars['DateTime'];
   progress?: Maybe<Scalars['Float']>;
   title: Scalars['String'];
-};
-
-export type CrowdfundingMemberPlan = {
-  __typename?: 'CrowdfundingMemberPlan';
-  id: Scalars['String'];
-  name: Scalars['String'];
-};
-
-export type CrowdfundingWithActiveGoal = {
-  __typename?: 'CrowdfundingWithActiveGoal';
-  activeCrowdfundingGoal?: Maybe<CrowdfundingGoalWithProgress>;
-  additionalRevenue?: Maybe<Scalars['Float']>;
-  countSubscriptionsFrom?: Maybe<Scalars['DateTime']>;
-  countSubscriptionsUntil?: Maybe<Scalars['DateTime']>;
-  createdAt: Scalars['DateTime'];
-  goals: Array<CrowdfundingGoal>;
-  id: Scalars['String'];
-  memberPlans: Array<CrowdfundingMemberPlan>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  revenue?: Maybe<Scalars['Float']>;
 };
 
 export enum Currency {
@@ -1060,7 +1059,7 @@ export type HasOptionalArticle = {
 };
 
 export type HasOptionalCrowdfunding = {
-  crowdfunding?: Maybe<CrowdfundingWithActiveGoal>;
+  crowdfunding?: Maybe<Crowdfunding>;
   crowdfundingId?: Maybe<Scalars['String']>;
 };
 
@@ -1388,12 +1387,14 @@ export type MemberPlan = HasImage & {
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
+  externalReward?: Maybe<Scalars['String']>;
   failPageId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
   imageID?: Maybe<Scalars['String']>;
   maxCount?: Maybe<Scalars['Int']>;
   name: Scalars['String'];
+  productType: ProductType;
   shortDescription?: Maybe<Scalars['RichText']>;
   slug: Scalars['String'];
   successPageId?: Maybe<Scalars['String']>;
@@ -1410,6 +1411,7 @@ export type MemberPlanConnection = {
 export type MemberPlanFilter = {
   active?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
+  productType?: InputMaybe<ProductType>;
   tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -1435,7 +1437,7 @@ export type Mutation = {
    *
    */
   createConsent: Consent;
-  /** Create a new Crowdfunding */
+  /** Create a new crowdfunding */
   createCrowdfunding: Crowdfunding;
   /** Creates a new event. */
   createEvent: Event;
@@ -1554,8 +1556,8 @@ export type Mutation = {
    *
    */
   updateConsent: Consent;
-  /** Update a single crowdfunding */
-  updateCrowdfunding: CrowdfundingWithActiveGoal;
+  /** Updates a single crowdfunding */
+  updateCrowdfunding: Crowdfunding;
   /** Updates an existing event. */
   updateEvent: Event;
   /** Updates an existing navigation. */
@@ -2585,6 +2587,11 @@ export enum PollVoteSort {
   CreatedAt = 'CreatedAt'
 }
 
+export enum ProductType {
+  Donation = 'Donation',
+  Subscription = 'Subscription'
+}
+
 export type Property = {
   __typename?: 'Property';
   id: Scalars['String'];
@@ -2606,7 +2613,9 @@ export type PublicSubscription = HasPaymentMethod & HasUser & {
   canExtend: Scalars['Boolean'];
   deactivation?: Maybe<SubscriptionDeactivation>;
   extendable: Scalars['Boolean'];
+  externalReward?: Maybe<Scalars['String']>;
   id: Scalars['String'];
+  isActive: Scalars['Boolean'];
   memberPlan: MemberPlan;
   monthlyAmount: Scalars['Int'];
   paidUntil?: Maybe<Scalars['DateTime']>;
@@ -2661,9 +2670,9 @@ export type Query = {
    *
    */
   consents: Array<Consent>;
-  /** Get a single crowdfunding by id with calculated progress */
-  crowdfunding: CrowdfundingWithActiveGoal;
-  /** Returns a paginated list of crowdfundings. */
+  /** Get a single crowdfunding by id */
+  crowdfunding: Crowdfunding;
+  /** Returns a list of crowdfundings. */
   crowdfundings: Array<Crowdfunding>;
   /**
    *
@@ -3263,16 +3272,44 @@ export type Stats = {
   firstArticleDate?: Maybe<Scalars['DateTime']>;
 };
 
+export type StreamableVideoBlock = BaseBlock & {
+  __typename?: 'StreamableVideoBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  blockStyleName?: Maybe<Scalars['String']>;
+  type: BlockType;
+  videoID?: Maybe<Scalars['String']>;
+};
+
+export type StreamableVideoBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
+  blockStyleName?: InputMaybe<Scalars['String']>;
+  videoID?: InputMaybe<Scalars['String']>;
+};
+
 export type SubscribeBlock = BaseBlock & {
   __typename?: 'SubscribeBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  fields: Array<SubscribeBlockField>;
+  memberPlanIds?: Maybe<Array<Scalars['String']>>;
+  memberPlans: Array<MemberPlan>;
   type: BlockType;
 };
+
+export enum SubscribeBlockField {
+  Address = 'Address',
+  Birthday = 'Birthday',
+  EmailRepeated = 'EmailRepeated',
+  FirstName = 'FirstName',
+  Password = 'Password',
+  PasswordRepeated = 'PasswordRepeated'
+}
 
 export type SubscribeBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  fields?: Array<SubscribeBlockField>;
+  memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type SubscriptionCreatedAction = BaseAction & HasSubscriptionLc & {
@@ -3608,10 +3645,11 @@ export type UpdateCrowdfundingInput = {
   additionalRevenue?: InputMaybe<Scalars['Float']>;
   countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>;
   countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']>;
+  goalType?: InputMaybe<CrowdfundingGoalType>;
   goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>;
   id: Scalars['String'];
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
-  name: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
 };
 
 export type UploadImageInput = {
@@ -3779,6 +3817,8 @@ type ImportBlock_RichTextBlock_Fragment = { __typename: 'RichTextBlock', blockSt
 
 type ImportBlock_SoundCloudTrackBlock_Fragment = { __typename: 'SoundCloudTrackBlock', blockStyle?: string | null, type: BlockType, trackID?: string | null };
 
+type ImportBlock_StreamableVideoBlock_Fragment = { __typename: 'StreamableVideoBlock' };
+
 type ImportBlock_SubscribeBlock_Fragment = { __typename: 'SubscribeBlock' };
 
 type ImportBlock_TeaserGridBlock_Fragment = { __typename: 'TeaserGridBlock' };
@@ -3801,7 +3841,7 @@ type ImportBlock_VimeoVideoBlock_Fragment = { __typename: 'VimeoVideoBlock', blo
 
 type ImportBlock_YouTubeVideoBlock_Fragment = { __typename: 'YouTubeVideoBlock', blockStyle?: string | null, type: BlockType, videoID?: string | null };
 
-export type ImportBlockFragment = ImportBlock_BildwurfAdBlock_Fragment | ImportBlock_BreakBlock_Fragment | ImportBlock_CommentBlock_Fragment | ImportBlock_CrowdfundingBlock_Fragment | ImportBlock_EventBlock_Fragment | ImportBlock_FacebookPostBlock_Fragment | ImportBlock_FacebookVideoBlock_Fragment | ImportBlock_HtmlBlock_Fragment | ImportBlock_IFrameBlock_Fragment | ImportBlock_ImageBlock_Fragment | ImportBlock_ImageGalleryBlock_Fragment | ImportBlock_InstagramPostBlock_Fragment | ImportBlock_ListicleBlock_Fragment | ImportBlock_PolisConversationBlock_Fragment | ImportBlock_PollBlock_Fragment | ImportBlock_QuoteBlock_Fragment | ImportBlock_RichTextBlock_Fragment | ImportBlock_SoundCloudTrackBlock_Fragment | ImportBlock_SubscribeBlock_Fragment | ImportBlock_TeaserGridBlock_Fragment | ImportBlock_TeaserGridFlexBlock_Fragment | ImportBlock_TeaserListBlock_Fragment | ImportBlock_TeaserSlotsBlock_Fragment | ImportBlock_TikTokVideoBlock_Fragment | ImportBlock_TitleBlock_Fragment | ImportBlock_TwitterTweetBlock_Fragment | ImportBlock_UnknownBlock_Fragment | ImportBlock_VimeoVideoBlock_Fragment | ImportBlock_YouTubeVideoBlock_Fragment;
+export type ImportBlockFragment = ImportBlock_BildwurfAdBlock_Fragment | ImportBlock_BreakBlock_Fragment | ImportBlock_CommentBlock_Fragment | ImportBlock_CrowdfundingBlock_Fragment | ImportBlock_EventBlock_Fragment | ImportBlock_FacebookPostBlock_Fragment | ImportBlock_FacebookVideoBlock_Fragment | ImportBlock_HtmlBlock_Fragment | ImportBlock_IFrameBlock_Fragment | ImportBlock_ImageBlock_Fragment | ImportBlock_ImageGalleryBlock_Fragment | ImportBlock_InstagramPostBlock_Fragment | ImportBlock_ListicleBlock_Fragment | ImportBlock_PolisConversationBlock_Fragment | ImportBlock_PollBlock_Fragment | ImportBlock_QuoteBlock_Fragment | ImportBlock_RichTextBlock_Fragment | ImportBlock_SoundCloudTrackBlock_Fragment | ImportBlock_StreamableVideoBlock_Fragment | ImportBlock_SubscribeBlock_Fragment | ImportBlock_TeaserGridBlock_Fragment | ImportBlock_TeaserGridFlexBlock_Fragment | ImportBlock_TeaserListBlock_Fragment | ImportBlock_TeaserSlotsBlock_Fragment | ImportBlock_TikTokVideoBlock_Fragment | ImportBlock_TitleBlock_Fragment | ImportBlock_TwitterTweetBlock_Fragment | ImportBlock_UnknownBlock_Fragment | ImportBlock_VimeoVideoBlock_Fragment | ImportBlock_YouTubeVideoBlock_Fragment;
 
 export type SlimArticleRevisionFragment = { __typename?: 'ArticleRevision', id: string, createdAt: string, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
@@ -3823,7 +3863,7 @@ export type ArticleQueryVariables = Exact<{
 }>;
 
 
-export type ArticleQuery = { __typename?: 'Query', article: { __typename?: 'Article', id: string, url: string, slug?: string | null, tags: Array<{ __typename?: 'Tag', tag?: string | null }>, published?: { __typename?: 'ArticleRevision', title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'BreakBlock', blockStyle?: string | null, type: BlockType, text?: string | null, richText: Descendant[], hideButton?: boolean | null, linkTarget?: string | null, linkText?: string | null, linkURL?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | { __typename: 'CommentBlock' } | { __typename: 'CrowdfundingBlock' } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, postID?: string | null } | { __typename: 'FacebookVideoBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, videoID?: string | null } | { __typename: 'HTMLBlock' } | { __typename: 'IFrameBlock', blockStyle?: string | null, type: BlockType, url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'ImageBlock', blockStyle?: string | null, type: BlockType, caption?: string | null, linkUrl?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | { __typename: 'ImageGalleryBlock', blockStyle?: string | null, type: BlockType, images: Array<{ __typename?: 'ImageGalleryImage', caption?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> } | { __typename: 'InstagramPostBlock', blockStyle?: string | null, type: BlockType, postID?: string | null } | { __typename: 'ListicleBlock', blockStyle?: string | null, type: BlockType, items: Array<{ __typename?: 'ListicleItem', title?: string | null, richText: Descendant[], image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> } | { __typename: 'PolisConversationBlock', blockStyle?: string | null, type: BlockType, conversationID?: string | null } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', blockStyle?: string | null, type: BlockType, quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | { __typename: 'RichTextBlock', blockStyle?: string | null, type: BlockType, richText: Descendant[] } | { __typename: 'SoundCloudTrackBlock', blockStyle?: string | null, type: BlockType, trackID?: string | null } | { __typename: 'SubscribeBlock' } | { __typename: 'TeaserGridBlock' } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TeaserListBlock' } | { __typename: 'TeaserSlotsBlock' } | { __typename: 'TikTokVideoBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, videoID?: string | null } | { __typename: 'TitleBlock', blockStyle?: string | null, type: BlockType, title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, tweetID?: string | null } | { __typename: 'UnknownBlock' } | { __typename: 'VimeoVideoBlock', blockStyle?: string | null, type: BlockType, videoID?: string | null } | { __typename: 'YouTubeVideoBlock', blockStyle?: string | null, type: BlockType, videoID?: string | null }>, authors: Array<{ __typename?: 'Author', name: string, slug: string, bio?: Descendant[] | null, jobTitle?: string | null, hideOnArticle: boolean, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> } | null } };
+export type ArticleQuery = { __typename?: 'Query', article: { __typename?: 'Article', id: string, url: string, slug?: string | null, tags: Array<{ __typename?: 'Tag', tag?: string | null }>, published?: { __typename?: 'ArticleRevision', title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'BreakBlock', blockStyle?: string | null, type: BlockType, text?: string | null, richText: Descendant[], hideButton?: boolean | null, linkTarget?: string | null, linkText?: string | null, linkURL?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | { __typename: 'CommentBlock' } | { __typename: 'CrowdfundingBlock' } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, postID?: string | null } | { __typename: 'FacebookVideoBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, videoID?: string | null } | { __typename: 'HTMLBlock' } | { __typename: 'IFrameBlock', blockStyle?: string | null, type: BlockType, url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'ImageBlock', blockStyle?: string | null, type: BlockType, caption?: string | null, linkUrl?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | { __typename: 'ImageGalleryBlock', blockStyle?: string | null, type: BlockType, images: Array<{ __typename?: 'ImageGalleryImage', caption?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> } | { __typename: 'InstagramPostBlock', blockStyle?: string | null, type: BlockType, postID?: string | null } | { __typename: 'ListicleBlock', blockStyle?: string | null, type: BlockType, items: Array<{ __typename?: 'ListicleItem', title?: string | null, richText: Descendant[], image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> } | { __typename: 'PolisConversationBlock', blockStyle?: string | null, type: BlockType, conversationID?: string | null } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', blockStyle?: string | null, type: BlockType, quote?: string | null, author?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | { __typename: 'RichTextBlock', blockStyle?: string | null, type: BlockType, richText: Descendant[] } | { __typename: 'SoundCloudTrackBlock', blockStyle?: string | null, type: BlockType, trackID?: string | null } | { __typename: 'StreamableVideoBlock' } | { __typename: 'SubscribeBlock' } | { __typename: 'TeaserGridBlock' } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TeaserListBlock' } | { __typename: 'TeaserSlotsBlock' } | { __typename: 'TikTokVideoBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, videoID?: string | null } | { __typename: 'TitleBlock', blockStyle?: string | null, type: BlockType, title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', blockStyle?: string | null, type: BlockType, userID?: string | null, tweetID?: string | null } | { __typename: 'UnknownBlock' } | { __typename: 'VimeoVideoBlock', blockStyle?: string | null, type: BlockType, videoID?: string | null } | { __typename: 'YouTubeVideoBlock', blockStyle?: string | null, type: BlockType, videoID?: string | null }>, authors: Array<{ __typename?: 'Author', name: string, slug: string, bio?: Descendant[] | null, jobTitle?: string | null, hideOnArticle: boolean, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> } | null } };
 
 export type ImageUrlsFragment = { __typename?: 'Image', url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null };
 
@@ -4168,6 +4208,7 @@ export const PeerProfile = gql`
       "QuoteBlock",
       "RichTextBlock",
       "SoundCloudTrackBlock",
+      "StreamableVideoBlock",
       "SubscribeBlock",
       "TeaserGridBlock",
       "TeaserGridFlexBlock",
@@ -4179,6 +4220,10 @@ export const PeerProfile = gql`
       "TwitterTweetBlock",
       "VimeoVideoBlock",
       "YouTubeVideoBlock"
+    ],
+    "BaseCrowdfundingGoal": [
+      "CrowdfundingGoal",
+      "CrowdfundingGoalWithProgress"
     ],
     "BaseNavigationLink": [
       "ArticleNavigationLink",
@@ -4210,6 +4255,7 @@ export const PeerProfile = gql`
       "QuoteBlock",
       "RichTextBlock",
       "SoundCloudTrackBlock",
+      "StreamableVideoBlock",
       "SubscribeBlock",
       "TeaserGridBlock",
       "TeaserGridFlexBlock",

@@ -4,7 +4,6 @@ import {
   ArticleWrapper,
 } from '@wepublish/article/website';
 import { CommentListContainer } from '@wepublish/comments/website';
-import { getArticlePathsBasedOnPage } from '@wepublish/utils/website';
 import {
   addClientCacheToV1Props,
   ArticleDocument,
@@ -79,7 +78,10 @@ export default function ArticleBySlugOrId() {
   );
 }
 
-export const getStaticPaths = getArticlePathsBasedOnPage('');
+export const getStaticPaths = () => ({
+  paths: [],
+  fallback: 'blocking',
+});
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id, slug } = params || {};
@@ -109,6 +111,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   if (is404) {
     return {
       notFound: true,
+      revalidate: 1,
     };
   }
 
@@ -136,6 +139,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props,
-    revalidate: !article.data?.article ? 1 : 60, // every 60 seconds
+    revalidate: 60, // every 60 seconds
   };
 };
