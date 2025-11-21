@@ -74,7 +74,6 @@ const OnlineReportsCommentListItemBase = ({
       showContent={!showEdit}
       className={className}
     >
-      hallo
       <CommentListItemStateWarnings state={state} />
       {showEdit && (
         <CommentEditor
