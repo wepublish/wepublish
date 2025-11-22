@@ -66,12 +66,14 @@ function AudienceDashboard({
     fetchStats,
   });
 
-  const { audienceStatsComputed, audienceStatsAggregatedByMonth } = useAudience(
-    {
-      audienceClientFilter,
-      audienceStats: rawAudienceStats,
-    }
-  );
+  const {
+    audienceStatsComputed,
+    audienceStatsAggregatedByMonth,
+    audienceStatsByPeriod,
+  } = useAudience({
+    audienceClientFilter,
+    audienceStats: rawAudienceStats,
+  });
 
   const audienceStats = useMemo(
     () =>
@@ -108,6 +110,7 @@ function AudienceDashboard({
               setApiFilter={setAudienceApiFilter}
               componentFilter={audienceComponentFilter}
               setComponentFilter={setAudienceComponentFilter}
+              audienceStatsByPeriod={audienceStatsByPeriod}
             />
           </ListViewFilterArea>
         )}

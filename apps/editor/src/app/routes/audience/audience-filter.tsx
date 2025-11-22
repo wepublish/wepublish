@@ -1,11 +1,18 @@
 import styled from '@emotion/styled';
-import { useMemberPlanListQuery } from '@wepublish/editor/api';
+import {
+  SubscriptionFilter,
+  useMemberPlanListQuery,
+} from '@wepublish/editor/api';
+import { DailySubscriptionStatsUser } from '@wepublish/editor/api-v2';
+import { useExportSubscriptionsAsCsv } from '@wepublish/ui/editor';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { TbUserDown } from 'react-icons/tb';
 import {
   Col,
   DateRangePicker,
   Grid,
+  IconButton,
   Panel,
   Radio,
   RadioGroup,
@@ -16,6 +23,7 @@ import {
 import { RangeType } from 'rsuite/esm/DateRangePicker';
 
 import { AudienceFilterToggle, ToggleLable } from './audience-filter-toggle';
+import { AudienceStatsComputed } from './useAudience';
 import {
   AudienceApiFilter,
   AudienceClientFilter,
@@ -48,7 +56,20 @@ export interface AudienceFilterProps {
   setApiFilter: (data: AudienceApiFilter) => void;
   componentFilter: AudienceComponentFilter;
   setComponentFilter: Dispatch<SetStateAction<AudienceComponentFilter>>;
+  audienceStatsByPeriod: AudienceStatsComputed[];
 }
+
+const filterKeyMap: Record<string, string> = {
+  createdSubscriptionCount: 'createdSubscriptionUsers',
+  overdueSubscriptionCount: 'overdueSubscriptionUsers',
+  renewedSubscriptionCount: 'renewedSubscriptionUsers',
+  replacedSubscriptionCount: 'replacedSubscriptionUsers',
+  totalActiveSubscriptionCount: 'totalActiveSubscriptionUsers',
+  deactivatedSubscriptionCount: 'deactivatedSubscriptionUsers',
+  predictedSubscriptionRenewalCount:
+    'predictedSubscriptionRenewalUsersHighProbability',
+  endingSubscriptionCount: 'endingSubscriptionUsers',
+};
 
 export function AudienceFilter({
   resolution,
@@ -59,8 +80,14 @@ export function AudienceFilter({
   setApiFilter,
   componentFilter,
   setComponentFilter,
+  audienceStatsByPeriod,
 }: AudienceFilterProps) {
-  const { t } = useTranslation();
+  const {
+    t,
+    i18n: { language },
+  } = useTranslation();
+
+  const { initDownload, getCsv, loading } = useExportSubscriptionsAsCsv();
 
   // load available subscription plans
   const { data: memberPlans } = useMemberPlanListQuery();
@@ -77,8 +104,17 @@ export function AudienceFilter({
   }, [memberPlans]);
 
   const oneClickDateRanges = useMemo<RangeType[]>(() => {
-    const { today, lastWeek, lastMonth, lastQuarter, lastYear } =
-      preDefinedDates();
+    const {
+      today,
+      lastWeek,
+      lastMonth,
+      lastQuarter,
+      lastYear,
+      nextWeek,
+      nextMonth,
+      nextQuarter,
+      nextYear,
+    } = preDefinedDates();
     return [
       {
         label: t('audienceFilter.rangeLastWeek'),
@@ -96,14 +132,111 @@ export function AudienceFilter({
         label: t('audienceFilter.rangeLastYear'),
         value: [lastYear, today],
       },
+      {
+        label: t('audienceFilter.rangeNextWeek'),
+        value: [today, nextWeek],
+      },
+      {
+        label: t('audienceFilter.rangeNextMonth'),
+        value: [today, nextMonth],
+      },
+      {
+        label: t('audienceFilter.rangeNextQuarter'),
+        value: [today, nextQuarter],
+      },
+      {
+        label: t('audienceFilter.rangeNextYear'),
+        value: [today, nextYear],
+      },
     ];
   }, [t]);
+
+  const dateString = useMemo<string>(() => {
+    const dateTimeFormat: Intl.DateTimeFormatOptions = { dateStyle: 'short' };
+    /*
+    if (resolution === 'monthly') {
+      dateTimeFormat = { month: 'short', year: 'numeric' };
+    }
+      */
+    // DateRange
+    const fromDate = apiFilter.dateRange ? apiFilter.dateRange[0] : null;
+    const toDate = apiFilter.dateRange ? apiFilter.dateRange[1] : null;
+
+    return `${fromDate?.toLocaleDateString(language, dateTimeFormat)}-${toDate?.toLocaleDateString(
+      language,
+      dateTimeFormat
+    )}`;
+  }, [apiFilter.dateRange, language, resolution]);
+
+  const handleClick = (filterKey: string) => {
+    const statsUsersKey = filterKeyMap[
+      filterKey
+    ] as keyof AudienceStatsComputed;
+    const statsForPeriod = audienceStatsByPeriod[0];
+
+    if (!statsForPeriod) {
+      return;
+    }
+
+    let statsUsers: DailySubscriptionStatsUser[] = [];
+
+    if ((statsUsersKey as string) === 'totalActiveSubscriptionUsers') {
+      const renewedUsers =
+        (statsForPeriod['renewedSubscriptionUsers'] as
+          | DailySubscriptionStatsUser[]
+          | undefined) || [];
+      const replacedUsers =
+        (statsForPeriod['replacedSubscriptionUsers'] as
+          | DailySubscriptionStatsUser[]
+          | undefined) || [];
+      const createdUsers =
+        (statsForPeriod['createdSubscriptionUsers'] as
+          | DailySubscriptionStatsUser[]
+          | undefined) || [];
+      statsUsers = [...createdUsers, ...renewedUsers, ...replacedUsers];
+    } else if (filterKey === 'predictedSubscriptionRenewalCount') {
+      const highProbabilityUsers =
+        (statsForPeriod['predictedSubscriptionRenewalUsersHighProbability'] as
+          | DailySubscriptionStatsUser[]
+          | undefined) || [];
+      const lowProbabilityUsers =
+        (statsForPeriod['predictedSubscriptionRenewalUsersLowProbability'] as
+          | DailySubscriptionStatsUser[]
+          | undefined) || [];
+
+      statsUsers = [
+        ...highProbabilityUsers,
+        ...lowProbabilityUsers.filter(
+          lowUser => !highProbabilityUsers.find(user => user.id === lowUser.id)
+        ),
+      ];
+    } else if (statsUsersKey) {
+      statsUsers =
+        (statsForPeriod[statsUsersKey] as
+          | DailySubscriptionStatsUser[]
+          | undefined) || [];
+    }
+
+    const filter: SubscriptionFilter = {
+      userIDs: statsUsers.map((user: DailySubscriptionStatsUser) => user.id),
+    };
+
+    initDownload({
+      getCsv,
+      filter,
+      filename: `${dateString}-${statsUsersKey as string}`,
+      prefixByDate: false,
+    });
+  };
 
   return (
     <Grid style={{ width: '100%' }}>
       <Row>
         {/* select date range */}
-        <Col xs={4}>
+        <Col
+          xs={24}
+          xl={4}
+        >
           <RadioGroup
             name="aggregation-picker"
             inline
@@ -118,7 +251,10 @@ export function AudienceFilter({
           </RadioGroup>
         </Col>
 
-        <Col xs={6}>
+        <Col
+          xs={24}
+          xl={6}
+        >
           <DateRangePicker
             size="lg"
             value={apiFilter.dateRange}
@@ -161,7 +297,10 @@ export function AudienceFilter({
         </Col>
 
         {/* filter data */}
-        <Col xs={14}>
+        <Col
+          xs={24}
+          xl={14}
+        >
           <Panel
             header={t('audienceFilter.panelHeader')}
             bordered
@@ -169,14 +308,32 @@ export function AudienceFilter({
             <Row>
               {Object.keys(clientFilter).map((filterKey, filterIndex) => (
                 <Col
-                  xs={12}
+                  xs={24}
+                  xl={12}
                   key={`client-filter-${filterIndex}`}
                 >
-                  <AudienceFilterToggle
-                    filterKey={filterKey as keyof AudienceClientFilter}
-                    clientFilter={clientFilter}
-                    setClientFilter={setClientFilter}
-                  />
+                  <Row>
+                    <Col
+                      xl={16}
+                      xs={9}
+                    >
+                      <AudienceFilterToggle
+                        filterKey={filterKey as keyof AudienceClientFilter}
+                        clientFilter={clientFilter}
+                        setClientFilter={setClientFilter}
+                      />
+                    </Col>
+                    <Col
+                      xl={8}
+                      xs={15}
+                    >
+                      <IconButton
+                        icon={<TbUserDown />}
+                        loading={loading}
+                        onClick={() => handleClick(filterKey)}
+                      />
+                    </Col>
+                  </Row>
                 </Col>
               ))}
             </Row>
