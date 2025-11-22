@@ -648,14 +648,27 @@ input CustomTeaserInput {
   title: String
 }
 
+type DailyPredictedSubscriptionRenewalCount {
+  high: Int!
+  low: Int!
+  perDayHighProbability: Int!
+  perDayLowProbability: Int!
+  total: Int!
+}
+
 type DailySubscriptionStats {
   createdSubscriptionCount: Int!
   createdSubscriptionUsers: [DailySubscriptionStatsUser!]!
   date: String!
   deactivatedSubscriptionCount: Int!
   deactivatedSubscriptionUsers: [DailySubscriptionStatsUser!]!
+  endingSubscriptionCount: Int!
+  endingSubscriptionUsers: [DailySubscriptionStatsUser!]!
   overdueSubscriptionCount: Int!
   overdueSubscriptionUsers: [DailySubscriptionStatsUser!]!
+  predictedSubscriptionRenewalCount: DailyPredictedSubscriptionRenewalCount!
+  predictedSubscriptionRenewalUsersHighProbability: [DailySubscriptionStatsUser!]!
+  predictedSubscriptionRenewalUsersLowProbability: [DailySubscriptionStatsUser!]!
   renewedSubscriptionCount: Int!
   renewedSubscriptionUsers: [DailySubscriptionStatsUser!]!
   replacedSubscriptionCount: Int!

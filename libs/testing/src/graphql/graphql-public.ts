@@ -755,6 +755,15 @@ export type CustomTeaserInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type DailyPredictedSubscriptionRenewalCount = {
+  __typename?: 'DailyPredictedSubscriptionRenewalCount';
+  high: Scalars['Int'];
+  low: Scalars['Int'];
+  perDayHighProbability: Scalars['Int'];
+  perDayLowProbability: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
 export type DailySubscriptionStats = {
   __typename?: 'DailySubscriptionStats';
   createdSubscriptionCount: Scalars['Int'];
@@ -762,8 +771,13 @@ export type DailySubscriptionStats = {
   date: Scalars['String'];
   deactivatedSubscriptionCount: Scalars['Int'];
   deactivatedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  endingSubscriptionCount: Scalars['Int'];
+  endingSubscriptionUsers: Array<DailySubscriptionStatsUser>;
   overdueSubscriptionCount: Scalars['Int'];
   overdueSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  predictedSubscriptionRenewalCount: DailyPredictedSubscriptionRenewalCount;
+  predictedSubscriptionRenewalUsersHighProbability: Array<DailySubscriptionStatsUser>;
+  predictedSubscriptionRenewalUsersLowProbability: Array<DailySubscriptionStatsUser>;
   renewedSubscriptionCount: Scalars['Int'];
   renewedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
   replacedSubscriptionCount: Scalars['Int'];
