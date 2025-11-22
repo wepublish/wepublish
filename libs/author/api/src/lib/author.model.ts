@@ -1,54 +1,54 @@
-import {Field, ObjectType} from '@nestjs/graphql'
-import {GraphQLRichText} from '@wepublish/richtext/api'
-import {HasImage, Image} from '@wepublish/image/api'
-import {HasOptionalPeerLc, Peer} from '@wepublish/peering/api'
-import {Node} from 'slate'
-import {GraphQLSlug} from '@wepublish/utils/api'
-import {AuthorLink} from './author-link.model'
+import { Field, ObjectType } from '@nestjs/graphql';
+import { GraphQLRichText } from '@wepublish/richtext/api';
+import { HasImage, Image } from '@wepublish/image/api';
+import { HasOptionalPeerLc, Peer } from '@wepublish/peering/api';
+import { Descendant } from 'slate';
+import { GraphQLSlug } from '@wepublish/utils/api';
+import { AuthorLink } from './author-link.model';
 
-@ObjectType('Author', {
-  implements: () => [HasImage, HasOptionalPeerLc]
+@ObjectType({
+  implements: () => [HasImage, HasOptionalPeerLc],
 })
 export class Author implements HasImage, HasOptionalPeerLc {
   @Field()
-  id!: string
+  id!: string;
 
   @Field(() => Date)
-  createdAt!: Date
+  createdAt!: Date;
 
   @Field(() => Date)
-  modifiedAt!: Date
+  modifiedAt!: Date;
 
   @Field()
-  name!: string
+  name!: string;
 
   @Field(() => GraphQLSlug)
-  slug!: string
+  slug!: string;
 
-  @Field({nullable: true})
-  jobTitle?: string
+  @Field({ nullable: true })
+  jobTitle?: string;
 
-  @Field(() => [AuthorLink], {nullable: true})
-  links?: AuthorLink[]
+  @Field(() => [AuthorLink], { nullable: true })
+  links?: AuthorLink[];
 
-  @Field(() => GraphQLRichText, {nullable: true})
-  bio?: Node[]
+  @Field(() => GraphQLRichText, { nullable: true })
+  bio?: Descendant[];
 
-  imageID?: string
-  image?: Image
+  imageID?: string;
+  image?: Image;
 
-  peerId?: string
-  peer?: Peer
-
-  @Field()
-  hideOnArticle!: boolean
+  peerId?: string;
+  peer?: Peer;
 
   @Field()
-  hideOnTeaser!: boolean
+  hideOnArticle!: boolean;
 
   @Field()
-  hideOnTeam!: boolean
+  hideOnTeaser!: boolean;
 
   @Field()
-  url!: string
+  hideOnTeam!: boolean;
+
+  @Field()
+  url!: string;
 }

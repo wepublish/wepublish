@@ -1,13 +1,23 @@
-import {SubscribePage} from '@wepublish/utils/website'
-import styled from '@emotion/styled'
-import {SubscribeAmount, SubscribeWrapper, TransactionFeeIcon} from '@wepublish/membership/website'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {useAdsContext} from '../src/context/ads-context'
-import {useEffect} from 'react'
+import styled from '@emotion/styled';
+import { UserFormWrapper } from '@wepublish/authentication/website';
+import {
+  SubscribeAmount,
+  SubscribeButton,
+  SubscribeCancelable,
+  SubscribeNarrowSection,
+  SubscribeSection,
+  SubscribeWrapper,
+  TransactionFeeIcon,
+} from '@wepublish/membership/website';
+import { SubscribePage } from '@wepublish/utils/website';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { useEffect } from 'react';
+
+import { useAdsContext } from '../src/context/ads-context';
 
 const OnlineReportsSubscribePageWrapper = styled('div')`
   ${SubscribeWrapper} {
-    font-weight: bold;
+    grid-template-columns: 100%;
     grid-template-areas:
       'returning'
       'userForm'
@@ -16,47 +26,76 @@ const OnlineReportsSubscribePageWrapper = styled('div')`
       'paymentPeriodicity'
       'transactionFee'
       'challenge'
-      'cta';
+      'submit';
+
+    gap: ${({ theme }) => theme.spacing(2.5)};
   }
-`
+
+  ${SubscribeSection},
+  ${SubscribeNarrowSection} {
+    grid-area: var(--grid-area);
+
+    &:is(:nth-of-type(2)) {
+      &:not(:has(+ :nth-of-type(3) > ${UserFormWrapper})) {
+        grid-area: unset;
+        grid-row: 1/3;
+      }
+    }
+  }
+`;
 
 const SubscribePageWrapper = styled('div')`
   display: flex;
   flex-direction: column;
-  gap: ${({theme}) => theme.spacing(2.5)};
-  margin-top: ${({theme}) => theme.spacing(4)};
+  gap: ${({ theme }) => theme.spacing(2.5)};
+  margin-top: ${({ theme }) => theme.spacing(4)};
 
   ${TransactionFeeIcon} {
     display: none;
   }
 
   ${SubscribeAmount} {
-    background: ${({theme}) => theme.palette.secondary.main};
+    background: ${({ theme }) => theme.palette.secondary.main};
   }
-`
 
-export const MitmachenInner = () => <SubscribePage fields={['firstName']} />
+  ${SubscribeButton} {
+    margin-bottom: ${({ theme }) => theme.spacing(4)};
+
+    &:has(+ ${SubscribeCancelable}) {
+      margin-bottom: 0;
+    }
+  }
+
+  ${SubscribeCancelable} {
+    font-weight: bold;
+    margin-bottom: ${({ theme }) => theme.spacing(2)};
+  }
+`;
+
+export const MitmachenInner = () => (
+  <OnlineReportsSubscribePageWrapper>
+    <SubscribePage fields={['firstName']} />
+  </OnlineReportsSubscribePageWrapper>
+);
 
 export default function Mitmachen() {
-  const {setAdsDisabled} = useAdsContext()
+  const { setAdsDisabled } = useAdsContext();
 
   const {
-    elements: {H3}
-  } = useWebsiteBuilder()
+    elements: { H3 },
+  } = useWebsiteBuilder();
 
   useEffect(() => {
-    setAdsDisabled(true)
-    return () => setAdsDisabled(false)
-  }, [setAdsDisabled])
+    setAdsDisabled(true);
+    return () => setAdsDisabled(false);
+  }, [setAdsDisabled]);
 
   return (
     <SubscribePageWrapper>
       <H3 component="h1">Herzlichen Dank für Ihre Unterstützung!</H3>
-      <OnlineReportsSubscribePageWrapper>
-        <MitmachenInner />
-      </OnlineReportsSubscribePageWrapper>
+      <MitmachenInner />
     </SubscribePageWrapper>
-  )
+  );
 }
 
-Mitmachen.getInitialProps = SubscribePage.getInitialProps
+Mitmachen.getInitialProps = SubscribePage.getInitialProps;

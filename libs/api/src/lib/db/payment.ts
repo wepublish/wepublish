@@ -1,8 +1,8 @@
 export enum PaymentSort {
   CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
+  ModifiedAt = 'modifiedAt',
 }
 
 export interface PaymentFilter {
-  intentID?: string
+  intentID?: string;
 }

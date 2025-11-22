@@ -1,12 +1,15 @@
-import {FormControlLabel, InputAdornment, OutlinedInput, RadioGroup} from '@mui/material'
-import {BuilderPaymentAmountProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {forwardRef} from 'react'
-import styled from '@emotion/styled'
+import { NumberField } from '@base-ui-components/react/number-field';
+import styled from '@emotion/styled';
+import { RadioGroup } from '@mui/material';
+import { BuilderPaymentAmountProps } from '@wepublish/website/builder';
+import { forwardRef } from 'react';
+
+import { CurrencyNumberSpinner } from './currency-number-spinner';
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup)`
   display: grid;
   justify-content: center;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({ theme }) => theme.spacing(2)};
   align-items: start;
 
   label {
@@ -18,9 +21,9 @@ export const PaymentAmountPickerWrapper = styled(RadioGroup)`
       display: none;
     }
   }
-`
+`;
 
-const PaymentAmountInput = styled(OutlinedInput)`
+const PaymentAmountInput = styled(CurrencyNumberSpinner)`
   background: #fff;
   // Chrome, Safari, Edge
 
@@ -35,9 +38,16 @@ const PaymentAmountInput = styled(OutlinedInput)`
   -moz-appearance: textfield;
 },
 
-`
+`;
 
-export const OnlineReportsPaymentAmount = forwardRef<HTMLInputElement, BuilderPaymentAmountProps>(
+const PaymentAmountInputWrapper = styled('div')`
+  width: 236px;
+`;
+
+export const OnlineReportsPaymentAmount = forwardRef<
+  typeof CurrencyNumberSpinner,
+  BuilderPaymentAmountProps
+>(
   (
     {
       className,
@@ -48,47 +58,38 @@ export const OnlineReportsPaymentAmount = forwardRef<HTMLInputElement, BuilderPa
       name,
       error,
       value,
-      onChange
+      onChange,
     },
     ref
   ) => {
-    const {
-      elements: {TextField},
-      meta: {locale, siteTitle}
-    } = useWebsiteBuilder()
-
     return (
       <PaymentAmountPickerWrapper
         className={className}
         name={name}
         onChange={event => {
           if (+event.target.value) {
-            onChange(+event.target.value)
+            onChange(+event.target.value);
           }
         }}
-        value={value}>
-        <FormControlLabel
-          sx={{width: '180px'}}
-          value={''}
-          control={
-            <PaymentAmountInput
-              type={'number'}
-              inputMode="numeric"
-              startAdornment={<InputAdornment position="start">CHF</InputAdornment>}
-              value={value ? value / 100 : ''}
-              onChange={event => onChange(+event.target.value * 100)}
-              inputProps={{
-                'aria-label': 'weight',
-                inputMode: 'numeric',
-                step: 'any'
-              }}
-            />
-          }
-          label={'Manuell'}
-        />
+        value={value}
+      >
+        <PaymentAmountInputWrapper>
+          <PaymentAmountInput
+            onValueChange={(
+              value: number | null,
+              eventDetails: NumberField.Root.ChangeEventDetails
+            ) => {
+              if (typeof value === 'number' && value >= 0) {
+                onChange(value ? value * 100 : 0);
+              } else {
+                onChange(0);
+              }
+            }}
+          />
+        </PaymentAmountInputWrapper>
       </PaymentAmountPickerWrapper>
-    )
+    );
   }
-)
+);
 
-OnlineReportsPaymentAmount.displayName = 'OnlineReportsPaymentAmount'
+OnlineReportsPaymentAmount.displayName = 'OnlineReportsPaymentAmount';

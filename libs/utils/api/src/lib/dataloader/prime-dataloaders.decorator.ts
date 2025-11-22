@@ -1,11 +1,11 @@
-import {Type} from '@nestjs/common'
-import {Inject} from '@nestjs/common'
-import DataLoader from 'dataloader'
+import { Type } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
+import DataLoader from 'dataloader';
 
 export interface Primeable<T> {
-  prime: DataLoader<string, T | null>['prime']
-  load: DataLoader<string, T | null>['load']
-  loadMany: DataLoader<string, T | null>['loadMany']
+  prime: DataLoader<string, T | null>['prime'];
+  load: DataLoader<string, T | null>['load'];
+  loadMany: DataLoader<string, T | null>['loadMany'];
 }
 
 export function PrimeDataLoader<T extends Primeable<unknown>>(
@@ -17,37 +17,36 @@ export function PrimeDataLoader<T extends Primeable<unknown>>(
     propertyKey: unknown,
     descriptor: PropertyDescriptor
   ) => {
-    const origin = descriptor.value
-    const injectProperty = `__DATALOADER__${dataloader.name}`
-    const injectDataloader = Inject(dataloader)
-    injectDataloader(target, injectProperty)
+    const origin = descriptor.value;
+    const injectProperty = `__DATALOADER__${dataloader.name}`;
+    const injectDataloader = Inject(dataloader);
+    injectDataloader(target, injectProperty);
 
     descriptor.value = async function (...args: unknown[]) {
-      const resultItem = await origin.apply(this, args)
+      const resultItem = await origin.apply(this, args);
 
       if (!resultItem) {
-        return resultItem
+        return resultItem;
       }
 
-      const results = Array.isArray(resultItem)
-        ? resultItem
-        : Array.isArray(resultItem.nodes)
-        ? resultItem.nodes
-        : [resultItem]
+      const results =
+        Array.isArray(resultItem) ? resultItem.flat()
+        : Array.isArray(resultItem.nodes) ? resultItem.nodes
+        : [resultItem];
 
       for (const result of results) {
-        if ('id' in result) {
-          const that = this as any
-          const loader = that[injectProperty] as T
-          loader.prime(result[primeKey], result)
+        if (primeKey in result) {
+          const that = this as any;
+          const loader = that[injectProperty] as T;
+          loader.prime(result[primeKey], result);
         }
       }
 
-      return resultItem
-    }
-  }
+      return resultItem;
+    };
+  };
 
-  decoratorFactory.KEY = `PrimeDataLoader_${dataloader.name}`
+  decoratorFactory.KEY = `PrimeDataLoader_${dataloader.name}`;
 
-  return decoratorFactory
+  return decoratorFactory;
 }

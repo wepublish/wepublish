@@ -1,19 +1,25 @@
-import styled from '@emotion/styled'
-import nanoid from 'nanoid'
+import styled from '@emotion/styled';
+import nanoid from 'nanoid';
 
 interface ColorPickerProps {
-  setColor: (color: string) => void
-  currentColor?: string
-  label?: string
-  disabled?: boolean
+  setColor: (color: string) => void;
+  currentColor?: string;
+  label?: string;
+  disabled?: boolean;
 }
 
 const Input = styled.input`
   cursor: pointer;
-`
+`;
 
-export function ColorPicker({setColor, currentColor, label, disabled}: ColorPickerProps) {
-  const id = nanoid()
+export function ColorPicker({
+  setColor,
+  currentColor,
+  label,
+  disabled,
+}: ColorPickerProps) {
+  const id = nanoid();
+
   return (
     <>
       {label && <label htmlFor={id}>{label}</label>}
@@ -23,9 +29,9 @@ export function ColorPicker({setColor, currentColor, label, disabled}: ColorPick
         type="color"
         value={currentColor}
         onChange={e => {
-          setColor(e.target.value)
+          setColor(e.target.value);
         }}
       />
     </>
-  )
+  );
 }

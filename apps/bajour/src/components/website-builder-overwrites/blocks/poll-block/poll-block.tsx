@@ -1,4 +1,4 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   PollBlock as BasePollBlock,
   PollBlockMeta,
@@ -8,8 +8,8 @@ import {
   PollBlockTitle,
   PollBlockVoteBar,
   PollBlockVoteBarFill,
-  RichTextBlockWrapper
-} from '@wepublish/block-content/website'
+  RichTextBlockWrapper,
+} from '@wepublish/block-content/website';
 
 export const PollBlock = styled(BasePollBlock)`
   ${PollBlockTitle} {
@@ -28,12 +28,12 @@ export const PollBlock = styled(BasePollBlock)`
   ${PollBlockVoteBar} {
     font-size: 0.65em;
     line-height: 1.15em;
-    padding: ${({theme}) => `0 ${theme.spacing(1)}`};
-    border-radius: ${({theme}) => theme.spacing(1)};
+    padding: ${({ theme }) => `0 ${theme.spacing(1)}`};
+    border-radius: ${({ theme }) => theme.spacing(1)};
   }
 
   ${PollBlockVoteBarFill} {
-    border-radius: ${({theme}) => theme.spacing(1)};
+    border-radius: ${({ theme }) => theme.spacing(1)};
   }
 
   ${PollBlockResultInfo} {
@@ -54,4 +54,4 @@ export const PollBlock = styled(BasePollBlock)`
   ${RichTextBlockWrapper} {
     display: none;
   }
-`
+`;

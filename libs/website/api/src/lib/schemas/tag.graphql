@@ -1,6 +1,7 @@
 fragment FullTag on Tag {
   id
   tag
+  description
   type
   main
   url
@@ -11,5 +12,29 @@ query Tag($tag: String!, $type: TagType!) {
     nodes {
       ...FullTag
     }
+  }
+}
+
+query TagList(
+  $filter: TagFilter
+  $cursor: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: TagSort
+) {
+  tags(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...FullTag
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
   }
 }

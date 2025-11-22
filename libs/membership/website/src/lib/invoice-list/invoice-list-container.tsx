@@ -1,139 +1,156 @@
-import {StripeElement, StripePayment} from '@wepublish/payment/website'
+import {
+  PaymentForm,
+  usePayInvoice,
+  useSubscribe,
+} from '@wepublish/payment/website';
 import {
   FullInvoiceFragment,
-  FullMemberPlanFragment,
   useCheckInvoiceStatusLazyQuery,
   useInvoicesQuery,
-  usePageLazyQuery,
-  usePayInvoiceMutation
-} from '@wepublish/website/api'
-import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {produce} from 'immer'
-import {useMemo, useState} from 'react'
+} from '@wepublish/website/api';
+import {
+  BuilderContainerProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { produce } from 'immer';
+import { anyPass } from 'ramda';
+import { useCallback, useMemo } from 'react';
+import { isPayrexxSubscription } from './invoice-list';
+
+const isInNeedOfMigration = anyPass([
+  // @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated
+  isPayrexxSubscription,
+]);
+
+const mapMigratePaymentMethod = (invoice: FullInvoiceFragment) => {
+  if (!invoice.subscription?.paymentMethod) {
+    return;
+  }
+
+  switch (invoice.subscription.paymentMethod.paymentProviderID) {
+    case 'payrexx-subscription': {
+      return 'payrexx';
+    }
+  }
+};
 
 export type InvoiceListContainerProps = {
-  filter?: (invoices: FullInvoiceFragment[]) => FullInvoiceFragment[]
-} & BuilderContainerProps
+  filter?: (invoices: FullInvoiceFragment[]) => FullInvoiceFragment[];
+} & BuilderContainerProps;
 
-export function InvoiceListContainer({filter, className}: InvoiceListContainerProps) {
-  const [stripeClientSecret, setStripeClientSecret] = useState<string>()
-  const [stripeMemberPlan, setStripeMemberPlan] = useState<FullMemberPlanFragment>()
-  const {InvoiceList} = useWebsiteBuilder()
-  const [checkInvoice, {loading: loadingCheckInvoice}] = useCheckInvoiceStatusLazyQuery()
+export function InvoiceListContainer({
+  filter,
+  className,
+}: InvoiceListContainerProps) {
+  const { InvoiceList } = useWebsiteBuilder();
+  const [checkInvoice, { loading: loadingCheckInvoice }] =
+    useCheckInvoiceStatusLazyQuery();
   const {
     data,
     loading: loadingInvoices,
-    error
+    error,
   } = useInvoicesQuery({
     onCompleted(data) {
-      for (const {id, paidAt, canceledAt} of data.invoices) {
+      for (const { id, paidAt, canceledAt } of data.invoices) {
         if (paidAt || canceledAt || typeof window === 'undefined') {
-          continue
+          continue;
         }
 
         checkInvoice({
           variables: {
-            id
-          }
-        })
+            id,
+          },
+        });
       }
-    }
-  })
+    },
+  });
 
-  const [pay] = usePayInvoiceMutation({
-    onCompleted(data) {
-      if (!data.createPaymentFromInvoice?.intentSecret) {
-        return
-      }
-
-      if (data.createPaymentFromInvoice.paymentMethod.paymentProviderID === 'stripe') {
-        setStripeClientSecret(data.createPaymentFromInvoice.intentSecret)
-      }
-
-      if (data.createPaymentFromInvoice.intentSecret.startsWith('http')) {
-        window.location.href = data.createPaymentFromInvoice.intentSecret
-      }
-    }
-  })
-
-  // @TODO: Replace with objects on Memberplan when Memberplan has been migrated to V2
-  // Pages are currently in V2 and Memberplan are in V1, so we have no access to page objects.
-  const [fetchPage] = usePageLazyQuery()
+  const [pay, redirectPages1, stripeClientSecret1] = usePayInvoice();
+  const [migrate, redirectPages2, stripeClientSecret2] = useSubscribe();
 
   const filteredInvoices = useMemo(
     () =>
       produce(data, draftData => {
         if (filter && draftData?.invoices) {
-          draftData.invoices = filter(draftData.invoices)
+          draftData.invoices = filter(draftData.invoices);
         }
       }),
     [data, filter]
-  )
+  );
 
   const loading = useMemo(
     () => loadingInvoices || loadingCheckInvoice,
     [loadingInvoices, loadingCheckInvoice]
-  )
+  );
+
+  const handlePay = useCallback(
+    async (invoice: FullInvoiceFragment) => {
+      const subscription = invoice.subscription!;
+      const memberPlan = subscription?.memberPlan;
+      const needsMigration = isInNeedOfMigration(invoice);
+
+      if (needsMigration) {
+        const newPaymentProviderID = mapMigratePaymentMethod(invoice);
+        const newPaymentMethodId = memberPlan.availablePaymentMethods
+          .flatMap(({ paymentMethods }) => paymentMethods)
+          .find(
+            ({ paymentProviderID }) =>
+              paymentProviderID === newPaymentProviderID
+          )?.id;
+
+        if (!newPaymentMethodId) {
+          throw new Error(
+            'Der benötigte Payment-Adapter konnte nicht gefunden werden.'
+          );
+        }
+
+        return migrate(memberPlan, {
+          variables: {
+            deactivateSubscriptionId: subscription.id,
+            memberPlanId: memberPlan?.id,
+            paymentMethodId: newPaymentMethodId,
+            // What if forceAutoRenew is now enabled and autoRenew is false?
+            autoRenew: subscription.autoRenew,
+            // What if monthlyAmount is now higher?
+            monthlyAmount: subscription?.monthlyAmount,
+            // What if paymentPeriodicity is now not allowed?
+            paymentPeriodicity: subscription?.paymentPeriodicity,
+          },
+        });
+      }
+
+      return pay(memberPlan, {
+        variables: {
+          invoiceId: invoice.id,
+          paymentMethodId: subscription.paymentMethod.id,
+        },
+      });
+    },
+    [migrate, pay]
+  );
 
   return (
     <>
-      {stripeClientSecret && (
-        <StripeElement clientSecret={stripeClientSecret}>
-          <StripePayment
-            onClose={async success => {
-              if (stripeMemberPlan) {
-                const page = await fetchPage({
-                  variables: {
-                    id: success ? stripeMemberPlan.successPageId : stripeMemberPlan.failPageId
-                  }
-                })
-
-                window.location.href = page.data?.page.url ?? ''
-
-                // window.location.href = success
-                //   ? stripeMemberPlan.successPage?.url ?? ''
-                //   : stripeMemberPlan.failPage?.url ?? ''
-              }
-            }}
-          />
-        </StripeElement>
-      )}
+      <PaymentForm
+        stripeClientSecret={stripeClientSecret1 ?? stripeClientSecret2}
+        redirectPages={redirectPages1 ?? redirectPages2}
+      />
 
       <InvoiceList
         data={filteredInvoices}
         loading={loading}
         error={error}
         className={className}
-        onPay={async (invoiceId, paymentMethodId) => {
-          const memberPlan = filteredInvoices?.invoices?.find(invoice => invoice.id === invoiceId)
-            ?.subscription?.memberPlan
-          setStripeMemberPlan(memberPlan)
+        onPay={async invoiceId => {
+          const invoice = filteredInvoices?.invoices?.find(
+            invoice => invoice.id === invoiceId
+          );
 
-          const [successPage, failPage] = await Promise.all([
-            fetchPage({
-              variables: {
-                id: memberPlan?.successPageId
-              }
-            }),
-            fetchPage({
-              variables: {
-                id: memberPlan?.successPageId
-              }
-            })
-          ])
-
-          await pay({
-            variables: {
-              invoiceId,
-              paymentMethodId,
-              successURL: successPage.data?.page.url,
-              failureURL: failPage.data?.page.url
-              // failureURL: memberPlan?.failPage?.url,
-              // successURL: memberPlan?.successPage?.url
-            }
-          })
+          if (invoice) {
+            await handlePay(invoice);
+          }
         }}
       />
     </>
-  )
+  );
 }

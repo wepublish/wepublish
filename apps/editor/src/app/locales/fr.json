@@ -78,6 +78,7 @@
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "Non",
         "noImagesFound": "Aucune image trouvée",
+        "openInNewTab": "URL du contenu ouvre dans un nouvel onglet",
         "pagePreviewLink": "Lien de prévisualisation de la page",
         "peerDisabled": "Ce peer est actuellement désactivé",
         "peeredArticlePreview": "Prévisualisation",
@@ -131,25 +132,8 @@
         "light": "Light",
         "style": "Style",
         "text": "Texte",
-        "default": "Default"
-      }
-    },
-    "articleList": {
-      "filter": {
-        "dates": "Dates",
-        "description": "Filtrer par description",
-        "isDraft": "Brouillon",
-        "isPending": "En attente",
-        "isPublished": "Publié",
-        "lead": "Filtrer par lead",
-        "location": "Location",
-        "name": "Nom",
-        "preTitle": "Filtrer par pré-titre",
-        "providers": "Fournisseurs",
-        "publicationDate": "Date de publication",
-        "reset": "Réinitialiser les filtres",
-        "title": "Filtrer par titre",
-        "includeHidden": "Inclure cachés"
+        "default": "Default",
+        "paywall": "Paywall"
       }
     },
     "articles": {
@@ -294,7 +278,18 @@
         "warning": "Veuillez noter que l’utilisation d’HTML personnalisé peut à l’utilisateur·trice ou rompre la mise en page. Veuillez vous assurer que le HTML que vous fournissez est exempt de scripts malveillants et qu’il est structuré correctement."
       },
       "subscribe": {
-        "label": "S'abonner"
+        "label": "S'abonner",
+        "selectMemberPlans": "Plans affichés",
+        "selectMemberPlansPlaceholder": "Afficher tous les plans",
+        "selectMemberPlansSelectionHintAll": "Sans sélection, tous les plans actifs sont affichés.",
+        "selectFields": "Champs de saisie",
+        "selectFieldsSelectionHint": "L’email et le nom de famille sont toujours demandés. L’ordre n’a pas d’importance",
+        "FirstName": "Prénom",
+        "Birthday": "Date de naissance",
+        "Address": "Adresse",
+        "EmailRepeated": "Répéter l’email",
+        "Password": "Mot de passe",
+        "PasswordRepeated": "Répéter le mot de passe"
       },
       "image": {
         "label": "Image",
@@ -369,8 +364,9 @@
       },
       "title": {
         "label": "Titre",
-        "leadText": "Lead ",
-        "title": "Titre"
+        "leadText": "Lead",
+        "title": "Titre",
+        "preTitle": "Pré-titre"
       }
     },
     "cancel": "Annuler",
@@ -594,6 +590,25 @@
         "title": "Events"
       }
     },
+    "filterableList": {
+      "filter": {
+        "dates": "Dates",
+        "description": "Filtrer par description",
+        "isDraft": "Brouillon",
+        "isPending": "En attente",
+        "isPublished": "Publié",
+        "lead": "Filtrer par lead",
+        "location": "Location",
+        "name": "Nom",
+        "preTitle": "Filtrer par pré-titre",
+        "providers": "Fournisseurs",
+        "publicationDate": "Date de publication",
+        "reset": "Réinitialiser les filtres",
+        "title": "Filtrer par titre",
+        "includeHiddenArticles": "Inclure cachés",
+        "includeHiddenPages": "Inclure cachés"
+      }
+    },
     "images": {
       "overview": {
         "actions": "Actions",
@@ -705,6 +720,7 @@
       "autoRenewalDescription": "Force le renouvellement automatique de l'abonnement",
       "createMemberPlanHeader": "Créer un plan membre",
       "description": "Description",
+      "shortDescription": "Brève description",
       "editPaymentSetting": "Modifier les paramètres de paiement",
       "forceAutoRenewal": "Forcer le renouvellement automatique",
       "loadingTitle": "Chargement",
@@ -719,7 +735,8 @@
       "tags": "Tags",
       "savedChanges": "Enregistré",
       "successPage": "Redirection vers la page en cas de succès du paiement",
-      "failPage": "Redirection vers la page en cas d'erreur de paiement"
+      "failPage": "Redirection vers la page en cas d'erreur de paiement",
+      "externalReward": "Lien ou description vers une récompense externe (visible uniquement par les abonnés)"
     },
     "memberPlanList": {
       "action": "Actions",
@@ -734,7 +751,8 @@
         "quarterly": "Trimestriel",
         "yearly": "Annuel",
         "biennial": "Biennal",
-        "lifetime": "À vie"
+        "lifetime": "À vie",
+        "donationOnce": "Don unique"
       },
       "title": "Plans membres"
     },
@@ -844,6 +862,8 @@
         "publishAtDateCheckbox": "Définir une date différente pour la disponibilité en ligne",
         "publishDate": "Date de publication",
         "publishPage": "Publier la page",
+        "hidden": "Cacher",
+        "setAsHidden": "Les pages cachés sont exclus par défaut mais peuvent toujours être interrogés sur demande.",
         "slug": "Slug",
         "socialMediaDescription": "Description pour les réseaux sociaux",
         "socialMediaImage": "Image pour les médias sociaux",
@@ -1218,7 +1238,9 @@
       "userDataTitle": "Données des utilisateurs·trices",
       "userRoles": "Rôles de l'utilisateur·trice",
       "zipCode": "Code Postal",
-      "birthday": "Birthday"
+      "birthday": "Birthday",
+      "note": "Note",
+      "noteHelpText": "Non visible pour l'utilisateur."
     },
     "userList": {
       "overview": {
@@ -1339,13 +1361,19 @@
       "extendableHelpText": "Détermine si l'abonnement d'un utilisateur peut être renouvelé - automatiquement ou manuellement - ou non. En règle générale, les abonnements d'essai ne peuvent pas être prolongés.",
       "maxCount": "Nombre maximum d'abonnements par utilisateur",
       "maxCountHelpText": "Limite le nombre d'abonnements qu'un:e utilisateur:trice peut souscrire pour ce plan d'abonnement. Cela inclut les abonnements désactivés.",
+      "maxCountDonation": "Nombre maximum de dons par utilisateur:trice",
+      "maxCountDonationHelpText": "Limite le nombre de dons qu'un:e utilisateur:trice peut effectuer pour ce plan.",
       "trialMemberplanAlert": "Ce plan d'abonnement est configuré pour des abonnements d'essai.",
       "forceAutoRenewNotPossible": "Le renouvellement automatique n'est pas possible, car le plan d'abonnement n'est pas extensible.",
       "trialSubscriptionNotPossible": "Le plan d'abonnement doit rester extensible, car un renouvellement automatique est paramétré dans un paramètre de paiement. Tu peux bien sûr changer cela.",
       "migratePMTitle": "Migrer les abonnements vers le mode de paiement cible",
       "migratePMHelptext": "Migre les abonnements de ce plan vers un nouveau mode de paiement. Les abonnements qui sont encore débités automatiquement ne sont pas migrés. La migration n'a lieu que lorsqu'un utilisateur agit lui-même et veut par exemple payer une facture ouverte dans son profil ou prolonger un abonnement de manière anticipée.",
       "confirmationPage": "Redirection vers la page en cas d'utilisateur existant (retargeting)",
-      "confirmationPageHelptext": "Si l'identifiant de l'utilisateur est connu lors de la souscription d'un abonnement, la personne reçoit un e-mail pour payer l'abonnement. Cela pourrait être signalé sur cette page."
+      "confirmationPageHelptext": "Si l'identifiant de l'utilisateur est connu lors de la souscription d'un abonnement, la personne reçoit un e-mail pour payer l'abonnement. Cela pourrait être signalé sur cette page.",
+      "productType": "Type de produit",
+      "productTypeHelpText": "Choisissez si le plan doit être proposé comme abonnement ou don. ",
+      "productTypeSubscription": "Abonnement",
+      "productTypeDonation": "Don"
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Paramètres avancés",
@@ -1411,7 +1439,12 @@
         "countSubscriptionsFrom": "Inclure uniquement les abonnements payés à partir de la date",
         "countSubscriptionsUntil": "Inclure uniquement les abonnements payés jusqu'à la date",
         "revenue": "Déjà CHF {{revenue}} financé",
-        "goals": "Objectifs"
+        "goals": "Objectifs",
+        "subscriptions": "Déjà {{subscriptions}} abonnés",
+        "crowdfunding": "Crowdfunding",
+        "goalType": "Type d’objectif",
+        "goalType_Revenue": "Revenus",
+        "goalType_Subscription": "Nombre d’abonnements"
       },
       "goalsForm": {
         "title": "Titre",
@@ -1506,6 +1539,31 @@
         "lowProbability": "Renouvellements d'abonnement prévus avec une faible probabilité, par jour ou cumulés par mois si affichés en vue mensuelle",
         "highProbability": "Renouvellements d'abonnement prévus avec une forte probabilité, par jour ou cumulés par mois si affichés en vue mensuelle"
       }
+    },
+    "paywall": {
+      "navbar": "Paywall",
+      "form": {
+        "title": "Modifier le paywall",
+        "name": "Nom du paywall (NON visible par l'utilisateur)",
+        "description": "Texte du paywall (visible par l'utilisateur)",
+        "circumventDescription": "Texte du paywall lorsque le contenu de l'article n'est pas masqué (visible par l'utilisateur)",
+        "active": "Actif",
+        "activeHelpText": "Permet de désactiver rapidement le paywall sur tous les articles",
+        "anyMemberPlan": "Autoriser tout abonnement à franchir le paywall",
+        "memberPlans": "Seuls certains abonnements peuvent franchir le paywall",
+        "bypasses": "Contournements",
+        "bypassToken": "Token de contournement",
+        "newBypassToken": "Créer un nouveau token de contournement",
+        "addBypass": "Ajouter",
+        "qrCodeTitle": "Code QR pour le token de contournement",
+        "downloadSvg": "Télécharger SVG",
+        "baseUrl": "URL du site web (baseurl). Par ex. https://wepublish.ch"
+      }
+    },
+    "paymentMethodEditPanel": {
+      "gracePeriod": "Délai de paiement",
+      "gracePeriodHelpText": "Si votre site web utilise un paywall, les utilisateurs peuvent lire immédiatement ou continuer à lire tous les contenus, même s'ils n'ont pas souscrit d'abonnement payant, pendant le délai de paiement. Cela est utile, par exemple, en cas de virement bancaire.",
+      "days": "Jours"
     }
   }
 }

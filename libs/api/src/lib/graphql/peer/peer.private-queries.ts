@@ -1,36 +1,36 @@
-import {Context} from '../../context'
-import {authorise} from '../permissions'
-import {CanGetPeer, CanGetPeers} from '@wepublish/permissions'
-import {PrismaClient} from '@prisma/client'
-import {DisabledPeerError} from '../../error'
+import { Context } from '../../context';
+import { authorise } from '../permissions';
+import { CanGetPeer, CanGetPeers } from '@wepublish/permissions';
+import { PrismaClient } from '@prisma/client';
+import { DisabledPeerError } from '../../error';
 
 export const getPeerById = async (
   id: string,
   authenticate: Context['authenticate'],
   peerClient: Context['loaders']['peer']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanGetPeer, roles)
+  const { roles } = authenticate();
+  authorise(CanGetPeer, roles);
 
-  const peer = await peerClient.load(id)
+  const peer = await peerClient.load(id);
 
   if (peer?.isDisabled) {
-    throw new DisabledPeerError()
+    throw new DisabledPeerError();
   }
 
-  return peer
-}
+  return peer;
+};
 
 export const getPeers = async (
   authenticate: Context['authenticate'],
   peer: PrismaClient['peer']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanGetPeers, roles)
+  const { roles } = authenticate();
+  authorise(CanGetPeers, roles);
 
   return peer.findMany({
     orderBy: {
-      createdAt: 'desc'
-    }
-  })
-}
+      createdAt: 'desc',
+    },
+  });
+};

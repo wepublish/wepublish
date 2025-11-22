@@ -86,12 +86,12 @@ TBD
 
 ## Demo (Stable)
 
-- [Editor](https://editor-demo.wepublish.media)
-  - username: `dev@wepublish.ch`
-  - password: `123`
-- [Website](https://demo.wepublish.media)
-- [API V1](https://api-demo.wepublish.media/v1)
-- [API Admin](https://api-demo.wepublish.media/v1/admin)
+- [Editor](https://editor-wepublish-site.wepublish.dev)
+  - username: `admin@wepublish.ch`
+  - password: `demo`
+- [Website](https://wepublish-site.wepublish.dev)
+- [API V1](https://api-wepublish-site.wepublish.dev/v1)
+- [API Admin](https://api-wepublish-site.wepublish.dev/v1/admin)
 
 ## Packages
 

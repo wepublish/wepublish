@@ -1,45 +1,45 @@
-import {PageContainer} from '@wepublish/page/website'
+import { PageContainer } from '@wepublish/page/website';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
   NavigationListDocument,
   PageDocument,
-  PeerProfileDocument
-} from '@wepublish/website/api'
-import {GetStaticProps} from 'next'
-import getConfig from 'next/config'
+  PeerProfileDocument,
+} from '@wepublish/website/api';
+import { GetStaticProps } from 'next';
+import getConfig from 'next/config';
 
 export default function Index() {
-  return <PageContainer slug={''} />
+  return <PageContainer slug={''} />;
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const {publicRuntimeConfig} = getConfig()
+  const { publicRuntimeConfig } = getConfig();
 
   if (!publicRuntimeConfig.env.API_URL) {
-    return {props: {}, revalidate: 1}
+    return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, []);
   await Promise.all([
     client.query({
       query: PageDocument,
       variables: {
-        slug: ''
-      }
+        slug: '',
+      },
     }),
     client.query({
-      query: NavigationListDocument
+      query: NavigationListDocument,
     }),
     client.query({
-      query: PeerProfileDocument
-    })
-  ])
+      query: PeerProfileDocument,
+    }),
+  ]);
 
-  const props = addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {});
 
   return {
     props,
-    revalidate: 60 // every 60 seconds
-  }
-}
+    revalidate: 60, // every 60 seconds
+  };
+};

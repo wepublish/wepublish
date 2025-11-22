@@ -1,16 +1,16 @@
-import {Meta} from '@storybook/react'
-import {ArticleAuthor as ArticleAuthorCmp} from './article-author'
-import {mockAuthor} from '@wepublish/storybook/mocks'
+import { Meta } from '@storybook/react';
+import { ArticleAuthor as ArticleAuthorCmp } from './article-author';
+import { mockAuthor } from '@wepublish/storybook/mocks';
 
-const author = mockAuthor()
+const author = mockAuthor();
 
 export default {
   component: ArticleAuthorCmp,
-  title: 'Components/ArticleAuthor'
-} as Meta
+  title: 'Components/ArticleAuthor',
+} as Meta;
 
 export const ArticleAuthor = {
   args: {
-    author
-  }
-}
+    author,
+  },
+};

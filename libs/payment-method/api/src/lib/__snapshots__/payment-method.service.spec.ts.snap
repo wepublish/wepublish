@@ -6,6 +6,7 @@ exports[`PaymentMethodService should create a payment method 1`] = `
     "data": {
       "active": true,
       "description": "New Method Description",
+      "gracePeriod": 0,
       "name": "newMethod",
       "paymentProviderID": "provider1",
       "slug": "new-method",

@@ -1,9 +1,9 @@
-import styled from '@emotion/styled'
-import React, {ReactNode} from 'react'
+import styled from '@emotion/styled';
+import React, { ReactNode } from 'react';
 
 export interface LoginTemplateProps {
-  readonly children?: ReactNode
-  readonly backgroundChildren?: ReactNode
+  readonly children?: ReactNode;
+  readonly backgroundChildren?: ReactNode;
 }
 
 const Wrapper = styled.div`
@@ -14,7 +14,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   min-height: 100vh;
-`
+`;
 
 const Content = styled.div`
   display: flex;
@@ -28,18 +28,21 @@ const Content = styled.div`
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-`
+`;
 
 const Background = styled.div`
   margin-bottom: 20px;
   z-index: 0;
-`
+`;
 
-export function LoginTemplate({backgroundChildren, children}: LoginTemplateProps) {
+export function LoginTemplate({
+  backgroundChildren,
+  children,
+}: LoginTemplateProps) {
   return (
     <Wrapper>
       {backgroundChildren && <Background>{backgroundChildren}</Background>}
       <Content>{children}</Content>
     </Wrapper>
-  )
+  );
 }

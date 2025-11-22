@@ -1,7 +1,7 @@
-import {Query, Resolver} from '@nestjs/graphql'
-import {Public} from '@wepublish/authentication/api'
-import {FullCommentRatingSystem} from '../comment.model'
-import {RatingSystemService} from './rating-system.service'
+import { Query, Resolver } from '@nestjs/graphql';
+import { Public } from '@wepublish/authentication/api';
+import { FullCommentRatingSystem } from '../comment.model';
+import { RatingSystemService } from './rating-system.service';
 
 @Resolver(() => FullCommentRatingSystem)
 export class RatingSystemResolver {
@@ -9,9 +9,9 @@ export class RatingSystemResolver {
 
   @Public()
   @Query(() => FullCommentRatingSystem, {
-    description: 'This query returns the comment rating system.'
+    description: 'This query returns the comment rating system.',
   })
   async ratingSystem() {
-    return this.ratingSystemService.getRatingSystem()
+    return this.ratingSystemService.getRatingSystem();
   }
 }

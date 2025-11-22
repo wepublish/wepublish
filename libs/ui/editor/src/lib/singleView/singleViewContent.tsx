@@ -1,13 +1,13 @@
-import React, {ReactNode} from 'react'
-import {Col, Row} from 'rsuite'
+import React, { ReactNode } from 'react';
+import { Col, Row } from 'rsuite';
 
 interface SingleViewContentProps {
-  children: ReactNode
+  children: ReactNode;
 }
-export function SingleViewContent({children}: SingleViewContentProps) {
+export function SingleViewContent({ children }: SingleViewContentProps) {
   return (
     <Row>
       <Col xs={24}>{children}</Col>
     </Row>
-  )
+  );
 }

@@ -1,43 +1,53 @@
-import styled from '@emotion/styled'
-import {useMemberPlanListQuery} from '@wepublish/editor/api'
-import {Dispatch, SetStateAction, useMemo} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Col, DateRangePicker, Grid, Panel, Radio, RadioGroup, Row, TagPicker, Toggle} from 'rsuite'
-import {RangeType} from 'rsuite/esm/DateRangePicker'
+import styled from '@emotion/styled';
+import { useMemberPlanListQuery } from '@wepublish/editor/api';
+import { Dispatch, SetStateAction, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  Col,
+  DateRangePicker,
+  Grid,
+  Panel,
+  Radio,
+  RadioGroup,
+  Row,
+  TagPicker,
+  Toggle,
+} from 'rsuite';
+import { RangeType } from 'rsuite/esm/DateRangePicker';
 
-import {AudienceFilterToggle, ToggleLable} from './audience-filter-toggle'
+import { AudienceFilterToggle, ToggleLable } from './audience-filter-toggle';
 import {
   AudienceApiFilter,
   AudienceClientFilter,
   AudienceComponentFilter,
   preDefinedDates,
-  TimeResolution
-} from './useAudienceFilter'
+  TimeResolution,
+} from './useAudienceFilter';
 
 const TagPickerStyled = styled(TagPicker)`
-  margin-top: ${({theme}) => theme.spacing(2)};
-`
+  margin-top: ${({ theme }) => theme.spacing(2)};
+`;
 
 const ComponentFilterContainer = styled.div`
-  margin-top: ${({theme}) => theme.spacing(2)};
+  margin-top: ${({ theme }) => theme.spacing(2)};
   display: flex;
   flex-wrap: wrap;
-`
+`;
 
 const ToggleContainer = styled('div')`
-  margin-right: ${({theme}) => theme.spacing(2)};
-  margin-top: ${({theme}) => theme.spacing(1)};
-`
+  margin-right: ${({ theme }) => theme.spacing(2)};
+  margin-top: ${({ theme }) => theme.spacing(1)};
+`;
 
 export interface AudienceFilterProps {
-  resolution: TimeResolution
-  setResolution: Dispatch<SetStateAction<TimeResolution>>
-  clientFilter: AudienceClientFilter
-  setClientFilter: Dispatch<SetStateAction<AudienceClientFilter>>
-  apiFilter: AudienceApiFilter
-  setApiFilter: (data: AudienceApiFilter) => void
-  componentFilter: AudienceComponentFilter
-  setComponentFilter: Dispatch<SetStateAction<AudienceComponentFilter>>
+  resolution: TimeResolution;
+  setResolution: Dispatch<SetStateAction<TimeResolution>>;
+  clientFilter: AudienceClientFilter;
+  setClientFilter: Dispatch<SetStateAction<AudienceClientFilter>>;
+  apiFilter: AudienceApiFilter;
+  setApiFilter: (data: AudienceApiFilter) => void;
+  componentFilter: AudienceComponentFilter;
+  setComponentFilter: Dispatch<SetStateAction<AudienceComponentFilter>>;
 }
 
 export function AudienceFilter({
@@ -48,21 +58,23 @@ export function AudienceFilter({
   apiFilter,
   setApiFilter,
   componentFilter,
-  setComponentFilter
+  setComponentFilter,
 }: AudienceFilterProps) {
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
   // load available subscription plans
-  const {data: memberPlans} = useMemberPlanListQuery()
+  const { data: memberPlans } = useMemberPlanListQuery();
 
-  const memberPlansForPicker = useMemo<{label: string; value: string}[]>(() => {
+  const memberPlansForPicker = useMemo<
+    { label: string; value: string }[]
+  >(() => {
     return (
       memberPlans?.memberPlans.nodes.map(memberPlan => ({
         label: memberPlan.name,
-        value: memberPlan.id
+        value: memberPlan.id,
       })) || []
-    )
-  }, [memberPlans])
+    );
+  }, [memberPlans]);
 
   const oneClickDateRanges = useMemo<RangeType[]>(() => {
     const {
@@ -74,46 +86,46 @@ export function AudienceFilter({
       nextWeek,
       nextMonth,
       nextQuarter,
-      nextYear
-    } = preDefinedDates()
+      nextYear,
+    } = preDefinedDates();
     return [
       {
         label: t('audienceFilter.rangeLastWeek'),
-        value: [lastWeek, today]
+        value: [lastWeek, today],
       },
       {
         label: t('audienceFilter.rangeLastMonth'),
-        value: [lastMonth, today]
+        value: [lastMonth, today],
       },
       {
         label: t('audienceFilter.rangeLastQuarter'),
-        value: [lastQuarter, today]
+        value: [lastQuarter, today],
       },
       {
         label: t('audienceFilter.rangeLastYear'),
-        value: [lastYear, today]
+        value: [lastYear, today],
       },
       {
         label: t('audienceFilter.rangeNextWeek'),
-        value: [today, nextWeek]
+        value: [today, nextWeek],
       },
       {
         label: t('audienceFilter.rangeNextMonth'),
-        value: [today, nextMonth]
+        value: [today, nextMonth],
       },
       {
         label: t('audienceFilter.rangeNextQuarter'),
-        value: [today, nextQuarter]
+        value: [today, nextQuarter],
       },
       {
         label: t('audienceFilter.rangeNextYear'),
-        value: [today, nextYear]
-      }
-    ]
-  }, [t])
+        value: [today, nextYear],
+      },
+    ];
+  }, [t]);
 
   return (
-    <Grid style={{width: '100%'}}>
+    <Grid style={{ width: '100%' }}>
       <Row>
         {/* select date range */}
         <Col xs={4}>
@@ -122,7 +134,10 @@ export function AudienceFilter({
             inline
             appearance="picker"
             defaultValue={resolution}
-            onChange={newResolution => setResolution(newResolution as TimeResolution)}>
+            onChange={newResolution =>
+              setResolution(newResolution as TimeResolution)
+            }
+          >
             <Radio value="daily">{t('audienceFilter.daily')}</Radio>
             <Radio value="monthly">{t('audienceFilter.monthly')}</Radio>
           </RadioGroup>
@@ -132,32 +147,38 @@ export function AudienceFilter({
           <DateRangePicker
             size="lg"
             value={apiFilter.dateRange}
-            onChange={newDateRange => setApiFilter({dateRange: newDateRange})}
+            onChange={newDateRange => setApiFilter({ dateRange: newDateRange })}
             format="dd.MM.yyyy"
             placeholder={t('audienceFilter.rangePickerPlaceholder')}
-            style={{width: '100%'}}
+            style={{ width: '100%' }}
             ranges={oneClickDateRanges as RangeType[]}
           />
           <TagPickerStyled
             size="lg"
             data={memberPlansForPicker}
-            style={{width: '100%'}}
+            style={{ width: '100%' }}
             placeholder={t('audienceFilter.filterSubscriptionPlans')}
-            onChange={newMemberPlanIds => setApiFilter({memberPlanIds: newMemberPlanIds})}
+            onChange={newMemberPlanIds =>
+              setApiFilter({ memberPlanIds: newMemberPlanIds })
+            }
           />
 
           <ComponentFilterContainer>
             <ToggleContainer>
               <Toggle
                 checked={componentFilter.chart}
-                onChange={chart => setComponentFilter({...componentFilter, chart})}
+                onChange={chart =>
+                  setComponentFilter({ ...componentFilter, chart })
+                }
               />{' '}
               <ToggleLable>{t('audienceFilter.chart')}</ToggleLable>
             </ToggleContainer>
             <ToggleContainer>
               <Toggle
                 checked={componentFilter.table}
-                onChange={table => setComponentFilter({...componentFilter, table})}
+                onChange={table =>
+                  setComponentFilter({ ...componentFilter, table })
+                }
               />{' '}
               <ToggleLable>{t('audienceFilter.table')}</ToggleLable>
             </ToggleContainer>
@@ -166,10 +187,16 @@ export function AudienceFilter({
 
         {/* filter data */}
         <Col xs={14}>
-          <Panel header={t('audienceFilter.panelHeader')} bordered>
+          <Panel
+            header={t('audienceFilter.panelHeader')}
+            bordered
+          >
             <Row>
               {Object.keys(clientFilter).map((filterKey, filterIndex) => (
-                <Col xs={12} key={`client-filter-${filterIndex}`}>
+                <Col
+                  xs={12}
+                  key={`client-filter-${filterIndex}`}
+                >
                   <AudienceFilterToggle
                     filterKey={filterKey as keyof AudienceClientFilter}
                     clientFilter={clientFilter}
@@ -182,5 +209,5 @@ export function AudienceFilter({
         </Col>
       </Row>
     </Grid>
-  )
+  );
 }

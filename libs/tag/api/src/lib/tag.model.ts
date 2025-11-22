@@ -1,22 +1,25 @@
-import {Field, ObjectType, OmitType} from '@nestjs/graphql'
-import {TagType} from './tag.types'
+import { Field, ObjectType } from '@nestjs/graphql';
+import { TagType } from '@prisma/client';
+import { GraphQLRichText } from '@wepublish/richtext/api';
+import { Descendant } from 'slate';
 
 @ObjectType()
 export class Tag {
   @Field()
-  id!: string
+  id!: string;
 
-  @Field(() => String, {nullable: true})
-  tag?: string | null
+  @Field(() => String, { nullable: true })
+  tag?: string;
 
-  @Field(() => TagType, {nullable: true})
-  type?: TagType
-
-  @Field()
-  main!: boolean
+  @Field(() => TagType, { nullable: true })
+  type?: TagType;
 
   @Field()
-  url!: string
+  main!: boolean;
+
+  @Field(() => GraphQLRichText, { nullable: true })
+  description?: Descendant[];
+
+  @Field()
+  url!: string;
 }
-
-export class TagFields extends OmitType(Tag, ['url']) {}

@@ -1,19 +1,24 @@
-import {Meta} from '@storybook/react'
-import {ArticleDocument} from '@wepublish/website/api'
-import {ArticleContainer} from './article-container'
-import {mockArticle, mockPeer} from '@wepublish/storybook/mocks'
+import { Meta } from '@storybook/react';
+import { ArticleDocument } from '@wepublish/website/api';
+import { ArticleContainer } from './article-container';
+import { mockArticle, mockPeer } from '@wepublish/storybook/mocks';
+import {
+  WithPollBlockDecorators,
+  WithSubscribeBlockDecorators,
+} from '@wepublish/storybook';
 
-const article = mockArticle()
-const articleWithPeer = mockArticle({peer: mockPeer()})
+const article = mockArticle();
+const articleWithPeer = mockArticle({ peer: mockPeer() });
 
 export default {
   component: ArticleContainer,
-  title: 'Container/Article'
-} as Meta
+  title: 'Container/Article',
+  decorators: [WithSubscribeBlockDecorators({}), WithPollBlockDecorators({})],
+} as Meta;
 
 export const ById = {
   args: {
-    id: article.id
+    id: article.id,
   },
 
   parameters: {
@@ -23,23 +28,23 @@ export const ById = {
           request: {
             query: ArticleDocument,
             variables: {
-              id: article.id
-            }
+              id: article.id,
+            },
           },
           result: {
             data: {
-              article
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+              article,
+            },
+          },
+        },
+      ],
+    },
+  },
+};
 
 export const BySlug = {
   args: {
-    slug: article.slug
+    slug: article.slug,
   },
 
   parameters: {
@@ -49,23 +54,23 @@ export const BySlug = {
           request: {
             query: ArticleDocument,
             variables: {
-              slug: article.slug
-            }
+              slug: article.slug,
+            },
           },
           result: {
             data: {
-              article
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+              article,
+            },
+          },
+        },
+      ],
+    },
+  },
+};
 
 export const ByToken = {
   args: {
-    token: 'foobar'
+    token: 'foobar',
   },
 
   parameters: {
@@ -75,23 +80,23 @@ export const ByToken = {
           request: {
             query: ArticleDocument,
             variables: {
-              token: 'foobar'
-            }
+              token: 'foobar',
+            },
           },
           result: {
             data: {
-              article
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+              article,
+            },
+          },
+        },
+      ],
+    },
+  },
+};
 
 export const WithPeer = {
   args: {
-    id: articleWithPeer.id
+    id: articleWithPeer.id,
   },
 
   parameters: {
@@ -101,24 +106,24 @@ export const WithPeer = {
           request: {
             query: ArticleDocument,
             variables: {
-              id: articleWithPeer.id
-            }
+              id: articleWithPeer.id,
+            },
           },
           result: {
             data: {
-              article: articleWithPeer
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+              article: articleWithPeer,
+            },
+          },
+        },
+      ],
+    },
+  },
+};
 
 export const WithChildren = {
   args: {
     id: article.id,
-    children: <div>Children</div>
+    children: <div>Children</div>,
   },
 
   parameters: {
@@ -128,16 +133,16 @@ export const WithChildren = {
           request: {
             query: ArticleDocument,
             variables: {
-              id: article.id
-            }
+              id: article.id,
+            },
           },
           result: {
             data: {
-              article
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+              article,
+            },
+          },
+        },
+      ],
+    },
+  },
+};

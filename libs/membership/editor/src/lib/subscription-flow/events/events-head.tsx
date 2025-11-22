@@ -1,29 +1,29 @@
-import {TableCell} from '@mui/material'
-import styled from '@emotion/styled'
-import {PermissionControl} from '@wepublish/ui/editor'
-import {useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdAdd} from 'react-icons/md'
-import {Button, IconButton, InputNumber, Popover, Whisper} from 'rsuite'
+import { TableCell } from '@mui/material';
+import styled from '@emotion/styled';
+import { PermissionControl } from '@wepublish/ui/editor';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdAdd } from 'react-icons/md';
+import { Button, IconButton, InputNumber, Popover, Whisper } from 'rsuite';
 
 const PopoverBody = styled('div')`
   display: grid;
   min-width: 170px;
   justify-content: center;
   flex-wrap: wrap;
-`
+`;
 
 const FlexContainer = styled('div')`
   display: flex;
-`
+`;
 
 interface EventsHeadProps {
-  setNewDay(newDay: number): void
+  setNewDay(newDay: number): void;
 }
 
-export function EventsHead({setNewDay}: EventsHeadProps) {
-  const {t} = useTranslation()
-  const [createDayFrom, setCreateDayFrom] = useState<number>(-3)
+export function EventsHead({ setNewDay }: EventsHeadProps) {
+  const { t } = useTranslation();
+  const [createDayFrom, setCreateDayFrom] = useState<number>(-3);
 
   return (
     <PermissionControl qualifyingPermissions={['CAN_UPDATE_SUBSCRIPTION_FLOW']}>
@@ -36,7 +36,7 @@ export function EventsHead({setNewDay}: EventsHeadProps) {
               <PopoverBody>
                 <h6>New day in timeline</h6>
 
-                <FlexContainer style={{marginTop: '5px'}}>
+                <FlexContainer style={{ marginTop: '5px' }}>
                   <InputNumber
                     defaultValue={createDayFrom}
                     onChange={value => setCreateDayFrom(+value)}
@@ -46,16 +46,23 @@ export function EventsHead({setNewDay}: EventsHeadProps) {
                   <Button
                     onClick={() => setNewDay(+createDayFrom)}
                     appearance="primary"
-                    style={{marginLeft: '5px'}}>
+                    style={{ marginLeft: '5px' }}
+                  >
                     {t('subscriptionFlow.add')}
                   </Button>
                 </FlexContainer>
               </PopoverBody>
             </Popover>
-          }>
-          <IconButton icon={<MdAdd />} color="green" appearance="primary" circle />
+          }
+        >
+          <IconButton
+            icon={<MdAdd />}
+            color="green"
+            appearance="primary"
+            circle
+          />
         </Whisper>
       </TableCell>
     </PermissionControl>
-  )
+  );
 }

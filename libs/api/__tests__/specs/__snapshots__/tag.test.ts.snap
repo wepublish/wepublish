@@ -4,6 +4,7 @@ exports[`Tags can be created 1`] = `
 {
   "data": {
     "createTag": {
+      "description": Any<Array>,
       "id": Any<String>,
       "tag": Any<String>,
     },

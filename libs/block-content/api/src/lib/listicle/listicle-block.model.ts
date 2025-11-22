@@ -1,36 +1,40 @@
-import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
-import {BaseBlock} from '../base-block.model'
-import {BlockType} from '../block-type.model'
-import {HasImage, Image} from '@wepublish/image/api'
-import {Node} from 'slate'
-import {GraphQLRichText} from '@wepublish/richtext/api'
+import { Field, InputType, ObjectType, OmitType } from '@nestjs/graphql';
+import { BaseBlock } from '../base-block.model';
+import { BlockType } from '../block-type.model';
+import { HasImage, Image } from '@wepublish/image/api';
+import { Descendant } from 'slate';
+import { GraphQLRichText } from '@wepublish/richtext/api';
 
 @ObjectType({
-  implements: () => [HasImage]
+  implements: () => [HasImage],
 })
 export class ListicleItem implements HasImage {
-  image?: Image
-  imageID?: string
+  image?: Image;
+  imageID?: string;
 
   @Field(() => GraphQLRichText)
-  richText!: Node[]
+  richText!: Descendant[];
 
-  @Field({nullable: true})
-  title?: string
+  @Field({ nullable: true })
+  title?: string;
 }
 
 @InputType()
-export class ListicleItemInput extends OmitType(ListicleItem, ['image'] as const, InputType) {
-  @Field({nullable: true})
-  override imageID?: string
+export class ListicleItemInput extends OmitType(
+  ListicleItem,
+  ['image'] as const,
+  InputType
+) {
+  @Field({ nullable: true })
+  override imageID?: string;
 }
 
 @ObjectType({
-  implements: BaseBlock
+  implements: BaseBlock,
 })
 export class ListicleBlock extends BaseBlock<typeof BlockType.Listicle> {
   @Field(() => [ListicleItem])
-  items!: ListicleItem[]
+  items!: ListicleItem[];
 }
 
 @InputType()
@@ -40,5 +44,5 @@ export class ListicleBlockInput extends OmitType(
   InputType
 ) {
   @Field(() => [ListicleItemInput])
-  items!: ListicleItemInput[]
+  items!: ListicleItemInput[];
 }

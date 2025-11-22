@@ -1,7 +1,7 @@
-import {Prisma} from '@prisma/client'
+import { Prisma } from '@prisma/client';
 
 export type CreateUserInput = Prisma.UserUncheckedCreateInput &
   Partial<{
-    properties: Prisma.MetadataPropertyUncheckedCreateWithoutUserInput[]
-    address: Prisma.UserAddressUncheckedCreateWithoutUserInput | null
-  }>
+    properties: Prisma.MetadataPropertyUncheckedCreateWithoutUserInput[];
+    address: Prisma.UserAddressUncheckedCreateWithoutUserInput | null;
+  }>;

@@ -1,64 +1,72 @@
-import {Inject, Injectable, Logger, Scope} from '@nestjs/common'
-import {Client, ClientOptions, BucketItem} from 'minio'
+import { Inject, Injectable, Logger, Scope } from '@nestjs/common';
+import { Client, ClientOptions, BucketItem } from 'minio';
 
-export const STORAGE_CLIENT_MODULE_OPTIONS = Symbol('STORAGE_CLIENT_MODULE_OPTIONS')
+export const STORAGE_CLIENT_MODULE_OPTIONS = Symbol(
+  'STORAGE_CLIENT_MODULE_OPTIONS'
+);
 
-export type StorageClientConfig = ClientOptions
+export type StorageClientConfig = ClientOptions;
 
 @Injectable({
-  scope: Scope.REQUEST
+  scope: Scope.REQUEST,
 })
 export class StorageClient {
-  private readonly logger = new Logger('StorageClient')
+  private logger = new Logger('StorageClient');
 
-  private client: Client
+  private client: Client;
 
-  constructor(@Inject(STORAGE_CLIENT_MODULE_OPTIONS) config: StorageClientConfig) {
-    this.client = new Client(config)
+  constructor(
+    @Inject(STORAGE_CLIENT_MODULE_OPTIONS) config: StorageClientConfig
+  ) {
+    this.client = new Client(config);
   }
 
-  public async hasFile(...params: Parameters<Client['statObject']>): Promise<boolean> {
+  public async hasFile(
+    ...params: Parameters<Client['statObject']>
+  ): Promise<boolean> {
     try {
-      await this.client.statObject(...params)
-      return true
+      await this.client.statObject(...params);
+      return true;
     } catch {
-      return false
+      return false;
     }
   }
 
   public getFile(...params: Parameters<Client['getObject']>) {
-    return this.client.getObject(...params)
+    return this.client.getObject(...params);
   }
 
   public getFileInformation(...params: Parameters<Client['statObject']>) {
-    return this.client.statObject(...params)
+    return this.client.statObject(...params);
   }
 
   public saveFile(...params: Parameters<Client['putObject']>) {
-    return this.client.putObject(...params)
+    return this.client.putObject(...params);
   }
 
   public deleteFile(...params: Parameters<Client['removeObject']>) {
-    return this.client.removeObject(...params)
+    return this.client.removeObject(...params);
   }
 
-  public async listFiles(...params: Parameters<Client['listObjects']>): Promise<BucketItem[]> {
-    const data: BucketItem[] = []
+  public async listFiles(
+    ...params: Parameters<Client['listObjects']>
+  ): Promise<BucketItem[]> {
+    const data: BucketItem[] = [];
     return new Promise((resolve, reject) => {
-      const stream = this.client.listObjects(...params)
-      stream.on('data', function (obj) {
-        data.push(obj)
-      })
+      const stream = this.client.listObjects(...params);
+      stream.on('data', function (obj: BucketItem) {
+        data.push(obj);
+      });
       stream.on('end', function () {
-        resolve(data)
-      })
+        resolve(data);
+      });
       stream.on('error', function (err) {
-        reject(err)
-      })
-    })
+        reject(err);
+      });
+    });
   }
 
   public deleteFiles(...params: Parameters<Client['removeObjects']>) {
-    return this.client.removeObjects(...params)
+    return this.client.removeObjects(...params);
   }
 }

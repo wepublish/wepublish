@@ -1,3 +1,3 @@
-import {DeactivatedSubscriptionsPage} from '@wepublish/utils/website'
+import { DeactivatedSubscriptionsPage } from '@wepublish/utils/website';
 
-export default DeactivatedSubscriptionsPage
+export default DeactivatedSubscriptionsPage;
