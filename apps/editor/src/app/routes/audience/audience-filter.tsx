@@ -77,8 +77,17 @@ export function AudienceFilter({
   }, [memberPlans]);
 
   const oneClickDateRanges = useMemo<RangeType[]>(() => {
-    const { today, lastWeek, lastMonth, lastQuarter, lastYear } =
-      preDefinedDates();
+    const {
+      today,
+      lastWeek,
+      lastMonth,
+      lastQuarter,
+      lastYear,
+      nextWeek,
+      nextMonth,
+      nextQuarter,
+      nextYear,
+    } = preDefinedDates();
     return [
       {
         label: t('audienceFilter.rangeLastWeek'),
@@ -95,6 +104,22 @@ export function AudienceFilter({
       {
         label: t('audienceFilter.rangeLastYear'),
         value: [lastYear, today],
+      },
+      {
+        label: t('audienceFilter.rangeNextWeek'),
+        value: [today, nextWeek],
+      },
+      {
+        label: t('audienceFilter.rangeNextMonth'),
+        value: [today, nextMonth],
+      },
+      {
+        label: t('audienceFilter.rangeNextQuarter'),
+        value: [today, nextQuarter],
+      },
+      {
+        label: t('audienceFilter.rangeNextYear'),
+        value: [today, nextYear],
       },
     ];
   }, [t]);
