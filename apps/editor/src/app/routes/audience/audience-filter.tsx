@@ -66,6 +66,9 @@ const filterKeyMap: Record<string, string> = {
   replacedSubscriptionCount: 'replacedSubscriptionUsers',
   totalActiveSubscriptionCount: 'totalActiveSubscriptionUsers',
   deactivatedSubscriptionCount: 'deactivatedSubscriptionUsers',
+  predictedSubscriptionRenewalCount:
+    'predictedSubscriptionRenewalUsersHighProbability',
+  endingSubscriptionCount: 'endingSubscriptionUsers',
 };
 
 export function AudienceFilter({
@@ -166,27 +169,52 @@ export function AudienceFilter({
   }, [apiFilter.dateRange, language, resolution]);
 
   const handleClick = (filterKey: string) => {
-    let statsUsers: DailySubscriptionStatsUser[];
     const statsUsersKey = filterKeyMap[
       filterKey
     ] as keyof AudienceStatsComputed;
+    const statsForPeriod = audienceStatsByPeriod[0];
+
+    if (!statsForPeriod) {
+      return;
+    }
+
+    let statsUsers: DailySubscriptionStatsUser[] = [];
 
     if ((statsUsersKey as string) === 'totalActiveSubscriptionUsers') {
-      const renewedUsers = audienceStatsByPeriod[0][
-        'renewedSubscriptionUsers'
-      ] as DailySubscriptionStatsUser[];
-      const replacedUsers = audienceStatsByPeriod[0][
-        'replacedSubscriptionUsers'
-      ] as DailySubscriptionStatsUser[];
-      const createdUsers = audienceStatsByPeriod[0][
-        'createdSubscriptionUsers'
-      ] as DailySubscriptionStatsUser[];
-
+      const renewedUsers =
+        (statsForPeriod['renewedSubscriptionUsers'] as
+          | DailySubscriptionStatsUser[]
+          | undefined) || [];
+      const replacedUsers =
+        (statsForPeriod['replacedSubscriptionUsers'] as
+          | DailySubscriptionStatsUser[]
+          | undefined) || [];
+      const createdUsers =
+        (statsForPeriod['createdSubscriptionUsers'] as
+          | DailySubscriptionStatsUser[]
+          | undefined) || [];
       statsUsers = [...createdUsers, ...renewedUsers, ...replacedUsers];
-    } else {
-      statsUsers = audienceStatsByPeriod[0][
-        statsUsersKey
-      ] as DailySubscriptionStatsUser[];
+    } else if (filterKey === 'predictedSubscriptionRenewalCount') {
+      const highProbabilityUsers =
+        (statsForPeriod['predictedSubscriptionRenewalUsersHighProbability'] as
+          | DailySubscriptionStatsUser[]
+          | undefined) || [];
+      const lowProbabilityUsers =
+        (statsForPeriod['predictedSubscriptionRenewalUsersLowProbability'] as
+          | DailySubscriptionStatsUser[]
+          | undefined) || [];
+
+      statsUsers = [
+        ...highProbabilityUsers,
+        ...lowProbabilityUsers.filter(
+          lowUser => !highProbabilityUsers.find(user => user.id === lowUser.id)
+        ),
+      ];
+    } else if (statsUsersKey) {
+      statsUsers =
+        (statsForPeriod[statsUsersKey] as
+          | DailySubscriptionStatsUser[]
+          | undefined) || [];
     }
 
     const filter: SubscriptionFilter = {

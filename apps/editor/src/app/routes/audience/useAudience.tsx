@@ -281,6 +281,9 @@ export function useAudience({
       'deactivatedSubscriptionUsers',
       'renewedSubscriptionUsers',
       'replacedSubscriptionUsers',
+      'endingSubscriptionUsers',
+      'predictedSubscriptionRenewalUsersHighProbability',
+      'predictedSubscriptionRenewalUsersLowProbability',
     ];
     userKeys.forEach(key => {
       const users = audienceStatsComputed
