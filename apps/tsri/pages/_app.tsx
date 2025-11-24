@@ -50,7 +50,7 @@ import { TsriContextBox } from '../src/components/tsri-context-box';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
 import { TsriTeaser } from '../src/components/tsri-teaser';
-import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
+import { TsriV2Navbar } from '../src/components/tsri-v2-navbar'; // test comment
 import theme from '../src/theme';
 
 setDefaultOptions({
