@@ -1,5 +1,5 @@
 import { QueryResult } from '@apollo/client';
-import { Page, PageQuery } from '@wepublish/website/api';
+import { ArticleRevision, Page, PageQuery } from '@wepublish/website/api';
 import { PropsWithChildren } from 'react';
 
 export enum PageType {

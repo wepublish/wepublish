@@ -38,8 +38,8 @@ import Head from 'next/head';
 import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
-import { TabbedContent } from '../src/block-styles/tsri-tabbed-content';
 
+import { TabbedContent } from '../src/block-styles/tsri-tabbed-content';
 import { TsriArticleDate } from '../src/components/tsri-article-date';
 import { TsriArticleMeta } from '../src/components/tsri-article-meta';
 import { TsriBanner } from '../src/components/tsri-banner';
@@ -49,7 +49,6 @@ import { TsriContextBox } from '../src/components/tsri-context-box';
 import { TSRIFooter } from '../src/components/tsri-footer';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
-import { TsriTeaser } from '../src/components/tsri-teaser';
 import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
 import theme from '../src/theme';
 
@@ -119,7 +118,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   cache.compat = true;
 
   const pageTypeBasedContent = getPageTypeBasedContent(pageProps);
-
+  // test
   return (
     <AppCacheProvider emotionCache={cache}>
       <WebsiteProvider>
@@ -127,7 +126,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Head={Head}
           Footer={TSRIFooter}
           Script={Script}
-          Navbar={TsriNavbar}
+          Navbar={TsriV2Navbar}
           ArticleDate={TsriArticleDate}
           ArticleMeta={TsriArticleMeta}
           PaymentAmount={PaymentAmountPicker}
