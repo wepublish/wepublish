@@ -49,8 +49,8 @@ import { TsriContextBox } from '../src/components/tsri-context-box';
 import { TSRIFooter } from '../src/components/tsri-footer';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
+import { TsriTeaser } from '../src/components/tsri-teaser';
 import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
-import { TsriTeaserGridFlex } from '../src/components/tsri-teaser-grid-flex';
 import theme from '../src/theme';
 
 setDefaultOptions({
@@ -127,7 +127,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Head={Head}
           Footer={TSRIFooter}
           Script={Script}
-          Navbar={TsriV2Navbar}
+          Navbar={TsriNavbar}
           ArticleDate={TsriArticleDate}
           ArticleMeta={TsriArticleMeta}
           PaymentAmount={PaymentAmountPicker}
