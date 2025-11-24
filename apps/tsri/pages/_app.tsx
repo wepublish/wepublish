@@ -46,6 +46,7 @@ import { TsriBanner } from '../src/components/tsri-banner';
 import { TsriBaseTeaser } from '../src/components/tsri-base-teaser';
 import { TsriBreakBlock } from '../src/components/tsri-break-block';
 import { TsriContextBox } from '../src/components/tsri-context-box';
+import { TSRIFooter } from '../src/components/tsri-footer';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
 import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
@@ -124,6 +125,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
       <WebsiteProvider>
         <WebsiteBuilderProvider
           Head={Head}
+          Footer={TSRIFooter}
           Script={Script}
           Navbar={TsriV2Navbar}
           ArticleDate={TsriArticleDate}
