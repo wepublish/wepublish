@@ -14,6 +14,7 @@ env:
   WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   STORYBOOK_URL: https://storybook-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+  S3_PUBLIC_URL: https://storage-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   PROJECT_URL_SUFFIX: -${{ github.event.pull_request.number }}.reviews.wepublish.dev
 
 jobs:
@@ -105,7 +106,7 @@ jobs:
               policy: none
               purge: false
             - name: wepublish-transformed
-              policy: none
+              policy: download
               purge: false
 
           persistence:
@@ -127,6 +128,32 @@ jobs:
 
           helm repo add minio https://charts.min.io
           helm upgrade --install review-${{ github.event.pull_request.number }}-minio minio/minio --version 4.0.15 -n reviews -f values.yaml
+          
+          cat > minio-ingress.yaml <<'EOF'
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            labels:
+              app.kubernetes.io/instance: review-${{ github.event.pull_request.number }}-minio
+              app.kubernetes.io/managed-by: Helm
+              app.kubernetes.io/name: minio
+              helm.sh/chart: minio-4.0.15
+            name: review-${{ github.event.pull_request.number }}-minio
+          spec:
+            rules:
+              - host: storage-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+                http:
+                  paths:
+                    - path: /
+                      pathType: ImplementationSpecific
+                      backend:
+                        service:
+                          name: review-${{ github.event.pull_request.number }}-minio
+                          port:
+                            number: 9000
+          EOF
+        
+            kubectl apply -n reviews -f minio-ingress.yaml
 
       - name: Helm deploy database
         run: |
@@ -344,6 +371,7 @@ jobs:
               S3_SECRET_KEY: secretKey
               S3_ENDPOINT: 'review-${{ github.event.pull_request.number }}-minio.reviews.svc.cluster.local'
               S3_PORT: '9000'
+              S3_PUBLIC_HOST: 'https://storage-${{ github.event.pull_request.number }}.reviews.wepublish.dev/wepublish-transformed'
             resources:
               requests:
                 memory: "64Mi"

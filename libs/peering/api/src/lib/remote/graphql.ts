@@ -266,6 +266,15 @@ export type BaseBlock = {
   type: BlockType;
 };
 
+export type BaseCrowdfundingGoal = {
+  amount: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  title: Scalars['String'];
+};
+
 export type BaseNavigationLink = {
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
@@ -598,6 +607,7 @@ export type CreateCrowdfundingInput = {
   additionalRevenue?: InputMaybe<Scalars['Float']>;
   countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>;
   countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']>;
+  goalType: CrowdfundingGoalType;
   goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>;
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
   name: Scalars['String'];
@@ -609,23 +619,26 @@ export type CreateCrowdfundingMemberPlan = {
 
 export type Crowdfunding = {
   __typename?: 'Crowdfunding';
+  activeGoal?: Maybe<CrowdfundingGoalWithProgress>;
   additionalRevenue?: Maybe<Scalars['Float']>;
   countSubscriptionsFrom?: Maybe<Scalars['DateTime']>;
   countSubscriptionsUntil?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
+  goalType: CrowdfundingGoalType;
   goals: Array<CrowdfundingGoal>;
   id: Scalars['String'];
-  memberPlans: Array<CrowdfundingMemberPlan>;
+  memberPlans: Array<MemberPlan>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   revenue?: Maybe<Scalars['Float']>;
+  subscriptions?: Maybe<Scalars['Int']>;
 };
 
 export type CrowdfundingBlock = BaseBlock & HasOptionalCrowdfunding & {
   __typename?: 'CrowdfundingBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
-  crowdfunding?: Maybe<CrowdfundingWithActiveGoal>;
+  crowdfunding?: Maybe<Crowdfunding>;
   crowdfundingId?: Maybe<Scalars['String']>;
   type: BlockType;
 };
@@ -636,7 +649,7 @@ export type CrowdfundingBlockInput = {
   crowdfundingId?: InputMaybe<Scalars['String']>;
 };
 
-export type CrowdfundingGoal = {
+export type CrowdfundingGoal = BaseCrowdfundingGoal & {
   __typename?: 'CrowdfundingGoal';
   amount: Scalars['Float'];
   createdAt: Scalars['DateTime'];
@@ -646,7 +659,12 @@ export type CrowdfundingGoal = {
   title: Scalars['String'];
 };
 
-export type CrowdfundingGoalWithProgress = {
+export enum CrowdfundingGoalType {
+  Revenue = 'Revenue',
+  Subscription = 'Subscription'
+}
+
+export type CrowdfundingGoalWithProgress = BaseCrowdfundingGoal & {
   __typename?: 'CrowdfundingGoalWithProgress';
   amount: Scalars['Float'];
   createdAt: Scalars['DateTime'];
@@ -655,27 +673,6 @@ export type CrowdfundingGoalWithProgress = {
   modifiedAt: Scalars['DateTime'];
   progress?: Maybe<Scalars['Float']>;
   title: Scalars['String'];
-};
-
-export type CrowdfundingMemberPlan = {
-  __typename?: 'CrowdfundingMemberPlan';
-  id: Scalars['String'];
-  name: Scalars['String'];
-};
-
-export type CrowdfundingWithActiveGoal = {
-  __typename?: 'CrowdfundingWithActiveGoal';
-  activeCrowdfundingGoal?: Maybe<CrowdfundingGoalWithProgress>;
-  additionalRevenue?: Maybe<Scalars['Float']>;
-  countSubscriptionsFrom?: Maybe<Scalars['DateTime']>;
-  countSubscriptionsUntil?: Maybe<Scalars['DateTime']>;
-  createdAt: Scalars['DateTime'];
-  goals: Array<CrowdfundingGoal>;
-  id: Scalars['String'];
-  memberPlans: Array<CrowdfundingMemberPlan>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  revenue?: Maybe<Scalars['Float']>;
 };
 
 export enum Currency {
@@ -1103,7 +1100,7 @@ export type HasOptionalArticle = {
 };
 
 export type HasOptionalCrowdfunding = {
-  crowdfunding?: Maybe<CrowdfundingWithActiveGoal>;
+  crowdfunding?: Maybe<Crowdfunding>;
   crowdfundingId?: Maybe<Scalars['String']>;
 };
 
@@ -1481,7 +1478,7 @@ export type Mutation = {
    *
    */
   createConsent: Consent;
-  /** Create a new Crowdfunding */
+  /** Create a new crowdfunding */
   createCrowdfunding: Crowdfunding;
   /** Creates a new event. */
   createEvent: Event;
@@ -1600,8 +1597,8 @@ export type Mutation = {
    *
    */
   updateConsent: Consent;
-  /** Update a single crowdfunding */
-  updateCrowdfunding: CrowdfundingWithActiveGoal;
+  /** Updates a single crowdfunding */
+  updateCrowdfunding: Crowdfunding;
   /** Updates an existing event. */
   updateEvent: Event;
   /** Updates an existing navigation. */
@@ -2725,9 +2722,9 @@ export type Query = {
    *
    */
   consents: Array<Consent>;
-  /** Get a single crowdfunding by id with calculated progress */
-  crowdfunding: CrowdfundingWithActiveGoal;
-  /** Returns a paginated list of crowdfundings. */
+  /** Get a single crowdfunding by id */
+  crowdfunding: Crowdfunding;
+  /** Returns a list of crowdfundings. */
   crowdfundings: Array<Crowdfunding>;
   /**
    *
@@ -3700,10 +3697,11 @@ export type UpdateCrowdfundingInput = {
   additionalRevenue?: InputMaybe<Scalars['Float']>;
   countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>;
   countSubscriptionsUntil?: InputMaybe<Scalars['DateTime']>;
+  goalType?: InputMaybe<CrowdfundingGoalType>;
   goals?: InputMaybe<Array<CreateCrowdfundingGoalInput>>;
   id: Scalars['String'];
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
-  name: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
 };
 
 export type UploadImageInput = {
@@ -4277,6 +4275,10 @@ export const PeerProfile = gql`
       "TwitterTweetBlock",
       "VimeoVideoBlock",
       "YouTubeVideoBlock"
+    ],
+    "BaseCrowdfundingGoal": [
+      "CrowdfundingGoal",
+      "CrowdfundingGoalWithProgress"
     ],
     "BaseNavigationLink": [
       "ArticleNavigationLink",
