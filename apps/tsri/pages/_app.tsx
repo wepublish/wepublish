@@ -51,6 +51,7 @@ import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
 import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
 import theme from '../src/theme';
+// test comment
 
 setDefaultOptions({
   locale: de,
