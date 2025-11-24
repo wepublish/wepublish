@@ -16,9 +16,6 @@ export enum PageType {
   Page = 'Page',
   Unknown = 'Unknown',
 }
-
-// test comment
-
 export type PageTypeBasedProps = {
   Page?: Pick<Page, 'slug' | 'url'>;
   Article?: Pick<ArticleRevision, 'preTitle'>;
