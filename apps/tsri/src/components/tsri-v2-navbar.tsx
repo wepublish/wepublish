@@ -58,7 +58,9 @@ const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
   }
 `;
 
-export const AppBar = styled(MuiAppBar)<{ isMenuOpen?: boolean }>`
+export const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: propName => propName !== 'isMenuOpen',
+})<{ isMenuOpen?: boolean }>`
   background-color: white;
 
   ${({ isMenuOpen }) =>
@@ -143,7 +145,9 @@ export const NavbarSearchButton = styled(IconButton)`
 
 export const NavbarIconButtonWrapper = styled('div')``;
 
-export const NavbarMain = styled('div')<{ isMenuOpen?: boolean }>`
+export const NavbarMain = styled('div', {
+  shouldForwardProp: propName => propName !== 'isMenuOpen',
+})<{ isMenuOpen?: boolean }>`
   grid-column: 2 / 3;
   grid-row: -1 / 1;
 
@@ -269,8 +273,6 @@ const TsriClaim = styled('img', {
     isScrolled &&
     css`
       @container toolbar (width > 200px) {
-        //width: 18.61cqw;
-        //width: 14.85cqw;
         width: 16.77cqw;
         top: 9.7cqw;
       }
@@ -523,7 +525,6 @@ export function TsriV2Navbar({
   const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
 
   const categories = useMemo(() => {
-    console.log('categorySlugs', categorySlugs);
     return categorySlugs.map(categorySlugArray =>
       categorySlugArray.reduce((navigations, categorySlug) => {
         const navItem = data?.navigations?.find(
