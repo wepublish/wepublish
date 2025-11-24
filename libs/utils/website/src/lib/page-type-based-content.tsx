@@ -96,6 +96,8 @@ const getPageData = (pageProps: NormalizedCacheObject) => {
   return pageData;
 };
 
+// test comment
+
 const getArticleData = (pageProps: NormalizedCacheObject) => {
   let articleData: Pick<ArticleRevision, 'preTitle'> | undefined = undefined;
   const rootQuery = pageProps.ROOT_QUERY;
