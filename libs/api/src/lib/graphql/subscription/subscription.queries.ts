@@ -288,6 +288,27 @@ const createUserIDsFilter = (
   return {};
 };
 
+const createSubscriptionIDsFilter = (
+  filter: Partial<SubscriptionFilter>
+): Prisma.SubscriptionWhereInput => {
+  if (filter?.subscriptionIDs) {
+    if (filter.subscriptionIDs.length > 0) {
+      return {
+        id: {
+          in: filter.subscriptionIDs,
+        },
+      };
+    } else {
+      return {
+        id: {
+          in: ['___none___'],
+        },
+      };
+    }
+  }
+  return {};
+};
+
 const createUserFilter = (
   filter: Partial<SubscriptionFilter>
 ): Prisma.SubscriptionWhereInput => {
@@ -322,6 +343,7 @@ export const createSubscriptionFilter = (
     createUserFilter(filter),
     createExtendableFilter(filter),
     createUserIDsFilter(filter),
+    createSubscriptionIDsFilter(filter),
   ],
 });
 

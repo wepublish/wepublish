@@ -739,6 +739,7 @@ export type DailySubscriptionStatsUser = {
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   name: Scalars['String'];
+  subscriptionID?: Maybe<Scalars['String']>;
 };
 
 export type DashboardInvoice = {

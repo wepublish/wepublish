@@ -52,6 +52,9 @@ export class DailySubscriptionStatsUser {
 
   @Field()
   email!: string;
+
+  @Field({ nullable: true })
+  subscriptionID?: string;
 }
 
 @ObjectType()

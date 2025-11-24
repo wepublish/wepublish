@@ -403,6 +403,7 @@ input SubscriptionFilter {
   userHasAddress: Boolean
   userID: String
   userIDs: [String!]
+  subscriptionIDs: [String!]
   extendable: Boolean
 }
 

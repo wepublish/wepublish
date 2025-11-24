@@ -204,12 +204,7 @@ export function AudienceFilter({
           | DailySubscriptionStatsUser[]
           | undefined) || [];
 
-      statsUsers = [
-        ...highProbabilityUsers,
-        ...lowProbabilityUsers.filter(
-          lowUser => !highProbabilityUsers.find(user => user.id === lowUser.id)
-        ),
-      ];
+      statsUsers = [...highProbabilityUsers, ...lowProbabilityUsers];
     } else if (statsUsersKey) {
       statsUsers =
         (statsForPeriod[statsUsersKey] as
@@ -218,7 +213,10 @@ export function AudienceFilter({
     }
 
     const filter: SubscriptionFilter = {
-      userIDs: statsUsers.map((user: DailySubscriptionStatsUser) => user.id),
+      subscriptionIDs: statsUsers.map(
+        (user: DailySubscriptionStatsUser) =>
+          user.subscriptionID ?? '___none___'
+      ),
     };
 
     initDownload({

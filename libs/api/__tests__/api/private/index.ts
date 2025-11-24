@@ -1446,6 +1446,7 @@ export type SubscriptionFilter = {
   startsAt?: InputMaybe<DateFilter>;
   startsAtFrom?: InputMaybe<DateFilter>;
   startsAtTo?: InputMaybe<DateFilter>;
+  subscriptionIDs?: InputMaybe<Array<Scalars['String']>>;
   userHasAddress?: InputMaybe<Scalars['Boolean']>;
   userID?: InputMaybe<Scalars['String']>;
   userIDs?: InputMaybe<Array<Scalars['String']>>;

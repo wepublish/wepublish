@@ -248,6 +248,7 @@ export class DashboardSubscriptionService {
     }
     return this.prisma.subscription.findMany({
       select: {
+        id: true,
         replacesSubscriptionID: true,
         user: {
           select: {
@@ -294,6 +295,7 @@ export class DashboardSubscriptionService {
 
     return this.prisma.subscription.findMany({
       select: {
+        id: true,
         user: {
           select: {
             id: true,
@@ -339,6 +341,7 @@ export class DashboardSubscriptionService {
     }
     return this.prisma.subscription.findMany({
       select: {
+        id: true,
         user: {
           select: {
             id: true,
@@ -380,6 +383,7 @@ export class DashboardSubscriptionService {
     }
     return this.prisma.subscription.findMany({
       select: {
+        id: true,
         user: {
           select: {
             id: true,
@@ -462,6 +466,7 @@ export class DashboardSubscriptionService {
 
     return await this.prisma.subscription.findMany({
       select: {
+        id: true,
         user: {
           select: {
             id: true,
@@ -513,6 +518,7 @@ export class DashboardSubscriptionService {
 
     return await this.prisma.subscription.findMany({
       select: {
+        id: true,
         _count: {
           select: { periods: true },
         },
@@ -550,6 +556,7 @@ export class DashboardSubscriptionService {
 
     return this.prisma.subscription.findMany({
       select: {
+        id: true,
         user: {
           select: {
             id: true,
@@ -640,26 +647,61 @@ export class DashboardSubscriptionService {
       totalActiveSubscriptionCount,
       createdSubscriptionCount: createdSubscriptions.length,
       createdSubscriptionUsers: createdSubscriptions.map(
-        createdSubscription => createdSubscription.user
+        createdSubscription => {
+          const user =
+            createdSubscription.user as typeof createdSubscription.user & {
+              subscriptionID: string;
+            };
+          user.subscriptionID = createdSubscription.id;
+          return user;
+        }
       ),
       overdueSubscriptionCount: dailyOverdueSubscriptions.length,
       overdueSubscriptionUsers: dailyOverdueSubscriptions.map(
-        createdSubscription => createdSubscription.user
+        createdSubscription => {
+          const user =
+            createdSubscription.user as typeof createdSubscription.user & {
+              subscriptionID: string;
+            };
+          user.subscriptionID = createdSubscription.id;
+          return user;
+        }
       ),
 
       replacedSubscriptionCount: replacedSubscriptions.length,
       replacedSubscriptionUsers: replacedSubscriptions.map(
-        replacedSubscription => replacedSubscription.user
+        replacedSubscription => {
+          const user =
+            replacedSubscription.user as typeof replacedSubscription.user & {
+              subscriptionID: string;
+            };
+          user.subscriptionID = replacedSubscription.id;
+          return user;
+        }
       ),
 
       renewedSubscriptionCount: renewedSubscriptions.length,
       renewedSubscriptionUsers: renewedSubscriptions.map(
-        renewedSubscription => renewedSubscription.user
+        renewedSubscription => {
+          const user =
+            renewedSubscription.user as typeof renewedSubscription.user & {
+              subscriptionID: string;
+            };
+          user.subscriptionID = renewedSubscription.id;
+          return user;
+        }
       ),
 
       deactivatedSubscriptionCount: deactivatedSubscriptions.length,
       deactivatedSubscriptionUsers: deactivatedSubscriptions.map(
-        deactivatedSubscription => deactivatedSubscription.user
+        deactivatedSubscription => {
+          const user =
+            deactivatedSubscription.user as typeof deactivatedSubscription.user & {
+              subscriptionID: string;
+            };
+          user.subscriptionID = deactivatedSubscription.id;
+          return user;
+        }
       ),
 
       predictedSubscriptionRenewalCount: {
@@ -670,17 +712,34 @@ export class DashboardSubscriptionService {
         perDayLowProbability: lowProbabilityRenewals.length,
       },
       predictedSubscriptionRenewalUsersHighProbability:
-        highProbabilityRenewals.map(
-          predictedSubscription => predictedSubscription.user
-        ),
+        highProbabilityRenewals.map(predictedSubscription => {
+          const user =
+            predictedSubscription.user as typeof predictedSubscription.user & {
+              subscriptionID: string;
+            };
+          user.subscriptionID = predictedSubscription.id;
+          return user;
+        }),
       predictedSubscriptionRenewalUsersLowProbability:
-        lowProbabilityRenewals.map(
-          predictedSubscription => predictedSubscription.user
-        ),
+        lowProbabilityRenewals.map(predictedSubscription => {
+          const user =
+            predictedSubscription.user as typeof predictedSubscription.user & {
+              subscriptionID: string;
+            };
+          user.subscriptionID = predictedSubscription.id;
+          return user;
+        }),
 
       endingSubscriptionCount: dailyEndingSubscriptions.length,
       endingSubscriptionUsers: dailyEndingSubscriptions.map(
-        endingSubscription => endingSubscription.user
+        endingSubscription => {
+          const user =
+            endingSubscription.user as typeof endingSubscription.user & {
+              subscriptionID: string;
+            };
+          user.subscriptionID = endingSubscription.id;
+          return user;
+        }
       ),
     };
   }

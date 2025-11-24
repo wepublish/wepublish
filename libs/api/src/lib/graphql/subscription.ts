@@ -101,6 +101,9 @@ export const GraphQLSubscriptionFilter = new GraphQLInputObjectType({
     userHasAddress: { type: GraphQLBoolean },
     userID: { type: GraphQLString },
     userIDs: { type: new GraphQLList(new GraphQLNonNull(GraphQLString)) },
+    subscriptionIDs: {
+      type: new GraphQLList(new GraphQLNonNull(GraphQLString)),
+    },
     extendable: { type: GraphQLBoolean },
   },
 });

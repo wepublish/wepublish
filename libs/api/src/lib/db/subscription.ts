@@ -30,6 +30,7 @@ export interface SubscriptionFilter {
   readonly userHasAddress?: boolean;
   readonly userID?: string;
   readonly userIDs?: string[];
+  readonly subscriptionIDs?: string[];
   readonly extendable?: boolean;
 }
 

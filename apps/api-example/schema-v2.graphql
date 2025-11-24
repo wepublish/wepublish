@@ -681,6 +681,7 @@ type DailySubscriptionStatsUser {
   firstName: String
   id: String!
   name: String!
+  subscriptionID: String
 }
 
 type DashboardInvoice {
