@@ -285,7 +285,6 @@ export function useAudience({
       'predictedSubscriptionRenewalUsersHighProbability',
       'predictedSubscriptionRenewalUsersLowProbability',
     ];
-    console.log('audienceStatsComputed', audienceStatsComputed);
     userKeys.forEach(key => {
       const users = audienceStatsComputed
         .flatMap(stat => stat[key] as DailySubscriptionStatsUser[])
