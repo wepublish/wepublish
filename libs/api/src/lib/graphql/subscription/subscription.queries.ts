@@ -273,13 +273,13 @@ const createUserIDsFilter = (
   if (filter?.userIDs) {
     if (filter.userIDs.length > 0) {
       return {
-        id: {
+        userID: {
           in: filter.userIDs,
         },
       };
     } else {
       return {
-        id: {
+        userID: {
           in: ['___none___'],
         },
       };
