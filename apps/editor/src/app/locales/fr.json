@@ -1442,7 +1442,12 @@
         "countSubscriptionsFrom": "Inclure uniquement les abonnements payés à partir de la date",
         "countSubscriptionsUntil": "Inclure uniquement les abonnements payés jusqu'à la date",
         "revenue": "Déjà CHF {{revenue}} financé",
-        "goals": "Objectifs"
+        "goals": "Objectifs",
+        "subscriptions": "Déjà {{subscriptions}} abonnés",
+        "crowdfunding": "Crowdfunding",
+        "goalType": "Type d’objectif",
+        "goalType_Revenue": "Revenus",
+        "goalType_Subscription": "Nombre d’abonnements"
       },
       "goalsForm": {
         "title": "Titre",
