@@ -48,9 +48,8 @@ import { TsriContextBox } from '../src/components/tsri-context-box';
 import { TsriNavbar } from '../src/components/tsri-navbar';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
-import { TsriTeaserGridFlex } from '../src/components/tsri-teaser-grid-flex';
+import { TsriTeaserGridFlex } from '../src/components/tsri-teaser-grid-flex'; // test comment
 import theme from '../src/theme';
-// test comment
 
 setDefaultOptions({
   locale: de,
