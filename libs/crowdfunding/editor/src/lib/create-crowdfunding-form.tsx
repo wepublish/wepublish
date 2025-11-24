@@ -109,7 +109,9 @@ export const CreateCrowdfundingForm = () => {
       <CrowdfundingForm
         create
         crowdfunding={crowdfunding}
-        onChange={changes => setCrowdfunding(changes)}
+        onChange={changes =>
+          setCrowdfunding(changes as CreateCrowdfundingInput)
+        }
         onAddGoal={handleAddGoal}
         onRemoveGoal={handleRemoveGoal}
       />

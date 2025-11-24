@@ -1,6 +1,0 @@
-{
-  "prisma": {
-    "schema": "../../api/prisma/schema.prisma",
-    "seed": "npx tsx __tests__/prisma/seed.ts"
-  }
-}
