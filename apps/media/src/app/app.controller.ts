@@ -31,9 +31,11 @@ import 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { assertRemoteFileIsAccessible } from './assertRemoteFileIsAccessible';
 
 const HTTP_CODE_FOUND = 301;
 const HTTP_CODE_NOT_FOUND = 307;
+let S3_HOST_CHECKED = false;
 
 @Controller({
   version: '1',
@@ -99,20 +101,18 @@ export class AppController {
     // Check if image is cached
     const uriFromCache = await this.linkCache.get<ImageURIObject>(cacheKey);
 
-    res.setHeader('Content-Type', 'image/webp');
-
     if (process.env['NODE_ENV'] === 'production') {
-      // max-age = 4hours, immutable, stale-if-error = 7days, stale-while-revalidate = 1day
+      // max-age = 12hours, immutable, stale-if-error = 7days, stale-while-revalidate = 1day
       res.setHeader(
         'Cache-Control',
-        `public, max-age=14400, immutable, stale-if-error=604800, stale-while-revalidate=86400`
+        `public, max-age=43200, immutable, stale-if-error=604800, stale-while-revalidate=86400`
       );
     }
 
     if (uriFromCache) {
       let httpCode = HTTP_CODE_FOUND;
       if (!uriFromCache.exists) {
-        res.setHeader('Cache-Control', `public, max-age=60`); // 1 min cache for 404, optional
+        res.setHeader('Cache-Control', `public, max-age=600`);
         httpCode = HTTP_CODE_NOT_FOUND;
       } else {
         // On access refresh cache ttl
@@ -130,19 +130,22 @@ export class AppController {
       transformations
     );
 
+    const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
+
+    if (!S3_HOST_CHECKED) {
+      S3_HOST_CHECKED = await assertRemoteFileIsAccessible(url);
+    }
+
     if (!exists) {
-      res.setHeader('Cache-Control', `public, max-age=60`);
-      res.redirect(
-        HTTP_CODE_NOT_FOUND,
-        `${process.env['S3_PUBLIC_HOST']}/${uri}`
-      );
-      await this.linkCache.set(cacheKey, { uri, exists: false }, 120);
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_NOT_FOUND, url);
+      await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
       return;
     } else {
       await this.linkCache.set(cacheKey, { uri, exists: true });
     }
 
-    res.redirect(HTTP_CODE_FOUND, `${process.env['S3_PUBLIC_HOST']}/${uri}`);
+    res.redirect(HTTP_CODE_FOUND, url);
   }
 
   @UseGuards(TokenAuthGuard)

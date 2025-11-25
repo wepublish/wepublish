@@ -19,7 +19,7 @@ import { CacheModule } from '@nestjs/cache-manager';
       cache: true,
     }),
     CacheModule.register({
-      ttl: 172800,
+      ttl: 259200,
       max: 1000000,
       isGlobal: true,
     }),
