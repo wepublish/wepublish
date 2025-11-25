@@ -31,6 +31,10 @@ export function handleRequest(indexPath: string) {
     const markup = `${htmlStart}${clientSettingsHTML}</head>${htmlEnd}`;
     res.header('content-type', 'text/html; charset=UTF-8');
     res.header('content-length', Buffer.byteLength(markup).toString());
+    res.header(
+      'cache-control',
+      'public, max-age=59, s-maxage=59, stale-while-revalidate=604800, stale-if-error=86400'
+    );
     res.send(markup);
   };
 }

@@ -16,8 +16,17 @@ const indexPath = path.join(browserDist, 'index.html');
 app.use(cors());
 
 app.get('/health', (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
   res.status(200).json({ status: 'ok' });
 });
+
+app.use(
+  express.static(browserDist, {
+    setHeaders: (res, filePath) => {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    },
+  })
+);
 
 app.get('*.*', express.static(browserDist, {}));
 
