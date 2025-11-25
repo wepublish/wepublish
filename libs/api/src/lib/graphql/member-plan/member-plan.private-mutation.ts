@@ -119,7 +119,7 @@ export const updateMemberPlan = async (
       input.amountPerMonthTarget === null ?
         null
       : ((input.amountPerMonthTarget as number | undefined) ??
-        existingMemberPlan.amountPerMonthMax),
+        existingMemberPlan.amountPerMonthTarget),
 
     availablePaymentMethods,
   });
