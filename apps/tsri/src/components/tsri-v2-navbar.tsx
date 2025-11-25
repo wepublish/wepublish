@@ -461,8 +461,6 @@ export function TsriV2Navbar({
 }: ExtendedNavbarProps) {
   const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
 
-  console.log('TsriV2Navbar render', pageTypeBasedProps);
-
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollDirection, setScrollDirection] = useState<ScrollDirection>(
     ScrollDirection.Down

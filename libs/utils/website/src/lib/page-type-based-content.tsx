@@ -150,7 +150,5 @@ export const getPageTypeBasedContent = (pProps: {
     }
   }
 
-  console.log('getPageTypeBasedContent', essentialProps);
-
   return essentialProps;
 };
