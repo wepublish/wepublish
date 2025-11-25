@@ -285,7 +285,7 @@ const TsriClaim = styled('img', {
     `}
 `;
 
-const navbarTabStyles = () => css`
+export const navbarTabStyles = () => css`
   background-color: black;
   color: white;
   font-size: 1.2cqw;
