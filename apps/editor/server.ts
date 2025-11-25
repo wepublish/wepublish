@@ -20,6 +20,14 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
+app.get('/', (req, res) => {
+  res.setHeader(
+    'Cache-Control',
+    'public, max-age=59, s-maxage=59, stale-while-revalidate=604800, stale-if-error=86400'
+  );
+  res.sendFile(indexPath);
+});
+
 app.use(
   express.static(browserDist, {
     setHeaders: (res, filePath) => {
