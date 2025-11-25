@@ -20,6 +20,7 @@ fragment MemberPlanRef on MemberPlan {
 fragment FullMemberPlan on MemberPlan {
   tags
   amountPerMonthMin
+  amountPerMonthMax
   amountPerMonthTarget
   currency
   availablePaymentMethods {
