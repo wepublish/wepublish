@@ -170,10 +170,11 @@ const AktuelleBildWrapper = styled(Box)`
   ${TeaserWrapper} {
     ${TeaserTitle} {
       opacity: 1;
+      font-weight: 600;
     }
     ${TeaserMetadata} {
       opacity: 1;
-      padding: 2px 10px 4px 40px;
+      padding: 2px 10px 4px 10px;
       background: rgba(0, 0, 0, 0.7);
       transition: opacity 500ms ease;
       position: absolute;
@@ -181,7 +182,7 @@ const AktuelleBildWrapper = styled(Box)`
       width: 100%;
 
       &::before {
-        content: 'Von ';
+        content: ' ';
         position: absolute;
         left: 10px;
         height: 100%;

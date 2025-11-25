@@ -165,14 +165,16 @@ export const Upgrade = ({
     [selectedMemberPlan?.availablePaymentMethods]
   );
 
-  const paymentText = usePaymentText(
-    subscriptionToUpgrade.autoRenew,
-    selectedMemberPlan?.extendable ?? true,
-    subscriptionToUpgrade.paymentPeriodicity,
+  const paymentText = usePaymentText({
+    autoRenew: subscriptionToUpgrade.autoRenew,
+    currency: selectedMemberPlan?.currency ?? Currency.Chf,
+    extendable: selectedMemberPlan?.extendable ?? true,
+    paymentPeriodicity: subscriptionToUpgrade.paymentPeriodicity,
+    productType: subscriptionToUpgrade.memberPlan.productType,
+    siteTitle,
     monthlyAmount,
-    selectedMemberPlan?.currency ?? Currency.Chf,
-    locale
-  );
+    locale,
+  });
 
   const upgradeText = getUpgradeText(
     subscriptionToUpgrade.autoRenew,
@@ -184,14 +186,16 @@ export const Upgrade = ({
     locale
   );
 
-  const monthlyPaymentText = usePaymentText(
-    true,
-    selectedMemberPlan?.extendable ?? true,
-    PaymentPeriodicity.Monthly,
-    watch('monthlyAmount'),
-    selectedMemberPlan?.currency ?? Currency.Chf,
-    locale
-  );
+  const monthlyPaymentText = usePaymentText({
+    autoRenew: true,
+    extendable: selectedMemberPlan?.extendable ?? true,
+    paymentPeriodicity: PaymentPeriodicity.Monthly,
+    monthlyAmount: watch('monthlyAmount'),
+    currency: selectedMemberPlan?.currency ?? Currency.Chf,
+    productType: subscriptionToUpgrade.memberPlan.productType,
+    siteTitle,
+    locale,
+  });
 
   const onSubmit = handleSubmit(data => {
     const upgradeData: UpgradeMutationVariables = {

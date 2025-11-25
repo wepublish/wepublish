@@ -35,6 +35,14 @@ type CreateMemberPlanInput = Omit<
   availablePaymentMethods: Prisma.AvailablePaymentMethodUncheckedCreateWithoutMemberPlanInput[];
 };
 
+type MemberPlanIntegrityInput = {
+  extendable: boolean;
+  amountPerMonthMin: number;
+  amountPerMonthMax: number | null;
+  amountPerMonthTarget: number | null;
+  availablePaymentMethods: Prisma.AvailablePaymentMethodUncheckedCreateWithoutMemberPlanInput[];
+};
+
 export const createMemberPlan = (
   { availablePaymentMethods, ...input }: CreateMemberPlanInput,
   authenticate: Context['authenticate'],
@@ -43,7 +51,13 @@ export const createMemberPlan = (
   const { roles } = authenticate();
   authorise(CanCreateMemberPlan, roles);
 
-  checkMemberPlanIntegrity({ availablePaymentMethods, ...input });
+  checkMemberPlanIntegrity({
+    extendable: input.extendable ?? true,
+    amountPerMonthMin: input.amountPerMonthMin,
+    amountPerMonthMax: input.amountPerMonthMax ?? null,
+    amountPerMonthTarget: input.amountPerMonthTarget ?? null,
+    availablePaymentMethods,
+  });
 
   return memberPlan.create({
     data: {
@@ -76,7 +90,39 @@ export const updateMemberPlan = async (
   const { roles } = authenticate();
   authorise(CanCreateMemberPlan, roles);
 
-  checkMemberPlanIntegrity({ availablePaymentMethods, ...input });
+  const existingMemberPlan = await memberPlan.findUniqueOrThrow({
+    where: { id },
+    select: {
+      extendable: true,
+      amountPerMonthMin: true,
+      amountPerMonthMax: true,
+      amountPerMonthTarget: true,
+    },
+  });
+
+  checkMemberPlanIntegrity({
+    extendable:
+      (input.extendable as boolean | undefined) ??
+      existingMemberPlan.extendable,
+
+    amountPerMonthMin:
+      (input.amountPerMonthMin as number | undefined) ??
+      existingMemberPlan.amountPerMonthMin,
+
+    amountPerMonthMax:
+      input.amountPerMonthMax === null ?
+        null
+      : ((input.amountPerMonthMax as number | undefined) ??
+        existingMemberPlan.amountPerMonthMax),
+
+    amountPerMonthTarget:
+      input.amountPerMonthTarget === null ?
+        null
+      : ((input.amountPerMonthTarget as number | undefined) ??
+        existingMemberPlan.amountPerMonthTarget),
+
+    availablePaymentMethods,
+  });
 
   return memberPlan.update({
     where: { id },
@@ -99,10 +145,11 @@ export const updateMemberPlan = async (
   });
 };
 
-function checkMemberPlanIntegrity(input: UpdateMemberPlanInput): void {
+function checkMemberPlanIntegrity(input: MemberPlanIntegrityInput): void {
   const {
     extendable,
     amountPerMonthMin,
+    amountPerMonthMax,
     amountPerMonthTarget,
     availablePaymentMethods,
   } = input;
@@ -111,6 +158,10 @@ function checkMemberPlanIntegrity(input: UpdateMemberPlanInput): void {
   );
 
   if (!extendable && hasForceAutoRenew) {
+    throw new InvalidMemberPlanSettings();
+  }
+
+  if (amountPerMonthMax != null && amountPerMonthMax < amountPerMonthMin) {
     throw new InvalidMemberPlanSettings();
   }
 
