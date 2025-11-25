@@ -50,8 +50,9 @@ import { TSRIFooter } from '../src/components/tsri-footer';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
 import { TsriTeaserGridFlex } from '../src/components/tsri-teaser-grid-flex';
+import { TsriTeaser } from '../src/components/tsri-teaser';
+import { TsriV2Navbar } from '../src/components/tsri-v2-navbar'; // test comment to trigger diff
 import theme from '../src/theme';
-// test comment to trigger redeploy
 
 setDefaultOptions({
   locale: de,
