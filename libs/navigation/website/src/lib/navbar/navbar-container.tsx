@@ -64,7 +64,7 @@ export function NavbarContainer({
       logo={logo}
       hasUnpaidInvoices={!!hasUnpaidInvoices}
       hasRunningSubscription={!!hasRunningSubscription}
-      pageTypeBasedProps={pageTypeBasedProps}
+      pageTypeBasedProps={pageTypeBasedProps} // comment triggering re-merge
     >
       {children}
     </Navbar>
