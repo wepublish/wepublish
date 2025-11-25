@@ -196,8 +196,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   onResubscribe,
   deactivateSubscriptionId,
   termsOfServiceUrl,
-  hidePaymentAmount = memberPlan =>
-    !!memberPlan?.tags?.includes('hide-payment-amount'),
   transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
   transactionFeeText,
   returningUserId,
@@ -327,6 +325,12 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   );
 
   const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
+
+  const shouldHidePaymentAmount =
+    selectedMemberPlan ?
+      selectedMemberPlan.amountPerMonthMin ===
+      selectedMemberPlan.amountPerMonthMax
+    : false;
 
   const paymentText = usePaymentText({
     autoRenew,
@@ -543,7 +547,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       </SubscribeSection>
 
       <SubscribeSection area="monthlyAmount">
-        {!hidePaymentAmount(selectedMemberPlan) && (
+        {!shouldHidePaymentAmount && (
           <Controller
             name={'monthlyAmount'}
             control={control}
@@ -562,6 +566,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                   slug={selectedMemberPlan?.slug}
                   donate={isDonation}
                   amountPerMonthMin={amountPerMonthMin}
+                  amountPerMonthMax={
+                    selectedMemberPlan?.amountPerMonthMax ?? undefined
+                  }
                   amountPerMonthTarget={
                     selectedMemberPlan?.amountPerMonthTarget ?? undefined
                   }

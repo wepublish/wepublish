@@ -98,6 +98,7 @@ function MemberPlanEdit() {
       description: [],
       currency: Currency.Chf,
       amountPerMonthMin: 0,
+      amountPerMonthMax: 0,
       amountPerMonthTarget: null,
       image: undefined,
       active: true,
@@ -162,6 +163,12 @@ function MemberPlanEdit() {
     amountPerMonthMin: Schema.Types.NumberType()
       .isRequired(t('memberPlanEdit.amountPerMonthMinRequired'))
       .min(0, t('memberPlanEdit.amountPerMonthMinZero')),
+
+    amountPerMonthMax: Schema.Types.NumberType().min(
+      (memberPlan?.amountPerMonthMin || 0) / 100,
+      t('memberPlanEdit.maxPriceMustBeGreaterThanMin')
+    ),
+
     amountPerMonthTarget: Schema.Types.NumberType().min(
       ((memberPlan?.amountPerMonthMin || 0) + 1) / 100,
       t('memberPlanEdit.targetPriceMustBeGreaterThanMin')
@@ -193,6 +200,7 @@ function MemberPlanEdit() {
       })),
       currency: memberPlan.currency,
       amountPerMonthMin: memberPlan.amountPerMonthMin,
+      amountPerMonthMax: memberPlan.amountPerMonthMax,
       amountPerMonthTarget: memberPlan.amountPerMonthTarget,
       extendable: memberPlan.extendable,
       externalReward: memberPlan.externalReward,
@@ -258,6 +266,7 @@ function MemberPlanEdit() {
           name: memberPlan?.name,
           slug: memberPlan?.slug,
           amountPerMonthMin: memberPlan?.amountPerMonthMin,
+          amountPerMonthMax: memberPlan?.amountPerMonthMax,
           currency: memberPlan?.currency,
         }}
       >
