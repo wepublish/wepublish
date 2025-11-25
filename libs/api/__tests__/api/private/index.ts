@@ -400,6 +400,7 @@ export type JwtToken = {
 export type MemberPlan = {
   __typename?: 'MemberPlan';
   active: Scalars['Boolean'];
+  amountPerMonthMax?: Maybe<Scalars['Int']>;
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
@@ -439,6 +440,7 @@ export type MemberPlanFilter = {
 
 export type MemberPlanInput = {
   active: Scalars['Boolean'];
+  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
