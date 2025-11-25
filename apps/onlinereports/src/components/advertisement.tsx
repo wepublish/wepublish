@@ -75,6 +75,7 @@ const AdBox = styled(Box)`
   //background: repeating-linear-gradient(-45deg, #dde8ee, #dde8ee 15px, #eee 15px, #eee 40px);
   //border: 5px solid #eee;
   margin: 0 auto;
+  overflow: hidden;
 
   img {
     height: 100%;

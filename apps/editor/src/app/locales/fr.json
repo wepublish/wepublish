@@ -1376,7 +1376,8 @@
       "productType": "Type de produit",
       "productTypeHelpText": "Choisissez si le plan doit être proposé comme abonnement ou don. ",
       "productTypeSubscription": "Abonnement",
-      "productTypeDonation": "Don"
+      "productTypeDonation": "Don",
+      "amountPerMonthMaxHelpText": "Le montant maximum par mois qu'un utilisateur peut payer pour ce plan d'abonnement."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Paramètres avancés",
