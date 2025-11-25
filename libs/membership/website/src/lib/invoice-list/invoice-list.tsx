@@ -19,7 +19,7 @@ export const isSepa = (invoice: FullInvoiceFragment) =>
   invoice.subscription?.paymentMethod.description === 'sepa';
 
 export const isBexio = (invoice: FullInvoiceFragment) =>
-  invoice.subscription?.paymentMethod.slug === 'bexio';
+  invoice.subscription?.paymentMethod.slug.includes('bexio');
 
 export const isPayrexxSubscription = (invoice: FullInvoiceFragment) =>
   invoice.subscription?.paymentMethod.paymentProviderID ===
