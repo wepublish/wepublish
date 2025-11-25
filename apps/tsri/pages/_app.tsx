@@ -239,7 +239,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 
               <FooterContainer
                 slug="footer"
-                categorySlugs={[['categories', 'about-us']]}
+                categorySlugs={[['about-us', 'categories', 'main']]}
                 iconSlug="icons"
               />
             </Spacer>
