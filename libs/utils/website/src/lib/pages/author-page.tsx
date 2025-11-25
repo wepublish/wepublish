@@ -16,7 +16,7 @@ import {
   useAuthorQuery,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
-import { GetStaticPaths, GetStaticProps } from 'next';
+import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
@@ -103,12 +103,10 @@ export function AuthorPage() {
   );
 }
 
-export const getAuthorStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: 'blocking',
-  };
-};
+export const getAuthorStaticPaths = async () => ({
+  paths: [],
+  fallback: 'blocking',
+});
 
 export const getAuthorStaticProps: GetStaticProps = async ({ params }) => {
   const { slug } = params || {};

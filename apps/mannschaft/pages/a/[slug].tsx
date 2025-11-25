@@ -7,7 +7,6 @@ import {
 } from '@wepublish/article/website';
 import { CommentListContainer } from '@wepublish/comments/website';
 import { useHasActiveSubscription } from '@wepublish/membership/website';
-import { getPagePathsBasedOnPage } from '@wepublish/utils/website';
 import { CommentItemType, Tag } from '@wepublish/website/api';
 import {
   addClientCacheToV1Props,
@@ -113,7 +112,10 @@ export default function ArticleBySlugOrId() {
   );
 }
 
-export const getStaticPaths = getPagePathsBasedOnPage('');
+export const getStaticPaths = () => ({
+  paths: [],
+  fallback: 'blocking',
+});
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id, slug } = params || {};
