@@ -62,6 +62,7 @@ export const AppBar = styled(MuiAppBar, {
   shouldForwardProp: propName => propName !== 'isMenuOpen',
 })<{ isMenuOpen?: boolean }>`
   background-color: white;
+  position: relative;
 
   ${({ isMenuOpen }) =>
     isMenuOpen &&
