@@ -94,17 +94,17 @@ export class MemberPlan {
 
   @Field({ nullable: true })
   successPageId?: string;
-  @Field({ nullable: true })
+  @Field(() => Page, { nullable: true })
   successPage?: Page;
 
   @Field({ nullable: true })
   failPageId?: string;
-  @Field({ nullable: true })
+  @Field(() => Page, { nullable: true })
   failPage?: Page;
 
   @Field({ nullable: true })
   confirmationPageId?: string;
-  @Field({ nullable: true })
+  @Field(() => Page, { nullable: true })
   confirmationPage?: Page;
 }
 
