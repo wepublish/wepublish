@@ -1452,6 +1452,7 @@ export type MailTemplateWithUrlAndStatusModel = {
 
 export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
+  amountPerMonthMax?: Maybe<Scalars['Int']>;
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;

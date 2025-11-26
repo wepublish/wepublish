@@ -25,10 +25,12 @@ export default function PageBySlugOrId() {
   return <PageContainer {...containerProps} />;
 }
 
-export const getStaticPaths = () => ({
-  paths: [],
-  fallback: 'blocking',
-});
+//export const getStaticPaths = getPagePathsBasedOnPage('');
+
+export const getStaticPaths = async () => {
+  return { paths: [], fallback: false };
+};
+
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { slug, id } = params || {};
   const { publicRuntimeConfig } = getConfig();
