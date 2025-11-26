@@ -15,6 +15,7 @@ declare module 'react' {
 export const AuthorWrapper = styled('article')`
   grid-column: -1 / 1;
   display: grid;
+  padding: ${({ theme }) => theme.spacing(3)} 0 0 0;
   grid-template-columns: calc(100% - 2.2cqw - 33.75%) 33.75%;
   row-gap: ${({ theme }) => theme.spacing(2)};
 `;
@@ -54,6 +55,7 @@ const richTextStyles = css`
 `;
 
 const authorLinkStyles = css`
+  margin: 0 0 40px 0;
   grid-column: 1 / 2;
 `;
 
