@@ -38,11 +38,14 @@ import Head from 'next/head';
 import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
-import { TabbedContent } from '../src/block-styles/tsri-tabbed-content';
 
+import { TabbedContent } from '../src/block-styles/tsri-tabbed-content';
 import { TsriArticleDate } from '../src/components/tsri-article-date';
-import { TsriArticleMeta } from '../src/components/tsri-article-meta';
 import { TsriArticleList } from '../src/components/tsri-article-list';
+import { TsriArticleMeta } from '../src/components/tsri-article-meta';
+import { TSRIAuthor } from '../src/components/tsri-author';
+import { TSRIAuthorLinks } from '../src/components/tsri-author-links';
+import { TSRIAuthorList } from '../src/components/tsri-author-list';
 import { TsriBanner } from '../src/components/tsri-banner';
 import { TsriBaseTeaser } from '../src/components/tsri-base-teaser';
 import { TsriBreakBlock } from '../src/components/tsri-break-block';
@@ -51,8 +54,7 @@ import { TSRIFooter } from '../src/components/tsri-footer';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
 import { TsriTeaserGridFlex } from '../src/components/tsri-teaser-grid-flex';
-import { TsriTeaser } from '../src/components/tsri-teaser';
-import { TsriV2Navbar } from '../src/components/tsri-v2-navbar'; // test comment to trigger diff
+import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
 import theme from '../src/theme';
 
 setDefaultOptions({
