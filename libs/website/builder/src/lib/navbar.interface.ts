@@ -17,7 +17,7 @@ export type BuilderNavbarProps = PropsWithChildren<
     subscribeBtn?: ButtonProps | null;
     hasUnpaidInvoices: boolean;
     hasRunningSubscription: boolean;
-    pageTypeBasedProps?: PageTypeBasedProps;
+    pageTypeBasedProps?: PageTypeBasedProps; // test comment to trigger re-merge
     imagesBase64?: {
       logoDefault?: string;
       logoAlternative?: string;
