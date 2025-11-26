@@ -436,6 +436,12 @@ export type ChallengeInput = {
   challengeSolution: Scalars['String'];
 };
 
+export type Chat = {
+  __typename?: 'Chat';
+  chatId: Scalars['String'];
+  message: Scalars['String'];
+};
+
 export type Comment = {
   __typename?: 'Comment';
   authorType: CommentAuthorType;
@@ -2776,6 +2782,7 @@ export type Query = {
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
   primaryBanner?: Maybe<Banner>;
+  prompt: Chat;
   provider: MailProviderModel;
   /** This query returns the comment rating system. */
   ratingSystem: FullCommentRatingSystem;
@@ -3064,6 +3071,12 @@ export type QueryPrimaryBannerArgs = {
   documentType: BannerDocumentType;
   hasSubscription: Scalars['Boolean'];
   loggedIn: Scalars['Boolean'];
+};
+
+
+export type QueryPromptArgs = {
+  chatId?: InputMaybe<Scalars['String']>;
+  query: Scalars['String'];
 };
 
 
@@ -4740,6 +4753,14 @@ export type FullTrackingPixelFragment = { __typename?: 'TrackingPixel', id: stri
 export type FullTrackingPixelMethodFragment = { __typename?: 'TrackingPixelMethod', trackingPixelProviderID: string, trackingPixelProviderType: TrackingPixelProviderType };
 
 export type CommentUserFragment = { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
+
+export type PromptQueryVariables = Exact<{
+  query: Scalars['String'];
+  chatId?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type PromptQuery = { __typename?: 'Query', prompt: { __typename?: 'Chat', chatId: string, message: string } };
 
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -9122,6 +9143,43 @@ export function useTestSystemMailMutation(baseOptions?: Apollo.MutationHookOptio
 export type TestSystemMailMutationHookResult = ReturnType<typeof useTestSystemMailMutation>;
 export type TestSystemMailMutationResult = Apollo.MutationResult<TestSystemMailMutation>;
 export type TestSystemMailMutationOptions = Apollo.BaseMutationOptions<TestSystemMailMutation, TestSystemMailMutationVariables>;
+export const PromptDocument = gql`
+    query Prompt($query: String!, $chatId: String) {
+  prompt(query: $query, chatId: $chatId) {
+    chatId
+    message
+  }
+}
+    `;
+
+/**
+ * __usePromptQuery__
+ *
+ * To run a query within a React component, call `usePromptQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePromptQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePromptQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *      chatId: // value for 'chatId'
+ *   },
+ * });
+ */
+export function usePromptQuery(baseOptions: Apollo.QueryHookOptions<PromptQuery, PromptQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PromptQuery, PromptQueryVariables>(PromptDocument, options);
+      }
+export function usePromptLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PromptQuery, PromptQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PromptQuery, PromptQueryVariables>(PromptDocument, options);
+        }
+export type PromptQueryHookResult = ReturnType<typeof usePromptQuery>;
+export type PromptLazyQueryHookResult = ReturnType<typeof usePromptLazyQuery>;
+export type PromptQueryResult = Apollo.QueryResult<PromptQuery, PromptQueryVariables>;
 export const VersionInformationDocument = gql`
     query VersionInformation {
   versionInformation {

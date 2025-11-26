@@ -89,6 +89,7 @@ import { InvoiceModule } from '@wepublish/invoice/api';
 import { SessionModule } from '@wepublish/session/api';
 import { ChallengeModule } from '@wepublish/challenge/api';
 import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
+import { V0Module } from '@wepublish/ai/api';
 
 @Global()
 @Module({
@@ -116,6 +117,7 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
         } as ApolloDriverConfig;
       },
     }),
+    V0Module,
     AuthorModule,
     PrismaModule,
     MailsModule.registerAsync({
