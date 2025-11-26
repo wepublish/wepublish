@@ -22,9 +22,9 @@ import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
 
-const take = 10;
+export const take = 10;
 
-const pageSchema = z.object({
+export const pageSchema = z.object({
   page: z.coerce.number().gte(1).optional(),
   slug: z.string(),
 });

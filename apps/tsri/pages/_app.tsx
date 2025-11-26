@@ -40,6 +40,8 @@ import { zodI18nMap } from 'zod-i18n-map';
 
 import { TsriArticleDate } from '../src/components/tsri-article-date';
 import { TsriArticleMeta } from '../src/components/tsri-article-meta';
+import { TSRIAuthor } from '../src/components/tsri-author';
+import { TSRIAuthorLinks } from '../src/components/tsri-author-links';
 import { TSRIAuthorList } from '../src/components/tsri-author-list';
 import { TsriBanner } from '../src/components/tsri-banner';
 import { TsriBreakBlock } from '../src/components/tsri-break-block';
@@ -125,6 +127,8 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           ArticleDate={TsriArticleDate}
           ArticleMeta={TsriArticleMeta}
           PaymentAmount={PaymentAmountPicker}
+          Author={TSRIAuthor}
+          AuthorLinks={TSRIAuthorLinks}
           AuthorList={TSRIAuthorList}
           elements={{ Link: NextWepublishLink }}
           blocks={{
