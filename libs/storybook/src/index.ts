@@ -4,5 +4,4 @@ export * from './lib/decorators/user.decorator';
 export * from './lib/decorators/subscribe.decorator';
 
 export * from './lib/decorators';
-export * from './lib/tsridecorators';
 export * from './lib/parameters';
