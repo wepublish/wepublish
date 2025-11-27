@@ -108,8 +108,7 @@ export function AudienceDetailDrawer({
           <AudienceCsvBtn
             audienceStats={audienceStats}
             selectedStatKey={selectedStat}
-            dateFrom={new Date()}
-            dateTo={new Date()}
+            fileNameDate={date}
           />
           <Button
             onClick={() => setOpen(undefined)}

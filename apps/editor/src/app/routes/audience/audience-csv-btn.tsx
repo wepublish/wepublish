@@ -12,15 +12,13 @@ export interface AudienceCsvBtnProps {
     | Omit<AudienceStatsComputed, 'predictedSubscriptionRenewalCount'>
     | undefined;
   selectedStatKey: AggregatedUsers;
-  dateFrom: Date;
-  dateTo: Date;
+  fileNameDate: string;
 }
 
 export function AudienceCsvBtn({
   audienceStats,
   selectedStatKey,
-  dateFrom,
-  dateTo,
+  fileNameDate,
 }: AudienceCsvBtnProps) {
   const { initDownload, getCsv, loading } = useExportSubscriptionsAsCsv();
   const {
@@ -29,14 +27,6 @@ export function AudienceCsvBtn({
   } = useTranslation();
 
   // helper functions for the csv download
-  const formattedDateRange = useMemo<string>(() => {
-    const dateTimeFormat: Intl.DateTimeFormatOptions = { dateStyle: 'short' };
-    return `${dateFrom?.toLocaleDateString(language, dateTimeFormat)}-${dateTo?.toLocaleDateString(
-      language,
-      dateTimeFormat
-    )}`;
-  }, [language, dateFrom, dateTo]);
-
   const filteredStats = useMemo<DailySubscriptionStatsUser[]>(() => {
     if (!audienceStats) {
       return [];
@@ -55,7 +45,7 @@ export function AudienceCsvBtn({
     initDownload({
       getCsv,
       filter,
-      filename: `${formattedDateRange}-${selectedStatKey}`,
+      filename: `${fileNameDate}-${t(`audience.legend.${selectedStatKey}`)}`,
       prefixByDate: false,
     });
   };
