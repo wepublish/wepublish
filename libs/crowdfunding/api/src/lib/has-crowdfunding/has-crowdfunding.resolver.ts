@@ -4,13 +4,13 @@ import {
   HasOptionalCrowdfunding,
 } from './has-crowdfunding.model';
 import { CrowdfundingDataloaderService } from '../crowdfunding-dataloader.service';
-import { CrowdfundingWithActiveGoal } from '../crowdfunding.model';
+import { Crowdfunding } from '../crowdfunding.model';
 
 @Resolver(() => HasCrowdfunding)
 export class HasCrowdfundingResolver {
   constructor(private dataloader: CrowdfundingDataloaderService) {}
 
-  @ResolveField(() => CrowdfundingWithActiveGoal, { nullable: true })
+  @ResolveField(() => Crowdfunding, { nullable: true })
   public crowdfunding(
     @Parent() block: HasOptionalCrowdfunding | HasCrowdfunding
   ) {
