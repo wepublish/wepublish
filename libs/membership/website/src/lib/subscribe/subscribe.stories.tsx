@@ -94,6 +94,8 @@ const subscription = mockSubscription({
 const invoice = mockInvoice({
   total: 5000,
   subscription,
+  canceledAt: null,
+  description: 'Mock Invoice',
 });
 
 const fillFirstName: StoryObj['play'] = async ({ canvasElement, step }) => {
