@@ -110,7 +110,6 @@ function AudienceDashboard({
               setApiFilter={setAudienceApiFilter}
               componentFilter={audienceComponentFilter}
               setComponentFilter={setAudienceComponentFilter}
-              audienceStatsByPeriod={audienceStatsByPeriod}
             />
           </ListViewFilterArea>
         )}

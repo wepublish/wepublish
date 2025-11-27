@@ -1565,6 +1565,9 @@
       "gracePeriod": "Délai de paiement",
       "gracePeriodHelpText": "Si votre site web utilise un paywall, les utilisateurs peuvent lire immédiatement ou continuer à lire tous les contenus, même s'ils n'ont pas souscrit d'abonnement payant, pendant le délai de paiement. Cela est utile, par exemple, en cas de virement bancaire.",
       "days": "Jours"
+    },
+    "audienceCsvBtn": {
+      "exportUsers": "Télécharger CSV"
     }
   }
 }

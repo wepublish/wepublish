@@ -1748,6 +1748,9 @@
       "gracePeriod": "Grace Period",
       "gracePeriodHelpText": "If you use the paywall, allow users to read instantly after ordering a subscription, even if they don't pay eventually. This would apply to payments via bank transfer, for instance.",
       "days": "days"
+    },
+    "audienceCsvBtn": {
+      "exportUsers": "Download CSV"
     }
   }
 }

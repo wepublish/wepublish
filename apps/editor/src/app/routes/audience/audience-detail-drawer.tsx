@@ -15,6 +15,7 @@ import { Button, Col, Drawer, Nav, Row, Sidenav, Table } from 'rsuite';
 
 import { AggregatedUsers, AudienceStatsComputed } from './useAudience';
 import { TimeResolution } from './useAudienceFilter';
+import { AudienceCsvBtn } from './audience-csv-btn';
 
 const { Cell, Column, HeaderCell } = Table;
 const { Body, Header } = Sidenav;
@@ -104,6 +105,12 @@ export function AudienceDetailDrawer({
       <Drawer.Header>
         <Drawer.Title>{date}</Drawer.Title>
         <Drawer.Actions>
+          <AudienceCsvBtn
+            audienceStats={audienceStats}
+            selectedStatKey={selectedStat}
+            dateFrom={new Date()}
+            dateTo={new Date()}
+          />
           <Button
             onClick={() => setOpen(undefined)}
             appearance="primary"
