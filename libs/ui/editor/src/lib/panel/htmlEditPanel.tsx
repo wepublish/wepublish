@@ -1,5 +1,8 @@
 import styled from '@emotion/styled';
-import { getApiClientV2, usePromptLazyQuery } from '@wepublish/editor/api-v2';
+import {
+  getApiClientV2,
+  usePromptHtmlLazyQuery,
+} from '@wepublish/editor/api-v2';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAutoFixHigh } from 'react-icons/md';
@@ -24,8 +27,8 @@ const Input = styled(RInput)`
 `;
 
 const StyledDrawer = styled(Drawer.Body)`
-  display: flex;
-  flex-flow: column;
+  display: grid;
+  grid-auto-rows: max-content;
   grid-gap: 20px;
 `;
 
@@ -55,27 +58,30 @@ export function HtmlEditPanel({
   const { t } = useTranslation();
 
   const [prompt, setPrompt] = useState('');
-  const [promptAI, { loading: thinking, error, data: v0Data }] =
-    usePromptLazyQuery({
+  const [promptHTML, { loading: thinking, error, data: v0Data }] =
+    usePromptHtmlLazyQuery({
       fetchPolicy: 'no-cache',
       client: getApiClientV2(),
     });
 
   const onGenerateHTML = useCallback(
     async (query: string) => {
-      const chat = await promptAI({
+      const chat = await promptHTML({
         variables: {
           query: query.trim(),
-          chatId: v0Data?.prompt.chatId,
+          chatId: v0Data?.promptHTML.chatId,
         },
       });
 
       if (!chat.error) {
-        setHtmlBlock({ ...htmlBlock, html: chat.data?.prompt.message ?? `` });
+        setHtmlBlock(block => ({
+          ...block,
+          html: chat.data?.promptHTML.message ?? ``,
+        }));
         setPrompt('');
       }
     },
-    [htmlBlock, promptAI, v0Data?.prompt.chatId]
+    [promptHTML, v0Data?.promptHTML.chatId]
   );
 
   return (

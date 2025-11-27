@@ -2261,7 +2261,7 @@ type Query {
   """Returns a paginated list of poll votes"""
   pollVotes(cursorId: String, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
   primaryBanner(documentId: String!, documentType: BannerDocumentType!, hasSubscription: Boolean!, loggedIn: Boolean!): Banner
-  prompt(chatId: String, query: String!): Chat!
+  promptHTML(chatId: String, query: String!): Chat!
   provider: MailProviderModel!
 
   """This query returns the comment rating system."""

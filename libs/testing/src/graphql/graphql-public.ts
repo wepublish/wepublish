@@ -2937,7 +2937,7 @@ export type Query = {
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
   primaryBanner?: Maybe<Banner>;
-  prompt: Chat;
+  promptHTML: Chat;
   provider: MailProviderModel;
   /** This query returns the comment rating system. */
   ratingSystem: FullCommentRatingSystem;
@@ -3235,7 +3235,7 @@ export type QueryPrimaryBannerArgs = {
 };
 
 
-export type QueryPromptArgs = {
+export type QueryPromptHtmlArgs = {
   chatId?: InputMaybe<Scalars['String']>;
   query: Scalars['String'];
 };
