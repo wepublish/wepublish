@@ -8,6 +8,8 @@ import { css } from '@emotion/react';
 import { useMemo } from 'react';
 import IframeResizer from 'iframe-resizer-react';
 
+delete (IframeResizer as unknown as { defaultProps: any }).defaultProps;
+
 export const isIFrameBlock = (
   block: Pick<BlockContent, '__typename'>
 ): block is IFrameBlockType => block.__typename === 'IFrameBlock';
@@ -40,7 +42,7 @@ export function IFrameBlock({
         <IFrameBlockIframe
           css={styleCustomCss}
           src={url}
-          title={title ?? undefined}
+          title={title ?? 'iframe'}
           allowFullScreen
           width={width?.toString()}
           height={height?.toString()}
