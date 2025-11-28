@@ -7,10 +7,13 @@ import * as stories from './comment-list-container.stories';
 const storiesCmp = composeStories(stories);
 
 describe('CommentList Container', () => {
-  Object.entries(storiesCmp).forEach(([story, Component]) => {
+  Object.entries(storiesCmp).forEach(([story, Component], index) => {
     it(`should render ${story}`, async () => {
-      const { asFragment, container } = render(
-        <MockedProvider {...Component.parameters?.apolloClient}>
+      const { container } = render(
+        <MockedProvider
+          {...Component.parameters?.apolloClient}
+          key={index}
+        >
           <Component />
         </MockedProvider>
       );
