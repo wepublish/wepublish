@@ -153,6 +153,7 @@ export function RegistrationForm<
           render={({ field, fieldState: { error } }) => (
             <Challenge
               {...field}
+              value={field.value || ''}
               onChange={field.onChange}
               challenge={challenge.data!.challenge}
               label={'Captcha'}
