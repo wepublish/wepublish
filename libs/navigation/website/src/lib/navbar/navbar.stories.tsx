@@ -1,16 +1,24 @@
 import { ApolloError } from '@apollo/client';
 import { Meta } from '@storybook/react';
-import { Navigation } from '@wepublish/website/api';
+import {
+  BaseNavigationLink,
+  Navigation,
+  NavigationLinkType,
+} from '@wepublish/website/api';
 import { Navbar } from './navbar';
 import { Md60FpsSelect, MdInvertColors, MdSecurity } from 'react-icons/md';
 import { WithUserDecorator } from '@wepublish/storybook';
 import { mockImage } from '@wepublish/storybook/mocks';
+import nanoid from 'nanoid';
+import React from 'react';
 
 const navigations = [
   {
-    id: 'cldx7kcpi1168oapxftiqsh0p',
+    id: nanoid(),
     key: 'main',
     name: 'main',
+    createdAt: '2000-01-01',
+    modifiedAt: '2000-01-01',
     links: [
       {
         __typename: 'PageNavigationLink',
@@ -44,13 +52,19 @@ const navigations = [
         __typename: 'ExternalNavigationLink',
         label: 'Was lauft?',
         url: 'https://google.com',
-      },
+        createdAt: '2000-01-01',
+        id: nanoid(),
+        modifiedAt: '2000-01-01',
+        type: NavigationLinkType.External,
+      } as BaseNavigationLink,
     ],
   },
   {
-    id: '1234-1234',
+    id: nanoid(),
     key: 'guides',
     name: 'Guides',
+    createdAt: '2000-01-01',
+    modifiedAt: '2000-01-01',
     links: [
       {
         __typename: 'PageNavigationLink',
@@ -63,6 +77,10 @@ const navigations = [
         __typename: 'ExternalNavigationLink',
         label: 'Denkmal.org',
         url: 'https://google.com',
+        createdAt: '2000-01-01',
+        id: nanoid(),
+        modifiedAt: '2000-01-01',
+        type: NavigationLinkType.External,
       },
       {
         __typename: 'ArticleNavigationLink',
@@ -74,9 +92,11 @@ const navigations = [
     ],
   },
   {
-    id: '12345-12345',
+    id: nanoid(),
     key: 'fokusthema',
     name: 'Fokusthema',
+    createdAt: '2000-01-01',
+    modifiedAt: '2000-01-01',
     links: [
       {
         __typename: 'PageNavigationLink',
@@ -109,9 +129,11 @@ const navigations = [
     ],
   },
   {
-    id: '123456-123456',
+    id: nanoid(),
     key: 'about',
     name: 'Über Uns',
+    createdAt: '2000-01-01',
+    modifiedAt: '2000-01-01',
     links: [
       {
         __typename: 'PageNavigationLink',
@@ -144,9 +166,11 @@ const navigations = [
     ],
   },
   {
-    id: '123456-123456',
+    id: nanoid(),
     key: 'header',
     name: 'Header',
+    createdAt: '2000-01-01',
+    modifiedAt: '2000-01-01',
     links: [
       {
         __typename: 'PageNavigationLink',
@@ -165,9 +189,11 @@ const navigations = [
     ],
   },
   {
-    id: '123456-123456',
+    id: nanoid(),
     key: 'icons',
     name: 'Icons',
+    createdAt: '2000-01-01',
+    modifiedAt: '2000-01-01',
     links: [
       {
         __typename: 'PageNavigationLink',
@@ -180,6 +206,10 @@ const navigations = [
         __typename: 'ExternalNavigationLink',
         label: 'X',
         url: 'https://twitter.com/foobar',
+        createdAt: '2000-01-01',
+        id: nanoid(),
+        modifiedAt: '2000-01-01',
+        type: NavigationLinkType.External,
       },
     ],
   },
@@ -224,11 +254,11 @@ export const WithChildren = {
   args: {
     ...Default.args,
     children: [
-      <>
+      <React.Fragment key="icons">
         <MdInvertColors size="32" />
         <Md60FpsSelect size="32" />
         <MdSecurity size="32" />
-      </>,
+      </React.Fragment>,
     ],
   },
 };
