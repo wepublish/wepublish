@@ -8,14 +8,14 @@ import {
 } from '@wepublish/website/api';
 import { PersonalDataFormContainer } from './personal-data-form-container';
 import * as personalDataFormStories from './personal-data-form.stories';
-import { mockImage } from '@wepublish/storybook/mocks';
+import { mockImage, mockUser as getMockUser } from '@wepublish/storybook/mocks';
 
 export default {
   title: 'Container/Personal Data Form',
   component: PersonalDataFormContainer,
 };
 
-const mockUser: User = {
+const mockUser: User = getMockUser({
   id: '1234',
   firstName: 'Kamil',
   name: 'Wasyl',
@@ -29,7 +29,7 @@ const mockUser: User = {
   },
   image: mockImage(),
   paymentProviderCustomers: [],
-};
+}) as User;
 
 const onUpdateVariables = {
   input: {
@@ -82,7 +82,10 @@ export const Default: StoryObj = {
                 flair: 'CEO & Advisor',
                 paymentProviderCustomers: [],
                 image: mockImage(),
+                permissions: [],
+                properties: [],
                 __typename: 'User',
+                birthday: '1990-01-01',
               },
             },
           },
@@ -111,7 +114,10 @@ export const Default: StoryObj = {
                 flair: 'CEO & Advisor',
                 paymentProviderCustomers: [],
                 image: mockImage(),
+                permissions: [],
+                properties: [],
                 __typename: 'User',
+                birthday: '1990-01-01',
               },
             },
           },
