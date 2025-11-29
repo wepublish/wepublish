@@ -20,6 +20,7 @@ import {
   UserAddressInput,
 } from '@wepublish/website/api';
 import {
+  BuilderRouterContext,
   BuilderSubscribeProps,
   BuilderUserFormFields,
   Button,
@@ -27,7 +28,7 @@ import {
   useAsyncAction,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
@@ -200,6 +201,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   transactionFeeText,
   returningUserId,
 }: BuilderSubscribeProps<T>) => {
+  const { query } = useContext(BuilderRouterContext);
   const {
     meta: { locale, siteTitle },
     elements: { Alert, H5, Paragraph },
@@ -362,6 +364,21 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       paymentMethodId: data.paymentMethodId,
       paymentPeriodicity: data.paymentPeriodicity,
       autoRenew: data.autoRenew,
+      subscriptionProperties: [
+        { key: 'utm_source', value: query.utm_source as string, public: true },
+        { key: 'utm_medium', value: query.utm_medium as string, public: true },
+        {
+          key: 'utm_campaign',
+          value: query.utm_campaign as string,
+          public: true,
+        },
+        { key: 'utm_term', value: query.utm_term as string, public: true },
+        {
+          key: 'utm_content',
+          value: query.utm_content as string,
+          public: true,
+        },
+      ],
     };
 
     if (hasUser) {
