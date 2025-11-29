@@ -376,11 +376,11 @@ fragment FullBlock on BlockContent {
       ...FullTeaser
     }
   }
-  
+
   ... on FlexBlock {
     blockStyle
     type
-    nestedBlocks {
+    blocks {
       alignment {
         i
         x
@@ -391,7 +391,7 @@ fragment FullBlock on BlockContent {
       }
       block {
         __typename
-        
+
         ... on TeaserSlotsBlock {
           title
           blockStyle
@@ -419,7 +419,7 @@ fragment FullBlock on BlockContent {
             ...FullTeaser
           }
         }
-        
+
         ... on TeaserListBlock {
           title
           blockStyle
@@ -439,7 +439,7 @@ fragment FullBlock on BlockContent {
             ...FullTeaser
           }
         }
-        
+
         ...BlockWithoutTeaser
       }
     }

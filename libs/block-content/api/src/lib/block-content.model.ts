@@ -96,7 +96,7 @@ import {
   StreamableVideoBlock,
   StreamableVideoBlockInput,
 } from './embed/streamable-block.model';
-import { FlexBlock, FlexBlockInput } from './nested-blocks/flex-block.model';
+import { FlexBlock, FlexBlockInput } from './flex/flex-block.model';
 
 export const BlockContent = createUnionType({
   name: 'BlockContent',
@@ -333,28 +333,19 @@ export function mapBlockUnionMap(
         autofillTeasers: [],
       };
     }
-    
+
     case BlockType.FlexBlock: {
       const blockValue = value[type];
+
       return {
         type,
         ...blockValue,
-        nestedBlocks:
-          blockValue?.nestedBlocks.map(nestedBlock => {
-            if (nestedBlock.block) {
-              const mappedBlock = mapBlockUnionMap(
-                nestedBlock.block as BlockContentInput
-              );
-              return {
-                alignment: nestedBlock.alignment,
-                block: mappedBlock,
-              };
-            } else {
-              return {
-                alignment: nestedBlock.alignment,
-                block: null,
-              };
-            }
+        blocks:
+          blockValue?.blocks.map(block => {
+            return {
+              alignment: block.alignment,
+              block: block.block ? mapBlockUnionMap(block.block) : undefined,
+            };
           }) ?? [],
       };
     }
@@ -376,5 +367,5 @@ export class HasBlockContent {
 @InterfaceType()
 export class HasOneBlockContent {
   @Field(() => BlockContent, { nullable: true })
-  block!: typeof BlockContent | null;
+  block?: typeof BlockContent;
 }

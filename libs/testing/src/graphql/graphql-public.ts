@@ -434,6 +434,17 @@ export enum BlockType {
   YouTubeVideo = 'YouTubeVideo',
 }
 
+export type BlockWithAlignment = HasOneBlockContent & {
+  __typename?: 'BlockWithAlignment';
+  alignment: FlexAlignment;
+  block?: Maybe<BlockContent>;
+};
+
+export type BlockWithAlignmentInput = {
+  alignment: FlexAlignmentInput;
+  block?: InputMaybe<BlockContentInput>;
+};
+
 export type BreakBlock = BaseBlock &
   HasImage & {
     __typename?: 'BreakBlock';
@@ -1006,26 +1017,7 @@ export type FlexAlignment = {
   __typename?: 'FlexAlignment';
   h: Scalars['Int'];
   i: Scalars['String'];
-  static: Scalars['Boolean'];
-  w: Scalars['Int'];
-  x: Scalars['Int'];
-  y: Scalars['Int'];
-};
-
-export type FlexAlignmentBlocks = {
-  __typename?: 'FlexAlignmentBlocks';
-  h: Scalars['Int'];
-  i: Scalars['String'];
-  static: Scalars['Boolean'];
-  w: Scalars['Int'];
-  x: Scalars['Int'];
-  y: Scalars['Int'];
-};
-
-export type FlexAlignmentBlocksInput = {
-  h: Scalars['Int'];
-  i: Scalars['String'];
-  static: Scalars['Boolean'];
+  static?: Maybe<Scalars['Boolean']>;
   w: Scalars['Int'];
   x: Scalars['Int'];
   y: Scalars['Int'];
@@ -1034,7 +1026,7 @@ export type FlexAlignmentBlocksInput = {
 export type FlexAlignmentInput = {
   h: Scalars['Int'];
   i: Scalars['String'];
-  static: Scalars['Boolean'];
+  static?: InputMaybe<Scalars['Boolean']>;
   w: Scalars['Int'];
   x: Scalars['Int'];
   y: Scalars['Int'];
@@ -1044,15 +1036,14 @@ export type FlexBlock = BaseBlock & {
   __typename?: 'FlexBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
-  nestedBlocks: Array<NestedBlock>;
+  blocks: Array<BlockWithAlignment>;
   type: BlockType;
 };
 
 export type FlexBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
-  nestedBlocks: Array<NestedBlockInput>;
-  type: BlockType;
+  blocks: Array<BlockWithAlignmentInput>;
 };
 
 export type FlexTeaser = {
@@ -2162,17 +2153,6 @@ export enum NavigationLinkType {
   External = 'External',
   Page = 'Page',
 }
-
-export type NestedBlock = HasOneBlockContent & {
-  __typename?: 'NestedBlock';
-  alignment: FlexAlignmentBlocks;
-  block?: Maybe<BlockContent>;
-};
-
-export type NestedBlockInput = {
-  alignment: FlexAlignmentBlocksInput;
-  block?: InputMaybe<BlockContentInput>;
-};
 
 export type NonDbProperty = {
   __typename?: 'NonDbProperty';

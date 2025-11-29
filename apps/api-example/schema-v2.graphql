@@ -342,6 +342,16 @@ enum BlockType {
   YouTubeVideo
 }
 
+type BlockWithAlignment implements HasOneBlockContent {
+  alignment: FlexAlignment!
+  block: BlockContent
+}
+
+input BlockWithAlignmentInput {
+  alignment: FlexAlignmentInput!
+  block: BlockContentInput
+}
+
 type BreakBlock implements BaseBlock & HasImage {
   blockStyle: String
   blockStyleName: String
@@ -890,25 +900,7 @@ input FacebookVideoBlockInput {
 type FlexAlignment {
   h: Int!
   i: String!
-  static: Boolean!
-  w: Int!
-  x: Int!
-  y: Int!
-}
-
-type FlexAlignmentBlocks {
-  h: Int!
-  i: String!
-  static: Boolean!
-  w: Int!
-  x: Int!
-  y: Int!
-}
-
-input FlexAlignmentBlocksInput {
-  h: Int!
-  i: String!
-  static: Boolean!
+  static: Boolean
   w: Int!
   x: Int!
   y: Int!
@@ -917,7 +909,7 @@ input FlexAlignmentBlocksInput {
 input FlexAlignmentInput {
   h: Int!
   i: String!
-  static: Boolean!
+  static: Boolean
   w: Int!
   x: Int!
   y: Int!
@@ -926,15 +918,14 @@ input FlexAlignmentInput {
 type FlexBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
-  nestedBlocks: [NestedBlock!]!
+  blocks: [BlockWithAlignment!]!
   type: BlockType!
 }
 
 input FlexBlockInput {
   blockStyle: String
   blockStyleName: String
-  nestedBlocks: [NestedBlockInput!]!
-  type: BlockType!
+  blocks: [BlockWithAlignmentInput!]!
 }
 
 type FlexTeaser {
@@ -1626,16 +1617,6 @@ enum NavigationLinkType {
   Article
   External
   Page
-}
-
-type NestedBlock implements HasOneBlockContent {
-  alignment: FlexAlignmentBlocks!
-  block: BlockContent
-}
-
-input NestedBlockInput {
-  alignment: FlexAlignmentBlocksInput!
-  block: BlockContentInput
 }
 
 type NonDbProperty {
