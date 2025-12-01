@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import { Meta } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
 import {
   BaseNavigationLink,
   Navigation,
@@ -11,6 +11,10 @@ import { WithUserDecorator } from '@wepublish/storybook';
 import { mockImage } from '@wepublish/storybook/mocks';
 import nanoid from 'nanoid';
 import React from 'react';
+import { userEvent, within } from '@storybook/test';
+import { wait } from '@wepublish/testing';
+import { mockUser } from '@wepublish/storybook/mocks';
+import { MeDocument } from '@wepublish/website/api';
 
 const navigations = [
   {
@@ -217,6 +221,46 @@ const navigations = [
 
 const logo = mockImage();
 
+const clickLogout: StoryObj['play'] = async ({ canvasElement, step }) => {
+  const canvas = within(canvasElement);
+  const logoutButton = await canvas.getByText('Logout');
+
+  await step('Logout', async () => {
+    await userEvent.click(logoutButton);
+  });
+};
+
+const clickIconButton: StoryObj['play'] = async ({ canvasElement, step }) => {
+  const canvas = within(canvasElement);
+  const iconButton = await canvas.getByRole('link', { name: 'Search' });
+  iconButton.addEventListener('click', e => {
+    e.preventDefault();
+  });
+
+  await step('Click icon button', async () => {
+    await userEvent.click(iconButton);
+  });
+};
+
+const toggleMenu: StoryObj['play'] = async ({ canvasElement, step }) => {
+  const canvas = within(canvasElement);
+  const menuButton = await canvas.getByLabelText('Menu');
+
+  await step('Toggle menu', async () => {
+    await userEvent.click(menuButton);
+  });
+};
+
+const waitForInitialDataIsSet =
+  (
+    playFunction: NonNullable<StoryObj['play']>
+  ): NonNullable<StoryObj['play']> =>
+  async ctx => {
+    await wait(100);
+    await playFunction(ctx);
+  };
+
+const user = mockUser();
 export default {
   component: Navbar,
   title: 'Components/Navbar',
@@ -236,9 +280,73 @@ export const Default = {
   },
 };
 
+export const WithMenuOpen = {
+  ...Default,
+  args: {
+    ...Default.args,
+    isMenuOpen: true,
+  },
+};
+
 export const WithLoggedIn = {
   ...Default,
   decorators: [WithUserDecorator(null)],
+};
+
+export const UserLogOut = {
+  ...WithLoggedIn,
+  decorators: [WithUserDecorator(user)],
+  args: {
+    ...WithLoggedIn.args,
+    isMenuOpen: true,
+    logo: undefined,
+  },
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: MeDocument,
+          },
+          result: {
+            data: {
+              me: user,
+            },
+          },
+        },
+      ],
+    },
+  },
+  play: waitForInitialDataIsSet(async ctx => {
+    await wait(500);
+    await clickLogout(ctx);
+  }),
+};
+
+export const ToggleMenu = {
+  ...Default,
+  args: {
+    ...Default.args,
+    logo: undefined,
+  },
+  play: waitForInitialDataIsSet(async ctx => {
+    await toggleMenu(ctx);
+    await wait(500);
+    await toggleMenu(ctx);
+  }),
+};
+
+export const ClickIconButton = {
+  ...Default,
+  args: {
+    ...Default.args,
+    logo: undefined,
+    navPaperClassName: 'navpaper-class',
+  },
+  play: waitForInitialDataIsSet(async ctx => {
+    await wait(500);
+    await clickIconButton(ctx);
+  }),
 };
 
 export const WithoutLogo = {
