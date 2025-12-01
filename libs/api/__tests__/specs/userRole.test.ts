@@ -1,9 +1,7 @@
-import { Permission } from '@wepublish/permissions';
 import { ApolloServer } from 'apollo-server-express';
 import {
   CreateUserRole,
   DeleteUserRole,
-  PermissionList,
   UpdateUserRole,
   UserRole,
   UserRoleInput,
@@ -30,7 +28,6 @@ beforeAll(async () => {
 describe('User Roles', () => {
   describe('can be created/edited/deleted:', () => {
     const ids: string[] = [];
-    let permissionsList: Permission[];
     let permissionIDs: string[];
 
     beforeAll(async () => {
@@ -46,18 +43,6 @@ describe('User Roles', () => {
         },
       });
       ids.unshift(res.data?.createUserRole.id);
-    });
-
-    test('can read permission list', async () => {
-      const res = await testServerPrivate.executeOperation({
-        query: PermissionList,
-      });
-      expect(res).toMatchSnapshot();
-
-      permissionsList = res.data?.permissions;
-      permissionIDs = permissionsList.map(
-        (permission: Permission) => permission.id
-      );
     });
 
     test('can be created', async () => {

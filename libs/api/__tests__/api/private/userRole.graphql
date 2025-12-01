@@ -15,7 +15,12 @@ fragment FullUserRole on UserRole {
 }
 
 query UserRoleList($filter: String, $cursor: String, $take: Int, $skip: Int) {
-  userRoles(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
+  userRoles(
+    filter: { name: $filter }
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
     nodes {
       ...FullUserRole
     }
@@ -28,12 +33,6 @@ query UserRoleList($filter: String, $cursor: String, $take: Int, $skip: Int) {
     }
 
     totalCount
-  }
-}
-
-query PermissionList {
-  permissions {
-    ...FullPermission
   }
 }
 

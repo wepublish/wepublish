@@ -1138,7 +1138,6 @@ export type Query = {
   peer?: Maybe<Peer>;
   peerProfile: PeerProfile;
   peers?: Maybe<Array<Peer>>;
-  permissions?: Maybe<Array<Permission>>;
   poll?: Maybe<FullPoll>;
   polls?: Maybe<PollConnection>;
   ratingSystem: FullCommentRatingSystem;
@@ -2074,11 +2073,6 @@ export type UserRoleListQueryVariables = Exact<{
 
 export type UserRoleListQuery = { __typename?: 'Query', userRoles: { __typename?: 'UserRoleConnection', totalCount: number, nodes: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
-export type PermissionListQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type PermissionListQuery = { __typename?: 'Query', permissions?: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> | null };
-
 export type UserRoleQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -2716,13 +2710,6 @@ export const UserRoleList = gql`
   }
 }
     ${FullUserRole}`;
-export const PermissionList = gql`
-    query PermissionList {
-  permissions {
-    ...FullPermission
-  }
-}
-    ${FullPermission}`;
 export const UserRole = gql`
     query UserRole($id: String!) {
   userRole(id: $id) {
