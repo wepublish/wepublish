@@ -29,70 +29,6 @@ export type Scalars = {
   VoteValue: number;
 };
 
-export type Author = {
-  __typename?: 'Author';
-  bio?: Maybe<Scalars['RichText']>;
-  createdAt: Scalars['DateTime'];
-  hideOnArticle?: Maybe<Scalars['Boolean']>;
-  hideOnTeam?: Maybe<Scalars['Boolean']>;
-  hideOnTeaser?: Maybe<Scalars['Boolean']>;
-  id: Scalars['String'];
-  image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  jobTitle?: Maybe<Scalars['String']>;
-  links?: Maybe<Array<AuthorLink>>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  peer?: Maybe<Peer>;
-  peerId?: Maybe<Scalars['String']>;
-  slug: Scalars['Slug'];
-  tags: Array<Tag>;
-  url: Scalars['String'];
-};
-
-export type AuthorConnection = {
-  __typename?: 'AuthorConnection';
-  nodes: Array<Author>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type AuthorFilter = {
-  hideOnTeam?: InputMaybe<Scalars['Boolean']>;
-  name?: InputMaybe<Scalars['String']>;
-  tagIds?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export type AuthorInput = {
-  bio?: InputMaybe<Scalars['RichText']>;
-  hideOnArticle?: InputMaybe<Scalars['Boolean']>;
-  hideOnTeam?: InputMaybe<Scalars['Boolean']>;
-  hideOnTeaser?: InputMaybe<Scalars['Boolean']>;
-  imageID?: InputMaybe<Scalars['String']>;
-  jobTitle?: InputMaybe<Scalars['String']>;
-  links?: InputMaybe<Array<AuthorLinkInput>>;
-  name: Scalars['String'];
-  slug: Scalars['Slug'];
-  tagIds?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export type AuthorLink = {
-  __typename?: 'AuthorLink';
-  title: Scalars['String'];
-  url: Scalars['String'];
-};
-
-export type AuthorLinkInput = {
-  title: Scalars['String'];
-  url: Scalars['String'];
-};
-
-export enum AuthorSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  Name = 'NAME'
-}
-
 export type AvailablePaymentMethod = {
   __typename?: 'AvailablePaymentMethod';
   forceAutoRenewal: Scalars['Boolean'];
@@ -472,7 +408,6 @@ export type Mutation = {
   __typename?: 'Mutation';
   approveComment: Comment;
   cancelSubscription?: Maybe<Subscription>;
-  createAuthor?: Maybe<Author>;
   createComment: Comment;
   createInvoice?: Maybe<Invoice>;
   createMemberPlan?: Maybe<MemberPlan>;
@@ -489,7 +424,6 @@ export type Mutation = {
   createTag?: Maybe<Tag>;
   createToken: CreatedToken;
   createUser?: Maybe<User>;
-  deleteAuthor?: Maybe<Author>;
   deleteComment: Comment;
   deleteImage?: Maybe<Image>;
   deleteInvoice?: Maybe<Invoice>;
@@ -515,7 +449,6 @@ export type Mutation = {
   sendJWTLogin: Scalars['String'];
   sendWebsiteLogin: Scalars['String'];
   sessions: Array<Session>;
-  updateAuthor?: Maybe<Author>;
   updateComment: Comment;
   updateImage?: Maybe<Image>;
   updateInvoice?: Maybe<Invoice>;
@@ -540,11 +473,6 @@ export type MutationApproveCommentArgs = {
 export type MutationCancelSubscriptionArgs = {
   id: Scalars['String'];
   reason: SubscriptionDeactivationReason;
-};
-
-
-export type MutationCreateAuthorArgs = {
-  input: AuthorInput;
 };
 
 
@@ -640,11 +568,6 @@ export type MutationCreateTokenArgs = {
 export type MutationCreateUserArgs = {
   input: UserInput;
   password: Scalars['String'];
-};
-
-
-export type MutationDeleteAuthorArgs = {
-  id: Scalars['String'];
 };
 
 
@@ -765,12 +688,6 @@ export type MutationSendJwtLoginArgs = {
 
 export type MutationSendWebsiteLoginArgs = {
   email: Scalars['String'];
-};
-
-
-export type MutationUpdateAuthorArgs = {
-  id: Scalars['String'];
-  input: AuthorInput;
 };
 
 
@@ -1099,8 +1016,6 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
-  author?: Maybe<Author>;
-  authors: AuthorConnection;
   comment?: Maybe<Comment>;
   comments: CommentConnection;
   createJWTForUser?: Maybe<JwtToken>;
@@ -1134,22 +1049,6 @@ export type Query = {
   tokens: Array<Token>;
   user?: Maybe<User>;
   users: UserConnection;
-};
-
-
-export type QueryAuthorArgs = {
-  id?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['Slug']>;
-};
-
-
-export type QueryAuthorsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<AuthorFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<AuthorSort>;
-  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -1680,51 +1579,6 @@ export type CreateJwtForWebsiteLoginQueryVariables = Exact<{ [key: string]: neve
 
 
 export type CreateJwtForWebsiteLoginQuery = { __typename?: 'Query', createJWTForWebsiteLogin?: { __typename?: 'JWTToken', token: string, expiresAt: string } | null };
-
-export type AuthorRefFragment = { __typename?: 'Author', id: string, name: string, jobTitle?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, information?: Descendant[] | null, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null };
-
-export type FullAuthorFragment = { __typename?: 'Author', slug: string, bio?: Descendant[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, information?: Descendant[] | null, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null };
-
-export type AuthorListQueryVariables = Exact<{
-  filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['String']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<SortOrder>;
-  sort?: InputMaybe<AuthorSort>;
-}>;
-
-
-export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'AuthorConnection', totalCount: number, nodes: Array<{ __typename?: 'Author', slug: string, bio?: Descendant[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, information?: Descendant[] | null, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
-
-export type AuthorQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type AuthorQuery = { __typename?: 'Query', author?: { __typename?: 'Author', slug: string, bio?: Descendant[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, information?: Descendant[] | null, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null } | null };
-
-export type CreateAuthorMutationVariables = Exact<{
-  input: AuthorInput;
-}>;
-
-
-export type CreateAuthorMutation = { __typename?: 'Mutation', createAuthor?: { __typename?: 'Author', slug: string, bio?: Descendant[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, information?: Descendant[] | null, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null } | null };
-
-export type UpdateAuthorMutationVariables = Exact<{
-  id: Scalars['String'];
-  input: AuthorInput;
-}>;
-
-
-export type UpdateAuthorMutation = { __typename?: 'Mutation', updateAuthor?: { __typename?: 'Author', slug: string, bio?: Descendant[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, information?: Descendant[] | null, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null } | null };
-
-export type DeleteAuthorMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteAuthorMutation = { __typename?: 'Mutation', deleteAuthor?: { __typename?: 'Author', slug: string, bio?: Descendant[] | null, createdAt: string, hideOnArticle?: boolean | null, hideOnTeaser?: boolean | null, hideOnTeam?: boolean | null, id: string, name: string, jobTitle?: string | null, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, information?: Descendant[] | null, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null } | null };
 
 export type RatingSystemQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2385,72 +2239,6 @@ export const FullImageFragmentDoc = gql`
   ...ImageURLs
 }
     ${ImageUrLsFragmentDoc}`;
-export const FullPeerProfileFragmentDoc = gql`
-    fragment FullPeerProfile on PeerProfile {
-  name
-  hostURL
-  themeColor
-  themeFontColor
-  logo {
-    ...FullImage
-  }
-  squareLogo {
-    ...FullImage
-  }
-  callToActionText
-  callToActionURL
-  callToActionImage {
-    ...FullImage
-  }
-  callToActionImageURL
-}
-    ${FullImageFragmentDoc}`;
-export const FullPeerFragmentDoc = gql`
-    fragment FullPeer on Peer {
-  id
-  name
-  slug
-  isDisabled
-  hostURL
-  information
-  profile {
-    ...FullPeerProfile
-  }
-}
-    ${FullPeerProfileFragmentDoc}`;
-export const AuthorRefFragmentDoc = gql`
-    fragment AuthorRef on Author {
-  id
-  name
-  jobTitle
-  image {
-    ...FullImage
-  }
-  peer {
-    ...FullPeer
-  }
-}
-    ${FullImageFragmentDoc}
-${FullPeerFragmentDoc}`;
-export const FullAuthorFragmentDoc = gql`
-    fragment FullAuthor on Author {
-  ...AuthorRef
-  slug
-  links {
-    title
-    url
-  }
-  bio
-  tags {
-    id
-    tag
-  }
-  createdAt
-  hideOnArticle
-  hideOnTeaser
-  hideOnTeam
-}
-    ${AuthorRefFragmentDoc}`;
 export const FullPermissionFragmentDoc = gql`
     fragment FullPermission on Permission {
   id
@@ -2666,6 +2454,39 @@ export const PageInfoFragmentDoc = gql`
   hasPreviousPage
 }
     `;
+export const FullPeerProfileFragmentDoc = gql`
+    fragment FullPeerProfile on PeerProfile {
+  name
+  hostURL
+  themeColor
+  themeFontColor
+  logo {
+    ...FullImage
+  }
+  squareLogo {
+    ...FullImage
+  }
+  callToActionText
+  callToActionURL
+  callToActionImage {
+    ...FullImage
+  }
+  callToActionImageURL
+}
+    ${FullImageFragmentDoc}`;
+export const FullPeerFragmentDoc = gql`
+    fragment FullPeer on Peer {
+  id
+  name
+  slug
+  isDisabled
+  hostURL
+  information
+  profile {
+    ...FullPeerProfile
+  }
+}
+    ${FullPeerProfileFragmentDoc}`;
 export const PollExternalVoteSourceFragmentDoc = gql`
     fragment PollExternalVoteSource on PollExternalVoteSource {
   id
@@ -2883,197 +2704,6 @@ export function useCreateJwtForWebsiteLoginLazyQuery(baseOptions?: Apollo.LazyQu
 export type CreateJwtForWebsiteLoginQueryHookResult = ReturnType<typeof useCreateJwtForWebsiteLoginQuery>;
 export type CreateJwtForWebsiteLoginLazyQueryHookResult = ReturnType<typeof useCreateJwtForWebsiteLoginLazyQuery>;
 export type CreateJwtForWebsiteLoginQueryResult = Apollo.QueryResult<CreateJwtForWebsiteLoginQuery, CreateJwtForWebsiteLoginQueryVariables>;
-export const AuthorListDocument = gql`
-    query AuthorList($filter: String, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: AuthorSort) {
-  authors(
-    filter: {name: $filter}
-    cursor: $cursor
-    take: $take
-    skip: $skip
-    order: $order
-    sort: $sort
-  ) {
-    nodes {
-      ...FullAuthor
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    ${FullAuthorFragmentDoc}`;
-
-/**
- * __useAuthorListQuery__
- *
- * To run a query within a React component, call `useAuthorListQuery` and pass it any options that fit your needs.
- * When your component renders, `useAuthorListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useAuthorListQuery({
- *   variables: {
- *      filter: // value for 'filter'
- *      cursor: // value for 'cursor'
- *      take: // value for 'take'
- *      skip: // value for 'skip'
- *      order: // value for 'order'
- *      sort: // value for 'sort'
- *   },
- * });
- */
-export function useAuthorListQuery(baseOptions?: Apollo.QueryHookOptions<AuthorListQuery, AuthorListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AuthorListQuery, AuthorListQueryVariables>(AuthorListDocument, options);
-      }
-export function useAuthorListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AuthorListQuery, AuthorListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AuthorListQuery, AuthorListQueryVariables>(AuthorListDocument, options);
-        }
-export type AuthorListQueryHookResult = ReturnType<typeof useAuthorListQuery>;
-export type AuthorListLazyQueryHookResult = ReturnType<typeof useAuthorListLazyQuery>;
-export type AuthorListQueryResult = Apollo.QueryResult<AuthorListQuery, AuthorListQueryVariables>;
-export const AuthorDocument = gql`
-    query Author($id: String!) {
-  author(id: $id) {
-    ...FullAuthor
-  }
-}
-    ${FullAuthorFragmentDoc}`;
-
-/**
- * __useAuthorQuery__
- *
- * To run a query within a React component, call `useAuthorQuery` and pass it any options that fit your needs.
- * When your component renders, `useAuthorQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useAuthorQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useAuthorQuery(baseOptions: Apollo.QueryHookOptions<AuthorQuery, AuthorQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AuthorQuery, AuthorQueryVariables>(AuthorDocument, options);
-      }
-export function useAuthorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AuthorQuery, AuthorQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AuthorQuery, AuthorQueryVariables>(AuthorDocument, options);
-        }
-export type AuthorQueryHookResult = ReturnType<typeof useAuthorQuery>;
-export type AuthorLazyQueryHookResult = ReturnType<typeof useAuthorLazyQuery>;
-export type AuthorQueryResult = Apollo.QueryResult<AuthorQuery, AuthorQueryVariables>;
-export const CreateAuthorDocument = gql`
-    mutation CreateAuthor($input: AuthorInput!) {
-  createAuthor(input: $input) {
-    ...FullAuthor
-  }
-}
-    ${FullAuthorFragmentDoc}`;
-export type CreateAuthorMutationFn = Apollo.MutationFunction<CreateAuthorMutation, CreateAuthorMutationVariables>;
-
-/**
- * __useCreateAuthorMutation__
- *
- * To run a mutation, you first call `useCreateAuthorMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateAuthorMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createAuthorMutation, { data, loading, error }] = useCreateAuthorMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useCreateAuthorMutation(baseOptions?: Apollo.MutationHookOptions<CreateAuthorMutation, CreateAuthorMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateAuthorMutation, CreateAuthorMutationVariables>(CreateAuthorDocument, options);
-      }
-export type CreateAuthorMutationHookResult = ReturnType<typeof useCreateAuthorMutation>;
-export type CreateAuthorMutationResult = Apollo.MutationResult<CreateAuthorMutation>;
-export type CreateAuthorMutationOptions = Apollo.BaseMutationOptions<CreateAuthorMutation, CreateAuthorMutationVariables>;
-export const UpdateAuthorDocument = gql`
-    mutation UpdateAuthor($id: String!, $input: AuthorInput!) {
-  updateAuthor(id: $id, input: $input) {
-    ...FullAuthor
-  }
-}
-    ${FullAuthorFragmentDoc}`;
-export type UpdateAuthorMutationFn = Apollo.MutationFunction<UpdateAuthorMutation, UpdateAuthorMutationVariables>;
-
-/**
- * __useUpdateAuthorMutation__
- *
- * To run a mutation, you first call `useUpdateAuthorMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateAuthorMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateAuthorMutation, { data, loading, error }] = useUpdateAuthorMutation({
- *   variables: {
- *      id: // value for 'id'
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateAuthorMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAuthorMutation, UpdateAuthorMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateAuthorMutation, UpdateAuthorMutationVariables>(UpdateAuthorDocument, options);
-      }
-export type UpdateAuthorMutationHookResult = ReturnType<typeof useUpdateAuthorMutation>;
-export type UpdateAuthorMutationResult = Apollo.MutationResult<UpdateAuthorMutation>;
-export type UpdateAuthorMutationOptions = Apollo.BaseMutationOptions<UpdateAuthorMutation, UpdateAuthorMutationVariables>;
-export const DeleteAuthorDocument = gql`
-    mutation DeleteAuthor($id: String!) {
-  deleteAuthor(id: $id) {
-    ...FullAuthor
-  }
-}
-    ${FullAuthorFragmentDoc}`;
-export type DeleteAuthorMutationFn = Apollo.MutationFunction<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
-
-/**
- * __useDeleteAuthorMutation__
- *
- * To run a mutation, you first call `useDeleteAuthorMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteAuthorMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteAuthorMutation, { data, loading, error }] = useDeleteAuthorMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeleteAuthorMutation(baseOptions?: Apollo.MutationHookOptions<DeleteAuthorMutation, DeleteAuthorMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteAuthorMutation, DeleteAuthorMutationVariables>(DeleteAuthorDocument, options);
-      }
-export type DeleteAuthorMutationHookResult = ReturnType<typeof useDeleteAuthorMutation>;
-export type DeleteAuthorMutationResult = Apollo.MutationResult<DeleteAuthorMutation>;
-export type DeleteAuthorMutationOptions = Apollo.BaseMutationOptions<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
 export const RatingSystemDocument = gql`
     query RatingSystem {
   ratingSystem {

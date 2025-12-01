@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
 import {
   AuthorListDocument,
-  AuthorRefFragment,
+  FullAuthorFragment,
+  getApiClientV2,
   useAuthorListQuery,
   useCreateAuthorMutation,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import { slugify } from '@wepublish/utils';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,10 +19,10 @@ const ButtonWrapper = styled.div`
 `;
 
 export interface AuthorCheckPickerProps {
-  readonly list: AuthorRefFragment[];
+  readonly list: FullAuthorFragment[];
   disabled?: boolean;
   onClose?(): void;
-  onChange?(authors: AuthorRefFragment[]): void;
+  onChange?(authors: FullAuthorFragment[]): void;
 }
 
 export function AuthorCheckPicker({
@@ -30,11 +31,13 @@ export function AuthorCheckPicker({
   onChange,
 }: AuthorCheckPickerProps) {
   const { t } = useTranslation();
-  const [foundAuthors, setFoundAuthors] = useState<AuthorRefFragment[]>([]);
+  const [foundAuthors, setFoundAuthors] = useState<FullAuthorFragment[]>([]);
   const [authorsFilter, setAuthorsFilter] = useState('');
 
   const authorsVariables = { filter: authorsFilter || undefined, take: 10 };
+  const client = getApiClientV2();
   const { data } = useAuthorListQuery({
+    client,
     variables: authorsVariables,
     fetchPolicy: 'network-only',
   });
@@ -50,16 +53,21 @@ export function AuthorCheckPicker({
   }, [data?.authors, list]);
 
   const [createAuthor] = useCreateAuthorMutation({
+    client,
     refetchQueries: [getOperationNameFromDocument(AuthorListDocument)],
   });
 
   async function handleCreateAuthor() {
     await createAuthor({
       variables: {
-        input: {
-          name: authorsFilter,
-          slug: slugify(authorsFilter),
-        },
+        name: authorsFilter,
+        slug: slugify(authorsFilter),
+        hideOnArticle: false,
+        hideOnTeam: false,
+        hideOnTeaser: false,
+        links: [],
+        tagIds: [],
+        bio: [],
       },
     });
   }

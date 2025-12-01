@@ -13,8 +13,6 @@ type Query {
   subscriptions(cursor: String, take: Int = 10, skip: Int = 0, filter: SubscriptionFilter, sort: SubscriptionSort = modifiedAt, order: SortOrder = Descending): SubscriptionConnection!
   subscriptionsAsCsv(filter: SubscriptionFilter): String
   tokens: [Token!]!
-  author(id: String, slug: Slug): Author
-  authors(cursor: String, take: Int = 10, skip: Int = 0, filter: AuthorFilter, sort: AuthorSort = ModifiedAt, order: SortOrder = Descending): AuthorConnection!
   image(id: String): Image
   images(cursor: String, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
   comment(id: String!): Comment
@@ -430,66 +428,6 @@ type Token {
   name: String!
 }
 
-type Author {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  slug: Slug!
-  url: String!
-  links: [AuthorLink!]
-  bio: RichText
-  jobTitle: String
-  imageID: String
-  image: Image
-  tags: [Tag!]!
-  hideOnArticle: Boolean
-  hideOnTeaser: Boolean
-  hideOnTeam: Boolean
-  peerId: String
-  peer: Peer
-}
-
-type AuthorLink {
-  title: String!
-  url: String!
-}
-
-type Tag {
-  id: String!
-  tag: String
-  type: TagType
-  main: Boolean!
-  description: RichText
-  url: String!
-}
-
-enum TagType {
-  Comment
-  Event
-  Author
-  Article
-  Page
-}
-
-type AuthorConnection {
-  nodes: [Author!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input AuthorFilter {
-  name: String
-  tagIds: [String!]
-  hideOnTeam: Boolean
-}
-
-enum AuthorSort {
-  CreatedAt
-  ModifiedAt
-  NAME
-}
-
 type ImageConnection {
   nodes: [Image!]!
   totalCount: Int!
@@ -524,6 +462,23 @@ type Comment {
   createdAt: DateTime!
   modifiedAt: DateTime!
   overriddenRatings: [overriddenRating!]
+}
+
+type Tag {
+  id: String!
+  tag: String
+  type: TagType
+  main: Boolean!
+  description: RichText
+  url: String!
+}
+
+enum TagType {
+  Comment
+  Event
+  Author
+  Article
+  Page
 }
 
 enum CommentAuthorType {
@@ -780,9 +735,6 @@ type Mutation {
   updateSubscription(id: String!, input: SubscriptionInput!): Subscription
   deleteSubscription(id: String!): Subscription
   cancelSubscription(id: String!, reason: SubscriptionDeactivationReason!): Subscription
-  createAuthor(input: AuthorInput!): Author
-  updateAuthor(id: String!, input: AuthorInput!): Author
-  deleteAuthor(id: String!): Author
   uploadImage(input: UploadImageInput!): Image
   updateImage(id: String!, input: UpdateImageInput!): Image
   deleteImage(id: String!): Image
@@ -914,24 +866,6 @@ input SubscriptionInput {
 input SubscriptionDeactivationInput {
   date: DateTime!
   reason: SubscriptionDeactivationReason!
-}
-
-input AuthorInput {
-  name: String!
-  slug: Slug!
-  links: [AuthorLinkInput!]
-  bio: RichText
-  jobTitle: String
-  imageID: String
-  tagIds: [String!]
-  hideOnArticle: Boolean
-  hideOnTeaser: Boolean
-  hideOnTeam: Boolean
-}
-
-input AuthorLinkInput {
-  title: String!
-  url: String!
 }
 
 input UploadImageInput {
