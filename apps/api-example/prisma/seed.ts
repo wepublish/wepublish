@@ -827,9 +827,9 @@ async function seedComments(
 }
 
 async function seedPaymentMethods(prisma: PrismaClient) {
-  const paymentMethods = await Promise.all([
-    prisma.paymentMethod.create({
-      data: {
+  await prisma.paymentMethod.createMany({
+    data: [
+      {
         id: 'payrexx',
         name: 'Payrexx',
         slug: 'payrexx',
@@ -837,9 +837,7 @@ async function seedPaymentMethods(prisma: PrismaClient) {
         paymentProviderID: 'payrexx',
         active: true,
       },
-    }),
-    prisma.paymentMethod.create({
-      data: {
+      {
         id: 'stripe',
         name: 'Stripe',
         slug: 'stripe',
@@ -847,10 +845,8 @@ async function seedPaymentMethods(prisma: PrismaClient) {
         paymentProviderID: 'stripe',
         active: true,
       },
-    }),
-  ]);
-
-  return paymentMethods;
+    ],
+  });
 }
 
 async function seedMemberPlans(prisma: PrismaClient) {
