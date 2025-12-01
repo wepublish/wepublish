@@ -106,8 +106,6 @@ import {
   getSubscriptionsAsCSV,
 } from './subscription/subscription.private-queries';
 
-import { GraphQLToken } from './token';
-import { getTokens } from './token/token.private-queries';
 import {
   GraphQLUser,
   GraphQLUserConnection,
@@ -307,17 +305,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       args: { filter: { type: GraphQLSubscriptionFilter } },
       resolve: (root, { filter }, { prisma: { subscription }, authenticate }) =>
         getSubscriptionsAsCSV(filter, authenticate, subscription),
-    },
-
-    // Token
-    // =====
-
-    tokens: {
-      type: new GraphQLNonNull(
-        new GraphQLList(new GraphQLNonNull(GraphQLToken))
-      ),
-      resolve: (root, args, { authenticateUser, prisma: { token } }) =>
-        getTokens(authenticateUser, token),
     },
 
     // Image

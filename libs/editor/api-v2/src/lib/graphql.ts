@@ -299,6 +299,13 @@ export type BaseTeaser = {
   type: Scalars['String'];
 };
 
+export type BaseToken = {
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+};
+
 export type BaseUser = {
   active: Scalars['Boolean'];
   firstName?: Maybe<Scalars['String']>;
@@ -1509,6 +1516,8 @@ export type Mutation = {
   createSubscriptionWithConfirmation: Scalars['Boolean'];
   /** Creates a new tag. */
   createTag: Tag;
+  /** Creates a token and returns it's secret once. */
+  createToken: TokenWithSecret;
   /**
    *
    *       Creates a new userConsent based on input.
@@ -1552,6 +1561,8 @@ export type Mutation = {
   deleteSubscriptionInterval: Array<SubscriptionFlowModel>;
   /** Deletes an existing tag. */
   deleteTag: Tag;
+  /** Deletes a token. */
+  deleteToken: Token;
   /**
    *
    *       Delete an existing userConsent by id.
@@ -1869,6 +1880,11 @@ export type MutationCreateTagArgs = {
 };
 
 
+export type MutationCreateTokenArgs = {
+  name: Scalars['String'];
+};
+
+
 export type MutationCreateUserConsentArgs = {
   consentId: Scalars['String'];
   userId: Scalars['String'];
@@ -1959,6 +1975,11 @@ export type MutationDeleteSubscriptionIntervalArgs = {
 
 
 export type MutationDeleteTagArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteTokenArgs = {
   id: Scalars['String'];
 };
 
@@ -3005,6 +3026,8 @@ export type Query = {
   tag: Tag;
   /** This query returns a list of tags */
   tags: TagConnection;
+  /** Returns a list of all tokens. */
+  tokens: Array<Token>;
   /**
    *
    *       Returns a single userConsent by id.
@@ -3817,6 +3840,23 @@ export type TitleBlockInput = {
   lead?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
+};
+
+export type Token = BaseToken & {
+  __typename?: 'Token';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+};
+
+export type TokenWithSecret = BaseToken & {
+  __typename?: 'TokenWithSecret';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  token: Scalars['String'];
 };
 
 export type TrackingPixel = {
@@ -5147,6 +5187,31 @@ export type DeleteTagMutationVariables = Exact<{
 
 export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, type: TagType, main: boolean, url: string } };
 
+type FullToken_Token_Fragment = { __typename?: 'Token', id: string, name: string };
+
+type FullToken_TokenWithSecret_Fragment = { __typename?: 'TokenWithSecret', id: string, name: string };
+
+export type FullTokenFragment = FullToken_Token_Fragment | FullToken_TokenWithSecret_Fragment;
+
+export type TokenListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TokenListQuery = { __typename?: 'Query', tokens: Array<{ __typename?: 'Token', id: string, name: string }> };
+
+export type CreateTokenMutationVariables = Exact<{
+  name: Scalars['String'];
+}>;
+
+
+export type CreateTokenMutation = { __typename?: 'Mutation', createToken: { __typename?: 'TokenWithSecret', token: string, id: string, name: string } };
+
+export type DeleteTokenMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteTokenMutation = { __typename?: 'Mutation', deleteToken: { __typename?: 'Token', id: string, name: string } };
+
 export type FullTrackingPixelFragment = { __typename?: 'TrackingPixel', id: string, uri?: string | null, error?: string | null, pixelUid?: string | null, trackingPixelMethod: { __typename?: 'TrackingPixelMethod', trackingPixelProviderID: string, trackingPixelProviderType: TrackingPixelProviderType } };
 
 export type FullTrackingPixelMethodFragment = { __typename?: 'TrackingPixelMethod', trackingPixelProviderID: string, trackingPixelProviderType: TrackingPixelProviderType };
@@ -6424,6 +6489,12 @@ export const SystemMailFragmentDoc = gql`
   }
 }
     ${MailTemplateRefFragmentDoc}`;
+export const FullTokenFragmentDoc = gql`
+    fragment FullToken on BaseToken {
+  id
+  name
+}
+    `;
 export const FullPermissionFragmentDoc = gql`
     fragment FullPermission on Permission {
   id
@@ -10337,6 +10408,107 @@ export function useDeleteTagMutation(baseOptions?: Apollo.MutationHookOptions<De
 export type DeleteTagMutationHookResult = ReturnType<typeof useDeleteTagMutation>;
 export type DeleteTagMutationResult = Apollo.MutationResult<DeleteTagMutation>;
 export type DeleteTagMutationOptions = Apollo.BaseMutationOptions<DeleteTagMutation, DeleteTagMutationVariables>;
+export const TokenListDocument = gql`
+    query TokenList {
+  tokens {
+    ...FullToken
+  }
+}
+    ${FullTokenFragmentDoc}`;
+
+/**
+ * __useTokenListQuery__
+ *
+ * To run a query within a React component, call `useTokenListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTokenListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTokenListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTokenListQuery(baseOptions?: Apollo.QueryHookOptions<TokenListQuery, TokenListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TokenListQuery, TokenListQueryVariables>(TokenListDocument, options);
+      }
+export function useTokenListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TokenListQuery, TokenListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TokenListQuery, TokenListQueryVariables>(TokenListDocument, options);
+        }
+export type TokenListQueryHookResult = ReturnType<typeof useTokenListQuery>;
+export type TokenListLazyQueryHookResult = ReturnType<typeof useTokenListLazyQuery>;
+export type TokenListQueryResult = Apollo.QueryResult<TokenListQuery, TokenListQueryVariables>;
+export const CreateTokenDocument = gql`
+    mutation CreateToken($name: String!) {
+  createToken(name: $name) {
+    ...FullToken
+    token
+  }
+}
+    ${FullTokenFragmentDoc}`;
+export type CreateTokenMutationFn = Apollo.MutationFunction<CreateTokenMutation, CreateTokenMutationVariables>;
+
+/**
+ * __useCreateTokenMutation__
+ *
+ * To run a mutation, you first call `useCreateTokenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTokenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTokenMutation, { data, loading, error }] = useCreateTokenMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useCreateTokenMutation(baseOptions?: Apollo.MutationHookOptions<CreateTokenMutation, CreateTokenMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTokenMutation, CreateTokenMutationVariables>(CreateTokenDocument, options);
+      }
+export type CreateTokenMutationHookResult = ReturnType<typeof useCreateTokenMutation>;
+export type CreateTokenMutationResult = Apollo.MutationResult<CreateTokenMutation>;
+export type CreateTokenMutationOptions = Apollo.BaseMutationOptions<CreateTokenMutation, CreateTokenMutationVariables>;
+export const DeleteTokenDocument = gql`
+    mutation DeleteToken($id: String!) {
+  deleteToken(id: $id) {
+    ...FullToken
+  }
+}
+    ${FullTokenFragmentDoc}`;
+export type DeleteTokenMutationFn = Apollo.MutationFunction<DeleteTokenMutation, DeleteTokenMutationVariables>;
+
+/**
+ * __useDeleteTokenMutation__
+ *
+ * To run a mutation, you first call `useDeleteTokenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTokenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTokenMutation, { data, loading, error }] = useDeleteTokenMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteTokenMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTokenMutation, DeleteTokenMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteTokenMutation, DeleteTokenMutationVariables>(DeleteTokenDocument, options);
+      }
+export type DeleteTokenMutationHookResult = ReturnType<typeof useDeleteTokenMutation>;
+export type DeleteTokenMutationResult = Apollo.MutationResult<DeleteTokenMutation>;
+export type DeleteTokenMutationOptions = Apollo.BaseMutationOptions<DeleteTokenMutation, DeleteTokenMutationVariables>;
 export const UserRoleListDocument = gql`
     query UserRoleList($filter: String, $cursorId: String, $take: Int, $skip: Int, $order: SortOrder, $sort: UserRoleSort) {
   userRoles(
@@ -10686,6 +10858,10 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
       "CustomTeaser",
       "EventTeaser",
       "PageTeaser"
+    ],
+    "BaseToken": [
+      "Token",
+      "TokenWithSecret"
     ],
     "BaseUser": [
       "SensitiveDataUser",
