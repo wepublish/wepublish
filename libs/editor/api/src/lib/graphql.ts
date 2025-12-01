@@ -489,7 +489,6 @@ export type Mutation = {
   createTag?: Maybe<Tag>;
   createToken: CreatedToken;
   createUser?: Maybe<User>;
-  createUserRole?: Maybe<UserRole>;
   deleteAuthor?: Maybe<Author>;
   deleteComment: Comment;
   deleteImage?: Maybe<Image>;
@@ -505,7 +504,6 @@ export type Mutation = {
   deleteTag?: Maybe<Tag>;
   deleteToken?: Maybe<CreatedToken>;
   deleteUser?: Maybe<User>;
-  deleteUserRole?: Maybe<UserRole>;
   importSubscription?: Maybe<Subscription>;
   markInvoiceAsPaid?: Maybe<Invoice>;
   rejectComment: Comment;
@@ -530,7 +528,6 @@ export type Mutation = {
   updateSubscription?: Maybe<Subscription>;
   updateTag?: Maybe<Tag>;
   updateUser?: Maybe<User>;
-  updateUserRole?: Maybe<UserRole>;
   uploadImage?: Maybe<Image>;
 };
 
@@ -646,11 +643,6 @@ export type MutationCreateUserArgs = {
 };
 
 
-export type MutationCreateUserRoleArgs = {
-  input: UserRoleInput;
-};
-
-
 export type MutationDeleteAuthorArgs = {
   id: Scalars['String'];
 };
@@ -722,11 +714,6 @@ export type MutationDeleteTokenArgs = {
 
 
 export type MutationDeleteUserArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteUserRoleArgs = {
   id: Scalars['String'];
 };
 
@@ -870,12 +857,6 @@ export type MutationUpdateTagArgs = {
 export type MutationUpdateUserArgs = {
   id: Scalars['String'];
   input: UserInput;
-};
-
-
-export type MutationUpdateUserRoleArgs = {
-  id: Scalars['String'];
-  input: UserRoleInput;
 };
 
 
@@ -1152,8 +1133,6 @@ export type Query = {
   tags?: Maybe<TagConnection>;
   tokens: Array<Token>;
   user?: Maybe<User>;
-  userRole?: Maybe<UserRole>;
-  userRoles: UserRoleConnection;
   users: UserConnection;
 };
 
@@ -1329,21 +1308,6 @@ export type QueryTagsArgs = {
 
 export type QueryUserArgs = {
   id?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryUserRoleArgs = {
-  id?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryUserRolesArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<UserRoleFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<UserRoleSort>;
-  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -1664,28 +1628,6 @@ export type UserRole = {
   permissions: Array<Permission>;
   systemRole: Scalars['Boolean'];
 };
-
-export type UserRoleConnection = {
-  __typename?: 'UserRoleConnection';
-  nodes: Array<UserRole>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type UserRoleFilter = {
-  name?: InputMaybe<Scalars['String']>;
-};
-
-export type UserRoleInput = {
-  description: Scalars['String'];
-  name: Scalars['String'];
-  permissionIDs?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export enum UserRoleSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
-}
 
 export enum UserSort {
   CreatedAt = 'createdAt',
@@ -2407,45 +2349,6 @@ export type SendWebsiteLoginMutation = { __typename?: 'Mutation', sendWebsiteLog
 export type FullPermissionFragment = { __typename?: 'Permission', id: string, description: string, deprecated: boolean };
 
 export type FullUserRoleFragment = { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> };
-
-export type UserRoleListQueryVariables = Exact<{
-  filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['String']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type UserRoleListQuery = { __typename?: 'Query', userRoles: { __typename?: 'UserRoleConnection', totalCount: number, nodes: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
-
-export type UserRoleQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type UserRoleQuery = { __typename?: 'Query', userRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
-
-export type CreateUserRoleMutationVariables = Exact<{
-  input: UserRoleInput;
-}>;
-
-
-export type CreateUserRoleMutation = { __typename?: 'Mutation', createUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
-
-export type UpdateUserRoleMutationVariables = Exact<{
-  id: Scalars['String'];
-  input: UserRoleInput;
-}>;
-
-
-export type UpdateUserRoleMutation = { __typename?: 'Mutation', updateUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
-
-export type DeleteUserRoleMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteUserRoleMutation = { __typename?: 'Mutation', deleteUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
 
 export const ImageUrLsFragmentDoc = gql`
     fragment ImageURLs on Image {
@@ -5935,188 +5838,6 @@ export function useSendWebsiteLoginMutation(baseOptions?: Apollo.MutationHookOpt
 export type SendWebsiteLoginMutationHookResult = ReturnType<typeof useSendWebsiteLoginMutation>;
 export type SendWebsiteLoginMutationResult = Apollo.MutationResult<SendWebsiteLoginMutation>;
 export type SendWebsiteLoginMutationOptions = Apollo.BaseMutationOptions<SendWebsiteLoginMutation, SendWebsiteLoginMutationVariables>;
-export const UserRoleListDocument = gql`
-    query UserRoleList($filter: String, $cursor: String, $take: Int, $skip: Int) {
-  userRoles(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
-    nodes {
-      ...FullUserRole
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    ${FullUserRoleFragmentDoc}`;
-
-/**
- * __useUserRoleListQuery__
- *
- * To run a query within a React component, call `useUserRoleListQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserRoleListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useUserRoleListQuery({
- *   variables: {
- *      filter: // value for 'filter'
- *      cursor: // value for 'cursor'
- *      take: // value for 'take'
- *      skip: // value for 'skip'
- *   },
- * });
- */
-export function useUserRoleListQuery(baseOptions?: Apollo.QueryHookOptions<UserRoleListQuery, UserRoleListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UserRoleListQuery, UserRoleListQueryVariables>(UserRoleListDocument, options);
-      }
-export function useUserRoleListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserRoleListQuery, UserRoleListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UserRoleListQuery, UserRoleListQueryVariables>(UserRoleListDocument, options);
-        }
-export type UserRoleListQueryHookResult = ReturnType<typeof useUserRoleListQuery>;
-export type UserRoleListLazyQueryHookResult = ReturnType<typeof useUserRoleListLazyQuery>;
-export type UserRoleListQueryResult = Apollo.QueryResult<UserRoleListQuery, UserRoleListQueryVariables>;
-export const UserRoleDocument = gql`
-    query UserRole($id: String!) {
-  userRole(id: $id) {
-    ...FullUserRole
-  }
-}
-    ${FullUserRoleFragmentDoc}`;
-
-/**
- * __useUserRoleQuery__
- *
- * To run a query within a React component, call `useUserRoleQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserRoleQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useUserRoleQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useUserRoleQuery(baseOptions: Apollo.QueryHookOptions<UserRoleQuery, UserRoleQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UserRoleQuery, UserRoleQueryVariables>(UserRoleDocument, options);
-      }
-export function useUserRoleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserRoleQuery, UserRoleQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UserRoleQuery, UserRoleQueryVariables>(UserRoleDocument, options);
-        }
-export type UserRoleQueryHookResult = ReturnType<typeof useUserRoleQuery>;
-export type UserRoleLazyQueryHookResult = ReturnType<typeof useUserRoleLazyQuery>;
-export type UserRoleQueryResult = Apollo.QueryResult<UserRoleQuery, UserRoleQueryVariables>;
-export const CreateUserRoleDocument = gql`
-    mutation CreateUserRole($input: UserRoleInput!) {
-  createUserRole(input: $input) {
-    ...FullUserRole
-  }
-}
-    ${FullUserRoleFragmentDoc}`;
-export type CreateUserRoleMutationFn = Apollo.MutationFunction<CreateUserRoleMutation, CreateUserRoleMutationVariables>;
-
-/**
- * __useCreateUserRoleMutation__
- *
- * To run a mutation, you first call `useCreateUserRoleMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateUserRoleMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createUserRoleMutation, { data, loading, error }] = useCreateUserRoleMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useCreateUserRoleMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserRoleMutation, CreateUserRoleMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateUserRoleMutation, CreateUserRoleMutationVariables>(CreateUserRoleDocument, options);
-      }
-export type CreateUserRoleMutationHookResult = ReturnType<typeof useCreateUserRoleMutation>;
-export type CreateUserRoleMutationResult = Apollo.MutationResult<CreateUserRoleMutation>;
-export type CreateUserRoleMutationOptions = Apollo.BaseMutationOptions<CreateUserRoleMutation, CreateUserRoleMutationVariables>;
-export const UpdateUserRoleDocument = gql`
-    mutation UpdateUserRole($id: String!, $input: UserRoleInput!) {
-  updateUserRole(id: $id, input: $input) {
-    ...FullUserRole
-  }
-}
-    ${FullUserRoleFragmentDoc}`;
-export type UpdateUserRoleMutationFn = Apollo.MutationFunction<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>;
-
-/**
- * __useUpdateUserRoleMutation__
- *
- * To run a mutation, you first call `useUpdateUserRoleMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateUserRoleMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateUserRoleMutation, { data, loading, error }] = useUpdateUserRoleMutation({
- *   variables: {
- *      id: // value for 'id'
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateUserRoleMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>(UpdateUserRoleDocument, options);
-      }
-export type UpdateUserRoleMutationHookResult = ReturnType<typeof useUpdateUserRoleMutation>;
-export type UpdateUserRoleMutationResult = Apollo.MutationResult<UpdateUserRoleMutation>;
-export type UpdateUserRoleMutationOptions = Apollo.BaseMutationOptions<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>;
-export const DeleteUserRoleDocument = gql`
-    mutation DeleteUserRole($id: String!) {
-  deleteUserRole(id: $id) {
-    ...FullUserRole
-  }
-}
-    ${FullUserRoleFragmentDoc}`;
-export type DeleteUserRoleMutationFn = Apollo.MutationFunction<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>;
-
-/**
- * __useDeleteUserRoleMutation__
- *
- * To run a mutation, you first call `useDeleteUserRoleMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteUserRoleMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteUserRoleMutation, { data, loading, error }] = useDeleteUserRoleMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeleteUserRoleMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>(DeleteUserRoleDocument, options);
-      }
-export type DeleteUserRoleMutationHookResult = ReturnType<typeof useDeleteUserRoleMutation>;
-export type DeleteUserRoleMutationResult = Apollo.MutationResult<DeleteUserRoleMutation>;
-export type DeleteUserRoleMutationOptions = Apollo.BaseMutationOptions<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>;
 
       export interface PossibleTypesResultData {
         possibleTypes: {

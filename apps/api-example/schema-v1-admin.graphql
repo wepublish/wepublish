@@ -12,8 +12,6 @@ type Query {
   subscription(id: String!): Subscription
   subscriptions(cursor: String, take: Int = 10, skip: Int = 0, filter: SubscriptionFilter, sort: SubscriptionSort = modifiedAt, order: SortOrder = Descending): SubscriptionConnection!
   subscriptionsAsCsv(filter: SubscriptionFilter): String
-  userRole(id: String): UserRole
-  userRoles(cursor: String, take: Int = 10, skip: Int = 0, filter: UserRoleFilter, sort: UserRoleSort = modifiedAt, order: SortOrder = Descending): UserRoleConnection!
   tokens: [Token!]!
   author(id: String, slug: Slug): Author
   authors(cursor: String, take: Int = 10, skip: Int = 0, filter: AuthorFilter, sort: AuthorSort = ModifiedAt, order: SortOrder = Descending): AuthorConnection!
@@ -425,21 +423,6 @@ enum SubscriptionSort {
   modifiedAt
 }
 
-type UserRoleConnection {
-  nodes: [UserRole!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input UserRoleFilter {
-  name: String
-}
-
-enum UserRoleSort {
-  createdAt
-  modifiedAt
-}
-
 type Token {
   id: String!
   createdAt: DateTime!
@@ -797,9 +780,6 @@ type Mutation {
   updateSubscription(id: String!, input: SubscriptionInput!): Subscription
   deleteSubscription(id: String!): Subscription
   cancelSubscription(id: String!, reason: SubscriptionDeactivationReason!): Subscription
-  createUserRole(input: UserRoleInput!): UserRole
-  updateUserRole(id: String!, input: UserRoleInput!): UserRole
-  deleteUserRole(id: String!): UserRole
   createAuthor(input: AuthorInput!): Author
   updateAuthor(id: String!, input: AuthorInput!): Author
   deleteAuthor(id: String!): Author
@@ -934,12 +914,6 @@ input SubscriptionInput {
 input SubscriptionDeactivationInput {
   date: DateTime!
   reason: SubscriptionDeactivationReason!
-}
-
-input UserRoleInput {
-  name: String!
-  description: String!
-  permissionIDs: [String!]
 }
 
 input AuthorInput {

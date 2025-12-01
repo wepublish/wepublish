@@ -19,7 +19,6 @@ import { MemberPlanSort } from '../db/memberPlan';
 import { PaymentSort } from '../db/payment';
 import { SubscriptionSort } from '../db/subscription';
 import { UserSort } from '../db/user';
-import { UserRoleSort } from '../db/userRole';
 import { GivenTokeExpiryToLongError, UserIdNotFound } from '../error';
 
 import { GraphQLJWTToken } from './auth';
@@ -135,17 +134,7 @@ import {
   GraphQLUserFilter,
   GraphQLUserSort,
 } from './user';
-import {
-  getAdminUserRoles,
-  getUserRoleById,
-} from './user-role/user-role.private-queries';
 import { getAdminUsers, getMe, getUserById } from './user/user.private-queries';
-import {
-  GraphQLUserRole,
-  GraphQLUserRoleConnection,
-  GraphQLUserRoleFilter,
-  GraphQLUserRoleSort,
-} from './userRole';
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -351,46 +340,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       args: { filter: { type: GraphQLSubscriptionFilter } },
       resolve: (root, { filter }, { prisma: { subscription }, authenticate }) =>
         getSubscriptionsAsCSV(filter, authenticate, subscription),
-    },
-
-    // UserRole
-    // ========
-
-    userRole: {
-      type: GraphQLUserRole,
-      args: { id: { type: GraphQLString } },
-      resolve: (root, { id }, { authenticate, loaders }) =>
-        getUserRoleById(id, authenticate, loaders.userRolesByID),
-    },
-
-    userRoles: {
-      type: new GraphQLNonNull(GraphQLUserRoleConnection),
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 10 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLUserRoleFilter },
-        sort: {
-          type: GraphQLUserRoleSort,
-          defaultValue: UserRoleSort.ModifiedAt,
-        },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, take, skip, cursor },
-        { authenticate, prisma: { userRole } }
-      ) =>
-        getAdminUserRoles(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          userRole
-        ),
     },
 
     // Token

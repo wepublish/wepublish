@@ -7,7 +7,6 @@ import {
   usePeerListLazyQuery,
   usePollLazyQuery,
   UserFilter,
-  useUserRoleListLazyQuery,
 } from '@wepublish/editor/api';
 import {
   ArticleFilter,
@@ -20,8 +19,9 @@ import {
   PollVoteFilter,
   Scalars,
   useEventProvidersLazyQuery,
+  useUserRoleListLazyQuery,
 } from '@wepublish/editor/api-v2';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdClose } from 'react-icons/md';
 import {
@@ -128,7 +128,7 @@ export function ListViewFilters({
   className,
   tagType,
 }: ListViewFiltersProps) {
-  const client = useMemo(() => getApiClientV2(), []);
+  const client = getApiClientV2();
   const { t } = useTranslation();
   const [resetFilterKey, setResetFilterkey] = useState<string>(
     new Date().getTime().toString()
@@ -142,6 +142,7 @@ export function ListViewFilters({
   });
 
   const [userRoleFetch, { data: userRoleData }] = useUserRoleListLazyQuery({
+    client,
     fetchPolicy: 'network-only',
     variables: {
       take: 200,
