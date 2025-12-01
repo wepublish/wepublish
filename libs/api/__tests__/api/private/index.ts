@@ -402,7 +402,6 @@ export type Mutation = {
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   createSubscription?: Maybe<Subscription>;
-  createTag?: Maybe<Tag>;
   createToken: CreatedToken;
   createUser?: Maybe<User>;
   deleteComment: Comment;
@@ -415,7 +414,6 @@ export type Mutation = {
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
   deleteRatingSystemAnswer: CommentRatingSystemAnswer;
   deleteSubscription?: Maybe<Subscription>;
-  deleteTag?: Maybe<Tag>;
   deleteToken?: Maybe<CreatedToken>;
   deleteUser?: Maybe<User>;
   importSubscription?: Maybe<Subscription>;
@@ -438,7 +436,6 @@ export type Mutation = {
   updatePoll?: Maybe<FullPoll>;
   updateRatingSystem: FullCommentRatingSystem;
   updateSubscription?: Maybe<Subscription>;
-  updateTag?: Maybe<Tag>;
   updateUser?: Maybe<User>;
   uploadImage?: Maybe<Image>;
 };
@@ -526,14 +523,6 @@ export type MutationCreateSubscriptionArgs = {
 };
 
 
-export type MutationCreateTagArgs = {
-  description?: InputMaybe<Scalars['RichText']>;
-  main?: InputMaybe<Scalars['Boolean']>;
-  tag?: InputMaybe<Scalars['String']>;
-  type: TagType;
-};
-
-
 export type MutationCreateTokenArgs = {
   input: TokenInput;
 };
@@ -591,11 +580,6 @@ export type MutationDeleteRatingSystemAnswerArgs = {
 
 
 export type MutationDeleteSubscriptionArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteTagArgs = {
   id: Scalars['String'];
 };
 
@@ -723,14 +707,6 @@ export type MutationUpdateRatingSystemArgs = {
 export type MutationUpdateSubscriptionArgs = {
   id: Scalars['String'];
   input: SubscriptionInput;
-};
-
-
-export type MutationUpdateTagArgs = {
-  description?: InputMaybe<Scalars['RichText']>;
-  id: Scalars['String'];
-  main?: InputMaybe<Scalars['Boolean']>;
-  tag?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -977,7 +953,6 @@ export type Query = {
   me?: Maybe<User>;
   memberPlan?: Maybe<MemberPlan>;
   memberPlans: MemberPlanConnection;
-  newSubscribersPerMonth?: Maybe<Array<Maybe<SubscribersPerMonth>>>;
   payment?: Maybe<Payment>;
   paymentMethod?: Maybe<PaymentMethod>;
   paymentMethods: Array<PaymentMethod>;
@@ -992,8 +967,6 @@ export type Query = {
   subscription?: Maybe<Subscription>;
   subscriptions: SubscriptionConnection;
   subscriptionsAsCsv?: Maybe<Scalars['String']>;
-  tag?: Maybe<Tag>;
-  tags?: Maybe<TagConnection>;
   tokens: Array<Token>;
   user?: Maybe<User>;
   users: UserConnection;
@@ -1067,11 +1040,6 @@ export type QueryMemberPlansArgs = {
 };
 
 
-export type QueryNewSubscribersPerMonthArgs = {
-  monthsBack?: InputMaybe<Scalars['Int']>;
-};
-
-
 export type QueryPaymentArgs = {
   id?: InputMaybe<Scalars['String']>;
 };
@@ -1133,21 +1101,6 @@ export type QuerySubscriptionsAsCsvArgs = {
 };
 
 
-export type QueryTagArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QueryTagsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<TagFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<TagSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
 export type QueryUserArgs = {
   id?: InputMaybe<Scalars['String']>;
 };
@@ -1187,12 +1140,6 @@ export enum SortOrder {
   Ascending = 'Ascending',
   Descending = 'Descending'
 }
-
-export type SubscribersPerMonth = {
-  __typename?: 'SubscribersPerMonth';
-  month: Scalars['String'];
-  subscriberCount: Scalars['Int'];
-};
 
 export type Subscription = {
   __typename?: 'Subscription';
@@ -1300,24 +1247,6 @@ export type Tag = {
   type?: Maybe<TagType>;
   url: Scalars['String'];
 };
-
-export type TagConnection = {
-  __typename?: 'TagConnection';
-  nodes: Array<Tag>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type TagFilter = {
-  tag?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<TagType>;
-};
-
-export enum TagSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  Tag = 'Tag'
-}
 
 export enum TagType {
   Article = 'Article',
@@ -1635,43 +1564,6 @@ export type RenewSubscriptionMutationVariables = Exact<{
 
 
 export type RenewSubscriptionMutation = { __typename?: 'Mutation', renewSubscription?: { __typename?: 'Invoice', id: string } | null };
-
-export type TagListQueryVariables = Exact<{
-  filter?: InputMaybe<TagFilter>;
-  cursor?: InputMaybe<Scalars['String']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<SortOrder>;
-  sort?: InputMaybe<TagSort>;
-}>;
-
-
-export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
-
-export type CreateTagMutationVariables = Exact<{
-  tag?: InputMaybe<Scalars['String']>;
-  description?: InputMaybe<Scalars['RichText']>;
-  type: TagType;
-}>;
-
-
-export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null } | null };
-
-export type UpdateTagMutationVariables = Exact<{
-  id: Scalars['String'];
-  tag?: InputMaybe<Scalars['String']>;
-  description?: InputMaybe<Scalars['RichText']>;
-}>;
-
-
-export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null } | null };
-
-export type DeleteTagMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null } | null };
 
 export type FullUserFragment = { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> };
 
@@ -2055,58 +1947,6 @@ export const RenewSubscription = gql`
     mutation RenewSubscription($id: String!) {
   renewSubscription(id: $id) {
     id
-  }
-}
-    `;
-export const TagList = gql`
-    query TagList($filter: TagFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
-  tags(
-    filter: $filter
-    cursor: $cursor
-    take: $take
-    skip: $skip
-    order: $order
-    sort: $sort
-  ) {
-    nodes {
-      id
-      tag
-      description
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    `;
-export const CreateTag = gql`
-    mutation CreateTag($tag: String, $description: RichText, $type: TagType!) {
-  createTag(tag: $tag, description: $description, type: $type) {
-    id
-    tag
-    description
-  }
-}
-    `;
-export const UpdateTag = gql`
-    mutation UpdateTag($id: String!, $tag: String, $description: RichText) {
-  updateTag(id: $id, tag: $tag, description: $description) {
-    id
-    tag
-    description
-  }
-}
-    `;
-export const DeleteTag = gql`
-    mutation DeleteTag($id: String!) {
-  deleteTag(id: $id) {
-    id
-    tag
-    description
   }
 }
     `;

@@ -404,7 +404,6 @@ export type Mutation = {
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   createSubscription?: Maybe<Subscription>;
-  createTag?: Maybe<Tag>;
   createToken: CreatedToken;
   createUser?: Maybe<User>;
   deleteComment: Comment;
@@ -417,7 +416,6 @@ export type Mutation = {
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
   deleteRatingSystemAnswer: CommentRatingSystemAnswer;
   deleteSubscription?: Maybe<Subscription>;
-  deleteTag?: Maybe<Tag>;
   deleteToken?: Maybe<CreatedToken>;
   deleteUser?: Maybe<User>;
   importSubscription?: Maybe<Subscription>;
@@ -440,7 +438,6 @@ export type Mutation = {
   updatePoll?: Maybe<FullPoll>;
   updateRatingSystem: FullCommentRatingSystem;
   updateSubscription?: Maybe<Subscription>;
-  updateTag?: Maybe<Tag>;
   updateUser?: Maybe<User>;
   uploadImage?: Maybe<Image>;
 };
@@ -528,14 +525,6 @@ export type MutationCreateSubscriptionArgs = {
 };
 
 
-export type MutationCreateTagArgs = {
-  description?: InputMaybe<Scalars['RichText']>;
-  main?: InputMaybe<Scalars['Boolean']>;
-  tag?: InputMaybe<Scalars['String']>;
-  type: TagType;
-};
-
-
 export type MutationCreateTokenArgs = {
   input: TokenInput;
 };
@@ -593,11 +582,6 @@ export type MutationDeleteRatingSystemAnswerArgs = {
 
 
 export type MutationDeleteSubscriptionArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteTagArgs = {
   id: Scalars['String'];
 };
 
@@ -725,14 +709,6 @@ export type MutationUpdateRatingSystemArgs = {
 export type MutationUpdateSubscriptionArgs = {
   id: Scalars['String'];
   input: SubscriptionInput;
-};
-
-
-export type MutationUpdateTagArgs = {
-  description?: InputMaybe<Scalars['RichText']>;
-  id: Scalars['String'];
-  main?: InputMaybe<Scalars['Boolean']>;
-  tag?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -979,7 +955,6 @@ export type Query = {
   me?: Maybe<User>;
   memberPlan?: Maybe<MemberPlan>;
   memberPlans: MemberPlanConnection;
-  newSubscribersPerMonth?: Maybe<Array<Maybe<SubscribersPerMonth>>>;
   payment?: Maybe<Payment>;
   paymentMethod?: Maybe<PaymentMethod>;
   paymentMethods: Array<PaymentMethod>;
@@ -994,8 +969,6 @@ export type Query = {
   subscription?: Maybe<Subscription>;
   subscriptions: SubscriptionConnection;
   subscriptionsAsCsv?: Maybe<Scalars['String']>;
-  tag?: Maybe<Tag>;
-  tags?: Maybe<TagConnection>;
   tokens: Array<Token>;
   user?: Maybe<User>;
   users: UserConnection;
@@ -1069,11 +1042,6 @@ export type QueryMemberPlansArgs = {
 };
 
 
-export type QueryNewSubscribersPerMonthArgs = {
-  monthsBack?: InputMaybe<Scalars['Int']>;
-};
-
-
 export type QueryPaymentArgs = {
   id?: InputMaybe<Scalars['String']>;
 };
@@ -1135,21 +1103,6 @@ export type QuerySubscriptionsAsCsvArgs = {
 };
 
 
-export type QueryTagArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QueryTagsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<TagFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<TagSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
 export type QueryUserArgs = {
   id?: InputMaybe<Scalars['String']>;
 };
@@ -1189,12 +1142,6 @@ export enum SortOrder {
   Ascending = 'Ascending',
   Descending = 'Descending'
 }
-
-export type SubscribersPerMonth = {
-  __typename?: 'SubscribersPerMonth';
-  month: Scalars['String'];
-  subscriberCount: Scalars['Int'];
-};
 
 export type Subscription = {
   __typename?: 'Subscription';
@@ -1302,24 +1249,6 @@ export type Tag = {
   type?: Maybe<TagType>;
   url: Scalars['String'];
 };
-
-export type TagConnection = {
-  __typename?: 'TagConnection';
-  nodes: Array<Tag>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type TagFilter = {
-  tag?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<TagType>;
-};
-
-export enum TagSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  Tag = 'Tag'
-}
 
 export enum TagType {
   Article = 'Article',
@@ -1959,58 +1888,6 @@ export type RenewSubscriptionMutationVariables = Exact<{
 
 
 export type RenewSubscriptionMutation = { __typename?: 'Mutation', renewSubscription?: { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> } | null };
-
-export type NewSubscribersPerMonthQueryVariables = Exact<{
-  months: Scalars['Int'];
-}>;
-
-
-export type NewSubscribersPerMonthQuery = { __typename?: 'Query', newSubscribersPerMonth?: Array<{ __typename?: 'SubscribersPerMonth', month: string, subscriberCount: number } | null> | null };
-
-export type TagListQueryVariables = Exact<{
-  filter?: InputMaybe<TagFilter>;
-  cursor?: InputMaybe<Scalars['String']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<SortOrder>;
-  sort?: InputMaybe<TagSort>;
-}>;
-
-
-export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
-
-export type TagQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type TagQuery = { __typename?: 'Query', tag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean } | null };
-
-export type CreateTagMutationVariables = Exact<{
-  tag?: InputMaybe<Scalars['String']>;
-  description?: InputMaybe<Scalars['RichText']>;
-  type: TagType;
-}>;
-
-
-export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean } | null };
-
-export type UpdateTagMutationVariables = Exact<{
-  id: Scalars['String'];
-  description?: InputMaybe<Scalars['RichText']>;
-  tag?: InputMaybe<Scalars['String']>;
-  main?: InputMaybe<Scalars['Boolean']>;
-}>;
-
-
-export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean } | null };
-
-export type DeleteTagMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, main: boolean } | null };
 
 export type TokenRefFragment = { __typename?: 'Token', id: string, name: string };
 
@@ -4544,252 +4421,6 @@ export function useRenewSubscriptionMutation(baseOptions?: Apollo.MutationHookOp
 export type RenewSubscriptionMutationHookResult = ReturnType<typeof useRenewSubscriptionMutation>;
 export type RenewSubscriptionMutationResult = Apollo.MutationResult<RenewSubscriptionMutation>;
 export type RenewSubscriptionMutationOptions = Apollo.BaseMutationOptions<RenewSubscriptionMutation, RenewSubscriptionMutationVariables>;
-export const NewSubscribersPerMonthDocument = gql`
-    query NewSubscribersPerMonth($months: Int!) {
-  newSubscribersPerMonth(monthsBack: $months) {
-    month
-    subscriberCount
-  }
-}
-    `;
-
-/**
- * __useNewSubscribersPerMonthQuery__
- *
- * To run a query within a React component, call `useNewSubscribersPerMonthQuery` and pass it any options that fit your needs.
- * When your component renders, `useNewSubscribersPerMonthQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useNewSubscribersPerMonthQuery({
- *   variables: {
- *      months: // value for 'months'
- *   },
- * });
- */
-export function useNewSubscribersPerMonthQuery(baseOptions: Apollo.QueryHookOptions<NewSubscribersPerMonthQuery, NewSubscribersPerMonthQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<NewSubscribersPerMonthQuery, NewSubscribersPerMonthQueryVariables>(NewSubscribersPerMonthDocument, options);
-      }
-export function useNewSubscribersPerMonthLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NewSubscribersPerMonthQuery, NewSubscribersPerMonthQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<NewSubscribersPerMonthQuery, NewSubscribersPerMonthQueryVariables>(NewSubscribersPerMonthDocument, options);
-        }
-export type NewSubscribersPerMonthQueryHookResult = ReturnType<typeof useNewSubscribersPerMonthQuery>;
-export type NewSubscribersPerMonthLazyQueryHookResult = ReturnType<typeof useNewSubscribersPerMonthLazyQuery>;
-export type NewSubscribersPerMonthQueryResult = Apollo.QueryResult<NewSubscribersPerMonthQuery, NewSubscribersPerMonthQueryVariables>;
-export const TagListDocument = gql`
-    query TagList($filter: TagFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
-  tags(
-    filter: $filter
-    cursor: $cursor
-    take: $take
-    skip: $skip
-    order: $order
-    sort: $sort
-  ) {
-    nodes {
-      id
-      tag
-      description
-      main
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    `;
-
-/**
- * __useTagListQuery__
- *
- * To run a query within a React component, call `useTagListQuery` and pass it any options that fit your needs.
- * When your component renders, `useTagListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useTagListQuery({
- *   variables: {
- *      filter: // value for 'filter'
- *      cursor: // value for 'cursor'
- *      take: // value for 'take'
- *      skip: // value for 'skip'
- *      order: // value for 'order'
- *      sort: // value for 'sort'
- *   },
- * });
- */
-export function useTagListQuery(baseOptions?: Apollo.QueryHookOptions<TagListQuery, TagListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
-      }
-export function useTagListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TagListQuery, TagListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
-        }
-export type TagListQueryHookResult = ReturnType<typeof useTagListQuery>;
-export type TagListLazyQueryHookResult = ReturnType<typeof useTagListLazyQuery>;
-export type TagListQueryResult = Apollo.QueryResult<TagListQuery, TagListQueryVariables>;
-export const TagDocument = gql`
-    query Tag($id: String!) {
-  tag(id: $id) {
-    id
-    tag
-    description
-    main
-  }
-}
-    `;
-
-/**
- * __useTagQuery__
- *
- * To run a query within a React component, call `useTagQuery` and pass it any options that fit your needs.
- * When your component renders, `useTagQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useTagQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useTagQuery(baseOptions: Apollo.QueryHookOptions<TagQuery, TagQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<TagQuery, TagQueryVariables>(TagDocument, options);
-      }
-export function useTagLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TagQuery, TagQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<TagQuery, TagQueryVariables>(TagDocument, options);
-        }
-export type TagQueryHookResult = ReturnType<typeof useTagQuery>;
-export type TagLazyQueryHookResult = ReturnType<typeof useTagLazyQuery>;
-export type TagQueryResult = Apollo.QueryResult<TagQuery, TagQueryVariables>;
-export const CreateTagDocument = gql`
-    mutation CreateTag($tag: String, $description: RichText, $type: TagType!) {
-  createTag(tag: $tag, description: $description, type: $type) {
-    id
-    tag
-    description
-    main
-  }
-}
-    `;
-export type CreateTagMutationFn = Apollo.MutationFunction<CreateTagMutation, CreateTagMutationVariables>;
-
-/**
- * __useCreateTagMutation__
- *
- * To run a mutation, you first call `useCreateTagMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateTagMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createTagMutation, { data, loading, error }] = useCreateTagMutation({
- *   variables: {
- *      tag: // value for 'tag'
- *      description: // value for 'description'
- *      type: // value for 'type'
- *   },
- * });
- */
-export function useCreateTagMutation(baseOptions?: Apollo.MutationHookOptions<CreateTagMutation, CreateTagMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateTagMutation, CreateTagMutationVariables>(CreateTagDocument, options);
-      }
-export type CreateTagMutationHookResult = ReturnType<typeof useCreateTagMutation>;
-export type CreateTagMutationResult = Apollo.MutationResult<CreateTagMutation>;
-export type CreateTagMutationOptions = Apollo.BaseMutationOptions<CreateTagMutation, CreateTagMutationVariables>;
-export const UpdateTagDocument = gql`
-    mutation UpdateTag($id: String!, $description: RichText, $tag: String, $main: Boolean) {
-  updateTag(id: $id, tag: $tag, description: $description, main: $main) {
-    id
-    tag
-    description
-    main
-  }
-}
-    `;
-export type UpdateTagMutationFn = Apollo.MutationFunction<UpdateTagMutation, UpdateTagMutationVariables>;
-
-/**
- * __useUpdateTagMutation__
- *
- * To run a mutation, you first call `useUpdateTagMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateTagMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateTagMutation, { data, loading, error }] = useUpdateTagMutation({
- *   variables: {
- *      id: // value for 'id'
- *      description: // value for 'description'
- *      tag: // value for 'tag'
- *      main: // value for 'main'
- *   },
- * });
- */
-export function useUpdateTagMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTagMutation, UpdateTagMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateTagMutation, UpdateTagMutationVariables>(UpdateTagDocument, options);
-      }
-export type UpdateTagMutationHookResult = ReturnType<typeof useUpdateTagMutation>;
-export type UpdateTagMutationResult = Apollo.MutationResult<UpdateTagMutation>;
-export type UpdateTagMutationOptions = Apollo.BaseMutationOptions<UpdateTagMutation, UpdateTagMutationVariables>;
-export const DeleteTagDocument = gql`
-    mutation DeleteTag($id: String!) {
-  deleteTag(id: $id) {
-    id
-    tag
-    description
-    main
-  }
-}
-    `;
-export type DeleteTagMutationFn = Apollo.MutationFunction<DeleteTagMutation, DeleteTagMutationVariables>;
-
-/**
- * __useDeleteTagMutation__
- *
- * To run a mutation, you first call `useDeleteTagMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteTagMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteTagMutation, { data, loading, error }] = useDeleteTagMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeleteTagMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTagMutation, DeleteTagMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteTagMutation, DeleteTagMutationVariables>(DeleteTagDocument, options);
-      }
-export type DeleteTagMutationHookResult = ReturnType<typeof useDeleteTagMutation>;
-export type DeleteTagMutationResult = Apollo.MutationResult<DeleteTagMutation>;
-export type DeleteTagMutationOptions = Apollo.BaseMutationOptions<DeleteTagMutation, DeleteTagMutationVariables>;
 export const TokenListDocument = gql`
     query TokenList {
   tokens {
