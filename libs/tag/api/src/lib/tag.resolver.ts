@@ -50,21 +50,18 @@ export class TagResolver {
     return this.tagService.getTags(filter, sort, order, cursor, skip, take);
   }
 
-  @Mutation(() => Tag, { description: `Creates a new tag.` })
   @Permissions(CanCreateTag)
   @Mutation(returns => Tag, { description: `Creates a new tag.` })
   public createTag(@Args() tag: CreateTagInput) {
     return this.tagService.createTag(tag);
   }
 
-  @Mutation(() => Tag, { description: `Updates an existing tag.` })
   @Permissions(CanUpdateTag)
   @Mutation(returns => Tag, { description: `Updates an existing tag.` })
   public updateTag(@Args() tag: UpdateTagInput) {
     return this.tagService.updateTag(tag);
   }
 
-  @Mutation(() => Tag, { description: `Deletes an existing tag.` })
   @Permissions(CanDeleteTag)
   @Mutation(returns => Tag, { description: `Deletes an existing tag.` })
   public deleteTag(@Args('id') id: string) {
