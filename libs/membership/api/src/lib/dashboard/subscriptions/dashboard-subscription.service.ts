@@ -139,7 +139,7 @@ export class DashboardSubscriptionService {
       where: {
         paidUntil: {
           gte: start,
-          lt: end,
+          lte: end,
         },
         autoRenew: true,
         deactivation: null,
@@ -186,7 +186,7 @@ export class DashboardSubscriptionService {
         deactivation: {
           createdAt: {
             gte: start,
-            lt: end,
+            lte: end,
           },
         },
       },
@@ -232,7 +232,7 @@ export class DashboardSubscriptionService {
     date: Date,
     memberPlanIds: string[] = []
   ) {
-    if (date > new Date()) {
+    if (date > new Date(new Date().getTime() + 24 * 60 * 60 * 1000)) {
       return [];
     }
 
@@ -276,7 +276,7 @@ export class DashboardSubscriptionService {
     date: Date,
     memberPlanIds: string[] = []
   ) {
-    if (date > new Date()) {
+    if (date > new Date(new Date().getTime() + 24 * 60 * 60 * 1000)) {
       return [];
     }
 
@@ -324,7 +324,7 @@ export class DashboardSubscriptionService {
     date: Date,
     memberPlanIds: string[] = []
   ) {
-    if (date > new Date()) {
+    if (date > new Date(new Date().getTime() + 24 * 60 * 60 * 1000)) {
       return [];
     }
 
@@ -367,7 +367,7 @@ export class DashboardSubscriptionService {
     date: Date,
     memberPlanIds: string[] = []
   ) {
-    if (date > new Date()) {
+    if (date > new Date(new Date().getTime() + 24 * 60 * 60 * 1000)) {
       return [];
     }
 
