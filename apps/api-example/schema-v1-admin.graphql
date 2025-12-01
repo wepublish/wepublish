@@ -15,7 +15,6 @@ type Query {
   userRole(id: String): UserRole
   userRoles(cursor: String, take: Int = 10, skip: Int = 0, filter: UserRoleFilter, sort: UserRoleSort = modifiedAt, order: SortOrder = Descending): UserRoleConnection!
   permissions: [Permission!]
-  tokens: [Token!]!
   author(id: String, slug: Slug): Author
   authors(cursor: String, take: Int = 10, skip: Int = 0, filter: AuthorFilter, sort: AuthorSort = ModifiedAt, order: SortOrder = Descending): AuthorConnection!
   image(id: String): Image
@@ -439,13 +438,6 @@ enum UserRoleSort {
   modifiedAt
 }
 
-type Token {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-}
-
 type Author {
   id: String!
   createdAt: DateTime!
@@ -784,8 +776,6 @@ type Mutation {
   sessions: [Session!]!
   sendJWTLogin(url: String!, email: String!): String!
   sendWebsiteLogin(email: String!): String!
-  createToken(input: TokenInput!): CreatedToken!
-  deleteToken(id: String!): CreatedToken
   createUser(input: UserInput!, password: String!): User
   updateUser(id: String!, input: UserInput!): User
   resetUserPassword(id: String!, password: String!, sendMail: Boolean): User
@@ -872,18 +862,6 @@ type SessionWithToken {
   token: String!
   createdAt: DateTime!
   expiresAt: DateTime!
-}
-
-type CreatedToken {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  token: String!
-}
-
-input TokenInput {
-  name: String!
 }
 
 input UserInput {

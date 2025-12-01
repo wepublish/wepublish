@@ -253,6 +253,13 @@ interface BaseTeaser implements HasImage {
   type: String!
 }
 
+interface BaseToken {
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+}
+
 type BildwurfAdBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -1401,6 +1408,12 @@ type Mutation {
   """
   createSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
+  """Creates a new tag."""
+  createTag(description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
+
+  """Creates a token and returns it's secret once."""
+  createToken(name: String!): TokenWithSecret!
+
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
 
@@ -1438,6 +1451,12 @@ type Mutation {
 
   """Delete an existing subscription interval"""
   deleteSubscriptionInterval(id: String!): [SubscriptionFlowModel!]!
+
+  """Deletes an existing tag."""
+  deleteTag(id: String!): Tag!
+
+  """Deletes a token."""
+  deleteToken(id: String!): Token!
 
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
@@ -1544,6 +1563,9 @@ type Mutation {
 
   """Updates an existing mail flow"""
   updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
+
+  """Updates an existing tag."""
+  updateTag(description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
 
   """
   This mutation allows to update the user's data by taking an input of type UserInput.
@@ -2220,6 +2242,9 @@ type Query {
   """Returns all mail flows"""
   systemMails: [SystemMailModel!]!
 
+  """Returns a tag by id"""
+  tag(id: String!): Tag!
+
   """This query returns a list of tags"""
   tags(
     """Cursor for pagination"""
@@ -2240,6 +2265,9 @@ type Query {
     """Number of items to fetch"""
     take: Int! = 10
   ): TagConnection!
+
+  """Returns a list of all tokens."""
+  tokens: [Token!]!
 
   "\n      Returns a single userConsent by id.\n    "
   userConsent(id: String!): UserConsent!
@@ -2488,7 +2516,7 @@ type Tag {
   id: String!
   main: Boolean!
   tag: String
-  type: TagType
+  type: TagType!
   url: String!
 }
 
@@ -2683,6 +2711,21 @@ input TitleBlockInput {
   lead: String
   preTitle: String
   title: String
+}
+
+type Token implements BaseToken {
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+}
+
+type TokenWithSecret implements BaseToken {
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+  token: String!
 }
 
 type TrackingPixel {
