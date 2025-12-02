@@ -1,9 +1,18 @@
-query DailySubscriptionStats($start: DateTime!, $end: DateTime, $memberPlanIds: [String!]) {
-  dailySubscriptionStats(start: $start, end: $end, memberPlanIds: $memberPlanIds) {
+query DailySubscriptionStats(
+  $start: DateTime!
+  $end: DateTime
+  $memberPlanIds: [String!]
+) {
+  dailySubscriptionStats(
+    start: $start
+    end: $end
+    memberPlanIds: $memberPlanIds
+  ) {
     date
     totalActiveSubscriptionCount
     createdSubscriptionCount
     createdSubscriptionUsers {
+      subscriptionID
       id
       name
       firstName
@@ -11,6 +20,7 @@ query DailySubscriptionStats($start: DateTime!, $end: DateTime, $memberPlanIds: 
     }
     replacedSubscriptionCount
     replacedSubscriptionUsers {
+      subscriptionID
       id
       name
       firstName
@@ -18,6 +28,7 @@ query DailySubscriptionStats($start: DateTime!, $end: DateTime, $memberPlanIds: 
     }
     renewedSubscriptionCount
     renewedSubscriptionUsers {
+      subscriptionID
       id
       name
       firstName
@@ -25,6 +36,7 @@ query DailySubscriptionStats($start: DateTime!, $end: DateTime, $memberPlanIds: 
     }
     deactivatedSubscriptionCount
     deactivatedSubscriptionUsers {
+      subscriptionID
       id
       name
       firstName
@@ -32,6 +44,36 @@ query DailySubscriptionStats($start: DateTime!, $end: DateTime, $memberPlanIds: 
     }
     overdueSubscriptionCount
     overdueSubscriptionUsers {
+      subscriptionID
+      id
+      name
+      firstName
+      email
+    }
+    endingSubscriptionCount
+    endingSubscriptionUsers {
+      subscriptionID
+      id
+      name
+      firstName
+      email
+    }
+    predictedSubscriptionRenewalCount {
+      high
+      low
+      total
+      perDayHighProbability
+      perDayLowProbability
+    }
+    predictedSubscriptionRenewalUsersHighProbability {
+      subscriptionID
+      id
+      name
+      firstName
+      email
+    }
+    predictedSubscriptionRenewalUsersLowProbability {
+      subscriptionID
       id
       name
       firstName

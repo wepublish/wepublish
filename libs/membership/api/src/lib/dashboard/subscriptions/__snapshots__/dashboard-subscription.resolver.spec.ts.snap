@@ -33,6 +33,14 @@ exports[`DashboardSubscriptionResolver newDeactivations 1`] = `
     "reasonForDeactivation": "invoiceNotPaid",
     "startsAt": "2023-01-01T00:00:00.000Z",
   },
+  {
+    "endsAt": "2023-02-03T00:00:00.000Z",
+    "memberPlan": "Foo",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": "invoiceNotPaid",
+    "startsAt": "2023-01-01T00:00:00.000Z",
+  },
 ]
 `;
 
@@ -61,6 +69,14 @@ exports[`DashboardSubscriptionResolver newSubscribers 1`] = `
 
 exports[`DashboardSubscriptionResolver renewingSubscribers 1`] = `
 [
+  {
+    "memberPlan": "Foo",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": null,
+    "renewsAt": "2023-02-01T00:00:00.000Z",
+    "startsAt": "2023-01-01T00:00:00.000Z",
+  },
   {
     "memberPlan": "Foo",
     "monthlyAmount": 50,

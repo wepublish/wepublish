@@ -703,6 +703,15 @@ export type CustomTeaserInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type DailyPredictedSubscriptionRenewalCount = {
+  __typename?: 'DailyPredictedSubscriptionRenewalCount';
+  high: Scalars['Int'];
+  low: Scalars['Int'];
+  perDayHighProbability: Scalars['Int'];
+  perDayLowProbability: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
 export type DailySubscriptionStats = {
   __typename?: 'DailySubscriptionStats';
   createdSubscriptionCount: Scalars['Int'];
@@ -710,8 +719,13 @@ export type DailySubscriptionStats = {
   date: Scalars['String'];
   deactivatedSubscriptionCount: Scalars['Int'];
   deactivatedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  endingSubscriptionCount: Scalars['Int'];
+  endingSubscriptionUsers: Array<DailySubscriptionStatsUser>;
   overdueSubscriptionCount: Scalars['Int'];
   overdueSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  predictedSubscriptionRenewalCount: DailyPredictedSubscriptionRenewalCount;
+  predictedSubscriptionRenewalUsersHighProbability: Array<DailySubscriptionStatsUser>;
+  predictedSubscriptionRenewalUsersLowProbability: Array<DailySubscriptionStatsUser>;
   renewedSubscriptionCount: Scalars['Int'];
   renewedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
   replacedSubscriptionCount: Scalars['Int'];
@@ -725,6 +739,7 @@ export type DailySubscriptionStatsUser = {
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   name: Scalars['String'];
+  subscriptionID?: Maybe<Scalars['String']>;
 };
 
 export type DashboardInvoice = {
@@ -4258,7 +4273,7 @@ export type DailySubscriptionStatsQueryVariables = Exact<{
 }>;
 
 
-export type DailySubscriptionStatsQuery = { __typename?: 'Query', dailySubscriptionStats: Array<{ __typename?: 'DailySubscriptionStats', date: string, totalActiveSubscriptionCount: number, createdSubscriptionCount: number, replacedSubscriptionCount: number, renewedSubscriptionCount: number, deactivatedSubscriptionCount: number, overdueSubscriptionCount: number, createdSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, replacedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, renewedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, deactivatedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, overdueSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }> }> };
+export type DailySubscriptionStatsQuery = { __typename?: 'Query', dailySubscriptionStats: Array<{ __typename?: 'DailySubscriptionStats', date: string, totalActiveSubscriptionCount: number, createdSubscriptionCount: number, replacedSubscriptionCount: number, renewedSubscriptionCount: number, deactivatedSubscriptionCount: number, overdueSubscriptionCount: number, endingSubscriptionCount: number, createdSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, replacedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, renewedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, deactivatedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, overdueSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, endingSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, predictedSubscriptionRenewalCount: { __typename?: 'DailyPredictedSubscriptionRenewalCount', high: number, low: number, total: number, perDayHighProbability: number, perDayLowProbability: number }, predictedSubscriptionRenewalUsersHighProbability: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, predictedSubscriptionRenewalUsersLowProbability: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }> }> };
 
 export type FullEventFragment = { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, createdAt: string, modifiedAt: string, url: string, externalSourceName?: string | null, externalSourceId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, type?: TagType | null, main: boolean, url: string }> | null };
 
@@ -7182,6 +7197,7 @@ export const DailySubscriptionStatsDocument = gql`
     totalActiveSubscriptionCount
     createdSubscriptionCount
     createdSubscriptionUsers {
+      subscriptionID
       id
       name
       firstName
@@ -7189,6 +7205,7 @@ export const DailySubscriptionStatsDocument = gql`
     }
     replacedSubscriptionCount
     replacedSubscriptionUsers {
+      subscriptionID
       id
       name
       firstName
@@ -7196,6 +7213,7 @@ export const DailySubscriptionStatsDocument = gql`
     }
     renewedSubscriptionCount
     renewedSubscriptionUsers {
+      subscriptionID
       id
       name
       firstName
@@ -7203,6 +7221,7 @@ export const DailySubscriptionStatsDocument = gql`
     }
     deactivatedSubscriptionCount
     deactivatedSubscriptionUsers {
+      subscriptionID
       id
       name
       firstName
@@ -7210,6 +7229,36 @@ export const DailySubscriptionStatsDocument = gql`
     }
     overdueSubscriptionCount
     overdueSubscriptionUsers {
+      subscriptionID
+      id
+      name
+      firstName
+      email
+    }
+    endingSubscriptionCount
+    endingSubscriptionUsers {
+      subscriptionID
+      id
+      name
+      firstName
+      email
+    }
+    predictedSubscriptionRenewalCount {
+      high
+      low
+      total
+      perDayHighProbability
+      perDayLowProbability
+    }
+    predictedSubscriptionRenewalUsersHighProbability {
+      subscriptionID
+      id
+      name
+      firstName
+      email
+    }
+    predictedSubscriptionRenewalUsersLowProbability {
+      subscriptionID
       id
       name
       firstName

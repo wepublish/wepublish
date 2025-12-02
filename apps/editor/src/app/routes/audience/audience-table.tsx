@@ -4,8 +4,8 @@ import { DailySubscriptionStats } from '@wepublish/editor/api-v2';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdInfo } from 'react-icons/md';
-import { Button, Tooltip, Whisper } from 'rsuite';
-import Table, { RowDataType } from 'rsuite/esm/Table';
+import { Button, Table, Tooltip, Whisper } from 'rsuite';
+import { RowDataType } from 'rsuite-table';
 
 import { AudienceDetailDrawer } from './audience-detail-drawer';
 import { AudienceStatsComputed } from './useAudience';
@@ -56,10 +56,12 @@ export function AudienceTable({
     overdueSubscriptionCount,
     replacedSubscriptionCount,
     deactivatedSubscriptionCount,
+    predictedSubscriptionRenewalCount,
+    endingSubscriptionCount,
   } = clientFilter;
 
   const [selectedAudienceStats, setSelectedAudienceStats] = useState<
-    AudienceStatsComputed | undefined
+    Omit<AudienceStatsComputed, 'predictedSubscriptionRenewalCount'> | undefined
   >(undefined);
 
   return (
@@ -120,6 +122,55 @@ export function AudienceTable({
               {t('audience.legend.renewedSubscriptionCount')}
             </HeaderCell>
             <Cell dataKey="renewedSubscriptionCount" />
+          </Column>
+        )}
+
+        {predictedSubscriptionRenewalCount && (
+          <>
+            <Column
+              resizable
+              width={150}
+            >
+              <HeaderCell>
+                <HeaderInfo
+                  text={t(
+                    'audienceTable.predictedSubscriptionRenewalCountPerDay.highProbability'
+                  )}
+                />
+                {t(
+                  'audience.legend.predictedSubscriptionRenewalCountPerDay.highProbability'
+                )}
+              </HeaderCell>
+              <Cell dataKey="predictedSubscriptionRenewalCount.perDayHighProbability" />
+            </Column>
+            <Column
+              resizable
+              width={150}
+            >
+              <HeaderCell>
+                <HeaderInfo
+                  text={t(
+                    'audienceTable.predictedSubscriptionRenewalCountPerDay.lowProbability'
+                  )}
+                />
+                {t(
+                  'audience.legend.predictedSubscriptionRenewalCountPerDay.lowProbability'
+                )}
+              </HeaderCell>
+              <Cell dataKey="predictedSubscriptionRenewalCount.perDayLowProbability" />
+            </Column>
+          </>
+        )}
+
+        {endingSubscriptionCount && (
+          <Column
+            resizable
+            width={150}
+          >
+            <HeaderCell>
+              {t('audience.legend.endingSubscriptionCount')}
+            </HeaderCell>
+            <Cell dataKey="endingSubscriptionCount" />
           </Column>
         )}
 

@@ -52,6 +52,27 @@ export class DailySubscriptionStatsUser {
 
   @Field()
   email!: string;
+
+  @Field({ nullable: true })
+  subscriptionID?: string;
+}
+
+@ObjectType()
+export class DailyPredictedSubscriptionRenewalCount {
+  @Field(() => Int)
+  high!: number;
+
+  @Field(() => Int)
+  low!: number;
+
+  @Field(() => Int)
+  total!: number;
+
+  @Field(() => Int)
+  perDayHighProbability!: number;
+
+  @Field(() => Int)
+  perDayLowProbability!: number;
 }
 
 @ObjectType()
@@ -91,4 +112,19 @@ export class DailySubscriptionStats {
 
   @Field(type => [DailySubscriptionStatsUser])
   deactivatedSubscriptionUsers!: DailySubscriptionStatsUser[];
+
+  @Field(() => Int)
+  endingSubscriptionCount!: number;
+
+  @Field(type => [DailySubscriptionStatsUser])
+  endingSubscriptionUsers!: DailySubscriptionStatsUser[];
+
+  @Field(() => DailyPredictedSubscriptionRenewalCount)
+  predictedSubscriptionRenewalCount!: DailyPredictedSubscriptionRenewalCount;
+
+  @Field(() => [DailySubscriptionStatsUser])
+  predictedSubscriptionRenewalUsersHighProbability!: DailySubscriptionStatsUser[];
+
+  @Field(() => [DailySubscriptionStatsUser])
+  predictedSubscriptionRenewalUsersLowProbability!: DailySubscriptionStatsUser[];
 }
