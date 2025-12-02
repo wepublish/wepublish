@@ -20,9 +20,11 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import {
+  forwardRef,
   PropsWithChildren,
   useCallback,
   useEffect,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -45,6 +47,7 @@ const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
   :root {
     ${isHomePage ?
       `
+    --navbar-height: -10px;
     --navbar-aspect-ratio: 6.5 / 1;
     --scrolled-navbar-aspect-ratio: 9 / 1;
     `
@@ -397,301 +400,6 @@ const HauptstadtOpenInvoices = styled('div')`
   font-weight: 600;
 `;
 
-export const NavbarInnerWrapper = styled(Toolbar, {
-  shouldForwardProp: propName =>
-    propName !== 'navbarState' && propName !== 'isMenuOpen',
-})<{
-  navbarState: NavbarState[];
-  isMenuOpen?: boolean;
-}>`
-  min-height: unset !important;
-  margin: 0 auto;
-  width: 100%;
-  background-color: white;
-  max-width: 1333px;
-  container: toolbar/inline-size;
-  position: static;
-  box-sizing: border-box;
-  aspect-ratio: var(--changing-aspect-ratio) !important;
-  display: grid;
-  grid-template-columns: repeat(2, 50%);
-  transition:
-    background-color 100ms ease-out 200ms,
-    aspect-ratio 300ms ease-out;
-
-  ${({ isMenuOpen }) =>
-    isMenuOpen &&
-    css`
-      background-color: transparent;
-      pointer-events: none;
-
-      ${NavbarLoginLink} {
-        visibility: hidden;
-      }
-      ${NavbarTabs} {
-        visibility: hidden;
-      }
-    `}
-`;
-
-export interface ExtendedNavbarProps extends BuilderNavbarProps {
-  isMenuOpen?: boolean;
-  onMenuToggle?: (isOpen: boolean) => void;
-  navPaperClassName?: string;
-}
-
-export function TsriV2Navbar({
-  className,
-  children,
-  categorySlugs,
-  slug,
-  headerSlug,
-  iconSlug,
-  data,
-  hasRunningSubscription,
-  hasUnpaidInvoices,
-  loginBtn = { href: '/login' },
-  profileBtn = { href: '/profile' },
-  subscribeBtn = { href: '/mitmachen' },
-  isMenuOpen: controlledIsMenuOpen,
-  onMenuToggle,
-  navPaperClassName,
-  pageTypeBasedProps,
-  imagesBase64 = {},
-}: ExtendedNavbarProps) {
-  const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
-
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [scrollDirection, setScrollDirection] = useState<ScrollDirection>(
-    ScrollDirection.Down
-  );
-  const lastScrollY = useRef(0);
-  const hasActiveSubscription = useHasActiveSubscription();
-
-  const isMenuOpen =
-    controlledIsMenuOpen !== undefined ? controlledIsMenuOpen : (
-      internalIsMenuOpen
-    );
-
-  const handleScroll = useCallback(
-    (...args: any) => {
-      const currentScrollY = window.scrollY;
-
-      if (currentScrollY > lastScrollY.current) {
-        if (scrollDirection !== ScrollDirection.Down) {
-          setScrollDirection(ScrollDirection.Down);
-        }
-      } else if (currentScrollY < lastScrollY.current) {
-        if (scrollDirection !== ScrollDirection.Up) {
-          setScrollDirection(ScrollDirection.Up);
-        }
-      }
-
-      const newIsScrolled = currentScrollY > 1;
-
-      if (newIsScrolled !== isScrolled) {
-        setIsScrolled(newIsScrolled);
-      }
-
-      lastScrollY.current = currentScrollY;
-    },
-    [isScrolled, scrollDirection]
-  );
-
-  const toggleMenu = useCallback(() => {
-    const newState = !isMenuOpen;
-
-    if (controlledIsMenuOpen === undefined) {
-      setInternalMenuOpen(newState);
-    }
-
-    onMenuToggle?.(newState);
-  }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
-
-  const getTabText = (pageTypeBasedProps: PageTypeBasedProps | undefined) => {
-    if (pageTypeBasedProps) {
-      switch (pageTypeBasedProps.pageType) {
-        case PageType.Article:
-          return pageTypeBasedProps.Article?.preTitle || '';
-        case PageType.Author:
-          return 'Ich bin Tsüri!';
-        case PageType.AuthorList:
-          return 'Mir sind Tsüri!';
-      }
-    }
-    return '';
-  };
-
-  const mainItems = data?.navigations?.find(({ key }) => key === slug);
-  const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
-
-  const categories = useMemo(() => {
-    return categorySlugs.map(categorySlugArray =>
-      categorySlugArray.reduce((navigations, categorySlug) => {
-        const navItem = data?.navigations?.find(
-          ({ key }) => key === categorySlug
-        );
-
-        if (navItem) {
-          navigations.push(navItem);
-        }
-
-        return navigations;
-      }, [] as FullNavigationFragment[])
-    );
-  }, [categorySlugs, data?.navigations]);
-
-  useEffect(() => {
-    lastScrollY.current = window.scrollY;
-    window.addEventListener('scroll', handleScroll);
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
-
-  const navbarState = getNavbarState(
-    isScrolled,
-    scrollDirection,
-    hasActiveSubscription
-  );
-
-  const isHomePage = pageTypeBasedProps?.Page?.slug === '';
-
-  const tabText = getTabText(pageTypeBasedProps);
-
-  const navbarStyles = useMemo(
-    () => cssVariables(navbarState, isHomePage),
-    [navbarState, isHomePage]
-  );
-
-  return (
-    <NavbarWrapper className={className}>
-      <GlobalStyles styles={navbarStyles} />
-      <AppBar
-        isMenuOpen={isMenuOpen}
-        elevation={0}
-      >
-        <NavbarInnerWrapper
-          navbarState={navbarState}
-          isMenuOpen={isMenuOpen}
-        >
-          <NavbarLoginLink
-            href="/"
-            aria-label="Startseite"
-          >
-            <TsriLogo
-              src={
-                isHomePage ?
-                  imagesBase64?.logoDefault ?
-                    imagesBase64.logoDefault
-                  : '/logo.svg'
-                : imagesBase64?.logoAlternative ?
-                  imagesBase64.logoAlternative
-                : '/logo_blue.svg'
-              }
-              alt="Tsüri"
-              isScrolled={isScrolled}
-              isHomePage={isHomePage}
-            />
-            <TsriClaim
-              src={imagesBase64?.claim ? imagesBase64.claim : '/claim.gif'}
-              alt="Unabhängig, Kritisch, Lokal."
-              isScrolled={isScrolled}
-              isHomePage={isHomePage}
-            />
-          </NavbarLoginLink>
-
-          <NavbarMain isMenuOpen={isMenuOpen}>
-            <NavbarInstaButton
-              size="small"
-              aria-label="Instagram"
-              color={'inherit'}
-            >
-              <FiInstagram />
-            </NavbarInstaButton>
-            <NavbarSearchButton
-              size="small"
-              aria-label="Suche"
-              color={'inherit'}
-            >
-              <FiSearch />
-            </NavbarSearchButton>
-
-            <NavbarHamburgerButton
-              size="small"
-              aria-label="Menu"
-              onClick={toggleMenu}
-              color={'inherit'}
-            >
-              <FiMenu />
-              {hasUnpaidInvoices && profileBtn && (
-                <HauptstadtOpenInvoices>
-                  <MdWarning size={24} />
-
-                  <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
-                    Abo Jetzt Bezahlen
-                  </Box>
-                </HauptstadtOpenInvoices>
-              )}
-            </NavbarHamburgerButton>
-          </NavbarMain>
-
-          <NavbarTabs
-            navbarState={navbarState}
-            isHomePage={isHomePage}
-          >
-            <PreTitleTab>
-              <span>{tabText}</span>
-            </PreTitleTab>
-            <BecomeMemberTab>
-              <a href="#">Member werden</a>
-            </BecomeMemberTab>
-            <RegisterNewsLetterTab>
-              <a href="#">Newsletter kostenlos abonnieren</a>
-            </RegisterNewsLetterTab>
-          </NavbarTabs>
-        </NavbarInnerWrapper>
-
-        {Boolean(mainItems || categories?.length) && (
-          <NavPaper
-            hasRunningSubscription={hasRunningSubscription}
-            hasUnpaidInvoices={hasUnpaidInvoices}
-            subscribeBtn={subscribeBtn}
-            profileBtn={profileBtn}
-            loginBtn={loginBtn}
-            main={mainItems}
-            categories={categories}
-            closeMenu={toggleMenu}
-            isMenuOpen={isMenuOpen}
-            className={navPaperClassName}
-          >
-            {iconItems?.links.map((link, index) => (
-              <Link
-                key={index}
-                href={navigationLinkToUrl(link)}
-                onClick={() => {
-                  if (controlledIsMenuOpen === undefined) {
-                    setInternalMenuOpen(false);
-                  }
-
-                  onMenuToggle?.(false);
-                }}
-                color="inherit"
-              >
-                <TextToIcon
-                  title={link.label}
-                  size={32}
-                />
-              </Link>
-            ))}
-
-            {children}
-          </NavPaper>
-        )}
-      </AppBar>
-    </NavbarWrapper>
-  );
-}
-
 export const NavPaperWrapper = styled('div', {
   shouldForwardProp: propName => propName !== 'isMenuOpen',
 })<{ isMenuOpen: boolean }>`
@@ -1021,3 +729,346 @@ const NavPaper = ({
     </NavPaperWrapper>
   );
 };
+
+export const NavbarInnerWrapper = styled(Toolbar, {
+  shouldForwardProp: propName =>
+    propName !== 'navbarState' && propName !== 'isMenuOpen',
+})<{
+  navbarState: NavbarState[];
+  isMenuOpen?: boolean;
+}>`
+  min-height: unset !important;
+  margin: 0 auto;
+  width: 100%;
+  background-color: white;
+  max-width: 1333px;
+  container: toolbar/inline-size;
+  position: static;
+  box-sizing: border-box;
+  aspect-ratio: var(--changing-aspect-ratio) !important;
+  display: grid;
+  grid-template-columns: repeat(2, 50%);
+  transition:
+    background-color 100ms ease-out 200ms,
+    aspect-ratio 300ms ease-out;
+
+  ${({ isMenuOpen }) =>
+    isMenuOpen &&
+    css`
+      background-color: transparent;
+      pointer-events: none;
+
+      ${NavbarLoginLink} {
+        visibility: hidden;
+      }
+      ${NavbarTabs} {
+        visibility: hidden;
+      }
+    `}
+`;
+
+export interface ExtendedNavbarProps extends BuilderNavbarProps {
+  isMenuOpen?: boolean;
+  onMenuToggle?: (isOpen: boolean) => void;
+  navPaperClassName?: string;
+}
+
+export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
+  function TsriV2Navbar(
+    {
+      className,
+      children,
+      categorySlugs,
+      slug,
+      headerSlug,
+      iconSlug,
+      data,
+      hasRunningSubscription,
+      hasUnpaidInvoices,
+      loginBtn = { href: '/login' },
+      profileBtn = { href: '/profile' },
+      subscribeBtn = { href: '/mitmachen' },
+      isMenuOpen: controlledIsMenuOpen,
+      onMenuToggle,
+      navPaperClassName,
+      pageTypeBasedProps,
+      imagesBase64 = {},
+    }: ExtendedNavbarProps,
+    forwardRef
+  ) {
+    const ref = useRef<HTMLElement>(null);
+
+    const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
+
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [scrollDirection, setScrollDirection] = useState<ScrollDirection>(
+      ScrollDirection.Down
+    );
+    const lastScrollY = useRef(0);
+    const hasActiveSubscription = useHasActiveSubscription();
+
+    const isMenuOpen =
+      controlledIsMenuOpen !== undefined ? controlledIsMenuOpen : (
+        internalIsMenuOpen
+      );
+
+    const handleScroll = useCallback(
+      (...args: any) => {
+        const currentScrollY = window.scrollY;
+
+        if (currentScrollY > lastScrollY.current) {
+          if (scrollDirection !== ScrollDirection.Down) {
+            setScrollDirection(ScrollDirection.Down);
+          }
+        } else if (currentScrollY < lastScrollY.current) {
+          if (scrollDirection !== ScrollDirection.Up) {
+            setScrollDirection(ScrollDirection.Up);
+          }
+        }
+
+        const newIsScrolled = currentScrollY > 1;
+
+        if (newIsScrolled !== isScrolled) {
+          setIsScrolled(newIsScrolled);
+        }
+
+        lastScrollY.current = currentScrollY;
+      },
+      [isScrolled, scrollDirection]
+    );
+
+    const toggleMenu = useCallback(() => {
+      const newState = !isMenuOpen;
+
+      if (controlledIsMenuOpen === undefined) {
+        setInternalMenuOpen(newState);
+      }
+
+      onMenuToggle?.(newState);
+    }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
+
+    const getTabText = (pageTypeBasedProps: PageTypeBasedProps | undefined) => {
+      if (pageTypeBasedProps) {
+        switch (pageTypeBasedProps.pageType) {
+          case PageType.Article:
+            return pageTypeBasedProps.Article?.preTitle || '';
+          case PageType.Author:
+            return 'Ich bin Tsüri!';
+          case PageType.AuthorList:
+            return 'Mir sind Tsüri!';
+        }
+      }
+      return '';
+    };
+
+    const mainItems = data?.navigations?.find(({ key }) => key === slug);
+    const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
+
+    const categories = useMemo(() => {
+      return categorySlugs.map(categorySlugArray =>
+        categorySlugArray.reduce((navigations, categorySlug) => {
+          const navItem = data?.navigations?.find(
+            ({ key }) => key === categorySlug
+          );
+
+          if (navItem) {
+            navigations.push(navItem);
+          }
+
+          return navigations;
+        }, [] as FullNavigationFragment[])
+      );
+    }, [categorySlugs, data?.navigations]);
+
+    useEffect(() => {
+      lastScrollY.current = window.scrollY;
+      window.addEventListener('scroll', handleScroll);
+
+      return () => window.removeEventListener('scroll', handleScroll);
+    }, [handleScroll]);
+
+    const navbarState = getNavbarState(
+      isScrolled,
+      scrollDirection,
+      hasActiveSubscription
+    );
+
+    const isHomePage = pageTypeBasedProps?.Page?.slug === '';
+
+    const tabText = getTabText(pageTypeBasedProps);
+
+    const navbarStyles = useMemo(
+      () => cssVariables(navbarState, isHomePage),
+      [navbarState, isHomePage]
+    );
+
+    useImperativeHandle(forwardRef, () => ref.current!, []);
+
+    useEffect(() => {
+      if (typeof ResizeObserver !== 'undefined') {
+        const observer = new ResizeObserver(() => {
+          handleResize();
+        });
+
+        if (!ref.current) {
+          return;
+        }
+
+        observer.observe(ref.current);
+
+        return () =>
+          ref?.current ? observer.unobserve(ref.current) : undefined;
+      }
+
+      window.addEventListener('resize', handleResize);
+
+      return () => window.removeEventListener('resize', handleResize);
+    }, [ref]);
+
+    function handleResize() {
+      if (ref?.current) {
+        /*
+        ref.current.style.overflow = 'hidden';
+        ref.current.style.height = 'auto';
+        ref.current.style.height = `${ref.current.scrollHeight}px`;
+        */
+        ref.current.ownerDocument.documentElement.setAttribute(
+          'style',
+          `--navbar-height: ${ref.current.getBoundingClientRect().height}px`
+        );
+        //console.log(ref.current.getBoundingClientRect());
+      }
+    }
+
+    return (
+      <NavbarWrapper
+        ref={ref}
+        className={className}
+      >
+        <GlobalStyles styles={navbarStyles} />
+        <AppBar
+          isMenuOpen={isMenuOpen}
+          elevation={0}
+        >
+          <NavbarInnerWrapper
+            navbarState={navbarState}
+            isMenuOpen={isMenuOpen}
+          >
+            <NavbarLoginLink
+              href="/"
+              aria-label="Startseite"
+            >
+              <TsriLogo
+                src={
+                  isHomePage ?
+                    imagesBase64?.logoDefault ?
+                      imagesBase64.logoDefault
+                    : '/logo.svg'
+                  : imagesBase64?.logoAlternative ?
+                    imagesBase64.logoAlternative
+                  : '/logo_blue.svg'
+                }
+                alt="Tsüri"
+                isScrolled={isScrolled}
+                isHomePage={isHomePage}
+              />
+              <TsriClaim
+                src={imagesBase64?.claim ? imagesBase64.claim : '/claim.gif'}
+                alt="Unabhängig, Kritisch, Lokal."
+                isScrolled={isScrolled}
+                isHomePage={isHomePage}
+              />
+            </NavbarLoginLink>
+
+            <NavbarMain isMenuOpen={isMenuOpen}>
+              <NavbarInstaButton
+                size="small"
+                aria-label="Instagram"
+                color={'inherit'}
+              >
+                <FiInstagram />
+              </NavbarInstaButton>
+              <NavbarSearchButton
+                size="small"
+                aria-label="Suche"
+                color={'inherit'}
+              >
+                <FiSearch />
+              </NavbarSearchButton>
+
+              <NavbarHamburgerButton
+                size="small"
+                aria-label="Menu"
+                onClick={toggleMenu}
+                color={'inherit'}
+              >
+                <FiMenu />
+                {hasUnpaidInvoices && profileBtn && (
+                  <HauptstadtOpenInvoices>
+                    <MdWarning size={24} />
+
+                    <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
+                      Abo Jetzt Bezahlen
+                    </Box>
+                  </HauptstadtOpenInvoices>
+                )}
+              </NavbarHamburgerButton>
+            </NavbarMain>
+
+            <NavbarTabs
+              navbarState={navbarState}
+              isHomePage={isHomePage}
+            >
+              <PreTitleTab>
+                <span>{tabText}</span>
+              </PreTitleTab>
+              <BecomeMemberTab>
+                <a href="#">Member werden</a>
+              </BecomeMemberTab>
+              <RegisterNewsLetterTab>
+                <a href="#">Newsletter kostenlos abonnieren</a>
+              </RegisterNewsLetterTab>
+            </NavbarTabs>
+          </NavbarInnerWrapper>
+
+          {Boolean(mainItems || categories?.length) && (
+            <NavPaper
+              hasRunningSubscription={hasRunningSubscription}
+              hasUnpaidInvoices={hasUnpaidInvoices}
+              subscribeBtn={subscribeBtn}
+              profileBtn={profileBtn}
+              loginBtn={loginBtn}
+              main={mainItems}
+              categories={categories}
+              closeMenu={toggleMenu}
+              isMenuOpen={isMenuOpen}
+              className={navPaperClassName}
+            >
+              {iconItems?.links.map((link, index) => (
+                <Link
+                  key={index}
+                  href={navigationLinkToUrl(link)}
+                  onClick={() => {
+                    if (controlledIsMenuOpen === undefined) {
+                      setInternalMenuOpen(false);
+                    }
+
+                    onMenuToggle?.(false);
+                  }}
+                  color="inherit"
+                >
+                  <TextToIcon
+                    title={link.label}
+                    size={32}
+                  />
+                </Link>
+              ))}
+
+              {children}
+            </NavPaper>
+          )}
+        </AppBar>
+      </NavbarWrapper>
+    );
+  }
+);
