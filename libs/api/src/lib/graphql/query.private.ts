@@ -77,12 +77,11 @@ import {
   getPaymentById,
 } from './payment/payment.private-queries';
 import { GraphQLPaymentMethod, GraphQLPaymentProvider } from './paymentMethod';
-import { GraphQLPeer, GraphQLPeerProfile } from './peer';
+import { GraphQLPeerProfile } from './peer';
 import {
   getAdminPeerProfile,
   getRemotePeerProfile,
 } from './peer-profile/peer-profile.private-queries';
-import { getPeerById, getPeers } from './peer/peer.private-queries';
 import { authorise } from './permissions';
 import {
   GraphQLFullPoll,
@@ -214,19 +213,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         args,
         { authenticate, hostURL, websiteURL, prisma: { peerProfile } }
       ) => getAdminPeerProfile(hostURL, websiteURL, authenticate, peerProfile),
-    },
-
-    peers: {
-      type: new GraphQLList(new GraphQLNonNull(GraphQLPeer)),
-      resolve: (root, _, { authenticate, prisma: { peer } }) =>
-        getPeers(authenticate, peer),
-    },
-
-    peer: {
-      type: GraphQLPeer,
-      args: { id: { type: new GraphQLNonNull(GraphQLString) } },
-      resolve: (root, { id }, { authenticate, loaders: { peer } }) =>
-        getPeerById(id, authenticate, peer),
     },
 
     // User

@@ -134,14 +134,6 @@ export enum CommentState {
   Rejected = 'rejected'
 }
 
-export type CreatePeerInput = {
-  hostURL: Scalars['String'];
-  information?: InputMaybe<Scalars['RichText']>;
-  name: Scalars['String'];
-  slug: Scalars['String'];
-  token: Scalars['String'];
-};
-
 export type CreatedToken = {
   __typename?: 'CreatedToken';
   createdAt: Scalars['DateTime'];
@@ -405,7 +397,6 @@ export type Mutation = {
   createMemberPlan?: Maybe<MemberPlan>;
   createPaymentFromInvoice?: Maybe<Payment>;
   createPaymentMethod?: Maybe<PaymentMethod>;
-  createPeer: Peer;
   createPoll?: Maybe<PollWithAnswers>;
   createPollAnswer?: Maybe<PollAnswer>;
   createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
@@ -421,7 +412,6 @@ export type Mutation = {
   deleteInvoice?: Maybe<Invoice>;
   deleteMemberPlan?: Maybe<MemberPlan>;
   deletePaymentMethod?: Maybe<PaymentMethod>;
-  deletePeer?: Maybe<Peer>;
   deletePoll?: Maybe<FullPoll>;
   deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
@@ -446,7 +436,6 @@ export type Mutation = {
   updateInvoice?: Maybe<Invoice>;
   updateMemberPlan?: Maybe<MemberPlan>;
   updatePaymentMethod?: Maybe<PaymentMethod>;
-  updatePeer: Peer;
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
   updateRatingSystem: FullCommentRatingSystem;
@@ -494,11 +483,6 @@ export type MutationCreatePaymentFromInvoiceArgs = {
 
 export type MutationCreatePaymentMethodArgs = {
   input: PaymentMethodInput;
-};
-
-
-export type MutationCreatePeerArgs = {
-  input: CreatePeerInput;
 };
 
 
@@ -584,11 +568,6 @@ export type MutationDeleteMemberPlanArgs = {
 
 
 export type MutationDeletePaymentMethodArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeletePeerArgs = {
   id: Scalars['String'];
 };
 
@@ -717,12 +696,6 @@ export type MutationUpdateMemberPlanArgs = {
 export type MutationUpdatePaymentMethodArgs = {
   id: Scalars['String'];
   input: PaymentMethodInput;
-};
-
-
-export type MutationUpdatePeerArgs = {
-  id: Scalars['String'];
-  input: UpdatePeerInput;
 };
 
 
@@ -875,19 +848,6 @@ export enum PaymentState {
   Submitted = 'submitted'
 }
 
-export type Peer = {
-  __typename?: 'Peer';
-  createdAt: Scalars['DateTime'];
-  hostURL: Scalars['String'];
-  id: Scalars['String'];
-  information?: Maybe<Scalars['RichText']>;
-  isDisabled?: Maybe<Scalars['Boolean']>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  profile?: Maybe<PeerProfile>;
-  slug: Scalars['String'];
-};
-
 export type PeerProfile = {
   __typename?: 'PeerProfile';
   callToActionImage?: Maybe<Image>;
@@ -1025,9 +985,7 @@ export type Query = {
   paymentMethods: Array<PaymentMethod>;
   paymentProviders: Array<PaymentProvider>;
   payments: PaymentConnection;
-  peer?: Maybe<Peer>;
   peerProfile: PeerProfile;
-  peers?: Maybe<Array<Peer>>;
   poll?: Maybe<FullPoll>;
   polls?: Maybe<PollConnection>;
   ratingSystem: FullCommentRatingSystem;
@@ -1133,11 +1091,6 @@ export type QueryPaymentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<PaymentSort>;
   take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryPeerArgs = {
-  id: Scalars['String'];
 };
 
 
@@ -1403,15 +1356,6 @@ export type UpdateImageInput = {
   source?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
-};
-
-export type UpdatePeerInput = {
-  hostURL?: InputMaybe<Scalars['String']>;
-  information?: InputMaybe<Scalars['RichText']>;
-  isDisabled?: InputMaybe<Scalars['Boolean']>;
-  name?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['String']>;
-  token?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdatePollAnswer = {
@@ -1849,8 +1793,6 @@ export type DeletePaymentMethodMutation = { __typename?: 'Mutation', deletePayme
 
 export type FullPeerProfileFragment = { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
-export type FullPeerFragment = { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, information?: Descendant[] | null, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null };
-
 export type PeerProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1870,40 +1812,6 @@ export type UpdatePeerProfileMutationVariables = Exact<{
 
 
 export type UpdatePeerProfileMutation = { __typename?: 'Mutation', updatePeerProfile: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } };
-
-export type PeerListQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type PeerListQuery = { __typename?: 'Query', peers?: Array<{ __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, information?: Descendant[] | null, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null }> | null };
-
-export type PeerQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type PeerQuery = { __typename?: 'Query', peer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, information?: Descendant[] | null, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null };
-
-export type CreatePeerMutationVariables = Exact<{
-  input: CreatePeerInput;
-}>;
-
-
-export type CreatePeerMutation = { __typename?: 'Mutation', createPeer: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, information?: Descendant[] | null, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } };
-
-export type UpdatePeerMutationVariables = Exact<{
-  id: Scalars['String'];
-  input: UpdatePeerInput;
-}>;
-
-
-export type UpdatePeerMutation = { __typename?: 'Mutation', updatePeer: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, information?: Descendant[] | null, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } };
-
-export type DeletePeerMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeletePeerMutation = { __typename?: 'Mutation', deletePeer?: { __typename?: 'Peer', id: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, information?: Descendant[] | null, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null } | null };
 
 export type PollExternalVoteSourceFragment = { __typename?: 'PollExternalVoteSource', id: string, source?: string | null, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> };
 
@@ -2466,19 +2374,6 @@ export const FullPeerProfileFragmentDoc = gql`
   callToActionImageURL
 }
     ${FullImageFragmentDoc}`;
-export const FullPeerFragmentDoc = gql`
-    fragment FullPeer on Peer {
-  id
-  name
-  slug
-  isDisabled
-  hostURL
-  information
-  profile {
-    ...FullPeerProfile
-  }
-}
-    ${FullPeerProfileFragmentDoc}`;
 export const PollExternalVoteSourceFragmentDoc = gql`
     fragment PollExternalVoteSource on PollExternalVoteSource {
   id
@@ -3979,175 +3874,6 @@ export function useUpdatePeerProfileMutation(baseOptions?: Apollo.MutationHookOp
 export type UpdatePeerProfileMutationHookResult = ReturnType<typeof useUpdatePeerProfileMutation>;
 export type UpdatePeerProfileMutationResult = Apollo.MutationResult<UpdatePeerProfileMutation>;
 export type UpdatePeerProfileMutationOptions = Apollo.BaseMutationOptions<UpdatePeerProfileMutation, UpdatePeerProfileMutationVariables>;
-export const PeerListDocument = gql`
-    query PeerList {
-  peers {
-    ...FullPeer
-  }
-}
-    ${FullPeerFragmentDoc}`;
-
-/**
- * __usePeerListQuery__
- *
- * To run a query within a React component, call `usePeerListQuery` and pass it any options that fit your needs.
- * When your component renders, `usePeerListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePeerListQuery({
- *   variables: {
- *   },
- * });
- */
-export function usePeerListQuery(baseOptions?: Apollo.QueryHookOptions<PeerListQuery, PeerListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PeerListQuery, PeerListQueryVariables>(PeerListDocument, options);
-      }
-export function usePeerListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PeerListQuery, PeerListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PeerListQuery, PeerListQueryVariables>(PeerListDocument, options);
-        }
-export type PeerListQueryHookResult = ReturnType<typeof usePeerListQuery>;
-export type PeerListLazyQueryHookResult = ReturnType<typeof usePeerListLazyQuery>;
-export type PeerListQueryResult = Apollo.QueryResult<PeerListQuery, PeerListQueryVariables>;
-export const PeerDocument = gql`
-    query Peer($id: String!) {
-  peer(id: $id) {
-    ...FullPeer
-  }
-}
-    ${FullPeerFragmentDoc}`;
-
-/**
- * __usePeerQuery__
- *
- * To run a query within a React component, call `usePeerQuery` and pass it any options that fit your needs.
- * When your component renders, `usePeerQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePeerQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function usePeerQuery(baseOptions: Apollo.QueryHookOptions<PeerQuery, PeerQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PeerQuery, PeerQueryVariables>(PeerDocument, options);
-      }
-export function usePeerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PeerQuery, PeerQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PeerQuery, PeerQueryVariables>(PeerDocument, options);
-        }
-export type PeerQueryHookResult = ReturnType<typeof usePeerQuery>;
-export type PeerLazyQueryHookResult = ReturnType<typeof usePeerLazyQuery>;
-export type PeerQueryResult = Apollo.QueryResult<PeerQuery, PeerQueryVariables>;
-export const CreatePeerDocument = gql`
-    mutation CreatePeer($input: CreatePeerInput!) {
-  createPeer(input: $input) {
-    ...FullPeer
-  }
-}
-    ${FullPeerFragmentDoc}`;
-export type CreatePeerMutationFn = Apollo.MutationFunction<CreatePeerMutation, CreatePeerMutationVariables>;
-
-/**
- * __useCreatePeerMutation__
- *
- * To run a mutation, you first call `useCreatePeerMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreatePeerMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createPeerMutation, { data, loading, error }] = useCreatePeerMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useCreatePeerMutation(baseOptions?: Apollo.MutationHookOptions<CreatePeerMutation, CreatePeerMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePeerMutation, CreatePeerMutationVariables>(CreatePeerDocument, options);
-      }
-export type CreatePeerMutationHookResult = ReturnType<typeof useCreatePeerMutation>;
-export type CreatePeerMutationResult = Apollo.MutationResult<CreatePeerMutation>;
-export type CreatePeerMutationOptions = Apollo.BaseMutationOptions<CreatePeerMutation, CreatePeerMutationVariables>;
-export const UpdatePeerDocument = gql`
-    mutation UpdatePeer($id: String!, $input: UpdatePeerInput!) {
-  updatePeer(id: $id, input: $input) {
-    ...FullPeer
-  }
-}
-    ${FullPeerFragmentDoc}`;
-export type UpdatePeerMutationFn = Apollo.MutationFunction<UpdatePeerMutation, UpdatePeerMutationVariables>;
-
-/**
- * __useUpdatePeerMutation__
- *
- * To run a mutation, you first call `useUpdatePeerMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdatePeerMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updatePeerMutation, { data, loading, error }] = useUpdatePeerMutation({
- *   variables: {
- *      id: // value for 'id'
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdatePeerMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePeerMutation, UpdatePeerMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdatePeerMutation, UpdatePeerMutationVariables>(UpdatePeerDocument, options);
-      }
-export type UpdatePeerMutationHookResult = ReturnType<typeof useUpdatePeerMutation>;
-export type UpdatePeerMutationResult = Apollo.MutationResult<UpdatePeerMutation>;
-export type UpdatePeerMutationOptions = Apollo.BaseMutationOptions<UpdatePeerMutation, UpdatePeerMutationVariables>;
-export const DeletePeerDocument = gql`
-    mutation DeletePeer($id: String!) {
-  deletePeer(id: $id) {
-    ...FullPeer
-  }
-}
-    ${FullPeerFragmentDoc}`;
-export type DeletePeerMutationFn = Apollo.MutationFunction<DeletePeerMutation, DeletePeerMutationVariables>;
-
-/**
- * __useDeletePeerMutation__
- *
- * To run a mutation, you first call `useDeletePeerMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeletePeerMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deletePeerMutation, { data, loading, error }] = useDeletePeerMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeletePeerMutation(baseOptions?: Apollo.MutationHookOptions<DeletePeerMutation, DeletePeerMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeletePeerMutation, DeletePeerMutationVariables>(DeletePeerDocument, options);
-      }
-export type DeletePeerMutationHookResult = ReturnType<typeof useDeletePeerMutation>;
-export type DeletePeerMutationResult = Apollo.MutationResult<DeletePeerMutation>;
-export type DeletePeerMutationOptions = Apollo.BaseMutationOptions<DeletePeerMutation, DeletePeerMutationVariables>;
 export const CreatePollDocument = gql`
     mutation CreatePoll($opensAt: DateTime, $closedAt: DateTime, $question: String) {
   createPoll(opensAt: $opensAt, closedAt: $closedAt, question: $question) {

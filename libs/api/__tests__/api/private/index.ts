@@ -132,14 +132,6 @@ export enum CommentState {
   Rejected = 'rejected'
 }
 
-export type CreatePeerInput = {
-  hostURL: Scalars['String'];
-  information?: InputMaybe<Scalars['RichText']>;
-  name: Scalars['String'];
-  slug: Scalars['String'];
-  token: Scalars['String'];
-};
-
 export type CreatedToken = {
   __typename?: 'CreatedToken';
   createdAt: Scalars['DateTime'];
@@ -403,7 +395,6 @@ export type Mutation = {
   createMemberPlan?: Maybe<MemberPlan>;
   createPaymentFromInvoice?: Maybe<Payment>;
   createPaymentMethod?: Maybe<PaymentMethod>;
-  createPeer: Peer;
   createPoll?: Maybe<PollWithAnswers>;
   createPollAnswer?: Maybe<PollAnswer>;
   createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
@@ -419,7 +410,6 @@ export type Mutation = {
   deleteInvoice?: Maybe<Invoice>;
   deleteMemberPlan?: Maybe<MemberPlan>;
   deletePaymentMethod?: Maybe<PaymentMethod>;
-  deletePeer?: Maybe<Peer>;
   deletePoll?: Maybe<FullPoll>;
   deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
@@ -444,7 +434,6 @@ export type Mutation = {
   updateInvoice?: Maybe<Invoice>;
   updateMemberPlan?: Maybe<MemberPlan>;
   updatePaymentMethod?: Maybe<PaymentMethod>;
-  updatePeer: Peer;
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
   updateRatingSystem: FullCommentRatingSystem;
@@ -492,11 +481,6 @@ export type MutationCreatePaymentFromInvoiceArgs = {
 
 export type MutationCreatePaymentMethodArgs = {
   input: PaymentMethodInput;
-};
-
-
-export type MutationCreatePeerArgs = {
-  input: CreatePeerInput;
 };
 
 
@@ -582,11 +566,6 @@ export type MutationDeleteMemberPlanArgs = {
 
 
 export type MutationDeletePaymentMethodArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeletePeerArgs = {
   id: Scalars['String'];
 };
 
@@ -715,12 +694,6 @@ export type MutationUpdateMemberPlanArgs = {
 export type MutationUpdatePaymentMethodArgs = {
   id: Scalars['String'];
   input: PaymentMethodInput;
-};
-
-
-export type MutationUpdatePeerArgs = {
-  id: Scalars['String'];
-  input: UpdatePeerInput;
 };
 
 
@@ -873,19 +846,6 @@ export enum PaymentState {
   Submitted = 'submitted'
 }
 
-export type Peer = {
-  __typename?: 'Peer';
-  createdAt: Scalars['DateTime'];
-  hostURL: Scalars['String'];
-  id: Scalars['String'];
-  information?: Maybe<Scalars['RichText']>;
-  isDisabled?: Maybe<Scalars['Boolean']>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  profile?: Maybe<PeerProfile>;
-  slug: Scalars['String'];
-};
-
 export type PeerProfile = {
   __typename?: 'PeerProfile';
   callToActionImage?: Maybe<Image>;
@@ -1023,9 +983,7 @@ export type Query = {
   paymentMethods: Array<PaymentMethod>;
   paymentProviders: Array<PaymentProvider>;
   payments: PaymentConnection;
-  peer?: Maybe<Peer>;
   peerProfile: PeerProfile;
-  peers?: Maybe<Array<Peer>>;
   poll?: Maybe<FullPoll>;
   polls?: Maybe<PollConnection>;
   ratingSystem: FullCommentRatingSystem;
@@ -1131,11 +1089,6 @@ export type QueryPaymentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<PaymentSort>;
   take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryPeerArgs = {
-  id: Scalars['String'];
 };
 
 
@@ -1403,15 +1356,6 @@ export type UpdateImageInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
-export type UpdatePeerInput = {
-  hostURL?: InputMaybe<Scalars['String']>;
-  information?: InputMaybe<Scalars['RichText']>;
-  isDisabled?: InputMaybe<Scalars['Boolean']>;
-  name?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['String']>;
-  token?: InputMaybe<Scalars['String']>;
-};
-
 export type UpdatePollAnswer = {
   answer?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
@@ -1677,58 +1621,6 @@ export type DeleteImageMutationVariables = Exact<{
 
 
 export type DeleteImageMutation = { __typename?: 'Mutation', deleteImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
-
-export type FullPeerProfileFragment = { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
-
-export type PeerRefFragment = { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string };
-
-export type PeerWithProfileFragment = { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
-
-export type PeerProfileQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type PeerProfileQuery = { __typename?: 'Query', peerProfile: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
-
-export type UpdatePeerProfileMutationVariables = Exact<{
-  input: PeerProfileInput;
-}>;
-
-
-export type UpdatePeerProfileMutation = { __typename?: 'Mutation', updatePeerProfile: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
-
-export type PeerListQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type PeerListQuery = { __typename?: 'Query', peers?: Array<{ __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string }> | null };
-
-export type PeerQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type PeerQuery = { __typename?: 'Query', peer?: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string } | null };
-
-export type CreatePeerMutationVariables = Exact<{
-  input: CreatePeerInput;
-}>;
-
-
-export type CreatePeerMutation = { __typename?: 'Mutation', createPeer: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string } };
-
-export type UpdatePeerMutationVariables = Exact<{
-  id: Scalars['String'];
-  input: UpdatePeerInput;
-}>;
-
-
-export type UpdatePeerMutation = { __typename?: 'Mutation', updatePeer: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string } };
-
-export type DeletePeerMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeletePeerMutation = { __typename?: 'Mutation', deletePeer?: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string } | null };
 
 export type CreateSubscriptionMutationVariables = Exact<{
   input: SubscriptionInput;
@@ -2006,44 +1898,6 @@ export const FullImage = gql`
   ...ImageRef
 }
     ${ImageRef}`;
-export const PeerRef = gql`
-    fragment PeerRef on Peer {
-  id
-  name
-  isDisabled
-  slug
-  hostURL
-}
-    `;
-export const FullPeerProfile = gql`
-    fragment FullPeerProfile on PeerProfile {
-  name
-  hostURL
-  themeColor
-  themeFontColor
-  logo {
-    ...ImageRef
-  }
-  squareLogo {
-    ...ImageRef
-  }
-  callToActionText
-  callToActionURL
-  callToActionImage {
-    ...ImageRef
-  }
-  callToActionImageURL
-}
-    ${ImageRef}`;
-export const PeerWithProfile = gql`
-    fragment PeerWithProfile on Peer {
-  ...PeerRef
-  profile {
-    ...FullPeerProfile
-  }
-}
-    ${PeerRef}
-${FullPeerProfile}`;
 export const CommentList = gql`
     query CommentList($filter: CommentFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
   comments(
@@ -2177,55 +2031,6 @@ export const DeleteImage = gql`
   }
 }
     ${FullImage}`;
-export const PeerProfile = gql`
-    query PeerProfile {
-  peerProfile {
-    ...FullPeerProfile
-  }
-}
-    ${FullPeerProfile}`;
-export const UpdatePeerProfile = gql`
-    mutation UpdatePeerProfile($input: PeerProfileInput!) {
-  updatePeerProfile(input: $input) {
-    ...FullPeerProfile
-  }
-}
-    ${FullPeerProfile}`;
-export const PeerList = gql`
-    query PeerList {
-  peers {
-    ...PeerRef
-  }
-}
-    ${PeerRef}`;
-export const Peer = gql`
-    query Peer($id: String!) {
-  peer(id: $id) {
-    ...PeerRef
-  }
-}
-    ${PeerRef}`;
-export const CreatePeer = gql`
-    mutation CreatePeer($input: CreatePeerInput!) {
-  createPeer(input: $input) {
-    ...PeerRef
-  }
-}
-    ${PeerRef}`;
-export const UpdatePeer = gql`
-    mutation UpdatePeer($id: String!, $input: UpdatePeerInput!) {
-  updatePeer(id: $id, input: $input) {
-    ...PeerRef
-  }
-}
-    ${PeerRef}`;
-export const DeletePeer = gql`
-    mutation DeletePeer($id: String!) {
-  deletePeer(id: $id) {
-    ...PeerRef
-  }
-}
-    ${PeerRef}`;
 export const CreateSubscription = gql`
     mutation CreateSubscription($input: SubscriptionInput!) {
   createSubscription(input: $input) {

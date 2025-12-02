@@ -1403,6 +1403,9 @@ type Mutation {
 
   """Creates a paywall bypass token."""
   createPaywallBypass(paywallId: String!, token: String!): PaywallBypass!
+
+  """Creates a new peer."""
+  createPeer(hostURL: String!, information: RichText, isDisabled: Boolean, name: String!, slug: String!, token: String!): Peer!
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
 
@@ -1454,6 +1457,9 @@ type Mutation {
 
   """Deletes a paywall bypass token."""
   deletePaywallBypass(id: String!): String!
+
+  """Deletes an existing peer."""
+  deletePeer(id: String!): Peer!
 
   """Delete poll votes"""
   deletePollVotes(ids: [String!]!): DeletePollVotesResult!
@@ -1563,6 +1569,9 @@ type Mutation {
 
   """Updates a paywall."""
   updatePaywall(active: Boolean, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, id: String!, memberPlanIds: [String!] = [], name: String): Paywall!
+
+  """Updates an existing peer."""
+  updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -1860,6 +1869,7 @@ type Peer {
   name: String!
   profile: RemotePeerProfile
   slug: String!
+  token: String!
 }
 
 type PeerArticle implements HasOptionalPeerLc {
@@ -2218,13 +2228,16 @@ type Query {
   """
   This query takes either the ID or the slug and returns the peer profile.
   """
-  peer(id: String, slug: Slug): Peer
+  peer(id: String, slug: String): Peer
 
   """Returns a paginated list of peer articles based on the filters given."""
   peerArticles(filter: PeerArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedPeerArticle!
 
   """This query returns the peer profile."""
   peerProfile: PeerProfile!
+
+  """Returns a list of all peers."""
+  peers: [Peer!]!
   periodicJobLog(skip: Int, take: Int = 10): [PeriodicJob!]!
 
   """Returns a list of all permissions."""

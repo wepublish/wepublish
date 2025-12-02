@@ -1,14 +1,14 @@
 import styled from '@emotion/styled';
+import { usePeerProfileQuery } from '@wepublish/editor/api';
 import {
+  getApiClientV2,
   PeerListDocument,
   PeerListQuery,
   useDeletePeerMutation,
   usePeerListQuery,
-  usePeerProfileQuery,
   useUpdatePeerMutation,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import {
-  addOrUpdateOneInArray,
   createCheckedPermissionComponent,
   DescriptionList,
   DescriptionListItem,
@@ -102,17 +102,23 @@ function PeerList() {
     error: peerInfoError,
   } = usePeerProfileQuery({ fetchPolicy: 'network-only' });
 
+  const client = getApiClientV2();
   const {
     data: peerListData,
     loading: isPeerListLoading,
     error: peerListError,
   } = usePeerListQuery({
+    client,
     fetchPolicy: 'network-only',
     errorPolicy: 'ignore',
   });
 
-  const [deletePeer, { loading: isDeleting }] = useDeletePeerMutation();
-  const [updatePeer, { loading: isUpdating }] = useUpdatePeerMutation();
+  const [deletePeer, { loading: isDeleting }] = useDeletePeerMutation({
+    client,
+  });
+  const [updatePeer, { loading: isUpdating }] = useUpdatePeerMutation({
+    client,
+  });
 
   const { t } = useTranslation();
 
@@ -160,8 +166,8 @@ function PeerList() {
               <Avatar
                 circle
                 src={
-                  profile?.squareLogo?.squareURL ??
-                  profile?.logo?.squareURL ??
+                  profile?.squareLogo?.xxsSquare ??
+                  profile?.logo?.xxsSquare ??
                   undefined
                 }
                 alt={profile?.name?.substr(0, 2)}
@@ -174,35 +180,19 @@ function PeerList() {
                 {hostURL}
               </p>
             </FlexboxGrid.Item>
+
             <FlexboxGrid.Item colspan={3}>
               <PermissionControl qualifyingPermissions={['CAN_CREATE_PEER']}>
                 <IconButton
                   appearance="primary"
+                  type="button"
                   disabled={isUpdating}
                   icon={isDisabled ? <MdVisibility /> : <MdVisibilityOff />}
-                  onClick={async e => {
-                    e.preventDefault();
-                    await updatePeer({
-                      variables: { id, input: { isDisabled: !isDisabled } },
-                      update: cache => {
-                        const query = cache.readQuery<PeerListQuery>({
-                          query: PeerListDocument,
-                        });
-
-                        if (!query) return;
-
-                        cache.writeQuery({
-                          query: PeerListDocument,
-                          data: {
-                            peers: addOrUpdateOneInArray(query.peers, {
-                              ...peer,
-                              isDisabled: !isDisabled,
-                            }),
-                          },
-                        });
-                      },
-                    });
-                  }}
+                  onClick={() =>
+                    updatePeer({
+                      variables: { id, isDisabled: !isDisabled },
+                    })
+                  }
                 >
                   {isDisabled ?
                     t('peerList.overview.enable')
@@ -210,6 +200,7 @@ function PeerList() {
                 </IconButton>
               </PermissionControl>
             </FlexboxGrid.Item>
+
             <FlexItem colspan={2}>
               <PermissionControl qualifyingPermissions={['CAN_DELETE_PEER']}>
                 <IconButtonTooltip caption={t('delete')}>
