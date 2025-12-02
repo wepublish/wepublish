@@ -28,28 +28,64 @@ export class UserResolver {
     return this.imageDataloaderService.load(userImageID);
   }
 
-  @ResolveField(() => UserAddress)
-  public async address(@Parent() { id: userId, address }: User) {
-    if (address !== undefined) {
-      return address;
+  @ResolveField(() => String)
+  public async email(
+    @CurrentUser() user: UserSession | undefined,
+    @Parent() { id, email }: User
+  ) {
+    if (user?.user.id === id) {
+      return email;
     }
 
-    return this.prisma.userAddress.findUnique({
-      where: { userId },
-    });
+    return '';
   }
 
-  @ResolveField(() => [PaymentProviderCustomer], { nullable: true })
-  public async paymentProviderCustomers(
-    @Parent() { id: userId, paymentProviderCustomers }: User
+  @ResolveField(() => Date, { nullable: true })
+  public async birthday(
+    @CurrentUser() user: UserSession | undefined,
+    @Parent() { id, birthday }: User
   ) {
-    if (paymentProviderCustomers !== undefined) {
-      return paymentProviderCustomers;
+    if (user?.user.id === id) {
+      return birthday;
     }
 
-    return this.prisma.paymentProviderCustomer.findMany({
-      where: { userId },
-    });
+    return null;
+  }
+
+  @ResolveField(() => UserAddress, { nullable: true })
+  public async address(
+    @CurrentUser() user: UserSession | undefined,
+    @Parent() { id, address }: User
+  ) {
+    if (user?.user.id === id) {
+      if (address !== undefined) {
+        return address;
+      }
+
+      return this.prisma.userAddress.findUnique({
+        where: { userId: id },
+      });
+    }
+
+    return null;
+  }
+
+  @ResolveField(() => [PaymentProviderCustomer])
+  public async paymentProviderCustomers(
+    @CurrentUser() user: UserSession | undefined,
+    @Parent() { id, paymentProviderCustomers }: User
+  ) {
+    if (user?.user.id === id) {
+      if (paymentProviderCustomers !== undefined) {
+        return paymentProviderCustomers;
+      }
+
+      return this.prisma.paymentProviderCustomer.findMany({
+        where: { userId: id },
+      });
+    }
+
+    return [];
   }
 
   @ResolveField(() => [Property])
