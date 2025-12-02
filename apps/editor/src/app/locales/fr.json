@@ -1481,7 +1481,7 @@
           "createdSubscriptionCount": "Abonnements entièrement nouveaux avec seulement une période payée jusqu'à présent.",
           "deactivatedSubscriptionCount": "Abonnements désactivés/résiliés et non renouvelés.",
           "replacedSubscriptionCount": "Abonnements remplacés par un autre (par ex. abonnements d'essai).",
-          "predictedSubscriptionRenewalCount": "Abonnements qui seront probablement renouvelés à la fin de leur période.\n Faible probabilité: Abonnements pour la première fois\n Forte probabilité: Abonnements avec un historique de renouvellement\n Somme: Le nombre total de renouvellements potentiels dans la période sélectionnée\n Les renouvellements sont résumés depuis le début de la période sélectionnée (ou la date actuelle, si la période commence dans le passé)\n Les renouvellements sont représentés par le nombre d'abonnements actuellement payés et actifs configurés pour se renouveler automatiquement.",
+          "predictedSubscriptionRenewalCount": "Nombre d'abonnements arrivant à expiration et prêts à être renouvelés.\n Abonnements pour la première fois, par rapport aux... \n Abonnements avec un historique de renouvellement\n Somme: Le nombre total d'abonnements arrivant à expiration et prêts à être renouvelés dans la période sélectionnée\n Les renouvellements sont résumés depuis le début de la période sélectionnée (ou la date actuelle, si la période commence dans le passé)\n Les renouvellements sont représentés par le nombre d'abonnements actuellement payés et actifs configurés pour se renouveler automatiquement.",
           "endingSubscriptionCount": "Abonnements qui expirent à la fin de leur période, excluant ceux configurés pour se renouveler automatiquement."
         },
         "totalActiveSubscriptionCount": "Total des abonnements actifs & payés",
@@ -1490,15 +1490,15 @@
         "createdSubscriptionCount": "Nouveaux abonnements payés",
         "deactivatedSubscriptionCount": "Abonnements désactivés",
         "replacedSubscriptionCount": "Abonnements remplacés",
-        "predictedSubscriptionRenewalCount": "Renouvellements d'abonnement prévus",
+        "predictedSubscriptionRenewalCount": "Renouvellements d'abonnement",
         "predictedSubscriptionRenewalCount_variants": {
-          "low": "Faible probabilité",
-          "high": "Forte probabilité",
-          "total": "Somme des renouvellements potentiels"
+          "low": "Renouvellements pour la première fois",
+          "high": "Renouvellements subséquents",
+          "total": "Somme des renouvellements à venir"
         },
         "predictedSubscriptionRenewalCountPerDay": {
-          "lowProbability": "Renouvellements faible probabilité",
-          "highProbability": "Renouvellements forte probabilité"
+          "lowProbability": "Renouvellements pour la première fois",
+          "highProbability": "Renouvellements subséquents"
         },
         "endingSubscriptionCount": "Abonnements expirants",
         "totalNewSubscriptions": "Total des nouveaux abonnements payés & des abonnements renouvelés",
@@ -1511,8 +1511,8 @@
         "deactivatedSubscriptionUsers": "Abonnements désactivés",
         "renewedSubscriptionUsers": "Abonnements renouvelés payés",
         "replacedSubscriptionUsers": "Abonnements remplacés",
-        "predictedSubscriptionRenewalUsersLowProbability": "Renouvellements faible probabilité",
-        "predictedSubscriptionRenewalUsersHighProbability": "Renouvellements forte probabilité",
+        "predictedSubscriptionRenewalUsersLowProbability": "Renouvellements pour la première fois",
+        "predictedSubscriptionRenewalUsersHighProbability": "Renouvellements subséquents",
         "endingSubscriptionUsers": "Abonnements expirants"
       }
     },
@@ -1537,8 +1537,8 @@
       "renewalRateInfo": "Part des abonnements qui ont été renouvelés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés réduisent le taux de renouvellement jusqu'à ce qu'ils soient payés.",
       "cancellationRateInfo": "Part des abonnements qui n'ont pas été renouvelés mais résiliés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés augmentent le taux de résiliation jusqu'à ce qu'ils soient payés.",
       "predictedSubscriptionRenewalCountPerDay": {
-        "lowProbability": "Renouvellements d'abonnement prévus avec une faible probabilité, par jour ou cumulés par mois si affichés en vue mensuelle",
-        "highProbability": "Renouvellements d'abonnement prévus avec une forte probabilité, par jour ou cumulés par mois si affichés en vue mensuelle"
+        "lowProbability": "Renouvellements d'abonnement pour la première fois",
+        "highProbability": "Renouvellements d'abonnement subséquents"
       }
     },
     "paywall": {

@@ -1664,7 +1664,7 @@
           "createdSubscriptionCount": "Completely new and paid subscriptions with only one period so far.",
           "deactivatedSubscriptionCount": "Subscriptions that have been deactivated/canceled and not renewed.",
           "replacedSubscriptionCount": "Subscriptions that have been replaced by another (e.g. trial subscriptions).",
-          "predictedSubscriptionRenewalCount": "Predicted number of subscriptions that will be renewed at the end of their term.\n Lower probability: First-time subscriptions\n Higher probability: Subscriptions with a history of renewal\n Sum: The total number of potential upcoming renewals\n Renewals are summarized from the start of the selected period (or current date, if period starts in the past) \n Renewals are represented by the number of currently paid and active subscriptions set to auto-renew.",
+          "predictedSubscriptionRenewalCount": "Number of subscriptions that are ready to be renewed at the end of their term.\n First-time subscriptions vs. \n Subscriptions with a history of renewal (subsequent renewals)\n Sum: The total number of upcoming renewals\n Renewals are summarized from the start of the selected period (or current date, if period starts in the past) \n Renewals are represented by the number of currently paid and active subscriptions set to auto-renew.",
           "endingSubscriptionCount": "Subscriptions that will expire at the end of their term, excluding those set to auto-renew."
         },
         "totalActiveSubscriptionCount": "Total active & paid subscriptions",
@@ -1673,15 +1673,15 @@
         "createdSubscriptionCount": "New paid subscriptions",
         "deactivatedSubscriptionCount": "Deactivated subscriptions",
         "replacedSubscriptionCount": "Replaced subscriptions",
-        "predictedSubscriptionRenewalCount": "Potential renewals in period",
+        "predictedSubscriptionRenewalCount": "Upcoming renewals in period",
         "predictedSubscriptionRenewalCount_variants": {
-          "low": "Lower probability",
-          "high": "Higher probability",
-          "total": "Sum of potential renewals"
+          "low": "First time renewals",
+          "high": "Subsequent renewals",
+          "total": "Sum of upcoming renewals"
         },
         "predictedSubscriptionRenewalCountPerDay": {
-          "lowProbability": "Low probability renewals",
-          "highProbability": "High probability renewals"
+          "lowProbability": "First time renewals",
+          "highProbability": "Subsequent renewals"
         },
         "endingSubscriptionCount": "Expiring subscriptions",
         "totalNewSubscriptions": "Total new and renewed paid subscriptions",
@@ -1694,8 +1694,8 @@
         "deactivatedSubscriptionUsers": "Deactivated subscriptions",
         "renewedSubscriptionUsers": "Renewed paid subscriptions",
         "replacedSubscriptionUsers": "Replaced subscriptions",
-        "predictedSubscriptionRenewalUsersLowProbability": "Low probability renewals",
-        "predictedSubscriptionRenewalUsersHighProbability": "High probability renewals",
+        "predictedSubscriptionRenewalUsersLowProbability": "First time renewals",
+        "predictedSubscriptionRenewalUsersHighProbability": "Subsequent renewals",
         "endingSubscriptionUsers": "Expiring subscriptions"
       }
     },
@@ -1720,8 +1720,8 @@
       "renewalRateInfo": "Share of subscriptions that were renewed at the end of their term. Replaced, renewed, and deactivated subscriptions are included. Renewed unpaid subscriptions reduce the renewal rate until they are paid.",
       "cancellationRateInfo": "Share of subscriptions that were not renewed but canceled at the end of their term. Renewed unpaid subscriptions increase the cancellation rate until they are paid.",
       "predictedSubscriptionRenewalCountPerDay": {
-        "lowProbability": "Predicted renewals with lower probability, per day or cumulated per month if set to monthly view",
-        "highProbability": "Predicted renewals with higher probability, per day or cumulated per month if set to monthly view"
+        "lowProbability": "First time renewals ",
+        "highProbability": "Subsequent renewals "
       }
     },
     "paywall": {
