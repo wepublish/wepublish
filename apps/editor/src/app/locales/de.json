@@ -1596,7 +1596,7 @@
           "createdSubscriptionCount": "Gänzlich neu gelöste Abos mit bisher nur einer Periode, die bezahlt wurden.",
           "deactivatedSubscriptionCount": "Abos, die deaktiviert / gekündigt und nicht erneuert wurden.",
           "replacedSubscriptionCount": "Abos, die durch ein anderes ersetzt wurden (z.B. Probe-Abos).",
-          "predictedSubscriptionRenewalCount": "Anzahl Abos, die am Ende ihrer Laufzeit zur Erneuerung anstehen.\n Erstmalige Abo-Erneuerungen, sowie...\n Abo-Erneuerungen Stammkunden: Abos, die in der Vergangenheit bereits ein oder mehrmals erneuert worden sind\n Summe: Gesamtzahl der Abos, die im gewählten Zeitraum zur Erneuerung anstehen\n Abo-Erneuerungen werden summiert dargestellt, beginnend ab dem gewählten Start-Datum (oder ab dem aktuellen Datum, falls der gewählte Zeitraum in der Vergangenheit beginnt).\n Als anstehende Abo-Erneuerungen werden die zurzeit Bezahlten mit aktivierter automatischer Verlängerung gezählt.",
+          "predictedSubscriptionRenewalCount": "Anzahl Abos, die am Ende ihrer Laufzeit zur Erneuerung anstehen.\n Erstmalige Abo-Erneuerungen, sowie...\n Abo-Erneuerungen Stammkunden: Abos, die in der Vergangenheit bereits ein oder mehrmals erneuert worden sind\n Abo-Erneuerungen werden beginnend ab dem gewählten Start-Datum (oder ab dem aktuellen Datum, falls der gewählte Zeitraum in der Vergangenheit beginnt) dargestellt .\n Als anstehende Abo-Erneuerungen werden die zurzeit Bezahlten mit aktivierter automatischer Verlängerung gezählt.",
           "endingSubscriptionCount": "Abos, die am Ende ihrer Laufzeit auslaufen werden, d.h. ohne Abos mit automatischer Verlängerung."
         },
         "totalActiveSubscriptionCount": "Total aktive & bezahlte Abos",
@@ -1609,7 +1609,9 @@
         "predictedSubscriptionRenewalCount_variants": {
           "low": "Erstmalige Abo-Erneuerungen",
           "high": "Abo-Erneuerungen Stammkunden",
-          "total": "Total anstehende Abo-Erneuerungen"
+          "total": "Total anstehende Abo-Erneuerungen",
+          "perDayHighProbability": "Abo-Erneuerungen Stammkunden",
+          "perDayLowProbability": "Erstmalige Abo-Erneuerungen"
         },
         "predictedSubscriptionRenewalCountPerDay": {
           "lowProbability": "Erstmalige Abo-Erneuerungen",

@@ -1481,7 +1481,7 @@
           "createdSubscriptionCount": "Abonnements entièrement nouveaux avec seulement une période payée jusqu'à présent.",
           "deactivatedSubscriptionCount": "Abonnements désactivés/résiliés et non renouvelés.",
           "replacedSubscriptionCount": "Abonnements remplacés par un autre (par ex. abonnements d'essai).",
-          "predictedSubscriptionRenewalCount": "Nombre d'abonnements arrivant à expiration et prêts à être renouvelés.\n Abonnements pour la première fois, par rapport aux... \n Abonnements avec un historique de renouvellement\n Somme: Le nombre total d'abonnements arrivant à expiration et prêts à être renouvelés dans la période sélectionnée\n Les renouvellements sont résumés depuis le début de la période sélectionnée (ou la date actuelle, si la période commence dans le passé)\n Les renouvellements sont représentés par le nombre d'abonnements actuellement payés et actifs configurés pour se renouveler automatiquement.",
+          "predictedSubscriptionRenewalCount": "Nombre d'abonnements arrivant à expiration et prêts à être renouvelés.\n Abonnements pour la première fois, par rapport aux... \n Abonnements avec un historique de renouvellement\n Les renouvellements sont affichés depuis le début de la période sélectionnée (ou la date actuelle, si la période commence dans le passé)\n Les renouvellements sont représentés par le nombre d'abonnements actuellement payés et actifs configurés pour se renouveler automatiquement.",
           "endingSubscriptionCount": "Abonnements qui expirent à la fin de leur période, excluant ceux configurés pour se renouveler automatiquement."
         },
         "totalActiveSubscriptionCount": "Total des abonnements actifs & payés",
@@ -1494,7 +1494,9 @@
         "predictedSubscriptionRenewalCount_variants": {
           "low": "Renouvellements pour la première fois",
           "high": "Renouvellements subséquents",
-          "total": "Somme des renouvellements à venir"
+          "total": "Somme des renouvellements à venir",
+          "perDayHighProbability": "Renouvellements pour la première fois",
+          "perDayLowProbability": "Renouvellements subséquents"
         },
         "predictedSubscriptionRenewalCountPerDay": {
           "lowProbability": "Renouvellements pour la première fois",
