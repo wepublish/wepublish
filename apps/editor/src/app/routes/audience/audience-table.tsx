@@ -4,8 +4,8 @@ import { DailySubscriptionStats } from '@wepublish/editor/api-v2';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdInfo } from 'react-icons/md';
-import { Button, Tooltip, Whisper } from 'rsuite';
-import Table, { RowDataType } from 'rsuite/esm/Table';
+import { Button, Table, Tooltip, Whisper } from 'rsuite';
+import { RowDataType } from 'rsuite-table';
 
 import { AudienceDetailDrawer } from './audience-detail-drawer';
 import { AudienceStatsComputed } from './useAudience';
