@@ -6,7 +6,6 @@ import {
   createEmotionCache,
 } from '@mui/material-nextjs/v15-pagesRouter';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
-import { TitleBlock, TitleBlockTitle } from '@wepublish/block-content/website';
 import { withErrorSnackbar } from '@wepublish/errors/website';
 import { PaymentAmountPicker } from '@wepublish/membership/website';
 import {
@@ -38,16 +37,23 @@ import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import { TsriArticle } from '../src/components/tsri-article';
 import { TsriArticleDate } from '../src/components/tsri-article-date';
+import { TsriArticleList } from '../src/components/tsri-article-list';
 import { TsriArticleMeta } from '../src/components/tsri-article-meta';
+import { TSRIAuthor } from '../src/components/tsri-author';
+import { TSRIAuthorLinks } from '../src/components/tsri-author-links';
+import { TSRIAuthorList } from '../src/components/tsri-author-list';
 import { TsriBanner } from '../src/components/tsri-banner';
 import { TsriBreakBlock } from '../src/components/tsri-break-block';
 import { TsriContextBox } from '../src/components/tsri-context-box';
 import { TsriNavbar } from '../src/components/tsri-navbar';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
+import { TsriTitleBlock } from '../src/components/tsri-title-block';
 import { TsriTeaser } from '../src/components/tsri-teaser';
 import theme from '../src/theme';
+import { TsriBlockRenderer } from '../src/tsri-block-renderer';
 
 setDefaultOptions({
   locale: de,
@@ -81,20 +87,13 @@ const MainSpacer = styled(Container)`
   position: relative;
   display: grid;
   gap: ${({ theme }) => theme.spacing(5)};
+  container: main / inline-size;
 
   ${({ theme }) => css`
     ${theme.breakpoints.up('md')} {
       gap: ${theme.spacing(10)};
     }
   `}
-`;
-
-const TsriTitle = styled(TitleBlock)`
-  ${TitleBlockTitle} {
-    ${({ theme }) => theme.breakpoints.down('sm')} {
-      font-size: 2rem;
-    }
-  }
 `;
 
 const dateFormatter = (date: Date, includeTime = true) =>
@@ -121,16 +120,22 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Head={Head}
           Script={Script}
           Navbar={TsriNavbar}
+          Article={TsriArticle}
           ArticleDate={TsriArticleDate}
           ArticleMeta={TsriArticleMeta}
+          ArticleList={TsriArticleList}
           PaymentAmount={PaymentAmountPicker}
+          Author={TSRIAuthor}
+          AuthorLinks={TSRIAuthorLinks}
+          AuthorList={TSRIAuthorList}
           elements={{ Link: NextWepublishLink }}
           blocks={{
             BaseTeaser: TsriTeaser,
             Break: TsriBreakBlock,
             Quote: TsriQuoteBlock,
             RichText: TsriRichText,
-            Title: TsriTitle,
+            Title: TsriTitleBlock,
+            Renderer: TsriBlockRenderer,
           }}
           blockStyles={{
             ContextBox: TsriContextBox,
