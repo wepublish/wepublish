@@ -1584,7 +1584,11 @@
       "rangeLastWeek": "Letzte Woche",
       "rangeLastMonth": "Letzter Monat",
       "rangeLastQuarter": "Letztes Quartal",
-      "rangeLastYear": "Letztes Jahr"
+      "rangeLastYear": "Letztes Jahr",
+      "rangeNextWeek": "Nächste Woche",
+      "rangeNextMonth": "Nächster Monat",
+      "rangeNextQuarter": "Nächstes Quartal",
+      "rangeNextYear": "Nächstes Jahr"
     },
     "audience": {
       "legend": {
@@ -1594,7 +1598,9 @@
           "renewedSubscriptionCount": "Abos, die um eine weitere Periode erneuert und bezahlt wurden.",
           "createdSubscriptionCount": "Gänzlich neu gelöste Abos mit bisher nur einer Periode, die bezahlt wurden.",
           "deactivatedSubscriptionCount": "Abos, die deaktiviert / gekündigt und nicht erneuert wurden.",
-          "replacedSubscriptionCount": "Abos, die durch ein anderes ersetzt wurden (z.B. Probe-Abos)."
+          "replacedSubscriptionCount": "Abos, die durch ein anderes ersetzt wurden (z.B. Probe-Abos).",
+          "predictedSubscriptionRenewalCount": "Anzahl Abos, die am Ende ihrer Laufzeit zur Erneuerung anstehen.\n Erstmalige Abo-Erneuerungen, sowie...\n Abo-Erneuerungen Stammkunden: Abos, die in der Vergangenheit bereits ein oder mehrmals erneuert worden sind\n Abo-Erneuerungen werden beginnend ab dem gewählten Start-Datum (oder ab dem aktuellen Datum, falls der gewählte Zeitraum in der Vergangenheit beginnt) dargestellt .\n Als anstehende Abo-Erneuerungen werden die zurzeit Bezahlten mit aktivierter automatischer Verlängerung gezählt.",
+          "endingSubscriptionCount": "Abos, die am Ende ihrer Laufzeit auslaufen werden, d.h. ohne Abos mit automatischer Verlängerung."
         },
         "totalActiveSubscriptionCount": "Total aktive & bezahlte Abos",
         "overdueSubscriptionCount": "Erneuerte nicht bezahlte Abos",
@@ -1602,14 +1608,32 @@
         "createdSubscriptionCount": "Neue bezahlte Abos",
         "deactivatedSubscriptionCount": "Deaktivierte Abos",
         "replacedSubscriptionCount": "Ersetzte Abos",
+        "predictedSubscriptionRenewalCount": "Anstehende Abo-Erneuerungen",
+        "predictedSubscriptionRenewalCount_variants": {
+          "low": "Erstmalige Abo-Erneuerungen",
+          "high": "Abo-Erneuerungen Stammkunden",
+          "total": "Total anstehende Abo-Erneuerungen",
+          "perDayHighProbability": "Abo-Erneuerungen Stammkunden",
+          "perDayLowProbability": "Erstmalige Abo-Erneuerungen"
+        },
+        "predictedSubscriptionRenewalCountPerDay": {
+          "lowProbability": "Erstmalige Abo-Erneuerungen",
+          "highProbability": "Abo-Erneuerungen Stammkunden"
+        },
+        "endingSubscriptionCount": "Auslaufende Abos",
         "totalNewSubscriptions": "Total bezahlte neue & erneuerte Abos",
         "renewalRate": "Erneuerungsrate",
         "cancellationRate": "Kündigungsrate",
         "createdSubscriptionUsers": "Neue bezahlte Abos",
         "overdueSubscriptionUsers": "Erneuerte nicht bezahlte Abos",
+        "predictedSubscriptionRenewalUsers": "Anstehende Abo-Erneuerungen",
+        "createdUnpaidSubscriptionUsers": "Erneuerte, nicht bezahlte Abos",
         "deactivatedSubscriptionUsers": "Deaktivierte Abos",
         "renewedSubscriptionUsers": "Erneuerte bezahlte Abos",
-        "replacedSubscriptionUsers": "Ersetzte Abos"
+        "replacedSubscriptionUsers": "Ersetzte Abos",
+        "predictedSubscriptionRenewalUsersLowProbability": "Erstmalige Abo-Erneuerungen",
+        "predictedSubscriptionRenewalUsersHighProbability": "Abo-Erneuerungen Stammkunden",
+        "endingSubscriptionUsers": "Auslaufende Abos"
       }
     },
     "audienceDetailDrawer": {
@@ -1631,7 +1655,11 @@
       "byDate": "Per",
       "totalNewSubscriptionsInfo": "Summe aus ersetzten, neuen und erneuerten Abos. Nur die aktiven Spalten werden summiert.",
       "renewalRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit erneuert wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos senken die Erneuerungsrate, bis sie ggf. bezahlt werden.",
-      "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos erhöhen die Kündigungsrate, bis sie ggf. bezahlt werden."
+      "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos erhöhen die Kündigungsrate, bis sie ggf. bezahlt werden.",
+      "predictedSubscriptionRenewalCountPerDay": {
+        "lowProbability": "erstmalige Abo-Erneuerungen",
+        "highProbability": "Abo-Erneuerungen Stammkunden"
+      }
     },
     "paywall": {
       "navbar": "Paywall",
@@ -1657,6 +1685,9 @@
       "gracePeriod": "Zahlungsfrist",
       "gracePeriodHelpText": "Wenn deine Webseite eine Paywall verwendet, können die Nutzer alle Inhalte auch bei unbezahlten Abos sofort oder weiterhin lesen - innerhalb der Zahlungsfrist. Dies ist etwa bei Banküberweisung nützlich.",
       "days": "Tage"
+    },
+    "audienceCsvBtn": {
+      "exportUsers": "CSV herunterladen"
     }
   }
 }

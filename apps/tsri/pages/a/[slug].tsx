@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import {
   ArticleContainer,
   ArticleListContainer,
-  ArticleWrapper,
+  ArticleWrapper as DefaultArticleWrapper,
 } from '@wepublish/article/website';
 import { ArticleAuthor } from '@wepublish/author/website';
 import { CommentListContainer } from '@wepublish/comments/website';
@@ -25,6 +25,10 @@ import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
 
 import TsriAdHeader from '../../src/components/tsri-ad-header';
+
+const AfterArticleWrapper = styled(DefaultArticleWrapper)`
+  background-color: pink !important;
+`;
 
 const AfterArticleTitle = styled(H2)`
   ${({ theme }) => theme.breakpoints.down('sm')} {
@@ -75,7 +79,7 @@ export default function ArticleBySlugOrId() {
 
       {data?.article && (
         <>
-          <ArticleWrapper>
+          <AfterArticleWrapper>
             <AfterArticleTitle component={'h2'}>
               Das könnte dich auch interessieren
             </AfterArticleTitle>
@@ -91,10 +95,10 @@ export default function ArticleBySlugOrId() {
                   .splice(0, 3)
               }
             />
-          </ArticleWrapper>
+          </AfterArticleWrapper>
 
           {!data.article.disableComments && (
-            <ArticleWrapper>
+            <AfterArticleWrapper>
               <AfterArticleTitle
                 component={'h2'}
                 id="comments"
@@ -107,7 +111,7 @@ export default function ArticleBySlugOrId() {
                 type={CommentItemType.Article}
                 signUpUrl="/mitmachen"
               />
-            </ArticleWrapper>
+            </AfterArticleWrapper>
           )}
         </>
       )}
