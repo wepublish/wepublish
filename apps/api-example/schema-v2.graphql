@@ -2780,6 +2780,7 @@ input UploadImageInput {
 }
 
 type User {
+  active: Boolean!
   address: UserAddress
   birthday: DateTime
   email: String!
@@ -2788,9 +2789,11 @@ type User {
   id: String!
   image: Image
   name: String!
-  paymentProviderCustomers: [PaymentProviderCustomer!]!
+  paymentProviderCustomers: [PaymentProviderCustomer!]
   permissions: [String!]!
   properties: [Property!]!
+  roleIDs: [String!]!
+  userImageID: String
 }
 
 type UserAddress {
