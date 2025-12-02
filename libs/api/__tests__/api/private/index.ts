@@ -204,15 +204,6 @@ export type CreatePeerInput = {
   token: Scalars['String'];
 };
 
-export type CreatedToken = {
-  __typename?: 'CreatedToken';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  token: Scalars['String'];
-};
-
 export enum Currency {
   Chf = 'CHF',
   Eur = 'EUR'
@@ -485,7 +476,6 @@ export type Mutation = {
   createSessionWithJWT: SessionWithToken;
   createSubscription?: Maybe<Subscription>;
   createTag?: Maybe<Tag>;
-  createToken: CreatedToken;
   createUser?: Maybe<User>;
   createUserRole?: Maybe<UserRole>;
   deleteAuthor?: Maybe<Author>;
@@ -501,7 +491,6 @@ export type Mutation = {
   deleteRatingSystemAnswer: CommentRatingSystemAnswer;
   deleteSubscription?: Maybe<Subscription>;
   deleteTag?: Maybe<Tag>;
-  deleteToken?: Maybe<CreatedToken>;
   deleteUser?: Maybe<User>;
   deleteUserRole?: Maybe<UserRole>;
   importSubscription?: Maybe<Subscription>;
@@ -633,11 +622,6 @@ export type MutationCreateTagArgs = {
 };
 
 
-export type MutationCreateTokenArgs = {
-  input: TokenInput;
-};
-
-
 export type MutationCreateUserArgs = {
   input: UserInput;
   password: Scalars['String'];
@@ -710,11 +694,6 @@ export type MutationDeleteSubscriptionArgs = {
 
 
 export type MutationDeleteTagArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteTokenArgs = {
   id: Scalars['String'];
 };
 
@@ -1149,7 +1128,6 @@ export type Query = {
   subscriptionsAsCsv?: Maybe<Scalars['String']>;
   tag?: Maybe<Tag>;
   tags?: Maybe<TagConnection>;
-  tokens: Array<Token>;
   user?: Maybe<User>;
   userRole?: Maybe<UserRole>;
   userRoles: UserRoleConnection;
@@ -1519,18 +1497,6 @@ export enum TagType {
   Event = 'Event',
   Page = 'Page'
 }
-
-export type Token = {
-  __typename?: 'Token';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-};
-
-export type TokenInput = {
-  name: Scalars['String'];
-};
 
 export type UpdateCommentRatingSystemAnswer = {
   answer?: InputMaybe<Scalars['String']>;

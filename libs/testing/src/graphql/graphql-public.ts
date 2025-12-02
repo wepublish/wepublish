@@ -312,6 +312,13 @@ export type BaseTeaser = {
   type: Scalars['String'];
 };
 
+export type BaseToken = {
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+};
+
 export type BildwurfAdBlock = BaseBlock & {
   __typename?: 'BildwurfAdBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -1536,6 +1543,10 @@ export type Mutation = {
   createSubscriptionInterval: Array<SubscriptionFlowModel>;
   /** Allows guests and authenticated users to create additional subscriptions */
   createSubscriptionWithConfirmation: Scalars['Boolean'];
+  /** Creates a new tag. */
+  createTag: Tag;
+  /** Creates a token and returns it's secret once. */
+  createToken: TokenWithSecret;
   /**
    *
    *       Creates a new userConsent based on input.
@@ -1571,6 +1582,10 @@ export type Mutation = {
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
   deleteSubscriptionInterval: Array<SubscriptionFlowModel>;
+  /** Deletes an existing tag. */
+  deleteTag: Tag;
+  /** Deletes a token. */
+  deleteToken: Token;
   /**
    *
    *       Delete an existing userConsent by id.
@@ -1651,6 +1666,8 @@ export type Mutation = {
   updateSubscriptionInterval: Array<SubscriptionFlowModel>;
   /** Updates an existing mail flow */
   updateSystemMail: Array<SystemMailModel>;
+  /** Updates an existing tag. */
+  updateTag: Tag;
   /** This mutation allows to update the user's data by taking an input of type UserInput. */
   updateUser?: Maybe<User>;
   /**
@@ -1825,6 +1842,17 @@ export type MutationCreateSubscriptionWithConfirmationArgs = {
   userId?: InputMaybe<Scalars['String']>;
 };
 
+export type MutationCreateTagArgs = {
+  description?: InputMaybe<Scalars['RichText']>;
+  main?: Scalars['Boolean'];
+  tag?: InputMaybe<Scalars['String']>;
+  type: TagType;
+};
+
+export type MutationCreateTokenArgs = {
+  name: Scalars['String'];
+};
+
 export type MutationCreateUserConsentArgs = {
   consentId: Scalars['String'];
   userId: Scalars['String'];
@@ -1880,6 +1908,14 @@ export type MutationDeleteSubscriptionFlowArgs = {
 };
 
 export type MutationDeleteSubscriptionIntervalArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationDeleteTagArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationDeleteTokenArgs = {
   id: Scalars['String'];
 };
 
@@ -2089,6 +2125,14 @@ export type MutationUpdateSubscriptionIntervalArgs = {
 export type MutationUpdateSystemMailArgs = {
   event: UserEvent;
   mailTemplateId: Scalars['String'];
+};
+
+export type MutationUpdateTagArgs = {
+  description?: InputMaybe<Scalars['RichText']>;
+  id: Scalars['String'];
+  main?: InputMaybe<Scalars['Boolean']>;
+  tag?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<TagType>;
 };
 
 export type MutationUpdateUserArgs = {
@@ -2824,8 +2868,12 @@ export type Query = {
   subscriptions: Array<PublicSubscription>;
   /** Returns all mail flows */
   systemMails: Array<SystemMailModel>;
+  /** Returns a tag by id */
+  tag: Tag;
   /** This query returns a list of tags */
   tags: TagConnection;
+  /** Returns a list of all tokens. */
+  tokens: Array<Token>;
   /**
    *
    *       Returns a single userConsent by id.
@@ -3064,6 +3112,10 @@ export type QuerySettingsArgs = {
 export type QuerySubscriptionFlowsArgs = {
   defaultFlowOnly: Scalars['Boolean'];
   memberPlanId?: InputMaybe<Scalars['String']>;
+};
+
+export type QueryTagArgs = {
+  id: Scalars['String'];
 };
 
 export type QueryTagsArgs = {
@@ -3343,7 +3395,7 @@ export type Tag = {
   id: Scalars['String'];
   main: Scalars['Boolean'];
   tag?: Maybe<Scalars['String']>;
-  type?: Maybe<TagType>;
+  type: TagType;
   url: Scalars['String'];
 };
 
@@ -3548,6 +3600,23 @@ export type TitleBlockInput = {
   lead?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
+};
+
+export type Token = BaseToken & {
+  __typename?: 'Token';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+};
+
+export type TokenWithSecret = BaseToken & {
+  __typename?: 'TokenWithSecret';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  token: Scalars['String'];
 };
 
 export type TrackingPixel = {

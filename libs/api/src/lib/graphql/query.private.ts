@@ -128,8 +128,6 @@ import {
 } from './tag/tag';
 import { getTags, getTag } from './tag/tag.private-query';
 import { TagSort } from './tag/tag.query';
-import { GraphQLToken } from './token';
-import { getTokens } from './token/token.private-queries';
 import {
   GraphQLUser,
   GraphQLUserConnection,
@@ -402,17 +400,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: new GraphQLList(new GraphQLNonNull(GraphQLPermission)),
       args: {},
       resolve: (root, _, { authenticate }) => getPermissions(authenticate),
-    },
-
-    // Token
-    // =====
-
-    tokens: {
-      type: new GraphQLNonNull(
-        new GraphQLList(new GraphQLNonNull(GraphQLToken))
-      ),
-      resolve: (root, args, { authenticateUser, prisma: { token } }) =>
-        getTokens(authenticateUser, token),
     },
 
     // Author

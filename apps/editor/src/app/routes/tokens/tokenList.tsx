@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
 import {
+  FullTokenFragment,
+  getApiClientV2,
   TokenListDocument,
-  TokenRefFragment,
   useDeleteTokenMutation,
   useTokenListQuery,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import {
   createCheckedPermissionComponent,
   getOperationNameFromDocument,
@@ -53,7 +54,7 @@ function TokenList() {
   const [isTokenGeneratePanelOpen, setTokenGeneratePanelOpen] =
     useState(isGenerateRoute);
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
-  const [currentToken, setCurrentToken] = useState<TokenRefFragment>();
+  const [currentToken, setCurrentToken] = useState<FullTokenFragment>();
 
   const {
     data: tokenListData,
@@ -63,8 +64,10 @@ function TokenList() {
     fetchPolicy: 'network-only',
   });
 
+  const client = getApiClientV2();
   const [deleteToken, { loading: isDeleting, error: deleteTokenError }] =
     useDeleteTokenMutation({
+      client,
       refetchQueries: [getOperationNameFromDocument(TokenListDocument)],
     });
 
