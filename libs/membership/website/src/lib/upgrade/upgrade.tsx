@@ -95,8 +95,6 @@ export const Upgrade = ({
   onUpgrade,
   donate,
   termsOfServiceUrl,
-  hidePaymentAmount = memberPlan =>
-    !!memberPlan?.tags?.includes('hide-payment-amount'),
   transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
   transactionFeeText,
 }: BuilderUpgradeProps) => {
@@ -231,6 +229,10 @@ export const Upgrade = ({
     onSelect(selectedMemberPlan?.id);
   }, [selectedMemberPlan?.id, onSelect]);
 
+  const shouldHidePaymentAmount =
+    selectedMemberPlan?.amountPerMonthMin ===
+    selectedMemberPlan?.amountPerMonthMax;
+
   const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin || 500;
 
   return (
@@ -263,7 +265,7 @@ export const Upgrade = ({
       </SubscribeSection>
 
       <SubscribeSection area="monthlyAmount">
-        {!hidePaymentAmount(selectedMemberPlan) && (
+        {!shouldHidePaymentAmount && (
           <Controller
             name={'monthlyAmount'}
             defaultValue={0}

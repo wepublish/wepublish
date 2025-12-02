@@ -4553,6 +4553,8 @@ export type CreatePaywallMutationVariables = Exact<{
   memberPlanIds: Array<Scalars['String']> | Scalars['String'];
   bypassTokens: Array<Scalars['String']> | Scalars['String'];
   alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
+  upgradeDescription?: InputMaybe<Scalars['RichText']>;
+  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
 }>;
 
 
@@ -4563,6 +4565,8 @@ export type UpdatePaywallMutationVariables = Exact<{
   name?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['RichText']>;
   circumventDescription?: InputMaybe<Scalars['RichText']>;
+  upgradeDescription?: InputMaybe<Scalars['RichText']>;
+  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
   active?: InputMaybe<Scalars['Boolean']>;
   anyMemberPlan?: InputMaybe<Scalars['Boolean']>;
   memberPlanIds?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
@@ -8331,11 +8335,13 @@ export type PaywallQueryHookResult = ReturnType<typeof usePaywallQuery>;
 export type PaywallLazyQueryHookResult = ReturnType<typeof usePaywallLazyQuery>;
 export type PaywallQueryResult = Apollo.QueryResult<PaywallQuery, PaywallQueryVariables>;
 export const CreatePaywallDocument = gql`
-    mutation CreatePaywall($name: String, $description: RichText, $circumventDescription: RichText, $active: Boolean!, $anyMemberPlan: Boolean!, $memberPlanIds: [String!]!, $bypassTokens: [String!]!, $alternativeSubscribeUrl: String) {
+    mutation CreatePaywall($name: String, $description: RichText, $circumventDescription: RichText, $active: Boolean!, $anyMemberPlan: Boolean!, $memberPlanIds: [String!]!, $bypassTokens: [String!]!, $alternativeSubscribeUrl: String, $upgradeDescription: RichText, $upgradeCircumventDescription: RichText) {
   createPaywall(
     name: $name
     description: $description
     circumventDescription: $circumventDescription
+    upgradeDescription: $upgradeDescription
+    upgradeCircumventDescription: $upgradeCircumventDescription
     anyMemberPlan: $anyMemberPlan
     active: $active
     memberPlanIds: $memberPlanIds
@@ -8369,6 +8375,8 @@ export type CreatePaywallMutationFn = Apollo.MutationFunction<CreatePaywallMutat
  *      memberPlanIds: // value for 'memberPlanIds'
  *      bypassTokens: // value for 'bypassTokens'
  *      alternativeSubscribeUrl: // value for 'alternativeSubscribeUrl'
+ *      upgradeDescription: // value for 'upgradeDescription'
+ *      upgradeCircumventDescription: // value for 'upgradeCircumventDescription'
  *   },
  * });
  */
@@ -8380,12 +8388,14 @@ export type CreatePaywallMutationHookResult = ReturnType<typeof useCreatePaywall
 export type CreatePaywallMutationResult = Apollo.MutationResult<CreatePaywallMutation>;
 export type CreatePaywallMutationOptions = Apollo.BaseMutationOptions<CreatePaywallMutation, CreatePaywallMutationVariables>;
 export const UpdatePaywallDocument = gql`
-    mutation UpdatePaywall($id: String!, $name: String, $description: RichText, $circumventDescription: RichText, $active: Boolean, $anyMemberPlan: Boolean, $memberPlanIds: [String!], $bypassTokens: [String!], $alternativeSubscribeUrl: String) {
+    mutation UpdatePaywall($id: String!, $name: String, $description: RichText, $circumventDescription: RichText, $upgradeDescription: RichText, $upgradeCircumventDescription: RichText, $active: Boolean, $anyMemberPlan: Boolean, $memberPlanIds: [String!], $bypassTokens: [String!], $alternativeSubscribeUrl: String) {
   updatePaywall(
     id: $id
     name: $name
     description: $description
     circumventDescription: $circumventDescription
+    upgradeDescription: $upgradeDescription
+    upgradeCircumventDescription: $upgradeCircumventDescription
     anyMemberPlan: $anyMemberPlan
     active: $active
     memberPlanIds: $memberPlanIds
@@ -8415,6 +8425,8 @@ export type UpdatePaywallMutationFn = Apollo.MutationFunction<UpdatePaywallMutat
  *      name: // value for 'name'
  *      description: // value for 'description'
  *      circumventDescription: // value for 'circumventDescription'
+ *      upgradeDescription: // value for 'upgradeDescription'
+ *      upgradeCircumventDescription: // value for 'upgradeCircumventDescription'
  *      active: // value for 'active'
  *      anyMemberPlan: // value for 'anyMemberPlan'
  *      memberPlanIds: // value for 'memberPlanIds'

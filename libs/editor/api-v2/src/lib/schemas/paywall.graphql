@@ -41,11 +41,15 @@ mutation CreatePaywall(
   $memberPlanIds: [String!]!
   $bypassTokens: [String!]!
   $alternativeSubscribeUrl: String
+  $upgradeDescription: RichText
+  $upgradeCircumventDescription: RichText
 ) {
   createPaywall(
     name: $name
     description: $description
     circumventDescription: $circumventDescription
+    upgradeDescription: $upgradeDescription
+    upgradeCircumventDescription: $upgradeCircumventDescription
     anyMemberPlan: $anyMemberPlan
     active: $active
     memberPlanIds: $memberPlanIds
@@ -61,6 +65,8 @@ mutation UpdatePaywall(
   $name: String
   $description: RichText
   $circumventDescription: RichText
+  $upgradeDescription: RichText
+  $upgradeCircumventDescription: RichText
   $active: Boolean
   $anyMemberPlan: Boolean
   $memberPlanIds: [String!]
@@ -72,6 +78,8 @@ mutation UpdatePaywall(
     name: $name
     description: $description
     circumventDescription: $circumventDescription
+    upgradeDescription: $upgradeDescription
+    upgradeCircumventDescription: $upgradeCircumventDescription
     anyMemberPlan: $anyMemberPlan
     active: $active
     memberPlanIds: $memberPlanIds

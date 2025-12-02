@@ -327,10 +327,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
 
   const shouldHidePaymentAmount =
-    selectedMemberPlan ?
-      selectedMemberPlan.amountPerMonthMin ===
-      selectedMemberPlan.amountPerMonthMax
-    : false;
+    selectedMemberPlan?.amountPerMonthMin ===
+    selectedMemberPlan?.amountPerMonthMax;
 
   const paymentText = usePaymentText({
     autoRenew,

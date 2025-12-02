@@ -23,7 +23,6 @@ export type UpgradeContainerProps = BuilderContainerProps &
     | 'donate'
     | 'transactionFee'
     | 'transactionFeeText'
-    | 'hidePaymentAmount'
   > & {
     sort?: (memberPlans: FullMemberPlanFragment[]) => FullMemberPlanFragment[];
     filter?: (

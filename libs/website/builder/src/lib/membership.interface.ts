@@ -171,7 +171,6 @@ export type BuilderUpgradeProps = {
   }>;
   onSelect: (memberPlanId: string | undefined) => void;
   donate?: (memberPlan?: FullMemberPlanFragment) => boolean;
-  hidePaymentAmount?: (memberPlan?: FullMemberPlanFragment) => boolean;
   termsOfServiceUrl?: string;
   transactionFee?: (monthlyAmount: number) => number;
   transactionFeeText?: string;

@@ -21,26 +21,31 @@ const HauptstadtPaywall = styled((props: BuilderPaywallProps) => {
     skip: !hasUser,
   });
 
-  const hasRequiredSubscription = useMemo(
+  const filteredSubscriptions = useMemo(
     () =>
-      props.anyMemberPlan ||
-      data?.subscriptions.some(
+      data?.subscriptions.filter(
         subscription =>
-          props.memberPlans.find(mb => subscription.memberPlan.id === mb.id) &&
           subscription.extendable &&
           subscription.autoRenew &&
           subscription.isActive &&
           subscription.memberPlan.productType === ProductType.Subscription
+      ) ?? [],
+    [data?.subscriptions]
+  );
+
+  const hasRequiredSubscription = useMemo(
+    () =>
+      props.anyMemberPlan ||
+      filteredSubscriptions.some(subscription =>
+        props.memberPlans.find(mb => subscription.memberPlan.id === mb.id)
       ),
-    [data?.subscriptions, props.anyMemberPlan, props.memberPlans]
+    [filteredSubscriptions, props.anyMemberPlan, props.memberPlans]
   );
 
   const cheapestSubscription = useMemo(
     () =>
-      sortWith([ascend(prop('monthlyAmount'))], data?.subscriptions ?? []).at(
-        0
-      ),
-    [data?.subscriptions]
+      sortWith([ascend(prop('monthlyAmount'))], filteredSubscriptions).at(0),
+    [filteredSubscriptions]
   );
 
   const canUpgrade = !hasRequiredSubscription && cheapestSubscription;
