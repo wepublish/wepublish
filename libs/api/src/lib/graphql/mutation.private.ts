@@ -133,17 +133,11 @@ import { GraphQLCreatedToken, GraphQLTokenInput } from './token';
 import { createToken, deleteTokenById } from './token/token.private-mutation';
 import { GraphQLUser, GraphQLUserInput } from './user';
 import {
-  createUserRole,
-  deleteUserRoleById,
-  updateUserRole,
-} from './user-role/user-role.private-mutation';
-import {
   createAdminUser,
   deleteUserById,
   resetUserPassword,
   updateAdminUser,
 } from './user/user.private-mutation';
-import { GraphQLUserRole, GraphQLUserRoleInput } from './userRole';
 
 import { CanSendJWTLogin } from '@wepublish/permissions';
 import { mailLogType } from '@wepublish/mail/api';
@@ -516,35 +510,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           subscription,
           memberContext
         ),
-    },
-
-    // UserRole
-    // ====
-
-    createUserRole: {
-      type: GraphQLUserRole,
-      args: { input: { type: new GraphQLNonNull(GraphQLUserRoleInput) } },
-      resolve: (root, { input }, { authenticate, prisma: { userRole } }) =>
-        createUserRole(input, authenticate, userRole),
-    },
-
-    updateUserRole: {
-      type: GraphQLUserRole,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        input: { type: new GraphQLNonNull(GraphQLUserRoleInput) },
-      },
-      resolve: (root, { id, input }, { authenticate, prisma: { userRole } }) =>
-        updateUserRole(id, input, authenticate, userRole),
-    },
-
-    deleteUserRole: {
-      type: GraphQLUserRole,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { userRole } }) =>
-        deleteUserRoleById(id, authenticate, userRole),
     },
 
     // Author

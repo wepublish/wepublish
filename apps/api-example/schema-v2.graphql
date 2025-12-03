@@ -1415,11 +1415,11 @@ type Mutation {
   """
   createSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
-  """Creates a new tag."""
-  createTag(description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
-
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
+
+  """Creates a new userrole."""
+  createUserRole(description: String, name: String!, permissionIDs: [String!]!): UserRole!
 
   """Deletes an article."""
   deleteArticle(id: String!): String!
@@ -1456,11 +1456,11 @@ type Mutation {
   """Delete an existing subscription interval"""
   deleteSubscriptionInterval(id: String!): [SubscriptionFlowModel!]!
 
-  """Deletes an existing tag."""
-  deleteTag(id: String!): Tag!
-
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
+
+  """Deletes an existing userrole."""
+  deleteUserRole(id: String!): UserRole!
 
   """Dislikes an article."""
   dislikeArticle(id: String!): Article!
@@ -1565,9 +1565,6 @@ type Mutation {
   """Updates an existing mail flow"""
   updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
 
-  """Updates an existing tag."""
-  updateTag(description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
-
   """
   This mutation allows to update the user's data by taking an input of type UserInput.
   """
@@ -1575,6 +1572,9 @@ type Mutation {
 
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
+
+  """Updates an existing userrole."""
+  updateUserRole(description: String, id: String!, name: String, permissionIDs: [String!]): UserRole!
 
   """
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
@@ -1752,6 +1752,12 @@ type PaginatedPeerArticle {
 
 type PaginatedPollVotes {
   nodes: [PollVote!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedUserRoles {
+  nodes: [UserRole!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -2252,9 +2258,6 @@ type Query {
   """Returns all mail flows"""
   systemMails: [SystemMailModel!]!
 
-  """Returns a tag by id"""
-  tag(id: String!): Tag!
-
   """This query returns a list of tags"""
   tags(
     """Cursor for pagination"""
@@ -2282,6 +2285,12 @@ type Query {
   "\n      Returns a list of userConsents. Possible to filter.\n    "
   userConsents(name: String, slug: String, value: Boolean): [UserConsent!]!
   userPollVote(pollId: String!): String
+
+  """Returns a userrole by id."""
+  userRole(id: String!): UserRole!
+
+  """Returns a paginated list of userroles based on the filters given."""
+  userRoles(cursorId: String, filter: UserRoleFilter, order: SortOrder = Ascending, skip: Int = 0, sort: UserRoleSort = CreatedAt, take: Int = 10): PaginatedUserRoles!
   versionInformation: VersionInformation!
 }
 
@@ -2523,7 +2532,7 @@ type Tag {
   id: String!
   main: Boolean!
   tag: String
-  type: TagType!
+  type: TagType
   url: String!
 }
 
@@ -2866,6 +2875,26 @@ input UserInput {
   flair: String
   name: String!
   uploadImageInput: UploadImageInput
+}
+
+type UserRole {
+  createdAt: DateTime!
+  description: String
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+  permissionIDs: [String!]!
+  permissions: [Permission!]!
+  systemRole: Boolean!
+}
+
+input UserRoleFilter {
+  name: String
+}
+
+enum UserRoleSort {
+  CreatedAt
+  ModifiedAt
 }
 
 input UserSubscriptionInput {

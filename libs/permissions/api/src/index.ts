@@ -4,3 +4,5 @@ export * from './lib/permission.module';
 export * from './lib/permission.decorator';
 export * from './lib/permission.guard';
 export * from './lib/preview-mode.decorator';
+
+export * from './lib/permission.model';
