@@ -27,70 +27,6 @@ export type Scalars = {
   VoteValue: number;
 };
 
-export type Author = {
-  __typename?: 'Author';
-  bio?: Maybe<Scalars['RichText']>;
-  createdAt: Scalars['DateTime'];
-  hideOnArticle?: Maybe<Scalars['Boolean']>;
-  hideOnTeam?: Maybe<Scalars['Boolean']>;
-  hideOnTeaser?: Maybe<Scalars['Boolean']>;
-  id: Scalars['String'];
-  image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  jobTitle?: Maybe<Scalars['String']>;
-  links?: Maybe<Array<AuthorLink>>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  peer?: Maybe<Peer>;
-  peerId?: Maybe<Scalars['String']>;
-  slug: Scalars['Slug'];
-  tags: Array<Tag>;
-  url: Scalars['String'];
-};
-
-export type AuthorConnection = {
-  __typename?: 'AuthorConnection';
-  nodes: Array<Author>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type AuthorFilter = {
-  hideOnTeam?: InputMaybe<Scalars['Boolean']>;
-  name?: InputMaybe<Scalars['String']>;
-  tagIds?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export type AuthorInput = {
-  bio?: InputMaybe<Scalars['RichText']>;
-  hideOnArticle?: InputMaybe<Scalars['Boolean']>;
-  hideOnTeam?: InputMaybe<Scalars['Boolean']>;
-  hideOnTeaser?: InputMaybe<Scalars['Boolean']>;
-  imageID?: InputMaybe<Scalars['String']>;
-  jobTitle?: InputMaybe<Scalars['String']>;
-  links?: InputMaybe<Array<AuthorLinkInput>>;
-  name: Scalars['String'];
-  slug: Scalars['Slug'];
-  tagIds?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export type AuthorLink = {
-  __typename?: 'AuthorLink';
-  title: Scalars['String'];
-  url: Scalars['String'];
-};
-
-export type AuthorLinkInput = {
-  title: Scalars['String'];
-  url: Scalars['String'];
-};
-
-export enum AuthorSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  Name = 'NAME'
-}
-
 export type AvailablePaymentMethod = {
   __typename?: 'AvailablePaymentMethod';
   forceAutoRenewal: Scalars['Boolean'];
@@ -470,7 +406,6 @@ export type Mutation = {
   __typename?: 'Mutation';
   approveComment: Comment;
   cancelSubscription?: Maybe<Subscription>;
-  createAuthor?: Maybe<Author>;
   createComment: Comment;
   createInvoice?: Maybe<Invoice>;
   createMemberPlan?: Maybe<MemberPlan>;
@@ -487,7 +422,6 @@ export type Mutation = {
   createTag?: Maybe<Tag>;
   createToken: CreatedToken;
   createUser?: Maybe<User>;
-  deleteAuthor?: Maybe<Author>;
   deleteComment: Comment;
   deleteImage?: Maybe<Image>;
   deleteInvoice?: Maybe<Invoice>;
@@ -513,7 +447,6 @@ export type Mutation = {
   sendJWTLogin: Scalars['String'];
   sendWebsiteLogin: Scalars['String'];
   sessions: Array<Session>;
-  updateAuthor?: Maybe<Author>;
   updateComment: Comment;
   updateImage?: Maybe<Image>;
   updateInvoice?: Maybe<Invoice>;
@@ -538,11 +471,6 @@ export type MutationApproveCommentArgs = {
 export type MutationCancelSubscriptionArgs = {
   id: Scalars['String'];
   reason: SubscriptionDeactivationReason;
-};
-
-
-export type MutationCreateAuthorArgs = {
-  input: AuthorInput;
 };
 
 
@@ -638,11 +566,6 @@ export type MutationCreateTokenArgs = {
 export type MutationCreateUserArgs = {
   input: UserInput;
   password: Scalars['String'];
-};
-
-
-export type MutationDeleteAuthorArgs = {
-  id: Scalars['String'];
 };
 
 
@@ -763,12 +686,6 @@ export type MutationSendJwtLoginArgs = {
 
 export type MutationSendWebsiteLoginArgs = {
   email: Scalars['String'];
-};
-
-
-export type MutationUpdateAuthorArgs = {
-  id: Scalars['String'];
-  input: AuthorInput;
 };
 
 
@@ -1097,8 +1014,6 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
-  author?: Maybe<Author>;
-  authors: AuthorConnection;
   comment?: Maybe<Comment>;
   comments: CommentConnection;
   createJWTForUser?: Maybe<JwtToken>;
@@ -1132,22 +1047,6 @@ export type Query = {
   tokens: Array<Token>;
   user?: Maybe<User>;
   users: UserConnection;
-};
-
-
-export type QueryAuthorArgs = {
-  id?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['Slug']>;
-};
-
-
-export type QueryAuthorsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<AuthorFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<AuthorSort>;
-  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -1659,49 +1558,6 @@ export type OverriddenRating = {
   value?: Maybe<Scalars['Int']>;
 };
 
-export type AuthorRefFragment = { __typename?: 'Author', id: string, name: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
-
-export type FullAuthorFragment = { __typename?: 'Author', slug: string, bio?: Descendant[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
-
-export type AuthorListQueryVariables = Exact<{
-  filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['String']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'AuthorConnection', totalCount: number, nodes: Array<{ __typename?: 'Author', slug: string, bio?: Descendant[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
-
-export type AuthorQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type AuthorQuery = { __typename?: 'Query', author?: { __typename?: 'Author', slug: string, bio?: Descendant[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
-
-export type CreateAuthorMutationVariables = Exact<{
-  input: AuthorInput;
-}>;
-
-
-export type CreateAuthorMutation = { __typename?: 'Mutation', createAuthor?: { __typename?: 'Author', slug: string, bio?: Descendant[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
-
-export type UpdateAuthorMutationVariables = Exact<{
-  id: Scalars['String'];
-  input: AuthorInput;
-}>;
-
-
-export type UpdateAuthorMutation = { __typename?: 'Mutation', updateAuthor?: { __typename?: 'Author', slug: string, bio?: Descendant[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
-
-export type DeleteAuthorMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteAuthorMutation = { __typename?: 'Mutation', deleteAuthor?: { __typename?: 'Author', slug: string, bio?: Descendant[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
-
 export type CommentRevisionFragment = { __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string };
 
 export type FullParentCommentFragment = { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }> };
@@ -2031,26 +1887,6 @@ export const ImageRef = gql`
   ...ImageURLs
 }
     ${ImageUrLs}`;
-export const AuthorRef = gql`
-    fragment AuthorRef on Author {
-  id
-  name
-  image {
-    ...ImageRef
-  }
-}
-    ${ImageRef}`;
-export const FullAuthor = gql`
-    fragment FullAuthor on Author {
-  slug
-  links {
-    title
-    url
-  }
-  bio
-  ...AuthorRef
-}
-    ${AuthorRef}`;
 export const FullPermission = gql`
     fragment FullPermission on Permission {
   id
@@ -2216,50 +2052,6 @@ export const PeerWithProfile = gql`
 }
     ${PeerRef}
 ${FullPeerProfile}`;
-export const AuthorList = gql`
-    query AuthorList($filter: String, $cursor: String, $take: Int, $skip: Int) {
-  authors(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
-    nodes {
-      ...FullAuthor
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    ${FullAuthor}`;
-export const Author = gql`
-    query Author($id: String!) {
-  author(id: $id) {
-    ...FullAuthor
-  }
-}
-    ${FullAuthor}`;
-export const CreateAuthor = gql`
-    mutation CreateAuthor($input: AuthorInput!) {
-  createAuthor(input: $input) {
-    ...FullAuthor
-  }
-}
-    ${FullAuthor}`;
-export const UpdateAuthor = gql`
-    mutation UpdateAuthor($id: String!, $input: AuthorInput!) {
-  updateAuthor(id: $id, input: $input) {
-    ...FullAuthor
-  }
-}
-    ${FullAuthor}`;
-export const DeleteAuthor = gql`
-    mutation DeleteAuthor($id: String!) {
-  deleteAuthor(id: $id) {
-    ...FullAuthor
-  }
-}
-    ${FullAuthor}`;
 export const CommentList = gql`
     query CommentList($filter: CommentFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
   comments(

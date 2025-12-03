@@ -12,12 +12,7 @@ import { SettingName } from '@wepublish/settings/api';
 import { unselectPassword } from '@wepublish/authentication/api';
 import { NotFound } from '../error';
 import { Validator } from '../validator';
-import { GraphQLAuthor, GraphQLAuthorInput } from './author';
-import {
-  createAuthor,
-  deleteAuthorById,
-  updateAuthor,
-} from './author/author.private-mutation';
+
 import {
   GraphQLComment,
   GraphQLCommentItemType,
@@ -510,35 +505,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           subscription,
           memberContext
         ),
-    },
-
-    // Author
-    // ======
-
-    createAuthor: {
-      type: GraphQLAuthor,
-      args: { input: { type: new GraphQLNonNull(GraphQLAuthorInput) } },
-      resolve: (root, { input }, { authenticate, prisma: { author } }) =>
-        createAuthor(input, authenticate, author),
-    },
-
-    updateAuthor: {
-      type: GraphQLAuthor,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        input: { type: new GraphQLNonNull(GraphQLAuthorInput) },
-      },
-      resolve: (root, { id, input }, { authenticate, prisma: { author } }) =>
-        updateAuthor(id, input, authenticate, author),
-    },
-
-    deleteAuthor: {
-      type: GraphQLAuthor,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { author } }) =>
-        deleteAuthorById(id, authenticate, author),
     },
 
     // Image

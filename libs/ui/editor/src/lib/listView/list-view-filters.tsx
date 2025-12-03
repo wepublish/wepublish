@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import {
-  AuthorRefFragment,
   FullUserRoleFragment,
   PollAnswerWithVoteCount,
   TagType,
@@ -12,6 +11,7 @@ import {
   ArticleFilter,
   DateFilterComparison,
   EventFilter,
+  FullAuthorFragment,
   getApiClientV2,
   InputMaybe,
   PageFilter,
@@ -437,7 +437,7 @@ export function ListViewFilters({
         {fields.includes('authors') && (
           <Group style={formInputStyle}>
             <AuthorCheckPicker
-              list={authorsData as AuthorRefFragment[]}
+              list={authorsData as FullAuthorFragment[]}
               onChange={value => {
                 return updateFilter({
                   authors: value ? value.map(author => author.id) : [],

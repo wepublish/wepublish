@@ -168,6 +168,11 @@ type AuthorLink {
   url: String!
 }
 
+input AuthorLinkInput {
+  title: String!
+  url: String!
+}
+
 """Sorting options for authors"""
 enum AuthorSort {
   CreatedAt
@@ -1370,6 +1375,9 @@ type Mutation {
 
   """Creates an article."""
   createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+
+  """Creates a new author."""
+  createAuthor(bio: RichText, hideOnArticle: Boolean!, hideOnTeam: Boolean!, hideOnTeaser: Boolean!, imageID: String, jobTitle: String, links: [AuthorLinkInput!]!, name: String!, slug: Slug!, tagIds: [String!]!): Author!
   createBanner(input: CreateBannerInput!): Banner!
 
   """Creates a new block style."""
@@ -1428,6 +1436,9 @@ type Mutation {
 
   """Deletes an article."""
   deleteArticle(id: String!): String!
+
+  """Deletes an existing author."""
+  deleteAuthor(id: String!): Author!
   deleteBanner(id: String!): Boolean
 
   """Deletes an existing block style."""
@@ -1524,6 +1535,9 @@ type Mutation {
 
   """Updates an article."""
   updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+
+  """Updates an existing author."""
+  updateAuthor(bio: RichText, hideOnArticle: Boolean, hideOnTeam: Boolean, hideOnTeaser: Boolean, id: String!, imageID: String, jobTitle: String, links: [AuthorLinkInput!], name: String, slug: Slug, tagIds: [String!]): Author!
   updateBanner(input: UpdateBannerInput!): Banner!
 
   """Updates an existing block style."""

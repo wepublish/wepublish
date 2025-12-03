@@ -204,6 +204,11 @@ export type AuthorLink = {
   url: Scalars['String'];
 };
 
+export type AuthorLinkInput = {
+  title: Scalars['String'];
+  url: Scalars['String'];
+};
+
 /** Sorting options for authors */
 export enum AuthorSort {
   CreatedAt = 'CreatedAt',
@@ -1450,6 +1455,8 @@ export type Mutation = {
   cancelUserSubscription?: Maybe<PublicSubscription>;
   /** Creates an article. */
   createArticle: Article;
+  /** Creates a new author. */
+  createAuthor: Author;
   createBanner: Banner;
   /** Creates a new block style. */
   createBlockStyle: BlockStyle;
@@ -1496,6 +1503,8 @@ export type Mutation = {
   createUserRole: UserRole;
   /** Deletes an article. */
   deleteArticle: Scalars['String'];
+  /** Deletes an existing author. */
+  deleteAuthor: Author;
   deleteBanner?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing block style. */
   deleteBlockStyle: BlockStyle;
@@ -1571,6 +1580,8 @@ export type Mutation = {
   unpublishPage: Page;
   /** Updates an article. */
   updateArticle: Article;
+  /** Updates an existing author. */
+  updateAuthor: Author;
   updateBanner: Banner;
   /** Updates an existing block style. */
   updateBlockStyle: BlockStyle;
@@ -1657,6 +1668,20 @@ export type MutationCreateArticleArgs = {
   socialMediaTitle?: InputMaybe<Scalars['String']>;
   tagIds: Array<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationCreateAuthorArgs = {
+  bio?: InputMaybe<Scalars['RichText']>;
+  hideOnArticle: Scalars['Boolean'];
+  hideOnTeam: Scalars['Boolean'];
+  hideOnTeaser: Scalars['Boolean'];
+  imageID?: InputMaybe<Scalars['String']>;
+  jobTitle?: InputMaybe<Scalars['String']>;
+  links: Array<AuthorLinkInput>;
+  name: Scalars['String'];
+  slug: Scalars['Slug'];
+  tagIds: Array<Scalars['String']>;
 };
 
 
@@ -1816,6 +1841,11 @@ export type MutationCreateUserRoleArgs = {
 
 
 export type MutationDeleteArticleArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteAuthorArgs = {
   id: Scalars['String'];
 };
 
@@ -2004,6 +2034,21 @@ export type MutationUpdateArticleArgs = {
   socialMediaTitle?: InputMaybe<Scalars['String']>;
   tagIds: Array<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateAuthorArgs = {
+  bio?: InputMaybe<Scalars['RichText']>;
+  hideOnArticle?: InputMaybe<Scalars['Boolean']>;
+  hideOnTeam?: InputMaybe<Scalars['Boolean']>;
+  hideOnTeaser?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['String'];
+  imageID?: InputMaybe<Scalars['String']>;
+  jobTitle?: InputMaybe<Scalars['String']>;
+  links?: InputMaybe<Array<AuthorLinkInput>>;
+  name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['Slug']>;
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
@@ -3895,27 +3940,6 @@ export type OverriddenRating = {
   value?: Maybe<Scalars['Int']>;
 };
 
-export type AuthorRefFragment = { __typename?: 'Author', id: string, name: string, image?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
-
-export type FullAuthorFragment = { __typename?: 'Author', slug: string, bio?: Descendant[] | null, hideOnTeam: boolean, hideOnTeaser: boolean, hideOnArticle: boolean, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
-
-export type AuthorListQueryVariables = Exact<{
-  filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['String']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'PaginatedAuthors', totalCount: number, nodes: Array<{ __typename?: 'Author', slug: string, bio?: Descendant[] | null, hideOnTeam: boolean, hideOnTeaser: boolean, hideOnArticle: boolean, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
-
-export type AuthorQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type AuthorQuery = { __typename?: 'Query', author?: { __typename?: 'Author', slug: string, bio?: Descendant[] | null, hideOnTeam: boolean, hideOnTeaser: boolean, hideOnArticle: boolean, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
-
 export type ChallengeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3993,6 +4017,19 @@ export type UpdatePaymentProviderCustomersMutationVariables = Exact<{
 
 export type UpdatePaymentProviderCustomersMutation = { __typename?: 'Mutation', updatePaymentProviderCustomers: Array<{ __typename?: 'PaymentProviderCustomer', customerID: string, paymentProviderID: string }> };
 
+export const MutationComment = gql`
+    fragment MutationComment on Comment {
+  id
+  itemID
+  itemType
+  state
+  user {
+    id
+  }
+  text
+  parentID
+}
+    `;
 export const ImageUrLs = gql`
     fragment ImageURLs on Image {
   url
@@ -4018,42 +4055,6 @@ export const ImageRef = gql`
   ...ImageURLs
 }
     ${ImageUrLs}`;
-export const AuthorRef = gql`
-    fragment AuthorRef on Author {
-  id
-  name
-  image {
-    ...ImageRef
-  }
-}
-    ${ImageRef}`;
-export const FullAuthor = gql`
-    fragment FullAuthor on Author {
-  slug
-  links {
-    title
-    url
-  }
-  bio
-  hideOnTeam
-  hideOnTeaser
-  hideOnArticle
-  ...AuthorRef
-}
-    ${AuthorRef}`;
-export const MutationComment = gql`
-    fragment MutationComment on Comment {
-  id
-  itemID
-  itemType
-  state
-  user {
-    id
-  }
-  text
-  parentID
-}
-    `;
 export const FullImage = gql`
     fragment FullImage on Image {
   id
@@ -4151,29 +4152,6 @@ export const FullUser = gql`
   email
 }
     `;
-export const AuthorList = gql`
-    query AuthorList($filter: String, $cursor: String, $take: Int, $skip: Int) {
-  authors(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
-    nodes {
-      ...FullAuthor
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    ${FullAuthor}`;
-export const Author = gql`
-    query Author($id: String!) {
-  author(id: $id) {
-    ...FullAuthor
-  }
-}
-    ${FullAuthor}`;
 export const Challenge = gql`
     query Challenge {
   challenge {

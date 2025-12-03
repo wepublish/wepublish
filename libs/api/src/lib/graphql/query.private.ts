@@ -11,7 +11,6 @@ import {
   GraphQLString,
 } from 'graphql';
 import { Context } from '../context';
-import { AuthorSort } from '../db/author';
 import { CommentSort } from '../db/comment';
 import { ImageSort } from '../db/image';
 import { InvoiceSort } from '../db/invoice';
@@ -22,16 +21,7 @@ import { UserSort } from '../db/user';
 import { GivenTokeExpiryToLongError, UserIdNotFound } from '../error';
 
 import { GraphQLJWTToken } from './auth';
-import {
-  GraphQLAuthor,
-  GraphQLAuthorConnection,
-  GraphQLAuthorFilter,
-  GraphQLAuthorSort,
-} from './author';
-import {
-  getAdminAuthors,
-  getAuthorByIdOrSlug,
-} from './author/author.private-queries';
+
 import { GraphQLFullCommentRatingSystem } from './comment-rating/comment-rating';
 import { getRatingSystem } from './comment-rating/comment-rating.public-queries';
 import {
@@ -351,47 +341,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       ),
       resolve: (root, args, { authenticateUser, prisma: { token } }) =>
         getTokens(authenticateUser, token),
-    },
-
-    // Author
-    // ======
-
-    author: {
-      type: GraphQLAuthor,
-      args: { id: { type: GraphQLString }, slug: { type: GraphQLSlug } },
-      resolve: (
-        root,
-        { id, slug },
-        { authenticate, loaders: { authorsByID, authorsBySlug } }
-      ) =>
-        getAuthorByIdOrSlug(id, slug, authenticate, authorsByID, authorsBySlug),
-    },
-
-    authors: {
-      type: new GraphQLNonNull(GraphQLAuthorConnection),
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 10 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLAuthorFilter },
-        sort: { type: GraphQLAuthorSort, defaultValue: AuthorSort.ModifiedAt },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, take, skip, cursor },
-        { authenticate, prisma: { author } }
-      ) =>
-        getAdminAuthors(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          author
-        ),
     },
 
     // Image

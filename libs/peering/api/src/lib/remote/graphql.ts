@@ -204,6 +204,11 @@ export type AuthorLink = {
   url: Scalars['String'];
 };
 
+export type AuthorLinkInput = {
+  title: Scalars['String'];
+  url: Scalars['String'];
+};
+
 /** Sorting options for authors */
 export enum AuthorSort {
   CreatedAt = 'CreatedAt',
@@ -1450,6 +1455,8 @@ export type Mutation = {
   cancelUserSubscription?: Maybe<PublicSubscription>;
   /** Creates an article. */
   createArticle: Article;
+  /** Creates a new author. */
+  createAuthor: Author;
   createBanner: Banner;
   /** Creates a new block style. */
   createBlockStyle: BlockStyle;
@@ -1496,6 +1503,8 @@ export type Mutation = {
   createUserRole: UserRole;
   /** Deletes an article. */
   deleteArticle: Scalars['String'];
+  /** Deletes an existing author. */
+  deleteAuthor: Author;
   deleteBanner?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing block style. */
   deleteBlockStyle: BlockStyle;
@@ -1571,6 +1580,8 @@ export type Mutation = {
   unpublishPage: Page;
   /** Updates an article. */
   updateArticle: Article;
+  /** Updates an existing author. */
+  updateAuthor: Author;
   updateBanner: Banner;
   /** Updates an existing block style. */
   updateBlockStyle: BlockStyle;
@@ -1657,6 +1668,20 @@ export type MutationCreateArticleArgs = {
   socialMediaTitle?: InputMaybe<Scalars['String']>;
   tagIds: Array<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationCreateAuthorArgs = {
+  bio?: InputMaybe<Scalars['RichText']>;
+  hideOnArticle: Scalars['Boolean'];
+  hideOnTeam: Scalars['Boolean'];
+  hideOnTeaser: Scalars['Boolean'];
+  imageID?: InputMaybe<Scalars['String']>;
+  jobTitle?: InputMaybe<Scalars['String']>;
+  links: Array<AuthorLinkInput>;
+  name: Scalars['String'];
+  slug: Scalars['Slug'];
+  tagIds: Array<Scalars['String']>;
 };
 
 
@@ -1816,6 +1841,11 @@ export type MutationCreateUserRoleArgs = {
 
 
 export type MutationDeleteArticleArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteAuthorArgs = {
   id: Scalars['String'];
 };
 
@@ -2004,6 +2034,21 @@ export type MutationUpdateArticleArgs = {
   socialMediaTitle?: InputMaybe<Scalars['String']>;
   tagIds: Array<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateAuthorArgs = {
+  bio?: InputMaybe<Scalars['RichText']>;
+  hideOnArticle?: InputMaybe<Scalars['Boolean']>;
+  hideOnTeam?: InputMaybe<Scalars['Boolean']>;
+  hideOnTeaser?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['String'];
+  imageID?: InputMaybe<Scalars['String']>;
+  jobTitle?: InputMaybe<Scalars['String']>;
+  links?: InputMaybe<Array<AuthorLinkInput>>;
+  name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['Slug']>;
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
