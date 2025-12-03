@@ -5,6 +5,7 @@ import {
   BuilderCommentBlockProps,
   BuilderCrowdfundingBlockProps,
   BuilderEventBlockProps,
+  BuilderFlexBlockProps,
   BuilderHTMLBlockProps,
   BuilderListicleBlockProps,
   BuilderPollBlockProps,
@@ -14,6 +15,7 @@ import {
   BuilderTitleBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { isFlexBlock } from './nested-blocks/flex-block';
 import { isHtmlBlock } from './html/html-block';
 import { isSubscribeBlock } from './subscribe/subscribe-block';
 import { isImageBlock } from './image/image-block';
@@ -56,6 +58,7 @@ import {
   isAlternatingTeaserSlotsBlockStyle,
 } from './block-styles/alternating/is-alternating';
 import { isTeaserSlotsBlock } from './teaser/teaser-slots-block';
+import { isTabbedContentBlockStyle } from './block-styles/tabbed-content/tabbed-content';
 
 export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
   const { blocks, blockStyles } = useWebsiteBuilder();
@@ -80,6 +83,12 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
     [
       isAlternatingTeaserSlotsBlockStyle,
       block => <blockStyles.AlternatingTeaserSlots {...block} />,
+    ],
+    [
+      isTabbedContentBlockStyle,
+      block => (
+        <blockStyles.TabbedContent {...(block as BuilderFlexBlockProps)} />
+      ),
     ],
   ]);
 
@@ -170,6 +179,10 @@ export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
       [
         isCommentBlock,
         block => <blocks.Comment {...(block as BuilderCommentBlockProps)} />,
+      ],
+      [
+        isFlexBlock,
+        block => <blocks.FlexBlock {...(block as BuilderFlexBlockProps)} />,
       ],
     ])(block)
   );

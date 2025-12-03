@@ -6,7 +6,6 @@ import {
   createEmotionCache,
 } from '@mui/material-nextjs/v15-pagesRouter';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
-import { TitleBlock, TitleBlockTitle } from '@wepublish/block-content/website';
 import { withErrorSnackbar } from '@wepublish/errors/website';
 import { PaymentAmountPicker } from '@wepublish/membership/website';
 import {
@@ -22,6 +21,7 @@ import {
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
+import { getPageTypeBasedContent } from '@wepublish/utils/website';
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
@@ -38,16 +38,26 @@ import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import { TabbedContent } from '../src/block-styles/tsri-tabbed-content';
+import { TsriArticle } from '../src/components/tsri-article';
 import { TsriArticleDate } from '../src/components/tsri-article-date';
+import { TsriArticleList } from '../src/components/tsri-article-list';
 import { TsriArticleMeta } from '../src/components/tsri-article-meta';
+import { TSRIAuthor } from '../src/components/tsri-author';
+import { TSRIAuthorLinks } from '../src/components/tsri-author-links';
+import { TSRIAuthorList } from '../src/components/tsri-author-list';
 import { TsriBanner } from '../src/components/tsri-banner';
+import { TsriBaseTeaser } from '../src/components/tsri-base-teaser';
 import { TsriBreakBlock } from '../src/components/tsri-break-block';
 import { TsriContextBox } from '../src/components/tsri-context-box';
-import { TsriNavbar } from '../src/components/tsri-navbar';
+import { TSRIFooter } from '../src/components/tsri-footer';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
-import { TsriTeaser } from '../src/components/tsri-teaser';
+import { TsriTitleBlock } from '../src/components/tsri-title-block';
+import { TsriTeaserGridFlex } from '../src/components/tsri-teaser-grid-flex';
+import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
 import theme from '../src/theme';
+import { TsriBlockRenderer } from '../src/tsri-block-renderer';
 
 setDefaultOptions({
   locale: de,
@@ -81,20 +91,13 @@ const MainSpacer = styled(Container)`
   position: relative;
   display: grid;
   gap: ${({ theme }) => theme.spacing(5)};
+  container: main / inline-size;
 
   ${({ theme }) => css`
     ${theme.breakpoints.up('md')} {
       gap: ${theme.spacing(10)};
     }
   `}
-`;
-
-const TsriTitle = styled(TitleBlock)`
-  ${TitleBlockTitle} {
-    ${({ theme }) => theme.breakpoints.down('sm')} {
-      font-size: 2rem;
-    }
-  }
 `;
 
 const dateFormatter = (date: Date, includeTime = true) =>
@@ -114,26 +117,37 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
 
+  const pageTypeBasedContent = getPageTypeBasedContent(pageProps);
+
   return (
     <AppCacheProvider emotionCache={cache}>
       <WebsiteProvider>
         <WebsiteBuilderProvider
           Head={Head}
+          Footer={TSRIFooter}
           Script={Script}
-          Navbar={TsriNavbar}
+          Navbar={TsriV2Navbar}
+          Article={TsriArticle}
           ArticleDate={TsriArticleDate}
           ArticleMeta={TsriArticleMeta}
+          ArticleList={TsriArticleList}
           PaymentAmount={PaymentAmountPicker}
+          Author={TSRIAuthor}
+          AuthorLinks={TSRIAuthorLinks}
+          AuthorList={TSRIAuthorList}
           elements={{ Link: NextWepublishLink }}
           blocks={{
-            BaseTeaser: TsriTeaser,
+            BaseTeaser: TsriBaseTeaser,
+            TeaserGridFlex: TsriTeaserGridFlex,
             Break: TsriBreakBlock,
             Quote: TsriQuoteBlock,
             RichText: TsriRichText,
-            Title: TsriTitle,
+            Title: TsriTitleBlock,
+            Renderer: TsriBlockRenderer,
           }}
           blockStyles={{
             ContextBox: TsriContextBox,
+            TabbedContent,
           }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
@@ -216,10 +230,11 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 
             <Spacer>
               <NavbarContainer
-                categorySlugs={[['categories', 'about-us']]}
+                categorySlugs={[['about-us', 'categories', 'main']]}
                 slug="main"
                 headerSlug="header"
                 iconSlug="icons"
+                pageTypeBasedProps={pageTypeBasedContent}
               />
 
               <main>
@@ -230,7 +245,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 
               <FooterContainer
                 slug="footer"
-                categorySlugs={[['categories', 'about-us']]}
+                categorySlugs={[['about-us', 'categories', 'main']]}
                 iconSlug="icons"
               />
             </Spacer>
