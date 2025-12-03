@@ -327,7 +327,10 @@
         "edit": "Edit HTML",
         "label": "HTML",
         "placeholder": "Paste your HTML block here..",
-        "warning": "Please note, rendering custom HTML may be harmful to the user or break the page layout. Please make sure that the HTML you provide is free of malicious scripts and is structured correctly."
+        "warning": "Please note, rendering custom HTML may be harmful to the user or break the page layout. Please make sure that the HTML you provide is free of malicious scripts and is structured correctly.",
+        "generate": "Generate your HTML via AI",
+        "prompt": "Send prompt",
+        "promptSuccess": "Successfully generated HTML and updated block. Chat history is saved and you can continue the chat."
       },
       "subscribe": {
         "label": "Subscribe",

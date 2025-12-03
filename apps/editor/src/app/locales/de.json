@@ -328,7 +328,10 @@
         "edit": "HTML bearbeiten",
         "label": "HTML",
         "placeholder": "Füge hier deinen HTML Block ein",
-        "warning": "Bitte beachte, dass benutzerdefinierte HTML Blocks für den Benutzer schädlich sein oder das Seitenlayout beeinträchtigen können. Bitte stelle sicher, dass der bereitgestellte HTML Block frei von bösartigen Skripten und korrekt strukturiert ist."
+        "warning": "Bitte beachte, dass benutzerdefinierte HTML Blocks für den Benutzer schädlich sein oder das Seitenlayout beeinträchtigen können. Bitte stelle sicher, dass der bereitgestellte HTML Block frei von bösartigen Skripten und korrekt strukturiert ist.",
+        "generate": "Generieren Sie Ihr HTML mit KI",
+        "prompt": "Prompt senden",
+        "promptSuccess": "HTML erfolgreich generiert und Block aktualisiert. Der Chatverlauf wurde gespeichert und du kannst den Chat hier fortsetzen."
       },
       "subscribe": {
         "label": "Abonnieren",

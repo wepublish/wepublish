@@ -103,7 +103,7 @@ export function HtmlEditPanel({
       <StyledDrawer>
         <StyledForm onSubmit={() => onGenerateHTML(prompt)}>
           <div>
-            <Form.ControlLabel>Generate your HTML via AI</Form.ControlLabel>
+            <Form.ControlLabel>{t('blocks.html.generate')}</Form.ControlLabel>
 
             <InputGroup inside>
               <Form.Control
@@ -115,9 +115,7 @@ export function HtmlEditPanel({
               <Whisper
                 placement="top"
                 trigger="hover"
-                speaker={
-                  <Tooltip>{t('articleEditor.panels.slugifySeoTitle')}</Tooltip>
-                }
+                speaker={<Tooltip>{t('blocks.html.prompt')}</Tooltip>}
               >
                 <InputGroup.Button
                   type="submit"
@@ -145,8 +143,7 @@ export function HtmlEditPanel({
               showIcon
               type="success"
             >
-              Successfully generated HTML and updated block. Chat history is
-              saved and you can continue the chat.
+              {t('blocks.html.promptSuccess')}
             </Message>
           )}
         </StyledForm>
