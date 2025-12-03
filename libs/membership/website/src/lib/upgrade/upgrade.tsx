@@ -242,7 +242,7 @@ export const Upgrade = ({
       noValidate
     >
       <SubscribeSection area="memberPlans">
-        {!!availableMemberplans.length && <H5 component="h2">Abo wählen</H5>}
+        {availableMemberplans.length > 1 && <H5 component="h2">Abo wählen</H5>}
 
         <Controller
           name={'memberPlanId'}

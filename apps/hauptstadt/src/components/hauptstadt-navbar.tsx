@@ -570,7 +570,7 @@ export function HauptstadtNavbar({
                     <MdWarning size={24} />
 
                     <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
-                      Abo Jetzt Bezahlen
+                      Offene Rechnungen
                     </Box>
                   </HauptstadtOpenInvoices>
                 )}
