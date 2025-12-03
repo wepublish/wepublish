@@ -485,6 +485,12 @@ export type ChallengeInput = {
   challengeSolution: Scalars['String'];
 };
 
+export type Chat = {
+  __typename?: 'Chat';
+  chatId: Scalars['String'];
+  message: Scalars['String'];
+};
+
 export type Comment = {
   __typename?: 'Comment';
   authorType: CommentAuthorType;
@@ -2822,6 +2828,7 @@ export type Query = {
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
   primaryBanner?: Maybe<Banner>;
+  prompt: Chat;
   provider: MailProviderModel;
   /** This query returns the comment rating system. */
   ratingSystem: FullCommentRatingSystem;
@@ -3080,6 +3087,11 @@ export type QueryPrimaryBannerArgs = {
   documentType: BannerDocumentType;
   hasSubscription: Scalars['Boolean'];
   loggedIn: Scalars['Boolean'];
+};
+
+export type QueryPromptArgs = {
+  chatId?: InputMaybe<Scalars['String']>;
+  query: Scalars['String'];
 };
 
 export type QueryRenewingSubscribersArgs = {
@@ -3689,6 +3701,7 @@ export type UploadImageInput = {
 
 export type User = {
   __typename?: 'User';
+  active: Scalars['Boolean'];
   address?: Maybe<UserAddress>;
   birthday?: Maybe<Scalars['DateTime']>;
   email: Scalars['String'];
@@ -3697,9 +3710,11 @@ export type User = {
   id: Scalars['String'];
   image?: Maybe<Image>;
   name: Scalars['String'];
-  paymentProviderCustomers: Array<PaymentProviderCustomer>;
+  paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
   permissions: Array<Scalars['String']>;
   properties: Array<Property>;
+  roleIDs: Array<Scalars['String']>;
+  userImageID?: Maybe<Scalars['String']>;
 };
 
 export type UserAddress = {

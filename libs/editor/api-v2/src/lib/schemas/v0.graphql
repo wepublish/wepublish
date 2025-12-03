@@ -1,0 +1,6 @@
+query Prompt($query: String!, $chatId: String) {
+  prompt(query: $query, chatId: $chatId) {
+    chatId
+    message
+  }
+}

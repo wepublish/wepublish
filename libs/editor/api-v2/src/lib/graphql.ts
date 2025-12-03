@@ -436,6 +436,12 @@ export type ChallengeInput = {
   challengeSolution: Scalars['String'];
 };
 
+export type Chat = {
+  __typename?: 'Chat';
+  chatId: Scalars['String'];
+  message: Scalars['String'];
+};
+
 export type Comment = {
   __typename?: 'Comment';
   authorType: CommentAuthorType;
@@ -2834,6 +2840,7 @@ export type Query = {
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
   primaryBanner?: Maybe<Banner>;
+  prompt: Chat;
   provider: MailProviderModel;
   /** This query returns the comment rating system. */
   ratingSystem: FullCommentRatingSystem;
@@ -3126,6 +3133,12 @@ export type QueryPrimaryBannerArgs = {
   documentType: BannerDocumentType;
   hasSubscription: Scalars['Boolean'];
   loggedIn: Scalars['Boolean'];
+};
+
+
+export type QueryPromptArgs = {
+  chatId?: InputMaybe<Scalars['String']>;
+  query: Scalars['String'];
 };
 
 
@@ -3745,6 +3758,7 @@ export type UploadImageInput = {
 
 export type User = {
   __typename?: 'User';
+  active: Scalars['Boolean'];
   address?: Maybe<UserAddress>;
   birthday?: Maybe<Scalars['DateTime']>;
   email: Scalars['String'];
@@ -3753,9 +3767,11 @@ export type User = {
   id: Scalars['String'];
   image?: Maybe<Image>;
   name: Scalars['String'];
-  paymentProviderCustomers: Array<PaymentProviderCustomer>;
+  paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
   permissions: Array<Scalars['String']>;
   properties: Array<Property>;
+  roleIDs: Array<Scalars['String']>;
+  userImageID?: Maybe<Scalars['String']>;
 };
 
 export type UserAddress = {
@@ -4892,6 +4908,14 @@ export type DeleteUserRoleMutationVariables = Exact<{
 
 
 export type DeleteUserRoleMutation = { __typename?: 'Mutation', deleteUserRole: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } };
+
+export type PromptQueryVariables = Exact<{
+  query: Scalars['String'];
+  chatId?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type PromptQuery = { __typename?: 'Query', prompt: { __typename?: 'Chat', chatId: string, message: string } };
 
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -9565,6 +9589,43 @@ export function useDeleteUserRoleMutation(baseOptions?: Apollo.MutationHookOptio
 export type DeleteUserRoleMutationHookResult = ReturnType<typeof useDeleteUserRoleMutation>;
 export type DeleteUserRoleMutationResult = Apollo.MutationResult<DeleteUserRoleMutation>;
 export type DeleteUserRoleMutationOptions = Apollo.BaseMutationOptions<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>;
+export const PromptDocument = gql`
+    query Prompt($query: String!, $chatId: String) {
+  prompt(query: $query, chatId: $chatId) {
+    chatId
+    message
+  }
+}
+    `;
+
+/**
+ * __usePromptQuery__
+ *
+ * To run a query within a React component, call `usePromptQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePromptQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePromptQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *      chatId: // value for 'chatId'
+ *   },
+ * });
+ */
+export function usePromptQuery(baseOptions: Apollo.QueryHookOptions<PromptQuery, PromptQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PromptQuery, PromptQueryVariables>(PromptDocument, options);
+      }
+export function usePromptLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PromptQuery, PromptQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PromptQuery, PromptQueryVariables>(PromptDocument, options);
+        }
+export type PromptQueryHookResult = ReturnType<typeof usePromptQuery>;
+export type PromptLazyQueryHookResult = ReturnType<typeof usePromptLazyQuery>;
+export type PromptQueryResult = Apollo.QueryResult<PromptQuery, PromptQueryVariables>;
 export const VersionInformationDocument = gql`
     query VersionInformation {
   versionInformation {
