@@ -1,5 +1,5 @@
 import { Field, ObjectType, OmitType } from '@nestjs/graphql';
-import { User } from '@wepublish/user/api';
+import { SensitiveDataUser } from '@wepublish/user/api';
 
 @ObjectType()
 export class SessionWithToken {
@@ -12,8 +12,8 @@ export class SessionWithToken {
   @Field()
   expiresAt!: Date;
 
-  @Field(() => User)
-  user!: User;
+  @Field(() => SensitiveDataUser)
+  user!: SensitiveDataUser;
 }
 
 @ObjectType()
