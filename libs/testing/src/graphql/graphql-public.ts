@@ -319,7 +319,6 @@ export type BaseUser = {
   id: Scalars['String'];
   image?: Maybe<Image>;
   name: Scalars['String'];
-  permissions: Array<Scalars['String']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
   userImageID?: Maybe<Scalars['String']>;
@@ -3677,7 +3676,6 @@ export type User = BaseUser & {
   id: Scalars['String'];
   image?: Maybe<Image>;
   name: Scalars['String'];
-  permissions: Array<Scalars['String']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
   userImageID?: Maybe<Scalars['String']>;

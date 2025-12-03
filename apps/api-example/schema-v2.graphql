@@ -260,7 +260,6 @@ interface BaseUser {
   id: String!
   image: Image
   name: String!
-  permissions: [String!]!
   properties: [Property!]!
   roleIDs: [String!]!
   userImageID: String
@@ -2823,7 +2822,6 @@ type User implements BaseUser {
   id: String!
   image: Image
   name: String!
-  permissions: [String!]!
   properties: [Property!]!
   roleIDs: [String!]!
   userImageID: String
