@@ -292,6 +292,18 @@ export type BaseTeaser = {
   type: Scalars['String'];
 };
 
+export type BaseUser = {
+  active: Scalars['Boolean'];
+  firstName?: Maybe<Scalars['String']>;
+  flair?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  image?: Maybe<Image>;
+  name: Scalars['String'];
+  paymentProviderCustomers: Array<PaymentProviderCustomer>;
+  properties: Array<Property>;
+  roleIDs: Array<Scalars['String']>;
+};
+
 export type BildwurfAdBlock = BaseBlock & {
   __typename?: 'BildwurfAdBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -434,7 +446,7 @@ export type ChallengeInput = {
   challengeSolution: Scalars['String'];
 };
 
-export type Comment = {
+export type Comment = HasOptionalUser & {
   __typename?: 'Comment';
   authorType: CommentAuthorType;
   calculatedRatings: Array<CalculatedRating>;
@@ -442,6 +454,7 @@ export type Comment = {
   createdAt: Scalars['DateTime'];
   featured?: Maybe<Scalars['Boolean']>;
   guestUserImage?: Maybe<Image>;
+  guestUserImageID?: Maybe<Scalars['String']>;
   guestUsername?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   itemID: Scalars['String'];
@@ -459,6 +472,7 @@ export type Comment = {
   title?: Maybe<Scalars['String']>;
   url: Scalars['String'];
   user?: Maybe<User>;
+  userID?: Maybe<Scalars['String']>;
   userRatings: Array<CommentRating>;
 };
 
@@ -1093,6 +1107,11 @@ export type HasOptionalSubscription = {
   subscriptionID?: Maybe<Scalars['String']>;
 };
 
+export type HasOptionalUser = {
+  user?: Maybe<User>;
+  userID?: Maybe<Scalars['String']>;
+};
+
 export type HasPage = {
   page: Page;
   pageID: Scalars['String'];
@@ -1565,7 +1584,7 @@ export type Mutation = {
   /** Updates an page. */
   updatePage: Page;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
-  updatePassword: User;
+  updatePassword: SensitiveDataUser;
   /** This mutation allows to update the Payment Provider Customers */
   updatePaymentProviderCustomers: Array<PaymentProviderCustomer>;
   /** Updates a paywall. */
@@ -1579,7 +1598,7 @@ export type Mutation = {
   /** Updates an existing mail flow */
   updateSystemMail: Array<SystemMailModel>;
   /** This mutation allows to update the user's data by taking an input of type UserInput. */
-  updateUser?: Maybe<User>;
+  updateUser?: Maybe<SensitiveDataUser>;
   /**
    *
    *       Updates an existing userConsent based on input.
@@ -1590,7 +1609,7 @@ export type Mutation = {
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
   /** This mutation allows to upload and update the user's profile image. */
-  uploadUserProfileImage?: Maybe<User>;
+  uploadUserProfileImage?: Maybe<SensitiveDataUser>;
   /** This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous */
   voteOnPoll?: Maybe<PollVote>;
 };
@@ -2728,7 +2747,7 @@ export type Query = {
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /** This query returns the user. */
-  me?: Maybe<User>;
+  me?: Maybe<SensitiveDataUser>;
   /** This query returns a member plan. */
   memberPlan?: Maybe<MemberPlan>;
   /** This query returns the member plans. */
@@ -3150,7 +3169,7 @@ export enum RatingSystemType {
 export type Registration = {
   __typename?: 'Registration';
   session: SessionWithTokenWithoutUser;
-  user: User;
+  user: SensitiveDataUser;
 };
 
 export type RemotePeerProfile = {
@@ -3185,12 +3204,29 @@ export type RichTextBlockInput = {
   richText: Scalars['RichText'];
 };
 
+export type SensitiveDataUser = BaseUser & {
+  __typename?: 'SensitiveDataUser';
+  active: Scalars['Boolean'];
+  address?: Maybe<UserAddress>;
+  birthday?: Maybe<Scalars['DateTime']>;
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  flair?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  image?: Maybe<Image>;
+  name: Scalars['String'];
+  paymentProviderCustomers: Array<PaymentProviderCustomer>;
+  permissions: Array<Scalars['String']>;
+  properties: Array<Property>;
+  roleIDs: Array<Scalars['String']>;
+};
+
 export type SessionWithToken = {
   __typename?: 'SessionWithToken';
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
   token: Scalars['String'];
-  user: User;
+  user: SensitiveDataUser;
 };
 
 export type SessionWithTokenWithoutUser = {
@@ -3664,19 +3700,17 @@ export type UploadImageInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
-export type User = {
+export type User = BaseUser & {
   __typename?: 'User';
-  address?: Maybe<UserAddress>;
-  birthday?: Maybe<Scalars['DateTime']>;
-  email: Scalars['String'];
+  active: Scalars['Boolean'];
   firstName?: Maybe<Scalars['String']>;
   flair?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
   name: Scalars['String'];
   paymentProviderCustomers: Array<PaymentProviderCustomer>;
-  permissions: Array<Scalars['String']>;
   properties: Array<Property>;
+  roleIDs: Array<Scalars['String']>;
 };
 
 export type UserAddress = {
@@ -3807,11 +3841,11 @@ export type ChallengeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ChallengeQuery = { __typename?: 'Query', challenge: { __typename?: 'Challenge', challenge?: string | null, challengeID?: string | null, validUntil?: string | null } };
 
-export type FullCommentUserFragment = { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, email: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
+export type FullCommentUserFragment = { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type MutationCommentFragment = { __typename?: 'Comment', id: string, itemID: string, itemType: CommentItemType, state: CommentState, text?: Descendant[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null };
 
-export type FullCommentFragment = { __typename?: 'Comment', id: string, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, email: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null };
+export type FullCommentFragment = { __typename?: 'Comment', id: string, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null };
 
 export type AddCommentMutationVariables = Exact<{
   input: CommentInput;
@@ -3827,7 +3861,7 @@ export type CommentsQueryVariables = Exact<{
 }>;
 
 
-export type CommentsQuery = { __typename?: 'Query', comments: Array<{ __typename?: 'Comment', id: string, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, email: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null }> };
+export type CommentsQuery = { __typename?: 'Query', comments: Array<{ __typename?: 'Comment', id: string, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null }> };
 
 export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
@@ -3855,22 +3889,20 @@ export type PeerQueryVariables = Exact<{
 
 export type PeerQuery = { __typename?: 'Query', peer?: { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string } | null };
 
-export type FullUserFragment = { __typename?: 'User', name: string, email: string };
-
 export type CreateSessionMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
 }>;
 
 
-export type CreateSessionMutation = { __typename?: 'Mutation', createSession: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'User', email: string } } };
+export type CreateSessionMutation = { __typename?: 'Mutation', createSession: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'SensitiveDataUser', email: string } } };
 
 export type CreateSessionWithJwtMutationVariables = Exact<{
   jwt: Scalars['String'];
 }>;
 
 
-export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'User', email: string } } };
+export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'SensitiveDataUser', email: string } } };
 
 export type UpdatePaymentProviderCustomersMutationVariables = Exact<{
   customers: Array<PaymentProviderCustomerInput> | PaymentProviderCustomerInput;
@@ -3968,7 +4000,6 @@ export const FullCommentUser = gql`
   name
   firstName
   flair
-  email
   image {
     ...FullImage
   }
@@ -4031,12 +4062,6 @@ export const PeerWithProfile = gql`
 }
     ${PeerRef}
 ${FullRemotePeerProfile}`;
-export const FullUser = gql`
-    fragment FullUser on User {
-  name
-  email
-}
-    `;
 export const AuthorList = gql`
     query AuthorList($filter: String, $cursor: String, $take: Int, $skip: Int) {
   authors(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
