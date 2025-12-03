@@ -19,8 +19,8 @@ import { CacheModule } from '@nestjs/cache-manager';
       cache: true,
     }),
     CacheModule.register({
-      ttl: 86400,
-      max: 100000,
+      ttl: 259200,
+      max: 1000000,
       isGlobal: true,
     }),
     MulterModule.register({}),
@@ -34,6 +34,7 @@ import { CacheModule } from '@nestjs/cache-manager';
             port: +config.getOrThrow('S3_PORT'),
             accessKey: config.getOrThrow('S3_ACCESS_KEY'),
             secretKey: config.getOrThrow('S3_SECRET_KEY'),
+            publicHost: config.getOrThrow('S3_PUBLIC_HOST'),
             useSSL: Boolean(config.get('S3_SSL')),
             region: config.get('S3_REGION', 'us-east-1'),
           }),

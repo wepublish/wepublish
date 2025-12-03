@@ -761,6 +761,15 @@ export type CustomTeaserInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type DailyPredictedSubscriptionRenewalCount = {
+  __typename?: 'DailyPredictedSubscriptionRenewalCount';
+  high: Scalars['Int'];
+  low: Scalars['Int'];
+  perDayHighProbability: Scalars['Int'];
+  perDayLowProbability: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
 export type DailySubscriptionStats = {
   __typename?: 'DailySubscriptionStats';
   createdSubscriptionCount: Scalars['Int'];
@@ -768,8 +777,13 @@ export type DailySubscriptionStats = {
   date: Scalars['String'];
   deactivatedSubscriptionCount: Scalars['Int'];
   deactivatedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  endingSubscriptionCount: Scalars['Int'];
+  endingSubscriptionUsers: Array<DailySubscriptionStatsUser>;
   overdueSubscriptionCount: Scalars['Int'];
   overdueSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  predictedSubscriptionRenewalCount: DailyPredictedSubscriptionRenewalCount;
+  predictedSubscriptionRenewalUsersHighProbability: Array<DailySubscriptionStatsUser>;
+  predictedSubscriptionRenewalUsersLowProbability: Array<DailySubscriptionStatsUser>;
   renewedSubscriptionCount: Scalars['Int'];
   renewedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
   replacedSubscriptionCount: Scalars['Int'];
@@ -783,6 +797,7 @@ export type DailySubscriptionStatsUser = {
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   name: Scalars['String'];
+  subscriptionID?: Maybe<Scalars['String']>;
 };
 
 export type DashboardInvoice = {
@@ -1443,6 +1458,7 @@ export type MailTemplateWithUrlAndStatusModel = {
 
 export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
+  amountPerMonthMax?: Maybe<Scalars['Int']>;
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
@@ -1533,6 +1549,8 @@ export type Mutation = {
    *
    */
   createUserConsent: UserConsent;
+  /** Creates a new userrole. */
+  createUserRole: UserRole;
   /** Deletes an article. */
   deleteArticle: Scalars['String'];
   deleteBanner?: Maybe<Scalars['Boolean']>;
@@ -1568,6 +1586,8 @@ export type Mutation = {
    *
    */
   deleteUserConsent: UserConsent;
+  /** Deletes an existing userrole. */
+  deleteUserRole: UserRole;
   /** Dislikes an article. */
   dislikeArticle: Article;
   /** Duplicates an article. */
@@ -1650,6 +1670,8 @@ export type Mutation = {
    *
    */
   updateUserConsent: UserConsent;
+  /** Updates an existing userrole. */
+  updateUserRole: UserRole;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
   /** This mutation allows to upload and update the user's profile image. */
@@ -1821,6 +1843,12 @@ export type MutationCreateUserConsentArgs = {
   value: Scalars['Boolean'];
 };
 
+export type MutationCreateUserRoleArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  permissionIDs: Array<Scalars['String']>;
+};
+
 export type MutationDeleteArticleArgs = {
   id: Scalars['String'];
 };
@@ -1874,6 +1902,10 @@ export type MutationDeleteSubscriptionIntervalArgs = {
 };
 
 export type MutationDeleteUserConsentArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationDeleteUserRoleArgs = {
   id: Scalars['String'];
 };
 
@@ -2090,6 +2122,13 @@ export type MutationUpdateUserConsentArgs = {
   value: Scalars['Boolean'];
 };
 
+export type MutationUpdateUserRoleArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  permissionIDs?: InputMaybe<Array<Scalars['String']>>;
+};
+
 export type MutationUpdateUserSubscriptionArgs = {
   id: Scalars['String'];
   input: UserSubscriptionInput;
@@ -2284,6 +2323,13 @@ export type PaginatedPeerArticle = {
 export type PaginatedPollVotes = {
   __typename?: 'PaginatedPollVotes';
   nodes: Array<PollVote>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedUserRoles = {
+  __typename?: 'PaginatedUserRoles';
+  nodes: Array<UserRole>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -2485,6 +2531,13 @@ export type PeriodicJob = {
   modifiedAt: Scalars['DateTime'];
   successfullyFinished?: Maybe<Scalars['DateTime']>;
   tries: Scalars['Float'];
+};
+
+export type Permission = {
+  __typename?: 'Permission';
+  deprecated: Scalars['Boolean'];
+  description: Scalars['String'];
+  id: Scalars['String'];
 };
 
 export type Phrase = {
@@ -2767,6 +2820,8 @@ export type Query = {
   /** This query returns the peer profile. */
   peerProfile: PeerProfile;
   periodicJobLog: Array<PeriodicJob>;
+  /** Returns a list of all permissions. */
+  permissions: Array<Permission>;
   /** This query performs a fulltext search on titles and blocks of articles/phrases and returns all matching ones. */
   phrase: Phrase;
   poll: FullPoll;
@@ -2830,6 +2885,10 @@ export type Query = {
    */
   userConsents: Array<UserConsent>;
   userPollVote?: Maybe<Scalars['String']>;
+  /** Returns a userrole by id. */
+  userRole: UserRole;
+  /** Returns a paginated list of userroles based on the filters given. */
+  userRoles: PaginatedUserRoles;
   versionInformation: VersionInformation;
 };
 
@@ -3083,6 +3142,19 @@ export type QueryUserConsentsArgs = {
 
 export type QueryUserPollVoteArgs = {
   pollId: Scalars['String'];
+};
+
+export type QueryUserRoleArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryUserRolesArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<UserRoleFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<UserRoleSort>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 export type QuoteBlock = BaseBlock &
@@ -3629,6 +3701,7 @@ export type UploadImageInput = {
 
 export type User = {
   __typename?: 'User';
+  active: Scalars['Boolean'];
   address?: Maybe<UserAddress>;
   birthday?: Maybe<Scalars['DateTime']>;
   email: Scalars['String'];
@@ -3637,9 +3710,11 @@ export type User = {
   id: Scalars['String'];
   image?: Maybe<Image>;
   name: Scalars['String'];
-  paymentProviderCustomers: Array<PaymentProviderCustomer>;
+  paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
   permissions: Array<Scalars['String']>;
   properties: Array<Property>;
+  roleIDs: Array<Scalars['String']>;
+  userImageID?: Maybe<Scalars['String']>;
 };
 
 export type UserAddress = {
@@ -3696,6 +3771,27 @@ export type UserInput = {
   name: Scalars['String'];
   uploadImageInput?: InputMaybe<UploadImageInput>;
 };
+
+export type UserRole = {
+  __typename?: 'UserRole';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  permissionIDs: Array<Scalars['String']>;
+  permissions: Array<Permission>;
+  systemRole: Scalars['Boolean'];
+};
+
+export type UserRoleFilter = {
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export enum UserRoleSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+}
 
 export type UserSubscriptionInput = {
   autoRenew: Scalars['Boolean'];

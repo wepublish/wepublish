@@ -709,6 +709,15 @@ export type CustomTeaserInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type DailyPredictedSubscriptionRenewalCount = {
+  __typename?: 'DailyPredictedSubscriptionRenewalCount';
+  high: Scalars['Int'];
+  low: Scalars['Int'];
+  perDayHighProbability: Scalars['Int'];
+  perDayLowProbability: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
 export type DailySubscriptionStats = {
   __typename?: 'DailySubscriptionStats';
   createdSubscriptionCount: Scalars['Int'];
@@ -716,8 +725,13 @@ export type DailySubscriptionStats = {
   date: Scalars['String'];
   deactivatedSubscriptionCount: Scalars['Int'];
   deactivatedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  endingSubscriptionCount: Scalars['Int'];
+  endingSubscriptionUsers: Array<DailySubscriptionStatsUser>;
   overdueSubscriptionCount: Scalars['Int'];
   overdueSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  predictedSubscriptionRenewalCount: DailyPredictedSubscriptionRenewalCount;
+  predictedSubscriptionRenewalUsersHighProbability: Array<DailySubscriptionStatsUser>;
+  predictedSubscriptionRenewalUsersLowProbability: Array<DailySubscriptionStatsUser>;
   renewedSubscriptionCount: Scalars['Int'];
   renewedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
   replacedSubscriptionCount: Scalars['Int'];
@@ -731,6 +745,7 @@ export type DailySubscriptionStatsUser = {
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   name: Scalars['String'];
+  subscriptionID?: Maybe<Scalars['String']>;
 };
 
 export type DashboardInvoice = {
@@ -1388,6 +1403,7 @@ export type MailTemplateWithUrlAndStatusModel = {
 
 export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
+  amountPerMonthMax?: Maybe<Scalars['Int']>;
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
@@ -1478,6 +1494,8 @@ export type Mutation = {
    *
    */
   createUserConsent: UserConsent;
+  /** Creates a new userrole. */
+  createUserRole: UserRole;
   /** Deletes an article. */
   deleteArticle: Scalars['String'];
   deleteBanner?: Maybe<Scalars['Boolean']>;
@@ -1513,6 +1531,8 @@ export type Mutation = {
    *
    */
   deleteUserConsent: UserConsent;
+  /** Deletes an existing userrole. */
+  deleteUserRole: UserRole;
   /** Dislikes an article. */
   dislikeArticle: Article;
   /** Duplicates an article. */
@@ -1595,6 +1615,8 @@ export type Mutation = {
    *
    */
   updateUserConsent: UserConsent;
+  /** Updates an existing userrole. */
+  updateUserRole: UserRole;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
   /** This mutation allows to upload and update the user's profile image. */
@@ -1788,6 +1810,13 @@ export type MutationCreateUserConsentArgs = {
 };
 
 
+export type MutationCreateUserRoleArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  permissionIDs: Array<Scalars['String']>;
+};
+
+
 export type MutationDeleteArticleArgs = {
   id: Scalars['String'];
 };
@@ -1854,6 +1883,11 @@ export type MutationDeleteSubscriptionIntervalArgs = {
 
 
 export type MutationDeleteUserConsentArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteUserRoleArgs = {
   id: Scalars['String'];
 };
 
@@ -2104,6 +2138,14 @@ export type MutationUpdateUserConsentArgs = {
 };
 
 
+export type MutationUpdateUserRoleArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  permissionIDs?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
 export type MutationUpdateUserSubscriptionArgs = {
   id: Scalars['String'];
   input: UserSubscriptionInput;
@@ -2296,6 +2338,13 @@ export type PaginatedPeerArticle = {
 export type PaginatedPollVotes = {
   __typename?: 'PaginatedPollVotes';
   nodes: Array<PollVote>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedUserRoles = {
+  __typename?: 'PaginatedUserRoles';
+  nodes: Array<UserRole>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -2497,6 +2546,13 @@ export type PeriodicJob = {
   modifiedAt: Scalars['DateTime'];
   successfullyFinished?: Maybe<Scalars['DateTime']>;
   tries: Scalars['Float'];
+};
+
+export type Permission = {
+  __typename?: 'Permission';
+  deprecated: Scalars['Boolean'];
+  description: Scalars['String'];
+  id: Scalars['String'];
 };
 
 export type Phrase = {
@@ -2776,6 +2832,8 @@ export type Query = {
   /** This query returns the peer profile. */
   peerProfile: PeerProfile;
   periodicJobLog: Array<PeriodicJob>;
+  /** Returns a list of all permissions. */
+  permissions: Array<Permission>;
   /** This query performs a fulltext search on titles and blocks of articles/phrases and returns all matching ones. */
   phrase: Phrase;
   poll: FullPoll;
@@ -2839,6 +2897,10 @@ export type Query = {
    */
   userConsents: Array<UserConsent>;
   userPollVote?: Maybe<Scalars['String']>;
+  /** Returns a userrole by id. */
+  userRole: UserRole;
+  /** Returns a paginated list of userroles based on the filters given. */
+  userRoles: PaginatedUserRoles;
   versionInformation: VersionInformation;
 };
 
@@ -3137,6 +3199,21 @@ export type QueryUserConsentsArgs = {
 
 export type QueryUserPollVoteArgs = {
   pollId: Scalars['String'];
+};
+
+
+export type QueryUserRoleArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryUserRolesArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<UserRoleFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<UserRoleSort>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 export type QuoteBlock = BaseBlock & HasImage & {
@@ -3681,6 +3758,7 @@ export type UploadImageInput = {
 
 export type User = {
   __typename?: 'User';
+  active: Scalars['Boolean'];
   address?: Maybe<UserAddress>;
   birthday?: Maybe<Scalars['DateTime']>;
   email: Scalars['String'];
@@ -3689,9 +3767,11 @@ export type User = {
   id: Scalars['String'];
   image?: Maybe<Image>;
   name: Scalars['String'];
-  paymentProviderCustomers: Array<PaymentProviderCustomer>;
+  paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
   permissions: Array<Scalars['String']>;
   properties: Array<Property>;
+  roleIDs: Array<Scalars['String']>;
+  userImageID?: Maybe<Scalars['String']>;
 };
 
 export type UserAddress = {
@@ -3747,6 +3827,27 @@ export type UserInput = {
   name: Scalars['String'];
   uploadImageInput?: InputMaybe<UploadImageInput>;
 };
+
+export type UserRole = {
+  __typename?: 'UserRole';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  permissionIDs: Array<Scalars['String']>;
+  permissions: Array<Permission>;
+  systemRole: Scalars['Boolean'];
+};
+
+export type UserRoleFilter = {
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export enum UserRoleSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt'
+}
 
 export type UserSubscriptionInput = {
   autoRenew: Scalars['Boolean'];
@@ -4270,7 +4371,7 @@ export type DailySubscriptionStatsQueryVariables = Exact<{
 }>;
 
 
-export type DailySubscriptionStatsQuery = { __typename?: 'Query', dailySubscriptionStats: Array<{ __typename?: 'DailySubscriptionStats', date: string, totalActiveSubscriptionCount: number, createdSubscriptionCount: number, replacedSubscriptionCount: number, renewedSubscriptionCount: number, deactivatedSubscriptionCount: number, overdueSubscriptionCount: number, createdSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, replacedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, renewedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, deactivatedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }>, overdueSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', id: string, name: string, firstName?: string | null, email: string }> }> };
+export type DailySubscriptionStatsQuery = { __typename?: 'Query', dailySubscriptionStats: Array<{ __typename?: 'DailySubscriptionStats', date: string, totalActiveSubscriptionCount: number, createdSubscriptionCount: number, replacedSubscriptionCount: number, renewedSubscriptionCount: number, deactivatedSubscriptionCount: number, overdueSubscriptionCount: number, endingSubscriptionCount: number, createdSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, replacedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, renewedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, deactivatedSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, overdueSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, endingSubscriptionUsers: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, predictedSubscriptionRenewalCount: { __typename?: 'DailyPredictedSubscriptionRenewalCount', high: number, low: number, total: number, perDayHighProbability: number, perDayLowProbability: number }, predictedSubscriptionRenewalUsersHighProbability: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }>, predictedSubscriptionRenewalUsersLowProbability: Array<{ __typename?: 'DailySubscriptionStatsUser', subscriptionID?: string | null, id: string, name: string, firstName?: string | null, email: string }> }> };
 
 export type FullEventFragment = { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, createdAt: string, modifiedAt: string, url: string, externalSourceName?: string | null, externalSourceId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, type?: TagType | null, main: boolean, url: string }> | null };
 
@@ -4608,6 +4709,13 @@ export type PeriodicJobLogsQueryVariables = Exact<{
 
 export type PeriodicJobLogsQuery = { __typename?: 'Query', periodicJobLog: Array<{ __typename?: 'PeriodicJob', id: string, date: string, error?: string | null, executionTime?: string | null, finishedWithError?: string | null, modifiedAt: string, successfullyFinished?: string | null, tries: number, createdAt: string }> };
 
+export type FullPermissionFragment = { __typename?: 'Permission', id: string, description: string, deprecated: boolean };
+
+export type PermissionListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PermissionListQuery = { __typename?: 'Query', permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> };
+
 export type FullPollFragment = { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: Descendant[] | null, answers: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }>, externalVoteSources: Array<{ __typename?: 'PollExternalVoteSource', id: string, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> }> };
 
 export type FullPollVoteFragment = { __typename?: 'PollVote', id: string, createdAt: string, pollId: string, answerId: string, userId?: string | null, fingerprint?: string | null };
@@ -4652,7 +4760,7 @@ export type SubscriptionFlowsQueryVariables = Exact<{
 }>;
 
 
-export type SubscriptionFlowsQuery = { __typename?: 'Query', subscriptionFlows: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type SubscriptionFlowsQuery = { __typename?: 'Query', subscriptionFlows: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type CreateSubscriptionFlowMutationVariables = Exact<{
   memberPlanId: Scalars['String'];
@@ -4662,7 +4770,7 @@ export type CreateSubscriptionFlowMutationVariables = Exact<{
 }>;
 
 
-export type CreateSubscriptionFlowMutation = { __typename?: 'Mutation', createSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type CreateSubscriptionFlowMutation = { __typename?: 'Mutation', createSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type UpdateSubscriptionFlowMutationVariables = Exact<{
   id: Scalars['String'];
@@ -4672,14 +4780,14 @@ export type UpdateSubscriptionFlowMutationVariables = Exact<{
 }>;
 
 
-export type UpdateSubscriptionFlowMutation = { __typename?: 'Mutation', updateSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type UpdateSubscriptionFlowMutation = { __typename?: 'Mutation', updateSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type DeleteSubscriptionFlowMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteSubscriptionFlowMutation = { __typename?: 'Mutation', deleteSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type DeleteSubscriptionFlowMutation = { __typename?: 'Mutation', deleteSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type CreateSubscriptionIntervalMutationVariables = Exact<{
   subscriptionFlowId: Scalars['String'];
@@ -4689,7 +4797,7 @@ export type CreateSubscriptionIntervalMutationVariables = Exact<{
 }>;
 
 
-export type CreateSubscriptionIntervalMutation = { __typename?: 'Mutation', createSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type CreateSubscriptionIntervalMutation = { __typename?: 'Mutation', createSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type UpdateSubscriptionIntervalMutationVariables = Exact<{
   id: Scalars['String'];
@@ -4698,27 +4806,27 @@ export type UpdateSubscriptionIntervalMutationVariables = Exact<{
 }>;
 
 
-export type UpdateSubscriptionIntervalMutation = { __typename?: 'Mutation', updateSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type UpdateSubscriptionIntervalMutation = { __typename?: 'Mutation', updateSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type DeleteSubscriptionIntervalMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteSubscriptionIntervalMutation = { __typename?: 'Mutation', deleteSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
+export type DeleteSubscriptionIntervalMutation = { __typename?: 'Mutation', deleteSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type ListPaymentMethodsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ListPaymentMethodsQuery = { __typename?: 'Query', paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> };
 
-export type SubscriptionFlowFragment = { __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
+export type SubscriptionFlowFragment = { __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> }> } | null, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
 
 export type SubscriptionIntervalFragment = { __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null };
 
 export type MailTemplateRefFragment = { __typename?: 'MailTemplateRef', id: string, name: string };
 
-export type MemberPlanRefFragment = { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> }> };
+export type MemberPlanRefFragment = { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> }> };
 
 export type FullAvailablePaymentMethodFragment = { __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number }> };
 
@@ -4753,6 +4861,53 @@ export type FullTrackingPixelFragment = { __typename?: 'TrackingPixel', id: stri
 export type FullTrackingPixelMethodFragment = { __typename?: 'TrackingPixelMethod', trackingPixelProviderID: string, trackingPixelProviderType: TrackingPixelProviderType };
 
 export type CommentUserFragment = { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
+
+export type FullUserRoleFragment = { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> };
+
+export type UserRoleListQueryVariables = Exact<{
+  filter?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<UserRoleSort>;
+}>;
+
+
+export type UserRoleListQuery = { __typename?: 'Query', userRoles: { __typename?: 'PaginatedUserRoles', totalCount: number, nodes: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type UserRoleQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type UserRoleQuery = { __typename?: 'Query', userRole: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } };
+
+export type CreateUserRoleMutationVariables = Exact<{
+  name: Scalars['String'];
+  description?: InputMaybe<Scalars['String']>;
+  permissionIDs: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+export type CreateUserRoleMutation = { __typename?: 'Mutation', createUserRole: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } };
+
+export type UpdateUserRoleMutationVariables = Exact<{
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  permissionIDs?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
+}>;
+
+
+export type UpdateUserRoleMutation = { __typename?: 'Mutation', updateUserRole: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } };
+
+export type DeleteUserRoleMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteUserRoleMutation = { __typename?: 'Mutation', deleteUserRole: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } };
 
 export type PromptQueryVariables = Exact<{
   query: Scalars['String'];
@@ -5918,6 +6073,7 @@ export const MemberPlanRefFragmentDoc = gql`
   name
   productType
   amountPerMonthMin
+  amountPerMonthMax
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
   }
@@ -5970,6 +6126,24 @@ export const SystemMailFragmentDoc = gql`
   }
 }
     ${MailTemplateRefFragmentDoc}`;
+export const FullPermissionFragmentDoc = gql`
+    fragment FullPermission on Permission {
+  id
+  description
+  deprecated
+}
+    `;
+export const FullUserRoleFragmentDoc = gql`
+    fragment FullUserRole on UserRole {
+  id
+  name
+  description
+  systemRole
+  permissions {
+    ...FullPermission
+  }
+}
+    ${FullPermissionFragmentDoc}`;
 export const RecentActionsDocument = gql`
     query RecentActions {
   actions {
@@ -7201,6 +7375,7 @@ export const DailySubscriptionStatsDocument = gql`
     totalActiveSubscriptionCount
     createdSubscriptionCount
     createdSubscriptionUsers {
+      subscriptionID
       id
       name
       firstName
@@ -7208,6 +7383,7 @@ export const DailySubscriptionStatsDocument = gql`
     }
     replacedSubscriptionCount
     replacedSubscriptionUsers {
+      subscriptionID
       id
       name
       firstName
@@ -7215,6 +7391,7 @@ export const DailySubscriptionStatsDocument = gql`
     }
     renewedSubscriptionCount
     renewedSubscriptionUsers {
+      subscriptionID
       id
       name
       firstName
@@ -7222,6 +7399,7 @@ export const DailySubscriptionStatsDocument = gql`
     }
     deactivatedSubscriptionCount
     deactivatedSubscriptionUsers {
+      subscriptionID
       id
       name
       firstName
@@ -7229,6 +7407,36 @@ export const DailySubscriptionStatsDocument = gql`
     }
     overdueSubscriptionCount
     overdueSubscriptionUsers {
+      subscriptionID
+      id
+      name
+      firstName
+      email
+    }
+    endingSubscriptionCount
+    endingSubscriptionUsers {
+      subscriptionID
+      id
+      name
+      firstName
+      email
+    }
+    predictedSubscriptionRenewalCount {
+      high
+      low
+      total
+      perDayHighProbability
+      perDayLowProbability
+    }
+    predictedSubscriptionRenewalUsersHighProbability {
+      subscriptionID
+      id
+      name
+      firstName
+      email
+    }
+    predictedSubscriptionRenewalUsersLowProbability {
+      subscriptionID
       id
       name
       firstName
@@ -8574,6 +8782,40 @@ export function usePeriodicJobLogsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type PeriodicJobLogsQueryHookResult = ReturnType<typeof usePeriodicJobLogsQuery>;
 export type PeriodicJobLogsLazyQueryHookResult = ReturnType<typeof usePeriodicJobLogsLazyQuery>;
 export type PeriodicJobLogsQueryResult = Apollo.QueryResult<PeriodicJobLogsQuery, PeriodicJobLogsQueryVariables>;
+export const PermissionListDocument = gql`
+    query PermissionList {
+  permissions {
+    ...FullPermission
+  }
+}
+    ${FullPermissionFragmentDoc}`;
+
+/**
+ * __usePermissionListQuery__
+ *
+ * To run a query within a React component, call `usePermissionListQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePermissionListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePermissionListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePermissionListQuery(baseOptions?: Apollo.QueryHookOptions<PermissionListQuery, PermissionListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PermissionListQuery, PermissionListQueryVariables>(PermissionListDocument, options);
+      }
+export function usePermissionListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PermissionListQuery, PermissionListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PermissionListQuery, PermissionListQueryVariables>(PermissionListDocument, options);
+        }
+export type PermissionListQueryHookResult = ReturnType<typeof usePermissionListQuery>;
+export type PermissionListLazyQueryHookResult = ReturnType<typeof usePermissionListLazyQuery>;
+export type PermissionListQueryResult = Apollo.QueryResult<PermissionListQuery, PermissionListQueryVariables>;
 export const PollVoteListDocument = gql`
     query PollVoteList($filter: PollVoteFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: PollVoteSort) {
   pollVotes(
@@ -9143,6 +9385,210 @@ export function useTestSystemMailMutation(baseOptions?: Apollo.MutationHookOptio
 export type TestSystemMailMutationHookResult = ReturnType<typeof useTestSystemMailMutation>;
 export type TestSystemMailMutationResult = Apollo.MutationResult<TestSystemMailMutation>;
 export type TestSystemMailMutationOptions = Apollo.BaseMutationOptions<TestSystemMailMutation, TestSystemMailMutationVariables>;
+export const UserRoleListDocument = gql`
+    query UserRoleList($filter: String, $cursorId: String, $take: Int, $skip: Int, $order: SortOrder, $sort: UserRoleSort) {
+  userRoles(
+    filter: {name: $filter}
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullUserRole
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    ${FullUserRoleFragmentDoc}`;
+
+/**
+ * __useUserRoleListQuery__
+ *
+ * To run a query within a React component, call `useUserRoleListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserRoleListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserRoleListQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      cursorId: // value for 'cursorId'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      order: // value for 'order'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useUserRoleListQuery(baseOptions?: Apollo.QueryHookOptions<UserRoleListQuery, UserRoleListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserRoleListQuery, UserRoleListQueryVariables>(UserRoleListDocument, options);
+      }
+export function useUserRoleListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserRoleListQuery, UserRoleListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserRoleListQuery, UserRoleListQueryVariables>(UserRoleListDocument, options);
+        }
+export type UserRoleListQueryHookResult = ReturnType<typeof useUserRoleListQuery>;
+export type UserRoleListLazyQueryHookResult = ReturnType<typeof useUserRoleListLazyQuery>;
+export type UserRoleListQueryResult = Apollo.QueryResult<UserRoleListQuery, UserRoleListQueryVariables>;
+export const UserRoleDocument = gql`
+    query UserRole($id: String!) {
+  userRole(id: $id) {
+    ...FullUserRole
+  }
+}
+    ${FullUserRoleFragmentDoc}`;
+
+/**
+ * __useUserRoleQuery__
+ *
+ * To run a query within a React component, call `useUserRoleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserRoleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserRoleQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUserRoleQuery(baseOptions: Apollo.QueryHookOptions<UserRoleQuery, UserRoleQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserRoleQuery, UserRoleQueryVariables>(UserRoleDocument, options);
+      }
+export function useUserRoleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserRoleQuery, UserRoleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserRoleQuery, UserRoleQueryVariables>(UserRoleDocument, options);
+        }
+export type UserRoleQueryHookResult = ReturnType<typeof useUserRoleQuery>;
+export type UserRoleLazyQueryHookResult = ReturnType<typeof useUserRoleLazyQuery>;
+export type UserRoleQueryResult = Apollo.QueryResult<UserRoleQuery, UserRoleQueryVariables>;
+export const CreateUserRoleDocument = gql`
+    mutation CreateUserRole($name: String!, $description: String, $permissionIDs: [String!]!) {
+  createUserRole(
+    name: $name
+    description: $description
+    permissionIDs: $permissionIDs
+  ) {
+    ...FullUserRole
+  }
+}
+    ${FullUserRoleFragmentDoc}`;
+export type CreateUserRoleMutationFn = Apollo.MutationFunction<CreateUserRoleMutation, CreateUserRoleMutationVariables>;
+
+/**
+ * __useCreateUserRoleMutation__
+ *
+ * To run a mutation, you first call `useCreateUserRoleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUserRoleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUserRoleMutation, { data, loading, error }] = useCreateUserRoleMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      description: // value for 'description'
+ *      permissionIDs: // value for 'permissionIDs'
+ *   },
+ * });
+ */
+export function useCreateUserRoleMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserRoleMutation, CreateUserRoleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateUserRoleMutation, CreateUserRoleMutationVariables>(CreateUserRoleDocument, options);
+      }
+export type CreateUserRoleMutationHookResult = ReturnType<typeof useCreateUserRoleMutation>;
+export type CreateUserRoleMutationResult = Apollo.MutationResult<CreateUserRoleMutation>;
+export type CreateUserRoleMutationOptions = Apollo.BaseMutationOptions<CreateUserRoleMutation, CreateUserRoleMutationVariables>;
+export const UpdateUserRoleDocument = gql`
+    mutation UpdateUserRole($id: String!, $name: String, $description: String, $permissionIDs: [String!]) {
+  updateUserRole(
+    id: $id
+    name: $name
+    description: $description
+    permissionIDs: $permissionIDs
+  ) {
+    ...FullUserRole
+  }
+}
+    ${FullUserRoleFragmentDoc}`;
+export type UpdateUserRoleMutationFn = Apollo.MutationFunction<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>;
+
+/**
+ * __useUpdateUserRoleMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserRoleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserRoleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserRoleMutation, { data, loading, error }] = useUpdateUserRoleMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *      description: // value for 'description'
+ *      permissionIDs: // value for 'permissionIDs'
+ *   },
+ * });
+ */
+export function useUpdateUserRoleMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>(UpdateUserRoleDocument, options);
+      }
+export type UpdateUserRoleMutationHookResult = ReturnType<typeof useUpdateUserRoleMutation>;
+export type UpdateUserRoleMutationResult = Apollo.MutationResult<UpdateUserRoleMutation>;
+export type UpdateUserRoleMutationOptions = Apollo.BaseMutationOptions<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>;
+export const DeleteUserRoleDocument = gql`
+    mutation DeleteUserRole($id: String!) {
+  deleteUserRole(id: $id) {
+    ...FullUserRole
+  }
+}
+    ${FullUserRoleFragmentDoc}`;
+export type DeleteUserRoleMutationFn = Apollo.MutationFunction<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>;
+
+/**
+ * __useDeleteUserRoleMutation__
+ *
+ * To run a mutation, you first call `useDeleteUserRoleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUserRoleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUserRoleMutation, { data, loading, error }] = useDeleteUserRoleMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteUserRoleMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>(DeleteUserRoleDocument, options);
+      }
+export type DeleteUserRoleMutationHookResult = ReturnType<typeof useDeleteUserRoleMutation>;
+export type DeleteUserRoleMutationResult = Apollo.MutationResult<DeleteUserRoleMutation>;
+export type DeleteUserRoleMutationOptions = Apollo.BaseMutationOptions<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>;
 export const PromptDocument = gql`
     query Prompt($query: String!, $chatId: String) {
   prompt(query: $query, chatId: $chatId) {

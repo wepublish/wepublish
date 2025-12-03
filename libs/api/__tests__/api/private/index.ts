@@ -400,6 +400,7 @@ export type JwtToken = {
 export type MemberPlan = {
   __typename?: 'MemberPlan';
   active: Scalars['Boolean'];
+  amountPerMonthMax?: Maybe<Scalars['Int']>;
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
@@ -439,6 +440,7 @@ export type MemberPlanFilter = {
 
 export type MemberPlanInput = {
   active: Scalars['Boolean'];
+  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
@@ -485,7 +487,6 @@ export type Mutation = {
   createTag?: Maybe<Tag>;
   createToken: CreatedToken;
   createUser?: Maybe<User>;
-  createUserRole?: Maybe<UserRole>;
   deleteAuthor?: Maybe<Author>;
   deleteComment: Comment;
   deleteImage?: Maybe<Image>;
@@ -501,7 +502,6 @@ export type Mutation = {
   deleteTag?: Maybe<Tag>;
   deleteToken?: Maybe<CreatedToken>;
   deleteUser?: Maybe<User>;
-  deleteUserRole?: Maybe<UserRole>;
   importSubscription?: Maybe<Subscription>;
   markInvoiceAsPaid?: Maybe<Invoice>;
   rejectComment: Comment;
@@ -526,7 +526,6 @@ export type Mutation = {
   updateSubscription?: Maybe<Subscription>;
   updateTag?: Maybe<Tag>;
   updateUser?: Maybe<User>;
-  updateUserRole?: Maybe<UserRole>;
   uploadImage?: Maybe<Image>;
 };
 
@@ -642,11 +641,6 @@ export type MutationCreateUserArgs = {
 };
 
 
-export type MutationCreateUserRoleArgs = {
-  input: UserRoleInput;
-};
-
-
 export type MutationDeleteAuthorArgs = {
   id: Scalars['String'];
 };
@@ -718,11 +712,6 @@ export type MutationDeleteTokenArgs = {
 
 
 export type MutationDeleteUserArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteUserRoleArgs = {
   id: Scalars['String'];
 };
 
@@ -866,12 +855,6 @@ export type MutationUpdateTagArgs = {
 export type MutationUpdateUserArgs = {
   id: Scalars['String'];
   input: UserInput;
-};
-
-
-export type MutationUpdateUserRoleArgs = {
-  id: Scalars['String'];
-  input: UserRoleInput;
 };
 
 
@@ -1136,7 +1119,6 @@ export type Query = {
   peer?: Maybe<Peer>;
   peerProfile: PeerProfile;
   peers?: Maybe<Array<Peer>>;
-  permissions?: Maybe<Array<Permission>>;
   poll?: Maybe<FullPoll>;
   polls?: Maybe<PollConnection>;
   ratingSystem: FullCommentRatingSystem;
@@ -1149,8 +1131,6 @@ export type Query = {
   tags?: Maybe<TagConnection>;
   tokens: Array<Token>;
   user?: Maybe<User>;
-  userRole?: Maybe<UserRole>;
-  userRoles: UserRoleConnection;
   users: UserConnection;
 };
 
@@ -1329,21 +1309,6 @@ export type QueryUserArgs = {
 };
 
 
-export type QueryUserRoleArgs = {
-  id?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryUserRolesArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<UserRoleFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<UserRoleSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
 export type QueryUsersArgs = {
   cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<UserFilter>;
@@ -1446,8 +1411,10 @@ export type SubscriptionFilter = {
   startsAt?: InputMaybe<DateFilter>;
   startsAtFrom?: InputMaybe<DateFilter>;
   startsAtTo?: InputMaybe<DateFilter>;
+  subscriptionIDs?: InputMaybe<Array<Scalars['String']>>;
   userHasAddress?: InputMaybe<Scalars['Boolean']>;
   userID?: InputMaybe<Scalars['String']>;
+  userIDs?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type SubscriptionInput = {
@@ -1659,28 +1626,6 @@ export type UserRole = {
   permissions: Array<Permission>;
   systemRole: Scalars['Boolean'];
 };
-
-export type UserRoleConnection = {
-  __typename?: 'UserRoleConnection';
-  nodes: Array<UserRole>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type UserRoleFilter = {
-  name?: InputMaybe<Scalars['String']>;
-};
-
-export type UserRoleInput = {
-  description: Scalars['String'];
-  name: Scalars['String'];
-  permissionIDs?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export enum UserRoleSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
-}
 
 export enum UserSort {
   CreatedAt = 'createdAt',
@@ -2061,50 +2006,6 @@ export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSess
 export type FullPermissionFragment = { __typename?: 'Permission', id: string, description: string, deprecated: boolean };
 
 export type FullUserRoleFragment = { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> };
-
-export type UserRoleListQueryVariables = Exact<{
-  filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['String']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type UserRoleListQuery = { __typename?: 'Query', userRoles: { __typename?: 'UserRoleConnection', totalCount: number, nodes: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
-
-export type PermissionListQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type PermissionListQuery = { __typename?: 'Query', permissions?: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> | null };
-
-export type UserRoleQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type UserRoleQuery = { __typename?: 'Query', userRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
-
-export type CreateUserRoleMutationVariables = Exact<{
-  input: UserRoleInput;
-}>;
-
-
-export type CreateUserRoleMutation = { __typename?: 'Mutation', createUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
-
-export type UpdateUserRoleMutationVariables = Exact<{
-  id: Scalars['String'];
-  input: UserRoleInput;
-}>;
-
-
-export type UpdateUserRoleMutation = { __typename?: 'Mutation', updateUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
-
-export type DeleteUserRoleMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteUserRoleMutation = { __typename?: 'Mutation', deleteUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
 
 export const ImageUrLs = gql`
     fragment ImageURLs on Image {
@@ -2698,54 +2599,3 @@ export const CreateSessionWithJwt = gql`
   }
 }
     `;
-export const UserRoleList = gql`
-    query UserRoleList($filter: String, $cursor: String, $take: Int, $skip: Int) {
-  userRoles(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
-    nodes {
-      ...FullUserRole
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    ${FullUserRole}`;
-export const PermissionList = gql`
-    query PermissionList {
-  permissions {
-    ...FullPermission
-  }
-}
-    ${FullPermission}`;
-export const UserRole = gql`
-    query UserRole($id: String!) {
-  userRole(id: $id) {
-    ...FullUserRole
-  }
-}
-    ${FullUserRole}`;
-export const CreateUserRole = gql`
-    mutation CreateUserRole($input: UserRoleInput!) {
-  createUserRole(input: $input) {
-    ...FullUserRole
-  }
-}
-    ${FullUserRole}`;
-export const UpdateUserRole = gql`
-    mutation UpdateUserRole($id: String!, $input: UserRoleInput!) {
-  updateUserRole(id: $id, input: $input) {
-    ...FullUserRole
-  }
-}
-    ${FullUserRole}`;
-export const DeleteUserRole = gql`
-    mutation DeleteUserRole($id: String!) {
-  deleteUserRole(id: $id) {
-    ...FullUserRole
-  }
-}
-    ${FullUserRole}`;

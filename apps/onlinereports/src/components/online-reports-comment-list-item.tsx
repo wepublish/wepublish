@@ -1,6 +1,8 @@
+import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
 import {
   buttonStyles,
+  CommentHeader,
   CommentListItemActions,
   CommentListItemActionsButtons,
   CommentListItemChildren,
@@ -15,7 +17,7 @@ import {
 } from '@wepublish/website/builder';
 import { MdEdit, MdReply } from 'react-icons/md';
 
-export const OnlineReportsCommentListItem = ({
+const OnlineReportsCommentListItemBase = ({
   anonymousCanComment,
   anonymousCanRate,
   userCanEdit,
@@ -73,7 +75,6 @@ export const OnlineReportsCommentListItem = ({
       className={className}
     >
       <CommentListItemStateWarnings state={state} />
-
       {showEdit && (
         <CommentEditor
           title={title}
@@ -94,7 +95,6 @@ export const OnlineReportsCommentListItem = ({
           signUpUrl={signUpUrl}
         />
       )}
-
       <CommentListItemActions>
         <CommentRatings
           commentId={id}
@@ -147,7 +147,6 @@ export const OnlineReportsCommentListItem = ({
           )}
         </CommentListItemActionsButtons>
       </CommentListItemActions>
-
       {showReply && (
         <CommentEditor
           onCancel={() =>
@@ -168,7 +167,6 @@ export const OnlineReportsCommentListItem = ({
           anonymousCanComment={anonymousCanComment}
         />
       )}
-
       {!!children?.length && (
         <CommentListItemChildren>
           {children.map(child => (
@@ -198,3 +196,16 @@ export const OnlineReportsCommentListItem = ({
     </Comment>
   );
 };
+
+export const OnlineReportsCommentListItem = styled(
+  OnlineReportsCommentListItemBase
+)`
+  ${CommentHeader} {
+    & div {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: calc(100vw - ${({ theme }) => theme.spacing(5)} - 62px);
+    }
+  }
+`;

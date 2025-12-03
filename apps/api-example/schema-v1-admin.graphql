@@ -12,9 +12,6 @@ type Query {
   subscription(id: String!): Subscription
   subscriptions(cursor: String, take: Int = 10, skip: Int = 0, filter: SubscriptionFilter, sort: SubscriptionSort = modifiedAt, order: SortOrder = Descending): SubscriptionConnection!
   subscriptionsAsCsv(filter: SubscriptionFilter): String
-  userRole(id: String): UserRole
-  userRoles(cursor: String, take: Int = 10, skip: Int = 0, filter: UserRoleFilter, sort: UserRoleSort = modifiedAt, order: SortOrder = Descending): UserRoleConnection!
-  permissions: [Permission!]
   tokens: [Token!]!
   author(id: String, slug: Slug): Author
   authors(cursor: String, take: Int = 10, skip: Int = 0, filter: AuthorFilter, sort: AuthorSort = ModifiedAt, order: SortOrder = Descending): AuthorConnection!
@@ -253,6 +250,7 @@ type MemberPlan {
   tags: [String!]
   active: Boolean!
   amountPerMonthMin: Int!
+  amountPerMonthMax: Int
   amountPerMonthTarget: Int
   currency: Currency!
   maxCount: Int
@@ -402,6 +400,8 @@ input SubscriptionFilter {
   paymentPeriodicity: PaymentPeriodicity
   userHasAddress: Boolean
   userID: String
+  userIDs: [String!]
+  subscriptionIDs: [String!]
   extendable: Boolean
 }
 
@@ -419,21 +419,6 @@ enum DateFilterComparison {
 }
 
 enum SubscriptionSort {
-  createdAt
-  modifiedAt
-}
-
-type UserRoleConnection {
-  nodes: [UserRole!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input UserRoleFilter {
-  name: String
-}
-
-enum UserRoleSort {
   createdAt
   modifiedAt
 }
@@ -795,9 +780,6 @@ type Mutation {
   updateSubscription(id: String!, input: SubscriptionInput!): Subscription
   deleteSubscription(id: String!): Subscription
   cancelSubscription(id: String!, reason: SubscriptionDeactivationReason!): Subscription
-  createUserRole(input: UserRoleInput!): UserRole
-  updateUserRole(id: String!, input: UserRoleInput!): UserRole
-  deleteUserRole(id: String!): UserRole
   createAuthor(input: AuthorInput!): Author
   updateAuthor(id: String!, input: AuthorInput!): Author
   deleteAuthor(id: String!): Author
@@ -934,12 +916,6 @@ input SubscriptionDeactivationInput {
   reason: SubscriptionDeactivationReason!
 }
 
-input UserRoleInput {
-  name: String!
-  description: String!
-  permissionIDs: [String!]
-}
-
 input AuthorInput {
   name: String!
   slug: Slug!
@@ -998,6 +974,7 @@ input MemberPlanInput {
   tags: [String!]
   active: Boolean!
   amountPerMonthMin: Int!
+  amountPerMonthMax: Int
   amountPerMonthTarget: Int
   currency: Currency!
   extendable: Boolean!
