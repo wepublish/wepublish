@@ -9,10 +9,17 @@ import {
   HasUserResolver,
 } from './has-user/has-user.resolver';
 import { UserService } from './user.service';
-import { UserResolver } from './user.resolver';
 import { ProfileService } from './profile.service';
 import { ProfileResolver } from './profile.resolver';
 import { PropertyModule } from '@wepublish/property/api';
+import { SensitiveDataUserResolver } from './sensitive-data-user.resolver';
+import { BaseUserResolver } from './base-user.resolver';
+import {
+  HasSensitiveDataUserResolver,
+  HasSensitiveDataUserLcResolver,
+  HasOptionalSensitiveDataUserResolver,
+  HasOptionalSensitiveDataUserLcResolver,
+} from './has-sensitive-data-user/has-sensitive-data-user.resolver';
 
 @Module({
   imports: [PrismaModule, ImageModule, PropertyModule],
@@ -22,8 +29,13 @@ import { PropertyModule } from '@wepublish/property/api';
     HasUserLcResolver,
     HasOptionalUserResolver,
     HasOptionalUserLcResolver,
+    HasSensitiveDataUserResolver,
+    HasSensitiveDataUserLcResolver,
+    HasOptionalSensitiveDataUserResolver,
+    HasOptionalSensitiveDataUserLcResolver,
     UserService,
-    UserResolver,
+    SensitiveDataUserResolver,
+    BaseUserResolver,
     ProfileResolver,
     ProfileService,
   ],
