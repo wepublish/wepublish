@@ -1536,6 +1536,8 @@ export type Mutation = {
   createSubscriptionInterval: Array<SubscriptionFlowModel>;
   /** Allows guests and authenticated users to create additional subscriptions */
   createSubscriptionWithConfirmation: Scalars['Boolean'];
+  /** Creates a new tag. */
+  createTag: Tag;
   /**
    *
    *       Creates a new userConsent based on input.
@@ -1571,6 +1573,8 @@ export type Mutation = {
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
   deleteSubscriptionInterval: Array<SubscriptionFlowModel>;
+  /** Deletes an existing tag. */
+  deleteTag: Tag;
   /**
    *
    *       Delete an existing userConsent by id.
@@ -1651,6 +1655,8 @@ export type Mutation = {
   updateSubscriptionInterval: Array<SubscriptionFlowModel>;
   /** Updates an existing mail flow */
   updateSystemMail: Array<SystemMailModel>;
+  /** Updates an existing tag. */
+  updateTag: Tag;
   /** This mutation allows to update the user's data by taking an input of type UserInput. */
   updateUser?: Maybe<User>;
   /**
@@ -1825,6 +1831,13 @@ export type MutationCreateSubscriptionWithConfirmationArgs = {
   userId?: InputMaybe<Scalars['String']>;
 };
 
+export type MutationCreateTagArgs = {
+  description?: InputMaybe<Scalars['RichText']>;
+  main?: Scalars['Boolean'];
+  tag?: InputMaybe<Scalars['String']>;
+  type: TagType;
+};
+
 export type MutationCreateUserConsentArgs = {
   consentId: Scalars['String'];
   userId: Scalars['String'];
@@ -1880,6 +1893,10 @@ export type MutationDeleteSubscriptionFlowArgs = {
 };
 
 export type MutationDeleteSubscriptionIntervalArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationDeleteTagArgs = {
   id: Scalars['String'];
 };
 
@@ -2089,6 +2106,14 @@ export type MutationUpdateSubscriptionIntervalArgs = {
 export type MutationUpdateSystemMailArgs = {
   event: UserEvent;
   mailTemplateId: Scalars['String'];
+};
+
+export type MutationUpdateTagArgs = {
+  description?: InputMaybe<Scalars['RichText']>;
+  id: Scalars['String'];
+  main?: InputMaybe<Scalars['Boolean']>;
+  tag?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<TagType>;
 };
 
 export type MutationUpdateUserArgs = {
@@ -2497,6 +2522,13 @@ export type PeriodicJob = {
   tries: Scalars['Float'];
 };
 
+export type Permission = {
+  __typename?: 'Permission';
+  deprecated: Scalars['Boolean'];
+  description: Scalars['String'];
+  id: Scalars['String'];
+};
+
 export type Phrase = {
   __typename?: 'Phrase';
   articles: PaginatedArticles;
@@ -2777,6 +2809,8 @@ export type Query = {
   /** This query returns the peer profile. */
   peerProfile: PeerProfile;
   periodicJobLog: Array<PeriodicJob>;
+  /** Returns a list of all permissions. */
+  permissions: Array<Permission>;
   /** This query performs a fulltext search on titles and blocks of articles/phrases and returns all matching ones. */
   phrase: Phrase;
   poll: FullPoll;
@@ -2824,6 +2858,8 @@ export type Query = {
   subscriptions: Array<PublicSubscription>;
   /** Returns all mail flows */
   systemMails: Array<SystemMailModel>;
+  /** Returns a tag by id */
+  tag: Tag;
   /** This query returns a list of tags */
   tags: TagConnection;
   /**
@@ -3064,6 +3100,10 @@ export type QuerySettingsArgs = {
 export type QuerySubscriptionFlowsArgs = {
   defaultFlowOnly: Scalars['Boolean'];
   memberPlanId?: InputMaybe<Scalars['String']>;
+};
+
+export type QueryTagArgs = {
+  id: Scalars['String'];
 };
 
 export type QueryTagsArgs = {
@@ -3343,7 +3383,7 @@ export type Tag = {
   id: Scalars['String'];
   main: Scalars['Boolean'];
   tag?: Maybe<Scalars['String']>;
-  type?: Maybe<TagType>;
+  type: TagType;
   url: Scalars['String'];
 };
 

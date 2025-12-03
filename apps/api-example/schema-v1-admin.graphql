@@ -14,7 +14,6 @@ type Query {
   subscriptionsAsCsv(filter: SubscriptionFilter): String
   userRole(id: String): UserRole
   userRoles(cursor: String, take: Int = 10, skip: Int = 0, filter: UserRoleFilter, sort: UserRoleSort = modifiedAt, order: SortOrder = Descending): UserRoleConnection!
-  permissions: [Permission!]
   tokens: [Token!]!
   author(id: String, slug: Slug): Author
   authors(cursor: String, take: Int = 10, skip: Int = 0, filter: AuthorFilter, sort: AuthorSort = ModifiedAt, order: SortOrder = Descending): AuthorConnection!

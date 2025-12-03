@@ -1140,7 +1140,6 @@ export type Query = {
   peer?: Maybe<Peer>;
   peerProfile: PeerProfile;
   peers?: Maybe<Array<Peer>>;
-  permissions?: Maybe<Array<Permission>>;
   poll?: Maybe<FullPoll>;
   polls?: Maybe<PollConnection>;
   ratingSystem: FullCommentRatingSystem;
@@ -2418,11 +2417,6 @@ export type UserRoleListQueryVariables = Exact<{
 
 
 export type UserRoleListQuery = { __typename?: 'Query', userRoles: { __typename?: 'UserRoleConnection', totalCount: number, nodes: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
-
-export type PermissionListQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type PermissionListQuery = { __typename?: 'Query', permissions?: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> | null };
 
 export type UserRoleQueryVariables = Exact<{
   id: Scalars['String'];
@@ -5988,40 +5982,6 @@ export function useUserRoleListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type UserRoleListQueryHookResult = ReturnType<typeof useUserRoleListQuery>;
 export type UserRoleListLazyQueryHookResult = ReturnType<typeof useUserRoleListLazyQuery>;
 export type UserRoleListQueryResult = Apollo.QueryResult<UserRoleListQuery, UserRoleListQueryVariables>;
-export const PermissionListDocument = gql`
-    query PermissionList {
-  permissions {
-    ...FullPermission
-  }
-}
-    ${FullPermissionFragmentDoc}`;
-
-/**
- * __usePermissionListQuery__
- *
- * To run a query within a React component, call `usePermissionListQuery` and pass it any options that fit your needs.
- * When your component renders, `usePermissionListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePermissionListQuery({
- *   variables: {
- *   },
- * });
- */
-export function usePermissionListQuery(baseOptions?: Apollo.QueryHookOptions<PermissionListQuery, PermissionListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PermissionListQuery, PermissionListQueryVariables>(PermissionListDocument, options);
-      }
-export function usePermissionListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PermissionListQuery, PermissionListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PermissionListQuery, PermissionListQueryVariables>(PermissionListDocument, options);
-        }
-export type PermissionListQueryHookResult = ReturnType<typeof usePermissionListQuery>;
-export type PermissionListLazyQueryHookResult = ReturnType<typeof usePermissionListLazyQuery>;
-export type PermissionListQueryResult = Apollo.QueryResult<PermissionListQuery, PermissionListQueryVariables>;
 export const UserRoleDocument = gql`
     query UserRole($id: String!) {
   userRole(id: $id) {

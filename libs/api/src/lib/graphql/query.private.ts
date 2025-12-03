@@ -94,7 +94,6 @@ import {
   getRemotePeerProfile,
 } from './peer-profile/peer-profile.private-queries';
 import { getPeerById, getPeers } from './peer/peer.private-queries';
-import { getPermissions } from './permission/permission.private-queries';
 import { authorise } from './permissions';
 import {
   GraphQLFullPoll,
@@ -142,7 +141,6 @@ import {
 } from './user-role/user-role.private-queries';
 import { getAdminUsers, getMe, getUserById } from './user/user.private-queries';
 import {
-  GraphQLPermission,
   GraphQLUserRole,
   GraphQLUserRoleConnection,
   GraphQLUserRoleFilter,
@@ -393,15 +391,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           authenticate,
           userRole
         ),
-    },
-
-    // Permissions
-    // ========
-
-    permissions: {
-      type: new GraphQLList(new GraphQLNonNull(GraphQLPermission)),
-      args: {},
-      resolve: (root, _, { authenticate }) => getPermissions(authenticate),
     },
 
     // Token

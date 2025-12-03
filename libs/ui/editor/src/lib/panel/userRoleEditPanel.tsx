@@ -3,10 +3,13 @@ import {
   FullUserRoleFragment,
   Permission,
   useCreateUserRoleMutation,
-  usePermissionListQuery,
   useUpdateUserRoleMutation,
   useUserRoleQuery,
 } from '@wepublish/editor/api';
+import {
+  getApiClientV2,
+  usePermissionListQuery,
+} from '@wepublish/editor/api-v2';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -57,11 +60,13 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
     skip: id === undefined,
   });
 
+  const client = getApiClientV2();
   const {
     data: permissionData,
     loading: isPermissionLoading,
     error: loadPermissionError,
   } = usePermissionListQuery({
+    client,
     fetchPolicy: 'network-only',
   });
 
