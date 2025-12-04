@@ -28,12 +28,12 @@ export class BaseCrowdfundingGoal {
 }
 
 @ObjectType({
-  implements: [BaseCrowdfundingGoal],
+  implements: () => [BaseCrowdfundingGoal],
 })
 export class CrowdfundingGoal extends BaseCrowdfundingGoal {}
 
 @ObjectType({
-  implements: [BaseCrowdfundingGoal],
+  implements: () => [BaseCrowdfundingGoal],
 })
 export class CrowdfundingGoalWithProgress extends BaseCrowdfundingGoal {
   @Field(() => Number, { nullable: true })

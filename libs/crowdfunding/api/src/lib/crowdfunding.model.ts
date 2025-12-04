@@ -21,11 +21,10 @@ registerEnumType(CrowdfundingGoalType, {
 });
 
 @InputType()
-export class CreateCrowdfundingMemberPlan extends PickType(
-  MemberPlan,
-  ['id'],
-  InputType
-) {}
+export class CreateCrowdfundingMemberPlan {
+  @Field()
+  id!: string;
+}
 
 @ObjectType()
 export class Crowdfunding {

@@ -41,7 +41,7 @@ import { ApiAlert } from '@wepublish/errors/website';
 import { Modal } from '@wepublish/website/builder';
 import { useTranslation } from 'react-i18next';
 
-const subscribeSchema = z.object({
+export const subscribeSchema = z.object({
   memberPlanId: z.string().min(1),
   paymentMethodId: z.string().min(1),
   monthlyAmount: z.coerce.number().gte(0),
@@ -327,10 +327,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
 
   const shouldHidePaymentAmount =
-    selectedMemberPlan ?
-      selectedMemberPlan.amountPerMonthMin ===
-      selectedMemberPlan.amountPerMonthMax
-    : false;
+    selectedMemberPlan?.amountPerMonthMin ===
+    selectedMemberPlan?.amountPerMonthMax;
 
   const paymentText = usePaymentText({
     autoRenew,
@@ -590,7 +588,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       )}
 
       <SubscribeSection area="paymentPeriodicity">
-        {allPaymentMethods && allPaymentMethods.length > 1 && (
+        {allPaymentMethods.length > 1 && (
           <H5 component="h2">Zahlungsmethode wählen</H5>
         )}
 

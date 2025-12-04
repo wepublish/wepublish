@@ -1,6 +1,5 @@
 import {
   ArgsType,
-  Directive,
   Field,
   InputType,
   Int,
@@ -91,9 +90,8 @@ export class ArticleRevision implements HasBlockContent {
 }
 
 @ObjectType({
-  implements: [HasOptionalPeerLc, HasOptionalPaywall],
+  implements: () => [HasOptionalPeerLc, HasOptionalPaywall],
 })
-@Directive('@key(fields: "id")')
 export class Article implements HasOptionalPeerLc, HasOptionalPaywall {
   @Field()
   id!: string;

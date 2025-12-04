@@ -26,6 +26,7 @@ import { CommentInput, CommentUpdateInput } from './comment.input';
 import { URLAdapter } from '@wepublish/nest-modules';
 import { ArticleDataloaderService } from '@wepublish/article/api';
 import { PageDataloaderService } from '@wepublish/page/api';
+import { forwardRef, Inject } from '@nestjs/common';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -37,7 +38,9 @@ export class CommentResolver {
     private imageDataloaderService: ImageDataloaderService,
     private userDataloaderService: UserDataloaderService,
     private urlAdapter: URLAdapter,
+    @Inject(forwardRef(() => ArticleDataloaderService))
     private articleDataloader: ArticleDataloaderService,
+    @Inject(forwardRef(() => PageDataloaderService))
     private pageDataloader: PageDataloaderService
   ) {}
 

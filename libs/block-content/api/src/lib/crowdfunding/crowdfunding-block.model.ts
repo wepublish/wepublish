@@ -5,7 +5,7 @@ import { BlockType } from '../block-type.model';
 import { HasOptionalCrowdfunding } from '@wepublish/crowdfunding/api';
 
 @ObjectType({
-  implements: [BaseBlock, HasOptionalCrowdfunding],
+  implements: () => [BaseBlock, HasOptionalCrowdfunding],
 })
 export class CrowdfundingBlock
   extends BaseBlock<typeof BlockType.Crowdfunding>

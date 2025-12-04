@@ -45,6 +45,7 @@ import {
   ListInput,
   ListValue,
   PermissionControl,
+  SelectPaywall,
   SelectTags,
   Textarea,
   useAuthorisation,
@@ -128,7 +129,7 @@ export interface ArticleMetadata {
   readonly canonicalUrl: string;
   readonly image?: FullImageFragment;
   readonly shared?: boolean;
-  readonly paywall?: boolean;
+  readonly paywall?: string | null;
   readonly hidden?: boolean | null;
   readonly disableComments?: boolean | null;
   readonly breaking: boolean;
@@ -605,10 +606,12 @@ function ArticleMetadataPanel({
             <Group controlId="paywall">
               <ControlLabel>{t('articleEditor.panels.paywall')}</ControlLabel>
 
-              <Toggle
-                checked={paywall}
+              <SelectPaywall
                 disabled={!isAuthorized}
-                onChange={paywall => onChange?.({ ...value, paywall })}
+                selectedPaywall={paywall}
+                setSelectedPaywall={paywall =>
+                  onChange?.({ ...value, paywall })
+                }
               />
             </Group>
 

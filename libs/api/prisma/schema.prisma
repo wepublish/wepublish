@@ -1022,8 +1022,8 @@ model Setting {
   createdAt          DateTime @default(now())
   modifiedAt         DateTime @updatedAt
   name               String   @unique
-  value              Json
-  settingRestriction Json
+  value              Json?
+  settingRestriction Json?
 
   @@map("settings")
 }
@@ -1449,11 +1449,16 @@ model Paywall {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name                  String? @unique
-  description           Json?
-  circumventDescription Json?
-  anyMemberPlan         Boolean @default(false)
-  active                Boolean @default(true)
+  name String? @unique
+
+  description                  Json?
+  upgradeDescription           Json?
+  circumventDescription        Json?
+  upgradeCircumventDescription Json?
+
+  anyMemberPlan           Boolean @default(false)
+  active                  Boolean @default(true)
+  alternativeSubscribeUrl String?
 
   memberPlans PaywallMemberplan[]
   articles    Article[]

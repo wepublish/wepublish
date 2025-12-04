@@ -8,7 +8,7 @@ import {
   PeerProfileDocument,
   TagDocument,
 } from '@wepublish/website/api';
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
+import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
@@ -50,12 +50,10 @@ export function TagPage({
   );
 }
 
-export const TagPageGetStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: 'blocking',
-  };
-};
+export const TagPageGetStaticPaths = () => ({
+  paths: [],
+  fallback: 'blocking',
+});
 
 export const TagPageGetStaticProps = (async ({ params }) => {
   const { tag } = params || {};

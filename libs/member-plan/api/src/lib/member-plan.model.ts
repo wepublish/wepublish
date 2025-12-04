@@ -11,6 +11,7 @@ import { GraphQLRichText } from '@wepublish/richtext/api';
 import { Descendant } from 'slate';
 import { PaymentMethod } from '@wepublish/payment-method/api';
 import { Currency, PaymentPeriodicity, ProductType } from '@prisma/client';
+import { Page } from '@wepublish/page/api';
 
 export enum MemberPlanSort {
   createdAt = 'createdAt',
@@ -96,12 +97,18 @@ export class MemberPlan {
 
   @Field({ nullable: true })
   successPageId?: string;
+  @Field(() => Page, { nullable: true })
+  successPage?: Page;
 
   @Field({ nullable: true })
   failPageId?: string;
+  @Field(() => Page, { nullable: true })
+  failPage?: Page;
 
   @Field({ nullable: true })
   confirmationPageId?: string;
+  @Field(() => Page, { nullable: true })
+  confirmationPage?: Page;
 }
 
 @ObjectType()

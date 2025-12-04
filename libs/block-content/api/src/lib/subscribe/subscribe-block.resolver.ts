@@ -5,11 +5,14 @@ import {
   MemberPlanDataloader,
   MemberPlanService,
 } from '@wepublish/member-plan/api';
+import { forwardRef, Inject } from '@nestjs/common';
 
 @Resolver(() => SubscribeBlock)
 export class SubscribeBlockResolver {
   constructor(
+    @Inject(forwardRef(() => MemberPlanDataloader))
     private memberPlanDataloader: MemberPlanDataloader,
+    @Inject(forwardRef(() => MemberPlanService))
     private memberPlanService: MemberPlanService
   ) {}
 
