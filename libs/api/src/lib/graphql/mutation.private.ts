@@ -72,19 +72,8 @@ import {
   GraphQLPaymentMethod,
   GraphQLPaymentMethodInput,
 } from './paymentMethod';
-import {
-  GraphQLCreatePeerInput,
-  GraphQLPeer,
-  GraphQLPeerProfile,
-  GraphQLPeerProfileInput,
-  GraphQLUpdatePeerInput,
-} from './peer';
+import { GraphQLPeerProfile, GraphQLPeerProfileInput } from './peer';
 import { upsertPeerProfile } from './peer-profile/peer-profile.private-mutation';
-import {
-  createPeer,
-  deletePeerById,
-  updatePeer,
-} from './peer/peer.private-mutation';
 import { authorise } from './permissions';
 import {
   GraphQLFullPoll,
@@ -152,30 +141,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         { input },
         { hostURL, authenticate, prisma: { peerProfile } }
       ) => upsertPeerProfile(input, hostURL, authenticate, peerProfile),
-    },
-
-    createPeer: {
-      type: new GraphQLNonNull(GraphQLPeer),
-      args: { input: { type: new GraphQLNonNull(GraphQLCreatePeerInput) } },
-      resolve: (root, { input }, { authenticate, prisma: { peer } }) =>
-        createPeer(input, authenticate, peer),
-    },
-
-    updatePeer: {
-      type: new GraphQLNonNull(GraphQLPeer),
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        input: { type: new GraphQLNonNull(GraphQLUpdatePeerInput) },
-      },
-      resolve: (root, { id, input }, { authenticate, prisma: { peer } }) =>
-        updatePeer(id, input, authenticate, peer),
-    },
-
-    deletePeer: {
-      type: GraphQLPeer,
-      args: { id: { type: new GraphQLNonNull(GraphQLString) } },
-      resolve: (root, { id }, { authenticate, prisma: { peer } }) =>
-        deletePeerById(id, authenticate, peer),
     },
 
     // Session

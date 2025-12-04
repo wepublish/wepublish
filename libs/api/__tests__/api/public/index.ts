@@ -1474,6 +1474,8 @@ export type Mutation = {
   createPaywall: Paywall;
   /** Creates a paywall bypass token. */
   createPaywallBypass: PaywallBypass;
+  /** Creates a new peer. */
+  createPeer: Peer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   /** Allows authenticated users to create additional subscriptions */
@@ -1517,6 +1519,8 @@ export type Mutation = {
   deletePaywall: Paywall;
   /** Deletes a paywall bypass token. */
   deletePaywallBypass: Scalars['String'];
+  /** Deletes an existing peer. */
+  deletePeer: Peer;
   /** Delete poll votes */
   deletePollVotes: DeletePollVotesResult;
   /** Delete an existing subscription flow */
@@ -1599,6 +1603,8 @@ export type Mutation = {
   updatePaymentProviderCustomers: Array<PaymentProviderCustomer>;
   /** Updates a paywall. */
   updatePaywall: Paywall;
+  /** Updates an existing peer. */
+  updatePeer: Peer;
   /** Updates an existing setting. */
   updateSetting: Setting;
   /** Update an existing subscription flow */
@@ -1763,6 +1769,16 @@ export type MutationCreatePaywallBypassArgs = {
 };
 
 
+export type MutationCreatePeerArgs = {
+  hostURL: Scalars['String'];
+  information?: InputMaybe<Scalars['RichText']>;
+  isDisabled?: InputMaybe<Scalars['Boolean']>;
+  name: Scalars['String'];
+  slug: Scalars['String'];
+  token: Scalars['String'];
+};
+
+
 export type MutationCreateSessionArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -1883,6 +1899,11 @@ export type MutationDeletePaywallArgs = {
 
 
 export type MutationDeletePaywallBypassArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeletePeerArgs = {
   id: Scalars['String'];
 };
 
@@ -2132,6 +2153,17 @@ export type MutationUpdatePaywallArgs = {
   id: Scalars['String'];
   memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
   name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdatePeerArgs = {
+  hostURL?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  information?: InputMaybe<Scalars['RichText']>;
+  isDisabled?: InputMaybe<Scalars['Boolean']>;
+  name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+  token?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2477,6 +2509,7 @@ export type Peer = {
   name: Scalars['String'];
   profile?: Maybe<RemotePeerProfile>;
   slug: Scalars['String'];
+  token: Scalars['String'];
 };
 
 export type PeerArticle = HasOptionalPeerLc & {
@@ -2866,6 +2899,8 @@ export type Query = {
   peerArticles: PaginatedPeerArticle;
   /** This query returns the peer profile. */
   peerProfile: PeerProfile;
+  /** Returns a list of all peers. */
+  peers: Array<Peer>;
   periodicJobLog: Array<PeriodicJob>;
   /** Returns a list of all permissions. */
   permissions: Array<Permission>;
@@ -3119,7 +3154,7 @@ export type QueryPaywallArgs = {
 
 export type QueryPeerArgs = {
   id?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['Slug']>;
+  slug?: InputMaybe<Scalars['String']>;
 };
 
 

@@ -1,5 +1,4 @@
 export * from './lib/graphql/session';
-export * from './lib/graphql/author';
 export * from './lib/graphql/image';
 export * from './lib/graphql/comment/comment';
 export * from './lib/graphql/peer';

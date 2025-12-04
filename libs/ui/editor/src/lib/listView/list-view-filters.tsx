@@ -3,7 +3,6 @@ import {
   FullUserRoleFragment,
   PollAnswerWithVoteCount,
   TagType,
-  usePeerListLazyQuery,
   usePollLazyQuery,
   UserFilter,
 } from '@wepublish/editor/api';
@@ -19,6 +18,7 @@ import {
   PollVoteFilter,
   Scalars,
   useEventProvidersLazyQuery,
+  usePeerListLazyQuery,
   useUserRoleListLazyQuery,
 } from '@wepublish/editor/api-v2';
 import { useEffect, useState } from 'react';
@@ -150,6 +150,7 @@ export function ListViewFilters({
   });
 
   const [peerListFetch, { data: peerListData }] = usePeerListLazyQuery({
+    client,
     fetchPolicy: 'network-only',
   });
 

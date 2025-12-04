@@ -7,8 +7,8 @@ fragment RemotePeerProfile on PeerProfile {
     ...RemoteImage
   }
 
-  # themeColor
-  # themeFontColor
+  themeColor
+  themeFontColor
 
   hostURL
   websiteURL
