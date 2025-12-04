@@ -111,8 +111,6 @@ import {
   renewSubscription,
   updateAdminSubscription,
 } from './subscription/subscription.private-mutation';
-import { GraphQLTag, GraphQLTagType } from './tag/tag';
-import { createTag, deleteTag, updateTag } from './tag/tag.private-mutation';
 import { GraphQLCreatedToken, GraphQLTokenInput } from './token';
 import { createToken, deleteTokenById } from './token/token.private-mutation';
 import { GraphQLUser, GraphQLUserInput } from './user';
@@ -956,48 +954,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         { authenticate, prisma: { pollExternalVoteSource } }
       ) =>
         deletePollExternalVoteSource(id, authenticate, pollExternalVoteSource),
-    },
-
-    // Tag
-    // ==========
-
-    createTag: {
-      type: GraphQLTag,
-      args: {
-        tag: { type: GraphQLString },
-        description: { type: GraphQLRichText },
-        type: { type: new GraphQLNonNull(GraphQLTagType) },
-        main: { type: GraphQLBoolean },
-      },
-      resolve: (
-        root,
-        { tag, description, type, main },
-        { authenticate, prisma }
-      ) => createTag(tag, description, type, main, authenticate, prisma.tag),
-    },
-
-    updateTag: {
-      type: GraphQLTag,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        tag: { type: GraphQLString },
-        description: { type: GraphQLRichText },
-        main: { type: GraphQLBoolean },
-      },
-      resolve: (
-        root,
-        { id, tag, description, main },
-        { authenticate, prisma }
-      ) => updateTag(id, tag, description, main, authenticate, prisma.tag),
-    },
-
-    deleteTag: {
-      type: GraphQLTag,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { tag } }) =>
-        deleteTag(id, authenticate, tag),
     },
   },
 });

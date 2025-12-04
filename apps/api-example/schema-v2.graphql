@@ -1423,6 +1423,9 @@ type Mutation {
   """
   createSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
+  """Creates a new tag."""
+  createTag(description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
+
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
 
@@ -1469,6 +1472,9 @@ type Mutation {
 
   """Delete an existing subscription interval"""
   deleteSubscriptionInterval(id: String!): [SubscriptionFlowModel!]!
+
+  """Deletes an existing tag."""
+  deleteTag(id: String!): Tag!
 
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
@@ -1584,6 +1590,9 @@ type Mutation {
 
   """Updates an existing mail flow"""
   updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
+
+  """Updates an existing tag."""
+  updateTag(description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
 
   """
   This mutation allows to update the user's data by taking an input of type UserInput.
@@ -2283,6 +2292,9 @@ type Query {
   """Returns all mail flows"""
   systemMails: [SystemMailModel!]!
 
+  """Returns a tag by id"""
+  tag(id: String!): Tag!
+
   """This query returns a list of tags"""
   tags(
     """Cursor for pagination"""
@@ -2557,7 +2569,7 @@ type Tag {
   id: String!
   main: Boolean!
   tag: String
-  type: TagType
+  type: TagType!
   url: String!
 }
 

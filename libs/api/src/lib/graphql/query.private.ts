@@ -95,7 +95,6 @@ import { GraphQLSession } from './session';
 import { getSessionsForUser } from './session/session.private-queries';
 import { GraphQLSlug } from '@wepublish/utils/api';
 import {
-  GraphQLSubscribersPerMonth,
   GraphQLSubscription,
   GraphQLSubscriptionConnection,
   GraphQLSubscriptionFilter,
@@ -103,18 +102,10 @@ import {
 } from './subscription';
 import {
   getAdminSubscriptions,
-  getNewSubscribersPerMonth,
   getSubscriptionById,
   getSubscriptionsAsCSV,
 } from './subscription/subscription.private-queries';
-import {
-  GraphQLTag,
-  GraphQLTagConnection,
-  GraphQLTagFilter,
-  GraphQLTagSort,
-} from './tag/tag';
-import { getTags, getTag } from './tag/tag.private-query';
-import { TagSort } from './tag/tag.query';
+
 import { GraphQLToken } from './token';
 import { getTokens } from './token/token.private-queries';
 import {
@@ -584,45 +575,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         getRatingSystem(commentRatingSystem),
     },
 
-    // Tag
-    // ==========
-
-    tags: {
-      type: GraphQLTagConnection,
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 10 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLTagFilter },
-        sort: { type: GraphQLTagSort, defaultValue: TagSort.CreatedAt },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, cursor, take, skip },
-        { authenticate, prisma }
-      ) =>
-        getTags(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          prisma.tag
-        ),
-    },
-
-    tag: {
-      type: GraphQLTag,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma }) =>
-        getTag(id, authenticate, prisma.tag),
-    },
-
     // Polls
     // =======
 
@@ -650,23 +602,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         id: { type: GraphQLString },
       },
       resolve: (root, { id }, { prisma: { poll } }) => getPoll(id, poll),
-    },
-
-    // Stats
-    newSubscribersPerMonth: {
-      type: new GraphQLList(GraphQLSubscribersPerMonth),
-      args: { monthsBack: { type: GraphQLInt } },
-      resolve: (
-        root,
-        { monthsBack },
-        { authenticate, prisma: { subscription } }
-      ) => {
-        return getNewSubscribersPerMonth(
-          authenticate,
-          subscription,
-          monthsBack
-        );
-      },
     },
   },
 });
