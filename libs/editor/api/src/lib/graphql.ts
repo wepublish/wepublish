@@ -233,12 +233,6 @@ export type ImageFilter = {
   title?: InputMaybe<Scalars['String']>;
 };
 
-export enum ImageOutput {
-  Jpeg = 'jpeg',
-  Png = 'png',
-  Webp = 'webp'
-}
-
 export enum ImageRotation {
   Auto = 'Auto',
   Rotate0 = 'Rotate0',
@@ -254,8 +248,6 @@ export enum ImageSort {
 
 export type ImageTransformation = {
   height?: InputMaybe<Scalars['Int']>;
-  output?: InputMaybe<ImageOutput>;
-  quality?: InputMaybe<Scalars['Float']>;
   rotation?: InputMaybe<ImageRotation>;
   width?: InputMaybe<Scalars['Int']>;
 };

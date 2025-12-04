@@ -87,8 +87,6 @@ input ImageTransformation {
   width: Int
   height: Int
   rotation: ImageRotation
-  quality: Float
-  output: ImageOutput
 }
 
 enum ImageRotation {
@@ -97,12 +95,6 @@ enum ImageRotation {
   Rotate90
   Rotate180
   Rotate270
-}
-
-enum ImageOutput {
-  png
-  jpeg
-  webp
 }
 
 """A hexidecimal color value."""
