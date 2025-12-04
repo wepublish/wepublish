@@ -10,7 +10,7 @@ import { TSRIAuthor } from '../src/components/tsri-author';
 import { TSRIAuthorLinks } from '../src/components/tsri-author-links';
 import { TSRIAuthorList } from '../src/components/tsri-author-list';
 import { TsriBanner } from '../src/components/tsri-banner';
-import { TsriBaseTeaser } from '../src/components/tsri-base-teaser';
+import { TsriBaseTeaser } from '../src/components/teasers/tsri-base-teaser';
 import { TsriBreakBlock } from '../src/components/tsri-break-block';
 import { TsriContextBox } from '../src/components/tsri-context-box';
 import { TSRIFooter } from '../src/components/tsri-footer';
