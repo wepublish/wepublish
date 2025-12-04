@@ -1,5 +1,5 @@
-query Prompt($query: String!, $chatId: String) {
-  prompt(query: $query, chatId: $chatId) {
+query PromptHTML($query: String!, $chatId: String) {
+  promptHTML(query: $query, chatId: $chatId) {
     chatId
     message
   }

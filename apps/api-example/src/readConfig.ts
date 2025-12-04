@@ -152,6 +152,11 @@ type ProLitteris = ProLitterisCountPixelProps & {
 type TrackingPixels = ProLitteris &
   Omit<TrackingPixelProvider, 'createPixelUri'>;
 
+type V0 = {
+  apiKey: string;
+  systemPrompt: string;
+};
+
 type Config = {
   general: General;
   mailProvider: MailProvider;
@@ -160,6 +165,7 @@ type Config = {
   challenge: AlgebraicCaptcha | Turnstile;
   trackingPixelProviders: TrackingPixels[];
   ga?: GoogleAnalyticsConfig;
+  v0?: V0;
 };
 
 function extractReplacer(input: string): string[] {

@@ -1,7 +1,7 @@
 import { ArgsType, Field, ObjectType } from '@nestjs/graphql';
 
 @ArgsType()
-export class QueryArgs {
+export class PromptHTMLArgs {
   @Field()
   query!: string;
 
@@ -12,8 +12,8 @@ export class QueryArgs {
 @ObjectType()
 export class Chat {
   @Field()
-  chatId: string;
+  chatId!: string;
 
   @Field()
-  message: string;
+  message!: string;
 }

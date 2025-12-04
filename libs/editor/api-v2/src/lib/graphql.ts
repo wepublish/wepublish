@@ -2940,7 +2940,7 @@ export type Query = {
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
   primaryBanner?: Maybe<Banner>;
-  prompt: Chat;
+  promptHTML: Chat;
   provider: MailProviderModel;
   /** This query returns the comment rating system. */
   ratingSystem: FullCommentRatingSystem;
@@ -3238,7 +3238,7 @@ export type QueryPrimaryBannerArgs = {
 };
 
 
-export type QueryPromptArgs = {
+export type QueryPromptHtmlArgs = {
   chatId?: InputMaybe<Scalars['String']>;
   query: Scalars['String'];
 };
@@ -5168,13 +5168,13 @@ export type DeleteUserRoleMutationVariables = Exact<{
 
 export type DeleteUserRoleMutation = { __typename?: 'Mutation', deleteUserRole: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } };
 
-export type PromptQueryVariables = Exact<{
+export type PromptHtmlQueryVariables = Exact<{
   query: Scalars['String'];
   chatId?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type PromptQuery = { __typename?: 'Query', prompt: { __typename?: 'Chat', chatId: string, message: string } };
+export type PromptHtmlQuery = { __typename?: 'Query', promptHTML: { __typename?: 'Chat', chatId: string, message: string } };
 
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -10513,9 +10513,9 @@ export function useDeleteUserRoleMutation(baseOptions?: Apollo.MutationHookOptio
 export type DeleteUserRoleMutationHookResult = ReturnType<typeof useDeleteUserRoleMutation>;
 export type DeleteUserRoleMutationResult = Apollo.MutationResult<DeleteUserRoleMutation>;
 export type DeleteUserRoleMutationOptions = Apollo.BaseMutationOptions<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>;
-export const PromptDocument = gql`
-    query Prompt($query: String!, $chatId: String) {
-  prompt(query: $query, chatId: $chatId) {
+export const PromptHtmlDocument = gql`
+    query PromptHTML($query: String!, $chatId: String) {
+  promptHTML(query: $query, chatId: $chatId) {
     chatId
     message
   }
@@ -10523,33 +10523,33 @@ export const PromptDocument = gql`
     `;
 
 /**
- * __usePromptQuery__
+ * __usePromptHtmlQuery__
  *
- * To run a query within a React component, call `usePromptQuery` and pass it any options that fit your needs.
- * When your component renders, `usePromptQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `usePromptHtmlQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePromptHtmlQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = usePromptQuery({
+ * const { data, loading, error } = usePromptHtmlQuery({
  *   variables: {
  *      query: // value for 'query'
  *      chatId: // value for 'chatId'
  *   },
  * });
  */
-export function usePromptQuery(baseOptions: Apollo.QueryHookOptions<PromptQuery, PromptQueryVariables>) {
+export function usePromptHtmlQuery(baseOptions: Apollo.QueryHookOptions<PromptHtmlQuery, PromptHtmlQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PromptQuery, PromptQueryVariables>(PromptDocument, options);
+        return Apollo.useQuery<PromptHtmlQuery, PromptHtmlQueryVariables>(PromptHtmlDocument, options);
       }
-export function usePromptLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PromptQuery, PromptQueryVariables>) {
+export function usePromptHtmlLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PromptHtmlQuery, PromptHtmlQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PromptQuery, PromptQueryVariables>(PromptDocument, options);
+          return Apollo.useLazyQuery<PromptHtmlQuery, PromptHtmlQueryVariables>(PromptHtmlDocument, options);
         }
-export type PromptQueryHookResult = ReturnType<typeof usePromptQuery>;
-export type PromptLazyQueryHookResult = ReturnType<typeof usePromptLazyQuery>;
-export type PromptQueryResult = Apollo.QueryResult<PromptQuery, PromptQueryVariables>;
+export type PromptHtmlQueryHookResult = ReturnType<typeof usePromptHtmlQuery>;
+export type PromptHtmlLazyQueryHookResult = ReturnType<typeof usePromptHtmlLazyQuery>;
+export type PromptHtmlQueryResult = Apollo.QueryResult<PromptHtmlQuery, PromptHtmlQueryVariables>;
 export const VersionInformationDocument = gql`
     query VersionInformation {
   versionInformation {
