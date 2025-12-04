@@ -23,7 +23,10 @@ import { cond, T } from 'ramda';
 import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { isDailyBriefingTeaser } from './daily-briefing/daily-briefing-teaser';
+import { isDailyBriefingTeaser } from './daily-briefing-teaser';
+import { isTeaserMoreAbout, TeaserMoreAbout } from './teaser-more-about';
+import { isTeaserNoImage, TeaserNoImage } from './teaser-no-image';
+import { isTeaserTwoRow, TeaserTwoRow } from './teaser-two-row';
 
 export const TeaserWrapper = styled('li')<FlexAlignment>`
   list-style: none;
@@ -73,7 +76,9 @@ export const TeaserImageWrapper = styled('figure')`
 
 export const TeaserImageInnerWrapper = styled('picture')``;
 
-export const TeaserImage = styled(Image)``;
+export const TeaserImage = styled(Image)`
+  max-height: unset;
+`;
 
 export const TeaserImageCaption = styled('figcaption')``;
 
@@ -86,7 +91,7 @@ export const TeaserPreTitle = styled('div')`
     font-size: calc((9 * 100cqw / 16) * 0.045) !important;
     line-height: calc((9 * 100cqw / 16) * 0.045) !important;
     font-weight: bold;
-    padding: 0 0.5cqw;
+    padding: 0.5cqw;
   }
 `;
 
@@ -328,14 +333,23 @@ export const TsriTeaser = ({
   );
 };
 
-/*
-export const TsriBaseTeaser = cond([
-  [isDailyBriefingTeaser, props => <DailyBriefingTeaser {...props} />],
-  [T, props => <TsriTeaser {...props} />],
-]);
-*/
+export enum TsriTeaserTypes {
+  DailyBriefing = 'DailyBriefing',
+  FullsizeImage = 'FullsizeImage',
+  MoreAbout = 'MoreAbout',
+  NoImage = 'NoImage',
+  TwoColAuthor = 'TwoColAuthor',
+  TwoCol = 'TwoCol',
+  TwoRowAuthor = 'TwoRowAuthor',
+  TwoRow = 'TwoRow',
+  Default = 'TsriBaseTeaser',
+}
 
 export const TsriBaseTeaser = cond([
+  //[isDailyBriefingTeaser, props => <DailyBriefingTeaser {...props} />],
+  [isTeaserNoImage, props => <TeaserNoImage {...props} />],
+  [isTeaserMoreAbout, props => <TeaserMoreAbout {...props} />],
+  [isTeaserTwoRow, props => <TeaserTwoRow {...props} />],
   [isDailyBriefingTeaser, props => <></>],
   [T, props => <TsriTeaser {...props} />],
 ]);
