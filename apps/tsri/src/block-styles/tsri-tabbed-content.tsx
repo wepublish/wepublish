@@ -28,7 +28,7 @@ import {
   TeaserTime,
   TeaserTitle,
   TeaserWrapper,
-} from '../components/tsri-base-teaser';
+} from '../components/teasers/tsri-base-teaser';
 
 export const TabPanel = styled(TabPanelDefault)`
   background: linear-gradient(
@@ -52,6 +52,7 @@ export const TabPanel = styled(TabPanelDefault)`
   }
 
   ${TeaserSlotsBlockTeasers} {
+    /*
     display: grid;
 
     @container tabbed-content (width > 700px) {
@@ -60,6 +61,7 @@ export const TabPanel = styled(TabPanelDefault)`
       column-gap: 2.2cqw;
       row-gap: 1.77cqw;
     }
+      */
   }
 
   ${TeaserWrapper} {
@@ -259,6 +261,7 @@ export const TabPanel = styled(TabPanelDefault)`
 export const TabbedContent = ({
   className,
   nestedBlocks,
+  blockStyle,
 }: BuilderBlockStyleProps['TabbedContent']) => {
   const {
     blocks: { Renderer },
@@ -298,7 +301,12 @@ export const TabbedContent = ({
           key={index}
         >
           <Renderer
-            block={nestedBlock.block as BlockContent}
+            block={
+              {
+                ...nestedBlock.block,
+                blockStyle: 'ArchiveTopic',
+              } as BlockContent
+            }
             type="Article"
             index={index}
             count={nestedBlocks.length}
