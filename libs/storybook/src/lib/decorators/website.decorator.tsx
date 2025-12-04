@@ -12,6 +12,7 @@ import { SessionTokenContext } from '@wepublish/authentication/website';
 
 import { WebsiteProvider } from '@wepublish/website';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
+import { act } from '@testing-library/react';
 
 const SessionProvider = memo<PropsWithChildren>(({ children }) => {
   const [token, setToken] = useState<SessionWithTokenWithoutUser | null>();
@@ -19,20 +20,22 @@ const SessionProvider = memo<PropsWithChildren>(({ children }) => {
 
   const setTokenAndGetMe = useCallback(
     async (newToken: SessionWithTokenWithoutUser | null) => {
-      setToken(newToken);
+      await act(() => setToken(newToken));
 
       if (newToken) {
-        setUser({
-          id: '1234-1234',
-          firstName: 'Foo',
-          name: 'Bar',
-          email: 'foobar@example.com',
-          paymentProviderCustomers: [],
-          properties: [],
-          permissions: [],
-        });
+        await act(() =>
+          setUser({
+            id: '1234-1234',
+            firstName: 'Foo',
+            name: 'Bar',
+            email: 'foobar@example.com',
+            paymentProviderCustomers: [],
+            properties: [],
+            permissions: [],
+          })
+        );
       } else {
-        setUser(null);
+        await act(() => setUser(null));
       }
     },
     []
