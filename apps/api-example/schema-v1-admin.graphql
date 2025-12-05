@@ -22,8 +22,6 @@ type Query {
   paymentProviders: [PaymentProvider!]!
   invoice(id: String): Invoice
   invoices(cursor: String, take: Int = 10, skip: Int = 0, filter: InvoiceFilter, sort: InvoiceSort = modifiedAt, order: SortOrder = Descending): InvoiceConnection!
-  payment(id: String): Payment
-  payments(cursor: String, take: Int = 10, skip: Int = 0, filter: PaymentFilter, sort: PaymentSort = modifiedAt, order: SortOrder = Descending): PaymentConnection!
   ratingSystem: FullCommentRatingSystem!
   polls(cursor: String, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
   poll(id: String): FullPoll
@@ -554,44 +552,6 @@ enum InvoiceSort {
   paidAt
 }
 
-type Payment {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  intentID: String
-  intentSecret: String
-  state: PaymentState!
-  invoice: Invoice!
-  intentData: String
-  paymentMethod: PaymentMethod!
-  paymentData: String
-}
-
-enum PaymentState {
-  created
-  submitted
-  requiresUserAction
-  processing
-  paid
-  canceled
-  declined
-}
-
-type PaymentConnection {
-  nodes: [Payment!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input PaymentFilter {
-  intentID: String
-}
-
-enum PaymentSort {
-  createdAt
-  modifiedAt
-}
-
 type FullCommentRatingSystem {
   id: String!
   name: String
@@ -883,6 +843,29 @@ input InvoiceItemInput {
   amount: Int!
   createdAt: DateTime!
   modifiedAt: DateTime!
+}
+
+type Payment {
+  id: String!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  intentID: String
+  intentSecret: String
+  state: PaymentState!
+  invoice: Invoice!
+  intentData: String
+  paymentMethod: PaymentMethod!
+  paymentData: String
+}
+
+enum PaymentState {
+  created
+  submitted
+  requiresUserAction
+  processing
+  paid
+  canceled
+  declined
 }
 
 input PaymentFromInvoiceInput {

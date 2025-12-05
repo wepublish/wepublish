@@ -15,7 +15,6 @@ import { CommentSort } from '../db/comment';
 import { ImageSort } from '../db/image';
 import { InvoiceSort } from '../db/invoice';
 import { MemberPlanSort } from '../db/memberPlan';
-import { PaymentSort } from '../db/payment';
 import { SubscriptionSort } from '../db/subscription';
 import { UserSort } from '../db/user';
 import { GivenTokeExpiryToLongError, UserIdNotFound } from '../error';
@@ -62,20 +61,12 @@ import {
   GraphQLMemberPlanFilter,
   GraphQLMemberPlanSort,
 } from './memberPlan';
-import {
-  GraphQLPayment,
-  GraphQLPaymentConnection,
-  GraphQLPaymentFilter,
-  GraphQLPaymentSort,
-} from './payment';
+
 import {
   getPaymentMethodById,
   getPaymentMethods,
 } from './payment-method/payment-method.private-queries';
-import {
-  getAdminPayments,
-  getPaymentById,
-} from './payment/payment.private-queries';
+
 import { GraphQLPaymentMethod, GraphQLPaymentProvider } from './paymentMethod';
 import { GraphQLPeerProfile } from './peer';
 import {
@@ -523,46 +514,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           take,
           authenticate,
           invoice
-        ),
-    },
-
-    // Payment
-    // ======
-
-    payment: {
-      type: GraphQLPayment,
-      args: { id: { type: GraphQLString } },
-      resolve: (root, { id }, { authenticate, loaders: { paymentsByID } }) =>
-        getPaymentById(id, authenticate, paymentsByID),
-    },
-
-    payments: {
-      type: new GraphQLNonNull(GraphQLPaymentConnection),
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 10 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLPaymentFilter },
-        sort: {
-          type: GraphQLPaymentSort,
-          defaultValue: PaymentSort.ModifiedAt,
-        },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, cursor, take, skip },
-        { authenticate, prisma: { payment } }
-      ) =>
-        getAdminPayments(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          payment
         ),
     },
 
