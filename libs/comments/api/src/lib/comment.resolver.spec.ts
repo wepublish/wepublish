@@ -18,16 +18,12 @@ import { RatingSystemService } from './rating-system/rating-system.service';
 import { CommentTagDataloader } from '@wepublish/tag/api';
 import { Descendant } from 'slate';
 import request from 'supertest';
-import {
-  Comment,
-  CommentAuthorType,
-  CommentItemType as CommentModelItemType,
-  CommentState,
-} from './comment.model';
+import { Comment, CommentAuthorType } from './comment.model';
 import { ImageDataloaderService } from '@wepublish/image/api';
 import { UserDataloaderService } from '@wepublish/user/api';
 import { ArticleDataloaderService } from '@wepublish/article/api';
 import { PageDataloaderService } from '@wepublish/page/api';
+import { CommentState } from '@prisma/client';
 
 const mockUser = {
   id: 'userId',
@@ -64,7 +60,7 @@ const mockComment: Comment = {
   tags: [],
   authorType: CommentAuthorType.author,
   itemID: 'item-id',
-  itemType: CommentModelItemType.article,
+  itemType: CommentItemType.Article,
   state: CommentState.approved,
   createdAt: new Date('2002-12-29'),
   modifiedAt: new Date('2002-12-29'),

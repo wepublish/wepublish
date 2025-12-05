@@ -410,13 +410,14 @@ type Comment {
   createdAt: DateTime!
   featured: Boolean
   guestUserImage: Image
+  guestUserImageID: String
   guestUsername: String
   id: String!
   itemID: String!
   itemType: CommentItemType!
   lead: String
   modifiedAt: DateTime!
-  overriddenRatings: [overriddenRating!]!
+  overriddenRatings: [OverriddenRating!]!
   parentComment: Comment
   parentID: String
   rejectionReason: String
@@ -427,6 +428,7 @@ type Comment {
   title: String
   url: String!
   user: User
+  userID: String
   userRatings: [CommentRating!]!
 }
 
@@ -492,8 +494,15 @@ type CommentRating {
   disabled: Boolean
   fingerprint: String
   id: String!
+  modifiedAt: DateTime!
   userId: String
   value: Int!
+}
+
+type CommentRatingSystem {
+  answers: [CommentRatingSystemAnswer!]!
+  id: String!
+  name: String
 }
 
 type CommentRatingSystemAnswer {
@@ -944,12 +953,6 @@ type FocalPoint {
 input FocalPointInput {
   x: Float!
   y: Float!
-}
-
-type FullCommentRatingSystem {
-  answers: [CommentRatingSystemAnswer!]!
-  id: String!
-  name: String
 }
 
 type FullPoll {
@@ -1406,6 +1409,9 @@ type Mutation {
 
   """Creates a new peer."""
   createPeer(hostURL: String!, information: RichText, isDisabled: Boolean, name: String!, slug: String!, token: String!): Peer!
+
+  """Creates a rating system answer."""
+  createRatingSystemAnswer(answer: String, ratingSystemId: String!, type: RatingSystemType!): CommentRatingSystemAnswer!
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
 
@@ -1466,6 +1472,9 @@ type Mutation {
 
   """Delete poll votes"""
   deletePollVotes(ids: [String!]!): DeletePollVotesResult!
+
+  """Deletes a rating system answer."""
+  deleteRatingSystemAnswer(id: String!): CommentRatingSystemAnswer!
 
   """Delete an existing subscription flow"""
   deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
@@ -1579,6 +1588,9 @@ type Mutation {
   """Updates an existing peer."""
   updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
 
+  """Update the comment rating system."""
+  updateRatingSystem(answers: [UpdateCommentRatingSystemAnswerInput!], id: String!, name: String): CommentRatingSystem!
+
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
 
@@ -1646,6 +1658,11 @@ type NonDbProperty {
   key: String!
   public: Boolean!
   value: String!
+}
+
+type OverriddenRating {
+  answerId: String!
+  value: Int
 }
 
 type Page {
@@ -2265,7 +2282,7 @@ type Query {
   provider: MailProviderModel!
 
   """This query returns the comment rating system."""
-  ratingSystem: FullCommentRatingSystem!
+  ratingSystem: CommentRatingSystem!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "
   renewingSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
@@ -2820,6 +2837,12 @@ input UpdateBannerInput {
   title: String!
 }
 
+input UpdateCommentRatingSystemAnswerInput {
+  answer: String
+  id: String!
+  type: RatingSystemType
+}
+
 input UpdateCrowdfundingInput {
   additionalRevenue: Float
   countSubscriptionsFrom: DateTime
@@ -2974,9 +2997,4 @@ input YouTubeVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   videoID: String
-}
-
-type overriddenRating {
-  answerId: String!
-  value: Int
 }
