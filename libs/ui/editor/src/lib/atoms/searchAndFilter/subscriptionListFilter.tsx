@@ -7,8 +7,11 @@ import {
   SubscriptionDeactivationReason,
   SubscriptionFilter,
   useMemberPlanListQuery,
-  usePaymentMethodListQuery,
 } from '@wepublish/editor/api';
+import {
+  getApiClientV2,
+  usePaymentMethodListQuery,
+} from '@wepublish/editor/api-v2';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdClose } from 'react-icons/md';
@@ -34,10 +37,6 @@ const FormGroup = styled(Group)`
   margin-top: 15px;
 `;
 
-const FormControlLabelMarginLeft = styled(ControlLabel)`
-  margin-left: 10px;
-`;
-
 export interface SubscriptionListFilterProps {
   filter: SubscriptionFilter;
   isLoading: boolean;
@@ -61,14 +60,13 @@ export function SubscriptionListFilter({
     undefined
   );
 
-  /**
-   * fetch payment methods
-   */
+  const client = getApiClientV2();
   const {
     data: paymentMethodData,
     loading: isPaymentMethodLoading,
     error: paymentMethodLoadError,
   } = usePaymentMethodListQuery({
+    client,
     fetchPolicy: 'network-only',
   });
 

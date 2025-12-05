@@ -33,37 +33,9 @@ export class PaymentMethodService {
     });
   }
 
-  async deletePaymentMethodById(id: string) {
+  async deletePaymentMethod(id: string) {
     return this.prisma.paymentMethod.delete({
       where: { id },
-    });
-  }
-
-  @PrimeDataLoader(PaymentMethodDataloader)
-  async findActivePaymentMethodById(id: string) {
-    return this.prisma.paymentMethod.findFirst({
-      where: { id, active: true },
-    });
-  }
-
-  @PrimeDataLoader(PaymentMethodDataloader)
-  async findActivePaymentMethodBySlug(slug: string) {
-    return this.prisma.paymentMethod.findFirst({
-      where: { slug, active: true },
-    });
-  }
-
-  @PrimeDataLoader(PaymentMethodDataloader)
-  async getAvailablePaymentMethodsByIds(paymentMethodIds: string[]) {
-    return this.prisma.paymentMethod.findMany({
-      where: {
-        id: {
-          in: paymentMethodIds,
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
     });
   }
 }

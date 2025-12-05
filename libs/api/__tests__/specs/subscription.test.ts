@@ -12,14 +12,10 @@ import {
   PaymentMethod,
   PrismaClient,
   Subscription,
-  SubscriptionPeriod,
   User,
 } from '@prisma/client';
 import { PaymentPeriodicity } from '../api/public';
-import {
-  AlgebraicCaptchaChallenge,
-  TestingChallengeAnswer,
-} from '../../src/lib/challenges/algebraicCaptchaChallenge';
+import { AlgebraicCaptchaChallenge } from '../../src/lib/challenges/algebraicCaptchaChallenge';
 
 let testServerPrivate: ApolloServer;
 let prisma: PrismaClient;
@@ -30,8 +26,6 @@ let memberPlan: MemberPlan | undefined;
 let user: User | undefined;
 let subscription: Subscription | undefined;
 let invoice: Invoice | undefined;
-let subsccriptionPeriod: SubscriptionPeriod | undefined;
-let testingChallengeResponse: TestingChallengeAnswer | undefined;
 
 beforeAll(async () => {
   try {
@@ -113,19 +107,6 @@ beforeAll(async () => {
         scheduledDeactivationAt: new Date(),
       },
     });
-
-    subsccriptionPeriod = await prisma.subscriptionPeriod.create({
-      data: {
-        startsAt: new Date(),
-        endsAt: new Date(),
-        paymentPeriodicity: 'yearly',
-        amount: 24,
-        invoice: { connect: { id: invoice.id } },
-      },
-    });
-
-    await challenge.generateChallenge(true);
-    testingChallengeResponse = challenge.getTestingChallengeAnswer();
   } catch (error) {
     console.log('Error', error);
     throw new Error(error.toString());

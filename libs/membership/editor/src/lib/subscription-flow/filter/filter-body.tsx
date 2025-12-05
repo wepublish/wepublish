@@ -3,9 +3,9 @@ import { FullMemberPlanFragment } from '@wepublish/editor/api';
 import {
   ListPaymentMethodsQuery,
   PaymentPeriodicity,
-  SubscriptionFlowModel,
   CreateSubscriptionFlowMutationVariables,
   UpdateSubscriptionFlowMutationVariables,
+  SubscriptionFlowFragment,
 } from '@wepublish/editor/api-v2';
 import { useAuthorisation } from '@wepublish/ui/editor';
 import { useContext, useState } from 'react';
@@ -16,7 +16,7 @@ import { SubscriptionClientContext } from '../graphql-client-context';
 
 interface FilterBodyProps {
   memberPlan: FullMemberPlanFragment;
-  subscriptionFlow?: SubscriptionFlowModel;
+  subscriptionFlow?: SubscriptionFlowFragment;
   createNewFlow?: boolean;
   paymentMethods: ListPaymentMethodsQuery | undefined;
 }

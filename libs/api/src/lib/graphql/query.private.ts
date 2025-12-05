@@ -1,7 +1,4 @@
-import {
-  CanGetPaymentProviders,
-  CanLoginAsOtherUser,
-} from '@wepublish/permissions';
+import { CanLoginAsOtherUser } from '@wepublish/permissions';
 import { SortOrder } from '@wepublish/utils/api';
 import {
   GraphQLInt,
@@ -68,15 +65,11 @@ import {
   GraphQLPaymentFilter,
   GraphQLPaymentSort,
 } from './payment';
-import {
-  getPaymentMethodById,
-  getPaymentMethods,
-} from './payment-method/payment-method.private-queries';
+
 import {
   getAdminPayments,
   getPaymentById,
 } from './payment/payment.private-queries';
-import { GraphQLPaymentMethod, GraphQLPaymentProvider } from './paymentMethod';
 import { GraphQLPeerProfile } from './peer';
 import {
   getAdminPeerProfile,
@@ -448,42 +441,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           authenticate,
           memberPlan
         ),
-    },
-
-    // PaymentMethod
-    // ======
-
-    paymentMethod: {
-      type: GraphQLPaymentMethod,
-      args: { id: { type: GraphQLString } },
-      resolve: (
-        root,
-        { id },
-        { authenticate, loaders: { paymentMethodsByID } }
-      ) => getPaymentMethodById(id, authenticate, paymentMethodsByID),
-    },
-
-    paymentMethods: {
-      type: new GraphQLNonNull(
-        new GraphQLList(new GraphQLNonNull(GraphQLPaymentMethod))
-      ),
-      resolve: (root, _, { authenticate, prisma: { paymentMethod } }) =>
-        getPaymentMethods(authenticate, paymentMethod),
-    },
-
-    paymentProviders: {
-      type: new GraphQLNonNull(
-        new GraphQLList(new GraphQLNonNull(GraphQLPaymentProvider))
-      ),
-      resolve(root, _, { authenticate, paymentProviders }) {
-        const { roles } = authenticate();
-        authorise(CanGetPaymentProviders, roles);
-
-        return paymentProviders.map(({ id, name }) => ({
-          id,
-          name,
-        }));
-      },
     },
 
     // Invoice

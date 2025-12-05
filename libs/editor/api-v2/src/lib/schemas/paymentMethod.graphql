@@ -1,0 +1,91 @@
+fragment FullPaymentProvider on PaymentProvider {
+  id
+  name
+}
+
+fragment FullPaymentMethod on PaymentMethod {
+  id
+  name
+  slug
+  createdAt
+  modifiedAt
+  gracePeriod
+  paymentProvider {
+    ...FullPaymentProvider
+  }
+  description
+  active
+  image {
+    ...FullImage
+  }
+}
+
+query PaymentProviderList {
+  paymentProviders {
+    ...FullPaymentProvider
+  }
+}
+
+query PaymentMethodList {
+  paymentMethods {
+    ...FullPaymentMethod
+  }
+}
+
+query PaymentMethod($id: String!) {
+  paymentMethod(id: $id) {
+    ...FullPaymentMethod
+  }
+}
+
+mutation CreatePaymentMethod(
+  $name: String!
+  $slug: Slug!
+  $description: String!
+  $paymentProviderID: String!
+  $gracePeriod: Int!
+  $imageId: String
+  $active: Boolean!
+) {
+  createPaymentMethod(
+    name: $name
+    slug: $slug
+    description: $description
+    paymentProviderID: $paymentProviderID
+    gracePeriod: $gracePeriod
+    imageId: $imageId
+    active: $active
+  ) {
+    ...FullPaymentMethod
+  }
+}
+
+mutation UpdatePaymentMethod(
+  $id: String!
+  $name: String
+  $slug: Slug
+  $description: String
+  $paymentProviderID: String
+  $gracePeriod: Int
+  $imageId: String
+  $active: Boolean
+) {
+  updatePaymentMethod(
+    id: $id
+    name: $name
+    slug: $slug
+    description: $description
+    paymentProviderID: $paymentProviderID
+    gracePeriod: $gracePeriod
+    imageId: $imageId
+    active: $active
+  ) {
+    ...FullPaymentMethod
+  }
+}
+
+mutation DeletePaymentMethod($id: String!) {
+  deletePaymentMethod(id: $id) {
+    ...FullPaymentMethod
+  }
+}

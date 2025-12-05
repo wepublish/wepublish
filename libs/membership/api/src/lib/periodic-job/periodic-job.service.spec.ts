@@ -17,10 +17,11 @@ import { SubscriptionFlowService } from '../subscription-flow/subscription-flow.
 import { SubscriptionService } from '../subscription/subscription.service';
 import {
   registerMailsModule,
-  registerPaymentsModule,
+  registerPaymentMethodModule,
   registerPrismaModule,
 } from '../testing/module-registrars';
 import { PeriodicJobService } from './periodic-job.service';
+import { PaymentsModule } from '@wepublish/payment/api';
 
 describe('PeriodicJobService', () => {
   let service: PeriodicJobService;
@@ -37,7 +38,8 @@ describe('PeriodicJobService', () => {
         PrismaModule,
         forwardRef(() => registerPrismaModule(prismaClient)),
         registerMailsModule(),
-        registerPaymentsModule(),
+        registerPaymentMethodModule(),
+        PaymentsModule,
       ],
       providers: [
         SubscriptionFlowService,

@@ -20,10 +20,11 @@ import request from 'supertest';
 import { SubscriptionService } from '../subscription/subscription.service';
 import {
   registerMailsModule,
-  registerPaymentsModule,
+  registerPaymentMethodModule,
 } from '../testing/module-registrars';
 import { SubscriptionFlowResolver } from './subscription-flow.resolver';
 import { SubscriptionFlowService } from './subscription-flow.service';
+import { PaymentsModule } from '@wepublish/payment/api';
 
 @Injectable()
 export class TestPermissionsGuard implements CanActivate {
@@ -138,7 +139,8 @@ const paymentMethodsQuery = `
     }),
     PrismaModule,
     registerMailsModule(),
-    registerPaymentsModule(),
+    registerPaymentMethodModule(),
+    PaymentsModule,
   ],
   providers: [
     SubscriptionFlowResolver,
@@ -161,7 +163,7 @@ export class AppUnauthenticatedModule {}
     }),
     PrismaModule,
     registerMailsModule(),
-    registerPaymentsModule(),
+    PaymentsModule,
   ],
   providers: [
     SubscriptionFlowResolver,

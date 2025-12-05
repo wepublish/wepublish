@@ -9,7 +9,7 @@ import { PaginatedType } from '@wepublish/utils/api';
 import { HasImage, Image } from '@wepublish/image/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { Descendant } from 'slate';
-import { PaymentMethod } from '@wepublish/payment-method/api';
+import { PaymentMethod } from '@wepublish/payment/api';
 import { Currency, PaymentPeriodicity, ProductType } from '@prisma/client';
 
 export enum MemberPlanSort {

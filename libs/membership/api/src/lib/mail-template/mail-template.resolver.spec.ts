@@ -16,8 +16,9 @@ import { PermissionsGuard } from '@wepublish/permissions/api';
 import request from 'supertest';
 import {
   registerMailsModule,
-  registerPaymentsModule,
+  registerPaymentMethodModule,
 } from '../testing/module-registrars';
+import { PaymentsModule } from '@wepublish/payment/api';
 
 const mailTemplatesQuery = `
   query MailTemplates {
@@ -88,7 +89,8 @@ const syncServiceMock = {
     }),
     PrismaModule,
     registerMailsModule(),
-    registerPaymentsModule(),
+    registerPaymentMethodModule(),
+    PaymentsModule,
   ],
   providers: [
     MailTemplatesResolver,

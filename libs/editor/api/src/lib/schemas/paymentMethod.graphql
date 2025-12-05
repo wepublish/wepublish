@@ -19,39 +19,3 @@ fragment FullPaymentMethod on PaymentMethod {
     ...FullImage
   }
 }
-
-query PaymentProviderList {
-  paymentProviders {
-    ...FullPaymentProvider
-  }
-}
-
-query PaymentMethodList {
-  paymentMethods {
-    ...FullPaymentMethod
-  }
-}
-
-query PaymentMethod($id: String!) {
-  paymentMethod(id: $id) {
-    ...FullPaymentMethod
-  }
-}
-
-mutation CreatePaymentMethod($input: PaymentMethodInput!) {
-  createPaymentMethod(input: $input) {
-    ...FullPaymentMethod
-  }
-}
-
-mutation UpdatePaymentMethod($id: String!, $input: PaymentMethodInput!) {
-  updatePaymentMethod(id: $id, input: $input) {
-    ...FullPaymentMethod
-  }
-}
-
-mutation DeletePaymentMethod($id: String!) {
-  deletePaymentMethod(id: $id) {
-    ...FullPaymentMethod
-  }
-}

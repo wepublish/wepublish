@@ -1,8 +1,9 @@
 import {
   FullPaymentMethodFragment,
+  getApiClientV2,
   useDeletePaymentMethodMutation,
   usePaymentMethodListQuery,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import {
   createCheckedPermissionComponent,
   DescriptionList,
@@ -57,16 +58,18 @@ function PaymentMethodList() {
   const [currentPaymentMethod, setCurrentPaymentMethod] =
     useState<FullPaymentMethodFragment>();
 
+  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
     refetch,
   } = usePaymentMethodListQuery({
+    client,
     fetchPolicy: 'network-only',
   });
 
   const [deletePaymentMethod, { loading: isDeleting }] =
-    useDeletePaymentMethodMutation();
+    useDeletePaymentMethodMutation({ client });
 
   useEffect(() => {
     if (isCreateRoute) {

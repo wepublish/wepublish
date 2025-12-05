@@ -1,5 +1,8 @@
 query SubscriptionFlows($defaultFlowOnly: Boolean!, $memberPlanId: String) {
-  subscriptionFlows(defaultFlowOnly: $defaultFlowOnly, memberPlanId: $memberPlanId) {
+  subscriptionFlows(
+    defaultFlowOnly: $defaultFlowOnly
+    memberPlanId: $memberPlanId
+  ) {
     ...SubscriptionFlow
   }
 }
@@ -135,13 +138,4 @@ fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
   }
   paymentPeriodicities
   forceAutoRenewal
-}
-
-fragment FullPaymentMethod on PaymentMethod {
-  id
-  paymentProviderID
-  name
-  slug
-  description
-  gracePeriod
 }
