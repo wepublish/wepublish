@@ -118,7 +118,7 @@ describe('PaymentMethodService', () => {
       createdAt: new Date('2023-01-01T00:00:00Z'),
       modifiedAt: new Date('2023-01-01T00:00:00Z'),
     });
-    await service.deletePaymentMethodById('1');
+    await service.deletePaymentMethod('1');
     expect(prismaMock.paymentMethod.delete).toHaveBeenCalled();
     expect(prismaMock.paymentMethod.delete.mock.calls[0]).toMatchSnapshot();
     expect(dataloader.prime).not.toHaveBeenCalled();

@@ -10,7 +10,11 @@ import {
   PaymentFromInvoiceInput,
   PaymentFromSubscriptionArgs,
 } from './payment.model';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import {
+  PAYMENT_METHOD_CONFIG,
+  PaymentMethodConfig,
+} from './payment-method/payment-method.config';
 
 interface CreatePaymentWithProvider {
   paymentMethodID: string;
@@ -24,9 +28,12 @@ interface CreatePaymentWithProvider {
 
 @Injectable()
 export class PaymentsService {
+  private readonly paymentProviders = this.config.paymentProviders;
+
   constructor(
-    readonly prisma: PrismaClient,
-    readonly paymentProviders: PaymentProvider[]
+    private prisma: PrismaClient,
+    @Inject(PAYMENT_METHOD_CONFIG)
+    private config: PaymentMethodConfig
   ) {}
 
   getProviders() {
@@ -53,7 +60,11 @@ export class PaymentsService {
         id,
       },
     });
-    if (!paymentMethode) return undefined;
+
+    if (!paymentMethode) {
+      return undefined;
+    }
+
     return this.paymentProviders.find(
       p => p.id === paymentMethode.paymentProviderID
     );

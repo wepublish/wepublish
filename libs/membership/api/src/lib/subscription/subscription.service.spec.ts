@@ -8,13 +8,13 @@ import {
 import nock from 'nock';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { PaymentsService } from '@wepublish/payment/api';
+import { PaymentsModule } from '@wepublish/payment/api';
 import { add, sub } from 'date-fns';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { SubscriptionFlowService } from '../subscription-flow/subscription-flow.service';
 import {
   registerMailsModule,
-  registerPaymentsModule,
+  registerPaymentMethodModule,
 } from '../testing/module-registrars';
 import { SubscriptionService } from './subscription.service';
 
@@ -99,7 +99,11 @@ describe('SubscriptionPaymentsService', () => {
       });
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [registerMailsModule(), registerPaymentsModule()],
+      imports: [
+        registerMailsModule(),
+        registerPaymentMethodModule(),
+        PaymentsModule,
+      ],
       providers: [
         SubscriptionFlowService,
         SubscriptionService,
@@ -110,11 +114,7 @@ describe('SubscriptionPaymentsService', () => {
       ],
     }).compile();
 
-    const paymentsService = module.get<PaymentsService>(PaymentsService);
-    subscriptionService = new SubscriptionService(
-      prismaMock as any,
-      paymentsService
-    );
+    subscriptionService = module.get<SubscriptionService>(SubscriptionService);
   });
 
   afterEach(async () => {

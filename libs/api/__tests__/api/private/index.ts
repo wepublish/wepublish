@@ -394,7 +394,6 @@ export type Mutation = {
   createInvoice?: Maybe<Invoice>;
   createMemberPlan?: Maybe<MemberPlan>;
   createPaymentFromInvoice?: Maybe<Payment>;
-  createPaymentMethod?: Maybe<PaymentMethod>;
   createPoll?: Maybe<PollWithAnswers>;
   createPollAnswer?: Maybe<PollAnswer>;
   createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
@@ -408,7 +407,6 @@ export type Mutation = {
   deleteImage?: Maybe<Image>;
   deleteInvoice?: Maybe<Invoice>;
   deleteMemberPlan?: Maybe<MemberPlan>;
-  deletePaymentMethod?: Maybe<PaymentMethod>;
   deletePoll?: Maybe<FullPoll>;
   deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
@@ -431,7 +429,6 @@ export type Mutation = {
   updateImage?: Maybe<Image>;
   updateInvoice?: Maybe<Invoice>;
   updateMemberPlan?: Maybe<MemberPlan>;
-  updatePaymentMethod?: Maybe<PaymentMethod>;
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
   updateRatingSystem: FullCommentRatingSystem;
@@ -473,11 +470,6 @@ export type MutationCreateMemberPlanArgs = {
 
 export type MutationCreatePaymentFromInvoiceArgs = {
   input: PaymentFromInvoiceInput;
-};
-
-
-export type MutationCreatePaymentMethodArgs = {
-  input: PaymentMethodInput;
 };
 
 
@@ -550,11 +542,6 @@ export type MutationDeleteInvoiceArgs = {
 
 
 export type MutationDeleteMemberPlanArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeletePaymentMethodArgs = {
   id: Scalars['String'];
 };
 
@@ -675,12 +662,6 @@ export type MutationUpdateMemberPlanArgs = {
 };
 
 
-export type MutationUpdatePaymentMethodArgs = {
-  id: Scalars['String'];
-  input: PaymentMethodInput;
-};
-
-
 export type MutationUpdatePeerProfileArgs = {
   input: PeerProfileInput;
 };
@@ -773,16 +754,6 @@ export type PaymentMethod = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   paymentProvider?: Maybe<PaymentProvider>;
-  slug: Scalars['Slug'];
-};
-
-export type PaymentMethodInput = {
-  active: Scalars['Boolean'];
-  description: Scalars['String'];
-  gracePeriod: Scalars['Int'];
-  imageId?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  paymentProviderID: Scalars['String'];
   slug: Scalars['Slug'];
 };
 
@@ -954,9 +925,6 @@ export type Query = {
   memberPlan?: Maybe<MemberPlan>;
   memberPlans: MemberPlanConnection;
   payment?: Maybe<Payment>;
-  paymentMethod?: Maybe<PaymentMethod>;
-  paymentMethods: Array<PaymentMethod>;
-  paymentProviders: Array<PaymentProvider>;
   payments: PaymentConnection;
   peerProfile: PeerProfile;
   poll?: Maybe<FullPoll>;
@@ -1041,11 +1009,6 @@ export type QueryMemberPlansArgs = {
 
 
 export type QueryPaymentArgs = {
-  id?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryPaymentMethodArgs = {
   id?: InputMaybe<Scalars['String']>;
 };
 
