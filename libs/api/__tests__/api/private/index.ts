@@ -416,7 +416,6 @@ export type Mutation = {
   deleteSubscription?: Maybe<Subscription>;
   deleteToken?: Maybe<CreatedToken>;
   deleteUser?: Maybe<User>;
-  importSubscription?: Maybe<Subscription>;
   markInvoiceAsPaid?: Maybe<Invoice>;
   rejectComment: Comment;
   renewSubscription?: Maybe<Invoice>;
@@ -591,11 +590,6 @@ export type MutationDeleteTokenArgs = {
 
 export type MutationDeleteUserArgs = {
   id: Scalars['String'];
-};
-
-
-export type MutationImportSubscriptionArgs = {
-  input: SubscriptionInput;
 };
 
 
