@@ -28,7 +28,7 @@ fragment FullCalculatedRating on CalculatedRating {
   }
 }
 
-fragment FullOverriddenRating on overriddenRating {
+fragment FullOverriddenRating on OverriddenRating {
   answerId
   value
 }
@@ -110,7 +110,7 @@ fragment FullRatingSystemAnswer on CommentRatingSystemAnswer {
   ratingSystemId
 }
 
-fragment FullRatingSystem on FullCommentRatingSystem {
+fragment FullRatingSystem on CommentRatingSystem {
   id
   name
 

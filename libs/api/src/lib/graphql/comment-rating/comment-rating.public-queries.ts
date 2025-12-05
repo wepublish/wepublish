@@ -1,16 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { Context } from '../../context';
 
-export const getRatingSystem = (
-  commentRatingSystem: PrismaClient['commentRatingSystem']
-) => {
-  return commentRatingSystem.findFirst({
-    include: {
-      answers: true,
-    },
-  });
-};
-
 export const userCommentRating = async (
   commentId: string,
   optionalAuthenticateUser: Context['optionalAuthenticateUser'],
