@@ -278,7 +278,10 @@
         "edit": "Editer l’HTML",
         "label": "HTML",
         "placeholder": "Copiez votre bloc HTML ici..",
-        "warning": "Veuillez noter que l’utilisation d’HTML personnalisé peut à l’utilisateur·trice ou rompre la mise en page. Veuillez vous assurer que le HTML que vous fournissez est exempt de scripts malveillants et qu’il est structuré correctement."
+        "warning": "Veuillez noter que l’utilisation d’HTML personnalisé peut à l’utilisateur·trice ou rompre la mise en page. Veuillez vous assurer que le HTML que vous fournissez est exempt de scripts malveillants et qu’il est structuré correctement.",
+        "generate": "Générez votre HTML via l'IA",
+        "prompt": "Envoyer le prompt",
+        "promptSuccess": "HTML généré avec succès et bloc mis à jour. L'historique du chat est enregistré et vous pouvez continuer la conversation."
       },
       "subscribe": {
         "label": "S'abonner",
