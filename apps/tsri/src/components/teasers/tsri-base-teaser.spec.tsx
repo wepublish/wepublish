@@ -1,7 +1,7 @@
 import { composeStories } from '@storybook/react';
 import { render } from '@testing-library/react';
 
-import { WithWebsiteBuilderProvider } from '../with-website-builder-provider';
+import { WithWebsiteBuilderProvider } from '../../with-website-builder-provider';
 import * as stories from './tsri-base-teaser.stories';
 
 jest.mock('next/font/google', () => ({
