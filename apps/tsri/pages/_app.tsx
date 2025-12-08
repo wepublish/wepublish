@@ -27,16 +27,15 @@ import { previewLink } from '@wepublish/website/admin';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
 import { createWithV1ApiClient } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import deTranlations from '@wepublish/website/translations/de.json';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
-import resourcesToBackend from 'i18next-resources-to-backend';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
+import deOverriden from '../locales/deOverriden.json';
 
 import { TsriArticleDate } from '../src/components/tsri-article-date';
 import { TsriArticleMeta } from '../src/components/tsri-article-meta';
@@ -55,7 +54,8 @@ setDefaultOptions({
   locale: de,
 });
 
-initWePublishTranslator()
+initWePublishTranslator(deOverriden);
+/*
   .use(resourcesToBackend(() => deTranlations))
   .init({
     partialBundledLanguages: true,
@@ -69,6 +69,7 @@ initWePublishTranslator()
       de: { zod: deTranlations.zod },
     },
   });
+*/
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
