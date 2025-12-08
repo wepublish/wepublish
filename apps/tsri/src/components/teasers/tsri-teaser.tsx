@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Chip, css, Typography } from '@mui/material';
 import {
-  selectTeaserAuthors,
+  //selectTeaserAuthors,
   selectTeaserDate,
   selectTeaserImage,
   selectTeaserLead,
@@ -13,17 +13,36 @@ import {
   selectTeaserUrl,
 } from '@wepublish/block-content/website';
 import {} from '@wepublish/block-content/website';
-import { FlexAlignment } from '@wepublish/website/api';
+import {
+  FlexAlignment,
+  FullImageFragment,
+  Teaser as TeaserType,
+} from '@wepublish/website/api';
 import {
   BuilderTeaserProps,
   Image,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { cond, T } from 'ramda';
 import { PropsWithChildren } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
-import { isDailyBriefingTeaser } from './daily-briefing/daily-briefing-teaser';
+export const selectTeaserAuthors = (teaser: TeaserType) => {
+  switch (teaser.__typename) {
+    case 'PageTeaser': {
+      return null;
+    }
+
+    case 'ArticleTeaser': {
+      return teaser.article?.latest.authors.filter(
+        author => !author.hideOnTeaser
+      );
+    }
+
+    case 'EventTeaser':
+    case 'CustomTeaser':
+      return null;
+  }
+};
 
 export const TeaserWrapper = styled('li')<FlexAlignment>`
   list-style: none;
@@ -73,7 +92,23 @@ export const TeaserImageWrapper = styled('figure')`
 
 export const TeaserImageInnerWrapper = styled('picture')``;
 
-export const TeaserImage = styled(Image)``;
+export const TeaserImage = styled(Image)`
+  max-height: unset;
+`;
+
+export const TeaserAuthorImageWrapper = styled('figure')`
+  grid-row: 1 / 6;
+  grid-column: 1/3;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  z-index: -1;
+  display: none;
+`;
+
+export const TeaserAuthorImage = styled(Image)`
+  max-height: unset;
+`;
 
 export const TeaserImageCaption = styled('figcaption')``;
 
@@ -86,7 +121,7 @@ export const TeaserPreTitle = styled('div')`
     font-size: calc((9 * 100cqw / 16) * 0.045) !important;
     line-height: calc((9 * 100cqw / 16) * 0.045) !important;
     font-weight: bold;
-    padding: 0 0.5cqw;
+    padding: 0.5cqw;
   }
 `;
 
@@ -96,9 +131,7 @@ export const TeaserContentWrapper = styled('article')`
   grid-template-rows: 38.5% 5.75% 42.5% 7.5% 6.75%;
   grid-template-columns: 50% 50%;
   gap: 0;
-  @container teaser (width > 200px) {
-    border-radius: calc((9 * 100cqw / 16) * 0.03);
-  }
+  border-radius: calc((9 * 100cqw / 16) * 0.03);
 
   &:hover {
     ${TeaserPreTitle} {
@@ -117,7 +150,7 @@ export const TeaserTitle = styled('h1')`
   @container teaser (width > 200px) {
     font-size: calc((9 * 100cqw / 16) * 0.08) !important;
     line-height: 1.05 !important;
-    padding: 0 0.5cqw;
+    padding: 1.5cqw 1.5cqw 2.2cqw;
   }
 `;
 
@@ -126,6 +159,10 @@ export const TeaserLead = styled('p')`
 `;
 
 export const TeaserAuthors = styled('span')``;
+
+export const TeaserAuthorTextWrapper = styled('span')``;
+
+export const TeaserAuthorWrapper = styled('span')``;
 
 export const TeaserPreTitleNoContent = styled('div')``;
 
@@ -140,18 +177,18 @@ export const TeaserMetadata = styled('div')`
   grid-column: 2 / 3;
   background-color: white;
   margin: 0;
-  @container teaser (width > 200px) {
-    font-size: calc((9 * 100cqw / 16) * 0.04) !important;
-    font-weight: bold;
-    padding: 0 0.5cqw;
-  }
+  font-size: calc((9 * 100cqw / 16) * 0.04) !important;
+  font-weight: bold;
+  padding: 0 0.5cqw;
 `;
 
 export const TeaserTime = styled('time')``;
 
-export const TeaserTags = styled('div')``;
+export const TeaserTags = styled('div')`
+  display: none;
+`;
 
-const TeaserContent = ({
+export const TeaserContent = ({
   href,
   className,
   children,
@@ -216,7 +253,10 @@ export const TsriTeaser = ({
 
   return (
     true && (
-      <TeaserWrapper {...alignment}>
+      <TeaserWrapper
+        {...alignment}
+        className={className}
+      >
         <TeaserContent
           href={href}
           target={target}
@@ -267,7 +307,7 @@ export const TsriTeaser = ({
           {/* image start */}
           <TeaserImageWrapper>
             <TeaserImageInnerWrapper>
-              {image && <TeaserImage image={image} />}
+              {image && <TeaserImage image={image as FullImageFragment} />}
               {peerLogo && (
                 <TeaserPeerLogo
                   image={peerLogo}
@@ -276,9 +316,28 @@ export const TsriTeaser = ({
                 />
               )}
             </TeaserImageInnerWrapper>
-            <TeaserImageCaption>{blockStyle}</TeaserImageCaption>
+            <TeaserImageCaption>
+              {teaser?.image?.description}
+            </TeaserImageCaption>
           </TeaserImageWrapper>
           {/* image end */}
+
+          {/* author image start */}
+          <TeaserAuthorImageWrapper>
+            <TeaserImageInnerWrapper>
+              {image && authors && authors?.length && (
+                <TeaserAuthorImage
+                  image={
+                    authors.find(author => !!author.image) ?
+                      (authors.find(author => !!author.image)
+                        ?.image as FullImageFragment)
+                    : image
+                  }
+                />
+              )}
+            </TeaserImageInnerWrapper>
+          </TeaserAuthorImageWrapper>
+          {/* author image end */}
 
           {/* meta start */}
           <Typography
@@ -287,9 +346,18 @@ export const TsriTeaser = ({
           >
             {authors && authors?.length ?
               <TeaserAuthors>
-                {t('teaser.author.text', {
-                  authors: authors?.join(t('teaser.author.seperator')),
-                })}
+                <Trans
+                  i18nKey="teaser.author.text"
+                  values={{
+                    authors: authors
+                      ?.map(author => author.name)
+                      .join(t('teaser.author.seperator')),
+                  }}
+                  components={{
+                    TeaserAuthorTextWrapper: <TeaserAuthorTextWrapper />,
+                    TeaserAuthorWrapper: <TeaserAuthorWrapper />,
+                  }}
+                />
               </TeaserAuthors>
             : null}
 
@@ -327,15 +395,3 @@ export const TsriTeaser = ({
     )
   );
 };
-
-/*
-export const TsriBaseTeaser = cond([
-  [isDailyBriefingTeaser, props => <DailyBriefingTeaser {...props} />],
-  [T, props => <TsriTeaser {...props} />],
-]);
-*/
-
-export const TsriBaseTeaser = cond([
-  [isDailyBriefingTeaser, props => <></>],
-  [T, props => <TsriTeaser {...props} />],
-]);

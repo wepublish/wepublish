@@ -11,7 +11,7 @@ import { cond, T } from 'ramda';
 import {
   DailyBriefingTeaser,
   isDailyBriefingTeaser,
-} from './daily-briefing/daily-briefing-teaser';
+} from './teasers/daily-briefing-teaser';
 
 const OverridenTeaser = styled(BaseTeaser)`
   &,
