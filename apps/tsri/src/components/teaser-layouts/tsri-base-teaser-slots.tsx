@@ -3,6 +3,7 @@ import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { cond, T } from 'ramda';
 
 import {
+  alignmentForTeaserBlock,
   isTeaserSlotsArchiveTopic,
   teaserBlockStyleByIndex,
   TeaserSlotsArchiveTopic,
@@ -17,13 +18,29 @@ import {
   teaserBlockStyleByIndex as teaserBlockStyleByIndexWithTwoCol,
   TeaserSlotsArchiveTopicWithTwoCol,
 } from './teaser-slots-archive-topic-with-two-col';
-
+import {
+  alignmentForTeaserBlock as alignmentForTeaserBlockFrontTop,
+  isTeaserSlotsFrontTop,
+  teaserBlockStyleByIndex as teaserBlockStyleByIndexFrontTop,
+  TeaserSlotsFrontTop,
+} from './teaser-slots-front-top';
 export const TsriBaseTeaserSlots = cond([
+  [
+    isTeaserSlotsFrontTop,
+    (props: BuilderTeaserSlotsBlockProps) => (
+      <TeaserSlotsFrontTop
+        {...props}
+        alignmentForTeaserBlock={alignmentForTeaserBlockFrontTop}
+        teaserBlockStyleByIndex={teaserBlockStyleByIndexFrontTop}
+      />
+    ),
+  ],
   [
     isTeaserSlotsArchiveTopic,
     (props: BuilderTeaserSlotsBlockProps) => (
       <TeaserSlotsArchiveTopic
         {...props}
+        alignmentForTeaserBlock={alignmentForTeaserBlock}
         teaserBlockStyleByIndex={teaserBlockStyleByIndex}
       />
     ),
@@ -33,6 +50,7 @@ export const TsriBaseTeaserSlots = cond([
     (props: BuilderTeaserSlotsBlockProps) => (
       <TeaserSlotsArchiveTopicAuthor
         {...props}
+        alignmentForTeaserBlock={alignmentForTeaserBlock}
         teaserBlockStyleByIndex={teaserBlockStyleByIndexAuthor}
       />
     ),
@@ -42,6 +60,7 @@ export const TsriBaseTeaserSlots = cond([
     (props: BuilderTeaserSlotsBlockProps) => (
       <TeaserSlotsArchiveTopicWithTwoCol
         {...props}
+        alignmentForTeaserBlock={alignmentForTeaserBlock}
         teaserBlockStyleByIndex={teaserBlockStyleByIndexWithTwoCol}
       />
     ),
