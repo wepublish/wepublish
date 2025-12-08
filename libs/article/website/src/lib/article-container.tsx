@@ -18,6 +18,7 @@ export function ArticleContainer({
   id,
   slug,
   className,
+  style,
   children,
 }: ArticleContainerProps) {
   const { data, loading, error } = useArticleQuery({
@@ -43,6 +44,7 @@ export function ArticleContainer({
           showPaywall={showPaywall}
           hideContent={hideContent}
           className={className}
+          style={style}
         >
           {children}
         </Article>

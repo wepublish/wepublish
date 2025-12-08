@@ -437,7 +437,6 @@ const HauptstadtOpenInvoices = styled('div')`
 export interface ExtendedNavbarProps extends BuilderNavbarProps {
   isMenuOpen?: boolean;
   onMenuToggle?: (isOpen: boolean) => void;
-  navPaperClassName?: string;
 }
 
 export function HauptstadtNavbar({
@@ -455,7 +454,6 @@ export function HauptstadtNavbar({
   subscribeBtn = { href: '/mitmachen' },
   isMenuOpen: controlledIsMenuOpen,
   onMenuToggle,
-  navPaperClassName,
 }: ExtendedNavbarProps) {
   const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
 
@@ -646,7 +644,6 @@ export function HauptstadtNavbar({
           categories={categories}
           closeMenu={toggleMenu}
           isMenuOpen={isMenuOpen}
-          className={navPaperClassName}
         >
           {iconItems?.links.map((link, index) => (
             <Link

@@ -11,6 +11,7 @@ export const ArticleDateWrapper = styled('time')`
 export const ArticleDate = ({
   article,
   className,
+  style,
 }: BuilderArticleDateProps) => {
   const { date } = useWebsiteBuilder();
 
@@ -22,6 +23,7 @@ export const ArticleDate = ({
     <ArticleDateWrapper
       suppressHydrationWarning
       className={className}
+      style={style}
       dateTime={article.publishedAt}
     >
       {date.format(new Date(article.publishedAt), false)}

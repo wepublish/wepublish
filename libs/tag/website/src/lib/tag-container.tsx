@@ -17,6 +17,7 @@ export function TagContainer({
   tag,
   type,
   className,
+  style,
   variables,
   onVariablesChange,
 }: TagContainerProps) {
@@ -40,6 +41,7 @@ export function TagContainer({
   return (
     <Tag
       className={className}
+      style={style}
       tags={tags}
       articles={articles}
       variables={variables}

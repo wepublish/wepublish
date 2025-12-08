@@ -114,7 +114,7 @@ import {
   Pagination,
   Paragraph,
   Rating,
-  theme,
+  theme as defaultTheme,
   UnorderedList,
 } from '@wepublish/ui';
 import { ImageUpload, PersonalDataForm } from '@wepublish/user/website';
@@ -127,6 +127,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { ContentWrapperStyled } from '@wepublish/content/website';
 import { Paywall } from '@wepublish/paywall/website';
 import { Tag, TagSEO } from '@wepublish/tag/website';
+import { ThemeProviderProps } from '@emotion/react';
 
 export type WebsiteProps = PropsWithChildren;
 
@@ -180,137 +181,139 @@ const globalStyles = (
   />
 );
 
-export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
-  <ThemeProvider theme={theme}>
-    <IconContext.Provider value={{}}>
-      <LocalizationProvider
-        dateAdapter={AdapterDateFns}
-        adapterLocale={(getDefaultOptions() as { locale: Locale }).locale}
-      >
-        <WebsiteBuilderProvider
-          Author={Author}
-          AuthorLinks={AuthorLinks}
-          AuthorChip={AuthorChip}
-          AuthorList={AuthorList}
-          AuthorListItem={AuthorListItem}
-          ArticleList={ArticleList}
-          Article={Article}
-          ArticleDate={ArticleDate}
-          ArticleAuthors={ArticleAuthors}
-          ArticleMeta={ArticleTags}
-          ArticleSEO={ArticleSEO}
-          Banner={PageBanner}
-          PeerInformation={PeerInformation}
-          Navbar={Navbar}
-          Footer={Footer}
-          Event={Event}
-          EventSEO={EventSEO}
-          EventList={EventList}
-          EventListItem={EventListItem}
-          CommentList={CommentList}
-          CommentListItem={CommentListItem}
-          CommentListItemShare={CommentListItemShare}
-          CommentListItemChild={CommentListItemChild}
-          Comment={Comment}
-          CommentEditor={CommentEditor}
-          CommentRatings={CommentRatings}
-          Page={Page}
-          PageSEO={PageSEO}
-          LoginForm={LoginForm}
-          RegistrationForm={RegistrationForm}
-          PersonalDataForm={PersonalDataForm}
-          SubscriptionList={SubscriptionList}
-          SubscriptionListItem={SubscriptionListItem}
-          InvoiceList={InvoiceList}
-          InvoiceListItem={InvoiceListItem}
-          MemberPlanPicker={MemberPlanPicker}
-          MemberPlanItem={MemberPlanItem}
-          PeriodicityPicker={PeriodicityPicker}
-          PaymentAmount={PaymentAmountSlider}
-          PaymentMethodPicker={PaymentMethodPicker}
-          TransactionFee={TransactionFee}
-          Subscribe={Subscribe}
-          ContentWrapper={ContentWrapperStyled}
-          Paywall={Paywall}
-          Tag={Tag}
-          TagSEO={TagSEO}
-          elements={{
-            TextField,
-            Rating,
-            Alert,
-            Button,
-            IconButton,
-            Pagination,
-            H1,
-            H2,
-            H3,
-            H4,
-            H5,
-            H6,
-            Paragraph,
-            Link,
-            UnorderedList,
-            ImageUpload,
-            OrderedList,
-            ListItem,
-            Image,
-            Modal,
-          }}
-          blocks={{
-            Blocks,
-            Renderer: BlockRenderer,
-            Title: TitleBlock,
-            Break: BreakBlock,
-            Image: ImageBlock,
-            ImageGallery: ImageGalleryBlock,
-            Comment: CommentBlock,
-            Quote: QuoteBlock,
-            HTML: HtmlBlock,
-            Poll: PollBlock,
-            Crowdfunding: CrowdfundingBlock,
-            RichText: RichTextBlock,
-            Event: EventBlock,
-            Subscribe: SubscribeBlock,
-            Listicle: ListicleBlock,
-            TeaserGridFlex: TeaserGridFlexBlock,
-            TeaserGrid: TeaserGridBlock,
-            TeaserList: TeaserListBlock,
-            BaseTeaser,
-            TeaserSlots: TeaserSlotsBlock,
-            Teaser,
-            BildwurfAd: BildwurfAdBlock,
-            IFrame: IFrameBlock,
-            FacebookPost: FacebookPostBlock,
-            FacebookVideo: FacebookVideoBlock,
-            InstagramPost: InstagramPostBlock,
-            PolisConversation: PolisConversationBlock,
-            SoundCloudTrack: SoundCloudTrackBlock,
-            TikTokVideo: TikTokVideoBlock,
-            TwitterTweet: TwitterTweetBlock,
-            VimeoVideo: VimeoVideoBlock,
-            StreamableVideo: StreamableVideoBlock,
-            YouTubeVideo: YouTubeVideoBlock,
-          }}
-          blockStyles={{
-            Banner,
-            ContextBox,
-            FocusTeaser,
-            ImageSlider,
-            TeaserSlider,
-            AlternatingTeaser,
-            AlternatingTeaserGrid: AlternatingTeaserGridBlock,
-            AlternatingTeaserList: AlternatingTeaserListBlock,
-            AlternatingTeaserSlots: AlternatingTeaserSlotsBlock,
-          }}
-          richtext={{ RenderElement, RenderLeaf, RenderRichtext }}
-          date={{
-            format: dateFormatter,
-          }}
+export const WebsiteProvider = memo<WebsiteProps & Partial<ThemeProviderProps>>(
+  ({ children, theme = defaultTheme }) => (
+    <ThemeProvider theme={theme}>
+      <IconContext.Provider value={{}}>
+        <LocalizationProvider
+          dateAdapter={AdapterDateFns}
+          adapterLocale={(getDefaultOptions() as { locale: Locale }).locale}
         >
-          {globalStyles}
-          {children}
-        </WebsiteBuilderProvider>
-      </LocalizationProvider>
-    </IconContext.Provider>
-  </ThemeProvider>
-));
+          <WebsiteBuilderProvider
+            Author={Author}
+            AuthorLinks={AuthorLinks}
+            AuthorChip={AuthorChip}
+            AuthorList={AuthorList}
+            AuthorListItem={AuthorListItem}
+            ArticleList={ArticleList}
+            Article={Article}
+            ArticleDate={ArticleDate}
+            ArticleAuthors={ArticleAuthors}
+            ArticleMeta={ArticleTags}
+            ArticleSEO={ArticleSEO}
+            Banner={PageBanner}
+            PeerInformation={PeerInformation}
+            Navbar={Navbar}
+            Footer={Footer}
+            Event={Event}
+            EventSEO={EventSEO}
+            EventList={EventList}
+            EventListItem={EventListItem}
+            CommentList={CommentList}
+            CommentListItem={CommentListItem}
+            CommentListItemShare={CommentListItemShare}
+            CommentListItemChild={CommentListItemChild}
+            Comment={Comment}
+            CommentEditor={CommentEditor}
+            CommentRatings={CommentRatings}
+            Page={Page}
+            PageSEO={PageSEO}
+            LoginForm={LoginForm}
+            RegistrationForm={RegistrationForm}
+            PersonalDataForm={PersonalDataForm}
+            SubscriptionList={SubscriptionList}
+            SubscriptionListItem={SubscriptionListItem}
+            InvoiceList={InvoiceList}
+            InvoiceListItem={InvoiceListItem}
+            MemberPlanPicker={MemberPlanPicker}
+            MemberPlanItem={MemberPlanItem}
+            PeriodicityPicker={PeriodicityPicker}
+            PaymentAmount={PaymentAmountSlider}
+            PaymentMethodPicker={PaymentMethodPicker}
+            TransactionFee={TransactionFee}
+            Subscribe={Subscribe}
+            ContentWrapper={ContentWrapperStyled}
+            Paywall={Paywall}
+            Tag={Tag}
+            TagSEO={TagSEO}
+            elements={{
+              TextField,
+              Rating,
+              Alert,
+              Button,
+              IconButton,
+              Pagination,
+              H1,
+              H2,
+              H3,
+              H4,
+              H5,
+              H6,
+              Paragraph,
+              Link,
+              UnorderedList,
+              ImageUpload,
+              OrderedList,
+              ListItem,
+              Image,
+              Modal,
+            }}
+            blocks={{
+              Blocks,
+              Renderer: BlockRenderer,
+              Title: TitleBlock,
+              Break: BreakBlock,
+              Image: ImageBlock,
+              ImageGallery: ImageGalleryBlock,
+              Comment: CommentBlock,
+              Quote: QuoteBlock,
+              HTML: HtmlBlock,
+              Poll: PollBlock,
+              Crowdfunding: CrowdfundingBlock,
+              RichText: RichTextBlock,
+              Event: EventBlock,
+              Subscribe: SubscribeBlock,
+              Listicle: ListicleBlock,
+              TeaserGridFlex: TeaserGridFlexBlock,
+              TeaserGrid: TeaserGridBlock,
+              TeaserList: TeaserListBlock,
+              BaseTeaser,
+              TeaserSlots: TeaserSlotsBlock,
+              Teaser,
+              BildwurfAd: BildwurfAdBlock,
+              IFrame: IFrameBlock,
+              FacebookPost: FacebookPostBlock,
+              FacebookVideo: FacebookVideoBlock,
+              InstagramPost: InstagramPostBlock,
+              PolisConversation: PolisConversationBlock,
+              SoundCloudTrack: SoundCloudTrackBlock,
+              TikTokVideo: TikTokVideoBlock,
+              TwitterTweet: TwitterTweetBlock,
+              VimeoVideo: VimeoVideoBlock,
+              StreamableVideo: StreamableVideoBlock,
+              YouTubeVideo: YouTubeVideoBlock,
+            }}
+            blockStyles={{
+              Banner,
+              ContextBox,
+              FocusTeaser,
+              ImageSlider,
+              TeaserSlider,
+              AlternatingTeaser,
+              AlternatingTeaserGrid: AlternatingTeaserGridBlock,
+              AlternatingTeaserList: AlternatingTeaserListBlock,
+              AlternatingTeaserSlots: AlternatingTeaserSlotsBlock,
+            }}
+            richtext={{ RenderElement, RenderLeaf, RenderRichtext }}
+            date={{
+              format: dateFormatter,
+            }}
+          >
+            {globalStyles}
+            {children}
+          </WebsiteBuilderProvider>
+        </LocalizationProvider>
+      </IconContext.Provider>
+    </ThemeProvider>
+  )
+);

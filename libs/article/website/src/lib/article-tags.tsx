@@ -14,6 +14,7 @@ export const ArticleTagsWrapper = styled('div')`
 export const ArticleTags = ({
   article,
   className,
+  style,
 }: BuilderArticleMetaProps) => {
   const {
     elements: { Link },
@@ -24,7 +25,10 @@ export const ArticleTags = ({
   }
 
   return (
-    <ArticleTagsWrapper className={className}>
+    <ArticleTagsWrapper
+      className={className}
+      style={style}
+    >
       {article.tags.map(tag => (
         <Chip
           key={tag.id}

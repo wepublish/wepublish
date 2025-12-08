@@ -42,6 +42,7 @@ export const TeaserSlotsBlock = ({
   teasers,
   blockStyle,
   className,
+  style,
 }: BuilderTeaserSlotsBlockProps) => {
   const {
     elements: { H5 },
@@ -51,7 +52,10 @@ export const TeaserSlotsBlock = ({
   const filledTeasers = teasers.filter(isFilledTeaser);
 
   return (
-    <TeaserSlotsBlockWrapper className={className}>
+    <TeaserSlotsBlockWrapper
+      style={style}
+      className={className}
+    >
       {title && <H5 component={'h1'}>{title}</H5>}
 
       <TeaserSlotsBlockTeasers>

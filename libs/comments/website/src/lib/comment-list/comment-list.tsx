@@ -28,6 +28,7 @@ export const CommentList = ({
   error,
   challenge,
   className,
+  style,
   maxCommentLength,
   anonymousCanComment,
   anonymousCanRate,
@@ -50,7 +51,10 @@ export const CommentList = ({
   const showReply = getStateForEditor(openEditorsState)('add', null);
 
   return (
-    <CommentListWrapper className={className}>
+    <CommentListWrapper
+      style={style}
+      className={className}
+    >
       {!loading && !error && !data?.comments.length && (
         <Alert severity="info">Keine Kommentare vorhanden.</Alert>
       )}

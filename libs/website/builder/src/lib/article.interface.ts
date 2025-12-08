@@ -6,13 +6,14 @@ import {
   ArticleListQueryVariables,
   ArticleQuery,
 } from '@wepublish/website/api';
-import { PropsWithChildren } from 'react';
+import { CSSProperties, PropsWithChildren } from 'react';
 
 export type BuilderArticleProps = PropsWithChildren<
   Pick<QueryResult<ArticleQuery>, 'data' | 'loading' | 'error'> & {
     showPaywall: boolean;
     hideContent: boolean;
     className?: string;
+    style?: CSSProperties;
   }
 >;
 
@@ -23,6 +24,7 @@ export type BuilderArticleSEOProps = {
 export type BuilderArticleMetaProps = {
   article: Article;
   className?: string;
+  style?: CSSProperties;
 };
 
 export type BuilderArticleListProps = Pick<
@@ -30,6 +32,7 @@ export type BuilderArticleListProps = Pick<
   'data' | 'loading' | 'error'
 > & {
   className?: string;
+  style?: CSSProperties;
   variables?: Partial<ArticleListQueryVariables>;
   onVariablesChange?: (variables: Partial<ArticleListQueryVariables>) => void;
 };
@@ -37,9 +40,11 @@ export type BuilderArticleListProps = Pick<
 export type BuilderArticleDateProps = {
   article: Article;
   className?: string;
+  style?: CSSProperties;
 };
 
 export type BuilderArticleAuthorsProps = {
   article: Article;
   className?: string;
+  style?: CSSProperties;
 };

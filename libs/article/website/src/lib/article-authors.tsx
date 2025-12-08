@@ -14,6 +14,7 @@ export const ArticleAuthorsWrapper = styled('div')`
 export const ArticleAuthors = ({
   article,
   className,
+  style,
 }: BuilderArticleAuthorsProps) => {
   const { AuthorChip, ArticleDate } = useWebsiteBuilder();
   const authors =
@@ -28,6 +29,7 @@ export const ArticleAuthors = ({
       variant="articleAuthors"
       component={ArticleAuthorsWrapper}
       className={className}
+      style={style}
     >
       {authors.map(author => (
         <AuthorChip

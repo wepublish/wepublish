@@ -71,7 +71,7 @@ export const PaymentMethodPicker = forwardRef<
   HTMLButtonElement,
   BuilderPaymentMethodPickerProps
 >(function PaymentMethodPicker(
-  { paymentMethods, onChange, value, className, name },
+  { paymentMethods, onChange, value, className, style, name },
   ref
 ) {
   const id = useId();
@@ -92,7 +92,10 @@ export const PaymentMethodPicker = forwardRef<
     paymentMethods?.filter(pm => pm.paymentProviderID !== 'no-charge') ?? [];
 
   return (
-    <PaymentMethodPickerWrapper className={className}>
+    <PaymentMethodPickerWrapper
+      className={className}
+      style={style}
+    >
       <RadioGroup
         id={id}
         ref={ref}

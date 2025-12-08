@@ -106,6 +106,7 @@ const defaultSchema = z.object({
 export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
   fields = ['firstName', 'flair', 'address', 'password', 'image'] as T[],
   className,
+  style,
   user,
   schema = defaultSchema,
   onUpdate,
@@ -193,6 +194,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
   return (
     <PersonalDataFormWrapper
       className={className}
+      style={style}
       onSubmit={onSubmit}
     >
       <PersonalDataInputForm>

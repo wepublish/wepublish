@@ -62,6 +62,7 @@ export const ContextBoxIcon = styled(MdInfoOutline)``;
 
 export const ContextBox = ({
   className,
+  style,
   richText,
   text,
 }: BuilderBlockStyleProps['ContextBox']) => {
@@ -71,7 +72,10 @@ export const ContextBox = ({
   } = useWebsiteBuilder();
 
   return (
-    <ContextBoxWrapper className={className}>
+    <ContextBoxWrapper
+      style={style}
+      className={className}
+    >
       <ContextBoxIcon size="36" />
 
       <ContextBoxTitle>{text || `Darum geht's`}</ContextBoxTitle>

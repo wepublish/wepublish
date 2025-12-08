@@ -14,9 +14,16 @@ export const AuthorLink = styled(Link)`
   display: grid;
 `;
 
-export function AuthorLinks({ links, className }: BuilderAuthorLinksProps) {
+export function AuthorLinks({
+  links,
+  className,
+  style,
+}: BuilderAuthorLinksProps) {
   return (
-    <AuthorLinksWrapper className={className}>
+    <AuthorLinksWrapper
+      className={className}
+      style={style}
+    >
       {links.map((link, index) => (
         <AuthorLink
           key={index}

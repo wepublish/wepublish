@@ -20,6 +20,7 @@ export function FooterContainer({
   categorySlugs,
   children,
   className,
+  style,
   hideBannerOnIntersecting = true,
   wepublishLogo = 'light',
 }: FooterContainerProps) {
@@ -33,6 +34,7 @@ export function FooterContainer({
       error={error}
       slug={slug}
       className={className}
+      style={style}
       iconSlug={iconSlug}
       categorySlugs={categorySlugs}
       hideBannerOnIntersecting={hideBannerOnIntersecting}

@@ -8,9 +8,11 @@ import {
 } from '@wepublish/website/api';
 import z from 'zod';
 import { BuilderUserFormFields } from './user.interface';
+import { CSSProperties } from 'react';
 
 export type BuilderLoginFormProps = {
   className?: string;
+  style?: CSSProperties;
 
   defaults?: Partial<{
     email: string;
@@ -64,5 +66,6 @@ export type BuilderRegistrationFormProps<
     'data' | 'loading' | 'error'
   >;
   className?: string;
+  style?: CSSProperties;
   onRegister?: (data: RegisterMutationVariables) => void;
 };

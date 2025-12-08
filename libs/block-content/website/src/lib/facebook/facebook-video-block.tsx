@@ -22,10 +22,14 @@ export const FacebookVideoBlock = ({
   userID,
   videoID,
   className,
+  style,
 }: BuilderFacebookVideoBlockProps) => {
   const id = useId();
   return (
-    <FacebookVideoBlockWrapper className={className}>
+    <FacebookVideoBlockWrapper
+      style={style}
+      className={className}
+    >
       <FacebookVideoBlockPlayer
         width={'auto'}
         height={'auto'}

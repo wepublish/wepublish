@@ -15,8 +15,12 @@ export function FacebookPostBlock({
   userID,
   postID,
   className,
+  style,
 }: BuilderFacebookPostBlockProps) {
   return (
-    <FacebookPostBlockWrapper className={className}></FacebookPostBlockWrapper>
+    <FacebookPostBlockWrapper
+      style={style}
+      className={className}
+    ></FacebookPostBlockWrapper>
   );
 }

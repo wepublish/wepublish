@@ -12,8 +12,15 @@ export const isHtmlBlock = (
 
 export const HtmlBlockWrapper = styled('div')``;
 
-export const HtmlBlock = ({ html, className }: BuilderHTMLBlockProps) => (
-  <HtmlBlockWrapper className={className}>
+export const HtmlBlock = ({
+  html,
+  className,
+  style,
+}: BuilderHTMLBlockProps) => (
+  <HtmlBlockWrapper
+    className={className}
+    style={style}
+  >
     {html && (
       <InnerHTML
         key={html}

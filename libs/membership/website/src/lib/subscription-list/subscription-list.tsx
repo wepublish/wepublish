@@ -22,6 +22,7 @@ export const SubscriptionList = ({
   onCancel,
   onExtend,
   className,
+  style,
   subscribeUrl,
 }: BuilderSubscriptionListProps) => {
   const {
@@ -31,7 +32,10 @@ export const SubscriptionList = ({
   const { t } = useTranslation();
 
   return (
-    <SubscriptionListWrapper className={className}>
+    <SubscriptionListWrapper
+      className={className}
+      style={style}
+    >
       {!loading && !error && !data?.subscriptions?.length && (
         <SubscriptionListItemWrapper>
           <SubscriptionListItemContent>

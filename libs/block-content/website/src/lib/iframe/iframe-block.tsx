@@ -27,6 +27,7 @@ export function IFrameBlock({
   styleCustom,
   sandbox,
   className,
+  style,
 }: BuilderIFrameBlockProps) {
   const styleCustomCss = useMemo(
     () => css`
@@ -36,7 +37,10 @@ export function IFrameBlock({
   );
 
   return url ?
-      <IFrameBlockWrapper className={className}>
+      <IFrameBlockWrapper
+        style={style}
+        className={className}
+      >
         <IFrameBlockIframe
           css={styleCustomCss}
           src={url}

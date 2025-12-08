@@ -165,6 +165,7 @@ export const useSlidesPadding = () => {
 export const TeaserSlider = ({
   blockStyle,
   className,
+  style,
   teasers,
   slidesPerViewConfig = {},
   ...props
@@ -198,7 +199,10 @@ export const TeaserSlider = ({
 
   return (
     !!filledTeasers.length && (
-      <SliderWrapper className={className}>
+      <SliderWrapper
+        style={style}
+        className={className}
+      >
         {(props as BuilderTeaserListBlockProps).title && (
           <SliderTitle>
             <H5 component={'h1'}>

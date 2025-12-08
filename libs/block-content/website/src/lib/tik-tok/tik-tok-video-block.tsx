@@ -25,9 +25,13 @@ export const TikTokVideoBlockPlayer = styled('iframe')`
 export function TikTokVideoBlock({
   videoID,
   className,
+  style,
 }: BuilderTikTokVideoBlockProps) {
   return (
-    <TikTokVideoBlockWrapper className={className}>
+    <TikTokVideoBlockWrapper
+      className={className}
+      style={style}
+    >
       <TikTokVideoBlockPlayer
         src={`https://www.tiktok.com/embed/v2/${videoID}`}
         allowFullScreen

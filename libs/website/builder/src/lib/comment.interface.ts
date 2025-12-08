@@ -15,7 +15,7 @@ import {
   FullCommentRatingSystem,
   OverriddenRating,
 } from '@wepublish/website/api';
-import { Dispatch, PropsWithChildren } from 'react';
+import { CSSProperties, Dispatch, PropsWithChildren } from 'react';
 
 export type BuilderCommentListStateTypes = 'add' | 'edit';
 
@@ -49,6 +49,7 @@ export type BuilderCommentListProps = Pick<
   'data' | 'loading' | 'error'
 > & {
   className?: string;
+  style?: CSSProperties;
   anonymousCanComment?: boolean;
   anonymousCanRate?: boolean;
   userCanEdit?: boolean;
@@ -80,6 +81,7 @@ export type BuilderCommentListProps = Pick<
 
 export type BuilderCommentListItemShareProps = {
   className?: string;
+  style?: CSSProperties;
   url: string;
   title: string;
   forceNonSystemShare?: boolean;
@@ -89,6 +91,7 @@ export type BuilderCommentListItemProps = (CommentWithoutNestingFragment & {
   children?: CommentWithoutNestingFragment[] | null;
 }) & {
   className?: string;
+  style?: CSSProperties;
   ratingSystem: FullCommentRatingSystem;
   signUpUrl: string;
   commentDepth?: number;
@@ -124,6 +127,7 @@ export type BuilderCommentProps = PropsWithChildren<
     | 'tags'
   > & {
     className?: string;
+    style?: CSSProperties;
     showContent?: boolean;
     includeAnchor?: boolean;
   }
@@ -156,6 +160,7 @@ type EditCommentProps = {
 export type BuilderCommentEditorProps = {
   onCancel: () => void;
   className?: string;
+  style?: CSSProperties;
   maxCommentLength: number;
   loading: boolean;
   error?: ApolloError;

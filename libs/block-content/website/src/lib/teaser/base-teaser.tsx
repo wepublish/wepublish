@@ -7,7 +7,7 @@ import {
   Image,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { PropsWithChildren } from 'react';
+import { CSSProperties, PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isImageBlock } from '../image/image-block';
 import { isTitleBlock } from '../title/title-block';
@@ -368,11 +368,13 @@ const stretchToParentHeight = {
 const TeaserContent = ({
   href,
   className,
+  style,
   children,
   target,
 }: PropsWithChildren<{
   href?: string;
   className?: string;
+  style?: CSSProperties;
   target?: string;
 }>) => {
   const {
@@ -388,7 +390,10 @@ const TeaserContent = ({
         target={target}
         css={stretchToParentHeight}
       >
-        <TeaserContentWrapper className={className}>
+        <TeaserContentWrapper
+          className={className}
+          style={style}
+        >
           {children}
         </TeaserContentWrapper>
       </Link>
@@ -396,7 +401,10 @@ const TeaserContent = ({
   }
 
   return (
-    <TeaserContentWrapper className={className}>
+    <TeaserContentWrapper
+      className={className}
+      style={style}
+    >
       {children}
     </TeaserContentWrapper>
   );
@@ -406,6 +414,7 @@ export const BaseTeaser = ({
   teaser,
   alignment,
   className,
+  style,
 }: BuilderTeaserProps) => {
   const title = teaser && selectTeaserTitle(teaser);
   const preTitle = teaser && selectTeaserPreTitle(teaser);
@@ -428,6 +437,7 @@ export const BaseTeaser = ({
         href={href}
         target={target}
         className={className}
+        style={style}
       >
         <TeaserImageWrapper>
           <TeaserImageInnerWrapper>

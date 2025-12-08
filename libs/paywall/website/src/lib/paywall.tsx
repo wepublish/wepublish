@@ -34,6 +34,7 @@ const PaywallActions = styled.div`
 
 export const Paywall = ({
   className,
+  style,
   description,
   circumventDescription,
   hideContent,
@@ -52,6 +53,7 @@ export const Paywall = ({
   return (
     <PaywallWrapper
       className={className}
+      style={style}
       ref={ref}
     >
       <RichText

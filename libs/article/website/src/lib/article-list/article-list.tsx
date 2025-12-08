@@ -20,7 +20,11 @@ export const articleToTeaser = (article: Article): ArticleTeaser => ({
   imageID: null,
 });
 
-export const ArticleList = ({ data, className }: BuilderArticleListProps) => {
+export const ArticleList = ({
+  data,
+  className,
+  style,
+}: BuilderArticleListProps) => {
   const {
     blocks: { TeaserGrid },
   } = useWebsiteBuilder();
@@ -34,7 +38,10 @@ export const ArticleList = ({ data, className }: BuilderArticleListProps) => {
   );
 
   return (
-    <ArticleListWrapper className={className}>
+    <ArticleListWrapper
+      className={className}
+      style={style}
+    >
       <TeaserGrid
         numColumns={3}
         teasers={teasers}

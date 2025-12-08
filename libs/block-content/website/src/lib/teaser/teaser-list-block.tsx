@@ -42,6 +42,7 @@ export const TeaserListBlock = ({
   teasers,
   blockStyle,
   className,
+  style,
 }: BuilderTeaserListBlockProps) => {
   const {
     elements: { H5 },
@@ -49,7 +50,10 @@ export const TeaserListBlock = ({
   } = useWebsiteBuilder();
 
   return (
-    <TeaserListBlockWrapper className={className}>
+    <TeaserListBlockWrapper
+      style={style}
+      className={className}
+    >
       {title && <H5 component={'h1'}>{title}</H5>}
 
       <TeaserListBlockTeasers>

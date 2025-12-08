@@ -10,6 +10,7 @@ export type AuthorListContainerProps = BuilderContainerProps &
 
 export function AuthorListContainer({
   className,
+  style,
   variables,
   onVariablesChange,
 }: AuthorListContainerProps) {
@@ -24,6 +25,7 @@ export function AuthorListContainer({
       loading={loading}
       error={error}
       className={className}
+      style={style}
       variables={variables}
       onVariablesChange={onVariablesChange}
     />

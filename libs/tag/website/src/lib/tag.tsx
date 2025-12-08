@@ -27,6 +27,7 @@ export const TagTitleWrapper = styled('div')`
 
 export function Tag({
   className,
+  style,
   tags,
   articles,
   variables,
@@ -58,7 +59,10 @@ export function Tag({
   }
 
   return (
-    <TagWrapper className={className}>
+    <TagWrapper
+      className={className}
+      style={style}
+    >
       <TagSEO tag={tag} />
 
       <TagTitleWrapper>

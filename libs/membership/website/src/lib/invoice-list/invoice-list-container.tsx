@@ -41,6 +41,7 @@ export type InvoiceListContainerProps = {
 export function InvoiceListContainer({
   filter,
   className,
+  style,
 }: InvoiceListContainerProps) {
   const { InvoiceList } = useWebsiteBuilder();
   const [checkInvoice, { loading: loadingCheckInvoice }] =
@@ -141,6 +142,7 @@ export function InvoiceListContainer({
         loading={loading}
         error={error}
         className={className}
+        style={style}
         onPay={async invoiceId => {
           const invoice = filteredInvoices?.invoices?.find(
             invoice => invoice.id === invoiceId

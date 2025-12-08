@@ -20,6 +20,7 @@ const lowercase = replace(/^./, toLower);
 
 export const SubscribeBlock = ({
   className,
+  style,
   memberPlans,
   fields,
 }: BuilderSubscribeBlockProps) => {
@@ -58,7 +59,7 @@ export const SubscribeBlock = ({
 
       <Subscribe
         {...subscribeProps}
-        className={className}
+        style={style}
         memberPlans={memberPlansObj}
         fields={fields.map(lowercase) as BuilderSubscribeProps['fields']}
         onSubscribe={async formData => {

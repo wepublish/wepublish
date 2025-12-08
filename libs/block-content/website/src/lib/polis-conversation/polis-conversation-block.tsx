@@ -15,10 +15,11 @@ export const PolisConversationBlockWrapper = styled('div')``;
 export function PolisConversationBlock({
   conversationID,
   className,
+  style,
 }: BuilderPolisConversationBlockProps) {
   return (
     <PolisConversationBlockWrapper
-      className={className}
+      style={style}
     ></PolisConversationBlockWrapper>
   );
 }

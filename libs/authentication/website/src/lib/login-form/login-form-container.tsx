@@ -17,6 +17,7 @@ export type LoginFormContainerProps = BuilderContainerProps & {
 
 export function LoginFormContainer({
   className,
+  style,
   afterLoginCallback,
   defaults,
   disablePasswordLogin,
@@ -38,6 +39,7 @@ export function LoginFormContainer({
   return (
     <LoginForm
       className={className}
+      style={style}
       onSubmitLoginWithCredentials={(email, password) => {
         (async () => {
           const loginResult = await loginWithCredentials({

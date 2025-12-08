@@ -37,6 +37,7 @@ export const InvoiceList = ({
   error,
   onPay,
   className,
+  style,
 }: BuilderInvoiceListProps) => {
   const {
     InvoiceListItem,
@@ -44,7 +45,10 @@ export const InvoiceList = ({
   } = useWebsiteBuilder();
 
   return (
-    <InvoiceListWrapper className={className}>
+    <InvoiceListWrapper
+      className={className}
+      style={style}
+    >
       {loading && <Skeleton variant={'rectangular'} />}
 
       {!loading && !error && !data?.invoices?.length && (

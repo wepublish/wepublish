@@ -71,6 +71,7 @@ export const FocusTeaser = ({
   blockStyle,
   title,
   className,
+  style,
   ...props
 }: BuilderBlockStyleProps['FocusTeaser']) => {
   const {
@@ -90,7 +91,10 @@ export const FocusTeaser = ({
     : [];
 
   return (
-    <FocusTeaserWrapper className={className}>
+    <FocusTeaserWrapper
+      style={style}
+      className={className}
+    >
       <FocusedTeaserContent>
         <FocusedTeaserTitle>
           {tags?.length === 1 && tags[0].url ?

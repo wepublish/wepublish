@@ -19,9 +19,13 @@ export const VimeoVideoBlockPlayer = styled(ReactPlayer)`
 export function VimeoVideoBlock({
   videoID,
   className,
+  style,
 }: BuilderVimeoVideoBlockProps) {
   return (
-    <VimeoVideoBlockWrapper className={className}>
+    <VimeoVideoBlockWrapper
+      style={style}
+      className={className}
+    >
       <VimeoVideoBlockPlayer
         controls={true}
         url={`https://vimeo.com/${videoID}`}

@@ -103,6 +103,7 @@ export const Banner = ({
   loading,
   error,
   className,
+  style,
 }: BuilderBannerProps) => {
   const [showBanner, setShowBanner] = useState(false);
   const [collapsed, setCollapsed] = useState(true);
@@ -167,6 +168,7 @@ export const Banner = ({
     <BannerWrapper
       hasImage={!!data?.primaryBanner.image}
       className={className}
+      style={style}
       data-collapsed={collapsed}
       data-banner
     >

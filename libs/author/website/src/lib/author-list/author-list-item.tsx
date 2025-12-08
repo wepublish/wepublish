@@ -2,6 +2,7 @@ import { Author } from '@wepublish/website/api';
 import { css } from '@mui/material';
 import styled from '@emotion/styled';
 import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
+import { CSSProperties } from 'react';
 
 export const AuthorListItemImageWrapper = styled('div')`
   display: grid;
@@ -26,11 +27,12 @@ const imageStyles = css`
 
 export function AuthorListItem({
   className,
+  style,
   url,
   image,
   name,
   jobTitle,
-}: Author & { className?: string }) {
+}: Author & { className?: string; style?: CSSProperties }) {
   const {
     elements: { Image, Paragraph, H6 },
   } = useWebsiteBuilder();
@@ -38,6 +40,7 @@ export function AuthorListItem({
   return (
     <AuthorListItemLink
       className={className}
+      style={style}
       href={url}
     >
       <AuthorListItemImageWrapper>

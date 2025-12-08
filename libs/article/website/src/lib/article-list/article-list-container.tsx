@@ -19,6 +19,7 @@ export type ArticleListContainerProps = BuilderContainerProps &
 
 export function ArticleListContainer({
   className,
+  style,
   variables,
   onVariablesChange,
   filter,
@@ -44,6 +45,7 @@ export function ArticleListContainer({
       loading={loading}
       error={error}
       className={className}
+      style={style}
       variables={variables}
       onVariablesChange={onVariablesChange}
     />

@@ -66,6 +66,7 @@ export function PeerInformation({
   information,
   originUrl,
   className,
+  style,
 }: BuilderPeerProps) {
   if (!profile) {
     return;
@@ -75,8 +76,14 @@ export function PeerInformation({
   const linkText = toPlaintext(profile.callToActionText?.content ?? []);
 
   return (
-    <PeerInformationWrapper className={className}>
-      <PeerProfileWrapper className={className}>
+    <PeerInformationWrapper
+      className={className}
+      style={style}
+    >
+      <PeerProfileWrapper
+        className={className}
+        style={style}
+      >
         {profile.callToActionImage && (
           <PeerProfileBanner
             image={profile.callToActionImage}

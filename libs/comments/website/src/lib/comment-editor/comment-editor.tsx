@@ -213,6 +213,7 @@ export const ModalContent = styled('div')`
 
 export const CommentEditor = ({
   className,
+  style,
   onCancel,
   onSubmit,
   maxCommentLength,
@@ -343,7 +344,7 @@ export const CommentEditor = ({
   return (
     <>
       <CommentEditorWrapper
-        className={className}
+        style={style}
         onSubmit={submit}
         modalOpen={modalOpen}
       >

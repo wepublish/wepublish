@@ -17,6 +17,7 @@ export const EventListWrapper = styled('article')`
 export const EventList = ({
   data,
   className,
+  style,
   descriptionMaxLength = MAX_LENGTH,
 }: BuilderEventListProps) => {
   const { EventListItem } = useWebsiteBuilder();
@@ -27,7 +28,10 @@ export const EventList = ({
   );
 
   return (
-    <EventListWrapper className={className}>
+    <EventListWrapper
+      className={className}
+      style={style}
+    >
       {data?.events?.nodes.map(event => (
         <EventListItem
           key={event.id}

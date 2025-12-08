@@ -57,6 +57,7 @@ export const EventListItem = ({
   startsAt,
   endsAt,
   className,
+  style,
 }: BuilderEventListItemProps) => {
   const {
     elements: { H4, Link, Image, Paragraph },
@@ -69,7 +70,10 @@ export const EventListItem = ({
       href={url}
       css={eventListItemStyles}
     >
-      <EventListItemWrapper className={className}>
+      <EventListItemWrapper
+        className={className}
+        style={style}
+      >
         <EventListItemImage>
           {image && <Image image={image} />}
         </EventListItemImage>

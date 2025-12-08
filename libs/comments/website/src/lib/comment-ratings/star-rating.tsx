@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { CSSProperties } from 'react';
 
 export const StarRatingWrapper = styled('div')`
   display: grid;
@@ -17,6 +18,7 @@ export const StarRatingName = styled('div')`
 
 export type StarRatingProps = {
   className?: string;
+  style?: CSSProperties;
   rating?: number;
   name?: string | null;
   hasRated?: boolean;
@@ -26,6 +28,7 @@ export type StarRatingProps = {
 
 export const StarRating = ({
   className,
+  style,
   hasRated,
   rating = 0,
   readOnly,
@@ -37,7 +40,10 @@ export const StarRating = ({
   } = useWebsiteBuilder();
 
   return (
-    <StarRatingWrapper className={className}>
+    <StarRatingWrapper
+      className={className}
+      style={style}
+    >
       {name && <StarRatingName>{name}</StarRatingName>}
 
       <Rating

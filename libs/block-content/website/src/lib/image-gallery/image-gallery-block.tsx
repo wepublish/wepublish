@@ -35,6 +35,7 @@ export const ImageGalleryBlockImageList = styled(ImageList)`
 export const ImageGalleryBlock = ({
   images,
   className,
+  style,
 }: BuilderImageGalleryBlockProps) => {
   const {
     elements: { Image },
@@ -42,7 +43,10 @@ export const ImageGalleryBlock = ({
   const nonEmptyImages = images.filter(image => image.image);
 
   return (
-    <ImageGalleryBlockWrapper className={className}>
+    <ImageGalleryBlockWrapper
+      className={className}
+      style={style}
+    >
       <ImageGalleryBlockImageList
         cols={0}
         gap={8}

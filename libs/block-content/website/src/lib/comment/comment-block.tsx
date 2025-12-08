@@ -21,12 +21,16 @@ export const CommentBlockActions = styled('div')``;
 
 export const CommentBlock = ({
   className,
+  style,
   comments,
 }: BuilderCommentBlockProps) => {
   const { Comment: BuilderComment } = useWebsiteBuilder();
 
   return (
-    <CommentBlockWrapper className={className}>
+    <CommentBlockWrapper
+      style={style}
+      className={className}
+    >
       {comments?.map(({ children, ...comment }) => (
         <BuilderComment
           key={comment.id}

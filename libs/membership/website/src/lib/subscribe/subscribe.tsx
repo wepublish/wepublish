@@ -191,6 +191,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   fields = ['firstName', 'password', 'passwordRepeated', 'address'] as T[],
   schema = defaultRegisterSchema,
   className,
+  style,
   onSubscribe,
   onSubscribeWithRegister,
   onResubscribe,
@@ -494,6 +495,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   return (
     <SubscribeWrapper
       className={className}
+      style={style}
       onSubmit={onSubmit}
       noValidate
     >

@@ -25,6 +25,7 @@ export function PersonalDataFormContainer<
   T extends BuilderPersonalDataFormFields,
 >({
   className,
+  style,
   mediaEmail,
   schema,
   fields,
@@ -85,6 +86,7 @@ export function PersonalDataFormContainer<
   return (
     <PersonalDataForm
       className={className}
+      style={style}
       user={user}
       onImageUpload={handleOnImageUpload}
       onUpdate={handleOnUpdate}

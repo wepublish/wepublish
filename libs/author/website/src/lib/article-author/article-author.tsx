@@ -48,7 +48,11 @@ const imageStyles = css`
   border-radius: 50%;
 `;
 
-export function ArticleAuthor({ className, author }: BuilderAuthorChipProps) {
+export function ArticleAuthor({
+  className,
+  style,
+  author,
+}: BuilderAuthorChipProps) {
   const {
     AuthorLinks,
     elements: { Image, Link },
@@ -56,7 +60,10 @@ export function ArticleAuthor({ className, author }: BuilderAuthorChipProps) {
   } = useWebsiteBuilder();
 
   return (
-    <ArticleAuthorWrapper className={className}>
+    <ArticleAuthorWrapper
+      style={style}
+      className={className}
+    >
       {author.image && (
         <ArticleAuthorImageWrapper>
           <Image

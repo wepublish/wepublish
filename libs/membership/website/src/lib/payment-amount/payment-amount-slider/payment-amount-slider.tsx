@@ -27,6 +27,7 @@ export const PaymentAmountSlider = forwardRef<
   (
     {
       className,
+      style,
       currency,
       amountPerMonthMin,
       amountPerMonthMax,
@@ -43,7 +44,10 @@ export const PaymentAmountSlider = forwardRef<
     } = useWebsiteBuilder();
 
     return (
-      <PaymentAmountSliderWrapper className={className}>
+      <PaymentAmountSliderWrapper
+        style={style}
+        className={className}
+      >
         {!donate && (
           <Slider
             ref={ref}

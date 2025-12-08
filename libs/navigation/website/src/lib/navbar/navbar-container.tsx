@@ -29,6 +29,7 @@ export type NavbarContainerProps = PropsWithChildren<
 
 export function NavbarContainer({
   className,
+  style,
   categorySlugs,
   headerSlug,
   slug,
@@ -59,6 +60,7 @@ export function NavbarContainer({
       loading={loading}
       error={error}
       className={className}
+      style={style}
       logo={logo}
       hasUnpaidInvoices={!!hasUnpaidInvoices}
       hasRunningSubscription={!!hasRunningSubscription}

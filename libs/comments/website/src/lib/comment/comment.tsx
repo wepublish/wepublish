@@ -69,6 +69,7 @@ export const CommentTitle = styled('h1')`
 export const Comment = ({
   id,
   className,
+  style,
   text,
   authorType,
   user,
@@ -98,7 +99,7 @@ export const Comment = ({
 
   return (
     <CommentWrapper
-      className={className}
+      style={style}
       id={includeAnchor ? id : undefined}
     >
       <CommentHeader>

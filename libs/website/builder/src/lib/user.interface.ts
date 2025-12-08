@@ -5,7 +5,7 @@ import {
   UpdateUserMutationVariables,
   SensitiveDataUser,
 } from '@wepublish/website/api';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, CSSProperties } from 'react';
 import { OptionalKeysOf } from 'type-fest';
 import z from 'zod';
 import { Control } from 'react-hook-form';
@@ -20,6 +20,7 @@ export type BuilderUserFormFields =
 export type BuilderUserFormProps<T extends BuilderUserFormFields> = {
   fields: T[];
   className?: string;
+  style?: CSSProperties;
   control: Control<any>;
   hideEmail?: boolean;
 };
@@ -28,6 +29,7 @@ export type BuilderImageUploadProps = {
   image?: Image | null;
   onUpload: (image: ChangeEvent<HTMLInputElement> | null) => void;
   className?: string;
+  style?: CSSProperties;
 };
 
 export type PersonalDataFormFields = UpdateUserMutationVariables['input'] &
@@ -56,6 +58,7 @@ export type BuilderPersonalDataFormProps<
   >;
   user: SensitiveDataUser;
   className?: string;
+  style?: CSSProperties;
   onUpdate?: (
     data: UpdateUserMutationVariables['input'] &
       Partial<UpdatePasswordMutationVariables>

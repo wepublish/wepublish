@@ -40,7 +40,10 @@ export const TransactionFeeIcon = styled('div')`
 export const TransactionFee = forwardRef<
   HTMLButtonElement,
   BuilderTransactionFeeProps
->(function TransactionFee({ text, onChange, value, className, name }, ref) {
+>(function TransactionFee(
+  { text, onChange, value, className, style, name },
+  ref
+) {
   const id = useId();
   const {
     meta: { siteTitle },
@@ -49,6 +52,7 @@ export const TransactionFee = forwardRef<
   return (
     <TransactionFeeWrapper
       className={className}
+      style={style}
       control={
         <>
           <TransactionFeeIcon>

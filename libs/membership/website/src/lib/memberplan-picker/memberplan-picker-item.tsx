@@ -55,6 +55,7 @@ export const MemberPlanItem = forwardRef<
   (
     {
       className,
+      style,
       id,
       name,
       slug,
@@ -79,7 +80,10 @@ export const MemberPlanItem = forwardRef<
       amountPerMonthMax != null && amountPerMonthMax === amountPerMonthMin;
 
     return (
-      <MemberPlanItemWrapper className={className}>
+      <MemberPlanItemWrapper
+        className={className}
+        style={style}
+      >
         <MemberPlanItemPicker isChecked={isChecked}>
           <MemberPlanItemContent>
             <MemberPlanItemName>{name}</MemberPlanItemName>

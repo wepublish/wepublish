@@ -17,9 +17,11 @@ import {
 import { BuilderRegistrationFormProps } from './authentication.interface';
 import { BuilderUserFormFields } from './user.interface';
 import { FieldError } from 'react-hook-form';
+import { CSSProperties } from 'react';
 
 export type BuilderSubscriptionListItemProps = FullSubscriptionFragment & {
   className?: string;
+  style?: CSSProperties;
   canExtend: boolean;
   cancel?: () => Promise<void>;
   extend?: () => Promise<void>;
@@ -30,6 +32,7 @@ export type BuilderSubscriptionListProps = Pick<
   'data' | 'loading' | 'error'
 > & {
   className?: string;
+  style?: CSSProperties;
   invoices: Pick<QueryResult<InvoicesQuery>, 'data' | 'loading' | 'error'>;
   subscribeUrl: string;
   onCancel?: (subscriptionId: string) => Promise<void>;
@@ -38,6 +41,7 @@ export type BuilderSubscriptionListProps = Pick<
 
 export type BuilderInvoiceListItemProps = FullInvoiceFragment & {
   className?: string;
+  style?: CSSProperties;
   isSepa?: boolean;
   isBexio?: boolean;
   isPayrexxSubscription?: boolean;
@@ -50,12 +54,14 @@ export type BuilderInvoiceListProps = Pick<
   'data' | 'loading' | 'error'
 > & {
   className?: string;
+  style?: CSSProperties;
   onPay?: (invoiceId: string, paymentMethodId: string) => Promise<void>;
 };
 
 export type BuilderMemberPlanPickerProps = {
   memberPlans: FullMemberPlanFragment[];
   className?: string;
+  style?: CSSProperties;
   onChange: (memberPlanId: string) => void;
   name?: string;
   value?: string;
@@ -70,11 +76,14 @@ export type BuilderMemberPlanItemProps = Pick<
   | 'shortDescription'
   | 'tags'
 > &
-  Omit<RadioProps, 'ref'> & { className?: string } & { slug: string };
+  Omit<RadioProps, 'ref'> & { className?: string; style?: CSSProperties } & {
+    slug: string;
+  };
 
 export type BuilderPeriodicityPickerProps = {
   periodicities: PaymentPeriodicity[] | undefined;
   className?: string;
+  style?: CSSProperties;
   onChange: (periodicitiy: PaymentPeriodicity) => void;
   name?: string;
   value?: string;
@@ -83,6 +92,7 @@ export type BuilderPeriodicityPickerProps = {
 export type BuilderPaymentMethodPickerProps = {
   paymentMethods: PaymentMethod[] | undefined;
   className?: string;
+  style?: CSSProperties;
   onChange: (paymentMethodId: string) => void;
   name?: string;
   value?: string;
@@ -91,6 +101,7 @@ export type BuilderPaymentMethodPickerProps = {
 export type BuilderTransactionFeeProps = {
   text?: string;
   className?: string;
+  style?: CSSProperties;
   onChange: (value: boolean) => void;
   name?: string;
   value?: boolean;
@@ -107,6 +118,7 @@ export type BuilderPaymentAmountProps = {
   value: number;
   error: FieldError | undefined;
   className?: string;
+  style?: CSSProperties;
   slug?: string;
 };
 
@@ -127,6 +139,7 @@ export type BuilderSubscribeProps<
     'data' | 'loading' | 'error'
   >;
   className?: string;
+  style?: CSSProperties;
   onSubscribeWithRegister?: (data: {
     subscribe: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>;
     register: RegisterMutationVariables;

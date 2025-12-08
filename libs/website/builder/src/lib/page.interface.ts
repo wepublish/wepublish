@@ -1,10 +1,11 @@
 import { QueryResult } from '@apollo/client';
 import { Page, PageQuery } from '@wepublish/website/api';
-import { PropsWithChildren } from 'react';
+import { CSSProperties, PropsWithChildren } from 'react';
 
 export type BuilderPageProps = PropsWithChildren<
   Pick<QueryResult<PageQuery>, 'data' | 'loading' | 'error'> & {
     className?: string;
+    style?: CSSProperties;
   }
 >;
 

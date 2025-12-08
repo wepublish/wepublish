@@ -21,8 +21,12 @@ export const SoundCloudTrackBlockPlayer = styled(ReactPlayer)`
 export const SoundCloudTrackBlock = ({
   trackID,
   className,
+  style,
 }: BuilderSoundCloudTrackBlockProps) => (
-  <SoundCloudTrackBlockWrapper className={className}>
+  <SoundCloudTrackBlockWrapper
+    style={style}
+    className={className}
+  >
     <SoundCloudTrackBlockPlayer
       width={'auto'}
       height={'auto'}

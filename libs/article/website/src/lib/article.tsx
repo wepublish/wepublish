@@ -49,6 +49,7 @@ export const ArticleWrapper = styled(ContentWrapper)<{ hideContent?: boolean }>`
 
 export function Article({
   className,
+  style,
   data,
   children,
   showPaywall,
@@ -68,6 +69,7 @@ export function Article({
   return (
     <ArticleWrapper
       className={className}
+      style={style}
       hideContent={hideContent}
     >
       {article && <ArticleSEO article={article} />}

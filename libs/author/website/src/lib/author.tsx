@@ -29,6 +29,7 @@ const imageStyles = css`
 
 export function Author({
   className,
+  style,
   data,
   loading,
   error,
@@ -44,7 +45,10 @@ export function Author({
   }
 
   return (
-    <AuthorWrapper className={className}>
+    <AuthorWrapper
+      className={className}
+      style={style}
+    >
       <header>
         <H3 component="h1">{data.author.name}</H3>
         {data.author.jobTitle && (
