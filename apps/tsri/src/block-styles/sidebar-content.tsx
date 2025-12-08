@@ -163,18 +163,19 @@ export const SidebarContent = ({
               size="medium"
               LinkComponent={Link}
               href={
-                linkURL && !linkURL.startsWith('javascript:') ? linkURL : ''
+                linkURL && text && text !== 'Shop' && text !== 'Newsletter' ?
+                  linkURL
+                : ''
               }
               target={linkTarget ?? '_blank'}
-              onClick={
-                linkURL?.startsWith('javascript:') ?
-                  e => {
-                    e.preventDefault();
-                    linkURL.split('javascript:')[1] &&
-                      eval(linkURL.split('javascript:')[1]);
-                  }
-                : undefined
-              }
+              onClick={e => {
+                e.preventDefault();
+                if (text && text === 'Shop') {
+                  console.log('Shop button clicked');
+                } else if (text && text === 'Newsletter') {
+                  console.log('Newsletter button clicked');
+                }
+              }}
             >
               {linkText}
             </SidebarContentButton>
