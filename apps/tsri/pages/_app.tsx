@@ -27,10 +27,8 @@ import { previewLink } from '@wepublish/website/admin';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
 import { createWithV1ApiClient } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import deTranlations from '@wepublish/website/translations/de.json';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
-import resourcesToBackend from 'i18next-resources-to-backend';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
@@ -38,7 +36,10 @@ import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import deOverriden from '../locales/deOverriden.json';
 import { TabbedContent } from '../src/block-styles/tsri-tabbed-content';
+import { TsriBaseTeaserSlots } from '../src/components/teaser-layouts/tsri-base-teaser-slots';
+import { TsriBaseTeaser } from '../src/components/teasers/tsri-base-teaser';
 import { TsriArticle } from '../src/components/tsri-article';
 import { TsriArticleDate } from '../src/components/tsri-article-date';
 import { TsriArticleList } from '../src/components/tsri-article-list';
@@ -47,14 +48,13 @@ import { TSRIAuthor } from '../src/components/tsri-author';
 import { TSRIAuthorLinks } from '../src/components/tsri-author-links';
 import { TSRIAuthorList } from '../src/components/tsri-author-list';
 import { TsriBanner } from '../src/components/tsri-banner';
-import { TsriBaseTeaser } from '../src/components/tsri-base-teaser';
 import { TsriBreakBlock } from '../src/components/tsri-break-block';
 import { TsriContextBox } from '../src/components/tsri-context-box';
 import { TSRIFooter } from '../src/components/tsri-footer';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
-import { TsriTitleBlock } from '../src/components/tsri-title-block';
 import { TsriTeaserGridFlex } from '../src/components/tsri-teaser-grid-flex';
+import { TsriTitleBlock } from '../src/components/tsri-title-block';
 import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
 import theme from '../src/theme';
 import { TsriBlockRenderer } from '../src/tsri-block-renderer';
@@ -63,7 +63,8 @@ setDefaultOptions({
   locale: de,
 });
 
-initWePublishTranslator()
+initWePublishTranslator(deOverriden);
+/*
   .use(resourcesToBackend(() => deTranlations))
   .init({
     partialBundledLanguages: true,
@@ -77,6 +78,7 @@ initWePublishTranslator()
       de: { zod: deTranlations.zod },
     },
   });
+*/
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
@@ -138,6 +140,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           elements={{ Link: NextWepublishLink }}
           blocks={{
             BaseTeaser: TsriBaseTeaser,
+            TeaserSlots: TsriBaseTeaserSlots,
             TeaserGridFlex: TsriTeaserGridFlex,
             Break: TsriBreakBlock,
             Quote: TsriQuoteBlock,

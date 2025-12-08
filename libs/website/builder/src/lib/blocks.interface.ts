@@ -46,7 +46,7 @@ export type BuilderBlocksProps = {
 
 export type BuilderFlexBlockProps = FlexBlock & {
   className?: string;
-  children?: React.ReactNode;
+  subBlockStyles?: (string | undefined)[];
 };
 
 export type BuilderTitleBlockProps = Omit<TitleBlock, 'type'> & {
