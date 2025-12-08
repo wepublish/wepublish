@@ -77,8 +77,17 @@ export function AudienceFilter({
   }, [memberPlans]);
 
   const oneClickDateRanges = useMemo<RangeType[]>(() => {
-    const { today, lastWeek, lastMonth, lastQuarter, lastYear } =
-      preDefinedDates();
+    const {
+      today,
+      lastWeek,
+      lastMonth,
+      lastQuarter,
+      lastYear,
+      nextWeek,
+      nextMonth,
+      nextQuarter,
+      nextYear,
+    } = preDefinedDates();
     return [
       {
         label: t('audienceFilter.rangeLastWeek'),
@@ -96,6 +105,22 @@ export function AudienceFilter({
         label: t('audienceFilter.rangeLastYear'),
         value: [lastYear, today],
       },
+      {
+        label: t('audienceFilter.rangeNextWeek'),
+        value: [today, nextWeek],
+      },
+      {
+        label: t('audienceFilter.rangeNextMonth'),
+        value: [today, nextMonth],
+      },
+      {
+        label: t('audienceFilter.rangeNextQuarter'),
+        value: [today, nextQuarter],
+      },
+      {
+        label: t('audienceFilter.rangeNextYear'),
+        value: [today, nextYear],
+      },
     ];
   }, [t]);
 
@@ -103,7 +128,10 @@ export function AudienceFilter({
     <Grid style={{ width: '100%' }}>
       <Row>
         {/* select date range */}
-        <Col xs={4}>
+        <Col
+          xs={24}
+          xl={4}
+        >
           <RadioGroup
             name="aggregation-picker"
             inline
@@ -118,7 +146,10 @@ export function AudienceFilter({
           </RadioGroup>
         </Col>
 
-        <Col xs={6}>
+        <Col
+          xs={24}
+          xl={6}
+        >
           <DateRangePicker
             size="lg"
             value={apiFilter.dateRange}
@@ -161,7 +192,10 @@ export function AudienceFilter({
         </Col>
 
         {/* filter data */}
-        <Col xs={14}>
+        <Col
+          xs={24}
+          xl={14}
+        >
           <Panel
             header={t('audienceFilter.panelHeader')}
             bordered
@@ -169,7 +203,8 @@ export function AudienceFilter({
             <Row>
               {Object.keys(clientFilter).map((filterKey, filterIndex) => (
                 <Col
-                  xs={12}
+                  xs={24}
+                  xl={12}
                   key={`client-filter-${filterIndex}`}
                 >
                   <AudienceFilterToggle

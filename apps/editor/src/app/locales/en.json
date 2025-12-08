@@ -330,7 +330,10 @@
         "edit": "Edit HTML",
         "label": "HTML",
         "placeholder": "Paste your HTML block here..",
-        "warning": "Please note, rendering custom HTML may be harmful to the user or break the page layout. Please make sure that the HTML you provide is free of malicious scripts and is structured correctly."
+        "warning": "Please note, rendering custom HTML may be harmful to the user or break the page layout. Please make sure that the HTML you provide is free of malicious scripts and is structured correctly.",
+        "generate": "Generate your HTML via AI",
+        "prompt": "Send prompt",
+        "promptSuccess": "Successfully generated HTML and updated block. Chat history is saved and you can continue the chat."
       },
       "subscribe": {
         "label": "Subscribe",
@@ -1652,17 +1655,23 @@
       "rangeLastWeek": "Last Week",
       "rangeLastMonth": "Last Month",
       "rangeLastQuarter": "Last Quarter",
-      "rangeLastYear": "Last Year"
+      "rangeLastYear": "Last Year",
+      "rangeNextWeek": "Next Week",
+      "rangeNextMonth": "Next Month",
+      "rangeNextQuarter": "Next Quarter",
+      "rangeNextYear": "Next Year"
     },
     "audience": {
       "legend": {
         "info": {
-          "totalActiveSubscriptionCount": "Subscriptions that were active and paid on the reporting date.",
+          "totalActiveSubscriptionCount": "Subscriptions that were active and paid on the reporting date, or that will be paid and potentially still be active in the future.",
           "overdueSubscriptionCount": "Renewed subscriptions for which payment is due and outstanding. Subscriptions created for the first time that have not been paid for are not included.",
           "renewedSubscriptionCount": "Subscriptions that have been renewed and paid for another period.",
           "createdSubscriptionCount": "Completely new and paid subscriptions with only one period so far.",
           "deactivatedSubscriptionCount": "Subscriptions that have been deactivated/canceled and not renewed.",
-          "replacedSubscriptionCount": "Subscriptions that have been replaced by another (e.g. trial subscriptions)."
+          "replacedSubscriptionCount": "Subscriptions that have been replaced by another (e.g. trial subscriptions).",
+          "predictedSubscriptionRenewalCount": "Number of subscriptions that are ready to be renewed at the end of their term.\n First-time subscriptions vs. \n Subscriptions with a history of renewal (subsequent renewals)\n Renewals are shown from the start of the selected period (or current date, if period starts in the past) \n Renewals are represented by the number of currently paid and active subscriptions set to auto-renew.",
+          "endingSubscriptionCount": "Subscriptions that will expire at the end of their term, excluding those set to auto-renew."
         },
         "totalActiveSubscriptionCount": "Total active & paid subscriptions",
         "overdueSubscriptionCount": "Renewed unpaid subscriptions",
@@ -1670,14 +1679,32 @@
         "createdSubscriptionCount": "New paid subscriptions",
         "deactivatedSubscriptionCount": "Deactivated subscriptions",
         "replacedSubscriptionCount": "Replaced subscriptions",
+        "predictedSubscriptionRenewalCount": "Upcoming renewals in period",
+        "predictedSubscriptionRenewalCount_variants": {
+          "low": "First time renewals",
+          "high": "Subsequent renewals",
+          "total": "Sum of upcoming renewals",
+          "perDayHighProbability": "First time renewals",
+          "perDayLowProbability": "Subsequent renewals"
+        },
+        "predictedSubscriptionRenewalCountPerDay": {
+          "lowProbability": "First time renewals",
+          "highProbability": "Subsequent renewals"
+        },
+        "endingSubscriptionCount": "Expiring subscriptions",
         "totalNewSubscriptions": "Total new and renewed paid subscriptions",
         "renewalRate": "Renewal rate",
         "cancellationRate": "Cancellation rate",
         "createdSubscriptionUsers": "New paid subscriptions",
+        "overdueSubscriptionUsers": "Renewed unpaid subscriptions",
+        "predictedSubscriptionRenewalUsers": "Predicted renewals",
         "createdUnpaidSubscriptionUsers": "Renewed unpaid subscriptions",
         "deactivatedSubscriptionUsers": "Deactivated subscriptions",
         "renewedSubscriptionUsers": "Renewed paid subscriptions",
-        "replacedSubscriptionUsers": "Replaced subscriptions"
+        "replacedSubscriptionUsers": "Replaced subscriptions",
+        "predictedSubscriptionRenewalUsersLowProbability": "First time renewals",
+        "predictedSubscriptionRenewalUsersHighProbability": "Subsequent renewals",
+        "endingSubscriptionUsers": "Expiring subscriptions"
       }
     },
     "audienceDetailDrawer": {
@@ -1699,7 +1726,11 @@
       "byDate": "By",
       "totalNewSubscriptionsInfo": "Sum of replaced, new, and renewed subscriptions. Only the active columns are summed.",
       "renewalRateInfo": "Share of subscriptions that were renewed at the end of their term. Replaced, renewed, and deactivated subscriptions are included. Renewed unpaid subscriptions reduce the renewal rate until they are paid.",
-      "cancellationRateInfo": "Share of subscriptions that were not renewed but canceled at the end of their term. Renewed unpaid subscriptions increase the cancellation rate until they are paid."
+      "cancellationRateInfo": "Share of subscriptions that were not renewed but canceled at the end of their term. Renewed unpaid subscriptions increase the cancellation rate until they are paid.",
+      "predictedSubscriptionRenewalCountPerDay": {
+        "lowProbability": "First time renewals ",
+        "highProbability": "Subsequent renewals "
+      }
     },
     "paywall": {
       "navbar": "Paywall",
@@ -1725,6 +1756,9 @@
       "gracePeriod": "Grace Period",
       "gracePeriodHelpText": "If you use the paywall, allow users to read instantly after ordering a subscription, even if they don't pay eventually. This would apply to payments via bank transfer, for instance.",
       "days": "days"
+    },
+    "audienceCsvBtn": {
+      "exportUsers": "Download CSV"
     }
   }
 }

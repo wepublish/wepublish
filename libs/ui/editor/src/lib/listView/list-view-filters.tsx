@@ -1,18 +1,16 @@
 import styled from '@emotion/styled';
 import {
-  AuthorRefFragment,
   FullUserRoleFragment,
   PollAnswerWithVoteCount,
   TagType,
-  usePeerListLazyQuery,
   usePollLazyQuery,
   UserFilter,
-  useUserRoleListLazyQuery,
 } from '@wepublish/editor/api';
 import {
   ArticleFilter,
   DateFilterComparison,
   EventFilter,
+  FullAuthorFragment,
   getApiClientV2,
   InputMaybe,
   PageFilter,
@@ -20,8 +18,10 @@ import {
   PollVoteFilter,
   Scalars,
   useEventProvidersLazyQuery,
+  usePeerListLazyQuery,
+  useUserRoleListLazyQuery,
 } from '@wepublish/editor/api-v2';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdClose } from 'react-icons/md';
 import {
@@ -128,7 +128,7 @@ export function ListViewFilters({
   className,
   tagType,
 }: ListViewFiltersProps) {
-  const client = useMemo(() => getApiClientV2(), []);
+  const client = getApiClientV2();
   const { t } = useTranslation();
   const [resetFilterKey, setResetFilterkey] = useState<string>(
     new Date().getTime().toString()
@@ -142,6 +142,7 @@ export function ListViewFilters({
   });
 
   const [userRoleFetch, { data: userRoleData }] = useUserRoleListLazyQuery({
+    client,
     fetchPolicy: 'network-only',
     variables: {
       take: 200,
@@ -149,6 +150,7 @@ export function ListViewFilters({
   });
 
   const [peerListFetch, { data: peerListData }] = usePeerListLazyQuery({
+    client,
     fetchPolicy: 'network-only',
   });
 
@@ -436,7 +438,7 @@ export function ListViewFilters({
         {fields.includes('authors') && (
           <Group style={formInputStyle}>
             <AuthorCheckPicker
-              list={authorsData as AuthorRefFragment[]}
+              list={authorsData as FullAuthorFragment[]}
               onChange={value => {
                 return updateFilter({
                   authors: value ? value.map(author => author.id) : [],
