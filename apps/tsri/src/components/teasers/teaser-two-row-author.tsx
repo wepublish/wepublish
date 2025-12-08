@@ -160,7 +160,7 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
       padding: 0.4cqw 1cqw;
       display: block;
       color: black;
-      margin-left: -0.5cqw;
+      margin-left: -1.5cqw;
       z-index: 2;
       align-self: end;
       background-color: white;
