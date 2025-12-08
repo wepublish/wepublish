@@ -9,34 +9,27 @@ import { allPass } from 'ramda';
 
 import { TsriTeaserType } from '../teasers/tsri-base-teaser';
 
-export const TeaserSlotsArchiveTopicWrapper = styled('ul')`
+export const TeaserSlotsFrontTopWrapper = styled('ul')`
   display: grid;
+  column-gap: ${({ theme }) => theme.spacing(2)};
+  row-gap: ${({ theme }) => theme.spacing(5)};
+  align-items: stretch;
+  list-style: none;
   margin: 0;
   padding: 0;
-  list-style: none;
-
-  @container tabbed-content (width > 200px) {
-    grid-template-columns: 58.42cqw 32.5cqw !important;
-    grid-template-rows: repeat(6, min-content) !important;
-    column-gap: 2.2cqw;
-    row-gap: 1.77cqw;
-  }
+  grid-template-columns: repeat(12, 1fr);
 `;
 
-export const isTeaserSlotsArchiveTopic = allPass([
+export const isTeaserSlotsFrontTop = allPass([
   ({ blockStyle }: BuilderTeaserSlotsBlockProps) => {
-    return blockStyle === 'ArchiveTopic';
+    return blockStyle === 'FrontTop';
   },
 ]);
 
 export const teaserBlockStyleByIndex = (index: number): TsriTeaserType => {
   switch (index) {
-    case 0:
-      return TsriTeaserType.TwoRow;
-    case 6:
-      return TsriTeaserType.MoreAbout;
     default:
-      return TsriTeaserType.NoImage;
+      return TsriTeaserType.FullsizeImage;
   }
 };
 
@@ -45,21 +38,31 @@ export const alignmentForTeaserBlock = (index: number): FlexAlignment => {
     i: index.toString(),
     static: false,
     h: 1, // how many rows high
-    w: 1, // how many columns wide
+    w: 4, // how many columns wide
     x: 0, // starting column - 1
     y: 0, // starting row - 1
   };
   switch (index) {
     case 0:
-      return { ...alignment, h: 5 };
+      return { ...alignment, w: 8 };
+    case 1:
+      return { ...alignment, y: 1 }; // second row
+    case 2:
+      return { ...alignment, x: 4, y: 1 };
+    case 3:
+      return { ...alignment, x: 8, y: 1 };
+    case 4:
+      return { ...alignment, y: 2 }; // third row
+    case 5:
+      return { ...alignment, x: 4, y: 2 };
     case 6:
-      return { ...alignment, w: 2, y: 6 };
+      return { ...alignment, x: 8, y: 2 };
     default:
-      return { ...alignment, x: 1, y: index - 1 };
+      return { ...alignment, x: 1, y: index - 1 }; // should never happen
   }
 };
 
-export const TeaserSlotsArchiveTopic = ({
+export const TeaserSlotsFrontTop = ({
   teasers,
   className,
   teaserBlockStyleByIndex,
@@ -75,7 +78,7 @@ export const TeaserSlotsArchiveTopic = ({
   const filledTeasers = teasers.filter(isFilledTeaser);
 
   return (
-    <TeaserSlotsArchiveTopicWrapper className={className}>
+    <TeaserSlotsFrontTopWrapper className={className}>
       {filledTeasers.map(
         (teaser, index) =>
           index < 7 && (
@@ -88,6 +91,6 @@ export const TeaserSlotsArchiveTopic = ({
             />
           )
       )}
-    </TeaserSlotsArchiveTopicWrapper>
+    </TeaserSlotsFrontTopWrapper>
   );
 };

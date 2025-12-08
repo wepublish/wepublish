@@ -38,6 +38,7 @@ import { zodI18nMap } from 'zod-i18n-map';
 
 import deOverriden from '../locales/deOverriden.json';
 import { TabbedContent } from '../src/block-styles/tsri-tabbed-content';
+import { TsriBaseTeaserGridFlex } from '../src/components/teaser-layouts/tsri-base-teaser-flex-grid';
 import { TsriBaseTeaserSlots } from '../src/components/teaser-layouts/tsri-base-teaser-slots';
 import { TsriBaseTeaser } from '../src/components/teasers/tsri-base-teaser';
 import { TsriArticle } from '../src/components/tsri-article';
@@ -53,7 +54,6 @@ import { TsriContextBox } from '../src/components/tsri-context-box';
 import { TSRIFooter } from '../src/components/tsri-footer';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
-import { TsriTeaserGridFlex } from '../src/components/tsri-teaser-grid-flex';
 import { TsriTitleBlock } from '../src/components/tsri-title-block';
 import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
 import theme from '../src/theme';
@@ -141,7 +141,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           blocks={{
             BaseTeaser: TsriBaseTeaser,
             TeaserSlots: TsriBaseTeaserSlots,
-            TeaserGridFlex: TsriTeaserGridFlex,
+            TeaserGridFlex: TsriBaseTeaserGridFlex,
             Break: TsriBreakBlock,
             Quote: TsriQuoteBlock,
             RichText: TsriRichText,
