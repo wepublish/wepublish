@@ -12,12 +12,7 @@ import { SettingName } from '@wepublish/settings/api';
 import { unselectPassword } from '@wepublish/authentication/api';
 import { NotFound } from '../error';
 import { Validator } from '../validator';
-import { GraphQLAuthor, GraphQLAuthorInput } from './author';
-import {
-  createAuthor,
-  deleteAuthorById,
-  updateAuthor,
-} from './author/author.private-mutation';
+
 import {
   GraphQLComment,
   GraphQLCommentItemType,
@@ -77,19 +72,8 @@ import {
   GraphQLPaymentMethod,
   GraphQLPaymentMethodInput,
 } from './paymentMethod';
-import {
-  GraphQLCreatePeerInput,
-  GraphQLPeer,
-  GraphQLPeerProfile,
-  GraphQLPeerProfileInput,
-  GraphQLUpdatePeerInput,
-} from './peer';
+import { GraphQLPeerProfile, GraphQLPeerProfileInput } from './peer';
 import { upsertPeerProfile } from './peer-profile/peer-profile.private-mutation';
-import {
-  createPeer,
-  deletePeerById,
-  updatePeer,
-} from './peer/peer.private-mutation';
 import { authorise } from './permissions';
 import {
   GraphQLFullPoll,
@@ -127,23 +111,15 @@ import {
   renewSubscription,
   updateAdminSubscription,
 } from './subscription/subscription.private-mutation';
-import { GraphQLTag, GraphQLTagType } from './tag/tag';
-import { createTag, deleteTag, updateTag } from './tag/tag.private-mutation';
 import { GraphQLCreatedToken, GraphQLTokenInput } from './token';
 import { createToken, deleteTokenById } from './token/token.private-mutation';
 import { GraphQLUser, GraphQLUserInput } from './user';
-import {
-  createUserRole,
-  deleteUserRoleById,
-  updateUserRole,
-} from './user-role/user-role.private-mutation';
 import {
   createAdminUser,
   deleteUserById,
   resetUserPassword,
   updateAdminUser,
 } from './user/user.private-mutation';
-import { GraphQLUserRole, GraphQLUserRoleInput } from './userRole';
 
 import { CanSendJWTLogin } from '@wepublish/permissions';
 import { mailLogType } from '@wepublish/mail/api';
@@ -163,30 +139,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         { input },
         { hostURL, authenticate, prisma: { peerProfile } }
       ) => upsertPeerProfile(input, hostURL, authenticate, peerProfile),
-    },
-
-    createPeer: {
-      type: new GraphQLNonNull(GraphQLPeer),
-      args: { input: { type: new GraphQLNonNull(GraphQLCreatePeerInput) } },
-      resolve: (root, { input }, { authenticate, prisma: { peer } }) =>
-        createPeer(input, authenticate, peer),
-    },
-
-    updatePeer: {
-      type: new GraphQLNonNull(GraphQLPeer),
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        input: { type: new GraphQLNonNull(GraphQLUpdatePeerInput) },
-      },
-      resolve: (root, { id, input }, { authenticate, prisma: { peer } }) =>
-        updatePeer(id, input, authenticate, peer),
-    },
-
-    deletePeer: {
-      type: GraphQLPeer,
-      args: { id: { type: new GraphQLNonNull(GraphQLString) } },
-      resolve: (root, { id }, { authenticate, prisma: { peer } }) =>
-        deletePeerById(id, authenticate, peer),
     },
 
     // Session
@@ -516,64 +468,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           subscription,
           memberContext
         ),
-    },
-
-    // UserRole
-    // ====
-
-    createUserRole: {
-      type: GraphQLUserRole,
-      args: { input: { type: new GraphQLNonNull(GraphQLUserRoleInput) } },
-      resolve: (root, { input }, { authenticate, prisma: { userRole } }) =>
-        createUserRole(input, authenticate, userRole),
-    },
-
-    updateUserRole: {
-      type: GraphQLUserRole,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        input: { type: new GraphQLNonNull(GraphQLUserRoleInput) },
-      },
-      resolve: (root, { id, input }, { authenticate, prisma: { userRole } }) =>
-        updateUserRole(id, input, authenticate, userRole),
-    },
-
-    deleteUserRole: {
-      type: GraphQLUserRole,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { userRole } }) =>
-        deleteUserRoleById(id, authenticate, userRole),
-    },
-
-    // Author
-    // ======
-
-    createAuthor: {
-      type: GraphQLAuthor,
-      args: { input: { type: new GraphQLNonNull(GraphQLAuthorInput) } },
-      resolve: (root, { input }, { authenticate, prisma: { author } }) =>
-        createAuthor(input, authenticate, author),
-    },
-
-    updateAuthor: {
-      type: GraphQLAuthor,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        input: { type: new GraphQLNonNull(GraphQLAuthorInput) },
-      },
-      resolve: (root, { id, input }, { authenticate, prisma: { author } }) =>
-        updateAuthor(id, input, authenticate, author),
-    },
-
-    deleteAuthor: {
-      type: GraphQLAuthor,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { author } }) =>
-        deleteAuthorById(id, authenticate, author),
     },
 
     // Image
@@ -1060,48 +954,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         { authenticate, prisma: { pollExternalVoteSource } }
       ) =>
         deletePollExternalVoteSource(id, authenticate, pollExternalVoteSource),
-    },
-
-    // Tag
-    // ==========
-
-    createTag: {
-      type: GraphQLTag,
-      args: {
-        tag: { type: GraphQLString },
-        description: { type: GraphQLRichText },
-        type: { type: new GraphQLNonNull(GraphQLTagType) },
-        main: { type: GraphQLBoolean },
-      },
-      resolve: (
-        root,
-        { tag, description, type, main },
-        { authenticate, prisma }
-      ) => createTag(tag, description, type, main, authenticate, prisma.tag),
-    },
-
-    updateTag: {
-      type: GraphQLTag,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        tag: { type: GraphQLString },
-        description: { type: GraphQLRichText },
-        main: { type: GraphQLBoolean },
-      },
-      resolve: (
-        root,
-        { id, tag, description, main },
-        { authenticate, prisma }
-      ) => updateTag(id, tag, description, main, authenticate, prisma.tag),
-    },
-
-    deleteTag: {
-      type: GraphQLTag,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { tag } }) =>
-        deleteTag(id, authenticate, tag),
     },
   },
 });

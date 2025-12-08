@@ -11,7 +11,6 @@ import {
   GraphQLString,
 } from 'graphql';
 import { Context } from '../context';
-import { AuthorSort } from '../db/author';
 import { CommentSort } from '../db/comment';
 import { ImageSort } from '../db/image';
 import { InvoiceSort } from '../db/invoice';
@@ -19,20 +18,10 @@ import { MemberPlanSort } from '../db/memberPlan';
 import { PaymentSort } from '../db/payment';
 import { SubscriptionSort } from '../db/subscription';
 import { UserSort } from '../db/user';
-import { UserRoleSort } from '../db/userRole';
 import { GivenTokeExpiryToLongError, UserIdNotFound } from '../error';
 
 import { GraphQLJWTToken } from './auth';
-import {
-  GraphQLAuthor,
-  GraphQLAuthorConnection,
-  GraphQLAuthorFilter,
-  GraphQLAuthorSort,
-} from './author';
-import {
-  getAdminAuthors,
-  getAuthorByIdOrSlug,
-} from './author/author.private-queries';
+
 import { GraphQLFullCommentRatingSystem } from './comment-rating/comment-rating';
 import { getRatingSystem } from './comment-rating/comment-rating.public-queries';
 import {
@@ -88,13 +77,11 @@ import {
   getPaymentById,
 } from './payment/payment.private-queries';
 import { GraphQLPaymentMethod, GraphQLPaymentProvider } from './paymentMethod';
-import { GraphQLPeer, GraphQLPeerProfile } from './peer';
+import { GraphQLPeerProfile } from './peer';
 import {
   getAdminPeerProfile,
   getRemotePeerProfile,
 } from './peer-profile/peer-profile.private-queries';
-import { getPeerById, getPeers } from './peer/peer.private-queries';
-import { getPermissions } from './permission/permission.private-queries';
 import { authorise } from './permissions';
 import {
   GraphQLFullPoll,
@@ -108,7 +95,6 @@ import { GraphQLSession } from './session';
 import { getSessionsForUser } from './session/session.private-queries';
 import { GraphQLSlug } from '@wepublish/utils/api';
 import {
-  GraphQLSubscribersPerMonth,
   GraphQLSubscription,
   GraphQLSubscriptionConnection,
   GraphQLSubscriptionFilter,
@@ -116,18 +102,10 @@ import {
 } from './subscription';
 import {
   getAdminSubscriptions,
-  getNewSubscribersPerMonth,
   getSubscriptionById,
   getSubscriptionsAsCSV,
 } from './subscription/subscription.private-queries';
-import {
-  GraphQLTag,
-  GraphQLTagConnection,
-  GraphQLTagFilter,
-  GraphQLTagSort,
-} from './tag/tag';
-import { getTags, getTag } from './tag/tag.private-query';
-import { TagSort } from './tag/tag.query';
+
 import { GraphQLToken } from './token';
 import { getTokens } from './token/token.private-queries';
 import {
@@ -136,18 +114,7 @@ import {
   GraphQLUserFilter,
   GraphQLUserSort,
 } from './user';
-import {
-  getAdminUserRoles,
-  getUserRoleById,
-} from './user-role/user-role.private-queries';
 import { getAdminUsers, getMe, getUserById } from './user/user.private-queries';
-import {
-  GraphQLPermission,
-  GraphQLUserRole,
-  GraphQLUserRoleConnection,
-  GraphQLUserRoleFilter,
-  GraphQLUserRoleSort,
-} from './userRole';
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -237,19 +204,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         args,
         { authenticate, hostURL, websiteURL, prisma: { peerProfile } }
       ) => getAdminPeerProfile(hostURL, websiteURL, authenticate, peerProfile),
-    },
-
-    peers: {
-      type: new GraphQLList(new GraphQLNonNull(GraphQLPeer)),
-      resolve: (root, _, { authenticate, prisma: { peer } }) =>
-        getPeers(authenticate, peer),
-    },
-
-    peer: {
-      type: GraphQLPeer,
-      args: { id: { type: new GraphQLNonNull(GraphQLString) } },
-      resolve: (root, { id }, { authenticate, loaders: { peer } }) =>
-        getPeerById(id, authenticate, peer),
     },
 
     // User
@@ -355,55 +309,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         getSubscriptionsAsCSV(filter, authenticate, subscription),
     },
 
-    // UserRole
-    // ========
-
-    userRole: {
-      type: GraphQLUserRole,
-      args: { id: { type: GraphQLString } },
-      resolve: (root, { id }, { authenticate, loaders }) =>
-        getUserRoleById(id, authenticate, loaders.userRolesByID),
-    },
-
-    userRoles: {
-      type: new GraphQLNonNull(GraphQLUserRoleConnection),
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 10 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLUserRoleFilter },
-        sort: {
-          type: GraphQLUserRoleSort,
-          defaultValue: UserRoleSort.ModifiedAt,
-        },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, take, skip, cursor },
-        { authenticate, prisma: { userRole } }
-      ) =>
-        getAdminUserRoles(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          userRole
-        ),
-    },
-
-    // Permissions
-    // ========
-
-    permissions: {
-      type: new GraphQLList(new GraphQLNonNull(GraphQLPermission)),
-      args: {},
-      resolve: (root, _, { authenticate }) => getPermissions(authenticate),
-    },
-
     // Token
     // =====
 
@@ -413,47 +318,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       ),
       resolve: (root, args, { authenticateUser, prisma: { token } }) =>
         getTokens(authenticateUser, token),
-    },
-
-    // Author
-    // ======
-
-    author: {
-      type: GraphQLAuthor,
-      args: { id: { type: GraphQLString }, slug: { type: GraphQLSlug } },
-      resolve: (
-        root,
-        { id, slug },
-        { authenticate, loaders: { authorsByID, authorsBySlug } }
-      ) =>
-        getAuthorByIdOrSlug(id, slug, authenticate, authorsByID, authorsBySlug),
-    },
-
-    authors: {
-      type: new GraphQLNonNull(GraphQLAuthorConnection),
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 10 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLAuthorFilter },
-        sort: { type: GraphQLAuthorSort, defaultValue: AuthorSort.ModifiedAt },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, take, skip, cursor },
-        { authenticate, prisma: { author } }
-      ) =>
-        getAdminAuthors(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          author
-        ),
     },
 
     // Image
@@ -711,45 +575,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         getRatingSystem(commentRatingSystem),
     },
 
-    // Tag
-    // ==========
-
-    tags: {
-      type: GraphQLTagConnection,
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 10 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLTagFilter },
-        sort: { type: GraphQLTagSort, defaultValue: TagSort.CreatedAt },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, cursor, take, skip },
-        { authenticate, prisma }
-      ) =>
-        getTags(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          prisma.tag
-        ),
-    },
-
-    tag: {
-      type: GraphQLTag,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma }) =>
-        getTag(id, authenticate, prisma.tag),
-    },
-
     // Polls
     // =======
 
@@ -777,23 +602,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         id: { type: GraphQLString },
       },
       resolve: (root, { id }, { prisma: { poll } }) => getPoll(id, poll),
-    },
-
-    // Stats
-    newSubscribersPerMonth: {
-      type: new GraphQLList(GraphQLSubscribersPerMonth),
-      args: { monthsBack: { type: GraphQLInt } },
-      resolve: (
-        root,
-        { monthsBack },
-        { authenticate, prisma: { subscription } }
-      ) => {
-        return getNewSubscribersPerMonth(
-          authenticate,
-          subscription,
-          monthsBack
-        );
-      },
     },
   },
 });
