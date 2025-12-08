@@ -13,6 +13,9 @@ import { UserResolver } from './user.resolver';
 import { ProfileService } from './profile.service';
 import { ProfileResolver } from './profile.resolver';
 import { PropertyModule } from '@wepublish/property/api';
+import { UserRoleResolver } from './user-role.resolver';
+import { UserRoleService } from './user-role.service';
+import { UserRoleDataloader } from './user-role.dataloader';
 
 @Module({
   imports: [PrismaModule, ImageModule, PropertyModule],
@@ -26,7 +29,10 @@ import { PropertyModule } from '@wepublish/property/api';
     UserResolver,
     ProfileResolver,
     ProfileService,
+    UserRoleResolver,
+    UserRoleService,
+    UserRoleDataloader,
   ],
-  exports: [UserDataloaderService, UserService],
+  exports: [UserDataloaderService, UserRoleDataloader, UserService],
 })
 export class UserModule {}
