@@ -49,6 +49,7 @@ export class User {
   @Field()
   email!: string;
 
+  @Field()
   active!: boolean;
 
   @Field(() => UserAddress, { nullable: true })
@@ -57,10 +58,8 @@ export class User {
   @Field(() => String, { nullable: true })
   flair!: string | null;
 
-  @Field(() => [PaymentProviderCustomer])
-  paymentProviderCustomers?: PaymentProviderCustomer[];
-
-  userImageID!: string | null;
+  @Field(() => String, { nullable: true })
+  userImageID?: string | null;
 
   @Field(() => Image, { nullable: true })
   image?: Image | null;
@@ -68,10 +67,14 @@ export class User {
   @Field(() => [Property])
   properties?: Property[];
 
+  @Field(() => [String])
   roleIDs!: string[];
 
   @Field(() => [String])
   permissions?: string[];
+
+  @Field(() => [PaymentProviderCustomer], { nullable: true })
+  paymentProviderCustomers?: PaymentProviderCustomer[];
 }
 
 @InputType()
