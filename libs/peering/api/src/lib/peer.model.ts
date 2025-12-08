@@ -1,4 +1,10 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import {
+  ArgsType,
+  Field,
+  ObjectType,
+  PartialType,
+  PickType,
+} from '@nestjs/graphql';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { Descendant } from 'slate';
 import { RemotePeerProfile } from './peer-profile.model';
@@ -26,9 +32,25 @@ export class Peer {
   @Field()
   hostURL!: string;
 
+  @Field()
+  token!: string;
+
   @Field(() => GraphQLRichText, { nullable: true })
   information?: Descendant[];
 
   @Field(() => RemotePeerProfile, { nullable: true })
   profile?: RemotePeerProfile;
+}
+
+@ArgsType()
+export class CreatePeerInput extends PickType(
+  Peer,
+  ['slug', 'name', 'isDisabled', 'information', 'hostURL', 'token'] as const,
+  ArgsType
+) {}
+
+@ArgsType()
+export class UpdatePeerInput extends PartialType(CreatePeerInput, ArgsType) {
+  @Field()
+  id!: string;
 }

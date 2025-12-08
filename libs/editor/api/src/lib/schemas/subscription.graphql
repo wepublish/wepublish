@@ -105,10 +105,3 @@ mutation RenewSubscription($id: String!) {
     ...Invoice
   }
 }
-
-query NewSubscribersPerMonth($months: Int!) {
-  newSubscribersPerMonth(monthsBack: $months) {
-    month
-    subscriberCount
-  }
-}
