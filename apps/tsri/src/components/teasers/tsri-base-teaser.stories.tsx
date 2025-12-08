@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/react';
 import { mockArticleTeaser } from '@wepublish/storybook/mocks';
 
-import { TsriTeaser as BaseTeaser } from './tsri-base-teaser';
+import { TsriTeaser as BaseTeaser } from './tsri-teaser';
 
 export default {
   component: BaseTeaser,
