@@ -7,8 +7,8 @@ import {
   UserAddress,
   useUpdateUserMutation,
   useUserQuery,
-  useUserRoleListQuery,
 } from '@wepublish/editor/api';
+import { getApiClientV2, useUserRoleListQuery } from '@wepublish/editor/api-v2';
 import {
   ChooseEditImage,
   createCheckedPermissionComponent,
@@ -128,8 +128,10 @@ function UserEditView() {
 
   // getting user id from url param
   const [id] = useState<string | undefined>(isEditRoute ? userId : undefined);
+  const client = getApiClientV2();
   const { data: userRoleData, loading: isUserRoleLoading } =
     useUserRoleListQuery({
+      client,
       fetchPolicy: 'network-only',
       variables: {
         take: 200,

@@ -6,6 +6,7 @@ import {
 import { PeerDataloaderService } from './peer-dataloader.service';
 import { PrismaClient } from '@prisma/client';
 import { PrimeDataLoader } from '@wepublish/utils/api';
+import { CreatePeerInput, UpdatePeerInput } from './peer.model';
 
 @Injectable()
 export class PeerService {
@@ -13,6 +14,15 @@ export class PeerService {
     private peerDataloaderService: PeerDataloaderService,
     private prisma: PrismaClient
   ) {}
+
+  @PrimeDataLoader(PeerDataloaderService)
+  async getPeers() {
+    return this.prisma.peer.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
 
   @PrimeDataLoader(PeerDataloaderService)
   async getPeerByIdOrSlug(id?: string, slug?: string) {
@@ -35,5 +45,36 @@ export class PeerService {
     }
 
     return peer;
+  }
+
+  @PrimeDataLoader(PeerDataloaderService)
+  async createPeer({ information, ...input }: CreatePeerInput) {
+    return this.prisma.peer.create({
+      data: {
+        ...input,
+        information: information as any[],
+      },
+    });
+  }
+
+  @PrimeDataLoader(PeerDataloaderService)
+  async updatePeer({ id, information, ...input }: UpdatePeerInput) {
+    return this.prisma.peer.update({
+      where: {
+        id,
+      },
+      data: {
+        ...input,
+        information: information as any[],
+      },
+    });
+  }
+
+  async deletePeer(id: string) {
+    return this.prisma.peer.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

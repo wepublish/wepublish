@@ -1,12 +1,13 @@
 import styled from '@emotion/styled';
 import {
   FullUserRoleFragment,
+  getApiClientV2,
   Permission,
   useCreateUserRoleMutation,
   usePermissionListQuery,
   useUpdateUserRoleMutation,
   useUserRoleQuery,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -47,11 +48,13 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [allPermissions, setAllPermissions] = useState<Permission[]>([]);
 
+  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
     error: loadError,
   } = useUserRoleQuery({
+    client,
     variables: { id: id! },
     fetchPolicy: 'network-only',
     skip: id === undefined,
@@ -62,13 +65,14 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
     loading: isPermissionLoading,
     error: loadPermissionError,
   } = usePermissionListQuery({
+    client,
     fetchPolicy: 'network-only',
   });
 
   const [createUserRole, { loading: isCreating, error: createError }] =
-    useCreateUserRoleMutation();
+    useCreateUserRoleMutation({ client });
   const [updateUserRole, { loading: isUpdating, error: updateError }] =
-    useUpdateUserRoleMutation();
+    useUpdateUserRoleMutation({ client });
 
   const isDisabled =
     systemRole ||
@@ -120,27 +124,27 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
       const { data } = await updateUserRole({
         variables: {
           id,
-          input: {
-            name,
-            description,
-            permissionIDs: permissions.map(({ id }) => id),
-          },
+          name,
+          description,
+          permissionIDs: permissions.map(({ id }) => id),
         },
       });
 
-      if (data?.updateUserRole) onSave?.(data.updateUserRole);
+      if (data?.updateUserRole) {
+        onSave?.(data.updateUserRole);
+      }
     } else {
       const { data } = await createUserRole({
         variables: {
-          input: {
-            name,
-            description,
-            permissionIDs: permissions.map(({ id }) => id),
-          },
+          name,
+          description,
+          permissionIDs: permissions.map(({ id }) => id),
         },
       });
 
-      if (data?.createUserRole) onSave?.(data.createUserRole);
+      if (data?.createUserRole) {
+        onSave?.(data.createUserRole);
+      }
     }
   }
 
