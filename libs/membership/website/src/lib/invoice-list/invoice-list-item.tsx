@@ -62,6 +62,7 @@ export function InvoiceListItem({
   canPay,
   pay,
   className,
+  style,
 }: BuilderInvoiceListItemProps) {
   const {
     meta: { locale },
@@ -74,7 +75,10 @@ export function InvoiceListItem({
   const callAction = useAsyncAction(setLoading, setError);
 
   return (
-    <InvoiceListItemWrapper className={className}>
+    <InvoiceListItemWrapper
+      className={className}
+      style={style}
+    >
       <InvoiceListItemContent>
         {!paidAt && !canceledAt && (
           <H6>

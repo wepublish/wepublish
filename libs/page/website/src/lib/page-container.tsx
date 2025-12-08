@@ -20,6 +20,7 @@ export function PageContainer({
   id,
   slug,
   className,
+  style,
   children,
 }: PageContainerProps) {
   const { Page } = useWebsiteBuilder();
@@ -43,6 +44,7 @@ export function PageContainer({
           loading={loading}
           error={error}
           className={className}
+          style={style}
         >
           {children}
         </Page>

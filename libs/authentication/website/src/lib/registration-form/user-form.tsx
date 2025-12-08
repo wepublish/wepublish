@@ -56,6 +56,7 @@ const countryStyles = (theme: Theme) => css`
 export function UserForm<T extends BuilderUserFormFields>({
   fields,
   className,
+  style,
   control,
   hideEmail,
 }: BuilderUserFormProps<T>) {
@@ -71,7 +72,10 @@ export function UserForm<T extends BuilderUserFormFields>({
   );
 
   return (
-    <UserFormWrapper className={className}>
+    <UserFormWrapper
+      className={className}
+      style={style}
+    >
       {fieldsToDisplay.firstName && (
         <Controller
           name={'firstName'}

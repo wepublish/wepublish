@@ -51,6 +51,7 @@ export const ImageBlock = ({
   linkUrl,
   image,
   className,
+  style,
 }: BuilderImageBlockProps) => {
   const [realImageWidth, setRealImageWidth] = useState<number>();
   const imageRef = useRef<HTMLImageElement>(null);
@@ -88,7 +89,10 @@ export const ImageBlock = ({
   }, [realImageWidth]);
 
   return (
-    <ImageBlockWrapper className={className}>
+    <ImageBlockWrapper
+      style={style}
+      className={className}
+    >
       <ImageBlockInnerWrapper>
         {linkUrl ?
           <Link

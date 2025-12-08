@@ -16,7 +16,7 @@ export type RegistrationFormContainerProps<
 
 export function RegistrationFormContainer<
   T extends Exclude<BuilderUserFormFields, 'flair'>,
->({ className, fields, schema }: RegistrationFormContainerProps<T>) {
+>({ className, style, fields, schema }: RegistrationFormContainerProps<T>) {
   const { RegistrationForm } = useWebsiteBuilder();
   const {
     register: [register, registerData],
@@ -26,6 +26,7 @@ export function RegistrationFormContainer<
   return (
     <RegistrationForm
       className={className}
+      style={style}
       challenge={challenge}
       register={registerData}
       onRegister={variables =>

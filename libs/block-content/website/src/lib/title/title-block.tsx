@@ -34,13 +34,18 @@ export const TitleBlock = ({
   lead,
   preTitle,
   className,
+  style,
 }: BuilderTitleBlockProps) => {
   const {
     elements: { H2 },
   } = useWebsiteBuilder();
 
   return (
-    <TitleBlockWrapper className={className}>
+    <TitleBlockWrapper
+      className={className}
+      className={className}
+      style={style}
+    >
       {preTitle && (
         <Typography
           variant="blockTitlePreTitle"

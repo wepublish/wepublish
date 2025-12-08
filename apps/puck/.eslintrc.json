@@ -1,0 +1,19 @@
+{
+  "extends": [
+    "plugin:@nx/react-typescript",
+    "next",
+    "next/core-web-vitals",
+    "../../.eslintrc.json"
+  ],
+  "ignorePatterns": ["!**/*", ".next/**/*"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "plugins": ["react-refresh"],
+      "rules": {
+        "@next/next/no-html-link-for-pages": ["error", "apps/puck/pages"],
+        "react-refresh/only-export-components": "error"
+      }
+    }
+  ]
+}

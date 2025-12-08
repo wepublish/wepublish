@@ -58,6 +58,7 @@ export const CommentListItem = ({
   openEditorsStateDispatch: dispatch,
   ratingSystem,
   className,
+  style,
   signUpUrl,
   commentDepth = 0,
   maxCommentDepth,
@@ -99,7 +100,7 @@ export const CommentListItem = ({
     <Comment
       {...comment}
       showContent={!showEdit}
-      className={className}
+      style={style}
     >
       <CommentListItemStateWarnings state={state} />
 
@@ -215,7 +216,7 @@ export const CommentListItem = ({
               anonymousCanRate={anonymousCanRate}
               userCanEdit={userCanEdit}
               maxCommentLength={maxCommentLength}
-              className={className}
+              style={style}
               signUpUrl={signUpUrl}
               commentDepth={commentDepth + 1}
               maxCommentDepth={maxCommentDepth}

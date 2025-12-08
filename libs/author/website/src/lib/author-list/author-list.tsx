@@ -11,11 +11,18 @@ export const AuthorListWrapper = styled('article')`
   justify-items: center;
 `;
 
-export const AuthorList = ({ data, className }: BuilderAuthorListProps) => {
+export const AuthorList = ({
+  data,
+  className,
+  style,
+}: BuilderAuthorListProps) => {
   const { AuthorListItem } = useWebsiteBuilder();
 
   return (
-    <AuthorListWrapper className={className}>
+    <AuthorListWrapper
+      className={className}
+      style={style}
+    >
       {data?.authors?.nodes.map(author => (
         <AuthorListItem
           key={author.id}

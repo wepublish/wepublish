@@ -31,6 +31,7 @@ export const InstagramBlockWrapper = styled('div')`
 export function InstagramPostBlock({
   postID,
   className,
+  style,
 }: BuilderInstagramPostBlockProps) {
   const { Script } = useWebsiteBuilder();
 
@@ -51,7 +52,10 @@ export function InstagramPostBlock({
   }
 
   return (
-    <InstagramBlockWrapper className={className}>
+    <InstagramBlockWrapper
+      style={style}
+      className={className}
+    >
       <blockquote
         className="instagram-media"
         data-instgrm-captioned

@@ -16,6 +16,7 @@ export function TwitterTweetBlock({
   userID,
   tweetID,
   className,
+  style,
 }: BuilderTwitterTweetBlockProps) {
   if (!tweetID) {
     return null;
@@ -23,7 +24,7 @@ export function TwitterTweetBlock({
 
   return (
     <TwitterTweetBlockWrapper
-      className={className}
+      style={style}
       data-theme="dark"
     >
       <Tweet id={tweetID} />

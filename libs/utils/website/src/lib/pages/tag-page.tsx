@@ -11,6 +11,7 @@ import {
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
+import { CSSProperties } from 'react';
 import { z } from 'zod';
 
 const take = 25;
@@ -22,8 +23,10 @@ const pageSchema = z.object({
 export function TagPage({
   tag,
   className,
+  style,
 }: InferGetStaticPropsType<typeof TagPageGetStaticProps> & {
   className?: string;
+  style?: CSSProperties;
 }) {
   const { query, replace } = useRouter();
   const { page } = pageSchema.parse(query);
@@ -31,6 +34,7 @@ export function TagPage({
   return (
     <TagContainer
       className={className}
+      style={style}
       tag={tag}
       type={TagType.Article}
       variables={{ take, skip: (page - 1) * take }}

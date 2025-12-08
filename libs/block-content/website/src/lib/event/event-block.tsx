@@ -22,11 +22,18 @@ export const EventBlockWrapper = styled('aside')`
 
 const truncate = truncateFirstParagraph(255);
 
-export const EventBlock = ({ events, className }: BuilderEventBlockProps) => {
+export const EventBlock = ({
+  events,
+  className,
+  style,
+}: BuilderEventBlockProps) => {
   const { EventListItem } = useWebsiteBuilder();
 
   return (
-    <EventBlockWrapper className={className}>
+    <EventBlockWrapper
+      className={className}
+      style={style}
+    >
       {events.map(event => (
         <EventListItem
           key={event.id}

@@ -31,6 +31,7 @@ const StreamableVideoBlockPlayer = styled(ReactPlayer)`
 export function StreamableVideoBlock({
   videoID,
   className,
+  style,
 }: BuilderStreamableVideoBlockProps) {
   const [aspectRatio, setAspectRatio] = useState<number>(16 / 9);
 
@@ -71,7 +72,10 @@ export function StreamableVideoBlock({
   }
 
   return (
-    <StreamableVideoBlockWrapper className={className}>
+    <StreamableVideoBlockWrapper
+      style={style}
+      className={className}
+    >
       <AspectBox $aspectRatio={aspectRatio}>
         <StreamableVideoBlockPlayer
           url={streamableUrl}

@@ -18,6 +18,7 @@ export function BannerContainer({
   documentType,
   documentId,
   className,
+  style,
 }: BannerContainerProps) {
   const { Banner } = useWebsiteBuilder();
   const { hasUser } = useUser();
@@ -39,6 +40,7 @@ export function BannerContainer({
       loading={loading}
       error={error}
       className={className}
+      style={style}
     />
   );
 }

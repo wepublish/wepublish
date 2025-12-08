@@ -57,6 +57,7 @@ export const QuoteBlock = ({
   author,
   image,
   className,
+  style,
 }: BuilderQuoteBlockProps) => {
   const {
     elements: { Paragraph },
@@ -64,7 +65,7 @@ export const QuoteBlock = ({
 
   return (
     <QuoteBlockWrapper
-      className={className}
+      style={style}
       withImage={!!image}
     >
       {image && (

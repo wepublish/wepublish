@@ -8,7 +8,7 @@ export type EventContainerProps = {
   id: string;
 } & BuilderContainerProps;
 
-export function EventContainer({ id, className }: EventContainerProps) {
+export function EventContainer({ id, className, style }: EventContainerProps) {
   const { Event } = useWebsiteBuilder();
   const { data, loading, error } = useEventQuery({
     variables: {
@@ -22,6 +22,7 @@ export function EventContainer({ id, className }: EventContainerProps) {
       loading={loading}
       error={error}
       className={className}
+      style={style}
     />
   );
 }

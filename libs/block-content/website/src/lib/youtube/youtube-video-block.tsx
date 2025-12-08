@@ -20,9 +20,13 @@ export const YouTubeVideoBlockPlayer = styled(ReactPlayer)`
 export function YouTubeVideoBlock({
   videoID,
   className,
+  style,
 }: BuilderYouTubeVideoBlockProps) {
   return (
-    <YouTubeVideoBlockWrapper className={className}>
+    <YouTubeVideoBlockWrapper
+      style={style}
+      className={className}
+    >
       <YouTubeVideoBlockPlayer
         width={'auto'}
         height={'auto'}

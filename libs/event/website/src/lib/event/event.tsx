@@ -53,6 +53,7 @@ export const Event = ({
   loading,
   error,
   className,
+  style,
 }: BuilderEventProps) => {
   const {
     blocks: { RichText, Title, Image },
@@ -60,7 +61,10 @@ export const Event = ({
   } = useWebsiteBuilder();
 
   return (
-    <EventWrapper className={className}>
+    <EventWrapper
+      className={className}
+      style={style}
+    >
       {data?.event && <EventSEO event={data.event} />}
       {data?.event.image && (
         <Image

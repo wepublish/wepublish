@@ -18,7 +18,6 @@ export enum ElementID {
 
 export interface ClientSettings {
   readonly apiURL: string;
-  readonly peerByDefault: boolean;
   readonly imgMinSizeToCompress: number;
 }
 
@@ -47,12 +46,16 @@ const authLink = new ApolloLink((operation, forward) => {
 let settings: ClientSettings;
 
 export function getSettings(): ClientSettings {
-  if (!settings) {
-    const defaultSettings = {
-      apiURL: 'http://localhost:4000',
-      imgMinSizeToCompress: 10,
-    };
+  const defaultSettings = {
+    apiURL: 'http://localhost:4000',
+    imgMinSizeToCompress: 10,
+  };
 
+  if (typeof document === 'undefined') {
+    return defaultSettings;
+  }
+
+  if (!settings) {
     const settingsJson = document.getElementById(ElementID.Settings);
 
     settings =

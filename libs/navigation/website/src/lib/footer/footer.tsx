@@ -74,6 +74,7 @@ export const FooterIcons = styled.div`
 
 export function Footer({
   className,
+  style,
   categorySlugs,
   slug,
   iconSlug,
@@ -110,6 +111,7 @@ export function Footer({
   return (
     <FooterWrapper
       className={className}
+      style={style}
       ref={ref}
     >
       <FooterPaper

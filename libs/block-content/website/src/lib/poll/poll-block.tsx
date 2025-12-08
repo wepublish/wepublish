@@ -41,7 +41,11 @@ export const PollBlockMeta = styled('div')`
   color: ${({ theme }) => theme.palette.text.disabled};
 `;
 
-export const PollBlock = ({ poll, className }: BuilderPollBlockProps) => {
+export const PollBlock = ({
+  poll,
+  className,
+  style,
+}: BuilderPollBlockProps) => {
   const { vote, fetchUserVote, canVoteAnonymously, getAnonymousVote } =
     usePollBlock();
 
@@ -123,7 +127,10 @@ export const PollBlock = ({ poll, className }: BuilderPollBlockProps) => {
   );
 
   return (
-    <PollBlockWrapper className={className}>
+    <PollBlockWrapper
+      className={className}
+      style={style}
+    >
       {poll.question && (
         <PollBlockTitle component={'h1'}>{poll.question}</PollBlockTitle>
       )}

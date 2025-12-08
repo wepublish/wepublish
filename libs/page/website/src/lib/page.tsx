@@ -10,6 +10,7 @@ export const PageWrapper = styled(ContentWrapper)``;
 
 export function Page({
   className,
+  style,
   data,
   loading,
   error,
@@ -21,7 +22,10 @@ export function Page({
   } = useWebsiteBuilder();
 
   return (
-    <PageWrapper className={className}>
+    <PageWrapper
+      className={className}
+      style={style}
+    >
       {data?.page && <PageSEO page={data.page as PageType} />}
 
       {data?.page && (

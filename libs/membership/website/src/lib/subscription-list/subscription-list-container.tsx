@@ -30,6 +30,7 @@ export function SubscriptionListContainer({
   filter,
   subscribeUrl = '/mitmachen',
   className,
+  style,
 }: SubscriptionListContainerProps) {
   const [stripeClientSecret, setStripeClientSecret] = useState<string>();
   const [stripeMemberPlan, setStripeMemberPlan] =
@@ -106,6 +107,7 @@ export function SubscriptionListContainer({
         invoices={invoices}
         subscribeUrl={subscribeUrl}
         className={className}
+        style={style}
         onCancel={async subscriptionId => {
           await cancel({
             variables: {

@@ -20,6 +20,7 @@ export const RichTextBlockWrapper = styled('div')`
 
 export const RichTextBlock = ({
   className,
+  style,
   richText,
 }: BuilderRichTextBlockProps) => {
   const {
@@ -27,7 +28,10 @@ export const RichTextBlock = ({
   } = useWebsiteBuilder();
 
   return (
-    <RichTextBlockWrapper className={className}>
+    <RichTextBlockWrapper
+      style={style}
+      className={className}
+    >
       <RenderRichtext elements={richText ?? []} />
     </RichTextBlockWrapper>
   );

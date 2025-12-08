@@ -8,7 +8,12 @@ type IdOrSlug = { id: string; slug?: never } | { id?: never; slug: string };
 
 export type AuthorContainerProps = IdOrSlug & BuilderContainerProps;
 
-export function AuthorContainer({ id, slug, className }: AuthorContainerProps) {
+export function AuthorContainer({
+  id,
+  slug,
+  className,
+  style,
+}: AuthorContainerProps) {
   const { Author } = useWebsiteBuilder();
   const { data, loading, error } = useAuthorQuery({
     variables: {
@@ -23,6 +28,7 @@ export function AuthorContainer({ id, slug, className }: AuthorContainerProps) {
       loading={loading}
       error={error}
       className={className}
+      style={style}
     />
   );
 }

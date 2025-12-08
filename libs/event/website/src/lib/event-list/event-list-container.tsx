@@ -10,6 +10,7 @@ export type EventListContainerProps = BuilderContainerProps &
 
 export function EventListContainer({
   className,
+  style,
   variables,
   onVariablesChange,
 }: EventListContainerProps) {
@@ -24,6 +25,7 @@ export function EventListContainer({
       loading={loading}
       error={error}
       className={className}
+      style={style}
       variables={variables}
       onVariablesChange={onVariablesChange}
     />

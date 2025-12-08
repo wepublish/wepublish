@@ -57,6 +57,7 @@ export function LoginForm({
   defaults,
   disablePasswordLogin,
   className,
+  style,
 }: BuilderLoginFormProps) {
   const {
     elements: { Alert, TextField },
@@ -96,7 +97,10 @@ export function LoginForm({
   const awaitingLoginConfirmed = loginWithPassword && loading;
 
   return (
-    <LoginFormWrapper className={className}>
+    <LoginFormWrapper
+      className={className}
+      style={style}
+    >
       {!disablePasswordLogin && (
         <FormControlLabel
           control={

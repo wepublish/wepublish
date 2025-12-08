@@ -72,6 +72,7 @@ export function RegistrationForm<
   fields = ['firstName', 'address', 'password', 'passwordRepeated'] as T[],
   register,
   className,
+  style,
   schema = defaultRegisterSchema,
   onRegister,
   onChange,
@@ -139,6 +140,7 @@ export function RegistrationForm<
   return (
     <RegistrationFormWrapper
       className={className}
+      style={style}
       onSubmit={onSubmit}
     >
       <UserForm

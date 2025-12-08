@@ -84,6 +84,7 @@ export const TeaserGridBlock = ({
   teasers,
   blockStyle,
   className,
+  style,
 }: BuilderTeaserGridBlockProps) => {
   const {
     blocks: { Teaser },
@@ -93,7 +94,7 @@ export const TeaserGridBlock = ({
 
   return (
     <TeaserGridBlockWrapper
-      className={className}
+      style={style}
       numColumns={numColumns}
     >
       {filledTeasers.map((teaser, index) => (

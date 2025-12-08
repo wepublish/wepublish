@@ -5,12 +5,14 @@ import {
   EventListQueryVariables,
   EventQuery,
 } from '@wepublish/website/api';
+import { CSSProperties } from 'react';
 
 export type BuilderEventProps = Pick<
   QueryResult<EventQuery>,
   'data' | 'loading' | 'error'
 > & {
   className?: string;
+  style?: CSSProperties;
 };
 
 export type BuilderEventSEOProps = {
@@ -22,6 +24,7 @@ export type BuilderEventListProps = Pick<
   'data' | 'loading' | 'error'
 > & {
   className?: string;
+  style?: CSSProperties;
   variables?: Partial<EventListQueryVariables>;
   descriptionMaxLength?: number;
   onVariablesChange?: (variables: Partial<EventListQueryVariables>) => void;
@@ -29,4 +32,5 @@ export type BuilderEventListProps = Pick<
 
 export type BuilderEventListItemProps = Event & {
   className?: string;
+  style?: CSSProperties;
 };

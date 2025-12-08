@@ -37,7 +37,7 @@ export const MemberPlanPicker = forwardRef<
   HTMLButtonElement,
   BuilderMemberPlanPickerProps
 >(function MemberPlanPicker(
-  { memberPlans, onChange, value, className, name },
+  { memberPlans, onChange, value, className, style, name },
   ref
 ) {
   const {
@@ -61,7 +61,10 @@ export const MemberPlanPicker = forwardRef<
 
   return (
     showPicker && (
-      <MemberPlanPickerWrapper className={className}>
+      <MemberPlanPickerWrapper
+        className={className}
+        style={style}
+      >
         {showRadioButtons && (
           <MemberPlanPickerRadios
             name={name}

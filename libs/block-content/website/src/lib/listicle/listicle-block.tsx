@@ -47,13 +47,17 @@ export const ListicleRichtText = styled(RichTextBlock)``;
 export const ListicleBlock = ({
   items,
   className,
+  style,
 }: BuilderListicleBlockProps) => {
   const {
     elements: { H3 },
   } = useWebsiteBuilder();
 
   return (
-    <ListicleBlockWrapper className={className}>
+    <ListicleBlockWrapper
+      style={style}
+      className={className}
+    >
       {items.map((item, index) => (
         <ListicleBlockItem key={index}>
           <ListicleBlockItemCounter>{index + 1}</ListicleBlockItemCounter>

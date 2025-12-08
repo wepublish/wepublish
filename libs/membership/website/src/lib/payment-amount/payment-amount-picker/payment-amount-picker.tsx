@@ -101,6 +101,7 @@ export const PaymentAmountPicker = forwardRef<
   (
     {
       className,
+      style,
       slug,
       currency,
       amountPerMonthMin,
@@ -130,7 +131,7 @@ export const PaymentAmountPicker = forwardRef<
 
     return (
       <PaymentAmountPickerWrapper
-        className={className}
+        style={style}
         name={name}
         onChange={event => {
           if (+event.target.value) {

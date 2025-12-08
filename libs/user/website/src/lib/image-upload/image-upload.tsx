@@ -41,7 +41,7 @@ const avatarStyles = css`
 export const ImageUpload = forwardRef<
   HTMLInputElement | null,
   BuilderImageUploadProps
->(function ImageUpload({ image, onUpload, className }, parentRef) {
+>(function ImageUpload({ image, onUpload, className, style }, parentRef) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const {
     elements: { Image, IconButton },
@@ -51,7 +51,10 @@ export const ImageUpload = forwardRef<
   useImperativeHandle(parentRef, () => fileInputRef.current!, []);
 
   return (
-    <ImageUploadWrapper className={className}>
+    <ImageUploadWrapper
+      className={className}
+      style={style}
+    >
       <ImageUploadImageWrapper>
         {image ?
           <Image

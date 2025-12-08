@@ -30,6 +30,7 @@ const mockTeaserSlotsBlock = ({
   teasers,
   blockStyle,
   className,
+  style,
   autofillConfig,
   autofillTeasers,
   slots,

@@ -96,6 +96,7 @@ export function SubscriptionListItem({
   externalReward,
   extend,
   className,
+  style,
 }: BuilderSubscriptionListItemProps) {
   const {
     meta: { locale },
@@ -115,7 +116,10 @@ export function SubscriptionListItem({
   const [confirmExtend, setConfirmExtend] = useState<boolean>(false);
 
   return (
-    <SubscriptionListItemWrapper className={className}>
+    <SubscriptionListItemWrapper
+      className={className}
+      style={style}
+    >
       {image && <Image image={image} />}
 
       <SubscriptionListItemContent>

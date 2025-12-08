@@ -65,6 +65,7 @@ const richTextStyles = (theme: Theme) => css`
 
 export const BreakBlock = ({
   className,
+  style,
   text,
   image,
   richText,
@@ -80,7 +81,10 @@ export const BreakBlock = ({
   const theme = useTheme();
 
   return (
-    <BreakBlockWrapper className={className}>
+    <BreakBlockWrapper
+      style={style}
+      className={className}
+    >
       {(image || text) && (
         <BreakBlockSegment>
           {!image && text && (

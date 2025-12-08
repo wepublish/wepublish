@@ -13,7 +13,7 @@ export const PeriodicityPicker = forwardRef<
   HTMLButtonElement,
   BuilderPeriodicityPickerProps
 >(function PeriodicityPicker(
-  { periodicities, onChange, value, className, name },
+  { periodicities, onChange, value, className, style, name },
   ref
 ) {
   const id = useId();
@@ -30,7 +30,10 @@ export const PeriodicityPicker = forwardRef<
   }
 
   return (
-    <PeriodicityPickerWrapper className={className}>
+    <PeriodicityPickerWrapper
+      className={className}
+      style={style}
+    >
       <>
         <InputLabel htmlFor={id}>Zahlungsintervall</InputLabel>
 

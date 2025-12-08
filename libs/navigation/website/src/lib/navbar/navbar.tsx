@@ -16,7 +16,13 @@ import {
   Link,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { PropsWithChildren, useCallback, useMemo, useState } from 'react';
+import {
+  CSSProperties,
+  PropsWithChildren,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import { MdClose, MdMenu, MdWarning } from 'react-icons/md';
 import { navigationLinkToUrl } from '../link-to-url';
 import { useTranslation } from 'react-i18next';
@@ -222,11 +228,12 @@ const imageStyles = (theme: Theme) => css`
 export interface ExtendedNavbarProps extends BuilderNavbarProps {
   isMenuOpen?: boolean;
   onMenuToggle?: (isOpen: boolean) => void;
-  navPaperClassName?: string;
+  style?: CSSProperties;
 }
 
 export function Navbar({
   className,
+  style,
   children,
   categorySlugs,
   slug,
@@ -241,7 +248,6 @@ export function Navbar({
   subscribeBtn = { href: '/mitmachen' },
   isMenuOpen: controlledIsMenuOpen,
   onMenuToggle,
-  navPaperClassName,
 }: ExtendedNavbarProps) {
   const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
 
@@ -287,7 +293,10 @@ export function Navbar({
   } = useWebsiteBuilder();
 
   return (
-    <NavbarWrapper className={className}>
+    <NavbarWrapper
+      className={className}
+      style={style}
+    >
       <GlobalStyles styles={theme => cssVariables(theme)} />
 
       <AppBar
@@ -392,7 +401,6 @@ export function Navbar({
           categories={categories}
           closeMenu={toggleMenu}
           isMenuOpen={isMenuOpen}
-          className={navPaperClassName}
         >
           {iconItems?.links.map((link, index) => (
             <Link
@@ -537,6 +545,7 @@ const NavPaper = ({
   hasUnpaidInvoices,
   isMenuOpen,
   className,
+  style,
   children,
 }: PropsWithChildren<{
   loginBtn?: ButtonProps | null;
@@ -549,6 +558,7 @@ const NavPaper = ({
   hasUnpaidInvoices: boolean;
   isMenuOpen: boolean;
   className?: string;
+  style?: CSSProperties;
 }>) => {
   const {
     elements: { Link, Button, H4, H6 },

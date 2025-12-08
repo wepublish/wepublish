@@ -38,6 +38,7 @@ export type CommentListContainerProps = {
 
 export function CommentListContainer({
   className,
+  style,
   variables,
   id,
   type,
@@ -116,7 +117,7 @@ export function CommentListContainer({
         loading={loading || settings.loading}
         error={error ?? settings.error}
         challenge={challenge}
-        className={className}
+        style={style}
         variables={variables}
         onVariablesChange={onVariablesChange}
         openEditorsState={openCommentEditors}

@@ -1,0 +1,44 @@
+{
+  "name": "puck",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/puck",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/puck"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "apps/puck"
+        },
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "puck:build",
+        "dev": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "puck:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "puck:build:production",
+          "dev": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

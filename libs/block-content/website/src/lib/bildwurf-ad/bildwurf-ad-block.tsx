@@ -36,6 +36,7 @@ export interface BildwurfAdEmbedProps {
 export function BildwurfAdBlock({
   zoneID,
   className,
+  style,
 }: BuilderBildwurfAdBlockProps) {
   const { Script } = useWebsiteBuilder();
 
@@ -59,7 +60,7 @@ export function BildwurfAdBlock({
       />
 
       <BildwurfBlockWrapper
-        className={className}
+        style={style}
         dangerouslySetInnerHTML={{
           // Inject it dynamically so that React does not track it.
           // Bildwurf will dynamically change the DOM which can break the application on navigation

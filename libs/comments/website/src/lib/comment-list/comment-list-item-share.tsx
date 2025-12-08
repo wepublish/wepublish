@@ -30,6 +30,7 @@ export const CommentListItemShare = ({
   url,
   title,
   className,
+  style,
   forceNonSystemShare,
 }: BuilderCommentListItemShareProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -97,7 +98,10 @@ export const CommentListItemShare = ({
   ];
 
   return (
-    <CommentListItemShareWrapper className={className}>
+    <CommentListItemShareWrapper
+      style={style}
+      className={className}
+    >
       <IconButton
         size="small"
         onClick={handleClick}
