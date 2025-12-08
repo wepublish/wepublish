@@ -33,12 +33,10 @@ export const TabPanelBase = (props: TabPanelBaseProps) => {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && <TabPanelBox>{children}</TabPanelBox>}
+      {value === index && children}
     </div>
   );
 };
-
-export const TabPanelBox = styled('div')``;
 
 export const TabPanel = styled(TabPanelBase)`
   background: linear-gradient(
@@ -80,7 +78,7 @@ export const Tab = styled(MuiTab)`
   align-items: flex-start;
   min-height: unset;
 
-  @container tabbed-content (width > 700px) {
+  @container tabbed-content (width > 200px) {
     font-size: 1.4cqw;
     line-height: 1.4cqw;
     padding: 0.7cqw 2.8cqw 0.5cqw 2.8cqw;
@@ -89,7 +87,7 @@ export const Tab = styled(MuiTab)`
     border-top-right-radius: 1cqw;
   }
 
-  &:last-child {
+  &:last-of-type {
     margin-right: 0;
   }
 
@@ -123,6 +121,7 @@ export const a11yProps = (index: number) => {
 export const TabbedContent = ({
   className,
   nestedBlocks,
+  blockStyle,
 }: BuilderBlockStyleProps['TabbedContent']) => {
   const [value, setValue] = React.useState(0);
 
@@ -143,11 +142,6 @@ export const TabbedContent = ({
           aria-label="Tabs zur Navigation zwischen verschiedenen Themenbereichen"
         >
           {nestedBlocks.map((nestedBlock, index) => {
-            /*
-            if (nestedBlock?.block) {
-              nestedBlock.block.blockStyle = `TabbedContent${nestedBlock.block.blockStyle ?? `|${nestedBlock.block.blockStyle}`}`;
-            }
-            */
             return (
               <Tab
                 disableRipple={true}
@@ -169,7 +163,15 @@ export const TabbedContent = ({
           key={index}
         >
           <Renderer
-            block={nestedBlock.block as BlockContent}
+            block={
+              {
+                ...nestedBlock.block,
+                blockStyle:
+                  nestedBlock.block?.blockStyle ||
+                  TabbedContent['subBlockStyles']?.[index] ||
+                  blockStyle,
+              } as BlockContent
+            }
             type="Article"
             index={index}
             count={nestedBlocks.length}
@@ -179,6 +181,9 @@ export const TabbedContent = ({
     </TabbedContentWrapper>
   );
 };
+
+TabbedContent['subBlockStyles'] =
+  [] as BuilderBlockStyleProps['TabbedContent']['subBlockStyles'];
 
 export const isTabbedContentBlockStyle = (
   block: Pick<BlockContent, '__typename'>
