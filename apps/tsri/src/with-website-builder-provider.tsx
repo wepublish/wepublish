@@ -16,7 +16,7 @@ import { TsriContextBox } from '../src/components/tsri-context-box';
 import { TSRIFooter } from '../src/components/tsri-footer';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
-import { TsriTeaserGridFlex } from '../src/components/tsri-teaser-grid-flex';
+import { TsriBaseTeaserGridFlex } from './components/teaser-layouts/tsri-base-teaser-flex-grid';
 import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
 import theme from '../src/theme';
 
@@ -34,7 +34,7 @@ export const WithWebsiteBuilderProvider = (
     AuthorList={TSRIAuthorList}
     blocks={{
       BaseTeaser: TsriBaseTeaser,
-      TeaserGridFlex: TsriTeaserGridFlex,
+      TeaserGridFlex: TsriBaseTeaserGridFlex,
       Break: TsriBreakBlock,
       Quote: TsriQuoteBlock,
       RichText: TsriRichText,
