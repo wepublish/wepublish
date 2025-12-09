@@ -11,5 +11,6 @@ export const RichTextConfig: ComponentConfig<BuilderRichTextBlockProps> = {
   defaultProps: {
     richText: mockRichText(),
   },
+  inline: true,
   render: RichTextBlock,
 };

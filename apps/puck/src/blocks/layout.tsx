@@ -7,10 +7,10 @@ import { CSSProperties, forwardRef, ReactNode } from 'react';
 import { spacingOptions } from '../options/spacing-options';
 
 type LayoutFieldProps = {
-  padding?: string;
+  vertPadding?: string;
+  horPadding?: string;
   spanCol?: number;
   spanRow?: number;
-  grow?: boolean;
 };
 
 export type WithLayout<Props extends DefaultComponentProps> = Props & {
@@ -37,9 +37,14 @@ export const layoutField: ObjectField<LayoutFieldProps> = {
       min: 1,
       max: 12,
     },
-    padding: {
+    vertPadding: {
       type: 'select',
       label: 'Vertical Padding',
+      options: [{ label: '0px', value: '0px' }, ...spacingOptions],
+    },
+    horPadding: {
+      type: 'select',
+      label: 'Horizontal Padding',
       options: [{ label: '0px', value: '0px' }, ...spacingOptions],
     },
   },
@@ -60,8 +65,7 @@ export const Layout = forwardRef<HTMLDivElement, LayoutProps>(function Layout(
           layout?.spanRow ?
             `span ${Math.max(Math.min(layout.spanRow, 12), 1)}`
           : undefined,
-        paddingTop: layout?.padding,
-        paddingBottom: layout?.padding,
+        padding: `${layout?.vertPadding} ${layout?.horPadding}`,
         ...style,
       }}
       ref={ref}
@@ -87,7 +91,8 @@ export function withLayout<
       layout: {
         spanCol: 1,
         spanRow: 1,
-        padding: '0px',
+        vertPadding: '0px',
+        horPadding: spacingOptions[1].value,
         ...componentConfig.defaultProps?.layout,
       },
     },
@@ -105,7 +110,8 @@ export function withLayout<
             objectFields: {
               spanCol: layoutField.objectFields.spanCol,
               spanRow: layoutField.objectFields.spanRow,
-              padding: layoutField.objectFields.padding,
+              vertPadding: layoutField.objectFields.vertPadding,
+              horPadding: layoutField.objectFields.horPadding,
             },
           },
         };
@@ -116,7 +122,8 @@ export function withLayout<
         layout: {
           ...layoutField,
           objectFields: {
-            padding: layoutField.objectFields.padding,
+            vertPadding: layoutField.objectFields.vertPadding,
+            horPadding: layoutField.objectFields.horPadding,
           },
         },
       };

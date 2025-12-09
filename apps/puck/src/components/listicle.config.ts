@@ -29,5 +29,6 @@ export const ListicleConfig: ComponentConfig<BuilderListicleBlockProps> = {
       },
     ],
   },
+  inline: true,
   render: ListicleBlock,
 };
