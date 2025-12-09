@@ -1,4 +1,5 @@
 import { Field, ObjectType, OmitType } from '@nestjs/graphql';
+// eslint-disable-next-line no-restricted-imports
 import { SensitiveDataUser } from '@wepublish/user/api';
 
 @ObjectType()
