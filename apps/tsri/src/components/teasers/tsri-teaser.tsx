@@ -50,6 +50,7 @@ export const TeaserWrapper = styled('li')<FlexAlignment>`
   cursor: pointer;
   container: teaser/inline-size;
   display: grid;
+  position: relative;
 
   ${({ theme, w }) =>
     w > 6 &&
@@ -191,6 +192,20 @@ export const TeaserTitle = styled('h1')`
   font-size: calc((9 * 100cqw / 16) * 0.08) !important;
   line-height: 1.05 !important;
   padding: 1.5cqw 1.5cqw 2.2cqw;
+
+  & .MuiLink-root {
+    &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: transparent;
+      cursor: pointer;
+    }
+  }
 `;
 
 export const TeaserLead = styled('p')`
@@ -228,24 +243,6 @@ export const TeaserContent = ({
   const {
     elements: { Link },
   } = useWebsiteBuilder();
-
-  /*
-  if (href) {
-    return (
-      <Link
-        color="inherit"
-        underline="none"
-        href={href}
-        target={target}
-        css={stretchToParentHeight}
-      >
-        <TeaserContentWrapper className={className}>
-          {children}
-        </TeaserContentWrapper>
-      </Link>
-    );
-  }
-*/
 
   return (
     <TeaserContentWrapper className={className}>
