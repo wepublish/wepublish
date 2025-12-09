@@ -15,6 +15,7 @@ export const TeaserMoreAbout = styled(TsriTeaser)`
   aspect-ratio: unset;
   container: unset;
   background-color: transparent;
+  cursor: default;
 
   & * {
     background-color: transparent;
@@ -29,18 +30,30 @@ export const TeaserMoreAbout = styled(TsriTeaser)`
     grid-template-columns: unset;
     border-radius: unset;
     background-color: transparent;
-    padding: 7cqw 0 0 0;
+    padding-top: 7cqw;
   }
 
   & ${TeaserTitle} {
-    @container tabbed-content (width > 200px) {
-      font-size: 1.1cqw !important;
-      font-weight: 700 !important;
-      line-height: 1.2cqw !important;
-    }
+    font-size: 1.1cqw !important;
+    font-weight: 700 !important;
+    line-height: 1.2cqw !important;
     text-align: right;
     display: inline-block;
     padding: 0;
+
+    & .MuiLink-root {
+      &:after {
+        content: '';
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: transparent;
+        cursor: pointer;
+      }
+    }
 
     & > * {
       display: inline;
