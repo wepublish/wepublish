@@ -54,7 +54,17 @@ export const HauptstadtTeaserGrid = styled(TeaserGridBlock)`
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-template-columns: repeat(12, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  // Ignore TeaserWrapper layout and follow parent columns
+  ${TeaserWrapper} {
+    grid-column: unset;
+    grid-row: unset;
+
+    &:only-child {
+      grid-column-start: 2;
+    }
   }
 `;
 
