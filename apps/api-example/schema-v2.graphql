@@ -746,6 +746,7 @@ enum EditorBlockType {
   Crowdfunding
   Embed
   Event
+  FlexBlock
   HTML
   Image
   ImageGallery
