@@ -4,12 +4,12 @@ import {
   ApolloProvider,
   DefaultOptions,
   from,
+  HttpLink,
   InMemoryCache,
   InMemoryCacheConfig,
   NormalizedCacheObject,
   split,
 } from '@apollo/client';
-import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { mergeDeepRight } from 'ramda';
 import possibleTypes from './graphql';
 
@@ -34,13 +34,13 @@ const createV1ApiClient = (
   cacheConfig?: InMemoryCacheConfig,
   cache?: NormalizedCacheObject
 ) => {
-  // If operation is uploading a file, use the upload link, else use the batch http
+  // If operation is uploading a file, use the upload link, else use the normal http link
   const httpLink = split(
     ({ variables }) => isFile(variables),
     createUploadLink({
       uri: `${apiUrl}/v1`,
     }),
-    new BatchHttpLink({ uri: `${apiUrl}/v1`, batchMax: 5, batchInterval: 20 })
+    new HttpLink({ uri: `${apiUrl}/v1` })
   );
 
   const link = from([...links, httpLink]);
