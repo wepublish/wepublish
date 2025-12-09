@@ -15,5 +15,6 @@ export const QuoteConfig: ComponentConfig<BuilderQuoteBlockProps> = {
     quote: 'Hello, world',
     author: 'Julius Cesar',
   },
+  inline: true,
   render: QuoteBlock,
 };

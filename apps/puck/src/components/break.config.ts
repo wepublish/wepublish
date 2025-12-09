@@ -40,5 +40,6 @@ export const BreakConfig: ComponentConfig<BuilderBreakBlockProps> = {
     hideButton: false,
     richText: mockRichText(),
   },
+  inline: true,
   render: BreakBlock,
 };

@@ -11,5 +11,6 @@ export const HtmlConfig: ComponentConfig<BuilderHTMLBlockProps> = {
   defaultProps: {
     html: '',
   },
+  inline: true,
   render: HtmlBlock,
 };

@@ -50,6 +50,7 @@ export const TeaserConfig: ComponentConfig<ComponentProps<typeof TeaserItem>> =
 
       return params.fields;
     },
+    inline: true,
     render: TeaserItem,
     defaultProps: {
       type: 'article',

@@ -26,6 +26,7 @@ export const EventConfig: ComponentConfig<EventConfigProps> = {
   defaultProps: {
     events: [{}],
   },
+  inline: true,
   render: ({ events, ...props }) => (
     <EventBlock
       events={events.flatMap(event => (event.event ? [event.event] : []))}
