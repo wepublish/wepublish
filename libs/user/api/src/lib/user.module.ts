@@ -12,6 +12,9 @@ import { UserService } from './user.service';
 import { ProfileService } from './profile.service';
 import { ProfileResolver } from './profile.resolver';
 import { PropertyModule } from '@wepublish/property/api';
+import { UserRoleResolver } from './user-role.resolver';
+import { UserRoleService } from './user-role.service';
+import { UserRoleDataloader } from './user-role.dataloader';
 import { SensitiveDataUserResolver } from './sensitive-data-user.resolver';
 import { BaseUserResolver } from './base-user.resolver';
 import {
@@ -38,7 +41,10 @@ import {
     BaseUserResolver,
     ProfileResolver,
     ProfileService,
+    UserRoleResolver,
+    UserRoleService,
+    UserRoleDataloader,
   ],
-  exports: [UserDataloaderService, UserService],
+  exports: [UserDataloaderService, UserRoleDataloader, UserService],
 })
 export class UserModule {}

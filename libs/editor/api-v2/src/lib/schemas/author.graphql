@@ -8,6 +8,10 @@ fragment FullAuthor on Author {
   createdAt
   modifiedAt
 
+  peer {
+    ...FullPeer
+  }
+
   links {
     title
     url
@@ -17,10 +21,113 @@ fragment FullAuthor on Author {
     ...FullTag
   }
 
+  imageID
   image {
     ...FullImage
   }
+
   hideOnArticle
   hideOnTeaser
   hideOnTeam
+}
+
+query AuthorList(
+  $filter: String
+  $cursor: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: AuthorSort
+) {
+  authors(
+    filter: { name: $filter }
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullAuthor
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query Author($id: String!) {
+  author(id: $id) {
+    ...FullAuthor
+  }
+}
+
+mutation CreateAuthor(
+  $slug: Slug!
+  $name: String!
+  $jobTitle: String
+  $bio: RichText
+  $hideOnArticle: Boolean!
+  $hideOnTeam: Boolean!
+  $hideOnTeaser: Boolean!
+  $links: [AuthorLinkInput!]!
+  $tagIds: [String!]!
+  $imageID: String
+) {
+  createAuthor(
+    slug: $slug
+    name: $name
+    jobTitle: $jobTitle
+    bio: $bio
+    hideOnArticle: $hideOnArticle
+    hideOnTeam: $hideOnTeam
+    hideOnTeaser: $hideOnTeaser
+    links: $links
+    tagIds: $tagIds
+    imageID: $imageID
+  ) {
+    ...FullAuthor
+  }
+}
+
+mutation UpdateAuthor(
+  $id: String!
+  $slug: Slug
+  $name: String
+  $jobTitle: String
+  $bio: RichText
+  $hideOnArticle: Boolean
+  $hideOnTeam: Boolean
+  $hideOnTeaser: Boolean
+  $links: [AuthorLinkInput!]
+  $tagIds: [String!]
+  $imageID: String
+) {
+  updateAuthor(
+    id: $id
+    slug: $slug
+    name: $name
+    jobTitle: $jobTitle
+    bio: $bio
+    hideOnArticle: $hideOnArticle
+    hideOnTeam: $hideOnTeam
+    hideOnTeaser: $hideOnTeaser
+    links: $links
+    tagIds: $tagIds
+    imageID: $imageID
+  ) {
+    ...FullAuthor
+  }
+}
+
+mutation DeleteAuthor($id: String!) {
+  deleteAuthor(id: $id) {
+    ...FullAuthor
+  }
 }

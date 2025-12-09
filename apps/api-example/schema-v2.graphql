@@ -168,6 +168,11 @@ type AuthorLink {
   url: String!
 }
 
+input AuthorLinkInput {
+  title: String!
+  url: String!
+}
+
 """Sorting options for authors"""
 enum AuthorSort {
   CreatedAt
@@ -400,6 +405,11 @@ type Challenge {
 input ChallengeInput {
   challengeID: String!
   challengeSolution: String!
+}
+
+type Chat {
+  chatId: String!
+  message: String!
 }
 
 """A hexadecimal color value (#RRGGBB)"""
@@ -1188,12 +1198,6 @@ input ImageGalleryImageInput {
   imageID: String
 }
 
-enum ImageOutput {
-  jpeg
-  png
-  webp
-}
-
 enum ImageRotation {
   Auto
   Rotate0
@@ -1207,8 +1211,6 @@ input ImageTransformation {
   grayscale: Boolean
   height: Int
   negate: Boolean
-  output: ImageOutput
-  quality: Float
   rotation: ImageRotation
   sharpen: Boolean
   width: Int
@@ -1384,6 +1386,9 @@ type Mutation {
 
   """Creates an article."""
   createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+
+  """Creates a new author."""
+  createAuthor(bio: RichText, hideOnArticle: Boolean!, hideOnTeam: Boolean!, hideOnTeaser: Boolean!, imageID: String, jobTitle: String, links: [AuthorLinkInput!]!, name: String!, slug: Slug!, tagIds: [String!]!): Author!
   createBanner(input: CreateBannerInput!): Banner!
 
   """Creates a new block style."""
@@ -1417,6 +1422,9 @@ type Mutation {
 
   """Creates a paywall bypass token."""
   createPaywallBypass(paywallId: String!, token: String!): PaywallBypass!
+
+  """Creates a new peer."""
+  createPeer(hostURL: String!, information: RichText, isDisabled: Boolean, name: String!, slug: String!, token: String!): Peer!
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
 
@@ -1434,11 +1442,20 @@ type Mutation {
   """
   createSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
+  """Creates a new tag."""
+  createTag(description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
+
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
 
+  """Creates a new userrole."""
+  createUserRole(description: String, name: String!, permissionIDs: [String!]!): UserRole!
+
   """Deletes an article."""
   deleteArticle(id: String!): String!
+
+  """Deletes an existing author."""
+  deleteAuthor(id: String!): Author!
   deleteBanner(id: String!): Boolean
 
   """Deletes an existing block style."""
@@ -1463,6 +1480,9 @@ type Mutation {
   """Deletes a paywall bypass token."""
   deletePaywallBypass(id: String!): String!
 
+  """Deletes an existing peer."""
+  deletePeer(id: String!): Peer!
+
   """Delete poll votes"""
   deletePollVotes(ids: [String!]!): DeletePollVotesResult!
 
@@ -1472,8 +1492,14 @@ type Mutation {
   """Delete an existing subscription interval"""
   deleteSubscriptionInterval(id: String!): [SubscriptionFlowModel!]!
 
+  """Deletes an existing tag."""
+  deleteTag(id: String!): Tag!
+
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
+
+  """Deletes an existing userrole."""
+  deleteUserRole(id: String!): UserRole!
 
   """Dislikes an article."""
   dislikeArticle(id: String!): Article!
@@ -1532,6 +1558,9 @@ type Mutation {
 
   """Updates an article."""
   updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
+
+  """Updates an existing author."""
+  updateAuthor(bio: RichText, hideOnArticle: Boolean, hideOnTeam: Boolean, hideOnTeaser: Boolean, id: String!, imageID: String, jobTitle: String, links: [AuthorLinkInput!], name: String, slug: Slug, tagIds: [String!]): Author!
   updateBanner(input: UpdateBannerInput!): Banner!
 
   """Updates an existing block style."""
@@ -1566,6 +1595,9 @@ type Mutation {
   """Updates a paywall."""
   updatePaywall(active: Boolean, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, id: String!, memberPlanIds: [String!] = [], name: String): Paywall!
 
+  """Updates an existing peer."""
+  updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
+
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
 
@@ -1578,6 +1610,9 @@ type Mutation {
   """Updates an existing mail flow"""
   updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
 
+  """Updates an existing tag."""
+  updateTag(description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
+
   """
   This mutation allows to update the user's data by taking an input of type UserInput.
   """
@@ -1585,6 +1620,9 @@ type Mutation {
 
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
+
+  """Updates an existing userrole."""
+  updateUserRole(description: String, id: String!, name: String, permissionIDs: [String!]): UserRole!
 
   """
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
@@ -1766,6 +1804,12 @@ type PaginatedPollVotes {
   totalCount: Int!
 }
 
+type PaginatedUserRoles {
+  nodes: [UserRole!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type Payment implements HasPaymentMethod {
   id: String!
   intentSecret: String!
@@ -1853,6 +1897,7 @@ type Peer {
   name: String!
   profile: RemotePeerProfile
   slug: String!
+  token: String!
 }
 
 type PeerArticle implements HasOptionalPeerLc {
@@ -1952,6 +1997,12 @@ type PeriodicJob {
   modifiedAt: DateTime!
   successfullyFinished: DateTime
   tries: Float!
+}
+
+type Permission {
+  deprecated: Boolean!
+  description: String!
+  id: String!
 }
 
 type Phrase {
@@ -2205,14 +2256,20 @@ type Query {
   """
   This query takes either the ID or the slug and returns the peer profile.
   """
-  peer(id: String, slug: Slug): Peer
+  peer(id: String, slug: String): Peer
 
   """Returns a paginated list of peer articles based on the filters given."""
   peerArticles(filter: PeerArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedPeerArticle!
 
   """This query returns the peer profile."""
   peerProfile: PeerProfile!
+
+  """Returns a list of all peers."""
+  peers: [Peer!]!
   periodicJobLog(skip: Int, take: Int = 10): [PeriodicJob!]!
+
+  """Returns a list of all permissions."""
+  permissions: [Permission!]!
 
   """
   This query performs a fulltext search on titles and blocks of articles/phrases and returns all matching ones.
@@ -2223,6 +2280,7 @@ type Query {
   """Returns a paginated list of poll votes"""
   pollVotes(cursorId: String, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
   primaryBanner(documentId: String!, documentType: BannerDocumentType!, hasSubscription: Boolean!, loggedIn: Boolean!): Banner
+  promptHTML(chatId: String, query: String!): Chat!
   provider: MailProviderModel!
 
   """This query returns the comment rating system."""
@@ -2253,6 +2311,9 @@ type Query {
   """Returns all mail flows"""
   systemMails: [SystemMailModel!]!
 
+  """Returns a tag by id"""
+  tag(id: String!): Tag!
+
   """This query returns a list of tags"""
   tags(
     """Cursor for pagination"""
@@ -2280,6 +2341,12 @@ type Query {
   "\n      Returns a list of userConsents. Possible to filter.\n    "
   userConsents(name: String, slug: String, value: Boolean): [UserConsent!]!
   userPollVote(pollId: String!): String
+
+  """Returns a userrole by id."""
+  userRole(id: String!): UserRole!
+
+  """Returns a paginated list of userroles based on the filters given."""
+  userRoles(cursorId: String, filter: UserRoleFilter, order: SortOrder = Ascending, skip: Int = 0, sort: UserRoleSort = CreatedAt, take: Int = 10): PaginatedUserRoles!
   versionInformation: VersionInformation!
 }
 
@@ -2538,7 +2605,7 @@ type Tag {
   id: String!
   main: Boolean!
   tag: String
-  type: TagType
+  type: TagType!
   url: String!
 }
 
@@ -2876,6 +2943,26 @@ input UserInput {
   flair: String
   name: String!
   uploadImageInput: UploadImageInput
+}
+
+type UserRole {
+  createdAt: DateTime!
+  description: String
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+  permissionIDs: [String!]!
+  permissions: [Permission!]!
+  systemRole: Boolean!
+}
+
+input UserRoleFilter {
+  name: String
+}
+
+enum UserRoleSort {
+  CreatedAt
+  ModifiedAt
 }
 
 input UserSubscriptionInput {
