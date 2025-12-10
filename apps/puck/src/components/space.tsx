@@ -1,6 +1,8 @@
 import { ComponentConfig } from '@measured/puck';
 
-export const Space: ComponentConfig<{ size: number }> = {
+export type SpaceProps = { size: number };
+
+export const Space: ComponentConfig<SpaceProps> = {
   fields: {
     size: {
       type: 'select',

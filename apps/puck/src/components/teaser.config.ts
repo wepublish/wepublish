@@ -1,9 +1,10 @@
 import { ComponentConfig } from '@measured/puck';
 import { TeaserItem } from './teaser.render';
-import { ComponentProps } from 'react';
+import { ComponentProps, memo } from 'react';
 import { articleField } from '../fields/article';
 import { pageField } from '../fields/page';
 import { eventField } from '../fields/event';
+import { TeaserType } from '@wepublish/website/api';
 
 export const TeaserConfig: ComponentConfig<ComponentProps<typeof TeaserItem>> =
   {
@@ -11,10 +12,10 @@ export const TeaserConfig: ComponentConfig<ComponentProps<typeof TeaserItem>> =
       type: {
         type: 'radio',
         options: [
-          { label: 'Article', value: 'article' },
-          { label: 'Page', value: 'page' },
-          { label: 'Event', value: 'event' },
-          { label: 'Custom', value: 'custom' },
+          { label: TeaserType.Article, value: TeaserType.Article },
+          { label: TeaserType.Page, value: TeaserType.Page },
+          { label: TeaserType.Event, value: TeaserType.Event },
+          { label: TeaserType.Custom, value: TeaserType.Custom },
         ],
       },
       page: pageField,
@@ -23,19 +24,19 @@ export const TeaserConfig: ComponentConfig<ComponentProps<typeof TeaserItem>> =
     },
     resolveFields: (data, params) => {
       switch (data.props.type) {
-        case 'article': {
+        case TeaserType.Article: {
           const { page, event, ...fields } = params.fields;
 
           return fields;
         }
 
-        case 'page': {
+        case TeaserType.Page: {
           const { article, event, ...fields } = params.fields;
 
           return fields;
         }
 
-        case 'event': {
+        case TeaserType.Event: {
           const { page, article, ...fields } = params.fields;
 
           return fields;
@@ -51,8 +52,8 @@ export const TeaserConfig: ComponentConfig<ComponentProps<typeof TeaserItem>> =
       return params.fields;
     },
     inline: true,
-    render: TeaserItem,
+    render: memo(TeaserItem),
     defaultProps: {
-      type: 'article',
+      type: TeaserType.Article,
     },
   };

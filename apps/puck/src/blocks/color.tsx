@@ -51,10 +51,11 @@ export function withColor<
     >(function Color(props) {
       const style = useMemo(
         () => ({
+          ...props.style,
           backgroundColor: props.color.background,
           color: props.color.forground,
         }),
-        [props.color.background, props.color.forground]
+        [props.color.background, props.color.forground, props.style]
       );
 
       return (

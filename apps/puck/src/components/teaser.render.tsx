@@ -6,17 +6,21 @@ import {
   FullEventTeaserFragment,
   ArticleWithoutBlocksFragment,
   PageWithoutBlocksFragment,
+  TeaserType,
 } from '@wepublish/website/api';
 import { BuilderTeaserProps, Teaser } from '@wepublish/website/builder';
-import { useMemo } from 'react';
+import { CSSProperties, useMemo } from 'react';
 
 export type TeaserItemProps = {
   className?: string;
-  type: 'article' | 'page' | 'event' | 'custom';
+  style?: CSSProperties;
+  type: TeaserType;
   article?: ArticleWithoutBlocksFragment;
   page?: PageWithoutBlocksFragment;
   event?: FullEventFragment;
 };
+
+const alignment = alignmentForTeaserBlock(1, 1);
 
 export function TeaserItem({
   type,
@@ -24,24 +28,28 @@ export function TeaserItem({
   event,
   page,
   className,
+  style,
 }: TeaserItemProps) {
-  const cr: BuilderTeaserProps['teaser'] = useMemo(() => {
+  const teaser: BuilderTeaserProps['teaser'] = useMemo(() => {
     switch (type) {
-      case 'article':
+      case TeaserType.Article:
         return {
           __typename: 'ArticleTeaser',
+          type: TeaserType.Article,
           article,
         } as FullArticleTeaserFragment;
 
-      case 'page':
+      case TeaserType.Page:
         return {
           __typename: 'PageTeaser',
+          type: TeaserType.Page,
           page,
         } as FullPageTeaserFragment;
 
-      case 'event':
+      case TeaserType.Event:
         return {
           __typename: 'EventTeaser',
+          type: TeaserType.Event,
           event,
         } as FullEventTeaserFragment;
     }
@@ -50,8 +58,9 @@ export function TeaserItem({
   return (
     <Teaser
       className={className}
-      teaser={cr}
-      alignment={alignmentForTeaserBlock(1, 1)}
+      style={style}
+      teaser={teaser}
+      alignment={alignment}
       index={1}
       blockStyle={''}
     />
