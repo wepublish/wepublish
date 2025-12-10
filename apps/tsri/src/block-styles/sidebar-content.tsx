@@ -80,8 +80,6 @@ export const SidebarContentImage = styled(Image)`
 `;
 
 export const SidebarContentButton = styled(Button)`
-  margin-top: ${({ theme }) => theme.spacing(2)};
-  padding: ${({ theme }) => theme.spacing(1)} ${({ theme }) => theme.spacing(3)};
   width: fit-content;
   background-color: black;
   color: white;
