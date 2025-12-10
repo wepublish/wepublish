@@ -3,7 +3,7 @@ import {
   RegisterMutationVariables,
   UpdatePasswordMutationVariables,
   UpdateUserMutationVariables,
-  User,
+  SensitiveDataUser,
 } from '@wepublish/website/api';
 import { ChangeEvent } from 'react';
 import { OptionalKeysOf } from 'type-fest';
@@ -54,7 +54,7 @@ export type BuilderPersonalDataFormProps<
       birthday: z.ZodDate | z.ZodOptional<z.ZodDate>;
     }>
   >;
-  user: User;
+  user: SensitiveDataUser;
   className?: string;
   onUpdate?: (
     data: UpdateUserMutationVariables['input'] &
