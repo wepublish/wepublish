@@ -1,6 +1,10 @@
 import { ApolloError } from '@apollo/client';
 import styled from '@emotion/styled';
-import { Poll, usePollsLazyQuery } from '@wepublish/editor/api';
+import {
+  getApiClientV2,
+  Poll,
+  usePollsLazyQuery,
+} from '@wepublish/editor/api-v2';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAddCircle } from 'react-icons/md';
@@ -80,7 +84,9 @@ export function SelectPollPanel({
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const { t } = useTranslation();
+  const client = getApiClientV2();
   const [fetchPolls, { data, loading }] = usePollsLazyQuery({
+    client,
     onError: onErrorToast,
     fetchPolicy: 'cache-and-network',
   });
@@ -92,7 +98,7 @@ export function SelectPollPanel({
         skip: (page - 1) * limit,
       },
     });
-  }, [page, limit]);
+  }, [page, limit, fetchPolls]);
 
   return (
     <>

@@ -1,10 +1,10 @@
-import { usePollQuery } from '@wepublish/editor/api';
 import {
   getApiClientV2,
   PollVoteListQueryResult,
   PollVoteSort,
   SortOrder as SortOrderV2,
   useDeletePollVotesMutation,
+  usePollQuery,
   usePollVoteListQuery,
 } from '@wepublish/editor/api-v2';
 import {
@@ -49,7 +49,8 @@ function PollVoteListContainer() {
   };
 
   const pollQuery = usePollQuery({
-    variables: { pollId },
+    client,
+    variables: { id: pollId! },
     fetchPolicy: 'network-only',
   });
 

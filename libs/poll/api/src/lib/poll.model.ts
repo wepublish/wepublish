@@ -1,60 +1,54 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import {
+  ArgsType,
+  Field,
+  InputType,
+  Int,
+  ObjectType,
+  OmitType,
+  PartialType,
+  PickType,
+  registerEnumType,
+} from '@nestjs/graphql';
 import { GraphQLRichText } from '@wepublish/richtext/api';
-import { GraphQLError, GraphQLScalarType, Kind } from 'graphql/index';
 import { Descendant } from 'slate';
+import { VoteValue } from './poll.scalar';
+import { PaginatedType, SortOrder } from '@wepublish/utils/api';
+import { PollAnswer, PollAnswerInput } from './poll-answer.model';
+
+export enum PollSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  OpensAt = 'OpensAt',
+}
+
+registerEnumType(SortOrder, {
+  name: 'SortOrder',
+});
+
+registerEnumType(PollSort, {
+  name: 'PollSort',
+});
 
 @ObjectType()
-export class FullPoll {
+export class Poll {
   @Field()
   id!: string;
 
   @Field(() => String, { nullable: true })
-  question?: string | null;
+  question?: string;
 
   @Field(() => Date)
   opensAt!: Date;
 
   @Field(() => Date, { nullable: true })
-  closedAt?: Date | null;
+  closedAt?: Date;
 
   @Field(() => GraphQLRichText, { nullable: true })
   infoText?: Descendant[];
-
-  @Field(() => [PollAnswerWithVoteCount])
-  answers!: PollAnswerWithVoteCount[];
-
-  @Field(() => [PollExternalVoteSource])
-  externalVoteSources!: PollExternalVoteSource[];
 }
 
 @ObjectType()
-export class PollAnswerWithVoteCount {
-  @Field()
-  id!: string;
-
-  @Field()
-  pollId!: string;
-
-  @Field(() => String, { nullable: true })
-  answer?: string | null;
-
-  _count!: any;
-
-  @Field(() => Int)
-  votes!: number;
-}
-
-@ObjectType()
-export class PollExternalVoteSource {
-  @Field()
-  id!: string;
-
-  @Field(() => String, { nullable: true })
-  source?: string | null;
-
-  @Field(() => [PollExternalVote])
-  voteAmounts!: PollExternalVote[];
-}
+export class PaginatedPolls extends PaginatedType(Poll) {}
 
 @ObjectType()
 export class PollExternalVote {
@@ -68,30 +62,109 @@ export class PollExternalVote {
   amount!: number;
 }
 
-const validateVoteValue = (voteValue: unknown): number => {
-  if (typeof voteValue !== 'number') {
-    throw new GraphQLError(`Value is not a number: ${voteValue}`);
-  }
+@InputType()
+export class PollExternalVoteInput extends OmitType(
+  PollExternalVote,
+  ['answerId'] as const,
+  InputType
+) {}
 
-  if (voteValue < 0) {
-    throw new GraphQLError(`Value can not be below 0.`);
-  }
+@ArgsType()
+export class CreatePollAnswerInput extends OmitType(
+  PollAnswerInput,
+  ['id'] as const,
+  ArgsType
+) {}
 
-  return voteValue;
-};
+@ObjectType()
+export class PollExternalVoteSource {
+  @Field()
+  id!: string;
 
-export const VoteValue = new GraphQLScalarType({
-  name: 'VoteValue',
-  description: 'A valid vote value',
-  serialize: validateVoteValue,
-  parseValue: validateVoteValue,
-  parseLiteral: ast => {
-    if (ast.kind !== Kind.INT) {
-      throw new GraphQLError(
-        `Query error: Can only parse numbers as vote values but got a: ${ast.kind}`
-      );
-    }
+  @Field(() => String, { nullable: true })
+  source?: string | null;
 
-    return validateVoteValue(ast.value);
-  },
-});
+  @Field(() => [PollExternalVote])
+  voteAmounts!: PollExternalVote[];
+}
+
+@InputType()
+export class PollExternalVoteSourceInput extends OmitType(
+  PollExternalVoteSource,
+  ['voteAmounts'] as const,
+  InputType
+) {
+  @Field(() => [PollExternalVoteInput])
+  voteAmounts!: PollExternalVoteInput[];
+}
+
+@ArgsType()
+export class CreatePollExternalVoteSourceInput extends OmitType(
+  PollExternalVoteSourceInput,
+  ['id', 'voteAmounts'] as const,
+  ArgsType
+) {
+  @Field()
+  pollId!: string;
+}
+
+@ObjectType()
+export class FullPoll extends Poll {
+  @Field(() => [PollAnswer])
+  answers!: PollAnswer[];
+
+  @Field(() => [PollExternalVoteSource])
+  externalVoteSources!: PollExternalVoteSource[];
+}
+
+@InputType()
+export class PollFilter {
+  @Field({ nullable: true })
+  openOnly?: boolean;
+}
+
+@ArgsType()
+export class PollListArgs {
+  @Field(type => PollFilter, { nullable: true })
+  filter?: PollFilter;
+
+  @Field(type => PollSort, {
+    nullable: true,
+    defaultValue: PollSort.OpensAt,
+  })
+  sort?: PollSort;
+
+  @Field(type => SortOrder, {
+    nullable: true,
+    defaultValue: SortOrder.Descending,
+  })
+  order?: SortOrder;
+
+  @Field(type => Int, { nullable: true, defaultValue: 10 })
+  take?: number;
+
+  @Field(type => Int, { nullable: true, defaultValue: 0 })
+  skip?: number;
+
+  @Field({ nullable: true })
+  cursorId?: string;
+}
+
+@ArgsType()
+export class CreatePollInput extends PickType(
+  Poll,
+  ['opensAt', 'closedAt', 'infoText', 'question'] as const,
+  ArgsType
+) {}
+
+@ArgsType()
+export class UpdatePollInput extends PartialType(CreatePollInput, ArgsType) {
+  @Field()
+  id!: string;
+
+  @Field(() => [PollExternalVoteSourceInput])
+  externalVoteSources!: PollExternalVoteSourceInput[];
+
+  @Field(() => [PollAnswerInput])
+  answers!: PollAnswerInput[];
+}

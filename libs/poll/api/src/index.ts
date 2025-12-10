@@ -1,5 +1,6 @@
 export * from './lib/poll-vote.model';
 export * from './lib/poll.model';
+export * from './lib/poll.scalar';
 export * from './lib/poll.module';
 export * from './lib/poll.resolver';
 export * from './lib/poll-dataloader.service';
