@@ -3001,7 +3001,7 @@ export type Query = {
   subscriptions: Array<PublicSubscription>;
   /** Returns all mail flows */
   systemMails: Array<SystemMailModel>;
-  /** Returns a tag by id */
+  /** Returns an tag by id or tag. */
   tag: Tag;
   /** This query returns a list of tags */
   tags: TagConnection;
@@ -3297,7 +3297,9 @@ export type QuerySubscriptionFlowsArgs = {
 
 
 export type QueryTagArgs = {
-  id: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
+  tag?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<TagType>;
 };
 
 
