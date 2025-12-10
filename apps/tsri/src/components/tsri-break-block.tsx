@@ -11,17 +11,17 @@ import {
 export const BreakBlockWrapper = styled('div')`
   display: grid;
   grid-template-rows: min-content auto;
-  grid-template-columns: repeat(2, auto);
+  grid-template-columns: 57% calc(100% - 57%);
   background: linear-gradient(
     to bottom,
     #f5ff64,
     color-mix(in srgb, white 40%, #f5ff64)
   );
   border-radius: 1cqw;
-  width: 83cqw;
+  width: 69.4cqw;
   margin: 0 auto;
   row-gap: 5cqw;
-  column-gap: 1.5cqw;
+  column-gap: 0;
 `;
 
 export const BreakBlockHeading = styled('div')`
@@ -45,19 +45,42 @@ export const BreakBlockSegment = styled('div')`
 
 export const BreakBlockImage = styled(Image)`
   object-fit: cover;
-  width: 44.65cqw;
+  //width: 37.4cqw;
   margin: 0 auto;
   aspect-ratio: 1;
   border-radius: 0.8cqw;
+  max-height: unset;
 `;
 
 export const BreakBlockButton = styled(Button)`
   width: fit-content;
+  background-color: black;
+  color: white;
+  justify-self: end;
+  padding-right: 8cqw;
+  margin-top: 4cqw;
+
+  &:hover {
+    background-color: rgb(12, 159, 237);
+    color: white;
+  }
 `;
 
 const richTextStyles = (theme: Theme) => css`
+  h2 {
+    font-size: 2.42cqw !important;
+    line-height: 2.6cqw !important;
+    font-weight: 700 !important;
+    color: black;
+    margin-bottom: 1cqw;
+    padding: 0;
+  }
+
   p {
-    ${theme.typography.blockBreakBody}
+    font-size: 1.48cqw !important;
+    line-height: 2.04cqw !important;
+    font-weight: 700 !important;
+    color: black;
   }
 `;
 
@@ -70,6 +93,8 @@ const firstSegmentStyles = css`
 const secondSegmentStyles = css`
   grid-column: 2 / 3;
   grid-row: 2 / 3;
+  padding: 0 1cqw 1cqw 0;
+  margin-left: 1.5cqw;
 `;
 
 export const BreakBlock = ({
@@ -93,23 +118,11 @@ export const BreakBlock = ({
       {text && <Typography component={BreakBlockHeading}>{text}</Typography>}
       {(image || text) && (
         <BreakBlockSegment css={firstSegmentStyles}>
-          {!image && text && (
-            <Typography variant="blockBreakTitle">{text}</Typography>
-          )}
-
           {image && <BreakBlockImage image={image} />}
         </BreakBlockSegment>
       )}
 
       <BreakBlockSegment css={secondSegmentStyles}>
-        {image && text && (
-          <Typography
-            variant="blockBreakTitle"
-            component={'div'}
-          >
-            {text}
-          </Typography>
-        )}
         <RichText
           richText={richText}
           css={richTextStyles(theme)}
