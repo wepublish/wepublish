@@ -258,6 +258,18 @@ interface BaseTeaser implements HasImage {
   type: String!
 }
 
+interface BaseUser {
+  active: Boolean!
+  firstName: String
+  flair: String
+  id: String!
+  image: Image
+  name: String!
+  properties: [Property!]!
+  roleIDs: [String!]!
+  userImageID: String
+}
+
 type BildwurfAdBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -405,13 +417,14 @@ type Chat {
 """A hexadecimal color value (#RRGGBB)"""
 scalar Color
 
-type Comment {
+type Comment implements HasOptionalUser {
   authorType: CommentAuthorType!
   calculatedRatings: [CalculatedRating!]!
   children: [Comment!]!
   createdAt: DateTime!
   featured: Boolean
   guestUserImage: Image
+  guestUserImageID: String
   guestUsername: String
   id: String!
   itemID: String!
@@ -429,6 +442,7 @@ type Comment {
   title: String
   url: String!
   user: User
+  userID: String
   userRatings: [CommentRating!]!
 }
 
@@ -1096,6 +1110,11 @@ interface HasOptionalSubscription {
   subscriptionID: String
 }
 
+interface HasOptionalUser {
+  user: User
+  userID: String
+}
+
 interface HasPage {
   page: Page!
   pageID: String!
@@ -1607,7 +1626,7 @@ type Mutation {
   """
   This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.
   """
-  updatePassword(password: String!, passwordRepeated: String!): User!
+  updatePassword(password: String!, passwordRepeated: String!): SensitiveDataUser!
 
   """This mutation allows to update the Payment Provider Customers"""
   updatePaymentProviderCustomers(input: [PaymentProviderCustomerInput!]!): [PaymentProviderCustomer!]!
@@ -1636,7 +1655,7 @@ type Mutation {
   """
   This mutation allows to update the user's data by taking an input of type UserInput.
   """
-  updateUser(input: UserInput!): User
+  updateUser(input: UserInput!): SensitiveDataUser
 
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
@@ -1650,7 +1669,7 @@ type Mutation {
   updateUserSubscription(id: String!, input: UserSubscriptionInput!): PublicSubscription
 
   """This mutation allows to upload and update the user's profile image."""
-  uploadUserProfileImage(uploadImageInput: UploadImageInput): User
+  uploadUserProfileImage(uploadImageInput: UploadImageInput): SensitiveDataUser
 
   """
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
@@ -2248,7 +2267,7 @@ type Query {
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
 
   """This query returns the user."""
-  me: User
+  me: SensitiveDataUser
 
   """This query returns a member plan."""
   memberPlan(id: String, slug: Slug): MemberPlan
@@ -2404,7 +2423,7 @@ enum RatingSystemType {
 
 type Registration {
   session: SessionWithTokenWithoutUser!
-  user: User!
+  user: SensitiveDataUser!
 }
 
 type RemotePeerProfile {
@@ -2439,11 +2458,28 @@ input RichTextBlockInput {
   richText: RichText!
 }
 
+type SensitiveDataUser implements BaseUser {
+  active: Boolean!
+  address: UserAddress
+  birthday: DateTime
+  email: String!
+  firstName: String
+  flair: String
+  id: String!
+  image: Image
+  name: String!
+  paymentProviderCustomers: [PaymentProviderCustomer!]
+  permissions: [String!]!
+  properties: [Property!]!
+  roleIDs: [String!]!
+  userImageID: String
+}
+
 type SessionWithToken {
   createdAt: DateTime!
   expiresAt: DateTime!
   token: String!
-  user: User!
+  user: SensitiveDataUser!
 }
 
 type SessionWithTokenWithoutUser {
@@ -2895,18 +2931,13 @@ input UploadImageInput {
   title: String
 }
 
-type User {
+type User implements BaseUser {
   active: Boolean!
-  address: UserAddress
-  birthday: DateTime
-  email: String!
   firstName: String
   flair: String
   id: String!
   image: Image
   name: String!
-  paymentProviderCustomers: [PaymentProviderCustomer!]
-  permissions: [String!]!
   properties: [Property!]!
   roleIDs: [String!]!
   userImageID: String

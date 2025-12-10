@@ -23,7 +23,9 @@ const subscription = {
   monthlyAmount: 250000,
   paymentPeriodicity: PaymentPeriodicity.Quarterly,
   url: 'https://example.com',
-  paymentMethod: {},
+  paymentMethod: {
+    slug: 'foo',
+  },
   memberPlan: mockMemberPlan(),
 } as Exact<FullSubscriptionFragment>;
 
