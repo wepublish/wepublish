@@ -21,7 +21,6 @@ fragment FullUserConsent on UserConsent {
     id
     name
     firstName
-    email
   }
 }
 
@@ -37,14 +36,28 @@ query consent($id: String!) {
   }
 }
 
-mutation createConsent($name: String!, $slug: String!, $defaultValue: Boolean!) {
+mutation createConsent(
+  $name: String!
+  $slug: String!
+  $defaultValue: Boolean!
+) {
   createConsent(name: $name, slug: $slug, defaultValue: $defaultValue) {
     ...FullConsent
   }
 }
 
-mutation updateConsent($id: String!, $name: String, $slug: String, $defaultValue: Boolean) {
-  updateConsent(id: $id, name: $name, slug: $slug, defaultValue: $defaultValue) {
+mutation updateConsent(
+  $id: String!
+  $name: String
+  $slug: String
+  $defaultValue: Boolean
+) {
+  updateConsent(
+    id: $id
+    name: $name
+    slug: $slug
+    defaultValue: $defaultValue
+  ) {
     ...FullConsent
   }
 }
@@ -67,7 +80,11 @@ query userConsent($id: String!) {
   }
 }
 
-mutation createUserConsent($consentId: String!, $userId: String!, $value: Boolean!) {
+mutation createUserConsent(
+  $consentId: String!
+  $userId: String!
+  $value: Boolean!
+) {
   createUserConsent(consentId: $consentId, userId: $userId, value: $value) {
     ...FullUserConsent
   }
