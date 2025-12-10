@@ -2,9 +2,10 @@ import styled from '@emotion/styled';
 import {
   AuthorSort,
   FullAuthorFragment,
+  getApiClientV2,
   useAuthorListQuery,
   useDeleteAuthorMutation,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import {
   AuthorEditPanel,
   createCheckedPermissionComponent,
@@ -25,7 +26,7 @@ import {
   Table,
   TableWrapper,
 } from '@wepublish/ui/editor';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdSearch } from 'react-icons/md';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -90,28 +91,43 @@ function AuthorList() {
   const [authors, setAuthors] = useState<FullAuthorFragment[]>([]);
   const [currentAuthor, setCurrentAuthor] = useState<FullAuthorFragment>();
 
-  const authorListQueryVariables = {
-    filter: filter || undefined,
-    take: limit,
-    skip: (page - 1) * limit,
-    sort: mapColumFieldToGraphQLField(sortField),
-    order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
-  };
+  const authorListQueryVariables = useMemo(
+    () => ({
+      filter: filter || undefined,
+      take: limit,
+      skip: (page - 1) * limit,
+      sort: mapColumFieldToGraphQLField(sortField),
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+    }),
+    [filter, limit, page, sortField, sortOrder]
+  );
 
+  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
     refetch: authorListRefetch,
   } = useAuthorListQuery({
+    client,
     variables: authorListQueryVariables,
     fetchPolicy: 'network-only',
   });
 
   useEffect(() => {
     authorListRefetch(authorListQueryVariables);
-  }, [filter, page, limit, sortOrder, sortField]);
+  }, [
+    filter,
+    page,
+    limit,
+    sortOrder,
+    sortField,
+    authorListRefetch,
+    authorListQueryVariables,
+  ]);
 
-  const [deleteAuthor, { loading: isDeleting }] = useDeleteAuthorMutation();
+  const [deleteAuthor, { loading: isDeleting }] = useDeleteAuthorMutation({
+    client,
+  });
 
   useEffect(() => {
     if (isCreateRoute) {

@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import {
-  AuthorRefFragment,
   FullImageFragment,
   useCreateJwtForWebsiteLoginLazyQuery,
 } from '@wepublish/editor/api';
 import {
   CreateArticleMutationVariables,
   EditorBlockType,
+  FullAuthorFragment,
   getApiClientV2,
   SettingName,
   useArticleQuery,
@@ -290,14 +290,14 @@ function ArticleEditor() {
         breaking,
         authors: authors.filter(
           author => author != null
-        ) as AuthorRefFragment[],
+        ) as FullAuthorFragment[],
         image: (image as FullImageFragment) || undefined,
         hideAuthor,
         socialMediaTitle: socialMediaTitle || '',
         socialMediaDescription: socialMediaDescription || '',
         socialMediaAuthors: socialMediaAuthors?.filter(
           socialMediaAuthor => socialMediaAuthor != null
-        ) as AuthorRefFragment[],
+        ) as FullAuthorFragment[],
         socialMediaImage: (socialMediaImage as FullImageFragment) || undefined,
         likes: likes ?? 0,
         trackingPixels: trackingPixels || undefined,

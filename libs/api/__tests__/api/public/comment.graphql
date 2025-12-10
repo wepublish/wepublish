@@ -3,7 +3,6 @@ fragment FullCommentUser on User {
   name
   firstName
   flair
-  email
 
   image {
     ...FullImage

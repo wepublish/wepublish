@@ -204,6 +204,11 @@ export type AuthorLink = {
   url: Scalars['String'];
 };
 
+export type AuthorLinkInput = {
+  title: Scalars['String'];
+  url: Scalars['String'];
+};
+
 /** Sorting options for authors */
 export enum AuthorSort {
   CreatedAt = 'CreatedAt',
@@ -290,6 +295,18 @@ export type BaseTeaser = {
   preTitle?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   type: Scalars['String'];
+};
+
+export type BaseUser = {
+  active: Scalars['Boolean'];
+  firstName?: Maybe<Scalars['String']>;
+  flair?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  image?: Maybe<Image>;
+  name: Scalars['String'];
+  properties: Array<Property>;
+  roleIDs: Array<Scalars['String']>;
+  userImageID?: Maybe<Scalars['String']>;
 };
 
 export type BildwurfAdBlock = BaseBlock & {
@@ -434,7 +451,13 @@ export type ChallengeInput = {
   challengeSolution: Scalars['String'];
 };
 
-export type Comment = {
+export type Chat = {
+  __typename?: 'Chat';
+  chatId: Scalars['String'];
+  message: Scalars['String'];
+};
+
+export type Comment = HasOptionalUser & {
   __typename?: 'Comment';
   authorType: CommentAuthorType;
   calculatedRatings: Array<CalculatedRating>;
@@ -442,6 +465,7 @@ export type Comment = {
   createdAt: Scalars['DateTime'];
   featured?: Maybe<Scalars['Boolean']>;
   guestUserImage?: Maybe<Image>;
+  guestUserImageID?: Maybe<Scalars['String']>;
   guestUsername?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   itemID: Scalars['String'];
@@ -459,6 +483,7 @@ export type Comment = {
   title?: Maybe<Scalars['String']>;
   url: Scalars['String'];
   user?: Maybe<User>;
+  userID?: Maybe<Scalars['String']>;
   userRatings: Array<CommentRating>;
 };
 
@@ -701,6 +726,15 @@ export type CustomTeaserInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type DailyPredictedSubscriptionRenewalCount = {
+  __typename?: 'DailyPredictedSubscriptionRenewalCount';
+  high: Scalars['Int'];
+  low: Scalars['Int'];
+  perDayHighProbability: Scalars['Int'];
+  perDayLowProbability: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
 export type DailySubscriptionStats = {
   __typename?: 'DailySubscriptionStats';
   createdSubscriptionCount: Scalars['Int'];
@@ -708,8 +742,13 @@ export type DailySubscriptionStats = {
   date: Scalars['String'];
   deactivatedSubscriptionCount: Scalars['Int'];
   deactivatedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  endingSubscriptionCount: Scalars['Int'];
+  endingSubscriptionUsers: Array<DailySubscriptionStatsUser>;
   overdueSubscriptionCount: Scalars['Int'];
   overdueSubscriptionUsers: Array<DailySubscriptionStatsUser>;
+  predictedSubscriptionRenewalCount: DailyPredictedSubscriptionRenewalCount;
+  predictedSubscriptionRenewalUsersHighProbability: Array<DailySubscriptionStatsUser>;
+  predictedSubscriptionRenewalUsersLowProbability: Array<DailySubscriptionStatsUser>;
   renewedSubscriptionCount: Scalars['Int'];
   renewedSubscriptionUsers: Array<DailySubscriptionStatsUser>;
   replacedSubscriptionCount: Scalars['Int'];
@@ -723,6 +762,7 @@ export type DailySubscriptionStatsUser = {
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   name: Scalars['String'];
+  subscriptionID?: Maybe<Scalars['String']>;
 };
 
 export type DashboardInvoice = {
@@ -1093,6 +1133,11 @@ export type HasOptionalSubscription = {
   subscriptionID?: Maybe<Scalars['String']>;
 };
 
+export type HasOptionalUser = {
+  user?: Maybe<User>;
+  userID?: Maybe<Scalars['String']>;
+};
+
 export type HasPage = {
   page: Page;
   pageID: Scalars['String'];
@@ -1225,12 +1270,6 @@ export type ImageGalleryImageInput = {
   imageID?: InputMaybe<Scalars['String']>;
 };
 
-export enum ImageOutput {
-  Jpeg = 'jpeg',
-  Png = 'png',
-  Webp = 'webp'
-}
-
 export enum ImageRotation {
   Auto = 'Auto',
   Rotate0 = 'Rotate0',
@@ -1244,8 +1283,6 @@ export type ImageTransformation = {
   grayscale?: InputMaybe<Scalars['Boolean']>;
   height?: InputMaybe<Scalars['Int']>;
   negate?: InputMaybe<Scalars['Boolean']>;
-  output?: InputMaybe<ImageOutput>;
-  quality?: InputMaybe<Scalars['Float']>;
   rotation?: InputMaybe<ImageRotation>;
   sharpen?: InputMaybe<Scalars['Boolean']>;
   width?: InputMaybe<Scalars['Int']>;
@@ -1429,6 +1466,8 @@ export type Mutation = {
   cancelUserSubscription?: Maybe<PublicSubscription>;
   /** Creates an article. */
   createArticle: Article;
+  /** Creates a new author. */
+  createAuthor: Author;
   createBanner: Banner;
   /** Creates a new block style. */
   createBlockStyle: BlockStyle;
@@ -1454,6 +1493,8 @@ export type Mutation = {
   createPaywall: Paywall;
   /** Creates a paywall bypass token. */
   createPaywallBypass: PaywallBypass;
+  /** Creates a new peer. */
+  createPeer: Peer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   /** Allows authenticated users to create additional subscriptions */
@@ -1464,6 +1505,8 @@ export type Mutation = {
   createSubscriptionInterval: Array<SubscriptionFlowModel>;
   /** Allows guests and authenticated users to create additional subscriptions */
   createSubscriptionWithConfirmation: Scalars['Boolean'];
+  /** Creates a new tag. */
+  createTag: Tag;
   /**
    *
    *       Creates a new userConsent based on input.
@@ -1471,8 +1514,12 @@ export type Mutation = {
    *
    */
   createUserConsent: UserConsent;
+  /** Creates a new userrole. */
+  createUserRole: UserRole;
   /** Deletes an article. */
   deleteArticle: Scalars['String'];
+  /** Deletes an existing author. */
+  deleteAuthor: Author;
   deleteBanner?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing block style. */
   deleteBlockStyle: BlockStyle;
@@ -1493,12 +1540,16 @@ export type Mutation = {
   deletePaywall: Paywall;
   /** Deletes a paywall bypass token. */
   deletePaywallBypass: Scalars['String'];
+  /** Deletes an existing peer. */
+  deletePeer: Peer;
   /** Delete poll votes */
   deletePollVotes: DeletePollVotesResult;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
   deleteSubscriptionInterval: Array<SubscriptionFlowModel>;
+  /** Deletes an existing tag. */
+  deleteTag: Tag;
   /**
    *
    *       Delete an existing userConsent by id.
@@ -1506,6 +1557,8 @@ export type Mutation = {
    *
    */
   deleteUserConsent: UserConsent;
+  /** Deletes an existing userrole. */
+  deleteUserRole: UserRole;
   /** Dislikes an article. */
   dislikeArticle: Article;
   /** Duplicates an article. */
@@ -1546,6 +1599,8 @@ export type Mutation = {
   unpublishPage: Page;
   /** Updates an article. */
   updateArticle: Article;
+  /** Updates an existing author. */
+  updateAuthor: Author;
   updateBanner: Banner;
   /** Updates an existing block style. */
   updateBlockStyle: BlockStyle;
@@ -1566,11 +1621,13 @@ export type Mutation = {
   /** Updates an page. */
   updatePage: Page;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
-  updatePassword: User;
+  updatePassword: SensitiveDataUser;
   /** This mutation allows to update the Payment Provider Customers */
   updatePaymentProviderCustomers: Array<PaymentProviderCustomer>;
   /** Updates a paywall. */
   updatePaywall: Paywall;
+  /** Updates an existing peer. */
+  updatePeer: Peer;
   /** Updates an existing setting. */
   updateSetting: Setting;
   /** Update an existing subscription flow */
@@ -1579,8 +1636,10 @@ export type Mutation = {
   updateSubscriptionInterval: Array<SubscriptionFlowModel>;
   /** Updates an existing mail flow */
   updateSystemMail: Array<SystemMailModel>;
+  /** Updates an existing tag. */
+  updateTag: Tag;
   /** This mutation allows to update the user's data by taking an input of type UserInput. */
-  updateUser?: Maybe<User>;
+  updateUser?: Maybe<SensitiveDataUser>;
   /**
    *
    *       Updates an existing userConsent based on input.
@@ -1588,10 +1647,12 @@ export type Mutation = {
    *
    */
   updateUserConsent: UserConsent;
+  /** Updates an existing userrole. */
+  updateUserRole: UserRole;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
   /** This mutation allows to upload and update the user's profile image. */
-  uploadUserProfileImage?: Maybe<User>;
+  uploadUserProfileImage?: Maybe<SensitiveDataUser>;
   /** This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous */
   voteOnPoll?: Maybe<PollVote>;
 };
@@ -1630,6 +1691,20 @@ export type MutationCreateArticleArgs = {
   socialMediaTitle?: InputMaybe<Scalars['String']>;
   tagIds: Array<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationCreateAuthorArgs = {
+  bio?: InputMaybe<Scalars['RichText']>;
+  hideOnArticle: Scalars['Boolean'];
+  hideOnTeam: Scalars['Boolean'];
+  hideOnTeaser: Scalars['Boolean'];
+  imageID?: InputMaybe<Scalars['String']>;
+  jobTitle?: InputMaybe<Scalars['String']>;
+  links: Array<AuthorLinkInput>;
+  name: Scalars['String'];
+  slug: Scalars['Slug'];
+  tagIds: Array<Scalars['String']>;
 };
 
 
@@ -1719,6 +1794,16 @@ export type MutationCreatePaywallBypassArgs = {
 };
 
 
+export type MutationCreatePeerArgs = {
+  hostURL: Scalars['String'];
+  information?: InputMaybe<Scalars['RichText']>;
+  isDisabled?: InputMaybe<Scalars['Boolean']>;
+  name: Scalars['String'];
+  slug: Scalars['String'];
+  token: Scalars['String'];
+};
+
+
 export type MutationCreateSessionArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -1774,6 +1859,14 @@ export type MutationCreateSubscriptionWithConfirmationArgs = {
 };
 
 
+export type MutationCreateTagArgs = {
+  description?: InputMaybe<Scalars['RichText']>;
+  main?: Scalars['Boolean'];
+  tag?: InputMaybe<Scalars['String']>;
+  type: TagType;
+};
+
+
 export type MutationCreateUserConsentArgs = {
   consentId: Scalars['String'];
   userId: Scalars['String'];
@@ -1781,7 +1874,19 @@ export type MutationCreateUserConsentArgs = {
 };
 
 
+export type MutationCreateUserRoleArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  permissionIDs: Array<Scalars['String']>;
+};
+
+
 export type MutationDeleteArticleArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteAuthorArgs = {
   id: Scalars['String'];
 };
 
@@ -1831,6 +1936,11 @@ export type MutationDeletePaywallBypassArgs = {
 };
 
 
+export type MutationDeletePeerArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeletePollVotesArgs = {
   ids: Array<Scalars['String']>;
 };
@@ -1846,7 +1956,17 @@ export type MutationDeleteSubscriptionIntervalArgs = {
 };
 
 
+export type MutationDeleteTagArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteUserConsentArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteUserRoleArgs = {
   id: Scalars['String'];
 };
 
@@ -1968,6 +2088,21 @@ export type MutationUpdateArticleArgs = {
 };
 
 
+export type MutationUpdateAuthorArgs = {
+  bio?: InputMaybe<Scalars['RichText']>;
+  hideOnArticle?: InputMaybe<Scalars['Boolean']>;
+  hideOnTeam?: InputMaybe<Scalars['Boolean']>;
+  hideOnTeaser?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['String'];
+  imageID?: InputMaybe<Scalars['String']>;
+  jobTitle?: InputMaybe<Scalars['String']>;
+  links?: InputMaybe<Array<AuthorLinkInput>>;
+  name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['Slug']>;
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
 export type MutationUpdateBannerArgs = {
   input: UpdateBannerInput;
 };
@@ -2059,6 +2194,17 @@ export type MutationUpdatePaywallArgs = {
 };
 
 
+export type MutationUpdatePeerArgs = {
+  hostURL?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  information?: InputMaybe<Scalars['RichText']>;
+  isDisabled?: InputMaybe<Scalars['Boolean']>;
+  name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+  token?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationUpdateSettingArgs = {
   name: SettingName;
   value: Scalars['GraphQLSettingValueType'];
@@ -2086,6 +2232,15 @@ export type MutationUpdateSystemMailArgs = {
 };
 
 
+export type MutationUpdateTagArgs = {
+  description?: InputMaybe<Scalars['RichText']>;
+  id: Scalars['String'];
+  main?: InputMaybe<Scalars['Boolean']>;
+  tag?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<TagType>;
+};
+
+
 export type MutationUpdateUserArgs = {
   input: UserInput;
 };
@@ -2094,6 +2249,14 @@ export type MutationUpdateUserArgs = {
 export type MutationUpdateUserConsentArgs = {
   id: Scalars['String'];
   value: Scalars['Boolean'];
+};
+
+
+export type MutationUpdateUserRoleArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  permissionIDs?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
@@ -2293,6 +2456,13 @@ export type PaginatedPollVotes = {
   totalCount: Scalars['Int'];
 };
 
+export type PaginatedUserRoles = {
+  __typename?: 'PaginatedUserRoles';
+  nodes: Array<UserRole>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type Payment = HasPaymentMethod & {
   __typename?: 'Payment';
   id: Scalars['String'];
@@ -2386,6 +2556,7 @@ export type Peer = {
   name: Scalars['String'];
   profile?: Maybe<RemotePeerProfile>;
   slug: Scalars['String'];
+  token: Scalars['String'];
 };
 
 export type PeerArticle = HasOptionalPeerLc & {
@@ -2490,6 +2661,13 @@ export type PeriodicJob = {
   modifiedAt: Scalars['DateTime'];
   successfullyFinished?: Maybe<Scalars['DateTime']>;
   tries: Scalars['Float'];
+};
+
+export type Permission = {
+  __typename?: 'Permission';
+  deprecated: Scalars['Boolean'];
+  description: Scalars['String'];
+  id: Scalars['String'];
 };
 
 export type Phrase = {
@@ -2729,7 +2907,7 @@ export type Query = {
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /** This query returns the user. */
-  me?: Maybe<User>;
+  me?: Maybe<SensitiveDataUser>;
   /** This query returns a member plan. */
   memberPlan?: Maybe<MemberPlan>;
   /** This query returns the member plans. */
@@ -2768,13 +2946,18 @@ export type Query = {
   peerArticles: PaginatedPeerArticle;
   /** This query returns the peer profile. */
   peerProfile: PeerProfile;
+  /** Returns a list of all peers. */
+  peers: Array<Peer>;
   periodicJobLog: Array<PeriodicJob>;
+  /** Returns a list of all permissions. */
+  permissions: Array<Permission>;
   /** This query performs a fulltext search on titles and blocks of articles/phrases and returns all matching ones. */
   phrase: Phrase;
   poll: FullPoll;
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
   primaryBanner?: Maybe<Banner>;
+  promptHTML: Chat;
   provider: MailProviderModel;
   /** This query returns the comment rating system. */
   ratingSystem: FullCommentRatingSystem;
@@ -2816,6 +2999,8 @@ export type Query = {
   subscriptions: Array<PublicSubscription>;
   /** Returns all mail flows */
   systemMails: Array<SystemMailModel>;
+  /** Returns a tag by id */
+  tag: Tag;
   /** This query returns a list of tags */
   tags: TagConnection;
   /**
@@ -2831,6 +3016,10 @@ export type Query = {
    */
   userConsents: Array<UserConsent>;
   userPollVote?: Maybe<Scalars['String']>;
+  /** Returns a userrole by id. */
+  userRole: UserRole;
+  /** Returns a paginated list of userroles based on the filters given. */
+  userRoles: PaginatedUserRoles;
   versionInformation: VersionInformation;
 };
 
@@ -3014,7 +3203,7 @@ export type QueryPaywallArgs = {
 
 export type QueryPeerArgs = {
   id?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['Slug']>;
+  slug?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -3066,6 +3255,12 @@ export type QueryPrimaryBannerArgs = {
 };
 
 
+export type QueryPromptHtmlArgs = {
+  chatId?: InputMaybe<Scalars['String']>;
+  query: Scalars['String'];
+};
+
+
 export type QueryRenewingSubscribersArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
@@ -3099,6 +3294,11 @@ export type QuerySubscriptionFlowsArgs = {
 };
 
 
+export type QueryTagArgs = {
+  id: Scalars['String'];
+};
+
+
 export type QueryTagsArgs = {
   cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<TagFilter>;
@@ -3123,6 +3323,21 @@ export type QueryUserConsentsArgs = {
 
 export type QueryUserPollVoteArgs = {
   pollId: Scalars['String'];
+};
+
+
+export type QueryUserRoleArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryUserRolesArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<UserRoleFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<UserRoleSort>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 export type QuoteBlock = BaseBlock & HasImage & {
@@ -3151,7 +3366,7 @@ export enum RatingSystemType {
 export type Registration = {
   __typename?: 'Registration';
   session: SessionWithTokenWithoutUser;
-  user: User;
+  user: SensitiveDataUser;
 };
 
 export type RemotePeerProfile = {
@@ -3186,12 +3401,30 @@ export type RichTextBlockInput = {
   richText: Scalars['RichText'];
 };
 
+export type SensitiveDataUser = BaseUser & {
+  __typename?: 'SensitiveDataUser';
+  active: Scalars['Boolean'];
+  address?: Maybe<UserAddress>;
+  birthday?: Maybe<Scalars['DateTime']>;
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  flair?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  image?: Maybe<Image>;
+  name: Scalars['String'];
+  paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
+  permissions: Array<Scalars['String']>;
+  properties: Array<Property>;
+  roleIDs: Array<Scalars['String']>;
+  userImageID?: Maybe<Scalars['String']>;
+};
+
 export type SessionWithToken = {
   __typename?: 'SessionWithToken';
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
   token: Scalars['String'];
-  user: User;
+  user: SensitiveDataUser;
 };
 
 export type SessionWithTokenWithoutUser = {
@@ -3377,7 +3610,7 @@ export type Tag = {
   id: Scalars['String'];
   main: Scalars['Boolean'];
   tag?: Maybe<Scalars['String']>;
-  type?: Maybe<TagType>;
+  type: TagType;
   url: Scalars['String'];
 };
 
@@ -3665,19 +3898,17 @@ export type UploadImageInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
-export type User = {
+export type User = BaseUser & {
   __typename?: 'User';
-  address?: Maybe<UserAddress>;
-  birthday?: Maybe<Scalars['DateTime']>;
-  email: Scalars['String'];
+  active: Scalars['Boolean'];
   firstName?: Maybe<Scalars['String']>;
   flair?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
   name: Scalars['String'];
-  paymentProviderCustomers: Array<PaymentProviderCustomer>;
-  permissions: Array<Scalars['String']>;
   properties: Array<Property>;
+  roleIDs: Array<Scalars['String']>;
+  userImageID?: Maybe<Scalars['String']>;
 };
 
 export type UserAddress = {
@@ -3733,6 +3964,27 @@ export type UserInput = {
   name: Scalars['String'];
   uploadImageInput?: InputMaybe<UploadImageInput>;
 };
+
+export type UserRole = {
+  __typename?: 'UserRole';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  permissionIDs: Array<Scalars['String']>;
+  permissions: Array<Permission>;
+  systemRole: Scalars['Boolean'];
+};
+
+export type UserRoleFilter = {
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export enum UserRoleSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt'
+}
 
 export type UserSubscriptionInput = {
   autoRenew: Scalars['Boolean'];
@@ -3870,44 +4122,30 @@ export type ImageUrlsFragment = { __typename?: 'Image', url?: string | null, xxl
 
 export type RemoteImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null };
 
-export type RemotePeerProfileFragment = { __typename?: 'PeerProfile', name: string, hostURL: string, websiteURL: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
+export type RemotePeerProfileFragment = { __typename?: 'PeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type PeerProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PeerProfileQuery = { __typename?: 'Query', peerProfile: { __typename?: 'PeerProfile', name: string, hostURL: string, websiteURL: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } };
+export type PeerProfileQuery = { __typename?: 'Query', peerProfile: { __typename?: 'PeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, squareLogo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } };
 
 export const ImageUrls = gql`
     fragment ImageUrls on Image {
   url
-  xxl: transformURL(input: {width: 1500, output: png, quality: 0.8})
-  xl: transformURL(input: {width: 1200, output: png, quality: 0.8})
-  l: transformURL(input: {width: 1000, output: png, quality: 0.8})
-  m: transformURL(input: {width: 800, output: png, quality: 0.8})
-  s: transformURL(input: {width: 500, output: png, quality: 0.8})
-  xs: transformURL(input: {width: 300, output: png, quality: 0.8})
-  xxs: transformURL(input: {width: 200, output: png, quality: 0.8})
-  xxlSquare: transformURL(
-    input: {width: 1500, height: 1500, output: png, quality: 0.8}
-  )
-  xlSquare: transformURL(
-    input: {width: 1200, height: 1200, output: png, quality: 0.8}
-  )
-  lSquare: transformURL(
-    input: {width: 1000, height: 1000, output: png, quality: 0.8}
-  )
-  mSquare: transformURL(
-    input: {width: 800, height: 800, output: png, quality: 0.8}
-  )
-  sSquare: transformURL(
-    input: {width: 500, height: 500, output: png, quality: 0.8}
-  )
-  xsSquare: transformURL(
-    input: {width: 300, height: 300, output: png, quality: 0.8}
-  )
-  xxsSquare: transformURL(
-    input: {width: 200, height: 200, output: png, quality: 0.8}
-  )
+  xxl: transformURL(input: {width: 1500})
+  xl: transformURL(input: {width: 1200})
+  l: transformURL(input: {width: 1000})
+  m: transformURL(input: {width: 800})
+  s: transformURL(input: {width: 500})
+  xs: transformURL(input: {width: 300})
+  xxs: transformURL(input: {width: 200})
+  xxlSquare: transformURL(input: {width: 1500, height: 1500})
+  xlSquare: transformURL(input: {width: 1200, height: 1200})
+  lSquare: transformURL(input: {width: 1000, height: 1000})
+  mSquare: transformURL(input: {width: 800, height: 800})
+  sSquare: transformURL(input: {width: 500, height: 500})
+  xsSquare: transformURL(input: {width: 300, height: 300})
+  xxsSquare: transformURL(input: {width: 200, height: 200})
 }
     `;
 export const RemoteImage = gql`
@@ -4096,6 +4334,8 @@ export const RemotePeerProfile = gql`
   squareLogo {
     ...RemoteImage
   }
+  themeColor
+  themeFontColor
   hostURL
   websiteURL
   callToActionText
@@ -4237,6 +4477,10 @@ export const PeerProfile = gql`
       "EventTeaser",
       "PageTeaser"
     ],
+    "BaseUser": [
+      "SensitiveDataUser",
+      "User"
+    ],
     "BlockContent": [
       "BildwurfAdBlock",
       "BreakBlock",
@@ -4329,6 +4573,9 @@ export const PeerProfile = gql`
     ],
     "HasOptionalSubscription": [
       "Invoice"
+    ],
+    "HasOptionalUser": [
+      "Comment"
     ],
     "HasPage": [
       "PageNavigationLink"

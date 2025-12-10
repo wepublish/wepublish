@@ -28,8 +28,19 @@ const FilterInfo = ({
 }) => (
   <Whisper
     trigger="hover"
-    speaker={<Tooltip>{text}</Tooltip>}
-    placement="top"
+    speaker={
+      <Tooltip>
+        {text.split('\n').map((line, index) => (
+          <span
+            style={{ display: 'block', paddingBottom: '.5rem' }}
+            key={index}
+          >
+            {line}
+          </span>
+        ))}
+      </Tooltip>
+    }
+    placement="rightStart"
   >
     <Info>
       <MdInfo
@@ -53,11 +64,14 @@ export function AudienceFilterToggle({
 }: AudienceFilterToggleProps) {
   const { t } = useTranslation();
 
+  const chartColor =
+    typeof chartColors[filterKey] === 'string' ?
+      chartColors[filterKey]
+    : chartColors[filterKey][0];
+
   return (
     <>
       <Toggle
-        color={chartColors[filterKey]}
-        style={{ color: chartColors[filterKey] }}
         checked={clientFilter[filterKey as keyof AudienceClientFilter]}
         onChange={(checked: boolean) =>
           setClientFilter({
@@ -69,7 +83,7 @@ export function AudienceFilterToggle({
       <ToggleLable>{t(`audience.legend.${filterKey}`)}</ToggleLable>
       <FilterInfo
         text={t(`audience.legend.info.${filterKey}`)}
-        color={chartColors[filterKey]}
+        color={chartColor}
       />
     </>
   );

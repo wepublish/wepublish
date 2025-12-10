@@ -1,8 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
-import { TagFilter, TagSort } from './tags.query';
 import { getMaxTake, PrimeDataLoader, SortOrder } from '@wepublish/utils/api';
 import { TagDataloader } from './tag.dataloader';
+import {
+  CreateTagInput,
+  TagFilter,
+  TagSort,
+  UpdateTagInput,
+} from './tag.model';
 
 @Injectable()
 export class TagService {
@@ -53,25 +58,35 @@ export class TagService {
     };
   }
 
-  private createTagFilter(filter?: TagFilter): Prisma.TagWhereInput {
-    const conditions: Prisma.TagWhereInput[] = [];
+  @PrimeDataLoader(TagDataloader)
+  async updateTag({ id, description, ...input }: UpdateTagInput) {
+    return this.prisma.tag.update({
+      where: {
+        id,
+      },
+      data: {
+        ...input,
+        description: description as any[],
+      },
+    });
+  }
 
-    if (filter?.type) {
-      conditions.push({
-        type: filter.type,
-      });
-    }
+  @PrimeDataLoader(TagDataloader)
+  async createTag({ description, ...input }: CreateTagInput) {
+    return this.prisma.tag.create({
+      data: {
+        ...input,
+        description: description as any[],
+      },
+    });
+  }
 
-    if (filter?.tag) {
-      conditions.push({
-        tag: {
-          mode: 'insensitive',
-          equals: filter.tag,
-        },
-      });
-    }
-
-    return conditions.length ? { AND: conditions } : {};
+  async deleteTag(id: string) {
+    return this.prisma.tag.delete({
+      where: {
+        id,
+      },
+    });
   }
 }
 

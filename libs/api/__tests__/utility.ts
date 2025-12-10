@@ -7,7 +7,6 @@ import {
   contextFromRequest,
   GraphQLWepublishPublicSchema,
   GraphQLWepublishSchema,
-  KarmaMediaAdapter,
   DefaultSessionTTL,
 } from '../src';
 import { createUserSession } from '../src/lib/graphql/session/session.mutation';
@@ -71,7 +70,8 @@ export async function createGraphQLTestClient(
     fromAddress: 'fakeMail@wepublish.media',
   });
 
-  const mediaAdapter: KarmaMediaAdapter = {
+  const mediaAdapter = {
+    config: { quality: 1 },
     url: new URL('https://fakeurl.com'),
     token: 'fake',
     internalURL: new URL('https://internalurl.com'),
@@ -81,7 +81,7 @@ export async function createGraphQLTestClient(
     uploadImage: jest.fn(),
     uploadImageFromArrayBuffer: jest.fn(),
     _uploadImage: jest.fn(),
-  };
+  } as any;
 
   const challenge = new AlgebraicCaptchaChallenge('secret', 600, {});
 
