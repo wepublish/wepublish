@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { ImageService, UploadImageInput } from '@wepublish/image/api';
 import { PrismaClient } from '@prisma/client';
 import { UserInputError } from '@nestjs/apollo';
-import { PaymentProviderCustomerInput, User, UserInput } from './user.model';
+import {
+  PaymentProviderCustomerInput,
+  SensitiveDataUser,
+  UserInput,
+} from './user.model';
 import { Validator } from '@wepublish/user';
 import { unselectPassword } from '@wepublish/authentication/api';
 
@@ -14,7 +18,7 @@ export class ProfileService {
   ) {}
 
   async uploadUserProfileImage(
-    user: User,
+    user: SensitiveDataUser,
     uploadImageInput: UploadImageInput | null
   ) {
     let newImage = null;
@@ -52,7 +56,7 @@ export class ProfileService {
   }
 
   async updatePublicUser(
-    user: User,
+    user: SensitiveDataUser,
     {
       address,
       name,
@@ -106,7 +110,7 @@ export class ProfileService {
   async updatePaymentProviderCustomers(
     userId: string,
     paymentProviderCustomers: PaymentProviderCustomerInput[]
-  ): Promise<User> {
+  ): Promise<SensitiveDataUser> {
     return this.prisma.user.update({
       where: { id: userId },
       data: {

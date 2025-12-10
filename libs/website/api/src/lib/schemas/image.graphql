@@ -96,6 +96,6 @@ fragment FullPeerImage on PeerImage {
 
 mutation UploadImage($uploadImageInput: UploadImageInput) {
   uploadUserProfileImage(uploadImageInput: $uploadImageInput) {
-    ...FullUser
+    ...FullSensitiveDataUser
   }
 }
