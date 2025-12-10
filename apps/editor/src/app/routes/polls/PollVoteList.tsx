@@ -1,7 +1,7 @@
-import { PollQueryResult } from '@wepublish/editor/api';
 import {
   FullPollVoteFragment,
   FullPollVoteWithAnswerFragment,
+  PollQueryResult,
   PollVoteListQueryResult,
   PollVoteListQueryVariables,
 } from '@wepublish/editor/api-v2';

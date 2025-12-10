@@ -1017,7 +1017,7 @@ export type FullCommentRatingSystem = {
 
 export type FullPoll = {
   __typename?: 'FullPoll';
-  answers: Array<PollAnswerWithVoteCount>;
+  answers: Array<PollAnswer>;
   closedAt?: Maybe<Scalars['DateTime']>;
   externalVoteSources: Array<PollExternalVoteSource>;
   id: Scalars['String'];
@@ -1476,6 +1476,12 @@ export type Mutation = {
   createPaywallBypass: PaywallBypass;
   /** Creates a new peer. */
   createPeer: Peer;
+  /** Creates a new poll. */
+  createPoll: FullPoll;
+  /** Creates a new poll answer. */
+  createPollAnswer: PollAnswer;
+  /** Creates a new external vote source. */
+  createPollExternalVoteSource: PollExternalVoteSource;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   /** Allows authenticated users to create additional subscriptions */
@@ -1523,6 +1529,12 @@ export type Mutation = {
   deletePaywallBypass: Scalars['String'];
   /** Deletes an existing peer. */
   deletePeer: Peer;
+  /** Deletes an existing poll. */
+  deletePoll: FullPoll;
+  /** Deletes an existing poll answer. */
+  deletePollAnswer: PollAnswer;
+  /** Deletes an existing external vote source. */
+  deletePollExternalVoteSource: PollExternalVoteSource;
   /** Delete poll votes */
   deletePollVotes: DeletePollVotesResult;
   /** Delete an existing subscription flow */
@@ -1609,6 +1621,8 @@ export type Mutation = {
   updatePaywall: Paywall;
   /** Updates an existing peer. */
   updatePeer: Peer;
+  /** Updates an existing poll. */
+  updatePoll: FullPoll;
   /** Updates an existing setting. */
   updateSetting: Setting;
   /** Update an existing subscription flow */
@@ -1785,6 +1799,26 @@ export type MutationCreatePeerArgs = {
 };
 
 
+export type MutationCreatePollArgs = {
+  closedAt?: InputMaybe<Scalars['DateTime']>;
+  infoText?: InputMaybe<Scalars['RichText']>;
+  opensAt: Scalars['DateTime'];
+  question?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationCreatePollAnswerArgs = {
+  answer?: InputMaybe<Scalars['String']>;
+  pollId: Scalars['String'];
+};
+
+
+export type MutationCreatePollExternalVoteSourceArgs = {
+  pollId: Scalars['String'];
+  source?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationCreateSessionArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -1918,6 +1952,21 @@ export type MutationDeletePaywallBypassArgs = {
 
 
 export type MutationDeletePeerArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeletePollArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeletePollAnswerArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeletePollExternalVoteSourceArgs = {
   id: Scalars['String'];
 };
 
@@ -2186,6 +2235,17 @@ export type MutationUpdatePeerArgs = {
 };
 
 
+export type MutationUpdatePollArgs = {
+  answers: Array<PollAnswerInput>;
+  closedAt?: InputMaybe<Scalars['DateTime']>;
+  externalVoteSources: Array<PollExternalVoteSourceInput>;
+  id: Scalars['String'];
+  infoText?: InputMaybe<Scalars['RichText']>;
+  opensAt?: InputMaybe<Scalars['DateTime']>;
+  question?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationUpdateSettingArgs = {
   name: SettingName;
   value: Scalars['GraphQLSettingValueType'];
@@ -2437,6 +2497,13 @@ export type PaginatedPollVotes = {
   totalCount: Scalars['Int'];
 };
 
+export type PaginatedPolls = {
+  __typename?: 'PaginatedPolls';
+  nodes: Array<Poll>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type PaginatedUserRoles = {
   __typename?: 'PaginatedUserRoles';
   nodes: Array<UserRole>;
@@ -2671,18 +2738,32 @@ export type PolisConversationBlockInput = {
   conversationID?: InputMaybe<Scalars['String']>;
 };
 
+export type Poll = {
+  __typename?: 'Poll';
+  closedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  infoText?: Maybe<Scalars['RichText']>;
+  opensAt: Scalars['DateTime'];
+  question?: Maybe<Scalars['String']>;
+};
+
+export type PollAnswer = {
+  __typename?: 'PollAnswer';
+  answer?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  pollId: Scalars['String'];
+  votes: Scalars['Int'];
+};
+
 export type PollAnswerInVote = {
   __typename?: 'PollAnswerInVote';
   answer: Scalars['String'];
   id: Scalars['String'];
 };
 
-export type PollAnswerWithVoteCount = {
-  __typename?: 'PollAnswerWithVoteCount';
-  answer?: Maybe<Scalars['String']>;
+export type PollAnswerInput = {
+  answer?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
-  pollId: Scalars['String'];
-  votes: Scalars['Int'];
 };
 
 export type PollBlock = BaseBlock & HasOptionalPoll & {
@@ -2707,12 +2788,33 @@ export type PollExternalVote = {
   id: Scalars['String'];
 };
 
+export type PollExternalVoteInput = {
+  amount: Scalars['VoteValue'];
+  id: Scalars['String'];
+};
+
 export type PollExternalVoteSource = {
   __typename?: 'PollExternalVoteSource';
   id: Scalars['String'];
   source?: Maybe<Scalars['String']>;
   voteAmounts: Array<PollExternalVote>;
 };
+
+export type PollExternalVoteSourceInput = {
+  id: Scalars['String'];
+  source?: InputMaybe<Scalars['String']>;
+  voteAmounts: Array<PollExternalVoteInput>;
+};
+
+export type PollFilter = {
+  openOnly?: InputMaybe<Scalars['Boolean']>;
+};
+
+export enum PollSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  OpensAt = 'OpensAt'
+}
 
 export type PollStartedAction = BaseAction & HasPoll & {
   __typename?: 'PollStartedAction';
@@ -2937,6 +3039,8 @@ export type Query = {
   poll: FullPoll;
   /** Returns a paginated list of poll votes */
   pollVotes: PaginatedPollVotes;
+  /** Returns a paginated list of polls based on the filters given. */
+  polls: PaginatedPolls;
   primaryBanner?: Maybe<Banner>;
   promptHTML: Chat;
   provider: MailProviderModel;
@@ -3224,6 +3328,16 @@ export type QueryPollVotesArgs = {
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<PollVoteSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPollsArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<PollFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<PollSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
 

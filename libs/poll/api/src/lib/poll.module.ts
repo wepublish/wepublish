@@ -6,9 +6,11 @@ import {
   HasOptionalPollResolver,
   HasPollResolver,
 } from './has-poll/has-poll.resolver';
-import { PollAnswerWithVoteCountResolver, PollResolver } from './poll.resolver';
+import { PollResolver } from './poll.resolver';
 import { PollDataloaderService } from './poll-dataloader.service';
 import { SettingModule } from '@wepublish/settings/api';
+import { PollAnswerResolver } from './poll-answer.resolver';
+import { PollService } from './poll.service';
 
 @Module({
   imports: [PrismaModule, SettingModule],
@@ -18,8 +20,9 @@ import { SettingModule } from '@wepublish/settings/api';
     HasPollResolver,
     HasOptionalPollResolver,
     PollResolver,
-    PollAnswerWithVoteCountResolver,
+    PollAnswerResolver,
     PollDataloaderService,
+    PollService,
   ],
   exports: [PollDataloaderService],
 })
