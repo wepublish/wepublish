@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { BuilderTeaserProps } from './teaser.interface';
 import { useWebsiteBuilder } from './website-builder.context';
 
@@ -17,10 +18,10 @@ export const AlternatingTeaser = (props: BuilderTeaserProps) => {
   return <AlternatingTeaser {...props} />;
 };
 
-export const Teaser = (props: BuilderTeaserProps) => {
+export const Teaser = memo<BuilderTeaserProps>(props => {
   const {
     blocks: { Teaser },
   } = useWebsiteBuilder();
 
   return <Teaser {...props} />;
-};
+});

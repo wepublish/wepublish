@@ -15,6 +15,13 @@ import { Space } from './components/space';
 import { Teaser } from './components/teaser';
 import { UserConfig, UserOverride } from './types';
 import { TextField } from '@wepublish/ui';
+import { FacebookVideo, Facebook, Instagram } from './components/facebook';
+import { IFrame } from './components/iframe';
+import { TikTok } from './components/tiktok';
+import { Vimeo } from './components/vimeo';
+import { YouTube } from './components/youtube';
+import { Subscribe } from './components/subscribe';
+import { TeaserList } from './components/teaser-list';
 
 const config: UserConfig = {
   root,
@@ -29,10 +36,19 @@ const config: UserConfig = {
     RichText,
     Listicle,
     Event,
+    IFrame,
+    Facebook,
+    FacebookVideo,
+    Instagram,
+    YouTube,
+    Vimeo,
+    TikTok,
+    Subscribe,
+    TeaserList,
   },
   categories: {
     recommended: {
-      components: ['Title', 'RichText'],
+      components: ['Title', 'RichText', 'Subscribe'],
     },
     blocks: {
       components: ['Title', 'Quote', 'Html', 'Break'],
@@ -40,6 +56,17 @@ const config: UserConfig = {
     },
     layout: {
       components: ['Grid', 'Space'],
+      defaultExpanded: false,
+    },
+    embed: {
+      components: [
+        'IFrame',
+        'YouTube',
+        'FacebookVideo',
+        'Facebook',
+        'Instagram',
+        'TikTok',
+      ],
       defaultExpanded: false,
     },
     other: {
@@ -74,7 +101,7 @@ const overrides: UserOverride = {
           {...field.metadata}
           defaultValue={value}
           name={name}
-          onChange={e => onChange(e.currentTarget.value)}
+          onChange={e => onChange(+e.currentTarget.value)}
         />
       </FieldLabel>
     ),

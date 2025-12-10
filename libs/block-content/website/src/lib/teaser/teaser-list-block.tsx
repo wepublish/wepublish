@@ -9,6 +9,7 @@ import {
 import { alignmentForTeaserBlock } from './teaser-grid-block';
 import { css } from '@mui/material';
 import styled from '@emotion/styled';
+import { memo } from 'react';
 
 export const isTeaserListBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -37,36 +38,32 @@ export const TeaserListBlockTeasers = styled('div')`
   `}
 `;
 
-export const TeaserListBlock = ({
-  title,
-  teasers,
-  blockStyle,
-  className,
-  style,
-}: BuilderTeaserListBlockProps) => {
-  const {
-    elements: { H5 },
-    blocks: { Teaser },
-  } = useWebsiteBuilder();
+export const TeaserListBlock = memo<BuilderTeaserListBlockProps>(
+  ({ title, teasers, blockStyle, className, style }) => {
+    const {
+      elements: { H5 },
+      blocks: { Teaser },
+    } = useWebsiteBuilder();
 
-  return (
-    <TeaserListBlockWrapper
-      style={style}
-      className={className}
-    >
-      {title && <H5 component={'h1'}>{title}</H5>}
+    return (
+      <TeaserListBlockWrapper
+        style={style}
+        className={className}
+      >
+        {title && <H5 component={'h1'}>{title}</H5>}
 
-      <TeaserListBlockTeasers>
-        {teasers.map((teaser, index) => (
-          <Teaser
-            key={index}
-            teaser={teaser}
-            alignment={alignmentForTeaserBlock(index, 3)}
-            blockStyle={blockStyle}
-            index={index}
-          />
-        ))}
-      </TeaserListBlockTeasers>
-    </TeaserListBlockWrapper>
-  );
-};
+        <TeaserListBlockTeasers>
+          {teasers.map((teaser, index) => (
+            <Teaser
+              key={index}
+              teaser={teaser}
+              alignment={alignmentForTeaserBlock(index, 3)}
+              blockStyle={blockStyle}
+              index={index}
+            />
+          ))}
+        </TeaserListBlockTeasers>
+      </TeaserListBlockWrapper>
+    );
+  }
+);

@@ -3,7 +3,7 @@ import {
   DefaultComponentProps,
   ObjectField,
 } from '@measured/puck';
-import { CSSProperties, forwardRef, ReactNode } from 'react';
+import { CSSProperties, forwardRef, memo, ReactNode, useMemo } from 'react';
 import { spacingOptions } from '../options/spacing-options';
 
 type LayoutFieldProps = {
@@ -65,7 +65,6 @@ export const Layout = forwardRef<HTMLDivElement, LayoutProps>(function Layout(
           layout?.spanRow ?
             `span ${Math.max(Math.min(layout.spanRow, 12), 1)}`
           : undefined,
-        padding: `${layout?.vertPadding} ${layout?.horPadding}`,
         ...style,
       }}
       ref={ref}
@@ -91,7 +90,7 @@ export function withLayout<
       layout: {
         spanCol: 1,
         spanRow: 1,
-        vertPadding: '0px',
+        vertPadding: spacingOptions[1].value,
         horPadding: spacingOptions[1].value,
         ...componentConfig.defaultProps?.layout,
       },
@@ -129,13 +128,26 @@ export function withLayout<
       };
     },
     inline: true,
-    render: props => (
-      <Layout
-        layout={props.layout as LayoutFieldProps}
-        ref={props.puck.dragRef}
-      >
-        <Render {...props} />
-      </Layout>
-    ),
+    render: memo(function Rend(props) {
+      const style = useMemo(
+        () => ({
+          ...props.style,
+          padding: `${props.layout?.vertPadding} ${props.layout?.horPadding}`,
+        }),
+        [props.layout?.horPadding, props.layout?.vertPadding, props.style]
+      );
+
+      return (
+        <Layout
+          layout={props.layout as LayoutFieldProps}
+          ref={props.puck.dragRef}
+        >
+          <Render
+            {...props}
+            style={style}
+          />
+        </Layout>
+      );
+    }),
   };
 }
