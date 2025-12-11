@@ -3001,7 +3001,7 @@ export type Query = {
   subscriptions: Array<PublicSubscription>;
   /** Returns all mail flows */
   systemMails: Array<SystemMailModel>;
-  /** Returns a tag by id */
+  /** Returns an tag by id or tag. */
   tag: Tag;
   /** This query returns a list of tags */
   tags: TagConnection;
@@ -3297,7 +3297,9 @@ export type QuerySubscriptionFlowsArgs = {
 
 
 export type QueryTagArgs = {
-  id: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
+  tag?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<TagType>;
 };
 
 
@@ -4616,7 +4618,7 @@ export type TagQueryVariables = Exact<{
 }>;
 
 
-export type TagQuery = { __typename?: 'Query', tags: { __typename?: 'TagConnection', nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, type: TagType, main: boolean, url: string }> } };
+export type TagQuery = { __typename?: 'Query', tag: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, type: TagType, main: boolean, url: string } };
 
 export type TagListQueryVariables = Exact<{
   filter?: InputMaybe<TagFilter>;
@@ -7413,10 +7415,8 @@ export type StatsLazyQueryHookResult = ReturnType<typeof useStatsLazyQuery>;
 export type StatsQueryResult = Apollo.QueryResult<StatsQuery, StatsQueryVariables>;
 export const TagDocument = gql`
     query Tag($tag: String!, $type: TagType!) {
-  tags(filter: {tag: $tag, type: $type}, take: 1) {
-    nodes {
-      ...FullTag
-    }
+  tag(tag: $tag, type: $type) {
+    ...FullTag
   }
 }
     ${FullTagFragmentDoc}`;
