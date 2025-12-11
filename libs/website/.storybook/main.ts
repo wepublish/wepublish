@@ -51,7 +51,7 @@ export default {
     '@chromatic-com/storybook',
   ],
 
-  babel: (config, options) => {
+  babel: (config: any) => {
     config.overrides?.push({
       presets: [
         [
