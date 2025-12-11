@@ -3,7 +3,8 @@ import { mockImage } from '@wepublish/storybook/mocks';
 import { Navigation } from '@wepublish/website/api';
 import { PageType } from '@wepublish/website/builder';
 
-import { TsriV2Navbar as Navbar } from './tsri-v2-navbar';
+import { WithWebsiteProviderDecorator } from '../with-website-builder-provider';
+import { TsriV2Navbar } from './tsri-v2-navbar';
 
 const navigations = [
   {
@@ -195,8 +196,9 @@ const pageTypeBasedProps = {
 };
 
 export default {
-  component: Navbar,
-  title: 'Components/Navbar',
+  component: TsriV2Navbar,
+  title: 'Components/Tsri/TsriV2Navbar',
+  decorators: [WithWebsiteProviderDecorator],
 } as Meta;
 
 export const HomePage = {

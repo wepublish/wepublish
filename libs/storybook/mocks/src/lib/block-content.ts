@@ -495,7 +495,7 @@ export const mockTeaserSlotsBlock = ({
     mockArticleTeaser(),
     mockCustomTeaser({ title: 'More about this topic' }),
   ],
-  blockStyle = undefined,
+  blockStyle = '',
   className = '',
   autofillConfig = {
     __typename: 'TeaserSlotsAutofillConfig',
@@ -623,10 +623,11 @@ export const mockTeaserGridFlexBlock = ({
       teaser: mockArticleTeaser(),
     },
   ],
+  blockStyle = '',
 }: Partial<FullTeaserGridFlexBlockFragment> = {}): FullTeaserGridFlexBlockFragment => ({
   type: BlockType.TeaserGridFlex,
   __typename: 'TeaserGridFlexBlock',
-  blockStyle: null,
+  blockStyle,
   flexTeasers,
 });
 
@@ -673,6 +674,7 @@ export const mockBlockContent = ({
   col6 = mockTeaserGridBlock(),
   col1 = mockTeaserGridBlock({ numColumns: 1, teasers: [mockEventTeaser()] }),
   flex = mockTeaserGridFlexBlock(),
+  slots = mockTeaserSlotsBlock(),
 } = {}) =>
   [
     title,
@@ -700,4 +702,5 @@ export const mockBlockContent = ({
     col6,
     col1,
     flex,
+    slots,
   ].filter(block => !!block) as FullBlockFragment[];

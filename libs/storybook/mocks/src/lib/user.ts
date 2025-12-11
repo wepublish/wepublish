@@ -2,6 +2,14 @@ import { User, UserAddress } from '@wepublish/website/api';
 import { mockImage } from './image';
 import { faker } from '@faker-js/faker';
 
+type UserExtensionProperties = {
+  birthday?: string;
+  email?: string;
+  permissions?: string[];
+  address?: Partial<UserAddress>;
+  paymentProviderCustomers?: any[];
+};
+
 export const mockUser = ({
   id = faker.string.nanoid(),
   name = faker.person.lastName(),
@@ -18,7 +26,10 @@ export const mockUser = ({
   address = mockUserAdress(),
   properties = [],
   paymentProviderCustomers = [],
-}: Partial<User> = {}): User => ({
+  active = true,
+  roleIDs = [],
+}: Partial<User> & UserExtensionProperties = {}): User &
+  UserExtensionProperties => ({
   __typename: 'User',
   id,
   name,
@@ -31,6 +42,8 @@ export const mockUser = ({
   flair,
   image,
   paymentProviderCustomers,
+  active,
+  roleIDs,
 });
 
 export const mockUserAdress = ({

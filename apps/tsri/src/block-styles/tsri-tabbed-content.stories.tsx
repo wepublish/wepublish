@@ -13,11 +13,13 @@ import {
   NestedBlock,
 } from '@wepublish/website/api';
 
+import { WithWebsiteProviderDecorator } from '../with-website-builder-provider';
 import { TabbedContent } from './tsri-tabbed-content';
 
 export default {
   component: TabbedContent,
-  title: 'Blocks/Flex Block/Block Styles/Tabbed Content',
+  title: 'Container/Tsri/Tabbed Content',
+  decorators: [WithWebsiteProviderDecorator],
 } as Meta;
 
 type MockTabbedContentBlock = (args?: {
