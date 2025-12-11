@@ -14,13 +14,10 @@ export const TeaserSlotsArchiveTopicWrapper = styled('ul')`
   margin: 0;
   padding: 0;
   list-style: none;
-
-  @container tabbed-content (width > 200px) {
-    grid-template-columns: 58.42cqw 32.5cqw !important;
-    grid-template-rows: repeat(6, min-content) !important;
-    column-gap: 2.2cqw;
-    row-gap: 1.77cqw;
-  }
+  grid-template-columns: 58.42cqw 32.5cqw !important;
+  grid-template-rows: repeat(6, min-content) !important;
+  column-gap: 2.2cqw;
+  row-gap: 1.77cqw;
 `;
 
 export const isTeaserSlotsArchiveTopic = allPass([
