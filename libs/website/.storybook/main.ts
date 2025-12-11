@@ -20,6 +20,7 @@ export default {
   stories: [
     '../../**/src/lib/**/*.mdx',
     '../../**/src/lib/**/*.stories.@(js|jsx|ts|tsx)',
+    '../../../apps/**/*.stories.@(js|jsx|ts|tsx)',
   ],
 
   addons: [
