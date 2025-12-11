@@ -7,7 +7,10 @@ import {
   useCallback,
   useState,
 } from 'react';
-import { User, SessionWithTokenWithoutUser } from '@wepublish/website/api';
+import {
+  SensitiveDataUser,
+  SessionWithTokenWithoutUser,
+} from '@wepublish/website/api';
 import { SessionTokenContext } from '@wepublish/authentication/website';
 
 import { WebsiteProvider } from '@wepublish/website';
@@ -16,7 +19,7 @@ import { act } from '@testing-library/react';
 
 const SessionProvider = memo<PropsWithChildren>(({ children }) => {
   const [token, setToken] = useState<SessionWithTokenWithoutUser | null>();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<SensitiveDataUser | null>(null);
 
   const setTokenAndGetMe = useCallback(
     async (newToken: SessionWithTokenWithoutUser | null) => {
@@ -32,6 +35,8 @@ const SessionProvider = memo<PropsWithChildren>(({ children }) => {
             paymentProviderCustomers: [],
             properties: [],
             permissions: [],
+            active: true,
+            roleIDs: [],
           })
         );
       } else {
