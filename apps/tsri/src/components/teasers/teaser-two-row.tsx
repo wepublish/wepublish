@@ -40,19 +40,17 @@ export const TeaserTwoRow = styled(TsriTeaser)`
     display: grid;
     z-index: 1;
 
-    @container tabbed-content (width > 700px) {
-      aspect-ratio: 1;
-      border-top-left-radius: 1.3cqw;
-      border-top-right-radius: 1.3cqw;
-      grid-column: 1 / 2;
-      grid-row: 1 / 2;
+    aspect-ratio: 1;
+    border-top-left-radius: 1.3cqw;
+    border-top-right-radius: 1.3cqw;
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
 
-      & img {
-        width: auto;
-        height: 58.42cqw;
-        object-fit: cover;
-        max-height: unset;
-      }
+    & img {
+      width: auto;
+      height: 58.42cqw;
+      object-fit: cover;
+      max-height: unset;
     }
   }
 

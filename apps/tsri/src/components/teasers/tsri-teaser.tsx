@@ -92,6 +92,7 @@ export const TeaserImageWrapper = styled('figure')`
 
 export const TeaserImage = styled(Image)`
   max-height: unset;
+  max-width: unset;
 `;
 
 export const TeaserBreakingNewsBadge = styled('div')`
