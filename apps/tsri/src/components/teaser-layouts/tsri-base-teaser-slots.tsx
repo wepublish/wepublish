@@ -3,6 +3,26 @@ import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { cond, T } from 'ramda';
 
 import {
+  alignmentForTeaserBlock as alignmentForTeaserBlockFullsizeImage,
+  isTeaserSlotsFullsizeImage,
+  TeaserSlotsFullsizeImage,
+} from './layout-fullsize-image';
+import {
+  alignmentForTeaserBlock as alignmentForTeaserBlockNoImage,
+  isTeaserSlotNoImage,
+  TeaserSlotNoImage,
+} from './layout-no-image';
+import {
+  alignmentForTeaserBlock as alignmentForTeaserBlockNoImageAltColor,
+  isTeaserSlotNoImageAltColor,
+  TeaserSlotNoImageAltColor,
+} from './layout-no-image-alt-color';
+import {
+  alignmentForTeaserBlock as teaserBlockStyleByIndexTwoCol,
+  isTeaserSlotsTwoCol,
+  TeaserSlotsTwoCol,
+} from './layout-two-col';
+import {
   alignmentForTeaserBlock,
   isTeaserSlotsArchiveTopic,
   teaserBlockStyleByIndex,
@@ -24,7 +44,44 @@ import {
   teaserBlockStyleByIndex as teaserBlockStyleByIndexFrontTop,
   TeaserSlotsFrontTop,
 } from './teaser-slots-front-top';
+
 export const TsriBaseTeaserSlots = cond([
+  [
+    isTeaserSlotsFullsizeImage,
+    (props: BuilderTeaserSlotsBlockProps) => (
+      <TeaserSlotsFullsizeImage
+        {...props}
+        alignmentForTeaserBlock={alignmentForTeaserBlockFullsizeImage}
+      />
+    ),
+  ],
+  [
+    isTeaserSlotsTwoCol,
+    (props: BuilderTeaserSlotsBlockProps) => (
+      <TeaserSlotsTwoCol
+        {...props}
+        alignmentForTeaserBlock={teaserBlockStyleByIndexTwoCol}
+      />
+    ),
+  ],
+  [
+    isTeaserSlotNoImage,
+    (props: BuilderTeaserSlotsBlockProps) => (
+      <TeaserSlotNoImage
+        {...props}
+        alignmentForTeaserBlock={alignmentForTeaserBlockNoImage}
+      />
+    ),
+  ],
+  [
+    isTeaserSlotNoImageAltColor,
+    (props: BuilderTeaserSlotsBlockProps) => (
+      <TeaserSlotNoImageAltColor
+        {...props}
+        alignmentForTeaserBlock={alignmentForTeaserBlockNoImageAltColor}
+      />
+    ),
+  ],
   [
     isTeaserSlotsFrontTop,
     (props: BuilderTeaserSlotsBlockProps) => (
