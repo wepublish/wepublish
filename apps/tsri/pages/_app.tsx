@@ -38,6 +38,9 @@ import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import { TabbedContent } from '../src/block-styles/tsri-tabbed-content';
+import { TsriBaseTeaserGridFlex } from '../src/components/teaser-layouts/tsri-base-teaser-flex-grid';
+import { TsriBaseTeaserSlots } from '../src/components/teaser-layouts/tsri-base-teaser-slots';
 import { TsriArticleDate } from '../src/components/tsri-article-date';
 import { TsriArticleMeta } from '../src/components/tsri-article-meta';
 import { TsriBanner } from '../src/components/tsri-banner';
@@ -48,6 +51,7 @@ import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
 import { TsriTeaser } from '../src/components/tsri-teaser';
 import theme from '../src/theme';
+import { TsriBlockRenderer } from '../src/tsri-block-renderer';
 
 setDefaultOptions({
   locale: de,
@@ -127,13 +131,17 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           elements={{ Link: NextWepublishLink }}
           blocks={{
             BaseTeaser: TsriTeaser,
+            TeaserSlots: TsriBaseTeaserSlots,
+            TeaserGridFlex: TsriBaseTeaserGridFlex,
             Break: TsriBreakBlock,
             Quote: TsriQuoteBlock,
             RichText: TsriRichText,
             Title: TsriTitle,
+            Renderer: TsriBlockRenderer,
           }}
           blockStyles={{
             ContextBox: TsriContextBox,
+            TabbedContent,
           }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
