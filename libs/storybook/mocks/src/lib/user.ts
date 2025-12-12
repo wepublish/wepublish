@@ -1,14 +1,14 @@
-import { User, UserAddress } from '@wepublish/website/api';
+import { SensitiveDataUser, User, UserAddress } from '@wepublish/website/api';
 import { mockImage } from './image';
 import { faker } from '@faker-js/faker';
 
 type UserExtensionProperties = {
-  birthday?: string; 
-  email?: string; 
-  permissions?: string[]; 
-  address?: Partial<UserAddress>
+  birthday?: string;
+  email?: string;
+  permissions?: string[];
+  address?: Partial<UserAddress>;
   paymentProviderCustomers?: any[];
-}
+};
 
 export const mockUser = ({
   id = faker.string.nanoid(),
@@ -27,8 +27,9 @@ export const mockUser = ({
   properties = [],
   paymentProviderCustomers = [],
   active = true,
-  roleIDs = []
-}: Partial<User> & UserExtensionProperties = {}): User & UserExtensionProperties => ({
+  roleIDs = [],
+}: Partial<User> & UserExtensionProperties = {}): User &
+  UserExtensionProperties => ({
   __typename: 'User',
   id,
   name,
@@ -42,7 +43,44 @@ export const mockUser = ({
   image,
   paymentProviderCustomers,
   active,
-  roleIDs
+  roleIDs,
+});
+
+export const mockSensitiveDataUser = ({
+  id = faker.string.nanoid(),
+  name = faker.person.lastName(),
+  image = mockImage(),
+  birthday = faker.date
+    .past({
+      years: 18,
+    })
+    .toISOString(),
+  email = faker.internet.email(),
+  firstName = faker.person.firstName(),
+  flair = faker.person.jobTitle(),
+  permissions = [],
+  address = mockUserAdress(),
+  properties = [],
+  paymentProviderCustomers = [],
+  active = true,
+  roleIDs = [],
+}: Partial<SensitiveDataUser> &
+  UserExtensionProperties = {}): SensitiveDataUser &
+  UserExtensionProperties => ({
+  __typename: 'SensitiveDataUser',
+  id,
+  name,
+  email,
+  permissions,
+  properties,
+  address,
+  birthday,
+  firstName,
+  flair,
+  image,
+  paymentProviderCustomers,
+  active,
+  roleIDs,
 });
 
 export const mockUserAdress = ({
