@@ -3,6 +3,12 @@ import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { cond, T } from 'ramda';
 
 import {
+  alignmentForTeaserBlock as alignmentForTeaserBlockFrontTopOneRow,
+  isTeaserSlotsFrontTopOneRow,
+  teaserBlockStyleByIndex as teaserBlockStyleByIndexFrontTopOneRow,
+  TeaserSlotsFrontTopOneRow,
+} from './front-top-one-row';
+import {
   alignmentForTeaserBlock as alignmentForTeaserBlockFullsizeImage,
   isTeaserSlotsFullsizeImage,
   TeaserSlotsFullsizeImage,
