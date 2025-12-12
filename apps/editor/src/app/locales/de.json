@@ -322,6 +322,9 @@
         "removeBlock": "Block entfernen",
         "unlockBlock": "Entsperren"
       },
+      "flexBlock": {
+        "label": "Flex Block"
+      },
       "html": {
         "close": "Schliessen",
         "confirm": "Bestätigen",

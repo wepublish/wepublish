@@ -1,14 +1,10 @@
 import { action } from '@storybook/addon-actions';
 import { Meta, StoryObj } from '@storybook/react';
-import {
-  Currency,
-  Exact,
-  FullMemberPlanFragment,
-} from '@wepublish/website/api';
+import { Currency, FullMemberPlanFragment } from '@wepublish/website/api';
 import { useState } from 'react';
 import { MemberPlanPicker } from './memberplan-picker';
 import { ApolloError } from '@apollo/client';
-import { mockImage, mockRichText } from '@wepublish/storybook/mocks';
+import { mockMemberPlan } from '@wepublish/storybook/mocks';
 
 export default {
   component: MemberPlanPicker,
@@ -29,19 +25,7 @@ export default {
   },
 } as Meta<typeof MemberPlanPicker>;
 
-const memberPlan = {
-  __typename: 'MemberPlan',
-  image: mockImage(),
-  name: 'Foobar Memberplan',
-  amountPerMonthMin: 5000,
-  availablePaymentMethods: [],
-  id: '123',
-  slug: '',
-  description: mockRichText(),
-  tags: [],
-  currency: Currency.Chf,
-  extendable: true,
-} as Exact<FullMemberPlanFragment>;
+const memberPlan = mockMemberPlan() as FullMemberPlanFragment;
 
 export const Default: StoryObj<typeof MemberPlanPicker> = {
   args: {

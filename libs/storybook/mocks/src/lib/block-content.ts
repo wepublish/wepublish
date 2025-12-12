@@ -484,6 +484,106 @@ export const mockTeaserGridBlock = ({
   numColumns,
 });
 
+export const mockTeaserSlotsBlock = ({
+  title = 'test title',
+  teasers = [
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+    mockCustomTeaser({ title: 'More about this topic' }),
+  ],
+  blockStyle = '',
+  className = '',
+  autofillConfig = {
+    __typename: 'TeaserSlotsAutofillConfig',
+    enabled: true,
+    strategy: 'manual',
+    numberOfTeasers: 7,
+    tagIds: [],
+    maxAgeInDays: 30,
+    sort: null,
+    filter: {
+      __typename: 'TeaserListBlockFilter',
+      tags: ['test-tag-id'],
+      tagObjects: [
+        {
+          __typename: 'Tag',
+          id: 'test-tag-id',
+          tag: 'lorem-ipsum',
+        },
+      ],
+    },
+  },
+  autofillTeasers = [
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+  ],
+  slots = [
+    {
+      __typename: 'TeaserSlot',
+      type: 'Autofill',
+      teaser: null,
+    },
+    {
+      __typename: 'TeaserSlot',
+      type: 'Autofill',
+      teaser: null,
+    },
+    {
+      __typename: 'TeaserSlot',
+      type: 'Autofill',
+      teaser: null,
+    },
+    {
+      __typename: 'TeaserSlot',
+      type: 'Autofill',
+      teaser: null,
+    },
+    {
+      __typename: 'TeaserSlot',
+      type: 'Autofill',
+      teaser: null,
+    },
+    {
+      __typename: 'TeaserSlot',
+      type: 'Autofill',
+      teaser: null,
+    },
+    {
+      __typename: 'TeaserSlot',
+      type: 'Manual',
+      teaser: {
+        __typename: 'CustomTeaser',
+        image: null,
+        type: 'custom',
+        preTitle: null,
+        title: 'More about this topic',
+        lead: null,
+        contentUrl: '/some/topic/url',
+        openInNewTab: false,
+        properties: [],
+      },
+    },
+  ],
+} = {}) => ({
+  __typename: 'TeaserSlotsBlock',
+  title,
+  teasers,
+  blockStyle,
+  className,
+  autofillConfig,
+  autofillTeasers,
+  slots,
+  type: BlockType.TeaserSlots,
+});
+
 export const mockFlexAlignment = (
   props: Omit<FlexAlignment, 'static' | 'i'>
 ): FlexAlignment => ({
@@ -523,10 +623,11 @@ export const mockTeaserGridFlexBlock = ({
       teaser: mockArticleTeaser(),
     },
   ],
+  blockStyle = '',
 }: Partial<FullTeaserGridFlexBlockFragment> = {}): FullTeaserGridFlexBlockFragment => ({
   type: BlockType.TeaserGridFlex,
   __typename: 'TeaserGridFlexBlock',
-  blockStyle: null,
+  blockStyle,
   flexTeasers,
 });
 
@@ -573,6 +674,7 @@ export const mockBlockContent = ({
   col6 = mockTeaserGridBlock(),
   col1 = mockTeaserGridBlock({ numColumns: 1, teasers: [mockEventTeaser()] }),
   flex = mockTeaserGridFlexBlock(),
+  slots = mockTeaserSlotsBlock(),
 } = {}) =>
   [
     title,
@@ -600,4 +702,5 @@ export const mockBlockContent = ({
     col6,
     col1,
     flex,
+    slots,
   ].filter(block => !!block) as FullBlockFragment[];

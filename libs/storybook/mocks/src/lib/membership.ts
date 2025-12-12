@@ -71,6 +71,11 @@ export const mockMemberPlan = ({
   ],
   description = mockRichText(),
   shortDescription = mockShortRichText(),
+  successPageId = faker.string.nanoid(),
+  failPageId = faker.string.nanoid(),
+  confirmationPageId = faker.string.nanoid(),
+  amountPerMonthMax = 1000,
+  externalReward = 'https://example.com/mock-external-reward-url',
 }: Partial<MemberPlan> = {}): MemberPlan => ({
   __typename: 'MemberPlan',
   id,
@@ -86,6 +91,11 @@ export const mockMemberPlan = ({
   extendable,
   productType,
   availablePaymentMethods,
+  successPageId,
+  failPageId,
+  confirmationPageId,
+  amountPerMonthMax,
+  externalReward,
 });
 
 export const mockChallenge = ({
@@ -195,6 +205,7 @@ export const mockInvoice = ({
     }),
   ],
   mail = faker.internet.email(),
+  description = faker.lorem.sentence(),
 }: Partial<Invoice> = {}): Invoice => ({
   __typename: 'Invoice',
   id,
@@ -208,4 +219,5 @@ export const mockInvoice = ({
   items,
   mail,
   total: items[0].total,
+  description,
 });

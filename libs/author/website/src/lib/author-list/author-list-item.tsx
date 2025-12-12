@@ -14,7 +14,6 @@ const AuthorListItemLink = styled(Link)`
   display: grid;
   grid-template-rows: max-content 1fr;
   gap: ${({ theme }) => theme.spacing(3)};
-  width: 240px;
   text-align: center;
   text-decoration: none;
   color: inherit;
