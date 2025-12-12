@@ -51,16 +51,26 @@ export default {
     '@chromatic-com/storybook',
   ],
 
-  babel: (config: any) => {
-    config.overrides?.push({
-      presets: [
-        [
-          '@babel/preset-react',
-          { runtime: 'automatic', importSource: '@emotion/react' },
-        ],
-      ],
-      plugins: [['@emotion']],
-      test: '*',
+  webpackFinal: async (config: any) => {
+    config.module.rules.push({
+      test: /\.[jt]sx?$/,
+      exclude: /node_modules/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: [
+            [
+              '@babel/preset-react',
+              {
+                runtime: 'automatic',
+                importSource: '@emotion/react',
+              },
+            ],
+            '@babel/preset-typescript',
+          ],
+          plugins: ['@emotion/babel-plugin'],
+        },
+      },
     });
 
     return config;

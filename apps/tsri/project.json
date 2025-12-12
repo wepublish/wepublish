@@ -54,32 +54,6 @@
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
-    },
-    "storybook": {
-      "executor": "@nx/storybook:storybook",
-      "options": {
-        "port": 4400,
-        "configDir": "apps/tsri/.storybook"
-      },
-      "configurations": {
-        "ci": {
-          "quiet": true
-        }
-      }
-    },
-    "build-storybook": {
-      "executor": "@nx/storybook:build",
-      "outputs": ["{options.outputDir}"],
-      "options": {
-        "configDir": "apps/tsri/.storybook",
-        "outputDir": "dist/storybook/tsri",
-        "babelConfig": "apps/tsri/.storybook/.babelrc"
-      },
-      "configurations": {
-        "ci": {
-          "quiet": true
-        }
-      }
     }
   }
 }

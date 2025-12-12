@@ -7,7 +7,7 @@ import { TsriBaseTeaserGridFlex } from './tsri-base-teaser-flex-grid';
 
 export default {
   component: TsriBaseTeaserGridFlex,
-  title: 'Container/Tsri/TeaserFlexGrid',
+  title: 'Tsri/Container/TeaserFlexGrid',
   decorators: [WithWebsiteProviderDecorator],
 } as Meta;
 

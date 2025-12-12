@@ -7,7 +7,7 @@ import { TsriBaseTeaserSlots } from './tsri-base-teaser-slots';
 
 export default {
   component: TsriBaseTeaserSlots,
-  title: 'Container/Tsri/TeaserSlots',
+  title: 'Tsri/Container/TeaserSlots',
   decorators: [WithWebsiteProviderDecorator],
 } as Meta;
 

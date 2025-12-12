@@ -18,7 +18,7 @@ import { TabbedContent } from './tsri-tabbed-content';
 
 export default {
   component: TabbedContent,
-  title: 'Container/Tsri/Tabbed Content',
+  title: 'Tsri/Container/Tabbed Content',
   decorators: [WithWebsiteProviderDecorator],
 } as Meta;
 

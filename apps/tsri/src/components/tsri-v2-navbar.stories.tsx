@@ -197,7 +197,7 @@ const pageTypeBasedProps = {
 
 export default {
   component: TsriV2Navbar,
-  title: 'Components/Tsri/TsriV2Navbar',
+  title: 'Tsri/Components/TsriV2Navbar',
   decorators: [WithWebsiteProviderDecorator],
 } as Meta;
 

@@ -16,6 +16,7 @@ import {
   Challenge,
   CommentAuthorType,
   CommentListQuery,
+  SensitiveDataUser,
 } from '@wepublish/website/api';
 import { ComponentProps } from 'react';
 import { LoggedInFilled } from '../comment-editor/comment-editor.stories';
@@ -111,7 +112,7 @@ export const Commenting: StoryObj = {
   },
   decorators: [
     WithCommentRatingsDecorators({}),
-    WithUserDecorator(verifiedUserComment.user ?? null),
+    WithUserDecorator((verifiedUserComment.user as SensitiveDataUser) ?? null),
   ],
 };
 
@@ -147,7 +148,7 @@ export const Editing: StoryObj = {
   },
   decorators: [
     WithCommentRatingsDecorators({}),
-    WithUserDecorator(verifiedUserComment.user ?? null),
+    WithUserDecorator((verifiedUserComment.user as SensitiveDataUser) ?? null),
   ],
 };
 

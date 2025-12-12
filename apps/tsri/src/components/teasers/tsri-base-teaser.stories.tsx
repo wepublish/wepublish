@@ -5,7 +5,7 @@ import { TsriTeaser as BaseTeaser } from './tsri-teaser';
 
 export default {
   component: BaseTeaser,
-  title: 'Blocks/Tsri/Teaser',
+  title: 'Tsri/Blocks/Teaser',
 } as Meta;
 
 //const customTeaser = mockCustomTeaser();
