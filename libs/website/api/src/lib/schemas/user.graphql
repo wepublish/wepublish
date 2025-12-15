@@ -82,6 +82,7 @@ mutation LoginWithJWT($jwt: String!) {
 
 mutation Register(
   $name: String!
+  $flair: String
   $firstName: String
   $birthday: DateTime
   $address: UserAddressInput
@@ -91,6 +92,7 @@ mutation Register(
 ) {
   registerMember(
     name: $name
+    flair: $flair
     firstName: $firstName
     birthday: $birthday
     address: $address
@@ -108,8 +110,20 @@ mutation Register(
   }
 }
 
-mutation UpdateUser($input: UserInput!) {
-  updateUser(input: $input) {
+mutation UpdateUser(
+  $firstName: String
+  $name: String
+  $email: String
+  $password: String
+  $address: UserAddressInput
+) {
+  updateCurrentUser(
+    name: $name
+    firstName: $firstName
+    email: $email
+    password: $password
+    address: $address
+  ) {
     ...FullSensitiveDataUser
   }
 }

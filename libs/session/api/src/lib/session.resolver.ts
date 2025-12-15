@@ -16,7 +16,7 @@ export class SessionResolver {
   async createSession(
     @Args('email') email: string,
     @Args('password') password: string
-  ): Promise<SessionWithToken> {
+  ) {
     return this.sessionService.createSessionWithEmailAndPassword(
       email,
       password
@@ -25,9 +25,7 @@ export class SessionResolver {
 
   @Public()
   @Mutation(() => SessionWithToken)
-  async createSessionWithJWT(
-    @Args('jwt') jwt: string
-  ): Promise<SessionWithToken> {
+  async createSessionWithJWT(@Args('jwt') jwt: string) {
     return this.sessionService.createSessionWithJWT(jwt);
   }
 

@@ -1237,12 +1237,6 @@ enum ImportedEventSort {
   STARTS_AT
 }
 
-type ImportedEventsDocument {
-  nodes: [EventFromSource!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
 type InstagramPostBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -1357,12 +1351,6 @@ type MemberPlan implements HasImage {
   tags: [String!]
 }
 
-type MemberPlanConnection {
-  nodes: [MemberPlan!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
 input MemberPlanFilter {
   active: Boolean
   name: String
@@ -1445,6 +1433,9 @@ type Mutation {
   """Creates a new tag."""
   createTag(description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
 
+  """Creates a new user."""
+  createUser(active: Boolean!, address: UserAddressInput, birthday: DateTime, email: String!, emailVerifiedAt: DateTime, firstName: String, flair: String, name: String!, note: String, password: String, properties: [PropertyInput!]!, roleIDs: [String!]!, userImageID: String): SensitiveDataUser!
+
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
 
@@ -1495,6 +1486,9 @@ type Mutation {
   """Deletes an existing tag."""
   deleteTag(id: String!): Tag!
 
+  """Deletes an existing user."""
+  deleteUser(id: String!): SensitiveDataUser!
+
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
 
@@ -1536,7 +1530,10 @@ type Mutation {
   """
   This mutation registers a new member by providing name, email, and other required information.
   """
-  registerMember(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput!, email: String!, firstName: String, name: String!, password: String): Registration!
+  registerMember(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput!, email: String!, firstName: String, flair: String, name: String!, password: String): Registration!
+
+  """Resets the password of a user."""
+  resetPassword(id: String!, password: String, sendMail: Boolean): SensitiveDataUser!
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
@@ -1575,6 +1572,9 @@ type Mutation {
   """Updates a single crowdfunding"""
   updateCrowdfunding(input: UpdateCrowdfundingInput!): Crowdfunding!
 
+  """Updates the current logged in user."""
+  updateCurrentUser(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput, email: String, firstName: String, flair: String, name: String, password: String): SensitiveDataUser!
+
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
 
@@ -1588,9 +1588,6 @@ type Mutation {
   This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.
   """
   updatePassword(password: String!, passwordRepeated: String!): SensitiveDataUser!
-
-  """This mutation allows to update the Payment Provider Customers"""
-  updatePaymentProviderCustomers(input: [PaymentProviderCustomerInput!]!): [PaymentProviderCustomer!]!
 
   """Updates a paywall."""
   updatePaywall(active: Boolean, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, id: String!, memberPlanIds: [String!] = [], name: String): Paywall!
@@ -1613,10 +1610,8 @@ type Mutation {
   """Updates an existing tag."""
   updateTag(description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
 
-  """
-  This mutation allows to update the user's data by taking an input of type UserInput.
-  """
-  updateUser(input: UserInput!): SensitiveDataUser
+  """Updates an existing user."""
+  updateUser(active: Boolean, address: UserAddressInput, birthday: DateTime, email: String, emailVerifiedAt: DateTime, firstName: String, flair: String, id: String, name: String, note: String, password: String, properties: [PropertyInput!], roleIDs: [String!], userImageID: String): SensitiveDataUser!
 
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
@@ -1786,13 +1781,25 @@ type PaginatedEvents {
   totalCount: Int!
 }
 
+type PaginatedEventsFromSources {
+  nodes: [EventFromSource!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedMemberPlans {
+  nodes: [MemberPlan!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type PaginatedPages {
   nodes: [Page!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
 
-type PaginatedPeerArticle {
+type PaginatedPeerArticles {
   nodes: [PeerArticle!]!
   pageInfo: PageInfo!
   totalCount: Int!
@@ -1800,6 +1807,18 @@ type PaginatedPeerArticle {
 
 type PaginatedPollVotes {
   nodes: [PollVote!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedSensitiveDataUsers {
+  nodes: [SensitiveDataUser!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedTags {
+  nodes: [Tag!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -1847,11 +1866,6 @@ enum PaymentPeriodicity {
 }
 
 type PaymentProviderCustomer {
-  customerID: String!
-  paymentProviderID: String!
-}
-
-input PaymentProviderCustomerInput {
   customerID: String!
   paymentProviderID: String!
 }
@@ -2146,10 +2160,10 @@ type Query {
   articles(cursorId: String, filter: ArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!
 
   """Get an author by ID or slug"""
-  author(id: String, slug: Slug): Author
+  author(id: String, slug: String): Author
 
   """Get a paginated list of authors with optional filtering and sorting"""
-  authors(cursor: String, filter: AuthorFilter, order: SortOrder = Descending, skip: Int, sort: AuthorSort = ModifiedAt, take: Int): PaginatedAuthors!
+  authors(cursorId: String, filter: AuthorFilter, order: SortOrder = Descending, skip: Int, sort: AuthorSort = ModifiedAt, take: Int): PaginatedAuthors!
   banner(id: String!): Banner!
   banners(skip: Int!, take: Int!): [Banner!]!
 
@@ -2206,7 +2220,7 @@ type Query {
   importedEvent(filter: SingleEventFilter!): EventFromSource!
 
   "\n      Returns a list of imported events from external sources, transformed to match our model.\n    "
-  importedEvents(filter: ImportedEventFilter, order: Int, skip: Int, sort: ImportedEventSort, take: Int): ImportedEventsDocument!
+  importedEvents(filter: ImportedEventFilter, order: Int, skip: Int, sort: ImportedEventSort, take: Int): PaginatedEventsFromSources!
 
   "\n      Returns a list of external source ids of already imported events.\n    "
   importedEventsIds: [String!]!
@@ -2224,7 +2238,7 @@ type Query {
   memberPlan(id: String, slug: Slug): MemberPlan
 
   """This query returns the member plans."""
-  memberPlans(cursor: String, filter: MemberPlanFilter, order: SortOrder! = Descending, skip: Int! = 0, sort: MemberPlanSort! = createdAt, take: Int! = 10): MemberPlanConnection!
+  memberPlans(cursorId: String, filter: MemberPlanFilter, order: SortOrder! = Descending, skip: Int! = 0, sort: MemberPlanSort! = createdAt, take: Int! = 10): PaginatedMemberPlans!
 
   """Returns a navigation by id."""
   navigation(id: String!): Navigation!
@@ -2259,7 +2273,7 @@ type Query {
   peer(id: String, slug: String): Peer
 
   """Returns a paginated list of peer articles based on the filters given."""
-  peerArticles(filter: PeerArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedPeerArticle!
+  peerArticles(filter: PeerArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedPeerArticles!
 
   """This query returns the peer profile."""
   peerProfile: PeerProfile!
@@ -2317,7 +2331,7 @@ type Query {
   """This query returns a list of tags"""
   tags(
     """Cursor for pagination"""
-    cursor: String
+    cursorId: String
 
     """Filter for tags"""
     filter: TagFilter
@@ -2333,7 +2347,10 @@ type Query {
 
     """Number of items to fetch"""
     take: Int! = 10
-  ): TagConnection!
+  ): PaginatedTags!
+
+  """Returns a user by id."""
+  user(id: String!): SensitiveDataUser!
 
   "\n      Returns a single userConsent by id.\n    "
   userConsent(id: String!): UserConsent!
@@ -2347,6 +2364,27 @@ type Query {
 
   """Returns a paginated list of userroles based on the filters given."""
   userRoles(cursorId: String, filter: UserRoleFilter, order: SortOrder = Ascending, skip: Int = 0, sort: UserRoleSort = CreatedAt, take: Int = 10): PaginatedUserRoles!
+
+  """Returns a paginated list of users based on the filters given."""
+  users(
+    """Cursor for pagination"""
+    cursorId: String
+
+    """Filter for users"""
+    filter: UserFilter
+
+    """Sort order"""
+    order: SortOrder = Descending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: UserSort! = CreatedAt
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedSensitiveDataUsers!
   versionInformation: VersionInformation!
 }
 
@@ -2413,16 +2451,22 @@ type SensitiveDataUser implements BaseUser {
   active: Boolean!
   address: UserAddress
   birthday: DateTime
+  createdAt: DateTime!
   email: String!
+  emailVerifiedAt: DateTime
   firstName: String
   flair: String
   id: String!
   image: Image
+  lastLogin: DateTime
+  modifiedAt: DateTime!
   name: String!
+  note: String
   paymentProviderCustomers: [PaymentProviderCustomer!]
   permissions: [String!]!
   properties: [Property!]!
   roleIDs: [String!]!
+  roles: [UserRole!]!
   userImageID: String
 }
 
@@ -2607,12 +2651,6 @@ type Tag {
   tag: String
   type: TagType!
   url: String!
-}
-
-type TagConnection {
-  nodes: [Tag!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
 }
 
 input TagFilter {
@@ -2889,6 +2927,7 @@ type User implements BaseUser {
   id: String!
   image: Image
   name: String!
+  note: String
   properties: [Property!]!
   roleIDs: [String!]!
   userImageID: String
@@ -2935,14 +2974,10 @@ enum UserEvent {
   TEST_MAIL
 }
 
-input UserInput {
-  address: UserAddressInput
-  birthday: DateTime
-  email: String!
-  firstName: String
-  flair: String
-  name: String!
-  uploadImageInput: UploadImageInput
+input UserFilter {
+  name: String
+  text: String
+  userRole: [String!]
 }
 
 type UserRole {
@@ -2963,6 +2998,13 @@ input UserRoleFilter {
 enum UserRoleSort {
   CreatedAt
   ModifiedAt
+}
+
+enum UserSort {
+  CreatedAt
+  FirstName
+  ModifiedAt
+  Name
 }
 
 input UserSubscriptionInput {

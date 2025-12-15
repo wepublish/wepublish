@@ -3,12 +3,12 @@ import {
   DateFilterComparison,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
-  FullUserFragment,
   SubscriptionDeactivationReason,
   SubscriptionFilter,
   useMemberPlanListQuery,
   usePaymentMethodListQuery,
 } from '@wepublish/editor/api';
+import { FullUserFragment } from '@wepublish/editor/api-v2';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdClose } from 'react-icons/md';

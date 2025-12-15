@@ -4,13 +4,13 @@ import {
   Author,
   AuthorFilter,
   AuthorSort,
+  AuthorListArgs,
   CreateAuthorInput,
   UpdateAuthorInput,
 } from './author.model';
 import { AuthorDataloaderService } from './author-dataloader.service';
 import {
   graphQLSortOrderToPrisma,
-  PageInfo,
   PrimeDataLoader,
   SortOrder,
 } from '@wepublish/utils/api';
@@ -48,14 +48,14 @@ export class AuthorService {
   }
 
   @PrimeDataLoader(AuthorDataloaderService)
-  async getAuthors(
-    filter?: Partial<AuthorFilter>,
-    sort: AuthorSort = AuthorSort.ModifiedAt,
-    order: SortOrder = SortOrder.Descending,
-    cursorId: string | null = null,
+  async getAuthors({
+    filter,
+    sort = AuthorSort.ModifiedAt,
+    order = SortOrder.Descending,
+    cursorId,
     skip = 0,
-    take = 10
-  ): Promise<{ nodes: Author[]; totalCount: number; pageInfo: PageInfo }> {
+    take = 10,
+  }: AuthorListArgs) {
     const where = createAuthorFilter(filter);
     const prismaOrder = graphQLSortOrderToPrisma(order);
 

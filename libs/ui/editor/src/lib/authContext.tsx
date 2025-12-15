@@ -1,5 +1,9 @@
-import { useMeQuery, UserRole } from '@wepublish/editor/api';
-import { LocalStorageKey } from '@wepublish/editor/api-v2';
+import {
+  FullUserRoleFragment,
+  getApiClientV2,
+  LocalStorageKey,
+  useMeQuery,
+} from '@wepublish/editor/api-v2';
 import {
   createContext,
   Dispatch,
@@ -13,7 +17,7 @@ export interface AuthContextState {
   readonly session?: {
     readonly email: string;
     readonly sessionToken: string;
-    readonly sessionRoles?: UserRole[];
+    readonly sessionRoles?: FullUserRoleFragment[];
   } | null;
 }
 
@@ -29,7 +33,7 @@ export interface AuthDispatchLoginAction {
   readonly payload: {
     readonly email: string;
     readonly sessionToken: string;
-    readonly sessionRoles?: UserRole[];
+    readonly sessionRoles?: FullUserRoleFragment[];
   } | null;
 }
 
@@ -68,7 +72,9 @@ export interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { data, loading, refetch, error } = useMeQuery();
+  const client = getApiClientV2();
+  const { data, loading, refetch, error } = useMeQuery({ client });
+  console.log(data);
   const [state, dispatch] = useReducer(authReducer, {});
 
   const isPageActive = usePageVisibility();
@@ -85,6 +91,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     if (data?.me) {
       const { email, roles } = data.me;
+
       dispatch({
         type: AuthDispatchActionType.Login,
         payload: {

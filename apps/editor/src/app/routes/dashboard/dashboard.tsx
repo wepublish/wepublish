@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { useMeQuery } from '@wepublish/editor/api';
 import { PeriodicJobsLog } from '@wepublish/membership/editor';
 import {
   ActivityFeed,
@@ -22,9 +21,6 @@ const Item = styled(FlexboxGrid.Item)`
 
 export function Dashboard() {
   const { t } = useTranslation();
-
-  const { data: me } = useMeQuery();
-  const name = me?.me?.firstName ?? me?.me?.name ?? t('dashboard.user');
 
   return (
     <FlexboxGrid justify="space-between">

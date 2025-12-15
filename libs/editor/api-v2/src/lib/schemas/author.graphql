@@ -33,7 +33,7 @@ fragment FullAuthor on Author {
 
 query AuthorList(
   $filter: String
-  $cursor: String
+  $cursorId: String
   $take: Int
   $skip: Int
   $order: SortOrder
@@ -41,7 +41,7 @@ query AuthorList(
 ) {
   authors(
     filter: { name: $filter }
-    cursor: $cursor
+    cursorId: $cursorId
     take: $take
     skip: $skip
     order: $order

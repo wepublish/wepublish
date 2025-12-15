@@ -403,7 +403,6 @@ export type Mutation = {
   createSessionWithJWT: SessionWithToken;
   createSubscription?: Maybe<Subscription>;
   createToken: CreatedToken;
-  createUser?: Maybe<User>;
   deleteComment: Comment;
   deleteImage?: Maybe<Image>;
   deleteInvoice?: Maybe<Invoice>;
@@ -415,13 +414,11 @@ export type Mutation = {
   deleteRatingSystemAnswer: CommentRatingSystemAnswer;
   deleteSubscription?: Maybe<Subscription>;
   deleteToken?: Maybe<CreatedToken>;
-  deleteUser?: Maybe<User>;
   importSubscription?: Maybe<Subscription>;
   markInvoiceAsPaid?: Maybe<Invoice>;
   rejectComment: Comment;
   renewSubscription?: Maybe<Invoice>;
   requestChangesOnComment: Comment;
-  resetUserPassword?: Maybe<User>;
   revokeActiveSession: Scalars['Boolean'];
   revokeSession: Scalars['Boolean'];
   sendJWTLogin: Scalars['String'];
@@ -436,7 +433,6 @@ export type Mutation = {
   updatePoll?: Maybe<FullPoll>;
   updateRatingSystem: FullCommentRatingSystem;
   updateSubscription?: Maybe<Subscription>;
-  updateUser?: Maybe<User>;
   uploadImage?: Maybe<Image>;
 };
 
@@ -528,12 +524,6 @@ export type MutationCreateTokenArgs = {
 };
 
 
-export type MutationCreateUserArgs = {
-  input: UserInput;
-  password: Scalars['String'];
-};
-
-
 export type MutationDeleteCommentArgs = {
   id: Scalars['String'];
 };
@@ -589,11 +579,6 @@ export type MutationDeleteTokenArgs = {
 };
 
 
-export type MutationDeleteUserArgs = {
-  id: Scalars['String'];
-};
-
-
 export type MutationImportSubscriptionArgs = {
   input: SubscriptionInput;
 };
@@ -618,13 +603,6 @@ export type MutationRenewSubscriptionArgs = {
 export type MutationRequestChangesOnCommentArgs = {
   id: Scalars['String'];
   rejectionReason: CommentRejectionReason;
-};
-
-
-export type MutationResetUserPasswordArgs = {
-  id: Scalars['String'];
-  password: Scalars['String'];
-  sendMail?: InputMaybe<Scalars['Boolean']>;
 };
 
 
@@ -707,12 +685,6 @@ export type MutationUpdateRatingSystemArgs = {
 export type MutationUpdateSubscriptionArgs = {
   id: Scalars['String'];
   input: SubscriptionInput;
-};
-
-
-export type MutationUpdateUserArgs = {
-  id: Scalars['String'];
-  input: UserInput;
 };
 
 
@@ -950,7 +922,6 @@ export type Query = {
   images: ImageConnection;
   invoice?: Maybe<Invoice>;
   invoices: InvoiceConnection;
-  me?: Maybe<User>;
   memberPlan?: Maybe<MemberPlan>;
   memberPlans: MemberPlanConnection;
   payment?: Maybe<Payment>;
@@ -968,8 +939,6 @@ export type Query = {
   subscriptions: SubscriptionConnection;
   subscriptionsAsCsv?: Maybe<Scalars['String']>;
   tokens: Array<Token>;
-  user?: Maybe<User>;
-  users: UserConnection;
 };
 
 
@@ -1098,21 +1067,6 @@ export type QuerySubscriptionsArgs = {
 
 export type QuerySubscriptionsAsCsvArgs = {
   filter?: InputMaybe<SubscriptionFilter>;
-};
-
-
-export type QueryUserArgs = {
-  id?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryUsersArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<UserFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<UserSort>;
-  take?: InputMaybe<Scalars['Int']>;
 };
 
 export enum RatingSystemType {
@@ -1345,43 +1299,6 @@ export type UserAddress = {
   zipCode?: Maybe<Scalars['String']>;
 };
 
-export type UserAddressInput = {
-  city?: InputMaybe<Scalars['String']>;
-  company?: InputMaybe<Scalars['String']>;
-  country?: InputMaybe<Scalars['String']>;
-  streetAddress?: InputMaybe<Scalars['String']>;
-  streetAddress2?: InputMaybe<Scalars['String']>;
-  zipCode?: InputMaybe<Scalars['String']>;
-};
-
-export type UserConnection = {
-  __typename?: 'UserConnection';
-  nodes: Array<User>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type UserFilter = {
-  name?: InputMaybe<Scalars['String']>;
-  text?: InputMaybe<Scalars['String']>;
-  userRole?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
-export type UserInput = {
-  active: Scalars['Boolean'];
-  address?: InputMaybe<UserAddressInput>;
-  birthday?: InputMaybe<Scalars['DateTime']>;
-  email: Scalars['String'];
-  emailVerifiedAt?: InputMaybe<Scalars['DateTime']>;
-  firstName?: InputMaybe<Scalars['String']>;
-  flair?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  note?: InputMaybe<Scalars['String']>;
-  properties: Array<PropertiesInput>;
-  roleIDs?: InputMaybe<Array<Scalars['String']>>;
-  userImageID?: InputMaybe<Scalars['String']>;
-};
-
 export type UserRole = {
   __typename?: 'UserRole';
   description?: Maybe<Scalars['String']>;
@@ -1390,13 +1307,6 @@ export type UserRole = {
   permissions: Array<Permission>;
   systemRole: Scalars['Boolean'];
 };
-
-export enum UserSort {
-  CreatedAt = 'createdAt',
-  FirstName = 'firstName',
-  ModifiedAt = 'modifiedAt',
-  Name = 'name'
-}
 
 export type UserSubscription = {
   __typename?: 'UserSubscription';
@@ -1566,59 +1476,6 @@ export type RenewSubscriptionMutationVariables = Exact<{
 export type RenewSubscriptionMutation = { __typename?: 'Mutation', renewSubscription?: { __typename?: 'Invoice', id: string } | null };
 
 export type FullUserFragment = { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> };
-
-export type UserListQueryVariables = Exact<{
-  filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['String']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type UserListQuery = { __typename?: 'Query', users: { __typename?: 'UserConnection', totalCount: number, nodes: Array<{ __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
-
-export type MeQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null };
-
-export type UserQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null };
-
-export type CreateUserMutationVariables = Exact<{
-  input: UserInput;
-  password: Scalars['String'];
-}>;
-
-
-export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null };
-
-export type UpdateUserMutationVariables = Exact<{
-  id: Scalars['String'];
-  input: UserInput;
-}>;
-
-
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null };
-
-export type ResetUserPasswordMutationVariables = Exact<{
-  id: Scalars['String'];
-  password: Scalars['String'];
-}>;
-
-
-export type ResetUserPasswordMutation = { __typename?: 'Mutation', resetUserPassword?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null };
-
-export type DeleteUserMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null };
 
 export type CreateSessionMutationVariables = Exact<{
   email: Scalars['String'];
@@ -1950,64 +1807,6 @@ export const RenewSubscription = gql`
   }
 }
     `;
-export const UserList = gql`
-    query UserList($filter: String, $cursor: String, $take: Int, $skip: Int) {
-  users(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
-    nodes {
-      ...FullUser
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    ${FullUser}`;
-export const Me = gql`
-    query Me {
-  me {
-    ...FullUser
-  }
-}
-    ${FullUser}`;
-export const User = gql`
-    query User($id: String!) {
-  user(id: $id) {
-    ...FullUser
-  }
-}
-    ${FullUser}`;
-export const CreateUser = gql`
-    mutation CreateUser($input: UserInput!, $password: String!) {
-  createUser(input: $input, password: $password) {
-    ...FullUser
-  }
-}
-    ${FullUser}`;
-export const UpdateUser = gql`
-    mutation UpdateUser($id: String!, $input: UserInput!) {
-  updateUser(id: $id, input: $input) {
-    ...FullUser
-  }
-}
-    ${FullUser}`;
-export const ResetUserPassword = gql`
-    mutation ResetUserPassword($id: String!, $password: String!) {
-  resetUserPassword(id: $id, password: $password) {
-    ...FullUser
-  }
-}
-    ${FullUser}`;
-export const DeleteUser = gql`
-    mutation DeleteUser($id: String!) {
-  deleteUser(id: $id) {
-    ...FullUser
-  }
-}
-    ${FullUser}`;
 export const CreateSession = gql`
     mutation CreateSession($email: String!, $password: String!) {
   createSession(email: $email, password: $password) {

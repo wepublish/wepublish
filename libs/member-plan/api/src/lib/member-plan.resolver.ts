@@ -14,9 +14,9 @@ import {
 import { GraphQLSlug, SortOrder } from '@wepublish/utils/api';
 import {
   MemberPlan,
-  MemberPlanConnection,
   MemberPlanFilter,
   MemberPlanSort,
+  PaginatedMemberPlans,
 } from './member-plan.model';
 import { MemberPlanService } from './member-plan.service';
 import { UserInputError } from '@nestjs/apollo';
@@ -50,11 +50,11 @@ export class MemberPlanResolver {
   }
 
   @Public()
-  @Query(() => MemberPlanConnection, {
+  @Query(() => PaginatedMemberPlans, {
     description: 'This query returns the member plans.',
   })
   async memberPlans(
-    @Args('cursor', { nullable: true }) cursor?: string,
+    @Args('cursorId', { nullable: true }) cursor?: string,
     @Args('take', { type: () => Int, defaultValue: 10 }) take?: number,
     @Args('skip', { type: () => Int, defaultValue: 0 }) skip?: number,
     @Args('filter', { nullable: true }) filter?: MemberPlanFilter,

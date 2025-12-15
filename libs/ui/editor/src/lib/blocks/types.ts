@@ -1102,10 +1102,9 @@ export function blockForQueryBlock(
         value: {
           blockStyle: block.blockStyle,
           numColumns: block.numColumns,
-          teasers: block.teasers.map(teaser => [
-            nanoid(),
-            mapTeaserToQueryTeaser(teaser),
-          ]),
+          teasers: block.teasers.map(
+            teaser => [nanoid(), mapTeaserToQueryTeaser(teaser)] as const
+          ),
         },
       };
 

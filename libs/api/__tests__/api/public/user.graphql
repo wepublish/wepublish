@@ -15,12 +15,3 @@ mutation CreateSessionWithJWT($jwt: String!) {
     token
   }
 }
-
-mutation UpdatePaymentProviderCustomers(
-  $customers: [PaymentProviderCustomerInput!]!
-) {
-  updatePaymentProviderCustomers(input: $customers) {
-    customerID
-    paymentProviderID
-  }
-}

@@ -1309,13 +1309,6 @@ export enum ImportedEventSort {
   StartsAt = 'STARTS_AT'
 }
 
-export type ImportedEventsDocument = {
-  __typename?: 'ImportedEventsDocument';
-  nodes: Array<EventFromSource>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
 export type InstagramPostBlock = BaseBlock & {
   __typename?: 'InstagramPostBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -1439,13 +1432,6 @@ export type MemberPlan = HasImage & {
   tags?: Maybe<Array<Scalars['String']>>;
 };
 
-export type MemberPlanConnection = {
-  __typename?: 'MemberPlanConnection';
-  nodes: Array<MemberPlan>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
 export type MemberPlanFilter = {
   active?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
@@ -1507,6 +1493,8 @@ export type Mutation = {
   createSubscriptionWithConfirmation: Scalars['Boolean'];
   /** Creates a new tag. */
   createTag: Tag;
+  /** Creates a new user. */
+  createUser: SensitiveDataUser;
   /**
    *
    *       Creates a new userConsent based on input.
@@ -1550,6 +1538,8 @@ export type Mutation = {
   deleteSubscriptionInterval: Array<SubscriptionFlowModel>;
   /** Deletes an existing tag. */
   deleteTag: Tag;
+  /** Deletes an existing user. */
+  deleteUser: SensitiveDataUser;
   /**
    *
    *       Delete an existing userConsent by id.
@@ -1586,6 +1576,8 @@ export type Mutation = {
   rateComment: Comment;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
+  /** Resets the password of a user. */
+  resetPassword: SensitiveDataUser;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
@@ -1614,6 +1606,8 @@ export type Mutation = {
   updateConsent: Consent;
   /** Updates a single crowdfunding */
   updateCrowdfunding: Crowdfunding;
+  /** Updates the current logged in user. */
+  updateCurrentUser: SensitiveDataUser;
   /** Updates an existing event. */
   updateEvent: Event;
   /** Updates an existing navigation. */
@@ -1622,8 +1616,6 @@ export type Mutation = {
   updatePage: Page;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
   updatePassword: SensitiveDataUser;
-  /** This mutation allows to update the Payment Provider Customers */
-  updatePaymentProviderCustomers: Array<PaymentProviderCustomer>;
   /** Updates a paywall. */
   updatePaywall: Paywall;
   /** Updates an existing peer. */
@@ -1638,8 +1630,8 @@ export type Mutation = {
   updateSystemMail: Array<SystemMailModel>;
   /** Updates an existing tag. */
   updateTag: Tag;
-  /** This mutation allows to update the user's data by taking an input of type UserInput. */
-  updateUser?: Maybe<SensitiveDataUser>;
+  /** Updates an existing user. */
+  updateUser: SensitiveDataUser;
   /**
    *
    *       Updates an existing userConsent based on input.
@@ -1867,6 +1859,23 @@ export type MutationCreateTagArgs = {
 };
 
 
+export type MutationCreateUserArgs = {
+  active: Scalars['Boolean'];
+  address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
+  email: Scalars['String'];
+  emailVerifiedAt?: InputMaybe<Scalars['DateTime']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  note?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+  properties: Array<PropertyInput>;
+  roleIDs: Array<Scalars['String']>;
+  userImageID?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationCreateUserConsentArgs = {
   consentId: Scalars['String'];
   userId: Scalars['String'];
@@ -1961,6 +1970,11 @@ export type MutationDeleteTagArgs = {
 };
 
 
+export type MutationDeleteUserArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteUserConsentArgs = {
   id: Scalars['String'];
 };
@@ -2036,8 +2050,16 @@ export type MutationRegisterMemberArgs = {
   challengeAnswer: ChallengeInput;
   email: Scalars['String'];
   firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   password?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationResetPasswordArgs = {
+  id: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
+  sendMail?: InputMaybe<Scalars['Boolean']>;
 };
 
 
@@ -2133,6 +2155,18 @@ export type MutationUpdateCrowdfundingArgs = {
 };
 
 
+export type MutationUpdateCurrentUserArgs = {
+  address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
+  challengeAnswer?: InputMaybe<ChallengeInput>;
+  email?: InputMaybe<Scalars['String']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationUpdateEventArgs = {
   description?: InputMaybe<Scalars['RichText']>;
   endsAt?: InputMaybe<Scalars['DateTime']>;
@@ -2174,11 +2208,6 @@ export type MutationUpdatePageArgs = {
 export type MutationUpdatePasswordArgs = {
   password: Scalars['String'];
   passwordRepeated: Scalars['String'];
-};
-
-
-export type MutationUpdatePaymentProviderCustomersArgs = {
-  input: Array<PaymentProviderCustomerInput>;
 };
 
 
@@ -2242,7 +2271,20 @@ export type MutationUpdateTagArgs = {
 
 
 export type MutationUpdateUserArgs = {
-  input: UserInput;
+  active?: InputMaybe<Scalars['Boolean']>;
+  address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
+  email?: InputMaybe<Scalars['String']>;
+  emailVerifiedAt?: InputMaybe<Scalars['DateTime']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  note?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+  properties?: InputMaybe<Array<PropertyInput>>;
+  roleIDs?: InputMaybe<Array<Scalars['String']>>;
+  userImageID?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2435,6 +2477,20 @@ export type PaginatedEvents = {
   totalCount: Scalars['Int'];
 };
 
+export type PaginatedEventsFromSources = {
+  __typename?: 'PaginatedEventsFromSources';
+  nodes: Array<EventFromSource>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedMemberPlans = {
+  __typename?: 'PaginatedMemberPlans';
+  nodes: Array<MemberPlan>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type PaginatedPages = {
   __typename?: 'PaginatedPages';
   nodes: Array<Page>;
@@ -2442,8 +2498,8 @@ export type PaginatedPages = {
   totalCount: Scalars['Int'];
 };
 
-export type PaginatedPeerArticle = {
-  __typename?: 'PaginatedPeerArticle';
+export type PaginatedPeerArticles = {
+  __typename?: 'PaginatedPeerArticles';
   nodes: Array<PeerArticle>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
@@ -2452,6 +2508,20 @@ export type PaginatedPeerArticle = {
 export type PaginatedPollVotes = {
   __typename?: 'PaginatedPollVotes';
   nodes: Array<PollVote>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedSensitiveDataUsers = {
+  __typename?: 'PaginatedSensitiveDataUsers';
+  nodes: Array<SensitiveDataUser>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedTags = {
+  __typename?: 'PaginatedTags';
+  nodes: Array<Tag>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -2503,11 +2573,6 @@ export enum PaymentPeriodicity {
 
 export type PaymentProviderCustomer = {
   __typename?: 'PaymentProviderCustomer';
-  customerID: Scalars['String'];
-  paymentProviderID: Scalars['String'];
-};
-
-export type PaymentProviderCustomerInput = {
   customerID: Scalars['String'];
   paymentProviderID: Scalars['String'];
 };
@@ -2895,7 +2960,7 @@ export type Query = {
    *       Returns a list of imported events from external sources, transformed to match our model.
    *
    */
-  importedEvents: ImportedEventsDocument;
+  importedEvents: PaginatedEventsFromSources;
   /**
    *
    *       Returns a list of external source ids of already imported events.
@@ -2911,7 +2976,7 @@ export type Query = {
   /** This query returns a member plan. */
   memberPlan?: Maybe<MemberPlan>;
   /** This query returns the member plans. */
-  memberPlans: MemberPlanConnection;
+  memberPlans: PaginatedMemberPlans;
   /** Returns a navigation by id. */
   navigation: Navigation;
   /** Returns a list of navigations. */
@@ -2943,7 +3008,7 @@ export type Query = {
   /** This query takes either the ID or the slug and returns the peer profile. */
   peer?: Maybe<Peer>;
   /** Returns a paginated list of peer articles based on the filters given. */
-  peerArticles: PaginatedPeerArticle;
+  peerArticles: PaginatedPeerArticles;
   /** This query returns the peer profile. */
   peerProfile: PeerProfile;
   /** Returns a list of all peers. */
@@ -3002,7 +3067,9 @@ export type Query = {
   /** Returns a tag by id */
   tag: Tag;
   /** This query returns a list of tags */
-  tags: TagConnection;
+  tags: PaginatedTags;
+  /** Returns a user by id. */
+  user: SensitiveDataUser;
   /**
    *
    *       Returns a single userConsent by id.
@@ -3020,6 +3087,8 @@ export type Query = {
   userRole: UserRole;
   /** Returns a paginated list of userroles based on the filters given. */
   userRoles: PaginatedUserRoles;
+  /** Returns a paginated list of users based on the filters given. */
+  users: PaginatedSensitiveDataUsers;
   versionInformation: VersionInformation;
 };
 
@@ -3042,12 +3111,12 @@ export type QueryArticlesArgs = {
 
 export type QueryAuthorArgs = {
   id?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['Slug']>;
+  slug?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryAuthorsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<AuthorFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -3154,7 +3223,7 @@ export type QueryMemberPlanArgs = {
 
 
 export type QueryMemberPlansArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<MemberPlanFilter>;
   order?: SortOrder;
   skip?: Scalars['Int'];
@@ -3300,12 +3369,17 @@ export type QueryTagArgs = {
 
 
 export type QueryTagsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<TagFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: Scalars['Int'];
   sort?: TagSort;
   take?: Scalars['Int'];
+};
+
+
+export type QueryUserArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -3338,6 +3412,16 @@ export type QueryUserRolesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<UserRoleSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryUsersArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<UserFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int'];
+  sort?: UserSort;
+  take?: Scalars['Int'];
 };
 
 export type QuoteBlock = BaseBlock & HasImage & {
@@ -3406,16 +3490,22 @@ export type SensitiveDataUser = BaseUser & {
   active: Scalars['Boolean'];
   address?: Maybe<UserAddress>;
   birthday?: Maybe<Scalars['DateTime']>;
+  createdAt: Scalars['DateTime'];
   email: Scalars['String'];
+  emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   firstName?: Maybe<Scalars['String']>;
   flair?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
+  lastLogin?: Maybe<Scalars['DateTime']>;
+  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  note?: Maybe<Scalars['String']>;
   paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
   permissions: Array<Scalars['String']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
+  roles: Array<UserRole>;
   userImageID?: Maybe<Scalars['String']>;
 };
 
@@ -3612,13 +3702,6 @@ export type Tag = {
   tag?: Maybe<Scalars['String']>;
   type: TagType;
   url: Scalars['String'];
-};
-
-export type TagConnection = {
-  __typename?: 'TagConnection';
-  nodes: Array<Tag>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
 };
 
 export type TagFilter = {
@@ -3906,8 +3989,10 @@ export type User = BaseUser & {
   id: Scalars['String'];
   image?: Maybe<Image>;
   name: Scalars['String'];
+  note?: Maybe<Scalars['String']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
+  roles: Array<UserRole>;
   userImageID?: Maybe<Scalars['String']>;
 };
 
@@ -3955,14 +4040,10 @@ export enum UserEvent {
   TestMail = 'TEST_MAIL'
 }
 
-export type UserInput = {
-  address?: InputMaybe<UserAddressInput>;
-  birthday?: InputMaybe<Scalars['DateTime']>;
-  email: Scalars['String'];
-  firstName?: InputMaybe<Scalars['String']>;
-  flair?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  uploadImageInput?: InputMaybe<UploadImageInput>;
+export type UserFilter = {
+  name?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['String']>;
+  userRole?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type UserRole = {
@@ -3984,6 +4065,13 @@ export type UserRoleFilter = {
 export enum UserRoleSort {
   CreatedAt = 'CreatedAt',
   ModifiedAt = 'ModifiedAt'
+}
+
+export enum UserSort {
+  CreatedAt = 'CreatedAt',
+  FirstName = 'FirstName',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name'
 }
 
 export type UserSubscriptionInput = {
@@ -4101,13 +4189,6 @@ export type CreateSessionWithJwtMutationVariables = Exact<{
 
 
 export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'SensitiveDataUser', email: string } } };
-
-export type UpdatePaymentProviderCustomersMutationVariables = Exact<{
-  customers: Array<PaymentProviderCustomerInput> | PaymentProviderCustomerInput;
-}>;
-
-
-export type UpdatePaymentProviderCustomersMutation = { __typename?: 'Mutation', updatePaymentProviderCustomers: Array<{ __typename?: 'PaymentProviderCustomer', customerID: string, paymentProviderID: string }> };
 
 export const MutationComment = gql`
     fragment MutationComment on Comment {
@@ -4291,14 +4372,6 @@ export const CreateSessionWithJwt = gql`
       email
     }
     token
-  }
-}
-    `;
-export const UpdatePaymentProviderCustomers = gql`
-    mutation UpdatePaymentProviderCustomers($customers: [PaymentProviderCustomerInput!]!) {
-  updatePaymentProviderCustomers(input: $customers) {
-    customerID
-    paymentProviderID
   }
 }
     `;
