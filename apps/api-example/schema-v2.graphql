@@ -2311,8 +2311,8 @@ type Query {
   """Returns all mail flows"""
   systemMails: [SystemMailModel!]!
 
-  """Returns a tag by id"""
-  tag(id: String!): Tag!
+  """Returns an tag by id or tag."""
+  tag(id: String, tag: String, type: TagType): Tag!
 
   """This query returns a list of tags"""
   tags(

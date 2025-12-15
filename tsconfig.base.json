@@ -96,6 +96,7 @@
       "@wepublish/poll/api": ["libs/poll/api/src/index.ts"],
       "@wepublish/richtext": ["libs/richtext/src/index.ts"],
       "@wepublish/richtext/api": ["libs/richtext/api/src/index.ts"],
+      "@wepublish/richtext/editor": ["libs/richtext/editor/src/index.ts"],
       "@wepublish/richtext/website": ["libs/richtext/website/src/index.ts"],
       "@wepublish/session/api": ["libs/session/api/src/index.ts"],
       "@wepublish/settings/api": ["libs/settings/api/src/index.ts"],
