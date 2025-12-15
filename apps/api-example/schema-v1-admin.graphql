@@ -3,10 +3,7 @@ type Query {
   createJWTForUser(userId: String!, expiresInMinutes: Int!): JWTToken
   createJWTForWebsiteLogin: JWTToken
   peerProfile: PeerProfile!
-  me: User
   sessions: [Session!]!
-  user(id: String): User
-  users(cursor: String, take: Int = 10, skip: Int = 0, filter: UserFilter, sort: UserSort = modifiedAt, order: SortOrder = Descending): UserConnection!
   subscription(id: String!): Subscription
   subscriptions(cursor: String, take: Int = 10, skip: Int = 0, filter: SubscriptionFilter, sort: SubscriptionSort = modifiedAt, order: SortOrder = Descending): SubscriptionConnection!
   subscriptionsAsCsv(filter: SubscriptionFilter): String
@@ -100,6 +97,13 @@ scalar RichText
 type JWTToken {
   token: String!
   expiresAt: String!
+}
+
+type Session {
+  id: String!
+  user: User!
+  createdAt: DateTime!
+  expiresAt: DateTime!
 }
 
 type User {
@@ -293,44 +297,6 @@ type InvoiceItem {
   total: Int!
 }
 
-type Session {
-  id: String!
-  user: User!
-  createdAt: DateTime!
-  expiresAt: DateTime!
-}
-
-type UserConnection {
-  nodes: [User!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-type PageInfo {
-  startCursor: String
-  endCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-}
-
-input UserFilter {
-  name: String
-  text: String
-  userRole: [String]
-}
-
-enum UserSort {
-  createdAt
-  modifiedAt
-  name
-  firstName
-}
-
-enum SortOrder {
-  Ascending
-  Descending
-}
-
 type Subscription {
   id: String!
   createdAt: DateTime!
@@ -353,6 +319,13 @@ type SubscriptionConnection {
   nodes: [Subscription!]!
   pageInfo: PageInfo!
   totalCount: Int!
+}
+
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
 }
 
 input SubscriptionFilter {
@@ -394,6 +367,11 @@ enum DateFilterComparison {
 enum SubscriptionSort {
   createdAt
   modifiedAt
+}
+
+enum SortOrder {
+  Ascending
+  Descending
 }
 
 type Token {
@@ -672,13 +650,8 @@ type Mutation {
   revokeActiveSession: Boolean!
   sessions: [Session!]!
   sendJWTLogin(url: String!, email: String!): String!
-  sendWebsiteLogin(email: String!): String!
   createToken(input: TokenInput!): CreatedToken!
   deleteToken(id: String!): CreatedToken
-  createUser(input: UserInput!, password: String!): User
-  updateUser(id: String!, input: UserInput!): User
-  resetUserPassword(id: String!, password: String!, sendMail: Boolean): User
-  deleteUser(id: String!): User
   createSubscription(input: SubscriptionInput!): Subscription
   importSubscription(input: SubscriptionInput!): Subscription
   renewSubscription(id: String!): Invoice
@@ -749,36 +722,6 @@ input TokenInput {
   name: String!
 }
 
-input UserInput {
-  name: String!
-  firstName: String
-  email: String!
-  emailVerifiedAt: DateTime
-  birthday: DateTime
-  address: UserAddressInput
-  flair: String
-  note: String
-  userImageID: String
-  active: Boolean!
-  properties: [PropertiesInput!]!
-  roleIDs: [String!]
-}
-
-input UserAddressInput {
-  company: String
-  streetAddress: String
-  streetAddress2: String
-  zipCode: String
-  city: String
-  country: String
-}
-
-input PropertiesInput {
-  key: String!
-  value: String!
-  public: Boolean!
-}
-
 input SubscriptionInput {
   userID: String!
   memberPlanID: String!
@@ -791,6 +734,12 @@ input SubscriptionInput {
   extendable: Boolean!
   properties: [PropertiesInput!]!
   deactivation: SubscriptionDeactivationInput
+}
+
+input PropertiesInput {
+  key: String!
+  value: String!
+  public: Boolean!
 }
 
 input SubscriptionDeactivationInput {

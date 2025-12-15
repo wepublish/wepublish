@@ -1,4 +1,8 @@
-import { FullUserFragment, useUserListQuery } from '@wepublish/editor/api';
+import {
+  FullUserFragment,
+  getApiClientV2,
+  useUserListQuery,
+} from '@wepublish/editor/api-v2';
 import { useEffect, useState } from 'react';
 import { CheckPicker } from 'rsuite';
 
@@ -18,7 +22,9 @@ export function UserCheckPicker({ list, onChange }: UserCheckPickerProps) {
     },
     take: 10,
   };
+  const client = getApiClientV2();
   const { data } = useUserListQuery({
+    client,
     variables: usersVariables,
     fetchPolicy: 'network-only',
   });

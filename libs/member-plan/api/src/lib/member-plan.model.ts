@@ -105,7 +105,7 @@ export class MemberPlan {
 }
 
 @ObjectType()
-export class MemberPlanConnection extends PaginatedType(MemberPlan) {}
+export class PaginatedMemberPlans extends PaginatedType(MemberPlan) {}
 
 @InputType()
 export class MemberPlanFilter {

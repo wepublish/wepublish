@@ -15,7 +15,7 @@ query Tag($id: String!) {
 
 query TagList(
   $filter: TagFilter
-  $cursor: String
+  $cursorId: String
   $take: Int
   $skip: Int
   $order: SortOrder
@@ -23,7 +23,7 @@ query TagList(
 ) {
   tags(
     filter: $filter
-    cursor: $cursor
+    cursorId: $cursorId
     take: $take
     skip: $skip
     order: $order

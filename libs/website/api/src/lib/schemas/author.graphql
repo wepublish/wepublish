@@ -25,7 +25,7 @@ fragment FullAuthor on Author {
   hideOnTeam
 }
 
-query Author($id: String, $slug: Slug) {
+query Author($id: String, $slug: String) {
   author(id: $id, slug: $slug) {
     ...FullAuthor
   }
@@ -33,13 +33,20 @@ query Author($id: String, $slug: Slug) {
 
 query AuthorList(
   $filter: AuthorFilter
-  $cursor: String
+  $cursorId: String
   $take: Int
   $skip: Int
   $sort: AuthorSort
   $order: SortOrder
 ) {
-  authors(filter: $filter, cursor: $cursor, sort: $sort, order: $order, take: $take, skip: $skip) {
+  authors(
+    filter: $filter
+    cursorId: $cursorId
+    sort: $sort
+    order: $order
+    take: $take
+    skip: $skip
+  ) {
     nodes {
       ...FullAuthor
     }

@@ -3,7 +3,7 @@ import { Article } from '@wepublish/article/api';
 import { ImportPeerArticleService } from './import-peer-article.service';
 import {
   ImportArticleOptions,
-  PaginatedPeerArticle,
+  PaginatedPeerArticles,
   PeerArticle,
   PeerArticleListArgs,
 } from './peer-article.model';
@@ -15,7 +15,7 @@ export class ImportPeerArticleResolver {
   constructor(private importPeerArticleService: ImportPeerArticleService) {}
 
   @Permissions(CanGetPeerArticles)
-  @Query(() => PaginatedPeerArticle, {
+  @Query(() => PaginatedPeerArticles, {
     description: `Returns a paginated list of peer articles based on the filters given.`,
   })
   public peerArticles(@Args() args: PeerArticleListArgs) {

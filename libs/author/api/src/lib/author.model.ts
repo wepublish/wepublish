@@ -106,7 +106,7 @@ registerEnumType(AuthorSort, {
 });
 
 @ArgsType()
-export class AuthorsQueryArgs {
+export class AuthorListArgs {
   @Field(() => AuthorFilter, { nullable: true })
   filter?: AuthorFilter;
 
@@ -123,7 +123,7 @@ export class AuthorsQueryArgs {
   order?: SortOrder;
 
   @Field({ nullable: true })
-  cursor?: string;
+  cursorId?: string;
 
   @Field(() => Int, { nullable: true })
   skip?: number;
@@ -137,7 +137,7 @@ export class AuthorArgs {
   @Field({ nullable: true })
   id?: string;
 
-  @Field(() => GraphQLSlug, { nullable: true })
+  @Field({ nullable: true })
   slug?: string;
 }
 

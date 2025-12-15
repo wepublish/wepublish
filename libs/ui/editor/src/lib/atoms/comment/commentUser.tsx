@@ -1,8 +1,5 @@
-import {
-  FullCommentFragment,
-  FullImageFragment,
-  FullUserFragment,
-} from '@wepublish/editor/api';
+import { FullCommentFragment, FullImageFragment } from '@wepublish/editor/api';
+import { FullUserFragment } from '@wepublish/editor/api-v2';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Col, Drawer, Form, Row } from 'rsuite';
@@ -23,8 +20,14 @@ export function CommentUser({ comment, setComment }: CommentUserProps) {
   const [open, setOpen] = useState(false);
 
   function setUser(user: FullUserFragment) {
+    // @ts-expect-error Wrong type for now
     setComment(oldComment =>
-      oldComment ? { ...oldComment, user } : oldComment
+      oldComment ?
+        {
+          ...oldComment,
+          user,
+        }
+      : oldComment
     );
   }
 
@@ -52,6 +55,7 @@ export function CommentUser({ comment, setComment }: CommentUserProps) {
             name="selectFromExistingUser"
             placeholder={t('commentUser.selectExistingUser')}
             onUpdateUser={setUser}
+            // @ts-expect-error Wrong type for now
             user={comment?.user}
           />
         </Col>

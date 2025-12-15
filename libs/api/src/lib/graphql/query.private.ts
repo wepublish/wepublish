@@ -17,7 +17,6 @@ import { InvoiceSort } from '../db/invoice';
 import { MemberPlanSort } from '../db/memberPlan';
 import { PaymentSort } from '../db/payment';
 import { SubscriptionSort } from '../db/subscription';
-import { UserSort } from '../db/user';
 import { GivenTokeExpiryToLongError, UserIdNotFound } from '../error';
 
 import { GraphQLJWTToken } from './auth';
@@ -108,13 +107,6 @@ import {
 
 import { GraphQLToken } from './token';
 import { getTokens } from './token/token.private-queries';
-import {
-  GraphQLUser,
-  GraphQLUserConnection,
-  GraphQLUserFilter,
-  GraphQLUserSort,
-} from './user';
-import { getAdminUsers, getMe, getUserById } from './user/user.private-queries';
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -206,14 +198,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       ) => getAdminPeerProfile(hostURL, websiteURL, authenticate, peerProfile),
     },
 
-    // User
-    // ====
-
-    me: {
-      type: GraphQLUser,
-      resolve: (root, args, { authenticate }) => getMe(authenticate),
-    },
-
     // Session
     // =======
 
@@ -223,43 +207,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       ),
       resolve: (root, _, { authenticateUser, prisma: { session, userRole } }) =>
         getSessionsForUser(authenticateUser, session, userRole),
-    },
-
-    // Users
-    // ==========
-    user: {
-      type: GraphQLUser,
-      args: { id: { type: GraphQLString } },
-      resolve: (root, { id }, { authenticate, prisma: { user } }) => {
-        return getUserById(id, authenticate, user);
-      },
-    },
-
-    users: {
-      type: new GraphQLNonNull(GraphQLUserConnection),
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 10 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLUserFilter },
-        sort: { type: GraphQLUserSort, defaultValue: UserSort.ModifiedAt },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, take, skip, cursor },
-        { authenticate, prisma: { user } }
-      ) =>
-        getAdminUsers(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          user
-        ),
     },
 
     // Subscriptions

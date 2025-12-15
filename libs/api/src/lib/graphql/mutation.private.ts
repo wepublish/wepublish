@@ -113,13 +113,6 @@ import {
 } from './subscription/subscription.private-mutation';
 import { GraphQLCreatedToken, GraphQLTokenInput } from './token';
 import { createToken, deleteTokenById } from './token/token.private-mutation';
-import { GraphQLUser, GraphQLUserInput } from './user';
-import {
-  createAdminUser,
-  deleteUserById,
-  resetUserPassword,
-  updateAdminUser,
-} from './user/user.private-mutation';
 
 import { CanSendJWTLogin } from '@wepublish/permissions';
 import { mailLogType } from '@wepublish/mail/api';
@@ -247,52 +240,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
     },
 
-    sendWebsiteLogin: {
-      type: new GraphQLNonNull(GraphQLString),
-      args: {
-        email: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      async resolve(
-        root,
-        { url, email },
-        { authenticate, prisma, generateJWT, mailContext, urlAdapter }
-      ) {
-        email = email.toLowerCase();
-        await Validator.login.parse({ email });
-        const { roles } = authenticate();
-        authorise(CanSendJWTLogin, roles);
-
-        const jwtExpiresSetting = await prisma.setting.findUnique({
-          where: { name: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN },
-        });
-        const jwtExpires =
-          (jwtExpiresSetting?.value as number) ??
-          parseInt(process.env['SEND_LOGIN_JWT_EXPIRES_MIN'] ?? '');
-
-        if (!jwtExpires)
-          throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN');
-
-        const user = await prisma.user.findUnique({
-          where: { email },
-          select: unselectPassword,
-        });
-
-        if (!user) throw new NotFound('User', email);
-
-        const remoteTemplate = await mailContext.getUserTemplateName(
-          UserEvent.LOGIN_LINK
-        );
-        await mailContext.sendMail({
-          externalMailTemplateId: remoteTemplate,
-          recipient: user,
-          optionalData: {},
-          mailType: mailLogType.UserFlow,
-        });
-
-        return email;
-      },
-    },
-
     // Token
     // =====
 
@@ -308,71 +255,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: { id: { type: new GraphQLNonNull(GraphQLString) } },
       resolve: (root, { id }, { authenticate, prisma: { token } }) =>
         deleteTokenById(id, authenticate, token),
-    },
-
-    // User
-    // ====
-
-    createUser: {
-      type: GraphQLUser,
-      args: {
-        input: { type: new GraphQLNonNull(GraphQLUserInput) },
-        password: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (
-        root,
-        { input, password },
-        { hashCostFactor, authenticate, prisma, mailContext }
-      ) =>
-        createAdminUser(
-          { ...input, password },
-          authenticate,
-          hashCostFactor,
-          prisma,
-          mailContext
-        ),
-    },
-
-    updateUser: {
-      type: GraphQLUser,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        input: { type: new GraphQLNonNull(GraphQLUserInput) },
-      },
-      resolve: (root, { id, input }, { authenticate, prisma: { user } }) =>
-        updateAdminUser(id, input, authenticate, user),
-    },
-
-    resetUserPassword: {
-      type: GraphQLUser,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        password: { type: new GraphQLNonNull(GraphQLString) },
-        sendMail: { type: GraphQLBoolean },
-      },
-      resolve: (
-        root,
-        { id, password, sendMail },
-        { authenticate, mailContext, prisma: { user }, hashCostFactor }
-      ) =>
-        resetUserPassword(
-          id,
-          password,
-          sendMail,
-          hashCostFactor,
-          authenticate,
-          mailContext,
-          user
-        ),
-    },
-
-    deleteUser: {
-      type: GraphQLUser,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { user } }) =>
-        deleteUserById(id, authenticate, user),
     },
 
     // Subscriptions

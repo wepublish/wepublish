@@ -26,10 +26,6 @@ export class UserAuthenticationService {
     return user;
   }
 
-  async getUserByEmail(email: string) {
-    return this.userService.getUserByEmail(email);
-  }
-
   async updateUserLastLoginLinkSend(userId: string) {
     try {
       await this.prisma.user.update({

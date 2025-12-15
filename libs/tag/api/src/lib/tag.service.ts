@@ -5,6 +5,7 @@ import { TagDataloader } from './tag.dataloader';
 import {
   CreateTagInput,
   TagFilter,
+  TagListArgs,
   TagSort,
   UpdateTagInput,
 } from './tag.model';
@@ -14,14 +15,14 @@ export class TagService {
   constructor(private prisma: PrismaClient) {}
 
   @PrimeDataLoader(TagDataloader)
-  async getTags(
-    filter?: TagFilter,
-    sort: TagSort = TagSort.CreatedAt,
-    order: SortOrder = SortOrder.Descending,
-    cursorId: string | null = null,
+  async getTags({
+    filter,
+    sort = TagSort.CreatedAt,
+    order = SortOrder.Descending,
+    cursorId,
     skip = 0,
-    take = 10
-  ) {
+    take = 10,
+  }: TagListArgs) {
     const where = createTagFilter(filter);
     const orderBy = createTagOrder(sort, order);
 

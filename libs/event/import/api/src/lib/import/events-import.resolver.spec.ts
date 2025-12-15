@@ -8,7 +8,7 @@ import { htmlToSlate } from 'slate-serializers';
 import {
   EventFromSource,
   ImportedEventSort,
-  ImportedEventsDocument,
+  PaginatedEventsFromSources,
 } from './events-import.model';
 import { EventsImportResolver } from './events-import.resolver';
 import {
@@ -35,7 +35,7 @@ export const mockImportableEvents: EventFromSource[] = [
   },
 ];
 
-export const mockImportableEventsDocument: ImportedEventsDocument = {
+export const mockImportableEventsDocument: PaginatedEventsFromSources = {
   nodes: mockImportableEvents,
   totalCount: mockImportableEvents.length,
   pageInfo: {

@@ -1,7 +1,7 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   ImportedEventFilter,
-  ImportedEventsDocument,
+  PaginatedEventsFromSources,
   EventFromSource,
   SingleEventFilter,
   ImportEventArgs,
@@ -17,7 +17,7 @@ export class EventsImportResolver {
   constructor(private events: EventsImportService) {}
 
   @Permissions(CanGetImportedEvents)
-  @Query(returns => ImportedEventsDocument, {
+  @Query(returns => PaginatedEventsFromSources, {
     name: 'importedEvents',
     description: `
       Returns a list of imported events from external sources, transformed to match our model.

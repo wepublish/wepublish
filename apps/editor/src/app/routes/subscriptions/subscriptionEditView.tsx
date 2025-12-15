@@ -7,7 +7,6 @@ import {
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
   FullSubscriptionFragment,
-  FullUserFragment,
   InvoiceFragment,
   MetadataPropertyFragment,
   PaymentPeriodicity,
@@ -20,8 +19,12 @@ import {
   useRenewSubscriptionMutation,
   useSubscriptionQuery,
   useUpdateSubscriptionMutation,
-  useUserQuery,
 } from '@wepublish/editor/api';
+import {
+  FullUserFragment,
+  getApiClientV2,
+  useUserQuery,
+} from '@wepublish/editor/api-v2';
 import {
   ALL_PAYMENT_PERIODICITIES,
   createCheckedPermissionComponent,
@@ -224,6 +227,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     if (!subscription) {
       return;
     }
+    // @ts-expect-error Wrong type for now
     setUser(subscription.user);
     setMemberPlan(subscription.memberPlan);
     setPaymentPeriodicity(subscription.paymentPeriodicity);
@@ -278,7 +282,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   /**
    * fetch edited user from api
    */
+  const client = getApiClientV2();
   const { data: editedUserData } = useUserQuery({
+    client,
     variables: { id: editedUserId! },
     fetchPolicy: 'network-only',
     skip: editedUserId === undefined,

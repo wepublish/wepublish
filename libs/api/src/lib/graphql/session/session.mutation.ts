@@ -4,7 +4,8 @@ import { Context } from '../../context';
 import { AuthSessionType } from '@wepublish/authentication/api';
 import { unselectPassword } from '@wepublish/authentication/api';
 import { InvalidCredentialsError, NotActiveError } from '../../error';
-import { getUserForCredentials } from '../user/user.queries';
+import { Validator } from '@wepublish/user';
+import bcrypt from 'bcrypt';
 
 const IDAlphabet =
   '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -60,6 +61,38 @@ export const createUserSession = async (
       },
     }),
   };
+};
+
+const getUserForCredentials = async (
+  email: string,
+  password: string,
+  userClient: PrismaClient['user']
+) => {
+  email = email.toLowerCase();
+  await Validator.login.parse({ email });
+
+  const user = await userClient.findUnique({
+    where: {
+      email,
+    },
+    include: {
+      address: true,
+      paymentProviderCustomers: true,
+      properties: true,
+    },
+  });
+
+  if (!user) {
+    return null;
+  }
+
+  const theSame = await bcrypt.compare(password, user.password);
+
+  if (!theSame) {
+    return null;
+  }
+
+  return user;
 };
 
 export const createSession = async (
