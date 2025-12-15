@@ -56,15 +56,16 @@ function TokenList() {
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [currentToken, setCurrentToken] = useState<FullTokenFragment>();
 
+  const client = getApiClientV2();
   const {
     data: tokenListData,
     loading: isTokenListLoading,
     error: tokenListError,
   } = useTokenListQuery({
+    client,
     fetchPolicy: 'network-only',
   });
 
-  const client = getApiClientV2();
   const [deleteToken, { loading: isDeleting, error: deleteTokenError }] =
     useDeleteTokenMutation({
       client,

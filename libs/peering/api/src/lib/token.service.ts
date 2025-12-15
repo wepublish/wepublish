@@ -1,13 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { CreateTokenInput } from './token.model';
-import nanoid from 'nanoid/generate';
-
-const IDAlphabet =
-  '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+import * as crypto from 'crypto';
 
 export function generateToken() {
-  return nanoid(IDAlphabet, 32);
+  return crypto.randomBytes(48).toString('base64');
 }
 
 @Injectable()
