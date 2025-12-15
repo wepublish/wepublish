@@ -15,6 +15,8 @@ import { PEER_MODULE_OPTIONS, PeerModuleOptions } from './peer.constants';
 import { ImageModule } from '@wepublish/image/api';
 import { CacheModule } from '@nestjs/cache-manager';
 import { RemotePeerProfileDataloaderService } from './remote-peer-profile.dataloader';
+import { TokenResolver } from './token.resolver';
+import { TokenService } from './token.service';
 
 export interface PeerModuleAsyncOptions {
   imports?: Array<Type<any> | DynamicModule | Promise<DynamicModule>>;
@@ -44,8 +46,10 @@ export interface PeerModuleAsyncOptions {
     HasPeerLcResolver,
     HasOptionalPeerResolver,
     HasOptionalPeerLcResolver,
+    TokenResolver,
+    TokenService,
   ],
-  exports: [PeerDataloaderService, PeerService, PeerProfileService],
+  exports: [PeerDataloaderService],
 })
 export class PeerModule {
   static register(options: PeerModuleOptions): DynamicModule {

@@ -10,7 +10,6 @@ type Query {
   subscription(id: String!): Subscription
   subscriptions(cursor: String, take: Int = 10, skip: Int = 0, filter: SubscriptionFilter, sort: SubscriptionSort = modifiedAt, order: SortOrder = Descending): SubscriptionConnection!
   subscriptionsAsCsv(filter: SubscriptionFilter): String
-  tokens: [Token!]!
   image(id: String): Image
   images(cursor: String, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
   comment(id: String!): Comment
@@ -396,13 +395,6 @@ enum SubscriptionSort {
   modifiedAt
 }
 
-type Token {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-}
-
 type ImageConnection {
   nodes: [Image!]!
   totalCount: Int!
@@ -673,8 +665,6 @@ type Mutation {
   sessions: [Session!]!
   sendJWTLogin(url: String!, email: String!): String!
   sendWebsiteLogin(email: String!): String!
-  createToken(input: TokenInput!): CreatedToken!
-  deleteToken(id: String!): CreatedToken
   createUser(input: UserInput!, password: String!): User
   updateUser(id: String!, input: UserInput!): User
   resetUserPassword(id: String!, password: String!, sendMail: Boolean): User
@@ -735,18 +725,6 @@ type SessionWithToken {
   token: String!
   createdAt: DateTime!
   expiresAt: DateTime!
-}
-
-type CreatedToken {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  token: String!
-}
-
-input TokenInput {
-  name: String!
 }
 
 input UserInput {

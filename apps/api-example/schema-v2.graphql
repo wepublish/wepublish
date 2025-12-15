@@ -258,6 +258,13 @@ interface BaseTeaser implements HasImage {
   type: String!
 }
 
+interface BaseToken {
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+}
+
 interface BaseUser {
   active: Boolean!
   firstName: String
@@ -1445,6 +1452,9 @@ type Mutation {
   """Creates a new tag."""
   createTag(description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
 
+  """Creates a token and returns it's secret once."""
+  createToken(name: String!): TokenWithSecret!
+
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
 
@@ -1494,6 +1504,9 @@ type Mutation {
 
   """Deletes an existing tag."""
   deleteTag(id: String!): Tag!
+
+  """Deletes a token."""
+  deleteToken(id: String!): Token!
 
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
@@ -2335,6 +2348,9 @@ type Query {
     take: Int! = 10
   ): TagConnection!
 
+  """Returns a list of all tokens."""
+  tokens: [Token!]!
+
   "\n      Returns a single userConsent by id.\n    "
   userConsent(id: String!): UserConsent!
 
@@ -2800,6 +2816,21 @@ input TitleBlockInput {
   lead: String
   preTitle: String
   title: String
+}
+
+type Token implements BaseToken {
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+}
+
+type TokenWithSecret implements BaseToken {
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+  token: String!
 }
 
 type TrackingPixel {
