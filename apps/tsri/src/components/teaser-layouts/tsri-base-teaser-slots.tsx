@@ -1,4 +1,3 @@
-import { TeaserSlotsBlock } from '@wepublish/block-content/website';
 import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { cond, T } from 'ramda';
 
@@ -7,6 +6,11 @@ import {
   isTeaserSlotsFullsizeImage,
   TeaserSlotsFullsizeImage,
 } from './layout-fullsize-image';
+import {
+  alignmentForTeaserBlock as alignmentForTeaserBlockTeaserSlotsHeroTeaser,
+  isTeaserSlotsHeroTeaser,
+  TeaserSlotsHeroTeaser,
+} from './layout-hero-teaser';
 import {
   alignmentForTeaserBlock as alignmentForTeaserBlockNoImage,
   isTeaserSlotNoImage,
@@ -18,10 +22,39 @@ import {
   TeaserSlotNoImageAltColor,
 } from './layout-no-image-alt-color';
 import {
-  alignmentForTeaserBlock as teaserBlockStyleByIndexTwoCol,
+  alignmentForTeaserBlock as alignmentForTeaserBlockDailyBriefingSidebar,
+  isTeaserSlotsDailyBriefingSidebar,
+  teaserBlockStyleByIndex as teaserBlockStyleByIndexDailyBriefingSidebar,
+  TeaserSlotsDailyBriefingSidebar,
+} from './layout-sidebar-daily-briefing';
+import {
+  alignmentForTeaserBlock as alignmentForTeaserBlockFocusMonthSidebar,
+  isTeaserSlotsFocusMonthSidebar,
+  teaserBlockStyleByIndex as teaserBlockStyleByIndexFocusMonthSidebar,
+  TeaserSlotsFocusMonthSidebar,
+} from './layout-sidebar-focus-month';
+import {
+  alignmentForTeaserBlock as alignmentForTeaserBlockShopProductsSidebar,
+  isTeaserSlotsShopProductsSidebar,
+  teaserBlockStyleByIndex as teaserBlockStyleByIndexShopProductsSidebar,
+  TeaserSlotsShopProductsSidebar,
+} from './layout-sidebar-shop-products';
+import {
+  alignmentForTeaserBlock as alignmentForTeaserBlockTsriLoveSidebar,
+  isTeaserSlotsTsriLoveSidebar,
+  teaserBlockStyleByIndex as teaserBlockStyleByIndexTsriLoveSidebar,
+  TeaserSlotsTsriLoveSidebar,
+} from './layout-sidebar-tsri-love';
+import {
+  alignmentForTeaserBlock as alignmentForTeaserBlockTwoCol,
   isTeaserSlotsTwoCol,
   TeaserSlotsTwoCol,
 } from './layout-two-col';
+import {
+  alignmentForTeaserBlock as alignmentForTeaserBlockTwoColAltColor,
+  isTeaserSlotsTwoColAltColor,
+  TeaserSlotsTwoColAltColor,
+} from './layout-two-col-alt-color';
 import {
   alignmentForTeaserBlock,
   isTeaserSlotsArchiveTopic,
@@ -38,14 +71,57 @@ import {
   teaserBlockStyleByIndex as teaserBlockStyleByIndexWithTwoCol,
   TeaserSlotsArchiveTopicWithTwoCol,
 } from './teaser-slots-archive-topic-with-two-col';
-import {
-  alignmentForTeaserBlock as alignmentForTeaserBlockFrontTop,
-  isTeaserSlotsFrontTop,
-  teaserBlockStyleByIndex as teaserBlockStyleByIndexFrontTop,
-  TeaserSlotsFrontTop,
-} from './teaser-slots-front-top';
 
 export const TsriBaseTeaserSlots = cond([
+  [
+    isTeaserSlotsTsriLoveSidebar,
+    (props: BuilderTeaserSlotsBlockProps) => (
+      <TeaserSlotsTsriLoveSidebar
+        {...props}
+        teaserBlockStyleByIndex={teaserBlockStyleByIndexTsriLoveSidebar}
+        alignmentForTeaserBlock={alignmentForTeaserBlockTsriLoveSidebar}
+      />
+    ),
+  ],
+  [
+    isTeaserSlotsShopProductsSidebar,
+    (props: BuilderTeaserSlotsBlockProps) => (
+      <TeaserSlotsShopProductsSidebar
+        {...props}
+        teaserBlockStyleByIndex={teaserBlockStyleByIndexShopProductsSidebar}
+        alignmentForTeaserBlock={alignmentForTeaserBlockShopProductsSidebar}
+      />
+    ),
+  ],
+  [
+    isTeaserSlotsDailyBriefingSidebar,
+    (props: BuilderTeaserSlotsBlockProps) => (
+      <TeaserSlotsDailyBriefingSidebar
+        {...props}
+        teaserBlockStyleByIndex={teaserBlockStyleByIndexDailyBriefingSidebar}
+        alignmentForTeaserBlock={alignmentForTeaserBlockDailyBriefingSidebar}
+      />
+    ),
+  ],
+  [
+    isTeaserSlotsHeroTeaser,
+    (props: BuilderTeaserSlotsBlockProps) => (
+      <TeaserSlotsHeroTeaser
+        {...props}
+        alignmentForTeaserBlock={alignmentForTeaserBlockTeaserSlotsHeroTeaser}
+      />
+    ),
+  ],
+  [
+    isTeaserSlotsFocusMonthSidebar,
+    (props: BuilderTeaserSlotsBlockProps) => (
+      <TeaserSlotsFocusMonthSidebar
+        {...props}
+        teaserBlockStyleByIndex={teaserBlockStyleByIndexFocusMonthSidebar}
+        alignmentForTeaserBlock={alignmentForTeaserBlockFocusMonthSidebar}
+      />
+    ),
+  ],
   [
     isTeaserSlotsFullsizeImage,
     (props: BuilderTeaserSlotsBlockProps) => (
@@ -60,7 +136,7 @@ export const TsriBaseTeaserSlots = cond([
     (props: BuilderTeaserSlotsBlockProps) => (
       <TeaserSlotsTwoCol
         {...props}
-        alignmentForTeaserBlock={teaserBlockStyleByIndexTwoCol}
+        alignmentForTeaserBlock={alignmentForTeaserBlockTwoCol}
       />
     ),
   ],
@@ -79,16 +155,6 @@ export const TsriBaseTeaserSlots = cond([
       <TeaserSlotNoImageAltColor
         {...props}
         alignmentForTeaserBlock={alignmentForTeaserBlockNoImageAltColor}
-      />
-    ),
-  ],
-  [
-    isTeaserSlotsFrontTop,
-    (props: BuilderTeaserSlotsBlockProps) => (
-      <TeaserSlotsFrontTop
-        {...props}
-        alignmentForTeaserBlock={alignmentForTeaserBlockFrontTop}
-        teaserBlockStyleByIndex={teaserBlockStyleByIndexFrontTop}
       />
     ),
   ],
@@ -122,5 +188,23 @@ export const TsriBaseTeaserSlots = cond([
       />
     ),
   ],
-  [T, (props: BuilderTeaserSlotsBlockProps) => <TeaserSlotsBlock {...props} />],
+  [
+    isTeaserSlotsTwoColAltColor,
+    (props: BuilderTeaserSlotsBlockProps) => (
+      <TeaserSlotsTwoColAltColor
+        {...props}
+        alignmentForTeaserBlock={alignmentForTeaserBlockTwoColAltColor}
+      />
+    ),
+  ],
+  //[T, (props: BuilderTeaserSlotsBlockProps) => <TeaserSlotsBlock {...props} />],
+  [
+    T,
+    props => (
+      <div>
+        TsriTeaserSlots fallback - unknown TeaserSlots type. blockStyle:
+        {props.blockStyle}
+      </div>
+    ),
+  ],
 ]);

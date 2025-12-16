@@ -27,12 +27,6 @@ import {
   isTeaserFlexGridTwoColAltColor,
   TeaserFlexGridTwoColAltColor,
 } from './layout-two-col-alt-color';
-import {
-  alignmentForTeaserBlock,
-  isTeaserFlexGridFrontMiddle,
-  teaserBlockStyleByIndex,
-  TeaserFlexGridFrontMiddle,
-} from './teaser-flex-grid-front-middle';
 
 export const TsriBaseTeaserGridFlex = cond([
   [
@@ -77,16 +71,6 @@ export const TsriBaseTeaserGridFlex = cond([
       <TeaserFlexGridTwoColAltColor
         {...props}
         alignmentForTeaserBlock={alignmentForTeaserBlockTwoColAltColor}
-      />
-    ),
-  ],
-  [
-    isTeaserFlexGridFrontMiddle,
-    (props: BuilderTeaserGridFlexBlockProps) => (
-      <TeaserFlexGridFrontMiddle
-        {...props}
-        teaserBlockStyleByIndex={teaserBlockStyleByIndex}
-        alignmentForTeaserBlock={alignmentForTeaserBlock}
       />
     ),
   ],

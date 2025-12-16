@@ -5,7 +5,7 @@ import {
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
-import { TsriTeaserType } from '../teasers/tsri-base-teaser';
+import { TsriLayoutType } from './tsri-layout';
 import {
   alignmentForTeaserBlock as alignmentFunc,
   TeaserFlexGrid,
@@ -14,13 +14,13 @@ import {
 
 export const isTeaserFlexGridNoImage = allPass([
   ({ blockStyle }: BuilderTeaserGridFlexBlockProps) => {
-    return blockStyle === TsriTeaserType.NoImage;
+    return blockStyle === TsriLayoutType.NoImage;
   },
 ]);
 
 export const isTeaserSlotNoImage = allPass([
   ({ blockStyle }: BuilderTeaserSlotsBlockProps) => {
-    return blockStyle === TsriTeaserType.NoImage;
+    return blockStyle === TsriLayoutType.NoImage;
   },
 ]);
 
