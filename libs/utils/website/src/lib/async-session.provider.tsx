@@ -16,7 +16,7 @@ import {
 export const AsyncSessionProvider = memo<
   PropsWithChildren<{ sessionToken: SessionWithTokenWithoutUser | null }>
 >(function SessionProvider({ sessionToken, children }) {
-  const [token, setToken] = useState<typeof sessionToken>(sessionToken);
+  const [token, setToken] = useState<typeof sessionToken>();
   const [user, setUser] = useState<User | null>(null);
   const initialSetupDone = useRef(false);
 

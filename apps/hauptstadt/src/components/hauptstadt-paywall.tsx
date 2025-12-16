@@ -2,7 +2,12 @@ import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
 import { Paywall, useShowPaywall } from '@wepublish/paywall/website';
 import { createWithTheme } from '@wepublish/ui';
-import { ProductType, useSubscriptionsQuery } from '@wepublish/website/api';
+import {
+  FullMemberPlanFragment,
+  FullSubscriptionFragment,
+  ProductType,
+  useSubscriptionsQuery,
+} from '@wepublish/website/api';
 import {
   BuilderPaywallProps,
   Paywall as BuilderPaywall,
@@ -11,6 +16,20 @@ import { ascend, prop, sortWith } from 'ramda';
 import { useMemo } from 'react';
 
 import theme from '../theme';
+
+export const isMemberplanUpgradeableTo = (memberPlan: FullMemberPlanFragment) =>
+  memberPlan.productType === ProductType.Subscription && memberPlan.extendable;
+
+export const isMemberplanUpgradeable = (memberPlan: FullMemberPlanFragment) =>
+  memberPlan.productType === ProductType.Subscription;
+
+export const isSubscriptionUpgradeable = (
+  subscription: FullSubscriptionFragment
+) =>
+  subscription.extendable &&
+  subscription.autoRenew &&
+  subscription.isActive &&
+  isMemberplanUpgradeable(subscription.memberPlan);
 
 const HauptstadtPaywall = styled((props: BuilderPaywallProps) => {
   const { hasUser } = useUser();
@@ -22,14 +41,7 @@ const HauptstadtPaywall = styled((props: BuilderPaywallProps) => {
   });
 
   const filteredSubscriptions = useMemo(
-    () =>
-      data?.subscriptions.filter(
-        subscription =>
-          subscription.extendable &&
-          subscription.autoRenew &&
-          subscription.isActive &&
-          subscription.memberPlan.productType === ProductType.Subscription
-      ) ?? [],
+    () => data?.subscriptions.filter(isSubscriptionUpgradeable) ?? [],
     [data?.subscriptions]
   );
 

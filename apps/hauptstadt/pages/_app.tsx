@@ -66,6 +66,7 @@ import { HauptstadtFooter } from '../src/components/hauptstadt-navigation';
 import { HauptstadtPage } from '../src/components/hauptstadt-page';
 import { HauptstadtPaywall } from '../src/components/hauptstadt-paywall';
 import { HauptstadtQuoteBlock } from '../src/components/hauptstadt-quote';
+import { HauptstadtSubscribe } from '../src/components/hauptstadt-subscribe';
 import { HauptstadtSubscriptionListItem } from '../src/components/hauptstadt-subscription-list-item';
 import {
   HauptstadtAlternatingTeaser,
@@ -162,6 +163,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             ImageGallery: HauptstadtImageGalleryBlock,
             Break: HauptstadtBreakBlock,
             Listicle: HauptstadtListicle,
+            Subscribe: HauptstadtSubscribe,
           }}
           blockStyles={{
             FocusTeaser: HauptstadtFocusTeaser,
