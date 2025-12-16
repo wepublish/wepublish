@@ -37,6 +37,7 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import deOverriden from '../locales/deOverriden.json';
+import { Article } from '../src/article';
 import theme from '../src/theme';
 import { ZwoelfBaseTeaser } from '../src/zwoelf-base-teaser';
 import { ZwoelfFocusTeaser } from '../src/zwoelf-focus-teaser';
@@ -102,6 +103,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           blockStyles={{
             FocusTeaser: ZwoelfFocusTeaser,
           }}
+          Article={Article}
         >
           <ThemeProvider theme={theme}>
             <CssBaseline />
