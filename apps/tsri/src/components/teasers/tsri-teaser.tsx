@@ -56,7 +56,7 @@ export const TeaserWrapper = styled('li')<FlexAlignment>`
     w > 6 &&
     css`
       grid-column: 1 / -1;
-
+      /*
       ${theme.breakpoints.up('md')} {
         ${TeaserTitle} {
           font-size: ${theme.typography.h3.fontSize};
@@ -68,6 +68,7 @@ export const TeaserWrapper = styled('li')<FlexAlignment>`
           line-height: ${theme.typography.h6.lineHeight};
         }
       }
+*/
     `}
 
   ${({ theme, h, w, x, y }) => css`
@@ -192,6 +193,7 @@ export const TeaserTitle = styled('h1')`
   margin-bottom: 0 !important;
   font-size: calc((9 * 100cqw / 16) * 0.08) !important;
   line-height: 1.05 !important;
+  font-weight: 700 !important;
   padding: 1.5cqw 1.5cqw 2.2cqw;
 
   & .MuiLink-root {
@@ -311,6 +313,7 @@ export const TsriTeaser = ({
                 href={href}
                 color="inherit"
                 underline="none"
+                target={target}
               >
                 {title}
               </Link>
