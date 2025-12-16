@@ -8,7 +8,6 @@ import { mockBlockContent } from './block-content';
 import { mockAuthor } from './author';
 import { mockImage } from './image';
 import { faker } from '@faker-js/faker';
-
 export const mockArticleRevision: (
   args?: Partial<FullArticleRevisionFragment>
 ) => FullArticleRevisionFragment = ({
