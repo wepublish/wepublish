@@ -1,4 +1,3 @@
-import { hasBlockStyle } from '../../has-blockstyle';
 import {
   BuilderBlockStyleProps,
   useWebsiteBuilder,
@@ -7,7 +6,7 @@ import { BlockContent, FlexBlock } from '@wepublish/website/api';
 import { allPass } from 'ramda';
 import { isFlexBlock } from '../../nested-blocks/flex-block';
 import * as React from 'react';
-import { Box, Tab as MuiTab, Tabs as MuiTabs } from '@mui/material';
+import { Box, css, Tab as MuiTab, Tabs as MuiTabs } from '@mui/material';
 import styled from '@emotion/styled';
 
 export const TabbedContentWrapper = styled('div')`
@@ -20,17 +19,18 @@ interface TabPanelBaseProps {
   children?: React.ReactNode;
   index: number;
   value: number;
+  id: string;
 }
 
 export const TabPanelBase = (props: TabPanelBaseProps) => {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, id, ...other } = props;
 
   return (
     <div
       role="tabpanel"
       hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
+      id={`${id}-simple-tabpanel-${index}`}
+      aria-labelledby={`${id}-simple-tab-${index}`}
       {...other}
     >
       {value === index && children}
@@ -38,19 +38,25 @@ export const TabPanelBase = (props: TabPanelBaseProps) => {
   );
 };
 
-export const TabPanel = styled(TabPanelBase)`
+export const TabPanel = styled(TabPanelBase, {
+  shouldForwardProp: propName => propName !== 'cssByBlockStyle',
+})<{
+  cssByBlockStyle: string | undefined | null;
+}>`
   background: linear-gradient(
     to bottom,
     rgb(174, 179, 190),
-    rgba(174, 179, 190, 0.4)
+    color-mix(in srgb, white 40%, rgb(174, 179, 190))
   );
   position: relative;
   top: -1px;
   z-index: 0;
 
-  @container tabbed-content (width > 700px) {
-    padding: 7cqw 1.3cqw 10cqw 5.58cqw;
-  }
+  padding: 7cqw 1.3cqw 10cqw 5.58cqw;
+
+  ${({ cssByBlockStyle }) => css`
+    ${cssByBlockStyle ? cssByBlockStyle : ''};
+  `}}
 `;
 
 export const Tabs = styled(MuiTabs)`
@@ -64,7 +70,11 @@ export const Tabs = styled(MuiTabs)`
   }
 `;
 
-export const Tab = styled(MuiTab)`
+export const Tab = styled(MuiTab, {
+  shouldForwardProp: propName => propName !== 'cssByBlockStyle',
+})<{
+  cssByBlockStyle: string | undefined | null;
+}>`
   background-color: rgba(0, 0, 0, 1);
   color: rgba(255, 255, 255, 1);
   font-size: 16px;
@@ -78,14 +88,12 @@ export const Tab = styled(MuiTab)`
   align-items: flex-start;
   min-height: unset;
 
-  @container tabbed-content (width > 200px) {
-    font-size: 1.4cqw;
-    line-height: 1.4cqw;
-    padding: 0.7cqw 2.8cqw 0.5cqw 2.8cqw;
-    margin-right: 0.25cqw;
-    border-top-left-radius: 1cqw;
-    border-top-right-radius: 1cqw;
-  }
+  font-size: 1.4cqw;
+  line-height: 1.4cqw;
+  padding: 0.7cqw 2.8cqw 0.5cqw 2.8cqw;
+  margin-right: 0.25cqw;
+  border-top-left-radius: 1cqw;
+  border-top-right-radius: 1cqw;
 
   &:last-of-type {
     margin-right: 0;
@@ -106,15 +114,19 @@ export const Tab = styled(MuiTab)`
     backgroundcolor: #d1eaff;
   }
 
-  & > span: {
+  & > span {
     display: none;
   }
+
+  ${({ cssByBlockStyle }) => css`
+    ${cssByBlockStyle ? cssByBlockStyle : ''};
+  `}}
 `;
 
-export const a11yProps = (index: number) => {
+export const a11yProps = (index: number, id: string) => {
   return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    id: `${id}-simple-tab-${index}`,
+    'aria-controls': `${id}-simple-tabpanel-${index}`,
   };
 };
 
@@ -122,8 +134,17 @@ export const TabbedContent = ({
   className,
   nestedBlocks,
   blockStyle,
-}: BuilderBlockStyleProps['TabbedContent']) => {
+  blockStyleByIndex,
+  cssByBlockStyle,
+}: BuilderBlockStyleProps['TabbedContent'] & {
+  blockStyleByIndex?: (index: number) => string;
+  cssByBlockStyle?: (
+    index: number,
+    blockStyleOverride?: string | undefined | null
+  ) => string;
+}) => {
   const [value, setValue] = React.useState(0);
+  const thisId = `TC-${React.useId()}`;
 
   const {
     blocks: { Renderer },
@@ -150,7 +171,11 @@ export const TabbedContent = ({
                   (nestedBlock.block as { title: string }).title ||
                   `Tab ${index + 1}`
                 }
-                {...a11yProps(index)}
+                {...a11yProps(index, thisId)}
+                cssByBlockStyle={
+                  cssByBlockStyle &&
+                  cssByBlockStyle(index, nestedBlock.block?.blockStyle)
+                }
               />
             );
           })}
@@ -161,6 +186,11 @@ export const TabbedContent = ({
           value={value}
           index={index}
           key={index}
+          id={thisId}
+          cssByBlockStyle={
+            cssByBlockStyle &&
+            cssByBlockStyle(index, nestedBlock.block?.blockStyle)
+          }
         >
           <Renderer
             block={
@@ -168,7 +198,7 @@ export const TabbedContent = ({
                 ...nestedBlock.block,
                 blockStyle:
                   nestedBlock.block?.blockStyle ||
-                  TabbedContent['subBlockStyles']?.[index] ||
+                  (blockStyleByIndex && blockStyleByIndex(index)) ||
                   blockStyle,
               } as BlockContent
             }
@@ -182,10 +212,15 @@ export const TabbedContent = ({
   );
 };
 
-TabbedContent['subBlockStyles'] =
-  [] as BuilderBlockStyleProps['TabbedContent']['subBlockStyles'];
-
 export const isTabbedContentBlockStyle = (
   block: Pick<BlockContent, '__typename'>
 ): block is FlexBlock =>
-  allPass([hasBlockStyle('TabbedContent'), isFlexBlock])(block);
+  allPass([
+    isFlexBlock,
+    ({ blockStyle }: BuilderBlockStyleProps['TabbedContent']) => {
+      if (!blockStyle) {
+        return false;
+      }
+      return blockStyle.startsWith('TabbedContent');
+    },
+  ])(block as BuilderBlockStyleProps['TabbedContent']);
