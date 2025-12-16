@@ -1,15 +1,14 @@
 import styled from '@emotion/styled';
-import { campaigns } from '@mailchimp/mailchimp_marketing';
 import {
   BuilderTeaserProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
-import { createContext, useContext } from 'react';
+import { useContext } from 'react';
 
+import { DailyBriefingContext } from './teaser-sidebar-daily-briefing-context';
 import { TsriTeaserType } from './tsri-base-teaser';
 import { TeaserWrapper as TeaserWrapperDefault } from './tsri-teaser';
-
 /*
 export const isDailyBriefingTeaser = allPass([
   ({ teaser }: BuilderTeaserProps) => teaser?.__typename === 'CustomTeaser',
@@ -22,8 +21,6 @@ export const isDailyBriefingTeaser = allPass([
     return blockStyle === TsriTeaserType.DailyBriefing;
   },
 ]);
-
-export const DailyBriefingContext = createContext<campaigns.Campaigns[]>([]);
 
 export const TeaserWrapper = styled(TeaserWrapperDefault)`
   aspect-ratio: unset;
@@ -69,7 +66,7 @@ export const DailyBriefingTeaser = ({
   teaser,
 }: BuilderTeaserProps) => {
   const {
-    elements: { H4, Link },
+    elements: { Link },
   } = useWebsiteBuilder();
   const campaigns = useContext(DailyBriefingContext);
 
