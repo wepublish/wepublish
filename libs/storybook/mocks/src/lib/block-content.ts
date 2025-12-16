@@ -36,6 +36,11 @@ import {
   FlexAlignment,
   CrowdfundingBlock,
   SubscribeBlock,
+  FlexBlock,
+  NestedBlock,
+  FlexAlignmentBlocks,
+  Maybe,
+  BlockContent,
 } from '@wepublish/website/api';
 import { mockImage } from './image';
 import { mockRichText } from './richtext';
