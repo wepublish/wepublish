@@ -3,6 +3,7 @@ import { allPass } from 'ramda';
 
 import { TsriTeaserType } from '../teasers/tsri-base-teaser';
 import { TeaserSlotsArchiveTopic } from './teaser-slots-archive-topic';
+import { TsriLayoutType } from './tsri-layout';
 
 export const teaserBlockStyleByIndex = (index: number): TsriTeaserType => {
   switch (index) {
@@ -17,7 +18,7 @@ export const teaserBlockStyleByIndex = (index: number): TsriTeaserType => {
 
 export const isTeaserSlotsArchiveTopicWithTwoCol = allPass([
   ({ blockStyle }: BuilderTeaserSlotsBlockProps) => {
-    return blockStyle === 'ArchiveTopicWithTwoCol';
+    return blockStyle === TsriLayoutType.ArchiveTopicWithTwoCol;
   },
 ]);
 

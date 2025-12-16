@@ -14,16 +14,17 @@ import { allPass } from 'ramda';
 import { useMemo } from 'react';
 
 import { TsriTeaserType } from '../teasers/tsri-base-teaser';
+import { TsriLayoutType } from './tsri-layout';
 
 export const isTeaserFlexGridNoImageAltColor = allPass([
   ({ blockStyle }: BuilderTeaserGridFlexBlockProps) => {
-    return blockStyle === TsriTeaserType.NoImageAltColor;
+    return blockStyle === TsriLayoutType.NoImageAltColor;
   },
 ]);
 
 export const isTeaserSlotNoImageAltColor = allPass([
   ({ blockStyle }: BuilderTeaserSlotsBlockProps) => {
-    return blockStyle === TsriTeaserType.NoImageAltColor;
+    return blockStyle === TsriLayoutType.NoImageAltColor;
   },
 ]);
 

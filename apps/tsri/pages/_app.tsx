@@ -38,7 +38,7 @@ import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
-import { TabbedContent } from '../src/block-styles/tsri-tabbed-content';
+import { TsriTabbedContent } from '../src/components/block-layouts/tsri-base-tabbed-content';
 import { TsriBaseTeaserGridFlex } from '../src/components/teaser-layouts/tsri-base-teaser-flex-grid';
 import { TsriBaseTeaserSlots } from '../src/components/teaser-layouts/tsri-base-teaser-slots';
 import { TsriArticleDate } from '../src/components/tsri-article-date';
@@ -51,7 +51,7 @@ import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
 import { TsriTeaser } from '../src/components/tsri-teaser';
 import theme from '../src/theme';
-import { TsriBlockRenderer } from '../src/tsri-block-renderer';
+import { TsriBlockRenderer } from '../src/components/tsri-block-renderer';
 
 setDefaultOptions({
   locale: de,
@@ -141,7 +141,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           }}
           blockStyles={{
             ContextBox: TsriContextBox,
-            TabbedContent,
+            TabbedContent: TsriTabbedContent,
           }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}

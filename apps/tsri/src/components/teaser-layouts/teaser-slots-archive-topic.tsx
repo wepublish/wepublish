@@ -8,6 +8,7 @@ import {
 import { allPass } from 'ramda';
 
 import { TsriTeaserType } from '../teasers/tsri-base-teaser';
+import { TsriLayoutType } from './tsri-layout';
 
 export const TeaserSlotsArchiveTopicWrapper = styled('ul')`
   display: grid;
@@ -22,7 +23,7 @@ export const TeaserSlotsArchiveTopicWrapper = styled('ul')`
 
 export const isTeaserSlotsArchiveTopic = allPass([
   ({ blockStyle }: BuilderTeaserSlotsBlockProps) => {
-    return blockStyle === 'ArchiveTopic';
+    return blockStyle === TsriLayoutType.ArchiveTopic;
   },
 ]);
 

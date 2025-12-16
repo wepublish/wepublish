@@ -5,7 +5,7 @@ import {
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
-import { TsriTeaserType } from '../teasers/tsri-base-teaser';
+import { TsriLayoutType } from './tsri-layout';
 import {
   alignmentForTeaserBlock as alignmentFunc,
   TeaserFlexGrid,
@@ -14,13 +14,13 @@ import {
 
 export const isTeaserFlexGridTwoColAltColor = allPass([
   ({ blockStyle }: BuilderTeaserGridFlexBlockProps) => {
-    return blockStyle === TsriTeaserType.TwoColAltColor;
+    return blockStyle === TsriLayoutType.TwoColAltColor;
   },
 ]);
 
-export const isTeaserSlotTwoColAltColor = allPass([
+export const isTeaserSlotsTwoColAltColor = allPass([
   ({ blockStyle }: BuilderTeaserSlotsBlockProps) => {
-    return blockStyle === TsriTeaserType.TwoColAltColor;
+    return blockStyle === TsriLayoutType.TwoColAltColor;
   },
 ]);
 
@@ -28,4 +28,4 @@ export const alignmentForTeaserBlock = alignmentFunc;
 
 export const TeaserFlexGridTwoColAltColor = styled(TeaserFlexGrid)``;
 
-export const TeaserSlotTwoColAltColor = styled(TeaserSlots)``;
+export const TeaserSlotsTwoColAltColor = styled(TeaserSlots)``;
