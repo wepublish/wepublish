@@ -1565,7 +1565,11 @@
         "addBypass": "Ajouter",
         "qrCodeTitle": "Code QR pour le token de contournement",
         "downloadSvg": "Télécharger SVG",
-        "baseUrl": "URL du site web (baseurl). Par ex. https://wepublish.ch"
+        "baseUrl": "URL du site web (baseurl). Par ex. https://wepublish.ch",
+        "display": "Options d’affichage",
+        "hideContentAfter": "Masquer le contenu après X blocs",
+        "fadeout": "Fondu des blocs masqués",
+        "fadeoutHelpText": "Le fondu permet d’afficher un aperçu du reste du contenu."
       }
     },
     "paymentMethodEditPanel": {

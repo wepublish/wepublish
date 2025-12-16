@@ -1418,7 +1418,7 @@ type Mutation {
   createPaymentFromSubscription(failureURL: String, subscriptionId: String, successURL: String): Payment
 
   """Creates a paywall."""
-  createPaywall(active: Boolean!, anyMemberPlan: Boolean!, circumventDescription: RichText, description: RichText, memberPlanIds: [String!]! = [], name: String): Paywall!
+  createPaywall(active: Boolean!, anyMemberPlan: Boolean!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]! = [], name: String): Paywall!
 
   """Creates a paywall bypass token."""
   createPaywallBypass(paywallId: String!, token: String!): PaywallBypass!
@@ -1593,7 +1593,7 @@ type Mutation {
   updatePaymentProviderCustomers(input: [PaymentProviderCustomerInput!]!): [PaymentProviderCustomer!]!
 
   """Updates a paywall."""
-  updatePaywall(active: Boolean, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, id: String!, memberPlanIds: [String!] = [], name: String): Paywall!
+  updatePaywall(active: Boolean, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!] = [], name: String): Paywall!
 
   """Updates an existing peer."""
   updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
@@ -1873,6 +1873,8 @@ type Paywall {
   circumventDescription: RichText
   createdAt: DateTime!
   description: RichText
+  fadeout: Boolean!
+  hideContentAfter: Int!
   id: String!
   memberPlans: [MemberPlan!]!
   modifiedAt: DateTime!

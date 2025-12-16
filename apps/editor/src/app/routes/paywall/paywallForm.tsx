@@ -315,6 +315,41 @@ export const PaywallForm = ({
         </Form.Group>
       </Panel>
 
+      <Panel
+        bordered
+        collapsible
+        header={t('paywall.form.display')}
+      >
+        <Form.Group controlId="hideContentAfter">
+          <Form.ControlLabel>
+            {t('paywall.form.hideContentAfter')}
+          </Form.ControlLabel>
+
+          <Form.Control
+            name="hideContentAfter"
+            type="number"
+            min={0}
+            value={paywall.hideContentAfter ?? ''}
+            onChange={(hideContentAfter: string) =>
+              onChange({ hideContentAfter: +hideContentAfter })
+            }
+          />
+        </Form.Group>
+
+        <Form.Group controlId="fadeout">
+          <Form.Control
+            name="fadeout"
+            checked={!!paywall.fadeout}
+            onChange={() => onChange({ fadeout: !paywall.fadeout })}
+            accepter={Checkbox}
+          >
+            {t('paywall.form.fadeout')}
+          </Form.Control>
+
+          <Form.HelpText>{t('paywall.form.fadeoutHelpText')}</Form.HelpText>
+        </Form.Group>
+      </Panel>
+
       <Modal
         open={showQRModal}
         onClose={() => setShowQRModal(false)}

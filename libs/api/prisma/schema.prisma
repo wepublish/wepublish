@@ -1457,6 +1457,9 @@ model Paywall {
   anyMemberPlan         Boolean @default(false)
   active                Boolean @default(true)
 
+  hideContentAfter Int     @default(3)
+  fadeout          Boolean @default(true)
+
   memberPlans PaywallMemberplan[]
   articles    Article[]
   bypasses    PaywallBypass[]
