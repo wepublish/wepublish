@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { campaigns } from '@mailchimp/mailchimp_marketing';
-import { TeaserWrapper } from '@wepublish/block-content/website';
 import {
   BuilderTeaserProps,
   useWebsiteBuilder,
@@ -8,22 +7,33 @@ import {
 import { allPass } from 'ramda';
 import { createContext, useContext } from 'react';
 
+import { TsriTeaserType } from './tsri-base-teaser';
+import { TeaserWrapper as TeaserWrapperDefault } from './tsri-teaser';
+
+/*
 export const isDailyBriefingTeaser = allPass([
   ({ teaser }: BuilderTeaserProps) => teaser?.__typename === 'CustomTeaser',
   ({ teaser }: BuilderTeaserProps) => teaser?.preTitle === 'daily-briefing',
 ]);
+*/
+
+export const isDailyBriefingTeaser = allPass([
+  ({ blockStyle }: BuilderTeaserProps) => {
+    return blockStyle === TsriTeaserType.DailyBriefing;
+  },
+]);
 
 export const DailyBriefingContext = createContext<campaigns.Campaigns[]>([]);
+
+export const TeaserWrapper = styled(TeaserWrapperDefault)`
+  aspect-ratio: unset;
+  container: unset;
+`;
 
 const DailyBriefingTeaserWrapper = styled('div')`
   display: grid;
   grid-auto-rows: min-content;
-  gap: ${({ theme }) => theme.spacing(4)};
-  background-color: ${({ theme }) => theme.palette.accent.main};
-  padding: ${({ theme }) => theme.spacing(2)};
 `;
-
-const DailyBriefingTitle = styled('h1')``;
 
 const DailyBriefingLinkList = styled('ul')`
   list-style: none;
@@ -31,17 +41,26 @@ const DailyBriefingLinkList = styled('ul')`
   padding: 0;
   display: grid;
   grid-auto-rows: min-content;
-  gap: ${({ theme }) => theme.spacing(2)};
+  font-size: 1.3cqw !important;
+  line-height: 1.49cqw !important;
+  font-weight: 700 !important;
 `;
 
 const DailyBriefingLink = styled('li')`
-  padding-bottom: ${({ theme }) => theme.spacing(2)};
-  border-bottom: currentColor 1px solid;
-  font-size: ${({ theme }) => theme.typography.h6.fontSize};
-  font-weight: 600;
+  color: black;
+  margin: 0 0 0.2cqw 0;
 
-  &:last-child {
-    border-bottom: 0;
+  & a {
+    color: inherit;
+    text-decoration: none;
+    padding: 0.5cqw;
+    display: block;
+    background-color: white;
+
+    &:hover {
+      background-color: #f5ff64;
+      color: black;
+    }
   }
 `;
 
@@ -57,10 +76,6 @@ export const DailyBriefingTeaser = ({
   return (
     <TeaserWrapper {...alignment}>
       <DailyBriefingTeaserWrapper>
-        <H4 component={DailyBriefingTitle}>
-          {teaser?.title || 'Daily Briefing'}
-        </H4>
-
         <DailyBriefingLinkList>
           {campaigns.map(campaign => (
             <DailyBriefingLink key={campaign.id}>
