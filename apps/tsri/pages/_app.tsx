@@ -21,6 +21,7 @@ import {
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
+import { getPageTypeBasedContent } from '@wepublish/utils/website';
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
@@ -35,6 +36,7 @@ import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import deOverriden from '../locales/deOverriden.json';
 import { TsriTabbedContent } from '../src/components/block-layouts/tsri-base-tabbed-content';
 import { TsriBaseTeaserGridFlex } from '../src/components/teaser-layouts/tsri-base-teaser-flex-grid';
 import { TsriBaseTeaserSlots } from '../src/components/teaser-layouts/tsri-base-teaser-slots';
@@ -61,20 +63,7 @@ setDefaultOptions({
   locale: de,
 });
 
-initWePublishTranslator()
-  .use(resourcesToBackend(() => deTranlations))
-  .init({
-    partialBundledLanguages: true,
-    lng: 'de',
-    fallbackLng: 'de',
-    supportedLngs: ['de'],
-    interpolation: {
-      escapeValue: false,
-    },
-    resources: {
-      de: { zod: deTranlations.zod },
-    },
-  });
+initWePublishTranslator(deOverriden);
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
@@ -89,20 +78,13 @@ const MainSpacer = styled(Container)`
   position: relative;
   display: grid;
   gap: ${({ theme }) => theme.spacing(5)};
+  container: main / inline-size;
 
   ${({ theme }) => css`
     ${theme.breakpoints.up('md')} {
       gap: ${theme.spacing(10)};
     }
   `}
-`;
-
-const TsriTitle = styled(TitleBlock)`
-  ${TitleBlockTitle} {
-    ${({ theme }) => theme.breakpoints.down('sm')} {
-      font-size: 2rem;
-    }
-  }
 `;
 
 const dateFormatter = (date: Date, includeTime = true) =>
@@ -121,6 +103,8 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   // Compat removes certain warnings that are irrelevant to us
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
+
+  const pageTypeBasedContent = getPageTypeBasedContent(pageProps);
 
   return (
     <AppCacheProvider emotionCache={cache}>
