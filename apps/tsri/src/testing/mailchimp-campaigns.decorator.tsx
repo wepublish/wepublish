@@ -2,7 +2,7 @@
 import { campaigns } from '@mailchimp/mailchimp_marketing';
 import { ComponentType } from 'react';
 
-import { DailyBriefingContext } from '../components/teasers/teaser-sidebar-daily-briefing';
+import { DailyBriefingContext } from '../components/teasers/teaser-sidebar-daily-briefing-context';
 
 type MailchimpCampaignsDecoratorProps = {
   campaigns: campaigns.Campaigns[];
