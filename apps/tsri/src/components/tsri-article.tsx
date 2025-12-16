@@ -11,7 +11,7 @@ import {
 } from '@wepublish/block-content/website';
 import { CommentListWrapper } from '@wepublish/comments/website';
 
-import { SidebarContentWrapper } from '../block-styles/sidebar-content';
+import { SidebarContentWrapper } from './sidebar-content';
 
 export const TsriArticle = styled(ArticleDefault)`
   ${TitleBlockPreTitle} {
