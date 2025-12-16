@@ -14,6 +14,8 @@ import { SmilieReplacer } from './editor/extensions/emoji';
 import Typography from '@tiptap/extension-typography';
 import { TableKit } from '@tiptap/extension-table';
 import { WePTableCell } from './editor/extensions/table-cell';
+import { Commands } from './editor/extensions/commands';
+import { suggestions } from './editor/extensions/suggestions';
 
 const extensions = [
   TextStyleKit,
@@ -59,6 +61,9 @@ const extensions = [
   // We.Publish Extensions
   SmilieReplacer,
   WePTableCell,
+  Commands.configure({
+    suggestions,
+  }),
 ];
 
 export const editorConfig: UseEditorOptions = {
