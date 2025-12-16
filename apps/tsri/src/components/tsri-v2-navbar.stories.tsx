@@ -3,7 +3,7 @@ import { mockImage } from '@wepublish/storybook/mocks';
 import { Navigation } from '@wepublish/website/api';
 import { PageType } from '@wepublish/website/builder';
 
-import { WithWebsiteProviderDecorator } from '../with-website-builder-provider';
+import { WithWebsiteProviderDecorator } from '../testing/with-website-builder-provider';
 import { TsriV2Navbar } from './tsri-v2-navbar';
 
 const navigations = [

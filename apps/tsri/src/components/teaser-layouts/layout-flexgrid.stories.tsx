@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/react';
 import { mockTeaserGridFlexBlock } from '@wepublish/storybook/mocks';
 
-import { WithWebsiteProviderDecorator } from '../../with-website-builder-provider';
+import { WithWebsiteProviderDecorator } from '../../testing/with-website-builder-provider';
 import { TsriTeaserType } from '../teasers/tsri-base-teaser';
 import { TsriBaseTeaserGridFlex } from './tsri-base-teaser-flex-grid';
 
