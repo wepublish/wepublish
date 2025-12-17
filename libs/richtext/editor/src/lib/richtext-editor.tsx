@@ -6,6 +6,7 @@ import { Box, css, Paper } from '@mui/material';
 import { BubbleMenu } from './editor/bubble-menu';
 import { editorConfig } from './richtext-editor.config';
 import { DragHandle } from './editor/drag-handle';
+import { FooterActions } from './editor/footer-actions';
 
 export const RichtextEditorWrapper = styled(Paper)``;
 
@@ -18,10 +19,13 @@ const Editor = styled(EditorContent)`
       cursor: ew-resize;
       cursor: col-resize;
     }
-  }
 
-  li > p {
-    margin: 0;
+    *:first-child {
+      margin-top: 0;
+    }
+    *:last-child {
+      margin-bottom: 0;
+    }
   }
 
   pre {
@@ -62,6 +66,14 @@ const Editor = styled(EditorContent)`
     ${({ theme }) => css(theme.typography.h6)}
   }
 
+  // Blockquote
+  blockquote {
+    border-left: 3px solid ${({ theme }) => theme.palette.text.disabled};
+    margin: 1.5rem 0;
+    padding-left: 1rem;
+  }
+
+  // Tables
   table {
     border-collapse: collapse;
     margin: 0;
@@ -77,6 +89,10 @@ const Editor = styled(EditorContent)`
       padding: 6px 8px;
       position: relative;
       vertical-align: top;
+
+      p {
+        margin: 0;
+      }
     }
 
     th {
@@ -92,6 +108,10 @@ const Editor = styled(EditorContent)`
     overflow-x: auto;
   }
 
+  .selectedCell {
+    border-style: dashed;
+  }
+
   // Placeholder
   .is-empty::before {
     color: ${({ theme }) => theme.palette.grey[400]};
@@ -104,6 +124,11 @@ const Editor = styled(EditorContent)`
   .ProseMirror-selectednode:not(img):not(pre):not(.react-renderer) {
     background-color: #68cef822;
     border-radius: 0.5rem;
+
+    &:is(blockquote) {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
   }
 `;
 
@@ -122,6 +147,9 @@ export const RichtextEditor = () => {
           borderColor: 'divider',
           flexWrap: 'wrap',
           bgcolor: 'background.default',
+          position: 'sticky',
+          top: 0,
+          zIndex: 1,
         }}
       >
         <MenuBar editor={editor} />
@@ -131,6 +159,31 @@ export const RichtextEditor = () => {
       <DragHandle editor={editor} />
 
       <Editor editor={editor} />
+
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          height: 46,
+          gap: 2,
+          p: 1,
+          m: 2,
+          mt: 0,
+          borderRadius: 2,
+          border: 1,
+          borderColor: 'divider',
+          flexWrap: 'wrap',
+          bgcolor: 'background.default',
+          position: 'sticky',
+          bottom: 16,
+          '&:empty': {
+            opacity: 0,
+            pointerEvents: 'none',
+          },
+        }}
+      >
+        <FooterActions editor={editor} />
+      </Box>
     </RichtextEditorWrapper>
   );
 };

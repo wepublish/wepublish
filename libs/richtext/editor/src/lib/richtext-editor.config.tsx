@@ -13,9 +13,8 @@ import TextAlign from '@tiptap/extension-text-align';
 import { SmilieReplacer } from './editor/extensions/emoji';
 import Typography from '@tiptap/extension-typography';
 import { TableKit } from '@tiptap/extension-table';
-import { WePTableCell } from './editor/extensions/table-cell';
 import { Commands } from './editor/extensions/commands';
-import { suggestions } from './editor/extensions/suggestions';
+import { commandSuggestions } from './editor/extensions/commands/command-suggestions';
 
 const extensions = [
   TextStyleKit,
@@ -45,14 +44,12 @@ const extensions = [
   }),
   Placeholder.configure({
     placeholder: ({ node }) => {
-      console.log(node);
-
       if (node.type.name === 'heading') {
         return 'Untitled';
       }
 
       if (node.type.name === 'paragraph') {
-        return 'The start of your paragraph';
+        return `Write, type '/' for commands...`;
       }
 
       return '';
@@ -60,9 +57,8 @@ const extensions = [
   }),
   // We.Publish Extensions
   SmilieReplacer,
-  WePTableCell,
   Commands.configure({
-    suggestions,
+    suggestions: commandSuggestions,
   }),
 ];
 

@@ -21,7 +21,6 @@ import {
   MdFormatListNumbered,
   MdFormatStrikethrough,
   MdFormatUnderlined,
-  MdHighlight,
   MdRedo,
   MdSubscript,
   MdSuperscript,
@@ -29,6 +28,7 @@ import {
 } from 'react-icons/md';
 import { Level } from '@tiptap/extension-heading';
 import { equals } from 'ramda';
+import { TbCodePlus, TbQuoteFilled, TbTablePlus } from 'react-icons/tb';
 
 export function MenuBar({ editor }: { editor: Editor }) {
   const editorState = useEditorState({
@@ -83,6 +83,9 @@ export function MenuBar({ editor }: { editor: Editor }) {
 
         canUndo: ctx.editor.can().chain().undo().run() ?? false,
         canRedo: ctx.editor.can().chain().redo().run() ?? false,
+
+        isCodeBlock: ctx.editor.isActive('codeBlock') ?? false,
+        isBlockquote: ctx.editor.isActive('blockquote') ?? false,
       };
     },
     equalityFn: equals,
@@ -111,18 +114,6 @@ export function MenuBar({ editor }: { editor: Editor }) {
         flexItem
         sx={{ mx: 0.5 }}
       />
-
-      <button
-        onClick={() =>
-          editor
-            .chain()
-            .focus()
-            .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
-            .run()
-        }
-      >
-        Insert table
-      </button>
 
       <FormControl size="small">
         <Select
@@ -241,24 +232,6 @@ export function MenuBar({ editor }: { editor: Editor }) {
         />
       </IconButton>
 
-      <IconButton
-        size="small"
-        onClick={() =>
-          editor
-            .chain()
-            .focus()
-            .setHighlight({
-              color: '#faa',
-            })
-            .run()
-        }
-      >
-        <MdHighlight
-          size={18}
-          style={{ color: editorState.background }}
-        />
-      </IconButton>
-
       <Divider
         orientation="vertical"
         flexItem
@@ -323,6 +296,39 @@ export function MenuBar({ editor }: { editor: Editor }) {
           <MdFormatAlignRight size={18} />
         </ToggleButton>
       </ToggleButtonGroup>
+
+      <Divider
+        orientation="vertical"
+        flexItem
+        sx={{ mx: 0.5 }}
+      />
+
+      <IconButton
+        size="small"
+        onClick={() =>
+          editor
+            .chain()
+            .focus()
+            .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+            .run()
+        }
+      >
+        <TbTablePlus size={18} />
+      </IconButton>
+
+      <IconButton
+        size="small"
+        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+      >
+        <TbCodePlus size={18} />
+      </IconButton>
+
+      <IconButton
+        size="small"
+        onClick={() => editor.chain().focus().toggleBlockquote().run()}
+      >
+        <TbQuoteFilled size={18} />
+      </IconButton>
     </>
   );
 }
