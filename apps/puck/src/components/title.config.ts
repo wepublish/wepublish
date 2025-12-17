@@ -6,12 +6,15 @@ export const TitleConfig: ComponentConfig<BuilderTitleBlockProps> = {
   fields: {
     title: {
       type: 'text',
+      contentEditable: true,
     },
     preTitle: {
       type: 'text',
+      contentEditable: true,
     },
     lead: {
       type: 'textarea',
+      contentEditable: true,
     },
   },
   defaultProps: {
