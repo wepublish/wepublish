@@ -2,7 +2,6 @@ import { FullPoll, Tag } from '@wepublish/editor/api';
 import {
   ArticleWithoutBlocksFragment,
   BlockContentInput,
-  BlockType,
   BlockWithAlignment,
   CommentBlockCommentFragment,
   EditorBlockType,
@@ -770,7 +769,6 @@ export function mapBlockValueToBlockInput(
           block:
             nb.block ? mapBlockValueToBlockInput(nb.block as BlockValue) : null,
         })),
-        type: BlockType.FlexBlock,
         blockStyle: block.value.blockStyle,
       };
 
@@ -1145,7 +1143,7 @@ export function blockForQueryBlock(
       return (() => {
         return {
           key,
-          type: EditorBlockType.TeaserSlots as EditorBlockType.TeaserSlots,
+          type: EditorBlockType.TeaserSlots,
           value: {
             blockStyle: block.blockStyle,
             slots: block.slots.map(({ teaser, type }) => ({
@@ -1194,7 +1192,10 @@ export function blockForQueryBlock(
           blockStyle: block.blockStyle,
           blocks: block.blocks.map(({ alignment, block }) => ({
             alignment,
-            block: blockForQueryBlock(block as FullBlockFragment),
+            block:
+              block ?
+                blockForQueryBlock(block as FullBlockFragment)
+              : undefined,
           })),
         },
       };

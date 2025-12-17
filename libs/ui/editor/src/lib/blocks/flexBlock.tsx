@@ -164,7 +164,15 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
   const handleLayoutChange = (layout: FlexAlignment[]) => {
     const newBlocks = layout.map(v => ({
       block: blocks.find(flexTeaser => v.i === flexTeaser.alignment.i)?.block,
-      alignment: v,
+      //alignment: v,
+      alignment: {
+        i: v.i,
+        x: v.x,
+        y: v.y,
+        w: v.w,
+        h: v.h,
+        static: v.static,
+      },
     }));
 
     onChange({ ...value, blocks: newBlocks });
@@ -214,17 +222,17 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
       </IconButtonTooltip>
 
       <GridLayout
-        onResizeStop={layout => handleLayoutChange(layout)}
-        onDrop={layout => handleLayoutChange(layout)}
+        onResizeStop={layout => handleLayoutChange(layout as FlexAlignment[])}
+        onDrop={layout => handleLayoutChange(layout as FlexAlignment[])}
         className="layout"
         onDragStop={layout => {
           setIsDragging(false);
-          handleLayoutChange(layout);
+          handleLayoutChange(layout as FlexAlignment[]);
         }}
         onDrag={() => setIsDragging(true)} // buggy behavior with onDragStart with double click
         cols={12}
         rowHeight={30}
-        layout={blocks.map(ft => ft.alignment)}
+        layout={blocks.map(ft => ft.alignment) as FlexAlignment[]}
         width={640}
       >
         {blocks.map(block => (
@@ -247,7 +255,7 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
               {!block.block && (
                 <IconButtonTooltip caption={t('blocks.flexTeaser.removeBlock')}>
                   <RIconButton
-                    disabled={block.alignment.static}
+                    disabled={block.alignment.static as unknown as boolean}
                     block
                     appearance="subtle"
                     icon={<MdDelete />}
