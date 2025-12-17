@@ -78,6 +78,7 @@ export const HTMLBlock = ({
                   {t('blocks.html.edit')}
                 </IconButton>
               </IconWrapper>
+
               <InnerHtmlWrapper>
                 <InnerHTML html={correctScript()} />
               </InnerHtmlWrapper>

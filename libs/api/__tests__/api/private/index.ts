@@ -27,70 +27,6 @@ export type Scalars = {
   VoteValue: number;
 };
 
-export type Author = {
-  __typename?: 'Author';
-  bio?: Maybe<Scalars['RichText']>;
-  createdAt: Scalars['DateTime'];
-  hideOnArticle?: Maybe<Scalars['Boolean']>;
-  hideOnTeam?: Maybe<Scalars['Boolean']>;
-  hideOnTeaser?: Maybe<Scalars['Boolean']>;
-  id: Scalars['String'];
-  image?: Maybe<Image>;
-  imageID?: Maybe<Scalars['String']>;
-  jobTitle?: Maybe<Scalars['String']>;
-  links?: Maybe<Array<AuthorLink>>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  peer?: Maybe<Peer>;
-  peerId?: Maybe<Scalars['String']>;
-  slug: Scalars['Slug'];
-  tags: Array<Tag>;
-  url: Scalars['String'];
-};
-
-export type AuthorConnection = {
-  __typename?: 'AuthorConnection';
-  nodes: Array<Author>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type AuthorFilter = {
-  hideOnTeam?: InputMaybe<Scalars['Boolean']>;
-  name?: InputMaybe<Scalars['String']>;
-  tagIds?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export type AuthorInput = {
-  bio?: InputMaybe<Scalars['RichText']>;
-  hideOnArticle?: InputMaybe<Scalars['Boolean']>;
-  hideOnTeam?: InputMaybe<Scalars['Boolean']>;
-  hideOnTeaser?: InputMaybe<Scalars['Boolean']>;
-  imageID?: InputMaybe<Scalars['String']>;
-  jobTitle?: InputMaybe<Scalars['String']>;
-  links?: InputMaybe<Array<AuthorLinkInput>>;
-  name: Scalars['String'];
-  slug: Scalars['Slug'];
-  tagIds?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export type AuthorLink = {
-  __typename?: 'AuthorLink';
-  title: Scalars['String'];
-  url: Scalars['String'];
-};
-
-export type AuthorLinkInput = {
-  title: Scalars['String'];
-  url: Scalars['String'];
-};
-
-export enum AuthorSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  Name = 'NAME'
-}
-
 export type AvailablePaymentMethod = {
   __typename?: 'AvailablePaymentMethod';
   forceAutoRenewal: Scalars['Boolean'];
@@ -196,14 +132,6 @@ export enum CommentState {
   Rejected = 'rejected'
 }
 
-export type CreatePeerInput = {
-  hostURL: Scalars['String'];
-  information?: InputMaybe<Scalars['RichText']>;
-  name: Scalars['String'];
-  slug: Scalars['String'];
-  token: Scalars['String'];
-};
-
 export type CreatedToken = {
   __typename?: 'CreatedToken';
   createdAt: Scalars['DateTime'];
@@ -295,12 +223,6 @@ export type ImageFilter = {
   title?: InputMaybe<Scalars['String']>;
 };
 
-export enum ImageOutput {
-  Jpeg = 'jpeg',
-  Png = 'png',
-  Webp = 'webp'
-}
-
 export enum ImageRotation {
   Auto = 'Auto',
   Rotate0 = 'Rotate0',
@@ -316,8 +238,6 @@ export enum ImageSort {
 
 export type ImageTransformation = {
   height?: InputMaybe<Scalars['Int']>;
-  output?: InputMaybe<ImageOutput>;
-  quality?: InputMaybe<Scalars['Float']>;
   rotation?: InputMaybe<ImageRotation>;
   width?: InputMaybe<Scalars['Int']>;
 };
@@ -400,6 +320,7 @@ export type JwtToken = {
 export type MemberPlan = {
   __typename?: 'MemberPlan';
   active: Scalars['Boolean'];
+  amountPerMonthMax?: Maybe<Scalars['Int']>;
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
@@ -439,6 +360,7 @@ export type MemberPlanFilter = {
 
 export type MemberPlanInput = {
   active: Scalars['Boolean'];
+  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
@@ -468,13 +390,11 @@ export type Mutation = {
   __typename?: 'Mutation';
   approveComment: Comment;
   cancelSubscription?: Maybe<Subscription>;
-  createAuthor?: Maybe<Author>;
   createComment: Comment;
   createInvoice?: Maybe<Invoice>;
   createMemberPlan?: Maybe<MemberPlan>;
   createPaymentFromInvoice?: Maybe<Payment>;
   createPaymentMethod?: Maybe<PaymentMethod>;
-  createPeer: Peer;
   createPoll?: Maybe<PollWithAnswers>;
   createPollAnswer?: Maybe<PollAnswer>;
   createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
@@ -482,26 +402,20 @@ export type Mutation = {
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   createSubscription?: Maybe<Subscription>;
-  createTag?: Maybe<Tag>;
   createToken: CreatedToken;
   createUser?: Maybe<User>;
-  createUserRole?: Maybe<UserRole>;
-  deleteAuthor?: Maybe<Author>;
   deleteComment: Comment;
   deleteImage?: Maybe<Image>;
   deleteInvoice?: Maybe<Invoice>;
   deleteMemberPlan?: Maybe<MemberPlan>;
   deletePaymentMethod?: Maybe<PaymentMethod>;
-  deletePeer?: Maybe<Peer>;
   deletePoll?: Maybe<FullPoll>;
   deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
   deleteRatingSystemAnswer: CommentRatingSystemAnswer;
   deleteSubscription?: Maybe<Subscription>;
-  deleteTag?: Maybe<Tag>;
   deleteToken?: Maybe<CreatedToken>;
   deleteUser?: Maybe<User>;
-  deleteUserRole?: Maybe<UserRole>;
   importSubscription?: Maybe<Subscription>;
   markInvoiceAsPaid?: Maybe<Invoice>;
   rejectComment: Comment;
@@ -513,20 +427,16 @@ export type Mutation = {
   sendJWTLogin: Scalars['String'];
   sendWebsiteLogin: Scalars['String'];
   sessions: Array<Session>;
-  updateAuthor?: Maybe<Author>;
   updateComment: Comment;
   updateImage?: Maybe<Image>;
   updateInvoice?: Maybe<Invoice>;
   updateMemberPlan?: Maybe<MemberPlan>;
   updatePaymentMethod?: Maybe<PaymentMethod>;
-  updatePeer: Peer;
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
   updateRatingSystem: FullCommentRatingSystem;
   updateSubscription?: Maybe<Subscription>;
-  updateTag?: Maybe<Tag>;
   updateUser?: Maybe<User>;
-  updateUserRole?: Maybe<UserRole>;
   uploadImage?: Maybe<Image>;
 };
 
@@ -539,11 +449,6 @@ export type MutationApproveCommentArgs = {
 export type MutationCancelSubscriptionArgs = {
   id: Scalars['String'];
   reason: SubscriptionDeactivationReason;
-};
-
-
-export type MutationCreateAuthorArgs = {
-  input: AuthorInput;
 };
 
 
@@ -573,11 +478,6 @@ export type MutationCreatePaymentFromInvoiceArgs = {
 
 export type MutationCreatePaymentMethodArgs = {
   input: PaymentMethodInput;
-};
-
-
-export type MutationCreatePeerArgs = {
-  input: CreatePeerInput;
 };
 
 
@@ -623,14 +523,6 @@ export type MutationCreateSubscriptionArgs = {
 };
 
 
-export type MutationCreateTagArgs = {
-  description?: InputMaybe<Scalars['RichText']>;
-  main?: InputMaybe<Scalars['Boolean']>;
-  tag?: InputMaybe<Scalars['String']>;
-  type: TagType;
-};
-
-
 export type MutationCreateTokenArgs = {
   input: TokenInput;
 };
@@ -639,16 +531,6 @@ export type MutationCreateTokenArgs = {
 export type MutationCreateUserArgs = {
   input: UserInput;
   password: Scalars['String'];
-};
-
-
-export type MutationCreateUserRoleArgs = {
-  input: UserRoleInput;
-};
-
-
-export type MutationDeleteAuthorArgs = {
-  id: Scalars['String'];
 };
 
 
@@ -673,11 +555,6 @@ export type MutationDeleteMemberPlanArgs = {
 
 
 export type MutationDeletePaymentMethodArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeletePeerArgs = {
   id: Scalars['String'];
 };
 
@@ -707,22 +584,12 @@ export type MutationDeleteSubscriptionArgs = {
 };
 
 
-export type MutationDeleteTagArgs = {
-  id: Scalars['String'];
-};
-
-
 export type MutationDeleteTokenArgs = {
   id: Scalars['String'];
 };
 
 
 export type MutationDeleteUserArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteUserRoleArgs = {
   id: Scalars['String'];
 };
 
@@ -777,12 +644,6 @@ export type MutationSendWebsiteLoginArgs = {
 };
 
 
-export type MutationUpdateAuthorArgs = {
-  id: Scalars['String'];
-  input: AuthorInput;
-};
-
-
 export type MutationUpdateCommentArgs = {
   featured?: InputMaybe<Scalars['Boolean']>;
   guestUserImageID?: InputMaybe<Scalars['String']>;
@@ -820,12 +681,6 @@ export type MutationUpdatePaymentMethodArgs = {
 };
 
 
-export type MutationUpdatePeerArgs = {
-  id: Scalars['String'];
-  input: UpdatePeerInput;
-};
-
-
 export type MutationUpdatePeerProfileArgs = {
   input: PeerProfileInput;
 };
@@ -855,23 +710,9 @@ export type MutationUpdateSubscriptionArgs = {
 };
 
 
-export type MutationUpdateTagArgs = {
-  description?: InputMaybe<Scalars['RichText']>;
-  id: Scalars['String'];
-  main?: InputMaybe<Scalars['Boolean']>;
-  tag?: InputMaybe<Scalars['String']>;
-};
-
-
 export type MutationUpdateUserArgs = {
   id: Scalars['String'];
   input: UserInput;
-};
-
-
-export type MutationUpdateUserRoleArgs = {
-  id: Scalars['String'];
-  input: UserRoleInput;
 };
 
 
@@ -980,19 +821,6 @@ export enum PaymentState {
   RequiresUserAction = 'requiresUserAction',
   Submitted = 'submitted'
 }
-
-export type Peer = {
-  __typename?: 'Peer';
-  createdAt: Scalars['DateTime'];
-  hostURL: Scalars['String'];
-  id: Scalars['String'];
-  information?: Maybe<Scalars['RichText']>;
-  isDisabled?: Maybe<Scalars['Boolean']>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  profile?: Maybe<PeerProfile>;
-  slug: Scalars['String'];
-};
 
 export type PeerProfile = {
   __typename?: 'PeerProfile';
@@ -1114,8 +942,6 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
-  author?: Maybe<Author>;
-  authors: AuthorConnection;
   comment?: Maybe<Comment>;
   comments: CommentConnection;
   createJWTForUser?: Maybe<JwtToken>;
@@ -1127,16 +953,12 @@ export type Query = {
   me?: Maybe<User>;
   memberPlan?: Maybe<MemberPlan>;
   memberPlans: MemberPlanConnection;
-  newSubscribersPerMonth?: Maybe<Array<Maybe<SubscribersPerMonth>>>;
   payment?: Maybe<Payment>;
   paymentMethod?: Maybe<PaymentMethod>;
   paymentMethods: Array<PaymentMethod>;
   paymentProviders: Array<PaymentProvider>;
   payments: PaymentConnection;
-  peer?: Maybe<Peer>;
   peerProfile: PeerProfile;
-  peers?: Maybe<Array<Peer>>;
-  permissions?: Maybe<Array<Permission>>;
   poll?: Maybe<FullPoll>;
   polls?: Maybe<PollConnection>;
   ratingSystem: FullCommentRatingSystem;
@@ -1145,29 +967,9 @@ export type Query = {
   subscription?: Maybe<Subscription>;
   subscriptions: SubscriptionConnection;
   subscriptionsAsCsv?: Maybe<Scalars['String']>;
-  tag?: Maybe<Tag>;
-  tags?: Maybe<TagConnection>;
   tokens: Array<Token>;
   user?: Maybe<User>;
-  userRole?: Maybe<UserRole>;
-  userRoles: UserRoleConnection;
   users: UserConnection;
-};
-
-
-export type QueryAuthorArgs = {
-  id?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['Slug']>;
-};
-
-
-export type QueryAuthorsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<AuthorFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<AuthorSort>;
-  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -1238,11 +1040,6 @@ export type QueryMemberPlansArgs = {
 };
 
 
-export type QueryNewSubscribersPerMonthArgs = {
-  monthsBack?: InputMaybe<Scalars['Int']>;
-};
-
-
 export type QueryPaymentArgs = {
   id?: InputMaybe<Scalars['String']>;
 };
@@ -1260,11 +1057,6 @@ export type QueryPaymentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<PaymentSort>;
   take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryPeerArgs = {
-  id: Scalars['String'];
 };
 
 
@@ -1309,38 +1101,8 @@ export type QuerySubscriptionsAsCsvArgs = {
 };
 
 
-export type QueryTagArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QueryTagsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<TagFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<TagSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
 export type QueryUserArgs = {
   id?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryUserRoleArgs = {
-  id?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryUserRolesArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<UserRoleFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<UserRoleSort>;
-  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -1378,12 +1140,6 @@ export enum SortOrder {
   Ascending = 'Ascending',
   Descending = 'Descending'
 }
-
-export type SubscribersPerMonth = {
-  __typename?: 'SubscribersPerMonth';
-  month: Scalars['String'];
-  subscriberCount: Scalars['Int'];
-};
 
 export type Subscription = {
   __typename?: 'Subscription';
@@ -1446,8 +1202,10 @@ export type SubscriptionFilter = {
   startsAt?: InputMaybe<DateFilter>;
   startsAtFrom?: InputMaybe<DateFilter>;
   startsAtTo?: InputMaybe<DateFilter>;
+  subscriptionIDs?: InputMaybe<Array<Scalars['String']>>;
   userHasAddress?: InputMaybe<Scalars['Boolean']>;
   userID?: InputMaybe<Scalars['String']>;
+  userIDs?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type SubscriptionInput = {
@@ -1490,24 +1248,6 @@ export type Tag = {
   url: Scalars['String'];
 };
 
-export type TagConnection = {
-  __typename?: 'TagConnection';
-  nodes: Array<Tag>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type TagFilter = {
-  tag?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<TagType>;
-};
-
-export enum TagSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  Tag = 'Tag'
-}
-
 export enum TagType {
   Article = 'Article',
   Author = 'Author',
@@ -1543,15 +1283,6 @@ export type UpdateImageInput = {
   source?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
-};
-
-export type UpdatePeerInput = {
-  hostURL?: InputMaybe<Scalars['String']>;
-  information?: InputMaybe<Scalars['RichText']>;
-  isDisabled?: InputMaybe<Scalars['Boolean']>;
-  name?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['String']>;
-  token?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdatePollAnswer = {
@@ -1660,28 +1391,6 @@ export type UserRole = {
   systemRole: Scalars['Boolean'];
 };
 
-export type UserRoleConnection = {
-  __typename?: 'UserRoleConnection';
-  nodes: Array<UserRole>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type UserRoleFilter = {
-  name?: InputMaybe<Scalars['String']>;
-};
-
-export type UserRoleInput = {
-  description: Scalars['String'];
-  name: Scalars['String'];
-  permissionIDs?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export enum UserRoleSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
-}
-
 export enum UserSort {
   CreatedAt = 'createdAt',
   FirstName = 'firstName',
@@ -1713,49 +1422,6 @@ export type OverriddenRating = {
   answerId: Scalars['String'];
   value?: Maybe<Scalars['Int']>;
 };
-
-export type AuthorRefFragment = { __typename?: 'Author', id: string, name: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
-
-export type FullAuthorFragment = { __typename?: 'Author', slug: string, bio?: Descendant[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
-
-export type AuthorListQueryVariables = Exact<{
-  filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['String']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type AuthorListQuery = { __typename?: 'Query', authors: { __typename?: 'AuthorConnection', totalCount: number, nodes: Array<{ __typename?: 'Author', slug: string, bio?: Descendant[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
-
-export type AuthorQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type AuthorQuery = { __typename?: 'Query', author?: { __typename?: 'Author', slug: string, bio?: Descendant[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
-
-export type CreateAuthorMutationVariables = Exact<{
-  input: AuthorInput;
-}>;
-
-
-export type CreateAuthorMutation = { __typename?: 'Mutation', createAuthor?: { __typename?: 'Author', slug: string, bio?: Descendant[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
-
-export type UpdateAuthorMutationVariables = Exact<{
-  id: Scalars['String'];
-  input: AuthorInput;
-}>;
-
-
-export type UpdateAuthorMutation = { __typename?: 'Mutation', updateAuthor?: { __typename?: 'Author', slug: string, bio?: Descendant[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
-
-export type DeleteAuthorMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteAuthorMutation = { __typename?: 'Mutation', deleteAuthor?: { __typename?: 'Author', slug: string, bio?: Descendant[] | null, id: string, name: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 export type CommentRevisionFragment = { __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string };
 
@@ -1885,58 +1551,6 @@ export type DeleteImageMutationVariables = Exact<{
 
 export type DeleteImageMutation = { __typename?: 'Mutation', deleteImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
-export type FullPeerProfileFragment = { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
-
-export type PeerRefFragment = { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string };
-
-export type PeerWithProfileFragment = { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
-
-export type PeerProfileQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type PeerProfileQuery = { __typename?: 'Query', peerProfile: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
-
-export type UpdatePeerProfileMutationVariables = Exact<{
-  input: PeerProfileInput;
-}>;
-
-
-export type UpdatePeerProfileMutation = { __typename?: 'Mutation', updatePeerProfile: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, callToActionText: Descendant[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, callToActionImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
-
-export type PeerListQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type PeerListQuery = { __typename?: 'Query', peers?: Array<{ __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string }> | null };
-
-export type PeerQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type PeerQuery = { __typename?: 'Query', peer?: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string } | null };
-
-export type CreatePeerMutationVariables = Exact<{
-  input: CreatePeerInput;
-}>;
-
-
-export type CreatePeerMutation = { __typename?: 'Mutation', createPeer: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string } };
-
-export type UpdatePeerMutationVariables = Exact<{
-  id: Scalars['String'];
-  input: UpdatePeerInput;
-}>;
-
-
-export type UpdatePeerMutation = { __typename?: 'Mutation', updatePeer: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string } };
-
-export type DeletePeerMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeletePeerMutation = { __typename?: 'Mutation', deletePeer?: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string } | null };
-
 export type CreateSubscriptionMutationVariables = Exact<{
   input: SubscriptionInput;
 }>;
@@ -1950,43 +1564,6 @@ export type RenewSubscriptionMutationVariables = Exact<{
 
 
 export type RenewSubscriptionMutation = { __typename?: 'Mutation', renewSubscription?: { __typename?: 'Invoice', id: string } | null };
-
-export type TagListQueryVariables = Exact<{
-  filter?: InputMaybe<TagFilter>;
-  cursor?: InputMaybe<Scalars['String']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<SortOrder>;
-  sort?: InputMaybe<TagSort>;
-}>;
-
-
-export type TagListQuery = { __typename?: 'Query', tags?: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null };
-
-export type CreateTagMutationVariables = Exact<{
-  tag?: InputMaybe<Scalars['String']>;
-  description?: InputMaybe<Scalars['RichText']>;
-  type: TagType;
-}>;
-
-
-export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null } | null };
-
-export type UpdateTagMutationVariables = Exact<{
-  id: Scalars['String'];
-  tag?: InputMaybe<Scalars['String']>;
-  description?: InputMaybe<Scalars['RichText']>;
-}>;
-
-
-export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null } | null };
-
-export type DeleteTagMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag?: { __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null } | null };
 
 export type FullUserFragment = { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> };
 
@@ -2062,50 +1639,6 @@ export type FullPermissionFragment = { __typename?: 'Permission', id: string, de
 
 export type FullUserRoleFragment = { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> };
 
-export type UserRoleListQueryVariables = Exact<{
-  filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['String']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type UserRoleListQuery = { __typename?: 'Query', userRoles: { __typename?: 'UserRoleConnection', totalCount: number, nodes: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
-
-export type PermissionListQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type PermissionListQuery = { __typename?: 'Query', permissions?: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> | null };
-
-export type UserRoleQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type UserRoleQuery = { __typename?: 'Query', userRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
-
-export type CreateUserRoleMutationVariables = Exact<{
-  input: UserRoleInput;
-}>;
-
-
-export type CreateUserRoleMutation = { __typename?: 'Mutation', createUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
-
-export type UpdateUserRoleMutationVariables = Exact<{
-  id: Scalars['String'];
-  input: UserRoleInput;
-}>;
-
-
-export type UpdateUserRoleMutation = { __typename?: 'Mutation', updateUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
-
-export type DeleteUserRoleMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteUserRoleMutation = { __typename?: 'Mutation', deleteUserRole?: { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> } | null };
-
 export const ImageUrLs = gql`
     fragment ImageURLs on Image {
   url
@@ -2130,26 +1663,6 @@ export const ImageRef = gql`
   ...ImageURLs
 }
     ${ImageUrLs}`;
-export const AuthorRef = gql`
-    fragment AuthorRef on Author {
-  id
-  name
-  image {
-    ...ImageRef
-  }
-}
-    ${ImageRef}`;
-export const FullAuthor = gql`
-    fragment FullAuthor on Author {
-  slug
-  links {
-    title
-    url
-  }
-  bio
-  ...AuthorRef
-}
-    ${AuthorRef}`;
 export const FullPermission = gql`
     fragment FullPermission on Permission {
   id
@@ -2277,88 +1790,6 @@ export const FullImage = gql`
   ...ImageRef
 }
     ${ImageRef}`;
-export const PeerRef = gql`
-    fragment PeerRef on Peer {
-  id
-  name
-  isDisabled
-  slug
-  hostURL
-}
-    `;
-export const FullPeerProfile = gql`
-    fragment FullPeerProfile on PeerProfile {
-  name
-  hostURL
-  themeColor
-  themeFontColor
-  logo {
-    ...ImageRef
-  }
-  squareLogo {
-    ...ImageRef
-  }
-  callToActionText
-  callToActionURL
-  callToActionImage {
-    ...ImageRef
-  }
-  callToActionImageURL
-}
-    ${ImageRef}`;
-export const PeerWithProfile = gql`
-    fragment PeerWithProfile on Peer {
-  ...PeerRef
-  profile {
-    ...FullPeerProfile
-  }
-}
-    ${PeerRef}
-${FullPeerProfile}`;
-export const AuthorList = gql`
-    query AuthorList($filter: String, $cursor: String, $take: Int, $skip: Int) {
-  authors(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
-    nodes {
-      ...FullAuthor
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    ${FullAuthor}`;
-export const Author = gql`
-    query Author($id: String!) {
-  author(id: $id) {
-    ...FullAuthor
-  }
-}
-    ${FullAuthor}`;
-export const CreateAuthor = gql`
-    mutation CreateAuthor($input: AuthorInput!) {
-  createAuthor(input: $input) {
-    ...FullAuthor
-  }
-}
-    ${FullAuthor}`;
-export const UpdateAuthor = gql`
-    mutation UpdateAuthor($id: String!, $input: AuthorInput!) {
-  updateAuthor(id: $id, input: $input) {
-    ...FullAuthor
-  }
-}
-    ${FullAuthor}`;
-export const DeleteAuthor = gql`
-    mutation DeleteAuthor($id: String!) {
-  deleteAuthor(id: $id) {
-    ...FullAuthor
-  }
-}
-    ${FullAuthor}`;
 export const CommentList = gql`
     query CommentList($filter: CommentFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
   comments(
@@ -2492,55 +1923,6 @@ export const DeleteImage = gql`
   }
 }
     ${FullImage}`;
-export const PeerProfile = gql`
-    query PeerProfile {
-  peerProfile {
-    ...FullPeerProfile
-  }
-}
-    ${FullPeerProfile}`;
-export const UpdatePeerProfile = gql`
-    mutation UpdatePeerProfile($input: PeerProfileInput!) {
-  updatePeerProfile(input: $input) {
-    ...FullPeerProfile
-  }
-}
-    ${FullPeerProfile}`;
-export const PeerList = gql`
-    query PeerList {
-  peers {
-    ...PeerRef
-  }
-}
-    ${PeerRef}`;
-export const Peer = gql`
-    query Peer($id: String!) {
-  peer(id: $id) {
-    ...PeerRef
-  }
-}
-    ${PeerRef}`;
-export const CreatePeer = gql`
-    mutation CreatePeer($input: CreatePeerInput!) {
-  createPeer(input: $input) {
-    ...PeerRef
-  }
-}
-    ${PeerRef}`;
-export const UpdatePeer = gql`
-    mutation UpdatePeer($id: String!, $input: UpdatePeerInput!) {
-  updatePeer(id: $id, input: $input) {
-    ...PeerRef
-  }
-}
-    ${PeerRef}`;
-export const DeletePeer = gql`
-    mutation DeletePeer($id: String!) {
-  deletePeer(id: $id) {
-    ...PeerRef
-  }
-}
-    ${PeerRef}`;
 export const CreateSubscription = gql`
     mutation CreateSubscription($input: SubscriptionInput!) {
   createSubscription(input: $input) {
@@ -2565,58 +1947,6 @@ export const RenewSubscription = gql`
     mutation RenewSubscription($id: String!) {
   renewSubscription(id: $id) {
     id
-  }
-}
-    `;
-export const TagList = gql`
-    query TagList($filter: TagFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
-  tags(
-    filter: $filter
-    cursor: $cursor
-    take: $take
-    skip: $skip
-    order: $order
-    sort: $sort
-  ) {
-    nodes {
-      id
-      tag
-      description
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    `;
-export const CreateTag = gql`
-    mutation CreateTag($tag: String, $description: RichText, $type: TagType!) {
-  createTag(tag: $tag, description: $description, type: $type) {
-    id
-    tag
-    description
-  }
-}
-    `;
-export const UpdateTag = gql`
-    mutation UpdateTag($id: String!, $tag: String, $description: RichText) {
-  updateTag(id: $id, tag: $tag, description: $description) {
-    id
-    tag
-    description
-  }
-}
-    `;
-export const DeleteTag = gql`
-    mutation DeleteTag($id: String!) {
-  deleteTag(id: $id) {
-    id
-    tag
-    description
   }
 }
     `;
@@ -2698,54 +2028,3 @@ export const CreateSessionWithJwt = gql`
   }
 }
     `;
-export const UserRoleList = gql`
-    query UserRoleList($filter: String, $cursor: String, $take: Int, $skip: Int) {
-  userRoles(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
-    nodes {
-      ...FullUserRole
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    ${FullUserRole}`;
-export const PermissionList = gql`
-    query PermissionList {
-  permissions {
-    ...FullPermission
-  }
-}
-    ${FullPermission}`;
-export const UserRole = gql`
-    query UserRole($id: String!) {
-  userRole(id: $id) {
-    ...FullUserRole
-  }
-}
-    ${FullUserRole}`;
-export const CreateUserRole = gql`
-    mutation CreateUserRole($input: UserRoleInput!) {
-  createUserRole(input: $input) {
-    ...FullUserRole
-  }
-}
-    ${FullUserRole}`;
-export const UpdateUserRole = gql`
-    mutation UpdateUserRole($id: String!, $input: UserRoleInput!) {
-  updateUserRole(id: $id, input: $input) {
-    ...FullUserRole
-  }
-}
-    ${FullUserRole}`;
-export const DeleteUserRole = gql`
-    mutation DeleteUserRole($id: String!) {
-  deleteUserRole(id: $id) {
-    ...FullUserRole
-  }
-}
-    ${FullUserRole}`;

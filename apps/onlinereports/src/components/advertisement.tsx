@@ -103,7 +103,6 @@ const HalfPage = styled(AdBox)`
 
 const Small = styled(AdBox)`
   & {
-    max-height: 250px;
     height: auto;
     max-width: 300px;
     width: 100%;

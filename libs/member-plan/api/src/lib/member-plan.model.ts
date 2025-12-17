@@ -74,6 +74,9 @@ export class MemberPlan {
   amountPerMonthMin!: number;
 
   @Field(() => Int, { nullable: true })
+  amountPerMonthMax?: number;
+
+  @Field(() => Int, { nullable: true })
   amountPerMonthTarget?: number;
 
   @Field(() => Int, { nullable: true })

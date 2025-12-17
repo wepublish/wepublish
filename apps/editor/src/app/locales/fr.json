@@ -278,7 +278,10 @@
         "edit": "Editer l’HTML",
         "label": "HTML",
         "placeholder": "Copiez votre bloc HTML ici..",
-        "warning": "Veuillez noter que l’utilisation d’HTML personnalisé peut à l’utilisateur·trice ou rompre la mise en page. Veuillez vous assurer que le HTML que vous fournissez est exempt de scripts malveillants et qu’il est structuré correctement."
+        "warning": "Veuillez noter que l’utilisation d’HTML personnalisé peut à l’utilisateur·trice ou rompre la mise en page. Veuillez vous assurer que le HTML que vous fournissez est exempt de scripts malveillants et qu’il est structuré correctement.",
+        "generate": "Générez votre HTML via l'IA",
+        "prompt": "Envoyer le prompt",
+        "promptSuccess": "HTML généré avec succès et bloc mis à jour. L'historique du chat est enregistré et vous pouvez continuer la conversation."
       },
       "subscribe": {
         "label": "S'abonner",
@@ -1376,7 +1379,8 @@
       "productType": "Type de produit",
       "productTypeHelpText": "Choisissez si le plan doit être proposé comme abonnement ou don. ",
       "productTypeSubscription": "Abonnement",
-      "productTypeDonation": "Don"
+      "productTypeDonation": "Don",
+      "amountPerMonthMaxHelpText": "Le montant maximum par mois qu'un utilisateur peut payer pour ce plan d'abonnement."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Paramètres avancés",
@@ -1468,7 +1472,11 @@
       "rangeLastWeek": "Semaine dernière",
       "rangeLastMonth": "Mois dernier",
       "rangeLastQuarter": "Dernier trimestre",
-      "rangeLastYear": "Année dernière"
+      "rangeLastYear": "Année dernière",
+      "rangeNextWeek": "Semaine prochaine",
+      "rangeNextMonth": "Mois prochain",
+      "rangeNextQuarter": "Trimestre prochain",
+      "rangeNextYear": "Année prochaine"
     },
     "audience": {
       "legend": {
@@ -1478,7 +1486,9 @@
           "renewedSubscriptionCount": "Abonnements renouvelés et payés pour une nouvelle période.",
           "createdSubscriptionCount": "Abonnements entièrement nouveaux avec seulement une période payée jusqu'à présent.",
           "deactivatedSubscriptionCount": "Abonnements désactivés/résiliés et non renouvelés.",
-          "replacedSubscriptionCount": "Abonnements remplacés par un autre (par ex. abonnements d'essai)."
+          "replacedSubscriptionCount": "Abonnements remplacés par un autre (par ex. abonnements d'essai).",
+          "predictedSubscriptionRenewalCount": "Nombre d'abonnements arrivant à expiration et prêts à être renouvelés.\n Abonnements pour la première fois, par rapport aux... \n Abonnements avec un historique de renouvellement\n Les renouvellements sont affichés depuis le début de la période sélectionnée (ou la date actuelle, si la période commence dans le passé)\n Les renouvellements sont représentés par le nombre d'abonnements actuellement payés et actifs configurés pour se renouveler automatiquement.",
+          "endingSubscriptionCount": "Abonnements qui expirent à la fin de leur période, excluant ceux configurés pour se renouveler automatiquement."
         },
         "totalActiveSubscriptionCount": "Total des abonnements actifs & payés",
         "overdueSubscriptionCount": "Abonnements renouvelés et non payés",
@@ -1486,14 +1496,32 @@
         "createdSubscriptionCount": "Nouveaux abonnements payés",
         "deactivatedSubscriptionCount": "Abonnements désactivés",
         "replacedSubscriptionCount": "Abonnements remplacés",
+        "predictedSubscriptionRenewalCount": "Renouvellements d'abonnement",
+        "predictedSubscriptionRenewalCount_variants": {
+          "low": "Renouvellements pour la première fois",
+          "high": "Renouvellements subséquents",
+          "total": "Somme des renouvellements à venir",
+          "perDayHighProbability": "Renouvellements pour la première fois",
+          "perDayLowProbability": "Renouvellements subséquents"
+        },
+        "predictedSubscriptionRenewalCountPerDay": {
+          "lowProbability": "Renouvellements pour la première fois",
+          "highProbability": "Renouvellements subséquents"
+        },
+        "endingSubscriptionCount": "Abonnements expirants",
         "totalNewSubscriptions": "Total des nouveaux abonnements payés & des abonnements renouvelés",
         "renewalRate": "Taux de renouvellement",
         "cancellationRate": "Taux de résiliation",
         "createdSubscriptionUsers": "Nouveaux abonnements payés",
         "overdueSubscriptionUsers": "Abonnements renouvelés et non payés",
+        "predictedSubscriptionRenewalUsers": "Predicted renewals",
+        "createdUnpaidSubscriptionUsers": "Renewed unpaid subscriptions",
         "deactivatedSubscriptionUsers": "Abonnements désactivés",
         "renewedSubscriptionUsers": "Abonnements renouvelés payés",
-        "replacedSubscriptionUsers": "Abonnements remplacés"
+        "replacedSubscriptionUsers": "Abonnements remplacés",
+        "predictedSubscriptionRenewalUsersLowProbability": "Renouvellements pour la première fois",
+        "predictedSubscriptionRenewalUsersHighProbability": "Renouvellements subséquents",
+        "endingSubscriptionUsers": "Abonnements expirants"
       }
     },
     "audienceDetailDrawer": {
@@ -1515,7 +1543,11 @@
       "byDate": "Par",
       "totalNewSubscriptionsInfo": "Somme des abonnements remplacés, nouveaux et renouvelés. Seules les colonnes actives sont additionnées.",
       "renewalRateInfo": "Part des abonnements qui ont été renouvelés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés réduisent le taux de renouvellement jusqu'à ce qu'ils soient payés.",
-      "cancellationRateInfo": "Part des abonnements qui n'ont pas été renouvelés mais résiliés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés augmentent le taux de résiliation jusqu'à ce qu'ils soient payés."
+      "cancellationRateInfo": "Part des abonnements qui n'ont pas été renouvelés mais résiliés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés augmentent le taux de résiliation jusqu'à ce qu'ils soient payés.",
+      "predictedSubscriptionRenewalCountPerDay": {
+        "lowProbability": "Renouvellements d'abonnement pour la première fois",
+        "highProbability": "Renouvellements d'abonnement subséquents"
+      }
     },
     "paywall": {
       "navbar": "Paywall",
@@ -1541,6 +1573,9 @@
       "gracePeriod": "Délai de paiement",
       "gracePeriodHelpText": "Si votre site web utilise un paywall, les utilisateurs peuvent lire immédiatement ou continuer à lire tous les contenus, même s'ils n'ont pas souscrit d'abonnement payant, pendant le délai de paiement. Cela est utile, par exemple, en cas de virement bancaire.",
       "days": "Jours"
+    },
+    "audienceCsvBtn": {
+      "exportUsers": "Télécharger CSV"
     }
   }
 }
