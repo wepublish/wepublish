@@ -1748,7 +1748,11 @@
         "addBypass": "add",
         "qrCodeTitle": "QR Code for Bypass Token",
         "downloadSvg": "Download SVG",
-        "baseUrl": "Website URL (baseurl). E.g. https://wepublish.ch"
+        "baseUrl": "Website URL (baseurl). E.g. https://wepublish.ch",
+        "display": "Display options",
+        "hideContentAfter": "Hide content after X amount of blocks",
+        "fadeout": "Fade out hidden blocks",
+        "fadeoutHelpText": "Fading out allows to show a preview of the rest of the content."
       }
     },
     "paymentMethodEditPanel": {

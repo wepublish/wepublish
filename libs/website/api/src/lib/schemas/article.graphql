@@ -12,6 +12,9 @@ fragment FullPaywall on Paywall {
     id
     token
   }
+
+  fadeout
+  hideContentAfter
 }
 
 fragment ArticleRevisionWithoutBlocks on ArticleRevision {
