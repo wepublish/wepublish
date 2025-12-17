@@ -85,7 +85,7 @@ const overrides: UserOverride = {
         <TextField
           type={field.type}
           {...field.metadata}
-          defaultValue={value}
+          value={value}
           name={name}
           onChange={e => onChange(e.currentTarget.value)}
         />
@@ -99,7 +99,7 @@ const overrides: UserOverride = {
         <TextField
           type={field.type}
           {...field.metadata}
-          defaultValue={value}
+          value={value}
           name={name}
           onChange={e => onChange(+e.currentTarget.value)}
         />

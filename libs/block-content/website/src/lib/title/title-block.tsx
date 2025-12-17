@@ -43,7 +43,6 @@ export const TitleBlock = ({
   return (
     <TitleBlockWrapper
       className={className}
-      className={className}
       style={style}
     >
       {preTitle && (
