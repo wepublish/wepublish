@@ -2,6 +2,7 @@ import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
 import styled from '@emotion/styled';
+import { BlockType } from '@wepublish/editor/api-v2';
 import i18next from 'i18next';
 import nanoid from 'nanoid';
 import { ComponentType, PropsWithChildren, useEffect, useState } from 'react';
@@ -19,13 +20,18 @@ import {
 } from 'react-icons/md';
 import {
   ButtonToolbar as RButtonToolbar,
+  Drawer,
   IconButton as RIconButton,
   Panel as RPanel,
 } from 'rsuite';
 
-import { BlockProps } from '../atoms/blockList';
+import type { BlockListValue } from '../atoms/blockList';
+import { BlockMapType, BlockProps } from '../atoms/blockList';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { PlaceholderInput } from '../atoms/placeholderInput';
+import { BlockSelectAndEditPanel } from '../panel/blockSelectAndEditPanel';
+import { isValueConstructor } from '../utility';
+import { BlockMap } from './blockMap';
 import { IconWrapper } from './teaserGridBlock';
 import {
   BlockValue,
@@ -38,10 +44,12 @@ const IconButton = styled(RIconButton)`
   margin: 10px;
 `;
 
-const Teaser = styled.div`
+const Block = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
+
+  background-color: yellowgreen;
 `;
 
 // Fixes that pre React 18, all components had the children prop.
@@ -49,10 +57,60 @@ const Teaser = styled.div`
 const GridLayout: ComponentType<PropsWithChildren<ReactGridLayoutProps>> =
   GridLayoutWithoutChildren;
 
+const GridLayoutStyled = styled(GridLayout)`
+  .react-resizable-handle {
+    z-index: 3;
+  }
+`;
+
 const ButtonToolbar = styled(RButtonToolbar)`
   top: 0;
   left: 0;
   position: absolute;
+
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  justify-content: start;
+
+  flex-wrap: unset;
+  position: relative;
+  z-index: 2;
+  line-height: unset;
+  padding: 0.4rem;
+  //border-bottom: 1px solid #eeeeee;
+
+  gap: 0.1rem;
+`;
+
+const ToolbarButton = styled(RIconButton)`
+  aspect-ratio: 1;
+  padding: 0.15rem !important;
+  width: 1.5rem;
+  height: 1.5rem;
+  line-height: unset !important;
+  text-align: unset;
+  overflow: visible;
+  position: relative;
+
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #eeeeee;
+
+  & svg {
+    display: block;
+    height: 1.2rem;
+    width: 1.2rem;
+    margin: auto;
+    font-size: unset;
+  }
+
+  & + button {
+    margin: 0 !important;
+  }
 `;
 
 const Panel = styled(RPanel, {
@@ -63,6 +121,11 @@ const Panel = styled(RPanel, {
   height: inherit;
   overflow: hidden;
   z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 `;
 
 export function FlexItem({
@@ -79,12 +142,12 @@ export function FlexItem({
     >
       <PlaceholderInput onAddClick={onChoose}>
         {block && (
-          <Teaser>
+          <Block>
             {/* <ContentForTeaser teaser={block} /> */}
 
             <IconWrapper>
               <IconButtonTooltip
-                caption={i18next.t('blocks.flexTeaser.chooseTeaser')}
+                caption={i18next.t('blocks.flexBlock.chooseNestedBlock')}
               >
                 <IconButton
                   icon={<MdArticle />}
@@ -93,7 +156,7 @@ export function FlexItem({
               </IconButtonTooltip>
 
               <IconButtonTooltip
-                caption={i18next.t('blocks.flexTeaser.editTeaser')}
+                caption={i18next.t('blocks.flexBlock.editNestedBlock')}
               >
                 <IconButton
                   icon={<MdEdit />}
@@ -102,7 +165,7 @@ export function FlexItem({
               </IconButtonTooltip>
 
               <IconButtonTooltip
-                caption={i18next.t('blocks.flexTeaser.deleteTeaser')}
+                caption={i18next.t('blocks.flexBlock.deleteNestedBlock')}
               >
                 <IconButton
                   icon={<MdDelete />}
@@ -110,7 +173,7 @@ export function FlexItem({
                 />
               </IconButtonTooltip>
             </IconWrapper>
-          </Teaser>
+          </Block>
         )}
       </PlaceholderInput>
     </Panel>
@@ -118,11 +181,13 @@ export function FlexItem({
 }
 
 export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
+  const [editIndex, setEditIndex] = useState(0);
   const [editItem, setEditItem] = useState<FlexBlockWithAlignment>();
-
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+
+  const blockMap = BlockMap as BlockMapType;
 
   const { blocks } = value;
 
@@ -138,7 +203,7 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
     }
   }, [isDragging]);
 
-  const handleAddTeaserBlock = () => {
+  const handleAddNestedBlock = () => {
     const newBlock: FlexBlockWithAlignment = {
       alignment: {
         i: nanoid(),
@@ -154,7 +219,7 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
     onChange({ ...value, blocks: [...blocks, newBlock] });
   };
 
-  const handleRemoveTeaserBlock = (index: string) => {
+  const handleRemoveNestedBlock = (index: string) => {
     onChange({
       ...value,
       blocks: blocks.filter(flexTeaser => flexTeaser.alignment.i !== index),
@@ -198,7 +263,7 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
     onChange({ ...value, blocks: newTeasers });
   };
 
-  function handleRemoveBlock(index: string) {
+  const handleRemoveBlock = (index: string) => {
     onChange({
       ...value,
       blocks: blocks.map(({ block, alignment }) => {
@@ -207,24 +272,44 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
           : { block, alignment };
       }),
     });
-  }
+  };
+
+  const createBlock = (type: string) => {
+    const { defaultValue } = blockMap[type];
+    return {
+      key: nanoid(),
+      type,
+      value: isValueConstructor(defaultValue) ? defaultValue() : defaultValue,
+    } as BlockListValue;
+  };
+
+  const handleBlockLinkChange = (index: number, block: { id: BlockType }) => {
+    console.log('changing block at index', index, 'to', block, blocks);
+    onChange({
+      ...value,
+      blocks: Object.assign([], blocks, {
+        [index]: { ...blocks[index], block: createBlock(block.id) },
+      }),
+    });
+  };
 
   return (
     <>
-      <IconButtonTooltip caption={t('blocks.flexTeaser.addBlock')}>
+      <IconButtonTooltip caption={t('blocks.flexBlock.addNestedBlock')}>
         <RIconButton
           icon={<MdAddBox />}
           appearance="primary"
           circle
           size="md"
-          onClick={handleAddTeaserBlock}
+          onClick={handleAddNestedBlock}
         />
       </IconButtonTooltip>
 
-      <GridLayout
+      <GridLayoutStyled
         onResizeStop={layout => handleLayoutChange(layout as FlexAlignment[])}
         onDrop={layout => handleLayoutChange(layout as FlexAlignment[])}
         className="layout"
+        resizeHandles={['se']}
         onDragStop={layout => {
           setIsDragging(false);
           handleLayoutChange(layout as FlexAlignment[]);
@@ -235,16 +320,18 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
         layout={blocks.map(ft => ft.alignment) as FlexAlignment[]}
         width={640}
       >
-        {blocks.map(block => (
+        {blocks.map((block, index) => (
           <div key={block.alignment.i}>
             <FlexItem
               block={block.block}
               showGrabCursor={!block.alignment.static}
               onEdit={() => {
+                setEditIndex(index);
                 setEditItem(block);
                 setEditModalOpen(true);
               }}
               onChoose={() => {
+                setEditIndex(index);
                 setEditItem(block);
                 setChooseModalOpen(true);
               }}
@@ -253,13 +340,15 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
 
             <ButtonToolbar>
               {!block.block && (
-                <IconButtonTooltip caption={t('blocks.flexTeaser.removeBlock')}>
-                  <RIconButton
+                <IconButtonTooltip
+                  caption={t('blocks.flexBlock.removeNestedBlock')}
+                >
+                  <ToolbarButton
                     disabled={block.alignment.static as unknown as boolean}
                     block
                     appearance="subtle"
                     icon={<MdDelete />}
-                    onClick={() => handleRemoveTeaserBlock(block.alignment.i)}
+                    onClick={() => handleRemoveNestedBlock(block.alignment.i)}
                   />
                 </IconButtonTooltip>
               )}
@@ -267,11 +356,11 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
               <IconButtonTooltip
                 caption={
                   !block.alignment.static ?
-                    t('blocks.block.lockBlock')
-                  : t('blocks.block.unlockBlock')
+                    t('blocks.flexBlock.lockNestedBlock')
+                  : t('blocks.flexBlock.unlockNestedBlock')
                 }
               >
-                <RIconButton
+                <ToolbarButton
                   block
                   appearance="subtle"
                   icon={block.alignment.static ? <MdLockOpen /> : <MdLock />}
@@ -281,7 +370,21 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
             </ButtonToolbar>
           </div>
         ))}
-      </GridLayout>
+      </GridLayoutStyled>
+      <Drawer
+        open={isChooseModalOpen}
+        size="xs"
+        onClose={() => setChooseModalOpen(false)}
+      >
+        <BlockSelectAndEditPanel
+          onClose={() => setChooseModalOpen(false)}
+          onSelect={block => {
+            console.log('selected block', block);
+            setChooseModalOpen(false);
+            handleBlockLinkChange(editIndex, block);
+          }}
+        />
+      </Drawer>
     </>
   );
 }

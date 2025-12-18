@@ -117,7 +117,7 @@ export interface BlockListValue<T extends string = string, V = any> {
   value: V;
 }
 
-type BlockMap = Record<string, BlockCaseProps>;
+export type BlockMapType = Record<string, BlockCaseProps>;
 
 export type BlockMapForValue<R extends BlockListValue> = UnionToIntersection<
   R extends BlockListValue<infer T, infer V> ? { [K in T]: BlockCaseProps<V> }
@@ -209,7 +209,7 @@ export function BlockList<V extends BlockListValue>({
   onChange,
 }: BlockListProps<V>) {
   const [focusIndex, setFocusIndex] = useState<number | null>(null);
-  const blockMap = blocMap as BlockMap;
+  const blockMap = blocMap as BlockMapType;
 
   const handleItemChange = useCallback(
     (index: number, itemValue: React.SetStateAction<BlockListValue>) => {
@@ -327,6 +327,7 @@ export function BlockList<V extends BlockListValue>({
 
   return (
     <AddButton>
+      {'aa'}
       {addButtonForIndex(0)}
       {values.map((value: any, index: any) => listItemForIndex(value, index))}
     </AddButton>
@@ -415,7 +416,10 @@ function ListItemWrapper({
 
       <PanelWrapper>
         <Panel bordered>
-          <ChildrenWrapper>{children}</ChildrenWrapper>
+          <ChildrenWrapper>
+            {children}
+            {blockStyleValue && <div>{blockStyleValue.name}</div>}
+          </ChildrenWrapper>
         </Panel>
       </PanelWrapper>
 

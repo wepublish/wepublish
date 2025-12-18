@@ -323,7 +323,14 @@
         "unlockBlock": "Entsperren"
       },
       "flexBlock": {
-        "label": "Flex Block"
+        "label": "Flex Block",
+        "addNestedBlock": "(Sub-)Block hinzufügen",
+        "chooseNestedBlock": "(Sub-)Block wählen",
+        "deleteNestedBlock": "(Sub-)Block löschen",
+        "editNestedBlock": "(Sub-)Block bearbeiten",
+        "lockNestedBlock": "(Sub-)Block sperren",
+        "removeNestedBlock": "(Sub-)Block entfernen",
+        "unlockNestedBlock": "(Sub-)Block entsperren"
       },
       "html": {
         "close": "Schliessen",
@@ -913,6 +920,7 @@
         "close": "Schliessen",
         "confirm": "Bestätigen",
         "createdAt": "{{createdAt, ccc PP p}}",
+        "chooseBlock": "Blocktyp wählen",
         "dateExplanationPopOver": "Dies kann verwendet werden, um auf Artikel zu verweisen, die zu einem späteren Zeitpunkt veröffentlicht werden sollen. Dies ist z. B. hilfreich, wenn Beiträge auf Sozialen Medien für den nächsten Morgen geplant werden.",
         "description": "SEO Beschreibung",
         "descriptionHelpBlock": "Verwende eine SEO-optimierte Beschreibung",
