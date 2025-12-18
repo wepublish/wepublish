@@ -2,7 +2,7 @@ import { FullPoll, Tag } from '@wepublish/editor/api';
 import {
   ArticleWithoutBlocksFragment,
   BlockContentInput,
-  BlockType,
+  BlockWithAlignment,
   CommentBlockCommentFragment,
   EditorBlockType,
   FullBlockFragment,
@@ -111,37 +111,17 @@ export interface LinkPageBreakBlockValue extends BaseBlockValue {
   linkText: string;
   linkTarget?: string;
   hideButton: boolean;
-  image?: FullImageFragment | undefined;
+  image?: FullImageFragment;
 }
 
-export interface MinimalBlock {
-  type: string;
-}
-
-export interface NestedBlock {
-  alignment: FlexAlignment;
-  block: (BlockContentInput & { type?: string }) | null;
-}
+export type FlexBlockWithAlignment = {
+  alignment: BlockWithAlignment['alignment'];
+  block?: BlockValue | null;
+};
 
 export interface FlexBlockValue extends BaseBlockValue {
-  nestedBlocks: Array<NestedBlock>;
+  blocks: Array<FlexBlockWithAlignment>;
 }
-
-const isNestedBlock = (nb: unknown): nb is NestedBlock => {
-  return (
-    !!nb &&
-    typeof nb === 'object' &&
-    Object.prototype.hasOwnProperty.call(nb as object, 'alignment')
-  );
-};
-
-const isMinimalBlock = (nb: unknown): nb is MinimalBlock => {
-  return (
-    !!nb &&
-    typeof nb === 'object' &&
-    Object.prototype.hasOwnProperty.call(nb as object, 'type')
-  );
-};
 
 export enum EmbedType {
   StreamableVideo = 'streamableVideo',
@@ -323,7 +303,7 @@ export interface FlexAlignment {
   y: number;
   w: number;
   h: number;
-  static?: boolean;
+  static: boolean;
 }
 
 export interface FlexTeaser {
@@ -784,18 +764,11 @@ export function mapBlockValueToBlockInput(
 
     case EditorBlockType.FlexBlock: {
       const flexBlock = {
-        nestedBlocks: (block.value.nestedBlocks || []).map(nb => ({
-          alignment: {
-            i: nb.alignment.i,
-            x: nb.alignment.x,
-            y: nb.alignment.y,
-            w: nb.alignment.w,
-            h: nb.alignment.h,
-            static: nb.alignment.static ?? false,
-          },
-          block: nb.block ? nb.block : null,
+        blocks: block.value.blocks.map(nb => ({
+          alignment: nb.alignment,
+          block:
+            nb.block ? mapBlockValueToBlockInput(nb.block as BlockValue) : null,
         })),
-        type: BlockType.FlexBlock,
         blockStyle: block.value.blockStyle,
       };
 
@@ -1170,8 +1143,9 @@ export function blockForQueryBlock(
       return (() => {
         return {
           key,
-          type: EditorBlockType.TeaserSlots as EditorBlockType.TeaserSlots,
+          type: EditorBlockType.TeaserSlots,
           value: {
+            title: block.title,
             blockStyle: block.blockStyle,
             slots: block.slots.map(({ teaser, type }) => ({
               type,
@@ -1217,41 +1191,13 @@ export function blockForQueryBlock(
         type: EditorBlockType.FlexBlock,
         value: {
           blockStyle: block.blockStyle,
-          nestedBlocks: (block.nestedBlocks || []).map(nb => {
-            if (!nb) {
-              return {
-                alignment: { i: '', x: 0, y: 0, w: 0, h: 0, static: false },
-                block: null,
-              };
-            }
-
-            if (isNestedBlock(nb)) {
-              const s = nb;
-              return {
-                alignment: {
-                  i: s.alignment.i ?? '',
-                  x: s.alignment.x ?? 0,
-                  y: s.alignment.y ?? 0,
-                  w: s.alignment.w ?? 0,
-                  h: s.alignment.h ?? 0,
-                  static: s.alignment.static ?? false,
-                },
-                block: s.block ? s.block : null,
-              };
-            }
-
-            if (isMinimalBlock(nb)) {
-              const s = nb;
-              return {
-                alignment: { i: '', x: 0, y: 0, w: 1, h: 1, static: false },
-                block: { type: s.type },
-              };
-            }
-            return {
-              alignment: { i: '', x: 0, y: 0, w: 0, h: 0, static: false },
-              block: null,
-            };
-          }),
+          blocks: block.blocks.map(({ alignment, block }) => ({
+            alignment,
+            block:
+              block ?
+                blockForQueryBlock(block as FullBlockFragment)
+              : undefined,
+          })),
         },
       };
 

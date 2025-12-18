@@ -1,5 +1,4 @@
 import { Injectable, Scope } from '@nestjs/common';
-import { Article } from '@prisma/client';
 import { ArticleTeaser, EventTeaser, Teaser, TeaserType } from './teaser.model';
 import {
   isTeaserSlotsBlock,
@@ -13,93 +12,73 @@ import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
 import { isTeaserGridFlexBlock } from './teaser-flex.model';
 import { isTeaserGridBlock } from './teaser-grid.model';
+import { isFlexBlock } from '../flex/flex-block.model';
+
+const extractTeasers = <Block extends BaseBlock<BlockType>>(block: Block) => {
+  if (isTeaserSlotsBlock(block)) {
+    return block.slots.reduce((teasers: (typeof Teaser)[], slot) => {
+      if (slot.type === TeaserSlotType.Manual && slot.teaser) {
+        teasers.push(slot.teaser);
+      }
+
+      return teasers;
+    }, []);
+  }
+
+  if (isTeaserGridBlock(block)) {
+    return block.teasers.reduce((teasers: (typeof Teaser)[], teaser) => {
+      if (teaser) {
+        teasers.push(teaser);
+      }
+
+      return teasers;
+    }, []);
+  }
+
+  if (isTeaserGridFlexBlock(block)) {
+    return block.flexTeasers.reduce(
+      (teasers: (typeof Teaser)[], flexTeaser) => {
+        if (flexTeaser.teaser) {
+          teasers.push(flexTeaser.teaser);
+        }
+
+        return teasers;
+      },
+      []
+    );
+  }
+
+  if (isFlexBlock(block)) {
+    return block.blocks.reduce((teasers: (typeof Teaser)[], nestedBlock) => {
+      if (nestedBlock.block) {
+        teasers.push(...extractTeasers(nestedBlock.block));
+      }
+
+      return teasers;
+    }, []);
+  }
+
+  return [];
+};
 
 @Injectable({ scope: Scope.REQUEST })
 export class SlotTeasersLoader {
   private loadedTeasers: (typeof Teaser)[] = [];
-  private nestedBlocks: BaseBlock<BlockType>[] = [];
 
   constructor(
     private eventService: EventService,
     private articleService: ArticleService
   ) {}
 
-  async loadSlotTeasersIntoBlocks(
-    revisionBlocks: BaseBlock<BlockType>[],
-    insideRecursion?: boolean
-  ): Promise<BaseBlock<BlockType>[]> {
-    if (!insideRecursion) {
-      this.nestedBlocks = [];
-    }
-    
-    for await (const block of revisionBlocks) {
-      if (Object.prototype.hasOwnProperty.call(block, 'nestedBlocks')) {
-        const flexBlock = block as unknown as {
-          nestedBlocks: { block: BaseBlock<BlockType> }[];
-        };
-        for await (const nestedBlock of flexBlock.nestedBlocks) {
-          if (isTeaserSlotsBlock(nestedBlock.block)) {
-            const blocks = await this.loadSlotTeasersIntoBlocks(
-              [nestedBlock.block],
-              true
-            );
-            this.addNestedBlock(blocks[0]);
-          }
-        }
-      }
-      if (isTeaserSlotsBlock(block)) {
-        this.addLoadedTeaser(
-          ...block.slots.reduce((teasers: (typeof Teaser)[], slot) => {
-            if (slot.type === TeaserSlotType.Manual && slot.teaser) {
-              teasers.push(slot.teaser);
-            }
-            return teasers;
-          }, [])
-        );
-      }
-
-      if (isTeaserGridBlock(block)) {
-        this.addLoadedTeaser(
-          ...block.teasers.reduce((teasers: (typeof Teaser)[], teaser) => {
-            if (teaser) {
-              teasers.push(teaser);
-            }
-            return teasers;
-          }, [])
-        );
-      }
-
-      if (isTeaserGridFlexBlock(block)) {
-        this.addLoadedTeaser(
-          ...block.flexTeasers.reduce(
-            (teasers: (typeof Teaser)[], flexTeaser) => {
-              if (flexTeaser.teaser) {
-                teasers.push(flexTeaser.teaser);
-              }
-              return teasers;
-            },
-            []
-          )
-        );
-      }
-    }
-
+  async loadSlotTeasersIntoBlocks(revisionBlocks: BaseBlock<BlockType>[]) {
     const blocks = [];
     for (const block of revisionBlocks) {
-      if (Object.prototype.hasOwnProperty.call(block, 'nestedBlocks')) {
-        const flexBlock = block as unknown as {
-          nestedBlocks: { block: BaseBlock<BlockType> }[];
-        };
-        flexBlock.nestedBlocks.forEach(nestedBlock => {
-          if (isTeaserSlotsBlock(nestedBlock.block)) {
-            nestedBlock.block = this.getNestedBlock();
-          }
-        });
-      }
-      
+      this.addLoadedTeaser(...extractTeasers(block));
+
       if (isTeaserSlotsBlock(block)) {
         const autofillTeasers = await this.getAutofillTeasers(block);
         const teasers = await this.getTeasers(block, autofillTeasers);
+
         blocks.push({
           ...block,
           autofillTeasers,
@@ -133,27 +112,24 @@ export class SlotTeasersLoader {
   async getAutofillTeasers(
     slotsBlock: TeaserSlotsBlock
   ): Promise<(typeof Teaser)[]> {
-    const { teaserType, sort, filter } = slotsBlock.autofillConfig;
+    const { teaserType, filter } = slotsBlock.autofillConfig;
     const take = slotsBlock.slots.filter(
       ({ type }) => type === TeaserSlotType.Autofill
     ).length;
 
     if (teaserType === TeaserType.Article) {
-      let articles: Article[] = [];
-      articles = (
-        await this.articleService.getArticles({
-          filter: {
-            tags: filter?.tags,
-            published: true,
-            excludeIds: this.getLoadedTeasers(TeaserType.Article),
-          },
-          sort: ArticleSort.PublishedAt,
-          order: SortOrder.Descending,
-          take,
-        })
-      )?.nodes;
+      const articles = await this.articleService.getArticles({
+        filter: {
+          tags: filter?.tags,
+          published: true,
+          excludeIds: this.getLoadedTeasers(TeaserType.Article),
+        },
+        sort: ArticleSort.PublishedAt,
+        order: SortOrder.Descending,
+        take,
+      });
 
-      const teasers = articles.map(
+      const teasers = articles.nodes.map(
         article =>
           ({
             articleID: article.id,
@@ -165,6 +141,7 @@ export class SlotTeasersLoader {
       );
 
       this.addLoadedTeaser(...teasers);
+
       return teasers;
     }
 
@@ -188,6 +165,7 @@ export class SlotTeasersLoader {
             title: undefined,
           }) as EventTeaser
       );
+
       this.addLoadedTeaser(...teasers);
       return teasers;
     }
@@ -213,13 +191,5 @@ export class SlotTeasersLoader {
 
       return ids;
     }, []);
-  }
-  
-  getNestedBlock(): BaseBlock<BlockType> {
-    return this.nestedBlocks.shift() as BaseBlock<BlockType>;
-  }
-  
-  addNestedBlock(block: BaseBlock<BlockType>) {
-    this.nestedBlocks.push(block);
   }
 }

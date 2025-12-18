@@ -52,7 +52,7 @@ import { TeaserGridFlexBlock } from './teaserGridFlexBlock';
 import { TeaserListBlock } from './teaserListBlock';
 import { TeaserSlotsBlock } from './teaserSlotsBlock';
 import { TitleBlock } from './titleBlock';
-import { BlockValue, EmbedType, NestedBlock } from './types';
+import { BlockValue, EmbedType } from './types';
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [EditorBlockType.Title]: {
@@ -303,17 +303,14 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     label: 'blocks.event.label',
     icon: <MdEvent />,
   },
-  
+
   [EditorBlockType.FlexBlock]: {
     field: props => <FlexBlock {...props} />,
     defaultValue: {
-      nestedBlocks: [
+      blocks: [
         {
           alignment: { i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false },
-          block: {
-            type: 'unknownBlock',
-            blockStyle: undefined,
-          } as NestedBlock['block'],
+          block: null,
         },
       ],
       blockStyle: undefined,
