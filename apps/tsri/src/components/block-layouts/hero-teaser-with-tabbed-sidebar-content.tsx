@@ -149,7 +149,7 @@ export const SidebarContent = styled(TabbedContentDefault)`
 
 export const HeroTeaserWithTabbedContent = ({
   className,
-  nestedBlocks,
+  blocks,
   blockStyle,
   blockStyleByIndex,
 }: BuilderBlockStyleProps['TabbedContent'] & {
@@ -158,12 +158,12 @@ export const HeroTeaserWithTabbedContent = ({
   return (
     <FrontTopRow>
       <HeroTeaser
-        {...(nestedBlocks[0].block as BuilderTeaserSlotsBlockProps)}
+        {...(blocks[0].block as BuilderTeaserSlotsBlockProps)}
         blockStyle={TsriLayoutType.HeroTeaser}
       />
       <SidebarContent
         className={className}
-        nestedBlocks={nestedBlocks.slice(1)}
+        blocks={blocks.slice(1)}
         blockStyle={blockStyle}
         blockStyleByIndex={(index: number) => blockStyleByIndex(index + 1)}
         cssByBlockStyle={(
