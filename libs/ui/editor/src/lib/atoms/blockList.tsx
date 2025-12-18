@@ -28,7 +28,7 @@ import {
 } from '../utility';
 import { AddBlockInput } from './addBlockInput';
 
-const IconWrapper = styled.div`
+export const BlockStyleIconWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 10px;
@@ -54,31 +54,31 @@ const Panel = styled(RPanel)`
   width: 100%;
 `;
 
-const PanelWrapper = styled.div`
+export const PanelWrapper = styled.div`
   display: flex;
   width: 100%;
 `;
 
-const DownwardButtonWrapper = styled.div`
+export const DownwardButtonWrapper = styled.div`
   margin-bottom: 10px;
 `;
 
-const UpwardButtonWrapper = styled.div`
+export const UpwardButtonWrapper = styled.div`
   margin-top: 10px;
   margin-bottom: 5px;
 `;
 
-const FlexGrow = styled.div`
+export const FlexGrow = styled.div`
   flex-grow: 1;
 `;
 
-const Wrapper = styled.div`
+export const LeftButtonsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-right: 10px;
 `;
 
-const ListItem = styled.div`
+export const ListItem = styled.div`
   display: flex;
   width: 100%;
 `;
@@ -142,7 +142,7 @@ export interface BlockListItemProps<T extends string = string, V = any> {
   children: (props: BlockProps<V>) => JSX.Element;
 }
 
-const BlockListItem = memo(function BlockListItem({
+export const BlockListItem = memo(function BlockListItem({
   itemId,
   index,
   value,
@@ -327,7 +327,6 @@ export function BlockList<V extends BlockListValue>({
 
   return (
     <AddButton>
-      {'aa'}
       {addButtonForIndex(0)}
       {values.map((value: any, index: any) => listItemForIndex(value, index))}
     </AddButton>
@@ -386,7 +385,7 @@ function ListItemWrapper({
 
   return (
     <ListItem>
-      <Wrapper>
+      <LeftButtonsWrapper>
         <IconButton
           icon={<MdDelete />}
           onClick={onDelete}
@@ -412,18 +411,15 @@ function ListItemWrapper({
           />
         </DownwardButtonWrapper>
         <FlexGrow />
-      </Wrapper>
+      </LeftButtonsWrapper>
 
       <PanelWrapper>
         <Panel bordered>
-          <ChildrenWrapper>
-            {children}
-            {blockStyleValue && <div>{blockStyleValue.name}</div>}
-          </ChildrenWrapper>
+          <ChildrenWrapper>{children}</ChildrenWrapper>
         </Panel>
       </PanelWrapper>
 
-      <IconWrapper>
+      <BlockStyleIconWrapper>
         <Icon>
           {icon} {t('blockStyles.style')}
         </Icon>
@@ -439,7 +435,7 @@ function ListItemWrapper({
             onStyleChange?.(blockStyle as string | undefined);
           }}
         />
-      </IconWrapper>
+      </BlockStyleIconWrapper>
     </ListItem>
   );
 }

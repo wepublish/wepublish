@@ -5,7 +5,13 @@ import styled from '@emotion/styled';
 import { BlockType } from '@wepublish/editor/api-v2';
 import i18next from 'i18next';
 import nanoid from 'nanoid';
-import { ComponentType, PropsWithChildren, useEffect, useState } from 'react';
+import {
+  ComponentType,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import GridLayoutWithoutChildren, {
   ReactGridLayoutProps,
 } from 'react-grid-layout';
@@ -25,12 +31,19 @@ import {
   Panel as RPanel,
 } from 'rsuite';
 
-import type { BlockListValue } from '../atoms/blockList';
+import {
+  type BlockListValue,
+  BlockListItem,
+  BlockStyleIconWrapper,
+  LeftButtonsWrapper,
+  ListItem,
+  PanelWrapper,
+} from '../atoms/blockList';
 import { BlockMapType, BlockProps } from '../atoms/blockList';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { PlaceholderInput } from '../atoms/placeholderInput';
 import { BlockSelectAndEditPanel } from '../panel/blockSelectAndEditPanel';
-import { isValueConstructor } from '../utility';
+import { isFunctionalUpdate, isValueConstructor } from '../utility';
 import { BlockMap } from './blockMap';
 import { IconWrapper } from './teaserGridBlock';
 import {
@@ -67,19 +80,15 @@ const ButtonToolbar = styled(RButtonToolbar)`
   top: 0;
   left: 0;
   position: absolute;
-
   display: flex;
   flex-direction: row;
   align-items: start;
   justify-content: start;
-
   flex-wrap: unset;
   position: relative;
   z-index: 2;
   line-height: unset;
   padding: 0.6rem 0.4rem;
-  //border-bottom: 1px solid #eeeeee;
-
   pointer-events: none;
   gap: 0.1rem;
 `;
@@ -93,7 +102,6 @@ const ToolbarButton = styled(RIconButton)`
   text-align: unset;
   overflow: visible;
   position: relative;
-
   display: flex;
   align-content: center;
   justify-content: center;
@@ -111,6 +119,29 @@ const ToolbarButton = styled(RIconButton)`
 
   & + button {
     margin: 0 !important;
+  }
+`;
+
+const NesteBlockEditPanel = styled('div')`
+  margin: 0 -25px;
+
+  ${ListItem} {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: min-content auto;
+    row-gap: 10px;
+  }
+
+  ${BlockStyleIconWrapper} {
+    justify-self: end;
+  }
+
+  ${PanelWrapper} {
+    order: 2;
+  }
+
+  ${LeftButtonsWrapper} {
+    display: none;
   }
 `;
 
@@ -188,9 +219,22 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
+  const [nestedBlocks, setNestedBlocks] = useState<BlockValue[]>([]);
+
   const blockMap = BlockMap as BlockMapType;
 
   const { blocks } = value;
+
+  useEffect(() => {
+    setNestedBlocks(blocks.map(flexBlock => flexBlock.block as BlockValue));
+  }, []);
+
+  useEffect(() => {
+    for (let i = 0; i < blocks.length; i++) {
+      blocks[i].block = nestedBlocks[i];
+    }
+    onChange({ ...value, blocks });
+  }, [nestedBlocks]);
 
   const { t } = useTranslation();
 
@@ -275,6 +319,35 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
     });
   };
 
+  const handleBlockLinkChange = (index: number, block: { id: BlockType }) => {
+    onChange({
+      ...value,
+      blocks: Object.assign([], blocks, {
+        [index]: { ...blocks[index], block: createBlock(block.id) },
+      }),
+    });
+  };
+
+  const handleChange = useCallback(
+    (blocks: React.SetStateAction<BlockValue[]>) => {
+      setNestedBlocks(blocks);
+      //setChanged(true);
+    },
+    []
+  );
+
+  const handleItemChange = useCallback(
+    (index: number, itemValue: React.SetStateAction<BlockListValue>) => {
+      handleChange((value: any) => {
+        return Object.assign([], value, {
+          [index]:
+            isFunctionalUpdate(itemValue) ? itemValue(value[index]) : itemValue,
+        });
+      });
+    },
+    [handleChange]
+  );
+
   const createBlock = (type: string) => {
     const { defaultValue } = blockMap[type];
     return {
@@ -282,16 +355,6 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
       type,
       value: isValueConstructor(defaultValue) ? defaultValue() : defaultValue,
     } as BlockListValue;
-  };
-
-  const handleBlockLinkChange = (index: number, block: { id: BlockType }) => {
-    console.log('changing block at index', index, 'to', block, blocks);
-    onChange({
-      ...value,
-      blocks: Object.assign([], blocks, {
-        [index]: { ...blocks[index], block: createBlock(block.id) },
-      }),
-    });
   };
 
   return (
@@ -305,7 +368,6 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
           onClick={handleAddNestedBlock}
         />
       </IconButtonTooltip>
-
       <GridLayoutStyled
         onResizeStop={layout => handleLayoutChange(layout as FlexAlignment[])}
         onDrop={layout => handleLayoutChange(layout as FlexAlignment[])}
@@ -380,12 +442,38 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
         <BlockSelectAndEditPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={block => {
-            console.log('selected block', block);
             setChooseModalOpen(false);
             handleBlockLinkChange(editIndex, block);
           }}
         />
       </Drawer>
+      {isEditModalOpen && (
+        <NesteBlockEditPanel>
+          <BlockListItem
+            itemId={editItem!.alignment.i}
+            index={editIndex}
+            value={{
+              value: editItem!.block!.value,
+              key: editItem!.block!.key,
+              type: editItem!.block!.type,
+            }}
+            icon={blockMap[editItem!.block!.type].icon}
+            autofocus={false}
+            disabled={false}
+            children={blockMap[editItem!.block!.type].field}
+            onChange={handleItemChange}
+            onDelete={() => {
+              // will never happen here
+            }}
+            onMoveUp={() => {
+              // will never happen here
+            }}
+            onMoveDown={() => {
+              // will never happen here
+            }}
+          />
+        </NesteBlockEditPanel>
+      )}
     </>
   );
 }
