@@ -17,7 +17,7 @@ const FlexBlockWrapper = styled('div')`
   grid-template-columns: repeat(12, 1fr);
   grid-column: 1 / -1;
 `;
-export const NestedBlock = styled('div')<FlexAlignment>`
+export const BlockWithAlignment = styled('div')<FlexAlignment>`
   grid-column: 1 / -1;
 
   ${({ theme, w }) =>
@@ -52,7 +52,7 @@ export const FlexBlock = ({ className, blocks }: BuilderFlexBlockProps) => {
     <FlexBlockWrapper>
       {blocks.map((nestedBlock, index) => {
         return (
-          <NestedBlock
+          <BlockWithAlignment
             key={index}
             {...(nestedBlock.alignment as FlexAlignment)}
           >
@@ -62,7 +62,7 @@ export const FlexBlock = ({ className, blocks }: BuilderFlexBlockProps) => {
               index={index}
               count={blocks.length}
             />
-          </NestedBlock>
+          </BlockWithAlignment>
         );
       })}
     </FlexBlockWrapper>
