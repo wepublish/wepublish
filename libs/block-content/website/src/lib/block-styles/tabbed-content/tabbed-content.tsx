@@ -132,7 +132,7 @@ export const a11yProps = (index: number, id: string) => {
 
 export const TabbedContent = ({
   className,
-  nestedBlocks,
+  blocks,
   blockStyle,
   blockStyleByIndex,
   cssByBlockStyle,
@@ -162,7 +162,7 @@ export const TabbedContent = ({
           onChange={handleChange}
           aria-label="Tabs zur Navigation zwischen verschiedenen Themenbereichen"
         >
-          {nestedBlocks.map((nestedBlock, index) => {
+          {blocks.map((nestedBlock, index) => {
             return (
               <Tab
                 disableRipple={true}
@@ -181,7 +181,7 @@ export const TabbedContent = ({
           })}
         </Tabs>
       </Box>
-      {nestedBlocks.map((nestedBlock, index) => (
+      {blocks.map((nestedBlock, index) => (
         <TabPanel
           value={value}
           index={index}
@@ -204,7 +204,7 @@ export const TabbedContent = ({
             }
             type="Article"
             index={index}
-            count={nestedBlocks.length}
+            count={blocks.length}
           />
         </TabPanel>
       ))}
