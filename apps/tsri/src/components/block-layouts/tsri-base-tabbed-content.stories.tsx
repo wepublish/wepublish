@@ -13,7 +13,7 @@ import {
 import {
   BlockContent,
   CustomTeaser,
-  FlexAlignmentBlocks,
+  FlexAlignment,
   Maybe,
 } from '@wepublish/website/api';
 import nanoid from 'nanoid';
@@ -75,14 +75,13 @@ export const TabbedMainTeaserSlots = {
   },
 };
 
-const nestedBlocks = mockTabbedContentTeaserSlots().nestedBlocks;
+const blocks = mockTabbedContentTeaserSlots().blocks;
 // override block styles of first and last blocks...
-nestedBlocks[nestedBlocks.length - 1].block!.blockStyle =
-  TsriLayoutType.ArchiveTopic;
-nestedBlocks[0].block!.blockStyle = TsriLayoutType.ArchiveTopicAuthor;
+blocks[blocks.length - 1].block!.blockStyle = TsriLayoutType.ArchiveTopic;
+blocks[0].block!.blockStyle = TsriLayoutType.ArchiveTopicAuthor;
 export const TabbedMainWithOverride = {
   args: {
-    nestedBlocks,
+    blocks,
     blockStyle: TsriTabbedContentType.TabbedMainContent,
   },
 };
@@ -90,14 +89,14 @@ export const TabbedMainWithOverride = {
 export const TabbedMainTeaserLists = {
   args: {
     ...TabbedMainTeaserSlots.args,
-    nestedBlocks: [
+    blocks: [
       {
         alignment: mockFlexAlignment({
           h: 0,
           w: 0,
           x: 0,
           y: 0,
-        }) as FlexAlignmentBlocks,
+        }) as FlexAlignment,
         block: mockTeaserListBlock({
           title: 'First Tab',
         }) as Maybe<BlockContent> | undefined,
@@ -107,14 +106,14 @@ export const TabbedMainTeaserLists = {
 };
 
 const mockTabbedSidebarContentBlock = mockTabbedContentTeaserSlots({
-  nestedBlocks: [
+  blocks: [
     {
       alignment: mockFlexAlignment({
         h: 0,
         w: 0,
         x: 0,
         y: 0,
-      }) as FlexAlignmentBlocks,
+      }) as FlexAlignment,
       block: mockTeaserSlotsBlock({
         teasers: [mockArticleTeaser()],
       }) as Maybe<BlockContent> | undefined,
@@ -125,7 +124,7 @@ const mockTabbedSidebarContentBlock = mockTabbedContentTeaserSlots({
         w: 0,
         x: 0,
         y: 0,
-      }) as FlexAlignmentBlocks,
+      }) as FlexAlignment,
       block: mockTeaserSlotsBlock({
         title: 'Briefing',
         teasers: [
@@ -145,7 +144,7 @@ const mockTabbedSidebarContentBlock = mockTabbedContentTeaserSlots({
         w: 0,
         x: 0,
         y: 0,
-      }) as FlexAlignmentBlocks,
+      }) as FlexAlignment,
       block: mockTeaserSlotsBlock({
         title: 'Fokusmonat',
         teasers: [
@@ -176,7 +175,7 @@ const mockTabbedSidebarContentBlock = mockTabbedContentTeaserSlots({
         w: 0,
         x: 0,
         y: 0,
-      }) as FlexAlignmentBlocks,
+      }) as FlexAlignment,
       block: mockTeaserSlotsBlock({
         title: 'Shop',
         teasers: [
@@ -213,16 +212,16 @@ export const HeroTeaserTabbedSidebar = {
 
 export const HeroTeaserTabbedWithLove = {
   args: {
-    nestedBlocks: [
-      mockTabbedSidebarContentBlock.nestedBlocks![0],
-      mockTabbedSidebarContentBlock.nestedBlocks![1],
+    blocks: [
+      mockTabbedSidebarContentBlock.blocks![0],
+      mockTabbedSidebarContentBlock.blocks![1],
       {
         alignment: mockFlexAlignment({
           h: 0,
           w: 0,
           x: 0,
           y: 0,
-        }) as FlexAlignmentBlocks,
+        }) as FlexAlignment,
         block: mockTeaserSlotsBlock({
           title: 'Tsüri-Love',
           blockStyle: TsriLayoutType.TsriLove,
@@ -249,7 +248,7 @@ export const HeroTeaserTabbedWithLove = {
           ] as CustomTeaser[],
         }) as Maybe<BlockContent> | undefined,
       },
-      mockTabbedSidebarContentBlock.nestedBlocks![3],
+      mockTabbedSidebarContentBlock.blocks![3],
     ],
     blockStyle: TsriTabbedContentType.HeroTeaserWithTabbedSidebarContent,
   },
