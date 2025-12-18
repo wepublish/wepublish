@@ -1,630 +1,487 @@
-import { BlockProps } from '../atoms';
-import { FlexBlockValue } from './types';
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 
-export const FlexBlock = ({
-  value,
-  onChange,
-  autofocus,
-}: BlockProps<FlexBlockValue>) => {
-  console.log('Rendering FlexBlock with value:', value);
+import styled from '@emotion/styled';
+import { BlockType } from '@wepublish/editor/api-v2';
+import i18next from 'i18next';
+import nanoid from 'nanoid';
+import {
+  ComponentType,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
+import GridLayoutWithoutChildren, {
+  ReactGridLayoutProps,
+} from 'react-grid-layout';
+import { useTranslation } from 'react-i18next';
+import {
+  MdAddBox,
+  MdArticle,
+  MdDelete,
+  MdEdit,
+  MdLock,
+  MdLockOpen,
+} from 'react-icons/md';
+import {
+  ButtonToolbar as RButtonToolbar,
+  Drawer,
+  IconButton as RIconButton,
+  Panel as RPanel,
+} from 'rsuite';
 
-  const setTheValue = (newValue: FlexBlockValue): string | undefined => {
-    //console.log('Setting new value for FlexBlock:', newValue);
-    // sidebar content block style
-    // create a block-style called "TabbedContentSidebar"
-    // below set the id of that block-style
-    // before each save/publish click once in every FlexBlock textarea to ensure the correct data is ready....
-    if (
-      newValue &&
-      newValue.blockStyle === 'beb77a99-0344-47c6-8bd8-e24b93bb7e4e'
-    ) {
-      return JSON.stringify(
-        {
-          type: 'flexBlock',
-          nestedBlocks: [
-            {
-              alignment: {
-                i: '',
-                x: 0,
-                y: 0,
-                w: 0,
-                h: 0,
-                static: false,
-              },
-              block: {
-                teaserSlots: {
-                  slots: [
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                  ],
-                  autofillConfig: {
-                    enabled: true,
-                    filter: {
-                      tags: ['5bf64c06-bb04-4d3a-a0cd-dc0db102c28d'],
-                    },
-                    teaserType: 'Article',
-                  },
-                  title: null,
-                },
-              },
-            },
-            {
-              alignment: {
-                i: '',
-                x: 0,
-                y: 0,
-                w: 0,
-                h: 0,
-                static: false,
-              },
-              block: {
-                teaserSlots: {
-                  slots: [
-                    {
-                      teaser: {
-                        custom: {
-                          contentUrl: null,
-                          openInNewTab: false,
-                          title: null,
-                          preTitle: 'daily briefing',
-                          properties: [],
-                        },
-                      },
-                      type: 'Manual',
-                    },
-                    {
-                      teaser: {
-                        custom: {
-                          contentUrl: '/newsletter-anmelden-link-to-be-defined',
-                          openInNewTab: false,
-                          title: 'Das Wichtigste aus Zürich',
-                          lead: 'Lorem ipsum dolor sit amet, consectetur adipiscing elited do eiusmod Lorem ipsum dolor sit amet, consectetur adipiscing elited do eiusmod Lorem ipsum dolor sit.',
-                          properties: [],
-                          preTitle: 'Kostenlos abonnieren!',
-                        },
-                      },
-                      type: 'Manual',
-                    },
-                  ],
-                  autofillConfig: {
-                    enabled: false,
-                    filter: null,
-                    teaserType: 'Article',
-                  },
-                  title: 'Briefing',
-                },
-              },
-            },
-            {
-              alignment: {
-                i: '',
-                x: 0,
-                y: 0,
-                w: 0,
-                h: 0,
-                static: false,
-              },
-              block: {
-                teaserSlots: {
-                  slots: [
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: {
-                        custom: {
-                          contentUrl:
-                            '/event?from=2025-11-30T23%3A00%3A00.000Z&to=2026-12-31T22%3A59%3A00.000Z',
-                          openInNewTab: false,
-                          preTitle: 'Mehr Events',
-                          title: 'Unsere Event-Liste',
-                          lead: 'Wir bieten dir regelmässig spannende Anlässe und Events.',
-                          properties: [],
-                        },
-                      },
-                      type: 'Manual',
-                    },
-                  ],
-                  autofillConfig: {
-                    enabled: true,
-                    filter: null,
-                    teaserType: 'Event',
-                  },
-                  title: 'Fokusmonat',
-                },
-              },
-            },
-            {
-              alignment: {
-                i: '',
-                x: 0,
-                y: 0,
-                w: 0,
-                h: 0,
-                static: false,
-              },
-              block: {
-                teaserSlots: {
-                  slots: [
-                    {
-                      teaser: {
-                        custom: {
-                          contentUrl:
-                            'https://shop.tsri.ch/products/tsuri-lette-1',
-                          openInNewTab: true,
-                          title: 'Tsüri Lette',
-                          lead: 'Der Sommer ist da! Adilette, obere Lette, undere Lette, ... cheggsch? CHF 39.00',
-                          imageID: '5e653fb0-c76d-4496-99a6-5ddeb8112a8f',
-                          properties: [],
-                        },
-                      },
-                      type: 'Manual',
-                    },
-                    {
-                      teaser: {
-                        custom: {
-                          contentUrl:
-                            'https://shop.tsri.ch/products/tsuri-lette-1',
-                          openInNewTab: true,
-                          title: 'Tsüri Lette',
-                          lead: 'Der Sommer ist da! Adilette, obere Lette, undere Lette, ... cheggsch? CHF 39.00',
-                          imageID: '5e653fb0-c76d-4496-99a6-5ddeb8112a8f',
-                          properties: [],
-                        },
-                      },
-                      type: 'Manual',
-                    },
-                    {
-                      teaser: {
-                        custom: {
-                          contentUrl:
-                            'https://shop.tsri.ch/products/tsuri-lette-1',
-                          openInNewTab: true,
-                          title: 'Tsüri Lette',
-                          lead: 'Der Sommer ist da! Adilette, obere Lette, undere Lette, ... cheggsch? CHF 39.00',
-                          imageID: '5e653fb0-c76d-4496-99a6-5ddeb8112a8f',
-                          properties: [],
-                        },
-                      },
-                      type: 'Manual',
-                    },
-                    {
-                      teaser: {
-                        custom: {
-                          contentUrl: 'https://shop.tsri.ch/',
-                          openInNewTab: false,
-                          preTitle: 'Zum Shop',
-                          properties: [],
-                        },
-                      },
-                      type: 'Manual',
-                    },
-                  ],
-                  autofillConfig: {
-                    enabled: false,
-                    filter: null,
-                    teaserType: 'Custom',
-                  },
-                  title: 'Shop',
-                },
-              },
-            },
-          ],
-        },
-        null,
-        2
-      );
+import {
+  type BlockListValue,
+  BlockListItem,
+  BlockStyleIconWrapper,
+  LeftButtonsWrapper,
+  ListItem,
+  PanelWrapper,
+} from '../atoms/blockList';
+import { BlockMapType, BlockProps } from '../atoms/blockList';
+import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
+import { PlaceholderInput } from '../atoms/placeholderInput';
+import { BlockSelectAndEditPanel } from '../panel/blockSelectAndEditPanel';
+import { isFunctionalUpdate, isValueConstructor } from '../utility';
+import { BlockMap } from './blockMap';
+import { IconWrapper } from './teaserGridBlock';
+import {
+  BlockValue,
+  FlexAlignment,
+  FlexBlockValue,
+  FlexBlockWithAlignment,
+} from './types';
+
+const IconButton = styled(RIconButton)`
+  margin: 10px;
+`;
+
+const Block = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  background-color: yellowgreen;
+`;
+
+// Fixes that pre React 18, all components had the children prop.
+// With React 18 this is not the case anymore, so some types are wrong
+const GridLayout: ComponentType<PropsWithChildren<ReactGridLayoutProps>> =
+  GridLayoutWithoutChildren;
+
+const GridLayoutStyled = styled(GridLayout)`
+  .react-resizable-handle {
+    z-index: 3;
+  }
+`;
+
+const ButtonToolbar = styled(RButtonToolbar)`
+  top: 0;
+  left: 0;
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  justify-content: start;
+  flex-wrap: unset;
+  position: relative;
+  z-index: 2;
+  line-height: unset;
+  padding: 0.6rem 0.4rem;
+  pointer-events: none;
+  gap: 0.1rem;
+`;
+
+const ToolbarButton = styled(RIconButton)`
+  aspect-ratio: 1;
+  padding: 0.15rem !important;
+  width: 1.5rem;
+  height: 1.5rem;
+  line-height: unset !important;
+  text-align: unset;
+  overflow: visible;
+  position: relative;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  pointer-events: all;
+  background-color: #eeeeee;
+
+  & svg {
+    display: block;
+    height: 1.2rem;
+    width: 1.2rem;
+    margin: auto;
+    font-size: unset;
+  }
+
+  & + button {
+    margin: 0 !important;
+  }
+`;
+
+const NesteBlockEditPanel = styled('div')`
+  margin: 0 -25px;
+
+  ${ListItem} {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: min-content auto;
+    row-gap: 10px;
+  }
+
+  ${BlockStyleIconWrapper} {
+    justify-self: end;
+  }
+
+  ${PanelWrapper} {
+    order: 2;
+  }
+
+  ${LeftButtonsWrapper} {
+    display: none;
+  }
+`;
+
+const Panel = styled(RPanel, {
+  shouldForwardProp: prop => prop !== 'showGrabCursor',
+})<{ showGrabCursor: boolean }>`
+  display: grid;
+  cursor: ${({ showGrabCursor }) => showGrabCursor && 'grab'};
+  height: inherit;
+  overflow: hidden;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+`;
+
+export function FlexItem({
+  block,
+  showGrabCursor,
+  onEdit,
+  onChoose,
+  onRemove,
+}: FlexItemProps) {
+  return (
+    <Panel
+      bodyFill
+      showGrabCursor={showGrabCursor}
+    >
+      <PlaceholderInput onAddClick={onChoose}>
+        {block && (
+          <Block>
+            {/* <ContentForTeaser teaser={block} /> */}
+
+            <IconWrapper>
+              <IconButtonTooltip
+                caption={i18next.t('blocks.flexBlock.chooseNestedBlock')}
+              >
+                <IconButton
+                  icon={<MdArticle />}
+                  onClick={onChoose}
+                />
+              </IconButtonTooltip>
+
+              <IconButtonTooltip
+                caption={i18next.t('blocks.flexBlock.editNestedBlock')}
+              >
+                <IconButton
+                  icon={<MdEdit />}
+                  onClick={onEdit}
+                />
+              </IconButtonTooltip>
+
+              <IconButtonTooltip
+                caption={i18next.t('blocks.flexBlock.deleteNestedBlock')}
+              >
+                <IconButton
+                  icon={<MdDelete />}
+                  onClick={onRemove}
+                />
+              </IconButtonTooltip>
+            </IconWrapper>
+          </Block>
+        )}
+      </PlaceholderInput>
+    </Panel>
+  );
+}
+
+export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
+  const [editIndex, setEditIndex] = useState(0);
+  const [editItem, setEditItem] = useState<FlexBlockWithAlignment>();
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [isChooseModalOpen, setChooseModalOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const [nestedBlocks, setNestedBlocks] = useState<BlockValue[]>([]);
+
+  const blockMap = BlockMap as BlockMapType;
+
+  const { blocks } = value;
+
+  useEffect(() => {
+    setNestedBlocks(blocks.map(flexBlock => flexBlock.block as BlockValue));
+  }, []);
+
+  useEffect(() => {
+    for (let i = 0; i < blocks.length; i++) {
+      blocks[i].block = nestedBlocks[i];
     }
-    // create a block-style called "TabbedContentMain"
-    // below set the id of that block-style
-    else if (
-      newValue &&
-      newValue.blockStyle === 'ec6b5203-ffd4-4903-aa00-c526c45de464'
-    ) {
-      // main content block style
-      return JSON.stringify(
-        {
-          type: 'flexBlock',
-          nestedBlocks: [
-            {
-              alignment: {
-                i: '',
-                x: 0,
-                y: 0,
-                w: 0,
-                h: 0,
-                static: false,
-              },
-              block: {
-                teaserSlots: {
-                  slots: [
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: {
-                        custom: {
-                          contentUrl: '/a/tag/wohnen',
-                          openInNewTab: false,
-                          title: 'Mehr zum Thema Wohnen',
-                          properties: [],
-                        },
-                      },
-                      type: 'Manual',
-                    },
-                  ],
-                  autofillConfig: {
-                    enabled: true,
-                    filter: {
-                      tags: ['5bf64c06-bb04-4d3a-a0cd-dc0db102c28d'],
-                    },
-                    teaserType: 'Article',
-                  },
-                  title: 'Wohnen',
-                },
-              },
-            },
-            {
-              alignment: {
-                i: '',
-                x: 0,
-                y: 0,
-                w: 0,
-                h: 0,
-                static: false,
-              },
-              block: {
-                teaserSlots: {
-                  slots: [
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: {
-                        custom: {
-                          contentUrl: '/a/tag/politik',
-                          openInNewTab: false,
-                          title: 'Mehr zum Thema Politik',
-                          properties: [],
-                        },
-                      },
-                      type: 'Manual',
-                    },
-                  ],
-                  autofillConfig: {
-                    enabled: true,
-                    filter: {
-                      tags: ['clxkczkq60096pv07gkxvrmqf'],
-                    },
-                    teaserType: 'Article',
-                  },
-                  title: 'Politik',
-                },
-              },
-            },
-            {
-              alignment: {
-                i: '',
-                x: 0,
-                y: 0,
-                w: 0,
-                h: 0,
-                static: false,
-              },
-              block: {
-                teaserSlots: {
-                  slots: [
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: {
-                        custom: {
-                          contentUrl: '/a/tag/stadtleben',
-                          openInNewTab: false,
-                          title: 'Mehr zum Thema Stadtleben',
-                          properties: [],
-                        },
-                      },
-                      type: 'Manual',
-                    },
-                  ],
-                  autofillConfig: {
-                    enabled: true,
-                    filter: {
-                      tags: ['323c058f-d56d-489e-9084-f3fd37feb0a2'],
-                    },
-                    teaserType: 'Article',
-                  },
-                  title: 'Stadtleben',
-                },
-              },
-            },
-            {
-              alignment: {
-                i: '',
-                x: 0,
-                y: 0,
-                w: 0,
-                h: 0,
-                static: false,
-              },
-              block: {
-                teaserSlots: {
-                  slots: [
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: {
-                        custom: {
-                          contentUrl: '/a/tag/mobilität',
-                          openInNewTab: false,
-                          title: 'Mehr zum Thema Mobilität',
-                          properties: [],
-                        },
-                      },
-                      type: 'Manual',
-                    },
-                  ],
-                  autofillConfig: {
-                    enabled: true,
-                    filter: {
-                      tags: ['70a5bc62-628b-4b23-8cb6-05c9b64542f5'],
-                    },
-                    teaserType: 'Article',
-                  },
-                  title: 'Mobilität',
-                },
-              },
-            },
-            {
-              alignment: {
-                i: '',
-                x: 0,
-                y: 0,
-                w: 0,
-                h: 0,
-                static: false,
-              },
-              block: {
-                teaserSlots: {
-                  slots: [
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: {
-                        custom: {
-                          contentUrl: '/a/tag/kultur',
-                          openInNewTab: false,
-                          title: 'Mehr zum Thema Kultur',
-                          properties: [],
-                        },
-                      },
-                      type: 'Manual',
-                    },
-                  ],
-                  autofillConfig: {
-                    enabled: true,
-                    filter: {
-                      tags: ['831ef2f7-0106-4417-bc7f-64aae44f58fd'],
-                    },
-                    teaserType: 'Article',
-                  },
-                  title: 'Kultur',
-                },
-              },
-            },
-            {
-              alignment: {
-                i: '',
-                x: 0,
-                y: 0,
-                w: 0,
-                h: 0,
-                static: false,
-              },
-              block: {
-                teaserSlots: {
-                  slots: [
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: null,
-                      type: 'Autofill',
-                    },
-                    {
-                      teaser: {
-                        custom: {
-                          contentUrl: '/a/tag/kolumnen',
-                          openInNewTab: false,
-                          title: 'Mehr Kolumnen',
-                          properties: [],
-                        },
-                      },
-                      type: 'Manual',
-                    },
-                  ],
-                  autofillConfig: {
-                    enabled: true,
-                    filter: {
-                      tags: ['f82e18dc-bc0b-4ad6-9fd6-b7496d43286a'],
-                    },
-                    teaserType: 'Article',
-                  },
-                  title: 'Kolumnen',
-                },
-              },
-            },
-          ],
-        },
-        null,
-        2
-      );
+    onChange({ ...value, blocks });
+  }, [nestedBlocks]);
+
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    if (isDragging) {
+      document.documentElement.style.cursor = 'grabbing';
+      document.body.style.pointerEvents = 'none';
+    } else {
+      document.documentElement.style.cursor = '';
+      document.body.style.pointerEvents = '';
     }
-    return JSON.stringify(newValue, null, 2);
+  }, [isDragging]);
+
+  const handleAddNestedBlock = () => {
+    const newBlock: FlexBlockWithAlignment = {
+      alignment: {
+        i: nanoid(),
+        x: 0,
+        y: 0,
+        w: 4,
+        h: 4,
+        static: false,
+      },
+      block: null,
+    };
+
+    onChange({ ...value, blocks: [...blocks, newBlock] });
+  };
+
+  const handleRemoveNestedBlock = (index: string) => {
+    onChange({
+      ...value,
+      blocks: blocks.filter(flexTeaser => flexTeaser.alignment.i !== index),
+    });
+  };
+
+  const handleLayoutChange = (layout: FlexAlignment[]) => {
+    const newBlocks = layout.map(v => ({
+      block: blocks.find(flexTeaser => v.i === flexTeaser.alignment.i)?.block,
+      //alignment: v,
+      alignment: {
+        i: v.i,
+        x: v.x,
+        y: v.y,
+        w: v.w,
+        h: v.h,
+        static: v.static,
+      },
+    }));
+
+    onChange({ ...value, blocks: newBlocks });
+  };
+
+  const handlePinTeaserBlock = (index: string) => {
+    const newTeasers = blocks.map(({ block, alignment }) => {
+      return alignment.i === index ?
+          {
+            block,
+            alignment: {
+              i: alignment.i,
+              x: alignment.x,
+              y: alignment.y,
+              w: alignment.w,
+              h: alignment.h,
+              static: !alignment.static,
+            },
+          }
+        : { block, alignment };
+    });
+
+    onChange({ ...value, blocks: newTeasers });
+  };
+
+  const handleRemoveBlock = (index: string) => {
+    onChange({
+      ...value,
+      blocks: blocks.map(({ block, alignment }) => {
+        return alignment.i === index ?
+            { alignment, block: null }
+          : { block, alignment };
+      }),
+    });
+  };
+
+  const handleBlockLinkChange = (index: number, block: { id: BlockType }) => {
+    onChange({
+      ...value,
+      blocks: Object.assign([], blocks, {
+        [index]: { ...blocks[index], block: createBlock(block.id) },
+      }),
+    });
+  };
+
+  const handleChange = useCallback(
+    (blocks: React.SetStateAction<BlockValue[]>) => {
+      setNestedBlocks(blocks);
+      //setChanged(true);
+    },
+    []
+  );
+
+  const handleItemChange = useCallback(
+    (index: number, itemValue: React.SetStateAction<BlockListValue>) => {
+      handleChange((value: any) => {
+        return Object.assign([], value, {
+          [index]:
+            isFunctionalUpdate(itemValue) ? itemValue(value[index]) : itemValue,
+        });
+      });
+    },
+    [handleChange]
+  );
+
+  const createBlock = (type: string) => {
+    const { defaultValue } = blockMap[type];
+    return {
+      key: nanoid(),
+      type,
+      value: isValueConstructor(defaultValue) ? defaultValue() : defaultValue,
+    } as BlockListValue;
   };
 
   return (
-    <div>
-      <h2>{'Der FlexBlock kommt hier hin.'}</h2>
-      <textarea
-        autoFocus={autofocus}
-        //defaultValue={JSON.stringify(value, null, 2)}
-        defaultValue={setTheValue(value)}
-        //value={setTheValue(value)}
-        onChange={e => {
-          e.stopPropagation();
-          e.preventDefault();
-          console.log('Textarea change:');
-          return void 0;
+    <>
+      <IconButtonTooltip caption={t('blocks.flexBlock.addNestedBlock')}>
+        <RIconButton
+          icon={<MdAddBox />}
+          appearance="primary"
+          circle
+          size="md"
+          onClick={handleAddNestedBlock}
+        />
+      </IconButtonTooltip>
+      <GridLayoutStyled
+        onResizeStop={layout => handleLayoutChange(layout as FlexAlignment[])}
+        onDrop={layout => handleLayoutChange(layout as FlexAlignment[])}
+        className="layout"
+        resizeHandles={['se']}
+        onDragStop={layout => {
+          setIsDragging(false);
+          handleLayoutChange(layout as FlexAlignment[]);
         }}
-        onBlur={e => {
-          console.log('onblur');
-          try {
-            const parsedValue = JSON.parse(e.target.value);
-            onChange(parsedValue);
-          } catch (error) {
-            console.error('Invalid JSON:', error);
-          }
-        }}
-        style={{ width: '100%', height: '600px' }}
-      />
-    </div>
+        onDrag={() => setIsDragging(true)} // buggy behavior with onDragStart with double click
+        cols={12}
+        rowHeight={30}
+        layout={blocks.map(ft => ft.alignment) as FlexAlignment[]}
+        width={640}
+      >
+        {blocks.map((block, index) => (
+          <div key={block.alignment.i}>
+            <FlexItem
+              block={block.block}
+              showGrabCursor={!block.alignment.static}
+              onEdit={() => {
+                setEditIndex(index);
+                setEditItem(block);
+                setEditModalOpen(true);
+              }}
+              onChoose={() => {
+                setEditIndex(index);
+                setEditItem(block);
+                setChooseModalOpen(true);
+              }}
+              onRemove={() => handleRemoveBlock(block.alignment.i)}
+            />
+
+            <ButtonToolbar>
+              {!block.block && (
+                <IconButtonTooltip
+                  caption={t('blocks.flexBlock.removeNestedBlock')}
+                >
+                  <ToolbarButton
+                    disabled={block.alignment.static as unknown as boolean}
+                    block
+                    appearance="subtle"
+                    icon={<MdDelete />}
+                    onClick={() => handleRemoveNestedBlock(block.alignment.i)}
+                  />
+                </IconButtonTooltip>
+              )}
+
+              <IconButtonTooltip
+                caption={
+                  !block.alignment.static ?
+                    t('blocks.flexBlock.lockNestedBlock')
+                  : t('blocks.flexBlock.unlockNestedBlock')
+                }
+              >
+                <ToolbarButton
+                  block
+                  appearance="subtle"
+                  icon={block.alignment.static ? <MdLockOpen /> : <MdLock />}
+                  onClick={() => handlePinTeaserBlock(block.alignment.i)}
+                />
+              </IconButtonTooltip>
+            </ButtonToolbar>
+          </div>
+        ))}
+      </GridLayoutStyled>
+      <Drawer
+        open={isChooseModalOpen}
+        size="xs"
+        onClose={() => setChooseModalOpen(false)}
+      >
+        <BlockSelectAndEditPanel
+          onClose={() => setChooseModalOpen(false)}
+          onSelect={block => {
+            setChooseModalOpen(false);
+            handleBlockLinkChange(editIndex, block);
+          }}
+        />
+      </Drawer>
+      {isEditModalOpen && (
+        <NesteBlockEditPanel>
+          <BlockListItem
+            itemId={editItem!.alignment.i}
+            index={editIndex}
+            value={{
+              value: editItem!.block!.value,
+              key: editItem!.block!.key,
+              type: editItem!.block!.type,
+            }}
+            icon={blockMap[editItem!.block!.type].icon}
+            autofocus={false}
+            disabled={false}
+            children={blockMap[editItem!.block!.type].field}
+            onChange={handleItemChange}
+            onDelete={() => {
+              // will never happen here
+            }}
+            onMoveUp={() => {
+              // will never happen here
+            }}
+            onMoveDown={() => {
+              // will never happen here
+            }}
+          />
+        </NesteBlockEditPanel>
+      )}
+    </>
   );
-};
+}
+
+interface FlexItemProps {
+  block: BlockValue | null | undefined;
+  showGrabCursor: boolean;
+  onEdit: () => void;
+  onChoose: () => void;
+  onRemove: () => void;
+}

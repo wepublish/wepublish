@@ -17,9 +17,7 @@ const FlexBlockWrapper = styled('div')`
   grid-template-columns: repeat(12, 1fr);
   grid-column: 1 / -1;
 `;
-export const NestedBlock = styled('div')<FlexAlignment>`
-  //background-color: lime;
-
+export const BlockWithAlignment = styled('div')<FlexAlignment>`
   grid-column: 1 / -1;
 
   ${({ theme, w }) =>
@@ -30,13 +28,11 @@ export const NestedBlock = styled('div')<FlexAlignment>`
 
   ${({ theme, h, w, x, y }) => css`
     ${theme.breakpoints.up('md')} {
-      /*
       grid-column-start: ${x + 1};
       grid-column-end: ${x + 1 + w};
 
       grid-row-start: ${y + 1};
       grid-row-end: ${y + 1 + h};
-      */
     }
   `}
 `;
@@ -47,19 +43,16 @@ export const isFlexBlock = (
   return block.__typename === 'FlexBlock';
 };
 
-export const FlexBlock = ({
-  className,
-  nestedBlocks,
-}: BuilderFlexBlockProps) => {
+export const FlexBlock = ({ className, blocks }: BuilderFlexBlockProps) => {
   const {
     blocks: { Renderer },
   } = useWebsiteBuilder();
 
   return (
     <FlexBlockWrapper>
-      {nestedBlocks.map((nestedBlock, index) => {
+      {blocks.map((nestedBlock, index) => {
         return (
-          <NestedBlock
+          <BlockWithAlignment
             key={index}
             {...(nestedBlock.alignment as FlexAlignment)}
           >
@@ -67,9 +60,9 @@ export const FlexBlock = ({
               block={nestedBlock.block as BlockContent}
               type="Article"
               index={index}
-              count={nestedBlocks.length}
+              count={blocks.length}
             />
-          </NestedBlock>
+          </BlockWithAlignment>
         );
       })}
     </FlexBlockWrapper>

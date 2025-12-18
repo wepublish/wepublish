@@ -62,7 +62,7 @@ const mockNestedBlock = ({
 
 const mockFlexBock = ({
   blockStyle = null,
-  nestedBlocks = [
+  blocks = [
     mockNestedBlock(),
     mockNestedBlock(),
     mockNestedBlock(),
@@ -73,7 +73,7 @@ const mockFlexBock = ({
   ],
 } = {}) => ({
   blockStyle,
-  nestedBlocks,
+  blocks,
 });
 
 export const Default = {

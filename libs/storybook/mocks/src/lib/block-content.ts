@@ -37,8 +37,7 @@ import {
   CrowdfundingBlock,
   SubscribeBlock,
   FlexBlock,
-  NestedBlock,
-  FlexAlignmentBlocks,
+  BlockWithAlignment,
   Maybe,
   BlockContent,
 } from '@wepublish/website/api';
@@ -674,19 +673,18 @@ export const mockSubscribeBlock = ({
 });
 export type MockTabbedContent = (args?: {
   blockStyle?: string;
-  nestedBlocks?: NestedBlock[];
+  blocks?: BlockWithAlignment[];
 }) => FlexBlock;
-
 export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
   blockStyle = 'TabbedContent',
-  nestedBlocks = [
+  blocks = [
     {
       alignment: mockFlexAlignment({
         h: 0,
         w: 0,
         x: 0,
         y: 0,
-      }) as FlexAlignmentBlocks,
+      }) as FlexAlignment,
       block: mockTeaserSlotsBlock({
         title: 'First Tab',
       }) as Maybe<BlockContent> | undefined,
@@ -697,7 +695,7 @@ export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
         w: 0,
         x: 0,
         y: 0,
-      }) as FlexAlignmentBlocks,
+      }) as FlexAlignment,
       block: mockTeaserSlotsBlock({
         title: 'Second Tab',
       }) as Maybe<BlockContent> | undefined,
@@ -708,7 +706,7 @@ export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
         w: 0,
         x: 0,
         y: 0,
-      }) as FlexAlignmentBlocks,
+      }) as FlexAlignment,
       block: mockTeaserSlotsBlock({
         title: 'Third Tab',
       }) as Maybe<BlockContent> | undefined,
@@ -719,7 +717,7 @@ export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
         w: 0,
         x: 0,
         y: 0,
-      }) as FlexAlignmentBlocks,
+      }) as FlexAlignment,
       block: mockTeaserSlotsBlock({
         title: 'Fourth Tab',
       }) as Maybe<BlockContent> | undefined,
@@ -730,7 +728,7 @@ export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
         w: 0,
         x: 0,
         y: 0,
-      }) as FlexAlignmentBlocks,
+      }) as FlexAlignment,
       block: mockTeaserSlotsBlock({
         title: 'Fifth Tab',
       }) as Maybe<BlockContent> | undefined,
@@ -741,7 +739,7 @@ export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
         w: 0,
         x: 0,
         y: 0,
-      }) as FlexAlignmentBlocks,
+      }) as FlexAlignment,
       block: mockTeaserSlotsBlock({
         title: 'Sixth Tab',
       }) as Maybe<BlockContent> | undefined,
@@ -749,7 +747,7 @@ export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
   ],
 }: Partial<FlexBlock> = {}): FlexBlock => ({
   blockStyle,
-  nestedBlocks,
+  blocks,
   type: BlockType.FlexBlock,
   __typename: 'FlexBlock',
 });
