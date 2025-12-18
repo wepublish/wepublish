@@ -1145,6 +1145,7 @@ export function blockForQueryBlock(
           key,
           type: EditorBlockType.TeaserSlots,
           value: {
+            title: block.title,
             blockStyle: block.blockStyle,
             slots: block.slots.map(({ teaser, type }) => ({
               type,
