@@ -77,9 +77,10 @@ const ButtonToolbar = styled(RButtonToolbar)`
   position: relative;
   z-index: 2;
   line-height: unset;
-  padding: 0.4rem;
+  padding: 0.6rem 0.4rem;
   //border-bottom: 1px solid #eeeeee;
 
+  pointer-events: none;
   gap: 0.1rem;
 `;
 
@@ -97,7 +98,7 @@ const ToolbarButton = styled(RIconButton)`
   align-content: center;
   justify-content: center;
   align-items: center;
-
+  pointer-events: all;
   background-color: #eeeeee;
 
   & svg {
