@@ -25,6 +25,7 @@ import {
   MdLockOpen,
 } from 'react-icons/md';
 import {
+  Button,
   ButtonToolbar as RButtonToolbar,
   Drawer,
   IconButton as RIconButton,
@@ -61,8 +62,9 @@ const Block = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-
-  background-color: yellowgreen;
+  background-color: rgba(0, 0, 0, 0.025);
+  display: grid;
+  grid-template-rows: auto min-content;
 `;
 
 // Fixes that pre React 18, all components had the children prop.
@@ -73,6 +75,12 @@ const GridLayout: ComponentType<PropsWithChildren<ReactGridLayoutProps>> =
 const GridLayoutStyled = styled(GridLayout)`
   .react-resizable-handle {
     z-index: 3;
+  }
+
+  & .react-grid-item[data-is-editing='true'] {
+    ${Block} {
+      background-color: rgba(52, 152, 255, 0.25);
+    }
   }
 `;
 
@@ -122,8 +130,26 @@ const ToolbarButton = styled(RIconButton)`
   }
 `;
 
-const NesteBlockEditPanel = styled('div')`
+const Panel = styled(RPanel, {
+  shouldForwardProp: prop => prop !== 'showGrabCursor',
+})<{ showGrabCursor: boolean }>`
+  display: grid;
+  cursor: ${({ showGrabCursor }) => showGrabCursor && 'grab'};
+  height: inherit;
+  overflow: hidden;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+`;
+
+const NestedBlockEditPanel = styled('div')`
   margin: 0 -25px;
+  box-shadow: 1px 0 11px 4px rgba(52, 152, 255, 0.25);
+  border-radius: 0.3rem;
+  padding: 5px;
 
   ${ListItem} {
     display: grid;
@@ -138,26 +164,17 @@ const NesteBlockEditPanel = styled('div')`
 
   ${PanelWrapper} {
     order: 2;
+
+    & > div:first-of-type {
+      border-width: 0;
+      border-top-width: 1px;
+      border-radius: 0;
+    }
   }
 
   ${LeftButtonsWrapper} {
     display: none;
   }
-`;
-
-const Panel = styled(RPanel, {
-  shouldForwardProp: prop => prop !== 'showGrabCursor',
-})<{ showGrabCursor: boolean }>`
-  display: grid;
-  cursor: ${({ showGrabCursor }) => showGrabCursor && 'grab'};
-  height: inherit;
-  overflow: hidden;
-  z-index: 1;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
 `;
 
 export function FlexItem({
@@ -175,7 +192,7 @@ export function FlexItem({
       <PlaceholderInput onAddClick={onChoose}>
         {block && (
           <Block>
-            {/* <ContentForTeaser teaser={block} /> */}
+            <ContentForFlexBlock block={block} />
 
             <IconWrapper>
               <IconButtonTooltip
@@ -211,6 +228,37 @@ export function FlexItem({
     </Panel>
   );
 }
+
+const ContentForFlexBlockWrapper = styled('div')`
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-self: end;
+  padding: 0.25rem;
+  background-color: rgba(0, 0, 0, 0.4);
+  min-height: 2.5rem;
+  color: white;
+`;
+
+export const ContentForFlexBlock = ({ block }: { block: BlockValue }) => {
+  const { type, value } = block;
+
+  /*
+  const BlockComponent = (BlockMap as BlockMapType)[type]?.component;
+
+  if (!BlockComponent) {
+    return <div>Unknown block type: {type}</div>;
+  }
+
+  return <BlockComponent value={value} onChange={() => {}} />;
+  */
+
+  return (
+    <ContentForFlexBlockWrapper>
+      {(value as { title: string }).title ?? ''}
+    </ContentForFlexBlockWrapper>
+  );
+};
 
 export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
   const [editIndex, setEditIndex] = useState(0);
@@ -357,6 +405,12 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
     } as BlockListValue;
   };
 
+  const handleClose = () => {
+    setEditModalOpen(false);
+    setEditItem(undefined);
+    setEditIndex(0);
+  };
+
   return (
     <>
       <IconButtonTooltip caption={t('blocks.flexBlock.addNestedBlock')}>
@@ -384,7 +438,10 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
         width={640}
       >
         {blocks.map((block, index) => (
-          <div key={block.alignment.i}>
+          <div
+            key={block.alignment.i}
+            data-is-editing={editItem && index === editIndex ? 'true' : 'false'}
+          >
             <FlexItem
               block={block.block}
               showGrabCursor={!block.alignment.static}
@@ -448,7 +505,13 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
         />
       </Drawer>
       {isEditModalOpen && (
-        <NesteBlockEditPanel>
+        <NestedBlockEditPanel>
+          <Button
+            appearance={'subtle'}
+            onClick={handleClose}
+          >
+            {t('blocks.flexBlock.close')}
+          </Button>
           <BlockListItem
             itemId={editItem!.alignment.i}
             index={editIndex}
@@ -472,7 +535,7 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
               // will never happen here
             }}
           />
-        </NesteBlockEditPanel>
+        </NestedBlockEditPanel>
       )}
     </>
   );
