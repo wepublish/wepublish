@@ -53,6 +53,8 @@ export class PageRevisionResolver {
 
   @ResolveField(() => [BlockContent])
   async blocks(@Parent() parent: PageRevision) {
-    return this.slotTeasersLoader.loadSlotTeasersIntoBlocks(parent.blocks);
+    return await this.slotTeasersLoader.loadSlotTeasersIntoBlocks(
+      parent.blocks
+    );
   }
 }
