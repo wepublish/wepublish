@@ -1,0 +1,226 @@
+import {
+  BuilderBlockStyleProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { BlockContent, FlexBlock } from '@wepublish/website/api';
+import { allPass } from 'ramda';
+import { isFlexBlock } from '../../nested-blocks/flex-block';
+import * as React from 'react';
+import { Box, css, Tab as MuiTab, Tabs as MuiTabs } from '@mui/material';
+import styled from '@emotion/styled';
+
+export const TabbedContentWrapper = styled('div')`
+  width: 100%;
+  grid-column: -1/1;
+  container: tabbed-content/inline-size;
+`;
+
+interface TabPanelBaseProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+  id: string;
+}
+
+export const TabPanelBase = (props: TabPanelBaseProps) => {
+  const { children, value, index, id, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`${id}-simple-tabpanel-${index}`}
+      aria-labelledby={`${id}-simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && children}
+    </div>
+  );
+};
+
+export const TabPanel = styled(TabPanelBase, {
+  shouldForwardProp: propName => propName !== 'cssByBlockStyle',
+})<{
+  cssByBlockStyle: string | undefined | null;
+}>`
+  background: linear-gradient(
+    to bottom,
+    rgb(174, 179, 190),
+    color-mix(in srgb, white 40%, rgb(174, 179, 190))
+  );
+  position: relative;
+  top: -1px;
+  z-index: 0;
+
+  padding: 7cqw 1.3cqw 10cqw 5.58cqw;
+
+  ${({ cssByBlockStyle }) => css`
+    ${cssByBlockStyle ? cssByBlockStyle : ''};
+  `}}
+`;
+
+export const Tabs = styled(MuiTabs)`
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  min-height: unset;
+
+  & .MuiTabs-indicator {
+    display: none;
+  }
+`;
+
+export const Tab = styled(MuiTab, {
+  shouldForwardProp: propName => propName !== 'cssByBlockStyle',
+})<{
+  cssByBlockStyle: string | undefined | null;
+}>`
+  background-color: rgba(0, 0, 0, 1);
+  color: rgba(255, 255, 255, 1);
+  font-size: 16px;
+  font-weight: 700;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  margin-right: 4px;
+  padding: 7px 20px 2px 20px;
+  text-transform: none;
+  flex-grow: 1;
+  align-items: flex-start;
+  min-height: unset;
+
+  font-size: 1.4cqw;
+  line-height: 1.4cqw;
+  padding: 0.7cqw 2.8cqw 0.5cqw 2.8cqw;
+  margin-right: 0.25cqw;
+  border-top-left-radius: 1cqw;
+  border-top-right-radius: 1cqw;
+
+  &:last-of-type {
+    margin-right: 0;
+  }
+
+  &:hover {
+    background-color: #f5ff64;
+    color: black;
+  }
+
+  &.Mui-selected,
+  &.Mui-selected:hover {
+    background-color: rgb(174, 179, 190);
+    color: rgba(255, 255, 255, 1);
+  }
+
+  &.mui-focusvisible: {
+    backgroundcolor: #d1eaff;
+  }
+
+  & > span {
+    display: none;
+  }
+
+  ${({ cssByBlockStyle }) => css`
+    ${cssByBlockStyle ? cssByBlockStyle : ''};
+  `}}
+`;
+
+export const a11yProps = (index: number, id: string) => {
+  return {
+    id: `${id}-simple-tab-${index}`,
+    'aria-controls': `${id}-simple-tabpanel-${index}`,
+  };
+};
+
+export const TabbedContent = ({
+  className,
+  blocks,
+  blockStyle,
+  blockStyleByIndex,
+  cssByBlockStyle,
+}: BuilderBlockStyleProps['TabbedContent'] & {
+  blockStyleByIndex?: (index: number) => string;
+  cssByBlockStyle?: (
+    index: number,
+    blockStyleOverride?: string | undefined | null
+  ) => string;
+}) => {
+  const [value, setValue] = React.useState(0);
+  const thisId = `TC-${React.useId()}`;
+
+  const {
+    blocks: { Renderer },
+  } = useWebsiteBuilder();
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+
+  return (
+    <TabbedContentWrapper className={className}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="Tabs zur Navigation zwischen verschiedenen Themenbereichen"
+        >
+          {blocks.map((nestedBlock, index) => {
+            return (
+              <Tab
+                disableRipple={true}
+                key={index}
+                label={
+                  (nestedBlock.block as { title: string }).title ||
+                  `Tab ${index + 1}`
+                }
+                {...a11yProps(index, thisId)}
+                cssByBlockStyle={
+                  cssByBlockStyle &&
+                  cssByBlockStyle(index, nestedBlock.block?.blockStyle)
+                }
+              />
+            );
+          })}
+        </Tabs>
+      </Box>
+      {blocks.map((nestedBlock, index) => (
+        <TabPanel
+          value={value}
+          index={index}
+          key={index}
+          id={thisId}
+          cssByBlockStyle={
+            cssByBlockStyle &&
+            cssByBlockStyle(index, nestedBlock.block?.blockStyle)
+          }
+        >
+          <Renderer
+            block={
+              {
+                ...nestedBlock.block,
+                blockStyle:
+                  nestedBlock.block?.blockStyle ||
+                  (blockStyleByIndex && blockStyleByIndex(index)) ||
+                  blockStyle,
+              } as BlockContent
+            }
+            type="Article"
+            index={index}
+            count={blocks.length}
+          />
+        </TabPanel>
+      ))}
+    </TabbedContentWrapper>
+  );
+};
+
+export const isTabbedContentBlockStyle = (
+  block: Pick<BlockContent, '__typename'>
+): block is FlexBlock =>
+  allPass([
+    isFlexBlock,
+    ({ blockStyle }: BuilderBlockStyleProps['TabbedContent']) => {
+      if (!blockStyle) {
+        return false;
+      }
+      return blockStyle.startsWith('TabbedContent');
+    },
+  ])(block as BuilderBlockStyleProps['TabbedContent']);
