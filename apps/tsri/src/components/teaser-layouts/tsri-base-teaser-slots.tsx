@@ -1,3 +1,4 @@
+import { TeaserSlotsBlock } from '@wepublish/block-content/website';
 import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { cond, T } from 'ramda';
 
@@ -197,7 +198,7 @@ export const TsriBaseTeaserSlots = cond([
       />
     ),
   ],
-  //[T, (props: BuilderTeaserSlotsBlockProps) => <TeaserSlotsBlock {...props} />],
+  [T, (props: BuilderTeaserSlotsBlockProps) => <TeaserSlotsBlock {...props} />],
   [
     T,
     props => (

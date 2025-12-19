@@ -1,3 +1,7 @@
+import {
+  isTabbedContentBlockStyle,
+  TabbedContent,
+} from '@wepublish/block-content/website';
 import { cond, T } from 'ramda';
 
 import {
@@ -37,6 +41,7 @@ export const TsriTabbedContent = cond([
       />
     ),
   ],
+  [isTabbedContentBlockStyle, props => <TabbedContent {...props} />],
   [
     T,
     props => (
