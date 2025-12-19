@@ -326,6 +326,7 @@
         "label": "Flex Block",
         "addNestedBlock": "(Sub-)Block hinzufügen",
         "chooseNestedBlock": "(Sub-)Block wählen",
+        "close": "Schliessen",
         "deleteNestedBlock": "(Sub-)Block löschen",
         "editNestedBlock": "(Sub-)Block bearbeiten",
         "lockNestedBlock": "(Sub-)Block sperren",
