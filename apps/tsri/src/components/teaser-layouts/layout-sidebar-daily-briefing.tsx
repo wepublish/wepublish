@@ -64,7 +64,7 @@ export const TeaserSlotsDailyBriefingSidebar = styled(TeaserSlots)`
       width: 100%;
       flex-direction: row;
       text-align: left;
-      align-items: center;
+      align-items: flex-end;
       justify-self: center;
 
       & .MuiLink-root {
