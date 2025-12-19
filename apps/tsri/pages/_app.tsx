@@ -22,51 +22,40 @@ import {
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
+import { getPageTypeBasedContent } from '@wepublish/utils/website';
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
 import { createWithV1ApiClient } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import deTranlations from '@wepublish/website/translations/de.json';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
-import resourcesToBackend from 'i18next-resources-to-backend';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
+import deOverriden from '../locales/deOverriden.json';
 
 import { TsriArticleDate } from '../src/components/tsri-article-date';
 import { TsriArticleMeta } from '../src/components/tsri-article-meta';
+import { TsriArticleList } from '../src/components/tsri-article-list';
 import { TsriBanner } from '../src/components/tsri-banner';
+import { TsriBaseTeaser } from '../src/components/teasers/tsri-base-teaser';
 import { TsriBreakBlock } from '../src/components/tsri-break-block';
 import { TsriContextBox } from '../src/components/tsri-context-box';
 import { TsriNavbar } from '../src/components/tsri-navbar';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
-import { TsriTeaser } from '../src/components/tsri-teaser';
+import { TsriTeaserGridFlex } from '../src/components/tsri-teaser-grid-flex'; // test comment
 import theme from '../src/theme';
 
 setDefaultOptions({
   locale: de,
 });
 
-initWePublishTranslator()
-  .use(resourcesToBackend(() => deTranlations))
-  .init({
-    partialBundledLanguages: true,
-    lng: 'de',
-    fallbackLng: 'de',
-    supportedLngs: ['de'],
-    interpolation: {
-      escapeValue: false,
-    },
-    resources: {
-      de: { zod: deTranlations.zod },
-    },
-  });
+initWePublishTranslator(deOverriden);
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
@@ -81,20 +70,13 @@ const MainSpacer = styled(Container)`
   position: relative;
   display: grid;
   gap: ${({ theme }) => theme.spacing(5)};
+  container: main / inline-size;
 
   ${({ theme }) => css`
     ${theme.breakpoints.up('md')} {
       gap: ${theme.spacing(10)};
     }
   `}
-`;
-
-const TsriTitle = styled(TitleBlock)`
-  ${TitleBlockTitle} {
-    ${({ theme }) => theme.breakpoints.down('sm')} {
-      font-size: 2rem;
-    }
-  }
 `;
 
 const dateFormatter = (date: Date, includeTime = true) =>
@@ -114,6 +96,8 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
 
+  const pageTypeBasedContent = getPageTypeBasedContent(pageProps);
+
   return (
     <AppCacheProvider emotionCache={cache}>
       <WebsiteProvider>
@@ -123,10 +107,12 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Navbar={TsriNavbar}
           ArticleDate={TsriArticleDate}
           ArticleMeta={TsriArticleMeta}
+          ArticleList={TsriArticleList}
           PaymentAmount={PaymentAmountPicker}
           elements={{ Link: NextWepublishLink }}
           blocks={{
-            BaseTeaser: TsriTeaser,
+            BaseTeaser: TsriBaseTeaser,
+            TeaserGridFlex: TsriTeaserGridFlex,
             Break: TsriBreakBlock,
             Quote: TsriQuoteBlock,
             RichText: TsriRichText,
