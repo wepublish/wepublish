@@ -26,7 +26,9 @@ export class ArticleRevisionResolver {
 
   @ResolveField(() => [BlockContent])
   async blocks(@Parent() parent: ArticleRevision) {
-    return this.slotTeasersLoader.loadSlotTeasersIntoBlocks(parent.blocks);
+    return await this.slotTeasersLoader.loadSlotTeasersIntoBlocks(
+      parent.blocks
+    );
   }
 
   @ResolveField(() => [Property])
