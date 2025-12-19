@@ -70,22 +70,39 @@ export class SlotTeasersLoader {
     private articleService: ArticleService
   ) {}
 
+  async populateTeaserSlots(block: BaseBlock<BlockType> | undefined) {
+    if (!block) {
+      return block;
+    }
+    if (isTeaserSlotsBlock(block)) {
+      const autofillTeasers = await this.getAutofillTeasers(block);
+      const teasers = await this.getTeasers(block, autofillTeasers);
+
+      return {
+        ...block,
+        autofillTeasers,
+        teasers,
+      };
+    }
+    return block;
+  }
+
   async loadSlotTeasersIntoBlocks(revisionBlocks: BaseBlock<BlockType>[]) {
     const blocks = [];
     for (const block of revisionBlocks) {
       this.addLoadedTeaser(...extractTeasers(block));
 
-      if (isTeaserSlotsBlock(block)) {
-        const autofillTeasers = await this.getAutofillTeasers(block);
-        const teasers = await this.getTeasers(block, autofillTeasers);
-
-        blocks.push({
-          ...block,
-          autofillTeasers,
-          teasers,
-        });
+      if (isFlexBlock(block)) {
+        const updatedBlocks = [];
+        for (const nestedBlock of block.blocks) {
+          updatedBlocks.push({
+            ...nestedBlock,
+            block: await this.populateTeaserSlots(nestedBlock.block),
+          });
+        }
+        blocks.push({ ...block, blocks: updatedBlocks });
       } else {
-        blocks.push(block);
+        blocks.push(await this.populateTeaserSlots(block));
       }
     }
 
