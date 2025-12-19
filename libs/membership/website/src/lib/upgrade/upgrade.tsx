@@ -16,7 +16,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
 
-import { replace, toLower } from 'ramda';
 import { ApolloError } from '@apollo/client';
 import { ApiAlert } from '@wepublish/errors/website';
 import { useTranslation } from 'react-i18next';
@@ -184,7 +183,8 @@ export const Upgrade = ({
     locale
   );
 
-  const monthlyPaymentText = usePaymentText({
+  const supportText = usePaymentText({
+    type: 'support',
     autoRenew: true,
     extendable: selectedMemberPlan?.extendable ?? true,
     paymentPeriodicity: PaymentPeriodicity.Monthly,
@@ -241,6 +241,20 @@ export const Upgrade = ({
       onSubmit={onSubmit}
       noValidate
     >
+      <Paragraph gutterBottom={false}>
+        Mach jetzt ein Upgrade von deinem{' '}
+        {subscriptionToUpgrade.memberPlan.name} auf das{' '}
+        {selectedMemberPlan?.name}. Dein Restguthaben von{' '}
+        {formatCurrency(
+          (upgradeInfo.data?.upgradeSubscriptionInfo.discountAmount ?? 0) / 100,
+          selectedMemberPlan?.currency ?? Currency.Chf,
+          locale
+        )}{' '}
+        Franken bei deinem {subscriptionToUpgrade.memberPlan.name} wird Dir
+        dabei angerechnet. Weiter unten siehst du Deinen noch zu zahlenden
+        Upgrade-Preis für den Wechsel zum {selectedMemberPlan?.name}.
+      </Paragraph>
+
       <SubscribeSection area="memberPlans">
         {availableMemberplans.length > 1 && <H5 component="h2">Abo wählen</H5>}
 
@@ -263,7 +277,6 @@ export const Upgrade = ({
           />
         )}
       </SubscribeSection>
-
       <SubscribeSection area="monthlyAmount">
         {!shouldHidePaymentAmount && (
           <Controller
@@ -276,8 +289,7 @@ export const Upgrade = ({
                   component={SubscribeAmountText}
                   gutterBottom={false}
                 >
-                  Ich unterstütze {siteTitle}{' '}
-                  {replace(/^./, toLower)(monthlyPaymentText)}
+                  {supportText}
                 </Paragraph>
 
                 <PaymentAmount
@@ -296,7 +308,6 @@ export const Upgrade = ({
           />
         )}
       </SubscribeSection>
-
       <SubscribeSection area="paymentPeriodicity">
         {allPaymentMethods.length > 1 && (
           <H5 component="h2">Zahlungsmethode wählen</H5>
@@ -320,14 +331,12 @@ export const Upgrade = ({
           />
         </SubscribePayment>
       </SubscribeSection>
-
       {error && (
         <ApiAlert
           error={error as ApolloError}
           severity="error"
         />
       )}
-
       {!!watch('monthlyAmount') && (
         <SubscribeSection area="transactionFee">
           <Controller
@@ -342,7 +351,6 @@ export const Upgrade = ({
           />
         </SubscribeSection>
       )}
-
       <SubscribeNarrowSection area="submit">
         <SubscribeButton
           size={'large'}

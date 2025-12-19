@@ -9,7 +9,7 @@ import { useMemo } from 'react';
 import {
   isMemberplanUpgradeableTo,
   isSubscriptionUpgradeable,
-} from './hauptstadt-paywall';
+} from '../hooks/inform-user-upgrade';
 
 export const HauptstadtSubscribe = (props: BuilderSubscribeBlockProps) => {
   const { hasUser } = useUser();
