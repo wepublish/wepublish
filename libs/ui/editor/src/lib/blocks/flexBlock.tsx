@@ -494,10 +494,18 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
       <Drawer
         open={isChooseModalOpen}
         size="xs"
-        onClose={() => setChooseModalOpen(false)}
+        onClose={() => {
+          setChooseModalOpen(false);
+          setEditItem(undefined);
+          setEditIndex(0);
+        }}
       >
         <BlockSelectAndEditPanel
-          onClose={() => setChooseModalOpen(false)}
+          onClose={() => {
+            setChooseModalOpen(false);
+            setEditItem(undefined);
+            setEditIndex(0);
+          }}
           onSelect={block => {
             setChooseModalOpen(false);
             handleBlockLinkChange(editIndex, block);
