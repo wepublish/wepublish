@@ -27,7 +27,7 @@ import { ComponentProps } from 'react';
 import TsriAdHeader from '../../src/components/tsri-ad-header';
 
 const AfterArticleWrapper = styled(DefaultArticleWrapper)`
-  background-color: pink !important;
+  background-color: transparent !important;
 `;
 
 const AfterArticleTitle = styled(H2)`
