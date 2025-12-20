@@ -12,7 +12,7 @@ import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
 import { isTeaserGridFlexBlock } from './teaser-flex.model';
 import { isTeaserGridBlock } from './teaser-grid.model';
-import { isFlexBlock } from '../flex/flex-block.model';
+import { FlexBlock, isFlexBlock } from '../flex/flex-block.model';
 
 const extractTeasers = <Block extends BaseBlock<BlockType>>(block: Block) => {
   if (isTeaserSlotsBlock(block)) {
@@ -87,26 +87,37 @@ export class SlotTeasersLoader {
     return block;
   }
 
-  async loadSlotTeasersIntoBlocks(revisionBlocks: BaseBlock<BlockType>[]) {
-    const blocks = [];
-    for (const block of revisionBlocks) {
-      this.addLoadedTeaser(...extractTeasers(block));
+  async processBlock(
+    block: BaseBlock<BlockType> | undefined
+  ): Promise<BaseBlock<BlockType> | undefined> {
+    if (!block) return block;
 
-      if (isFlexBlock(block)) {
-        const updatedBlocks = [];
-        for (const nestedBlock of block.blocks) {
-          updatedBlocks.push({
-            ...nestedBlock,
-            block: await this.populateTeaserSlots(nestedBlock.block),
-          });
-        }
-        blocks.push({ ...block, blocks: updatedBlocks });
-      } else {
-        blocks.push(await this.populateTeaserSlots(block));
-      }
+    this.addLoadedTeaser(...extractTeasers(block));
+
+    if (isTeaserSlotsBlock(block)) {
+      return await this.populateTeaserSlots(block);
     }
 
-    return blocks;
+    if (isFlexBlock(block)) {
+      const updatedBlocks = await Promise.all(
+        block.blocks.map(async nested => ({
+          ...nested,
+          block: await this.processBlock(nested.block),
+        }))
+      );
+
+      return { ...block, blocks: updatedBlocks } as FlexBlock;
+    }
+
+    return block;
+  }
+
+  async loadSlotTeasersIntoBlocks(revisionBlocks: BaseBlock<BlockType>[]) {
+    const blocks = await Promise.all(
+      revisionBlocks.map(block => this.processBlock(block))
+    );
+
+    return blocks as BaseBlock<BlockType>[];
   }
 
   async getTeasers(
