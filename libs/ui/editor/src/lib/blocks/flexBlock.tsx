@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { BlockType } from '@wepublish/editor/api-v2';
 import i18next from 'i18next';
 import nanoid from 'nanoid';
-import {
+import React, {
   ComponentType,
   PropsWithChildren,
   useCallback,
@@ -241,48 +241,22 @@ const ContentForFlexBlockWrapper = styled('div')`
 `;
 
 export const ContentForFlexBlock = ({ block }: { block: BlockValue }) => {
-  const { type, value } = block;
-
-  /*
-  const BlockComponent = (BlockMap as BlockMapType)[type]?.component;
-
-  if (!BlockComponent) {
-    return <div>Unknown block type: {type}</div>;
-  }
-
-  return <BlockComponent value={value} onChange={() => {}} />;
-  */
-
+  const { value } = block;
   return (
     <ContentForFlexBlockWrapper>
-      {(value as { title: string }).title ?? ''}
+      {(value && (value as { title: string }).title) ?? ''}
     </ContentForFlexBlockWrapper>
   );
 };
 
 export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
   const [editIndex, setEditIndex] = useState(0);
-  const [editItem, setEditItem] = useState<FlexBlockWithAlignment>();
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
-  const [nestedBlocks, setNestedBlocks] = useState<BlockValue[]>([]);
-
   const blockMap = BlockMap as BlockMapType;
-
   const { blocks } = value;
-
-  useEffect(() => {
-    setNestedBlocks(blocks.map(flexBlock => flexBlock.block as BlockValue));
-  }, []);
-
-  useEffect(() => {
-    for (let i = 0; i < blocks.length; i++) {
-      blocks[i].block = nestedBlocks[i];
-    }
-    onChange({ ...value, blocks });
-  }, [nestedBlocks]);
 
   const { t } = useTranslation();
 
@@ -321,8 +295,7 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
 
   const handleLayoutChange = (layout: FlexAlignment[]) => {
     const newBlocks = layout.map(v => ({
-      block: blocks.find(flexTeaser => v.i === flexTeaser.alignment.i)?.block,
-      //alignment: v,
+      block: blocks.find(block => v.i === block.alignment.i)?.block,
       alignment: {
         i: v.i,
         x: v.x,
@@ -336,8 +309,8 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
     onChange({ ...value, blocks: newBlocks });
   };
 
-  const handlePinTeaserBlock = (index: string) => {
-    const newTeasers = blocks.map(({ block, alignment }) => {
+  const handlePinNestedBlock = (index: string) => {
+    const newBlocks = blocks.map(({ block, alignment }) => {
       return alignment.i === index ?
           {
             block,
@@ -353,7 +326,7 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
         : { block, alignment };
     });
 
-    onChange({ ...value, blocks: newTeasers });
+    onChange({ ...value, blocks: newBlocks });
   };
 
   const handleRemoveBlock = (index: string) => {
@@ -368,32 +341,42 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
   };
 
   const handleBlockLinkChange = (index: number, block: { id: BlockType }) => {
+    const newBlock = createBlock(block.id);
+
     onChange({
       ...value,
       blocks: Object.assign([], blocks, {
-        [index]: { ...blocks[index], block: createBlock(block.id) },
+        [index]: { ...blocks[index], block: newBlock },
       }),
     });
   };
 
-  const handleChange = useCallback(
-    (blocks: React.SetStateAction<BlockValue[]>) => {
-      setNestedBlocks(blocks);
-      //setChanged(true);
-    },
-    []
-  );
-
   const handleItemChange = useCallback(
     (index: number, itemValue: React.SetStateAction<BlockListValue>) => {
-      handleChange((value: any) => {
-        return Object.assign([], value, {
-          [index]:
-            isFunctionalUpdate(itemValue) ? itemValue(value[index]) : itemValue,
-        });
-      });
+      const current = value.blocks[index]?.block as BlockValue | null;
+      if (!current) return;
+
+      const resolved =
+        isFunctionalUpdate(itemValue) ?
+          (
+            itemValue as (
+              value: BlockValue | BlockListValue
+            ) => BlockValue | BlockListValue
+          )(current)
+        : itemValue;
+
+      const updatedBlock: BlockValue =
+        isBlockValue(resolved) ? resolved : (
+          ({ ...current, value: resolved } as BlockValue)
+        );
+
+      const updatedBlocks = value.blocks.map((block, idx) =>
+        idx === index ? { ...block, block: updatedBlock } : block
+      );
+
+      onChange({ ...value, blocks: updatedBlocks });
     },
-    [handleChange]
+    [onChange, value]
   );
 
   const createBlock = (type: string) => {
@@ -407,7 +390,7 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
 
   const handleClose = () => {
     setEditModalOpen(false);
-    setEditItem(undefined);
+    setChooseModalOpen(false);
     setEditIndex(0);
   };
 
@@ -440,20 +423,21 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
         {blocks.map((block, index) => (
           <div
             key={block.alignment.i}
-            data-is-editing={editItem && index === editIndex ? 'true' : 'false'}
+            data-is-editing={
+              isEditModalOpen && index === editIndex ? 'true' : 'false'
+            }
           >
             <FlexItem
               block={block.block}
               showGrabCursor={!block.alignment.static}
               onEdit={() => {
                 setEditIndex(index);
-                setEditItem(block);
                 setEditModalOpen(true);
               }}
               onChoose={() => {
                 setEditIndex(index);
-                setEditItem(block);
                 setChooseModalOpen(true);
+                setEditModalOpen(false);
               }}
               onRemove={() => handleRemoveBlock(block.alignment.i)}
             />
@@ -484,7 +468,7 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
                   block
                   appearance="subtle"
                   icon={block.alignment.static ? <MdLockOpen /> : <MdLock />}
-                  onClick={() => handlePinTeaserBlock(block.alignment.i)}
+                  onClick={() => handlePinNestedBlock(block.alignment.i)}
                 />
               </IconButtonTooltip>
             </ButtonToolbar>
@@ -504,39 +488,47 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
           }}
         />
       </Drawer>
-      {isEditModalOpen && (
-        <NestedBlockEditPanel>
-          <Button
-            appearance={'subtle'}
-            onClick={handleClose}
-          >
-            {t('blocks.flexBlock.close')}
-          </Button>
-          <BlockListItem
-            itemId={editItem!.alignment.i}
-            index={editIndex}
-            value={{
-              value: editItem!.block!.value,
-              key: editItem!.block!.key,
-              type: editItem!.block!.type,
-            }}
-            icon={blockMap[editItem!.block!.type].icon}
-            autofocus={false}
-            disabled={false}
-            children={blockMap[editItem!.block!.type].field}
-            onChange={handleItemChange}
-            onDelete={() => {
-              // will never happen here
-            }}
-            onMoveUp={() => {
-              // will never happen here
-            }}
-            onMoveDown={() => {
-              // will never happen here
-            }}
-          />
-        </NestedBlockEditPanel>
-      )}
+      {isEditModalOpen &&
+        (() => {
+          const blockWithAlignment = value.blocks[editIndex];
+          const currentBlock = blockWithAlignment?.block;
+
+          if (!currentBlock) return null;
+
+          return (
+            <NestedBlockEditPanel>
+              <Button
+                appearance={'subtle'}
+                onClick={handleClose}
+              >
+                {t('blocks.flexBlock.close')}
+              </Button>
+              <BlockListItem
+                itemId={blockWithAlignment.alignment.i}
+                index={editIndex}
+                value={{
+                  value: currentBlock.value,
+                  key: currentBlock.key,
+                  type: currentBlock.type,
+                }}
+                icon={blockMap[currentBlock.type].icon}
+                autofocus={false}
+                disabled={false}
+                children={blockMap[currentBlock.type].field}
+                onChange={handleItemChange}
+                onDelete={() => {
+                  // will never happen here
+                }}
+                onMoveUp={() => {
+                  // will never happen here
+                }}
+                onMoveDown={() => {
+                  // will never happen here
+                }}
+              />
+            </NestedBlockEditPanel>
+          );
+        })()}
     </>
   );
 }
@@ -548,3 +540,11 @@ interface FlexItemProps {
   onChoose: () => void;
   onRemove: () => void;
 }
+
+export const isBlockValue = (obj: unknown): obj is BlockValue => {
+  return (
+    !!obj &&
+    typeof obj === 'object' &&
+    ['type', 'key', 'value'].every(prop => prop in obj)
+  );
+};
