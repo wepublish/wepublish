@@ -1,8 +1,9 @@
 import {
   FullUserRoleFragment,
+  getApiClientV2,
   useDeleteUserRoleMutation,
   useUserRoleListQuery,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import {
   createCheckedPermissionComponent,
   DescriptionList,
@@ -61,11 +62,13 @@ function UserRoleList() {
   const [currentUserRole, setCurrentUserRole] =
     useState<FullUserRoleFragment>();
 
+  const client = getApiClientV2();
   const {
     data,
     refetch,
     loading: isLoading,
   } = useUserRoleListQuery({
+    client,
     variables: {
       filter: filter || undefined,
       take: 200,
@@ -73,7 +76,9 @@ function UserRoleList() {
     fetchPolicy: 'network-only',
   });
 
-  const [deleteUserRole, { loading: isDeleting }] = useDeleteUserRoleMutation();
+  const [deleteUserRole, { loading: isDeleting }] = useDeleteUserRoleMutation({
+    client,
+  });
 
   useEffect(() => {
     if (isCreateRoute) {

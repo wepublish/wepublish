@@ -1,4 +1,10 @@
-import { Field, InputType, ObjectType, OmitType } from '@nestjs/graphql';
+import {
+  Field,
+  InputType,
+  InterfaceType,
+  ObjectType,
+  OmitType,
+} from '@nestjs/graphql';
 import { Image, UploadImageInput } from '@wepublish/image/api';
 import { Property } from '@wepublish/property/api';
 
@@ -32,8 +38,8 @@ export class PaymentProviderCustomer {
   customerID!: string;
 }
 
-@ObjectType()
-export class User {
+@InterfaceType()
+export abstract class BaseUser {
   @Field()
   id!: string;
 
@@ -43,35 +49,48 @@ export class User {
   @Field(() => String, { nullable: true })
   firstName!: string | null;
 
+  @Field(() => String, { nullable: true })
+  flair!: string | null;
+
+  @Field(() => String, { nullable: true })
+  userImageID?: string | null;
+
+  @Field(() => Image, { nullable: true })
+  image?: Image | null;
+
+  @Field(() => [String])
+  roleIDs!: string[];
+
+  @Field(() => [Property])
+  properties?: Property[];
+
+  @Field()
+  active!: boolean;
+}
+
+@ObjectType({
+  implements: [BaseUser],
+})
+export class User extends BaseUser {}
+
+@ObjectType({
+  implements: [BaseUser],
+})
+export class SensitiveDataUser extends BaseUser {
   @Field(() => Date, { nullable: true })
   birthday!: Date | null;
 
   @Field()
   email!: string;
 
-  active!: boolean;
-
   @Field(() => UserAddress, { nullable: true })
   address?: UserAddress | null;
 
-  @Field(() => String, { nullable: true })
-  flair!: string | null;
-
-  @Field(() => [PaymentProviderCustomer])
-  paymentProviderCustomers?: PaymentProviderCustomer[];
-
-  userImageID!: string | null;
-
-  @Field(() => Image, { nullable: true })
-  image?: Image | null;
-
-  @Field(() => [Property])
-  properties?: Property[];
-
-  roleIDs!: string[];
-
   @Field(() => [String])
   permissions?: string[];
+
+  @Field(() => [PaymentProviderCustomer], { nullable: true })
+  paymentProviderCustomers?: PaymentProviderCustomer[];
 }
 
 @InputType()

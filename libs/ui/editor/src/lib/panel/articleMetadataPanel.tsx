@@ -1,12 +1,14 @@
 import styled from '@emotion/styled';
 import {
-  AuthorRefFragment,
   CommentItemType,
   FullImageFragment,
   Tag,
   TagType,
 } from '@wepublish/editor/api';
-import { FullTrackingPixelFragment } from '@wepublish/editor/api-v2';
+import {
+  FullAuthorFragment,
+  FullTrackingPixelFragment,
+} from '@wepublish/editor/api-v2';
 import { slugify } from '@wepublish/utils';
 import { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -119,7 +121,7 @@ export interface ArticleMetadata {
   readonly title: string;
   readonly lead: string;
   readonly seoTitle: string;
-  readonly authors: AuthorRefFragment[];
+  readonly authors: FullAuthorFragment[];
   readonly tags: string[];
   readonly defaultTags: Pick<Tag, 'id' | 'tag'>[];
   readonly url: string;
@@ -134,7 +136,7 @@ export interface ArticleMetadata {
   readonly hideAuthor: boolean;
   readonly socialMediaTitle?: string;
   readonly socialMediaDescription?: string;
-  readonly socialMediaAuthors: AuthorRefFragment[];
+  readonly socialMediaAuthors: FullAuthorFragment[];
   readonly socialMediaImage?: FullImageFragment;
   readonly likes: number;
   readonly trackingPixels?: (FullTrackingPixelFragment | null)[];

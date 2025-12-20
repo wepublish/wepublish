@@ -9,7 +9,7 @@ import { UserSession } from '@wepublish/authentication/api';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
 import { Validator } from './validator';
-import { User } from '@wepublish/user/api';
+import { SensitiveDataUser } from '@wepublish/user/api';
 import {
   FIFTEEN_MINUTES_IN_MILLISECONDS,
   logger,
@@ -69,7 +69,7 @@ export class SessionService {
     }));
   }
 
-  async createUserSession(user: User): Promise<SessionWithToken> {
+  async createUserSession(user: SensitiveDataUser): Promise<SessionWithToken> {
     const token = nanoid(IDAlphabet, 64);
 
     const expiresAt = new Date(Date.now() + this.sessionTTL);

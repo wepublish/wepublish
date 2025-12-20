@@ -10,7 +10,7 @@ import { UserService } from './user.service';
 import {
   PaymentProviderCustomer,
   PaymentProviderCustomerInput,
-  User,
+  SensitiveDataUser,
   UserInput,
 } from './user.model';
 import { UploadImageInput } from '@wepublish/image/api';
@@ -25,11 +25,13 @@ export class ProfileResolver {
   ) {}
 
   @Public()
-  @Query(() => User, {
+  @Query(() => SensitiveDataUser, {
     description: `This query returns the user.`,
     nullable: true,
   })
-  async me(@CurrentUser() session: UserSession): Promise<User | null> {
+  async me(
+    @CurrentUser() session: UserSession
+  ): Promise<SensitiveDataUser | null> {
     if (session?.type !== AuthSessionType.User) {
       return null;
     }
@@ -38,7 +40,7 @@ export class ProfileResolver {
   }
 
   @Authenticated()
-  @Mutation(() => User, {
+  @Mutation(() => SensitiveDataUser, {
     description: `This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.`,
   })
   async updatePassword(
@@ -77,7 +79,7 @@ export class ProfileResolver {
   }
 
   @Authenticated()
-  @Mutation(() => User, {
+  @Mutation(() => SensitiveDataUser, {
     nullable: true,
     description: `This mutation allows to upload and update the user's profile image.`,
   })
@@ -96,7 +98,7 @@ export class ProfileResolver {
   }
 
   @Authenticated()
-  @Mutation(() => User, {
+  @Mutation(() => SensitiveDataUser, {
     nullable: true,
     description: `This mutation allows to update the user's data by taking an input of type UserInput.`,
   })
