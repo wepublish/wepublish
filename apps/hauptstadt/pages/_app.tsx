@@ -79,7 +79,7 @@ import {
 } from '../src/components/hauptstadt-teaser';
 import { HauptstadtTitleBlock } from '../src/components/hauptstadt-title-block';
 import { PrintLogo } from '../src/components/print-logo';
-import { withTrackFirstRoute } from '../src/hooks/use-is-first';
+import { withTrackFirstRoute } from '../src/hooks/use-is-first-route';
 import { printStyles } from '../src/print-styles';
 import theme from '../src/theme';
 

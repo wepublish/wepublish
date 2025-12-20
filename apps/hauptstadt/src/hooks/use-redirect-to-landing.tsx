@@ -1,10 +1,12 @@
 import { useUser } from '@wepublish/authentication/website';
+import { BYPASS_COOKIE_KEY } from '@wepublish/paywall/website';
 import { FullPageFragment } from '@wepublish/website/api';
+import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { anyPass } from 'ramda';
 import { useMemo } from 'react';
 
-import { useIsFirstRoute } from './use-is-first';
+import { useIsFirstRoute } from './use-is-first-route';
 
 export const useRedirectToLandingPage = (
   page?: FullPageFragment
@@ -28,6 +30,8 @@ export const useRedirectToLandingPage = (
     () => hasUser || user === undefined,
     // Check if first page hit
     () => !isFirstRoute,
+    // Has paywall bypass
+    () => !!getCookie(BYPASS_COOKIE_KEY),
   ])();
 
   if (shouldNotRedirect) {
