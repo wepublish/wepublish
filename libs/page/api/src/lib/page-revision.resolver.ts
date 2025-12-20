@@ -4,11 +4,7 @@ import { Image, ImageDataloaderService } from '@wepublish/image/api';
 import { PagePropertyDataloader, Property } from '@wepublish/property/api';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { hasPermission } from '@wepublish/permissions/api';
-import {
-  BlockContent,
-  isTeaserSlotsBlock,
-  SlotTeasersLoader,
-} from '@wepublish/block-content/api';
+import { BlockContent, SlotTeasersLoader } from '@wepublish/block-content/api';
 import { forwardRef, Inject } from '@nestjs/common';
 import { CanGetPage } from '@wepublish/permissions';
 
@@ -56,13 +52,9 @@ export class PageRevisionResolver {
   }
 
   @ResolveField(() => [BlockContent])
-  async blocks(
-    @Parent() revision: PageRevision
-  ): Promise<(typeof BlockContent)[]> {
-    if (revision.blocks.some(isTeaserSlotsBlock)) {
-      return this.slotTeasersLoader.loadSlotTeasersIntoBlocks(revision.blocks);
-    }
-
-    return revision.blocks;
+  async blocks(@Parent() parent: PageRevision) {
+    return await this.slotTeasersLoader.loadSlotTeasersIntoBlocks(
+      parent.blocks
+    );
   }
 }

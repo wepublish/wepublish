@@ -29,6 +29,7 @@ import {
   VimeoVideoBlock,
   StreamableVideoBlock,
   YouTubeVideoBlock,
+  FlexBlock,
 } from '@wepublish/website/api';
 
 export type BuilderBlockRendererProps = {
@@ -41,6 +42,11 @@ export type BuilderBlockRendererProps = {
 export type BuilderBlocksProps = {
   blocks: BlockContent[];
   type: BuilderBlockRendererProps['type'];
+};
+
+export type BuilderFlexBlockProps = FlexBlock & {
+  className?: string;
+  subBlockStyles?: (string | undefined)[];
 };
 
 export type BuilderTitleBlockProps = Omit<TitleBlock, 'type'> & {
