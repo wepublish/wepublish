@@ -96,6 +96,7 @@ import {
   StreamableVideoBlock,
   StreamableVideoBlockInput,
 } from './embed/streamable-block.model';
+import { FlexBlock, FlexBlockInput } from './flex/flex-block.model';
 
 export const BlockContent = createUnionType({
   name: 'BlockContent',
@@ -131,6 +132,7 @@ export const BlockContent = createUnionType({
       TeaserGridFlexBlock,
       TeaserListBlock,
       TeaserSlotsBlock,
+      FlexBlock,
     ] as const,
   resolveType: (value: BaseBlock<BlockType>) => {
     switch (value.type) {
@@ -192,7 +194,10 @@ export const BlockContent = createUnionType({
         return TeaserListBlock.name;
       case BlockType.TeaserSlots:
         return TeaserSlotsBlock.name;
+      case BlockType.FlexBlock:
+        return FlexBlock.name;
     }
+
     console.warn(`Block ${value.type} not implemented!`);
 
     return UnknownBlock.name;
@@ -263,6 +268,8 @@ export class BlockContentInput {
   [BlockType.TeaserList]?: TeaserListBlockInput;
   @Field(() => TeaserSlotsBlockInput, { nullable: true })
   [BlockType.TeaserSlots]?: TeaserSlotsBlockInput;
+  @Field(() => FlexBlockInput, { nullable: true })
+  [BlockType.FlexBlock]?: FlexBlockInput;
 }
 
 export function mapBlockUnionMap(
@@ -323,6 +330,23 @@ export function mapBlockUnionMap(
             teaser: mapTeaserUnionMap(teaser),
           })) ?? [],
         teasers: [],
+        autofillTeasers: [],
+      };
+    }
+
+    case BlockType.FlexBlock: {
+      const blockValue = value[type];
+
+      return {
+        type,
+        ...blockValue,
+        blocks:
+          blockValue?.blocks.map(block => {
+            return {
+              alignment: block.alignment,
+              block: block.block ? mapBlockUnionMap(block.block) : undefined,
+            };
+          }) ?? [],
       };
     }
 
@@ -338,4 +362,10 @@ export function mapBlockUnionMap(
 export class HasBlockContent {
   @Field(() => [BlockContent])
   blocks!: Array<typeof BlockContent>;
+}
+
+@InterfaceType()
+export class HasOneBlockContent {
+  @Field(() => BlockContent, { nullable: true })
+  block?: typeof BlockContent;
 }
