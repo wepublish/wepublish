@@ -2,13 +2,16 @@ import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
 import { Paywall, useShowPaywall } from '@wepublish/paywall/website';
 import { createWithTheme } from '@wepublish/ui';
-import { useSubscriptionsQuery } from '@wepublish/website/api';
+import {
+  FullPaywallFragment,
+  useSubscriptionsQuery,
+} from '@wepublish/website/api';
 import {
   BuilderPaywallProps,
   Paywall as BuilderPaywall,
 } from '@wepublish/website/builder';
 import { ascend, prop, sortWith } from 'ramda';
-import { useMemo } from 'react';
+import { createContext, useMemo } from 'react';
 
 import { isSubscriptionUpgradeable } from '../hooks/inform-user-upgrade';
 import theme from '../theme';
@@ -96,3 +99,7 @@ export const DuplicatedPaywall = ({
 
   return null;
 };
+
+export const CurrentPaywallContext = createContext<
+  FullPaywallFragment | null | undefined
+>(undefined);

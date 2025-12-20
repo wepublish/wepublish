@@ -1,13 +1,25 @@
 import styled from '@emotion/styled';
 import {
   TitleBlock,
-  TitleBlockPreTitle,
+  TitleBlockPreTitleWrapper,
 } from '@wepublish/block-content/website';
+import { BuilderTitleBlockProps } from '@wepublish/website/builder';
 
-export const HauptstadtTitleBlock = styled(TitleBlock)`
+import { HauptstadtTitleBlockPreTitle } from './hauptstadt-premium-indicator';
+
+const TitleBlockWithAboPlus = (props: BuilderTitleBlockProps) => {
+  return (
+    <TitleBlock
+      {...props}
+      PreTitle={HauptstadtTitleBlockPreTitle}
+    />
+  );
+};
+
+export const HauptstadtTitleBlock = styled(TitleBlockWithAboPlus)`
   gap: ${({ theme }) => theme.spacing(3.5)};
 
-  ${TitleBlockPreTitle} {
-    margin-bottom: -${({ theme }) => theme.spacing(2)};
+  ${TitleBlockPreTitleWrapper} {
+    margin-bottom: 0;
   }
 `;
