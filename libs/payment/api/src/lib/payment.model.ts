@@ -1,6 +1,5 @@
 import {
   ArgsType,
-  Directive,
   Field,
   InputType,
   ObjectType,
@@ -14,8 +13,7 @@ registerEnumType(PaymentState, {
   name: 'PaymentState',
 });
 
-@ObjectType({ implements: HasPaymentMethod })
-@Directive('@key(fields: "id")')
+@ObjectType({ implements: () => HasPaymentMethod })
 export class Payment {
   @Field()
   id!: string;

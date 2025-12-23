@@ -10,7 +10,11 @@ export class PaywallService {
 
   @PrimeDataLoader(PaywallDataloaderService)
   public getPaywalls() {
-    return this.prisma.paywall.findMany({});
+    return this.prisma.paywall.findMany({
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
   }
 
   @PrimeDataLoader(PaywallDataloaderService)
@@ -23,7 +27,11 @@ export class PaywallService {
   }
 
   @PrimeDataLoader(PaywallDataloaderService)
-  public createPaywall({ memberPlanIds, ...input }: CreatePaywallInput) {
+  public createPaywall({
+    memberPlanIds,
+    bypassTokens,
+    ...input
+  }: CreatePaywallInput) {
     if (input.hideContentAfter < 0) {
       throw new BadRequestException('hideContentAfter can not be lower than 0');
     }
@@ -33,10 +41,20 @@ export class PaywallService {
         ...input,
         description: input.description as any[],
         circumventDescription: input.circumventDescription as any[],
+        upgradeDescription: input.upgradeDescription as any[],
+        upgradeCircumventDescription:
+          input.upgradeCircumventDescription as any[],
         memberPlans: {
           createMany: {
             data: memberPlanIds.map(memberPlanId => ({
               memberPlanId,
+            })),
+          },
+        },
+        bypasses: {
+          createMany: {
+            data: bypassTokens.map(token => ({
+              token,
             })),
           },
         },
@@ -63,6 +81,9 @@ export class PaywallService {
         ...input,
         description: input.description as any[],
         circumventDescription: input.circumventDescription as any[],
+        upgradeDescription: input.upgradeDescription as any[],
+        upgradeCircumventDescription:
+          input.upgradeCircumventDescription as any[],
         memberPlans:
           memberPlanIds ?
             {
@@ -108,6 +129,7 @@ export class PaywallService {
     });
   }
 
+  // @PrimeDataLoader(MemberPlanDataloader)
   public getPaywallMemberplans(id: string) {
     return this.prisma.memberPlan.findMany({
       where: {
@@ -127,24 +149,6 @@ export class PaywallService {
     return this.prisma.paywallBypass.findMany({
       where: {
         paywallId: id,
-      },
-    });
-  }
-
-  @PrimeDataLoader(PaywallDataloaderService)
-  public createPaywallBypass(paywallId: string, token: string) {
-    return this.prisma.paywallBypass.create({
-      data: {
-        paywallId,
-        token,
-      },
-    });
-  }
-
-  public deletePaywallBypass(id: string) {
-    return this.prisma.paywallBypass.delete({
-      where: {
-        id,
       },
     });
   }

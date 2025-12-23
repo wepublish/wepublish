@@ -117,9 +117,7 @@ export const Banner = ({
     }
 
     const timer = setTimeout(
-      () => {
-        setShowBanner(true);
-      },
+      () => setShowBanner(true),
       (data?.primaryBanner?.delay ?? 0) * 1000
     );
 

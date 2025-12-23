@@ -36,6 +36,7 @@ import {
   DashboardModule,
   MembershipModule,
   SubscriptionModule,
+  UpgradeSubscriptionModule,
 } from '@wepublish/membership/api';
 import { NavigationModule } from '@wepublish/navigation/api';
 import {
@@ -111,7 +112,7 @@ import { V0Module } from '@wepublish/ai/api';
           persistedQueries: false,
           introspection: configFile.general.apolloIntrospection,
           playground: configFile.general.apolloPlayground,
-          allowBatchedHttpRequests: true,
+          allowBatchedHttpRequests: false,
           inheritResolversFromInterfaces: true,
         } as ApolloDriverConfig;
       },
@@ -491,6 +492,7 @@ import { V0Module } from '@wepublish/ai/api';
       inject: [ConfigService],
     }),
     SubscriptionModule,
+    UpgradeSubscriptionModule,
     NavigationModule,
     TagModule,
     EventsImportModule.registerAsync({

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { CommentDataloaderService } from './comment-dataloader.service';
 import {
   HasCommentResolver,
@@ -23,8 +23,8 @@ import { PageModule } from '@wepublish/page/api';
     URLAdapterModule,
     ImageModule,
     UserModule,
-    ArticleModule,
-    PageModule,
+    forwardRef(() => ArticleModule),
+    forwardRef(() => PageModule),
   ],
   providers: [
     CommentDataloaderService,

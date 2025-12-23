@@ -9,7 +9,7 @@ import { GoogleTagManager } from '@next/third-parties/google';
 import {
   TitleBlock,
   TitleBlockLead,
-  TitleBlockPreTitle,
+  TitleBlockPreTitleWrapper,
   TitleBlockTitle,
 } from '@wepublish/block-content/website';
 import { withErrorSnackbar } from '@wepublish/errors/website';
@@ -23,6 +23,7 @@ import {
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
+  withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
@@ -156,7 +157,7 @@ const OnlineReportsTitle = styled(TitleBlock)`
     letter-spacing: 0;
   }
 
-  ${TitleBlockPreTitle} {
+  ${TitleBlockPreTitleWrapper} {
     display: none;
   }
 `;
@@ -351,8 +352,10 @@ const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   previewLink,
 ]);
 const ConnectedApp = withApollo(
-  withErrorSnackbar(
-    withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+  withBuilderRouter(
+    withErrorSnackbar(
+      withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+    )
   )
 );
 

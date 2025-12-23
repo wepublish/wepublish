@@ -16,14 +16,6 @@ import { SubscriptionWithRelations } from './db/subscription';
 import { UserWithRelations } from './db/user';
 import { format } from 'date-fns';
 
-export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000;
-export const ONE_DAY_IN_MILLISECONDS = 24 * ONE_HOUR_IN_MILLISECONDS;
-export const FIFTEEN_MINUTES_IN_MILLISECONDS = 900000;
-export const ONE_MONTH_IN_MILLISECONDS = 31 * ONE_DAY_IN_MILLISECONDS;
-
-export const USER_PROPERTY_LAST_LOGIN_LINK_SEND =
-  '_wepLastLoginLinkSentTimestamp';
-
 export function mapSubscriptionsAsCsv(
   subscriptions: (SubscriptionWithRelations & {
     user: UserWithRelations;
