@@ -32,6 +32,13 @@ export const UserAddressWrapper = styled('div')`
   }
 `;
 
+export const UserStreetWrapper = styled('div')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(3)};
+  grid-template-columns: 1fr ${({ theme }) => theme.spacing(15)};
+  grid-column: 1 / -1;
+`;
+
 export const UserPasswordWrapper = styled('div')`
   display: flex;
   flex: 1 0 50%;
@@ -41,10 +48,6 @@ export const UserPasswordWrapper = styled('div')`
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-column: 1 / -1;
   }
-`;
-
-const addressStyles = (theme: Theme) => css`
-  grid-column: 1 / -1;
 `;
 
 const countryStyles = (theme: Theme) => css`
@@ -256,22 +259,39 @@ export function UserForm<T extends BuilderUserFormFields>({
 
       {fieldsToDisplay.address && (
         <UserAddressWrapper>
-          <Controller
-            name={'address.streetAddress'}
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                value={field.value ?? ''}
-                css={theme => addressStyles(theme as Theme)}
-                fullWidth
-                label={'Strasse und Hausnummer'}
-                error={!!error}
-                helperText={error?.message}
-                autoComplete="address"
-              />
-            )}
-          />
+          <UserStreetWrapper>
+            <Controller
+              name={'address.streetAddress'}
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  value={field.value ?? ''}
+                  fullWidth
+                  label={'Strasse'}
+                  error={!!error}
+                  helperText={error?.message}
+                  autoComplete="address"
+                />
+              )}
+            />
+
+            <Controller
+              name={'address.streetAddressNumber'}
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  value={field.value ?? ''}
+                  fullWidth
+                  label={'Hausnummer'}
+                  error={!!error}
+                  helperText={error?.message}
+                  autoComplete="house number"
+                />
+              )}
+            />
+          </UserStreetWrapper>
 
           <Controller
             name={'address.zipCode'}

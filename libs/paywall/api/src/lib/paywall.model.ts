@@ -4,6 +4,7 @@ import {
   ObjectType,
   OmitType,
   PartialType,
+  Int,
 } from '@nestjs/graphql';
 import { MemberPlan } from '@wepublish/member-plan/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
@@ -59,6 +60,11 @@ export class Paywall {
 
   @Field()
   active!: boolean;
+
+  @Field(() => Int)
+  hideContentAfter!: number;
+  @Field()
+  fadeout!: boolean;
 
   @Field(() => [MemberPlan])
   memberPlans!: MemberPlan[];

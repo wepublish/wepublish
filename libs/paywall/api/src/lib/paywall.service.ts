@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { PaywallDataloaderService } from './paywall-dataloader.service';
@@ -32,6 +32,10 @@ export class PaywallService {
     bypassTokens,
     ...input
   }: CreatePaywallInput) {
+    if (input.hideContentAfter < 0) {
+      throw new BadRequestException('hideContentAfter can not be lower than 0');
+    }
+
     return this.prisma.paywall.create({
       data: {
         ...input,
@@ -65,6 +69,10 @@ export class PaywallService {
     bypassTokens,
     ...input
   }: UpdatePaywallInput) {
+    if (input.hideContentAfter != null && input.hideContentAfter < 0) {
+      throw new BadRequestException('hideContentAfter can not be lower than 0');
+    }
+
     return this.prisma.paywall.update({
       where: {
         id,

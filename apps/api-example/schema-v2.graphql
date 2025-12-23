@@ -1421,7 +1421,7 @@ type Mutation {
   createPaymentFromSubscription(failureURL: String, subscriptionId: String, successURL: String): Payment
 
   """Creates a paywall."""
-  createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
+  createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
   """Creates a new peer."""
   createPeer(hostURL: String!, information: RichText, isDisabled: Boolean, name: String!, slug: String!, token: String!): Peer!
@@ -1590,7 +1590,7 @@ type Mutation {
   updatePaymentProviderCustomers(input: [PaymentProviderCustomerInput!]!): [PaymentProviderCustomer!]!
 
   """Updates a paywall."""
-  updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
+  updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
   """Updates an existing peer."""
   updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
@@ -1874,6 +1874,8 @@ type Paywall {
   circumventDescription: RichText
   createdAt: DateTime!
   description: RichText
+  fadeout: Boolean!
+  hideContentAfter: Int!
   id: String!
   memberPlans: [MemberPlan!]!
   modifiedAt: DateTime!
@@ -2314,8 +2316,8 @@ type Query {
   """Returns all mail flows"""
   systemMails: [SystemMailModel!]!
 
-  """Returns a tag by id"""
-  tag(id: String!): Tag!
+  """Returns an tag by id or tag."""
+  tag(id: String, tag: String, type: TagType): Tag!
 
   """This query returns a list of tags"""
   tags(
@@ -2910,6 +2912,8 @@ type UserAddress {
   country: String
   streetAddress: String
   streetAddress2: String
+  streetAddress2Number: String
+  streetAddressNumber: String
   zipCode: String
 }
 
@@ -2919,6 +2923,8 @@ input UserAddressInput {
   country: String
   streetAddress: String
   streetAddress2: String
+  streetAddress2Number: String
+  streetAddressNumber: String
   zipCode: String
 }
 

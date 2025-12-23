@@ -18,6 +18,9 @@ fragment FullPaywall on Paywall {
     id
     token
   }
+
+  fadeout
+  hideContentAfter
 }
 
 query PaywallList {
@@ -43,6 +46,8 @@ mutation CreatePaywall(
   $alternativeSubscribeUrl: String
   $upgradeDescription: RichText
   $upgradeCircumventDescription: RichText
+  $fadeout: Boolean!
+  $hideContentAfter: Int!
 ) {
   createPaywall(
     name: $name
@@ -55,6 +60,8 @@ mutation CreatePaywall(
     memberPlanIds: $memberPlanIds
     bypassTokens: $bypassTokens
     alternativeSubscribeUrl: $alternativeSubscribeUrl
+    fadeout: $fadeout
+    hideContentAfter: $hideContentAfter
   ) {
     ...FullPaywall
   }
@@ -72,6 +79,8 @@ mutation UpdatePaywall(
   $memberPlanIds: [String!]
   $bypassTokens: [String!]
   $alternativeSubscribeUrl: String
+  $fadeout: Boolean
+  $hideContentAfter: Int
 ) {
   updatePaywall(
     id: $id
@@ -85,6 +94,8 @@ mutation UpdatePaywall(
     memberPlanIds: $memberPlanIds
     bypassTokens: $bypassTokens
     alternativeSubscribeUrl: $alternativeSubscribeUrl
+    fadeout: $fadeout
+    hideContentAfter: $hideContentAfter
   ) {
     ...FullPaywall
   }
