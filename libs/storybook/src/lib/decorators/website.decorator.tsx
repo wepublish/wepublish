@@ -7,21 +7,26 @@ import {
   useCallback,
   useState,
 } from 'react';
-import { User, SessionWithTokenWithoutUser } from '@wepublish/website/api';
+import {
+  SensitiveDataUser,
+  SessionWithTokenWithoutUser,
+} from '@wepublish/website/api';
 import { SessionTokenContext } from '@wepublish/authentication/website';
 
 import { WebsiteProvider } from '@wepublish/website';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
+import { act } from '@testing-library/react';
 
 const SessionProvider = memo<PropsWithChildren>(({ children }) => {
   const [token, setToken] = useState<SessionWithTokenWithoutUser | null>();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<SensitiveDataUser | null>(null);
 
   const setTokenAndGetMe = useCallback(
     async (newToken: SessionWithTokenWithoutUser | null) => {
-      setToken(newToken);
+      await act(() => setToken(newToken));
 
       if (newToken) {
+        await act(() =>
         setUser({
           id: '1234-1234',
           firstName: 'Foo',
@@ -30,9 +35,12 @@ const SessionProvider = memo<PropsWithChildren>(({ children }) => {
           paymentProviderCustomers: [],
           properties: [],
           permissions: [],
-        });
+            active: true,
+            roleIDs: [],
+          })
+        );
       } else {
-        setUser(null);
+        await act(() => setUser(null));
       }
     },
     []
