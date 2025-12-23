@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { PrismaClient, UserEvent } from '@prisma/client';
+import { PrismaClient, User, UserEvent } from '@prisma/client';
 import { SessionWithToken } from './session.model';
 import { InvalidCredentialsError, NotActiveError } from './session.errors';
 import nanoid from 'nanoid/generate';
@@ -9,7 +9,6 @@ import { UserSession } from '@wepublish/authentication/api';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
 import { Validator } from './validator';
-import { SensitiveDataUser } from '@wepublish/user/api';
 import {
   FIFTEEN_MINUTES_IN_MILLISECONDS,
   logger,
@@ -52,8 +51,13 @@ export class SessionService {
     const user =
       await this.jwtAuthenticationService.authenticateUserWithJWT(jwt);
 
-    if (!user) throw new InvalidCredentialsError();
-    if (!user.active) throw new NotActiveError();
+    if (!user) {
+      throw new InvalidCredentialsError();
+    }
+
+    if (!user.active) {
+      throw new NotActiveError();
+    }
 
     return this.createUserSession(user);
   }
@@ -62,6 +66,7 @@ export class SessionService {
     if (!session) {
       return false;
     }
+
     return !!(await this.prisma.session.delete({
       where: {
         token: session.token,
@@ -69,7 +74,7 @@ export class SessionService {
     }));
   }
 
-  async createUserSession(user: SensitiveDataUser): Promise<SessionWithToken> {
+  async createUserSession(user: User): Promise<SessionWithToken> {
     const token = nanoid(IDAlphabet, 64);
 
     const expiresAt = new Date(Date.now() + this.sessionTTL);

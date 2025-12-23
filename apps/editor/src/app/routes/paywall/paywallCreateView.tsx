@@ -1,6 +1,5 @@
 import { ApolloError } from '@apollo/client';
 import {
-  FullPaywallFragment,
   getApiClientV2,
   MutationCreatePaywallArgs,
   useCreatePaywallMutation,
@@ -30,14 +29,6 @@ const onErrorToast = (error: ApolloError) => {
   );
 };
 
-const mapApiDataToInput = (
-  paywall: FullPaywallFragment
-): MutationCreatePaywallArgs => ({
-  ...paywall,
-  memberPlanIds: paywall.memberPlans?.map(memberPlan => memberPlan.id),
-  bypassTokens: paywall.bypasses?.map(bypass => bypass.token) || undefined,
-});
-
 const PaywallCreateView = () => {
   const { t } = useTranslation();
   const [shouldClose, setShouldClose] = useState(false);
@@ -53,6 +44,8 @@ const PaywallCreateView = () => {
     anyMemberPlan: false,
     bypassTokens: [],
     memberPlanIds: [],
+    fadeout: true,
+    hideContentAfter: 3,
   }));
 
   const client = getApiClientV2();

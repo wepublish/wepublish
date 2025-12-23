@@ -1340,7 +1340,9 @@
       "sendWebsiteLogin": "Login-Link versenden",
       "sendWebsiteLoginSuccessMessage": "Login-Link an {{email}} versendet",
       "streetAddress": "Strasse",
+      "streetAddressNumber": "Hausnummer",
       "streetAddress2": "Strasse 2",
+      "streetAddress2Number": "Hausnummer",
       "subscriptionsHeader": "Abonnemente",
       "successfullyCreatedUser": "Benutzer:in erstellt",
       "successfullyUpdatedUser": "Benutzerdaten aktualisiert",
@@ -1682,7 +1684,11 @@
         "qrCodeTitle": "QR-Code für Bypass-Token",
         "downloadSvg": "SVG herunterladen",
         "baseUrl": "Website-Url (Baseurl). Z.B. https://wepublish.ch",
-        "upgrade": "Texte, wenn die Paywall ein Upgrade unterstützt und zulässt"
+        "upgrade": "Texte, wenn die Paywall ein Upgrade unterstützt und zulässt",
+        "display": "Anzeigeoptionen",
+        "hideContentAfter": "Inhalt nach X Blöcken ausblenden",
+        "fadeout": "Ausgeblendete Blöcke ausblenden mit Überblendung",
+        "fadeoutHelpText": "Die Überblendung ermöglicht eine Vorschau auf den restlichen Inhalt."
       },
       "overview": {
         "areYouSure": "Bist du sicher?",

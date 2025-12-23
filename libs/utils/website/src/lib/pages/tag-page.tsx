@@ -69,14 +69,14 @@ export const TagPageGetStaticProps = (async ({ params }) => {
     },
   });
 
-  if (!tagResult.error && !tagResult.data.tags.nodes.length) {
+  if (!tagResult.error && !tagResult.data.tag) {
     return {
       notFound: true,
       revalidate: 1,
     };
   }
 
-  const tagId = tagResult.data.tags.nodes[0].id;
+  const tagId = tagResult.data.tag.id;
 
   await Promise.all([
     client.query({

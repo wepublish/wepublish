@@ -942,12 +942,14 @@ model UserAddress {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  company        String?
-  streetAddress  String?
-  streetAddress2 String?
-  zipCode        String?
-  city           String?
-  country        String?
+  company              String?
+  streetAddress        String?
+  streetAddressNumber  String?
+  streetAddress2       String?
+  streetAddress2Number String?
+  zipCode              String?
+  city                 String?
+  country              String?
 
   userId String @unique
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -1459,6 +1461,9 @@ model Paywall {
   anyMemberPlan           Boolean @default(false)
   active                  Boolean @default(true)
   alternativeSubscribeUrl String?
+
+  hideContentAfter Int     @default(3)
+  fadeout          Boolean @default(true)
 
   memberPlans PaywallMemberplan[]
   articles    Article[]
