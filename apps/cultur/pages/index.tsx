@@ -43,7 +43,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const [mailchimpResponse] = await Promise.all([
     mailchimp.campaigns.list({
       count: 4,
-      sortField: 'send_time',
+      sortField: 'create_time',
       status: 'sent',
       sortDir: 'DESC',
       folderId: '496b1eb537',
