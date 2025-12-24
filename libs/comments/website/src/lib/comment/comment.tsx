@@ -130,7 +130,7 @@ export const Comment = ({
           {!isValidUrl(source ?? '') && flair && (
             <CommentFlair>{flair}</CommentFlair>
           )}
-          {!flair && createdAt && (
+          {createdAt && (
             <CommentFlair>{date.format(new Date(createdAt))}</CommentFlair>
           )}
         </CommentHeaderContent>
