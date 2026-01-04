@@ -9,10 +9,9 @@ import {
 import { CrowdfundingDataloaderService } from './crowdfunding-dataloader.service';
 import { CrowdfundingGoalDataloader } from './crowdfunding-goal.dataloader';
 import { CrowdfundingMemberPlanDataloader } from './crowdfunding-memberplan.dataloader';
-import { MemberPlanModule } from '@wepublish/member-plan/api';
 
 @Module({
-  imports: [PrismaModule, MemberPlanModule],
+  imports: [PrismaModule],
   providers: [
     CrowdfundingResolver,
     CrowdfundingService,

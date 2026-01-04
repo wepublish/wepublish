@@ -64,12 +64,15 @@ import { NavigationList } from './routes/navigations/navigationList';
 import { PageEditor } from './routes/pages/pageEditor';
 import { PageList } from './routes/pages/pageList';
 import { PaymentMethodList } from './routes/paymentMethods/paymentMethodList';
+import { PaywallCreateView } from './routes/paywall/paywallCreateView';
 import { PaywallEditView } from './routes/paywall/paywallEditView';
+import { PaywallList } from './routes/paywall/paywallList';
 import { PeerArticleList } from './routes/peerArticles/peerArticleList';
 import { PeerList } from './routes/peers/peerList';
 import { PollEditView } from './routes/polls/pollEditView';
 import { PollList } from './routes/polls/pollList';
 import { PollVoteListContainer } from './routes/polls/PollVotesListContainer';
+import { Seed } from './routes/seed/seed';
 import { SubscriptionEditView } from './routes/subscriptions/subscriptionEditView';
 import { SubscriptionList } from './routes/subscriptions/subscriptionList';
 import { TagCreateView } from './routes/tags/tagCreateView';
@@ -247,6 +250,10 @@ export function App() {
               path="login"
               element={<Login />}
             />
+            <Route
+              path="seed"
+              element={<Seed />}
+            />
             {/* Dashboard Routes */}
             <Route
               path="dashboard"
@@ -314,10 +321,26 @@ export function App() {
               }
             />
             <Route
-              path="articles/paywall"
+              path="articles/paywalls"
+              element={
+                <Base>
+                  <PaywallList />
+                </Base>
+              }
+            />
+            <Route
+              path="articles/paywalls/edit/:id"
               element={
                 <Base>
                   <PaywallEditView />
+                </Base>
+              }
+            />
+            <Route
+              path="articles/paywalls/create"
+              element={
+                <Base>
+                  <PaywallCreateView />
                 </Base>
               }
             />

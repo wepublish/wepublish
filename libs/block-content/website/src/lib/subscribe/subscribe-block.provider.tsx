@@ -5,8 +5,10 @@ import { SubscribeBlockContext } from './subscribe-block.context';
 import {
   useSubscriptionsQuery,
   useInvoicesQuery,
+  useUpgradeSubscriptionInfoLazyQuery,
+  useResubscribeMutation,
 } from '@wepublish/website/api';
-import { useSubscribe } from '@wepublish/payment/website';
+import { useSubscribe, useUpgrade } from '@wepublish/payment/website';
 
 export function SubscribeBlockProvider({ children }: PropsWithChildren) {
   const { hasUser } = useUser();
@@ -17,8 +19,15 @@ export function SubscribeBlockProvider({ children }: PropsWithChildren) {
   const userInvoices = useInvoicesQuery({
     skip: !hasUser,
   });
-  const [subscribe, redirectPages, stripeClientSecret] = useSubscribe();
+  const [subscribe, subscribeRedirectPages, subscribeStripeClientSecret] =
+    useSubscribe();
+  const [upgrade, upgradeRedirectPages, upgradeStripeClientSecret] =
+    useUpgrade();
+  const upgradeInfo = useUpgradeSubscriptionInfoLazyQuery({
+    fetchPolicy: 'cache-first',
+  });
   const { register, challenge } = useRegister();
+  const resubscribe = useResubscribeMutation();
 
   return (
     <SubscribeBlockContext.Provider
@@ -26,10 +35,14 @@ export function SubscribeBlockProvider({ children }: PropsWithChildren) {
         userSubscriptions,
         userInvoices,
         subscribe,
-        redirectPages,
-        stripeClientSecret,
+        upgrade,
+        upgradeInfo,
+        redirectPages: subscribeRedirectPages ?? upgradeRedirectPages,
+        stripeClientSecret:
+          subscribeStripeClientSecret ?? upgradeStripeClientSecret,
         register,
         challenge,
+        resubscribe,
       }}
     >
       {children}

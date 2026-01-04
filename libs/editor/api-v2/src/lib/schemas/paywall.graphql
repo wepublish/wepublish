@@ -5,8 +5,11 @@ fragment FullPaywall on Paywall {
   name
   description
   circumventDescription
+  upgradeDescription
+  upgradeCircumventDescription
   active
   anyMemberPlan
+  alternativeSubscribeUrl
   memberPlans {
     id
     name
@@ -15,6 +18,9 @@ fragment FullPaywall on Paywall {
     id
     token
   }
+
+  fadeout
+  hideContentAfter
 }
 
 query PaywallList {
@@ -36,14 +42,26 @@ mutation CreatePaywall(
   $active: Boolean!
   $anyMemberPlan: Boolean!
   $memberPlanIds: [String!]!
+  $bypassTokens: [String!]!
+  $alternativeSubscribeUrl: String
+  $upgradeDescription: RichText
+  $upgradeCircumventDescription: RichText
+  $fadeout: Boolean!
+  $hideContentAfter: Int!
 ) {
   createPaywall(
     name: $name
     description: $description
     circumventDescription: $circumventDescription
+    upgradeDescription: $upgradeDescription
+    upgradeCircumventDescription: $upgradeCircumventDescription
     anyMemberPlan: $anyMemberPlan
     active: $active
     memberPlanIds: $memberPlanIds
+    bypassTokens: $bypassTokens
+    alternativeSubscribeUrl: $alternativeSubscribeUrl
+    fadeout: $fadeout
+    hideContentAfter: $hideContentAfter
   ) {
     ...FullPaywall
   }
@@ -54,20 +72,30 @@ mutation UpdatePaywall(
   $name: String
   $description: RichText
   $circumventDescription: RichText
+  $upgradeDescription: RichText
+  $upgradeCircumventDescription: RichText
   $active: Boolean
   $anyMemberPlan: Boolean
   $memberPlanIds: [String!]
   $bypassTokens: [String!]
+  $alternativeSubscribeUrl: String
+  $fadeout: Boolean
+  $hideContentAfter: Int
 ) {
   updatePaywall(
     id: $id
     name: $name
     description: $description
     circumventDescription: $circumventDescription
+    upgradeDescription: $upgradeDescription
+    upgradeCircumventDescription: $upgradeCircumventDescription
     anyMemberPlan: $anyMemberPlan
     active: $active
     memberPlanIds: $memberPlanIds
     bypassTokens: $bypassTokens
+    alternativeSubscribeUrl: $alternativeSubscribeUrl
+    fadeout: $fadeout
+    hideContentAfter: $hideContentAfter
   ) {
     ...FullPaywall
   }
