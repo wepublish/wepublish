@@ -8,6 +8,7 @@ import {
   useRejectCommentMutation,
   useRequestChangesOnCommentMutation,
 } from '@wepublish/editor/api';
+import { toPlaintext } from '@wepublish/richtext';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdReplay } from 'react-icons/md';
@@ -21,7 +22,6 @@ import {
   toaster,
 } from 'rsuite';
 
-import { RichTextBlock } from '../../blocks/richTextBlock/rich-text-block';
 import { DescriptionList, DescriptionListItem } from '../descriptionList';
 
 const ParentCommentPanel = styled(Panel)`
@@ -233,18 +233,12 @@ export function CommentStateChangeModal({
                     })}
                   </div>
                   <p>{printUsername}:</p>
-                  <RichTextBlock
-                    displayOnly
-                    displayOneLine
-                    disabled
-                    // TODO: remove this
-                    onChange={console.log}
-                    value={
-                      comment.parentComment.revisions[
-                        comment.parentComment.revisions.length - 1
-                      ]?.text || []
-                    }
-                  />
+
+                  {toPlaintext(
+                    comment.parentComment.revisions[
+                      comment.parentComment.revisions.length - 1
+                    ]?.text?.content
+                  )}
                 </>
               </ParentCommentPanel>
               <IconWrapper>
@@ -309,14 +303,8 @@ export function CommentStateChangeModal({
                         revisionCreatedAtDate: new Date(createdAt),
                       })}
                     </div>
-                    <RichTextBlock
-                      disabled
-                      displayOnly
-                      onChange={() => {
-                        return undefined;
-                      }}
-                      value={text || []}
-                    />
+
+                    {toPlaintext(text?.content)}
                   </Timeline.Item>
                 ))
               : null}

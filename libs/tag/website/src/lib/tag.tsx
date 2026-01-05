@@ -64,7 +64,9 @@ export function Tag({
       <TagTitleWrapper>
         <H2 component={TagTitle}>{capitalize(tag.tag ?? '')}</H2>
 
-        {!!tag.description?.length && <RichText richText={tag.description} />}
+        {!!tag.description?.content?.length && (
+          <RichText richText={tag.description} />
+        )}
       </TagTitleWrapper>
 
       {!articles.loading && !articles.data?.articles?.nodes.length && (

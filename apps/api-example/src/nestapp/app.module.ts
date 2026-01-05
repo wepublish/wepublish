@@ -64,7 +64,7 @@ import { ImportPeerArticleModule } from '@wepublish/peering/api/import';
 import { PermissionModule } from '@wepublish/permissions/api';
 import { PhraseModule } from '@wepublish/phrase/api';
 import { PollModule } from '@wepublish/poll/api';
-import { GraphQLRichText } from '@wepublish/richtext/api';
+import { GraphQLRichText, SlateToPmMigrator } from '@wepublish/richtext/api';
 import { SettingModule } from '@wepublish/settings/api';
 import { StatsModule } from '@wepublish/stats/api';
 import { SystemInfoModule } from '@wepublish/system-info';
@@ -574,7 +574,7 @@ import { V0Module } from '@wepublish/ai/api';
       },
       inject: [ConfigService],
     },
-    // System info key provider
+    SlateToPmMigrator,
   ],
 })
 export class AppModule {}

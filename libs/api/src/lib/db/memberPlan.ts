@@ -3,7 +3,7 @@ import {
   PaymentPeriodicity,
   AvailablePaymentMethod,
 } from '@prisma/client';
-import { RichTextNode } from '@wepublish/richtext/api';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 
 export const AllPaymentPeriodicity: PaymentPeriodicity[] = [
   PaymentPeriodicity.monthly,
@@ -15,7 +15,7 @@ export const AllPaymentPeriodicity: PaymentPeriodicity[] = [
 ];
 
 export interface MemberPlan extends Omit<PrismaMemberPlan, 'description'> {
-  readonly description: RichTextNode[];
+  readonly description: RichtextJSONDocument;
 }
 
 export enum MemberPlanSort {

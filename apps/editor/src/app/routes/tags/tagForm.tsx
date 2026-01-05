@@ -44,7 +44,7 @@ export const TagForm = ({ tag, onChange }: TagFormProps) => {
           <Panel bordered>
             <Form.Control
               name="description"
-              value={tag.description || []}
+              value={tag.description}
               onChange={(description: RichTextBlockValue['richText']) =>
                 onChange({ description })
               }

@@ -93,7 +93,7 @@ export const Event = ({
 
       <Title title={data?.event.name} />
 
-      <RichText richText={data?.event.description ?? []} />
+      <RichText richText={data?.event.description} />
     </EventWrapper>
   );
 };

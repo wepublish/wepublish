@@ -16,7 +16,7 @@ import {
   CanUpdateComments,
 } from '@wepublish/permissions';
 import { hasPermission } from '@wepublish/permissions/api';
-import { RichTextNode } from '@wepublish/richtext/api';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 
 export const takeActionOnComment = (
   id: string,
@@ -37,7 +37,7 @@ export const takeActionOnComment = (
 };
 
 type CommentRevisionInput = {
-  text?: RichTextNode[];
+  text?: RichtextJSONDocument;
   title?: string;
   lead?: string;
 };

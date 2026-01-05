@@ -1,9 +1,15 @@
 import { Article } from '@wepublish/website/api';
 import type { Feed, Item } from 'feed';
 import { getArticleSEO } from '@wepublish/article/website';
-import { Descendant } from 'slate';
 import { isRichTextBlock } from '@wepublish/block-content/website';
-import { toHtml } from '@wepublish/richtext';
+import { generateHTML } from '@tiptap/html';
+import { RichtextElements, RichtextJSONDocument } from '@wepublish/richtext';
+
+export const toHtml = async (document: RichtextJSONDocument) => {
+  const { editorConfig } = await import('@wepublish/richtext/editor');
+
+  return generateHTML(document, editorConfig.extensions ?? []);
+};
 
 export const generateFeed =
   ({
@@ -19,15 +25,18 @@ export const generateFeed =
     const items = articles.map(async (article): Promise<Item> => {
       const seo = getArticleSEO(article);
 
-      const content = await toHtml(
-        article.published?.blocks?.reduce((acc, curr) => {
-          if (isRichTextBlock(curr)) {
-            acc.push(...curr.richText);
-          }
+      const content = await toHtml({
+        attrs: undefined,
+        type: 'doc',
+        content:
+          article.published?.blocks?.reduce((acc, curr) => {
+            if (isRichTextBlock(curr)) {
+              acc.push(...(curr.richText?.content ?? []));
+            }
 
-          return acc;
-        }, [] as Descendant[]) ?? []
-      );
+            return acc;
+          }, [] as RichtextElements[]) ?? [],
+      });
 
       return {
         title: seo.schema.headline ?? '',

@@ -6,6 +6,7 @@ import {
   FullCommentFragment,
   useCommentListQuery,
 } from '@wepublish/editor/api';
+import { toPlaintext } from '@wepublish/richtext';
 import {
   CommentStateDropdown,
   createCheckedPermissionComponent,
@@ -19,7 +20,6 @@ import {
   ListViewHeader,
   mapTableSortTypeToGraphQLSortOrder,
   PermissionControl,
-  RichTextBlock,
   Table,
   TableWrapper,
 } from '@wepublish/ui/editor';
@@ -236,18 +236,10 @@ function CommentList() {
             <Cell dataKey="revisions">
               {(rowData: RowDataType<FullCommentFragment>) =>
                 rowData.revisions?.length ?
-                  <RichTextBlock
-                    displayOnly
-                    displayOneLine
-                    disabled
-                    onChange={() => {
-                      return undefined;
-                    }}
-                    value={
-                      rowData.revisions[rowData.revisions?.length - 1]?.text ||
-                      []
-                    }
-                  />
+                  toPlaintext(
+                    rowData.revisions[rowData.revisions.length - 1]?.text
+                      .content
+                  )
                 : null
               }
             </Cell>

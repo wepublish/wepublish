@@ -41,10 +41,7 @@ import { LinkPageBreakBlock } from './linkPageBreakBlock';
 import { ListicleBlock } from './listicleBlock';
 import { PollBlock } from './pollBlock';
 import { QuoteBlock } from './quoteBlock';
-import {
-  createDefaultValue,
-  RichTextBlock,
-} from './richTextBlock/rich-text-block';
+import { RichTextBlock } from './richTextBlock/rich-text-block';
 import { SubscribeBlock } from './subscribeBlock';
 import { TeaserGridBlock } from './teaserGridBlock';
 import { TeaserGridFlexBlock } from './teaserGridFlexBlock';
@@ -78,7 +75,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       />
     ),
     defaultValue: {
-      richText: createDefaultValue(),
+      richText: undefined,
     },
     label: 'blocks.richText.label',
     icon: <MdFormatColorText />,
@@ -110,7 +107,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
           value: {
             image: null,
             title: '',
-            richText: createDefaultValue(),
+            richText: undefined,
           },
         },
       ],
@@ -134,7 +131,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       linkText: '',
       linkTarget: '',
       linkURL: '',
-      richText: createDefaultValue(),
+      richText: undefined,
       image: undefined,
       hideButton: false,
       blockStyle: undefined,

@@ -1,4 +1,4 @@
-import { RichTextNode } from '@wepublish/richtext/api';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 
 export interface PeerProfile {
   name: string;
@@ -6,7 +6,7 @@ export interface PeerProfile {
   logoID?: string | null;
   themeColor: string;
   themeFontColor: string;
-  callToActionText: RichTextNode[];
+  callToActionText: RichtextJSONDocument;
   callToActionURL: string;
   callToActionImageID?: string | null;
   callToActionImageURL?: string | null;

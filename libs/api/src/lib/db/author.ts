@@ -1,4 +1,4 @@
-import { RichTextNode } from '@wepublish/richtext/api';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 
 export interface AuthorLink {
   title: string;
@@ -14,7 +14,7 @@ export interface Author {
   jobTitle?: string | null;
   imageID?: string | null;
   links: AuthorLink[];
-  bio: RichTextNode[];
+  bio: RichtextJSONDocument;
   peerId?: string | null;
 }
 
@@ -24,7 +24,7 @@ export interface AuthorInput {
   jobTitle?: string | null;
   imageID?: string | null;
   links: AuthorLink[];
-  bio: RichTextNode[];
+  bio: RichtextJSONDocument;
 }
 
 export type OptionalAuthor = Author | null;

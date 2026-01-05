@@ -105,7 +105,7 @@ export class AuthorService {
       },
       data: {
         ...input,
-        bio: bio as any[],
+        bio: bio as any,
         links: {
           deleteMany: {
             authorId: {
@@ -137,7 +137,7 @@ export class AuthorService {
     return this.prisma.author.create({
       data: {
         ...input,
-        bio: bio as any[],
+        bio: bio as any,
         links: {
           create: links,
         },

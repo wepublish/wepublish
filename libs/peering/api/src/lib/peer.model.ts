@@ -6,8 +6,8 @@ import {
   PickType,
 } from '@nestjs/graphql';
 import { GraphQLRichText } from '@wepublish/richtext/api';
-import { Descendant } from 'slate';
 import { RemotePeerProfile } from './peer-profile.model';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 
 @ObjectType()
 export class Peer {
@@ -36,7 +36,7 @@ export class Peer {
   token!: string;
 
   @Field(() => GraphQLRichText, { nullable: true })
-  information?: Descendant[];
+  information?: RichtextJSONDocument;
 
   @Field(() => RemotePeerProfile, { nullable: true })
   profile?: RemotePeerProfile;

@@ -55,7 +55,7 @@ export const CommandList = forwardRef<
       anchorEl={props.decorationNode}
       placement={'bottom-start'}
       modifiers={[{ name: 'shift' }, { name: 'flip' }]}
-      sx={{ bgcolor: 'background.default', border: 1 }}
+      sx={{ bgcolor: 'background.default', border: 1, zIndex: 10000 }}
     >
       {props.items.length ?
         props.items.map((item, index) => (

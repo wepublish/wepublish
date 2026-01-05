@@ -366,7 +366,7 @@ type BreakBlock implements BaseBlock & HasImage {
   linkTarget: String
   linkText: String
   linkURL: String
-  richText: RichText!
+  richText: RichText
   text: String
   type: BlockType!
 }
@@ -379,7 +379,7 @@ input BreakBlockInput {
   linkTarget: String
   linkText: String
   linkURL: String
-  richText: RichText!
+  richText: RichText
   text: String
 }
 
@@ -1297,13 +1297,13 @@ input ListicleBlockInput {
 type ListicleItem implements HasImage {
   image: Image
   imageID: String
-  richText: RichText!
+  richText: RichText
   title: String
 }
 
 input ListicleItemInput {
   imageID: String
-  richText: RichText!
+  richText: RichText
   title: String
 }
 
@@ -1974,7 +1974,7 @@ type PeerProfile {
   callToActionImage: Image
   callToActionImageID: String
   callToActionImageURL: String
-  callToActionText: RichText!
+  callToActionText: RichText
   callToActionURL: String!
   hostURL: String!
   logo: Image
@@ -2381,7 +2381,7 @@ type RemotePeerProfile {
   callToActionImage: PeerImage
   callToActionImageID: String
   callToActionImageURL: String
-  callToActionText: RichText!
+  callToActionText: RichText
   callToActionURL: String!
   hostURL: String!
   logo: PeerImage
@@ -2399,14 +2399,14 @@ scalar RichText
 type RichTextBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
-  richText: RichText!
+  richText: RichText
   type: BlockType!
 }
 
 input RichTextBlockInput {
   blockStyle: String
   blockStyleName: String
-  richText: RichText!
+  richText: RichText
 }
 
 type SensitiveDataUser implements BaseUser {

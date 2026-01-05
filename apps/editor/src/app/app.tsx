@@ -205,15 +205,6 @@ export function App() {
             word-wrap: break-word;
           }
 
-          .richTextFrame {
-            padding: 0px 20px 20px;
-            border: 1px solid #e5e5ea;
-            border-radius: 7px;
-            &:hover {
-              border-color: #1675e0;
-            }
-          }
-
           .authorLinks div {
             overflow: visible;
           }

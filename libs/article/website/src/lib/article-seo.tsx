@@ -19,7 +19,7 @@ export const getArticleSEO = (article: Article) => {
   const articleBody = article.latest.blocks
     ?.filter(isRichTextBlock)
     .reduce((body, richText) => {
-      const text = toPlaintext(richText.richText);
+      const text = toPlaintext(richText.richText?.content);
 
       if (text) {
         body.push(text);
@@ -32,9 +32,10 @@ export const getArticleSEO = (article: Article) => {
   const socialMediaDescription =
     article.latest.socialMediaDescription ||
     article.latest.lead ||
-    firstParagraphToPlaintext(firstRichText?.richText);
+    firstParagraphToPlaintext(firstRichText?.richText?.content ?? []);
   const description =
-    article.latest.lead || firstParagraphToPlaintext(firstRichText?.richText);
+    article.latest.lead ||
+    firstParagraphToPlaintext(firstRichText?.richText?.content ?? []);
 
   const image = (article.latest.socialMediaImage ??
     article.latest.image ??

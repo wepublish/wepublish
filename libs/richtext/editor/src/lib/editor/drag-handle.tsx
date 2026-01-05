@@ -1,5 +1,5 @@
 import TipTapDragHandle from '@tiptap/extension-drag-handle-react';
-import { Editor } from '@tiptap/react';
+import { useCurrentEditor } from '@tiptap/react';
 import { MdDragIndicator } from 'react-icons/md';
 import styled from '@emotion/styled';
 import { useRef } from 'react';
@@ -26,7 +26,8 @@ const DragHandleAnim = styled(TipTapDragHandle)`
   transition: top 200ms ease-out;
 `;
 
-export function DragHandle({ editor }: { editor: Editor }) {
+export function DragHandle() {
+  const editor = useCurrentEditor().editor!;
   const pos = useRef<number | null>(null);
 
   return (

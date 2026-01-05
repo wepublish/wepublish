@@ -9,7 +9,7 @@ import { useMemo } from 'react';
 
 export const getEventSEO = (event: Event) => {
   const description =
-    event.lead ?? firstParagraphToPlaintext(event.description);
+    event.lead ?? firstParagraphToPlaintext(event.description?.content ?? []);
   const image = event.image as FullImageFragment | undefined;
   const startDate = formatISO(new Date(event.startsAt));
   const endDate = event.endsAt ? formatISO(new Date(event.endsAt)) : undefined;

@@ -1,5 +1,9 @@
 import { ToggleButtonGroup, ToggleButton } from '@mui/material';
-import { Editor, isTextSelection, useEditorState } from '@tiptap/react';
+import {
+  isTextSelection,
+  useCurrentEditor,
+  useEditorState,
+} from '@tiptap/react';
 import { BubbleMenu } from '@tiptap/react/menus';
 import { equals } from 'ramda';
 import {
@@ -11,7 +15,9 @@ import {
   MdSuperscript,
 } from 'react-icons/md';
 
-export function MarkBubbleMenu({ editor }: { editor: Editor }) {
+export function MarkBubbleMenu() {
+  const editor = useCurrentEditor().editor!;
+
   const editorState = useEditorState({
     editor,
     selector: ({ editor }) => {
@@ -26,7 +32,7 @@ export function MarkBubbleMenu({ editor }: { editor: Editor }) {
         canUnderline: editor.can().chain().toggleUnderline().run() ?? false,
         isSub: editor.isActive('subscript') ?? false,
         canSub: editor.can().chain().toggleSubscript().run() ?? false,
-        isSup: editor.isActive('supscript') ?? false,
+        isSup: editor.isActive('superscript') ?? false,
         canSup: editor.can().chain().toggleSuperscript().run() ?? false,
       };
     },
@@ -35,6 +41,7 @@ export function MarkBubbleMenu({ editor }: { editor: Editor }) {
 
   return (
     <BubbleMenu
+      tabIndex={-1}
       editor={editor}
       options={{ placement: 'bottom', offset: 8, flip: true }}
       shouldShow={({ state, from, to, editor, element, view }) => {
@@ -67,6 +74,7 @@ export function MarkBubbleMenu({ editor }: { editor: Editor }) {
       }}
     >
       <ToggleButtonGroup
+        tabIndex={-1}
         size="small"
         sx={{ background: '#fff' }}
         value={Object.entries({

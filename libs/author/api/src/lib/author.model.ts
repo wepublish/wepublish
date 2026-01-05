@@ -12,9 +12,9 @@ import {
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { HasImage, Image } from '@wepublish/image/api';
 import { HasOptionalPeerLc, Peer } from '@wepublish/peering/api';
-import { Descendant } from 'slate';
 import { GraphQLSlug, PaginatedType, SortOrder } from '@wepublish/utils/api';
 import { Tag } from '@wepublish/tag/api';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 
 @ObjectType()
 export class AuthorLink {
@@ -58,7 +58,7 @@ export class Author implements HasImage, HasOptionalPeerLc {
   links?: AuthorLink[];
 
   @Field(() => GraphQLRichText, { nullable: true })
-  bio?: Descendant[];
+  bio?: RichtextJSONDocument;
 
   @Field(() => [Tag])
   tags!: Tag[];

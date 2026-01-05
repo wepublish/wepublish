@@ -16,7 +16,6 @@ import { CommentResolver } from './comment.resolver';
 import { CommentService } from './comment.service';
 import { RatingSystemService } from './rating-system/rating-system.service';
 import { CommentTagDataloader } from '@wepublish/tag/api';
-import { Descendant } from 'slate';
 import request from 'supertest';
 import {
   Comment,
@@ -27,6 +26,7 @@ import {
 import { ImageDataloaderService } from '@wepublish/image/api';
 import { ArticleDataloaderService } from '@wepublish/article/api';
 import { PageDataloaderService } from '@wepublish/page/api';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 
 const mockUser = {
   id: 'userId',
@@ -56,7 +56,7 @@ const richTextNodes = [
       },
     ],
   },
-] as Descendant[];
+] as RichtextJSONDocument;
 
 const mockComment: Comment = {
   id: 'id',

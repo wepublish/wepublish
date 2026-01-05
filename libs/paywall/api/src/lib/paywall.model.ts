@@ -7,8 +7,8 @@ import {
   InputType,
 } from '@nestjs/graphql';
 import { MemberPlan } from '@wepublish/member-plan/api';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 import { GraphQLRichText } from '@wepublish/richtext/api';
-import { Descendant } from 'slate';
 
 @ObjectType()
 export class PaywallBypass {
@@ -43,10 +43,10 @@ export class Paywall {
   name?: string;
 
   @Field(() => GraphQLRichText, { nullable: true })
-  description?: Descendant[];
+  description?: RichtextJSONDocument;
 
   @Field(() => GraphQLRichText, { nullable: true })
-  circumventDescription?: Descendant[];
+  circumventDescription?: RichtextJSONDocument;
 
   @Field()
   anyMemberPlan!: boolean;

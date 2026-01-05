@@ -7,7 +7,7 @@ import {
 import { useMemo } from 'react';
 
 export const getTagSEO = (tag: Tag) => {
-  const tagBody = toPlaintext(tag.description);
+  const tagBody = toPlaintext(tag.description?.content ?? []);
   const description = tagBody;
 
   const title = tag.tag;

@@ -8,9 +8,9 @@ import {
 import { PaginatedType } from '@wepublish/utils/api';
 import { HasImage, Image } from '@wepublish/image/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
-import { Descendant } from 'slate';
 import { PaymentMethod } from '@wepublish/payment-method/api';
 import { Currency, PaymentPeriodicity, ProductType } from '@prisma/client';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 
 export enum MemberPlanSort {
   createdAt = 'createdAt',
@@ -59,10 +59,10 @@ export class MemberPlan {
   image?: Image;
 
   @Field(() => GraphQLRichText, { nullable: true })
-  description?: Descendant[];
+  description?: RichtextJSONDocument;
 
   @Field(() => GraphQLRichText, { nullable: true })
-  shortDescription?: Descendant[];
+  shortDescription?: RichtextJSONDocument;
 
   @Field(() => [String], { nullable: true })
   tags?: string[];

@@ -6,7 +6,7 @@ import {
   CommentRejectionReason,
   CommentState,
 } from '@prisma/client';
-import { RichTextNode } from '@wepublish/richtext/api';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 
 export interface CommentData {
   readonly id: string;
@@ -36,7 +36,7 @@ export interface Comment extends CommentData {
 }
 
 export interface CommentRevision {
-  readonly text: RichTextNode[];
+  readonly text: RichtextJSONDocument;
   readonly title: string | null;
   readonly lead: string | null;
   readonly createdAt: Date;
@@ -50,7 +50,7 @@ export type CalculatedRating = {
 };
 
 export interface PublicComment extends CommentData {
-  readonly text: RichTextNode[];
+  readonly text: RichtextJSONDocument;
   readonly calculatedRatings?: CalculatedRating[];
 }
 

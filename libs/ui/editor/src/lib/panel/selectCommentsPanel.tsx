@@ -6,6 +6,7 @@ import {
   useCommentListLazyQuery,
 } from '@wepublish/editor/api';
 import { CommentBlockCommentFragment } from '@wepublish/editor/api-v2';
+import { toPlaintext } from '@wepublish/richtext';
 import { TFunction } from 'i18next';
 import React, { useEffect, useMemo, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -26,7 +27,6 @@ import {
 import { RowDataType } from 'rsuite-table';
 
 import { IconButtonTooltip, PermissionControl, SelectTags } from '../atoms';
-import { RichTextBlock } from '../blocks';
 import { CommentBlockValue } from '../blocks/types';
 import { DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES } from '../utility';
 
@@ -260,23 +260,14 @@ export function SelectCommentPanel({
           >
             <Table.HeaderCell>{t('comments.overview.text')}</Table.HeaderCell>
             <Table.Cell dataKey="revisions">
-              {(rowData: RowDataType<FullCommentFragment>) => (
-                <>
-                  {rowData?.revisions?.length ?
-                    <RichTextBlock
-                      displayOnly
-                      displayOneLine
-                      disabled
-                      // TODO: remove this
-                      onChange={console.log}
-                      value={
-                        rowData?.revisions[rowData?.revisions?.length - 1]
-                          ?.text || []
-                      }
-                    />
-                  : null}
-                </>
-              )}
+              {(rowData: RowDataType<FullCommentFragment>) =>
+                rowData?.revisions?.length ?
+                  toPlaintext(
+                    rowData?.revisions[rowData?.revisions?.length - 1]?.text
+                      .content
+                  )
+                : null
+              }
             </Table.Cell>
           </Table.Column>
 

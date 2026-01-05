@@ -31,7 +31,11 @@ export const EventBlock = ({ events, className }: BuilderEventBlockProps) => {
         <EventListItem
           key={event.id}
           {...event}
-          description={truncate(event.description)}
+          description={{
+            type: 'doc',
+            attrs: undefined,
+            content: [truncate(event.description?.content ?? []) ?? []].flat(),
+          }}
         />
       ))}
     </EventBlockWrapper>

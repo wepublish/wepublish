@@ -304,25 +304,20 @@ export function MemberPlanForm({
               <Form.ControlLabel>
                 {t('memberPlanEdit.description')}
               </Form.ControlLabel>
-              <div className="richTextFrame">
-                {memberPlan && (
-                  <RichTextBlock
-                    value={memberPlan?.description || []}
-                    disabled={loading}
-                    onChange={newDescription => {
-                      if (!memberPlan) {
-                        return;
-                      }
-                      setMemberPlan({
-                        ...memberPlan,
-                        description:
-                          (newDescription as RichTextBlockValue['richText']) ||
-                          [],
-                      });
-                    }}
-                  />
-                )}
-              </div>
+
+              <RichTextBlock
+                value={memberPlan?.description}
+                disabled={loading}
+                onChange={newDescription => {
+                  if (memberPlan) {
+                    setMemberPlan({
+                      ...memberPlan,
+                      description:
+                        newDescription as RichTextBlockValue['richText'],
+                    });
+                  }
+                }}
+              />
             </Col>
 
             {/* short description */}
@@ -330,25 +325,20 @@ export function MemberPlanForm({
               <Form.ControlLabel>
                 {t('memberPlanEdit.shortDescription')}
               </Form.ControlLabel>
-              <div className="richTextFrame">
-                {memberPlan && (
-                  <RichTextBlock
-                    value={memberPlan?.shortDescription || []}
-                    disabled={loading}
-                    onChange={newShortDescription => {
-                      if (!memberPlan) {
-                        return;
-                      }
-                      setMemberPlan({
-                        ...memberPlan,
-                        shortDescription:
-                          (newShortDescription as RichTextBlockValue['richText']) ||
-                          [],
-                      });
-                    }}
-                  />
-                )}
-              </div>
+
+              <RichTextBlock
+                value={memberPlan?.shortDescription}
+                disabled={loading}
+                onChange={newShortDescription => {
+                  if (memberPlan) {
+                    setMemberPlan({
+                      ...memberPlan,
+                      shortDescription:
+                        newShortDescription as RichTextBlockValue['richText'],
+                    });
+                  }
+                }}
+              />
             </Col>
 
             <Col xs={24}>

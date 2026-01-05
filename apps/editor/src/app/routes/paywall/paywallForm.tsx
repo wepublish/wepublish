@@ -185,7 +185,7 @@ export const PaywallForm = ({
           <Panel bordered>
             <Form.Control
               name="description"
-              value={paywall.description || []}
+              value={paywall.description}
               onChange={(description: RichTextBlockValue['richText']) =>
                 onChange({ description })
               }
@@ -201,7 +201,7 @@ export const PaywallForm = ({
           <Panel bordered>
             <Form.Control
               name="circumventDescription"
-              value={paywall.circumventDescription || []}
+              value={paywall.circumventDescription}
               onChange={(
                 circumventDescription: RichTextBlockValue['richText']
               ) => onChange({ circumventDescription })}

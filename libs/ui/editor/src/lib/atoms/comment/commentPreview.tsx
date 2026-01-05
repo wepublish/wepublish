@@ -3,6 +3,7 @@ import {
   CommentRevisionUpdateInput,
   FullCommentFragment,
 } from '@wepublish/editor/api';
+import { toPlaintext } from '@wepublish/richtext';
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -44,11 +45,7 @@ export function CommentRevisionView({
 
       {revision.text && (
         <div style={{ marginTop: '5px' }}>
-          <RichTextBlock
-            value={revision.text}
-            onChange={console.log}
-            displayOnly
-          />
+          {toPlaintext(revision.text.content)}
         </div>
       )}
     </>
@@ -255,22 +252,17 @@ export function CommentPreview({
                 {t('commentEditView.comment')}
               </Form.ControlLabel>
 
-              <Panel
-                bordered
-                style={{ backgroundColor: 'white' }}
-              >
-                <RichTextBlock
-                  value={revision?.text || []}
-                  onChange={text => {
-                    if (setRevision) {
-                      setRevision(oldRevision => ({
-                        ...oldRevision,
-                        text: text as RichTextBlockValue['richText'],
-                      }));
-                    }
-                  }}
-                />
-              </Panel>
+              <RichTextBlock
+                value={revision?.text}
+                onChange={text => {
+                  if (setRevision) {
+                    setRevision(oldRevision => ({
+                      ...oldRevision,
+                      text: text as RichTextBlockValue['richText'],
+                    }));
+                  }
+                }}
+              />
             </Col>
           </Row>
         </Grid>

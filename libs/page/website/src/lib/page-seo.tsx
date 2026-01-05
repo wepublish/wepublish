@@ -19,11 +19,11 @@ export const getPageSEO = (page: Page) => {
   const socialMediaDescription =
     page.latest.socialMediaDescription ||
     page.latest.description ||
-    firstParagraphToPlaintext(firstRichText?.richText);
+    firstParagraphToPlaintext(firstRichText?.richText?.content ?? []);
   const description =
     page.latest.socialMediaDescription ||
     page.latest.description ||
-    firstParagraphToPlaintext(firstRichText?.richText);
+    firstParagraphToPlaintext(firstRichText?.richText?.content ?? []);
   const image = (page.latest.socialMediaImage ??
     page.latest.image ??
     firstImageBlock?.image) as FullImageFragment | undefined;

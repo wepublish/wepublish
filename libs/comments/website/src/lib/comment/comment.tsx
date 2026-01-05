@@ -147,7 +147,7 @@ export const Comment = ({
             </Paragraph>
           )}
 
-          <RichText richText={text ?? []} />
+          <RichText richText={text} />
         </CommentContent>
       )}
 

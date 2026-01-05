@@ -10,6 +10,7 @@ import {
   usePeerQuery,
   useUpdatePeerMutation,
 } from '@wepublish/editor/api-v2';
+import { RichtextJSONDocument, toPlaintext } from '@wepublish/richtext';
 import { slugify } from '@wepublish/utils';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +23,6 @@ import {
   Schema,
   toaster,
 } from 'rsuite';
-import { Descendant } from 'slate';
 
 import {
   ChooseEditImage,
@@ -67,7 +67,7 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
   const isAuthorized = useAuthorisation('CAN_CREATE_PEER');
   const [name, setName] = useState('');
   const [slug, setSlug] = useState('');
-  const [information, setInformation] = useState<Descendant[]>();
+  const [information, setInformation] = useState<RichtextJSONDocument | null>();
   const [urlString, setURLString] = useState('');
   const [token, setToken] = useState('');
   const [profile, setProfile] = useState<
@@ -265,7 +265,7 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
               <Panel bordered>
                 <Control
                   name="information"
-                  value={information ?? []}
+                  value={information}
                   onChange={(newInformation: RichTextBlockValue['richText']) =>
                     setInformation(newInformation)
                   }
@@ -343,15 +343,7 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
                 <DescriptionListItem
                   label={t('peerList.panels.callToActionText')}
                 >
-                  {!!profile?.callToActionText && (
-                    <RichTextBlock
-                      disabled
-                      displayOnly
-                      // TODO: remove this
-                      onChange={console.log}
-                      value={profile.callToActionText}
-                    />
-                  )}
+                  {toPlaintext(profile?.callToActionText?.content)}
                 </DescriptionListItem>
 
                 <DescriptionListItem

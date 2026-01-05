@@ -27,8 +27,8 @@ export class PaywallService {
     return this.prisma.paywall.create({
       data: {
         ...input,
-        description: input.description as any[],
-        circumventDescription: input.circumventDescription as any[],
+        description: input.description as any,
+        circumventDescription: input.circumventDescription as any,
         memberPlans: {
           createMany: {
             data: memberPlanIds.map(memberPlanId => ({
@@ -53,8 +53,8 @@ export class PaywallService {
       },
       data: {
         ...input,
-        description: input.description as any[],
-        circumventDescription: input.circumventDescription as any[],
+        description: input.description as any,
+        circumventDescription: input.circumventDescription as any,
         memberPlans:
           memberPlanIds ?
             {

@@ -27,7 +27,6 @@ import {
   Toggle,
 } from 'rsuite';
 import FormControl from 'rsuite/FormControl';
-import { Descendant } from 'slate';
 
 import {
   ChooseEditImage,
@@ -38,11 +37,7 @@ import {
   SelectTags,
   useAuthorisation,
 } from '../atoms';
-import {
-  createDefaultValue,
-  RichTextBlock,
-  RichTextBlockValue,
-} from '../blocks';
+import { RichTextBlock, RichTextBlockValue } from '../blocks';
 import { toggleRequiredLabel } from '../toggleRequiredLabel';
 import { generateID, getOperationNameFromDocument } from '../utility';
 import { ImageEditPanel } from './imageEditPanel';
@@ -81,9 +76,7 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
   const [slug, setSlug] = useState('');
   const [jobTitle, setJobTitle] = useState('');
   const [image, setImage] = useState<Maybe<FullImageFragment>>();
-  const [bio, setBio] = useState<RichTextBlockValue['richText'] | undefined>(
-    () => (!id ? createDefaultValue() : undefined)
-  );
+  const [bio, setBio] = useState<RichTextBlockValue['richText']>();
   const [hideOnArticle, setHideOnArticle] = useState<
     boolean | undefined | null
   >(undefined);
@@ -141,7 +134,7 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
       setSlug(data.author.slug);
       setJobTitle(data.author.jobTitle ?? '');
       setImage(data.author.image);
-      setBio(data.author.bio ? data.author.bio : createDefaultValue());
+      setBio(data.author.bio);
       setHideOnArticle(data.author.hideOnArticle);
       setHideOnTeam(data.author.hideOnTeam);
       setHideOnTeaser(data.author.hideOnTeaser);
@@ -304,15 +297,11 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
             </Panel>
 
             <Panel header={t('authors.panels.bioInformation')}>
-              <div className="richTextFrame">
-                {bio && (
-                  <RichTextBlock
-                    disabled={isDisabled}
-                    value={bio}
-                    onChange={value => setBio(value as Descendant[])}
-                  />
-                )}
-              </div>
+              <RichTextBlock
+                disabled={isDisabled}
+                value={bio}
+                onChange={value => setBio(value)}
+              />
             </Panel>
 
             <Panel

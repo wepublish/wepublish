@@ -72,7 +72,7 @@ export function PeerInformation({
   }
 
   const linkURL = profile.callToActionURL ?? profile.websiteURL;
-  const linkText = toPlaintext(profile.callToActionText ?? []);
+  const linkText = toPlaintext(profile.callToActionText?.content ?? []);
 
   return (
     <PeerInformationWrapper className={className}>
@@ -85,7 +85,7 @@ export function PeerInformation({
         )}
 
         <RichTextBlock
-          richText={information ?? []}
+          richText={information}
           css={richTextStyles(theme)}
         />
 

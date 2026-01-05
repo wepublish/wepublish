@@ -7,10 +7,10 @@ import {
 } from '@nestjs/graphql';
 import { Tag } from '@wepublish/tag/api';
 import { Image } from '@wepublish/image/api';
-import { Descendant } from 'slate';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { RatingSystemType as PrismaRatingSystemType } from '@prisma/client';
 import { HasOptionalUser } from '@wepublish/user/api';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 
 export enum CommentAuthorType {
   author = 'author',
@@ -217,7 +217,7 @@ export class Comment extends HasOptionalUser {
   lead?: string | null;
 
   @Field(() => GraphQLRichText, { nullable: true })
-  text?: Descendant[];
+  text?: RichtextJSONDocument;
 
   @Field(() => String)
   url?: string;

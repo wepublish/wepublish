@@ -27,11 +27,7 @@ import {
   PermissionControl,
   useAuthorisation,
 } from '../atoms';
-import {
-  createDefaultValue,
-  RichTextBlock,
-  RichTextBlockValue,
-} from '../blocks';
+import { RichTextBlock, RichTextBlockValue } from '../blocks';
 import { toggleRequiredLabel } from '../toggleRequiredLabel';
 import { getOperationNameFromDocument } from '../utility';
 import { ImageEditPanel, ImageEditPanelProps } from './imageEditPanel';
@@ -103,11 +99,7 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
       setName(data.peerProfile.name);
       setThemeColor(data.peerProfile.themeColor);
       setThemeFontColor(data.peerProfile.themeFontColor);
-      setCallToActionText(
-        data.peerProfile.callToActionText.length ?
-          data.peerProfile.callToActionText
-        : createDefaultValue()
-      );
+      setCallToActionText(data.peerProfile.callToActionText);
       setCallToActionTextURL(data.peerProfile.callToActionURL);
       setCallToActionImage(data?.peerProfile?.callToActionImage);
       setCallToActionImageURL(data.peerProfile.callToActionImageURL ?? '');
@@ -311,15 +303,13 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
           <BoxWrapper>
             <Group controlId="peerListCallToAction">
               <ControlLabel>{t('peerList.panels.text')}</ControlLabel>
-              {callToActionText && (
-                <Control
-                  name="callToActionText"
-                  value={callToActionText}
-                  onChange={setCallToActionText}
-                  accepter={RichTextBlock}
-                  disabled={isDisabled}
-                />
-              )}
+              <Control
+                name="callToActionText"
+                value={callToActionText}
+                onChange={setCallToActionText}
+                accepter={RichTextBlock}
+                disabled={isDisabled}
+              />
             </Group>
             <Group>
               <Control

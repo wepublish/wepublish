@@ -1,9 +1,9 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { CommentItemType } from './comment.model';
 import { GraphQLRichText } from '@wepublish/richtext/api';
-import { Descendant } from 'slate';
 import { CommentItemType as PCommentItemType } from '@prisma/client';
 import { ChallengeInput } from '@wepublish/challenge/api';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 
 @InputType()
 export class CommentInput {
@@ -26,7 +26,7 @@ export class CommentInput {
   title?: string;
 
   @Field(() => GraphQLRichText)
-  text!: Descendant[];
+  text!: RichtextJSONDocument;
 }
 
 @InputType()
@@ -35,7 +35,7 @@ export class CommentUpdateInput {
   id!: string;
 
   @Field(() => GraphQLRichText, { nullable: true })
-  text?: Descendant[];
+  text?: RichtextJSONDocument;
 
   @Field(() => String, { nullable: true })
   title?: string;

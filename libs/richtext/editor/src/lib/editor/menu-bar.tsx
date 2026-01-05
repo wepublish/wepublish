@@ -7,9 +7,8 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from '@mui/material';
-import { Editor, useEditorState } from '@tiptap/react';
+import { useCurrentEditor, useEditorState } from '@tiptap/react';
 import {
-  MdChecklist,
   MdFormatAlignCenter,
   MdFormatAlignLeft,
   MdFormatAlignRight,
@@ -28,9 +27,26 @@ import {
 } from 'react-icons/md';
 import { Level } from '@tiptap/extension-heading';
 import { equals } from 'ramda';
-import { TbCodePlus, TbQuoteFilled, TbTablePlus } from 'react-icons/tb';
+import {
+  TbCodePlus,
+  TbLinkPlus,
+  TbQuoteFilled,
+  TbTablePlus,
+} from 'react-icons/tb';
+import { BsParagraph } from 'react-icons/bs';
+import styled from '@emotion/styled';
+import { useCallback, useRef } from 'react';
+import { useDebounceCallback } from 'usehooks-ts';
 
-export function MenuBar({ editor }: { editor: Editor }) {
+const HiddenInput = styled(`input`)`
+  visibility: hidden;
+  position: absolute;
+  height: 0;
+  width: 0;
+`;
+
+export function MenuBar() {
+  const editor = useCurrentEditor().editor!;
   const editorState = useEditorState({
     editor,
     selector: ctx => {
@@ -61,7 +77,7 @@ export function MenuBar({ editor }: { editor: Editor }) {
         canUnderline: ctx.editor.can().chain().toggleUnderline().run() ?? false,
         isSub: ctx.editor.isActive('subscript') ?? false,
         canSub: ctx.editor.can().chain().toggleSubscript().run() ?? false,
-        isSup: ctx.editor.isActive('supscript') ?? false,
+        isSup: ctx.editor.isActive('superscript') ?? false,
         canSup: ctx.editor.can().chain().toggleSuperscript().run() ?? false,
 
         alignment: Object.entries(alignmentMap).reduce(
@@ -86,10 +102,36 @@ export function MenuBar({ editor }: { editor: Editor }) {
 
         isCodeBlock: ctx.editor.isActive('codeBlock') ?? false,
         isBlockquote: ctx.editor.isActive('blockquote') ?? false,
+        isLink: ctx.editor.isActive('link') ?? false,
+
+        invisibleCharactersVisible:
+          ctx.editor.storage.invisibleCharacters.visibility(),
       };
     },
     equalityFn: equals,
   });
+  const colorRef = useRef<HTMLInputElement>(null);
+  const backgroundColorRef = useRef<HTMLInputElement>(null);
+
+  const updateColor = useDebounceCallback(
+    useCallback(
+      (color: string) => {
+        editor.chain().focus().setColor(color).run();
+      },
+      [editor]
+    ),
+    1
+  );
+
+  const updateBackgroundColor = useDebounceCallback(
+    useCallback(
+      (color: string) => {
+        editor.chain().focus().setBackgroundColor(color).run();
+      },
+      [editor]
+    ),
+    1
+  );
 
   return (
     <>
@@ -214,8 +256,15 @@ export function MenuBar({ editor }: { editor: Editor }) {
 
       <IconButton
         size="small"
-        onClick={() => editor.chain().focus().setColor('#faa').run()}
+        onClick={() => colorRef.current?.click()}
       >
+        <HiddenInput
+          type="color"
+          ref={colorRef}
+          onInput={event => updateColor(event.currentTarget.value)}
+          value={editorState.color ?? null}
+        />
+
         <MdFormatColorText
           size={18}
           style={{ color: editorState.color }}
@@ -224,8 +273,15 @@ export function MenuBar({ editor }: { editor: Editor }) {
 
       <IconButton
         size="small"
-        onClick={() => editor.chain().focus().setBackgroundColor('#faa').run()}
+        onClick={() => backgroundColorRef.current?.click()}
       >
+        <HiddenInput
+          type="color"
+          ref={backgroundColorRef}
+          onInput={event => updateBackgroundColor(event.currentTarget.value)}
+          value={editorState.background ?? null}
+        />
+
         <MdFormatColorFill
           size={18}
           style={{ color: editorState.background }}
@@ -256,12 +312,13 @@ export function MenuBar({ editor }: { editor: Editor }) {
           <MdFormatListNumbered size={18} />
         </ToggleButton>
 
-        <ToggleButton
+        {/* @TODO: Not supported yet */}
+        {/* <ToggleButton
           value="task"
           onClick={() => editor.chain().focus().toggleTaskList().run()}
         >
           <MdChecklist size={18} />
-        </ToggleButton>
+        </ToggleButton> */}
       </ToggleButtonGroup>
 
       <Divider
@@ -305,6 +362,35 @@ export function MenuBar({ editor }: { editor: Editor }) {
 
       <IconButton
         size="small"
+        onClick={() => {
+          const previousUrl = editor.getAttributes('link').href;
+          const url = window.prompt('URL', previousUrl);
+
+          // cancelled
+          if (url === null) {
+            return;
+          }
+
+          // empty
+          if (url === '') {
+            editor.chain().focus().extendMarkRange('link').unsetLink().run();
+
+            return;
+          }
+
+          editor
+            .chain()
+            .focus()
+            .extendMarkRange('link')
+            .setLink({ href: url })
+            .run();
+        }}
+      >
+        <TbLinkPlus size={18} />
+      </IconButton>
+
+      <IconButton
+        size="small"
         onClick={() =>
           editor
             .chain()
@@ -328,6 +414,20 @@ export function MenuBar({ editor }: { editor: Editor }) {
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
       >
         <TbQuoteFilled size={18} />
+      </IconButton>
+
+      <Divider
+        orientation="vertical"
+        flexItem
+        sx={{ mx: 0.5 }}
+      />
+
+      <IconButton
+        size="small"
+        color={editorState.invisibleCharactersVisible ? 'primary' : undefined}
+        onClick={() => editor.commands.toggleInvisibleCharacters()}
+      >
+        <BsParagraph size={18} />
       </IconButton>
     </>
   );

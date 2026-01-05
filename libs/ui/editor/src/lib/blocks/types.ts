@@ -17,8 +17,8 @@ import {
   TeaserSlotType,
   TeaserType,
 } from '@wepublish/editor/api-v2';
+import { RichtextJSONDocument } from '@wepublish/richtext';
 import nanoid from 'nanoid';
-import { Descendant } from 'slate';
 
 import { BlockListValue } from '../atoms/blockList';
 import { ListValue } from '../atoms/listInput';
@@ -29,7 +29,7 @@ export interface BaseBlockValue {
 }
 
 export interface RichTextBlockValue extends BaseBlockValue {
-  richText: Descendant[];
+  richText: RichtextJSONDocument | null | undefined;
 }
 
 export interface ImageBlockValue extends BaseBlockValue {
@@ -50,7 +50,7 @@ export interface ImageGalleryBlockValue extends BaseBlockValue {
 export interface ListicleItem {
   title: string | null | undefined;
   image: FullImageFragment | null;
-  richText: Descendant[];
+  richText: RichtextJSONDocument | null | undefined;
 }
 
 export interface ListicleBlockValue extends BaseBlockValue {

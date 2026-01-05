@@ -165,6 +165,17 @@ const globalStyles = (
         // fixes taking up more space than needed in 'display: block' wrappers
         vertical-align: bottom;
       }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      table,
+      td,
+      th {
+        border: 1px solid black;
+      }
     `}
   />
 );

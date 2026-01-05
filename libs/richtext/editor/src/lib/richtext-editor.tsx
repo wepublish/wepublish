@@ -1,4 +1,9 @@
-import { EditorContent, useEditor } from '@tiptap/react';
+import {
+  EditorContent,
+  EditorContext,
+  useEditor,
+  UseEditorOptions,
+} from '@tiptap/react';
 
 import { MenuBar } from './editor/menu-bar';
 import styled from '@emotion/styled';
@@ -7,6 +12,9 @@ import { BubbleMenu } from './editor/bubble-menu';
 import { editorConfig } from './richtext-editor.config';
 import { DragHandle } from './editor/drag-handle';
 import { FooterActions } from './editor/footer-actions';
+import { RichtextJSONDocument } from '@wepublish/richtext';
+import { forwardRef, useEffect, useMemo } from 'react';
+import { equals } from 'ramda';
 
 export const RichtextEditorWrapper = styled(Paper)``;
 
@@ -132,58 +140,100 @@ const Editor = styled(EditorContent)`
   }
 `;
 
-export const RichtextEditor = () => {
-  const editor = useEditor(editorConfig, []);
-
-  return (
-    <RichtextEditorWrapper elevation={2}>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 0.5,
-          p: 1,
-          borderBottom: 1,
-          borderColor: 'divider',
-          flexWrap: 'wrap',
-          bgcolor: 'background.default',
-          position: 'sticky',
-          top: 0,
-          zIndex: 1,
-        }}
-      >
-        <MenuBar editor={editor} />
-      </Box>
-
-      <BubbleMenu editor={editor} />
-      <DragHandle editor={editor} />
-
-      <Editor editor={editor} />
-
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          height: 46,
-          gap: 2,
-          p: 1,
-          m: 2,
-          mt: 0,
-          borderRadius: 2,
-          border: 1,
-          borderColor: 'divider',
-          flexWrap: 'wrap',
-          bgcolor: 'background.default',
-          position: 'sticky',
-          bottom: 16,
-          '&:empty': {
-            opacity: 0,
-            pointerEvents: 'none',
-          },
-        }}
-      >
-        <FooterActions editor={editor} />
-      </Box>
-    </RichtextEditorWrapper>
-  );
+type RichtextEditorProps = {
+  defaultValue?: UseEditorOptions['content'];
+  value?: UseEditorOptions['content'];
+  disabled?: boolean;
+  autofocus?: boolean;
+  onChange?: (values: { json: RichtextJSONDocument; html: string }) => void;
 };
+
+export const RichtextEditor = forwardRef<HTMLDivElement, RichtextEditorProps>(
+  ({ defaultValue, value, onChange, disabled, autofocus }, ref) => {
+    const editor = useEditor(
+      {
+        ...editorConfig,
+        content: null,
+        autofocus,
+        editable: !disabled,
+        onUpdate: arg => {
+          onChange?.({
+            html: arg.editor.getHTML(),
+            json: arg.editor.getJSON() as RichtextJSONDocument,
+          });
+        },
+      },
+      [disabled, autofocus]
+    );
+    const providerValue = useMemo(() => ({ editor }), [editor]);
+
+    useEffect(() => {
+      if (defaultValue) {
+        editor.commands.setContent(defaultValue);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+      if (!equals(value, editor.getJSON()) && value) {
+        editor.commands.setContent(value);
+      }
+    }, [value, editor]);
+
+    return (
+      <EditorContext.Provider value={providerValue}>
+        <RichtextEditorWrapper
+          variant="outlined"
+          square={false}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              gap: 0.5,
+              p: 1,
+              borderBottom: 1,
+              borderColor: 'divider',
+            }}
+          >
+            <MenuBar />
+          </Box>
+
+          <BubbleMenu />
+          <DragHandle />
+
+          <Editor
+            editor={editor}
+            ref={ref}
+          />
+
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              height: 46,
+              gap: 2,
+              p: 1,
+              m: 2,
+              mt: 0,
+              borderRadius: 2,
+              border: 1,
+              borderColor: 'divider',
+              flexWrap: 'wrap',
+              bgcolor: 'background.default',
+              position: 'sticky',
+              bottom: 16,
+              '&:empty': {
+                opacity: 0,
+                pointerEvents: 'none',
+              },
+            }}
+          >
+            <FooterActions />
+          </Box>
+        </RichtextEditorWrapper>
+      </EditorContext.Provider>
+    );
+  }
+);

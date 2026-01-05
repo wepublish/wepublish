@@ -95,7 +95,7 @@ function MemberPlanEdit() {
     const initMemberPlan = memberPlanData?.memberPlan || {
       id: 'dummy-id',
       availablePaymentMethods: [],
-      description: [],
+      description: undefined,
       currency: Currency.Chf,
       amountPerMonthMin: 0,
       amountPerMonthMax: 0,

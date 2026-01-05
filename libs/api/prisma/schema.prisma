@@ -222,6 +222,7 @@ model Author {
   jobTitle   String?
   links      AuthorsLinks[]
   bio        Json?
+  slateBio   Json?
 
   imageID                     String?
   image                       Image?                             @relation(fields: [imageID], references: [id])
@@ -327,6 +328,7 @@ model CommentsRevisions {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   text      Json?
+  slateText Json?
   title     String?
   lead      String?
 
@@ -576,7 +578,9 @@ model MemberPlan {
   slug                           String                   @unique
   tags                           String[]
   shortDescription               Json?
-  description                    Json
+  slateShortDescription          Json?
+  description                    Json?
+  slateDescription               Json
   active                         Boolean
   currency                       Currency
   amountPerMonthMin              Float
@@ -799,14 +803,15 @@ model Payment {
 }
 
 model PeerProfile {
-  id                   String  @id @default(cuid())
-  name                 String
-  themeColor           String
-  themeFontColor       String
-  callToActionURL      String
-  callToActionText     Json
-  callToActionImageURL String?
-  callToActionImageID  String?
+  id                    String  @id @default(cuid())
+  name                  String
+  themeColor            String
+  themeFontColor        String
+  callToActionURL       String
+  callToActionText      Json?
+  slateCallToActionText Json
+  callToActionImageURL  String?
+  callToActionImageID   String?
 
   logoID String?
   logo   Image?  @relation("logo", fields: [logoID], references: [id])
@@ -822,12 +827,13 @@ model Peer {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name        String
-  slug        String  @unique
-  hostURL     String
-  token       String
-  isDisabled  Boolean @default(false)
-  information Json?
+  name             String
+  slug             String  @unique
+  hostURL          String
+  token            String
+  isDisabled       Boolean @default(false)
+  information      Json?
+  slateInformation Json?
 
   articles Article[]
   images   Image[]
@@ -1041,10 +1047,11 @@ model Tag {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  type        TagType
-  tag         String?
-  description Json?
-  main        Boolean @default(false)
+  type             TagType
+  tag              String?
+  description      Json?
+  slateDescription Json?
+  main             Boolean @default(false)
 
   peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
   peerId String?
@@ -1067,8 +1074,9 @@ model Poll {
   opensAt  DateTime  @default(now())
   closedAt DateTime?
 
-  question String?
-  infoText Json?
+  question      String?
+  infoText      Json?
+  slateInfoText Json?
 
   answers             PollAnswer[]
   votes               PollVote[]
@@ -1159,10 +1167,11 @@ model Event {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name        String
-  lead        String?
-  description Json[]
-  status      EventStatus @default(Scheduled)
+  name             String
+  lead             String?
+  description      Json?
+  slateDescription Json?
+  status           EventStatus @default(Scheduled)
 
   imageId String?
   image   Image?  @relation(fields: [imageId], references: [id])
@@ -1235,7 +1244,7 @@ model UserFlowMail {
 
   event UserEvent @unique
 
-  mailTemplate   MailTemplate? @relation(fields: [mailTemplateId], references: [id]) // user creates a new account
+  mailTemplate   MailTemplate? @relation(fields: [mailTemplateId], references: [id])
   mailTemplateId String?
 
   @@map("user_communication_flows")
@@ -1266,7 +1275,7 @@ model SubscriptionFlow {
   periodicities  PaymentPeriodicity[]
   autoRenewal    Boolean[]
 
-  intervals SubscriptionInterval[] // send some more e-mails such as reminders
+  intervals SubscriptionInterval[]
 
   @@map("subscription_communication_flows")
 }
@@ -1449,11 +1458,13 @@ model Paywall {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name                  String? @unique
-  description           Json?
-  circumventDescription Json?
-  anyMemberPlan         Boolean @default(false)
-  active                Boolean @default(true)
+  name                       String? @unique
+  description                Json?
+  slateDescription           Json?
+  circumventDescription      Json?
+  slateCircumventDescription Json?
+  anyMemberPlan              Boolean @default(false)
+  active                     Boolean @default(true)
 
   memberPlans PaywallMemberplan[]
   articles    Article[]

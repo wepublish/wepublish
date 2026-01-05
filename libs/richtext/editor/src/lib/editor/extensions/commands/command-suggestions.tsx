@@ -9,40 +9,6 @@ export const commandSuggestions = {
     (
       [
         {
-          title: 'Heading 1',
-          command: ({ editor, range }) => {
-            editor
-              .chain()
-              .focus()
-              .deleteRange(range)
-              .setNode('heading', { level: 1 })
-              .run();
-          },
-        },
-        {
-          title: 'Heading 2',
-          command: ({ editor, range }) => {
-            editor
-              .chain()
-              .focus()
-              .deleteRange(range)
-              .setNode('heading', { level: 2 })
-              .run();
-          },
-        },
-        {
-          title: 'Bold',
-          command: ({ editor, range }) => {
-            editor.chain().focus().deleteRange(range).setMark('bold').run();
-          },
-        },
-        {
-          title: 'Italic',
-          command: ({ editor, range }) => {
-            editor.chain().focus().deleteRange(range).setMark('italic').run();
-          },
-        },
-        {
           title: 'Table',
           command: ({ editor, range }) => {
             editor
@@ -71,9 +37,11 @@ export const commandSuggestions = {
       .slice(0, 10),
 
   render: () => {
-    let component: ReactRenderer<{
-      onKeyDown?: (props: SuggestionKeyDownProps) => any;
-    }>;
+    let component:
+      | ReactRenderer<{
+          onKeyDown?: (props: SuggestionKeyDownProps) => any;
+        }>
+      | undefined;
 
     return {
       onStart: props => {
@@ -88,7 +56,7 @@ export const commandSuggestions = {
       },
 
       onUpdate(props) {
-        component.updateProps(props);
+        component?.updateProps(props);
 
         if (!props.clientRect) {
           return;
@@ -97,18 +65,18 @@ export const commandSuggestions = {
 
       onKeyDown(props) {
         if (props.event.key === 'Escape') {
-          component.destroy();
-          component.element.remove();
+          component?.destroy();
+          component?.element.remove();
 
           return true;
         }
 
-        return component.ref?.onKeyDown?.(props);
+        return component?.ref?.onKeyDown?.(props);
       },
 
       onExit() {
-        component.destroy();
-        component.element.remove();
+        component?.destroy();
+        component?.element.remove();
       },
     };
   },

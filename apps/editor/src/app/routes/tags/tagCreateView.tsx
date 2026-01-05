@@ -38,7 +38,7 @@ const TagCreateView = ({ type }: TagCreateViewProps) => {
   const { t } = useTranslation();
   const [tag, setTag] = useState<MutationCreateTagArgs>({
     type,
-    description: [],
+    description: undefined,
     main: false,
     tag: '',
   });
