@@ -299,6 +299,18 @@ export type BaseTeaser = {
   type: Scalars['String'];
 };
 
+export type BaseUser = {
+  active: Scalars['Boolean'];
+  firstName?: Maybe<Scalars['String']>;
+  flair?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  image?: Maybe<Image>;
+  name: Scalars['String'];
+  properties: Array<Property>;
+  roleIDs: Array<Scalars['String']>;
+  userImageID?: Maybe<Scalars['String']>;
+};
+
 export type BildwurfAdBlock = BaseBlock & {
   __typename?: 'BildwurfAdBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -447,7 +459,7 @@ export type Chat = {
   message: Scalars['String'];
 };
 
-export type Comment = {
+export type Comment = HasOptionalUser & {
   __typename?: 'Comment';
   authorType: CommentAuthorType;
   calculatedRatings: Array<CalculatedRating>;
@@ -455,6 +467,7 @@ export type Comment = {
   createdAt: Scalars['DateTime'];
   featured?: Maybe<Scalars['Boolean']>;
   guestUserImage?: Maybe<Image>;
+  guestUserImageID?: Maybe<Scalars['String']>;
   guestUsername?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   itemID: Scalars['String'];
@@ -472,6 +485,7 @@ export type Comment = {
   title?: Maybe<Scalars['String']>;
   url: Scalars['String'];
   user?: Maybe<User>;
+  userID?: Maybe<Scalars['String']>;
   userRatings: Array<CommentRating>;
 };
 
@@ -1121,6 +1135,11 @@ export type HasOptionalSubscription = {
   subscriptionID?: Maybe<Scalars['String']>;
 };
 
+export type HasOptionalUser = {
+  user?: Maybe<User>;
+  userID?: Maybe<Scalars['String']>;
+};
+
 export type HasPage = {
   page: Page;
   pageID: Scalars['String'];
@@ -1404,11 +1423,13 @@ export type MemberPlan = HasImage & {
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
+  confirmationPage?: Maybe<Page>;
   confirmationPageId?: Maybe<Scalars['String']>;
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
   externalReward?: Maybe<Scalars['String']>;
+  failPage?: Maybe<Page>;
   failPageId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
@@ -1418,6 +1439,7 @@ export type MemberPlan = HasImage & {
   productType: ProductType;
   shortDescription?: Maybe<Scalars['RichText']>;
   slug: Scalars['String'];
+  successPage?: Maybe<Page>;
   successPageId?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Scalars['String']>>;
 };
@@ -1476,8 +1498,6 @@ export type Mutation = {
   createPaymentMethod: PaymentMethod;
   /** Creates a paywall. */
   createPaywall: Paywall;
-  /** Creates a paywall bypass token. */
-  createPaywallBypass: PaywallBypass;
   /** Creates a new peer. */
   createPeer: Peer;
   createSession: SessionWithToken;
@@ -1525,8 +1545,6 @@ export type Mutation = {
   deletePaymentMethod: PaymentMethod;
   /** Deletes a paywall. */
   deletePaywall: Paywall;
-  /** Deletes a paywall bypass token. */
-  deletePaywallBypass: Scalars['String'];
   /** Deletes an existing peer. */
   deletePeer: Peer;
   /** Delete poll votes */
@@ -1608,7 +1626,7 @@ export type Mutation = {
   /** Updates an page. */
   updatePage: Page;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
-  updatePassword: User;
+  updatePassword: SensitiveDataUser;
   /** Updates an existing payment method. */
   updatePaymentMethod: PaymentMethod;
   /** This mutation allows to update the Payment Provider Customers */
@@ -1628,7 +1646,7 @@ export type Mutation = {
   /** Updates an existing tag. */
   updateTag: Tag;
   /** This mutation allows to update the user's data by taking an input of type UserInput. */
-  updateUser?: Maybe<User>;
+  updateUser?: Maybe<SensitiveDataUser>;
   /**
    *
    *       Updates an existing userConsent based on input.
@@ -1640,8 +1658,9 @@ export type Mutation = {
   updateUserRole: UserRole;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
+  upgradeSubscription: Payment;
   /** This mutation allows to upload and update the user's profile image. */
-  uploadUserProfileImage?: Maybe<User>;
+  uploadUserProfileImage?: Maybe<SensitiveDataUser>;
   /** This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous */
   voteOnPoll?: Maybe<PollVote>;
 };
@@ -1780,17 +1799,17 @@ export type MutationCreatePaymentMethodArgs = {
 
 export type MutationCreatePaywallArgs = {
   active: Scalars['Boolean'];
+  alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
   anyMemberPlan: Scalars['Boolean'];
+  bypassTokens: Array<Scalars['String']>;
   circumventDescription?: InputMaybe<Scalars['RichText']>;
   description?: InputMaybe<Scalars['RichText']>;
-  memberPlanIds?: Array<Scalars['String']>;
+  fadeout: Scalars['Boolean'];
+  hideContentAfter: Scalars['Int'];
+  memberPlanIds: Array<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
-};
-
-
-export type MutationCreatePaywallBypassArgs = {
-  paywallId: Scalars['String'];
-  token: Scalars['String'];
+  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
+  upgradeDescription?: InputMaybe<Scalars['RichText']>;
 };
 
 
@@ -1932,11 +1951,6 @@ export type MutationDeletePaymentMethodArgs = {
 
 
 export type MutationDeletePaywallArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeletePaywallBypassArgs = {
   id: Scalars['String'];
 };
 
@@ -2201,13 +2215,18 @@ export type MutationUpdatePaymentProviderCustomersArgs = {
 
 export type MutationUpdatePaywallArgs = {
   active?: InputMaybe<Scalars['Boolean']>;
+  alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
   anyMemberPlan?: InputMaybe<Scalars['Boolean']>;
   bypassTokens?: InputMaybe<Array<Scalars['String']>>;
   circumventDescription?: InputMaybe<Scalars['RichText']>;
   description?: InputMaybe<Scalars['RichText']>;
+  fadeout?: InputMaybe<Scalars['Boolean']>;
+  hideContentAfter?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
   name?: InputMaybe<Scalars['String']>;
+  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
+  upgradeDescription?: InputMaybe<Scalars['RichText']>;
 };
 
 
@@ -2280,6 +2299,16 @@ export type MutationUpdateUserRoleArgs = {
 export type MutationUpdateUserSubscriptionArgs = {
   id: Scalars['String'];
   input: UserSubscriptionInput;
+};
+
+
+export type MutationUpgradeSubscriptionArgs = {
+  failureURL?: InputMaybe<Scalars['String']>;
+  memberPlanId: Scalars['String'];
+  monthlyAmount: Scalars['Int'];
+  paymentMethodId: Scalars['String'];
+  subscriptionId: Scalars['String'];
+  successURL?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2552,15 +2581,20 @@ export enum PaymentState {
 export type Paywall = {
   __typename?: 'Paywall';
   active: Scalars['Boolean'];
+  alternativeSubscribeUrl?: Maybe<Scalars['String']>;
   anyMemberPlan: Scalars['Boolean'];
   bypasses: Array<PaywallBypass>;
   circumventDescription?: Maybe<Scalars['RichText']>;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['RichText']>;
+  fadeout: Scalars['Boolean'];
+  hideContentAfter: Scalars['Int'];
   id: Scalars['String'];
   memberPlans: Array<MemberPlan>;
   modifiedAt: Scalars['DateTime'];
   name?: Maybe<Scalars['String']>;
+  upgradeCircumventDescription?: Maybe<Scalars['RichText']>;
+  upgradeDescription?: Maybe<Scalars['RichText']>;
 };
 
 export type PaywallBypass = {
@@ -2934,7 +2968,7 @@ export type Query = {
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /** This query returns the user. */
-  me?: Maybe<User>;
+  me?: Maybe<SensitiveDataUser>;
   /** This query returns a member plan. */
   memberPlan?: Maybe<MemberPlan>;
   /** This query returns the member plans. */
@@ -3030,10 +3064,11 @@ export type Query = {
   subscriptions: Array<PublicSubscription>;
   /** Returns all mail flows */
   systemMails: Array<SystemMailModel>;
-  /** Returns a tag by id */
+  /** Returns an tag by id or tag. */
   tag: Tag;
   /** This query returns a list of tags */
   tags: TagConnection;
+  upgradeSubscriptionInfo: UpgradeSubscription;
   /**
    *
    *       Returns a single userConsent by id.
@@ -3331,7 +3366,9 @@ export type QuerySubscriptionFlowsArgs = {
 
 
 export type QueryTagArgs = {
-  id: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
+  tag?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<TagType>;
 };
 
 
@@ -3342,6 +3379,12 @@ export type QueryTagsArgs = {
   skip?: Scalars['Int'];
   sort?: TagSort;
   take?: Scalars['Int'];
+};
+
+
+export type QueryUpgradeSubscriptionInfoArgs = {
+  memberPlanId: Scalars['String'];
+  subscriptionId: Scalars['String'];
 };
 
 
@@ -3402,7 +3445,7 @@ export enum RatingSystemType {
 export type Registration = {
   __typename?: 'Registration';
   session: SessionWithTokenWithoutUser;
-  user: User;
+  user: SensitiveDataUser;
 };
 
 export type RemotePeerProfile = {
@@ -3437,12 +3480,30 @@ export type RichTextBlockInput = {
   richText: Scalars['RichText'];
 };
 
+export type SensitiveDataUser = BaseUser & {
+  __typename?: 'SensitiveDataUser';
+  active: Scalars['Boolean'];
+  address?: Maybe<UserAddress>;
+  birthday?: Maybe<Scalars['DateTime']>;
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  flair?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  image?: Maybe<Image>;
+  name: Scalars['String'];
+  paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
+  permissions: Array<Scalars['String']>;
+  properties: Array<Property>;
+  roleIDs: Array<Scalars['String']>;
+  userImageID?: Maybe<Scalars['String']>;
+};
+
 export type SessionWithToken = {
   __typename?: 'SessionWithToken';
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
   token: Scalars['String'];
-  user: User;
+  user: SensitiveDataUser;
 };
 
 export type SessionWithTokenWithoutUser = {
@@ -3904,6 +3965,11 @@ export type UpdateCrowdfundingInput = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+export type UpgradeSubscription = {
+  __typename?: 'UpgradeSubscription';
+  discountAmount: Scalars['Float'];
+};
+
 export type UploadImageInput = {
   description?: InputMaybe<Scalars['String']>;
   file: Scalars['Upload'];
@@ -3916,19 +3982,14 @@ export type UploadImageInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
-export type User = {
+export type User = BaseUser & {
   __typename?: 'User';
   active: Scalars['Boolean'];
-  address?: Maybe<UserAddress>;
-  birthday?: Maybe<Scalars['DateTime']>;
-  email: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
   flair?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
   name: Scalars['String'];
-  paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
-  permissions: Array<Scalars['String']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
   userImageID?: Maybe<Scalars['String']>;
@@ -3941,6 +4002,8 @@ export type UserAddress = {
   country?: Maybe<Scalars['String']>;
   streetAddress?: Maybe<Scalars['String']>;
   streetAddress2?: Maybe<Scalars['String']>;
+  streetAddress2Number?: Maybe<Scalars['String']>;
+  streetAddressNumber?: Maybe<Scalars['String']>;
   zipCode?: Maybe<Scalars['String']>;
 };
 
@@ -3950,6 +4013,8 @@ export type UserAddressInput = {
   country?: InputMaybe<Scalars['String']>;
   streetAddress?: InputMaybe<Scalars['String']>;
   streetAddress2?: InputMaybe<Scalars['String']>;
+  streetAddress2Number?: InputMaybe<Scalars['String']>;
+  streetAddressNumber?: InputMaybe<Scalars['String']>;
   zipCode?: InputMaybe<Scalars['String']>;
 };
 
@@ -4060,7 +4125,7 @@ export type OverriddenRating = {
 export type RecentActionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RecentActionsQuery = { __typename?: 'Query', actions: Array<{ __typename: 'ArticleCreatedAction', date: string, article: { __typename?: 'Article', id: string, createdAt: string, url: string, latest: { __typename?: 'ArticleRevision', title?: string | null, socialMediaTitle?: string | null } } } | { __typename: 'AuthorCreatedAction', date: string, author: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } } | { __typename: 'CommentCreatedAction', date: string, comment: { __typename?: 'Comment', id: string, guestUsername?: string | null, title?: string | null, text?: Descendant[] | null, user?: { __typename?: 'User', firstName?: string | null, name: string } | null } } | { __typename: 'EventCreatedAction', date: string, event: { __typename?: 'Event', id: string, name: string, location?: string | null } } | { __typename: 'PageCreatedAction', date: string, page: { __typename?: 'Page', id: string, createdAt: string, url: string, latest: { __typename?: 'PageRevision', title?: string | null, socialMediaTitle?: string | null } } } | { __typename: 'PollStartedAction', date: string, poll: { __typename?: 'FullPoll', id: string, question?: string | null } } | { __typename: 'SubscriptionCreatedAction', date: string, subscription: { __typename?: 'PublicSubscription', id: string, user: { __typename?: 'User', firstName?: string | null, name: string }, memberPlan: { __typename?: 'MemberPlan', name: string } } } | { __typename: 'UserCreatedAction', date: string, user: { __typename?: 'User', id: string, firstName?: string | null, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } }> };
+export type RecentActionsQuery = { __typename?: 'Query', actions: Array<{ __typename: 'ArticleCreatedAction', date: string, article: { __typename?: 'Article', id: string, createdAt: string, url: string, latest: { __typename?: 'ArticleRevision', title?: string | null, socialMediaTitle?: string | null } } } | { __typename: 'AuthorCreatedAction', date: string, author: { __typename?: 'Author', id: string, name: string, jobTitle?: string | null } } | { __typename: 'CommentCreatedAction', date: string, comment: { __typename?: 'Comment', id: string, guestUsername?: string | null, title?: string | null, text?: Descendant[] | null, user?: { __typename?: 'User', firstName?: string | null, name: string } | null } } | { __typename: 'EventCreatedAction', date: string, event: { __typename?: 'Event', id: string, name: string, location?: string | null } } | { __typename: 'PageCreatedAction', date: string, page: { __typename?: 'Page', id: string, createdAt: string, url: string, latest: { __typename?: 'PageRevision', title?: string | null, socialMediaTitle?: string | null } } } | { __typename: 'PollStartedAction', date: string, poll: { __typename?: 'FullPoll', id: string, question?: string | null } } | { __typename: 'SubscriptionCreatedAction', date: string, subscription: { __typename?: 'PublicSubscription', id: string, user: { __typename?: 'User', firstName?: string | null, name: string }, memberPlan: { __typename?: 'MemberPlan', name: string } } } | { __typename: 'UserCreatedAction', date: string, user: { __typename?: 'User', id: string, firstName?: string | null, name: string } }> };
 
 export type ArticleCreatedActionRevisionFragment = { __typename?: 'ArticleRevision', title?: string | null, socialMediaTitle?: string | null };
 
@@ -4080,7 +4145,7 @@ type FullAction_PollStartedAction_Fragment = { __typename: 'PollStartedAction', 
 
 type FullAction_SubscriptionCreatedAction_Fragment = { __typename: 'SubscriptionCreatedAction', date: string, subscription: { __typename?: 'PublicSubscription', id: string, user: { __typename?: 'User', firstName?: string | null, name: string }, memberPlan: { __typename?: 'MemberPlan', name: string } } };
 
-type FullAction_UserCreatedAction_Fragment = { __typename: 'UserCreatedAction', date: string, user: { __typename?: 'User', id: string, firstName?: string | null, name: string, address?: { __typename?: 'UserAddress', city?: string | null } | null } };
+type FullAction_UserCreatedAction_Fragment = { __typename: 'UserCreatedAction', date: string, user: { __typename?: 'User', id: string, firstName?: string | null, name: string } };
 
 export type FullActionFragment = FullAction_ArticleCreatedAction_Fragment | FullAction_AuthorCreatedAction_Fragment | FullAction_CommentCreatedAction_Fragment | FullAction_EventCreatedAction_Fragment | FullAction_PageCreatedAction_Fragment | FullAction_PollStartedAction_Fragment | FullAction_SubscriptionCreatedAction_Fragment | FullAction_UserCreatedAction_Fragment;
 
@@ -4468,7 +4533,7 @@ export type CommentBlockCommentFragment = { __typename?: 'Comment', id: string, 
 
 export type FullConsentFragment = { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string };
 
-export type FullUserConsentFragment = { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } };
+export type FullUserConsentFragment = { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null } };
 
 export type ConsentsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -4511,14 +4576,14 @@ export type DeleteConsentMutation = { __typename?: 'Mutation', deleteConsent: { 
 export type UserConsentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserConsentsQuery = { __typename?: 'Query', userConsents: Array<{ __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } }> };
+export type UserConsentsQuery = { __typename?: 'Query', userConsents: Array<{ __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null } }> };
 
 export type UserConsentQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type UserConsentQuery = { __typename?: 'Query', userConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
+export type UserConsentQuery = { __typename?: 'Query', userConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null } } };
 
 export type CreateUserConsentMutationVariables = Exact<{
   consentId: Scalars['String'];
@@ -4527,7 +4592,7 @@ export type CreateUserConsentMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserConsentMutation = { __typename?: 'Mutation', createUserConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
+export type CreateUserConsentMutation = { __typename?: 'Mutation', createUserConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null } } };
 
 export type UpdateUserConsentMutationVariables = Exact<{
   id: Scalars['String'];
@@ -4535,14 +4600,14 @@ export type UpdateUserConsentMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserConsentMutation = { __typename?: 'Mutation', updateUserConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
+export type UpdateUserConsentMutation = { __typename?: 'Mutation', updateUserConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null } } };
 
 export type DeleteUserConsentMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteUserConsentMutation = { __typename?: 'Mutation', deleteUserConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
+export type DeleteUserConsentMutation = { __typename?: 'Mutation', deleteUserConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null } } };
 
 export type CrowdfundingsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -4896,19 +4961,19 @@ export type DeletePaymentMethodMutationVariables = Exact<{
 
 export type DeletePaymentMethodMutation = { __typename?: 'Mutation', deletePaymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } };
 
-export type FullPaywallFragment = { __typename?: 'Paywall', id: string, createdAt: string, modifiedAt: string, name?: string | null, description?: Descendant[] | null, circumventDescription?: Descendant[] | null, active: boolean, anyMemberPlan: boolean, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> };
+export type FullPaywallFragment = { __typename?: 'Paywall', id: string, createdAt: string, modifiedAt: string, name?: string | null, description?: Descendant[] | null, circumventDescription?: Descendant[] | null, upgradeDescription?: Descendant[] | null, upgradeCircumventDescription?: Descendant[] | null, active: boolean, anyMemberPlan: boolean, alternativeSubscribeUrl?: string | null, fadeout: boolean, hideContentAfter: number, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> };
 
 export type PaywallListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PaywallListQuery = { __typename?: 'Query', paywalls: Array<{ __typename?: 'Paywall', id: string, createdAt: string, modifiedAt: string, name?: string | null, description?: Descendant[] | null, circumventDescription?: Descendant[] | null, active: boolean, anyMemberPlan: boolean, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> }> };
+export type PaywallListQuery = { __typename?: 'Query', paywalls: Array<{ __typename?: 'Paywall', id: string, createdAt: string, modifiedAt: string, name?: string | null, description?: Descendant[] | null, circumventDescription?: Descendant[] | null, upgradeDescription?: Descendant[] | null, upgradeCircumventDescription?: Descendant[] | null, active: boolean, anyMemberPlan: boolean, alternativeSubscribeUrl?: string | null, fadeout: boolean, hideContentAfter: number, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> }> };
 
 export type PaywallQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type PaywallQuery = { __typename?: 'Query', paywall: { __typename?: 'Paywall', id: string, createdAt: string, modifiedAt: string, name?: string | null, description?: Descendant[] | null, circumventDescription?: Descendant[] | null, active: boolean, anyMemberPlan: boolean, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> } };
+export type PaywallQuery = { __typename?: 'Query', paywall: { __typename?: 'Paywall', id: string, createdAt: string, modifiedAt: string, name?: string | null, description?: Descendant[] | null, circumventDescription?: Descendant[] | null, upgradeDescription?: Descendant[] | null, upgradeCircumventDescription?: Descendant[] | null, active: boolean, anyMemberPlan: boolean, alternativeSubscribeUrl?: string | null, fadeout: boolean, hideContentAfter: number, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> } };
 
 export type CreatePaywallMutationVariables = Exact<{
   name?: InputMaybe<Scalars['String']>;
@@ -4917,31 +4982,42 @@ export type CreatePaywallMutationVariables = Exact<{
   active: Scalars['Boolean'];
   anyMemberPlan: Scalars['Boolean'];
   memberPlanIds: Array<Scalars['String']> | Scalars['String'];
+  bypassTokens: Array<Scalars['String']> | Scalars['String'];
+  alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
+  upgradeDescription?: InputMaybe<Scalars['RichText']>;
+  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
+  fadeout: Scalars['Boolean'];
+  hideContentAfter: Scalars['Int'];
 }>;
 
 
-export type CreatePaywallMutation = { __typename?: 'Mutation', createPaywall: { __typename?: 'Paywall', id: string, createdAt: string, modifiedAt: string, name?: string | null, description?: Descendant[] | null, circumventDescription?: Descendant[] | null, active: boolean, anyMemberPlan: boolean, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> } };
+export type CreatePaywallMutation = { __typename?: 'Mutation', createPaywall: { __typename?: 'Paywall', id: string, createdAt: string, modifiedAt: string, name?: string | null, description?: Descendant[] | null, circumventDescription?: Descendant[] | null, upgradeDescription?: Descendant[] | null, upgradeCircumventDescription?: Descendant[] | null, active: boolean, anyMemberPlan: boolean, alternativeSubscribeUrl?: string | null, fadeout: boolean, hideContentAfter: number, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> } };
 
 export type UpdatePaywallMutationVariables = Exact<{
   id: Scalars['String'];
   name?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['RichText']>;
   circumventDescription?: InputMaybe<Scalars['RichText']>;
+  upgradeDescription?: InputMaybe<Scalars['RichText']>;
+  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
   active?: InputMaybe<Scalars['Boolean']>;
   anyMemberPlan?: InputMaybe<Scalars['Boolean']>;
   memberPlanIds?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
   bypassTokens?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
+  alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
+  fadeout?: InputMaybe<Scalars['Boolean']>;
+  hideContentAfter?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type UpdatePaywallMutation = { __typename?: 'Mutation', updatePaywall: { __typename?: 'Paywall', id: string, createdAt: string, modifiedAt: string, name?: string | null, description?: Descendant[] | null, circumventDescription?: Descendant[] | null, active: boolean, anyMemberPlan: boolean, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> } };
+export type UpdatePaywallMutation = { __typename?: 'Mutation', updatePaywall: { __typename?: 'Paywall', id: string, createdAt: string, modifiedAt: string, name?: string | null, description?: Descendant[] | null, circumventDescription?: Descendant[] | null, upgradeDescription?: Descendant[] | null, upgradeCircumventDescription?: Descendant[] | null, active: boolean, anyMemberPlan: boolean, alternativeSubscribeUrl?: string | null, fadeout: boolean, hideContentAfter: number, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> } };
 
 export type DeletePaywallMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeletePaywallMutation = { __typename?: 'Mutation', deletePaywall: { __typename?: 'Paywall', id: string, createdAt: string, modifiedAt: string, name?: string | null, description?: Descendant[] | null, circumventDescription?: Descendant[] | null, active: boolean, anyMemberPlan: boolean, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> } };
+export type DeletePaywallMutation = { __typename?: 'Mutation', deletePaywall: { __typename?: 'Paywall', id: string, createdAt: string, modifiedAt: string, name?: string | null, description?: Descendant[] | null, circumventDescription?: Descendant[] | null, upgradeDescription?: Descendant[] | null, upgradeCircumventDescription?: Descendant[] | null, active: boolean, anyMemberPlan: boolean, alternativeSubscribeUrl?: string | null, fadeout: boolean, hideContentAfter: number, memberPlans: Array<{ __typename?: 'MemberPlan', id: string, name: string }>, bypasses: Array<{ __typename?: 'PaywallBypass', id: string, token: string }> } };
 
 export type SlimPeerArticleRevisionFragment = { __typename?: 'PeerArticleRevision', id: string, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'PeerImage', id: string, url?: string | null, license?: string | null, source?: string | null } | null };
 
@@ -5371,9 +5447,6 @@ export const FullActionFragmentDoc = gql`
       id
       firstName
       name
-      address {
-        city
-      }
     }
   }
   ... on EventCreatedAction {
@@ -6202,7 +6275,6 @@ export const FullUserConsentFragmentDoc = gql`
     id
     name
     firstName
-    email
   }
 }
     ${FullConsentFragmentDoc}`;
@@ -6328,8 +6400,11 @@ export const FullPaywallFragmentDoc = gql`
   name
   description
   circumventDescription
+  upgradeDescription
+  upgradeCircumventDescription
   active
   anyMemberPlan
+  alternativeSubscribeUrl
   memberPlans {
     id
     name
@@ -6338,6 +6413,8 @@ export const FullPaywallFragmentDoc = gql`
     id
     token
   }
+  fadeout
+  hideContentAfter
 }
     `;
 export const SlimPeerArticleRevisionFragmentDoc = gql`
@@ -9386,14 +9463,20 @@ export type PaywallQueryHookResult = ReturnType<typeof usePaywallQuery>;
 export type PaywallLazyQueryHookResult = ReturnType<typeof usePaywallLazyQuery>;
 export type PaywallQueryResult = Apollo.QueryResult<PaywallQuery, PaywallQueryVariables>;
 export const CreatePaywallDocument = gql`
-    mutation CreatePaywall($name: String, $description: RichText, $circumventDescription: RichText, $active: Boolean!, $anyMemberPlan: Boolean!, $memberPlanIds: [String!]!) {
+    mutation CreatePaywall($name: String, $description: RichText, $circumventDescription: RichText, $active: Boolean!, $anyMemberPlan: Boolean!, $memberPlanIds: [String!]!, $bypassTokens: [String!]!, $alternativeSubscribeUrl: String, $upgradeDescription: RichText, $upgradeCircumventDescription: RichText, $fadeout: Boolean!, $hideContentAfter: Int!) {
   createPaywall(
     name: $name
     description: $description
     circumventDescription: $circumventDescription
+    upgradeDescription: $upgradeDescription
+    upgradeCircumventDescription: $upgradeCircumventDescription
     anyMemberPlan: $anyMemberPlan
     active: $active
     memberPlanIds: $memberPlanIds
+    bypassTokens: $bypassTokens
+    alternativeSubscribeUrl: $alternativeSubscribeUrl
+    fadeout: $fadeout
+    hideContentAfter: $hideContentAfter
   ) {
     ...FullPaywall
   }
@@ -9420,6 +9503,12 @@ export type CreatePaywallMutationFn = Apollo.MutationFunction<CreatePaywallMutat
  *      active: // value for 'active'
  *      anyMemberPlan: // value for 'anyMemberPlan'
  *      memberPlanIds: // value for 'memberPlanIds'
+ *      bypassTokens: // value for 'bypassTokens'
+ *      alternativeSubscribeUrl: // value for 'alternativeSubscribeUrl'
+ *      upgradeDescription: // value for 'upgradeDescription'
+ *      upgradeCircumventDescription: // value for 'upgradeCircumventDescription'
+ *      fadeout: // value for 'fadeout'
+ *      hideContentAfter: // value for 'hideContentAfter'
  *   },
  * });
  */
@@ -9431,16 +9520,21 @@ export type CreatePaywallMutationHookResult = ReturnType<typeof useCreatePaywall
 export type CreatePaywallMutationResult = Apollo.MutationResult<CreatePaywallMutation>;
 export type CreatePaywallMutationOptions = Apollo.BaseMutationOptions<CreatePaywallMutation, CreatePaywallMutationVariables>;
 export const UpdatePaywallDocument = gql`
-    mutation UpdatePaywall($id: String!, $name: String, $description: RichText, $circumventDescription: RichText, $active: Boolean, $anyMemberPlan: Boolean, $memberPlanIds: [String!], $bypassTokens: [String!]) {
+    mutation UpdatePaywall($id: String!, $name: String, $description: RichText, $circumventDescription: RichText, $upgradeDescription: RichText, $upgradeCircumventDescription: RichText, $active: Boolean, $anyMemberPlan: Boolean, $memberPlanIds: [String!], $bypassTokens: [String!], $alternativeSubscribeUrl: String, $fadeout: Boolean, $hideContentAfter: Int) {
   updatePaywall(
     id: $id
     name: $name
     description: $description
     circumventDescription: $circumventDescription
+    upgradeDescription: $upgradeDescription
+    upgradeCircumventDescription: $upgradeCircumventDescription
     anyMemberPlan: $anyMemberPlan
     active: $active
     memberPlanIds: $memberPlanIds
     bypassTokens: $bypassTokens
+    alternativeSubscribeUrl: $alternativeSubscribeUrl
+    fadeout: $fadeout
+    hideContentAfter: $hideContentAfter
   ) {
     ...FullPaywall
   }
@@ -9465,10 +9559,15 @@ export type UpdatePaywallMutationFn = Apollo.MutationFunction<UpdatePaywallMutat
  *      name: // value for 'name'
  *      description: // value for 'description'
  *      circumventDescription: // value for 'circumventDescription'
+ *      upgradeDescription: // value for 'upgradeDescription'
+ *      upgradeCircumventDescription: // value for 'upgradeCircumventDescription'
  *      active: // value for 'active'
  *      anyMemberPlan: // value for 'anyMemberPlan'
  *      memberPlanIds: // value for 'memberPlanIds'
  *      bypassTokens: // value for 'bypassTokens'
+ *      alternativeSubscribeUrl: // value for 'alternativeSubscribeUrl'
+ *      fadeout: // value for 'fadeout'
+ *      hideContentAfter: // value for 'hideContentAfter'
  *   },
  * });
  */
@@ -11012,6 +11111,10 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
       "EventTeaser",
       "PageTeaser"
     ],
+    "BaseUser": [
+      "SensitiveDataUser",
+      "User"
+    ],
     "BlockContent": [
       "BildwurfAdBlock",
       "BreakBlock",
@@ -11104,6 +11207,9 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
     ],
     "HasOptionalSubscription": [
       "Invoice"
+    ],
+    "HasOptionalUser": [
+      "Comment"
     ],
     "HasPage": [
       "PageNavigationLink"

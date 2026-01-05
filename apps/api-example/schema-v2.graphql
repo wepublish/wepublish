@@ -258,6 +258,18 @@ interface BaseTeaser implements HasImage {
   type: String!
 }
 
+interface BaseUser {
+  active: Boolean!
+  firstName: String
+  flair: String
+  id: String!
+  image: Image
+  name: String!
+  properties: [Property!]!
+  roleIDs: [String!]!
+  userImageID: String
+}
+
 type BildwurfAdBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -403,13 +415,14 @@ type Chat {
 """A hexadecimal color value (#RRGGBB)"""
 scalar Color
 
-type Comment {
+type Comment implements HasOptionalUser {
   authorType: CommentAuthorType!
   calculatedRatings: [CalculatedRating!]!
   children: [Comment!]!
   createdAt: DateTime!
   featured: Boolean
   guestUserImage: Image
+  guestUserImageID: String
   guestUsername: String
   id: String!
   itemID: String!
@@ -427,6 +440,7 @@ type Comment {
   title: String
   url: String!
   user: User
+  userID: String
   userRatings: [CommentRating!]!
 }
 
@@ -1057,6 +1071,11 @@ interface HasOptionalSubscription {
   subscriptionID: String
 }
 
+interface HasOptionalUser {
+  user: User
+  userID: String
+}
+
 interface HasPage {
   page: Page!
   pageID: String!
@@ -1320,11 +1339,13 @@ type MemberPlan implements HasImage {
   amountPerMonthMin: Int!
   amountPerMonthTarget: Int
   availablePaymentMethods: [AvailablePaymentMethod!]!
+  confirmationPage: Page
   confirmationPageId: String
   currency: Currency!
   description: RichText
   extendable: Boolean!
   externalReward: String
+  failPage: Page
   failPageId: String
   id: String!
   image: Image
@@ -1334,6 +1355,7 @@ type MemberPlan implements HasImage {
   productType: ProductType!
   shortDescription: RichText
   slug: String!
+  successPage: Page
   successPageId: String
   tags: [String!]
 }
@@ -1402,10 +1424,7 @@ type Mutation {
   createPaymentMethod(active: Boolean!, description: String!, gracePeriod: Int!, imageId: String, name: String!, paymentProviderID: String!, slug: Slug!): PaymentMethod!
 
   """Creates a paywall."""
-  createPaywall(active: Boolean!, anyMemberPlan: Boolean!, circumventDescription: RichText, description: RichText, memberPlanIds: [String!]! = [], name: String): Paywall!
-
-  """Creates a paywall bypass token."""
-  createPaywallBypass(paywallId: String!, token: String!): PaywallBypass!
+  createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
   """Creates a new peer."""
   createPeer(hostURL: String!, information: RichText, isDisabled: Boolean, name: String!, slug: String!, token: String!): Peer!
@@ -1463,9 +1482,6 @@ type Mutation {
 
   """Deletes a paywall."""
   deletePaywall(id: String!): Paywall!
-
-  """Deletes a paywall bypass token."""
-  deletePaywallBypass(id: String!): String!
 
   """Deletes an existing peer."""
   deletePeer(id: String!): Peer!
@@ -1574,7 +1590,7 @@ type Mutation {
   """
   This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.
   """
-  updatePassword(password: String!, passwordRepeated: String!): User!
+  updatePassword(password: String!, passwordRepeated: String!): SensitiveDataUser!
 
   """Updates an existing payment method."""
   updatePaymentMethod(active: Boolean, description: String, gracePeriod: Int, id: String!, imageId: String, name: String, paymentProviderID: String, slug: Slug): PaymentMethod!
@@ -1583,7 +1599,7 @@ type Mutation {
   updatePaymentProviderCustomers(input: [PaymentProviderCustomerInput!]!): [PaymentProviderCustomer!]!
 
   """Updates a paywall."""
-  updatePaywall(active: Boolean, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, id: String!, memberPlanIds: [String!] = [], name: String): Paywall!
+  updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
   """Updates an existing peer."""
   updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
@@ -1606,7 +1622,7 @@ type Mutation {
   """
   This mutation allows to update the user's data by taking an input of type UserInput.
   """
-  updateUser(input: UserInput!): User
+  updateUser(input: UserInput!): SensitiveDataUser
 
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
@@ -1619,8 +1635,11 @@ type Mutation {
   """
   updateUserSubscription(id: String!, input: UserSubscriptionInput!): PublicSubscription
 
+  """"""
+  upgradeSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
+
   """This mutation allows to upload and update the user's profile image."""
-  uploadUserProfileImage(uploadImageInput: UploadImageInput): User
+  uploadUserProfileImage(uploadImageInput: UploadImageInput): SensitiveDataUser
 
   """
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
@@ -1867,15 +1886,20 @@ enum PaymentState {
 
 type Paywall {
   active: Boolean!
+  alternativeSubscribeUrl: String
   anyMemberPlan: Boolean!
   bypasses: [PaywallBypass!]!
   circumventDescription: RichText
   createdAt: DateTime!
   description: RichText
+  fadeout: Boolean!
+  hideContentAfter: Int!
   id: String!
   memberPlans: [MemberPlan!]!
   modifiedAt: DateTime!
   name: String
+  upgradeCircumventDescription: RichText
+  upgradeDescription: RichText
 }
 
 type PaywallBypass {
@@ -2217,7 +2241,7 @@ type Query {
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
 
   """This query returns the user."""
-  me: User
+  me: SensitiveDataUser
 
   """This query returns a member plan."""
   memberPlan(id: String, slug: Slug): MemberPlan
@@ -2316,8 +2340,8 @@ type Query {
   """Returns all mail flows"""
   systemMails: [SystemMailModel!]!
 
-  """Returns a tag by id"""
-  tag(id: String!): Tag!
+  """Returns an tag by id or tag."""
+  tag(id: String, tag: String, type: TagType): Tag!
 
   """This query returns a list of tags"""
   tags(
@@ -2339,6 +2363,9 @@ type Query {
     """Number of items to fetch"""
     take: Int! = 10
   ): TagConnection!
+
+  """"""
+  upgradeSubscriptionInfo(memberPlanId: String!, subscriptionId: String!): UpgradeSubscription!
 
   "\n      Returns a single userConsent by id.\n    "
   userConsent(id: String!): UserConsent!
@@ -2379,7 +2406,7 @@ enum RatingSystemType {
 
 type Registration {
   session: SessionWithTokenWithoutUser!
-  user: User!
+  user: SensitiveDataUser!
 }
 
 type RemotePeerProfile {
@@ -2414,11 +2441,28 @@ input RichTextBlockInput {
   richText: RichText!
 }
 
+type SensitiveDataUser implements BaseUser {
+  active: Boolean!
+  address: UserAddress
+  birthday: DateTime
+  email: String!
+  firstName: String
+  flair: String
+  id: String!
+  image: Image
+  name: String!
+  paymentProviderCustomers: [PaymentProviderCustomer!]
+  permissions: [String!]!
+  properties: [Property!]!
+  roleIDs: [String!]!
+  userImageID: String
+}
+
 type SessionWithToken {
   createdAt: DateTime!
   expiresAt: DateTime!
   token: String!
-  user: User!
+  user: SensitiveDataUser!
 }
 
 type SessionWithTokenWithoutUser {
@@ -2855,6 +2899,10 @@ input UpdateCrowdfundingInput {
   name: String
 }
 
+type UpgradeSubscription {
+  discountAmount: Float!
+}
+
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
@@ -2870,18 +2918,13 @@ input UploadImageInput {
   title: String
 }
 
-type User {
+type User implements BaseUser {
   active: Boolean!
-  address: UserAddress
-  birthday: DateTime
-  email: String!
   firstName: String
   flair: String
   id: String!
   image: Image
   name: String!
-  paymentProviderCustomers: [PaymentProviderCustomer!]
-  permissions: [String!]!
   properties: [Property!]!
   roleIDs: [String!]!
   userImageID: String
@@ -2893,6 +2936,8 @@ type UserAddress {
   country: String
   streetAddress: String
   streetAddress2: String
+  streetAddress2Number: String
+  streetAddressNumber: String
   zipCode: String
 }
 
@@ -2902,6 +2947,8 @@ input UserAddressInput {
   country: String
   streetAddress: String
   streetAddress2: String
+  streetAddress2Number: String
+  streetAddressNumber: String
   zipCode: String
 }
 

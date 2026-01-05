@@ -123,7 +123,9 @@ type User {
 type UserAddress {
   company: String
   streetAddress: String
+  streetAddressNumber: String
   streetAddress2: String
+  streetAddress2Number: String
   zipCode: String
   city: String
   country: String
@@ -761,7 +763,9 @@ input UserInput {
 input UserAddressInput {
   company: String
   streetAddress: String
+  streetAddressNumber: String
   streetAddress2: String
+  streetAddress2Number: String
   zipCode: String
   city: String
   country: String

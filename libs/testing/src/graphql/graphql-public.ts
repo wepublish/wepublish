@@ -317,6 +317,18 @@ export type BaseTeaser = {
   type: Scalars['String'];
 };
 
+export type BaseUser = {
+  active: Scalars['Boolean'];
+  firstName?: Maybe<Scalars['String']>;
+  flair?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  image?: Maybe<Image>;
+  name: Scalars['String'];
+  properties: Array<Property>;
+  roleIDs: Array<Scalars['String']>;
+  userImageID?: Maybe<Scalars['String']>;
+};
+
 export type BildwurfAdBlock = BaseBlock & {
   __typename?: 'BildwurfAdBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -496,7 +508,7 @@ export type Chat = {
   message: Scalars['String'];
 };
 
-export type Comment = {
+export type Comment = HasOptionalUser & {
   __typename?: 'Comment';
   authorType: CommentAuthorType;
   calculatedRatings: Array<CalculatedRating>;
@@ -504,6 +516,7 @@ export type Comment = {
   createdAt: Scalars['DateTime'];
   featured?: Maybe<Scalars['Boolean']>;
   guestUserImage?: Maybe<Image>;
+  guestUserImageID?: Maybe<Scalars['String']>;
   guestUsername?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   itemID: Scalars['String'];
@@ -521,6 +534,7 @@ export type Comment = {
   title?: Maybe<Scalars['String']>;
   url: Scalars['String'];
   user?: Maybe<User>;
+  userID?: Maybe<Scalars['String']>;
   userRatings: Array<CommentRating>;
 };
 
@@ -1176,6 +1190,11 @@ export type HasOptionalSubscription = {
   subscriptionID?: Maybe<Scalars['String']>;
 };
 
+export type HasOptionalUser = {
+  user?: Maybe<User>;
+  userID?: Maybe<Scalars['String']>;
+};
+
 export type HasPage = {
   page: Page;
   pageID: Scalars['String'];
@@ -1459,11 +1478,13 @@ export type MemberPlan = HasImage & {
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
+  confirmationPage?: Maybe<Page>;
   confirmationPageId?: Maybe<Scalars['String']>;
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
   externalReward?: Maybe<Scalars['String']>;
+  failPage?: Maybe<Page>;
   failPageId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
@@ -1473,6 +1494,7 @@ export type MemberPlan = HasImage & {
   productType: ProductType;
   shortDescription?: Maybe<Scalars['RichText']>;
   slug: Scalars['String'];
+  successPage?: Maybe<Page>;
   successPageId?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Scalars['String']>>;
 };
@@ -1531,8 +1553,6 @@ export type Mutation = {
   createPaymentMethod: PaymentMethod;
   /** Creates a paywall. */
   createPaywall: Paywall;
-  /** Creates a paywall bypass token. */
-  createPaywallBypass: PaywallBypass;
   /** Creates a new peer. */
   createPeer: Peer;
   createSession: SessionWithToken;
@@ -1580,8 +1600,6 @@ export type Mutation = {
   deletePaymentMethod: PaymentMethod;
   /** Deletes a paywall. */
   deletePaywall: Paywall;
-  /** Deletes a paywall bypass token. */
-  deletePaywallBypass: Scalars['String'];
   /** Deletes an existing peer. */
   deletePeer: Peer;
   /** Delete poll votes */
@@ -1663,7 +1681,7 @@ export type Mutation = {
   /** Updates an page. */
   updatePage: Page;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
-  updatePassword: User;
+  updatePassword: SensitiveDataUser;
   /** Updates an existing payment method. */
   updatePaymentMethod: PaymentMethod;
   /** This mutation allows to update the Payment Provider Customers */
@@ -1683,7 +1701,7 @@ export type Mutation = {
   /** Updates an existing tag. */
   updateTag: Tag;
   /** This mutation allows to update the user's data by taking an input of type UserInput. */
-  updateUser?: Maybe<User>;
+  updateUser?: Maybe<SensitiveDataUser>;
   /**
    *
    *       Updates an existing userConsent based on input.
@@ -1695,8 +1713,9 @@ export type Mutation = {
   updateUserRole: UserRole;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
+  upgradeSubscription: Payment;
   /** This mutation allows to upload and update the user's profile image. */
-  uploadUserProfileImage?: Maybe<User>;
+  uploadUserProfileImage?: Maybe<SensitiveDataUser>;
   /** This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous */
   voteOnPoll?: Maybe<PollVote>;
 };
@@ -1820,16 +1839,17 @@ export type MutationCreatePaymentMethodArgs = {
 
 export type MutationCreatePaywallArgs = {
   active: Scalars['Boolean'];
+  alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
   anyMemberPlan: Scalars['Boolean'];
+  bypassTokens: Array<Scalars['String']>;
   circumventDescription?: InputMaybe<Scalars['RichText']>;
   description?: InputMaybe<Scalars['RichText']>;
-  memberPlanIds?: Array<Scalars['String']>;
+  fadeout: Scalars['Boolean'];
+  hideContentAfter: Scalars['Int'];
+  memberPlanIds: Array<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
-};
-
-export type MutationCreatePaywallBypassArgs = {
-  paywallId: Scalars['String'];
-  token: Scalars['String'];
+  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
+  upgradeDescription?: InputMaybe<Scalars['RichText']>;
 };
 
 export type MutationCreatePeerArgs = {
@@ -1950,10 +1970,6 @@ export type MutationDeletePaymentMethodArgs = {
 };
 
 export type MutationDeletePaywallArgs = {
-  id: Scalars['String'];
-};
-
-export type MutationDeletePaywallBypassArgs = {
   id: Scalars['String'];
 };
 
@@ -2182,13 +2198,18 @@ export type MutationUpdatePaymentProviderCustomersArgs = {
 
 export type MutationUpdatePaywallArgs = {
   active?: InputMaybe<Scalars['Boolean']>;
+  alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
   anyMemberPlan?: InputMaybe<Scalars['Boolean']>;
   bypassTokens?: InputMaybe<Array<Scalars['String']>>;
   circumventDescription?: InputMaybe<Scalars['RichText']>;
   description?: InputMaybe<Scalars['RichText']>;
+  fadeout?: InputMaybe<Scalars['Boolean']>;
+  hideContentAfter?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
   name?: InputMaybe<Scalars['String']>;
+  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
+  upgradeDescription?: InputMaybe<Scalars['RichText']>;
 };
 
 export type MutationUpdatePeerArgs = {
@@ -2251,6 +2272,15 @@ export type MutationUpdateUserRoleArgs = {
 export type MutationUpdateUserSubscriptionArgs = {
   id: Scalars['String'];
   input: UserSubscriptionInput;
+};
+
+export type MutationUpgradeSubscriptionArgs = {
+  failureURL?: InputMaybe<Scalars['String']>;
+  memberPlanId: Scalars['String'];
+  monthlyAmount: Scalars['Int'];
+  paymentMethodId: Scalars['String'];
+  subscriptionId: Scalars['String'];
+  successURL?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationUploadUserProfileImageArgs = {
@@ -2525,15 +2555,20 @@ export enum PaymentState {
 export type Paywall = {
   __typename?: 'Paywall';
   active: Scalars['Boolean'];
+  alternativeSubscribeUrl?: Maybe<Scalars['String']>;
   anyMemberPlan: Scalars['Boolean'];
   bypasses: Array<PaywallBypass>;
   circumventDescription?: Maybe<Scalars['RichText']>;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['RichText']>;
+  fadeout: Scalars['Boolean'];
+  hideContentAfter: Scalars['Int'];
   id: Scalars['String'];
   memberPlans: Array<MemberPlan>;
   modifiedAt: Scalars['DateTime'];
   name?: Maybe<Scalars['String']>;
+  upgradeCircumventDescription?: Maybe<Scalars['RichText']>;
+  upgradeDescription?: Maybe<Scalars['RichText']>;
 };
 
 export type PaywallBypass = {
@@ -2910,7 +2945,7 @@ export type Query = {
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /** This query returns the user. */
-  me?: Maybe<User>;
+  me?: Maybe<SensitiveDataUser>;
   /** This query returns a member plan. */
   memberPlan?: Maybe<MemberPlan>;
   /** This query returns the member plans. */
@@ -3006,10 +3041,11 @@ export type Query = {
   subscriptions: Array<PublicSubscription>;
   /** Returns all mail flows */
   systemMails: Array<SystemMailModel>;
-  /** Returns a tag by id */
+  /** Returns an tag by id or tag. */
   tag: Tag;
   /** This query returns a list of tags */
   tags: TagConnection;
+  upgradeSubscriptionInfo: UpgradeSubscription;
   /**
    *
    *       Returns a single userConsent by id.
@@ -3264,7 +3300,9 @@ export type QuerySubscriptionFlowsArgs = {
 };
 
 export type QueryTagArgs = {
-  id: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
+  tag?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<TagType>;
 };
 
 export type QueryTagsArgs = {
@@ -3274,6 +3312,11 @@ export type QueryTagsArgs = {
   skip?: Scalars['Int'];
   sort?: TagSort;
   take?: Scalars['Int'];
+};
+
+export type QueryUpgradeSubscriptionInfoArgs = {
+  memberPlanId: Scalars['String'];
+  subscriptionId: Scalars['String'];
 };
 
 export type QueryUserConsentArgs = {
@@ -3330,7 +3373,7 @@ export enum RatingSystemType {
 export type Registration = {
   __typename?: 'Registration';
   session: SessionWithTokenWithoutUser;
-  user: User;
+  user: SensitiveDataUser;
 };
 
 export type RemotePeerProfile = {
@@ -3365,12 +3408,30 @@ export type RichTextBlockInput = {
   richText: Scalars['RichText'];
 };
 
+export type SensitiveDataUser = BaseUser & {
+  __typename?: 'SensitiveDataUser';
+  active: Scalars['Boolean'];
+  address?: Maybe<UserAddress>;
+  birthday?: Maybe<Scalars['DateTime']>;
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  flair?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  image?: Maybe<Image>;
+  name: Scalars['String'];
+  paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
+  permissions: Array<Scalars['String']>;
+  properties: Array<Property>;
+  roleIDs: Array<Scalars['String']>;
+  userImageID?: Maybe<Scalars['String']>;
+};
+
 export type SessionWithToken = {
   __typename?: 'SessionWithToken';
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
   token: Scalars['String'];
-  user: User;
+  user: SensitiveDataUser;
 };
 
 export type SessionWithTokenWithoutUser = {
@@ -3833,6 +3894,11 @@ export type UpdateCrowdfundingInput = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+export type UpgradeSubscription = {
+  __typename?: 'UpgradeSubscription';
+  discountAmount: Scalars['Float'];
+};
+
 export type UploadImageInput = {
   description?: InputMaybe<Scalars['String']>;
   file: Scalars['Upload'];
@@ -3845,19 +3911,14 @@ export type UploadImageInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
-export type User = {
+export type User = BaseUser & {
   __typename?: 'User';
   active: Scalars['Boolean'];
-  address?: Maybe<UserAddress>;
-  birthday?: Maybe<Scalars['DateTime']>;
-  email: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
   flair?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
   name: Scalars['String'];
-  paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
-  permissions: Array<Scalars['String']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
   userImageID?: Maybe<Scalars['String']>;
@@ -3870,6 +3931,8 @@ export type UserAddress = {
   country?: Maybe<Scalars['String']>;
   streetAddress?: Maybe<Scalars['String']>;
   streetAddress2?: Maybe<Scalars['String']>;
+  streetAddress2Number?: Maybe<Scalars['String']>;
+  streetAddressNumber?: Maybe<Scalars['String']>;
   zipCode?: Maybe<Scalars['String']>;
 };
 
@@ -3879,6 +3942,8 @@ export type UserAddressInput = {
   country?: InputMaybe<Scalars['String']>;
   streetAddress?: InputMaybe<Scalars['String']>;
   streetAddress2?: InputMaybe<Scalars['String']>;
+  streetAddress2Number?: InputMaybe<Scalars['String']>;
+  streetAddressNumber?: InputMaybe<Scalars['String']>;
   zipCode?: InputMaybe<Scalars['String']>;
 };
 
@@ -4163,7 +4228,6 @@ export type FullCommentUserFragment = {
   name: string;
   firstName?: string | null;
   flair?: string | null;
-  email: string;
   image?: { __typename?: 'Image'; id: string; filename?: string | null } | null;
 };
 
@@ -4563,12 +4627,6 @@ export type TagListQuery = {
   };
 };
 
-export type FullUserFragment = {
-  __typename?: 'User';
-  name: string;
-  email: string;
-};
-
 export type CreateSessionMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
@@ -4579,7 +4637,7 @@ export type CreateSessionMutation = {
   createSession: {
     __typename?: 'SessionWithToken';
     token: string;
-    user: { __typename?: 'User'; email: string };
+    user: { __typename?: 'SensitiveDataUser'; email: string };
   };
 };
 
@@ -4592,7 +4650,7 @@ export type CreateSessionWithJwtMutation = {
   createSessionWithJWT: {
     __typename?: 'SessionWithToken';
     token: string;
-    user: { __typename?: 'User'; email: string };
+    user: { __typename?: 'SensitiveDataUser'; email: string };
   };
 };
 
@@ -4663,7 +4721,6 @@ export const FullCommentUser = `
   name
   firstName
   flair
-  email
   image {
     id
     filename
@@ -4773,12 +4830,6 @@ export const PeerWithProfile = `
 }
     ${PeerRef}
 ${FullRemotePeerProfile}`;
-export const FullUser = `
-    fragment FullUser on User {
-  name
-  email
-}
-    `;
 export const AuthorList = `
     query AuthorList($filter: String, $cursor: String, $take: Int, $skip: Int) {
   authors(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {

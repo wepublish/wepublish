@@ -88,7 +88,7 @@ export class PageNavigationLink extends BaseNavigationLink implements HasPage {
   page!: Page;
 }
 
-@ObjectType({ implements: BaseNavigationLink })
+@ObjectType({ implements: () => BaseNavigationLink })
 export class ExternalNavigationLink extends BaseNavigationLink {
   @Field({ nullable: true })
   url?: string;

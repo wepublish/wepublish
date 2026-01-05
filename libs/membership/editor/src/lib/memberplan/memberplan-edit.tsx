@@ -103,7 +103,7 @@ function MemberPlanEdit() {
       description: [],
       currency: Currency.Chf,
       amountPerMonthMin: 0,
-      amountPerMonthMax: 0,
+      amountPerMonthMax: null,
       amountPerMonthTarget: null,
       image: undefined,
       active: true,

@@ -1305,6 +1305,8 @@ export type UserAddress = {
   country?: Maybe<Scalars['String']>;
   streetAddress?: Maybe<Scalars['String']>;
   streetAddress2?: Maybe<Scalars['String']>;
+  streetAddress2Number?: Maybe<Scalars['String']>;
+  streetAddressNumber?: Maybe<Scalars['String']>;
   zipCode?: Maybe<Scalars['String']>;
 };
 
@@ -1314,6 +1316,8 @@ export type UserAddressInput = {
   country?: InputMaybe<Scalars['String']>;
   streetAddress?: InputMaybe<Scalars['String']>;
   streetAddress2?: InputMaybe<Scalars['String']>;
+  streetAddress2Number?: InputMaybe<Scalars['String']>;
+  streetAddressNumber?: InputMaybe<Scalars['String']>;
   zipCode?: InputMaybe<Scalars['String']>;
 };
 

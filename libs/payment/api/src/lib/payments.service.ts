@@ -4,13 +4,12 @@ import {
 } from './payment-provider/payment-provider';
 import { Payment, PaymentState, PrismaClient } from '@prisma/client';
 import { sub } from 'date-fns';
-import { UserInputError } from '@nestjs/apollo';
 import { GraphQLError } from 'graphql/index';
 import {
   PaymentFromInvoiceInput,
   PaymentFromSubscriptionArgs,
 } from './payment.model';
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import {
   PAYMENT_METHOD_CONFIG,
   PaymentMethodConfig,
@@ -86,7 +85,7 @@ export class PaymentsService {
       (paymentMethodID == null && paymentMethodSlug == null) ||
       (paymentMethodID != null && paymentMethodSlug != null)
     ) {
-      throw new UserInputError(
+      throw new BadRequestException(
         'You must provide either `paymentMethodID` or `paymentMethodSlug`.'
       );
     }
@@ -100,7 +99,7 @@ export class PaymentsService {
     });
 
     if (!paymentMethod) {
-      throw new UserInputError(
+      throw new BadRequestException(
         `PaymentMethod not found ${paymentMethodID || paymentMethodSlug}`
       );
     }
@@ -115,11 +114,11 @@ export class PaymentsService {
     });
 
     if (!invoice || !invoice.subscriptionID) {
-      throw new UserInputError(`Invoice not found ${invoiceID}`);
+      throw new BadRequestException(`Invoice not found ${invoiceID}`);
     }
 
     if (invoice.paidAt || invoice.canceledAt) {
-      throw new UserInputError(
+      throw new BadRequestException(
         `Invoice with id ${invoiceID} is already paid or canceled!`
       );
     }
@@ -137,7 +136,7 @@ export class PaymentsService {
     });
 
     if (!subscription || subscription.userID !== userId) {
-      throw new UserInputError(`Invoice not found ${invoiceID}`);
+      throw new BadRequestException(`Invoice not found ${invoiceID}`);
     }
 
     // Prevent multiple payment of same invoice!
@@ -157,7 +156,7 @@ export class PaymentsService {
       },
     });
     if (blockingPayment) {
-      throw new UserInputError(blockingPayment.id);
+      throw new BadRequestException(blockingPayment.id);
     }
 
     return await this.createPaymentWithProvider({
@@ -193,11 +192,13 @@ export class PaymentsService {
     });
 
     if (!invoice) {
-      throw new UserInputError(`Unpaid Invoice not found ${subscriptionId}`);
+      throw new BadRequestException(
+        `Unpaid Invoice not found ${subscriptionId}`
+      );
     }
 
     if (invoice.subscription?.userID !== userId) {
-      throw new UserInputError(`Subscription not found ${subscriptionId}`);
+      throw new BadRequestException(`Subscription not found ${subscriptionId}`);
     }
 
     return await this.createPaymentWithProvider({

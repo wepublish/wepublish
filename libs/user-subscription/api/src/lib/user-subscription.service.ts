@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   MemberPlan,
   MetadataProperty,
@@ -14,21 +14,19 @@ import {
   InternalError,
   MonthlyAmountNotEnough,
   NotFound,
-  PaymentConfigurationNotAllowed,
   SubscriptionToDeactivateDoesNotExist,
 } from '@wepublish/api';
 import { RemoteSubscriptionsService } from './remote-subscriptions.service';
-import { UserInputError } from '@nestjs/apollo';
 import { MemberPlanService } from '@wepublish/member-plan/api';
 import {
   CreateSubscriptionArgs,
   CreateSubscriptionWithConfirmationArgs,
   ExtendSubscriptionArgs,
 } from './subscription.model';
-import { MemberContextService } from './member-context.service';
 import { PaymentsService } from '@wepublish/payment/api';
 import { logger } from '@wepublish/utils/api';
 import { unselectPassword } from '@wepublish/authentication/api';
+import { MemberContextService } from '@wepublish/membership/api';
 
 export type SubscriptionWithRelations = Subscription & {
   periods: SubscriptionPeriod[];
@@ -96,17 +94,17 @@ export class UserSubscriptionService {
     );
 
     const { subscription, invoice } =
-      await this.memberContext.createSubscription(
-        userId,
-        paymentMethod.id,
+      await this.memberContext.createSubscription({
+        userID: userId,
+        paymentMethodId: paymentMethod.id,
         paymentPeriodicity,
         monthlyAmount,
-        memberPlan.id,
+        memberPlanId: memberPlan.id,
         properties,
         autoRenew,
-        memberPlan.extendable,
-        subscriptionToDeactivate
-      );
+        extendable: memberPlan.extendable,
+        replacedSubscriptionId: subscriptionToDeactivate?.id,
+      });
 
     if (!invoice) {
       logger('mutation.public').error(
@@ -154,19 +152,19 @@ export class UserSubscriptionService {
       );
 
       const { subscription, invoice } =
-        await this.memberContext.createSubscription(
-          userId,
-          paymentMethod.id,
+        await this.memberContext.createSubscription({
+          userID: userId,
+          paymentMethodId: paymentMethod.id,
           paymentPeriodicity,
           monthlyAmount,
-          memberPlan.id,
+          memberPlanId: memberPlan.id,
           properties,
           autoRenew,
-          memberPlan.extendable,
-          undefined,
-          undefined,
-          true
-        );
+          extendable: memberPlan.extendable,
+          replacedSubscriptionId: undefined,
+          startsAt: undefined,
+          needsConfirmation: true,
+        });
 
       if (!invoice) {
         logger('mutation.public').error(
@@ -202,12 +200,12 @@ export class UserSubscriptionService {
         subscriptionId,
         userId
       );
-      throw new UserInputError(`SubscriptionId given not found!`);
+      throw new BadRequestException(`SubscriptionId given not found!`);
     }
 
     // Prevent user from extending not extendable subscription
     if (!subscription.extendable) {
-      throw new UserInputError(
+      throw new BadRequestException(
         `Subscription with id ${subscription.id} is not extendable!`
       );
     }
@@ -238,7 +236,7 @@ export class UserSubscriptionService {
       },
     });
     if (unpaidInvoices.length > 0) {
-      throw new UserInputError(
+      throw new BadRequestException(
         `You cant create new invoice while you have unpaid invoices!`
       );
     }
@@ -383,21 +381,12 @@ export class UserSubscriptionService {
       );
     }
 
-    if (
-      !memberPlan.availablePaymentMethods.some((apm: any) => {
-        if (apm.forceAutoRenewal && !autoRenew) {
-          return false;
-        }
-
-        return (
-          apm.paymentPeriodicities.includes(
-            paymentPeriodicity as PaymentPeriodicity
-          ) && apm.paymentMethodIDs.includes(paymentMethodID as string)
-        );
-      })
-    ) {
-      throw new PaymentConfigurationNotAllowed();
-    }
+    this.memberContext.validateSubscriptionPaymentConfiguration(
+      memberPlan,
+      autoRenew as boolean,
+      paymentPeriodicity as PaymentPeriodicity,
+      paymentMethodID as string
+    );
 
     // handle remote managed subscriptions (Payrexx Subscription)
     const paymentMethodRemote = await this.prisma.paymentMethod.findUnique({
@@ -456,7 +445,7 @@ export class UserSubscriptionService {
     });
 
     if (!subscription) {
-      throw new UserInputError(`Subscription not found ${subscriptionId}`);
+      throw new BadRequestException(`Subscription not found ${subscriptionId}`);
     }
 
     if (subscription.deactivation) {
@@ -464,7 +453,7 @@ export class UserSubscriptionService {
         subscription.deactivation.date < new Date() ?
           'Subscription is already canceled'
         : 'Subscription is already marked to be canceled';
-      throw new UserInputError(msg);
+      throw new BadRequestException(msg);
     }
 
     await this.memberContext.deactivateSubscription({
@@ -482,7 +471,7 @@ export class UserSubscriptionService {
     });
 
     if (!updatedSubscription) {
-      throw new UserInputError(`Subscription not found ${subscriptionId}`);
+      throw new BadRequestException(`Subscription not found ${subscriptionId}`);
     }
 
     return updatedSubscription;
@@ -515,7 +504,7 @@ export class UserSubscriptionService {
         await this.memberPlanService.getMemberPlanById(memberPlanID)
       : await this.memberPlanService.getMemberPlanBySlug(memberPlanSlug ?? '');
     if (!memberPlan) {
-      throw new UserInputError(
+      throw new BadRequestException(
         `MemberPlan not found ${memberPlanID || memberPlanSlug}`
       );
     }
@@ -528,20 +517,20 @@ export class UserSubscriptionService {
     });
 
     if (!paymentMethod) {
-      throw new UserInputError(
+      throw new BadRequestException(
         `PaymentMethod not found ${paymentMethodID || paymentMethodSlug}`
       );
     }
 
     if (monthlyAmount < memberPlan.amountPerMonthMin) {
-      throw new UserInputError(`Monthly amount not enough`);
+      throw new BadRequestException(`Monthly amount not enough`);
     }
 
     await this.memberContext.validateSubscriptionPaymentConfiguration(
       memberPlan,
       autoRenew,
       paymentPeriodicity,
-      paymentMethod
+      paymentMethod.id
     );
 
     return {
