@@ -34,12 +34,6 @@ export type AvailablePaymentMethod = {
   paymentPeriodicities: Array<PaymentPeriodicity>;
 };
 
-export type AvailablePaymentMethodInput = {
-  forceAutoRenewal: Scalars['Boolean'];
-  paymentMethodIDs: Array<Scalars['String']>;
-  paymentPeriodicities: Array<PaymentPeriodicity>;
-};
-
 export type Comment = {
   __typename?: 'Comment';
   authorType: CommentAuthorType;
@@ -344,55 +338,12 @@ export type MemberPlan = {
   tags?: Maybe<Array<Scalars['String']>>;
 };
 
-export type MemberPlanConnection = {
-  __typename?: 'MemberPlanConnection';
-  nodes: Array<MemberPlan>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type MemberPlanFilter = {
-  active?: InputMaybe<Scalars['Boolean']>;
-  name?: InputMaybe<Scalars['String']>;
-  productType?: InputMaybe<ProductType>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export type MemberPlanInput = {
-  active: Scalars['Boolean'];
-  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
-  amountPerMonthMin: Scalars['Int'];
-  amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
-  availablePaymentMethods: Array<AvailablePaymentMethodInput>;
-  confirmationPageId?: InputMaybe<Scalars['String']>;
-  currency: Currency;
-  description?: InputMaybe<Scalars['RichText']>;
-  extendable: Scalars['Boolean'];
-  externalReward?: InputMaybe<Scalars['String']>;
-  failPageId?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['String']>;
-  maxCount?: InputMaybe<Scalars['Int']>;
-  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  productType: ProductType;
-  shortDescription?: InputMaybe<Scalars['RichText']>;
-  slug: Scalars['String'];
-  successPageId?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export enum MemberPlanSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
-}
-
 export type Mutation = {
   __typename?: 'Mutation';
   approveComment: Comment;
   cancelSubscription?: Maybe<Subscription>;
   createComment: Comment;
   createInvoice?: Maybe<Invoice>;
-  createMemberPlan?: Maybe<MemberPlan>;
   createPaymentFromInvoice?: Maybe<Payment>;
   createPoll?: Maybe<PollWithAnswers>;
   createPollAnswer?: Maybe<PollAnswer>;
@@ -406,7 +357,6 @@ export type Mutation = {
   deleteComment: Comment;
   deleteImage?: Maybe<Image>;
   deleteInvoice?: Maybe<Invoice>;
-  deleteMemberPlan?: Maybe<MemberPlan>;
   deletePoll?: Maybe<FullPoll>;
   deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
@@ -428,7 +378,6 @@ export type Mutation = {
   updateComment: Comment;
   updateImage?: Maybe<Image>;
   updateInvoice?: Maybe<Invoice>;
-  updateMemberPlan?: Maybe<MemberPlan>;
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
   updateRatingSystem: FullCommentRatingSystem;
@@ -460,11 +409,6 @@ export type MutationCreateCommentArgs = {
 
 export type MutationCreateInvoiceArgs = {
   input: InvoiceInput;
-};
-
-
-export type MutationCreateMemberPlanArgs = {
-  input: MemberPlanInput;
 };
 
 
@@ -537,11 +481,6 @@ export type MutationDeleteImageArgs = {
 
 
 export type MutationDeleteInvoiceArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteMemberPlanArgs = {
   id: Scalars['String'];
 };
 
@@ -653,12 +592,6 @@ export type MutationUpdateImageArgs = {
 export type MutationUpdateInvoiceArgs = {
   id: Scalars['String'];
   input: InvoiceInput;
-};
-
-
-export type MutationUpdateMemberPlanArgs = {
-  id: Scalars['String'];
-  input: MemberPlanInput;
 };
 
 
@@ -922,8 +855,6 @@ export type Query = {
   invoice?: Maybe<Invoice>;
   invoices: InvoiceConnection;
   me?: Maybe<User>;
-  memberPlan?: Maybe<MemberPlan>;
-  memberPlans: MemberPlanConnection;
   payment?: Maybe<Payment>;
   payments: PaymentConnection;
   peerProfile: PeerProfile;
@@ -988,22 +919,6 @@ export type QueryInvoicesArgs = {
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<InvoiceSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryMemberPlanArgs = {
-  id?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['Slug']>;
-};
-
-
-export type QueryMemberPlansArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<MemberPlanFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<MemberPlanSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
 

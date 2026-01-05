@@ -182,7 +182,14 @@ enum AuthorSort {
 
 type AvailablePaymentMethod {
   forceAutoRenewal: Boolean!
+  paymentMethodIDs: [String!]!
   paymentMethods: [PaymentMethod!]!
+  paymentPeriodicities: [PaymentPeriodicity!]!
+}
+
+input AvailablePaymentMethodInput {
+  forceAutoRenewal: Boolean!
+  paymentMethodIDs: [String!]!
   paymentPeriodicities: [PaymentPeriodicity!]!
 }
 
@@ -1335,6 +1342,7 @@ type MailTemplateWithUrlAndStatusModel {
 }
 
 type MemberPlan implements HasImage {
+  active: Boolean!
   amountPerMonthMax: Int
   amountPerMonthMin: Int!
   amountPerMonthTarget: Int
@@ -1351,6 +1359,8 @@ type MemberPlan implements HasImage {
   image: Image
   imageID: String
   maxCount: Int
+  migrateToTargetPaymentMethod: PaymentMethod
+  migrateToTargetPaymentMethodID: String
   name: String!
   productType: ProductType!
   shortDescription: RichText
@@ -1405,6 +1415,9 @@ type Mutation {
 
   """Creates a new event."""
   createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, status: EventStatus! = Scheduled, tagIds: [String!]): Event!
+
+  """Creates a new memberplan."""
+  createMemberPlan(active: Boolean!, amountPerMonthMax: Int, amountPerMonthMin: Int!, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
 
   """Creates a new navigation."""
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
@@ -1470,6 +1483,9 @@ type Mutation {
 
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
+
+  """Deletes an existing memberplan."""
+  deleteMemberPlan(id: String!): MemberPlan!
 
   """Deletes an existing navigation."""
   deleteNavigation(id: String!): Navigation!
@@ -1580,6 +1596,9 @@ type Mutation {
 
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
+
+  """Updates an existing memberplan."""
+  updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
 
   """Updates an existing navigation."""
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!

@@ -55,12 +55,7 @@ import {
   markInvoiceAsPaid,
   updateInvoice,
 } from './invoice/invoice.private-mutation';
-import {
-  createMemberPlan,
-  deleteMemberPlanById,
-  updateMemberPlan,
-} from './member-plan/member-plan.private-mutation';
-import { GraphQLMemberPlan, GraphQLMemberPlanInput } from './memberPlan';
+
 import { GraphQLPayment, GraphQLPaymentFromInvoiceInput } from './payment';
 
 import { createPaymentFromInvoice } from './payment/payment.private-mutation';
@@ -494,38 +489,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         { id },
         { authenticate, mediaAdapter, prisma: { image } }
       ) => deleteImageById(id, authenticate, image, mediaAdapter),
-    },
-
-    // MemberPlan
-    // ======
-
-    createMemberPlan: {
-      type: GraphQLMemberPlan,
-      args: { input: { type: new GraphQLNonNull(GraphQLMemberPlanInput) } },
-      resolve: (root, { input }, { authenticate, prisma: { memberPlan } }) =>
-        createMemberPlan(input, authenticate, memberPlan),
-    },
-
-    updateMemberPlan: {
-      type: GraphQLMemberPlan,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        input: { type: new GraphQLNonNull(GraphQLMemberPlanInput) },
-      },
-      resolve: (
-        root,
-        { id, input },
-        { authenticate, prisma: { memberPlan } }
-      ) => updateMemberPlan(id, input, authenticate, memberPlan),
-    },
-
-    deleteMemberPlan: {
-      type: GraphQLMemberPlan,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { memberPlan } }) =>
-        deleteMemberPlanById(id, authenticate, memberPlan),
     },
 
     // Invoice

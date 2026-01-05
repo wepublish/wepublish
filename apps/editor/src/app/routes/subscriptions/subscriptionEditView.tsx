@@ -14,7 +14,6 @@ import {
   useCancelSubscriptionMutation,
   useCreateSubscriptionMutation,
   useInvoicesQuery,
-  useMemberPlanListQuery,
   useRenewSubscriptionMutation,
   useSubscriptionQuery,
   useUpdateSubscriptionMutation,
@@ -23,6 +22,7 @@ import {
 import {
   FullPaymentMethodFragment,
   getApiClientV2,
+  useMemberPlanListQuery,
   usePaymentMethodListQuery,
 } from '@wepublish/editor/api-v2';
 import {
@@ -249,18 +249,19 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     setCurrency(subscription.currency);
   }
 
+  const client = getApiClientV2();
   const {
     data: memberPlanData,
     loading: isMemberPlanLoading,
     error: loadMemberPlanError,
   } = useMemberPlanListQuery({
+    client,
     fetchPolicy: 'network-only',
     variables: {
       take: 100, // TODO: Pagination
     },
   });
 
-  const client = getApiClientV2();
   const {
     data: paymentMethodData,
     loading: isPaymentMethodLoading,

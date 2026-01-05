@@ -15,8 +15,6 @@ type Query {
   images(cursor: String, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
   comment(id: String!): Comment
   comments(cursor: String, take: Int = 10, skip: Int = 0, filter: CommentFilter, sort: CommentSort = modifiedAt, order: SortOrder = Descending): CommentConnection!
-  memberPlan(id: String, slug: Slug): MemberPlan
-  memberPlans(cursor: String, take: Int = 10, skip: Int = 0, filter: MemberPlanFilter, sort: MemberPlanSort = modifiedAt, order: SortOrder = Descending): MemberPlanConnection!
   invoice(id: String): Invoice
   invoices(cursor: String, take: Int = 10, skip: Int = 0, filter: InvoiceFilter, sort: InvoiceSort = modifiedAt, order: SortOrder = Descending): InvoiceConnection!
   payment(id: String): Payment
@@ -510,24 +508,6 @@ enum CommentSort {
   createdAt
 }
 
-type MemberPlanConnection {
-  nodes: [MemberPlan!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input MemberPlanFilter {
-  name: String
-  active: Boolean
-  tags: [String!]
-  productType: ProductType
-}
-
-enum MemberPlanSort {
-  createdAt
-  modifiedAt
-}
-
 type InvoiceConnection {
   nodes: [Invoice!]!
   pageInfo: PageInfo!
@@ -687,9 +667,6 @@ type Mutation {
   uploadImage(input: UploadImageInput!): Image
   updateImage(id: String!, input: UpdateImageInput!): Image
   deleteImage(id: String!): Image
-  createMemberPlan(input: MemberPlanInput!): MemberPlan
-  updateMemberPlan(id: String!, input: MemberPlanInput!): MemberPlan
-  deleteMemberPlan(id: String!): MemberPlan
   createInvoice(input: InvoiceInput!): Invoice
   createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment
   updateInvoice(id: String!, input: InvoiceInput!): Invoice
@@ -825,35 +802,6 @@ input UpdateImageInput {
   source: String
   license: String
   focalPoint: InputPoint
-}
-
-input MemberPlanInput {
-  name: String!
-  slug: String!
-  imageID: String
-  description: RichText
-  shortDescription: RichText
-  tags: [String!]
-  active: Boolean!
-  amountPerMonthMin: Int!
-  amountPerMonthMax: Int
-  amountPerMonthTarget: Int
-  currency: Currency!
-  extendable: Boolean!
-  productType: ProductType!
-  externalReward: String
-  maxCount: Int
-  availablePaymentMethods: [AvailablePaymentMethodInput!]!
-  migrateToTargetPaymentMethodID: String
-  successPageId: String
-  failPageId: String
-  confirmationPageId: String
-}
-
-input AvailablePaymentMethodInput {
-  paymentMethodIDs: [String!]!
-  paymentPeriodicities: [PaymentPeriodicity!]!
-  forceAutoRenewal: Boolean!
 }
 
 input InvoiceInput {

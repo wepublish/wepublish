@@ -9,7 +9,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useMemberPlanListQuery } from '@wepublish/editor/api';
+import { useMemberPlanListQuery } from '@wepublish/editor/api-v2';
 import {
   FullMailTemplateFragment,
   getApiClientV2,
@@ -120,8 +120,9 @@ function SubscriptionFlowList() {
   const params = useParams();
   const { id: memberPlanId } = params;
   const [newDay, setNewDay] = useState<number | undefined>(undefined);
-  const client = useMemo(() => getApiClientV2(), []);
+  const client = getApiClientV2();
   const { data: memberPlans } = useMemberPlanListQuery({
+    client,
     variables: { take: 100 },
   });
 
