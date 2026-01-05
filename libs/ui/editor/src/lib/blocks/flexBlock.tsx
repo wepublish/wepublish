@@ -422,7 +422,7 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
       >
         {blocks.map((block, index) => (
           <div
-            key={block.alignment.i}
+            key={index}
             data-is-editing={
               isEditModalOpen && index === editIndex ? 'true' : 'false'
             }
