@@ -7,17 +7,18 @@ import {
 import {
   ImageBlockCaption,
   ImageBlockImage,
-  TitleBlockPreTitle,
+  //TitleBlockPreTitle,
 } from '@wepublish/block-content/website';
 import { CommentListWrapper } from '@wepublish/comments/website';
 
 import { SidebarContentWrapper } from './sidebar-content';
 
-export const TsriArticle = styled(ArticleDefault)`
+/*
   ${TitleBlockPreTitle} {
     display: none;
   }
-
+*/
+export const TsriArticle = styled(ArticleDefault)`
   ${ArticleInfoWrapper} {
     grid-row-start: 3;
   }
