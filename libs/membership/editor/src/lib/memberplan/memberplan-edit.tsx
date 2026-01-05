@@ -9,7 +9,6 @@ import {
   ProductType,
   useCreateMemberPlanMutation,
   useMemberPlanLazyQuery,
-  usePaymentMethodListQuery,
   useUpdateMemberPlanMutation,
 } from '@wepublish/editor/api';
 import {
@@ -25,6 +24,10 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
 import { MemberPlanForm } from './memberplan-form';
+import {
+  getApiClientV2,
+  usePaymentMethodListQuery,
+} from '@wepublish/editor/api-v2';
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
@@ -60,8 +63,10 @@ function MemberPlanEdit() {
     onError: showErrors,
   });
 
+  const client = getApiClientV2();
   const { data: paymentMethodData, loading: paymentMethodLoading } =
     usePaymentMethodListQuery({
+      client,
       fetchPolicy: 'network-only',
       onError: showErrors,
     });

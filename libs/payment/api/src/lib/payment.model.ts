@@ -6,15 +6,15 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import { PaymentState } from '@prisma/client';
-import { HasPaymentMethod, PaymentMethod } from '@wepublish/payment-method/api';
 import { GraphQLSlug } from '@wepublish/utils/api';
+import { HasPaymentMethod } from './payment-method/has-payment-method/has-payment-method.model';
 
 registerEnumType(PaymentState, {
   name: 'PaymentState',
 });
 
-@ObjectType({ implements: () => HasPaymentMethod })
-export class Payment {
+@ObjectType({ implements: () => [HasPaymentMethod] })
+export class Payment extends HasPaymentMethod {
   @Field()
   id!: string;
 
@@ -23,9 +23,6 @@ export class Payment {
 
   @Field(() => PaymentState)
   state!: PaymentState;
-
-  paymentMethodID!: string;
-  paymentMethod!: PaymentMethod;
 }
 
 @InputType()

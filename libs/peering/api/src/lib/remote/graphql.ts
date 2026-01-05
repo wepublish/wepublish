@@ -1492,6 +1492,8 @@ export type Mutation = {
   createPaymentFromInvoice?: Maybe<Payment>;
   /** This mutation allows to create payment by referencing a subscription. */
   createPaymentFromSubscription?: Maybe<Payment>;
+  /** Creates a new payment method. */
+  createPaymentMethod: PaymentMethod;
   /** Creates a paywall. */
   createPaywall: Paywall;
   /** Creates a new peer. */
@@ -1537,6 +1539,8 @@ export type Mutation = {
   deleteNavigation: Navigation;
   /** Deletes an page. */
   deletePage: Scalars['String'];
+  /** Deletes an existing payment method. */
+  deletePaymentMethod: PaymentMethod;
   /** Deletes a paywall. */
   deletePaywall: Paywall;
   /** Deletes an existing peer. */
@@ -1621,6 +1625,8 @@ export type Mutation = {
   updatePage: Page;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
   updatePassword: SensitiveDataUser;
+  /** Updates an existing payment method. */
+  updatePaymentMethod: PaymentMethod;
   /** This mutation allows to update the Payment Provider Customers */
   updatePaymentProviderCustomers: Array<PaymentProviderCustomer>;
   /** Updates a paywall. */
@@ -1778,6 +1784,17 @@ export type MutationCreatePaymentFromSubscriptionArgs = {
 };
 
 
+export type MutationCreatePaymentMethodArgs = {
+  active: Scalars['Boolean'];
+  description: Scalars['String'];
+  gracePeriod: Scalars['Int'];
+  imageId?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  paymentProviderID: Scalars['String'];
+  slug: Scalars['Slug'];
+};
+
+
 export type MutationCreatePaywallArgs = {
   active: Scalars['Boolean'];
   alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
@@ -1922,6 +1939,11 @@ export type MutationDeleteNavigationArgs = {
 
 
 export type MutationDeletePageArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeletePaymentMethodArgs = {
   id: Scalars['String'];
 };
 
@@ -2169,6 +2191,18 @@ export type MutationUpdatePageArgs = {
 export type MutationUpdatePasswordArgs = {
   password: Scalars['String'];
   passwordRepeated: Scalars['String'];
+};
+
+
+export type MutationUpdatePaymentMethodArgs = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  description?: InputMaybe<Scalars['String']>;
+  gracePeriod?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  imageId?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  paymentProviderID?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['Slug']>;
 };
 
 
@@ -2492,12 +2526,16 @@ export type PaymentFromInvoiceInput = {
 
 export type PaymentMethod = HasImageLc & {
   __typename?: 'PaymentMethod';
+  active: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
   description: Scalars['String'];
   gracePeriod: Scalars['Int'];
   id: Scalars['String'];
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
+  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  paymentProvider?: Maybe<PaymentProvider>;
   paymentProviderID: Scalars['String'];
   slug: Scalars['Slug'];
 };
@@ -2510,6 +2548,12 @@ export enum PaymentPeriodicity {
   Quarterly = 'quarterly',
   Yearly = 'yearly'
 }
+
+export type PaymentProvider = {
+  __typename?: 'PaymentProvider';
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
 
 export type PaymentProviderCustomer = {
   __typename?: 'PaymentProviderCustomer';
@@ -2949,8 +2993,12 @@ export type Query = {
   page: Page;
   /** Returns a paginated list of pages based on the filters given. */
   pages: PaginatedPages;
+  /** Returns a payment method by id */
+  paymentMethod: PaymentMethod;
   /** Returns all payment methods */
   paymentMethods: Array<PaymentMethod>;
+  /** Returns all payment providers */
+  paymentProviders: Array<PaymentProvider>;
   /** Returns an paywall by id. */
   paywall: Paywall;
   /** Returns a list of paywalls based on the filters given. */
@@ -3209,6 +3257,11 @@ export type QueryPagesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<PageSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPaymentMethodArgs = {
+  id: Scalars['String'];
 };
 
 

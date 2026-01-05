@@ -5,7 +5,6 @@ import {
   Currency,
   DeactivationFragment,
   FullMemberPlanFragment,
-  FullPaymentMethodFragment,
   FullSubscriptionFragment,
   FullUserFragment,
   InvoiceFragment,
@@ -16,12 +15,16 @@ import {
   useCreateSubscriptionMutation,
   useInvoicesQuery,
   useMemberPlanListQuery,
-  usePaymentMethodListQuery,
   useRenewSubscriptionMutation,
   useSubscriptionQuery,
   useUpdateSubscriptionMutation,
   useUserQuery,
 } from '@wepublish/editor/api';
+import {
+  FullPaymentMethodFragment,
+  getApiClientV2,
+  usePaymentMethodListQuery,
+} from '@wepublish/editor/api-v2';
 import {
   ALL_PAYMENT_PERIODICITIES,
   createCheckedPermissionComponent,
@@ -257,11 +260,13 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     },
   });
 
+  const client = getApiClientV2();
   const {
     data: paymentMethodData,
     loading: isPaymentMethodLoading,
     error: paymentMethodLoadError,
   } = usePaymentMethodListQuery({
+    client,
     fetchPolicy: 'network-only',
   });
 

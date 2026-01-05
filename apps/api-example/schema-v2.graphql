@@ -1420,6 +1420,9 @@ type Mutation {
   """This mutation allows to create payment by referencing a subscription."""
   createPaymentFromSubscription(failureURL: String, subscriptionId: String, successURL: String): Payment
 
+  """Creates a new payment method."""
+  createPaymentMethod(active: Boolean!, description: String!, gracePeriod: Int!, imageId: String, name: String!, paymentProviderID: String!, slug: Slug!): PaymentMethod!
+
   """Creates a paywall."""
   createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
@@ -1473,6 +1476,9 @@ type Mutation {
 
   """Deletes an page."""
   deletePage(id: String!): String!
+
+  """Deletes an existing payment method."""
+  deletePaymentMethod(id: String!): PaymentMethod!
 
   """Deletes a paywall."""
   deletePaywall(id: String!): Paywall!
@@ -1585,6 +1591,9 @@ type Mutation {
   This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.
   """
   updatePassword(password: String!, passwordRepeated: String!): SensitiveDataUser!
+
+  """Updates an existing payment method."""
+  updatePaymentMethod(active: Boolean, description: String, gracePeriod: Int, id: String!, imageId: String, name: String, paymentProviderID: String, slug: Slug): PaymentMethod!
 
   """This mutation allows to update the Payment Provider Customers"""
   updatePaymentProviderCustomers(input: [PaymentProviderCustomerInput!]!): [PaymentProviderCustomer!]!
@@ -1827,12 +1836,16 @@ input PaymentFromInvoiceInput {
 }
 
 type PaymentMethod implements HasImageLc {
+  active: Boolean!
+  createdAt: DateTime!
   description: String!
   gracePeriod: Int!
   id: String!
   image: Image
   imageId: String
+  modifiedAt: DateTime!
   name: String!
+  paymentProvider: PaymentProvider
   paymentProviderID: String!
   slug: Slug!
 }
@@ -1844,6 +1857,11 @@ enum PaymentPeriodicity {
   monthly
   quarterly
   yearly
+}
+
+type PaymentProvider {
+  id: String!
+  name: String!
 }
 
 type PaymentProviderCustomer {
@@ -2249,8 +2267,14 @@ type Query {
   """Returns a paginated list of pages based on the filters given."""
   pages(cursorId: String, filter: PageFilter, order: SortOrder = Descending, skip: Int = 0, sort: PageSort = PublishedAt, take: Int = 10): PaginatedPages!
 
+  """Returns a payment method by id"""
+  paymentMethod(id: String!): PaymentMethod!
+
   """Returns all payment methods"""
   paymentMethods: [PaymentMethod!]!
+
+  """Returns all payment providers"""
+  paymentProviders: [PaymentProvider!]!
 
   """Returns an paywall by id."""
   paywall(id: String!): Paywall!

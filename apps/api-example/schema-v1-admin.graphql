@@ -17,9 +17,6 @@ type Query {
   comments(cursor: String, take: Int = 10, skip: Int = 0, filter: CommentFilter, sort: CommentSort = modifiedAt, order: SortOrder = Descending): CommentConnection!
   memberPlan(id: String, slug: Slug): MemberPlan
   memberPlans(cursor: String, take: Int = 10, skip: Int = 0, filter: MemberPlanFilter, sort: MemberPlanSort = modifiedAt, order: SortOrder = Descending): MemberPlanConnection!
-  paymentMethod(id: String): PaymentMethod
-  paymentMethods: [PaymentMethod!]!
-  paymentProviders: [PaymentProvider!]!
   invoice(id: String): Invoice
   invoices(cursor: String, take: Int = 10, skip: Int = 0, filter: InvoiceFilter, sort: InvoiceSort = modifiedAt, order: SortOrder = Descending): InvoiceConnection!
   payment(id: String): Payment
@@ -693,9 +690,6 @@ type Mutation {
   createMemberPlan(input: MemberPlanInput!): MemberPlan
   updateMemberPlan(id: String!, input: MemberPlanInput!): MemberPlan
   deleteMemberPlan(id: String!): MemberPlan
-  createPaymentMethod(input: PaymentMethodInput!): PaymentMethod
-  updatePaymentMethod(id: String!, input: PaymentMethodInput!): PaymentMethod
-  deletePaymentMethod(id: String!): PaymentMethod
   createInvoice(input: InvoiceInput!): Invoice
   createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment
   updateInvoice(id: String!, input: InvoiceInput!): Invoice
@@ -860,16 +854,6 @@ input AvailablePaymentMethodInput {
   paymentMethodIDs: [String!]!
   paymentPeriodicities: [PaymentPeriodicity!]!
   forceAutoRenewal: Boolean!
-}
-
-input PaymentMethodInput {
-  name: String!
-  slug: Slug!
-  description: String!
-  paymentProviderID: String!
-  active: Boolean!
-  gracePeriod: Int!
-  imageId: String
 }
 
 input InvoiceInput {

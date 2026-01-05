@@ -242,7 +242,7 @@ function SubscriptionFlowList() {
     }:nth-of-type(${filterCount + userActionCount}), .${tableCellClasses.head}:nth-of-type(${
       filterCount + userActionCount + nonUserActionCount
     })`]: {
-      borderRight: `1px solid ${theme.palette.common.black}`,
+      borderRight: `1px solid #000`,
     },
 
     [`.${tableCellClasses.body}:nth-of-type(${filterCount}), .${
@@ -250,7 +250,7 @@ function SubscriptionFlowList() {
     }:nth-of-type(${filterCount + userActionCount}), .${tableCellClasses.body}:nth-of-type(${
       filterCount + userActionCount + nonUserActionCount
     })`]: {
-      borderRight: `1px solid ${theme.palette.common.black}`,
+      borderRight: `1px solid #000`,
     },
   }));
 
