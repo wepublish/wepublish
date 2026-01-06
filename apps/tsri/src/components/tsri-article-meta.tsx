@@ -13,6 +13,7 @@ export const ArticleMetaWrapper = styled('div')`
   flex-flow: row wrap;
   justify-content: space-between;
   gap: ${({ theme }) => theme.spacing(2)};
+  background-color: cyan;
 `;
 
 export const ArticleMetaComments = styled('div')`

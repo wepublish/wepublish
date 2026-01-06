@@ -7,20 +7,20 @@ import {
 import {
   ImageBlockCaption,
   ImageBlockImage,
-  //TitleBlockPreTitle,
+  TitleBlockPreTitleWrapper,
 } from '@wepublish/block-content/website';
 import { CommentListWrapper } from '@wepublish/comments/website';
 
 import { SidebarContentWrapper } from './sidebar-content';
 
-/*
-  ${TitleBlockPreTitle} {
+export const TsriArticle = styled(ArticleDefault)`
+  ${TitleBlockPreTitleWrapper} {
     display: none;
   }
-*/
-export const TsriArticle = styled(ArticleDefault)`
+
   ${ArticleInfoWrapper} {
     grid-row-start: 3;
+    outline: 5px solid yellow;
   }
 
   ${ImageBlockImage} {

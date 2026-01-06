@@ -8,6 +8,7 @@ import {
 const TsriArticleDateWrapper = styled(ArticleDateWrapper)`
   font-size: 0.875em;
   display: grid;
+  background-color: lightgreen;
 `;
 
 export const TsriArticleDate = ({
