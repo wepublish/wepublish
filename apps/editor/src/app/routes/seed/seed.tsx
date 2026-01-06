@@ -12,20 +12,25 @@ import {
   ArticleTeaserInput,
   AuthorListDocument,
   BlockContentInput,
-  BlockType,
+  BlockStyle,
+  BlockStylesDocument,
+  //BlockType,
   BlockWithAlignment,
-  BreakBlock,
+  CreateArticleMutationVariables,
+  //BreakBlock,
   CustomTeaserInput,
-  EventBlock,
+  //EventBlock,
+  EventListDocument,
   FlexBlockInput,
   getApiClientV2,
-  ImageBlock,
+  //ImageBlock,
   NavigationLinkType,
   NavigationListDocument,
   PageListDocument,
-  PollBlock,
-  QuoteBlock,
-  RichTextBlock,
+  RichTextBlockInput,
+  //PollBlock,
+  //QuoteBlock,
+  //RichTextBlock,
   Tag,
   TagListDocument,
   TagListQueryVariables,
@@ -36,16 +41,19 @@ import {
   TeaserSlotsBlock,
   TeaserSlotsBlockInput,
   TeaserType,
-  TitleBlock,
-  useBlockStylesQuery,
+  //TitleBlock,
+  TitleBlockInput,
   useCreateArticleMutation,
   useCreateAuthorMutation,
+  useCreateBlockStyleMutation,
   useCreateEventMutation,
   useCreateNavigationMutation,
   useCreatePageMutation,
   useCreateTagMutation,
   useDeleteArticleMutation,
   useDeleteAuthorMutation,
+  useDeleteBlockStyleMutation,
+  useDeleteEventMutation,
   useDeleteNavigationMutation,
   useDeletePageMutation,
   useDeleteTagMutation,
@@ -110,6 +118,7 @@ const waitForMs = async (msToWait: number) =>
 async function seedImages(
   uploadImage: ReturnType<typeof useUploadImageMutation>[0]
 ) {
+  console.log('Seeding images...');
   const getCommonInput = (imgConf: any) => ({
     filename: `image${imgConf.id}.jpg`,
     title: imgConf.author,
@@ -124,12 +133,13 @@ async function seedImages(
   });
   const imageIds: string[] = [];
 
-  for (const imgConf of imageData) {
+  for await (const imgConf of imageData) {
     const file = new File(
       [await fetch(imgConf.download_url).then(res => res.blob())],
       `image${imgConf.id}.jpg`,
       { type: 'image/jpg' }
     );
+    console.log(`Uploading image ${imgConf.id}...`);
 
     const optimizedImage: File = await resizeImage(file!);
     const { data } = await uploadImage({
@@ -242,116 +252,33 @@ const createArticleInput = (
       tagIds: tagIds.length ? [tagIds[i % tagIds.length]] : [],
       canonicalUrl: faker.internet.url(),
       properties: [],
-      blocks: [],
+      blocks: [
+        {
+          title: {
+            title,
+            preTitle: capitalize(faker.lorem.words({ min: 3, max: 8 })),
+            lead: faker.lorem.sentences({ min: 3, max: 5 }),
+          } as TitleBlockInput,
+        } as BlockContentInput,
+        {
+          image: {
+            imageID: imageIds[(i + 1) % imageIds.length],
+            caption: faker.lorem.sentence(),
+          },
+        } as BlockContentInput,
+        {
+          richText: {
+            richText: getText(3, 7),
+          } as RichTextBlockInput,
+        } as BlockContentInput,
+      ] as BlockContentInput[],
       hideAuthor: false,
       socialMediaTitle: `Social Media - ${title}`,
-      socialMediaDescription: undefined,
+      socialMediaDescription: faker.lorem.paragraph(),
       socialMediaAuthorIds: [],
       socialMediaImageID: undefined,
       likes: 0,
-      revisions: {
-        create: {
-          title,
-          lead: faker.lorem.paragraph(),
-          socialMediaTitle: `Social Media - ${title}`,
-          socialMediaDescription: faker.lorem.paragraph(),
-          blocks: [
-            {
-              type: BlockType.Title,
-              title: capitalize(faker.lorem.words({ min: 3, max: 8 })),
-              lead: faker.lorem.sentences({ min: 3, max: 8 }),
-            } as TitleBlock,
-            {
-              type: BlockType.Image,
-              imageID: shuffle(imageIds).at(0),
-              caption: capitalize(faker.lorem.words({ min: 3, max: 8 })),
-            } as ImageBlock,
-            ...shuffle([
-              ...pickRandom(
-                {
-                  type: BlockType.RichText,
-                  richText: getText(3, 10) as any,
-                } as RichTextBlock,
-                0.7
-              ),
-              ...pickRandom(
-                {
-                  type: BlockType.Quote,
-                  author: faker.person.fullName(),
-                  quote: faker.lorem.sentences({ min: 1, max: 2 }),
-                } as QuoteBlock,
-                0.8
-              ),
-              ...pickRandom(
-                {
-                  type: BlockType.RichText,
-                  richText: getText(3, 10) as any,
-                } as RichTextBlock,
-                0.5
-              ),
-              ...pickRandom(
-                {
-                  type: BlockType.Image,
-                  imageID: shuffle(imageIds).at(0),
-                  caption: capitalize(faker.lorem.words({ min: 3, max: 8 })),
-                } as ImageBlock,
-                0.5
-              ),
-              ...pickRandom(
-                {
-                  type: BlockType.RichText,
-                  richText: getText(3, 10) as any,
-                } as RichTextBlock,
-                0.3
-              ),
-              ...pickRandom(
-                {
-                  type: BlockType.Poll,
-                  pollId: shuffle(pollIds).at(0),
-                } as PollBlock,
-                0.2
-              ),
-              ...pickRandom(
-                {
-                  type: BlockType.Event,
-                  filter: {
-                    events: [
-                      shuffle(eventIds).at(0),
-                      ...pickRandom(shuffle(eventIds).at(0)),
-                      ...pickRandom(shuffle(eventIds).at(0)),
-                      ...pickRandom(shuffle(eventIds).at(0)),
-                      ...pickRandom(shuffle(eventIds).at(0)),
-                      ...pickRandom(shuffle(eventIds).at(0)),
-                    ],
-                  },
-                } as EventBlock,
-                0.3
-              ),
-              ...pickRandom(
-                {
-                  type: BlockType.LinkPageBreak,
-                  imageID: null,
-                  hideButton: false,
-                  linkTarget: '',
-                  linkText: capitalize(faker.lorem.words({ min: 2, max: 4 })),
-                  linkURL: faker.internet.url(),
-                  richText: getText(1, 1) as any,
-                  text: capitalize(faker.lorem.words({ min: 8, max: 12 })),
-                  layoutOption: 'image-left',
-                } as BreakBlock,
-                0.7
-              ),
-            ]),
-          ] as any,
-          breaking: false,
-          hideAuthor: false,
-          publishedAt: new Date().toISOString(),
-        },
-      },
-    },
-    include: {
-      revisions: true,
-    },
+    } as CreateArticleMutationVariables,
   };
 };
 
@@ -514,8 +441,8 @@ async function seedEvents(createEvent: any, imageIds: string[] = []) {
   );
 }
 
-const getBlockStyle = (blockStylesData: any, blockStyleName: string) => {
-  let retVal = blockStylesData?.blockStyles.find((style: any) =>
+const getBlockStyle = (blockStyles: any, blockStyleName: string) => {
+  let retVal = blockStyles.find((style: any) =>
     [style.id, style.name].includes(blockStyleName)
   );
   if (!retVal) {
@@ -598,7 +525,7 @@ async function seedPages(
   tags: Tag[] = [],
   articleIds: string[] = [],
   heroArticleId: string[] = [],
-  blockStylesData: any
+  blockStyles: any
 ) {
   const [home] = await Promise.all([
     createPage({
@@ -612,10 +539,7 @@ async function seedPages(
         blocks: [
           {
             flexBlock: {
-              blockStyle: getBlockStyle(
-                blockStylesData,
-                'TabbedContentSidebar'
-              ),
+              blockStyle: getBlockStyle(blockStyles, 'TabbedContentSidebar'),
               blocks: [
                 // heros teaser
                 {
@@ -846,7 +770,7 @@ async function seedPages(
 
           {
             flexBlock: {
-              blockStyle: getBlockStyle(blockStylesData, 'TabbedContentMain'),
+              blockStyle: getBlockStyle(blockStyles, 'TabbedContentMain'),
               blocks: tags
                 .splice(0, 6)
                 .map(
@@ -855,38 +779,66 @@ async function seedPages(
             } as FlexBlockInput,
           } as BlockContentInput,
         ] as BlockContentInput[],
-        revisions: {
-          create: {
-            title: 'Home',
-            description: faker.lorem.paragraph(),
-            socialMediaTitle: 'Home',
-            socialMediaDescription: faker.lorem.paragraph(),
-            blocks: [
-              {
-                flexBlock: {
-                  blockStyle: getBlockStyle(
-                    blockStylesData,
-                    'TabbedContentMain'
-                  ),
-                  blocks: tags
-                    .splice(0, 6)
-                    .map(
-                      createBlockWithAlignmentForArchiveLayout
-                    ) as BlockWithAlignment[],
-                } as FlexBlockInput,
-              } as BlockContentInput,
-            ] as BlockContentInput[],
-            publishedAt: new Date().toISOString(),
-          },
-        },
-        include: {
-          revisions: true,
-        },
       },
     }),
   ]);
 
   return [home];
+}
+
+async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
+  const blockStylesData = [
+    {
+      name: 'Banner',
+      blocks: ['LinkPageBreak'],
+    },
+    {
+      name: 'ContextBox',
+      blocks: ['LinkPageBreak'],
+    },
+    {
+      name: 'Alternating',
+      blocks: ['TeaserList', 'TeaserSlots', 'TeaserGrid6'],
+    },
+    {
+      name: 'Focus',
+      blocks: ['TeaserList', 'TeaserSlots'],
+    },
+    {
+      name: 'Slider',
+      blocks: ['TeaserList', 'TeaserGrid6', 'TeaserSlots', 'ImageGallery'],
+    },
+    {
+      name: 'FrontTop',
+      blocks: ['TeaserSlots'],
+    },
+    {
+      name: 'FrontMiddle',
+      blocks: ['TeaserGridFlex'],
+    },
+    {
+      name: 'TabbedContent',
+      blocks: ['FlexBlock'],
+    },
+    {
+      name: 'TabbedContentMain',
+      blocks: ['FlexBlock'],
+    },
+    {
+      name: 'TabbedContentSidebar',
+      blocks: ['FlexBlock'],
+    },
+  ];
+
+  const blockStyles = [];
+
+  for (const style of blockStylesData) {
+    const blockStyle = await createBlockStyle({
+      variables: { ...style },
+    });
+    blockStyles.push(blockStyle.data.createBlockStyle);
+  }
+  return blockStyles;
 }
 
 async function hashSHA256(message: string): Promise<string> {
@@ -941,169 +893,391 @@ function SeedSession({ children }: { children: React.ReactNode }) {
   );
 }
 
+// fetch all functions
+
+const PAGE_SIZE = 100;
+async function fetchAllTags(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: TagListDocument,
+      variables: {
+        filter: {
+          type: TagType.Article,
+        },
+        take: PAGE_SIZE,
+        skip,
+      } as TagListQueryVariables,
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.tags?.nodes ?? []) as Array<{ id: string }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.tags?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllAuthors(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: AuthorListDocument,
+      variables: {
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.authors?.nodes ?? []) as Array<{ id: string }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.authors?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllArticles(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: ArticleListDocument,
+      variables: {
+        take: PAGE_SIZE,
+        skip,
+      } as ArticleListQueryVariables,
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.articles?.nodes ?? []) as Array<{ id: string }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.articles?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllNavigations(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: NavigationListDocument,
+      variables: {
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.navigations ?? []) as Array<{ id: string }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.navigations.length > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllImages(clientV1: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await clientV1.query({
+      query: ImageListDocument,
+      variables: {
+        filter: undefined,
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.images?.nodes ?? []) as Array<{ id: string }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.images?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllEvents(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: EventListDocument,
+      variables: {
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.events?.nodes ?? []) as Array<{ id: string }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.events?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllBlockStyles(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: BlockStylesDocument,
+      variables: {
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.blockStyles ?? []) as Array<{
+      id: string;
+    }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.blockStyles?.length > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllPages(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: PageListDocument,
+      variables: {
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.pages?.nodes ?? []) as Array<{ id: string }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.pages?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+// end fetch all functions
+
+async function handleDelete(
+  deleteTag: ReturnType<typeof useDeleteTagMutation>[0],
+  deleteAuthor: ReturnType<typeof useDeleteAuthorMutation>[0],
+  deleteArticle: ReturnType<typeof useDeleteArticleMutation>[0],
+  deleteNavigation: ReturnType<typeof useDeleteNavigationMutation>[0],
+  deletePage: ReturnType<typeof useDeletePageMutation>[0],
+  deleteImage: ReturnType<typeof useDeleteImageMutation>[0],
+  deleteEvent: ReturnType<typeof useDeleteEventMutation>[0],
+  deleteBlockStyle: ReturnType<typeof useDeleteBlockStyleMutation>[0],
+  client: any,
+  clientV1: any,
+  params?: URLSearchParams
+) {
+  const [
+    allTags,
+    allAuthors,
+    allArticles,
+    allNavigations,
+    allImages,
+    allPages,
+    allEvents,
+    allBlockStyles,
+  ] = await Promise.all([
+    fetchAllTags(client),
+    fetchAllAuthors(client),
+    fetchAllArticles(client),
+    fetchAllNavigations(client),
+    !(params?.get('type') === 'exclude-images') ?
+      fetchAllImages(clientV1)
+    : Promise.resolve([]),
+    fetchAllPages(client),
+    fetchAllEvents(client),
+    fetchAllBlockStyles(client),
+  ]);
+
+  await Promise.all(
+    allTags.map(tag =>
+      deleteTag({
+        variables: { id: tag.id },
+      })
+    )
+  );
+  await Promise.all(
+    allAuthors.map(author =>
+      deleteAuthor({
+        variables: { id: author.id },
+      })
+    )
+  );
+  await Promise.all(
+    allArticles.map(article =>
+      deleteArticle({
+        variables: { id: article.id },
+      })
+    )
+  );
+  await Promise.all(
+    allNavigations.map(nav =>
+      deleteNavigation({
+        variables: { id: nav.id },
+      })
+    )
+  );
+  if (!(params?.get('type') === 'exclude-images')) {
+    console.log('Deleting images...');
+    await Promise.all(
+      allImages.map((image: any) =>
+        deleteImage({
+          variables: { id: image.id },
+        })
+      )
+    );
+  }
+  await Promise.all(
+    allPages.map(page => {
+      if ((page as unknown as { slug: string }).slug === '404') {
+        return Promise.resolve();
+      }
+      return deletePage({
+        variables: { id: page.id },
+      });
+    })
+  );
+  await Promise.all(
+    allEvents.map(event => {
+      return deleteEvent({
+        variables: { id: event.id },
+      });
+    })
+  );
+  await Promise.all(
+    allBlockStyles.map(style =>
+      deleteBlockStyle({
+        variables: { id: style.id },
+      })
+    )
+  );
+}
+
+async function handleSeed(
+  uploadImage: ReturnType<typeof useUploadImageMutation>[0],
+  createAuthor: ReturnType<typeof useCreateAuthorMutation>[0],
+  createTag: ReturnType<typeof useCreateTagMutation>[0],
+  createBlockStyle: ReturnType<typeof useCreateBlockStyleMutation>[0],
+  createArticle: ReturnType<typeof useCreateArticleMutation>[0],
+  publishArticle: ReturnType<typeof usePublishArticleMutation>[0],
+  createNavigation: ReturnType<typeof useCreateNavigationMutation>[0],
+  createEvent: ReturnType<typeof useCreateEventMutation>[0],
+  createPage: ReturnType<typeof useCreatePageMutation>[0],
+  publishPage: ReturnType<typeof usePublishPageMutation>[0],
+  fetchAllImages: (clientV1: any) => Promise<Array<{ id: string }>>,
+  clientV1: any,
+  params?: URLSearchParams
+) {
+  const images =
+    !(params?.get('type') === 'exclude-images') ?
+      await seedImages(uploadImage)
+    : (await fetchAllImages(clientV1)).map(img => img.id);
+
+  const authors = await seedAuthors(createAuthor, images);
+  const tags = await seedArticleTags(createTag);
+  const blockStyles = await seedBlockStyles(createBlockStyle);
+  const articles = await seedArticlesByTag(
+    createArticle,
+    tags.map(tag => tag.data?.createTag.id),
+    authors.map(author => author.data?.createAuthor.id),
+    images
+  );
+  const heroArticle = await seedArticles(
+    createArticle,
+    tags.map(tag => tag.data?.createTag.id),
+    authors.map(author => author.data?.createAuthor.id),
+    images
+  );
+
+  for (const article of [...articles, ...heroArticle]) {
+    await publishArticle({
+      variables: {
+        id: article?.data?.createArticle.id,
+        publishedAt: new Date().toISOString(),
+      },
+    });
+  }
+
+  const navigations = await seedNavigations(
+    createNavigation,
+    tags.map(tag => tag.data?.createTag.tag).filter(tag => !!tag) as string[]
+  );
+
+  const events = await seedEvents(createEvent, images);
+
+  const pages = await seedPages(
+    createPage,
+    images,
+    tags.map(tag => tag.data?.createTag),
+    articles.map(article => article.data?.createArticle.id),
+    heroArticle.map(article => article.data?.createArticle.id),
+    blockStyles
+  );
+
+  for (const page of pages) {
+    await publishPage({
+      variables: {
+        id: page?.data?.createPage.id,
+        publishedAt: new Date().toISOString(),
+      },
+    });
+  }
+}
+
 type SeedProps = { type?: string };
 
 export const Seed = ({ type }: SeedProps) => {
   const client = getApiClientV2();
   const clientV1 = useApolloClient(); // used to fetch all images --> api v1
-
-  const PAGE_SIZE = 100;
-
-  // fetch all functions
-  async function fetchAllTags() {
-    let skip = 0;
-    const all: Array<{ id: string }> = [];
-
-    let hasMore = true;
-    while (hasMore) {
-      const { data } = await client.query({
-        query: TagListDocument,
-        variables: {
-          filter: {
-            type: TagType.Article,
-          },
-          take: PAGE_SIZE,
-          skip,
-        } as TagListQueryVariables,
-        fetchPolicy: 'network-only',
-      });
-
-      const nodes = (data?.tags?.nodes ?? []) as Array<{ id: string }>;
-      all.push(...nodes.map(n => ({ id: n.id })));
-
-      hasMore = data?.tags?.totalCount > all.length;
-      skip += PAGE_SIZE;
-    }
-
-    return all;
-  }
-
-  async function fetchAllAuthors() {
-    let skip = 0;
-    const all: Array<{ id: string }> = [];
-
-    let hasMore = true;
-    while (hasMore) {
-      const { data } = await client.query({
-        query: AuthorListDocument,
-        variables: {
-          take: PAGE_SIZE,
-          skip,
-        },
-        fetchPolicy: 'network-only',
-      });
-
-      const nodes = (data?.authors?.nodes ?? []) as Array<{ id: string }>;
-      all.push(...nodes.map(n => ({ id: n.id })));
-
-      hasMore = data?.authors?.totalCount > all.length;
-      skip += PAGE_SIZE;
-    }
-
-    return all;
-  }
-
-  async function fetchAllArticles() {
-    let skip = 0;
-    const all: Array<{ id: string }> = [];
-
-    let hasMore = true;
-    while (hasMore) {
-      const { data } = await client.query({
-        query: ArticleListDocument,
-        variables: {
-          take: PAGE_SIZE,
-          skip,
-        } as ArticleListQueryVariables,
-        fetchPolicy: 'network-only',
-      });
-
-      const nodes = (data?.articles?.nodes ?? []) as Array<{ id: string }>;
-      all.push(...nodes.map(n => ({ id: n.id })));
-
-      hasMore = data?.articles?.totalCount > all.length;
-      skip += PAGE_SIZE;
-    }
-
-    return all;
-  }
-
-  async function fetchAllNavigations() {
-    let skip = 0;
-    const all: Array<{ id: string }> = [];
-
-    let hasMore = true;
-    while (hasMore) {
-      const { data } = await client.query({
-        query: NavigationListDocument,
-        variables: {
-          take: PAGE_SIZE,
-          skip,
-        },
-        fetchPolicy: 'network-only',
-      });
-
-      const nodes = (data?.navigations ?? []) as Array<{ id: string }>;
-      all.push(...nodes.map(n => ({ id: n.id })));
-
-      hasMore = data?.navigations.length > all.length;
-      skip += PAGE_SIZE;
-    }
-
-    return all;
-  }
-
-  async function fetchAllImages() {
-    let skip = 0;
-    const all: Array<{ id: string }> = [];
-
-    let hasMore = true;
-    while (hasMore) {
-      const { data } = await clientV1.query({
-        query: ImageListDocument,
-        variables: {
-          filter: undefined,
-          take: PAGE_SIZE,
-          skip,
-        },
-        fetchPolicy: 'network-only',
-      });
-
-      const nodes = (data?.images?.nodes ?? []) as Array<{ id: string }>;
-      all.push(...nodes.map(n => ({ id: n.id })));
-
-      hasMore = data?.images?.totalCount > all.length;
-      skip += PAGE_SIZE;
-    }
-
-    return all;
-  }
-
-  async function fetchAllPages() {
-    let skip = 0;
-    const all: Array<{ id: string }> = [];
-
-    let hasMore = true;
-    while (hasMore) {
-      const { data } = await client.query({
-        query: PageListDocument,
-        variables: {
-          take: PAGE_SIZE,
-          skip,
-        },
-        fetchPolicy: 'network-only',
-      });
-
-      const nodes = (data?.pages?.nodes ?? []) as Array<{ id: string }>;
-      all.push(...nodes.map(n => ({ id: n.id })));
-
-      hasMore = data?.pages?.totalCount > all.length;
-      skip += PAGE_SIZE;
-    }
-
-    return all;
-  }
-  // end fetch all functions
 
   // delete hooks
   const [deleteTag] = useDeleteTagMutation({ client });
@@ -1112,6 +1286,8 @@ export const Seed = ({ type }: SeedProps) => {
   const [deleteNavigation] = useDeleteNavigationMutation({ client });
   const [deletePage] = useDeletePageMutation({ client });
   const [deleteImage] = useDeleteImageMutation();
+  const [deleteEvent] = useDeleteEventMutation({ client });
+  const [deleteBlockStyle] = useDeleteBlockStyleMutation({ client });
   // end delete hooks
 
   // create hooks
@@ -1124,16 +1300,40 @@ export const Seed = ({ type }: SeedProps) => {
   const [uploadImage] = useUploadImageMutation({
     refetchQueries: [getOperationNameFromDocument(ImageListDocument)],
   });
+  const [createBlockStyle] = useCreateBlockStyleMutation({
+    variables: {
+      blocks: [],
+      name: '',
+    },
+    client,
+  });
   const [publishArticle] = usePublishArticleMutation({ client });
   const [publishPage] = usePublishPageMutation({ client });
-  const { data: blockStylesData } = useBlockStylesQuery({ client });
+  //const { data: blockStylesData } = useBlockStylesQuery({ client });
   // end create hooks
 
   const [params] = useQueryState<URLSearchParams>(
     new URLSearchParams(window.location.search)
   );
 
-  console.log('Seeding content...');
+  function handleSeedParamsChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.currentTarget.checked) {
+      window.history.replaceState(
+        { 'exclude-images': true },
+        '',
+        `${window.location.pathname}?type=exclude-images`
+      );
+    } else {
+      window.history.replaceState(
+        {
+          'exclude-images': false,
+        },
+        '',
+        `${window.location.pathname}`
+      );
+    }
+    window.dispatchEvent(new Event('popstate'));
+  }
 
   return (
     <SeedSession>
@@ -1155,21 +1355,7 @@ export const Seed = ({ type }: SeedProps) => {
             type="checkbox"
             id="exclude-images"
             defaultChecked={params?.get('type') === 'exclude-images'}
-            onChange={e => {
-              if (e.currentTarget.checked) {
-                window.history.replaceState(
-                  {},
-                  '',
-                  `${window.location.pathname}?type=exclude-images`
-                );
-              } else {
-                window.history.replaceState(
-                  {},
-                  '',
-                  `${window.location.pathname}`
-                );
-              }
-            }}
+            onChange={handleSeedParamsChange}
           />
           {`Exclude images from delete & create actions. \n
             Default is to include them. \n
@@ -1184,61 +1370,28 @@ export const Seed = ({ type }: SeedProps) => {
             const t = self.innerText;
             self.innerText = 'Seeding...';
 
-            const images =
-              !(params?.get('type') === 'exclude-images') ?
-                await seedImages(uploadImage)
-              : (await fetchAllImages()).map(img => img.id);
-
-            const authors = await seedAuthors(createAuthor, images);
-            const tags = await seedArticleTags(createTag);
-            const articles = await seedArticlesByTag(
-              createArticle,
-              tags.map(tag => tag.data?.createTag.id),
-              authors.map(author => author.data?.createAuthor.id),
-              images
-            );
-            const heroArticle = await seedArticles(
-              createArticle,
-              tags.map(tag => tag.data?.createTag.id),
-              authors.map(author => author.data?.createAuthor.id),
-              images
-            );
-
-            for (const article of [...articles, ...heroArticle]) {
-              await publishArticle({
-                variables: {
-                  id: article?.data?.createArticle.id,
-                  publishedAt: new Date().toISOString(),
-                },
-              });
+            console.log('Starting seeding process...');
+            try {
+              await handleSeed(
+                uploadImage,
+                createAuthor,
+                createTag,
+                createBlockStyle,
+                createArticle,
+                publishArticle,
+                createNavigation,
+                createEvent,
+                createPage,
+                publishPage,
+                fetchAllImages,
+                clientV1,
+                params
+              );
+            } catch (error) {
+              console.error('Error during seeding process:', error);
             }
+            console.log('Seeding process completed.');
 
-            const navigations = await seedNavigations(
-              createNavigation,
-              tags
-                .map(tag => tag.data?.createTag.tag)
-                .filter(tag => !!tag) as string[]
-            );
-
-            const events = await seedEvents(createEvent, images);
-
-            const pages = await seedPages(
-              createPage,
-              images,
-              tags.map(tag => tag.data?.createTag),
-              articles.map(article => article.data?.createArticle.id),
-              heroArticle.map(article => article.data?.createArticle.id),
-              blockStylesData
-            );
-
-            for (const page of pages) {
-              await publishPage({
-                variables: {
-                  id: page?.data?.createPage.id,
-                  publishedAt: new Date().toISOString(),
-                },
-              });
-            }
             self.innerText = t;
             self.disabled = false;
           }}
@@ -1254,71 +1407,26 @@ export const Seed = ({ type }: SeedProps) => {
             const t = self.innerText;
             self.innerText = 'Deleting...';
 
-            const [
-              allTags,
-              allAuthors,
-              allArticles,
-              allNavigations,
-              allImages,
-              allPages,
-            ] = await Promise.all([
-              fetchAllTags(),
-              fetchAllAuthors(),
-              fetchAllArticles(),
-              fetchAllNavigations(),
-              !(params?.get('type') === 'exclude-images') ?
-                fetchAllImages()
-              : Promise.resolve([]),
-              fetchAllPages(),
-            ]);
-
-            await Promise.all(
-              allTags.map(tag =>
-                deleteTag({
-                  variables: { id: tag.id },
-                })
-              )
-            );
-            await Promise.all(
-              allAuthors.map(author =>
-                deleteAuthor({
-                  variables: { id: author.id },
-                })
-              )
-            );
-            await Promise.all(
-              allArticles.map(article =>
-                deleteArticle({
-                  variables: { id: article.id },
-                })
-              )
-            );
-            await Promise.all(
-              allNavigations.map(nav =>
-                deleteNavigation({
-                  variables: { id: nav.id },
-                })
-              )
-            );
-            if (!(params?.get('type') === 'exclude-images')) {
-              await Promise.all(
-                allImages.map((image: any) =>
-                  deleteImage({
-                    variables: { id: image.id },
-                  })
-                )
+            console.log('Starting deletion process...');
+            try {
+              await handleDelete(
+                deleteTag,
+                deleteAuthor,
+                deleteArticle,
+                deleteNavigation,
+                deletePage,
+                deleteImage,
+                deleteEvent,
+                deleteBlockStyle,
+                client,
+                clientV1,
+                params
               );
+            } catch (error) {
+              console.error('Error during deletion process:', error);
             }
-            await Promise.all(
-              allPages.map(page => {
-                if ((page as unknown as { slug: string }).slug === '404') {
-                  return Promise.resolve();
-                }
-                return deletePage({
-                  variables: { id: page.id },
-                });
-              })
-            );
+            console.log('Deletion process completed.');
+
             self.innerText = t;
             self.disabled = false;
           }}

@@ -8,8 +8,14 @@ export const useQueryState = <
   const [state, setState] = useState<T>(initialState);
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search);
-    setState(queryParams as unknown as T);
+    const listenToPopstate = () => {
+      const queryParams = window.location.search;
+      setState(new URLSearchParams(queryParams) as unknown as T);
+    };
+    window.addEventListener('popstate', listenToPopstate);
+    return () => {
+      window.removeEventListener('popstate', listenToPopstate);
+    };
   }, []);
 
   const setQueryParams = (query?: Partial<T>) => {
