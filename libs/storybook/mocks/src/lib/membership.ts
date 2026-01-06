@@ -26,7 +26,11 @@ export const mockPaymentMethod = ({
   gracePeriod = 0,
   image = mockImage(),
   imageId = image?.id,
-}: Partial<PaymentMethod> = {}): PaymentMethod => ({
+}: Partial<PaymentMethod> = {}): PaymentMethod & {
+  active: boolean;
+  createdAt: string;
+  modifiedAt: string;
+} => ({
   __typename: 'PaymentMethod',
   id,
   name,
@@ -36,6 +40,9 @@ export const mockPaymentMethod = ({
   gracePeriod,
   image,
   imageId,
+  active: true,
+  createdAt: new Date().toISOString(),
+  modifiedAt: new Date().toISOString(),
 });
 
 export const mockAvailablePaymentMethod = ({
