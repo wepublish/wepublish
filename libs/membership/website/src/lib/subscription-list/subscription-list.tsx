@@ -32,7 +32,7 @@ export const SubscriptionList = ({
 
   return (
     <SubscriptionListWrapper className={className}>
-      {!loading && !error && !data?.subscriptions?.length && (
+      {!loading && !error && !data?.userSubscriptions?.length && (
         <SubscriptionListItemWrapper>
           <SubscriptionListItemContent>
             <strong>
@@ -45,7 +45,7 @@ export const SubscriptionList = ({
 
       {error && <Alert severity="error">{error.message}</Alert>}
 
-      {data?.subscriptions?.map(subscription => (
+      {data?.userSubscriptions?.map(subscription => (
         <SubscriptionListItem
           key={subscription.id}
           {...subscription}

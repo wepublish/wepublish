@@ -16,7 +16,7 @@ export class UpgradeSubscriptionResolver {
   @Mutation(() => Payment, {
     description: ``,
   })
-  async upgradeSubscription(
+  async upgradeUserSubscription(
     @CurrentUser() session: UserSession,
     @Args('subscriptionId') subscriptionId: string,
     @Args('memberPlanId') memberPlanId: string,
@@ -43,7 +43,7 @@ export class UpgradeSubscriptionResolver {
   @Query(() => UpgradeSubscription, {
     description: ``,
   })
-  async upgradeSubscriptionInfo(
+  async upgradeUserSubscriptionInfo(
     @CurrentUser() session: UserSession,
     @Args('subscriptionId') subscriptionId: string,
     @Args('memberPlanId') memberPlanId: string

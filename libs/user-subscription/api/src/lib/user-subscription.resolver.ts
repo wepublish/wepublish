@@ -3,7 +3,7 @@ import {
   CreateSubscriptionArgs,
   CreateSubscriptionWithConfirmationArgs,
   ExtendSubscriptionArgs,
-  UserSubscriptionInput,
+  UpdateUserSubscriptionInput,
 } from './subscription.model';
 import {
   Authenticated,
@@ -28,7 +28,7 @@ export class UserSubscriptionResolver {
   @Query(() => [PublicSubscription], {
     description: `This query returns the subscriptions of the authenticated user.`,
   })
-  async subscriptions(@CurrentUser() session: UserSession) {
+  async userSubscriptions(@CurrentUser() session: UserSession) {
     return this.userSubscriptionService.getUserSubscriptions(session.user.id);
   }
 
@@ -36,7 +36,7 @@ export class UserSubscriptionResolver {
   @Mutation(() => Payment, {
     description: `Allows authenticated users to create additional subscriptions`,
   })
-  async createSubscription(
+  async createUserSubscription(
     @Args() args: CreateSubscriptionArgs,
     @CurrentUser() { user }: UserSession
   ) {
@@ -47,7 +47,7 @@ export class UserSubscriptionResolver {
   @Mutation(() => Boolean, {
     description: `Allows guests and authenticated users to create additional subscriptions`,
   })
-  async createSubscriptionWithConfirmation(
+  async createUserSubscriptionWithConfirmation(
     @Args() { userId, ...args }: CreateSubscriptionWithConfirmationArgs,
     @CurrentUser() session?: UserSession
   ) {
@@ -69,7 +69,7 @@ export class UserSubscriptionResolver {
   @Mutation(() => Payment, {
     description: `Allows authenticated users to extend existing subscriptions`,
   })
-  async extendSubscription(
+  async extendUserSubscription(
     @Args() args: ExtendSubscriptionArgs,
     @CurrentUser() { user }: UserSession
   ) {
@@ -83,7 +83,7 @@ export class UserSubscriptionResolver {
   })
   async updateUserSubscription(
     @Args('id') id: string,
-    @Args('input') input: UserSubscriptionInput,
+    @Args('input') input: UpdateUserSubscriptionInput,
     @CurrentUser() { user }: UserSession
   ) {
     return this.userSubscriptionService.updateSubscription(id, {

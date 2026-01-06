@@ -10,11 +10,11 @@ export const useActiveSubscriptions = () => {
   });
 
   const subscriptions = useMemo(
-    () => data?.subscriptions.filter(({ isActive }) => isActive),
-    [data?.subscriptions]
+    () => data?.userSubscriptions.filter(({ isActive }) => isActive),
+    [data?.userSubscriptions]
   );
 
-  if (!data?.subscriptions) {
+  if (!data?.userSubscriptions) {
     // return null so we know if it hasn't been loaded yet
     return null;
   }

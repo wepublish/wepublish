@@ -140,19 +140,6 @@ export enum Currency {
   Eur = 'EUR'
 }
 
-export type DateFilter = {
-  comparison: DateFilterComparison;
-  date?: InputMaybe<Scalars['DateTime']>;
-};
-
-export enum DateFilterComparison {
-  Equal = 'Equal',
-  GreaterThan = 'GreaterThan',
-  GreaterThanOrEqual = 'GreaterThanOrEqual',
-  LowerThan = 'LowerThan',
-  LowerThanOrEqual = 'LowerThanOrEqual'
-}
-
 export type FocalPoint = {
   __typename?: 'FocalPoint';
   x: Scalars['Float'];
@@ -341,7 +328,6 @@ export type MemberPlan = {
 export type Mutation = {
   __typename?: 'Mutation';
   approveComment: Comment;
-  cancelSubscription?: Maybe<Subscription>;
   createComment: Comment;
   createInvoice?: Maybe<Invoice>;
   createPaymentFromInvoice?: Maybe<Payment>;
@@ -351,7 +337,6 @@ export type Mutation = {
   createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
-  createSubscription?: Maybe<Subscription>;
   createToken: CreatedToken;
   createUser?: Maybe<User>;
   deleteComment: Comment;
@@ -361,10 +346,8 @@ export type Mutation = {
   deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
   deleteRatingSystemAnswer: CommentRatingSystemAnswer;
-  deleteSubscription?: Maybe<Subscription>;
   deleteToken?: Maybe<CreatedToken>;
   deleteUser?: Maybe<User>;
-  importSubscription?: Maybe<Subscription>;
   markInvoiceAsPaid?: Maybe<Invoice>;
   rejectComment: Comment;
   renewSubscription?: Maybe<Invoice>;
@@ -381,7 +364,6 @@ export type Mutation = {
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
   updateRatingSystem: FullCommentRatingSystem;
-  updateSubscription?: Maybe<Subscription>;
   updateUser?: Maybe<User>;
   uploadImage?: Maybe<Image>;
 };
@@ -389,12 +371,6 @@ export type Mutation = {
 
 export type MutationApproveCommentArgs = {
   id: Scalars['String'];
-};
-
-
-export type MutationCancelSubscriptionArgs = {
-  id: Scalars['String'];
-  reason: SubscriptionDeactivationReason;
 };
 
 
@@ -454,11 +430,6 @@ export type MutationCreateSessionWithJwtArgs = {
 };
 
 
-export type MutationCreateSubscriptionArgs = {
-  input: SubscriptionInput;
-};
-
-
 export type MutationCreateTokenArgs = {
   input: TokenInput;
 };
@@ -505,11 +476,6 @@ export type MutationDeleteRatingSystemAnswerArgs = {
 };
 
 
-export type MutationDeleteSubscriptionArgs = {
-  id: Scalars['String'];
-};
-
-
 export type MutationDeleteTokenArgs = {
   id: Scalars['String'];
 };
@@ -517,11 +483,6 @@ export type MutationDeleteTokenArgs = {
 
 export type MutationDeleteUserArgs = {
   id: Scalars['String'];
-};
-
-
-export type MutationImportSubscriptionArgs = {
-  input: SubscriptionInput;
 };
 
 
@@ -615,12 +576,6 @@ export type MutationUpdateRatingSystemArgs = {
   answers?: InputMaybe<Array<UpdateCommentRatingSystemAnswer>>;
   name?: InputMaybe<Scalars['String']>;
   ratingSystemId: Scalars['String'];
-};
-
-
-export type MutationUpdateSubscriptionArgs = {
-  id: Scalars['String'];
-  input: SubscriptionInput;
 };
 
 
@@ -863,9 +818,6 @@ export type Query = {
   ratingSystem: FullCommentRatingSystem;
   remotePeerProfile?: Maybe<PeerProfile>;
   sessions: Array<Session>;
-  subscription?: Maybe<Subscription>;
-  subscriptions: SubscriptionConnection;
-  subscriptionsAsCsv?: Maybe<Scalars['String']>;
   tokens: Array<Token>;
   user?: Maybe<User>;
   users: UserConnection;
@@ -959,26 +911,6 @@ export type QueryRemotePeerProfileArgs = {
 };
 
 
-export type QuerySubscriptionArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QuerySubscriptionsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<SubscriptionFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<SubscriptionSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QuerySubscriptionsAsCsvArgs = {
-  filter?: InputMaybe<SubscriptionFilter>;
-};
-
-
 export type QueryUserArgs = {
   id?: InputMaybe<Scalars['String']>;
 };
@@ -1019,39 +951,8 @@ export enum SortOrder {
   Descending = 'Descending'
 }
 
-export type Subscription = {
-  __typename?: 'Subscription';
-  autoRenew: Scalars['Boolean'];
-  createdAt: Scalars['DateTime'];
-  currency: Currency;
-  deactivation?: Maybe<SubscriptionDeactivation>;
-  extendable: Scalars['Boolean'];
-  id: Scalars['String'];
-  memberPlan: MemberPlan;
-  modifiedAt: Scalars['DateTime'];
-  monthlyAmount: Scalars['Int'];
-  paidUntil?: Maybe<Scalars['DateTime']>;
-  paymentMethod: PaymentMethod;
-  paymentPeriodicity: PaymentPeriodicity;
-  properties: Array<Properties>;
-  startsAt: Scalars['DateTime'];
-  user?: Maybe<User>;
-};
-
-export type SubscriptionConnection = {
-  __typename?: 'SubscriptionConnection';
-  nodes: Array<Subscription>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
 export type SubscriptionDeactivation = {
   __typename?: 'SubscriptionDeactivation';
-  date: Scalars['DateTime'];
-  reason: SubscriptionDeactivationReason;
-};
-
-export type SubscriptionDeactivationInput = {
   date: Scalars['DateTime'];
   reason: SubscriptionDeactivationReason;
 };
@@ -1063,43 +964,6 @@ export enum SubscriptionDeactivationReason {
   UserSelfDeactivated = 'userSelfDeactivated'
 }
 
-export type SubscriptionFilter = {
-  autoRenew?: InputMaybe<Scalars['Boolean']>;
-  cancellationDateFrom?: InputMaybe<DateFilter>;
-  cancellationDateTo?: InputMaybe<DateFilter>;
-  deactivationDateFrom?: InputMaybe<DateFilter>;
-  deactivationDateTo?: InputMaybe<DateFilter>;
-  deactivationReason?: InputMaybe<SubscriptionDeactivationReason>;
-  extendable?: InputMaybe<Scalars['Boolean']>;
-  memberPlanID?: InputMaybe<Scalars['String']>;
-  paidUntil?: InputMaybe<DateFilter>;
-  paidUntilFrom?: InputMaybe<DateFilter>;
-  paidUntilTo?: InputMaybe<DateFilter>;
-  paymentMethodID?: InputMaybe<Scalars['String']>;
-  paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
-  startsAt?: InputMaybe<DateFilter>;
-  startsAtFrom?: InputMaybe<DateFilter>;
-  startsAtTo?: InputMaybe<DateFilter>;
-  subscriptionIDs?: InputMaybe<Array<Scalars['String']>>;
-  userHasAddress?: InputMaybe<Scalars['Boolean']>;
-  userID?: InputMaybe<Scalars['String']>;
-  userIDs?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export type SubscriptionInput = {
-  autoRenew: Scalars['Boolean'];
-  deactivation?: InputMaybe<SubscriptionDeactivationInput>;
-  extendable: Scalars['Boolean'];
-  memberPlanID: Scalars['String'];
-  monthlyAmount: Scalars['Int'];
-  paidUntil?: InputMaybe<Scalars['DateTime']>;
-  paymentMethodID: Scalars['String'];
-  paymentPeriodicity: PaymentPeriodicity;
-  properties: Array<PropertiesInput>;
-  startsAt: Scalars['DateTime'];
-  userID: Scalars['String'];
-};
-
 export type SubscriptionPeriod = {
   __typename?: 'SubscriptionPeriod';
   amount: Scalars['Int'];
@@ -1110,11 +974,6 @@ export type SubscriptionPeriod = {
   paymentPeriodicity: PaymentPeriodicity;
   startsAt: Scalars['DateTime'];
 };
-
-export enum SubscriptionSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
-}
 
 export type Tag = {
   __typename?: 'Tag';
@@ -1432,13 +1291,6 @@ export type DeleteImageMutationVariables = Exact<{
 
 
 export type DeleteImageMutation = { __typename?: 'Mutation', deleteImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
-
-export type CreateSubscriptionMutationVariables = Exact<{
-  input: SubscriptionInput;
-}>;
-
-
-export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', autoRenew: boolean, id: string, paidUntil?: string | null, monthlyAmount: number, extendable: boolean, user?: { __typename?: 'User', id: string } | null, memberPlan: { __typename?: 'MemberPlan', id: string }, paymentMethod: { __typename?: 'PaymentMethod', id: string } } | null };
 
 export type RenewSubscriptionMutationVariables = Exact<{
   id: Scalars['String'];
@@ -1805,26 +1657,6 @@ export const DeleteImage = gql`
   }
 }
     ${FullImage}`;
-export const CreateSubscription = gql`
-    mutation CreateSubscription($input: SubscriptionInput!) {
-  createSubscription(input: $input) {
-    autoRenew
-    id
-    paidUntil
-    user {
-      id
-    }
-    monthlyAmount
-    memberPlan {
-      id
-    }
-    extendable
-    paymentMethod {
-      id
-    }
-  }
-}
-    `;
 export const RenewSubscription = gql`
     mutation RenewSubscription($id: String!) {
   renewSubscription(id: $id) {

@@ -7,9 +7,6 @@ type Query {
   sessions: [Session!]!
   user(id: String): User
   users(cursor: String, take: Int = 10, skip: Int = 0, filter: UserFilter, sort: UserSort = modifiedAt, order: SortOrder = Descending): UserConnection!
-  subscription(id: String!): Subscription
-  subscriptions(cursor: String, take: Int = 10, skip: Int = 0, filter: SubscriptionFilter, sort: SubscriptionSort = modifiedAt, order: SortOrder = Descending): SubscriptionConnection!
-  subscriptionsAsCsv(filter: SubscriptionFilter): String
   tokens: [Token!]!
   image(id: String): Image
   images(cursor: String, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
@@ -328,71 +325,6 @@ enum SortOrder {
   Descending
 }
 
-type Subscription {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  user: User
-  memberPlan: MemberPlan!
-  paymentPeriodicity: PaymentPeriodicity!
-  monthlyAmount: Int!
-  autoRenew: Boolean!
-  extendable: Boolean!
-  startsAt: DateTime!
-  paidUntil: DateTime
-  paymentMethod: PaymentMethod!
-  properties: [Properties!]!
-  deactivation: SubscriptionDeactivation
-  currency: Currency!
-}
-
-type SubscriptionConnection {
-  nodes: [Subscription!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input SubscriptionFilter {
-  startsAt: DateFilter
-  paidUntil: DateFilter
-  startsAtFrom: DateFilter
-  startsAtTo: DateFilter
-  paidUntilFrom: DateFilter
-  paidUntilTo: DateFilter
-  deactivationDateFrom: DateFilter
-  deactivationDateTo: DateFilter
-  cancellationDateFrom: DateFilter
-  cancellationDateTo: DateFilter
-  deactivationReason: SubscriptionDeactivationReason
-  autoRenew: Boolean
-  paymentMethodID: String
-  memberPlanID: String
-  paymentPeriodicity: PaymentPeriodicity
-  userHasAddress: Boolean
-  userID: String
-  userIDs: [String!]
-  subscriptionIDs: [String!]
-  extendable: Boolean
-}
-
-input DateFilter {
-  date: DateTime = null
-  comparison: DateFilterComparison!
-}
-
-enum DateFilterComparison {
-  GreaterThan
-  GreaterThanOrEqual
-  Equal
-  LowerThan
-  LowerThanOrEqual
-}
-
-enum SubscriptionSort {
-  createdAt
-  modifiedAt
-}
-
 type Token {
   id: String!
   createdAt: DateTime!
@@ -658,12 +590,6 @@ type Mutation {
   updateUser(id: String!, input: UserInput!): User
   resetUserPassword(id: String!, password: String!, sendMail: Boolean): User
   deleteUser(id: String!): User
-  createSubscription(input: SubscriptionInput!): Subscription
-  importSubscription(input: SubscriptionInput!): Subscription
-  renewSubscription(id: String!): Invoice
-  updateSubscription(id: String!, input: SubscriptionInput!): Subscription
-  deleteSubscription(id: String!): Subscription
-  cancelSubscription(id: String!, reason: SubscriptionDeactivationReason!): Subscription
   uploadImage(input: UploadImageInput!): Image
   updateImage(id: String!, input: UpdateImageInput!): Image
   deleteImage(id: String!): Image
@@ -672,6 +598,7 @@ type Mutation {
   updateInvoice(id: String!, input: InvoiceInput!): Invoice
   deleteInvoice(id: String!): Invoice
   markInvoiceAsPaid(id: String!): Invoice
+  renewSubscription(id: String!): Invoice
   updateComment(id: String!, revision: CommentRevisionUpdateInput, userID: String, guestUsername: String, guestUserImageID: String, featured: Boolean, source: String, tagIds: [String!], ratingOverrides: [CommentRatingOverrideUpdateInput!]): Comment!
   createComment(text: RichText, tagIds: [String!], itemID: String!, parentID: String, itemType: CommentItemType!): Comment!
   approveComment(id: String!): Comment!
@@ -752,25 +679,6 @@ input PropertiesInput {
   key: String!
   value: String!
   public: Boolean!
-}
-
-input SubscriptionInput {
-  userID: String!
-  memberPlanID: String!
-  paymentPeriodicity: PaymentPeriodicity!
-  monthlyAmount: Int!
-  autoRenew: Boolean!
-  startsAt: DateTime!
-  paidUntil: DateTime
-  paymentMethodID: String!
-  extendable: Boolean!
-  properties: [PropertiesInput!]!
-  deactivation: SubscriptionDeactivationInput
-}
-
-input SubscriptionDeactivationInput {
-  date: DateTime!
-  reason: SubscriptionDeactivationReason!
 }
 
 input UploadImageInput {

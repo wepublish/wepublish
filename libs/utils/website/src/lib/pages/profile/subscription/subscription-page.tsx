@@ -63,7 +63,7 @@ function SubscriptionPage() {
   const { data } = useSubscriptionsQuery({
     fetchPolicy: 'cache-only',
   });
-  const subscription = data?.subscriptions.find(sub => sub.id === id);
+  const subscription = data?.userSubscriptions.find(sub => sub.id === id);
 
   return (
     <SubscriptionsWrapper>
@@ -151,7 +151,7 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
 
     if (
       !subscriptions.error &&
-      !subscriptions.data.subscriptions.find(
+      !subscriptions.data.userSubscriptions.find(
         subscription => subscription.id === ctx.query.id
       )
     ) {

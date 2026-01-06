@@ -49,7 +49,7 @@ query MemberPlanList(
 ) {
   memberPlans(
     filter: $filter
-    cursor: $cursor
+    cursorId: $cursor
     take: $take
     skip: $skip
     order: $order
