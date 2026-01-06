@@ -42,6 +42,7 @@ import { TsriArticleDate } from '../src/components/tsri-article-date';
 import { TsriArticleList } from '../src/components/tsri-article-list';
 import { TsriArticleMeta } from '../src/components/tsri-article-meta';
 import { TSRIAuthor } from '../src/components/tsri-author';
+import { TsriAuthorChip } from '../src/components/tsri-author-chip';
 import { TSRIAuthorLinks } from '../src/components/tsri-author-links';
 import { TSRIAuthorList } from '../src/components/tsri-author-list';
 import { TsriBanner } from '../src/components/tsri-banner';
@@ -126,6 +127,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           ArticleList={TsriArticleList}
           PaymentAmount={PaymentAmountPicker}
           Author={TSRIAuthor}
+          AuthorChip={TsriAuthorChip}
           AuthorLinks={TSRIAuthorLinks}
           AuthorList={TSRIAuthorList}
           elements={{ Link: NextWepublishLink }}
