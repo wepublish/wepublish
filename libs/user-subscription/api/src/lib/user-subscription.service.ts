@@ -17,7 +17,10 @@ import {
   SubscriptionToDeactivateDoesNotExist,
 } from '@wepublish/api';
 import { RemoteSubscriptionsService } from './remote-subscriptions.service';
-import { MemberPlanService } from '@wepublish/member-plan/api';
+import {
+  MemberPlanDataloader,
+  MemberPlanService,
+} from '@wepublish/member-plan/api';
 import {
   CreateSubscriptionArgs,
   CreateSubscriptionWithConfirmationArgs,
@@ -40,6 +43,7 @@ export class UserSubscriptionService {
     private prisma: PrismaClient,
     private payments: PaymentsService,
     private memberPlanService: MemberPlanService,
+    private memberPlanDataloader: MemberPlanDataloader,
     private remoteSubscriptionsService: RemoteSubscriptionsService,
     private memberContext: MemberContextService
   ) {}
@@ -348,7 +352,7 @@ export class UserSubscriptionService {
       userID,
     } = input;
 
-    const memberPlan = await this.memberPlanService.getMemberPlanById(
+    const memberPlan = await this.memberPlanDataloader.load(
       memberPlanID as string
     );
     if (!memberPlan) {
@@ -501,7 +505,7 @@ export class UserSubscriptionService {
 
     const memberPlan =
       memberPlanID ?
-        await this.memberPlanService.getMemberPlanById(memberPlanID)
+        await this.memberPlanDataloader.load(memberPlanID)
       : await this.memberPlanService.getMemberPlanBySlug(memberPlanSlug ?? '');
     if (!memberPlan) {
       throw new BadRequestException(
