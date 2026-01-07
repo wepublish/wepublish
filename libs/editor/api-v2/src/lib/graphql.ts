@@ -221,7 +221,14 @@ export enum AuthorSort {
 export type AvailablePaymentMethod = {
   __typename?: 'AvailablePaymentMethod';
   forceAutoRenewal: Scalars['Boolean'];
+  paymentMethodIDs: Array<Scalars['String']>;
   paymentMethods: Array<PaymentMethod>;
+  paymentPeriodicities: Array<PaymentPeriodicity>;
+};
+
+export type AvailablePaymentMethodInput = {
+  forceAutoRenewal: Scalars['Boolean'];
+  paymentMethodIDs: Array<Scalars['String']>;
   paymentPeriodicities: Array<PaymentPeriodicity>;
 };
 
@@ -1419,6 +1426,7 @@ export type MailTemplateWithUrlAndStatusModel = {
 
 export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
+  active: Scalars['Boolean'];
   amountPerMonthMax?: Maybe<Scalars['Int']>;
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
@@ -1435,6 +1443,8 @@ export type MemberPlan = HasImage & {
   image?: Maybe<Image>;
   imageID?: Maybe<Scalars['String']>;
   maxCount?: Maybe<Scalars['Int']>;
+  migrateToTargetPaymentMethod?: Maybe<PaymentMethod>;
+  migrateToTargetPaymentMethodID?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   productType: ProductType;
   shortDescription?: Maybe<Scalars['RichText']>;
@@ -1486,6 +1496,8 @@ export type Mutation = {
   createCrowdfunding: Crowdfunding;
   /** Creates a new event. */
   createEvent: Event;
+  /** Creates a new memberplan. */
+  createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
   createNavigation: Navigation;
   /** Creates an page. */
@@ -1537,6 +1549,8 @@ export type Mutation = {
   deleteCrowdfunding?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing event. */
   deleteEvent: Event;
+  /** Deletes an existing memberplan. */
+  deleteMemberPlan: MemberPlan;
   /** Deletes an existing navigation. */
   deleteNavigation: Navigation;
   /** Deletes an page. */
@@ -1621,6 +1635,8 @@ export type Mutation = {
   updateCrowdfunding: Crowdfunding;
   /** Updates an existing event. */
   updateEvent: Event;
+  /** Updates an existing memberplan. */
+  updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
   updateNavigation: Navigation;
   /** Updates an page. */
@@ -1749,6 +1765,30 @@ export type MutationCreateEventArgs = {
   startsAt: Scalars['DateTime'];
   status?: EventStatus;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type MutationCreateMemberPlanArgs = {
+  active: Scalars['Boolean'];
+  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
+  amountPerMonthMin: Scalars['Int'];
+  amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
+  availablePaymentMethods: Array<AvailablePaymentMethodInput>;
+  confirmationPageId?: InputMaybe<Scalars['String']>;
+  currency: Currency;
+  description?: InputMaybe<Scalars['RichText']>;
+  extendable: Scalars['Boolean'];
+  externalReward?: InputMaybe<Scalars['String']>;
+  failPageId?: InputMaybe<Scalars['String']>;
+  imageID?: InputMaybe<Scalars['String']>;
+  maxCount?: InputMaybe<Scalars['Int']>;
+  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  productType: ProductType;
+  shortDescription?: InputMaybe<Scalars['RichText']>;
+  slug: Scalars['String'];
+  successPageId?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
@@ -1931,6 +1971,11 @@ export type MutationDeleteCrowdfundingArgs = {
 
 
 export type MutationDeleteEventArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteMemberPlanArgs = {
   id: Scalars['String'];
 };
 
@@ -2163,6 +2208,31 @@ export type MutationUpdateEventArgs = {
   startsAt?: InputMaybe<Scalars['DateTime']>;
   status?: InputMaybe<EventStatus>;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type MutationUpdateMemberPlanArgs = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
+  amountPerMonthMin?: InputMaybe<Scalars['Int']>;
+  amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
+  availablePaymentMethods?: InputMaybe<Array<AvailablePaymentMethodInput>>;
+  confirmationPageId?: InputMaybe<Scalars['String']>;
+  currency?: InputMaybe<Currency>;
+  description?: InputMaybe<Scalars['RichText']>;
+  extendable?: InputMaybe<Scalars['Boolean']>;
+  externalReward?: InputMaybe<Scalars['String']>;
+  failPageId?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  imageID?: InputMaybe<Scalars['String']>;
+  maxCount?: InputMaybe<Scalars['Int']>;
+  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  productType?: InputMaybe<ProductType>;
+  shortDescription?: InputMaybe<Scalars['RichText']>;
+  slug?: InputMaybe<Scalars['String']>;
+  successPageId?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
@@ -4773,6 +4843,89 @@ export type FullMailTemplateFragment = { __typename?: 'MailTemplateWithUrlAndSta
 
 export type FullMailProviderFragment = { __typename?: 'MailProviderModel', name: string };
 
+export type FullAvailablePaymentMethodFragment = { __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> };
+
+export type FullMemberPlanFragment = { __typename?: 'MemberPlan', id: string, name: string, description?: Descendant[] | null, shortDescription?: Descendant[] | null, slug: string, active: boolean, productType: ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> };
+
+export type MemberPlanListQueryVariables = Exact<{
+  filter?: InputMaybe<MemberPlanFilter>;
+  cursor?: InputMaybe<Scalars['String']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<MemberPlanSort>;
+}>;
+
+
+export type MemberPlanListQuery = { __typename?: 'Query', memberPlans: { __typename?: 'MemberPlanConnection', totalCount: number, nodes: Array<{ __typename?: 'MemberPlan', id: string, name: string, description?: Descendant[] | null, shortDescription?: Descendant[] | null, slug: string, active: boolean, productType: ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type MemberPlanQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type MemberPlanQuery = { __typename?: 'Query', memberPlan?: { __typename?: 'MemberPlan', id: string, name: string, description?: Descendant[] | null, shortDescription?: Descendant[] | null, slug: string, active: boolean, productType: ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> } | null };
+
+export type CreateMemberPlanMutationVariables = Exact<{
+  name: Scalars['String'];
+  slug: Scalars['String'];
+  active: Scalars['Boolean'];
+  shortDescription?: InputMaybe<Scalars['RichText']>;
+  description?: InputMaybe<Scalars['RichText']>;
+  imageID?: InputMaybe<Scalars['String']>;
+  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
+  amountPerMonthMin: Scalars['Int'];
+  amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
+  confirmationPageId?: InputMaybe<Scalars['String']>;
+  failPageId?: InputMaybe<Scalars['String']>;
+  successPageId?: InputMaybe<Scalars['String']>;
+  productType: ProductType;
+  currency: Currency;
+  extendable: Scalars['Boolean'];
+  externalReward?: InputMaybe<Scalars['String']>;
+  maxCount?: InputMaybe<Scalars['Int']>;
+  availablePaymentMethods: Array<AvailablePaymentMethodInput> | AvailablePaymentMethodInput;
+  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
+  tags: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+export type CreateMemberPlanMutation = { __typename?: 'Mutation', createMemberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Descendant[] | null, shortDescription?: Descendant[] | null, slug: string, active: boolean, productType: ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> } };
+
+export type UpdateMemberPlanMutationVariables = Exact<{
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+  active?: InputMaybe<Scalars['Boolean']>;
+  shortDescription?: InputMaybe<Scalars['RichText']>;
+  description?: InputMaybe<Scalars['RichText']>;
+  imageID?: InputMaybe<Scalars['String']>;
+  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
+  amountPerMonthMin?: InputMaybe<Scalars['Int']>;
+  amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
+  confirmationPageId?: InputMaybe<Scalars['String']>;
+  failPageId?: InputMaybe<Scalars['String']>;
+  successPageId?: InputMaybe<Scalars['String']>;
+  productType: ProductType;
+  currency: Currency;
+  extendable: Scalars['Boolean'];
+  externalReward?: InputMaybe<Scalars['String']>;
+  maxCount?: InputMaybe<Scalars['Int']>;
+  availablePaymentMethods?: InputMaybe<Array<AvailablePaymentMethodInput> | AvailablePaymentMethodInput>;
+  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
+}>;
+
+
+export type UpdateMemberPlanMutation = { __typename?: 'Mutation', updateMemberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Descendant[] | null, shortDescription?: Descendant[] | null, slug: string, active: boolean, productType: ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> } };
+
+export type DeleteMemberPlanMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteMemberPlanMutation = { __typename?: 'Mutation', deleteMemberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Descendant[] | null, shortDescription?: Descendant[] | null, slug: string, active: boolean, productType: ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> } };
+
 export type SlimNavigationFragment = { __typename?: 'Navigation', id: string, key: string, name: string };
 
 export type FullNavigationFragment = { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, articleID: string } | { __typename: 'ExternalNavigationLink', label: string, url?: string | null } | { __typename: 'PageNavigationLink', label: string, pageID: string }> };
@@ -5225,8 +5378,6 @@ export type SubscriptionIntervalFragment = { __typename?: 'SubscriptionInterval'
 export type MailTemplateRefFragment = { __typename?: 'MailTemplateRef', id: string, name: string };
 
 export type MemberPlanRefFragment = { __typename?: 'MemberPlan', id: string, name: string, productType: ProductType, amountPerMonthMin: number, amountPerMonthMax?: number | null, currency: Currency, extendable: boolean, slug: string, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> };
-
-export type FullAvailablePaymentMethodFragment = { __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> };
 
 export type SystemMailsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -6347,6 +6498,71 @@ export const FullMailProviderFragmentDoc = gql`
   name
 }
     `;
+export const FullPaymentProviderFragmentDoc = gql`
+    fragment FullPaymentProvider on PaymentProvider {
+  id
+  name
+}
+    `;
+export const FullPaymentMethodFragmentDoc = gql`
+    fragment FullPaymentMethod on PaymentMethod {
+  id
+  name
+  slug
+  createdAt
+  modifiedAt
+  gracePeriod
+  paymentProvider {
+    ...FullPaymentProvider
+  }
+  description
+  active
+  image {
+    ...FullImage
+  }
+}
+    ${FullPaymentProviderFragmentDoc}
+${FullImageFragmentDoc}`;
+export const FullAvailablePaymentMethodFragmentDoc = gql`
+    fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
+  paymentMethods {
+    ...FullPaymentMethod
+  }
+  paymentPeriodicities
+  forceAutoRenewal
+}
+    ${FullPaymentMethodFragmentDoc}`;
+export const FullMemberPlanFragmentDoc = gql`
+    fragment FullMemberPlan on MemberPlan {
+  id
+  name
+  description
+  shortDescription
+  slug
+  active
+  productType
+  tags
+  externalReward
+  tags
+  currency
+  extendable
+  maxCount
+  migrateToTargetPaymentMethodID
+  amountPerMonthMin
+  amountPerMonthMax
+  amountPerMonthTarget
+  successPageId
+  failPageId
+  confirmationPageId
+  image {
+    ...FullImage
+  }
+  availablePaymentMethods {
+    ...FullAvailablePaymentMethod
+  }
+}
+    ${FullImageFragmentDoc}
+${FullAvailablePaymentMethodFragmentDoc}`;
 export const SlimNavigationFragmentDoc = gql`
     fragment SlimNavigation on Navigation {
   id
@@ -6501,40 +6717,6 @@ export const FullPollVoteWithAnswerFragmentDoc = gql`
   }
 }
     ${FullPollVoteFragmentDoc}`;
-export const FullPaymentProviderFragmentDoc = gql`
-    fragment FullPaymentProvider on PaymentProvider {
-  id
-  name
-}
-    `;
-export const FullPaymentMethodFragmentDoc = gql`
-    fragment FullPaymentMethod on PaymentMethod {
-  id
-  name
-  slug
-  createdAt
-  modifiedAt
-  gracePeriod
-  paymentProvider {
-    ...FullPaymentProvider
-  }
-  description
-  active
-  image {
-    ...FullImage
-  }
-}
-    ${FullPaymentProviderFragmentDoc}
-${FullImageFragmentDoc}`;
-export const FullAvailablePaymentMethodFragmentDoc = gql`
-    fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
-  paymentMethods {
-    ...FullPaymentMethod
-  }
-  paymentPeriodicities
-  forceAutoRenewal
-}
-    ${FullPaymentMethodFragmentDoc}`;
 export const MemberPlanRefFragmentDoc = gql`
     fragment MemberPlanRef on MemberPlan {
   id
@@ -8654,6 +8836,278 @@ export function useSynchronizeMailTemplatesMutation(baseOptions?: Apollo.Mutatio
 export type SynchronizeMailTemplatesMutationHookResult = ReturnType<typeof useSynchronizeMailTemplatesMutation>;
 export type SynchronizeMailTemplatesMutationResult = Apollo.MutationResult<SynchronizeMailTemplatesMutation>;
 export type SynchronizeMailTemplatesMutationOptions = Apollo.BaseMutationOptions<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>;
+export const MemberPlanListDocument = gql`
+    query MemberPlanList($filter: MemberPlanFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: MemberPlanSort) {
+  memberPlans(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullMemberPlan
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    ${FullMemberPlanFragmentDoc}`;
+
+/**
+ * __useMemberPlanListQuery__
+ *
+ * To run a query within a React component, call `useMemberPlanListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMemberPlanListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMemberPlanListQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      order: // value for 'order'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useMemberPlanListQuery(baseOptions?: Apollo.QueryHookOptions<MemberPlanListQuery, MemberPlanListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MemberPlanListQuery, MemberPlanListQueryVariables>(MemberPlanListDocument, options);
+      }
+export function useMemberPlanListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MemberPlanListQuery, MemberPlanListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MemberPlanListQuery, MemberPlanListQueryVariables>(MemberPlanListDocument, options);
+        }
+export type MemberPlanListQueryHookResult = ReturnType<typeof useMemberPlanListQuery>;
+export type MemberPlanListLazyQueryHookResult = ReturnType<typeof useMemberPlanListLazyQuery>;
+export type MemberPlanListQueryResult = Apollo.QueryResult<MemberPlanListQuery, MemberPlanListQueryVariables>;
+export const MemberPlanDocument = gql`
+    query MemberPlan($id: String!) {
+  memberPlan(id: $id) {
+    ...FullMemberPlan
+  }
+}
+    ${FullMemberPlanFragmentDoc}`;
+
+/**
+ * __useMemberPlanQuery__
+ *
+ * To run a query within a React component, call `useMemberPlanQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMemberPlanQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMemberPlanQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useMemberPlanQuery(baseOptions: Apollo.QueryHookOptions<MemberPlanQuery, MemberPlanQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MemberPlanQuery, MemberPlanQueryVariables>(MemberPlanDocument, options);
+      }
+export function useMemberPlanLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MemberPlanQuery, MemberPlanQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MemberPlanQuery, MemberPlanQueryVariables>(MemberPlanDocument, options);
+        }
+export type MemberPlanQueryHookResult = ReturnType<typeof useMemberPlanQuery>;
+export type MemberPlanLazyQueryHookResult = ReturnType<typeof useMemberPlanLazyQuery>;
+export type MemberPlanQueryResult = Apollo.QueryResult<MemberPlanQuery, MemberPlanQueryVariables>;
+export const CreateMemberPlanDocument = gql`
+    mutation CreateMemberPlan($name: String!, $slug: String!, $active: Boolean!, $shortDescription: RichText, $description: RichText, $imageID: String, $amountPerMonthMax: Int, $amountPerMonthMin: Int!, $amountPerMonthTarget: Int, $confirmationPageId: String, $failPageId: String, $successPageId: String, $productType: ProductType!, $currency: Currency!, $extendable: Boolean!, $externalReward: String, $maxCount: Int, $availablePaymentMethods: [AvailablePaymentMethodInput!]!, $migrateToTargetPaymentMethodID: String, $tags: [String!]!) {
+  createMemberPlan(
+    name: $name
+    slug: $slug
+    active: $active
+    shortDescription: $shortDescription
+    description: $description
+    imageID: $imageID
+    amountPerMonthMax: $amountPerMonthMax
+    amountPerMonthMin: $amountPerMonthMin
+    amountPerMonthTarget: $amountPerMonthTarget
+    confirmationPageId: $confirmationPageId
+    failPageId: $failPageId
+    successPageId: $successPageId
+    productType: $productType
+    currency: $currency
+    extendable: $extendable
+    externalReward: $externalReward
+    maxCount: $maxCount
+    availablePaymentMethods: $availablePaymentMethods
+    migrateToTargetPaymentMethodID: $migrateToTargetPaymentMethodID
+    tags: $tags
+  ) {
+    ...FullMemberPlan
+  }
+}
+    ${FullMemberPlanFragmentDoc}`;
+export type CreateMemberPlanMutationFn = Apollo.MutationFunction<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>;
+
+/**
+ * __useCreateMemberPlanMutation__
+ *
+ * To run a mutation, you first call `useCreateMemberPlanMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMemberPlanMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMemberPlanMutation, { data, loading, error }] = useCreateMemberPlanMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      slug: // value for 'slug'
+ *      active: // value for 'active'
+ *      shortDescription: // value for 'shortDescription'
+ *      description: // value for 'description'
+ *      imageID: // value for 'imageID'
+ *      amountPerMonthMax: // value for 'amountPerMonthMax'
+ *      amountPerMonthMin: // value for 'amountPerMonthMin'
+ *      amountPerMonthTarget: // value for 'amountPerMonthTarget'
+ *      confirmationPageId: // value for 'confirmationPageId'
+ *      failPageId: // value for 'failPageId'
+ *      successPageId: // value for 'successPageId'
+ *      productType: // value for 'productType'
+ *      currency: // value for 'currency'
+ *      extendable: // value for 'extendable'
+ *      externalReward: // value for 'externalReward'
+ *      maxCount: // value for 'maxCount'
+ *      availablePaymentMethods: // value for 'availablePaymentMethods'
+ *      migrateToTargetPaymentMethodID: // value for 'migrateToTargetPaymentMethodID'
+ *      tags: // value for 'tags'
+ *   },
+ * });
+ */
+export function useCreateMemberPlanMutation(baseOptions?: Apollo.MutationHookOptions<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>(CreateMemberPlanDocument, options);
+      }
+export type CreateMemberPlanMutationHookResult = ReturnType<typeof useCreateMemberPlanMutation>;
+export type CreateMemberPlanMutationResult = Apollo.MutationResult<CreateMemberPlanMutation>;
+export type CreateMemberPlanMutationOptions = Apollo.BaseMutationOptions<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>;
+export const UpdateMemberPlanDocument = gql`
+    mutation UpdateMemberPlan($id: String!, $name: String, $slug: String, $active: Boolean, $shortDescription: RichText, $description: RichText, $imageID: String, $amountPerMonthMax: Int, $amountPerMonthMin: Int, $amountPerMonthTarget: Int, $confirmationPageId: String, $failPageId: String, $successPageId: String, $productType: ProductType!, $currency: Currency!, $extendable: Boolean!, $externalReward: String, $maxCount: Int, $availablePaymentMethods: [AvailablePaymentMethodInput!], $migrateToTargetPaymentMethodID: String, $tags: [String!]) {
+  updateMemberPlan(
+    id: $id
+    name: $name
+    slug: $slug
+    active: $active
+    shortDescription: $shortDescription
+    description: $description
+    imageID: $imageID
+    amountPerMonthMax: $amountPerMonthMax
+    amountPerMonthMin: $amountPerMonthMin
+    amountPerMonthTarget: $amountPerMonthTarget
+    confirmationPageId: $confirmationPageId
+    failPageId: $failPageId
+    successPageId: $successPageId
+    productType: $productType
+    currency: $currency
+    extendable: $extendable
+    externalReward: $externalReward
+    maxCount: $maxCount
+    availablePaymentMethods: $availablePaymentMethods
+    migrateToTargetPaymentMethodID: $migrateToTargetPaymentMethodID
+    tags: $tags
+  ) {
+    ...FullMemberPlan
+  }
+}
+    ${FullMemberPlanFragmentDoc}`;
+export type UpdateMemberPlanMutationFn = Apollo.MutationFunction<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>;
+
+/**
+ * __useUpdateMemberPlanMutation__
+ *
+ * To run a mutation, you first call `useUpdateMemberPlanMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMemberPlanMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMemberPlanMutation, { data, loading, error }] = useUpdateMemberPlanMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *      slug: // value for 'slug'
+ *      active: // value for 'active'
+ *      shortDescription: // value for 'shortDescription'
+ *      description: // value for 'description'
+ *      imageID: // value for 'imageID'
+ *      amountPerMonthMax: // value for 'amountPerMonthMax'
+ *      amountPerMonthMin: // value for 'amountPerMonthMin'
+ *      amountPerMonthTarget: // value for 'amountPerMonthTarget'
+ *      confirmationPageId: // value for 'confirmationPageId'
+ *      failPageId: // value for 'failPageId'
+ *      successPageId: // value for 'successPageId'
+ *      productType: // value for 'productType'
+ *      currency: // value for 'currency'
+ *      extendable: // value for 'extendable'
+ *      externalReward: // value for 'externalReward'
+ *      maxCount: // value for 'maxCount'
+ *      availablePaymentMethods: // value for 'availablePaymentMethods'
+ *      migrateToTargetPaymentMethodID: // value for 'migrateToTargetPaymentMethodID'
+ *      tags: // value for 'tags'
+ *   },
+ * });
+ */
+export function useUpdateMemberPlanMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>(UpdateMemberPlanDocument, options);
+      }
+export type UpdateMemberPlanMutationHookResult = ReturnType<typeof useUpdateMemberPlanMutation>;
+export type UpdateMemberPlanMutationResult = Apollo.MutationResult<UpdateMemberPlanMutation>;
+export type UpdateMemberPlanMutationOptions = Apollo.BaseMutationOptions<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>;
+export const DeleteMemberPlanDocument = gql`
+    mutation DeleteMemberPlan($id: String!) {
+  deleteMemberPlan(id: $id) {
+    ...FullMemberPlan
+  }
+}
+    ${FullMemberPlanFragmentDoc}`;
+export type DeleteMemberPlanMutationFn = Apollo.MutationFunction<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>;
+
+/**
+ * __useDeleteMemberPlanMutation__
+ *
+ * To run a mutation, you first call `useDeleteMemberPlanMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteMemberPlanMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteMemberPlanMutation, { data, loading, error }] = useDeleteMemberPlanMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteMemberPlanMutation(baseOptions?: Apollo.MutationHookOptions<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>(DeleteMemberPlanDocument, options);
+      }
+export type DeleteMemberPlanMutationHookResult = ReturnType<typeof useDeleteMemberPlanMutation>;
+export type DeleteMemberPlanMutationResult = Apollo.MutationResult<DeleteMemberPlanMutation>;
+export type DeleteMemberPlanMutationOptions = Apollo.BaseMutationOptions<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>;
 export const NavigationListDocument = gql`
     query NavigationList {
   navigations {

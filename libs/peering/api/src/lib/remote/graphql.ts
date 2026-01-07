@@ -219,7 +219,14 @@ export enum AuthorSort {
 export type AvailablePaymentMethod = {
   __typename?: 'AvailablePaymentMethod';
   forceAutoRenewal: Scalars['Boolean'];
+  paymentMethodIDs: Array<Scalars['String']>;
   paymentMethods: Array<PaymentMethod>;
+  paymentPeriodicities: Array<PaymentPeriodicity>;
+};
+
+export type AvailablePaymentMethodInput = {
+  forceAutoRenewal: Scalars['Boolean'];
+  paymentMethodIDs: Array<Scalars['String']>;
   paymentPeriodicities: Array<PaymentPeriodicity>;
 };
 
@@ -1417,6 +1424,7 @@ export type MailTemplateWithUrlAndStatusModel = {
 
 export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
+  active: Scalars['Boolean'];
   amountPerMonthMax?: Maybe<Scalars['Int']>;
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
@@ -1433,6 +1441,8 @@ export type MemberPlan = HasImage & {
   image?: Maybe<Image>;
   imageID?: Maybe<Scalars['String']>;
   maxCount?: Maybe<Scalars['Int']>;
+  migrateToTargetPaymentMethod?: Maybe<PaymentMethod>;
+  migrateToTargetPaymentMethodID?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   productType: ProductType;
   shortDescription?: Maybe<Scalars['RichText']>;
@@ -1484,6 +1494,8 @@ export type Mutation = {
   createCrowdfunding: Crowdfunding;
   /** Creates a new event. */
   createEvent: Event;
+  /** Creates a new memberplan. */
+  createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
   createNavigation: Navigation;
   /** Creates an page. */
@@ -1535,6 +1547,8 @@ export type Mutation = {
   deleteCrowdfunding?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing event. */
   deleteEvent: Event;
+  /** Deletes an existing memberplan. */
+  deleteMemberPlan: MemberPlan;
   /** Deletes an existing navigation. */
   deleteNavigation: Navigation;
   /** Deletes an page. */
@@ -1619,6 +1633,8 @@ export type Mutation = {
   updateCrowdfunding: Crowdfunding;
   /** Updates an existing event. */
   updateEvent: Event;
+  /** Updates an existing memberplan. */
+  updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
   updateNavigation: Navigation;
   /** Updates an page. */
@@ -1747,6 +1763,30 @@ export type MutationCreateEventArgs = {
   startsAt: Scalars['DateTime'];
   status?: EventStatus;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type MutationCreateMemberPlanArgs = {
+  active: Scalars['Boolean'];
+  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
+  amountPerMonthMin: Scalars['Int'];
+  amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
+  availablePaymentMethods: Array<AvailablePaymentMethodInput>;
+  confirmationPageId?: InputMaybe<Scalars['String']>;
+  currency: Currency;
+  description?: InputMaybe<Scalars['RichText']>;
+  extendable: Scalars['Boolean'];
+  externalReward?: InputMaybe<Scalars['String']>;
+  failPageId?: InputMaybe<Scalars['String']>;
+  imageID?: InputMaybe<Scalars['String']>;
+  maxCount?: InputMaybe<Scalars['Int']>;
+  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  productType: ProductType;
+  shortDescription?: InputMaybe<Scalars['RichText']>;
+  slug: Scalars['String'];
+  successPageId?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
@@ -1929,6 +1969,11 @@ export type MutationDeleteCrowdfundingArgs = {
 
 
 export type MutationDeleteEventArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteMemberPlanArgs = {
   id: Scalars['String'];
 };
 
@@ -2161,6 +2206,31 @@ export type MutationUpdateEventArgs = {
   startsAt?: InputMaybe<Scalars['DateTime']>;
   status?: InputMaybe<EventStatus>;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type MutationUpdateMemberPlanArgs = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
+  amountPerMonthMin?: InputMaybe<Scalars['Int']>;
+  amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
+  availablePaymentMethods?: InputMaybe<Array<AvailablePaymentMethodInput>>;
+  confirmationPageId?: InputMaybe<Scalars['String']>;
+  currency?: InputMaybe<Currency>;
+  description?: InputMaybe<Scalars['RichText']>;
+  extendable?: InputMaybe<Scalars['Boolean']>;
+  externalReward?: InputMaybe<Scalars['String']>;
+  failPageId?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  imageID?: InputMaybe<Scalars['String']>;
+  maxCount?: InputMaybe<Scalars['Int']>;
+  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  productType?: InputMaybe<ProductType>;
+  shortDescription?: InputMaybe<Scalars['RichText']>;
+  slug?: InputMaybe<Scalars['String']>;
+  successPageId?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
 

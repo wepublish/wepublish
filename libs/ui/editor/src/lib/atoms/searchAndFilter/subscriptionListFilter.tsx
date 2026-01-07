@@ -1,15 +1,15 @@
 import styled from '@emotion/styled';
 import {
   DateFilterComparison,
-  FullMemberPlanFragment,
   FullPaymentMethodFragment,
   FullUserFragment,
   SubscriptionDeactivationReason,
   SubscriptionFilter,
-  useMemberPlanListQuery,
 } from '@wepublish/editor/api';
 import {
+  FullMemberPlanFragment,
   getApiClientV2,
+  useMemberPlanListQuery,
   usePaymentMethodListQuery,
 } from '@wepublish/editor/api-v2';
 import React, { useEffect, useState } from 'react';
@@ -20,7 +20,7 @@ import { Button, DateRangePicker, Form as RForm, SelectPicker } from 'rsuite';
 import { ALL_PAYMENT_PERIODICITIES } from '../../utility';
 import { UserSearch } from './userSearch';
 
-const { Group, ControlLabel } = RForm;
+const { Group } = RForm;
 
 const Form = styled(RForm)`
   display: flex;
@@ -76,14 +76,12 @@ export function SubscriptionListFilter({
     marginBottom: '10px',
   };
 
-  /**
-   * fetch member plans
-   */
   const {
     data: memberPlanData,
     loading: isMemberPlanLoading,
     error: loadMemberPlanError,
   } = useMemberPlanListQuery({
+    client,
     fetchPolicy: 'network-only',
     variables: {
       take: 200,
