@@ -7,11 +7,13 @@ import { Page } from '@wepublish/page/website';
 import { createWithTheme } from '@wepublish/ui';
 import { BuilderPageProps } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
-import { memo } from 'react';
+import { createContext, memo } from 'react';
 
 import { useRedirectToLandingPage } from '../hooks/use-redirect-to-landing';
 import { pageTheme } from '../theme';
 import { breakoutContainerOnXs } from '../utils/breakout-container';
+
+export const ForceUpgradeContext = createContext(false);
 
 const PageWithLandingPageRedirect = memo(function WithLandingPageRedirect(
   props: BuilderPageProps
@@ -23,7 +25,17 @@ const PageWithLandingPageRedirect = memo(function WithLandingPageRedirect(
     router.replace(landingPageUrl);
   }
 
-  return <Page {...props} />;
+  return (
+    <ForceUpgradeContext.Provider
+      value={
+        !!props.data?.page.tags.find(
+          tag => tag.tag === 'AutomaticallyTryToUpgradeSubscription'
+        )
+      }
+    >
+      <Page {...props} />
+    </ForceUpgradeContext.Provider>
+  );
 });
 
 export const HauptstadtPage = createWithTheme(

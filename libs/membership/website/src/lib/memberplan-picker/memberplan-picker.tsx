@@ -35,9 +35,9 @@ export const MemberPlanPickerRadios = styled(RadioGroup)`
 
 export const MemberPlanPicker = forwardRef<
   HTMLButtonElement,
-  BuilderMemberPlanPickerProps
+  BuilderMemberPlanPickerProps & { alwaysShow?: boolean }
 >(function MemberPlanPicker(
-  { memberPlans, onChange, value, className, name },
+  { memberPlans, onChange, value, className, name, alwaysShow },
   ref
 ) {
   const {
@@ -46,7 +46,7 @@ export const MemberPlanPicker = forwardRef<
     blocks: { RichText },
   } = useWebsiteBuilder();
 
-  const showRadioButtons = memberPlans.length > 1;
+  const showRadioButtons = memberPlans.length > 1 || alwaysShow;
   const selectedMemberPlan = memberPlans.find(({ id }) => id === value);
   const showPicker =
     showRadioButtons ||

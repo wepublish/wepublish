@@ -14,6 +14,10 @@ export const withTrackFirstRoute = <
     const router = useRouter();
 
     useEffect(() => {
+      // @TODO: track also initial page not page with property??
+      // sessionStorage.setItem(storageKey, `1`);
+      // wait for user to be loaded
+
       const handleRouteChange = () => {
         sessionStorage.setItem(storageKey, `1`);
       };

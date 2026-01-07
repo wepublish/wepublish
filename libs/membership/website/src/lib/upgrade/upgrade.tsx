@@ -84,6 +84,14 @@ export const UpgradeContinuation = styled(SubscribeCancelable)`
   margin-bottom: ${({ theme }) => theme.spacing(1)};
 `;
 
+export const UpgradeInformation = styled('div')`
+  padding: ${({ theme }) => theme.spacing(2)};
+  background-color: ${({ theme }) => theme.palette.grey['100']};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  max-width: 65ch;
+  justify-self: center;
+`;
+
 export const Upgrade = ({
   defaults,
   memberPlans,
@@ -241,19 +249,26 @@ export const Upgrade = ({
       onSubmit={onSubmit}
       noValidate
     >
-      <Paragraph gutterBottom={false}>
-        Mach jetzt ein Upgrade von deinem{' '}
-        {subscriptionToUpgrade.memberPlan.name} auf das{' '}
-        {selectedMemberPlan?.name}. Dein Restguthaben von{' '}
-        {formatCurrency(
-          (upgradeInfo.data?.upgradeSubscriptionInfo.discountAmount ?? 0) / 100,
-          selectedMemberPlan?.currency ?? Currency.Chf,
-          locale
-        )}{' '}
-        Franken bei deinem {subscriptionToUpgrade.memberPlan.name} wird Dir
-        dabei angerechnet. Weiter unten siehst du Deinen noch zu zahlenden
-        Upgrade-Preis für den Wechsel zum {selectedMemberPlan?.name}.
-      </Paragraph>
+      <UpgradeInformation>
+        <Paragraph gutterBottom={false}>
+          Mach jetzt ein Upgrade von deinem{' '}
+          {subscriptionToUpgrade.memberPlan.name} auf das{' '}
+          {selectedMemberPlan?.name}.{' '}
+          <strong>
+            Dein Restguthaben von{' '}
+            {formatCurrency(
+              (upgradeInfo.data?.upgradeSubscriptionInfo.discountAmount ?? 0) /
+                100,
+              selectedMemberPlan?.currency ?? Currency.Chf,
+              locale
+            )}{' '}
+            Franken bei deinem {subscriptionToUpgrade.memberPlan.name} wird Dir
+            dabei angerechnet.
+          </strong>{' '}
+          Weiter unten siehst du Deinen noch zu zahlenden Upgrade-Preis für den
+          Wechsel zum {selectedMemberPlan?.name}.
+        </Paragraph>
+      </UpgradeInformation>
 
       <SubscribeSection area="memberPlans">
         {availableMemberplans.length > 1 && <H5 component="h2">Abo wählen</H5>}

@@ -14,14 +14,12 @@ import { toPlaintext } from '@wepublish/richtext';
 export const PeerProfileWrapper = styled('div')`
   display: grid;
   align-items: center;
-  padding: ${({ theme }) => theme.spacing(2)}
-    ${({ theme }) => theme.spacing(2.5)};
+  padding: ${({ theme }) => theme.spacing(2, 2.5)};
   background-color: ${({ theme }) => theme.palette.grey['100']};
   gap: ${({ theme }) => theme.spacing(1)};
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    padding: ${({ theme }) => theme.spacing(2)}
-      ${({ theme }) => theme.spacing(3)};
+    padding: ${({ theme }) => theme.spacing(2, 3)};
     gap: ${({ theme }) => theme.spacing(2)};
   }
 `;
