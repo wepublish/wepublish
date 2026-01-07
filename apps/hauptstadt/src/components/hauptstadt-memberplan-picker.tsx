@@ -8,6 +8,7 @@ import {
   MemberPlanPicker,
   MemberPlanPickerRadios,
 } from '@wepublish/membership/website';
+import { BuilderMemberPlanPickerProps } from '@wepublish/website/builder';
 
 export const HauptstadtMemberPlanItem = styled(MemberPlanItem)`
   --memberplan-item-picker-checked-bg: ${({ theme }) =>
@@ -42,7 +43,14 @@ export const HauptstadtMemberPlanItem = styled(MemberPlanItem)`
   }}
 `;
 
-export const HauptstadtMemberPlanPicker = styled(MemberPlanPicker)`
+export const HauptstadtMemberPlanPicker = styled(
+  (props: BuilderMemberPlanPickerProps) => (
+    <MemberPlanPicker
+      {...props}
+      alwaysShow
+    />
+  )
+)`
   ${MemberPlanPickerRadios} {
     gap: ${({ theme }) => theme.spacing(4)};
   }

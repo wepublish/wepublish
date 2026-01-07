@@ -36,7 +36,7 @@ export const useInformUserAboutUpgrade = () => {
     },
   });
 
-  const memberPlanToUpgrade = useMemo(() => {
+  const memberPlanToUpgradeTo = useMemo(() => {
     if (!userSubscriptions?.length) {
       return undefined;
     }
@@ -45,10 +45,10 @@ export const useInformUserAboutUpgrade = () => {
       mb =>
         mb.tags?.includes('navbar-upgrade') &&
         isMemberplanUpgradeableTo(mb) &&
-        !userSubscriptions?.some(
+        userSubscriptions?.some(
           allPass([
             isSubscriptionUpgradeable,
-            (sub: FullSubscriptionFragment) => sub.memberPlan.id === mb.id,
+            (sub: FullSubscriptionFragment) => mb.id !== sub.memberPlan.id,
             (sub: FullSubscriptionFragment) =>
               mb.amountPerMonthMin > sub.memberPlan.amountPerMonthMin,
           ])
@@ -56,5 +56,5 @@ export const useInformUserAboutUpgrade = () => {
     );
   }, [memberPlanList?.memberPlans.nodes, userSubscriptions]);
 
-  return [!!memberPlanToUpgrade, memberPlanToUpgrade];
+  return [!!memberPlanToUpgradeTo, memberPlanToUpgradeTo];
 };
