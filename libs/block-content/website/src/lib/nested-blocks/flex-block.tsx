@@ -10,13 +10,14 @@ import {
 import { FlexAlignment } from '@wepublish/website/api';
 import { css } from '@emotion/react';
 
-const FlexBlockWrapper = styled('div')`
+export const FlexBlockWrapper = styled('div')`
   display: grid;
   column-gap: ${({ theme }) => theme.spacing(2)};
   row-gap: ${({ theme }) => theme.spacing(8)};
   grid-template-columns: repeat(12, 1fr);
   grid-column: 1 / -1;
 `;
+
 export const BlockWithAlignment = styled('div')<FlexAlignment>`
   grid-column: 1 / -1;
 
@@ -48,9 +49,13 @@ export const FlexBlock = ({ className, blocks }: BuilderFlexBlockProps) => {
     blocks: { Renderer },
   } = useWebsiteBuilder();
 
+  const sortedBlocks = [...blocks].sort(
+    (a, b) => a.alignment.y - b.alignment.y || a.alignment.x - b.alignment.x
+  );
+
   return (
-    <FlexBlockWrapper>
-      {blocks.map((nestedBlock, index) => {
+    <FlexBlockWrapper className={className}>
+      {sortedBlocks.map((nestedBlock, index) => {
         return (
           <BlockWithAlignment
             key={index}
@@ -60,7 +65,7 @@ export const FlexBlock = ({ className, blocks }: BuilderFlexBlockProps) => {
               block={nestedBlock.block as BlockContent}
               type="Article"
               index={index}
-              count={blocks.length}
+              count={sortedBlocks.length}
             />
           </BlockWithAlignment>
         );
