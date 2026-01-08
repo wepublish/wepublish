@@ -1,22 +1,3 @@
-mutation CreateSubscription($input: SubscriptionInput!) {
-  createSubscription(input: $input) {
-    autoRenew
-    id
-    paidUntil
-    user {
-      id
-    }
-    monthlyAmount
-    memberPlan {
-      id
-    }
-    extendable
-    paymentMethod {
-      id
-    }
-  }
-}
-
 mutation RenewSubscription($id: String!) {
   renewSubscription(id: $id) {
     id

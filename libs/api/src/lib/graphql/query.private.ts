@@ -12,7 +12,6 @@ import { CommentSort } from '../db/comment';
 import { ImageSort } from '../db/image';
 import { InvoiceSort } from '../db/invoice';
 import { PaymentSort } from '../db/payment';
-import { SubscriptionSort } from '../db/subscription';
 import { UserSort } from '../db/user';
 import { GivenTokeExpiryToLongError, UserIdNotFound } from '../error';
 
@@ -76,17 +75,6 @@ import { PollSort, getPolls } from './poll/poll.private-queries';
 import { getPoll } from './poll/poll.public-queries';
 import { GraphQLSession } from './session';
 import { getSessionsForUser } from './session/session.private-queries';
-import {
-  GraphQLSubscription,
-  GraphQLSubscriptionConnection,
-  GraphQLSubscriptionFilter,
-  GraphQLSubscriptionSort,
-} from './subscription';
-import {
-  getAdminSubscriptions,
-  getSubscriptionById,
-  getSubscriptionsAsCSV,
-} from './subscription/subscription.private-queries';
 
 import { GraphQLToken } from './token';
 import { getTokens } from './token/token.private-queries';
@@ -242,53 +230,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           authenticate,
           user
         ),
-    },
-
-    // Subscriptions
-    // ==========
-    subscription: {
-      type: GraphQLSubscription,
-      args: { id: { type: new GraphQLNonNull(GraphQLString) } },
-      resolve: (root, { id }, { authenticate, prisma: { subscription } }) => {
-        return getSubscriptionById(id, authenticate, subscription);
-      },
-    },
-
-    subscriptions: {
-      type: new GraphQLNonNull(GraphQLSubscriptionConnection),
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 10 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLSubscriptionFilter },
-        sort: {
-          type: GraphQLSubscriptionSort,
-          defaultValue: SubscriptionSort.ModifiedAt,
-        },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, take, skip, cursor },
-        { authenticate, prisma: { subscription } }
-      ) =>
-        getAdminSubscriptions(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          subscription
-        ),
-    },
-
-    subscriptionsAsCsv: {
-      type: GraphQLString,
-      args: { filter: { type: GraphQLSubscriptionFilter } },
-      resolve: (root, { filter }, { prisma: { subscription }, authenticate }) =>
-        getSubscriptionsAsCSV(filter, authenticate, subscription),
     },
 
     // Token

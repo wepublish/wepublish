@@ -462,7 +462,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     }
 
     return (
-      userSubscriptions.data?.subscriptions.some(
+      userSubscriptions.data?.userSubscriptions.some(
         ({ memberPlan, deactivation }) =>
           memberPlan.id === selectedMemberPlanId &&
           memberPlan.productType === ProductType.Subscription &&
@@ -471,7 +471,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     );
   }, [
     deactivateSubscriptionId,
-    userSubscriptions.data?.subscriptions,
+    userSubscriptions.data?.userSubscriptions,
     selectedMemberPlanId,
   ]);
 

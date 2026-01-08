@@ -1,10 +1,6 @@
 import { ApolloServer } from 'apollo-server-express';
 import { createGraphQLTestClientWithPrisma } from '../utility';
-import {
-  CreateSubscription,
-  RenewSubscription,
-  SubscriptionInput,
-} from '../api/private';
+import { RenewSubscription } from '../api/private';
 import {
   Currency,
   Invoice,
@@ -14,12 +10,9 @@ import {
   Subscription,
   User,
 } from '@prisma/client';
-import { PaymentPeriodicity } from '../api/public';
-import { AlgebraicCaptchaChallenge } from '../../src/lib/challenges/algebraicCaptchaChallenge';
 
 let testServerPrivate: ApolloServer;
 let prisma: PrismaClient;
-let challenge: AlgebraicCaptchaChallenge;
 
 let paymentMethod: PaymentMethod | undefined;
 let memberPlan: MemberPlan | undefined;
@@ -33,7 +26,6 @@ beforeAll(async () => {
     testServerPrivate = setupClient.testServerPrivate;
 
     prisma = setupClient.prisma;
-    challenge = setupClient.challenge;
 
     // prepare mock data
     paymentMethod = await prisma.paymentMethod.create({
@@ -115,53 +107,6 @@ beforeAll(async () => {
 
 describe('Subscriptions', () => {
   describe('PRIVATE', () => {
-    test('can be created', async () => {
-      const subscriptionInput: SubscriptionInput = {
-        autoRenew: true,
-        extendable: true,
-        monthlyAmount: 100,
-        userID: user.id,
-        paymentMethodID: paymentMethod.id,
-        paymentPeriodicity: PaymentPeriodicity.Monthly,
-        memberPlanID: memberPlan.id,
-        properties: [],
-        startsAt: new Date().toISOString(),
-      };
-
-      const result = await testServerPrivate.executeOperation({
-        query: CreateSubscription,
-        variables: {
-          input: {
-            ...subscriptionInput,
-          },
-        },
-      });
-
-      const subscription = result.data.createSubscription;
-
-      const invoice = await prisma.invoice.findFirst({
-        where: {
-          subscription: {
-            id: {
-              equals: subscription.id,
-            },
-          },
-        },
-      });
-
-      expect(subscription.id).toBeTruthy();
-      expect(subscription.autoRenew).toBe(subscriptionInput.autoRenew);
-      expect(subscription.paidUntil).toBeNull();
-      expect(subscription.user.id).toBe(user.id);
-      expect(subscription.monthlyAmount).toBe(subscriptionInput.monthlyAmount);
-      expect(subscription.memberPlan.id).toBe(memberPlan.id);
-      expect(subscription.extendable).toBe(subscriptionInput.extendable);
-      expect(subscription.paymentMethod.id).toBe(paymentMethod.id);
-
-      // expects an invoice
-      expect(invoice.id).toBeTruthy();
-    });
-
     test('does not renew unpaid subscriptions', async () => {
       const invoiceCountBefore = await prisma.invoice.count({
         where: { subscription },

@@ -1,11 +1,14 @@
+import FileDownloadIcon from '@rsuite/icons/FileDownload';
+import {
+  DailySubscriptionStatsUser,
+  SubscriptionFilter,
+} from '@wepublish/editor/api-v2';
 import { useExportSubscriptionsAsCsv } from '@wepublish/ui/editor';
-import { Button } from 'rsuite';
-import { AggregatedUsers, AudienceStatsComputed } from './useAudience';
-import { DailySubscriptionStatsUser } from '@wepublish/editor/api-v2';
-import { SubscriptionFilter } from '@wepublish/editor/api';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import FileDownloadIcon from '@rsuite/icons/FileDownload';
+import { Button } from 'rsuite';
+
+import { AggregatedUsers, AudienceStatsComputed } from './useAudience';
 
 export interface AudienceCsvBtnProps {
   audienceStats:
@@ -21,10 +24,7 @@ export function AudienceCsvBtn({
   fileNameDate,
 }: AudienceCsvBtnProps) {
   const { initDownload, getCsv, loading } = useExportSubscriptionsAsCsv();
-  const {
-    t,
-    i18n: { language },
-  } = useTranslation();
+  const { t } = useTranslation();
 
   // helper functions for the csv download
   const filteredStats = useMemo<DailySubscriptionStatsUser[]>(() => {
@@ -56,17 +56,15 @@ export function AudienceCsvBtn({
   );
 
   return (
-    <>
-      <Button
-        disabled={disableBtn}
-        loading={loading}
-        appearance="primary"
-        color="green"
-        startIcon={<FileDownloadIcon />}
-        onClick={() => downloadCsv()}
-      >
-        {t('audienceCsvBtn.exportUsers')}
-      </Button>
-    </>
+    <Button
+      disabled={disableBtn}
+      loading={loading}
+      appearance="primary"
+      color="green"
+      startIcon={<FileDownloadIcon />}
+      onClick={() => downloadCsv()}
+    >
+      {t('audienceCsvBtn.exportUsers')}
+    </Button>
   );
 }

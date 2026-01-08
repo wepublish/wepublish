@@ -14,7 +14,7 @@ import { matches } from 'lodash';
 import nock from 'nock';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { SubscriptionFlowService } from '../subscription-flow/subscription-flow.service';
-import { SubscriptionService } from '../subscription/subscription.service';
+import { SubscriptionService } from './subscription.service';
 import {
   registerMailsModule,
   registerPaymentMethodModule,
