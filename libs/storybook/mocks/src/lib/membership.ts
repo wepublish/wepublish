@@ -54,11 +54,19 @@ export const mockAvailablePaymentMethod = ({
     PaymentPeriodicity.Lifetime,
   ],
   paymentMethods = [mockPaymentMethod(), mockPaymentMethod()],
-}: Partial<AvailablePaymentMethod> = {}): AvailablePaymentMethod => ({
+  paymentMethodIDs = [],
+}: Partial<
+  AvailablePaymentMethod & {
+    paymentMethodIDs: string[];
+  }
+> = {}): AvailablePaymentMethod & {
+  paymentMethodIDs: string[];
+} => ({
   __typename: 'AvailablePaymentMethod',
   forceAutoRenewal,
   paymentMethods,
   paymentPeriodicities,
+  paymentMethodIDs,
 });
 
 export const mockMemberPlan = ({
