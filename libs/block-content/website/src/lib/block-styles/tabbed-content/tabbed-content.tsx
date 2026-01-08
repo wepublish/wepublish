@@ -150,6 +150,10 @@ export const TabbedContent = ({
     blocks: { Renderer },
   } = useWebsiteBuilder();
 
+  const sortedBlocks = [...blocks].sort(
+    (a, b) => a.alignment.y - b.alignment.y || a.alignment.x - b.alignment.x
+  );
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -162,7 +166,7 @@ export const TabbedContent = ({
           onChange={handleChange}
           aria-label="Tabs zur Navigation zwischen verschiedenen Themenbereichen"
         >
-          {blocks.map((nestedBlock, index) => {
+          {sortedBlocks.map((nestedBlock, index) => {
             return (
               <Tab
                 disableRipple={true}
@@ -181,7 +185,7 @@ export const TabbedContent = ({
           })}
         </Tabs>
       </Box>
-      {blocks.map((nestedBlock, index) => (
+      {sortedBlocks.map((nestedBlock, index) => (
         <TabPanel
           value={value}
           index={index}
@@ -204,7 +208,7 @@ export const TabbedContent = ({
             }
             type="Article"
             index={index}
-            count={blocks.length}
+            count={sortedBlocks.length}
           />
         </TabPanel>
       ))}

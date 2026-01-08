@@ -1,12 +1,13 @@
 import { TeaserGridFlexBlock } from '@wepublish/block-content/website';
 import { BuilderTeaserGridFlexBlockProps } from '@wepublish/website/builder';
 import { cond, T } from 'ramda';
-
+/*
 import {
   alignmentForTeaserBlock as alignmentForTeaserBlockFullsizeImage,
   isTeaserFlexGridFullsizeImage,
   TeaserFlexGridFullsizeImage,
 } from './layout-fullsize-image';
+
 import {
   alignmentForTeaserBlock as alignmentForTeaserBlockNoImage,
   isTeaserFlexGridNoImage,
@@ -27,8 +28,10 @@ import {
   isTeaserFlexGridTwoColAltColor,
   TeaserFlexGridTwoColAltColor,
 } from './layout-two-col-alt-color';
+*/
 
 export const TsriBaseTeaserGridFlex = cond([
+  /*
   [
     isTeaserFlexGridFullsizeImage,
     (props: BuilderTeaserGridFlexBlockProps) => (
@@ -38,6 +41,7 @@ export const TsriBaseTeaserGridFlex = cond([
       />
     ),
   ],
+
   [
     isTeaserFlexGridTwoCol,
     (props: BuilderTeaserGridFlexBlockProps) => (
@@ -74,6 +78,7 @@ export const TsriBaseTeaserGridFlex = cond([
       />
     ),
   ],
+  */
   [
     T,
     (props: BuilderTeaserGridFlexBlockProps) => (

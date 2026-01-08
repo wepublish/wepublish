@@ -38,6 +38,7 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import deOverriden from '../locales/deOverriden.json';
+import { TsriFlexBlock } from '../src/components/block-layouts/tsri-base-flex-block';
 import { TsriTabbedContent } from '../src/components/block-layouts/tsri-base-tabbed-content';
 import { TsriBaseTeaserGridFlex } from '../src/components/teaser-layouts/tsri-base-teaser-flex-grid';
 import { TsriBaseTeaserSlots } from '../src/components/teaser-layouts/tsri-base-teaser-slots';
@@ -133,6 +134,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             RichText: TsriRichText,
             Title: TsriTitleBlock,
             Renderer: TsriBlockRenderer,
+            FlexBlock: TsriFlexBlock,
           }}
           blockStyles={{
             ContextBox: TsriContextBox,
