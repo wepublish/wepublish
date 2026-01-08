@@ -158,6 +158,7 @@ export const TeaserPreTitleWrapper = styled('div')`
   grid-column: 2 / 3;
   background-color: transparent;
 `;
+
 export const TeaserContentWrapper = styled('article')`
   overflow: hidden;
   display: grid;

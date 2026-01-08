@@ -8,13 +8,9 @@ import { useContext } from 'react';
 
 import { DailyBriefingContext } from './teaser-sidebar-daily-briefing-context';
 import { TsriTeaserType } from './tsri-base-teaser';
-import { TeaserWrapper as TeaserWrapperDefault } from './tsri-teaser';
-/*
-export const isDailyBriefingTeaser = allPass([
-  ({ teaser }: BuilderTeaserProps) => teaser?.__typename === 'CustomTeaser',
-  ({ teaser }: BuilderTeaserProps) => teaser?.preTitle === 'daily-briefing',
-]);
-*/
+import {
+  TeaserWrapper as TeaserWrapperDefault
+} from './tsri-teaser';
 
 export const isDailyBriefingTeaser = allPass([
   ({ blockStyle }: BuilderTeaserProps) => {
