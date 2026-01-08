@@ -16,6 +16,7 @@ import {
   BlockStylesDocument,
   //BlockType,
   BlockWithAlignment,
+  BreakBlockInput,
   CreateArticleMutationVariables,
   //BreakBlock,
   CustomTeaserInput,
@@ -732,40 +733,184 @@ async function seedPages(
           } as BlockContentInput,
 
           {
-            teaserSlots: {
-              autofillConfig: {
-                enabled: true,
-                filter: {},
-                teaserType: TeaserType.Article,
-                sort: TeaserListBlockSort.PublishedAt,
-              } as TeaserSlotsAutofillConfig,
-              slots: [
+            flexBlock: {
+              blocks: [
                 {
-                  type: 'Autofill',
-                  teaser: null,
+                  alignment: {
+                    i: '0',
+                    x: 0,
+                    y: 0,
+                    w: 12,
+                    h: 2,
+                    static: false,
+                  },
+                  block: {
+                    teaserSlots: {
+                      title: 'FullsizeImage - 6 Teasers',
+                      blockStyle: getBlockStyle(blockStyles, 'FullsizeImage'),
+                      autofillConfig: {
+                        enabled: true,
+                        filter: {},
+                        teaserType: TeaserType.Article,
+                        sort: TeaserListBlockSort.PublishedAt,
+                      } as TeaserSlotsAutofillConfig,
+                      slots: [
+                        {
+                          type: 'Autofill',
+                          teaser: null,
+                        },
+                        {
+                          type: 'Autofill',
+                          teaser: null,
+                        },
+                        {
+                          type: 'Autofill',
+                          teaser: null,
+                        },
+                        {
+                          type: 'Autofill',
+                          teaser: null,
+                        },
+                        {
+                          type: 'Autofill',
+                          teaser: null,
+                        },
+                        {
+                          type: 'Autofill',
+                          teaser: null,
+                        },
+                      ],
+                    } as TeaserSlotsBlock,
+                  } as BlockContentInput,
                 },
+              ] as BlockWithAlignment[],
+            } as FlexBlockInput,
+          } as BlockContentInput,
+
+          {
+            linkPageBreak: {
+              blockStyle: getBlockStyle(blockStyles, 'LinkPageBreak'),
+              hideButton: false,
+              imageID: imageIds[imageIds.length - 15],
+              linkTarget: null,
+              linkText: faker.lorem.words({ min: 1, max: 3 }),
+              linkURL: 'https://shop.tsri.ch/products/cap-tsuri',
+              richText: getText(2, 2) as Descendant[],
+              text: 'Shop',
+            } as BreakBlockInput,
+          } as BlockContentInput,
+
+          {
+            flexBlock: {
+              blocks: [
                 {
-                  type: 'Autofill',
-                  teaser: null,
+                  alignment: {
+                    i: '0',
+                    x: 0,
+                    y: 0,
+                    w: 12,
+                    h: 2,
+                    static: false,
+                  },
+                  block: {
+                    teaserSlots: {
+                      title: 'XLFullsizeImage - 2 Teasers',
+                      blockStyle: getBlockStyle(blockStyles, 'XLFullsizeImage'),
+                      autofillConfig: {
+                        enabled: true,
+                        filter: {},
+                        teaserType: TeaserType.Article,
+                        sort: TeaserListBlockSort.PublishedAt,
+                      } as TeaserSlotsAutofillConfig,
+                      slots: [
+                        {
+                          type: 'Autofill',
+                          teaser: null,
+                        },
+                        {
+                          type: 'Autofill',
+                          teaser: null,
+                        },
+                      ],
+                    } as TeaserSlotsBlock,
+                  } as BlockContentInput,
                 },
+
                 {
-                  type: 'Autofill',
-                  teaser: null,
+                  alignment: {
+                    i: '1',
+                    x: 0,
+                    y: 2,
+                    w: 12,
+                    h: 2,
+                    static: false,
+                  },
+                  block: {
+                    teaserSlots: {
+                      title: 'NoImageAltColor - 3 Teasers ',
+                      blockStyle: getBlockStyle(blockStyles, 'NoImageAltColor'),
+                      autofillConfig: {
+                        enabled: true,
+                        filter: {},
+                        teaserType: TeaserType.Article,
+                        sort: TeaserListBlockSort.PublishedAt,
+                      } as TeaserSlotsAutofillConfig,
+                      slots: [
+                        {
+                          type: 'Autofill',
+                          teaser: null,
+                        },
+                        {
+                          type: 'Autofill',
+                          teaser: null,
+                        },
+                        {
+                          type: 'Autofill',
+                          teaser: null,
+                        },
+                      ],
+                    } as TeaserSlotsBlock,
+                  } as BlockContentInput,
                 },
+
                 {
-                  type: 'Autofill',
-                  teaser: null,
+                  alignment: {
+                    i: '2',
+                    x: 0,
+                    y: 4,
+                    w: 12,
+                    h: 2,
+                    static: false,
+                  },
+                  block: {
+                    teaserSlots: {
+                      title: 'TwoColAltColor - 3 Teasers',
+                      blockStyle: getBlockStyle(blockStyles, 'TwoColAltColor'),
+                      autofillConfig: {
+                        enabled: true,
+                        filter: {},
+                        teaserType: TeaserType.Article,
+                        sort: TeaserListBlockSort.PublishedAt,
+                      } as TeaserSlotsAutofillConfig,
+                      slots: [
+                        {
+                          type: 'Autofill',
+                          teaser: null,
+                        },
+                        {
+                          type: 'Autofill',
+                          teaser: null,
+                        },
+                        {
+                          type: 'Autofill',
+                          teaser: null,
+                        },
+                      ],
+                    } as TeaserSlotsBlock,
+                  } as BlockContentInput,
                 },
-                {
-                  type: 'Autofill',
-                  teaser: null,
-                },
-                {
-                  type: 'Autofill',
-                  teaser: null,
-                },
-              ],
-            } as TeaserSlotsBlock,
+              ] as BlockWithAlignment[],
+            } as FlexBlockInput,
           } as BlockContentInput,
 
           {
@@ -788,6 +933,7 @@ async function seedPages(
 
 async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
   const blockStylesData = [
+    /*
     {
       name: 'Banner',
       blocks: ['LinkPageBreak'],
@@ -808,14 +954,9 @@ async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
       name: 'Slider',
       blocks: ['TeaserList', 'TeaserGrid6', 'TeaserSlots', 'ImageGallery'],
     },
-    {
-      name: 'FrontTop',
-      blocks: ['TeaserSlots'],
-    },
-    {
-      name: 'FrontMiddle',
-      blocks: ['TeaserGridFlex'],
-    },
+    */
+
+    // block layouts for FlexBlock
     {
       name: 'TabbedContent',
       blocks: ['FlexBlock'],
@@ -827,6 +968,64 @@ async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
     {
       name: 'TabbedContentSidebar',
       blocks: ['FlexBlock'],
+    },
+
+    // archive layouts
+    {
+      name: 'ArchiveTopic',
+      blocks: ['TeaserSlots'],
+    },
+    {
+      name: 'ArchiveTopicWithTwoCol',
+      blocks: ['TeaserSlots'],
+    },
+    {
+      name: 'ArchiveTopicAuthor',
+      blocks: ['TeaserSlots'],
+    },
+
+    // archive sidebar layouts
+    {
+      name: 'DailyBriefing',
+      blocks: ['TeaserSlots'],
+    },
+    {
+      name: 'ShopProducts',
+      blocks: ['TeaserSlots'],
+    },
+    {
+      name: 'FocusMonth',
+      blocks: ['TeaserSlots'],
+    },
+    {
+      name: 'TsriLove',
+      blocks: ['TeaserSlots'],
+    },
+
+    // normal teaser layouts
+    {
+      name: 'FullsizeImage',
+      blocks: ['TeaserSlots'],
+    },
+    {
+      name: 'XLFullsizeImage',
+      blocks: ['TeaserSlots'],
+    },
+    {
+      name: 'NoImage',
+      blocks: ['TeaserSlots'],
+    },
+    {
+      name: 'NoImageAltColor',
+      blocks: ['TeaserSlots'],
+    },
+    {
+      name: 'TwoCol',
+      blocks: ['TeaserSlots'],
+    },
+    {
+      name: 'TwoColAltColor',
+      blocks: ['TeaserSlots'],
     },
   ];
 
