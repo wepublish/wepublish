@@ -4,15 +4,10 @@ import { cond, T } from 'ramda';
 
 import { FlexBlockSmallRowGaps } from './flex-block-small-row-gaps';
 
-console.log('TsriFlexBlock loaded');
-
 export const TsriFlexBlock = cond([
   [
     isFlexBlock,
-    (props: BuilderFlexBlockProps) => {
-      console.log('Rendering TsriFlexBlock with FlexBlockSmallRowGaps', props);
-      return <FlexBlockSmallRowGaps {...props} />;
-    },
+    (props: BuilderFlexBlockProps) => <FlexBlockSmallRowGaps {...props} />,
   ],
   [
     T,
