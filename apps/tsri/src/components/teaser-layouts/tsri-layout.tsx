@@ -18,6 +18,7 @@ export enum TsriLayoutType {
   NoImageAltColor = 'NoImageAltColor',
   TwoCol = 'TwoCol',
   TwoColAltColor = 'TwoColAltColor',
+  XLFullsizeImage = 'XLFullsizeImage',
 
   // archive layouts
   ArchiveTopic = 'ArchiveTopic',

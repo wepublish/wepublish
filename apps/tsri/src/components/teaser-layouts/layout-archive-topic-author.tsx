@@ -2,7 +2,7 @@ import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
 import { TsriTeaserType } from '../teasers/tsri-base-teaser';
-import { TeaserSlotsArchiveTopic } from './teaser-slots-archive-topic';
+import { TeaserSlotsArchiveTopic } from './layout-archive-topic';
 import { TsriLayoutType } from './tsri-layout';
 
 export const teaserBlockStyleByIndex = (index: number): TsriTeaserType => {

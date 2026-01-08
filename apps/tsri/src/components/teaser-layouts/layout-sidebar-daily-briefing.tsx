@@ -5,11 +5,9 @@ import {
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
-import { TeaserTopicMeta } from '../teasers/teaser-topic-meta';
 import { TsriTeaserType } from '../teasers/tsri-base-teaser';
 import { TeaserPreTitle } from '../teasers/tsri-teaser';
-import { TsriLayoutType } from './tsri-layout';
-import { TeaserFlexGrid, TeaserSlots } from './tsri-layout';
+import { TeaserFlexGrid, TeaserSlots, TsriLayoutType } from './tsri-layout';
 
 export const isTeaserFlexGridDailyBriefingSidebar = allPass([
   ({ blockStyle }: BuilderTeaserGridFlexBlockProps) => {
@@ -23,12 +21,15 @@ export const isTeaserSlotsDailyBriefingSidebar = allPass([
   },
 ]);
 
-export const teaserBlockStyleByIndex = (index: number): TsriTeaserType => {
+export const teaserBlockStyleByIndex = (
+  index: number,
+  count?: number
+): TsriTeaserType => {
   switch (index) {
-    case 0:
-      return TsriTeaserType.DailyBriefing;
-    default:
+    case count! - 1:
       return TsriTeaserType.TopicMeta;
+    default:
+      return TsriTeaserType.DailyBriefing;
   }
 };
 
@@ -59,28 +60,26 @@ export const TeaserSlotsDailyBriefingSidebar = styled(TeaserSlots)`
   row-gap: 2cqw;
   height: 100%;
 
-  ${TeaserTopicMeta} {
-    ${TeaserPreTitle} {
-      width: 100%;
-      flex-direction: row;
-      text-align: left;
-      align-items: flex-end;
-      justify-self: center;
+  ${TeaserPreTitle} {
+    width: 100%;
+    flex-direction: row;
+    text-align: left !important;
+    align-items: flex-end;
+    justify-self: center;
 
-      & .MuiLink-root {
-        display: block;
-        padding: 0.5cqw 1cqw;
-        border-radius: 1cqw;
-        font-weight: 700 !important;
-        background-color: black;
-        color: white;
-        flex-grow: 1;
-        text-decoration: none;
+    & .MuiLink-root {
+      display: block !important;
+      padding: 0.5cqw 1cqw !important;
+      border-radius: 1cqw;
+      font-weight: 700 !important;
+      background-color: black;
+      color: white;
+      flex-grow: 1 !important;
+      text-decoration: none !important;
 
-        &:hover {
-          background-color: #f5ff64;
-          color: black;
-        }
+      &:hover {
+        background-color: #f5ff64;
+        color: black;
       }
     }
   }
