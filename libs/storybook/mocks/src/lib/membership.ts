@@ -91,7 +91,7 @@ export const mockMemberPlan = ({
   confirmationPageId = faker.string.nanoid(),
   amountPerMonthMax = 1000,
   externalReward = 'https://example.com/mock-external-reward-url',
-}: Partial<MemberPlan> = {}): MemberPlan => ({
+}: Partial<MemberPlan> = {}): MemberPlan & { active: boolean } => ({
   __typename: 'MemberPlan',
   id,
   image,
@@ -111,6 +111,7 @@ export const mockMemberPlan = ({
   confirmationPageId,
   amountPerMonthMax,
   externalReward,
+  active: true,
 });
 
 export const mockChallenge = ({
