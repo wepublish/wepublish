@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, css, TextField, Typography } from '@mui/material';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
-import { useState } from 'react';
+import { BaseSyntheticEvent, FormEvent, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -80,12 +80,12 @@ export default function MailchimpSubscribeForm(
   });
 
   const onSubmit = handleSubmit(
-    (data: FormInput, event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
+    (data: FormInput, event?: BaseSyntheticEvent<object, any, any>) => {
+      event?.preventDefault();
       if (data?.email) {
         setEmail(data.email);
       }
-      return processSubmit(event);
+      return processSubmit(event as FormEvent<HTMLFormElement>);
     }
   );
 
