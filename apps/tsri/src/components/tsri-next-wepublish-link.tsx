@@ -129,7 +129,7 @@ export const TsriNextWepublishLink = forwardRef<
     setIsMCSubmit(false);
   };
 
-  const handleMCSubmit = (e: React.BaseSyntheticEvent) => {
+  const handleMCSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     setIsMCSubmit(true);
   };
 
