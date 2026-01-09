@@ -528,7 +528,7 @@ async function seedPages(
   heroArticleId: string[] = [],
   blockStyles: any
 ) {
-  const [home] = await Promise.all([
+  const pages = await Promise.all([
     createPage({
       variables: {
         publishedAt: new Date().toISOString(),
@@ -604,7 +604,8 @@ async function seedPages(
                               preTitle: 'Kostenlos abonnieren!',
                               title: 'Das Wichtigste aus Zürich',
                               lead: faker.lorem.paragraph(),
-                              contentUrl: 'https://wepublish.ch',
+                              contentUrl:
+                                '/newsletter?mc_u=56ee24de7341c744008a13c9e&mc_id=32c65d081a&mc_f_id=00e5c2e1f0&source=tsri&tf_id=jExhxiVv&popTitle=BASIUM%20UBI%20CURA%20ZÜRI&popButtonText=Lorem%20ipsum%20dolor!&popText=Provident%20agnosco%20absorbeo%20victoria%20rem%20celer%20uberrime%20vilis%20suscipit%20peccatus.%20Velum%20xiphias%20fuga%20solus%20alienus%20supplanto.%20Officiis%20cura%20cultellus%20tantum%20atrocitas.',
                             } as ArticleTeaserInput,
                           } as TeaserSlotInput,
                         },
@@ -928,7 +929,7 @@ async function seedPages(
     }),
   ]);
 
-  return [home];
+  return pages;
 }
 
 async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
