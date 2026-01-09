@@ -18,7 +18,6 @@ import {
   UserSession,
 } from '@wepublish/authentication/api';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
-import { User, UserDataloaderService } from '@wepublish/user/api';
 import { CommentTagDataloader, Tag } from '@wepublish/tag/api';
 import { CommentDataloaderService } from './comment-dataloader.service';
 import { RatingSystemService } from './rating-system';
@@ -27,6 +26,7 @@ import { URLAdapter } from '@wepublish/nest-modules';
 import { ArticleDataloaderService } from '@wepublish/article/api';
 import { PageDataloaderService } from '@wepublish/page/api';
 import { CommentRating } from './rating-system/rating-system.model';
+import { forwardRef, Inject } from '@nestjs/common';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -36,9 +36,10 @@ export class CommentResolver {
     private tagDataLoader: CommentTagDataloader,
     private ratingSystemService: RatingSystemService,
     private imageDataloaderService: ImageDataloaderService,
-    private userDataloaderService: UserDataloaderService,
     private urlAdapter: URLAdapter,
+    @Inject(forwardRef(() => ArticleDataloaderService))
     private articleDataloader: ArticleDataloaderService,
+    @Inject(forwardRef(() => PageDataloaderService))
     private pageDataloader: PageDataloaderService
   ) {}
 
@@ -126,15 +127,6 @@ export class CommentResolver {
       return null;
     }
     return this.imageDataloaderService.load(comment.guestUserImageID);
-  }
-
-  @ResolveField(() => User, { nullable: true })
-  async user(@Parent() comment: Comment) {
-    if (!comment.userID) {
-      return null;
-    }
-
-    return this.userDataloaderService.load(comment.userID);
   }
 
   @ResolveField(() => [Tag])

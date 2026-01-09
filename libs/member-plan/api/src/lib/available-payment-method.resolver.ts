@@ -1,18 +1,13 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { AvailablePaymentMethod } from './member-plan.model';
-import {
-  PaymentMethod,
-  PaymentMethodService,
-} from '@wepublish/payment-method/api';
+import { PaymentMethod, PaymentMethodDataloader } from '@wepublish/payment/api';
 
 @Resolver(() => AvailablePaymentMethod)
 export class AvailablePaymentMethodResolver {
-  constructor(private paymentMethodService: PaymentMethodService) {}
+  constructor(private paymentMethodDataloader: PaymentMethodDataloader) {}
 
   @ResolveField(() => [PaymentMethod])
   async paymentMethods(@Parent() { paymentMethodIDs }: AvailablePaymentMethod) {
-    return this.paymentMethodService.getAvailablePaymentMethodsByIds(
-      paymentMethodIDs
-    );
+    return this.paymentMethodDataloader.loadMany(paymentMethodIDs);
   }
 }

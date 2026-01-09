@@ -1,6 +1,5 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Tag } from '@wepublish/tag/api';
-import { User } from '@wepublish/user/api';
 import { Image } from '@wepublish/image/api';
 import { Descendant } from 'slate';
 import { GraphQLRichText } from '@wepublish/richtext/api';
@@ -10,6 +9,7 @@ import {
   CommentRating,
 } from './rating-system/rating-system.model';
 import { CommentItemType, CommentState } from '@prisma/client';
+import { HasOptionalUser } from '@wepublish/user/api';
 
 export enum CommentAuthorType {
   author = 'author',
@@ -53,8 +53,10 @@ export class CommentRevision {
   createdAt!: Date;
 }
 
-@ObjectType()
-export class Comment {
+@ObjectType({
+  implements: [HasOptionalUser],
+})
+export class Comment extends HasOptionalUser {
   @Field()
   id!: string;
   @Field(() => Date)
@@ -69,16 +71,10 @@ export class Comment {
 
   @Field(() => String, { nullable: true })
   guestUsername?: string;
-
   @Field(() => String, { nullable: true })
   guestUserImageID?: string;
   @Field(() => Image, { nullable: true })
   guestUserImage?: Image;
-
-  @Field(() => String, { nullable: true })
-  userID?: string;
-  @Field(() => User, { nullable: true })
-  user?: User;
 
   @Field(() => [Tag])
   tags!: Tag[];

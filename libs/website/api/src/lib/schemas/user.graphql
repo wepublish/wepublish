@@ -3,22 +3,11 @@ fragment FullPaymentProviderCustomer on PaymentProviderCustomer {
   customerID
 }
 
-fragment FullUser on User {
+fragment FullBaseUser on BaseUser {
   id
   name
   firstName
   flair
-  birthday
-  email
-  permissions
-
-  address {
-    ...FullAddress
-  }
-
-  paymentProviderCustomers {
-    ...FullPaymentProviderCustomer
-  }
 
   image {
     ...FullImage
@@ -26,6 +15,25 @@ fragment FullUser on User {
 
   properties {
     ...FullProperty
+  }
+}
+
+fragment FullUser on User {
+  ...FullBaseUser
+}
+
+fragment FullSensitiveDataUser on SensitiveDataUser {
+  ...FullBaseUser
+  permissions
+  birthday
+  email
+
+  address {
+    ...FullAddress
+  }
+
+  paymentProviderCustomers {
+    ...FullPaymentProviderCustomer
   }
 }
 
@@ -52,7 +60,7 @@ fragment FullSessionWithToken on SessionWithToken {
 
 query Me {
   me {
-    ...FullUser
+    ...FullSensitiveDataUser
   }
 }
 
@@ -91,7 +99,7 @@ mutation Register(
     challengeAnswer: $challengeAnswer
   ) {
     user {
-      ...FullUser
+      ...FullSensitiveDataUser
     }
 
     session {
@@ -102,12 +110,12 @@ mutation Register(
 
 mutation UpdateUser($input: UserInput!) {
   updateUser(input: $input) {
-    ...FullUser
+    ...FullSensitiveDataUser
   }
 }
 
 mutation UpdatePassword($password: String!, $passwordRepeated: String!) {
   updatePassword(password: $password, passwordRepeated: $passwordRepeated) {
-    ...FullUser
+    ...FullSensitiveDataUser
   }
 }

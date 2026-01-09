@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   Comment,
   CommentAuthorType,
@@ -23,7 +23,6 @@ import {
   InvalidStarRatingValueError,
   NotAuthorisedError,
   NotFound,
-  UserInputError,
 } from '@wepublish/api';
 import { CanCreateApprovedComment } from '@wepublish/permissions';
 import { ChallengeService } from '@wepublish/challenge/api';
@@ -274,7 +273,9 @@ export class CommentService {
       !commentEditingSetting?.value &&
       comment.state !== CommentState.pendingUserChanges
     ) {
-      throw new UserInputError('Comment state must be pending user changes');
+      throw new BadRequestException(
+        'Comment state must be pending user changes'
+      );
     }
 
     const { id, text, title, lead } = input;

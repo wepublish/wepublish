@@ -1,7 +1,4 @@
-import {
-  CanGetPaymentProviders,
-  CanLoginAsOtherUser,
-} from '@wepublish/permissions';
+import { CanLoginAsOtherUser } from '@wepublish/permissions';
 import { SortOrder } from '@wepublish/utils/api';
 import {
   GraphQLInt,
@@ -14,7 +11,6 @@ import { Context } from '../context';
 import { CommentSort } from '../db/comment';
 import { ImageSort } from '../db/image';
 import { InvoiceSort } from '../db/invoice';
-import { MemberPlanSort } from '../db/memberPlan';
 import { PaymentSort } from '../db/payment';
 import { SubscriptionSort } from '../db/subscription';
 import { UserSort } from '../db/user';
@@ -50,31 +46,18 @@ import {
   getAdminInvoices,
   getInvoiceById,
 } from './invoice/invoice.private-queries';
-import {
-  getAdminMemberPlans,
-  getMemberPlanByIdOrSlug,
-} from './member-plan/member-plan.private-queries';
-import {
-  GraphQLMemberPlan,
-  GraphQLMemberPlanConnection,
-  GraphQLMemberPlanFilter,
-  GraphQLMemberPlanSort,
-} from './memberPlan';
+
 import {
   GraphQLPayment,
   GraphQLPaymentConnection,
   GraphQLPaymentFilter,
   GraphQLPaymentSort,
 } from './payment';
-import {
-  getPaymentMethodById,
-  getPaymentMethods,
-} from './payment-method/payment-method.private-queries';
+
 import {
   getAdminPayments,
   getPaymentById,
 } from './payment/payment.private-queries';
-import { GraphQLPaymentMethod, GraphQLPaymentProvider } from './paymentMethod';
 import { GraphQLPeerProfile } from './peer';
 import {
   getAdminPeerProfile,
@@ -91,7 +74,6 @@ import { PollSort, getPolls } from './poll/poll.private-queries';
 import { getPoll } from './poll/poll.public-queries';
 import { GraphQLSession } from './session';
 import { getSessionsForUser } from './session/session.private-queries';
-import { GraphQLSlug } from '@wepublish/utils/api';
 import {
   GraphQLSubscription,
   GraphQLSubscriptionConnection,
@@ -104,8 +86,6 @@ import {
   getSubscriptionsAsCSV,
 } from './subscription/subscription.private-queries';
 
-import { GraphQLToken } from './token';
-import { getTokens } from './token/token.private-queries';
 import {
   GraphQLUser,
   GraphQLUserConnection,
@@ -307,17 +287,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         getSubscriptionsAsCSV(filter, authenticate, subscription),
     },
 
-    // Token
-    // =====
-
-    tokens: {
-      type: new GraphQLNonNull(
-        new GraphQLList(new GraphQLNonNull(GraphQLToken))
-      ),
-      resolve: (root, args, { authenticateUser, prisma: { token } }) =>
-        getTokens(authenticateUser, token),
-    },
-
     // Image
     // =====
 
@@ -396,92 +365,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           authenticate,
           comment
         ),
-    },
-
-    // MemberPlan
-    // ======
-
-    memberPlan: {
-      type: GraphQLMemberPlan,
-      args: { id: { type: GraphQLString }, slug: { type: GraphQLSlug } },
-      resolve: (
-        root,
-        { id, slug },
-        { authenticate, loaders: { memberPlansByID, memberPlansBySlug } }
-      ) =>
-        getMemberPlanByIdOrSlug(
-          id,
-          slug,
-          authenticate,
-          memberPlansByID,
-          memberPlansBySlug
-        ),
-    },
-
-    memberPlans: {
-      type: new GraphQLNonNull(GraphQLMemberPlanConnection),
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 10 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLMemberPlanFilter },
-        sort: {
-          type: GraphQLMemberPlanSort,
-          defaultValue: MemberPlanSort.ModifiedAt,
-        },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, cursor, take, skip },
-        { authenticate, prisma: { memberPlan } }
-      ) =>
-        getAdminMemberPlans(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          memberPlan
-        ),
-    },
-
-    // PaymentMethod
-    // ======
-
-    paymentMethod: {
-      type: GraphQLPaymentMethod,
-      args: { id: { type: GraphQLString } },
-      resolve: (
-        root,
-        { id },
-        { authenticate, loaders: { paymentMethodsByID } }
-      ) => getPaymentMethodById(id, authenticate, paymentMethodsByID),
-    },
-
-    paymentMethods: {
-      type: new GraphQLNonNull(
-        new GraphQLList(new GraphQLNonNull(GraphQLPaymentMethod))
-      ),
-      resolve: (root, _, { authenticate, prisma: { paymentMethod } }) =>
-        getPaymentMethods(authenticate, paymentMethod),
-    },
-
-    paymentProviders: {
-      type: new GraphQLNonNull(
-        new GraphQLList(new GraphQLNonNull(GraphQLPaymentProvider))
-      ),
-      resolve(root, _, { authenticate, paymentProviders }) {
-        const { roles } = authenticate();
-        authorise(CanGetPaymentProviders, roles);
-
-        return paymentProviders.map(({ id, name }) => ({
-          id,
-          name,
-        }));
-      },
     },
 
     // Invoice
