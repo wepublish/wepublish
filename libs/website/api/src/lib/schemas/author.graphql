@@ -5,8 +5,6 @@ fragment FullAuthor on Author {
   slug
   bio
   url
-  createdAt
-  modifiedAt
 
   links {
     title
@@ -39,14 +37,19 @@ query AuthorList(
   $sort: AuthorSort
   $order: SortOrder
 ) {
-  authors(filter: $filter, cursor: $cursor, sort: $sort, order: $order, take: $take, skip: $skip) {
+  authors(
+    filter: $filter
+    cursor: $cursor
+    sort: $sort
+    order: $order
+    take: $take
+    skip: $skip
+  ) {
     nodes {
       ...FullAuthor
     }
 
     pageInfo {
-      startCursor
-      endCursor
       hasNextPage
       hasPreviousPage
     }

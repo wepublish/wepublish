@@ -26,14 +26,19 @@ query EventList(
   $order: SortOrder
   $sort: EventSort
 ) {
-  events(filter: $filter, cursorId: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  events(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...FullEvent
     }
 
     pageInfo {
-      startCursor
-      endCursor
       hasNextPage
       hasPreviousPage
     }

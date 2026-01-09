@@ -304,8 +304,6 @@ query MemberPlanList(
     }
 
     pageInfo {
-      startCursor
-      endCursor
       hasNextPage
       hasPreviousPage
     }

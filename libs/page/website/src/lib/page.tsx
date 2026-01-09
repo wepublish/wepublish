@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { ContentWrapper } from '@wepublish/content/website';
-import { BlockContent, Page as PageType } from '@wepublish/website/api';
+import { BlockContent } from '@wepublish/website/api';
 import {
   BuilderPageProps,
   useWebsiteBuilder,
@@ -22,7 +22,7 @@ export function Page({
 
   return (
     <PageWrapper className={className}>
-      {data?.page && <PageSEO page={data.page as PageType} />}
+      {data?.page && <PageSEO page={data.page} />}
 
       {data?.page && (
         <Blocks

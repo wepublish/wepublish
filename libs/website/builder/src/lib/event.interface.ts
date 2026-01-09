@@ -1,9 +1,9 @@
 import { QueryResult } from '@apollo/client';
 import {
-  Event,
   EventListQuery,
   EventListQueryVariables,
   EventQuery,
+  FullEventFragment,
 } from '@wepublish/website/api';
 
 export type BuilderEventProps = Pick<
@@ -14,7 +14,7 @@ export type BuilderEventProps = Pick<
 };
 
 export type BuilderEventSEOProps = {
-  event: Event;
+  event: FullEventFragment;
 };
 
 export type BuilderEventListProps = Pick<
@@ -27,6 +27,6 @@ export type BuilderEventListProps = Pick<
   onVariablesChange?: (variables: Partial<EventListQueryVariables>) => void;
 };
 
-export type BuilderEventListItemProps = Event & {
+export type BuilderEventListItemProps = FullEventFragment & {
   className?: string;
 };

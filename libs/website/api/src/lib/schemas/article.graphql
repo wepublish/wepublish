@@ -25,12 +25,10 @@ fragment FullPaywall on Paywall {
 fragment ArticleRevisionWithoutBlocks on ArticleRevision {
   id
   publishedAt
-  createdAt
   preTitle
   title
+  seoTitle
   lead
-  lead
-  title
   canonicalUrl
 
   authors {
@@ -127,8 +125,6 @@ query ArticleList(
     }
 
     pageInfo {
-      startCursor
-      endCursor
       hasNextPage
       hasPreviousPage
     }
@@ -158,8 +154,6 @@ query FullArticleList(
     }
 
     pageInfo {
-      startCursor
-      endCursor
       hasNextPage
       hasPreviousPage
     }

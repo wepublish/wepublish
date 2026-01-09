@@ -4,25 +4,27 @@ import {
   isTitleBlock,
 } from '@wepublish/block-content/website';
 import { firstParagraphToPlaintext, toPlaintext } from '@wepublish/richtext';
-import { Article, FullImageFragment } from '@wepublish/website/api';
+import { FullArticleFragment, FullImageFragment } from '@wepublish/website/api';
 import {
   BuilderArticleSEOProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { find } from 'ramda';
 import { Fragment, useMemo } from 'react';
 
-export const getArticleSEO = (article: Article) => {
-  const firstTitle = article.latest.blocks?.find(isTitleBlock);
-  const firstRichText = article.latest.blocks?.find(isRichTextBlock);
-  const firstImageBlock = article.latest.blocks?.find(isImageBlock);
+export const getArticleSEO = (article: FullArticleFragment) => {
+  const firstTitle = find(isTitleBlock, article.latest.blocks ?? []);
+  const firstRichText = find(isRichTextBlock, article.latest.blocks ?? []);
+  const firstImageBlock = find(isImageBlock, article.latest.blocks ?? []);
 
   const articleBody = article.latest.blocks
-    ?.filter(isRichTextBlock)
-    .reduce((body, richText) => {
-      const text = toPlaintext(richText.richText);
+    .reduce((body, block) => {
+      if (isRichTextBlock(block)) {
+        const text = toPlaintext(block.richText);
 
-      if (text) {
-        body.push(text);
+        if (text) {
+          body.push(text);
+        }
       }
 
       return body;

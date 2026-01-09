@@ -4,7 +4,7 @@ import {
   PeerInformation,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { Article as ArticleType, BlockContent } from '@wepublish/website/api';
+import { BlockContent } from '@wepublish/website/api';
 import { ArticleListWrapper } from './article-list/article-list';
 import { CommentListWrapper } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
@@ -82,7 +82,7 @@ export function Article({
     blocks: { Blocks },
   } = useWebsiteBuilder();
 
-  const article = data?.article as ArticleType | undefined;
+  const article = data?.article;
 
   return (
     <ArticleWrapper

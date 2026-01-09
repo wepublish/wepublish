@@ -1,7 +1,7 @@
-import { css } from '@mui/material';
 import styled from '@emotion/styled';
 import {
   BuilderEventProps,
+  Image,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { MdDateRange, MdLocationCity } from 'react-icons/md';
@@ -13,7 +13,7 @@ export const EventWrapper = styled(ContentWrapper)`
   gap: ${({ theme }) => theme.spacing(4)};
 `;
 
-const eventImage = css`
+const EventImage = styled(Image)`
   ${ImageWrapper} {
     aspect-ratio: 16 / 9;
     object-fit: cover;
@@ -55,19 +55,14 @@ export const Event = ({
   className,
 }: BuilderEventProps) => {
   const {
-    blocks: { RichText, Title, Image },
+    blocks: { RichText, Title },
     date,
   } = useWebsiteBuilder();
 
   return (
     <EventWrapper className={className}>
       {data?.event && <EventSEO event={data.event} />}
-      {data?.event.image && (
-        <Image
-          css={eventImage}
-          image={data.event.image}
-        />
-      )}
+      {data?.event.image && <EventImage image={data.event.image} />}
 
       {data?.event && (
         <EventMeta>

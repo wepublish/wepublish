@@ -1,4 +1,4 @@
-import { Article } from '@wepublish/website/api';
+import { FullArticleFragment } from '@wepublish/website/api';
 import type { Feed, Item } from 'feed';
 import { getArticleSEO } from '@wepublish/article/website';
 import { Descendant } from 'slate';
@@ -15,12 +15,12 @@ export const generateFeed =
     },
     'generator'
   >) =>
-  async (articles: Article[]) => {
+  async (articles: FullArticleFragment[]) => {
     const items = articles.map(async (article): Promise<Item> => {
       const seo = getArticleSEO(article);
 
       const content = await toHtml(
-        article.published?.blocks?.reduce((acc, curr) => {
+        article.latest?.blocks?.reduce((acc, curr) => {
           if (isRichTextBlock(curr)) {
             acc.push(...curr.richText);
           }

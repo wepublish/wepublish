@@ -1,5 +1,5 @@
 import { QueryResult } from '@apollo/client';
-import { Page, PageQuery } from '@wepublish/website/api';
+import { FullPageFragment, PageQuery } from '@wepublish/website/api';
 import { PropsWithChildren } from 'react';
 
 export type BuilderPageProps = PropsWithChildren<
@@ -9,5 +9,5 @@ export type BuilderPageProps = PropsWithChildren<
 >;
 
 export type BuilderPageSEOProps = {
-  page: Page;
+  page: FullPageFragment;
 };

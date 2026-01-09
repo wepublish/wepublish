@@ -1,10 +1,10 @@
 import { QueryResult } from '@apollo/client';
 
 import {
-  Article,
   ArticleListQuery,
   ArticleListQueryVariables,
   ArticleQuery,
+  FullArticleFragment,
 } from '@wepublish/website/api';
 import { PropsWithChildren } from 'react';
 
@@ -17,11 +17,11 @@ export type BuilderArticleProps = PropsWithChildren<
 >;
 
 export type BuilderArticleSEOProps = {
-  article: Article;
+  article: FullArticleFragment;
 };
 
 export type BuilderArticleMetaProps = {
-  article: Article;
+  article: FullArticleFragment;
   className?: string;
 };
 
@@ -35,11 +35,11 @@ export type BuilderArticleListProps = Pick<
 };
 
 export type BuilderArticleDateProps = {
-  article: Article;
+  article: FullArticleFragment;
   className?: string;
 };
 
 export type BuilderArticleAuthorsProps = {
-  article: Article;
+  article: FullArticleFragment;
   className?: string;
 };

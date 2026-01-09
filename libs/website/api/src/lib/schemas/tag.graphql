@@ -34,8 +34,6 @@ query TagList(
     }
 
     pageInfo {
-      startCursor
-      endCursor
       hasNextPage
       hasPreviousPage
     }

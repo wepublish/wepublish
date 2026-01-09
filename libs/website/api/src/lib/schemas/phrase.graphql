@@ -6,8 +6,6 @@ query Phrase($query: String!, $take: Int, $skip: Int) {
       }
 
       pageInfo {
-        startCursor
-        endCursor
         hasNextPage
         hasPreviousPage
       }
@@ -21,8 +19,6 @@ query Phrase($query: String!, $take: Int, $skip: Int) {
       }
 
       pageInfo {
-        startCursor
-        endCursor
         hasNextPage
         hasPreviousPage
       }

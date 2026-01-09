@@ -21,24 +21,14 @@ fragment ImageURLs on Image {
 fragment FullImage on Image {
   id
 
-  createdAt
-  modifiedAt
-
-  filename
-  format
-  mimeType
-  extension
   width
   height
-  fileSize
 
   title
   description
-  tags
 
   source
-  link
-  license
+  mimeType
 
   focalPoint {
     x
@@ -51,24 +41,13 @@ fragment FullImage on Image {
 fragment FullPeerImage on PeerImage {
   id
 
-  createdAt
-  modifiedAt
-
-  filename
-  format
-  mimeType
-  extension
   width
   height
-  fileSize
 
   title
   description
-  tags
 
   source
-  link
-  license
 
   focalPoint {
     x

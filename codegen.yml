@@ -76,9 +76,19 @@ generates:
         Slug: string
         RichText: Descendant[]
         Upload: File
+      # Apollo
       withHooks: true
       withHOC: false
       withComponent: false
+      emitLegacyCommonJSImports: false
+      dedupeFragments: true
+      inlineFragmentTypes: combine
+      # Operations
+      # flattenGeneratedTypes: true
+      # flattenGeneratedTypesIncludeFragments: true
+      # TypeScript
+      constEnums: true
+      arrayInputCoercion: false
 
   ./libs/api/__tests__/api/private/index.ts:
     schema:

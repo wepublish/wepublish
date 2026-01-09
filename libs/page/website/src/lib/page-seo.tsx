@@ -4,17 +4,18 @@ import {
   isTitleBlock,
 } from '@wepublish/block-content/website';
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
-import { FullImageFragment, Page } from '@wepublish/website/api';
+import { FullImageFragment, FullPageFragment } from '@wepublish/website/api';
 import {
   BuilderPageSEOProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { find } from 'ramda';
 import { useMemo } from 'react';
 
-export const getPageSEO = (page: Page) => {
-  const firstTitle = page.latest.blocks?.find(isTitleBlock);
-  const firstRichText = page.latest.blocks?.find(isRichTextBlock);
-  const firstImageBlock = page.latest.blocks?.find(isImageBlock);
+export const getPageSEO = (page: FullPageFragment) => {
+  const firstTitle = find(isTitleBlock, page.latest.blocks ?? []);
+  const firstRichText = find(isRichTextBlock, page.latest.blocks ?? []);
+  const firstImageBlock = find(isImageBlock, page.latest.blocks ?? []);
 
   const socialMediaDescription =
     page.latest.socialMediaDescription ||

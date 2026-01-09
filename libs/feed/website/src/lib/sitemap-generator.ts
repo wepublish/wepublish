@@ -1,5 +1,5 @@
 import { getArticleSEO } from '@wepublish/article/website';
-import { Article, Page } from '@wepublish/website/api';
+import { FullArticleFragment, FullPageFragment } from '@wepublish/website/api';
 import { escape } from 'lodash';
 
 const SITEMAP_MAX_ENTRIES = 49999;
@@ -12,7 +12,11 @@ export type SitemapConfig = {
 
 export const generateSitemap =
   ({ lang = 'de', title, siteUrl }: SitemapConfig) =>
-  (articles: Article[], pages: Page[], pageUrls: string[]) => {
+  (
+    articles: FullArticleFragment[],
+    pages: FullPageFragment[],
+    pageUrls: string[]
+  ) => {
     if (
       articles.length + pages.length + pageUrls.length >
       SITEMAP_MAX_ENTRIES

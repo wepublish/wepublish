@@ -1,6 +1,5 @@
 fragment PageRevisionWithoutBlocks on PageRevision {
   id
-  createdAt
   publishedAt
   description
   title
@@ -65,14 +64,19 @@ query PageList(
   $order: SortOrder
   $sort: PageSort
 ) {
-  pages(filter: $filter, cursorId: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  pages(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...FullPage
     }
 
     pageInfo {
-      startCursor
-      endCursor
       hasNextPage
       hasPreviousPage
     }

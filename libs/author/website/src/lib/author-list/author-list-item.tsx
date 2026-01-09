@@ -1,7 +1,10 @@
-import { Author } from '@wepublish/website/api';
 import { css } from '@mui/material';
 import styled from '@emotion/styled';
-import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
+import {
+  BuilderAuthorListItemProps,
+  Link,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
 
 export const AuthorListItemImageWrapper = styled('div')`
   display: grid;
@@ -30,7 +33,7 @@ export function AuthorListItem({
   image,
   name,
   jobTitle,
-}: Author & { className?: string }) {
+}: BuilderAuthorListItemProps) {
   const {
     elements: { Image, Paragraph, H6 },
   } = useWebsiteBuilder();
