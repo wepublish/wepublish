@@ -16,7 +16,6 @@ import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
   initWePublishTranslator,
-  NextWepublishLink,
   RoutedAdminBar,
   withBuilderRouter,
   withJwtHandler,
@@ -55,6 +54,7 @@ import { TsriBlockRenderer } from '../src/components/tsri-block-renderer';
 import { TsriBreakBlock } from '../src/components/tsri-break-block';
 import { TsriContextBox } from '../src/components/tsri-context-box';
 import { TSRIFooter } from '../src/components/tsri-footer';
+import { TsriNextWepublishLink } from '../src/components/tsri-next-wepublish-link';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
 import { TsriTitleBlock } from '../src/components/tsri-title-block';
@@ -124,7 +124,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Author={TSRIAuthor}
           AuthorLinks={TSRIAuthorLinks}
           AuthorList={TSRIAuthorList}
-          elements={{ Link: NextWepublishLink }}
+          elements={{ Link: TsriNextWepublishLink }}
           blocks={{
             BaseTeaser: TsriBaseTeaser,
             TeaserSlots: TsriBaseTeaserSlots,
