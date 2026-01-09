@@ -480,6 +480,7 @@ export const CommentEditor = ({
                 >
                   Login für Leserinnen und Leser
                 </H3>
+
                 <LoginFormContainer
                   afterLoginCallback={handleAfterLoginCallback}
                   css={loginFormContainerStyles}

@@ -93,6 +93,7 @@ export const InstagramBanner = ({
           <IoLogoInstagram size={94} />
         </ContentLogo>
       </Content>
+
       {image && (
         <Image
           image={image}
