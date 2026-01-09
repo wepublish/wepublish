@@ -79,7 +79,7 @@ export class Setting {
   name!: string;
 
   @Field(type => GraphQLSettingValueType, { nullable: true })
-  value?: any;
+  value?: unknown;
 
   @Field(type => SettingRestriction, { nullable: true })
   settingRestriction?: SettingRestriction;
@@ -97,5 +97,5 @@ export class UpdateSettingInput {
   name!: SettingName;
 
   @Field(type => GraphQLSettingValueType)
-  value!: any;
+  value!: unknown;
 }

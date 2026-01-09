@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 import {
   TitleBlock,
-  TitleBlockPreTitle,
+  TitleBlockPreTitleWrapper,
 } from '@wepublish/block-content/website';
 
 export const BajourTitleBlock = styled(TitleBlock)`
-  ${TitleBlockPreTitle} {
+  ${TitleBlockPreTitleWrapper} {
     background-color: #a977a3;
     color: white;
   }

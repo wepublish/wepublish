@@ -27,7 +27,7 @@ export const TagTitleWrapper = styled('div')`
 
 export function Tag({
   className,
-  tags,
+  tag: tagData,
   articles,
   variables,
   onVariablesChange,
@@ -38,7 +38,7 @@ export function Tag({
     blocks: { RichText },
   } = useWebsiteBuilder();
 
-  const tag = tags.data?.tags?.nodes.at(0);
+  const tag = tagData.data?.tag;
   const take = variables?.take ?? 1;
   const page = variables?.skip ? variables.skip / take + 1 : 1;
 

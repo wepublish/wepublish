@@ -182,7 +182,14 @@ enum AuthorSort {
 
 type AvailablePaymentMethod {
   forceAutoRenewal: Boolean!
+  paymentMethodIDs: [String!]!
   paymentMethods: [PaymentMethod!]!
+  paymentPeriodicities: [PaymentPeriodicity!]!
+}
+
+input AvailablePaymentMethodInput {
+  forceAutoRenewal: Boolean!
+  paymentMethodIDs: [String!]!
   paymentPeriodicities: [PaymentPeriodicity!]!
 }
 
@@ -1342,24 +1349,30 @@ type MailTemplateWithUrlAndStatusModel {
 }
 
 type MemberPlan implements HasImage {
+  active: Boolean!
   amountPerMonthMax: Int
   amountPerMonthMin: Int!
   amountPerMonthTarget: Int
   availablePaymentMethods: [AvailablePaymentMethod!]!
+  confirmationPage: Page
   confirmationPageId: String
   currency: Currency!
   description: RichText
   extendable: Boolean!
   externalReward: String
+  failPage: Page
   failPageId: String
   id: String!
   image: Image
   imageID: String
   maxCount: Int
+  migrateToTargetPaymentMethod: PaymentMethod
+  migrateToTargetPaymentMethodID: String
   name: String!
   productType: ProductType!
   shortDescription: RichText
   slug: String!
+  successPage: Page
   successPageId: String
   tags: [String!]
 }
@@ -1378,8 +1391,8 @@ input MemberPlanFilter {
 }
 
 enum MemberPlanSort {
-  createdAt
-  modifiedAt
+  CreatedAt
+  ModifiedAt
 }
 
 type Mutation {
@@ -1410,6 +1423,9 @@ type Mutation {
   """Creates a new event."""
   createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, status: EventStatus! = Scheduled, tagIds: [String!]): Event!
 
+  """Creates a new memberplan."""
+  createMemberPlan(active: Boolean!, amountPerMonthMax: Int, amountPerMonthMin: Int!, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
+
   """Creates a new navigation."""
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
 
@@ -1424,11 +1440,11 @@ type Mutation {
   """This mutation allows to create payment by referencing a subscription."""
   createPaymentFromSubscription(failureURL: String, subscriptionId: String, successURL: String): Payment
 
-  """Creates a paywall."""
-  createPaywall(active: Boolean!, anyMemberPlan: Boolean!, circumventDescription: RichText, description: RichText, memberPlanIds: [String!]! = [], name: String): Paywall!
+  """Creates a new payment method."""
+  createPaymentMethod(active: Boolean!, description: String!, gracePeriod: Int!, imageId: String, name: String!, paymentProviderID: String!, slug: Slug!): PaymentMethod!
 
-  """Creates a paywall bypass token."""
-  createPaywallBypass(paywallId: String!, token: String!): PaywallBypass!
+  """Creates a paywall."""
+  createPaywall(active: Boolean!, alternativeSubscribeUrl: String, anyMemberPlan: Boolean!, bypassTokens: [String!]!, circumventDescription: RichText, description: RichText, fadeout: Boolean!, hideContentAfter: Int!, memberPlanIds: [String!]!, name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
   """Creates a new peer."""
   createPeer(hostURL: String!, information: RichText, isDisabled: Boolean, name: String!, slug: String!, token: String!): Peer!
@@ -1478,17 +1494,20 @@ type Mutation {
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
 
+  """Deletes an existing memberplan."""
+  deleteMemberPlan(id: String!): MemberPlan!
+
   """Deletes an existing navigation."""
   deleteNavigation(id: String!): Navigation!
 
   """Deletes an page."""
   deletePage(id: String!): String!
 
+  """Deletes an existing payment method."""
+  deletePaymentMethod(id: String!): PaymentMethod!
+
   """Deletes a paywall."""
   deletePaywall(id: String!): Paywall!
-
-  """Deletes a paywall bypass token."""
-  deletePaywallBypass(id: String!): String!
 
   """Deletes an existing peer."""
   deletePeer(id: String!): Peer!
@@ -1591,6 +1610,9 @@ type Mutation {
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
 
+  """Updates an existing memberplan."""
+  updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
+
   """Updates an existing navigation."""
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
 
@@ -1602,11 +1624,14 @@ type Mutation {
   """
   updatePassword(password: String!, passwordRepeated: String!): SensitiveDataUser!
 
+  """Updates an existing payment method."""
+  updatePaymentMethod(active: Boolean, description: String, gracePeriod: Int, id: String!, imageId: String, name: String, paymentProviderID: String, slug: Slug): PaymentMethod!
+
   """This mutation allows to update the Payment Provider Customers"""
   updatePaymentProviderCustomers(input: [PaymentProviderCustomerInput!]!): [PaymentProviderCustomer!]!
 
   """Updates a paywall."""
-  updatePaywall(active: Boolean, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, id: String!, memberPlanIds: [String!] = [], name: String): Paywall!
+  updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
 
   """Updates an existing peer."""
   updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
@@ -1641,6 +1666,9 @@ type Mutation {
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
   """
   updateUserSubscription(id: String!, input: UserSubscriptionInput!): PublicSubscription
+
+  """"""
+  upgradeSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
 
   """This mutation allows to upload and update the user's profile image."""
   uploadUserProfileImage(uploadImageInput: UploadImageInput): SensitiveDataUser
@@ -1840,12 +1868,16 @@ input PaymentFromInvoiceInput {
 }
 
 type PaymentMethod implements HasImageLc {
+  active: Boolean!
+  createdAt: DateTime!
   description: String!
   gracePeriod: Int!
   id: String!
   image: Image
   imageId: String
+  modifiedAt: DateTime!
   name: String!
+  paymentProvider: PaymentProvider
   paymentProviderID: String!
   slug: Slug!
 }
@@ -1857,6 +1889,11 @@ enum PaymentPeriodicity {
   monthly
   quarterly
   yearly
+}
+
+type PaymentProvider {
+  id: String!
+  name: String!
 }
 
 type PaymentProviderCustomer {
@@ -1881,15 +1918,20 @@ enum PaymentState {
 
 type Paywall {
   active: Boolean!
+  alternativeSubscribeUrl: String
   anyMemberPlan: Boolean!
   bypasses: [PaywallBypass!]!
   circumventDescription: RichText
   createdAt: DateTime!
   description: RichText
+  fadeout: Boolean!
+  hideContentAfter: Int!
   id: String!
   memberPlans: [MemberPlan!]!
   modifiedAt: DateTime!
   name: String
+  upgradeCircumventDescription: RichText
+  upgradeDescription: RichText
 }
 
 type PaywallBypass {
@@ -2233,11 +2275,11 @@ type Query {
   """This query returns the user."""
   me: SensitiveDataUser
 
-  """This query returns a member plan."""
-  memberPlan(id: String, slug: Slug): MemberPlan
+  """Returns a memberplan by id or slug."""
+  memberPlan(id: String, slug: Slug): MemberPlan!
 
-  """This query returns the member plans."""
-  memberPlans(cursor: String, filter: MemberPlanFilter, order: SortOrder! = Descending, skip: Int! = 0, sort: MemberPlanSort! = createdAt, take: Int! = 10): MemberPlanConnection!
+  """Returns a paginated list of memberplans based on the filters given."""
+  memberPlans(cursorId: String, filter: MemberPlanFilter, order: SortOrder = Ascending, skip: Int = 0, sort: MemberPlanSort = ModifiedAt, take: Int = 10): MemberPlanConnection!
 
   """Returns a navigation by id."""
   navigation(id: String!): Navigation!
@@ -2257,8 +2299,14 @@ type Query {
   """Returns a paginated list of pages based on the filters given."""
   pages(cursorId: String, filter: PageFilter, order: SortOrder = Descending, skip: Int = 0, sort: PageSort = PublishedAt, take: Int = 10): PaginatedPages!
 
+  """Returns a payment method by id"""
+  paymentMethod(id: String!): PaymentMethod!
+
   """Returns all payment methods"""
   paymentMethods: [PaymentMethod!]!
+
+  """Returns all payment providers"""
+  paymentProviders: [PaymentProvider!]!
 
   """Returns an paywall by id."""
   paywall(id: String!): Paywall!
@@ -2324,8 +2372,8 @@ type Query {
   """Returns all mail flows"""
   systemMails: [SystemMailModel!]!
 
-  """Returns a tag by id"""
-  tag(id: String!): Tag!
+  """Returns an tag by id or tag."""
+  tag(id: String, tag: String, type: TagType): Tag!
 
   """This query returns a list of tags"""
   tags(
@@ -2350,6 +2398,9 @@ type Query {
 
   """Returns a list of all tokens."""
   tokens: [Token!]!
+
+  """"""
+  upgradeSubscriptionInfo(memberPlanId: String!, subscriptionId: String!): UpgradeSubscription!
 
   "\n      Returns a single userConsent by id.\n    "
   userConsent(id: String!): UserConsent!
@@ -2898,6 +2949,10 @@ input UpdateCrowdfundingInput {
   name: String
 }
 
+type UpgradeSubscription {
+  discountAmount: Float!
+}
+
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
@@ -2931,6 +2986,8 @@ type UserAddress {
   country: String
   streetAddress: String
   streetAddress2: String
+  streetAddress2Number: String
+  streetAddressNumber: String
   zipCode: String
 }
 
@@ -2940,6 +2997,8 @@ input UserAddressInput {
   country: String
   streetAddress: String
   streetAddress2: String
+  streetAddress2Number: String
+  streetAddressNumber: String
   zipCode: String
 }
 

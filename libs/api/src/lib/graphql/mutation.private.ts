@@ -55,23 +55,11 @@ import {
   markInvoiceAsPaid,
   updateInvoice,
 } from './invoice/invoice.private-mutation';
-import {
-  createMemberPlan,
-  deleteMemberPlanById,
-  updateMemberPlan,
-} from './member-plan/member-plan.private-mutation';
-import { GraphQLMemberPlan, GraphQLMemberPlanInput } from './memberPlan';
+
 import { GraphQLPayment, GraphQLPaymentFromInvoiceInput } from './payment';
-import {
-  createPaymentMethod,
-  deletePaymentMethodById,
-  updatePaymentMethod,
-} from './payment-method/payment-method.private-mutation';
+
 import { createPaymentFromInvoice } from './payment/payment.private-mutation';
-import {
-  GraphQLPaymentMethod,
-  GraphQLPaymentMethodInput,
-} from './paymentMethod';
+
 import { GraphQLPeerProfile, GraphQLPeerProfileInput } from './peer';
 import { upsertPeerProfile } from './peer-profile/peer-profile.private-mutation';
 import { authorise } from './permissions';
@@ -482,72 +470,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         { id },
         { authenticate, mediaAdapter, prisma: { image } }
       ) => deleteImageById(id, authenticate, image, mediaAdapter),
-    },
-
-    // MemberPlan
-    // ======
-
-    createMemberPlan: {
-      type: GraphQLMemberPlan,
-      args: { input: { type: new GraphQLNonNull(GraphQLMemberPlanInput) } },
-      resolve: (root, { input }, { authenticate, prisma: { memberPlan } }) =>
-        createMemberPlan(input, authenticate, memberPlan),
-    },
-
-    updateMemberPlan: {
-      type: GraphQLMemberPlan,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        input: { type: new GraphQLNonNull(GraphQLMemberPlanInput) },
-      },
-      resolve: (
-        root,
-        { id, input },
-        { authenticate, prisma: { memberPlan } }
-      ) => updateMemberPlan(id, input, authenticate, memberPlan),
-    },
-
-    deleteMemberPlan: {
-      type: GraphQLMemberPlan,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { memberPlan } }) =>
-        deleteMemberPlanById(id, authenticate, memberPlan),
-    },
-
-    // PaymentMethod
-    // ======
-
-    createPaymentMethod: {
-      type: GraphQLPaymentMethod,
-      args: {
-        input: { type: new GraphQLNonNull(GraphQLPaymentMethodInput) },
-      },
-      resolve: (root, { input }, { authenticate, prisma: { paymentMethod } }) =>
-        createPaymentMethod(input, authenticate, paymentMethod),
-    },
-
-    updatePaymentMethod: {
-      type: GraphQLPaymentMethod,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        input: { type: new GraphQLNonNull(GraphQLPaymentMethodInput) },
-      },
-      resolve: (
-        root,
-        { id, input },
-        { authenticate, prisma: { paymentMethod } }
-      ) => updatePaymentMethod(id, input, authenticate, paymentMethod),
-    },
-
-    deletePaymentMethod: {
-      type: GraphQLPaymentMethod,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { paymentMethod } }) =>
-        deletePaymentMethodById(id, authenticate, paymentMethod),
     },
 
     // Invoice

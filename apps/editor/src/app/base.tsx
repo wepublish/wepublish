@@ -162,7 +162,7 @@ export function Base({ children }: BaseProps) {
 
   useEffect(() => {
     i18n.changeLanguage(uiLanguage);
-  }, [uiLanguage]);
+  }, [i18n, uiLanguage]);
 
   return (
     <Wrapper>
@@ -283,9 +283,9 @@ export function Base({ children }: BaseProps) {
                     >
                       <Nav.Item
                         as={NavLink}
-                        href="/articles/paywall"
+                        href="/articles/paywalls"
                         icon={<MdPayment />}
-                        active={path === 'articles/paywall'}
+                        active={path === 'articles/paywalls'}
                       >
                         {t('paywall.navbar')}
                       </Nav.Item>
