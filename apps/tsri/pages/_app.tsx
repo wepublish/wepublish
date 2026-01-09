@@ -47,6 +47,7 @@ import { TsriArticleMeta } from '../src/components/tsri-article-meta';
 import { TsriBanner } from '../src/components/tsri-banner';
 import { TsriBreakBlock } from '../src/components/tsri-break-block';
 import { TsriContextBox } from '../src/components/tsri-context-box';
+import { TsriNextWepublishLink } from '../src/components/tsri-next-wepublish-link';
 import { TsriNavbar } from '../src/components/tsri-navbar';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
@@ -129,7 +130,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           ArticleDate={TsriArticleDate}
           ArticleMeta={TsriArticleMeta}
           PaymentAmount={PaymentAmountPicker}
-          elements={{ Link: NextWepublishLink }}
+          elements={{ Link: TsriNextWepublishLink }}
           blocks={{
             BaseTeaser: TsriTeaser,
             TeaserSlots: TsriBaseTeaserSlots,
