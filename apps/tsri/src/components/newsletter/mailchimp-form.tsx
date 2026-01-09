@@ -38,7 +38,7 @@ export type MailchimpSubscribeFormProps = {
   popButtonText?: string;
   popHeading?: string;
   popText?: string;
-  onMCSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
+  onMCSubmit?: (e: FormEvent<HTMLFormElement>) => void;
 };
 
 export default function MailchimpSubscribeForm(
@@ -71,24 +71,26 @@ export default function MailchimpSubscribeForm(
 
   const { handleSubmit, control } = useForm<FormInput>({
     resolver: zodResolver(RegisterMCNewsletterFormSchema),
+    defaultValues: {
+      email: '',
+      SOURCE: '',
+    },
     mode: 'onSubmit',
     reValidateMode: 'onSubmit',
   });
 
   const onSubmit = handleSubmit(
-    (data: FormInput, event?: React.BaseSyntheticEvent) => {
+    (data: FormInput, event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       if (data?.email) {
         setEmail(data.email);
       }
-      return processSubmit(event, data);
+      return processSubmit(event);
     }
   );
 
-  const processSubmit = (
-    event: React.BaseSyntheticEvent,
-    formData: FormInput
-  ) => {
+  const processSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const formData = new FormData(event.target as HTMLFormElement);
     fetch(`${mc_fetchBaseURL}?u=${mc_u}&id=${mc_id}&f_id=${mc_f_id}&c=?`, {
       method: 'POST',
       body: formData,
