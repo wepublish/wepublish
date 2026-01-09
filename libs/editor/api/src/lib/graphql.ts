@@ -424,7 +424,6 @@ export type Mutation = {
   revokeActiveSession: Scalars['Boolean'];
   revokeSession: Scalars['Boolean'];
   sendJWTLogin: Scalars['String'];
-  sendWebsiteLogin: Scalars['String'];
   sessions: Array<Session>;
   updateComment: Comment;
   updateImage?: Maybe<Image>;
@@ -616,11 +615,6 @@ export type MutationRevokeSessionArgs = {
 export type MutationSendJwtLoginArgs = {
   email: Scalars['String'];
   url: Scalars['String'];
-};
-
-
-export type MutationSendWebsiteLoginArgs = {
-  email: Scalars['String'];
 };
 
 
@@ -1823,13 +1817,6 @@ export type DeleteTokenMutation = { __typename?: 'Mutation', deleteToken?: { __t
 export type FullUserFragment = { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, note?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Descendant[] | null, shortDescription?: Descendant[] | null, slug: string, active: boolean, productType: ProductType, tags?: Array<string> | null, externalReward?: string | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> };
 
 export type UserSubscriptionFragment = { __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Descendant[] | null, shortDescription?: Descendant[] | null, slug: string, active: boolean, productType: ProductType, tags?: Array<string> | null, externalReward?: string | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> };
-
-export type SendWebsiteLoginMutationVariables = Exact<{
-  email: Scalars['String'];
-}>;
-
-
-export type SendWebsiteLoginMutation = { __typename?: 'Mutation', sendWebsiteLogin: string };
 
 export type FullPermissionFragment = { __typename?: 'Permission', id: string, description: string, deprecated: boolean };
 
@@ -4379,37 +4366,6 @@ export function useDeleteTokenMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteTokenMutationHookResult = ReturnType<typeof useDeleteTokenMutation>;
 export type DeleteTokenMutationResult = Apollo.MutationResult<DeleteTokenMutation>;
 export type DeleteTokenMutationOptions = Apollo.BaseMutationOptions<DeleteTokenMutation, DeleteTokenMutationVariables>;
-export const SendWebsiteLoginDocument = gql`
-    mutation SendWebsiteLogin($email: String!) {
-  sendWebsiteLogin(email: $email)
-}
-    `;
-export type SendWebsiteLoginMutationFn = Apollo.MutationFunction<SendWebsiteLoginMutation, SendWebsiteLoginMutationVariables>;
-
-/**
- * __useSendWebsiteLoginMutation__
- *
- * To run a mutation, you first call `useSendWebsiteLoginMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSendWebsiteLoginMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [sendWebsiteLoginMutation, { data, loading, error }] = useSendWebsiteLoginMutation({
- *   variables: {
- *      email: // value for 'email'
- *   },
- * });
- */
-export function useSendWebsiteLoginMutation(baseOptions?: Apollo.MutationHookOptions<SendWebsiteLoginMutation, SendWebsiteLoginMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SendWebsiteLoginMutation, SendWebsiteLoginMutationVariables>(SendWebsiteLoginDocument, options);
-      }
-export type SendWebsiteLoginMutationHookResult = ReturnType<typeof useSendWebsiteLoginMutation>;
-export type SendWebsiteLoginMutationResult = Apollo.MutationResult<SendWebsiteLoginMutation>;
-export type SendWebsiteLoginMutationOptions = Apollo.BaseMutationOptions<SendWebsiteLoginMutation, SendWebsiteLoginMutationVariables>;
 
       export interface PossibleTypesResultData {
         possibleTypes: {

@@ -422,7 +422,6 @@ export type Mutation = {
   revokeActiveSession: Scalars['Boolean'];
   revokeSession: Scalars['Boolean'];
   sendJWTLogin: Scalars['String'];
-  sendWebsiteLogin: Scalars['String'];
   sessions: Array<Session>;
   updateComment: Comment;
   updateImage?: Maybe<Image>;
@@ -614,11 +613,6 @@ export type MutationRevokeSessionArgs = {
 export type MutationSendJwtLoginArgs = {
   email: Scalars['String'];
   url: Scalars['String'];
-};
-
-
-export type MutationSendWebsiteLoginArgs = {
-  email: Scalars['String'];
 };
 
 

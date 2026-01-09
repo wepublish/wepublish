@@ -30,7 +30,7 @@ export type BuilderImageUploadProps = {
   className?: string;
 };
 
-export type PersonalDataFormFields = UpdateUserMutationVariables['input'] &
+export type PersonalDataFormFields = UpdateUserMutationVariables &
   Partial<UpdatePasswordMutationVariables>;
 
 export type BuilderPersonalDataFormFields =
@@ -57,8 +57,7 @@ export type BuilderPersonalDataFormProps<
   user: SensitiveDataUser;
   className?: string;
   onUpdate?: (
-    data: UpdateUserMutationVariables['input'] &
-      Partial<UpdatePasswordMutationVariables>
+    data: UpdateUserMutationVariables & Partial<UpdatePasswordMutationVariables>
   ) => Promise<void>;
   onImageUpload: (image: ChangeEvent<HTMLInputElement> | null) => Promise<void>;
   mediaEmail?: string;

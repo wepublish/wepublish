@@ -112,17 +112,21 @@ mutation Register(
 
 mutation UpdateUser(
   $firstName: String
+  $flair: String
   $name: String
   $email: String
   $password: String
   $address: UserAddressInput
+  $birthday: DateTime
 ) {
   updateCurrentUser(
     name: $name
     firstName: $firstName
+    flair: $flair
     email: $email
     password: $password
     address: $address
+    birthday: $birthday
   ) {
     ...FullSensitiveDataUser
   }

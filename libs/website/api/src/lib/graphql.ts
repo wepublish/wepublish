@@ -3994,7 +3994,6 @@ export type User = BaseUser & {
   note?: Maybe<Scalars['String']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
-  roles: Array<UserRole>;
   userImageID?: Maybe<Scalars['String']>;
 };
 
@@ -4779,10 +4778,12 @@ export type RegisterMutation = { __typename?: 'Mutation', registerMember: { __ty
 
 export type UpdateUserMutationVariables = Exact<{
   firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   email?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
   address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
 }>;
 
 
@@ -7782,13 +7783,15 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const UpdateUserDocument = gql`
-    mutation UpdateUser($firstName: String, $name: String, $email: String, $password: String, $address: UserAddressInput) {
+    mutation UpdateUser($firstName: String, $flair: String, $name: String, $email: String, $password: String, $address: UserAddressInput, $birthday: DateTime) {
   updateCurrentUser(
     name: $name
     firstName: $firstName
+    flair: $flair
     email: $email
     password: $password
     address: $address
+    birthday: $birthday
   ) {
     ...FullSensitiveDataUser
   }
@@ -7810,10 +7813,12 @@ export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, U
  * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
  *   variables: {
  *      firstName: // value for 'firstName'
+ *      flair: // value for 'flair'
  *      name: // value for 'name'
  *      email: // value for 'email'
  *      password: // value for 'password'
  *      address: // value for 'address'
+ *      birthday: // value for 'birthday'
  *   },
  * });
  */

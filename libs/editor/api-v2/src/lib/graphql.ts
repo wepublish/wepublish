@@ -3994,7 +3994,6 @@ export type User = BaseUser & {
   note?: Maybe<Scalars['String']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
-  roles: Array<UserRole>;
   userImageID?: Maybe<Scalars['String']>;
 };
 
