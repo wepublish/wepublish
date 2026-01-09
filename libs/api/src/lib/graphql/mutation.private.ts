@@ -1,4 +1,4 @@
-import { CommentState, RatingSystemType, UserEvent } from '@prisma/client';
+import { CommentState, UserEvent } from '@prisma/client';
 import {
   GraphQLBoolean,
   GraphQLList,
@@ -20,17 +20,6 @@ import {
   GraphQLCommentRejectionReason,
   GraphQLCommentRevisionUpdateInput,
 } from './comment/comment';
-import {
-  GraphQLCommentRatingSystemAnswer,
-  GraphQLFullCommentRatingSystem,
-  GraphQLRatingSystemType,
-  GraphQLUpdateCommentRatingSystemAnswer,
-} from './comment-rating/comment-rating';
-import {
-  createCommentRatingAnswer,
-  deleteCommentRatingAnswer,
-  updateRatingSystem,
-} from './comment-rating/comment-rating.private-mutation';
 
 import {
   createAdminComment,
@@ -675,71 +664,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, { id }, { authenticate, prisma: { comment } }) =>
         deleteComment(id, authenticate, comment),
-    },
-
-    // Rating System
-    // ==========
-
-    createRatingSystemAnswer: {
-      type: new GraphQLNonNull(GraphQLCommentRatingSystemAnswer),
-      args: {
-        ratingSystemId: { type: new GraphQLNonNull(GraphQLString) },
-        type: {
-          type: GraphQLRatingSystemType,
-          defaultValue: RatingSystemType.star,
-        },
-        answer: { type: GraphQLString },
-      },
-      resolve: (
-        root,
-        { ratingSystemId, type, answer },
-        { authenticate, prisma: { commentRatingSystemAnswer } }
-      ) =>
-        createCommentRatingAnswer(
-          ratingSystemId,
-          type,
-          answer,
-          authenticate,
-          commentRatingSystemAnswer
-        ),
-    },
-
-    updateRatingSystem: {
-      type: new GraphQLNonNull(GraphQLFullCommentRatingSystem),
-      args: {
-        ratingSystemId: { type: new GraphQLNonNull(GraphQLString) },
-        name: { type: GraphQLString },
-        answers: {
-          type: new GraphQLList(
-            new GraphQLNonNull(GraphQLUpdateCommentRatingSystemAnswer)
-          ),
-        },
-      },
-      resolve: (
-        root,
-        { ratingSystemId, answers, name },
-        { authenticate, prisma: { commentRatingSystem } }
-      ) =>
-        updateRatingSystem(
-          ratingSystemId,
-          name,
-          answers,
-          authenticate,
-          commentRatingSystem
-        ),
-    },
-
-    deleteRatingSystemAnswer: {
-      type: new GraphQLNonNull(GraphQLCommentRatingSystemAnswer),
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (
-        root,
-        { id },
-        { authenticate, prisma: { commentRatingSystemAnswer } }
-      ) =>
-        deleteCommentRatingAnswer(id, authenticate, commentRatingSystemAnswer),
     },
 
     // Poll

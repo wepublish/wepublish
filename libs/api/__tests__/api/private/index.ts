@@ -87,14 +87,6 @@ export type CommentRatingOverrideUpdateInput = {
   value?: InputMaybe<Scalars['Int']>;
 };
 
-export type CommentRatingSystemAnswer = {
-  __typename?: 'CommentRatingSystemAnswer';
-  answer?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  ratingSystemId: Scalars['String'];
-  type: RatingSystemType;
-};
-
 export enum CommentRejectionReason {
   Misconduct = 'misconduct',
   Spam = 'spam'
@@ -148,13 +140,6 @@ export type FocalPoint = {
   __typename?: 'FocalPoint';
   x: Scalars['Float'];
   y: Scalars['Float'];
-};
-
-export type FullCommentRatingSystem = {
-  __typename?: 'FullCommentRatingSystem';
-  answers: Array<CommentRatingSystemAnswer>;
-  id: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
 };
 
 export type FullPoll = {
@@ -339,7 +324,6 @@ export type Mutation = {
   createPoll?: Maybe<PollWithAnswers>;
   createPollAnswer?: Maybe<PollAnswer>;
   createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
-  createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   createSubscription?: Maybe<Subscription>;
@@ -350,7 +334,6 @@ export type Mutation = {
   deletePoll?: Maybe<FullPoll>;
   deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
-  deleteRatingSystemAnswer: CommentRatingSystemAnswer;
   deleteSubscription?: Maybe<Subscription>;
   deleteUser?: Maybe<User>;
   importSubscription?: Maybe<Subscription>;
@@ -369,7 +352,6 @@ export type Mutation = {
   updateInvoice?: Maybe<Invoice>;
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
-  updateRatingSystem: FullCommentRatingSystem;
   updateSubscription?: Maybe<Subscription>;
   updateUser?: Maybe<User>;
   uploadImage?: Maybe<Image>;
@@ -425,13 +407,6 @@ export type MutationCreatePollExternalVoteSourceArgs = {
 };
 
 
-export type MutationCreateRatingSystemAnswerArgs = {
-  answer?: InputMaybe<Scalars['String']>;
-  ratingSystemId: Scalars['String'];
-  type?: InputMaybe<RatingSystemType>;
-};
-
-
 export type MutationCreateSessionArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -480,11 +455,6 @@ export type MutationDeletePollAnswerArgs = {
 
 
 export type MutationDeletePollExternalVoteSourceArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteRatingSystemAnswerArgs = {
   id: Scalars['String'];
 };
 
@@ -587,13 +557,6 @@ export type MutationUpdatePollArgs = {
   opensAt?: InputMaybe<Scalars['DateTime']>;
   pollId: Scalars['String'];
   question?: InputMaybe<Scalars['String']>;
-};
-
-
-export type MutationUpdateRatingSystemArgs = {
-  answers?: InputMaybe<Array<UpdateCommentRatingSystemAnswer>>;
-  name?: InputMaybe<Scalars['String']>;
-  ratingSystemId: Scalars['String'];
 };
 
 
@@ -839,7 +802,6 @@ export type Query = {
   peerProfile: PeerProfile;
   poll?: Maybe<FullPoll>;
   polls?: Maybe<PollConnection>;
-  ratingSystem: FullCommentRatingSystem;
   remotePeerProfile?: Maybe<PeerProfile>;
   sessions: Array<Session>;
   subscription?: Maybe<Subscription>;
@@ -970,10 +932,6 @@ export type QueryUsersArgs = {
   sort?: InputMaybe<UserSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
-
-export enum RatingSystemType {
-  Star = 'star'
-}
 
 export type Session = {
   __typename?: 'Session';
@@ -1111,12 +1069,6 @@ export enum TagType {
   Event = 'Event',
   Page = 'Page'
 }
-
-export type UpdateCommentRatingSystemAnswer = {
-  answer?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
-  type?: InputMaybe<RatingSystemType>;
-};
 
 export type UpdateImageInput = {
   description?: InputMaybe<Scalars['String']>;

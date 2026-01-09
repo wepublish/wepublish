@@ -567,8 +567,16 @@ export type CommentRating = {
   disabled?: Maybe<Scalars['Boolean']>;
   fingerprint?: Maybe<Scalars['String']>;
   id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
   userId?: Maybe<Scalars['String']>;
   value: Scalars['Int'];
+};
+
+export type CommentRatingSystem = {
+  __typename?: 'CommentRatingSystem';
+  answers: Array<CommentRatingSystemAnswer>;
+  id: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
 };
 
 export type CommentRatingSystemAnswer = {
@@ -1034,13 +1042,6 @@ export type FocalPoint = {
 export type FocalPointInput = {
   x: Scalars['Float'];
   y: Scalars['Float'];
-};
-
-export type FullCommentRatingSystem = {
-  __typename?: 'FullCommentRatingSystem';
-  answers: Array<CommentRatingSystemAnswer>;
-  id: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
 };
 
 export type FullPoll = {
@@ -1517,6 +1518,8 @@ export type Mutation = {
   createPaywall: Paywall;
   /** Creates a new peer. */
   createPeer: Peer;
+  /** Creates a rating system answer. */
+  createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   /** Allows authenticated users to create additional subscriptions */
@@ -1570,6 +1573,8 @@ export type Mutation = {
   deletePeer: Peer;
   /** Delete poll votes */
   deletePollVotes: DeletePollVotesResult;
+  /** Deletes a rating system answer. */
+  deleteRatingSystemAnswer: CommentRatingSystemAnswer;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
@@ -1660,6 +1665,8 @@ export type Mutation = {
   updatePaywall: Paywall;
   /** Updates an existing peer. */
   updatePeer: Peer;
+  /** Update the comment rating system. */
+  updateRatingSystem: CommentRatingSystem;
   /** Updates an existing setting. */
   updateSetting: Setting;
   /** Update an existing subscription flow */
@@ -1872,6 +1879,13 @@ export type MutationCreatePeerArgs = {
 };
 
 
+export type MutationCreateRatingSystemAnswerArgs = {
+  answer?: InputMaybe<Scalars['String']>;
+  ratingSystemId: Scalars['String'];
+  type: RatingSystemType;
+};
+
+
 export type MutationCreateSessionArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -2021,6 +2035,11 @@ export type MutationDeletePeerArgs = {
 
 export type MutationDeletePollVotesArgs = {
   ids: Array<Scalars['String']>;
+};
+
+
+export type MutationDeleteRatingSystemAnswerArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -2330,6 +2349,13 @@ export type MutationUpdatePeerArgs = {
 };
 
 
+export type MutationUpdateRatingSystemArgs = {
+  answers?: InputMaybe<Array<UpdateCommentRatingSystemAnswerInput>>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationUpdateSettingArgs = {
   name: SettingName;
   value: Scalars['GraphQLSettingValueType'];
@@ -2439,6 +2465,12 @@ export type NonDbProperty = {
   key: Scalars['String'];
   public: Scalars['Boolean'];
   value: Scalars['String'];
+};
+
+export type OverriddenRating = {
+  __typename?: 'OverriddenRating';
+  answerId: Scalars['String'];
+  value?: Maybe<Scalars['Int']>;
 };
 
 export type Page = {
@@ -3114,7 +3146,7 @@ export type Query = {
   promptHTML: Chat;
   provider: MailProviderModel;
   /** This query returns the comment rating system. */
-  ratingSystem: FullCommentRatingSystem;
+  ratingSystem: CommentRatingSystem;
   /**
    *
    *       Returns all renewing subscribers in a given timeframe.
@@ -4062,6 +4094,12 @@ export type UpdateBannerInput = {
   title: Scalars['String'];
 };
 
+export type UpdateCommentRatingSystemAnswerInput = {
+  answer?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  type?: InputMaybe<RatingSystemType>;
+};
+
 export type UpdateCrowdfundingInput = {
   additionalRevenue?: InputMaybe<Scalars['Float']>;
   countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>;
@@ -4222,12 +4260,6 @@ export type YouTubeVideoBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
   videoID?: InputMaybe<Scalars['String']>;
-};
-
-export type OverriddenRating = {
-  __typename?: 'overriddenRating';
-  answerId: Scalars['String'];
-  value?: Maybe<Scalars['Int']>;
 };
 
 export type ChallengeQueryVariables = Exact<{ [key: string]: never; }>;

@@ -18,7 +18,6 @@ type Query {
   invoices(cursor: String, take: Int = 10, skip: Int = 0, filter: InvoiceFilter, sort: InvoiceSort = modifiedAt, order: SortOrder = Descending): InvoiceConnection!
   payment(id: String): Payment
   payments(cursor: String, take: Int = 10, skip: Int = 0, filter: PaymentFilter, sort: PaymentSort = modifiedAt, order: SortOrder = Descending): PaymentConnection!
-  ratingSystem: FullCommentRatingSystem!
   polls(cursor: String, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
   poll(id: String): FullPoll
 }
@@ -563,23 +562,6 @@ enum PaymentSort {
   modifiedAt
 }
 
-type FullCommentRatingSystem {
-  id: String!
-  name: String
-  answers: [CommentRatingSystemAnswer!]!
-}
-
-type CommentRatingSystemAnswer {
-  id: String!
-  ratingSystemId: String!
-  answer: String
-  type: RatingSystemType!
-}
-
-enum RatingSystemType {
-  star
-}
-
 type PollConnection {
   nodes: [Poll!]!
   pageInfo: PageInfo!
@@ -668,9 +650,6 @@ type Mutation {
   rejectComment(id: String!, rejectionReason: CommentRejectionReason): Comment!
   requestChangesOnComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
   deleteComment(id: String!): Comment!
-  createRatingSystemAnswer(ratingSystemId: String!, type: RatingSystemType = star, answer: String): CommentRatingSystemAnswer!
-  updateRatingSystem(ratingSystemId: String!, name: String, answers: [UpdateCommentRatingSystemAnswer!]): FullCommentRatingSystem!
-  deleteRatingSystemAnswer(id: String!): CommentRatingSystemAnswer!
   createPoll(opensAt: DateTime, closedAt: DateTime, question: String): PollWithAnswers
   createPollAnswer(pollId: String!, answer: String): PollAnswer
   createPollExternalVoteSource(pollId: String!, source: String): PollExternalVoteSource
@@ -816,12 +795,6 @@ input CommentRevisionUpdateInput {
 input CommentRatingOverrideUpdateInput {
   answerId: String!
   value: Int
-}
-
-input UpdateCommentRatingSystemAnswer {
-  id: String!
-  type: RatingSystemType
-  answer: String
 }
 
 type PollWithAnswers {

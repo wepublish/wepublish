@@ -18,8 +18,6 @@ import { GivenTokeExpiryToLongError, UserIdNotFound } from '../error';
 
 import { GraphQLJWTToken } from './auth';
 
-import { GraphQLFullCommentRatingSystem } from './comment-rating/comment-rating';
-import { getRatingSystem } from './comment-rating/comment-rating.public-queries';
 import {
   GraphQLComment,
   GraphQLCommentConnection,
@@ -447,15 +445,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           authenticate,
           payment
         ),
-    },
-
-    // Rating System
-    // ==========
-
-    ratingSystem: {
-      type: new GraphQLNonNull(GraphQLFullCommentRatingSystem),
-      resolve: (root, input, { prisma: { commentRatingSystem } }) =>
-        getRatingSystem(commentRatingSystem),
     },
 
     // Polls
