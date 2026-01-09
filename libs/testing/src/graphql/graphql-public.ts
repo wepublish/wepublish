@@ -324,6 +324,13 @@ export type BaseTeaser = {
   type: Scalars['String'];
 };
 
+export type BaseToken = {
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+};
+
 export type BaseUser = {
   active: Scalars['Boolean'];
   firstName?: Maybe<Scalars['String']>;
@@ -1524,8 +1531,8 @@ export type MemberPlanFilter = {
 };
 
 export enum MemberPlanSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt',
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
 }
 
 export type Mutation = {
@@ -1579,6 +1586,8 @@ export type Mutation = {
   createSubscriptionWithConfirmation: Scalars['Boolean'];
   /** Creates a new tag. */
   createTag: Tag;
+  /** Creates a token and returns it's secret once. */
+  createToken: TokenWithSecret;
   /**
    *
    *       Creates a new userConsent based on input.
@@ -1624,6 +1633,8 @@ export type Mutation = {
   deleteSubscriptionInterval: Array<SubscriptionFlowModel>;
   /** Deletes an existing tag. */
   deleteTag: Tag;
+  /** Deletes a token. */
+  deleteToken: Token;
   /**
    *
    *       Delete an existing userConsent by id.
@@ -1956,6 +1967,10 @@ export type MutationCreateTagArgs = {
   type: TagType;
 };
 
+export type MutationCreateTokenArgs = {
+  name: Scalars['String'];
+};
+
 export type MutationCreateUserConsentArgs = {
   consentId: Scalars['String'];
   userId: Scalars['String'];
@@ -2033,6 +2048,10 @@ export type MutationDeleteSubscriptionIntervalArgs = {
 };
 
 export type MutationDeleteTagArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationDeleteTokenArgs = {
   id: Scalars['String'];
 };
 
@@ -3013,9 +3032,9 @@ export type Query = {
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /** This query returns the user. */
   me?: Maybe<SensitiveDataUser>;
-  /** This query returns a member plan. */
-  memberPlan?: Maybe<MemberPlan>;
-  /** This query returns the member plans. */
+  /** Returns a memberplan by id or slug. */
+  memberPlan: MemberPlan;
+  /** Returns a paginated list of memberplans based on the filters given. */
   memberPlans: MemberPlanConnection;
   /** Returns a navigation by id. */
   navigation: Navigation;
@@ -3112,6 +3131,8 @@ export type Query = {
   tag: Tag;
   /** This query returns a list of tags */
   tags: TagConnection;
+  /** Returns a list of all tokens. */
+  tokens: Array<Token>;
   upgradeSubscriptionInfo: UpgradeSubscription;
   /**
    *
@@ -3243,12 +3264,12 @@ export type QueryMemberPlanArgs = {
 };
 
 export type QueryMemberPlansArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<MemberPlanFilter>;
-  order?: SortOrder;
-  skip?: Scalars['Int'];
-  sort?: MemberPlanSort;
-  take?: Scalars['Int'];
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<MemberPlanSort>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 export type QueryNavigationArgs = {
@@ -3890,6 +3911,23 @@ export type TitleBlockInput = {
   lead?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
+};
+
+export type Token = BaseToken & {
+  __typename?: 'Token';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+};
+
+export type TokenWithSecret = BaseToken & {
+  __typename?: 'TokenWithSecret';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  token: Scalars['String'];
 };
 
 export type TrackingPixel = {

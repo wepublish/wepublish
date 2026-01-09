@@ -99,8 +99,6 @@ import {
   renewSubscription,
   updateAdminSubscription,
 } from './subscription/subscription.private-mutation';
-import { GraphQLCreatedToken, GraphQLTokenInput } from './token';
-import { createToken, deleteTokenById } from './token/token.private-mutation';
 import { GraphQLUser, GraphQLUserInput } from './user';
 import {
   createAdminUser,
@@ -279,23 +277,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         return email;
       },
-    },
-
-    // Token
-    // =====
-
-    createToken: {
-      type: new GraphQLNonNull(GraphQLCreatedToken),
-      args: { input: { type: new GraphQLNonNull(GraphQLTokenInput) } },
-      resolve: (root, { input }, { authenticate, prisma: { token } }) =>
-        createToken({ ...input, roleIDs: ['peer'] }, authenticate, token),
-    },
-
-    deleteToken: {
-      type: GraphQLCreatedToken,
-      args: { id: { type: new GraphQLNonNull(GraphQLString) } },
-      resolve: (root, { id }, { authenticate, prisma: { token } }) =>
-        deleteTokenById(id, authenticate, token),
     },
 
     // User

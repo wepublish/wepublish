@@ -1,0 +1,23 @@
+fragment FullToken on BaseToken {
+  id
+  name
+}
+
+query TokenList {
+  tokens {
+    ...FullToken
+  }
+}
+
+mutation CreateToken($name: String!) {
+  createToken(name: $name) {
+    ...FullToken
+    token
+  }
+}
+
+mutation DeleteToken($id: String!) {
+  deleteToken(id: $id) {
+    ...FullToken
+  }
+}

@@ -126,15 +126,6 @@ export enum CommentState {
   Rejected = 'rejected'
 }
 
-export type CreatedToken = {
-  __typename?: 'CreatedToken';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  token: Scalars['String'];
-};
-
 export enum Currency {
   Chf = 'CHF',
   Eur = 'EUR'
@@ -352,7 +343,6 @@ export type Mutation = {
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   createSubscription?: Maybe<Subscription>;
-  createToken: CreatedToken;
   createUser?: Maybe<User>;
   deleteComment: Comment;
   deleteImage?: Maybe<Image>;
@@ -362,7 +352,6 @@ export type Mutation = {
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
   deleteRatingSystemAnswer: CommentRatingSystemAnswer;
   deleteSubscription?: Maybe<Subscription>;
-  deleteToken?: Maybe<CreatedToken>;
   deleteUser?: Maybe<User>;
   importSubscription?: Maybe<Subscription>;
   markInvoiceAsPaid?: Maybe<Invoice>;
@@ -459,11 +448,6 @@ export type MutationCreateSubscriptionArgs = {
 };
 
 
-export type MutationCreateTokenArgs = {
-  input: TokenInput;
-};
-
-
 export type MutationCreateUserArgs = {
   input: UserInput;
   password: Scalars['String'];
@@ -506,11 +490,6 @@ export type MutationDeleteRatingSystemAnswerArgs = {
 
 
 export type MutationDeleteSubscriptionArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteTokenArgs = {
   id: Scalars['String'];
 };
 
@@ -866,7 +845,6 @@ export type Query = {
   subscription?: Maybe<Subscription>;
   subscriptions: SubscriptionConnection;
   subscriptionsAsCsv?: Maybe<Scalars['String']>;
-  tokens: Array<Token>;
   user?: Maybe<User>;
   users: UserConnection;
 };
@@ -1133,18 +1111,6 @@ export enum TagType {
   Event = 'Event',
   Page = 'Page'
 }
-
-export type Token = {
-  __typename?: 'Token';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-};
-
-export type TokenInput = {
-  name: Scalars['String'];
-};
 
 export type UpdateCommentRatingSystemAnswer = {
   answer?: InputMaybe<Scalars['String']>;

@@ -265,6 +265,13 @@ interface BaseTeaser implements HasImage {
   type: String!
 }
 
+interface BaseToken {
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+}
+
 interface BaseUser {
   active: Boolean!
   firstName: String
@@ -1384,8 +1391,8 @@ input MemberPlanFilter {
 }
 
 enum MemberPlanSort {
-  createdAt
-  modifiedAt
+  CreatedAt
+  ModifiedAt
 }
 
 type Mutation {
@@ -1461,6 +1468,9 @@ type Mutation {
   """Creates a new tag."""
   createTag(description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
 
+  """Creates a token and returns it's secret once."""
+  createToken(name: String!): TokenWithSecret!
+
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
 
@@ -1513,6 +1523,9 @@ type Mutation {
 
   """Deletes an existing tag."""
   deleteTag(id: String!): Tag!
+
+  """Deletes a token."""
+  deleteToken(id: String!): Token!
 
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
@@ -2262,11 +2275,11 @@ type Query {
   """This query returns the user."""
   me: SensitiveDataUser
 
-  """This query returns a member plan."""
-  memberPlan(id: String, slug: Slug): MemberPlan
+  """Returns a memberplan by id or slug."""
+  memberPlan(id: String, slug: Slug): MemberPlan!
 
-  """This query returns the member plans."""
-  memberPlans(cursor: String, filter: MemberPlanFilter, order: SortOrder! = Descending, skip: Int! = 0, sort: MemberPlanSort! = createdAt, take: Int! = 10): MemberPlanConnection!
+  """Returns a paginated list of memberplans based on the filters given."""
+  memberPlans(cursorId: String, filter: MemberPlanFilter, order: SortOrder = Ascending, skip: Int = 0, sort: MemberPlanSort = ModifiedAt, take: Int = 10): MemberPlanConnection!
 
   """Returns a navigation by id."""
   navigation(id: String!): Navigation!
@@ -2382,6 +2395,9 @@ type Query {
     """Number of items to fetch"""
     take: Int! = 10
   ): TagConnection!
+
+  """Returns a list of all tokens."""
+  tokens: [Token!]!
 
   """"""
   upgradeSubscriptionInfo(memberPlanId: String!, subscriptionId: String!): UpgradeSubscription!
@@ -2851,6 +2867,21 @@ input TitleBlockInput {
   lead: String
   preTitle: String
   title: String
+}
+
+type Token implements BaseToken {
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+}
+
+type TokenWithSecret implements BaseToken {
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+  token: String!
 }
 
 type TrackingPixel {
