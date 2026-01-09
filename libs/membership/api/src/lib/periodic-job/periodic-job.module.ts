@@ -4,9 +4,10 @@ import { SubscriptionFlowModule } from '../subscription-flow/subscription-flow.m
 import { PeriodicJobExecutor } from './periodic-job.executor';
 import { PeriodicJobResolver } from './periodic-job.resolver';
 import { PeriodicJobService } from './periodic-job.service';
+import { PaymentsModule } from '@wepublish/payment/api';
 
 @Module({
   providers: [PeriodicJobExecutor, PeriodicJobService, PeriodicJobResolver],
-  imports: [PrismaModule, SubscriptionFlowModule],
+  imports: [PrismaModule, SubscriptionFlowModule, PaymentsModule],
 })
 export class PeriodicJobModule {}

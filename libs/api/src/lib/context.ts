@@ -51,7 +51,7 @@ import { SubscriptionWithRelations } from './db/subscription';
 import { TokenExpiredError } from './error';
 import { FullPoll, getPoll } from './graphql/poll/poll.public-queries';
 import { Hooks } from './hooks';
-import { MemberContext } from './memberContext';
+import { MemberContext } from '@wepublish/membership/api';
 import { BlockStylesDataloaderService } from '@wepublish/block-content/api';
 import { URLAdapter } from '@wepublish/nest-modules';
 import { createSafeHostUrl } from '@wepublish/peering/api';

@@ -1233,7 +1233,9 @@
       "sendWebsiteLogin": "Envoyer le lien de login",
       "sendWebsiteLoginSuccessMessage": "Lien de login envoyé à {{email}}.",
       "streetAddress": "Rue",
+      "streetAddressNumber": "Numéro de maison",
       "streetAddress2": "Rue 2",
+      "streetAddress2Number": "Numéro de maison",
       "subscriptionsHeader": "Abonnements",
       "successfullyCreatedUser": "Utilisateur·trice créé·e avec succès",
       "successfullyUpdatedUser": "Utilisateur·trice mis·e à jour avec succès",
@@ -1549,12 +1551,15 @@
     "paywall": {
       "navbar": "Paywall",
       "form": {
-        "title": "Modifier le paywall",
+        "editTitle": "Modifier le paywall",
+        "createTitle": "Créer un paywall",
         "name": "Nom du paywall (NON visible par l'utilisateur)",
         "description": "Texte du paywall (visible par l'utilisateur)",
         "circumventDescription": "Texte du paywall lorsque le contenu de l'article n'est pas masqué (visible par l'utilisateur)",
         "active": "Actif",
         "activeHelpText": "Permet de désactiver rapidement le paywall sur tous les articles",
+        "alternativeSubscribeUrl": "URL alternative vers la page d’abonnement",
+        "alternativeSubscribeUrlHelpText": "Peut être utilisée en combinaison avec un bloc d’abonnement sur une page. Si laissé vide, la page par défaut sera utilisée.",
         "anyMemberPlan": "Autoriser tout abonnement à franchir le paywall",
         "memberPlans": "Seuls certains abonnements peuvent franchir le paywall",
         "bypasses": "Contournements",
@@ -1563,7 +1568,23 @@
         "addBypass": "Ajouter",
         "qrCodeTitle": "Code QR pour le token de contournement",
         "downloadSvg": "Télécharger SVG",
-        "baseUrl": "URL du site web (baseurl). Par ex. https://wepublish.ch"
+        "baseUrl": "URL du site web (baseurl). Par ex. https://wepublish.ch",
+        "upgrade": "Textes lorsque le paywall permet et prend en charge la mise à niveau",
+        "display": "Options d’affichage",
+        "hideContentAfter": "Masquer le contenu après X blocs",
+        "fadeout": "Fondu des blocs masqués",
+        "fadeoutHelpText": "Le fondu permet d’afficher un aperçu du reste du contenu."
+      },
+      "overview": {
+        "areYouSure": "Êtes-vous sûr ?",
+        "areYouSureBody": "Le paywall « {{ paywall }} » sera supprimé définitivement et ne peut pas être annulé.",
+        "areYouSureConfirmation": "Supprimer le paywall",
+        "createPaywall": "Nouveau paywall",
+        "title": "Paywalls",
+        "name": "Nom",
+        "active": "Actif",
+        "memberPlans": "Plans d’abonnement",
+        "anyMemberPlan": "Tous les plans d’abonnement"
       }
     },
     "paymentMethodEditPanel": {

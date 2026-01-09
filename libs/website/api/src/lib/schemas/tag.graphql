@@ -8,10 +8,8 @@ fragment FullTag on Tag {
 }
 
 query Tag($tag: String!, $type: TagType!) {
-  tags(filter: { tag: $tag, type: $type }, take: 1) {
-    nodes {
-      ...FullTag
-    }
+  tag(tag: $tag, type: $type) {
+    ...FullTag
   }
 }
 

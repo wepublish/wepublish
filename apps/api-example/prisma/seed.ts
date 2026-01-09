@@ -897,10 +897,6 @@ async function seed() {
   const prisma = new PrismaClient();
   await prisma.$connect();
 
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error('Seeding in production is not allowed');
-  }
-
   try {
     const [adminUserRole, editorUserRole] = await rootSeed(prisma);
 
@@ -908,17 +904,38 @@ async function seed() {
       throw new Error('@wepublish/api seeding has not been done');
     }
 
-    // Overwrite admin passwords from dump. This never runs in production because of the check above.
+    try {
+      // Overwrite admin passwords from db dump.
+      await Promise.all([
+        prisma.user.update({
+          where: {
+            email: 'dev@wepublish.ch',
+          },
+          data: {
+            password: await hashPassword('123'),
+          },
+        }),
+        prisma.user.update({
+          where: {
+            email: 'editor@wepublish.ch',
+          },
+          data: {
+            password: await hashPassword('123'),
+          },
+        }),
+      ]);
+    } catch {}
+
+    const hasUsers = await prisma.user.count();
+
+    if (hasUsers) {
+      throw 'Website Example seeding has already been done. Skipping';
+    }
+
     console.log('Seeding users');
     await Promise.all([
-      prisma.user.upsert({
-        where: {
-          email: 'dev@wepublish.ch',
-        },
-        update: {
-          password: await hashPassword('123'),
-        },
-        create: {
+      prisma.user.create({
+        data: {
           email: 'dev@wepublish.ch',
           emailVerifiedAt: new Date(),
           name: 'Dev User',
@@ -927,14 +944,8 @@ async function seed() {
           password: await hashPassword('123'),
         },
       }),
-      prisma.user.upsert({
-        where: {
-          email: 'editor@wepublish.ch',
-        },
-        update: {
-          password: await hashPassword('123'),
-        },
-        create: {
+      prisma.user.create({
+        data: {
           email: 'editor@wepublish.ch',
           emailVerifiedAt: new Date(),
           name: 'Editor User',
@@ -944,12 +955,6 @@ async function seed() {
         },
       }),
     ]);
-
-    const hasUsers = await prisma.user.count();
-
-    if (hasUsers) {
-      throw 'Website Example seeding has already been done. Skipping';
-    }
 
     const tags = Array.from({ length: 5 }, () =>
       faker.word.noun().toLowerCase()

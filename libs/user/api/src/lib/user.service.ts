@@ -455,6 +455,12 @@ const createTextFilter = (
                 },
               },
               {
+                streetAddressNumber: {
+                  contains: filter.text,
+                  mode: 'insensitive',
+                },
+              },
+              {
                 zipCode: {
                   contains: filter.text,
                   mode: 'insensitive',

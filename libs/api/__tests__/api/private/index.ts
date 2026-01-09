@@ -34,12 +34,6 @@ export type AvailablePaymentMethod = {
   paymentPeriodicities: Array<PaymentPeriodicity>;
 };
 
-export type AvailablePaymentMethodInput = {
-  forceAutoRenewal: Scalars['Boolean'];
-  paymentMethodIDs: Array<Scalars['String']>;
-  paymentPeriodicities: Array<PaymentPeriodicity>;
-};
-
 export type Comment = {
   __typename?: 'Comment';
   authorType: CommentAuthorType;
@@ -93,14 +87,6 @@ export type CommentRatingOverrideUpdateInput = {
   value?: InputMaybe<Scalars['Int']>;
 };
 
-export type CommentRatingSystemAnswer = {
-  __typename?: 'CommentRatingSystemAnswer';
-  answer?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  ratingSystemId: Scalars['String'];
-  type: RatingSystemType;
-};
-
 export enum CommentRejectionReason {
   Misconduct = 'misconduct',
   Spam = 'spam'
@@ -132,15 +118,6 @@ export enum CommentState {
   Rejected = 'rejected'
 }
 
-export type CreatedToken = {
-  __typename?: 'CreatedToken';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  token: Scalars['String'];
-};
-
 export enum Currency {
   Chf = 'CHF',
   Eur = 'EUR'
@@ -163,13 +140,6 @@ export type FocalPoint = {
   __typename?: 'FocalPoint';
   x: Scalars['Float'];
   y: Scalars['Float'];
-};
-
-export type FullCommentRatingSystem = {
-  __typename?: 'FullCommentRatingSystem';
-  answers: Array<CommentRatingSystemAnswer>;
-  id: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
 };
 
 export type FullPoll = {
@@ -344,76 +314,26 @@ export type MemberPlan = {
   tags?: Maybe<Array<Scalars['String']>>;
 };
 
-export type MemberPlanConnection = {
-  __typename?: 'MemberPlanConnection';
-  nodes: Array<MemberPlan>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type MemberPlanFilter = {
-  active?: InputMaybe<Scalars['Boolean']>;
-  name?: InputMaybe<Scalars['String']>;
-  productType?: InputMaybe<ProductType>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export type MemberPlanInput = {
-  active: Scalars['Boolean'];
-  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
-  amountPerMonthMin: Scalars['Int'];
-  amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
-  availablePaymentMethods: Array<AvailablePaymentMethodInput>;
-  confirmationPageId?: InputMaybe<Scalars['String']>;
-  currency: Currency;
-  description?: InputMaybe<Scalars['RichText']>;
-  extendable: Scalars['Boolean'];
-  externalReward?: InputMaybe<Scalars['String']>;
-  failPageId?: InputMaybe<Scalars['String']>;
-  imageID?: InputMaybe<Scalars['String']>;
-  maxCount?: InputMaybe<Scalars['Int']>;
-  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  productType: ProductType;
-  shortDescription?: InputMaybe<Scalars['RichText']>;
-  slug: Scalars['String'];
-  successPageId?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export enum MemberPlanSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
-}
-
 export type Mutation = {
   __typename?: 'Mutation';
   approveComment: Comment;
   cancelSubscription?: Maybe<Subscription>;
   createComment: Comment;
   createInvoice?: Maybe<Invoice>;
-  createMemberPlan?: Maybe<MemberPlan>;
   createPaymentFromInvoice?: Maybe<Payment>;
-  createPaymentMethod?: Maybe<PaymentMethod>;
   createPoll?: Maybe<PollWithAnswers>;
   createPollAnswer?: Maybe<PollAnswer>;
   createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
-  createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   createSubscription?: Maybe<Subscription>;
-  createToken: CreatedToken;
   deleteComment: Comment;
   deleteImage?: Maybe<Image>;
   deleteInvoice?: Maybe<Invoice>;
-  deleteMemberPlan?: Maybe<MemberPlan>;
-  deletePaymentMethod?: Maybe<PaymentMethod>;
   deletePoll?: Maybe<FullPoll>;
   deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
-  deleteRatingSystemAnswer: CommentRatingSystemAnswer;
   deleteSubscription?: Maybe<Subscription>;
-  deleteToken?: Maybe<CreatedToken>;
   importSubscription?: Maybe<Subscription>;
   markInvoiceAsPaid?: Maybe<Invoice>;
   rejectComment: Comment;
@@ -422,15 +342,13 @@ export type Mutation = {
   revokeActiveSession: Scalars['Boolean'];
   revokeSession: Scalars['Boolean'];
   sendJWTLogin: Scalars['String'];
+  sendWebsiteLogin: Scalars['String'];
   sessions: Array<Session>;
   updateComment: Comment;
   updateImage?: Maybe<Image>;
   updateInvoice?: Maybe<Invoice>;
-  updateMemberPlan?: Maybe<MemberPlan>;
-  updatePaymentMethod?: Maybe<PaymentMethod>;
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
-  updateRatingSystem: FullCommentRatingSystem;
   updateSubscription?: Maybe<Subscription>;
   uploadImage?: Maybe<Image>;
 };
@@ -461,18 +379,8 @@ export type MutationCreateInvoiceArgs = {
 };
 
 
-export type MutationCreateMemberPlanArgs = {
-  input: MemberPlanInput;
-};
-
-
 export type MutationCreatePaymentFromInvoiceArgs = {
   input: PaymentFromInvoiceInput;
-};
-
-
-export type MutationCreatePaymentMethodArgs = {
-  input: PaymentMethodInput;
 };
 
 
@@ -495,13 +403,6 @@ export type MutationCreatePollExternalVoteSourceArgs = {
 };
 
 
-export type MutationCreateRatingSystemAnswerArgs = {
-  answer?: InputMaybe<Scalars['String']>;
-  ratingSystemId: Scalars['String'];
-  type?: InputMaybe<RatingSystemType>;
-};
-
-
 export type MutationCreateSessionArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -518,11 +419,6 @@ export type MutationCreateSubscriptionArgs = {
 };
 
 
-export type MutationCreateTokenArgs = {
-  input: TokenInput;
-};
-
-
 export type MutationDeleteCommentArgs = {
   id: Scalars['String'];
 };
@@ -534,16 +430,6 @@ export type MutationDeleteImageArgs = {
 
 
 export type MutationDeleteInvoiceArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteMemberPlanArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeletePaymentMethodArgs = {
   id: Scalars['String'];
 };
 
@@ -563,17 +449,7 @@ export type MutationDeletePollExternalVoteSourceArgs = {
 };
 
 
-export type MutationDeleteRatingSystemAnswerArgs = {
-  id: Scalars['String'];
-};
-
-
 export type MutationDeleteSubscriptionArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteTokenArgs = {
   id: Scalars['String'];
 };
 
@@ -616,6 +492,11 @@ export type MutationSendJwtLoginArgs = {
 };
 
 
+export type MutationSendWebsiteLoginArgs = {
+  email: Scalars['String'];
+};
+
+
 export type MutationUpdateCommentArgs = {
   featured?: InputMaybe<Scalars['Boolean']>;
   guestUserImageID?: InputMaybe<Scalars['String']>;
@@ -641,18 +522,6 @@ export type MutationUpdateInvoiceArgs = {
 };
 
 
-export type MutationUpdateMemberPlanArgs = {
-  id: Scalars['String'];
-  input: MemberPlanInput;
-};
-
-
-export type MutationUpdatePaymentMethodArgs = {
-  id: Scalars['String'];
-  input: PaymentMethodInput;
-};
-
-
 export type MutationUpdatePeerProfileArgs = {
   input: PeerProfileInput;
 };
@@ -666,13 +535,6 @@ export type MutationUpdatePollArgs = {
   opensAt?: InputMaybe<Scalars['DateTime']>;
   pollId: Scalars['String'];
   question?: InputMaybe<Scalars['String']>;
-};
-
-
-export type MutationUpdateRatingSystemArgs = {
-  answers?: InputMaybe<Array<UpdateCommentRatingSystemAnswer>>;
-  name?: InputMaybe<Scalars['String']>;
-  ratingSystemId: Scalars['String'];
 };
 
 
@@ -739,16 +601,6 @@ export type PaymentMethod = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   paymentProvider?: Maybe<PaymentProvider>;
-  slug: Scalars['Slug'];
-};
-
-export type PaymentMethodInput = {
-  active: Scalars['Boolean'];
-  description: Scalars['String'];
-  gracePeriod: Scalars['Int'];
-  imageId?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  paymentProviderID: Scalars['String'];
   slug: Scalars['Slug'];
 };
 
@@ -916,23 +768,16 @@ export type Query = {
   images: ImageConnection;
   invoice?: Maybe<Invoice>;
   invoices: InvoiceConnection;
-  memberPlan?: Maybe<MemberPlan>;
-  memberPlans: MemberPlanConnection;
   payment?: Maybe<Payment>;
-  paymentMethod?: Maybe<PaymentMethod>;
-  paymentMethods: Array<PaymentMethod>;
-  paymentProviders: Array<PaymentProvider>;
   payments: PaymentConnection;
   peerProfile: PeerProfile;
   poll?: Maybe<FullPoll>;
   polls?: Maybe<PollConnection>;
-  ratingSystem: FullCommentRatingSystem;
   remotePeerProfile?: Maybe<PeerProfile>;
   sessions: Array<Session>;
   subscription?: Maybe<Subscription>;
   subscriptions: SubscriptionConnection;
   subscriptionsAsCsv?: Maybe<Scalars['String']>;
-  tokens: Array<Token>;
 };
 
 
@@ -987,28 +832,7 @@ export type QueryInvoicesArgs = {
 };
 
 
-export type QueryMemberPlanArgs = {
-  id?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['Slug']>;
-};
-
-
-export type QueryMemberPlansArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<MemberPlanFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<MemberPlanSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
 export type QueryPaymentArgs = {
-  id?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryPaymentMethodArgs = {
   id?: InputMaybe<Scalars['String']>;
 };
 
@@ -1062,10 +886,6 @@ export type QuerySubscriptionsArgs = {
 export type QuerySubscriptionsAsCsvArgs = {
   filter?: InputMaybe<SubscriptionFilter>;
 };
-
-export enum RatingSystemType {
-  Star = 'star'
-}
 
 export type Session = {
   __typename?: 'Session';
@@ -1204,24 +1024,6 @@ export enum TagType {
   Page = 'Page'
 }
 
-export type Token = {
-  __typename?: 'Token';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-};
-
-export type TokenInput = {
-  name: Scalars['String'];
-};
-
-export type UpdateCommentRatingSystemAnswer = {
-  answer?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
-  type?: InputMaybe<RatingSystemType>;
-};
-
 export type UpdateImageInput = {
   description?: InputMaybe<Scalars['String']>;
   filename?: InputMaybe<Scalars['String']>;
@@ -1290,6 +1092,8 @@ export type UserAddress = {
   country?: Maybe<Scalars['String']>;
   streetAddress?: Maybe<Scalars['String']>;
   streetAddress2?: Maybe<Scalars['String']>;
+  streetAddress2Number?: Maybe<Scalars['String']>;
+  streetAddressNumber?: Maybe<Scalars['String']>;
   zipCode?: Maybe<Scalars['String']>;
 };
 

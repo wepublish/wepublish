@@ -5,7 +5,6 @@ import {
   Currency,
   DeactivationFragment,
   FullMemberPlanFragment,
-  FullPaymentMethodFragment,
   FullSubscriptionFragment,
   InvoiceFragment,
   MetadataPropertyFragment,
@@ -14,15 +13,16 @@ import {
   useCancelSubscriptionMutation,
   useCreateSubscriptionMutation,
   useInvoicesQuery,
-  useMemberPlanListQuery,
-  usePaymentMethodListQuery,
   useRenewSubscriptionMutation,
   useSubscriptionQuery,
   useUpdateSubscriptionMutation,
 } from '@wepublish/editor/api';
 import {
+  FullPaymentMethodFragment,
   FullUserFragment,
   getApiClientV2,
+  useMemberPlanListQuery,
+  usePaymentMethodListQuery,
   useUserQuery,
 } from '@wepublish/editor/api-v2';
 import {
@@ -250,11 +250,13 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     setCurrency(subscription.currency);
   }
 
+  const client = getApiClientV2();
   const {
     data: memberPlanData,
     loading: isMemberPlanLoading,
     error: loadMemberPlanError,
   } = useMemberPlanListQuery({
+    client,
     fetchPolicy: 'network-only',
     variables: {
       take: 100, // TODO: Pagination
@@ -266,6 +268,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     loading: isPaymentMethodLoading,
     error: paymentMethodLoadError,
   } = usePaymentMethodListQuery({
+    client,
     fetchPolicy: 'network-only',
   });
 
@@ -282,7 +285,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   /**
    * fetch edited user from api
    */
-  const client = getApiClientV2();
   const { data: editedUserData } = useUserQuery({
     client,
     variables: { id: editedUserId! },

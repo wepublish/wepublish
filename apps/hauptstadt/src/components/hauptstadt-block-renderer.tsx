@@ -7,6 +7,8 @@ import { BuilderBlockRendererProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 import { useCallback } from 'react';
 
+import { isCenterText } from '../block-style/centter-text';
+
 export const HauptstadtBlockRenderer = (props: BuilderBlockRendererProps) => {
   // Hauptstadt has some old related articles teasers
   // and we want to show them as small teasers instead of big teasers
@@ -28,6 +30,7 @@ export const HauptstadtBlockRenderer = (props: BuilderBlockRendererProps) => {
     <BlockRenderer
       {...props}
       block={block}
+      css={isCenterText(props.block) ? { textAlign: 'center' } : undefined}
     />
   );
 };

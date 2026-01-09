@@ -1,4 +1,4 @@
-import { CommentState, RatingSystemType, UserEvent } from '@prisma/client';
+import { CommentState, UserEvent } from '@prisma/client';
 import {
   GraphQLBoolean,
   GraphQLList,
@@ -20,17 +20,6 @@ import {
   GraphQLCommentRejectionReason,
   GraphQLCommentRevisionUpdateInput,
 } from './comment/comment';
-import {
-  GraphQLCommentRatingSystemAnswer,
-  GraphQLFullCommentRatingSystem,
-  GraphQLRatingSystemType,
-  GraphQLUpdateCommentRatingSystemAnswer,
-} from './comment-rating/comment-rating';
-import {
-  createCommentRatingAnswer,
-  deleteCommentRatingAnswer,
-  updateRatingSystem,
-} from './comment-rating/comment-rating.private-mutation';
 
 import {
   createAdminComment,
@@ -55,23 +44,11 @@ import {
   markInvoiceAsPaid,
   updateInvoice,
 } from './invoice/invoice.private-mutation';
-import {
-  createMemberPlan,
-  deleteMemberPlanById,
-  updateMemberPlan,
-} from './member-plan/member-plan.private-mutation';
-import { GraphQLMemberPlan, GraphQLMemberPlanInput } from './memberPlan';
+
 import { GraphQLPayment, GraphQLPaymentFromInvoiceInput } from './payment';
-import {
-  createPaymentMethod,
-  deletePaymentMethodById,
-  updatePaymentMethod,
-} from './payment-method/payment-method.private-mutation';
+
 import { createPaymentFromInvoice } from './payment/payment.private-mutation';
-import {
-  GraphQLPaymentMethod,
-  GraphQLPaymentMethodInput,
-} from './paymentMethod';
+
 import { GraphQLPeerProfile, GraphQLPeerProfileInput } from './peer';
 import { upsertPeerProfile } from './peer-profile/peer-profile.private-mutation';
 import { authorise } from './permissions';
@@ -111,8 +88,6 @@ import {
   renewSubscription,
   updateAdminSubscription,
 } from './subscription/subscription.private-mutation';
-import { GraphQLCreatedToken, GraphQLTokenInput } from './token';
-import { createToken, deleteTokenById } from './token/token.private-mutation';
 
 import { CanSendJWTLogin } from '@wepublish/permissions';
 import { mailLogType } from '@wepublish/mail/api';
@@ -240,21 +215,50 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
     },
 
-    // Token
-    // =====
+    sendWebsiteLogin: {
+      type: new GraphQLNonNull(GraphQLString),
+      args: {
+        email: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(
+        root,
+        { url, email },
+        { authenticate, prisma, generateJWT, mailContext, urlAdapter }
+      ) {
+        email = email.toLowerCase();
+        await Validator.login.parse({ email });
+        const { roles } = authenticate();
+        authorise(CanSendJWTLogin, roles);
 
-    createToken: {
-      type: new GraphQLNonNull(GraphQLCreatedToken),
-      args: { input: { type: new GraphQLNonNull(GraphQLTokenInput) } },
-      resolve: (root, { input }, { authenticate, prisma: { token } }) =>
-        createToken({ ...input, roleIDs: ['peer'] }, authenticate, token),
-    },
+        const jwtExpiresSetting = await prisma.setting.findUnique({
+          where: { name: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN },
+        });
+        const jwtExpires =
+          (jwtExpiresSetting?.value as number) ??
+          parseInt(process.env['SEND_LOGIN_JWT_EXPIRES_MIN'] ?? '');
 
-    deleteToken: {
-      type: GraphQLCreatedToken,
-      args: { id: { type: new GraphQLNonNull(GraphQLString) } },
-      resolve: (root, { id }, { authenticate, prisma: { token } }) =>
-        deleteTokenById(id, authenticate, token),
+        if (!jwtExpires)
+          throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN');
+
+        const user = await prisma.user.findUnique({
+          where: { email },
+          select: unselectPassword,
+        });
+
+        if (!user) throw new NotFound('User', email);
+
+        const remoteTemplate = await mailContext.getUserTemplateName(
+          UserEvent.LOGIN_LINK
+        );
+        await mailContext.sendMail({
+          externalMailTemplateId: remoteTemplate,
+          recipient: user,
+          optionalData: {},
+          mailType: mailLogType.UserFlow,
+        });
+
+        return email;
+      },
     },
 
     // Subscriptions
@@ -383,72 +387,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         { id },
         { authenticate, mediaAdapter, prisma: { image } }
       ) => deleteImageById(id, authenticate, image, mediaAdapter),
-    },
-
-    // MemberPlan
-    // ======
-
-    createMemberPlan: {
-      type: GraphQLMemberPlan,
-      args: { input: { type: new GraphQLNonNull(GraphQLMemberPlanInput) } },
-      resolve: (root, { input }, { authenticate, prisma: { memberPlan } }) =>
-        createMemberPlan(input, authenticate, memberPlan),
-    },
-
-    updateMemberPlan: {
-      type: GraphQLMemberPlan,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        input: { type: new GraphQLNonNull(GraphQLMemberPlanInput) },
-      },
-      resolve: (
-        root,
-        { id, input },
-        { authenticate, prisma: { memberPlan } }
-      ) => updateMemberPlan(id, input, authenticate, memberPlan),
-    },
-
-    deleteMemberPlan: {
-      type: GraphQLMemberPlan,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { memberPlan } }) =>
-        deleteMemberPlanById(id, authenticate, memberPlan),
-    },
-
-    // PaymentMethod
-    // ======
-
-    createPaymentMethod: {
-      type: GraphQLPaymentMethod,
-      args: {
-        input: { type: new GraphQLNonNull(GraphQLPaymentMethodInput) },
-      },
-      resolve: (root, { input }, { authenticate, prisma: { paymentMethod } }) =>
-        createPaymentMethod(input, authenticate, paymentMethod),
-    },
-
-    updatePaymentMethod: {
-      type: GraphQLPaymentMethod,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        input: { type: new GraphQLNonNull(GraphQLPaymentMethodInput) },
-      },
-      resolve: (
-        root,
-        { id, input },
-        { authenticate, prisma: { paymentMethod } }
-      ) => updatePaymentMethod(id, input, authenticate, paymentMethod),
-    },
-
-    deletePaymentMethod: {
-      type: GraphQLPaymentMethod,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { paymentMethod } }) =>
-        deletePaymentMethodById(id, authenticate, paymentMethod),
     },
 
     // Invoice
@@ -654,71 +592,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, { id }, { authenticate, prisma: { comment } }) =>
         deleteComment(id, authenticate, comment),
-    },
-
-    // Rating System
-    // ==========
-
-    createRatingSystemAnswer: {
-      type: new GraphQLNonNull(GraphQLCommentRatingSystemAnswer),
-      args: {
-        ratingSystemId: { type: new GraphQLNonNull(GraphQLString) },
-        type: {
-          type: GraphQLRatingSystemType,
-          defaultValue: RatingSystemType.star,
-        },
-        answer: { type: GraphQLString },
-      },
-      resolve: (
-        root,
-        { ratingSystemId, type, answer },
-        { authenticate, prisma: { commentRatingSystemAnswer } }
-      ) =>
-        createCommentRatingAnswer(
-          ratingSystemId,
-          type,
-          answer,
-          authenticate,
-          commentRatingSystemAnswer
-        ),
-    },
-
-    updateRatingSystem: {
-      type: new GraphQLNonNull(GraphQLFullCommentRatingSystem),
-      args: {
-        ratingSystemId: { type: new GraphQLNonNull(GraphQLString) },
-        name: { type: GraphQLString },
-        answers: {
-          type: new GraphQLList(
-            new GraphQLNonNull(GraphQLUpdateCommentRatingSystemAnswer)
-          ),
-        },
-      },
-      resolve: (
-        root,
-        { ratingSystemId, answers, name },
-        { authenticate, prisma: { commentRatingSystem } }
-      ) =>
-        updateRatingSystem(
-          ratingSystemId,
-          name,
-          answers,
-          authenticate,
-          commentRatingSystem
-        ),
-    },
-
-    deleteRatingSystemAnswer: {
-      type: new GraphQLNonNull(GraphQLCommentRatingSystemAnswer),
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (
-        root,
-        { id },
-        { authenticate, prisma: { commentRatingSystemAnswer } }
-      ) =>
-        deleteCommentRatingAnswer(id, authenticate, commentRatingSystemAnswer),
     },
 
     // Poll

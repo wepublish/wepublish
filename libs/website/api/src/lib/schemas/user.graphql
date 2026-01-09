@@ -40,7 +40,9 @@ fragment FullSensitiveDataUser on SensitiveDataUser {
 fragment FullAddress on UserAddress {
   company
   streetAddress
+  streetAddressNumber
   streetAddress2
+  streetAddress2Number
   zipCode
   city
   country
