@@ -2,12 +2,12 @@ import styled from '@emotion/styled';
 import {
   DateFilterComparison,
   FullPaymentMethodFragment,
-  FullUserFragment,
   SubscriptionDeactivationReason,
   SubscriptionFilter,
 } from '@wepublish/editor/api';
 import {
   FullMemberPlanFragment,
+  FullUserFragment,
   getApiClientV2,
   useMemberPlanListQuery,
   usePaymentMethodListQuery,

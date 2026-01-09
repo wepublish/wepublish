@@ -88,13 +88,6 @@ import {
   renewSubscription,
   updateAdminSubscription,
 } from './subscription/subscription.private-mutation';
-import { GraphQLUser, GraphQLUserInput } from './user';
-import {
-  createAdminUser,
-  deleteUserById,
-  resetUserPassword,
-  updateAdminUser,
-} from './user/user.private-mutation';
 
 import { CanSendJWTLogin } from '@wepublish/permissions';
 import { mailLogType } from '@wepublish/mail/api';
@@ -266,71 +259,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         return email;
       },
-    },
-
-    // User
-    // ====
-
-    createUser: {
-      type: GraphQLUser,
-      args: {
-        input: { type: new GraphQLNonNull(GraphQLUserInput) },
-        password: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (
-        root,
-        { input, password },
-        { hashCostFactor, authenticate, prisma, mailContext }
-      ) =>
-        createAdminUser(
-          { ...input, password },
-          authenticate,
-          hashCostFactor,
-          prisma,
-          mailContext
-        ),
-    },
-
-    updateUser: {
-      type: GraphQLUser,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        input: { type: new GraphQLNonNull(GraphQLUserInput) },
-      },
-      resolve: (root, { id, input }, { authenticate, prisma: { user } }) =>
-        updateAdminUser(id, input, authenticate, user),
-    },
-
-    resetUserPassword: {
-      type: GraphQLUser,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        password: { type: new GraphQLNonNull(GraphQLString) },
-        sendMail: { type: GraphQLBoolean },
-      },
-      resolve: (
-        root,
-        { id, password, sendMail },
-        { authenticate, mailContext, prisma: { user }, hashCostFactor }
-      ) =>
-        resetUserPassword(
-          id,
-          password,
-          sendMail,
-          hashCostFactor,
-          authenticate,
-          mailContext,
-          user
-        ),
-    },
-
-    deleteUser: {
-      type: GraphQLUser,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { user } }) =>
-        deleteUserById(id, authenticate, user),
     },
 
     // Subscriptions

@@ -1,15 +1,22 @@
 import { ApolloServer } from 'apollo-server-express';
 import jwt, { SignOptions } from 'jsonwebtoken';
-import { CreateSession, CreateSessionWithJwt, Me } from '../api/private';
+import { CreateSession, CreateSessionWithJwt } from '../api/private';
 
 import { createGraphQLTestClientWithPrisma } from '../utility';
 
 let testServerPrivate: ApolloServer;
+let userId: string;
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithPrisma();
     testServerPrivate = setupClient.testServerPrivate;
+    const adminUser = await setupClient.prisma.user.findUnique({
+      where: {
+        email: 'dev@wepublish.ch',
+      },
+    });
+    userId = adminUser.id;
   } catch (error) {
     console.log('Error', error);
     throw new Error('Error during test setup');
@@ -32,12 +39,6 @@ describe('Sessions', () => {
     });
 
     test('can be create via JWT', async () => {
-      const userRes = await testServerPrivate.executeOperation({
-        query: Me,
-      });
-
-      const user = userRes.data?.me;
-
       const jwtOptions: SignOptions = {
         issuer: 'https://fakeURL',
         audience: 'https://fakeURL',
@@ -50,7 +51,7 @@ describe('Sessions', () => {
       }
 
       const token = jwt.sign(
-        { sub: user.id },
+        { sub: userId },
         process.env.JWT_SECRET_KEY,
         jwtOptions
       );

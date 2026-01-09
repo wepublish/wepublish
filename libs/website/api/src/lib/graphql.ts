@@ -1326,13 +1326,6 @@ export enum ImportedEventSort {
   StartsAt = 'STARTS_AT'
 }
 
-export type ImportedEventsDocument = {
-  __typename?: 'ImportedEventsDocument';
-  nodes: Array<EventFromSource>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
 export type InstagramPostBlock = BaseBlock & {
   __typename?: 'InstagramPostBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -1462,13 +1455,6 @@ export type MemberPlan = HasImage & {
   tags?: Maybe<Array<Scalars['String']>>;
 };
 
-export type MemberPlanConnection = {
-  __typename?: 'MemberPlanConnection';
-  nodes: Array<MemberPlan>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
 export type MemberPlanFilter = {
   active?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
@@ -1536,6 +1522,8 @@ export type Mutation = {
   createTag: Tag;
   /** Creates a token and returns it's secret once. */
   createToken: TokenWithSecret;
+  /** Creates a new user. */
+  createUser: SensitiveDataUser;
   /**
    *
    *       Creates a new userConsent based on input.
@@ -1585,6 +1573,8 @@ export type Mutation = {
   deleteTag: Tag;
   /** Deletes a token. */
   deleteToken: Token;
+  /** Deletes an existing user. */
+  deleteUser: SensitiveDataUser;
   /**
    *
    *       Delete an existing userConsent by id.
@@ -1621,6 +1611,8 @@ export type Mutation = {
   rateComment: Comment;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
+  /** Resets the password of a user. */
+  resetPassword: SensitiveDataUser;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
@@ -1649,6 +1641,8 @@ export type Mutation = {
   updateConsent: Consent;
   /** Updates a single crowdfunding */
   updateCrowdfunding: Crowdfunding;
+  /** Updates the current logged in user. */
+  updateCurrentUser: SensitiveDataUser;
   /** Updates an existing event. */
   updateEvent: Event;
   /** Updates an existing memberplan. */
@@ -1661,8 +1655,6 @@ export type Mutation = {
   updatePassword: SensitiveDataUser;
   /** Updates an existing payment method. */
   updatePaymentMethod: PaymentMethod;
-  /** This mutation allows to update the Payment Provider Customers */
-  updatePaymentProviderCustomers: Array<PaymentProviderCustomer>;
   /** Updates a paywall. */
   updatePaywall: Paywall;
   /** Updates an existing peer. */
@@ -1679,8 +1671,8 @@ export type Mutation = {
   updateSystemMail: Array<SystemMailModel>;
   /** Updates an existing tag. */
   updateTag: Tag;
-  /** This mutation allows to update the user's data by taking an input of type UserInput. */
-  updateUser?: Maybe<SensitiveDataUser>;
+  /** Updates an existing user. */
+  updateUser: SensitiveDataUser;
   /**
    *
    *       Updates an existing userConsent based on input.
@@ -1956,6 +1948,23 @@ export type MutationCreateTokenArgs = {
 };
 
 
+export type MutationCreateUserArgs = {
+  active: Scalars['Boolean'];
+  address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
+  email: Scalars['String'];
+  emailVerifiedAt?: InputMaybe<Scalars['DateTime']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  note?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+  properties: Array<PropertyInput>;
+  roleIDs: Array<Scalars['String']>;
+  userImageID?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationCreateUserConsentArgs = {
   consentId: Scalars['String'];
   userId: Scalars['String'];
@@ -2065,6 +2074,11 @@ export type MutationDeleteTokenArgs = {
 };
 
 
+export type MutationDeleteUserArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteUserConsentArgs = {
   id: Scalars['String'];
 };
@@ -2140,8 +2154,16 @@ export type MutationRegisterMemberArgs = {
   challengeAnswer: ChallengeInput;
   email: Scalars['String'];
   firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   password?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationResetPasswordArgs = {
+  id: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
+  sendMail?: InputMaybe<Scalars['Boolean']>;
 };
 
 
@@ -2237,6 +2259,18 @@ export type MutationUpdateCrowdfundingArgs = {
 };
 
 
+export type MutationUpdateCurrentUserArgs = {
+  address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
+  challengeAnswer?: InputMaybe<ChallengeInput>;
+  email?: InputMaybe<Scalars['String']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationUpdateEventArgs = {
   description?: InputMaybe<Scalars['RichText']>;
   endsAt?: InputMaybe<Scalars['DateTime']>;
@@ -2318,11 +2352,6 @@ export type MutationUpdatePaymentMethodArgs = {
 };
 
 
-export type MutationUpdatePaymentProviderCustomersArgs = {
-  input: Array<PaymentProviderCustomerInput>;
-};
-
-
 export type MutationUpdatePaywallArgs = {
   active?: InputMaybe<Scalars['Boolean']>;
   alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
@@ -2395,7 +2424,20 @@ export type MutationUpdateTagArgs = {
 
 
 export type MutationUpdateUserArgs = {
-  input: UserInput;
+  active?: InputMaybe<Scalars['Boolean']>;
+  address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
+  email?: InputMaybe<Scalars['String']>;
+  emailVerifiedAt?: InputMaybe<Scalars['DateTime']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  note?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+  properties?: InputMaybe<Array<PropertyInput>>;
+  roleIDs?: InputMaybe<Array<Scalars['String']>>;
+  userImageID?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2604,6 +2646,20 @@ export type PaginatedEvents = {
   totalCount: Scalars['Int'];
 };
 
+export type PaginatedEventsFromSources = {
+  __typename?: 'PaginatedEventsFromSources';
+  nodes: Array<EventFromSource>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedMemberPlans = {
+  __typename?: 'PaginatedMemberPlans';
+  nodes: Array<MemberPlan>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type PaginatedPages = {
   __typename?: 'PaginatedPages';
   nodes: Array<Page>;
@@ -2611,8 +2667,8 @@ export type PaginatedPages = {
   totalCount: Scalars['Int'];
 };
 
-export type PaginatedPeerArticle = {
-  __typename?: 'PaginatedPeerArticle';
+export type PaginatedPeerArticles = {
+  __typename?: 'PaginatedPeerArticles';
   nodes: Array<PeerArticle>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
@@ -2621,6 +2677,20 @@ export type PaginatedPeerArticle = {
 export type PaginatedPollVotes = {
   __typename?: 'PaginatedPollVotes';
   nodes: Array<PollVote>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedSensitiveDataUsers = {
+  __typename?: 'PaginatedSensitiveDataUsers';
+  nodes: Array<SensitiveDataUser>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedTags = {
+  __typename?: 'PaginatedTags';
+  nodes: Array<Tag>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -2682,11 +2752,6 @@ export type PaymentProvider = {
 
 export type PaymentProviderCustomer = {
   __typename?: 'PaymentProviderCustomer';
-  customerID: Scalars['String'];
-  paymentProviderID: Scalars['String'];
-};
-
-export type PaymentProviderCustomerInput = {
   customerID: Scalars['String'];
   paymentProviderID: Scalars['String'];
 };
@@ -3079,7 +3144,7 @@ export type Query = {
    *       Returns a list of imported events from external sources, transformed to match our model.
    *
    */
-  importedEvents: ImportedEventsDocument;
+  importedEvents: PaginatedEventsFromSources;
   /**
    *
    *       Returns a list of external source ids of already imported events.
@@ -3095,7 +3160,7 @@ export type Query = {
   /** Returns a memberplan by id or slug. */
   memberPlan: MemberPlan;
   /** Returns a paginated list of memberplans based on the filters given. */
-  memberPlans: MemberPlanConnection;
+  memberPlans: PaginatedMemberPlans;
   /** Returns a navigation by id. */
   navigation: Navigation;
   /** Returns a list of navigations. */
@@ -3131,7 +3196,7 @@ export type Query = {
   /** This query takes either the ID or the slug and returns the peer profile. */
   peer?: Maybe<Peer>;
   /** Returns a paginated list of peer articles based on the filters given. */
-  peerArticles: PaginatedPeerArticle;
+  peerArticles: PaginatedPeerArticles;
   /** This query returns the peer profile. */
   peerProfile: PeerProfile;
   /** Returns a list of all peers. */
@@ -3190,10 +3255,12 @@ export type Query = {
   /** Returns an tag by id or tag. */
   tag: Tag;
   /** This query returns a list of tags */
-  tags: TagConnection;
+  tags: PaginatedTags;
   /** Returns a list of all tokens. */
   tokens: Array<Token>;
   upgradeSubscriptionInfo: UpgradeSubscription;
+  /** Returns a user by id. */
+  user: SensitiveDataUser;
   /**
    *
    *       Returns a single userConsent by id.
@@ -3211,6 +3278,8 @@ export type Query = {
   userRole: UserRole;
   /** Returns a paginated list of userroles based on the filters given. */
   userRoles: PaginatedUserRoles;
+  /** Returns a paginated list of users based on the filters given. */
+  users: PaginatedSensitiveDataUsers;
   versionInformation: VersionInformation;
 };
 
@@ -3233,12 +3302,12 @@ export type QueryArticlesArgs = {
 
 export type QueryAuthorArgs = {
   id?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['Slug']>;
+  slug?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryAuthorsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<AuthorFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -3498,7 +3567,7 @@ export type QueryTagArgs = {
 
 
 export type QueryTagsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<TagFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: Scalars['Int'];
@@ -3510,6 +3579,11 @@ export type QueryTagsArgs = {
 export type QueryUpgradeSubscriptionInfoArgs = {
   memberPlanId: Scalars['String'];
   subscriptionId: Scalars['String'];
+};
+
+
+export type QueryUserArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -3542,6 +3616,16 @@ export type QueryUserRolesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<UserRoleSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryUsersArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<UserFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int'];
+  sort?: UserSort;
+  take?: Scalars['Int'];
 };
 
 export type QuoteBlock = BaseBlock & HasImage & {
@@ -3610,16 +3694,22 @@ export type SensitiveDataUser = BaseUser & {
   active: Scalars['Boolean'];
   address?: Maybe<UserAddress>;
   birthday?: Maybe<Scalars['DateTime']>;
+  createdAt: Scalars['DateTime'];
   email: Scalars['String'];
+  emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   firstName?: Maybe<Scalars['String']>;
   flair?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
+  lastLogin?: Maybe<Scalars['DateTime']>;
+  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  note?: Maybe<Scalars['String']>;
   paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
   permissions: Array<Scalars['String']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
+  roles: Array<UserRole>;
   userImageID?: Maybe<Scalars['String']>;
 };
 
@@ -3816,13 +3906,6 @@ export type Tag = {
   tag?: Maybe<Scalars['String']>;
   type: TagType;
   url: Scalars['String'];
-};
-
-export type TagConnection = {
-  __typename?: 'TagConnection';
-  nodes: Array<Tag>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
 };
 
 export type TagFilter = {
@@ -4138,6 +4221,7 @@ export type User = BaseUser & {
   id: Scalars['String'];
   image?: Maybe<Image>;
   name: Scalars['String'];
+  note?: Maybe<Scalars['String']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
   userImageID?: Maybe<Scalars['String']>;
@@ -4191,14 +4275,10 @@ export enum UserEvent {
   TestMail = 'TEST_MAIL'
 }
 
-export type UserInput = {
-  address?: InputMaybe<UserAddressInput>;
-  birthday?: InputMaybe<Scalars['DateTime']>;
-  email: Scalars['String'];
-  firstName?: InputMaybe<Scalars['String']>;
-  flair?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  uploadImageInput?: InputMaybe<UploadImageInput>;
+export type UserFilter = {
+  name?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['String']>;
+  userRole?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type UserRole = {
@@ -4220,6 +4300,13 @@ export type UserRoleFilter = {
 export enum UserRoleSort {
   CreatedAt = 'CreatedAt',
   ModifiedAt = 'ModifiedAt'
+}
+
+export enum UserSort {
+  CreatedAt = 'CreatedAt',
+  FirstName = 'FirstName',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name'
 }
 
 export type UserSubscriptionInput = {
@@ -4332,7 +4419,7 @@ export type FullAuthorFragment = { __typename?: 'Author', id: string, name: stri
 
 export type AuthorQueryVariables = Exact<{
   id?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['Slug']>;
+  slug?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -4340,7 +4427,7 @@ export type AuthorQuery = { __typename?: 'Query', author?: { __typename?: 'Autho
 
 export type AuthorListQueryVariables = Exact<{
   filter?: InputMaybe<AuthorFilter>;
-  cursor?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<AuthorSort>;
@@ -4601,7 +4688,7 @@ export type UploadImageMutationVariables = Exact<{
 }>;
 
 
-export type UploadImageMutation = { __typename?: 'Mutation', uploadUserProfileImage?: { __typename?: 'SensitiveDataUser', permissions: Array<string>, birthday?: string | null, email: string, id: string, name: string, firstName?: string | null, flair?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers?: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> } | null };
+export type UploadImageMutation = { __typename?: 'Mutation', uploadUserProfileImage?: { __typename?: 'SensitiveDataUser', permissions: Array<string>, birthday?: string | null, email: string, id: string, name: string, firstName?: string | null, flair?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers?: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> } | null };
 
 export type FullPaymentMethodFragment = { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
@@ -4726,7 +4813,7 @@ export type MemberPlanListQueryVariables = Exact<{
 }>;
 
 
-export type MemberPlanListQuery = { __typename?: 'Query', memberPlans: { __typename?: 'MemberPlanConnection', totalCount: number, nodes: Array<{ __typename?: 'MemberPlan', id: string, slug: string, name: string, tags?: Array<string> | null, description?: Descendant[] | null, shortDescription?: Descendant[] | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, productType: ProductType, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }>, successPage?: { __typename?: 'Page', url: string } | null, failPage?: { __typename?: 'Page', url: string } | null, confirmationPage?: { __typename?: 'Page', url: string } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type MemberPlanListQuery = { __typename?: 'Query', memberPlans: { __typename?: 'PaginatedMemberPlans', totalCount: number, nodes: Array<{ __typename?: 'MemberPlan', id: string, slug: string, name: string, tags?: Array<string> | null, description?: Descendant[] | null, shortDescription?: Descendant[] | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, currency: Currency, extendable: boolean, productType: ProductType, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }>, successPage?: { __typename?: 'Page', url: string } | null, failPage?: { __typename?: 'Page', url: string } | null, confirmationPage?: { __typename?: 'Page', url: string } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type RevenueQueryVariables = Exact<{
   start: Scalars['DateTime'];
@@ -4864,7 +4951,7 @@ export type TagQuery = { __typename?: 'Query', tag: { __typename?: 'Tag', id: st
 
 export type TagListQueryVariables = Exact<{
   filter?: InputMaybe<TagFilter>;
-  cursor?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']>;
   take?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<SortOrder>;
@@ -4872,7 +4959,7 @@ export type TagListQueryVariables = Exact<{
 }>;
 
 
-export type TagListQuery = { __typename?: 'Query', tags: { __typename?: 'TagConnection', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, type: TagType, main: boolean, url: string }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type TagListQuery = { __typename?: 'Query', tags: { __typename?: 'PaginatedTags', totalCount: number, nodes: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, type: TagType, main: boolean, url: string }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type FullTrackingPixelFragment = { __typename?: 'TrackingPixel', id: string, uri?: string | null };
 
@@ -4888,9 +4975,9 @@ export type FullBaseUserFragment = FullBaseUser_SensitiveDataUser_Fragment | Ful
 
 export type FullUserFragment = { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> };
 
-export type FullSensitiveDataUserFragment = { __typename?: 'SensitiveDataUser', permissions: Array<string>, birthday?: string | null, email: string, id: string, name: string, firstName?: string | null, flair?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers?: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> };
+export type FullSensitiveDataUserFragment = { __typename?: 'SensitiveDataUser', permissions: Array<string>, birthday?: string | null, email: string, id: string, name: string, firstName?: string | null, flair?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers?: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> };
 
-export type FullAddressFragment = { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null };
+export type FullAddressFragment = { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null };
 
 export type FullSessionWithTokenWithoutUserFragment = { __typename?: 'SessionWithTokenWithoutUser', token: string, expiresAt: string, createdAt: string };
 
@@ -4899,7 +4986,7 @@ export type FullSessionWithTokenFragment = { __typename?: 'SessionWithToken', to
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'SensitiveDataUser', permissions: Array<string>, birthday?: string | null, email: string, id: string, name: string, firstName?: string | null, flair?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers?: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'SensitiveDataUser', permissions: Array<string>, birthday?: string | null, email: string, id: string, name: string, firstName?: string | null, flair?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers?: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> } | null };
 
 export type LoginWithCredentialsMutationVariables = Exact<{
   email: Scalars['String'];
@@ -4925,6 +5012,7 @@ export type LoginWithJwtMutation = { __typename?: 'Mutation', createSessionWithJ
 
 export type RegisterMutationVariables = Exact<{
   name: Scalars['String'];
+  flair?: InputMaybe<Scalars['String']>;
   firstName?: InputMaybe<Scalars['String']>;
   birthday?: InputMaybe<Scalars['DateTime']>;
   address?: InputMaybe<UserAddressInput>;
@@ -4934,14 +5022,20 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', registerMember: { __typename?: 'Registration', user: { __typename?: 'SensitiveDataUser', permissions: Array<string>, birthday?: string | null, email: string, id: string, name: string, firstName?: string | null, flair?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers?: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> }, session: { __typename?: 'SessionWithTokenWithoutUser', token: string, expiresAt: string, createdAt: string } } };
+export type RegisterMutation = { __typename?: 'Mutation', registerMember: { __typename?: 'Registration', user: { __typename?: 'SensitiveDataUser', permissions: Array<string>, birthday?: string | null, email: string, id: string, name: string, firstName?: string | null, flair?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers?: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> }, session: { __typename?: 'SessionWithTokenWithoutUser', token: string, expiresAt: string, createdAt: string } } };
 
 export type UpdateUserMutationVariables = Exact<{
-  input: UserInput;
+  firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+  address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'SensitiveDataUser', permissions: Array<string>, birthday?: string | null, email: string, id: string, name: string, firstName?: string | null, flair?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers?: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> } | null };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateCurrentUser: { __typename?: 'SensitiveDataUser', permissions: Array<string>, birthday?: string | null, email: string, id: string, name: string, firstName?: string | null, flair?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers?: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> } };
 
 export type UpdatePasswordMutationVariables = Exact<{
   password: Scalars['String'];
@@ -4949,7 +5043,7 @@ export type UpdatePasswordMutationVariables = Exact<{
 }>;
 
 
-export type UpdatePasswordMutation = { __typename?: 'Mutation', updatePassword: { __typename?: 'SensitiveDataUser', permissions: Array<string>, birthday?: string | null, email: string, id: string, name: string, firstName?: string | null, flair?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers?: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> } };
+export type UpdatePasswordMutation = { __typename?: 'Mutation', updatePassword: { __typename?: 'SensitiveDataUser', permissions: Array<string>, birthday?: string | null, email: string, id: string, name: string, firstName?: string | null, flair?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers?: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> } };
 
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -6024,7 +6118,9 @@ export const FullAddressFragmentDoc = gql`
     fragment FullAddress on UserAddress {
   company
   streetAddress
+  streetAddressNumber
   streetAddress2
+  streetAddress2Number
   zipCode
   city
   country
@@ -6317,7 +6413,7 @@ export type DislikeArticleMutationHookResult = ReturnType<typeof useDislikeArtic
 export type DislikeArticleMutationResult = Apollo.MutationResult<DislikeArticleMutation>;
 export type DislikeArticleMutationOptions = Apollo.BaseMutationOptions<DislikeArticleMutation, DislikeArticleMutationVariables>;
 export const AuthorDocument = gql`
-    query Author($id: String, $slug: Slug) {
+    query Author($id: String, $slug: String) {
   author(id: $id, slug: $slug) {
     ...FullAuthor
   }
@@ -6353,10 +6449,10 @@ export type AuthorQueryHookResult = ReturnType<typeof useAuthorQuery>;
 export type AuthorLazyQueryHookResult = ReturnType<typeof useAuthorLazyQuery>;
 export type AuthorQueryResult = Apollo.QueryResult<AuthorQuery, AuthorQueryVariables>;
 export const AuthorListDocument = gql`
-    query AuthorList($filter: AuthorFilter, $cursor: String, $take: Int, $skip: Int, $sort: AuthorSort, $order: SortOrder) {
+    query AuthorList($filter: AuthorFilter, $cursorId: String, $take: Int, $skip: Int, $sort: AuthorSort, $order: SortOrder) {
   authors(
     filter: $filter
-    cursor: $cursor
+    cursorId: $cursorId
     sort: $sort
     order: $order
     take: $take
@@ -6389,7 +6485,7 @@ export const AuthorListDocument = gql`
  * const { data, loading, error } = useAuthorListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      cursor: // value for 'cursor'
+ *      cursorId: // value for 'cursorId'
  *      take: // value for 'take'
  *      skip: // value for 'skip'
  *      sort: // value for 'sort'
@@ -7792,10 +7888,10 @@ export type TagQueryHookResult = ReturnType<typeof useTagQuery>;
 export type TagLazyQueryHookResult = ReturnType<typeof useTagLazyQuery>;
 export type TagQueryResult = Apollo.QueryResult<TagQuery, TagQueryVariables>;
 export const TagListDocument = gql`
-    query TagList($filter: TagFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
+    query TagList($filter: TagFilter, $cursorId: String, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
   tags(
     filter: $filter
-    cursor: $cursor
+    cursorId: $cursorId
     take: $take
     skip: $skip
     order: $order
@@ -7828,7 +7924,7 @@ export const TagListDocument = gql`
  * const { data, loading, error } = useTagListQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      cursor: // value for 'cursor'
+ *      cursorId: // value for 'cursorId'
  *      take: // value for 'take'
  *      skip: // value for 'skip'
  *      order: // value for 'order'
@@ -7980,9 +8076,10 @@ export type LoginWithJwtMutationHookResult = ReturnType<typeof useLoginWithJwtMu
 export type LoginWithJwtMutationResult = Apollo.MutationResult<LoginWithJwtMutation>;
 export type LoginWithJwtMutationOptions = Apollo.BaseMutationOptions<LoginWithJwtMutation, LoginWithJwtMutationVariables>;
 export const RegisterDocument = gql`
-    mutation Register($name: String!, $firstName: String, $birthday: DateTime, $address: UserAddressInput, $email: String!, $password: String, $challengeAnswer: ChallengeInput!) {
+    mutation Register($name: String!, $flair: String, $firstName: String, $birthday: DateTime, $address: UserAddressInput, $email: String!, $password: String, $challengeAnswer: ChallengeInput!) {
   registerMember(
     name: $name
+    flair: $flair
     firstName: $firstName
     birthday: $birthday
     address: $address
@@ -8016,6 +8113,7 @@ export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, Regis
  * const [registerMutation, { data, loading, error }] = useRegisterMutation({
  *   variables: {
  *      name: // value for 'name'
+ *      flair: // value for 'flair'
  *      firstName: // value for 'firstName'
  *      birthday: // value for 'birthday'
  *      address: // value for 'address'
@@ -8033,8 +8131,16 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const UpdateUserDocument = gql`
-    mutation UpdateUser($input: UserInput!) {
-  updateUser(input: $input) {
+    mutation UpdateUser($firstName: String, $flair: String, $name: String, $email: String, $password: String, $address: UserAddressInput, $birthday: DateTime) {
+  updateCurrentUser(
+    name: $name
+    firstName: $firstName
+    flair: $flair
+    email: $email
+    password: $password
+    address: $address
+    birthday: $birthday
+  ) {
     ...FullSensitiveDataUser
   }
 }
@@ -8054,7 +8160,13 @@ export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, U
  * @example
  * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
  *   variables: {
- *      input: // value for 'input'
+ *      firstName: // value for 'firstName'
+ *      flair: // value for 'flair'
+ *      name: // value for 'name'
+ *      email: // value for 'email'
+ *      password: // value for 'password'
+ *      address: // value for 'address'
+ *      birthday: // value for 'birthday'
  *   },
  * });
  */

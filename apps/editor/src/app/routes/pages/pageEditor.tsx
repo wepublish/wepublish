@@ -1,12 +1,10 @@
 import styled from '@emotion/styled';
-import {
-  useCreateJwtForWebsiteLoginLazyQuery,
-  useMeQuery,
-} from '@wepublish/editor/api';
+import { useCreateJwtForWebsiteLoginLazyQuery } from '@wepublish/editor/api';
 import {
   CreatePageMutationVariables,
   getApiClientV2,
   useCreatePageMutation,
+  useMeQuery,
   usePageQuery,
   usePublishPageMutation,
   useUpdatePageMutation,
@@ -137,6 +135,7 @@ function PageEditor() {
     skip: !pageID,
   });
   const { data: user } = useMeQuery({
+    client,
     fetchPolicy: 'cache-only',
   });
   const [createJWT] = useCreateJwtForWebsiteLoginLazyQuery({

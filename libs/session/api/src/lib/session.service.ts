@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaClient, User, UserEvent } from '@prisma/client';
-import { SessionWithToken } from './session.model';
 import { InvalidCredentialsError, NotActiveError } from './session.errors';
 import nanoid from 'nanoid/generate';
 import { UserAuthenticationService } from './user-authentication.service';
@@ -9,6 +8,7 @@ import { UserSession } from '@wepublish/authentication/api';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
 import { Validator } from './validator';
+import { UserService } from '@wepublish/user/api';
 import {
   FIFTEEN_MINUTES_IN_MILLISECONDS,
   logger,
@@ -26,15 +26,13 @@ export class SessionService {
     private prisma: PrismaClient,
     @Inject(SESSION_TTL_TOKEN) private sessionTTL: number,
     private userAuthenticationService: UserAuthenticationService,
+    private userService: UserService,
     private jwtAuthenticationService: JwtAuthenticationService,
     private settingsService: SettingsService,
     private mailContext: MailContext
   ) {}
 
-  async createSessionWithEmailAndPassword(
-    email: string,
-    password: string
-  ): Promise<SessionWithToken> {
+  async createSessionWithEmailAndPassword(email: string, password: string) {
     const user =
       await this.userAuthenticationService.authenticateUserWithEmailAndPassword(
         email,
@@ -47,7 +45,7 @@ export class SessionService {
     return this.createUserSession(user);
   }
 
-  async createSessionWithJWT(jwt: string): Promise<SessionWithToken> {
+  async createSessionWithJWT(jwt: string) {
     const user =
       await this.jwtAuthenticationService.authenticateUserWithJWT(jwt);
 
@@ -74,7 +72,7 @@ export class SessionService {
     }));
   }
 
-  async createUserSession(user: User): Promise<SessionWithToken> {
+  async createUserSession(user: User) {
     const token = nanoid(IDAlphabet, 64);
 
     const expiresAt = new Date(Date.now() + this.sessionTTL);
@@ -100,11 +98,14 @@ export class SessionService {
   }
 
   async sendWebsiteLogin(email: string) {
-    email = email.toLowerCase();
     Validator.login.parse({ email });
 
-    const user = await this.userAuthenticationService.getUserByEmail(email);
-    if (!user) return;
+    const user = await this.userService.getUserByEmail(email);
+
+    if (!user) {
+      return;
+    }
+
     const lastSendTimeStamp = user.properties.find(
       property => property?.key === USER_PROPERTY_LAST_LOGIN_LINK_SEND
     );
@@ -118,12 +119,14 @@ export class SessionService {
         'User with ID %s requested Login Link multiple times in 15 min time window',
         user.id
       );
+
       return email;
     }
 
     const resetPwdSetting = await this.settingsService.settingByName(
       SettingName.RESET_PASSWORD_JWT_EXPIRES_MIN
     );
+
     const resetPwd =
       (resetPwdSetting?.value as number) ??
       parseInt(process.env.RESET_PASSWORD_JWT_EXPIRES_MIN ?? '');
@@ -135,6 +138,7 @@ export class SessionService {
     const remoteTemplate = await this.mailContext.getUserTemplateName(
       UserEvent.LOGIN_LINK
     );
+
     await this.mailContext.sendMail({
       externalMailTemplateId: remoteTemplate,
       recipient: user,

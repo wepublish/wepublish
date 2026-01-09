@@ -4,7 +4,6 @@ import {
   PollAnswerWithVoteCount,
   TagType,
   usePollLazyQuery,
-  UserFilter,
 } from '@wepublish/editor/api';
 import {
   ArticleFilter,
@@ -19,6 +18,7 @@ import {
   Scalars,
   useEventProvidersLazyQuery,
   usePeerListLazyQuery,
+  UserFilter,
   useUserRoleListLazyQuery,
 } from '@wepublish/editor/api-v2';
 import { useEffect, useState } from 'react';
