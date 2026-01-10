@@ -33,14 +33,14 @@ import { TsriArticle } from '../components/tsri-article';
 import { TsriArticleDate } from '../components/tsri-article-date';
 import { TsriArticleList } from '../components/tsri-article-list';
 import { TsriArticleMeta } from '../components/tsri-article-meta';
-import { TSRIAuthor } from '../components/tsri-author';
-import { TSRIAuthorLinks } from '../components/tsri-author-links';
-import { TSRIAuthorList } from '../components/tsri-author-list';
+import { TsriAuthor } from '../components/tsri-author';
+import { TsriAuthorLinks } from '../components/tsri-author-links';
+import { TsriAuthorList } from '../components/tsri-author-list';
 import { TsriBanner } from '../components/tsri-banner';
 import { TsriBlockRenderer } from '../components/tsri-block-renderer';
 import { TsriBreakBlock } from '../components/tsri-break-block';
 import { TsriContextBox } from '../components/tsri-context-box';
-import { TSRIFooter } from '../components/tsri-footer';
+import { TsriFooter } from '../components/tsri-footer';
 import { TsriQuoteBlock } from '../components/tsri-quote-block';
 import { TsriRichText } from '../components/tsri-richtext';
 import { TsriTitleBlock } from '../components/tsri-title-block';
@@ -104,15 +104,15 @@ export const WithWebsiteBuilderProvider = (
   props: ComponentProps<typeof WebsiteBuilderProvider>
 ) => (
   <WebsiteBuilderProvider
-    Footer={TSRIFooter}
+    Footer={TsriFooter}
     Navbar={TsriV2Navbar}
     Article={TsriArticle}
     ArticleDate={TsriArticleDate}
     ArticleMeta={TsriArticleMeta}
     ArticleList={TsriArticleList}
-    Author={TSRIAuthor}
-    AuthorLinks={TSRIAuthorLinks}
-    AuthorList={TSRIAuthorList}
+    Author={TsriAuthor}
+    AuthorLinks={TsriAuthorLinks}
+    AuthorList={TsriAuthorList}
     blocks={{
       BaseTeaser: TsriBaseTeaser,
       TeaserSlots: TsriBaseTeaserSlots,
@@ -146,15 +146,15 @@ export const WithWebsiteProviderDecorator = (Story: ComponentType) => {
       <WebsiteBuilderProvider
         Head={Head}
         Script={Script}
-        Footer={TSRIFooter}
+        Footer={TsriFooter}
         Navbar={TsriV2Navbar}
         Article={TsriArticle}
         ArticleDate={TsriArticleDate}
         ArticleMeta={TsriArticleMeta}
         ArticleList={TsriArticleList}
-        Author={TSRIAuthor}
-        AuthorLinks={TSRIAuthorLinks}
-        AuthorList={TSRIAuthorList}
+        Author={TsriAuthor}
+        AuthorLinks={TsriAuthorLinks}
+        AuthorList={TsriAuthorList}
         blocks={{
           BaseTeaser: TsriBaseTeaser,
           TeaserSlots: TsriBaseTeaserSlots,
