@@ -1,6 +1,6 @@
 type TextToIconProps = {
   title: string;
-  size?: number;
+  size: number;
 };
 
 export type BuilderTextToIconProps = TextToIconProps & { className?: string };

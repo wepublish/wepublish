@@ -85,7 +85,7 @@ export default function ArticleBySlugOrId() {
           </AfterArticleAuthorWrapper>
         ))}
 
-        {!data.article.disableComments && (
+        {data?.article.disableComments && (
           <AfterArticleWrapper>
             <AfterArticleTitle
               component={'h2'}
