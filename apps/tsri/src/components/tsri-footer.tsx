@@ -407,7 +407,7 @@ export const FooterCategoryLinks = styled(CategoryLinkList)`
 
 export const FooterMainLinks = styled(FooterCategoryLinks)``;
 
-export const TSRIFooter = styled(Footer)``;
+export const TsriFooter = styled(Footer)``;
 
 export const FooterPaper = ({
   main,
