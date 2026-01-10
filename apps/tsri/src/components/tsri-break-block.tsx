@@ -40,7 +40,7 @@ export const BreakBlockHeading = styled('div')`
 
 export const BreakBlockSegment = styled('div')`
   display: grid;
-  align-items: center;
+  align-items: start;
 `;
 
 export const BreakBlockImage = styled(Image)`
@@ -59,10 +59,11 @@ export const BreakBlockButton = styled(Button)`
   justify-self: end;
   padding-right: 8cqw;
   margin-top: 4cqw;
+  transition: all 0s;
 
   &:hover {
-    background-color: rgb(12, 159, 237);
-    color: white;
+    background-color: rgb(12, 159, 237) !important;
+    color: white !important;
   }
 `;
 
@@ -95,6 +96,7 @@ const secondSegmentStyles = css`
   grid-row: 2 / 3;
   padding: 0 1cqw 1cqw 0;
   margin-left: 1.5cqw;
+  grid-template-rows: auto min-content;
 `;
 
 export const BreakBlock = ({
