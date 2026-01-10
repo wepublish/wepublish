@@ -9,6 +9,7 @@ import {
 } from '@wepublish/article/website';
 import { LoginForm, RegistrationForm } from '@wepublish/authentication/website';
 import {
+  ArticleAuthor,
   Author,
   AuthorChip,
   AuthorLinks,
@@ -114,6 +115,7 @@ import {
   Pagination,
   Paragraph,
   Rating,
+  TextToIcon,
   theme,
   UnorderedList,
 } from '@wepublish/ui';
@@ -182,6 +184,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
           AuthorChip={AuthorChip}
           AuthorList={AuthorList}
           AuthorListItem={AuthorListItem}
+          ArticleAuthor={ArticleAuthor}
           ArticleList={ArticleList}
           Article={Article}
           ArticleDate={ArticleDate}
@@ -223,6 +226,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
           Paywall={Paywall}
           Tag={Tag}
           TagSEO={TagSEO}
+          TextToIcon={TextToIcon}
           elements={{
             TextField,
             Rating,

@@ -20,7 +20,9 @@ export const TsriArticle = styled(ArticleDefault)`
 
   ${ArticleInfoWrapper} {
     grid-row-start: 3;
-    outline: 5px solid yellow;
+    display: grid;
+    gap: 0;
+    grid-template-columns: min-content 1fr min-content;
   }
 
   ${ImageBlockImage} {

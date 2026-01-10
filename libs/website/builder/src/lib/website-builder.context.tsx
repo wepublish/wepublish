@@ -128,6 +128,7 @@ import { BuilderContentWrapperProps } from './content-wrapper.interface';
 import { BuilderTeaserProps } from './teaser.interface';
 import { BuilderPaywallProps } from './paywall.interface';
 import { BuilderTagProps, BuilderTagSEOProps } from './tag.interface';
+import { BuilderTextToIconProps } from './text-to-icon.interface';
 
 const NoComponent: any = () => null;
 
@@ -152,6 +153,7 @@ export type WebsiteBuilderProps = {
   AuthorChip: ComponentType<BuilderAuthorChipProps>;
   AuthorListItem: ComponentType<BuilderAuthorListItemProps>;
   AuthorList: ComponentType<BuilderAuthorListProps>;
+  ArticleAuthor: ComponentType<BuilderAuthorChipProps>;
   ArticleList: ComponentType<BuilderArticleListProps>;
   ArticleAuthors: ComponentType<BuilderArticleAuthorsProps>;
   Banner: ComponentType<BuilderBannerProps>;
@@ -182,6 +184,7 @@ export type WebsiteBuilderProps = {
   Subscribe: ComponentType<BuilderSubscribeProps>;
   ContentWrapper: ComponentType<BuilderContentWrapperProps>;
   Paywall: ComponentType<BuilderPaywallProps>;
+  TextToIcon: ComponentType<BuilderTextToIconProps>;
 
   elements: {
     Rating: ComponentType<BuilderRatingProps>;
@@ -294,6 +297,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   ArticleDate: NoComponent,
   ArticleAuthors: NoComponent,
   PeerInformation: NoComponent,
+  ArticleAuthor: NoComponent,
   Author: NoComponent,
   AuthorLinks: NoComponent,
   AuthorChip: NoComponent,
@@ -317,6 +321,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   PersonalDataForm: NoComponent,
   ContentWrapper: NoComponent,
   Paywall: NoComponent,
+  TextToIcon: NoComponent,
 
   elements: {
     Rating: NoComponent,

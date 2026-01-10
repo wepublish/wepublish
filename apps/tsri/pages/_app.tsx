@@ -38,19 +38,22 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import { TsriArticle } from '../src/components/tsri-article';
+import { TsriArticleAuthor } from '../src/components/tsri-article-author';
+import { TsriArticleAuthors } from '../src/components/tsri-article-authors';
 import { TsriArticleDate } from '../src/components/tsri-article-date';
 import { TsriArticleList } from '../src/components/tsri-article-list';
 import { TsriArticleMeta } from '../src/components/tsri-article-meta';
-import { TSRIAuthor } from '../src/components/tsri-author';
+import { TsriAuthor } from '../src/components/tsri-author';
 import { TsriAuthorChip } from '../src/components/tsri-author-chip';
-import { TSRIAuthorLinks } from '../src/components/tsri-author-links';
-import { TSRIAuthorList } from '../src/components/tsri-author-list';
+import { TsriAuthorLinks } from '../src/components/tsri-author-links';
+import { TsriAuthorList } from '../src/components/tsri-author-list';
 import { TsriBanner } from '../src/components/tsri-banner';
 import { TsriBreakBlock } from '../src/components/tsri-break-block';
 import { TsriContextBox } from '../src/components/tsri-context-box';
 import { TsriNavbar } from '../src/components/tsri-navbar';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
+import { TsriTextToIcon } from '../src/components/tsri-text-to-icon';
 import { TsriTitleBlock } from '../src/components/tsri-title-block';
 import { TsriTeaser } from '../src/components/tsri-teaser';
 import theme from '../src/theme';
@@ -126,10 +129,13 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           ArticleMeta={TsriArticleMeta}
           ArticleList={TsriArticleList}
           PaymentAmount={PaymentAmountPicker}
-          Author={TSRIAuthor}
+          ArticleAuthor={TsriArticleAuthor}
+          ArticleAuthors={TsriArticleAuthors}
+          Author={TsriAuthor}
           AuthorChip={TsriAuthorChip}
-          AuthorLinks={TSRIAuthorLinks}
-          AuthorList={TSRIAuthorList}
+          AuthorLinks={TsriAuthorLinks}
+          AuthorList={TsriAuthorList}
+          TextToIcon={TsriTextToIcon}
           elements={{ Link: NextWepublishLink }}
           blocks={{
             BaseTeaser: TsriTeaser,
