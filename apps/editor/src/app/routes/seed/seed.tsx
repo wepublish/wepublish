@@ -2,7 +2,13 @@ import { useApolloClient } from '@apollo/client';
 import { faker } from '@faker-js/faker';
 import { capitalize } from '@mui/material';
 import {
+  CommentAuthorType,
+  CommentItemType,
+  CommentListDocument,
+  CommentState,
   ImageListDocument,
+  useCreateCommentMutation,
+  useDeleteCommentMutation,
   useDeleteImageMutation,
   useUploadImageMutation,
 } from '@wepublish/editor/api';
@@ -24,6 +30,7 @@ import {
   EventListDocument,
   FlexBlockInput,
   getApiClientV2,
+  ImageBlockInput,
   //ImageBlock,
   NavigationLinkType,
   NavigationListDocument,
@@ -201,21 +208,52 @@ async function seedAuthors(createAuthor: any, imageIds: string[] = []) {
   };
 
   return Promise.all(
-    Array.from({ length: 10 }, (_, i) =>
-      createAuthor({
+    Array.from({ length: 10 }, (_, i) => {
+      const accounts = [
+        'github',
+        'reddit',
+        //'vimeo',
+        'discord',
+        //'bluesky',
+        'youtube',
+        //'strava',
+        'twitter',
+        'tiktok',
+        'facebook',
+        'instagram',
+        'linkedin',
+        'email',
+        'website',
+      ];
+      return createAuthor({
         variables: {
           ...nameAndSlug(),
-          bio: getText(4, 9),
+          bio: getText(1, 2) as Descendant[],
           jobTitle: faker.person.jobTitle(),
           imageID: imageIds[imageIds.length - 1 - i],
-          links: [],
+          links: Array.from(
+            { length: faker.number.int({ min: 1, max: 5 }) },
+            () => {
+              const account = accounts.splice(
+                shuffle(Array.from(accounts, (e, i) => i)).at(0)!,
+                1
+              )[0];
+              return {
+                title: account,
+                url:
+                  account === 'email' ?
+                    faker.internet.email()
+                  : faker.internet.url(),
+              };
+            }
+          ),
           tagIds: [],
           hideOnArticle: false,
           hideOnTeaser: false,
           hideOnTeam: false,
         },
-      })
-    )
+      });
+    })
   );
 }
 
@@ -244,13 +282,30 @@ const createArticleInput = (
             return pick.length ? pick[0][0] : undefined;
           })
           .filter(authorId => !!authorId)
-      ).slice(0, faker.number.int({ min: 1, max: 3 })),
+      ).slice(0, 1), //faker.number.int({ min: 1, max: 3 })),
       imageID: imageIds[i],
       breaking: pickRandom(true, 0.1).length ? true : false,
       paywallId: null,
       hidden: false,
       disableComments: false,
-      tagIds: tagIds.length ? [tagIds[i % tagIds.length]] : [],
+      tagIds: (() => {
+        if (tagIds.length) {
+          let _tagIds = [...tagIds];
+          let picks: string[] | never[] = [];
+          for (let i = 0; i < 4; i++) {
+            picks = [
+              ...picks,
+              ...pickRandom(
+                (_tagIds = shuffle(_tagIds)).splice(0, 1)[0],
+                Math.random()
+              ),
+            ];
+          }
+          picks = picks.filter((tagId, i) => !!tagId);
+          return [..._tagIds.splice(i % tagIds.length, 1), ...picks];
+        }
+        return [];
+      })(),
       canonicalUrl: faker.internet.url(),
       properties: [],
       blocks: [
@@ -265,14 +320,50 @@ const createArticleInput = (
           image: {
             imageID: imageIds[(i + 1) % imageIds.length],
             caption: faker.lorem.sentence(),
-          },
+          } as ImageBlockInput,
         } as BlockContentInput,
         {
           richText: {
             richText: getText(3, 7),
           } as RichTextBlockInput,
         } as BlockContentInput,
+
+        ...Array.from({ length: faker.number.int({ min: 6, max: 12 }) }, () => {
+          const imageBlock = pickRandom<BlockContentInput>(
+            {
+              image: {
+                imageID:
+                  imageIds[
+                    faker.number.int({ min: 0, max: imageIds.length - 1 })
+                  ],
+                caption: faker.lorem.sentence(),
+              } as ImageBlockInput,
+            },
+            0.1
+          );
+          const richTextBlock = {
+            richText: {
+              richText: [
+                {
+                  type: 'heading-three',
+                  children: [
+                    {
+                      text: capitalize(faker.lorem.words({ min: 3, max: 9 })),
+                    },
+                  ],
+                },
+                ...(getText(3, 5) as Descendant[]),
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput;
+          if (imageBlock.length) {
+            return imageBlock[0];
+          } else {
+            return richTextBlock;
+          }
+        }),
       ] as BlockContentInput[],
+
       hideAuthor: false,
       socialMediaTitle: `Social Media - ${title}`,
       socialMediaDescription: faker.lorem.paragraph(),
@@ -283,7 +374,7 @@ const createArticleInput = (
   };
 };
 
-const nrOfArticlesPerTag = 6;
+const nrOfArticlesPerTag = 7;
 async function seedArticlesByTag(
   createArticle: any,
   tagIds: string[] = [],
@@ -789,13 +880,23 @@ async function seedPages(
 
           {
             linkPageBreak: {
-              blockStyle: getBlockStyle(blockStyles, 'LinkPageBreak'),
+              blockStyle: undefined,
               hideButton: false,
               imageID: imageIds[imageIds.length - 15],
               linkTarget: null,
-              linkText: faker.lorem.words({ min: 1, max: 3 }),
+              linkText: capitalize(faker.lorem.words({ min: 1, max: 3 })),
               linkURL: 'https://shop.tsri.ch/products/cap-tsuri',
-              richText: getText(2, 2) as Descendant[],
+              richText: [
+                {
+                  type: 'heading-two',
+                  children: [
+                    {
+                      text: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    },
+                  ],
+                },
+                ...(getText(2, 2) as Descendant[]),
+              ] as Descendant[],
               text: 'Shop',
             } as BreakBlockInput,
           } as BlockContentInput,
@@ -929,6 +1030,61 @@ async function seedPages(
   ]);
 
   return pages;
+}
+
+async function seedComments(
+  createComment: any,
+  articleIds: string[],
+  imageIds: string[] = []
+) {
+  const comments = await Promise.all(
+    articleIds.flatMap(async articleId => {
+      const firstBatchOfComments = await Promise.all(
+        Array.from({ length: faker.number.int({ min: 0, max: 8 }) }, () =>
+          createComment({
+            variables: {
+              text: getText(2, 4) as Descendant[],
+              tagIds: [],
+              itemID: articleId,
+              parentID: null,
+              itemType: CommentItemType.Article,
+              authorType: CommentAuthorType.GuestUser,
+              source: capitalize(faker.lorem.words({ min: 3, max: 8 })),
+              state: CommentState.Approved,
+              guestUsername: faker.person.fullName(),
+              guestUserImageID: shuffle(imageIds).at(0),
+            },
+          })
+        )
+      );
+
+      const repliesToFirstBatchOfComments = await Promise.all(
+        firstBatchOfComments.flatMap(async parentComment => {
+          return Promise.all(
+            Array.from({ length: faker.number.int({ min: 0, max: 4 }) }, () =>
+              createComment({
+                variables: {
+                  text: getText(1, 3) as Descendant[],
+                  tagIds: [],
+                  itemID: articleId,
+                  parentID: parentComment.data.createComment.id,
+                  itemType: CommentItemType.Article,
+                  authorType: CommentAuthorType.GuestUser,
+                  source: capitalize(faker.lorem.words({ min: 3, max: 8 })),
+                  state: CommentState.Approved,
+                  guestUsername: faker.person.fullName(),
+                  guestUserImageID: shuffle(imageIds).at(0),
+                },
+              })
+            )
+          );
+        })
+      );
+
+      return [...firstBatchOfComments, ...repliesToFirstBatchOfComments];
+    })
+  );
+  return comments;
 }
 
 async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
@@ -1300,6 +1456,32 @@ async function fetchAllPages(client: any) {
 
   return all;
 }
+
+async function fetchAllComments(clientV1: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await clientV1.query({
+      query: CommentListDocument,
+      variables: {
+        filter: {},
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.comments?.nodes ?? []) as Array<{ id: string }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.comments?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
 // end fetch all functions
 
 async function handleDelete(
@@ -1311,6 +1493,7 @@ async function handleDelete(
   deleteImage: ReturnType<typeof useDeleteImageMutation>[0],
   deleteEvent: ReturnType<typeof useDeleteEventMutation>[0],
   deleteBlockStyle: ReturnType<typeof useDeleteBlockStyleMutation>[0],
+  deleteComment: ReturnType<typeof useDeleteCommentMutation>[0],
   client: any,
   clientV1: any,
   params?: URLSearchParams
@@ -1324,6 +1507,7 @@ async function handleDelete(
     allPages,
     allEvents,
     allBlockStyles,
+    allComments,
   ] = await Promise.all([
     fetchAllTags(client),
     fetchAllAuthors(client),
@@ -1335,6 +1519,7 @@ async function handleDelete(
     fetchAllPages(client),
     fetchAllEvents(client),
     fetchAllBlockStyles(client),
+    fetchAllComments(clientV1),
   ]);
 
   await Promise.all(
@@ -1399,6 +1584,13 @@ async function handleDelete(
       })
     )
   );
+  await Promise.all(
+    allComments.map(comment =>
+      deleteComment({
+        variables: { deleteCommentId: comment.id },
+      })
+    )
+  );
 }
 
 async function handleSeed(
@@ -1411,6 +1603,7 @@ async function handleSeed(
   createNavigation: ReturnType<typeof useCreateNavigationMutation>[0],
   createEvent: ReturnType<typeof useCreateEventMutation>[0],
   createPage: ReturnType<typeof useCreatePageMutation>[0],
+  createComment: ReturnType<typeof useCreateCommentMutation>[0],
   publishPage: ReturnType<typeof usePublishPageMutation>[0],
   fetchAllImages: (clientV1: any) => Promise<Array<{ id: string }>>,
   clientV1: any,
@@ -1470,6 +1663,12 @@ async function handleSeed(
       },
     });
   }
+
+  const comments = await seedComments(
+    createComment,
+    articles.map(article => article.data?.createArticle.id),
+    images
+  );
 }
 
 type SeedProps = { type?: string };
@@ -1487,6 +1686,7 @@ export const Seed = ({ type }: SeedProps) => {
   const [deleteImage] = useDeleteImageMutation();
   const [deleteEvent] = useDeleteEventMutation({ client });
   const [deleteBlockStyle] = useDeleteBlockStyleMutation({ client });
+  const [deleteComment] = useDeleteCommentMutation();
   // end delete hooks
 
   // create hooks
@@ -1506,6 +1706,7 @@ export const Seed = ({ type }: SeedProps) => {
     },
     client,
   });
+  const [createComment] = useCreateCommentMutation();
   const [publishArticle] = usePublishArticleMutation({ client });
   const [publishPage] = usePublishPageMutation({ client });
   //const { data: blockStylesData } = useBlockStylesQuery({ client });
@@ -1581,6 +1782,7 @@ export const Seed = ({ type }: SeedProps) => {
                 createNavigation,
                 createEvent,
                 createPage,
+                createComment,
                 publishPage,
                 fetchAllImages,
                 clientV1,
@@ -1617,6 +1819,7 @@ export const Seed = ({ type }: SeedProps) => {
                 deleteImage,
                 deleteEvent,
                 deleteBlockStyle,
+                deleteComment,
                 client,
                 clientV1,
                 params
