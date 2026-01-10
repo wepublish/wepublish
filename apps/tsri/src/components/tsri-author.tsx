@@ -65,7 +65,7 @@ const AuthorHeading = styled('h1')`
   font-weight: 700 !important;
 `;
 
-export function TSRIAuthor({
+export function TsriAuthor({
   className,
   data,
   loading,

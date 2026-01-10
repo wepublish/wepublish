@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { TextToIcon } from '@wepublish/ui';
 import { BuilderAuthorLinksProps, Link } from '@wepublish/website/builder';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
 
 export const AuthorLinksWrapper = styled('aside')`
   display: grid;
@@ -15,6 +15,7 @@ export const AuthorLink = styled(Link)`
 `;
 
 export function AuthorLinks({ links, className }: BuilderAuthorLinksProps) {
+  const { TextToIcon } = useWebsiteBuilder();
   return (
     <AuthorLinksWrapper className={className}>
       {links.map((link, index) => (

@@ -43,20 +43,24 @@ import { TsriBaseTeaserGridFlex } from '../src/components/teaser-layouts/tsri-ba
 import { TsriBaseTeaserSlots } from '../src/components/teaser-layouts/tsri-base-teaser-slots';
 import { TsriBaseTeaser } from '../src/components/teasers/tsri-base-teaser';
 import { TsriArticle } from '../src/components/tsri-article';
+import { TsriArticleAuthor } from '../src/components/tsri-article-author';
+import { TsriArticleAuthors } from '../src/components/tsri-article-authors';
 import { TsriArticleDate } from '../src/components/tsri-article-date';
 import { TsriArticleList } from '../src/components/tsri-article-list';
 import { TsriArticleMeta } from '../src/components/tsri-article-meta';
-import { TSRIAuthor } from '../src/components/tsri-author';
-import { TSRIAuthorLinks } from '../src/components/tsri-author-links';
-import { TSRIAuthorList } from '../src/components/tsri-author-list';
+import { TsriAuthor } from '../src/components/tsri-author';
+import { TsriAuthorChip } from '../src/components/tsri-author-chip';
+import { TsriAuthorLinks } from '../src/components/tsri-author-links';
+import { TsriAuthorList } from '../src/components/tsri-author-list';
 import { TsriBanner } from '../src/components/tsri-banner';
 import { TsriBlockRenderer } from '../src/components/tsri-block-renderer';
 import { TsriBreakBlock } from '../src/components/tsri-break-block';
 import { TsriContextBox } from '../src/components/tsri-context-box';
-import { TSRIFooter } from '../src/components/tsri-footer';
+import { TsriFooter } from '../src/components/tsri-footer';
 import { TsriNextWepublishLink } from '../src/components/tsri-next-wepublish-link';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
+import { TsriTextToIcon } from '../src/components/tsri-text-to-icon';
 import { TsriTitleBlock } from '../src/components/tsri-title-block';
 import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
 import theme from '../src/theme';
@@ -91,7 +95,7 @@ const MainSpacer = styled(Container)`
 
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime ?
-    `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
+    `${format(date, 'dd. MMMM yyyy')} | ${format(date, 'HH:mm')}`
   : format(date, 'dd. MMMM yyyy');
 
 type CustomAppProps = AppProps<{
@@ -113,17 +117,21 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
       <WebsiteProvider>
         <WebsiteBuilderProvider
           Head={Head}
-          Footer={TSRIFooter}
+          Footer={TsriFooter}
           Script={Script}
           Navbar={TsriV2Navbar}
           Article={TsriArticle}
+          AuthorChip={TsriAuthorChip}
           ArticleDate={TsriArticleDate}
           ArticleMeta={TsriArticleMeta}
           ArticleList={TsriArticleList}
           PaymentAmount={PaymentAmountPicker}
-          Author={TSRIAuthor}
-          AuthorLinks={TSRIAuthorLinks}
-          AuthorList={TSRIAuthorList}
+          ArticleAuthor={TsriArticleAuthor}
+          ArticleAuthors={TsriArticleAuthors}
+          Author={TsriAuthor}
+          AuthorLinks={TsriAuthorLinks}
+          AuthorList={TsriAuthorList}
+          TextToIcon={TsriTextToIcon}
           elements={{ Link: TsriNextWepublishLink }}
           blocks={{
             BaseTeaser: TsriBaseTeaser,

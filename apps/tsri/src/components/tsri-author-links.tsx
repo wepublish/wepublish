@@ -4,7 +4,7 @@ import {
   AuthorLinks as AuthorLinksDefault,
 } from '@wepublish/author/website';
 
-export const TSRIAuthorLinks = styled(AuthorLinksDefault)`
+export const TsriAuthorLinks = styled(AuthorLinksDefault)`
   gap: unset;
   column-gap: ${({ theme }) => theme.spacing(1)};
 
@@ -12,7 +12,7 @@ export const TSRIAuthorLinks = styled(AuthorLinksDefault)`
     color: white;
     background-color: black;
     border-radius: 50%;
-    padding: 0.5rem;
+    padding: 0.25rem;
 
     &:hover {
       background-color: #f5ff64;
@@ -20,8 +20,8 @@ export const TSRIAuthorLinks = styled(AuthorLinksDefault)`
     }
 
     & > svg {
-      width: 1.25rem;
-      height: 1.25rem;
+      width: 2rem;
+      height: 2rem;
     }
   }
 `;
