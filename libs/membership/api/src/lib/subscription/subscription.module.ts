@@ -10,7 +10,7 @@ import { SubscriptionService } from './subscription.service';
 import { SubscriptionDataloader } from './subscription.dataloader';
 import { PublicSubscriptionResolver } from './subscription.resolver';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
-import { PaymentMethodModule } from '@wepublish/payment-method/api';
+import { PaymentMethodModule, PaymentsModule } from '@wepublish/payment/api';
 import { SubscriptionDeactivationDataloader } from './subscription-deactivation.dataloader';
 import { PropertyModule } from '@wepublish/property/api';
 
@@ -18,6 +18,7 @@ import { PropertyModule } from '@wepublish/property/api';
   imports: [
     PrismaModule,
     MemberPlanModule,
+    PaymentsModule,
     PaymentMethodModule,
     PropertyModule,
   ],

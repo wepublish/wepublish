@@ -4,6 +4,7 @@
   "engines": {
     "node": "^22.20.0"
   },
+  "sideEffects": false,
   "scripts": {
     "migrate": "prisma migrate deploy && prisma db seed",
     "serve": "nx run-many  --parallel 10 -t serve --output-style stream",
