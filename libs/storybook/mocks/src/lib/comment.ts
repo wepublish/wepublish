@@ -46,7 +46,7 @@ export const mockOverridenRating = ({
   value = 100,
 }: Partial<OverriddenRating> = {}) =>
   ({
-    __typename: 'overriddenRating',
+    __typename: 'OverriddenRating',
     answerId,
     value,
   }) as OverriddenRating;
