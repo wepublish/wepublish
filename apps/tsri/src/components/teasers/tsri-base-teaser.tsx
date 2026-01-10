@@ -75,7 +75,7 @@ export const TsriBaseTeaser = cond([
   [isTeaserTwoColAltColor, props => <TeaserTwoColAltColor {...props} />],
   [isTeaserTwoRowAuthor, props => <TeaserTwoRowAuthor {...props} />],
   [isDailyBriefingTeaser, props => <DailyBriefingTeaser {...props} />],
-  [T, props => <TeaserNoImage {...props} />], // Default teaser fallback
+  [T, props => <TeaserFullsizeImage {...props} />], // default teaser
   [
     T,
     props => (
