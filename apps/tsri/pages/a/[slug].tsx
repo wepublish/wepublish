@@ -2,9 +2,8 @@ import styled from '@emotion/styled';
 import {
   ArticleContainer,
   ArticleListContainer,
-  ArticleWrapper,
+  ArticleWrapper as DefaultArticleWrapper,
 } from '@wepublish/article/website';
-import { ArticleAuthor } from '@wepublish/author/website';
 import { CommentListContainer } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import { H2 } from '@wepublish/ui';
@@ -19,6 +18,7 @@ import {
   PeerProfileDocument,
   useArticleQuery,
 } from '@wepublish/website/api';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -26,13 +26,24 @@ import { ComponentProps } from 'react';
 
 import TsriAdHeader from '../../src/components/tsri-ad-header';
 
-const AfterArticleTitle = styled(H2)`
-  ${({ theme }) => theme.breakpoints.down('sm')} {
-    font-size: 2rem;
-  }
+const AfterArticleWrapper = styled(DefaultArticleWrapper)`
+  background-color: transparent !important;
 `;
 
-export const AuthorWrapper = styled(ContentWrapper)`
+const AfterArticleTitle = styled(H2)`
+  background-color: black;
+  color: white;
+  border-top-left-radius: 0.8rem;
+  border-top-right-radius: 0.8rem;
+  padding: 0.33rem 1rem;
+  font-size: 1rem !important;
+  line-height: 1.5rem !important;
+  grid-column: -1 / 1;
+`;
+
+export const AfterArticleAuthorWrapper = styled(ContentWrapper)`
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
   margin: 0 ${({ theme }) => theme.spacing(6)};
 
   ${({ theme }) => theme.breakpoints.up('md')} {
@@ -53,6 +64,8 @@ export default function ArticleBySlugOrId() {
     },
   });
 
+  const { ArticleAuthor } = useWebsiteBuilder();
+
   const containerProps = {
     slug,
     id,
@@ -64,18 +77,35 @@ export default function ArticleBySlugOrId() {
 
       <ArticleContainer {...containerProps}>
         {data?.article?.latest.authors.map(author => (
-          <AuthorWrapper
+          <AfterArticleAuthorWrapper
             key={author.id}
             fullWidth
           >
             <ArticleAuthor author={author} />
-          </AuthorWrapper>
+          </AfterArticleAuthorWrapper>
         ))}
+
+        {data?.article && !data.article.disableComments && (
+          <AfterArticleWrapper>
+            <AfterArticleTitle
+              component={'h2'}
+              id="comments"
+            >
+              Kommentare
+            </AfterArticleTitle>
+
+            <CommentListContainer
+              id={data.article.id}
+              type={CommentItemType.Article}
+              signUpUrl="/mitmachen"
+            />
+          </AfterArticleWrapper>
+        )}
       </ArticleContainer>
 
       {data?.article && (
         <>
-          <ArticleWrapper>
+          <AfterArticleWrapper>
             <AfterArticleTitle component={'h2'}>
               Das könnte dich auch interessieren
             </AfterArticleTitle>
@@ -83,32 +113,15 @@ export default function ArticleBySlugOrId() {
             <ArticleListContainer
               variables={{
                 filter: { tags: data.article.tags.map(tag => tag.id) },
-                take: 4,
+                take: 7,
               }}
               filter={articles =>
                 articles
                   .filter(article => article.id !== data.article?.id)
-                  .splice(0, 3)
+                  .splice(0, 6)
               }
             />
-          </ArticleWrapper>
-
-          {!data.article.disableComments && (
-            <ArticleWrapper>
-              <AfterArticleTitle
-                component={'h2'}
-                id="comments"
-              >
-                Kommentare
-              </AfterArticleTitle>
-
-              <CommentListContainer
-                id={data.article.id}
-                type={CommentItemType.Article}
-                signUpUrl="/mitmachen"
-              />
-            </ArticleWrapper>
-          )}
+          </AfterArticleWrapper>
         </>
       )}
     </>
@@ -161,7 +174,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           filter: {
             tags: article.data.article.tags.map((tag: Tag) => tag.id),
           },
-          take: 4,
+          take: 7,
         },
       }),
       client.query({
