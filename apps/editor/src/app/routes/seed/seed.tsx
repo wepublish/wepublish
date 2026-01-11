@@ -67,6 +67,7 @@ import {
   useDeleteTagMutation,
   usePublishArticleMutation,
   usePublishPageMutation,
+  useUpdateArticleMutation,
 } from '@wepublish/editor/api-v2';
 import {
   getImgMinSizeToCompress,
@@ -275,14 +276,7 @@ const createArticleInput = (
       title,
       lead: faker.lorem.paragraph(),
       seoTitle: `SEO - ${title}`,
-      authorIds: shuffle(
-        authorIds
-          .map(authorId => {
-            const pick = pickRandom([authorId], Math.random());
-            return pick.length ? pick[0][0] : undefined;
-          })
-          .filter(authorId => !!authorId)
-      ).slice(0, 1), //faker.number.int({ min: 1, max: 3 })),
+      authorIds: [shuffle(authorIds).at(0)],
       imageID: imageIds[i],
       breaking: pickRandom(true, 0.1).length ? true : false,
       paywallId: null,
@@ -377,6 +371,7 @@ const createArticleInput = (
 const nrOfArticlesPerTag = 7;
 async function seedArticlesByTag(
   createArticle: any,
+  updateArticle: any,
   tagIds: string[] = [],
   authorIds: string[] = [],
   imageIds: string[] = [],
@@ -385,16 +380,24 @@ async function seedArticlesByTag(
 ) {
   const articles = await Promise.all(
     Array.from({ length: nrOfArticlesPerTag * tagIds.length }, (_, index) => {
-      return createArticle(
-        createArticleInput(
-          tagIds,
-          authorIds,
-          imageIds,
-          pollIds,
-          eventIds,
-          index
-        )
+      const articleData = createArticleInput(
+        tagIds,
+        authorIds,
+        imageIds,
+        pollIds,
+        eventIds,
+        index
       );
+      return createArticle(articleData).then((_a: any) => {
+        return updateArticle({
+          variables: {
+            id: _a?.data?.createArticle.id,
+            ...articleData.variables,
+          },
+        }).then((_v: any) => {
+          return _v.data.updateArticle;
+        });
+      });
     })
   );
 
@@ -403,6 +406,7 @@ async function seedArticlesByTag(
 
 async function seedArticles(
   createArticle: any,
+  updateArticle: any,
   tagIds: string[] = [],
   authorIds: string[] = [],
   imageIds: string[] = [],
@@ -411,16 +415,24 @@ async function seedArticles(
 ) {
   const articles = await Promise.all(
     Array.from({ length: 1 }, (_, index) => {
-      return createArticle(
-        createArticleInput(
-          tagIds,
-          authorIds,
-          imageIds,
-          pollIds,
-          eventIds,
-          index
-        )
+      const articleData = createArticleInput(
+        tagIds,
+        authorIds,
+        imageIds,
+        pollIds,
+        eventIds,
+        index
       );
+      return createArticle(articleData).then((_a: any) => {
+        return updateArticle({
+          variables: {
+            id: _a?.data?.createArticle.id,
+            ...articleData.variables,
+          },
+        }).then((_v: any) => {
+          return _v.data.updateArticle;
+        });
+      });
     })
   );
 
@@ -1053,6 +1065,7 @@ async function seedComments(
               state: CommentState.Approved,
               guestUsername: faker.person.fullName(),
               guestUserImageID: shuffle(imageIds).at(0),
+              userRatings: [],
             },
           })
         )
@@ -1600,6 +1613,7 @@ async function handleSeed(
   createBlockStyle: ReturnType<typeof useCreateBlockStyleMutation>[0],
   createArticle: ReturnType<typeof useCreateArticleMutation>[0],
   publishArticle: ReturnType<typeof usePublishArticleMutation>[0],
+  updateArticle: ReturnType<typeof useUpdateArticleMutation>[0],
   createNavigation: ReturnType<typeof useCreateNavigationMutation>[0],
   createEvent: ReturnType<typeof useCreateEventMutation>[0],
   createPage: ReturnType<typeof useCreatePageMutation>[0],
@@ -1617,14 +1631,18 @@ async function handleSeed(
   const authors = await seedAuthors(createAuthor, images);
   const tags = await seedArticleTags(createTag);
   const blockStyles = await seedBlockStyles(createBlockStyle);
+
   const articles = await seedArticlesByTag(
     createArticle,
+    updateArticle,
     tags.map(tag => tag.data?.createTag.id),
     authors.map(author => author.data?.createAuthor.id),
     images
   );
+
   const heroArticle = await seedArticles(
     createArticle,
+    updateArticle,
     tags.map(tag => tag.data?.createTag.id),
     authors.map(author => author.data?.createAuthor.id),
     images
@@ -1633,7 +1651,7 @@ async function handleSeed(
   for (const article of [...articles, ...heroArticle]) {
     await publishArticle({
       variables: {
-        id: article?.data?.createArticle.id,
+        id: article.id,
         publishedAt: new Date().toISOString(),
       },
     });
@@ -1650,8 +1668,8 @@ async function handleSeed(
     createPage,
     images,
     tags.map(tag => tag.data?.createTag),
-    articles.map(article => article.data?.createArticle.id),
-    heroArticle.map(article => article.data?.createArticle.id),
+    articles.map(article => article.id),
+    heroArticle.map(article => article.id),
     blockStyles
   );
 
@@ -1666,7 +1684,7 @@ async function handleSeed(
 
   const comments = await seedComments(
     createComment,
-    articles.map(article => article.data?.createArticle.id),
+    articles.map(article => article.id),
     images
   );
 }
@@ -1709,6 +1727,7 @@ export const Seed = ({ type }: SeedProps) => {
   const [createComment] = useCreateCommentMutation();
   const [publishArticle] = usePublishArticleMutation({ client });
   const [publishPage] = usePublishPageMutation({ client });
+  const [updateArticle] = useUpdateArticleMutation({ client });
   //const { data: blockStylesData } = useBlockStylesQuery({ client });
   // end create hooks
 
@@ -1779,6 +1798,7 @@ export const Seed = ({ type }: SeedProps) => {
                 createBlockStyle,
                 createArticle,
                 publishArticle,
+                updateArticle,
                 createNavigation,
                 createEvent,
                 createPage,
