@@ -70,7 +70,8 @@ export const CommentRatings = ({
   const canVote = hasUser || canRateAnonymously;
 
   const allUserRatings =
-    hasUser ? userRatings : (
+    hasUser ? userRatings
+    : ratingSystem.answers ?
       ratingSystem.answers.flatMap(answer => {
         const value = getAnonymousRate(commentId, answer.id);
 
@@ -83,7 +84,7 @@ export const CommentRatings = ({
           value,
         };
       })
-    );
+    : [];
 
   const rateComment = useCallback(
     async ({ answerId, commentId, value }: RateCommentMutationVariables) =>
@@ -99,7 +100,7 @@ export const CommentRatings = ({
     [callAction, rate]
   );
 
-  const showRatingNames = ratingSystem.answers.length > 1;
+  const showRatingNames = ratingSystem.answers?.length > 1;
 
   return (
     <CommentRatingsWrapper>
