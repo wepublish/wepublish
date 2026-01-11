@@ -9,11 +9,7 @@ import { Image, ImageDataloaderService } from '@wepublish/image/api';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { CanGetArticle } from '@wepublish/permissions';
 import { hasPermission } from '@wepublish/permissions/api';
-import {
-  SlotTeasersLoader,
-  BlockContent,
-  isTeaserSlotsBlock,
-} from '@wepublish/block-content/api';
+import { SlotTeasersLoader, BlockContent } from '@wepublish/block-content/api';
 import { forwardRef, Inject } from '@nestjs/common';
 import { ArticlePropertyDataloader, Property } from '@wepublish/property/api';
 
@@ -29,14 +25,10 @@ export class ArticleRevisionResolver {
   ) {}
 
   @ResolveField(() => [BlockContent])
-  async blocks(
-    @Parent() revision: ArticleRevision
-  ): Promise<(typeof BlockContent)[]> {
-    if (revision.blocks.some(isTeaserSlotsBlock)) {
-      return this.slotTeasersLoader.loadSlotTeasersIntoBlocks(revision.blocks);
-    }
-
-    return revision.blocks;
+  async blocks(@Parent() parent: ArticleRevision) {
+    return await this.slotTeasersLoader.loadSlotTeasersIntoBlocks(
+      parent.blocks
+    );
   }
 
   @ResolveField(() => [Property])

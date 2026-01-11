@@ -9,6 +9,7 @@ import {
 } from '@wepublish/article/website';
 import { LoginForm, RegistrationForm } from '@wepublish/authentication/website';
 import {
+  ArticleAuthor,
   Author,
   AuthorChip,
   AuthorLinks,
@@ -42,6 +43,7 @@ import {
   RichTextBlock,
   SoundCloudTrackBlock,
   BaseTeaser,
+  TabbedContent,
   Teaser,
   TeaserGridBlock,
   TeaserGridFlexBlock,
@@ -58,6 +60,7 @@ import {
   AlternatingTeaserListBlock,
   AlternatingTeaser,
   AlternatingTeaserSlotsBlock,
+  FlexBlock,
 } from '@wepublish/block-content/website';
 import {
   Comment,
@@ -115,6 +118,7 @@ import {
   Pagination,
   Paragraph,
   Rating,
+  TextToIcon,
   theme,
   UnorderedList,
 } from '@wepublish/ui';
@@ -183,6 +187,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
           AuthorChip={AuthorChip}
           AuthorList={AuthorList}
           AuthorListItem={AuthorListItem}
+          ArticleAuthor={ArticleAuthor}
           ArticleList={ArticleList}
           Article={Article}
           ArticleDate={ArticleDate}
@@ -225,6 +230,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
           Paywall={Paywall}
           Tag={Tag}
           TagSEO={TagSEO}
+          TextToIcon={TextToIcon}
           elements={{
             TextField,
             Rating,
@@ -281,6 +287,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
             VimeoVideo: VimeoVideoBlock,
             StreamableVideo: StreamableVideoBlock,
             YouTubeVideo: YouTubeVideoBlock,
+            FlexBlock,
           }}
           blockStyles={{
             Banner,
@@ -292,6 +299,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
             AlternatingTeaserGrid: AlternatingTeaserGridBlock,
             AlternatingTeaserList: AlternatingTeaserListBlock,
             AlternatingTeaserSlots: AlternatingTeaserSlotsBlock,
+            TabbedContent,
           }}
           richtext={{ RenderElement, RenderLeaf, RenderRichtext }}
           date={{

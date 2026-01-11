@@ -3,6 +3,13 @@ import { RichTextBlock } from '@wepublish/block-content/website';
 
 export const TsriRichText = styled(RichTextBlock)`
   .MuiTypography-body1 {
-    font-size: 1.25em;
+    font-size: 1.86cqw;
+    line-height: 2.24cqw;
+    font-weight: 300;
+  }
+  .MuiTypography-h4 {
+    font-size: 2.98cqw;
+    line-height: 3.53cqw;
+    font-weight: 700;
   }
 `;

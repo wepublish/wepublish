@@ -236,12 +236,12 @@ export function TeaserGridFlexBlock({
         />
       </IconButtonTooltip>
       <GridLayout
-        onResizeStop={layout => handleLayoutChange(layout)}
-        onDrop={layout => handleLayoutChange(layout)}
+        onResizeStop={layout => handleLayoutChange(layout as FlexAlignment[])}
+        onDrop={layout => handleLayoutChange(layout as FlexAlignment[])}
         className="layout"
         onDragStop={layout => {
           setIsDragging(false);
-          handleLayoutChange(layout);
+          handleLayoutChange(layout as FlexAlignment[]);
         }}
         onDrag={() => setIsDragging(true)} // buggy behavior with onDragStart with double click
         cols={12}

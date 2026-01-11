@@ -32,6 +32,7 @@ fragment ArticleRevisionWithoutBlocks on ArticleRevision {
   lead
   title
   canonicalUrl
+  breaking
 
   authors {
     ...FullAuthor

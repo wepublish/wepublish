@@ -297,7 +297,7 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
@@ -307,6 +307,7 @@ input BlockContentInput {
   event: EventBlockInput
   facebookPost: FacebookPostBlockInput
   facebookVideo: FacebookVideoBlockInput
+  flexBlock: FlexBlockInput
   html: HTMLBlockInput
   image: ImageBlockInput
   imageGallery: ImageGalleryBlockInput
@@ -347,6 +348,7 @@ enum BlockType {
   Event
   FacebookPost
   FacebookVideo
+  FlexBlock
   HTML
   Image
   ImageGallery
@@ -369,6 +371,16 @@ enum BlockType {
   TwitterTweet
   VimeoVideo
   YouTubeVideo
+}
+
+type BlockWithAlignment implements HasOneBlockContent {
+  alignment: FlexAlignment!
+  block: BlockContent
+}
+
+input BlockWithAlignmentInput {
+  alignment: FlexAlignmentInput!
+  block: BlockContentInput
 }
 
 type BreakBlock implements BaseBlock & HasImage {
@@ -779,6 +791,7 @@ enum EditorBlockType {
   Crowdfunding
   Embed
   Event
+  FlexBlock
   HTML
   Image
   ImageGallery
@@ -946,7 +959,7 @@ input FacebookVideoBlockInput {
 type FlexAlignment {
   h: Int!
   i: String!
-  static: Boolean!
+  static: Boolean
   w: Int!
   x: Int!
   y: Int!
@@ -955,10 +968,23 @@ type FlexAlignment {
 input FlexAlignmentInput {
   h: Int!
   i: String!
-  static: Boolean!
+  static: Boolean
   w: Int!
   x: Int!
   y: Int!
+}
+
+type FlexBlock implements BaseBlock {
+  blockStyle: String
+  blockStyleName: String
+  blocks: [BlockWithAlignment!]!
+  type: BlockType!
+}
+
+input FlexBlockInput {
+  blockStyle: String
+  blockStyleName: String
+  blocks: [BlockWithAlignmentInput!]!
 }
 
 type FlexTeaser {
@@ -1044,6 +1070,10 @@ interface HasImage {
 interface HasImageLc {
   image: Image
   imageId: String
+}
+
+interface HasOneBlockContent {
+  block: BlockContent
 }
 
 interface HasOptionalArticle {

@@ -13,6 +13,7 @@ import { mockTag } from './tag';
 import { mockImage } from './image';
 import { mockRichText } from './richtext';
 import { faker } from '@faker-js/faker';
+import { mockUser } from './user';
 
 export const mockCommentRatingAnswer = ({
   id = faker.string.nanoid(),
@@ -45,7 +46,7 @@ export const mockOverridenRating = ({
   value = 100,
 }: Partial<OverriddenRating> = {}) =>
   ({
-    __typename: 'overriddenRating',
+    __typename: 'OverriddenRating',
     answerId,
     value,
   }) as OverriddenRating;
@@ -54,8 +55,10 @@ export const mockUserCommentRating = ({
   answer = 'Foobar',
   id = faker.string.nanoid(),
   value = 100,
+  disabled = false,
+  userId = faker.string.nanoid(),
 }: Partial<
-  Pick<CommentRating, 'value'> &
+  Pick<CommentRating, 'value' | 'disabled' | 'userId'> &
     Pick<CommentRatingSystemAnswer, 'answer' | 'id'>
 > = {}) =>
   ({
@@ -65,6 +68,8 @@ export const mockUserCommentRating = ({
     commentId: faker.string.nanoid(),
     createdAt: new Date('2023-01-01').toISOString(),
     id: faker.string.nanoid(),
+    disabled,
+    userId,
   }) as CommentRating;
 
 export const mockComment = ({
@@ -89,9 +94,9 @@ export const mockComment = ({
   text = mockRichText(),
   source = 'Source',
   title = 'Foobar',
-  lead,
-  rejectionReason,
-  user,
+  lead = faker.lorem.sentence(),
+  rejectionReason = faker.lorem.sentence(),
+  user = mockUser(),
 }: Partial<Comment> = {}): Comment => ({
   id,
   __typename: 'Comment',

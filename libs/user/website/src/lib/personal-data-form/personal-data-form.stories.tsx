@@ -75,9 +75,13 @@ const fillFlair: StoryObj['play'] = async ({ canvasElement, step }) => {
     selector: 'input',
   });
 
-  await step('Enter preferred name', async () => {
+  await step('Enter job position', async () => {
     await userEvent.click(input);
-    await userEvent.clear(input);
+    (input as HTMLInputElement).value = '';
+    // there's a bug in user-event that prevents clear() from working properly
+    // so we workaround it by setting the value to empty first
+    // https://github.com/testing-library/user-event/issues/1143
+    // await userEvent.clear(input);
     await userEvent.type(input, 'Wordpress Ninja & CSS Shaolin');
   });
 };

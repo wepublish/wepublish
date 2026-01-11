@@ -376,4 +376,72 @@ fragment FullBlock on BlockContent {
       ...FullTeaser
     }
   }
+  
+  ... on FlexBlock {
+    blockStyle
+    type
+    blocks {
+      alignment {
+        i
+        x
+        y
+        w
+        h
+        static
+      }
+      block {
+        __typename
+        
+        ... on TeaserSlotsBlock {
+          title
+          blockStyle
+          type
+          autofillConfig {
+            enabled
+            filter {
+              tags
+              tagObjects {
+                id
+                tag
+              }
+            }
+            sort
+            teaserType
+          }
+          slots {
+            type
+            teaser {
+              __typename
+              ...FullTeaser
+            }
+          }
+          autofillTeasers {
+            ...FullTeaser
+          }
+        }
+        
+        ... on TeaserListBlock {
+          title
+          blockStyle
+          type
+          skip
+          take
+          sort
+          teaserType
+          filter {
+            tags
+            tagObjects {
+              id
+              tag
+            }
+          }
+          teasers {
+            ...FullTeaser
+          }
+        }
+        
+        ...BlockWithoutTeaser
+      }
+    }
+  }
 }

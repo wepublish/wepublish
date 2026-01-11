@@ -4,7 +4,7 @@ import {
   TeaserSlotType,
 } from '@wepublish/editor/api-v2';
 import arrayMove from 'array-move';
-import { ReactNode, useMemo, useState } from 'react';
+import { ChangeEvent, ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdArticle, MdDelete, MdEdit } from 'react-icons/md';
 import {
@@ -20,7 +20,11 @@ import {
   Toggle,
 } from 'rsuite';
 
-import { IconButtonTooltip, PlaceholderInput } from '../atoms';
+import {
+  IconButtonTooltip,
+  PlaceholderInput,
+  TypographicTextArea,
+} from '../atoms';
 import { BlockProps } from '../atoms/blockList';
 import { TeaserEditPanel } from '../panel/teaserEditPanel';
 import { TeaserSelectAndEditPanel } from '../panel/teaserSelectAndEditPanel';
@@ -198,6 +202,13 @@ export function TeaserSlotsBlock({
     });
   }
 
+  function handleTitleChange(e: ChangeEvent<HTMLTextAreaElement>) {
+    onChange({
+      ...value,
+      title: e.target.value,
+    });
+  }
+
   function handleAutofillConfigChange(
     newAutofillConfig: TeaserSlotsAutofillConfigInput
   ) {
@@ -236,6 +247,14 @@ export function TeaserSlotsBlock({
 
   return (
     <TeaserSlotsBlockWrapper>
+      <TypographicTextArea
+        //ref={focusRef}
+        variant="title"
+        align="center"
+        placeholder={t('blocks.title.title')}
+        value={value.title ?? ''}
+        onChange={handleTitleChange}
+      />
       <TeaserSlotsAutofillControls
         config={autofillConfig}
         onConfigChange={handleAutofillConfigChange}

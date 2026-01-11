@@ -37,6 +37,7 @@ export * from './lib/teaser/teaser-slots-block';
 export * from './lib/listicle/listicle-block';
 export * from './lib/event/event-block';
 export * from './lib/break/break-block';
+export * from './lib/nested-blocks/flex-block';
 
 export * from './lib/block-styles/context-box/context-box';
 export * from './lib/block-styles/focus-teaser/focus-teaser';
@@ -48,3 +49,4 @@ export * from './lib/block-styles/alternating/alternating-teaser-grid';
 export * from './lib/block-styles/alternating/alternating-teaser-list';
 export * from './lib/block-styles/alternating/alternating-teaser-slots';
 export * from './lib/block-styles/alternating/is-alternating';
+export * from './lib/block-styles/tabbed-content/tabbed-content';

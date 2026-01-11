@@ -26,7 +26,11 @@ export const mockPaymentMethod = ({
   gracePeriod = 0,
   image = mockImage(),
   imageId = image?.id,
-}: Partial<PaymentMethod> = {}): PaymentMethod => ({
+}: Partial<PaymentMethod> = {}): PaymentMethod & {
+  active: boolean;
+  createdAt: string;
+  modifiedAt: string;
+} => ({
   __typename: 'PaymentMethod',
   id,
   name,
@@ -36,6 +40,9 @@ export const mockPaymentMethod = ({
   gracePeriod,
   image,
   imageId,
+  active: true,
+  createdAt: new Date().toISOString(),
+  modifiedAt: new Date().toISOString(),
 });
 
 export const mockAvailablePaymentMethod = ({
@@ -47,11 +54,19 @@ export const mockAvailablePaymentMethod = ({
     PaymentPeriodicity.Lifetime,
   ],
   paymentMethods = [mockPaymentMethod(), mockPaymentMethod()],
-}: Partial<AvailablePaymentMethod> = {}): AvailablePaymentMethod => ({
+  paymentMethodIDs = [],
+}: Partial<
+  AvailablePaymentMethod & {
+    paymentMethodIDs: string[];
+  }
+> = {}): AvailablePaymentMethod & {
+  paymentMethodIDs: string[];
+} => ({
   __typename: 'AvailablePaymentMethod',
   forceAutoRenewal,
   paymentMethods,
   paymentPeriodicities,
+  paymentMethodIDs,
 });
 
 export const mockMemberPlan = ({
@@ -71,7 +86,12 @@ export const mockMemberPlan = ({
   ],
   description = mockRichText(),
   shortDescription = mockShortRichText(),
-}: Partial<MemberPlan> = {}): MemberPlan => ({
+  successPageId = faker.string.nanoid(),
+  failPageId = faker.string.nanoid(),
+  confirmationPageId = faker.string.nanoid(),
+  amountPerMonthMax = 1000,
+  externalReward = 'https://example.com/mock-external-reward-url',
+}: Partial<MemberPlan> = {}): MemberPlan & { active: boolean } => ({
   __typename: 'MemberPlan',
   id,
   image,
@@ -86,6 +106,12 @@ export const mockMemberPlan = ({
   extendable,
   productType,
   availablePaymentMethods,
+  successPageId,
+  failPageId,
+  confirmationPageId,
+  amountPerMonthMax,
+  externalReward,
+  active: true,
 });
 
 export const mockChallenge = ({
@@ -195,6 +221,7 @@ export const mockInvoice = ({
     }),
   ],
   mail = faker.internet.email(),
+  description = faker.lorem.sentence(),
 }: Partial<Invoice> = {}): Invoice => ({
   __typename: 'Invoice',
   id,
@@ -208,4 +235,5 @@ export const mockInvoice = ({
   items,
   mail,
   total: items[0].total,
+  description,
 });

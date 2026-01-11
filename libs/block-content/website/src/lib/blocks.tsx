@@ -5,6 +5,7 @@ import {
   BuilderCommentBlockProps,
   BuilderCrowdfundingBlockProps,
   BuilderEventBlockProps,
+  BuilderFlexBlockProps,
   BuilderHTMLBlockProps,
   BuilderListicleBlockProps,
   BuilderPollBlockProps,
@@ -14,6 +15,7 @@ import {
   BuilderTitleBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { isFlexBlock } from './nested-blocks/flex-block';
 import { isHtmlBlock } from './html/html-block';
 import { isSubscribeBlock } from './subscribe/subscribe-block';
 import { isImageBlock } from './image/image-block';
@@ -56,10 +58,32 @@ import {
   isAlternatingTeaserSlotsBlockStyle,
 } from './block-styles/alternating/is-alternating';
 import { isTeaserSlotsBlock } from './teaser/teaser-slots-block';
+import { isTabbedContentBlockStyle } from './block-styles/tabbed-content/tabbed-content';
+import { css } from '@emotion/react';
 
 export const BlockRenderer = memo(
   ({ block, className }: BuilderBlockRendererProps) => {
     const { blocks, blockStyles } = useWebsiteBuilder();
+
+    const emptyBlockCss = css`
+      height: 100%;
+      width: 100%;
+      background-color: red;
+      color: white;
+      font-size: 2rem;
+      text-align: center;
+      display: flex;
+      align-content: center;
+      justify-content: center;
+      justify-items: center;
+      align-items: center;
+      font-weight: 700;
+      border-radius: 1rem;
+    `;
+
+    if (!block) {
+      return <div css={emptyBlockCss}>empty block</div>;
+    }
 
     const blockStylesCond = cond([
       [
@@ -132,6 +156,12 @@ export const BlockRenderer = memo(
             {...block}
             className={className}
           />
+        ),
+      ],
+      [
+        isTabbedContentBlockStyle,
+        block => (
+          <blockStyles.TabbedContent {...(block as BuilderFlexBlockProps)} />
         ),
       ],
     ]);
@@ -415,6 +445,10 @@ export const BlockRenderer = memo(
               className={className}
             />
           ),
+        ],
+        [
+          isFlexBlock,
+          block => <blocks.FlexBlock {...(block as BuilderFlexBlockProps)} />,
         ],
       ])(block)
     );
