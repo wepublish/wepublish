@@ -105,7 +105,7 @@ export const CommentRatings = ({
   return (
     <CommentRatingsWrapper>
       <NoSsr>
-        {ratingSystem.answers.map(answer => (
+        {ratingSystem.answers?.map(answer => (
           <Fragment key={answer.id}>
             {answer.type === RatingSystemType.Star && (
               <StarRating
