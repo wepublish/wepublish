@@ -105,30 +105,31 @@ export const CommentRatings = ({
   return (
     <CommentRatingsWrapper>
       <NoSsr>
-        {ratingSystem.answers.map(answer => (
-          <Fragment key={answer.id}>
-            {answer.type === RatingSystemType.Star && (
-              <StarRating
-                name={showRatingNames ? answer.answer : null}
-                hasRated={hasUserRated(answer.id, allUserRatings)}
-                rating={getCommentRating(
-                  answer.id,
-                  allUserRatings,
-                  calculatedRatings,
-                  overriddenRatings
-                )}
-                onChange={rating =>
-                  rateComment({
-                    answerId: answer.id,
-                    commentId,
-                    value: rating,
-                  })
-                }
-                readOnly={!canVote}
-              />
-            )}
-          </Fragment>
-        ))}
+        {ratingSystem.answers &&
+          ratingSystem.answers.map(answer => (
+            <Fragment key={answer.id}>
+              {answer.type === RatingSystemType.Star && (
+                <StarRating
+                  name={showRatingNames ? answer.answer : null}
+                  hasRated={hasUserRated(answer.id, allUserRatings)}
+                  rating={getCommentRating(
+                    answer.id,
+                    allUserRatings,
+                    calculatedRatings,
+                    overriddenRatings
+                  )}
+                  onChange={rating =>
+                    rateComment({
+                      answerId: answer.id,
+                      commentId,
+                      value: rating,
+                    })
+                  }
+                  readOnly={!canVote}
+                />
+              )}
+            </Fragment>
+          ))}
       </NoSsr>
 
       {error && <Alert severity="error">{error.message}</Alert>}
