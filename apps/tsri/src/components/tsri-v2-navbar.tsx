@@ -19,6 +19,7 @@ import {
   PageTypeBasedProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { useRouter } from 'next/router';
 import {
   forwardRef,
   PropsWithChildren,
@@ -32,7 +33,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import { FiInstagram, FiMenu as FiMenuDefault, FiSearch } from 'react-icons/fi';
 import { MdWarning } from 'react-icons/md';
-
 enum NavbarState {
   Low,
   High,
@@ -82,6 +82,7 @@ export const NavbarWrapper = styled('nav')`
   z-index: 10;
   height: auto;
   pointer-events: none;
+  margin-bottom: calc(${({ theme }) => theme.spacing(-3)} + 1px);
 
   > * {
     pointer-events: all;
@@ -265,11 +266,13 @@ const TsriClaim = styled('img', {
     top 300ms ease-out;
   transform: translate3d(0, 0, 0);
   position: absolute;
+  clip-path: inset(10px 0 10px 0);
 
   @container toolbar (width > 200px) {
     width: 26cqw;
     height: auto;
     top: 13.5cqw;
+    top: 12.8cqw;
     left: 2cqw;
   }
 
@@ -279,6 +282,8 @@ const TsriClaim = styled('img', {
       @container toolbar (width > 200px) {
         width: 16.77cqw;
         top: 9.7cqw;
+        top: 8.7cqw;
+        clip-path: inset(10px 0 4px 0);
       }
     `}
 
@@ -300,7 +305,7 @@ export const navbarTabStyles = () => css`
   user-select: none;
   cursor: pointer;
   font-weight: 700;
-  padding: 0.75cqw 1cqw;
+  padding: 0;
   border-top-left-radius: 1cqw;
   border-top-right-radius: 1cqw;
   box-sizing: border-box;
@@ -312,8 +317,12 @@ export const navbarTabStyles = () => css`
   }
 
   & > * {
-    text-decoration: none;
-    color: inherit;
+    text-decoration: none !important;
+    color: inherit !important;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0.75cqw 1cqw;
   }
 `;
 
@@ -325,10 +334,6 @@ const BecomeMemberTab = styled('button')`
 const RegisterNewsLetterTab = styled('button')`
   ${navbarTabStyles()}
   grid-row: 2 / 3;
-  & > * {
-    text-decoration: none !important;
-    color: inherit !important;
-  }
 `;
 
 const PreTitleTab = styled('div')`
@@ -363,7 +368,7 @@ const NavbarTabs = styled('div', {
   transition: visibility 300ms ease-in-out;
 
   @container toolbar (width > 200px) {
-    grid-template-columns: calc(100% - 2.2cqw - 33.75%) 33.75%;
+    grid-template-columns: var(--two-column-grid);
     width: 100%;
     row-gap: 0.15cqw;
     column-gap: 2.2cqw;
@@ -436,14 +441,14 @@ export const NavPaperWrapper = styled('div', {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
     grid-template-rows: min-content;
-    grid-template-columns: calc(100% - 33.75%) 33.75%;
+    grid-template-columns: var(--two-column-grid-no-gap);
     width: 100%;
     border-bottom: none;
 
     ${BecomeMemberTab} {
       font-size: 0.75cqw;
       line-height: 0.75cqw;
-      padding: 0.5cqw 0.75cqw;
+      padding: 0;
       border-top-left-radius: 0.5cqw;
       border-top-right-radius: 0.5cqw;
     }
@@ -585,7 +590,7 @@ const NavPaper = ({
   className?: string;
 }>) => {
   const {
-    elements: { Link, Button, H4, H6 },
+    elements: { Link, H6 },
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const { hasUser, logout } = useUser();
@@ -727,7 +732,7 @@ const NavPaper = ({
         isHomePage={false}
       >
         <BecomeMemberTab>
-          <a href="#">Member werden</a>
+          <Link href="/mitmachen">Member werden</Link>
         </BecomeMemberTab>
       </NavbarTabs>
     </NavPaperWrapper>
@@ -850,6 +855,12 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
 
       onMenuToggle?.(newState);
     }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
+
+    const {
+      elements: { Link },
+    } = useWebsiteBuilder();
+
+    const router = useRouter();
 
     const getTabText = (pageTypeBasedProps: PageTypeBasedProps | undefined) => {
       if (pageTypeBasedProps) {
@@ -988,14 +999,20 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
               <NavbarInstaButton
                 size="small"
                 aria-label="Instagram"
+                title="Instagram"
                 color={'inherit'}
+                onClick={() =>
+                  router.push('https://www.instagram.com/tsri.ch/')
+                }
               >
                 <FiInstagram />
               </NavbarInstaButton>
               <NavbarSearchButton
                 size="small"
                 aria-label="Suche"
+                title="Suche"
                 color={'inherit'}
+                onClick={() => router.push('/search')}
               >
                 <FiSearch />
               </NavbarSearchButton>
@@ -1003,6 +1020,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
               <NavbarHamburgerButton
                 size="small"
                 aria-label="Menu"
+                title="Menu"
                 onClick={toggleMenu}
                 color={'inherit'}
               >
@@ -1027,7 +1045,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                 <span>{tabText}</span>
               </PreTitleTab>
               <BecomeMemberTab>
-                <a href="#">Member werden</a>
+                <Link href="/mitmachen">Member werden</Link>
               </BecomeMemberTab>
               <RegisterNewsLetterTab>
                 <Link href="/newsletter?mc_u=56ee24de7341c744008a13c9e&mc_id=32c65d081a&mc_f_id=00e5c2e1f0&source=tsri&tf_id=jExhxiVv&popTitle=DAS%20WICHTIGSTE%20AUS%20ZÜRI&popButtonText=Jetzt%20kostenlos%20abonnieren!&popText=Jeden%20Morgen%20findest%20du%20im%20Z%C3%BCri%20Briefing%20kuratierte%20News,%20Geschichten%20und%20Tipps%20f%C3%BCr%20den%20Tag.%20Bereits%2029'000%20Menschen%20lesen%20mit%20%E2%80%93%20und%20du?">
