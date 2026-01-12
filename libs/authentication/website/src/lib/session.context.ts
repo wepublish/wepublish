@@ -1,11 +1,14 @@
-import { SessionWithTokenWithoutUser, User } from '@wepublish/website/api';
+import {
+  SensitiveDataUser,
+  SessionWithTokenWithoutUser,
+} from '@wepublish/website/api';
 import { createContext, useContext } from 'react';
 
 export const AuthTokenStorageKey = 'auth.token';
 
 export const SessionTokenContext = createContext<
   | [
-      User | null,
+      SensitiveDataUser | null | undefined,
       boolean,
       (value: SessionWithTokenWithoutUser | null) => Promise<void>,
     ]

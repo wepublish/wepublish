@@ -219,7 +219,14 @@ export enum AuthorSort {
 export type AvailablePaymentMethod = {
   __typename?: 'AvailablePaymentMethod';
   forceAutoRenewal: Scalars['Boolean'];
+  paymentMethodIDs: Array<Scalars['String']>;
   paymentMethods: Array<PaymentMethod>;
+  paymentPeriodicities: Array<PaymentPeriodicity>;
+};
+
+export type AvailablePaymentMethodInput = {
+  forceAutoRenewal: Scalars['Boolean'];
+  paymentMethodIDs: Array<Scalars['String']>;
   paymentPeriodicities: Array<PaymentPeriodicity>;
 };
 
@@ -295,6 +302,25 @@ export type BaseTeaser = {
   preTitle?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   type: Scalars['String'];
+};
+
+export type BaseToken = {
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+};
+
+export type BaseUser = {
+  active: Scalars['Boolean'];
+  firstName?: Maybe<Scalars['String']>;
+  flair?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  image?: Maybe<Image>;
+  name: Scalars['String'];
+  properties: Array<Property>;
+  roleIDs: Array<Scalars['String']>;
+  userImageID?: Maybe<Scalars['String']>;
 };
 
 export type BildwurfAdBlock = BaseBlock & {
@@ -445,7 +471,7 @@ export type Chat = {
   message: Scalars['String'];
 };
 
-export type Comment = {
+export type Comment = HasOptionalUser & {
   __typename?: 'Comment';
   authorType: CommentAuthorType;
   calculatedRatings: Array<CalculatedRating>;
@@ -453,6 +479,7 @@ export type Comment = {
   createdAt: Scalars['DateTime'];
   featured?: Maybe<Scalars['Boolean']>;
   guestUserImage?: Maybe<Image>;
+  guestUserImageID?: Maybe<Scalars['String']>;
   guestUsername?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   itemID: Scalars['String'];
@@ -470,6 +497,7 @@ export type Comment = {
   title?: Maybe<Scalars['String']>;
   url: Scalars['String'];
   user?: Maybe<User>;
+  userID?: Maybe<Scalars['String']>;
   userRatings: Array<CommentRating>;
 };
 
@@ -539,8 +567,16 @@ export type CommentRating = {
   disabled?: Maybe<Scalars['Boolean']>;
   fingerprint?: Maybe<Scalars['String']>;
   id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
   userId?: Maybe<Scalars['String']>;
   value: Scalars['Int'];
+};
+
+export type CommentRatingSystem = {
+  __typename?: 'CommentRatingSystem';
+  answers: Array<CommentRatingSystemAnswer>;
+  id: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
 };
 
 export type CommentRatingSystemAnswer = {
@@ -1008,13 +1044,6 @@ export type FocalPointInput = {
   y: Scalars['Float'];
 };
 
-export type FullCommentRatingSystem = {
-  __typename?: 'FullCommentRatingSystem';
-  answers: Array<CommentRatingSystemAnswer>;
-  id: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
-};
-
 export type FullPoll = {
   __typename?: 'FullPoll';
   answers: Array<PollAnswerWithVoteCount>;
@@ -1117,6 +1146,11 @@ export type HasOptionalPoll = {
 export type HasOptionalSubscription = {
   subscription?: Maybe<PublicSubscription>;
   subscriptionID?: Maybe<Scalars['String']>;
+};
+
+export type HasOptionalUser = {
+  user?: Maybe<User>;
+  userID?: Maybe<Scalars['String']>;
 };
 
 export type HasPage = {
@@ -1398,24 +1432,30 @@ export type MailTemplateWithUrlAndStatusModel = {
 
 export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
+  active: Scalars['Boolean'];
   amountPerMonthMax?: Maybe<Scalars['Int']>;
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
+  confirmationPage?: Maybe<Page>;
   confirmationPageId?: Maybe<Scalars['String']>;
   currency: Currency;
   description?: Maybe<Scalars['RichText']>;
   extendable: Scalars['Boolean'];
   externalReward?: Maybe<Scalars['String']>;
+  failPage?: Maybe<Page>;
   failPageId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
   imageID?: Maybe<Scalars['String']>;
   maxCount?: Maybe<Scalars['Int']>;
+  migrateToTargetPaymentMethod?: Maybe<PaymentMethod>;
+  migrateToTargetPaymentMethodID?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   productType: ProductType;
   shortDescription?: Maybe<Scalars['RichText']>;
   slug: Scalars['String'];
+  successPage?: Maybe<Page>;
   successPageId?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Scalars['String']>>;
 };
@@ -1435,8 +1475,8 @@ export type MemberPlanFilter = {
 };
 
 export enum MemberPlanSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt'
 }
 
 export type Mutation = {
@@ -1462,6 +1502,8 @@ export type Mutation = {
   createCrowdfunding: Crowdfunding;
   /** Creates a new event. */
   createEvent: Event;
+  /** Creates a new memberplan. */
+  createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
   createNavigation: Navigation;
   /** Creates an page. */
@@ -1470,12 +1512,14 @@ export type Mutation = {
   createPaymentFromInvoice?: Maybe<Payment>;
   /** This mutation allows to create payment by referencing a subscription. */
   createPaymentFromSubscription?: Maybe<Payment>;
+  /** Creates a new payment method. */
+  createPaymentMethod: PaymentMethod;
   /** Creates a paywall. */
   createPaywall: Paywall;
-  /** Creates a paywall bypass token. */
-  createPaywallBypass: PaywallBypass;
   /** Creates a new peer. */
   createPeer: Peer;
+  /** Creates a rating system answer. */
+  createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   /** Allows authenticated users to create additional subscriptions */
@@ -1488,6 +1532,8 @@ export type Mutation = {
   createSubscriptionWithConfirmation: Scalars['Boolean'];
   /** Creates a new tag. */
   createTag: Tag;
+  /** Creates a token and returns it's secret once. */
+  createToken: TokenWithSecret;
   /**
    *
    *       Creates a new userConsent based on input.
@@ -1513,24 +1559,30 @@ export type Mutation = {
   deleteCrowdfunding?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing event. */
   deleteEvent: Event;
+  /** Deletes an existing memberplan. */
+  deleteMemberPlan: MemberPlan;
   /** Deletes an existing navigation. */
   deleteNavigation: Navigation;
   /** Deletes an page. */
   deletePage: Scalars['String'];
+  /** Deletes an existing payment method. */
+  deletePaymentMethod: PaymentMethod;
   /** Deletes a paywall. */
   deletePaywall: Paywall;
-  /** Deletes a paywall bypass token. */
-  deletePaywallBypass: Scalars['String'];
   /** Deletes an existing peer. */
   deletePeer: Peer;
   /** Delete poll votes */
   deletePollVotes: DeletePollVotesResult;
+  /** Deletes a rating system answer. */
+  deleteRatingSystemAnswer: CommentRatingSystemAnswer;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
   deleteSubscriptionInterval: Array<SubscriptionFlowModel>;
   /** Deletes an existing tag. */
   deleteTag: Tag;
+  /** Deletes a token. */
+  deleteToken: Token;
   /**
    *
    *       Delete an existing userConsent by id.
@@ -1597,18 +1649,24 @@ export type Mutation = {
   updateCrowdfunding: Crowdfunding;
   /** Updates an existing event. */
   updateEvent: Event;
+  /** Updates an existing memberplan. */
+  updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
   updateNavigation: Navigation;
   /** Updates an page. */
   updatePage: Page;
   /** This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated. */
-  updatePassword: User;
+  updatePassword: SensitiveDataUser;
+  /** Updates an existing payment method. */
+  updatePaymentMethod: PaymentMethod;
   /** This mutation allows to update the Payment Provider Customers */
   updatePaymentProviderCustomers: Array<PaymentProviderCustomer>;
   /** Updates a paywall. */
   updatePaywall: Paywall;
   /** Updates an existing peer. */
   updatePeer: Peer;
+  /** Update the comment rating system. */
+  updateRatingSystem: CommentRatingSystem;
   /** Updates an existing setting. */
   updateSetting: Setting;
   /** Update an existing subscription flow */
@@ -1620,7 +1678,7 @@ export type Mutation = {
   /** Updates an existing tag. */
   updateTag: Tag;
   /** This mutation allows to update the user's data by taking an input of type UserInput. */
-  updateUser?: Maybe<User>;
+  updateUser?: Maybe<SensitiveDataUser>;
   /**
    *
    *       Updates an existing userConsent based on input.
@@ -1632,8 +1690,9 @@ export type Mutation = {
   updateUserRole: UserRole;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
+  upgradeSubscription: Payment;
   /** This mutation allows to upload and update the user's profile image. */
-  uploadUserProfileImage?: Maybe<User>;
+  uploadUserProfileImage?: Maybe<SensitiveDataUser>;
   /** This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous */
   voteOnPoll?: Maybe<PollVote>;
 };
@@ -1725,6 +1784,30 @@ export type MutationCreateEventArgs = {
 };
 
 
+export type MutationCreateMemberPlanArgs = {
+  active: Scalars['Boolean'];
+  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
+  amountPerMonthMin: Scalars['Int'];
+  amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
+  availablePaymentMethods: Array<AvailablePaymentMethodInput>;
+  confirmationPageId?: InputMaybe<Scalars['String']>;
+  currency: Currency;
+  description?: InputMaybe<Scalars['RichText']>;
+  extendable: Scalars['Boolean'];
+  externalReward?: InputMaybe<Scalars['String']>;
+  failPageId?: InputMaybe<Scalars['String']>;
+  imageID?: InputMaybe<Scalars['String']>;
+  maxCount?: InputMaybe<Scalars['Int']>;
+  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  productType: ProductType;
+  shortDescription?: InputMaybe<Scalars['RichText']>;
+  slug: Scalars['String'];
+  successPageId?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
 export type MutationCreateNavigationArgs = {
   key: Scalars['String'];
   links: Array<NavigationLinkInput>;
@@ -1759,19 +1842,30 @@ export type MutationCreatePaymentFromSubscriptionArgs = {
 };
 
 
-export type MutationCreatePaywallArgs = {
+export type MutationCreatePaymentMethodArgs = {
   active: Scalars['Boolean'];
-  anyMemberPlan: Scalars['Boolean'];
-  circumventDescription?: InputMaybe<Scalars['RichText']>;
-  description?: InputMaybe<Scalars['RichText']>;
-  memberPlanIds?: Array<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
+  description: Scalars['String'];
+  gracePeriod: Scalars['Int'];
+  imageId?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  paymentProviderID: Scalars['String'];
+  slug: Scalars['Slug'];
 };
 
 
-export type MutationCreatePaywallBypassArgs = {
-  paywallId: Scalars['String'];
-  token: Scalars['String'];
+export type MutationCreatePaywallArgs = {
+  active: Scalars['Boolean'];
+  alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
+  anyMemberPlan: Scalars['Boolean'];
+  bypassTokens: Array<Scalars['String']>;
+  circumventDescription?: InputMaybe<Scalars['RichText']>;
+  description?: InputMaybe<Scalars['RichText']>;
+  fadeout: Scalars['Boolean'];
+  hideContentAfter: Scalars['Int'];
+  memberPlanIds: Array<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
+  upgradeDescription?: InputMaybe<Scalars['RichText']>;
 };
 
 
@@ -1782,6 +1876,13 @@ export type MutationCreatePeerArgs = {
   name: Scalars['String'];
   slug: Scalars['String'];
   token: Scalars['String'];
+};
+
+
+export type MutationCreateRatingSystemAnswerArgs = {
+  answer?: InputMaybe<Scalars['String']>;
+  ratingSystemId: Scalars['String'];
+  type: RatingSystemType;
 };
 
 
@@ -1848,6 +1949,11 @@ export type MutationCreateTagArgs = {
 };
 
 
+export type MutationCreateTokenArgs = {
+  name: Scalars['String'];
+};
+
+
 export type MutationCreateUserConsentArgs = {
   consentId: Scalars['String'];
   userId: Scalars['String'];
@@ -1897,6 +2003,11 @@ export type MutationDeleteEventArgs = {
 };
 
 
+export type MutationDeleteMemberPlanArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteNavigationArgs = {
   id: Scalars['String'];
 };
@@ -1907,12 +2018,12 @@ export type MutationDeletePageArgs = {
 };
 
 
-export type MutationDeletePaywallArgs = {
+export type MutationDeletePaymentMethodArgs = {
   id: Scalars['String'];
 };
 
 
-export type MutationDeletePaywallBypassArgs = {
+export type MutationDeletePaywallArgs = {
   id: Scalars['String'];
 };
 
@@ -1927,6 +2038,11 @@ export type MutationDeletePollVotesArgs = {
 };
 
 
+export type MutationDeleteRatingSystemAnswerArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteSubscriptionFlowArgs = {
   id: Scalars['String'];
 };
@@ -1938,6 +2054,11 @@ export type MutationDeleteSubscriptionIntervalArgs = {
 
 
 export type MutationDeleteTagArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteTokenArgs = {
   id: Scalars['String'];
 };
 
@@ -2128,6 +2249,31 @@ export type MutationUpdateEventArgs = {
 };
 
 
+export type MutationUpdateMemberPlanArgs = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  amountPerMonthMax?: InputMaybe<Scalars['Int']>;
+  amountPerMonthMin?: InputMaybe<Scalars['Int']>;
+  amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
+  availablePaymentMethods?: InputMaybe<Array<AvailablePaymentMethodInput>>;
+  confirmationPageId?: InputMaybe<Scalars['String']>;
+  currency?: InputMaybe<Currency>;
+  description?: InputMaybe<Scalars['RichText']>;
+  extendable?: InputMaybe<Scalars['Boolean']>;
+  externalReward?: InputMaybe<Scalars['String']>;
+  failPageId?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  imageID?: InputMaybe<Scalars['String']>;
+  maxCount?: InputMaybe<Scalars['Int']>;
+  migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  productType?: InputMaybe<ProductType>;
+  shortDescription?: InputMaybe<Scalars['RichText']>;
+  slug?: InputMaybe<Scalars['String']>;
+  successPageId?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
 export type MutationUpdateNavigationArgs = {
   id: Scalars['String'];
   key: Scalars['String'];
@@ -2158,6 +2304,18 @@ export type MutationUpdatePasswordArgs = {
 };
 
 
+export type MutationUpdatePaymentMethodArgs = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  description?: InputMaybe<Scalars['String']>;
+  gracePeriod?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  imageId?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  paymentProviderID?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['Slug']>;
+};
+
+
 export type MutationUpdatePaymentProviderCustomersArgs = {
   input: Array<PaymentProviderCustomerInput>;
 };
@@ -2165,13 +2323,18 @@ export type MutationUpdatePaymentProviderCustomersArgs = {
 
 export type MutationUpdatePaywallArgs = {
   active?: InputMaybe<Scalars['Boolean']>;
+  alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
   anyMemberPlan?: InputMaybe<Scalars['Boolean']>;
   bypassTokens?: InputMaybe<Array<Scalars['String']>>;
   circumventDescription?: InputMaybe<Scalars['RichText']>;
   description?: InputMaybe<Scalars['RichText']>;
+  fadeout?: InputMaybe<Scalars['Boolean']>;
+  hideContentAfter?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
   name?: InputMaybe<Scalars['String']>;
+  upgradeCircumventDescription?: InputMaybe<Scalars['RichText']>;
+  upgradeDescription?: InputMaybe<Scalars['RichText']>;
 };
 
 
@@ -2183,6 +2346,13 @@ export type MutationUpdatePeerArgs = {
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
   token?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateRatingSystemArgs = {
+  answers?: InputMaybe<Array<UpdateCommentRatingSystemAnswerInput>>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2247,6 +2417,16 @@ export type MutationUpdateUserSubscriptionArgs = {
 };
 
 
+export type MutationUpgradeSubscriptionArgs = {
+  failureURL?: InputMaybe<Scalars['String']>;
+  memberPlanId: Scalars['String'];
+  monthlyAmount: Scalars['Int'];
+  paymentMethodId: Scalars['String'];
+  subscriptionId: Scalars['String'];
+  successURL?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationUploadUserProfileImageArgs = {
   uploadImageInput?: InputMaybe<UploadImageInput>;
 };
@@ -2285,6 +2465,12 @@ export type NonDbProperty = {
   key: Scalars['String'];
   public: Scalars['Boolean'];
   value: Scalars['String'];
+};
+
+export type OverriddenRating = {
+  __typename?: 'OverriddenRating';
+  answerId: Scalars['String'];
+  value?: Maybe<Scalars['Int']>;
 };
 
 export type Page = {
@@ -2463,12 +2649,16 @@ export type PaymentFromInvoiceInput = {
 
 export type PaymentMethod = HasImageLc & {
   __typename?: 'PaymentMethod';
+  active: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
   description: Scalars['String'];
   gracePeriod: Scalars['Int'];
   id: Scalars['String'];
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
+  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  paymentProvider?: Maybe<PaymentProvider>;
   paymentProviderID: Scalars['String'];
   slug: Scalars['Slug'];
 };
@@ -2481,6 +2671,12 @@ export enum PaymentPeriodicity {
   Quarterly = 'quarterly',
   Yearly = 'yearly'
 }
+
+export type PaymentProvider = {
+  __typename?: 'PaymentProvider';
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
 
 export type PaymentProviderCustomer = {
   __typename?: 'PaymentProviderCustomer';
@@ -2506,15 +2702,20 @@ export enum PaymentState {
 export type Paywall = {
   __typename?: 'Paywall';
   active: Scalars['Boolean'];
+  alternativeSubscribeUrl?: Maybe<Scalars['String']>;
   anyMemberPlan: Scalars['Boolean'];
   bypasses: Array<PaywallBypass>;
   circumventDescription?: Maybe<Scalars['RichText']>;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['RichText']>;
+  fadeout: Scalars['Boolean'];
+  hideContentAfter: Scalars['Int'];
   id: Scalars['String'];
   memberPlans: Array<MemberPlan>;
   modifiedAt: Scalars['DateTime'];
   name?: Maybe<Scalars['String']>;
+  upgradeCircumventDescription?: Maybe<Scalars['RichText']>;
+  upgradeDescription?: Maybe<Scalars['RichText']>;
 };
 
 export type PaywallBypass = {
@@ -2888,10 +3089,10 @@ export type Query = {
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /** This query returns the user. */
-  me?: Maybe<User>;
-  /** This query returns a member plan. */
-  memberPlan?: Maybe<MemberPlan>;
-  /** This query returns the member plans. */
+  me?: Maybe<SensitiveDataUser>;
+  /** Returns a memberplan by id or slug. */
+  memberPlan: MemberPlan;
+  /** Returns a paginated list of memberplans based on the filters given. */
   memberPlans: MemberPlanConnection;
   /** Returns a navigation by id. */
   navigation: Navigation;
@@ -2915,8 +3116,12 @@ export type Query = {
   page: Page;
   /** Returns a paginated list of pages based on the filters given. */
   pages: PaginatedPages;
+  /** Returns a payment method by id */
+  paymentMethod: PaymentMethod;
   /** Returns all payment methods */
   paymentMethods: Array<PaymentMethod>;
+  /** Returns all payment providers */
+  paymentProviders: Array<PaymentProvider>;
   /** Returns an paywall by id. */
   paywall: Paywall;
   /** Returns a list of paywalls based on the filters given. */
@@ -2941,7 +3146,7 @@ export type Query = {
   promptHTML: Chat;
   provider: MailProviderModel;
   /** This query returns the comment rating system. */
-  ratingSystem: FullCommentRatingSystem;
+  ratingSystem: CommentRatingSystem;
   /**
    *
    *       Returns all renewing subscribers in a given timeframe.
@@ -2980,10 +3185,13 @@ export type Query = {
   subscriptions: Array<PublicSubscription>;
   /** Returns all mail flows */
   systemMails: Array<SystemMailModel>;
-  /** Returns a tag by id */
+  /** Returns an tag by id or tag. */
   tag: Tag;
   /** This query returns a list of tags */
   tags: TagConnection;
+  /** Returns a list of all tokens. */
+  tokens: Array<Token>;
+  upgradeSubscriptionInfo: UpgradeSubscription;
   /**
    *
    *       Returns a single userConsent by id.
@@ -3135,12 +3343,12 @@ export type QueryMemberPlanArgs = {
 
 
 export type QueryMemberPlansArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<MemberPlanFilter>;
-  order?: SortOrder;
-  skip?: Scalars['Int'];
-  sort?: MemberPlanSort;
-  take?: Scalars['Int'];
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<MemberPlanSort>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -3174,6 +3382,11 @@ export type QueryPagesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<PageSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPaymentMethodArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -3276,7 +3489,9 @@ export type QuerySubscriptionFlowsArgs = {
 
 
 export type QueryTagArgs = {
-  id: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
+  tag?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<TagType>;
 };
 
 
@@ -3287,6 +3502,12 @@ export type QueryTagsArgs = {
   skip?: Scalars['Int'];
   sort?: TagSort;
   take?: Scalars['Int'];
+};
+
+
+export type QueryUpgradeSubscriptionInfoArgs = {
+  memberPlanId: Scalars['String'];
+  subscriptionId: Scalars['String'];
 };
 
 
@@ -3347,7 +3568,7 @@ export enum RatingSystemType {
 export type Registration = {
   __typename?: 'Registration';
   session: SessionWithTokenWithoutUser;
-  user: User;
+  user: SensitiveDataUser;
 };
 
 export type RemotePeerProfile = {
@@ -3382,12 +3603,30 @@ export type RichTextBlockInput = {
   richText: Scalars['RichText'];
 };
 
+export type SensitiveDataUser = BaseUser & {
+  __typename?: 'SensitiveDataUser';
+  active: Scalars['Boolean'];
+  address?: Maybe<UserAddress>;
+  birthday?: Maybe<Scalars['DateTime']>;
+  email: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  flair?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  image?: Maybe<Image>;
+  name: Scalars['String'];
+  paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
+  permissions: Array<Scalars['String']>;
+  properties: Array<Property>;
+  roleIDs: Array<Scalars['String']>;
+  userImageID?: Maybe<Scalars['String']>;
+};
+
 export type SessionWithToken = {
   __typename?: 'SessionWithToken';
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
   token: Scalars['String'];
-  user: User;
+  user: SensitiveDataUser;
 };
 
 export type SessionWithTokenWithoutUser = {
@@ -3780,6 +4019,23 @@ export type TitleBlockInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type Token = BaseToken & {
+  __typename?: 'Token';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+};
+
+export type TokenWithSecret = BaseToken & {
+  __typename?: 'TokenWithSecret';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  token: Scalars['String'];
+};
+
 export type TrackingPixel = {
   __typename?: 'TrackingPixel';
   error?: Maybe<Scalars['String']>;
@@ -3838,6 +4094,12 @@ export type UpdateBannerInput = {
   title: Scalars['String'];
 };
 
+export type UpdateCommentRatingSystemAnswerInput = {
+  answer?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  type?: InputMaybe<RatingSystemType>;
+};
+
 export type UpdateCrowdfundingInput = {
   additionalRevenue?: InputMaybe<Scalars['Float']>;
   countSubscriptionsFrom?: InputMaybe<Scalars['DateTime']>;
@@ -3847,6 +4109,11 @@ export type UpdateCrowdfundingInput = {
   id: Scalars['String'];
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
   name?: InputMaybe<Scalars['String']>;
+};
+
+export type UpgradeSubscription = {
+  __typename?: 'UpgradeSubscription';
+  discountAmount: Scalars['Float'];
 };
 
 export type UploadImageInput = {
@@ -3861,19 +4128,14 @@ export type UploadImageInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
-export type User = {
+export type User = BaseUser & {
   __typename?: 'User';
   active: Scalars['Boolean'];
-  address?: Maybe<UserAddress>;
-  birthday?: Maybe<Scalars['DateTime']>;
-  email: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
   flair?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
   name: Scalars['String'];
-  paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
-  permissions: Array<Scalars['String']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
   userImageID?: Maybe<Scalars['String']>;
@@ -3886,6 +4148,8 @@ export type UserAddress = {
   country?: Maybe<Scalars['String']>;
   streetAddress?: Maybe<Scalars['String']>;
   streetAddress2?: Maybe<Scalars['String']>;
+  streetAddress2Number?: Maybe<Scalars['String']>;
+  streetAddressNumber?: Maybe<Scalars['String']>;
   zipCode?: Maybe<Scalars['String']>;
 };
 
@@ -3895,6 +4159,8 @@ export type UserAddressInput = {
   country?: InputMaybe<Scalars['String']>;
   streetAddress?: InputMaybe<Scalars['String']>;
   streetAddress2?: InputMaybe<Scalars['String']>;
+  streetAddress2Number?: InputMaybe<Scalars['String']>;
+  streetAddressNumber?: InputMaybe<Scalars['String']>;
   zipCode?: InputMaybe<Scalars['String']>;
 };
 
@@ -3996,22 +4262,16 @@ export type YouTubeVideoBlockInput = {
   videoID?: InputMaybe<Scalars['String']>;
 };
 
-export type OverriddenRating = {
-  __typename?: 'overriddenRating';
-  answerId: Scalars['String'];
-  value?: Maybe<Scalars['Int']>;
-};
-
 export type ChallengeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ChallengeQuery = { __typename?: 'Query', challenge: { __typename?: 'Challenge', challenge?: string | null, challengeID?: string | null, validUntil?: string | null } };
 
-export type FullCommentUserFragment = { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, email: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
+export type FullCommentUserFragment = { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type MutationCommentFragment = { __typename?: 'Comment', id: string, itemID: string, itemType: CommentItemType, state: CommentState, text?: Descendant[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null };
 
-export type FullCommentFragment = { __typename?: 'Comment', id: string, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, email: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null };
+export type FullCommentFragment = { __typename?: 'Comment', id: string, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null };
 
 export type AddCommentMutationVariables = Exact<{
   input: CommentInput;
@@ -4027,7 +4287,7 @@ export type CommentsQueryVariables = Exact<{
 }>;
 
 
-export type CommentsQuery = { __typename?: 'Query', comments: Array<{ __typename?: 'Comment', id: string, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, email: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null }> };
+export type CommentsQuery = { __typename?: 'Query', comments: Array<{ __typename?: 'Comment', id: string, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null }> };
 
 export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
@@ -4055,22 +4315,20 @@ export type PeerQueryVariables = Exact<{
 
 export type PeerQuery = { __typename?: 'Query', peer?: { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string } | null };
 
-export type FullUserFragment = { __typename?: 'User', name: string, email: string };
-
 export type CreateSessionMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
 }>;
 
 
-export type CreateSessionMutation = { __typename?: 'Mutation', createSession: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'User', email: string } } };
+export type CreateSessionMutation = { __typename?: 'Mutation', createSession: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'SensitiveDataUser', email: string } } };
 
 export type CreateSessionWithJwtMutationVariables = Exact<{
   jwt: Scalars['String'];
 }>;
 
 
-export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'User', email: string } } };
+export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'SensitiveDataUser', email: string } } };
 
 export type UpdatePaymentProviderCustomersMutationVariables = Exact<{
   customers: Array<PaymentProviderCustomerInput> | PaymentProviderCustomerInput;
@@ -4145,7 +4403,6 @@ export const FullCommentUser = gql`
   name
   firstName
   flair
-  email
   image {
     ...FullImage
   }
@@ -4208,12 +4465,6 @@ export const PeerWithProfile = gql`
 }
     ${PeerRef}
 ${FullRemotePeerProfile}`;
-export const FullUser = gql`
-    fragment FullUser on User {
-  name
-  email
-}
-    `;
 export const Challenge = gql`
     query Challenge {
   challenge {

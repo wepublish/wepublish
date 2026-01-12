@@ -7,7 +7,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { Comment, CommentRating, CommentSort } from './comment.model';
+import { Comment, CommentSort } from './comment.model';
 import { CommentService } from './comment.service';
 import { SortOrder } from '@wepublish/utils/api';
 import {
@@ -18,7 +18,6 @@ import {
   UserSession,
 } from '@wepublish/authentication/api';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
-import { User, UserDataloaderService } from '@wepublish/user/api';
 import { CommentTagDataloader, Tag } from '@wepublish/tag/api';
 import { CommentDataloaderService } from './comment-dataloader.service';
 import { RatingSystemService } from './rating-system';
@@ -26,6 +25,8 @@ import { CommentInput, CommentUpdateInput } from './comment.input';
 import { URLAdapter } from '@wepublish/nest-modules';
 import { ArticleDataloaderService } from '@wepublish/article/api';
 import { PageDataloaderService } from '@wepublish/page/api';
+import { CommentRating } from './rating-system/rating-system.model';
+import { forwardRef, Inject } from '@nestjs/common';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -35,9 +36,10 @@ export class CommentResolver {
     private tagDataLoader: CommentTagDataloader,
     private ratingSystemService: RatingSystemService,
     private imageDataloaderService: ImageDataloaderService,
-    private userDataloaderService: UserDataloaderService,
     private urlAdapter: URLAdapter,
+    @Inject(forwardRef(() => ArticleDataloaderService))
     private articleDataloader: ArticleDataloaderService,
+    @Inject(forwardRef(() => PageDataloaderService))
     private pageDataloader: PageDataloaderService
   ) {}
 
@@ -110,21 +112,12 @@ export class CommentResolver {
 
   @ResolveField(() => [CommentRating])
   @Public()
-  async userRatings(
-    @Parent() comment: Comment,
-    @CurrentUser() session?: UserSession | null
-  ) {
-    const userId = session?.user?.id || null;
-    return this.ratingSystemService.getUserCommentRatings(comment.id, userId);
-  }
-
-  @ResolveField(() => [CommentRating])
-  @Public()
   async calculatedRatings(@Parent() comment: Comment) {
     const [answers, ratings] = await Promise.all([
       this.ratingSystemService.getRatingSystemAnswers(),
       this.ratingSystemService.getCommentRatings(comment.id),
     ]);
+
     return this.commentService.getCalculatedRatingsForComment(answers, ratings);
   }
 
@@ -134,15 +127,6 @@ export class CommentResolver {
       return null;
     }
     return this.imageDataloaderService.load(comment.guestUserImageID);
-  }
-
-  @ResolveField(() => User, { nullable: true })
-  async user(@Parent() comment: Comment) {
-    if (!comment.userID) {
-      return null;
-    }
-
-    return this.userDataloaderService.load(comment.userID);
   }
 
   @ResolveField(() => [Tag])

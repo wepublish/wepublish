@@ -1,12 +1,13 @@
 import { ArgsType, Field, ObjectType } from '@nestjs/graphql';
 import { ChallengeInput } from '@wepublish/challenge/api';
-import { User, UserAddressInput } from '@wepublish/user/api';
+// eslint-disable-next-line no-restricted-imports
+import { SensitiveDataUser, UserAddressInput } from '@wepublish/user/api';
 import { SessionWithTokenWithoutUser } from './session.model';
 
 @ObjectType()
 export class Registration {
   @Field()
-  user!: User;
+  user!: SensitiveDataUser;
 
   @Field(() => SessionWithTokenWithoutUser)
   session!: SessionWithTokenWithoutUser;

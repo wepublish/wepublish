@@ -18,16 +18,11 @@ import { RatingSystemService } from './rating-system/rating-system.service';
 import { CommentTagDataloader } from '@wepublish/tag/api';
 import { Descendant } from 'slate';
 import request from 'supertest';
-import {
-  Comment,
-  CommentAuthorType,
-  CommentItemType as CommentModelItemType,
-  CommentState,
-} from './comment.model';
+import { Comment, CommentAuthorType } from './comment.model';
 import { ImageDataloaderService } from '@wepublish/image/api';
-import { UserDataloaderService } from '@wepublish/user/api';
 import { ArticleDataloaderService } from '@wepublish/article/api';
 import { PageDataloaderService } from '@wepublish/page/api';
+import { CommentState } from '@prisma/client';
 
 const mockUser = {
   id: 'userId',
@@ -64,7 +59,7 @@ const mockComment: Comment = {
   tags: [],
   authorType: CommentAuthorType.author,
   itemID: 'item-id',
-  itemType: CommentModelItemType.article,
+  itemType: CommentItemType.Article,
   state: CommentState.approved,
   createdAt: new Date('2002-12-29'),
   modifiedAt: new Date('2002-12-29'),
@@ -80,7 +75,6 @@ describe('CommentResolver', () => {
   let commentDataloader: PartialMocked<CommentDataloaderService>;
   let ratingSystemService: PartialMocked<RatingSystemService>;
   let imageDataloaderService: PartialMocked<ImageDataloaderService>;
-  let userDataloaderService: PartialMocked<UserDataloaderService>;
   let articleDataloaderService: PartialMocked<ArticleDataloaderService>;
   let pageDataloaderService: PartialMocked<PageDataloaderService>;
   let commentTagDataloader: PartialMocked<CommentTagDataloader>;
@@ -90,7 +84,6 @@ describe('CommentResolver', () => {
     commentDataloader = createMock(CommentDataloaderService);
     ratingSystemService = createMock(RatingSystemService);
     imageDataloaderService = createMock(ImageDataloaderService);
-    userDataloaderService = createMock(UserDataloaderService);
     articleDataloaderService = createMock(ArticleDataloaderService);
     pageDataloaderService = createMock(PageDataloaderService);
     commentTagDataloader = createMock(CommentTagDataloader);
@@ -127,10 +120,6 @@ describe('CommentResolver', () => {
         {
           provide: ImageDataloaderService,
           useValue: imageDataloaderService,
-        },
-        {
-          provide: UserDataloaderService,
-          useValue: userDataloaderService,
         },
         {
           provide: ArticleDataloaderService,
@@ -175,20 +164,8 @@ describe('CommentResolver', () => {
         },
       });
 
-    expect(res.body.data).toMatchInlineSnapshot(`
-      {
-        "addComment": {
-          "id": "id",
-          "itemID": "item-id",
-          "itemType": "article",
-          "parentID": null,
-          "state": "approved",
-          "text": null,
-          "user": null,
-        },
-      }
-    `);
-    expect(res.body.data.addComment.state).toMatchInlineSnapshot(`"approved"`);
+    expect(res.body.data).toMatchSnapshot();
+    expect(res.body.data.addComment.state).toMatchSnapshot(`"approved"`);
   });
 
   test('can be created with bare minimum', async () => {
@@ -206,56 +183,9 @@ describe('CommentResolver', () => {
       },
     });
 
-    expect(commentService.addPublicComment?.mock.calls).toMatchInlineSnapshot(`
-      [
-        [
-          {
-            "itemID": "item-id",
-            "itemType": "article",
-            "text": [
-              {
-                "children": [
-                  {
-                    "text": "p text rich text",
-                  },
-                ],
-                "type": "paragraph",
-              },
-            ],
-          },
-          {
-            "id": "448c86d8-9df1-4836-9ae9-aa2668ef9dcd",
-            "token": "some-token",
-            "type": "user",
-            "user": {
-              "active": true,
-              "birthday": null,
-              "email": "email",
-              "firstName": "firstName",
-              "flair": "flair",
-              "id": "userId",
-              "name": "name",
-              "roleIDs": [],
-              "userImageID": "userImageId",
-            },
-          },
-        ],
-      ]
-    `);
+    expect(commentService.addPublicComment?.mock.calls).toMatchSnapshot();
     expect(res.body.errors).toBeUndefined();
-    expect(res.body.data).toMatchInlineSnapshot(`
-      {
-        "addComment": {
-          "id": "id",
-          "itemID": "item-id",
-          "itemType": "article",
-          "parentID": null,
-          "state": "approved",
-          "text": null,
-          "user": null,
-        },
-      }
-    `);
+    expect(res.body.data).toMatchSnapshot();
   });
 
   test('get comments', async () => {
@@ -289,11 +219,6 @@ describe('CommentResolver', () => {
       filename: 'image.png',
     });
 
-    userDataloaderService.load?.mockResolvedValue({
-      id: 'user-id',
-      name: 'name',
-    });
-
     await request(app.getHttpServer())
       .post('/')
       .send({
@@ -303,46 +228,12 @@ describe('CommentResolver', () => {
         },
       })
       .expect(res => {
-        expect(commentService.getPublicCommentsForItemById?.mock.calls)
-          .toMatchInlineSnapshot(`
-          [
-            [
-              "item-id",
-              "userId",
-              null,
-              "Descending",
-            ],
-          ]
-        `);
-        expect(imageDataloaderService.load?.mock.calls).toMatchInlineSnapshot(`
-          [
-            [
-              "guestUserImageID",
-            ],
-          ]
-        `);
+        expect(
+          commentService.getPublicCommentsForItemById?.mock.calls
+        ).toMatchSnapshot();
+        expect(imageDataloaderService.load?.mock.calls).toMatchSnapshot();
         expect(res.body.errors).toBeUndefined();
-        expect(res.body.data).toMatchInlineSnapshot(`
-          {
-            "comments": [
-              {
-                "createdAt": "2022-12-29T00:00:00.000Z",
-                "guestUserImage": {
-                  "filename": "image.png",
-                  "id": "guestUserImageID",
-                },
-                "id": "id",
-                "itemID": "item-id",
-                "itemType": "article",
-                "modifiedAt": "2022-12-29T00:00:00.000Z",
-                "user": {
-                  "id": "user-id",
-                  "name": "name",
-                },
-              },
-            ],
-          }
-        `);
+        expect(res.body.data).toMatchSnapshot();
       });
   });
 });

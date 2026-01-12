@@ -18,6 +18,7 @@ import {
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
+  withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
@@ -238,8 +239,10 @@ const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   previewLink,
 ]);
 const ConnectedApp = withApollo(
-  withErrorSnackbar(
-    withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+  withBuilderRouter(
+    withErrorSnackbar(
+      withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+    )
   )
 );
 

@@ -1,4 +1,7 @@
-import { User, SessionWithTokenWithoutUser } from '@wepublish/website/api';
+import {
+  SessionWithTokenWithoutUser,
+  SensitiveDataUser,
+} from '@wepublish/website/api';
 import {
   AuthTokenStorageKey,
   SessionTokenContext,
@@ -16,19 +19,20 @@ import {
 export const AsyncSessionProvider = memo<
   PropsWithChildren<{ sessionToken: SessionWithTokenWithoutUser | null }>
 >(function SessionProvider({ sessionToken, children }) {
-  const [token, setToken] = useState<typeof sessionToken>(sessionToken);
-  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<typeof sessionToken>();
+  const [user, setUser] = useState<SensitiveDataUser | null>();
   const initialSetupDone = useRef(false);
 
   const [getMe] = useMeLazyQuery({
     onCompleted(data) {
-      setUser((data.me as User) ?? null);
+      setUser((data.me as SensitiveDataUser) ?? null);
     },
   });
 
   const setCookieAndToken = useCallback(
     async (newToken: SessionWithTokenWithoutUser | null) => {
       setToken(newToken);
+      setUser(undefined);
 
       if (newToken) {
         sessionStorage.setItem(AuthTokenStorageKey, JSON.stringify(newToken));
@@ -68,6 +72,8 @@ export const AsyncSessionProvider = memo<
     if (token) {
       sessionStorage.setItem(AuthTokenStorageKey, JSON.stringify(token));
       await getMe();
+    } else {
+      setUser(null);
     }
   }, [getMe, sessionToken, setCookieAndToken]);
 

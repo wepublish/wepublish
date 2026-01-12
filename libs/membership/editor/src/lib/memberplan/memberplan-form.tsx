@@ -1,13 +1,13 @@
 import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import {
-  AvailablePaymentMethod,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
   FullImageFragment,
   PaymentMethod,
   Currency,
   ProductType,
-} from '@wepublish/editor/api';
+  FullAvailablePaymentMethodFragment,
+} from '@wepublish/editor/api-v2';
 import {
   Button,
   CheckPicker,
@@ -67,14 +67,14 @@ const RowPaddingTop = styled(Row)`
 interface MemberPlanFormProps {
   memberPlanId?: string;
   memberPlan?: FullMemberPlanFragment | null;
-  availablePaymentMethods: ListValue<AvailablePaymentMethod>[];
+  availablePaymentMethods: ListValue<FullAvailablePaymentMethodFragment>[];
   paymentMethods: FullPaymentMethodFragment[];
   loading: boolean;
   setMemberPlan: Dispatch<
     SetStateAction<FullMemberPlanFragment | null | undefined>
   >;
   setAvailablePaymentMethods: Dispatch<
-    SetStateAction<ListValue<AvailablePaymentMethod>[]>
+    SetStateAction<ListValue<FullAvailablePaymentMethodFragment>[]>
   >;
 }
 
@@ -146,8 +146,10 @@ export function MemberPlanForm({
 
   function setForceAutoRenewal(
     forceAutoRenewal: boolean,
-    onChange: React.Dispatch<React.SetStateAction<AvailablePaymentMethod>>,
-    availablePaymentMethod: AvailablePaymentMethod
+    onChange: React.Dispatch<
+      React.SetStateAction<FullAvailablePaymentMethodFragment>
+    >,
+    availablePaymentMethod: FullAvailablePaymentMethodFragment
   ): void {
     // if subscription plan ist not extendable, a subscription can not be forced to be auto-renew.
     if (!memberPlan?.extendable && forceAutoRenewal) {

@@ -8,14 +8,19 @@ export const GraphQLSlug = new GraphQLScalarType({
   },
 
   parseValue(value) {
-    if (typeof value != 'string') throw new Error();
+    if (typeof value != 'string') {
+      throw new Error();
+    }
+
     return slugify(value);
   },
 
   parseLiteral(literal) {
     const value = valueFromAST(literal, GraphQLString) as string | undefined;
 
-    if (value == null) throw new Error();
+    if (value == null) {
+      throw new Error();
+    }
 
     return slugify(value);
   },
