@@ -262,9 +262,8 @@ const createArticleInput = (
   tagIds: string[],
   authorIds: string[],
   imageIds: string[],
-  pollIds: string[],
-  eventIds: string[],
-  i: number
+  i: number,
+  blockStyles: BlockStyle[]
 ) => {
   const title = capitalize(faker.lorem.words({ min: 3, max: 8 }));
   return {
@@ -316,6 +315,41 @@ const createArticleInput = (
             caption: faker.lorem.sentence(),
           } as ImageBlockInput,
         } as BlockContentInput,
+
+        {
+          linkPageBreak: {
+            blockStyle: getBlockStyle(blockStyles, 'SidebarContent'),
+            hideButton: false,
+            imageID: imageIds[imageIds.length - 25],
+            linkTarget: null,
+            linkText: capitalize(faker.lorem.words({ min: 1, max: 3 })),
+            linkURL: 'https://shop.tsri.ch/products/cap-tsuri',
+            richText: [
+              {
+                type: 'paragraph',
+                children: [
+                  {
+                    text: `Neu! ${capitalize(faker.lorem.words({ min: 2, max: 4 }))}`,
+                  },
+                ],
+              },
+              ...(getText(1, 1) as Descendant[]),
+              {
+                type: 'paragraph',
+                children: [
+                  {
+                    text: `Design von Armanda Asani
+CHF 42.00
+
+Jetzt im Shop erhältlich.`,
+                  },
+                ],
+              },
+            ] as Descendant[],
+            text: 'Shop',
+          } as BreakBlockInput,
+        } as BlockContentInput,
+
         {
           richText: {
             richText: getText(3, 7),
@@ -356,6 +390,29 @@ const createArticleInput = (
             return richTextBlock;
           }
         }),
+
+        {
+          linkPageBreak: {
+            blockStyle: getBlockStyle(blockStyles, 'SidebarContent'),
+            hideButton: false,
+            imageID: imageIds[imageIds.length - 30],
+            linkTarget: null,
+            linkText: capitalize(faker.lorem.words({ min: 1, max: 3 })),
+            linkURL: `/newsletter?mc_u=56ee24de7341c744008a13c9e&mc_id=32c65d081a&mc_f_id=00e5c2e1f0&source=tsri&tf_id=jExhxiVv&popTitle=${encodeURIComponent(faker.lorem.words({ min: 2, max: 5 }).toUpperCase())}&popButtonText=${encodeURIComponent(capitalize(faker.lorem.words({ min: 2, max: 3 })))}&popText=${encodeURIComponent(faker.lorem.sentence({ min: 16, max: 30 }))}`,
+            richText: [
+              {
+                type: 'heading-two',
+                children: [
+                  {
+                    text: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                  },
+                ],
+              },
+              ...(getText(1, 1) as Descendant[]),
+            ] as Descendant[],
+            text: 'Newsletter',
+          } as BreakBlockInput,
+        } as BlockContentInput,
       ] as BlockContentInput[],
 
       hideAuthor: false,
@@ -375,8 +432,7 @@ async function seedArticlesByTag(
   tagIds: string[] = [],
   authorIds: string[] = [],
   imageIds: string[] = [],
-  pollIds: string[] = [],
-  eventIds: string[] = []
+  blockStyles: BlockStyle[]
 ) {
   const articles = await Promise.all(
     Array.from({ length: nrOfArticlesPerTag * tagIds.length }, (_, index) => {
@@ -384,9 +440,8 @@ async function seedArticlesByTag(
         tagIds,
         authorIds,
         imageIds,
-        pollIds,
-        eventIds,
-        index
+        index,
+        blockStyles
       );
       return createArticle(articleData).then((_a: any) => {
         return updateArticle({
@@ -410,8 +465,7 @@ async function seedArticles(
   tagIds: string[] = [],
   authorIds: string[] = [],
   imageIds: string[] = [],
-  pollIds: string[] = [],
-  eventIds: string[] = []
+  blockStyles: BlockStyle[]
 ) {
   const articles = await Promise.all(
     Array.from({ length: 1 }, (_, index) => {
@@ -419,9 +473,8 @@ async function seedArticles(
         tagIds,
         authorIds,
         imageIds,
-        pollIds,
-        eventIds,
-        index
+        index,
+        blockStyles
       );
       return createArticle(articleData).then((_a: any) => {
         return updateArticle({
@@ -892,7 +945,7 @@ async function seedPages(
 
           {
             linkPageBreak: {
-              blockStyle: undefined,
+              blockStyle: getBlockStyle(blockStyles, 'AttentionCatcher'),
               hideButton: false,
               imageID: imageIds[imageIds.length - 15],
               linkTarget: null,
@@ -1195,6 +1248,20 @@ async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
     {
       name: 'TwoColAltColor',
       blocks: ['TeaserSlots'],
+    },
+
+    // break block styles
+    {
+      name: 'AttentionCatcher',
+      blocks: ['LinkPageBreak'],
+    },
+    {
+      name: 'SidebarContent',
+      blocks: ['LinkPageBreak'],
+    },
+    {
+      name: 'ContextBox',
+      blocks: ['LinkPageBreak'],
     },
   ];
 
@@ -1637,7 +1704,8 @@ async function handleSeed(
     updateArticle,
     tags.map(tag => tag.data?.createTag.id),
     authors.map(author => author.data?.createAuthor.id),
-    images
+    images,
+    blockStyles
   );
 
   const heroArticle = await seedArticles(
@@ -1645,7 +1713,8 @@ async function handleSeed(
     updateArticle,
     tags.map(tag => tag.data?.createTag.id),
     authors.map(author => author.data?.createAuthor.id),
-    images
+    images,
+    blockStyles
   );
 
   for (const article of [...articles, ...heroArticle]) {
