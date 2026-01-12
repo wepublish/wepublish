@@ -338,7 +338,6 @@ export type Mutation = {
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
   deleteSubscription?: Maybe<Subscription>;
   deleteUser?: Maybe<User>;
-  importSubscription?: Maybe<Subscription>;
   markInvoiceAsPaid?: Maybe<Invoice>;
   rejectComment: Comment;
   renewSubscription?: Maybe<Invoice>;
@@ -471,11 +470,6 @@ export type MutationDeleteUserArgs = {
 };
 
 
-export type MutationImportSubscriptionArgs = {
-  input: SubscriptionInput;
-};
-
-
 export type MutationMarkInvoiceAsPaidArgs = {
   id: Scalars['String'];
 };
@@ -600,17 +594,6 @@ export type Payment = {
   state: PaymentState;
 };
 
-export type PaymentConnection = {
-  __typename?: 'PaymentConnection';
-  nodes: Array<Payment>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type PaymentFilter = {
-  intentID?: InputMaybe<Scalars['String']>;
-};
-
 export type PaymentFromInvoiceInput = {
   failureURL?: InputMaybe<Scalars['String']>;
   invoiceID: Scalars['String'];
@@ -654,11 +637,6 @@ export type PaymentProviderCustomer = {
   customerID: Scalars['String'];
   paymentProviderID: Scalars['String'];
 };
-
-export enum PaymentSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
-}
 
 export enum PaymentState {
   Canceled = 'canceled',
@@ -799,8 +777,6 @@ export type Query = {
   invoice?: Maybe<Invoice>;
   invoices: InvoiceConnection;
   me?: Maybe<User>;
-  payment?: Maybe<Payment>;
-  payments: PaymentConnection;
   peerProfile: PeerProfile;
   poll?: Maybe<FullPoll>;
   polls?: Maybe<PollConnection>;
@@ -861,21 +837,6 @@ export type QueryInvoicesArgs = {
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<InvoiceSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryPaymentArgs = {
-  id?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryPaymentsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<PaymentFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<PaymentSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
 
