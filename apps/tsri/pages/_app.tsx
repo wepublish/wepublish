@@ -26,13 +26,17 @@ import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
 import { createWithV1ApiClient } from '@wepublish/website/api';
-import { WebsiteBuilderProvider } from '@wepublish/website/builder';
+import {
+  BuilderBlockRendererProps,
+  WebsiteBuilderProvider,
+} from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
+import { ComponentType } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
@@ -143,7 +147,9 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             Quote: TsriQuoteBlock,
             RichText: TsriRichText,
             Title: TsriTitleBlock,
-            Renderer: TsriBlockRenderer,
+            Renderer: TsriBlockRenderer as ComponentType<
+              BuilderBlockRendererProps & { siblings: BlockSiblings }
+            >,
             Blocks: TsriBlocks,
             FlexBlock: TsriFlexBlock,
           }}
