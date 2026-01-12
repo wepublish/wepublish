@@ -48,8 +48,8 @@ import { TsriAuthorChip } from '../src/components/tsri-author-chip';
 import { TsriAuthorLinks } from '../src/components/tsri-author-links';
 import { TsriAuthorList } from '../src/components/tsri-author-list';
 import { TsriBanner } from '../src/components/tsri-banner';
-import { TsriBreakBlock } from '../src/components/tsri-break-block';
-import { TsriContextBox } from '../src/components/tsri-context-box';
+import { TsriBreakBlock } from '../src/components/break-blocks/tsri-base-break-block';
+import { TsriContextBox } from '../src/components/break-blocks/tsri-context-box';
 import { TsriNavbar } from '../src/components/tsri-navbar';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
@@ -58,6 +58,8 @@ import { TsriTitleBlock } from '../src/components/tsri-title-block';
 import { TsriTeaser } from '../src/components/tsri-teaser';
 import theme from '../src/theme';
 import { TsriBlockRenderer } from '../src/tsri-block-renderer';
+import { TsriBlocks } from '../src/components/tsri-block-renderer';
+import { TsriGlobalStyles } from '../src/components/tsri-global-styles';
 
 setDefaultOptions({
   locale: de,
@@ -144,6 +146,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             RichText: TsriRichText,
             Title: TsriTitleBlock,
             Renderer: TsriBlockRenderer,
+            Blocks: TsriBlocks,
           }}
           blockStyles={{
             ContextBox: TsriContextBox,
@@ -157,6 +160,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
         >
           <ThemeProvider theme={theme}>
             <CssBaseline />
+            <TsriGlobalStyles />
 
             <Head>
               <title key="title">{siteTitle}</title>
