@@ -152,9 +152,8 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             Quote: TsriQuoteBlock,
             RichText: TsriRichText,
             Title: TsriTitleBlock,
-            Renderer: TsriBlockRenderer as ComponentType<
-              BuilderBlockRendererProps & { siblings: BlockSiblings }
-            >,
+            Renderer:
+              TsriBlockRenderer as ComponentType<BuilderBlockRendererProps>,
             Blocks: TsriBlocks,
           }}
           blockStyles={{
