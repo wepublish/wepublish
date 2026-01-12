@@ -356,7 +356,7 @@ Jetzt im Shop erhältlich.`,
           } as RichTextBlockInput,
         } as BlockContentInput,
 
-        ...Array.from({ length: faker.number.int({ min: 5, max: 19 }) }, () => {
+        ...Array.from({ length: faker.number.int({ min: 5, max: 9 }) }, () => {
           const imageBlock = pickRandom<BlockContentInput>(
             {
               image: {
@@ -413,6 +413,24 @@ Jetzt im Shop erhältlich.`,
             text: 'Newsletter',
           } as BreakBlockInput,
         } as BlockContentInput,
+
+        ...Array.from({ length: faker.number.int({ min: 1, max: 4 }) }, () => {
+          return {
+            richText: {
+              richText: [
+                {
+                  type: 'heading-three',
+                  children: [
+                    {
+                      text: capitalize(faker.lorem.words({ min: 3, max: 9 })),
+                    },
+                  ],
+                },
+                ...(getText(3, 5) as Descendant[]),
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput;
+        }),
       ] as BlockContentInput[],
 
       hideAuthor: false,
