@@ -11,14 +11,11 @@ import { Context } from '../context';
 import { CommentSort } from '../db/comment';
 import { ImageSort } from '../db/image';
 import { InvoiceSort } from '../db/invoice';
-import { PaymentSort } from '../db/payment';
 import { UserSort } from '../db/user';
 import { GivenTokeExpiryToLongError, UserIdNotFound } from '../error';
 
 import { GraphQLJWTToken } from './auth';
 
-import { GraphQLFullCommentRatingSystem } from './comment-rating/comment-rating';
-import { getRatingSystem } from './comment-rating/comment-rating.public-queries';
 import {
   GraphQLComment,
   GraphQLCommentConnection,
@@ -48,17 +45,6 @@ import {
   getInvoiceById,
 } from './invoice/invoice.private-queries';
 
-import {
-  GraphQLPayment,
-  GraphQLPaymentConnection,
-  GraphQLPaymentFilter,
-  GraphQLPaymentSort,
-} from './payment';
-
-import {
-  getAdminPayments,
-  getPaymentById,
-} from './payment/payment.private-queries';
 import { GraphQLPeerProfile } from './peer';
 import {
   getAdminPeerProfile,
@@ -76,8 +62,6 @@ import { getPoll } from './poll/poll.public-queries';
 import { GraphQLSession } from './session';
 import { getSessionsForUser } from './session/session.private-queries';
 
-import { GraphQLToken } from './token';
-import { getTokens } from './token/token.private-queries';
 import {
   GraphQLUser,
   GraphQLUserConnection,
@@ -232,17 +216,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         ),
     },
 
-    // Token
-    // =====
-
-    tokens: {
-      type: new GraphQLNonNull(
-        new GraphQLList(new GraphQLNonNull(GraphQLToken))
-      ),
-      resolve: (root, args, { authenticateUser, prisma: { token } }) =>
-        getTokens(authenticateUser, token),
-    },
-
     // Image
     // =====
 
@@ -361,55 +334,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           authenticate,
           invoice
         ),
-    },
-
-    // Payment
-    // ======
-
-    payment: {
-      type: GraphQLPayment,
-      args: { id: { type: GraphQLString } },
-      resolve: (root, { id }, { authenticate, loaders: { paymentsByID } }) =>
-        getPaymentById(id, authenticate, paymentsByID),
-    },
-
-    payments: {
-      type: new GraphQLNonNull(GraphQLPaymentConnection),
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 10 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLPaymentFilter },
-        sort: {
-          type: GraphQLPaymentSort,
-          defaultValue: PaymentSort.ModifiedAt,
-        },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, cursor, take, skip },
-        { authenticate, prisma: { payment } }
-      ) =>
-        getAdminPayments(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          payment
-        ),
-    },
-
-    // Rating System
-    // ==========
-
-    ratingSystem: {
-      type: new GraphQLNonNull(GraphQLFullCommentRatingSystem),
-      resolve: (root, input, { prisma: { commentRatingSystem } }) =>
-        getRatingSystem(commentRatingSystem),
     },
 
     // Polls

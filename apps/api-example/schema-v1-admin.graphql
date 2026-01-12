@@ -7,16 +7,12 @@ type Query {
   sessions: [Session!]!
   user(id: String): User
   users(cursor: String, take: Int = 10, skip: Int = 0, filter: UserFilter, sort: UserSort = modifiedAt, order: SortOrder = Descending): UserConnection!
-  tokens: [Token!]!
   image(id: String): Image
   images(cursor: String, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
   comment(id: String!): Comment
   comments(cursor: String, take: Int = 10, skip: Int = 0, filter: CommentFilter, sort: CommentSort = modifiedAt, order: SortOrder = Descending): CommentConnection!
   invoice(id: String): Invoice
   invoices(cursor: String, take: Int = 10, skip: Int = 0, filter: InvoiceFilter, sort: InvoiceSort = modifiedAt, order: SortOrder = Descending): InvoiceConnection!
-  payment(id: String): Payment
-  payments(cursor: String, take: Int = 10, skip: Int = 0, filter: PaymentFilter, sort: PaymentSort = modifiedAt, order: SortOrder = Descending): PaymentConnection!
-  ratingSystem: FullCommentRatingSystem!
   polls(cursor: String, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
   poll(id: String): FullPoll
 }
@@ -325,13 +321,6 @@ enum SortOrder {
   Descending
 }
 
-type Token {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-}
-
 type ImageConnection {
   nodes: [Image!]!
   totalCount: Int!
@@ -465,61 +454,6 @@ enum InvoiceSort {
   paidAt
 }
 
-type Payment {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  intentID: String
-  intentSecret: String
-  state: PaymentState!
-  invoice: Invoice!
-  intentData: String
-  paymentMethod: PaymentMethod!
-  paymentData: String
-}
-
-enum PaymentState {
-  created
-  submitted
-  requiresUserAction
-  processing
-  paid
-  canceled
-  declined
-}
-
-type PaymentConnection {
-  nodes: [Payment!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input PaymentFilter {
-  intentID: String
-}
-
-enum PaymentSort {
-  createdAt
-  modifiedAt
-}
-
-type FullCommentRatingSystem {
-  id: String!
-  name: String
-  answers: [CommentRatingSystemAnswer!]!
-}
-
-type CommentRatingSystemAnswer {
-  id: String!
-  ratingSystemId: String!
-  answer: String
-  type: RatingSystemType!
-}
-
-enum RatingSystemType {
-  star
-}
-
 type PollConnection {
   nodes: [Poll!]!
   pageInfo: PageInfo!
@@ -584,8 +518,6 @@ type Mutation {
   sessions: [Session!]!
   sendJWTLogin(url: String!, email: String!): String!
   sendWebsiteLogin(email: String!): String!
-  createToken(input: TokenInput!): CreatedToken!
-  deleteToken(id: String!): CreatedToken
   createUser(input: UserInput!, password: String!): User
   updateUser(id: String!, input: UserInput!): User
   resetUserPassword(id: String!, password: String!, sendMail: Boolean): User
@@ -605,9 +537,6 @@ type Mutation {
   rejectComment(id: String!, rejectionReason: CommentRejectionReason): Comment!
   requestChangesOnComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
   deleteComment(id: String!): Comment!
-  createRatingSystemAnswer(ratingSystemId: String!, type: RatingSystemType = star, answer: String): CommentRatingSystemAnswer!
-  updateRatingSystem(ratingSystemId: String!, name: String, answers: [UpdateCommentRatingSystemAnswer!]): FullCommentRatingSystem!
-  deleteRatingSystemAnswer(id: String!): CommentRatingSystemAnswer!
   createPoll(opensAt: DateTime, closedAt: DateTime, question: String): PollWithAnswers
   createPollAnswer(pollId: String!, answer: String): PollAnswer
   createPollExternalVoteSource(pollId: String!, source: String): PollExternalVoteSource
@@ -635,18 +564,6 @@ type SessionWithToken {
   token: String!
   createdAt: DateTime!
   expiresAt: DateTime!
-}
-
-type CreatedToken {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  token: String!
-}
-
-input TokenInput {
-  name: String!
 }
 
 input UserInput {
@@ -729,6 +646,29 @@ input InvoiceItemInput {
   modifiedAt: DateTime!
 }
 
+type Payment {
+  id: String!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  intentID: String
+  intentSecret: String
+  state: PaymentState!
+  invoice: Invoice!
+  intentData: String
+  paymentMethod: PaymentMethod!
+  paymentData: String
+}
+
+enum PaymentState {
+  created
+  submitted
+  requiresUserAction
+  processing
+  paid
+  canceled
+  declined
+}
+
 input PaymentFromInvoiceInput {
   invoiceID: String!
   paymentMethodID: String
@@ -746,12 +686,6 @@ input CommentRevisionUpdateInput {
 input CommentRatingOverrideUpdateInput {
   answerId: String!
   value: Int
-}
-
-input UpdateCommentRatingSystemAnswer {
-  id: String!
-  type: RatingSystemType
-  answer: String
 }
 
 type PollWithAnswers {

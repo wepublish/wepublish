@@ -108,7 +108,7 @@ export class PublicSubscription
   @Field(() => SubscriptionDeactivation, { nullable: true })
   deactivation?: SubscriptionDeactivation;
 
-  @Field(() => String)
+  @Field()
   url!: string;
 
   @Field(() => Boolean)

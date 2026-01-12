@@ -89,14 +89,6 @@ export type CommentRatingOverrideUpdateInput = {
   value?: InputMaybe<Scalars['Int']>;
 };
 
-export type CommentRatingSystemAnswer = {
-  __typename?: 'CommentRatingSystemAnswer';
-  answer?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  ratingSystemId: Scalars['String'];
-  type: RatingSystemType;
-};
-
 export enum CommentRejectionReason {
   Misconduct = 'misconduct',
   Spam = 'spam'
@@ -128,15 +120,6 @@ export enum CommentState {
   Rejected = 'rejected'
 }
 
-export type CreatedToken = {
-  __typename?: 'CreatedToken';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  token: Scalars['String'];
-};
-
 export enum Currency {
   Chf = 'CHF',
   Eur = 'EUR'
@@ -146,13 +129,6 @@ export type FocalPoint = {
   __typename?: 'FocalPoint';
   x: Scalars['Float'];
   y: Scalars['Float'];
-};
-
-export type FullCommentRatingSystem = {
-  __typename?: 'FullCommentRatingSystem';
-  answers: Array<CommentRatingSystemAnswer>;
-  id: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
 };
 
 export type FullPoll = {
@@ -336,10 +312,8 @@ export type Mutation = {
   createPoll?: Maybe<PollWithAnswers>;
   createPollAnswer?: Maybe<PollAnswer>;
   createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
-  createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
-  createToken: CreatedToken;
   createUser?: Maybe<User>;
   deleteComment: Comment;
   deleteImage?: Maybe<Image>;
@@ -347,8 +321,6 @@ export type Mutation = {
   deletePoll?: Maybe<FullPoll>;
   deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
-  deleteRatingSystemAnswer: CommentRatingSystemAnswer;
-  deleteToken?: Maybe<CreatedToken>;
   deleteUser?: Maybe<User>;
   markInvoiceAsPaid?: Maybe<Invoice>;
   rejectComment: Comment;
@@ -365,7 +337,6 @@ export type Mutation = {
   updateInvoice?: Maybe<Invoice>;
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
-  updateRatingSystem: FullCommentRatingSystem;
   updateUser?: Maybe<User>;
   uploadImage?: Maybe<Image>;
 };
@@ -414,13 +385,6 @@ export type MutationCreatePollExternalVoteSourceArgs = {
 };
 
 
-export type MutationCreateRatingSystemAnswerArgs = {
-  answer?: InputMaybe<Scalars['String']>;
-  ratingSystemId: Scalars['String'];
-  type?: InputMaybe<RatingSystemType>;
-};
-
-
 export type MutationCreateSessionArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -429,11 +393,6 @@ export type MutationCreateSessionArgs = {
 
 export type MutationCreateSessionWithJwtArgs = {
   jwt: Scalars['String'];
-};
-
-
-export type MutationCreateTokenArgs = {
-  input: TokenInput;
 };
 
 
@@ -469,16 +428,6 @@ export type MutationDeletePollAnswerArgs = {
 
 
 export type MutationDeletePollExternalVoteSourceArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteRatingSystemAnswerArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteTokenArgs = {
   id: Scalars['String'];
 };
 
@@ -574,13 +523,6 @@ export type MutationUpdatePollArgs = {
 };
 
 
-export type MutationUpdateRatingSystemArgs = {
-  answers?: InputMaybe<Array<UpdateCommentRatingSystemAnswer>>;
-  name?: InputMaybe<Scalars['String']>;
-  ratingSystemId: Scalars['String'];
-};
-
-
 export type MutationUpdateUserArgs = {
   id: Scalars['String'];
   input: UserInput;
@@ -611,17 +553,6 @@ export type Payment = {
   paymentData?: Maybe<Scalars['String']>;
   paymentMethod: PaymentMethod;
   state: PaymentState;
-};
-
-export type PaymentConnection = {
-  __typename?: 'PaymentConnection';
-  nodes: Array<Payment>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type PaymentFilter = {
-  intentID?: InputMaybe<Scalars['String']>;
 };
 
 export type PaymentFromInvoiceInput = {
@@ -667,11 +598,6 @@ export type PaymentProviderCustomer = {
   customerID: Scalars['String'];
   paymentProviderID: Scalars['String'];
 };
-
-export enum PaymentSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
-}
 
 export enum PaymentState {
   Canceled = 'canceled',
@@ -812,15 +738,11 @@ export type Query = {
   invoice?: Maybe<Invoice>;
   invoices: InvoiceConnection;
   me?: Maybe<User>;
-  payment?: Maybe<Payment>;
-  payments: PaymentConnection;
   peerProfile: PeerProfile;
   poll?: Maybe<FullPoll>;
   polls?: Maybe<PollConnection>;
-  ratingSystem: FullCommentRatingSystem;
   remotePeerProfile?: Maybe<PeerProfile>;
   sessions: Array<Session>;
-  tokens: Array<Token>;
   user?: Maybe<User>;
   users: UserConnection;
 };
@@ -877,21 +799,6 @@ export type QueryInvoicesArgs = {
 };
 
 
-export type QueryPaymentArgs = {
-  id?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryPaymentsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<PaymentFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<PaymentSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
 export type QueryPollArgs = {
   id?: InputMaybe<Scalars['String']>;
 };
@@ -926,10 +833,6 @@ export type QueryUsersArgs = {
   sort?: InputMaybe<UserSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
-
-export enum RatingSystemType {
-  Star = 'star'
-}
 
 export type Session = {
   __typename?: 'Session';
@@ -994,24 +897,6 @@ export enum TagType {
   Event = 'Event',
   Page = 'Page'
 }
-
-export type Token = {
-  __typename?: 'Token';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-};
-
-export type TokenInput = {
-  name: Scalars['String'];
-};
-
-export type UpdateCommentRatingSystemAnswer = {
-  answer?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
-  type?: InputMaybe<RatingSystemType>;
-};
 
 export type UpdateImageInput = {
   description?: InputMaybe<Scalars['String']>;
@@ -1185,36 +1070,6 @@ export type CreateJwtForWebsiteLoginQueryVariables = Exact<{ [key: string]: neve
 
 
 export type CreateJwtForWebsiteLoginQuery = { __typename?: 'Query', createJWTForWebsiteLogin?: { __typename?: 'JWTToken', token: string, expiresAt: string } | null };
-
-export type RatingSystemQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type RatingSystemQuery = { __typename?: 'Query', ratingSystem: { __typename?: 'FullCommentRatingSystem', id: string, name?: string | null, answers: Array<{ __typename?: 'CommentRatingSystemAnswer', id: string, type: RatingSystemType, answer?: string | null, ratingSystemId: string }> } };
-
-export type UpdateRatingSystemMutationVariables = Exact<{
-  ratingSystemId: Scalars['String'];
-  name?: InputMaybe<Scalars['String']>;
-  answers?: InputMaybe<Array<UpdateCommentRatingSystemAnswer> | UpdateCommentRatingSystemAnswer>;
-}>;
-
-
-export type UpdateRatingSystemMutation = { __typename?: 'Mutation', updateRatingSystem: { __typename?: 'FullCommentRatingSystem', id: string, name?: string | null, answers: Array<{ __typename?: 'CommentRatingSystemAnswer', id: string, type: RatingSystemType, answer?: string | null, ratingSystemId: string }> } };
-
-export type CreateRatingSystemAnswerMutationVariables = Exact<{
-  ratingSystemId: Scalars['String'];
-  type: RatingSystemType;
-  answer?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type CreateRatingSystemAnswerMutation = { __typename?: 'Mutation', createRatingSystemAnswer: { __typename?: 'CommentRatingSystemAnswer', answer?: string | null, id: string, type: RatingSystemType, ratingSystemId: string } };
-
-export type DeleteRatingSystemAnswerMutationVariables = Exact<{
-  answerId: Scalars['String'];
-}>;
-
-
-export type DeleteRatingSystemAnswerMutation = { __typename?: 'Mutation', deleteRatingSystemAnswer: { __typename?: 'CommentRatingSystemAnswer', id: string } };
 
 export type CommentRevisionFragment = { __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string };
 
@@ -1491,27 +1346,6 @@ export type RenewSubscriptionMutationVariables = Exact<{
 
 
 export type RenewSubscriptionMutation = { __typename?: 'Mutation', renewSubscription?: { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> } | null };
-
-export type TokenRefFragment = { __typename?: 'Token', id: string, name: string };
-
-export type TokenListQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type TokenListQuery = { __typename?: 'Query', tokens: Array<{ __typename?: 'Token', id: string, name: string }> };
-
-export type CreateTokenMutationVariables = Exact<{
-  input: TokenInput;
-}>;
-
-
-export type CreateTokenMutation = { __typename?: 'Mutation', createToken: { __typename?: 'CreatedToken', id: string, name: string, token: string } };
-
-export type DeleteTokenMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteTokenMutation = { __typename?: 'Mutation', deleteToken?: { __typename?: 'CreatedToken', id: string, name: string, token: string } | null };
 
 export type FullUserFragment = { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, note?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Descendant[] | null, shortDescription?: Descendant[] | null, slug: string, active: boolean, productType: ProductType, tags?: Array<string> | null, externalReward?: string | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> };
 
@@ -1920,12 +1754,6 @@ export const PollExternalVoteSourceFragmentDoc = gql`
   }
 }
     `;
-export const TokenRefFragmentDoc = gql`
-    fragment TokenRef on Token {
-  id
-  name
-}
-    `;
 export const CreateSessionDocument = gql`
     mutation CreateSession($email: String!, $password: String!) {
   createSession(email: $email, password: $password) {
@@ -2040,168 +1868,6 @@ export function useCreateJwtForWebsiteLoginLazyQuery(baseOptions?: Apollo.LazyQu
 export type CreateJwtForWebsiteLoginQueryHookResult = ReturnType<typeof useCreateJwtForWebsiteLoginQuery>;
 export type CreateJwtForWebsiteLoginLazyQueryHookResult = ReturnType<typeof useCreateJwtForWebsiteLoginLazyQuery>;
 export type CreateJwtForWebsiteLoginQueryResult = Apollo.QueryResult<CreateJwtForWebsiteLoginQuery, CreateJwtForWebsiteLoginQueryVariables>;
-export const RatingSystemDocument = gql`
-    query RatingSystem {
-  ratingSystem {
-    id
-    name
-    answers {
-      id
-      type
-      answer
-      ratingSystemId
-    }
-  }
-}
-    `;
-
-/**
- * __useRatingSystemQuery__
- *
- * To run a query within a React component, call `useRatingSystemQuery` and pass it any options that fit your needs.
- * When your component renders, `useRatingSystemQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useRatingSystemQuery({
- *   variables: {
- *   },
- * });
- */
-export function useRatingSystemQuery(baseOptions?: Apollo.QueryHookOptions<RatingSystemQuery, RatingSystemQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RatingSystemQuery, RatingSystemQueryVariables>(RatingSystemDocument, options);
-      }
-export function useRatingSystemLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RatingSystemQuery, RatingSystemQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RatingSystemQuery, RatingSystemQueryVariables>(RatingSystemDocument, options);
-        }
-export type RatingSystemQueryHookResult = ReturnType<typeof useRatingSystemQuery>;
-export type RatingSystemLazyQueryHookResult = ReturnType<typeof useRatingSystemLazyQuery>;
-export type RatingSystemQueryResult = Apollo.QueryResult<RatingSystemQuery, RatingSystemQueryVariables>;
-export const UpdateRatingSystemDocument = gql`
-    mutation UpdateRatingSystem($ratingSystemId: String!, $name: String, $answers: [UpdateCommentRatingSystemAnswer!]) {
-  updateRatingSystem(
-    ratingSystemId: $ratingSystemId
-    name: $name
-    answers: $answers
-  ) {
-    id
-    name
-    answers {
-      id
-      type
-      answer
-      ratingSystemId
-    }
-  }
-}
-    `;
-export type UpdateRatingSystemMutationFn = Apollo.MutationFunction<UpdateRatingSystemMutation, UpdateRatingSystemMutationVariables>;
-
-/**
- * __useUpdateRatingSystemMutation__
- *
- * To run a mutation, you first call `useUpdateRatingSystemMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateRatingSystemMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateRatingSystemMutation, { data, loading, error }] = useUpdateRatingSystemMutation({
- *   variables: {
- *      ratingSystemId: // value for 'ratingSystemId'
- *      name: // value for 'name'
- *      answers: // value for 'answers'
- *   },
- * });
- */
-export function useUpdateRatingSystemMutation(baseOptions?: Apollo.MutationHookOptions<UpdateRatingSystemMutation, UpdateRatingSystemMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateRatingSystemMutation, UpdateRatingSystemMutationVariables>(UpdateRatingSystemDocument, options);
-      }
-export type UpdateRatingSystemMutationHookResult = ReturnType<typeof useUpdateRatingSystemMutation>;
-export type UpdateRatingSystemMutationResult = Apollo.MutationResult<UpdateRatingSystemMutation>;
-export type UpdateRatingSystemMutationOptions = Apollo.BaseMutationOptions<UpdateRatingSystemMutation, UpdateRatingSystemMutationVariables>;
-export const CreateRatingSystemAnswerDocument = gql`
-    mutation CreateRatingSystemAnswer($ratingSystemId: String!, $type: RatingSystemType!, $answer: String) {
-  createRatingSystemAnswer(
-    ratingSystemId: $ratingSystemId
-    type: $type
-    answer: $answer
-  ) {
-    answer
-    id
-    type
-    ratingSystemId
-  }
-}
-    `;
-export type CreateRatingSystemAnswerMutationFn = Apollo.MutationFunction<CreateRatingSystemAnswerMutation, CreateRatingSystemAnswerMutationVariables>;
-
-/**
- * __useCreateRatingSystemAnswerMutation__
- *
- * To run a mutation, you first call `useCreateRatingSystemAnswerMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateRatingSystemAnswerMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createRatingSystemAnswerMutation, { data, loading, error }] = useCreateRatingSystemAnswerMutation({
- *   variables: {
- *      ratingSystemId: // value for 'ratingSystemId'
- *      type: // value for 'type'
- *      answer: // value for 'answer'
- *   },
- * });
- */
-export function useCreateRatingSystemAnswerMutation(baseOptions?: Apollo.MutationHookOptions<CreateRatingSystemAnswerMutation, CreateRatingSystemAnswerMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateRatingSystemAnswerMutation, CreateRatingSystemAnswerMutationVariables>(CreateRatingSystemAnswerDocument, options);
-      }
-export type CreateRatingSystemAnswerMutationHookResult = ReturnType<typeof useCreateRatingSystemAnswerMutation>;
-export type CreateRatingSystemAnswerMutationResult = Apollo.MutationResult<CreateRatingSystemAnswerMutation>;
-export type CreateRatingSystemAnswerMutationOptions = Apollo.BaseMutationOptions<CreateRatingSystemAnswerMutation, CreateRatingSystemAnswerMutationVariables>;
-export const DeleteRatingSystemAnswerDocument = gql`
-    mutation DeleteRatingSystemAnswer($answerId: String!) {
-  deleteRatingSystemAnswer(id: $answerId) {
-    id
-  }
-}
-    `;
-export type DeleteRatingSystemAnswerMutationFn = Apollo.MutationFunction<DeleteRatingSystemAnswerMutation, DeleteRatingSystemAnswerMutationVariables>;
-
-/**
- * __useDeleteRatingSystemAnswerMutation__
- *
- * To run a mutation, you first call `useDeleteRatingSystemAnswerMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteRatingSystemAnswerMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteRatingSystemAnswerMutation, { data, loading, error }] = useDeleteRatingSystemAnswerMutation({
- *   variables: {
- *      answerId: // value for 'answerId'
- *   },
- * });
- */
-export function useDeleteRatingSystemAnswerMutation(baseOptions?: Apollo.MutationHookOptions<DeleteRatingSystemAnswerMutation, DeleteRatingSystemAnswerMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteRatingSystemAnswerMutation, DeleteRatingSystemAnswerMutationVariables>(DeleteRatingSystemAnswerDocument, options);
-      }
-export type DeleteRatingSystemAnswerMutationHookResult = ReturnType<typeof useDeleteRatingSystemAnswerMutation>;
-export type DeleteRatingSystemAnswerMutationResult = Apollo.MutationResult<DeleteRatingSystemAnswerMutation>;
-export type DeleteRatingSystemAnswerMutationOptions = Apollo.BaseMutationOptions<DeleteRatingSystemAnswerMutation, DeleteRatingSystemAnswerMutationVariables>;
 export const CommentListDocument = gql`
     query CommentList($filter: CommentFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
   comments(
@@ -3341,110 +3007,6 @@ export function useRenewSubscriptionMutation(baseOptions?: Apollo.MutationHookOp
 export type RenewSubscriptionMutationHookResult = ReturnType<typeof useRenewSubscriptionMutation>;
 export type RenewSubscriptionMutationResult = Apollo.MutationResult<RenewSubscriptionMutation>;
 export type RenewSubscriptionMutationOptions = Apollo.BaseMutationOptions<RenewSubscriptionMutation, RenewSubscriptionMutationVariables>;
-export const TokenListDocument = gql`
-    query TokenList {
-  tokens {
-    ...TokenRef
-  }
-}
-    ${TokenRefFragmentDoc}`;
-
-/**
- * __useTokenListQuery__
- *
- * To run a query within a React component, call `useTokenListQuery` and pass it any options that fit your needs.
- * When your component renders, `useTokenListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useTokenListQuery({
- *   variables: {
- *   },
- * });
- */
-export function useTokenListQuery(baseOptions?: Apollo.QueryHookOptions<TokenListQuery, TokenListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<TokenListQuery, TokenListQueryVariables>(TokenListDocument, options);
-      }
-export function useTokenListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TokenListQuery, TokenListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<TokenListQuery, TokenListQueryVariables>(TokenListDocument, options);
-        }
-export type TokenListQueryHookResult = ReturnType<typeof useTokenListQuery>;
-export type TokenListLazyQueryHookResult = ReturnType<typeof useTokenListLazyQuery>;
-export type TokenListQueryResult = Apollo.QueryResult<TokenListQuery, TokenListQueryVariables>;
-export const CreateTokenDocument = gql`
-    mutation CreateToken($input: TokenInput!) {
-  createToken(input: $input) {
-    id
-    name
-    token
-  }
-}
-    `;
-export type CreateTokenMutationFn = Apollo.MutationFunction<CreateTokenMutation, CreateTokenMutationVariables>;
-
-/**
- * __useCreateTokenMutation__
- *
- * To run a mutation, you first call `useCreateTokenMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateTokenMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createTokenMutation, { data, loading, error }] = useCreateTokenMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useCreateTokenMutation(baseOptions?: Apollo.MutationHookOptions<CreateTokenMutation, CreateTokenMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateTokenMutation, CreateTokenMutationVariables>(CreateTokenDocument, options);
-      }
-export type CreateTokenMutationHookResult = ReturnType<typeof useCreateTokenMutation>;
-export type CreateTokenMutationResult = Apollo.MutationResult<CreateTokenMutation>;
-export type CreateTokenMutationOptions = Apollo.BaseMutationOptions<CreateTokenMutation, CreateTokenMutationVariables>;
-export const DeleteTokenDocument = gql`
-    mutation DeleteToken($id: String!) {
-  deleteToken(id: $id) {
-    id
-    name
-    token
-  }
-}
-    `;
-export type DeleteTokenMutationFn = Apollo.MutationFunction<DeleteTokenMutation, DeleteTokenMutationVariables>;
-
-/**
- * __useDeleteTokenMutation__
- *
- * To run a mutation, you first call `useDeleteTokenMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteTokenMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteTokenMutation, { data, loading, error }] = useDeleteTokenMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeleteTokenMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTokenMutation, DeleteTokenMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteTokenMutation, DeleteTokenMutationVariables>(DeleteTokenDocument, options);
-      }
-export type DeleteTokenMutationHookResult = ReturnType<typeof useDeleteTokenMutation>;
-export type DeleteTokenMutationResult = Apollo.MutationResult<DeleteTokenMutation>;
-export type DeleteTokenMutationOptions = Apollo.BaseMutationOptions<DeleteTokenMutation, DeleteTokenMutationVariables>;
 export const UserListDocument = gql`
     query UserList($filter: UserFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
   users(

@@ -304,6 +304,13 @@ export type BaseTeaser = {
   type: Scalars['String'];
 };
 
+export type BaseToken = {
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+};
+
 export type BaseUser = {
   active: Scalars['Boolean'];
   firstName?: Maybe<Scalars['String']>;
@@ -560,8 +567,16 @@ export type CommentRating = {
   disabled?: Maybe<Scalars['Boolean']>;
   fingerprint?: Maybe<Scalars['String']>;
   id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
   userId?: Maybe<Scalars['String']>;
   value: Scalars['Int'];
+};
+
+export type CommentRatingSystem = {
+  __typename?: 'CommentRatingSystem';
+  answers: Array<CommentRatingSystemAnswer>;
+  id: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
 };
 
 export type CommentRatingSystemAnswer = {
@@ -1027,13 +1042,6 @@ export type FocalPoint = {
 export type FocalPointInput = {
   x: Scalars['Float'];
   y: Scalars['Float'];
-};
-
-export type FullCommentRatingSystem = {
-  __typename?: 'FullCommentRatingSystem';
-  answers: Array<CommentRatingSystemAnswer>;
-  id: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
 };
 
 export type FullPoll = {
@@ -1518,6 +1526,8 @@ export type Mutation = {
   createPaywall: Paywall;
   /** Creates a new peer. */
   createPeer: Peer;
+  /** Creates a rating system answer. */
+  createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   /** Creates a new subscription. */
@@ -1528,6 +1538,8 @@ export type Mutation = {
   createSubscriptionInterval: Array<SubscriptionFlowModel>;
   /** Creates a new tag. */
   createTag: Tag;
+  /** Creates a token and returns it's secret once. */
+  createToken: TokenWithSecret;
   /**
    *
    *       Creates a new userConsent based on input.
@@ -1571,6 +1583,8 @@ export type Mutation = {
   deletePeer: Peer;
   /** Delete poll votes */
   deletePollVotes: DeletePollVotesResult;
+  /** Deletes a rating system answer. */
+  deleteRatingSystemAnswer: CommentRatingSystemAnswer;
   /** Deletes an existing subscription. */
   deleteSubscription: PublicSubscription;
   /** Delete an existing subscription flow */
@@ -1579,6 +1593,8 @@ export type Mutation = {
   deleteSubscriptionInterval: Array<SubscriptionFlowModel>;
   /** Deletes an existing tag. */
   deleteTag: Tag;
+  /** Deletes a token. */
+  deleteToken: Token;
   /**
    *
    *       Delete an existing userConsent by id.
@@ -1663,6 +1679,8 @@ export type Mutation = {
   updatePaywall: Paywall;
   /** Updates an existing peer. */
   updatePeer: Peer;
+  /** Update the comment rating system. */
+  updateRatingSystem: CommentRatingSystem;
   /** Updates an existing setting. */
   updateSetting: Setting;
   /** Updates an existing subscription. */
@@ -1883,6 +1901,13 @@ export type MutationCreatePeerArgs = {
 };
 
 
+export type MutationCreateRatingSystemAnswerArgs = {
+  answer?: InputMaybe<Scalars['String']>;
+  ratingSystemId: Scalars['String'];
+  type: RatingSystemType;
+};
+
+
 export type MutationCreateSessionArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -1929,6 +1954,11 @@ export type MutationCreateTagArgs = {
   main?: Scalars['Boolean'];
   tag?: InputMaybe<Scalars['String']>;
   type: TagType;
+};
+
+
+export type MutationCreateTokenArgs = {
+  name: Scalars['String'];
 };
 
 
@@ -2044,6 +2074,11 @@ export type MutationDeletePollVotesArgs = {
 };
 
 
+export type MutationDeleteRatingSystemAnswerArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteSubscriptionArgs = {
   id: Scalars['String'];
 };
@@ -2060,6 +2095,11 @@ export type MutationDeleteSubscriptionIntervalArgs = {
 
 
 export type MutationDeleteTagArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteTokenArgs = {
   id: Scalars['String'];
 };
 
@@ -2364,6 +2404,13 @@ export type MutationUpdatePeerArgs = {
 };
 
 
+export type MutationUpdateRatingSystemArgs = {
+  answers?: InputMaybe<Array<UpdateCommentRatingSystemAnswerInput>>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationUpdateSettingArgs = {
   name: SettingName;
   value: Scalars['GraphQLSettingValueType'];
@@ -2488,6 +2535,12 @@ export type NonDbProperty = {
   key: Scalars['String'];
   public: Scalars['Boolean'];
   value: Scalars['String'];
+};
+
+export type OverriddenRating = {
+  __typename?: 'OverriddenRating';
+  answerId: Scalars['String'];
+  value?: Maybe<Scalars['Int']>;
 };
 
 export type Page = {
@@ -3176,7 +3229,7 @@ export type Query = {
   promptHTML: Chat;
   provider: MailProviderModel;
   /** This query returns the comment rating system. */
-  ratingSystem: FullCommentRatingSystem;
+  ratingSystem: CommentRatingSystem;
   /**
    *
    *       Returns all renewing subscribers in a given timeframe.
@@ -3223,6 +3276,8 @@ export type Query = {
   tag: Tag;
   /** This query returns a list of tags */
   tags: TagConnection;
+  /** Returns a list of all tokens. */
+  tokens: Array<Token>;
   upgradeUserSubscriptionInfo: UpgradeSubscription;
   /**
    *
@@ -4127,6 +4182,23 @@ export type TitleBlockInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type Token = BaseToken & {
+  __typename?: 'Token';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+};
+
+export type TokenWithSecret = BaseToken & {
+  __typename?: 'TokenWithSecret';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  token: Scalars['String'];
+};
+
 export type TrackingPixel = {
   __typename?: 'TrackingPixel';
   error?: Maybe<Scalars['String']>;
@@ -4183,6 +4255,12 @@ export type UpdateBannerInput = {
   showOnPages?: InputMaybe<Array<PageModelInput>>;
   text: Scalars['String'];
   title: Scalars['String'];
+};
+
+export type UpdateCommentRatingSystemAnswerInput = {
+  answer?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  type?: InputMaybe<RatingSystemType>;
 };
 
 export type UpdateCrowdfundingInput = {
@@ -4345,12 +4423,6 @@ export type YouTubeVideoBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
   videoID?: InputMaybe<Scalars['String']>;
-};
-
-export type OverriddenRating = {
-  __typename?: 'overriddenRating';
-  answerId: Scalars['String'];
-  value?: Maybe<Scalars['Int']>;
 };
 
 export type ChallengeQueryVariables = Exact<{ [key: string]: never; }>;

@@ -2,17 +2,15 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   Comment,
   CommentAuthorType,
+  CommentRating,
+  CommentRatingSystemAnswer,
   CommentsRevisions,
+  CommentState,
   PrismaClient,
+  RatingSystemType,
 } from '@prisma/client';
 import { SortOrder } from '@wepublish/utils/api';
-import {
-  CalculatedRating,
-  CommentRatingSystemAnswer,
-  CommentSort,
-  CommentState,
-  RatingSystemType,
-} from './comment.model';
+import { CommentSort } from './comment.model';
 import { RatingSystemService } from './rating-system';
 import {
   AnonymousCommentError,
@@ -33,6 +31,7 @@ import { SettingName, SettingsService } from '@wepublish/settings/api';
 import { CommentWithTags } from './comment.types';
 import { hasPermission } from '@wepublish/permissions/api';
 import { UserSession } from '@wepublish/authentication/api';
+import { CalculatedRating } from './rating-system/rating-system.model';
 
 export interface CommentWithRevisions {
   title: string | null;
@@ -81,7 +80,7 @@ export class CommentService {
 
   getCalculatedRatingsForComment(
     answers: CommentRatingSystemAnswer[],
-    ratings: any[]
+    ratings: CommentRating[]
   ): CalculatedRating[] {
     return answers.map(answer => {
       const sortedRatings = ratings
@@ -92,7 +91,10 @@ export class CommentService {
       const mean = total / Math.max(sortedRatings.length, 1);
 
       return {
-        answer,
+        answer: {
+          ...answer,
+          answer: answer.answer ?? undefined,
+        },
         count: sortedRatings.length,
         mean,
         total,
@@ -131,15 +133,7 @@ export class CommentService {
     order: SortOrder
   ) {
     const ratingSystem = await this.ratingSystem.getRatingSystem();
-
-    const answers: CommentRatingSystemAnswer[] = (
-      ratingSystem?.answers || []
-    ).map(answer => ({
-      id: answer.id,
-      ratingSystemId: answer.ratingSystemId,
-      answer: answer.answer,
-      type: answer.type as unknown as RatingSystemType,
-    }));
+    const answers = ratingSystem?.answers || [];
 
     const comments = await this.prisma.comment.findMany({
       where: {

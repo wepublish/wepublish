@@ -1,4 +1,4 @@
-import { CommentState, RatingSystemType, UserEvent } from '@prisma/client';
+import { CommentState, UserEvent } from '@prisma/client';
 import {
   GraphQLBoolean,
   GraphQLList,
@@ -20,17 +20,6 @@ import {
   GraphQLCommentRejectionReason,
   GraphQLCommentRevisionUpdateInput,
 } from './comment/comment';
-import {
-  GraphQLCommentRatingSystemAnswer,
-  GraphQLFullCommentRatingSystem,
-  GraphQLRatingSystemType,
-  GraphQLUpdateCommentRatingSystemAnswer,
-} from './comment-rating/comment-rating';
-import {
-  createCommentRatingAnswer,
-  deleteCommentRatingAnswer,
-  updateRatingSystem,
-} from './comment-rating/comment-rating.private-mutation';
 
 import {
   createAdminComment,
@@ -91,8 +80,6 @@ import {
 import { revokeSessionById } from './session/session.private-mutation';
 import { getSessionsForUser } from './session/session.private-queries';
 import { renewSubscription } from './subscription/subscription.private-mutation';
-import { GraphQLCreatedToken, GraphQLTokenInput } from './token';
-import { createToken, deleteTokenById } from './token/token.private-mutation';
 import { GraphQLUser, GraphQLUserInput } from './user';
 import {
   createAdminUser,
@@ -270,23 +257,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         return email;
       },
-    },
-
-    // Token
-    // =====
-
-    createToken: {
-      type: new GraphQLNonNull(GraphQLCreatedToken),
-      args: { input: { type: new GraphQLNonNull(GraphQLTokenInput) } },
-      resolve: (root, { input }, { authenticate, prisma: { token } }) =>
-        createToken({ ...input, roleIDs: ['peer'] }, authenticate, token),
-    },
-
-    deleteToken: {
-      type: GraphQLCreatedToken,
-      args: { id: { type: new GraphQLNonNull(GraphQLString) } },
-      resolve: (root, { id }, { authenticate, prisma: { token } }) =>
-        deleteTokenById(id, authenticate, token),
     },
 
     // User
@@ -609,71 +579,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, { id }, { authenticate, prisma: { comment } }) =>
         deleteComment(id, authenticate, comment),
-    },
-
-    // Rating System
-    // ==========
-
-    createRatingSystemAnswer: {
-      type: new GraphQLNonNull(GraphQLCommentRatingSystemAnswer),
-      args: {
-        ratingSystemId: { type: new GraphQLNonNull(GraphQLString) },
-        type: {
-          type: GraphQLRatingSystemType,
-          defaultValue: RatingSystemType.star,
-        },
-        answer: { type: GraphQLString },
-      },
-      resolve: (
-        root,
-        { ratingSystemId, type, answer },
-        { authenticate, prisma: { commentRatingSystemAnswer } }
-      ) =>
-        createCommentRatingAnswer(
-          ratingSystemId,
-          type,
-          answer,
-          authenticate,
-          commentRatingSystemAnswer
-        ),
-    },
-
-    updateRatingSystem: {
-      type: new GraphQLNonNull(GraphQLFullCommentRatingSystem),
-      args: {
-        ratingSystemId: { type: new GraphQLNonNull(GraphQLString) },
-        name: { type: GraphQLString },
-        answers: {
-          type: new GraphQLList(
-            new GraphQLNonNull(GraphQLUpdateCommentRatingSystemAnswer)
-          ),
-        },
-      },
-      resolve: (
-        root,
-        { ratingSystemId, answers, name },
-        { authenticate, prisma: { commentRatingSystem } }
-      ) =>
-        updateRatingSystem(
-          ratingSystemId,
-          name,
-          answers,
-          authenticate,
-          commentRatingSystem
-        ),
-    },
-
-    deleteRatingSystemAnswer: {
-      type: new GraphQLNonNull(GraphQLCommentRatingSystemAnswer),
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (
-        root,
-        { id },
-        { authenticate, prisma: { commentRatingSystemAnswer } }
-      ) =>
-        deleteCommentRatingAnswer(id, authenticate, commentRatingSystemAnswer),
     },
 
     // Poll

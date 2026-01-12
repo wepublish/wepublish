@@ -265,6 +265,13 @@ interface BaseTeaser implements HasImage {
   type: String!
 }
 
+interface BaseToken {
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+}
+
 interface BaseUser {
   active: Boolean!
   firstName: String
@@ -436,7 +443,7 @@ type Comment implements HasOptionalUser {
   itemType: CommentItemType!
   lead: String
   modifiedAt: DateTime!
-  overriddenRatings: [overriddenRating!]!
+  overriddenRatings: [OverriddenRating!]!
   parentComment: Comment
   parentID: String
   rejectionReason: String
@@ -513,8 +520,15 @@ type CommentRating {
   disabled: Boolean
   fingerprint: String
   id: String!
+  modifiedAt: DateTime!
   userId: String
   value: Int!
+}
+
+type CommentRatingSystem {
+  answers: [CommentRatingSystemAnswer!]!
+  id: String!
+  name: String
 }
 
 type CommentRatingSystemAnswer {
@@ -965,12 +979,6 @@ type FocalPoint {
 input FocalPointInput {
   x: Float!
   y: Float!
-}
-
-type FullCommentRatingSystem {
-  answers: [CommentRatingSystemAnswer!]!
-  id: String!
-  name: String
 }
 
 type FullPoll {
@@ -1450,6 +1458,9 @@ type Mutation {
 
   """Creates a new peer."""
   createPeer(hostURL: String!, information: RichText, isDisabled: Boolean, name: String!, slug: String!, token: String!): Peer!
+
+  """Creates a rating system answer."""
+  createRatingSystemAnswer(answer: String, ratingSystemId: String!, type: RatingSystemType!): CommentRatingSystemAnswer!
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
 
@@ -1464,6 +1475,9 @@ type Mutation {
 
   """Creates a new tag."""
   createTag(description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
+
+  """Creates a token and returns it's secret once."""
+  createToken(name: String!): TokenWithSecret!
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
@@ -1517,6 +1531,9 @@ type Mutation {
   """Delete poll votes"""
   deletePollVotes(ids: [String!]!): DeletePollVotesResult!
 
+  """Deletes a rating system answer."""
+  deleteRatingSystemAnswer(id: String!): CommentRatingSystemAnswer!
+
   """Deletes an existing subscription."""
   deleteSubscription(id: String!): PublicSubscription!
 
@@ -1528,6 +1545,9 @@ type Mutation {
 
   """Deletes an existing tag."""
   deleteTag(id: String!): Tag!
+
+  """Deletes a token."""
+  deleteToken(id: String!): Token!
 
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
@@ -1641,6 +1661,9 @@ type Mutation {
   """Updates an existing peer."""
   updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
 
+  """Update the comment rating system."""
+  updateRatingSystem(answers: [UpdateCommentRatingSystemAnswerInput!], id: String!, name: String): CommentRatingSystem!
+
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
 
@@ -1714,6 +1737,11 @@ type NonDbProperty {
   key: String!
   public: Boolean!
   value: String!
+}
+
+type OverriddenRating {
+  answerId: String!
+  value: Int
 }
 
 type Page {
@@ -2365,7 +2393,7 @@ type Query {
   provider: MailProviderModel!
 
   """This query returns the comment rating system."""
-  ratingSystem: FullCommentRatingSystem!
+  ratingSystem: CommentRatingSystem!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "
   renewingSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
@@ -2421,6 +2449,9 @@ type Query {
     """Number of items to fetch"""
     take: Int! = 10
   ): TagConnection!
+
+  """Returns a list of all tokens."""
+  tokens: [Token!]!
 
   """"""
   upgradeUserSubscriptionInfo(memberPlanId: String!, subscriptionId: String!): UpgradeSubscription!
@@ -2931,6 +2962,21 @@ input TitleBlockInput {
   title: String
 }
 
+type Token implements BaseToken {
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+}
+
+type TokenWithSecret implements BaseToken {
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+  token: String!
+}
+
 type TrackingPixel {
   error: String
   id: String!
@@ -2983,6 +3029,12 @@ input UpdateBannerInput {
   showOnPages: [PageModelInput!]
   text: String!
   title: String!
+}
+
+input UpdateCommentRatingSystemAnswerInput {
+  answer: String
+  id: String!
+  type: RatingSystemType
 }
 
 input UpdateCrowdfundingInput {
@@ -3142,9 +3194,4 @@ input YouTubeVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   videoID: String
-}
-
-type overriddenRating {
-  answerId: String!
-  value: Int
 }

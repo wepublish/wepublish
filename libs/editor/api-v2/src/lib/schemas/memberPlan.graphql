@@ -41,7 +41,7 @@ fragment FullMemberPlan on MemberPlan {
 
 query MemberPlanList(
   $filter: MemberPlanFilter
-  $cursor: String
+  $cursorId: String
   $take: Int
   $skip: Int
   $order: SortOrder
@@ -49,7 +49,7 @@ query MemberPlanList(
 ) {
   memberPlans(
     filter: $filter
-    cursorId: $cursor
+    cursorId: $cursorId
     take: $take
     skip: $skip
     order: $order
