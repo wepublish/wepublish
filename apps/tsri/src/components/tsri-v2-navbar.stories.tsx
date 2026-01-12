@@ -1,4 +1,5 @@
 import { Meta } from '@storybook/react';
+import { WithRouterDecorator } from '@wepublish/storybook';
 import { mockImage } from '@wepublish/storybook/mocks';
 import { Navigation } from '@wepublish/website/api';
 import { PageType } from '@wepublish/website/builder';
@@ -198,7 +199,7 @@ const pageTypeBasedProps = {
 export default {
   component: TsriV2Navbar,
   title: 'Tsri/Components/TsriV2Navbar',
-  decorators: [WithWebsiteProviderDecorator],
+  decorators: [WithWebsiteProviderDecorator, WithRouterDecorator],
 } as Meta;
 
 export const HomePage = {
