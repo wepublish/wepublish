@@ -15,6 +15,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { IconButton } from '@wepublish/website/builder';
+import { useRouter } from 'next/router';
 import { PropsWithChildren } from 'react';
 import { FiInstagram, FiSearch } from 'react-icons/fi';
 import { useIntersectionObserver } from 'usehooks-ts';
@@ -339,7 +340,7 @@ const FooterTabs = styled('div')`
   transition: visibility 300ms ease-in-out;
 
   @container footer (width > 200px) {
-    grid-template-columns: calc(100% - 2.2cqw - 33.75%) 33.75%;
+    grid-template-columns: var(--two-column-grid);
     width: 100%;
     row-gap: 0.15cqw;
     column-gap: 2.2cqw;
@@ -367,7 +368,7 @@ export const FooterPaperWrapper = styled('div')`
     grid-column: 2 / 3;
     grid-row: 2 / 3;
     grid-template-rows: min-content;
-    grid-template-columns: calc(100% - 33.75%) 33.75%;
+    grid-template-columns: var(--two-column-grid-no-gap);
     width: 100%;
     border-bottom: none;
 
@@ -417,20 +418,25 @@ export const FooterPaper = ({
   main: FullNavigationFragment | null | undefined;
   categories: FullNavigationFragment[][];
 }>) => {
+  const router = useRouter();
   return (
     <FooterPaperWrapper>
       <FooterMain>
         <FooterInstaButton
           size="small"
+          title="Instagram"
           aria-label="Instagram"
           color={'inherit'}
+          onClick={() => router.push('https://www.instagram.com/tsri.ch/')}
         >
           <FiInstagram />
         </FooterInstaButton>
         <FooterSearchButton
           size="small"
           aria-label="Suche"
+          title="Suche"
           color={'inherit'}
+          onClick={() => router.push('/search')}
         >
           <FiSearch />
         </FooterSearchButton>
@@ -458,7 +464,7 @@ export const FooterPaper = ({
       {children}
       <FooterTabs>
         <LoginTab>
-          <a href="#">Login</a>
+          <Link href="/login">Login</Link>
         </LoginTab>
       </FooterTabs>
     </FooterPaperWrapper>
