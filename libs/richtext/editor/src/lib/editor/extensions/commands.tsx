@@ -9,7 +9,7 @@ export type CommandItem = {
 export type CommandOptions = SuggestionOptions<CommandItem, CommandItem>;
 
 export const Commands = Extension.create({
-  name: 'commands',
+  name: 'commandList',
 
   addOptions() {
     return {
