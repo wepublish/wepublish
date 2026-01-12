@@ -12,7 +12,7 @@ export const TsriAuthorLinks = styled(AuthorLinksDefault)`
     color: white;
     background-color: black;
     border-radius: 50%;
-    padding: 0.25rem;
+    padding: 0.45rem;
 
     &:hover {
       background-color: #f5ff64;
@@ -20,8 +20,8 @@ export const TsriAuthorLinks = styled(AuthorLinksDefault)`
     }
 
     & > svg {
-      width: 2rem;
-      height: 2rem;
+      width: 1.6rem;
+      height: 1.6rem;
     }
   }
 `;

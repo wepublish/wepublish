@@ -39,6 +39,8 @@ import { zodI18nMap } from 'zod-i18n-map';
 import deOverriden from '../locales/deOverriden.json';
 import { TsriFlexBlock } from '../src/components/block-layouts/tsri-base-flex-block';
 import { TsriTabbedContent } from '../src/components/block-layouts/tsri-base-tabbed-content';
+import { TsriBreakBlock } from '../src/components/break-blocks/tsri-base-break-block';
+import { TsriContextBox } from '../src/components/break-blocks/tsri-context-box';
 import { TsriBaseTeaserGridFlex } from '../src/components/teaser-layouts/tsri-base-teaser-flex-grid';
 import { TsriBaseTeaserSlots } from '../src/components/teaser-layouts/tsri-base-teaser-slots';
 import { TsriBaseTeaser } from '../src/components/teasers/tsri-base-teaser';
@@ -54,9 +56,9 @@ import { TsriAuthorLinks } from '../src/components/tsri-author-links';
 import { TsriAuthorList } from '../src/components/tsri-author-list';
 import { TsriBanner } from '../src/components/tsri-banner';
 import { TsriBlockRenderer } from '../src/components/tsri-block-renderer';
-import { TsriBreakBlock } from '../src/components/tsri-break-block';
-import { TsriContextBox } from '../src/components/tsri-context-box';
+import { TsriBlocks } from '../src/components/tsri-block-renderer';
 import { TsriFooter } from '../src/components/tsri-footer';
+import { TsriGlobalStyles } from '../src/components/tsri-global-styles';
 import { TsriNextWepublishLink } from '../src/components/tsri-next-wepublish-link';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
@@ -142,6 +144,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             RichText: TsriRichText,
             Title: TsriTitleBlock,
             Renderer: TsriBlockRenderer,
+            Blocks: TsriBlocks,
             FlexBlock: TsriFlexBlock,
           }}
           blockStyles={{
@@ -157,6 +160,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
         >
           <ThemeProvider theme={theme}>
             <CssBaseline />
+            <TsriGlobalStyles />
 
             <Head>
               <title key="title">{siteTitle}</title>

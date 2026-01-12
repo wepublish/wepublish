@@ -16,7 +16,7 @@ export const AuthorWrapper = styled('article')`
   grid-column: -1 / 1;
   display: grid;
   padding: ${({ theme }) => theme.spacing(3)} 0 0 0;
-  grid-template-columns: calc(100% - 2.2cqw - 33.75%) 33.75%;
+  grid-template-columns: var(--two-column-grid);
   row-gap: ${({ theme }) => theme.spacing(2)};
 `;
 

@@ -11,7 +11,7 @@ import {
 } from '@wepublish/block-content/website';
 import { CommentListWrapper } from '@wepublish/comments/website';
 
-import { SidebarContentWrapper } from './sidebar-content';
+import { SidebarContentWrapper } from './break-blocks/tsri-sidebar-content';
 
 export const TsriArticle = styled(ArticleDefault)`
   ${TitleBlockPreTitleWrapper} {
@@ -36,7 +36,7 @@ export const TsriArticle = styled(ArticleDefault)`
   }
 
   @container main (width >= 200px) {
-    grid-template-columns: calc(100% - 2.2cqw - 33.75%) 33.75% !important;
+    grid-template-columns: var(--two-column-grid) !important;
     justify-content: space-between;
 
     & > * {
@@ -45,7 +45,7 @@ export const TsriArticle = styled(ArticleDefault)`
   }
 
   & ${SidebarContentWrapper} + * {
-    margin-top: -56px;
+    margin-top: ${({ theme }) => theme.spacing(-3)};
   }
 
   & > :is(${ArticleListWrapper}, ${CommentListWrapper}) {

@@ -107,6 +107,8 @@ export const TsriArticleMeta = ({
           href="#comments"
           color="inherit"
           css={commentsLinkStyles}
+          aria-label="Kommentare"
+          title="Kommentare"
         >
           <ArticleMetaBadge
             max={99}
