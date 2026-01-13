@@ -84,7 +84,7 @@ export const Default: StoryObj = {
           },
           result: {
             data: {
-              invoices: [invoice, { ...invoice, id: '4321-4321' }],
+              userInvoices: [invoice, { ...invoice, id: '4321-4321' }],
             },
           },
         },

@@ -38,14 +38,14 @@ export const Upgrade = {
     WithSubscribeBlockDecorators({
       upgradeInfoResult: {
         data: {
-          upgradeSubscriptionInfo: {
+          upgradeUserSubscriptionInfo: {
             discountAmount: 50,
           },
         },
       },
       userSubscriptions: {
         data: {
-          subscriptions: [
+          userSubscriptions: [
             mockSubscription({
               id: 'subcriptionToUpgrade',
               monthlyAmount: 100,

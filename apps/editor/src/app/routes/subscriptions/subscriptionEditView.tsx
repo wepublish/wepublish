@@ -5,12 +5,9 @@ import {
   Currency,
   FullMemberPlanFragment,
   FullUserFragment,
-  InvoiceFragment,
   MetadataPropertyFragment,
   PaymentPeriodicity,
   SubscriptionDeactivationReason,
-  useInvoicesQuery,
-  useRenewSubscriptionMutation,
   useUserQuery,
 } from '@wepublish/editor/api';
 import {
@@ -18,10 +15,13 @@ import {
   FullPaymentMethodFragment,
   FullSubscriptionFragment,
   getApiClientV2,
+  InvoiceFragment,
   useCancelSubscriptionMutation,
   useCreateSubscriptionMutation,
+  useInvoicesQuery,
   useMemberPlanListQuery,
   usePaymentMethodListQuery,
+  useRenewSubscriptionMutation,
   useSubscriptionQuery,
   useUpdateSubscriptionMutation,
 } from '@wepublish/editor/api-v2';
@@ -178,6 +178,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     error: loadErrorInvoices,
     refetch: reloadInvoices,
   } = useInvoicesQuery({
+    client,
     variables: {
       take: 100,
       filter: {
@@ -277,8 +278,8 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
 
   const [createSubscription, { loading: isCreating }] =
     useCreateSubscriptionMutation({ client });
-  const [renewSubscription, { loading: isRenewing, error: renewalError }] =
-    useRenewSubscriptionMutation();
+  const [renewSubscription, { error: renewalError }] =
+    useRenewSubscriptionMutation({ client });
 
   /**
    * fetch edited user from api

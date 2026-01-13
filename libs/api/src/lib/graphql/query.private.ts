@@ -10,7 +10,6 @@ import {
 import { Context } from '../context';
 import { CommentSort } from '../db/comment';
 import { ImageSort } from '../db/image';
-import { InvoiceSort } from '../db/invoice';
 import { UserSort } from '../db/user';
 import { GivenTokeExpiryToLongError, UserIdNotFound } from '../error';
 
@@ -34,16 +33,6 @@ import {
   GraphQLImageSort,
 } from './image';
 import { getAdminImages, getImageById } from './image/image.private-queries';
-import {
-  GraphQLInvoice,
-  GraphQLInvoiceConnection,
-  GraphQLInvoiceSort,
-  GraphQLinvoiceFilter,
-} from './invoice';
-import {
-  getAdminInvoices,
-  getInvoiceById,
-} from './invoice/invoice.private-queries';
 
 import { GraphQLPeerProfile } from './peer';
 import {
@@ -293,46 +282,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           take,
           authenticate,
           comment
-        ),
-    },
-
-    // Invoice
-    // ======
-
-    invoice: {
-      type: GraphQLInvoice,
-      args: { id: { type: GraphQLString } },
-      resolve: (root, { id }, { authenticate, loaders: { invoicesByID } }) =>
-        getInvoiceById(id, authenticate, invoicesByID),
-    },
-
-    invoices: {
-      type: new GraphQLNonNull(GraphQLInvoiceConnection),
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 10 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLinvoiceFilter },
-        sort: {
-          type: GraphQLInvoiceSort,
-          defaultValue: InvoiceSort.ModifiedAt,
-        },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, cursor, take, skip },
-        { authenticate, prisma: { invoice } }
-      ) =>
-        getAdminInvoices(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          invoice
         ),
     },
 

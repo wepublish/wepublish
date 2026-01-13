@@ -372,13 +372,13 @@ export const LoggedIn: StoryObj<typeof Subscribe> = {
     },
     userSubscriptions: {
       data: {
-        subscriptions: [subscription],
+        userSubscriptions: [subscription],
       },
       loading: false,
     },
     userInvoices: {
       data: {
-        invoices: [invoice],
+        userInvoices: [invoice],
       },
       loading: false,
     },
@@ -668,7 +668,7 @@ export const NoWarningPaidInvoice: StoryObj<typeof Subscribe> = {
     ...LoggedIn.args,
     userInvoices: {
       data: {
-        invoices: [
+        userInvoices: [
           { ...invoice, paidAt: new Date('2023-01-01').toISOString() },
           { ...invoice, canceledAt: new Date('2023-01-01').toISOString() },
         ],

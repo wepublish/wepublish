@@ -11,8 +11,6 @@ type Query {
   images(cursor: String, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
   comment(id: String!): Comment
   comments(cursor: String, take: Int = 10, skip: Int = 0, filter: CommentFilter, sort: CommentSort = modifiedAt, order: SortOrder = Descending): CommentConnection!
-  invoice(id: String): Invoice
-  invoices(cursor: String, take: Int = 10, skip: Int = 0, filter: InvoiceFilter, sort: InvoiceSort = modifiedAt, order: SortOrder = Descending): InvoiceConnection!
   polls(cursor: String, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
   poll(id: String): FullPoll
 }
@@ -429,31 +427,6 @@ enum CommentSort {
   createdAt
 }
 
-type InvoiceConnection {
-  nodes: [Invoice!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input InvoiceFilter {
-  mail: String
-  paidAt: Date
-  canceledAt: Date
-  userID: String
-  subscriptionID: String
-}
-
-"""
-A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-"""
-scalar Date
-
-enum InvoiceSort {
-  createdAt
-  modifiedAt
-  paidAt
-}
-
 type PollConnection {
   nodes: [Poll!]!
   pageInfo: PageInfo!
@@ -525,12 +498,6 @@ type Mutation {
   uploadImage(input: UploadImageInput!): Image
   updateImage(id: String!, input: UpdateImageInput!): Image
   deleteImage(id: String!): Image
-  createInvoice(input: InvoiceInput!): Invoice
-  createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment
-  updateInvoice(id: String!, input: InvoiceInput!): Invoice
-  deleteInvoice(id: String!): Invoice
-  markInvoiceAsPaid(id: String!): Invoice
-  renewSubscription(id: String!): Invoice
   updateComment(id: String!, revision: CommentRevisionUpdateInput, userID: String, guestUsername: String, guestUserImageID: String, featured: Boolean, source: String, tagIds: [String!], ratingOverrides: [CommentRatingOverrideUpdateInput!]): Comment!
   createComment(text: RichText, tagIds: [String!], itemID: String!, parentID: String, itemType: CommentItemType!): Comment!
   approveComment(id: String!): Comment!
@@ -627,54 +594,6 @@ input UpdateImageInput {
   source: String
   license: String
   focalPoint: InputPoint
-}
-
-input InvoiceInput {
-  mail: String!
-  description: String
-  subscriptionID: String
-  manuallySetAsPaidByUserId: String
-  items: [InvoiceItemInput!]!
-}
-
-input InvoiceItemInput {
-  name: String!
-  description: String
-  quantity: Int!
-  amount: Int!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-}
-
-type Payment {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  intentID: String
-  intentSecret: String
-  state: PaymentState!
-  invoice: Invoice!
-  intentData: String
-  paymentMethod: PaymentMethod!
-  paymentData: String
-}
-
-enum PaymentState {
-  created
-  submitted
-  requiresUserAction
-  processing
-  paid
-  canceled
-  declined
-}
-
-input PaymentFromInvoiceInput {
-  invoiceID: String!
-  paymentMethodID: String
-  paymentMethodSlug: Slug
-  successURL: String
-  failureURL: String
 }
 
 input CommentRevisionUpdateInput {

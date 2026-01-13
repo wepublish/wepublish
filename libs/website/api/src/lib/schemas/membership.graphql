@@ -266,7 +266,7 @@ mutation ExtendSubscription(
 }
 
 query Invoices {
-  invoices {
+  userInvoices {
     ...FullInvoice
   }
 }

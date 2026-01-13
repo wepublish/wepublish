@@ -106,7 +106,7 @@ export const Default: StoryObj<typeof UpgradeContainer> = {
             query: SubscriptionsDocument,
           },
           result: {
-            data: { subscriptions: [subscription] },
+            data: { userSubscriptions: [subscription] },
           },
         },
         {
