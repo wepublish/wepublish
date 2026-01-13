@@ -13,11 +13,13 @@ import { BlockSiblings } from '../tsri-block-renderer';
 import { TsriBreakBlockType } from './tsri-base-break-block';
 
 export const SidebarContentWrapper = styled('div')`
-  grid-column: 2 / 3 !important;
   width: 100%;
   position: relative;
-
   z-index: 6;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-column: 2 / 3 !important;
+  }
 `;
 
 //   top: calc(var(--navbar-height, 0px) + 10px);
@@ -137,12 +139,15 @@ export const TsriSidebarContent = ({
     return undefined;
   })();
 
-  const sidebarContentWrapperStyles = css`
+  const sidebarContentWrapperStyles = (theme: Theme) => css`
     ${siblingSidebarContentWrapperStyles};
-    grid-row-start: ${index};
-    grid-row-end: ${nextOfTypeIndex ?? count + 4};
-    background-color: white;
-    margin-bottom: ${nextOfTypeIndex ? theme.spacing(-4) : 0};
+
+    ${theme.breakpoints.up('md')} {
+      grid-row-start: ${index};
+      grid-row-end: ${nextOfTypeIndex ?? count + 4};
+      background-color: white;
+      margin-bottom: ${nextOfTypeIndex ? theme.spacing(-4) : 0};
+    }
 
     & ${SidebarContentBox} {
       background: ${

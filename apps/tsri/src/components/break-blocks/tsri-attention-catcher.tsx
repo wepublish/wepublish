@@ -13,18 +13,23 @@ import { TsriBreakBlockType } from './tsri-base-break-block';
 
 export const BreakBlockWrapper = styled('div')`
   display: grid;
-  grid-template-rows: min-content auto;
-  grid-template-columns: 57% calc(100% - 57%);
   background: linear-gradient(
     to bottom,
     #f5ff64,
     color-mix(in srgb, white 40%, #f5ff64)
   );
   border-radius: 1cqw;
-  width: 69.4cqw;
   margin: 0 auto;
   row-gap: 5cqw;
   column-gap: 0;
+  grid-template-rows: unset;
+  grid-template-columns: unset;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-template-rows: min-content auto;
+    grid-template-columns: 57% calc(100% - 57%);
+    width: 69.4cqw;
+  }
 `;
 
 export const BreakBlockHeading = styled('div')`
@@ -88,18 +93,22 @@ const richTextStyles = (theme: Theme) => css`
   }
 `;
 
-const firstSegmentStyles = css`
-  grid-column: 1 / 2;
-  grid-row: 2 / 3;
-  padding: 0 0 1cqw 1cqw;
+const firstSegmentStyles = (theme: Theme) => css`
+  ${theme.breakpoints.up('md')} {
+    padding: 0 0 1cqw 1cqw;
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+  }
 `;
 
-const secondSegmentStyles = css`
-  grid-column: 2 / 3;
-  grid-row: 2 / 3;
-  padding: 0 1cqw 1cqw 0;
-  margin-left: 1.5cqw;
-  grid-template-rows: auto min-content;
+const secondSegmentStyles = (theme: Theme) => css`
+  ${theme.breakpoints.up('md')} {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    padding: 0 1cqw 1cqw 0;
+    margin-left: 1.5cqw;
+    grid-template-rows: auto min-content;
+  }
 `;
 
 export const BreakBlock = ({

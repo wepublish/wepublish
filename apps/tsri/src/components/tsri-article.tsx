@@ -14,6 +14,17 @@ import { CommentListWrapper } from '@wepublish/comments/website';
 import { SidebarContentWrapper } from './break-blocks/tsri-sidebar-content';
 
 export const TsriArticle = styled(ArticleDefault)`
+  grid-template-columns: var(--two-column-grid) !important;
+  justify-content: space-between;
+
+  & > * {
+    grid-column: 1 / 2 !important;
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    width: unset;
+  }
+
   ${TitleBlockPreTitleWrapper} {
     display: none;
   }
@@ -22,11 +33,25 @@ export const TsriArticle = styled(ArticleDefault)`
     grid-row-start: 3;
     display: grid;
     gap: 0;
-    grid-template-columns: min-content 1fr min-content;
+    grid-template-columns: unset;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      grid-template-columns: min-content 1fr min-content;
+    }
   }
 
   ${ImageBlockImage} {
     border-radius: 1cqw;
+    object-fit: cover;
+    max-width: calc(100vw - ${({ theme }) => theme.spacing(4)});
+
+    ${({ theme }) => theme.breakpoints.up('sm')} {
+      max-width: calc(100vw - ${({ theme }) => theme.spacing(6)});
+    }
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      max-width: 100%;
+    }
   }
 
   ${ImageBlockCaption} {
@@ -35,24 +60,11 @@ export const TsriArticle = styled(ArticleDefault)`
     font-weight: 700;
   }
 
-  @container main (width >= 200px) {
-    grid-template-columns: var(--two-column-grid) !important;
-    justify-content: space-between;
-
-    & > * {
-      grid-column: 1 / 2 !important;
-    }
-  }
-
   & ${SidebarContentWrapper} + * {
     margin-top: ${({ theme }) => theme.spacing(-3)};
   }
 
   & > :is(${ArticleListWrapper}, ${CommentListWrapper}) {
     grid-column: -1 / 1;
-  }
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    //
   }
 `;
