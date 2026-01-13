@@ -1,5 +1,0 @@
-mutation RenewSubscription($id: String!) {
-  renewSubscription(id: $id) {
-    id
-  }
-}

@@ -15,8 +15,6 @@ export type Scalars = {
   Float: number;
   /** A hexidecimal color value. */
   Color: string;
-  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
-  Date: string;
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: string;
   RichText: Descendant[];
@@ -219,29 +217,6 @@ export type Invoice = {
   total: Scalars['Int'];
 };
 
-export type InvoiceConnection = {
-  __typename?: 'InvoiceConnection';
-  nodes: Array<Invoice>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type InvoiceFilter = {
-  canceledAt?: InputMaybe<Scalars['Date']>;
-  mail?: InputMaybe<Scalars['String']>;
-  paidAt?: InputMaybe<Scalars['Date']>;
-  subscriptionID?: InputMaybe<Scalars['String']>;
-  userID?: InputMaybe<Scalars['String']>;
-};
-
-export type InvoiceInput = {
-  description?: InputMaybe<Scalars['String']>;
-  items: Array<InvoiceItemInput>;
-  mail: Scalars['String'];
-  manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
-  subscriptionID?: InputMaybe<Scalars['String']>;
-};
-
 export type InvoiceItem = {
   __typename?: 'InvoiceItem';
   amount: Scalars['Int'];
@@ -252,21 +227,6 @@ export type InvoiceItem = {
   quantity: Scalars['Int'];
   total: Scalars['Int'];
 };
-
-export type InvoiceItemInput = {
-  amount: Scalars['Int'];
-  createdAt: Scalars['DateTime'];
-  description?: InputMaybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  quantity: Scalars['Int'];
-};
-
-export enum InvoiceSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt',
-  PaidAt = 'paidAt'
-}
 
 export type JwtToken = {
   __typename?: 'JWTToken';
@@ -305,8 +265,6 @@ export type Mutation = {
   __typename?: 'Mutation';
   approveComment: Comment;
   createComment: Comment;
-  createInvoice?: Maybe<Invoice>;
-  createPaymentFromInvoice?: Maybe<Payment>;
   createPoll?: Maybe<PollWithAnswers>;
   createPollAnswer?: Maybe<PollAnswer>;
   createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
@@ -315,14 +273,11 @@ export type Mutation = {
   createUser?: Maybe<User>;
   deleteComment: Comment;
   deleteImage?: Maybe<Image>;
-  deleteInvoice?: Maybe<Invoice>;
   deletePoll?: Maybe<FullPoll>;
   deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
   deleteUser?: Maybe<User>;
-  markInvoiceAsPaid?: Maybe<Invoice>;
   rejectComment: Comment;
-  renewSubscription?: Maybe<Invoice>;
   requestChangesOnComment: Comment;
   resetUserPassword?: Maybe<User>;
   revokeActiveSession: Scalars['Boolean'];
@@ -332,7 +287,6 @@ export type Mutation = {
   sessions: Array<Session>;
   updateComment: Comment;
   updateImage?: Maybe<Image>;
-  updateInvoice?: Maybe<Invoice>;
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
   updateUser?: Maybe<User>;
@@ -351,16 +305,6 @@ export type MutationCreateCommentArgs = {
   parentID?: InputMaybe<Scalars['String']>;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
   text?: InputMaybe<Scalars['RichText']>;
-};
-
-
-export type MutationCreateInvoiceArgs = {
-  input: InvoiceInput;
-};
-
-
-export type MutationCreatePaymentFromInvoiceArgs = {
-  input: PaymentFromInvoiceInput;
 };
 
 
@@ -410,11 +354,6 @@ export type MutationDeleteImageArgs = {
 };
 
 
-export type MutationDeleteInvoiceArgs = {
-  id: Scalars['String'];
-};
-
-
 export type MutationDeletePollArgs = {
   id: Scalars['String'];
 };
@@ -435,19 +374,9 @@ export type MutationDeleteUserArgs = {
 };
 
 
-export type MutationMarkInvoiceAsPaidArgs = {
-  id: Scalars['String'];
-};
-
-
 export type MutationRejectCommentArgs = {
   id: Scalars['String'];
   rejectionReason?: InputMaybe<CommentRejectionReason>;
-};
-
-
-export type MutationRenewSubscriptionArgs = {
-  id: Scalars['String'];
 };
 
 
@@ -499,12 +428,6 @@ export type MutationUpdateImageArgs = {
 };
 
 
-export type MutationUpdateInvoiceArgs = {
-  id: Scalars['String'];
-  input: InvoiceInput;
-};
-
-
 export type MutationUpdatePeerProfileArgs = {
   input: PeerProfileInput;
 };
@@ -537,28 +460,6 @@ export type PageInfo = {
   hasNextPage: Scalars['Boolean'];
   hasPreviousPage: Scalars['Boolean'];
   startCursor?: Maybe<Scalars['String']>;
-};
-
-export type Payment = {
-  __typename?: 'Payment';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  intentData?: Maybe<Scalars['String']>;
-  intentID?: Maybe<Scalars['String']>;
-  intentSecret?: Maybe<Scalars['String']>;
-  invoice: Invoice;
-  modifiedAt: Scalars['DateTime'];
-  paymentData?: Maybe<Scalars['String']>;
-  paymentMethod: PaymentMethod;
-  state: PaymentState;
-};
-
-export type PaymentFromInvoiceInput = {
-  failureURL?: InputMaybe<Scalars['String']>;
-  invoiceID: Scalars['String'];
-  paymentMethodID?: InputMaybe<Scalars['String']>;
-  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
-  successURL?: InputMaybe<Scalars['String']>;
 };
 
 export type PaymentMethod = {
@@ -596,16 +497,6 @@ export type PaymentProviderCustomer = {
   customerID: Scalars['String'];
   paymentProviderID: Scalars['String'];
 };
-
-export enum PaymentState {
-  Canceled = 'canceled',
-  Created = 'created',
-  Declined = 'declined',
-  Paid = 'paid',
-  Processing = 'processing',
-  RequiresUserAction = 'requiresUserAction',
-  Submitted = 'submitted'
-}
 
 export type PeerProfile = {
   __typename?: 'PeerProfile';
@@ -733,8 +624,6 @@ export type Query = {
   createJWTForWebsiteLogin?: Maybe<JwtToken>;
   image?: Maybe<Image>;
   images: ImageConnection;
-  invoice?: Maybe<Invoice>;
-  invoices: InvoiceConnection;
   me?: Maybe<User>;
   peerProfile: PeerProfile;
   poll?: Maybe<FullPoll>;
@@ -778,21 +667,6 @@ export type QueryImagesArgs = {
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<ImageSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryInvoiceArgs = {
-  id?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryInvoicesArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<InvoiceFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<InvoiceSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
 
@@ -1177,13 +1051,6 @@ export type DeleteImageMutationVariables = Exact<{
 
 export type DeleteImageMutation = { __typename?: 'Mutation', deleteImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
-export type RenewSubscriptionMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type RenewSubscriptionMutation = { __typename?: 'Mutation', renewSubscription?: { __typename?: 'Invoice', id: string } | null };
-
 export type FullUserFragment = { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> };
 
 export type UserListQueryVariables = Exact<{
@@ -1542,13 +1409,6 @@ export const DeleteImage = gql`
   }
 }
     ${FullImage}`;
-export const RenewSubscription = gql`
-    mutation RenewSubscription($id: String!) {
-  renewSubscription(id: $id) {
-    id
-  }
-}
-    `;
 export const UserList = gql`
     query UserList($filter: String, $cursor: String, $take: Int, $skip: Int) {
   users(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {

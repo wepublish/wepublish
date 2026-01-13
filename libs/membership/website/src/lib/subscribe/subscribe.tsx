@@ -481,11 +481,11 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     }
 
     return (
-      userInvoices.data?.invoices.some(
+      userInvoices.data?.userInvoices.some(
         invoice => !invoice.canceledAt && !invoice.paidAt
       ) ?? false
     );
-  }, [deactivateSubscriptionId, userInvoices.data?.invoices]);
+  }, [deactivateSubscriptionId, userInvoices.data?.userInvoices]);
 
   const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin || 500;
 

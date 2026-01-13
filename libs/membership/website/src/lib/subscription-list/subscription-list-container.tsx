@@ -127,8 +127,8 @@ const useCancelSubscriptionMutationWithCacheUpdate = (
 
       if (newSubscription) {
         cache.updateQuery<InvoicesQuery>({ query: InvoicesDocument }, data => ({
-          invoices:
-            data?.invoices.map(invoice => {
+          userInvoices:
+            data?.userInvoices.map(invoice => {
               if (
                 invoice.subscriptionID === newSubscription.id &&
                 !invoice.paidAt &&

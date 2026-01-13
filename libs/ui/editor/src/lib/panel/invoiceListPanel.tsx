@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
-import { InvoiceFragment, useMeQuery } from '@wepublish/editor/api';
+import { useMeQuery } from '@wepublish/editor/api';
+import { InvoiceFragment } from '@wepublish/editor/api-v2';
 import { useTranslation } from 'react-i18next';
 import { Drawer, Message } from 'rsuite';
 

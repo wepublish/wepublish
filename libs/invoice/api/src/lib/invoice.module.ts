@@ -1,18 +1,31 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '@wepublish/nest-modules';
+import {
+  HasOptionalInvoiceLcResolver,
+  HasOptionalInvoiceResolver,
+  HasInvoiceLcResolver,
+  HasInvoiceResolver,
+} from './has-invoice/has-invoice.resolver';
+import { InvoiceDataloader } from './invoice.dataloader';
 import { InvoiceItemResolver, InvoiceResolver } from './invoice.resolver';
 import { InvoiceService } from './invoice.service';
-import { InvoiceDataloader } from './invoice.dataloader';
-import { PaymentsModule } from '@wepublish/payment/api';
+import { InvoiceItemDataloader } from './invoice-items.dataloader';
+import { PaymentMethodModule } from '@wepublish/payment/api';
+import { UserModule } from '@wepublish/user/api';
 
 @Module({
-  imports: [PrismaModule, PaymentsModule],
+  imports: [PrismaModule, PaymentMethodModule, UserModule],
   providers: [
-    InvoiceService,
+    HasInvoiceResolver,
+    HasOptionalInvoiceResolver,
+    HasInvoiceLcResolver,
+    HasOptionalInvoiceLcResolver,
+    InvoiceDataloader,
+    InvoiceItemDataloader,
     InvoiceResolver,
     InvoiceItemResolver,
-    InvoiceDataloader,
+    InvoiceService,
   ],
-  exports: [InvoiceService, InvoiceDataloader],
+  exports: [InvoiceDataloader],
 })
 export class InvoiceModule {}

@@ -2,9 +2,3 @@ fragment Deactivation on SubscriptionDeactivation {
   date
   reason
 }
-
-mutation RenewSubscription($id: String!) {
-  renewSubscription(id: $id) {
-    ...Invoice
-  }
-}

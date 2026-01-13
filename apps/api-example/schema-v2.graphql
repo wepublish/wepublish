@@ -1280,26 +1280,58 @@ input InstagramPostBlockInput {
 type Invoice implements HasOptionalSubscription {
   canceledAt: DateTime
   createdAt: DateTime!
+  currency: Currency!
   description: String
   dueAt: DateTime!
   id: String!
   items: [InvoiceItem!]!
   mail: String!
+  manuallySetAsPaidByUser: User
+  manuallySetAsPaidByUserId: String
   modifiedAt: DateTime!
   paidAt: DateTime
+  scheduledDeactivationAt: DateTime!
   subscription: PublicSubscription
   subscriptionID: String
   total: Int!
+}
+
+type InvoiceConnection {
+  nodes: [Invoice!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input InvoiceFilter {
+  canceledAt: DateFilter
+  mail: String
+  paidAt: DateFilter
+  subscriptionID: String
+  userID: String
 }
 
 type InvoiceItem {
   amount: Int!
   createdAt: DateTime!
   description: String
+  id: String!
   modifiedAt: DateTime!
   name: String!
   quantity: Int!
   total: Int!
+}
+
+input InvoiceItemInput {
+  amount: Int!
+  description: String
+  name: String!
+  quantity: Int!
+}
+
+enum InvoiceSort {
+  CreatedAt
+  ModifiedAt
+  PaidAt
 }
 
 type ListicleBlock implements BaseBlock {
@@ -1433,6 +1465,9 @@ type Mutation {
   """Creates a new event."""
   createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, status: EventStatus! = Scheduled, tagIds: [String!]): Event!
 
+  """Creates a new invoice."""
+  createInvoice(currency: Currency!, description: String, dueAt: DateTime!, items: [InvoiceItemInput!]!, mail: String!, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime!, subscriptionID: String): Invoice!
+
   """Creates a new memberplan."""
   createMemberPlan(active: Boolean!, amountPerMonthMax: Int, amountPerMonthMin: Int!, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
 
@@ -1510,6 +1545,9 @@ type Mutation {
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
 
+  """Deletes an existing invoice."""
+  deleteInvoice(id: String!): Invoice!
+
   """Deletes an existing memberplan."""
   deleteMemberPlan(id: String!): MemberPlan!
 
@@ -1579,6 +1617,9 @@ type Mutation {
   """Likes an article."""
   likeArticle(id: String!): Article!
 
+  """Marks an invoice as paid."""
+  markInvoiceAsPaid(id: String!): Invoice!
+
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
 
@@ -1594,6 +1635,9 @@ type Mutation {
   This mutation registers a new member by providing name, email, and other required information.
   """
   registerMember(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput!, email: String!, firstName: String, name: String!, password: String): Registration!
+
+  """Renews a subscription."""
+  renewSubscription(id: String!): PublicSubscription!
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
@@ -1634,6 +1678,9 @@ type Mutation {
 
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
+
+  """Updates an existing invoice."""
+  updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
 
   """Updates an existing memberplan."""
   updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
@@ -2267,7 +2314,7 @@ type Query {
   """
   Check the status of an invoice and update with information from the payment provider
   """
-  checkInvoiceStatus(id: String!): Invoice
+  checkInvoiceStatus(id: String!): Invoice!
 
   """This query returns the comments of an item."""
   comments(itemId: String!, order: SortOrder = Descending, sort: CommentSort): [Comment!]!
@@ -2314,8 +2361,11 @@ type Query {
   "\n      Returns a list of external source ids of already imported events.\n    "
   importedEventsIds: [String!]!
 
-  """Get all invoices for the authenticated user"""
-  invoices: [Invoice!]!
+  """Returns a invoice by id."""
+  invoice(id: String!): Invoice!
+
+  """Returns a paginated list of invoices based on the filters given."""
+  invoices(cursorId: String, filter: InvoiceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: InvoiceSort = ModifiedAt, take: Int = 10): InvoiceConnection!
 
   """Return all mail templates"""
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
@@ -2461,6 +2511,9 @@ type Query {
 
   "\n      Returns a list of userConsents. Possible to filter.\n    "
   userConsents(name: String, slug: String, value: Boolean): [UserConsent!]!
+
+  """Get all invoices for the authenticated user"""
+  userInvoices: [Invoice!]!
   userPollVote(pollId: String!): String
 
   """Returns a userrole by id."""

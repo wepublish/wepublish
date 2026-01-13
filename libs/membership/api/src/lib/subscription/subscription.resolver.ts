@@ -128,6 +128,14 @@ export class PublicSubscriptionResolver {
     return this.service.deleteSubscription(id);
   }
 
+  @Permissions(CanCreateSubscription)
+  @Mutation(returns => PublicSubscription, {
+    description: `Renews a subscription.`,
+  })
+  public renewSubscription(@Args('id') id: string) {
+    return this.service.renewSubscription(id);
+  }
+
   @ResolveField(() => [SubscriptionPeriod])
   async periods(@Parent() subscription: Subscription) {
     return this.periodDataloader.load(subscription.id);

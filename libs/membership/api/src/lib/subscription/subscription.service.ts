@@ -251,6 +251,40 @@ export class SubscriptionService {
       },
     });
   }
+
+  async renewSubscription(id: string) {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: { id },
+      include: {
+        deactivation: true,
+        periods: true,
+        properties: true,
+      },
+    });
+
+    if (!subscription) {
+      throw new NotFoundException('subscription', id);
+    }
+
+    const unpaidInvoiceCount = await this.prisma.invoice.count({
+      where: {
+        subscriptionID: subscription.id,
+        paidAt: null,
+      },
+    });
+
+    if (unpaidInvoiceCount > 0) {
+      throw new BadRequestException(
+        'You cant create new invoice while you have unpaid invoices!'
+      );
+    }
+
+    await this.memberContext.renewSubscriptionForUser({
+      subscription,
+    });
+
+    return subscription;
+  }
 }
 
 export const createSubscriptionOrder = (

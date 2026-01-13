@@ -1,16 +1,12 @@
 import { createOptionalsArray, DataLoaderService } from '@wepublish/utils/api';
-import { Invoice, InvoiceItem, PrismaClient } from '@prisma/client';
+import { PrismaClient, Invoice } from '@prisma/client';
 import { Injectable, Scope } from '@nestjs/common';
-
-export type InvoiceWithItems = Invoice & {
-  items: InvoiceItem[];
-};
 
 @Injectable({
   scope: Scope.REQUEST,
 })
-export class InvoiceDataloader extends DataLoaderService<InvoiceWithItems> {
-  constructor(private prisma: PrismaClient) {
+export class InvoiceDataloader extends DataLoaderService<Invoice> {
+  constructor(protected prisma: PrismaClient) {
     super();
   }
 
@@ -19,9 +15,6 @@ export class InvoiceDataloader extends DataLoaderService<InvoiceWithItems> {
       ids,
       await this.prisma.invoice.findMany({
         where: { id: { in: ids } },
-        include: {
-          items: true,
-        },
       }),
       'id'
     );
