@@ -21,6 +21,11 @@ export const TeaserMoreAbout = styled(TeaserTopicMeta)`
   ${TeaserContentWrapper} {
     grid-template-rows: unset;
     padding-top: 7cqw;
+    padding-bottom: 2cqw;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      padding-bottom: 0;
+    }
   }
 
   & ${TeaserTitle} {
@@ -32,8 +37,13 @@ export const TeaserMoreAbout = styled(TeaserTopicMeta)`
   }
 
   & ${TeaserPreTitle} {
-    font-size: 1.1cqw !important;
+    font-size: 3.5cqw !important;
     font-weight: 700 !important;
-    line-height: 1.2cqw !important;
+    line-height: 5cqw !important;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      font-size: 1.1cqw !important;
+      line-height: 1.2cqw !important;
+    }
   }
 `;
