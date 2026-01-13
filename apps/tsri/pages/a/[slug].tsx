@@ -43,11 +43,10 @@ const AfterArticleTitle = styled(H2)`
 
 export const AfterArticleAuthorWrapper = styled(ContentWrapper)`
   display: grid;
-  grid-template-columns: min-content 1fr min-content;
-  margin: 0 ${({ theme }) => theme.spacing(6)};
+  grid-template-columns: unset;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    margin: 0;
+    grid-template-columns: min-content 1fr min-content;
   }
 `;
 

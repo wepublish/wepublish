@@ -86,7 +86,7 @@ export function TsriAuthor({
       <header>
         <H3 component={AuthorHeading}>
           {data.author.name}
-          {data.author.jobTitle && data.author.jobTitle}
+          {data.author.jobTitle && `, ${data.author.jobTitle}`}
         </H3>
       </header>
 
