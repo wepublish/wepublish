@@ -92,8 +92,9 @@ export const TeaserImageWrapper = styled('figure')`
 `;
 
 export const TeaserImage = styled(Image)`
-  max-height: unset;
-  max-width: unset;
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: cover;
 `;
 
 export const TeaserBreakingNewsBadge = styled('div')`
