@@ -229,6 +229,17 @@ describe('UpgradeSubscriptionService', () => {
             id: '4',
             paymentPeriodicity: PaymentPeriodicity.yearly,
             amount: 600,
+            endsAt: new Date('2025-01-03'),
+            createdAt: new Date('2024-01-03'),
+            startsAt: new Date('2024-01-03'),
+            invoice: {
+              paidAt: new Date('2024-01-03'),
+            },
+          },
+          {
+            id: '5',
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            amount: 600,
             endsAt: new Date('2026-01-01'),
             createdAt: new Date('2025-01-01'),
             startsAt: new Date('2025-01-01'),
@@ -237,7 +248,7 @@ describe('UpgradeSubscriptionService', () => {
             },
           },
           {
-            id: '5',
+            id: '6',
             paymentPeriodicity: PaymentPeriodicity.yearly,
             amount: 700,
             endsAt: new Date('2027-01-01'),
@@ -267,8 +278,9 @@ describe('UpgradeSubscriptionService', () => {
       });
 
       // Should not be 700 as the period with 700 is unpaid
-      // Should not be 500 but 600 because the period with 500 got extended and paid already
-      expect(result).toBe(600);
+      // Should not be 500 as the period has ended
+      // Should not be 600 because 2 periods are still active and 5 comes from the nearly ended one
+      expect(result).toBe(605);
     });
   });
 

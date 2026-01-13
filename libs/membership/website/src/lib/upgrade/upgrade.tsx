@@ -3,6 +3,7 @@ import {
   Currency,
   PaymentMethod,
   PaymentPeriodicity,
+  ProductType,
   UpgradeMutationVariables,
 } from '@wepublish/website/api';
 import {
@@ -18,7 +19,7 @@ import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
 
 import { ApolloError } from '@apollo/client';
 import { ApiAlert } from '@wepublish/errors/website';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import {
   SubscribeAmount,
   SubscribeAmountText,
@@ -41,43 +42,49 @@ const upgradeSchema = subscribeSchema.pick({
   payTransactionFee: true,
 });
 
-export const getUpgradeText = (
-  autoRenew: boolean,
-  extendable: boolean,
-  paymentPeriodicity: PaymentPeriodicity,
-  monthlyAmount: number,
-  discount: number,
-  currency: Currency,
-  locale: string
-) => {
-  if (!monthlyAmount) {
-    return 'Kostenlos';
-  }
+export const useUpgradeText = ({
+  productType,
+  discount,
+  paymentPeriodicity,
+  monthlyAmount,
+  memberPlan,
+  currency,
+  locale,
+}: {
+  discount: number;
+  productType: ProductType;
+  paymentPeriodicity: PaymentPeriodicity;
+  monthlyAmount: number;
+  memberPlan: string;
+  currency: Currency;
+  locale: string;
+}) => {
+  const { t } = useTranslation();
 
-  if (autoRenew && extendable) {
-    return `Für ${formatCurrency(
-      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity) -
-        discount / 100,
-      currency,
-      locale
-    )}`;
-  }
+  return useMemo(() => {
+    const variables = {
+      productType,
+      formattedAmount: formatCurrency(
+        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity) -
+          discount / 100,
+        currency,
+        locale
+      ),
+      monthlyAmount,
+      memberPlan,
+    };
 
-  if (extendable) {
-    return `Für ${formatCurrency(
-      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity) -
-        discount / 100,
-      currency,
-      locale
-    )}`;
-  }
-
-  return `Für ${formatCurrency(
-    (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity) -
-      discount / 100,
+    return t(`subscribe.upgrade.button`, variables);
+  }, [
+    productType,
+    monthlyAmount,
+    paymentPeriodicity,
+    discount,
     currency,
-    locale
-  )}`;
+    locale,
+    memberPlan,
+    t,
+  ]);
 };
 
 export const UpgradeContinuation = styled(SubscribeCancelable)`
@@ -176,30 +183,32 @@ export const Upgrade = ({
     extendable: selectedMemberPlan?.extendable ?? true,
     paymentPeriodicity: subscriptionToUpgrade.paymentPeriodicity,
     productType: subscriptionToUpgrade.memberPlan.productType,
+    memberPlan: selectedMemberPlan?.name ?? '',
     siteTitle,
     monthlyAmount,
     locale,
   });
 
-  const upgradeText = getUpgradeText(
-    subscriptionToUpgrade.autoRenew,
-    selectedMemberPlan?.extendable ?? true,
-    subscriptionToUpgrade.paymentPeriodicity,
-    monthlyAmount,
-    upgradeInfo.data?.upgradeSubscriptionInfo.discountAmount ?? 0,
-    selectedMemberPlan?.currency ?? Currency.Chf,
-    locale
-  );
-
   const supportText = usePaymentText({
     type: 'support',
     autoRenew: true,
     extendable: selectedMemberPlan?.extendable ?? true,
+    memberPlan: selectedMemberPlan?.name ?? '',
     paymentPeriodicity: PaymentPeriodicity.Monthly,
     monthlyAmount: watch('monthlyAmount'),
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     productType: subscriptionToUpgrade.memberPlan.productType,
     siteTitle,
+    locale,
+  });
+
+  const upgradeText = useUpgradeText({
+    memberPlan: selectedMemberPlan?.name ?? '',
+    productType: subscriptionToUpgrade.memberPlan.productType,
+    paymentPeriodicity: subscriptionToUpgrade.paymentPeriodicity,
+    monthlyAmount,
+    discount: upgradeInfo.data?.upgradeSubscriptionInfo.discountAmount ?? 0,
+    currency: selectedMemberPlan?.currency ?? Currency.Chf,
     locale,
   });
 
@@ -251,22 +260,22 @@ export const Upgrade = ({
     >
       <UpgradeInformation>
         <Paragraph gutterBottom={false}>
-          Mach jetzt ein Upgrade von deinem{' '}
-          {subscriptionToUpgrade.memberPlan.name} auf das{' '}
-          {selectedMemberPlan?.name}.{' '}
-          <strong>
-            Dein Restguthaben von{' '}
-            {formatCurrency(
-              (upgradeInfo.data?.upgradeSubscriptionInfo.discountAmount ?? 0) /
-                100,
-              selectedMemberPlan?.currency ?? Currency.Chf,
-              locale
-            )}{' '}
-            Franken bei deinem {subscriptionToUpgrade.memberPlan.name} wird Dir
-            dabei angerechnet.
-          </strong>{' '}
-          Weiter unten siehst du Deinen noch zu zahlenden Upgrade-Preis für den
-          Wechsel zum {selectedMemberPlan?.name}.
+          <Trans
+            i18nKey="subscribe.upgrade.info"
+            values={{
+              oldMemberPlan: subscriptionToUpgrade.memberPlan.name,
+              newMemberPlan: selectedMemberPlan?.name,
+              discount: formatCurrency(
+                (upgradeInfo.data?.upgradeSubscriptionInfo.discountAmount ??
+                  0) / 100,
+                selectedMemberPlan?.currency ?? Currency.Chf,
+                locale
+              ),
+            }}
+            components={{
+              bold: <strong />,
+            }}
+          />
         </Paragraph>
       </UpgradeInformation>
 
@@ -372,7 +381,7 @@ export const Upgrade = ({
           disabled={loading}
           type="submit"
         >
-          {upgradeText} upgraden
+          {upgradeText}
         </SubscribeButton>
 
         <UpgradeContinuation>Danach {paymentText}</UpgradeContinuation>
