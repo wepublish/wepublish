@@ -101,22 +101,36 @@ export const FrontTopRow = styled('div')`
   list-style: none;
   margin: 0;
   padding: 0;
-  grid-template-columns: repeat(12, 1fr);
-  column-gap: 1cqw;
   row-gap: 0;
+  grid-template-columns: unset;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 1cqw;
+  }
 `;
 
 export const HeroTeaser = styled(HeroTeaserDefault)`
-  grid-column: 1 / 9;
-  grid-row: 1 / 2;
+  grid-column: unset;
+  grid-row: unset;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-row: 1 / 2;
+    grid-column: 1 / 9;
+  }
 `;
 
 export const SidebarContent = styled(TabbedContentDefault)`
   display: grid;
   grid-template-rows: min-content 1fr;
-  grid-column: 9 / 13;
-  grid-row: 1 / 2;
+  grid-column: unset;
+  grid-row: unset;
   container: unset;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-row: 1 / 2;
+    grid-column: 9 / 13;
+  }
 
   ${TabPanel} {
     position: relative;
