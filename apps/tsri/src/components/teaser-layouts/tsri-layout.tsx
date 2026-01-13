@@ -41,7 +41,11 @@ export const TeaserLayoutWrapper = styled('ul')`
   list-style: none;
   margin: 0;
   padding: 0;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: unset;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-template-columns: repeat(12, 1fr);
+  }
 `;
 
 export const alignmentForTeaserBlock = (

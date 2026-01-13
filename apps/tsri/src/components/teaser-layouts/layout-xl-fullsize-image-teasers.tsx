@@ -28,8 +28,8 @@ export const alignmentForTeaserBlock = alignmentFunc;
 export const TeaserFlexGridXLFullsizeImage = styled(TeaserFlexGrid)``;
 
 export const TeaserSlotsXLFullsizeImage = styled(TeaserSlots)`
-  column-gap: 1.25cqw;
   row-gap: 1.25cqw;
+  grid-template-columns: unset;
 
   & > * {
     grid-column-start: unset;
@@ -38,5 +38,9 @@ export const TeaserSlotsXLFullsizeImage = styled(TeaserSlots)`
     grid-row-end: unset;
     height: 100%;
   }
-  grid-template-columns: repeat(2, calc(50% - 1.25cqw / 2));
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    column-gap: 1.25cqw;
+    grid-template-columns: repeat(2, calc(50% - 1.25cqw / 2));
+  }
 `;

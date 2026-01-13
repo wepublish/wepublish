@@ -56,5 +56,13 @@ export const TabbedMainContent = styled(TabbedContentDefault)`
     position: relative;
     top: -1px;
     z-index: 0;
-    padding: 7cqw 1.3cqw 0.5cqw 5.58cqw;
+    padding: 1.7cqw 2cqw 0.5cqw 2cqw;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      padding: 7cqw 1.3cqw 0.5cqw 5.58cqw;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+    }
 `;

@@ -18,46 +18,15 @@ import {
   teaserBlockStyleByIndex as teaserBlockStyleByIndexWithTwoCol,
   TeaserSlotsArchiveTopicWithTwoCol,
 } from './layout-archive-topic-with-two-col';
-/*
-import {
-  alignmentForTeaserBlock as alignmentForTeaserBlockTwoCol,
-  isTeaserSlotsTwoCol,
-  TeaserSlotsTwoCol,
-} from './layout-two-col';
-import {
-  alignmentForTeaserBlock as alignmentForTeaserBlockTwoColAltColor,
-  isTeaserSlotsTwoColAltColor,
-  TeaserSlotsTwoColAltColor,
-} from './layout-two-col-alt-color';
-*/
 import {
   alignmentForTeaserBlock as alignmentForTeaserBlockDefault,
   TeaserSlotsDefault,
 } from './layout-default';
-/*
-import {
-  alignmentForTeaserBlock as alignmentForTeaserBlockFullsizeImage,
-  isTeaserSlotsFullsizeImage,
-  TeaserSlotsFullsizeImage,
-} from './layout-fullsize-image';
-*/
 import {
   alignmentForTeaserBlock as alignmentForTeaserBlockTeaserSlotsHeroTeaser,
   isTeaserSlotsHeroTeaser,
   TeaserSlotsHeroTeaser,
 } from './layout-hero-teaser';
-/*
-import {
-  alignmentForTeaserBlock as alignmentForTeaserBlockNoImage,
-  isTeaserSlotNoImage,
-  TeaserSlotNoImage,
-} from './layout-no-image';
-import {
-  alignmentForTeaserBlock as alignmentForTeaserBlockNoImageAltColor,
-  isTeaserSlotsNoImageAltColor,
-  TeaserSlotsNoImageAltColor,
-} from './layout-no-image-alt-color';
-*/
 import {
   alignmentForTeaserBlock as alignmentForTeaserBlockDailyBriefingSidebar,
   isTeaserSlotsDailyBriefingSidebar,
@@ -179,53 +148,6 @@ export const TsriBaseTeaserSlots = cond([
       />
     ),
   ],
-  /*
-  [
-    isTeaserSlotsFullsizeImage,
-    (props: BuilderTeaserSlotsBlockProps) => (
-      <TeaserSlotsFullsizeImage
-        {...props}
-        alignmentForTeaserBlock={alignmentForTeaserBlockFullsizeImage}
-      />
-    ),
-  ],
-  [
-    isTeaserSlotsTwoCol,
-    (props: BuilderTeaserSlotsBlockProps) => (
-      <TeaserSlotsTwoCol
-        {...props}
-        alignmentForTeaserBlock={alignmentForTeaserBlockTwoCol}
-      />
-    ),
-  ],
-  [
-    isTeaserSlotNoImage,
-    (props: BuilderTeaserSlotsBlockProps) => (
-      <TeaserSlotNoImage
-        {...props}
-        alignmentForTeaserBlock={alignmentForTeaserBlockNoImage}
-      />
-    ),
-  ],
-  [
-    isTeaserSlotsNoImageAltColor,
-    (props: BuilderTeaserSlotsBlockProps) => (
-      <TeaserSlotsNoImageAltColor
-        {...props}
-        alignmentForTeaserBlock={alignmentForTeaserBlockNoImageAltColor}
-      />
-    ),
-  ],
-  [
-    isTeaserSlotsTwoColAltColor,
-    (props: BuilderTeaserSlotsBlockProps) => (
-      <TeaserSlotsTwoColAltColor
-        {...props}
-        alignmentForTeaserBlock={alignmentForTeaserBlockTwoColAltColor}
-      />
-    ),
-  ],
-  */
   [
     T,
     (props: BuilderTeaserSlotsBlockProps) => (

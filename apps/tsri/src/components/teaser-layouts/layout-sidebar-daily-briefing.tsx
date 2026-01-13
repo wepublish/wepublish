@@ -55,7 +55,7 @@ export const alignmentForTeaserBlock = (index: number) => {
 export const TeaserFlexGridDailyBriefingSidebar = styled(TeaserFlexGrid)``;
 
 export const TeaserSlotsDailyBriefingSidebar = styled(TeaserSlots)`
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr !important;
   grid-template-rows: min-content auto;
   row-gap: 2cqw;
   height: 100%;
