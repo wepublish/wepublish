@@ -62,11 +62,40 @@ export const TabPanel = styled(TabPanelBase, {
 export const Tabs = styled(MuiTabs)`
   display: flex;
   flex-direction: row;
-  align-items: stretch;
   min-height: unset;
+  background-color: rgb(174, 179, 190);
+  padding: 2cqw 2cqw 0 2cqw;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 
   & .MuiTabs-indicator {
-    display: none;
+    display: none !important;
+  }
+
+  & .MuiTabs-fixed {
+    overflow: visible !important;
+  }
+
+  & .MuiTabs-flexContainer {
+    flex-wrap: wrap !important;
+    gap: 0.5cqw !important;
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    align-items: stretch;
+    background-color: transparent;
+    padding: 0;
+    border-top-left-radius: unset;
+    border-top-right-radius: unset;
+
+    & .MuiTabs-fixed {
+      overflow: hidden !important;
+    }
+
+    & .MuiTabs-flexContainer {
+      flex-wrap: nowrap !important;
+      gap: 0 !important;
+    }
   }
 `;
 
@@ -81,19 +110,22 @@ export const Tab = styled(MuiTab, {
   font-weight: 700;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
-  margin-right: 4px;
   padding: 7px 20px 2px 20px;
   text-transform: none;
   flex-grow: 1;
   align-items: flex-start;
   min-height: unset;
 
-  font-size: 1.4cqw;
-  line-height: 1.4cqw;
-  padding: 0.7cqw 2.8cqw 0.5cqw 2.8cqw;
+  font-size: 3cqw;
+  line-height: 3cqw;
+  padding: 1.3cqw 2.8cqw 1.1cqw 2.8cqw;
   margin-right: 0.25cqw;
   border-top-left-radius: 1cqw;
   border-top-right-radius: 1cqw;
+
+  flex: 1 1 calc((100% - 4 * 0.5cqw) / 3);
+  max-width: unset;
+  min-width: unset;
 
   &:last-of-type {
     margin-right: 0;
@@ -116,6 +148,13 @@ export const Tab = styled(MuiTab, {
 
   & > span {
     display: none;
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    flex: 1 1 auto;
+    font-size: 1.4cqw;
+    line-height: 1.4cqw;
+    padding: 0.7cqw 2.8cqw 0.5cqw 2.8cqw;
   }
 
   ${({ cssByBlockStyle }) => css`
