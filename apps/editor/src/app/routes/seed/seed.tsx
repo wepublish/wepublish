@@ -1158,6 +1158,7 @@ async function seedComments(
                   state: CommentState.Approved,
                   guestUsername: faker.person.fullName(),
                   guestUserImageID: shuffle(imageIds).at(0),
+                  userRatings: [],
                 },
               })
             )
