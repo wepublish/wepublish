@@ -4,12 +4,13 @@ import {
   Box,
   css,
   GlobalStyles,
+  Theme,
   Toolbar,
 } from '@mui/material';
 import { useUser } from '@wepublish/authentication/website';
 import { useHasActiveSubscription } from '@wepublish/membership/website';
 import { navigationLinkToUrl } from '@wepublish/navigation/website';
-import { ButtonProps, TextToIcon } from '@wepublish/ui';
+import { ButtonProps, TextToIcon, theme } from '@wepublish/ui';
 import { FullNavigationFragment } from '@wepublish/website/api';
 import { PageType } from '@wepublish/website/builder';
 import {
@@ -33,6 +34,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { FiInstagram, FiMenu as FiMenuDefault, FiSearch } from 'react-icons/fi';
 import { MdWarning } from 'react-icons/md';
+
 enum NavbarState {
   Low,
   High,
@@ -47,9 +49,15 @@ const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
   :root {
     ${isHomePage ?
       `
-    --navbar-height: -10px;
-    --navbar-aspect-ratio: 6.5 / 1;
-    --scrolled-navbar-aspect-ratio: 9 / 1;
+        --navbar-height: -10px;
+        --navbar-aspect-ratio: 100 / 43;
+        --scrolled-navbar-aspect-ratio: 9 / 1;
+
+      ${theme.breakpoints.up('md')} {
+        --navbar-height: -10px;
+        --navbar-aspect-ratio: 6.5 / 1;
+        --scrolled-navbar-aspect-ratio: 9 / 1;
+      }
     `
     : `
     --navbar-aspect-ratio: 8 / 1;
@@ -83,9 +91,14 @@ export const NavbarWrapper = styled('nav')`
   height: auto;
   pointer-events: none;
   margin-bottom: calc(${({ theme }) => theme.spacing(-3)} + 1px);
+  --sizing-factor: 2.5;
 
   > * {
     pointer-events: all;
+  }
+
+  ${theme.breakpoints.up('md')} {
+    --sizing-factor: 1;
   }
 `;
 
@@ -107,29 +120,38 @@ const getNavbarState = (
   return [NavbarState.High];
 };
 
-export const navbarButtonStyles = () => css`
+export const navbarButtonStyles = (theme: Theme) => css`
   padding: 0;
   background-color: black;
   border-radius: 50%;
-  @container toolbar (width > 200px) {
-    width: 3.917442cqw;
-    height: 3.917442cqw;
-  }
+  width: 12cqw;
+  height: 12cqw;
+
   > svg {
     stroke-width: 1.25px;
     stroke: white;
-    font-size: 2.5cqw;
+    font-size: 8cqw;
   }
+
   &:hover {
     background-color: #f5ff64;
     > svg {
       stroke: black;
     }
   }
+
+  ${theme.breakpoints.up('md')} {
+    width: 3.917442cqw;
+    height: 3.917442cqw;
+
+    & > svg {
+      font-size: 2.5cqw;
+    }
+  }
 `;
 
 export const NavbarInstaButton = styled(IconButton)`
-  ${navbarButtonStyles()}
+  ${navbarButtonStyles(theme)}
   opacity: 0;
   transition: opacity 300ms ease-in-out;
   pointer-events: none;
@@ -141,11 +163,11 @@ const FiMenu = styled(FiMenuDefault)`
 `;
 
 export const NavbarHamburgerButton = styled(IconButton)`
-  ${navbarButtonStyles()}
+  ${navbarButtonStyles(theme)}
 `;
 
 export const NavbarSearchButton = styled(IconButton)`
-  ${navbarButtonStyles()}
+  ${navbarButtonStyles(theme)}
 `;
 
 export const NavbarIconButtonWrapper = styled('div')``;
@@ -154,12 +176,10 @@ export const NavbarMain = styled('div', {
   shouldForwardProp: propName => propName !== 'isMenuOpen',
 })<{ isMenuOpen?: boolean }>`
   grid-column: 2 / 3;
-  grid-row: -1 / 1;
+  grid-row: 1 / 2;
+  margin: 1.3cqw 2.5cqw 0 0;
+  column-gap: 0.9cqw;
 
-  @container toolbar (width > 200px) {
-    margin: 1.3cqw 2.5cqw 0 0;
-    column-gap: 0.9cqw;
-  }
   display: grid;
   grid-template-columns: repeat(3, min-content);
   align-items: center;
@@ -220,41 +240,40 @@ const TsriLogo = styled('img', {
   transform: translate3d(0, 0, 0);
   position: absolute;
 
-  // not scrolled --> blue logo, larger
-  @container toolbar (width > 200px) {
+  width: 40cqw;
+  height: auto;
+  top: 3cqw;
+  left: 2cqw;
+
+  ${theme.breakpoints.up('md')} {
+    // not scrolled --> blue logo, larger
     width: 24.2cqw;
     height: auto;
     top: 0.5cqw;
     left: 2cqw;
-  }
 
-  // scrolled --> blue logo, smaller
-  ${({ isScrolled }) =>
-    isScrolled &&
-    css`
-      @container toolbar (width > 200px) {
+    // scrolled --> blue logo, smaller
+    ${({ isScrolled }) =>
+      isScrolled &&
+      css`
         width: 18.6cqw;
-      }
-    `}
+      `}
 
-  // on home page, not scrolled --> black logo, larger
-  ${({ isHomePage }) =>
-    isHomePage &&
-    css`
-      @container toolbar (width > 200px) {
+    // on home page, not scrolled --> black logo, larger
+    ${({ isHomePage }) =>
+      isHomePage &&
+      css`
         width: 32.55cqw;
-      }
-    `}
+      `}
 
-  // on home page, scrolled --> black logo, smaller
-  ${({ isScrolled, isHomePage }) =>
-    isHomePage &&
-    isScrolled &&
-    css`
-      @container toolbar (width > 200px) {
+      // on home page, scrolled --> black logo, smaller
+    ${({ isScrolled, isHomePage }) =>
+      isHomePage &&
+      isScrolled &&
+      css`
         width: 21cqw;
-      }
-    `}
+      `}
+  }
 `;
 
 const TsriClaim = styled('img', {
@@ -267,14 +286,11 @@ const TsriClaim = styled('img', {
   transform: translate3d(0, 0, 0);
   position: absolute;
   clip-path: inset(10px 0 10px 0);
-
-  @container toolbar (width > 200px) {
-    width: 26cqw;
-    height: auto;
-    top: 13.5cqw;
-    top: 12.8cqw;
-    left: 2cqw;
-  }
+  width: 26cqw;
+  height: auto;
+  top: 13.5cqw;
+  top: 12.8cqw;
+  left: 2cqw;
 
   ${({ isScrolled }) =>
     isScrolled &&
@@ -297,8 +313,8 @@ const TsriClaim = styled('img', {
 export const navbarTabStyles = () => css`
   background-color: black;
   color: white;
-  font-size: 1.2cqw;
-  line-height: 1.2cqw;
+  font-size: calc(var(--sizing-factor) * 1.2cqw) !important;
+  line-height: calc(var(--sizing-factor) * 1.2cqw);
   text-align: left;
   border: 0;
   outline: 0;
@@ -306,8 +322,8 @@ export const navbarTabStyles = () => css`
   cursor: pointer;
   font-weight: 700;
   padding: 0;
-  border-top-left-radius: 1cqw;
-  border-top-right-radius: 1cqw;
+  border-top-left-radius: 2cqw;
+  border-top-right-radius: 2cqw;
   box-sizing: border-box;
   grid-column: 2 / 3;
 
@@ -320,20 +336,46 @@ export const navbarTabStyles = () => css`
     text-decoration: none !important;
     color: inherit !important;
     display: block;
-    width: 100%;
-    height: 100%;
-    padding: 0.75cqw 1cqw;
+    width: 50cqw;
+    height: 6.5cqw;
+    padding: calc(var(--sizing-factor) * 0.75cqw)
+      calc(var(--sizing-factor) * 1cqw);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  ${theme.breakpoints.up('md')} {
+    border-top-left-radius: 1cqw;
+    border-top-right-radius: 1cqw;
+
+    & > * {
+      width: auto;
+      height: auto;
+    }
   }
 `;
 
 const BecomeMemberTab = styled('button')`
   ${navbarTabStyles()}
-  grid-row: 1 / 2;
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+
+  ${theme.breakpoints.up('md')} {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+  }
 `;
 
 const RegisterNewsLetterTab = styled('button')`
   ${navbarTabStyles()}
+  grid-column: 1 / 2;
   grid-row: 2 / 3;
+
+  ${theme.breakpoints.up('md')} {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+  }
 `;
 
 const PreTitleTab = styled('div')`
@@ -341,7 +383,7 @@ const PreTitleTab = styled('div')`
   background-color: #0C9FED;
   grid-column: 1 / 2;
   grid-row: 2 / 3;
-  box-model: border-box;
+  box-sizing: border-box;
   cursor: default;
   &:hover {
     background-color: #0c9fed;
@@ -357,19 +399,24 @@ const NavbarTabs = styled('div', {
   isHomePage: boolean;
 }>`
   display: grid;
-  grid-template-rows: repeat(2, min-content);
   border-bottom: 0.15cqw solid transparent;
   margin: 0 auto;
   align-self: flex-end;
   pointer-events: all;
   grid-column: -1 / 1;
-  grid-row: -1 / 1;
+  grid-row: 2 / 3;
   visibility: visible;
   transition: visibility 300ms ease-in-out;
+  width: 100%;
+  grid-template-columns: repeat(2, calc(50% - 0.5cqw));
+  grid-template-rows: repeat(2, 6.5cqw);
+  column-gap: 1cqw;
 
-  @container toolbar (width > 200px) {
+  ${theme.breakpoints.up('md')} {
     grid-template-columns: var(--two-column-grid);
-    width: 100%;
+    grid-template-rows: repeat(2, min-content);
+    grid-row: 1 / 2;
+    grid-column: -1 / 1;
     row-gap: 0.15cqw;
     column-gap: 2.2cqw;
   }
@@ -757,6 +804,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   aspect-ratio: var(--changing-aspect-ratio) !important;
   display: grid;
   grid-template-columns: repeat(2, 50%);
+  grid-template-rows: repeat(2, auto);
   transition:
     background-color 100ms ease-out 200ms,
     aspect-ratio 300ms ease-out;
@@ -774,6 +822,10 @@ export const NavbarInnerWrapper = styled(Toolbar, {
         visibility: hidden;
       }
     `}
+
+  ${theme.breakpoints.up('md')} {
+    grid-template-rows: unset;
+  }
 `;
 
 export interface ExtendedNavbarProps extends BuilderNavbarProps {
