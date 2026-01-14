@@ -8,9 +8,7 @@ import { useContext } from 'react';
 
 import { DailyBriefingContext } from './teaser-sidebar-daily-briefing-context';
 import { TsriTeaserType } from './tsri-base-teaser';
-import {
-  TeaserWrapper as TeaserWrapperDefault
-} from './tsri-teaser';
+import { TeaserWrapper as TeaserWrapperDefault } from './tsri-teaser';
 
 export const isDailyBriefingTeaser = allPass([
   ({ blockStyle }: BuilderTeaserProps) => {
@@ -34,19 +32,19 @@ const DailyBriefingLinkList = styled('ul')`
   padding: 0;
   display: grid;
   grid-auto-rows: min-content;
-  font-size: 1.3cqw !important;
-  line-height: 1.49cqw !important;
+  font-size: calc(var(--sizing-factor) * 1.3cqw) !important;
+  line-height: calc(var(--sizing-factor) * 1.49cqw) !important;
   font-weight: 700 !important;
 `;
 
 const DailyBriefingLink = styled('li')`
   color: black;
-  margin: 0 0 0.2cqw 0;
+  margin: 0 0 calc(var(--sizing-factor) * 0.2cqw) 0;
 
   & a {
     color: inherit;
     text-decoration: none;
-    padding: 0.5cqw;
+    padding: calc(var(--sizing-factor) * 0.5cqw);
     display: block;
     background-color: white;
 

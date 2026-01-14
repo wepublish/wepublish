@@ -76,7 +76,7 @@ export const TeaserTopicMeta = styled(TeaserTopicMetaBase)`
   container: unset;
   background-color: transparent;
   cursor: default;
-  padding: 0 0.5cqw;
+  padding: 0 calc(var(--sizing-factor) * 1cqw) 0 0;
 
   & * {
     background-color: transparent;
@@ -101,9 +101,9 @@ export const TeaserTopicMeta = styled(TeaserTopicMetaBase)`
     grid-row: 1 / 2;
     grid-column: 1 / 2;
     padding: 0;
-    margin: 0 0 1cqw 0 !important;
-    font-size: 1.67cqw !important;
-    line-height: 1.8cqw !important;
+    margin: 0 0 calc(var(--sizing-factor) * 1cqw) 0 !important;
+    font-size: calc(var(--sizing-factor) * 1.67cqw) !important;
+    line-height: calc(var(--sizing-factor) * 1.8cqw) !important;
     font-weight: 700 !important;
     color: black;
     background-color: transparent;
@@ -113,8 +113,8 @@ export const TeaserTopicMeta = styled(TeaserTopicMetaBase)`
     grid-row: 2 / 3;
     grid-column: 1 / 2;
     display: block;
-    font-size: 1.3cqw !important;
-    line-height: 1.4cqw !important;
+    font-size: calc(var(--sizing-factor) * 1.3cqw) !important;
+    line-height: calc(var(--sizing-factor) * 1.4cqw) !important;
     font-weight: 400 !important;
     padding: 0;
     background-color: transparent;
@@ -124,9 +124,9 @@ export const TeaserTopicMeta = styled(TeaserTopicMetaBase)`
   & ${TeaserPreTitle} {
     grid-row: 3 / 4;
     grid-column: 1 / 2;
-    font-size: 1.1cqw !important;
+    font-size: calc(var(--sizing-factor) * 1.1cqw) !important;
     font-weight: 700 !important;
-    line-height: 1.2cqw !important;
+    line-height: calc(var(--sizing-factor) * 1.2cqw) !important;
     text-align: right;
     display: flex;
     align-items: flex-end;
@@ -139,7 +139,9 @@ export const TeaserTopicMeta = styled(TeaserTopicMetaBase)`
       display: inline;
       text-decoration: underline;
       flex-grow: 0;
-      padding: 0.3cqw 0.5cqw;
+      padding: calc(var(--sizing-factor) * 0.3cqw)
+        calc(var(--sizing-factor) * 0.5cqw);
+      border-radius: calc(var(--sizing-factor) * 1cqw);
 
       &:hover {
         background-color: #f5ff64;
