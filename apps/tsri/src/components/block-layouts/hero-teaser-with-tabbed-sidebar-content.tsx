@@ -129,7 +129,7 @@ export const SidebarContent = styled(TabbedContentDefault)`
   grid-column: unset;
   grid-row: unset;
   container: unset;
-  --sizing-factor: 10/3;
+  --sizing-factor: 2.9;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-row: 1 / 2;
@@ -185,6 +185,8 @@ export const SidebarContent = styled(TabbedContentDefault)`
     margin-right: calc(var(--sizing-factor) * 0.25cqw) !important;
     color: white;
     background-color: black;
+    border-top-left-radius: 2cqw;
+    border-top-right-radius: 2cqw;
 
     &:hover {
       background-color: #f5ff64;
@@ -198,6 +200,11 @@ export const SidebarContent = styled(TabbedContentDefault)`
     &.Mui-selected:last-of-type,
     &.Mui-selected:last-of-type:hover {
       color: white;
+    }
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      border-top-left-radius: 1cqw;
+      border-top-right-radius: 1cqw;
     }
   }
 `;
