@@ -57,7 +57,7 @@ export const TeaserFlexGridDailyBriefingSidebar = styled(TeaserFlexGrid)``;
 export const TeaserSlotsDailyBriefingSidebar = styled(TeaserSlots)`
   grid-template-columns: 1fr !important;
   grid-template-rows: min-content auto;
-  row-gap: 2cqw;
+  row-gap: calc(var(--sizing-factor) * 2cqw);
   height: 100%;
 
   ${TeaserPreTitle} {
@@ -69,7 +69,8 @@ export const TeaserSlotsDailyBriefingSidebar = styled(TeaserSlots)`
 
     & .MuiLink-root {
       display: block !important;
-      padding: 0.5cqw 1cqw !important;
+      padding: calc(var(--sizing-factor) * 0.5cqw)
+        calc(var(--sizing-factor) * 1cqw) !important;
       border-radius: 1cqw;
       font-weight: 700 !important;
       background-color: black;

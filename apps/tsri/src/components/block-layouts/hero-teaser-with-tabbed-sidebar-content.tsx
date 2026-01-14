@@ -3,6 +3,7 @@ import {
   Tab,
   TabbedContent as TabbedContentDefault,
   TabPanel,
+  Tabs,
 } from '@wepublish/block-content/website';
 import { BlockType } from '@wepublish/website/api';
 import { BuilderBlockStyleProps } from '@wepublish/website/builder';
@@ -11,6 +12,7 @@ import { allPass } from 'ramda';
 
 import { TsriBaseTeaserSlots as HeroTeaserDefault } from '../teaser-layouts/tsri-base-teaser-slots';
 import { TsriLayoutType } from '../teaser-layouts/tsri-layout';
+import { TeaserPreTitle } from '../teasers/tsri-teaser';
 import { TsriTabbedContentType } from './tsri-base-tabbed-content';
 
 export const isHeroTeaserWithTabbedSidebarContent = ({
@@ -101,12 +103,13 @@ export const FrontTopRow = styled('div')`
   list-style: none;
   margin: 0;
   padding: 0;
-  row-gap: 0;
+  row-gap: 2cqw;
   grid-template-columns: unset;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-columns: repeat(12, 1fr);
     column-gap: 1cqw;
+    row-gap: 0;
   }
 `;
 
@@ -126,32 +129,70 @@ export const SidebarContent = styled(TabbedContentDefault)`
   grid-column: unset;
   grid-row: unset;
   container: unset;
+  --sizing-factor: 10/3;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-row: 1 / 2;
     grid-column: 9 / 13;
+    --sizing-factor: 1;
   }
 
   ${TabPanel} {
     position: relative;
     top: -1px;
     z-index: 0;
-    padding: 1.5cqw 0 1.5cqw 6cqw;
-    border-bottom-left-radius: 1cqw;
-    border-bottom-right-radius: 1cqw;
+    padding: calc(var(--sizing-factor) * 1.5cqw) 0
+      calc(var(--sizing-factor) * 1.5cqw) calc(var(--sizing-factor) * 6cqw);
+    border-bottom-left-radius: 2cqw;
+    border-bottom-right-radius: 2cqw;
+
+    ${TeaserPreTitle} {
+      margin-top: 5cqw;
+
+      ${({ theme }) => theme.breakpoints.up('md')} {
+        margin-top: 0;
+      }
+    }
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      border-bottom-left-radius: 1cqw;
+      border-bottom-right-radius: 1cqw;
+    }
+  }
+
+  ${Tabs} {
+    background-color: transparent;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    padding: 0;
+    align-items: stretch;
+
+    & .MuiTabs-fixed {
+      overflow: hidden !important;
+    }
+
+    & .MuiTabs-flexContainer {
+      flex-wrap: nowrap !important;
+      gap: 0 !important;
+    }
   }
 
   ${Tab} {
-    font-size: 1.2cqw !important;
-    line-height: 1.2cqw !important;
+    font-size: calc(var(--sizing-factor) * 1.2cqw) !important;
+    line-height: calc(var(--sizing-factor) * 1.2cqw) !important;
     font-weight: 700 !important;
-    padding-left: 1cqw !important;
+    padding-left: calc(var(--sizing-factor) * 1cqw) !important;
+    margin-right: calc(var(--sizing-factor) * 0.25cqw) !important;
     color: white;
     background-color: black;
 
     &:hover {
       background-color: #f5ff64;
       color: black;
+    }
+
+    &:last-of-type {
+      margin-right: 0 !important;
     }
 
     &.Mui-selected:last-of-type,
