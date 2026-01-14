@@ -21,8 +21,6 @@ export type Scalars = {
   DateTime: string;
   RichText: Descendant[];
   Slug: string;
-  /** The `Upload` scalar type represents a file upload. */
-  Upload: File;
   /** A valid vote value */
   VoteValue: number;
 };
@@ -181,40 +179,9 @@ export type ImageTransformUrlArgs = {
   input?: InputMaybe<ImageTransformation>;
 };
 
-export type ImageConnection = {
-  __typename?: 'ImageConnection';
-  nodes: Array<Image>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type ImageFilter = {
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export enum ImageRotation {
-  Auto = 'Auto',
-  Rotate0 = 'Rotate0',
-  Rotate90 = 'Rotate90',
-  Rotate180 = 'Rotate180',
-  Rotate270 = 'Rotate270'
-}
-
-export enum ImageSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
-}
-
 export type ImageTransformation = {
   height?: InputMaybe<Scalars['Int']>;
-  rotation?: InputMaybe<ImageRotation>;
   width?: InputMaybe<Scalars['Int']>;
-};
-
-export type InputPoint = {
-  x: Scalars['Float'];
-  y: Scalars['Float'];
 };
 
 export type Invoice = {
@@ -329,7 +296,6 @@ export type Mutation = {
   createSubscription?: Maybe<Subscription>;
   createUser?: Maybe<User>;
   deleteComment: Comment;
-  deleteImage?: Maybe<Image>;
   deleteInvoice?: Maybe<Invoice>;
   deletePoll?: Maybe<FullPoll>;
   deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
@@ -347,13 +313,11 @@ export type Mutation = {
   sendWebsiteLogin: Scalars['String'];
   sessions: Array<Session>;
   updateComment: Comment;
-  updateImage?: Maybe<Image>;
   updateInvoice?: Maybe<Invoice>;
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
   updateSubscription?: Maybe<Subscription>;
   updateUser?: Maybe<User>;
-  uploadImage?: Maybe<Image>;
 };
 
 
@@ -429,11 +393,6 @@ export type MutationCreateUserArgs = {
 
 
 export type MutationDeleteCommentArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteImageArgs = {
   id: Scalars['String'];
 };
 
@@ -526,12 +485,6 @@ export type MutationUpdateCommentArgs = {
 };
 
 
-export type MutationUpdateImageArgs = {
-  id: Scalars['String'];
-  input: UpdateImageInput;
-};
-
-
 export type MutationUpdateInvoiceArgs = {
   id: Scalars['String'];
   input: InvoiceInput;
@@ -563,11 +516,6 @@ export type MutationUpdateSubscriptionArgs = {
 export type MutationUpdateUserArgs = {
   id: Scalars['String'];
   input: UserInput;
-};
-
-
-export type MutationUploadImageArgs = {
-  input: UploadImageInput;
 };
 
 export type PageInfo = {
@@ -770,8 +718,6 @@ export type Query = {
   comments: CommentConnection;
   createJWTForUser?: Maybe<JwtToken>;
   createJWTForWebsiteLogin?: Maybe<JwtToken>;
-  image?: Maybe<Image>;
-  images: ImageConnection;
   invoice?: Maybe<Invoice>;
   invoices: InvoiceConnection;
   me?: Maybe<User>;
@@ -806,21 +752,6 @@ export type QueryCommentsArgs = {
 export type QueryCreateJwtForUserArgs = {
   expiresInMinutes: Scalars['Int'];
   userId: Scalars['String'];
-};
-
-
-export type QueryImageArgs = {
-  id?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryImagesArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<ImageFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<ImageSort>;
-  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -1031,17 +962,6 @@ export enum TagType {
   Page = 'Page'
 }
 
-export type UpdateImageInput = {
-  description?: InputMaybe<Scalars['String']>;
-  filename?: InputMaybe<Scalars['String']>;
-  focalPoint?: InputMaybe<InputPoint>;
-  license?: InputMaybe<Scalars['String']>;
-  link?: InputMaybe<Scalars['String']>;
-  source?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
 export type UpdatePollAnswer = {
   answer?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
@@ -1056,18 +976,6 @@ export type UpdatePollExternalVoteSources = {
   id: Scalars['String'];
   source?: InputMaybe<Scalars['String']>;
   voteAmounts?: InputMaybe<Array<UpdatePollExternalVote>>;
-};
-
-export type UploadImageInput = {
-  description?: InputMaybe<Scalars['String']>;
-  file: Scalars['Upload'];
-  filename?: InputMaybe<Scalars['String']>;
-  focalPoint?: InputMaybe<InputPoint>;
-  license?: InputMaybe<Scalars['String']>;
-  link?: InputMaybe<Scalars['String']>;
-  source?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
 };
 
 export type User = {
@@ -1272,45 +1180,6 @@ export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, lar
 export type ImageRefFragment = { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
 export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null };
-
-export type ImageListQueryVariables = Exact<{
-  filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['String']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type ImageListQuery = { __typename?: 'Query', images: { __typename?: 'ImageConnection', nodes: Array<{ __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
-
-export type ImageQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type ImageQuery = { __typename?: 'Query', image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
-
-export type UploadImageMutationVariables = Exact<{
-  input: UploadImageInput;
-}>;
-
-
-export type UploadImageMutation = { __typename?: 'Mutation', uploadImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
-
-export type UpdateImageMutationVariables = Exact<{
-  id: Scalars['String'];
-  input: UpdateImageInput;
-}>;
-
-
-export type UpdateImageMutation = { __typename?: 'Mutation', updateImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
-
-export type DeleteImageMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteImageMutation = { __typename?: 'Mutation', deleteImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type CreateSubscriptionMutationVariables = Exact<{
   input: SubscriptionInput;
@@ -1641,49 +1510,6 @@ export const DeleteComment = gql`
   }
 }
     `;
-export const ImageList = gql`
-    query ImageList($filter: String, $cursor: String, $take: Int, $skip: Int) {
-  images(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip) {
-    nodes {
-      ...ImageRef
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-  }
-}
-    ${ImageRef}`;
-export const Image = gql`
-    query Image($id: String!) {
-  image(id: $id) {
-    ...FullImage
-  }
-}
-    ${FullImage}`;
-export const UploadImage = gql`
-    mutation UploadImage($input: UploadImageInput!) {
-  uploadImage(input: $input) {
-    ...ImageRef
-  }
-}
-    ${ImageRef}`;
-export const UpdateImage = gql`
-    mutation UpdateImage($id: String!, $input: UpdateImageInput!) {
-  updateImage(id: $id, input: $input) {
-    ...FullImage
-  }
-}
-    ${FullImage}`;
-export const DeleteImage = gql`
-    mutation DeleteImage($id: String!) {
-  deleteImage(id: $id) {
-    ...FullImage
-  }
-}
-    ${FullImage}`;
 export const CreateSubscription = gql`
     mutation CreateSubscription($input: SubscriptionInput!) {
   createSubscription(input: $input) {

@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { ImageService, UploadImageInput } from '@wepublish/image/api';
+import { ImageUploadService, UploadImageInput } from '@wepublish/image/api';
 import { PrismaClient } from '@prisma/client';
 import {
   PaymentProviderCustomerInput,
@@ -13,7 +13,7 @@ import { unselectPassword } from '@wepublish/authentication/api';
 export class ProfileService {
   constructor(
     readonly prisma: PrismaClient,
-    readonly imageService: ImageService
+    readonly imageService: ImageUploadService
   ) {}
 
   async uploadUserProfileImage(
@@ -30,7 +30,7 @@ export class ProfileService {
         );
       } else {
         // create new image
-        newImage = await this.imageService.uploadNewImage(uploadImageInput);
+        newImage = await this.imageService.uploadImage(uploadImageInput);
       }
       // cleanup existing user profile from file system
       if (newImage && user.userImageID) {
@@ -56,15 +56,7 @@ export class ProfileService {
 
   async updatePublicUser(
     user: SensitiveDataUser,
-    {
-      address,
-      name,
-      email,
-      birthday,
-      firstName,
-      flair,
-      uploadImageInput,
-    }: UserInput
+    { address, name, email, birthday, firstName, flair }: UserInput
   ) {
     email = email ? (email as string).toLowerCase() : email;
 
@@ -81,10 +73,6 @@ export class ProfileService {
       }
     }
 
-    // eventually upload user profile image
-    if (uploadImageInput !== undefined) {
-      await this.uploadUserProfileImage(user, uploadImageInput);
-    }
     return this.prisma.user.update({
       where: { id: user.id },
       data: {

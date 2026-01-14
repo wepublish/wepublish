@@ -3,7 +3,7 @@ import { FocalPoint, Image, PrismaClient } from '@prisma/client';
 import { createOptionalsArray, Primeable } from '@wepublish/utils/api';
 import DataLoader from 'dataloader';
 
-export type ImageWithFocalPoint = Image & { focalPoint: FocalPoint | null };
+export type ImageWithFocalPoint = Image & { focalPoint?: FocalPoint | null };
 
 @Injectable({
   scope: Scope.REQUEST,

@@ -5,7 +5,7 @@ import {
   ObjectType,
   OmitType,
 } from '@nestjs/graphql';
-import { Image, UploadImageInput } from '@wepublish/image/api';
+import { Image } from '@wepublish/image/api';
 import { Property } from '@wepublish/property/api';
 
 @ObjectType()
@@ -134,7 +134,4 @@ export class UserInput {
 
   @Field(() => Date, { nullable: true })
   birthday?: Date;
-
-  @Field(() => UploadImageInput, { nullable: true })
-  uploadImageInput?: UploadImageInput;
 }

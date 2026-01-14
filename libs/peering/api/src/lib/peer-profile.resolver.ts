@@ -3,11 +3,13 @@ import { Public } from '@wepublish/authentication/api';
 import { PeerProfile } from './peer-profile.model';
 import { PeerProfileService } from './peer-profile.service';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
+import { forwardRef, Inject } from '@nestjs/common';
 
 @Resolver(() => PeerProfile)
 export class PeerProfileResolver {
   constructor(
     private peerProfileService: PeerProfileService,
+    @Inject(forwardRef(() => ImageDataloaderService))
     private imageDataloaderService: ImageDataloaderService
   ) {}
 

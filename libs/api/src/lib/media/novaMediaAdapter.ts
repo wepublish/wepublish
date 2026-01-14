@@ -4,8 +4,8 @@ import fetch from 'node-fetch';
 import type { FileUpload } from 'graphql-upload';
 import {
   ArrayBufferUpload,
-  Image,
   ImageTransformation,
+  ImageWithFocalPoint,
   MediaAdapter,
   UploadImage,
 } from '@wepublish/image/api';
@@ -120,7 +120,7 @@ export class NovaMediaAdapter implements MediaAdapter {
   }
 
   async getImageURL(
-    image: Image,
+    image: ImageWithFocalPoint,
     transformations?: ImageTransformation
   ): Promise<string> {
     const queryParameters = [] as string[];

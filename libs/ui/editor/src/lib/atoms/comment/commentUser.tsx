@@ -1,8 +1,5 @@
-import {
-  FullCommentFragment,
-  FullImageFragment,
-  FullUserFragment,
-} from '@wepublish/editor/api';
+import { FullCommentFragment, FullUserFragment } from '@wepublish/editor/api';
+import { FullImageFragment } from '@wepublish/editor/api-v2';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Col, Drawer, Form, Row } from 'rsuite';

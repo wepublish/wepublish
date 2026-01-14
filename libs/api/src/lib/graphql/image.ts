@@ -14,7 +14,6 @@ import { GraphQLUpload } from 'graphql-upload';
 
 import { Context } from '../context';
 import { ImageSort, ImageWithTransformURL } from '../db/image';
-import { ImageRotation } from '@wepublish/image/api';
 import { GraphQLPageInfo } from './common';
 import { createProxyingResolver } from '../utility';
 
@@ -34,23 +33,11 @@ export const GraphQLFocalPoint = new GraphQLObjectType<any, Context>({
   },
 });
 
-export const GraphQLImageRotation = new GraphQLEnumType({
-  name: 'ImageRotation',
-  values: {
-    Auto: { value: ImageRotation.Auto },
-    Rotate0: { value: ImageRotation.Rotate0 },
-    Rotate90: { value: ImageRotation.Rotate90 },
-    Rotate180: { value: ImageRotation.Rotate180 },
-    Rotate270: { value: ImageRotation.Rotate270 },
-  },
-});
-
 export const GraphQLImageTransformation = new GraphQLInputObjectType({
   name: 'ImageTransformation',
   fields: {
     width: { type: GraphQLInt },
     height: { type: GraphQLInt },
-    rotation: { type: GraphQLImageRotation },
   },
 });
 

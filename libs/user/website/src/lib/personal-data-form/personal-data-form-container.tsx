@@ -38,12 +38,11 @@ export function PersonalDataFormContainer<
 
   const handleOnImageUpload = useCallback(
     async (input: ChangeEvent<HTMLInputElement> | null) => {
-      await uploadImage({
-        variables: {
-          uploadImageInput:
-            input ? { file: input.target?.files![0] as File } : null,
-        },
-      });
+      if (input) {
+        await uploadImage({
+          variables: { file: input.target?.files![0] as File },
+        });
+      }
     },
     [uploadImage]
   );

@@ -1,24 +1,78 @@
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { Image } from './image.model';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import {
+  Image,
+  ImageListArgs,
+  PaginatedImages,
+  UpdateImageInput,
+  UploadImageInput,
+} from './image.model';
 import {
   ImageDataloaderService,
   ImageWithFocalPoint,
 } from './image-dataloader.service';
-import { Public } from '@wepublish/authentication/api';
 import { MediaAdapter } from './media-adapter';
 import { ImageTransformation } from './image-transformation.model';
+import { NotFoundException } from '@nestjs/common';
+import { Permissions } from '@wepublish/permissions/api';
+import {
+  CanCreateImage,
+  CanDeleteImage,
+  CanGetImage,
+  CanGetImages,
+} from '@wepublish/permissions';
+import { ImageService } from './image.service';
 
 @Resolver(() => Image)
 export class ImageResolver {
   constructor(
+    private service: ImageService,
     private imageDataloader: ImageDataloaderService,
     private mediaAdapter: MediaAdapter
   ) {}
 
-  @Public()
-  @Query(() => Image, { description: `Returns an image by id.` })
-  public getImage(@Args('id') id: string) {
-    return this.imageDataloader.load(id);
+  @Permissions(CanGetImages)
+  @Query(() => PaginatedImages, {
+    description: `Returns a paginated list of images based on the filters given.`,
+  })
+  public images(@Args() filter: ImageListArgs) {
+    return this.service.getImages(filter);
+  }
+
+  @Permissions(CanGetImage)
+  @Query(() => Image, { description: `Returns a image by id.` })
+  public async image(@Args('id') id: string) {
+    const image = await this.imageDataloader.load(id);
+
+    if (!image) {
+      throw new NotFoundException(`Image with id ${id} was not found.`);
+    }
+
+    return image;
+  }
+
+  @Permissions(CanCreateImage)
+  @Mutation(returns => Image, { description: `Uploads a new image.` })
+  public uploadImage(@Args() image: UploadImageInput) {
+    return this.service.createImage(image);
+  }
+
+  @Permissions(CanCreateImage)
+  @Mutation(returns => Image, { description: `Updates an existing image.` })
+  public updateImage(@Args() image: UpdateImageInput) {
+    return this.service.updateImage(image);
+  }
+
+  @Permissions(CanDeleteImage)
+  @Mutation(returns => Image, { description: `Deletes an existing image.` })
+  public deleteImage(@Args('id') id: string) {
+    return this.service.deleteImage(id);
   }
 
   @ResolveField(() => String)

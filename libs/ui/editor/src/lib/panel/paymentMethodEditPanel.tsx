@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { FullImageFragment } from '@wepublish/editor/api';
 import {
+  FullImageFragment,
   FullPaymentMethodFragment,
   FullPaymentProviderFragment,
   getApiClientV2,

@@ -1,7 +1,8 @@
 import { ApolloError } from '@apollo/client';
-import { FullImageFragment, stripTypename } from '@wepublish/editor/api';
+import { stripTypename } from '@wepublish/editor/api';
 import {
   FullEventFragment,
+  FullImageFragment,
   getApiClientV2,
   MutationUpdateEventArgs,
   useEventQuery,

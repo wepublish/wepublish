@@ -1,11 +1,12 @@
 import styled from '@emotion/styled';
 import {
   FullImageFragment,
+  getApiClientV2,
   ImageListDocument,
   useImageQuery,
   useUpdateImageMutation,
   useUploadImageMutation,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import imageCompression from 'browser-image-compression';
 import prettyBytes from 'pretty-bytes';
 import { useEffect, useState } from 'react';
@@ -91,17 +92,20 @@ function ImageEditPanel({
 
   const [focalPoint, setFocalPoint] = useState<Point>();
 
+  const client = getApiClientV2();
   const { data, error: loadingError } = useImageQuery({
+    client,
     variables: { id: id! },
     fetchPolicy: 'network-only',
     skip: id === undefined,
   });
 
   const [updateImage, { loading: isUpdating, error: savingError }] =
-    useUpdateImageMutation();
+    useUpdateImageMutation({ client });
 
   const [uploadImage, { loading: isUploading, error: uploadError }] =
     useUploadImageMutation({
+      client,
       refetchQueries: [getOperationNameFromDocument(ImageListDocument)],
     });
 
@@ -234,7 +238,8 @@ function ImageEditPanel({
       const optimizedImage: File = await resizeImage(file!);
       const { data } = await uploadImage({
         variables: {
-          input: { file: optimizedImage!, ...commonInput },
+          file: optimizedImage!,
+          ...commonInput,
         },
       });
 
@@ -243,7 +248,7 @@ function ImageEditPanel({
       }
     } else {
       const { data } = await updateImage({
-        variables: { id: id!, input: commonInput },
+        variables: { id: id!, ...commonInput },
       });
 
       toaster.push(
