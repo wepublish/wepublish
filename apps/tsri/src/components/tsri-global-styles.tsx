@@ -2,6 +2,7 @@ import { css, GlobalStyles, Theme } from '@mui/material';
 
 const globalCSS = (theme: Theme) => css`
   :root {
+    --sizing-factor: 1;
     --two-column-grid: unset;
     --two-column-grid-no-gap: unset;
 
