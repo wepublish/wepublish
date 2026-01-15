@@ -521,17 +521,37 @@ async function seedNavigations(createNavigation: any, tags: string[] = []) {
     createNavigation({
       variables: {
         key: 'main',
-        name: 'Navbar',
+        name: 'Service',
         links: [
           {
             type: NavigationLinkType.External,
-            label: 'Home',
-            url: '/',
+            label: 'Memeber werden',
+            url: faker.internet.url(),
           },
           {
             type: NavigationLinkType.External,
-            label: 'Agenda',
+            label: 'Tsüri-Briefing',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Shop',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Werben auf tsüri.ch',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Events',
             url: '/event',
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Impressum',
+            url: faker.internet.url(),
           },
         ],
       },
@@ -550,8 +570,13 @@ async function seedNavigations(createNavigation: any, tags: string[] = []) {
     createNavigation({
       variables: {
         key: 'about-us',
-        name: 'Über uns',
+        name: 'Tsüri',
         links: [
+          {
+            type: NavigationLinkType.External,
+            label: 'Redaktion',
+            url: faker.internet.url(),
+          },
           {
             type: NavigationLinkType.External,
             label: 'Team',
@@ -559,12 +584,27 @@ async function seedNavigations(createNavigation: any, tags: string[] = []) {
           },
           {
             type: NavigationLinkType.External,
-            label: 'Kontakt & Impressum',
+            label: 'Jobs',
             url: faker.internet.url(),
           },
           {
             type: NavigationLinkType.External,
-            label: 'Jobs',
+            label: 'Civic Media',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Redaktionsstatut',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Partner:innen',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Kontakt',
             url: faker.internet.url(),
           },
         ],
