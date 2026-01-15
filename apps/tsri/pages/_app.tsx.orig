@@ -67,7 +67,11 @@ import { TsriGlobalStyles } from '../src/components/tsri-global-styles';
 import { TsriNextWepublishLink } from '../src/components/tsri-next-wepublish-link';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
+<<<<<<< HEAD
+=======
+import { TsriTeaser } from '../src/components/tsri-teaser';
 import { TsriTag } from '../src/components/tsri-tag';
+>>>>>>> origin/TSRI-161-artikel-ansicht
 import { TsriTextToIcon } from '../src/components/tsri-text-to-icon';
 import { TsriTitleBlock } from '../src/components/tsri-title-block';
 import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
@@ -117,7 +121,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   // Compat removes certain warnings that are irrelevant to us
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
-
   const router = useRouter();
 
   const pageTypeBasedContent = getPageTypeBasedContent(
@@ -145,8 +148,12 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           AuthorLinks={TsriAuthorLinks}
           AuthorList={TsriAuthorList}
           TextToIcon={TsriTextToIcon}
-          Tag={TsriTag}
+<<<<<<< HEAD
           elements={{ Link: TsriNextWepublishLink }}
+=======
+          Tag={TsriTag}
+          elements={{ Link: NextWepublishLink }}
+>>>>>>> origin/TSRI-161-artikel-ansicht
           blocks={{
             BaseTeaser: TsriBaseTeaser,
             TeaserSlots: TsriBaseTeaserSlots,
