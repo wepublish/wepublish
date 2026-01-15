@@ -17,8 +17,17 @@ const {
 
 const theme = createTheme(WePTheme, {
   palette: {
+    common: {
+      black: '#000000',
+      white: '#ffffff',
+    },
     primary: augmentColor({
-      color: { main: '#0E9FED', light: '#36addf', contrastText: '#fff' },
+      color: {
+        main: '#0c9eed', // TSRI Blue
+        light: '#f5ff64', // TSRI Yellow
+        dark: '#aeb3be', // TSRI Grey
+        contrastText: '#fffff',
+      },
     }),
   },
   typography: {
@@ -99,6 +108,9 @@ const theme = createTheme(WePTheme, {
           padding: `${WePTheme.spacing(1.5)} ${WePTheme.spacing(3)}`,
           fontSize: '1.1em',
         }),
+        '&:hover': {
+          backgroundColor: '#f5ff64',
+        },
       },
     },
   },

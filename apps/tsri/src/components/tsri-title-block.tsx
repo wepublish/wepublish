@@ -1,11 +1,7 @@
 import styled from '@emotion/styled';
-import {
-  TitleBlock,
-  TitleBlockLead,
-  TitleBlockTitle,
-} from '@wepublish/block-content/website';
+import { TitleBlock } from '@wepublish/block-content/website';
 
-export const TsriTitleBlock = styled(TitleBlock)`
+/*
   ${TitleBlockLead} {
     font-size: 1.86cqw;
     line-height: 2.24cqw;
@@ -16,4 +12,5 @@ export const TsriTitleBlock = styled(TitleBlock)`
     line-height: 4.47cqw;
     font-weight: 700;
   }
-`;
+*/
+export const TsriTitleBlock = styled(TitleBlock)``;

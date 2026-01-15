@@ -15,8 +15,12 @@ export const BreakBlockWrapper = styled('div')`
   display: grid;
   background: linear-gradient(
     to bottom,
-    #f5ff64,
-    color-mix(in srgb, white 40%, #f5ff64)
+    ${({ theme }) => theme.palette.primary.light},
+    color-mix(
+      in srgb,
+      ${({ theme }) => theme.palette.common.white} 40%,
+      ${({ theme }) => theme.palette.primary.light}
+    )
   );
   border-radius: 1cqw;
   margin: 0 auto;
@@ -35,8 +39,8 @@ export const BreakBlockWrapper = styled('div')`
 export const BreakBlockHeading = styled('div')`
   grid-column: 1 / -1;
   grid-row: 1 / 2;
-  background-color: black;
-  color: white;
+  background-color: ${({ theme }) => theme.palette.common.black};
+  color: ${({ theme }) => theme.palette.common.white};
   font-size: 1.2cqw !important;
   line-height: 1.2cqw !important;
   text-align: left;
@@ -62,16 +66,16 @@ export const BreakBlockImage = styled(Image)`
 
 export const BreakBlockButton = styled(Button)`
   width: fit-content;
-  background-color: black;
-  color: white;
+  background-color: ${({ theme }) => theme.palette.common.black};
+  color: ${({ theme }) => theme.palette.common.white};
   justify-self: end;
   padding-right: 8cqw;
   margin-top: 4cqw;
   transition: all 0s;
 
   &:hover {
-    background-color: rgb(12, 159, 237) !important;
-    color: white !important;
+    background-color: ${({ theme }) => theme.palette.primary.main} !important;
+    color: ${({ theme }) => theme.palette.common.white} !important;
   }
 `;
 
@@ -80,7 +84,7 @@ const richTextStyles = (theme: Theme) => css`
     font-size: 2.42cqw !important;
     line-height: 2.6cqw !important;
     font-weight: 700 !important;
-    color: black;
+    color: ${theme.palette.common.black};
     margin-bottom: 1cqw;
     padding: 0;
   }
@@ -89,7 +93,7 @@ const richTextStyles = (theme: Theme) => css`
     font-size: 1.48cqw !important;
     line-height: 2.04cqw !important;
     font-weight: 700 !important;
-    color: black;
+    color: ${theme.palette.common.black};
   }
 `;
 
@@ -168,8 +172,8 @@ export const isTsriAttentionCatcher = allPass([
 export const TsriAttentionCatcher = styled(BreakBlock)`
   .MuiButton-root,
   .MuiButton-root:hover {
-    background-color: ${({ theme }) => theme.palette.secondary.main};
-    color: ${({ theme }) => theme.palette.secondary.contrastText};
+    background-color: ${({ theme }) => theme.palette.common.black};
+    color: ${({ theme }) => theme.palette.common.white};
   }
 
   ${BreakBlockHeading} {

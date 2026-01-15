@@ -52,12 +52,12 @@ export const TsriAuthorChip = styled(AuthorChip)`
 
         & .MuiTypography-root {
           padding: 0.2rem 0.2rem;
-          color: black;
+          color: ${({ theme }) => theme.palette.common.black};
           text-decoration: underline;
 
           &:hover {
-            background-color: #f5ff64;
-            color: black;
+            background-color: ${({ theme }) => theme.palette.primary.light};
+            color: ${({ theme }) => theme.palette.common.black};
             text-decoration: none;
           }
         }

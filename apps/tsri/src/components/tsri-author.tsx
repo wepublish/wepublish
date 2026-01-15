@@ -43,8 +43,8 @@ export const RichTextWrapper = styled('div')`
     font-weight: 400 !important;
 
     & a:hover {
-      background-color: #f5ff64;
-      color: black;
+      background-color: ${({ theme }) => theme.palette.primary.light};
+      color: ${({ theme }) => theme.palette.common.black};
       text-decoration: none;
     }
   }
