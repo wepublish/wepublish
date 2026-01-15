@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import {
   AppBar as MuiAppBar,
   Box,
+  capitalize,
   css,
   GlobalStyles,
   Theme,
@@ -10,14 +11,13 @@ import {
 import { useUser } from '@wepublish/authentication/website';
 import { useHasActiveSubscription } from '@wepublish/membership/website';
 import { navigationLinkToUrl } from '@wepublish/navigation/website';
-import { ButtonProps, TextToIcon, theme } from '@wepublish/ui';
+import { ButtonProps, TextToIcon } from '@wepublish/ui';
 import { FullNavigationFragment } from '@wepublish/website/api';
 import { PageType } from '@wepublish/website/builder';
 import {
   BuilderNavbarProps,
   IconButton,
   Link,
-  PageTypeBasedProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
@@ -35,6 +35,8 @@ import { useTranslation } from 'react-i18next';
 import { FiInstagram, FiMenu as FiMenuDefault, FiSearch } from 'react-icons/fi';
 import { MdWarning } from 'react-icons/md';
 
+import theme from '../theme';
+
 enum NavbarState {
   Low,
   High,
@@ -50,8 +52,8 @@ const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
     ${isHomePage ?
       `
         --navbar-height: -10px;
-        --navbar-aspect-ratio: 100 / 43;
-        --scrolled-navbar-aspect-ratio: 9 / 1;
+        --navbar-aspect-ratio: 3.7 / 1;
+        --scrolled-navbar-aspect-ratio: 3.7 / 1;
 
       ${theme.breakpoints.up('md')} {
         --navbar-height: -10px;
@@ -60,8 +62,13 @@ const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
       }
     `
     : `
-    --navbar-aspect-ratio: 8 / 1;
-    --scrolled-navbar-aspect-ratio: 9.5 / 1;
+    --navbar-aspect-ratio: 3.1 / 1;
+    --scrolled-navbar-aspect-ratio: 3.1 / 1;
+
+      ${theme.breakpoints.up('md')} {
+        --navbar-aspect-ratio: 8 / 1;
+        --scrolled-navbar-aspect-ratio: 9.5 / 1;
+      }
     `}
     --changing-aspect-ratio: ${state.includes(NavbarState.Low) ?
       'var(--navbar-aspect-ratio)'
@@ -72,7 +79,7 @@ const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
 export const AppBar = styled(MuiAppBar, {
   shouldForwardProp: propName => propName !== 'isMenuOpen',
 })<{ isMenuOpen?: boolean }>`
-  background-color: white;
+  background-color: ${({ theme }) => theme.palette.common.white};
   position: relative;
 
   ${({ isMenuOpen }) =>
@@ -91,7 +98,7 @@ export const NavbarWrapper = styled('nav')`
   height: auto;
   pointer-events: none;
   margin-bottom: calc(${({ theme }) => theme.spacing(-3)} + 1px);
-  --sizing-factor: 2.5;
+  --sizing-factor: 2.7;
 
   > * {
     pointer-events: all;
@@ -122,21 +129,21 @@ const getNavbarState = (
 
 export const navbarButtonStyles = (theme: Theme) => css`
   padding: 0;
-  background-color: black;
+  background-color: ${theme.palette.common.black};
   border-radius: 50%;
-  width: 12cqw;
-  height: 12cqw;
+  width: 10cqw;
+  height: 10cqw;
 
   > svg {
     stroke-width: 1.25px;
-    stroke: white;
-    font-size: 8cqw;
+    stroke: ${theme.palette.common.white};
+    font-size: 6.5cqw;
   }
 
   &:hover {
-    background-color: #f5ff64;
+    background-color: ${theme.palette.primary.light};
     > svg {
-      stroke: black;
+      stroke: ${theme.palette.common.black};
     }
   }
 
@@ -177,7 +184,7 @@ export const NavbarMain = styled('div', {
 })<{ isMenuOpen?: boolean }>`
   grid-column: 2 / 3;
   grid-row: 1 / 2;
-  margin: 1.3cqw 2.5cqw 0 0;
+  margin: 7cqw 2.5cqw 0 0;
   column-gap: 0.9cqw;
 
   display: grid;
@@ -187,6 +194,10 @@ export const NavbarMain = styled('div', {
   align-self: flex-start;
   pointer-events: all;
   z-index: 30;
+
+  ${theme.breakpoints.up('md')} {
+    margin: 1.3cqw 2.5cqw 0 0;
+  }
 
   ${({ isMenuOpen }) =>
     isMenuOpen &&
@@ -310,9 +321,9 @@ const TsriClaim = styled('img', {
     `}
 `;
 
-export const navbarTabStyles = () => css`
-  background-color: black;
-  color: white;
+export const navbarTabStyles = (theme: Theme) => css`
+  background-color: ${theme.palette.common.black};
+  color: ${theme.palette.common.white};
   font-size: calc(var(--sizing-factor) * 1.2cqw) !important;
   line-height: calc(var(--sizing-factor) * 1.2cqw);
   text-align: left;
@@ -328,8 +339,8 @@ export const navbarTabStyles = () => css`
   grid-column: 2 / 3;
 
   &:hover {
-    background-color: #f5ff64;
-    color: black;
+    background-color: ${theme.palette.primary.light};
+    color: ${theme.palette.common.black};
   }
 
   & > * {
@@ -337,7 +348,7 @@ export const navbarTabStyles = () => css`
     color: inherit !important;
     display: block;
     width: 50cqw;
-    height: 6.5cqw;
+    height: 7.2cqw;
     padding: calc(var(--sizing-factor) * 0.75cqw)
       calc(var(--sizing-factor) * 1cqw);
     overflow: hidden;
@@ -357,9 +368,9 @@ export const navbarTabStyles = () => css`
 `;
 
 const BecomeMemberTab = styled('button')`
-  ${navbarTabStyles()}
+  ${navbarTabStyles(theme)}
   grid-column: 2 / 3;
-  grid-row: 2 / 3;
+  grid-row: 1 / 2;
 
   ${theme.breakpoints.up('md')} {
     grid-column: 2 / 3;
@@ -368,9 +379,9 @@ const BecomeMemberTab = styled('button')`
 `;
 
 const RegisterNewsLetterTab = styled('button')`
-  ${navbarTabStyles()}
+  ${navbarTabStyles(theme)}
   grid-column: 1 / 2;
-  grid-row: 2 / 3;
+  grid-row: 1 / 2;
 
   ${theme.breakpoints.up('md')} {
     grid-column: 2 / 3;
@@ -379,15 +390,20 @@ const RegisterNewsLetterTab = styled('button')`
 `;
 
 const PreTitleTab = styled('div')`
-  ${navbarTabStyles()}
-  background-color: #0C9FED;
-  grid-column: 1 / 2;
+  ${navbarTabStyles(theme)}
+  background-color: ${({ theme }) => theme.palette.primary.main};
+  grid-column: -1 / 1;
   grid-row: 2 / 3;
   box-sizing: border-box;
   cursor: default;
+
   &:hover {
-    background-color: #0c9fed;
-    color: white;
+    background-color: ${({ theme }) => theme.palette.primary.main};
+    color: ${({ theme }) => theme.palette.common.white};
+  }
+
+  ${theme.breakpoints.up('md')} {
+    grid-column: 1 / 2;
   }
 `;
 
@@ -409,8 +425,9 @@ const NavbarTabs = styled('div', {
   transition: visibility 300ms ease-in-out;
   width: 100%;
   grid-template-columns: repeat(2, calc(50% - 0.5cqw));
-  grid-template-rows: repeat(2, 6.5cqw);
+  grid-template-rows: 7.2cqw, 0;
   column-gap: 1cqw;
+  row-gap: 0.4cqw;
 
   ${theme.breakpoints.up('md')} {
     grid-template-columns: var(--two-column-grid);
@@ -424,18 +441,26 @@ const NavbarTabs = styled('div', {
   ${({ navbarState }) =>
     navbarState.includes(NavbarState.High) &&
     css`
-      ${RegisterNewsLetterTab} {
-        display: none;
-      }
+      ${theme.breakpoints.up('md')} {
+        ${RegisterNewsLetterTab} {
+          display: none;
+        }
 
-      ${BecomeMemberTab} {
-        grid-row: 2 / 3;
+        ${BecomeMemberTab} {
+          grid-row: 2 / 3;
+        }
       }
     `}
 
   ${({ isHomePage }) =>
     isHomePage &&
     css`
+      row-gap: 0;
+
+      ${theme.breakpoints.up('md')} {
+        row-gap: 0.15cqw;
+      }
+
       ${PreTitleTab} {
         display: none;
       }
@@ -459,13 +484,17 @@ const HauptstadtOpenInvoices = styled('div')`
 export const NavPaperWrapper = styled('div', {
   shouldForwardProp: propName => propName !== 'isMenuOpen',
 })<{ isMenuOpen: boolean }>`
-  padding: 0.5cqw 24px 0 24px;
+  padding: ${({ theme }) => `8cqw ${theme.spacing(2)} 0 ${theme.spacing(2)}`};
   background: linear-gradient(
     to bottom,
-    color-mix(in srgb, white 40%, rgb(12, 159, 237)),
-    rgb(12, 159, 237)
+    color-mix(
+      in srgb,
+      ${({ theme }) => theme.palette.common.white} 40%,
+      ${({ theme }) => theme.palette.primary.main}
+    ),
+    ${({ theme }) => theme.palette.primary.main}
   );
-  color: black;
+  color: ${({ theme }) => theme.palette.common.black};
   top: 0;
   left: 0;
   right: 0;
@@ -481,8 +510,14 @@ export const NavPaperWrapper = styled('div', {
   height: auto;
   display: grid;
   grid-template-rows: min-content 6cqw;
+  row-gap: 12cqw;
   grid-template-columns: 1fr minmax(max-content, 1285px) 1fr;
   position: absolute;
+
+  ${theme.breakpoints.up('md')} {
+    row-gap: unset;
+    padding-top: 0.5cqw;
+  }
 
   ${NavbarTabs} {
     grid-column: 2 / 3;
@@ -493,16 +528,53 @@ export const NavPaperWrapper = styled('div', {
     border-bottom: none;
 
     ${BecomeMemberTab} {
-      font-size: 0.75cqw;
-      line-height: 0.75cqw;
+      font-size: 1cqw;
+      line-height: 1cqw;
       padding: 0;
-      border-top-left-radius: 0.5cqw;
-      border-top-right-radius: 0.5cqw;
+      border-top-left-radius: 2cqw;
+      border-top-right-radius: 2cqw;
+      grid-column: -1 / 1;
+
+      & > * {
+        width: 100%;
+        padding-top: 3cqw;
+      }
+
+      ${({ theme }) => theme.breakpoints.up('md')} {
+        grid-column: 2 / 3;
+        border-top-left-radius: 0.5cqw;
+        border-top-right-radius: 0.5cqw;
+        font-size: 0.75cqw;
+        line-height: 0.75cqw;
+      }
     }
   }
 `;
 
-export const NavPaperCategory = styled('div')``;
+export const NavPaperCategory = styled('div')`
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  row-gap: 0.8cqw;
+  padding-left: 2cqw;
+
+  &:nth-of-type(n + 2) {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+  }
+
+  &:nth-of-type(n + 3) {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    padding-left: 0;
+    padding-right: 2cqw;
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-column: unset !important;
+    grid-row: unset !important;
+    padding: 0;
+  }
+`;
 
 export const NavPaperName = styled('span')`
   text-transform: uppercase;
@@ -528,19 +600,34 @@ export const NavPaperLinksGroup = styled('div')`
   column-gap: 2cqw;
   grid-row: 1 / 2;
   grid-column: 2 / 3;
-  grid-template-columns: repeat(3, min-content);
+  grid-template-columns: repeat(2, auto);
+  grid-template-rows: repeat(2, auto);
+  row-gap: 12cqw;
   margin: 0 0 0 3cqw;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    row-gap: unset;
+    grid-template-rows: unset;
+    grid-template-columns: repeat(3, min-content);
+  }
 `;
 
 export const NavPaperCategoryLinksTitle = styled('h6')`
-  font-weight: 700 !important;
-  font-size: min(1.25cqw, 1.4rem) !important;
-  line-height: min(1.66cqw, 1.86rem) !important;
-  color: white;
+  color: ${({ theme }) => theme.palette.common.white};
   display: inline-block;
   white-space: nowrap;
   padding: 0 0.3cqw;
   margin: 0;
+
+  font-weight: 700 !important;
+  font-size: 4.5cqw !important;
+  line-height: 6cqw !important;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    font-weight: 700 !important;
+    font-size: min(1.25cqw, 1.4rem) !important;
+    line-height: min(1.66cqw, 1.86rem) !important;
+  }
 `;
 
 export const NavPaperCategoryLinks = styled('ul')`
@@ -548,8 +635,14 @@ export const NavPaperCategoryLinks = styled('ul')`
   margin: 0;
   padding: 0;
   font-weight: 700 !important;
-  font-size: min(1.25cqw, 1.4rem) !important;
-  line-height: min(1.66cqw, 1.86rem) !important;
+  font-size: 4.5cqw !important;
+  line-height: 6cqw !important;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    font-weight: 700 !important;
+    font-size: min(1.25cqw, 1.4rem) !important;
+    line-height: min(1.66cqw, 1.86rem) !important;
+  }
 `;
 
 export const NavPaperCategoryLinkItem = styled('li')`
@@ -566,7 +659,7 @@ export const CategoryLink = styled(Link)`
   text-decoration: none;
 
   &:hover {
-    background-color: #f5ff64;
+    background-color: ${({ theme }) => theme.palette.primary.light};
     text-decoration: none;
   }
 `;
@@ -779,7 +872,7 @@ const NavPaper = ({
         isHomePage={false}
       >
         <BecomeMemberTab>
-          <Link href="/mitmachen">Member werden</Link>
+          <Link href="/Login">Login</Link>
         </BecomeMemberTab>
       </NavbarTabs>
     </NavPaperWrapper>
@@ -796,7 +889,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   min-height: unset !important;
   margin: 0 auto;
   width: 100%;
-  background-color: white;
+  background-color: ${({ theme }) => theme.palette.common.white};
   max-width: 1333px;
   container: toolbar/inline-size;
   position: static;
@@ -914,7 +1007,8 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
 
     const router = useRouter();
 
-    const getTabText = (pageTypeBasedProps: PageTypeBasedProps | undefined) => {
+    const tabText = useMemo(() => {
+      //console.log('pageTypeBasedProps', pageTypeBasedProps);
       if (pageTypeBasedProps) {
         switch (pageTypeBasedProps.pageType) {
           case PageType.Article:
@@ -923,10 +1017,18 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
             return 'Ich bin Tsüri!';
           case PageType.AuthorList:
             return 'Mir sind Tsüri!';
+          case PageType.SearchPage:
+            return 'Suche';
+          case PageType.SubscriptionPage:
+            return 'Jetzt Tsüri unterstützen!';
+          case PageType.ArticleList:
+            return capitalize(pageTypeBasedProps.ArticleList?.tag || '');
+          case PageType.EventList:
+            return 'Unsere Events';
         }
       }
       return '';
-    };
+    }, [pageTypeBasedProps]);
 
     const mainItems = data?.navigations?.find(({ key }) => key === slug);
     const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
@@ -961,8 +1063,6 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
     );
 
     const isHomePage = pageTypeBasedProps?.Page?.slug === '';
-
-    const tabText = getTabText(pageTypeBasedProps);
 
     const navbarStyles = useMemo(
       () => cssVariables(navbarState, isHomePage),
