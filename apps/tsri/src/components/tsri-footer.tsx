@@ -8,7 +8,6 @@ import {
   FooterName as FooterNameDefault,
   navigationLinkToUrl,
 } from '@wepublish/navigation/website';
-import { theme } from '@wepublish/ui';
 import { FullNavigationFragment } from '@wepublish/website/api';
 import {
   BuilderFooterProps,
@@ -20,6 +19,8 @@ import { useRouter } from 'next/router';
 import { PropsWithChildren } from 'react';
 import { FiInstagram, FiSearch } from 'react-icons/fi';
 import { useIntersectionObserver } from 'usehooks-ts';
+
+import theme from '../theme';
 
 export const FooterWrapper = styled('footer')`
   display: grid;
@@ -58,21 +59,21 @@ export const FooterMain = styled('div')`
 
 export const footerButtonStyles = (theme: Theme) => css`
   padding: 0;
-  background-color: black;
+  background-color: ${theme.palette.common.black};
   border-radius: 50%;
   width: 28cqw;
   height: 28cqw;
 
   & > svg {
     stroke-width: 1.25px;
-    stroke: white;
+    stroke: ${theme.palette.common.white};
     font-size: 18cqw;
   }
 
   &:hover {
-    background-color: #f5ff64;
+    background-color: ${theme.palette.primary.light};
     > svg {
-      stroke: black;
+      stroke: ${theme.palette.common.black};
     }
   }
 
@@ -123,8 +124,8 @@ export const FooterSupportWrapper = styled('div')`
 
 export const FooterSupport = styled('div')`
   grid-column: unset;
-  background-color: black;
-  color: white;
+  background-color: ${({ theme }) => theme.palette.common.black};
+  color: ${({ theme }) => theme.palette.common.white};
   border-top-left-radius: 1em;
   border-top-right-radius: 1em;
   background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAyMCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTAuMDAxMDQ5OTggNS42MzJDMC4wMDEwNDk5OCAyLjQ5NiAyLjMwNTA1IDAgNS41MDUwNSAwQzguNzA1MDUgMCA5LjkyMTA1IDEuNzkyIDkuOTIxMDUgMS43OTJDOS45MjEwNSAxLjc5MiAxMS4xMzcgMCAxNC4zMzcgMEMxNy41MzcgMCAxOS44NDExIDIuNDk2IDE5Ljg0MTEgNS42MzJDMTkuODQxMSA4LjU3NiAxNy4wMjUgMTEuMDcyIDE2LjE5MzEgMTEuOTA0QzE1LjM2MTEgMTIuNzM2IDkuOTIxMDUgMTcuOTg0IDkuOTIxMDUgMTcuOTg0QzkuOTIxMDUgMTcuOTg0IDQuNDgxMDUgMTIuNzM2IDMuNjQ5MDUgMTEuOTA0QzIuODE3MDUgMTEuMDcyIC0wLjA2Mjk1IDguNTEyIDAuMDAxMDQ5OTggNS42MzJaIiBmaWxsPSIjMEM5RkVEIi8+Cjwvc3ZnPgo=');
@@ -148,7 +149,7 @@ export const FooterSupport = styled('div')`
 `;
 
 export const FooterSupportHeading = styled('h6')`
-  color: #0c9fed;
+  color: ${({ theme }) => theme.palette.primary.main};
   font-weight: 700 !important;
   font-size: 0.8rem !important;
 `;
@@ -156,7 +157,7 @@ export const FooterSupportHeading = styled('h6')`
 export const FooterSupportText = styled('p')`
   margin: 0 auto 1.5rem auto !important;
   font-weight: 400 !important;
-  color: white;
+  color: ${({ theme }) => theme.palette.common.white};
   font-size: 0.8rem !important;
 `;
 
@@ -300,7 +301,7 @@ export const LinkGroup = styled('div')``;
 
 export const CategoryLinkTitle = styled('h6')`
   font-weight: 700 !important;
-  color: white;
+  color: ${({ theme }) => theme.palette.common.white};
   display: inline-block;
   white-space: nowrap;
   margin: 0;
@@ -342,71 +343,61 @@ export const CategoryLink = styled(Link)`
   text-decoration: none;
 
   &:hover {
-    background-color: #f5ff64;
+    background-color: ${({ theme }) => theme.palette.primary.light};
     text-decoration: none;
   }
 `;
 
-export const footerTabStyles = () => css`
-  background-color: black;
-  color: white;
-  font-size: 1.2cqw;
-  line-height: 1.2cqw;
+export const footerTabStyles = () => css``;
+
+const FooterTabs = styled('div')`
+  display: grid;
+  grid-template-rows: min-content;
+  grid-template-colums: subgrid;
+  margin: 0 auto;
+  align-self: flex-end;
+  pointer-events: all;
+  grid-column: -1 / 1;
+  grid-row: 1 / 2;
+  visibility: visible;
+  transition: visibility 300ms ease-in-out;
+  width: 100%;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    grid-template-columns: var(--two-column-grid-no-gap);
+    width: 100%;
+  }
+`;
+
+const LoginTab = styled('button')`
+  background-color: ${({ theme }) => theme.palette.common.black};
+  color: ${({ theme }) => theme.palette.common.white};
   text-align: left;
-  border: 0;
-  outline: 0;
   user-select: none;
   cursor: pointer;
-  font-weight: 700;
-  padding: 0.75cqw 1cqw;
-  border-top-left-radius: 1cqw;
-  border-top-right-radius: 1cqw;
   box-sizing: border-box;
-  grid-column: 2 / 3;
+  font-weight: 700;
+  font-size: 4.5cqw !important;
+  line-height: 4.5cqw !important;
+  padding: 2cqw 3cqw;
+  border: 0;
+  outline: 0;
+  border-radius: 0;
+  border-bottom-left-radius: 2cqw;
+  border-bottom-right-radius: 2cqw;
+  grid-column: -1 / 1;
 
   &:hover {
-    background-color: #f5ff64;
-    color: black;
+    background-color: ${({ theme }) => theme.palette.primary.light};
+    color: ${({ theme }) => theme.palette.common.black};
   }
 
   & > * {
     text-decoration: none;
     color: inherit;
   }
-`;
-
-const FooterTabs = styled('div')`
-  display: grid;
-  grid-template-rows: repeat(2, min-content);
-  border-bottom: 0.15cqw solid transparent;
-  margin: 0 auto;
-  align-self: flex-end;
-  pointer-events: all;
-  grid-column: -1 / 1;
-  grid-row: -1 / 1;
-  visibility: visible;
-  transition: visibility 300ms ease-in-out;
-  width: 100%;
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-column: 2/3;
-    grid-row: 2/3;
-    grid-template-rows: min-content;
-    grid-template-columns: var(--two-column-grid-no-gap);
-    width: 100%;
-    border-bottom: none;
-  }
-`;
-
-const LoginTab = styled('button')`
-  ${footerTabStyles()}
-  font-size: 4.5cqw !important;
-  line-height: 4.5cqw !important;
-  padding: 2cqw 3cqw;
-  border-radius: 0;
-  border-bottom-left-radius: 2cqw;
-  border-bottom-right-radius: 2cqw;
-  grid-column: -1/1;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     font-size: 0.75cqw !important;
@@ -425,10 +416,14 @@ const LoginTab = styled('button')`
 export const FooterPaperWrapper = styled('div')`
   background: linear-gradient(
     to bottom,
-    color-mix(in srgb, white 40%, rgb(12, 159, 237)),
-    rgb(12, 159, 237)
+    color-mix(
+      in srgb,
+      ${({ theme }) => theme.palette.common.white} 40%,
+      ${({ theme }) => theme.palette.primary.main} 60%
+    ),
+    ${({ theme }) => theme.palette.primary.main}
   );
-  color: black;
+  color: ${({ theme }) => theme.palette.common.black};
   display: grid;
   grid-template-rows: repeat(3, auto);
   grid-template-columns: repeat(2, auto);
@@ -440,22 +435,6 @@ export const FooterPaperWrapper = styled('div')`
     grid-template-columns: 1fr minmax(max-content, 1285px) 1fr;
     padding: 1cqw 24px 0 24px;
     row-gap: 0;
-  }
-
-  ${FooterTabs} {
-    border-bottom: none;
-    grid-column: -1 / 1;
-    grid-row: 1 / 2;
-    grid-template-rows: min-content;
-    grid-template-colum: subgrid;
-
-    ${({ theme }) => theme.breakpoints.up('md')} {
-      grid-column: 2 / 3;
-      grid-row: 2 / 3;
-      grid-template-rows: min-content;
-      grid-template-columns: var(--two-column-grid-no-gap);
-      width: 100%;
-    }
   }
 `;
 
