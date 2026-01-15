@@ -36,6 +36,7 @@ import resourcesToBackend from 'i18next-resources-to-backend';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { ComponentType } from 'react';
 import { z } from 'zod';
@@ -63,6 +64,7 @@ import { TsriNavbar } from '../src/components/tsri-navbar';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
 import { TsriTeaser } from '../src/components/tsri-teaser';
+import { TsriTag } from '../src/components/tsri-tag';
 import { TsriTextToIcon } from '../src/components/tsri-text-to-icon';
 import { TsriTitleBlock } from '../src/components/tsri-title-block';
 import theme from '../src/theme';
@@ -145,6 +147,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           AuthorLinks={TsriAuthorLinks}
           AuthorList={TsriAuthorList}
           TextToIcon={TsriTextToIcon}
+          Tag={TsriTag}
           elements={{ Link: NextWepublishLink }}
           blocks={{
             BaseTeaser: TsriTeaser,
