@@ -6,6 +6,8 @@ import { BaseSyntheticEvent, FormEvent, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import theme from '../../theme';
+
 const formStyles = css`
   display: block;
   align-self: flex-end;
@@ -192,7 +194,7 @@ export default function MailchimpSubscribeForm(
       {showTypeForm && (
         <IFrame
           css={{
-            marginTop: (theme: Theme) => theme.spacing(5) as string,
+            marginTop: theme.spacing(5) as string,
             border: 'none',
           }}
           url={`${tf_baseURL}/${tf_id}#email=${encodeURIComponent(email)}`}
