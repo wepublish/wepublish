@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Theme } from '@mui/material';
 import {
   TabbedContent as TabbedContentDefault,
   TabPanel,
@@ -24,6 +25,7 @@ export const blockStyleByIndex = (index: number): TsriLayoutType => {
 
 export const cssByBlockStyle = (
   index: number,
+  theme: Theme,
   blockStyleOverride?: string | undefined | null
 ): string => {
   let blockStyle = blockStyleByIndex(index);
@@ -36,12 +38,12 @@ export const cssByBlockStyle = (
         &:is([role='tabpanel']) {
           background: linear-gradient(
             to bottom,
-            rgb(12, 159, 237),
-            color-mix(in srgb, white 40%, rgb(12, 159, 237))
+            ${theme.palette.primary.main} 0%,
+            color-mix(in srgb, ${theme.palette.common.white} 40%, ${theme.palette.primary.main})
           );
         }
         &:is(.MuiTab-root.Mui-selected,.MuiTab-root.Mui-selected:last-of-type,.MuiTab-root.Mui-selected:last-of-type:hover) {
-          background-color: rgb(12, 159, 237);
+          background-color: ${theme.palette.primary.main};
         }
       `;
     case TsriLayoutType.ArchiveTopic:

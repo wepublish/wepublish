@@ -6,7 +6,14 @@ import { BlockContent, FlexBlock } from '@wepublish/website/api';
 import { allPass } from 'ramda';
 import { isFlexBlock } from '../../nested-blocks/flex-block';
 import * as React from 'react';
-import { Box, css, Tab as MuiTab, Tabs as MuiTabs } from '@mui/material';
+import {
+  Box,
+  css,
+  Tab as MuiTab,
+  Tabs as MuiTabs,
+  Theme,
+  useTheme,
+} from '@mui/material';
 import styled from '@emotion/styled';
 
 export const TabbedContentWrapper = styled('div')`
@@ -116,9 +123,9 @@ export const Tab = styled(MuiTab, {
   align-items: flex-start;
   min-height: unset;
 
-  font-size: 3cqw;
-  line-height: 3cqw;
-  padding: 1.3cqw 2.8cqw 1.1cqw 2.8cqw;
+  font-size: 3.8cqw;
+  line-height: 3.8cqw;
+  padding: 1.6cqw 2.8cqw 1.5cqw 2.8cqw;
   margin-right: 0.25cqw;
   border-top-left-radius: 1cqw;
   border-top-right-radius: 1cqw;
@@ -179,6 +186,7 @@ export const TabbedContent = ({
   blockStyleByIndex?: (index: number) => string;
   cssByBlockStyle?: (
     index: number,
+    theme: Theme,
     blockStyleOverride?: string | undefined | null
   ) => string;
 }) => {
@@ -188,6 +196,8 @@ export const TabbedContent = ({
   const {
     blocks: { Renderer },
   } = useWebsiteBuilder();
+
+  const theme = useTheme();
 
   const sortedBlocks = [...blocks].sort(
     (a, b) => a.alignment.y - b.alignment.y || a.alignment.x - b.alignment.x
@@ -217,7 +227,7 @@ export const TabbedContent = ({
                 {...a11yProps(index, thisId)}
                 cssByBlockStyle={
                   cssByBlockStyle &&
-                  cssByBlockStyle(index, nestedBlock.block?.blockStyle)
+                  cssByBlockStyle(index, theme, nestedBlock.block?.blockStyle)
                 }
               />
             );
@@ -232,7 +242,7 @@ export const TabbedContent = ({
           id={thisId}
           cssByBlockStyle={
             cssByBlockStyle &&
-            cssByBlockStyle(index, nestedBlock.block?.blockStyle)
+            cssByBlockStyle(index, theme, nestedBlock.block?.blockStyle)
           }
         >
           <Renderer
