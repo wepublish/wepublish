@@ -53,7 +53,10 @@ const searchPageSchema = z.object({
 
 export const SearchPage = ({
   query,
-}: InferGetServerSidePropsType<typeof SearchPageGetServerSideProps>) => {
+  className,
+}: InferGetServerSidePropsType<typeof SearchPageGetServerSideProps> & {
+  className: string;
+}) => {
   const {
     blocks: { TeaserGrid },
     elements: { IconButton, TextField, Pagination, Alert, H3, H4 },
@@ -111,7 +114,10 @@ export const SearchPage = ({
   const noResultsFound = !teasers.length && !loading && !error && phraseQuery;
 
   return (
-    <SearchPageWrapper fullWidth>
+    <SearchPageWrapper
+      fullWidth
+      className={className}
+    >
       <H3 component="h1">Suche</H3>
 
       <SearchForm
@@ -202,7 +208,9 @@ export const SearchPageGetServerSideProps = (async ({ query }) => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, { query });
+  const props = addClientCacheToV1Props(client, {
+    query,
+  });
 
   return {
     props,
