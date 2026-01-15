@@ -13,7 +13,7 @@ export const Modal = styled(MUIModal)``;
 export const ModalTitle = styled('div')`
   padding: 0
   position: relative;
-  background-color: rgb(14, 159, 237);
+  background-color: ${({ theme }) => theme.palette.primary.main};
   padding: ${({ theme }) => theme.spacing(0.75, 2)};
   border-top-left-radius: 0.75rem;
   border-top-right-radius: 0.75rem;
@@ -24,7 +24,7 @@ export const ModalTitleText = styled('h2')`
   font-size: ${({ theme }) => theme.typography.h6.fontSize};
   font-weight: 700;
   padding: 0;
-  color: white;
+  color: ${({ theme }) => theme.palette.common.white};
 `;
 
 export const ModalClose = styled(IconButton)`
@@ -32,12 +32,12 @@ export const ModalClose = styled(IconButton)`
   top: ${({ theme }) => `${theme.spacing(0.75)}`};
   right: ${({ theme }) => `${theme.spacing(1)}`};
   z-index: 1;
-  color: white;
+  color: ${({ theme }) => theme.palette.common.white};
   padding: ${({ theme }) => `${theme.spacing(0.5)}`};
 
   &:hover {
-    color: rgb(14, 159, 237);
-    background-color: white;
+    color: ${({ theme }) => theme.palette.primary.main};
+    background-color: ${({ theme }) => theme.palette.common.white};
   }
 `;
 
