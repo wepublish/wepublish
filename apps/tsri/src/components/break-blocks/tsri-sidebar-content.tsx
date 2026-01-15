@@ -46,8 +46,8 @@ const siblingSidebarContentWrapperStyles = css`
 `;
 
 export const SidebarContentHeading = styled('div')`
-  background-color: black;
-  color: white;
+  background-color: ${({ theme }) => theme.palette.common.black};
+  color: ${({ theme }) => theme.palette.common.white};
   font-size: 1.2cqw !important;
   line-height: 1.2cqw !important;
   text-align: left;
@@ -57,12 +57,12 @@ export const SidebarContentHeading = styled('div')`
   border-top-right-radius: 1cqw;
 `;
 
-const subTitleStyles = css`
+const subTitleStyles = (theme: Theme) => css`
   padding: 0;
   margin: 0;
 
   & .MuiTypography-root {
-    color: black !important;
+    color: ${theme.palette.common.black} !important;
     font-size: 1.8cqw !important;
     line-height: 2.2cqw !important;
     font-weight: 700 !important;
@@ -74,7 +74,7 @@ const richTextStyles = (theme: Theme) => css`
     font-size: 1.48cqw !important;
     line-height: 2.04cqw !important;
     font-weight: 700 !important;
-    color: black;
+    color: ${theme.palette.common.black};
   }
 `;
 
@@ -88,8 +88,8 @@ export const SidebarContentImage = styled(Image)`
 
 export const SidebarContentButton = styled(Button)`
   width: fit-content;
-  background-color: black;
-  color: white;
+  background-color: ${({ theme }) => theme.palette.common.black};
+  color: ${({ theme }) => theme.palette.common.white};
   justify-self: end;
   padding-right: 8cqw;
   margin-top: 1cqw;
@@ -145,24 +145,22 @@ export const TsriSidebarContent = ({
     ${theme.breakpoints.up('md')} {
       grid-row-start: ${index};
       grid-row-end: ${nextOfTypeIndex ?? count + 4};
-      background-color: white;
+      background-color: ${theme.palette.common.white};
       margin-bottom: ${nextOfTypeIndex ? theme.spacing(-4) : 0};
     }
 
     & ${SidebarContentBox} {
       background: ${
         text && text === 'Shop' ?
-          'linear-gradient(to bottom, #F5FF64, color-mix(in srgb, white 40%, #F5FF64))'
-        : 'linear-gradient(to bottom, rgb(12, 159, 237), color-mix(in srgb, white 40%, rgb(12, 159, 237)))'
+          `linear-gradient(to bottom, ${theme.palette.primary.light}, color-mix(in srgb, ${theme.palette.common.white} 40%, ${theme.palette.primary.light}))`
+        : `linear-gradient(to bottom, ${theme.palette.primary.main}, color-mix(in srgb, ${theme.palette.common.white} 40%, ${theme.palette.primary.main}))`
       };
   `;
 
-  const sidebarContentButtonStyles = css`
+  const sidebarContentButtonStyles = (theme: Theme) => css`
       &:hover {
-        background-color: ${
-          text && text === 'Shop' ? 'rgb(12, 159, 237)' : '#E6E600'
-        };
-        color: ${text && text === 'Shop' ? 'white' : 'black'};
+        background-color: ${text && text === 'Shop' ? theme.palette.primary.main : theme.palette.primary.light};
+        color: ${text && text === 'Shop' ? theme.palette.common.white : theme.palette.common.black};
       }
     }
   `;
