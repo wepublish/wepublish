@@ -41,8 +41,9 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
 
     &:hover {
       ${TeaserAuthorWrapper} {
-        background-color: #f5ff64 !important;
-        color: black !important;
+        background-color: ${({ theme }) =>
+          theme.palette.primary.light} !important;
+        color: ${({ theme }) => theme.palette.common.black} !important;
       }
     }
   }
@@ -73,7 +74,7 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
     grid-column: 1 / 2;
     grid-row: 2 / 4;
     padding: 1cqw;
-    background-color: white;
+    background-color: ${({ theme }) => theme.palette.common.white};
 
     & img {
       width: 13.42cqw;
@@ -105,7 +106,7 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
     padding: 2cqw 1cqw 3cqw 1cqw;
     margin: 0;
     grid-row: 4 / 6;
-    background-color: white;
+    background-color: ${({ theme }) => theme.palette.common.white};
     height: 100%;
     font-size: 1.67cqw !important;
     line-height: 1.6cqw !important;
@@ -138,8 +139,8 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
       height: min-content;
 
       ${TeaserAuthorWrapper} {
-        color: white;
-        background-color: black;
+        color: ${({ theme }) => theme.palette.common.white};
+        background-color: ${({ theme }) => theme.palette.common.black};
         display: inline-block;
         padding: 0.2cqw 1cqw;
         font-size: 1cqw;
@@ -159,11 +160,11 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
       font-weight: 700 !important;
       padding: 0.4cqw 1cqw;
       display: block;
-      color: black;
+      color: ${({ theme }) => theme.palette.common.black};
       margin-left: -1.5cqw;
       z-index: 2;
       align-self: end;
-      background-color: white;
+      background-color: ${({ theme }) => theme.palette.common.white};
     }
   }
 `;

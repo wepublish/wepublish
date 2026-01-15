@@ -31,7 +31,7 @@ export const TeaserNoImage = styled(TsriTeaser)`
   ${TeaserContentWrapper} {
     grid-template-rows: 26% 7.9% min-content min-content;
     grid-template-columns: 15.9% 84.1%;
-    background-color: #aeb3be;
+    background-color: ${({ theme }) => theme.palette.primary.dark};
   }
 
   ${TeaserPreTitleWrapper} {
@@ -54,7 +54,7 @@ export const TeaserNoImage = styled(TsriTeaser)`
   }
 
   ${TeaserAuthors} {
-    color: black;
+    color: ${({ theme }) => theme.palette.common.black};
   }
 
   ${TeaserTime} {

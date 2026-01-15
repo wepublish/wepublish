@@ -91,13 +91,12 @@ export const TeaserTopicMeta = styled(TeaserTopicMetaBase)`
     &:hover {
       ${TeaserPreTitle} {
         background-color: transparent;
-        color: black;
+        color: ${({ theme }) => theme.palette.common.black};
       }
     }
   }
 
   & ${TeaserTitle} {
-    color: red;
     grid-row: 1 / 2;
     grid-column: 1 / 2;
     padding: 0;
@@ -105,7 +104,7 @@ export const TeaserTopicMeta = styled(TeaserTopicMetaBase)`
     font-size: calc(var(--sizing-factor) * 1.67cqw) !important;
     line-height: calc(var(--sizing-factor) * 1.8cqw) !important;
     font-weight: 700 !important;
-    color: black;
+    color: ${({ theme }) => theme.palette.common.black};
     background-color: transparent;
   }
 
@@ -118,7 +117,7 @@ export const TeaserTopicMeta = styled(TeaserTopicMetaBase)`
     font-weight: 400 !important;
     padding: 0;
     background-color: transparent;
-    color: black;
+    color: ${({ theme }) => theme.palette.common.black};
   }
 
   & ${TeaserPreTitle} {
@@ -132,7 +131,7 @@ export const TeaserTopicMeta = styled(TeaserTopicMetaBase)`
     align-items: flex-end;
     justify-content: flex-end;
     background-color: transparent;
-    color: black;
+    color: ${({ theme }) => theme.palette.common.black};
     justify-self: end;
 
     & .MuiLink-root {
@@ -144,8 +143,8 @@ export const TeaserTopicMeta = styled(TeaserTopicMetaBase)`
       border-radius: calc(var(--sizing-factor) * 1cqw);
 
       &:hover {
-        background-color: #f5ff64;
-        color: black;
+        background-color: ${({ theme }) => theme.palette.primary.light};
+        color: ${({ theme }) => theme.palette.common.black};
         text-decoration: none;
       }
     }

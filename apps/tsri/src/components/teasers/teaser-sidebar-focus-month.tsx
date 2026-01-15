@@ -26,11 +26,11 @@ export const TeaserFocusMonth = styled(TsriTeaser)`
 
   ${TeaserContentWrapper} {
     display: block;
-    background-color: white;
+    background-color: ${({ theme }) => theme.palette.common.white};
 
     ${TeaserTitle} {
       &.MuiTypography-root {
-        color: black;
+        color: ${({ theme }) => theme.palette.common.black};
         font-size: 1.3cqw !important;
         line-height: 1.49cqw !important;
         font-weight: 700 !important;
@@ -43,11 +43,11 @@ export const TeaserFocusMonth = styled(TsriTeaser)`
         text-decoration: none;
         padding: 0.5cqw;
         display: block;
-        background-color: white;
+        background-color: ${({ theme }) => theme.palette.common.white};
 
         &:hover {
-          background-color: rgb(12, 159, 237);
-          color: white;
+          background-color: ${({ theme }) => theme.palette.primary.main};
+          color: ${({ theme }) => theme.palette.common.white};
         }
       }
     }

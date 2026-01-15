@@ -27,13 +27,13 @@ export const TeaserTwoColAuthor = styled(TsriTeaser)`
   ${TeaserContentWrapper} {
     grid-template-columns: 50% 50%;
     grid-template-rows: auto 7.8% fit-content(1px) 14.25%;
-    background-color: rgb(12, 159, 237);
+    background-color: ${({ theme }) => theme.palette.primary.main};
     border-top-left-radius: 25cqw;
 
     &:hover {
       ${TeaserAuthors} {
-        background-color: #f5ff64;
-        color: black;
+        background-color: ${({ theme }) => theme.palette.primary.light};
+        color: ${({ theme }) => theme.palette.common.black};
       }
     }
   }
@@ -77,8 +77,8 @@ export const TeaserTwoColAuthor = styled(TsriTeaser)`
 
     & ${TeaserAuthors} {
       padding: 0.65cqw 1.5cqw;
-      color: white;
-      background-color: black;
+      color: ${({ theme }) => theme.palette.common.white};
+      background-color: ${({ theme }) => theme.palette.common.black};
       font-size: calc((9 * 100cqw / 16) * 0.045) !important;
       line-height: calc((9 * 100cqw / 16) * 0.045) !important;
       font-weight: 700 !important;

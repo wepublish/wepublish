@@ -24,7 +24,7 @@ export const TeaserTwoCol = styled(TsriTeaser)`
   ${TeaserContentWrapper} {
     grid-template-columns: 50% 50%;
     grid-template-rows: auto 7.8% fit-content(1px) 14.25%;
-    background-color: #aeb3be;
+    background-color: ${({ theme }) => theme.palette.primary.dark};
   }
 
   ${TeaserImageWrapper} {
