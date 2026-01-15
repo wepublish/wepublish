@@ -80,8 +80,8 @@ export const TeaserSlotsShopProductsSidebar = styled(TeaserSlots)`
     ${TeaserPreTitle} {
       & .MuiLink-root {
         &:hover {
-          background-color: rgb(12, 159, 237);
-          color: white;
+          background-color: ${({ theme }) => theme.palette.primary.main};
+          color: ${({ theme }) => theme.palette.common.white};
         }
       }
     }

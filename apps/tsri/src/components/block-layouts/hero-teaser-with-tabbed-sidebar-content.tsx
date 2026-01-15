@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Theme } from '@mui/material';
 import {
   Tab,
   TabbedContent as TabbedContentDefault,
@@ -45,6 +46,7 @@ export const blockStyleByIndex = (index: number): TsriLayoutType => {
 
 const cssByBlockStyle = (
   index: number,
+  theme: Theme,
   blockStyleOverride?: string | undefined | null
 ): string => {
   let blockStyle = blockStyleByIndex(index);
@@ -57,12 +59,12 @@ const cssByBlockStyle = (
         &:is([role='tabpanel']) {
           background: linear-gradient(
             to bottom,
-            rgb(12, 159, 237),
-            color-mix(in srgb, white 40%, rgb(12, 159, 237))
+            ${theme.palette.primary.main},
+            color-mix(in srgb, white 40%, ${theme.palette.primary.main})
           );
         }
         &:is(.MuiTab-root.Mui-selected,.MuiTab-root.Mui-selected:last-of-type,.MuiTab-root.Mui-selected:last-of-type:hover) {
-          background-color: rgb(12, 159, 237);
+          background-color: ${theme.palette.primary.main};
         }
       `;
     case TsriLayoutType.FocusMonth:
@@ -71,13 +73,13 @@ const cssByBlockStyle = (
         &:is([role='tabpanel']) {
           background: linear-gradient(
             to bottom,
-            #f5ff64,
-            color-mix(in srgb, white 40%, #f5ff64)
+            ${theme.palette.primary.light},
+            color-mix(in srgb, ${theme.palette.common.white} 40%, ${theme.palette.primary.light})
           );
         }
         &:is(.MuiTab-root.Mui-selected,.MuiTab-root.Mui-selected:last-of-type,.MuiTab-root.Mui-selected:last-of-type:hover) {
-          background-color: #f5ff64;
-          color: black;
+          background-color: ${theme.palette.primary.light};
+          color: ${theme.palette.common.black};
         }
       `;
     case TsriLayoutType.TsriLove:
@@ -86,12 +88,12 @@ const cssByBlockStyle = (
         &:is([role='tabpanel']) {
           background: linear-gradient(
             to bottom,
-            rgb(174, 179, 190),
-            color-mix(in srgb, white 40%, rgb(174, 179, 190))
+            ${theme.palette.primary.dark},
+            color-mix(in srgb, ${theme.palette.common.white} 40%, ${theme.palette.primary.dark})
           );
         }
         &:is(.MuiTab-root.Mui-selected,.MuiTab-root.Mui-selected:last-of-type,.MuiTab-root.Mui-selected:last-of-type:hover) {
-          background-color: rgb(174, 179, 190);
+          background-color: ${theme.palette.primary.dark};
         }
       `;
   }
@@ -183,14 +185,14 @@ export const SidebarContent = styled(TabbedContentDefault)`
     font-weight: 700 !important;
     padding-left: calc(var(--sizing-factor) * 1cqw) !important;
     margin-right: calc(var(--sizing-factor) * 0.25cqw) !important;
-    color: white;
-    background-color: black;
+    color: ${({ theme }) => theme.palette.common.white};
+    background-color: ${({ theme }) => theme.palette.common.black};
     border-top-left-radius: 2cqw;
     border-top-right-radius: 2cqw;
 
     &:hover {
-      background-color: #f5ff64;
-      color: black;
+      background-color: ${({ theme }) => theme.palette.primary.light};
+      color: ${({ theme }) => theme.palette.common.black};
     }
 
     &:last-of-type {
@@ -199,7 +201,7 @@ export const SidebarContent = styled(TabbedContentDefault)`
 
     &.Mui-selected:last-of-type,
     &.Mui-selected:last-of-type:hover {
-      color: white;
+      color: ${({ theme }) => theme.palette.common.white};
     }
 
     ${({ theme }) => theme.breakpoints.up('md')} {
@@ -230,8 +232,9 @@ export const HeroTeaserWithTabbedContent = ({
         blockStyleByIndex={(index: number) => blockStyleByIndex(index + 1)}
         cssByBlockStyle={(
           index: number,
+          theme: Theme,
           blockStyleOverride?: string | undefined | null
-        ) => cssByBlockStyle(index + 1, blockStyleOverride)}
+        ) => cssByBlockStyle(index + 1, theme, blockStyleOverride)}
         type={BlockType.FlexBlock}
       />
     </FrontTopRow>

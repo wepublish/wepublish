@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, Button, css, TextField, Typography } from '@mui/material';
+import { Box, Button, css, TextField, Theme, Typography } from '@mui/material';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { BaseSyntheticEvent, FormEvent, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -176,7 +176,11 @@ export default function MailchimpSubscribeForm(
                   paddingY: 1,
                   fontSize: 16,
                   fontWeight: 700,
-                  ':hover': { color: 'black', backgroundColor: '#f5ff64' },
+                  ':hover': {
+                    color: (theme: Theme) => theme.palette.common.black,
+                    backgroundColor: (theme: Theme) =>
+                      theme.palette.primary.light,
+                  },
                 }}
               >
                 {popButtonText ?? 'Abonnieren'}
@@ -187,7 +191,10 @@ export default function MailchimpSubscribeForm(
       )}
       {showTypeForm && (
         <IFrame
-          css={{ marginTop: '40px', border: 'none' }}
+          css={{
+            marginTop: (theme: Theme) => theme.spacing(5) as string,
+            border: 'none',
+          }}
           url={`${tf_baseURL}/${tf_id}#email=${encodeURIComponent(email)}`}
           width={1200}
           height={1000}

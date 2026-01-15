@@ -73,14 +73,14 @@ export const TeaserSlotsDailyBriefingSidebar = styled(TeaserSlots)`
         calc(var(--sizing-factor) * 1cqw) !important;
       border-radius: 1cqw;
       font-weight: 700 !important;
-      background-color: black;
-      color: white;
+      background-color: ${({ theme }) => theme.palette.common.black};
+      color: ${({ theme }) => theme.palette.common.white};
       flex-grow: 1 !important;
       text-decoration: none !important;
 
       &:hover {
-        background-color: #f5ff64;
-        color: black;
+        background-color: ${({ theme }) => theme.palette.primary.light};
+        color: ${({ theme }) => theme.palette.common.black};
       }
     }
   }

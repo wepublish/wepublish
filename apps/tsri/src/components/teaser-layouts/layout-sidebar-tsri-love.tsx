@@ -69,8 +69,8 @@ export const TeaserSlotsTsriLoveSidebar = styled(TeaserSlots)`
     ${TeaserPreTitle} {
       & .MuiLink-root {
         &:hover {
-          background-color: #f5ff64;
-          color: black;
+          background-color: ${({ theme }) => theme.palette.primary.light};
+          color: ${({ theme }) => theme.palette.common.black};
         }
       }
     }
