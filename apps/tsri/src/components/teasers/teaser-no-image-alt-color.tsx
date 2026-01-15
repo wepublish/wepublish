@@ -62,7 +62,7 @@ export const TeaserNoImageAltColor = styled(TsriTeaser)`
   }
 
   ${TeaserAuthors} {
-    color: black;
+    color: ${({ theme }) => theme.palette.common.black};
   }
 
   ${TeaserTime} {
