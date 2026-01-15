@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Badge, css } from '@mui/material';
+import { Badge, css, Theme } from '@mui/material';
 import { ArticleTags as ArticleTagsDefault } from '@wepublish/article/website';
 import { useCommentListQuery } from '@wepublish/website/api';
 import {
@@ -24,13 +24,13 @@ export const ArticleMetaComments = styled('div')``;
 const ArticleMetaBadge = styled(Badge)`
   .MuiBadge-badge {
     top: 27px;
-    border: 2px solid #fff;
-    background: black;
-    color: white;
+    border: 2px solid ${({ theme }) => theme.palette.common.white};
+    background: ${({ theme }) => theme.palette.common.black};
+    color: ${({ theme }) => theme.palette.common.white};
     right: unset;
     left: -24px;
     aspect-ratio: 1;
-    color: white;
+    color: ${({ theme }) => theme.palette.common.white};
   }
 `;
 
@@ -43,24 +43,24 @@ const ArticleTags = styled(ArticleTagsDefault)`
     adding: 0.9rem 0.25rem;
     font-size: 1.1rem;
     font-weight: 500;
-    border-color: black;
-    color: black;
+    border-color: ${({ theme }) => theme.palette.common.black};
+    color: ${({ theme }) => theme.palette.common.black};
     height: 2rem;
     overflow: hidden;
 
     &:hover {
-      border-color: #f5ff64;
+      border-color: ${({ theme }) => theme.palette.primary.light};
 
       & > *:first-of-type {
         z-index: 5;
-        background-color: #f5ff64;
-        color: black;
+        background-color: ${({ theme }) => theme.palette.primary.light};
+        color: ${({ theme }) => theme.palette.common.black};
       }
     }
   }
 `;
 
-const commentsLinkStyles = css`
+const commentsLinkStyles = (theme: Theme) => css`
   margin: 0;
   font: inherit;
   text-decoration: none;
@@ -76,9 +76,9 @@ const commentsLinkStyles = css`
   align-items: center;
 
   &:hover {
-    background-color: #f5ff64;
-    color: black;
-    border-color: #f5ff64;
+    background-color: ${theme.palette.primary.light};
+    color: ${theme.palette.common.black};
+    border-color: ${theme.palette.primary.light};
   }
 `;
 
