@@ -76,11 +76,6 @@ const HauptstadtTeaserPremiumIndicator = styled(HauptstadtPremiumIndicator)`
 export const HauptstadtTeaserPreTitle: typeof BaseTeaserPreTitle = props => {
   const paywall = useContext(CurrentPaywallContext);
   const premiumName = selectPremiumMemberplan(paywall?.memberPlans ?? [])?.name;
-  const show = Boolean(premiumName || props.preTitle);
-
-  if (!show) {
-    return;
-  }
 
   return (
     <HauptstadtTeaserPremiumIndicator>
