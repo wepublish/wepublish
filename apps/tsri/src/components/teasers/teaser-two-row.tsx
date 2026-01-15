@@ -115,7 +115,7 @@ export const TeaserTwoRow = styled(TsriTeaser)`
     padding: 0.6cqw 1cqw 3cqw 1cqw;
     margin: 0;
     grid-row: 3 / 4;
-    background-color: white;
+    background-color: ${({ theme }) => theme.palette.common.white};
     height: 100%;
     font-size: 2.5cqw !important;
     line-height: 2.8cqw !important;

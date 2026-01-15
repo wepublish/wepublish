@@ -38,7 +38,7 @@ const DailyBriefingLinkList = styled('ul')`
 `;
 
 const DailyBriefingLink = styled('li')`
-  color: black;
+  color: ${({ theme }) => theme.palette.common.black};
   margin: 0 0 calc(var(--sizing-factor) * 0.2cqw) 0;
 
   & a {
@@ -46,11 +46,11 @@ const DailyBriefingLink = styled('li')`
     text-decoration: none;
     padding: calc(var(--sizing-factor) * 0.5cqw);
     display: block;
-    background-color: white;
+    background-color: ${({ theme }) => theme.palette.common.white};
 
     &:hover {
-      background-color: #f5ff64;
-      color: black;
+      background-color: ${({ theme }) => theme.palette.primary.light};
+      color: ${({ theme }) => theme.palette.common.black};
     }
   }
 `;

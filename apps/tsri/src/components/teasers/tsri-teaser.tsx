@@ -108,15 +108,13 @@ export const TeaserBreakingNewsBadge = styled('div')`
   line-height: 14cqw;
   aspect-ratio: 1;
   z-index: 2;
-  background-color: red;
-  color: white;
   font-size: calc((9 * 100cqw / 16) * 0.035) !important;
   font-weight: 700;
   padding: 0;
   margin: 0;
   transform: rotate(-20deg);
-  color: black;
-  background-color: #f5ff64;
+  color: ${({ theme }) => theme.palette.common.black};
+  background-color: ${({ theme }) => theme.palette.primary.light};
   mask-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI1IiBoZWlnaHQ9IjEyNSIgdmlld0JveD0iMCAwIDEyNSAxMjUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8cGF0aCBkPSJNNjkuMSAtMy41TDYyLjYgMTUuM0w1NiAtMy41TDUzLjUgMTYuMkw0My4zIC0wLjhMNDQuOSAxOUwzMS4zIDQuNkwzNyAyMy42TDIwLjggMTIuM0wzMC4yIDI5LjdMMTIgMjIuMUwyNC45IDM3LjFMNS41IDMzLjRMMjEuMiA0NS41TDEuNCA0NS45TDE5LjMgNTQuNEwwIDU5TDE5LjMgNjMuNkwxLjQgNzIuMUwyMS4yIDcyLjVMNS41IDg0LjZMMjQuOSA4MC45TDEyIDk1LjlMMzAuMiA4OC4zTDIwLjggMTA1LjdMMzcgOTQuNEwzMS4zIDExMy40TDQ0LjkgOTlMNDMuMyAxMTguOEw1My41IDEwMS44TDU2IDEyMS41TDYyLjYgMTAyLjhMNjkuMSAxMjEuNUw3MS42IDEwMS44TDgxLjkgMTE4LjhMODAuMyA5OUw5My44IDExMy40TDg4LjIgOTQuNEwxMDQuNCAxMDUuN0w5NC45IDg4LjNMMTEzLjEgOTUuOUwxMDAuMyA4MC45TDExOS43IDg0LjZMMTA0IDcyLjVMMTIzLjcgNzIuMUwxMDUuOSA2My42TDEyNS4xIDU5TDEwNS45IDU0LjRMMTIzLjcgNDUuOUwxMDQgNDUuNUwxMTkuNyAzMy40TDEwMC4zIDM3LjFMMTEzLjEgMjIuMUw5NC45IDI5LjdMMTA0LjQgMTIuM0w4OC4yIDIzLjZMOTMuOCA0LjZMODAuMyAxOUw4MS45IC0wLjhMNzEuNiAxNi4yTDY5LjEgLTMuNVoiLz4KPC9zdmc+');
   mask-size: contain;
 `;
@@ -144,14 +142,12 @@ export const TeaserPeerLogo = styled(Image)``;
 export const TeaserPreTitleNoContent = styled('div')``;
 
 export const TeaserPreTitle = styled('div')`
-  color: white;
-  background-color: black;
-  @container teaser (width > 200px) {
-    font-size: calc((9 * 100cqw / 16) * 0.045) !important;
-    line-height: calc((9 * 100cqw / 16) * 0.045) !important;
-    font-weight: bold;
-    padding: 0.5cqw 1.5cqw;
-  }
+  color: ${({ theme }) => theme.palette.common.white};
+  background-color: ${({ theme }) => theme.palette.common.black};
+  font-size: calc((9 * 100cqw / 16) * 0.045) !important;
+  line-height: calc((9 * 100cqw / 16) * 0.045) !important;
+  font-weight: 700 !important;
+  padding: 0.5cqw 1.5cqw;
 `;
 
 export const TeaserPreTitleWrapper = styled('div')`
@@ -181,8 +177,8 @@ export const TeaserContentWrapper = styled('article')`
 
   &:hover {
     ${TeaserPreTitle} {
-      background-color: #f5ff64;
-      color: black;
+      background-color: ${({ theme }) => theme.palette.primary.light};
+      color: ${({ theme }) => theme.palette.common.black};
     }
   }
 `;

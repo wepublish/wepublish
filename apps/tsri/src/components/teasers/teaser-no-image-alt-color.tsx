@@ -33,8 +33,12 @@ export const TeaserNoImageAltColor = styled(TsriTeaser)`
     grid-template-columns: 15.9% 84.1%;
     background: linear-gradient(
       to bottom,
-      rgb(12, 159, 237),
-      color-mix(in srgb, white 40%, rgb(12, 159, 237))
+      ${({ theme }) => theme.palette.primary.main},
+      color-mix(
+        in srgb,
+        ${({ theme }) => theme.palette.common.white} 40%,
+        ${({ theme }) => theme.palette.primary.main}
+      )
     );
   }
 

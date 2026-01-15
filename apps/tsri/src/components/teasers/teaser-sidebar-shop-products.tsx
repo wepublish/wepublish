@@ -28,13 +28,13 @@ export const TeaserShopProducts = styled(TsriTeaser)`
   ${TeaserContentWrapper} {
     grid-template-columns: 8.1cqw auto;
     grid-template-rows: min-content auto;
-    background-color: white;
+    background-color: ${({ theme }) => theme.palette.common.white};
     grid-column-gap: 1cqw;
-    color: black;
+    color: ${({ theme }) => theme.palette.common.black};
 
     &:hover {
-      background-color: rgb(12, 159, 237);
-      color: white;
+      background-color: ${({ theme }) => theme.palette.primary.main};
+      color: ${({ theme }) => theme.palette.common.white};
     }
   }
 
