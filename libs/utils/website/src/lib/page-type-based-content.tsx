@@ -1,14 +1,18 @@
 import { NormalizedCacheObject } from '@apollo/client';
 import {
   SessionWithTokenWithoutUser,
+  Tag,
   V1_CLIENT_STATE_PROP_NAME,
 } from '@wepublish/website/api';
 import { Page, ArticleRevision } from '@wepublish/website/api';
 import { PageTypeBasedProps, PageType } from '@wepublish/website/builder';
 
-export const getPageType = (pageProps: {
-  [V1_CLIENT_STATE_PROP_NAME]: NormalizedCacheObject;
-}): PageType => {
+export const getPageType = (
+  pageProps: {
+    [V1_CLIENT_STATE_PROP_NAME]: NormalizedCacheObject;
+  },
+  path: string
+): PageType => {
   let pageType: PageType = PageType.Unknown;
   const pp = (
     pageProps as {
@@ -22,10 +26,11 @@ export const getPageType = (pageProps: {
     const propNames = Object.getOwnPropertyNames(rootQuery);
     propNames.some(propName => {
       switch (propName.match(/^[^(]+/)?.[0]) {
-        case 'page':
+        case 'page': {
           pageType = PageType.Page;
           return true;
-        case 'articles':
+        }
+        case 'articles': {
           pageType = PageType.ArticleList;
           propNames.some(name => {
             if (name.startsWith('article(')) {
@@ -41,26 +46,44 @@ export const getPageType = (pageProps: {
             return false;
           });
           return true;
-        case 'authors':
+        }
+        case 'authors': {
           pageType = PageType.AuthorList;
           return true;
-        case 'events':
+        }
+        case 'events': {
           pageType = PageType.EventList;
           return true;
-        case 'event':
+        }
+        case 'event': {
           pageType = PageType.Event;
           return true;
-        case 'profiles':
+        }
+        case 'profiles': {
           pageType = PageType.ProfileList;
           return true;
-        case 'profile':
+        }
+        case 'profile': {
           pageType = PageType.Profile;
           return true;
-        case 'phrase':
+        }
+        case 'phrase': {
           pageType = PageType.SearchResults;
           return true;
+        }
         case '__typename':
-        case 'navigations':
+        case 'navigations': {
+          switch (true) {
+            case path.startsWith('/search'):
+              pageType = PageType.SearchPage;
+              return true;
+            case path.startsWith('/mitmachen'):
+              pageType = PageType.SubscriptionPage;
+              return true;
+            default:
+          }
+          return false;
+        }
         case 'peerProfile':
         case 'ratingSystem':
         case 'comments':
@@ -96,8 +119,6 @@ const getPageData = (pageProps: NormalizedCacheObject) => {
   return pageData;
 };
 
-// test comment
-
 const getArticleData = (pageProps: NormalizedCacheObject) => {
   let articleData: Pick<ArticleRevision, 'preTitle'> | undefined = undefined;
   const rootQuery = pageProps.ROOT_QUERY;
@@ -120,13 +141,36 @@ const getArticleData = (pageProps: NormalizedCacheObject) => {
   return articleData;
 };
 
-export const getPageTypeBasedContent = (pProps: {
-  sessionToken?: SessionWithTokenWithoutUser | undefined;
-}) => {
+const getArticleListData = (pageProps: NormalizedCacheObject) => {
+  let articleListTag: Pick<Tag, 'tag'> | undefined = undefined;
+  const rootQuery = pageProps.ROOT_QUERY;
+  if (rootQuery) {
+    Object.getOwnPropertyNames(rootQuery).some(propName => {
+      switch (propName.match(/^[^(]+/)?.[0]) {
+        case 'tag':
+          articleListTag = {
+            tag: pageProps[(rootQuery[propName] as { __ref: string }).__ref]
+              ?.tag as string,
+          };
+          return true;
+        default:
+      }
+      return false;
+    });
+  }
+  return articleListTag;
+};
+
+export const getPageTypeBasedContent = (
+  pProps: {
+    sessionToken?: SessionWithTokenWithoutUser | undefined;
+  },
+  path: string
+) => {
   const pageProps = pProps as {
     [V1_CLIENT_STATE_PROP_NAME]: NormalizedCacheObject;
   };
-  const pageType = getPageType(pageProps);
+  const pageType = getPageType(pageProps, path);
   const essentialProps: PageTypeBasedProps = {
     pageType,
   };
@@ -147,6 +191,10 @@ export const getPageTypeBasedContent = (pProps: {
       case PageType.Article:
         essentialProps.Article = getArticleData(pp);
         break;
+      case PageType.ArticleList:
+        essentialProps.ArticleList = getArticleListData(pp);
+        break;
+      default:
     }
   }
 
