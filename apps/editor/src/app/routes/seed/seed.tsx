@@ -318,8 +318,9 @@ const createArticleInput = (
 
         {
           linkPageBreak: {
-            blockStyle: getBlockStyle(blockStyles, 'SidebarContent'),
+            blockStyle: getBlockStyle(blockStyles, 'SB_SidebarContent'),
             hideButton: false,
+            text: 'Shop',
             imageID: imageIds[imageIds.length - 25],
             linkTarget: null,
             linkText: capitalize(faker.lorem.words({ min: 1, max: 3 })),
@@ -346,7 +347,6 @@ Jetzt im Shop erhältlich.`,
                 ],
               },
             ] as Descendant[],
-            text: 'Shop',
           } as BreakBlockInput,
         } as BlockContentInput,
 
@@ -393,7 +393,7 @@ Jetzt im Shop erhältlich.`,
 
         {
           linkPageBreak: {
-            blockStyle: getBlockStyle(blockStyles, 'SidebarContent'),
+            blockStyle: getBlockStyle(blockStyles, 'SB_SidebarContent'),
             hideButton: false,
             imageID: imageIds[imageIds.length - 30],
             linkTarget: null,
@@ -525,7 +525,7 @@ async function seedNavigations(createNavigation: any, tags: string[] = []) {
         links: [
           {
             type: NavigationLinkType.External,
-            label: 'Memeber werden',
+            label: 'Member werden',
             url: faker.internet.url(),
           },
           {
@@ -961,7 +961,7 @@ async function seedPages(
                   block: {
                     teaserSlots: {
                       title: 'FullsizeImage - 6 Teasers',
-                      blockStyle: getBlockStyle(blockStyles, 'FullsizeImage'),
+                      blockStyle: getBlockStyle(blockStyles, 'T_FullsizeImage'),
                       autofillConfig: {
                         enabled: true,
                         filter: {},
@@ -1005,6 +1005,7 @@ async function seedPages(
             linkPageBreak: {
               blockStyle: getBlockStyle(blockStyles, 'AttentionCatcher'),
               hideButton: false,
+              text: 'Shop',
               imageID: imageIds[imageIds.length - 15],
               linkTarget: null,
               linkText: capitalize(faker.lorem.words({ min: 1, max: 3 })),
@@ -1020,7 +1021,6 @@ async function seedPages(
                 },
                 ...(getText(2, 2) as Descendant[]),
               ] as Descendant[],
-              text: 'Shop',
             } as BreakBlockInput,
           } as BlockContentInput,
 
@@ -1039,7 +1039,10 @@ async function seedPages(
                   block: {
                     teaserSlots: {
                       title: 'XLFullsizeImage - 2 Teasers',
-                      blockStyle: getBlockStyle(blockStyles, 'XLFullsizeImage'),
+                      blockStyle: getBlockStyle(
+                        blockStyles,
+                        'T_XLFullsizeImage'
+                      ),
                       autofillConfig: {
                         enabled: true,
                         filter: {},
@@ -1072,7 +1075,10 @@ async function seedPages(
                   block: {
                     teaserSlots: {
                       title: 'NoImageAltColor - 3 Teasers ',
-                      blockStyle: getBlockStyle(blockStyles, 'NoImageAltColor'),
+                      blockStyle: getBlockStyle(
+                        blockStyles,
+                        'T_NoImageAltColor'
+                      ),
                       autofillConfig: {
                         enabled: true,
                         filter: {},
@@ -1109,7 +1115,10 @@ async function seedPages(
                   block: {
                     teaserSlots: {
                       title: 'TwoColAltColor - 3 Teasers',
-                      blockStyle: getBlockStyle(blockStyles, 'TwoColAltColor'),
+                      blockStyle: getBlockStyle(
+                        blockStyles,
+                        'T_TwoColAltColor'
+                      ),
                       autofillConfig: {
                         enabled: true,
                         filter: {},
@@ -1267,45 +1276,45 @@ async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
 
     // archive sidebar layouts
     {
-      name: 'DailyBriefing',
+      name: 'SB_DailyBriefing',
       blocks: ['TeaserSlots'],
     },
     {
-      name: 'ShopProducts',
+      name: 'SB_ShopProducts',
       blocks: ['TeaserSlots'],
     },
     {
-      name: 'FocusMonth',
+      name: 'SB_Events',
       blocks: ['TeaserSlots'],
     },
     {
-      name: 'TsriLove',
+      name: 'SB_TsriLove',
       blocks: ['TeaserSlots'],
     },
 
     // normal teaser layouts
     {
-      name: 'FullsizeImage',
+      name: 'T_FullsizeImage',
       blocks: ['TeaserSlots'],
     },
     {
-      name: 'XLFullsizeImage',
+      name: 'T_XLFullsizeImage',
       blocks: ['TeaserSlots'],
     },
     {
-      name: 'NoImage',
+      name: 'T_NoImage',
       blocks: ['TeaserSlots'],
     },
     {
-      name: 'NoImageAltColor',
+      name: 'T_NoImageAltColor',
       blocks: ['TeaserSlots'],
     },
     {
-      name: 'TwoCol',
+      name: 'T_TwoCol',
       blocks: ['TeaserSlots'],
     },
     {
-      name: 'TwoColAltColor',
+      name: 'T_TwoColAltColor',
       blocks: ['TeaserSlots'],
     },
 
@@ -1315,7 +1324,7 @@ async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
       blocks: ['LinkPageBreak'],
     },
     {
-      name: 'SidebarContent',
+      name: 'SB_SidebarContent',
       blocks: ['LinkPageBreak'],
     },
     {
