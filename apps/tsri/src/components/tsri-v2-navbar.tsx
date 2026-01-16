@@ -8,7 +8,6 @@ import {
   Theme,
   Toolbar,
 } from '@mui/material';
-import { useUser } from '@wepublish/authentication/website';
 import { useHasActiveSubscription } from '@wepublish/membership/website';
 import { navigationLinkToUrl } from '@wepublish/navigation/website';
 import { ButtonProps, TextToIcon } from '@wepublish/ui';
@@ -31,7 +30,6 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useTranslation } from 'react-i18next';
 import { FiInstagram, FiMenu as FiMenuDefault, FiSearch } from 'react-icons/fi';
 import { MdWarning } from 'react-icons/md';
 
@@ -527,6 +525,10 @@ export const NavPaperWrapper = styled('div', {
     width: 100%;
     border-bottom: none;
 
+    ${theme.breakpoints.up('md')} {
+      column-gap: 0;
+    }
+
     ${BecomeMemberTab} {
       font-size: 1cqw;
       line-height: 1cqw;
@@ -544,8 +546,14 @@ export const NavPaperWrapper = styled('div', {
         grid-column: 2 / 3;
         border-top-left-radius: 0.5cqw;
         border-top-right-radius: 0.5cqw;
-        font-size: 0.75cqw;
-        line-height: 0.75cqw;
+
+        & > * {
+          padding-top: 0.7cqw;
+          height: 2.2cqw;
+          width: auto;
+          font-size: 0.75cqw;
+          line-height: 0.75cqw;
+        }
       }
     }
   }
@@ -732,113 +740,12 @@ const NavPaper = ({
   const {
     elements: { Link, H6 },
   } = useWebsiteBuilder();
-  const { t } = useTranslation();
-  const { hasUser, logout } = useUser();
-
-  const showMenu = true;
-
-  if (!showMenu) {
-    return null;
-  }
 
   return (
     <NavPaperWrapper
       isMenuOpen={isMenuOpen}
       className={`${className || ''} ${isMenuOpen ? 'menu-open' : ''}`.trim()}
     >
-      {/*
-      {children && (
-        <NavPaperChildrenWrapper>{children}</NavPaperChildrenWrapper>
-      )}
-
-      <NavPaperMainLinks>
-        {main?.links.map((link, index) => {
-          const url = navigationLinkToUrl(link);
-
-          return (
-            <Link
-              href={url}
-              key={index}
-              color="inherit"
-              underline="none"
-              onClick={closeMenu}
-            >
-              <H4
-                component="span"
-                css={{ fontWeight: '700' }}
-              >
-                {link.label}
-              </H4>
-            </Link>
-          );
-        })}
-
-
-        <NavPaperActions>
-          {hasUnpaidInvoices && profileBtn && (
-            <Button
-              LinkComponent={Link}
-              variant="contained"
-              color="warning"
-              onClick={closeMenu}
-              startIcon={<MdWarning />}
-              {...profileBtn}
-            >
-              Offene Rechnung
-            </Button>
-          )}
-
-          {!hasRunningSubscription && subscribeBtn && (
-            <Button
-              LinkComponent={Link}
-              variant="contained"
-              color="secondary"
-              onClick={closeMenu}
-              {...subscribeBtn}
-            >
-              {t('navbar.subscribe')}
-            </Button>
-          )}
-
-          {hasUser && profileBtn && (
-            <Button
-              LinkComponent={Link}
-              variant="outlined"
-              color="secondary"
-              onClick={closeMenu}
-              {...profileBtn}
-            >
-              Mein Konto
-            </Button>
-          )}
-
-          {hasUser && (
-            <Button
-              onClick={() => {
-                logout();
-                closeMenu();
-              }}
-              variant="contained"
-              color="primary"
-            >
-              Logout
-            </Button>
-          )}
-
-          {!hasUser && loginBtn && (
-            <Button
-              LinkComponent={Link}
-              variant="outlined"
-              color="secondary"
-              onClick={closeMenu}
-              {...loginBtn}
-            >
-              Login
-            </Button>
-          )}
-        </NavPaperActions>
-      </NavPaperMainLinks>
-        */}
       {!!categories.length &&
         categories.map((categoryArray, arrayIndex) => (
           <NavPaperLinksGroup key={arrayIndex}>
@@ -872,7 +779,12 @@ const NavPaper = ({
         isHomePage={false}
       >
         <BecomeMemberTab>
-          <Link href="/Login">Login</Link>
+          <Link
+            href="/Login"
+            onClick={closeMenu}
+          >
+            Login
+          </Link>
         </BecomeMemberTab>
       </NavbarTabs>
     </NavPaperWrapper>
@@ -1094,16 +1006,10 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
 
     function handleResize() {
       if (ref?.current) {
-        /*
-        ref.current.style.overflow = 'hidden';
-        ref.current.style.height = 'auto';
-        ref.current.style.height = `${ref.current.scrollHeight}px`;
-        */
         ref.current.ownerDocument.documentElement.setAttribute(
           'style',
           `--navbar-height: ${ref.current.getBoundingClientRect().height}px`
         );
-        //console.log(ref.current.getBoundingClientRect());
       }
     }
 
@@ -1153,9 +1059,10 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                 aria-label="Instagram"
                 title="Instagram"
                 color={'inherit'}
-                onClick={() =>
-                  router.push('https://www.instagram.com/tsri.ch/')
-                }
+                onClick={() => {
+                  toggleMenu();
+                  router.push('https://www.instagram.com/tsri.ch/');
+                }}
               >
                 <FiInstagram />
               </NavbarInstaButton>
@@ -1164,7 +1071,10 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                 aria-label="Suche"
                 title="Suche"
                 color={'inherit'}
-                onClick={() => router.push('/search')}
+                onClick={() => {
+                  toggleMenu();
+                  router.push('/search');
+                }}
               >
                 <FiSearch />
               </NavbarSearchButton>
