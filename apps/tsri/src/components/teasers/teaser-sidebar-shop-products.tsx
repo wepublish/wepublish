@@ -26,10 +26,10 @@ export const TeaserShopProducts = styled(TsriTeaser)`
   border-radius: unset;
 
   ${TeaserContentWrapper} {
-    grid-template-columns: 8.1cqw auto;
+    grid-template-columns: calc(var(--sizing-factor) * 8.1cqw) auto;
     grid-template-rows: min-content auto;
     background-color: ${({ theme }) => theme.palette.common.white};
-    grid-column-gap: 1cqw;
+    grid-column-gap: calc(var(--sizing-factor) * 1cqw);
     color: ${({ theme }) => theme.palette.common.black};
 
     &:hover {
@@ -39,10 +39,11 @@ export const TeaserShopProducts = styled(TsriTeaser)`
   }
 
   ${TeaserTitle} {
-    font-size: 1.3cqw !important;
-    line-height: 1.49cqw !important;
+    font-size: calc(var(--sizing-factor) * 1.3cqw) !important;
+    line-height: calc(var(--sizing-factor) * 1.49cqw) !important;
     font-weight: 700 !important;
-    padding: 0.9cqw 0 0.2cqw 0 !important;
+    padding: calc(var(--sizing-factor) * 0.9cqw) 0
+      calc(var(--sizing-factor) * 0.2cqw) 0 !important;
     margin: 0 !important;
     grid-column: 2 / 3;
     grid-row: 1 / 2;
@@ -52,8 +53,8 @@ export const TeaserShopProducts = styled(TsriTeaser)`
 
   ${TeaserLead} {
     display: block;
-    font-size: 1.2cqw !important;
-    line-height: 1.5cqw !important;
+    font-size: calc(var(--sizing-factor) * 1.2cqw) !important;
+    line-height: calc(var(--sizing-factor) * 1.5cqw) !important;
     font-weight: 400 !important;
     padding: 0 !important;
     grid-column: 2 / 3;
@@ -64,17 +65,20 @@ export const TeaserShopProducts = styled(TsriTeaser)`
   ${TeaserImageWrapper} {
     display: grid;
     z-index: 1;
-
     aspect-ratio: 1;
-    border-radius: 0.5cqw;
     grid-column: 1 / 2;
     grid-row: -1 / 1;
-    width: 6.69cqw;
+    width: calc(var(--sizing-factor) * 6.69cqw);
     margin: auto;
+    border-radius: 1cqw;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      border-radius: 0.5cqw;
+    }
 
     & img {
       width: auto;
-      height: 6.69cqw;
+      height: calc(var(--sizing-factor) * 6.69cqw);
       object-fit: cover;
       max-height: unset;
     }
