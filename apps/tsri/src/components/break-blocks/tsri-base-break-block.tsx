@@ -7,7 +7,7 @@ import {
 } from './tsri-attention-catcher';
 
 export enum TsriBreakBlockType {
-  SidebarContent = 'SidebarContent', // handled by TsriBlockRenderer
+  SidebarContent = 'SB_SidebarContent', // handled by TsriBlockRenderer
   ContextBox = 'ContextBox', // handled "globally" by BlockRenderer
   AttentionCatcher = 'AttentionCatcher',
 }

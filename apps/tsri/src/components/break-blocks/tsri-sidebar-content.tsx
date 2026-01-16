@@ -16,9 +16,11 @@ export const SidebarContentWrapper = styled('div')`
   width: 100%;
   position: relative;
   z-index: 6;
+  --sizing-factor: 2.5;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-column: 2 / 3 !important;
+    --sizing-factor: 1;
   }
 `;
 
@@ -30,13 +32,14 @@ export const SidebarContentBox = styled('div')`
   width: 100%;
   position: sticky;
   top: var(--navbar-height, 0px);
-  padding: 0 0 1.5cqw 0;
+  padding: 0 0 calc(var(--sizing-factor) * 1.5cqw) 0;
 `;
 
 export const SidebarContentBody = styled('div')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(2)};
-  margin: 1cqw 1cqw 0 1cqw;
+  margin: calc(var(--sizing-factor) * 1cqw) calc(var(--sizing-factor) * 1cqw) 0
+    calc(var(--sizing-factor) * 1cqw);
 `;
 
 const siblingSidebarContentWrapperStyles = css`
@@ -48,13 +51,19 @@ const siblingSidebarContentWrapperStyles = css`
 export const SidebarContentHeading = styled('div')`
   background-color: ${({ theme }) => theme.palette.common.black};
   color: ${({ theme }) => theme.palette.common.white};
-  font-size: 1.2cqw !important;
-  line-height: 1.2cqw !important;
+  font-size: calc(var(--sizing-factor) * 1.3cqw) !important;
+  line-height: calc(var(--sizing-factor) * 1.3cqw) !important;
   text-align: left;
   font-weight: 700 !important;
-  padding: 0.75cqw 1cqw !important;
-  border-top-left-radius: 1cqw;
-  border-top-right-radius: 1cqw;
+  padding: calc(var(--sizing-factor) * 0.75cqw)
+    calc(var(--sizing-factor) * 1cqw) !important;
+  border-top-left-radius: 2cqw;
+  border-top-right-radius: 2cqw;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    border-top-left-radius: 1cqw;
+    border-top-right-radius: 1cqw;
+  }
 `;
 
 const subTitleStyles = (theme: Theme) => css`
@@ -63,16 +72,16 @@ const subTitleStyles = (theme: Theme) => css`
 
   & .MuiTypography-root {
     color: ${theme.palette.common.black} !important;
-    font-size: 1.8cqw !important;
-    line-height: 2.2cqw !important;
+    font-size: calc(var(--sizing-factor) * 1.8cqw) !important;
+    line-height: calc(var(--sizing-factor) * 2.2cqw) !important;
     font-weight: 700 !important;
   }
 `;
 
 const richTextStyles = (theme: Theme) => css`
   p {
-    font-size: 1.48cqw !important;
-    line-height: 2.04cqw !important;
+    font-size: calc(var(--sizing-factor) * 1.48cqw) !important;
+    line-height: calc(var(--sizing-factor) * 2.04cqw) !important;
     font-weight: 700 !important;
     color: ${theme.palette.common.black};
   }
@@ -91,8 +100,8 @@ export const SidebarContentButton = styled(Button)`
   background-color: ${({ theme }) => theme.palette.common.black};
   color: ${({ theme }) => theme.palette.common.white};
   justify-self: end;
-  padding-right: 8cqw;
-  margin-top: 1cqw;
+  padding-right: calc(var(--sizing-factor) * 8cqw);
+  margin-top: calc(var(--sizing-factor) * 1cqw);
 `;
 
 export const isTsriSidebarContent = allPass([
@@ -152,8 +161,8 @@ export const TsriSidebarContent = ({
     & ${SidebarContentBox} {
       background: ${
         text && text === 'Shop' ?
-          `linear-gradient(to bottom, ${theme.palette.primary.light}, color-mix(in srgb, ${theme.palette.common.white} 40%, ${theme.palette.primary.light}))`
-        : `linear-gradient(to bottom, ${theme.palette.primary.main}, color-mix(in srgb, ${theme.palette.common.white} 40%, ${theme.palette.primary.main}))`
+          `linear-gradient(to bottom, ${theme.palette.primary.light}, color-mix(in srgb, ${theme.palette.common.white} 60%, ${theme.palette.primary.light}))`
+        : `linear-gradient(to bottom, ${theme.palette.primary.main}, color-mix(in srgb, ${theme.palette.common.white} 60%, ${theme.palette.primary.main}))`
       };
   `;
 
