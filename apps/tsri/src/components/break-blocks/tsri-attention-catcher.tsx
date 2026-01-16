@@ -12,6 +12,7 @@ import { allPass } from 'ramda';
 import { TsriBreakBlockType } from './tsri-base-break-block';
 
 export const BreakBlockWrapper = styled('div')`
+  --sizing-factor: 2.7;
   display: grid;
   background: linear-gradient(
     to bottom,
@@ -22,7 +23,7 @@ export const BreakBlockWrapper = styled('div')`
       ${({ theme }) => theme.palette.primary.light}
     )
   );
-  border-radius: 1cqw;
+  border-radius: 2cqw;
   margin: 0 auto;
   row-gap: 5cqw;
   column-gap: 0;
@@ -30,9 +31,11 @@ export const BreakBlockWrapper = styled('div')`
   grid-template-columns: unset;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
+    --sizing-factor: 1;
     grid-template-rows: min-content auto;
     grid-template-columns: 57% calc(100% - 57%);
     width: 69.4cqw;
+    border-radius: 1cqw;
   }
 `;
 
@@ -41,13 +44,19 @@ export const BreakBlockHeading = styled('div')`
   grid-row: 1 / 2;
   background-color: ${({ theme }) => theme.palette.common.black};
   color: ${({ theme }) => theme.palette.common.white};
-  font-size: 1.2cqw !important;
-  line-height: 1.2cqw !important;
+  font-size: calc(var(--sizing-factor) * 1.2cqw) !important;
+  line-height: calc(var(--sizing-factor) * 1.2cqw) !important;
   text-align: left;
   font-weight: 700 !important;
-  padding: 0.75cqw 1cqw !important;
-  border-top-left-radius: 1cqw;
-  border-top-right-radius: 1cqw;
+  padding: calc(var(--sizing-factor) * 0.75cqw)
+    calc(var(--sizing-factor) * 1cqw) !important;
+  border-top-left-radius: 2cqw;
+  border-top-right-radius: 2cqw;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    border-top-left-radius: 1cqw;
+    border-top-right-radius: 1cqw;
+  }
 `;
 
 export const BreakBlockSegment = styled('div')`
@@ -57,7 +66,6 @@ export const BreakBlockSegment = styled('div')`
 
 export const BreakBlockImage = styled(Image)`
   object-fit: cover;
-  //width: 37.4cqw;
   margin: 0 auto;
   aspect-ratio: 1;
   border-radius: 0.8cqw;
@@ -69,8 +77,8 @@ export const BreakBlockButton = styled(Button)`
   background-color: ${({ theme }) => theme.palette.common.black};
   color: ${({ theme }) => theme.palette.common.white};
   justify-self: end;
-  padding-right: 8cqw;
-  margin-top: 4cqw;
+  padding-right: calc(var(--sizing-factor) * 8cqw);
+  margin-top: calc(var(--sizing-factor) * 4cqw);
   transition: all 0s;
 
   &:hover {
@@ -81,36 +89,41 @@ export const BreakBlockButton = styled(Button)`
 
 const richTextStyles = (theme: Theme) => css`
   h2 {
-    font-size: 2.42cqw !important;
-    line-height: 2.6cqw !important;
+    font-size: calc(var(--sizing-factor) * 2.42cqw) !important;
+    line-height: calc(var(--sizing-factor) * 2.6cqw) !important;
     font-weight: 700 !important;
     color: ${theme.palette.common.black};
-    margin-bottom: 1cqw;
+    margin-bottom: calc(var(--sizing-factor) * 1cqw);
     padding: 0;
   }
 
   p {
-    font-size: 1.48cqw !important;
-    line-height: 2.04cqw !important;
+    font-size: calc(var(--sizing-factor) * 1.48cqw) !important;
+    line-height: calc(var(--sizing-factor) * 2.04cqw) !important;
     font-weight: 700 !important;
     color: ${theme.palette.common.black};
   }
 `;
 
 const firstSegmentStyles = (theme: Theme) => css`
+  padding: 0 calc(var(--sizing-factor) * 1cqw) calc(var(--sizing-factor) * 1cqw)
+    calc(var(--sizing-factor) * 1cqw);
+
   ${theme.breakpoints.up('md')} {
-    padding: 0 0 1cqw 1cqw;
+    padding-right: 0;
     grid-column: 1 / 2;
     grid-row: 2 / 3;
   }
 `;
 
 const secondSegmentStyles = (theme: Theme) => css`
+  padding: 0 calc(var(--sizing-factor) * 1cqw) calc(var(--sizing-factor) * 1cqw)
+    0;
+  margin-left: calc(var(--sizing-factor) * 1.5cqw);
+
   ${theme.breakpoints.up('md')} {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
-    padding: 0 1cqw 1cqw 0;
-    margin-left: 1.5cqw;
     grid-template-rows: auto min-content;
   }
 `;

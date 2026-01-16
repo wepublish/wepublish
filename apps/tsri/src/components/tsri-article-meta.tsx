@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
 import { Badge, css, Theme } from '@mui/material';
-import { ArticleTags as ArticleTagsDefault } from '@wepublish/article/website';
+import {
+  ArticleTags as ArticleTagsDefault,
+  ArticleTagsWrapper,
+} from '@wepublish/article/website';
 import { useCommentListQuery } from '@wepublish/website/api';
 import {
   BuilderArticleMetaProps,
@@ -10,42 +13,70 @@ import { FaCommentSlash } from 'react-icons/fa6';
 import { FiMessageCircle as FiMessageCircleDefault } from 'react-icons/fi';
 
 export const ArticleMetaWrapper = styled('div')`
-  grid-column: 2 / 4;
+  grid-column: 1 / 3;
   display: flex;
   flex-direction: row-reverse;
   justify-content: flex-start;
   position: relative;
-  top: -100%;
-  gap: 8px;
+  gap: 4px;
+  padding-top: 5cqw;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    top: -100%;
+    grid-column: 2 / 3;
+    gap: 8px;
+    padding-top: 0;
+  }
+
+  ${ArticleTagsWrapper} {
+    gap: 4px;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      gap: 8px;
+    }
+  }
 `;
 
 export const ArticleMetaComments = styled('div')``;
 
 const ArticleMetaBadge = styled(Badge)`
-  .MuiBadge-badge {
-    top: 27px;
-    border: 2px solid ${({ theme }) => theme.palette.common.white};
+  & .MuiBadge-badge {
+    top: 22px;
+    border: 1px solid ${({ theme }) => theme.palette.common.white};
     background: ${({ theme }) => theme.palette.common.black};
     color: ${({ theme }) => theme.palette.common.white};
     right: unset;
-    left: -24px;
+    left: -22px;
     aspect-ratio: 1;
     color: ${({ theme }) => theme.palette.common.white};
+    scale: 0.8;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      border-width: 2px;
+      top: 27px;
+      left: -24px;
+      scale: 1;
+    }
   }
 `;
 
 const FiMessageCircle = styled(FiMessageCircleDefault)`
   transform: scale(-1, 1);
+  scale: 0.6;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    scale: 1;
+  }
 `;
 
 const ArticleTags = styled(ArticleTagsDefault)`
   & > .MuiChip-root {
-    adding: 0.9rem 0.25rem;
-    font-size: 1.1rem;
+    padding: 0.4rem 0.1rem;
+    font-size: 0.75rem;
     font-weight: 500;
     border-color: ${({ theme }) => theme.palette.common.black};
     color: ${({ theme }) => theme.palette.common.black};
-    height: 2rem;
+    height: 1.3rem;
     overflow: hidden;
 
     &:hover {
@@ -56,6 +87,12 @@ const ArticleTags = styled(ArticleTagsDefault)`
         background-color: ${({ theme }) => theme.palette.primary.light};
         color: ${({ theme }) => theme.palette.common.black};
       }
+    }
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      padding: 0.9rem 0.25rem;
+      font-size: 1.1rem;
+      height: 2rem;
     }
   }
 `;
@@ -71,7 +108,8 @@ const commentsLinkStyles = (theme: Theme) => css`
   display: flex;
   aspect-ratio: 1/1;
   box-sizing: content-box;
-  width: 2rem;
+  width: 1.3rem;
+  height: 1.3rem;
   justify-content: center;
   align-items: center;
 
@@ -79,6 +117,11 @@ const commentsLinkStyles = (theme: Theme) => css`
     background-color: ${theme.palette.primary.light};
     color: ${theme.palette.common.black};
     border-color: ${theme.palette.primary.light};
+  }
+
+  ${theme.breakpoints.up('md')} {
+    width: 2rem;
+    height: 2rem;
   }
 `;
 

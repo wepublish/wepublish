@@ -21,21 +21,38 @@ export const TsriAuthorChip = styled(AuthorChip)`
 
   ${AuthorChipImageWrapper} {
     margin-left: unset;
-    width: 140px;
+    width: 80px;
     grid-column: 1 / 2;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      width: 140px;
+    }
   }
 
   ${AuthorChipContent} {
-    padding: 1rem 0 0 0;
+    padding: 0.7rem 0 0 0;
     align-items: start;
+    row-gap: 2rem;
+    display: grid;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      display: flex;
+      padding: 1rem 0 0 0;
+      row-gap: unset;
+    }
 
     & > div {
       display: flex;
       flex-direction: row;
-      gap: 0.5rem;
+      gap: 0.2rem;
 
-      font-size: 1rem;
+      font-size: 0.7rem;
       font-weight: 700;
+
+      ${({ theme }) => theme.breakpoints.up('md')} {
+        font-size: 1rem;
+        gap: 0.5rem;
+      }
 
       ${AuthorChipName} {
         position: relative;

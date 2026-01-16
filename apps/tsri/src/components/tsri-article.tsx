@@ -34,14 +34,15 @@ export const TsriArticle = styled(ArticleDefault)`
     display: grid;
     gap: 0;
     grid-template-columns: unset;
+    grid-template-columns: min-content 1fr;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
-      grid-template-columns: min-content 1fr min-content;
+      grid-template-columns: min-content 1fr;
     }
   }
 
   ${ImageBlockImage} {
-    border-radius: 1cqw;
+    border-radius: 1rem;
     object-fit: cover;
     max-width: calc(100vw - ${({ theme }) => theme.spacing(4)});
 
@@ -55,8 +56,8 @@ export const TsriArticle = styled(ArticleDefault)`
   }
 
   ${ImageBlockCaption} {
-    font-size: 1.12cqw;
-    line-height: 1.58cqw;
+    font-size: 0.75rem;
+    line-height: 1rem;
     font-weight: 700;
   }
 

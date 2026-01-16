@@ -7,6 +7,7 @@ import {
 export const TsriAuthorLinks = styled(AuthorLinksDefault)`
   gap: unset;
   column-gap: ${({ theme }) => theme.spacing(1)};
+  justify-self: end;
 
   ${AuthorLink} {
     color: ${({ theme }) => theme.palette.common.white};
@@ -20,8 +21,15 @@ export const TsriAuthorLinks = styled(AuthorLinksDefault)`
     }
 
     & > svg {
-      width: 1.6rem;
-      height: 1.6rem;
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      & > svg {
+        width: 1.6rem;
+        height: 1.6rem;
+      }
     }
   }
 `;
