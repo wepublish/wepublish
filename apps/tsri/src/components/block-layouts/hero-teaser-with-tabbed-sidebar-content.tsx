@@ -107,6 +107,7 @@ export const FrontTopRow = styled('div')`
   padding: 0;
   row-gap: 2cqw;
   grid-template-columns: unset;
+  margin-bottom: ${({ theme }) => theme.spacing(-5)};
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-columns: repeat(12, 1fr);
