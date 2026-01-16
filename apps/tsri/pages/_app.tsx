@@ -46,7 +46,6 @@ import { TsriFlexBlock } from '../src/components/block-layouts/tsri-base-flex-bl
 import { TsriTabbedContent } from '../src/components/block-layouts/tsri-base-tabbed-content';
 import { TsriBreakBlock } from '../src/components/break-blocks/tsri-base-break-block';
 import { TsriContextBox } from '../src/components/break-blocks/tsri-context-box';
-import { TsriBaseTeaserGridFlex } from '../src/components/teaser-layouts/tsri-base-teaser-flex-grid';
 import { TsriBaseTeaserSlots } from '../src/components/teaser-layouts/tsri-base-teaser-slots';
 import { TsriBaseTeaser } from '../src/components/teasers/tsri-base-teaser';
 import { TsriArticle } from '../src/components/tsri-article';
@@ -150,7 +149,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           blocks={{
             BaseTeaser: TsriBaseTeaser,
             TeaserSlots: TsriBaseTeaserSlots,
-            TeaserGridFlex: TsriBaseTeaserGridFlex,
             Break: TsriBreakBlock,
             Quote: TsriQuoteBlock,
             RichText: TsriRichText,
