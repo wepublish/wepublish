@@ -6,7 +6,6 @@ import { TsriTeaserType } from '../teasers/tsri-base-teaser';
 import { TsriLayoutType } from './tsri-layout';
 import {
   alignmentForTeaserBlock as alignmentFunc,
-  TeaserFlexGrid,
   TeaserSlots,
 } from './tsri-layout';
 
@@ -24,8 +23,6 @@ export const teaserBlockStyleByIndex = (
 };
 
 export const alignmentForTeaserBlock = alignmentFunc;
-
-export const TeaserFlexGridXLFullsizeImage = styled(TeaserFlexGrid)``;
 
 export const TeaserSlotsXLFullsizeImage = styled(TeaserSlots)`
   row-gap: 1.25cqw;

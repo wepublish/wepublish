@@ -25,6 +25,7 @@ import {
 import {
   alignmentForTeaserBlock as alignmentForTeaserBlockTeaserSlotsHeroTeaser,
   isTeaserSlotsHeroTeaser,
+  teaserBlockStyleByIndex as teaserBlockStyleByIndexHeroTeaser,
   TeaserSlotsHeroTeaser,
 } from './layout-hero-teaser';
 import {
@@ -34,11 +35,11 @@ import {
   TeaserSlotsDailyBriefingSidebar,
 } from './layout-sidebar-daily-briefing';
 import {
-  alignmentForTeaserBlock as alignmentForTeaserBlockFocusMonthSidebar,
-  isTeaserSlotsFocusMonthSidebar,
-  teaserBlockStyleByIndex as teaserBlockStyleByIndexFocusMonthSidebar,
-  TeaserSlotsFocusMonthSidebar,
-} from './layout-sidebar-focus-month';
+  alignmentForTeaserBlock as alignmentForTeaserBlockEventsSidebar,
+  isTeaserSlotsEventsSidebar,
+  teaserBlockStyleByIndex as teaserBlockStyleByIndexEventsSidebar,
+  TeaserSlotsEventsSidebar,
+} from './layout-sidebar-events';
 import {
   alignmentForTeaserBlock as alignmentForTeaserBlockShopProductsSidebar,
   isTeaserSlotsShopProductsSidebar,
@@ -94,6 +95,7 @@ export const TsriBaseTeaserSlots = cond([
     (props: BuilderTeaserSlotsBlockProps) => (
       <TeaserSlotsHeroTeaser
         {...props}
+        teaserBlockStyleByIndex={teaserBlockStyleByIndexHeroTeaser}
         alignmentForTeaserBlock={alignmentForTeaserBlockTeaserSlotsHeroTeaser}
       />
     ),
@@ -109,12 +111,12 @@ export const TsriBaseTeaserSlots = cond([
     ),
   ],
   [
-    isTeaserSlotsFocusMonthSidebar,
+    isTeaserSlotsEventsSidebar,
     (props: BuilderTeaserSlotsBlockProps) => (
-      <TeaserSlotsFocusMonthSidebar
+      <TeaserSlotsEventsSidebar
         {...props}
-        teaserBlockStyleByIndex={teaserBlockStyleByIndexFocusMonthSidebar}
-        alignmentForTeaserBlock={alignmentForTeaserBlockFocusMonthSidebar}
+        teaserBlockStyleByIndex={teaserBlockStyleByIndexEventsSidebar}
+        alignmentForTeaserBlock={alignmentForTeaserBlockEventsSidebar}
       />
     ),
   ],

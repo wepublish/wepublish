@@ -1,21 +1,12 @@
 import styled from '@emotion/styled';
-import {
-  BuilderTeaserGridFlexBlockProps,
-  BuilderTeaserSlotsBlockProps,
-} from '@wepublish/website/builder';
+import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
 import { TeaserTopicMeta } from '../teasers/teaser-topic-meta';
 import { TsriTeaserType } from '../teasers/tsri-base-teaser';
 import { TeaserPreTitle } from '../teasers/tsri-teaser';
 import { TsriLayoutType } from './tsri-layout';
-import { TeaserFlexGrid, TeaserSlots } from './tsri-layout';
-
-export const isTeaserFlexGridTsriLoveSidebar = allPass([
-  ({ blockStyle }: BuilderTeaserGridFlexBlockProps) => {
-    return blockStyle === TsriLayoutType.TsriLove;
-  },
-]);
+import { TeaserSlots } from './tsri-layout';
 
 export const isTeaserSlotsTsriLoveSidebar = allPass([
   ({ blockStyle }: BuilderTeaserSlotsBlockProps) => {
@@ -49,8 +40,6 @@ export const alignmentForTeaserBlock = (index: number) => {
       return { ...alignment, y: index };
   }
 };
-
-export const TeaserFlexGridTsriLoveSidebar = styled(TeaserFlexGrid)``;
 
 export const TeaserSlotsTsriLoveSidebar = styled(TeaserSlots)`
   margin: 0;

@@ -39,7 +39,7 @@ export const cssByBlockStyle = (
           background: linear-gradient(
             to bottom,
             ${theme.palette.primary.main} 0%,
-            color-mix(in srgb, ${theme.palette.common.white} 40%, ${theme.palette.primary.main})
+            color-mix(in srgb, ${theme.palette.common.white} 60%, ${theme.palette.primary.main})
           );
         }
         &:is(.MuiTab-root.Mui-selected,.MuiTab-root.Mui-selected:last-of-type,.MuiTab-root.Mui-selected:last-of-type:hover) {
