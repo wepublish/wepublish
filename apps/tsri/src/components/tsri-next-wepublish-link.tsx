@@ -117,6 +117,9 @@ export const TsriNextWepublishLink = forwardRef<
   const handleLinkClick = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
+    if (props.onClick) {
+      props.onClick(event);
+    }
     if (href?.startsWith('/newsletter')) {
       event.preventDefault();
       setModalOpen(true);
