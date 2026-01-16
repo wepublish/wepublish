@@ -1,23 +1,11 @@
 import styled from '@emotion/styled';
 import { FlexAlignment } from '@wepublish/website/api';
-import {
-  BuilderTeaserGridFlexBlockProps,
-  BuilderTeaserSlotsBlockProps,
-} from '@wepublish/website/builder';
+import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
+import { TsriTeaserType } from '../teasers/tsri-base-teaser';
 import { TsriLayoutType } from './tsri-layout';
-import {
-  TeaserFlexGrid,
-  TeaserLayoutWrapper,
-  TeaserSlots,
-} from './tsri-layout';
-
-export const isTeaserFlexGridHeroTeaser = allPass([
-  ({ blockStyle }: BuilderTeaserGridFlexBlockProps) => {
-    return blockStyle === TsriLayoutType.HeroTeaser;
-  },
-]);
+import { TeaserLayoutWrapper, TeaserSlots } from './tsri-layout';
 
 export const isTeaserSlotsHeroTeaser = allPass([
   ({ blockStyle }: BuilderTeaserSlotsBlockProps) => {
@@ -39,15 +27,24 @@ export const alignmentForTeaserBlock = (index: number): FlexAlignment => {
   };
 };
 
+export const teaserBlockStyleByIndex = (
+  index: number,
+  count?: number
+): TsriTeaserType => {
+  return TsriTeaserType.HeroTeaser;
+};
+
 export const TeaserSlotsHeroTeaser = styled(TeaserSlots)`
-  aspect-ratio: 16 / 9;
+  aspect-ratio: unset;
   align-items: flex-start;
   golumn-gap: 0;
   row-gap: 0;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    aspect-ratio: 16 / 9;
+  }
 
   ${TeaserLayoutWrapper} {
     grid-template-columns: 1 / 9;
   }
 `;
-
-export const TeaserFlexGridHeroTeaser = styled(TeaserFlexGrid)``;

@@ -1,24 +1,19 @@
 import styled from '@emotion/styled';
-import {
-  fixFlexTeasers,
-  isFilledTeaser,
-} from '@wepublish/block-content/website';
+import { isFilledTeaser } from '@wepublish/block-content/website';
 import { FlexAlignment } from '@wepublish/website/api';
 import {
-  BuilderTeaserGridFlexBlockProps,
   BuilderTeaserSlotsBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useMemo } from 'react';
 
 export enum TsriLayoutType {
   // basic teaser layouts
-  FullsizeImage = 'FullsizeImage',
-  NoImage = 'NoImage',
-  NoImageAltColor = 'NoImageAltColor',
-  TwoCol = 'TwoCol',
-  TwoColAltColor = 'TwoColAltColor',
-  XLFullsizeImage = 'XLFullsizeImage',
+  FullsizeImage = 'T_FullsizeImage',
+  NoImage = 'T_NoImage',
+  NoImageAltColor = 'T_NoImageAltColor',
+  TwoCol = 'T_TwoCol',
+  TwoColAltColor = 'T_TwoColAltColor',
+  XLFullsizeImage = 'T_XLFullsizeImage',
 
   // archive layouts
   ArchiveTopic = 'ArchiveTopic',
@@ -26,10 +21,10 @@ export enum TsriLayoutType {
   ArchiveTopicAuthor = 'ArchiveTopicAuthor',
 
   // sidebar layouts
-  DailyBriefing = 'DailyBriefing',
-  ShopProducts = 'ShopProducts',
-  FocusMonth = 'FocusMonth',
-  TsriLove = 'TsriLove',
+  DailyBriefing = 'SB_DailyBriefing',
+  ShopProducts = 'SB_ShopProducts',
+  Events = 'SB_Events',
+  TsriLove = 'SB_TsriLove',
 
   // hero teaser layouts
   HeroTeaser = 'HeroTeaser',
@@ -65,44 +60,6 @@ export const alignmentForTeaserBlock = (
     x: (index % 3) * alignment.w,
     y: Math.floor(index / 3),
   };
-};
-
-export const TeaserFlexGrid = ({
-  flexTeasers,
-  className,
-  alignmentForTeaserBlock,
-  teaserBlockStyleByIndex,
-  blockStyle,
-}: BuilderTeaserGridFlexBlockProps & {
-  alignmentForTeaserBlock: (index: number, count?: number) => FlexAlignment;
-  teaserBlockStyleByIndex?: (index: number, count?: number) => string;
-}) => {
-  const {
-    blocks: { Teaser },
-  } = useWebsiteBuilder();
-
-  const sortedTeasers = useMemo(
-    () => (flexTeasers ? fixFlexTeasers(flexTeasers) : []),
-    [flexTeasers]
-  );
-
-  return (
-    <TeaserLayoutWrapper className={className}>
-      {sortedTeasers.map((teaser, index) => (
-        <Teaser
-          key={index}
-          index={index}
-          {...teaser}
-          alignment={alignmentForTeaserBlock(index, sortedTeasers.length)}
-          blockStyle={
-            (teaserBlockStyleByIndex &&
-              teaserBlockStyleByIndex(index, sortedTeasers.length)) ||
-            blockStyle
-          }
-        />
-      ))}
-    </TeaserLayoutWrapper>
-  );
 };
 
 export const TeaserSlots = ({

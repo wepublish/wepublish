@@ -1,19 +1,10 @@
 import styled from '@emotion/styled';
-import {
-  BuilderTeaserGridFlexBlockProps,
-  BuilderTeaserSlotsBlockProps,
-} from '@wepublish/website/builder';
+import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
 import { TsriTeaserType } from '../teasers/tsri-base-teaser';
 import { TeaserPreTitle } from '../teasers/tsri-teaser';
-import { TeaserFlexGrid, TeaserSlots, TsriLayoutType } from './tsri-layout';
-
-export const isTeaserFlexGridDailyBriefingSidebar = allPass([
-  ({ blockStyle }: BuilderTeaserGridFlexBlockProps) => {
-    return blockStyle === TsriLayoutType.DailyBriefing;
-  },
-]);
+import { TeaserSlots, TsriLayoutType } from './tsri-layout';
 
 export const isTeaserSlotsDailyBriefingSidebar = allPass([
   ({ blockStyle }: BuilderTeaserSlotsBlockProps) => {
@@ -51,8 +42,6 @@ export const alignmentForTeaserBlock = (index: number) => {
       return { ...alignment }; // should never happen
   }
 };
-
-export const TeaserFlexGridDailyBriefingSidebar = styled(TeaserFlexGrid)``;
 
 export const TeaserSlotsDailyBriefingSidebar = styled(TeaserSlots)`
   grid-template-columns: 1fr !important;

@@ -1,8 +1,5 @@
 import styled from '@emotion/styled';
-import {
-  BuilderTeaserGridFlexBlockProps,
-  BuilderTeaserSlotsBlockProps,
-} from '@wepublish/website/builder';
+import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
 import { TeaserTopicMeta } from '../teasers/teaser-topic-meta';
@@ -12,13 +9,7 @@ import {
   TeaserPreTitle,
   TeaserTitle,
 } from '../teasers/tsri-teaser';
-import { TeaserFlexGrid, TeaserSlots, TsriLayoutType } from './tsri-layout';
-
-export const isTeaserFlexGridShopProductsSidebar = allPass([
-  ({ blockStyle }: BuilderTeaserGridFlexBlockProps) => {
-    return blockStyle === TsriLayoutType.ShopProducts;
-  },
-]);
+import { TeaserSlots, TsriLayoutType } from './tsri-layout';
 
 export const isTeaserSlotsShopProductsSidebar = allPass([
   ({ blockStyle }: BuilderTeaserSlotsBlockProps) => {
@@ -53,12 +44,10 @@ export const alignmentForTeaserBlock = (index: number) => {
   }
 };
 
-export const TeaserFlexGridShopProductsSidebar = styled(TeaserFlexGrid)``;
-
 export const TeaserSlotsShopProductsSidebar = styled(TeaserSlots)`
   margin: 0;
   padding: 0;
-  row-gap: 0.2cqw;
+  row-gap: calc(var(--sizing-factor) * 0.2cqw);
   height: 100%;
   align-items: flex-start;
   display: flex;
@@ -66,7 +55,7 @@ export const TeaserSlotsShopProductsSidebar = styled(TeaserSlots)`
   align-items: stretch;
 
   ${TeaserTopicMeta} {
-    margin-top: 2cqw;
+    margin-top: calc(var(--sizing-factor) * 2cqw);
     flex-grow: 1;
 
     ${TeaserTitle} {

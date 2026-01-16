@@ -36,7 +36,7 @@ export const blockStyleByIndex = (index: number): TsriLayoutType => {
     case 1:
       return TsriLayoutType.DailyBriefing;
     case 2:
-      return TsriLayoutType.FocusMonth;
+      return TsriLayoutType.Events;
     case 3:
       return TsriLayoutType.ShopProducts;
     default:
@@ -60,21 +60,21 @@ const cssByBlockStyle = (
           background: linear-gradient(
             to bottom,
             ${theme.palette.primary.main},
-            color-mix(in srgb, white 40%, ${theme.palette.primary.main})
+            color-mix(in srgb, ${theme.palette.common.white} 60%, ${theme.palette.primary.main})
           );
         }
         &:is(.MuiTab-root.Mui-selected,.MuiTab-root.Mui-selected:last-of-type,.MuiTab-root.Mui-selected:last-of-type:hover) {
           background-color: ${theme.palette.primary.main};
         }
       `;
-    case TsriLayoutType.FocusMonth:
+    case TsriLayoutType.Events:
     case TsriLayoutType.ShopProducts:
       return `
         &:is([role='tabpanel']) {
           background: linear-gradient(
             to bottom,
             ${theme.palette.primary.light},
-            color-mix(in srgb, ${theme.palette.common.white} 40%, ${theme.palette.primary.light})
+            color-mix(in srgb, ${theme.palette.common.white} 60%, ${theme.palette.primary.light})
           );
         }
         &:is(.MuiTab-root.Mui-selected,.MuiTab-root.Mui-selected:last-of-type,.MuiTab-root.Mui-selected:last-of-type:hover) {
@@ -89,7 +89,7 @@ const cssByBlockStyle = (
           background: linear-gradient(
             to bottom,
             ${theme.palette.primary.dark},
-            color-mix(in srgb, ${theme.palette.common.white} 40%, ${theme.palette.primary.dark})
+            color-mix(in srgb, ${theme.palette.common.white} 60%, ${theme.palette.primary.dark})
           );
         }
         &:is(.MuiTab-root.Mui-selected,.MuiTab-root.Mui-selected:last-of-type,.MuiTab-root.Mui-selected:last-of-type:hover) {
