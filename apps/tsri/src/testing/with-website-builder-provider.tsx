@@ -33,7 +33,6 @@ import { TsriFlexBlock } from '../components/block-layouts/tsri-base-flex-block'
 import { TsriTabbedContent } from '../components/block-layouts/tsri-base-tabbed-content';
 import { TsriBreakBlock } from '../components/break-blocks/tsri-base-break-block';
 import { TsriContextBox } from '../components/break-blocks/tsri-context-box';
-import { TsriBaseTeaserGridFlex } from '../components/teaser-layouts/tsri-base-teaser-flex-grid';
 import { TsriBaseTeaserSlots } from '../components/teaser-layouts/tsri-base-teaser-slots';
 import { TsriBaseTeaser } from '../components/teasers/tsri-base-teaser';
 import { TsriArticle } from '../components/tsri-article';
@@ -136,7 +135,6 @@ export const WithWebsiteBuilderProvider = (
     blocks={{
       BaseTeaser: TsriBaseTeaser,
       TeaserSlots: TsriBaseTeaserSlots,
-      TeaserGridFlex: TsriBaseTeaserGridFlex,
       Break: TsriBreakBlock,
       Quote: TsriQuoteBlock,
       RichText: TsriRichText,
@@ -190,7 +188,6 @@ export const WithWebsiteProviderDecorator = (Story: ComponentType) => {
         blocks={{
           BaseTeaser: TsriBaseTeaser,
           TeaserSlots: TsriBaseTeaserSlots,
-          TeaserGridFlex: TsriBaseTeaserGridFlex,
           Break: TsriBreakBlock,
           Quote: TsriQuoteBlock,
           RichText: TsriRichText,
