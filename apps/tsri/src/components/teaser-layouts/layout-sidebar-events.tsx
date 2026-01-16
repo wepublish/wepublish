@@ -1,25 +1,16 @@
 import styled from '@emotion/styled';
-import {
-  BuilderTeaserGridFlexBlockProps,
-  BuilderTeaserSlotsBlockProps,
-} from '@wepublish/website/builder';
+import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
 import { TeaserTopicMeta } from '../teasers/teaser-topic-meta';
 import { TsriTeaserType } from '../teasers/tsri-base-teaser';
 import { TeaserPreTitle } from '../teasers/tsri-teaser';
 import { TsriLayoutType } from './tsri-layout';
-import { TeaserFlexGrid, TeaserSlots } from './tsri-layout';
+import { TeaserSlots } from './tsri-layout';
 
-export const isTeaserFlexGridFocusMonthSidebar = allPass([
-  ({ blockStyle }: BuilderTeaserGridFlexBlockProps) => {
-    return blockStyle === TsriLayoutType.FocusMonth;
-  },
-]);
-
-export const isTeaserSlotsFocusMonthSidebar = allPass([
+export const isTeaserSlotsEventsSidebar = allPass([
   ({ blockStyle }: BuilderTeaserSlotsBlockProps) => {
-    return blockStyle === TsriLayoutType.FocusMonth;
+    return blockStyle === TsriLayoutType.Events;
   },
 ]);
 
@@ -31,7 +22,7 @@ export const teaserBlockStyleByIndex = (
     case count! - 1:
       return TsriTeaserType.TopicMeta;
     default:
-      return TsriTeaserType.FocusMonth;
+      return TsriTeaserType.Events;
   }
 };
 
@@ -50,12 +41,10 @@ export const alignmentForTeaserBlock = (index: number) => {
   }
 };
 
-export const TeaserFlexGridFocusMonthSidebar = styled(TeaserFlexGrid)``;
-
-export const TeaserSlotsFocusMonthSidebar = styled(TeaserSlots)`
+export const TeaserSlotsEventsSidebar = styled(TeaserSlots)`
   margin: 0;
   padding: 0;
-  row-gap: 0.2cqw;
+  row-gap: calc(var(--sizing-factor) * 0.2cqw);
   height: 100%;
   align-items: flex-start;
   display: flex;
@@ -63,7 +52,7 @@ export const TeaserSlotsFocusMonthSidebar = styled(TeaserSlots)`
   align-items: stretch;
 
   ${TeaserTopicMeta} {
-    margin-top: 2cqw;
+    margin-top: calc(var(--sizing-factor) * 2cqw);
     flex-grow: 1;
 
     ${TeaserPreTitle} {

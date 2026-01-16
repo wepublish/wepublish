@@ -40,7 +40,6 @@ import { zodI18nMap } from 'zod-i18n-map';
 
 import { TsriFlexBlock } from '../src/components/block-layouts/tsri-base-flex-block';
 import { TsriTabbedContent } from '../src/components/block-layouts/tsri-base-tabbed-content';
-import { TsriBaseTeaserGridFlex } from '../src/components/teaser-layouts/tsri-base-teaser-flex-grid';
 import { TsriBaseTeaserSlots } from '../src/components/teaser-layouts/tsri-base-teaser-slots';
 import { TsriArticleDate } from '../src/components/tsri-article-date';
 import { TsriArticleMeta } from '../src/components/tsri-article-meta';
@@ -134,7 +133,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           blocks={{
             BaseTeaser: TsriTeaser,
             TeaserSlots: TsriBaseTeaserSlots,
-            TeaserGridFlex: TsriBaseTeaserGridFlex,
             Break: TsriBreakBlock,
             Quote: TsriQuoteBlock,
             RichText: TsriRichText,
