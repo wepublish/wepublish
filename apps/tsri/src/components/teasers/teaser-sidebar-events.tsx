@@ -13,13 +13,13 @@ import {
   TsriTeaser,
 } from './tsri-teaser';
 
-export const isTeaserFocusMonth = allPass([
+export const isTeaserEvents = allPass([
   ({ blockStyle }: BuilderTeaserProps) => {
-    return blockStyle === TsriTeaserType.FocusMonth;
+    return blockStyle === TsriTeaserType.Events;
   },
 ]);
 
-export const TeaserFocusMonth = styled(TsriTeaser)`
+export const TeaserEvents = styled(TsriTeaser)`
   aspect-ratio: unset !important;
   container: unset;
   border-radius: 0 !important;
@@ -31,8 +31,8 @@ export const TeaserFocusMonth = styled(TsriTeaser)`
     ${TeaserTitle} {
       &.MuiTypography-root {
         color: ${({ theme }) => theme.palette.common.black};
-        font-size: 1.3cqw !important;
-        line-height: 1.49cqw !important;
+        font-size: calc(var(--sizing-factor) * 1.3cqw) !important;
+        line-height: calc(var(--sizing-factor) * 1.49cqw) !important;
         font-weight: 700 !important;
         padding: 0 !important;
         margin: 0 !important;

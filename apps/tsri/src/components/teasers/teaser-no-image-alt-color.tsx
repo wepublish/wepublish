@@ -36,7 +36,7 @@ export const TeaserNoImageAltColor = styled(TsriTeaser)`
       ${({ theme }) => theme.palette.primary.main},
       color-mix(
         in srgb,
-        ${({ theme }) => theme.palette.common.white} 40%,
+        ${({ theme }) => theme.palette.common.white} 60%,
         ${({ theme }) => theme.palette.primary.main}
       )
     );

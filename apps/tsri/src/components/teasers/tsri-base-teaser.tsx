@@ -1,3 +1,4 @@
+import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { cond, T } from 'ramda';
 
 import {
@@ -15,10 +16,7 @@ import {
   DailyBriefingTeaser,
   isDailyBriefingTeaser,
 } from './teaser-sidebar-daily-briefing';
-import {
-  isTeaserFocusMonth,
-  TeaserFocusMonth,
-} from './teaser-sidebar-focus-month';
+import { isTeaserEvents, TeaserEvents } from './teaser-sidebar-events';
 import {
   isTeaserShopProducts,
   TeaserShopProducts,
@@ -41,28 +39,28 @@ import {
 } from './teaser-two-row-author';
 
 export enum TsriTeaserType {
-  DailyBriefing = 'DailyBriefing',
-  FullsizeImage = 'FullsizeImage',
-  MoreAbout = 'MoreAbout',
-  TopicMeta = 'TopicMeta',
-  NoImage = 'NoImage',
-  NoImageAltColor = 'NoImageAltColor',
-  TwoColAuthor = 'TwoColAuthor',
-  TwoCol = 'TwoCol',
-  TwoColAltColor = 'TwoColAltColor',
-  TwoRowAuthor = 'TwoRowAuthor',
-  TwoRow = 'TwoRow',
-  HeroTeaser = 'HeroTeaser',
+  DailyBriefing = 'SB_DailyBriefing',
+  FullsizeImage = 'T_FullsizeImage',
+  MoreAbout = 'T_MoreAbout',
+  TopicMeta = 'T_TopicMeta',
+  NoImage = 'T_NoImage',
+  NoImageAltColor = 'T_NoImageAltColor',
+  TwoColAuthor = 'T_TwoColAuthor',
+  TwoCol = 'T_TwoCol',
+  TwoColAltColor = 'T_TwoColAltColor',
+  TwoRowAuthor = 'T_TwoRowAuthor',
+  TwoRow = 'T_TwoRow',
+  HeroTeaser = 'T_HeroTeaser',
   Default = 'TsriTeaser',
-  FocusMonth = 'FocusMonth',
-  ShopProducts = 'ShopProducts',
-  TsriLove = 'TsriLove',
+  Events = 'SB_Events',
+  ShopProducts = 'SB_ShopProducts',
+  TsriLove = 'SB_TsriLove',
 }
 
 export const TsriBaseTeaser = cond([
   [isTeaserTsriLove, props => <TeaserTsriLove {...props} />],
   [isTeaserShopProducts, props => <TeaserShopProducts {...props} />],
-  [isTeaserFocusMonth, props => <TeaserFocusMonth {...props} />],
+  [isTeaserEvents, props => <TeaserEvents {...props} />],
   [isTeaserHeroTeaser, props => <TeaserHeroTeaser {...props} />],
   [isTeaserFullsizeImage, props => <TeaserFullsizeImage {...props} />],
   [isTeaserNoImage, props => <TeaserNoImage {...props} />],
@@ -78,7 +76,7 @@ export const TsriBaseTeaser = cond([
   [T, props => <TeaserFullsizeImage {...props} />], // default teaser
   [
     T,
-    props => (
+    (props: BuilderTeaserProps) => (
       <div>
         TsriTeaser fallback - unknown teaser type. blockStyle:
         {props.blockStyle}
