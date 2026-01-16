@@ -4,6 +4,7 @@ import {
   ArticleListContainer,
   ArticleWrapper as DefaultArticleWrapper,
 } from '@wepublish/article/website';
+import { ArticleListWrapper } from '@wepublish/article/website';
 import { CommentListContainer } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import { H2 } from '@wepublish/ui';
@@ -39,6 +40,10 @@ const AfterArticleTitle = styled(H2)`
   font-size: 1rem !important;
   line-height: 1.5rem !important;
   grid-column: -1 / 1;
+
+  &:has(+ ${ArticleListWrapper}) {
+    margin-bottom: ${({ theme }) => theme.spacing(-5)};
+  }
 `;
 
 export const AfterArticleAuthorWrapper = styled(ContentWrapper)`
