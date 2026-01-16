@@ -489,7 +489,7 @@ export const NavPaperWrapper = styled('div', {
     to bottom,
     color-mix(
       in srgb,
-      ${({ theme }) => theme.palette.common.white} 40%,
+      ${({ theme }) => theme.palette.common.white} 60%,
       ${({ theme }) => theme.palette.primary.main}
     ),
     ${({ theme }) => theme.palette.primary.main}
