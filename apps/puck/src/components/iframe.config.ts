@@ -1,4 +1,4 @@
-import { ComponentConfig } from '@measured/puck';
+import { ComponentConfig } from '@puckeditor/core';
 import { IFrameBlock } from '@wepublish/block-content/website';
 import { BuilderIFrameBlockProps } from '@wepublish/website/builder';
 import { urlField } from '../fields/url';

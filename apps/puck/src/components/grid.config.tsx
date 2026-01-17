@@ -1,4 +1,4 @@
-import { ComponentConfig, Slot } from '@measured/puck';
+import { ComponentConfig, Slot } from '@puckeditor/core';
 
 export type GridProps = {
   numColumns: number;

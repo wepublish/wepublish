@@ -1,4 +1,4 @@
-import { ComponentConfig } from '@measured/puck';
+import { ComponentConfig } from '@puckeditor/core';
 import { VimeoVideoBlock } from '@wepublish/block-content/website';
 import { BuilderVimeoVideoBlockProps } from '@wepublish/website/builder';
 

@@ -1,4 +1,4 @@
-import { ComponentConfig } from '@measured/puck';
+import { ComponentConfig } from '@puckeditor/core';
 import { BuilderRichTextBlockProps } from '@wepublish/website/builder';
 import { richTextField } from '../fields/richtext';
 import { RichTextBlock } from '@wepublish/block-content/website';

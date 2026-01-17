@@ -1,4 +1,4 @@
-import { DefaultRootProps, PuckContext, RootConfig } from '@measured/puck';
+import { DefaultRootProps, PuckContext, RootConfig } from '@puckeditor/core';
 import {
   FooterContainer,
   NavbarContainer,

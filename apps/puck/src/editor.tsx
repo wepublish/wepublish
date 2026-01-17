@@ -1,6 +1,6 @@
-import { FieldLabel, Puck } from '@measured/puck';
+import { FieldLabel, Puck } from '@puckeditor/core';
 import { Hash, Type } from 'lucide-react';
-import '@measured/puck/puck.css';
+import '@puckeditor/core/puck.css';
 
 import { Grid } from './components/grid';
 import { Quote } from './components/quote';

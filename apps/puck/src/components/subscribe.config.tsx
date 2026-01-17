@@ -1,4 +1,4 @@
-import { ComponentConfig } from '@measured/puck';
+import { ComponentConfig } from '@puckeditor/core';
 import { BuilderSubscribeBlockProps } from '@wepublish/website/builder';
 import {
   SubscribeBlock,

@@ -2,7 +2,7 @@ import {
   ComponentConfig,
   DefaultComponentProps,
   ObjectField,
-} from '@measured/puck';
+} from '@puckeditor/core';
 import { CSSProperties, forwardRef, memo, ReactNode, useMemo } from 'react';
 import { spacingOptions } from '../options/spacing-options';
 

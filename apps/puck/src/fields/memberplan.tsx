@@ -1,4 +1,4 @@
-import { CustomField } from '@measured/puck';
+import { CustomField } from '@puckeditor/core';
 import { MemberPlanField } from './memberplan.component';
 import { ComponentProps } from 'react';
 

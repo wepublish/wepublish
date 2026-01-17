@@ -1,4 +1,4 @@
-import { TextField } from '@measured/puck';
+import { TextField } from '@puckeditor/core';
 
 export const colorField: TextField = {
   type: 'text',

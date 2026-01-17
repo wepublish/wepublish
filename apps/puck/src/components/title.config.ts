@@ -1,4 +1,4 @@
-import { ComponentConfig } from '@measured/puck';
+import { ComponentConfig } from '@puckeditor/core';
 import { BuilderTitleBlockProps } from '@wepublish/website/builder';
 import { TitleBlock } from '@wepublish/block-content/website';
 

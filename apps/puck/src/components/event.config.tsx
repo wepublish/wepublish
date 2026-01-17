@@ -1,4 +1,4 @@
-import { ComponentConfig } from '@measured/puck';
+import { ComponentConfig } from '@puckeditor/core';
 import { BuilderEventBlockProps } from '@wepublish/website/builder';
 import { EventBlock } from '@wepublish/block-content/website';
 import { eventField } from '../fields/event';

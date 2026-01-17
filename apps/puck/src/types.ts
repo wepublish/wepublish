@@ -1,4 +1,4 @@
-import { Config, Data, Overrides } from '@measured/puck';
+import { Config, Data, Overrides } from '@puckeditor/core';
 import { RootProps } from './root';
 import {
   BuilderBreakBlockProps,
@@ -24,7 +24,7 @@ import { SpaceProps } from './components/space';
 import { SubscribeConfigProps } from './components/subscribe.config';
 import { TeaserListProps } from './components/teaser-list.render';
 
-declare module '@measured/puck' {
+declare module '@puckeditor/core' {
   interface TextField {
     metadata?: ComponentProps<typeof TextField>;
   }

@@ -1,4 +1,4 @@
-import { ComponentConfig } from '@measured/puck';
+import { ComponentConfig } from '@puckeditor/core';
 import { BuilderQuoteBlockProps } from '@wepublish/website/builder';
 import { QuoteBlock } from '@wepublish/block-content/website';
 

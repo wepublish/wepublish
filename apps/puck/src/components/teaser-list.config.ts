@@ -1,4 +1,4 @@
-import { ComponentConfig } from '@measured/puck';
+import { ComponentConfig } from '@puckeditor/core';
 import { TeaserList } from './teaser-list.render';
 import { ComponentProps, memo } from 'react';
 import { TeaserType } from '@wepublish/website/api';

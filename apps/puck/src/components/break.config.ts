@@ -1,4 +1,4 @@
-import { ComponentConfig } from '@measured/puck';
+import { ComponentConfig } from '@puckeditor/core';
 import { BuilderBreakBlockProps } from '@wepublish/website/builder';
 import { BreakBlock } from '@wepublish/block-content/website';
 import { urlField } from '../fields/url';

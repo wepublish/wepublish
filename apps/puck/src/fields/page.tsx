@@ -1,4 +1,4 @@
-import { CustomField } from '@measured/puck';
+import { CustomField } from '@puckeditor/core';
 import { PageField } from './page.component';
 import { ComponentProps } from 'react';
 

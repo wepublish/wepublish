@@ -1,4 +1,4 @@
-import { CustomField } from '@measured/puck';
+import { CustomField } from '@puckeditor/core';
 import { PollField } from './poll.component';
 import { ComponentProps } from 'react';
 

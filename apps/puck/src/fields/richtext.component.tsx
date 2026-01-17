@@ -1,4 +1,4 @@
-import { CustomFieldRender, FieldLabel } from '@measured/puck';
+import { CustomFieldRender, FieldLabel } from '@puckeditor/core';
 import { Descendant } from 'slate';
 import { RichTextBlock } from '@wepublish/ui/editor';
 

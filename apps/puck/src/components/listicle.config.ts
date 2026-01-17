@@ -1,4 +1,4 @@
-import { ComponentConfig } from '@measured/puck';
+import { ComponentConfig } from '@puckeditor/core';
 import { BuilderListicleBlockProps } from '@wepublish/website/builder';
 import { ListicleBlock } from '@wepublish/block-content/website';
 import { richTextField } from '../fields/richtext';

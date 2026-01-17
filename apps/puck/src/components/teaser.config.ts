@@ -1,4 +1,4 @@
-import { ComponentConfig } from '@measured/puck';
+import { ComponentConfig } from '@puckeditor/core';
 import { TeaserItem } from './teaser.render';
 import { ComponentProps, memo } from 'react';
 import { articleField } from '../fields/article';

@@ -2,7 +2,7 @@ import {
   ComponentConfig,
   DefaultComponentProps,
   ObjectField,
-} from '@measured/puck';
+} from '@puckeditor/core';
 import { colorField } from '../fields/color';
 import { ComponentProps, memo, useMemo } from 'react';
 

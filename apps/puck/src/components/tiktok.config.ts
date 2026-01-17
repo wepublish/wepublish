@@ -1,4 +1,4 @@
-import { ComponentConfig } from '@measured/puck';
+import { ComponentConfig } from '@puckeditor/core';
 import { TikTokVideoBlock } from '@wepublish/block-content/website';
 import { BuilderTikTokVideoBlockProps } from '@wepublish/website/builder';
 
