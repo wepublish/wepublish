@@ -1,7 +1,6 @@
 import { ComponentConfig } from '@puckeditor/core';
 import { BuilderListicleBlockProps } from '@wepublish/website/builder';
 import { ListicleBlock } from '@wepublish/block-content/website';
-import { richTextField } from '../fields/richtext';
 
 export const ListicleConfig: ComponentConfig<BuilderListicleBlockProps> = {
   fields: {
@@ -13,18 +12,20 @@ export const ListicleConfig: ComponentConfig<BuilderListicleBlockProps> = {
         title: {
           type: 'text',
         },
-        richText: richTextField,
+        richText: {
+          type: 'richtext',
+        },
       },
       defaultItemProps: {
         title: 'Title',
-        richText: [],
+        richText: null,
       },
     },
   },
   defaultProps: {
     items: [
       {
-        richText: [],
+        richText: null,
         title: 'Title',
       },
     ],

@@ -1,57 +1,9 @@
-import { DefaultRootProps, PuckContext, RootConfig } from '@puckeditor/core';
-import {
-  FooterContainer,
-  NavbarContainer,
-} from '@wepublish/navigation/website';
-import { memo } from 'react';
+import { DefaultRootProps, RootConfig } from '@puckeditor/core';
+
 import { Eye } from 'lucide-react';
+import { RootRender } from './root.component';
 
 export type RootProps = DefaultRootProps;
-
-// Improves performance by a lot as it doesn't need to rerender anymore when any props change
-const Rend = memo(
-  ({
-    DropZone,
-    showFooter,
-    showNavigation,
-  }: {
-    DropZone: PuckContext['renderDropZone'];
-    showFooter: boolean;
-    showNavigation: boolean;
-  }) => (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-      }}
-    >
-      {showNavigation && (
-        <NavbarContainer
-          categorySlugs={[['categories', 'about-us']]}
-          slug="main"
-          headerSlug="header"
-          iconSlug="icons"
-          css={{ '*, &': { pointerEvents: 'none !important' } }}
-        />
-      )}
-
-      <DropZone
-        zone="default-zone"
-        style={{ flexGrow: 1 }}
-      />
-
-      {showFooter && (
-        <FooterContainer
-          slug="footer"
-          categorySlugs={[['categories', 'about-us']]}
-          iconSlug="icons"
-          css={{ '*, &': { pointerEvents: 'none !important' } }}
-        />
-      )}
-    </div>
-  )
-);
 
 export const root: RootConfig<{
   props: RootProps & { showNavigation: boolean; showFooter: boolean };
@@ -81,7 +33,7 @@ export const root: RootConfig<{
     showNavigation: true,
   },
   render: ({ puck: { renderDropZone }, showFooter, showNavigation }) => (
-    <Rend
+    <RootRender
       DropZone={renderDropZone}
       showFooter={showFooter}
       showNavigation={showNavigation}

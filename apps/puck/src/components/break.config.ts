@@ -2,7 +2,6 @@ import { ComponentConfig } from '@puckeditor/core';
 import { BuilderBreakBlockProps } from '@wepublish/website/builder';
 import { BreakBlock } from '@wepublish/block-content/website';
 import { urlField } from '../fields/url';
-import { richTextField } from '../fields/richtext';
 import { mockRichText } from '@wepublish/storybook/mocks';
 
 export const BreakConfig: ComponentConfig<BuilderBreakBlockProps> = {
@@ -10,7 +9,10 @@ export const BreakConfig: ComponentConfig<BuilderBreakBlockProps> = {
     text: {
       type: 'text',
     },
-    richText: richTextField,
+    richText: {
+      type: 'richtext',
+      contentEditable: true,
+    },
     hideButton: {
       type: 'radio',
       options: [
