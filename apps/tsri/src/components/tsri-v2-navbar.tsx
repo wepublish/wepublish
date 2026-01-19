@@ -548,8 +548,8 @@ export const NavPaperWrapper = styled('div', {
         border-top-right-radius: 0.5cqw;
 
         & > * {
-          padding-top: 0.7cqw;
-          height: 2.2cqw;
+          padding-top: 0.5cqw;
+          height: 1.8cqw;
           width: auto;
           font-size: 0.75cqw;
           line-height: 0.75cqw;
