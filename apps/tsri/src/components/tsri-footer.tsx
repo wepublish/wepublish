@@ -261,37 +261,6 @@ export function Footer({
         children={children} // eslint-disable-line react/no-children-prop
       />
 
-      {/*(!!iconItems?.links.length || wepublishLogo !== 'hidden') && (
-        <FooterIconsWrapper>
-          <FooterIcons>
-            {iconItems?.links.map((link, index) => (
-              <span
-                key={index}
-                href={navigationLinkToUrl(link)}
-                color="inherit"
-              >
-                <TextToIcon
-                  title={link.label}
-                  size={32}
-                />
-              </span>
-            ))}
-
-            {wepublishLogo === 'light' && (
-              <Link href="https://wepublish.ch/de/das-projekt/#cms">
-                <WepublishLight height={40} />
-              </Link>
-            )}
-
-            {wepublishLogo === 'dark' && (
-              <Link href="https://wepublish.ch/de/das-projekt/#cms">
-                <WepublishDark height={40} />
-              </Link>
-            )}
-          </FooterIcons>
-        </FooterIconsWrapper>
-      )*/}
-
       {isIntersecting && hideBannerOnIntersecting && forceHideBanner}
     </FooterWrapper>
   );
@@ -428,12 +397,14 @@ export const FooterPaperWrapper = styled('div')`
   grid-template-rows: repeat(3, auto);
   grid-template-columns: repeat(2, auto);
   row-gap: 10cqw;
-  padding: 0 24px 20cqw 24px;
+  padding: 0 ${({ theme }) => theme.spacing(2)} 20cqw
+    ${({ theme }) => theme.spacing(2)};
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-rows: min-content 6cqw;
     grid-template-columns: 1fr minmax(max-content, 1285px) 1fr;
-    padding: 1cqw 24px 0 24px;
+    padding: 1cqw ${({ theme }) => theme.spacing(3)} 0
+      ${({ theme }) => theme.spacing(3)};
     row-gap: 0;
   }
 `;
