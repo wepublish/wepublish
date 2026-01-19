@@ -68,4 +68,8 @@ export const TsriArticle = styled(ArticleDefault)`
   & > :is(${ArticleListWrapper}, ${CommentListWrapper}) {
     grid-column: -1 / 1;
   }
+
+  & ${CommentListWrapper} {
+    grid-column: -1 / 1 !important;
+  }
 `;
