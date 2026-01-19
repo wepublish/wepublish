@@ -56,14 +56,6 @@ const mockTeaserSlotsBlockData = mockTeaserSlotsBlock({
   blockStyle: '',
 });
 
-/*
-(
-  mockTeaserSlotsBlockData as typeof mockTeaserSlotsBlockData & {
-    alignmentForTeaserBlock: (index: number) => FlexAlignment;
-  }
-).alignmentForTeaserBlock = alignmentForTeaserBlock;
-*/
-
 export const Default = {
   args: mockTeaserSlotsBlockData,
 };
@@ -99,46 +91,3 @@ export const ArchiveTopicWithTwoCol = {
 export const ArchiveTopicAuthor = {
   args: { ...Default.args, blockStyle: TsriLayoutType.ArchiveTopicAuthor },
 };
-
-/*
-const mockTeaserSlotsBlockData2 = mockTeaserSlotsBlock({
-  title: 'test title',
-  blockStyle: '',
-  teasers: [
-    mockArticleTeaser({ title: faker.lorem.sentence() }),
-
-    mockArticleTeaser({ title: 'Briefing' }),
-    mockArticleTeaser({ title: 'Fokusmonat' }),
-    mockArticleTeaser({ title: 'Shop' }),
-
-    mockArticleTeaser({ title: faker.lorem.sentence() }),
-    mockArticleTeaser({ title: faker.lorem.sentence() }),
-    mockArticleTeaser({ title: faker.lorem.sentence() }),
-
-    mockArticleTeaser({ title: faker.lorem.sentence() }),
-    mockArticleTeaser({ title: faker.lorem.sentence() }),
-    mockArticleTeaser({ title: faker.lorem.sentence() }),
-  ],
-});
-export const FrontTop = {
-  args: { ...mockTeaserSlotsBlockData2, blockStyle: TsriLayoutType.FrontTop },
-};
-
-const mockTeaserSlotsBlockData3 = mockTeaserSlotsBlock({
-  title: 'test title',
-  blockStyle: '',
-  teasers: [
-    mockArticleTeaser({ title: faker.lorem.sentence() }),
-    mockArticleTeaser({ title: 'Briefing' }),
-    mockArticleTeaser({ title: 'Fokusmonat' }),
-    mockArticleTeaser({ title: 'Shop' }),
-  ],
-});
-
-export const FrontTopOneRow = {
-  args: {
-    ...mockTeaserSlotsBlockData3,
-    blockStyle: TsriLayoutType.FrontTopOneRow,
-  },
-};
-*/
