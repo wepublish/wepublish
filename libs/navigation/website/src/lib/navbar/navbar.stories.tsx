@@ -1,6 +1,10 @@
 import { ApolloError } from '@apollo/client';
 import { Meta } from '@storybook/react';
-import { Navigation } from '@wepublish/website/api';
+import {
+  BaseNavigationLink,
+  Navigation,
+  NavigationLinkInput,
+} from '@wepublish/website/api';
 import { Navbar } from './navbar';
 import { Md60FpsSelect, MdInvertColors, MdSecurity } from 'react-icons/md';
 import { WithUserDecorator } from '@wepublish/storybook';
@@ -45,7 +49,11 @@ const navigations = [
         label: 'Was lauft?',
         url: 'https://google.com',
       },
-    ],
+    ] as Array<
+      Pick<NavigationLinkInput, 'label' | 'url'> & { __typename: string }
+    >,
+    createdAt: new Date().toISOString(),
+    modifiedAt: new Date().toISOString(),
   },
   {
     id: '1234-1234',
@@ -71,7 +79,14 @@ const navigations = [
           url: '/a/abcd',
         },
       },
-    ],
+    ] as Array<
+      Pick<NavigationLinkInput, 'label' | 'url'> & {
+        __typename: string;
+        page?: any;
+      }
+    >,
+    createdAt: new Date().toISOString(),
+    modifiedAt: new Date().toISOString(),
   },
   {
     id: '12345-12345',
@@ -106,7 +121,14 @@ const navigations = [
           url: '/a/abcd',
         },
       },
-    ],
+    ] as Array<
+      Pick<NavigationLinkInput, 'label' | 'url'> & {
+        __typename: string;
+        article: any;
+      }
+    >,
+    createdAt: new Date().toISOString(),
+    modifiedAt: new Date().toISOString(),
   },
   {
     id: '123456-123456',
@@ -141,10 +163,17 @@ const navigations = [
           url: '/jobs/',
         },
       },
-    ],
+    ] as Array<
+      Pick<NavigationLinkInput, 'label' | 'url'> & {
+        __typename: string;
+        article: any;
+      }
+    > as unknown as BaseNavigationLink[],
+    createdAt: new Date().toISOString(),
+    modifiedAt: new Date().toISOString(),
   },
   {
-    id: '123456-123456',
+    id: '1234567-1234567',
     key: 'header',
     name: 'Header',
     links: [
@@ -162,10 +191,17 @@ const navigations = [
           url: '/bar',
         },
       },
-    ],
+    ] as Array<
+      Pick<NavigationLinkInput, 'label' | 'url'> & {
+        __typename: string;
+        page?: any;
+      }
+    >,
+    createdAt: new Date().toISOString(),
+    modifiedAt: new Date().toISOString(),
   },
   {
-    id: '123456-123456',
+    id: '1234568-1234568',
     key: 'icons',
     name: 'Icons',
     links: [
@@ -181,7 +217,11 @@ const navigations = [
         label: 'X',
         url: 'https://twitter.com/foobar',
       },
-    ],
+    ] as Array<
+      Pick<NavigationLinkInput, 'label' | 'url'> & { __typename: string }
+    >,
+    createdAt: new Date().toISOString(),
+    modifiedAt: new Date().toISOString(),
   },
 ] as Navigation[];
 
