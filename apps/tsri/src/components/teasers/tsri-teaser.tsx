@@ -42,7 +42,7 @@ export const selectTeaserAuthors = (teaser: TeaserType) => {
   }
 };
 
-export const TeaserWrapper = styled('li')<FlexAlignment>`
+export const TeaserWrapper = styled('div')<FlexAlignment>`
   list-style: none;
   aspect-ratio: 16/9;
   overflow: hidden;
@@ -56,19 +56,6 @@ export const TeaserWrapper = styled('li')<FlexAlignment>`
     w > 6 &&
     css`
       grid-column: 1 / -1;
-      /*
-      ${theme.breakpoints.up('md')} {
-        ${TeaserTitle} {
-          font-size: ${theme.typography.h3.fontSize};
-          line-height: ${theme.typography.h3.lineHeight};
-        }
-
-        ${TeaserLead} {
-          font-size: ${theme.typography.h6.fontSize};
-          line-height: ${theme.typography.h6.lineHeight};
-        }
-      }
-*/
     `}
 
   ${({ theme, h, w, x, y }) => css`
