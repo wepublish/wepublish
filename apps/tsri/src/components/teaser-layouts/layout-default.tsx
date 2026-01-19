@@ -18,5 +18,9 @@ export const alignmentForTeaserBlock = alignmentFunc;
 
 export const TeaserSlotsDefault = styled(TeaserSlots)`
   column-gap: 1.25cqw;
-  row-gap: 1.25cqw;
+  row-gap: 4cqw;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    row-gap: 1.25cqw;
+  }
 `;

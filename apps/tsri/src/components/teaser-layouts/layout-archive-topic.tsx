@@ -10,15 +10,16 @@ import { allPass } from 'ramda';
 import { TsriTeaserType } from '../teasers/tsri-base-teaser';
 import { TsriLayoutType } from './tsri-layout';
 
-export const TeaserSlotsArchiveTopicWrapper = styled('ul')`
+export const TeaserSlotsArchiveTopicWrapper = styled('div')`
   display: grid;
   margin: 0;
   padding: 0;
   list-style: none;
   column-gap: 2.2cqw;
-  row-gap: 1.77cqw;
+  row-gap: 4cqw;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
+    row-gap: 1.77cqw;
     grid-template-columns: 58.42cqw 32.5cqw !important;
     grid-template-rows: repeat(6, min-content) !important;
   }
