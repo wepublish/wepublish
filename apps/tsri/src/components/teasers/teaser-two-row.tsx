@@ -85,12 +85,12 @@ export const TeaserTwoRow = styled(TsriTeaser)`
     display: inline-block;
     font-weight: 700;
     padding: 0.4cqw 1cqw;
-    font-size: 2.3cqw;
+    font-size: 2.3cqw !important;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
-      padding: 0.2cqw 1cqw;
-      font-size: 1cqw;
-      line-height: 1cqw;
+      padding: 0.7cqw 1cqw;
+      font-size: 1.3cqw !important;
+      line-height: 1.3cqw !important;
     }
   }
 

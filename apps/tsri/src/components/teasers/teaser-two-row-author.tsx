@@ -59,7 +59,6 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
 
     & img {
       width: auto;
-      //height: 58.42cqw;
       height: 65.4cqw;
       object-fit: cover;
       max-height: unset;
@@ -144,8 +143,13 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
         display: inline-block;
         padding: 0.2cqw 1cqw;
         font-size: 1cqw;
-        font-weight: 700;
+        font-weight: 700 !important;
         margin-left: 7.2cqw;
+
+        ${({ theme }) => theme.breakpoints.up('md')} {
+          font-size: 1.2cqw;
+          padding: 0.3cqw 1cqw;
+        }
       }
 
       & ${TeaserAuthorTextWrapper} {

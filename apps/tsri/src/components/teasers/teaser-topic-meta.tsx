@@ -140,7 +140,6 @@ export const TeaserTopicMeta = styled(TeaserTopicMetaBase)`
       flex-grow: 0;
       padding: calc(var(--sizing-factor) * 0.3cqw)
         calc(var(--sizing-factor) * 0.5cqw);
-      border-radius: calc(var(--sizing-factor) * 1cqw);
 
       &:hover {
         background-color: ${({ theme }) => theme.palette.primary.light};
