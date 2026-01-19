@@ -14,7 +14,7 @@ export const isIFrameBlock = (
 
 export const IFrameBlockWrapper = styled('div')``;
 
-export const IFrameBlockIframe = styled(IframeResizer)`
+export const IFrameBlockIframe = styled(IframeResizer as any)`
   width: 100%;
   border: 0;
 `;
