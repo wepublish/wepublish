@@ -60,7 +60,7 @@ export const TeaserSlotsDailyBriefingSidebar = styled(TeaserSlots)`
       display: block !important;
       padding: calc(var(--sizing-factor) * 0.5cqw)
         calc(var(--sizing-factor) * 1cqw) !important;
-      border-radius: 1cqw;
+      border-radius: calc(var(--sizing-factor) * 1cqw);
       font-weight: 700 !important;
       background-color: ${({ theme }) => theme.palette.common.black};
       color: ${({ theme }) => theme.palette.common.white};

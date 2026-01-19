@@ -105,7 +105,7 @@ export const FrontTopRow = styled('div')`
   list-style: none;
   margin: 0;
   padding: 0;
-  row-gap: 2cqw;
+  row-gap: 4cqw;
   grid-template-columns: unset;
   margin-bottom: ${({ theme }) => theme.spacing(-5)};
 

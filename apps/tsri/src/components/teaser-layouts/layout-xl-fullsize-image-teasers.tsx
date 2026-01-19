@@ -25,7 +25,7 @@ export const teaserBlockStyleByIndex = (
 export const alignmentForTeaserBlock = alignmentFunc;
 
 export const TeaserSlotsXLFullsizeImage = styled(TeaserSlots)`
-  row-gap: 1.25cqw;
+  row-gap: 4cqw;
   grid-template-columns: unset;
 
   & > * {

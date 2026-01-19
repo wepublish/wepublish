@@ -30,7 +30,7 @@ export enum TsriLayoutType {
   HeroTeaser = 'HeroTeaser',
 }
 
-export const TeaserLayoutWrapper = styled('ul')`
+export const TeaserLayoutWrapper = styled('div')`
   display: grid;
   align-items: stretch;
   list-style: none;

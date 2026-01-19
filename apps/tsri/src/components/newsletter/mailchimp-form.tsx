@@ -178,6 +178,8 @@ export default function MailchimpSubscribeForm(
                   paddingY: 1,
                   fontSize: 16,
                   fontWeight: 700,
+                  color: (theme: Theme) => theme.palette.common.white,
+                  transition: 'none',
                   ':hover': {
                     color: (theme: Theme) => theme.palette.common.black,
                     backgroundColor: (theme: Theme) =>
