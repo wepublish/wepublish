@@ -10,6 +10,7 @@ export * from './lib/page';
 export * from './lib/peer';
 export * from './lib/block-content';
 export * from './lib/crowdfunding';
+export * from './lib/user';
 export * from './lib/membership';
 export * from './lib/user';
 export * from './lib/mailchimp-campaign';
