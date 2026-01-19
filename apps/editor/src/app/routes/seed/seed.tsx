@@ -30,6 +30,7 @@ import {
   EventListDocument,
   FlexBlockInput,
   getApiClientV2,
+  IFrameBlockInput,
   ImageBlockInput,
   //ImageBlock,
   NavigationLinkType,
@@ -302,6 +303,7 @@ const createArticleInput = (
       canonicalUrl: faker.internet.url(),
       properties: [],
       blocks: [
+        // a title block
         {
           title: {
             title,
@@ -309,6 +311,8 @@ const createArticleInput = (
             lead: faker.lorem.sentences({ min: 3, max: 5 }),
           } as TitleBlockInput,
         } as BlockContentInput,
+
+        // an image block
         {
           image: {
             imageID: imageIds[(i + 1) % imageIds.length],
@@ -316,6 +320,7 @@ const createArticleInput = (
           } as ImageBlockInput,
         } as BlockContentInput,
 
+        // a break block --> on large screens placed in sidebar
         {
           linkPageBreak: {
             blockStyle: getBlockStyle(blockStyles, 'SB_SidebarContent'),
@@ -350,12 +355,21 @@ Jetzt im Shop erhältlich.`,
           } as BreakBlockInput,
         } as BlockContentInput,
 
+        // a rich text block
         {
           richText: {
             richText: getText(3, 7),
           } as RichTextBlockInput,
         } as BlockContentInput,
 
+        // a bildwurf ad block
+        {
+          bildwurfAd: {
+            zoneID: '77348',
+          } as IFrameBlockInput,
+        } as BlockContentInput,
+
+        // some alternating image and rich text blocks
         ...Array.from({ length: faker.number.int({ min: 5, max: 9 }) }, () => {
           const imageBlock = pickRandom<BlockContentInput>(
             {
@@ -391,6 +405,7 @@ Jetzt im Shop erhältlich.`,
           }
         }),
 
+        // another break block (newsletter registration) --> on large screens placed in sidebar
         {
           linkPageBreak: {
             blockStyle: getBlockStyle(blockStyles, 'SB_SidebarContent'),
@@ -414,6 +429,7 @@ Jetzt im Shop erhältlich.`,
           } as BreakBlockInput,
         } as BlockContentInput,
 
+        // more rich text blocks
         ...Array.from({ length: faker.number.int({ min: 1, max: 4 }) }, () => {
           return {
             richText: {
