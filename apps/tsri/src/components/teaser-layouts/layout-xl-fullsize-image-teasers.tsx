@@ -37,6 +37,7 @@ export const TeaserSlotsXLFullsizeImage = styled(TeaserSlots)`
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
+    row-gap: 1.25cqw;
     column-gap: 1.25cqw;
     grid-template-columns: repeat(2, calc(50% - 1.25cqw / 2));
   }
