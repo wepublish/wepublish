@@ -55,6 +55,8 @@ import { TsriAuthorChip } from '../src/components/tsri-author-chip';
 import { TsriAuthorLinks } from '../src/components/tsri-author-links';
 import { TsriAuthorList } from '../src/components/tsri-author-list';
 import { TsriBanner } from '../src/components/tsri-banner';
+import { TsriBildwurfAdBlock } from '../src/components/tsri-bildwurf-ad-block';
+import { TsriCommentList } from '../src/components/tsri-comment-list';
 import {
   BlockSiblings,
   TsriBlocks,
@@ -148,6 +150,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           AuthorList={TsriAuthorList}
           TextToIcon={TsriTextToIcon}
           Tag={TsriTag}
+          CommentList={TsriCommentList}
           elements={{ Link: NextWepublishLink }}
           blocks={{
             BaseTeaser: TsriTeaser,
@@ -158,6 +161,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             Renderer:
               TsriBlockRenderer as ComponentType<BuilderBlockRendererProps>,
             Blocks: TsriBlocks,
+            BildwurfAd: TsriBildwurfAdBlock,
           }}
           blockStyles={{
             ContextBox: TsriContextBox,
