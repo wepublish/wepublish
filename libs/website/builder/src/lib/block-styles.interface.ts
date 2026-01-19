@@ -1,5 +1,6 @@
 import {
   BuilderBreakBlockProps,
+  BuilderFlexBlockProps, // IGNORE
   BuilderImageGalleryBlockProps,
   BuilderTeaserGridBlockProps,
   BuilderTeaserListBlockProps,
