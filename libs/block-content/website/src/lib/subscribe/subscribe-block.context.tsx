@@ -1,5 +1,13 @@
 import { useRegister } from '@wepublish/authentication/website';
-import { PaymentForm, useSubscribe } from '@wepublish/payment/website';
+import {
+  PaymentForm,
+  useSubscribe,
+  useUpgrade,
+} from '@wepublish/payment/website';
+import {
+  useResubscribeMutation,
+  useUpgradeSubscriptionInfoLazyQuery,
+} from '@wepublish/website/api';
 import { BuilderSubscribeProps } from '@wepublish/website/builder';
 
 import { ComponentProps, createContext, useContext } from 'react';
@@ -10,6 +18,9 @@ export type SubscribeBlockContextProps = {
   challenge: BuilderSubscribeProps['challenge'];
 
   subscribe: ReturnType<typeof useSubscribe>[0];
+  upgrade: ReturnType<typeof useUpgrade>[0];
+  resubscribe: ReturnType<typeof useResubscribeMutation>;
+  upgradeInfo: ReturnType<typeof useUpgradeSubscriptionInfoLazyQuery>;
   register: ReturnType<typeof useRegister>['register'];
 
   redirectPages: ComponentProps<typeof PaymentForm>['redirectPages'];

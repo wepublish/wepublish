@@ -4,7 +4,6 @@ import {
   FullMemberPlanFragment,
   useInvoicesQuery,
   useMemberPlanListQuery,
-  usePageLazyQuery,
   useResubscribeMutation,
   useSubscriptionsQuery,
 } from '@wepublish/website/api';
@@ -82,10 +81,6 @@ export const SubscribeContainer = <
     challenge,
   } = useRegister();
 
-  // @TODO: Replace with objects on Memberplan when Memberplan has been migrated to V2
-  // Pages are currently in V2 and Memberplan are in V1, so we have no access to page objects.
-  const [fetchPage] = usePageLazyQuery();
-
   const filteredMemberPlans = useMemo(() => {
     return produce(memberPlanList, draftList => {
       if (draftList.data?.memberPlans) {
@@ -155,17 +150,12 @@ export const SubscribeContainer = <
             filteredMemberPlans.data?.memberPlans.nodes.find(
               mb => mb.id === formData.memberPlanId
             );
-          const page = await fetchPage({
-            variables: {
-              id: selectedMemberplan?.confirmationPageId,
-            },
-          });
 
           await resubscribe({
             variables: formData,
             async onCompleted() {
-              window.location.href = page.data?.page.url ?? '';
-              // window.location.href = selectedMemberplan?.confirmationPage?.url ?? ''
+              window.location.href =
+                selectedMemberplan?.confirmationPage?.url ?? '';
             },
           });
         }}

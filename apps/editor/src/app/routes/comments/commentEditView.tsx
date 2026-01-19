@@ -6,9 +6,9 @@ import {
   stripTypename,
   TagType,
   useCommentQuery,
-  useRatingSystemQuery,
   useUpdateCommentMutation,
 } from '@wepublish/editor/api';
+import { getApiClientV2, useRatingSystemQuery } from '@wepublish/editor/api-v2';
 import {
   CommentDeleteBtn,
   CommentHistory,
@@ -127,8 +127,10 @@ const CommentEditView = memo(() => {
     onError: showErrors,
   });
 
+  const client = getApiClientV2();
   const { data: ratingSystem, loading: loadingRatingSystem } =
     useRatingSystemQuery({
+      client,
       onError: showErrors,
     });
 

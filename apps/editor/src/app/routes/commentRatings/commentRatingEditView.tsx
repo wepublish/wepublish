@@ -2,13 +2,14 @@ import { ApolloError } from '@apollo/client';
 import styled from '@emotion/styled';
 import {
   CommentRatingSystemAnswer,
-  FullCommentRatingSystem,
+  FullCommentRatingSystemFragment,
+  getApiClientV2,
   RatingSystemType,
   useCreateRatingSystemAnswerMutation,
   useDeleteRatingSystemAnswerMutation,
   useRatingSystemLazyQuery,
   useUpdateRatingSystemMutation,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import {
   createCheckedPermissionComponent,
   IconButtonTooltip,
@@ -71,13 +72,15 @@ const showErrors = (error: ApolloError): void => {
 
 function CommentRatingEditView() {
   const [ratingSystem, setRatingSystem] =
-    useState<FullCommentRatingSystem | null>(null);
+    useState<FullCommentRatingSystemFragment | null>(null);
   const [answerToDelete, setAnswerToDelete] = useState<string | null>(null);
 
   const [t] = useTranslation();
 
+  const client = getApiClientV2();
   const [fetchRatingSystem, { loading: isFetching }] = useRatingSystemLazyQuery(
     {
+      client,
       onError: showErrors,
       onCompleted: data => setRatingSystem(data.ratingSystem),
     }
@@ -85,6 +88,7 @@ function CommentRatingEditView() {
 
   const [addAnswer, { loading: isAdding }] =
     useCreateRatingSystemAnswerMutation({
+      client,
       onCompleted: ({ createRatingSystemAnswer }) => {
         setRatingSystem(old =>
           old ?
@@ -99,6 +103,7 @@ function CommentRatingEditView() {
 
   const [deleteAnswer, { loading: isDeleting }] =
     useDeleteRatingSystemAnswerMutation({
+      client,
       onError: showErrors,
       onCompleted: data => {
         setRatingSystem(old =>
@@ -116,6 +121,7 @@ function CommentRatingEditView() {
 
   const [updateAnswer, { loading: isUpdating }] = useUpdateRatingSystemMutation(
     {
+      client,
       onError: showErrors,
       onCompleted: () =>
         toaster.push(
@@ -190,7 +196,7 @@ function CommentRatingEditView() {
               onClick={() =>
                 updateAnswer({
                   variables: {
-                    ratingSystemId: ratingSystem.id,
+                    id: ratingSystem.id,
                     answers: ratingSystem.answers.map(
                       ({ id, type, answer }) => ({ id, type, answer })
                     ),

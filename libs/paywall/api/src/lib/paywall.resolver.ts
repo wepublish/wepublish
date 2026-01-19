@@ -78,24 +78,4 @@ export class PaywallResolver {
   async bypasses(@Parent() parent: PPaywall) {
     return this.paywallService.getPaywallBypasses(parent.id);
   }
-
-  @Permissions(CanCreatePaywall)
-  @Mutation(() => PaywallBypass, {
-    description: `Creates a paywall bypass token.`,
-  })
-  public createPaywallBypass(
-    @Args('paywallId') paywallId: string,
-    @Args('token') token: string
-  ) {
-    return this.paywallService.createPaywallBypass(paywallId, token);
-  }
-
-  @Permissions(CanDeletePaywall)
-  @Mutation(() => String, {
-    description: `Deletes a paywall bypass token.`,
-  })
-  public async deletePaywallBypass(@Args('id') id: string) {
-    await this.paywallService.deletePaywallBypass(id);
-    return id;
-  }
 }
