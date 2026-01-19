@@ -150,6 +150,7 @@ export const TsriNextWepublishLink = forwardRef<
       <Modal
         open={modalOpen}
         onClose={handleClose}
+        slotProps={{ backdrop: { sx: { backgroundColor: 'rgba(0,0,0,0.9)' } } }}
       >
         <ModalPaper isMCSubmit={isMCSubmit}>
           <ModalTitle>
