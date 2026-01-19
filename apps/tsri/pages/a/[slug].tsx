@@ -40,9 +40,14 @@ const AfterArticleTitle = styled(H2)`
   font-size: 1rem !important;
   line-height: 1.5rem !important;
   grid-column: -1 / 1;
+  scroll-margin-top: ${({ theme }) => theme.spacing(8)};
 
   &:has(+ ${ArticleListWrapper}) {
     margin-bottom: ${({ theme }) => theme.spacing(-5)};
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    scroll-margin-top: ${({ theme }) => theme.spacing(5)};
   }
 `;
 

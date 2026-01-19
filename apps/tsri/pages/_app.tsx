@@ -59,8 +59,10 @@ import { TsriAuthorChip } from '../src/components/tsri-author-chip';
 import { TsriAuthorLinks } from '../src/components/tsri-author-links';
 import { TsriAuthorList } from '../src/components/tsri-author-list';
 import { TsriBanner } from '../src/components/tsri-banner';
+import { TsriBildwurfAdBlock } from '../src/components/tsri-bildwurf-ad-block';
 import { TsriBlockRenderer } from '../src/components/tsri-block-renderer';
 import { TsriBlocks } from '../src/components/tsri-block-renderer';
+import { TsriCommentList } from '../src/components/tsri-comment-list';
 import { TsriFooter } from '../src/components/tsri-footer';
 import { TsriGlobalStyles } from '../src/components/tsri-global-styles';
 import { TsriNextWepublishLink } from '../src/components/tsri-next-wepublish-link';
@@ -145,6 +147,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           AuthorList={TsriAuthorList}
           TextToIcon={TsriTextToIcon}
           Tag={TsriTag}
+          CommentList={TsriCommentList}
           elements={{ Link: TsriNextWepublishLink }}
           blocks={{
             BaseTeaser: TsriBaseTeaser,
@@ -157,6 +160,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
               TsriBlockRenderer as ComponentType<BuilderBlockRendererProps>,
             Blocks: TsriBlocks,
             FlexBlock: TsriFlexBlock,
+            BildwurfAd: TsriBildwurfAdBlock,
           }}
           blockStyles={{
             ContextBox: TsriContextBox,
