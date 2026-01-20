@@ -18,6 +18,7 @@ export class Validator {
   static createAddress = z
     .object({
       streetAddress: z.string(),
+      streetAddressNuber: z.string(),
       zipCode: z.string(),
       city: z.string(),
       country: z.enum(userCountryNames).or(z.literal('')),

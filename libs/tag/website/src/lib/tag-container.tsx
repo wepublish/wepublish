@@ -20,7 +20,7 @@ export function TagContainer({
   variables,
   onVariablesChange,
 }: TagContainerProps) {
-  const tags = useTagQuery({
+  const tagData = useTagQuery({
     variables: {
       tag,
       type,
@@ -28,11 +28,11 @@ export function TagContainer({
   });
 
   const articles = useArticleListQuery({
-    skip: !tags.data?.tags?.nodes[0].id,
+    skip: !tagData.data?.tag?.id,
     variables: {
       ...variables,
       filter: {
-        tags: tags.data?.tags?.nodes[0] ? [tags.data.tags.nodes[0].id] : [],
+        tags: tagData.data?.tag ? [tagData.data.tag.id] : [],
       },
     },
   });
@@ -40,7 +40,7 @@ export function TagContainer({
   return (
     <Tag
       className={className}
-      tags={tags}
+      tag={tagData}
       articles={articles}
       variables={variables}
       onVariablesChange={onVariablesChange}

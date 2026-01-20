@@ -18,8 +18,8 @@ import {
   NotFound,
   UserSubscriptionAlreadyDeactivated,
 } from '../../error';
-import { getPaymentMethodByIDOrSlug, MemberContext } from '../../memberContext';
 import { PaymentProvider } from '@wepublish/payment/api';
+import { MemberContext } from '@wepublish/membership/api';
 
 export const deleteSubscriptionById = (
   id: string,
@@ -124,43 +124,19 @@ export const createSubscription = async (
   const { roles } = authenticate();
   authorise(CanCreateSubscription, roles);
 
-  const { subscription } = await memberContext.createSubscription(
-    input['userID'],
-    input['paymentMethodID'],
-    input['paymentPeriodicity'],
-    input['monthlyAmount'],
-    input['memberPlanID'],
+  const { subscription } = await memberContext.createSubscription({
+    userID: input['userID'],
+    paymentMethodId: input['paymentMethodID'],
+    paymentPeriodicity: input['paymentPeriodicity'],
+    monthlyAmount: input['monthlyAmount'],
+    memberPlanId: input['memberPlanID'],
     properties,
-    input['autoRenew'],
-    !!input['extendable'],
-    null,
-    input['startsAt']
-  );
-  return subscription;
-};
+    autoRenew: input['autoRenew'],
+    extendable: !!input['extendable'],
+    replacedSubscriptionId: null,
+    startsAt: input['startsAt'],
+  });
 
-export const importSubscription = async (
-  { properties, ...input }: CreateSubscriptionInput,
-  authenticate: Context['authenticate'],
-  memberContext: Context['memberContext'],
-  prismaClient: PrismaClient
-) => {
-  const { roles } = authenticate();
-  authorise(CanCreateSubscription, roles);
-
-  const { subscription } = await memberContext.importSubscription(
-    prismaClient,
-    input['userID'],
-    input['paymentMethodID'],
-    input['paymentPeriodicity'],
-    input['monthlyAmount'],
-    input['memberPlanID'],
-    properties,
-    input['autoRenew'],
-    !!input['extendable'],
-    input['startsAt'],
-    input['paidUntil'] ?? undefined
-  );
   return subscription;
 };
 
@@ -238,14 +214,16 @@ export const updateAdminSubscription = async (
   }
 
   // handle remote managed subscriptions (Payrexx Subscription)
-  const { paymentProviderID } = await getPaymentMethodByIDOrSlug(
-    loaders,
-    undefined,
+  const paymentMethod = await loaders.paymentMethodsByID.load(
     originalSubscription.paymentMethodID
   );
 
+  if (!paymentMethod) {
+    throw new NotFound('PaymentMethod', originalSubscription.paymentMethodID);
+  }
+
   const paymentProvider = paymentProviders.find(
-    paymentProvider => paymentProvider.id === paymentProviderID
+    paymentProvider => paymentProvider.id === paymentMethod.paymentProviderID
   );
 
   if (paymentProvider?.remoteManagedSubscription) {

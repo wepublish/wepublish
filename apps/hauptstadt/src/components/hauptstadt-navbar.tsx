@@ -33,6 +33,7 @@ import { useTranslation } from 'react-i18next';
 import { FiMenu, FiPlus } from 'react-icons/fi';
 import { MdSearch, MdWarning } from 'react-icons/md';
 
+import { useInformUserAboutUpgrade } from '../hooks/inform-user-upgrade';
 import { Tiempos } from '../theme';
 
 enum NavbarState {
@@ -543,6 +544,8 @@ export function HauptstadtNavbar({
   );
   const navbarHeight = useMemo(() => cssVariables(navbarState), [navbarState]);
 
+  const [canUpgrade] = useInformUserAboutUpgrade();
+
   return (
     <NavbarWrapper className={className}>
       <GlobalStyles styles={navbarHeight} />
@@ -570,7 +573,17 @@ export function HauptstadtNavbar({
                     <MdWarning size={24} />
 
                     <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
-                      Abo Jetzt Bezahlen
+                      Offene Rechnungen
+                    </Box>
+                  </HauptstadtOpenInvoices>
+                )}
+
+                {!hasUnpaidInvoices && subscribeBtn && canUpgrade && (
+                  <HauptstadtOpenInvoices>
+                    <MdWarning size={24} />
+
+                    <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
+                      Jetzt Upgraden
                     </Box>
                   </HauptstadtOpenInvoices>
                 )}
@@ -820,12 +833,7 @@ const NavPaper = ({
   const { t } = useTranslation();
   const { hasUser, logout } = useUser();
   const theme = useTheme();
-
-  const showMenu = true;
-
-  if (!showMenu) {
-    return null;
-  }
+  const [canUpgrade] = useInformUserAboutUpgrade();
 
   return (
     <NavPaperWrapper
@@ -869,6 +877,19 @@ const NavPaper = ({
               {...profileBtn}
             >
               Offene Rechnung
+            </Button>
+          )}
+
+          {!hasUnpaidInvoices && canUpgrade && (
+            <Button
+              LinkComponent={Link}
+              variant="contained"
+              color="warning"
+              onClick={closeMenu}
+              startIcon={<MdWarning />}
+              {...subscribeBtn}
+            >
+              Jetzt Upgraden
             </Button>
           )}
 

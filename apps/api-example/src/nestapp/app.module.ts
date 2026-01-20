@@ -36,6 +36,7 @@ import {
   DashboardModule,
   MembershipModule,
   SubscriptionModule,
+  UpgradeSubscriptionModule,
 } from '@wepublish/membership/api';
 import { NavigationModule } from '@wepublish/navigation/api';
 import {
@@ -52,6 +53,7 @@ import {
   NeverChargePaymentProvider,
   PaymentProvider,
   PaymentsModule,
+  PaymentMethodModule,
   PayrexxFactory,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
@@ -81,7 +83,6 @@ import FormData from 'form-data';
 import Mailgun from 'mailgun.js';
 import { SlackMailProvider } from '../app/slack-mail-provider';
 import { readConfig } from '../readConfig';
-import { PaymentMethodModule } from '@wepublish/payment-method/api';
 import { AuthorModule } from '@wepublish/author/api';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
 import { InvoiceModule } from '@wepublish/invoice/api';
@@ -111,7 +112,7 @@ import { V0Module } from '@wepublish/ai/api';
           persistedQueries: false,
           introspection: configFile.general.apolloIntrospection,
           playground: configFile.general.apolloPlayground,
-          allowBatchedHttpRequests: true,
+          allowBatchedHttpRequests: false,
           inheritResolversFromInterfaces: true,
         } as ApolloDriverConfig;
       },
@@ -249,8 +250,7 @@ import { V0Module } from '@wepublish/ai/api';
       },
       inject: [ConfigService, HttpService],
     }),
-    PaymentMethodModule,
-    PaymentsModule.registerAsync({
+    PaymentMethodModule.registerAsync({
       imports: [ConfigModule, PrismaModule],
       useFactory: async (config: ConfigService, prisma: PrismaClient) => {
         const paymentProviders: PaymentProvider[] = [];
@@ -394,6 +394,7 @@ import { V0Module } from '@wepublish/ai/api';
       inject: [ConfigService, PrismaClient],
       global: true,
     }),
+    PaymentsModule,
     MemberPlanModule,
     ApiModule,
     MembershipModule,
@@ -491,6 +492,7 @@ import { V0Module } from '@wepublish/ai/api';
       inject: [ConfigService],
     }),
     SubscriptionModule,
+    UpgradeSubscriptionModule,
     NavigationModule,
     TagModule,
     EventsImportModule.registerAsync({

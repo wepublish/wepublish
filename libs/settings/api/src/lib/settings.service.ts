@@ -16,9 +16,7 @@ export class SettingsService {
   @PrimeDataLoader(SettingDataloaderService, 'name')
   async settingsList(filter?: SettingFilter): Promise<Setting[]> {
     const data = await this.prisma.setting.findMany({
-      where: {
-        ...filter,
-      },
+      where: filter,
       orderBy: {
         createdAt: 'desc',
       },
@@ -67,13 +65,8 @@ export class SettingsService {
       throw new NotFoundException('setting', name);
     }
 
-    const currentVal = fullSetting.value;
     const restriction = fullSetting.settingRestriction;
-    checkSettingRestrictions(
-      value,
-      currentVal,
-      restriction as SettingRestriction
-    );
+    checkSettingRestrictions(value, restriction as SettingRestriction);
 
     return this.prisma.setting.update({
       where: {

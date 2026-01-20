@@ -30,7 +30,7 @@ import { MemberPlanModule } from '@wepublish/member-plan/api';
     PeerModule,
     CommentModule,
     TagModule,
-    MemberPlanModule,
+    forwardRef(() => MemberPlanModule),
   ],
   providers: [
     BaseBlockResolver,
