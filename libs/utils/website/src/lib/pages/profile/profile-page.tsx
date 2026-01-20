@@ -78,7 +78,7 @@ export const ProfileWrapper = styled(ContentWrapper)`
 type ProfilePageProps = Omit<
   ComponentProps<typeof PersonalDataFormContainer>,
   ''
->;
+> & { className?: string };
 
 function ProfilePage(props: ProfilePageProps) {
   const {
@@ -108,7 +108,7 @@ function ProfilePage(props: ProfilePageProps) {
 
   return (
     <>
-      <SubscriptionsWrapper>
+      <SubscriptionsWrapper className={props.className}>
         {hasUnpaidInvoices && (
           <SubscriptionListWrapper>
             <H4 component={'h1'}>Offene Rechnungen</H4>
