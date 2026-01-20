@@ -1,4 +1,4 @@
-//import mailchimp, { campaigns } from '@mailchimp/mailchimp_marketing';
+import mailchimp, { campaigns } from '@mailchimp/mailchimp_marketing';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
 import {
@@ -11,10 +11,10 @@ import {
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 
-//import { DailyBriefingContext } from '../src/components/daily-briefing/daily-briefing-teaser';
+import { DailyBriefingContext } from '../src/components/daily-briefing/daily-briefing-teaser';
 
 type IndexProps = {
-  //campaigns: campaigns.Campaigns[];
+  campaigns: campaigns.Campaigns[];
 };
 
 export default function Index({ campaigns }: IndexProps) {
@@ -25,7 +25,7 @@ export default function Index({ campaigns }: IndexProps) {
   );
 }
 
-export const __getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 
   if (!publicRuntimeConfig.env.API_URL) {
