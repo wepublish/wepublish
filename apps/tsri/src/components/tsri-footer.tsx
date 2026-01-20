@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { css, Theme } from '@mui/material';
+import { useUser } from '@wepublish/authentication/website';
 import { forceHideBanner } from '@wepublish/banner/website';
 import {
   FooterCategory as FooterCategoryDefault,
@@ -35,7 +36,7 @@ export const FooterMain = styled('div')`
   flex-direction: row;
   align-content: flex-end;
   justify-content: flex-end;
-  gap: 1.5cqw;
+  column-gap: 2.5cqw;
   padding-right: 2cqw;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
@@ -481,6 +482,8 @@ export const FooterPaper = ({
   categories: FullNavigationFragment[][];
 }>) => {
   const router = useRouter();
+  const { hasUser, logout } = useUser();
+
   return (
     <FooterPaperWrapper>
       <FooterMain>
@@ -526,7 +529,17 @@ export const FooterPaper = ({
       {children}
       <FooterTabs>
         <LoginTab>
-          <Link href="/login">Login</Link>
+          {hasUser && (
+            <Link
+              onClick={() => {
+                logout();
+              }}
+              href={router.asPath}
+            >
+              Logout
+            </Link>
+          )}
+          {!hasUser && <Link href={'/login'}>Login</Link>}
         </LoginTab>
       </FooterTabs>
     </FooterPaperWrapper>
