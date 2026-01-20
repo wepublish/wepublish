@@ -16,6 +16,7 @@ export enum PageType {
   SearchPage = 'SearchPage',
   SubscriptionPage = 'SubscriptionPage',
   Page = 'Page',
+  Login = 'Login',
   Unknown = 'Unknown',
 }
 

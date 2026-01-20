@@ -71,7 +71,6 @@ export const getPageType = (
           pageType = PageType.SearchResults;
           return true;
         }
-        case '__typename':
         case 'navigations': {
           switch (true) {
             case path.startsWith('/search'):
@@ -79,6 +78,9 @@ export const getPageType = (
               return true;
             case path.startsWith('/mitmachen'):
               pageType = PageType.SubscriptionPage;
+              return true;
+            case path.startsWith('/profile'):
+              pageType = PageType.Profile;
               return true;
             default:
           }
@@ -91,10 +93,18 @@ export const getPageType = (
         case 'article':
         case 'tags':
         case 'tag':
+        case '__typename':
         default:
       }
       return false;
     });
+  } else {
+    switch (true) {
+      case path.startsWith('/login'):
+        return PageType.Login;
+      case path.startsWith('/profile'):
+        return PageType.Profile;
+    }
   }
 
   return pageType;
