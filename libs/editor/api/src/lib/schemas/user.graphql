@@ -7,7 +7,9 @@ fragment FullUser on User {
   address {
     company
     streetAddress
+    streetAddressNumber
     streetAddress2
+    streetAddress2Number
     zipCode
     city
     country

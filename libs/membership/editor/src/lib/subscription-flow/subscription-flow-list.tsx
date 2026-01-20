@@ -9,7 +9,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useMemberPlanListQuery } from '@wepublish/editor/api';
+import { useMemberPlanListQuery } from '@wepublish/editor/api-v2';
 import {
   FullMailTemplateFragment,
   getApiClientV2,
@@ -120,8 +120,9 @@ function SubscriptionFlowList() {
   const params = useParams();
   const { id: memberPlanId } = params;
   const [newDay, setNewDay] = useState<number | undefined>(undefined);
-  const client = useMemo(() => getApiClientV2(), []);
+  const client = getApiClientV2();
   const { data: memberPlans } = useMemberPlanListQuery({
+    client,
     variables: { take: 100 },
   });
 
@@ -242,7 +243,7 @@ function SubscriptionFlowList() {
     }:nth-of-type(${filterCount + userActionCount}), .${tableCellClasses.head}:nth-of-type(${
       filterCount + userActionCount + nonUserActionCount
     })`]: {
-      borderRight: `1px solid ${theme.palette.common.black}`,
+      borderRight: `1px solid #000`,
     },
 
     [`.${tableCellClasses.body}:nth-of-type(${filterCount}), .${
@@ -250,7 +251,7 @@ function SubscriptionFlowList() {
     }:nth-of-type(${filterCount + userActionCount}), .${tableCellClasses.body}:nth-of-type(${
       filterCount + userActionCount + nonUserActionCount
     })`]: {
-      borderRight: `1px solid ${theme.palette.common.black}`,
+      borderRight: `1px solid #000`,
     },
   }));
 

@@ -175,8 +175,8 @@ const seedSettings = (prisma: PrismaClient) =>
       update: {},
       create: {
         name: SettingName.NEW_ARTICLE_PAYWALL,
-        value: false,
-        settingRestriction: { allowedValues: { boolChoice: true } },
+        value: '',
+        settingRestriction: null,
       },
     }),
     prisma.setting.upsert({
