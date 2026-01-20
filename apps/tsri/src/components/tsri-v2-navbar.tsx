@@ -5,9 +5,11 @@ import {
   capitalize,
   css,
   GlobalStyles,
+  SxProps,
   Theme,
   Toolbar,
 } from '@mui/material';
+import { useUser } from '@wepublish/authentication/website';
 import { useHasActiveSubscription } from '@wepublish/membership/website';
 import { navigationLinkToUrl } from '@wepublish/navigation/website';
 import { ButtonProps, TextToIcon } from '@wepublish/ui';
@@ -30,6 +32,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FiInstagram, FiMenu as FiMenuDefault, FiSearch } from 'react-icons/fi';
 import { MdWarning } from 'react-icons/md';
 
@@ -38,6 +41,8 @@ import theme from '../theme';
 enum NavbarState {
   Low,
   High,
+  IsLoggedOut,
+  IsLoggedIn,
 }
 
 enum ScrollDirection {
@@ -110,32 +115,45 @@ export const NavbarWrapper = styled('nav')`
 const getNavbarState = (
   isScrolled: boolean,
   scrollDirection: ScrollDirection,
-  hasActiveSubscription: boolean
+  hasActiveSubscription: boolean,
+  isLoggedOut: boolean
 ): NavbarState[] => {
+  const navbarStates: NavbarState[] = [];
+
   if (!isScrolled) {
-    return [NavbarState.Low];
+    navbarStates.push(NavbarState.Low);
   }
 
   if (hasActiveSubscription) {
     if (scrollDirection === ScrollDirection.Down) {
-      return [NavbarState.Low];
+      navbarStates.push(NavbarState.Low);
     }
   }
 
-  return [NavbarState.High];
+  if (isLoggedOut) {
+    navbarStates.push(NavbarState.IsLoggedOut);
+  } else {
+    navbarStates.push(NavbarState.IsLoggedIn);
+  }
+
+  if (!navbarStates.includes(NavbarState.Low)) {
+    navbarStates.push(NavbarState.High);
+  }
+
+  return navbarStates;
 };
 
 export const navbarButtonStyles = (theme: Theme) => css`
   padding: 0;
   background-color: ${theme.palette.common.black};
   border-radius: 50%;
-  width: 10cqw;
-  height: 10cqw;
+  width: 14cqw;
+  height: 14cqw;
 
   > svg {
     stroke-width: 1.25px;
     stroke: ${theme.palette.common.white};
-    font-size: 6.5cqw;
+    font-size: 8.5cqw;
   }
 
   &:hover {
@@ -180,10 +198,10 @@ export const NavbarIconButtonWrapper = styled('div')``;
 export const NavbarMain = styled('div', {
   shouldForwardProp: propName => propName !== 'isMenuOpen',
 })<{ isMenuOpen?: boolean }>`
-  grid-column: 2 / 3;
+  grid-column: 3 / 4;
   grid-row: 1 / 2;
-  margin: 7cqw 2.5cqw 0 0;
-  column-gap: 0.9cqw;
+  margin: 4cqw 2.5cqw 0 0;
+  column-gap: 2.5cqw;
 
   display: grid;
   grid-template-columns: repeat(3, min-content);
@@ -194,6 +212,7 @@ export const NavbarMain = styled('div', {
   z-index: 30;
 
   ${theme.breakpoints.up('md')} {
+    column-gap: 0.9cqw;
     margin: 1.3cqw 2.5cqw 0 0;
   }
 
@@ -213,18 +232,22 @@ export const NavbarMain = styled('div', {
 export const NavbarActions = styled('div', {
   shouldForwardProp: propName => propName !== 'isMenuOpen',
 })<{ isMenuOpen?: boolean }>`
-  display: flex;
+  display: none;
   flex-flow: row wrap;
   align-items: center;
-  justify-self: end;
   gap: 1cqw;
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  align-self: flex-start;
   justify-self: end;
+  margin-top: 1.9cqw;
+  z-index: 20;
+  pointer-events: all;
+  padding-right: 1.5cqw;
 
-  ${({ isMenuOpen }) =>
-    isMenuOpen &&
-    css`
-      z-index: 20;
-    `}
+  ${theme.breakpoints.up('md')} {
+    display: flex;
+  }
 `;
 
 export const NavbarLoginLink = styled(Link)`
@@ -335,6 +358,9 @@ export const navbarTabStyles = (theme: Theme) => css`
   border-top-right-radius: 2cqw;
   box-sizing: border-box;
   grid-column: 2 / 3;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
 
   &:hover {
     background-color: ${theme.palette.primary.light};
@@ -365,7 +391,7 @@ export const navbarTabStyles = (theme: Theme) => css`
   }
 `;
 
-const BecomeMemberTab = styled('button')`
+const BecomeMemberGoToProfileTab = styled('button')`
   ${navbarTabStyles(theme)}
   grid-column: 2 / 3;
   grid-row: 1 / 2;
@@ -400,8 +426,49 @@ const PreTitleTab = styled('div')`
     color: ${({ theme }) => theme.palette.common.white};
   }
 
+  & > * {
+    width: unset;
+  }
+
   ${theme.breakpoints.up('md')} {
     grid-column: 1 / 2;
+  }
+`;
+
+const OpenInvoiceTab = styled('button')`
+  ${navbarTabStyles(theme)}
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  background-color: ${({ theme }) => theme.palette.error.main};
+  color: ${({ theme }) => theme.palette.common.white};
+
+  &:hover {
+    background-color: ${({ theme }) => theme.palette.error.main};
+    color: ${({ theme }) => theme.palette.common.white};
+  }
+
+  & > * {
+    width: unset;
+  }
+
+  & > svg {
+    scale: 1.5;
+    margin-right: -3cqw;
+  }
+
+  ${theme.breakpoints.up('md')} {
+    display: none;
+  }
+`;
+
+const LoginLogoutTab = styled('button')`
+  ${navbarTabStyles(theme)}
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+
+  ${theme.breakpoints.up('md')} {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
   }
 `;
 
@@ -436,19 +503,33 @@ const NavbarTabs = styled('div', {
     column-gap: 2.2cqw;
   }
 
-  ${({ navbarState }) =>
-    navbarState.includes(NavbarState.High) &&
-    css`
-      ${theme.breakpoints.up('md')} {
+  ${({ navbarState }) => {
+    if (navbarState.includes(NavbarState.IsLoggedIn)) {
+      return css`
         ${RegisterNewsLetterTab} {
           display: none;
         }
-
-        ${BecomeMemberTab} {
-          grid-row: 2 / 3;
+        ${theme.breakpoints.up('md')} {
+          ${BecomeMemberGoToProfileTab} {
+            grid-row: 2 / 3;
+          }
         }
-      }
-    `}
+      `;
+    }
+    if (navbarState.includes(NavbarState.High)) {
+      return css`
+        ${theme.breakpoints.up('md')} {
+          ${RegisterNewsLetterTab} {
+            display: none;
+          }
+
+          ${BecomeMemberGoToProfileTab} {
+            grid-row: 2 / 3;
+          }
+        }
+      `;
+    }
+  }}
 
   ${({ isHomePage }) =>
     isHomePage &&
@@ -465,10 +546,8 @@ const NavbarTabs = styled('div', {
     `}
 `;
 
-const HauptstadtOpenInvoices = styled('div')`
+const OpenInvoicesAlert = styled('div')`
   position: absolute;
-  top: 12px;
-  right: 12px;
   transform: translateX(100%);
   display: grid;
   gap: ${({ theme }) => theme.spacing(0.5)};
@@ -477,6 +556,13 @@ const HauptstadtOpenInvoices = styled('div')`
   color: ${({ theme }) => theme.palette.error.main};
   font-size: 0.875em;
   font-weight: 600;
+  top: 32px;
+  right: 54px;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    top: 34px;
+    right: 56px;
+  }
 `;
 
 export const NavPaperWrapper = styled('div', {
@@ -529,7 +615,7 @@ export const NavPaperWrapper = styled('div', {
       column-gap: 0;
     }
 
-    ${BecomeMemberTab} {
+    ${LoginLogoutTab} {
       font-size: 1cqw;
       line-height: 1cqw;
       padding: 0;
@@ -740,6 +826,8 @@ const NavPaper = ({
   const {
     elements: { Link, H6 },
   } = useWebsiteBuilder();
+  const { hasUser, logout } = useUser();
+  const router = useRouter();
 
   return (
     <NavPaperWrapper
@@ -778,14 +866,27 @@ const NavPaper = ({
         navbarState={[]}
         isHomePage={false}
       >
-        <BecomeMemberTab>
-          <Link
-            href="/Login"
-            onClick={closeMenu}
-          >
-            Login
-          </Link>
-        </BecomeMemberTab>
+        <LoginLogoutTab>
+          {hasUser && (
+            <Link
+              onClick={() => {
+                logout();
+                closeMenu();
+              }}
+              href={router.asPath}
+            >
+              Logout
+            </Link>
+          )}
+          {!hasUser && loginBtn && (
+            <Link
+              href={loginBtn.href}
+              onClick={closeMenu}
+            >
+              Login
+            </Link>
+          )}
+        </LoginLogoutTab>
       </NavbarTabs>
     </NavPaperWrapper>
   );
@@ -808,7 +909,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   box-sizing: border-box;
   aspect-ratio: var(--changing-aspect-ratio) !important;
   display: grid;
-  grid-template-columns: repeat(2, 50%);
+  grid-template-columns: 1fr min-content min-content;
   grid-template-rows: repeat(2, auto);
   transition:
     background-color 100ms ease-out 200ms,
@@ -832,6 +933,17 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     grid-template-rows: unset;
   }
 `;
+
+const buttonStyles: SxProps<Theme> = theme => ({
+  [theme.breakpoints.up('xs')]: {
+    fontSize: `calc(${theme.typography.button.fontSize} * 1.1)`,
+    padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`,
+    textWrap: 'nowrap',
+    '&:hover': {
+      boxShadow: '5px 5px 7px rgba(0, 0, 0, 0.6);',
+    },
+  },
+});
 
 export interface ExtendedNavbarProps extends BuilderNavbarProps {
   isMenuOpen?: boolean;
@@ -913,8 +1025,12 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
       onMenuToggle?.(newState);
     }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
 
+    const { t } = useTranslation();
+
+    const { hasUser, logout } = useUser();
+
     const {
-      elements: { Link },
+      elements: { Link, Button },
     } = useWebsiteBuilder();
 
     const router = useRouter();
@@ -937,6 +1053,10 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
             return capitalize(pageTypeBasedProps.ArticleList?.tag || '');
           case PageType.EventList:
             return 'Unsere Events';
+          case PageType.Profile:
+            return 'Verwalte dein Konto, deine Abos und Rechnungen';
+          case PageType.Login:
+            return 'Melde dich in deinem Konto an';
         }
       }
       return '';
@@ -971,7 +1091,8 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
     const navbarState = getNavbarState(
       isScrolled,
       scrollDirection,
-      hasActiveSubscription
+      hasActiveSubscription,
+      (!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn) as boolean
     );
 
     const isHomePage = pageTypeBasedProps?.Page?.slug === '';
@@ -1053,6 +1174,41 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
               />
             </NavbarLoginLink>
 
+            <NavbarActions isMenuOpen={isMenuOpen}>
+              {hasUnpaidInvoices && profileBtn && (
+                <Button
+                  LinkComponent={Link}
+                  color="error"
+                  startIcon={<MdWarning />}
+                  sx={buttonStyles}
+                  size="medium"
+                  {...profileBtn}
+                  onClick={() => {
+                    if (controlledIsMenuOpen === undefined) {
+                      setInternalMenuOpen(false);
+                    }
+                    onMenuToggle?.(false);
+                  }}
+                >
+                  <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
+                    Offene
+                  </Box>
+                  &nbsp;Rechnung
+                </Button>
+              )}
+
+              {hasRunningSubscription && !hasUnpaidInvoices && profileBtn && (
+                <Button
+                  LinkComponent={Link}
+                  sx={buttonStyles}
+                  size="medium"
+                  {...profileBtn}
+                >
+                  Mein Konto
+                </Button>
+              )}
+            </NavbarActions>
+
             <NavbarMain isMenuOpen={isMenuOpen}>
               <NavbarInstaButton
                 size="small"
@@ -1060,7 +1216,10 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                 title="Instagram"
                 color={'inherit'}
                 onClick={() => {
-                  toggleMenu();
+                  if (controlledIsMenuOpen === undefined) {
+                    setInternalMenuOpen(false);
+                  }
+                  onMenuToggle?.(false);
                   router.push('https://www.instagram.com/tsri.ch/');
                 }}
               >
@@ -1072,7 +1231,10 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                 title="Suche"
                 color={'inherit'}
                 onClick={() => {
-                  toggleMenu();
+                  if (controlledIsMenuOpen === undefined) {
+                    setInternalMenuOpen(false);
+                  }
+                  onMenuToggle?.(false);
                   router.push('/search');
                 }}
               >
@@ -1088,13 +1250,9 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
               >
                 <FiMenu />
                 {hasUnpaidInvoices && profileBtn && (
-                  <HauptstadtOpenInvoices>
+                  <OpenInvoicesAlert>
                     <MdWarning size={24} />
-
-                    <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
-                      Abo Jetzt Bezahlen
-                    </Box>
-                  </HauptstadtOpenInvoices>
+                  </OpenInvoicesAlert>
                 )}
               </NavbarHamburgerButton>
             </NavbarMain>
@@ -1106,9 +1264,38 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
               <PreTitleTab>
                 <span>{tabText}</span>
               </PreTitleTab>
-              <BecomeMemberTab>
-                <Link href="/mitmachen">Member werden</Link>
-              </BecomeMemberTab>
+
+              <BecomeMemberGoToProfileTab>
+                {!hasUser &&
+                  !hasRunningSubscription &&
+                  !hasUnpaidInvoices &&
+                  subscribeBtn && (
+                    <Link href={subscribeBtn.href}>
+                      {t('navbar.subscribe')}
+                    </Link>
+                  )}
+                {hasUser && profileBtn && (
+                  <Link href={profileBtn.href}>Mein Konto</Link>
+                )}
+              </BecomeMemberGoToProfileTab>
+
+              {hasUnpaidInvoices && profileBtn && (
+                <OpenInvoiceTab>
+                  <MdWarning size={24} />
+                  <Link
+                    href={profileBtn.href}
+                    onClick={() => {
+                      if (controlledIsMenuOpen === undefined) {
+                        setInternalMenuOpen(false);
+                      }
+                      onMenuToggle?.(false);
+                    }}
+                  >
+                    Offene Rechnung
+                  </Link>
+                </OpenInvoiceTab>
+              )}
+
               <RegisterNewsLetterTab>
                 <Link href="/newsletter?mc_u=56ee24de7341c744008a13c9e&mc_id=32c65d081a&mc_f_id=00e5c2e1f0&source=tsri&tf_id=jExhxiVv&popTitle=DAS%20WICHTIGSTE%20AUS%20ZÜRI&popButtonText=Jetzt%20kostenlos%20abonnieren!&popText=Jeden%20Morgen%20findest%20du%20im%20Z%C3%BCri%20Briefing%20kuratierte%20News,%20Geschichten%20und%20Tipps%20f%C3%BCr%20den%20Tag.%20Bereits%2029'000%20Menschen%20lesen%20mit%20%E2%80%93%20und%20du?">
                   Newsletter kostenlos abonnieren
