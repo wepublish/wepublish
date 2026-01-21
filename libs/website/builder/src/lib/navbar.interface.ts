@@ -2,7 +2,7 @@ import { QueryResult } from '@apollo/client';
 import { ButtonProps } from '@wepublish/ui';
 import { FullImageFragment, NavigationListQuery } from '@wepublish/website/api';
 import { PropsWithChildren } from 'react';
-import { PageTypeBasedProps } from './page.interface'; // test comment to trigger re-merge
+import { PageTypeBasedProps } from './page.interface';
 
 export type BuilderNavbarProps = PropsWithChildren<
   Pick<QueryResult<NavigationListQuery>, 'data' | 'loading' | 'error'> & {

@@ -19,11 +19,9 @@ type IndexProps = {
 
 export default function Index({ campaigns }: IndexProps) {
   return (
-    <DailyBriefingContext.Provider value={campaigns}>
-      <ContentWidthProvider fullWidth={true}>
-        <PageContainer slug={''} />
-      </ContentWidthProvider>
-    </DailyBriefingContext.Provider>
+    <ContentWidthProvider fullWidth={true}>
+      <PageContainer slug={''} />
+    </ContentWidthProvider>
   );
 }
 

@@ -371,7 +371,7 @@ export const navbarTabStyles = (theme: Theme) => css`
     text-decoration: none !important;
     color: inherit !important;
     display: block;
-    width: 50cqw;
+    width: 100%;
     height: 7.2cqw;
     padding: calc(var(--sizing-factor) * 0.75cqw)
       calc(var(--sizing-factor) * 1cqw);
@@ -385,7 +385,6 @@ export const navbarTabStyles = (theme: Theme) => css`
     border-top-right-radius: 1cqw;
 
     & > * {
-      width: auto;
       height: auto;
     }
   }
@@ -449,6 +448,10 @@ const OpenInvoiceTab = styled('button')`
 
   & > * {
     width: unset;
+  }
+
+  & > a {
+    width: 100%;
   }
 
   & > svg {
@@ -1194,17 +1197,6 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                     Offene
                   </Box>
                   &nbsp;Rechnung
-                </Button>
-              )}
-
-              {hasRunningSubscription && !hasUnpaidInvoices && profileBtn && (
-                <Button
-                  LinkComponent={Link}
-                  sx={buttonStyles}
-                  size="medium"
-                  {...profileBtn}
-                >
-                  Mein Konto
                 </Button>
               )}
             </NavbarActions>
