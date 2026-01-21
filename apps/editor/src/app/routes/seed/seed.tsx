@@ -7,9 +7,12 @@ import {
   CommentListDocument,
   CommentState,
   ImageListDocument,
+  ProductType,
+  SubscriptionListDocument,
   useCreateCommentMutation,
   useDeleteCommentMutation,
   useDeleteImageMutation,
+  useDeleteSubscriptionMutation,
   useUploadImageMutation,
 } from '@wepublish/editor/api';
 import {
@@ -32,14 +35,18 @@ import {
   getApiClientV2,
   IFrameBlockInput,
   ImageBlockInput,
+  //TitleBlock,
+  MemberPlanListDocument,
   //ImageBlock,
   NavigationLinkType,
   NavigationListDocument,
   PageListDocument,
+  PaymentMethodListDocument,
   RichTextBlockInput,
   //PollBlock,
   //QuoteBlock,
   //RichTextBlock,
+  SubscriptionFlowsDocument,
   Tag,
   TagListDocument,
   TagListQueryVariables,
@@ -50,21 +57,25 @@ import {
   TeaserSlotsBlock,
   TeaserSlotsBlockInput,
   TeaserType,
-  //TitleBlock,
   TitleBlockInput,
   useCreateArticleMutation,
   useCreateAuthorMutation,
   useCreateBlockStyleMutation,
   useCreateEventMutation,
+  useCreateMemberPlanMutation,
   useCreateNavigationMutation,
   useCreatePageMutation,
+  useCreatePaymentMethodMutation,
   useCreateTagMutation,
   useDeleteArticleMutation,
   useDeleteAuthorMutation,
   useDeleteBlockStyleMutation,
   useDeleteEventMutation,
+  useDeleteMemberPlanMutation,
   useDeleteNavigationMutation,
   useDeletePageMutation,
+  useDeletePaymentMethodMutation,
+  useDeleteSubscriptionFlowMutation,
   useDeleteTagMutation,
   usePublishArticleMutation,
   usePublishPageMutation,
@@ -1360,6 +1371,82 @@ async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
   return blockStyles;
 }
 
+async function seedMemberPlans(createMemberPlan: any, paymentMethods: any) {
+  const memberPlans = await Promise.all([
+    createMemberPlan({
+      variables: {
+        name: 'Test-Abo CHF',
+        slug: 'test-abo-chf',
+        active: true,
+        description: [],
+        imageID: null,
+        amountPerMonthMin: 1000,
+        productType: ProductType.Subscription,
+        extendable: true,
+        currency: 'CHF',
+        tags: ['selling'],
+        availablePaymentMethods: [
+          {
+            forceAutoRenewal: false,
+            paymentMethodIDs: [paymentMethods[0].data.createPaymentMethod.id],
+            paymentPeriodicities: ['yearly', 'monthly'],
+          },
+        ],
+      },
+    }),
+    createMemberPlan({
+      variables: {
+        name: 'Test-Abo EUR',
+        slug: 'test-abo-eur',
+        active: true,
+        description: [],
+        imageID: null,
+        amountPerMonthMin: 1000,
+        productType: ProductType.Subscription,
+        extendable: true,
+        currency: 'EUR',
+        tags: ['selling'],
+        availablePaymentMethods: [
+          {
+            forceAutoRenewal: false,
+            paymentMethodIDs: [paymentMethods[1].data.createPaymentMethod.id],
+            paymentPeriodicities: ['yearly', 'monthly'],
+          },
+        ],
+      },
+    }),
+  ]);
+  return memberPlans;
+}
+
+async function seedPaymentMethods(createPaymentMethod: any) {
+  const paymentMethods = await Promise.all([
+    createPaymentMethod({
+      variables: {
+        name: 'Payrexx',
+        slug: 'payrexx',
+        description: '',
+        paymentProviderID: 'payrexx',
+        gracePeriod: 7,
+        imageId: null,
+        active: true,
+      },
+    }),
+    createPaymentMethod({
+      variables: {
+        name: 'Stripe',
+        slug: 'stripe',
+        description: '',
+        paymentProviderID: 'stripe',
+        gracePeriod: 7,
+        imageId: null,
+        active: true,
+      },
+    }),
+  ]);
+  return paymentMethods;
+}
+
 async function hashSHA256(message: string): Promise<string> {
   const encoder = new TextEncoder();
   const data = encoder.encode(message);
@@ -1646,6 +1733,116 @@ async function fetchAllComments(clientV1: any) {
 
   return all;
 }
+
+async function fetchAllSubscriptions(clientV1: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await clientV1.query({
+      query: SubscriptionListDocument,
+      variables: {
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.subscriptions?.nodes ?? []) as Array<{
+      id: string;
+    }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.subscriptions?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllMemberPlans(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: MemberPlanListDocument,
+      variables: {
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.memberPlans?.nodes ?? []) as Array<{
+      id: string;
+    }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.memberPlans?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllPaymentMethods(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: PaymentMethodListDocument,
+      variables: {
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.paymentMethods ?? []) as Array<{
+      id: string;
+    }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.paymentMethods?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllSubscriptionFlows(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: SubscriptionFlowsDocument,
+      variables: {
+        defaultFlowOnly: false,
+        memberPlanID: null,
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.subscriptionFlows ?? []) as Array<{
+      id: string;
+    }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.subscriptionFlows?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
 // end fetch all functions
 
 async function handleDelete(
@@ -1658,6 +1855,12 @@ async function handleDelete(
   deleteEvent: ReturnType<typeof useDeleteEventMutation>[0],
   deleteBlockStyle: ReturnType<typeof useDeleteBlockStyleMutation>[0],
   deleteComment: ReturnType<typeof useDeleteCommentMutation>[0],
+  deletePaymentMethod: ReturnType<typeof useDeletePaymentMethodMutation>[0],
+  deleteMemberPlan: ReturnType<typeof useDeleteMemberPlanMutation>[0],
+  deleteSubscriptionFlow: ReturnType<
+    typeof useDeleteSubscriptionFlowMutation
+  >[0],
+  deleteSubscription: ReturnType<typeof useDeleteSubscriptionMutation>[0],
   client: any,
   clientV1: any,
   params?: URLSearchParams
@@ -1672,6 +1875,10 @@ async function handleDelete(
     allEvents,
     allBlockStyles,
     allComments,
+    allMemberPlans,
+    allPaymentMethods,
+    allSubscriptionFlows,
+    allSubscriptions,
   ] = await Promise.all([
     fetchAllTags(client),
     fetchAllAuthors(client),
@@ -1684,6 +1891,10 @@ async function handleDelete(
     fetchAllEvents(client),
     fetchAllBlockStyles(client),
     fetchAllComments(clientV1),
+    fetchAllMemberPlans(client),
+    fetchAllPaymentMethods(client),
+    fetchAllSubscriptionFlows(client),
+    fetchAllSubscriptions(clientV1),
   ]);
 
   await Promise.all(
@@ -1755,6 +1966,34 @@ async function handleDelete(
       })
     )
   );
+  await Promise.all(
+    allSubscriptions.map(subscription =>
+      deleteSubscription({
+        variables: { id: subscription.id },
+      })
+    )
+  );
+  await Promise.all(
+    allMemberPlans.map(memberPlan =>
+      deleteMemberPlan({
+        variables: { id: memberPlan.id },
+      })
+    )
+  );
+  await Promise.all(
+    allPaymentMethods.map(paymentMethod =>
+      deletePaymentMethod({
+        variables: { id: paymentMethod.id },
+      })
+    )
+  );
+  await Promise.all(
+    allSubscriptionFlows.map(subscriptionFlow =>
+      deleteSubscriptionFlow({
+        variables: { id: subscriptionFlow.id },
+      })
+    )
+  );
 }
 
 async function handleSeed(
@@ -1771,6 +2010,8 @@ async function handleSeed(
   createComment: ReturnType<typeof useCreateCommentMutation>[0],
   publishPage: ReturnType<typeof usePublishPageMutation>[0],
   fetchAllImages: (clientV1: any) => Promise<Array<{ id: string }>>,
+  createMemberPlan: ReturnType<typeof useCreateMemberPlanMutation>[0],
+  createPaymentMethod: ReturnType<typeof useCreatePaymentMethodMutation>[0],
   clientV1: any,
   params?: URLSearchParams
 ) {
@@ -1840,6 +2081,10 @@ async function handleSeed(
     articles.map(article => article.id),
     images
   );
+
+  const paymentMethods = await seedPaymentMethods(createPaymentMethod);
+
+  const memberPlans = await seedMemberPlans(createMemberPlan, paymentMethods);
 }
 
 type SeedProps = { type?: string };
@@ -1858,6 +2103,12 @@ export const Seed = ({ type }: SeedProps) => {
   const [deleteEvent] = useDeleteEventMutation({ client });
   const [deleteBlockStyle] = useDeleteBlockStyleMutation({ client });
   const [deleteComment] = useDeleteCommentMutation();
+  const [deleteMemberPlan] = useDeleteMemberPlanMutation({ client });
+  const [deletePaymentMethod] = useDeletePaymentMethodMutation({ client });
+  const [deleteSubscriptionFlow] = useDeleteSubscriptionFlowMutation({
+    client,
+  });
+  const [deleteSubscription] = useDeleteSubscriptionMutation();
   // end delete hooks
 
   // create hooks
@@ -1881,6 +2132,8 @@ export const Seed = ({ type }: SeedProps) => {
   const [publishArticle] = usePublishArticleMutation({ client });
   const [publishPage] = usePublishPageMutation({ client });
   const [updateArticle] = useUpdateArticleMutation({ client });
+  const [createMemberPlan] = useCreateMemberPlanMutation({ client });
+  const [createPaymentMethod] = useCreatePaymentMethodMutation({ client });
   //const { data: blockStylesData } = useBlockStylesQuery({ client });
   // end create hooks
 
@@ -1958,6 +2211,8 @@ export const Seed = ({ type }: SeedProps) => {
                 createComment,
                 publishPage,
                 fetchAllImages,
+                createMemberPlan,
+                createPaymentMethod,
                 clientV1,
                 params
               );
@@ -1993,6 +2248,10 @@ export const Seed = ({ type }: SeedProps) => {
                 deleteEvent,
                 deleteBlockStyle,
                 deleteComment,
+                deletePaymentMethod,
+                deleteMemberPlan,
+                deleteSubscriptionFlow,
+                deleteSubscription,
                 client,
                 clientV1,
                 params
