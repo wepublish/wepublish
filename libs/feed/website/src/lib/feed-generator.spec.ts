@@ -1,6 +1,6 @@
 import { Article } from '@wepublish/website/api';
 import { generateFeed } from './feed-generator';
-import { mockArticle, mockAuthor } from '@wepublish/storybook/mocks';
+import { mockArticle, mockAuthor, mockImage } from '@wepublish/storybook/mocks';
 import { faker } from '@faker-js/faker/.';
 
 const author = mockAuthor();
@@ -53,4 +53,38 @@ it('should generate the json feed', async () => {
   ] as Article[];
 
   expect((await generate(articles)).json1()).toMatchSnapshot();
+});
+
+it('should escape ampersands in image URLs for RSS feed', async () => {
+  const imageWithSignature = mockImage();
+  imageWithSignature.url =
+    'https://example.com/image.jpg?quality=52&sig=7Qm1DF&format=webp';
+
+  const articles = [
+    mockArticle({
+      id: '1',
+      latest: {
+        __typename: 'ArticleRevision',
+        id: '1',
+        publishedAt: new Date('2023-01-01').toISOString(),
+        createdAt: new Date('2023-01-01').toISOString(),
+        blocks: [],
+        authors: [mockAuthor()],
+        properties: [],
+        image: imageWithSignature,
+        lead: 'Test lead',
+        title: 'Test title',
+        preTitle: 'Test pretitle',
+        socialMediaDescription: 'Test social media description',
+        socialMediaImage: imageWithSignature,
+        socialMediaTitle: 'Test social media title',
+        canonicalUrl: 'https://example.com',
+      },
+    }),
+  ] as Article[];
+
+  const rss = (await generate(articles)).rss2();
+
+  expect(rss).toContain('&amp;sig=');
+  expect(rss).toContain('&amp;format=');
 });
