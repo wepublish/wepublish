@@ -92,12 +92,17 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
     padding: 1.8cqw 1cqw;
     grid-column: 2 / 3;
     grid-row: 2 / 4;
-    font-size: 2.6cqw !important;
-    line-height: 2.98cqw !important;
+    font-size: 3.8cqw !important;
+    line-height: 4.2cqw !important;
     word-wrap: nowrap;
     text-wrap: wrap;
     white-space: pre-wrap;
     word-break: break-word;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      font-size: 2.6cqw !important;
+      line-height: 2.98cqw !important;
+    }
   }
 
   ${TeaserLead} {
@@ -107,9 +112,14 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
     grid-row: 4 / 6;
     background-color: ${({ theme }) => theme.palette.common.white};
     height: 100%;
-    font-size: 1.67cqw !important;
-    line-height: 1.6cqw !important;
+    font-size: 2.5cqw !important;
+    line-height: 2.8cqw !important;
     font-weight: 700 !important;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      font-size: 1.67cqw !important;
+      line-height: 1.6cqw !important;
+    }
   }
 
   ${TeaserMetadata} {
@@ -159,16 +169,22 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
 
     ${TeaserTime} {
       grid-row: 2 / 6;
-      font-size: 1.05cqw !important;
-      line-height: 1.2cqw !important;
+      font-size: 2cqw !important;
+      line-height: 2.2cqw !important;
       font-weight: 700 !important;
-      padding: 0.4cqw 1cqw;
+      padding: 0.6cqw 1cqw;
       display: block;
       color: ${({ theme }) => theme.palette.common.black};
       margin-left: -1.5cqw;
       z-index: 2;
       align-self: end;
       background-color: ${({ theme }) => theme.palette.common.white};
+
+      ${({ theme }) => theme.breakpoints.up('md')} {
+        font-size: 1.05cqw !important;
+        line-height: 1.2cqw !important;
+        padding: 0.4cqw 1cqw;
+      }
     }
   }
 `;
