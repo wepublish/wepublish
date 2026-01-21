@@ -1,21 +1,14 @@
 import styled from '@emotion/styled';
-import { css, Theme } from '@mui/material';
+import { css, Theme, Typography } from '@mui/material';
 import { useUser } from '@wepublish/authentication/website';
 import { forceHideBanner } from '@wepublish/banner/website';
 import {
   FooterCategory as FooterCategoryDefault,
-  FooterIcons as FooterIconsDefault,
-  FooterIconsWrapper as FooterIconsWrapperDefault,
-  FooterName as FooterNameDefault,
   navigationLinkToUrl,
 } from '@wepublish/navigation/website';
 import { FullNavigationFragment } from '@wepublish/website/api';
-import {
-  BuilderFooterProps,
-  Link,
-  useWebsiteBuilder,
-} from '@wepublish/website/builder';
-import { IconButton } from '@wepublish/website/builder';
+import { Link } from '@wepublish/website/builder';
+import { BuilderFooterProps, IconButton } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
 import { PropsWithChildren } from 'react';
 import { FiInstagram, FiSearch } from 'react-icons/fi';
@@ -100,7 +93,7 @@ export const FooterSearchButton = styled(IconButton)`
 
 export const PlaceholderButton = styled(IconButton)`
   ${footerButtonStyles(theme)}
-  point-events: none;
+  pointer-events: none;
   visibility: hidden;
   grid-column: 4 / 5;
   display: none;
@@ -109,10 +102,6 @@ export const PlaceholderButton = styled(IconButton)`
     display: block;
   }
 `;
-
-export const FooterIconsWrapper = styled(FooterIconsWrapperDefault)``;
-
-export const FooterIcons = styled(FooterIconsDefault)``;
 
 export const FooterSupportWrapper = styled('div')`
   display: grid;
@@ -129,7 +118,7 @@ export const FooterSupport = styled('div')`
   color: ${({ theme }) => theme.palette.common.white};
   border-top-left-radius: 1em;
   border-top-right-radius: 1em;
-  background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAyMCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTAuMDAxMDQ5OTggNS42MzJDMC4wMDEwNDk5OCAyLjQ5NiAyLjMwNTA1IDAgNS41MDUwNSAwQzguNzA1MDUgMCA5LjkyMTA1IDEuNzkyIDkuOTIxMDUgMS43OTJDOS45MjEwNSAxLjc5MiAxMS4xMzcgMCAxNC4zMzcgMEMxNy41MzcgMCAxOS44NDExIDIuNDk2IDE5Ljg0MTEgNS42MzJDMTkuODQxMSA4LjU3NiAxNy4wMjUgMTEuMDcyIDE2LjE5MzEgMTEuOTA0QzE1LjM2MTEgMTIuNzM2IDkuOTIxMDUgMTcuOTg0IDkuOTIxMDUgMTcuOTg0QzkuOTIxMDUgMTcuOTg0IDQuNDgxMDUgMTIuNzM2IDMuNjQ5MDUgMTEuOTA0QzIuODE3MDUgMTEuMDcyIC0wLjA2Mjk1IDguNTEyIDAuMDAxMDQ5OTggNS42MzJaIiBmaWxsPSIjMEM5RkVEIi8+Cjwvc3ZnPgo=');
+  background-image: url(/heart.svg);
   background-repeat: no-repeat;
   background-position: top 1rem center;
   background-size: 20px auto;
@@ -140,8 +129,6 @@ export const FooterSupport = styled('div')`
     text-align: center;
     hyphens: none;
     padding: 0;
-    margin: 0 auto !important;
-    line-height: 1rem !important;
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
@@ -149,44 +136,18 @@ export const FooterSupport = styled('div')`
   }
 `;
 
-export const FooterSupportHeading = styled('h6')`
-  color: ${({ theme }) => theme.palette.primary.main};
-  font-weight: 700 !important;
-  font-size: 0.8rem !important;
-`;
-
-export const FooterSupportText = styled('p')`
-  margin: 0 auto 1.5rem auto !important;
-  font-weight: 400 !important;
-  color: ${({ theme }) => theme.palette.common.white};
-  font-size: 0.8rem !important;
-`;
-
-export const FooterSupportImprint = styled('p')`
-  font-size: 0.65rem !important;
-  line-height: 0.8rem !important;
-  padding-top: 2rem !important;
-`;
-
 export function Footer({
   className,
   categorySlugs,
   slug,
-  iconSlug,
   data,
-  loading,
-  error,
   hideBannerOnIntersecting,
-  wepublishLogo,
   children,
 }: BuilderFooterProps) {
   const { isIntersecting, ref } = useIntersectionObserver({
     initialIsIntersecting: false,
     threshold: 0.9,
   });
-  const {
-    elements: { H6, Paragraph },
-  } = useWebsiteBuilder();
 
   const mainItems = data?.navigations?.find(({ key }) => key === slug);
 
@@ -204,8 +165,6 @@ export function Footer({
     }, [] as FullNavigationFragment[]);
   });
 
-  const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
-
   return (
     <FooterWrapper
       className={className}
@@ -213,46 +172,48 @@ export function Footer({
     >
       <FooterSupportWrapper>
         <FooterSupport>
-          <H6 component={FooterSupportHeading}>Hallo Welt!</H6>
-          <Paragraph component={FooterSupportText}>
+          <Typography variant="footerSupportHeading">Hallo Welt!</Typography>
+          <Typography variant="footerSupportText">
             Tsüri ist ein unabhängiges Medium für unsere Stadt. Wir stehen für
             vertrauenswürdigen und kritischen Journalismus.
             <br />
             Unabhängigkeit, Fairness, Transparenz und Glaubwürdigkeit sind unser
             Fundament.
-          </Paragraph>
-          <H6 component={FooterSupportHeading}>Werde Teil von Tsüri</H6>
-          <Paragraph component={FooterSupportText}>
+          </Typography>
+          <Typography variant="footerSupportHeading">
+            Werde Teil von Tsüri
+          </Typography>
+          <Typography variant="footerSupportText">
             Im Gegensatz zu vielen anderen Medienhäusern gehören wir keinem
             Grosskonzern – und wir werden auch nicht von Superreichen
             finanziert. Unser Journalismus lebt von der Community. Über 2000
             Tsüri-Member unterstützen uns bereits.
             <br />
             Werde auch du Teil davon!
-          </Paragraph>
-          <H6 component={FooterSupportHeading}>
+          </Typography>
+          <Typography variant="footerSupportHeading">
             Du willst Menschen in Zürich erreichen?
-          </H6>
-          <Paragraph component={FooterSupportText}>
+          </Typography>
+          <Typography variant="footerSupportText">
             Dann bist du bei uns richtig. Emilio zeigt dir gerne, wie du mit
             deinem Unternehmen Teil unserer Community wirst und welche
             Möglichkeiten es gibt.
-          </Paragraph>
-          <H6 component={FooterSupportHeading}>
+          </Typography>
+          <Typography variant="footerSupportHeading">
             Civic Media heisst gemeinsam etwas bewegen
-          </H6>
-          <Paragraph component={FooterSupportText}>
+          </Typography>
+          <Typography variant="footerSupportText">
             Wir wollen etwas bewegen – gemeinsam mit dir. Nicht für Klicks,
             sondern für Austausch, Beteiligung und Erlebnisse.
             <br />
             Analog und digital. Das nennen wir Civic Media. Hier gehts zu
             unserem Engagement.
-          </Paragraph>
-          <Paragraph component={FooterSupportImprint}>
+          </Typography>
+          <Typography variant="footerSupportImprint">
             Copyright © 2025 Tsüri AG
             <br />
             All rights reserved. Tsüri AG, Flüelastrasse 12, 8048 Zürich
-          </Paragraph>
+          </Typography>
         </FooterSupport>
       </FooterSupportWrapper>
 
@@ -266,59 +227,6 @@ export function Footer({
     </FooterWrapper>
   );
 }
-
-export const LinkGroup = styled('div')``;
-
-export const CategoryLinkTitle = styled('h6')`
-  font-weight: 700 !important;
-  color: ${({ theme }) => theme.palette.common.white};
-  display: inline-block;
-  white-space: nowrap;
-  margin: 0;
-  padding: 0 0.3cqw;
-  font-size: 4.5cqw !important;
-  line-height: 6cqw !important;
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    font-size: min(1.25cqw, 1.4rem) !important;
-    line-height: min(1.66cqw, 1.86rem) !important;
-  }
-`;
-
-export const CategoryLinkList = styled('ul')`
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  font-weight: 700 !important;
-  font-size: 4.5cqw !important;
-  line-height: 6cqw !important;
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    font-size: min(1.25cqw, 1.4rem) !important;
-    line-height: min(1.66cqw, 1.86rem) !important;
-  }
-`;
-
-export const CategoryLinkItem = styled('li')`
-  list-style: none;
-  margin: 0;
-  padding: 0;
-`;
-
-export const CategoryLink = styled(Link)`
-  color: inherit;
-  display: inline-block;
-  white-space: nowrap;
-  padding: 0 0.3cqw;
-  text-decoration: none;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.palette.primary.light};
-    text-decoration: none;
-  }
-`;
-
-export const footerTabStyles = () => css``;
 
 const FooterTabs = styled('div')`
   display: grid;
@@ -341,7 +249,7 @@ const FooterTabs = styled('div')`
   }
 `;
 
-const LoginTab = styled('button')`
+const LoginTab = styled(Link)`
   background-color: ${({ theme }) => theme.palette.common.black};
   color: ${({ theme }) => theme.palette.common.white};
   text-align: left;
@@ -349,8 +257,8 @@ const LoginTab = styled('button')`
   cursor: pointer;
   box-sizing: border-box;
   font-weight: 700;
-  font-size: 4.5cqw !important;
-  line-height: 4.5cqw !important;
+  font-size: 4.5cqw;
+  line-height: 4.5cqw;
   padding: 2cqw 3cqw;
   border: 0;
   outline: 0;
@@ -358,20 +266,16 @@ const LoginTab = styled('button')`
   border-bottom-left-radius: 2cqw;
   border-bottom-right-radius: 2cqw;
   grid-column: -1 / 1;
+  text-decoration: none;
 
   &:hover {
     background-color: ${({ theme }) => theme.palette.primary.light};
     color: ${({ theme }) => theme.palette.common.black};
   }
 
-  & > * {
-    text-decoration: none;
-    color: inherit;
-  }
-
   ${({ theme }) => theme.breakpoints.up('md')} {
-    font-size: 0.75cqw !important;
-    line-height: 0.75cqw !important;
+    font-size: 1cqw;
+    line-height: 1cqw;
     padding: 0.5cqw 0.75cqw;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
@@ -429,13 +333,11 @@ export const FooterCategory = styled(FooterCategoryDefault)`
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-column: unset !important;
-    grid-row: unset !important;
+    grid-column: unset;
+    grid-row: unset;
     padding: 0;
   }
 `;
-
-export const FooterName = styled(FooterNameDefault)``;
 
 export const FooterLinksGroup = styled('div')`
   display: grid;
@@ -452,24 +354,6 @@ export const FooterLinksGroup = styled('div')`
     margin: 0 0 0 3cqw;
   }
 `;
-
-export const FooterPaperLink = styled(Link)``;
-
-export const FooterCategoryLinks = styled(CategoryLinkList)`
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  font-size: 4.5cqw !important;
-  line-height: 6cqw !important;
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    font-weight: 700 !important;
-    font-size: min(1.25cqw, 1.4rem) !important;
-    line-height: min(1.66cqw, 1.86rem) !important;
-  }
-`;
-
-export const FooterMainLinks = styled(FooterCategoryLinks)``;
 
 export const TsriFooter = styled(Footer)``;
 
@@ -511,36 +395,41 @@ export const FooterPaper = ({
         <FooterLinksGroup key={arrayIndex}>
           {categoryArray.map(nav => (
             <FooterCategory key={nav.id}>
-              {nav.name && <CategoryLinkTitle>{nav.name}</CategoryLinkTitle>}
-
-              <FooterCategoryLinks>
+              {nav.name && (
+                <Typography variant="categoryLinkTitle">{nav.name}</Typography>
+              )}
+              <Typography variant="categoryLinkList">
                 {nav.links?.map((link, index) => (
-                  <CategoryLinkItem key={index}>
-                    <CategoryLink href={navigationLinkToUrl(link)}>
+                  <Typography
+                    variant="categoryLinkItem"
+                    key={index}
+                  >
+                    <Link
+                      variant={'categoryLink'}
+                      href={navigationLinkToUrl(link)}
+                    >
                       {link.label}
-                    </CategoryLink>
-                  </CategoryLinkItem>
+                    </Link>
+                  </Typography>
                 ))}
-              </FooterCategoryLinks>
+              </Typography>
             </FooterCategory>
           ))}
         </FooterLinksGroup>
       ))}
       {children}
       <FooterTabs>
-        <LoginTab>
-          {hasUser && (
-            <Link
-              onClick={() => {
-                logout();
-              }}
-              href={router.asPath}
-            >
-              Logout
-            </Link>
-          )}
-          {!hasUser && <Link href={'/login'}>Login</Link>}
-        </LoginTab>
+        {hasUser && (
+          <LoginTab
+            onClick={() => {
+              logout();
+            }}
+            href={router.asPath}
+          >
+            Logout
+          </LoginTab>
+        )}
+        {!hasUser && <LoginTab href={'/login'}>Login</LoginTab>}
       </FooterTabs>
     </FooterPaperWrapper>
   );
