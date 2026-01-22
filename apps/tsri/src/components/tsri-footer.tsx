@@ -333,9 +333,11 @@ export const FooterCategory = styled(FooterCategoryDefault)`
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-column: unset;
-    grid-row: unset;
-    padding: 0;
+    &:nth-of-type(n) {
+      grid-column: unset;
+      grid-row: unset;
+      padding: 0;
+    }
   }
 `;
 

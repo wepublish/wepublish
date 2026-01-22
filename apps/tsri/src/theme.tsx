@@ -101,6 +101,8 @@ const theme = createTheme(WePTheme, {
     teaserMeta: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
     },
+    // Header
+
     // Footer / Header
     categoryLinkTitle: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
@@ -126,6 +128,7 @@ const theme = createTheme(WePTheme, {
       listStyle: 'none',
       margin: 0,
       padding: 0,
+      lineHeight: 0,
     },
     // Footer
     footerSupportHeading: {
@@ -193,6 +196,49 @@ const theme = createTheme(WePTheme, {
     },
     MuiLink: {
       variants: [
+        // Header --> Navbar --> NavbarTabs
+        {
+          props: { variant: 'navbarTab' },
+          style: {
+            fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(
+              ','
+            ),
+            backgroundColor: colors.common.black,
+            color: colors.common.white,
+            fontSize: `calc(var(--sizing-factor) * 1.2cqw)`,
+            lineHeight: `calc(var(--sizing-factor) * 1.2cqw)`,
+            textAlign: 'left',
+            border: 0,
+            outline: 0,
+            userSelect: 'none',
+            cursor: 'pointer',
+            fontWeight: 700,
+            borderTopLeftRadius: '2cqw',
+            borderTopRightRadius: '2cqw',
+            boxSizing: 'border-box',
+            gridColumn: '2 / 3',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+            justifyContent: 'flex-start',
+            textDecoration: 'none',
+            height: '7.2cqw',
+            padding: `calc(var(--sizing-factor) * 0.75cqw)
+              calc(var(--sizing-factor) * 1cqw)`,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            '&:hover': {
+              backgroundColor: colors.primary.light,
+              color: colors.common.black,
+            },
+            [breakpoints.up('md')]: {
+              borderTopLeftRadius: '1cqw',
+              borderTopRightRadius: '1cqw',
+              height: 'auto',
+            },
+          },
+        },
         {
           // Footer / Header
           props: { variant: 'categoryLink' },
@@ -207,14 +253,40 @@ const theme = createTheme(WePTheme, {
             textDecoration: 'none',
             fontWeight: 700,
             fontSize: '4.5cqw',
-            lineHeight: '6cqw',
+            lineHeight: '6.5cqw',
             '&:hover': {
               backgroundColor: colors.primary.light,
               textDecoration: 'none',
             },
             [breakpoints.up('md')]: {
               fontSize: 'min(1.25cqw, 1.4rem)',
-              lineHeight: 'min(1.66cqw, 1.86rem)',
+              lineHeight: 'min(2cqw, 1.65rem)',
+            },
+          },
+        },
+      ],
+    },
+    MuiToolbar: {
+      variants: [
+        {
+          props: { variant: 'navbarInnerWrapper' },
+          style: {
+            minHeight: 'unset',
+            aspectRatio: 'var(--changing-aspect-ratio)',
+            margin: '0 auto',
+            width: '100%',
+            backgroundColor: colors.common.white,
+            maxWidth: 1333,
+            container: 'toolbar/inline-size',
+            position: 'static',
+            boxSizing: 'border-box',
+            display: 'grid',
+            gridTemplateColumns: '1fr min-content min-content',
+            gridTemplateRows: 'repeat(2, auto)',
+            transition:
+              'background-color 100ms ease-out 200ms, aspect-ratio 300ms ease-out',
+            [breakpoints.up('md')]: {
+              gridTemplateRows: 'unset',
             },
           },
         },

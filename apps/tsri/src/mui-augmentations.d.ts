@@ -21,8 +21,9 @@ declare module '@mui/material/styles' {
     bannerTitle: CSSProperties;
     bannerText: CSSProperties;
     bannerCta: CSSProperties;
-    // Link -- MuiLink.variant is baed on Typography variants
+    // Link -- MuiLink.variant is based on Typography variants
     categoryLink: CSSProperties;
+    navbarTab: CSSProperties;
   }
 
   // Optional
@@ -42,6 +43,7 @@ declare module '@mui/material/styles' {
     bannerText?: CSSProperties;
     bannerCta?: CSSProperties;
     categoryLink?: CSSProperties;
+    navbarTab?: CSSProperties;
   }
 }
 
@@ -62,11 +64,19 @@ declare module '@mui/material/Typography' {
     bannerText: true;
     bannerCta: true;
     categoryLink: true;
+    navbarTab: true;
   }
 }
 
 declare module '@mui/material/Link' {
   interface LinkPropsVariantOverrides {
     categoryLink: true;
+    navbarTab: true;
+  }
+}
+
+declare module '@mui/material/Toolbar' {
+  interface ToolbarPropsVariantOverrides {
+    navbarInnerWrapper: true;
   }
 }
