@@ -23,8 +23,6 @@ export type Scalars = {
   Slug: string;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
-  /** A valid vote value */
-  VoteValue: number;
 };
 
 export type AvailablePaymentMethod = {
@@ -140,17 +138,6 @@ export type FocalPoint = {
   __typename?: 'FocalPoint';
   x: Scalars['Float'];
   y: Scalars['Float'];
-};
-
-export type FullPoll = {
-  __typename?: 'FullPoll';
-  answers: Array<PollAnswerWithVoteCount>;
-  closedAt?: Maybe<Scalars['DateTime']>;
-  externalVoteSources: Array<PollExternalVoteSource>;
-  id: Scalars['String'];
-  infoText?: Maybe<Scalars['RichText']>;
-  opensAt: Scalars['DateTime'];
-  question?: Maybe<Scalars['String']>;
 };
 
 export type Image = {
@@ -321,9 +308,6 @@ export type Mutation = {
   createComment: Comment;
   createInvoice?: Maybe<Invoice>;
   createPaymentFromInvoice?: Maybe<Payment>;
-  createPoll?: Maybe<PollWithAnswers>;
-  createPollAnswer?: Maybe<PollAnswer>;
-  createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   createSubscription?: Maybe<Subscription>;
@@ -331,9 +315,6 @@ export type Mutation = {
   deleteComment: Comment;
   deleteImage?: Maybe<Image>;
   deleteInvoice?: Maybe<Invoice>;
-  deletePoll?: Maybe<FullPoll>;
-  deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
-  deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
   deleteSubscription?: Maybe<Subscription>;
   deleteUser?: Maybe<User>;
   markInvoiceAsPaid?: Maybe<Invoice>;
@@ -350,7 +331,6 @@ export type Mutation = {
   updateImage?: Maybe<Image>;
   updateInvoice?: Maybe<Invoice>;
   updatePeerProfile: PeerProfile;
-  updatePoll?: Maybe<FullPoll>;
   updateSubscription?: Maybe<Subscription>;
   updateUser?: Maybe<User>;
   uploadImage?: Maybe<Image>;
@@ -387,25 +367,6 @@ export type MutationCreatePaymentFromInvoiceArgs = {
 };
 
 
-export type MutationCreatePollArgs = {
-  closedAt?: InputMaybe<Scalars['DateTime']>;
-  opensAt?: InputMaybe<Scalars['DateTime']>;
-  question?: InputMaybe<Scalars['String']>;
-};
-
-
-export type MutationCreatePollAnswerArgs = {
-  answer?: InputMaybe<Scalars['String']>;
-  pollId: Scalars['String'];
-};
-
-
-export type MutationCreatePollExternalVoteSourceArgs = {
-  pollId: Scalars['String'];
-  source?: InputMaybe<Scalars['String']>;
-};
-
-
 export type MutationCreateSessionArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -439,21 +400,6 @@ export type MutationDeleteImageArgs = {
 
 
 export type MutationDeleteInvoiceArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeletePollArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeletePollAnswerArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeletePollExternalVoteSourceArgs = {
   id: Scalars['String'];
 };
 
@@ -540,17 +486,6 @@ export type MutationUpdateInvoiceArgs = {
 
 export type MutationUpdatePeerProfileArgs = {
   input: PeerProfileInput;
-};
-
-
-export type MutationUpdatePollArgs = {
-  answers?: InputMaybe<Array<UpdatePollAnswer>>;
-  closedAt?: InputMaybe<Scalars['DateTime']>;
-  externalVoteSources?: InputMaybe<Array<UpdatePollExternalVoteSources>>;
-  infoText?: InputMaybe<Scalars['RichText']>;
-  opensAt?: InputMaybe<Scalars['DateTime']>;
-  pollId: Scalars['String'];
-  question?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -683,69 +618,6 @@ export type Permission = {
   id: Scalars['String'];
 };
 
-export type Poll = {
-  __typename?: 'Poll';
-  closedAt?: Maybe<Scalars['DateTime']>;
-  id: Scalars['String'];
-  opensAt: Scalars['DateTime'];
-  question?: Maybe<Scalars['String']>;
-};
-
-export type PollAnswer = {
-  __typename?: 'PollAnswer';
-  answer?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  pollId: Scalars['String'];
-};
-
-export type PollAnswerWithVoteCount = {
-  __typename?: 'PollAnswerWithVoteCount';
-  answer?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  pollId: Scalars['String'];
-  votes: Scalars['Int'];
-};
-
-export type PollConnection = {
-  __typename?: 'PollConnection';
-  nodes: Array<Poll>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type PollExternalVote = {
-  __typename?: 'PollExternalVote';
-  amount: Scalars['VoteValue'];
-  answerId: Scalars['String'];
-  id: Scalars['String'];
-};
-
-export type PollExternalVoteSource = {
-  __typename?: 'PollExternalVoteSource';
-  id: Scalars['String'];
-  source?: Maybe<Scalars['String']>;
-  voteAmounts: Array<PollExternalVote>;
-};
-
-export type PollFilter = {
-  openOnly?: InputMaybe<Scalars['Boolean']>;
-};
-
-export enum PollSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  OpensAt = 'OpensAt'
-}
-
-export type PollWithAnswers = {
-  __typename?: 'PollWithAnswers';
-  answers?: Maybe<Array<PollAnswer>>;
-  closedAt?: Maybe<Scalars['DateTime']>;
-  id: Scalars['String'];
-  opensAt: Scalars['DateTime'];
-  question?: Maybe<Scalars['String']>;
-};
-
 export enum ProductType {
   Donation = 'Donation',
   Subscription = 'Subscription'
@@ -776,8 +648,6 @@ export type Query = {
   invoices: InvoiceConnection;
   me?: Maybe<User>;
   peerProfile: PeerProfile;
-  poll?: Maybe<FullPoll>;
-  polls?: Maybe<PollConnection>;
   remotePeerProfile?: Maybe<PeerProfile>;
   sessions: Array<Session>;
   subscription?: Maybe<Subscription>;
@@ -835,21 +705,6 @@ export type QueryInvoicesArgs = {
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<InvoiceSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryPollArgs = {
-  id?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryPollsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<PollFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<PollSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
 
@@ -1040,22 +895,6 @@ export type UpdateImageInput = {
   source?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
-};
-
-export type UpdatePollAnswer = {
-  answer?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
-};
-
-export type UpdatePollExternalVote = {
-  amount?: InputMaybe<Scalars['VoteValue']>;
-  id: Scalars['String'];
-};
-
-export type UpdatePollExternalVoteSources = {
-  id: Scalars['String'];
-  source?: InputMaybe<Scalars['String']>;
-  voteAmounts?: InputMaybe<Array<UpdatePollExternalVote>>;
 };
 
 export type UploadImageInput = {

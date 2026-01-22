@@ -52,14 +52,7 @@ import {
   getRemotePeerProfile,
 } from './peer-profile/peer-profile.private-queries';
 import { authorise } from './permissions';
-import {
-  GraphQLFullPoll,
-  GraphQLPollConnection,
-  GraphQLPollFilter,
-  GraphQLPollSort,
-} from './poll/poll';
-import { PollSort, getPolls } from './poll/poll.private-queries';
-import { getPoll } from './poll/poll.public-queries';
+
 import { GraphQLSession } from './session';
 import { getSessionsForUser } from './session/session.private-queries';
 import {
@@ -393,35 +386,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           authenticate,
           invoice
         ),
-    },
-
-    // Polls
-    // =======
-
-    polls: {
-      type: GraphQLPollConnection,
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 10 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLPollFilter },
-        sort: { type: GraphQLPollSort, defaultValue: PollSort.OpensAt },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { cursor, take, skip, filter, sort, order },
-        { authenticate, prisma: { poll } }
-      ) =>
-        getPolls(filter, sort, order, cursor, skip, take, authenticate, poll),
-    },
-
-    poll: {
-      type: GraphQLFullPoll,
-      args: {
-        id: { type: GraphQLString },
-      },
-      resolve: (root, { id }, { prisma: { poll } }) => getPoll(id, poll),
     },
   },
 });
