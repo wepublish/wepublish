@@ -125,12 +125,6 @@ const getNavbarState = (
     navbarStates.push(NavbarState.Low);
   }
 
-  if (hasActiveSubscription) {
-    if (scrollDirection === ScrollDirection.Down) {
-      navbarStates.push(NavbarState.Low);
-    }
-  }
-
   if (isLoggedOut) {
     navbarStates.push(NavbarState.IsLoggedOut);
   } else {
@@ -566,6 +560,13 @@ export const NavPaperWrapper = styled('div', {
         border-top-left-radius: 0.8cqw;
         border-top-right-radius: 0.8cqw;
       }
+
+      ${theme.breakpoints.up('xl')} {
+        padding: 0.25cqw 1cqw;
+        font-size: 0.85cqw;
+        border-top-left-radius: 0.5cqw;
+        border-top-right-radius: 0.5cqw;
+      }
     }
   }
 `;
@@ -615,26 +616,16 @@ export const NavPaperLinksGroup = styled('div')`
 `;
 
 const NavPaper = ({
-  main,
   categories,
   loginBtn,
-  profileBtn,
-  subscribeBtn,
   closeMenu,
-  hasRunningSubscription,
-  hasUnpaidInvoices,
   isMenuOpen,
   className,
-  children,
 }: PropsWithChildren<{
   loginBtn?: ButtonProps | null;
-  profileBtn?: ButtonProps | null;
-  subscribeBtn?: ButtonProps | null;
   main: FullNavigationFragment | null | undefined;
   categories: FullNavigationFragment[][];
   closeMenu: () => void;
-  hasRunningSubscription: boolean;
-  hasUnpaidInvoices: boolean;
   isMenuOpen: boolean;
   className?: string;
 }>) => {
@@ -697,8 +688,8 @@ const NavPaper = ({
             variant="navbarTab"
             onClick={() => {
               closeMenu();
-              router.push(loginBtn.href!);
             }}
+            href={loginBtn.href}
           >
             Login
           </LoginLogoutTab>
@@ -823,7 +814,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
 
     const { t } = useTranslation();
 
-    const { hasUser, logout } = useUser();
+    const { hasUser } = useUser();
 
     const {
       elements: { Link, Button },
@@ -1100,10 +1091,6 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
 
           {Boolean(mainItems || categories?.length) && (
             <NavPaper
-              hasRunningSubscription={hasRunningSubscription}
-              hasUnpaidInvoices={hasUnpaidInvoices}
-              subscribeBtn={subscribeBtn}
-              profileBtn={profileBtn}
               loginBtn={loginBtn}
               main={mainItems}
               categories={categories}
