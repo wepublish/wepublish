@@ -17,7 +17,6 @@ import {
 import { PrismaModule } from '@wepublish/nest-modules';
 import { PermissionsGuard } from '@wepublish/permissions/api';
 import request from 'supertest';
-import { SubscriptionService } from '../subscription/subscription.service';
 import {
   registerMailsModule,
   registerPaymentMethodModule,
@@ -145,7 +144,6 @@ const paymentMethodsQuery = `
   providers: [
     SubscriptionFlowResolver,
     SubscriptionFlowService,
-    SubscriptionService,
     {
       provide: APP_GUARD,
       useClass: PermissionsGuard,
@@ -168,7 +166,6 @@ export class AppUnauthenticatedModule {}
   providers: [
     SubscriptionFlowResolver,
     SubscriptionFlowService,
-    SubscriptionService,
     {
       provide: APP_GUARD,
       useClass: TestPermissionsGuard,

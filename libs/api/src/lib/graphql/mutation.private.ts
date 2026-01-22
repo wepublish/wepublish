@@ -79,14 +79,7 @@ import {
 } from './session/session.mutation';
 import { revokeSessionById } from './session/session.private-mutation';
 import { getSessionsForUser } from './session/session.private-queries';
-import { GraphQLSubscription, GraphQLSubscriptionInput } from './subscription';
-import {
-  cancelSubscriptionById,
-  createSubscription,
-  deleteSubscriptionById,
-  renewSubscription,
-  updateAdminSubscription,
-} from './subscription/subscription.private-mutation';
+import { renewSubscription } from './subscription/subscription.private-mutation';
 import { GraphQLUser, GraphQLUserInput } from './user';
 import {
   createAdminUser,
@@ -97,7 +90,6 @@ import {
 
 import { CanSendJWTLogin } from '@wepublish/permissions';
 import { mailLogType } from '@wepublish/mail/api';
-import { GraphQLSubscriptionDeactivationReason } from './subscriptionDeactivation';
 
 export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -332,92 +324,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         deleteUserById(id, authenticate, user),
     },
 
-    // Subscriptions
-    // ====
-
-    createSubscription: {
-      type: GraphQLSubscription,
-      args: {
-        input: { type: new GraphQLNonNull(GraphQLSubscriptionInput) },
-      },
-      resolve: (root, { input }, { authenticate, prisma, memberContext }) =>
-        createSubscription(input, authenticate, memberContext, prisma),
-    },
-
-    renewSubscription: {
-      type: GraphQLInvoice,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (
-        root,
-        { id },
-        { authenticate, prisma: { subscription, invoice }, memberContext }
-      ) =>
-        renewSubscription(
-          id,
-          authenticate,
-          subscription,
-          invoice,
-          memberContext
-        ),
-    },
-
-    updateSubscription: {
-      type: GraphQLSubscription,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        input: { type: new GraphQLNonNull(GraphQLSubscriptionInput) },
-      },
-      resolve: (
-        root,
-        { id, input },
-        { authenticate, prisma, memberContext, paymentProviders, loaders }
-      ) =>
-        updateAdminSubscription(
-          id,
-          input,
-          authenticate,
-          memberContext,
-          loaders,
-          prisma.subscription,
-          prisma.user,
-          paymentProviders,
-          prisma.memberPlan
-        ),
-    },
-
-    deleteSubscription: {
-      type: GraphQLSubscription,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { subscription } }) =>
-        deleteSubscriptionById(id, authenticate, subscription),
-    },
-
-    cancelSubscription: {
-      type: GraphQLSubscription,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        reason: {
-          type: new GraphQLNonNull(GraphQLSubscriptionDeactivationReason),
-        },
-      },
-      resolve: (
-        root,
-        { id, reason },
-        { authenticate, prisma: { subscription }, memberContext }
-      ) =>
-        cancelSubscriptionById(
-          id,
-          reason,
-          authenticate,
-          subscription,
-          memberContext
-        ),
-    },
-
     // Image
     // =====
 
@@ -514,6 +420,25 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, { id }, { authenticate, prisma, authenticateUser }) =>
         markInvoiceAsPaid(id, authenticate, authenticateUser, prisma),
+    },
+
+    renewSubscription: {
+      type: GraphQLInvoice,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve: (
+        root,
+        { id },
+        { authenticate, prisma: { subscription, invoice }, memberContext }
+      ) =>
+        renewSubscription(
+          id,
+          authenticate,
+          subscription,
+          invoice,
+          memberContext
+        ),
     },
 
     // Comment

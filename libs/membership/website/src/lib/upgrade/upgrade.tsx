@@ -178,7 +178,7 @@ export const Upgrade = ({
     selectedMemberPlan?.extendable ?? true,
     subscriptionToUpgrade.paymentPeriodicity,
     monthlyAmount,
-    upgradeInfo.data?.upgradeSubscriptionInfo.discountAmount ?? 0,
+    upgradeInfo.data?.upgradeUserSubscriptionInfo.discountAmount ?? 0,
     selectedMemberPlan?.currency ?? Currency.Chf,
     locale
   );
@@ -246,7 +246,8 @@ export const Upgrade = ({
         {subscriptionToUpgrade.memberPlan.name} auf das{' '}
         {selectedMemberPlan?.name}. Dein Restguthaben von{' '}
         {formatCurrency(
-          (upgradeInfo.data?.upgradeSubscriptionInfo.discountAmount ?? 0) / 100,
+          (upgradeInfo.data?.upgradeUserSubscriptionInfo.discountAmount ?? 0) /
+            100,
           selectedMemberPlan?.currency ?? Currency.Chf,
           locale
         )}{' '}

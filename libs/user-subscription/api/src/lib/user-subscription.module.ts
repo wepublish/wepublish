@@ -3,7 +3,6 @@ import { PrismaModule } from '@wepublish/nest-modules';
 import { UserSubscriptionService } from './user-subscription.service';
 import { UserSubscriptionResolver } from './user-subscription.resolver';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
-import { RemoteSubscriptionsService } from './remote-subscriptions.service';
 import { PaymentMethodModule, PaymentsModule } from '@wepublish/payment/api';
 import { UserModule } from '@wepublish/user/api';
 import { MemberContextModule } from '@wepublish/membership/api';
@@ -17,10 +16,6 @@ import { MemberContextModule } from '@wepublish/membership/api';
     UserModule,
     MemberContextModule,
   ],
-  providers: [
-    UserSubscriptionService,
-    RemoteSubscriptionsService,
-    UserSubscriptionResolver,
-  ],
+  providers: [UserSubscriptionService, UserSubscriptionResolver],
 })
 export class UserSubscriptionModule {}

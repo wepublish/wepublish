@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { useWebsiteBuilder } from '@wepublish/website/builder';

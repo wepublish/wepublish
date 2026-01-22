@@ -6,6 +6,12 @@ import { PaymentMethodModule } from '@wepublish/payment/api';
 import { AvailablePaymentMethodResolver } from './available-payment-method.resolver';
 import { MemberPlanDataloader } from './member-plan.dataloader';
 import { PageModule } from '@wepublish/page/api';
+import {
+  HasMemberPlanResolver,
+  HasMemberPlanLcResolver,
+  HasOptionalMemberPlanResolver,
+  HasOptionalMemberPlanLcResolver,
+} from './has-memberplan/has-memberplan.resolver';
 
 @Module({
   imports: [PrismaModule, PaymentMethodModule, forwardRef(() => PageModule)],
@@ -14,6 +20,11 @@ import { PageModule } from '@wepublish/page/api';
     MemberPlanResolver,
     AvailablePaymentMethodResolver,
     MemberPlanDataloader,
+
+    HasMemberPlanResolver,
+    HasMemberPlanLcResolver,
+    HasOptionalMemberPlanResolver,
+    HasOptionalMemberPlanLcResolver,
   ],
   exports: [MemberPlanService, MemberPlanDataloader],
 })
