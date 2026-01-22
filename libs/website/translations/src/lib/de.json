@@ -21,6 +21,7 @@
     },
     "cancellable": "Jederzeit kündbar",
     "upgrade": {
+      "infoTitle": "Dein Upgrade",
       "info": "Mach jetzt ein Upgrade von deinem {oldMemberPlan} auf das {newMemberPlan}. <bold>Dein Restguthaben von {discount} bei deinem {oldMemberPlan} wird Dir dabei angerechnet.</bold> Weiter unten siehst du Deinen noch zu zahlenden Upgrade-Preis für den Wechsel zum {newMemberPlan}.",
       "button": "Für {formattedAmount} auf {memberPlan} upgraden"
     },
