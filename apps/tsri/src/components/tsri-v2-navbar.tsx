@@ -13,7 +13,7 @@ import {
 import { useUser } from '@wepublish/authentication/website';
 import { useHasActiveSubscription } from '@wepublish/membership/website';
 import { navigationLinkToUrl } from '@wepublish/navigation/website';
-import { ButtonProps, TextToIcon } from '@wepublish/ui';
+import { ButtonProps } from '@wepublish/ui';
 import { FullNavigationFragment } from '@wepublish/website/api';
 import { PageType } from '@wepublish/website/builder';
 import {
@@ -859,7 +859,6 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
     }, [pageTypeBasedProps]);
 
     const mainItems = data?.navigations?.find(({ key }) => key === slug);
-    const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
 
     const categories = useMemo(() => {
       return categorySlugs.map(categorySlugArray =>
@@ -1112,26 +1111,6 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
               isMenuOpen={isMenuOpen}
               className={navPaperClassName}
             >
-              {iconItems?.links.map((link, index) => (
-                <Link
-                  key={index}
-                  href={navigationLinkToUrl(link)}
-                  onClick={() => {
-                    if (controlledIsMenuOpen === undefined) {
-                      setInternalMenuOpen(false);
-                    }
-
-                    onMenuToggle?.(false);
-                  }}
-                  color="inherit"
-                >
-                  <TextToIcon
-                    title={link.label}
-                    size={32}
-                  />
-                </Link>
-              ))}
-
               {children}
             </NavPaper>
           )}
