@@ -108,8 +108,8 @@ const parseQueryParams: (url: string) => QueryParams = (
 
 export const TsriNextWepublishLink = forwardRef<
   HTMLAnchorElement,
-  BuilderLinkProps
->(function NextWepublishLink({ children, href, ...props }, ref) {
+  BuilderLinkProps & { variant?: string }
+>(function NextWepublishLink({ children, href, variant, ...props }, ref) {
   const [modalOpen, setModalOpen] = useState(false);
   const [isMCSubmit, setIsMCSubmit] = useState(false);
   const queryParams = parseQueryParams(href ?? '');
@@ -144,6 +144,7 @@ export const TsriNextWepublishLink = forwardRef<
         component={NextLink}
         href={href ?? ''}
         onClick={handleLinkClick}
+        variant={variant}
       >
         {children}
       </BuilderLink>
