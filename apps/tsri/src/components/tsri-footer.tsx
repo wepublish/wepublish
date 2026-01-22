@@ -285,6 +285,11 @@ const LoginTab = styled(Link)`
     grid-column: 2/3;
     grid-row: 1/2;
   }
+
+  ${theme.breakpoints.up('xl')} {
+    padding: 0.25cqw 1cqw;
+    font-size: 0.85cqw;
+  }
 `;
 
 export const FooterPaperWrapper = styled('div')`

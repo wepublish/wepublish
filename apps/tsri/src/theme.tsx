@@ -262,6 +262,10 @@ const theme = createTheme(WePTheme, {
               fontSize: 'min(1.25cqw, 1.4rem)',
               lineHeight: 'min(2cqw, 1.65rem)',
             },
+            [breakpoints.up('xl')]: {
+              fontSize: '1.4rem',
+              lineHeight: '2rem',
+            },
           },
         },
       ],
