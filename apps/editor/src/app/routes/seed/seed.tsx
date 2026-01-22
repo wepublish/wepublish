@@ -6,14 +6,11 @@ import {
   CommentItemType,
   CommentListDocument,
   CommentState,
-  ImageListDocument,
   ProductType,
   SubscriptionListDocument,
   useCreateCommentMutation,
   useDeleteCommentMutation,
-  useDeleteImageMutation,
   useDeleteSubscriptionMutation,
-  useUploadImageMutation,
 } from '@wepublish/editor/api';
 import {
   ArticleListDocument,
@@ -35,6 +32,7 @@ import {
   getApiClientV2,
   IFrameBlockInput,
   ImageBlockInput,
+  ImageListDocument,
   //TitleBlock,
   MemberPlanListDocument,
   //ImageBlock,
@@ -71,6 +69,7 @@ import {
   useDeleteAuthorMutation,
   useDeleteBlockStyleMutation,
   useDeleteEventMutation,
+  useDeleteImageMutation,
   useDeleteMemberPlanMutation,
   useDeleteNavigationMutation,
   useDeletePageMutation,
@@ -80,6 +79,7 @@ import {
   usePublishArticleMutation,
   usePublishPageMutation,
   useUpdateArticleMutation,
+  useUploadImageMutation,
 } from '@wepublish/editor/api-v2';
 import {
   getImgMinSizeToCompress,
@@ -165,7 +165,8 @@ async function seedImages(
     const optimizedImage: File = await resizeImage(file!);
     const { data } = await uploadImage({
       variables: {
-        input: { file: optimizedImage!, ...getCommonInput(imgConf) },
+        file: optimizedImage!,
+        ...getCommonInput(imgConf),
       },
     });
     await waitForMs(200);
@@ -1605,13 +1606,13 @@ async function fetchAllNavigations(client: any) {
   return all;
 }
 
-async function fetchAllImages(clientV1: any) {
+async function fetchAllImages(client: any) {
   let skip = 0;
   const all: Array<{ id: string }> = [];
 
   let hasMore = true;
   while (hasMore) {
-    const { data } = await clientV1.query({
+    const { data } = await client.query({
       query: ImageListDocument,
       variables: {
         filter: undefined,
@@ -1885,7 +1886,7 @@ async function handleDelete(
     fetchAllArticles(client),
     fetchAllNavigations(client),
     !(params?.get('type') === 'exclude-images') ?
-      fetchAllImages(clientV1)
+      fetchAllImages(client)
     : Promise.resolve([]),
     fetchAllPages(client),
     fetchAllEvents(client),
@@ -1984,15 +1985,24 @@ async function handleDelete(
     allPaymentMethods.map(paymentMethod =>
       deletePaymentMethod({
         variables: { id: paymentMethod.id },
+      }).catch(err => {
+        console.log(
+          `Could not delete payment method with id ${paymentMethod.id}: ${err}`
+        );
       })
     )
   );
   await Promise.all(
-    allSubscriptionFlows.map(subscriptionFlow =>
+    allSubscriptionFlows.map(async subscriptionFlow => {
       deleteSubscriptionFlow({
         variables: { id: subscriptionFlow.id },
-      })
-    )
+      }).catch(err => {
+        console.log(
+          `Could not delete subscription flow with id ${subscriptionFlow.id}: ${err}`
+        );
+        return Promise.resolve();
+      });
+    })
   );
 }
 
@@ -2009,16 +2019,17 @@ async function handleSeed(
   createPage: ReturnType<typeof useCreatePageMutation>[0],
   createComment: ReturnType<typeof useCreateCommentMutation>[0],
   publishPage: ReturnType<typeof usePublishPageMutation>[0],
-  fetchAllImages: (clientV1: any) => Promise<Array<{ id: string }>>,
+  fetchAllImages: (client: any) => Promise<Array<{ id: string }>>,
   createMemberPlan: ReturnType<typeof useCreateMemberPlanMutation>[0],
   createPaymentMethod: ReturnType<typeof useCreatePaymentMethodMutation>[0],
   clientV1: any,
+  client: any,
   params?: URLSearchParams
 ) {
   const images =
     !(params?.get('type') === 'exclude-images') ?
       await seedImages(uploadImage)
-    : (await fetchAllImages(clientV1)).map(img => img.id);
+    : (await fetchAllImages(client)).map(img => img.id);
 
   const authors = await seedAuthors(createAuthor, images);
   const tags = await seedArticleTags(createTag);
@@ -2091,7 +2102,7 @@ type SeedProps = { type?: string };
 
 export const Seed = ({ type }: SeedProps) => {
   const client = getApiClientV2();
-  const clientV1 = useApolloClient(); // used to fetch all images --> api v1
+  const clientV1 = useApolloClient(); // used handle comments --> api v1
 
   // delete hooks
   const [deleteTag] = useDeleteTagMutation({ client });
@@ -2099,7 +2110,7 @@ export const Seed = ({ type }: SeedProps) => {
   const [deleteArticle] = useDeleteArticleMutation({ client });
   const [deleteNavigation] = useDeleteNavigationMutation({ client });
   const [deletePage] = useDeletePageMutation({ client });
-  const [deleteImage] = useDeleteImageMutation();
+  const [deleteImage] = useDeleteImageMutation({ client });
   const [deleteEvent] = useDeleteEventMutation({ client });
   const [deleteBlockStyle] = useDeleteBlockStyleMutation({ client });
   const [deleteComment] = useDeleteCommentMutation();
@@ -2119,6 +2130,7 @@ export const Seed = ({ type }: SeedProps) => {
   const [createNavigation] = useCreateNavigationMutation({ client });
   const [createEvent] = useCreateEventMutation({ client });
   const [uploadImage] = useUploadImageMutation({
+    client,
     refetchQueries: [getOperationNameFromDocument(ImageListDocument)],
   });
   const [createBlockStyle] = useCreateBlockStyleMutation({
@@ -2214,6 +2226,7 @@ export const Seed = ({ type }: SeedProps) => {
                 createMemberPlan,
                 createPaymentMethod,
                 clientV1,
+                client,
                 params
               );
             } catch (error) {
