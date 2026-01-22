@@ -56,6 +56,9 @@ const theme = createTheme(WePTheme, {
     overline: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
     },
+    blockTitlePreTitle: {
+      backgroundColor: '#B2D7AF',
+    },
     subtitle1: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
     },

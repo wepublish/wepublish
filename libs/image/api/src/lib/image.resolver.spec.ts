@@ -10,7 +10,7 @@ import { MediaAdapter } from './media-adapter';
 
 const imageQuery = `
   query Image($id: String!) {
-    getImage(id: $id) {
+    image(id: $id) {
       id
       filename
     }
