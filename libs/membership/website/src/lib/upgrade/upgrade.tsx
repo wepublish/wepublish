@@ -259,6 +259,8 @@ export const Upgrade = ({
       noValidate
     >
       <UpgradeInformation>
+        <H5 gutterBottom>{t('subscribe.upgrade.infoTitle')}</H5>
+
         <Paragraph gutterBottom={false}>
           <Trans
             i18nKey="subscribe.upgrade.info"

@@ -67,7 +67,7 @@ export const Paywall = ({
           variant="contained"
           color="secondary"
           LinkComponent={Link}
-          href={alternativeSubscribeUrl ?? '/mitmachen'}
+          href={alternativeSubscribeUrl || '/mitmachen'}
           onClick={setIntendedRoute}
         >
           {texts?.subscribe ?? t('paywall.subscribe')}
