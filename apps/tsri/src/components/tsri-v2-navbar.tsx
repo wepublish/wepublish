@@ -8,6 +8,7 @@ import {
   SxProps,
   Theme,
   Toolbar,
+  Typography,
 } from '@mui/material';
 import { useUser } from '@wepublish/authentication/website';
 import { useHasActiveSubscription } from '@wepublish/membership/website';
@@ -82,7 +83,7 @@ const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
 export const AppBar = styled(MuiAppBar, {
   shouldForwardProp: propName => propName !== 'isMenuOpen',
 })<{ isMenuOpen?: boolean }>`
-  background-color: ${({ theme }) => theme.palette.common.white};
+  background-color: ${theme.palette.common.white};
   position: relative;
 
   ${({ isMenuOpen }) =>
@@ -100,7 +101,7 @@ export const NavbarWrapper = styled('nav')`
   z-index: 10;
   height: auto;
   pointer-events: none;
-  margin-bottom: calc(${({ theme }) => theme.spacing(-3)} + 1px);
+  margin-bottom: calc(${theme.spacing(-3)} + 1px);
   --sizing-factor: 2.7;
 
   > * {
@@ -250,7 +251,7 @@ export const NavbarActions = styled('div', {
   }
 `;
 
-export const NavbarLoginLink = styled(Link)`
+export const NavbarHomeLink = styled(Link)`
   color: unset;
   position: relative;
   grid-column: 1 / 2;
@@ -260,8 +261,6 @@ export const NavbarLoginLink = styled(Link)`
   align-items: center;
   justify-items: center;
   justify-self: left;
-  visibility: visible;
-  transition: visibility 300ms ease-in-out;
 `;
 
 const TsriLogo = styled('img', {
@@ -342,56 +341,7 @@ const TsriClaim = styled('img', {
     `}
 `;
 
-export const navbarTabStyles = (theme: Theme) => css`
-  background-color: ${theme.palette.common.black};
-  color: ${theme.palette.common.white};
-  font-size: calc(var(--sizing-factor) * 1.2cqw) !important;
-  line-height: calc(var(--sizing-factor) * 1.2cqw);
-  text-align: left;
-  border: 0;
-  outline: 0;
-  user-select: none;
-  cursor: pointer;
-  font-weight: 700;
-  padding: 0;
-  border-top-left-radius: 2cqw;
-  border-top-right-radius: 2cqw;
-  box-sizing: border-box;
-  grid-column: 2 / 3;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-
-  &:hover {
-    background-color: ${theme.palette.primary.light};
-    color: ${theme.palette.common.black};
-  }
-
-  & > * {
-    text-decoration: none !important;
-    color: inherit !important;
-    display: block;
-    width: 100%;
-    height: 7.2cqw;
-    padding: calc(var(--sizing-factor) * 0.75cqw)
-      calc(var(--sizing-factor) * 1cqw);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  ${theme.breakpoints.up('md')} {
-    border-top-left-radius: 1cqw;
-    border-top-right-radius: 1cqw;
-
-    & > * {
-      height: auto;
-    }
-  }
-`;
-
-const BecomeMemberGoToProfileTab = styled('button')`
-  ${navbarTabStyles(theme)}
+const BecomeMemberGoToProfileTab = styled(Link)`
   grid-column: 2 / 3;
   grid-row: 1 / 2;
 
@@ -401,62 +351,53 @@ const BecomeMemberGoToProfileTab = styled('button')`
   }
 `;
 
-const RegisterNewsLetterTab = styled('button')`
-  ${navbarTabStyles(theme)}
+const RegisterNewsLetterTab = styled(Link)`
   grid-column: 1 / 2;
   grid-row: 1 / 2;
+  display: block;
+  width: 50cqw;
 
   ${theme.breakpoints.up('md')} {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
+    width: unset;
   }
 `;
 
 const PreTitleTab = styled('div')`
-  ${navbarTabStyles(theme)}
-  background-color: ${({ theme }) => theme.palette.primary.main};
   grid-column: -1 / 1;
   grid-row: 2 / 3;
-  box-sizing: border-box;
-  cursor: default;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.palette.primary.main};
-    color: ${({ theme }) => theme.palette.common.white};
-  }
-
-  & > * {
-    width: unset;
-  }
+  background-color: ${theme.palette.primary.main};
+  color: ${theme.palette.common.white};
+  font-size: calc(var(--sizing-factor) * 1.2cqw);
+  line-height: calc(var(--sizing-factor) * 1.2cqw);
+  font-weight: 700;
+  padding: calc(var(--sizing-factor) * 0.75cqw)
+    calc(var(--sizing-factor) * 1cqw);
+  border-top-left-radius: 2cqw;
+  border-top-right-radius: 2cqw;
 
   ${theme.breakpoints.up('md')} {
     grid-column: 1 / 2;
+    border-top-left-radius: 1cqw;
+    border-top-right-radius: 1cqw;
   }
 `;
 
-const OpenInvoiceTab = styled('button')`
-  ${navbarTabStyles(theme)}
+const OpenInvoiceTab = styled(Link)`
   grid-column: 1 / 2;
   grid-row: 1 / 2;
-  background-color: ${({ theme }) => theme.palette.error.main};
-  color: ${({ theme }) => theme.palette.common.white};
+  background-color: ${theme.palette.error.main};
+  color: ${theme.palette.common.white};
 
   &:hover {
-    background-color: ${({ theme }) => theme.palette.error.main};
-    color: ${({ theme }) => theme.palette.common.white};
-  }
-
-  & > * {
-    width: unset;
-  }
-
-  & > a {
-    width: 100%;
+    background-color: ${theme.palette.error.main};
+    color: ${theme.palette.common.white};
   }
 
   & > svg {
-    scale: 1.5;
-    margin-right: -3cqw;
+    scale: 1.25;
+    margin-right: 2cqw;
   }
 
   ${theme.breakpoints.up('md')} {
@@ -464,8 +405,7 @@ const OpenInvoiceTab = styled('button')`
   }
 `;
 
-const LoginLogoutTab = styled('button')`
-  ${navbarTabStyles(theme)}
+const LoginLogoutTab = styled(Link)`
   grid-column: 2 / 3;
   grid-row: 1 / 2;
 
@@ -553,16 +493,16 @@ const OpenInvoicesAlert = styled('div')`
   position: absolute;
   transform: translateX(100%);
   display: grid;
-  gap: ${({ theme }) => theme.spacing(0.5)};
+  gap: ${theme.spacing(0.5)};
   grid-template-columns: max-content max-content;
   align-items: center;
-  color: ${({ theme }) => theme.palette.error.main};
+  color: ${theme.palette.error.main};
   font-size: 0.875em;
   font-weight: 600;
   top: 32px;
   right: 54px;
 
-  ${({ theme }) => theme.breakpoints.up('md')} {
+  ${theme.breakpoints.up('md')} {
     top: 34px;
     right: 56px;
   }
@@ -571,23 +511,23 @@ const OpenInvoicesAlert = styled('div')`
 export const NavPaperWrapper = styled('div', {
   shouldForwardProp: propName => propName !== 'isMenuOpen',
 })<{ isMenuOpen: boolean }>`
-  padding: ${({ theme }) => `8cqw ${theme.spacing(2)} 0 ${theme.spacing(2)}`};
+  padding: 8cqw ${theme.spacing(2)} 0 ${theme.spacing(2)};
   background: linear-gradient(
     to bottom,
     color-mix(
       in srgb,
-      ${({ theme }) => theme.palette.common.white} 60%,
-      ${({ theme }) => theme.palette.primary.main}
+      ${theme.palette.common.white} 60%,
+      ${theme.palette.primary.main}
     ),
-    ${({ theme }) => theme.palette.primary.main}
+    ${theme.palette.primary.main}
   );
-  color: ${({ theme }) => theme.palette.common.black};
+  color: ${theme.palette.common.black};
   top: 0;
   left: 0;
   right: 0;
   transform: translate3d(
     0,
-    ${({ isMenuOpen }) => (isMenuOpen ? '0' : '-100%')},
+    ${({ isMenuOpen }) => (isMenuOpen ? '0' : '-102%')},
     0
   );
   transition: transform 300ms ease-in-out;
@@ -619,30 +559,12 @@ export const NavPaperWrapper = styled('div', {
     }
 
     ${LoginLogoutTab} {
-      font-size: 1cqw;
-      line-height: 1cqw;
-      padding: 0;
-      border-top-left-radius: 2cqw;
-      border-top-right-radius: 2cqw;
       grid-column: -1 / 1;
 
-      & > * {
-        width: 100%;
-        padding-top: 3cqw;
-      }
-
-      ${({ theme }) => theme.breakpoints.up('md')} {
+      ${theme.breakpoints.up('md')} {
         grid-column: 2 / 3;
-        border-top-left-radius: 0.5cqw;
-        border-top-right-radius: 0.5cqw;
-
-        & > * {
-          padding-top: 0.5cqw;
-          height: 1.8cqw;
-          width: auto;
-          font-size: 0.75cqw;
-          line-height: 0.75cqw;
-        }
+        border-top-left-radius: 0.8cqw;
+        border-top-right-radius: 0.8cqw;
       }
     }
   }
@@ -666,30 +588,13 @@ export const NavPaperCategory = styled('div')`
     padding-right: 2cqw;
   }
 
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-column: unset !important;
-    grid-row: unset !important;
-    padding: 0;
-  }
-`;
-
-export const NavPaperName = styled('span')`
-  text-transform: uppercase;
-  font-weight: 300;
-  font-size: ${({ theme }) => theme.typography.body2.fontSize};
-  font-size: 3rem !important;
-`;
-
-export const NavPaperSeparator = styled('hr')`
-  width: 100%;
-  height: 1px;
-  background-color: ${({ theme }) => theme.palette.common.white};
-
-  ${({ theme }) => css`
-    ${theme.breakpoints.up('sm')} {
-      display: none;
+  ${theme.breakpoints.up('md')} {
+    &:nth-of-type(n) {
+      grid-column: unset;
+      grid-row: unset;
+      padding: 0;
     }
-  `}
+  }
 `;
 
 export const NavPaperLinksGroup = styled('div')`
@@ -702,104 +607,11 @@ export const NavPaperLinksGroup = styled('div')`
   row-gap: 12cqw;
   margin: 0 0 0 3cqw;
 
-  ${({ theme }) => theme.breakpoints.up('md')} {
+  ${theme.breakpoints.up('md')} {
     row-gap: unset;
     grid-template-rows: unset;
     grid-template-columns: repeat(3, min-content);
   }
-`;
-
-export const NavPaperCategoryLinksTitle = styled('h6')`
-  color: ${({ theme }) => theme.palette.common.white};
-  display: inline-block;
-  white-space: nowrap;
-  padding: 0 0.3cqw;
-  margin: 0;
-
-  font-weight: 700 !important;
-  font-size: 4.5cqw !important;
-  line-height: 6cqw !important;
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    font-weight: 700 !important;
-    font-size: min(1.25cqw, 1.4rem) !important;
-    line-height: min(1.66cqw, 1.86rem) !important;
-  }
-`;
-
-export const NavPaperCategoryLinks = styled('ul')`
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  font-weight: 700 !important;
-  font-size: 4.5cqw !important;
-  line-height: 6cqw !important;
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    font-weight: 700 !important;
-    font-size: min(1.25cqw, 1.4rem) !important;
-    line-height: min(1.66cqw, 1.86rem) !important;
-  }
-`;
-
-export const NavPaperCategoryLinkItem = styled('li')`
-  list-style: none;
-  margin: 0;
-  padding: 0;
-`;
-
-export const CategoryLink = styled(Link)`
-  color: inherit;
-  display: inline-block;
-  white-space: nowrap;
-  padding: 0 0.3cqw;
-  text-decoration: none;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.palette.primary.light};
-    text-decoration: none;
-  }
-`;
-
-export const NavPaperMainLinks = styled(NavPaperCategoryLinks)`
-  gap: 0;
-
-  span {
-    font-family: inherhit;
-  }
-  display: none;
-`;
-
-export const NavPaperChildrenWrapper = styled('div')`
-  position: relative;
-  padding: ${({ theme }) => theme.spacing(1.5)};
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
-  justify-items: center;
-  width: 100%;
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    position: absolute;
-    grid-template-columns: auto;
-    justify-items: start;
-    width: calc(100% / 6);
-    gap: ${({ theme }) => theme.spacing(3)};
-    padding-top: ${({ theme }) => theme.spacing(10)};
-    padding-left: ${({ theme }) => theme.spacing(2)};
-  }
-`;
-
-export const NavPaperActions = styled('div')`
-  display: flex;
-  flex-flow: row wrap;
-  gap: ${({ theme }) => theme.spacing(2)};
-  margin-top: ${({ theme }) => theme.spacing(5)};
-`;
-
-export const categoryLinkComponent = styled('span')`
-  font-weight: 700 !important;
-  font-size: 1.675cqw !important;
-  line-height: 2.2cqw !important;
 `;
 
 const NavPaper = ({
@@ -827,7 +639,7 @@ const NavPaper = ({
   className?: string;
 }>) => {
   const {
-    elements: { Link, H6 },
+    elements: { Link },
   } = useWebsiteBuilder();
   const { hasUser, logout } = useUser();
   const router = useRouter();
@@ -840,27 +652,27 @@ const NavPaper = ({
       {!!categories.length &&
         categories.map((categoryArray, arrayIndex) => (
           <NavPaperLinksGroup key={arrayIndex}>
-            {arrayIndex > 0 && <NavPaperSeparator />}
-
             {categoryArray.map(nav => (
               <NavPaperCategory key={nav.id}>
-                <H6 component={NavPaperCategoryLinksTitle}>{nav.name}</H6>
-                <NavPaperCategoryLinks>
+                <Typography variant="categoryLinkTitle">{nav.name}</Typography>
+                <Typography variant="categoryLinkList">
                   {nav.links?.map((link, index) => {
-                    const url = navigationLinkToUrl(link);
-
                     return (
-                      <NavPaperCategoryLinkItem key={index}>
-                        <CategoryLink
-                          href={url}
+                      <Typography
+                        variant="categoryLinkItem"
+                        key={index}
+                      >
+                        <Link
+                          variant={'categoryLink'}
+                          href={navigationLinkToUrl(link)}
                           onClick={closeMenu}
                         >
                           {link.label}
-                        </CategoryLink>
-                      </NavPaperCategoryLinkItem>
+                        </Link>
+                      </Typography>
                     );
                   })}
-                </NavPaperCategoryLinks>
+                </Typography>
               </NavPaperCategory>
             ))}
           </NavPaperLinksGroup>
@@ -869,27 +681,28 @@ const NavPaper = ({
         navbarState={[]}
         isHomePage={false}
       >
-        <LoginLogoutTab>
-          {hasUser && (
-            <Link
-              onClick={() => {
-                logout();
-                closeMenu();
-              }}
-              href={router.asPath}
-            >
-              Logout
-            </Link>
-          )}
-          {!hasUser && loginBtn && (
-            <Link
-              href={loginBtn.href}
-              onClick={closeMenu}
-            >
-              Login
-            </Link>
-          )}
-        </LoginLogoutTab>
+        {hasUser && (
+          <LoginLogoutTab
+            variant="navbarTab"
+            onClick={() => {
+              logout();
+              closeMenu();
+            }}
+          >
+            Logout
+          </LoginLogoutTab>
+        )}
+        {!hasUser && loginBtn && (
+          <LoginLogoutTab
+            variant="navbarTab"
+            onClick={() => {
+              closeMenu();
+              router.push(loginBtn.href!);
+            }}
+          >
+            Login
+          </LoginLogoutTab>
+        )}
       </NavbarTabs>
     </NavPaperWrapper>
   );
@@ -902,39 +715,19 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   navbarState: NavbarState[];
   isMenuOpen?: boolean;
 }>`
-  min-height: unset !important;
-  margin: 0 auto;
-  width: 100%;
-  background-color: ${({ theme }) => theme.palette.common.white};
-  max-width: 1333px;
-  container: toolbar/inline-size;
-  position: static;
-  box-sizing: border-box;
-  aspect-ratio: var(--changing-aspect-ratio) !important;
-  display: grid;
-  grid-template-columns: 1fr min-content min-content;
-  grid-template-rows: repeat(2, auto);
-  transition:
-    background-color 100ms ease-out 200ms,
-    aspect-ratio 300ms ease-out;
-
   ${({ isMenuOpen }) =>
     isMenuOpen &&
     css`
       background-color: transparent;
       pointer-events: none;
 
-      ${NavbarLoginLink} {
+      ${NavbarHomeLink} {
         visibility: hidden;
       }
       ${NavbarTabs} {
         visibility: hidden;
       }
     `}
-
-  ${theme.breakpoints.up('md')} {
-    grid-template-rows: unset;
-  }
 `;
 
 const buttonStyles: SxProps<Theme> = theme => ({
@@ -1148,10 +941,11 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
           elevation={0}
         >
           <NavbarInnerWrapper
+            variant="navbarInnerWrapper"
             navbarState={navbarState}
             isMenuOpen={isMenuOpen}
           >
-            <NavbarLoginLink
+            <NavbarHomeLink
               href="/"
               aria-label="Startseite"
             >
@@ -1175,7 +969,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                 isScrolled={isScrolled}
                 isHomePage={isHomePage}
               />
-            </NavbarLoginLink>
+            </NavbarHomeLink>
 
             <NavbarActions isMenuOpen={isMenuOpen}>
               {hasUnpaidInvoices && profileBtn && (
@@ -1257,41 +1051,50 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                 <span>{tabText}</span>
               </PreTitleTab>
 
-              <BecomeMemberGoToProfileTab>
-                {!hasUser &&
-                  !hasRunningSubscription &&
-                  !hasUnpaidInvoices &&
-                  subscribeBtn && (
-                    <Link href={subscribeBtn.href}>
-                      {t('navbar.subscribe')}
-                    </Link>
-                  )}
-                {hasUser && profileBtn && (
-                  <Link href={profileBtn.href}>Mein Konto</Link>
+              {!hasUser &&
+                !hasRunningSubscription &&
+                !hasUnpaidInvoices &&
+                subscribeBtn && (
+                  <BecomeMemberGoToProfileTab
+                    variant="navbarTab"
+                    href={subscribeBtn.href}
+                  >
+                    {t('navbar.subscribe')}
+                  </BecomeMemberGoToProfileTab>
                 )}
-              </BecomeMemberGoToProfileTab>
+              {hasUser && profileBtn && (
+                <BecomeMemberGoToProfileTab
+                  variant="navbarTab"
+                  href={profileBtn.href}
+                >
+                  Mein Konto
+                </BecomeMemberGoToProfileTab>
+              )}
 
               {hasUnpaidInvoices && profileBtn && (
-                <OpenInvoiceTab>
-                  <MdWarning size={24} />
-                  <Link
-                    href={profileBtn.href}
-                    onClick={() => {
-                      if (controlledIsMenuOpen === undefined) {
-                        setInternalMenuOpen(false);
-                      }
-                      onMenuToggle?.(false);
-                    }}
-                  >
-                    Offene Rechnung
-                  </Link>
+                <OpenInvoiceTab
+                  variant="navbarTab"
+                  href={profileBtn.href}
+                  onClick={() => {
+                    if (controlledIsMenuOpen === undefined) {
+                      setInternalMenuOpen(false);
+                    }
+                    onMenuToggle?.(false);
+                  }}
+                >
+                  <MdWarning
+                    size={12}
+                    style={{ verticalAlign: 'middle' }}
+                  />
+                  <span>Offene Rechnung</span>
                 </OpenInvoiceTab>
               )}
 
-              <RegisterNewsLetterTab>
-                <Link href="/newsletter?mc_u=56ee24de7341c744008a13c9e&mc_id=32c65d081a&mc_f_id=00e5c2e1f0&source=tsri&tf_id=jExhxiVv&popTitle=DAS%20WICHTIGSTE%20AUS%20ZÜRI&popButtonText=Jetzt%20kostenlos%20abonnieren!&popText=Jeden%20Morgen%20findest%20du%20im%20Z%C3%BCri%20Briefing%20kuratierte%20News,%20Geschichten%20und%20Tipps%20f%C3%BCr%20den%20Tag.%20Bereits%2029'000%20Menschen%20lesen%20mit%20%E2%80%93%20und%20du?">
-                  Newsletter kostenlos abonnieren
-                </Link>
+              <RegisterNewsLetterTab
+                variant="navbarTab"
+                href="/newsletter?mc_u=56ee24de7341c744008a13c9e&mc_id=32c65d081a&mc_f_id=00e5c2e1f0&source=tsri&tf_id=jExhxiVv&popTitle=DAS%20WICHTIGSTE%20AUS%20ZÜRI&popButtonText=Jetzt%20kostenlos%20abonnieren!&popText=Jeden%20Morgen%20findest%20du%20im%20Z%C3%BCri%20Briefing%20kuratierte%20News,%20Geschichten%20und%20Tipps%20f%C3%BCr%20den%20Tag.%20Bereits%2029'000%20Menschen%20lesen%20mit%20%E2%80%93%20und%20du?"
+              >
+                Newsletter kostenlos abonnieren
               </RegisterNewsLetterTab>
             </NavbarTabs>
           </NavbarInnerWrapper>
