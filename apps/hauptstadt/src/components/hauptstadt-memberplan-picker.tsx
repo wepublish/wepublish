@@ -9,6 +9,7 @@ import {
   MemberPlanPickerRadios,
 } from '@wepublish/membership/website';
 import { BuilderMemberPlanPickerProps } from '@wepublish/website/builder';
+import { forwardRef } from 'react';
 
 export const HauptstadtMemberPlanItem = styled(MemberPlanItem)`
   --memberplan-item-picker-checked-bg: ${({ theme }) =>
@@ -44,11 +45,15 @@ export const HauptstadtMemberPlanItem = styled(MemberPlanItem)`
 `;
 
 export const HauptstadtMemberPlanPicker = styled(
-  (props: BuilderMemberPlanPickerProps) => (
-    <MemberPlanPicker
-      {...props}
-      alwaysShow
-    />
+  forwardRef<HTMLButtonElement, BuilderMemberPlanPickerProps>(
+    function HauptstadtMemberPlanPicker(props, ref) {
+      return (
+        <MemberPlanPicker
+          {...props}
+          alwaysShow
+        />
+      );
+    }
   )
 )`
   ${MemberPlanPickerRadios} {
