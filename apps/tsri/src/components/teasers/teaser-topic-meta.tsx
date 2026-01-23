@@ -133,6 +133,7 @@ export const TeaserTopicMeta = styled(TeaserTopicMetaBase)`
     background-color: transparent;
     color: ${({ theme }) => theme.palette.common.black};
     justify-self: end;
+    padding-right: 0;
 
     & .MuiLink-root {
       display: inline;

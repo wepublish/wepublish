@@ -92,8 +92,8 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
     padding: 1.8cqw 1cqw;
     grid-column: 2 / 3;
     grid-row: 2 / 4;
-    font-size: 3.8cqw !important;
-    line-height: 4.2cqw !important;
+    font-size: 4.5cqw !important;
+    line-height: 4.5cqw !important;
     word-wrap: nowrap;
     text-wrap: wrap;
     white-space: pre-wrap;
@@ -101,22 +101,23 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
 
     ${({ theme }) => theme.breakpoints.up('md')} {
       font-size: 2.6cqw !important;
-      line-height: 2.98cqw !important;
+      line-height: 3cqw !important;
     }
   }
 
   ${TeaserLead} {
     display: block;
-    padding: 2cqw 1cqw 3cqw 1cqw;
+    padding: 2cqw 1cqw 6cqw 1cqw;
     margin: 0;
     grid-row: 4 / 6;
     background-color: ${({ theme }) => theme.palette.common.white};
     height: 100%;
-    font-size: 2.5cqw !important;
-    line-height: 2.8cqw !important;
+    font-size: 3.5cqw !important;
+    line-height: 4cqw !important;
     font-weight: 700 !important;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
+      padding: 2cqw 1cqw 3cqw 1cqw;
       font-size: 1.67cqw !important;
       line-height: 1.6cqw !important;
     }
@@ -152,7 +153,7 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
         background-color: ${({ theme }) => theme.palette.common.black};
         display: inline-block;
         padding: 0.2cqw 1cqw;
-        font-size: 1cqw;
+        font-size: 2.6cqw;
         font-weight: 700 !important;
         margin-left: 7.2cqw;
 
@@ -169,8 +170,8 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
 
     ${TeaserTime} {
       grid-row: 2 / 6;
-      font-size: 2cqw !important;
-      line-height: 2.2cqw !important;
+      font-size: 2.5cqw !important;
+      line-height: 2.5cqw !important;
       font-weight: 700 !important;
       padding: 0.6cqw 1cqw;
       display: block;

@@ -37,7 +37,7 @@ export const TeaserMoreAbout = styled(TeaserTopicMeta)`
   }
 
   & ${TeaserPreTitle} {
-    font-size: 3.5cqw !important;
+    font-size: 4cqw !important;
     font-weight: 700 !important;
     line-height: 5cqw !important;
 
