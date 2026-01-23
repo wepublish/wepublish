@@ -13,7 +13,7 @@ const formStyles = css`
   align-self: flex-end;
   padding: 24px 32px 32px 0;
   font-size: 16px;
-  font-weight: 700px;
+  font-weight: 700;
 `;
 
 const PopTextComponent = styled('p')`

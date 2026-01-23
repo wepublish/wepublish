@@ -111,7 +111,7 @@ export const FrontTopRow = styled('div')`
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-columns: repeat(12, 1fr);
-    column-gap: 1cqw;
+    column-gap: ${({ theme }) => theme.spacing(2)};
     row-gap: 0;
   }
 `;
