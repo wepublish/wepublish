@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
-import { TeaserTopicMeta } from '../teasers/teaser-topic-meta';
+import { StyledTeaserTopicMeta } from '../teasers/teaser-topic-meta';
 import { TsriTeaserType } from '../teasers/tsri-base-teaser';
 import {
   TeaserLead,
@@ -54,7 +54,7 @@ export const TeaserSlotsShopProductsSidebar = styled(TeaserSlots)`
   flex-direction: column;
   align-items: stretch;
 
-  ${TeaserTopicMeta} {
+  ${StyledTeaserTopicMeta} {
     margin-top: calc(var(--sizing-factor) * 2cqw);
     flex-grow: 1;
 
