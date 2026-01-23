@@ -16,6 +16,8 @@ export const isTabbedMainContent = ({
 
 export const blockStyleByIndex = (index: number): TsriLayoutType => {
   switch (index) {
+    case 1:
+      return TsriLayoutType.ArchiveTopicWithTwoCol;
     case 5:
       return TsriLayoutType.ArchiveTopicAuthor;
     default:
