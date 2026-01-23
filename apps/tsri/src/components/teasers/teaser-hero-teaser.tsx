@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
+import { createWithTheme } from '@wepublish/ui';
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
+import { teaserHeroTheme } from '../../theme';
 import { TsriTeaserType } from './tsri-base-teaser';
 import {
   TeaserContentWrapper,
@@ -18,7 +20,7 @@ export const isTeaserHeroTeaser = allPass([
   },
 ]);
 
-export const TeaserHeroTeaser = styled(TsriTeaser)`
+export const StyledTeaserHeroTeaser = styled(TsriTeaser)`
   ${({ theme }) => theme.breakpoints.down('md')} {
     aspect-ratio: unset;
 
@@ -58,18 +60,20 @@ export const TeaserHeroTeaser = styled(TsriTeaser)`
 
     ${TeaserPreTitleWrapper} {
       grid-row: 2 / 3;
-      margin-right: 2cqw;
       z-index: 2;
     }
 
     ${TeaserTitle} {
       grid-row: 3 / 4;
-      margin-right: 2cqw !important;
     }
 
     ${TeaserMetadata} {
       grid-row: 4 / 5;
-      margin-right: 2cqw;
     }
   }
 `;
+
+export const TeaserHeroTeaser = createWithTheme(
+  StyledTeaserHeroTeaser,
+  teaserHeroTheme
+);

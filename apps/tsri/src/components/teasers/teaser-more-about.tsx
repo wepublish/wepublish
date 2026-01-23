@@ -1,15 +1,12 @@
 import styled from '@emotion/styled';
+import { createWithTheme } from '@wepublish/ui';
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
-import { TeaserTopicMeta } from './teaser-topic-meta';
+import { teaserMoreAboutTheme } from '../../theme';
+import { StyledTeaserTopicMeta } from './teaser-topic-meta';
 import { TsriTeaserType } from './tsri-base-teaser';
-import {
-  TeaserContentWrapper,
-  TeaserLead,
-  TeaserPreTitle,
-  TeaserTitle,
-} from './tsri-teaser';
+import { TeaserContentWrapper, TeaserLead, TeaserTitle } from './tsri-teaser';
 
 export const isTeaserMoreAbout = allPass([
   ({ blockStyle }: BuilderTeaserProps) => {
@@ -17,7 +14,7 @@ export const isTeaserMoreAbout = allPass([
   },
 ]);
 
-export const TeaserMoreAbout = styled(TeaserTopicMeta)`
+export const StyledTeaserMoreAbout = styled(StyledTeaserTopicMeta)`
   ${TeaserContentWrapper} {
     grid-template-rows: unset;
     padding-top: 7cqw;
@@ -35,15 +32,9 @@ export const TeaserMoreAbout = styled(TeaserTopicMeta)`
   & ${TeaserLead} {
     display: none;
   }
-
-  & ${TeaserPreTitle} {
-    font-size: 4cqw !important;
-    font-weight: 700 !important;
-    line-height: 5cqw !important;
-
-    ${({ theme }) => theme.breakpoints.up('md')} {
-      font-size: 1.1cqw !important;
-      line-height: 1.2cqw !important;
-    }
-  }
 `;
+
+export const TeaserMoreAbout = createWithTheme(
+  StyledTeaserMoreAbout,
+  teaserMoreAboutTheme
+);

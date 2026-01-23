@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { createWithTheme } from '@wepublish/ui';
 import {
   BuilderTeaserProps,
   useWebsiteBuilder,
@@ -6,9 +7,11 @@ import {
 import { allPass } from 'ramda';
 import { useContext } from 'react';
 
+import { sidebarDailyBriefingTheme } from '../../theme';
 import { DailyBriefingContext } from './teaser-sidebar-daily-briefing-context';
 import { TsriTeaserType } from './tsri-base-teaser';
 import { TeaserWrapper as TeaserWrapperDefault } from './tsri-teaser';
+import { Typography } from '@mui/material';
 
 export const isDailyBriefingTeaser = allPass([
   ({ blockStyle }: BuilderTeaserProps) => {
@@ -26,36 +29,7 @@ const DailyBriefingTeaserWrapper = styled('div')`
   grid-auto-rows: min-content;
 `;
 
-const DailyBriefingLinkList = styled('ul')`
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-auto-rows: min-content;
-  font-size: calc(var(--sizing-factor) * 1.3cqw) !important;
-  line-height: calc(var(--sizing-factor) * 1.49cqw) !important;
-  font-weight: 700 !important;
-`;
-
-const DailyBriefingLink = styled('li')`
-  color: ${({ theme }) => theme.palette.common.black};
-  margin: 0 0 calc(var(--sizing-factor) * 0.2cqw) 0;
-
-  & a {
-    color: inherit;
-    text-decoration: none;
-    padding: calc(var(--sizing-factor) * 0.5cqw);
-    display: block;
-    background-color: ${({ theme }) => theme.palette.common.white};
-
-    &:hover {
-      background-color: ${({ theme }) => theme.palette.primary.light};
-      color: ${({ theme }) => theme.palette.common.black};
-    }
-  }
-`;
-
-export const DailyBriefingTeaser = ({
+export const DailyBriefingTeaserBase = ({
   alignment,
   teaser,
 }: BuilderTeaserProps) => {
@@ -67,21 +41,32 @@ export const DailyBriefingTeaser = ({
   return (
     <TeaserWrapper {...alignment}>
       <DailyBriefingTeaserWrapper>
-        <DailyBriefingLinkList>
+        <Typography variant="dailyBriefingLinkList">
           {campaigns.map(campaign => (
-            <DailyBriefingLink key={campaign.id}>
+            <Typography
+              variant="dailyBriefingLinkItem"
+              key={campaign.id}
+            >
               <Link
                 href={campaign.long_archive_url}
-                color="inherit"
-                underline="none"
+                variant="dailyBriefingLink"
                 target="_blank"
               >
                 {campaign.settings.subject_line}
               </Link>
-            </DailyBriefingLink>
+            </Typography>
           ))}
-        </DailyBriefingLinkList>
+        </Typography>
       </DailyBriefingTeaserWrapper>
     </TeaserWrapper>
   );
 };
+
+export const StyledTeaserSidebarDailyBriefing = styled(
+  DailyBriefingTeaserBase
+)``;
+
+export const DailyBriefingTeaser = createWithTheme(
+  StyledTeaserSidebarDailyBriefing,
+  sidebarDailyBriefingTheme
+);

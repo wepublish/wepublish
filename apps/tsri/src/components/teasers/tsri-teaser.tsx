@@ -95,7 +95,7 @@ export const TeaserBreakingNewsBadge = styled('div')`
   line-height: 14cqw;
   aspect-ratio: 1;
   z-index: 2;
-  font-size: calc((9 * 100cqw / 16) * 0.035) !important;
+  font-size: calc((9 * 100cqw / 16) * 0.035);
   font-weight: 700;
   padding: 0;
   margin: 0;
@@ -128,14 +128,7 @@ export const TeaserPeerLogo = styled(Image)``;
 
 export const TeaserPreTitleNoContent = styled('div')``;
 
-export const TeaserPreTitle = styled('div')`
-  color: ${({ theme }) => theme.palette.common.white};
-  background-color: ${({ theme }) => theme.palette.common.black};
-  font-size: calc((9 * 100cqw / 16) * 0.045) !important;
-  line-height: calc((9 * 100cqw / 16) * 0.045) !important;
-  font-weight: 700 !important;
-  padding: 0.5cqw 1.5cqw;
-`;
+export const TeaserPreTitle = styled('div')``;
 
 export const TeaserPreTitleWrapper = styled('div')`
   grid-row: 2;
@@ -158,7 +151,7 @@ export const TeaserContentWrapper = styled('article')`
   }
 
   & a {
-    pointer-events: all !important;
+    pointer-events: all;
     cursor: pointer;
   }
 
@@ -173,32 +166,9 @@ export const TeaserContentWrapper = styled('article')`
 export const TeaserTitle = styled('h1')`
   grid-row: 3;
   grid-column: 2 / 3;
-  background-color: white;
-  margin: 0 !important;
-  margin-bottom: 0 !important;
-  font-size: calc((9 * 100cqw / 16) * 0.08) !important;
-  line-height: 1.05 !important;
-  font-weight: 700 !important;
-  padding: 1.5cqw 1.5cqw 2.2cqw;
-
-  & .MuiLink-root {
-    &:after {
-      content: '';
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: transparent;
-      cursor: pointer;
-    }
-  }
 `;
 
-export const TeaserLead = styled('p')`
-  display: none;
-`;
+export const TeaserLead = styled('p')``;
 
 export const TeaserAuthors = styled('span')``;
 
@@ -209,11 +179,6 @@ export const TeaserAuthorWrapper = styled('span')``;
 export const TeaserMetadata = styled('div')`
   grid-row: 4;
   grid-column: 2 / 3;
-  background-color: white;
-  margin: 0;
-  font-size: calc((9 * 100cqw / 16) * 0.04) !important;
-  font-weight: bold;
-  padding: 0 1.5cqw;
 `;
 
 export const TeaserTime = styled('time')``;
@@ -228,10 +193,6 @@ export const TeaserContent = ({
   className?: string;
   target?: string;
 }>) => {
-  const {
-    elements: { Link },
-  } = useWebsiteBuilder();
-
   return (
     <TeaserContentWrapper className={className}>
       {children}
@@ -299,6 +260,7 @@ export const TsriTeaser = ({
                 color="inherit"
                 underline="none"
                 target={target}
+                variant="teaserTitleLink"
               >
                 {title}
               </Link>
