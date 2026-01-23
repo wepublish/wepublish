@@ -125,7 +125,7 @@ export const FooterSupport = styled('div')`
   padding: 4rem 2rem 1.5rem 2rem;
 
   & > * {
-    max-width: 700px;
+    max-width: 780px;
     text-align: center;
     hyphens: none;
     padding: 0;
