@@ -90,16 +90,56 @@ const theme = createTheme(WePTheme, {
     },
     // Teaser
     teaserTitle: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      [breakpoints.up('xs')]: {
+        fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+        backgroundColor: colors.common.white,
+        margin: 0,
+        fontSize: 'calc((9 * 100cqw / 16) * 0.08)',
+        lineHeight: '1.05',
+        fontWeight: 700,
+        padding: '1.5cqw 1.5cqw 2.2cqw',
+      },
+    },
+    teaserTitleLink: {
+      [breakpoints.up('xs')]: {
+        fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+        ['&:after']: {
+          content: "''",
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'transparent',
+          cursor: 'pointer',
+        },
+      },
     },
     teaserPretitle: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      [breakpoints.up('xs')]: {
+        fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+        color: colors.common.white,
+        backgroundColor: colors.common.black,
+        fontSize: 'calc((9 * 100cqw / 16) * 0.045)',
+        lineHeight: 'calc((9 * 100cqw / 16) * 0.045)',
+        fontWeight: 700,
+        padding: '0.5cqw 1.5cqw',
+      },
     },
     teaserLead: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      display: 'none',
     },
     teaserMeta: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      [breakpoints.up('xs')]: {
+        fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+        backgroundColor: colors.common.white,
+        margin: 0,
+        fontSize: 'calc((9 * 100cqw / 16) * 0.04)',
+        fontWeight: 700,
+        padding: '0 1.5cqw',
+      },
     },
     // Header
 
@@ -296,6 +336,376 @@ const theme = createTheme(WePTheme, {
           },
         },
       ],
+    },
+  },
+});
+
+export const teaserTopicMetaTheme = createTheme(theme, {
+  typography: {
+    teaserTitle: {
+      [breakpoints.up('xs')]: {
+        fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+        padding: 0,
+        margin: '0 0 calc(var(--sizing-factor) * 1cqw) 0',
+        fontSize: 'calc(var(--sizing-factor) * 1.67cqw)',
+        lineHeight: 'calc(var(--sizing-factor) * 1.8cqw)',
+        fontWeight: 700,
+        color: colors.common.black,
+        backgroundColor: 'transparent',
+      },
+    },
+    teaserPretitle: {
+      [breakpoints.up('xs')]: {
+        fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+        fontSize: 'calc(var(--sizing-factor) * 1.1cqw)',
+        fontWeight: 700,
+        lineHeight: 'calc(var(--sizing-factor) * 1.2cqw)',
+        textAlign: 'right',
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'flex-end',
+        backgroundColor: 'transparent',
+        color: colors.common.black,
+        justifySelf: 'end',
+        paddingRight: 0,
+      },
+    },
+    teaserLead: {
+      [breakpoints.up('xs')]: {
+        fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+        display: 'block',
+        fontSize: 'calc(var(--sizing-factor) * 1.3cqw)',
+        lineHeight: 'calc(var(--sizing-factor) * 1.4cqw)',
+        fontWeight: 400,
+        padding: 0,
+        backgroundColor: 'transparent',
+        color: colors.common.black,
+      },
+    },
+  },
+  components: {
+    MuiLink: {
+      variants: [
+        {
+          props: { variant: 'teaserPretitleLink' },
+          style: {
+            fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(
+              ','
+            ),
+            display: 'inline',
+            textDecoration: 'underline',
+            flexGrow: 0,
+            padding:
+              'calc(var(--sizing-factor) * 0.3cqw) calc(var(--sizing-factor) * 0.5cqw)',
+            color: colors.common.black,
+            '&:hover': {
+              backgroundColor: colors.primary.light,
+              color: colors.common.black,
+              textDecoration: 'none',
+            },
+          },
+        },
+      ],
+    },
+  },
+});
+
+export const teaserMoreAboutTheme = createTheme(teaserTopicMetaTheme, {
+  typography: {
+    teaserPretitle: {
+      [breakpoints.up('xs')]: {
+        fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+        fontSize: '4cqw',
+        fontWeight: 700,
+        lineHeight: '5cqw',
+      },
+      [breakpoints.up('md')]: {
+        fontSize: '1.1cqw',
+        lineHeight: '1.2cqw',
+      },
+    },
+  },
+});
+
+export const teaserHeroTheme = createTheme(theme, {
+  typography: {
+    teaserTitle: {
+      [breakpoints.down('md')]: {
+        marginRight: '2cqw',
+      },
+    },
+    teaserPretitle: {
+      [breakpoints.down('md')]: {
+        marginRight: '2cqw',
+      },
+    },
+    teaserMeta: {
+      [breakpoints.down('md')]: {
+        marginRight: '2cqw',
+      },
+    },
+  },
+});
+
+export const sidebarDailyBriefingTheme = createTheme(theme, {
+  typography: {
+    dailyBriefingLinkList: {
+      listStyle: 'none',
+      margin: 0,
+      padding: 0,
+      display: 'grid',
+      gridAutoRows: 'min-content',
+      fontSize: 'calc(var(--sizing-factor) * 1.3cqw)',
+      lineHeight: 'calc(var(--sizing-factor) * 1.49cqw)',
+      fontWeight: 700,
+    },
+    dailyBriefingLinkItem: {
+      color: colors.common.black,
+      margin: '0 0 calc(var(--sizing-factor) * 0.2cqw) 0',
+    },
+  },
+  components: {
+    MuiLink: {
+      variants: [
+        {
+          props: { variant: 'dailyBriefingLink' },
+          style: {
+            fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(
+              ','
+            ),
+            color: colors.common.black,
+            textDecoration: 'none',
+            padding: 'calc(var(--sizing-factor) * 0.5cqw)',
+            display: 'block',
+            backgroundColor: colors.common.white,
+            ['&:hover']: {
+              backgroundColor: colors.primary.light,
+              color: colors.common.black,
+            },
+          },
+        },
+      ],
+    },
+    MuiTypography: {
+      defaultProps: {
+        variantMapping: {
+          dailyBriefingLinkList: 'ul',
+          dailyBriefingLinkItem: 'li',
+        },
+      },
+    },
+  },
+});
+
+export const sidebarEventsTheme = createTheme(theme, {
+  typography: {
+    teaserTitle: {
+      [breakpoints.up('xs')]: {
+        color: colors.common.black,
+        fontSize: 'calc(var(--sizing-factor) * 1.3cqw)',
+        lineHeight: 'calc(var(--sizing-factor) * 1.49cqw)',
+        fontWeight: 700,
+        padding: 0,
+        margin: 0,
+      },
+    },
+    teaserTitleLink: {
+      [breakpoints.up('xs')]: {
+        color: colors.common.black,
+        textDecoration: 'none',
+        padding: '0.5cqw',
+        display: 'block',
+        backgroundColor: colors.common.white,
+        ['&:hover']: {
+          backgroundColor: colors.primary.main,
+          color: colors.common.white,
+        },
+      },
+    },
+  },
+});
+
+export const sidebarShopProductsTheme = createTheme(theme, {
+  typography: {
+    teaserTitle: {
+      [breakpoints.up('xs')]: {
+        fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+        color: 'inherit',
+        fontSize: 'calc(var(--sizing-factor) * 1.3cqw)',
+        lineHeight: 'calc(var(--sizing-factor) * 1.49cqw)',
+        fontWeight: 700,
+        padding:
+          'calc(var(--sizing-factor) * 0.9cqw) 0 calc(var(--sizing-factor) * 0.2cqw) 0',
+        margin: 0,
+        backgroundColor: 'transparent',
+      },
+    },
+    teaserTitleLink: {
+      [breakpoints.up('xs')]: {},
+    },
+    teaserLead: {
+      [breakpoints.up('xs')]: {
+        fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+        color: 'inherit',
+        display: 'block',
+        fontSize: 'calc(var(--sizing-factor) * 1.2cqw)',
+        lineHeight: 'calc(var(--sizing-factor) * 1.5cqw)',
+        fontWeight: 400,
+        padding: 0,
+      },
+    },
+  },
+});
+
+export const teaserTwoRowTheme = createTheme(theme, {
+  typography: {
+    teaserTitle: {
+      [breakpoints.up('xs')]: {
+        fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+        padding: '1.8cqw 2cqw',
+        gridRow: '2 / 3',
+        fontSize: '4.5cqw',
+        lineHeight: '4.5cqw',
+        wordWrap: 'nowrap',
+        textWrap: 'wrap',
+        whiteSpace: 'pre-wrap',
+        wordBreak: 'break-word',
+      },
+      [breakpoints.up('md')]: {
+        padding: '1.8cqw 1cqw',
+        fontSize: '2.6cqw',
+        lineHeight: '3cqw',
+      },
+    },
+    teaserPretitle: {
+      [breakpoints.up('xs')]: {
+        display: 'inline-block',
+        fontWeight: 700,
+        padding: '1.2cqw 2cqw',
+        fontSize: '2.6cqw',
+      },
+      [breakpoints.up('md')]: {
+        padding: '0.7cqw 1cqw',
+        fontSize: '1.3cqw',
+        lineHeight: '1.3cqw',
+      },
+    },
+    teaserLead: {
+      [breakpoints.up('xs')]: {
+        display: 'block',
+        padding: '0.6cqw 2cqw 3cqw 2cqw',
+        margin: 0,
+        gridRow: '3 / 4',
+        backgroundColor: colors.common.white,
+        height: '100%',
+        fontSize: '3.5cqw',
+        lineHeight: '4cqw',
+        fontWeight: 700,
+      },
+      [breakpoints.up('md')]: {
+        padding: '0.6cqw 1cqw 3cqw 1cqw',
+        fontSize: '1.67cqw',
+        lineHeight: '1.6cqw',
+      },
+    },
+    teaserMeta: {
+      [breakpoints.up('xs')]: {
+        fontSize: '2.6cqw',
+        lineHeight: '2.6cqw',
+        fontWeight: 700,
+        padding: '1.2cqw 2cqw',
+        gridRow: '4 / 5',
+      },
+      [breakpoints.up('md')]: {
+        fontSize: '1.05cqw',
+        lineHeight: '1.2cqw',
+        padding: '0.4cqw 1cqw',
+      },
+    },
+  },
+});
+
+export const noImageAltColor = createTheme(theme, {
+  typography: {
+    teaserTitle: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserPretitle: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserLead: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserMeta: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+  },
+});
+
+export const sidebarTsriLove = createTheme(theme, {
+  typography: {
+    teaserTitle: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserPretitle: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserLead: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserMeta: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+  },
+});
+
+export const teaserTwoColAuthor = createTheme(theme, {
+  typography: {
+    teaserTitle: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserPretitle: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserLead: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserMeta: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+  },
+});
+
+export const teaserTwoRowAuthor = createTheme(theme, {
+  typography: {
+    teaserTitle: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserPretitle: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserLead: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserMeta: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+  },
+});
+
+export const teaserTwoRow = createTheme(theme, {
+  typography: {
+    teaserTitle: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserPretitle: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserLead: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserMeta: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
     },
   },
 });
