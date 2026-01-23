@@ -316,22 +316,23 @@ const TsriClaim = styled('img', {
   top: 13.5cqw;
   top: 12.8cqw;
   left: 2cqw;
+  display: none;
 
   ${({ isScrolled }) =>
     isScrolled &&
     css`
-      @container toolbar (width > 200px) {
-        width: 16.77cqw;
-        top: 9.7cqw;
-        top: 8.7cqw;
-        clip-path: inset(10px 0 4px 0);
-      }
+      width: 16.77cqw;
+      top: 9.7cqw;
+      top: 8.7cqw;
+      clip-path: inset(10px 0 4px 0);
     `}
 
   ${({ isHomePage }) =>
-    !isHomePage &&
+    isHomePage &&
     css`
-      display: none;
+      ${theme.breakpoints.up('md')} {
+        display: block;
+      }
     `}
 `;
 
@@ -491,14 +492,17 @@ const OpenInvoicesAlert = styled('div')`
   grid-template-columns: max-content max-content;
   align-items: center;
   color: ${theme.palette.error.main};
-  font-size: 0.875em;
+  font-size: 1cqw;
   font-weight: 600;
-  top: 32px;
-  right: 54px;
+  top: 66%;
+  right: 111%;
+`;
+
+const MdWarningOIA = styled(MdWarning)`
+  font-size: 6cqw;
 
   ${theme.breakpoints.up('md')} {
-    top: 34px;
-    right: 56px;
+    font-size: 2cqw;
   }
 `;
 
@@ -1027,7 +1031,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                 <FiMenu />
                 {hasUnpaidInvoices && profileBtn && (
                   <OpenInvoicesAlert>
-                    <MdWarning size={24} />
+                    <MdWarningOIA />
                   </OpenInvoicesAlert>
                 )}
               </NavbarHamburgerButton>
