@@ -57,9 +57,13 @@ export const HauptstadtSubscribe = (props: BuilderSubscribeBlockProps) => {
   const canUpgrade = !!upgradeableTo.length && cheapestSubscription;
 
   if (canUpgrade && !router.query.upgradeSubscriptionId && forceUpgrade) {
-    router.replace(
-      `?upgradeSubscriptionId=${encodeURIComponent(cheapestSubscription.id)}`
-    );
+    router.replace({
+      query: {
+        ...router.query,
+        upgradeSubscriptionId: encodeURIComponent(cheapestSubscription.id),
+      },
+      pathname: router.pathname,
+    });
   }
 
   return <StyledSubscribeBlock {...props} />;
