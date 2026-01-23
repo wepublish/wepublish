@@ -1,18 +1,16 @@
 import styled from '@emotion/styled';
+import { createWithTheme } from '@wepublish/ui';
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
+import { teaserTwoRowTheme } from '../../theme';
 import { TsriTeaserType } from './tsri-base-teaser';
 import {
   TeaserContentWrapper,
   TeaserImage,
   TeaserImageCaption,
   TeaserImageWrapper,
-  TeaserLead,
-  TeaserMetadata,
-  TeaserPreTitle,
   TeaserPreTitleWrapper,
-  TeaserTitle,
   TsriTeaser,
 } from './tsri-teaser';
 
@@ -22,7 +20,7 @@ export const isTeaserTwoRow = allPass([
   },
 ]);
 
-export const TeaserTwoRow = styled(TsriTeaser)`
+export const StyledTeaserTwoRow = styled(TsriTeaser)`
   aspect-ratio: unset;
   container: unset;
 
@@ -80,66 +78,9 @@ export const TeaserTwoRow = styled(TsriTeaser)`
       line-height: 1cqw;
     }
   }
-
-  ${TeaserPreTitle} {
-    display: inline-block;
-    font-weight: 700;
-    padding: 1.2cqw 2cqw;
-    font-size: 2.6cqw !important;
-
-    ${({ theme }) => theme.breakpoints.up('md')} {
-      padding: 0.7cqw 1cqw;
-      font-size: 1.3cqw !important;
-      line-height: 1.3cqw !important;
-    }
-  }
-
-  ${TeaserTitle} {
-    padding: 1.8cqw 2cqw;
-    grid-row: 2 / 3;
-    font-size: 4.5cqw !important;
-    line-height: 4.5cqw !important;
-    word-wrap: nowrap;
-    text-wrap: wrap;
-    white-space: pre-wrap;
-    word-break: break-word;
-
-    ${({ theme }) => theme.breakpoints.up('md')} {
-    padding: 1.8cqw 1cqw;
-      font-size: 2.6cqw !important;
-      line-height: 3cqw !important;
-    }
-  }
-
-  ${TeaserLead} {
-    display: block;
-    padding: 0.6cqw 2cqw 3cqw 2cqw;
-    margin: 0;
-    grid-row: 3 / 4;
-    background-color: ${({ theme }) => theme.palette.common.white};
-    height: 100%;
-    font-size: 3.5cqw !important;
-    line-height: 4cqw !important;
-    font-weight: 700 !important;
-
-    ${({ theme }) => theme.breakpoints.up('md')} {
-    padding: 0.6cqw 1cqw 3cqw 1cqw;
-      font-size: 1.67cqw !important;
-      line-height: 1.6cqw !important;
-    }
-  }
-
-  ${TeaserMetadata} {
-    font-size: 2.6cqw; !important;
-    line-height: 2.6cqw !important;
-    font-weight: 700 !important;
-    padding: 1.2cqw 2cqw;
-    grid-row: 4 / 5;
-
-    ${({ theme }) => theme.breakpoints.up('md')} {
-      font-size: 1.05cqw !important;
-      line-height: 1.2cqw !important;
-      padding: 0.4cqw 1cqw;
-    }
-  }
 `;
+
+export const TeaserTwoRow = createWithTheme(
+  StyledTeaserTwoRow,
+  teaserTwoRowTheme
+);

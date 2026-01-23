@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
+import { createWithTheme } from '@wepublish/ui';
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
+import { sidebarShopProductsTheme } from '../../theme';
 import { TsriTeaserType } from './tsri-base-teaser';
 import {
   TeaserAuthorImageWrapper,
@@ -20,7 +22,7 @@ export const isTeaserShopProducts = allPass([
   },
 ]);
 
-export const TeaserShopProducts = styled(TsriTeaser)`
+export const StyledTeaserShopProducts = styled(TsriTeaser)`
   aspect-ratio: 3.1818 !important;
   container: unset;
   border-radius: unset;
@@ -39,27 +41,13 @@ export const TeaserShopProducts = styled(TsriTeaser)`
   }
 
   ${TeaserTitle} {
-    font-size: calc(var(--sizing-factor) * 1.3cqw) !important;
-    line-height: calc(var(--sizing-factor) * 1.49cqw) !important;
-    font-weight: 700 !important;
-    padding: calc(var(--sizing-factor) * 0.9cqw) 0
-      calc(var(--sizing-factor) * 0.2cqw) 0 !important;
-    margin: 0 !important;
     grid-column: 2 / 3;
     grid-row: 1 / 2;
-    background-color: transparent;
-    color: inherit;
   }
 
   ${TeaserLead} {
-    display: block;
-    font-size: calc(var(--sizing-factor) * 1.2cqw) !important;
-    line-height: calc(var(--sizing-factor) * 1.5cqw) !important;
-    font-weight: 400 !important;
-    padding: 0 !important;
     grid-column: 2 / 3;
     grid-row: 2 / 3;
-    color: inherit;
   }
 
   ${TeaserImageWrapper} {
@@ -96,3 +84,8 @@ export const TeaserShopProducts = styled(TsriTeaser)`
     display: none;
   }
 `;
+
+export const TeaserShopProducts = createWithTheme(
+  StyledTeaserShopProducts,
+  sidebarShopProductsTheme
+);

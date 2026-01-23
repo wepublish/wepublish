@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
+import { createWithTheme } from '@wepublish/ui';
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
+import { sidebarEventsTheme } from '../../theme';
 import { TsriTeaserType } from './tsri-base-teaser';
 import {
   TeaserAuthorImageWrapper,
@@ -9,7 +11,6 @@ import {
   TeaserImageWrapper,
   TeaserMetadata,
   TeaserPreTitleWrapper,
-  TeaserTitle,
   TsriTeaser,
 } from './tsri-teaser';
 
@@ -19,38 +20,14 @@ export const isTeaserEvents = allPass([
   },
 ]);
 
-export const TeaserEvents = styled(TsriTeaser)`
+export const TeaserEventsBase = styled(TsriTeaser)`
   aspect-ratio: unset !important;
-  container: unset;
   border-radius: 0 !important;
+  container: unset;
 
   ${TeaserContentWrapper} {
     display: block;
     background-color: ${({ theme }) => theme.palette.common.white};
-
-    ${TeaserTitle} {
-      &.MuiTypography-root {
-        color: ${({ theme }) => theme.palette.common.black};
-        font-size: calc(var(--sizing-factor) * 1.3cqw) !important;
-        line-height: calc(var(--sizing-factor) * 1.49cqw) !important;
-        font-weight: 700 !important;
-        padding: 0 !important;
-        margin: 0 !important;
-      }
-
-      & a {
-        color: inherit;
-        text-decoration: none;
-        padding: 0.5cqw;
-        display: block;
-        background-color: ${({ theme }) => theme.palette.common.white};
-
-        &:hover {
-          background-color: ${({ theme }) => theme.palette.primary.main};
-          color: ${({ theme }) => theme.palette.common.white};
-        }
-      }
-    }
   }
 
   ${TeaserImageWrapper} {
@@ -69,3 +46,10 @@ export const TeaserEvents = styled(TsriTeaser)`
     display: none;
   }
 `;
+
+export const StyledTeaserEvents = styled(TeaserEventsBase)``;
+
+export const TeaserEvents = createWithTheme(
+  StyledTeaserEvents,
+  sidebarEventsTheme
+);
