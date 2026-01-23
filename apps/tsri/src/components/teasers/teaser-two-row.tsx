@@ -74,7 +74,7 @@ export const TeaserTwoRow = styled(TsriTeaser)`
     grid-row: 1 / 2;
     z-index: 2;
     align-self: end;
-    line-height: 2.3cqw;
+    line-height: 2.6cqw;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
       line-height: 1cqw;
@@ -84,8 +84,8 @@ export const TeaserTwoRow = styled(TsriTeaser)`
   ${TeaserPreTitle} {
     display: inline-block;
     font-weight: 700;
-    padding: 0.4cqw 1cqw;
-    font-size: 2.3cqw !important;
+    padding: 1.2cqw 2cqw;
+    font-size: 2.6cqw !important;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
       padding: 0.7cqw 1cqw;
@@ -95,43 +95,45 @@ export const TeaserTwoRow = styled(TsriTeaser)`
   }
 
   ${TeaserTitle} {
-    padding: 1.8cqw 1cqw;
+    padding: 1.8cqw 2cqw;
     grid-row: 2 / 3;
-    font-size: 3.8cqw !important;
-    line-height: 4.2cqw !important;
+    font-size: 4.5cqw !important;
+    line-height: 4.5cqw !important;
     word-wrap: nowrap;
     text-wrap: wrap;
     white-space: pre-wrap;
     word-break: break-word;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
+    padding: 1.8cqw 1cqw;
       font-size: 2.6cqw !important;
-      line-height: 2.98cqw !important;
+      line-height: 3cqw !important;
     }
   }
 
   ${TeaserLead} {
     display: block;
-    padding: 0.6cqw 1cqw 3cqw 1cqw;
+    padding: 0.6cqw 2cqw 3cqw 2cqw;
     margin: 0;
     grid-row: 3 / 4;
     background-color: ${({ theme }) => theme.palette.common.white};
     height: 100%;
-    font-size: 2.5cqw !important;
-    line-height: 2.8cqw !important;
+    font-size: 3.5cqw !important;
+    line-height: 4cqw !important;
     font-weight: 700 !important;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
+    padding: 0.6cqw 1cqw 3cqw 1cqw;
       font-size: 1.67cqw !important;
       line-height: 1.6cqw !important;
     }
   }
 
   ${TeaserMetadata} {
-    font-size: 2cqw !important;
-    line-height: 2.2cqw !important;
+    font-size: 2.6cqw; !important;
+    line-height: 2.6cqw !important;
     font-weight: 700 !important;
-    padding: 0.6cqw 1cqw;
+    padding: 1.2cqw 2cqw;
     grid-row: 4 / 5;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
