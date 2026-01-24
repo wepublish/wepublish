@@ -32,6 +32,7 @@ import {
 } from '@wepublish/website/api';
 
 export type BuilderBlockRendererProps = {
+  className?: string;
   block: BlockContent;
   index: number;
   count: number;

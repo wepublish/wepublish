@@ -1,5 +1,4 @@
 import { ApolloError } from '@apollo/client';
-import styled from '@emotion/styled';
 import {
   FullPaywallFragment,
   getApiClientV2,
@@ -10,20 +9,12 @@ import {
 import { CanUpdatePaywall } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
-  ListViewActions,
-  ListViewContainer,
-  ListViewHeader,
+  SingleViewTitle,
 } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdOutlineSave } from 'react-icons/md';
-import {
-  Form,
-  IconButton as RIconButton,
-  Message,
-  Schema,
-  toaster,
-} from 'rsuite';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Form, Message, Schema, toaster } from 'rsuite';
 
 import { PaywallForm } from './paywallForm';
 
@@ -42,26 +33,20 @@ const onErrorToast = (error: ApolloError) => {
 
 const mapApiDataToInput = (
   paywall: FullPaywallFragment
-): MutationUpdatePaywallArgs & {
-  bypasses?: Array<{ id?: string; token: string }>;
-} => ({
+): MutationUpdatePaywallArgs => ({
   ...paywall,
   memberPlanIds: paywall.memberPlans?.map(memberPlan => memberPlan.id),
   bypassTokens: paywall.bypasses?.map(bypass => bypass.token) || undefined,
-  bypasses: paywall.bypasses?.map(bypass => ({
-    id: bypass.id,
-    token: bypass.token,
-  })),
 });
-
-const P = styled.p`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
 
 const PaywallEditView = () => {
   const { t } = useTranslation();
+  const [shouldClose, setShouldClose] = useState(false);
+  const navigate = useNavigate();
+  const params = useParams();
+  const { id } = params;
+  const closePath = './../..';
+
   const [paywall, setPaywall] = useState<
     MutationUpdatePaywallArgs & {
       bypasses?: Array<{ id?: string; token: string }>;
@@ -71,10 +56,13 @@ const PaywallEditView = () => {
   const client = getApiClientV2();
   const { loading: dataLoading } = usePaywallListQuery({
     client,
+    fetchPolicy: 'cache-and-network',
     onError: onErrorToast,
     onCompleted: data => {
-      if (data.paywalls) {
-        setPaywall(mapApiDataToInput(data.paywalls[0]));
+      const paywallToEdit = data.paywalls.find(paywall => paywall.id === id);
+
+      if (paywallToEdit) {
+        setPaywall(mapApiDataToInput(paywallToEdit));
       }
     },
   });
@@ -84,7 +72,11 @@ const PaywallEditView = () => {
     onError: onErrorToast,
     onCompleted: data => {
       if (data.updatePaywall) {
-        setPaywall(mapApiDataToInput(data.updatePaywall));
+        if (shouldClose) {
+          navigate(closePath);
+        } else {
+          setPaywall(mapApiDataToInput(data.updatePaywall));
+        }
       }
     },
   });
@@ -98,6 +90,7 @@ const PaywallEditView = () => {
     active: BooleanType().isRequired(),
     anyMemberPlan: BooleanType().isRequired(),
     memberPlanIds: ArrayType().of(StringType()),
+    alternativeSubscribeUrl: StringType().isURL(),
   });
 
   if (!paywall) {
@@ -112,22 +105,15 @@ const PaywallEditView = () => {
       disabled={loading}
       onSubmit={validationPassed => validationPassed && onSubmit()}
     >
-      <ListViewContainer>
-        <ListViewHeader>
-          <h2>{t('paywall.form.title')}</h2>
-        </ListViewHeader>
-
-        <ListViewActions>
-          <RIconButton
-            type="submit"
-            appearance="primary"
-            disabled={loading}
-            icon={<MdOutlineSave />}
-          >
-            {t('save')}
-          </RIconButton>
-        </ListViewActions>
-      </ListViewContainer>
+      <SingleViewTitle
+        loading={loading}
+        title={t('paywall.form.editTitle', { paywall: paywall.name })}
+        loadingTitle={t('loading')}
+        saveBtnTitle={t('save')}
+        saveAndCloseBtnTitle={t('saveAndClose')}
+        closePath={closePath}
+        setCloseFn={setShouldClose}
+      />
 
       <PaywallForm
         paywall={paywall}

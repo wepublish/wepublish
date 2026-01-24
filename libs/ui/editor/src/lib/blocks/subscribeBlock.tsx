@@ -1,6 +1,10 @@
 import styled from '@emotion/styled';
-import { ProductType, useMemberPlanListQuery } from '@wepublish/editor/api';
-import { SubscribeBlockField } from '@wepublish/editor/api-v2';
+import {
+  getApiClientV2,
+  ProductType,
+  SubscribeBlockField,
+  useMemberPlanListQuery,
+} from '@wepublish/editor/api-v2';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { CheckPickerProps } from 'rsuite';
@@ -48,9 +52,10 @@ export const SubscribeBlock = ({
   onChange,
   disabled,
 }: BlockProps<SubscribeBlockValue>) => {
-  console.log(value);
   const { t } = useTranslation();
+  const client = getApiClientV2();
   const { data, loading } = useMemberPlanListQuery({
+    client,
     variables: {
       take: 200,
       filter: {

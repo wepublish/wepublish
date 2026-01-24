@@ -34,6 +34,7 @@ export type BuilderLoginFormProps = {
 
 export type AddressShape = z.ZodObject<{
   streetAddress: z.ZodString | z.ZodOptional<z.ZodString>;
+  streetAddressNumber: z.ZodString | z.ZodOptional<z.ZodString>;
   zipCode: z.ZodString | z.ZodOptional<z.ZodString>;
   city: z.ZodString | z.ZodOptional<z.ZodString>;
   country:

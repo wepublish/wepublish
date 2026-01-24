@@ -9,7 +9,7 @@ import {
 import { Public } from '@wepublish/authentication/api';
 import { TagService } from './tag.service';
 import { URLAdapter } from '@wepublish/nest-modules';
-import { Tag as PTag } from '@prisma/client';
+import { Tag as PTag, TagType } from '@prisma/client';
 import {
   CreateTagInput,
   Tag,
@@ -24,6 +24,7 @@ import {
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import { TagDataloader } from './tag.dataloader';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 @Resolver(() => Tag)
 export class TagResolver {
@@ -34,11 +35,39 @@ export class TagResolver {
   ) {}
 
   @Public()
-  @Query(() => Tag, {
-    description: 'Returns a tag by id',
-  })
-  async tag(@Args('id') id: string) {
-    return this.dataloader.load(id);
+  @Query(() => Tag, { description: `Returns an tag by id or tag.` })
+  public async tag(
+    @Args('id', { nullable: true }) id?: string,
+    @Args('tag', { nullable: true }) name?: string,
+    @Args('type', { nullable: true }) tagType?: TagType
+  ) {
+    if (id != null) {
+      const tag = await this.dataloader.load(id);
+
+      if (!tag) {
+        throw new NotFoundException(`Tag with id ${id} was not found.`);
+      }
+
+      return tag;
+    }
+
+    if (name != null) {
+      if (tagType == null) {
+        throw new BadRequestException(
+          'Type required when loading tag by name.'
+        );
+      }
+
+      const tag = await this.tagService.getTagByName(name, tagType);
+
+      if (!tag) {
+        throw new NotFoundException(`Tag ${tag} was not found.`);
+      }
+
+      return tag;
+    }
+
+    throw new BadRequestException('Tag id or tag required.');
   }
 
   @Public()

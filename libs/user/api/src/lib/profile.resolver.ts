@@ -13,9 +13,9 @@ import {
   SensitiveDataUser,
   UserInput,
 } from './user.model';
-import { UserInputError } from '@nestjs/apollo';
 import { UploadImageInput } from '@wepublish/image/api';
 import { ProfileService } from './profile.service';
+import { BadRequestException } from '@nestjs/common';
 
 @Resolver()
 export class ProfileResolver {
@@ -49,7 +49,9 @@ export class ProfileResolver {
     @CurrentUser() { user }: UserSession
   ) {
     if (password !== passwordRepeated) {
-      throw new UserInputError('password and passwordRepeated are not equal');
+      throw new BadRequestException(
+        'password and passwordRepeat are not equal'
+      );
     }
 
     return this.userService.updateUserPassword(user.id, password);
@@ -70,7 +72,7 @@ export class ProfileResolver {
     );
 
     if (!user) {
-      throw new UserInputError(`User not found ${session.user.id}`);
+      throw new BadRequestException(`User not found ${session.user.id}`);
     }
 
     return user.paymentProviderCustomers;
@@ -82,11 +84,7 @@ export class ProfileResolver {
     description: `This mutation allows to upload and update the user's profile image.`,
   })
   async uploadUserProfileImage(
-    @Args('uploadImageInput', {
-      type: () => UploadImageInput,
-      nullable: true,
-    })
-    uploadImageInput: UploadImageInput | null,
+    @Args() uploadImageInput: UploadImageInput,
     @CurrentUser() session: UserSession
   ) {
     return this.profileService.uploadUserProfileImage(

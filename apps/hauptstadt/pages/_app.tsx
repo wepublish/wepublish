@@ -18,6 +18,7 @@ import {
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
+  withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
@@ -65,6 +66,7 @@ import { HauptstadtFooter } from '../src/components/hauptstadt-navigation';
 import { HauptstadtPage } from '../src/components/hauptstadt-page';
 import { HauptstadtPaywall } from '../src/components/hauptstadt-paywall';
 import { HauptstadtQuoteBlock } from '../src/components/hauptstadt-quote';
+import { HauptstadtSubscribe } from '../src/components/hauptstadt-subscribe';
 import { HauptstadtSubscriptionListItem } from '../src/components/hauptstadt-subscription-list-item';
 import {
   HauptstadtAlternatingTeaser,
@@ -77,6 +79,7 @@ import {
 } from '../src/components/hauptstadt-teaser';
 import { HauptstadtTitleBlock } from '../src/components/hauptstadt-title-block';
 import { PrintLogo } from '../src/components/print-logo';
+import { withTrackFirstRoute } from '../src/hooks/use-is-first-route';
 import { printStyles } from '../src/print-styles';
 import theme from '../src/theme';
 
@@ -161,6 +164,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             ImageGallery: HauptstadtImageGalleryBlock,
             Break: HauptstadtBreakBlock,
             Listicle: HauptstadtListicle,
+            Subscribe: HauptstadtSubscribe,
           }}
           blockStyles={{
             FocusTeaser: HauptstadtFocusTeaser,
@@ -280,9 +284,14 @@ const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   previewLink,
 ]);
 const ConnectedApp = withApollo(
-  withErrorSnackbar(
-    withPaywallBypassToken(
-      withSessionProvider(withJwtHandler(CustomApp), AsyncSessionProvider)
+  withBuilderRouter(
+    withErrorSnackbar(
+      withPaywallBypassToken(
+        withSessionProvider(
+          withJwtHandler(withTrackFirstRoute(CustomApp)),
+          AsyncSessionProvider
+        )
+      )
     )
   )
 );

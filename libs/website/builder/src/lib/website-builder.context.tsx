@@ -96,6 +96,7 @@ import {
   BuilderSubscriptionListItemProps,
   BuilderSubscriptionListProps,
   BuilderTransactionFeeProps,
+  BuilderUpgradeProps,
 } from './membership.interface';
 import { BuilderNavbarProps } from './navbar.interface';
 import { BuilderPageProps, BuilderPageSEOProps } from './page.interface';
@@ -182,6 +183,7 @@ export type WebsiteBuilderProps = {
   PeriodicityPicker: ComponentType<BuilderPeriodicityPickerProps>;
   TransactionFee: ComponentType<BuilderTransactionFeeProps>;
   Subscribe: ComponentType<BuilderSubscribeProps>;
+  Upgrade: ComponentType<BuilderUpgradeProps>;
   ContentWrapper: ComponentType<BuilderContentWrapperProps>;
   Paywall: ComponentType<BuilderPaywallProps>;
   TextToIcon: ComponentType<BuilderTextToIconProps>;
@@ -281,6 +283,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   InvoiceList: NoComponent,
   InvoiceListItem: NoComponent,
   Subscribe: NoComponent,
+  Upgrade: NoComponent,
   TransactionFee: NoComponent,
   MemberPlanPicker: NoComponent,
   MemberPlanItem: NoComponent,

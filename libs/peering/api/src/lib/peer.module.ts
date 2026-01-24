@@ -1,4 +1,10 @@
-import { DynamicModule, Module, Provider, Type } from '@nestjs/common';
+import {
+  DynamicModule,
+  forwardRef,
+  Module,
+  Provider,
+  Type,
+} from '@nestjs/common';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { PeerDataloaderService } from './peer-dataloader.service';
 import {
@@ -15,6 +21,8 @@ import { PEER_MODULE_OPTIONS, PeerModuleOptions } from './peer.constants';
 import { ImageModule } from '@wepublish/image/api';
 import { CacheModule } from '@nestjs/cache-manager';
 import { RemotePeerProfileDataloaderService } from './remote-peer-profile.dataloader';
+import { TokenResolver } from './token.resolver';
+import { TokenService } from './token.service';
 
 export interface PeerModuleAsyncOptions {
   imports?: Array<Type<any> | DynamicModule | Promise<DynamicModule>>;
@@ -25,7 +33,11 @@ export interface PeerModuleAsyncOptions {
 }
 
 @Module({
-  imports: [PrismaModule, ImageModule, CacheModule.register()],
+  imports: [
+    PrismaModule,
+    forwardRef(() => ImageModule),
+    CacheModule.register(),
+  ],
   providers: [
     {
       provide: PEER_MODULE_OPTIONS,
@@ -44,8 +56,10 @@ export interface PeerModuleAsyncOptions {
     HasPeerLcResolver,
     HasOptionalPeerResolver,
     HasOptionalPeerLcResolver,
+    TokenResolver,
+    TokenService,
   ],
-  exports: [PeerDataloaderService, PeerService, PeerProfileService],
+  exports: [PeerDataloaderService],
 })
 export class PeerModule {
   static register(options: PeerModuleOptions): DynamicModule {

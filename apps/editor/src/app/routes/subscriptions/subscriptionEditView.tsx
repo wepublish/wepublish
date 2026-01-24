@@ -5,7 +5,6 @@ import {
   Currency,
   DeactivationFragment,
   FullMemberPlanFragment,
-  FullPaymentMethodFragment,
   FullSubscriptionFragment,
   FullUserFragment,
   InvoiceFragment,
@@ -15,13 +14,17 @@ import {
   useCancelSubscriptionMutation,
   useCreateSubscriptionMutation,
   useInvoicesQuery,
-  useMemberPlanListQuery,
-  usePaymentMethodListQuery,
   useRenewSubscriptionMutation,
   useSubscriptionQuery,
   useUpdateSubscriptionMutation,
   useUserQuery,
 } from '@wepublish/editor/api';
+import {
+  FullPaymentMethodFragment,
+  getApiClientV2,
+  useMemberPlanListQuery,
+  usePaymentMethodListQuery,
+} from '@wepublish/editor/api-v2';
 import {
   ALL_PAYMENT_PERIODICITIES,
   createCheckedPermissionComponent,
@@ -233,6 +236,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     setPaidUntil(
       subscription.paidUntil ? new Date(subscription.paidUntil) : null
     );
+    // @ts-expect-error wrong image type for now. Will be fixed with subscription PR
     setPaymentMethod(subscription.paymentMethod);
     setProperties(
       subscription.properties.map(({ key, value, public: isPublic }) => ({
@@ -246,11 +250,13 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     setCurrency(subscription.currency);
   }
 
+  const client = getApiClientV2();
   const {
     data: memberPlanData,
     loading: isMemberPlanLoading,
     error: loadMemberPlanError,
   } = useMemberPlanListQuery({
+    client,
     fetchPolicy: 'network-only',
     variables: {
       take: 100, // TODO: Pagination
@@ -262,6 +268,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     loading: isPaymentMethodLoading,
     error: paymentMethodLoadError,
   } = usePaymentMethodListQuery({
+    client,
     fetchPolicy: 'network-only',
   });
 
