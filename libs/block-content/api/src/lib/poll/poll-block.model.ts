@@ -4,7 +4,7 @@ import { BlockType } from '../block-type.model';
 import { FullPoll, HasOptionalPoll } from '@wepublish/poll/api';
 
 @ObjectType({
-  implements: [BaseBlock, HasOptionalPoll],
+  implements: () => [BaseBlock, HasOptionalPoll],
 })
 export class PollBlock
   extends BaseBlock<typeof BlockType.Poll>

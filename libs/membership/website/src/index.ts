@@ -13,6 +13,9 @@ export * from './lib/formatters/format-renewal-period';
 export * from './lib/subscribe/subscribe';
 export * from './lib/subscribe/subscribe-container';
 
+export * from './lib/upgrade/upgrade';
+export * from './lib/upgrade/upgrade-container';
+
 export * from './lib/memberplan-picker/memberplan-picker';
 export * from './lib/memberplan-picker/memberplan-picker-item';
 export * from './lib/periodicity-picker/periodicity-picker';

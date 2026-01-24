@@ -1,7 +1,6 @@
-import { DataLoaderService, PrimeDataLoader } from '@wepublish/utils/api';
+import { DataLoaderService } from '@wepublish/utils/api';
 import { MemberPlan, PrismaClient } from '@prisma/client';
 import { Injectable, Scope } from '@nestjs/common';
-import { MemberPlanDataloader } from '@wepublish/member-plan/api';
 
 @Injectable({
   scope: Scope.REQUEST,
@@ -13,7 +12,6 @@ export class CrowdfundingMemberPlanDataloader extends DataLoaderService<
     super();
   }
 
-  @PrimeDataLoader(MemberPlanDataloader)
   protected async loadByKeys(crowdfundingIds: string[]) {
     const crowdfundings = await this.prisma.crowdfunding.findMany({
       where: {

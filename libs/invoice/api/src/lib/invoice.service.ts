@@ -1,6 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { NotFound } from '@wepublish/api';
 import { PaymentsService } from '@wepublish/payment/api';
 
 @Injectable()
@@ -36,7 +35,7 @@ export class InvoiceService {
     });
 
     if (!invoice || !invoice.subscriptionID) {
-      throw new NotFound('Invoice', id);
+      throw new NotFoundException(`Invoice with id ${id} was not found`);
     }
 
     const subscription = await this.prisma.subscription.findUnique({
@@ -46,7 +45,7 @@ export class InvoiceService {
     });
 
     if (!subscription || subscription.userID !== userId) {
-      throw new NotFound('Invoice', id);
+      throw new NotFoundException(`Invoice with ${id} was not found`);
     }
 
     const payments = await this.prisma.payment.findMany({

@@ -58,129 +58,375 @@ import {
 import { isTeaserSlotsBlock } from './teaser/teaser-slots-block';
 import { isTabbedContentBlockStyle } from './block-styles/tabbed-content/tabbed-content';
 
-export const BlockRenderer = memo(({ block }: BuilderBlockRendererProps) => {
-  const { blocks, blockStyles } = useWebsiteBuilder();
+export const BlockRenderer = memo(
+  ({ block, className }: BuilderBlockRendererProps) => {
+    const { blocks, blockStyles } = useWebsiteBuilder();
 
-  const blockStylesCond = cond([
-    [isImageSliderBlockStyle, block => <blockStyles.ImageSlider {...block} />],
-    [
-      isTeaserSliderBlockStyle,
-      block => <blockStyles.TeaserSlider {...block} />,
-    ],
-    [isFocusTeaserBlockStyle, block => <blockStyles.FocusTeaser {...block} />],
-    [isContextBoxBlockStyle, block => <blockStyles.ContextBox {...block} />],
-    [isBannerBlockStyle, block => <blockStyles.Banner {...block} />],
-    [
-      isAlternatingTeaserGridBlockStyle,
-      block => <blockStyles.AlternatingTeaserGrid {...block} />,
-    ],
-    [
-      isAlternatingTeaserListBlockStyle,
-      block => <blockStyles.AlternatingTeaserList {...block} />,
-    ],
-    [
-      isAlternatingTeaserSlotsBlockStyle,
-      block => <blockStyles.AlternatingTeaserSlots {...block} />,
-    ],
-    [
-      isTabbedContentBlockStyle,
-      block => (
-        <blockStyles.TabbedContent {...(block as BuilderFlexBlockProps)} />
-      ),
-    ],
-  ]);
-
-  const facebookEmbedCond = cond([
-    [isFacebookPostBlock, block => <blocks.FacebookPost {...block} />],
-    [isFacebookVideoBlock, block => <blocks.FacebookVideo {...block} />],
-  ]);
-
-  const embedCond = cond([
-    [isIFrameBlock, block => <blocks.IFrame {...block} />],
-    [isBildwurfAdBlock, block => <blocks.BildwurfAd {...block} />],
-    [isInstagramBlock, block => <blocks.InstagramPost {...block} />],
-    [isSoundCloudTrackBlock, block => <blocks.SoundCloudTrack {...block} />],
-    [isTikTokVideoBlock, block => <blocks.TikTokVideo {...block} />],
-    [isTwitterTweetBlock, block => <blocks.TwitterTweet {...block} />],
-    [isVimeoVideoBlock, block => <blocks.VimeoVideo {...block} />],
-    [isYouTubeVideoBlock, block => <blocks.YouTubeVideo {...block} />],
-    [isStreamableVideoBlock, block => <blocks.StreamableVideo {...block} />],
-    [
-      isPolisConversationBlock,
-      block => <blocks.PolisConversation {...block} />,
-    ],
-  ]);
-
-  const teaserCond = cond([
-    [isTeaserGridFlexBlock, block => <blocks.TeaserGridFlex {...block} />],
-    [isTeaserGridBlock, block => <blocks.TeaserGrid {...block} />],
-    [isTeaserListBlock, block => <blocks.TeaserList {...block} />],
-    [isTeaserSlotsBlock, block => <blocks.TeaserSlots {...block} />],
-  ]);
-
-  const imageCond = cond([
-    [isImageBlock, block => <blocks.Image {...block} />],
-    [isImageGalleryBlock, block => <blocks.ImageGallery {...block} />],
-  ]);
-
-  return (
-    blockStylesCond(block) ??
-    facebookEmbedCond(block) ??
-    embedCond(block) ??
-    teaserCond(block) ??
-    imageCond(block) ??
-    cond([
+    const blockStylesCond = cond([
       [
-        isCrowdfundingBlock,
+        isImageSliderBlockStyle,
         block => (
-          <blocks.Crowdfunding {...(block as BuilderCrowdfundingBlockProps)} />
+          <blockStyles.ImageSlider
+            {...block}
+            className={className}
+          />
         ),
       ],
       [
-        isTitleBlock,
-        block => <blocks.Title {...(block as BuilderTitleBlockProps)} />,
-      ],
-      [
-        isQuoteBlock,
-        block => <blocks.Quote {...(block as BuilderQuoteBlockProps)} />,
-      ],
-      [
-        isBreakBlock,
-        block => <blocks.Break {...(block as BuilderBreakBlockProps)} />,
-      ],
-      [
-        isRichTextBlock,
-        block => <blocks.RichText {...(block as BuilderRichTextBlockProps)} />,
-      ],
-      [
-        isHtmlBlock,
-        block => <blocks.HTML {...(block as BuilderHTMLBlockProps)} />,
-      ],
-      [
-        isSubscribeBlock,
+        isTeaserSliderBlockStyle,
         block => (
-          <blocks.Subscribe {...(block as BuilderSubscribeBlockProps)} />
+          <blockStyles.TeaserSlider
+            {...block}
+            className={className}
+          />
         ),
       ],
       [
-        isEventBlock,
-        block => <blocks.Event {...(block as BuilderEventBlockProps)} />,
+        isFocusTeaserBlockStyle,
+        block => (
+          <blockStyles.FocusTeaser
+            {...block}
+            className={className}
+          />
+        ),
       ],
       [
-        isPollBlock,
-        block => <blocks.Poll {...(block as BuilderPollBlockProps)} />,
+        isContextBoxBlockStyle,
+        block => (
+          <blockStyles.ContextBox
+            {...block}
+            className={className}
+          />
+        ),
       ],
       [
-        isListicleBlock,
-        block => <blocks.Listicle {...(block as BuilderListicleBlockProps)} />,
+        isBannerBlockStyle,
+        block => (
+          <blockStyles.Banner
+            {...block}
+            className={className}
+          />
+        ),
       ],
       [
-        isCommentBlock,
-        block => <blocks.Comment {...(block as BuilderCommentBlockProps)} />,
+        isAlternatingTeaserGridBlockStyle,
+        block => (
+          <blockStyles.AlternatingTeaserGrid
+            {...block}
+            className={className}
+          />
+        ),
       ],
-    ])(block)
-  );
-});
+      [
+        isAlternatingTeaserListBlockStyle,
+        block => (
+          <blockStyles.AlternatingTeaserList
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+      [
+        isAlternatingTeaserSlotsBlockStyle,
+        block => (
+          <blockStyles.AlternatingTeaserSlots
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+      [
+        isTabbedContentBlockStyle,
+        block => (
+          <blockStyles.TabbedContent {...(block as BuilderFlexBlockProps)} />
+        ),
+      ],
+    ]);
+
+    const facebookEmbedCond = cond([
+      [
+        isFacebookPostBlock,
+        block => (
+          <blocks.FacebookPost
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+      [
+        isFacebookVideoBlock,
+        block => (
+          <blocks.FacebookVideo
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+    ]);
+
+    const embedCond = cond([
+      [
+        isIFrameBlock,
+        block => (
+          <blocks.IFrame
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+      [
+        isBildwurfAdBlock,
+        block => (
+          <blocks.BildwurfAd
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+      [
+        isInstagramBlock,
+        block => (
+          <blocks.InstagramPost
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+      [
+        isSoundCloudTrackBlock,
+        block => (
+          <blocks.SoundCloudTrack
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+      [
+        isTikTokVideoBlock,
+        block => (
+          <blocks.TikTokVideo
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+      [
+        isTwitterTweetBlock,
+        block => (
+          <blocks.TwitterTweet
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+      [
+        isVimeoVideoBlock,
+        block => (
+          <blocks.VimeoVideo
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+      [
+        isYouTubeVideoBlock,
+        block => (
+          <blocks.YouTubeVideo
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+      [
+        isStreamableVideoBlock,
+        block => (
+          <blocks.StreamableVideo
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+      [
+        isPolisConversationBlock,
+        block => (
+          <blocks.PolisConversation
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+    ]);
+
+    const teaserCond = cond([
+      [
+        isTeaserGridFlexBlock,
+        block => (
+          <blocks.TeaserGridFlex
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+      [
+        isTeaserGridBlock,
+        block => (
+          <blocks.TeaserGrid
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+      [
+        isTeaserListBlock,
+        block => (
+          <blocks.TeaserList
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+      [
+        isTeaserSlotsBlock,
+        block => (
+          <blocks.TeaserSlots
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+    ]);
+
+    const imageCond = cond([
+      [
+        isImageBlock,
+        block => (
+          <blocks.Image
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+      [
+        isImageGalleryBlock,
+        block => (
+          <blocks.ImageGallery
+            {...block}
+            className={className}
+          />
+        ),
+      ],
+    ]);
+
+    return (
+      blockStylesCond(block) ??
+      facebookEmbedCond(block) ??
+      embedCond(block) ??
+      teaserCond(block) ??
+      imageCond(block) ??
+      cond([
+        [
+          isCrowdfundingBlock,
+          block => (
+            <blocks.Crowdfunding
+              {...(block as BuilderCrowdfundingBlockProps)}
+              className={className}
+            />
+          ),
+        ],
+        [
+          isTitleBlock,
+          block => (
+            <blocks.Title
+              {...(block as BuilderTitleBlockProps)}
+              className={className}
+            />
+          ),
+        ],
+        [
+          isQuoteBlock,
+          block => (
+            <blocks.Quote
+              {...(block as BuilderQuoteBlockProps)}
+              className={className}
+            />
+          ),
+        ],
+        [
+          isBreakBlock,
+          block => (
+            <blocks.Break
+              {...(block as BuilderBreakBlockProps)}
+              className={className}
+            />
+          ),
+        ],
+        [
+          isRichTextBlock,
+          block => (
+            <blocks.RichText
+              {...(block as BuilderRichTextBlockProps)}
+              className={className}
+            />
+          ),
+        ],
+        [
+          isHtmlBlock,
+          block => (
+            <blocks.HTML
+              {...(block as BuilderHTMLBlockProps)}
+              className={className}
+            />
+          ),
+        ],
+        [
+          isSubscribeBlock,
+          block => (
+            <blocks.Subscribe
+              {...(block as BuilderSubscribeBlockProps)}
+              className={className}
+            />
+          ),
+        ],
+        [
+          isEventBlock,
+          block => (
+            <blocks.Event
+              {...(block as BuilderEventBlockProps)}
+              className={className}
+            />
+          ),
+        ],
+        [
+          isPollBlock,
+          block => (
+            <blocks.Poll
+              {...(block as BuilderPollBlockProps)}
+              className={className}
+            />
+          ),
+        ],
+        [
+          isListicleBlock,
+          block => (
+            <blocks.Listicle
+              {...(block as BuilderListicleBlockProps)}
+              className={className}
+            />
+          ),
+        ],
+        [
+          isCommentBlock,
+          block => (
+            <blocks.Comment
+              {...(block as BuilderCommentBlockProps)}
+              className={className}
+            />
+          ),
+        ],
+      ])(block)
+    );
+  }
+);
 
 export const Blocks = memo(({ blocks, type }: BuilderBlocksProps) => {
   const {

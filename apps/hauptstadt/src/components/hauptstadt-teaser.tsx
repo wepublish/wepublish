@@ -24,8 +24,12 @@ import {
 } from '@wepublish/block-content/website';
 import { ImageWrapper } from '@wepublish/image/website';
 import { createWithTheme } from '@wepublish/ui';
+import { BuilderTeaserProps } from '@wepublish/website/builder';
+import { memo } from 'react';
 
 import { alternatingTeaserTheme } from '../theme';
+import { CurrentPaywallContext } from './hauptstadt-paywall';
+import { HauptstadtTeaserPreTitle } from './hauptstadt-premium-indicator';
 
 const teaserGaps = ({ theme }: { theme: Theme }) => css`
   padding-bottom: var(--page-content-row-gap);
@@ -116,7 +120,24 @@ const revertTeaserToDefault = ({ theme }: { theme: Theme }) => css`
   }
 `;
 
-export const HauptstadtTeaser = styled(BaseTeaser)`
+const TeaserWithPaywall = memo<BuilderTeaserProps>(function WithPaywall(props) {
+  return (
+    <CurrentPaywallContext.Provider
+      value={
+        props.teaser?.__typename === 'ArticleTeaser' ?
+          props.teaser.article?.paywall
+        : null
+      }
+    >
+      <BaseTeaser
+        {...props}
+        PreTitle={HauptstadtTeaserPreTitle}
+      />
+    </CurrentPaywallContext.Provider>
+  );
+});
+
+export const HauptstadtTeaser = styled(TeaserWithPaywall)`
   border-bottom: 1px solid ${({ theme }) => theme.palette.primary.main};
   grid-template-rows: repeat(5, minmax(0, auto));
   grid-template-areas:

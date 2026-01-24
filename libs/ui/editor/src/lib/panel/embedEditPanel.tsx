@@ -52,7 +52,7 @@ export function EmbedEditPanel({ value, onClose, onConfirm }: EmbedEditPanel) {
     const bildwurfAdMatch = input.match(/data-zone="([0-9a-zA-Z-_]+)"/);
 
     const streamableVideoMatch = input.match(
-      /streamable\.com\/(?:e\/)?([0-9a-zA-Z-_]+)/
+      /nostreamable\.com\/(?:e\/)?([0-9a-zA-Z-_]+)/
     );
 
     if (facebookPostMatch) {
