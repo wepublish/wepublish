@@ -1,4 +1,10 @@
-import { DynamicModule, Module, Provider, Type } from '@nestjs/common';
+import {
+  DynamicModule,
+  forwardRef,
+  Module,
+  Provider,
+  Type,
+} from '@nestjs/common';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { PeerDataloaderService } from './peer-dataloader.service';
 import {
@@ -27,7 +33,11 @@ export interface PeerModuleAsyncOptions {
 }
 
 @Module({
-  imports: [PrismaModule, ImageModule, CacheModule.register()],
+  imports: [
+    PrismaModule,
+    forwardRef(() => ImageModule),
+    CacheModule.register(),
+  ],
   providers: [
     {
       provide: PEER_MODULE_OPTIONS,

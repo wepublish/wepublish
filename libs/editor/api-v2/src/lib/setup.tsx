@@ -2,14 +2,16 @@ import {
   ApolloClient,
   ApolloLink,
   ApolloProvider,
-  createHttpLink,
+  HttpLink,
   InMemoryCache,
   NormalizedCacheObject,
+  split,
 } from '@apollo/client';
 import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename';
+import { createUploadLink } from 'apollo-upload-client';
 
-import possibleTypes from './graphql';
 import { ComponentType, memo } from 'react';
+import possibleTypes from './graphql';
 
 export enum ElementID {
   Settings = 'settings',
@@ -66,14 +68,28 @@ export function getSettings(): ClientSettings {
 
 let client: ApolloClient<NormalizedCacheObject>;
 
+const isFile = (value: unknown): boolean =>
+  Boolean(
+    (typeof File !== 'undefined' && value instanceof File) ||
+      (typeof Blob !== 'undefined' && value instanceof Blob) ||
+      (value && typeof value === 'object' && Object.values(value).some(isFile))
+  );
+
 export function getApiClientV2() {
   const { apiURL } = getSettings();
 
   if (!client) {
+    // If operation is uploading a file, use the upload link, else use the normal http link
+    const httpLink = split(
+      ({ variables }) => isFile(variables),
+      createUploadLink({
+        uri: `${apiURL}/v1`,
+      }),
+      new HttpLink({ uri: `${apiURL}/v1` })
+    );
+
     client = new ApolloClient({
-      link: authLink
-        .concat(removeTypenameFromVariables({}))
-        .concat(createHttpLink({ uri: `${apiURL}/v1`, fetch })),
+      link: authLink.concat(removeTypenameFromVariables({})).concat(httpLink),
       cache: new InMemoryCache({
         possibleTypes: possibleTypes.possibleTypes,
       }),
