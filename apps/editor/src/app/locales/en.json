@@ -1396,7 +1396,9 @@
       "sendWebsiteLogin": "Send Login Link for Website",
       "sendWebsiteLoginSuccessMessage": "Login Link sent to {{email}}",
       "streetAddress": "Street",
+      "streetAddressNumber": "House number",
       "streetAddress2": "Street 2",
+      "streetAddress2Number": "House number",
       "subscriptionsHeader": "Subscriptions",
       "successfullyCreatedUser": "User successfully created",
       "successfullyUpdatedUser": "User successfully updated",
@@ -1732,12 +1734,15 @@
     "paywall": {
       "navbar": "Paywall",
       "form": {
-        "title": "Edit Paywall",
-        "name": "Name of the paywall (NOT visible to the user)",
+        "editTitle": "Edit Paywall",
+        "createTitle": "Create Paywall",
+        "name": "Name of the paywall (Not visible to the user)",
         "description": "Paywall text (visible to the user)",
         "circumventDescription": "Paywall text when the article content is not hidden (visible to the user)",
         "active": "Active",
         "activeHelpText": "Allows to quickly deactivate the paywall on all articles",
+        "alternativeSubscribeUrl": "Alternative URL to the subscribe page",
+        "alternativeSubscribeUrlHelpText": "Can be used in combination with a subscribe block on a page. If left empty will use the default page.",
         "anyMemberPlan": "Allow any subscription to pass the paywall",
         "memberPlans": "Only specific subscriptions can pass the paywall",
         "bypasses": "Bypasses",
@@ -1746,7 +1751,23 @@
         "addBypass": "add",
         "qrCodeTitle": "QR Code for Bypass Token",
         "downloadSvg": "Download SVG",
-        "baseUrl": "Website URL (baseurl). E.g. https://wepublish.ch"
+        "baseUrl": "Website URL (baseurl). E.g. https://wepublish.ch",
+        "upgrade": "Texts when paywall allows and supports upgrading",
+        "display": "Display options",
+        "hideContentAfter": "Hide content after X amount of blocks",
+        "fadeout": "Fade out hidden blocks",
+        "fadeoutHelpText": "Fading out allows to show a preview of the rest of the content."
+      },
+      "overview": {
+        "areYouSure": "Are you sure?",
+        "areYouSureBody": "The paywall \"{{ paywall }}\" will be deleted permanently and can not be reversed.",
+        "areYouSureConfirmation": "Delete paywall",
+        "createPaywall": "New Paywall",
+        "title": "Paywalls",
+        "name": "Name",
+        "active": "Active",
+        "memberPlans": "Memberplans",
+        "anyMemberPlan": "All memberplans"
       }
     },
     "paymentMethodEditPanel": {

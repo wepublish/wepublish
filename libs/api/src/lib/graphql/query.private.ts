@@ -1,7 +1,4 @@
-import {
-  CanGetPaymentProviders,
-  CanLoginAsOtherUser,
-} from '@wepublish/permissions';
+import { CanLoginAsOtherUser } from '@wepublish/permissions';
 import { SortOrder } from '@wepublish/utils/api';
 import {
   GraphQLInt,
@@ -12,18 +9,13 @@ import {
 } from 'graphql';
 import { Context } from '../context';
 import { CommentSort } from '../db/comment';
-import { ImageSort } from '../db/image';
 import { InvoiceSort } from '../db/invoice';
-import { MemberPlanSort } from '../db/memberPlan';
-import { PaymentSort } from '../db/payment';
 import { SubscriptionSort } from '../db/subscription';
 import { UserSort } from '../db/user';
 import { GivenTokeExpiryToLongError, UserIdNotFound } from '../error';
 
 import { GraphQLJWTToken } from './auth';
 
-import { GraphQLFullCommentRatingSystem } from './comment-rating/comment-rating';
-import { getRatingSystem } from './comment-rating/comment-rating.public-queries';
 import {
   GraphQLComment,
   GraphQLCommentConnection,
@@ -35,13 +27,7 @@ import {
   getComment,
 } from './comment/comment.private-queries';
 import { GraphQLSortOrder } from './common';
-import {
-  GraphQLImage,
-  GraphQLImageConnection,
-  GraphQLImageFilter,
-  GraphQLImageSort,
-} from './image';
-import { getAdminImages, getImageById } from './image/image.private-queries';
+
 import {
   GraphQLInvoice,
   GraphQLInvoiceConnection,
@@ -52,31 +38,7 @@ import {
   getAdminInvoices,
   getInvoiceById,
 } from './invoice/invoice.private-queries';
-import {
-  getAdminMemberPlans,
-  getMemberPlanByIdOrSlug,
-} from './member-plan/member-plan.private-queries';
-import {
-  GraphQLMemberPlan,
-  GraphQLMemberPlanConnection,
-  GraphQLMemberPlanFilter,
-  GraphQLMemberPlanSort,
-} from './memberPlan';
-import {
-  GraphQLPayment,
-  GraphQLPaymentConnection,
-  GraphQLPaymentFilter,
-  GraphQLPaymentSort,
-} from './payment';
-import {
-  getPaymentMethodById,
-  getPaymentMethods,
-} from './payment-method/payment-method.private-queries';
-import {
-  getAdminPayments,
-  getPaymentById,
-} from './payment/payment.private-queries';
-import { GraphQLPaymentMethod, GraphQLPaymentProvider } from './paymentMethod';
+
 import { GraphQLPeerProfile } from './peer';
 import {
   getAdminPeerProfile,
@@ -93,7 +55,6 @@ import { PollSort, getPolls } from './poll/poll.private-queries';
 import { getPoll } from './poll/poll.public-queries';
 import { GraphQLSession } from './session';
 import { getSessionsForUser } from './session/session.private-queries';
-import { GraphQLSlug } from '@wepublish/utils/api';
 import {
   GraphQLSubscription,
   GraphQLSubscriptionConnection,
@@ -106,8 +67,6 @@ import {
   getSubscriptionsAsCSV,
 } from './subscription/subscription.private-queries';
 
-import { GraphQLToken } from './token';
-import { getTokens } from './token/token.private-queries';
 import {
   GraphQLUser,
   GraphQLUserConnection,
@@ -309,54 +268,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         getSubscriptionsAsCSV(filter, authenticate, subscription),
     },
 
-    // Token
-    // =====
-
-    tokens: {
-      type: new GraphQLNonNull(
-        new GraphQLList(new GraphQLNonNull(GraphQLToken))
-      ),
-      resolve: (root, args, { authenticateUser, prisma: { token } }) =>
-        getTokens(authenticateUser, token),
-    },
-
-    // Image
-    // =====
-
-    image: {
-      type: GraphQLImage,
-      args: { id: { type: GraphQLString } },
-      resolve: (root, { id }, { authenticate, loaders: { images } }) =>
-        getImageById(id, authenticate, images),
-    },
-
-    images: {
-      type: new GraphQLNonNull(GraphQLImageConnection),
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 5 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLImageFilter },
-        sort: { type: GraphQLImageSort, defaultValue: ImageSort.ModifiedAt },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, skip, take, cursor },
-        { authenticate, prisma: { image } }
-      ) =>
-        getAdminImages(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          image
-        ),
-    },
-
     // Comments
     // =======
 
@@ -400,92 +311,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         ),
     },
 
-    // MemberPlan
-    // ======
-
-    memberPlan: {
-      type: GraphQLMemberPlan,
-      args: { id: { type: GraphQLString }, slug: { type: GraphQLSlug } },
-      resolve: (
-        root,
-        { id, slug },
-        { authenticate, loaders: { memberPlansByID, memberPlansBySlug } }
-      ) =>
-        getMemberPlanByIdOrSlug(
-          id,
-          slug,
-          authenticate,
-          memberPlansByID,
-          memberPlansBySlug
-        ),
-    },
-
-    memberPlans: {
-      type: new GraphQLNonNull(GraphQLMemberPlanConnection),
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 10 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLMemberPlanFilter },
-        sort: {
-          type: GraphQLMemberPlanSort,
-          defaultValue: MemberPlanSort.ModifiedAt,
-        },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, cursor, take, skip },
-        { authenticate, prisma: { memberPlan } }
-      ) =>
-        getAdminMemberPlans(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          memberPlan
-        ),
-    },
-
-    // PaymentMethod
-    // ======
-
-    paymentMethod: {
-      type: GraphQLPaymentMethod,
-      args: { id: { type: GraphQLString } },
-      resolve: (
-        root,
-        { id },
-        { authenticate, loaders: { paymentMethodsByID } }
-      ) => getPaymentMethodById(id, authenticate, paymentMethodsByID),
-    },
-
-    paymentMethods: {
-      type: new GraphQLNonNull(
-        new GraphQLList(new GraphQLNonNull(GraphQLPaymentMethod))
-      ),
-      resolve: (root, _, { authenticate, prisma: { paymentMethod } }) =>
-        getPaymentMethods(authenticate, paymentMethod),
-    },
-
-    paymentProviders: {
-      type: new GraphQLNonNull(
-        new GraphQLList(new GraphQLNonNull(GraphQLPaymentProvider))
-      ),
-      resolve(root, _, { authenticate, paymentProviders }) {
-        const { roles } = authenticate();
-        authorise(CanGetPaymentProviders, roles);
-
-        return paymentProviders.map(({ id, name }) => ({
-          id,
-          name,
-        }));
-      },
-    },
-
     // Invoice
     // ======
 
@@ -524,55 +349,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           authenticate,
           invoice
         ),
-    },
-
-    // Payment
-    // ======
-
-    payment: {
-      type: GraphQLPayment,
-      args: { id: { type: GraphQLString } },
-      resolve: (root, { id }, { authenticate, loaders: { paymentsByID } }) =>
-        getPaymentById(id, authenticate, paymentsByID),
-    },
-
-    payments: {
-      type: new GraphQLNonNull(GraphQLPaymentConnection),
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 10 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLPaymentFilter },
-        sort: {
-          type: GraphQLPaymentSort,
-          defaultValue: PaymentSort.ModifiedAt,
-        },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, cursor, take, skip },
-        { authenticate, prisma: { payment } }
-      ) =>
-        getAdminPayments(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          payment
-        ),
-    },
-
-    // Rating System
-    // ==========
-
-    ratingSystem: {
-      type: new GraphQLNonNull(GraphQLFullCommentRatingSystem),
-      resolve: (root, input, { prisma: { commentRatingSystem } }) =>
-        getRatingSystem(commentRatingSystem),
     },
 
     // Polls

@@ -45,7 +45,7 @@ exports[`SettingsService should list settings 2`] = `
   "orderBy": {
     "createdAt": "desc",
   },
-  "where": {},
+  "where": undefined,
 }
 `;
 

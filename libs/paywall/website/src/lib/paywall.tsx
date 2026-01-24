@@ -14,8 +14,6 @@ import { useTranslation } from 'react-i18next';
 export const PaywallWrapper = styled.div`
   display: grid !important; // exception as it should always be shown
   gap: ${({ theme }) => theme.spacing(5)};
-  justify-content: center;
-  align-items: center;
   background-color: ${({ theme }) => theme.palette.accent.light};
   color: ${({ theme }) => theme.palette.accent.contrastText};
   padding: ${({ theme }) => theme.spacing(4)};
@@ -37,6 +35,8 @@ export const Paywall = ({
   description,
   circumventDescription,
   hideContent,
+  alternativeSubscribeUrl,
+  texts,
 }: BuilderPaywallProps) => {
   const { t } = useTranslation();
   const { hasUser } = useUser();
@@ -67,10 +67,10 @@ export const Paywall = ({
           variant="contained"
           color="secondary"
           LinkComponent={Link}
-          href={'/mitmachen'}
+          href={alternativeSubscribeUrl ?? '/mitmachen'}
           onClick={setIntendedRoute}
         >
-          {t('paywall.subscribe')}
+          {texts?.subscribe ?? t('paywall.subscribe')}
         </Button>
 
         {!hasUser && (
@@ -81,7 +81,7 @@ export const Paywall = ({
             href={'/login'}
             onClick={setIntendedRoute}
           >
-            {t('paywall.login')}
+            {texts?.login ?? t('paywall.login')}
           </Button>
         )}
       </PaywallActions>

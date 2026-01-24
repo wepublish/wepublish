@@ -1,5 +1,6 @@
 import { ArgsType, Field, ObjectType } from '@nestjs/graphql';
 import { ChallengeInput } from '@wepublish/challenge/api';
+// eslint-disable-next-line no-restricted-imports
 import { SensitiveDataUser, UserAddressInput } from '@wepublish/user/api';
 import { SessionWithTokenWithoutUser } from './session.model';
 

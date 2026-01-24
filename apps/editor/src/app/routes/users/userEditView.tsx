@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import {
-  FullImageFragment,
   FullUserFragment,
   FullUserRoleFragment,
   useCreateUserMutation,
@@ -8,7 +7,11 @@ import {
   useUpdateUserMutation,
   useUserQuery,
 } from '@wepublish/editor/api';
-import { getApiClientV2, useUserRoleListQuery } from '@wepublish/editor/api-v2';
+import {
+  FullImageFragment,
+  getApiClientV2,
+  useUserRoleListQuery,
+} from '@wepublish/editor/api-v2';
 import {
   ChooseEditImage,
   createCheckedPermissionComponent,
@@ -180,6 +183,7 @@ function UserEditView() {
     );
     setActive(tmpUser.active);
     setAddress(tmpUser.address ? tmpUser.address : null);
+    // @ts-expect-error wrong image type for now. Will be fixed with User PR
     setUserImage(tmpUser.userImage ? tmpUser.userImage : undefined);
 
     if (tmpUser.roles) {
@@ -220,7 +224,9 @@ function UserEditView() {
     key:
       | 'company'
       | 'streetAddress'
+      | 'streetAddressNumber'
       | 'streetAddress2'
+      | 'streetAddress2Number'
       | 'zipCode'
       | 'city'
       | 'country',
@@ -231,7 +237,9 @@ function UserEditView() {
       addressCopy = {
         company: '',
         streetAddress: '',
+        streetAddressNumber: '',
         streetAddress2: '',
+        streetAddress2Number: '',
         zipCode: '',
         city: '',
         country: '',
@@ -294,8 +302,16 @@ function UserEditView() {
                 company: address?.company ? address.company : '',
                 streetAddress:
                   address?.streetAddress ? address.streetAddress : '',
+                streetAddressNumber:
+                  address?.streetAddressNumber ?
+                    address.streetAddressNumber
+                  : '',
                 streetAddress2:
                   address?.streetAddress2 ? address.streetAddress2 : '',
+                streetAddress2Number:
+                  address?.streetAddress2Number ?
+                    address.streetAddress2Number
+                  : '',
                 zipCode: address?.zipCode ? address.zipCode : '',
                 city: address?.city ? address.city : '',
                 country: address?.country ? address.country : '',
@@ -569,7 +585,7 @@ function UserEditView() {
                       </Form.Group>
                     </Col>
                     {/* street */}
-                    <Col xs={12}>
+                    <Col xs={18}>
                       <Form.Group controlId="streetAddress">
                         <Form.ControlLabel>
                           {t('userCreateOrEditView.streetAddress')}
@@ -589,8 +605,28 @@ function UserEditView() {
                         />
                       </Form.Group>
                     </Col>
+                    <Col xs={6}>
+                      <Form.Group controlId="streetAddressNumber">
+                        <Form.ControlLabel>
+                          {t('userCreateOrEditView.streetAddressNumber')}
+                        </Form.ControlLabel>
+                        <Form.Control
+                          name="streetAddressNumber"
+                          value={address?.streetAddressNumber || ''}
+                          disabled={isDisabled}
+                          onChange={(value: string) =>
+                            updateAddressObject(
+                              address,
+                              setAddress,
+                              'streetAddressNumber',
+                              value
+                            )
+                          }
+                        />
+                      </Form.Group>
+                    </Col>
                     {/* street 2 */}
-                    <Col xs={24}>
+                    <Col xs={18}>
                       <Form.Group controlId="streetAddress2">
                         <Form.ControlLabel>
                           {t('userCreateOrEditView.streetAddress2')}
@@ -604,6 +640,27 @@ function UserEditView() {
                               address,
                               setAddress,
                               'streetAddress2',
+                              value
+                            )
+                          }
+                        />
+                      </Form.Group>
+                    </Col>
+
+                    <Col xs={6}>
+                      <Form.Group controlId="streetAddress2Number">
+                        <Form.ControlLabel>
+                          {t('userCreateOrEditView.streetAddress2Number')}
+                        </Form.ControlLabel>
+                        <Form.Control
+                          name="streetAddress2Number"
+                          value={address?.streetAddress2Number || ''}
+                          disabled={isDisabled}
+                          onChange={(value: string) =>
+                            updateAddressObject(
+                              address,
+                              setAddress,
+                              'streetAddress2Number',
                               value
                             )
                           }

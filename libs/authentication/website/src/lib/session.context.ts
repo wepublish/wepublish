@@ -8,7 +8,7 @@ export const AuthTokenStorageKey = 'auth.token';
 
 export const SessionTokenContext = createContext<
   | [
-      SensitiveDataUser | null,
+      SensitiveDataUser | null | undefined,
       boolean,
       (value: SessionWithTokenWithoutUser | null) => Promise<void>,
     ]

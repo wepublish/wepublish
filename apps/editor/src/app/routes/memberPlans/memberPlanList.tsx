@@ -1,10 +1,11 @@
 import {
   FullMemberPlanFragment,
+  getApiClientV2,
   MemberPlanListDocument,
   MemberPlanListQuery,
   useDeleteMemberPlanMutation,
   useMemberPlanListQuery,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import {
   createCheckedPermissionComponent,
   DescriptionList,
@@ -49,7 +50,9 @@ function MemberPlanList() {
   const [currentMemberPlan, setCurrentMemberPlan] =
     useState<FullMemberPlanFragment>();
 
+  const client = getApiClientV2();
   const { data, loading: isLoading } = useMemberPlanListQuery({
+    client,
     variables: {
       filter: filter ? { name: filter } : undefined,
       take: 50,
@@ -58,7 +61,7 @@ function MemberPlanList() {
   });
 
   const [deleteMemberPlan, { loading: isDeleting }] =
-    useDeleteMemberPlanMutation();
+    useDeleteMemberPlanMutation({ client });
 
   useEffect(() => {
     if (data?.memberPlans?.nodes) {
