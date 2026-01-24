@@ -6,12 +6,12 @@ import {
   ChallengeQuery,
   CommentListQuery,
   CommentListQueryVariables,
-  CommentRating,
   CommentWithoutNestingFragment,
   EditCommentMutation,
   EditCommentMutationVariables,
   FullCommentFragment,
-  FullCommentRatingSystem,
+  FullCommentRatingFragment,
+  CommentRatingSystem,
   OverriddenRating,
 } from '@wepublish/website/api';
 import { Dispatch, PropsWithChildren } from 'react';
@@ -89,7 +89,7 @@ export type BuilderCommentListItemProps = (CommentWithoutNestingFragment & {
   children?: CommentWithoutNestingFragment[] | null;
 }) & {
   className?: string;
-  ratingSystem: FullCommentRatingSystem;
+  ratingSystem: CommentRatingSystem;
   signUpUrl: string;
   commentDepth?: number;
   maxCommentDepth?: number;
@@ -167,8 +167,8 @@ export type BuilderCommentEditorProps = {
 
 export type BuilderCommentRatingsProps = {
   commentId: string;
-  ratingSystem: FullCommentRatingSystem;
-  userRatings: CommentRating[];
+  ratingSystem: CommentRatingSystem;
+  userRatings: FullCommentRatingFragment[];
   calculatedRatings: CalculatedRating[];
   overriddenRatings: OverriddenRating[];
 };

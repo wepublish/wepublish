@@ -140,31 +140,6 @@ export const createSubscription = async (
   return subscription;
 };
 
-export const importSubscription = async (
-  { properties, ...input }: CreateSubscriptionInput,
-  authenticate: Context['authenticate'],
-  memberContext: Context['memberContext'],
-  prismaClient: PrismaClient
-) => {
-  const { roles } = authenticate();
-  authorise(CanCreateSubscription, roles);
-
-  const { subscription } = await memberContext.importSubscription(
-    prismaClient,
-    input['userID'],
-    input['paymentMethodID'],
-    input['paymentPeriodicity'],
-    input['monthlyAmount'],
-    input['memberPlanID'],
-    properties,
-    input['autoRenew'],
-    !!input['extendable'],
-    input['startsAt'],
-    input['paidUntil'] ?? undefined
-  );
-  return subscription;
-};
-
 type UpdateSubscriptionInput = Prisma.SubscriptionUncheckedUpdateInput & {
   properties: Prisma.MetadataPropertyCreateManySubscriptionInput[];
   deactivation: Prisma.SubscriptionDeactivationCreateWithoutSubscriptionInput | null;

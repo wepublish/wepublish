@@ -7,10 +7,7 @@ import {
 import { PrismaClient, Subscription } from '@prisma/client';
 import { URLAdapter } from '@wepublish/nest-modules';
 import { MemberPlan, MemberPlanDataloader } from '@wepublish/member-plan/api';
-import {
-  PaymentMethod,
-  PaymentMethodDataloader,
-} from '@wepublish/payment-method/api';
+import { PaymentMethod, PaymentMethodDataloader } from '@wepublish/payment/api';
 import { SubscriptionDeactivationDataloader } from './subscription-deactivation.dataloader';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { Subscription as PSubscription } from '@prisma/client';
