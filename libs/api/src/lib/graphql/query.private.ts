@@ -9,7 +9,6 @@ import {
 } from 'graphql';
 import { Context } from '../context';
 import { CommentSort } from '../db/comment';
-import { ImageSort } from '../db/image';
 import { InvoiceSort } from '../db/invoice';
 import { SubscriptionSort } from '../db/subscription';
 import { UserSort } from '../db/user';
@@ -28,13 +27,7 @@ import {
   getComment,
 } from './comment/comment.private-queries';
 import { GraphQLSortOrder } from './common';
-import {
-  GraphQLImage,
-  GraphQLImageConnection,
-  GraphQLImageFilter,
-  GraphQLImageSort,
-} from './image';
-import { getAdminImages, getImageById } from './image/image.private-queries';
+
 import {
   GraphQLInvoice,
   GraphQLInvoiceConnection,
@@ -273,43 +266,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       args: { filter: { type: GraphQLSubscriptionFilter } },
       resolve: (root, { filter }, { prisma: { subscription }, authenticate }) =>
         getSubscriptionsAsCSV(filter, authenticate, subscription),
-    },
-
-    // Image
-    // =====
-
-    image: {
-      type: GraphQLImage,
-      args: { id: { type: GraphQLString } },
-      resolve: (root, { id }, { authenticate, loaders: { images } }) =>
-        getImageById(id, authenticate, images),
-    },
-
-    images: {
-      type: new GraphQLNonNull(GraphQLImageConnection),
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 5 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLImageFilter },
-        sort: { type: GraphQLImageSort, defaultValue: ImageSort.ModifiedAt },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, skip, take, cursor },
-        { authenticate, prisma: { image } }
-      ) =>
-        getAdminImages(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          image
-        ),
     },
 
     // Comments

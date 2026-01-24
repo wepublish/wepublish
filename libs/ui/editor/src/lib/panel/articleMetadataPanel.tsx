@@ -1,13 +1,11 @@
 import styled from '@emotion/styled';
-import {
-  CommentItemType,
-  FullImageFragment,
-  Tag,
-  TagType,
-} from '@wepublish/editor/api';
+import { CommentItemType } from '@wepublish/editor/api';
 import {
   FullAuthorFragment,
+  FullImageFragment,
   FullTrackingPixelFragment,
+  Tag,
+  TagType,
 } from '@wepublish/editor/api-v2';
 import { slugify } from '@wepublish/utils';
 import { useEffect, useState } from 'react';

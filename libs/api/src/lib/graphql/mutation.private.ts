@@ -27,16 +27,7 @@ import {
   takeActionOnComment,
   updateComment,
 } from './comment/comment.private-mutation';
-import {
-  GraphQLImage,
-  GraphQLUpdateImageInput,
-  GraphQLUploadImageInput,
-} from './image';
-import {
-  createImage,
-  deleteImageById,
-  updateImage,
-} from './image/image.private-mutation';
+
 import { GraphQLInvoice, GraphQLInvoiceInput } from './invoice';
 import {
   createInvoice,
@@ -416,39 +407,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           subscription,
           memberContext
         ),
-    },
-
-    // Image
-    // =====
-
-    uploadImage: {
-      type: GraphQLImage,
-      args: { input: { type: new GraphQLNonNull(GraphQLUploadImageInput) } },
-      resolve: (
-        root,
-        { input },
-        { authenticate, mediaAdapter, prisma: { image } }
-      ) => createImage(input, authenticate, mediaAdapter, image),
-    },
-
-    updateImage: {
-      type: GraphQLImage,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        input: { type: new GraphQLNonNull(GraphQLUpdateImageInput) },
-      },
-      resolve: (root, { id, input }, { authenticate, prisma: { image } }) =>
-        updateImage(id, input, authenticate, image),
-    },
-
-    deleteImage: {
-      type: GraphQLImage,
-      args: { id: { type: new GraphQLNonNull(GraphQLString) } },
-      resolve: (
-        root,
-        { id },
-        { authenticate, mediaAdapter, prisma: { image } }
-      ) => deleteImageById(id, authenticate, image, mediaAdapter),
     },
 
     // Invoice

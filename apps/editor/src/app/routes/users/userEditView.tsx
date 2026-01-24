@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import {
-  FullImageFragment,
   FullUserFragment,
   FullUserRoleFragment,
   useCreateUserMutation,
@@ -8,7 +7,11 @@ import {
   useUpdateUserMutation,
   useUserQuery,
 } from '@wepublish/editor/api';
-import { getApiClientV2, useUserRoleListQuery } from '@wepublish/editor/api-v2';
+import {
+  FullImageFragment,
+  getApiClientV2,
+  useUserRoleListQuery,
+} from '@wepublish/editor/api-v2';
 import {
   ChooseEditImage,
   createCheckedPermissionComponent,
@@ -180,6 +183,7 @@ function UserEditView() {
     );
     setActive(tmpUser.active);
     setAddress(tmpUser.address ? tmpUser.address : null);
+    // @ts-expect-error wrong image type for now. Will be fixed with User PR
     setUserImage(tmpUser.userImage ? tmpUser.userImage : undefined);
 
     if (tmpUser.roles) {
