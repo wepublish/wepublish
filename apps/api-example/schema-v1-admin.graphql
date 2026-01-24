@@ -10,21 +10,10 @@ type Query {
   subscription(id: String!): Subscription
   subscriptions(cursor: String, take: Int = 10, skip: Int = 0, filter: SubscriptionFilter, sort: SubscriptionSort = modifiedAt, order: SortOrder = Descending): SubscriptionConnection!
   subscriptionsAsCsv(filter: SubscriptionFilter): String
-  tokens: [Token!]!
-  image(id: String): Image
-  images(cursor: String, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
   comment(id: String!): Comment
   comments(cursor: String, take: Int = 10, skip: Int = 0, filter: CommentFilter, sort: CommentSort = modifiedAt, order: SortOrder = Descending): CommentConnection!
-  memberPlan(id: String, slug: Slug): MemberPlan
-  memberPlans(cursor: String, take: Int = 10, skip: Int = 0, filter: MemberPlanFilter, sort: MemberPlanSort = modifiedAt, order: SortOrder = Descending): MemberPlanConnection!
-  paymentMethod(id: String): PaymentMethod
-  paymentMethods: [PaymentMethod!]!
-  paymentProviders: [PaymentProvider!]!
   invoice(id: String): Invoice
   invoices(cursor: String, take: Int = 10, skip: Int = 0, filter: InvoiceFilter, sort: InvoiceSort = modifiedAt, order: SortOrder = Descending): InvoiceConnection!
-  payment(id: String): Payment
-  payments(cursor: String, take: Int = 10, skip: Int = 0, filter: PaymentFilter, sort: PaymentSort = modifiedAt, order: SortOrder = Descending): PaymentConnection!
-  ratingSystem: FullCommentRatingSystem!
   polls(cursor: String, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
   poll(id: String): FullPoll
 }
@@ -81,15 +70,6 @@ type FocalPoint {
 input ImageTransformation {
   width: Int
   height: Int
-  rotation: ImageRotation
-}
-
-enum ImageRotation {
-  Auto
-  Rotate0
-  Rotate90
-  Rotate180
-  Rotate270
 }
 
 """A hexidecimal color value."""
@@ -126,7 +106,9 @@ type User {
 type UserAddress {
   company: String
   streetAddress: String
+  streetAddressNumber: String
   streetAddress2: String
+  streetAddress2Number: String
   zipCode: String
   city: String
   country: String
@@ -396,29 +378,6 @@ enum SubscriptionSort {
   modifiedAt
 }
 
-type Token {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-}
-
-type ImageConnection {
-  nodes: [Image!]!
-  totalCount: Int!
-  pageInfo: PageInfo!
-}
-
-input ImageFilter {
-  title: String
-  tags: [String!]
-}
-
-enum ImageSort {
-  createdAt
-  modifiedAt
-}
-
 type Comment {
   id: String!
   guestUsername: String
@@ -511,24 +470,6 @@ enum CommentSort {
   createdAt
 }
 
-type MemberPlanConnection {
-  nodes: [MemberPlan!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input MemberPlanFilter {
-  name: String
-  active: Boolean
-  tags: [String!]
-  productType: ProductType
-}
-
-enum MemberPlanSort {
-  createdAt
-  modifiedAt
-}
-
 type InvoiceConnection {
   nodes: [Invoice!]!
   pageInfo: PageInfo!
@@ -552,61 +493,6 @@ enum InvoiceSort {
   createdAt
   modifiedAt
   paidAt
-}
-
-type Payment {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  intentID: String
-  intentSecret: String
-  state: PaymentState!
-  invoice: Invoice!
-  intentData: String
-  paymentMethod: PaymentMethod!
-  paymentData: String
-}
-
-enum PaymentState {
-  created
-  submitted
-  requiresUserAction
-  processing
-  paid
-  canceled
-  declined
-}
-
-type PaymentConnection {
-  nodes: [Payment!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input PaymentFilter {
-  intentID: String
-}
-
-enum PaymentSort {
-  createdAt
-  modifiedAt
-}
-
-type FullCommentRatingSystem {
-  id: String!
-  name: String
-  answers: [CommentRatingSystemAnswer!]!
-}
-
-type CommentRatingSystemAnswer {
-  id: String!
-  ratingSystemId: String!
-  answer: String
-  type: RatingSystemType!
-}
-
-enum RatingSystemType {
-  star
 }
 
 type PollConnection {
@@ -673,27 +559,15 @@ type Mutation {
   sessions: [Session!]!
   sendJWTLogin(url: String!, email: String!): String!
   sendWebsiteLogin(email: String!): String!
-  createToken(input: TokenInput!): CreatedToken!
-  deleteToken(id: String!): CreatedToken
   createUser(input: UserInput!, password: String!): User
   updateUser(id: String!, input: UserInput!): User
   resetUserPassword(id: String!, password: String!, sendMail: Boolean): User
   deleteUser(id: String!): User
   createSubscription(input: SubscriptionInput!): Subscription
-  importSubscription(input: SubscriptionInput!): Subscription
   renewSubscription(id: String!): Invoice
   updateSubscription(id: String!, input: SubscriptionInput!): Subscription
   deleteSubscription(id: String!): Subscription
   cancelSubscription(id: String!, reason: SubscriptionDeactivationReason!): Subscription
-  uploadImage(input: UploadImageInput!): Image
-  updateImage(id: String!, input: UpdateImageInput!): Image
-  deleteImage(id: String!): Image
-  createMemberPlan(input: MemberPlanInput!): MemberPlan
-  updateMemberPlan(id: String!, input: MemberPlanInput!): MemberPlan
-  deleteMemberPlan(id: String!): MemberPlan
-  createPaymentMethod(input: PaymentMethodInput!): PaymentMethod
-  updatePaymentMethod(id: String!, input: PaymentMethodInput!): PaymentMethod
-  deletePaymentMethod(id: String!): PaymentMethod
   createInvoice(input: InvoiceInput!): Invoice
   createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment
   updateInvoice(id: String!, input: InvoiceInput!): Invoice
@@ -705,9 +579,6 @@ type Mutation {
   rejectComment(id: String!, rejectionReason: CommentRejectionReason): Comment!
   requestChangesOnComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
   deleteComment(id: String!): Comment!
-  createRatingSystemAnswer(ratingSystemId: String!, type: RatingSystemType = star, answer: String): CommentRatingSystemAnswer!
-  updateRatingSystem(ratingSystemId: String!, name: String, answers: [UpdateCommentRatingSystemAnswer!]): FullCommentRatingSystem!
-  deleteRatingSystemAnswer(id: String!): CommentRatingSystemAnswer!
   createPoll(opensAt: DateTime, closedAt: DateTime, question: String): PollWithAnswers
   createPollAnswer(pollId: String!, answer: String): PollAnswer
   createPollExternalVoteSource(pollId: String!, source: String): PollExternalVoteSource
@@ -737,18 +608,6 @@ type SessionWithToken {
   expiresAt: DateTime!
 }
 
-type CreatedToken {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  token: String!
-}
-
-input TokenInput {
-  name: String!
-}
-
 input UserInput {
   name: String!
   firstName: String
@@ -767,7 +626,9 @@ input UserInput {
 input UserAddressInput {
   company: String
   streetAddress: String
+  streetAddressNumber: String
   streetAddress2: String
+  streetAddress2Number: String
   zipCode: String
   city: String
   country: String
@@ -798,76 +659,6 @@ input SubscriptionDeactivationInput {
   reason: SubscriptionDeactivationReason!
 }
 
-input UploadImageInput {
-  file: Upload!
-  filename: String
-  title: String
-  description: String
-  tags: [String!]
-  link: String
-  source: String
-  license: String
-  focalPoint: InputPoint
-}
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
-
-input InputPoint {
-  x: Float!
-  y: Float!
-}
-
-input UpdateImageInput {
-  filename: String
-  title: String
-  description: String
-  tags: [String!]
-  link: String
-  source: String
-  license: String
-  focalPoint: InputPoint
-}
-
-input MemberPlanInput {
-  name: String!
-  slug: String!
-  imageID: String
-  description: RichText
-  shortDescription: RichText
-  tags: [String!]
-  active: Boolean!
-  amountPerMonthMin: Int!
-  amountPerMonthMax: Int
-  amountPerMonthTarget: Int
-  currency: Currency!
-  extendable: Boolean!
-  productType: ProductType!
-  externalReward: String
-  maxCount: Int
-  availablePaymentMethods: [AvailablePaymentMethodInput!]!
-  migrateToTargetPaymentMethodID: String
-  successPageId: String
-  failPageId: String
-  confirmationPageId: String
-}
-
-input AvailablePaymentMethodInput {
-  paymentMethodIDs: [String!]!
-  paymentPeriodicities: [PaymentPeriodicity!]!
-  forceAutoRenewal: Boolean!
-}
-
-input PaymentMethodInput {
-  name: String!
-  slug: Slug!
-  description: String!
-  paymentProviderID: String!
-  active: Boolean!
-  gracePeriod: Int!
-  imageId: String
-}
-
 input InvoiceInput {
   mail: String!
   description: String
@@ -883,6 +674,29 @@ input InvoiceItemInput {
   amount: Int!
   createdAt: DateTime!
   modifiedAt: DateTime!
+}
+
+type Payment {
+  id: String!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  intentID: String
+  intentSecret: String
+  state: PaymentState!
+  invoice: Invoice!
+  intentData: String
+  paymentMethod: PaymentMethod!
+  paymentData: String
+}
+
+enum PaymentState {
+  created
+  submitted
+  requiresUserAction
+  processing
+  paid
+  canceled
+  declined
 }
 
 input PaymentFromInvoiceInput {
@@ -902,12 +716,6 @@ input CommentRevisionUpdateInput {
 input CommentRatingOverrideUpdateInput {
   answerId: String!
   value: Int
-}
-
-input UpdateCommentRatingSystemAnswer {
-  id: String!
-  type: RatingSystemType
-  answer: String
 }
 
 type PollWithAnswers {

@@ -1,17 +1,14 @@
 import styled from '@emotion/styled';
-import {
-  FullImageFragment,
-  useCreateJwtForWebsiteLoginLazyQuery,
-} from '@wepublish/editor/api';
+import { useCreateJwtForWebsiteLoginLazyQuery } from '@wepublish/editor/api';
 import {
   CreateArticleMutationVariables,
   EditorBlockType,
   FullAuthorFragment,
+  FullImageFragment,
   getApiClientV2,
   SettingName,
   useArticleQuery,
   useCreateArticleMutation,
-  usePaywallListQuery,
   usePublishArticleMutation,
   useSettingsListQuery,
   useUpdateArticleMutation,
@@ -184,14 +181,11 @@ function ArticleEditor() {
           )?.value,
         paywall:
           meta.paywall ??
-          !!data.settings.find(
+          data.settings.find(
             setting => setting.name === SettingName.NewArticlePaywall
           )?.value,
       }));
     },
-  });
-  const { data: paywallData } = usePaywallListQuery({
-    client,
   });
 
   const isNew = id === undefined;
@@ -284,7 +278,7 @@ function ArticleEditor() {
         properties,
         canonicalUrl: canonicalUrl ?? '',
         shared,
-        paywall: !!paywallId,
+        paywall: paywallId,
         hidden,
         disableComments,
         breaking,
@@ -406,7 +400,7 @@ function ArticleEditor() {
       imageID: metadata.image?.id,
       breaking: metadata.breaking,
       shared: !!metadata.shared,
-      paywallId: metadata.paywall ? paywallData?.paywalls?.[0]?.id : null,
+      paywallId: metadata.paywall,
       hidden: metadata.hidden ?? false,
       disableComments: metadata.disableComments ?? false,
       tagIds: metadata.tags,

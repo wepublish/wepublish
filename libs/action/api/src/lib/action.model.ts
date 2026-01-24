@@ -39,7 +39,7 @@ export class BaseAction<AT extends ActionType> {
   date!: Date;
 }
 
-@ObjectType({ implements: [BaseAction, HasArticleLc] })
+@ObjectType({ implements: () => [BaseAction, HasArticleLc] })
 export class ArticleCreatedAction
   extends BaseAction<ActionType.ArticleCreated>
   implements HasArticleLc
@@ -48,7 +48,7 @@ export class ArticleCreatedAction
   article!: Article;
 }
 
-@ObjectType({ implements: [BaseAction, HasPageLc] })
+@ObjectType({ implements: () => [BaseAction, HasPageLc] })
 export class PageCreatedAction
   extends BaseAction<ActionType.PageCreated>
   implements HasPageLc
@@ -57,7 +57,7 @@ export class PageCreatedAction
   page!: Page;
 }
 
-@ObjectType({ implements: [BaseAction, HasComment] })
+@ObjectType({ implements: () => [BaseAction, HasComment] })
 export class CommentCreatedAction
   extends BaseAction<ActionType.CommentCreated>
   implements HasComment
@@ -66,7 +66,7 @@ export class CommentCreatedAction
   comment!: Comment;
 }
 
-@ObjectType({ implements: [BaseAction, HasPoll] })
+@ObjectType({ implements: () => [BaseAction, HasPoll] })
 export class PollStartedAction
   extends BaseAction<ActionType.PollStarted>
   implements HasPoll
@@ -75,7 +75,7 @@ export class PollStartedAction
   poll!: FullPoll;
 }
 
-@ObjectType({ implements: [BaseAction, HasSubscriptionLc] })
+@ObjectType({ implements: () => [BaseAction, HasSubscriptionLc] })
 export class SubscriptionCreatedAction
   extends BaseAction<ActionType.SubscriptionCreated>
   implements HasSubscriptionLc
@@ -84,7 +84,7 @@ export class SubscriptionCreatedAction
   subscription!: PublicSubscription;
 }
 
-@ObjectType({ implements: [BaseAction, HasAuthor] })
+@ObjectType({ implements: () => [BaseAction, HasAuthor] })
 export class AuthorCreatedAction
   extends BaseAction<ActionType.AuthorCreated>
   implements HasAuthor
@@ -93,7 +93,7 @@ export class AuthorCreatedAction
   author!: Author;
 }
 
-@ObjectType({ implements: [BaseAction, HasUserLc] })
+@ObjectType({ implements: () => [BaseAction, HasUserLc] })
 export class UserCreatedAction
   extends BaseAction<ActionType.UserCreated>
   implements HasUserLc
@@ -102,7 +102,7 @@ export class UserCreatedAction
   user!: User;
 }
 
-@ObjectType({ implements: [BaseAction, HasEventLc] })
+@ObjectType({ implements: () => [BaseAction, HasEventLc] })
 export class EventCreatedAction
   extends BaseAction<ActionType.EventCreated>
   implements HasEventLc

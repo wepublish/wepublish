@@ -37,7 +37,9 @@ export const GraphQLUserAddress = new GraphQLObjectType({
   fields: {
     company: { type: GraphQLString },
     streetAddress: { type: GraphQLString },
+    streetAddressNumber: { type: GraphQLString },
     streetAddress2: { type: GraphQLString },
+    streetAddress2Number: { type: GraphQLString },
     zipCode: { type: GraphQLString },
     city: { type: GraphQLString },
     country: { type: GraphQLString },
@@ -293,7 +295,9 @@ export const GraphQLUserAddressInput = new GraphQLInputObjectType({
   fields: {
     company: { type: GraphQLString },
     streetAddress: { type: GraphQLString },
+    streetAddressNumber: { type: GraphQLString },
     streetAddress2: { type: GraphQLString },
+    streetAddress2Number: { type: GraphQLString },
     zipCode: { type: GraphQLString },
     city: { type: GraphQLString },
     country: { type: GraphQLString },

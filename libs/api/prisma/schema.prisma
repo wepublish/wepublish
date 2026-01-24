@@ -942,12 +942,14 @@ model UserAddress {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  company        String?
-  streetAddress  String?
-  streetAddress2 String?
-  zipCode        String?
-  city           String?
-  country        String?
+  company              String?
+  streetAddress        String?
+  streetAddressNumber  String?
+  streetAddress2       String?
+  streetAddress2Number String?
+  zipCode              String?
+  city                 String?
+  country              String?
 
   userId String @unique
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -1022,8 +1024,8 @@ model Setting {
   createdAt          DateTime @default(now())
   modifiedAt         DateTime @updatedAt
   name               String   @unique
-  value              Json
-  settingRestriction Json
+  value              Json?
+  settingRestriction Json?
 
   @@map("settings")
 }
@@ -1449,11 +1451,19 @@ model Paywall {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name                  String? @unique
-  description           Json?
-  circumventDescription Json?
-  anyMemberPlan         Boolean @default(false)
-  active                Boolean @default(true)
+  name String? @unique
+
+  description                  Json?
+  upgradeDescription           Json?
+  circumventDescription        Json?
+  upgradeCircumventDescription Json?
+
+  anyMemberPlan           Boolean @default(false)
+  active                  Boolean @default(true)
+  alternativeSubscribeUrl String?
+
+  hideContentAfter Int     @default(3)
+  fadeout          Boolean @default(true)
 
   memberPlans PaywallMemberplan[]
   articles    Article[]

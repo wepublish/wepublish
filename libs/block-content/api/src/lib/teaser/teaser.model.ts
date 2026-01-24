@@ -25,7 +25,7 @@ registerEnumType(TeaserType, {
 });
 
 @InterfaceType({
-  implements: [HasImage],
+  implements: () => [HasImage],
 })
 export abstract class BaseTeaser<Type extends TeaserType> extends HasImage {
   @Field(() => String)

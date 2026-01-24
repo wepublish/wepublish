@@ -5,28 +5,34 @@ import {
   ObjectType,
   OmitType,
 } from '@nestjs/graphql';
-import { Image, UploadImageInput } from '@wepublish/image/api';
+import { Image } from '@wepublish/image/api';
 import { Property } from '@wepublish/property/api';
 
 @ObjectType()
 export class UserAddress {
   @Field(() => String, { nullable: true })
-  company!: string | null;
+  company?: string | null;
 
   @Field(() => String, { nullable: true })
-  streetAddress!: string | null;
+  streetAddress?: string | null;
 
   @Field(() => String, { nullable: true })
-  streetAddress2!: string | null;
+  streetAddressNumber?: string | null;
 
   @Field(() => String, { nullable: true })
-  zipCode!: string | null;
+  streetAddress2?: string | null;
 
   @Field(() => String, { nullable: true })
-  city!: string | null;
+  streetAddress2Number?: string | null;
 
   @Field(() => String, { nullable: true })
-  country!: string | null;
+  zipCode?: string | null;
+
+  @Field(() => String, { nullable: true })
+  city?: string | null;
+
+  @Field(() => String, { nullable: true })
+  country?: string | null;
 }
 
 @ObjectType()
@@ -128,7 +134,4 @@ export class UserInput {
 
   @Field(() => Date, { nullable: true })
   birthday?: Date;
-
-  @Field(() => UploadImageInput, { nullable: true })
-  uploadImageInput?: UploadImageInput;
 }

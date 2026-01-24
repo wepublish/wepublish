@@ -94,6 +94,7 @@ const defaultSchema = z.object({
   birthday: z.coerce.date().max(new Date()).optional(),
   address: z.object({
     streetAddress: z.string().min(1),
+    streetAddressNumber: z.string().min(1),
     zipCode: z.string().min(1),
     city: z.string().min(1),
     country: z.enum(userCountryNames),
@@ -167,6 +168,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
         city: user.address?.city || '',
         country: user.address?.country || '',
         streetAddress: user.address?.streetAddress || '',
+        streetAddressNumber: user.address?.streetAddressNumber || '',
         zipCode: user.address?.zipCode || '',
       },
       email: user.email,

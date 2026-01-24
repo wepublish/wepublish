@@ -9,7 +9,7 @@ import {
 
 export type BuilderTagProps = {
   className?: string;
-  tags: Pick<QueryResult<TagQuery>, 'data' | 'loading' | 'error'>;
+  tag: Pick<QueryResult<TagQuery>, 'data' | 'loading' | 'error'>;
   articles: Pick<QueryResult<ArticleListQuery>, 'data' | 'loading' | 'error'>;
   variables?: Partial<ArticleListQueryVariables>;
   onVariablesChange?: (variables: Partial<ArticleListQueryVariables>) => void;

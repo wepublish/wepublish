@@ -17,11 +17,9 @@ export default {
 
 export const Default: StoryObj<typeof Tag> = {
   args: {
-    tags: {
+    tag: {
       data: {
-        tags: {
-          nodes: [tag],
-        },
+        tag,
       },
       loading: false,
     },
@@ -71,7 +69,7 @@ export const WithTagLoading = {
   ...Default,
   args: {
     ...Default.args,
-    tags: {
+    tag: {
       data: {
         tag: null,
       },

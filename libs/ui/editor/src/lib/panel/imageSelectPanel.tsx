@@ -1,5 +1,9 @@
 import styled from '@emotion/styled';
-import { FullImageFragment, useImageListQuery } from '@wepublish/editor/api';
+import {
+  FullImageFragment,
+  getApiClientV2,
+  useImageListQuery,
+} from '@wepublish/editor/api-v2';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdFileUpload, MdSearch } from 'react-icons/md';
@@ -66,11 +70,13 @@ function ImageSelectPanel({ onClose, onSelect }: ImageSelectPanelProps) {
     link: '',
     licence: '',
   });
+  const client = getApiClientV2();
   const {
     data,
     fetchMore,
     loading: isLoading,
   } = useImageListQuery({
+    client,
     fetchPolicy: 'network-only',
     variables: {
       filter,

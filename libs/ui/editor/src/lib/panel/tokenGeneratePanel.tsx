@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
 import {
+  getApiClientV2,
   TokenListDocument,
   useCreateTokenMutation,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -28,8 +29,10 @@ export interface TokenGeneratePanelProps {
 function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
   const [name, setName] = useState('');
 
+  const client = getApiClientV2();
   const [createToken, { data, loading: isCreating, error: createError }] =
     useCreateTokenMutation({
+      client,
       refetchQueries: [getOperationNameFromDocument(TokenListDocument)],
     });
 
@@ -54,7 +57,7 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
   }, [createError]);
 
   async function handleSave() {
-    await createToken({ variables: { input: { name } } });
+    await createToken({ variables: { name } });
   }
 
   return (

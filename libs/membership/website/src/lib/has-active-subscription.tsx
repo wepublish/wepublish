@@ -14,10 +14,6 @@ export const useActiveSubscriptions = () => {
     [data?.subscriptions]
   );
 
-  if (!hasUser) {
-    return subscriptions;
-  }
-
   if (!data?.subscriptions) {
     // return null so we know if it hasn't been loaded yet
     return null;
