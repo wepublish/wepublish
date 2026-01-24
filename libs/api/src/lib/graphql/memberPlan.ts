@@ -173,33 +173,3 @@ export const GraphQLAvailablePaymentMethodInput = new GraphQLInputObjectType({
     forceAutoRenewal: { type: new GraphQLNonNull(GraphQLBoolean) },
   }),
 });
-
-export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
-  name: 'MemberPlanInput',
-  fields: () => ({
-    name: { type: new GraphQLNonNull(GraphQLString) },
-    slug: { type: new GraphQLNonNull(GraphQLString) },
-    imageID: { type: GraphQLString },
-    description: { type: GraphQLRichText },
-    shortDescription: { type: GraphQLRichText },
-    tags: { type: new GraphQLList(new GraphQLNonNull(GraphQLString)) },
-    active: { type: new GraphQLNonNull(GraphQLBoolean) },
-    amountPerMonthMin: { type: new GraphQLNonNull(GraphQLInt) },
-    amountPerMonthMax: { type: GraphQLInt },
-    amountPerMonthTarget: { type: GraphQLInt },
-    currency: { type: new GraphQLNonNull(GraphQLSupportedCurrency) },
-    extendable: { type: new GraphQLNonNull(GraphQLBoolean) },
-    productType: { type: new GraphQLNonNull(GraphQLProductType) },
-    externalReward: { type: GraphQLString },
-    maxCount: { type: GraphQLInt },
-    availablePaymentMethods: {
-      type: new GraphQLNonNull(
-        new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethodInput))
-      ),
-    },
-    migrateToTargetPaymentMethodID: { type: GraphQLString },
-    successPageId: { type: GraphQLString },
-    failPageId: { type: GraphQLString },
-    confirmationPageId: { type: GraphQLString },
-  }),
-});

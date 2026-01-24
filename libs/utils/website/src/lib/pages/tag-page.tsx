@@ -8,7 +8,7 @@ import {
   PeerProfileDocument,
   TagDocument,
 } from '@wepublish/website/api';
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
+import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
@@ -50,12 +50,10 @@ export function TagPage({
   );
 }
 
-export const TagPageGetStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: 'blocking',
-  };
-};
+export const TagPageGetStaticPaths = () => ({
+  paths: [],
+  fallback: 'blocking',
+});
 
 export const TagPageGetStaticProps = (async ({ params }) => {
   const { tag } = params || {};
@@ -71,14 +69,14 @@ export const TagPageGetStaticProps = (async ({ params }) => {
     },
   });
 
-  if (!tagResult.error && !tagResult.data.tags.nodes.length) {
+  if (!tagResult.error && !tagResult.data.tag) {
     return {
       notFound: true,
       revalidate: 1,
     };
   }
 
-  const tagId = tagResult.data.tags.nodes[0].id;
+  const tagId = tagResult.data.tag.id;
 
   await Promise.all([
     client.query({

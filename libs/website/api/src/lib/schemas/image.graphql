@@ -94,8 +94,27 @@ fragment FullPeerImage on PeerImage {
   xxsSquare
 }
 
-mutation UploadImage($uploadImageInput: UploadImageInput) {
-  uploadUserProfileImage(uploadImageInput: $uploadImageInput) {
+mutation UploadImage(
+  $title: String
+  $description: String
+  $focalPoint: FocalPointInput
+  $license: String
+  $link: String
+  $source: String
+  $file: Upload!
+  $filename: String
+) {
+  uploadUserProfileImage(
+    title: $title
+    description: $description
+    focalPoint: $focalPoint
+    license: $license
+    link: $link
+    source: $source
+    tags: []
+    file: $file
+    filename: $filename
+  ) {
     ...FullSensitiveDataUser
   }
 }

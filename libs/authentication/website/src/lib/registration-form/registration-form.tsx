@@ -55,6 +55,7 @@ export const defaultRegisterSchema = z.object({
   firstName: z.string().min(1),
   address: z.object({
     streetAddress: z.string().min(1),
+    streetAddressNumber: z.string().min(1),
     zipCode: z.string().min(1),
     city: z.string().min(1),
     country: z.enum(userCountryNames),

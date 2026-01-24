@@ -1340,7 +1340,9 @@
       "sendWebsiteLogin": "Login-Link versenden",
       "sendWebsiteLoginSuccessMessage": "Login-Link an {{email}} versendet",
       "streetAddress": "Strasse",
+      "streetAddressNumber": "Hausnummer",
       "streetAddress2": "Strasse 2",
+      "streetAddress2Number": "Hausnummer",
       "subscriptionsHeader": "Abonnemente",
       "successfullyCreatedUser": "Benutzer:in erstellt",
       "successfullyUpdatedUser": "Benutzerdaten aktualisiert",
@@ -1664,12 +1666,15 @@
     "paywall": {
       "navbar": "Paywall",
       "form": {
-        "title": "Paywall bearbeiten",
+        "editTitle": "Paywall bearbeiten",
+        "createTitle": "Paywall erstellen",
         "name": "Name der Paywall (Nicht sichtbar für Benutzer:innen)",
         "description": "Paywall-Text (Sichtbar für Benutzer:innen)",
         "circumventDescription": "Paywall-Text wenn der Artikel-Content nicht versteckt ist (Sichtbar für Benutzer:innen)",
         "active": "Aktiv",
         "activeHelpText": "Erlaubt, die Paywall für alle Artikel rasch zu dekativieren",
+        "alternativeSubscribeUrl": "Alternative URL zur Abo-Seite",
+        "alternativeSubscribeUrlHelpText": "Kann in Kombination mit einem Abonnieren-Block auf einer Seite verwendet werden. Wenn leer gelassen, wird die Standardseite verwendet.",
         "anyMemberPlan": "Die Paywall entfällt für alle Abos",
         "bypasses": "Bypasses",
         "bypassToken": "Bypass-Token",
@@ -1678,7 +1683,23 @@
         "addBypass": "hinzufügen",
         "qrCodeTitle": "QR-Code für Bypass-Token",
         "downloadSvg": "SVG herunterladen",
-        "baseUrl": "Website-Url (Baseurl). Z.B. https://wepublish.ch"
+        "baseUrl": "Website-Url (Baseurl). Z.B. https://wepublish.ch",
+        "upgrade": "Texte, wenn die Paywall ein Upgrade unterstützt und zulässt",
+        "display": "Anzeigeoptionen",
+        "hideContentAfter": "Inhalt nach X Blöcken ausblenden",
+        "fadeout": "Ausgeblendete Blöcke ausblenden mit Überblendung",
+        "fadeoutHelpText": "Die Überblendung ermöglicht eine Vorschau auf den restlichen Inhalt."
+      },
+      "overview": {
+        "areYouSure": "Bist du sicher?",
+        "areYouSureBody": "Die Paywall „{{ paywall }}“ wird dauerhaft gelöscht und kann nicht rückgängig gemacht werden.",
+        "areYouSureConfirmation": "Paywall löschen",
+        "createPaywall": "Neue Paywall",
+        "title": "Paywalls",
+        "name": "Name",
+        "active": "Aktiv",
+        "memberPlans": "Abo-Pläne",
+        "anyMemberPlan": "Alle Abo-Pläne"
       }
     },
     "paymentMethodEditPanel": {

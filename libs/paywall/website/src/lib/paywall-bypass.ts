@@ -1,6 +1,6 @@
 import { getCookie, setCookie } from 'cookies-next';
 
-const BYPASS_COOKIE_KEY = 'paywall_bypass_token';
+export const BYPASS_COOKIE_KEY = 'paywall_bypass_token';
 const BYPASS_EXPIRY_HOURS = 4;
 
 export function storeBypassToken(token: string): void {

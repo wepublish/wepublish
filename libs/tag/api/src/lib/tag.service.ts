@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient, TagType } from '@prisma/client';
 import { getMaxTake, PrimeDataLoader, SortOrder } from '@wepublish/utils/api';
 import { TagDataloader } from './tag.dataloader';
 import {
@@ -56,6 +56,19 @@ export class TagService {
         endCursor: lastTag?.id,
       },
     };
+  }
+
+  @PrimeDataLoader(TagDataloader)
+  async getTagByName(tag: string, type: TagType) {
+    return this.prisma.tag.findFirst({
+      where: {
+        type,
+        tag: {
+          mode: 'insensitive',
+          equals: tag,
+        },
+      },
+    });
   }
 
   @PrimeDataLoader(TagDataloader)
@@ -126,7 +139,7 @@ function createTagFilter(filter?: TagFilter): Prisma.TagWhereInput {
     conditions.push({
       tag: {
         mode: 'insensitive',
-        equals: filter.tag,
+        contains: filter.tag,
       },
     });
   }
