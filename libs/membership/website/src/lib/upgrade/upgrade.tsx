@@ -221,7 +221,7 @@ export const Upgrade = ({
     };
 
     return callAction(onUpgrade)(upgradeData);
-  });
+  }, console.warn);
 
   useEffect(() => {
     if (selectedMemberPlan) {
@@ -303,6 +303,7 @@ export const Upgrade = ({
           />
         )}
       </SubscribeSection>
+
       <SubscribeSection area="monthlyAmount">
         {!shouldHidePaymentAmount && (
           <Controller
@@ -334,6 +335,7 @@ export const Upgrade = ({
           />
         )}
       </SubscribeSection>
+
       <SubscribeSection area="paymentPeriodicity">
         {allPaymentMethods.length > 1 && (
           <H5 component="h2">Zahlungsmethode wählen</H5>
@@ -357,17 +359,20 @@ export const Upgrade = ({
           />
         </SubscribePayment>
       </SubscribeSection>
+
       {error && (
         <ApiAlert
           error={error as ApolloError}
           severity="error"
         />
       )}
+
       {!!watch('monthlyAmount') && (
         <SubscribeSection area="transactionFee">
           <Controller
             name={'payTransactionFee'}
             control={control}
+            defaultValue={false}
             render={({ field: feeField }) => (
               <TransactionFee
                 text={transactionFeeText}
@@ -377,6 +382,7 @@ export const Upgrade = ({
           />
         </SubscribeSection>
       )}
+
       <SubscribeNarrowSection area="submit">
         <SubscribeButton
           size={'large'}
