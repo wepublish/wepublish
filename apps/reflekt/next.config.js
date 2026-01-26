@@ -13,6 +13,20 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
  **/
 const nextConfig = {
   ...wepNextConfig,
+  webpack(config, options) {
+    // Call parent webpack config if it exists
+    if (wepNextConfig.webpack) {
+      config = wepNextConfig.webpack(config, options);
+    }
+
+    // Add .woff and .woff2 font loader
+    config.module.rules.push({
+      test: /\.(woff|woff2)$/,
+      type: 'asset/resource',
+    });
+
+    return config;
+  },
   publicRuntimeConfig: {
     env: {
       API_URL: process.env.API_URL || '',
