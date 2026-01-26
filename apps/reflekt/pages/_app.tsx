@@ -35,6 +35,8 @@ import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import { RefFooter } from '../src/components/reflekt-footer';
+import { ReflektNavbar } from '../src/components/reflekt-navbar';
 import theme from '../src/theme';
 
 setDefaultOptions({
@@ -91,6 +93,8 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
+          Footer={RefFooter}
+          Navbar={ReflektNavbar}
           elements={{ Link: NextWepublishLink }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
@@ -169,7 +173,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 
             <Spacer>
               <NavBar
-                categorySlugs={[['categories', 'about-us']]}
+                categorySlugs={[['main']]}
                 slug="main"
                 headerSlug="header"
                 iconSlug="icons"
@@ -183,7 +187,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 
               <FooterContainer
                 slug="footer"
-                categorySlugs={[['categories', 'about-us']]}
+                categorySlugs={[['main']]}
                 iconSlug="icons"
               />
             </Spacer>
