@@ -1,10 +1,10 @@
-import {
-  isTabbedContentBlockStyle,
-  TabbedContent,
-} from '@wepublish/block-content/website';
 import { BuilderFlexBlockProps } from '@wepublish/website/builder';
 import { cond, T } from 'ramda';
 
+import {
+  isTabbedContentBlockStyle,
+  TabbedContent,
+} from '../tabbed-content/tabbed-content';
 import {
   blockStyleByIndex as blockStyleByIndexTabbedSidebarContent,
   HeroTeaserWithTabbedContent,

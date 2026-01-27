@@ -80,7 +80,7 @@ type ProfilePageProps = Omit<
   ''
 > & { className?: string };
 
-function ProfilePage(props: ProfilePageProps) {
+function ProfilePage({ className, ...props }: ProfilePageProps) {
   const {
     elements: { H4 },
   } = useWebsiteBuilder();
@@ -108,7 +108,7 @@ function ProfilePage(props: ProfilePageProps) {
 
   return (
     <>
-      <SubscriptionsWrapper className={props.className}>
+      <SubscriptionsWrapper className={className}>
         {hasUnpaidInvoices && (
           <SubscriptionListWrapper>
             <H4 component={'h1'}>Offene Rechnungen</H4>
@@ -188,7 +188,7 @@ function ProfilePage(props: ProfilePageProps) {
         </SubscriptionListWrapper>
       </SubscriptionsWrapper>
 
-      <ProfileWrapper>
+      <ProfileWrapper className={className}>
         <H4 component={'h1'}>Profil</H4>
 
         <PersonalDataFormContainer {...props} />

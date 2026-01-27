@@ -47,7 +47,6 @@ export type BuilderBlocksProps = {
 
 export type BuilderFlexBlockProps = FlexBlock & {
   className?: string;
-  subBlockStyles?: (string | undefined)[];
 };
 
 export type BuilderTitleBlockProps = Omit<TitleBlock, 'type'> & {

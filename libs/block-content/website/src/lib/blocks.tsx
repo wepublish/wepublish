@@ -58,7 +58,6 @@ import {
   isAlternatingTeaserSlotsBlockStyle,
 } from './block-styles/alternating/is-alternating';
 import { isTeaserSlotsBlock } from './teaser/teaser-slots-block';
-import { isTabbedContentBlockStyle } from './block-styles/tabbed-content/tabbed-content';
 import { css } from '@emotion/react';
 
 export const BlockRenderer = memo(
@@ -156,12 +155,6 @@ export const BlockRenderer = memo(
             {...block}
             className={className}
           />
-        ),
-      ],
-      [
-        isTabbedContentBlockStyle,
-        block => (
-          <blockStyles.TabbedContent {...(block as BuilderFlexBlockProps)} />
         ),
       ],
     ]);

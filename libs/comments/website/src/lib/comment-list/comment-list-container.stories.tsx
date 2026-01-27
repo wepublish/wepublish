@@ -111,7 +111,7 @@ export const Default: StoryObj = {
             data: {
               comments,
               ratingSystem: {
-                __typename: 'FullCommentRatingSystem',
+                __typename: 'CommentRatingSystem',
                 answers: [],
                 id: '123',
                 name: 'default',

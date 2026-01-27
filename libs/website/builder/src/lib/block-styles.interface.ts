@@ -1,6 +1,5 @@
 import {
-  BuilderBreakBlockProps,
-  BuilderFlexBlockProps, // IGNORE
+  BuilderBreakBlockProps, // IGNORE
   BuilderImageGalleryBlockProps,
   BuilderTeaserGridBlockProps,
   BuilderTeaserListBlockProps,
@@ -35,5 +34,4 @@ export type BuilderBlockStyleProps = {
   FocusTeaser: BuilderTeaserListBlockProps | BuilderTeaserSlotsBlockProps;
   Banner: BuilderBreakBlockProps;
   ContextBox: BuilderBreakBlockProps;
-  TabbedContent: BuilderFlexBlockProps;
 };

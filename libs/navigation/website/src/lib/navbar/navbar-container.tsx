@@ -23,7 +23,6 @@ export type NavbarContainerProps = PropsWithChildren<
     | 'loginBtn'
     | 'profileBtn'
     | 'subscribeBtn'
-    | 'pageTypeBasedProps'
   > &
     BuilderContainerProps
 >;
@@ -38,7 +37,6 @@ export function NavbarContainer({
   profileBtn,
   subscribeBtn,
   children,
-  pageTypeBasedProps,
 }: NavbarContainerProps) {
   const { Navbar } = useWebsiteBuilder();
   const { data, loading, error } = useNavigationListQuery();
@@ -64,7 +62,6 @@ export function NavbarContainer({
       logo={logo}
       hasUnpaidInvoices={!!hasUnpaidInvoices}
       hasRunningSubscription={!!hasRunningSubscription}
-      pageTypeBasedProps={pageTypeBasedProps}
     >
       {children}
     </Navbar>

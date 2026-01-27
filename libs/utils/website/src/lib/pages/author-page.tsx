@@ -1,4 +1,3 @@
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import {
   ArticleListContainer,
   ArticleWrapper,
@@ -23,9 +22,9 @@ import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
 
-export const take = 10;
+const take = 10;
 
-export const pageSchema = z.object({
+const pageSchema = z.object({
   page: z.coerce.number().gte(1).optional(),
   slug: z.string(),
 });
@@ -34,7 +33,7 @@ export function AuthorPage({
   className,
 }: InferGetStaticPropsType<typeof getAuthorStaticProps> & {
   className?: string;
-}): EmotionJSX.Element {
+}) {
   const {
     elements: { Pagination, H3 },
   } = useWebsiteBuilder();

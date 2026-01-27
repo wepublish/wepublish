@@ -10,10 +10,12 @@ import { cond } from 'ramda';
 import type { ComponentType } from 'react';
 import { memo, useMemo } from 'react';
 
+import { TsriTabbedContent } from './block-layouts/tsri-base-tabbed-content';
 import {
   isTsriSidebarContent,
   TsriSidebarContent,
 } from './break-blocks/tsri-sidebar-content';
+import { isTabbedContentBlockStyle } from './tabbed-content/tabbed-content';
 
 export type BlockSiblings = Array<{
   typeName: string;
@@ -26,6 +28,7 @@ export const TsriBlockRenderer = (
   const extraBlockMap = useMemo(
     () =>
       cond([
+        [isTabbedContentBlockStyle, block => <TsriTabbedContent {...block} />],
         [
           isTsriSidebarContent,
           block => (
@@ -38,7 +41,7 @@ export const TsriBlockRenderer = (
           ),
         ],
       ]),
-    []
+    [props.count, props.index, props.siblings]
   );
 
   const block = extraBlockMap(props.block as BuilderBreakBlockProps) ?? (

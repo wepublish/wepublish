@@ -112,16 +112,6 @@ export class CommentResolver {
 
   @ResolveField(() => [CommentRating])
   @Public()
-  async userRatings(
-    @Parent() comment: Comment,
-
-    @CurrentUser() session?: UserSession | null
-  ) {
-    return this.ratingSystemService.getCommentRatings(comment.id);
-  }
-
-  @ResolveField(() => [CommentRating])
-  @Public()
   async calculatedRatings(@Parent() comment: Comment) {
     const [answers, ratings] = await Promise.all([
       this.ratingSystemService.getRatingSystemAnswers(),

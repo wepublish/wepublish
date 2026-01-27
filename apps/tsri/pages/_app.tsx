@@ -21,7 +21,6 @@ import {
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
-import { getPageTypeBasedContent } from '@wepublish/utils/website';
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
@@ -35,7 +34,6 @@ import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { ComponentType } from 'react';
 import { z } from 'zod';
@@ -43,7 +41,6 @@ import { zodI18nMap } from 'zod-i18n-map';
 
 import deOverriden from '../locales/deOverriden.json';
 import { TsriFlexBlock } from '../src/components/block-layouts/tsri-base-flex-block';
-import { TsriTabbedContent } from '../src/components/block-layouts/tsri-base-tabbed-content';
 import { TsriBreakBlock } from '../src/components/break-blocks/tsri-base-break-block';
 import { TsriContextBox } from '../src/components/break-blocks/tsri-context-box';
 import { TsriBaseTeaserSlots } from '../src/components/teaser-layouts/tsri-base-teaser-slots';
@@ -119,13 +116,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
 
-  const router = useRouter();
-
-  const pageTypeBasedContent = getPageTypeBasedContent(
-    pageProps,
-    router.asPath
-  );
-
   return (
     <AppCacheProvider emotionCache={cache}>
       <WebsiteProvider>
@@ -164,7 +154,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           }}
           blockStyles={{
             ContextBox: TsriContextBox,
-            TabbedContent: TsriTabbedContent,
           }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
@@ -252,7 +241,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                 slug="main"
                 headerSlug="header"
                 iconSlug="icons"
-                pageTypeBasedProps={pageTypeBasedContent}
               />
 
               <main>

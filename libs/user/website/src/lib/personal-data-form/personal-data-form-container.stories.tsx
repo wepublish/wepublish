@@ -2,20 +2,20 @@ import { action } from '@storybook/addon-actions';
 import { StoryObj } from '@storybook/react';
 import { WithUserDecorator } from '@wepublish/storybook';
 import {
+  SensitiveDataUser,
   UpdatePasswordDocument,
   UpdateUserDocument,
-  User,
 } from '@wepublish/website/api';
 import { PersonalDataFormContainer } from './personal-data-form-container';
 import * as personalDataFormStories from './personal-data-form.stories';
-import { mockImage, mockUser as getMockUser } from '@wepublish/storybook/mocks';
+import { mockImage, mockUser } from '@wepublish/storybook/mocks';
 
 export default {
   title: 'Container/Personal Data Form',
   component: PersonalDataFormContainer,
 };
 
-const mockUser: User = getMockUser({
+const mockedUser = mockUser({
   id: '1234',
   firstName: 'Kamil',
   name: 'Wasyl',
@@ -30,7 +30,7 @@ const mockUser: User = getMockUser({
   },
   image: mockImage(),
   paymentProviderCustomers: [],
-}) as User;
+}) as SensitiveDataUser;
 
 const onUpdateVariables = {
   input: {
@@ -129,7 +129,7 @@ export const Default: StoryObj = {
       ],
     },
   },
-  decorators: [WithUserDecorator(mockUser)],
+  decorators: [WithUserDecorator(mockedUser)],
 };
 
 export const Filled: StoryObj = {

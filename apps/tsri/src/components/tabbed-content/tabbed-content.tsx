@@ -1,20 +1,19 @@
-import {
-  BuilderBlockStyleProps,
-  useWebsiteBuilder,
-} from '@wepublish/website/builder';
-import { BlockContent, FlexBlock } from '@wepublish/website/api';
-import { allPass } from 'ramda';
-import { isFlexBlock } from '../../nested-blocks/flex-block';
-import * as React from 'react';
+import styled from '@emotion/styled';
 import {
   Box,
-  css,
   Tab as MuiTab,
   Tabs as MuiTabs,
   Theme,
   useTheme,
 } from '@mui/material';
-import styled from '@emotion/styled';
+import { isFlexBlock } from '@wepublish/block-content/website';
+import { BlockContent, FlexBlock } from '@wepublish/website/api';
+import {
+  BuilderFlexBlockProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { allPass } from 'ramda';
+import * as React from 'react';
 
 export const TabbedContentWrapper = styled('div')`
   width: 100%;
@@ -61,9 +60,7 @@ export const TabPanel = styled(TabPanelBase, {
 
   padding: 7cqw 1.3cqw 10cqw 5.58cqw;
 
-  ${({ cssByBlockStyle }) => css`
-    ${cssByBlockStyle ? cssByBlockStyle : ''};
-  `}}
+  ${({ cssByBlockStyle }) => cssByBlockStyle}
 `;
 
 export const Tabs = styled(MuiTabs)`
@@ -149,8 +146,8 @@ export const Tab = styled(MuiTab, {
     color: rgba(255, 255, 255, 1);
   }
 
-  &.mui-focusvisible: {
-    backgroundcolor: #d1eaff;
+  &.Mui-focus-visible {
+    background-color: #d1eaff;
   }
 
   & > span {
@@ -164,9 +161,7 @@ export const Tab = styled(MuiTab, {
     padding: 0.7cqw 2.8cqw 0.5cqw 2.8cqw;
   }
 
-  ${({ cssByBlockStyle }) => css`
-    ${cssByBlockStyle ? cssByBlockStyle : ''};
-  `}}
+  ${({ cssByBlockStyle }) => cssByBlockStyle}
 `;
 
 export const a11yProps = (index: number, id: string) => {
@@ -182,7 +177,7 @@ export const TabbedContent = ({
   blockStyle,
   blockStyleByIndex,
   cssByBlockStyle,
-}: BuilderBlockStyleProps['TabbedContent'] & {
+}: BuilderFlexBlockProps & {
   blockStyleByIndex?: (index: number) => string;
   cssByBlockStyle?: (
     index: number,
@@ -266,14 +261,10 @@ export const TabbedContent = ({
 };
 
 export const isTabbedContentBlockStyle = (
-  block: Pick<BlockContent, '__typename'>
+  block: Pick<BlockContent, '__typename' | 'blockStyle'>
 ): block is FlexBlock =>
   allPass([
     isFlexBlock,
-    ({ blockStyle }: BuilderBlockStyleProps['TabbedContent']) => {
-      if (!blockStyle) {
-        return false;
-      }
-      return blockStyle.startsWith('TabbedContent');
-    },
-  ])(block as BuilderBlockStyleProps['TabbedContent']);
+    <T extends { blockStyle?: string | null }>(block: T) =>
+      !!block.blockStyle?.startsWith('TabbedContent'),
+  ])(block);
