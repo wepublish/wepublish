@@ -327,7 +327,7 @@ const waitForInitialDataIsSet =
     playFunction: NonNullable<StoryObj['play']>
   ): NonNullable<StoryObj['play']> =>
   async ctx => {
-    await wait(500);
+    await wait(100);
     await playFunction(ctx);
   };
 
@@ -694,6 +694,5 @@ export const WithDonate: StoryObj<typeof Subscribe> = {
   ...LoggedIn,
   play: waitForInitialDataIsSet(async ctx => {
     await changeMemberPlan(memberPlan4)(ctx);
-    await clickSubscribe(ctx);
   }),
 };

@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 import { css, Theme, Typography, useTheme } from '@mui/material';
+import { hasBlockStyle, isBreakBlock } from '@wepublish/block-content/website';
+import { BlockContent, BreakBlock } from '@wepublish/website/api';
 import {
   BuilderBreakBlockProps,
   Button,
@@ -104,11 +106,12 @@ export const SidebarContentButton = styled(Button)`
   margin-top: calc(var(--sizing-factor) * 1cqw);
 `;
 
-export const isTsriSidebarContent = allPass([
-  ({ blockStyle }: BuilderBreakBlockProps) => {
-    return blockStyle === TsriBreakBlockType.SidebarContent;
-  },
-]);
+export const isTsriSidebarContent = (
+  block: Pick<BlockContent, '__typename'>
+): block is BreakBlock =>
+  allPass([hasBlockStyle(TsriBreakBlockType.SidebarContent), isBreakBlock])(
+    block
+  );
 
 export const TsriSidebarContent = ({
   blockStyle,
@@ -159,18 +162,20 @@ export const TsriSidebarContent = ({
     }
 
     & ${SidebarContentBox} {
-      background: ${
-        text && text === 'Shop' ?
-          `linear-gradient(to bottom, ${theme.palette.primary.light}, color-mix(in srgb, ${theme.palette.common.white} 60%, ${theme.palette.primary.light}))`
-        : `linear-gradient(to bottom, ${theme.palette.primary.main}, color-mix(in srgb, ${theme.palette.common.white} 60%, ${theme.palette.primary.main}))`
-      };
+      background: ${text && text === 'Shop' ?
+        `linear-gradient(to bottom, ${theme.palette.primary.light}, color-mix(in srgb, ${theme.palette.common.white} 60%, ${theme.palette.primary.light}))`
+      : `linear-gradient(to bottom, ${theme.palette.primary.main}, color-mix(in srgb, ${theme.palette.common.white} 60%, ${theme.palette.primary.main}))`};
+    }
   `;
 
   const sidebarContentButtonStyles = (theme: Theme) => css`
-      &:hover {
-        background-color: ${text && text === 'Shop' ? theme.palette.primary.main : theme.palette.primary.light};
-        color: ${text && text === 'Shop' ? theme.palette.common.white : theme.palette.common.black};
-      }
+    &:hover {
+      background-color: ${text && text === 'Shop' ?
+        theme.palette.primary.main
+      : theme.palette.primary.light};
+      color: ${text && text === 'Shop' ?
+        theme.palette.common.white
+      : theme.palette.common.black};
     }
   `;
 

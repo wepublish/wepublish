@@ -37,6 +37,7 @@ import { useTranslation } from 'react-i18next';
 import { FiInstagram, FiMenu as FiMenuDefault, FiSearch } from 'react-icons/fi';
 import { MdWarning } from 'react-icons/md';
 
+import { useGetPageTypeBasedContent } from '../hooks/page-type-based-content';
 import theme from '../theme';
 
 enum NavbarState {
@@ -637,7 +638,6 @@ const NavPaper = ({
     elements: { Link },
   } = useWebsiteBuilder();
   const { hasUser, logout } = useUser();
-  const router = useRouter();
 
   return (
     <NavPaperWrapper
@@ -760,11 +760,10 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
       isMenuOpen: controlledIsMenuOpen,
       onMenuToggle,
       navPaperClassName,
-      pageTypeBasedProps,
-      imagesBase64 = {},
     }: ExtendedNavbarProps,
     forwardRef
   ) {
+    const pageTypeBasedProps = useGetPageTypeBasedContent();
     const ref = useRef<HTMLElement>(null);
 
     const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
@@ -827,7 +826,6 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
     const router = useRouter();
 
     const tabText = useMemo(() => {
-      //console.log('pageTypeBasedProps', pageTypeBasedProps);
       if (pageTypeBasedProps) {
         switch (pageTypeBasedProps.pageType) {
           case PageType.Article:
@@ -944,21 +942,14 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
               aria-label="Startseite"
             >
               <TsriLogo
-                src={
-                  isHomePage ?
-                    imagesBase64?.logoDefault ?
-                      imagesBase64.logoDefault
-                    : '/logo.svg'
-                  : imagesBase64?.logoAlternative ?
-                    imagesBase64.logoAlternative
-                  : '/logo_blue.svg'
-                }
+                src={isHomePage ? '/logo.svg' : '/logo_blue.svg'}
                 alt="Tsüri"
                 isScrolled={isScrolled}
                 isHomePage={isHomePage}
               />
+
               <TsriClaim
-                src={imagesBase64?.claim ? imagesBase64.claim : '/claim.gif'}
+                src={'/claim.gif'}
                 alt="Unabhängig, Kritisch, Lokal."
                 isScrolled={isScrolled}
                 isHomePage={isHomePage}
@@ -1005,6 +996,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
               >
                 <FiInstagram />
               </NavbarInstaButton>
+
               <NavbarSearchButton
                 size="small"
                 aria-label="Suche"

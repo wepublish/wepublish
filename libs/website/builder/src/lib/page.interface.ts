@@ -1,5 +1,5 @@
 import { QueryResult } from '@apollo/client';
-import { ArticleRevision, Page, PageQuery, Tag } from '@wepublish/website/api';
+import { Page, PageQuery } from '@wepublish/website/api';
 import { PropsWithChildren } from 'react';
 
 export enum PageType {
@@ -19,13 +19,6 @@ export enum PageType {
   Login = 'Login',
   Unknown = 'Unknown',
 }
-
-export type PageTypeBasedProps = {
-  Page?: Pick<Page, 'slug' | 'url'>;
-  Article?: Pick<ArticleRevision, 'preTitle'>;
-  ArticleList?: Pick<Tag, 'tag'>;
-  pageType: PageType;
-};
 
 export type BuilderPageProps = PropsWithChildren<
   Pick<QueryResult<PageQuery>, 'data' | 'loading' | 'error'> & {

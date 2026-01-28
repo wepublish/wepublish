@@ -1,18 +1,20 @@
 import styled from '@emotion/styled';
 import { Theme } from '@mui/material';
-import {
-  TabbedContent as TabbedContentDefault,
-  TabPanel,
-} from '@wepublish/block-content/website';
-import { BuilderBlockStyleProps } from '@wepublish/website/builder';
+import { hasBlockStyle, isFlexBlock } from '@wepublish/block-content/website';
+import { BlockContent, FlexBlock } from '@wepublish/website/api';
+import { allPass } from 'ramda';
 
+import { TabbedContent, TabPanel } from '../tabbed-content/tabbed-content';
 import { TsriLayoutType } from '../teaser-layouts/tsri-layout';
 import { TsriTabbedContentType } from './tsri-base-tabbed-content';
-export const isTabbedMainContent = ({
-  blockStyle,
-}: BuilderBlockStyleProps['TabbedContent']) => {
-  return blockStyle === TsriTabbedContentType.TabbedMainContent;
-};
+
+export const isTabbedMainContent = (
+  block: Pick<BlockContent, '__typename'>
+): block is FlexBlock =>
+  allPass([
+    hasBlockStyle(TsriTabbedContentType.TabbedMainContent),
+    isFlexBlock,
+  ])(block);
 
 export const blockStyleByIndex = (index: number): TsriLayoutType => {
   switch (index) {
@@ -55,7 +57,7 @@ export const cssByBlockStyle = (
   }
 };
 
-export const TabbedMainContent = styled(TabbedContentDefault)`
+export const TabbedMainContent = styled(TabbedContent)`
   ${TabPanel} {
     position: relative;
     top: -1px;
@@ -69,4 +71,5 @@ export const TabbedMainContent = styled(TabbedContentDefault)`
       border-bottom-right-radius: 0;
       border-bottom-left-radius: 0;
     }
+  }
 `;

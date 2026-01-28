@@ -1,32 +1,29 @@
 import styled from '@emotion/styled';
 import { Theme } from '@mui/material';
-import {
-  Tab,
-  TabbedContent as TabbedContentDefault,
-  TabPanel,
-  Tabs,
-} from '@wepublish/block-content/website';
-import { BlockType } from '@wepublish/website/api';
-import { BuilderBlockStyleProps } from '@wepublish/website/builder';
+import { hasBlockStyle, isFlexBlock } from '@wepublish/block-content/website';
+import { BlockContent, BlockType, FlexBlock } from '@wepublish/website/api';
+import { BuilderFlexBlockProps } from '@wepublish/website/builder';
 import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
+import {
+  Tab,
+  TabbedContent,
+  TabPanel,
+  Tabs,
+} from '../tabbed-content/tabbed-content';
 import { TsriBaseTeaserSlots as HeroTeaserDefault } from '../teaser-layouts/tsri-base-teaser-slots';
 import { TsriLayoutType } from '../teaser-layouts/tsri-layout';
 import { TeaserPreTitle } from '../teasers/tsri-teaser';
 import { TsriTabbedContentType } from './tsri-base-tabbed-content';
 
-export const isHeroTeaserWithTabbedSidebarContent = ({
-  blockStyle,
-}: BuilderBlockStyleProps['TabbedContent']) => {
-  return allPass([
-    ({ blockStyle }: BuilderBlockStyleProps['TabbedContent']) => {
-      return (
-        blockStyle === TsriTabbedContentType.HeroTeaserWithTabbedSidebarContent
-      );
-    },
-  ])({ blockStyle } as BuilderBlockStyleProps['TabbedContent']);
-};
+export const isHeroTeaserWithTabbedSidebarContent = (
+  block: Pick<BlockContent, '__typename'>
+): block is FlexBlock =>
+  allPass([
+    hasBlockStyle(TsriTabbedContentType.HeroTeaserWithTabbedSidebarContent),
+    isFlexBlock,
+  ])(block);
 
 // defaults for this layout. can be overridden in the editor...
 export const blockStyleByIndex = (index: number): TsriLayoutType => {
@@ -126,7 +123,7 @@ export const HeroTeaser = styled(HeroTeaserDefault)`
   }
 `;
 
-export const SidebarContent = styled(TabbedContentDefault)`
+export const SidebarContent = styled(TabbedContent)`
   display: grid;
   grid-template-rows: min-content 1fr;
   grid-column: unset;
@@ -217,7 +214,7 @@ export const HeroTeaserWithTabbedContent = ({
   blocks,
   blockStyle,
   blockStyleByIndex,
-}: BuilderBlockStyleProps['TabbedContent'] & {
+}: BuilderFlexBlockProps & {
   blockStyleByIndex: (index: number) => TsriLayoutType;
 }) => {
   return (
@@ -226,6 +223,7 @@ export const HeroTeaserWithTabbedContent = ({
         {...(blocks[0].block as BuilderTeaserSlotsBlockProps)}
         blockStyle={TsriLayoutType.HeroTeaser}
       />
+
       <SidebarContent
         className={className}
         blocks={blocks.slice(1)}

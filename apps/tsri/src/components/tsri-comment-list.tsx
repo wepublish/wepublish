@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 import {
-  CommentList as CommentListDefault,
+  CommentList,
   CommentListActions,
   CommentListItemActions,
 } from '@wepublish/comments/website';
 
-export const TsriCommentList = styled(CommentListDefault)`
+export const TsriCommentList = styled(CommentList)`
   grid-column: -1 / 1 !important;
 
   & > .MuiAlert-root {

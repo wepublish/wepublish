@@ -37,16 +37,16 @@ const imageStyles = css`
 export const RichTextWrapper = styled('div')`
   grid-column: 1 / 2;
 
-  & p {
+  p {
     font-size: 1rem !important;
     line-height: 1.5rem !important;
     font-weight: 400 !important;
+  }
 
-    & a:hover {
-      background-color: ${({ theme }) => theme.palette.primary.light};
-      color: ${({ theme }) => theme.palette.common.black};
-      text-decoration: none;
-    }
+  a:hover {
+    background-color: ${({ theme }) => theme.palette.primary.light};
+    color: ${({ theme }) => theme.palette.common.black};
+    text-decoration: none;
   }
 `;
 

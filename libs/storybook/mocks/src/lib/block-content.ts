@@ -360,7 +360,7 @@ export const mockPolisConversationBlock = ({
 });
 
 export const mockIFrameBlock = ({
-  url = '#',
+  url = 'https=/www.example.com',
   title = 'Title',
   width = 560,
   height = 314,

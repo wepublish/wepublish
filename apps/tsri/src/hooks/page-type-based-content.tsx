@@ -1,26 +1,23 @@
-import { NormalizedCacheObject } from '@apollo/client';
-import {
-  SessionWithTokenWithoutUser,
-  Tag,
-  V1_CLIENT_STATE_PROP_NAME,
-} from '@wepublish/website/api';
-import { Page, ArticleRevision } from '@wepublish/website/api';
-import { PageTypeBasedProps, PageType } from '@wepublish/website/builder';
+import { NormalizedCacheObject, useApolloClient } from '@apollo/client';
+import { Tag } from '@wepublish/website/api';
+import { ArticleRevision, Page } from '@wepublish/website/api';
+import { PageType } from '@wepublish/website/builder';
+import { useRouter } from 'next/router';
+
+export type PageTypeBasedProps = {
+  Page?: Pick<Page, 'slug' | 'url'>;
+  Article?: Pick<ArticleRevision, 'preTitle'>;
+  ArticleList?: Pick<Tag, 'tag'>;
+  pageType: PageType;
+};
 
 export const getPageType = (
-  pageProps: {
-    [V1_CLIENT_STATE_PROP_NAME]: NormalizedCacheObject;
-  },
+  pageProps: NormalizedCacheObject,
   path: string
 ): PageType => {
   let pageType: PageType = PageType.Unknown;
-  const pp = (
-    pageProps as {
-      [V1_CLIENT_STATE_PROP_NAME]: NormalizedCacheObject;
-    }
-  )?.[V1_CLIENT_STATE_PROP_NAME];
 
-  const rootQuery = pp ? pp['ROOT_QUERY'] : undefined;
+  const rootQuery = pageProps ? pageProps['ROOT_QUERY'] : undefined;
 
   if (rootQuery) {
     const propNames = Object.getOwnPropertyNames(rootQuery);
@@ -132,6 +129,7 @@ const getPageData = (pageProps: NormalizedCacheObject) => {
 const getArticleData = (pageProps: NormalizedCacheObject) => {
   let articleData: Pick<ArticleRevision, 'preTitle'> | undefined = undefined;
   const rootQuery = pageProps.ROOT_QUERY;
+
   if (rootQuery) {
     Object.getOwnPropertyNames(rootQuery).some(propName => {
       switch (propName.match(/^[^(]+/)?.[0]) {
@@ -171,38 +169,29 @@ const getArticleListData = (pageProps: NormalizedCacheObject) => {
   return articleListTag;
 };
 
-export const getPageTypeBasedContent = (
-  pProps: {
-    sessionToken?: SessionWithTokenWithoutUser | undefined;
-  },
-  path: string
-) => {
-  const pageProps = pProps as {
-    [V1_CLIENT_STATE_PROP_NAME]: NormalizedCacheObject;
-  };
+export const useGetPageTypeBasedContent = () => {
+  const router = useRouter();
+  const path = router.asPath;
+  const client = useApolloClient();
+
+  const pageProps = client.cache.extract() as NormalizedCacheObject;
   const pageType = getPageType(pageProps, path);
   const essentialProps: PageTypeBasedProps = {
     pageType,
   };
 
-  const pp = (
-    pageProps as {
-      [V1_CLIENT_STATE_PROP_NAME]: NormalizedCacheObject;
-    }
-  )?.[V1_CLIENT_STATE_PROP_NAME];
-
-  const rootQuery = pp ? pp['ROOT_QUERY'] : undefined;
+  const rootQuery = pageProps ? pageProps['ROOT_QUERY'] : undefined;
 
   if (rootQuery) {
     switch (pageType) {
       case PageType.Page:
-        essentialProps.Page = getPageData(pp);
+        essentialProps.Page = getPageData(pageProps);
         break;
       case PageType.Article:
-        essentialProps.Article = getArticleData(pp);
+        essentialProps.Article = getArticleData(pageProps);
         break;
       case PageType.ArticleList:
-        essentialProps.ArticleList = getArticleListData(pp);
+        essentialProps.ArticleList = getArticleListData(pageProps);
         break;
       default:
     }

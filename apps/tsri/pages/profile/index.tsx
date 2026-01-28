@@ -1,24 +1,21 @@
-import { css, Global } from '@emotion/react';
+import styled from '@emotion/styled';
 import { ProfilePage } from '@wepublish/utils/website';
 
 import theme from '../../src/theme';
 
+const TsriProfilePage = styled(ProfilePage)`
+  &:is(SubscriptionsWrapper) {
+    padding-top: ${theme.spacing(2)};
+  }
+`;
+
 export default function Profile() {
   return (
-    <>
-      <Global
-        styles={css`
-          .tsri-profile-page {
-            padding-top: ${theme.spacing(2)};
-          }
-        `}
-      />
-      <ProfilePage
-        mediaEmail="info@tsri.ch"
-        fields={['firstName', 'address', 'password', 'image']}
-        className="tsri-profile-page"
-      />
-    </>
+    <TsriProfilePage
+      mediaEmail="info@tsri.ch"
+      fields={['firstName', 'address', 'password', 'image']}
+      className="tsri-profile-page"
+    />
   );
 }
 
