@@ -47,13 +47,13 @@ const AuthorNames = styled('div')`
   font-size: 16px;
 
   ${AuthorChipName} {
-    white-space: pre;
+    line-height: 1.25rem;
 
     a {
       color: ${({ theme }) => theme.palette.text.primary};
       text-decoration: none;
       font-weight: 500;
-      white-space: pre;
+      white-space: break-spaces;
     }
   }
 `;
