@@ -17,6 +17,9 @@ declare module '@mui/material/styles' {
     categoryLinkList: CSSProperties;
     categoryLinkItem: CSSProperties;
 
+    categoryAddress: CSSProperties;
+    categoryAddressText: CSSProperties;
+
     // Banner
     bannerTitle: CSSProperties;
     bannerText: CSSProperties;
@@ -38,6 +41,8 @@ declare module '@mui/material/styles' {
     categoryLinkTitle?: CSSProperties;
     categoryLinkList?: CSSProperties;
     categoryLinkItem?: CSSProperties;
+    categoryAddress?: CSSProperties;
+    categoryAddressText?: CSSProperties;
     bannerTitle?: CSSProperties;
     bannerText?: CSSProperties;
     bannerCta?: CSSProperties;
@@ -57,6 +62,8 @@ declare module '@mui/material/Typography' {
     categoryLinkTitle: true;
     categoryLinkList: true;
     categoryLinkItem: true;
+    categoryAddress: true;
+    categoryAddressText: true;
     bannerTitle: true;
     bannerText: true;
     bannerCta: true;

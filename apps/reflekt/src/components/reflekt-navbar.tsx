@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import {
   AppBar as MuiAppBar,
   Box,
-  capitalize,
   css,
   GlobalStyles,
   SxProps,
@@ -10,7 +9,6 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import { useUser } from '@wepublish/authentication/website';
 import { useHasActiveSubscription } from '@wepublish/membership/website';
 import { navigationLinkToUrl } from '@wepublish/navigation/website';
 import { ButtonProps } from '@wepublish/ui';
@@ -32,8 +30,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useTranslation } from 'react-i18next';
-import { FiInstagram, FiMenu as FiMenuDefault, FiSearch } from 'react-icons/fi';
+import { FiMenu as FiMenuDefault } from 'react-icons/fi';
 import { MdWarning } from 'react-icons/md';
 
 import theme from '../theme';
@@ -84,6 +81,7 @@ export const AppBar = styled(MuiAppBar, {
 })<{ isMenuOpen?: boolean }>`
   background-color: ${theme.palette.common.white};
   position: relative;
+  overflow-y: visible;
 
   ${({ isMenuOpen }) =>
     isMenuOpen &&
@@ -101,14 +99,9 @@ export const NavbarWrapper = styled('nav')`
   height: auto;
   pointer-events: none;
   margin-bottom: calc(${theme.spacing(-3)} + 1px);
-  --sizing-factor: 2.7;
 
   > * {
     pointer-events: all;
-  }
-
-  ${theme.breakpoints.up('md')} {
-    --sizing-factor: 1;
   }
 `;
 
@@ -179,8 +172,74 @@ const FiMenu = styled(FiMenuDefault)`
   transform: rotate(0);
 `;
 
-export const NavbarHamburgerButton = styled(IconButton)`
-  ${navbarButtonStyles(theme)}
+export const NavbarHamburgerButton = styled(IconButton, {
+  shouldForwardProp: propName =>
+    propName !== 'isMenuOpen' && propName !== 'isTransitioning',
+})<{ isMenuOpen: boolean; isTransitioning: boolean }>`
+  background-color: ${theme.palette.primary.main};
+  width: 5rem;
+  height: 5rem;
+  border-radius: 0;
+  transition: transform 100ms ease-out;
+  position: relative;
+  transform-origin: top left;
+
+  &:hover {
+    ${({ isTransitioning }) => {
+      if (isTransitioning) {
+        return '';
+      }
+
+      return css`
+        transform: scale(1.05);
+      `;
+    }}
+    background-color: ${theme.palette.primary.main};
+  }
+
+  ${({ isMenuOpen }) =>
+    isMenuOpen ?
+      css`
+        transform: scale(1.05);
+      `
+    : ''}
+
+  & > span {
+    position: absolute;
+    left: 25%;
+    top: 50%;
+    width: 32px;
+    height: 3px;
+    background-color: ${theme.palette.common.white};
+    transition: all 300ms cubic-bezier(0.84, 0.06, 0.52, 1.8);
+    transition: all 300ms ease-out;
+    opacity: 1;
+  }
+
+  & > span:nth-of-type(1) {
+    transform: translateY(-8px);
+    animation-delay: 100ms;
+  }
+
+  & > span:nth-of-type(3) {
+    transform: translateY(8px);
+    animation-delay: 250ms;
+  }
+  ${({ isMenuOpen }) =>
+    isMenuOpen ?
+      css`
+        transform: scale(1.05);
+        & > span:nth-of-type(1) {
+          transform: rotate(40deg);
+        }
+        & > span:nth-of-type(2) {
+          transform: rotate(-40deg);
+        }
+        & > span:nth-of-type(3) {
+          opacity: 0;
+        }
+      `
+    : ''}
 `;
 
 export const NavbarSearchButton = styled(IconButton)`
@@ -192,14 +251,10 @@ export const NavbarIconButtonWrapper = styled('div')``;
 export const NavbarMain = styled('div', {
   shouldForwardProp: propName => propName !== 'isMenuOpen',
 })<{ isMenuOpen?: boolean }>`
-  grid-column: 3 / 4;
+  grid-column: -1 / 1;
   grid-row: 1 / 2;
-  margin: 4cqw 2.5cqw 0 0;
+  margin: 0 0 0 ${({ theme }) => theme.spacing(-3)};
   column-gap: 2.5cqw;
-
-  position: absolute;
-  right: 3rem;
-
   display: grid;
   grid-template-columns: repeat(3, min-content);
   align-items: center;
@@ -210,7 +265,6 @@ export const NavbarMain = styled('div', {
 
   ${theme.breakpoints.up('md')} {
     column-gap: 0.9cqw;
-    margin: 1.3cqw 2.5cqw 0 0;
   }
 
   ${({ isMenuOpen }) =>
@@ -299,154 +353,6 @@ const ReflektLogo = styled('img', {
   }
 `;
 
-const BecomeMemberGoToProfileTab = styled(Link)`
-  grid-column: 2 / 3;
-  grid-row: 1 / 2;
-
-  ${theme.breakpoints.up('md')} {
-    grid-column: 2 / 3;
-    grid-row: 1 / 2;
-  }
-`;
-
-const RegisterNewsLetterTab = styled(Link)`
-  grid-column: 1 / 2;
-  grid-row: 1 / 2;
-  display: block;
-  width: 50cqw;
-
-  ${theme.breakpoints.up('md')} {
-    grid-column: 2 / 3;
-    grid-row: 2 / 3;
-    width: unset;
-  }
-`;
-
-const PreTitleTab = styled('div')`
-  grid-column: -1 / 1;
-  grid-row: 2 / 3;
-  background-color: ${theme.palette.primary.main};
-  color: ${theme.palette.common.white};
-  font-size: calc(var(--sizing-factor) * 1.2cqw);
-  line-height: calc(var(--sizing-factor) * 1.2cqw);
-  font-weight: 700;
-  padding: calc(var(--sizing-factor) * 0.75cqw)
-    calc(var(--sizing-factor) * 1cqw);
-  border-top-left-radius: 2cqw;
-  border-top-right-radius: 2cqw;
-
-  ${theme.breakpoints.up('md')} {
-    grid-column: 1 / 2;
-    border-top-left-radius: 1cqw;
-    border-top-right-radius: 1cqw;
-  }
-`;
-
-const OpenInvoiceTab = styled(Link)`
-  grid-column: 1 / 2;
-  grid-row: 1 / 2;
-  background-color: ${theme.palette.error.main};
-  color: ${theme.palette.common.white};
-
-  &:hover {
-    background-color: ${theme.palette.error.main};
-    color: ${theme.palette.common.white};
-  }
-
-  & > svg {
-    scale: 1.25;
-    margin-right: 2cqw;
-  }
-
-  ${theme.breakpoints.up('md')} {
-    display: none;
-  }
-`;
-
-const LoginLogoutTab = styled(Link)`
-  grid-column: 2 / 3;
-  grid-row: 1 / 2;
-
-  ${theme.breakpoints.up('md')} {
-    grid-column: 2 / 3;
-    grid-row: 1 / 2;
-  }
-`;
-
-const NavbarTabs = styled('div', {
-  shouldForwardProp: propName =>
-    propName !== 'navbarState' && propName !== 'isHomePage',
-})<{
-  navbarState: NavbarState[];
-  isHomePage: boolean;
-}>`
-  display: grid;
-  border-bottom: 0.15cqw solid transparent;
-  margin: 0 auto;
-  align-self: flex-end;
-  pointer-events: all;
-  grid-column: -1 / 1;
-  grid-row: 2 / 3;
-  visibility: visible;
-  transition: visibility 300ms ease-in-out;
-  width: 100%;
-  grid-template-columns: repeat(2, calc(50% - 0.5cqw));
-  grid-template-rows: 7.2cqw, 0;
-  column-gap: 1cqw;
-  row-gap: 0.4cqw;
-
-  ${theme.breakpoints.up('md')} {
-    grid-template-columns: var(--two-column-grid);
-    grid-template-rows: repeat(2, min-content);
-    grid-row: 1 / 2;
-    grid-column: -1 / 1;
-    row-gap: 0.15cqw;
-    column-gap: 2.2cqw;
-  }
-
-  ${({ navbarState }) => {
-    if (navbarState.includes(NavbarState.IsLoggedIn)) {
-      return css`
-        ${RegisterNewsLetterTab} {
-          display: none;
-        }
-        ${theme.breakpoints.up('md')} {
-          ${BecomeMemberGoToProfileTab} {
-            grid-row: 2 / 3;
-          }
-        }
-      `;
-    }
-    if (navbarState.includes(NavbarState.High)) {
-      return css`
-        ${theme.breakpoints.up('md')} {
-          ${RegisterNewsLetterTab} {
-            display: none;
-          }
-
-          ${BecomeMemberGoToProfileTab} {
-            grid-row: 2 / 3;
-          }
-        }
-      `;
-    }
-  }}
-
-  ${({ isHomePage }) =>
-    isHomePage &&
-    css`
-      row-gap: 0;
-
-      ${theme.breakpoints.up('md')} {
-        row-gap: 0.15cqw;
-      }
-
-      ${PreTitleTab} {
-        display: none;
-      }
-    `}
-`;
-
 const OpenInvoicesAlert = styled('div')`
   position: absolute;
   transform: translateX(100%);
@@ -466,67 +372,6 @@ const MdWarningOIA = styled(MdWarning)`
 
   ${theme.breakpoints.up('md')} {
     font-size: 2cqw;
-  }
-`;
-
-export const NavPaperWrapper = styled('div', {
-  shouldForwardProp: propName => propName !== 'isMenuOpen',
-})<{ isMenuOpen: boolean }>`
-  padding: 8cqw ${theme.spacing(2)} 0 ${theme.spacing(2)};
-  background: ${theme.palette.primary.main};
-  color: ${theme.palette.common.white};
-  top: 0;
-  left: 0;
-  right: 0;
-  transform: translate3d(
-    0,
-    ${({ isMenuOpen }) => (isMenuOpen ? '0' : '-102%')},
-    0
-  );
-  transition: transform 300ms ease-in-out;
-  overflow-y: hidden;
-  max-height: 100vh;
-  z-index: 2;
-  height: auto;
-  display: grid;
-  grid-template-rows: min-content 6cqw;
-  row-gap: 12cqw;
-  grid-template-columns: 1fr minmax(max-content, 1285px) 1fr;
-  position: absolute;
-
-  ${theme.breakpoints.up('md')} {
-    row-gap: unset;
-    padding-top: 0.5cqw;
-  }
-
-  ${NavbarTabs} {
-    grid-column: 2 / 3;
-    grid-row: 2 / 3;
-    grid-template-rows: min-content;
-    grid-template-columns: var(--two-column-grid-no-gap);
-    width: 100%;
-    border-bottom: none;
-
-    ${theme.breakpoints.up('md')} {
-      column-gap: 0;
-    }
-
-    ${LoginLogoutTab} {
-      grid-column: -1 / 1;
-
-      ${theme.breakpoints.up('md')} {
-        grid-column: 2 / 3;
-        border-top-left-radius: 0.8cqw;
-        border-top-right-radius: 0.8cqw;
-      }
-
-      ${theme.breakpoints.up('xl')} {
-        padding: 0.25cqw 1cqw;
-        font-size: 0.85cqw;
-        border-top-left-radius: 0.5cqw;
-        border-top-right-radius: 0.5cqw;
-      }
-    }
   }
 `;
 
@@ -571,6 +416,48 @@ export const NavPaperLinksGroup = styled('div')`
     row-gap: unset;
     grid-template-rows: unset;
     grid-template-columns: repeat(3, min-content);
+    opacity: 1;
+    transition: opacity 250ms ease-in-out;
+  }
+`;
+
+export const NavPaperWrapper = styled('div', {
+  shouldForwardProp: propName =>
+    propName !== 'isMenuOpen' && propName !== 'isTransitioning',
+})<{ isMenuOpen: boolean; isTransitioning: boolean }>`
+  padding: 8cqw ${theme.spacing(2)} 0 ${theme.spacing(2)};
+  background: ${theme.palette.primary.main};
+  color: ${theme.palette.common.white};
+  top: 0;
+  left: 0;
+  right: 0;
+  transform: scale(${({ isMenuOpen }) => (isMenuOpen ? '100%' : '3%')});
+  transform-origin: top left;
+  transition: transform 300ms cubic-bezier(0.62, 0.04, 0.3, 1.56);
+  transition: transform 300ms ease-out;
+  transition-delay: ${({ isMenuOpen }) => (isMenuOpen ? '0ms' : '100ms')};
+  overflow-y: hidden;
+  z-index: 2;
+  height: 100vh;
+  width: 100%;
+  display: grid;
+  grid-template-rows: min-content 6cqw;
+  row-gap: 12cqw;
+  grid-template-columns: 1fr minmax(max-content, 1285px) 1fr;
+  position: absolute;
+
+  ${theme.breakpoints.up('md')} {
+    row-gap: unset;
+    padding-top: 0.5cqw;
+  }
+
+  ${NavPaperLinksGroup} {
+    ${({ isTransitioning, isMenuOpen }) =>
+      isTransitioning && !isMenuOpen ?
+        css`
+          opacity: 0;
+        `
+      : ''}
   }
 `;
 
@@ -579,6 +466,7 @@ const NavPaper = ({
   loginBtn,
   closeMenu,
   isMenuOpen,
+  isTransitioning,
   className,
 }: PropsWithChildren<{
   loginBtn?: ButtonProps | null;
@@ -586,16 +474,17 @@ const NavPaper = ({
   categories: FullNavigationFragment[][];
   closeMenu: () => void;
   isMenuOpen: boolean;
+  isTransitioning: boolean;
   className?: string;
 }>) => {
   const {
     elements: { Link },
   } = useWebsiteBuilder();
-  const { hasUser, logout } = useUser();
 
   return (
     <NavPaperWrapper
       isMenuOpen={isMenuOpen}
+      isTransitioning={isTransitioning}
       className={`${className || ''} ${isMenuOpen ? 'menu-open' : ''}`.trim()}
     >
       {!!categories.length &&
@@ -625,33 +514,6 @@ const NavPaper = ({
             ))}
           </NavPaperLinksGroup>
         ))}
-      <NavbarTabs
-        navbarState={[]}
-        isHomePage={false}
-      >
-        {hasUser && (
-          <LoginLogoutTab
-            variant="navbarTab"
-            onClick={() => {
-              logout();
-              closeMenu();
-            }}
-          >
-            Logout
-          </LoginLogoutTab>
-        )}
-        {!hasUser && loginBtn && (
-          <LoginLogoutTab
-            variant="navbarTab"
-            onClick={() => {
-              closeMenu();
-            }}
-            href={loginBtn.href}
-          >
-            Login
-          </LoginLogoutTab>
-        )}
-      </NavbarTabs>
     </NavPaperWrapper>
   );
 };
@@ -670,9 +532,6 @@ export const NavbarInnerWrapper = styled(Toolbar, {
       pointer-events: none;
 
       ${NavbarHomeLink} {
-        visibility: hidden;
-      }
-      ${NavbarTabs} {
         visibility: hidden;
       }
     `}
@@ -719,6 +578,7 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
     const ref = useRef<HTMLElement>(null);
 
     const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
+    const [isTransitioning, setIsTransitioning] = useState(false);
 
     const [isScrolled, setIsScrolled] = useState(false);
     const [scrollDirection, setScrollDirection] = useState<ScrollDirection>(
@@ -759,6 +619,7 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
 
     const toggleMenu = useCallback(() => {
       const newState = !isMenuOpen;
+      setIsTransitioning(true);
 
       if (controlledIsMenuOpen === undefined) {
         setInternalMenuOpen(newState);
@@ -766,10 +627,6 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
 
       onMenuToggle?.(newState);
     }, [isMenuOpen, controlledIsMenuOpen, onMenuToggle]);
-
-    const { t } = useTranslation();
-
-    const { hasUser } = useUser();
 
     const {
       elements: { Link, Button },
@@ -863,6 +720,30 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
             navbarState={navbarState}
             isMenuOpen={isMenuOpen}
           >
+            <NavbarMain isMenuOpen={isMenuOpen}>
+              <NavbarHamburgerButton
+                isMenuOpen={isMenuOpen}
+                isTransitioning={isTransitioning}
+                size="small"
+                aria-label="Menu"
+                title="Menu"
+                onClick={toggleMenu}
+                onMouseLeave={() => {
+                  setTimeout(() => setIsTransitioning(false), 300);
+                }}
+                disableRipple={true}
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+                {hasUnpaidInvoices && profileBtn && (
+                  <OpenInvoicesAlert>
+                    <MdWarningOIA />
+                  </OpenInvoicesAlert>
+                )}
+              </NavbarHamburgerButton>
+            </NavbarMain>
+
             <NavbarHomeLink
               href="/"
               aria-label="Startseite"
@@ -898,105 +779,6 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                 </Button>
               )}
             </NavbarActions>
-
-            <NavbarMain isMenuOpen={isMenuOpen}>
-              <NavbarInstaButton
-                size="small"
-                aria-label="Instagram"
-                title="Instagram"
-                color={'inherit'}
-                onClick={() => {
-                  if (controlledIsMenuOpen === undefined) {
-                    setInternalMenuOpen(false);
-                  }
-                  onMenuToggle?.(false);
-                  router.push('https://www.instagram.com/tsri.ch/');
-                }}
-              >
-                <FiInstagram />
-              </NavbarInstaButton>
-              <NavbarSearchButton
-                size="small"
-                aria-label="Suche"
-                title="Suche"
-                color={'inherit'}
-                onClick={() => {
-                  if (controlledIsMenuOpen === undefined) {
-                    setInternalMenuOpen(false);
-                  }
-                  onMenuToggle?.(false);
-                  router.push('/search');
-                }}
-              >
-                <FiSearch />
-              </NavbarSearchButton>
-
-              <NavbarHamburgerButton
-                size="small"
-                aria-label="Menu"
-                title="Menu"
-                onClick={toggleMenu}
-                color={'inherit'}
-              >
-                <FiMenu />
-                {hasUnpaidInvoices && profileBtn && (
-                  <OpenInvoicesAlert>
-                    <MdWarningOIA />
-                  </OpenInvoicesAlert>
-                )}
-              </NavbarHamburgerButton>
-            </NavbarMain>
-
-            <NavbarTabs
-              navbarState={navbarState}
-              isHomePage={isHomePage}
-            >
-              {!hasUser &&
-                !hasRunningSubscription &&
-                !hasUnpaidInvoices &&
-                subscribeBtn && (
-                  <BecomeMemberGoToProfileTab
-                    variant="navbarTab"
-                    href={subscribeBtn.href}
-                  >
-                    {t('navbar.subscribe')}
-                  </BecomeMemberGoToProfileTab>
-                )}
-              {hasUser && profileBtn && (
-                <BecomeMemberGoToProfileTab
-                  variant="navbarTab"
-                  href={profileBtn.href}
-                >
-                  Mein Konto
-                </BecomeMemberGoToProfileTab>
-              )}
-
-              {hasUnpaidInvoices && profileBtn && (
-                <OpenInvoiceTab
-                  variant="navbarTab"
-                  href={profileBtn.href}
-                  onClick={() => {
-                    if (controlledIsMenuOpen === undefined) {
-                      setInternalMenuOpen(false);
-                    }
-                    onMenuToggle?.(false);
-                  }}
-                >
-                  <MdWarning
-                    size={12}
-                    style={{ verticalAlign: 'middle' }}
-                  />
-                  <span>Offene Rechnung</span>
-                </OpenInvoiceTab>
-              )}
-
-              <RegisterNewsLetterTab
-                variant="navbarTab"
-                href="/newsletter?mc_u=56ee24de7341c744008a13c9e&mc_id=32c65d081a&mc_f_id=00e5c2e1f0&source=tsri&tf_id=jExhxiVv&popTitle=DAS%20WICHTIGSTE%20AUS%20ZÜRI&popButtonText=Jetzt%20kostenlos%20abonnieren!&popText=Jeden%20Morgen%20findest%20du%20im%20Z%C3%BCri%20Briefing%20kuratierte%20News,%20Geschichten%20und%20Tipps%20f%C3%BCr%20den%20Tag.%20Bereits%2029'000%20Menschen%20lesen%20mit%20%E2%80%93%20und%20du?"
-              >
-                Newsletter kostenlos abonnieren
-              </RegisterNewsLetterTab>
-            </NavbarTabs>
           </NavbarInnerWrapper>
 
           {Boolean(mainItems || categories?.length) && (
@@ -1006,6 +788,7 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
               categories={categories}
               closeMenu={toggleMenu}
               isMenuOpen={isMenuOpen}
+              isTransitioning={isTransitioning}
               className={navPaperClassName}
             >
               {children}

@@ -22,7 +22,7 @@ const colors = {
     main: '#0800ff',
     light: '#f5ff64',
     dark: '#aeb3be',
-    contrastText: '#fffff',
+    contrastText: '#ffffff',
   },
   common: {
     black: '#000000',
@@ -121,7 +121,23 @@ const theme = createTheme(WePTheme, {
       padding: 0,
       lineHeight: 0,
     },
-    fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    categoryAddress: {
+      display: 'block',
+      margin: 0,
+      padding: 0,
+    },
+    categoryAddressText: {
+      fontFamily: ['Euclid', 'sans-serif'].join(','),
+      color: colors.common.white,
+      fontSize: '2rem',
+      lineHeight: '3rem',
+      fontWeight: 500,
+      fontStyle: 'normal',
+      [breakpoints.up('md')]: {
+        fontSize: '2rem',
+        lineHeight: '3rem',
+      },
+    },
   },
   components: {
     MuiCssBaseline: {
@@ -163,6 +179,8 @@ const theme = createTheme(WePTheme, {
           categoryLinkList: 'ul',
           categoryLinkItem: 'li',
           categoryLinkTitle: 'h6',
+          categoryAddress: 'address',
+          categoryAddressText: 'p',
         },
       },
     },
@@ -178,7 +196,7 @@ const theme = createTheme(WePTheme, {
             color: colors.common.white,
             display: 'inline-block',
             whiteSpace: 'nowrap',
-            padding: '0 0.3cqw',
+            padding: '0',
             textDecoration: 'none',
             fontSize: '2rem',
             lineHeight: '4rem',

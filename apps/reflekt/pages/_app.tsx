@@ -52,6 +52,7 @@ const Spacer = styled('div')`
   grid-template-rows: min-content 1fr min-content;
   gap: ${({ theme }) => theme.spacing(3)};
   min-height: 100vh;
+  overflow-x: hidden;
 `;
 
 const MainSpacer = styled(Container)`

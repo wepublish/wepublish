@@ -145,7 +145,7 @@ export const FooterLinksGroup = styled('div')`
   grid-template-rows: subgrid;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-template-columns: repeat(3, min-content);
+    grid-template-columns: repeat(2, auto);
     column-gap: 2cqw;
     grid-row: 1 / 2;
     grid-column: 2 / 3;
@@ -186,6 +186,29 @@ export const FooterPaper = ({
               </Typography>
             </FooterCategory>
           ))}
+          <FooterCategory>
+            <Typography variant="categoryAddress">
+              <Typography variant="categoryAddressText">
+                Verein REFLEKT
+                <br />
+                Postfach
+                <br />
+                3000 Bern 22
+              </Typography>
+              <Typography variant="categoryAddressText">
+                <Link
+                  variant="categoryLink"
+                  href="mailto:info@reflekt.ch"
+                  sx={{ textDecoration: 'underline' }}
+                >
+                  info@reflekt.ch
+                </Link>
+              </Typography>
+              <Typography variant="categoryAddressText">
+                IBAN: CH 74 0900 0000 1530 5569 6
+              </Typography>
+            </Typography>
+          </FooterCategory>
         </FooterLinksGroup>
       ))}
       {children}
