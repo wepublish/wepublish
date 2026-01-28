@@ -63,7 +63,7 @@ export class PaywallService {
   }
 
   @PrimeDataLoader(PaywallDataloaderService)
-  public updatePaywall({
+  public async updatePaywall({
     id,
     memberPlanIds,
     bypassTokens,
@@ -73,7 +73,7 @@ export class PaywallService {
       throw new BadRequestException('hideContentAfter can not be lower than 0');
     }
 
-    return this.prisma.paywall.update({
+    const result = await this.prisma.paywall.update({
       where: {
         id,
       },
@@ -104,11 +104,6 @@ export class PaywallService {
         bypasses:
           bypassTokens ?
             {
-              deleteMany: {
-                token: {
-                  notIn: bypassTokens,
-                },
-              },
               createMany: {
                 skipDuplicates: true,
                 data: bypassTokens.map(token => ({
@@ -119,6 +114,26 @@ export class PaywallService {
           : undefined,
       },
     });
+
+    await this.prisma.paywall.update({
+      where: {
+        id,
+      },
+      data: {
+        bypasses:
+          bypassTokens ?
+            {
+              deleteMany: {
+                token: {
+                  notIn: bypassTokens,
+                },
+              },
+            }
+          : undefined,
+      },
+    });
+
+    return result;
   }
 
   public deletePaywall(id: string) {
