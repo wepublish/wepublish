@@ -1,0 +1,2 @@
+INSERT INTO "settings" ("id", "modifiedAt", "name", "value", "settingRestriction") VALUES (gen_random_uuid(), CURRENT_TIMESTAMP, 'newArticlePeering', 'true'::jsonb, '{"allowedValues": {"boolChoice": true}}'::jsonb);
+INSERT INTO "settings" ("id", "modifiedAt", "name", "value", "settingRestriction") VALUES (gen_random_uuid(), CURRENT_TIMESTAMP, 'newArticlePaywall', 'false'::jsonb, '{"allowedValues": {"boolChoice": true}}'::jsonb);

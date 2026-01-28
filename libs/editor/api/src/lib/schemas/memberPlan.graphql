@@ -2,32 +2,25 @@ fragment MemberPlanRef on MemberPlan {
   id
   name
   description
+  shortDescription
   slug
   active
+  productType
   tags
   image {
     ...FullImage
   }
+  externalReward
 
   successPageId
-  # successPage {
-  #   ...PageRef
-  # }
-
   failPageId
-  # failPage {
-  #   ...PageRef
-  # }
-
   confirmationPageId
-  # confirmationPage {
-  #   ...PageRef
-  # }
 }
 
 fragment FullMemberPlan on MemberPlan {
   tags
   amountPerMonthMin
+  amountPerMonthMax
   amountPerMonthTarget
   currency
   availablePaymentMethods {
@@ -41,45 +34,4 @@ fragment FullMemberPlan on MemberPlan {
   extendable
   maxCount
   migrateToTargetPaymentMethodID
-}
-
-query MemberPlanList($filter: String, $cursor: String, $take: Int, $skip: Int) {
-  memberPlans(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
-    nodes {
-      ...FullMemberPlan
-    }
-
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-
-    totalCount
-  }
-}
-
-query MemberPlan($id: String!) {
-  memberPlan(id: $id) {
-    ...FullMemberPlan
-  }
-}
-
-mutation CreateMemberPlan($input: MemberPlanInput!) {
-  createMemberPlan(input: $input) {
-    ...FullMemberPlan
-  }
-}
-
-mutation UpdateMemberPlan($id: String!, $input: MemberPlanInput!) {
-  updateMemberPlan(id: $id, input: $input) {
-    ...FullMemberPlan
-  }
-}
-
-mutation DeleteMemberPlan($id: String!) {
-  deleteMemberPlan(id: $id) {
-    ...FullMemberPlan
-  }
 }

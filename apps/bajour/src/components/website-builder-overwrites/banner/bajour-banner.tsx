@@ -1,17 +1,17 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   Banner,
   BannerCloseButton,
-  BannerContent,
-  BannerCta,
+  BannerContentWrapper,
+  BannerCtaText,
   BannerImage,
   BannerText,
-  BannerTitle
-} from '@wepublish/banner/website'
+  BannerTitle,
+} from '@wepublish/banner/website';
 
 const BajourBanner = styled(Banner)(
-  ({theme}) => `
-${BannerContent} {
+  ({ theme }) => `
+${BannerContentWrapper} {
   padding: ${theme.spacing(2)};
 }
 
@@ -20,7 +20,7 @@ ${BannerCloseButton} {
   right: ${theme.spacing(2)};
 }
 
-${BannerCta} {
+${BannerCtaText} {
   display: none;
 }
 
@@ -39,7 +39,7 @@ ${BannerCta} {
     width: 20%;
   }
 
-  ${BannerCta} {
+  ${BannerCtaText} {
     display: block;
     margin-top: 0;
   }
@@ -48,6 +48,6 @@ ${BannerCta} {
     display: none;
   }
 }`
-)
+);
 
-export {BajourBanner}
+export { BajourBanner };

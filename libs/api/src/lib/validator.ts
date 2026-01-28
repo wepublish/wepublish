@@ -1,5 +1,5 @@
-import {userCountryNames} from '@wepublish/user'
-import z from 'zod'
+import { userCountryNames } from '@wepublish/user';
+import z from 'zod';
 
 export class Validator {
   static createUser = z.object({
@@ -10,23 +10,24 @@ export class Validator {
       .date()
       .refine(data => new Date() > data, {
         path: ['birthday'],
-        message: 'Birthday can not be in the future'
+        message: 'Birthday can not be in the future',
       })
-      .optional()
-  })
+      .optional(),
+  });
 
   static createAddress = z
     .object({
       streetAddress: z.string(),
+      streetAddressNuber: z.string(),
       zipCode: z.string(),
       city: z.string(),
-      country: z.enum(userCountryNames).or(z.literal(''))
+      country: z.enum(userCountryNames).or(z.literal('')),
     })
     .partial()
     .optional()
-    .nullable()
+    .nullable();
 
   static login = z.object({
-    email: z.string().email()
-  })
+    email: z.string().email(),
+  });
 }

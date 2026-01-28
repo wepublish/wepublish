@@ -1,88 +1,108 @@
-import {ApolloError, ApolloQueryResult} from '@apollo/client'
+import { ApolloError, ApolloQueryResult } from '@apollo/client';
 import {
   Crowdfunding,
   CrowdfundingsQuery,
   getApiClientV2,
-  useDeleteCrowdfundingMutation
-} from '@wepublish/editor/api-v2'
-import {TFunction} from 'i18next'
-import React from 'react'
-import {useMemo} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Button, Message, Modal, toaster} from 'rsuite'
+  useDeleteCrowdfundingMutation,
+} from '@wepublish/editor/api-v2';
+import { TFunction } from 'i18next';
+import React from 'react';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button, Message, Modal, toaster } from 'rsuite';
 
 type DeleteCrowdfundingProps = {
-  crowdfunding: Crowdfunding | undefined
-  onClose(): void
-  onDelete(): Promise<ApolloQueryResult<CrowdfundingsQuery>>
-}
+  crowdfunding: Crowdfunding | undefined;
+  onClose(): void;
+  onDelete(): Promise<ApolloQueryResult<CrowdfundingsQuery>>;
+};
 
 const onErrorToast = (error: ApolloError) => {
   toaster.push(
-    <Message type="error" showIcon closable duration={3000}>
+    <Message
+      type="error"
+      showIcon
+      closable
+      duration={3000}
+    >
       {error.message}
     </Message>
-  )
-}
+  );
+};
 
 const onCompletedToast = (t: TFunction) => () => {
   toaster.push(
-    <Message type="success" showIcon closable duration={3000}>
+    <Message
+      type="success"
+      showIcon
+      closable
+      duration={3000}
+    >
       {t('toast.deletedSuccess')}
     </Message>
-  )
-}
+  );
+};
 
 export function CrowdfundingDeleteModal({
   crowdfunding,
   onClose,
-  onDelete
+  onDelete,
 }: DeleteCrowdfundingProps) {
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
-  const client = useMemo(() => getApiClientV2(), [])
+  const client = useMemo(() => getApiClientV2(), []);
   const [deleteCrowdfundingMutation] = useDeleteCrowdfundingMutation({
     client,
     onError: onErrorToast,
-    onCompleted: onCompletedToast(t)
-  })
+    onCompleted: onCompletedToast(t),
+  });
 
   async function deleteCrowdfunding() {
     if (!crowdfunding) {
-      return
+      return;
     }
 
     await deleteCrowdfundingMutation({
       variables: {
-        id: crowdfunding.id
-      }
-    })
+        id: crowdfunding.id,
+      },
+    });
 
-    onClose()
-    onDelete()
+    onClose();
+    onDelete();
   }
 
   return (
-    <Modal open={!!crowdfunding} onClose={onClose}>
+    <Modal
+      open={!!crowdfunding}
+      onClose={onClose}
+    >
       <Modal.Header>
         <Modal.Title>{t('crowdfunding.delete.title')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         {t('crowdfunding.delete.body', {
-          name: crowdfunding?.name
+          name: crowdfunding?.name,
         })}
       </Modal.Body>
 
       <Modal.Footer>
-        <Button onClick={deleteCrowdfunding} appearance="primary" color="red">
+        <Button
+          onClick={deleteCrowdfunding}
+          appearance="primary"
+          color="red"
+        >
           {t('crowdfunding.delete.delete')}
         </Button>
 
-        <Button onClick={onClose} appearance="subtle">
+        <Button
+          onClick={onClose}
+          appearance="subtle"
+        >
           {t('cancel')}
         </Button>
       </Modal.Footer>
     </Modal>
-  )
+  );
 }

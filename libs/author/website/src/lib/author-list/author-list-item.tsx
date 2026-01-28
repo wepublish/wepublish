@@ -1,45 +1,53 @@
-import {Author} from '@wepublish/website/api'
-import {Theme, css, useTheme} from '@mui/material'
-import styled from '@emotion/styled'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
+import { Author } from '@wepublish/website/api';
+import { css } from '@mui/material';
+import styled from '@emotion/styled';
+import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
 
 export const AuthorListItemImageWrapper = styled('div')`
   display: grid;
   width: 100%;
-`
+`;
 
-export const AuthorListItemContent = styled('div')``
+export const AuthorListItemContent = styled('div')``;
 
-const wrapperStyles = (theme: Theme) => css`
+const AuthorListItemLink = styled(Link)`
   display: grid;
   grid-template-rows: max-content 1fr;
-  gap: ${theme.spacing(3)};
-  width: 240px;
+  gap: ${({ theme }) => theme.spacing(3)};
   text-align: center;
   text-decoration: none;
   color: inherit;
-`
+`;
 
 const imageStyles = css`
   border-radius: 50%;
-`
+`;
 
 export function AuthorListItem({
   className,
   url,
   image,
   name,
-  jobTitle
-}: Author & {className?: string}) {
-  const theme = useTheme()
+  jobTitle,
+}: Author & { className?: string }) {
   const {
-    elements: {Image, Paragraph, H6, Link}
-  } = useWebsiteBuilder()
+    elements: { Image, Paragraph, H6 },
+  } = useWebsiteBuilder();
 
   return (
-    <Link css={wrapperStyles(theme)} className={className} href={url}>
+    <AuthorListItemLink
+      className={className}
+      href={url}
+    >
       <AuthorListItemImageWrapper>
-        {image && <Image image={image} square css={imageStyles} maxWidth={500} />}
+        {image && (
+          <Image
+            image={image}
+            square
+            css={imageStyles}
+            maxWidth={500}
+          />
+        )}
       </AuthorListItemImageWrapper>
 
       <AuthorListItemContent>
@@ -47,6 +55,6 @@ export function AuthorListItem({
 
         {jobTitle && <Paragraph gutterBottom={false}>{jobTitle}</Paragraph>}
       </AuthorListItemContent>
-    </Link>
-  )
+    </AuthorListItemLink>
+  );
 }

@@ -5,21 +5,24 @@
       "custom_domain": "https://cültür.ch",
       "env": {
         "MAILCHIMP_SERVER_PREFIX": "us12",
-        "MAILCHIMP_SIGNUP_URL": "https://cultur.us12.list-manage.com/subscribe/post?u=930fd0ccfcf8b34b60492e282&id=7755141349"
+        "MAILCHIMP_SIGNUP_URL": "https://cultur.us12.list-manage.com/subscribe/post?u=930fd0ccfcf8b34b60492e282&id=7755141349",
+        "DEPLOY_ENV": "production"
       },
       "secret_env": ["MAILCHIMP_API_KEY"]
     },
     "staging": {
       "deployment": true,
       "env": {
-        "MAILCHIMP_SERVER_PREFIX": "us12"
+        "MAILCHIMP_SERVER_PREFIX": "us12",
+        "DEPLOY_ENV": "staging"
       },
       "secret_env": ["MAILCHIMP_API_KEY"]
     },
     "review": {
       "deployment": true,
       "env": {
-        "MAILCHIMP_SERVER_PREFIX": "us12"
+        "MAILCHIMP_SERVER_PREFIX": "us12",
+        "DEPLOY_ENV": "review"
       },
       "secret_env": ["MAILCHIMP_API_KEY"]
     }

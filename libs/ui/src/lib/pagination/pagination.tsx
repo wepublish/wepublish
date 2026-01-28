@@ -1,13 +1,14 @@
-import {css, Pagination as MuiPagination} from '@mui/material'
-import {ComponentProps} from 'react'
+import styled from '@emotion/styled';
+import { Pagination as MuiPagination } from '@mui/material';
+import { ComponentProps } from 'react';
 
-export type PaginationProps = ComponentProps<typeof MuiPagination>
+export type PaginationProps = ComponentProps<typeof MuiPagination>;
 
-export const center = css`
+export const CenteredPagination = styled(MuiPagination)`
   display: grid;
   justify-items: center;
-`
+`;
 
-export function Pagination({className, ...props}: PaginationProps) {
-  return <MuiPagination {...props} css={center} />
+export function Pagination({ className, ...props }: PaginationProps) {
+  return <CenteredPagination {...props} />;
 }

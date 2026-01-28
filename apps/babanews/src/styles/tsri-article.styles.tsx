@@ -1,9 +1,9 @@
-import {css} from '@emotion/react'
-import {Theme} from '@mui/material'
-import {ArticleInfoWrapper, ArticleWrapper} from '@wepublish/article/website'
-import {TitleBlockWrapper} from '@wepublish/block-content/website'
+import { css } from '@emotion/react';
+import { Theme } from '@mui/material';
+import { ArticleInfoWrapper, ArticleWrapper } from '@wepublish/article/website';
+import { TitleBlockWrapper } from '@wepublish/block-content/website';
 
-import {ArticleTagList} from '../../pages/a/[slug]'
+import { ArticleTagList } from '../../pages/a/[slug]';
 
 export const tsriArticleStyles = (theme: Theme) => css`
   ${ArticleWrapper} {
@@ -99,4 +99,4 @@ export const tsriArticleStyles = (theme: Theme) => css`
       }
     }
   }
-`
+`;

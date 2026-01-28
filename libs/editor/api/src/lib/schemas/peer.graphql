@@ -17,17 +17,6 @@ fragment FullPeerProfile on PeerProfile {
   callToActionImageURL
 }
 
-fragment FullPeer on Peer {
-  id
-  name
-  slug
-  isDisabled
-  hostURL
-  profile {
-    ...FullPeerProfile
-  }
-}
-
 query PeerProfile {
   peerProfile {
     ...FullPeerProfile
@@ -43,35 +32,5 @@ query RemotePeerProfile($hostURL: String!, $token: String!) {
 mutation UpdatePeerProfile($input: PeerProfileInput!) {
   updatePeerProfile(input: $input) {
     ...FullPeerProfile
-  }
-}
-
-query PeerList {
-  peers {
-    ...FullPeer
-  }
-}
-
-query Peer($id: String!) {
-  peer(id: $id) {
-    ...FullPeer
-  }
-}
-
-mutation CreatePeer($input: CreatePeerInput!) {
-  createPeer(input: $input) {
-    ...FullPeer
-  }
-}
-
-mutation UpdatePeer($id: String!, $input: UpdatePeerInput!) {
-  updatePeer(id: $id, input: $input) {
-    ...FullPeer
-  }
-}
-
-mutation DeletePeer($id: String!) {
-  deletePeer(id: $id) {
-    ...FullPeer
   }
 }

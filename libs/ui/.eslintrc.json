@@ -1,86 +1,10 @@
 {
   "extends": ["plugin:@nx/react", "../../.eslintrc.json"],
   "ignorePatterns": ["!**/*"],
-  "plugins": ["i18next", "simple-import-sort"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {
-        "no-empty": "warn",
-        "react/display-name": [0],
-        "react/jsx-boolean-value": [1],
-        "react/prop-types": [0],
-        "i18next/no-literal-string": [
-          2,
-          {
-            "markupOnly": true,
-            "ignoreAttribute": [
-              "align",
-              "alignItems",
-              "appearance",
-              "as",
-              "autoComplete",
-              "axis",
-              "backdrop",
-              "closePath",
-              "color",
-              "componentClass",
-              "controlId",
-              "data-testid",
-              "dataKey",
-              "dateFormat",
-              "display",
-              "element",
-              "eventKey",
-              "fill",
-              "fixed",
-              "fixed",
-              "flexDirection",
-              "flexWrap",
-              "format",
-              "href",
-              "icon",
-              "iconActive",
-              "justify",
-              "justifyContent",
-              "minHeight",
-              "name",
-              "overflow",
-              "path",
-              "placement",
-              "position",
-              "sdkLanguage",
-              "size",
-              "spacing",
-              "stack",
-              "target",
-              "to",
-              "trigger",
-              "value",
-              "variant",
-              "verticalAlign"
-            ],
-            "ignoreComponent": ["code"],
-            "ignore": ["—", "&"]
-          }
-        ],
-        "simple-import-sort/imports": 1,
-        "simple-import-sort/exports": 1,
-        "import/first": 1,
-        "import/newline-after-import": 1,
-        "import/no-duplicates": 1
-      }
-    },
-    {
-      "files": [
-        "*.test.ts",
-        "*.test.tsx",
-        "*.stories.ts",
-        "*.stories.tsx",
-        "*.spec.ts",
-        "*.spec.tsx"
-      ],
-      "rules": {"i18next/no-literal-string": "off"}
+      "rules": {}
     },
     {
       "files": ["*.ts", "*.tsx"],

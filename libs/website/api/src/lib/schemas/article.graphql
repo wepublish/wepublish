@@ -1,3 +1,27 @@
+fragment FullPaywall on Paywall {
+  id
+  active
+  anyMemberPlan
+  name
+  description
+  circumventDescription
+  alternativeSubscribeUrl
+  upgradeDescription
+  upgradeCircumventDescription
+  memberPlans {
+    id
+    name
+    tags
+  }
+  bypasses {
+    id
+    token
+  }
+
+  fadeout
+  hideContentAfter
+}
+
 fragment ArticleRevisionWithoutBlocks on ArticleRevision {
   id
   publishedAt
@@ -8,6 +32,7 @@ fragment ArticleRevisionWithoutBlocks on ArticleRevision {
   lead
   title
   canonicalUrl
+  breaking
 
   authors {
     ...FullAuthor
@@ -61,6 +86,10 @@ fragment ArticleWithoutBlocks on Article {
 
   peer {
     ...FullPeer
+  }
+
+  paywall {
+    ...FullPaywall
   }
 }
 

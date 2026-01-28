@@ -1,22 +1,22 @@
-import {forwardRef, Module} from '@nestjs/common'
-import {ImageModule} from '@wepublish/image/api'
-import {PrismaModule} from '@wepublish/nest-modules'
-import {ArticleDataloaderService} from './article-dataloader.service'
-import {ArticleResolver} from './article.resolver'
-import {ArticleService} from './article.service'
-import {ArticleRevisionDataloaderService} from './article-revision-dataloader.service'
-import {ArticleRevisionResolver} from './article-revision.resolver'
-import {ArticleRevisionService} from './article-revision.service'
-import {AuthorModule} from '@wepublish/author/api'
+import { forwardRef, Module } from '@nestjs/common';
+import { ImageModule } from '@wepublish/image/api';
+import { PrismaModule } from '@wepublish/nest-modules';
+import { ArticleDataloaderService } from './article-dataloader.service';
+import { ArticleResolver } from './article.resolver';
+import { ArticleService } from './article.service';
+import { ArticleRevisionDataloaderService } from './article-revision-dataloader.service';
+import { ArticleRevisionResolver } from './article-revision.resolver';
+import { AuthorModule } from '@wepublish/author/api';
 import {
   HasArticleLcResolver,
   HasArticleResolver,
   HasOptionalArticleLcResolver,
-  HasOptionalArticleResolver
-} from './has-article/has-article.resolver'
-import {BlockContentModule} from '@wepublish/block-content/api'
-import {SettingModule} from '@wepublish/settings/api'
-import {TagModule} from '@wepublish/tag/api'
+  HasOptionalArticleResolver,
+} from './has-article/has-article.resolver';
+import { BlockContentModule } from '@wepublish/block-content/api';
+import { SettingModule } from '@wepublish/settings/api';
+import { TagModule } from '@wepublish/tag/api';
+import { PropertyModule } from '@wepublish/property/api';
 
 @Module({
   imports: [
@@ -25,7 +25,8 @@ import {TagModule} from '@wepublish/tag/api'
     AuthorModule,
     SettingModule,
     TagModule,
-    forwardRef(() => BlockContentModule)
+    PropertyModule,
+    forwardRef(() => BlockContentModule),
   ],
   providers: [
     ArticleDataloaderService,
@@ -33,17 +34,16 @@ import {TagModule} from '@wepublish/tag/api'
     ArticleService,
     ArticleResolver,
     ArticleRevisionResolver,
-    ArticleRevisionService,
+
     HasArticleResolver,
     HasArticleLcResolver,
     HasOptionalArticleResolver,
-    HasOptionalArticleLcResolver
+    HasOptionalArticleLcResolver,
   ],
   exports: [
     ArticleDataloaderService,
     ArticleRevisionDataloaderService,
     ArticleService,
-    ArticleRevisionService
-  ]
+  ],
 })
 export class ArticleModule {}

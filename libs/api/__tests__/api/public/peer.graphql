@@ -11,6 +11,19 @@ fragment FullPeerProfile on PeerProfile {
   }
 }
 
+fragment FullRemotePeerProfile on RemotePeerProfile {
+  name
+  hostURL
+  themeColor
+  themeFontColor
+  logo {
+    id
+  }
+  squareLogo {
+    id
+  }
+}
+
 fragment PeerRef on Peer {
   id
   name
@@ -21,7 +34,7 @@ fragment PeerRef on Peer {
 fragment PeerWithProfile on Peer {
   ...PeerRef
   profile {
-    ...FullPeerProfile
+    ...FullRemotePeerProfile
   }
 }
 

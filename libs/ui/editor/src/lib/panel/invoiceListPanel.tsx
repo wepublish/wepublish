@@ -1,20 +1,21 @@
-import styled from '@emotion/styled'
-import {InvoiceFragment, useMeQuery} from '@wepublish/editor/api'
-import {useTranslation} from 'react-i18next'
-import {Drawer, Message} from 'rsuite'
-import {Invoice, createCheckedPermissionComponent} from '../atoms'
+import styled from '@emotion/styled';
+import { InvoiceFragment, useMeQuery } from '@wepublish/editor/api';
+import { useTranslation } from 'react-i18next';
+import { Drawer, Message } from 'rsuite';
+
+import { createCheckedPermissionComponent, Invoice } from '../atoms';
 
 const InvoiceWrapper = styled.div`
   margin-bottom: 10px;
-`
+`;
 
 export interface InvoiceListPanelProps {
-  subscriptionId?: string
-  invoices?: InvoiceFragment[]
-  disabled?: boolean
-  onClose?(): void
-  onSave?(): void
-  onInvoicePaid(): void
+  subscriptionId?: string;
+  invoices?: InvoiceFragment[];
+  disabled?: boolean;
+  onClose?(): void;
+  onSave?(): void;
+  onInvoicePaid(): void;
 }
 
 function InvoiceListPanel({
@@ -22,10 +23,10 @@ function InvoiceListPanel({
   invoices,
   disabled,
   onClose,
-  onInvoicePaid
+  onInvoicePaid,
 }: InvoiceListPanelProps) {
-  const {data: me} = useMeQuery()
-  const {t} = useTranslation()
+  const { data: me } = useMeQuery();
+  const { t } = useTranslation();
 
   /**
    * UI helper functions
@@ -35,9 +36,11 @@ function InvoiceListPanel({
     if (!subscriptionId) {
       return (
         <Drawer.Body>
-          <Message type="error">{t('invoice.panel.missingSubscriptionId')}</Message>
+          <Message type="error">
+            {t('invoice.panel.missingSubscriptionId')}
+          </Message>
         </Drawer.Body>
-      )
+      );
     }
     // missing invoices
     if (!invoices?.length) {
@@ -45,7 +48,7 @@ function InvoiceListPanel({
         <Drawer.Body>
           <Message type="info">{t('invoice.panel.noInvoices')}</Message>
         </Drawer.Body>
-      )
+      );
     }
     // iterate invoices
     return invoices?.map((invoice, invoiceId) => (
@@ -58,15 +61,15 @@ function InvoiceListPanel({
           onInvoicePaid={() => onInvoicePaid()}
         />
       </InvoiceWrapper>
-    ))
+    ));
   }
 
-  return <>{invoiceHistoryView()}</>
+  return <>{invoiceHistoryView()}</>;
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_INVOICES',
   'CAN_GET_INVOICE',
   'CAN_CREATE_INVOICE',
-  'CAN_DELETE_INVOICE'
-])(InvoiceListPanel)
-export {CheckedPermissionComponent as InvoiceListPanel}
+  'CAN_DELETE_INVOICE',
+])(InvoiceListPanel);
+export { CheckedPermissionComponent as InvoiceListPanel };

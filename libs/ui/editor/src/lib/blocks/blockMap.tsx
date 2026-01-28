@@ -1,4 +1,11 @@
-import nanoid from 'nanoid'
+import {
+  EditorBlockType,
+  SubscribeBlockField,
+  TeaserListBlockSort,
+  TeaserSlotType,
+  TeaserType,
+} from '@wepublish/editor/api-v2';
+import nanoid from 'nanoid';
 import {
   MdAccountBox,
   MdCode,
@@ -18,43 +25,41 @@ import {
   MdQueryStats,
   MdTitle,
   MdViewList,
-  MdViewQuilt
-} from 'react-icons/md'
+  MdViewQuilt,
+} from 'react-icons/md';
 
-import {BlockMapForValue} from '../atoms/blockList'
-import {CommentBlock} from './commentBlock'
-import {EmbedBlock} from './embedBlock'
-import {EventBlock} from './eventBlock'
-import {HTMLBlock} from './htmlBlock'
-import {ImageBlock} from './imageBlock'
-import {ImageGalleryBlock} from './imageGalleryBlock'
-import {LinkPageBreakBlock} from './linkPageBreakBlock'
-import {ListicleBlock} from './listicleBlock'
-import {PollBlock} from './pollBlock'
-import {QuoteBlock} from './quoteBlock'
-import {createDefaultValue, RichTextBlock} from './richTextBlock/rich-text-block'
-import {TeaserGridBlock} from './teaserGridBlock'
-import {TeaserGridFlexBlock} from './teaserGridFlexBlock'
-import {TitleBlock} from './titleBlock'
-import {BlockValue, EmbedType} from './types'
+import { BlockMapForValue } from '../atoms/blockList';
+import { isFunctionalUpdate } from '../utility';
+import { CommentBlock } from './commentBlock';
+import { CrowdfundingBlock } from './CrowdfundingBlock';
+import { EmbedBlock } from './embedBlock';
+import { EventBlock } from './eventBlock';
+import { FlexBlock } from './flexBlock';
+import { HTMLBlock } from './htmlBlock';
+import { ImageBlock } from './imageBlock';
+import { ImageGalleryBlock } from './imageGalleryBlock';
+import { LinkPageBreakBlock } from './linkPageBreakBlock';
+import { ListicleBlock } from './listicleBlock';
+import { PollBlock } from './pollBlock';
+import { QuoteBlock } from './quoteBlock';
 import {
-  EditorBlockType,
-  TeaserListBlockSort,
-  TeaserSlotType,
-  TeaserType
-} from '@wepublish/editor/api-v2'
-import {isFunctionalUpdate} from '../utility'
-import {TeaserListBlock} from './teaserListBlock'
-import {SubscribeBlock} from './subscribeBlock'
-import {TeaserSlotsBlock} from './teaserSlotsBlock'
-import {CrowdfundingBlock} from './CrowdfundingBlock'
+  createDefaultValue,
+  RichTextBlock,
+} from './richTextBlock/rich-text-block';
+import { SubscribeBlock } from './subscribeBlock';
+import { TeaserGridBlock } from './teaserGridBlock';
+import { TeaserGridFlexBlock } from './teaserGridFlexBlock';
+import { TeaserListBlock } from './teaserListBlock';
+import { TeaserSlotsBlock } from './teaserSlotsBlock';
+import { TitleBlock } from './titleBlock';
+import { BlockValue, EmbedType } from './types';
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [EditorBlockType.Title]: {
     field: props => <TitleBlock {...props} />,
-    defaultValue: {title: '', lead: '', blockStyle: undefined},
+    defaultValue: { title: '', lead: '', preTitle: '', blockStyle: undefined },
     label: 'blocks.title.label',
-    icon: <MdTitle />
+    icon: <MdTitle />,
   },
 
   [EditorBlockType.RichText]: {
@@ -65,30 +70,36 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
         onChange={fieldValue =>
           props.onChange({
             ...props.value,
-            richText: isFunctionalUpdate(fieldValue) ? fieldValue(props.value.richText) : fieldValue
+            richText:
+              isFunctionalUpdate(fieldValue) ?
+                fieldValue(props.value.richText)
+              : fieldValue,
           })
         }
       />
     ),
     defaultValue: {
-      richText: createDefaultValue()
+      richText: createDefaultValue(),
     },
     label: 'blocks.richText.label',
-    icon: <MdFormatColorText />
+    icon: <MdFormatColorText />,
   },
 
   [EditorBlockType.Image]: {
     field: props => <ImageBlock {...props} />,
-    defaultValue: {image: null, caption: '', blockStyle: undefined},
+    defaultValue: { image: null, caption: '', blockStyle: undefined },
     label: 'blocks.image.label',
-    icon: <MdPhoto />
+    icon: <MdPhoto />,
   },
 
   [EditorBlockType.ImageGallery]: {
     field: props => <ImageGalleryBlock {...props} />,
-    defaultValue: {images: [{caption: '', image: null}], blockStyle: undefined},
+    defaultValue: {
+      images: [{ caption: '', image: null }],
+      blockStyle: undefined,
+    },
     label: 'blocks.imageGallery.label',
-    icon: <MdPhotoLibrary />
+    icon: <MdPhotoLibrary />,
   },
 
   [EditorBlockType.Listicle]: {
@@ -100,21 +111,21 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
           value: {
             image: null,
             title: '',
-            richText: createDefaultValue()
-          }
-        }
+            richText: createDefaultValue(),
+          },
+        },
       ],
-      blockStyle: undefined
+      blockStyle: undefined,
     },
     label: 'blocks.listicle.label',
-    icon: <MdViewList />
+    icon: <MdViewList />,
   },
 
   [EditorBlockType.Quote]: {
     field: props => <QuoteBlock {...props} />,
-    defaultValue: {quote: '', author: '', image: null, blockStyle: undefined},
+    defaultValue: { quote: '', author: '', image: null, blockStyle: undefined },
     label: 'blocks.quote.label',
-    icon: <MdFormatQuote />
+    icon: <MdFormatQuote />,
   },
 
   [EditorBlockType.LinkPageBreak]: {
@@ -127,17 +138,17 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       richText: createDefaultValue(),
       image: undefined,
       hideButton: false,
-      blockStyle: undefined
+      blockStyle: undefined,
     },
     label: 'blocks.linkPageBreak.label',
-    icon: <MdCoffee />
+    icon: <MdCoffee />,
   },
 
   [EditorBlockType.Embed]: {
     field: props => <EmbedBlock {...props} />,
-    defaultValue: {type: EmbedType.Other, blockStyle: undefined},
+    defaultValue: { type: EmbedType.Other, blockStyle: undefined },
     label: 'blocks.embeds.label',
-    icon: <MdIntegrationInstructions />
+    icon: <MdIntegrationInstructions />,
   },
 
   [EditorBlockType.TeaserList]: {
@@ -145,24 +156,28 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {
       title: null,
       filter: {
-        tagObjects: []
+        tagObjects: [],
       },
       blockStyle: undefined,
       teasers: [],
       skip: 0,
       take: 6,
       sort: TeaserListBlockSort.PublishedAt,
-      teaserType: TeaserType.Article
+      teaserType: TeaserType.Article,
     },
     label: 'blocks.teaserList.label',
-    icon: <MdFilter9Plus />
+    icon: <MdFilter9Plus />,
   },
 
   [EditorBlockType.TeaserGrid1]: {
     field: props => <TeaserGridBlock {...props} />,
-    defaultValue: {numColumns: 1, teasers: [[nanoid(), null]], blockStyle: undefined},
+    defaultValue: {
+      numColumns: 1,
+      teasers: [[nanoid(), null]],
+      blockStyle: undefined,
+    },
     label: 'blocks.teaserGrid1.label',
-    icon: <MdFilter1 />
+    icon: <MdFilter1 />,
   },
 
   [EditorBlockType.TeaserGrid6]: {
@@ -175,12 +190,12 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
         [nanoid(), null],
         [nanoid(), null],
         [nanoid(), null],
-        [nanoid(), null]
+        [nanoid(), null],
       ],
-      blockStyle: undefined
+      blockStyle: undefined,
     },
     label: 'blocks.teaserGrid6.label',
-    icon: <MdFilter6 />
+    icon: <MdFilter6 />,
   },
 
   [EditorBlockType.TeaserSlots]: {
@@ -191,24 +206,24 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       autofillConfig: {
         enabled: false,
         filter: {
-          tags: []
+          tags: [],
         },
         sort: TeaserListBlockSort.PublishedAt,
-        teaserType: TeaserType.Article
+        teaserType: TeaserType.Article,
       },
       slots: [
-        {type: TeaserSlotType.Manual},
-        {type: TeaserSlotType.Manual},
-        {type: TeaserSlotType.Manual},
-        {type: TeaserSlotType.Manual},
-        {type: TeaserSlotType.Manual},
-        {type: TeaserSlotType.Manual}
+        { type: TeaserSlotType.Manual },
+        { type: TeaserSlotType.Manual },
+        { type: TeaserSlotType.Manual },
+        { type: TeaserSlotType.Manual },
+        { type: TeaserSlotType.Manual },
+        { type: TeaserSlotType.Manual },
       ],
       autofillTeasers: [],
-      teasers: []
+      teasers: [],
     },
     label: 'blocks.teaserSlots.label',
-    icon: <MdFilter />
+    icon: <MdFilter />,
   },
 
   [EditorBlockType.TeaserGridFlex]: {
@@ -216,67 +231,93 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {
       flexTeasers: [
         {
-          alignment: {i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false},
-          teaser: null
+          alignment: { i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false },
+          teaser: null,
         },
         {
-          alignment: {i: nanoid(), x: 3, y: 0, w: 5, h: 3, static: false},
-          teaser: null
+          alignment: { i: nanoid(), x: 3, y: 0, w: 5, h: 3, static: false },
+          teaser: null,
         },
         {
-          alignment: {i: nanoid(), x: 3, y: 3, w: 5, h: 3, static: false},
-          teaser: null
+          alignment: { i: nanoid(), x: 3, y: 3, w: 5, h: 3, static: false },
+          teaser: null,
         },
         {
-          alignment: {i: nanoid(), x: 8, y: 0, w: 4, h: 6, static: false},
-          teaser: null
-        }
+          alignment: { i: nanoid(), x: 8, y: 0, w: 4, h: 6, static: false },
+          teaser: null,
+        },
       ],
-      blockStyle: undefined
+      blockStyle: undefined,
     },
     label: 'blocks.teaserFlexGrid.label',
-    icon: <MdViewQuilt />
+    icon: <MdViewQuilt />,
   },
 
   [EditorBlockType.Html]: {
     field: props => <HTMLBlock {...props} />,
-    defaultValue: {html: '', blockStyle: undefined},
+    defaultValue: { html: '', blockStyle: undefined },
     label: 'blocks.html.label',
-    icon: <MdCode />
+    icon: <MdCode />,
   },
 
   [EditorBlockType.Subscribe]: {
     field: props => <SubscribeBlock {...props} />,
-    defaultValue: {blockStyle: undefined},
+    defaultValue: {
+      blockStyle: undefined,
+      memberPlanIds: [],
+      fields: [
+        SubscribeBlockField.FirstName,
+        SubscribeBlockField.Password,
+        SubscribeBlockField.PasswordRepeated,
+        SubscribeBlockField.Address,
+      ],
+    },
     label: 'blocks.subscribe.label',
-    icon: <MdAccountBox />
+    icon: <MdAccountBox />,
   },
 
   [EditorBlockType.Poll]: {
     field: props => <PollBlock {...props} />,
-    defaultValue: {poll: null, blockStyle: undefined},
+    defaultValue: { poll: null, blockStyle: undefined },
     label: 'blocks.poll.label',
-    icon: <MdQueryStats />
+    icon: <MdQueryStats />,
   },
 
   [EditorBlockType.Crowdfunding]: {
     field: props => <CrowdfundingBlock {...props} />,
-    defaultValue: {crowdfunding: null, blockStyle: undefined},
+    defaultValue: { crowdfunding: null, blockStyle: undefined },
     label: 'blocks.crowdfunding.label',
-    icon: <MdMoney />
+    icon: <MdMoney />,
   },
 
   [EditorBlockType.Comment]: {
     field: props => <CommentBlock {...props} />,
-    defaultValue: {filter: {}, comments: [], blockStyle: undefined},
+    defaultValue: { filter: {}, comments: [], blockStyle: undefined },
     label: 'blocks.comment.label',
-    icon: <MdComment />
+    icon: <MdComment />,
   },
 
   [EditorBlockType.Event]: {
     field: props => <EventBlock {...props} />,
-    defaultValue: {filter: {}, events: [], blockStyle: undefined},
+    defaultValue: { filter: {}, events: [], blockStyle: undefined },
     label: 'blocks.event.label',
-    icon: <MdEvent />
-  }
-}
+    icon: <MdEvent />,
+  },
+
+  [EditorBlockType.FlexBlock]: {
+    field: props => <FlexBlock {...props} />,
+    defaultValue: {
+      blocks: [
+        {
+          alignment: { i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false },
+          block: null,
+        },
+      ],
+      blockStyle: undefined,
+    },
+    label: (() => {
+      return 'blocks.flexBlock.label';
+    })(),
+    icon: <MdAccountBox />,
+  },
+};

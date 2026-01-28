@@ -1,45 +1,62 @@
-import styled from '@emotion/styled'
-import {TeaserSlotsAutofillConfigInput, TeaserSlotType} from '@wepublish/editor/api-v2'
-import arrayMove from 'array-move'
-import {ReactNode, useMemo, useState} from 'react'
-import {SortableContainer, SortableElement, SortEnd} from 'react-sortable-hoc'
-import {Button, Drawer, IconButton as RIconButton, Panel as RPanel, Toggle} from 'rsuite'
+import styled from '@emotion/styled';
+import {
+  TeaserSlotsAutofillConfigInput,
+  TeaserSlotType,
+} from '@wepublish/editor/api-v2';
+import arrayMove from 'array-move';
+import { ChangeEvent, ReactNode, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdArticle, MdDelete, MdEdit } from 'react-icons/md';
+import {
+  SortableContainer,
+  SortableElement,
+  SortEnd,
+} from 'react-sortable-hoc';
+import {
+  Button,
+  Drawer,
+  IconButton as RIconButton,
+  Panel as RPanel,
+  Toggle,
+} from 'rsuite';
 
-import {BlockProps} from '../atoms/blockList'
-import {TeaserEditPanel} from '../panel/teaserEditPanel'
-import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
-import {Teaser as TeaserTypeMixed, TeaserSlotsBlockValue} from './types'
-import {TeaserSlotsAutofillControls} from './teaserSlots/teaser-slots-autofill-controls'
-import {useTranslation} from 'react-i18next'
-import {ContentForTeaser} from './teaserGridBlock'
-import {MdArticle, MdDelete, MdEdit} from 'react-icons/md'
-import {IconButtonTooltip, PlaceholderInput} from '../atoms'
+import {
+  IconButtonTooltip,
+  PlaceholderInput,
+  TypographicTextArea,
+} from '../atoms';
+import { BlockProps } from '../atoms/blockList';
+import { TeaserEditPanel } from '../panel/teaserEditPanel';
+import { TeaserSelectAndEditPanel } from '../panel/teaserSelectAndEditPanel';
+import { ContentForTeaser } from './teaserGridBlock';
+import { TeaserSlotsAutofillControls } from './teaserSlots/teaser-slots-autofill-controls';
+import { Teaser as TeaserTypeMixed, TeaserSlotsBlockValue } from './types';
 // import {AdTeaser, AdTeaserWrapper} from '@wepublish/ui/editor'
 
 const IconButton = styled(RIconButton)`
   padding: 5px !important;
-`
+`;
 
-const SortableContainerComponent = styled.div<{numColumns: number}>`
+const SortableContainerComponent = styled.div<{ numColumns: number }>`
   display: grid;
-  grid-template-columns: repeat(${({numColumns}) => `${numColumns}`}, 1fr);
+  grid-template-columns: repeat(${({ numColumns }) => `${numColumns}`}, 1fr);
   grid-gap: 20px;
   user-select: none;
 
   img {
     user-drag: none;
   }
-`
+`;
 
 const Panel = styled(RPanel, {
-  shouldForwardProp: prop => prop !== 'showGrabCursor'
-})<{showGrabCursor: boolean}>`
+  shouldForwardProp: prop => prop !== 'showGrabCursor',
+})<{ showGrabCursor: boolean }>`
   display: grid;
-  cursor: ${({showGrabCursor}) => showGrabCursor && 'grab'};
+  cursor: ${({ showGrabCursor }) => showGrabCursor && 'grab'};
   height: 300px;
   overflow: hidden;
   z-index: 1;
-`
+`;
 
 const Teaser = styled.div`
   position: relative;
@@ -47,27 +64,15 @@ const Teaser = styled.div`
   height: 100%;
   border: 2px dashed #ccc;
   background: #fcfcfc;
-`
+`;
 
 const TeaserWrapper = styled('div', {
-  shouldForwardProp: prop => prop !== 'autofill'
-})<{autofill: boolean}>`
+  shouldForwardProp: prop => prop !== 'autofill',
+})<{ autofill: boolean }>`
   width: 100%;
   height: 100%;
-  opacity: ${({autofill}) => (autofill ? 0.4 : 1)};
-`
-
-const TeaserContentWrapper = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-`
-
-const TeaserImage = styled.img`
-  min-width: 100%;
-  min-height: 100%;
-  object-fit: cover;
-`
+  opacity: ${({ autofill }) => (autofill ? 0.4 : 1)};
+`;
 
 export const TeaserToolbar = styled.div`
   position: absolute;
@@ -81,7 +86,7 @@ export const TeaserToolbar = styled.div`
   padding: 5px;
   border-radius: 3px;
   font-size: 0.875rem;
-`
+`;
 export const SlotToolbar = styled.div`
   position: absolute;
   z-index: 2000;
@@ -94,96 +99,76 @@ export const SlotToolbar = styled.div`
   padding: 5px;
   border-radius: 3px;
   font-size: 0.875rem;
-`
-
-const PeerInfo = styled.div`
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
-const Content = styled.div`
-  margin-bottom: 10px;
-`
-
-const PeerLogo = styled.div`
-  display: flex;
-  margin-bottom: 10px;
-`
-
-const TeaserInfoWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`
-
-const TeaserStyleElement = styled.div`
-  flex-shrink: 0;
-  margin-right: 10px;
-`
-
-const Status = styled.div`
-  flex-shrink: 0;
-`
+`;
 
 const GridItem = SortableElement<TeaserSlotProps>((props: TeaserSlotProps) => {
-  return <TeaserSlot {...props} />
-})
+  return <TeaserSlot {...props} />;
+});
 
 const TeaserSlotsControls = styled.div`
   margin-top: 20px;
-`
+`;
 
 interface GridProps {
-  numColumns: number
-  children?: ReactNode
+  numColumns: number;
+  children?: ReactNode;
 }
 
-export const TeaserSlotsBlockWrapper = styled.div``
+export const TeaserSlotsBlockWrapper = styled.div``;
 
-const Grid = SortableContainer<GridProps>(({children, numColumns}: GridProps) => {
-  return <SortableContainerComponent numColumns={numColumns}>{children}</SortableContainerComponent>
-})
+const Grid = SortableContainer<GridProps>(
+  ({ children, numColumns }: GridProps) => {
+    return (
+      <SortableContainerComponent numColumns={numColumns}>
+        {children}
+      </SortableContainerComponent>
+    );
+  }
+);
 
 export function TeaserSlotsBlock({
   value,
-  onChange: onChangeTop
+  onChange: onChangeTop,
 }: BlockProps<TeaserSlotsBlockValue>) {
   const onChange = (data: any) => {
-    onChangeTop(data)
-  }
-  const numColumns = 3
-  const [editIndex, setEditIndex] = useState(0)
+    onChangeTop(data);
+  };
+  const numColumns = 3;
+  const [editIndex, setEditIndex] = useState(0);
+  const { t } = useTranslation();
 
-  const [isEditModalOpen, setEditModalOpen] = useState(false)
-  const [isChooseModalOpen, setChooseModalOpen] = useState(false)
-  const {autofillConfig, slots, autofillTeasers} = value
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [isChooseModalOpen, setChooseModalOpen] = useState(false);
+  const { autofillConfig, slots, autofillTeasers } = value;
 
-  function handleTeaserLinkChange(index: number, teaser: TeaserTypeMixed | null) {
+  function handleTeaserLinkChange(
+    index: number,
+    teaser: TeaserTypeMixed | null
+  ) {
     onChange({
       ...value,
       slots: Object.assign([], slots, {
-        [index]: {...slots[index], teaser}
-      })
-    })
+        [index]: { ...slots[index], teaser },
+      }),
+    });
   }
 
   function handleSlotTypeChange(index: number, type: TeaserSlotType) {
     onChange({
       ...value,
       slots: Object.assign([], slots, {
-        [index]: {...slots[index], type, teaser: null}
-      })
-    })
+        [index]: { ...slots[index], type, teaser: null },
+      }),
+    });
   }
 
   function handleSlotDelete(index: number) {
-    const newSlots = [...slots]
-    newSlots.splice(index, 1)
+    const newSlots = [...slots];
+    newSlots.splice(index, 1);
     onChange({
       ...value,
-      slots: newSlots
-    })
+      slots: newSlots,
+    });
   }
 
   function handleAddSlot() {
@@ -192,62 +177,84 @@ export function TeaserSlotsBlock({
       slots: [
         ...slots,
         {
-          type: autofillConfig.enabled ? TeaserSlotType.Autofill : TeaserSlotType.Manual,
-          teaser: null
-        }
-      ]
-    })
+          type:
+            autofillConfig.enabled ?
+              TeaserSlotType.Autofill
+            : TeaserSlotType.Manual,
+          teaser: null,
+        },
+      ],
+    });
   }
 
   function handleSortStart() {
-    document.documentElement.style.cursor = 'grabbing'
-    document.body.style.pointerEvents = 'none'
+    document.documentElement.style.cursor = 'grabbing';
+    document.body.style.pointerEvents = 'none';
   }
 
-  function handleSortEnd({oldIndex, newIndex}: SortEnd) {
-    document.documentElement.style.cursor = ''
-    document.body.style.pointerEvents = ''
+  function handleSortEnd({ oldIndex, newIndex }: SortEnd) {
+    document.documentElement.style.cursor = '';
+    document.body.style.pointerEvents = '';
 
     onChange({
       ...value,
-      slots: arrayMove(slots, oldIndex, newIndex)
-    })
+      slots: arrayMove(slots, oldIndex, newIndex),
+    });
   }
 
-  function handleAutofillConfigChange(newAutofillConfig: TeaserSlotsAutofillConfigInput) {
-    let newSlots = slots
+  function handleTitleChange(e: ChangeEvent<HTMLTextAreaElement>) {
+    onChange({
+      ...value,
+      title: e.target.value,
+    });
+  }
+
+  function handleAutofillConfigChange(
+    newAutofillConfig: TeaserSlotsAutofillConfigInput
+  ) {
+    let newSlots = slots;
     if (!autofillConfig.enabled && newAutofillConfig.enabled) {
       newSlots = [
-        ...slots.map(slot => (!slot?.teaser ? {type: TeaserSlotType.Autofill, teaser: null} : slot))
-      ]
+        ...slots.map(slot =>
+          !slot?.teaser ? { type: TeaserSlotType.Autofill, teaser: null } : slot
+        ),
+      ];
     }
     if (autofillConfig.enabled && !newAutofillConfig.enabled) {
       newSlots = [
         ...slots.map(slot =>
-          slot.type === TeaserSlotType.Autofill
-            ? {
-                type: TeaserSlotType.Manual,
-                teaser: null
-              }
-            : slot
-        )
-      ]
+          slot.type === TeaserSlotType.Autofill ?
+            {
+              type: TeaserSlotType.Manual,
+              teaser: null,
+            }
+          : slot
+        ),
+      ];
     }
 
     onChange({
       ...value,
       slots: newSlots,
-      autofillConfig: newAutofillConfig
-    })
+      autofillConfig: newAutofillConfig,
+    });
   }
 
   const autofillSlotsCount = useMemo(
     () => slots.filter(slot => slot.type === TeaserSlotType.Autofill).length,
     [slots]
-  )
+  );
 
   return (
     <TeaserSlotsBlockWrapper>
+      <TypographicTextArea
+        //ref={focusRef}
+        variant="title"
+        align="center"
+        placeholder={t('blocks.title.title')}
+        value={value.title ?? ''}
+        onChange={handleTitleChange}
+      />
       <TeaserSlotsAutofillControls
         config={autofillConfig}
         onConfigChange={handleAutofillConfigChange}
@@ -259,14 +266,17 @@ export function TeaserSlotsBlock({
         axis="xy"
         distance={10}
         onSortStart={handleSortStart}
-        onSortEnd={handleSortEnd}>
-        {slots.map(({type, teaser: manualTeaser}, index) => {
+        onSortEnd={handleSortEnd}
+      >
+        {slots.map(({ type, teaser: manualTeaser }, index) => {
           const autofillIndex = slots
             .slice(0, index)
-            .filter(slot => slot.type === TeaserSlotType.Autofill).length
+            .filter(slot => slot.type === TeaserSlotType.Autofill).length;
           const teaser = (
-            type === TeaserSlotType.Manual ? manualTeaser : autofillTeasers[autofillIndex] ?? null
-          ) as TeaserTypeMixed | null
+            type === TeaserSlotType.Manual ?
+              manualTeaser
+            : (autofillTeasers[autofillIndex] ??
+              null)) as TeaserTypeMixed | null;
 
           return (
             <GridItem
@@ -277,65 +287,75 @@ export function TeaserSlotsBlock({
               showGrabCursor={slots.length !== 1}
               disabled={slots.length === 1}
               onEdit={() => {
-                setEditIndex(index)
-                setEditModalOpen(true)
+                setEditIndex(index);
+                setEditModalOpen(true);
               }}
               onDelete={() => {
-                handleSlotDelete(index)
+                handleSlotDelete(index);
               }}
               onChoose={() => {
-                setEditIndex(index)
-                setChooseModalOpen(true)
+                setEditIndex(index);
+                setChooseModalOpen(true);
               }}
               onRemove={() => {
-                handleTeaserLinkChange(index, null)
+                handleTeaserLinkChange(index, null);
               }}
               slotType={type}
               onSlotTypeChange={type => handleSlotTypeChange(index, type)}
               autofillEnabled={autofillConfig.enabled}
             />
-          )
+          );
         })}
       </Grid>
       <TeaserSlotsControls>
-        <Button onClick={handleAddSlot}>Add slot</Button>
+        <Button onClick={handleAddSlot}>
+          {t('blocks.teaserSlots.addSlot')}
+        </Button>
       </TeaserSlotsControls>
-      <Drawer open={isEditModalOpen} size="sm" onClose={() => setEditModalOpen(false)}>
+      <Drawer
+        open={isEditModalOpen}
+        size="sm"
+        onClose={() => setEditModalOpen(false)}
+      >
         {slots[editIndex] && (
           <TeaserEditPanel
             initialTeaser={slots[editIndex].teaser!}
             onClose={() => setEditModalOpen(false)}
             onConfirm={teaser => {
-              setEditModalOpen(false)
-              handleTeaserLinkChange(editIndex, teaser)
+              setEditModalOpen(false);
+              handleTeaserLinkChange(editIndex, teaser);
             }}
           />
         )}
       </Drawer>
-      <Drawer open={isChooseModalOpen} size="md" onClose={() => setChooseModalOpen(false)}>
+      <Drawer
+        open={isChooseModalOpen}
+        size="md"
+        onClose={() => setChooseModalOpen(false)}
+      >
         <TeaserSelectAndEditPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={teaser => {
-            setChooseModalOpen(false)
-            handleTeaserLinkChange(editIndex, teaser)
+            setChooseModalOpen(false);
+            handleTeaserLinkChange(editIndex, teaser);
           }}
         />
       </Drawer>
     </TeaserSlotsBlockWrapper>
-  )
+  );
 }
 
 export interface TeaserSlotProps {
-  teaser?: TeaserTypeMixed | null
-  showGrabCursor: boolean
-  numColumns: number
-  onEdit: () => void
-  onDelete: () => void
-  onChoose: () => void
-  onRemove: () => void
-  onSlotTypeChange: (slotType: TeaserSlotType) => void
-  slotType: TeaserSlotType
-  autofillEnabled: boolean
+  teaser?: TeaserTypeMixed | null;
+  showGrabCursor: boolean;
+  numColumns: number;
+  onEdit: () => void;
+  onDelete: () => void;
+  onChoose: () => void;
+  onRemove: () => void;
+  onSlotTypeChange: (slotType: TeaserSlotType) => void;
+  slotType: TeaserSlotType;
+  autofillEnabled: boolean;
 }
 
 export function TeaserSlot({
@@ -348,50 +368,81 @@ export function TeaserSlot({
   onRemove,
   onSlotTypeChange,
   slotType,
-  autofillEnabled
+  autofillEnabled,
 }: TeaserSlotProps) {
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
-  const manualOverride = slotType === TeaserSlotType.Manual
+  const manualOverride = slotType === TeaserSlotType.Manual;
   const toggleSlotType = () =>
-    onSlotTypeChange(manualOverride ? TeaserSlotType.Autofill : TeaserSlotType.Manual)
+    onSlotTypeChange(
+      manualOverride ? TeaserSlotType.Autofill : TeaserSlotType.Manual
+    );
 
   return (
-    <Panel bodyFill showGrabCursor={showGrabCursor}>
+    <Panel
+      bodyFill
+      showGrabCursor={showGrabCursor}
+    >
       <Teaser>
         <TeaserWrapper autofill={!manualOverride}>
-          {manualOverride && !teaser && <PlaceholderInput onAddClick={onChoose} />}
+          {manualOverride && !teaser && (
+            <PlaceholderInput onAddClick={onChoose} />
+          )}
           {/*{!manualOverride && <span>Autofilled</span>}*/}
-          {teaser && <ContentForTeaser teaser={teaser} numColumns={numColumns} />}
+          {teaser && (
+            <ContentForTeaser
+              teaser={teaser}
+              numColumns={numColumns}
+            />
+          )}
         </TeaserWrapper>
         <TeaserToolbar>
           {manualOverride && teaser && (
             <>
               <IconButtonTooltip caption={t('blocks.flexTeaser.chooseTeaser')}>
-                <IconButton icon={<MdArticle />} onClick={onChoose} appearance={'subtle'} />
+                <IconButton
+                  icon={<MdArticle />}
+                  onClick={onChoose}
+                  appearance={'subtle'}
+                />
               </IconButtonTooltip>
               <IconButtonTooltip caption={t('blocks.flexTeaser.editTeaser')}>
-                <IconButton icon={<MdEdit />} onClick={onEdit} appearance={'subtle'} />
+                <IconButton
+                  icon={<MdEdit />}
+                  onClick={onEdit}
+                  appearance={'subtle'}
+                />
               </IconButtonTooltip>
               <IconButtonTooltip caption={t('blocks.flexTeaser.deleteTeaser')}>
-                <IconButton icon={<MdDelete />} onClick={onRemove} appearance={'subtle'} />
+                <IconButton
+                  icon={<MdDelete />}
+                  onClick={onRemove}
+                  appearance={'subtle'}
+                />
               </IconButtonTooltip>
             </>
           )}
           {autofillEnabled && (
             <>
               <span>{manualOverride ? 'Manual' : 'Auto'}</span>
-              <Toggle onClick={toggleSlotType} checked={manualOverride} />
+              <Toggle
+                onClick={toggleSlotType}
+                checked={manualOverride}
+              />
             </>
           )}
         </TeaserToolbar>
 
         <SlotToolbar>
           <IconButtonTooltip caption={t('blocks.flexTeaser.deleteTeaser')}>
-            <IconButton icon={<MdDelete />} onClick={onDelete} appearance={'subtle'} />
+            <IconButton
+              icon={<MdDelete />}
+              onClick={onDelete}
+              appearance={'subtle'}
+            />
           </IconButtonTooltip>
         </SlotToolbar>
       </Teaser>
     </Panel>
-  )
+  );
 }

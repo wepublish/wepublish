@@ -1,22 +1,24 @@
-import {PrismaClient} from '@prisma/client'
-import {DynamicModule} from '@nestjs/common'
-import {PrismaModule} from '@wepublish/nest-modules'
-import {FakeMailProvider, MailsModule} from '@wepublish/mail/api'
+import { PrismaClient } from '@prisma/client';
+import { DynamicModule } from '@nestjs/common';
+import { PrismaModule } from '@wepublish/nest-modules';
+import { FakeMailProvider, MailsModule } from '@wepublish/mail/api';
 import {
   MolliePaymentProvider,
+  PaymentMethodModule,
   PaymentProvider,
-  PaymentsModule,
   PayrexxFactory,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   StripeCheckoutPaymentProvider,
-  StripePaymentProvider
-} from '@wepublish/payment/api'
-import bodyParser from 'body-parser'
-import {ConfigModule, ConfigService} from '@nestjs/config'
+  StripePaymentProvider,
+} from '@wepublish/payment/api';
+import bodyParser from 'body-parser';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
-export function registerPrismaModule(prismaClient: PrismaClient): DynamicModule {
-  return PrismaModule.forTest(prismaClient)
+export function registerPrismaModule(
+  prismaClient: PrismaClient
+): DynamicModule {
+  return PrismaModule.forTest(prismaClient);
 }
 
 export function registerMailsModule(): DynamicModule {
@@ -27,17 +29,17 @@ export function registerMailsModule(): DynamicModule {
       mailProvider: new FakeMailProvider({
         id: 'fakeMail',
         name: 'Fake Mail',
-        fromAddress: 'fakeMail@wepublish.media'
-      })
-    })
-  })
+        fromAddress: 'fakeMail@wepublish.media',
+      }),
+    }),
+  });
 }
 
-export function registerPaymentsModule(): DynamicModule {
-  return PaymentsModule.registerAsync({
+export function registerPaymentMethodModule(): DynamicModule {
+  return PaymentMethodModule.registerAsync({
     imports: [ConfigModule, PrismaModule],
     useFactory: (config: ConfigService, prisma: PrismaClient) => {
-      const paymentProviders: PaymentProvider[] = []
+      const paymentProviders: PaymentProvider[] = [];
 
       if (
         config.get('STRIPE_SECRET_KEY') &&
@@ -51,9 +53,11 @@ export function registerPaymentsModule(): DynamicModule {
             offSessionPayments: false,
             secretKey: config.getOrThrow('STRIPE_SECRET_KEY'),
             webhookEndpointSecret: config.getOrThrow('STRIPE_SECRET_KEY'),
-            incomingRequestHandler: bodyParser.raw({type: 'application/json'}),
+            incomingRequestHandler: bodyParser.raw({
+              type: 'application/json',
+            }),
             methods: ['card'],
-            prisma
+            prisma,
           }),
           new StripePaymentProvider({
             id: 'stripe',
@@ -61,11 +65,13 @@ export function registerPaymentsModule(): DynamicModule {
             offSessionPayments: true,
             secretKey: config.getOrThrow('STRIPE_SECRET_KEY'),
             webhookEndpointSecret: config.getOrThrow('STRIPE_SECRET_KEY'),
-            incomingRequestHandler: bodyParser.raw({type: 'application/json'}),
+            incomingRequestHandler: bodyParser.raw({
+              type: 'application/json',
+            }),
             methods: ['card'],
-            prisma
+            prisma,
           })
-        )
+        );
       }
 
       if (
@@ -76,8 +82,8 @@ export function registerPaymentsModule(): DynamicModule {
         const payrexxFactory = new PayrexxFactory({
           baseUrl: 'https://api.payrexx.com/v1.0/',
           instance: config.getOrThrow('PAYREXX_INSTANCE_NAME'),
-          secret: config.getOrThrow('PAYREXX_API_SECRET')
-        })
+          secret: config.getOrThrow('PAYREXX_API_SECRET'),
+        });
         paymentProviders.push(
           new PayrexxPaymentProvider({
             id: 'payrexx',
@@ -90,9 +96,9 @@ export function registerPaymentsModule(): DynamicModule {
             pm: ['postfinance_card', 'postfinance_efinance', 'twint', 'paypal'],
             vatRate: 7.7,
             incomingRequestHandler: bodyParser.json(),
-            prisma
+            prisma,
           })
-        )
+        );
         paymentProviders.push(
           new PayrexxSubscriptionPaymentProvider({
             id: 'payrexx-subscription',
@@ -102,9 +108,9 @@ export function registerPaymentsModule(): DynamicModule {
             instanceAPISecret: config.getOrThrow('PAYREXX_API_SECRET'),
             incomingRequestHandler: bodyParser.json(),
             webhookSecret: config.getOrThrow('PAYREXX_WEBHOOK_SECRET'),
-            prisma
+            prisma,
           })
-        )
+        );
       }
       if (config.get('MOLLIE_API_SECRET')) {
         paymentProviders.push(
@@ -112,17 +118,18 @@ export function registerPaymentsModule(): DynamicModule {
             id: 'mollie',
             name: 'Mollie',
             offSessionPayments: true,
-            incomingRequestHandler: bodyParser.urlencoded({extended: true}),
+            incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
             apiKey: config.getOrThrow('MOLLIE_API_SECRET'),
             webhookEndpointSecret: 'secret',
             apiBaseUrl: 'https://wepublish.ch',
-            prisma
+            prisma,
           })
-        )
+        );
       }
 
-      return {paymentProviders}
+      return { paymentProviders };
     },
-    inject: [ConfigService, PrismaClient]
-  })
+    inject: [ConfigService, PrismaClient],
+    global: true,
+  });
 }

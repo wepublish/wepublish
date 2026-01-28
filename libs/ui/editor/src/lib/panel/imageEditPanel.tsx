@@ -1,15 +1,16 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
-  ImageListDocument,
   FullImageFragment,
+  getApiClientV2,
+  ImageListDocument,
   useImageQuery,
   useUpdateImageMutation,
-  useUploadImageMutation
-} from '@wepublish/editor/api'
-import imageCompression from 'browser-image-compression'
-import prettyBytes from 'pretty-bytes'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
+  useUploadImageMutation,
+} from '@wepublish/editor/api-v2';
+import imageCompression from 'browser-image-compression';
+import prettyBytes from 'pretty-bytes';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Button,
   Drawer,
@@ -18,178 +19,206 @@ import {
   Panel as RPanel,
   Schema,
   TagPicker,
-  toaster
-} from 'rsuite'
+  toaster,
+} from 'rsuite';
 
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {Point} from '../atoms/draggable'
-import {FocalPointInput} from '../atoms/focalPointInput'
-import {ImageMetaData} from '../atoms/imageMetaData'
+import { DescriptionList, DescriptionListItem } from '../atoms/descriptionList';
+import { Point } from '../atoms/draggable';
+import { FocalPointInput } from '../atoms/focalPointInput';
+import { ImageMetaData } from '../atoms/imageMetaData';
 import {
   createCheckedPermissionComponent,
   PermissionControl,
-  useAuthorisation
-} from '../atoms/permissionControl'
-import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
-import {ImageBlockValue} from '../blocks'
+  useAuthorisation,
+} from '../atoms/permissionControl';
+import { ImageBlockValue } from '../blocks';
+import {
+  getImgMinSizeToCompress,
+  getOperationNameFromDocument,
+} from '../utility';
 
-const {ControlLabel, Control, Group} = RForm
+const { ControlLabel, Control, Group } = RForm;
 
 const Panel = styled(RPanel)`
   background-color: dark;
-`
+`;
 
 const Form = styled(RForm)`
   height: 100%;
-`
+`;
 
 export interface ImageEditPanelProps {
-  readonly block?: ImageBlockValue
-  readonly id?: string
-  readonly file?: File
-  readonly imageMetaData?: ImageMetaData
+  readonly block?: ImageBlockValue;
+  readonly id?: string;
+  readonly file?: File;
+  readonly imageMetaData?: ImageMetaData;
 
-  onClose?(): void
-  onSave?(image: FullImageFragment, block: ImageBlockValue | undefined): void
+  onClose?(): void;
+  onSave?(image: FullImageFragment, block: ImageBlockValue | undefined): void;
 }
 
-function ImageEditPanel({id, file, block, onClose, onSave, imageMetaData}: ImageEditPanelProps) {
-  const [imageBlock, setImageBlock] = useState<ImageBlockValue | undefined>(block)
+function ImageEditPanel({
+  id,
+  file,
+  block,
+  onClose,
+  onSave,
+  imageMetaData,
+}: ImageEditPanelProps) {
+  const [imageBlock, setImageBlock] = useState<ImageBlockValue | undefined>(
+    block
+  );
 
-  const [filename, setFilename] = useState('')
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [tags, setTags] = useState<string[]>([])
+  const [filename, setFilename] = useState('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
 
-  const [source, setSource] = useState('')
-  const [link, setLink] = useState('')
-  const [license, setLicense] = useState('')
+  const [source, setSource] = useState('');
+  const [link, setLink] = useState('');
+  const [license, setLicense] = useState('');
 
-  const [fileSize, setFileSize] = useState(0)
-  const [extension, setExtension] = useState('')
+  const [fileSize, setFileSize] = useState(0);
+  const [extension, setExtension] = useState('');
 
-  const [originalImageURL, setOriginalImageURL] = useState<string>()
+  const [originalImageURL, setOriginalImageURL] = useState<string>();
 
-  const [imageURL, setImageURL] = useState('')
-  const [imageWidth, setImageWidth] = useState(0)
-  const [imageHeight, setImageHeight] = useState(0)
+  const [imageURL, setImageURL] = useState('');
+  const [imageWidth, setImageWidth] = useState(0);
+  const [imageHeight, setImageHeight] = useState(0);
 
-  const [createdAt, setCreatedAt] = useState<string>()
-  const [updatedAt, setUpdatedAt] = useState<string>()
+  const [createdAt, setCreatedAt] = useState<string>();
+  const [updatedAt, setUpdatedAt] = useState<string>();
 
-  const [focalPoint, setFocalPoint] = useState<Point>()
+  const [focalPoint, setFocalPoint] = useState<Point>();
 
-  const {data, error: loadingError} = useImageQuery({
-    variables: {id: id!},
+  const client = getApiClientV2();
+  const { data, error: loadingError } = useImageQuery({
+    client,
+    variables: { id: id! },
     fetchPolicy: 'network-only',
-    skip: id === undefined
-  })
+    skip: id === undefined,
+  });
 
-  const [updateImage, {loading: isUpdating, error: savingError}] = useUpdateImageMutation()
+  const [updateImage, { loading: isUpdating, error: savingError }] =
+    useUpdateImageMutation({ client });
 
-  const [uploadImage, {loading: isUploading, error: uploadError}] = useUploadImageMutation({
-    refetchQueries: [getOperationNameFromDocument(ImageListDocument)]
-  })
+  const [uploadImage, { loading: isUploading, error: uploadError }] =
+    useUploadImageMutation({
+      client,
+      refetchQueries: [getOperationNameFromDocument(ImageListDocument)],
+    });
 
-  const [isLoading, setLoading] = useState(true)
-  const isAuthorized = useAuthorisation('CAN_CREATE_IMAGE')
-  const isDisabled = isLoading || isUpdating || isUploading || !isAuthorized
-  const isUpload = file !== undefined
-  const {t} = useTranslation()
+  const [isLoading, setLoading] = useState(true);
+  const isAuthorized = useAuthorisation('CAN_CREATE_IMAGE');
+  const isDisabled = isLoading || isUpdating || isUploading || !isAuthorized;
+  const isUpload = file !== undefined;
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (file) {
-      const reader = new FileReader()
-      const [filename, ...extensions] = file.name.split('.')
-      const extension = `.${extensions.join('.')}`
-      const image = new Image()
+      const reader = new FileReader();
+      const [filename, ...extensions] = file.name.split('.');
+      const extension = `.${extensions.join('.')}`;
+      const image = new Image();
 
       const handleReaderLoad = function () {
-        image.src = reader.result as string
-      }
+        image.src = reader.result as string;
+      };
 
       const handleImageLoad = function () {
-        setCreatedAt(undefined)
-        setUpdatedAt(undefined)
+        setCreatedAt(undefined);
+        setUpdatedAt(undefined);
 
-        setFilename(filename)
-        setFileSize(file!.size)
-        setExtension(extension)
+        setFilename(filename);
+        setFileSize(file!.size);
+        setExtension(extension);
 
-        setOriginalImageURL(undefined)
-        setImageURL(reader.result as string)
-        setImageWidth(image.width)
-        setImageHeight(image.height)
-        setFocalPoint({x: 0.5, y: 0.5})
+        setOriginalImageURL(undefined);
+        setImageURL(reader.result as string);
+        setImageWidth(image.width);
+        setImageHeight(image.height);
+        setFocalPoint({ x: 0.5, y: 0.5 });
 
         if (imageMetaData) {
-          setTitle(imageMetaData.title)
-          setDescription(imageMetaData.description)
-          setLicense(imageMetaData.licence)
-          setLink(imageMetaData.link)
-          setSource(imageMetaData.source)
+          setTitle(imageMetaData.title);
+          setDescription(imageMetaData.description);
+          setLicense(imageMetaData.licence);
+          setLink(imageMetaData.link);
+          setSource(imageMetaData.source);
         }
 
-        setLoading(false)
-      }
+        setLoading(false);
+      };
 
-      reader.addEventListener('load', handleReaderLoad)
-      image.addEventListener('load', handleImageLoad)
+      reader.addEventListener('load', handleReaderLoad);
+      image.addEventListener('load', handleImageLoad);
 
-      reader.readAsDataURL(file)
+      reader.readAsDataURL(file);
 
       return () => {
-        reader.removeEventListener('load', handleReaderLoad)
-        image.removeEventListener('load', handleImageLoad)
-      }
+        reader.removeEventListener('load', handleReaderLoad);
+        image.removeEventListener('load', handleImageLoad);
+      };
     } else if (data) {
-      const {image} = data
+      const { image } = data;
 
       if (image) {
-        setCreatedAt(image.createdAt)
-        setUpdatedAt(image.modifiedAt)
+        setCreatedAt(image.createdAt);
+        setUpdatedAt(image.modifiedAt);
 
-        setFilename(image.filename || '')
-        setFileSize(image.fileSize)
-        setExtension(image.extension)
+        setFilename(image.filename || '');
+        setFileSize(image.fileSize);
+        setExtension(image.extension);
 
-        setTitle(image.title ?? '')
-        setDescription(image.description ?? '')
-        setTags(image.tags)
+        setTitle(image.title ?? '');
+        setDescription(image.description ?? '');
+        setTags(image.tags);
 
-        setSource(image.source ?? '')
-        setLink(image.link ?? '')
-        setLicense(image.license ?? '')
+        setSource(image.source ?? '');
+        setLink(image.link ?? '');
+        setLicense(image.license ?? '');
 
-        setOriginalImageURL(image.url ?? '')
-        setImageURL(image.mediumURL ?? '')
-        setImageWidth(image.width)
-        setImageHeight(image.height)
-        setFocalPoint(image.focalPoint ?? undefined)
-        setLoading(false)
+        setOriginalImageURL(image.url ?? '');
+        setImageURL(image.mediumURL ?? '');
+        setImageWidth(image.width);
+        setImageHeight(image.height);
+        setFocalPoint(image.focalPoint ?? undefined);
+        setLoading(false);
       } else {
         toaster.push(
-          <Message type="error" showIcon closable duration={0}>
+          <Message
+            type="error"
+            showIcon
+            closable
+            duration={0}
+          >
             {t('images.panels.notFound')}
           </Message>
-        )
+        );
       }
     }
 
     return () => {
       /* do nothing */
-    }
-  }, [file, data])
+    };
+  }, [file, data]);
 
   useEffect(() => {
-    const error = loadingError?.message ?? savingError?.message ?? uploadError?.message
+    const error =
+      loadingError?.message ?? savingError?.message ?? uploadError?.message;
     if (error)
       toaster.push(
-        <Message type="error" showIcon closable duration={0}>
+        <Message
+          type="error"
+          showIcon
+          closable
+          duration={0}
+        >
           {error}
         </Message>
-      )
-  }, [loadingError, savingError, uploadError])
+      );
+  }, [loadingError, savingError, uploadError]);
 
   async function handleSave() {
     const commonInput = {
@@ -202,33 +231,39 @@ function ImageEditPanel({id, file, block, onClose, onSave, imageMetaData}: Image
       link: link || undefined,
       license: license || undefined,
 
-      focalPoint
-    }
+      focalPoint,
+    };
 
     if (isUpload) {
-      const optimizedImage: File = await resizeImage(file!)
-      const {data} = await uploadImage({
+      const optimizedImage: File = await resizeImage(file!);
+      const { data } = await uploadImage({
         variables: {
-          input: {file: optimizedImage!, ...commonInput}
-        }
-      })
+          file: optimizedImage!,
+          ...commonInput,
+        },
+      });
 
       if (data?.uploadImage) {
-        onSave?.(data.uploadImage, imageBlock)
+        onSave?.(data.uploadImage, imageBlock);
       }
     } else {
-      const {data} = await updateImage({
-        variables: {id: id!, input: commonInput}
-      })
+      const { data } = await updateImage({
+        variables: { id: id!, ...commonInput },
+      });
 
       toaster.push(
-        <Message type="success" showIcon closable duration={2000}>
+        <Message
+          type="success"
+          showIcon
+          closable
+          duration={2000}
+        >
           {t('images.panels.imageUpdated')}
         </Message>
-      )
+      );
 
       if (data?.updateImage) {
-        onSave?.(data.updateImage, imageBlock)
+        onSave?.(data.updateImage, imageBlock);
       }
     }
   }
@@ -238,16 +273,16 @@ function ImageEditPanel({id, file, block, onClose, onSave, imageMetaData}: Image
    * @param file
    */
   async function resizeImage(file: File): Promise<File> {
-    const imgMinSizeToCompress: number = getImgMinSizeToCompress()
+    const imgMinSizeToCompress: number = getImgMinSizeToCompress();
     // only resize image if larger than IMG_MIN_SIZE_TO_COMPRESS env variable
     // ATTENTION: The MAX_UPLOAD_SIZE of the Media server must allow images of this size
     if (!willImageResize(file, imgMinSizeToCompress)) {
-      return file // do not resize
+      return file; // do not resize
     }
     const options = {
-      maxSizeMB: imgMinSizeToCompress // the max size in MB, defaults to 2MB
-    }
-    return imageCompression(file, options)
+      maxSizeMB: imgMinSizeToCompress, // the max size in MB, defaults to 2MB
+    };
+    return imageCompression(file, options);
   }
 
   /**
@@ -257,36 +292,46 @@ function ImageEditPanel({id, file, block, onClose, onSave, imageMetaData}: Image
    * @param imgMinSizeToResize
    */
   function willImageResize(file: File, imgMinSizeToResize: number) {
-    const originalFileSize: number = file.size / (1024 * 1024)
+    const originalFileSize: number = file.size / (1024 * 1024);
     if (originalFileSize > imgMinSizeToResize) {
-      return true
+      return true;
     }
-    return false
+    return false;
   }
 
   // Schema used for form validation
-  const {StringType} = Schema.Types
+  const { StringType } = Schema.Types;
   const validationModel = Schema.Model({
-    link: StringType().isURL(t('errorMessages.invalidUrlErrorMessage'))
-  })
+    link: StringType().isURL(t('errorMessages.invalidUrlErrorMessage')),
+  });
 
   return (
     <Form
       fluid
       model={validationModel}
-      onSubmit={validationPassed => validationPassed && handleSave()}>
+      onSubmit={validationPassed => validationPassed && handleSave()}
+    >
       <Drawer.Header>
         <Drawer.Title>
-          {isUpload ? t('images.panels.uploadImage') : t('images.panels.editImage')}
+          {isUpload ?
+            t('images.panels.uploadImage')
+          : t('images.panels.editImage')}
         </Drawer.Title>
 
         <Drawer.Actions>
           <PermissionControl qualifyingPermissions={['CAN_CREATE_IMAGE']}>
-            <Button appearance={'primary'} disabled={isDisabled} type="submit">
+            <Button
+              appearance={'primary'}
+              disabled={isDisabled}
+              type="submit"
+            >
               {isUpload ? t('images.panels.upload') : t('save')}
             </Button>
           </PermissionControl>
-          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          <Button
+            appearance={'subtle'}
+            onClick={() => onClose?.()}
+          >
             {isUpload ? t('images.panels.cancel') : t('images.panels.close')}
           </Button>
         </Drawer.Actions>
@@ -314,16 +359,23 @@ function ImageEditPanel({id, file, block, onClose, onSave, imageMetaData}: Image
                   {extension}
                 </DescriptionListItem>
                 <DescriptionListItem label={t('images.panels.dimension')}>
-                  {t('images.panels.imageDimension', {imageWidth, imageHeight})}
+                  {t('images.panels.imageDimension', {
+                    imageWidth,
+                    imageHeight,
+                  })}
                 </DescriptionListItem>
                 {createdAt && (
                   <DescriptionListItem label={t('images.panels.created')}>
-                    {t('images.panels.createdAt', {createdAt: new Date(createdAt)})}
+                    {t('images.panels.createdAt', {
+                      createdAt: new Date(createdAt),
+                    })}
                   </DescriptionListItem>
                 )}
                 {updatedAt && (
                   <DescriptionListItem label={t('images.panels.updated')}>
-                    {t('images.panels.updatedAt', {updatedAt: new Date(updatedAt)})}
+                    {t('images.panels.updatedAt', {
+                      updatedAt: new Date(updatedAt),
+                    })}
                   </DescriptionListItem>
                 )}
                 <DescriptionListItem label={t('images.panels.fileSize')}>
@@ -336,7 +388,11 @@ function ImageEditPanel({id, file, block, onClose, onSave, imageMetaData}: Image
 
                 {originalImageURL && (
                   <DescriptionListItem label={t('images.panels.link')}>
-                    <a href={originalImageURL} target="_blank" rel="noreferrer">
+                    <a
+                      href={originalImageURL}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       {originalImageURL}
                     </a>
                   </DescriptionListItem>
@@ -378,7 +434,9 @@ function ImageEditPanel({id, file, block, onClose, onSave, imageMetaData}: Image
                     name="linkUrl"
                     value={imageBlock.linkUrl}
                     disabled={isDisabled}
-                    onChange={(value: string) => setImageBlock({...imageBlock, linkUrl: value})}
+                    onChange={(value: string) =>
+                      setImageBlock({ ...imageBlock, linkUrl: value })
+                    }
                   />
                 </Group>
               )}
@@ -390,7 +448,7 @@ function ImageEditPanel({id, file, block, onClose, onSave, imageMetaData}: Image
                   creatable
                   disabled={isDisabled}
                   value={tags}
-                  data={tags.map(tag => ({value: tag, label: tag}))}
+                  data={tags.map(tag => ({ value: tag, label: tag }))}
                   onChange={value => setTags(value ?? [])}
                 />
               </Group>
@@ -430,13 +488,13 @@ function ImageEditPanel({id, file, block, onClose, onSave, imageMetaData}: Image
         )}
       </Drawer.Body>
     </Form>
-  )
+  );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_IMAGE',
   'CAN_GET_IMAGES',
   'CAN_DELETE_IMAGE',
-  'CAN_CREATE_IMAGE'
-])(ImageEditPanel)
-export {CheckedPermissionComponent as ImageEditPanel}
+  'CAN_CREATE_IMAGE',
+])(ImageEditPanel);
+export { CheckedPermissionComponent as ImageEditPanel };

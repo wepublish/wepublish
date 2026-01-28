@@ -1,28 +1,40 @@
 import {
   CommentRevision,
   CommentRevisionUpdateInput,
-  FullCommentFragment
-} from '@wepublish/editor/api'
-import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdAttachFile, MdEdit, MdExpandLess, MdExpandMore, MdTag} from 'react-icons/md'
-import {Link} from 'react-router-dom'
-import {Col, FlexboxGrid, Form, Grid, IconButton, Panel, Row} from 'rsuite'
+  FullCommentFragment,
+} from '@wepublish/editor/api';
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  MdAttachFile,
+  MdEdit,
+  MdExpandLess,
+  MdExpandMore,
+  MdTag,
+} from 'react-icons/md';
+import { Link } from 'react-router-dom';
+import { Col, FlexboxGrid, Form, Grid, IconButton, Panel, Row } from 'rsuite';
 
-import {RichTextBlock} from '../../blocks/richTextBlock/rich-text-block'
-import {RichTextBlockValue} from '../../blocks/types'
-import {humanReadableCommentState} from './commentStateDropdown'
-import {CreateCommentBtn} from './createCommentBtn'
+import { RichTextBlock } from '../../blocks/richTextBlock/rich-text-block';
+import { RichTextBlockValue } from '../../blocks/types';
+import { humanReadableCommentState } from './commentStateDropdown';
+import { CreateCommentBtn } from './createCommentBtn';
 
-export function CommentRevisionView({revision}: {revision: CommentRevision | undefined}) {
-  const {t} = useTranslation()
+export function CommentRevisionView({
+  revision,
+}: {
+  revision: CommentRevision | undefined;
+}) {
+  const { t } = useTranslation();
   if (!revision) {
     return (
       <h6>
         <MdAttachFile />
-        <span style={{marginLeft: '5px'}}>{t('commentPreview.noContent')}</span>
+        <span style={{ marginLeft: '5px' }}>
+          {t('commentPreview.noContent')}
+        </span>
       </h6>
-    )
+    );
   }
   return (
     <>
@@ -31,20 +43,28 @@ export function CommentRevisionView({revision}: {revision: CommentRevision | und
       {revision.lead && <p>{revision.lead}</p>}
 
       {revision.text && (
-        <div style={{marginTop: '5px'}}>
-          <RichTextBlock value={revision.text} onChange={console.log} displayOnly />
+        <div style={{ marginTop: '5px' }}>
+          <RichTextBlock
+            value={revision.text}
+            onChange={console.log}
+            displayOnly
+          />
         </div>
       )}
     </>
-  )
+  );
 }
 
-function CommentTags({comment}: {comment: FullCommentFragment | undefined}) {
-  const {t} = useTranslation()
-  const tags = comment?.tags
+function CommentTags({
+  comment,
+}: {
+  comment: FullCommentFragment | undefined;
+}) {
+  const { t } = useTranslation();
+  const tags = comment?.tags;
   return (
     <>
-      <h6 style={{marginBottom: '5px'}}>{t('tags.overview.title')}</h6>
+      <h6 style={{ marginBottom: '5px' }}>{t('tags.overview.title')}</h6>
       {tags &&
         tags.map(tag => (
           <div key={tag.id}>
@@ -53,13 +73,19 @@ function CommentTags({comment}: {comment: FullCommentFragment | undefined}) {
         ))}
       {(!tags || !tags.length) && <p>{t('commentPreview.noTags')}</p>}
     </>
-  )
+  );
 }
 
-function CommentSource({comment}: {comment: FullCommentFragment | undefined}) {
-  const {t} = useTranslation()
-  const source = comment?.source
-  const label = <h6 style={{marginBottom: '5px'}}>{t('commentPreview.source')}</h6>
+function CommentSource({
+  comment,
+}: {
+  comment: FullCommentFragment | undefined;
+}) {
+  const { t } = useTranslation();
+  const source = comment?.source;
+  const label = (
+    <h6 style={{ marginBottom: '5px' }}>{t('commentPreview.source')}</h6>
+  );
 
   if (source) {
     return (
@@ -67,75 +93,84 @@ function CommentSource({comment}: {comment: FullCommentFragment | undefined}) {
         {label}
         {source}
       </>
-    )
+    );
   }
   return (
     <>
       {label}
       {t('commentPreview.noSource')}
     </>
-  )
+  );
 }
 
 export interface RevisionProps {
-  revision?: CommentRevisionUpdateInput
-  setRevision?: Dispatch<SetStateAction<CommentRevisionUpdateInput | undefined>>
+  revision?: CommentRevisionUpdateInput;
+  setRevision?: Dispatch<
+    SetStateAction<CommentRevisionUpdateInput | undefined>
+  >;
 }
 
 interface CommentPreviewProps extends RevisionProps {
-  comment: FullCommentFragment
-  originComment?: FullCommentFragment
+  comment: FullCommentFragment;
+  originComment?: FullCommentFragment;
 }
 
 export function CommentPreview({
   comment,
   originComment,
   revision,
-  setRevision
+  setRevision,
 }: CommentPreviewProps) {
-  const {t} = useTranslation()
-  const revisions = comment.revisions
-  const lastRevision = revisions?.length ? revisions[revisions.length - 1] : undefined
-  const expanded = useMemo(() => comment.id === originComment?.id, [comment.id, originComment?.id])
+  const { t } = useTranslation();
+  const revisions = comment.revisions;
+  const lastRevision =
+    revisions?.length ? revisions[revisions.length - 1] : undefined;
+  const expanded = useMemo(
+    () => comment.id === originComment?.id,
+    [comment.id, originComment?.id]
+  );
   const displayComment = useMemo(
     () => (expanded ? originComment || comment : comment),
     [originComment, comment, expanded]
-  )
-  const [panelExpanded, setPanelExpanded] = useState<boolean>(!!expanded)
+  );
+  const [panelExpanded, setPanelExpanded] = useState<boolean>(!!expanded);
 
   useEffect(() => {
     if (!expanded) {
-      return
+      return;
     }
-    const element = document.getElementById(`comment-${comment.id}`)
+    const element = document.getElementById(`comment-${comment.id}`);
     if (!element) {
-      return
+      return;
     }
-    element.scrollIntoView({behavior: 'smooth'})
-  }, [originComment])
+    element.scrollIntoView({ behavior: 'smooth' });
+  }, [originComment]);
 
   function getPanelHeader() {
-    const createdAtReadable = new Date(displayComment.createdAt).toLocaleString('de-CH', {
-      timeZone: 'europe/zurich'
-    })
+    const createdAtReadable = new Date(displayComment.createdAt).toLocaleString(
+      'de-CH',
+      {
+        timeZone: 'europe/zurich',
+      }
+    );
 
     if (displayComment.guestUsername) {
       return `${displayComment.guestUsername} (${t(
         'commentHistory.guestUser'
-      )}) | ${createdAtReadable}`
+      )}) | ${createdAtReadable}`;
     }
 
-    const user = displayComment.user
-    let userName
+    const user = displayComment.user;
+    let userName;
     if (!user) {
-      userName = t('commentHistory.unknownUser')
+      userName = t('commentHistory.unknownUser');
     } else {
-      userName = user?.firstName ? `${user.firstName} ${user.name}` : user.name
+      userName = user?.firstName ? `${user.firstName} ${user.name}` : user.name;
     }
 
     return `${userName} | ${createdAtReadable} | ${t(
       humanReadableCommentState(displayComment.state)
-    )}`
+    )}`;
   }
 
   return (
@@ -153,10 +188,15 @@ export function CommentPreview({
       }
       defaultExpanded={!!expanded}
       onSelect={() => setPanelExpanded(!panelExpanded)}
-      style={expanded ? {border: `1px solid black`, backgroundColor: '#f7f9fa'} : {}}>
+      style={
+        expanded ?
+          { border: `1px solid black`, backgroundColor: '#f7f9fa' }
+        : {}
+      }
+    >
       {!expanded && (
-        <Grid style={{maxWidth: '100%'}}>
-          <Row style={{maxWidth: '100%'}}>
+        <Grid style={{ maxWidth: '100%' }}>
+          <Row style={{ maxWidth: '100%' }}>
             {/* title, lead, text */}
             <Col xs={18}>
               <CommentRevisionView revision={lastRevision} />
@@ -166,7 +206,7 @@ export function CommentPreview({
               <div>
                 <CommentTags comment={displayComment} />
               </div>
-              <div style={{marginTop: '20px'}}>
+              <div style={{ marginTop: '20px' }}>
                 <CommentSource comment={displayComment} />
               </div>
             </Col>
@@ -174,18 +214,20 @@ export function CommentPreview({
         </Grid>
       )}
       {expanded && (
-        <Grid style={{maxWidth: '100%'}}>
+        <Grid style={{ maxWidth: '100%' }}>
           <Row>
             {/* comment title */}
             <Col xs={24}>
-              <Form.ControlLabel>{t('commentEditView.title')}</Form.ControlLabel>
+              <Form.ControlLabel>
+                {t('commentEditView.title')}
+              </Form.ControlLabel>
               <Form.Control
                 name="commentTitle"
                 value={revision?.title || ''}
                 placeholder={t('commentEditView.title')}
                 onChange={(title: string) => {
                   if (setRevision) {
-                    setRevision(oldRevision => ({...oldRevision, title}))
+                    setRevision(oldRevision => ({ ...oldRevision, title }));
                   }
                 }}
               />
@@ -199,24 +241,32 @@ export function CommentPreview({
                 placeholder={t('commentEditView.lead')}
                 onChange={(lead: string) => {
                   if (setRevision) {
-                    setRevision(oldRevision => ({...oldRevision, lead}))
+                    setRevision(oldRevision => ({ ...oldRevision, lead }));
                   }
                 }}
               />
             </Col>
             {/* comment text */}
-            <Col xs={24} style={{marginTop: '20px'}}>
-              <Form.ControlLabel>{t('commentEditView.comment')}</Form.ControlLabel>
+            <Col
+              xs={24}
+              style={{ marginTop: '20px' }}
+            >
+              <Form.ControlLabel>
+                {t('commentEditView.comment')}
+              </Form.ControlLabel>
 
-              <Panel bordered style={{backgroundColor: 'white'}}>
+              <Panel
+                bordered
+                style={{ backgroundColor: 'white' }}
+              >
                 <RichTextBlock
                   value={revision?.text || []}
                   onChange={text => {
                     if (setRevision) {
                       setRevision(oldRevision => ({
                         ...oldRevision,
-                        text: text as RichTextBlockValue['richText']
-                      }))
+                        text: text as RichTextBlockValue['richText'],
+                      }));
                     }
                   }}
                 />
@@ -227,7 +277,10 @@ export function CommentPreview({
       )}
 
       {/* actions */}
-      <Col xs={24} style={{textAlign: 'center', marginTop: '20px', marginBottom: '20px'}}>
+      <Col
+        xs={24}
+        style={{ textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}
+      >
         <CreateCommentBtn
           itemID={comment.itemID}
           itemType={comment.itemType}
@@ -237,12 +290,16 @@ export function CommentPreview({
         />
         {!expanded && (
           <Link to={`/comments/edit/${comment.id}`}>
-            <IconButton style={{marginLeft: '10px'}} icon={<MdEdit />} appearance="ghost">
+            <IconButton
+              style={{ marginLeft: '10px' }}
+              icon={<MdEdit />}
+              appearance="ghost"
+            >
               {t('commentPreview.editComment')}
             </IconButton>
           </Link>
         )}
       </Col>
     </Panel>
-  )
+  );
 }

@@ -1,135 +1,137 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   DateFilterComparison,
-  FullMemberPlanFragment,
   FullPaymentMethodFragment,
   FullUserFragment,
   SubscriptionDeactivationReason,
   SubscriptionFilter,
+} from '@wepublish/editor/api';
+import {
+  FullMemberPlanFragment,
+  getApiClientV2,
   useMemberPlanListQuery,
-  usePaymentMethodListQuery
-} from '@wepublish/editor/api'
-import React, {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdClose} from 'react-icons/md'
-import {Button, DateRangePicker, Form as RForm, SelectPicker} from 'rsuite'
+  usePaymentMethodListQuery,
+} from '@wepublish/editor/api-v2';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdClose } from 'react-icons/md';
+import { Button, DateRangePicker, Form as RForm, SelectPicker } from 'rsuite';
 
-import {ALL_PAYMENT_PERIODICITIES} from '../../utility'
-import {UserSearch} from './userSearch'
+import { ALL_PAYMENT_PERIODICITIES } from '../../utility';
+import { UserSearch } from './userSearch';
 
-const {Group, ControlLabel} = RForm
+const { Group } = RForm;
 
 const Form = styled(RForm)`
   display: flex;
   flex-wrap: wrap;
   margin-top: 15px;
-`
+`;
 
 const CloseIcon = styled(MdClose)`
   margin-right: 5px;
-`
+`;
 
 const FormGroup = styled(Group)`
   margin-right: 15px;
   margin-top: 15px;
-`
-
-const FormControlLabelMarginLeft = styled(ControlLabel)`
-  margin-left: 10px;
-`
+`;
 
 export interface SubscriptionListFilterProps {
-  filter: SubscriptionFilter
-  isLoading: boolean
-  onSetFilter(filter: SubscriptionFilter): void
+  filter: SubscriptionFilter;
+  isLoading: boolean;
+  onSetFilter(filter: SubscriptionFilter): void;
 }
 
 export function SubscriptionListFilter({
   filter,
   isLoading,
-  onSetFilter
+  onSetFilter,
 }: SubscriptionListFilterProps) {
-  const {t} = useTranslation()
-  const [resetFilterKey, setResetFilterkey] = useState<string>(new Date().getTime().toString())
-  const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
-  const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
-  const [user, setUser] = useState<FullUserFragment | undefined | null>(undefined)
+  const { t } = useTranslation();
+  const [resetFilterKey, setResetFilterkey] = useState<string>(
+    new Date().getTime().toString()
+  );
+  const [paymentMethods, setPaymentMethods] = useState<
+    FullPaymentMethodFragment[]
+  >([]);
+  const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([]);
+  const [user, setUser] = useState<FullUserFragment | undefined | null>(
+    undefined
+  );
 
-  /**
-   * fetch payment methods
-   */
+  const client = getApiClientV2();
   const {
     data: paymentMethodData,
     loading: isPaymentMethodLoading,
-    error: paymentMethodLoadError
+    error: paymentMethodLoadError,
   } = usePaymentMethodListQuery({
-    fetchPolicy: 'network-only'
-  })
+    client,
+    fetchPolicy: 'network-only',
+  });
 
   const formInputStyle = {
     marginRight: '15px',
     marginTop: '0',
-    marginBottom: '10px'
-  }
+    marginBottom: '10px',
+  };
 
-  /**
-   * fetch member plans
-   */
   const {
     data: memberPlanData,
     loading: isMemberPlanLoading,
-    error: loadMemberPlanError
+    error: loadMemberPlanError,
   } = useMemberPlanListQuery({
+    client,
     fetchPolicy: 'network-only',
     variables: {
-      take: 200
-    }
-  })
+      take: 200,
+    },
+  });
 
   const isDisabled =
     isLoading ||
     isMemberPlanLoading ||
     isPaymentMethodLoading ||
     loadMemberPlanError !== undefined ||
-    paymentMethodLoadError !== undefined
+    paymentMethodLoadError !== undefined;
 
   /**
    * watchers
    */
   useEffect(() => {
     if (paymentMethodData?.paymentMethods) {
-      setPaymentMethods(paymentMethodData.paymentMethods)
+      setPaymentMethods(paymentMethodData.paymentMethods);
     }
-  }, [paymentMethodData?.paymentMethods])
+  }, [paymentMethodData?.paymentMethods]);
 
   useEffect(() => {
     if (memberPlanData?.memberPlans?.nodes) {
-      setMemberPlans(memberPlanData.memberPlans.nodes)
+      setMemberPlans(memberPlanData.memberPlans.nodes);
     }
-  }, [memberPlanData?.memberPlans])
+  }, [memberPlanData?.memberPlans]);
 
   /**
    * helper functions to manage filter
    */
   function isAnyFilterSet(): boolean {
     for (const [filterKey, filterValue] of Object.entries(filter)) {
-      if (filterKey && filterValue !== undefined) return true
+      if (filterKey && filterValue !== undefined) return true;
     }
-    return false
+    return false;
   }
 
   function resetFilter(): void {
-    onSetFilter({})
-    setResetFilterkey(new Date().getTime().toString())
+    onSetFilter({});
+    setResetFilterkey(new Date().getTime().toString());
   }
 
   const updateFilter = (value: SubscriptionFilter) => {
     const newFilter = {
       ...filter,
-      ...value
-    }
-    onSetFilter(newFilter)
-  }
+      ...value,
+    };
+    onSetFilter(newFilter);
+  };
 
   /**
    * UI helper functions
@@ -137,16 +139,20 @@ export function SubscriptionListFilter({
   function resetFilterView(): JSX.Element {
     if (!isAnyFilterSet()) {
       // eslint-disable-next-line react/jsx-no-useless-fragment
-      return <></>
+      return <></>;
     }
     return (
       <FormGroup>
-        <Button onClick={() => resetFilter()} color="red" appearance="ghost">
+        <Button
+          onClick={() => resetFilter()}
+          color="red"
+          appearance="ghost"
+        >
           <CloseIcon />
           {t('subscriptionList.filter.reset')}
         </Button>
       </FormGroup>
-    )
+    );
   }
 
   return (
@@ -158,10 +164,10 @@ export function SubscriptionListFilter({
             resetFilterKey={resetFilterKey}
             user={user}
             onUpdateUser={user => {
-              setUser(user)
+              setUser(user);
               updateFilter({
-                userID: user?.id
-              })
+                userID: user?.id,
+              });
             }}
             placeholder={t('subscriptionList.filter.searchPlaceholder')}
           />
@@ -172,9 +178,11 @@ export function SubscriptionListFilter({
             placeholder={t('userSubscriptionEdit.selectMemberPlan')}
             block
             disabled={isDisabled}
-            data={memberPlans.map(mp => ({value: mp.id, label: mp.name}))}
+            data={memberPlans.map(mp => ({ value: mp.id, label: mp.name }))}
             onChange={value =>
-              updateFilter({memberPlanID: memberPlans.find(mp => mp.id === value)?.id})
+              updateFilter({
+                memberPlanID: memberPlans.find(mp => mp.id === value)?.id,
+              })
             }
           />
         </Group>
@@ -186,9 +194,11 @@ export function SubscriptionListFilter({
             disabled={isDisabled}
             data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
               value: pp,
-              label: t(`memberPlanList.paymentPeriodicity.${pp}`)
+              label: t(`memberPlanList.paymentPeriodicity.${pp}`),
             }))}
-            onChange={value => updateFilter({paymentPeriodicity: value || undefined})}
+            onChange={value =>
+              updateFilter({ paymentPeriodicity: value || undefined })
+            }
           />
         </Group>
         <Group style={formInputStyle}>
@@ -197,9 +207,11 @@ export function SubscriptionListFilter({
             placeholder={t('userSubscriptionEdit.paymentMethod')}
             block
             disabled={isDisabled}
-            data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
+            data={paymentMethods.map(pm => ({ value: pm.id, label: pm.name }))}
             onChange={value =>
-              updateFilter({paymentMethodID: paymentMethods.find(pm => pm.id === value)?.id})
+              updateFilter({
+                paymentMethodID: paymentMethods.find(pm => pm.id === value)?.id,
+              })
             }
           />
         </Group>
@@ -213,16 +225,18 @@ export function SubscriptionListFilter({
                 updateFilter({
                   startsAtFrom: {
                     date: value[0]?.toISOString(),
-                    comparison: DateFilterComparison.GreaterThan
+                    comparison: DateFilterComparison.GreaterThan,
                   },
                   startsAtTo: {
                     date: value[1]?.toISOString(),
-                    comparison: DateFilterComparison.LowerThan
-                  }
-                })
+                    comparison: DateFilterComparison.LowerThan,
+                  },
+                });
               }
             }}
-            onClean={() => updateFilter({startsAtFrom: undefined, startsAtTo: undefined})}
+            onClean={() =>
+              updateFilter({ startsAtFrom: undefined, startsAtTo: undefined })
+            }
             placement="auto"
           />
         </Group>
@@ -234,16 +248,16 @@ export function SubscriptionListFilter({
             data={[
               {
                 value: 'true',
-                label: t('yes')
+                label: t('yes'),
               },
               {
                 value: 'false',
-                label: t('no')
-              }
+                label: t('no'),
+              },
             ]}
             block
             placement="auto"
-            onChange={value => updateFilter({autoRenew: value === 'true'})}
+            onChange={value => updateFilter({ autoRenew: value === 'true' })}
           />
         </Group>
         <Group style={formInputStyle}>
@@ -254,24 +268,26 @@ export function SubscriptionListFilter({
             data={[
               {
                 value: SubscriptionDeactivationReason.None,
-                label: t('subscriptionList.filter.reasonNone')
+                label: t('subscriptionList.filter.reasonNone'),
               },
               {
                 value: SubscriptionDeactivationReason.UserSelfDeactivated,
-                label: t('subscriptionList.filter.reasonUserSelfDeactivated')
+                label: t('subscriptionList.filter.reasonUserSelfDeactivated'),
               },
               {
                 value: SubscriptionDeactivationReason.InvoiceNotPaid,
-                label: t('subscriptionList.filter.reasonInvoiceNotPaid')
+                label: t('subscriptionList.filter.reasonInvoiceNotPaid'),
               },
               {
                 value: SubscriptionDeactivationReason.UserReplacedSubscription,
-                label: t('subscriptionList.filter.reasonUserReplacedSubscription')
-              }
+                label: t(
+                  'subscriptionList.filter.reasonUserReplacedSubscription'
+                ),
+              },
             ]}
             block
             placement="auto"
-            onChange={value => updateFilter({deactivationReason: value})}
+            onChange={value => updateFilter({ deactivationReason: value })}
           />
         </Group>
         <Group style={formInputStyle}>
@@ -285,17 +301,20 @@ export function SubscriptionListFilter({
                 updateFilter({
                   deactivationDateFrom: {
                     date: value[0]?.toISOString(),
-                    comparison: DateFilterComparison.GreaterThan
+                    comparison: DateFilterComparison.GreaterThan,
                   },
                   deactivationDateTo: {
                     date: value[1]?.toISOString(),
-                    comparison: DateFilterComparison.LowerThan
-                  }
-                })
+                    comparison: DateFilterComparison.LowerThan,
+                  },
+                });
               }
             }}
             onClean={() =>
-              updateFilter({deactivationDateFrom: undefined, deactivationDateTo: undefined})
+              updateFilter({
+                deactivationDateFrom: undefined,
+                deactivationDateTo: undefined,
+              })
             }
           />
         </Group>
@@ -310,17 +329,20 @@ export function SubscriptionListFilter({
                 updateFilter({
                   cancellationDateFrom: {
                     date: value[0]?.toISOString(),
-                    comparison: DateFilterComparison.GreaterThan
+                    comparison: DateFilterComparison.GreaterThan,
                   },
                   cancellationDateTo: {
                     date: value[1]?.toISOString(),
-                    comparison: DateFilterComparison.LowerThan
-                  }
-                })
+                    comparison: DateFilterComparison.LowerThan,
+                  },
+                });
               }
             }}
             onClean={() =>
-              updateFilter({cancellationDateFrom: undefined, cancellationDateTo: undefined})
+              updateFilter({
+                cancellationDateFrom: undefined,
+                cancellationDateTo: undefined,
+              })
             }
           />
         </Group>
@@ -335,16 +357,18 @@ export function SubscriptionListFilter({
                 updateFilter({
                   paidUntilFrom: {
                     date: value[0]?.toISOString(),
-                    comparison: DateFilterComparison.GreaterThan
+                    comparison: DateFilterComparison.GreaterThan,
                   },
                   paidUntilTo: {
                     date: value[1]?.toISOString(),
-                    comparison: DateFilterComparison.LowerThan
-                  }
-                })
+                    comparison: DateFilterComparison.LowerThan,
+                  },
+                });
               }
             }}
-            onClean={() => updateFilter({paidUntilFrom: undefined, paidUntilTo: undefined})}
+            onClean={() =>
+              updateFilter({ paidUntilFrom: undefined, paidUntilTo: undefined })
+            }
           />
         </Group>
         <Group style={formInputStyle}>
@@ -356,20 +380,24 @@ export function SubscriptionListFilter({
             data={[
               {
                 value: 'true',
-                label: t('yes')
+                label: t('yes'),
               },
               {
                 value: 'false',
-                label: t('no')
-              }
+                label: t('no'),
+              },
             ]}
             block
             placement="auto"
-            onChange={value => updateFilter({extendable: value === null ? null : value === 'true'})}
+            onChange={value =>
+              updateFilter({
+                extendable: value === null ? null : value === 'true',
+              })
+            }
           />
         </Group>
       </Form>
       {resetFilterView()}
     </>
-  )
+  );
 }

@@ -1,10 +1,10 @@
-import {Module} from '@nestjs/common'
-import {PrismaModule, URLAdapterModule} from '@wepublish/nest-modules'
-import {ImageFetcherModule} from '@wepublish/image/api'
-import {ImportPeerArticleService} from './import-peer-article.service'
-import {PeerModule} from '@wepublish/peering/api'
-import {ImportPeerArticleResolver} from './import-peer-article.resolver'
-import {ArticleModule} from '@wepublish/article/api'
+import { Module } from '@nestjs/common';
+import { PrismaModule, URLAdapterModule } from '@wepublish/nest-modules';
+import { ImageFetcherModule } from '@wepublish/image/api';
+import { ImportPeerArticleService } from './import-peer-article.service';
+import { PeerModule } from '@wepublish/peering/api';
+import { ImportPeerArticleResolver } from './import-peer-article.resolver';
+import { ArticleModule } from '@wepublish/article/api';
 
 @Module({
   imports: [
@@ -13,9 +13,9 @@ import {ArticleModule} from '@wepublish/article/api'
     ImageFetcherModule,
     PeerModule,
     ImageFetcherModule,
-    URLAdapterModule
+    URLAdapterModule,
   ],
   providers: [ImportPeerArticleService, ImportPeerArticleResolver],
-  exports: [ImportPeerArticleService]
+  exports: [ImportPeerArticleService],
 })
 export class ImportPeerArticleModule {}

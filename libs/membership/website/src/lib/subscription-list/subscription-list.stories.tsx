@@ -1,40 +1,35 @@
-import {ApolloError} from '@apollo/client'
-import {action} from '@storybook/addon-actions'
-import {Meta} from '@storybook/react'
-import {SubscriptionList} from './subscription-list'
+import { ApolloError } from '@apollo/client';
+import { action } from '@storybook/addon-actions';
+import { Meta } from '@storybook/react';
+import { SubscriptionList } from './subscription-list';
 import {
-  Currency,
   Exact,
   FullInvoiceFragment,
   FullSubscriptionFragment,
-  PaymentPeriodicity
-} from '@wepublish/website/api'
-import {mockImage} from '@wepublish/storybook/mocks'
+  PaymentPeriodicity,
+} from '@wepublish/website/api';
+import { mockMemberPlan, mockPaymentMethod } from '@wepublish/storybook/mocks';
 
 export default {
   component: SubscriptionList,
-  title: 'Components/SubscriptionList'
-} as Meta
+  title: 'Components/SubscriptionList',
+} as Meta;
 
 const subscription = {
   id: '1234-1234',
+  isActive: true,
   startsAt: '2023-01-01',
   paidUntil: '2032-01-01',
   autoRenew: true,
   monthlyAmount: 250000,
   paymentPeriodicity: PaymentPeriodicity.Quarterly,
   url: 'https://example.com',
-  paymentMethod: {},
-  memberPlan: {
-    image: mockImage(),
-    name: 'Foobar Memberplan',
-    extendable: true,
-    currency: Currency.Chf
-  },
+  paymentMethod: mockPaymentMethod(),
+  memberPlan: mockMemberPlan(),
   extendable: true,
   canExtend: true,
-  properties: []
-} as Exact<FullSubscriptionFragment>
+  properties: [],
+} as Exact<FullSubscriptionFragment>;
 
 const invoice = {
   id: '4321-4321',
@@ -45,45 +40,50 @@ const invoice = {
   total: 500,
   items: [],
   subscription,
-  subscriptionID: subscription.id
-} as Exact<FullInvoiceFragment>
+  subscriptionID: subscription.id,
+} as Exact<FullInvoiceFragment>;
 
 export const Default = {
   args: {
     data: {
       subscriptions: [
-        {...subscription, id: '1'},
-        {...subscription, id: '2'},
-        {...subscription, id: '3'},
-        {...subscription, id: '4'}
-      ]
+        { ...subscription, id: '1' },
+        { ...subscription, id: '2' },
+        { ...subscription, id: '3' },
+        { ...subscription, id: '4' },
+      ],
     },
     invoices: {
       data: {
         invoices: [
-          {...invoice, id: '1', subscriptionID: '1'},
+          { ...invoice, id: '1', subscriptionID: '1' },
           {
             ...invoice,
             id: '2',
             subscriptionID: '2',
-            paidAt: new Date('2023-04-04').toISOString()
+            paidAt: new Date('2023-04-04').toISOString(),
           },
           {
             ...invoice,
             id: '3',
             subscriptionID: '3',
-            canceledAt: new Date('2023-04-04').toISOString()
+            canceledAt: new Date('2023-04-04').toISOString(),
           },
-          {...invoice, id: '4', subscriptionID: '4', paidAt: new Date('2023-04-04').toISOString()}
-        ]
-      }
+          {
+            ...invoice,
+            id: '4',
+            subscriptionID: '4',
+            paidAt: new Date('2023-04-04').toISOString(),
+          },
+        ],
+      },
     },
     subscribeUrl: '/mitmachen',
     onPay: action('onPay'),
     onCancel: action('onCancel'),
-    onExtend: action('onExtend')
-  }
-}
+    onExtend: action('onExtend'),
+  },
+};
 
 export const WithPayrexxSubscriptionsWorkaround = {
   ...Default,
@@ -95,37 +95,37 @@ export const WithPayrexxSubscriptionsWorkaround = {
           ...subscription,
           id: '1',
           paymentMethod: {
-            slug: 'payrexx-subscription'
-          }
+            slug: 'payrexx-subscription',
+          },
         },
         {
           ...subscription,
           id: '2',
           paymentMethod: {
-            slug: 'payrexx-subscription'
-          }
-        }
-      ]
-    }
-  }
-}
+            slug: 'payrexx-subscription',
+          },
+        },
+      ],
+    },
+  },
+};
 
 export const Empty = {
   args: {
     ...Default.args,
     data: {
-      subscriptions: []
-    }
-  }
-}
+      subscriptions: [],
+    },
+  },
+};
 
 export const WithLoading = {
   args: {
     ...Default.args,
     data: undefined,
-    loading: true
-  }
-}
+    loading: true,
+  },
+};
 
 export const WithError = {
   args: {
@@ -133,21 +133,21 @@ export const WithError = {
     data: undefined,
     loading: false,
     error: new ApolloError({
-      errorMessage: 'Foobar'
-    })
-  }
-}
+      errorMessage: 'Foobar',
+    }),
+  },
+};
 
 export const WithoutImage = {
   args: {
     ...Default.args,
     data: {
       subscriptions: [
-        {...subscription, id: '1'},
-        {...subscription, id: '2', image: null},
-        {...subscription, id: '3'},
-        {...subscription, id: '4', image: null}
-      ]
-    }
-  }
-}
+        { ...subscription, id: '1' },
+        { ...subscription, id: '2', image: null },
+        { ...subscription, id: '3' },
+        { ...subscription, id: '4', image: null },
+      ],
+    },
+  },
+};

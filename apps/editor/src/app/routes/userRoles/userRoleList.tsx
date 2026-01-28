@@ -1,8 +1,9 @@
 import {
   FullUserRoleFragment,
+  getApiClientV2,
   useDeleteUserRoleMutation,
-  useUserRoleListQuery
-} from '@wepublish/editor/api'
+  useUserRoleListQuery,
+} from '@wepublish/editor/api-v2';
 import {
   createCheckedPermissionComponent,
   DescriptionList,
@@ -17,69 +18,85 @@ import {
   PermissionControl,
   Table,
   TableWrapper,
-  UserRoleEditPanel
-} from '@wepublish/ui/editor'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
-import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
-import {Button, Drawer, Input, InputGroup, Modal, Table as RTable} from 'rsuite'
-import {RowDataType} from 'rsuite-table'
+  UserRoleEditPanel,
+} from '@wepublish/ui/editor';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdAdd, MdDelete, MdSearch } from 'react-icons/md';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import {
+  Button,
+  Drawer,
+  Input,
+  InputGroup,
+  Modal,
+  Table as RTable,
+} from 'rsuite';
+import { RowDataType } from 'rsuite-table';
 
-const {Column, HeaderCell, Cell: RCell} = RTable
+const { Column, HeaderCell, Cell: RCell } = RTable;
 
 function UserRoleList() {
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
-  const location = useLocation()
-  const params = useParams()
-  const navigate = useNavigate()
-  const {id} = params
+  const location = useLocation();
+  const params = useParams();
+  const navigate = useNavigate();
+  const { id } = params;
 
-  const isCreateRoute = location.pathname.includes('create')
-  const isEditRoute = location.pathname.includes('edit')
+  const isCreateRoute = location.pathname.includes('create');
+  const isEditRoute = location.pathname.includes('edit');
 
-  const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute || isCreateRoute)
+  const [isEditModalOpen, setEditModalOpen] = useState(
+    isEditRoute || isCreateRoute
+  );
 
-  const [editID, setEditID] = useState<string | undefined>(isEditRoute ? id : undefined)
+  const [editID, setEditID] = useState<string | undefined>(
+    isEditRoute ? id : undefined
+  );
 
-  const [filter, setFilter] = useState('')
+  const [filter, setFilter] = useState('');
 
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
-  const [currentUserRole, setCurrentUserRole] = useState<FullUserRoleFragment>()
+  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([]);
+  const [currentUserRole, setCurrentUserRole] =
+    useState<FullUserRoleFragment>();
 
+  const client = getApiClientV2();
   const {
     data,
     refetch,
-    loading: isLoading
+    loading: isLoading,
   } = useUserRoleListQuery({
+    client,
     variables: {
       filter: filter || undefined,
-      take: 200
+      take: 200,
     },
-    fetchPolicy: 'network-only'
-  })
+    fetchPolicy: 'network-only',
+  });
 
-  const [deleteUserRole, {loading: isDeleting}] = useDeleteUserRoleMutation()
+  const [deleteUserRole, { loading: isDeleting }] = useDeleteUserRoleMutation({
+    client,
+  });
 
   useEffect(() => {
     if (isCreateRoute) {
-      setEditID(undefined)
-      setEditModalOpen(true)
+      setEditID(undefined);
+      setEditModalOpen(true);
     }
 
     if (isEditRoute) {
-      setEditID(id)
-      setEditModalOpen(true)
+      setEditID(id);
+      setEditModalOpen(true);
     }
-  }, [location])
+  }, [location]);
 
   useEffect(() => {
     if (data?.userRoles?.nodes) {
-      setUserRoles(data.userRoles.nodes)
+      setUserRoles(data.userRoles.nodes);
     }
-  }, [data?.userRoles])
+  }, [data?.userRoles]);
 
   return (
     <>
@@ -90,7 +107,11 @@ function UserRoleList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_USER_ROLE']}>
           <ListViewActions>
             <Link to="/userroles/create">
-              <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
+              <IconButton
+                appearance="primary"
+                disabled={isLoading}
+                icon={<MdAdd />}
+              >
                 {t('userRoles.overview.newUserRole')}
               </IconButton>
             </Link>
@@ -98,7 +119,10 @@ function UserRoleList() {
         </PermissionControl>
         <ListViewFilterArea>
           <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
+            <Input
+              value={filter}
+              onChange={value => setFilter(value)}
+            />
             <InputGroup.Addon>
               <MdSearch />
             </InputGroup.Addon>
@@ -107,8 +131,16 @@ function UserRoleList() {
       </ListViewContainer>
 
       <TableWrapper>
-        <Table fillHeight loading={isLoading} data={userRoles}>
-          <Column width={200} align="left" resizable>
+        <Table
+          fillHeight
+          loading={isLoading}
+          data={userRoles}
+        >
+          <Column
+            width={200}
+            align="left"
+            resizable
+          >
             <HeaderCell>{t('userRoles.overview.name')}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<FullUserRoleFragment>) => (
@@ -118,15 +150,25 @@ function UserRoleList() {
               )}
             </RCell>
           </Column>
-          <Column width={400} align="left" resizable>
+          <Column
+            width={400}
+            align="left"
+            resizable
+          >
             <HeaderCell>{t('userRoles.overview.description')}</HeaderCell>
             <RCell dataKey="description" />
           </Column>
-          <Column width={100} align="center" fixed="right">
+          <Column
+            width={100}
+            align="center"
+            fixed="right"
+          >
             <HeaderCell>{t('userRoles.overview.action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<FullUserRoleFragment>) => (
-                <PermissionControl qualifyingPermissions={['CAN_DELETE_USER_ROLE']}>
+                <PermissionControl
+                  qualifyingPermissions={['CAN_DELETE_USER_ROLE']}
+                >
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       disabled={rowData.systemRole}
@@ -136,8 +178,8 @@ function UserRoleList() {
                       size="sm"
                       icon={<MdDelete />}
                       onClick={() => {
-                        setConfirmationDialogOpen(true)
-                        setCurrentUserRole(rowData as FullUserRoleFragment)
+                        setConfirmationDialogOpen(true);
+                        setCurrentUserRole(rowData as FullUserRoleFragment);
                       }}
                     />
                   </IconButtonTooltip>
@@ -151,25 +193,29 @@ function UserRoleList() {
       <Drawer
         open={isEditModalOpen}
         onClose={() => {
-          setEditModalOpen(false)
-          navigate('/userroles')
+          setEditModalOpen(false);
+          navigate('/userroles');
         }}
-        size="sm">
+        size="sm"
+      >
         <UserRoleEditPanel
           id={editID!}
           onClose={() => {
-            setEditModalOpen(false)
-            navigate('/userroles')
+            setEditModalOpen(false);
+            navigate('/userroles');
           }}
           onSave={() => {
-            setEditModalOpen(false)
-            refetch()
-            navigate('/userroles')
+            setEditModalOpen(false);
+            refetch();
+            navigate('/userroles');
           }}
         />
       </Drawer>
 
-      <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
+      <Modal
+        open={isConfirmationDialogOpen}
+        onClose={() => setConfirmationDialogOpen(false)}
+      >
         <Modal.Header>
           <Modal.Title>{t('userRoles.panels.deleteUserRole')}</Modal.Title>
         </Modal.Header>
@@ -186,30 +232,34 @@ function UserRoleList() {
           <Button
             disabled={isDeleting}
             onClick={async () => {
-              if (!currentUserRole) return
+              if (!currentUserRole) return;
 
               await deleteUserRole({
-                variables: {id: currentUserRole.id}
-              })
+                variables: { id: currentUserRole.id },
+              });
 
-              setConfirmationDialogOpen(false)
-              refetch()
+              setConfirmationDialogOpen(false);
+              refetch();
             }}
-            color="red">
+            color="red"
+          >
             {t('userRoles.panels.confirm')}
           </Button>
-          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
+          <Button
+            onClick={() => setConfirmationDialogOpen(false)}
+            appearance="subtle"
+          >
             {t('userRoles.panels.cancel')}
           </Button>
         </Modal.Footer>
       </Modal>
     </>
-  )
+  );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_USER_ROLES',
   'CAN_GET_USER_ROLE',
   'CAN_CREATE_USER_ROLE',
-  'CAN_DELETE_USER_ROLE'
-])(UserRoleList)
-export {CheckedPermissionComponent as UserRoleList}
+  'CAN_DELETE_USER_ROLE',
+])(UserRoleList);
+export { CheckedPermissionComponent as UserRoleList };

@@ -1,23 +1,23 @@
-import {Meta} from '@storybook/react'
-import {ImageBlock} from './image-block'
-import {mockImage, mockImageBlock} from '@wepublish/storybook/mocks'
+import { Meta } from '@storybook/react';
+import { ImageBlock } from './image-block';
+import { mockImage, mockImageBlock } from '@wepublish/storybook/mocks';
 
 export default {
   component: ImageBlock,
-  title: 'Blocks/Image'
-} as Meta
+  title: 'Blocks/Image',
+} as Meta;
 
 export const Default = {
-  args: mockImageBlock()
-}
+  args: mockImageBlock(),
+};
 
 export const WithoutCaption = {
   ...Default,
   args: {
     ...Default.args,
-    caption: ''
-  }
-}
+    caption: '',
+  },
+};
 
 export const WithoutSource = {
   ...Default,
@@ -25,15 +25,15 @@ export const WithoutSource = {
     ...Default.args,
     image: {
       ...mockImage(),
-      source: ''
-    }
-  }
-}
+      source: '',
+    },
+  },
+};
 
 export const WithLink = {
   ...Default,
   args: {
     ...Default.args,
-    linkUrl: 'https://example.com'
-  }
-}
+    linkUrl: 'https://example.com',
+  },
+};

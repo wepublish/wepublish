@@ -1,7 +1,7 @@
-import {Prisma, PrismaClient} from '@prisma/client'
-import {CanUpdatePeerProfile} from '@wepublish/permissions'
-import {Context} from '../../context'
-import {authorise} from '../permissions'
+import { Prisma, PrismaClient } from '@prisma/client';
+import { CanUpdatePeerProfile } from '@wepublish/permissions';
+import { Context } from '../../context';
+import { authorise } from '../permissions';
 
 export const upsertPeerProfile = async (
   input:
@@ -11,21 +11,22 @@ export const upsertPeerProfile = async (
   authenticate: Context['authenticate'],
   peerProfile: PrismaClient['peerProfile']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanUpdatePeerProfile, roles)
+  const { roles } = authenticate();
+  authorise(CanUpdatePeerProfile, roles);
 
-  const oldProfile = await peerProfile.findFirst({})
+  const oldProfile = await peerProfile.findFirst({});
 
-  const data = oldProfile
-    ? await peerProfile.update({
+  const data =
+    oldProfile ?
+      await peerProfile.update({
         where: {
-          id: oldProfile.id
+          id: oldProfile.id,
         },
-        data: input
+        data: input,
       })
     : await peerProfile.create({
-        data: input as Prisma.PeerProfileUncheckedCreateInput
-      })
+        data: input as Prisma.PeerProfileUncheckedCreateInput,
+      });
 
-  return {...data, hostURL}
-}
+  return { ...data, hostURL };
+};

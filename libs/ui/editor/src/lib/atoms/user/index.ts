@@ -1,3 +1,3 @@
-export * from './editUserPassword'
-export * from './resetUserPasswordForm'
-export * from './userSubscriptionsList'
+export * from './editUserPassword';
+export * from './resetUserPasswordForm';
+export * from './userSubscriptionsList';

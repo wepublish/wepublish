@@ -1,7 +1,8 @@
-const {composePlugins, withNx} = require('@nx/webpack')
+const { composePlugins, withNx } = require('@nx/webpack');
 
 const swcDefaultConfig =
-  require('@nestjs/cli/lib/compiler/defaults/swc-defaults').swcDefaultsFactory().swcOptions
+  require('@nestjs/cli/lib/compiler/defaults/swc-defaults').swcDefaultsFactory()
+    .swcOptions;
 
 module.exports = composePlugins(withNx(), config => {
   config.module.rules.push({
@@ -9,8 +10,8 @@ module.exports = composePlugins(withNx(), config => {
     exclude: /node_modules/,
     use: {
       loader: 'swc-loader',
-      options: swcDefaultConfig
-    }
-  })
-  return config
-})
+      options: swcDefaultConfig,
+    },
+  });
+  return config;
+});

@@ -1,11 +1,11 @@
-import {registerEnumType} from '@nestjs/graphql'
+import { registerEnumType } from '@nestjs/graphql';
 
 export enum SortOrder {
   Ascending = 'Ascending',
-  Descending = 'Descending'
+  Descending = 'Descending',
 }
 
-registerEnumType(SortOrder, {name: 'SortOrder'})
+registerEnumType(SortOrder, { name: 'SortOrder' });
 
 export const graphQLSortOrderToPrisma = (sortOrder: SortOrder) =>
-  sortOrder === SortOrder.Ascending ? 'asc' : 'desc'
+  sortOrder === SortOrder.Ascending ? 'asc' : 'desc';

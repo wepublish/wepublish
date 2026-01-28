@@ -1,51 +1,61 @@
-import {ApolloError} from '@apollo/client'
-import styled from '@emotion/styled'
-import {useTranslation} from 'react-i18next'
-import {Button, Drawer, IconButton, Message, Table, toaster} from 'rsuite'
-import {RowDataType} from 'rsuite-table'
-import {CrowdfundingBlockValue} from '../blocks'
+import { ApolloError } from '@apollo/client';
+import styled from '@emotion/styled';
 import {
   Crowdfunding,
-  CrowdfundingWithActiveGoal,
   getApiClientV2,
-  useCrowdfundingsQuery
-} from '@wepublish/editor/api-v2'
-import {IconButtonTooltip} from '../atoms'
-import {MdAddCircle} from 'react-icons/md'
+  useCrowdfundingsQuery,
+} from '@wepublish/editor/api-v2';
+import { useTranslation } from 'react-i18next';
+import { MdAddCircle } from 'react-icons/md';
+import { Button, Drawer, IconButton, Message, Table, toaster } from 'rsuite';
+import { RowDataType } from 'rsuite-table';
+
+import { IconButtonTooltip } from '../atoms';
+import { CrowdfundingBlockValue } from '../blocks';
 
 const DrawerBody = styled(Drawer.Body)`
   padding: 24px;
-`
+`;
 
 const onErrorToast = (error: ApolloError) => {
   if (error?.message) {
     toaster.push(
-      <Message type="error" showIcon closable duration={3000}>
+      <Message
+        type="error"
+        showIcon
+        closable
+        duration={3000}
+      >
         {error?.message}
       </Message>
-    )
+    );
   }
-}
+};
 
 export type SelectCrowdfundingPanelProps = {
-  selectedCrowdfunding: CrowdfundingBlockValue['crowdfunding'] | null | undefined
-  onClose(): void
-  onSelect(crowdfunding: CrowdfundingBlockValue['crowdfunding'] | null | undefined): void
-}
+  selectedCrowdfunding:
+    | CrowdfundingBlockValue['crowdfunding']
+    | null
+    | undefined;
+  onClose(): void;
+  onSelect(
+    crowdfunding: CrowdfundingBlockValue['crowdfunding'] | null | undefined
+  ): void;
+};
 
 export function SelectCrowdfundingPanel({
   selectedCrowdfunding,
   onClose,
-  onSelect
+  onSelect,
 }: SelectCrowdfundingPanelProps) {
-  const {t} = useTranslation()
-  const client = getApiClientV2()
+  const { t } = useTranslation();
+  const client = getApiClientV2();
 
-  const {data, loading} = useCrowdfundingsQuery({
+  const { data, loading } = useCrowdfundingsQuery({
     onError: onErrorToast,
     fetchPolicy: 'cache-and-network',
-    client
-  })
+    client,
+  });
 
   return (
     <>
@@ -53,7 +63,10 @@ export function SelectCrowdfundingPanel({
         <Drawer.Title>{t('blocks.crowdfunding.title')}</Drawer.Title>
 
         <Drawer.Actions>
-          <Button appearance={'ghost'} onClick={() => onClose()}>
+          <Button
+            appearance={'ghost'}
+            onClick={() => onClose()}
+          >
             {t('close')}
           </Button>
         </Drawer.Actions>
@@ -67,14 +80,22 @@ export function SelectCrowdfundingPanel({
           data={data?.crowdfundings || []}
           rowClassName={rowData =>
             rowData?.id === selectedCrowdfunding?.id ? 'highlighted-row' : ''
-          }>
-          <Table.Column resizable width={200}>
+          }
+        >
+          <Table.Column
+            resizable
+            width={200}
+          >
             <Table.HeaderCell>{t('blocks.crowdfunding.name')}</Table.HeaderCell>
-            <Table.Cell>{(rowData: RowDataType<Crowdfunding>) => rowData.name}</Table.Cell>
+            <Table.Cell>
+              {(rowData: RowDataType<Crowdfunding>) => rowData.name}
+            </Table.Cell>
           </Table.Column>
 
           <Table.Column width={125}>
-            <Table.HeaderCell align="center">{t('blocks.crowdfunding.select')}</Table.HeaderCell>
+            <Table.HeaderCell align="center">
+              {t('blocks.crowdfunding.select')}
+            </Table.HeaderCell>
             <Table.Cell align="center">
               {(rowData: RowDataType<Crowdfunding>) => (
                 <IconButtonTooltip caption={t('blocks.crowdfunding.select')}>
@@ -84,8 +105,8 @@ export function SelectCrowdfundingPanel({
                     circle
                     size="xs"
                     onClick={() => {
-                      onSelect(rowData as CrowdfundingWithActiveGoal)
-                      onClose()
+                      onSelect(rowData as Crowdfunding);
+                      onClose();
                     }}
                   />
                 </IconButtonTooltip>
@@ -95,5 +116,5 @@ export function SelectCrowdfundingPanel({
         </Table>
       </DrawerBody>
     </>
-  )
+  );
 }

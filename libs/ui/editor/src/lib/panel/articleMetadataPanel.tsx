@@ -1,29 +1,32 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
+import { CommentItemType } from '@wepublish/editor/api';
 import {
-  AuthorRefFragment,
-  CommentItemType,
+  FullAuthorFragment,
   FullImageFragment,
+  FullTrackingPixelFragment,
   Tag,
-  TagType
-} from '@wepublish/editor/api'
-import {slugify} from '@wepublish/utils'
-import {useEffect, useState} from 'react'
-import {Trans, useTranslation} from 'react-i18next'
+  TagType,
+} from '@wepublish/editor/api-v2';
+import { slugify } from '@wepublish/utils';
+import { useEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import {
   MdAutoFixHigh,
   MdComment,
   MdListAlt,
   MdSettings,
   MdShare,
-  MdTrackChanges
-} from 'react-icons/md'
+  MdTrackChanges,
+} from 'react-icons/md';
 import {
+  Badge,
   Button,
   Drawer,
   Form as RForm,
   IconButton,
   Input,
   InputGroup as RInputGroup,
+  InputNumber,
   Message,
   Nav as RNav,
   Panel,
@@ -31,124 +34,124 @@ import {
   Toggle as RToggle,
   Tooltip,
   Whisper,
-  Badge,
-  InputNumber
-} from 'rsuite'
+} from 'rsuite';
+
 import {
   ChooseEditImage,
   CommentHistory,
+  createCheckedPermissionComponent,
   ListInput,
   ListValue,
   PermissionControl,
+  SelectPaywall,
   SelectTags,
   Textarea,
-  createCheckedPermissionComponent,
-  useAuthorisation
-} from '../atoms'
-import {MetaDataType} from '../blocks'
-import {generateID} from '../utility'
-import {AuthorCheckPicker} from './authorCheckPicker'
-import {ImageSelectPanel} from './imageSelectPanel'
-import {ImageEditPanel} from './imageEditPanel'
-import TrackingPixels from '../atoms/tracking/tracking-pixels'
-import {FullTrackingPixelFragment} from '@wepublish/editor/api-v2'
+  useAuthorisation,
+} from '../atoms';
+import TrackingPixels from '../atoms/tracking/tracking-pixels';
+import { MetaDataType } from '../blocks';
+import { generateID } from '../utility';
+import { AuthorCheckPicker } from './authorCheckPicker';
+import { ImageEditPanel } from './imageEditPanel';
+import { ImageSelectPanel } from './imageSelectPanel';
 
-const {Item} = RNav
+const { Item } = RNav;
 
-const {Group, Control, ControlLabel, HelpText} = RForm
+const { Group, Control, ControlLabel, HelpText } = RForm;
 
 const InputGroup = styled(RInputGroup)`
   width: 100%;
-`
+`;
 
 const Nav = styled(RNav)`
   margin-bottom: 20px;
-`
+`;
 
 const Form = styled(RForm)`
   height: 100%;
-`
+`;
 
 const Toggle = styled(RToggle)`
   max-width: 70px;
   min-width: 70px;
-`
+`;
 
 const ValueInput = styled(Input)`
   width: 60%;
-`
+`;
 
 const KeyInput = styled(Input)`
   width: 40%;
   margin-right: 10px;
-`
+`;
 
 const FlexRow = styled.div`
   display: flex;
   flex-direction: row;
-`
+`;
 
 const PaddingBottom = styled.div`
   padding-bottom: 20px;
-`
+`;
 
 const FloatRightLabel = styled.label`
   float: right;
-`
+`;
 
 const GoldLabel = styled.label`
   color: gold;
-`
+`;
 
 const FormGroup = styled(Group)`
   padding-top: 6px;
   padding-left: 8px;
-`
+`;
 
 export interface ArticleMetadataProperty {
-  readonly key: string
-  readonly value: string
-  readonly public: boolean
+  readonly key: string;
+  readonly value: string;
+  readonly public: boolean;
 }
 
 export interface ArticleMetadata {
-  readonly slug?: string | null
-  readonly preTitle: string
-  readonly title: string
-  readonly lead: string
-  readonly seoTitle: string
-  readonly authors: AuthorRefFragment[]
-  readonly tags: string[]
-  readonly defaultTags: Pick<Tag, 'id' | 'tag'>[]
-  readonly url: string
-  readonly properties: ArticleMetadataProperty[]
-  readonly canonicalUrl: string
-  readonly image?: FullImageFragment
-  readonly shared: boolean
-  readonly hidden?: boolean | null
-  readonly disableComments?: boolean | null
-  readonly breaking: boolean
-  readonly hideAuthor: boolean
-  readonly socialMediaTitle?: string
-  readonly socialMediaDescription?: string
-  readonly socialMediaAuthors: AuthorRefFragment[]
-  readonly socialMediaImage?: FullImageFragment
-  readonly likes: number
-  readonly trackingPixels?: (FullTrackingPixelFragment | null)[]
+  readonly slug?: string | null;
+  readonly preTitle: string;
+  readonly title: string;
+  readonly lead: string;
+  readonly seoTitle: string;
+  readonly authors: FullAuthorFragment[];
+  readonly tags: string[];
+  readonly defaultTags: Pick<Tag, 'id' | 'tag'>[];
+  readonly url: string;
+  readonly properties: ArticleMetadataProperty[];
+  readonly canonicalUrl: string;
+  readonly image?: FullImageFragment;
+  readonly shared?: boolean;
+  readonly paywall?: string | null;
+  readonly hidden?: boolean | null;
+  readonly disableComments?: boolean | null;
+  readonly breaking: boolean;
+  readonly hideAuthor: boolean;
+  readonly socialMediaTitle?: string;
+  readonly socialMediaDescription?: string;
+  readonly socialMediaAuthors: FullAuthorFragment[];
+  readonly socialMediaImage?: FullImageFragment;
+  readonly likes: number;
+  readonly trackingPixels?: (FullTrackingPixelFragment | null)[];
 }
 
 export interface InfoData {
-  readonly charCount: number
+  readonly charCount: number;
 }
 
 export interface ArticleMetadataPanelProps {
-  readonly articleID: string | null | undefined
-  readonly peerId: string | null | undefined
-  readonly value: ArticleMetadata
-  readonly infoData: InfoData
+  readonly articleID: string | null | undefined;
+  readonly peerId: string | null | undefined;
+  readonly value: ArticleMetadata;
+  readonly infoData: InfoData;
 
-  onClose?(): void
-  onChange?(value: ArticleMetadata): void
+  onClose?(): void;
+  onChange?(value: ArticleMetadata): void;
 }
 
 function ArticleMetadataPanel({
@@ -157,7 +160,7 @@ function ArticleMetadataPanel({
   value,
   infoData,
   onClose,
-  onChange
+  onChange,
 }: ArticleMetadataPanelProps) {
   const {
     canonicalUrl,
@@ -170,6 +173,7 @@ function ArticleMetadataPanel({
     defaultTags,
     authors,
     shared,
+    paywall,
     hidden,
     disableComments,
     breaking,
@@ -181,66 +185,69 @@ function ArticleMetadataPanel({
     socialMediaImage,
     properties,
     trackingPixels,
-    likes
-  } = value
+    likes,
+  } = value;
 
-  const [activeKey, setActiveKey] = useState(MetaDataType.General)
+  const [activeKey, setActiveKey] = useState(MetaDataType.General);
 
-  const [isChooseModalOpen, setChooseModalOpen] = useState(false)
-  const [isEditModalOpen, setEditModalOpen] = useState(false)
+  const [isChooseModalOpen, setChooseModalOpen] = useState(false);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
 
   const [metaDataProperties, setMetadataProperties] = useState<
     ListValue<ArticleMetadataProperty>[]
   >(
-    properties
-      ? properties.map(metaDataProperty => ({
-          id: generateID(),
-          value: metaDataProperty
-        }))
-      : []
-  )
+    properties ?
+      properties.map(metaDataProperty => ({
+        id: generateID(),
+        value: metaDataProperty,
+      }))
+    : []
+  );
 
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
-  const isAuthorized = useAuthorisation('CAN_CREATE_ARTICLE')
+  const isAuthorized = useAuthorisation('CAN_CREATE_ARTICLE');
 
   useEffect(() => {
     if (metaDataProperties) {
-      onChange?.({...value, properties: metaDataProperties.map(({value}) => value)})
+      onChange?.({
+        ...value,
+        properties: metaDataProperties.map(({ value }) => value),
+      });
     }
-  }, [metaDataProperties])
+  }, [metaDataProperties]);
 
   function handleImageChange(currentImage: FullImageFragment) {
     switch (activeKey) {
       case MetaDataType.General: {
-        const image = currentImage
-        onChange?.({...value, image})
-        break
+        const image = currentImage;
+        onChange?.({ ...value, image });
+        break;
       }
       case MetaDataType.SocialMedia: {
-        const socialMediaImage = currentImage
-        onChange?.({...value, socialMediaImage})
-        break
+        const socialMediaImage = currentImage;
+        onChange?.({ ...value, socialMediaImage });
+        break;
       }
       default: {
         // Handle unexpected cases
-        console.warn(`Unhandled activeKey: ${activeKey}`)
+        console.warn(`Unhandled activeKey: ${activeKey}`);
       }
     }
   }
 
-  const preTitleMax = 30
-  const seoTitleMax = 70
-  const titleMax = 140
-  const leadMax = 350
-  const socialMediaTitleMax = 100
-  const socialMediaDescriptionMax = 140
+  const preTitleMax = 30;
+  const seoTitleMax = 70;
+  const titleMax = 140;
+  const leadMax = 350;
+  const socialMediaTitleMax = 100;
+  const socialMediaDescriptionMax = 140;
 
   // Defines field requirements
-  const {StringType} = Schema.Types
+  const { StringType } = Schema.Types;
   const model = Schema.Model({
-    canonicalUrl: StringType().isURL(t('errorMessages.invalidUrlErrorMessage'))
-  })
+    canonicalUrl: StringType().isURL(t('errorMessages.invalidUrlErrorMessage')),
+  });
 
   function currentContent() {
     switch (activeKey) {
@@ -248,7 +255,10 @@ function ArticleMetadataPanel({
         return (
           <Panel>
             <Group>
-              <Message showIcon type="info">
+              <Message
+                showIcon
+                type="info"
+              >
                 {t('pageEditor.panels.metadataInfo')}
               </Message>
             </Group>
@@ -256,30 +266,34 @@ function ArticleMetadataPanel({
               <ControlLabel>
                 {t('articleEditor.panels.socialMediaTitle')}
                 <FloatRightLabel>
-                  {value.socialMediaTitle ? value.socialMediaTitle.length : 0}/{socialMediaTitleMax}
+                  {value.socialMediaTitle ? value.socialMediaTitle.length : 0}/
+                  {socialMediaTitleMax}
                 </FloatRightLabel>
               </ControlLabel>
               <Control
                 name="social-media-title"
                 value={socialMediaTitle || ''}
                 onChange={(socialMediaTitle: string) => {
-                  onChange?.({...value, socialMediaTitle})
+                  onChange?.({ ...value, socialMediaTitle });
                 }}
               />
-              {value.socialMediaTitle && value.socialMediaTitle?.length > socialMediaTitleMax && (
-                <GoldLabel>
-                  {t('articleEditor.panels.charCountWarning', {
-                    charCountWarning: socialMediaTitleMax
-                  })}
-                </GoldLabel>
-              )}
+              {value.socialMediaTitle &&
+                value.socialMediaTitle?.length > socialMediaTitleMax && (
+                  <GoldLabel>
+                    {t('articleEditor.panels.charCountWarning', {
+                      charCountWarning: socialMediaTitleMax,
+                    })}
+                  </GoldLabel>
+                )}
             </Group>
             <Group controlId="socialMediaDescription">
               <ControlLabel>
                 {t('articleEditor.panels.socialMediaDescription')}
                 <FloatRightLabel>
-                  {value.socialMediaDescription ? value.socialMediaDescription.length : 0}/
-                  {socialMediaDescriptionMax}
+                  {value.socialMediaDescription ?
+                    value.socialMediaDescription.length
+                  : 0}
+                  /{socialMediaDescriptionMax}
                 </FloatRightLabel>
               </ControlLabel>
               <Control
@@ -288,58 +302,73 @@ function ArticleMetadataPanel({
                 accepter={Textarea}
                 value={socialMediaDescription || ''}
                 onChange={(socialMediaDescription: string) => {
-                  onChange?.({...value, socialMediaDescription})
+                  onChange?.({ ...value, socialMediaDescription });
                 }}
               />
               {value.socialMediaDescription &&
-                value.socialMediaDescription?.length > socialMediaDescriptionMax && (
+                value.socialMediaDescription?.length >
+                  socialMediaDescriptionMax && (
                   <GoldLabel>
                     {t('articleEditor.panels.charCountWarning', {
-                      charCountWarning: socialMediaDescriptionMax
+                      charCountWarning: socialMediaDescriptionMax,
                     })}
                   </GoldLabel>
                 )}
             </Group>
             <Group controlId="socialMediaAuthors">
-              <ControlLabel>{t('articleEditor.panels.socialMediaAuthors')}</ControlLabel>
+              <ControlLabel>
+                {t('articleEditor.panels.socialMediaAuthors')}
+              </ControlLabel>
               <AuthorCheckPicker
                 disabled={!isAuthorized}
                 list={socialMediaAuthors}
-                onChange={authors => onChange?.({...value, socialMediaAuthors: authors})}
+                onChange={authors =>
+                  onChange?.({ ...value, socialMediaAuthors: authors })
+                }
               />
             </Group>
             <Group controlId="socialMediaImage">
-              <ControlLabel>{t('articleEditor.panels.socialMediaImage')}</ControlLabel>
+              <ControlLabel>
+                {t('articleEditor.panels.socialMediaImage')}
+              </ControlLabel>
               <ChooseEditImage
                 header={''}
                 image={socialMediaImage}
                 disabled={false}
                 openChooseModalOpen={() => {
-                  setChooseModalOpen(true)
+                  setChooseModalOpen(true);
                 }}
                 openEditModalOpen={() => {
-                  setEditModalOpen(true)
+                  setEditModalOpen(true);
                 }}
-                removeImage={() => onChange?.({...value, socialMediaImage: undefined})}
+                removeImage={() =>
+                  onChange?.({ ...value, socialMediaImage: undefined })
+                }
               />
             </Group>
           </Panel>
-        )
+        );
       case MetaDataType.General:
         return (
           <Panel>
             <PaddingBottom>
-              {t('articleEditor.panels.totalCharCount', {totalCharCount: infoData.charCount})}
+              {t('articleEditor.panels.totalCharCount', {
+                totalCharCount: infoData.charCount,
+              })}
             </PaddingBottom>
 
             <Group>
-              <ControlLabel>{t('articleEditor.panels.likeCount')}</ControlLabel>
+              <ControlLabel>
+                {t('articleEditor.panels.likeCount', { likeCount: likes })}
+              </ControlLabel>
               <Control
                 accepter={InputNumber}
                 name="likes"
                 className="likes"
                 value={likes}
-                onChange={(likes: string | number) => onChange?.({...value, likes: +likes})}
+                onChange={(likes: string | number) =>
+                  onChange?.({ ...value, likes: +likes })
+                }
               />
             </Group>
             <Group>
@@ -353,11 +382,15 @@ function ArticleMetadataPanel({
                 name="pre-title"
                 className="preTitle"
                 value={preTitle}
-                onChange={(preTitle: string) => onChange?.({...value, preTitle})}
+                onChange={(preTitle: string) =>
+                  onChange?.({ ...value, preTitle })
+                }
               />
               {value.preTitle.length > preTitleMax && (
                 <GoldLabel>
-                  {t('articleEditor.panels.charCountWarning', {charCountWarning: preTitleMax})}
+                  {t('articleEditor.panels.charCountWarning', {
+                    charCountWarning: preTitleMax,
+                  })}
                 </GoldLabel>
               )}
             </Group>
@@ -372,12 +405,14 @@ function ArticleMetadataPanel({
                 name="title"
                 className="title"
                 value={title}
-                onChange={(title: string) => onChange?.({...value, title})}
+                onChange={(title: string) => onChange?.({ ...value, title })}
               />
               <HelpText>{t('articleEditor.panels.titleHelpBlock')}</HelpText>
               {value.title.length > titleMax && (
                 <GoldLabel>
-                  {t('articleEditor.panels.charCountWarning', {charCountWarning: titleMax})}
+                  {t('articleEditor.panels.charCountWarning', {
+                    charCountWarning: titleMax,
+                  })}
                 </GoldLabel>
               )}
             </Group>
@@ -395,13 +430,15 @@ function ArticleMetadataPanel({
                 accepter={Textarea}
                 value={lead}
                 onChange={(lead: string) => {
-                  onChange?.({...value, lead})
+                  onChange?.({ ...value, lead });
                 }}
               />
               <HelpText>{t('articleEditor.panels.leadHelpBlock')}</HelpText>
               {value.lead.length > leadMax && (
                 <GoldLabel>
-                  {t('articleEditor.panels.charCountWarning', {charCountWarning: leadMax})}
+                  {t('articleEditor.panels.charCountWarning', {
+                    charCountWarning: leadMax,
+                  })}
                 </GoldLabel>
               )}
             </Group>
@@ -416,7 +453,9 @@ function ArticleMetadataPanel({
                 name="seo-title"
                 className="seoTitle"
                 value={seoTitle}
-                onChange={(seoTitle: string) => onChange?.({...value, seoTitle})}
+                onChange={(seoTitle: string) =>
+                  onChange?.({ ...value, seoTitle })
+                }
               />
               <HelpText>
                 <Trans i18nKey={'articleEditor.panels.seoTitleHelpBlock'}>
@@ -424,14 +463,17 @@ function ArticleMetadataPanel({
                   <a
                     href="https://wepublish.ch/just-another-page/"
                     target="_blank"
-                    rel="noreferrer">
+                    rel="noreferrer"
+                  >
                     more text
                   </a>
                 </Trans>
               </HelpText>
               {value.seoTitle.length > seoTitleMax && (
                 <GoldLabel>
-                  {t('articleEditor.panels.charCountWarning', {charCountWarning: seoTitleMax})}
+                  {t('articleEditor.panels.charCountWarning', {
+                    charCountWarning: seoTitleMax,
+                  })}
                 </GoldLabel>
               )}
             </Group>
@@ -442,17 +484,24 @@ function ArticleMetadataPanel({
                   name="slug"
                   className="slug"
                   value={slug}
-                  onChange={(slug: string) => onChange?.({...value, slug})}
-                  onBlur={() => onChange?.({...value, slug: slug ? slugify(slug) : null})}
+                  onChange={(slug: string) => onChange?.({ ...value, slug })}
+                  onBlur={() =>
+                    onChange?.({ ...value, slug: slug ? slugify(slug) : null })
+                  }
                 />
                 <Whisper
                   placement="top"
                   trigger="hover"
-                  speaker={<Tooltip>{t('articleEditor.panels.slugifySeoTitle')}</Tooltip>}>
+                  speaker={
+                    <Tooltip>
+                      {t('articleEditor.panels.slugifySeoTitle')}
+                    </Tooltip>
+                  }
+                >
                   <IconButton
                     icon={<MdAutoFixHigh />}
                     onClick={() => {
-                      onChange?.({...value, title, slug: slugify(seoTitle)})
+                      onChange?.({ ...value, title, slug: slugify(seoTitle) });
                     }}
                   />
                 </Whisper>
@@ -462,7 +511,8 @@ function ArticleMetadataPanel({
                 <a
                   href="https://wepublish.ch/just-another-page-2/"
                   target="_blank"
-                  rel="noreferrer">
+                  rel="noreferrer"
+                >
                   {t('articleEditor.panels.slugGuide')}
                 </a>
               </HelpText>
@@ -472,16 +522,18 @@ function ArticleMetadataPanel({
               <AuthorCheckPicker
                 list={authors}
                 disabled={!isAuthorized}
-                onChange={authors => onChange?.({...value, authors})}
+                onChange={authors => onChange?.({ ...value, authors })}
               />
             </Group>
             <Group>
-              <ControlLabel>{t('articleEditor.panels.hideAuthors')}</ControlLabel>
+              <ControlLabel>
+                {t('articleEditor.panels.hideAuthors')}
+              </ControlLabel>
               <Toggle
                 className="hideAuthor"
                 checked={hideAuthor}
                 disabled={!isAuthorized}
-                onChange={hideAuthor => onChange?.({...value, hideAuthor})}
+                onChange={hideAuthor => onChange?.({ ...value, hideAuthor })}
               />
             </Group>
             <Group controlId="articleTags">
@@ -490,27 +542,35 @@ function ArticleMetadataPanel({
                 defaultTags={defaultTags}
                 disabled={!isAuthorized}
                 selectedTags={tags}
-                setSelectedTags={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
+                setSelectedTags={tagsValue =>
+                  onChange?.({ ...value, tags: tagsValue ?? [] })
+                }
                 tagType={TagType.Article}
               />
             </Group>
             <Group controlId="articleBreakingNews">
-              <ControlLabel>{t('articleEditor.panels.breakingNews')}</ControlLabel>
+              <ControlLabel>
+                {t('articleEditor.panels.breakingNews')}
+              </ControlLabel>
               <Toggle
                 className="breaking"
                 disabled={!isAuthorized}
                 checked={breaking}
-                onChange={breaking => onChange?.({...value, breaking})}
+                onChange={breaking => onChange?.({ ...value, breaking })}
               />
             </Group>
             <Group controlId="articleCanonicalUrl">
-              <ControlLabel>{t('articleEditor.panels.canonicalUrl')}</ControlLabel>
+              <ControlLabel>
+                {t('articleEditor.panels.canonicalUrl')}
+              </ControlLabel>
               <Control
                 name="canonicalUrl"
                 className="canonicalUrl"
                 placeholder={t('articleEditor.panels.urlPlaceholder')}
                 value={canonicalUrl}
-                onChange={(canonicalUrl: string) => onChange?.({...value, canonicalUrl})}
+                onChange={(canonicalUrl: string) =>
+                  onChange?.({ ...value, canonicalUrl })
+                }
               />
               <HelpText>
                 <Trans i18nKey={'articleEditor.panels.canonicalUrLHelpBlock'}>
@@ -518,7 +578,8 @@ function ArticleMetadataPanel({
                   <a
                     href="https://developers.google.com/search/docs/advanced/crawling/consolidate-duplicate-urls"
                     target="_blank"
-                    rel="noreferrer">
+                    rel="noreferrer"
+                  >
                     more text
                   </a>
                 </Trans>
@@ -532,28 +593,46 @@ function ArticleMetadataPanel({
                 <Toggle
                   checked={shared}
                   disabled={!isAuthorized}
-                  onChange={shared => onChange?.({...value, shared})}
+                  onChange={shared => onChange?.({ ...value, shared })}
                 />
-                <HelpText>{t('articleEditor.panels.allowPeerPublishing')}</HelpText>
+                <HelpText>
+                  {t('articleEditor.panels.allowPeerPublishing')}
+                </HelpText>
               </Group>
             )}
+
+            <Group controlId="paywall">
+              <ControlLabel>{t('articleEditor.panels.paywall')}</ControlLabel>
+
+              <SelectPaywall
+                disabled={!isAuthorized}
+                selectedPaywall={paywall}
+                setSelectedPaywall={paywall =>
+                  onChange?.({ ...value, paywall })
+                }
+              />
+            </Group>
 
             <Group controlId="hidden">
               <ControlLabel>{t('articleEditor.panels.hidden')}</ControlLabel>
               <Toggle
                 checked={hidden ?? false}
                 disabled={!isAuthorized}
-                onChange={hidden => onChange?.({...value, hidden})}
+                onChange={hidden => onChange?.({ ...value, hidden })}
               />
               <HelpText>{t('articleEditor.panels.setAsHidden')}</HelpText>
             </Group>
 
             <Group controlId="disableComments">
-              <ControlLabel>{t('articleEditor.panels.disableComments')}</ControlLabel>
+              <ControlLabel>
+                {t('articleEditor.panels.disableComments')}
+              </ControlLabel>
               <Toggle
                 checked={disableComments ?? false}
                 disabled={!isAuthorized}
-                onChange={disableComments => onChange?.({...value, disableComments})}
+                onChange={disableComments =>
+                  onChange?.({ ...value, disableComments })
+                }
               />
             </Group>
 
@@ -563,47 +642,61 @@ function ArticleMetadataPanel({
               image={image}
               disabled={false}
               openChooseModalOpen={() => {
-                setChooseModalOpen(true)
+                setChooseModalOpen(true);
               }}
               openEditModalOpen={() => {
-                setEditModalOpen(true)
+                setEditModalOpen(true);
               }}
-              removeImage={() => onChange?.({...value, image: undefined})}
+              removeImage={() => onChange?.({ ...value, image: undefined })}
             />
           </Panel>
-        )
+        );
       case MetaDataType.Properties:
         return (
           <Panel>
             <Group>
-              <Message showIcon type="info">
+              <Message
+                showIcon
+                type="info"
+              >
                 {t('articleEditor.panels.propertiesInfo')}
               </Message>
             </Group>
             <Group controlId="articleProperties">
-              <ControlLabel>{t('articleEditor.panels.properties')}</ControlLabel>
+              <ControlLabel>
+                {t('articleEditor.panels.properties')}
+              </ControlLabel>
               <ListInput
                 value={metaDataProperties}
-                onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
-                defaultValue={{key: '', value: '', public: true}}>
-                {({value, onChange}) => (
+                onChange={propertiesItemInput =>
+                  setMetadataProperties(propertiesItemInput)
+                }
+                defaultValue={{ key: '', value: '', public: true }}
+              >
+                {({ value, onChange }) => (
                   <FlexRow>
                     <KeyInput
                       placeholder={t('articleEditor.panels.key')}
                       value={value.key}
-                      onChange={propertyKey => onChange({...value, key: propertyKey})}
+                      onChange={propertyKey =>
+                        onChange({ ...value, key: propertyKey })
+                      }
                     />
                     <ValueInput
                       placeholder={t('articleEditor.panels.value')}
                       value={value.value}
-                      onChange={propertyValue => onChange({...value, value: propertyValue})}
+                      onChange={propertyValue =>
+                        onChange({ ...value, value: propertyValue })
+                      }
                     />
                     <FormGroup controlId="articleProperty">
                       <Toggle
                         checkedChildren={t('articleEditor.panels.public')}
                         unCheckedChildren={t('articleEditor.panels.private')}
                         checked={value.public}
-                        onChange={isPublic => onChange({...value, public: isPublic})}
+                        onChange={isPublic =>
+                          onChange({ ...value, public: isPublic })
+                        }
                       />
                     </FormGroup>
                   </FlexRow>
@@ -611,35 +704,45 @@ function ArticleMetadataPanel({
               </ListInput>
             </Group>
           </Panel>
-        )
+        );
       case MetaDataType.Comments:
         return (
           <Panel>
             {articleID && (
-              <CommentHistory commentItemType={CommentItemType.Article} commentItemID={articleID} />
+              <CommentHistory
+                commentItemType={CommentItemType.Article}
+                commentItemID={articleID}
+              />
             )}
           </Panel>
-        )
+        );
       case MetaDataType.Tracking:
         return (
           <Panel>
             <TrackingPixels trackingPixels={trackingPixels} />
           </Panel>
-        )
+        );
       default:
         // eslint-disable-next-line react/jsx-no-useless-fragment
-        return <></>
+        return <></>;
     }
   }
 
   return (
-    <Form fluid model={model} onSubmit={validationPassed => validationPassed && onClose?.()}>
+    <Form
+      fluid
+      model={model}
+      onSubmit={validationPassed => validationPassed && onClose?.()}
+    >
       <Drawer.Header>
         <Drawer.Title>{t('articleEditor.panels.metadata')}</Drawer.Title>
 
         <Drawer.Actions>
           <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
-            <Button appearance="primary" type="submit">
+            <Button
+              appearance="primary"
+              type="submit"
+            >
               {t('saveAndClose')}
             </Button>
           </PermissionControl>
@@ -650,23 +753,43 @@ function ArticleMetadataPanel({
         <Nav
           appearance="tabs"
           activeKey={activeKey}
-          onSelect={activeKey => setActiveKey(activeKey)}>
-          <Item eventKey={MetaDataType.General} icon={<MdSettings />}>
+          onSelect={activeKey => setActiveKey(activeKey)}
+        >
+          <Item
+            eventKey={MetaDataType.General}
+            icon={<MdSettings />}
+          >
             {t('articleEditor.panels.general')}
           </Item>
-          <Item eventKey={MetaDataType.SocialMedia} icon={<MdShare />}>
+          <Item
+            eventKey={MetaDataType.SocialMedia}
+            icon={<MdShare />}
+          >
             {t('articleEditor.panels.socialMedia')}
           </Item>
-          <Item eventKey={MetaDataType.Properties} icon={<MdListAlt />}>
+          <Item
+            eventKey={MetaDataType.Properties}
+            icon={<MdListAlt />}
+          >
             {t('articleEditor.panels.properties')}
           </Item>
           {articleID && (
-            <Item eventKey={MetaDataType.Comments} icon={<MdComment />}>
+            <Item
+              eventKey={MetaDataType.Comments}
+              icon={<MdComment />}
+            >
               {t('articleEditor.panels.comments')}
             </Item>
           )}
-          <Badge content={!!trackingPixels?.find(trackingPixel => !!trackingPixel?.error)}>
-            <Item eventKey={MetaDataType.Tracking} icon={<MdTrackChanges />}>
+          <Badge
+            content={
+              !!trackingPixels?.find(trackingPixel => !!trackingPixel?.error)
+            }
+          >
+            <Item
+              eventKey={MetaDataType.Tracking}
+              icon={<MdTrackChanges />}
+            >
               {t('articleEditor.panels.tracking')}
             </Item>
           </Badge>
@@ -678,13 +801,14 @@ function ArticleMetadataPanel({
         open={isChooseModalOpen}
         size="sm"
         onClose={() => {
-          setChooseModalOpen(false)
-        }}>
+          setChooseModalOpen(false);
+        }}
+      >
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
-            setChooseModalOpen(false)
-            handleImageChange(value)
+            setChooseModalOpen(false);
+            handleImageChange(value);
           }}
         />
       </Drawer>
@@ -693,22 +817,27 @@ function ArticleMetadataPanel({
           open={isEditModalOpen}
           size="sm"
           onClose={() => {
-            setEditModalOpen(false)
-          }}>
+            setEditModalOpen(false);
+          }}
+        >
           <ImageEditPanel
-            id={activeKey === MetaDataType.General ? value.image?.id : value.socialMediaImage?.id}
+            id={
+              activeKey === MetaDataType.General ?
+                value.image?.id
+              : value.socialMediaImage?.id
+            }
             onClose={() => setEditModalOpen(false)}
           />
         </Drawer>
       )}
     </Form>
-  )
+  );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_ARTICLES',
   'CAN_GET_ARTICLES',
   'CAN_DELETE_ARTICLE',
   'CAN_PUBLISH_ARTICLE',
-  'CAN_CREATE_ARTICLE'
-])(ArticleMetadataPanel)
-export {CheckedPermissionComponent as ArticleMetadataPanel}
+  'CAN_CREATE_ARTICLE',
+])(ArticleMetadataPanel);
+export { CheckedPermissionComponent as ArticleMetadataPanel };

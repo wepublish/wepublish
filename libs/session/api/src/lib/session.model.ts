@@ -1,22 +1,23 @@
-import {Field, ObjectType, OmitType} from '@nestjs/graphql'
-import {User} from '@wepublish/user/api'
+import { Field, ObjectType, OmitType } from '@nestjs/graphql';
+// eslint-disable-next-line no-restricted-imports
+import { SensitiveDataUser } from '@wepublish/user/api';
 
 @ObjectType()
 export class SessionWithToken {
   @Field()
-  token!: string
+  token!: string;
 
   @Field()
-  createdAt!: Date
+  createdAt!: Date;
 
   @Field()
-  expiresAt!: Date
+  expiresAt!: Date;
 
-  @Field(() => User)
-  user!: User
+  @Field(() => SensitiveDataUser)
+  user!: SensitiveDataUser;
 }
 
-@ObjectType('UserSession')
+@ObjectType()
 export class SessionWithTokenWithoutUser extends OmitType(
   SessionWithToken,
   ['user'] as const,

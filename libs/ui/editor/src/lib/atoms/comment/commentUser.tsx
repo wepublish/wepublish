@@ -1,38 +1,49 @@
-import {FullCommentFragment, FullUserFragment, FullImageFragment} from '@wepublish/editor/api'
-import React, {useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Col, Drawer, Form, Row} from 'rsuite'
+import { FullCommentFragment, FullUserFragment } from '@wepublish/editor/api';
+import { FullImageFragment } from '@wepublish/editor/api-v2';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Col, Drawer, Form, Row } from 'rsuite';
 
-import {ImageSelectPanel} from '../../panel/imageSelectPanel'
-import {ChooseEditImage} from '../chooseEditImage'
-import {UserSearch} from '../searchAndFilter/userSearch'
+import { ImageSelectPanel } from '../../panel/imageSelectPanel';
+import { ChooseEditImage } from '../chooseEditImage';
+import { UserSearch } from '../searchAndFilter/userSearch';
 
 interface CommentUserProps {
-  comment?: FullCommentFragment
-  setComment: React.Dispatch<React.SetStateAction<FullCommentFragment | undefined>>
+  comment?: FullCommentFragment;
+  setComment: React.Dispatch<
+    React.SetStateAction<FullCommentFragment | undefined>
+  >;
 }
 
-export function CommentUser({comment, setComment}: CommentUserProps) {
-  const {t} = useTranslation()
-  const [open, setOpen] = useState(false)
+export function CommentUser({ comment, setComment }: CommentUserProps) {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
 
   function setUser(user: FullUserFragment) {
-    setComment(oldComment => (oldComment ? {...oldComment, user} : oldComment))
+    setComment(oldComment =>
+      oldComment ? { ...oldComment, user } : oldComment
+    );
   }
 
   function setGuestUser(guestUsername: string) {
-    setComment(oldComment => (oldComment ? {...oldComment, guestUsername} : oldComment))
+    setComment(oldComment =>
+      oldComment ? { ...oldComment, guestUsername } : oldComment
+    );
   }
 
   function setImage(guestUserImage: FullImageFragment | undefined) {
-    setComment(oldComment => (oldComment ? {...oldComment, guestUserImage} : oldComment))
+    setComment(oldComment =>
+      oldComment ? { ...oldComment, guestUserImage } : oldComment
+    );
   }
 
   return (
     <>
       <Row>
         <Col xs={24}>
-          <Form.ControlLabel>{t('commentUser.selectExistingUser')}</Form.ControlLabel>
+          <Form.ControlLabel>
+            {t('commentUser.selectExistingUser')}
+          </Form.ControlLabel>
           <UserSearch
             key={`user-${comment?.user}`}
             name="selectFromExistingUser"
@@ -67,16 +78,17 @@ export function CommentUser({comment, setComment}: CommentUserProps) {
       <Drawer
         open={open}
         onClose={() => {
-          setOpen(false)
-        }}>
+          setOpen(false);
+        }}
+      >
         <ImageSelectPanel
           onClose={() => setOpen(false)}
           onSelect={(image: FullImageFragment) => {
-            setImage(image)
-            setOpen(false)
+            setImage(image);
+            setOpen(false);
           }}
         />
       </Drawer>
     </>
-  )
+  );
 }

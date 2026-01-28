@@ -1,31 +1,39 @@
-import {TableCell} from '@mui/material'
-import styled from '@emotion/styled'
-import {SubscriptionEvent, SubscriptionFlowFragment} from '@wepublish/editor/api-v2'
-import {useContext} from 'react'
-import {useTranslation} from 'react-i18next'
-import {DraggableSubscriptionInterval} from '../draggable-subscription-interval'
-import {DroppableSubscriptionInterval} from '../droppable-subscription-interval'
+import { TableCell } from '@mui/material';
+import styled from '@emotion/styled';
+import {
+  SubscriptionEvent,
+  SubscriptionFlowFragment,
+} from '@wepublish/editor/api-v2';
+import { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
+import { DraggableSubscriptionInterval } from '../draggable-subscription-interval';
+import { DroppableSubscriptionInterval } from '../droppable-subscription-interval';
 import {
   DecoratedSubscriptionInterval,
   IntervalColoring,
   MailTemplatesContext,
-  NonUserActionInterval
-} from '../subscription-flow-list'
+  NonUserActionInterval,
+} from '../subscription-flow-list';
 
 const TableCellBottom = styled(TableCell)`
   vertical-align: bottom;
-`
+`;
 
 interface TimelineBodyProps {
-  days: (number | null | undefined)[]
-  subscriptionFlow: SubscriptionFlowFragment
-  eventIcons: Record<string, JSX.Element>
-  eventColors: Record<string, IntervalColoring>
+  days: (number | null | undefined)[];
+  subscriptionFlow: SubscriptionFlowFragment;
+  eventIcons: Record<string, JSX.Element>;
+  eventColors: Record<string, IntervalColoring>;
 }
 
-export function TimelineBody({days, subscriptionFlow, eventIcons, eventColors}: TimelineBodyProps) {
-  const mailTemplates = useContext(MailTemplatesContext)
-  const {t} = useTranslation()
+export function TimelineBody({
+  days,
+  subscriptionFlow,
+  eventIcons,
+  eventColors,
+}: TimelineBodyProps) {
+  const mailTemplates = useContext(MailTemplatesContext);
+  const { t } = useTranslation();
 
   const nonUserActionIntervalsFor = function (
     subscriptionFlow: SubscriptionFlowFragment,
@@ -33,7 +41,7 @@ export function TimelineBody({days, subscriptionFlow, eventIcons, eventColors}: 
   ): DecoratedSubscriptionInterval<NonUserActionInterval>[] {
     const intervals = subscriptionFlow.intervals.filter(
       interval => interval.daysAwayFromEnding === days
-    )
+    );
 
     return intervals.map(i => {
       return {
@@ -41,10 +49,10 @@ export function TimelineBody({days, subscriptionFlow, eventIcons, eventColors}: 
         subscriptionFlowId: subscriptionFlow.id,
         object: i,
         icon: eventIcons[i.event.toUpperCase()],
-        color: eventColors[i.event.toUpperCase()]
-      }
-    }) as DecoratedSubscriptionInterval<NonUserActionInterval>[]
-  }
+        color: eventColors[i.event.toUpperCase()],
+      };
+    }) as DecoratedSubscriptionInterval<NonUserActionInterval>[];
+  };
 
   return (
     // Not useless in this case
@@ -53,14 +61,18 @@ export function TimelineBody({days, subscriptionFlow, eventIcons, eventColors}: 
       {days &&
         mailTemplates &&
         days.map(day => {
-          const currentIntervals = nonUserActionIntervalsFor(subscriptionFlow, day!)
+          const currentIntervals = nonUserActionIntervalsFor(
+            subscriptionFlow,
+            day!
+          );
           // no interval
           if (currentIntervals.length === 0) {
             return (
               <TableCellBottom
                 key={`day-${day}`}
                 align="center"
-                style={day === 0 ? {backgroundColor: 'lightyellow'} : {}}>
+                style={day === 0 ? { backgroundColor: 'lightyellow' } : {}}
+              >
                 <DroppableSubscriptionInterval dayIndex={day ?? 0}>
                   <DraggableSubscriptionInterval
                     mailTemplates={mailTemplates}
@@ -71,7 +83,7 @@ export function TimelineBody({days, subscriptionFlow, eventIcons, eventColors}: 
                   />
                 </DroppableSubscriptionInterval>
               </TableCellBottom>
-            )
+            );
           }
 
           // some intervals
@@ -79,7 +91,8 @@ export function TimelineBody({days, subscriptionFlow, eventIcons, eventColors}: 
             <TableCellBottom
               key={`day-${day}`}
               align="center"
-              style={day === 0 ? {backgroundColor: 'lightyellow'} : {}}>
+              style={day === 0 ? { backgroundColor: 'lightyellow' } : {}}
+            >
               <DroppableSubscriptionInterval dayIndex={day ?? 0}>
                 {currentIntervals.map(currentInterval => (
                   <DraggableSubscriptionInterval
@@ -90,8 +103,8 @@ export function TimelineBody({days, subscriptionFlow, eventIcons, eventColors}: 
                 ))}
               </DroppableSubscriptionInterval>
             </TableCellBottom>
-          )
+          );
         })}
     </>
-  )
+  );
 }

@@ -1,8 +1,8 @@
 export enum MailLogSort {
   CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
+  ModifiedAt = 'modifiedAt',
 }
 
 export interface MailLogFilter {
-  readonly subject?: string
+  readonly subject?: string;
 }

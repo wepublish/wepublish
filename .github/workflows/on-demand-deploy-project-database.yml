@@ -1,4 +1,4 @@
-name: Setup database for review build
+name: Setup production database for review build
 
 on:
   workflow_dispatch:
@@ -11,9 +11,13 @@ on:
         description: 'Name of the project you want to get database from eg. bajour'
         required: true
         type: string
+      akk:
+        description: 'Are you sure you want to overwrite the existing review database? [Yes]'
+        required: true
+        type: string
 
 jobs:
-  copy-db:
+  sync-db:
     name: Copy Database
     runs-on: ubuntu-latest
     permissions:
@@ -21,6 +25,15 @@ jobs:
       id-token: 'write'
 
     steps:
+      - name: Confirm destructive action
+        shell: bash
+        run: |
+          VAL="$(printf '%s' "${{ inputs.akk }}" | tr -d '[:space:]')"
+          if ! printf '%s\n' "$VAL" | grep -qiE '^yes$'; then
+            echo "::error::Confirmation failed. You must type exactly 'yes' to proceed. You entered: '${{ inputs.akk }}'"
+            exit 1
+          fi  
+
       - uses: actions/checkout@v3
 
       - name: Set up Helm
@@ -44,28 +57,50 @@ jobs:
 
       - name: Port forward PostgreSQL
         run: |
-          kubectl port-forward -n staging svc/${{ inputs.project }}-database-postgresql 5432:5432 &
-          kubectl port-forward -n reviews svc/review-${{ inputs.pull_request_number }}-database-postgresql 5433:5432 &
+          kubectl port-forward -n reviews svc/review-${{ inputs.pull_request_number }}-database-postgres 5432:5432 &
 
       - name: Install PostgreSQL Client
         run: |
           sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
           wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
           sudo apt-get update
-          sudo apt-get install -y postgresql-client-16
+          sudo apt-get install -y postgresql-client-17
 
-      - name: Dump Project Staging Database
-        env:
-          PGPASSWORD: ${{ secrets.STAGING_DATABASE_PASSWORD }}
+      - name: Get and unpack project production database
         run: |
-          pg_dump -U ${{ secrets.STAGING_DATABASE_USER }} -h 127.0.0.1 -p 5432 -d wepublish -F c -b -v -f db.dump
+          curl --output database.dump.gz https://${{ secrets.HTTP_PROD_DUMP_SHARE_USER }}:${{ secrets.HTTP_PROD_DUMP_SHARE_PASSWORD }}@${{ secrets.HTTP_PROD_DUMP_SHARE_URL }}/${{ inputs.project }}.sql.gz
+          gzip -d database.dump.gz
 
       - name: Restore Dump to Review Database
         env:
           PGPASSWORD: foo
         run: |
-          psql -U postgres -h 127.0.0.1 -p 5433 -d wepublish -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
-          pg_restore -U postgres -h 127.0.0.1 -p 5433 -d wepublish -v db.dump
+          psql -h 127.0.0.1 -U postgres -d wepublish -f database.dump
+
+      - name: Rerun database migration
+        run: |
+          JOB_NAME=$(kubectl -n reviews get jobs --sort-by='{.metadata.creationTimestamp}' |grep "review-${{ inputs.pull_request_number }}-app-wepublish-migration"  |tail -n 1 | awk '{print $1}')
+          kubectl -n reviews get job "$JOB_NAME" -o json | jq --arg name "${JOB_NAME}r" '
+            .metadata.name = $name
+            | del(
+            .metadata.uid,
+            .metadata.resourceVersion,
+            .metadata.creationTimestamp,
+            .metadata.managedFields,
+            .status
+            )
+            | del(.spec.selector, .spec.manualSelector)
+            | (.spec.template.metadata.labels // {}) as $l
+            | .spec.template.metadata.labels = ($l
+            | del(
+            .["job-name"],
+            .["batch.kubernetes.io/job-name"],
+            .["controller-uid"],
+            .["batch.kubernetes.io/controller-uid"],
+            .["pod-template-hash"]
+            )
+            )
+            ' | kubectl -n reviews apply -f -          
 
       - name: Cleanup
-        run: rm db.dump
+        run: rm database.dump

@@ -3,7 +3,7 @@
 exports[`SettingList renders successfully 1`] = `
 <DocumentFragment>
   <form
-    class="rs-form rs-form-vertical rs-form-fixed-width rs-form-disabled"
+    class="rs-form rs-form-vertical rs-form-fixed-width"
     data-testid="form"
   >
     <div
@@ -161,14 +161,13 @@ exports[`SettingList renders successfully 1`] = `
                       </div>
                     </label>
                     <label
-                      class="rs-toggle rs-toggle-disabled"
+                      class="rs-toggle"
                     >
                       <input
                         aria-checked="false"
-                        aria-disabled="true"
+                        aria-disabled="false"
                         aria-label="Close"
                         class="rs-toggle-input"
-                        disabled=""
                         role="switch"
                         type="checkbox"
                       />
@@ -214,14 +213,13 @@ exports[`SettingList renders successfully 1`] = `
                       </div>
                     </label>
                     <label
-                      class="rs-toggle rs-toggle-disabled"
+                      class="rs-toggle"
                     >
                       <input
                         aria-checked="false"
-                        aria-disabled="true"
+                        aria-disabled="false"
                         aria-label="Close"
                         class="rs-toggle-input"
-                        disabled=""
                         role="switch"
                         type="checkbox"
                       />
@@ -267,14 +265,13 @@ exports[`SettingList renders successfully 1`] = `
                       </div>
                     </label>
                     <label
-                      class="rs-toggle rs-toggle-disabled"
+                      class="rs-toggle"
                     >
                       <input
                         aria-checked="false"
-                        aria-disabled="true"
+                        aria-disabled="false"
                         aria-label="Close"
                         class="rs-toggle-input"
-                        disabled=""
                         role="switch"
                         type="checkbox"
                       />
@@ -326,14 +323,13 @@ exports[`SettingList renders successfully 1`] = `
                         class="rs-form-control rs-form-control-wrapper"
                       >
                         <div
-                          class="rs-input-number rs-input-group rs-input-group-disabled"
+                          class="rs-input-number rs-input-group"
                         >
                           <input
                             aria-describedby="COMMENT_CHAR_LIMIT-help-text"
                             aria-labelledby="COMMENT_CHAR_LIMIT-control-label"
                             autocomplete="off"
                             class="rs-input"
-                            disabled=""
                             id="COMMENT_CHAR_LIMIT"
                             name="COMMENT_CHAR_LIMIT"
                             step="1"
@@ -342,13 +338,11 @@ exports[`SettingList renders successfully 1`] = `
                           />
                           <span
                             class="rs-input-number-btn-group-vertical"
-                            disabled=""
                           >
                             <button
-                              aria-disabled="true"
+                              aria-disabled="false"
                               aria-label="Increment"
-                              class="rs-input-number-touchspin-up rs-btn rs-btn-subtle rs-btn-disabled"
-                              disabled=""
+                              class="rs-input-number-touchspin-up rs-btn rs-btn-subtle"
                               tabindex="-1"
                               type="button"
                             >
@@ -376,10 +370,9 @@ exports[`SettingList renders successfully 1`] = `
                               </span>
                             </button>
                             <button
-                              aria-disabled="true"
+                              aria-disabled="false"
                               aria-label="Decrement"
-                              class="rs-input-number-touchspin-down rs-btn rs-btn-subtle rs-btn-disabled"
-                              disabled=""
+                              class="rs-input-number-touchspin-down rs-btn rs-btn-subtle"
                               tabindex="-1"
                               type="button"
                             >
@@ -465,14 +458,13 @@ exports[`SettingList renders successfully 1`] = `
                       settingList.guestPollVote
                     </label>
                     <label
-                      class="rs-toggle rs-toggle-disabled"
+                      class="rs-toggle"
                     >
                       <input
                         aria-checked="false"
-                        aria-disabled="true"
+                        aria-disabled="false"
                         aria-label="Close"
                         class="rs-toggle-input"
-                        disabled=""
                         role="switch"
                         type="checkbox"
                       />
@@ -548,14 +540,13 @@ exports[`SettingList renders successfully 1`] = `
                       </div>
                     </label>
                     <label
-                      class="rs-toggle rs-toggle-disabled"
+                      class="rs-toggle"
                     >
                       <input
                         aria-checked="false"
-                        aria-disabled="true"
+                        aria-disabled="false"
                         aria-label="Close"
                         class="rs-toggle-input"
-                        disabled=""
                         role="switch"
                         type="checkbox"
                       />
@@ -601,14 +592,13 @@ exports[`SettingList renders successfully 1`] = `
                       </div>
                     </label>
                     <label
-                      class="rs-toggle rs-toggle-disabled"
+                      class="rs-toggle"
                     >
                       <input
                         aria-checked="false"
-                        aria-disabled="true"
+                        aria-disabled="false"
                         aria-label="Close"
                         class="rs-toggle-input"
-                        disabled=""
                         role="switch"
                         type="checkbox"
                       />
@@ -654,14 +644,13 @@ exports[`SettingList renders successfully 1`] = `
                       </div>
                     </label>
                     <label
-                      class="rs-toggle rs-toggle-disabled"
+                      class="rs-toggle"
                     >
                       <input
                         aria-checked="false"
-                        aria-disabled="true"
+                        aria-disabled="false"
                         aria-label="Close"
                         class="rs-toggle-input"
-                        disabled=""
                         role="switch"
                         type="checkbox"
                       />
@@ -707,14 +696,13 @@ exports[`SettingList renders successfully 1`] = `
                       </div>
                     </label>
                     <label
-                      class="rs-toggle rs-toggle-disabled"
+                      class="rs-toggle"
                     >
                       <input
                         aria-checked="false"
-                        aria-disabled="true"
+                        aria-disabled="false"
                         aria-label="Close"
                         class="rs-toggle-input"
-                        disabled=""
                         role="switch"
                         type="checkbox"
                       />
@@ -760,14 +748,13 @@ exports[`SettingList renders successfully 1`] = `
                       </div>
                     </label>
                     <label
-                      class="rs-toggle rs-toggle-disabled"
+                      class="rs-toggle"
                     >
                       <input
                         aria-checked="false"
-                        aria-disabled="true"
+                        aria-disabled="false"
                         aria-label="Close"
                         class="rs-toggle-input"
-                        disabled=""
                         role="switch"
                         type="checkbox"
                       />
@@ -813,14 +800,13 @@ exports[`SettingList renders successfully 1`] = `
                       </div>
                     </label>
                     <label
-                      class="rs-toggle rs-toggle-disabled"
+                      class="rs-toggle"
                     >
                       <input
                         aria-checked="false"
-                        aria-disabled="true"
+                        aria-disabled="false"
                         aria-label="Close"
                         class="rs-toggle-input"
-                        disabled=""
                         role="switch"
                         type="checkbox"
                       />
@@ -912,14 +898,13 @@ exports[`SettingList renders successfully 1`] = `
                         class="rs-form-control rs-form-control-wrapper"
                       >
                         <div
-                          class="rs-input-number rs-input-group rs-input-group-disabled"
+                          class="rs-input-number rs-input-group"
                         >
                           <input
                             aria-describedby="SEND_LOGIN_JWT_EXPIRES_MIN-help-text"
                             aria-labelledby="SEND_LOGIN_JWT_EXPIRES_MIN-control-label"
                             autocomplete="off"
                             class="rs-input"
-                            disabled=""
                             id="SEND_LOGIN_JWT_EXPIRES_MIN"
                             name="SEND_LOGIN_JWT_EXPIRES_MIN"
                             step="1"
@@ -928,13 +913,11 @@ exports[`SettingList renders successfully 1`] = `
                           />
                           <span
                             class="rs-input-number-btn-group-vertical"
-                            disabled=""
                           >
                             <button
-                              aria-disabled="true"
+                              aria-disabled="false"
                               aria-label="Increment"
-                              class="rs-input-number-touchspin-up rs-btn rs-btn-subtle rs-btn-disabled"
-                              disabled=""
+                              class="rs-input-number-touchspin-up rs-btn rs-btn-subtle"
                               tabindex="-1"
                               type="button"
                             >
@@ -962,10 +945,9 @@ exports[`SettingList renders successfully 1`] = `
                               </span>
                             </button>
                             <button
-                              aria-disabled="true"
+                              aria-disabled="false"
                               aria-label="Decrement"
-                              class="rs-input-number-touchspin-down rs-btn rs-btn-subtle rs-btn-disabled"
-                              disabled=""
+                              class="rs-input-number-touchspin-down rs-btn rs-btn-subtle"
                               tabindex="-1"
                               type="button"
                             >
@@ -1041,14 +1023,13 @@ exports[`SettingList renders successfully 1`] = `
                         class="rs-form-control rs-form-control-wrapper"
                       >
                         <div
-                          class="rs-input-number rs-input-group rs-input-group-disabled"
+                          class="rs-input-number rs-input-group"
                         >
                           <input
                             aria-describedby="RESET_PASSWORD_JWT_EXPIRES_MIN-help-text"
                             aria-labelledby="RESET_PASSWORD_JWT_EXPIRES_MIN-control-label"
                             autocomplete="off"
                             class="rs-input"
-                            disabled=""
                             id="RESET_PASSWORD_JWT_EXPIRES_MIN"
                             name="RESET_PASSWORD_JWT_EXPIRES_MIN"
                             step="1"
@@ -1057,13 +1038,11 @@ exports[`SettingList renders successfully 1`] = `
                           />
                           <span
                             class="rs-input-number-btn-group-vertical"
-                            disabled=""
                           >
                             <button
-                              aria-disabled="true"
+                              aria-disabled="false"
                               aria-label="Increment"
-                              class="rs-input-number-touchspin-up rs-btn rs-btn-subtle rs-btn-disabled"
-                              disabled=""
+                              class="rs-input-number-touchspin-up rs-btn rs-btn-subtle"
                               tabindex="-1"
                               type="button"
                             >
@@ -1091,10 +1070,9 @@ exports[`SettingList renders successfully 1`] = `
                               </span>
                             </button>
                             <button
-                              aria-disabled="true"
+                              aria-disabled="false"
                               aria-label="Decrement"
-                              class="rs-input-number-touchspin-down rs-btn rs-btn-subtle rs-btn-disabled"
-                              disabled=""
+                              class="rs-input-number-touchspin-down rs-btn rs-btn-subtle"
                               tabindex="-1"
                               type="button"
                             >
@@ -1191,29 +1169,26 @@ exports[`SettingList renders successfully 1`] = `
                         class="rs-form-control rs-form-control-wrapper"
                       >
                         <div
-                          class="rs-input-number rs-input-group rs-input-group-disabled"
+                          class="rs-input-number rs-input-group"
                         >
                           <input
                             aria-describedby="PEERING_TIMEOUT_MS-help-text"
                             aria-labelledby="PEERING_TIMEOUT_MS-control-label"
                             autocomplete="off"
                             class="rs-input"
-                            disabled=""
                             id="PEERING_TIMEOUT_MS"
                             name="PEERING_TIMEOUT_MS"
                             step="1"
                             type="number"
-                            value="0"
+                            value="100"
                           />
                           <span
                             class="rs-input-number-btn-group-vertical"
-                            disabled=""
                           >
                             <button
-                              aria-disabled="true"
+                              aria-disabled="false"
                               aria-label="Increment"
-                              class="rs-input-number-touchspin-up rs-btn rs-btn-subtle rs-btn-disabled"
-                              disabled=""
+                              class="rs-input-number-touchspin-up rs-btn rs-btn-subtle"
                               tabindex="-1"
                               type="button"
                             >
@@ -1241,10 +1216,9 @@ exports[`SettingList renders successfully 1`] = `
                               </span>
                             </button>
                             <button
-                              aria-disabled="true"
+                              aria-disabled="false"
                               aria-label="Decrement"
-                              class="rs-input-number-touchspin-down rs-btn rs-btn-subtle rs-btn-disabled"
-                              disabled=""
+                              class="rs-input-number-touchspin-down rs-btn rs-btn-subtle"
                               tabindex="-1"
                               type="button"
                             >
@@ -1318,6 +1292,147 @@ exports[`SettingList renders successfully 1`] = `
                 >
                   <label
                     class="rs-form-control-label"
+                    for="NEW_ARTICLE_PEERING"
+                    id="NEW_ARTICLE_PEERING-control-label"
+                  >
+                    settingList.newArticlePeering
+                    <div
+                      class="emotion-5 emotion-6"
+                    >
+                      <svg
+                        fill="currentColor"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-width="0"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                        />
+                      </svg>
+                    </div>
+                  </label>
+                  <label
+                    class="rs-toggle"
+                  >
+                    <input
+                      aria-checked="false"
+                      aria-disabled="false"
+                      aria-label="Close"
+                      class="rs-toggle-input"
+                      role="switch"
+                      type="checkbox"
+                    />
+                    <span
+                      class="rs-toggle-presentation"
+                    >
+                      <span
+                        class="rs-toggle-inner"
+                      />
+                    </span>
+                  </label>
+                </div>
+                <div
+                  class="rs-form-group"
+                  role="group"
+                >
+                  <label
+                    class="rs-form-control-label"
+                    for="NEW_ARTICLE_PAYWALL"
+                    id="NEW_ARTICLE_PAYWALL-control-label"
+                  >
+                    settingList.newArticlePaywall
+                    <div
+                      class="emotion-5 emotion-6"
+                    >
+                      <svg
+                        fill="currentColor"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-width="0"
+                        viewBox="0 0 24 24"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                        />
+                      </svg>
+                    </div>
+                  </label>
+                  <div
+                    class="rs-picker rs-picker-select rs-picker-default rs-picker-toggle-wrapper rs-picker-cleanable rs-picker-block"
+                  >
+                    <div
+                      aria-disabled="false"
+                      aria-expanded="false"
+                      aria-haspopup="listbox"
+                      class="rs-picker-toggle rs-btn rs-btn-default"
+                      role="combobox"
+                      tabindex="0"
+                    >
+                      <div
+                        class="rs-stack"
+                        style="align-items: center;"
+                      >
+                        <div
+                          class="rs-stack-item"
+                          style="flex-grow: 1; overflow: hidden;"
+                        >
+                          <input
+                            aria-hidden="true"
+                            class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
+                            readonly=""
+                            style="pointer-events: none;"
+                            tabindex="-1"
+                            value=""
+                          />
+                          <span
+                            aria-placeholder="Select"
+                            class="rs-picker-toggle-placeholder"
+                          >
+                            Select
+                          </span>
+                        </div>
+                        <div
+                          class="rs-stack-item"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            aria-label="angle down"
+                            class="rs-picker-toggle-caret rs-icon"
+                            data-category="legacy"
+                            fill="currentColor"
+                            focusable="false"
+                            height="1em"
+                            viewBox="0 0 21 32"
+                            width="1em"
+                          >
+                            <path
+                              d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="rs-form-group"
+                  role="group"
+                >
+                  <label
+                    class="rs-form-control-label"
                     for="SHOW_PENDING_WHEN_NOT_PUBLISHED"
                     id="SHOW_PENDING_WHEN_NOT_PUBLISHED-control-label"
                   >
@@ -1345,14 +1460,13 @@ exports[`SettingList renders successfully 1`] = `
                     </div>
                   </label>
                   <label
-                    class="rs-toggle rs-toggle-disabled"
+                    class="rs-toggle"
                   >
                     <input
                       aria-checked="false"
-                      aria-disabled="true"
+                      aria-disabled="false"
                       aria-label="Close"
                       class="rs-toggle-input"
-                      disabled=""
                       role="switch"
                       type="checkbox"
                     />

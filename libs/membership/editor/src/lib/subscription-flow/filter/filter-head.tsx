@@ -1,8 +1,8 @@
-import {TableCell} from '@mui/material'
-import {useTranslation} from 'react-i18next'
+import { TableCell } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 export function FilterHead() {
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
   return (
     <>
@@ -22,5 +22,5 @@ export function FilterHead() {
         <strong>{t('subscriptionFlow.autoRenewal')}</strong>
       </TableCell>
     </>
-  )
+  );
 }

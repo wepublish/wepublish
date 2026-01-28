@@ -1,22 +1,22 @@
-import {Field, InterfaceType} from '@nestjs/graphql'
-import {User} from '../user.model'
+import { Field, InterfaceType } from '@nestjs/graphql';
+import { User } from '../user.model';
 
 @InterfaceType()
 export abstract class HasOptionalUser {
-  @Field({nullable: true})
-  userID?: string
+  @Field({ nullable: true })
+  userID?: string;
 
-  @Field(() => User, {nullable: true})
-  user?: User
+  @Field(() => User, { nullable: true })
+  user?: User;
 }
 
 @InterfaceType()
 export abstract class HasUser {
   @Field()
-  userID!: string
+  userID!: string;
 
   @Field(() => User)
-  user!: User
+  user!: User;
 }
 
 // New Style
@@ -24,17 +24,17 @@ export abstract class HasUser {
 @InterfaceType()
 export abstract class HasUserLc {
   @Field()
-  userId!: string
+  userId!: string;
 
   @Field(() => User)
-  user!: User
+  user!: User;
 }
 
 @InterfaceType()
 export abstract class HasOptionalUserLc {
-  @Field({nullable: true})
-  userId?: string
+  @Field({ nullable: true })
+  userId?: string;
 
-  @Field(() => User, {nullable: true})
-  user?: User
+  @Field(() => User, { nullable: true })
+  user?: User;
 }

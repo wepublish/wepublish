@@ -1,18 +1,20 @@
+import styled from '@emotion/styled';
 import {
   AuthorLink,
   AuthorListDocument,
   FullAuthorFragment,
   FullImageFragment,
+  getApiClientV2,
   Maybe,
   TagType,
   useAuthorQuery,
   useCreateAuthorMutation,
-  useUpdateAuthorMutation
-} from '@wepublish/editor/api'
-import {slugify} from '@wepublish/utils'
-import React, {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdLink} from 'react-icons/md'
+  useUpdateAuthorMutation,
+} from '@wepublish/editor/api-v2';
+import { slugify } from '@wepublish/utils';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdLink } from 'react-icons/md';
 import {
   Button,
   Drawer,
@@ -24,183 +26,206 @@ import {
   PanelGroup,
   Schema,
   toaster,
-  Toggle
-} from 'rsuite'
-import {RichTextBlock, RichTextBlockValue, createDefaultValue} from '../blocks'
-import {generateID, getOperationNameFromDocument} from '../utility'
+  Toggle,
+} from 'rsuite';
+import FormControl from 'rsuite/FormControl';
+import { Descendant } from 'slate';
+
 import {
   ChooseEditImage,
+  createCheckedPermissionComponent,
   ListInput,
   ListValue,
   PermissionControl,
-  createCheckedPermissionComponent,
+  SelectTags,
   useAuthorisation,
-  SelectTags
-} from '../atoms'
-import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {ImageSelectPanel} from './imageSelectPanel'
-import {ImageEditPanel} from './imageEditPanel'
-import FormControl from 'rsuite/FormControl'
-import styled from '@emotion/styled'
-import {Descendant} from 'slate'
+} from '../atoms';
+import {
+  createDefaultValue,
+  RichTextBlock,
+  RichTextBlockValue,
+} from '../blocks';
+import { toggleRequiredLabel } from '../toggleRequiredLabel';
+import { generateID, getOperationNameFromDocument } from '../utility';
+import { ImageEditPanel } from './imageEditPanel';
+import { ImageSelectPanel } from './imageSelectPanel';
 
-const {ControlLabel: RControlLabel, Group, Control} = RForm
+const { ControlLabel: RControlLabel, Group, Control } = RForm;
 
 const InputGroup = styled(RInputGroup)`
   width: 230px;
   margin-left: 5px;
-`
+`;
 
 const Controls = styled('div')`
   display: flex;
   flex-direction: row;
-`
+`;
 
 const Form = styled(RForm)`
   height: 100%;
-`
+`;
 
 const ControlLabel = styled(RControlLabel)`
   padding-top: 16px;
-`
+`;
 
 export interface AuthorEditPanelProps {
-  id?: string
+  id?: string;
 
-  onClose?(): void
-  onSave?(author: FullAuthorFragment): void
+  onClose?(): void;
+  onSave?(author: FullAuthorFragment): void;
 }
 
-function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
-  const [name, setName] = useState('')
-  const [tagIds, setTagIds] = useState<string[]>([])
-  const [slug, setSlug] = useState('')
-  const [jobTitle, setJobTitle] = useState('')
-  const [image, setImage] = useState<Maybe<FullImageFragment>>()
-  const [bio, setBio] = useState<RichTextBlockValue['richText'] | undefined>(() =>
-    !id ? createDefaultValue() : undefined
-  )
-  const [hideOnArticle, setHideOnArticle] = useState<boolean | undefined | null>(undefined)
-  const [hideOnTeaser, setHideOnTeaser] = useState<boolean | undefined | null>(undefined)
-  const [hideOnTeam, setHideOnTeam] = useState<boolean | undefined | null>(undefined)
+function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
+  const [name, setName] = useState('');
+  const [tagIds, setTagIds] = useState<string[]>([]);
+  const [slug, setSlug] = useState('');
+  const [jobTitle, setJobTitle] = useState('');
+  const [image, setImage] = useState<Maybe<FullImageFragment>>();
+  const [bio, setBio] = useState<RichTextBlockValue['richText'] | undefined>(
+    () => (!id ? createDefaultValue() : undefined)
+  );
+  const [hideOnArticle, setHideOnArticle] = useState<
+    boolean | undefined | null
+  >(undefined);
+  const [hideOnTeaser, setHideOnTeaser] = useState<boolean | undefined | null>(
+    undefined
+  );
+  const [hideOnTeam, setHideOnTeam] = useState<boolean | undefined | null>(
+    undefined
+  );
   const [links, setLinks] = useState<ListValue<AuthorLink>[]>([
-    {id: generateID(), value: {title: '', url: ''}}
-  ])
+    { id: generateID(), value: { title: '', url: '' } },
+  ]);
 
-  const [isChooseModalOpen, setChooseModalOpen] = useState(false)
-  const [isEditModalOpen, setEditModalOpen] = useState(false)
+  const [isChooseModalOpen, setChooseModalOpen] = useState(false);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
 
-  const isAuthorized = useAuthorisation('CAN_CREATE_AUTHOR')
+  const isAuthorized = useAuthorisation('CAN_CREATE_AUTHOR');
 
+  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
-    error: loadError
+    error: loadError,
   } = useAuthorQuery({
-    variables: {id: id!},
+    client,
+    variables: { id: id! },
     fetchPolicy: 'network-only',
-    skip: id === undefined
-  })
+    skip: id === undefined,
+  });
 
-  const [createAuthor, {loading: isCreating, error: createError}] = useCreateAuthorMutation({
-    refetchQueries: [getOperationNameFromDocument(AuthorListDocument)]
-  })
+  const [createAuthor, { loading: isCreating, error: createError }] =
+    useCreateAuthorMutation({
+      client,
+      refetchQueries: [getOperationNameFromDocument(AuthorListDocument)],
+    });
 
-  const [updateAuthor, {loading: isUpdating, error: updateError}] = useUpdateAuthorMutation()
+  const [updateAuthor, { loading: isUpdating, error: updateError }] =
+    useUpdateAuthorMutation({
+      client,
+    });
 
   const isDisabled =
-    isLoading || isCreating || isUpdating || loadError !== undefined || !isAuthorized
+    isLoading ||
+    isCreating ||
+    isUpdating ||
+    loadError !== undefined ||
+    !isAuthorized;
 
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (data?.author) {
-      setName(data.author.name)
-      setTagIds(data.author.tags?.map(tag => tag.id) || [])
-      setSlug(data.author.slug)
-      setJobTitle(data.author.jobTitle ?? '')
-      setImage(data.author.image)
-      setBio(data.author.bio ? data.author.bio : createDefaultValue())
-      setHideOnArticle(data.author.hideOnArticle)
-      setHideOnTeam(data.author.hideOnTeam)
-      setHideOnTeaser(data.author.hideOnTeaser)
+      setName(data.author.name);
+      setTagIds(data.author.tags?.map(tag => tag.id) || []);
+      setSlug(data.author.slug);
+      setJobTitle(data.author.jobTitle ?? '');
+      setImage(data.author.image);
+      setBio(data.author.bio ? data.author.bio : createDefaultValue());
+      setHideOnArticle(data.author.hideOnArticle);
+      setHideOnTeam(data.author.hideOnTeam);
+      setHideOnTeaser(data.author.hideOnTeaser);
       setLinks(
-        data.author.links
-          ? data.author.links.map(link => ({
-              id: generateID(),
-              value: {
-                title: link.title,
-                url: link.url
-              }
-            }))
-          : []
-      )
+        data.author.links ?
+          data.author.links.map(link => ({
+            id: generateID(),
+            value: {
+              title: link.title,
+              url: link.url,
+            },
+          }))
+        : []
+      );
     }
-  }, [data?.author])
+  }, [data?.author]);
 
   useEffect(() => {
-    const error = loadError?.message ?? createError?.message ?? updateError?.message
+    const error =
+      loadError?.message ?? createError?.message ?? updateError?.message;
     if (error)
       toaster.push(
-        <Message type="error" showIcon closable duration={0}>
+        <Message
+          type="error"
+          showIcon
+          closable
+          duration={0}
+        >
           {error}
         </Message>
-      )
-  }, [loadError, createError, updateError])
+      );
+  }, [loadError, createError, updateError]);
 
   function handleImageChange(image: FullImageFragment) {
-    setImage(image)
+    setImage(image);
   }
 
   async function handleSave() {
     if (id) {
-      const {data} = await updateAuthor({
+      const { data } = await updateAuthor({
         variables: {
           id,
-          input: {
-            name,
-            slug,
-            jobTitle,
-            imageID: image?.id || null,
-            links: links.map(({value}) => value),
-            bio,
-            tagIds,
-            hideOnArticle,
-            hideOnTeaser,
-            hideOnTeam
-          }
-        }
-      })
+          name,
+          slug,
+          jobTitle,
+          imageID: image?.id || null,
+          links: links.map(({ value }) => value),
+          bio,
+          tagIds,
+          hideOnArticle,
+          hideOnTeaser,
+          hideOnTeam,
+        },
+      });
 
-      if (data?.updateAuthor) onSave?.(data.updateAuthor)
+      if (data?.updateAuthor) onSave?.(data.updateAuthor);
     } else {
-      const {data} = await createAuthor({
+      const { data } = await createAuthor({
         variables: {
-          input: {
-            name,
-            slug,
-            jobTitle,
-            imageID: image?.id,
-            links: links.map(({value}) => value),
-            bio,
-            tagIds,
-            hideOnArticle,
-            hideOnTeaser,
-            hideOnTeam
-          }
-        }
-      })
+          name,
+          slug,
+          jobTitle,
+          imageID: image?.id,
+          links: links.map(({ value }) => value),
+          bio,
+          tagIds,
+          hideOnArticle: !!hideOnArticle,
+          hideOnTeaser: !!hideOnTeaser,
+          hideOnTeam: !!hideOnTeam,
+        },
+      });
 
-      if (data?.createAuthor) onSave?.(data.createAuthor)
+      if (data?.createAuthor) onSave?.(data.createAuthor);
     }
   }
 
   // Defines field requirements
-  const {StringType} = Schema.Types
+  const { StringType } = Schema.Types;
   const validationModel = Schema.Model({
     name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
-    link: StringType().isURL(t('errorMessages.invalidUrlErrorMessage'))
-  })
+    link: StringType().isURL(t('errorMessages.invalidUrlErrorMessage')),
+  });
 
   return (
     <>
@@ -208,10 +233,13 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         onSubmit={validationPassed => validationPassed && handleSave()}
         fluid
         model={validationModel}
-        formValue={{name}}>
+        formValue={{ name }}
+      >
         <Drawer.Header>
           <Drawer.Title>
-            {id ? t('authors.panels.editAuthor') : t('authors.panels.createAuthor')}
+            {id ?
+              t('authors.panels.editAuthor')
+            : t('authors.panels.createAuthor')}
           </Drawer.Title>
 
           <Drawer.Actions>
@@ -220,11 +248,15 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                 appearance="primary"
                 disabled={isDisabled}
                 type="submit"
-                data-testid="saveButton">
+                data-testid="saveButton"
+              >
                 {id ? t('save') : t('create')}
               </Button>
             </PermissionControl>
-            <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            <Button
+              appearance={'subtle'}
+              onClick={() => onClose?.()}
+            >
               {t('authors.panels.close')}
             </Button>
           </Drawer.Actions>
@@ -234,15 +266,17 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
           <PanelGroup>
             <Panel>
               <Group controlId="name">
-                <ControlLabel>{toggleRequiredLabel(t('authors.panels.name'))}</ControlLabel>
+                <ControlLabel>
+                  {toggleRequiredLabel(t('authors.panels.name'))}
+                </ControlLabel>
 
                 <Control
                   name="name"
                   value={name}
                   disabled={isDisabled}
                   onChange={(value: string) => {
-                    setName(value)
-                    setSlug(slugify(value))
+                    setName(value);
+                    setSlug(slugify(value));
                   }}
                 />
               </Group>
@@ -253,7 +287,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                   value={jobTitle}
                   disabled={isDisabled}
                   onChange={(value: string) => {
-                    setJobTitle(value)
+                    setJobTitle(value);
                   }}
                 />
               </Group>
@@ -283,21 +317,27 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
               </div>
             </Panel>
 
-            <Panel header={t('authors.panels.links')} className="authorLinks">
+            <Panel
+              header={t('authors.panels.links')}
+              className="authorLinks"
+            >
               <ListInput
                 disabled={isDisabled}
                 value={links}
                 onChange={links => {
-                  setLinks(links)
+                  setLinks(links);
                 }}
-                defaultValue={{title: '', url: ''}}>
-                {({value, onChange}) => (
+                defaultValue={{ title: '', url: '' }}
+              >
+                {({ value, onChange }) => (
                   <Controls>
                     <Control
                       name="title"
                       placeholder={t('authors.panels.title')}
                       value={value.title}
-                      onChange={(title: string) => onChange({...value, title})}
+                      onChange={(title: string) =>
+                        onChange({ ...value, title })
+                      }
                     />
                     <Group>
                       <InputGroup inside>
@@ -307,9 +347,11 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
                         <Control
                           name="link"
-                          placeholder={t('authors.panels.link') + ':https//link.com'}
+                          placeholder={
+                            t('authors.panels.link') + ':https//link.com'
+                          }
                           value={value.url}
-                          onChange={(url: any) => onChange({...value, url})}
+                          onChange={(url: any) => onChange({ ...value, url })}
                           accepter={Input}
                         />
                       </InputGroup>
@@ -333,31 +375,49 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             {/* hide author in different places */}
             <Panel header={t('authorEditPanel.hideAuthor')}>
               <Group controlId="hideAuthorToggles">
-                <RControlLabel>{t('authorEditPanel.hideOnArticle')}</RControlLabel>
-                <Toggle checked={!!hideOnArticle} onChange={value => setHideOnArticle(value)} />
+                <RControlLabel>
+                  {t('authorEditPanel.hideOnArticle')}
+                </RControlLabel>
+                <Toggle
+                  checked={!!hideOnArticle}
+                  onChange={value => setHideOnArticle(value)}
+                />
 
                 <ControlLabel>{t('authorEditPanel.hideOnTeaser')}</ControlLabel>
-                <Toggle checked={!!hideOnTeaser} onChange={value => setHideOnTeaser(value)} />
+                <Toggle
+                  checked={!!hideOnTeaser}
+                  onChange={value => setHideOnTeaser(value)}
+                />
 
                 <ControlLabel>{t('authorEditPanel.hideOnTeam')}</ControlLabel>
-                <Toggle checked={!!hideOnTeam} onChange={value => setHideOnTeam(value)} />
+                <Toggle
+                  checked={!!hideOnTeam}
+                  onChange={value => setHideOnTeam(value)}
+                />
               </Group>
             </Panel>
           </PanelGroup>
         </Drawer.Body>
       </Form>
 
-      <Drawer open={isChooseModalOpen} size="sm" onClose={() => setChooseModalOpen(false)}>
+      <Drawer
+        open={isChooseModalOpen}
+        size="sm"
+        onClose={() => setChooseModalOpen(false)}
+      >
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={(value: FullImageFragment) => {
-            setChooseModalOpen(false)
-            handleImageChange(value)
+            setChooseModalOpen(false);
+            handleImageChange(value);
           }}
         />
       </Drawer>
 
-      <Drawer open={isEditModalOpen} size="sm">
+      <Drawer
+        open={isEditModalOpen}
+        size="sm"
+      >
         <ImageEditPanel
           id={image?.id}
           onClose={() => setEditModalOpen(false)}
@@ -365,12 +425,12 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         />
       </Drawer>
     </>
-  )
+  );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_AUTHOR',
   'CAN_GET_AUTHORS',
   'CAN_CREATE_AUTHOR',
-  'CAN_DELETE_AUTHOR'
-])(AuthorEditPanel)
-export {CheckedPermissionComponent as AuthorEditPanel}
+  'CAN_DELETE_AUTHOR',
+])(AuthorEditPanel);
+export { CheckedPermissionComponent as AuthorEditPanel };

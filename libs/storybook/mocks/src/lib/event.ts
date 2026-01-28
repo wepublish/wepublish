@@ -1,14 +1,14 @@
-import {EventStatus, FullEventFragment} from '@wepublish/website/api'
-import {mockImage} from './image'
-import nanoid from 'nanoid'
-import {mockTag} from './tag'
-import {mockRichText} from './richtext'
+import { EventStatus, FullEventFragment } from '@wepublish/website/api';
+import { mockImage } from './image';
+import nanoid from 'nanoid';
+import { mockTag } from './tag';
+import { mockRichText } from './richtext';
 
 export const mockEvent = ({
   image = mockImage(),
-  tags = [mockTag(), mockTag({main: true})],
+  tags = [mockTag(), mockTag({ main: true })],
   description = mockRichText(),
-  lead = 'This is a lead'
+  lead = 'This is a lead',
 }: Partial<FullEventFragment> = {}): FullEventFragment => ({
   __typename: 'Event',
   id: nanoid(),
@@ -23,5 +23,5 @@ export const mockEvent = ({
   image,
   tags,
   description,
-  lead
-})
+  lead,
+});

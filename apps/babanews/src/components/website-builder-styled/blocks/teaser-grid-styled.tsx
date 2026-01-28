@@ -1,9 +1,9 @@
-import styled from '@emotion/styled'
-import {css} from '@mui/material'
-import {TeaserGridBlock} from '@wepublish/block-content/website'
+import styled from '@emotion/styled';
+import { css } from '@mui/material';
+import { TeaserGridBlock } from '@wepublish/block-content/website';
 
 export const BabanewsTeaserGrid = styled(TeaserGridBlock)`
-  ${({numColumns, theme}) =>
+  ${({ numColumns, theme }) =>
     numColumns > 1 &&
     css`
       row-gap: ${theme.spacing(3)};
@@ -25,4 +25,4 @@ export const BabanewsTeaserGrid = styled(TeaserGridBlock)`
         row-gap: ${theme.spacing(5)};
       }
     `}
-`
+`;

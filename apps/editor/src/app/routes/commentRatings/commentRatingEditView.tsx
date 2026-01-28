@@ -1,25 +1,26 @@
-import {ApolloError} from '@apollo/client'
-import styled from '@emotion/styled'
+import { ApolloError } from '@apollo/client';
+import styled from '@emotion/styled';
 import {
   CommentRatingSystemAnswer,
-  FullCommentRatingSystem,
+  FullCommentRatingSystemFragment,
+  getApiClientV2,
   RatingSystemType,
   useCreateRatingSystemAnswerMutation,
   useDeleteRatingSystemAnswerMutation,
   useRatingSystemLazyQuery,
-  useUpdateRatingSystemMutation
-} from '@wepublish/editor/api'
+  useUpdateRatingSystemMutation,
+} from '@wepublish/editor/api-v2';
 import {
   createCheckedPermissionComponent,
   IconButtonTooltip,
   ListViewActions,
   ListViewContainer,
   ListViewHeader,
-  TableWrapper
-} from '@wepublish/ui/editor'
-import {useCallback, useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete, MdOutlineSave, MdReplay} from 'react-icons/md'
+  TableWrapper,
+} from '@wepublish/ui/editor';
+import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdAdd, MdDelete, MdOutlineSave, MdReplay } from 'react-icons/md';
 import {
   Button,
   FlexboxGrid,
@@ -29,108 +30,138 @@ import {
   Message,
   Modal,
   SelectPicker,
-  toaster
-} from 'rsuite'
+  toaster,
+} from 'rsuite';
 
 const Content = styled.div`
   margin-top: 2rem;
   height: 100%;
-`
+`;
 
 const IconButton = styled(RIconButton)`
   margin-right: 12px;
-`
+`;
 
 const AnswerGrid = styled(FlexboxGrid)`
   margin-bottom: 12px;
   gap: 12px;
-`
+`;
 
 const Loader = styled(RLoader)`
   margin: 30px;
-`
+`;
 
 const P = styled.p`
   display: flex;
   align-items: center;
   gap: 8px;
-`
+`;
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
-    <Message type="error" showIcon closable duration={3000}>
+    <Message
+      type="error"
+      showIcon
+      closable
+      duration={3000}
+    >
       {error.message}
     </Message>
-  )
-}
+  );
+};
 
 function CommentRatingEditView() {
-  const [ratingSystem, setRatingSystem] = useState<FullCommentRatingSystem | null>(null)
-  const [answerToDelete, setAnswerToDelete] = useState<string | null>(null)
+  const [ratingSystem, setRatingSystem] =
+    useState<FullCommentRatingSystemFragment | null>(null);
+  const [answerToDelete, setAnswerToDelete] = useState<string | null>(null);
 
-  const [t] = useTranslation()
+  const [t] = useTranslation();
 
-  const [fetchRatingSystem, {loading: isFetching}] = useRatingSystemLazyQuery({
-    onError: showErrors,
-    onCompleted: data => setRatingSystem(data.ratingSystem)
-  })
+  const client = getApiClientV2();
+  const [fetchRatingSystem, { loading: isFetching }] = useRatingSystemLazyQuery(
+    {
+      client,
+      onError: showErrors,
+      onCompleted: data => setRatingSystem(data.ratingSystem),
+    }
+  );
 
-  const [addAnswer, {loading: isAdding}] = useCreateRatingSystemAnswerMutation({
-    onCompleted: ({createRatingSystemAnswer}) => {
-      setRatingSystem(old =>
-        old
-          ? {
+  const [addAnswer, { loading: isAdding }] =
+    useCreateRatingSystemAnswerMutation({
+      client,
+      onCompleted: ({ createRatingSystemAnswer }) => {
+        setRatingSystem(old =>
+          old ?
+            {
               ...old,
-              answers: [...old.answers, createRatingSystemAnswer]
+              answers: [...old.answers, createRatingSystemAnswer],
             }
           : null
-      )
-    }
-  })
+        );
+      },
+    });
 
-  const [deleteAnswer, {loading: isDeleting}] = useDeleteRatingSystemAnswerMutation({
-    onError: showErrors,
-    onCompleted: data => {
-      setRatingSystem(old =>
-        old
-          ? {
+  const [deleteAnswer, { loading: isDeleting }] =
+    useDeleteRatingSystemAnswerMutation({
+      client,
+      onError: showErrors,
+      onCompleted: data => {
+        setRatingSystem(old =>
+          old ?
+            {
               ...old,
-              answers: old.answers.filter(answer => answer.id !== data.deleteRatingSystemAnswer.id)
+              answers: old.answers.filter(
+                answer => answer.id !== data.deleteRatingSystemAnswer.id
+              ),
             }
           : null
-      )
-    }
-  })
+        );
+      },
+    });
 
-  const [updateAnswer, {loading: isUpdating}] = useUpdateRatingSystemMutation({
-    onError: showErrors,
-    onCompleted: () =>
-      toaster.push(
-        <Message type="success" showIcon closable duration={3000}>
-          {t('comments.ratingEdit.updateSuccessful')}
-        </Message>
-      )
-  })
+  const [updateAnswer, { loading: isUpdating }] = useUpdateRatingSystemMutation(
+    {
+      client,
+      onError: showErrors,
+      onCompleted: () =>
+        toaster.push(
+          <Message
+            type="success"
+            showIcon
+            closable
+            duration={3000}
+          >
+            {t('comments.ratingEdit.updateSuccessful')}
+          </Message>
+        ),
+    }
+  );
 
   const updateAnswerLocally = useCallback(
-    (answerId: string, answer: string | null | undefined, type: RatingSystemType) => {
+    (
+      answerId: string,
+      answer: string | null | undefined,
+      type: RatingSystemType
+    ) => {
       setRatingSystem(old =>
-        old
-          ? {
-              ...old,
-              answers: old.answers.map(a => (answerId === a.id ? {...a, answer, type} : a))
-            }
-          : null
-      )
+        old ?
+          {
+            ...old,
+            answers: old.answers.map(a =>
+              answerId === a.id ? { ...a, answer, type } : a
+            ),
+          }
+        : null
+      );
     },
     [setRatingSystem]
-  )
+  );
 
-  const isLoading = isFetching || isAdding || isDeleting || isUpdating
+  const isLoading = isFetching || isAdding || isDeleting || isUpdating;
 
   useEffect(() => {
-    fetchRatingSystem()
-  }, [])
+    fetchRatingSystem();
+  }, []);
 
   return (
     <>
@@ -147,10 +178,11 @@ function CommentRatingEditView() {
                 addAnswer({
                   variables: {
                     type: RatingSystemType.Star,
-                    ratingSystemId: ratingSystem.id
-                  }
-                })
-              }}>
+                    ratingSystemId: ratingSystem.id,
+                  },
+                });
+              }}
+            >
               <MdAdd />
               {t('comments.ratingEdit.newAnswer')}
             </IconButton>
@@ -164,18 +196,19 @@ function CommentRatingEditView() {
               onClick={() =>
                 updateAnswer({
                   variables: {
-                    ratingSystemId: ratingSystem.id,
-                    answers: ratingSystem.answers.map(({id, type, answer}) => ({id, type, answer}))
-                  }
+                    id: ratingSystem.id,
+                    answers: ratingSystem.answers.map(
+                      ({ id, type, answer }) => ({ id, type, answer })
+                    ),
+                  },
                 })
-              }>
-              {isLoading ? (
+              }
+            >
+              {isLoading ?
                 <P>
                   <MdReplay /> {t('comments.ratingEdit.loading')}
                 </P>
-              ) : (
-                t('save')
-              )}
+              : t('save')}
             </RIconButton>
           </ListViewActions>
         )}
@@ -205,11 +238,14 @@ function CommentRatingEditView() {
         open={!!answerToDelete}
         backdrop="static"
         size="xs"
-        onClose={() => setAnswerToDelete(null)}>
+        onClose={() => setAnswerToDelete(null)}
+      >
         <Modal.Title>{t('comments.ratingEdit.areYouSure')}</Modal.Title>
         <Modal.Body>
           {t('comments.ratingEdit.areYouSureBody', {
-            answer: ratingSystem?.answers.find(answer => answer.id === answerToDelete)?.answer
+            answer: ratingSystem?.answers.find(
+              answer => answer.id === answerToDelete
+            )?.answer,
           })}
         </Modal.Body>
         <Modal.Footer>
@@ -219,31 +255,43 @@ function CommentRatingEditView() {
             onClick={() => {
               deleteAnswer({
                 variables: {
-                  answerId: answerToDelete!
-                }
-              })
-              setAnswerToDelete(null)
-            }}>
+                  answerId: answerToDelete!,
+                },
+              });
+              setAnswerToDelete(null);
+            }}
+          >
             {t('comments.ratingEdit.areYouSureConfirmation')}
           </Button>
 
-          <Button appearance="subtle" onClick={() => setAnswerToDelete(null)}>
+          <Button
+            appearance="subtle"
+            onClick={() => setAnswerToDelete(null)}
+          >
             {t('cancel')}
           </Button>
         </Modal.Footer>
       </Modal>
     </>
-  )
+  );
 }
 
 type PollAnswersProps = {
-  answers: CommentRatingSystemAnswer[]
-  onDeleteAnswer(answerId: string): void
-  onUpdateAnswer(answerId: string, name: string | null | undefined, type: RatingSystemType): void
-}
+  answers: CommentRatingSystemAnswer[];
+  onDeleteAnswer(answerId: string): void;
+  onUpdateAnswer(
+    answerId: string,
+    name: string | null | undefined,
+    type: RatingSystemType
+  ): void;
+};
 
-export function RatingAnswers({answers, onDeleteAnswer, onUpdateAnswer}: PollAnswersProps) {
-  const {t} = useTranslation()
+export function RatingAnswers({
+  answers,
+  onDeleteAnswer,
+  onUpdateAnswer,
+}: PollAnswersProps) {
+  const { t } = useTranslation();
 
   return (
     <div>
@@ -253,7 +301,9 @@ export function RatingAnswers({answers, onDeleteAnswer, onUpdateAnswer}: PollAns
             name={`answer-${answer.id}`}
             placeholder={t('comments.ratingEdit.placeholder')}
             value={answer.answer || ''}
-            onChange={(value: string) => onUpdateAnswer(answer.id, value, answer.type)}
+            onChange={(value: string) =>
+              onUpdateAnswer(answer.id, value, answer.type)
+            }
           />
 
           <SelectPicker
@@ -262,7 +312,10 @@ export function RatingAnswers({answers, onDeleteAnswer, onUpdateAnswer}: PollAns
             onChange={(value: RatingSystemType | null) =>
               onUpdateAnswer(answer.id, answer.answer, value!)
             }
-            data={Object.entries(RatingSystemType).map(([label, value]) => ({label, value}))}
+            data={Object.entries(RatingSystemType).map(([label, value]) => ({
+              label,
+              value,
+            }))}
           />
 
           <IconButtonTooltip caption={t('delete')}>
@@ -278,14 +331,14 @@ export function RatingAnswers({answers, onDeleteAnswer, onUpdateAnswer}: PollAns
         </AnswerGrid>
       ))}
     </div>
-  )
+  );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_COMMENT_RATING_SYSTEM',
   'CAN_CREATE_COMMENT_RATING_SYSTEM',
   'CAN_UPDATE_COMMENT_RATING_SYSTEM',
-  'CAN_DELETE_COMMENT_RATING_SYSTEM'
-])(CommentRatingEditView)
+  'CAN_DELETE_COMMENT_RATING_SYSTEM',
+])(CommentRatingEditView);
 
-export {CheckedPermissionComponent as CommentRatingEditView}
+export { CheckedPermissionComponent as CommentRatingEditView };

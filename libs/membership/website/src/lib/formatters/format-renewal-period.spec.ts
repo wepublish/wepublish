@@ -1,5 +1,5 @@
-import {PaymentPeriodicity} from '@wepublish/website/api'
-import {formatRenewalPeriod} from './format-renewal-period'
+import { PaymentPeriodicity } from '@wepublish/website/api';
+import { formatRenewalPeriod } from './format-renewal-period';
 
 describe('formatRenewalPeriod', () => {
   it.each([
@@ -8,8 +8,8 @@ describe('formatRenewalPeriod', () => {
     PaymentPeriodicity.Biannual,
     PaymentPeriodicity.Yearly,
     PaymentPeriodicity.Biennial,
-    PaymentPeriodicity.Lifetime
+    PaymentPeriodicity.Lifetime,
   ])('should format renewal period for %s', periodicity => {
-    expect(formatRenewalPeriod(periodicity)).toMatchSnapshot()
-  })
-})
+    expect(formatRenewalPeriod(periodicity)).toMatchSnapshot();
+  });
+});

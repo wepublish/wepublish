@@ -1,13 +1,13 @@
-import {createOptionalsArray, DataLoaderService} from '@wepublish/utils/api'
-import {PrismaClient, SubscriptionDeactivation} from '@prisma/client'
-import {Injectable, Scope} from '@nestjs/common'
+import { createOptionalsArray, DataLoaderService } from '@wepublish/utils/api';
+import { PrismaClient, SubscriptionDeactivation } from '@prisma/client';
+import { Injectable, Scope } from '@nestjs/common';
 
 @Injectable({
-  scope: Scope.REQUEST
+  scope: Scope.REQUEST,
 })
 export class SubscriptionDeactivationDataloader extends DataLoaderService<SubscriptionDeactivation> {
   constructor(protected prisma: PrismaClient) {
-    super()
+    super();
   }
 
   protected async loadByKeys(subscriptionIds: string[]) {
@@ -15,10 +15,10 @@ export class SubscriptionDeactivationDataloader extends DataLoaderService<Subscr
       subscriptionIds,
       await this.prisma.subscriptionDeactivation.findMany({
         where: {
-          subscriptionID: {in: subscriptionIds}
-        }
+          subscriptionID: { in: subscriptionIds },
+        },
       }),
       'subscriptionID'
-    )
+    );
   }
 }

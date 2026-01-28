@@ -1,7 +1,7 @@
-import {Injectable} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
-import {DashboardInvoice} from './dashboard-invoice.model'
-import {ok} from 'assert'
+import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import { DashboardInvoice } from './dashboard-invoice.model';
+import { ok } from 'assert';
 
 @Injectable()
 export class DashboardInvoiceService {
@@ -14,21 +14,21 @@ export class DashboardInvoiceService {
           {
             dueAt: {
               gte: start,
-              lt: end
-            }
+              lt: end,
+            },
           },
           {
             paidAt: {
               gte: start,
-              lt: end
-            }
-          }
+              lt: end,
+            },
+          },
         ],
         canceledAt: null,
-        manuallySetAsPaidByUserId: null
+        manuallySetAsPaidByUserId: null,
       },
       orderBy: {
-        dueAt: 'desc'
+        dueAt: 'desc',
       },
       include: {
         items: true,
@@ -36,24 +36,27 @@ export class DashboardInvoiceService {
           select: {
             memberPlan: {
               select: {
-                name: true
-              }
-            }
-          }
-        }
-      }
-    })
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
-    return data.map(({items, subscription, dueAt, paidAt}) => {
-      const amount = items.reduce((sum, item) => sum + item.amount * item.quantity, 0)
+    return data.map(({ items, subscription, dueAt, paidAt }) => {
+      const amount = items.reduce(
+        (sum, item) => sum + item.amount * item.quantity,
+        0
+      );
 
       return {
         paidAt: paidAt ?? undefined,
         dueAt,
         memberPlan: subscription?.memberPlan?.name,
-        amount
-      }
-    })
+        amount,
+      };
+    });
   }
 
   async revenue(start: Date, end: Date): Promise<DashboardInvoice[]> {
@@ -61,42 +64,45 @@ export class DashboardInvoiceService {
       where: {
         paidAt: {
           gte: start,
-          lt: end
+          lt: end,
         },
-        manuallySetAsPaidByUserId: null
+        manuallySetAsPaidByUserId: null,
       },
       orderBy: {
-        paidAt: 'desc'
+        paidAt: 'desc',
       },
       include: {
         items: {
           select: {
             quantity: true,
-            amount: true
-          }
+            amount: true,
+          },
         },
         subscription: {
           select: {
             memberPlan: {
               select: {
-                name: true
-              }
-            }
-          }
-        }
-      }
-    })
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
-    return data.map(({items, subscription, dueAt, paidAt}) => {
-      ok(paidAt)
-      const amount = items.reduce((sum, item) => sum + item.amount * item.quantity, 0)
+    return data.map(({ items, subscription, dueAt, paidAt }) => {
+      ok(paidAt);
+      const amount = items.reduce(
+        (sum, item) => sum + item.amount * item.quantity,
+        0
+      );
 
       return {
         paidAt,
         dueAt,
         memberPlan: subscription?.memberPlan?.name,
-        amount
-      }
-    })
+        amount,
+      };
+    });
   }
 }

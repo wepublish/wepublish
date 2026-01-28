@@ -1,93 +1,112 @@
-import {ApolloError} from '@apollo/client'
-import {stripTypename} from '@wepublish/editor/api'
+import { ApolloError } from '@apollo/client';
+import { stripTypename } from '@wepublish/editor/api';
 import {
   FullConsentFragment,
   MutationCreateConsentArgs,
   MutationUpdateConsentArgs,
   useConsentQuery,
-  useUpdateConsentMutation
-} from '@wepublish/editor/api-v2'
-import {useMemo, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {useNavigate, useParams} from 'react-router-dom'
-import {Form, Message, Schema, toaster} from 'rsuite'
+  useUpdateConsentMutation,
+} from '@wepublish/editor/api-v2';
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Form, Message, Schema, toaster } from 'rsuite';
 
-import {getApiClientV2} from '@wepublish/editor/api-v2'
-import {SingleViewTitle} from '@wepublish/ui/editor'
-import {ConsentForm} from './consent-form'
+import { getApiClientV2 } from '@wepublish/editor/api-v2';
+import { SingleViewTitle } from '@wepublish/ui/editor';
+import { ConsentForm } from './consent-form';
 
-const mapApiDataToInput = (consent: FullConsentFragment): MutationUpdateConsentArgs => ({
+const mapApiDataToInput = (
+  consent: FullConsentFragment
+): MutationUpdateConsentArgs => ({
   ...stripTypename(consent),
   name: consent.name,
   slug: consent.slug,
-  defaultValue: consent.defaultValue
-})
+  defaultValue: consent.defaultValue,
+});
 
 export const ConsentEditView = () => {
-  const {id} = useParams()
-  const consentId = id!
+  const { id } = useParams();
+  const consentId = id!;
 
-  const client = useMemo(() => getApiClientV2(), [])
-  const navigate = useNavigate()
-  const {t} = useTranslation()
+  const client = useMemo(() => getApiClientV2(), []);
+  const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const onErrorToast = (error: ApolloError, slug?: string) => {
     if (error.message.includes('Unique constraint')) {
       toaster.push(
-        <Message type="error" showIcon closable duration={3000}>
-          {t('consents.uniqueConstraint', {slug})}
+        <Message
+          type="error"
+          showIcon
+          closable
+          duration={3000}
+        >
+          {t('consents.uniqueConstraint', { slug })}
         </Message>
-      )
-      return
+      );
+      return;
     }
     toaster.push(
-      <Message type="error" showIcon closable duration={3000}>
+      <Message
+        type="error"
+        showIcon
+        closable
+        duration={3000}
+      >
         {error.message}
       </Message>
-    )
-  }
+    );
+  };
 
-  const closePath = '/consents'
-  const [consent, setConsent] = useState<MutationCreateConsentArgs | MutationUpdateConsentArgs>({
+  const closePath = '/consents';
+  const [consent, setConsent] = useState<
+    MutationCreateConsentArgs | MutationUpdateConsentArgs
+  >({
     defaultValue: true,
     name: '',
-    slug: ''
-  })
+    slug: '',
+  });
 
-  const [shouldClose, setShouldClose] = useState<boolean>(false)
+  const [shouldClose, setShouldClose] = useState<boolean>(false);
 
-  const {loading: dataLoading} = useConsentQuery({
+  const { loading: dataLoading } = useConsentQuery({
     client,
     variables: {
-      id: consentId
+      id: consentId,
     },
     onError: onErrorToast,
     onCompleted: data => {
       if (data.consent) {
-        setConsent(mapApiDataToInput(data.consent))
+        setConsent(mapApiDataToInput(data.consent));
       }
-    }
-  })
+    },
+  });
 
-  const [updateConsent, {loading: updateLoading}] = useUpdateConsentMutation({
+  const [updateConsent, { loading: updateLoading }] = useUpdateConsentMutation({
     client,
     onError: error => onErrorToast(error, consent.slug ?? ''),
     onCompleted: data => {
       if (shouldClose) {
-        navigate(closePath)
+        navigate(closePath);
       }
 
       if (data.updateConsent) {
-        setConsent(mapApiDataToInput(data.updateConsent))
+        setConsent(mapApiDataToInput(data.updateConsent));
       }
 
       toaster.push(
-        <Message type="success" showIcon closable duration={3000}>
+        <Message
+          type="success"
+          showIcon
+          closable
+          duration={3000}
+        >
           {t('toast.updatedSuccess')}
         </Message>
-      )
-    }
-  })
+      );
+    },
+  });
 
   const onSubmit = () => {
     updateConsent({
@@ -95,19 +114,19 @@ export const ConsentEditView = () => {
         id: consentId,
         name: consent.name,
         slug: consent.slug,
-        defaultValue: consent.defaultValue
-      }
-    })
-  }
+        defaultValue: consent.defaultValue,
+      },
+    });
+  };
 
-  const loading = dataLoading || updateLoading
+  const loading = dataLoading || updateLoading;
 
-  const {StringType, BooleanType} = Schema.Types
+  const { StringType, BooleanType } = Schema.Types;
   const validationModel = Schema.Model({
     name: StringType().isRequired(),
     slug: StringType().isRequired(),
-    defaultValue: BooleanType().isRequired()
-  })
+    defaultValue: BooleanType().isRequired(),
+  });
 
   return (
     <Form
@@ -115,7 +134,8 @@ export const ConsentEditView = () => {
       formValue={consent}
       model={validationModel}
       disabled={loading}
-      onSubmit={validationPassed => validationPassed && onSubmit()}>
+      onSubmit={validationPassed => validationPassed && onSubmit()}
+    >
       <SingleViewTitle
         loading={loading}
         title={t('consents.titleEdit')}
@@ -129,8 +149,10 @@ export const ConsentEditView = () => {
       <ConsentForm
         consent={consent}
         create
-        onChange={changes => setConsent(oldConsent => ({...oldConsent, ...(changes as any)}))}
+        onChange={changes =>
+          setConsent(oldConsent => ({ ...oldConsent, ...(changes as any) }))
+        }
       />
     </Form>
-  )
-}
+  );
+};

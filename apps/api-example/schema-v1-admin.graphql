@@ -3,42 +3,19 @@ type Query {
   createJWTForUser(userId: String!, expiresInMinutes: Int!): JWTToken
   createJWTForWebsiteLogin: JWTToken
   peerProfile: PeerProfile!
-  peers: [Peer!]
-  peer(id: String!): Peer
   me: User
   sessions: [Session!]!
-  authProviders(redirectUri: String): [AuthProvider!]!
   user(id: String): User
   users(cursor: String, take: Int = 10, skip: Int = 0, filter: UserFilter, sort: UserSort = modifiedAt, order: SortOrder = Descending): UserConnection!
   subscription(id: String!): Subscription
   subscriptions(cursor: String, take: Int = 10, skip: Int = 0, filter: SubscriptionFilter, sort: SubscriptionSort = modifiedAt, order: SortOrder = Descending): SubscriptionConnection!
   subscriptionsAsCsv(filter: SubscriptionFilter): String
-  userRole(id: String): UserRole
-  userRoles(cursor: String, take: Int = 10, skip: Int = 0, filter: UserRoleFilter, sort: UserRoleSort = modifiedAt, order: SortOrder = Descending): UserRoleConnection!
-  permissions: [Permission!]
-  tokens: [Token!]!
-  author(id: String, slug: Slug): Author
-  authors(cursor: String, take: Int = 10, skip: Int = 0, filter: AuthorFilter, sort: AuthorSort = ModifiedAt, order: SortOrder = Descending): AuthorConnection!
-  image(id: String): Image
-  images(cursor: String, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
   comment(id: String!): Comment
   comments(cursor: String, take: Int = 10, skip: Int = 0, filter: CommentFilter, sort: CommentSort = modifiedAt, order: SortOrder = Descending): CommentConnection!
-  memberPlan(id: String, slug: Slug): MemberPlan
-  memberPlans(cursor: String, take: Int = 10, skip: Int = 0, filter: MemberPlanFilter, sort: MemberPlanSort = modifiedAt, order: SortOrder = Descending): MemberPlanConnection!
-  paymentMethod(id: String): PaymentMethod
-  paymentMethods: [PaymentMethod!]!
-  paymentProviders: [PaymentProvider!]!
   invoice(id: String): Invoice
   invoices(cursor: String, take: Int = 10, skip: Int = 0, filter: InvoiceFilter, sort: InvoiceSort = modifiedAt, order: SortOrder = Descending): InvoiceConnection!
-  payment(id: String): Payment
-  payments(cursor: String, take: Int = 10, skip: Int = 0, filter: PaymentFilter, sort: PaymentSort = modifiedAt, order: SortOrder = Descending): PaymentConnection!
-  setting(name: String!): Setting
-  settings: [Setting!]!
-  ratingSystem: FullCommentRatingSystem!
-  tags(cursor: String, take: Int = 10, skip: Int = 0, filter: TagFilter, sort: TagSort = CreatedAt, order: SortOrder = Descending): TagConnection
   polls(cursor: String, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
   poll(id: String): FullPoll
-  newSubscribersPerMonth(monthsBack: Int): [SubscribersPerMonth]
 }
 
 type PeerProfile {
@@ -93,23 +70,6 @@ type FocalPoint {
 input ImageTransformation {
   width: Int
   height: Int
-  rotation: ImageRotation
-  quality: Float
-  output: ImageOutput
-}
-
-enum ImageRotation {
-  Auto
-  Rotate0
-  Rotate90
-  Rotate180
-  Rotate270
-}
-
-enum ImageOutput {
-  png
-  jpeg
-  webp
 }
 
 """A hexidecimal color value."""
@@ -120,17 +80,6 @@ scalar RichText
 type JWTToken {
   token: String!
   expiresAt: String!
-}
-
-type Peer {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  slug: String!
-  isDisabled: Boolean
-  hostURL: String!
-  profile: PeerProfile
 }
 
 type User {
@@ -144,20 +93,22 @@ type User {
   birthday: DateTime
   address: UserAddress
   flair: String
+  note: String
   userImage: Image
   active: Boolean!
   lastLogin: DateTime
   properties: [Properties!]!
   roles: [UserRole!]!
   paymentProviderCustomers: [PaymentProviderCustomer!]!
-  oauth2Accounts: [OAuth2Account!]!
   subscriptions: [UserSubscription!]!
 }
 
 type UserAddress {
   company: String
   streetAddress: String
+  streetAddressNumber: String
   streetAddress2: String
+  streetAddress2Number: String
   zipCode: String
   city: String
   country: String
@@ -186,12 +137,6 @@ type Permission {
 type PaymentProviderCustomer {
   paymentProviderID: String!
   customerID: String!
-}
-
-type OAuth2Account {
-  type: String!
-  provider: String!
-  scope: String!
 }
 
 type UserSubscription {
@@ -256,18 +201,27 @@ type MemberPlan {
   slug: String!
   image: Image
   description: RichText
+  shortDescription: RichText
   tags: [String!]
   active: Boolean!
   amountPerMonthMin: Int!
+  amountPerMonthMax: Int
   amountPerMonthTarget: Int
   currency: Currency!
   maxCount: Int
   extendable: Boolean!
+  productType: ProductType!
+  externalReward: String
   availablePaymentMethods: [AvailablePaymentMethod!]!
   migrateToTargetPaymentMethodID: String
   successPageId: String
   failPageId: String
   confirmationPageId: String
+}
+
+enum ProductType {
+  Subscription
+  Donation
 }
 
 type AvailablePaymentMethod {
@@ -285,6 +239,7 @@ type PaymentMethod {
   description: String!
   paymentProvider: PaymentProvider
   active: Boolean!
+  gracePeriod: Int!
   imageId: String
   image: Image
 }
@@ -325,11 +280,6 @@ type Session {
   user: User!
   createdAt: DateTime!
   expiresAt: DateTime!
-}
-
-type AuthProvider {
-  name: String!
-  url: String!
 }
 
 type UserConnection {
@@ -405,6 +355,8 @@ input SubscriptionFilter {
   paymentPeriodicity: PaymentPeriodicity
   userHasAddress: Boolean
   userID: String
+  userIDs: [String!]
+  subscriptionIDs: [String!]
   extendable: Boolean
 }
 
@@ -422,103 +374,6 @@ enum DateFilterComparison {
 }
 
 enum SubscriptionSort {
-  createdAt
-  modifiedAt
-}
-
-type UserRoleConnection {
-  nodes: [UserRole!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input UserRoleFilter {
-  name: String
-}
-
-enum UserRoleSort {
-  createdAt
-  modifiedAt
-}
-
-type Token {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-}
-
-type Author {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  slug: Slug!
-  url: String!
-  links: [AuthorLink!]
-  bio: RichText
-  jobTitle: String
-  imageID: String
-  image: Image
-  tags: [Tag!]!
-  hideOnArticle: Boolean
-  hideOnTeaser: Boolean
-  hideOnTeam: Boolean
-  peerId: String
-  peer: Peer
-}
-
-type AuthorLink {
-  title: String!
-  url: String!
-}
-
-type Tag {
-  id: String!
-  tag: String
-  type: TagType
-  main: Boolean!
-  url: String!
-}
-
-enum TagType {
-  Comment
-  Event
-  Author
-  Article
-  Page
-}
-
-type AuthorConnection {
-  nodes: [Author!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input AuthorFilter {
-  name: String
-  tagIds: [String!]
-  hideOnTeam: Boolean
-}
-
-enum AuthorSort {
-  CreatedAt
-  ModifiedAt
-  NAME
-}
-
-type ImageConnection {
-  nodes: [Image!]!
-  totalCount: Int!
-  pageInfo: PageInfo!
-}
-
-input ImageFilter {
-  title: String
-  tags: [String!]
-}
-
-enum ImageSort {
   createdAt
   modifiedAt
 }
@@ -541,6 +396,23 @@ type Comment {
   createdAt: DateTime!
   modifiedAt: DateTime!
   overriddenRatings: [overriddenRating!]
+}
+
+type Tag {
+  id: String!
+  tag: String
+  type: TagType
+  main: Boolean!
+  description: RichText
+  url: String!
+}
+
+enum TagType {
+  Comment
+  Event
+  Author
+  Article
+  Page
 }
 
 enum CommentAuthorType {
@@ -598,23 +470,6 @@ enum CommentSort {
   createdAt
 }
 
-type MemberPlanConnection {
-  nodes: [MemberPlan!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input MemberPlanFilter {
-  name: String
-  active: Boolean
-  tags: [String!]
-}
-
-enum MemberPlanSort {
-  createdAt
-  modifiedAt
-}
-
 type InvoiceConnection {
   nodes: [Invoice!]!
   pageInfo: PageInfo!
@@ -638,116 +493,6 @@ enum InvoiceSort {
   createdAt
   modifiedAt
   paidAt
-}
-
-type Payment {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  intentID: String
-  intentSecret: String
-  state: PaymentState!
-  invoice: Invoice!
-  intentData: String
-  paymentMethod: PaymentMethod!
-  paymentData: String
-}
-
-enum PaymentState {
-  created
-  submitted
-  requiresUserAction
-  processing
-  paid
-  canceled
-  declined
-}
-
-type PaymentConnection {
-  nodes: [Payment!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input PaymentFilter {
-  intentID: String
-}
-
-enum PaymentSort {
-  createdAt
-  modifiedAt
-}
-
-type Setting {
-  id: String!
-  name: SettingName!
-  value: GraphQLSettingValueType!
-  settingRestriction: SettingRestriction
-}
-
-enum SettingName {
-  allowGuestCommenting
-  allowGuestCommentRating
-  allowGuestPollVoting
-  sendLoginJwtExpiresMin
-  resetPasswordJwtExpiresMin
-  peeringTimeoutInMs
-  makeActiveSubscribersApiPublic
-  makeNewSubscribersApiPublic
-  makeRenewingSubscribersApiPublic
-  makeNewDeactivationsApiPublic
-  makeExpectedRevenueApiPublic
-  makeRevenueApiPublic
-  commentCharLimit
-  allowCommentEditing
-}
-
-scalar GraphQLSettingValueType
-
-type SettingRestriction {
-  maxValue: Int
-  minValue: Int
-  inputLength: Int
-  allowedValues: AllowedSettingVals
-}
-
-type AllowedSettingVals {
-  stringChoice: [String]
-  boolChoice: Boolean
-}
-
-type FullCommentRatingSystem {
-  id: String!
-  name: String
-  answers: [CommentRatingSystemAnswer!]!
-}
-
-type CommentRatingSystemAnswer {
-  id: String!
-  ratingSystemId: String!
-  answer: String
-  type: RatingSystemType!
-}
-
-enum RatingSystemType {
-  star
-}
-
-type TagConnection {
-  nodes: [Tag!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input TagFilter {
-  type: TagType
-  tag: String
-}
-
-enum TagSort {
-  CreatedAt
-  ModifiedAt
-  Tag
 }
 
 type PollConnection {
@@ -805,51 +550,24 @@ type PollExternalVote {
 """A valid vote value"""
 scalar VoteValue
 
-type SubscribersPerMonth {
-  month: String!
-  subscriberCount: Int!
-}
-
 type Mutation {
   updatePeerProfile(input: PeerProfileInput!): PeerProfile!
-  createPeer(input: CreatePeerInput!): Peer!
-  updatePeer(id: String!, input: UpdatePeerInput!): Peer!
-  deletePeer(id: String!): Peer
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
-  createSessionWithOAuth2Code(name: String!, code: String!, redirectUri: String!): SessionWithToken!
   revokeSession(id: String!): Boolean!
   revokeActiveSession: Boolean!
   sessions: [Session!]!
   sendJWTLogin(url: String!, email: String!): String!
   sendWebsiteLogin(email: String!): String!
-  createToken(input: TokenInput!): CreatedToken!
-  deleteToken(id: String!): CreatedToken
   createUser(input: UserInput!, password: String!): User
   updateUser(id: String!, input: UserInput!): User
   resetUserPassword(id: String!, password: String!, sendMail: Boolean): User
   deleteUser(id: String!): User
   createSubscription(input: SubscriptionInput!): Subscription
-  importSubscription(input: SubscriptionInput!): Subscription
   renewSubscription(id: String!): Invoice
   updateSubscription(id: String!, input: SubscriptionInput!): Subscription
   deleteSubscription(id: String!): Subscription
   cancelSubscription(id: String!, reason: SubscriptionDeactivationReason!): Subscription
-  createUserRole(input: UserRoleInput!): UserRole
-  updateUserRole(id: String!, input: UserRoleInput!): UserRole
-  deleteUserRole(id: String!): UserRole
-  createAuthor(input: AuthorInput!): Author
-  updateAuthor(id: String!, input: AuthorInput!): Author
-  deleteAuthor(id: String!): Author
-  uploadImage(input: UploadImageInput!): Image
-  updateImage(id: String!, input: UpdateImageInput!): Image
-  deleteImage(id: String!): Image
-  createMemberPlan(input: MemberPlanInput!): MemberPlan
-  updateMemberPlan(id: String!, input: MemberPlanInput!): MemberPlan
-  deleteMemberPlan(id: String!): MemberPlan
-  createPaymentMethod(input: PaymentMethodInput!): PaymentMethod
-  updatePaymentMethod(id: String!, input: PaymentMethodInput!): PaymentMethod
-  deletePaymentMethod(id: String!): PaymentMethod
   createInvoice(input: InvoiceInput!): Invoice
   createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment
   updateInvoice(id: String!, input: InvoiceInput!): Invoice
@@ -861,10 +579,6 @@ type Mutation {
   rejectComment(id: String!, rejectionReason: CommentRejectionReason): Comment!
   requestChangesOnComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
   deleteComment(id: String!): Comment!
-  updateSettingList(value: [UpdateSettingArgs]): [Setting]
-  createRatingSystemAnswer(ratingSystemId: String!, type: RatingSystemType = star, answer: String): CommentRatingSystemAnswer!
-  updateRatingSystem(ratingSystemId: String!, name: String, answers: [UpdateCommentRatingSystemAnswer!]): FullCommentRatingSystem!
-  deleteRatingSystemAnswer(id: String!): CommentRatingSystemAnswer!
   createPoll(opensAt: DateTime, closedAt: DateTime, question: String): PollWithAnswers
   createPollAnswer(pollId: String!, answer: String): PollAnswer
   createPollExternalVoteSource(pollId: String!, source: String): PollExternalVoteSource
@@ -872,9 +586,6 @@ type Mutation {
   deletePoll(id: String!): FullPoll
   deletePollAnswer(id: String!): PollAnswerWithVoteCount
   deletePollExternalVoteSource(id: String!): PollExternalVoteSource
-  createTag(tag: String, type: TagType!, main: Boolean): Tag
-  updateTag(id: String!, tag: String, main: Boolean): Tag
-  deleteTag(id: String!): Tag
 }
 
 input PeerProfileInput {
@@ -889,39 +600,12 @@ input PeerProfileInput {
   callToActionImageID: String
 }
 
-input CreatePeerInput {
-  name: String!
-  slug: String!
-  hostURL: String!
-  token: String!
-}
-
-input UpdatePeerInput {
-  name: String
-  slug: String
-  hostURL: String
-  isDisabled: Boolean
-  token: String
-}
-
 type SessionWithToken {
   id: String!
   user: User!
   token: String!
   createdAt: DateTime!
   expiresAt: DateTime!
-}
-
-type CreatedToken {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  token: String!
-}
-
-input TokenInput {
-  name: String!
 }
 
 input UserInput {
@@ -932,6 +616,7 @@ input UserInput {
   birthday: DateTime
   address: UserAddressInput
   flair: String
+  note: String
   userImageID: String
   active: Boolean!
   properties: [PropertiesInput!]!
@@ -941,7 +626,9 @@ input UserInput {
 input UserAddressInput {
   company: String
   streetAddress: String
+  streetAddressNumber: String
   streetAddress2: String
+  streetAddress2Number: String
   zipCode: String
   city: String
   country: String
@@ -972,95 +659,6 @@ input SubscriptionDeactivationInput {
   reason: SubscriptionDeactivationReason!
 }
 
-input UserRoleInput {
-  name: String!
-  description: String!
-  permissionIDs: [String!]
-}
-
-input AuthorInput {
-  name: String!
-  slug: Slug!
-  links: [AuthorLinkInput!]
-  bio: RichText
-  jobTitle: String
-  imageID: String
-  tagIds: [String!]
-  hideOnArticle: Boolean
-  hideOnTeaser: Boolean
-  hideOnTeam: Boolean
-}
-
-input AuthorLinkInput {
-  title: String!
-  url: String!
-}
-
-input UploadImageInput {
-  file: Upload!
-  filename: String
-  title: String
-  description: String
-  tags: [String!]
-  link: String
-  source: String
-  license: String
-  focalPoint: InputPoint
-}
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
-
-input InputPoint {
-  x: Float!
-  y: Float!
-}
-
-input UpdateImageInput {
-  filename: String
-  title: String
-  description: String
-  tags: [String!]
-  link: String
-  source: String
-  license: String
-  focalPoint: InputPoint
-}
-
-input MemberPlanInput {
-  name: String!
-  slug: String!
-  imageID: String
-  description: RichText
-  tags: [String!]
-  active: Boolean!
-  amountPerMonthMin: Int!
-  amountPerMonthTarget: Int
-  currency: Currency!
-  extendable: Boolean!
-  maxCount: Int
-  availablePaymentMethods: [AvailablePaymentMethodInput!]!
-  migrateToTargetPaymentMethodID: String
-  successPageId: String
-  failPageId: String
-  confirmationPageId: String
-}
-
-input AvailablePaymentMethodInput {
-  paymentMethodIDs: [String!]!
-  paymentPeriodicities: [PaymentPeriodicity!]!
-  forceAutoRenewal: Boolean!
-}
-
-input PaymentMethodInput {
-  name: String!
-  slug: Slug!
-  description: String!
-  paymentProviderID: String!
-  active: Boolean!
-  imageId: String
-}
-
 input InvoiceInput {
   mail: String!
   description: String
@@ -1076,6 +674,29 @@ input InvoiceItemInput {
   amount: Int!
   createdAt: DateTime!
   modifiedAt: DateTime!
+}
+
+type Payment {
+  id: String!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  intentID: String
+  intentSecret: String
+  state: PaymentState!
+  invoice: Invoice!
+  intentData: String
+  paymentMethod: PaymentMethod!
+  paymentData: String
+}
+
+enum PaymentState {
+  created
+  submitted
+  requiresUserAction
+  processing
+  paid
+  canceled
+  declined
 }
 
 input PaymentFromInvoiceInput {
@@ -1095,17 +716,6 @@ input CommentRevisionUpdateInput {
 input CommentRatingOverrideUpdateInput {
   answerId: String!
   value: Int
-}
-
-input UpdateSettingArgs {
-  name: SettingName!
-  value: GraphQLSettingValueType!
-}
-
-input UpdateCommentRatingSystemAnswer {
-  id: String!
-  type: RatingSystemType
-  answer: String
 }
 
 type PollWithAnswers {

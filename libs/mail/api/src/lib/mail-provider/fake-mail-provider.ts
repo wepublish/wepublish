@@ -1,23 +1,23 @@
-import {BaseMailProvider, MailProviderProps} from './base-mail-provider'
+import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
 
 export class FakeMailProvider extends BaseMailProvider {
   constructor(props: MailProviderProps) {
-    super(props)
+    super(props);
   }
 
   async webhookForSendMail() {
-    return []
+    return [];
   }
 
   async sendMail() {
-    return
+    return;
   }
 
   async getTemplates() {
-    return []
+    return [];
   }
 
   getTemplateUrl() {
-    return 'http://example.com/'
+    return 'http://example.com/';
   }
 }

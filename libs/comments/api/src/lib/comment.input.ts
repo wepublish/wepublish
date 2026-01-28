@@ -1,45 +1,44 @@
-import {Field, InputType} from '@nestjs/graphql'
-import {CommentItemType} from './comment.model'
-import {GraphQLRichText} from '@wepublish/richtext/api'
-import {Node} from 'slate'
-import {CommentItemType as PCommentItemType} from '@prisma/client'
-import {ChallengeInput} from '@wepublish/challenge/api'
+import { Field, InputType } from '@nestjs/graphql';
+import { GraphQLRichText } from '@wepublish/richtext/api';
+import { Descendant } from 'slate';
+import { CommentItemType } from '@prisma/client';
+import { ChallengeInput } from '@wepublish/challenge/api';
 
 @InputType()
 export class CommentInput {
-  @Field(() => String, {nullable: true})
-  parentID?: string
+  @Field(() => String, { nullable: true })
+  parentID?: string;
 
-  @Field(() => String, {nullable: true})
-  guestUsername?: string
+  @Field(() => String, { nullable: true })
+  guestUsername?: string;
 
-  @Field(() => ChallengeInput, {nullable: true})
-  challenge?: ChallengeInput
+  @Field(() => ChallengeInput, { nullable: true })
+  challenge?: ChallengeInput;
 
-  @Field(() => String)
-  itemID!: string
+  @Field()
+  itemID!: string;
 
   @Field(() => CommentItemType)
-  itemType!: PCommentItemType
+  itemType!: CommentItemType;
 
-  @Field(() => String, {nullable: true})
-  title?: string
+  @Field(() => String, { nullable: true })
+  title?: string;
 
   @Field(() => GraphQLRichText)
-  text!: Node[]
+  text!: Descendant[];
 }
 
 @InputType()
 export class CommentUpdateInput {
-  @Field(() => String)
-  id!: string
+  @Field()
+  id!: string;
 
-  @Field(() => GraphQLRichText, {nullable: true})
-  text?: Node[]
+  @Field(() => GraphQLRichText, { nullable: true })
+  text?: Descendant[];
 
-  @Field(() => String, {nullable: true})
-  title?: string
+  @Field(() => String, { nullable: true })
+  title?: string;
 
-  @Field(() => String, {nullable: true})
-  lead?: string
+  @Field(() => String, { nullable: true })
+  lead?: string;
 }

@@ -1,20 +1,20 @@
-import styled from '@emotion/styled'
-import {Banner, BannerCloseButton, BannerContent, BannerTitle} from '@wepublish/banner/website'
+import styled from '@emotion/styled';
+import {
+  Banner,
+  BannerCloseButton,
+  BannerContentWrapper,
+} from '@wepublish/banner/website';
 
 const TsriBanner = styled(Banner)(
-  ({theme}) => `
+  ({ theme }) => `
 
-  ${BannerContent} {
+  ${BannerContentWrapper} {
     background-color: ${theme.palette.primary.main};
     padding: ${theme.spacing(2)};
 
     ${theme.breakpoints.up('md')} {
       padding: ${theme.spacing(6)} ${theme.spacing(12)};
     }
-  }
-
-  ${BannerTitle} {
-    font-size: ${theme.typography.h3.fontSize};
   }
 
   ${BannerCloseButton} {
@@ -27,18 +27,18 @@ const TsriBanner = styled(Banner)(
     }
   }
 
-  [data-role='PRIMARY'] button {
-    background-color: ${theme.palette.primary.contrastText};
-    color: ${theme.palette.secondary.main};
-    border: 2px solid ${theme.palette.primary.contrastText};
+  [data-role='PRIMARY'] {
+    background-color: ${theme.palette.primary.main};
+    color: ${theme.palette.common.white};
+    border: 2px solid ${theme.palette.common.white};
   }
 
-  [data-role='OTHER'] button {
+  [data-role='OTHER'] {
     background-color: ${theme.palette.primary.main};
-    color: ${theme.palette.primary.contrastText};
-    border: 2px solid ${theme.palette.primary.contrastText};
+    color: ${theme.palette.common.white};
+    border: 2px solid ${theme.palette.common.white};
   }
 `
-)
+);
 
-export {TsriBanner}
+export { TsriBanner };

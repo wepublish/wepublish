@@ -4,35 +4,38 @@ import {
   PollExternalVote,
   PollExternalVoteSource,
   Prisma,
-  PrismaClient
-} from '@prisma/client'
+  PrismaClient,
+} from '@prisma/client';
 
 export type FullPoll = Poll & {
   answers: (PollAnswer & {
-    _count: Prisma.PollAnswerCountOutputType
-  })[]
+    _count: Prisma.PollAnswerCountOutputType;
+  })[];
   externalVoteSources: (PollExternalVoteSource & {
-    voteAmounts: PollExternalVote[]
-  })[]
-}
+    voteAmounts: PollExternalVote[];
+  })[];
+};
 
-export const getPoll = (id: string, poll: PrismaClient['poll']): Promise<FullPoll | null> => {
+export const getPoll = (
+  id: string,
+  poll: PrismaClient['poll']
+): Promise<FullPoll | null> => {
   return poll.findUnique({
-    where: {id},
+    where: { id },
     include: {
       answers: {
         include: {
-          _count: true
+          _count: true,
         },
         orderBy: {
-          createdAt: 'asc'
-        }
+          createdAt: 'asc',
+        },
       },
       externalVoteSources: {
         include: {
-          voteAmounts: true
-        }
-      }
-    }
-  })
-}
+          voteAmounts: true,
+        },
+      },
+    },
+  });
+};

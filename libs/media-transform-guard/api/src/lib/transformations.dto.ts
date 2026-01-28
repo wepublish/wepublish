@@ -1,14 +1,14 @@
-import {z} from 'zod'
-import {createZodDto} from 'nestjs-zod'
+import { z } from 'zod';
+import { createZodDto } from 'nestjs-zod';
 
 const stringToJSONSchema = z.string().transform((str, ctx) => {
   try {
-    return JSON.parse(str)
+    return JSON.parse(str);
   } catch (e) {
-    ctx.addIssue({code: 'custom', message: 'Invalid JSON'})
-    return z.NEVER
+    ctx.addIssue({ code: 'custom', message: 'Invalid JSON' });
+    return z.NEVER;
   }
-})
+});
 
 export const TransformationsSchema = z
   .object({
@@ -32,7 +32,13 @@ export const TransformationsSchema = z
           background: z.string(),
           fit: z.enum(['contain', 'cover', 'fill', 'inside', 'outside']),
           position: z.coerce.number().or(z.string()),
-          kernel: z.enum(['nearest', 'cubic', 'mitchell', 'lanczos2', 'lanczos3'])
+          kernel: z.enum([
+            'nearest',
+            'cubic',
+            'mitchell',
+            'lanczos2',
+            'lanczos3',
+          ]),
         })
         .partial()
     ),
@@ -44,11 +50,11 @@ export const TransformationsSchema = z
           bottom: z.coerce.number(),
           right: z.coerce.number(),
           background: z.string(),
-          extendWidth: z.enum(['background', 'copy', 'repeat', 'mirror'])
+          extendWidth: z.enum(['background', 'copy', 'repeat', 'mirror']),
         })
         .partial()
-    )
+    ),
   })
-  .partial()
+  .partial();
 
 export class TransformationsDto extends createZodDto(TransformationsSchema) {}

@@ -1,59 +1,78 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   FullUserRoleFragment,
+  getApiClientV2,
   Permission,
   useCreateUserRoleMutation,
   usePermissionListQuery,
   useUpdateUserRoleMutation,
-  useUserRoleQuery
-} from '@wepublish/editor/api'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Button, CheckPicker, Drawer, Form as RForm, Message, Schema, toaster} from 'rsuite'
-import {PermissionControl, createCheckedPermissionComponent, useAuthorisation} from '../atoms'
-import {toggleRequiredLabel} from '../toggleRequiredLabel'
+  useUserRoleQuery,
+} from '@wepublish/editor/api-v2';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  Button,
+  CheckPicker,
+  Drawer,
+  Form as RForm,
+  Message,
+  Schema,
+  toaster,
+} from 'rsuite';
 
-const {Group, ControlLabel, Control} = RForm
+import {
+  createCheckedPermissionComponent,
+  PermissionControl,
+  useAuthorisation,
+} from '../atoms';
+import { toggleRequiredLabel } from '../toggleRequiredLabel';
+
+const { Group, ControlLabel, Control } = RForm;
 
 const Form = styled(RForm)`
   height: 100%;
-`
+`;
 
 export interface UserRoleEditPanelProps {
-  id?: string
+  id?: string;
 
-  onClose?(): void
-  onSave?(userRole: FullUserRoleFragment): void
+  onClose?(): void;
+  onSave?(userRole: FullUserRoleFragment): void;
 }
 
-function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
-  const isAuthorized = useAuthorisation('CAN_CREATE_USER_ROLE')
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [systemRole, setSystemRole] = useState(false)
-  const [permissions, setPermissions] = useState<Permission[]>([])
-  const [allPermissions, setAllPermissions] = useState<Permission[]>([])
+function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
+  const isAuthorized = useAuthorisation('CAN_CREATE_USER_ROLE');
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [systemRole, setSystemRole] = useState(false);
+  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const [allPermissions, setAllPermissions] = useState<Permission[]>([]);
 
+  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
-    error: loadError
+    error: loadError,
   } = useUserRoleQuery({
-    variables: {id: id!},
+    client,
+    variables: { id: id! },
     fetchPolicy: 'network-only',
-    skip: id === undefined
-  })
+    skip: id === undefined,
+  });
 
   const {
     data: permissionData,
     loading: isPermissionLoading,
-    error: loadPermissionError
+    error: loadPermissionError,
   } = usePermissionListQuery({
-    fetchPolicy: 'network-only'
-  })
+    client,
+    fetchPolicy: 'network-only',
+  });
 
-  const [createUserRole, {loading: isCreating, error: createError}] = useCreateUserRoleMutation()
-  const [updateUserRole, {loading: isUpdating, error: updateError}] = useUpdateUserRoleMutation()
+  const [createUserRole, { loading: isCreating, error: createError }] =
+    useCreateUserRoleMutation({ client });
+  const [updateUserRole, { loading: isUpdating, error: updateError }] =
+    useUpdateUserRoleMutation({ client });
 
   const isDisabled =
     systemRole ||
@@ -62,82 +81,90 @@ function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
     isCreating ||
     isUpdating ||
     loadError !== undefined ||
-    !isAuthorized
+    !isAuthorized;
 
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (data?.userRole) {
-      setName(data.userRole.name)
-      setDescription(data.userRole.description ?? '')
-      setSystemRole(data.userRole.systemRole)
-      setPermissions(data.userRole.permissions)
+      setName(data.userRole.name);
+      setDescription(data.userRole.description ?? '');
+      setSystemRole(data.userRole.systemRole);
+      setPermissions(data.userRole.permissions);
     }
-  }, [data?.userRole])
+  }, [data?.userRole]);
 
   useEffect(() => {
     if (permissionData?.permissions) {
-      setAllPermissions(permissionData.permissions)
+      setAllPermissions(permissionData.permissions);
     }
-  }, [permissionData?.permissions])
+  }, [permissionData?.permissions]);
 
   useEffect(() => {
     const error =
       loadError?.message ??
       createError?.message ??
       updateError?.message ??
-      loadPermissionError?.message
+      loadPermissionError?.message;
     if (error)
       toaster.push(
-        <Message type="error" showIcon closable duration={0}>
+        <Message
+          type="error"
+          showIcon
+          closable
+          duration={0}
+        >
           {error}
         </Message>
-      )
-  }, [loadError, createError, updateError, loadPermissionError])
+      );
+  }, [loadError, createError, updateError, loadPermissionError]);
 
   async function handleSave() {
     if (id) {
-      const {data} = await updateUserRole({
+      const { data } = await updateUserRole({
         variables: {
           id,
-          input: {
-            name,
-            description,
-            permissionIDs: permissions.map(({id}) => id)
-          }
-        }
-      })
+          name,
+          description,
+          permissionIDs: permissions.map(({ id }) => id),
+        },
+      });
 
-      if (data?.updateUserRole) onSave?.(data.updateUserRole)
+      if (data?.updateUserRole) {
+        onSave?.(data.updateUserRole);
+      }
     } else {
-      const {data} = await createUserRole({
+      const { data } = await createUserRole({
         variables: {
-          input: {
-            name,
-            description,
-            permissionIDs: permissions.map(({id}) => id)
-          }
-        }
-      })
+          name,
+          description,
+          permissionIDs: permissions.map(({ id }) => id),
+        },
+      });
 
-      if (data?.createUserRole) onSave?.(data.createUserRole)
+      if (data?.createUserRole) {
+        onSave?.(data.createUserRole);
+      }
     }
   }
 
-  const {StringType} = Schema.Types
+  const { StringType } = Schema.Types;
   const validationModel = Schema.Model({
-    name: StringType().isRequired(t('errorMessages.noNameErrorMessage'))
-  })
+    name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
+  });
 
   return (
     <Form
       onSubmit={validationPassed => validationPassed && handleSave()}
       fluid
       model={validationModel}
-      formValue={{name}}>
+      formValue={{ name }}
+    >
       <Drawer.Header>
         <Drawer.Title>
-          {id ? t('userRoles.panels.editUserRole') : t('userRoles.panels.createUserRole')}
+          {id ?
+            t('userRoles.panels.editUserRole')
+          : t('userRoles.panels.createUserRole')}
         </Drawer.Title>
 
         <Drawer.Actions>
@@ -146,11 +173,15 @@ function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
               type="submit"
               appearance="primary"
               disabled={isDisabled}
-              data-testid="saveButton">
+              data-testid="saveButton"
+            >
               {id ? t('save') : t('create')}
             </Button>
           </PermissionControl>
-          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          <Button
+            appearance={'subtle'}
+            onClick={() => onClose?.()}
+          >
             {t('userRoles.panels.close')}
           </Button>
         </Drawer.Actions>
@@ -158,7 +189,9 @@ function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
 
       <Drawer.Body>
         <Group controlId="name">
-          <ControlLabel>{toggleRequiredLabel(t('userRoles.panels.name'))}</ControlLabel>
+          <ControlLabel>
+            {toggleRequiredLabel(t('userRoles.panels.name'))}
+          </ControlLabel>
           <Control
             name="name"
             value={name}
@@ -182,25 +215,31 @@ function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
             disabled={isDisabled}
             virtualized
             block
-            disabledItemValues={systemRole ? allPermissions.map(per => per.id) : []}
+            disabledItemValues={
+              systemRole ? allPermissions.map(per => per.id) : []
+            }
             value={permissions.map(per => per.id)}
             data={allPermissions.map(permission => ({
               value: permission.id,
-              label: permission.description
+              label: permission.description,
             }))}
             onChange={value => {
-              setPermissions(allPermissions.filter(permissions => value.includes(permissions.id)))
+              setPermissions(
+                allPermissions.filter(permissions =>
+                  value.includes(permissions.id)
+                )
+              );
             }}
           />
         </Group>
       </Drawer.Body>
     </Form>
-  )
+  );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_USER_ROLE',
   'CAN_GET_USER_ROLES',
   'CAN_CREATE_USER_ROLE',
-  'CAN_DELETE_USER_ROLE'
-])(UserRoleEditPanel)
-export {CheckedPermissionComponent as UserRoleEditPanel}
+  'CAN_DELETE_USER_ROLE',
+])(UserRoleEditPanel);
+export { CheckedPermissionComponent as UserRoleEditPanel };

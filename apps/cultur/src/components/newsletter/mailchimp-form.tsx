@@ -1,29 +1,40 @@
-import {Box, Button, TextField} from '@mui/material'
-import React, {useEffect, useState} from 'react'
+import { Box, Button, TextField } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 
 type MailchimpSubscribeFormProps = {
-  signupUrl: string
-  defaultEmail?: string
-  defaultFirstName?: string
-  defaultLastName?: string
-  source?: string
-}
+  signupUrl: string;
+  defaultEmail?: string;
+  defaultFirstName?: string;
+  defaultLastName?: string;
+  source?: string;
+};
 
-export default function MailchimpSubscribeForm(props: MailchimpSubscribeFormProps) {
-  const {signupUrl, defaultEmail, defaultFirstName, defaultLastName, source} = props
-  const [email, setEmail] = useState(defaultEmail || '')
-  const [firstName, setFirstName] = useState(defaultFirstName || '')
-  const [lastName, setLastName] = useState(defaultLastName || '')
+export default function MailchimpSubscribeForm(
+  props: MailchimpSubscribeFormProps
+) {
+  const { signupUrl, defaultEmail, defaultFirstName, defaultLastName, source } =
+    props;
+  const [email, setEmail] = useState(defaultEmail || '');
+  const [firstName, setFirstName] = useState(defaultFirstName || '');
+  const [lastName, setLastName] = useState(defaultLastName || '');
 
   useEffect(() => {
-    setEmail(defaultEmail || '')
-    setFirstName(defaultFirstName || '')
-    setLastName(defaultLastName || '')
-  }, [defaultEmail, defaultFirstName, defaultLastName])
+    setEmail(defaultEmail || '');
+    setFirstName(defaultFirstName || '');
+    setLastName(defaultLastName || '');
+  }, [defaultEmail, defaultFirstName, defaultLastName]);
 
   return (
-    <form action={signupUrl} method="post">
-      <Box maxWidth="sm" display={'flex'} flexDirection={'column'} gap={2}>
+    <form
+      action={signupUrl}
+      method="post"
+    >
+      <Box
+        maxWidth="sm"
+        display={'flex'}
+        flexDirection={'column'}
+        gap={2}
+      >
         <TextField
           placeholder="Vorname"
           variant="outlined"
@@ -55,19 +66,29 @@ export default function MailchimpSubscribeForm(props: MailchimpSubscribeFormProp
           required
         />
 
-        <input type="hidden" name="SOURCE" value={source} />
+        <input
+          type="hidden"
+          name="SOURCE"
+          value={source}
+        />
 
-        <Box display={'flex'} flexDirection={'row'} alignItems={'end'} alignSelf={'end'}>
+        <Box
+          display={'flex'}
+          flexDirection={'row'}
+          alignItems={'end'}
+          alignSelf={'end'}
+        >
           <Button
             type="submit"
             variant="contained"
             color="primary"
             fullWidth
-            sx={{paddingX: 4, paddingY: 1}}>
+            sx={{ paddingX: 4, paddingY: 1 }}
+          >
             Abonnieren
           </Button>
         </Box>
       </Box>
     </form>
-  )
+  );
 }

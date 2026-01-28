@@ -1,10 +1,11 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   AuthorSort,
   FullAuthorFragment,
+  getApiClientV2,
   useAuthorListQuery,
-  useDeleteAuthorMutation
-} from '@wepublish/editor/api'
+  useDeleteAuthorMutation,
+} from '@wepublish/editor/api-v2';
 import {
   AuthorEditPanel,
   createCheckedPermissionComponent,
@@ -23,12 +24,12 @@ import {
   PeerAvatar,
   PermissionControl,
   Table,
-  TableWrapper
-} from '@wepublish/ui/editor'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete, MdSearch} from 'react-icons/md'
-import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
+  TableWrapper,
+} from '@wepublish/ui/editor';
+import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdAdd, MdDelete, MdSearch } from 'react-icons/md';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   Avatar,
   Button,
@@ -38,94 +39,113 @@ import {
   InputGroup,
   Modal,
   Pagination,
-  Table as RTable
-} from 'rsuite'
+  Table as RTable,
+} from 'rsuite';
 
-const {Column, HeaderCell, Cell} = RTable
+const { Column, HeaderCell, Cell } = RTable;
 
 const CellSmallPadding = styled(Cell)`
   .rs-table-cell-content {
     padding: 2px;
   }
-`
+`;
 
 function mapColumFieldToGraphQLField(columnField: string): AuthorSort | null {
   switch (columnField) {
     case 'createdAt':
-      return AuthorSort.CreatedAt
+      return AuthorSort.CreatedAt;
     case 'modifiedAt':
-      return AuthorSort.ModifiedAt
+      return AuthorSort.ModifiedAt;
     case 'name':
-      return AuthorSort.Name
+      return AuthorSort.Name;
     default:
-      return null
+      return null;
   }
 }
 
 function AuthorList() {
-  const {t} = useTranslation()
-  const location = useLocation()
-  const params = useParams()
-  const navigate = useNavigate()
-  const {id} = params
+  const { t } = useTranslation();
+  const location = useLocation();
+  const params = useParams();
+  const navigate = useNavigate();
+  const { id } = params;
 
-  const isCreateRoute = location.pathname.includes('create')
-  const isEditRoute = location.pathname.includes('edit')
+  const isCreateRoute = location.pathname.includes('create');
+  const isEditRoute = location.pathname.includes('edit');
 
-  const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute || isCreateRoute)
+  const [isEditModalOpen, setEditModalOpen] = useState(
+    isEditRoute || isCreateRoute
+  );
 
-  const [editID, setEditID] = useState<string | undefined>(isEditRoute ? id : undefined)
+  const [editID, setEditID] = useState<string | undefined>(
+    isEditRoute ? id : undefined
+  );
 
-  const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(10)
-  const [sortField, setSortField] = useState('createdAt')
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
-  const [filter, setFilter] = useState('')
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [sortField, setSortField] = useState('createdAt');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [filter, setFilter] = useState('');
 
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [authors, setAuthors] = useState<FullAuthorFragment[]>([])
-  const [currentAuthor, setCurrentAuthor] = useState<FullAuthorFragment>()
+  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [authors, setAuthors] = useState<FullAuthorFragment[]>([]);
+  const [currentAuthor, setCurrentAuthor] = useState<FullAuthorFragment>();
 
-  const authorListQueryVariables = {
-    filter: filter || undefined,
-    take: limit,
-    skip: (page - 1) * limit,
-    sort: mapColumFieldToGraphQLField(sortField),
-    order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
-  }
+  const authorListQueryVariables = useMemo(
+    () => ({
+      filter: filter || undefined,
+      take: limit,
+      skip: (page - 1) * limit,
+      sort: mapColumFieldToGraphQLField(sortField),
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+    }),
+    [filter, limit, page, sortField, sortOrder]
+  );
 
+  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
-    refetch: authorListRefetch
+    refetch: authorListRefetch,
   } = useAuthorListQuery({
+    client,
     variables: authorListQueryVariables,
-    fetchPolicy: 'network-only'
-  })
+    fetchPolicy: 'network-only',
+  });
 
   useEffect(() => {
-    authorListRefetch(authorListQueryVariables)
-  }, [filter, page, limit, sortOrder, sortField])
+    authorListRefetch(authorListQueryVariables);
+  }, [
+    filter,
+    page,
+    limit,
+    sortOrder,
+    sortField,
+    authorListRefetch,
+    authorListQueryVariables,
+  ]);
 
-  const [deleteAuthor, {loading: isDeleting}] = useDeleteAuthorMutation()
+  const [deleteAuthor, { loading: isDeleting }] = useDeleteAuthorMutation({
+    client,
+  });
 
   useEffect(() => {
     if (isCreateRoute) {
-      setEditID(undefined)
-      setEditModalOpen(true)
+      setEditID(undefined);
+      setEditModalOpen(true);
     }
 
     if (isEditRoute) {
-      setEditID(id)
-      setEditModalOpen(true)
+      setEditID(id);
+      setEditModalOpen(true);
     }
-  }, [location])
+  }, [location]);
 
   useEffect(() => {
     if (data?.authors?.nodes) {
-      setAuthors(data.authors.nodes)
+      setAuthors(data.authors.nodes);
     }
-  }, [data?.authors])
+  }, [data?.authors]);
 
   return (
     <>
@@ -137,7 +157,11 @@ function AuthorList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_AUTHOR']}>
           <ListViewActions>
             <Link to="/authors/create">
-              <RIconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
+              <RIconButton
+                appearance="primary"
+                disabled={isLoading}
+                icon={<MdAdd />}
+              >
                 {t('authors.overview.newAuthor')}
               </RIconButton>
             </Link>
@@ -146,7 +170,10 @@ function AuthorList() {
 
         <ListViewFilterArea>
           <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
+            <Input
+              value={filter}
+              onChange={value => setFilter(value)}
+            />
             <InputGroup.Addon>
               <MdSearch />
             </InputGroup.Addon>
@@ -162,19 +189,32 @@ function AuthorList() {
           sortColumn={sortField}
           sortType={sortOrder}
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType ?? 'asc')
-            setSortField(sortColumn)
-          }}>
-          <Column width={100} align="left" resizable>
+            setSortOrder(sortType ?? 'asc');
+            setSortField(sortColumn);
+          }}
+        >
+          <Column
+            width={100}
+            align="left"
+            resizable
+          >
             <HeaderCell>{}</HeaderCell>
             <CellSmallPadding>
               {(rowData: FullAuthorFragment) => (
-                <Avatar circle src={rowData.image?.squareURL || undefined} />
+                <Avatar
+                  circle
+                  src={rowData.image?.squareURL || undefined}
+                />
               )}
             </CellSmallPadding>
           </Column>
 
-          <Column width={300} align="left" resizable sortable>
+          <Column
+            width={300}
+            align="left"
+            resizable
+            sortable
+          >
             <HeaderCell>{t('authors.overview.name')}</HeaderCell>
             <Cell dataKey="name">
               {(rowData: FullAuthorFragment) => (
@@ -187,22 +227,33 @@ function AuthorList() {
             </Cell>
           </Column>
 
-          <Column width={200} align="left" resizable sortable>
+          <Column
+            width={200}
+            align="left"
+            resizable
+            sortable
+          >
             <HeaderCell>{t('authors.overview.created')}</HeaderCell>
             <Cell dataKey="createdAt">
-              {({createdAt}: FullAuthorFragment) =>
+              {({ createdAt }: FullAuthorFragment) =>
                 t('authors.overview.createdAt', {
-                  createdAt: new Date(createdAt)
+                  createdAt: new Date(createdAt),
                 })
               }
             </Cell>
           </Column>
 
-          <Column width={100} align="center" fixed="right">
+          <Column
+            width={100}
+            align="center"
+            fixed="right"
+          >
             <HeaderCell>{t('authors.overview.action')}</HeaderCell>
             <PaddedCell>
               {(rowData: FullAuthorFragment) => (
-                <PermissionControl qualifyingPermissions={['CAN_DELETE_AUTHOR']}>
+                <PermissionControl
+                  qualifyingPermissions={['CAN_DELETE_AUTHOR']}
+                >
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       icon={<MdDelete />}
@@ -211,8 +262,8 @@ function AuthorList() {
                       appearance="ghost"
                       color="red"
                       onClick={() => {
-                        setConfirmationDialogOpen(true)
-                        setCurrentAuthor(rowData as FullAuthorFragment)
+                        setConfirmationDialogOpen(true);
+                        setCurrentAuthor(rowData as FullAuthorFragment);
                       }}
                     />
                   </IconButtonTooltip>
@@ -244,23 +295,27 @@ function AuthorList() {
         open={isEditModalOpen}
         size="sm"
         onClose={() => {
-          setEditModalOpen(false)
-          navigate('/authors')
-        }}>
+          setEditModalOpen(false);
+          navigate('/authors');
+        }}
+      >
         <AuthorEditPanel
           id={editID}
           onClose={() => {
-            setEditModalOpen(false)
-            navigate('/authors')
+            setEditModalOpen(false);
+            navigate('/authors');
           }}
           onSave={() => {
-            setEditModalOpen(false)
-            navigate('/authors')
+            setEditModalOpen(false);
+            navigate('/authors');
           }}
         />
       </Drawer>
 
-      <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
+      <Modal
+        open={isConfirmationDialogOpen}
+        onClose={() => setConfirmationDialogOpen(false)}
+      >
         <Modal.Header>
           <Modal.Title>{t('authors.overview.deleteAuthor')}</Modal.Title>
         </Modal.Header>
@@ -277,32 +332,36 @@ function AuthorList() {
           <Button
             disabled={isDeleting}
             onClick={async () => {
-              if (!currentAuthor) return
+              if (!currentAuthor) return;
 
               await deleteAuthor({
-                variables: {id: currentAuthor.id}
-              })
+                variables: { id: currentAuthor.id },
+              });
 
-              await authorListRefetch(authorListQueryVariables)
+              await authorListRefetch(authorListQueryVariables);
 
-              setConfirmationDialogOpen(false)
+              setConfirmationDialogOpen(false);
             }}
-            color="red">
+            color="red"
+          >
             {t('authors.overview.confirm')}
           </Button>
-          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
+          <Button
+            onClick={() => setConfirmationDialogOpen(false)}
+            appearance="subtle"
+          >
             {t('authors.overview.cancel')}
           </Button>
         </Modal.Footer>
       </Modal>
     </>
-  )
+  );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_AUTHORS',
   'CAN_GET_AUTHOR',
   'CAN_DELETE_AUTHOR',
-  'CAN_CREATE_AUTHOR'
-])(AuthorList)
-export {CheckedPermissionComponent as AuthorList}
+  'CAN_CREATE_AUTHOR',
+])(AuthorList);
+export { CheckedPermissionComponent as AuthorList };

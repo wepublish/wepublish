@@ -1,20 +1,20 @@
-import {PrismaClient} from '@prisma/client'
-import {seed as rootSeed} from '../prisma/seed'
-import {hashPassword} from '../src/lib/db/user'
+import { PrismaClient } from '@prisma/client';
+import { seed as rootSeed } from '../prisma/seed';
+import { hashPassword } from '../src/lib/db/user';
 
 async function seed() {
-  const prisma = new PrismaClient()
-  await prisma.$connect()
+  const prisma = new PrismaClient();
+  await prisma.$connect();
 
-  const [adminUserRole, editorUserRole] = await rootSeed(prisma)
+  const [adminUserRole, editorUserRole] = await rootSeed(prisma);
 
   if (!adminUserRole || !editorUserRole) {
-    throw new Error('@wepublish/api seeding has not been done')
+    throw new Error('@wepublish/api seeding has not been done');
   }
 
   await prisma.user.upsert({
     where: {
-      email: 'dev@wepublish.ch'
+      email: 'dev@wepublish.ch',
     },
     update: {},
     create: {
@@ -23,13 +23,13 @@ async function seed() {
       name: 'Dev User',
       active: true,
       roleIDs: [adminUserRole.id],
-      password: await hashPassword('123')
-    }
-  })
+      password: await hashPassword('123'),
+    },
+  });
 
   await prisma.user.upsert({
     where: {
-      email: 'editor@wepublish.ch'
+      email: 'editor@wepublish.ch',
     },
     update: {},
     create: {
@@ -38,11 +38,11 @@ async function seed() {
       name: 'Editor User',
       active: true,
       roleIDs: [editorUserRole.id],
-      password: await hashPassword('123')
-    }
-  })
+      password: await hashPassword('123'),
+    },
+  });
 
-  await prisma.$disconnect()
+  await prisma.$disconnect();
 }
 
-seed()
+seed();

@@ -1,10 +1,14 @@
-import {Prisma, PrismaClient} from '@prisma/client'
-import bcrypt from 'bcrypt'
-import {ConnectionResult} from '../../db/common'
-import {UserFilter, UserSort, UserWithRelations} from '../../db/user'
-import {unselectPassword} from '@wepublish/authentication/api'
-import {Validator} from '../../validator'
-import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
+import { Prisma, PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
+import { ConnectionResult } from '../../db/common';
+import { UserFilter, UserSort, UserWithRelations } from '../../db/user';
+import { unselectPassword } from '@wepublish/authentication/api';
+import { Validator } from '../../validator';
+import {
+  SortOrder,
+  getMaxTake,
+  graphQLSortOrderToPrisma,
+} from '@wepublish/utils/api';
 
 export const createUserOrder = (
   field: UserSort,
@@ -13,52 +17,58 @@ export const createUserOrder = (
   switch (field) {
     case UserSort.CreatedAt:
       return {
-        createdAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        createdAt: graphQLSortOrderToPrisma(sortOrder),
+      };
 
     case UserSort.ModifiedAt:
       return {
-        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder),
+      };
 
     case UserSort.Name:
       return {
-        name: graphQLSortOrderToPrisma(sortOrder)
-      }
+        name: graphQLSortOrderToPrisma(sortOrder),
+      };
 
     case UserSort.FirstName:
       return {
-        firstName: graphQLSortOrderToPrisma(sortOrder)
-      }
+        firstName: graphQLSortOrderToPrisma(sortOrder),
+      };
   }
-}
+};
 
-const createUserRoleFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => {
+const createUserRoleFilter = (
+  filter: Partial<UserFilter>
+): Prisma.UserWhereInput => {
   if (filter?.userRole) {
     return {
       roleIDs: {
-        hasSome: filter.userRole
-      }
-    }
+        hasSome: filter.userRole,
+      },
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-const createNameFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => {
+const createNameFilter = (
+  filter: Partial<UserFilter>
+): Prisma.UserWhereInput => {
   if (filter?.name) {
     return {
       name: {
         contains: filter.name,
-        mode: 'insensitive'
-      }
-    }
+        mode: 'insensitive',
+      },
+    };
   }
 
-  return {}
-}
-const createUserNameFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => {
-  const splitedString = (filter.text || '').split(' ')
+  return {};
+};
+const createUserNameFilter = (
+  filter: Partial<UserFilter>
+): Prisma.UserWhereInput => {
+  const splitedString = (filter.text || '').split(' ');
 
   if (splitedString.length === 1) {
     return {
@@ -66,17 +76,17 @@ const createUserNameFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInpu
         {
           firstName: {
             contains: splitedString[0],
-            mode: 'insensitive'
-          }
+            mode: 'insensitive',
+          },
         },
         {
           name: {
             contains: splitedString[0],
-            mode: 'insensitive'
-          }
-        }
-      ]
-    }
+            mode: 'insensitive',
+          },
+        },
+      ],
+    };
   } else if (splitedString.length === 2) {
     return {
       // Double word first / last names
@@ -84,14 +94,14 @@ const createUserNameFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInpu
         {
           firstName: {
             contains: `${splitedString[0]} ${splitedString[1]}`,
-            mode: 'insensitive'
-          }
+            mode: 'insensitive',
+          },
         },
         {
           name: {
             contains: `${splitedString[0]} ${splitedString[1]}`,
-            mode: 'insensitive'
-          }
+            mode: 'insensitive',
+          },
         },
         // Single word first and lastname
         {
@@ -99,35 +109,35 @@ const createUserNameFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInpu
             {
               firstName: {
                 contains: splitedString[0],
-                mode: 'insensitive'
-              }
+                mode: 'insensitive',
+              },
             },
             {
               name: {
                 contains: splitedString[1],
-                mode: 'insensitive'
-              }
-            }
-          ]
+                mode: 'insensitive',
+              },
+            },
+          ],
         },
         {
           AND: [
             {
               firstName: {
                 contains: splitedString[1],
-                mode: 'insensitive'
-              }
+                mode: 'insensitive',
+              },
             },
             {
               name: {
                 contains: splitedString[0],
-                mode: 'insensitive'
-              }
-            }
-          ]
-        }
-      ]
-    }
+                mode: 'insensitive',
+              },
+            },
+          ],
+        },
+      ],
+    };
   } else {
     return {
       OR: [
@@ -137,16 +147,16 @@ const createUserNameFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInpu
             {
               firstName: {
                 contains: `${splitedString[0]} ${splitedString[1]}`,
-                mode: 'insensitive'
-              }
+                mode: 'insensitive',
+              },
             },
             {
               name: {
                 contains: splitedString.slice(2).join(' '),
-                mode: 'insensitive'
-              }
-            }
-          ]
+                mode: 'insensitive',
+              },
+            },
+          ],
         },
         {
           // Filter start with single firstname and ends with multi-word lastname
@@ -154,16 +164,16 @@ const createUserNameFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInpu
             {
               firstName: {
                 contains: `${splitedString[0]}`,
-                mode: 'insensitive'
-              }
+                mode: 'insensitive',
+              },
             },
             {
               name: {
                 contains: splitedString.slice(1).join(' '),
-                mode: 'insensitive'
-              }
-            }
-          ]
+                mode: 'insensitive',
+              },
+            },
+          ],
         },
         // Filter start with double lastname and ends with single or multi-word firstname
         {
@@ -171,16 +181,16 @@ const createUserNameFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInpu
             {
               name: {
                 contains: `${splitedString[0]} ${splitedString[1]}`,
-                mode: 'insensitive'
-              }
+                mode: 'insensitive',
+              },
             },
             {
               firstName: {
                 contains: splitedString.slice(2).join(' '),
-                mode: 'insensitive'
-              }
-            }
-          ]
+                mode: 'insensitive',
+              },
+            },
+          ],
         },
         // Filter start with single lastname and ends with multi-word firstname
         {
@@ -188,31 +198,33 @@ const createUserNameFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInpu
             {
               name: {
                 contains: `${splitedString[0]}`,
-                mode: 'insensitive'
-              }
+                mode: 'insensitive',
+              },
             },
             {
               firstName: {
                 contains: splitedString.slice(2).join(' '),
-                mode: 'insensitive'
-              }
-            }
-          ]
-        }
-      ]
-    }
+                mode: 'insensitive',
+              },
+            },
+          ],
+        },
+      ],
+    };
   }
-}
+};
 
-const createTextFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => {
+const createTextFilter = (
+  filter: Partial<UserFilter>
+): Prisma.UserWhereInput => {
   if (filter?.text) {
     return {
       OR: [
         {
           email: {
             contains: filter.text,
-            mode: 'insensitive'
-          }
+            mode: 'insensitive',
+          },
         },
         {
           address: {
@@ -220,37 +232,49 @@ const createTextFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput =>
               {
                 streetAddress: {
                   contains: filter.text,
-                  mode: 'insensitive'
-                }
+                  mode: 'insensitive',
+                },
+              },
+              {
+                streetAddressNumber: {
+                  contains: filter.text,
+                  mode: 'insensitive',
+                },
               },
               {
                 zipCode: {
                   contains: filter.text,
-                  mode: 'insensitive'
-                }
+                  mode: 'insensitive',
+                },
               },
               {
                 city: {
                   contains: filter.text,
-                  mode: 'insensitive'
-                }
-              }
-            ]
-          }
+                  mode: 'insensitive',
+                },
+              },
+            ],
+          },
         },
-        createUserNameFilter(filter)
-      ]
-    }
+        createUserNameFilter(filter),
+      ],
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-export const createUserFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => {
+export const createUserFilter = (
+  filter: Partial<UserFilter>
+): Prisma.UserWhereInput => {
   return {
-    AND: [createNameFilter(filter), createTextFilter(filter), createUserRoleFilter(filter)]
-  }
-}
+    AND: [
+      createNameFilter(filter),
+      createTextFilter(filter),
+      createUserRoleFilter(filter),
+    ],
+  };
+};
 
 export const getUsers = async (
   filter: Partial<UserFilter>,
@@ -261,30 +285,30 @@ export const getUsers = async (
   take: number,
   user: PrismaClient['user']
 ): Promise<ConnectionResult<UserWithRelations>> => {
-  const orderBy = createUserOrder(sortedField, order)
-  const where = createUserFilter(filter)
+  const orderBy = createUserOrder(sortedField, order);
+  const where = createUserFilter(filter);
 
   const [totalCount, users] = await Promise.all([
     user.count({
       where,
-      orderBy
+      orderBy,
     }),
     user.findMany({
       where,
       skip,
       take: getMaxTake(take) + 1,
       orderBy,
-      cursor: cursorId ? {id: cursorId} : undefined,
-      select: unselectPassword
-    })
-  ])
+      cursor: cursorId ? { id: cursorId } : undefined,
+      select: unselectPassword,
+    }),
+  ]);
 
-  const nodes = users.slice(0, take)
-  const firstUser = nodes[0]
-  const lastUser = nodes[nodes.length - 1]
+  const nodes = users.slice(0, take);
+  const firstUser = nodes[0];
+  const lastUser = nodes[nodes.length - 1];
 
-  const hasPreviousPage = Boolean(skip)
-  const hasNextPage = users.length > nodes.length
+  const hasPreviousPage = Boolean(skip);
+  const hasNextPage = users.length > nodes.length;
 
   return {
     nodes,
@@ -293,40 +317,39 @@ export const getUsers = async (
       hasPreviousPage,
       hasNextPage,
       startCursor: firstUser?.id,
-      endCursor: lastUser?.id
-    }
-  }
-}
+      endCursor: lastUser?.id,
+    },
+  };
+};
 
 export const getUserForCredentials = async (
   email: string,
   password: string,
   userClient: PrismaClient['user']
 ) => {
-  email = email.toLowerCase()
-  await Validator.login.parse({email})
+  email = email.toLowerCase();
+  await Validator.login.parse({ email });
 
   const user = await userClient.findUnique({
     where: {
-      email
+      email,
     },
     include: {
       address: true,
-      oauth2Accounts: true,
       paymentProviderCustomers: true,
-      properties: true
-    }
-  })
+      properties: true,
+    },
+  });
 
   if (!user) {
-    return null
+    return null;
   }
 
-  const theSame = await bcrypt.compare(password, user.password)
+  const theSame = await bcrypt.compare(password, user.password);
 
   if (!theSame) {
-    return null
+    return null;
   }
 
-  return user
-}
+  return user;
+};

@@ -1,29 +1,26 @@
-fragment FullUser on User {
-    name
-    email
-}
-
 mutation CreateSession($email: String!, $password: String!) {
-    createSession(email: $email, password: $password) {
-        user {
-            email
-        }
-        token
+  createSession(email: $email, password: $password) {
+    user {
+      email
     }
+    token
+  }
 }
 
 mutation CreateSessionWithJWT($jwt: String!) {
-    createSessionWithJWT(jwt: $jwt) {
-        user {
-            email
-        }
-        token
+  createSessionWithJWT(jwt: $jwt) {
+    user {
+      email
     }
+    token
+  }
 }
 
-mutation UpdatePaymentProviderCustomers($customers: [PaymentProviderCustomerInput!]!) {
-    updatePaymentProviderCustomers(input: $customers) {
-        customerID
-        paymentProviderID
-    }
+mutation UpdatePaymentProviderCustomers(
+  $customers: [PaymentProviderCustomerInput!]!
+) {
+  updatePaymentProviderCustomers(input: $customers) {
+    customerID
+    paymentProviderID
+  }
 }

@@ -1,8 +1,8 @@
 export type ReturnTrackingPixels = {
-  domain: string
-  pixelUids: string[]
-}
+  domain: string;
+  pixelUids: string[];
+};
 
 export interface ProLitterisGenerator {
-  getTrackingPixels(internalTrackingId: string): Promise<ReturnTrackingPixels>
+  getTrackingPixels(internalTrackingId: string): Promise<ReturnTrackingPixels>;
 }

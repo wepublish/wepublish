@@ -22,7 +22,7 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
       >
         <input
           class="rs-input"
-          placeholder="articleList.filter.name"
+          placeholder="filterableList.filter.name"
           type="text"
           value=""
         />
@@ -34,7 +34,7 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
       >
         <input
           class="rs-input"
-          placeholder="articleList.filter.location"
+          placeholder="filterableList.filter.location"
           type="text"
           value=""
         />
@@ -72,10 +72,10 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
                   value=""
                 />
                 <span
-                  aria-placeholder="articleList.filter.providers"
+                  aria-placeholder="filterableList.filter.providers"
                   class="rs-picker-toggle-placeholder"
                 >
-                  articleList.filter.providers
+                  filterableList.filter.providers
                 </span>
               </div>
               <div
@@ -127,16 +127,16 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
                 <input
                   aria-hidden="true"
                   class="rs-picker-toggle-textbox rs-picker-toggle-read-only"
-                  placeholder="articleList.filter.dates"
+                  placeholder="filterableList.filter.dates"
                   readonly=""
                   tabindex="0"
                   value=""
                 />
                 <span
-                  aria-placeholder="articleList.filter.dates"
+                  aria-placeholder="filterableList.filter.dates"
                   class="rs-picker-toggle-placeholder"
                 >
-                  articleList.filter.dates
+                  filterableList.filter.dates
                 </span>
               </div>
               <div

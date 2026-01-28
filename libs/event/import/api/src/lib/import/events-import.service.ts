@@ -1,4 +1,4 @@
-import {Inject, Injectable} from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common';
 
 import {
   ImportEventArgs,
@@ -6,39 +6,39 @@ import {
   ImportedEventFilter,
   ImportedEventSort,
   ImportedEventsDocument,
-  SingleEventFilter
-} from './events-import.model'
-import {PrismaClient} from '@prisma/client'
-import {SortOrder} from '@wepublish/utils/api'
+  SingleEventFilter,
+} from './events-import.model';
+import { PrismaClient } from '@prisma/client';
+import { SortOrder } from '@wepublish/utils/api';
 
 export interface ImportedEventsResolverParams {
-  filter: ImportedEventFilter
-  order: SortOrder
-  skip: number
-  take: number
-  sort: ImportedEventSort
+  filter: ImportedEventFilter;
+  order: SortOrder;
+  skip: number;
+  take: number;
+  sort: ImportedEventSort;
 }
 
 export interface ImportedEventResolverParams {
-  id: string
+  id: string;
 }
 
 export interface ImportedEventParams {
-  id: string
+  id: string;
 }
 
 export interface CreateEventParams {
-  id: string
+  id: string;
 }
 
 export interface EventsProvider {
-  name: string
-  importedEvents(): Promise<EventFromSource[]>
-  importedEvent({id}: ImportedEventResolverParams): Promise<EventFromSource>
-  createEvent({id}: CreateEventParams): Promise<string>
+  name: string;
+  importedEvents(): Promise<EventFromSource[]>;
+  importedEvent({ id }: ImportedEventResolverParams): Promise<EventFromSource>;
+  createEvent({ id }: CreateEventParams): Promise<string>;
 }
 
-export const EVENT_IMPORT_PROVIDER = Symbol('Event Import Provider')
+export const EVENT_IMPORT_PROVIDER = Symbol('Event Import Provider');
 
 @Injectable()
 export class EventsImportService {
@@ -50,54 +50,62 @@ export class EventsImportService {
   async importedEvents({
     filter,
     skip,
-    take
+    take,
   }: ImportedEventsResolverParams): Promise<ImportedEventsDocument> {
     const importableEvents = Promise.all(
       this.providers.map(async provider => await provider.importedEvents())
-    )
+    );
 
     try {
-      const events = await importableEvents
-      const flattened = events.flat()
+      const events = await importableEvents;
+      const flattened = events.flat();
 
       // sort events
       let sortedEvents = flattened.sort((a, b) => {
         // by startsAt date by default
-        return +a.startsAt - +b.startsAt
-      })
+        return +a.startsAt - +b.startsAt;
+      });
 
       // apply filters to events
       if (filter.providers && filter.providers.length) {
         sortedEvents = sortedEvents.filter(
-          e => e.externalSourceName && filter?.providers?.includes(e.externalSourceName)
-        )
+          e =>
+            e.externalSourceName &&
+            filter?.providers?.includes(e.externalSourceName)
+        );
       }
 
       if (filter.from) {
-        sortedEvents = sortedEvents.filter(e => e.startsAt > new Date(filter.from as string))
+        sortedEvents = sortedEvents.filter(
+          e => e.startsAt > new Date(filter.from as string)
+        );
       }
 
       if (filter.name) {
-        const nameFilter = filter.name.toLowerCase()
-        sortedEvents = sortedEvents.filter(e => e.name.toLowerCase().includes(nameFilter))
+        const nameFilter = filter.name.toLowerCase();
+        sortedEvents = sortedEvents.filter(e =>
+          e.name.toLowerCase().includes(nameFilter)
+        );
       }
 
       if (filter.location) {
-        const locationFilter = filter.location.toLowerCase()
-        sortedEvents = sortedEvents.filter(e => e.location?.toLowerCase().includes(locationFilter))
+        const locationFilter = filter.location.toLowerCase();
+        sortedEvents = sortedEvents.filter(e =>
+          e.location?.toLowerCase().includes(locationFilter)
+        );
       }
 
       if (filter.to) {
         sortedEvents = sortedEvents
           .filter(e => e.endsAt)
-          .filter(e => e.endsAt! < new Date(filter.to as string))
+          .filter(e => e.endsAt! < new Date(filter.to as string));
       }
 
       // apply pagination
-      const paginatedEvents = sortedEvents.slice(skip, skip + take)
+      const paginatedEvents = sortedEvents.slice(skip, skip + take);
 
-      const firstEvent = sortedEvents[0]
-      const lastEvent = sortedEvents[sortedEvents.length - 1]
+      const firstEvent = sortedEvents[0];
+      const lastEvent = sortedEvents[sortedEvents.length - 1];
       const aggregated = {
         nodes: paginatedEvents,
         totalCount: sortedEvents.length,
@@ -105,23 +113,23 @@ export class EventsImportService {
           hasPreviousPage: false,
           hasNextPage: false,
           startCursor: firstEvent?.id,
-          endCursor: lastEvent?.id
-        }
-      }
+          endCursor: lastEvent?.id,
+        },
+      };
 
-      return aggregated
+      return aggregated;
     } catch (e) {
-      throw new Error(e as string)
+      throw new Error(e as string);
     }
   }
 
   async importedEvent(filter: SingleEventFilter) {
-    const {id, source} = filter
-    return this.providers.find(p => p.name === source)?.importedEvent({id})
+    const { id, source } = filter;
+    return this.providers.find(p => p.name === source)?.importedEvent({ id });
   }
 
-  async createEventFromSource({id, source}: ImportEventArgs) {
-    return this.providers.find(p => p.name === source)?.createEvent({id})
+  async createEventFromSource({ id, source }: ImportEventArgs) {
+    return this.providers.find(p => p.name === source)?.createEvent({ id });
   }
 
   async importedEventsIds() {
@@ -129,16 +137,16 @@ export class EventsImportService {
       .findMany({
         where: {
           externalSourceId: {
-            not: null
-          }
-        }
+            not: null,
+          },
+        },
       })
-      .then(res => res.map(single => single.externalSourceId))
+      .then(res => res.map(single => single.externalSourceId));
 
-    return externalEventsIds
+    return externalEventsIds;
   }
 
   async getProviders() {
-    return this.providers.map(provider => provider.name)
+    return this.providers.map(provider => provider.name);
   }
 }

@@ -1,8 +1,11 @@
-import styled from '@emotion/styled'
-import {capitalize, Chip} from '@mui/material'
-import {ArticleContainer, ArticleListContainer, ArticleWrapper} from '@wepublish/article/website'
-import {CommentListContainer} from '@wepublish/comments/website'
-import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
+import styled from '@emotion/styled';
+import { capitalize, Chip } from '@mui/material';
+import {
+  ArticleContainer,
+  ArticleListContainer,
+  ArticleWrapper,
+} from '@wepublish/article/website';
+import { CommentListContainer } from '@wepublish/comments/website';
 import {
   addClientCacheToV1Props,
   ArticleDocument,
@@ -13,41 +16,41 @@ import {
   NavigationListDocument,
   PeerProfileDocument,
   Tag,
-  useArticleQuery
-} from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {GetStaticProps} from 'next'
-import getConfig from 'next/config'
-import {useRouter} from 'next/router'
-import {ComponentProps} from 'react'
+  useArticleQuery,
+} from '@wepublish/website/api';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { GetStaticProps } from 'next';
+import getConfig from 'next/config';
+import { useRouter } from 'next/router';
+import { ComponentProps } from 'react';
 
 export const ArticleTagList = styled('div')`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(75px, max-content));
-  gap: ${({theme}) => theme.spacing(1)};
-`
+  gap: ${({ theme }) => theme.spacing(1)};
+`;
 
 export default function ArticleBySlugOrId() {
   const {
     push,
-    query: {slug, id}
-  } = useRouter()
+    query: { slug, id },
+  } = useRouter();
   const {
-    elements: {H3}
-  } = useWebsiteBuilder()
+    elements: { H3 },
+  } = useWebsiteBuilder();
 
-  const {data} = useArticleQuery({
+  const { data } = useArticleQuery({
     fetchPolicy: 'cache-only',
     variables: {
       slug: slug as string,
-      id: id as string
-    }
-  })
+      id: id as string,
+    },
+  });
 
   const containerProps = {
     slug,
-    id
-  } as ComponentProps<typeof ArticleContainer>
+    id,
+  } as ComponentProps<typeof ArticleContainer>;
 
   return (
     <>
@@ -69,46 +72,70 @@ export default function ArticleBySlugOrId() {
           <ArticleWrapper>
             <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
             <ArticleListContainer
-              variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
-              filter={articles => articles.filter(article => article.id !== data.article?.id)}
+              variables={{
+                filter: { tags: data.article.tags.map(tag => tag.id) },
+                take: 4,
+              }}
+              filter={articles =>
+                articles
+                  .filter(article => article.id !== data.article?.id)
+                  .splice(0, 3)
+              }
             />
           </ArticleWrapper>
 
           {!data.article.disableComments && (
             <ArticleWrapper>
               <H3 component={'h2'}>Kommentare</H3>
-              <CommentListContainer id={data.article.id} type={CommentItemType.Article} />
+              <CommentListContainer
+                id={data.article.id}
+                type={CommentItemType.Article}
+              />
             </ArticleWrapper>
           )}
         </>
       )}
     </>
-  )
+  );
 }
 
-export const getStaticPaths = getArticlePathsBasedOnPage('')
+export const getStaticPaths = () => ({
+  paths: [],
+  fallback: 'blocking',
+});
 
-export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {id, slug} = params || {}
-  const {publicRuntimeConfig} = getConfig()
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const { id, slug } = params || {};
+  const { publicRuntimeConfig } = getConfig();
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
 
   const [article] = await Promise.all([
     client.query({
       query: ArticleDocument,
       variables: {
         id,
-        slug
-      }
+        slug,
+      },
     }),
     client.query({
-      query: NavigationListDocument
+      query: NavigationListDocument,
     }),
     client.query({
-      query: PeerProfileDocument
-    })
-  ])
+      query: PeerProfileDocument,
+    }),
+  ]);
+
+  const is404 = article.errors?.find(
+    ({ extensions }) => extensions?.status === 404
+  );
+
+  if (is404) {
+    return {
+      notFound: true,
+      revalidate: 1,
+    };
+  }
 
   if (article.data?.article) {
     await Promise.all([
@@ -116,24 +143,24 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
         query: ArticleListDocument,
         variables: {
           filter: {
-            tags: article.data.article.tags.map((tag: Tag) => tag.id)
+            tags: article.data.article.tags.map((tag: Tag) => tag.id),
           },
-          take: 4
-        }
+          take: 4,
+        },
       }),
       client.query({
         query: CommentListDocument,
         variables: {
-          itemId: article.data.article.id
-        }
-      })
-    ])
+          itemId: article.data.article.id,
+        },
+      }),
+    ]);
   }
 
-  const props = addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {});
 
   return {
     props,
-    revalidate: !article.data?.article ? 1 : 60 // every 60 seconds
-  }
-}
+    revalidate: 60, // every 60 seconds
+  };
+};

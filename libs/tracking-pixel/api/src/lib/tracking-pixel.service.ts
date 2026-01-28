@@ -1,11 +1,11 @@
-import {Inject, Injectable} from '@nestjs/common'
-import {Prisma, PrismaClient} from '@prisma/client'
-import {TrackingPixelProvider} from './tracking-pixel-provider/tracking-pixel-provider'
+import { Inject, Injectable } from '@nestjs/common';
+import { Prisma, PrismaClient } from '@prisma/client';
+import { TrackingPixelProvider } from './tracking-pixel-provider/tracking-pixel-provider';
 
-export const TRACKING_PIXEL_MODULE_OPTIONS = 'TRACKING_PIXEL_MODULE_OPTIONS'
+export const TRACKING_PIXEL_MODULE_OPTIONS = 'TRACKING_PIXEL_MODULE_OPTIONS';
 
 export interface TrackingPixelModuleOptions {
-  trackingPixelProviders: TrackingPixelProvider[]
+  trackingPixelProviders: TrackingPixelProvider[];
 }
 
 @Injectable()
@@ -19,92 +19,98 @@ export class TrackingPixelService {
   async getArticlePixels(
     articleId: string
   ): Promise<Prisma.ArticleTrackingPixelsCreateManyInput[]> {
-    const trackingPixels: Prisma.ArticleTrackingPixelsCreateManyInput[] = []
+    const trackingPixels: Prisma.ArticleTrackingPixelsCreateManyInput[] = [];
 
     for (const trackingPixelProvider of this.config.trackingPixelProviders) {
       const tackingPixelMethode = await this.prisma.trackingPixelMethod.upsert({
         where: {
-          trackingPixelProviderID: trackingPixelProvider.id
+          trackingPixelProviderID: trackingPixelProvider.id,
         },
         create: {
           trackingPixelProviderID: trackingPixelProvider.id,
-          trackingPixelProviderType: trackingPixelProvider.type
+          trackingPixelProviderType: trackingPixelProvider.type,
         },
-        update: {}
-      })
+        update: {},
+      });
 
       try {
-        const trackingPixel = await trackingPixelProvider.createPixelUri(`A${articleId}`)
+        const trackingPixel = await trackingPixelProvider.createPixelUri(
+          `A${articleId}`
+        );
 
         trackingPixels.push({
           articleId,
           tackingPixelMethodID: tackingPixelMethode.id,
           uri: trackingPixel.uri,
-          pixelUid: trackingPixel.pixelUid
-        })
+          pixelUid: trackingPixel.pixelUid,
+        });
       } catch (error: any) {
         trackingPixels.push({
           articleId,
           tackingPixelMethodID: tackingPixelMethode.id,
           uri: null,
           pixelUid: null,
-          error: JSON.stringify(error.message)
-        })
+          error: JSON.stringify(error.message),
+        });
       }
     }
 
-    return trackingPixels
+    return trackingPixels;
   }
 
   async addMissingArticleTrackingPixels(articleId: string) {
     const trackingPixels = await this.prisma.articleTrackingPixels.findMany({
       where: {
-        articleId
+        articleId,
       },
       include: {
-        trackingPixelMethod: true
-      }
-    })
+        trackingPixelMethod: true,
+      },
+    });
 
     for (const trackingPixelProvider of this.config.trackingPixelProviders) {
       const matchingPixel = trackingPixels.find(
-        tp => tp.trackingPixelMethod.trackingPixelProviderID === trackingPixelProvider.id
-      )
+        tp =>
+          tp.trackingPixelMethod.trackingPixelProviderID ===
+          trackingPixelProvider.id
+      );
 
       if (matchingPixel && !matchingPixel.error) {
-        continue
+        continue;
       }
 
       const tackingPixelMethode = await this.prisma.trackingPixelMethod.upsert({
         where: {
-          trackingPixelProviderID: trackingPixelProvider.id
+          trackingPixelProviderID: trackingPixelProvider.id,
         },
         create: {
           trackingPixelProviderID: trackingPixelProvider.id,
-          trackingPixelProviderType: trackingPixelProvider.type
+          trackingPixelProviderType: trackingPixelProvider.type,
         },
-        update: {}
-      })
+        update: {},
+      });
 
       if (matchingPixel) {
         await this.prisma.articleTrackingPixels.delete({
           where: {
-            id: matchingPixel.id
-          }
-        })
+            id: matchingPixel.id,
+          },
+        });
       }
 
       try {
-        const trackingPixel = await trackingPixelProvider.createPixelUri(`A${articleId}`)
+        const trackingPixel = await trackingPixelProvider.createPixelUri(
+          `A${articleId}`
+        );
 
         await this.prisma.articleTrackingPixels.create({
           data: {
             articleId,
             tackingPixelMethodID: tackingPixelMethode.id,
             uri: trackingPixel.uri,
-            pixelUid: trackingPixel.pixelUid
-          }
-        })
+            pixelUid: trackingPixel.pixelUid,
+          },
+        });
       } catch (error: any) {
         await this.prisma.articleTrackingPixels.create({
           data: {
@@ -112,9 +118,9 @@ export class TrackingPixelService {
             tackingPixelMethodID: tackingPixelMethode.id,
             uri: null,
             pixelUid: null,
-            error: JSON.stringify(error.message)
-          }
-        })
+            error: JSON.stringify(error.message),
+          },
+        });
       }
     }
   }

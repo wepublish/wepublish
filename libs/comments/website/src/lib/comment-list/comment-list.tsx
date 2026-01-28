@@ -1,23 +1,26 @@
-import styled from '@emotion/styled'
-import {Button} from '@wepublish/ui'
-import {BuilderCommentListProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {MdForum} from 'react-icons/md'
-import {getStateForEditor} from './comment-list.state'
+import styled from '@emotion/styled';
+import { Button } from '@wepublish/ui';
+import {
+  BuilderCommentListProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { MdForum } from 'react-icons/md';
+import { getStateForEditor } from './comment-list.state';
 
 export const CommentListWrapper = styled('section')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(4)};
-`
+  gap: ${({ theme }) => theme.spacing(4)};
+`;
 
 export const CommentListActions = styled('div')`
   display: flex;
   justify-content: end;
-`
+`;
 
 export const CommentListReadMore = styled(Button)`
-  padding: ${({theme}) => `${theme.spacing(1)} ${theme.spacing(2.5)}`};
+  padding: ${({ theme }) => `${theme.spacing(1)} ${theme.spacing(2.5)}`};
   text-transform: uppercase;
-`
+`;
 
 export const CommentList = ({
   data,
@@ -36,15 +39,15 @@ export const CommentList = ({
   openEditorsState,
   openEditorsStateDispatch: dispatch,
   signUpUrl,
-  maxCommentDepth
+  maxCommentDepth,
 }: BuilderCommentListProps) => {
   const {
     CommentEditor,
     CommentListItem,
-    elements: {Alert}
-  } = useWebsiteBuilder()
-  const canReply = true
-  const showReply = getStateForEditor(openEditorsState)('add', null)
+    elements: { Alert },
+  } = useWebsiteBuilder();
+  const canReply = true;
+  const showReply = getStateForEditor(openEditorsState)('add', null);
 
   return (
     <CommentListWrapper className={className}>
@@ -84,7 +87,7 @@ export const CommentList = ({
             dispatch({
               type: 'add',
               action: 'close',
-              commentId: null
+              commentId: null,
             })
           }
           onSubmit={onAddComment}
@@ -105,13 +108,14 @@ export const CommentList = ({
               dispatch({
                 type: 'add',
                 action: 'open',
-                commentId: null
-              })
-            }}>
+                commentId: null,
+              });
+            }}
+          >
             Jetzt Mitreden
           </CommentListReadMore>
         </CommentListActions>
       )}
     </CommentListWrapper>
-  )
-}
+  );
+};

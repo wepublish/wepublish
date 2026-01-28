@@ -1,52 +1,54 @@
-import {FullUserFragment, useUserListQuery} from '@wepublish/editor/api'
-import {useEffect, useState} from 'react'
-import {CheckPicker} from 'rsuite'
+import { FullUserFragment, useUserListQuery } from '@wepublish/editor/api';
+import { useEffect, useState } from 'react';
+import { CheckPicker } from 'rsuite';
 
 export interface UserCheckPickerProps {
-  readonly list: FullUserFragment[]
-  onClose?(): void
-  onChange?(users: FullUserFragment[]): void
+  readonly list: FullUserFragment[];
+  onClose?(): void;
+  onChange?(users: FullUserFragment[]): void;
 }
 
-export function UserCheckPicker({list, onChange}: UserCheckPickerProps) {
-  const [foundUsers, setFoundUsers] = useState<FullUserFragment[]>([])
-  const [usersFilter, setUsersFilter] = useState('')
+export function UserCheckPicker({ list, onChange }: UserCheckPickerProps) {
+  const [foundUsers, setFoundUsers] = useState<FullUserFragment[]>([]);
+  const [usersFilter, setUsersFilter] = useState('');
 
   const usersVariables = {
     filter: {
-      text: usersFilter || undefined
+      text: usersFilter || undefined,
     },
-    take: 10
-  }
-  const {data} = useUserListQuery({
+    take: 10,
+  };
+  const { data } = useUserListQuery({
     variables: usersVariables,
-    fetchPolicy: 'network-only'
-  })
+    fetchPolicy: 'network-only',
+  });
 
   useEffect(() => {
     if (data?.users?.nodes) {
-      const userIDs = data.users.nodes.map(user => user.id)
-      const selectedUsers = list.filter(user => !userIDs.includes(user.id))
-      setFoundUsers([...data.users.nodes, ...selectedUsers])
+      const userIDs = data.users.nodes.map(user => user.id);
+      const selectedUsers = list.filter(user => !userIDs.includes(user.id));
+      setFoundUsers([...data.users.nodes, ...selectedUsers]);
     }
-  }, [data?.users, list])
+  }, [data?.users, list]);
 
   return (
     <CheckPicker
       cleanable
       value={list.map(user => user.id)}
-      data={foundUsers.map(user => ({value: user.id, label: user.name}))}
+      data={foundUsers.map(user => ({ value: user.id, label: user.name }))}
       onSearch={searchKeyword => {
-        setUsersFilter(searchKeyword)
+        setUsersFilter(searchKeyword);
       }}
       onChange={authorsID => {
-        const authors = foundUsers.filter(author => authorsID.includes(author.id))
-        onChange?.(authors)
+        const authors = foundUsers.filter(author =>
+          authorsID.includes(author.id)
+        );
+        onChange?.(authors);
       }}
       onExit={() => {
-        setUsersFilter('')
+        setUsersFilter('');
       }}
       block
     />
-  )
+  );
 }

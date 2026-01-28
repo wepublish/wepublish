@@ -1,22 +1,22 @@
-import {Field, InterfaceType} from '@nestjs/graphql'
-import {Event} from '../event.model'
+import { Field, InterfaceType } from '@nestjs/graphql';
+import { Event } from '../event.model';
 
 @InterfaceType()
 export abstract class HasOptionalEvent {
-  @Field({nullable: true})
-  eventID?: string
+  @Field({ nullable: true })
+  eventID?: string;
 
-  @Field(() => Event, {nullable: true})
-  event?: Event
+  @Field(() => Event, { nullable: true })
+  event?: Event;
 }
 
 @InterfaceType()
 export abstract class HasEvent {
   @Field()
-  eventID!: string
+  eventID!: string;
 
   @Field(() => Event)
-  event!: Event
+  event!: Event;
 }
 
 // New Style
@@ -24,17 +24,17 @@ export abstract class HasEvent {
 @InterfaceType()
 export abstract class HasEventLc {
   @Field()
-  eventId!: string
+  eventId!: string;
 
   @Field(() => Event)
-  event!: Event
+  event!: Event;
 }
 
 @InterfaceType()
 export abstract class HasOptionalEventLc {
-  @Field({nullable: true})
-  eventId?: string
+  @Field({ nullable: true })
+  eventId?: string;
 
-  @Field(() => Event, {nullable: true})
-  event?: Event
+  @Field(() => Event, { nullable: true })
+  event?: Event;
 }

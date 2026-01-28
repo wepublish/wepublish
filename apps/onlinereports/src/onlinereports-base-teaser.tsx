@@ -1,8 +1,8 @@
-import styled from '@emotion/styled'
-import {Box, css, useTheme} from '@mui/material'
+import styled from '@emotion/styled';
+import { Box, css, useTheme } from '@mui/material';
 import {
+  BaseTeaser,
   selectTeaserTags,
-  Teaser,
   TeaserAuthors,
   TeaserImageWrapper,
   TeaserLead,
@@ -12,14 +12,15 @@ import {
   TeaserTags,
   TeaserTime,
   TeaserTitle,
-  TeaserWrapper
-} from '@wepublish/block-content/website'
-import {useMemo} from 'react'
-import {BuilderTeaserProps} from '@wepublish/website/builder'
-import {Advertisement} from './components/advertisement'
+  TeaserWrapper,
+} from '@wepublish/block-content/website';
+import { BuilderTeaserProps } from '@wepublish/website/builder';
+import { useMemo } from 'react';
+
+import { Advertisement } from './components/advertisement';
 
 export const useImageStyles = () => {
-  const theme = useTheme()
+  const theme = useTheme();
 
   return useMemo(
     () => css`
@@ -39,24 +40,22 @@ export const useImageStyles = () => {
       }
     `,
     [theme]
-  )
-}
+  );
+};
 
-const hasSpecialTags = (teaser: BuilderTeaserProps['teaser']) => {
+const hasTags = (teaser: BuilderTeaserProps['teaser']) => {
   if (!teaser) {
-    return false
+    return false;
   }
-  const tags = selectTeaserTags(teaser).map(({tag}) => tag)
-  const specialTags = ['Anzeige', 'Publireportage']
-  return tags.some(tag => tag && specialTags.includes(tag))
-}
+  return selectTeaserTags(teaser).length > 0;
+};
 
 export const OnlineReportsTeaserTitleWrapper = styled('h2')`
   grid-area: title;
   font-size: 24px !important;
-`
+`;
 
-export const OnlineReportsTeaserPreTitleWrapper = styled(Box)``
+export const OnlineReportsTeaserPreTitleWrapper = styled(Box)``;
 
 export const OnlineReportsBaseTeaser = (props: BuilderTeaserProps) => {
   if (props.teaser?.title === 'ad-small') {
@@ -64,7 +63,7 @@ export const OnlineReportsBaseTeaser = (props: BuilderTeaserProps) => {
       <TeaserWrapper {...props.alignment}>
         <Advertisement type={'small'} />
       </TeaserWrapper>
-    )
+    );
   }
 
   if (props.teaser?.title === 'ad-halfpage') {
@@ -72,7 +71,7 @@ export const OnlineReportsBaseTeaser = (props: BuilderTeaserProps) => {
       <TeaserWrapper {...props.alignment}>
         <Advertisement type={'half-page'} />
       </TeaserWrapper>
-    )
+    );
   }
 
   if (props.teaser?.title === 'ad-wideboard') {
@@ -80,12 +79,12 @@ export const OnlineReportsBaseTeaser = (props: BuilderTeaserProps) => {
       <TeaserWrapper {...props.alignment}>
         <Advertisement type={'whiteboard'} />
       </TeaserWrapper>
-    )
+    );
   }
 
-  return <OnlineReportsBaseTeaserStyled {...props} />
-}
-export const OnlineReportsBaseTeaserStyled = styled(Teaser)`
+  return <OnlineReportsBaseTeaserStyled {...props} />;
+};
+export const OnlineReportsBaseTeaserStyled = styled(BaseTeaser)`
   color: inherit;
   text-decoration: none;
   display: grid;
@@ -98,7 +97,7 @@ export const OnlineReportsBaseTeaserStyled = styled(Teaser)`
     'lead'
     'tags'
     'authors';
-  grid-template-rows: min-content 12px min-content min-content min-content min-content;
+  grid-template-rows: repeat(6, min-content);
 
   .MuiChip-root {
     color: inherit;
@@ -110,6 +109,14 @@ export const OnlineReportsBaseTeaserStyled = styled(Teaser)`
   }
 
   ${TeaserImageWrapper} {
+    &:empty {
+      display: none;
+
+      ${({ theme }) => theme.breakpoints.up('sm')} {
+        display: unset;
+      }
+    }
+
     img {
       aspect-ratio: 4/3;
       max-height: unset;
@@ -122,9 +129,9 @@ export const OnlineReportsBaseTeaserStyled = styled(Teaser)`
 
   ${TeaserPreTitleWrapper} {
     margin-bottom: 0;
-    padding: 0;
+    padding: ${({ theme }) => theme.spacing(0.5)} 0 0 0;
     height: unset;
-    color: ${({theme}) => theme.palette.primary.main};
+    color: ${({ theme }) => theme.palette.primary.main};
     background-color: transparent;
     grid-area: pretitle;
   }
@@ -133,16 +140,20 @@ export const OnlineReportsBaseTeaserStyled = styled(Teaser)`
     transform: none;
     padding: 0;
     background-color: transparent;
-    color: ${({theme}) => theme.palette.primary.main};
+    color: ${({ theme }) => theme.palette.primary.main};
     font-weight: 600;
-    width: max-content;
+    width: 100%;
   }
 
   ${TeaserTitle} {
-    font-family: ${({theme}) => theme.typography.h3.fontFamily};
-    font-size: ${({theme}) => theme.typography.h3.fontSize};
-    font-weight: ${({theme}) => theme.typography.h3.fontWeight};
-    color: ${({theme}) => theme.typography.h3.color};
+    font-family: ${({ theme }) => theme.typography.h3.fontFamily};
+    font-size: ${({ theme }) => theme.typography.h3.fontSize};
+    font-weight: ${({ theme }) => theme.typography.h3.fontWeight};
+    color: ${({ theme }) => theme.typography.h3.color};
+    margin-bottom: ${({ theme }) => theme.spacing(0.25)};
+    ${({ theme }) => theme.breakpoints.up('sm')} {
+      margin-bottom: ${({ theme }) => theme.spacing(1)};
+    }
   }
 
   ${TeaserLead} {
@@ -150,25 +161,31 @@ export const OnlineReportsBaseTeaserStyled = styled(Teaser)`
   }
 
   ${TeaserTags} {
-    display: ${({teaser}) => (hasSpecialTags(teaser) ? 'block' : 'none')};
+    display: ${({ teaser }) => (hasTags(teaser) ? 'block' : 'none')};
 
-    .MuiChip-root {
+    & .MuiChip-root {
       background-color: #7c7c7c;
       border-radius: 5px;
       border: none;
       color: #fff;
       padding: 4px 12px;
+      margin-top: 6px;
+
+      ${({ theme }) => theme.breakpoints.up('lg')} {
+        margin-top: 2px;
+      }
     }
   }
 
   ${TeaserAuthors} {
-    font-family: ${({theme}) => theme.typography.body2.fontFamily};
-    font-size: ${({theme}) => theme.typography.body2.fontSize};
-    font-weight: ${({theme}) => theme.typography.body2.fontWeight};
-    color: ${({theme}) => theme.typography.body2.color};
+    display: ${({ teaser }) => (hasTags(teaser) ? 'none' : 'block')};
+    font-family: ${({ theme }) => theme.typography.body2.fontFamily};
+    font-size: ${({ theme }) => theme.typography.body2.fontSize};
+    font-weight: ${({ theme }) => theme.typography.body2.fontWeight};
+    color: ${({ theme }) => theme.typography.body2.color};
   }
 
   ${TeaserTime} {
     display: none;
   }
-`
+`;

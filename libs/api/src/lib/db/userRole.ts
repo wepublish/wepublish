@@ -1,8 +1,8 @@
 export enum UserRoleSort {
   CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
+  ModifiedAt = 'modifiedAt',
 }
 
 export interface UserRoleFilter {
-  readonly name?: string
+  readonly name?: string;
 }

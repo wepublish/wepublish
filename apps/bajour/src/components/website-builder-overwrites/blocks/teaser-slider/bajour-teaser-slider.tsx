@@ -1,26 +1,29 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   SliderBall,
   SliderInnerContainer,
   SliderTitle,
-  TeaserSlider
-} from '@wepublish/block-content/website'
-import {BuilderBlockStyleProps, WebsiteBuilderProvider} from '@wepublish/website/builder'
+  TeaserSlider,
+} from '@wepublish/block-content/website';
+import {
+  BuilderBlockStyleProps,
+  WebsiteBuilderProvider,
+} from '@wepublish/website/builder';
 
-import {TeaserSlide} from './teaser-slide'
+import { TeaserSlide } from './teaser-slide';
 
 const StyledTeaserSlider = styled(TeaserSlider)`
   ${SliderBall} {
-    background-color: ${({theme}) => theme.palette.common.white};
+    background-color: ${({ theme }) => theme.palette.common.white};
   }
 
   ${SliderTitle} {
-    ${({theme}) => theme.breakpoints.up('sm')} {
+    ${({ theme }) => theme.breakpoints.up('sm')} {
       margin-left: calc(100% / 12);
       margin-right: calc(100% / 12);
     }
 
-    ${({theme}) => theme.breakpoints.up('md')} {
+    ${({ theme }) => theme.breakpoints.up('md')} {
       margin-left: calc((100% / 12) * 2);
       margin-right: calc((100% / 12) * 2);
     }
@@ -28,20 +31,20 @@ const StyledTeaserSlider = styled(TeaserSlider)`
 
   ${SliderInnerContainer} {
     position: relative;
-    padding-top: ${({theme}) => theme.spacing(2)};
-    padding-bottom: ${({theme}) => theme.spacing(2)};
+    padding-top: ${({ theme }) => theme.spacing(2)};
+    padding-bottom: ${({ theme }) => theme.spacing(2)};
 
-    ${({theme}) => theme.breakpoints.up('sm')} {
-      padding-top: ${({theme}) => theme.spacing(3)};
-      padding-bottom: ${({theme}) => theme.spacing(3)};
+    ${({ theme }) => theme.breakpoints.up('sm')} {
+      padding-top: ${({ theme }) => theme.spacing(3)};
+      padding-bottom: ${({ theme }) => theme.spacing(3)};
     }
 
-    ${({theme}) => theme.breakpoints.up('md')} {
-      padding-top: ${({theme}) => theme.spacing(5)};
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      padding-top: ${({ theme }) => theme.spacing(5)};
     }
 
-    ${({theme}) => theme.breakpoints.up('xl')} {
-      padding-top: ${({theme}) => theme.spacing(7)};
+    ${({ theme }) => theme.breakpoints.up('xl')} {
+      padding-top: ${({ theme }) => theme.spacing(7)};
     }
   }
 
@@ -55,22 +58,24 @@ const StyledTeaserSlider = styled(TeaserSlider)`
     z-index: -1;
     background: #feede8;
 
-    ${({theme}) => theme.breakpoints.up('sm')} {
+    ${({ theme }) => theme.breakpoints.up('sm')} {
       left: calc(100% / 12);
       right: calc(100% / 12);
     }
 
-    ${({theme}) => theme.breakpoints.up('md')} {
+    ${({ theme }) => theme.breakpoints.up('md')} {
       left: calc((100% / 12) * 2);
       right: calc((100% / 12) * 2);
     }
   }
-`
+`;
 
-export const BajourTeaserSlider = (props: BuilderBlockStyleProps['TeaserSlider']) => {
+export const BajourTeaserSlider = (
+  props: BuilderBlockStyleProps['TeaserSlider']
+) => {
   return (
-    <WebsiteBuilderProvider blocks={{Teaser: TeaserSlide}}>
+    <WebsiteBuilderProvider blocks={{ Teaser: TeaserSlide }}>
       <StyledTeaserSlider {...props} />
     </WebsiteBuilderProvider>
-  )
-}
+  );
+};

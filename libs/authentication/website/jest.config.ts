@@ -4,5 +4,5 @@ export default {
   preset: '../../../jest.preset.js',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../../coverage/libs/authentication/website',
-  setupFiles: ['./setup-tests.tsx']
-}
+  setupFiles: ['./setup-tests.tsx'],
+};

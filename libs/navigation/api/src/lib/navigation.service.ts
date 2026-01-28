@@ -1,8 +1,11 @@
-import {Injectable} from '@nestjs/common'
-import {CreateNavigationInput, UpdateNavigationInput} from './navigation.model'
-import {PrismaClient} from '@prisma/client'
-import {NavigationDataloaderService} from './navigation-dataloader.service'
-import {PrimeDataLoader} from '@wepublish/utils/api'
+import { Injectable } from '@nestjs/common';
+import {
+  CreateNavigationInput,
+  UpdateNavigationInput,
+} from './navigation.model';
+import { PrismaClient } from '@prisma/client';
+import { NavigationDataloaderService } from './navigation-dataloader.service';
+import { PrimeDataLoader } from '@wepublish/utils/api';
 
 @Injectable()
 export class NavigationService {
@@ -11,54 +14,54 @@ export class NavigationService {
   @PrimeDataLoader(NavigationDataloaderService)
   async getNavigations() {
     return this.prisma.navigation.findMany({
-      orderBy: {createdAt: 'desc'}
-    })
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   @PrimeDataLoader(NavigationDataloaderService)
   async createNavigation(input: CreateNavigationInput) {
-    const {links, ...data} = input
+    const { links, ...data } = input;
 
     return this.prisma.navigation.create({
       data: {
         ...data,
         links: {
-          createMany: {data: links}
-        }
-      }
-    })
+          createMany: { data: links },
+        },
+      },
+    });
   }
 
   async deleteNavigationById(id: string) {
     return this.prisma.navigation.delete({
-      where: {id}
-    })
+      where: { id },
+    });
   }
 
   @PrimeDataLoader(NavigationDataloaderService)
   async updateNavigation(input: UpdateNavigationInput) {
-    const {id, links, ...data} = input
+    const { id, links, ...data } = input;
 
     await this.prisma.navigationLink.deleteMany({
-      where: {navigationId: id}
-    })
+      where: { navigationId: id },
+    });
 
     return this.prisma.navigation.update({
-      where: {id},
+      where: { id },
       data: {
         ...data,
         links: {
-          createMany: {data: links}
-        }
-      }
-    })
+          createMany: { data: links },
+        },
+      },
+    });
   }
 
   async getNavigationLinks(id: string) {
     return this.prisma.navigationLink.findMany({
       where: {
-        navigationId: id
-      }
-    })
+        navigationId: id,
+      },
+    });
   }
 }

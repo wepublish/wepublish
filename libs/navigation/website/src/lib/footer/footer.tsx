@@ -1,232 +1,285 @@
-import {css, Theme, Toolbar, useTheme} from '@mui/material'
-import styled from '@emotion/styled'
-import {FullNavigationFragment} from '@wepublish/website/api'
-import {BuilderFooterProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {navigationLinkToUrl} from '../link-to-url'
-import {PropsWithChildren} from 'react'
+import { css } from '@mui/material';
+import styled from '@emotion/styled';
+import { FullNavigationFragment } from '@wepublish/website/api';
+import {
+  BuilderFooterProps,
+  Link,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { navigationLinkToUrl } from '../link-to-url';
+import { PropsWithChildren } from 'react';
+import { TextToIcon } from '@wepublish/ui';
+import { useIntersectionObserver } from 'usehooks-ts';
+import { forceHideBanner } from '@wepublish/banner/website';
+import { ReactComponent as WepublishLight } from './wepublish-light.svg';
+import { ReactComponent as WepublishDark } from './wepublish-dark.svg';
 
 export const FooterWrapper = styled('footer')`
   position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-`
 
-export const FooterInnerWrapper = styled(Toolbar)`
-  display: grid;
-  align-items: center;
-  grid-auto-flow: column;
-  justify-content: space-between;
-  justify-items: center;
+  --footer-paddingX: ${({ theme }) => theme.spacing(2.5)};
+  --footer-paddingY: ${({ theme }) => theme.spacing(2.5)};
 
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      grid-auto-columns: 1fr;
-    }
-  `}
-`
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    --footer-paddingX: calc(100% / 6);
+    --footer-paddingY: calc(100% / 12);
+  }
+`;
 
 export const FooterMain = styled('div')`
   display: flex;
   flex-flow: row wrap;
   align-items: center;
   justify-self: start;
-  gap: ${({theme}) => theme.spacing(2)};
-`
+  gap: ${({ theme }) => theme.spacing(2)};
+`;
 
-export const FooterMainItems = styled('div')<{show: boolean}>`
+export const FooterMainItems = styled('div')<{ show: boolean }>`
   display: none;
   grid-auto-flow: column;
   grid-auto-columns: max-content;
-  gap: ${({theme}) => theme.spacing(2)};
-  font-weight: ${({theme}) => theme.typography.fontWeightMedium};
+  gap: ${({ theme }) => theme.spacing(2)};
+  font-weight: ${({ theme }) => theme.typography.fontWeightMedium};
   font-size: 1.125rem;
   text-transform: uppercase;
 
-  ${({theme, show}) => css`
+  ${({ theme, show }) => css`
     ${theme.breakpoints.up('sm')} {
       display: ${show && 'grid'};
     }
   `}
-`
+`;
+
+export const FooterIconsWrapper = styled.div`
+  padding: calc(var(--footer-paddingY) / 2) var(--footer-paddingX);
+  background: #000;
+  color: ${({ theme }) => theme.palette.getContrastText('#000')};
+  display: grid;
+  grid-template-columns: 1fr;
+`;
+
+export const FooterIcons = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-self: center;
+  gap: ${({ theme }) => theme.spacing(3)};
+
+  ${({ theme }) => theme.breakpoints.up('sm')} {
+    justify-self: end;
+  }
+`;
 
 export function Footer({
   className,
   categorySlugs,
   slug,
+  iconSlug,
   data,
   loading,
   error,
-  children
+  hideBannerOnIntersecting,
+  wepublishLogo,
+  children,
 }: BuilderFooterProps) {
-  const mainItems = data?.navigations?.find(({key}) => key === slug)
+  const { isIntersecting, ref } = useIntersectionObserver({
+    initialIsIntersecting: false,
+    threshold: 0.9,
+  });
+
+  const mainItems = data?.navigations?.find(({ key }) => key === slug);
 
   const categories = categorySlugs.map(categorySlugArray => {
     return categorySlugArray.reduce((navigations, categorySlug) => {
-      const navItem = data?.navigations?.find(({key}) => key === categorySlug)
+      const navItem = data?.navigations?.find(
+        ({ key }) => key === categorySlug
+      );
 
       if (navItem) {
-        navigations.push(navItem)
+        navigations.push(navItem);
       }
 
-      return navigations
-    }, [] as FullNavigationFragment[])
-  })
+      return navigations;
+    }, [] as FullNavigationFragment[]);
+  });
+
+  const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
 
   return (
-    <FooterWrapper className={className}>
-      <FooterPaper main={mainItems} categories={categories}>
-        {children}
-      </FooterPaper>
+    <FooterWrapper
+      className={className}
+      ref={ref}
+    >
+      <FooterPaper
+        main={mainItems}
+        categories={categories}
+        children={children}
+      />
+
+      {(!!iconItems?.links.length || wepublishLogo !== 'hidden') && (
+        <FooterIconsWrapper>
+          <FooterIcons>
+            {iconItems?.links.map((link, index) => (
+              <Link
+                key={index}
+                href={navigationLinkToUrl(link)}
+                color="inherit"
+              >
+                <TextToIcon
+                  title={link.label}
+                  size={32}
+                />
+              </Link>
+            ))}
+
+            {wepublishLogo === 'light' && (
+              <Link href="https://wepublish.ch/de/das-projekt/#cms">
+                <WepublishLight height={40} />
+              </Link>
+            )}
+
+            {wepublishLogo === 'dark' && (
+              <Link href="https://wepublish.ch/de/das-projekt/#cms">
+                <WepublishDark height={40} />
+              </Link>
+            )}
+          </FooterIcons>
+        </FooterIconsWrapper>
+      )}
+
+      {isIntersecting && hideBannerOnIntersecting && forceHideBanner}
     </FooterWrapper>
-  )
+  );
 }
 
 export const FooterPaperWrapper = styled('div')`
-  padding: ${({theme}) => theme.spacing(2.5)};
-  background-color: ${({theme}) => theme.palette.grey[800]};
-  color: ${({theme}) => theme.palette.primary.contrastText};
+  padding: var(--footer-paddingY) var(--footer-paddingX);
+  background-color: ${({ theme }) => theme.palette.grey[800]};
+  color: ${({ theme }) =>
+    theme.palette.getContrastText(theme.palette.grey[800])};
   display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  transform: translateY(100%);
-  overflow: hidden;
-  row-gap: ${({theme}) => theme.spacing(8)};
+  column-gap: ${({ theme }) => theme.spacing(3)};
+  row-gap: ${({ theme }) => theme.spacing(8)};
 
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      gap: ${theme.spacing(6)};
-      row-gap: ${theme.spacing(12)};
-      grid-template-columns: 1fr 1fr;
-      padding: calc(100% / 12) calc(100% / 6);
-    }
-  `}
-`
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    column-gap: ${({ theme }) => theme.spacing(6)};
+    row-gap: ${({ theme }) => theme.spacing(12)};
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+  }
+`;
 
-export const FooterPaperCategory = styled('div')`
+export const FooterCategory = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(1)};
+  gap: ${({ theme }) => theme.spacing(1)};
   grid-auto-rows: max-content;
-`
+`;
 
 export const FooterName = styled('span')`
   text-transform: uppercase;
   font-weight: 300;
   font-size: 14px;
-`
-export const FooterSeparator = styled('div')`
-  position: absolute;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 50%;
-  background-color: ${({theme}) => theme.palette.common.black};
-  z-index: -1;
-  transform: translateY(-2rem);
-`
+`;
 
-export const LinksGroup = styled('div')`
+export const FooterLinksGroup = styled('div')`
   display: grid;
   grid-template-columns: 1fr;
-  gap: ${({theme}) => theme.spacing(3)};
+  gap: ${({ theme }) => theme.spacing(3)};
 
-  ${({theme}) => css`
+  ${({ theme }) => css`
     ${theme.breakpoints.up('sm')} {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fill, minmax(max-content, 25ch));
     }
   `}
-`
+`;
 
-const footerPaperLinkStyling = (theme: Theme) => css`
-  ${theme.breakpoints.up('sm')} {
+export const FooterPaperLink = styled(Link)`
+  ${({ theme }) => theme.breakpoints.up('sm')} {
     border-bottom: 0;
   }
-`
+`;
 
-export const FooterPaperSection = styled('div')`
+export const FooterCategoryLinks = styled('div')`
   display: grid;
-  font-weight: ${({theme}) => theme.typography.fontWeightMedium};
-  font-size: ${({theme}) => theme.typography.h6.fontSize};
+  font-weight: ${({ theme }) => theme.typography.fontWeightMedium};
+  font-size: ${({ theme }) => theme.typography.h6.fontSize};
 
   a {
     color: inherit;
     text-decoration: none;
   }
-`
+`;
 
-const FooterPaperCategoryLinks = styled(FooterPaperSection)``
+export const FooterMainLinks = styled(FooterCategoryLinks)`
+  gap: ${({ theme }) => theme.spacing(1)};
+  grid-auto-rows: max-content;
+`;
 
-const FooterPaperMainLinks = styled(FooterPaperCategoryLinks)`
-  gap: ${({theme}) => theme.spacing(1)};
-`
-
-const FooterPaper = ({
+export const FooterPaper = ({
   main,
   categories,
-  children
+  children,
 }: PropsWithChildren<{
-  main: FullNavigationFragment | null | undefined
-  categories: FullNavigationFragment[][]
+  main: FullNavigationFragment | null | undefined;
+  categories: FullNavigationFragment[][];
 }>) => {
   const {
-    elements: {Link, H4, H6}
-  } = useWebsiteBuilder()
-  const theme = useTheme()
+    elements: { H4, H6 },
+  } = useWebsiteBuilder();
 
   return (
     <FooterPaperWrapper>
       {!!main?.links.length && (
-        <FooterPaperMainLinks>
-          {main.links.map((link, index) => {
-            const url = navigationLinkToUrl(link)
-
-            return (
-              <Link href={url} key={index} color="inherit" underline="none">
-                <H4 component="span" css={{fontWeight: '700'}}>
-                  {link.label}
-                </H4>
-              </Link>
-            )
-          })}
-        </FooterPaperMainLinks>
-      )}
-
-      {!!categories.length && (
-        <>
-          {categories.map((categoryArray, arrayIndex) => (
-            <LinksGroup key={`category-group-${arrayIndex}`}>
-              {arrayIndex > 0 && <FooterSeparator />}
-              {categoryArray.map(nav => (
-                <FooterPaperCategory key={nav.id}>
-                  {nav.name && <FooterName>{nav.name}</FooterName>}
-
-                  <FooterPaperCategoryLinks>
-                    {nav.links?.map((link, index) => {
-                      const url = navigationLinkToUrl(link)
-
-                      return (
-                        <Link
-                          href={url}
-                          key={index}
-                          color="inherit"
-                          underline="none"
-                          css={footerPaperLinkStyling(theme)}>
-                          <H6 component="span">{link.label}</H6>
-                        </Link>
-                      )
-                    })}
-                  </FooterPaperCategoryLinks>
-                </FooterPaperCategory>
-              ))}
-            </LinksGroup>
+        <FooterMainLinks>
+          {main.links.map((link, index) => (
+            <Link
+              key={index}
+              href={navigationLinkToUrl(link)}
+              color="inherit"
+              underline="none"
+            >
+              <H4
+                component="span"
+                css={{ fontWeight: '700' }}
+              >
+                {link.label}
+              </H4>
+            </Link>
           ))}
-        </>
+        </FooterMainLinks>
       )}
+
+      {categories.map((categoryArray, arrayIndex) => (
+        <FooterLinksGroup key={arrayIndex}>
+          {categoryArray.map(nav => (
+            <FooterCategory key={nav.id}>
+              {nav.name && <FooterName>{nav.name}</FooterName>}
+
+              <FooterCategoryLinks>
+                {nav.links?.map((link, index) => (
+                  <FooterPaperLink
+                    href={navigationLinkToUrl(link)}
+                    key={index}
+                    color="inherit"
+                    underline="none"
+                  >
+                    <H6
+                      component="span"
+                      css={{ fontWeight: '700' }}
+                    >
+                      {link.label}
+                    </H6>
+                  </FooterPaperLink>
+                ))}
+              </FooterCategoryLinks>
+            </FooterCategory>
+          ))}
+        </FooterLinksGroup>
+      ))}
+
       {children}
     </FooterPaperWrapper>
-  )
-}
+  );
+};

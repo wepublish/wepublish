@@ -2,7 +2,7 @@
   "name": "media",
   "pkg": {
     "assets": [],
-    "targets": [ "node18-linux" ]
+    "targets": [ "node22-linux" ]
   },
   "bin": {
     "main": "dist/apps/media/main.js"

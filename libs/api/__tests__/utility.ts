@@ -1,75 +1,77 @@
-import {Currency, PrismaClient} from '@prisma/client'
-import {ApolloServer} from 'apollo-server-express'
-import * as crypto from 'crypto'
-import {URL} from 'url'
+import { Currency, PrismaClient } from '@prisma/client';
+import { ApolloServer } from 'apollo-server-express';
+import * as crypto from 'crypto';
+import { URL } from 'url';
 import {
   AlgebraicCaptchaChallenge,
   contextFromRequest,
   GraphQLWepublishPublicSchema,
   GraphQLWepublishSchema,
-  KarmaMediaAdapter,
-  DefaultSessionTTL
-} from '../src'
-import {createUserSession} from '../src/lib/graphql/session/session.mutation'
-import {PartialDeep} from 'type-fest'
-import Mock = jest.Mock
+  DefaultSessionTTL,
+} from '../src';
+import { createUserSession } from '../src/lib/graphql/session/session.mutation';
+import { PartialDeep } from 'type-fest';
+import Mock = jest.Mock;
 import {
   CreateGatewayRequestData,
   Gateway,
   GatewayClient,
   PayrexxPaymentProvider,
-  TransactionClient
-} from '@wepublish/payment/api'
-import {FakeMailProvider} from '@wepublish/mail/api'
-import {URLAdapter} from '@wepublish/nest-modules'
+  TransactionClient,
+} from '@wepublish/payment/api';
+import { FakeMailProvider } from '@wepublish/mail/api';
+import { URLAdapter } from '@wepublish/nest-modules';
 
 export interface TestClient {
-  testServerPublic: ApolloServer
-  testServerPrivate: ApolloServer
-  prisma: PrismaClient
-  challenge: AlgebraicCaptchaChallenge
+  testServerPublic: ApolloServer;
+  testServerPrivate: ApolloServer;
+  prisma: PrismaClient;
+  challenge: AlgebraicCaptchaChallenge;
 }
 
 export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
-  const prisma = new PrismaClient()
-  await prisma.$connect()
+  const prisma = new PrismaClient();
+  await prisma.$connect();
 
   const adminUser = await prisma.user.findUnique({
     where: {
-      email: 'dev@wepublish.ch'
-    }
-  })
+      email: 'dev@wepublish.ch',
+    },
+  });
 
   const userSession = await createUserSession(
     adminUser,
     DefaultSessionTTL,
     prisma.session,
     prisma.userRole
-  )
+  );
 
   const request: any = {
     headers: {
-      authorization: `Bearer ${userSession?.token}`
-    }
-  }
-  return await createGraphQLTestClient(request)
+      authorization: `Bearer ${userSession?.token}`,
+    },
+  };
+  return await createGraphQLTestClient(request);
 }
 
-export async function createGraphQLTestClient(overwriteRequest?: any): Promise<TestClient> {
+export async function createGraphQLTestClient(
+  overwriteRequest?: any
+): Promise<TestClient> {
   if (!process.env.DATABASE_URL) {
-    throw new Error('DATABASE_URL not defined')
+    throw new Error('DATABASE_URL not defined');
   }
 
-  const prisma = new PrismaClient()
-  await prisma.$connect()
+  const prisma = new PrismaClient();
+  await prisma.$connect();
 
   const mailProvider = new FakeMailProvider({
     id: 'fakeMail',
     name: 'Fake Mail',
-    fromAddress: 'fakeMail@wepublish.media'
-  })
+    fromAddress: 'fakeMail@wepublish.media',
+  });
 
-  const mediaAdapter: KarmaMediaAdapter = {
+  const mediaAdapter = {
+    config: { quality: 1 },
     url: new URL('https://fakeurl.com'),
     token: 'fake',
     internalURL: new URL('https://internalurl.com'),
@@ -78,21 +80,25 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
     deleteImage: jest.fn(),
     uploadImage: jest.fn(),
     uploadImageFromArrayBuffer: jest.fn(),
-    _uploadImage: jest.fn()
-  }
+    _uploadImage: jest.fn(),
+  } as any;
 
-  const challenge = new AlgebraicCaptchaChallenge('secret', 600, {})
+  const challenge = new AlgebraicCaptchaChallenge('secret', 600, {});
 
   /**
    * Create mock payment adapter to be used along with test server.
    * @param implementation
    */
   function mockInstance<Type = unknown>(implementation?: PartialDeep<Type>) {
-    return new (jest.fn().mockImplementation(() => implementation) as Mock<Type>)() as Type
+    return new (jest
+      .fn()
+      .mockImplementation(() => implementation) as Mock<Type>)() as Type;
   }
 
   const mockGatewayClient = mockInstance<GatewayClient>({
-    createGateway: async (requestData: CreateGatewayRequestData): Promise<Gateway> => {
+    createGateway: async (
+      requestData: CreateGatewayRequestData
+    ): Promise<Gateway> => {
       return {
         id: 1234,
         status: 'confirmed',
@@ -109,15 +115,15 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
         vatRate: 7.7,
         sku: 'sku',
         applicationFee: 10,
-        createdAt: 1234567890
-      }
+        createdAt: 1234567890,
+      };
     },
-    getGateway: jest.fn()
-  })
+    getGateway: jest.fn(),
+  });
   const mockTransactionClient = mockInstance<TransactionClient>({
     retrieveTransaction: jest.fn(),
-    chargePreAuthorizedTransaction: jest.fn()
-  })
+    chargePreAuthorizedTransaction: jest.fn(),
+  });
 
   const mockPaymentProvider = new PayrexxPaymentProvider({
     id: 'testing-payment-provider-id',
@@ -129,13 +135,13 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
     offSessionPayments: true,
     webhookApiKey: 'secret',
     pm: ['foo'],
-    prisma: prisma
-  })
+    prisma,
+  });
 
   const testServerPublic = new ApolloServer({
     schema: GraphQLWepublishPublicSchema,
     introspection: false,
-    context: async ({req}) =>
+    context: async ({ req }) =>
       await contextFromRequest(overwriteRequest ? overwriteRequest : req, {
         hostURL: 'https://fakeURL',
         websiteURL: 'https://fakeurl',
@@ -144,19 +150,18 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
         mailProvider,
         mailContextOptions: {
           defaultFromAddress: 'dev@fake.org',
-          defaultReplyToAddress: 'reply-to@fake.org'
+          defaultReplyToAddress: 'reply-to@fake.org',
         },
         urlAdapter: new URLAdapter(''),
-        oauth2Providers: [],
         paymentProviders: [mockPaymentProvider],
-        challenge
-      })
-  })
+        challenge,
+      }),
+  });
 
   const testServerPrivate = new ApolloServer({
     schema: GraphQLWepublishSchema,
     introspection: false,
-    context: async ({req}) =>
+    context: async ({ req }) =>
       await contextFromRequest(overwriteRequest ? overwriteRequest : req, {
         hostURL: 'https://fakeURL',
         websiteURL: 'https://fakeurl',
@@ -165,21 +170,21 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
         mailProvider,
         mailContextOptions: {
           defaultFromAddress: 'dev@fake.org',
-          defaultReplyToAddress: 'reply-to@fake.org'
+          defaultReplyToAddress: 'reply-to@fake.org',
         },
         urlAdapter: new URLAdapter(''),
-        oauth2Providers: [],
         paymentProviders: [mockPaymentProvider],
-        challenge
-      })
-  })
+        challenge,
+      }),
+  });
 
   return {
     testServerPublic,
     testServerPrivate,
     prisma,
-    challenge
-  }
+    challenge,
+  };
 }
 
-export const generateRandomString = () => crypto.randomBytes(20).toString('hex')
+export const generateRandomString = () =>
+  crypto.randomBytes(20).toString('hex');

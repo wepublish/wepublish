@@ -1,4 +1,8 @@
-import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common'
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   Invoice,
   InvoiceItem,
@@ -13,65 +17,68 @@ import {
   SubscriptionDeactivationReason,
   SubscriptionEvent,
   SubscriptionPeriod,
-  User
-} from '@prisma/client'
-import {PaymentProvider, PaymentsService} from '@wepublish/payment/api'
-import {add, endOfDay, startOfDay} from 'date-fns'
-import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
-import {mapPaymentPeriodToMonths} from '@wepublish/utils/api'
+  User,
+} from '@prisma/client';
+import { PaymentProvider, PaymentsService } from '@wepublish/payment/api';
+import { add, endOfDay, startOfDay } from 'date-fns';
+import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
+import { logger, mapPaymentPeriodToMonths } from '@wepublish/utils/api';
 
 export type SubscriptionControllerConfig = {
-  subscription: Subscription
-}
+  subscription: Subscription;
+};
 
 interface ChargeStatus {
-  action: Action | undefined
-  errorCode: string
+  action: Action | undefined;
+  errorCode: string;
 }
 
 interface PeriodBounds {
-  startsAt: Date
-  endsAt: Date
+  startsAt: Date;
+  endsAt: Date;
 }
 
 @Injectable()
 export class SubscriptionService {
-  constructor(private prismaService: PrismaClient, private payments: PaymentsService) {}
+  constructor(
+    private prismaService: PrismaClient,
+    private payments: PaymentsService
+  ) {}
 
   public async getActiveSubscriptionsWithoutInvoice(
     runDate: Date,
     closestRenewalDate: Date
   ): Promise<
     (Subscription & {
-      periods: SubscriptionPeriod[]
-      deactivation: SubscriptionDeactivation | null
-      user: User
-      paymentMethod: PaymentMethod
-      memberPlan: MemberPlan
+      periods: SubscriptionPeriod[];
+      deactivation: SubscriptionDeactivation | null;
+      user: User;
+      paymentMethod: PaymentMethod;
+      memberPlan: MemberPlan;
     })[]
   > {
     return this.prismaService.subscription.findMany({
       where: {
         paidUntil: {
-          lte: endOfDay(closestRenewalDate)
+          lte: endOfDay(closestRenewalDate),
         },
         deactivation: {
-          is: null
+          is: null,
         },
         periods: {
           none: {
             startsAt: {
-              gt: startOfDay(runDate)
-            }
-          }
+              gt: startOfDay(runDate),
+            },
+          },
         },
         autoRenew: true,
         invoices: {
           none: {
             paidAt: null,
-            canceledAt: null
-          }
-        }
+            canceledAt: null,
+          },
+        },
       },
       include: {
         periods: true,
@@ -79,9 +86,9 @@ export class SubscriptionService {
         user: true,
         paymentMethod: true,
         memberPlan: true,
-        invoices: true
-      }
-    })
+        invoices: true,
+      },
+    });
   }
 
   /**
@@ -95,11 +102,11 @@ export class SubscriptionService {
         paidAt: null,
         // skip invoices where the subscription has been deleted
         subscriptionID: {
-          not: null
+          not: null,
         },
         subscription: {
-          confirmed: true
-        }
+          confirmed: true,
+        },
       },
       include: {
         subscription: {
@@ -108,15 +115,15 @@ export class SubscriptionService {
             memberPlan: true,
             user: {
               include: {
-                paymentProviderCustomers: true
-              }
-            }
-          }
+                paymentProviderCustomers: true,
+              },
+            },
+          },
         },
         subscriptionPeriods: true,
-        items: true
-      }
-    })
+        items: true,
+      },
+    });
   }
 
   /**
@@ -128,17 +135,17 @@ export class SubscriptionService {
     return this.prismaService.invoice.findMany({
       where: {
         dueAt: {
-          lte: endOfDay(runDate)
+          lte: endOfDay(runDate),
         },
         canceledAt: null,
         paidAt: null,
         // skip invoices where the subscription has been deleted
         subscriptionID: {
-          not: null
+          not: null,
         },
         subscription: {
-          confirmed: true
-        }
+          confirmed: true,
+        },
       },
       include: {
         subscription: {
@@ -147,15 +154,15 @@ export class SubscriptionService {
             memberPlan: true,
             user: {
               include: {
-                paymentProviderCustomers: true
-              }
-            }
-          }
+                paymentProviderCustomers: true,
+              },
+            },
+          },
         },
         subscriptionPeriods: true,
-        items: true
-      }
-    })
+        items: true,
+      },
+    });
   }
 
   /**
@@ -167,23 +174,23 @@ export class SubscriptionService {
     return this.prismaService.invoice.findMany({
       where: {
         scheduledDeactivationAt: {
-          lte: startOfDay(runDate)
+          lte: startOfDay(runDate),
         },
         canceledAt: null,
         paidAt: null,
         // skip invoices where the subscription has been deleted
         subscriptionID: {
-          not: null
-        }
+          not: null,
+        },
       },
       include: {
         subscription: {
           include: {
-            user: true
-          }
-        }
-      }
-    })
+            user: true,
+          },
+        },
+      },
+    });
   }
 
   /**
@@ -196,17 +203,17 @@ export class SubscriptionService {
     return this.prismaService.subscription.findMany({
       where: {
         paidUntil: {
-          lte: endOfDay(runDate)
+          lte: endOfDay(runDate),
         },
         autoRenew: false,
         deactivation: {
-          is: null
-        }
+          is: null,
+        },
       },
       include: {
-        deactivation: true
-      }
-    })
+        deactivation: true,
+      },
+    });
   }
 
   /**
@@ -222,17 +229,21 @@ export class SubscriptionService {
   ): PeriodBounds {
     if (periods.length === 0) {
       return {
-        startsAt: add(new Date(), {days: 1}),
-        endsAt: add(new Date(), {months: mapPaymentPeriodToMonths(periodicity)})
-      }
+        startsAt: add(new Date(), { days: 1 }),
+        endsAt: add(new Date(), {
+          months: mapPaymentPeriodToMonths(periodicity),
+        }),
+      };
     }
     const latestPeriod = periods.reduce(function (prev, current) {
-      return prev.endsAt > current.endsAt ? prev : current
-    })
+      return prev.endsAt > current.endsAt ? prev : current;
+    });
     return {
-      startsAt: add(latestPeriod.endsAt, {days: 1}),
-      endsAt: add(latestPeriod.endsAt, {months: mapPaymentPeriodToMonths(periodicity)})
-    }
+      startsAt: add(latestPeriod.endsAt, { days: 1 }),
+      endsAt: add(latestPeriod.endsAt, {
+        months: mapPaymentPeriodToMonths(periodicity),
+      }),
+    };
   }
 
   /**
@@ -243,15 +254,16 @@ export class SubscriptionService {
    */
   public async createInvoice(
     subscription: Subscription & {
-      periods: SubscriptionPeriod[]
-      user: User
-      memberPlan: MemberPlan
+      periods: SubscriptionPeriod[];
+      user: User;
+      memberPlan: MemberPlan;
     },
     deactivationDate: Date
   ) {
     const amount =
-      subscription.monthlyAmount * mapPaymentPeriodToMonths(subscription.paymentPeriodicity)
-    const description = `${subscription.paymentPeriodicity} renewal of subscription ${subscription.memberPlan.name}`
+      subscription.monthlyAmount *
+      mapPaymentPeriodToMonths(subscription.paymentPeriodicity);
+    const description = `${subscription.paymentPeriodicity} renewal of subscription ${subscription.memberPlan.name}`;
 
     return this.prismaService.invoice.create({
       data: {
@@ -264,8 +276,8 @@ export class SubscriptionService {
             name: `${subscription.memberPlan.name}`,
             description,
             quantity: 1,
-            amount
-          }
+            amount,
+          },
         },
         scheduledDeactivationAt: deactivationDate,
         subscriptionPeriods: {
@@ -274,22 +286,25 @@ export class SubscriptionService {
             amount,
             subscription: {
               connect: {
-                id: subscription.id
-              }
+                id: subscription.id,
+              },
             },
-            ...this.getNextPeriod(subscription.periods, subscription.paymentPeriodicity)
-          }
+            ...this.getNextPeriod(
+              subscription.periods,
+              subscription.paymentPeriodicity
+            ),
+          },
         },
         subscription: {
           connect: {
-            id: subscription.id
-          }
-        }
+            id: subscription.id,
+          },
+        },
       },
       include: {
-        items: true
-      }
-    })
+        items: true,
+      },
+    });
   }
 
   /**
@@ -298,58 +313,67 @@ export class SubscriptionService {
    */
   public async markInvoiceAsPaid(
     invoice: Invoice & {
-      subscription: Subscription | null
+      subscription: Subscription | null;
     }
   ) {
-    const newPaidUntil = add(invoice.subscription!.paidUntil || invoice.subscription!.createdAt, {
-      months: mapPaymentPeriodToMonths(invoice.subscription!.paymentPeriodicity)
-    })
+    const newPaidUntil = add(
+      invoice.subscription!.paidUntil || invoice.subscription!.createdAt,
+      {
+        months: mapPaymentPeriodToMonths(
+          invoice.subscription!.paymentPeriodicity
+        ),
+      }
+    );
 
     await this.prismaService.$transaction([
       this.prismaService.subscription.update({
         where: {
-          id: invoice.subscription!.id
+          id: invoice.subscription!.id,
         },
         data: {
-          paidUntil: newPaidUntil
-        }
+          paidUntil: newPaidUntil,
+        },
       }),
       this.prismaService.invoice.update({
         where: {
-          id: invoice.id
+          id: invoice.id,
         },
         data: {
-          paidAt: new Date()
-        }
-      })
-    ])
+          paidAt: new Date(),
+        },
+      }),
+    ]);
   }
 
   /**
    * Deactivates the subscription belonging to an invoice.
    * @param invoice the invoice belonging to subscription.
    */
-  public async deactivateSubscription(invoice: Invoice & {subscription: Subscription | null}) {
+  public async deactivateSubscription(
+    invoice: Invoice & { subscription: Subscription | null }
+  ) {
     if (!invoice.subscription) {
-      throw new BadRequestException(`Invoice ${invoice.id} has no subscription assigned!`)
+      throw new BadRequestException(
+        `Invoice ${invoice.id} has no subscription assigned!`
+      );
     }
     await this.prismaService.$transaction([
       this.prismaService.subscriptionDeactivation.create({
         data: {
           subscriptionID: invoice.subscription.id || invoice.subscriptionID!,
           date: invoice.subscription.paidUntil ?? invoice.subscription.startsAt,
-          reason: SubscriptionDeactivationReason.invoiceNotPaid
-        }
+          reason: SubscriptionDeactivationReason.invoiceNotPaid,
+        },
       }),
       this.prismaService.invoice.update({
         where: {
-          id: invoice.id
+          id: invoice.id,
         },
         data: {
-          canceledAt: new Date()
-        }
-      })
-    ])
+          canceledAt: new Date(),
+        },
+      }),
+    ]);
   }
 
   /**
@@ -364,34 +388,40 @@ export class SubscriptionService {
     invoice: Invoice & {
       subscription:
         | (Subscription & {
-            paymentMethod: PaymentMethod
-            memberPlan: MemberPlan
-            user: (User & {paymentProviderCustomers: PaymentProviderCustomer[]}) | null
+            paymentMethod: PaymentMethod;
+            memberPlan: MemberPlan;
+            user:
+              | (User & { paymentProviderCustomers: PaymentProviderCustomer[] })
+              | null;
           })
-        | null
-      items: InvoiceItem[]
-      subscriptionPeriods: SubscriptionPeriod[]
+        | null;
+      items: InvoiceItem[];
+      subscriptionPeriods: SubscriptionPeriod[];
     },
     mailActions: Action[]
   ): Promise<ChargeStatus> {
     const paymentProvider = this.payments.findById(
       invoice.subscription!.paymentMethod.paymentProviderID
-    )
+    );
 
     if (!paymentProvider) {
       throw new NotFoundException(
         `Payment Provider ${invoice.subscription?.paymentMethod.paymentProviderID} not found!`
-      )
+      );
     }
 
     if (paymentProvider.offSessionPayments) {
-      return await this.offSessionPayment(invoice, paymentProvider, mailActions)
+      return await this.offSessionPayment(
+        invoice,
+        paymentProvider,
+        mailActions
+      );
     }
 
     return {
       action: undefined,
-      errorCode: ''
-    }
+      errorCode: '',
+    };
   }
 
   /**
@@ -403,34 +433,46 @@ export class SubscriptionService {
     invoice: Invoice & {
       subscription:
         | (Subscription & {
-            paymentMethod: PaymentMethod
-            memberPlan: MemberPlan
-            user: (User & {paymentProviderCustomers: PaymentProviderCustomer[]}) | null
+            paymentMethod: PaymentMethod;
+            memberPlan: MemberPlan;
+            user:
+              | (User & { paymentProviderCustomers: PaymentProviderCustomer[] })
+              | null;
           })
-        | null
-      items: InvoiceItem[]
-      subscriptionPeriods: SubscriptionPeriod[]
+        | null;
+      items: InvoiceItem[];
+      subscriptionPeriods: SubscriptionPeriod[];
     }
   ): Promise<undefined> {
     const paymentProvider = this.payments.findById(
       invoice.subscription!.paymentMethod.paymentProviderID
-    )
+    );
 
     if (!paymentProvider) {
       throw new NotFoundException(
         `Payment Provider ${invoice.subscription?.paymentMethod.paymentProviderID} not found!`
-      )
+      );
     }
-    const payments = await this.payments.findByInvoiceId(invoice.id)
+    const payments = await this.payments.findByInvoiceId(invoice.id);
     for (const payment of payments) {
-      if (!payment || !payment.intentID) continue
-      const intentState = await paymentProvider.checkIntentStatus({
-        intentID: payment.intentID,
-        paymentID: payment.id
-      })
-      await paymentProvider.updatePaymentWithIntentState({
-        intentState
-      })
+      if (!payment || !payment.intentID) continue;
+      try {
+        const intentState = await paymentProvider.checkIntentStatus({
+          intentID: payment.intentID,
+          paymentID: payment.id,
+        });
+        await paymentProvider.updatePaymentWithIntentState({
+          intentState,
+        });
+      } catch (e) {
+        logger('checkInvoiceState').error(
+          'Checking payment <%s> with intent %s on payment provider %s soft failed with error: %s',
+          payment.id,
+          payment.intentID,
+          paymentProvider.name,
+          e
+        );
+      }
     }
   }
 
@@ -446,13 +488,15 @@ export class SubscriptionService {
     invoice: Invoice & {
       subscription:
         | (Subscription & {
-            paymentMethod: PaymentMethod
-            memberPlan: MemberPlan
-            user: (User & {paymentProviderCustomers: PaymentProviderCustomer[]}) | null
+            paymentMethod: PaymentMethod;
+            memberPlan: MemberPlan;
+            user:
+              | (User & { paymentProviderCustomers: PaymentProviderCustomer[] })
+              | null;
           })
-        | null
-      items: InvoiceItem[]
-      subscriptionPeriods: SubscriptionPeriod[]
+        | null;
+      items: InvoiceItem[];
+      subscriptionPeriods: SubscriptionPeriod[];
     },
     paymentProvider: PaymentProvider,
     mailActions: Action[]
@@ -460,46 +504,50 @@ export class SubscriptionService {
     if (invoice.paidAt) {
       throw new BadRequestException(
         `Can not renew paid invoice for subscription ${invoice.subscription?.id}`
-      )
+      );
     }
 
     if (invoice.canceledAt) {
       throw new BadRequestException(
         `Can not renew canceled invoice for subscription ${invoice.subscription?.id}`
-      )
+      );
     }
 
     if (!invoice.subscription) {
-      throw new NotFoundException('Subscription not found!')
+      throw new NotFoundException('Subscription not found!');
     }
 
     if (!invoice.subscription.memberPlan) {
-      throw new NotFoundException('Memberplan not found!')
+      throw new NotFoundException('Memberplan not found!');
     }
 
     if (!invoice.subscription.user) {
-      throw new NotFoundException('User not found!')
+      throw new NotFoundException('User not found!');
     }
 
     const customer = invoice.subscription.user.paymentProviderCustomers.find(
-      ppc => ppc.paymentProviderID === invoice.subscription?.paymentMethod.paymentProviderID
-    )
-    const renewalFailedAction = mailActions.find(ma => ma.type === SubscriptionEvent.RENEWAL_FAILED)
+      ppc =>
+        ppc.paymentProviderID ===
+        invoice.subscription?.paymentMethod.paymentProviderID
+    );
+    const renewalFailedAction = mailActions.find(
+      ma => ma.type === SubscriptionEvent.RENEWAL_FAILED
+    );
 
     if (!customer) {
       return {
         action: renewalFailedAction,
-        errorCode: 'customer-not-found'
-      }
+        errorCode: 'customer-not-found',
+      };
     }
 
     const payment = await this.prismaService.payment.create({
       data: {
         paymentMethodID: invoice.subscription.paymentMethod.id,
         invoiceID: invoice.id,
-        state: PaymentState.created
-      }
-    })
+        state: PaymentState.created,
+      },
+    });
 
     try {
       const intent = await paymentProvider.createIntent({
@@ -508,11 +556,11 @@ export class SubscriptionService {
         currency: invoice.currency,
         saveCustomer: false,
         customerID: customer.customerID,
-        backgroundTask: true
-      })
+        backgroundTask: true,
+      });
 
       await this.prismaService.payment.update({
-        where: {id: payment.id},
+        where: { id: payment.id },
         data: {
           state: intent.state,
           intentID: intent.intentID,
@@ -520,40 +568,40 @@ export class SubscriptionService {
           intentSecret: intent.intentSecret,
           paymentData: intent.paymentData,
           paymentMethodID: payment.paymentMethodID,
-          invoiceID: payment.invoiceID
-        }
-      })
+          invoiceID: payment.invoiceID,
+        },
+      });
 
       if (intent.state === PaymentState.paid) {
         const renewalSuccessAction = mailActions.find(
           ma => ma.type === SubscriptionEvent.RENEWAL_SUCCESS
-        )
-        await this.markInvoiceAsPaid(invoice)
+        );
+        await this.markInvoiceAsPaid(invoice);
         return {
           action: renewalSuccessAction,
-          errorCode: ''
-        }
+          errorCode: '',
+        };
       }
 
       return {
         action: renewalFailedAction,
-        errorCode: 'user-action-required'
-      }
+        errorCode: 'user-action-required',
+      };
     } catch (e) {
       await this.prismaService.payment.update({
-        where: {id: payment.id},
+        where: { id: payment.id },
         data: {
           state: PaymentState.requiresUserAction,
           paymentData: JSON.stringify(e),
           paymentMethodID: payment.paymentMethodID,
-          invoiceID: payment.invoiceID
-        }
-      })
+          invoiceID: payment.invoiceID,
+        },
+      });
 
       return {
         action: renewalFailedAction,
-        errorCode: JSON.stringify(e)
-      }
+        errorCode: JSON.stringify(e),
+      };
     }
   }
 }

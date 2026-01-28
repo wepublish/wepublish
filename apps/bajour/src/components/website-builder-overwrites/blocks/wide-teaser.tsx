@@ -1,9 +1,17 @@
-import styled from '@emotion/styled'
-import {hasBlockStyle, isTeaserGridBlock, isTeaserListBlock} from '@wepublish/block-content/website'
-import {BlockContent, TeaserGridBlock, TeaserListBlock} from '@wepublish/website/api'
-import {allPass, anyPass} from 'ramda'
+import styled from '@emotion/styled';
+import {
+  hasBlockStyle,
+  isTeaserGridBlock,
+  isTeaserListBlock,
+} from '@wepublish/block-content/website';
+import {
+  BlockContent,
+  TeaserGridBlock,
+  TeaserListBlock,
+} from '@wepublish/website/api';
+import { allPass, anyPass } from 'ramda';
 
-import {TeaserOverwrite} from './teaser-overwrite'
+import { TeaserOverwrite } from './teaser-overwrite';
 import {
   AuthorsAndDate,
   fluidTypography,
@@ -12,16 +20,19 @@ import {
   TeaserLeadBelow,
   TeaserLeadStyled,
   TeaserPreTitleStyled,
-  TeaserTitlesStyled
-} from './teaser-overwrite.style'
+  TeaserTitlesStyled,
+} from './teaser-overwrite.style';
 
 export const isWideTeaser = (
   block: Pick<BlockContent, '__typename'>
 ): block is TeaserGridBlock | TeaserListBlock =>
-  allPass([hasBlockStyle('Breite Teaser'), anyPass([isTeaserGridBlock, isTeaserListBlock])])(block)
+  allPass([
+    hasBlockStyle('Breite Teaser'),
+    anyPass([isTeaserGridBlock, isTeaserListBlock]),
+  ])(block);
 
 export const WideTeaser = styled(TeaserOverwrite)`
-  gap: ${({theme}) => theme.spacing(1.5)};
+  gap: ${({ theme }) => theme.spacing(1.5)};
 
   ${TeaserContentStyled} {
     gap: 0;
@@ -44,7 +55,7 @@ export const WideTeaser = styled(TeaserOverwrite)`
 
   ${AuthorsAndDate} {
     font-size: ${fluidTypography(12, 20)};
-    margin-top: ${({theme}) => theme.spacing(1)};
+    margin-top: ${({ theme }) => theme.spacing(1)};
   }
 
   ${TeaserLeadBelow},
@@ -60,7 +71,7 @@ export const WideTeaser = styled(TeaserOverwrite)`
     grid-column: 2/24;
   }
 
-  ${({theme}) => theme.breakpoints.up('sm')} {
+  ${({ theme }) => theme.breakpoints.up('sm')} {
     ${TeaserImgStyled} {
       grid-column: 2/6;
     }
@@ -74,8 +85,8 @@ export const WideTeaser = styled(TeaserOverwrite)`
     }
   }
 
-  ${({theme}) => theme.breakpoints.up('md')} {
-    gap: ${({theme}) => theme.spacing(3)};
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    gap: ${({ theme }) => theme.spacing(3)};
 
     ${TeaserContentStyled} {
       grid-column: span 8;
@@ -85,4 +96,4 @@ export const WideTeaser = styled(TeaserOverwrite)`
       grid-column: span 4;
     }
   }
-`
+`;

@@ -1,15 +1,15 @@
-import {GraphQLSchema} from 'graphql'
+import { GraphQLSchema } from 'graphql';
 
-import {GraphQLQuery} from './query.private'
-import {GraphQLPublicQuery} from './query.public'
-import {GraphQLAdminMutation} from './mutation.private'
+import { GraphQLQuery } from './query.private';
+import { GraphQLPublicQuery } from './query.public';
+import { GraphQLAdminMutation } from './mutation.private';
 
 export const GraphQLWepublishSchema = new GraphQLSchema({
   query: GraphQLQuery,
-  mutation: GraphQLAdminMutation
-})
+  mutation: GraphQLAdminMutation,
+});
 
 export const GraphQLWepublishPublicSchema = new GraphQLSchema({
-  query: GraphQLPublicQuery
+  query: GraphQLPublicQuery,
   // mutation: GraphQLPublicMutation
-})
+});

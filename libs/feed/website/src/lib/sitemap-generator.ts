@@ -1,20 +1,23 @@
-import {getArticleSEO} from '@wepublish/article/website'
-import {Article, Page} from '@wepublish/website/api'
-import {escape} from 'lodash'
+import { getArticleSEO } from '@wepublish/article/website';
+import { Article, Page } from '@wepublish/website/api';
+import { escape } from 'lodash';
 
-const SITEMAP_MAX_ENTRIES = 49999
+const SITEMAP_MAX_ENTRIES = 49999;
 
 export type SitemapConfig = {
-  lang?: string
-  title: string
-  siteUrl: string
-}
+  lang?: string;
+  title: string;
+  siteUrl: string;
+};
 
 export const generateSitemap =
-  ({lang = 'de', title, siteUrl}: SitemapConfig) =>
+  ({ lang = 'de', title, siteUrl }: SitemapConfig) =>
   (articles: Article[], pages: Page[], pageUrls: string[]) => {
-    if (articles.length + pages.length + pageUrls.length > SITEMAP_MAX_ENTRIES) {
-      throw new Error('Too many URLs for sitemap.xml')
+    if (
+      articles.length + pages.length + pageUrls.length >
+      SITEMAP_MAX_ENTRIES
+    ) {
+      throw new Error('Too many URLs for sitemap.xml');
     }
 
     const sitemap = `
@@ -45,13 +48,13 @@ export const generateSitemap =
                   <loc>${page.url}</loc>
                   <lastmod>${page.latest.publishedAt}</lastmod>
               </url>
-          `
+          `;
             })
             .join('\n')}
 
         ${articles
           .map(article => {
-            const seo = getArticleSEO(article)
+            const seo = getArticleSEO(article);
 
             return `
             <url>
@@ -68,11 +71,11 @@ export const generateSitemap =
                     <news:title>${escape(seo.socialMediaTitle ?? '')}</news:title>
                 </news:news>
             </url>
-        `
+        `;
           })
           .join('\n')}
     </urlset>
-    `
+    `;
 
-    return sitemap.trim()
-  }
+    return sitemap.trim();
+  };

@@ -1,49 +1,53 @@
-import styled from '@emotion/styled'
-import ListIcon from '@rsuite/icons/List'
-import {DailySubscriptionStats} from '@wepublish/editor/api-v2'
-import {useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdInfo} from 'react-icons/md'
-import {Button, Tooltip, Whisper} from 'rsuite'
-import Table, {RowDataType} from 'rsuite/esm/Table'
+import styled from '@emotion/styled';
+import ListIcon from '@rsuite/icons/List';
+import { DailySubscriptionStats } from '@wepublish/editor/api-v2';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdInfo } from 'react-icons/md';
+import { Button, Table, Tooltip, Whisper } from 'rsuite';
+import { RowDataType } from 'rsuite-table';
 
-import {AudienceDetailDrawer} from './audience-detail-drawer'
-import {AudienceStatsComputed} from './useAudience'
-import {AudienceClientFilter, TimeResolution} from './useAudienceFilter'
+import { AudienceDetailDrawer } from './audience-detail-drawer';
+import { AudienceStatsComputed } from './useAudience';
+import { AudienceClientFilter, TimeResolution } from './useAudienceFilter';
 
-const {Column, HeaderCell, Cell} = Table
+const { Column, HeaderCell, Cell } = Table;
 
 const Info = styled.div`
-  margin-left: ${({theme}) => theme.spacing(1)};
+  margin-left: ${({ theme }) => theme.spacing(1)};
   position: relative;
   display: inline-block;
-`
+`;
 
-const HeaderInfo = ({text}: {text: string}) => (
-  <Whisper trigger="hover" speaker={<Tooltip>{text}</Tooltip>} placement="top">
+const HeaderInfo = ({ text }: { text: string }) => (
+  <Whisper
+    trigger="hover"
+    speaker={<Tooltip>{text}</Tooltip>}
+    placement="top"
+  >
     <Info>
       <MdInfo size={24} />
     </Info>
   </Whisper>
-)
+);
 
 interface AudienceTableProps {
-  audienceStats: AudienceStatsComputed[]
-  clientFilter: AudienceClientFilter
-  timeResolution: TimeResolution
-  loading?: boolean
+  audienceStats: AudienceStatsComputed[];
+  clientFilter: AudienceClientFilter;
+  timeResolution: TimeResolution;
+  loading?: boolean;
 }
 
 export function AudienceTable({
   audienceStats,
   clientFilter,
   timeResolution,
-  loading
+  loading,
 }: AudienceTableProps) {
   const {
     t,
-    i18n: {language}
-  } = useTranslation()
+    i18n: { language },
+  } = useTranslation();
 
   const {
     totalActiveSubscriptionCount,
@@ -51,28 +55,38 @@ export function AudienceTable({
     renewedSubscriptionCount,
     overdueSubscriptionCount,
     replacedSubscriptionCount,
-    deactivatedSubscriptionCount
-  } = clientFilter
+    deactivatedSubscriptionCount,
+    predictedSubscriptionRenewalCount,
+    endingSubscriptionCount,
+  } = clientFilter;
 
   const [selectedAudienceStats, setSelectedAudienceStats] = useState<
-    AudienceStatsComputed | undefined
-  >(undefined)
+    Omit<AudienceStatsComputed, 'predictedSubscriptionRenewalCount'> | undefined
+  >(undefined);
 
   return (
     <>
       <Table
         data={audienceStats}
-        style={{width: '100%'}}
+        style={{ width: '100%' }}
         virtualized
         height={800}
-        loading={loading}>
-        <Column resizable width={140}>
+        loading={loading}
+      >
+        <Column
+          resizable
+          width={140}
+        >
           <HeaderCell>{t('audienceTable.header.date')}</HeaderCell>
           <Cell dataKey="date">
             {(rowData: RowDataType<DailySubscriptionStats>) => (
               <>
-                {timeResolution === 'monthly' && <span>{t('audienceTable.byDate')}</span>}{' '}
-                {new Date(rowData.date).toLocaleDateString(language, {dateStyle: 'medium'})}
+                {timeResolution === 'monthly' && (
+                  <span>{t('audienceTable.byDate')}</span>
+                )}{' '}
+                {new Date(rowData.date).toLocaleDateString(language, {
+                  dateStyle: 'medium',
+                })}
               </>
             )}
           </Cell>
@@ -80,26 +94,90 @@ export function AudienceTable({
 
         {replacedSubscriptionCount && (
           <Column resizable>
-            <HeaderCell>{t('audience.legend.replacedSubscriptionCount')}</HeaderCell>
+            <HeaderCell>
+              {t('audience.legend.replacedSubscriptionCount')}
+            </HeaderCell>
             <Cell dataKey="replacedSubscriptionCount" />
           </Column>
         )}
 
         {createdSubscriptionCount && (
-          <Column resizable width={100}>
-            <HeaderCell>{t('audience.legend.createdSubscriptionCount')}</HeaderCell>
+          <Column
+            resizable
+            width={100}
+          >
+            <HeaderCell>
+              {t('audience.legend.createdSubscriptionCount')}
+            </HeaderCell>
             <Cell dataKey="createdSubscriptionCount" />
           </Column>
         )}
 
         {renewedSubscriptionCount && (
-          <Column resizable width={120}>
-            <HeaderCell>{t('audience.legend.renewedSubscriptionCount')}</HeaderCell>
+          <Column
+            resizable
+            width={120}
+          >
+            <HeaderCell>
+              {t('audience.legend.renewedSubscriptionCount')}
+            </HeaderCell>
             <Cell dataKey="renewedSubscriptionCount" />
           </Column>
         )}
 
-        <Column resizable width={150}>
+        {predictedSubscriptionRenewalCount && (
+          <>
+            <Column
+              resizable
+              width={150}
+            >
+              <HeaderCell>
+                <HeaderInfo
+                  text={t(
+                    'audienceTable.predictedSubscriptionRenewalCountPerDay.highProbability'
+                  )}
+                />
+                {t(
+                  'audience.legend.predictedSubscriptionRenewalCountPerDay.highProbability'
+                )}
+              </HeaderCell>
+              <Cell dataKey="predictedSubscriptionRenewalCount.perDayHighProbability" />
+            </Column>
+            <Column
+              resizable
+              width={150}
+            >
+              <HeaderCell>
+                <HeaderInfo
+                  text={t(
+                    'audienceTable.predictedSubscriptionRenewalCountPerDay.lowProbability'
+                  )}
+                />
+                {t(
+                  'audience.legend.predictedSubscriptionRenewalCountPerDay.lowProbability'
+                )}
+              </HeaderCell>
+              <Cell dataKey="predictedSubscriptionRenewalCount.perDayLowProbability" />
+            </Column>
+          </>
+        )}
+
+        {endingSubscriptionCount && (
+          <Column
+            resizable
+            width={150}
+          >
+            <HeaderCell>
+              {t('audience.legend.endingSubscriptionCount')}
+            </HeaderCell>
+            <Cell dataKey="endingSubscriptionCount" />
+          </Column>
+        )}
+
+        <Column
+          resizable
+          width={150}
+        >
           <HeaderCell>
             {t('audience.legend.totalNewSubscriptions')}{' '}
             <HeaderInfo text={t('audienceTable.totalNewSubscriptionsInfo')} />
@@ -112,26 +190,41 @@ export function AudienceTable({
         </Column>
 
         {overdueSubscriptionCount && (
-          <Column resizable width={150}>
-            <HeaderCell>{t('audience.legend.overdueSubscriptionCount')}</HeaderCell>
+          <Column
+            resizable
+            width={150}
+          >
+            <HeaderCell>
+              {t('audience.legend.overdueSubscriptionCount')}
+            </HeaderCell>
             <Cell dataKey="overdueSubscriptionCount" />
           </Column>
         )}
 
         {deactivatedSubscriptionCount && (
-          <Column resizable width={120}>
-            <HeaderCell>{t('audience.legend.deactivatedSubscriptionCount')}</HeaderCell>
+          <Column
+            resizable
+            width={120}
+          >
+            <HeaderCell>
+              {t('audience.legend.deactivatedSubscriptionCount')}
+            </HeaderCell>
             <Cell dataKey="deactivatedSubscriptionCount" />
           </Column>
         )}
 
         {totalActiveSubscriptionCount && (
           <Column resizable>
-            <HeaderCell>{t('audience.legend.totalActiveSubscriptionCount')}</HeaderCell>
+            <HeaderCell>
+              {t('audience.legend.totalActiveSubscriptionCount')}
+            </HeaderCell>
             <Cell dataKey="totalActiveSubscriptionCount" />
           </Column>
         )}
-        <Column resizable width={150}>
+        <Column
+          resizable
+          width={150}
+        >
           <HeaderCell>
             {t('audience.legend.renewalRate')}{' '}
             <HeaderInfo text={t('audienceTable.renewalRateInfo')} />
@@ -147,7 +240,10 @@ export function AudienceTable({
             )}
           </Cell>
         </Column>
-        <Column resizable width={150}>
+        <Column
+          resizable
+          width={150}
+        >
           <HeaderCell>
             {t('audience.legend.cancellationRate')}{' '}
             <HeaderInfo text={t('audienceTable.cancellationRateInfo')} />
@@ -174,7 +270,10 @@ export function AudienceTable({
                 size="xs"
                 appearance="primary"
                 startIcon={<ListIcon />}
-                onClick={() => setSelectedAudienceStats(rowData as AudienceStatsComputed)}>
+                onClick={() =>
+                  setSelectedAudienceStats(rowData as AudienceStatsComputed)
+                }
+              >
                 {t('audienceTable.showUsers')}
               </Button>
             )}
@@ -188,5 +287,5 @@ export function AudienceTable({
         timeResolution={timeResolution}
       />
     </>
-  )
+  );
 }

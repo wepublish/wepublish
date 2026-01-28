@@ -1,164 +1,71 @@
-import {capitalize} from '@mui/material'
-import {ArticleListContainer} from '@wepublish/article/website'
-import {
-  addClientCacheToV1Props,
-  ArticleListDocument,
-  getV1ApiClient,
-  NavigationListDocument,
-  PeerProfileDocument,
-  TagDocument,
-  TagType,
-  useArticleListQuery
-} from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {GetStaticPaths, GetStaticProps} from 'next'
-import getConfig from 'next/config'
-import Head from 'next/head'
-import {useRouter} from 'next/router'
-import {useMemo} from 'react'
-import {z} from 'zod'
-import styled from '@emotion/styled'
+export {
+  TagPageGetStaticPaths as getStaticPaths,
+  TagPageGetStaticProps as getStaticProps,
+} from '@wepublish/utils/website';
 
-const take = 25
-
-const pageSchema = z.object({
-  page: z.coerce.number().gte(1).optional(),
-  tag: z.string()
-})
-
-type ArticleListByTagProps = {
-  tagId: string
-}
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+import { ArticleListWrapper } from '@wepublish/article/website';
+import { ContentWrapperStyled } from '@wepublish/content/website';
+import { TagTitle, TagTitleWrapper, TagWrapper } from '@wepublish/tag/website';
+import { TagPage as TagPageDefault } from '@wepublish/utils/website';
+import { useRouter } from 'next/router';
+import { ComponentProps } from 'react';
+import { z } from 'zod';
 
 const TagArticleListWrapper = styled('div')`
   display: flex;
   flex-direction: column;
-  gap: ${({theme}) => theme.spacing(2.5)};
-  margin-top: ${({theme}) => theme.spacing(4)};
-`
+  gap: ${({ theme }) => theme.spacing(2.5)};
+  margin-top: ${({ theme }) => theme.spacing(4)};
 
-export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
-  const {
-    elements: {H1, Alert, Pagination}
-  } = useWebsiteBuilder()
+  ${ContentWrapperStyled} {
+    gap: ${({ theme }) => theme.spacing(3)};
+    row-gap: ${({ theme }) => theme.spacing(3)};
+  }
+`;
 
-  const {query, replace} = useRouter()
-  const {page, tag} = pageSchema.parse(query)
-
-  const variables = useMemo(
-    () => ({
-      take,
-      skip: ((page ?? 1) - 1) * take,
-      filter: {
-        tags: [tagId]
-      }
-    }),
-    [page, tagId]
-  )
-
-  const {data} = useArticleListQuery({
-    fetchPolicy: 'cache-only',
-    variables
-  })
-
-  const pageCount = useMemo(() => {
-    if (data?.articles.totalCount && data?.articles.totalCount > take) {
-      return Math.ceil(data.articles.totalCount / take)
+export const TagPage = styled(TagPageDefault)`
+  ${TagWrapper} {
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      gap: ${({ theme }) => theme.spacing(1.5)};
     }
+  }
 
-    return 1
-  }, [data?.articles.totalCount])
+  ${TagTitleWrapper} {
+    grid-column: -1/1;
+    margin-top: ${({ theme }) => theme.spacing(1)};
 
-  const canonicalUrl = `/a/tag/${tag}`
+    ${TagTitle} {
+      ${({ theme }) => css(theme.typography.h1)};
+    }
+  }
+
+  ${TagTitleWrapper} p {
+    ${({ theme }) => css(theme.typography.subtitle1)}
+  }
+
+  ${ArticleListWrapper} {
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      grid-column: -1/1;
+    }
+  }
+`;
+
+const pageSchema = z.object({
+  tag: z.string(),
+});
+
+export default function Tags(props: ComponentProps<typeof TagPageDefault>) {
+  const { query } = useRouter();
+  const { tag } = pageSchema.parse(query);
 
   return (
     <TagArticleListWrapper>
-      <H1 component="h1">{capitalize(tag)}</H1>
-
-      {data && !data.articles.nodes.length && (
-        <Alert severity="info">Keine Artikel vorhanden</Alert>
-      )}
-
-      <ArticleListContainer variables={variables} />
-
-      {pageCount > 1 && (
-        <>
-          <Head>
-            <link rel="canonical" key="canonical" href={canonicalUrl} />
-          </Head>
-
-          <Pagination
-            page={page ?? 1}
-            count={pageCount}
-            onChange={(_, value) =>
-              replace(
-                {
-                  query: {...query, page: value}
-                },
-                undefined,
-                {shallow: true, scroll: true}
-              )
-            }
-          />
-        </>
-      )}
+      <TagPage
+        {...props}
+        tag={tag ?? props.tag}
+      />
     </TagArticleListWrapper>
-  )
-}
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: 'blocking'
-  }
-}
-export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {tag} = params || {}
-
-  const {publicRuntimeConfig} = getConfig()
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
-
-  const tagResult = await client.query({
-    query: TagDocument,
-    variables: {
-      tag,
-      type: TagType.Article
-    }
-  })
-
-  if (!tagResult.error && !tagResult.data.tags.nodes.length) {
-    return {
-      notFound: true
-    }
-  }
-
-  const tagId = tagResult.data.tags.nodes[0].id
-
-  await Promise.all([
-    client.query({
-      query: ArticleListDocument,
-      variables: {
-        take,
-        skip: 0,
-        filter: {
-          tags: [tagId]
-        }
-      }
-    }),
-    client.query({
-      query: NavigationListDocument
-    }),
-    client.query({
-      query: PeerProfileDocument
-    })
-  ])
-
-  const props = addClientCacheToV1Props(client, {
-    tagId
-  })
-
-  return {
-    props,
-    revalidate: 60 // every 60 seconds
-  }
+  );
 }

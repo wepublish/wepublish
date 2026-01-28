@@ -1,32 +1,39 @@
-import {ArgsType, Field, InputType, ObjectType, PickType, registerEnumType} from '@nestjs/graphql'
-import {BannerActionRole} from '@prisma/client'
+import {
+  ArgsType,
+  Field,
+  InputType,
+  ObjectType,
+  PickType,
+  registerEnumType,
+} from '@nestjs/graphql';
+import { BannerActionRole } from '@prisma/client';
 
 @ArgsType()
 export class BannerActionArgs {
   @Field()
-  bannerId!: string
+  bannerId!: string;
 }
 
 registerEnumType(BannerActionRole, {
-  name: 'BannerActionRole'
-})
+  name: 'BannerActionRole',
+});
 
 @ObjectType()
 export class BannerAction {
   @Field()
-  id!: string
+  id!: string;
 
   @Field()
-  label!: string
+  label!: string;
 
   @Field()
-  url!: string
+  url!: string;
 
   @Field()
-  style!: string
+  style!: string;
 
   @Field(() => BannerActionRole)
-  role!: BannerActionRole
+  role!: BannerActionRole;
 }
 
 @InputType()

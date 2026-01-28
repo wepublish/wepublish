@@ -1,21 +1,32 @@
-import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
-import {HasEvent, HasEventLc, HasOptionalEvent, HasOptionalEventLc} from './has-event.model'
-import {Event} from '../event.model'
-import {EventDataloaderService} from '../event-dataloader.service'
+import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  HasEvent,
+  HasEventLc,
+  HasOptionalEvent,
+  HasOptionalEventLc,
+} from './has-event.model';
+import { Event } from '../event.model';
+import { EventDataloaderService } from '../event-dataloader.service';
 
 @Resolver(() => HasEvent)
 export class HasEventResolver {
   constructor(private dataloader: EventDataloaderService) {}
 
-  @ResolveField(() => Event, {nullable: true})
-  public event(@Parent() block: HasOptionalEvent | HasEvent | HasOptionalEventLc | HasEventLc) {
-    const id = 'eventId' in block ? block.eventId : 'eventID' in block ? block.eventID : null
+  @ResolveField(() => Event, { nullable: true })
+  public event(
+    @Parent()
+    block: HasOptionalEvent | HasEvent | HasOptionalEventLc | HasEventLc
+  ) {
+    const id =
+      'eventId' in block ? block.eventId
+      : 'eventID' in block ? block.eventID
+      : null;
 
     if (!id) {
-      return null
+      return null;
     }
 
-    return this.dataloader.load(id)
+    return this.dataloader.load(id);
   }
 }
 

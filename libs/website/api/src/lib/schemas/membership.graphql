@@ -4,6 +4,7 @@ fragment FullPaymentMethod on PaymentMethod {
   name
   slug
   description
+  gracePeriod
   image {
     ...FullImage
   }
@@ -24,32 +25,34 @@ fragment FullMemberPlan on MemberPlan {
   name
   tags
   description
+  shortDescription
   image {
     ...FullImage
   }
 
   amountPerMonthMin
+  amountPerMonthMax
   amountPerMonthTarget
   currency
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
   }
   extendable
-
+  productType
   successPageId
-  # successPage {
-  #   url
-  # }
+  successPage {
+    url
+  }
 
   failPageId
-  # failPage {
-  #   url
-  # }
+  failPage {
+    url
+  }
 
   confirmationPageId
-  # confirmationPage {
-  #   url
-  # }
+  confirmationPage {
+    url
+  }
 }
 
 fragment FullPayment on Payment {
@@ -77,6 +80,7 @@ fragment FullSubscription on PublicSubscription {
   autoRenew
   startsAt
   extendable
+  externalReward
 
   paidUntil
   paymentMethod {
@@ -96,6 +100,7 @@ fragment FullSubscription on PublicSubscription {
   }
 
   canExtend
+  isActive
 }
 
 fragment FullInvoiceItem on InvoiceItem {
@@ -186,6 +191,26 @@ mutation Resubscribe(
   )
 }
 
+mutation Upgrade(
+  $subscriptionId: String!
+  $memberPlanId: String!
+  $paymentMethodId: String!
+  $monthlyAmount: Int!
+  $successURL: String
+  $failureURL: String
+) {
+  upgradeSubscription(
+    subscriptionId: $subscriptionId
+    memberPlanId: $memberPlanId
+    paymentMethodId: $paymentMethodId
+    monthlyAmount: $monthlyAmount
+    successURL: $successURL
+    failureURL: $failureURL
+  ) {
+    ...FullPayment
+  }
+}
+
 mutation PayInvoice(
   $invoiceId: String!
   $paymentMethodId: String
@@ -206,7 +231,11 @@ mutation PayInvoice(
   }
 }
 
-mutation PaySubscription($subscriptionId: String!, $successURL: String, $failureURL: String) {
+mutation PaySubscription(
+  $subscriptionId: String!
+  $successURL: String
+  $failureURL: String
+) {
   createPaymentFromSubscription(
     subscriptionId: $subscriptionId
     successURL: $successURL
@@ -222,7 +251,11 @@ mutation CancelSubscription($subscriptionId: String!) {
   }
 }
 
-mutation ExtendSubscription($subscriptionId: String!, $successURL: String, $failureURL: String) {
+mutation ExtendSubscription(
+  $subscriptionId: String!
+  $successURL: String
+  $failureURL: String
+) {
   extendSubscription(
     subscriptionId: $subscriptionId
     successURL: $successURL
@@ -252,7 +285,7 @@ query CheckInvoiceStatus($id: String!) {
 
 query MemberPlanList(
   $filter: MemberPlanFilter
-  $cursor: String
+  $cursorId: String
   $take: Int
   $skip: Int
   $order: SortOrder
@@ -260,7 +293,7 @@ query MemberPlanList(
 ) {
   memberPlans(
     filter: $filter
-    cursor: $cursor
+    cursorId: $cursorId
     take: $take
     skip: $skip
     order: $order
@@ -293,5 +326,17 @@ query NewSubscribers($start: DateTime!, $end: DateTime) {
   newSubscribers(start: $start, end: $end) {
     monthlyAmount
     memberPlan
+  }
+}
+
+query UpgradeSubscriptionInfo(
+  $memberPlanId: String!
+  $subscriptionId: String!
+) {
+  upgradeSubscriptionInfo(
+    memberPlanId: $memberPlanId
+    subscriptionId: $subscriptionId
+  ) {
+    discountAmount
   }
 }

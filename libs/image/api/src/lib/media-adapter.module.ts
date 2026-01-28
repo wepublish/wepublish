@@ -1,15 +1,23 @@
-import {DynamicModule, Global, Module, ModuleMetadata, Provider, Type} from '@nestjs/common'
-import {MediaAdapter} from './media-adapter'
+import {
+  DynamicModule,
+  Global,
+  Module,
+  ModuleMetadata,
+  Provider,
+  Type,
+} from '@nestjs/common';
+import { MediaAdapter } from './media-adapter';
 
 export type MediaAdapterFactory = {
-  createMediaAdapter(): Promise<MediaAdapter> | MediaAdapter
-}
+  createMediaAdapter(): Promise<MediaAdapter> | MediaAdapter;
+};
 
-export interface MediaAdapterAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
-  useExisting?: Type<MediaAdapterFactory>
-  useClass?: Type<MediaAdapterFactory>
-  useFactory?: (...args: any[]) => Promise<MediaAdapter> | MediaAdapter
-  inject?: any[]
+export interface MediaAdapterAsyncOptions
+  extends Pick<ModuleMetadata, 'imports'> {
+  useExisting?: Type<MediaAdapterFactory>;
+  useClass?: Type<MediaAdapterFactory>;
+  useFactory?: (...args: any[]) => Promise<MediaAdapter> | MediaAdapter;
+  inject?: any[];
 }
 
 @Global()
@@ -21,40 +29,46 @@ export class MediaAdapterModule {
       providers: [
         {
           provide: MediaAdapter,
-          useValue: config
-        }
+          useValue: config,
+        },
       ],
-      exports: [MediaAdapter]
-    }
+      exports: [MediaAdapter],
+    };
   }
 
-  public static registerAsync(options: MediaAdapterAsyncOptions): DynamicModule {
+  public static registerAsync(
+    options: MediaAdapterAsyncOptions
+  ): DynamicModule {
     return {
       module: MediaAdapterModule,
       imports: [...(options.imports || [])],
       providers: this.createAsyncProviders(options),
-      exports: [MediaAdapter]
-    }
+      exports: [MediaAdapter],
+    };
   }
 
-  private static createAsyncProviders(options: MediaAdapterAsyncOptions): Provider[] {
-    return [this.createAsyncOptionsProvider(options)]
+  private static createAsyncProviders(
+    options: MediaAdapterAsyncOptions
+  ): Provider[] {
+    return [this.createAsyncOptionsProvider(options)];
   }
 
-  private static createAsyncOptionsProvider(options: MediaAdapterAsyncOptions): Provider {
+  private static createAsyncOptionsProvider(
+    options: MediaAdapterAsyncOptions
+  ): Provider {
     if (options.useFactory) {
       return {
         provide: MediaAdapter,
         useFactory: options.useFactory,
-        inject: options.inject || []
-      }
+        inject: options.inject || [],
+      };
     }
 
     return {
       provide: MediaAdapter,
       useFactory: async (optionsFactory: MediaAdapterFactory) =>
         await optionsFactory.createMediaAdapter(),
-      inject: [options.useExisting || options.useClass!]
-    }
+      inject: [options.useExisting || options.useClass!],
+    };
   }
 }

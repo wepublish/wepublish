@@ -11,43 +11,49 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
-  NotFoundException
-} from '@nestjs/common'
-import {FileInterceptor} from '@nestjs/platform-express'
-import {MediaService, SupportedImagesValidator, TokenAuthGuard} from '@wepublish/media/api'
+  NotFoundException,
+  Inject,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ImageURIObject,
+  MediaService,
+  SupportedImagesValidator,
+  TokenAuthGuard,
+} from '@wepublish/media/api';
 import {
   getTransformationKey,
   removeSignatureFromTransformations,
-  TransformationsDto
-} from '@wepublish/media-transform-guard'
-import {Response} from 'express'
-import 'multer'
-import {v4 as uuidv4} from 'uuid'
-import {ImageCacheService} from './imageCache.service'
+  TransformationsDto,
+} from '@wepublish/media-transform-guard';
+import { Response } from 'express';
+import 'multer';
+import { v4 as uuidv4 } from 'uuid';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { assertRemoteFileIsAccessible } from './assertRemoteFileIsAccessible';
+
+const HTTP_CODE_FOUND = 301;
+const HTTP_CODE_NOT_FOUND = 307;
+let S3_HOST_CHECKED = false;
 
 @Controller({
-  version: '1'
+  version: '1',
 })
 export class AppController {
   constructor(
-    private readonly media: MediaService,
-    private readonly imageCacheService: ImageCacheService
+    private media: MediaService,
+    @Inject(CACHE_MANAGER) private linkCache: Cache
   ) {}
 
   @Get('/health')
   async healthCheck(@Res() res: Response) {
-    res.status(200).send({status: 'ok'})
-  }
-
-  @Get('/cacheState')
-  async cacheState(@Res() res: Response) {
-    const state = this.imageCacheService.state()
-    res.status(state.healty ? 200 : 500).send(state.stats)
+    res.status(200).send({ status: 'ok' });
   }
 
   @Get('/favicon.ico')
   async favicon(@Res() res: Response) {
-    throw new NotFoundException()
+    throw new NotFoundException();
   }
 
   @UseGuards(TokenAuthGuard)
@@ -59,15 +65,15 @@ export class AppController {
     @UploadedFile(
       new ParseFilePipe({
         fileIsRequired: true,
-        validators: [new SupportedImagesValidator()]
+        validators: [new SupportedImagesValidator()],
       })
     )
     uploadedFile: Express.Multer.File
   ) {
     if (!imageId) {
-      imageId = uuidv4()
+      imageId = uuidv4();
     }
-    const metadata = await this.media.saveImage(imageId, uploadedFile.buffer)
+    const metadata = await this.media.saveImage(imageId, uploadedFile.buffer);
 
     res.status(201).send({
       id: imageId,
@@ -77,8 +83,8 @@ export class AppController {
       format: metadata.format,
       extension: `.${metadata.format}`,
       width: metadata.width,
-      height: metadata.height
-    })
+      height: metadata.height,
+    });
   }
 
   @Get(':imageId')
@@ -90,51 +96,63 @@ export class AppController {
   ) {
     const cacheKey = `${imageId}-${getTransformationKey(
       removeSignatureFromTransformations(transformations)
-    )}`
+    )}`;
 
     // Check if image is cached
-    const cachedBuffer = this.imageCacheService.get(cacheKey)
-
-    res.setHeader('Content-Type', 'image/webp')
+    const uriFromCache = await this.linkCache.get<ImageURIObject>(cacheKey);
 
     if (process.env['NODE_ENV'] === 'production') {
-      // max-age = 365days, immutable, stale-if-error = 30days, stale-while-revalidate = 1day
+      // max-age = 12hours, immutable, stale-if-error = 7days, stale-while-revalidate = 1day
       res.setHeader(
         'Cache-Control',
-        `public, max-age=31536000, immutable, stale-if-error=2592000, stale-while-revalidate=86400`
-      )
+        `public, max-age=43200, immutable, stale-if-error=604800, stale-while-revalidate=86400`
+      );
     }
 
-    if (cachedBuffer[0]) {
-      if (cachedBuffer[1] !== 200) {
-        res.setHeader('Cache-Control', `public, max-age=60`) // 1 min cache for 404, optional
+    if (uriFromCache) {
+      let httpCode = HTTP_CODE_FOUND;
+      if (!uriFromCache.exists) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        httpCode = HTTP_CODE_NOT_FOUND;
+      } else {
+        // On access refresh cache ttl
+        await this.linkCache.set(cacheKey, uriFromCache);
       }
-      res.status(cachedBuffer[1])
-      res.end(cachedBuffer[0])
-      return
+      res.redirect(
+        httpCode,
+        `${process.env['S3_PUBLIC_HOST']}/${uriFromCache.uri}`
+      );
+      return;
     }
 
-    // Not in cache, fetch and process image
-    const [file, imageExists] = await this.media.getImage(imageId, transformations)
+    const { uri, exists } = await this.media.getImageUri(
+      imageId,
+      transformations
+    );
 
-    const buffer = await this.media.bufferStream(file)
+    const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
 
-    if (!imageExists) {
-      res.status(404)
-      res.setHeader('Cache-Control', `public, max-age=60`) // 1 min cache for 404, optional
-      this.imageCacheService.set(cacheKey, buffer, 404, 120)
+    if (!S3_HOST_CHECKED) {
+      S3_HOST_CHECKED = await assertRemoteFileIsAccessible(url);
+    }
+
+    if (!exists) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_NOT_FOUND, url);
+      await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
+      return;
     } else {
-      this.imageCacheService.set(cacheKey, buffer)
+      await this.linkCache.set(cacheKey, { uri, exists: true });
     }
 
-    res.end(buffer)
+    res.redirect(HTTP_CODE_FOUND, url);
   }
 
   @UseGuards(TokenAuthGuard)
   @Delete(':imageId')
   async deleteImage(@Res() res: Response, @Param('imageId') imageId: string) {
-    await this.media.deleteImage(imageId)
+    await this.media.deleteImage(imageId);
 
-    return res.sendStatus(204)
+    return res.sendStatus(204);
   }
 }

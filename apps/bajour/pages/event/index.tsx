@@ -1,7 +1,7 @@
-import styled from '@emotion/styled'
-import {Checkbox, FormControlLabel, FormGroup} from '@mui/material'
-import {DateTimePicker} from '@mui/x-date-pickers'
-import {EventListContainer} from '@wepublish/event/website'
+import styled from '@emotion/styled';
+import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
+import { DateTimePicker } from '@mui/x-date-pickers';
+import { EventListContainer } from '@wepublish/event/website';
 import {
   addClientCacheToV1Props,
   EventListDocument,
@@ -11,24 +11,24 @@ import {
   NavigationListDocument,
   PeerProfileDocument,
   SortOrder,
-  useEventListQuery
-} from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {Container} from '../../src/components/layout/container'
-import {GetStaticProps} from 'next'
-import getConfig from 'next/config'
-import Head from 'next/head'
-import {useRouter} from 'next/router'
-import {useMemo} from 'react'
-import {z} from 'zod'
+  useEventListQuery,
+} from '@wepublish/website/api';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { GetStaticProps } from 'next';
+import getConfig from 'next/config';
+import { useRouter } from 'next/router';
+import { useMemo } from 'react';
+import { z } from 'zod';
+
+import { Container } from '../../src/components/layout/container';
 
 const Filter = styled('div')`
   display: grid;
   grid-template-columns: repeat(auto-fit, 250px);
   align-items: center;
-  gap: ${({theme}) => theme.spacing(2)};
-  margin-bottom: ${({theme}) => theme.spacing(3)};
-`
+  gap: ${({ theme }) => theme.spacing(2)};
+  margin-bottom: ${({ theme }) => theme.spacing(3)};
+`;
 
 const pageSchema = z.object({
   page: z.coerce.number().gte(1).optional(),
@@ -40,18 +40,18 @@ const pageSchema = z.object({
     .optional()
     .default('true'),
   from: z.coerce.date().optional(),
-  to: z.coerce.date().optional()
-})
+  to: z.coerce.date().optional(),
+});
 
-const take = 25
+const take = 25;
 
 export default function EventList() {
-  const {query, replace} = useRouter()
-  const {page, upcomingOnly, from, to} = pageSchema.parse(query)
+  const { query, replace } = useRouter();
+  const { page, upcomingOnly, from, to } = pageSchema.parse(query);
 
   const {
-    elements: {Pagination}
-  } = useWebsiteBuilder()
+    elements: { Pagination },
+  } = useWebsiteBuilder();
 
   const variables = useMemo(
     () =>
@@ -61,26 +61,26 @@ export default function EventList() {
         filter: {
           from: from?.toISOString(),
           to: to?.toISOString(),
-          upcomingOnly
+          upcomingOnly,
         },
         sort: EventSort.StartsAt,
-        order: SortOrder.Ascending
-      } satisfies Partial<EventListQueryVariables>),
+        order: SortOrder.Ascending,
+      }) satisfies Partial<EventListQueryVariables>,
     [from, page, to, upcomingOnly]
-  )
+  );
 
-  const {data} = useEventListQuery({
+  const { data } = useEventListQuery({
     fetchPolicy: 'cache-only',
-    variables
-  })
+    variables,
+  });
 
   const pageCount = useMemo(() => {
     if (data?.events?.totalCount && data?.events?.totalCount > take) {
-      return Math.ceil(data.events.totalCount / take)
+      return Math.ceil(data.events.totalCount / take);
     }
 
-    return 1
-  }, [data?.events?.totalCount])
+    return 1;
+  }, [data?.events?.totalCount]);
 
   const canonicalUrl = '/event'
 
@@ -93,11 +93,11 @@ export default function EventList() {
           onChange={value => {
             replace(
               {
-                query: {...query, from: value?.toISOString()}
+                query: { ...query, from: value?.toISOString() },
               },
               undefined,
-              {shallow: true, scroll: true}
-            )
+              { shallow: true, scroll: true }
+            );
           }}
         />
 
@@ -107,11 +107,11 @@ export default function EventList() {
           onChange={value => {
             replace(
               {
-                query: {...query, to: value?.toISOString()}
+                query: { ...query, to: value?.toISOString() },
               },
               undefined,
-              {shallow: true, scroll: true}
-            )
+              { shallow: true, scroll: true }
+            );
           }}
         />
 
@@ -123,11 +123,11 @@ export default function EventList() {
                 onChange={(_, checked) => {
                   replace(
                     {
-                      query: {...query, upcomingOnly: checked}
+                      query: { ...query, upcomingOnly: checked },
                     },
                     undefined,
-                    {shallow: true, scroll: true}
-                  )
+                    { shallow: true, scroll: true }
+                  );
                 }}
               />
             }
@@ -144,33 +144,33 @@ export default function EventList() {
             <link rel="canonical" key="canonical" href={canonicalUrl} />
           </Head>
 
-          <Pagination
-            page={page ?? 1}
-            count={pageCount}
-            onChange={(_, value) =>
-              replace(
-                {
-                  query: {...query, page: value}
-                },
-                undefined,
-                {shallow: true, scroll: true}
-              )
-            }
-          />
+        <Pagination
+          page={page ?? 1}
+          count={pageCount}
+          onChange={(_, value) =>
+            replace(
+              {
+                query: { ...query, page: value },
+              },
+              undefined,
+              { shallow: true, scroll: true }
+            )
+          }
+        />
         </>
       )}
     </Container>
-  )
+  );
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const {publicRuntimeConfig} = getConfig()
+  const { publicRuntimeConfig } = getConfig();
 
   if (!publicRuntimeConfig.env.API_URL) {
-    return {props: {}, revalidate: 1}
+    return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, []);
   await Promise.all([
     client.query({
       query: EventListDocument,
@@ -178,21 +178,21 @@ export const getStaticProps: GetStaticProps = async () => {
         take,
         skip: 0,
         sort: EventSort.StartsAt,
-        order: SortOrder.Ascending
-      }
+        order: SortOrder.Ascending,
+      },
     }),
     client.query({
-      query: NavigationListDocument
+      query: NavigationListDocument,
     }),
     client.query({
-      query: PeerProfileDocument
-    })
-  ])
+      query: PeerProfileDocument,
+    }),
+  ]);
 
-  const props = addClientCacheToV1Props(client, {})
+  const props = addClientCacheToV1Props(client, {});
 
   return {
     props,
-    revalidate: 60 // every 60 seconds
-  }
-}
+    revalidate: 60, // every 60 seconds
+  };
+};

@@ -1,29 +1,33 @@
-import {Prisma, PrismaClient, UserEvent} from '@prisma/client'
-import {Context} from '../../context'
-import {hashPassword} from '../../db/user'
-import {unselectPassword} from '@wepublish/authentication/api'
-import {EmailAlreadyInUseError} from '../../error'
-import {Validator} from '../../validator'
-import {authorise} from '../permissions'
-import {CanCreateUser, CanDeleteUser, CanResetUserPassword} from '@wepublish/permissions'
-import {createUser, CreateUserInput} from './user.mutation'
-import {mailLogType} from '@wepublish/mail/api'
+import { Prisma, PrismaClient, UserEvent } from '@prisma/client';
+import { Context } from '../../context';
+import { hashPassword } from '../../db/user';
+import { unselectPassword } from '@wepublish/authentication/api';
+import { EmailAlreadyInUseError } from '../../error';
+import { Validator } from '../../validator';
+import { authorise } from '../permissions';
+import {
+  CanCreateUser,
+  CanDeleteUser,
+  CanResetUserPassword,
+} from '@wepublish/permissions';
+import { createUser, CreateUserInput } from './user.mutation';
+import { mailLogType } from '@wepublish/mail/api';
 
 export const deleteUserById = (
   id: string,
   authenticate: Context['authenticate'],
   user: PrismaClient['user']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanDeleteUser, roles)
+  const { roles } = authenticate();
+  authorise(CanDeleteUser, roles);
 
   return user.delete({
     where: {
-      id
+      id,
     },
-    select: unselectPassword
-  })
-}
+    select: unselectPassword,
+  });
+};
 
 export const createAdminUser = async (
   input: CreateUserInput,
@@ -32,62 +36,65 @@ export const createAdminUser = async (
   prisma: PrismaClient,
   mailContext: Context['mailContext']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanCreateUser, roles)
+  const { roles } = authenticate();
+  authorise(CanCreateUser, roles);
 
-  input.email = input.email ? (input.email as string).toLowerCase() : input.email
+  input.email =
+    input.email ? (input.email as string).toLowerCase() : input.email;
 
   const userExists = await prisma.user.findUnique({
-    where: {email: input.email}
-  })
+    where: { email: input.email },
+  });
 
-  if (userExists) throw new EmailAlreadyInUseError()
+  if (userExists) throw new EmailAlreadyInUseError();
 
-  return createUser(input, hashCostFactor, prisma, mailContext)
-}
+  return createUser(input, hashCostFactor, prisma, mailContext);
+};
 
 type UpdateUserInput = Prisma.UserUncheckedUpdateInput & {
-  properties: Prisma.MetadataPropertyCreateManyUserInput[]
-  address: Prisma.UserAddressUncheckedCreateWithoutUserInput | null
-}
+  properties: Prisma.MetadataPropertyCreateManyUserInput[];
+  address: Prisma.UserAddressUncheckedCreateWithoutUserInput | null;
+};
 
 export const updateAdminUser = async (
   id: string,
-  {properties, address, ...input}: UpdateUserInput,
+  { properties, address, ...input }: UpdateUserInput,
   authenticate: Context['authenticate'],
   user: PrismaClient['user']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanCreateUser, roles)
+  const { roles } = authenticate();
+  authorise(CanCreateUser, roles);
 
-  input.email = input.email ? (input.email as string).toLowerCase() : input.email
-  await Validator.createUser.parse(input)
-  await Validator.createAddress.parse(address)
+  input.email =
+    input.email ? (input.email as string).toLowerCase() : input.email;
+  await Validator.createUser.parse(input);
+  await Validator.createAddress.parse(address);
 
   return user.update({
-    where: {id},
+    where: { id },
     data: {
       ...input,
-      address: address
-        ? {
+      address:
+        address ?
+          {
             upsert: {
               create: address,
-              update: address
-            }
+              update: address,
+            },
           }
         : undefined,
       properties: {
         deleteMany: {
-          userId: id
+          userId: id,
         },
         createMany: {
-          data: properties
-        }
-      }
+          data: properties,
+        },
+      },
     },
-    select: unselectPassword
-  })
-}
+    select: unselectPassword,
+  });
+};
 
 export const resetUserPassword = async (
   id: string,
@@ -98,27 +105,29 @@ export const resetUserPassword = async (
   mailContext: Context['mailContext'],
   userClient: PrismaClient['user']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanResetUserPassword, roles)
+  const { roles } = authenticate();
+  authorise(CanResetUserPassword, roles);
 
   const user = await userClient.update({
-    where: {id},
+    where: { id },
     data: {
-      password: await hashPassword(password, hashCostFactor)
+      password: await hashPassword(password, hashCostFactor),
     },
-    select: unselectPassword
-  })
+    select: unselectPassword,
+  });
 
   if (sendMail && user) {
-    const remoteTemplate = await mailContext.getUserTemplateName(UserEvent.PASSWORD_RESET)
+    const remoteTemplate = await mailContext.getUserTemplateName(
+      UserEvent.PASSWORD_RESET
+    );
 
     await mailContext.sendMail({
       externalMailTemplateId: remoteTemplate,
       recipient: user,
       optionalData: {},
-      mailType: mailLogType.UserFlow
-    })
+      mailType: mailLogType.UserFlow,
+    });
   }
 
-  return user
-}
+  return user;
+};

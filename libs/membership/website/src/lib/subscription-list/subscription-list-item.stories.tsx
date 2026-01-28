@@ -3,42 +3,30 @@ import {
   Exact,
   FullSubscriptionFragment,
   PaymentPeriodicity,
-  SubscriptionDeactivationReason
-} from '@wepublish/website/api'
-import {SubscriptionListItem} from './subscription-list-item'
-import {Meta, StoryObj} from '@storybook/react'
-import {action} from '@storybook/addon-actions'
-import {userEvent, within} from '@storybook/test'
-import {ApolloError} from '@apollo/client'
-import {mockImage} from '@wepublish/storybook/mocks'
+  SubscriptionDeactivationReason,
+} from '@wepublish/website/api';
+import { SubscriptionListItem } from './subscription-list-item';
+import { Meta, StoryObj } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
+import { userEvent, within } from '@storybook/test';
+import { ApolloError } from '@apollo/client';
+import { mockMemberPlan } from '@wepublish/storybook/mocks';
 
 export default {
   component: SubscriptionListItem,
-  title: 'Components/SubscriptionList/Item'
-} as Meta
+  title: 'Components/SubscriptionList/Item',
+} as Meta;
 
-const clickPay: StoryObj['play'] = async ({canvasElement, step}) => {
-  const canvas = within(canvasElement)
-
-  const button = canvas.getByText('Jetzt Bezahlen', {
-    selector: 'button'
-  })
-
-  await step('Click Pay', async () => {
-    await userEvent.click(button)
-  })
-}
-
-const clickCancel: StoryObj['play'] = async ({canvasElement, step}) => {
-  const canvas = within(canvasElement)
+const clickCancel: StoryObj['play'] = async ({ canvasElement, step }) => {
+  const canvas = within(canvasElement);
 
   const button = canvas.getByText('Abo kündigen', {
-    selector: 'button'
-  })
+    selector: 'button',
+  });
 
   await step('Click Cancel', async () => {
-    await userEvent.click(button)
-  })
+    await userEvent.click(button);
+  });
 
   /* Works fine in the browser but does not work in the terminal
   // Mui sets the portal outside of the story root, so we have to escape it
@@ -53,19 +41,19 @@ const clickCancel: StoryObj['play'] = async ({canvasElement, step}) => {
     await userEvent.click(modalButton)
   })
    */
-}
+};
 
-const clickExtend: StoryObj['play'] = async ({canvasElement, step}) => {
-  const canvas = within(canvasElement)
+const clickExtend: StoryObj['play'] = async ({ canvasElement, step }) => {
+  const canvas = within(canvasElement);
 
-  const button = canvas.getByText('Jetzt Verlängern', {
-    selector: 'button'
-  })
+  const button = canvas.getByText('Jetzt verlängern', {
+    selector: 'button',
+  });
 
   await step('Click Extend', async () => {
-    await userEvent.click(button)
-  })
-}
+    await userEvent.click(button);
+  });
+};
 
 const subscription = {
   id: '1234-1234',
@@ -76,14 +64,9 @@ const subscription = {
   paymentPeriodicity: PaymentPeriodicity.Quarterly,
   url: 'https://example.com',
   paymentMethod: {},
-  memberPlan: {
-    image: mockImage(),
-    name: 'Foobar Memberplan',
-    extendable: true,
-    currency: Currency.Chf
-  },
-  extendable: true
-} as Exact<FullSubscriptionFragment>
+  memberPlan: mockMemberPlan(),
+  extendable: true,
+} as Exact<FullSubscriptionFragment>;
 
 export const Default: StoryObj = {
   args: {
@@ -92,9 +75,9 @@ export const Default: StoryObj = {
     cancel: action('cancel'),
     canExtend: true,
     canPay: false,
-    extend: action('extend')
-  }
-}
+    extend: action('extend'),
+  },
+};
 
 export const Unpaid: StoryObj = {
   ...Default,
@@ -102,105 +85,105 @@ export const Unpaid: StoryObj = {
     ...Default.args,
     paidUntil: null,
     canPay: true,
-    canExtend: false
-  }
-}
+    canExtend: false,
+  },
+};
 
 export const RenewMonthly: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
-    paymentPeriodicity: PaymentPeriodicity.Monthly
-  }
-}
+    paymentPeriodicity: PaymentPeriodicity.Monthly,
+  },
+};
 
 export const RenewMonthlyManually: StoryObj = {
   ...RenewMonthly,
   args: {
     ...RenewMonthly.args,
-    autoRenew: false
-  }
-}
+    autoRenew: false,
+  },
+};
 
 export const RenewQuarterly: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
-    paymentPeriodicity: PaymentPeriodicity.Quarterly
-  }
-}
+    paymentPeriodicity: PaymentPeriodicity.Quarterly,
+  },
+};
 
 export const RenewQuarterlyManually: StoryObj = {
   ...RenewQuarterly,
   args: {
     ...RenewQuarterly.args,
-    autoRenew: false
-  }
-}
+    autoRenew: false,
+  },
+};
 
 export const RenewBianual: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
-    paymentPeriodicity: PaymentPeriodicity.Biannual
-  }
-}
+    paymentPeriodicity: PaymentPeriodicity.Biannual,
+  },
+};
 
 export const RenewBianualManually: StoryObj = {
   ...RenewBianual,
   args: {
     ...RenewBianual.args,
-    autoRenew: false
-  }
-}
+    autoRenew: false,
+  },
+};
 
 export const RenewYearly: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
-    paymentPeriodicity: PaymentPeriodicity.Yearly
-  }
-}
+    paymentPeriodicity: PaymentPeriodicity.Yearly,
+  },
+};
 
 export const RenewYearlyManually: StoryObj = {
   ...RenewYearly,
   args: {
     ...RenewYearly.args,
-    autoRenew: false
-  }
-}
+    autoRenew: false,
+  },
+};
 
 export const RenewBiennial: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
-    paymentPeriodicity: PaymentPeriodicity.Biennial
-  }
-}
+    paymentPeriodicity: PaymentPeriodicity.Biennial,
+  },
+};
 
 export const RenewBiennialManually: StoryObj = {
   ...RenewBiennial,
   args: {
     ...RenewBiennial.args,
-    autoRenew: false
-  }
-}
+    autoRenew: false,
+  },
+};
 
 export const RenewLifetime: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
-    paymentPeriodicity: PaymentPeriodicity.Lifetime
-  }
-}
+    paymentPeriodicity: PaymentPeriodicity.Lifetime,
+  },
+};
 
 export const RenewLifetimeManually: StoryObj = {
   ...RenewLifetime,
   args: {
     ...RenewLifetime.args,
-    autoRenew: false
-  }
-}
+    autoRenew: false,
+  },
+};
 
 export const DeactivatedCancelled: StoryObj = {
   ...Default,
@@ -208,10 +191,10 @@ export const DeactivatedCancelled: StoryObj = {
     ...Default.args,
     deactivation: {
       date: '2023-01-01',
-      reason: SubscriptionDeactivationReason.UserSelfDeactivated
-    }
-  }
-}
+      reason: SubscriptionDeactivationReason.UserSelfDeactivated,
+    },
+  },
+};
 
 export const DeactivatedUnpaid: StoryObj = {
   ...Default,
@@ -219,10 +202,10 @@ export const DeactivatedUnpaid: StoryObj = {
     ...Default.args,
     deactivation: {
       date: '2023-01-01',
-      reason: SubscriptionDeactivationReason.InvoiceNotPaid
-    }
-  }
-}
+      reason: SubscriptionDeactivationReason.InvoiceNotPaid,
+    },
+  },
+};
 
 export const DeactivatedUnknown: StoryObj = {
   ...Default,
@@ -230,68 +213,68 @@ export const DeactivatedUnknown: StoryObj = {
     ...Default.args,
     deactivation: {
       date: '2023-01-01',
-      reason: SubscriptionDeactivationReason.None
-    }
-  }
-}
+      reason: SubscriptionDeactivationReason.None,
+    },
+  },
+};
 
 export const WithCancelLoading: StoryObj = {
   args: {
     ...Unpaid.args,
     cancel: (...args: unknown[]) => {
-      action('cancel')(args)
+      action('cancel')(args);
 
       return new Promise(() => {
         // never resolve
-      })
-    }
+      });
+    },
   },
-  play: clickCancel
-}
+  play: clickCancel,
+};
 
 export const WithCancelError: StoryObj = {
   args: {
     ...Unpaid.args,
     cancel: (...args: unknown[]) => {
-      action('cancel')(args)
+      action('cancel')(args);
 
       throw new ApolloError({
-        errorMessage: 'Foobar'
-      })
-    }
+        errorMessage: 'Foobar',
+      });
+    },
   },
-  play: clickCancel
-}
+  play: clickCancel,
+};
 
 export const WithExtendLoading: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
     extend: (...args: unknown[]) => {
-      action('extend')(args)
+      action('extend')(args);
 
       return new Promise(() => {
         // never resolve
-      })
-    }
+      });
+    },
   },
-  play: clickExtend
-}
+  play: clickExtend,
+};
 
 export const WithExtendError: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
     extend: (...args: unknown[]) => {
-      action('extend')(args)
+      action('extend')(args);
 
       throw new ApolloError({
-        errorMessage: 'Foobar'
-      })
-    }
+        errorMessage: 'Foobar',
+      });
+    },
   },
-  play: clickExtend
-}
+  play: clickExtend,
+};
 
 export const WithCurrency: StoryObj = {
   ...Default,
@@ -301,8 +284,30 @@ export const WithCurrency: StoryObj = {
       ...subscription,
       memberPlan: {
         ...subscription.memberPlan,
-        currency: Currency.Eur
-      }
-    }
-  }
-}
+        currency: Currency.Eur,
+      },
+    },
+  },
+};
+
+export const WithExternalReward: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    subscription: {
+      ...subscription,
+      externalReward: 'API Token: <FOOBAR>',
+    },
+  },
+};
+
+export const WithExternalRewardLink: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    subscription: {
+      ...subscription,
+      externalReward: 'https://example.com',
+    },
+  },
+};

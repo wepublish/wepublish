@@ -1,82 +1,82 @@
-import {ApolloError} from '@apollo/client'
-import {Meta} from '@storybook/react'
-import {Author} from './author'
-import {mockAuthor} from '@wepublish/storybook/mocks'
+import { ApolloError } from '@apollo/client';
+import { Meta } from '@storybook/react';
+import { Author } from './author';
+import { mockAuthor } from '@wepublish/storybook/mocks';
 
-const author = mockAuthor()
+const author = mockAuthor();
 
 export default {
   component: Author,
-  title: 'Components/Author'
-} as Meta
+  title: 'Components/Author',
+} as Meta;
 
 export const Default = {
   args: {
-    data: {author}
-  }
-}
+    data: { author },
+  },
+};
 
 export const WithLoading = {
   args: {
     data: {
-      author: null
+      author: null,
     },
-    loading: true
-  }
-}
+    loading: true,
+  },
+};
 
 export const WithError = {
   args: {
     data: {
-      author: null
+      author: null,
     },
     loading: false,
     error: new ApolloError({
-      errorMessage: 'Foobar'
-    })
-  }
-}
+      errorMessage: 'Foobar',
+    }),
+  },
+};
 
 export const WithoutJobTitle = {
   args: {
     data: {
       author: {
         ...author,
-        jobTitle: null
-      }
-    }
-  }
-}
+        jobTitle: null,
+      },
+    },
+  },
+};
 
 export const WithoutImage = {
   args: {
     data: {
       author: {
         ...author,
-        image: null
-      }
-    }
-  }
-}
+        image: null,
+      },
+    },
+  },
+};
 
 export const WithoutBio = {
   args: {
     data: {
       author: {
         ...author,
-        bio: null
-      }
-    }
-  }
-}
+        bio: null,
+      },
+    },
+  },
+};
 
 export const WithoutLinks = {
   args: {
     data: {
       author: {
         ...author,
-        links: null
-      }
-    }
-  }
-}
+        links: null,
+      },
+    },
+  },
+};

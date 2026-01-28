@@ -1,23 +1,43 @@
 {
-  "blocks": {
-    "image": {
-      "captionSource": "(© {{source}})"
+  "image": {
+    "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>({source})</ImageSource>}}"
+  },
+  "teaser": {
+    "author": {
+      "text": "{authors}",
+      "seperator": ", "
     },
-    "imageGallery": {
-      "captionSource": "(© {{source}})"
+    "meta": {
+      "seperator": ""
     }
   },
   "subscription": {
-    "subscriptionIsUnpaid": "Rechnung ist unbezahlt",
-    "cancelSubscription": "Zahlung kündigen",
-    "cancelSubscriptionConfirmationText": "Ihre Zahlung wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen werden storniert.",
-    "renewSubscriptionConfirmationText": "Wir freuen uns, dass Sie Ihren Unterstützungsbeitrag frühzeitig um ein {{subscriptionDuration}} verlängern möchten. Weiterfahren?",
+    "unpaid": "Rechnung ist unbezahlt",
+    "cancel": "{type, select, Donation {Spende} other {Zahlung}} kündigen",
+    "cancelConfirmation": "Ihre Zahlung wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen werden storniert.",
+    "extendEarly": "{type, select, Donation {Spende} other {Zahlung}} frühzeitig verlängern?",
+    "extendEarlyConfirmation": "Wir freuen uns, dass Sie Ihren Unterstützungsbeitrag frühzeitig um ein {subscriptionDuration} verlängern möchten. Weiterfahren?",
     "noActiveSubscriptions": "Sie haben noch keine aktive Zahlung.",
     "subscribeNow": "Jetzt unterstützen."
   },
+  "subscribe": {
+    "button": {
+      "subscribeForPeriod": "{renewalPeriod} mit {formattedAmount}",
+      "payForPeriod": "{paymentPeriod} mit {formattedAmount}",
+      "pay": "Mit {formattedAmount}}"
+    },
+    "subscribe": {
+      "subscribeForPeriod": "Ich unterstütze {siteTitle} {renewalPeriodL} mit {formattedAmount}",
+      "payForPeriod": "Ich unterstütze {siteTitle} {paymentPeriodL} mit {formattedAmount}",
+      "pay": "Ich unterstütze {siteTitle} mit {formattedAmount}}"
+    }
+  },
+  "login": {
+    "alertLoginLinkSent": "Falls ein Account unter der E-Mail «{email}» besteht, sollte bald ein Login-Link in Ihrem Postfach eintreffen. Dies kann einen Moment dauern. Bitte prüfen Sie auch Ihren Spam-Ordner."
+  },
   "user": {
     "changeEmailRequest": "Klicken Sie hier, um Ihre E-Mail-Adresse zu ändern.",
-    "activeSubscriptions": "Aktive Zahlungen",
+    "activeSubscriptions": "Aktive {type, select, Donation {Spenden} other {Zahlungen}}",
     "viewCancelledSubscriptions": "Frühere Zahlungen anzeigen"
   }
 }

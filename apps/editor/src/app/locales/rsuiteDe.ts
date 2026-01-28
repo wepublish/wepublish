@@ -17,8 +17,8 @@ const Calendar = {
    * https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
    **/
   formattedMonthPattern: 'MMM yyyy',
-  formattedDayPattern: 'dd MMM yyyy'
-}
+  formattedDayPattern: 'dd MMM yyyy',
+};
 
 export default {
   Pagination: {
@@ -29,33 +29,33 @@ export default {
     next: 'Nächste',
     prev: 'Vorherige',
     skip: 'Gehe zu {0}',
-    total: 'Total: {0}'
+    total: 'Total: {0}',
   },
   Table: {
     emptyMessage: 'Keine Daten gefunden',
-    loading: 'Lade...'
+    loading: 'Lade...',
   },
   TablePagination: {
     lengthMenuInfo: '{0} / Seite',
-    totalInfo: 'Total: {0}'
+    totalInfo: 'Total: {0}',
   },
   Calendar,
   DatePicker: {
-    ...Calendar
+    ...Calendar,
   },
   DateRangePicker: {
     ...Calendar,
-    last7Days: 'Letzte 7 Tage'
+    last7Days: 'Letzte 7 Tage',
   },
   Picker: {
     noResultsText: 'Kein Ergebnis',
     placeholder: 'Auswählen',
     searchPlaceholder: 'Suchen',
-    checkAll: 'Alle'
+    checkAll: 'Alle',
   },
   InputPicker: {
     newItem: 'Neuer Eintrag',
-    createOption: 'Erstelle Option "{0}"'
+    createOption: 'Erstelle Option "{0}"',
   },
   Uploader: {
     inited: 'Start',
@@ -63,6 +63,6 @@ export default {
     error: 'Fehler',
     complete: 'Beendet',
     emptyFile: 'Leer',
-    upload: 'Upload'
-  }
-}
+    upload: 'Upload',
+  },
+};

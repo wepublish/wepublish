@@ -1,12 +1,12 @@
-import {Injectable} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
+import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class StatsService {
   constructor(private prisma: PrismaClient) {}
 
   async getAuthorsCount(): Promise<number> {
-    return await this.prisma.author.count()
+    return await this.prisma.author.count();
   }
 
   async getArticlesCount(): Promise<number> {
@@ -15,29 +15,29 @@ export class StatsService {
         revisions: {
           some: {
             publishedAt: {
-              not: null
-            }
-          }
-        }
-      }
-    })
+              not: null,
+            },
+          },
+        },
+      },
+    });
   }
 
   async getFirstArticleDate(): Promise<Date | null> {
     const earliestArticle = await this.prisma.articleRevision.findFirst({
       where: {
         publishedAt: {
-          not: null
-        }
+          not: null,
+        },
       },
       orderBy: {
-        publishedAt: 'asc'
+        publishedAt: 'asc',
       },
       select: {
-        publishedAt: true
-      }
-    })
+        publishedAt: true,
+      },
+    });
 
-    return earliestArticle?.publishedAt || null
+    return earliestArticle?.publishedAt || null;
   }
 }

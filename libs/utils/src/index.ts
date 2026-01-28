@@ -1,2 +1,2 @@
-export * from './lib/slugify'
-export * from './lib/url'
+export * from './lib/slugify';
+export * from './lib/url';

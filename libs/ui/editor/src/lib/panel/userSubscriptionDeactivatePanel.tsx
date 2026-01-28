@@ -1,28 +1,36 @@
-import styled from '@emotion/styled'
-import {SubscriptionDeactivationReason} from '@wepublish/editor/api'
-import {useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Button, DatePicker, Form as RForm, Message, Modal, SelectPicker} from 'rsuite'
-import {createCheckedPermissionComponent} from '../atoms'
+import styled from '@emotion/styled';
+import { SubscriptionDeactivationReason } from '@wepublish/editor/api';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  Button,
+  DatePicker,
+  Form as RForm,
+  Message,
+  Modal,
+  SelectPicker,
+} from 'rsuite';
 
-const {Group, ControlLabel} = RForm
+import { createCheckedPermissionComponent } from '../atoms';
+
+const { Group, ControlLabel } = RForm;
 
 const Form = styled(RForm)`
   margin-top: 20px;
-`
+`;
 
 export interface DeactivateSubscription {
-  date: Date
-  reason: SubscriptionDeactivationReason
+  date: Date;
+  reason: SubscriptionDeactivationReason;
 }
 
 export interface SubscriptionDeactivatePanelProps {
-  displayName: string
-  userEmail: string
-  paidUntil?: Date
+  displayName: string;
+  userEmail: string;
+  paidUntil?: Date;
 
-  onDeactivate(data: DeactivateSubscription): void
-  onClose(): void
+  onDeactivate(data: DeactivateSubscription): void;
+  onClose(): void;
 }
 
 function UserSubscriptionDeactivatePanel({
@@ -30,32 +38,36 @@ function UserSubscriptionDeactivatePanel({
   userEmail,
   paidUntil,
   onDeactivate,
-  onClose
+  onClose,
 }: SubscriptionDeactivatePanelProps) {
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
   const [deactivationDate, setDeactivationDate] = useState<Date | null>(
     paidUntil ? new Date(paidUntil) : new Date()
-  )
+  );
   const [deactivationReason, setDeactivationReason] =
-    useState<SubscriptionDeactivationReason | null>(null)
+    useState<SubscriptionDeactivationReason | null>(null);
 
   return (
     <>
       <Modal.Header>
-        <Modal.Title>{t('userSubscriptionEdit.deactivation.modalTitle.activated')}</Modal.Title>
+        <Modal.Title>
+          {t('userSubscriptionEdit.deactivation.modalTitle.activated')}
+        </Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <p>
           {t('userSubscriptionEdit.deactivation.modalMessage.activated', {
             userName: displayName,
-            userEmail
+            userEmail,
           })}
         </p>
         <Form fluid>
           <Group controlId="deactivationDate">
-            <ControlLabel>{t('userSubscriptionEdit.deactivation.date')}</ControlLabel>
+            <ControlLabel>
+              {t('userSubscriptionEdit.deactivation.date')}
+            </ControlLabel>
             <DatePicker
               block
               placement="auto"
@@ -65,27 +77,36 @@ function UserSubscriptionDeactivatePanel({
           </Group>
 
           <Group controlId="deactivationReason">
-            <ControlLabel>{t('userSubscriptionEdit.deactivation.reason')}</ControlLabel>
+            <ControlLabel>
+              {t('userSubscriptionEdit.deactivation.reason')}
+            </ControlLabel>
             <SelectPicker
               virtualized
               searchable={false}
               data={[
                 {
                   value: SubscriptionDeactivationReason.None,
-                  label: t('userSubscriptionEdit.deactivation.reasonNone')
+                  label: t('userSubscriptionEdit.deactivation.reasonNone'),
                 },
                 {
                   value: SubscriptionDeactivationReason.UserSelfDeactivated,
-                  label: t('userSubscriptionEdit.deactivation.reasonUserSelfDeactivated')
+                  label: t(
+                    'userSubscriptionEdit.deactivation.reasonUserSelfDeactivated'
+                  ),
                 },
                 {
                   value: SubscriptionDeactivationReason.InvoiceNotPaid,
-                  label: t('userSubscriptionEdit.deactivation.reasonInvoiceNotPaid')
+                  label: t(
+                    'userSubscriptionEdit.deactivation.reasonInvoiceNotPaid'
+                  ),
                 },
                 {
-                  value: SubscriptionDeactivationReason.UserReplacedSubscription,
-                  label: t('userSubscriptionEdit.deactivation.reasonUserReplacedSubscription')
-                }
+                  value:
+                    SubscriptionDeactivationReason.UserReplacedSubscription,
+                  label: t(
+                    'userSubscriptionEdit.deactivation.reasonUserReplacedSubscription'
+                  ),
+                },
               ]}
               value={deactivationReason}
               block
@@ -93,7 +114,10 @@ function UserSubscriptionDeactivatePanel({
               onChange={value => setDeactivationReason(value)}
             />
           </Group>
-          <Message showIcon type="info">
+          <Message
+            showIcon
+            type="info"
+          >
             {t('userSubscriptionEdit.deactivation.help')}
           </Message>
         </Form>
@@ -103,19 +127,28 @@ function UserSubscriptionDeactivatePanel({
         <Button
           disabled={!deactivationDate || !deactivationReason}
           appearance="primary"
-          onClick={() => onDeactivate({date: deactivationDate!, reason: deactivationReason!})}>
+          onClick={() =>
+            onDeactivate({
+              date: deactivationDate!,
+              reason: deactivationReason!,
+            })
+          }
+        >
           {t('userSubscriptionEdit.deactivation.action.activated')}
         </Button>
-        <Button appearance="subtle" onClick={() => onClose()}>
+        <Button
+          appearance="subtle"
+          onClick={() => onClose()}
+        >
           {t('articleEditor.panels.close')}
         </Button>
       </Modal.Footer>
     </>
-  )
+  );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_CREATE_SUBSCRIPTION',
-  'CAN_DELETE_SUBSCRIPTION'
-])(UserSubscriptionDeactivatePanel)
-export {CheckedPermissionComponent as UserSubscriptionDeactivatePanel}
+  'CAN_DELETE_SUBSCRIPTION',
+])(UserSubscriptionDeactivatePanel);
+export { CheckedPermissionComponent as UserSubscriptionDeactivatePanel };

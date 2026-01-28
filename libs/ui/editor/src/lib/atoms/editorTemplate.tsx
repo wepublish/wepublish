@@ -1,22 +1,11 @@
-import styled from '@emotion/styled'
-import {ReactNode} from 'react'
-import {TeaserSlotsBlockWrapper} from '../blocks/teaserSlotsBlock'
+import styled from '@emotion/styled';
+import { ReactNode } from 'react';
 
 const Children = styled.div`
   display: flex;
   width: 100%;
   max-width: 1220px;
-
-  > * > * {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 920px;
-
-    :has(${TeaserSlotsBlockWrapper}) {
-      max-width: 1220px;
-    }
-  }
-`
+`;
 
 const ChildrenWrapper = styled.div`
   display: flex;
@@ -27,7 +16,7 @@ const ChildrenWrapper = styled.div`
   padding-bottom: 60px;
   padding-left: 40px;
   padding-right: 40px;
-`
+`;
 
 const NavigationChildren = styled.div`
   display: flex;
@@ -35,21 +24,24 @@ const NavigationChildren = styled.div`
   top: 0;
   z-index: 10;
   width: 100%;
-`
+`;
 
 const EditorTemplateWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   min-height: 100%;
-`
+`;
 
 export interface EditorTemplateProps {
-  navigationChildren?: ReactNode
-  children?: ReactNode
+  navigationChildren?: ReactNode;
+  children?: ReactNode;
 }
 
-export function EditorTemplate({children, navigationChildren}: EditorTemplateProps) {
+export function EditorTemplate({
+  children,
+  navigationChildren,
+}: EditorTemplateProps) {
   return (
     <EditorTemplateWrapper>
       <NavigationChildren>{navigationChildren}</NavigationChildren>
@@ -57,5 +49,5 @@ export function EditorTemplate({children, navigationChildren}: EditorTemplatePro
         <Children>{children}</Children>
       </ChildrenWrapper>
     </EditorTemplateWrapper>
-  )
+  );
 }

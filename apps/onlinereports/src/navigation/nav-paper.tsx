@@ -1,28 +1,28 @@
-import styled from '@emotion/styled'
-import {css, Theme, useTheme} from '@mui/material'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {useUser} from '@wepublish/authentication/website'
-import {ButtonProps, TextToIcon} from '@wepublish/ui'
-import {FullNavigationFragment} from '@wepublish/website/api'
-import {PropsWithChildren} from 'react'
-import {navigationLinkToUrl} from '@wepublish/navigation/website'
+import styled from '@emotion/styled';
+import { css, Theme, useTheme } from '@mui/material';
+import { useUser } from '@wepublish/authentication/website';
+import { navigationLinkToUrl } from '@wepublish/navigation/website';
+import { ButtonProps, TextToIcon } from '@wepublish/ui';
+import { FullNavigationFragment } from '@wepublish/website/api';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { PropsWithChildren } from 'react';
 
 export type BuilderNavPaperProps = PropsWithChildren<{
-  loginBtn?: ButtonProps | null
-  profileBtn?: ButtonProps | null
-  subscribeBtn?: ButtonProps | null
-  main: FullNavigationFragment | null | undefined
-  categories: FullNavigationFragment[][]
-  iconItems: FullNavigationFragment | null | undefined
-  closeMenu: () => void
-}>
+  loginBtn?: ButtonProps | null;
+  profileBtn?: ButtonProps | null;
+  subscribeBtn?: ButtonProps | null;
+  main: FullNavigationFragment | null | undefined;
+  categories: FullNavigationFragment[][];
+  iconItems: FullNavigationFragment | null | undefined;
+  closeMenu: () => void;
+}>;
 
 export const NavPaperWrapper = styled('div')`
-  padding: ${({theme}) => theme.spacing(2.5)};
-  background-color: ${({theme}) => theme.palette.primary.main};
-  color: ${({theme}) => theme.palette.primary.contrastText};
+  padding: ${({ theme }) => theme.spacing(2.5)};
+  background-color: ${({ theme }) => theme.palette.primary.main};
+  color: ${({ theme }) => theme.palette.primary.contrastText};
   display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
+  gap: ${({ theme }) => theme.spacing(3)};
   position: absolute;
   bottom: 1px; // Fixes a 1px gap between navbar and paper
   left: 0;
@@ -30,9 +30,9 @@ export const NavPaperWrapper = styled('div')`
   transform: translateY(100%);
   overflow-y: scroll;
   max-height: 100vh;
-  padding-bottom: ${({theme}) => theme.spacing(10)};
+  padding-bottom: ${({ theme }) => theme.spacing(10)};
 
-  ${({theme}) => css`
+  ${({ theme }) => css`
     ${theme.breakpoints.up('md')} {
       gap: ${theme.spacing(6)};
       row-gap: ${theme.spacing(12)};
@@ -40,70 +40,70 @@ export const NavPaperWrapper = styled('div')`
       padding: ${theme.spacing(2.5)} calc(100% / 6) calc(100% / 12);
     }
   `}
-`
+`;
 
 export const NavPaperCategory = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(1)};
+  gap: ${({ theme }) => theme.spacing(1)};
   grid-auto-rows: max-content;
-`
+`;
 
 export const NavPaperName = styled('div')`
   text-transform: uppercase;
   font-weight: 300;
-  font-size: ${({theme}) => theme.typography.body2.fontSize};
-`
+  font-size: ${({ theme }) => theme.typography.body2.fontSize};
+`;
 
 export const NavPaperSeparator = styled('hr')`
   width: 100%;
   height: 1px;
-  background-color: ${({theme}) => theme.palette.common.white};
+  background-color: ${({ theme }) => theme.palette.common.white};
 
-  ${({theme}) => css`
+  ${({ theme }) => css`
     ${theme.breakpoints.up('sm')} {
       display: none;
     }
   `}
-`
+`;
 
 export const NavPaperLinksGroup = styled('div')`
   display: grid;
   grid-template-columns: 1fr;
-  gap: ${({theme}) => theme.spacing(3)};
+  gap: ${({ theme }) => theme.spacing(3)};
 
-  ${({theme}) => css`
+  ${({ theme }) => css`
     ${theme.breakpoints.up('sm')} {
       grid-template-columns: 1fr 1fr;
     }
   `}
-`
+`;
 
 export const navPaperLinkStyling = (theme: Theme) => css`
   ${theme.breakpoints.up('sm')} {
     border-bottom: 0;
   }
-`
+`;
 
 export const NavPaperCategoryLinks = styled('div')`
   display: grid;
   grid-auto-rows: max-content;
-  font-weight: ${({theme}) => theme.typography.fontWeightMedium};
-  font-size: ${({theme}) => theme.typography.h6.fontSize};
-`
+  font-weight: ${({ theme }) => theme.typography.fontWeightMedium};
+  font-size: ${({ theme }) => theme.typography.h6.fontSize};
+`;
 
 export const NavPaperMainLinks = styled(NavPaperCategoryLinks)`
-  gap: ${({theme}) => theme.spacing(1)};
-`
+  gap: ${({ theme }) => theme.spacing(1)};
+`;
 
 export const NavPaperChildrenWrapper = styled('div')`
   position: relative;
-  padding: ${({theme}) => theme.spacing(1.5)};
+  padding: ${({ theme }) => theme.spacing(1.5)};
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
   justify-items: center;
   width: 100%;
 
-  ${({theme}) => css`
+  ${({ theme }) => css`
     ${theme.breakpoints.up('md')} {
       position: absolute;
       grid-template-columns: auto;
@@ -114,15 +114,15 @@ export const NavPaperChildrenWrapper = styled('div')`
       padding-left: ${theme.spacing(2)};
     }
   `}
-`
+`;
 
 export const NavPaperActions = styled('div')`
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: max-content;
-  gap: ${({theme}) => theme.spacing(2)};
-  margin-top: ${({theme}) => theme.spacing(5)};
-`
+  gap: ${({ theme }) => theme.spacing(2)};
+  margin-top: ${({ theme }) => theme.spacing(5)};
+`;
 
 export const NavPaper = ({
   main,
@@ -132,26 +132,33 @@ export const NavPaper = ({
   subscribeBtn,
   closeMenu,
   children,
-  iconItems
+  iconItems,
 }: BuilderNavPaperProps) => {
   const {
-    elements: {Link, Button, H4, H6}
-  } = useWebsiteBuilder()
-  const {hasUser, logout} = useUser()
-  const theme = useTheme()
+    elements: { Link, Button, H4, H6 },
+  } = useWebsiteBuilder();
+  const { hasUser, logout } = useUser();
+  const theme = useTheme();
 
   return (
     <NavPaperWrapper>
       {children && (
         <NavPaperChildrenWrapper>
           {iconItems?.links.map((link, index) => {
-            const url = navigationLinkToUrl(link)
+            const url = navigationLinkToUrl(link);
 
             return (
-              <Link key={index} href={url} color="inherit">
-                <TextToIcon title={link.label} size={32} />
+              <Link
+                key={index}
+                href={url}
+                color="inherit"
+              >
+                <TextToIcon
+                  title={link.label}
+                  size={32}
+                />
               </Link>
-            )
+            );
           })}
           {children}
         </NavPaperChildrenWrapper>
@@ -159,15 +166,24 @@ export const NavPaper = ({
 
       <NavPaperMainLinks>
         {main?.links.map((link, index) => {
-          const url = navigationLinkToUrl(link)
+          const url = navigationLinkToUrl(link);
 
           return (
-            <Link href={url} key={index} color="inherit" underline="none" onClick={closeMenu}>
-              <H4 component="span" css={{fontWeight: '700'}}>
+            <Link
+              href={url}
+              key={index}
+              color="inherit"
+              underline="none"
+              onClick={closeMenu}
+            >
+              <H4
+                component="span"
+                css={{ fontWeight: '700' }}
+              >
                 {link.label}
               </H4>
             </Link>
-          )
+          );
         })}
         <MemberButtons
           loginBtn={loginBtn}
@@ -188,7 +204,7 @@ export const NavPaper = ({
 
                 <NavPaperCategoryLinks>
                   {nav.links?.map((link, index) => {
-                    const url = navigationLinkToUrl(link)
+                    const url = navigationLinkToUrl(link);
 
                     return (
                       <Link
@@ -197,12 +213,16 @@ export const NavPaper = ({
                         color="inherit"
                         underline="none"
                         css={navPaperLinkStyling(theme)}
-                        onClick={closeMenu}>
-                        <H6 component="span" css={{fontWeight: '700'}}>
+                        onClick={closeMenu}
+                      >
+                        <H6
+                          component="span"
+                          css={{ fontWeight: '700' }}
+                        >
                           {link.label}
                         </H6>
                       </Link>
-                    )
+                    );
                   })}
                 </NavPaperCategoryLinks>
               </NavPaperCategory>
@@ -210,19 +230,22 @@ export const NavPaper = ({
           </NavPaperLinksGroup>
         ))}
     </NavPaperWrapper>
-  )
-}
+  );
+};
 
 export const MemberButtons = ({
   loginBtn,
   profileBtn,
   subscribeBtn,
-  closeMenu
-}: Pick<BuilderNavPaperProps, 'loginBtn' | 'profileBtn' | 'subscribeBtn' | 'closeMenu'>) => {
-  const {hasUser, logout} = useUser()
+  closeMenu,
+}: Pick<
+  BuilderNavPaperProps,
+  'loginBtn' | 'profileBtn' | 'subscribeBtn' | 'closeMenu'
+>) => {
+  const { hasUser, logout } = useUser();
   const {
-    elements: {Button, Link}
-  } = useWebsiteBuilder()
+    elements: { Button, Link },
+  } = useWebsiteBuilder();
   return (
     <NavPaperActions>
       {!hasUser && loginBtn && (
@@ -231,7 +254,8 @@ export const MemberButtons = ({
           href={loginBtn.href}
           variant="contained"
           color="secondary"
-          onClick={closeMenu}>
+          onClick={closeMenu}
+        >
           Login
         </Button>
       )}
@@ -244,7 +268,8 @@ export const MemberButtons = ({
               href={profileBtn.href}
               variant="contained"
               color="secondary"
-              onClick={closeMenu}>
+              onClick={closeMenu}
+            >
               Mein Konto
             </Button>
           )}
@@ -255,22 +280,24 @@ export const MemberButtons = ({
               href={subscribeBtn.href}
               variant="contained"
               color="accent"
-              onClick={closeMenu}>
+              onClick={closeMenu}
+            >
               Meine Abos
             </Button>
           )}
 
           <Button
             onClick={() => {
-              logout()
-              closeMenu()
+              logout();
+              closeMenu();
             }}
             variant="outlined"
-            color="secondary">
+            color="secondary"
+          >
             Logout
           </Button>
         </>
       )}
     </NavPaperActions>
-  )
-}
+  );
+};

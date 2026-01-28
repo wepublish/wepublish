@@ -1,13 +1,13 @@
-import {Meta} from '@storybook/react'
-import {action} from '@storybook/addon-actions'
-import {AuthorList} from './author-list'
-import {ApolloError} from '@apollo/client'
-import {mockAuthor} from '@wepublish/storybook/mocks'
+import { Meta } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
+import { AuthorList } from './author-list';
+import { ApolloError } from '@apollo/client';
+import { mockAuthor } from '@wepublish/storybook/mocks';
 
 export default {
   component: AuthorList,
-  title: 'Components/AuthorList'
-} as Meta
+  title: 'Components/AuthorList',
+} as Meta;
 
 export const Default = {
   args: {
@@ -24,40 +24,40 @@ export const Default = {
           mockAuthor(),
           mockAuthor(),
           mockAuthor(),
-          mockAuthor()
+          mockAuthor(),
         ],
         pageInfo: {
           hasNextPage: false,
           hasPreviousPage: false,
           endCursor: null,
-          startCursor: null
+          startCursor: null,
         },
-        totalCount: 11
-      }
+        totalCount: 11,
+      },
     },
     variables: {},
-    onVariablesChange: action('onVariablesChange')
-  }
-}
+    onVariablesChange: action('onVariablesChange'),
+  },
+};
 
 export const WithLoading = {
   args: {
     data: undefined,
     loading: true,
-    onVariablesChange: action('onVariablesChange')
-  }
-}
+    onVariablesChange: action('onVariablesChange'),
+  },
+};
 
 export const WithError = {
   args: {
     data: undefined,
     loading: false,
     error: new ApolloError({
-      errorMessage: 'Author list error'
+      errorMessage: 'Author list error',
     }),
-    onVariablesChange: action('onVariablesChange')
-  }
-}
+    onVariablesChange: action('onVariablesChange'),
+  },
+};
 
 export const WithoutJobTitle = {
   args: {
@@ -65,30 +65,30 @@ export const WithoutJobTitle = {
       authors: {
         nodes: [
           mockAuthor(),
-          mockAuthor({jobTitle: undefined}),
-          mockAuthor({jobTitle: undefined}),
+          mockAuthor({ jobTitle: undefined }),
+          mockAuthor({ jobTitle: undefined }),
           mockAuthor(),
           mockAuthor(),
-          mockAuthor({jobTitle: undefined}),
+          mockAuthor({ jobTitle: undefined }),
           mockAuthor(),
-          mockAuthor({jobTitle: undefined}),
+          mockAuthor({ jobTitle: undefined }),
           mockAuthor(),
-          mockAuthor({jobTitle: undefined}),
-          mockAuthor()
+          mockAuthor({ jobTitle: undefined }),
+          mockAuthor(),
         ],
         pageInfo: {
           hasNextPage: false,
           hasPreviousPage: false,
           endCursor: null,
-          startCursor: null
+          startCursor: null,
         },
-        totalCount: 11
-      }
+        totalCount: 11,
+      },
     },
     variables: {},
-    onVariablesChange: action('onVariablesChange')
-  }
-}
+    onVariablesChange: action('onVariablesChange'),
+  },
+};
 
 export const WithoutImage = {
   args: {
@@ -96,27 +96,27 @@ export const WithoutImage = {
       authors: {
         nodes: [
           mockAuthor(),
-          mockAuthor({image: null}),
-          mockAuthor({image: null}),
+          mockAuthor({ image: null }),
+          mockAuthor({ image: null }),
           mockAuthor(),
           mockAuthor(),
-          mockAuthor({image: null}),
-          mockAuthor({image: null}),
+          mockAuthor({ image: null }),
+          mockAuthor({ image: null }),
           mockAuthor(),
           mockAuthor(),
-          mockAuthor({image: null}),
-          mockAuthor()
+          mockAuthor({ image: null }),
+          mockAuthor(),
         ],
         pageInfo: {
           hasNextPage: false,
           hasPreviousPage: false,
           endCursor: null,
-          startCursor: null
+          startCursor: null,
         },
-        totalCount: 11
-      }
+        totalCount: 11,
+      },
     },
     variables: {},
-    onVariablesChange: action('onVariablesChange')
-  }
-}
+    onVariablesChange: action('onVariablesChange'),
+  },
+};

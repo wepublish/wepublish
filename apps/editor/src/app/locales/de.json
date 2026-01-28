@@ -75,6 +75,7 @@
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "Nein",
         "noImagesFound": "Keine Bilder gefunden",
+        "openInNewTab": "Inhalt URL öffnet in einem neuen Tab",
         "pagePreviewLink": "Vorschau Link",
         "peerDisabled": "Dieser Peer ist momentan deaktiviert",
         "peeredArticlePreview": "Vorschau",
@@ -127,25 +128,8 @@
         "style": "Style",
         "text": "Text",
         "default": "Default",
-        "tracking": "Tracking"
-      }
-    },
-    "articleList": {
-      "filter": {
-        "dates": "Daten",
-        "description": "Nach Beschreibung filtern",
-        "isDraft": "Entwurf",
-        "isPending": "Geplant",
-        "isPublished": "Publiziert",
-        "lead": "Nach Lead filtern",
-        "location": "Veranstaltungsort",
-        "name": "Name",
-        "preTitle": "Nach Pre-Titel filtern",
-        "providers": "Anbieter",
-        "publicationDate": "Publikationsdatum",
-        "reset": "Filter zurücksetzen",
-        "title": "Nach Titel filtern",
-        "includeHidden": "Ausgeblendete Artikel"
+        "tracking": "Tracking",
+        "paywall": "Paywall"
       }
     },
     "articles": {
@@ -235,7 +219,9 @@
         "loginStatus": {
           "ALL": "alle",
           "LOGGED_IN": "nur eingeloggt",
-          "LOGGED_OUT": "nur ausgeloggt"
+          "LOGGED_OUT": "nur ausgeloggt",
+          "SUBSCRIBED": "nur abonniert",
+          "UNSUBSCRIBED": "nicht abonniert"
         },
         "actions": "Aktionen",
         "image": "Bild",
@@ -336,16 +322,41 @@
         "removeBlock": "Block entfernen",
         "unlockBlock": "Entsperren"
       },
+      "flexBlock": {
+        "label": "Flex Block",
+        "addNestedBlock": "(Sub-)Block hinzufügen",
+        "chooseNestedBlock": "(Sub-)Block wählen",
+        "close": "Schliessen",
+        "deleteNestedBlock": "(Sub-)Block löschen",
+        "editNestedBlock": "(Sub-)Block bearbeiten",
+        "lockNestedBlock": "(Sub-)Block sperren",
+        "removeNestedBlock": "(Sub-)Block entfernen",
+        "unlockNestedBlock": "(Sub-)Block entsperren"
+      },
       "html": {
         "close": "Schliessen",
         "confirm": "Bestätigen",
         "edit": "HTML bearbeiten",
         "label": "HTML",
         "placeholder": "Füge hier deinen HTML Block ein",
-        "warning": "Bitte beachte, dass benutzerdefinierte HTML Blocks für den Benutzer schädlich sein oder das Seitenlayout beeinträchtigen können. Bitte stelle sicher, dass der bereitgestellte HTML Block frei von bösartigen Skripten und korrekt strukturiert ist."
+        "warning": "Bitte beachte, dass benutzerdefinierte HTML Blocks für den Benutzer schädlich sein oder das Seitenlayout beeinträchtigen können. Bitte stelle sicher, dass der bereitgestellte HTML Block frei von bösartigen Skripten und korrekt strukturiert ist.",
+        "generate": "Generieren Sie Ihr HTML mit KI",
+        "prompt": "Prompt senden",
+        "promptSuccess": "HTML erfolgreich generiert und Block aktualisiert. Der Chatverlauf wurde gespeichert und du kannst den Chat hier fortsetzen."
       },
       "subscribe": {
-        "label": "Abonnieren"
+        "label": "Abonnieren",
+        "selectMemberPlans": "Anzuzeigende Pläne",
+        "selectMemberPlansPlaceholder": "Alle Pläne anzeigen",
+        "selectMemberPlansSelectionHintAll": "Ohne Auswahl werden alle aktiven Pläne angezeigt.",
+        "selectFields": "Eingabefelder",
+        "selectFieldsSelectionHint": "Email & Nachname wird immer abgefragt. Reihenfolge spielt keine Rolle",
+        "FirstName": "Vorname",
+        "Birthday": "Geburtstag",
+        "Address": "Adresse",
+        "EmailRepeated": "Email wiederholen",
+        "Password": "Passwort",
+        "PasswordRepeated": "Passwort wiederholen"
       },
       "image": {
         "label": "Bild",
@@ -420,8 +431,9 @@
       },
       "title": {
         "label": "Titel",
-        "leadText": "Lead-Text ",
-        "title": "Titel"
+        "leadText": "Lead-Text",
+        "title": "Titel",
+        "preTitle": "Oberzeile"
       }
     },
     "cancel": "Abbrechen",
@@ -645,6 +657,25 @@
         "title": "Events"
       }
     },
+    "filterableList": {
+      "filter": {
+        "dates": "Daten",
+        "description": "Nach Beschreibung filtern",
+        "isDraft": "Entwurf",
+        "isPending": "Geplant",
+        "isPublished": "Publiziert",
+        "lead": "Nach Lead filtern",
+        "location": "Veranstaltungsort",
+        "name": "Name",
+        "preTitle": "Nach Pre-Titel filtern",
+        "providers": "Anbieter",
+        "publicationDate": "Publikationsdatum",
+        "reset": "Filter zurücksetzen",
+        "title": "Nach Titel filtern",
+        "includeHiddenArticles": "Ausgeblendete Artikel",
+        "includeHiddenPages": "Ausgeblendete Seiten"
+      }
+    },
     "images": {
       "overview": {
         "actions": "Aktionen",
@@ -753,11 +784,16 @@
       "currency": "Währung",
       "currencyRequired": "Währung erforderlich",
       "amountPerMonthMin": "Minimaler Betrag / Monat",
+      "amountPerMonthMax": "Maximaler Betrag / Monat",
       "amountPerMonthMinRequired": "Minimaler Betrag erforderlich",
+      "amountPerMonthMaxRequired": "Maximaler Betrag erforderlich",
       "amountPerMonthMinZero": "Minimaler Betrag muss mindestens 0 betragen",
+      "amountPerMonthMaxZero": "Maximaler Betrag muss mindestens 0 betragen",
+      "maxPriceMustBeGreaterThanMin": "Maximaler Betrag muss grösser als der minimale Betrag sein",
       "autoRenewalDescription": "Erzwingt automatische Erneuerung des Abonnements",
       "createMemberPlanHeader": "Erstelle Memberplan",
       "description": "Beschreibung",
+      "shortDescription": "Kurze Beschreibung",
       "editPaymentSetting": "Zahlungseinstellung bearbeiten",
       "forceAutoRenewal": "Automatische Erneuerung erzwingen",
       "loadingTitle": "Lade",
@@ -772,7 +808,8 @@
       "tags": "Tags",
       "savedChanges": "Gespeichert",
       "successPage": "Weiterleitung zur Seite bei erfolgreicher Zahlung",
-      "failPage": "Weiterleitung zur Seite bei Zahlungsfehler"
+      "failPage": "Weiterleitung zur Seite bei Zahlungsfehler",
+      "externalReward": "Link oder Beschreibung zu einer externer Belohnung (nur für Abonnenten sichtbar)"
     },
     "memberPlanList": {
       "action": "Aktionen",
@@ -789,7 +826,8 @@
         "quarterly": "Vierteljährlich",
         "yearly": "Jährlich",
         "biennial": "Zweijährlich",
-        "lifetime": "Lebenslang"
+        "lifetime": "Lebenslang",
+        "donationOnce": "Einmalige Spende"
       },
       "title": "Abo Pläne"
     },
@@ -883,6 +921,7 @@
         "close": "Schliessen",
         "confirm": "Bestätigen",
         "createdAt": "{{createdAt, ccc PP p}}",
+        "chooseBlock": "Blocktyp wählen",
         "dateExplanationPopOver": "Dies kann verwendet werden, um auf Artikel zu verweisen, die zu einem späteren Zeitpunkt veröffentlicht werden sollen. Dies ist z. B. hilfreich, wenn Beiträge auf Sozialen Medien für den nächsten Morgen geplant werden.",
         "description": "SEO Beschreibung",
         "descriptionHelpBlock": "Verwende eine SEO-optimierte Beschreibung",
@@ -906,6 +945,8 @@
         "publishAtDateCheckbox": "Anderes Datum für Online-Verfügbarkeit wählen",
         "publishDate": "Publikationsdatum",
         "publishPage": "Seite publizieren",
+        "hidden": "Ausblenden",
+        "setAsHidden": "Ausgeblendete Seiten werden standardmäßig ausgeschlossen, können aber dennoch bei Bedarf abgefragt werden.",
         "slug": "Slug",
         "socialMediaDescription": "Beschreibung für Social Media",
         "socialMediaImage": "Bild für Social Media",
@@ -1159,6 +1200,8 @@
       "settings": "Einstellungen",
       "successMessage": "Einstellungen erfolgreich aktualisiert!",
       "successTitle": "Gespeichert",
+      "newArticlePeering": "Neue erstellte Artikel werden automatisch gepeered.",
+      "newArticlePaywall": "Neue erstellte Artikel benötigen ein Abo um gelesen zu werden.",
       "warnings": {
         "askOperators": "Achtung: Das Ändern einer oder mehrerer Einstellungen kann die Website zum abstürzen bringen oder andere unvorhersehbare Folgen haben. Falls es Unsicherheiten gibt, wendet euch an eure Operators. Falls nicht, einfach fortfahren.",
         "guestCommenting": "Erlaube Gastbesuchern (nicht eingeloggt), Kommentare zu schreiben und zu veröffentlichen.",
@@ -1167,7 +1210,9 @@
         "invoiceReminders": "Wie oft wird der Benutzer daran erinnert, das Abonnement zu bezahlen (einmal pro Tag).",
         "loginMinutes": "Wie lange (in Minuten) ist der per E-Mail gesendete Link zum Erstellen eines Kontos gültig. Die Standardeinstellung ist eine Woche (10080 / 60 / 24).",
         "passwordToken": "Wie lange (in Minuten) der per E-Mail gesendete Link zum Zurücksetzen des Passworts gültig ist. Die Standardeinstellung ist ein Tag (1440 / 60 / 24).",
-        "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden."
+        "peerToken": "Zeit in Millisekunden, nach der wir nicht mehr versuchen, Peer-Artikel abzurufen. Der Standardwert ist 3 Sekunden.",
+        "newArticlePeering": "Beeinflusst nicht schon erstellte Artikel",
+        "newArticlePaywall": "Beeinflusst nicht schon erstellte Artikel"
       }
     },
     "subscriptionFlow": {
@@ -1242,9 +1287,12 @@
         "areYouSure": "Bist Du sicher?",
         "areYouSureBody": "Das Tag \"{{ tag }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
         "areYouSureConfirmation": "Tag löschen",
-        "createTag": "Neuen Tag",
+        "createTag": "Neuer Tag",
+        "editTag": "{{tag}} Bearbeiten",
         "placeholder": "Name des Tags",
         "title": "Tags",
+        "name": "Name",
+        "description": "Beschreibung",
         "markAsMain": "Als Haupt-Tag verwenden"
       }
     },
@@ -1304,7 +1352,9 @@
       "sendWebsiteLogin": "Login-Link versenden",
       "sendWebsiteLoginSuccessMessage": "Login-Link an {{email}} versendet",
       "streetAddress": "Strasse",
+      "streetAddressNumber": "Hausnummer",
       "streetAddress2": "Strasse 2",
+      "streetAddress2Number": "Hausnummer",
       "subscriptionsHeader": "Abonnemente",
       "successfullyCreatedUser": "Benutzer:in erstellt",
       "successfullyUpdatedUser": "Benutzerdaten aktualisiert",
@@ -1312,7 +1362,9 @@
       "userDataTitle": "Userdaten",
       "userRoles": "Userrollen",
       "zipCode": "PLZ",
-      "birthday": "Geburtstag"
+      "birthday": "Geburtstag",
+      "note": "Notiz",
+      "noteHelpText": "Nicht für den Nutzer sichtbar."
     },
     "userList": {
       "overview": {
@@ -1433,6 +1485,8 @@
       "extendableHelpText": "Bestimme, ob ein Abo eines Benutzers - automatisch oder manuell - verlängert werden kann oder nicht. Probeabos können in der Regel nicht verlängert werden.",
       "maxCount": "Maximale Anzahl Abos pro Benutzer:in",
       "maxCountHelpText": "Limitiere die Anzahl Abos, welche ein:e Benutzer:in für diesen Abo-Plan lösen kann. Dazu zählen auch deaktivierte Abos.",
+      "maxCountDonation": "Maximale Anzahl Spenden pro Benutzer:in",
+      "maxCountDonationHelpText": "Limitiere die Anzahl Spenden, welche ein:e Benutzer:in für diesen Plan tätigen kann.",
       "trialMemberplanAlert": "Dieser Abo-Plan ist für Probeabos konfiguriert.",
       "forceAutoRenewNotPossible": "Automatische Erneuerung ist nicht möglich, weil der Abo-Plan nicht verlängerbar ist.",
       "trialSubscriptionNotPossible": "Der Abo-Plan muss verlängerbar bleiben, weil in einer Zahlungseinstellung eine automatische Verlängerung eingestellt ist. Du kannst das natürlich ändern.",
@@ -1441,8 +1495,13 @@
       "amountPerMonthTarget": "Ziel-Betrag / Monat",
       "amountPerMonthTargetHelpText": "Der monatliche Zielbetrag legt den gewünschten Abopreis fest, den die Benutzer:innen bezahlen sollten. Er muss höher als der Minimalbetrag sein und definiert typischerweise die Voreinstellung im Zahlungsformular.",
       "amountPerMonthMinHelpText": "Der minimale monatliche Betrag ist der eigentliche Abopreis, der mindestens bezahlt werden muss. Die Benutzer:innen können indes beim Aboabschluss freiwillig mehr bezahlen.",
+      "amountPerMonthMaxHelpText": "Der maximale monatliche Betrag ist der Höchstbetrag, den die Benutzer:innen beim Aboabschluss bezahlen können.",
       "confirmationPage": "Weiterleitung zur Seite bei bestehendem User (Retargeting)",
-      "confirmationPageHelptext": "Wenn beim Lösen eines Abos die User-ID bekannt ist, erhält die Person eine E-Mail, um das Abo zu bezahlen. Darauf könnte auf dieser Seite hingewiesen werden."
+      "confirmationPageHelptext": "Wenn beim Lösen eines Abos die User-ID bekannt ist, erhält die Person eine E-Mail, um das Abo zu bezahlen. Darauf könnte auf dieser Seite hingewiesen werden.",
+      "productType": "Produkttyp",
+      "productTypeHelpText": "Wähle, ob der Plan als Abonnement oder Spende angeboten wird.",
+      "productTypeSubscription": "Abonnement",
+      "productTypeDonation": "Spende"
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Erweiterte Einstellungen",
@@ -1513,7 +1572,12 @@
         "countSubscriptionsFrom": "Nur Abos einrechnen, die bezahlt wurden ab Datum",
         "countSubscriptionsUntil": "Nur Abos einrechnen, die bezahlt wurden bis Datum",
         "revenue": "Bereits CHF {{revenue}} finanziert",
-        "goals": "Ziele"
+        "subscriptions": "Bereits {{subscriptions}} abonnieren",
+        "goals": "Ziele",
+        "crowdfunding": "Crowdfunding",
+        "goalType": "Zieltyp",
+        "goalType_Revenue": "Einnahmen",
+        "goalType_Subscription": "Anzahl Abos"
       },
       "goalsForm": {
         "title": "Titel",
@@ -1534,7 +1598,11 @@
       "rangeLastWeek": "Letzte Woche",
       "rangeLastMonth": "Letzter Monat",
       "rangeLastQuarter": "Letztes Quartal",
-      "rangeLastYear": "Letztes Jahr"
+      "rangeLastYear": "Letztes Jahr",
+      "rangeNextWeek": "Nächste Woche",
+      "rangeNextMonth": "Nächster Monat",
+      "rangeNextQuarter": "Nächstes Quartal",
+      "rangeNextYear": "Nächstes Jahr"
     },
     "audience": {
       "legend": {
@@ -1544,7 +1612,9 @@
           "renewedSubscriptionCount": "Abos, die um eine weitere Periode erneuert und bezahlt wurden.",
           "createdSubscriptionCount": "Gänzlich neu gelöste Abos mit bisher nur einer Periode, die bezahlt wurden.",
           "deactivatedSubscriptionCount": "Abos, die deaktiviert / gekündigt und nicht erneuert wurden.",
-          "replacedSubscriptionCount": "Abos, die durch ein anderes ersetzt wurden (z.B. Probe-Abos)."
+          "replacedSubscriptionCount": "Abos, die durch ein anderes ersetzt wurden (z.B. Probe-Abos).",
+          "predictedSubscriptionRenewalCount": "Anzahl Abos, die am Ende ihrer Laufzeit zur Erneuerung anstehen.\n Erstmalige Abo-Erneuerungen, sowie...\n Abo-Erneuerungen Stammkunden: Abos, die in der Vergangenheit bereits ein oder mehrmals erneuert worden sind\n Abo-Erneuerungen werden beginnend ab dem gewählten Start-Datum (oder ab dem aktuellen Datum, falls der gewählte Zeitraum in der Vergangenheit beginnt) dargestellt .\n Als anstehende Abo-Erneuerungen werden die zurzeit Bezahlten mit aktivierter automatischer Verlängerung gezählt.",
+          "endingSubscriptionCount": "Abos, die am Ende ihrer Laufzeit auslaufen werden, d.h. ohne Abos mit automatischer Verlängerung."
         },
         "totalActiveSubscriptionCount": "Total aktive & bezahlte Abos",
         "overdueSubscriptionCount": "Erneuerte nicht bezahlte Abos",
@@ -1552,14 +1622,32 @@
         "createdSubscriptionCount": "Neue bezahlte Abos",
         "deactivatedSubscriptionCount": "Deaktivierte Abos",
         "replacedSubscriptionCount": "Ersetzte Abos",
+        "predictedSubscriptionRenewalCount": "Anstehende Abo-Erneuerungen",
+        "predictedSubscriptionRenewalCount_variants": {
+          "low": "Erstmalige Abo-Erneuerungen",
+          "high": "Abo-Erneuerungen Stammkunden",
+          "total": "Total anstehende Abo-Erneuerungen",
+          "perDayHighProbability": "Abo-Erneuerungen Stammkunden",
+          "perDayLowProbability": "Erstmalige Abo-Erneuerungen"
+        },
+        "predictedSubscriptionRenewalCountPerDay": {
+          "lowProbability": "Erstmalige Abo-Erneuerungen",
+          "highProbability": "Abo-Erneuerungen Stammkunden"
+        },
+        "endingSubscriptionCount": "Auslaufende Abos",
         "totalNewSubscriptions": "Total bezahlte neue & erneuerte Abos",
         "renewalRate": "Erneuerungsrate",
         "cancellationRate": "Kündigungsrate",
         "createdSubscriptionUsers": "Neue bezahlte Abos",
         "overdueSubscriptionUsers": "Erneuerte nicht bezahlte Abos",
+        "predictedSubscriptionRenewalUsers": "Anstehende Abo-Erneuerungen",
+        "createdUnpaidSubscriptionUsers": "Erneuerte, nicht bezahlte Abos",
         "deactivatedSubscriptionUsers": "Deaktivierte Abos",
         "renewedSubscriptionUsers": "Erneuerte bezahlte Abos",
-        "replacedSubscriptionUsers": "Ersetzte Abos"
+        "replacedSubscriptionUsers": "Ersetzte Abos",
+        "predictedSubscriptionRenewalUsersLowProbability": "Erstmalige Abo-Erneuerungen",
+        "predictedSubscriptionRenewalUsersHighProbability": "Abo-Erneuerungen Stammkunden",
+        "endingSubscriptionUsers": "Auslaufende Abos"
       }
     },
     "audienceDetailDrawer": {
@@ -1581,7 +1669,58 @@
       "byDate": "Per",
       "totalNewSubscriptionsInfo": "Summe aus ersetzten, neuen und erneuerten Abos. Nur die aktiven Spalten werden summiert.",
       "renewalRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit erneuert wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos senken die Erneuerungsrate, bis sie ggf. bezahlt werden.",
-      "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos erhöhen die Kündigungsrate, bis sie ggf. bezahlt werden."
+      "cancellationRateInfo": "Anteil der Abos, welche am Ende ihrer Laufzeit nicht erneuert, sondern gekündigt wurden. Einberechnet werden die ersetzten, erneuerten und deaktivierten Abos. Erneuerte nicht bezahlte Abos erhöhen die Kündigungsrate, bis sie ggf. bezahlt werden.",
+      "predictedSubscriptionRenewalCountPerDay": {
+        "lowProbability": "erstmalige Abo-Erneuerungen",
+        "highProbability": "Abo-Erneuerungen Stammkunden"
+      }
+    },
+    "paywall": {
+      "navbar": "Paywall",
+      "form": {
+        "editTitle": "Paywall bearbeiten",
+        "createTitle": "Paywall erstellen",
+        "name": "Name der Paywall (Nicht sichtbar für Benutzer:innen)",
+        "description": "Paywall-Text (Sichtbar für Benutzer:innen)",
+        "circumventDescription": "Paywall-Text wenn der Artikel-Content nicht versteckt ist (Sichtbar für Benutzer:innen)",
+        "active": "Aktiv",
+        "activeHelpText": "Erlaubt, die Paywall für alle Artikel rasch zu dekativieren",
+        "alternativeSubscribeUrl": "Alternative URL zur Abo-Seite",
+        "alternativeSubscribeUrlHelpText": "Kann in Kombination mit einem Abonnieren-Block auf einer Seite verwendet werden. Wenn leer gelassen, wird die Standardseite verwendet.",
+        "anyMemberPlan": "Die Paywall entfällt für alle Abos",
+        "bypasses": "Bypasses",
+        "bypassToken": "Bypass-Token",
+        "memberPlans": "Die Paywall entfällt nur mit spezifischen Abos",
+        "newBypassToken": "Neuen Bypass-Token erstellen",
+        "addBypass": "hinzufügen",
+        "qrCodeTitle": "QR-Code für Bypass-Token",
+        "downloadSvg": "SVG herunterladen",
+        "baseUrl": "Website-Url (Baseurl). Z.B. https://wepublish.ch",
+        "upgrade": "Texte, wenn die Paywall ein Upgrade unterstützt und zulässt",
+        "display": "Anzeigeoptionen",
+        "hideContentAfter": "Inhalt nach X Blöcken ausblenden",
+        "fadeout": "Ausgeblendete Blöcke ausblenden mit Überblendung",
+        "fadeoutHelpText": "Die Überblendung ermöglicht eine Vorschau auf den restlichen Inhalt."
+      },
+      "overview": {
+        "areYouSure": "Bist du sicher?",
+        "areYouSureBody": "Die Paywall „{{ paywall }}“ wird dauerhaft gelöscht und kann nicht rückgängig gemacht werden.",
+        "areYouSureConfirmation": "Paywall löschen",
+        "createPaywall": "Neue Paywall",
+        "title": "Paywalls",
+        "name": "Name",
+        "active": "Aktiv",
+        "memberPlans": "Abo-Pläne",
+        "anyMemberPlan": "Alle Abo-Pläne"
+      }
+    },
+    "paymentMethodEditPanel": {
+      "gracePeriod": "Zahlungsfrist",
+      "gracePeriodHelpText": "Wenn deine Webseite eine Paywall verwendet, können die Nutzer alle Inhalte auch bei unbezahlten Abos sofort oder weiterhin lesen - innerhalb der Zahlungsfrist. Dies ist etwa bei Banküberweisung nützlich.",
+      "days": "Tage"
+    },
+    "audienceCsvBtn": {
+      "exportUsers": "CSV herunterladen"
     }
   }
 }

@@ -1,17 +1,19 @@
-import Box from '@mui/material/Box'
+import Box from '@mui/material/Box';
 
-import {userCountries, selectCountryName} from '@wepublish/user'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {Autocomplete, Divider, InputAdornment} from '@mui/material'
-import {ComponentProps, forwardRef} from 'react'
-import {ControllerRenderProps} from 'react-hook-form'
+import { userCountries, selectCountryName } from '@wepublish/user';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
+import { Autocomplete, Divider, InputAdornment } from '@mui/material';
+import { ComponentProps, forwardRef } from 'react';
+import { ControllerRenderProps } from 'react-hook-form';
 
-export const countryOptions = Object.entries(userCountries).map(([code, names]) => ({
-  code,
-  names,
-  label: selectCountryName(names),
-  suggested: ['ch', 'de', 'at', 'li'].includes(code.toLowerCase())
-}))
+export const countryOptions = Object.entries(userCountries).map(
+  ([code, names]) => ({
+    code,
+    names,
+    label: selectCountryName(names),
+    suggested: ['ch', 'de', 'at', 'li'].includes(code.toLowerCase()),
+  })
+);
 
 export const CountrySelect = forwardRef<
   HTMLSelectElement,
@@ -19,27 +21,41 @@ export const CountrySelect = forwardRef<
     ComponentProps<typeof Autocomplete<(typeof countryOptions)[0]>>,
     'renderInput' | 'options' | 'value' | 'onChange'
   > & {
-    value: string
-    onChange: ControllerRenderProps['onChange']
-    error?: boolean
-    helperText?: string
+    value: string;
+    onChange: ControllerRenderProps['onChange'];
+    error?: boolean;
+    helperText?: string;
   }
->(function CountrySelect({value, onChange, error, helperText, ...props}, ref) {
+>(function CountrySelect(
+  { value, onChange, error, helperText, ...props },
+  ref
+) {
   const {
-    elements: {TextField}
-  } = useWebsiteBuilder()
+    elements: { TextField },
+  } = useWebsiteBuilder();
 
   return (
     <Autocomplete
       {...props}
       ref={ref}
-      value={countryOptions.find(({label}) => label === value) ?? null}
+      value={countryOptions.find(({ label }) => label === value) ?? null}
       onChange={(_, value) => onChange(value?.label)}
-      options={countryOptions.sort((a, b) => (a.suggested ? (b.suggested ? 0 : -1) : 1))}
+      options={countryOptions.sort((a, b) =>
+        a.suggested ?
+          b.suggested ?
+            0
+          : -1
+        : 1
+      )}
       autoHighlight
       getOptionLabel={option => option.label}
-      renderOption={({key, ...optionProps}, option) => (
-        <Box key={key} component="li" sx={{img: {mr: 2}}} {...optionProps}>
+      renderOption={({ key, ...optionProps }, option) => (
+        <Box
+          key={key}
+          component="li"
+          sx={{ img: { mr: 2 } }}
+          {...optionProps}
+        >
           <img
             loading="lazy"
             width="20"
@@ -52,7 +68,9 @@ export const CountrySelect = forwardRef<
         </Box>
       )}
       renderInput={params => {
-        const option = countryOptions.find(({label}) => label === params.inputProps.value)
+        const option = countryOptions.find(
+          ({ label }) => label === params.inputProps.value
+        );
 
         return (
           <TextField
@@ -72,14 +90,14 @@ export const CountrySelect = forwardRef<
                     alt={option.label}
                   />
                 </InputAdornment>
-              )
+              ),
             }}
             inputProps={{
               ...params.inputProps,
-              autoComplete: 'nothing' // disable autocomplete and autofill
+              autoComplete: 'nothing', // disable autocomplete and autofill
             }}
           />
-        )
+        );
       }}
       groupBy={option => (option.suggested ? 'Vorgeschlagen' : '')}
       renderGroup={params => (
@@ -89,5 +107,5 @@ export const CountrySelect = forwardRef<
         </div>
       )}
     />
-  )
-})
+  );
+});

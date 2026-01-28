@@ -1,9 +1,18 @@
-import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
-import {CanCreateConsent, CanDeleteConsent, CanUpdateConsent} from '@wepublish/permissions'
-import {Public} from '@wepublish/authentication/api'
-import {Consent, ConsentFilter, CreateConsentInput, UpdateConsentInput} from './consent.model'
-import {ConsentService} from './consent.service'
-import {Permissions} from '@wepublish/permissions/api'
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  CanCreateConsent,
+  CanDeleteConsent,
+  CanUpdateConsent,
+} from '@wepublish/permissions';
+import { Public } from '@wepublish/authentication/api';
+import {
+  Consent,
+  ConsentFilter,
+  CreateConsentInput,
+  UpdateConsentInput,
+} from './consent.model';
+import { ConsentService } from './consent.service';
+import { Permissions } from '@wepublish/permissions/api';
 
 @Resolver()
 export class ConsentResolver {
@@ -14,10 +23,10 @@ export class ConsentResolver {
     name: 'consents',
     description: `
       Returns all consents.
-    `
+    `,
   })
-  consentList(@Args('filter', {nullable: true}) filter: ConsentFilter) {
-    return this.consents.consentList(filter)
+  consentList(@Args('filter', { nullable: true }) filter: ConsentFilter) {
+    return this.consents.consentList(filter);
   }
 
   @Public()
@@ -25,10 +34,10 @@ export class ConsentResolver {
     name: 'consent',
     description: `
       Returns a consent by id.
-    `
+    `,
   })
   consent(@Args('id') id: string) {
-    return this.consents.consent(id)
+    return this.consents.consent(id);
   }
 
   @Permissions(CanCreateConsent)
@@ -36,10 +45,10 @@ export class ConsentResolver {
     name: 'createConsent',
     description: `
       Create a new consent.
-    `
+    `,
   })
   createConsent(@Args() consent: CreateConsentInput) {
-    return this.consents.createConsent(consent)
+    return this.consents.createConsent(consent);
   }
 
   @Permissions(CanUpdateConsent)
@@ -47,10 +56,10 @@ export class ConsentResolver {
     name: 'updateConsent',
     description: `
       Updates an existing consent.
-    `
+    `,
   })
   updateConsent(@Args() consent: UpdateConsentInput) {
-    return this.consents.updateConsent(consent)
+    return this.consents.updateConsent(consent);
   }
 
   @Permissions(CanDeleteConsent)
@@ -58,9 +67,9 @@ export class ConsentResolver {
     name: 'deleteConsent',
     description: `
       Deletes an existing consent.
-    `
+    `,
   })
   deleteConsent(@Args('id') id: string) {
-    return this.consents.deleteConsent(id)
+    return this.consents.deleteConsent(id);
   }
 }

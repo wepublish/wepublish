@@ -32,8 +32,18 @@ fragment PageRef on PageModel {
   id
 }
 
-query PrimaryBanner($documentType: BannerDocumentType!, $documentId: String!, $loggedIn: Boolean!) {
-  primaryBanner(documentType: $documentType, documentId: $documentId, loggedIn: $loggedIn) {
+query PrimaryBanner(
+  $documentType: BannerDocumentType!
+  $documentId: String!
+  $loggedIn: Boolean!
+  $hasSubscription: Boolean!
+) {
+  primaryBanner(
+    documentType: $documentType
+    documentId: $documentId
+    loggedIn: $loggedIn
+    hasSubscription: $hasSubscription
+  ) {
     ...FullBanner
   }
 }

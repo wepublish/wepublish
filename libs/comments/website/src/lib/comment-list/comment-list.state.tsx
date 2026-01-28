@@ -4,47 +4,48 @@ import {
   BuilderCommentListCloseAction,
   BuilderCommentListOpenAction,
   BuilderCommentListState,
-  BuilderCommentListStateTypes
-} from '@wepublish/website/builder'
-import {Reducer} from 'react'
+  BuilderCommentListStateTypes,
+} from '@wepublish/website/builder';
+import { Reducer } from 'react';
 
 export const isCommentListOpenAction = (
   action: BuilderCommentListAction
-): action is BuilderCommentListOpenAction => action.action === 'open'
+): action is BuilderCommentListOpenAction => action.action === 'open';
 
 export const isCommentListCloseAction = (
   action: BuilderCommentListAction
-): action is BuilderCommentListCloseAction => action.action === 'close'
+): action is BuilderCommentListCloseAction => action.action === 'close';
 
 const getCommentListStateKey = (
   type: BuilderCommentListStateTypes,
   commentId: string | null | undefined
-): `${BuilderCommentListStateTypes}:${string | null}` => `${type}:${commentId ?? null}`
+): `${BuilderCommentListStateTypes}:${string | null}` =>
+  `${type}:${commentId ?? null}`;
 
-export const commentListReducer: Reducer<BuilderCommentListState, BuilderCommentListActions> = (
-  state,
-  action
-) => {
-  const key = getCommentListStateKey(action.type, action.commentId)
+export const commentListReducer: Reducer<
+  BuilderCommentListState,
+  BuilderCommentListActions
+> = (state, action) => {
+  const key = getCommentListStateKey(action.type, action.commentId);
 
   if (isCommentListOpenAction(action)) {
     return {
       ...state,
-      [key]: true
-    }
+      [key]: true,
+    };
   }
 
   if (isCommentListCloseAction(action)) {
     return {
       ...state,
-      [key]: false
-    }
+      [key]: false,
+    };
   }
 
-  return state
-}
+  return state;
+};
 
 export const getStateForEditor =
   (state: BuilderCommentListState) =>
   (type: BuilderCommentListStateTypes, commentId: string | null) =>
-    state[getCommentListStateKey(type, commentId)]
+    state[getCommentListStateKey(type, commentId)];

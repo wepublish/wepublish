@@ -1,15 +1,15 @@
-import {DateFilter} from '@wepublish/utils/api'
+import { DateFilter } from '@wepublish/utils/api';
 
 export enum InvoiceSort {
   CreatedAt = 'createdAt',
   ModifiedAt = 'modifiedAt',
-  PaidAt = 'paidAt'
+  PaidAt = 'paidAt',
 }
 
 export interface InvoiceFilter {
-  mail?: string
-  paidAt?: DateFilter
-  canceledAt?: DateFilter
-  userID?: string
-  subscriptionID?: string
+  mail?: string;
+  paidAt?: DateFilter;
+  canceledAt?: DateFilter;
+  userID?: string;
+  subscriptionID?: string;
 }

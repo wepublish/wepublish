@@ -1,0 +1,38 @@
+{
+  "navbar": {
+    "subscribe": "Abo lösen"
+  },
+  "paywall": {
+    "subscribe": "Jetzt Abo Lösen"
+  },
+  "teaser": {
+    "author": {
+      "seperator": " und "
+    },
+    "meta": {
+      "seperator": ", "
+    }
+  },
+  "subscribe": {
+    "memberplan": {
+      "price": "{amountPerMonthMin, select, 0 {Kostenlos} other {{exactAmount, select, true {} other {Ab}} {yearlyPrice} {extendable, select, true {pro Jahr} other {}}}}"
+    },
+    "support": {
+      "subscribeForPeriod": "Ich unterstütze die {siteTitle} {monthlyAmount, select, 0 {gratis} other {{renewalPeriodL} mit {formattedAmount}}}",
+      "payForPeriod": "Ich unterstütze die {siteTitle} {monthlyAmount, select, 0 {gratis} other {{paymentPeriodL} mit {formattedAmount}}}",
+      "pay": "Ich unterstütze die {siteTitle} {monthlyAmount, select, 0 {gratis} other {mit {formattedAmount}}}"
+    },
+    "button": {
+      "pay": "{productType, select, Subscription {{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}}} other {{formattedAmount}}}"
+    },
+    "cancellable": "Automatische Abo-Erneuerung. Du erhältst von uns jährlich eine Erinnerungsmail und kannst jederzeit kündigen."
+  },
+  "subscription": {
+    "startsAt": "{type, select, Subscription {Abgeschlossen am <time>{startsAt}</time>} other {<time>{startsAt}</time>}}"
+  },
+  "user": {
+    "activeSubscriptions": "{type, select, Donation {Spenden} other {Aktive Abos}}",
+    "cancelledSubscriptions": "Gekündigte Abos & Alte Spenden",
+    "viewCancelledSubscriptions": "Gekündigte Abos & Alte Spenden anzeigen"
+  }
+}

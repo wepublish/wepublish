@@ -1,28 +1,48 @@
-import {MdEast} from 'react-icons/md'
-import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {extractTeaserData} from '@wepublish/block-content/website'
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
+import {
+  selectTeaserPreTitle,
+  selectTeaserTitle,
+  selectTeaserUrl,
+} from '@wepublish/block-content/website';
+import {
+  BuilderTeaserProps,
+  Link,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { MdEast } from 'react-icons/md';
 
-const NewsTeaserUnstyled = ({teaser, alignment, className}: BuilderTeaserProps) => {
-  const {title, preTitle, href} = extractTeaserData(teaser)
+const NewsTeaserUnstyled = ({
+  teaser,
+  alignment,
+  className,
+}: BuilderTeaserProps) => {
+  const title = teaser && selectTeaserTitle(teaser);
+  const preTitle = teaser && selectTeaserPreTitle(teaser);
+  const href = (teaser && selectTeaserUrl(teaser)) ?? '';
+
   const {
-    elements: {H4, Link}
-  } = useWebsiteBuilder()
+    elements: { H4 },
+  } = useWebsiteBuilder();
+
   return (
-    <Link href={href} className={className}>
+    <Link
+      href={href}
+      className={className}
+    >
       <span>{preTitle}</span>
+
       <div>
         <H4 gutterBottom>{title}</H4>
         <MdEast />
       </div>
     </Link>
-  )
-}
+  );
+};
 
 export const NewsTeaser = styled(NewsTeaserUnstyled)`
-  color: ${({theme}) => theme.palette.text.primary};
-  padding: ${({theme}) => `${theme.spacing(1)} ${theme.spacing(0)}`};
-  border-bottom: 1px solid ${({theme}) => theme.palette.divider};
+  color: ${({ theme }) => theme.palette.text.primary};
+  padding: ${({ theme }) => `${theme.spacing(1)} ${theme.spacing(0)}`};
+  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
   text-decoration: none;
 
   * {
@@ -44,10 +64,12 @@ export const NewsTeaser = styled(NewsTeaserUnstyled)`
   }
 
   > span {
+    display: inline-block;
     font-weight: 500;
+    line-height: 1.2;
   }
 
   h4 {
     font-weight: 300;
   }
-`
+`;

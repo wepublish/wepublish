@@ -1,97 +1,105 @@
-import styled from '@emotion/styled'
-import {Typography} from '@mui/material'
 import {
   AuthTokenStorageKey,
   IntendedRouteStorageKey,
   LoginFormContainer,
-  useUser
-} from '@wepublish/authentication/website'
-import {UserSession} from '@wepublish/website/api'
-import {getV1ApiClient, LoginWithJwtDocument} from '@wepublish/website/api'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {deleteCookie, getCookie, setCookie} from 'cookies-next'
-import {NextPageContext} from 'next'
-import getConfig from 'next/config'
-import {useRouter} from 'next/router'
-import {useEffect} from 'react'
+  useUser,
+} from '@wepublish/authentication/website';
+import { PageContainer } from '@wepublish/page/website';
+import { getSessionTokenProps } from '@wepublish/utils/website';
+import {
+  addClientCacheToV1Props,
+  PageDocument,
+  SessionWithTokenWithoutUser,
+} from '@wepublish/website/api';
+import { getV1ApiClient, LoginWithJwtDocument } from '@wepublish/website/api';
+import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import { NextPageContext } from 'next';
+import getConfig from 'next/config';
+import { useRouter } from 'next/router';
+import { useEffect, useRef } from 'react';
 
-const LoginWrapper = styled('div')`
-  display: grid;
-  justify-content: center;
-`
+import { HauptstadtContentFullWidth } from '../src/components/hauptstadt-content-wrapper';
 
-type LoginProps = {sessionToken?: UserSession}
+type LoginProps = { sessionToken?: SessionWithTokenWithoutUser };
 
-export default function Login({sessionToken}: LoginProps) {
-  const {hasUser, setToken} = useUser()
-  const {
-    elements: {H3, Link}
-  } = useWebsiteBuilder()
-  const router = useRouter()
+export default function Login({ sessionToken }: LoginProps) {
+  const { hasUser, setToken } = useUser();
+  const router = useRouter();
+  const isRedirecting = useRef(false);
 
   useEffect(() => {
     if (sessionToken) {
-      setToken(sessionToken)
+      setToken(sessionToken);
     }
-  }, [sessionToken, setToken])
+  }, [sessionToken, setToken]);
 
   if (hasUser && typeof window !== 'undefined') {
-    const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString()
-    deleteCookie(IntendedRouteStorageKey)
-    const route = intendedRoute ?? '/profile'
+    const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString();
+    deleteCookie(IntendedRouteStorageKey);
+    const route = intendedRoute ?? '/profile';
 
-    router.replace(route)
+    if (!isRedirecting.current) {
+      router.replace(route);
+      isRedirecting.current = true;
+    }
   }
 
   return (
-    <LoginWrapper>
-      <H3 component="h1">Login für Abonnent*innen</H3>
-
-      <Typography variant="body1" paragraph>
-        (Falls du noch keinen Account hast, <Link href={'/signup'}>klicke hier.</Link>)
-      </Typography>
-
-      <LoginFormContainer
-        defaults={{
-          email: router.query?.mail as string | undefined,
-          requirePassword: !!router.query?.requirePassword
-        }}
-      />
-    </LoginWrapper>
-  )
+    <PageContainer slug="login">
+      <HauptstadtContentFullWidth>
+        <LoginFormContainer
+          defaults={{
+            email: router.query?.mail as string | undefined,
+            requirePassword: !!router.query?.requirePassword,
+          }}
+        />
+      </HauptstadtContentFullWidth>
+    </PageContainer>
+  );
 }
 
 Login.getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
-    return {}
+    return {};
   }
 
-  const {publicRuntimeConfig} = getConfig()
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const { publicRuntimeConfig } = getConfig();
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
 
   if (ctx.query.jwt) {
     const data = await client.mutate({
       mutation: LoginWithJwtDocument,
       variables: {
-        jwt: ctx.query.jwt
-      }
-    })
+        jwt: ctx.query.jwt,
+      },
+    });
 
-    setCookie(AuthTokenStorageKey, JSON.stringify(data.data.createSessionWithJWT as UserSession), {
-      req: ctx.req,
-      res: ctx.res,
-      expires: new Date(data.data.createSessionWithJWT.expiresAt),
-      sameSite: 'strict'
-    })
-
-    return {
-      props: {
-        sessionToken: data.data.createSessionWithJWT
+    setCookie(
+      AuthTokenStorageKey,
+      JSON.stringify(
+        data.data.createSessionWithJWT as SessionWithTokenWithoutUser
+      ),
+      {
+        req: ctx.req,
+        res: ctx.res,
+        expires: new Date(data.data.createSessionWithJWT.expiresAt),
+        sameSite: 'strict',
+        httpOnly: true,
       }
-    }
+    );
+
+    return await getSessionTokenProps(ctx);
   }
 
-  return {
-    props: {}
-  }
-}
+  await Promise.all([
+    client.query({
+      query: PageDocument,
+      variables: {
+        slug: 'login',
+      },
+    }),
+  ]);
+  const props = addClientCacheToV1Props(client, {});
+
+  return props;
+};

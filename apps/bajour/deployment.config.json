@@ -6,7 +6,8 @@
       "env": {
         "MAILCHIMP_POPUP_SCRIPT_URL": "https://chimpstatic.com/mcjs-connected/js/users/c30add995be4a0a845d9e933a/30862514707cdff67aa2a6483.js",
         "GA_ID": "G-9LP77LLVG9",
-        "STRIPE_PUBLIC_KEY": "pk_live_M7lpkct7UemBdcZ9LmZlcLL000OuF8oml6"
+        "STRIPE_PUBLIC_KEY": "pk_live_M7lpkct7UemBdcZ9LmZlcLL000OuF8oml6",
+        "DEPLOY_ENV": "production"
       },
       "secret_env": []
     },
@@ -14,7 +15,8 @@
       "deployment": true,
       "env": {
         "MAILCHIMP_POPUP_SCRIPT_URL": "https://chimpstatic.com/mcjs-connected/js/users/c30add995be4a0a845d9e933a/30862514707cdff67aa2a6483.js",
-        "GA_ID": "G-JVGEEW3L24"
+        "GA_ID": "G-JVGEEW3L24",
+        "DEPLOY_ENV": "staging"
       },
       "secret_env": []
     },
@@ -22,7 +24,8 @@
       "deployment": true,
       "env": {
         "MAILCHIMP_POPUP_SCRIPT_URL": "https://chimpstatic.com/mcjs-connected/js/users/c30add995be4a0a845d9e933a/30862514707cdff67aa2a6483.js",
-        "GA_ID": "G-JVGEEW3L24"
+        "GA_ID": "G-JVGEEW3L24",
+        "DEPLOY_ENV": "review"
       },
       "secret_env": []
     }

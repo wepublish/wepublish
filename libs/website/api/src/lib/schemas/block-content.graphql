@@ -1,315 +1,355 @@
 fragment FullPageTeaser on PageTeaser {
-    type
-    image {
-        ...FullImage
-    }
+  type
+  image {
+    ...FullImage
+  }
 
-    preTitle
-    title
-    lead
+  preTitle
+  title
+  lead
 
-    page {
-        ...PageWithoutBlocks
-    }
+  page {
+    ...PageWithoutBlocks
+  }
 }
 
 fragment FullArticleTeaser on ArticleTeaser {
-    type
-    image {
-        ...FullImage
-    }
+  type
+  image {
+    ...FullImage
+  }
 
-    preTitle
-    title
-    lead
+  preTitle
+  title
+  lead
 
-    article {
-        ...ArticleWithoutBlocks
+  article {
+    ...ArticleWithoutBlocks
 
-        latest {
-            blocks {
-                __typename
+    latest {
+      blocks {
+        __typename
 
-                ... on PollBlock {
-                    blockStyle: blockStyleName
-                    poll {
-                        ...FullPoll
-                    }
-                }
-            }
+        ... on PollBlock {
+          blockStyle: blockStyleName
+          poll {
+            ...FullPoll
+          }
         }
+      }
     }
+  }
 }
 
 fragment FullEventTeaser on EventTeaser {
+  type
+  image {
+    ...FullImage
+  }
+
+  preTitle
+  title
+  lead
+
+  event {
+    ...FullEvent
+  }
+}
+
+fragment BlockWithoutTeaser on BlockContent {
+  __typename
+
+  ... on TitleBlock {
+    blockStyle: blockStyleName
+    preTitle
+    title
+    lead
+  }
+
+  ... on ImageBlock {
+    blockStyle: blockStyleName
+    caption
+    linkUrl
+    image {
+      ...FullImage
+    }
+  }
+
+  ... on ImageGalleryBlock {
+    blockStyle: blockStyleName
+    images {
+      caption
+      image {
+        ...FullImage
+      }
+    }
+  }
+
+  ... on QuoteBlock {
+    blockStyle: blockStyleName
+    quote
+    author
+    image {
+      ...FullImage
+    }
+  }
+
+  ... on RichTextBlock {
+    blockStyle: blockStyleName
+    richText
+  }
+
+  ... on HTMLBlock {
+    blockStyle: blockStyleName
+    html
+  }
+
+  ... on SubscribeBlock {
+    blockStyle: blockStyleName
+    memberPlanIds
+    memberPlans {
+      ...FullMemberPlan
+    }
+    fields
+  }
+
+  ... on EventBlock {
+    blockStyle: blockStyleName
+    events {
+      ...FullEvent
+    }
+  }
+
+  ... on PollBlock {
+    blockStyle: blockStyleName
+    poll {
+      ...FullPoll
+    }
+  }
+
+  ... on CrowdfundingBlock {
+    blockStyle: blockStyleName
+    crowdfunding {
+      ...FullCrowdfunding
+    }
+  }
+
+  ... on ListicleBlock {
+    blockStyle: blockStyleName
+    items {
+      title
+      richText
+      image {
+        ...FullImage
+      }
+    }
+  }
+
+  ... on BreakBlock {
+    blockStyle: blockStyleName
+    text
+    richText
+    hideButton
+    linkTarget
+    linkText
+    linkURL
+    image {
+      ...FullImage
+    }
+  }
+
+  ... on FacebookPostBlock {
+    blockStyle: blockStyleName
+    userID
+    postID
+  }
+
+  ... on FacebookVideoBlock {
+    blockStyle: blockStyleName
+    userID
+    videoID
+  }
+
+  ... on InstagramPostBlock {
+    blockStyle: blockStyleName
+    postID
+  }
+
+  ... on TwitterTweetBlock {
+    blockStyle: blockStyleName
+    userID
+    tweetID
+  }
+
+  ... on VimeoVideoBlock {
+    blockStyle: blockStyleName
+    videoID
+  }
+
+  ... on YouTubeVideoBlock {
+    blockStyle: blockStyleName
+    videoID
+  }
+
+  ... on StreamableVideoBlock {
+    blockStyle: blockStyleName
+    videoID
+  }
+
+  ... on SoundCloudTrackBlock {
+    blockStyle: blockStyleName
+    trackID
+  }
+
+  ... on PolisConversationBlock {
+    blockStyle: blockStyleName
+    conversationID
+  }
+
+  ... on TikTokVideoBlock {
+    blockStyle: blockStyleName
+    userID
+    videoID
+  }
+
+  ... on BildwurfAdBlock {
+    blockStyle: blockStyleName
+    zoneID
+  }
+
+  ... on IFrameBlock {
+    blockStyle: blockStyleName
+    url
+    title
+    width
+    height
+    styleCustom
+    sandbox
+  }
+}
+
+fragment FullTeaser on Teaser {
+  ... on ArticleTeaser {
+    ...FullArticleTeaser
+  }
+
+  ... on PageTeaser {
+    ...FullPageTeaser
+  }
+
+  ... on EventTeaser {
+    ...FullEventTeaser
+  }
+
+  ... on CustomTeaser {
     type
     image {
-        ...FullImage
+      ...FullImage
     }
 
     preTitle
     title
     lead
-
-    event {
-        ...FullEvent
+    contentUrl
+    openInNewTab
+    properties {
+      key
+      value
     }
-}
-
-fragment BlockWithoutTeaser on BlockContent {
-    __typename
-
-    ... on TitleBlock {
-        blockStyle: blockStyleName
-        title
-        lead
-    }
-
-    ... on ImageBlock {
-        blockStyle: blockStyleName
-        caption
-        linkUrl
-        image {
-            ...FullImage
-        }
-    }
-
-    ... on ImageGalleryBlock {
-        blockStyle: blockStyleName
-        images {
-            caption
-            image {
-                ...FullImage
-            }
-        }
-    }
-
-    ... on QuoteBlock {
-        blockStyle: blockStyleName
-        quote
-        author
-        image {
-            ...FullImage
-        }
-    }
-
-    ... on RichTextBlock {
-        blockStyle: blockStyleName
-        richText
-    }
-
-    ... on HTMLBlock {
-        blockStyle: blockStyleName
-        html
-    }
-
-    ... on SubscribeBlock {
-        blockStyle
-    }
-
-    ... on EventBlock {
-        blockStyle: blockStyleName
-        events {
-            ...FullEvent
-        }
-    }
-
-    ... on PollBlock {
-        blockStyle: blockStyleName
-        poll {
-            ...FullPoll
-        }
-    }
-
-    ... on CrowdfundingBlock {
-        blockStyle: blockStyleName
-        crowdfunding {
-            ...CrowdfundingWithActiveGoal
-        }
-    }
-
-    ... on ListicleBlock {
-        blockStyle: blockStyleName
-        items {
-            title
-            richText
-            image {
-                ...FullImage
-            }
-        }
-    }
-
-    ... on BreakBlock {
-        blockStyle: blockStyleName
-        text
-        richText
-        hideButton
-        linkTarget
-        linkText
-        linkURL
-        image {
-            ...FullImage
-        }
-    }
-
-    ... on FacebookPostBlock {
-        blockStyle: blockStyleName
-        userID
-        postID
-    }
-
-    ... on FacebookVideoBlock {
-        blockStyle: blockStyleName
-        userID
-        videoID
-    }
-
-    ... on InstagramPostBlock {
-        blockStyle: blockStyleName
-        postID
-    }
-
-    ... on TwitterTweetBlock {
-        blockStyle: blockStyleName
-        userID
-        tweetID
-    }
-
-    ... on VimeoVideoBlock {
-        blockStyle: blockStyleName
-        videoID
-    }
-
-    ... on YouTubeVideoBlock {
-        blockStyle: blockStyleName
-        videoID
-    }
-
-    ... on SoundCloudTrackBlock {
-        blockStyle: blockStyleName
-        trackID
-    }
-
-    ... on PolisConversationBlock {
-        blockStyle: blockStyleName
-        conversationID
-    }
-
-    ... on TikTokVideoBlock {
-        blockStyle: blockStyleName
-        userID
-        videoID
-    }
-
-    ... on BildwurfAdBlock {
-        blockStyle: blockStyleName
-        zoneID
-    }
-
-    ... on IFrameBlock {
-        blockStyle: blockStyleName
-        url
-        title
-        width
-        height
-        styleCustom
-        sandbox
-    }
-}
-
-fragment FullTeaser on Teaser {
-    ... on ArticleTeaser {
-        ...FullArticleTeaser
-    }
-
-    ... on PageTeaser {
-        ...FullPageTeaser
-    }
-
-    ... on EventTeaser {
-        ...FullEventTeaser
-    }
-
-    ... on CustomTeaser {
-        type
-        image {
-            ...FullImage
-        }
-
-        preTitle
-        title
-        lead
-        contentUrl
-        properties {
-            key
-            value
-        }
-    }
+  }
 }
 
 fragment FullTeaserGridFlexBlock on TeaserGridFlexBlock {
-    type
-    blockStyle: blockStyleName
-    flexTeasers {
-        alignment {
-            x
-            y
-            w
-            h
-        }
-
-        teaser {
-            ...FullTeaser
-        }
+  type
+  blockStyle: blockStyleName
+  flexTeasers {
+    alignment {
+      x
+      y
+      w
+      h
     }
+
+    teaser {
+      ...FullTeaser
+    }
+  }
 }
 
 fragment FullTeaserGridBlock on TeaserGridBlock {
-    type
-    blockStyle: blockStyleName
-    teasers {
-        ...FullTeaser
-    }
-    numColumns
+  type
+  blockStyle: blockStyleName
+  teasers {
+    ...FullTeaser
+  }
+  numColumns
 }
 
 fragment FullTeaserListBlock on TeaserListBlock {
-    title
-    type
-    blockStyle: blockStyleName
-    filter {
-        tags
-    }
-    teasers {
-        ...FullTeaser
-    }
+  title
+  type
+  blockStyle: blockStyleName
+  filter {
+    tags
+  }
+  teasers {
+    ...FullTeaser
+  }
 }
 
 fragment FullTeaserSlotsBlock on TeaserSlotsBlock {
-    title
-    type
-    blockStyle: blockStyleName
-    teasers {
-        ...FullTeaser
-    }
+  title
+  type
+  blockStyle: blockStyleName
+  teasers {
+    ...FullTeaser
+  }
 }
 
 fragment FullBlock on BlockContent {
-    ...BlockWithoutTeaser
+  ...BlockWithoutTeaser
 
-    ... on TeaserGridFlexBlock {
-        ...FullTeaserGridFlexBlock
-    }
+  ... on TeaserGridFlexBlock {
+    ...FullTeaserGridFlexBlock
+  }
 
-    ... on TeaserGridBlock {
-        ...FullTeaserGridBlock
-    }
+  ... on TeaserGridBlock {
+    ...FullTeaserGridBlock
+  }
 
-    ... on TeaserListBlock {
-        ...FullTeaserListBlock
-    }
+  ... on TeaserListBlock {
+    ...FullTeaserListBlock
+  }
 
-    ... on TeaserSlotsBlock {
-        ...FullTeaserSlotsBlock
+  ... on TeaserSlotsBlock {
+    ...FullTeaserSlotsBlock
+  }
+
+  ... on FlexBlock {
+    blockStyle: blockStyleName
+    type
+    blocks {
+      alignment {
+        i
+        x
+        y
+        w
+        h
+        static
+      }
+
+      block {
+        __typename
+        ...BlockWithoutTeaser
+
+        ... on TeaserSlotsBlock {
+          ...FullTeaserSlotsBlock
+        }
+
+        ... on TeaserListBlock {
+          ...FullTeaserListBlock
+        }
+      }
     }
+  }
 }

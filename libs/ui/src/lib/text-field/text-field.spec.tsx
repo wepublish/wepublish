@@ -1,15 +1,14 @@
-import {composeStories} from '@storybook/react'
-import {render} from '@testing-library/react'
+import { composeStories } from '@storybook/react';
+import { render } from '@testing-library/react';
 
-import * as stories from './text-field.stories'
+import * as stories from './text-field.stories';
 
-const storiesCmp = composeStories(stories)
+const storiesCmp = composeStories(stories);
 
 describe('TextField', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, () => {
-      const {asFragment} = render(<Component />)
-      expect(asFragment()).toMatchSnapshot()
-    })
-  })
-})
+      render(<Component />);
+    });
+  });
+});

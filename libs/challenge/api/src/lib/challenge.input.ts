@@ -1,10 +1,10 @@
-import {Field, InputType} from '@nestjs/graphql'
+import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class ChallengeInput {
   @Field()
-  challengeID!: string
+  challengeID!: string;
 
   @Field()
-  challengeSolution!: string
+  challengeSolution!: string;
 }

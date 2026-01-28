@@ -1,26 +1,33 @@
-import {ArgsType, Field, ObjectType, PartialType, PickType, registerEnumType} from '@nestjs/graphql'
-import {BlockType as EditorBlockType} from '@prisma/client'
+import {
+  ArgsType,
+  Field,
+  ObjectType,
+  PartialType,
+  PickType,
+  registerEnumType,
+} from '@nestjs/graphql';
+import { BlockType as EditorBlockType } from '@prisma/client';
 
 registerEnumType(EditorBlockType, {
-  name: 'EditorBlockType'
-})
+  name: 'EditorBlockType',
+});
 
 @ObjectType()
 export class BlockStyle {
   @Field()
-  id!: string
+  id!: string;
 
   @Field()
-  createdAt!: Date
+  createdAt!: Date;
 
   @Field()
-  modifiedAt!: Date
+  modifiedAt!: Date;
 
   @Field()
-  name!: string
+  name!: string;
 
   @Field(type => [EditorBlockType])
-  blocks!: EditorBlockType[]
+  blocks!: EditorBlockType[];
 }
 
 @ArgsType()
@@ -31,7 +38,10 @@ export class CreateBlockStyleInput extends PickType(
 ) {}
 
 @ArgsType()
-export class UpdateBlockStyleInput extends PartialType(CreateBlockStyleInput, ArgsType) {
+export class UpdateBlockStyleInput extends PartialType(
+  CreateBlockStyleInput,
+  ArgsType
+) {
   @Field()
-  id!: string
+  id!: string;
 }

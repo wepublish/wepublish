@@ -75,6 +75,7 @@
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "No",
         "noImagesFound": "No Images found",
+        "openInNewTab": "Content URL opens in a new tab",
         "pagePreviewLink": "Page Preview Link",
         "peerDisabled": "Currently this peer is disabled",
         "peeredArticlePreview": "Preview",
@@ -125,25 +126,8 @@
         "style": "Style",
         "text": "Text",
         "default": "Default",
-        "tracking": "Tracking"
-      }
-    },
-    "articleList": {
-      "filter": {
-        "dates": "Dates",
-        "description": "Filter by description",
-        "isDraft": "Draft",
-        "isPending": "Pending",
-        "isPublished": "Published",
-        "lead": "Filter by lead",
-        "location": "Location",
-        "name": "Name",
-        "preTitle": "Filter by pre-title",
-        "providers": "Providers",
-        "publicationDate": "Publication Date",
-        "reset": "Reset Filter",
-        "title": "Filter by title",
-        "includeHidden": "Include hidden"
+        "tracking": "Tracking",
+        "paywall": "Paywall"
       }
     },
     "articles": {
@@ -233,7 +217,9 @@
         "loginStatus": {
           "ALL": "all visitors",
           "LOGGED_IN": "logged in visitors",
-          "LOGGED_OUT": "logged out visitors"
+          "LOGGED_OUT": "logged out visitors",
+          "SUBSCRIBED": "subscribed visitors",
+          "UNSUBSCRIBED": "unsubscribed visitors"
         },
         "actions": "Actions",
         "image": "Image",
@@ -264,6 +250,7 @@
     },
     "blocks": {
       "crowdfunding": {
+        "crowdfundingName": "Crowdfunding {{name}}",
         "edit": "Edit",
         "label": "Crowdfunding",
         "title": "Select Crowdfunding",
@@ -334,16 +321,33 @@
         "removeBlock": "Remove Block",
         "unlockBlock": "Unlock"
       },
+      "flexBlock": {
+        "label": "Flex Block"
+      },
       "html": {
         "close": "Close",
         "confirm": "Confirm",
         "edit": "Edit HTML",
         "label": "HTML",
         "placeholder": "Paste your HTML block here..",
-        "warning": "Please note, rendering custom HTML may be harmful to the user or break the page layout. Please make sure that the HTML you provide is free of malicious scripts and is structured correctly."
+        "warning": "Please note, rendering custom HTML may be harmful to the user or break the page layout. Please make sure that the HTML you provide is free of malicious scripts and is structured correctly.",
+        "generate": "Generate your HTML via AI",
+        "prompt": "Send prompt",
+        "promptSuccess": "Successfully generated HTML and updated block. Chat history is saved and you can continue the chat."
       },
       "subscribe": {
-        "label": "Subscribe"
+        "label": "Subscribe",
+        "selectMemberPlans": "Displayed plans",
+        "selectMemberPlansPlaceholder": "Show all plans",
+        "selectMemberPlansSelectionHintAll": "Leave empty to display every active plan.",
+        "selectFields": "Input fields",
+        "selectFieldsSelectionHint": "Email & last name are always requested. Order does not matter",
+        "FirstName": "First name",
+        "Birthday": "Birthday",
+        "Address": "Address",
+        "EmailRepeated": "Repeat email",
+        "Password": "Password",
+        "PasswordRepeated": "Repeat password"
       },
       "image": {
         "label": "Image",
@@ -414,12 +418,21 @@
         "label": "6 Col"
       },
       "teaserSlots": {
-        "label": "Teaser Slots"
+        "autoLoading": "Auto-loading:",
+        "fillManually": "All slots will be manually filled",
+        "teasersLoaded": "teasers loaded",
+        "configure": "Configure",
+        "latest": "Latest",
+        "addSlot": "Add slot",
+        "label": "Teaser Slots",
+        "filter": "Filter by tags",
+        "filterHelpText": "Enter tags separated by commas. Leave empty for no tag filtering."
       },
       "title": {
         "label": "Title",
-        "leadText": "Lead Text ",
-        "title": "Title"
+        "leadText": "Lead Text",
+        "title": "Title",
+        "preTitle": "Pre-title"
       }
     },
     "cancel": "Cancel",
@@ -648,6 +661,25 @@
         "upcomingOnly": "Upcoming only"
       }
     },
+    "filterableList": {
+      "filter": {
+        "dates": "Dates",
+        "description": "Filter by description",
+        "isDraft": "Draft",
+        "isPending": "Pending",
+        "isPublished": "Published",
+        "lead": "Filter by lead",
+        "location": "Location",
+        "name": "Name",
+        "preTitle": "Filter by pre-title",
+        "providers": "Providers",
+        "publicationDate": "Publication Date",
+        "reset": "Reset Filter",
+        "title": "Filter by title",
+        "includeHiddenArticles": "Include hidden",
+        "includeHiddenPages": "Include hidden"
+      }
+    },
     "images": {
       "overview": {
         "actions": "Actions",
@@ -762,11 +794,13 @@
       "currency": "Currency",
       "currencyRequired": "Currency required",
       "amountPerMonthMin": "Minimal amount / month",
+      "amountPerMonthMax": "Maximal amount / month",
       "amountPerMonthMinRequired": "Minimal amount required",
       "amountPerMonthMinZero": "Minimal amount cannot be less than 0",
       "autoRenewalDescription": "Forces auto renewal of subscription",
       "createMemberPlanHeader": "Create Memberplan",
       "description": "Description",
+      "shortDescription": "Short description",
       "editPaymentSetting": "Edit payment setting",
       "forceAutoRenewal": "Force Auto Renew",
       "loadingTitle": "Loading",
@@ -781,7 +815,8 @@
       "tags": "Tags",
       "savedChanges": "Saved",
       "successPage": "Redirect to page on payment success",
-      "failPage": "Redirect to page on payment error"
+      "failPage": "Redirect to page on payment error",
+      "externalReward": "Link or description to an external reward (only visible to subscribers)"
     },
     "memberPlanList": {
       "action": "Actions",
@@ -798,7 +833,8 @@
         "quarterly": "Quarterly",
         "yearly": "Yearly",
         "biennial": "Biennial",
-        "lifetime": "Lifetime"
+        "lifetime": "Lifetime",
+        "donationOnce": "One-time donation"
       },
       "title": "Member Plans"
     },
@@ -916,6 +952,8 @@
         "publishAtDateCheckbox": "Set a different date for online availibility",
         "publishDate": "Publish Date",
         "publishPage": "Publish Page",
+        "hidden": "Hide",
+        "setAsHidden": "Hidden pages are excluded by default but can still be queried on demand.",
         "slug": "Slug",
         "socialMediaDescription": "Description for Social Media",
         "socialMediaImage": "Image for Social Media",
@@ -1180,6 +1218,8 @@
       "successTitle": "Saved",
       "articlePage": "Articles & Pages",
       "showPendingWhenNotPublished": "Show a pending article or page even when not published yet.",
+      "newArticlePeering": "Freshly created articles will be peered by default",
+      "newArticlePaywall": "Freshly created articles will require a subscription by default",
       "warnings": {
         "activeSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "allowCommentEditing": "Allow users to edit their comments",
@@ -1198,7 +1238,9 @@
         "peerToken": "Timeout in milliseconds after which we will no longer try to pull peer articles. Defaults to 3 seconds.",
         "renewingSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "revenueApiPublic": "Exposes invoices anonymized to the public.",
-        "showPendingWhenNotPublished": "This will expose pending articles & pages to the public (and thus also crawlers) eventhough they have never been published before."
+        "showPendingWhenNotPublished": "This will expose pending articles & pages to the public (and thus also crawlers) eventhough they have never been published before.",
+        "newArticlePeering": "Will not affect already created articles",
+        "newArticlePaywall": "Will not affect already created articles"
       }
     },
     "subscriptionFlow": {
@@ -1287,8 +1329,11 @@
         "areYouSureBody": "The tag \"{{ tag }}\" will be deleted permanently and can not be reversed.",
         "areYouSureConfirmation": "Delete tag",
         "createTag": "New Tag",
+        "editTag": "Edit {{tag}}",
         "placeholder": "Name of tag",
         "title": "Tags",
+        "name": "Name",
+        "description": "Description",
         "markAsMain": "Use as main tag"
       }
     },
@@ -1354,7 +1399,9 @@
       "sendWebsiteLogin": "Send Login Link for Website",
       "sendWebsiteLoginSuccessMessage": "Login Link sent to {{email}}",
       "streetAddress": "Street",
+      "streetAddressNumber": "House number",
       "streetAddress2": "Street 2",
+      "streetAddress2Number": "House number",
       "subscriptionsHeader": "Subscriptions",
       "successfullyCreatedUser": "User successfully created",
       "successfullyUpdatedUser": "User successfully updated",
@@ -1362,7 +1409,9 @@
       "userDataTitle": "User Data",
       "userRoles": "User Roles",
       "zipCode": "ZIP",
-      "birthday": "Birthday"
+      "birthday": "Birthday",
+      "note": "Note",
+      "noteHelpText": "Not visible to the user."
     },
     "userList": {
       "overview": {
@@ -1492,6 +1541,8 @@
       "extendableHelpText": "Determine whether a user's subscription can be renewed - automatically or manually - or not. As a rule, trial subscriptions cannot be renewed.",
       "maxCount": "Maximum number of subscriptions per user",
       "maxCountHelpText": "Limit the number of subscriptions that a user can purchase for this subscription plan. This also includes deactivated subscriptions.",
+      "maxCountDonation": "Maximum number of donations per user",
+      "maxCountDonationHelpText": "Limit the number of donations that a user can make for this plan.",
       "trialMemberplanAlert": "This subscription plan is configured for trial subscriptions.",
       "forceAutoRenewNotPossible": "Automatic renewal is not possible because the subscription plan is not extendable.",
       "trialSubscriptionNotPossible": "The subscription plan must remain renewable because an automatic renewal is forced in a payment setting. You can of course change this.",
@@ -1500,8 +1551,13 @@
       "amountPerMonthTarget": "Target amount / month",
       "amountPerMonthTargetHelpText": "The monthly target amount defines the desired member plan price that users should pay. It must be higher than the minimum amount and typically defines the default setting in the payment form.",
       "amountPerMonthMinHelpText": "The minimum monthly amount is the actual member plan price that must be paid as a minimum. However, users can voluntarily pay more when subscribing.",
+      "amountPerMonthMaxHelpText": "The maximum monthly amount is the highest amount users can pay when subscribing.",
       "confirmationPage": "Redirect to page for existing users (retargeting)",
-      "confirmationPageHelptext": "If the user ID is known when a subscription is ordered, the person will receive an e-mail to pay for the subscription. This could be indicated on this page."
+      "confirmationPageHelptext": "If the user ID is known when a subscription is ordered, the person will receive an e-mail to pay for the subscription. This could be indicated on this page.",
+      "productType": "Product type",
+      "productTypeHelpText": "Choose whether the plan should be offered as a subscription or donation.",
+      "productTypeSubscription": "Subscription",
+      "productTypeDonation": "Donation"
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Advanced settings",
@@ -1540,7 +1596,10 @@
     "trackingPixels": {
       "noPixelInfoHeader": "No tracking integration available",
       "noPixelInfoDescription": "This is the case, for example, if no tracking is configured or for old articles.",
-      "errorHeader": "Error"
+      "errorHeader": "Error",
+      "providerId": "Provider ID:",
+      "trackingId": "Tracking ID:",
+      "trackingURI": "Tracking URI:"
     },
     "audienceDashboard": {
       "title": "Audience Dashboard"
@@ -1572,7 +1631,12 @@
         "countSubscriptionsFrom": "Include only subscriptions paid from date",
         "countSubscriptionsUntil": "Include only subscriptions paid until date",
         "revenue": "Already CHF {{revenue}} financed",
-        "goals": "Goals"
+        "subscriptions": "Already {{subscriptions}} subscribed",
+        "goalType": "Goal type",
+        "goalType_Revenue": "Revenue",
+        "goalType_Subscription": "Subscription count",
+        "goals": "Goals",
+        "crowdfunding": "Crowdfunding"
       },
       "goalsForm": {
         "title": "Title",
@@ -1593,17 +1657,23 @@
       "rangeLastWeek": "Last Week",
       "rangeLastMonth": "Last Month",
       "rangeLastQuarter": "Last Quarter",
-      "rangeLastYear": "Last Year"
+      "rangeLastYear": "Last Year",
+      "rangeNextWeek": "Next Week",
+      "rangeNextMonth": "Next Month",
+      "rangeNextQuarter": "Next Quarter",
+      "rangeNextYear": "Next Year"
     },
     "audience": {
       "legend": {
         "info": {
-          "totalActiveSubscriptionCount": "Subscriptions that were active and paid on the reporting date.",
+          "totalActiveSubscriptionCount": "Subscriptions that were active and paid on the reporting date, or that will be paid and potentially still be active in the future.",
           "overdueSubscriptionCount": "Renewed subscriptions for which payment is due and outstanding. Subscriptions created for the first time that have not been paid for are not included.",
           "renewedSubscriptionCount": "Subscriptions that have been renewed and paid for another period.",
           "createdSubscriptionCount": "Completely new and paid subscriptions with only one period so far.",
           "deactivatedSubscriptionCount": "Subscriptions that have been deactivated/canceled and not renewed.",
-          "replacedSubscriptionCount": "Subscriptions that have been replaced by another (e.g. trial subscriptions)."
+          "replacedSubscriptionCount": "Subscriptions that have been replaced by another (e.g. trial subscriptions).",
+          "predictedSubscriptionRenewalCount": "Number of subscriptions that are ready to be renewed at the end of their term.\n First-time subscriptions vs. \n Subscriptions with a history of renewal (subsequent renewals)\n Renewals are shown from the start of the selected period (or current date, if period starts in the past) \n Renewals are represented by the number of currently paid and active subscriptions set to auto-renew.",
+          "endingSubscriptionCount": "Subscriptions that will expire at the end of their term, excluding those set to auto-renew."
         },
         "totalActiveSubscriptionCount": "Total active & paid subscriptions",
         "overdueSubscriptionCount": "Renewed unpaid subscriptions",
@@ -1611,14 +1681,32 @@
         "createdSubscriptionCount": "New paid subscriptions",
         "deactivatedSubscriptionCount": "Deactivated subscriptions",
         "replacedSubscriptionCount": "Replaced subscriptions",
+        "predictedSubscriptionRenewalCount": "Upcoming renewals in period",
+        "predictedSubscriptionRenewalCount_variants": {
+          "low": "First time renewals",
+          "high": "Subsequent renewals",
+          "total": "Sum of upcoming renewals",
+          "perDayHighProbability": "First time renewals",
+          "perDayLowProbability": "Subsequent renewals"
+        },
+        "predictedSubscriptionRenewalCountPerDay": {
+          "lowProbability": "First time renewals",
+          "highProbability": "Subsequent renewals"
+        },
+        "endingSubscriptionCount": "Expiring subscriptions",
         "totalNewSubscriptions": "Total new and renewed paid subscriptions",
         "renewalRate": "Renewal rate",
         "cancellationRate": "Cancellation rate",
         "createdSubscriptionUsers": "New paid subscriptions",
+        "overdueSubscriptionUsers": "Renewed unpaid subscriptions",
+        "predictedSubscriptionRenewalUsers": "Predicted renewals",
         "createdUnpaidSubscriptionUsers": "Renewed unpaid subscriptions",
         "deactivatedSubscriptionUsers": "Deactivated subscriptions",
         "renewedSubscriptionUsers": "Renewed paid subscriptions",
-        "replacedSubscriptionUsers": "Replaced subscriptions"
+        "replacedSubscriptionUsers": "Replaced subscriptions",
+        "predictedSubscriptionRenewalUsersLowProbability": "First time renewals",
+        "predictedSubscriptionRenewalUsersHighProbability": "Subsequent renewals",
+        "endingSubscriptionUsers": "Expiring subscriptions"
       }
     },
     "audienceDetailDrawer": {
@@ -1640,7 +1728,58 @@
       "byDate": "By",
       "totalNewSubscriptionsInfo": "Sum of replaced, new, and renewed subscriptions. Only the active columns are summed.",
       "renewalRateInfo": "Share of subscriptions that were renewed at the end of their term. Replaced, renewed, and deactivated subscriptions are included. Renewed unpaid subscriptions reduce the renewal rate until they are paid.",
-      "cancellationRateInfo": "Share of subscriptions that were not renewed but canceled at the end of their term. Renewed unpaid subscriptions increase the cancellation rate until they are paid."
+      "cancellationRateInfo": "Share of subscriptions that were not renewed but canceled at the end of their term. Renewed unpaid subscriptions increase the cancellation rate until they are paid.",
+      "predictedSubscriptionRenewalCountPerDay": {
+        "lowProbability": "First time renewals ",
+        "highProbability": "Subsequent renewals "
+      }
+    },
+    "paywall": {
+      "navbar": "Paywall",
+      "form": {
+        "editTitle": "Edit Paywall",
+        "createTitle": "Create Paywall",
+        "name": "Name of the paywall (Not visible to the user)",
+        "description": "Paywall text (visible to the user)",
+        "circumventDescription": "Paywall text when the article content is not hidden (visible to the user)",
+        "active": "Active",
+        "activeHelpText": "Allows to quickly deactivate the paywall on all articles",
+        "alternativeSubscribeUrl": "Alternative URL to the subscribe page",
+        "alternativeSubscribeUrlHelpText": "Can be used in combination with a subscribe block on a page. If left empty will use the default page.",
+        "anyMemberPlan": "Allow any subscription to pass the paywall",
+        "memberPlans": "Only specific subscriptions can pass the paywall",
+        "bypasses": "Bypasses",
+        "bypassToken": "Bypass token",
+        "newBypassToken": "Create new bypass token",
+        "addBypass": "add",
+        "qrCodeTitle": "QR Code for Bypass Token",
+        "downloadSvg": "Download SVG",
+        "baseUrl": "Website URL (baseurl). E.g. https://wepublish.ch",
+        "upgrade": "Texts when paywall allows and supports upgrading",
+        "display": "Display options",
+        "hideContentAfter": "Hide content after X amount of blocks",
+        "fadeout": "Fade out hidden blocks",
+        "fadeoutHelpText": "Fading out allows to show a preview of the rest of the content."
+      },
+      "overview": {
+        "areYouSure": "Are you sure?",
+        "areYouSureBody": "The paywall \"{{ paywall }}\" will be deleted permanently and can not be reversed.",
+        "areYouSureConfirmation": "Delete paywall",
+        "createPaywall": "New Paywall",
+        "title": "Paywalls",
+        "name": "Name",
+        "active": "Active",
+        "memberPlans": "Memberplans",
+        "anyMemberPlan": "All memberplans"
+      }
+    },
+    "paymentMethodEditPanel": {
+      "gracePeriod": "Grace Period",
+      "gracePeriodHelpText": "If you use the paywall, allow users to read instantly after ordering a subscription, even if they don't pay eventually. This would apply to payments via bank transfer, for instance.",
+      "days": "days"
+    },
+    "audienceCsvBtn": {
+      "exportUsers": "Download CSV"
     }
   }
 }

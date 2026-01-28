@@ -1,43 +1,65 @@
-import {Injectable} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
+import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import {
+  CreateCommentRatingSystemAnswerInput,
+  UpdateCommentRatingSystemInput,
+} from './rating-system.model';
 
 @Injectable()
 export class RatingSystemService {
   constructor(private prisma: PrismaClient) {}
 
-  async getRatingSystem() {
+  getRatingSystem() {
     return this.prisma.commentRatingSystem.findFirst({
       include: {
-        answers: true
-      }
-    })
+        answers: true,
+      },
+    });
   }
 
-  async getRatingSystemAnswers() {
-    return this.prisma.commentRatingSystemAnswer.findMany()
+  getRatingSystemAnswers() {
+    return this.prisma.commentRatingSystemAnswer.findMany();
   }
 
-  async getUserCommentRatings(commentId: string, userId: string | null) {
-    if (!userId) {
-      return []
-    }
-
+  getCommentRatings(commentId: string) {
     return this.prisma.commentRating.findMany({
       where: {
         commentId,
-        userId
       },
-      include: {
-        answer: true
-      }
-    })
+    });
   }
 
-  async getCommentRatings(commentId: string) {
-    return this.prisma.commentRating.findMany({
-      where: {
-        commentId
-      }
-    })
+  updateRatingSystem({
+    id,
+    answers,
+    ...input
+  }: UpdateCommentRatingSystemInput) {
+    return this.prisma.commentRatingSystem.update({
+      where: { id },
+      data: {
+        ...input,
+        answers: {
+          update: answers?.map(answer => ({
+            where: { id: answer.id },
+            data: answer,
+          })),
+        },
+      },
+      include: {
+        answers: true,
+      },
+    });
+  }
+
+  deleteRatingSystemAnswer(id: string) {
+    return this.prisma.commentRatingSystemAnswer.delete({
+      where: { id },
+    });
+  }
+
+  createRatingSystemAnswer(input: CreateCommentRatingSystemAnswerInput) {
+    return this.prisma.commentRatingSystemAnswer.create({
+      data: input,
+    });
   }
 }

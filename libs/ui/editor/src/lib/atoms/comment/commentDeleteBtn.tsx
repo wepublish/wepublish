@@ -1,44 +1,55 @@
-import {ApolloError} from '@apollo/client'
-import {FullCommentFragment, useDeleteCommentMutation} from '@wepublish/editor/api'
-import {useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdDelete} from 'react-icons/md'
-import {Button, IconButton, Message, Modal, toaster} from 'rsuite'
+import { ApolloError } from '@apollo/client';
+import {
+  FullCommentFragment,
+  useDeleteCommentMutation,
+} from '@wepublish/editor/api';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdDelete } from 'react-icons/md';
+import { Button, IconButton, Message, Modal, toaster } from 'rsuite';
 
-import {PermissionControl} from '../permissionControl'
+import { PermissionControl } from '../permissionControl';
 
 const onErrorToast = (error: ApolloError) => {
   toaster.push(
-    <Message type="error" showIcon closable duration={3000}>
+    <Message
+      type="error"
+      showIcon
+      closable
+      duration={3000}
+    >
       {error.message}
     </Message>
-  )
-}
+  );
+};
 
 interface CommentDeleteBtnProps {
-  comment?: FullCommentFragment
-  onCommentDeleted?(): void
+  comment?: FullCommentFragment;
+  onCommentDeleted?(): void;
 }
 
-export function CommentDeleteBtn({comment, onCommentDeleted}: CommentDeleteBtnProps): JSX.Element {
-  const {t} = useTranslation()
-  const [modalOpen, setModalOpen] = useState<boolean>(false)
-  const [deleteComment, {loading}] = useDeleteCommentMutation({
+export function CommentDeleteBtn({
+  comment,
+  onCommentDeleted,
+}: CommentDeleteBtnProps): JSX.Element {
+  const { t } = useTranslation();
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [deleteComment, { loading }] = useDeleteCommentMutation({
     onCompleted: () => {
-      setModalOpen(false)
+      setModalOpen(false);
       if (onCommentDeleted) {
-        onCommentDeleted()
+        onCommentDeleted();
       }
     },
     onError: error => {
-      setModalOpen(false)
-      onErrorToast(error)
-    }
-  })
+      setModalOpen(false);
+      onErrorToast(error);
+    },
+  });
 
   if (!comment) {
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    return <></>
+    return <></>;
   }
 
   return (
@@ -49,7 +60,8 @@ export function CommentDeleteBtn({comment, onCommentDeleted}: CommentDeleteBtnPr
           appearance="ghost"
           icon={<MdDelete />}
           onClick={() => setModalOpen(true)}
-          loading={loading}>
+          loading={loading}
+        >
           {t('delete')}
         </IconButton>
       </PermissionControl>
@@ -64,18 +76,23 @@ export function CommentDeleteBtn({comment, onCommentDeleted}: CommentDeleteBtnPr
             onClick={async () => {
               await deleteComment({
                 variables: {
-                  deleteCommentId: comment.id
-                }
-              })
+                  deleteCommentId: comment.id,
+                },
+              });
             }}
-            loading={loading}>
+            loading={loading}
+          >
             {t('delete')}
           </Button>
-          <Button onClick={() => setModalOpen(false)} appearance="primary" loading={loading}>
+          <Button
+            onClick={() => setModalOpen(false)}
+            appearance="primary"
+            loading={loading}
+          >
             {t('cancel')}
           </Button>
         </Modal.Footer>
       </Modal>
     </>
-  )
+  );
 }

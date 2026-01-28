@@ -1,25 +1,25 @@
-import {MockedProvider} from '@apollo/client/testing'
-import {composeStories} from '@storybook/react'
-import {act, render} from '@testing-library/react'
-import {actWait} from '@wepublish/testing'
-import * as stories from './comment-list-container.stories'
+import { MockedProvider } from '@apollo/client/testing';
+import { composeStories } from '@storybook/react';
+import { act, render } from '@testing-library/react';
+import { actWait } from '@wepublish/testing';
+import * as stories from './comment-list-container.stories';
 
-const storiesCmp = composeStories(stories)
+const storiesCmp = composeStories(stories);
 
 describe('CommentList Container', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, async () => {
-      const {asFragment, container} = render(
+      const { asFragment, container } = render(
         <MockedProvider {...Component.parameters?.apolloClient}>
           <Component />
         </MockedProvider>
-      )
+      );
 
-      await actWait()
+      await actWait();
 
       if (Component.play) {
-        await act(() => Component.play?.({canvasElement: container}))
+        await act(() => Component.play?.({ canvasElement: container }));
       }
-    })
-  })
-})
+    });
+  });
+});

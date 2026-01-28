@@ -1,0 +1,28 @@
+fragment RemotePeerProfile on PeerProfile {
+  name
+  logo {
+    ...RemoteImage
+  }
+  squareLogo {
+    ...RemoteImage
+  }
+
+  themeColor
+  themeFontColor
+
+  hostURL
+  websiteURL
+
+  callToActionText
+  callToActionURL
+  callToActionImageURL
+  callToActionImage {
+    ...RemoteImage
+  }
+}
+
+query PeerProfile {
+  peerProfile {
+    ...RemotePeerProfile
+  }
+}

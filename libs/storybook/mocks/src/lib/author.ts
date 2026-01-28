@@ -1,7 +1,7 @@
-import {FullAuthorFragment} from '@wepublish/website/api'
-import {mockImage} from './image'
-import {mockRichText} from './richtext'
-import nanoid from 'nanoid'
+import { FullAuthorFragment } from '@wepublish/website/api';
+import { mockImage } from './image';
+import { mockRichText } from './richtext';
+import nanoid from 'nanoid';
 
 export const mockAuthor = ({
   jobTitle = 'Editor',
@@ -10,7 +10,7 @@ export const mockAuthor = ({
   bio = mockRichText(),
   hideOnArticle = false,
   hideOnTeam = false,
-  hideOnTeaser = false
+  hideOnTeaser = false,
 }: Partial<FullAuthorFragment> = {}) =>
   ({
     __typename: 'Author',
@@ -25,23 +25,23 @@ export const mockAuthor = ({
       {
         title: 'Twitter',
         url: 'https://twitter.com',
-        __typename: 'AuthorLink'
+        __typename: 'AuthorLink',
       },
       {
         title: 'Facebook',
         url: 'https://facebook.com',
-        __typename: 'AuthorLink'
+        __typename: 'AuthorLink',
       },
       {
         title: 'Instagram',
         url: 'https://instagram.com',
-        __typename: 'AuthorLink'
-      }
+        __typename: 'AuthorLink',
+      },
     ],
     image,
     tags,
     bio,
     hideOnArticle,
     hideOnTeam,
-    hideOnTeaser
-  } as FullAuthorFragment)
+    hideOnTeaser,
+  }) as FullAuthorFragment;

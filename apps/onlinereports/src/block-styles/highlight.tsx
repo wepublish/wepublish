@@ -4,39 +4,45 @@ import {
   isTeaserGridBlock,
   isTeaserListBlock,
   isTeaserSlotsBlock,
-  TeaserGridBlockWrapper
-} from '@wepublish/block-content/website'
+  TeaserGridBlockWrapper,
+} from '@wepublish/block-content/website';
 import {
   BlockContent,
   TeaserGridBlock,
   TeaserListBlock,
-  TeaserSlotsBlock
-} from '@wepublish/website/api'
+  TeaserSlotsBlock,
+} from '@wepublish/website/api';
 import {
   BuilderTeaserGridBlockProps,
   BuilderTeaserListBlockProps,
-  BuilderTeaserSlotsBlockProps
-} from '@wepublish/website/builder'
-import {allPass, anyPass} from 'ramda'
+  BuilderTeaserSlotsBlockProps,
+} from '@wepublish/website/builder';
+import { allPass, anyPass } from 'ramda';
 
-import {HighlightTeaser} from '../custom-teasers/highlight'
+import { HighlightTeaser } from '../custom-teasers/highlight';
 
 export const isHighlightTeasers = (
   block: BlockContent
 ): block is TeaserGridBlock | TeaserListBlock | TeaserSlotsBlock =>
   allPass([
     hasBlockStyle('Highlight'),
-    anyPass([isTeaserGridBlock, isTeaserListBlock, isTeaserSlotsBlock])
-  ])(block)
+    anyPass([isTeaserGridBlock, isTeaserListBlock, isTeaserSlotsBlock]),
+  ])(block);
 
 export const HighlightBlockStyle = (
-  block: BuilderTeaserGridBlockProps | BuilderTeaserListBlockProps | BuilderTeaserSlotsBlockProps
+  block:
+    | BuilderTeaserGridBlockProps
+    | BuilderTeaserListBlockProps
+    | BuilderTeaserSlotsBlockProps
 ) => {
-  const {teasers, blockStyle, className} = block
-  const numColumns = 1
+  const { teasers, blockStyle, className } = block;
+  const numColumns = 1;
 
   return (
-    <TeaserGridBlockWrapper className={className} numColumns={numColumns}>
+    <TeaserGridBlockWrapper
+      className={className}
+      numColumns={numColumns}
+    >
       {teasers.map((teaser, index) => (
         <HighlightTeaser
           key={index}
@@ -44,8 +50,9 @@ export const HighlightBlockStyle = (
           numColumns={numColumns}
           alignment={alignmentForTeaserBlock(index, numColumns)}
           blockStyle={blockStyle}
+          index={index}
         />
       ))}
     </TeaserGridBlockWrapper>
-  )
-}
+  );
+};

@@ -1,3 +1,3 @@
-import {SubscriptionPage} from '@wepublish/utils/website'
+import { SubscriptionPage } from '@wepublish/utils/website';
 
-export default SubscriptionPage
+export default SubscriptionPage;

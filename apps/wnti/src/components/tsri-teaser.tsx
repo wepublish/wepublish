@@ -1,16 +1,19 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
-  Teaser,
+  BaseTeaser,
   TeaserImageWrapper,
   TeaserPreTitleNoContent,
-  TeaserPreTitleWrapper
-} from '@wepublish/block-content/website'
-import {ImageWrapper} from '@wepublish/image/website'
-import {cond, T} from 'ramda'
+  TeaserPreTitleWrapper,
+} from '@wepublish/block-content/website';
+import { ImageWrapper } from '@wepublish/image/website';
+import { cond, T } from 'ramda';
 
-import {DailyBriefingTeaser, isDailyBriefingTeaser} from './daily-briefing/daily-briefing-teaser'
+import {
+  DailyBriefingTeaser,
+  isDailyBriefingTeaser,
+} from './daily-briefing/daily-briefing-teaser';
 
-const OverridenTeaser = styled(Teaser)`
+const OverridenTeaser = styled(BaseTeaser)`
   &,
   &:hover {
     ${TeaserPreTitleNoContent},
@@ -26,9 +29,9 @@ const OverridenTeaser = styled(Teaser)`
   ${TeaserImageWrapper}:empty {
     min-height: unset;
   }
-`
+`;
 
 export const TsriTeaser = cond([
   [isDailyBriefingTeaser, props => <DailyBriefingTeaser {...props} />],
-  [T, props => <OverridenTeaser {...props} />]
-])
+  [T, props => <OverridenTeaser {...props} />],
+]);

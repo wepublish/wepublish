@@ -1,18 +1,18 @@
-import {Meta} from '@storybook/react'
-import {AuthorDocument} from '@wepublish/website/api'
-import {AuthorContainer} from './author-container'
-import {mockAuthor} from '@wepublish/storybook/mocks'
+import { Meta } from '@storybook/react';
+import { AuthorDocument } from '@wepublish/website/api';
+import { AuthorContainer } from './author-container';
+import { mockAuthor } from '@wepublish/storybook/mocks';
 
-const author = mockAuthor()
+const author = mockAuthor();
 
 export default {
   component: AuthorContainer,
-  title: 'Container/Author'
-} as Meta
+  title: 'Container/Author',
+} as Meta;
 
 export const ById = {
   args: {
-    id: author.id
+    id: author.id,
   },
 
   parameters: {
@@ -22,23 +22,23 @@ export const ById = {
           request: {
             query: AuthorDocument,
             variables: {
-              id: author.id
-            }
+              id: author.id,
+            },
           },
           result: {
             data: {
-              author
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+              author,
+            },
+          },
+        },
+      ],
+    },
+  },
+};
 
 export const BySlug = {
   args: {
-    slug: author.slug
+    slug: author.slug,
   },
 
   parameters: {
@@ -48,16 +48,16 @@ export const BySlug = {
           request: {
             query: AuthorDocument,
             variables: {
-              slug: author.slug
-            }
+              slug: author.slug,
+            },
           },
           result: {
             data: {
-              author
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+              author,
+            },
+          },
+        },
+      ],
+    },
+  },
+};

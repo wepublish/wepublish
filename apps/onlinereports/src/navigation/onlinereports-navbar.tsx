@@ -1,15 +1,16 @@
-import {css, GlobalStyles, Theme} from '@mui/material'
-import {FullNavigationFragment} from '@wepublish/website/api'
-import {BuilderNavbarProps} from '@wepublish/website/builder'
-import {useToggle} from '@wepublish/ui'
-import {OnlineReportsNavAppBar} from './onlinereports-nav-app-bar'
-import {OnlineReportsNavPaper} from './onlinereports-nav-paper'
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
+import { css, GlobalStyles, Theme } from '@mui/material';
+import { FullNavigationFragment } from '@wepublish/website/api';
+import { BuilderNavbarProps } from '@wepublish/website/builder';
+
+import { useToggle } from '../use-toggle';
+import { OnlineReportsNavAppBar } from './onlinereports-nav-app-bar';
+import { OnlineReportsNavPaper } from './onlinereports-nav-paper';
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface HTMLAttributes<T> {
-    fetchPriority?: 'high' | 'low' | 'auto'
+    fetchPriority?: 'high' | 'low' | 'auto';
   }
 }
 
@@ -25,7 +26,7 @@ const cssVariables = (theme: Theme) => css`
       --navbar-height: ${theme.spacing(12.5)};
     }
   }
-`
+`;
 
 export const NavbarWrapper = styled('nav')`
   position: sticky;
@@ -33,38 +34,43 @@ export const NavbarWrapper = styled('nav')`
   left: 0;
   right: 0;
   z-index: 10;
-  background-color: ${({theme}) => theme.palette.background.default};
-`
+  background-color: ${({ theme }) => theme.palette.background.default};
+`;
 
-export const NavbarSpacer = styled('div')``
+export const NavbarSpacer = styled('div')``;
 
 export const getMenuItems = (
-  props: Pick<BuilderNavbarProps, 'data' | 'slug' | 'headerSlug' | 'iconSlug' | 'categorySlugs'>
+  props: Pick<
+    BuilderNavbarProps,
+    'data' | 'slug' | 'headerSlug' | 'iconSlug' | 'categorySlugs'
+  >
 ) => {
-  const {data, slug, headerSlug, iconSlug, categorySlugs} = props
-  const mainItems = data?.navigations?.find(({key}) => key === slug)
-  const headerItems = data?.navigations?.find(({key}) => key === headerSlug)
-  const iconItems = data?.navigations?.find(({key}) => key === iconSlug)
+  const { data, slug, headerSlug, iconSlug, categorySlugs } = props;
+  const mainItems = data?.navigations?.find(({ key }) => key === slug);
+  const headerItems = data?.navigations?.find(({ key }) => key === headerSlug);
+  const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
 
   const categories = categorySlugs.map(categorySlugArray =>
     categorySlugArray.reduce((navigations, categorySlug) => {
-      const navItem = data?.navigations?.find(({key}) => key === categorySlug)
+      const navItem = data?.navigations?.find(
+        ({ key }) => key === categorySlug
+      );
 
       if (navItem) {
-        navigations.push(navItem)
+        navigations.push(navItem);
       }
 
-      return navigations
+      return navigations;
     }, [] as FullNavigationFragment[])
-  )
+  );
 
   return {
     mainItems,
     headerItems,
     iconItems,
-    categories
-  }
-}
+    categories,
+  };
+};
 
 export function OnlineReportsNavbar({
   className,
@@ -77,8 +83,9 @@ export function OnlineReportsNavbar({
   hasUnpaidInvoices,
   ...menuProps
 }: BuilderNavbarProps) {
-  const menuToggle = useToggle()
-  const {mainItems, headerItems, iconItems, categories} = getMenuItems(menuProps)
+  const menuToggle = useToggle();
+  const { mainItems, headerItems, iconItems, categories } =
+    getMenuItems(menuProps);
 
   return (
     <NavbarWrapper className={className}>
@@ -100,10 +107,11 @@ export function OnlineReportsNavbar({
           main={mainItems}
           categories={categories}
           iconItems={iconItems}
-          closeMenu={menuToggle.off}>
+          closeMenu={menuToggle.off}
+        >
           {children}
         </OnlineReportsNavPaper>
       )}
     </NavbarWrapper>
-  )
+  );
 }

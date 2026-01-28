@@ -1,16 +1,16 @@
-import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
-import {EventBlock} from './event-block.model'
-import {PrimeDataLoader} from '@wepublish/utils/api'
-import {Event, EventDataloaderService} from '@wepublish/event/api'
-import {PrismaClient} from '@prisma/client'
+import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { EventBlock } from './event-block.model';
+import { PrimeDataLoader } from '@wepublish/utils/api';
+import { Event, EventDataloaderService } from '@wepublish/event/api';
+import { PrismaClient } from '@prisma/client';
 
 @Resolver(() => EventBlock)
 export class EventBlockResolver {
   constructor(private prisma: PrismaClient) {}
 
-  @ResolveField(() => [Event], {nullable: true})
+  @ResolveField(() => [Event], { nullable: true })
   @PrimeDataLoader(EventDataloaderService)
-  public events(@Parent() {filter}: EventBlock) {
+  public events(@Parent() { filter }: EventBlock) {
     return this.prisma.event.findMany({
       where: {
         OR: [
@@ -18,18 +18,18 @@ export class EventBlockResolver {
             tags: {
               some: {
                 tagId: {
-                  in: filter.tags ?? []
-                }
-              }
-            }
+                  in: filter.tags ?? [],
+                },
+              },
+            },
           },
           {
             id: {
-              in: filter.events ?? []
-            }
-          }
-        ]
-      }
-    })
+              in: filter.events ?? [],
+            },
+          },
+        ],
+      },
+    });
   }
 }

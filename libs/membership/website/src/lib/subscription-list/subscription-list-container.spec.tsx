@@ -1,36 +1,36 @@
-import {MockedProvider} from '@apollo/client/testing'
-import {composeStories} from '@storybook/react'
-import {act, render} from '@testing-library/react'
-import {actWait, addDateMock} from '@wepublish/testing'
+import { MockedProvider } from '@apollo/client/testing';
+import { composeStories } from '@storybook/react';
+import { act, render } from '@testing-library/react';
+import { actWait, addDateMock } from '@wepublish/testing';
 
-import * as stories from './subscription-list-container.stories'
+import * as stories from './subscription-list-container.stories';
 
-const storiesCmp = composeStories(stories)
+const storiesCmp = composeStories(stories);
 
 describe('SubscriptionList Container', () => {
-  addDateMock()
+  addDateMock();
 
   beforeAll(() => {
     Object.defineProperty(global.window, 'location', {
       value: {
-        href: 'http://localhost'
-      }
-    })
-  })
+        href: 'http://localhost',
+      },
+    });
+  });
 
   Object.entries(storiesCmp).forEach(([story, Component]) => {
     it(`should render ${story}`, async () => {
-      const {container} = render(
+      const { container } = render(
         <MockedProvider {...Component.parameters?.apolloClient}>
           <Component />
         </MockedProvider>
-      )
+      );
 
-      await actWait()
+      await actWait();
 
       if (Component.play) {
-        await act(() => Component.play?.({canvasElement: container}))
+        await act(() => Component.play?.({ canvasElement: container }));
       }
-    })
-  })
-})
+    });
+  });
+});

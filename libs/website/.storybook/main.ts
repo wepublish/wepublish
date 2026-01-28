@@ -1,24 +1,27 @@
-import {configureSort} from 'storybook-multilevel-sort'
-import {StorybookConfig} from 'storybook/internal/types'
+import { configureSort } from 'storybook-multilevel-sort';
+import { StorybookConfig } from 'storybook/internal/types';
 
 configureSort({
   storyOrder: {
     'getting started': {},
     components: {
-      event: null
-    }
-  }
-})
+      event: null,
+    },
+  },
+});
 
 export default {
   framework: {
     name: '@storybook/nextjs',
-    options: {}
   },
 
   docs: {},
 
-  stories: ['../../**/src/lib/**/*.mdx', '../../**/src/lib/**/*.stories.@(js|jsx|ts|tsx)'],
+  stories: [
+    '../../**/src/lib/**/*.mdx',
+    '../../**/src/lib/**/*.stories.@(js|jsx|ts|tsx)',
+    '../../../apps/**/*.stories.@(js|jsx|ts|tsx)',
+  ],
 
   addons: [
     '@nx/react/plugins/storybook',
@@ -36,30 +39,44 @@ export default {
             bracketSpacing: false,
             jsxBracketSameLine: true,
             trailingComma: 'none',
-            arrowParens: 'avoid'
-          }
-        }
-      }
+            arrowParens: 'avoid',
+          },
+        },
+      },
     },
     '@storybook/addon-a11y',
     '@storybook/addon-links',
     '@storybook/addon-themes',
     'storybook-react-i18next',
     '@chromatic-com/storybook',
-    '@storybook/addon-webpack5-compiler-babel'
   ],
 
-  babel: (config, options) => {
-    config.overrides?.push({
-      presets: [['@babel/preset-react', {runtime: 'automatic', importSource: '@emotion/react'}]],
-      plugins: [['@emotion']],
-      test: '*'
-    })
+  webpackFinal: async (config: any) => {
+    config.module.rules.push({
+      test: /\.[jt]sx?$/,
+      exclude: /node_modules/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: [
+            [
+              '@babel/preset-react',
+              {
+                runtime: 'automatic',
+                importSource: '@emotion/react',
+              },
+            ],
+            '@babel/preset-typescript',
+          ],
+          plugins: ['@emotion/babel-plugin'],
+        },
+      },
+    });
 
-    return config
+    return config;
   },
 
   typescript: {
-    reactDocgen: 'react-docgen-typescript'
-  }
-} as StorybookConfig
+    reactDocgen: 'react-docgen-typescript',
+  },
+} as StorybookConfig;

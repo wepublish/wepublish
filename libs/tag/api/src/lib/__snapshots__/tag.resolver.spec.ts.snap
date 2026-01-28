@@ -1,6 +1,80 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TagResolver can query a list of tags 1`] = `
+exports[`TagResolver can query a list of tags and return a list of tags each with its URL 1`] = `
+[
+  [
+    {
+      "tags": [
+        "tag2",
+        "tag3",
+      ],
+      "type": "Article",
+    },
+    "CreatedAt",
+    "Descending",
+    undefined,
+    0,
+    10,
+  ],
+]
+`;
+
+exports[`TagResolver can query a list of tags and return a list of tags each with its URL 2`] = `
+[
+  [
+    {
+      "createdAt": 2023-01-01T00:00:00.000Z,
+      "description": [],
+      "id": "id2",
+      "main": false,
+      "modifiedAt": 2023-01-01T00:00:00.000Z,
+      "peerId": null,
+      "tag": "tag2",
+      "type": "Article",
+    },
+  ],
+  [
+    {
+      "createdAt": 2023-01-01T00:00:00.000Z,
+      "description": [],
+      "id": "id3",
+      "main": false,
+      "modifiedAt": 2023-01-01T00:00:00.000Z,
+      "peerId": null,
+      "tag": "tag3",
+      "type": "Article",
+    },
+  ],
+]
+`;
+
+exports[`TagResolver can query a list of tags and return a list of tags each with its URL 3`] = `
+{
+  "tags": {
+    "nodes": [
+      {
+        "id": "id2",
+        "tag": "tag2",
+        "url": "url-id2",
+      },
+      {
+        "id": "id3",
+        "tag": "tag3",
+        "url": "url-id3",
+      },
+    ],
+    "pageInfo": {
+      "endCursor": "id3",
+      "hasNextPage": false,
+      "hasPreviousPage": false,
+      "startCursor": "id2",
+    },
+    "totalCount": 2,
+  },
+}
+`;
+
+exports[`TagResolver can query a list of tags and return one tag with its URL 1`] = `
 [
   [
     {
@@ -15,18 +89,24 @@ exports[`TagResolver can query a list of tags 1`] = `
 ]
 `;
 
-exports[`TagResolver can query a list of tags 2`] = `
+exports[`TagResolver can query a list of tags and return one tag with its URL 2`] = `
 [
   [
     {
+      "createdAt": 2023-01-01T00:00:00.000Z,
+      "description": [],
       "id": "id1",
+      "main": false,
+      "modifiedAt": 2023-01-01T00:00:00.000Z,
+      "peerId": null,
       "tag": "tag1",
+      "type": "Article",
     },
   ],
 ]
 `;
 
-exports[`TagResolver can query a list of tags 3`] = `
+exports[`TagResolver can query a list of tags and return one tag with its URL 3`] = `
 {
   "tags": {
     "nodes": [
@@ -37,12 +117,12 @@ exports[`TagResolver can query a list of tags 3`] = `
       },
     ],
     "pageInfo": {
-      "endCursor": "endCursor",
+      "endCursor": "id1",
       "hasNextPage": false,
       "hasPreviousPage": false,
-      "startCursor": "startCursor",
+      "startCursor": "id1",
     },
-    "totalCount": 0,
+    "totalCount": 1,
   },
 }
 `;

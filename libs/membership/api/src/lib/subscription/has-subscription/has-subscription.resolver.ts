@@ -1,24 +1,26 @@
-import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
+import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import {
   HasOptionalSubscription,
   HasOptionalSubscriptionLc,
   HasSubscription,
-  HasSubscriptionLc
-} from './has-subscription.model'
-import {PublicSubscription} from '../subscription.model'
-import {SubscriptionDataloader} from '../subscription.dataloader'
+  HasSubscriptionLc,
+} from './has-subscription.model';
+import { PublicSubscription } from '../subscription.model';
+import { SubscriptionDataloader } from '../subscription.dataloader';
 
 @Resolver(() => HasSubscription)
 export class HasSubscriptionResolver {
   constructor(private subscriptionDataloader: SubscriptionDataloader) {}
 
-  @ResolveField(() => PublicSubscription, {nullable: true})
-  public subscription(@Parent() {subscriptionID}: HasOptionalSubscription | HasSubscription) {
+  @ResolveField(() => PublicSubscription, { nullable: true })
+  public subscription(
+    @Parent() { subscriptionID }: HasOptionalSubscription | HasSubscription
+  ) {
     if (!subscriptionID) {
-      return null
+      return null;
     }
 
-    return this.subscriptionDataloader.load(subscriptionID)
+    return this.subscriptionDataloader.load(subscriptionID);
   }
 }
 
@@ -29,12 +31,14 @@ export class HasOptionalSubscriptionResolver extends HasSubscriptionResolver {}
 export class HasSubscriptionLcResolver {
   constructor(private subscriptionDataloader: SubscriptionDataloader) {}
 
-  @ResolveField(() => PublicSubscription, {nullable: true})
-  public subscription(@Parent() {subscriptionId}: HasOptionalSubscriptionLc | HasSubscriptionLc) {
+  @ResolveField(() => PublicSubscription, { nullable: true })
+  public subscription(
+    @Parent() { subscriptionId }: HasOptionalSubscriptionLc | HasSubscriptionLc
+  ) {
     if (!subscriptionId) {
-      return null
+      return null;
     }
-    return this.subscriptionDataloader.load(subscriptionId)
+    return this.subscriptionDataloader.load(subscriptionId);
   }
 }
 

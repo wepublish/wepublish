@@ -1,12 +1,12 @@
-import {Test, TestingModule} from '@nestjs/testing'
-import {INestApplication, Module} from '@nestjs/common'
-import request from 'supertest'
-import {GraphQLModule} from '@nestjs/graphql'
-import {ApolloDriverConfig, ApolloDriver} from '@nestjs/apollo'
-import {PrismaClient} from '@prisma/client'
-import {PrismaModule} from '@wepublish/nest-modules'
-import {StatsResolver} from './stats.resolver'
-import {StatsService} from './stats.service'
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication, Module } from '@nestjs/common';
+import request from 'supertest';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
+import { PrismaClient } from '@prisma/client';
+import { PrismaModule } from '@wepublish/nest-modules';
+import { StatsResolver } from './stats.resolver';
+import { StatsService } from './stats.service';
 
 @Module({
   imports: [
@@ -14,11 +14,11 @@ import {StatsService} from './stats.service'
       driver: ApolloDriver,
       autoSchemaFile: true,
       path: '/',
-      cache: 'bounded'
+      cache: 'bounded',
     }),
-    PrismaModule
+    PrismaModule,
   ],
-  providers: [StatsResolver, StatsService]
+  providers: [StatsResolver, StatsService],
 })
 export class AppModule {}
 
@@ -30,7 +30,7 @@ const statsQuery = `
       firstArticleDate
     }
   }
-`
+`;
 
 const statsQueryWithoutFirstArticleDate = `
   query Stats {
@@ -39,18 +39,18 @@ const statsQueryWithoutFirstArticleDate = `
       authorsCount
     }
   }
-`
+`;
 
 describe('StatsResolver', () => {
-  let app: INestApplication
-  let statsServiceMock: {[method in keyof StatsService]?: jest.Mock}
+  let app: INestApplication;
+  let statsServiceMock: { [method in keyof StatsService]?: jest.Mock };
 
   beforeEach(async () => {
     statsServiceMock = {
       getArticlesCount: jest.fn(),
       getAuthorsCount: jest.fn(),
-      getFirstArticleDate: jest.fn()
-    }
+      getFirstArticleDate: jest.fn(),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -58,75 +58,77 @@ describe('StatsResolver', () => {
           driver: ApolloDriver,
           autoSchemaFile: true,
           path: '/',
-          cache: 'bounded'
-        })
+          cache: 'bounded',
+        }),
       ],
       providers: [
         StatsResolver,
         {
           provide: StatsService,
-          useValue: statsServiceMock
+          useValue: statsServiceMock,
         },
         {
           provide: PrismaClient,
-          useValue: jest.fn()
-        }
-      ]
-    }).compile()
+          useValue: jest.fn(),
+        },
+      ],
+    }).compile();
 
-    app = module.createNestApplication()
-    await app.init()
-  })
+    app = module.createNestApplication();
+    await app.init();
+  });
 
   afterAll(async () => {
-    await app.close()
-  })
+    await app.close();
+  });
 
   test('stats query', async () => {
-    const mockedArticlesValue = 123
-    const mockedAuthorsValue = 10
-    const mockedFirstArticleDateValue = new Date('2022-05-14T10:45:02.513Z')
+    const mockedArticlesValue = 123;
+    const mockedAuthorsValue = 10;
+    const mockedFirstArticleDateValue = new Date('2022-05-14T10:45:02.513Z');
 
-    statsServiceMock.getArticlesCount?.mockResolvedValue(mockedArticlesValue)
-    statsServiceMock.getAuthorsCount?.mockResolvedValue(mockedAuthorsValue)
-    statsServiceMock.getFirstArticleDate?.mockResolvedValue(mockedFirstArticleDateValue)
+    statsServiceMock.getArticlesCount?.mockResolvedValue(mockedArticlesValue);
+    statsServiceMock.getAuthorsCount?.mockResolvedValue(mockedAuthorsValue);
+    statsServiceMock.getFirstArticleDate?.mockResolvedValue(
+      mockedFirstArticleDateValue
+    );
 
     await request(app.getHttpServer())
       .post('')
       .send({
         query: statsQuery,
-        variables: {}
+        variables: {},
       })
       .expect(200)
       .expect(res => {
         expect(res.body.data.stats).toEqual({
           articlesCount: mockedArticlesValue,
           authorsCount: mockedAuthorsValue,
-          firstArticleDate: mockedFirstArticleDateValue.toISOString()
-        })
-      })
-  })
+          firstArticleDate: mockedFirstArticleDateValue.toISOString(),
+        });
+      });
+  });
 
   test('stats query without first article date', async () => {
-    const mockedArticlesValue = 123
-    const mockedAuthorsValue = 10
+    const mockedArticlesValue = 123;
+    const mockedAuthorsValue = 10;
 
-    statsServiceMock.getArticlesCount?.mockResolvedValue(mockedArticlesValue)
-    statsServiceMock.getAuthorsCount?.mockResolvedValue(mockedAuthorsValue)
+    statsServiceMock.getArticlesCount?.mockResolvedValue(mockedArticlesValue);
+    statsServiceMock.getAuthorsCount?.mockResolvedValue(mockedAuthorsValue);
 
     await request(app.getHttpServer())
       .post('')
       .send({
         query: statsQuery,
-        variables: {}
+        variables: {},
       })
       .expect(200)
       .expect(res => {
         expect(res.body.data.stats).toEqual({
           articlesCount: mockedArticlesValue,
           authorsCount: mockedAuthorsValue,
-          firstArticleDate: null
-        })
-      })
-  })
-})
+          firstArticleDate: null,
+        });
+      });
+  });
+});

@@ -1,25 +1,33 @@
-import {createOptionalsArray, DataLoaderService} from '@wepublish/utils/api'
-import {MemberPlan, PrismaClient} from '@prisma/client'
-import {Injectable, Scope} from '@nestjs/common'
+import { createOptionalsArray, DataLoaderService } from '@wepublish/utils/api';
+import {
+  AvailablePaymentMethod,
+  MemberPlan,
+  PrismaClient,
+} from '@prisma/client';
+import { Injectable, Scope } from '@nestjs/common';
 
 @Injectable({
-  scope: Scope.REQUEST
+  scope: Scope.REQUEST,
 })
-export class MemberPlanDataloader extends DataLoaderService<MemberPlan> {
+export class MemberPlanDataloader extends DataLoaderService<
+  MemberPlan & {
+    availablePaymentMethods: AvailablePaymentMethod[];
+  }
+> {
   constructor(protected prisma: PrismaClient) {
-    super()
+    super();
   }
 
   protected async loadByKeys(ids: string[]) {
     return createOptionalsArray(
       ids,
       await this.prisma.memberPlan.findMany({
-        where: {id: {in: ids}},
+        where: { id: { in: ids } },
         include: {
-          availablePaymentMethods: true
-        }
+          availablePaymentMethods: true,
+        },
       }),
       'id'
-    )
+    );
   }
 }

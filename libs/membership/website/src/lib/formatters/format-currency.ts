@@ -1,4 +1,4 @@
-import {Currency} from '@wepublish/website/api'
+import { Currency } from '@wepublish/website/api';
 
 export const formatCurrency = (
   value: number,
@@ -8,15 +8,16 @@ export const formatCurrency = (
 ) => {
   const formatter = new Intl.NumberFormat(locale, {
     style: includeCurrency ? 'currency' : 'decimal',
-    currency
-  })
-  let result = formatter.format(value)
+    currency,
+  });
+  let result = formatter.format(value);
 
   if (currency === Currency.Chf && result.endsWith('.00')) {
-    result = result.replace('.00', '.-')
+    result = result.replace('.00', '.-');
   }
 
-  return result
-}
+  return result;
+};
 
-export const roundUpTo5Cents = (amount: number) => +(Math.ceil(amount * 20) / 20)
+export const roundUpTo5Cents = (amount: number) =>
+  +(Math.ceil(amount * 20) / 20);

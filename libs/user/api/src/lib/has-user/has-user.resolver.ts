@@ -1,21 +1,31 @@
-import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
-import {HasUser, HasUserLc, HasOptionalUser, HasOptionalUserLc} from './has-user.model'
-import {User} from '../user.model'
-import {UserDataloaderService} from '../user-dataloader.service'
+import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  HasUser,
+  HasUserLc,
+  HasOptionalUser,
+  HasOptionalUserLc,
+} from './has-user.model';
+import { User } from '../user.model';
+import { UserDataloaderService } from '../user-dataloader.service';
 
 @Resolver(() => HasUser)
 export class HasUserResolver {
   constructor(private dataloader: UserDataloaderService) {}
 
-  @ResolveField(() => User, {nullable: true})
-  public user(@Parent() block: HasOptionalUser | HasUser | HasOptionalUserLc | HasUserLc) {
-    const id = 'userId' in block ? block.userId : 'userID' in block ? block.userID : null
+  @ResolveField(() => User, { nullable: true })
+  public user(
+    @Parent() block: HasOptionalUser | HasUser | HasOptionalUserLc | HasUserLc
+  ) {
+    const id =
+      'userId' in block ? block.userId
+      : 'userID' in block ? block.userID
+      : null;
 
     if (!id) {
-      return null
+      return null;
     }
 
-    return this.dataloader.load(id)
+    return this.dataloader.load(id);
   }
 }
 

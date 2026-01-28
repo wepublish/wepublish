@@ -1,73 +1,79 @@
-import {Field, Int, ObjectType, registerEnumType} from '@nestjs/graphql'
-import {PaymentPeriodicity} from '@prisma/client'
-import {MemberPlan} from '@wepublish/member-plan/api'
-import {HasPaymentMethod, PaymentMethod} from '@wepublish/payment-method/api'
-import {Property} from '@wepublish/utils/api'
-import {SubscriptionDeactivationReason} from '.prisma/client'
-import {HasUser, User} from '@wepublish/user/api'
+import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { PaymentPeriodicity } from '@prisma/client';
+import { MemberPlan } from '@wepublish/member-plan/api';
+import { HasPaymentMethod, PaymentMethod } from '@wepublish/payment/api';
+import { SubscriptionDeactivationReason } from '.prisma/client';
+import { HasUser, User } from '@wepublish/user/api';
+import { Property } from '@wepublish/property/api';
 
 registerEnumType(SubscriptionDeactivationReason, {
-  name: 'SubscriptionDeactivationReason'
-})
+  name: 'SubscriptionDeactivationReason',
+});
 
 registerEnumType(PaymentPeriodicity, {
-  name: 'PaymentPeriodicity'
-})
+  name: 'PaymentPeriodicity',
+});
 
 @ObjectType()
 export class SubscriptionDeactivation {
   @Field()
-  date!: Date
+  date!: Date;
 
   @Field(() => SubscriptionDeactivationReason)
-  reason!: SubscriptionDeactivationReason
+  reason!: SubscriptionDeactivationReason;
 }
 
 @ObjectType({
-  implements: () => [HasUser, HasPaymentMethod]
+  implements: () => [HasUser, HasPaymentMethod],
 })
 export class PublicSubscription {
   @Field()
-  id!: string
+  id!: string;
 
-  memberPlanID!: string
+  memberPlanID!: string;
 
   @Field(() => MemberPlan)
-  memberPlan!: MemberPlan
+  memberPlan!: MemberPlan;
 
   @Field(() => PaymentPeriodicity)
-  paymentPeriodicity!: PaymentPeriodicity
+  paymentPeriodicity!: PaymentPeriodicity;
 
   @Field(() => Int)
-  monthlyAmount!: number
+  monthlyAmount!: number;
 
   @Field(() => Boolean)
-  autoRenew!: boolean
+  autoRenew!: boolean;
 
   @Field()
-  startsAt!: Date
+  startsAt!: Date;
 
-  @Field(() => Date, {nullable: true})
-  paidUntil?: Date
+  @Field(() => Date, { nullable: true })
+  paidUntil?: Date;
 
-  paymentMethodID!: string
-  paymentMethod!: PaymentMethod
+  paymentMethodID!: string;
+  paymentMethod!: PaymentMethod;
 
   @Field(() => Boolean)
-  extendable!: boolean
+  extendable!: boolean;
 
   @Field(() => [Property])
-  properties!: Property[]
+  properties!: Property[];
 
-  @Field(() => SubscriptionDeactivation, {nullable: true})
-  deactivation?: SubscriptionDeactivation
+  @Field(() => SubscriptionDeactivation, { nullable: true })
+  deactivation?: SubscriptionDeactivation;
 
-  @Field(() => String)
-  url!: string
+  @Field()
+  url!: string;
 
   @Field(() => Boolean)
-  canExtend!: boolean
+  isActive!: boolean;
 
-  userID!: string
-  user!: User
+  @Field(() => Boolean)
+  canExtend!: boolean;
+
+  @Field({ nullable: true })
+  externalReward?: string;
+
+  userID!: string;
+  user!: User;
 }

@@ -1,13 +1,13 @@
-import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
-import {INestApplication} from '@nestjs/common'
-import {GraphQLModule} from '@nestjs/graphql'
-import {Test, TestingModule} from '@nestjs/testing'
-import {URLAdapter, URLAdapterModule} from '@wepublish/nest-modules'
-import request from 'supertest'
-import {UserConsentResolver} from './user-consent.resolver'
-import {UserConsentService} from './user-consent.service'
-import {UserDataloaderService} from '@wepublish/user/api'
-import {createMock, PartialMocked} from '@wepublish/testing'
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { INestApplication } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
+import { Test, TestingModule } from '@nestjs/testing';
+import { URLAdapter, URLAdapterModule } from '@wepublish/nest-modules';
+import request from 'supertest';
+import { UserConsentResolver } from './user-consent.resolver';
+import { UserConsentService } from './user-consent.service';
+import { UserDataloaderService } from '@wepublish/user/api';
+import { createMock, PartialMocked } from '@wepublish/testing';
 
 const userConsentQuery = `
   query userConsent($id: String!) {
@@ -27,7 +27,7 @@ const userConsentQuery = `
       }
     }
   }
-`
+`;
 
 const createUserConsentMutation = `
   mutation createUserConsent($consentId: String!, $userId: String!, $value: Boolean!) {
@@ -36,7 +36,7 @@ const createUserConsentMutation = `
       value
     }
   }
-`
+`;
 
 const updateUserConsentMutation = `
   mutation updateUserConsent($id: String!, $value: Boolean!) {
@@ -56,7 +56,7 @@ const updateUserConsentMutation = `
       }
     }
   }
-`
+`;
 
 const deleteUserConsentMutation = `
   mutation deleteUserConsent($id: String!) {
@@ -64,7 +64,7 @@ const deleteUserConsentMutation = `
       id
     }
   }
-`
+`;
 
 const mockUserConsent = {
   createdAt: new Date('2023-01-01'),
@@ -78,9 +78,9 @@ const mockUserConsent = {
     modifiedAt: new Date('2023-01-01'),
     name: 'name',
     slug: 'slug',
-    defaultValue: false
-  }
-}
+    defaultValue: false,
+  },
+};
 
 const mockUser = {
   id: 'userId',
@@ -91,24 +91,24 @@ const mockUser = {
   active: true,
   flair: 'flair',
   userImageID: 'userImageId',
-  roleIDs: []
-}
+  roleIDs: [],
+};
 
 const mockUserSession = {
   type: 'user',
   id: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd',
   token: 'some-token',
-  user: mockUser
-}
+  user: mockUser,
+};
 
 describe('UserConsentResolver', () => {
-  let app: INestApplication
-  let userConsentService: PartialMocked<UserConsentService>
-  let userDataloaderService: PartialMocked<UserDataloaderService>
+  let app: INestApplication;
+  let userConsentService: PartialMocked<UserConsentService>;
+  let userDataloaderService: PartialMocked<UserDataloaderService>;
 
   beforeEach(async () => {
-    userConsentService = createMock(UserConsentService)
-    userDataloaderService = createMock(UserDataloaderService)
+    userConsentService = createMock(UserConsentService);
+    userDataloaderService = createMock(UserDataloaderService);
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -119,55 +119,55 @@ describe('UserConsentResolver', () => {
           cache: 'bounded',
           context: {
             req: {
-              user: mockUserSession
-            }
-          }
+              user: mockUserSession,
+            },
+          },
         }),
-        URLAdapterModule.register(new URLAdapter(`https://example.com`))
+        URLAdapterModule.register(new URLAdapter(`https://example.com`)),
       ],
       providers: [
         UserConsentResolver,
         {
           provide: UserConsentService,
-          useValue: userConsentService
+          useValue: userConsentService,
         },
         {
           provide: UserDataloaderService,
-          useValue: userDataloaderService
-        }
-      ]
-    }).compile()
+          useValue: userDataloaderService,
+        },
+      ],
+    }).compile();
 
-    app = module.createNestApplication()
-    await app.init()
-  })
+    app = module.createNestApplication();
+    await app.init();
+  });
 
   afterAll(async () => {
-    await app.close()
-  })
+    await app.close();
+  });
 
   test('user consent query', async () => {
-    const idToGet = 'id-to-get'
+    const idToGet = 'id-to-get';
 
-    userConsentService.userConsent?.mockResolvedValue(mockUserConsent)
-    userDataloaderService.load?.mockResolvedValue(mockUser)
+    userConsentService.userConsent?.mockResolvedValue(mockUserConsent);
+    userDataloaderService.load?.mockResolvedValue(mockUser);
 
     await request(app.getHttpServer())
       .post('')
       .send({
         query: userConsentQuery,
         variables: {
-          id: idToGet
-        }
+          id: idToGet,
+        },
       })
       .expect(200)
       .expect(res => {
-        expect(res.body).toMatchSnapshot()
-      })
-  })
+        expect(res.body).toMatchSnapshot();
+      });
+  });
 
   test('create user consent mutation', async () => {
-    userConsentService.createUserConsent?.mockResolvedValue(mockUserConsent)
+    userConsentService.createUserConsent?.mockResolvedValue(mockUserConsent);
 
     await request(app.getHttpServer())
       .post('/')
@@ -176,19 +176,21 @@ describe('UserConsentResolver', () => {
         variables: {
           consentId: 'consentId',
           userId: 'userId',
-          value: true
-        }
+          value: true,
+        },
       })
       .expect(200)
       .expect(res => {
-        expect(userConsentService.createUserConsent?.mock.calls).toMatchSnapshot()
-        expect(res.body).toMatchSnapshot()
-      })
-  })
+        expect(
+          userConsentService.createUserConsent?.mock.calls
+        ).toMatchSnapshot();
+        expect(res.body).toMatchSnapshot();
+      });
+  });
 
   test('update user consent mutation', async () => {
-    userConsentService.updateUserConsent?.mockResolvedValue(mockUserConsent)
-    userDataloaderService.load?.mockResolvedValue(mockUser)
+    userConsentService.updateUserConsent?.mockResolvedValue(mockUserConsent);
+    userDataloaderService.load?.mockResolvedValue(mockUser);
 
     await request(app.getHttpServer())
       .post('/')
@@ -196,31 +198,35 @@ describe('UserConsentResolver', () => {
         query: updateUserConsentMutation,
         variables: {
           id: 'userConsentId',
-          value: false
-        }
+          value: false,
+        },
       })
       .expect(200)
       .expect(res => {
-        expect(userConsentService.updateUserConsent?.mock.calls).toMatchSnapshot()
-        expect(res.body).toMatchSnapshot()
-      })
-  })
+        expect(
+          userConsentService.updateUserConsent?.mock.calls
+        ).toMatchSnapshot();
+        expect(res.body).toMatchSnapshot();
+      });
+  });
 
   test('delete user consent mutation', async () => {
-    userConsentService.deleteUserConsent?.mockResolvedValue(mockUserConsent)
+    userConsentService.deleteUserConsent?.mockResolvedValue(mockUserConsent);
 
     await request(app.getHttpServer())
       .post('/')
       .send({
         query: deleteUserConsentMutation,
         variables: {
-          id: 'userConsentId'
-        }
+          id: 'userConsentId',
+        },
       })
       .expect(res => {
-        expect(userConsentService.deleteUserConsent?.mock.calls).toMatchSnapshot()
-        expect(res.body).toMatchSnapshot()
+        expect(
+          userConsentService.deleteUserConsent?.mock.calls
+        ).toMatchSnapshot();
+        expect(res.body).toMatchSnapshot();
       })
-      .expect(200)
-  })
-})
+      .expect(200);
+  });
+});

@@ -1,10 +1,11 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
+  FullTokenFragment,
+  getApiClientV2,
   TokenListDocument,
-  TokenRefFragment,
   useDeleteTokenMutation,
-  useTokenListQuery
-} from '@wepublish/editor/api'
+  useTokenListQuery,
+} from '@wepublish/editor/api-v2';
 import {
   createCheckedPermissionComponent,
   getOperationNameFromDocument,
@@ -14,12 +15,12 @@ import {
   ListViewHeader,
   PermissionControl,
   TableWrapper,
-  TokenGeneratePanel
-} from '@wepublish/ui/editor'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdDelete, MdGeneratingTokens} from 'react-icons/md'
-import {Link, useLocation, useNavigate} from 'react-router-dom'
+  TokenGeneratePanel,
+} from '@wepublish/ui/editor';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdDelete, MdGeneratingTokens } from 'react-icons/md';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Button,
   Drawer,
@@ -29,60 +30,70 @@ import {
   Loader,
   Message,
   Modal,
-  toaster
-} from 'rsuite'
+  toaster,
+} from 'rsuite';
 
 const List = styled(RList)`
   margin-top: 40px;
-`
+`;
 
 const FlexItemPLeft = styled(FlexboxGrid.Item)`
   padding-left: 10px;
-`
+`;
 
 const FlexItemPRight = styled(FlexboxGrid.Item)`
   padding-right: 10px;
-`
+`;
 
 function TokenList() {
-  const location = useLocation()
-  const navigate = useNavigate()
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const isGenerateRoute = location.pathname.includes('generate')
+  const isGenerateRoute = location.pathname.includes('generate');
 
-  const [isTokenGeneratePanelOpen, setTokenGeneratePanelOpen] = useState(isGenerateRoute)
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [currentToken, setCurrentToken] = useState<TokenRefFragment>()
+  const [isTokenGeneratePanelOpen, setTokenGeneratePanelOpen] =
+    useState(isGenerateRoute);
+  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [currentToken, setCurrentToken] = useState<FullTokenFragment>();
 
+  const client = getApiClientV2();
   const {
     data: tokenListData,
     loading: isTokenListLoading,
-    error: tokenListError
+    error: tokenListError,
   } = useTokenListQuery({
-    fetchPolicy: 'network-only'
-  })
+    client,
+    fetchPolicy: 'network-only',
+  });
 
-  const [deleteToken, {loading: isDeleting, error: deleteTokenError}] = useDeleteTokenMutation({
-    refetchQueries: [getOperationNameFromDocument(TokenListDocument)]
-  })
+  const [deleteToken, { loading: isDeleting, error: deleteTokenError }] =
+    useDeleteTokenMutation({
+      client,
+      refetchQueries: [getOperationNameFromDocument(TokenListDocument)],
+    });
 
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
   useEffect(() => {
-    const error = tokenListError?.message ?? deleteTokenError?.message
+    const error = tokenListError?.message ?? deleteTokenError?.message;
     if (error)
       toaster.push(
-        <Message type="error" showIcon closable duration={0}>
+        <Message
+          type="error"
+          showIcon
+          closable
+          duration={0}
+        >
           {error}
         </Message>
-      )
-  }, [tokenListError, deleteTokenError])
+      );
+  }, [tokenListError, deleteTokenError]);
 
   useEffect(() => {
     if (isGenerateRoute) {
-      setTokenGeneratePanelOpen(true)
+      setTokenGeneratePanelOpen(true);
     }
-  }, [location])
+  }, [location]);
 
   return (
     <>
@@ -96,7 +107,8 @@ function TokenList() {
               <IconButton
                 appearance="primary"
                 disabled={isTokenListLoading}
-                icon={<MdGeneratingTokens />}>
+                icon={<MdGeneratingTokens />}
+              >
                 {t('tokenList.overview.generateToken')}
               </IconButton>
             </Link>
@@ -104,17 +116,25 @@ function TokenList() {
         </PermissionControl>
       </ListViewContainer>
 
-      {isTokenListLoading ? (
-        <Loader backdrop content={t('tokenList.overview.loading')} vertical />
-      ) : (
-        <TableWrapper>
+      {isTokenListLoading ?
+        <Loader
+          backdrop
+          content={t('tokenList.overview.loading')}
+          vertical
+        />
+      : <TableWrapper>
           <List bordered>
             {tokenListData?.tokens.map((token, index) => (
-              <RList.Item key={token.name} index={index}>
+              <RList.Item
+                key={token.name}
+                index={index}
+              >
                 <FlexboxGrid>
                   <FlexItemPLeft colspan={23}>{token.name}</FlexItemPLeft>
                   <FlexItemPRight colspan={1}>
-                    <PermissionControl qualifyingPermissions={['CAN_DELETE_TOKEN']}>
+                    <PermissionControl
+                      qualifyingPermissions={['CAN_DELETE_TOKEN']}
+                    >
                       <IconButtonTooltip caption={t('delete')}>
                         <IconButton
                           icon={<MdDelete />}
@@ -123,8 +143,8 @@ function TokenList() {
                           appearance="ghost"
                           color="red"
                           onClick={() => {
-                            setConfirmationDialogOpen(true)
-                            setCurrentToken(token)
+                            setConfirmationDialogOpen(true);
+                            setCurrentToken(token);
                           }}
                         />
                       </IconButtonTooltip>
@@ -135,53 +155,63 @@ function TokenList() {
             ))}
           </List>
         </TableWrapper>
-      )}
+      }
 
       <Drawer
         open={isTokenGeneratePanelOpen}
         onClose={() => {
-          setTokenGeneratePanelOpen(false)
-          navigate('/tokens')
+          setTokenGeneratePanelOpen(false);
+          navigate('/tokens');
         }}
-        size="sm">
+        size="sm"
+      >
         <TokenGeneratePanel
           onClose={() => {
-            setTokenGeneratePanelOpen(false)
-            navigate('/tokens')
+            setTokenGeneratePanelOpen(false);
+            navigate('/tokens');
           }}
         />
       </Drawer>
 
-      <Modal open={isConfirmationDialogOpen} onClose={() => setConfirmationDialogOpen(false)}>
+      <Modal
+        open={isConfirmationDialogOpen}
+        onClose={() => setConfirmationDialogOpen(false)}
+      >
         <Modal.Header>
           <Modal.Title>{t('tokenList.panels.deleteToken')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {t('tokenList.panels.deleteTokenText', {name: currentToken?.name || currentToken?.id})}
+          {t('tokenList.panels.deleteTokenText', {
+            name: currentToken?.name || currentToken?.id,
+          })}
         </Modal.Body>
         <Modal.Footer>
           <Button
             disabled={isDeleting}
             onClick={async () => {
-              if (!currentToken) return
+              if (!currentToken) return;
 
-              await deleteToken({variables: {id: currentToken.id}})
-              setConfirmationDialogOpen(false)
+              await deleteToken({ variables: { id: currentToken.id } });
+              setConfirmationDialogOpen(false);
             }}
-            color="red">
+            color="red"
+          >
             {t('tokenList.panels.confirm')}
           </Button>
-          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
+          <Button
+            onClick={() => setConfirmationDialogOpen(false)}
+            appearance="subtle"
+          >
             {t('tokenList.panels.cancel')}
           </Button>
         </Modal.Footer>
       </Modal>
     </>
-  )
+  );
 }
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_CREATE_TOKEN',
   'CAN_GET_TOKENS',
-  'CAN_DELETE_TOKEN'
-])(TokenList)
-export {CheckedPermissionComponent as TokenList}
+  'CAN_DELETE_TOKEN',
+])(TokenList);
+export { CheckedPermissionComponent as TokenList };

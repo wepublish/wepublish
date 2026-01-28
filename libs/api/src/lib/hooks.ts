@@ -1,17 +1,17 @@
 export interface MutationHooks {
-  create?: () => void
-  update?: () => void
-  delete?: () => void
+  create?: () => void;
+  update?: () => void;
+  delete?: () => void;
 }
 
 export interface PublishMutationHooks extends MutationHooks {
-  publish?: () => void
+  publish?: () => void;
 }
 
 export interface Hooks {
-  readonly user?: MutationHooks
-  readonly authors?: MutationHooks
+  readonly user?: MutationHooks;
+  readonly authors?: MutationHooks;
 
-  readonly article?: PublishMutationHooks
-  readonly page?: PublishMutationHooks
+  readonly article?: PublishMutationHooks;
+  readonly page?: PublishMutationHooks;
 }

@@ -1,2 +1,2 @@
-export * from './lib/image'
-export * from './lib/image.context'
+export * from './lib/image';
+export * from './lib/image.context';

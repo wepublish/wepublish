@@ -1,26 +1,26 @@
-import {Prisma, PrismaClient, UserEvent} from '@prisma/client'
-import {hashPassword} from '../../db/user'
-import {unselectPassword} from '@wepublish/authentication/api'
-import {Context} from '../../context'
-import {Validator} from '../../validator'
-import {mailLogType} from '@wepublish/mail/api'
+import { Prisma, PrismaClient, UserEvent } from '@prisma/client';
+import { hashPassword } from '../../db/user';
+import { unselectPassword } from '@wepublish/authentication/api';
+import { Context } from '../../context';
+import { Validator } from '../../validator';
+import { mailLogType } from '@wepublish/mail/api';
 
 export type CreateUserInput = Prisma.UserUncheckedCreateInput &
   Partial<{
-    properties: Prisma.MetadataPropertyUncheckedCreateWithoutUserInput[]
-    address: Prisma.UserAddressUncheckedCreateWithoutUserInput | null
-  }>
+    properties: Prisma.MetadataPropertyUncheckedCreateWithoutUserInput[];
+    address: Prisma.UserAddressUncheckedCreateWithoutUserInput | null;
+  }>;
 
 export const createUser = async (
-  {properties, address, password, ...input}: CreateUserInput,
+  { properties, address, password, ...input }: CreateUserInput,
   hashCostFactor: Context['hashCostFactor'],
   prisma: PrismaClient,
   mailContext: Context['mailContext']
 ) => {
-  const hashedPassword = await hashPassword(password, hashCostFactor)
-  input.email = input.email.toLowerCase()
-  await Validator.createUser.parse(input)
-  await Validator.createAddress.parse(address)
+  const hashedPassword = await hashPassword(password, hashCostFactor);
+  input.email = input.email.toLowerCase();
+  await Validator.createUser.parse(input);
+  await Validator.createAddress.parse(address);
 
   const recipient = await prisma.user.create({
     data: {
@@ -28,28 +28,28 @@ export const createUser = async (
       password: hashedPassword,
       properties: {
         createMany: {
-          data: properties ?? []
-        }
+          data: properties ?? [],
+        },
       },
       address: {
-        create: address ?? {}
-      }
+        create: address ?? {},
+      },
     },
-    select: unselectPassword
-  })
+    select: unselectPassword,
+  });
 
   // send register mail
   const externalMailTemplateId = await mailContext.getUserTemplateName(
     UserEvent.ACCOUNT_CREATION,
     false
-  )
+  );
 
   await mailContext.sendMail({
     externalMailTemplateId,
     recipient,
     optionalData: {},
-    mailType: mailLogType.SystemMail
-  })
+    mailType: mailLogType.SystemMail,
+  });
 
-  return recipient
-}
+  return recipient;
+};

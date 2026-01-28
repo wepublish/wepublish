@@ -1,6 +1,6 @@
-import fetch from 'cross-fetch'
-import gql from 'graphql-tag'
-import {print} from 'graphql'
+import fetch from 'cross-fetch';
+import gql from 'graphql-tag';
+import { print } from 'graphql';
 
 const CreateIncomingPeerRequestMutation = gql`
   mutation CreateIncomingPeerRequest($input: PeerRequestInput!) {
@@ -8,7 +8,7 @@ const CreateIncomingPeerRequestMutation = gql`
       token
     }
   }
-`
+`;
 
 export async function createOutgoingPeerRequestToken(
   url: string,
@@ -18,17 +18,17 @@ export async function createOutgoingPeerRequestToken(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Accept: 'application/json'
+      Accept: 'application/json',
     },
     body: JSON.stringify({
       query: print(CreateIncomingPeerRequestMutation),
       variables: {
         input: {
-          hostURL
-        }
-      }
-    })
-  }).then(r => r.json())
+          hostURL,
+        },
+      },
+    }),
+  }).then(r => r.json());
 
-  return response?.data?.createIncomingPeerRequest?.token
+  return response?.data?.createIncomingPeerRequest?.token;
 }

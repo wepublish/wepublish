@@ -1,12 +1,22 @@
-import {BlockContent, Page as PageType} from '@wepublish/website/api'
-import {BuilderPageProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {OnlineReportsContentWrapper} from './content-wrapper'
+import { BlockContent, Page as PageType } from '@wepublish/website/api';
+import {
+  BuilderPageProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
 
-export function OnlineReportsPage({className, data, loading, error, children}: BuilderPageProps) {
+import { OnlineReportsContentWrapper } from './content-wrapper';
+
+export function OnlineReportsPage({
+  className,
+  data,
+  loading,
+  error,
+  children,
+}: BuilderPageProps) {
   const {
     PageSEO,
-    blocks: {Blocks}
-  } = useWebsiteBuilder()
+    blocks: { Blocks },
+  } = useWebsiteBuilder();
 
   return (
     <OnlineReportsContentWrapper className={className}>
@@ -22,5 +32,5 @@ export function OnlineReportsPage({className, data, loading, error, children}: B
 
       {children}
     </OnlineReportsContentWrapper>
-  )
+  );
 }

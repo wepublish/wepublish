@@ -1,0 +1,49 @@
+fragment ImageUrls on Image {
+  url
+
+  xxl: transformURL(input: { width: 1500 })
+  xl: transformURL(input: { width: 1200 })
+  l: transformURL(input: { width: 1000 })
+  m: transformURL(input: { width: 800 })
+  s: transformURL(input: { width: 500 })
+  xs: transformURL(input: { width: 300 })
+  xxs: transformURL(input: { width: 200 })
+
+  xxlSquare: transformURL(input: { width: 1500, height: 1500 })
+  xlSquare: transformURL(input: { width: 1200, height: 1200 })
+  lSquare: transformURL(input: { width: 1000, height: 1000 })
+  mSquare: transformURL(input: { width: 800, height: 800 })
+  sSquare: transformURL(input: { width: 500, height: 500 })
+  xsSquare: transformURL(input: { width: 300, height: 300 })
+  xxsSquare: transformURL(input: { width: 200, height: 200 })
+}
+
+fragment RemoteImage on Image {
+  id
+
+  createdAt
+  modifiedAt
+
+  filename
+  format
+  mimeType
+  extension
+  width
+  height
+  fileSize
+
+  title
+  description
+  tags
+
+  source
+  link
+  license
+
+  focalPoint {
+    x
+    y
+  }
+
+  ...ImageUrls
+}

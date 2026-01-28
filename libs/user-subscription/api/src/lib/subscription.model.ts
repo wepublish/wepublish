@@ -1,67 +1,75 @@
-import {ArgsType, Field, InputType, Int, OmitType, registerEnumType} from '@nestjs/graphql'
-import type {PaymentPeriodicity as PaymentPeriodicityType} from '@prisma/client'
-import {PaymentPeriodicity} from '@prisma/client'
-import {GraphQLSlug, PropertyInput} from '@wepublish/utils/api'
+import {
+  ArgsType,
+  Field,
+  InputType,
+  Int,
+  OmitType,
+  registerEnumType,
+} from '@nestjs/graphql';
+import type { PaymentPeriodicity as PaymentPeriodicityType } from '@prisma/client';
+import { PaymentPeriodicity } from '@prisma/client';
+import { PropertyInput } from '@wepublish/property/api';
+import { GraphQLSlug } from '@wepublish/utils/api';
 
 registerEnumType(PaymentPeriodicity, {
-  name: 'PaymentPeriodicity'
-})
+  name: 'PaymentPeriodicity',
+});
 
 @InputType()
 export class UserSubscriptionInput {
   @Field()
-  id!: string
+  id!: string;
 
   @Field()
-  memberPlanID!: string
+  memberPlanID!: string;
 
   @Field(() => PaymentPeriodicity)
-  paymentPeriodicity: PaymentPeriodicityType
+  paymentPeriodicity: PaymentPeriodicityType;
 
   @Field(() => Int)
-  monthlyAmount: number
+  monthlyAmount: number;
 
   @Field()
-  autoRenew: boolean
+  autoRenew: boolean;
 
   @Field()
-  paymentMethodID: string
+  paymentMethodID: string;
 }
 
 @ArgsType()
 export class CreateSubscriptionArgs {
-  @Field({nullable: true})
-  memberPlanID?: string
+  @Field({ nullable: true })
+  memberPlanID?: string;
 
-  @Field(() => GraphQLSlug, {nullable: true})
-  memberPlanSlug?: string
+  @Field(() => GraphQLSlug, { nullable: true })
+  memberPlanSlug?: string;
 
   @Field()
-  autoRenew!: boolean
+  autoRenew!: boolean;
 
   @Field(() => PaymentPeriodicity)
-  paymentPeriodicity!: PaymentPeriodicity
+  paymentPeriodicity!: PaymentPeriodicity;
 
   @Field(() => Int)
-  monthlyAmount!: number
+  monthlyAmount!: number;
 
-  @Field({nullable: true})
-  paymentMethodID?: string
+  @Field({ nullable: true })
+  paymentMethodID?: string;
 
-  @Field(() => GraphQLSlug, {nullable: true})
-  paymentMethodSlug?: string
+  @Field(() => GraphQLSlug, { nullable: true })
+  paymentMethodSlug?: string;
 
-  @Field(() => [PropertyInput], {nullable: true})
-  subscriptionProperties?: PropertyInput[]
+  @Field(() => [PropertyInput], { nullable: true })
+  subscriptionProperties?: PropertyInput[];
 
-  @Field({nullable: true})
-  successURL?: string
+  @Field({ nullable: true })
+  successURL?: string;
 
-  @Field({nullable: true})
-  failureURL?: string
+  @Field({ nullable: true })
+  failureURL?: string;
 
-  @Field({nullable: true})
-  deactivateSubscriptionId?: string
+  @Field({ nullable: true })
+  deactivateSubscriptionId?: string;
 }
 
 @ArgsType()
@@ -70,18 +78,18 @@ export class CreateSubscriptionWithConfirmationArgs extends OmitType(
   ['successURL', 'failureURL', 'deactivateSubscriptionId'],
   ArgsType
 ) {
-  @Field({nullable: true})
-  userId?: string
+  @Field({ nullable: true })
+  userId?: string;
 }
 
 @ArgsType()
 export class ExtendSubscriptionArgs {
   @Field()
-  subscriptionId!: string
+  subscriptionId!: string;
 
-  @Field({nullable: true})
-  successURL?: string
+  @Field({ nullable: true })
+  successURL?: string;
 
-  @Field({nullable: true})
-  failureURL?: string
+  @Field({ nullable: true })
+  failureURL?: string;
 }

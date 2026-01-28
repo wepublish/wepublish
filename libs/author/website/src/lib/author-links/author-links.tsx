@@ -1,32 +1,36 @@
-import {css} from '@mui/material'
-import styled from '@emotion/styled'
-import {TextToIcon} from '@wepublish/ui'
-import {BuilderAuthorLinksProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import styled from '@emotion/styled';
+import { BuilderAuthorLinksProps, Link } from '@wepublish/website/builder';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
 
 export const AuthorLinksWrapper = styled('aside')`
   display: grid;
   grid-auto-columns: max-content;
   grid-auto-flow: column;
   align-items: center;
-  gap: ${({theme}) => theme.spacing(2)};
-`
+  gap: ${({ theme }) => theme.spacing(2)};
+`;
 
-const linkStyles = css`
+export const AuthorLink = styled(Link)`
   display: grid;
-`
+`;
 
-export function AuthorLinks({links, className}: BuilderAuthorLinksProps) {
-  const {
-    elements: {Link}
-  } = useWebsiteBuilder()
-
+export function AuthorLinks({ links, className }: BuilderAuthorLinksProps) {
+  const { TextToIcon } = useWebsiteBuilder();
   return (
     <AuthorLinksWrapper className={className}>
       {links.map((link, index) => (
-        <Link key={index} href={link.url} target="__blank" title={link.title} css={linkStyles}>
-          <TextToIcon title={link.title} size={22} />
-        </Link>
+        <AuthorLink
+          key={index}
+          href={link.url}
+          target="__blank"
+          title={link.title}
+        >
+          <TextToIcon
+            title={link.title}
+            size={22}
+          />
+        </AuthorLink>
       ))}
     </AuthorLinksWrapper>
-  )
+  );
 }

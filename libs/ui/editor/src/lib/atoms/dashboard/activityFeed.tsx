@@ -1,7 +1,12 @@
-import styled from '@emotion/styled'
-import {formatDistanceToNow} from 'date-fns'
-import {ReactNode, useEffect} from 'react'
-import {Trans, useTranslation} from 'react-i18next'
+import styled from '@emotion/styled';
+import {
+  getApiClientV2,
+  RecentActionsQuery,
+  useRecentActionsQuery,
+} from '@wepublish/editor/api-v2';
+import { formatDistanceToNow } from 'date-fns';
+import { ReactNode, useEffect } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import {
   MdAccountCircle,
   MdAutorenew,
@@ -10,39 +15,38 @@ import {
   MdDescription,
   MdEvent,
   MdGroup,
-  MdQueryStats
-} from 'react-icons/md'
-import {Link} from 'react-router-dom'
-import {Avatar, Message, Timeline as RTimeline, toaster} from 'rsuite'
+  MdQueryStats,
+} from 'react-icons/md';
+import { Link } from 'react-router-dom';
+import { Avatar, Message, Timeline as RTimeline, toaster } from 'rsuite';
 
-import {AVAILABLE_LANG} from '../../utility'
-import {RichTextBlock} from '../../blocks/richTextBlock/rich-text-block'
-import {getApiClientV2, RecentActionsQuery, useRecentActionsQuery} from '@wepublish/editor/api-v2'
+import { RichTextBlock } from '../../blocks/richTextBlock/rich-text-block';
+import { AVAILABLE_LANG } from '../../utility';
 
 const Timeline = styled(RTimeline)`
   margin-left: 10px;
-`
+`;
 
 const TimelineItemStyled = styled(RTimeline.Item)`
   margin-left: 20px;
-`
+`;
 
 const TimelineItemDetails = styled.div`
   margin-left: 10px;
   margin-bottom: 10px;
-`
+`;
 
 const TimelineRichTextWrapper = styled.div`
   font-style: italic;
   color: gray;
   margin-left: 30px;
-`
+`;
 
 const ActionDetails = styled.div`
   font-style: italic;
   padding-top: 2px;
   color: gray;
-`
+`;
 
 const TimelineIcon = styled(Avatar)`
   background: #fff;
@@ -54,51 +58,64 @@ const TimelineIcon = styled(Avatar)`
   margin-left: -8px;
   margin-top: -8px;
   padding: 4px;
-`
+`;
 
-type Action = NonNullable<RecentActionsQuery['actions']>[number]
+type Action = NonNullable<RecentActionsQuery['actions']>[number];
 
 export function ActivityFeed() {
-  const client = getApiClientV2()
-  const {data, error} = useRecentActionsQuery({client, fetchPolicy: 'cache-and-network'})
+  const client = getApiClientV2();
+  const { data, error } = useRecentActionsQuery({
+    client,
+    fetchPolicy: 'cache-and-network',
+  });
 
-  const actions = data?.actions ?? []
+  const actions = data?.actions ?? [];
 
   useEffect(() => {
     if (error)
       toaster.push(
-        <Message type="error" showIcon closable duration={0}>
+        <Message
+          type="error"
+          showIcon
+          closable
+          duration={0}
+        >
           {error.message}
         </Message>
-      )
-  }, [error])
+      );
+  }, [error]);
 
   return (
     <Timeline>
       {actions?.map((action: Action, i) => {
-        return <TimelineItemContainer key={i} action={action} />
+        return (
+          <TimelineItemContainer
+            key={i}
+            action={action}
+          />
+        );
       })}
     </Timeline>
-  )
+  );
 }
 
 function RelativeTimeToNow(time: string) {
-  const {i18n} = useTranslation()
+  const { i18n } = useTranslation();
 
   return formatDistanceToNow(new Date(time), {
     locale: AVAILABLE_LANG.find(lang => lang.id === i18n.language)?.locale,
-    addSuffix: true
-  })
+    addSuffix: true,
+  });
 }
 
 export type TimelineItemContainerProps = {
-  key: number
-  action: Action
-}
+  key: number;
+  action: Action;
+};
 
 function TimelineItemContainer(props: TimelineItemContainerProps) {
-  const {action, key} = props
-  const {t} = useTranslation()
+  const { action, key } = props;
+  const { t } = useTranslation();
 
   switch (action.__typename) {
     case 'ArticleCreatedAction':
@@ -119,7 +136,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
             t('articles.overview.untitled')
           }
         />
-      )
+      );
     case 'PageCreatedAction':
       return (
         <TimelineItem
@@ -138,10 +155,12 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
             t('pages.overview.untitled')
           }
         />
-      )
+      );
     case 'CommentCreatedAction': {
-      const userName = action.comment?.user?.name ?? action.comment?.guestUsername ?? ''
-      const commentTitle = action.comment.title ? ': ' + action.comment.title : ''
+      const userName =
+        action.comment?.user?.name ?? action.comment?.guestUsername ?? '';
+      const commentTitle =
+        action.comment.title ? ': ' + action.comment.title : '';
 
       return (
         <TimelineItem
@@ -163,7 +182,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
                   displayOneLine
                   disabled
                   onChange={() => {
-                    return undefined
+                    return undefined;
                   }}
                   value={action.comment.text || []}
                 />
@@ -171,7 +190,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
             </>
           }
         />
-      )
+      );
     }
     case 'SubscriptionCreatedAction':
       return (
@@ -187,12 +206,13 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           date={action.date}
           details={
             <>
-              {action.subscription.memberPlan.name}: {action.subscription.user?.firstName}{' '}
+              {action.subscription.memberPlan.name}:{' '}
+              {action.subscription.user?.firstName}{' '}
               {action.subscription.user?.name}
             </>
           }
         />
-      )
+      );
     case 'UserCreatedAction':
       return (
         <TimelineItem
@@ -205,11 +225,9 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
             />
           }
           date={action.date}
-          details={`${action.user.firstName ? action.user.firstName + ' ' : ''}${action.user.name}${
-            action.user.address?.city ? ', ' + action.user.address?.city : ''
-          }`}
+          details={`${action.user.firstName ? action.user.firstName + ' ' : ''}${action.user.name}`}
         />
-      )
+      );
     case 'AuthorCreatedAction':
       return (
         <TimelineItem
@@ -229,7 +247,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
             </>
           }
         />
-      )
+      );
     case 'PollStartedAction':
       return (
         <TimelineItem
@@ -244,7 +262,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
           date={action.date}
           details={action.poll.question}
         />
-      )
+      );
     case 'EventCreatedAction':
       return (
         <TimelineItem
@@ -264,40 +282,55 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
             </>
           }
         />
-      )
+      );
     default:
-      return null
+      return null;
   }
 }
 
 type TimelineItemCustomProps = {
-  key: number
-  icon: JSX.Element
-  summary: ReactNode
-  date: string
-  details: ReactNode
-}
+  key: number;
+  icon: JSX.Element;
+  summary: ReactNode;
+  date: string;
+  details: ReactNode;
+};
 
-function TimelineItem({key, icon, summary, date, details}: TimelineItemCustomProps) {
+function TimelineItem({
+  key,
+  icon,
+  summary,
+  date,
+  details,
+}: TimelineItemCustomProps) {
   return (
     <TimelineItemStyled
       key={key}
       dot={
-        <TimelineIcon size="sm" circle>
+        <TimelineIcon
+          size="sm"
+          circle
+        >
           {icon}
         </TimelineIcon>
-      }>
+      }
+    >
       <TimelineItemDetails>
         {summary}
         <p>{RelativeTimeToNow(date)}</p>
         <ActionDetails>{details}</ActionDetails>
       </TimelineItemDetails>
     </TimelineItemStyled>
-  )
+  );
 }
 
-function TranslationWithLink(props: {link: string; translationKey: string}) {
-  const {link, translationKey} = props
+function TranslationWithLink(props: { link: string; translationKey: string }) {
+  const { link, translationKey } = props;
 
-  return <Trans i18nKey={translationKey} components={[<Link to={link} />]} />
+  return (
+    <Trans
+      i18nKey={translationKey}
+      components={[<Link to={link} />]}
+    />
+  );
 }

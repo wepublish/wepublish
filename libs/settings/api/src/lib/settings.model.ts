@@ -6,94 +6,96 @@ import {
   InputType,
   Scalar,
   CustomScalar,
-  ArgsType
-} from '@nestjs/graphql'
-import {SettingName} from './setting'
-import {ValueNode} from 'graphql'
-import {BadRequestException} from '@nestjs/common'
+  ArgsType,
+} from '@nestjs/graphql';
+import { SettingName } from './setting';
+import { ValueNode } from 'graphql';
+import { BadRequestException } from '@nestjs/common';
 
 registerEnumType(SettingName, {
-  name: 'SettingName'
-})
+  name: 'SettingName',
+});
 
 @Scalar('GraphQLSettingValueType')
 export class GraphQLSettingValueType implements CustomScalar<string, any> {
-  description = 'Setting Value'
+  description = 'Setting Value';
 
   serialize(value: any): any {
-    return value
+    return value;
   }
 
   parseValue(value: any): any {
-    return value
+    return value;
   }
 
   parseLiteral(ast: ValueNode): any {
     switch (ast.kind) {
       case 'StringValue':
-        return ast.value
+        return ast.value;
       case 'BooleanValue':
-        return ast.value
+        return ast.value;
       case 'IntValue':
-        return parseInt(ast.value, 10)
+        return parseInt(ast.value, 10);
       case 'FloatValue':
-        return parseFloat(ast.value)
+        return parseFloat(ast.value);
       default:
-        throw new BadRequestException(`Value scalar error: cannot handle kind: ${ast.kind}`)
+        throw new BadRequestException(
+          `Value scalar error: cannot handle kind: ${ast.kind}`
+        );
     }
   }
 }
 
 @ObjectType()
 export class AllowedSettingVals {
-  @Field(type => [String], {nullable: true})
-  stringChoice?: string[]
+  @Field(type => [String], { nullable: true })
+  stringChoice?: string[];
 
-  @Field({nullable: true})
-  boolChoice?: boolean
+  @Field({ nullable: true })
+  boolChoice?: boolean;
 }
 
 @ObjectType()
 export class SettingRestriction {
-  @Field(type => Int, {nullable: true})
-  maxValue?: number
+  @Field(type => Int, { nullable: true })
+  maxValue?: number;
 
-  @Field(type => Int, {nullable: true})
-  minValue?: number
+  @Field(type => Int, { nullable: true })
+  minValue?: number;
 
-  @Field(type => Int, {nullable: true})
-  inputLength?: number
+  @Field(type => Int, { nullable: true })
+  inputLength?: number;
 
-  @Field(type => AllowedSettingVals, {nullable: true})
-  allowedValues?: AllowedSettingVals
+  @Field(type => AllowedSettingVals, { nullable: true })
+  allowedValues?: AllowedSettingVals;
 }
 
 @ObjectType()
 export class Setting {
   @Field(type => String)
-  id!: string
+  id!: string;
 
   @Field(type => SettingName)
-  name!: string
+  name!: string;
 
-  @Field(type => GraphQLSettingValueType, {nullable: true})
-  value?: any
+  @Field(type => GraphQLSettingValueType, { nullable: true })
+  value?: unknown;
 
-  @Field(type => SettingRestriction, {nullable: true})
-  settingRestriction?: SettingRestriction
+  @Field(type => SettingRestriction, { nullable: true })
+  settingRestriction?: SettingRestriction;
 }
 
 @InputType()
 export class SettingFilter {
-  @Field({nullable: true})
-  name?: string
+  @Field({ nullable: true })
+  name?: string;
 }
 
 @ArgsType()
 export class UpdateSettingInput {
   @Field(type => SettingName)
-  name!: SettingName
+  name!: SettingName;
 
   @Field(type => GraphQLSettingValueType)
-  value!: any
+  value!: unknown;
 }

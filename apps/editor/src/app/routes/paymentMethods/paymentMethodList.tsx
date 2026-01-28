@@ -1,8 +1,9 @@
 import {
   FullPaymentMethodFragment,
+  getApiClientV2,
   useDeletePaymentMethodMutation,
-  usePaymentMethodListQuery
-} from '@wepublish/editor/api'
+  usePaymentMethodListQuery,
+} from '@wepublish/editor/api-v2';
 import {
   createCheckedPermissionComponent,
   DescriptionList,
@@ -16,66 +17,77 @@ import {
   PaymentMethodEditPanel,
   PermissionControl,
   Table,
-  TableWrapper
-} from '@wepublish/ui/editor'
-import {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdAdd, MdDelete} from 'react-icons/md'
-import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
-import {Button, Drawer, Modal, Table as RTable} from 'rsuite'
-import {RowDataType} from 'rsuite-table'
+  TableWrapper,
+} from '@wepublish/ui/editor';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdAdd, MdDelete } from 'react-icons/md';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Button, Drawer, Modal, Table as RTable } from 'rsuite';
+import { RowDataType } from 'rsuite-table';
 
-const {Column, HeaderCell, Cell: RCell} = RTable
+const { Column, HeaderCell, Cell: RCell } = RTable;
 
-const hasBrokenPaymentProvider = ({paymentProvider}: FullPaymentMethodFragment) =>
-  Boolean(paymentProvider)
+const hasBrokenPaymentProvider = ({
+  paymentProvider,
+}: FullPaymentMethodFragment) => Boolean(paymentProvider);
 
 function PaymentMethodList() {
-  const {t} = useTranslation()
-  const location = useLocation()
-  const params = useParams()
-  const navigate = useNavigate()
-  const {id} = params
+  const { t } = useTranslation();
+  const location = useLocation();
+  const params = useParams();
+  const navigate = useNavigate();
+  const { id } = params;
 
-  const isCreateRoute = location.pathname.includes('create')
-  const isEditRoute = location.pathname.includes('edit')
+  const isCreateRoute = location.pathname.includes('create');
+  const isEditRoute = location.pathname.includes('edit');
 
-  const [isEditModalOpen, setEditModalOpen] = useState(isEditRoute || isCreateRoute)
+  const [isEditModalOpen, setEditModalOpen] = useState(
+    isEditRoute || isCreateRoute
+  );
 
-  const [editID, setEditID] = useState<string | undefined>(isEditRoute ? id : undefined)
+  const [editID, setEditID] = useState<string | undefined>(
+    isEditRoute ? id : undefined
+  );
 
-  const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
+  const [paymentMethods, setPaymentMethods] = useState<
+    FullPaymentMethodFragment[]
+  >([]);
 
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [currentPaymentMethod, setCurrentPaymentMethod] = useState<FullPaymentMethodFragment>()
+  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [currentPaymentMethod, setCurrentPaymentMethod] =
+    useState<FullPaymentMethodFragment>();
 
+  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
-    refetch
+    refetch,
   } = usePaymentMethodListQuery({
-    fetchPolicy: 'network-only'
-  })
+    client,
+    fetchPolicy: 'network-only',
+  });
 
-  const [deletePaymentMethod, {loading: isDeleting}] = useDeletePaymentMethodMutation()
+  const [deletePaymentMethod, { loading: isDeleting }] =
+    useDeletePaymentMethodMutation({ client });
 
   useEffect(() => {
     if (isCreateRoute) {
-      setEditID(undefined)
-      setEditModalOpen(true)
+      setEditID(undefined);
+      setEditModalOpen(true);
     }
 
     if (isEditRoute) {
-      setEditID(id)
-      setEditModalOpen(true)
+      setEditID(id);
+      setEditModalOpen(true);
     }
-  }, [location])
+  }, [location]);
 
   useEffect(() => {
     if (data?.paymentMethods) {
-      setPaymentMethods(data.paymentMethods)
+      setPaymentMethods(data.paymentMethods);
     }
-  }, [data?.paymentMethods])
+  }, [data?.paymentMethods]);
 
   return (
     <>
@@ -83,10 +95,16 @@ function PaymentMethodList() {
         <ListViewHeader>
           <h2>{t('paymentMethodList.title')}</h2>
         </ListViewHeader>
-        <PermissionControl qualifyingPermissions={['CAN_CREATE_PAYMENT_METHOD']}>
+        <PermissionControl
+          qualifyingPermissions={['CAN_CREATE_PAYMENT_METHOD']}
+        >
           <ListViewActions>
             <Link to="/paymentmethods/create">
-              <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
+              <IconButton
+                appearance="primary"
+                disabled={isLoading}
+                icon={<MdAdd />}
+              >
                 {t('paymentMethodList.createNew')}
               </IconButton>
             </Link>
@@ -95,17 +113,30 @@ function PaymentMethodList() {
       </ListViewContainer>
 
       <TableWrapper>
-        <Table fillHeight loading={isLoading} data={paymentMethods}>
-          <Column width={40} align="left">
+        <Table
+          fillHeight
+          loading={isLoading}
+          data={paymentMethods}
+        >
+          <Column
+            width={40}
+            align="left"
+          >
             <HeaderCell>{''}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<FullPaymentMethodFragment>) =>
-                hasBrokenPaymentProvider(rowData as FullPaymentMethodFragment) ? `✅` : `❌`
+                hasBrokenPaymentProvider(rowData as FullPaymentMethodFragment) ?
+                  `✅`
+                : `❌`
               }
             </RCell>
           </Column>
 
-          <Column width={200} align="left" resizable>
+          <Column
+            width={200}
+            align="left"
+            resizable
+          >
             <HeaderCell>{t('paymentMethodList.name')}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<FullPaymentMethodFragment>) => (
@@ -116,7 +147,11 @@ function PaymentMethodList() {
             </RCell>
           </Column>
 
-          <Column width={200} align="left" resizable>
+          <Column
+            width={200}
+            align="left"
+            resizable
+          >
             <HeaderCell>{t('paymentMethodList.providerName')}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<FullPaymentMethodFragment>) => (
@@ -125,11 +160,17 @@ function PaymentMethodList() {
             </RCell>
           </Column>
 
-          <Column width={100} align="center" fixed="right">
+          <Column
+            width={100}
+            align="center"
+            fixed="right"
+          >
             <HeaderCell>{t('paymentMethodList.action')}</HeaderCell>
             <PaddedCell>
               {(rowData: RowDataType<FullPaymentMethodFragment>) => (
-                <PermissionControl qualifyingPermissions={['CAN_DELETE_PAYMENT_METHOD']}>
+                <PermissionControl
+                  qualifyingPermissions={['CAN_DELETE_PAYMENT_METHOD']}
+                >
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButton
                       icon={<MdDelete />}
@@ -138,8 +179,10 @@ function PaymentMethodList() {
                       color="red"
                       size="sm"
                       onClick={() => {
-                        setConfirmationDialogOpen(true)
-                        setCurrentPaymentMethod(rowData as FullPaymentMethodFragment)
+                        setConfirmationDialogOpen(true);
+                        setCurrentPaymentMethod(
+                          rowData as FullPaymentMethodFragment
+                        );
                       }}
                     />
                   </IconButtonTooltip>
@@ -154,25 +197,29 @@ function PaymentMethodList() {
         open={isEditModalOpen}
         size="sm"
         onClose={() => {
-          setEditModalOpen(false)
-          navigate('/paymentmethods')
-        }}>
+          setEditModalOpen(false);
+          navigate('/paymentmethods');
+        }}
+      >
         <PaymentMethodEditPanel
           id={editID}
           onClose={async () => {
-            setEditModalOpen(false)
-            navigate('/paymentmethods')
-            await refetch()
+            setEditModalOpen(false);
+            navigate('/paymentmethods');
+            await refetch();
           }}
           onSave={async () => {
-            setEditModalOpen(false)
-            navigate('/paymentmethods')
-            await refetch()
+            setEditModalOpen(false);
+            navigate('/paymentmethods');
+            await refetch();
           }}
         />
       </Drawer>
 
-      <Modal open={isConfirmationDialogOpen} size="sm">
+      <Modal
+        open={isConfirmationDialogOpen}
+        size="sm"
+      >
         <Modal.Header>
           <Modal.Title>{t('paymentMethodList.deleteModalTitle')}</Modal.Title>
         </Modal.Header>
@@ -189,31 +236,35 @@ function PaymentMethodList() {
           <Button
             disabled={isDeleting}
             onClick={async () => {
-              if (!currentPaymentMethod) return
+              if (!currentPaymentMethod) return;
 
               await deletePaymentMethod({
-                variables: {id: currentPaymentMethod.id}
-              })
+                variables: { id: currentPaymentMethod.id },
+              });
 
-              await refetch()
-              setConfirmationDialogOpen(false)
+              await refetch();
+              setConfirmationDialogOpen(false);
             }}
-            color="red">
+            color="red"
+          >
             {t('confirm')}
           </Button>
-          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
+          <Button
+            onClick={() => setConfirmationDialogOpen(false)}
+            appearance="subtle"
+          >
             {t('cancel')}
           </Button>
         </Modal.Footer>
       </Modal>
     </>
-  )
+  );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_PAYMENT_METHODS',
   'CAN_GET_PAYMENT_METHOD',
   'CAN_CREATE_PAYMENT_METHOD',
-  'CAN_DELETE_PAYMENT_METHOD'
-])(PaymentMethodList)
-export {CheckedPermissionComponent as PaymentMethodList}
+  'CAN_DELETE_PAYMENT_METHOD',
+])(PaymentMethodList);
+export { CheckedPermissionComponent as PaymentMethodList };

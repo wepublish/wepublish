@@ -1,16 +1,18 @@
-import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
-import {BaseBlock} from '../base-block.model'
-import {BlockType} from '../block-type.model'
+import { Field, InputType, ObjectType, OmitType } from '@nestjs/graphql';
+import { BaseBlock } from '../base-block.model';
+import { BlockType } from '../block-type.model';
 
 @ObjectType({
-  implements: BaseBlock
+  implements: BaseBlock,
 })
-export class FacebookPostBlock extends BaseBlock<typeof BlockType.FacebookPost> {
-  @Field({nullable: true})
-  userID?: string
+export class FacebookPostBlock extends BaseBlock<
+  typeof BlockType.FacebookPost
+> {
+  @Field({ nullable: true })
+  userID?: string;
 
-  @Field({nullable: true})
-  postID?: string
+  @Field({ nullable: true })
+  postID?: string;
 }
 
 @InputType()
@@ -21,14 +23,16 @@ export class FacebookPostBlockInput extends OmitType(
 ) {}
 
 @ObjectType({
-  implements: BaseBlock
+  implements: BaseBlock,
 })
-export class FacebookVideoBlock extends BaseBlock<typeof BlockType.FacebookVideo> {
-  @Field({nullable: true})
-  userID?: string
+export class FacebookVideoBlock extends BaseBlock<
+  typeof BlockType.FacebookVideo
+> {
+  @Field({ nullable: true })
+  userID?: string;
 
-  @Field({nullable: true})
-  videoID?: string
+  @Field({ nullable: true })
+  videoID?: string;
 }
 
 @InputType()

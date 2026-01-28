@@ -3,31 +3,31 @@ import {
   FullInvoiceFragment,
   PaymentPeriodicity,
   FullSubscriptionFragment,
-  Currency
-} from '@wepublish/website/api'
-import {InvoiceListItem} from './invoice-list-item'
-import {Meta, StoryObj} from '@storybook/react'
-import {action} from '@storybook/addon-actions'
-import {userEvent, within} from '@storybook/test'
-import {ApolloError} from '@apollo/client'
-import {mockImage} from '@wepublish/storybook/mocks'
+  Currency,
+} from '@wepublish/website/api';
+import { InvoiceListItem } from './invoice-list-item';
+import { Meta, StoryObj } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
+import { userEvent, within } from '@storybook/test';
+import { ApolloError } from '@apollo/client';
+import { mockMemberPlan } from '@wepublish/storybook/mocks';
 
 export default {
   component: InvoiceListItem,
-  title: 'Components/InvoiceList/Item'
-} as Meta
+  title: 'Components/InvoiceList/Item',
+} as Meta;
 
-const clickPay: StoryObj['play'] = async ({canvasElement, step}) => {
-  const canvas = within(canvasElement)
+const clickPay: StoryObj['play'] = async ({ canvasElement, step }) => {
+  const canvas = within(canvasElement);
 
   const button = canvas.getByText('Jetzt Bezahlen', {
-    selector: 'button'
-  })
+    selector: 'button',
+  });
 
   await step('Click Pay', async () => {
-    await userEvent.click(button)
-  })
-}
+    await userEvent.click(button);
+  });
+};
 
 const subscription = {
   id: '1234-1234',
@@ -37,15 +37,12 @@ const subscription = {
   monthlyAmount: 250000,
   paymentPeriodicity: PaymentPeriodicity.Quarterly,
   url: 'https://example.com',
-  paymentMethod: {},
-  memberPlan: {
-    image: mockImage(),
-    name: 'Foobar Memberplan',
-    extendable: true,
-    currency: Currency.Chf
+  paymentMethod: {
+    slug: 'foo',
   },
-  extendable: true
-} as Exact<FullSubscriptionFragment>
+  memberPlan: mockMemberPlan(),
+  extendable: true,
+} as Exact<FullSubscriptionFragment>;
 
 const invoice = {
   id: '4321-4321',
@@ -57,93 +54,103 @@ const invoice = {
   total: 500,
   items: [],
   subscription,
-  subscriptionID: subscription.id
-} as Exact<FullInvoiceFragment>
+  subscriptionID: subscription.id,
+} as Exact<FullInvoiceFragment>;
 
-export const Default: StoryObj = {
+export const Default: StoryObj<typeof InvoiceListItem> = {
   args: {
     ...invoice,
     canPay: false,
-    pay: action('pay')
-  }
-}
+    pay: async (...args: unknown[]): Promise<void> => {
+      action('pay')(...args);
+    },
+  },
+};
 
-export const Unpaid: StoryObj = {
+export const Unpaid: StoryObj<typeof InvoiceListItem> = {
   ...Default,
   args: {
     ...Default.args,
     paidAt: null,
-    canPay: true
-  }
-}
+    canPay: true,
+  },
+};
 
-export const Canceled: StoryObj = {
+export const Canceled: StoryObj<typeof InvoiceListItem> = {
   ...Default,
   args: {
     ...Default.args,
     paidAt: null,
-    canceledAt: '2023-01-01'
-  }
-}
+    canceledAt: '2023-01-01',
+  },
+};
 
-export const WithPayLoading: StoryObj = {
+export const WithPayLoading: StoryObj<typeof InvoiceListItem> = {
   ...Unpaid,
   args: {
     ...Unpaid.args,
     pay: (...args: unknown[]) => {
-      action('pay')(args)
+      action('pay')(args);
 
       return new Promise(() => {
         // never resolve
-      })
-    }
+      });
+    },
   },
-  play: clickPay
-}
+  play: clickPay,
+};
 
-export const WithPayError: StoryObj = {
+export const WithPayError: StoryObj<typeof InvoiceListItem> = {
   ...Unpaid,
   args: {
     ...Unpaid.args,
     pay: (...args: unknown[]) => {
-      action('pay')(args)
+      action('pay')(args);
 
       throw new ApolloError({
-        errorMessage: 'Foobar'
-      })
-    }
+        errorMessage: 'Foobar',
+      });
+    },
   },
-  play: clickPay
-}
+  play: clickPay,
+};
 
-export const WithPayrexxSubscriptionsWarning: StoryObj = {
+export const WithBexio: StoryObj<typeof InvoiceListItem> = {
   ...Default,
   args: {
     ...Default.args,
-    paidAt: null,
-    canceledAt: null,
+    isBexio: true,
+  },
+};
+
+export const WithSepa: StoryObj<typeof InvoiceListItem> = {
+  ...Default,
+  args: {
+    ...Default.args,
+    isSepa: true,
+  },
+};
+
+export const WithPayrexxSubscriptionsWarning: StoryObj<typeof InvoiceListItem> =
+  {
+    ...Default,
+    args: {
+      ...Default.args,
+      paidAt: null,
+      canceledAt: null,
+    },
+  };
+
+export const WithCurrency: StoryObj<typeof InvoiceListItem> = {
+  ...Default,
+  args: {
+    ...Default.args,
     subscription: {
-      ...subscription,
-      paymentMethod: {
-        slug: 'payrexx-subscription'
-      }
-    }
-  }
-}
-
-export const WithCurrency: StoryObj = {
-  ...Default,
-  args: {
-    ...Default.args,
-    invoice: {
-      ...invoice,
-      subscription: {
-        ...invoice.subscription,
-        memberPlan: {
-          ...invoice.subscription!.memberPlan,
-          currency: Currency.Eur
-        }
-      }
-    }
-  }
-}
+      ...invoice.subscription,
+      memberPlan: {
+        ...invoice.subscription!.memberPlan,
+        currency: Currency.Eur,
+      },
+    } as FullSubscriptionFragment,
+  },
+};

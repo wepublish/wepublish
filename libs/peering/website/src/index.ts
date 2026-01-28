@@ -1,1 +1,1 @@
-export * from './lib/peer-information'
+export * from './lib/peer-information';

@@ -1,13 +1,13 @@
-import {Meta, StoryObj} from '@storybook/react'
-import {mockComment, mockImage} from '@wepublish/storybook/mocks'
-import {WithUserDecorator} from '@wepublish/storybook'
-import {CommentAuthorType, CommentState} from '@wepublish/website/api'
-import {Comment} from './comment'
-import nanoid from 'nanoid'
+import { Meta, StoryObj } from '@storybook/react';
+import { mockComment, mockImage } from '@wepublish/storybook/mocks';
+import { WithUserDecorator } from '@wepublish/storybook';
+import { CommentAuthorType, CommentState } from '@wepublish/website/api';
+import { Comment } from './comment';
+import nanoid from 'nanoid';
 
 const anonymousComment = mockComment({
-  id: '1'
-})
+  id: '1',
+});
 
 const verifiedUserComment = mockComment({
   id: '2',
@@ -22,38 +22,37 @@ const verifiedUserComment = mockComment({
     paymentProviderCustomers: [],
     image: mockImage(),
     properties: [],
-    oauth2Accounts: [],
-    permissions: []
+    permissions: [],
   },
   guestUsername: null,
   guestUserImage: null,
-  authorType: CommentAuthorType.VerifiedUser
-})
+  authorType: CommentAuthorType.VerifiedUser,
+});
 
 export default {
   component: Comment,
-  title: 'Components/Comment'
-} as Meta
+  title: 'Components/Comment',
+} as Meta;
 
 const Default: StoryObj = {
-  args: {}
-}
+  args: {},
+};
 
 export const VerifiedUser: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
-    ...verifiedUserComment
-  }
-}
+    ...verifiedUserComment,
+  },
+};
 
 export const AnonymousUser: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
-    ...anonymousComment
-  }
-}
+    ...anonymousComment,
+  },
+};
 
 export const WithoutImage: StoryObj = {
   ...Default,
@@ -63,10 +62,10 @@ export const WithoutImage: StoryObj = {
     guestUserImage: null,
     user: {
       ...verifiedUserComment.user,
-      image: null
-    }
-  }
-}
+      image: null,
+    },
+  },
+};
 
 export const WithoutFlair: StoryObj = {
   ...Default,
@@ -75,10 +74,10 @@ export const WithoutFlair: StoryObj = {
     ...verifiedUserComment,
     user: {
       ...verifiedUserComment.user,
-      flair: null
-    }
-  }
-}
+      flair: null,
+    },
+  },
+};
 
 export const WithoutSource: StoryObj = {
   ...Default,
@@ -88,29 +87,29 @@ export const WithoutSource: StoryObj = {
     source: null,
     user: {
       ...verifiedUserComment.user,
-      flair: null
-    }
-  }
-}
+      flair: null,
+    },
+  },
+};
 
 export const PendingApproval: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
     ...verifiedUserComment,
-    state: CommentState.PendingApproval
-  }
-}
+    state: CommentState.PendingApproval,
+  },
+};
 
 export const PendingUserChanges: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
     ...verifiedUserComment,
-    state: CommentState.PendingUserChanges
+    state: CommentState.PendingUserChanges,
   },
-  decorators: [WithUserDecorator(verifiedUserComment.user ?? null)]
-}
+  decorators: [WithUserDecorator(verifiedUserComment.user ?? null)],
+};
 
 export const Rejected: StoryObj = {
   ...Default,
@@ -118,6 +117,6 @@ export const Rejected: StoryObj = {
     ...Default.args,
     ...verifiedUserComment,
     state: CommentState.Rejected,
-    rejectionReason: 'Spam'
-  }
-}
+    rejectionReason: 'Spam',
+  },
+};

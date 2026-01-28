@@ -1,43 +1,47 @@
-import {zodResolver} from '@hookform/resolvers/zod'
-import {Checkbox, FormControlLabel} from '@mui/material'
-import styled from '@emotion/styled'
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Checkbox, FormControlLabel } from '@mui/material';
+import styled from '@emotion/styled';
 import {
   Challenge,
   defaultRegisterSchema,
   requiredRegisterSchema,
   UserForm,
   useUser,
-  zodAlwaysRefine
-} from '@wepublish/authentication/website'
+  zodAlwaysRefine,
+} from '@wepublish/authentication/website';
 import {
   Currency,
-  FullMemberPlanFragment,
   PaymentMethod,
   PaymentPeriodicity,
+  ProductType,
   RegisterMutationVariables,
   ResubscribeMutationVariables,
   SubscribeMutationVariables,
-  UserAddressInput
-} from '@wepublish/website/api'
+  UserAddressInput,
+} from '@wepublish/website/api';
 import {
   BuilderSubscribeProps,
   BuilderUserFormFields,
+  Button,
+  Link,
   useAsyncAction,
-  useWebsiteBuilder
-} from '@wepublish/website/builder'
-import {useEffect, useMemo, useState} from 'react'
-import {Controller, useForm} from 'react-hook-form'
-import {z} from 'zod'
-import {formatCurrency, roundUpTo5Cents} from '../formatters/format-currency'
-import {formatPaymentPeriod, getPaymentPeriodicyMonths} from '../formatters/format-payment-period'
-import {formatRenewalPeriod} from '../formatters/format-renewal-period'
-import {css} from '@emotion/react'
-import {replace, sortBy, toLower} from 'ramda'
-import {MembershipModal} from '../membership-modal/membership-modal'
-import {ApolloError} from '@apollo/client'
-import {ApiAlert} from '@wepublish/errors/website'
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { useEffect, useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
+import {
+  formatPaymentPeriod,
+  getPaymentPeriodicyMonths,
+} from '../formatters/format-payment-period';
+import { formatRenewalPeriod } from '../formatters/format-renewal-period';
+import { ApolloError } from '@apollo/client';
+import { ApiAlert } from '@wepublish/errors/website';
+import { Modal } from '@wepublish/website/builder';
+import { useTranslation } from 'react-i18next';
 
-const subscribeSchema = z.object({
+export const subscribeSchema = z.object({
   memberPlanId: z.string().min(1),
   paymentMethodId: z.string().min(1),
   monthlyAmount: z.coerce.number().gte(0),
@@ -48,105 +52,135 @@ const subscribeSchema = z.object({
     PaymentPeriodicity.Biannual,
     PaymentPeriodicity.Yearly,
     PaymentPeriodicity.Biennial,
-    PaymentPeriodicity.Lifetime
+    PaymentPeriodicity.Lifetime,
   ]),
-  payTransactionFee: z.boolean()
-})
+  payTransactionFee: z.boolean(),
+});
 
 export const SubscribeWrapper = styled('form')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(5)};
+  gap: ${({ theme }) => theme.spacing(5)};
   align-content: start;
-  grid-template-areas:
-    'returning'
-    'memberPlans'
-    'monthlyAmount'
-    'userForm'
-    'paymentPeriodicity'
-    'challenge'
-    'transactionFee'
-    'cta';
-`
+`;
 
 export type SubscribeSectionProps = {
-  area?: string
-}
+  area?: string;
+};
+
 export const SubscribeSection = styled('div')<SubscribeSectionProps>`
+  --grid-area: ${({ area = 'auto' }) => area};
   display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
+  gap: ${({ theme }) => theme.spacing(3)};
   align-content: start;
-  grid-area: ${({area}) => area || 'auto'};
 
   &:empty {
     display: none;
   }
-`
+`;
 
 export const SubscribeAmount = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(1)};
+  gap: ${({ theme }) => theme.spacing(1)};
   grid-template-columns: 1fr;
   align-items: center;
-  padding: ${({theme}) => theme.spacing(3)};
-  border: 1px solid ${({theme}) => theme.palette.divider};
-  border-radius: ${({theme}) => theme.shape.borderRadius}px;
-`
+  padding: ${({ theme }) => theme.spacing(3)};
+  border: 1px solid ${({ theme }) => theme.palette.divider};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+`;
 
 export const SubscribeAmountText = styled('p')`
   text-align: center;
-`
+`;
 
 export const SubscribePayment = styled('div')`
   display: flex;
   flex-flow: row wrap;
   align-items: center;
   flex-grow: 1;
-  column-gap: ${({theme}) => theme.spacing(3)};
-  row-gap: ${({theme}) => theme.spacing(2)};
+  column-gap: ${({ theme }) => theme.spacing(3)};
+  row-gap: ${({ theme }) => theme.spacing(2)};
 
   &:empty {
     display: none;
   }
-`
+`;
 
-const buttonStyles = css`
+export const SubscribeButton = styled(Button)`
   justify-self: center;
-`
+`;
 
 export const SubscribeCancelable = styled('div')`
   text-align: center;
-  color: ${({theme}) => theme.palette.grey[500]};
-`
+  color: ${({ theme }) => theme.palette.grey[500]};
+  max-width: 35ch;
+  justify-self: center;
+`;
 
 export const SubscribeNarrowSection = styled(SubscribeSection)`
-  gap: ${({theme}) => theme.spacing(1)};
-`
+  gap: ${({ theme }) => theme.spacing(1)};
+`;
 
-export const getPaymentText = (
-  autoRenew: boolean,
-  extendable: boolean,
-  paymentPeriodicity: PaymentPeriodicity,
-  monthlyAmount: number,
-  currency: Currency,
-  locale: string
-) =>
-  autoRenew && extendable
-    ? `${formatRenewalPeriod(paymentPeriodicity)} für ${formatCurrency(
+export const usePaymentText = ({
+  type = 'button',
+  autoRenew,
+  extendable,
+  productType,
+  paymentPeriodicity,
+  monthlyAmount,
+  currency,
+  siteTitle,
+  locale,
+}: {
+  type?: 'button' | 'support';
+  autoRenew: boolean;
+  extendable: boolean;
+  productType: ProductType;
+  paymentPeriodicity: PaymentPeriodicity;
+  monthlyAmount: number;
+  currency: Currency;
+  siteTitle: string;
+  locale: string;
+}) => {
+  const { t } = useTranslation();
+
+  return useMemo(() => {
+    const variables = {
+      productType,
+      renewalPeriod: formatRenewalPeriod(paymentPeriodicity),
+      renewalPeriodL: formatRenewalPeriod(paymentPeriodicity).toLowerCase(),
+      paymentPeriod: formatPaymentPeriod(paymentPeriodicity),
+      paymentPeriodL: formatPaymentPeriod(paymentPeriodicity).toLowerCase(),
+      formattedAmount: formatCurrency(
         (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
         currency,
         locale
-      )}`
-    : extendable
-    ? `${formatPaymentPeriod(paymentPeriodicity)} für ${formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
-        currency,
-        locale
-      )}`
-    : `Für ${formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
-        currency,
-        locale
-      )}`
+      ),
+      monthlyAmount,
+      siteTitle,
+    };
+
+    if (autoRenew && extendable) {
+      return t(`subscribe.${type}.subscribeForPeriod`, variables);
+    }
+
+    if (extendable) {
+      return t(`subscribe.${type}.payForPeriod`, variables);
+    }
+
+    return t(`subscribe.${type}.pay`, variables);
+  }, [
+    autoRenew,
+    currency,
+    extendable,
+    locale,
+    monthlyAmount,
+    paymentPeriodicity,
+    productType,
+    type,
+    siteTitle,
+    t,
+  ]);
+};
 
 export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   defaults,
@@ -162,56 +196,71 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   onResubscribe,
   deactivateSubscriptionId,
   termsOfServiceUrl,
-  donate,
   transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
   transactionFeeText,
-  returningUserId
+  returningUserId,
 }: BuilderSubscribeProps<T>) => {
   const {
-    meta: {locale, siteTitle},
-    elements: {Alert, Button, H5, Link, Paragraph},
+    meta: { locale, siteTitle },
+    elements: { Alert, H5, Paragraph },
     MemberPlanPicker,
     PaymentMethodPicker,
     PeriodicityPicker,
     PaymentAmount,
-    TransactionFee
-  } = useWebsiteBuilder()
-  const {hasUser} = useUser()
-  const [openConfirm, setOpenConfirm] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<Error>()
-  const callAction = useAsyncAction(setLoading, setError)
+    TransactionFee,
+  } = useWebsiteBuilder();
+  const { t } = useTranslation();
+  const { hasUser } = useUser();
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error>();
+  const callAction = useAsyncAction(setLoading, setError);
 
   const fieldsToDisplay = useMemo(
     () =>
       fields.reduce(
-        (obj, field) => ({...obj, [field]: true}),
+        (obj, field) => ({ ...obj, [field]: true }),
         {} as Record<Exclude<BuilderUserFormFields, 'flair'>, true>
       ),
     [fields]
-  )
-  const hasUserContext = hasUser || !!returningUserId
+  );
+  const hasUserContext = hasUser || !!returningUserId;
 
   /**
    * Done like this to avoid type errors due to z.ZodObject vs z.ZodEffect<z.ZodObject>.
    * [Fixed with Zod 4](https://github.com/colinhacks/zod/issues/2474)
    */
   const loggedOutSchema = useMemo(() => {
-    const result = requiredRegisterSchema.merge(schema.pick(fieldsToDisplay).merge(subscribeSchema))
+    const result = requiredRegisterSchema.merge(
+      schema.pick(fieldsToDisplay).merge(subscribeSchema)
+    );
 
     if (fieldsToDisplay.passwordRepeated) {
-      return zodAlwaysRefine(result).refine(data => data.password === data.passwordRepeated, {
-        message: 'Passwörter stimmen nicht überein.',
-        path: ['passwordRepeated']
-      })
+      return zodAlwaysRefine(result).refine(
+        data => data.password === data.passwordRepeated,
+        {
+          message: 'Passwörter stimmen nicht überein.',
+          path: ['passwordRepeated'],
+        }
+      );
     }
 
-    return result
-  }, [fieldsToDisplay, schema])
+    if (fieldsToDisplay.emailRepeated) {
+      return zodAlwaysRefine(result).refine(
+        data => data.email === data.emailRepeated,
+        {
+          message: 'E-Mailadressen stimmen nicht überein.',
+          path: ['emailRepeated'],
+        }
+      );
+    }
 
-  const loggedInSchema = subscribeSchema
+    return result;
+  }, [fieldsToDisplay, schema]);
 
-  const {control, handleSubmit, watch, setValue, resetField} = useForm<
+  const loggedInSchema = subscribeSchema;
+
+  const { control, handleSubmit, watch, setValue, resetField } = useForm<
     z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>
   >({
     resolver: zodResolver(hasUserContext ? loggedInSchema : loggedOutSchema),
@@ -220,37 +269,34 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       monthlyAmount: 0,
       autoRenew: true,
       payTransactionFee: false,
-      memberPlanId: defaults?.memberPlanSlug
-        ? memberPlans.data?.memberPlans.nodes.find(
+      memberPlanId:
+        defaults?.memberPlanSlug ?
+          memberPlans.data?.memberPlans.nodes.find(
             memberPlan => memberPlan.slug === defaults?.memberPlanSlug
           )?.id
         : memberPlans.data?.memberPlans.nodes[0]?.id,
       paymentMethodId:
-        memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]?.paymentMethods[0]?.id,
+        memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]
+          ?.paymentMethods[0]?.id,
       paymentPeriodicity:
-        memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]?.paymentPeriodicities[0]
+        memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]
+          ?.paymentPeriodicities[0],
     },
     mode: 'onTouched',
-    reValidateMode: 'onChange'
-  })
+    reValidateMode: 'onChange',
+  });
 
-  const selectedPaymentMethodId = watch<'paymentMethodId'>('paymentMethodId')
-  const selectedPaymentPeriodicity = watch<'paymentPeriodicity'>('paymentPeriodicity')
-  const selectedMemberPlanId = watch<'memberPlanId'>('memberPlanId')
-  const payTransactionFee = watch<'payTransactionFee'>('payTransactionFee')
+  const selectedPaymentMethodId = watch<'paymentMethodId'>('paymentMethodId');
+  const selectedPaymentPeriodicity =
+    watch<'paymentPeriodicity'>('paymentPeriodicity');
+  const selectedMemberPlanId = watch<'memberPlanId'>('memberPlanId');
+  const payTransactionFee = watch<'payTransactionFee'>('payTransactionFee');
   const monthlyAmount =
     watch<'monthlyAmount'>('monthlyAmount') +
-    (payTransactionFee ? transactionFee(watch<'monthlyAmount'>('monthlyAmount')) : 0)
-  const autoRenew = watch<'autoRenew'>('autoRenew')
-
-  const sortedMemberPlans = useMemo(
-    () =>
-      sortBy(
-        (memberPlan: FullMemberPlanFragment) => memberPlan.amountPerMonthMin,
-        memberPlans.data?.memberPlans.nodes ?? []
-      ),
-    [memberPlans.data?.memberPlans.nodes]
-  )
+    (payTransactionFee ?
+      transactionFee(watch<'monthlyAmount'>('monthlyAmount'))
+    : 0);
+  const autoRenew = watch<'autoRenew'>('autoRenew');
 
   const selectedMemberPlan = useMemo(
     () =>
@@ -258,41 +304,54 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         memberPlan => memberPlan.id === selectedMemberPlanId
       ),
     [memberPlans.data?.memberPlans.nodes, selectedMemberPlanId]
-  )
+  );
 
   const selectedAvailablePaymentMethod = useMemo(
     () =>
       selectedMemberPlan?.availablePaymentMethods.find(memberPlan =>
-        memberPlan.paymentMethods.find(({id}) => id === selectedPaymentMethodId)
+        memberPlan.paymentMethods.find(
+          ({ id }) => id === selectedPaymentMethodId
+        )
       ),
     [selectedMemberPlan?.availablePaymentMethods, selectedPaymentMethodId]
-  )
+  );
 
   const allPaymentMethods = useMemo(
     () =>
       (selectedMemberPlan?.availablePaymentMethods?.flatMap(
-        ({paymentMethods}) => paymentMethods
+        ({ paymentMethods }) => paymentMethods
       ) as PaymentMethod[]) ?? [],
     [selectedMemberPlan?.availablePaymentMethods]
-  )
+  );
 
-  const paymentText = getPaymentText(
+  const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
+
+  const shouldHidePaymentAmount =
+    selectedMemberPlan?.amountPerMonthMin ===
+    selectedMemberPlan?.amountPerMonthMax;
+
+  const paymentText = usePaymentText({
     autoRenew,
-    selectedMemberPlan?.extendable ?? true,
-    selectedPaymentPeriodicity,
+    extendable: selectedMemberPlan?.extendable ?? true,
+    productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
+    paymentPeriodicity: selectedPaymentPeriodicity,
     monthlyAmount,
-    selectedMemberPlan?.currency ?? Currency.Chf,
-    locale
-  )
+    currency: selectedMemberPlan?.currency ?? Currency.Chf,
+    siteTitle,
+    locale,
+  });
 
-  const monthlyPaymentText = getPaymentText(
-    true,
-    selectedMemberPlan?.extendable ?? true,
-    PaymentPeriodicity.Monthly,
-    watch<'monthlyAmount'>('monthlyAmount'),
-    selectedMemberPlan?.currency ?? Currency.Chf,
-    locale
-  )
+  const supportText = usePaymentText({
+    type: 'support',
+    autoRenew: true,
+    extendable: selectedMemberPlan?.extendable ?? true,
+    productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
+    paymentPeriodicity: PaymentPeriodicity.Monthly,
+    monthlyAmount: watch<'monthlyAmount'>('monthlyAmount'),
+    currency: selectedMemberPlan?.currency ?? Currency.Chf,
+    siteTitle,
+    locale,
+  });
 
   const onSubmit = handleSubmit(data => {
     const subscribeData: SubscribeMutationVariables = {
@@ -300,25 +359,31 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       memberPlanId: data.memberPlanId,
       paymentMethodId: data.paymentMethodId,
       paymentPeriodicity: data.paymentPeriodicity,
-      autoRenew: data.autoRenew
-    }
+      autoRenew: data.autoRenew,
+    };
 
     if (hasUser) {
-      return callAction(onSubscribe)(subscribeData)
+      return callAction(onSubscribe)(subscribeData);
     }
 
     if (returningUserId) {
       const resubscribeData: ResubscribeMutationVariables = {
         ...subscribeData,
-        userId: returningUserId
-      }
+        userId: returningUserId,
+      };
 
-      return callAction(onResubscribe)(resubscribeData)
+      return callAction(onResubscribe)(resubscribeData);
     }
 
-    const {address, challengeAnswer, email, birthday, password, name, firstName} = data as z.infer<
-      typeof loggedOutSchema
-    >
+    const {
+      address,
+      challengeAnswer,
+      email,
+      birthday,
+      password,
+      name,
+      firstName,
+    } = data as z.infer<typeof loggedOutSchema>;
 
     const registerData = {
       birthday,
@@ -327,167 +392,211 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       name,
       firstName,
       address: address as UserAddressInput,
-      challengeAnswer
-    } as RegisterMutationVariables
+      challengeAnswer,
+    } as RegisterMutationVariables;
 
     return callAction(onSubscribeWithRegister)({
       register: registerData,
-      subscribe: subscribeData
-    })
-  })
+      subscribe: subscribeData,
+    });
+  });
 
   useEffect(() => {
     if (selectedMemberPlan) {
-      setValue<'monthlyAmount'>('monthlyAmount', selectedMemberPlan.amountPerMonthTarget ?? 0)
+      setValue<'monthlyAmount'>(
+        'monthlyAmount',
+        selectedMemberPlan.amountPerMonthTarget ||
+          selectedMemberPlan.amountPerMonthMin
+      );
     }
-  }, [selectedMemberPlan, setValue])
+  }, [selectedMemberPlan, setValue]);
 
   useEffect(() => {
     if (challenge.data?.challenge.challengeID) {
       setValue<'challengeAnswer.challengeID'>(
         'challengeAnswer.challengeID',
         challenge.data.challenge.challengeID
-      )
+      );
     }
-  }, [challenge, setValue])
+  }, [challenge, setValue]);
 
   useEffect(() => {
     if (selectedAvailablePaymentMethod?.forceAutoRenewal) {
-      setValue<'autoRenew'>('autoRenew', true)
+      setValue<'autoRenew'>('autoRenew', true);
     }
 
     if (!selectedMemberPlan?.extendable) {
-      setValue<'autoRenew'>('autoRenew', false)
+      setValue<'autoRenew'>('autoRenew', false);
     }
-  }, [selectedAvailablePaymentMethod?.forceAutoRenewal, selectedMemberPlan?.extendable, setValue])
+  }, [
+    selectedAvailablePaymentMethod?.forceAutoRenewal,
+    selectedMemberPlan?.extendable,
+    setValue,
+  ]);
 
   useEffect(() => {
     if (
       selectedPaymentMethodId &&
-      !allPaymentMethods?.find(({id}) => id === selectedPaymentMethodId)
+      !allPaymentMethods?.find(({ id }) => id === selectedPaymentMethodId)
     ) {
-      resetField('paymentMethodId')
+      resetField('paymentMethodId');
     }
-  }, [resetField, allPaymentMethods, selectedPaymentMethodId])
+  }, [resetField, allPaymentMethods, selectedPaymentMethodId]);
 
   useEffect(() => {
     if (
-      !selectedAvailablePaymentMethod?.paymentPeriodicities.includes(selectedPaymentPeriodicity)
+      !selectedAvailablePaymentMethod?.paymentPeriodicities.includes(
+        selectedPaymentPeriodicity
+      )
     ) {
       resetField('paymentPeriodicity', {
-        defaultValue: selectedAvailablePaymentMethod?.paymentPeriodicities?.[0] as undefined // wrong undefined typing by react-hook: https://react-hook-form.com/docs/useform/resetfield
-      })
+        defaultValue: selectedAvailablePaymentMethod
+          ?.paymentPeriodicities?.[0] as undefined, // wrong undefined typing by react-hook: https://react-hook-form.com/docs/useform/resetfield
+      });
     }
-  }, [selectedAvailablePaymentMethod, resetField, selectedPaymentPeriodicity])
+  }, [selectedAvailablePaymentMethod, resetField, selectedPaymentPeriodicity]);
 
   const alreadyHasSubscription = useMemo(() => {
     if (deactivateSubscriptionId) {
-      return
+      return;
     }
 
     return (
       userSubscriptions.data?.subscriptions.some(
-        ({memberPlan, deactivation}) => memberPlan.id === selectedMemberPlanId && !deactivation
+        ({ memberPlan, deactivation }) =>
+          memberPlan.id === selectedMemberPlanId &&
+          memberPlan.productType === ProductType.Subscription &&
+          !deactivation
       ) ?? false
-    )
-  }, [deactivateSubscriptionId, userSubscriptions.data?.subscriptions, selectedMemberPlanId])
+    );
+  }, [
+    deactivateSubscriptionId,
+    userSubscriptions.data?.subscriptions,
+    selectedMemberPlanId,
+  ]);
 
   const hasOpenInvoices = useMemo(() => {
     if (deactivateSubscriptionId) {
-      return
+      return;
     }
 
     return (
-      userInvoices.data?.invoices.some(invoice => !invoice.canceledAt && !invoice.paidAt) ?? false
-    )
-  }, [deactivateSubscriptionId, userInvoices.data?.invoices])
+      userInvoices.data?.invoices.some(
+        invoice => !invoice.canceledAt && !invoice.paidAt
+      ) ?? false
+    );
+  }, [deactivateSubscriptionId, userInvoices.data?.invoices]);
 
-  const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin || 500
+  const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin || 500;
 
   return (
-    <SubscribeWrapper className={className} onSubmit={onSubmit} noValidate>
+    <SubscribeWrapper
+      className={className}
+      onSubmit={onSubmit}
+      noValidate
+    >
       {!hasUser && returningUserId && (
-        <SubscribeSection area={'returning'}>
+        <SubscribeSection area="returning">
           <H5 component="h2">
-            {`Hallo ${defaults?.firstName ?? ''} ${defaults?.name ?? ''}`.trim()}, willkommen
-            zurück!
+            {`Hallo ${defaults?.firstName ?? ''} ${defaults?.name ?? ''}`.trim()}
+            , willkommen zurück!
           </H5>
         </SubscribeSection>
       )}
 
-      <SubscribeSection area={'memberPlans'}>
+      <SubscribeSection area="memberPlans">
         {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
           <H5 component="h2">Abo wählen</H5>
         )}
 
         {hasOpenInvoices && (
           <Alert severity="warning">
-            Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen
-            in deinem <Link href="/profile">Profil</Link> anschauen.
+            Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst
+            deine offenen Rechnungen in deinem{' '}
+            <Link href="/profile">Profil</Link> anschauen.
           </Alert>
         )}
 
         {alreadyHasSubscription && (
           <Alert severity="warning">
-            Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem{' '}
-            <Link href="/profile">Profil</Link> anschauen.
+            Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos
+            in deinem <Link href="/profile">Profil</Link> anschauen.
           </Alert>
         )}
 
         <Controller
           name={'memberPlanId'}
           control={control}
-          render={({field}) => (
+          render={({ field }) => (
             <MemberPlanPicker
               {...field}
               onChange={memberPlanId => field.onChange(memberPlanId)}
-              memberPlans={sortedMemberPlans}
+              memberPlans={memberPlans.data?.memberPlans.nodes ?? []}
             />
           )}
         />
 
-        {memberPlans.error && <ApiAlert error={memberPlans.error} severity="error" />}
+        {memberPlans.error && (
+          <ApiAlert
+            error={memberPlans.error}
+            severity="error"
+          />
+        )}
       </SubscribeSection>
 
-      <SubscribeSection area={'monthlyAmount'}>
-        <Controller
-          name={'monthlyAmount'}
-          control={control}
-          render={({field, fieldState: {error}}) => (
-            <SubscribeAmount>
-              <Paragraph component={SubscribeAmountText} gutterBottom={false}>
-                Ich unterstütze {siteTitle} {replace(/^./, toLower)(monthlyPaymentText)}
-              </Paragraph>
+      <SubscribeSection area="monthlyAmount">
+        {!shouldHidePaymentAmount && (
+          <Controller
+            name={'monthlyAmount'}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <SubscribeAmount>
+                <Paragraph
+                  component={SubscribeAmountText}
+                  gutterBottom={false}
+                >
+                  {supportText}
+                </Paragraph>
 
-              <PaymentAmount
-                {...field}
-                error={error}
-                slug={selectedMemberPlan?.slug}
-                donate={!!donate?.(selectedMemberPlan)}
-                amountPerMonthMin={amountPerMonthMin}
-                amountPerMonthTarget={selectedMemberPlan?.amountPerMonthTarget ?? undefined}
-                currency={selectedMemberPlan?.currency ?? Currency.Chf}
-              />
-            </SubscribeAmount>
-          )}
-        />
+                <PaymentAmount
+                  {...field}
+                  error={error}
+                  slug={selectedMemberPlan?.slug}
+                  donate={isDonation}
+                  amountPerMonthMin={amountPerMonthMin}
+                  amountPerMonthMax={
+                    selectedMemberPlan?.amountPerMonthMax ?? undefined
+                  }
+                  amountPerMonthTarget={
+                    selectedMemberPlan?.amountPerMonthTarget ?? undefined
+                  }
+                  currency={selectedMemberPlan?.currency ?? Currency.Chf}
+                />
+              </SubscribeAmount>
+            )}
+          />
+        )}
       </SubscribeSection>
 
       {!hasUserContext && (
         <SubscribeSection area={'userForm'}>
-          <UserForm control={control} fields={fields} />
+          <UserForm
+            control={control}
+            fields={fields}
+          />
         </SubscribeSection>
       )}
 
-      <SubscribeSection area={'paymentPeriodicity'}>
-        {allPaymentMethods && allPaymentMethods.length > 1 && (
+      <SubscribeSection area="paymentPeriodicity">
+        {allPaymentMethods.length > 1 && (
           <H5 component="h2">Zahlungsmethode wählen</H5>
         )}
+
         <SubscribePayment>
           <Controller
             name={'paymentMethodId'}
             control={control}
-            render={({field}) => (
+            render={({ field }) => (
               <PaymentMethodPicker
                 {...field}
                 onChange={paymentMethodId => field.onChange(paymentMethodId)}
@@ -499,46 +608,53 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           <Controller
             name={'paymentPeriodicity'}
             control={control}
-            render={({field}) => (
+            render={({ field }) => (
               <PeriodicityPicker
                 {...field}
                 onChange={periodicity => field.onChange(periodicity)}
-                periodicities={selectedAvailablePaymentMethod?.paymentPeriodicities}
+                periodicities={
+                  selectedAvailablePaymentMethod?.paymentPeriodicities
+                }
               />
             )}
           />
 
-          {!selectedAvailablePaymentMethod?.forceAutoRenewal && selectedMemberPlan?.extendable && (
-            <Controller
-              name={'autoRenew'}
-              control={control}
-              render={({field}) => (
-                <FormControlLabel
-                  {...field}
-                  control={
-                    <Checkbox
-                      checked={field.value}
-                      disabled={selectedAvailablePaymentMethod?.forceAutoRenewal}
-                    />
-                  }
-                  label="Automatisch erneuern"
-                />
-              )}
-            />
-          )}
+          {!selectedAvailablePaymentMethod?.forceAutoRenewal &&
+            selectedMemberPlan?.extendable && (
+              <Controller
+                name={'autoRenew'}
+                control={control}
+                render={({ field }) => (
+                  <FormControlLabel
+                    {...field}
+                    control={
+                      <Checkbox
+                        checked={field.value}
+                        disabled={
+                          selectedAvailablePaymentMethod?.forceAutoRenewal
+                        }
+                      />
+                    }
+                    label="Automatisch erneuern"
+                  />
+                )}
+              />
+            )}
         </SubscribePayment>
       </SubscribeSection>
+
       {!hasUserContext && (
-        <SubscribeSection area={'challenge'}>
+        <SubscribeSection area="challenge">
           <H5 component="h2">Spam-Schutz</H5>
 
           {challenge.data?.challenge && (
             <Controller
               name={'challengeAnswer.challengeSolution'}
               control={control}
-              render={({field, fieldState: {error}}) => (
+              render={({ field, fieldState: { error } }) => (
                 <Challenge
                   {...field}
+                  value={field.value || ''}
                   onChange={field.onChange}
                   challenge={challenge.data!.challenge}
                   label={'Captcha'}
@@ -549,62 +665,95 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             />
           )}
 
-          {challenge.error && <ApiAlert error={challenge.error} severity="error" />}
+          {challenge.error && (
+            <ApiAlert
+              error={challenge.error}
+              severity="error"
+            />
+          )}
         </SubscribeSection>
       )}
 
-      {error && <ApiAlert error={error as ApolloError} severity="error" />}
-
-      <SubscribeSection area={'transactionFee'}>
-        <Controller
-          name={'payTransactionFee'}
-          control={control}
-          render={({field: feeField}) => <TransactionFee text={transactionFeeText} {...feeField} />}
+      {error && (
+        <ApiAlert
+          error={error as ApolloError}
+          severity="error"
         />
-      </SubscribeSection>
+      )}
 
-      <SubscribeNarrowSection area={'cta'}>
-        <Button
+      {!!watch<'monthlyAmount'>('monthlyAmount') && (
+        <SubscribeSection area="transactionFee">
+          <Controller
+            name={'payTransactionFee'}
+            control={control}
+            render={({ field: feeField }) => (
+              <TransactionFee
+                text={transactionFeeText}
+                {...feeField}
+              />
+            )}
+          />
+        </SubscribeSection>
+      )}
+
+      <SubscribeNarrowSection area="submit">
+        <SubscribeButton
           size={'large'}
           disabled={
-            challenge.loading || userInvoices.loading || userSubscriptions.loading || loading
+            challenge.loading ||
+            userInvoices.loading ||
+            userSubscriptions.loading ||
+            loading
           }
           type="submit"
-          css={buttonStyles}
           onClick={e => {
             if (hasOpenInvoices || alreadyHasSubscription) {
-              e.preventDefault()
-              setOpenConfirm(true)
+              e.preventDefault();
+              setOpenConfirm(true);
             }
-          }}>
-          {paymentText} {donate?.(selectedMemberPlan) ? 'spenden' : 'abonnieren'}
-        </Button>
+          }}
+        >
+          {paymentText} {isDonation ? 'spenden' : 'abonnieren'}
+        </SubscribeButton>
 
-        {autoRenew && termsOfServiceUrl ? (
-          <Link underline={'hover'} href={termsOfServiceUrl}>
-            <SubscribeCancelable>Jederzeit kündbar</SubscribeCancelable>
+        {autoRenew && termsOfServiceUrl ?
+          <Link
+            underline={'hover'}
+            href={termsOfServiceUrl}
+          >
+            <SubscribeCancelable>
+              {t('subscribe.cancellable')}
+            </SubscribeCancelable>
           </Link>
-        ) : (
-          autoRenew && <SubscribeCancelable>Jederzeit kündbar</SubscribeCancelable>
-        )}
+        : autoRenew && (
+            <SubscribeCancelable>
+              {t('subscribe.cancellable')}
+            </SubscribeCancelable>
+          )
+        }
       </SubscribeNarrowSection>
 
-      <MembershipModal
+      <Modal
         open={openConfirm}
         onSubmit={() => {
-          onSubmit()
-          setOpenConfirm(false)
+          onSubmit();
+          setOpenConfirm(false);
         }}
         onCancel={() => setOpenConfirm(false)}
-        submitText={`${paymentText} Abonnieren`}>
-        <H5 id="modal-modal-title" component="h1">
+        submitText={`${paymentText} ${isDonation ? 'Spenden' : 'Abonnieren'}`}
+      >
+        <H5
+          id="modal-modal-title"
+          component="h1"
+        >
           Bist du dir sicher?
         </H5>
 
         {hasOpenInvoices && (
           <Paragraph gutterBottom={false}>
-            Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen
-            in deinem <Link href="/profile">Profil</Link> anschauen.
+            Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst
+            deine offenen Rechnungen in deinem{' '}
+            <Link href="/profile">Profil</Link> anschauen.
           </Paragraph>
         )}
 
@@ -614,7 +763,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             <Link href="/profile">Profil</Link> anschauen.
           </Paragraph>
         )}
-      </MembershipModal>
+      </Modal>
     </SubscribeWrapper>
-  )
-}
+  );
+};

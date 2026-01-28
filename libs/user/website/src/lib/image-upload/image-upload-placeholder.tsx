@@ -1,4 +1,4 @@
-import {HTMLAttributes} from 'react'
+import { HTMLAttributes } from 'react';
 
 export const ImageUploadPlaceholder = (props: HTMLAttributes<SVGElement>) => (
   <svg
@@ -7,8 +7,13 @@ export const ImageUploadPlaceholder = (props: HTMLAttributes<SVGElement>) => (
     height="800px"
     viewBox="0 0 24 24"
     fill="none"
-    xmlns="http://www.w3.org/2000/svg">
-    <rect width="24" height="24" fill="white" />
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <rect
+      width="24"
+      height="24"
+      fill="white"
+    />
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -16,4 +21,4 @@ export const ImageUploadPlaceholder = (props: HTMLAttributes<SVGElement>) => (
       fill="#323232"
     />
   </svg>
-)
+);

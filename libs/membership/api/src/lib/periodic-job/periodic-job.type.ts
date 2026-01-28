@@ -1,4 +1,4 @@
 export type PeriodicJobRunObject = {
-  date: Date
-  isRetry: boolean
-}
+  date: Date;
+  isRetry: boolean;
+};

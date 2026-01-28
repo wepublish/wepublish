@@ -1,13 +1,13 @@
-import {Injectable, Scope} from '@nestjs/common'
-import {Comment, PrismaClient} from '@prisma/client'
-import {createOptionalsArray, DataLoaderService} from '@wepublish/utils/api'
+import { Injectable, Scope } from '@nestjs/common';
+import { Comment, PrismaClient } from '@prisma/client';
+import { createOptionalsArray, DataLoaderService } from '@wepublish/utils/api';
 
 @Injectable({
-  scope: Scope.REQUEST
+  scope: Scope.REQUEST,
 })
 export class CommentDataloaderService extends DataLoaderService<Comment> {
   constructor(private prisma: PrismaClient) {
-    super()
+    super();
   }
 
   protected async loadByKeys(ids: string[]) {
@@ -16,11 +16,11 @@ export class CommentDataloaderService extends DataLoaderService<Comment> {
       await this.prisma.comment.findMany({
         where: {
           id: {
-            in: ids as string[]
-          }
-        }
+            in: ids as string[],
+          },
+        },
       }),
       'id'
-    )
+    );
   }
 }

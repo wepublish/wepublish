@@ -1,74 +1,77 @@
-import {IconButton, InputAdornment, Theme, css} from '@mui/material'
-import styled from '@emotion/styled'
-import {MobileDatePicker} from '@mui/x-date-pickers'
+import { IconButton, InputAdornment, Theme, css } from '@mui/material';
+import styled from '@emotion/styled';
+import { MobileDatePicker } from '@mui/x-date-pickers';
 import {
   BuilderUserFormFields,
   BuilderUserFormProps,
-  useWebsiteBuilder
-} from '@wepublish/website/builder'
-import {useReducer} from 'react'
-import {Controller} from 'react-hook-form'
-import {MdVisibility, MdVisibilityOff} from 'react-icons/md'
-import {CountrySelect} from './country-select'
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { useReducer } from 'react';
+import { Controller } from 'react-hook-form';
+import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
+import { CountrySelect } from './country-select';
 
 export const UserFormWrapper = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
+  gap: ${({ theme }) => theme.spacing(3)};
   grid-template-columns: 1fr;
 
-  ${({theme}) => theme.breakpoints.up('md')} {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-columns: 1fr 1fr;
   }
-`
+`;
 
 export const UserAddressWrapper = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
+  gap: ${({ theme }) => theme.spacing(3)};
   grid-template-columns: repeat(2, 1fr);
 
-  ${({theme}) => theme.breakpoints.up('md')} {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     grid-column: 1 / -1;
     grid-template-columns: repeat(3, 1fr);
   }
-`
+`;
+
+export const UserStreetWrapper = styled('div')`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(3)};
+  grid-template-columns: 1fr ${({ theme }) => theme.spacing(15)};
+  grid-column: 1 / -1;
+`;
 
 export const UserPasswordWrapper = styled('div')`
   display: flex;
   flex: 1 0 50%;
   flex-flow: row;
-  gap: ${({theme}) => theme.spacing(3)};
+  gap: ${({ theme }) => theme.spacing(3)};
 
-  ${({theme}) => theme.breakpoints.up('md')} {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     grid-column: 1 / -1;
   }
-`
-
-const addressStyles = (theme: Theme) => css`
-  grid-column: 1 / -1;
-`
+`;
 
 const countryStyles = (theme: Theme) => css`
   ${theme.breakpoints.down('md')} {
     grid-column: 1 / -1;
   }
-`
+`;
 
 export function UserForm<T extends BuilderUserFormFields>({
   fields,
   className,
   control,
-  hideEmail
+  hideEmail,
 }: BuilderUserFormProps<T>) {
-  const [showPassword, togglePassword] = useReducer(state => !state, false)
+  const [showPassword, togglePassword] = useReducer(state => !state, false);
 
   const {
-    elements: {TextField}
-  } = useWebsiteBuilder()
+    elements: { TextField },
+  } = useWebsiteBuilder();
 
   const fieldsToDisplay = fields.reduce(
-    (obj, field) => ({...obj, [field]: true}),
+    (obj, field) => ({ ...obj, [field]: true }),
     {} as Record<BuilderUserFormFields, true>
-  )
+  );
 
   return (
     <UserFormWrapper className={className}>
@@ -76,7 +79,7 @@ export function UserForm<T extends BuilderUserFormFields>({
         <Controller
           name={'firstName'}
           control={control}
-          render={({field, fieldState: {error}}) => (
+          render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
               value={field.value ?? ''}
@@ -93,7 +96,7 @@ export function UserForm<T extends BuilderUserFormFields>({
         <Controller
           name={'flair'}
           control={control}
-          render={({field, fieldState: {error}}) => (
+          render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
               label={'Funktion / Beruf'}
@@ -107,7 +110,7 @@ export function UserForm<T extends BuilderUserFormFields>({
       <Controller
         name={'name'}
         control={control}
-        render={({field, fieldState: {error}}) => (
+        render={({ field, fieldState: { error } }) => (
           <TextField
             {...field}
             value={field.value ?? ''}
@@ -120,29 +123,49 @@ export function UserForm<T extends BuilderUserFormFields>({
       />
 
       {!hideEmail && (
-        <Controller
-          name={'email'}
-          control={control}
-          render={({field, fieldState: {error}}) => (
-            <TextField
-              {...field}
-              value={field.value ?? ''}
-              autoComplete="email"
-              type={'email'}
-              fullWidth
-              label={'Email'}
-              error={!!error}
-              helperText={error?.message}
+        <>
+          <Controller
+            name={'email'}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                value={field.value ?? ''}
+                autoComplete="email"
+                type={'email'}
+                fullWidth
+                label={'Email'}
+                error={!!error}
+                helperText={error?.message}
+              />
+            )}
+          />
+
+          {fieldsToDisplay.emailRepeated && (
+            <Controller
+              name={'emailRepeated'}
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  value={field.value ?? ''}
+                  type={'email'}
+                  fullWidth
+                  label={'Email wiederholen'}
+                  error={!!error}
+                  helperText={error?.message}
+                />
+              )}
             />
           )}
-        />
+        </>
       )}
 
       {fieldsToDisplay.birthday && (
         <Controller
           name={'birthday'}
           control={control}
-          render={({field, fieldState: {error}}) => (
+          render={({ field, fieldState: { error } }) => (
             <MobileDatePicker
               {...field}
               value={field.value ? new Date(field.value) : null}
@@ -153,11 +176,11 @@ export function UserForm<T extends BuilderUserFormFields>({
               views={['year', 'month', 'day']}
               disableFuture
               slotProps={{
-                field: {clearable: true, ref: field.ref},
+                field: { clearable: true, ref: field.ref },
                 textField: {
                   error: !!error,
-                  helperText: error?.message
-                }
+                  helperText: error?.message,
+                },
               }}
             />
           )}
@@ -169,7 +192,7 @@ export function UserForm<T extends BuilderUserFormFields>({
           <Controller
             name={'password'}
             control={control}
-            render={({field, fieldState: {error}}) => (
+            render={({ field, fieldState: { error } }) => (
               <TextField
                 {...field}
                 value={field.value ?? ''}
@@ -185,11 +208,14 @@ export function UserForm<T extends BuilderUserFormFields>({
                       <IconButton
                         onClick={togglePassword}
                         onMouseDown={event => event.preventDefault()}
-                        edge="end">
-                        {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                        edge="end"
+                      >
+                        {showPassword ?
+                          <MdVisibilityOff />
+                        : <MdVisibility />}
                       </IconButton>
                     </InputAdornment>
-                  )
+                  ),
                 }}
               />
             )}
@@ -199,7 +225,7 @@ export function UserForm<T extends BuilderUserFormFields>({
             <Controller
               name={'passwordRepeated'}
               control={control}
-              render={({field, fieldState: {error}}) => (
+              render={({ field, fieldState: { error } }) => (
                 <TextField
                   {...field}
                   value={field.value ?? ''}
@@ -215,11 +241,14 @@ export function UserForm<T extends BuilderUserFormFields>({
                         <IconButton
                           onClick={togglePassword}
                           onMouseDown={event => event.preventDefault()}
-                          edge="end">
-                          {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                          edge="end"
+                        >
+                          {showPassword ?
+                            <MdVisibilityOff />
+                          : <MdVisibility />}
                         </IconButton>
                       </InputAdornment>
-                    )
+                    ),
                   }}
                 />
               )}
@@ -230,27 +259,44 @@ export function UserForm<T extends BuilderUserFormFields>({
 
       {fieldsToDisplay.address && (
         <UserAddressWrapper>
-          <Controller
-            name={'address.streetAddress'}
-            control={control}
-            render={({field, fieldState: {error}}) => (
-              <TextField
-                {...field}
-                value={field.value ?? ''}
-                css={theme => addressStyles(theme as Theme)}
-                fullWidth
-                label={'Strasse und Hausnummer'}
-                error={!!error}
-                helperText={error?.message}
-                autoComplete="address"
-              />
-            )}
-          />
+          <UserStreetWrapper>
+            <Controller
+              name={'address.streetAddress'}
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  value={field.value ?? ''}
+                  fullWidth
+                  label={'Strasse'}
+                  error={!!error}
+                  helperText={error?.message}
+                  autoComplete="address"
+                />
+              )}
+            />
+
+            <Controller
+              name={'address.streetAddressNumber'}
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  value={field.value ?? ''}
+                  fullWidth
+                  label={'Hausnummer'}
+                  error={!!error}
+                  helperText={error?.message}
+                  autoComplete="house number"
+                />
+              )}
+            />
+          </UserStreetWrapper>
 
           <Controller
             name={'address.zipCode'}
             control={control}
-            render={({field, fieldState: {error}}) => (
+            render={({ field, fieldState: { error } }) => (
               <TextField
                 {...field}
                 value={field.value ?? ''}
@@ -266,7 +312,7 @@ export function UserForm<T extends BuilderUserFormFields>({
           <Controller
             name={'address.city'}
             control={control}
-            render={({field, fieldState: {error}}) => (
+            render={({ field, fieldState: { error } }) => (
               <TextField
                 {...field}
                 value={field.value ?? ''}
@@ -282,7 +328,7 @@ export function UserForm<T extends BuilderUserFormFields>({
           <Controller
             name={'address.country'}
             control={control}
-            render={({field, fieldState: {error}}) => (
+            render={({ field, fieldState: { error } }) => (
               <CountrySelect
                 {...field}
                 value={field.value ?? ''}
@@ -296,5 +342,5 @@ export function UserForm<T extends BuilderUserFormFields>({
         </UserAddressWrapper>
       )}
     </UserFormWrapper>
-  )
+  );
 }

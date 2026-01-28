@@ -1,4 +1,8 @@
-import {CommentItemType, TagType, useCreateCommentMutation} from '@wepublish/editor/api'
+import {
+  CommentItemType,
+  TagType,
+  useCreateCommentMutation,
+} from '@wepublish/editor/api';
 import {
   FullPageFragment,
   getApiClientV2,
@@ -9,9 +13,9 @@ import {
   useDeletePageMutation,
   useDuplicatePageMutation,
   usePageListQuery,
-  useUnpublishPageMutation
-} from '@wepublish/editor/api-v2'
-import {CanPreview} from '@wepublish/permissions'
+  useUnpublishPageMutation,
+} from '@wepublish/editor/api-v2';
+import { CanPreview } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -29,96 +33,108 @@ import {
   PermissionControl,
   StatusBadge,
   Table,
-  TableWrapper
-} from '@wepublish/ui/editor'
-import {useEffect, useMemo, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdAdd, MdComment, MdContentCopy, MdDelete, MdUnpublished} from 'react-icons/md'
-import {Link, useNavigate} from 'react-router-dom'
-import {Button, Message, Modal, Pagination, Table as RTable} from 'rsuite'
+  TableWrapper,
+} from '@wepublish/ui/editor';
+import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  MdAdd,
+  MdComment,
+  MdContentCopy,
+  MdDelete,
+  MdUnpublished,
+} from 'react-icons/md';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button, Message, Modal, Pagination, Table as RTable } from 'rsuite';
 
 interface State {
-  state: string
-  text: string
+  state: string;
+  text: string;
 }
 
-const {Column, HeaderCell, Cell} = RTable
+const { Column, HeaderCell, Cell } = RTable;
 
 enum ConfirmAction {
   Delete = 'delete',
   Unpublish = 'unpublish',
-  Duplicate = 'duplicate'
+  Duplicate = 'duplicate',
 }
 
 function mapColumFieldToGraphQLField(columnField: string): PageSort | null {
   switch (columnField) {
     case 'createdAt':
-      return PageSort.CreatedAt
+      return PageSort.CreatedAt;
     case 'modifiedAt':
-      return PageSort.ModifiedAt
+      return PageSort.ModifiedAt;
     case 'publishedAt':
-      return PageSort.PublishedAt
+      return PageSort.PublishedAt;
     default:
-      return null
+      return null;
   }
 }
 
 function PageList() {
-  const {t} = useTranslation()
-  const navigate = useNavigate()
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
-  const [filter, setFilter] = useState({} as PageFilter)
+  const [filter, setFilter] = useState({} as PageFilter);
 
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [currentPage, setCurrentPage] = useState<FullPageFragment>()
-  const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
+  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState<FullPageFragment>();
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction>();
 
-  const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(10)
-  const [sortField, setSortField] = useState('modifiedAt')
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [sortField, setSortField] = useState('modifiedAt');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  const client = getApiClientV2()
-  const [deletePage, {loading: isDeleting}] = useDeletePageMutation({client})
-  const [unpublishPage, {loading: isUnpublishing}] = useUnpublishPageMutation({client})
-  const [duplicatePage, {loading: isDuplicating}] = useDuplicatePageMutation({client})
+  const client = getApiClientV2();
+  const [deletePage, { loading: isDeleting }] = useDeletePageMutation({
+    client,
+  });
+  const [unpublishPage, { loading: isUnpublishing }] = useUnpublishPageMutation(
+    { client }
+  );
+  const [duplicatePage, { loading: isDuplicating }] = useDuplicatePageMutation({
+    client,
+  });
 
   const pageListVariables = {
     filter: filter || undefined,
     take: limit,
     skip: (page - 1) * limit,
     sort: mapColumFieldToGraphQLField(sortField),
-    order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
-  }
+    order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
+  };
 
   const {
     data,
     refetch,
-    loading: isLoading
+    loading: isLoading,
   } = usePageListQuery({
     client,
     variables: pageListVariables,
-    fetchPolicy: 'cache-and-network'
-  })
+    fetchPolicy: 'cache-and-network',
+  });
 
-  const pages = useMemo(() => data?.pages?.nodes ?? [], [data])
+  const pages = useMemo(() => data?.pages?.nodes ?? [], [data]);
 
-  const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null)
+  const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null);
 
   useEffect(() => {
     const timerID = setTimeout(() => {
-      setHighlightedRowId(null)
-    }, 3000)
+      setHighlightedRowId(null);
+    }, 3000);
     return () => {
-      clearTimeout(timerID)
-    }
-  }, [highlightedRowId])
+      clearTimeout(timerID);
+    };
+  }, [highlightedRowId]);
 
   useEffect(() => {
-    refetch(pageListVariables)
-  }, [filter, page, limit, sortOrder, sortField])
+    refetch(pageListVariables);
+  }, [filter, page, limit, sortOrder, sortField]);
 
-  const [createComment] = useCreateCommentMutation()
+  const [createComment] = useCreateCommentMutation();
 
   return (
     <>
@@ -129,7 +145,11 @@ function PageList() {
         <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
           <ListViewActions>
             <Link to="/pages/create">
-              <IconButton appearance="primary" disabled={isLoading} icon={<MdAdd />}>
+              <IconButton
+                appearance="primary"
+                disabled={isLoading}
+                icon={<MdAdd />}
+              >
                 {t('pages.overview.newPage')}
               </IconButton>
             </Link>
@@ -137,7 +157,15 @@ function PageList() {
         </PermissionControl>
 
         <ListFilters
-          fields={['title', 'description', 'draft', 'pending', 'published', 'publicationDate']}
+          fields={[
+            'title',
+            'description',
+            'draft',
+            'pending',
+            'published',
+            'publicationDate',
+            'includeHidden',
+          ]}
           filter={filter}
           isLoading={isLoading}
           onSetFilter={filter => setFilter(filter)}
@@ -152,33 +180,54 @@ function PageList() {
           data={pages}
           sortColumn={sortField}
           sortType={sortOrder}
-          rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
+          rowClassName={rowData =>
+            rowData?.id === highlightedRowId ? 'highlighted-row' : ''
+          }
           onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType ?? 'asc')
-            setSortField(sortColumn)
-          }}>
-          <Column width={125} align="left" resizable>
+            setSortOrder(sortType ?? 'asc');
+            setSortField(sortColumn);
+          }}
+        >
+          <Column
+            width={125}
+            align="left"
+            resizable
+          >
             <HeaderCell>{t('pages.overview.states')}</HeaderCell>
             <Cell>
               {(rowData: FullPageFragment) => {
-                const states: State[] = []
+                const states: State[] = [];
 
-                if (rowData.draft) states.push({state: 'draft', text: t('pages.overview.draft')})
+                if (rowData.draft)
+                  states.push({
+                    state: 'draft',
+                    text: t('pages.overview.draft'),
+                  });
                 if (rowData.pending)
-                  states.push({state: 'pending', text: t('pages.overview.pending')})
+                  states.push({
+                    state: 'pending',
+                    text: t('pages.overview.pending'),
+                  });
                 if (rowData.published)
-                  states.push({state: 'published', text: t('pages.overview.published')})
+                  states.push({
+                    state: 'published',
+                    text: t('pages.overview.published'),
+                  });
 
                 return (
                   <StatusBadge states={states.map(st => st.state)}>
                     {states.map(st => st.text).join(' / ')}
                   </StatusBadge>
-                )
+                );
               }}
             </Cell>
           </Column>
 
-          <Column width={400} align="left" resizable>
+          <Column
+            width={400}
+            align="left"
+            resizable
+          >
             <HeaderCell>{t('pages.overview.title')}</HeaderCell>
             <Cell>
               {(rowData: FullPageFragment) => (
@@ -189,72 +238,100 @@ function PageList() {
             </Cell>
           </Column>
 
-          <Column width={210} align="left" resizable sortable>
+          <Column
+            width={210}
+            align="left"
+            resizable
+            sortable
+          >
             <HeaderCell>{t('pages.overview.publicationDate')}</HeaderCell>
             <Cell dataKey="publishedAt">
               {(pageRef: FullPageFragment) =>
-                pageRef.published?.publishedAt
-                  ? t('pageEditor.overview.publishedAt', {
-                      publicationDate: new Date(pageRef.published.publishedAt)
-                    })
-                  : pageRef.pending?.publishedAt
-                  ? t('pageEditor.overview.publishedAtIfPending', {
-                      publishedAtIfPending: new Date(pageRef.pending?.publishedAt)
-                    })
-                  : t('pages.overview.notPublished')
+                pageRef.published?.publishedAt ?
+                  t('pageEditor.overview.publishedAt', {
+                    publicationDate: new Date(pageRef.published.publishedAt),
+                  })
+                : pageRef.pending?.publishedAt ?
+                  t('pageEditor.overview.publishedAtIfPending', {
+                    publishedAtIfPending: new Date(
+                      pageRef.pending?.publishedAt
+                    ),
+                  })
+                : t('pages.overview.notPublished')
               }
             </Cell>
           </Column>
 
-          <Column width={210} align="left" resizable sortable>
+          <Column
+            width={210}
+            align="left"
+            resizable
+            sortable
+          >
             <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: FullPageFragment) =>
+              {({ modifiedAt }: FullPageFragment) =>
                 t('pageEditor.overview.modifiedAt', {
-                  modificationDate: new Date(modifiedAt)
+                  modificationDate: new Date(modifiedAt),
                 })
               }
             </Cell>
           </Column>
 
-          <Column width={220} align="center" fixed="right">
+          <Column
+            width={220}
+            align="center"
+            fixed="right"
+          >
             <HeaderCell>{t('pages.overview.action')}</HeaderCell>
             <IconButtonCell>
               {(rowData: FullPageFragment) => (
                 <>
-                  <PermissionControl qualifyingPermissions={['CAN_PUBLISH_PAGE']}>
-                    <IconButtonTooltip caption={t('pageEditor.overview.unpublish')}>
+                  <PermissionControl
+                    qualifyingPermissions={['CAN_PUBLISH_PAGE']}
+                  >
+                    <IconButtonTooltip
+                      caption={t('pageEditor.overview.unpublish')}
+                    >
                       <IconButton
                         icon={<MdUnpublished />}
                         circle
                         disabled={!(rowData.published || rowData.pending)}
                         size="sm"
                         onClick={e => {
-                          setCurrentPage(rowData)
-                          setConfirmAction(ConfirmAction.Unpublish)
-                          setConfirmationDialogOpen(true)
+                          setCurrentPage(rowData);
+                          setConfirmAction(ConfirmAction.Unpublish);
+                          setConfirmationDialogOpen(true);
                         }}
                       />
                     </IconButtonTooltip>
                   </PermissionControl>
 
-                  <PermissionControl qualifyingPermissions={['CAN_CREATE_PAGE']}>
-                    <IconButtonTooltip caption={t('pageEditor.overview.duplicate')}>
+                  <PermissionControl
+                    qualifyingPermissions={['CAN_CREATE_PAGE']}
+                  >
+                    <IconButtonTooltip
+                      caption={t('pageEditor.overview.duplicate')}
+                    >
                       <IconButton
                         icon={<MdContentCopy />}
                         circle
                         size="sm"
                         onClick={() => {
-                          setCurrentPage(rowData)
-                          setConfirmAction(ConfirmAction.Duplicate)
-                          setConfirmationDialogOpen(true)
+                          setCurrentPage(rowData);
+                          setConfirmAction(ConfirmAction.Duplicate);
+                          setConfirmationDialogOpen(true);
                         }}
                       />
                     </IconButtonTooltip>
                   </PermissionControl>
 
-                  <PermissionControl qualifyingPermissions={['CAN_UPDATE_COMMENTS']}>
-                    <IconButtonTooltip caption={t('pageEditor.overview.createComment')}>
+                  <PermissionControl
+                    qualifyingPermissions={['CAN_UPDATE_COMMENTS']}
+                  >
+                    <IconButtonTooltip
+                      caption={t('pageEditor.overview.createComment')}
+                    >
                       <IconButton
                         icon={<MdComment />}
                         circle
@@ -263,18 +340,22 @@ function PageList() {
                           createComment({
                             variables: {
                               itemID: rowData.id,
-                              itemType: CommentItemType.Article
+                              itemType: CommentItemType.Article,
                             },
                             onCompleted(data) {
-                              navigate(`/comments/edit/${data?.createComment.id}`)
-                            }
-                          })
+                              navigate(
+                                `/comments/edit/${data?.createComment.id}`
+                              );
+                            },
+                          });
                         }}
                       />
                     </IconButtonTooltip>
                   </PermissionControl>
 
-                  <PermissionControl qualifyingPermissions={['CAN_DELETE_PAGE']}>
+                  <PermissionControl
+                    qualifyingPermissions={['CAN_DELETE_PAGE']}
+                  >
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
                         icon={<MdDelete />}
@@ -283,9 +364,9 @@ function PageList() {
                         appearance="ghost"
                         color="red"
                         onClick={() => {
-                          setCurrentPage(rowData)
-                          setConfirmAction(ConfirmAction.Delete)
-                          setConfirmationDialogOpen(true)
+                          setCurrentPage(rowData);
+                          setConfirmAction(ConfirmAction.Delete);
+                          setConfirmationDialogOpen(true);
                         }}
                       />
                     </IconButtonTooltip>
@@ -317,14 +398,15 @@ function PageList() {
       <Modal
         open={isConfirmationDialogOpen}
         size="sm"
-        onClose={() => setConfirmationDialogOpen(false)}>
+        onClose={() => setConfirmationDialogOpen(false)}
+      >
         <Modal.Header>
           <Modal.Title>
-            {confirmAction === ConfirmAction.Unpublish
-              ? t('pages.panels.unpublishPage')
-              : confirmAction === ConfirmAction.Delete
-              ? t('pages.panels.deletePage')
-              : t('pages.panels.duplicatePage')}
+            {confirmAction === ConfirmAction.Unpublish ?
+              t('pages.panels.unpublishPage')
+            : confirmAction === ConfirmAction.Delete ?
+              t('pages.panels.deletePage')
+            : t('pages.panels.duplicatePage')}
           </Modal.Title>
         </Modal.Header>
 
@@ -342,13 +424,15 @@ function PageList() {
 
             <DescriptionListItem label={t('pages.panels.createdAt')}>
               {currentPage?.createdAt &&
-                t('pages.panels.createdAtDate', {createdAtDate: new Date(currentPage.createdAt)})}
+                t('pages.panels.createdAtDate', {
+                  createdAtDate: new Date(currentPage.createdAt),
+                })}
             </DescriptionListItem>
 
             <DescriptionListItem label={t('pages.panels.updatedAt')}>
               {currentPage?.modifiedAt &&
                 t('pages.panels.updatedAtDate', {
-                  updatedAtDate: new Date(currentPage.modifiedAt)
+                  updatedAtDate: new Date(currentPage.modifiedAt),
                 })}
             </DescriptionListItem>
 
@@ -356,13 +440,17 @@ function PageList() {
               <DescriptionListItem label={t('pages.panels.publishedAt')}>
                 {currentPage?.latest.publishedAt &&
                   t('pages.panels.publishedAtDate', {
-                    publishedAtDate: new Date(currentPage.latest.publishedAt)
+                    publishedAtDate: new Date(currentPage.latest.publishedAt),
                   })}
               </DescriptionListItem>
             )}
           </DescriptionList>
 
-          <Message showIcon type="warning" title={t('articleEditor.overview.warningLabel')}>
+          <Message
+            showIcon
+            type="warning"
+            title={t('articleEditor.overview.warningLabel')}
+          >
             {t('articleEditor.overview.unpublishWarningMessage')}
           </Message>
         </Modal.Body>
@@ -371,83 +459,91 @@ function PageList() {
           <Button
             disabled={isUnpublishing || isDeleting || isDuplicating}
             onClick={async () => {
-              if (!currentPage) return
+              if (!currentPage) return;
 
               switch (confirmAction) {
                 case ConfirmAction.Delete:
                   await deletePage({
-                    variables: {id: currentPage.id},
+                    variables: { id: currentPage.id },
                     update: cache => {
                       const query = cache.readQuery<PageListQuery>({
                         query: PageListDocument,
-                        variables: pageListVariables
-                      })
+                        variables: pageListVariables,
+                      });
 
-                      if (!query) return
+                      if (!query) return;
 
                       cache.writeQuery<PageListQuery>({
                         query: PageListDocument,
                         data: {
                           pages: {
                             ...query.pages,
-                            nodes: query.pages.nodes.filter(page => page.id !== currentPage.id)
-                          }
+                            nodes: query.pages.nodes.filter(
+                              page => page.id !== currentPage.id
+                            ),
+                          },
                         },
-                        variables: pageListVariables
-                      })
-                    }
-                  })
-                  break
+                        variables: pageListVariables,
+                      });
+                    },
+                  });
+                  break;
 
                 case ConfirmAction.Unpublish:
                   await unpublishPage({
-                    variables: {id: currentPage.id}
-                  })
-                  setHighlightedRowId(currentPage.id)
-                  break
+                    variables: { id: currentPage.id },
+                  });
+                  setHighlightedRowId(currentPage.id);
+                  break;
 
                 case ConfirmAction.Duplicate:
                   duplicatePage({
-                    variables: {id: currentPage.id},
+                    variables: { id: currentPage.id },
                     update: cache => {
-                      refetch(pageListVariables)
+                      refetch(pageListVariables);
                       const query = cache.readQuery<PageListQuery>({
                         query: PageListDocument,
-                        variables: pageListVariables
-                      })
+                        variables: pageListVariables,
+                      });
 
-                      if (!query) return
+                      if (!query) return;
 
                       cache.writeQuery<PageListQuery>({
                         query: PageListDocument,
                         data: {
                           pages: {
-                            ...query.pages
-                          }
+                            ...query.pages,
+                          },
                         },
-                        variables: pageListVariables
-                      })
-                    }
+                        variables: pageListVariables,
+                      });
+                    },
                   }).then(output => {
                     if (output.data) {
-                      navigate(`/pages/edit/${output.data?.duplicatePage.id}`, {replace: true})
+                      navigate(`/pages/edit/${output.data?.duplicatePage.id}`, {
+                        replace: true,
+                      });
                     }
-                  })
-                  break
+                  });
+                  break;
               }
 
-              setConfirmationDialogOpen(false)
+              setConfirmationDialogOpen(false);
             }}
-            appearance="primary">
+            appearance="primary"
+          >
             {t('pages.panels.confirm')}
           </Button>
-          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
+          <Button
+            onClick={() => setConfirmationDialogOpen(false)}
+            appearance="subtle"
+          >
             {t('pages.panels.cancel')}
           </Button>
         </Modal.Footer>
       </Modal>
     </>
-  )
+  );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
@@ -456,6 +552,6 @@ const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_CREATE_PAGE',
   'CAN_DELETE_PAGE',
   'CAN_PUBLISH_PAGE',
-  CanPreview.id
-])(PageList)
-export {CheckedPermissionComponent as PageList}
+  CanPreview.id,
+])(PageList);
+export { CheckedPermissionComponent as PageList };

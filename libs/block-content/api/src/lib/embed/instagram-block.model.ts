@@ -1,13 +1,15 @@
-import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
-import {BaseBlock} from '../base-block.model'
-import {BlockType} from '../block-type.model'
+import { Field, InputType, ObjectType, OmitType } from '@nestjs/graphql';
+import { BaseBlock } from '../base-block.model';
+import { BlockType } from '../block-type.model';
 
 @ObjectType({
-  implements: BaseBlock
+  implements: BaseBlock,
 })
-export class InstagramPostBlock extends BaseBlock<typeof BlockType.InstagramPost> {
-  @Field({nullable: true})
-  postID?: string
+export class InstagramPostBlock extends BaseBlock<
+  typeof BlockType.InstagramPost
+> {
+  @Field({ nullable: true })
+  postID?: string;
 }
 
 @InputType()

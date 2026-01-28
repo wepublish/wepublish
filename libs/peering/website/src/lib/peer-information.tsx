@@ -1,60 +1,111 @@
-import styled from '@emotion/styled'
-import {BuilderPeerProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {ContentWrapper} from '@wepublish/content/website'
+import styled from '@emotion/styled';
+import {
+  BuilderPeerProps,
+  Button,
+  Image,
+  Link,
+  RichTextBlock,
+} from '@wepublish/website/builder';
+import { ImageWrapper } from '@wepublish/image/website';
+import { Theme, css } from '@emotion/react';
+import { theme } from '@wepublish/ui';
+import { toPlaintext } from '@wepublish/richtext';
 
-export const PeerInformationWrapper = styled('aside')`
-  display: grid;
-  padding: ${({theme}) => theme.spacing(3)};
-  gap: ${({theme}) => theme.spacing(1)};
-  justify-items: center;
-  text-align: center;
-  position: relative;
-`
-
-export const PeerInformationName = styled('div')`
+export const PeerProfileWrapper = styled('div')`
   display: grid;
   align-items: center;
-`
+  padding: ${({ theme }) => theme.spacing(2)}
+    ${({ theme }) => theme.spacing(2.5)};
+  background-color: ${({ theme }) => theme.palette.grey['100']};
+  gap: ${({ theme }) => theme.spacing(1)};
 
-export const PeerInformationCTA = styled('div')`
-  *:last-child {
-    margin: 0;
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    padding: ${({ theme }) => theme.spacing(2)}
+      ${({ theme }) => theme.spacing(3)};
+    gap: ${({ theme }) => theme.spacing(2)};
   }
-`
+`;
 
-export const PeerInformationOrigin = styled('div')`
-  margin-top: ${({theme}) => theme.spacing(2)};
-`
+export const PeerProfileBanner = styled(Image)`
+  object-fit: cover;
+  width: 100%;
+  max-width: ${({ theme }) => theme.spacing(60)};
+  margin: 0 auto;
+`;
 
-export function PeerInformation({profile, originUrl, className}: BuilderPeerProps) {
-  const {
-    elements: {Image, Button, Link},
-    blocks: {RichText}
-  } = useWebsiteBuilder()
+export const PeerProfileCTA = styled(Button)`
+  margin-top: ${({ theme }) => theme.spacing(2)};
+  width: fit-content;
+  justify-self: center;
+`;
+
+const richTextStyles = (theme: Theme) => css`
+  p {
+    ${theme.typography.peerInformation}
+  }
+`;
+
+export const PeerInformationWrapper = styled('aside')`
+  margin-top: var(--article-content-row-gap);
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(1)};
+  justify-items: center;
+
+  ${ImageWrapper} {
+    max-height: 65px;
+    object-fit: contain;
+  }
+`;
+
+export const PeerInformationLink = styled(Link)`
+  font-size: 0.875em;
+`;
+
+export function PeerInformation({
+  profile,
+  information,
+  originUrl,
+  className,
+}: BuilderPeerProps) {
+  if (!profile) {
+    return;
+  }
+
+  const linkURL = profile.callToActionURL ?? profile.websiteURL;
+  const linkText = toPlaintext(profile.callToActionText ?? []);
 
   return (
-    <ContentWrapper>
-      <PeerInformationWrapper className={className}>
-        <PeerInformationName>
-          {profile?.callToActionImage && <Image image={profile.callToActionImage} />}
-        </PeerInformationName>
-
-        <PeerInformationCTA>
-          <Button
-            variant="contained"
-            color="primary"
-            href={profile?.callToActionURL ?? profile?.websiteURL}
-            LinkComponent={Link}>
-            <RichText richText={profile?.callToActionText ?? []} />
-          </Button>
-        </PeerInformationCTA>
-
-        {originUrl && (
-          <PeerInformationOrigin>
-            <Link href={originUrl}>Zum Originalartikel</Link>
-          </PeerInformationOrigin>
+    <PeerInformationWrapper className={className}>
+      <PeerProfileWrapper className={className}>
+        {profile.callToActionImage && (
+          <PeerProfileBanner
+            image={profile.callToActionImage}
+            maxWidth={500}
+          />
         )}
-      </PeerInformationWrapper>
-    </ContentWrapper>
-  )
+
+        <RichTextBlock
+          richText={information ?? []}
+          css={richTextStyles(theme)}
+        />
+
+        <PeerProfileCTA
+          color="primary"
+          variant="contained"
+          size="medium"
+          LinkComponent={Link}
+          href={linkURL ?? ''}
+          target={'_blank'}
+        >
+          {linkText}
+        </PeerProfileCTA>
+      </PeerProfileWrapper>
+
+      {originUrl && (
+        <PeerInformationLink href={originUrl}>
+          Zum Originalartikel
+        </PeerInformationLink>
+      )}
+    </PeerInformationWrapper>
+  );
 }

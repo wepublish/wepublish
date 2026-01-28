@@ -1,12 +1,12 @@
-import {AuthorListDocument} from '@wepublish/website/api'
-import {Meta} from '@storybook/react'
-import {AuthorListContainer} from './author-list-container'
-import {mockAuthor} from '@wepublish/storybook/mocks'
+import { AuthorListDocument } from '@wepublish/website/api';
+import { Meta } from '@storybook/react';
+import { AuthorListContainer } from './author-list-container';
+import { mockAuthor } from '@wepublish/storybook/mocks';
 
 export default {
   component: AuthorListContainer,
-  title: 'Container/AuthorList'
-} as Meta
+  title: 'Container/AuthorList',
+} as Meta;
 
 export const Default = {
   args: {},
@@ -17,7 +17,7 @@ export const Default = {
         {
           request: {
             query: AuthorListDocument,
-            variables: {}
+            variables: {},
           },
           result: {
             data: {
@@ -28,13 +28,13 @@ export const Default = {
                   hasNextPage: false,
                   hasPreviousPage: false,
                   endCursor: null,
-                  startCursor: null
-                }
-              }
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+                  startCursor: null,
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
+  },
+};

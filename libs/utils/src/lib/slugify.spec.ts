@@ -1,4 +1,4 @@
-import {slugify} from './slugify'
+import { slugify } from './slugify';
 
 describe('slugify', () => {
   it.each([
@@ -36,9 +36,9 @@ describe('slugify', () => {
     'text with special w like ẂŴẀẄ',
     'text with special x like ẍ',
     'text with special y like ÝŶŸỲỴỶỸ',
-    'text with special z like ŹŻŽ'
+    'text with special z like ŹŻŽ',
   ])('should transform %s correctly', text => {
-    const result = slugify(text)
-    expect(result).toMatchSnapshot()
-  })
-})
+    const result = slugify(text);
+    expect(result).toMatchSnapshot();
+  });
+});

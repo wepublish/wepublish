@@ -1,17 +1,21 @@
-import {action} from '@storybook/addon-actions'
-import {StoryObj} from '@storybook/react'
-import {WithUserDecorator} from '@wepublish/storybook'
-import {UpdatePasswordDocument, UpdateUserDocument, User} from '@wepublish/website/api'
-import {PersonalDataFormContainer} from './personal-data-form-container'
-import * as personalDataFormStories from './personal-data-form.stories'
-import {mockImage} from '@wepublish/storybook/mocks'
+import { action } from '@storybook/addon-actions';
+import { StoryObj } from '@storybook/react';
+import { WithUserDecorator } from '@wepublish/storybook';
+import {
+  SensitiveDataUser,
+  UpdatePasswordDocument,
+  UpdateUserDocument,
+} from '@wepublish/website/api';
+import { PersonalDataFormContainer } from './personal-data-form-container';
+import * as personalDataFormStories from './personal-data-form.stories';
+import { mockImage, mockUser } from '@wepublish/storybook/mocks';
 
 export default {
   title: 'Container/Personal Data Form',
-  component: PersonalDataFormContainer
-}
+  component: PersonalDataFormContainer,
+};
 
-const mockUser: User = {
+const mockedUser = mockUser({
   id: '1234',
   firstName: 'Kamil',
   name: 'Wasyl',
@@ -19,15 +23,14 @@ const mockUser: User = {
   flair: 'Financial Advisor & CEO',
   address: {
     streetAddress: 'Cool Street',
+    streetAddressNumber: '1234',
     zipCode: '12345',
     city: 'Surfers Paradise',
-    country: 'Australia'
+    country: 'Australia',
   },
   image: mockImage(),
-  oauth2Accounts: [],
   paymentProviderCustomers: [],
-  properties: []
-}
+}) as SensitiveDataUser;
 
 const onUpdateVariables = {
   input: {
@@ -36,19 +39,23 @@ const onUpdateVariables = {
     firstName: 'KamilFoo',
     flair: 'Financial Advisor & CEO',
     address: {
-      streetAddress: 'Cool StreetMusterstrasse 1',
+      streetAddress: 'Cool StreetMusterstrasse',
+      streetAddressNumber: '1',
       zipCode: '123458047',
       city: 'Surfers ParadiseZürich',
-      country: 'Schweiz'
-    }
-  }
-}
+      country: 'Schweiz',
+    },
+  },
+};
 
-const onUpdatePasswordVariables = {password: '12345678', passwordRepeated: '12345678'}
+const onUpdatePasswordVariables = {
+  password: '12345678',
+  passwordRepeated: '12345678',
+};
 
 export const Default: StoryObj = {
   args: {
-    onUpdate: action('onUpdate')
+    onUpdate: action('onUpdate'),
   },
   parameters: {
     apolloClient: {
@@ -56,7 +63,7 @@ export const Default: StoryObj = {
         {
           request: {
             query: UpdateUserDocument,
-            variables: onUpdateVariables
+            variables: onUpdateVariables,
           },
           result: {
             data: {
@@ -68,24 +75,28 @@ export const Default: StoryObj = {
                 address: {
                   company: null,
                   streetAddress: 'street',
+                  streetAddressNumber: '1234',
                   streetAddress2: null,
                   zipCode: '12345',
                   city: 'asdf',
                   country: 'Australia',
-                  __typename: 'UserAddress'
+                  __typename: 'UserAddress',
                 },
                 flair: 'CEO & Advisor',
                 paymentProviderCustomers: [],
                 image: mockImage(),
-                __typename: 'User'
-              }
-            }
-          }
+                permissions: [],
+                properties: [],
+                __typename: 'User',
+                birthday: '1990-01-01',
+              },
+            },
+          },
         },
         {
           request: {
             query: UpdatePasswordDocument,
-            variables: onUpdatePasswordVariables
+            variables: onUpdatePasswordVariables,
           },
           result: {
             data: {
@@ -97,35 +108,39 @@ export const Default: StoryObj = {
                 address: {
                   company: null,
                   streetAddress: 'street',
+                  streetAddressNumber: '1234',
                   streetAddress2: null,
                   zipCode: '12345',
                   city: 'asdf',
                   country: 'Australia',
-                  __typename: 'UserAddress'
+                  __typename: 'UserAddress',
                 },
                 flair: 'CEO & Advisor',
                 paymentProviderCustomers: [],
                 image: mockImage(),
-                __typename: 'User'
-              }
-            }
-          }
-        }
-      ]
-    }
+                permissions: [],
+                properties: [],
+                __typename: 'User',
+                birthday: '1990-01-01',
+              },
+            },
+          },
+        },
+      ],
+    },
   },
-  decorators: [WithUserDecorator(mockUser)]
-}
+  decorators: [WithUserDecorator(mockedUser)],
+};
 
 export const Filled: StoryObj = {
   ...Default,
   args: {
-    ...Default.args
+    ...Default.args,
   },
   play: async ctx => {
-    await personalDataFormStories.Filled.play?.(ctx)
-  }
-}
+    await personalDataFormStories.Filled.play?.(ctx);
+  },
+};
 
 // export const DeleteImage: StoryObj = {
 //   ...Default,

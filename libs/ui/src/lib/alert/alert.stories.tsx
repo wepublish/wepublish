@@ -1,7 +1,7 @@
-import {Link, Stack} from '@mui/material'
-import {Meta} from '@storybook/react'
+import { Link, Stack } from '@mui/material';
+import { Meta } from '@storybook/react';
 
-import {Alert as AlertCmp} from './alert'
+import { Alert as AlertCmp } from './alert';
 
 export default {
   component: AlertCmp,
@@ -14,11 +14,14 @@ export default {
       <AlertCmp severity="success">Success</AlertCmp>
 
       <br />
-      <Link href="https://mui.com/material-ui/react-alert/" target="_blank">
+      <Link
+        href="https://mui.com/material-ui/react-alert/"
+        target="_blank"
+      >
         See more
       </Link>
     </Stack>
-  )
-} as Meta<typeof AlertCmp>
+  ),
+} as Meta<typeof AlertCmp>;
 
-export const Alert = {}
+export const Alert = {};

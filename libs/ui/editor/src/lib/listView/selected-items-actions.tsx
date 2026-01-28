@@ -1,11 +1,11 @@
-import styled from '@emotion/styled'
-import {ReactNode} from 'react'
-import {useTranslation} from 'react-i18next'
+import styled from '@emotion/styled';
+import { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type SelectedItemsActionsProps = {
-  selectedItems: string[]
-  children?: ReactNode
-}
+  selectedItems: string[];
+  children?: ReactNode;
+};
 
 const SelectedItemsActionsStyled = styled.div`
   display: flex;
@@ -21,19 +21,24 @@ const SelectedItemsActionsStyled = styled.div`
   &.has-selected-items {
     visibility: visible;
   }
-`
+`;
 
-export function SelectedItemsActions({selectedItems, children}: SelectedItemsActionsProps) {
-  const {t} = useTranslation()
-  const hasSelectedItems = selectedItems && selectedItems.length > 0
+export function SelectedItemsActions({
+  selectedItems,
+  children,
+}: SelectedItemsActionsProps) {
+  const { t } = useTranslation();
+  const hasSelectedItems = selectedItems && selectedItems.length > 0;
   return (
-    <SelectedItemsActionsStyled className={hasSelectedItems ? 'has-selected-items' : ''}>
+    <SelectedItemsActionsStyled
+      className={hasSelectedItems ? 'has-selected-items' : ''}
+    >
       <div>
         {t('selectableItemsActions.selectedItems', {
-          numberOfItems: selectedItems.length
+          numberOfItems: selectedItems.length,
         })}
       </div>
       {children}
     </SelectedItemsActionsStyled>
-  )
+  );
 }

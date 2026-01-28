@@ -1,31 +1,19 @@
-import {UserInputError} from 'apollo-server-express'
+import { BadRequestException } from '@nestjs/common';
 
-export class InvalidCredentialsError extends UserInputError {
+export class InvalidCredentialsError extends BadRequestException {
   constructor() {
-    super('The provided credentials are invalid.')
+    super('The provided credentials are invalid.');
   }
 }
 
-export class NotActiveError extends UserInputError {
+export class NotActiveError extends BadRequestException {
   constructor() {
-    super('The user account is not active.')
+    super('The user account is not active.');
   }
 }
 
-export class OAuth2ProviderNotFoundError extends UserInputError {
-  constructor(name: string) {
-    super(`The OAuth2 provider "${name}" does not exist.`)
-  }
-}
-
-export class InvalidOAuth2TokenError extends UserInputError {
+export class UserNotFoundError extends BadRequestException {
   constructor() {
-    super('The provided OAuth2 token is invalid.')
-  }
-}
-
-export class UserNotFoundError extends UserInputError {
-  constructor() {
-    super('The user was not found.')
+    super('The user was not found.');
   }
 }

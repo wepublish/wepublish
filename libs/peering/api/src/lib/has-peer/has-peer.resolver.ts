@@ -1,21 +1,31 @@
-import {Parent, ResolveField, Resolver} from '@nestjs/graphql'
-import {HasOptionalPeer, HasOptionalPeerLc, HasPeer, HasPeerLc} from './has-peer.model'
-import {Peer} from '../peer.model'
-import {PeerDataloaderService} from '../peer-dataloader.service'
+import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  HasOptionalPeer,
+  HasOptionalPeerLc,
+  HasPeer,
+  HasPeerLc,
+} from './has-peer.model';
+import { Peer } from '../peer.model';
+import { PeerDataloaderService } from '../peer-dataloader.service';
 
 @Resolver(() => HasPeer)
 export class HasPeerResolver {
   constructor(private dataloader: PeerDataloaderService) {}
 
-  @ResolveField(() => Peer, {nullable: true})
-  public peer(@Parent() block: HasOptionalPeer | HasPeer | HasOptionalPeerLc | HasPeerLc) {
-    const id = 'peerId' in block ? block.peerId : 'peerID' in block ? block.peerID : null
+  @ResolveField(() => Peer, { nullable: true })
+  public async peer(
+    @Parent() block: HasOptionalPeer | HasPeer | HasOptionalPeerLc | HasPeerLc
+  ) {
+    const id =
+      'peerId' in block ? block.peerId
+      : 'peerID' in block ? block.peerID
+      : null;
 
     if (!id) {
-      return null
+      return null;
     }
 
-    return this.dataloader.load(id)
+    return this.dataloader.load(id);
   }
 }
 

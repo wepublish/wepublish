@@ -55,6 +55,7 @@ fragment ArticleWithoutBlocks on Article {
   likes
   url
   previewUrl
+  paywallId
 
   latest {
     ...FullArticleRevisionWithoutBlocks
@@ -135,6 +136,7 @@ mutation CreateArticle(
   $hidden: Boolean!
   $hideAuthor: Boolean!
   $imageID: String
+  $paywallId: String
   $lead: String
   $preTitle: String
   $properties: [PropertyInput!]!
@@ -158,6 +160,7 @@ mutation CreateArticle(
     hidden: $hidden
     hideAuthor: $hideAuthor
     imageID: $imageID
+    paywallId: $paywallId
     lead: $lead
     preTitle: $preTitle
     properties: $properties
@@ -186,6 +189,7 @@ mutation UpdateArticle(
   $hidden: Boolean!
   $hideAuthor: Boolean!
   $imageID: String
+  $paywallId: String
   $lead: String
   $preTitle: String
   $properties: [PropertyInput!]!
@@ -209,6 +213,7 @@ mutation UpdateArticle(
     hidden: $hidden
     hideAuthor: $hideAuthor
     imageID: $imageID
+    paywallId: $paywallId
     lead: $lead
     preTitle: $preTitle
     properties: $properties

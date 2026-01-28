@@ -1,9 +1,11 @@
-fragment CrowdfundingWithActiveGoal on CrowdfundingWithActiveGoal {
+fragment FullCrowdfunding on Crowdfunding {
   id
   name
   revenue
+  subscriptions
+  goalType
 
-  activeCrowdfundingGoal {
+  activeGoal {
     id
     title
     description

@@ -1,31 +1,31 @@
-import {Field, ObjectType} from '@nestjs/graphql'
+import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class PeriodicJob {
   @Field()
-  id!: string
+  id!: string;
 
   @Field()
-  createdAt!: Date
+  createdAt!: Date;
 
   @Field()
-  modifiedAt!: Date
+  modifiedAt!: Date;
 
   @Field()
-  date!: Date
+  date!: Date;
 
   @Field()
-  tries!: number
+  tries!: number;
 
-  @Field({nullable: true})
-  executionTime?: Date
+  @Field({ nullable: true })
+  executionTime?: Date;
 
-  @Field({nullable: true})
-  successfullyFinished?: Date
+  @Field({ nullable: true })
+  successfullyFinished?: Date;
 
-  @Field({nullable: true})
-  finishedWithError?: Date
+  @Field({ nullable: true })
+  finishedWithError?: Date;
 
-  @Field({nullable: true})
-  error?: string
+  @Field({ nullable: true })
+  error?: string;
 }

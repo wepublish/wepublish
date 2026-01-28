@@ -1,24 +1,24 @@
-import {Field, InputType, registerEnumType} from '@nestjs/graphql'
-import {Prisma} from '@prisma/client'
+import { Field, InputType, registerEnumType } from '@nestjs/graphql';
+import { Prisma } from '@prisma/client';
 
 export enum DateFilterComparison {
   GreaterThan = 'GreaterThan',
   GreaterThanOrEqual = 'GreaterThanOrEqual',
   Equal = 'Equal',
   LowerThan = 'LowerThan',
-  LowerThanOrEqual = 'LowerThanOrEqual'
+  LowerThanOrEqual = 'LowerThanOrEqual',
 }
 
 registerEnumType(DateFilterComparison, {
-  name: 'DateFilterComparison'
-})
+  name: 'DateFilterComparison',
+});
 
 @InputType()
 export class DateFilter {
-  @Field({nullable: true})
-  date?: Date
+  @Field({ nullable: true })
+  date?: Date;
   @Field(() => DateFilterComparison)
-  comparison!: DateFilterComparison
+  comparison!: DateFilterComparison;
 }
 
 export const mapDateFilterToPrisma = (
@@ -26,25 +26,25 @@ export const mapDateFilterToPrisma = (
 ): keyof Prisma.DateTimeFilter => {
   switch (comparison) {
     case DateFilterComparison.Equal: {
-      return 'equals'
+      return 'equals';
     }
 
     case DateFilterComparison.GreaterThan: {
-      return 'gt'
+      return 'gt';
     }
 
     case DateFilterComparison.GreaterThanOrEqual: {
-      return 'gte'
+      return 'gte';
     }
 
     case DateFilterComparison.LowerThan: {
-      return 'lt'
+      return 'lt';
     }
 
     case DateFilterComparison.LowerThanOrEqual: {
-      return 'lte'
+      return 'lte';
     }
   }
 
-  throw new Error('Unimplemented comparison.')
-}
+  throw new Error('Unimplemented comparison.');
+};

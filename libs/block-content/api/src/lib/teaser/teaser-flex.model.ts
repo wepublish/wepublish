@@ -1,37 +1,19 @@
-import {Field, InputType, Int, ObjectType, OmitType} from '@nestjs/graphql'
-import {BaseBlock} from '../base-block.model'
-import {BlockType} from '../block-type.model'
-import {Teaser, TeaserInput} from './teaser.model'
-
-@ObjectType()
-export class FlexAlignment {
-  @Field()
-  i!: string
-
-  @Field(() => Int)
-  x!: number
-  @Field(() => Int)
-  y!: number
-
-  @Field(() => Int)
-  w!: number
-  @Field(() => Int)
-  h!: number
-
-  @Field()
-  static!: boolean
-}
-
-@InputType()
-export class FlexAlignmentInput extends OmitType(FlexAlignment, [] as const, InputType) {}
+import { Field, InputType, ObjectType, OmitType } from '@nestjs/graphql';
+import { BaseBlock } from '../base-block.model';
+import { BlockType } from '../block-type.model';
+import { Teaser, TeaserInput } from './teaser.model';
+import {
+  FlexAlignment,
+  FlexAlignmentInput,
+} from '../flex/flex-alignment.model';
 
 @ObjectType()
 export class FlexTeaser {
   @Field(() => FlexAlignment)
-  alignment!: FlexAlignment
+  alignment!: FlexAlignment;
 
-  @Field(() => Teaser, {nullable: true})
-  teaser?: typeof Teaser | null
+  @Field(() => Teaser, { nullable: true })
+  teaser?: typeof Teaser | null;
 }
 
 @InputType()
@@ -41,18 +23,18 @@ export class FlexTeaserInput extends OmitType(
   InputType
 ) {
   @Field(() => FlexAlignmentInput)
-  alignment!: FlexAlignmentInput
+  alignment!: FlexAlignmentInput;
 
-  @Field(() => TeaserInput, {nullable: true})
-  teaser?: TeaserInput | null
+  @Field(() => TeaserInput, { nullable: true })
+  teaser?: TeaserInput | null;
 }
 
 @ObjectType({
-  implements: () => [BaseBlock]
+  implements: () => [BaseBlock],
 })
 export class TeaserGridFlexBlock extends BaseBlock<BlockType.TeaserGridFlex> {
   @Field(() => [FlexTeaser])
-  flexTeasers!: FlexTeaser[]
+  flexTeasers!: FlexTeaser[];
 }
 
 @InputType()
@@ -62,9 +44,11 @@ export class TeaserGridFlexBlockInput extends OmitType(
   InputType
 ) {
   @Field(() => [FlexTeaserInput])
-  flexTeasers!: FlexTeaserInput[]
+  flexTeasers!: FlexTeaserInput[];
 }
 
-export function isTeaserGridFlexBlock(block: BaseBlock<BlockType>): block is TeaserGridFlexBlock {
-  return block.type === BlockType.TeaserGridFlex
+export function isTeaserGridFlexBlock(
+  block: BaseBlock<BlockType>
+): block is TeaserGridFlexBlock {
+  return block.type === BlockType.TeaserGridFlex;
 }

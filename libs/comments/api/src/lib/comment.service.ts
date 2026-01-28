@@ -1,14 +1,17 @@
-import {Injectable} from '@nestjs/common'
-import {Comment, CommentAuthorType, CommentsRevisions, PrismaClient} from '@prisma/client'
-import {SortOrder} from '@wepublish/utils/api'
+import { BadRequestException, Injectable } from '@nestjs/common';
 import {
-  CalculatedRating,
+  Comment,
+  CommentAuthorType,
+  CommentRating,
   CommentRatingSystemAnswer,
-  CommentSort,
+  CommentsRevisions,
   CommentState,
-  RatingSystemType
-} from './comment.model'
-import {RatingSystemService} from './rating-system'
+  PrismaClient,
+  RatingSystemType,
+} from '@prisma/client';
+import { SortOrder } from '@wepublish/utils/api';
+import { CommentSort } from './comment.model';
+import { RatingSystemService } from './rating-system';
 import {
   AnonymousCommentError,
   AnonymousCommentRatingDisabledError,
@@ -17,75 +20,86 @@ import {
   CommentAuthenticationError,
   CommentLengthError,
   countRichtextChars,
-  hasPermission,
   InvalidStarRatingValueError,
   NotAuthorisedError,
   NotFound,
-  UserInputError,
-  UserSession
-} from '@wepublish/api'
-import {CanCreateApprovedComment} from '@wepublish/permissions'
-import {ChallengeService} from '@wepublish/challenge/api'
-import {CommentInput, CommentUpdateInput} from './comment.input'
-import {SettingName, SettingsService} from '@wepublish/settings/api'
-import {CommentWithTags} from './comment.types'
+} from '@wepublish/api';
+import { CanCreateApprovedComment } from '@wepublish/permissions';
+import { ChallengeService } from '@wepublish/challenge/api';
+import { CommentInput, CommentUpdateInput } from './comment.input';
+import { SettingName, SettingsService } from '@wepublish/settings/api';
+import { CommentWithTags } from './comment.types';
+import { hasPermission } from '@wepublish/permissions/api';
+import { UserSession } from '@wepublish/authentication/api';
+import { CalculatedRating } from './rating-system/rating-system.model';
 
 export interface CommentWithRevisions {
-  title: string | null
-  lead: string | null
-  text: string | null
+  title: string | null;
+  lead: string | null;
+  text: string | null;
 
-  [key: string]: any
+  [key: string]: any;
 }
 
 @Injectable()
 export class CommentService {
   constructor(
-    private readonly prisma: PrismaClient,
-    private readonly ratingSystem: RatingSystemService,
-    private readonly settingsService: SettingsService,
-    private readonly challengeService: ChallengeService
+    private prisma: PrismaClient,
+    private ratingSystem: RatingSystemService,
+    private settingsService: SettingsService,
+    private challengeService: ChallengeService
   ) {}
 
-  async getPublicChildrenCommentsByParentId(parentId: string, userId: string | null) {
+  async getPublicChildrenCommentsByParentId(
+    parentId: string,
+    userId: string | null
+  ) {
     const comments = await this.prisma.comment.findMany({
       where: {
         AND: [
-          {parentID: parentId},
-          {OR: [userId ? {userID: userId} : {}, {state: CommentState.approved}]}
-        ]
+          { parentID: parentId },
+          {
+            OR: [
+              userId ? { userID: userId } : {},
+              { state: CommentState.approved },
+            ],
+          },
+        ],
       },
       orderBy: {
-        modifiedAt: 'desc'
+        modifiedAt: 'desc',
       },
       include: {
-        revisions: {orderBy: {createdAt: 'asc'}},
-        overriddenRatings: true
-      }
-    })
+        revisions: { orderBy: { createdAt: 'asc' } },
+        overriddenRatings: true,
+      },
+    });
 
-    return comments.map(this.mapCommentToPublicComment)
+    return comments.map(this.mapCommentToPublicComment);
   }
 
   getCalculatedRatingsForComment(
     answers: CommentRatingSystemAnswer[],
-    ratings: any[]
+    ratings: CommentRating[]
   ): CalculatedRating[] {
     return answers.map(answer => {
       const sortedRatings = ratings
         .filter(rating => rating.answerId === answer.id)
         .map(rating => rating.value)
-        .sort((a, b) => a - b)
-      const total = sortedRatings.reduce((value, rating) => value + rating, 0)
-      const mean = total / Math.max(sortedRatings.length, 1)
+        .sort((a, b) => a - b);
+      const total = sortedRatings.reduce((value, rating) => value + rating, 0);
+      const mean = total / Math.max(sortedRatings.length, 1);
 
       return {
-        answer,
+        answer: {
+          ...answer,
+          answer: answer.answer ?? undefined,
+        },
         count: sortedRatings.length,
         mean,
-        total
-      }
-    })
+        total,
+      };
+    });
   }
 
   sortCommentsByRating(ascending: boolean) {
@@ -94,20 +108,22 @@ export class CommentService {
         const totalA = a.calculatedRatings.reduce(
           (total: number, rating: CalculatedRating) => total + rating.mean,
           0
-        )
+        );
         const totalB = b.calculatedRatings.reduce(
           (total: number, rating: CalculatedRating) => total + rating.mean,
           0
-        )
-        const ratingDiff = ascending ? totalA - totalB : totalB - totalA
+        );
+        const ratingDiff = ascending ? totalA - totalB : totalB - totalA;
 
         if (ratingDiff === 0) {
-          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          return (
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
         }
 
-        return ratingDiff
-      })
-    }
+        return ratingDiff;
+      });
+    };
   }
 
   async getPublicCommentsForItemById(
@@ -116,92 +132,93 @@ export class CommentService {
     sort: CommentSort | null,
     order: SortOrder
   ) {
-    const ratingSystem = await this.ratingSystem.getRatingSystem()
-
-    const answers: CommentRatingSystemAnswer[] = (ratingSystem?.answers || []).map(answer => ({
-      id: answer.id,
-      ratingSystemId: answer.ratingSystemId,
-      answer: answer.answer,
-      type: answer.type as unknown as RatingSystemType
-    }))
+    const ratingSystem = await this.ratingSystem.getRatingSystem();
+    const answers = ratingSystem?.answers || [];
 
     const comments = await this.prisma.comment.findMany({
       where: {
         OR: [
-          {itemID: itemId, state: CommentState.approved, parentID: null},
-          userId ? {itemID: itemId, userID: userId, parentID: null} : {}
-        ]
+          { itemID: itemId, state: CommentState.approved, parentID: null },
+          userId ? { itemID: itemId, userID: userId, parentID: null } : {},
+        ],
       },
       include: {
-        revisions: {orderBy: {createdAt: order === SortOrder.Ascending ? 'asc' : 'desc'}},
+        revisions: { orderBy: { createdAt: 'asc' } },
         ratings: true,
         overriddenRatings: true,
-        tags: {include: {tag: true}}
+        tags: { include: { tag: true } },
       },
       orderBy: {
-        createdAt: order === SortOrder.Ascending ? 'asc' : 'desc'
-      }
-    })
+        createdAt: order === SortOrder.Ascending ? 'asc' : 'desc',
+      },
+    });
 
     const commentsWithRating = comments.map(comment => {
       return {
         ...this.mapCommentToPublicComment(comment),
-        calculatedRatings: this.getCalculatedRatingsForComment(answers, comment.ratings || []),
+        calculatedRatings: this.getCalculatedRatingsForComment(
+          answers,
+          comment.ratings || []
+        ),
         tags: comment.tags?.map((t: any) => t.tag) || [],
-        featured: !!comment.featured
-      }
-    })
+        featured: !!comment.featured,
+      };
+    });
 
-    const topComments = commentsWithRating.filter(comment => comment.featured)
-    let otherComments = commentsWithRating.filter(comment => !comment.featured)
+    const topComments = commentsWithRating.filter(comment => comment.featured);
+    let otherComments = commentsWithRating.filter(comment => !comment.featured);
 
     if (sort === CommentSort.rating) {
-      const isAscending = order === SortOrder.Ascending
-      otherComments = this.sortCommentsByRating(isAscending)(otherComments)
+      const isAscending = order === SortOrder.Ascending;
+      otherComments = this.sortCommentsByRating(isAscending)(otherComments);
     }
 
-    return [...topComments, ...otherComments]
+    return [...topComments, ...otherComments];
   }
 
   async addPublicComment(input: CommentInput, session?: UserSession | null) {
-    let authorType: CommentAuthorType = CommentAuthorType.verifiedUser
-    const commentLength = countRichtextChars(0, input.text)
+    let authorType: CommentAuthorType = CommentAuthorType.verifiedUser;
+    const commentLength = countRichtextChars(0, input.text);
 
     const maxCommentLength = (
       await this.settingsService.settingByName(SettingName.COMMENT_CHAR_LIMIT)
-    )?.value as number
+    )?.value as number;
 
     if (commentLength > maxCommentLength) {
-      throw new CommentLengthError(+maxCommentLength)
+      throw new CommentLengthError(+maxCommentLength);
     }
 
-    const canSkipApproval = hasPermission(CanCreateApprovedComment, session?.roles ?? [])
+    const canSkipApproval = hasPermission(
+      CanCreateApprovedComment,
+      session?.roles ?? []
+    );
 
     // Challenge
     if (!session?.user?.id) {
-      authorType = CommentAuthorType.guestUser
+      authorType = CommentAuthorType.guestUser;
 
       const guestCanCommentSetting = await this.settingsService.settingByName(
         SettingName.ALLOW_GUEST_COMMENTING
-      )
+      );
       if (!guestCanCommentSetting?.value) {
-        throw new AnonymousCommentsDisabledError()
+        throw new AnonymousCommentsDisabledError();
       }
 
-      if (!input.guestUsername) throw new AnonymousCommentError()
-      if (!input.challenge) throw new ChallengeMissingCommentError()
+      if (!input.guestUsername) throw new AnonymousCommentError();
+      if (!input.challenge) throw new ChallengeMissingCommentError();
 
-      const challengeValidationResult = await this.challengeService.validateChallenge({
-        challengeID: input.challenge.challengeID,
-        solution: input.challenge.challengeSolution
-      })
+      const challengeValidationResult =
+        await this.challengeService.validateChallenge({
+          challengeID: input.challenge.challengeID,
+          solution: input.challenge.challengeSolution,
+        });
 
       if (!challengeValidationResult.valid)
-        throw new CommentAuthenticationError(challengeValidationResult.message)
+        throw new CommentAuthenticationError(challengeValidationResult.message);
     }
 
     // Cleanup
-    const {challenge: _, title, text, ...commentInput} = input
+    const { challenge: _, title, text, ...commentInput } = input;
 
     const comment = await this.prisma.comment.create({
       data: {
@@ -209,70 +226,87 @@ export class CommentService {
         revisions: {
           create: {
             text: text as any,
-            title
-          }
+            title,
+          },
         },
         userID: session?.user.id,
         authorType,
-        state: canSkipApproval ? CommentState.approved : CommentState.pendingApproval
+        state:
+          canSkipApproval ?
+            CommentState.approved
+          : CommentState.pendingApproval,
       },
-      include: {revisions: {orderBy: {createdAt: 'asc'}}, overriddenRatings: true}
-    })
-    return {...comment, title, text}
+      include: {
+        revisions: { orderBy: { createdAt: 'asc' } },
+        overriddenRatings: true,
+      },
+    });
+    return { ...comment, title, text };
   }
 
   async updatePublicComment(
     input: CommentUpdateInput,
-    {user, roles}: Pick<UserSession, 'user' | 'roles'>
+    { user, roles }: Pick<UserSession, 'user' | 'roles'>
   ) {
-    const canSkipApproval = hasPermission(CanCreateApprovedComment, roles)
+    const canSkipApproval = hasPermission(CanCreateApprovedComment, roles);
 
     const comment = await this.prisma.comment.findUnique({
       where: {
-        id: input.id
+        id: input.id,
       },
-      include: {revisions: {orderBy: {createdAt: 'asc'}}}
-    })
+      include: { revisions: { orderBy: { createdAt: 'asc' } } },
+    });
 
     if (!comment) {
-      throw new NotFound('comment', input.id)
+      throw new NotFound('comment', input.id);
     }
 
     if (user.id !== comment?.userID) {
-      throw new NotAuthorisedError()
+      throw new NotAuthorisedError();
     }
 
     const commentEditingSetting = await this.settingsService.settingByName(
       SettingName.ALLOW_COMMENT_EDITING
-    )
+    );
 
-    if (!commentEditingSetting?.value && comment.state !== CommentState.pendingUserChanges) {
-      throw new UserInputError('Comment state must be pending user changes')
+    if (
+      !commentEditingSetting?.value &&
+      comment.state !== CommentState.pendingUserChanges
+    ) {
+      throw new BadRequestException(
+        'Comment state must be pending user changes'
+      );
     }
 
-    const {id, text, title, lead} = input
+    const { id, text, title, lead } = input;
 
     const updatedComment = await this.prisma.comment.update({
-      where: {id},
+      where: { id },
       data: {
         revisions: {
           create: {
             text: (text ?? comment?.revisions.at(-1)?.text ?? '') as string,
             title: (title ?? comment?.revisions.at(-1)?.title ?? '') as string,
-            lead: (lead ?? comment?.revisions.at(-1)?.lead ?? '') as string
-          }
+            lead: (lead ?? comment?.revisions.at(-1)?.lead ?? '') as string,
+          },
         },
-        state: canSkipApproval ? CommentState.approved : CommentState.pendingApproval
+        state:
+          canSkipApproval ?
+            CommentState.approved
+          : CommentState.pendingApproval,
       },
-      select: {revisions: {orderBy: {createdAt: 'asc'}}, overriddenRatings: true}
-    })
+      select: {
+        revisions: { orderBy: { createdAt: 'asc' } },
+        overriddenRatings: true,
+      },
+    });
 
     return {
       ...updatedComment,
       text: updatedComment.revisions.at(-1)?.text,
       title: updatedComment.revisions.at(-1)?.title,
-      lead: updatedComment.revisions.at(-1)?.lead
-    }
+      lead: updatedComment.revisions.at(-1)?.lead,
+    };
   }
 
   async rateComment(
@@ -285,74 +319,76 @@ export class CommentService {
     // check if anonymous rating is allowed
     const guestRatingSetting = await this.settingsService.settingByName(
       SettingName.ALLOW_GUEST_COMMENT_RATING
-    )
+    );
 
     if (!session && guestRatingSetting?.value !== true) {
-      throw new AnonymousCommentRatingDisabledError()
+      throw new AnonymousCommentRatingDisabledError();
     }
 
     const answer = await this.prisma.commentRatingSystemAnswer.findUnique({
       where: {
-        id: answerId
-      }
-    })
+        id: answerId,
+      },
+    });
 
     if (!answer) {
-      throw new NotFound('CommentRatingSystemAnswer', answerId)
+      throw new NotFound('CommentRatingSystemAnswer', answerId);
     }
 
-    this.validateCommentRatingValue(answer.type as RatingSystemType, value)
+    this.validateCommentRatingValue(answer.type as RatingSystemType, value);
 
     await this.prisma.commentRating.upsert({
       where: {
         answerId_commentId_userId: {
           answerId,
           commentId,
-          userId: session?.user.id ?? ''
-        }
+          userId: session?.user.id ?? '',
+        },
       },
       update: {
         fingerprint,
-        value
+        value,
       },
       create: {
         answerId,
         commentId,
         userId: session?.user.id,
         value,
-        fingerprint
-      }
-    })
+        fingerprint,
+      },
+    });
 
     const comment = await this.prisma.comment.findFirst({
       where: {
-        id: commentId
+        id: commentId,
       },
       include: {
-        revisions: {orderBy: {createdAt: 'asc'}},
-        overriddenRatings: true
-      }
-    })
+        revisions: { orderBy: { createdAt: 'asc' } },
+        overriddenRatings: true,
+      },
+    });
 
-    return comment ? this.mapCommentToPublicComment(comment) : null
+    return comment ? this.mapCommentToPublicComment(comment) : null;
   }
 
-  private mapCommentToPublicComment(comment: Comment & {revisions: CommentsRevisions[]}) {
-    const {revisions} = comment
+  private mapCommentToPublicComment(
+    comment: Comment & { revisions: CommentsRevisions[] }
+  ) {
+    const { revisions } = comment;
 
     return {
       title: revisions.length ? revisions[revisions.length - 1].title : null,
       lead: revisions.length ? revisions[revisions.length - 1].lead : null,
       text: revisions.length ? revisions[revisions.length - 1].text : null,
-      ...comment
-    } as CommentWithTags
+      ...comment,
+    } as CommentWithTags;
   }
 
   private validateCommentRatingValue(type: RatingSystemType, value: number) {
     switch (type) {
       case RatingSystemType.star: {
         if (value <= 0 || value > 5) {
-          throw new InvalidStarRatingValueError()
+          throw new InvalidStarRatingValueError();
         }
       }
     }

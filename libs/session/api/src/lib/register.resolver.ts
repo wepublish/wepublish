@@ -1,9 +1,9 @@
-import {Args, Mutation, Resolver} from '@nestjs/graphql'
-import {Public} from '@wepublish/authentication/api'
-import {MemberRegistrationInput, Registration} from './register.model'
-import {ChallengeService} from '@wepublish/challenge/api'
-import {CommentAuthenticationError} from '@wepublish/api'
-import {RegisterService} from './register.service'
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Public } from '@wepublish/authentication/api';
+import { MemberRegistrationInput, Registration } from './register.model';
+import { ChallengeService } from '@wepublish/challenge/api';
+import { CommentAuthenticationError } from '@wepublish/api';
+import { RegisterService } from './register.service';
 
 @Resolver()
 export class RegisterResolver {
@@ -14,17 +14,21 @@ export class RegisterResolver {
 
   @Public()
   @Mutation(() => Registration, {
-    description: `This mutation registers a new member by providing name, email, and other required information.`
+    description: `This mutation registers a new member by providing name, email, and other required information.`,
   })
-  async registerMember(@Args() {challengeAnswer, ...input}: MemberRegistrationInput) {
-    const challengeValidationResult = await this.challengeService.validateChallenge({
-      challengeID: challengeAnswer.challengeID,
-      solution: challengeAnswer.challengeSolution
-    })
+  async registerMember(
+    @Args() { challengeAnswer, ...input }: MemberRegistrationInput
+  ) {
+    const challengeValidationResult =
+      await this.challengeService.validateChallenge({
+        challengeID: challengeAnswer.challengeID,
+        solution: challengeAnswer.challengeSolution,
+      });
 
     if (!challengeValidationResult.valid) {
-      throw new CommentAuthenticationError(challengeValidationResult.message)
+      throw new CommentAuthenticationError(challengeValidationResult.message);
     }
-    return this.registerService.registerMember(input)
+
+    return this.registerService.registerMember(input);
   }
 }

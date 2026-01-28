@@ -1,38 +1,40 @@
-import {TableCell} from '@mui/material'
-import styled from '@emotion/styled'
-import {SubscriptionInterval} from '@wepublish/editor/api-v2'
-import {useAuthorisation} from '@wepublish/ui/editor'
-import {useContext, useRef} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdCheck, MdEdit, MdRefresh} from 'react-icons/md'
-import {IconButton, InputNumber, Popover, Tag, Whisper} from 'rsuite'
-import {SubscriptionClientContext} from '../graphql-client-context'
+import { TableCell } from '@mui/material';
+import styled from '@emotion/styled';
+import { SubscriptionInterval } from '@wepublish/editor/api-v2';
+import { useAuthorisation } from '@wepublish/ui/editor';
+import { useContext, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdCheck, MdEdit, MdRefresh } from 'react-icons/md';
+import { IconButton, InputNumber, Popover, Tag, Whisper } from 'rsuite';
+import { SubscriptionClientContext } from '../graphql-client-context';
 
 interface FlowHeadProps {
-  days: (number | null | undefined)[]
-  intervals: SubscriptionInterval[]
+  days: (number | null | undefined)[];
+  intervals: SubscriptionInterval[];
 }
 
 const PopoverBody = styled('div')`
   display: flex;
   align-items: center;
   min-width: 170px;
-`
+`;
 
-export function TimelineHead({days, intervals}: FlowHeadProps) {
-  const {t} = useTranslation()
-  const canUpdateSubscriptionFlow = useAuthorisation('CAN_UPDATE_SUBSCRIPTION_FLOW')
-  const editDay = useRef<number | undefined>(undefined)
-  const client = useContext(SubscriptionClientContext)
+export function TimelineHead({ days, intervals }: FlowHeadProps) {
+  const { t } = useTranslation();
+  const canUpdateSubscriptionFlow = useAuthorisation(
+    'CAN_UPDATE_SUBSCRIPTION_FLOW'
+  );
+  const editDay = useRef<number | undefined>(undefined);
+  const client = useContext(SubscriptionClientContext);
 
   async function updateTimelineDay(dayToUpdate: number) {
     if (editDay.current === undefined) {
-      return
+      return;
     }
 
     const intervalsToUpdate = intervals.filter(
       interval => interval?.daysAwayFromEnding === dayToUpdate
-    )
+    );
 
     await Promise.all(
       intervalsToUpdate.map(intervalToUpdate => {
@@ -40,11 +42,11 @@ export function TimelineHead({days, intervals}: FlowHeadProps) {
           variables: {
             id: intervalToUpdate.id,
             mailTemplateId: intervalToUpdate.mailTemplate?.id,
-            daysAwayFromEnding: editDay.current
-          }
-        })
+            daysAwayFromEnding: editDay.current,
+          },
+        });
       })
-    )
+    );
   }
 
   return (
@@ -53,14 +55,18 @@ export function TimelineHead({days, intervals}: FlowHeadProps) {
         <TableCell
           key={`day-${day}`}
           align="center"
-          style={day === 0 ? {backgroundColor: 'lightyellow'} : {}}>
-          {t('subscriptionFlow.dayWithNumber', {day})}
+          style={day === 0 ? { backgroundColor: 'lightyellow' } : {}}
+        >
+          {t('subscriptionFlow.dayWithNumber', { day })}
           {/* show badge on zero day */}
           {!day && (
             <>
               <br />
               <Tag color="blue">
-                <MdRefresh size={20} style={{marginRight: '5px'}} />
+                <MdRefresh
+                  size={20}
+                  style={{ marginRight: '5px' }}
+                />
                 {t('subscriptionFlow.dayOfRenewal')}
               </Tag>
             </>
@@ -87,17 +93,24 @@ export function TimelineHead({days, intervals}: FlowHeadProps) {
                       color={'green'}
                       appearance={'primary'}
                       size="sm"
-                      style={{marginLeft: '5px'}}
+                      style={{ marginLeft: '5px' }}
                       onClick={() => updateTimelineDay(day ?? 0)}
                     />
                   </PopoverBody>
                 </Popover>
-              }>
-              <IconButton icon={<MdEdit />} size={'sm'} circle color={'blue'} appearance={'link'} />
+              }
+            >
+              <IconButton
+                icon={<MdEdit />}
+                size={'sm'}
+                circle
+                color={'blue'}
+                appearance={'link'}
+              />
             </Whisper>
           )}
         </TableCell>
       ))}
     </>
-  )
+  );
 }

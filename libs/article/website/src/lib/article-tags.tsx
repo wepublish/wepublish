@@ -1,20 +1,26 @@
-import styled from '@emotion/styled'
-import {Chip} from '@mui/material'
-import {BuilderArticleMetaProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import styled from '@emotion/styled';
+import { Chip } from '@mui/material';
+import {
+  BuilderArticleMetaProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
 
 export const ArticleTagsWrapper = styled('div')`
   display: flex;
   flex-flow: row wrap;
-  gap: ${({theme}) => theme.spacing(1)};
-`
+  gap: ${({ theme }) => theme.spacing(1)};
+`;
 
-export const ArticleTags = ({article, className}: BuilderArticleMetaProps) => {
+export const ArticleTags = ({
+  article,
+  className,
+}: BuilderArticleMetaProps) => {
   const {
-    elements: {Link}
-  } = useWebsiteBuilder()
+    elements: { Link },
+  } = useWebsiteBuilder();
 
   if (!article?.tags.length) {
-    return null
+    return null;
   }
 
   return (
@@ -31,5 +37,5 @@ export const ArticleTags = ({article, className}: BuilderArticleMetaProps) => {
         />
       ))}
     </ArticleTagsWrapper>
-  )
-}
+  );
+};

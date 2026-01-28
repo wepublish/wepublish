@@ -31,5 +31,10 @@
     "../../libs/utils/website/src/lib/auth-link.tsx",
     "../../libs/utils/website/src/lib/auth-guard.tsx"
   ],
-  "exclude": ["node_modules", "jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]
+  "exclude": [
+    "node_modules",
+    "jest.config.ts",
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts"
+  ]
 }

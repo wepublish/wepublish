@@ -19,11 +19,3 @@ projects:
     documents:
       - 'libs/testing/src/graphql/public/graphql-public.ts'
       - 'libs/testing/src/graphql/public/**/*.graphql'
-  migration-v1:
-    schema:
-      - 'apps/api-example/schema-v2.graphql'
-    documents: 'libs/migrate-wordpress/src/api/public/**/*.graphql'
-  migration-v1-admin:
-    schema:
-      - 'apps/api-example/schema-v1-admin.graphql'
-    documents: 'libs/migrate-wordpress/src/api/private/**/*.graphql'

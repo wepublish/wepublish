@@ -1,15 +1,16 @@
-import styled from '@emotion/styled'
-import {AppBar, Box, css} from '@mui/material'
-import {Structure} from '../structure'
-import {NavbarLinks, NavbarMain} from '@wepublish/navigation/website'
+import styled from '@emotion/styled';
+import { AppBar, Box, css } from '@mui/material';
+import { NavbarLinks, NavbarMain } from '@wepublish/navigation/website';
+
+import { Structure } from '../structure';
 import {
   BuilderNavAppBarProps,
   HomeLogoButton,
   LoggedInButtons,
   LoggedOutButtons,
   MenuItems,
-  NavbarOpenCloseButton
-} from './nav-app-bar'
+  NavbarOpenCloseButton,
+} from './nav-app-bar';
 
 export const OnlineReportsNavAppBar = ({
   logo,
@@ -18,15 +19,22 @@ export const OnlineReportsNavAppBar = ({
   subscribeBtn,
   headerItems,
   menuToggle,
-  actions
+  actions,
 }: BuilderNavAppBarProps) => {
   return (
-    <AppBar position="static" elevation={0} color={'transparent'}>
+    <AppBar
+      position="static"
+      elevation={0}
+      color={'transparent'}
+    >
       <Structure>
         <MenuContainer>
           <NavStructure>
             <NavbarInnerWrapper>
-              <OnlineReportsHomeLogoButton logo={logo} menuToggle={menuToggle} />
+              <OnlineReportsHomeLogoButton
+                logo={logo}
+                menuToggle={menuToggle}
+              />
               <NavbarMain>
                 {!!headerItems?.links.length && (
                   <NavbarLinks isMenuOpen={menuToggle.value}>
@@ -37,7 +45,10 @@ export const OnlineReportsNavAppBar = ({
 
               <NavbarActions>
                 {actions}
-                <LoggedInButtons profileBtn={profileBtn} subscribeBtn={subscribeBtn} />
+                <LoggedInButtons
+                  profileBtn={profileBtn}
+                  subscribeBtn={subscribeBtn}
+                />
                 <LoggedOutButtons loginBtn={loginBtn} />
                 <NavbarOpenCloseButton toggle={menuToggle} />
               </NavbarActions>
@@ -46,8 +57,8 @@ export const OnlineReportsNavAppBar = ({
         </MenuContainer>
       </Structure>
     </AppBar>
-  )
-}
+  );
+};
 
 const MenuContainer = styled('div')`
   grid-column: 2/4;
@@ -55,30 +66,30 @@ const MenuContainer = styled('div')`
   @media (max-width: 1200px) {
     grid-column: 2/3;
   }
-`
+`;
 
-const OnlineReportsHomeLogoButton = styled(HomeLogoButton)``
+const OnlineReportsHomeLogoButton = styled(HomeLogoButton)``;
 
 export const NavbarActions = styled(Box)`
   display: flex;
   flex-flow: row wrap;
   align-items: center;
   justify-self: end;
-  gap: ${({theme}) => theme.spacing(1)};
-  margin: -${({theme}) => theme.spacing(1.5)};
-`
+  gap: ${({ theme }) => theme.spacing(1)};
+  margin: -${({ theme }) => theme.spacing(1.5)};
+`;
 
 export const NavStructure = styled('div')`
   width: 100%;
-  max-width: ${({theme}) => theme.breakpoints.values.lg}px;
+  max-width: ${({ theme }) => theme.breakpoints.values.lg}px;
   margin-left: auto;
   margin-right: auto;
 
-  padding: ${({theme}) => theme.spacing(3)};
-  padding-top: ${({theme}) => theme.spacing(0)};
-  padding-bottom: ${({theme}) => theme.spacing(0)};
+  padding: ${({ theme }) => theme.spacing(3)};
+  padding-top: ${({ theme }) => theme.spacing(0)};
+  padding-bottom: ${({ theme }) => theme.spacing(0)};
 
-  ${({theme}) => css`
+  ${({ theme }) => css`
     ${theme.breakpoints.up('sm')} {
       //min-height: 120px;
     }
@@ -90,14 +101,14 @@ export const NavStructure = styled('div')`
       padding-bottom: ${theme.spacing(0)};
     }
   `}
-`
+`;
 
 export const NavbarInnerWrapper = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(1)};
+  gap: ${({ theme }) => theme.spacing(1)};
   grid-auto-flow: column;
   justify-items: center;
-  ${({theme}) => css`
+  ${({ theme }) => css`
     min-height: 92px;
     max-height: 92px;
     ${theme.breakpoints.up('md')} {
@@ -107,4 +118,4 @@ export const NavbarInnerWrapper = styled('div')`
   `}
   align-items: center;
   grid-template-columns: auto 1fr auto;
-`
+`;

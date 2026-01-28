@@ -1,9 +1,12 @@
-import {Test, TestingModule} from '@nestjs/testing'
-import {INestApplication} from '@nestjs/common'
-import request from 'supertest'
-import {GraphQLModule} from '@nestjs/graphql'
-import {ApolloDriverConfig, ApolloDriver} from '@nestjs/apollo'
-import {HOT_AND_TRENDING_DATA_SOURCE, HotAndTrendingResolver} from './hot-and-trending.resolver'
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import request from 'supertest';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
+import {
+  HOT_AND_TRENDING_DATA_SOURCE,
+  HotAndTrendingResolver,
+} from './hot-and-trending.resolver';
 
 const hotAndTrendingQuery = `
   query HotAndTrending {
@@ -12,10 +15,10 @@ const hotAndTrendingQuery = `
       id
     }
   }
-`
+`;
 
 describe('HotAndTrendingResolver', () => {
-  let app: INestApplication
+  let app: INestApplication;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -24,37 +27,41 @@ describe('HotAndTrendingResolver', () => {
           driver: ApolloDriver,
           autoSchemaFile: true,
           path: '/',
-          cache: 'bounded'
-        })
+          cache: 'bounded',
+        }),
       ],
       providers: [
         HotAndTrendingResolver,
         {
           provide: HOT_AND_TRENDING_DATA_SOURCE,
           useValue: {
-            getMostViewedArticles: () => [{id: '123'}, {id: '123-123'}, {id: '123-123-123'}]
-          }
-        }
-      ]
-    }).compile()
+            getMostViewedArticles: () => [
+              { id: '123' },
+              { id: '123-123' },
+              { id: '123-123-123' },
+            ],
+          },
+        },
+      ],
+    }).compile();
 
-    app = module.createNestApplication()
-    await app.init()
-  })
+    app = module.createNestApplication();
+    await app.init();
+  });
 
   afterAll(async () => {
-    await app.close()
-  })
+    await app.close();
+  });
 
   test('hotAndTrending query', async () => {
     await request(app.getHttpServer())
       .post('')
       .send({
-        query: hotAndTrendingQuery
+        query: hotAndTrendingQuery,
       })
       .expect(res => {
-        expect(res.body.data.hotAndTrending).toMatchSnapshot()
+        expect(res.body.data.hotAndTrending).toMatchSnapshot();
       })
-      .expect(200)
-  })
-})
+      .expect(200);
+  });
+});

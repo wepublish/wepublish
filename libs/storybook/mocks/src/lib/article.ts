@@ -1,9 +1,13 @@
-import {FullArticleFragment, FullArticleRevisionFragment} from '@wepublish/website/api'
-import {mockTag} from './tag'
-import nanoid from 'nanoid'
-import {mockBlockContent} from './block-content'
-import {mockAuthor} from './author'
-import {mockImage} from './image'
+import {
+  FullArticleFragment,
+  FullArticleRevisionFragment,
+} from '@wepublish/website/api';
+import { mockTag } from './tag';
+import nanoid from 'nanoid';
+import { mockBlockContent } from './block-content';
+import { mockAuthor } from './author';
+import { mockImage } from './image';
+import { faker } from '@faker-js/faker';
 
 export const mockArticleRevision = ({
   title = 'This is an article title',
@@ -15,7 +19,8 @@ export const mockArticleRevision = ({
   image = mockImage(),
   authors = [mockAuthor(), mockAuthor()],
   blocks = mockBlockContent(),
-  canonicalUrl = 'https://example.com'
+  canonicalUrl = 'https://example.com',
+  breaking = false,
 }: Partial<FullArticleRevisionFragment> = {}): FullArticleRevisionFragment => ({
   __typename: 'ArticleRevision',
   id: nanoid(),
@@ -31,19 +36,20 @@ export const mockArticleRevision = ({
   socialMediaDescription,
   socialMediaImage,
   socialMediaTitle,
-  canonicalUrl
-})
+  canonicalUrl,
+  breaking,
+});
 
 export const mockArticle = ({
-  id = nanoid(),
+  id = faker.string.nanoid(),
   disableComments = false,
   likes = 5,
   trackingPixels = [],
-  tags = [mockTag({main: true}), mockTag()],
+  tags = [mockTag({ main: true }), mockTag()],
   latest = mockArticleRevision(),
   peerId = null,
   peerArticleId = null,
-  peer = null
+  peer = null,
 }: Partial<FullArticleFragment> = {}): FullArticleFragment => ({
   __typename: 'Article',
   id,
@@ -58,5 +64,6 @@ export const mockArticle = ({
   url: 'https://example.com',
   peerId,
   peerArticleId,
-  peer
-})
+  peer,
+  paywall: null,
+});

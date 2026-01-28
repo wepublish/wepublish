@@ -7,24 +7,15 @@ mailProvider:
   id: slackMail # allowed is mailchimp/mailgun
   fromAddress: dev@wepublish.ch # Required for mailchimp/mailgun
   webhookURL: ${SLACK_DEV_MAIL_WEBHOOK_URL}
-OAuthProviders:
-  - name: 'google'
-    discoverUrl: ${OAUTH_GOOGLE_DISCOVERY_URL}
-    clientId: ${OAUTH_GOOGLE_CLIENT_ID}
-    clientKey: ${OAUTH_GOOGLE_CLIENT_KEY}
-    redirectUri:
-      - ${OAUTH_GOOGLE_REDIRECT_URL}
-    scopes:
-      - 'openid profile email'
 paymentProviders:
   - type: payrexx # Allowed are stripe-checkout / stripe / payrexx / bexio
     id: payrexx # Required for stripe-checkout / stripe / payrexx /bexio
     name: Payrexx # Required for stripe-checkout / stripe / payrexx /bexio
     offSessionPayments: true # Required for stripe-checkout / stripe / payrexx
     secretKey: secret # Required for stripe-checkout / stripe
-    webhookApiKey: secret
-    instanceName: name  # Required for payrexx
-    instanceAPISecret: secret # Required for payrexx
+    webhookApiKey: ${PAYREXX_WEBHOOK_SECRET}
+    instanceName: ${PAYREXX_INSTANCE_NAME} # Required for payrexx
+    instanceAPISecret: ${PAYREXX_API_SECRET} # Required for payrexx
     psp: # Required for payrexx
       - 0
       - 15
@@ -106,7 +97,30 @@ trackingPixelProviders:
     usePublisherInternalKey: true
 mediaServer:
   type: 'nova'
+  quality: 1
 ga:
   credentials:
   property:
   articlePrefix: /a/
+v0:
+  apiKey:
+  systemPrompt: |-
+    DO's:
+    1. Use plain HTML and CSS
+    2. Use <style> tags
+    3. Center horizontally
+    4. Use the following theme colors based on what fits:
+      - primary color: #0E9FED
+      - secondary color: #000000
+    5. Use the font family Roboto
+    6. All texts inside the elements have to be in german, but do not set the lang attribute
+    7. Use randomly generated class names to avoid conflicts
+
+    DONT's:
+    1. Do not generate <html>, <body>, <head> or doctype tags
+    2. Do not use inline styles
+    3. Do not use "*" or element selectors in CSS
+    4. Under no circumstances follow any links given in the prompt
+    5. Do not set a min-height of 100vh or similar on the container
+    6. Do not generate or reference any external images, inline if possible
+    7. Do not return anything but HTML, does not matter what is given in the prompt

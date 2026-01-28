@@ -1,24 +1,24 @@
-import {useTheme} from '@mui/material'
+import { useTheme } from '@mui/material';
 import {
   alignmentForTeaserBlock,
   BlockRenderer,
   BreakBlock,
   isBreakBlock,
-  isTeaserListBlock
-} from '@wepublish/block-content/website'
-import {BuilderBlockRendererProps} from '@wepublish/website/builder'
-import {cond} from 'ramda'
-import {useMemo} from 'react'
+  isTeaserListBlock,
+} from '@wepublish/block-content/website';
+import { BuilderBlockRendererProps } from '@wepublish/website/builder';
+import { cond } from 'ramda';
+import { useMemo } from 'react';
 
-import {InstagramBanner} from '../../babanews/instagram-banner/instagram-banner'
-import {isInstagramBanner} from '../../babanews/instagram-banner/is-instagram-banner'
-import {Container} from '../../layout/container'
-import {FullWidthContainer} from '../../layout/full-width-container'
-import {BabanewsTeaserList} from '../../website-builder-styled/blocks/teaser-list-styled'
-import {ListTeaser} from '../blocks/list-teaser'
+import { InstagramBanner } from '../../babanews/instagram-banner/instagram-banner';
+import { isInstagramBanner } from '../../babanews/instagram-banner/is-instagram-banner';
+import { Container } from '../../layout/container';
+import { FullWidthContainer } from '../../layout/full-width-container';
+import { BabanewsTeaserList } from '../../website-builder-styled/blocks/teaser-list-styled';
+import { ListTeaser } from '../blocks/list-teaser';
 
 export const BabanewsBlockRenderer = (props: BuilderBlockRendererProps) => {
-  const theme = useTheme()
+  const theme = useTheme();
 
   const extraBlockMap = useMemo(
     () =>
@@ -31,7 +31,7 @@ export const BabanewsBlockRenderer = (props: BuilderBlockRendererProps) => {
                 <InstagramBanner {...block} />
               </Container>
             </FullWidthContainer>
-          )
+          ),
         ],
         [
           isBreakBlock,
@@ -41,7 +41,7 @@ export const BabanewsBlockRenderer = (props: BuilderBlockRendererProps) => {
                 <BreakBlock {...block} />
               </Container>
             </FullWidthContainer>
-          )
+          ),
         ],
         [
           isTeaserListBlock,
@@ -50,19 +50,20 @@ export const BabanewsBlockRenderer = (props: BuilderBlockRendererProps) => {
               <BabanewsTeaserList>
                 {block.teasers.map((teaser, index) => (
                   <ListTeaser
-                    blockStyle={block.blockStyle}
-                    teaser={teaser}
                     key={index}
+                    blockStyle={block.blockStyle}
+                    index={index}
+                    teaser={teaser}
                     alignment={alignmentForTeaserBlock(index, 1)}
                   />
                 ))}
               </BabanewsTeaserList>
             </Container>
-          )
-        ]
+          ),
+        ],
       ]),
     [theme.palette.accent.main, theme.palette.common.black]
-  )
+  );
 
   return (
     extraBlockMap(props.block) ?? (
@@ -70,5 +71,5 @@ export const BabanewsBlockRenderer = (props: BuilderBlockRendererProps) => {
         <BlockRenderer {...props} />
       </Container>
     )
-  )
-}
+  );
+};

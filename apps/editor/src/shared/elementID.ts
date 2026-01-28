@@ -1,4 +1,4 @@
 export enum ElementID {
   Settings = 'settings',
-  ReactRoot = 'react-root'
+  ReactRoot = 'react-root',
 }

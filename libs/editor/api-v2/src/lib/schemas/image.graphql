@@ -1,13 +1,13 @@
 fragment ImageURLs on Image {
   url
 
-  largeURL: transformURL(input: {width: 500})
-  mediumURL: transformURL(input: {width: 300})
-  thumbURL: transformURL(input: {width: 280, height: 200})
-  squareURL: transformURL(input: {width: 100, height: 100})
-  previewURL: transformURL(input: {width: 400, height: 200})
-  column1URL: transformURL(input: {width: 800, height: 300})
-  column6URL: transformURL(input: {width: 260, height: 300})
+  largeURL: transformURL(input: { width: 500 })
+  mediumURL: transformURL(input: { width: 300 })
+  thumbURL: transformURL(input: { width: 280, height: 200 })
+  squareURL: transformURL(input: { width: 100, height: 100 })
+  previewURL: transformURL(input: { width: 400, height: 200 })
+  column1URL: transformURL(input: { width: 800, height: 300 })
+  column6URL: transformURL(input: { width: 260, height: 300 })
 }
 
 fragment FullImage on Image {
@@ -36,4 +36,136 @@ fragment FullImage on Image {
   }
 
   ...ImageURLs
+}
+
+fragment FullPeerImage on PeerImage {
+  id
+
+  createdAt
+  modifiedAt
+
+  filename
+  format
+  mimeType
+  extension
+  width
+  height
+  fileSize
+
+  title
+  description
+  tags
+
+  source
+  link
+  license
+
+  focalPoint {
+    x
+    y
+  }
+
+  url
+
+  xxl
+  xl
+  l
+  m
+  s
+  xs
+  xxs
+
+  xxlSquare
+  xlSquare
+  lSquare
+  mSquare
+  sSquare
+  xsSquare
+  xxsSquare
+}
+
+query ImageList($filter: String, $cursorId: String, $take: Int, $skip: Int) {
+  images(
+    filter: { title: $filter }
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+  ) {
+    nodes {
+      ...FullImage
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query Image($id: String!) {
+  image(id: $id) {
+    ...FullImage
+  }
+}
+
+mutation UploadImage(
+  $title: String
+  $description: String
+  $focalPoint: FocalPointInput
+  $license: String
+  $link: String
+  $source: String
+  $tags: [String!]!
+  $file: Upload!
+  $filename: String
+) {
+  uploadImage(
+    title: $title
+    description: $description
+    focalPoint: $focalPoint
+    license: $license
+    link: $link
+    source: $source
+    tags: $tags
+    file: $file
+    filename: $filename
+  ) {
+    ...FullImage
+  }
+}
+
+mutation UpdateImage(
+  $id: String!
+  $title: String
+  $description: String
+  $focalPoint: FocalPointInput
+  $license: String
+  $link: String
+  $source: String
+  $tags: [String!]
+  $filename: String
+) {
+  updateImage(
+    id: $id
+    title: $title
+    description: $description
+    focalPoint: $focalPoint
+    license: $license
+    link: $link
+    source: $source
+    tags: $tags
+    filename: $filename
+  ) {
+    ...FullImage
+  }
+}
+
+mutation DeleteImage($id: String!) {
+  deleteImage(id: $id) {
+    ...FullImage
+  }
 }

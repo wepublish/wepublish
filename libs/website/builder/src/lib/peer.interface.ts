@@ -1,6 +1,6 @@
-import {FullPeerFragment} from '@wepublish/website/api'
+import { FullPeerFragment } from '@wepublish/website/api';
 
 export type BuilderPeerProps = FullPeerFragment & {
-  originUrl?: string
-  className?: string
-}
+  originUrl?: string;
+  className?: string;
+};

@@ -1,7 +1,7 @@
-import {Module} from '@nestjs/common'
-import {SystemInfoController} from './system-info.controller'
+import { Module } from '@nestjs/common';
+import { SystemInfoController } from './system-info.controller';
 
 @Module({
-  controllers: [SystemInfoController]
+  controllers: [SystemInfoController],
 })
 export class SystemInfoModule {}

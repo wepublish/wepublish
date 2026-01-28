@@ -1,54 +1,153 @@
-import {Args, Int, Query, Resolver} from '@nestjs/graphql'
-import {Public} from '@wepublish/authentication/api'
-import {GraphQLSlug, SortOrder} from '@wepublish/utils/api'
 import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import {
+  CurrentUser,
+  Public,
+  UserSession,
+} from '@wepublish/authentication/api';
+import { GraphQLSlug } from '@wepublish/utils/api';
+import {
+  CreateMemberPlanInput,
   MemberPlan,
   MemberPlanConnection,
-  MemberPlanFilter,
-  MemberPlanSort
-} from './member-plan.model'
-import {MemberPlanService} from './member-plan.service'
-import {UserInputError} from '@nestjs/apollo'
-import {MemberPlanDataloader} from './member-plan.dataloader'
+  MemberPlanListArgs,
+  UpdateMemberPlanInput,
+} from './member-plan.model';
+import { MemberPlanService } from './member-plan.service';
+import { MemberPlanDataloader } from './member-plan.dataloader';
+import { hasPermission, Permissions } from '@wepublish/permissions/api';
+import {
+  CanCreateMemberPlan,
+  CanDeleteMemberPlan,
+  CanGetMemberPlan,
+  CanGetMemberPlans,
+} from '@wepublish/permissions';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  NotFoundException,
+} from '@nestjs/common';
+import { Page, PageDataloaderService } from '@wepublish/page/api';
+import { PaymentMethod, PaymentMethodDataloader } from '@wepublish/payment/api';
 
 @Resolver(() => MemberPlan)
 export class MemberPlanResolver {
   constructor(
     private memberPlanService: MemberPlanService,
-    private memberPlanDataloader: MemberPlanDataloader
+    private memberPlanDataloader: MemberPlanDataloader,
+    @Inject(forwardRef(() => PageDataloaderService))
+    private pageDataloader: PageDataloaderService,
+    private paymentMethodDataloader: PaymentMethodDataloader
   ) {}
 
   @Public()
   @Query(() => MemberPlan, {
-    description: 'This query returns a member plan.',
-    nullable: true
+    description: `Returns a memberplan by id or slug.`,
   })
   async memberPlan(
-    @Args('id', {nullable: true}) id?: string,
-    @Args('slug', {type: () => GraphQLSlug, nullable: true}) slug?: string
+    @Args('id', { nullable: true }) id?: string,
+    @Args('slug', { type: () => GraphQLSlug, nullable: true }) slug?: string
   ) {
-    if ((!id && !slug) || (id && slug)) {
-      throw new UserInputError('You must provide either `id` or `slug`.')
+    if (id) {
+      const memberPlan = await this.memberPlanDataloader.load(id);
+
+      if (!memberPlan) {
+        throw new NotFoundException(`Memberplan with id ${id} was not found.`);
+      }
+
+      return memberPlan;
     }
 
-    return id
-      ? this.memberPlanDataloader.load(id)
-      : this.memberPlanService.getMemberPlanBySlug(slug!)
+    if (slug) {
+      const memberPlan = await this.memberPlanService.getMemberPlanBySlug(slug);
+
+      if (!memberPlan) {
+        throw new NotFoundException(
+          `Memberplan with slug ${slug} was not found.`
+        );
+      }
+
+      return memberPlan;
+    }
+
+    throw new BadRequestException('Memberplan id or slug required.');
   }
 
   @Public()
   @Query(() => MemberPlanConnection, {
-    description: 'This query returns the member plans.'
+    description: `Returns a paginated list of memberplans based on the filters given.`,
   })
-  async memberPlans(
-    @Args('cursor', {nullable: true}) cursor?: string,
-    @Args('take', {type: () => Int, defaultValue: 10}) take?: number,
-    @Args('skip', {type: () => Int, defaultValue: 0}) skip?: number,
-    @Args('filter', {nullable: true}) filter?: MemberPlanFilter,
-    @Args('sort', {type: () => MemberPlanSort, defaultValue: MemberPlanSort.createdAt})
-    sort?: MemberPlanSort,
-    @Args('order', {type: () => SortOrder, defaultValue: SortOrder.Descending}) order?: SortOrder
+  async memberPlans(@Args() input: MemberPlanListArgs) {
+    return this.memberPlanService.getMemberPlans(input);
+  }
+
+  @Permissions(CanCreateMemberPlan)
+  @Mutation(returns => MemberPlan, { description: `Creates a new memberplan.` })
+  public createMemberPlan(@Args() input: CreateMemberPlanInput) {
+    return this.memberPlanService.createMemberPlan(input);
+  }
+
+  @Permissions(CanCreateMemberPlan)
+  @Mutation(returns => MemberPlan, {
+    description: `Updates an existing memberplan.`,
+  })
+  public updateMemberPlan(@Args() input: UpdateMemberPlanInput) {
+    return this.memberPlanService.updateMemberPlan(input);
+  }
+
+  @Permissions(CanDeleteMemberPlan)
+  @Mutation(returns => MemberPlan, {
+    description: `Deletes an existing memberplan.`,
+  })
+  public deleteMemberPlan(@Args('id') id: string) {
+    return this.memberPlanService.deleteMemberPlan(id);
+  }
+
+  @ResolveField(() => String, { nullable: true })
+  async externalReward(
+    @Parent() parent: MemberPlan,
+    @CurrentUser() user: UserSession | undefined
   ) {
-    return this.memberPlanService.getMemberPlans(filter, sort, order, cursor, skip, take)
+    const canManage = hasPermission(
+      [CanGetMemberPlan, CanGetMemberPlans],
+      user?.roles ?? []
+    );
+
+    return canManage ? parent.externalReward : null;
+  }
+
+  @ResolveField(() => Page, { nullable: true })
+  async successPage(@Parent() parent: MemberPlan) {
+    return parent.successPageId ?
+        this.pageDataloader.load(parent.successPageId)
+      : null;
+  }
+
+  @ResolveField(() => Page, { nullable: true })
+  async failPage(@Parent() parent: MemberPlan) {
+    return parent.failPageId ?
+        this.pageDataloader.load(parent.failPageId)
+      : null;
+  }
+
+  @ResolveField(() => Page, { nullable: true })
+  async confirmationPage(@Parent() parent: MemberPlan) {
+    return parent.confirmationPageId ?
+        this.pageDataloader.load(parent.confirmationPageId)
+      : null;
+  }
+
+  @ResolveField(() => PaymentMethod, { nullable: true })
+  async migrateToTargetPaymentMethod(@Parent() parent: MemberPlan) {
+    return parent.migrateToTargetPaymentMethodID ?
+        this.paymentMethodDataloader.load(parent.migrateToTargetPaymentMethodID)
+      : null;
   }
 }

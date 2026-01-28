@@ -8,11 +8,11 @@ export default {
     '^.+\\.[tj]s$': [
       'ts-jest',
       {
-        tsconfig: '<rootDir>/tsconfig.spec.json'
-      }
-    ]
+        tsconfig: '<rootDir>/tsconfig.spec.json',
+      },
+    ],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../../coverage/libs/mail/api',
-  globalSetup: '<rootDir>/setup-database.js'
-}
+  globalSetup: '<rootDir>/setup-database.js',
+};

@@ -5,9 +5,10 @@
       "node_modules/.prisma",
       "node_modules/axios/dist/node/axios.cjs",
       "node_modules/es-get-iterator/node.js",
-      "node_modules/i18n-iso-countries/langs"
+      "node_modules/i18n-iso-countries/langs",
+      "node_modules/bcrypt/lib/binding/**/bcrypt_lib.node"
     ],
-    "targets": ["node16-linux"]
+    "targets": ["node22-linux"]
   },
   "bin": {
     "main": "dist/apps/api-example/main.js"

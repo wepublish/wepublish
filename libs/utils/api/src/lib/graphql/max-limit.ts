@@ -1,3 +1,3 @@
-const MaxResultsPerPage = 100
+const MaxResultsPerPage = 100;
 
-export const getMaxTake = (take: number) => Math.min(take, MaxResultsPerPage)
+export const getMaxTake = (take: number) => Math.min(take, MaxResultsPerPage);

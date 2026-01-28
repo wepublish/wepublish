@@ -1,22 +1,29 @@
-import {useUser} from '@wepublish/authentication/website'
-import {useSubscriptionsQuery} from '@wepublish/website/api'
-import {useMemo} from 'react'
+import { useUser } from '@wepublish/authentication/website';
+import { useSubscriptionsQuery } from '@wepublish/website/api';
+import { useMemo } from 'react';
+
+export const useActiveSubscriptions = () => {
+  const { hasUser } = useUser();
+  const { data } = useSubscriptionsQuery({
+    fetchPolicy: 'cache-first',
+    skip: !hasUser,
+  });
+
+  const subscriptions = useMemo(
+    () => data?.subscriptions.filter(({ isActive }) => isActive),
+    [data?.subscriptions]
+  );
+
+  if (!data?.subscriptions) {
+    // return null so we know if it hasn't been loaded yet
+    return null;
+  }
+
+  return subscriptions;
+};
 
 export const useHasActiveSubscription = () => {
-  const {hasUser} = useUser()
-  const {data} = useSubscriptionsQuery({
-    fetchPolicy: 'cache-first',
-    skip: !hasUser
-  })
+  const runningSubscriptions = useActiveSubscriptions();
 
-  return useMemo(
-    () =>
-      !!data?.subscriptions.find(
-        subscription =>
-          subscription.paidUntil &&
-          new Date() > new Date(subscription.startsAt) &&
-          new Date(subscription.paidUntil) > new Date()
-      ),
-    [data?.subscriptions]
-  )
-}
+  return !!runningSubscriptions?.length;
+};

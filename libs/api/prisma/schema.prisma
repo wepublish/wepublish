@@ -138,6 +138,9 @@ model Article {
   peerId        String?
   peerArticleId String?
 
+  paywall   Paywall? @relation(fields: [paywallId], references: [id], onDelete: SetNull)
+  paywallId String?  @db.Uuid
+
   navigations              NavigationLink[]
   tags                     TaggedArticles[]
   revisions                ArticleRevision[]
@@ -457,7 +460,7 @@ model CommentRatingOverride {
 
   value Int?
 
-  @@unique([answerId, commentId])
+  @@id([answerId, commentId])
   @@map("comments.rating-override")
 }
 
@@ -511,7 +514,7 @@ enum MailLogState {
 }
 
 model MailLog {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -522,7 +525,7 @@ model MailLog {
   mailProviderID String
   mailIdentifier String
   mailTemplate   MailTemplate @relation(fields: [mailTemplateId], references: [id])
-  mailTemplateId String       @db.Uuid
+  mailTemplateId String
   mailData       String?
   subject        String?
 
@@ -559,6 +562,11 @@ enum Currency {
   EUR @map("EUR")
 }
 
+enum ProductType {
+  Subscription @map("Subscription")
+  Donation     @map("Donation")
+}
+
 model MemberPlan {
   id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
@@ -567,16 +575,20 @@ model MemberPlan {
   name                           String
   slug                           String                   @unique
   tags                           String[]
+  shortDescription               Json?
   description                    Json
   active                         Boolean
   currency                       Currency
   amountPerMonthMin              Float
+  amountPerMonthMax              Float?
   amountPerMonthTarget           Float?
   availablePaymentMethods        AvailablePaymentMethod[]
   migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
   migrateToTargetPaymentMethodID String?
   extendable                     Boolean                  @default(true)
   maxCount                       Int?
+  productType                    ProductType              @default(Subscription)
+  externalReward                 String?
 
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id])
@@ -594,6 +606,7 @@ model MemberPlan {
   subscriptionFlows SubscriptionFlow[]
 
   crowdfundings Crowdfunding[]
+  paywalls      PaywallMemberplan[]
 
   @@index([name])
   @@map("member.plans")
@@ -673,7 +686,8 @@ model Page {
   modifiedAt  DateTime  @updatedAt
   publishedAt DateTime?
 
-  slug String?
+  slug   String?
+  hidden Boolean @default(false)
 
   revisions               PageRevision[]
   navigations             NavigationLink[]
@@ -743,6 +757,7 @@ model PaymentMethod {
   description       String
   paymentProviderID String
   active            Boolean
+  gracePeriod       Int      @default(0)
 
   image   Image?  @relation(fields: [imageId], references: [id])
   imageId String?
@@ -807,11 +822,12 @@ model Peer {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name       String
-  slug       String  @unique
-  hostURL    String
-  token      String
-  isDisabled Boolean @default(false)
+  name        String
+  slug        String  @unique
+  hostURL     String
+  token       String
+  isDisabled  Boolean @default(false)
+  information Json?
 
   articles Article[]
   images   Image[]
@@ -926,41 +942,19 @@ model UserAddress {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  company        String?
-  streetAddress  String?
-  streetAddress2 String?
-  zipCode        String?
-  city           String?
-  country        String?
+  company              String?
+  streetAddress        String?
+  streetAddressNumber  String?
+  streetAddress2       String?
+  streetAddress2Number String?
+  zipCode              String?
+  city                 String?
+  country              String?
 
   userId String @unique
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("users.addresses")
-}
-
-model UserOAuth2Account {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
-
-  type              String
-  provider          String
-  providerAccountId String
-  refreshToken      String?
-  accessToken       String
-  expiresAt         Int
-  tokenType         String
-  scope             String
-  idToken           String
-  oauthTokenSecret  String?
-  oauthToken        String?
-  sessionState      String?
-
-  userId String?
-  User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("users.oauth2-accounts")
 }
 
 model PaymentProviderCustomer {
@@ -993,10 +987,10 @@ model User {
   roleIDs         String[]
   userImageID     String?
   userImage       Image?    @relation(fields: [userImageID], references: [id])
+  note            String?
 
   address                  UserAddress?
   properties               MetadataProperty[]
-  oauth2Accounts           UserOAuth2Account[]
   paymentProviderCustomers PaymentProviderCustomer[]
 
   comments         Comment[]
@@ -1030,8 +1024,8 @@ model Setting {
   createdAt          DateTime @default(now())
   modifiedAt         DateTime @updatedAt
   name               String   @unique
-  value              Json
-  settingRestriction Json
+  value              Json?
+  settingRestriction Json?
 
   @@map("settings")
 }
@@ -1049,9 +1043,10 @@ model Tag {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  type TagType
-  tag  String?
-  main Boolean @default(false)
+  type        TagType
+  tag         String?
+  description Json?
+  main        Boolean @default(false)
 
   peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
   peerId String?
@@ -1162,7 +1157,7 @@ enum EventStatus {
 }
 
 model Event {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1188,7 +1183,7 @@ model Event {
 
 model TaggedEvents {
   event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId    String   @db.Uuid
+  eventId    String
   tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId      String
   createdAt  DateTime @default(now())
@@ -1199,7 +1194,7 @@ model TaggedEvents {
 }
 
 model Consent {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1212,12 +1207,12 @@ model Consent {
 }
 
 model UserConsent {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
   consent   Consent @relation(fields: [consentId], references: [id], onDelete: Cascade)
-  consentId String  @db.Uuid
+  consentId String
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
@@ -1236,14 +1231,14 @@ enum UserEvent {
 }
 
 model UserFlowMail {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
   event UserEvent @unique
 
   mailTemplate   MailTemplate? @relation(fields: [mailTemplateId], references: [id]) // user creates a new account
-  mailTemplateId String?       @db.Uuid
+  mailTemplateId String?
 
   @@map("user_communication_flows")
 }
@@ -1260,7 +1255,7 @@ enum SubscriptionEvent {
 }
 
 model SubscriptionFlow {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1279,22 +1274,22 @@ model SubscriptionFlow {
 }
 
 model SubscriptionInterval {
-  id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                 String            @id @default(dbgenerated("gen_random_uuid()"))
   createdAt          DateTime          @default(now())
   modifiedAt         DateTime          @updatedAt
   event              SubscriptionEvent
   daysAwayFromEnding Int?              @db.SmallInt
   mailTemplate       MailTemplate?     @relation(fields: [mailTemplateId], references: [id])
-  mailTemplateId     String?           @db.Uuid
+  mailTemplateId     String?
 
   subscriptionFlow   SubscriptionFlow @relation(fields: [subscriptionFlowId], references: [id], onDelete: Cascade)
-  subscriptionFlowId String           @db.Uuid
+  subscriptionFlowId String
 
   @@map("subscriptions.intervals")
 }
 
 model MailTemplate {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1313,7 +1308,7 @@ model MailTemplate {
 }
 
 model PeriodicJob {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1347,10 +1342,11 @@ enum BlockType {
   Poll           @map("poll")
   Comment        @map("comment")
   Event          @map("event")
+  FlexBlock      @map("flexBlock")
 }
 
 model BlockStyle {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1361,7 +1357,7 @@ model BlockStyle {
 }
 
 model Banner {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
@@ -1387,18 +1383,20 @@ model Banner {
 }
 
 enum LoginStatus {
-  LOGGED_IN  @map("logged_in")
-  LOGGED_OUT @map("logged_out")
-  ALL        @map("all")
+  UNSUBSCRIBED @map("unsubscribed")
+  SUBSCRIBED   @map("subscribed")
+  LOGGED_IN    @map("logged_in")
+  LOGGED_OUT   @map("logged_out")
+  ALL          @map("all")
 }
 
 model BannerAction {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
   banner   Banner @relation(fields: [bannerId], references: [id], onDelete: Cascade)
-  bannerId String @db.Uuid
+  bannerId String
 
   label String
   url   String
@@ -1415,29 +1413,89 @@ enum BannerActionRole {
   OTHER   @map("other")
 }
 
+enum CrowdfundingGoalType {
+  Revenue      @map("Revenue")
+  Subscription @map("Subscription")
+}
+
 model Crowdfunding {
-  id                      String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt               DateTime           @default(now())
-  modifiedAt              DateTime           @updatedAt
+  id                      String               @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt               DateTime             @default(now())
+  modifiedAt              DateTime             @updatedAt
   name                    String
   countSubscriptionsFrom  DateTime?
   countSubscriptionsUntil DateTime?
   additionalRevenue       Int?
   memberPlans             MemberPlan[]
   goals                   CrowdfundingGoal[]
+  goalType                CrowdfundingGoalType @default(Revenue)
 
   @@map("crowdfundings")
 }
 
 model CrowdfundingGoal {
-  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt      DateTime     @default(now())
-  modifiedAt     DateTime     @updatedAt
-  title          String
-  description    String?
-  amount         Int
-  Crowdfunding   Crowdfunding @relation(fields: [crowdfundingId], references: [id], onDelete: Cascade)
-  crowdfundingId String       @db.Uuid
+  id          String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt   DateTime @default(now())
+  modifiedAt  DateTime @updatedAt
+  title       String
+  description String?
+  amount      Int
+
+  crowdfunding   Crowdfunding @relation(fields: [crowdfundingId], references: [id], onDelete: Cascade)
+  crowdfundingId String
 
   @@map("crowdfunding_goals")
+}
+
+model Paywall {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name String? @unique
+
+  description                  Json?
+  upgradeDescription           Json?
+  circumventDescription        Json?
+  upgradeCircumventDescription Json?
+
+  anyMemberPlan           Boolean @default(false)
+  active                  Boolean @default(true)
+  alternativeSubscribeUrl String?
+
+  hideContentAfter Int     @default(3)
+  fadeout          Boolean @default(true)
+
+  memberPlans PaywallMemberplan[]
+  articles    Article[]
+  bypasses    PaywallBypass[]
+
+  @@map("paywalls")
+}
+
+model PaywallMemberplan {
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  memberPlan   MemberPlan @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
+  memberPlanId String
+
+  paywall   Paywall @relation(fields: [paywallId], references: [id], onDelete: Cascade)
+  paywallId String  @db.Uuid
+
+  @@id([paywallId, memberPlanId])
+  @@map("paywalls.memberPlans")
+}
+
+model PaywallBypass {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  token String @unique
+
+  paywall   Paywall @relation(fields: [paywallId], references: [id], onDelete: Cascade)
+  paywallId String  @db.Uuid
+
+  @@map("paywall_bypasses")
 }

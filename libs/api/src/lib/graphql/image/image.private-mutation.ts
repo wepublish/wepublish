@@ -1,8 +1,8 @@
-import {Prisma, PrismaClient} from '@prisma/client'
-import type {FileUpload} from 'graphql-upload'
-import {Context} from '../../context'
-import {authorise} from '../permissions'
-import {CanCreateImage, CanDeleteImage} from '@wepublish/permissions'
+import { Prisma, PrismaClient } from '@prisma/client';
+import type { FileUpload } from 'graphql-upload';
+import { Context } from '../../context';
+import { authorise } from '../permissions';
+import { CanCreateImage, CanDeleteImage } from '@wepublish/permissions';
 
 export const deleteImageById = async (
   id: string,
@@ -10,28 +10,28 @@ export const deleteImageById = async (
   image: PrismaClient['image'],
   mediaAdapter: Context['mediaAdapter']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanDeleteImage, roles)
+  const { roles } = authenticate();
+  authorise(CanDeleteImage, roles);
 
   const [deletedImage] = await Promise.all([
     image.delete({
       where: {
-        id
+        id,
       },
       include: {
-        focalPoint: true
-      }
+        focalPoint: true,
+      },
     }),
-    mediaAdapter.deleteImage(id)
-  ])
+    mediaAdapter.deleteImage(id),
+  ]);
 
-  return deletedImage
-}
+  return deletedImage;
+};
 
 export type CreateImageInput = {
-  file: Promise<FileUpload>
-  focalPoint: Prisma.FocalPointUncheckedCreateWithoutImageInput
-} & Omit<Prisma.ImageUncheckedCreateInput, 'modifiedAt' | 'focalPoint'>
+  file: Promise<FileUpload>;
+  focalPoint: Prisma.FocalPointUncheckedCreateWithoutImageInput;
+} & Omit<Prisma.ImageUncheckedCreateInput, 'modifiedAt' | 'focalPoint'>;
 
 export const createImage = async (
   input: CreateImageInput,
@@ -39,11 +39,21 @@ export const createImage = async (
   mediaAdapter: Context['mediaAdapter'],
   imageClient: PrismaClient['image']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanCreateImage, roles)
+  const { roles } = authenticate();
+  authorise(CanCreateImage, roles);
 
-  const {file, filename, title, description, tags, source, link, license, focalPoint} = input
-  const {id, ...image} = await mediaAdapter.uploadImage(file)
+  const {
+    file,
+    filename,
+    title,
+    description,
+    tags,
+    source,
+    link,
+    license,
+    focalPoint,
+  } = input;
+  const { id, ...image } = await mediaAdapter.uploadImage(file);
 
   return imageClient.create({
     data: {
@@ -60,41 +70,44 @@ export const createImage = async (
       license,
 
       focalPoint: {
-        create: focalPoint
-      }
+        create: focalPoint,
+      },
     },
     include: {
-      focalPoint: true
-    }
-  })
-}
+      focalPoint: true,
+    },
+  });
+};
 
 export type UpdateImageInput = {
-  focalPoint: Prisma.FocalPointUncheckedCreateWithoutImageInput
-} & Omit<Prisma.ImageUncheckedUpdateInput, 'focalPoint' | 'modifiedAt' | 'createdAt'>
+  focalPoint: Prisma.FocalPointUncheckedCreateWithoutImageInput;
+} & Omit<
+  Prisma.ImageUncheckedUpdateInput,
+  'focalPoint' | 'modifiedAt' | 'createdAt'
+>;
 
 export const updateImage = (
   id: string,
-  {focalPoint, ...input}: UpdateImageInput,
+  { focalPoint, ...input }: UpdateImageInput,
   authenticate: Context['authenticate'],
   image: PrismaClient['image']
 ) => {
-  const {roles} = authenticate()
-  authorise(CanCreateImage, roles)
+  const { roles } = authenticate();
+  authorise(CanCreateImage, roles);
 
   return image.update({
-    where: {id},
+    where: { id },
     data: {
       ...input,
       focalPoint: {
         upsert: {
           create: focalPoint,
-          update: focalPoint
-        }
-      }
+          update: focalPoint,
+        },
+      },
     },
     include: {
-      focalPoint: true
-    }
-  })
-}
+      focalPoint: true,
+    },
+  });
+};

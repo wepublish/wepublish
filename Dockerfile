@@ -1,5 +1,5 @@
-ARG BUILD_IMAGE=node:18.19.1-bookworm-slim
-ARG PLAIN_BUILD_IMAGE=node:18.19.1-bookworm-slim
+ARG BUILD_IMAGE=node:22.20.0-bookworm-slim
+ARG PLAIN_BUILD_IMAGE=node:22.20.0-bookworm-slim
 
 #######
 ## Base Image
@@ -70,7 +70,7 @@ ENTRYPOINT ["/entrypoint.sh"]
 #######
 FROM ${BUILD_IMAGE} AS build-api
 COPY . .
-RUN npm install -g pkg && \
+RUN npm install -g @yao-pkg/pkg && \
     npx prisma generate && \
     npx nx build api-example && \
     cp docker/api_build_package.json package.json && \
@@ -90,6 +90,7 @@ RUN groupadd -r wepublish && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 COPY --chown=wepublish:wepublish apps/api-example/src/default.yaml /wepublish/config/default.yaml
+COPY --chown=wepublish:wepublish libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY --chown=wepublish:wepublish .version /wepublish/.version
 COPY --chown=wepublish:wepublish --from=build-api /wepublish/api /wepublish
 COPY --chown=wepublish:wepublish --from=build-api /wepublish/node_modules/bcrypt node_modules/bcrypt
@@ -103,7 +104,7 @@ CMD /wepublish/api
 
 FROM ${BUILD_IMAGE} AS build-editor
 COPY . .
-RUN npm install -g pkg && \
+RUN npm install -g @yao-pkg/pkg && \
     npx prisma generate && \
     npx nx build editor && \
     cp docker/editor_build_package.json package.json && \
@@ -133,8 +134,9 @@ WORKDIR /wepublish
 COPY libs/settings/api/src/lib/setting.ts settings/api/src/lib/setting.ts
 COPY libs/api/prisma/run-seed.ts api/prisma/run-seed.ts
 COPY libs/api/prisma/seed.ts api/prisma/seed.ts
+COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY docker/tsconfig.yaml_seed tsconfig.yaml
-RUN npm install prisma @prisma/client @types/node bcrypt typescript && \
+RUN npm install prisma@5.0.0 @prisma/client@5.0.0 @types/node bcrypt typescript && \
     npx tsc -p tsconfig.yaml
 
 FROM ${PLAIN_BUILD_IMAGE} AS migration
@@ -151,7 +153,7 @@ RUN groupadd -r wepublish && \
     apt-get install -y --no-install-recommends openssl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    npm install prisma bcrypt && \
+    npm install prisma@5.0.0 bcrypt && \
     npx prisma generate \
     USER wepublish
 CMD ["bash", "./start.sh"]
@@ -161,7 +163,7 @@ CMD ["bash", "./start.sh"]
 ## Media Server
 #######
 
-FROM node:18.20.4-bullseye-slim  AS base-media
+FROM ${PLAIN_BUILD_IMAGE} AS base-media
 FROM base-media AS build-media
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 WORKDIR /app

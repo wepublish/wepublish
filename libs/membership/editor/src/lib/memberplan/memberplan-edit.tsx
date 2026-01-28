@@ -1,83 +1,102 @@
-import {ApolloError} from '@apollo/client'
+import { ApolloError } from '@apollo/client';
 import {
-  AvailablePaymentMethod,
+  CreateMemberPlanMutationVariables,
   Currency,
+  FullAvailablePaymentMethodFragment,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
-  MemberPlanInput,
   PaymentMethod,
+  ProductType,
   useCreateMemberPlanMutation,
   useMemberPlanLazyQuery,
-  usePaymentMethodListQuery,
-  useUpdateMemberPlanMutation
-} from '@wepublish/editor/api'
+  useUpdateMemberPlanMutation,
+} from '@wepublish/editor/api-v2';
 import {
   createCheckedPermissionComponent,
   generateID,
   ListValue,
   SingleView,
   SingleViewContent,
-  SingleViewTitle
-} from '@wepublish/ui/editor'
-import {useEffect, useMemo, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {useNavigate, useParams} from 'react-router-dom'
-import {Form, Message, Schema, toaster} from 'rsuite'
-import {MemberPlanForm} from './memberplan-form'
+  SingleViewTitle,
+} from '@wepublish/ui/editor';
+import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Form, Message, Schema, toaster } from 'rsuite';
+import { MemberPlanForm } from './memberplan-form';
+import {
+  getApiClientV2,
+  usePaymentMethodListQuery,
+} from '@wepublish/editor/api-v2';
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
-    <Message type="error" showIcon closable duration={3000}>
+    <Message
+      type="error"
+      showIcon
+      closable
+      duration={3000}
+    >
       {error.message}
     </Message>
-  )
-}
+  );
+};
 
-const closePath = '/memberplans'
+const closePath = '/memberplans';
 
 function MemberPlanEdit() {
-  const navigate = useNavigate()
-  const {t} = useTranslation()
-  const {id: memberPlanId} = useParams()
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { id: memberPlanId } = useParams();
 
-  const [memberPlan, setMemberPlan] = useState<FullMemberPlanFragment | null>()
-  const [close, setClose] = useState<boolean>(false)
+  const [memberPlan, setMemberPlan] = useState<FullMemberPlanFragment | null>();
+  const [close, setClose] = useState<boolean>(false);
   const [availablePaymentMethods, setAvailablePaymentMethods] = useState<
-    ListValue<AvailablePaymentMethod>[]
-  >([])
+    ListValue<FullAvailablePaymentMethodFragment>[]
+  >([]);
 
-  const [fetchMemberPlan, {loading: memberPlanLoading, data: memberPlanData}] =
-    useMemberPlanLazyQuery({
+  const client = getApiClientV2();
+  const [
+    fetchMemberPlan,
+    { loading: memberPlanLoading, data: memberPlanData },
+  ] = useMemberPlanLazyQuery({
+    client,
+    fetchPolicy: 'network-only',
+    onError: showErrors,
+  });
+
+  const { data: paymentMethodData, loading: paymentMethodLoading } =
+    usePaymentMethodListQuery({
+      client,
       fetchPolicy: 'network-only',
-      onError: showErrors
-    })
+      onError: showErrors,
+    });
 
-  const {data: paymentMethodData, loading: paymentMethodLoading} = usePaymentMethodListQuery({
-    fetchPolicy: 'network-only',
-    onError: showErrors
-  })
+  const [updateMemberPlanMutation, { loading: memberPlanUpdating }] =
+    useUpdateMemberPlanMutation({
+      client,
+      fetchPolicy: 'network-only',
+      onError: showErrors,
+    });
 
-  const [updateMemberPlanMutation, {loading: memberPlanUpdating}] = useUpdateMemberPlanMutation({
-    fetchPolicy: 'network-only',
-    onError: showErrors
-  })
-
-  const [createMemberPlanMutation, {loading: memberPlanCreating}] = useCreateMemberPlanMutation({
-    fetchPolicy: 'network-only',
-    onError: showErrors
-  })
+  const [createMemberPlanMutation, { loading: memberPlanCreating }] =
+    useCreateMemberPlanMutation({
+      client,
+      fetchPolicy: 'network-only',
+      onError: showErrors,
+    });
 
   useEffect(() => {
     if (!memberPlanId) {
-      return
+      return;
     }
 
     fetchMemberPlan({
       variables: {
-        id: memberPlanId
-      }
-    })
-  }, [fetchMemberPlan, memberPlanId])
+        id: memberPlanId,
+      },
+    });
+  }, [fetchMemberPlan, memberPlanId]);
 
   // initially set member plan and available payment methods
   useEffect(() => {
@@ -87,62 +106,89 @@ function MemberPlanEdit() {
       description: [],
       currency: Currency.Chf,
       amountPerMonthMin: 0,
+      amountPerMonthMax: null,
       amountPerMonthTarget: null,
       image: undefined,
       active: true,
       tags: [],
       slug: '',
       name: '',
+      externalReward: undefined,
       extendable: true,
-      maxCount: undefined
-    }
+      maxCount: undefined,
+      productType: ProductType.Subscription,
+    };
 
-    setMemberPlan(initMemberPlan)
+    setMemberPlan(initMemberPlan);
     setAvailablePaymentMethods(
-      (initMemberPlan?.availablePaymentMethods || []).map(availablePaymentMethod => ({
-        id: generateID(),
-        value: {
-          ...availablePaymentMethod,
-          paymentMethods: availablePaymentMethod.paymentMethods as PaymentMethod[]
-        }
-      }))
-    )
-  }, [memberPlanData])
+      (initMemberPlan?.availablePaymentMethods || []).map(
+        availablePaymentMethod => ({
+          id: generateID(),
+          value: {
+            ...availablePaymentMethod,
+            paymentMethods:
+              availablePaymentMethod.paymentMethods as PaymentMethod[],
+          },
+        })
+      )
+    );
+  }, [memberPlanData]);
 
   const loading: boolean = useMemo(
-    () => memberPlanLoading || memberPlanUpdating || paymentMethodLoading || memberPlanCreating,
-    [memberPlanLoading, memberPlanUpdating, paymentMethodLoading, memberPlanCreating]
-  )
+    () =>
+      memberPlanLoading ||
+      memberPlanUpdating ||
+      paymentMethodLoading ||
+      memberPlanCreating,
+    [
+      memberPlanLoading,
+      memberPlanUpdating,
+      paymentMethodLoading,
+      memberPlanCreating,
+    ]
+  );
 
   const paymentMethods: FullPaymentMethodFragment[] = useMemo(
     () => paymentMethodData?.paymentMethods || [],
     [paymentMethodData]
-  )
+  );
 
   const header: string = useMemo(() => {
     if (!memberPlanId) {
-      return memberPlan?.name || t('memberPlanEdit.createMemberPlanHeader')
+      return memberPlan?.name || t('memberPlanEdit.createMemberPlanHeader');
     }
 
-    return memberPlan?.name || t('memberPlanEdit.noMemberPlanName')
-  }, [t, memberPlanId, memberPlan?.name])
+    return memberPlan?.name || t('memberPlanEdit.noMemberPlanName');
+  }, [t, memberPlanId, memberPlan?.name]);
 
   const validationModel = Schema.Model({
-    name: Schema.Types.StringType().isRequired(t('memberPlanEdit.nameRequired')),
-    slug: Schema.Types.StringType().isRequired(t('memberPlanEdit.slugRequired')),
+    name: Schema.Types.StringType().isRequired(
+      t('memberPlanEdit.nameRequired')
+    ),
+    slug: Schema.Types.StringType().isRequired(
+      t('memberPlanEdit.slugRequired')
+    ),
     amountPerMonthMin: Schema.Types.NumberType()
       .isRequired(t('memberPlanEdit.amountPerMonthMinRequired'))
       .min(0, t('memberPlanEdit.amountPerMonthMinZero')),
+
+    amountPerMonthMax: Schema.Types.NumberType().min(
+      (memberPlan?.amountPerMonthMin || 0) / 100,
+      t('memberPlanEdit.maxPriceMustBeGreaterThanMin')
+    ),
+
     amountPerMonthTarget: Schema.Types.NumberType().min(
       ((memberPlan?.amountPerMonthMin || 0) + 1) / 100,
       t('memberPlanEdit.targetPriceMustBeGreaterThanMin')
     ),
-    currency: Schema.Types.StringType().isRequired(t('memberPlanEdit.currencyRequired'))
-  })
+    currency: Schema.Types.StringType().isRequired(
+      t('memberPlanEdit.currencyRequired')
+    ),
+  });
 
   async function saveMemberPlan() {
     if (!memberPlan) {
-      return
+      return;
     }
 
     const memberPlanInput = {
@@ -151,57 +197,65 @@ function MemberPlanEdit() {
       tags: memberPlan.tags,
       imageID: memberPlan.image?.id || null,
       description: memberPlan.description,
+      shortDescription: memberPlan.shortDescription,
       active: memberPlan.active,
-      availablePaymentMethods: availablePaymentMethods.map(({value}) => ({
+      availablePaymentMethods: availablePaymentMethods.map(({ value }) => ({
         paymentPeriodicities: value.paymentPeriodicities,
         forceAutoRenewal: value.forceAutoRenewal,
-        paymentMethodIDs: value.paymentMethods.map((pm: PaymentMethod) => pm.id)
+        paymentMethodIDs: value.paymentMethods.map(pm => pm.id),
       })),
       currency: memberPlan.currency,
       amountPerMonthMin: memberPlan.amountPerMonthMin,
+      amountPerMonthMax: memberPlan.amountPerMonthMax,
       amountPerMonthTarget: memberPlan.amountPerMonthTarget,
       extendable: memberPlan.extendable,
+      externalReward: memberPlan.externalReward,
       maxCount: memberPlan.maxCount,
+      productType: memberPlan.productType,
       migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID,
       successPageId: memberPlan.successPageId,
       failPageId: memberPlan.failPageId,
-      confirmationPageId: memberPlan.confirmationPageId
-    } as MemberPlanInput
+      confirmationPageId: memberPlan.confirmationPageId,
+    } as CreateMemberPlanMutationVariables;
 
     // update member plan
     if (memberPlanId) {
       await updateMemberPlanMutation({
         variables: {
           id: memberPlanId,
-          input: memberPlanInput
+          ...memberPlanInput,
         },
         onCompleted: data => {
           toaster.push(
-            <Message type="success" closable>
+            <Message
+              type="success"
+              closable
+            >
               {t('memberPlanEdit.savedChanges')}
             </Message>
-          )
-        }
-      })
+          );
+        },
+      });
     } else {
       // create new member plan
       await createMemberPlanMutation({
-        variables: {
-          input: memberPlanInput
-        },
+        variables: memberPlanInput,
         onCompleted: data => {
           toaster.push(
-            <Message type="success" closable>
+            <Message
+              type="success"
+              closable
+            >
               {t('memberPlanEdit.savedChanges')}
             </Message>
-          )
-          navigate(`/memberplans/edit/${data.createMemberPlan?.id}`)
-        }
-      })
+          );
+          navigate(`/memberplans/edit/${data.createMemberPlan?.id}`);
+        },
+      });
     }
 
     if (close) {
-      navigate(closePath)
+      navigate(closePath);
     }
   }
 
@@ -216,8 +270,10 @@ function MemberPlanEdit() {
           name: memberPlan?.name,
           slug: memberPlan?.slug,
           amountPerMonthMin: memberPlan?.amountPerMonthMin,
-          currency: memberPlan?.currency
-        }}>
+          amountPerMonthMax: memberPlan?.amountPerMonthMax,
+          currency: memberPlan?.currency,
+        }}
+      >
         <SingleViewTitle
           loading={loading}
           loadingTitle={t('memberPlanEdit.loadingTitle')}
@@ -240,13 +296,13 @@ function MemberPlanEdit() {
         </SingleViewContent>
       </Form>
     </SingleView>
-  )
+  );
 }
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_GET_MEMBER_PLANS',
   'CAN_GET_MEMBER_PLAN',
   'CAN_CREATE_MEMBER_PLAN',
-  'CAN_DELETE_MEMBER_PLAN'
-])(MemberPlanEdit)
-export {CheckedPermissionComponent as MemberPlanEdit}
+  'CAN_DELETE_MEMBER_PLAN',
+])(MemberPlanEdit);
+export { CheckedPermissionComponent as MemberPlanEdit };

@@ -1,8 +1,8 @@
-import {Injectable} from '@nestjs/common'
-import {PrismaClient} from '@prisma/client'
-import {AuthSessionType, AuthSession} from './auth-session'
-import {unselectPassword} from './unselect-password'
-import {addPredefinedPermissions} from '@wepublish/permissions/api'
+import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import { AuthSessionType, AuthSession } from './auth-session';
+import { unselectPassword } from './unselect-password';
+import { addPredefinedPermissions } from '@wepublish/permissions/api';
 
 @Injectable()
 export class AuthenticationService {
@@ -12,15 +12,15 @@ export class AuthenticationService {
     const [tokenMatch, session] = await Promise.all([
       this.prisma.token.findFirst({
         where: {
-          token
-        }
+          token,
+        },
       }),
       this.prisma.session.findFirst({
         where: {
-          token
-        }
-      })
-    ])
+          token,
+        },
+      }),
+    ]);
 
     if (tokenMatch) {
       return {
@@ -32,24 +32,24 @@ export class AuthenticationService {
           await this.prisma.userRole.findMany({
             where: {
               id: {
-                in: tokenMatch.roleIDs
-              }
-            }
+                in: tokenMatch.roleIDs,
+              },
+            },
           })
-        ).map(addPredefinedPermissions)
-      }
+        ).map(addPredefinedPermissions),
+      };
     }
 
     if (session) {
       const user = await this.prisma.user.findUnique({
         where: {
-          id: session.userID
+          id: session.userID,
         },
-        select: unselectPassword
-      })
+        select: unselectPassword,
+      });
 
       if (!user) {
-        return null
+        return null;
       }
 
       return {
@@ -63,26 +63,26 @@ export class AuthenticationService {
           await this.prisma.userRole.findMany({
             where: {
               id: {
-                in: user.roleIDs
-              }
-            }
+                in: user.roleIDs,
+              },
+            },
           })
-        ).map(addPredefinedPermissions)
-      }
+        ).map(addPredefinedPermissions),
+      };
     }
 
-    return null
+    return null;
   }
 
   public isSessionValid(session: AuthSession | null) {
     if (!session) {
-      return false
+      return false;
     }
 
     if (session.type === AuthSessionType.User) {
-      return session.expiresAt > new Date()
+      return session.expiresAt > new Date();
     }
 
-    return true
+    return true;
   }
 }

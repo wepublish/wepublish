@@ -1,15 +1,22 @@
-import {useEffect} from 'react'
+import { useEffect } from 'react';
 
-import {useScript} from '../../utility'
+import { useScript } from '../../utility';
 
 export interface PolisEmbedProps {
-  conversationID: string | null | undefined
+  conversationID: string | null | undefined;
 }
 
-export function PolisEmbed({conversationID}: PolisEmbedProps) {
-  const {load} = useScript(`https://pol.is/embed.js`, () => false, false)
+export function PolisEmbed({ conversationID }: PolisEmbedProps) {
+  const { load } = useScript(`https://pol.is/embed.js`, () => false, false);
 
-  useEffect(() => load(), [])
+  useEffect(() => load(), []);
 
-  return conversationID && <div className="polis" data-conversation_id={conversationID}></div>
+  return (
+    conversationID && (
+      <div
+        className="polis"
+        data-conversation_id={conversationID}
+      ></div>
+    )
+  );
 }

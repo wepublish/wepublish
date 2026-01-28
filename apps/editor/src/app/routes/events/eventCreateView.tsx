@@ -1,61 +1,66 @@
-import {ApolloError} from '@apollo/client'
+import { ApolloError } from '@apollo/client';
 import {
   FullImageFragment,
   getApiClientV2,
   MutationCreateEventArgs,
-  useCreateEventMutation
-} from '@wepublish/editor/api-v2'
-import {SingleViewTitle} from '@wepublish/ui/editor'
-import {useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {useNavigate} from 'react-router-dom'
-import {Form, Message, Schema, toaster} from 'rsuite'
+  useCreateEventMutation,
+} from '@wepublish/editor/api-v2';
+import { SingleViewTitle } from '@wepublish/ui/editor';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { Form, Message, Schema, toaster } from 'rsuite';
 
-import {EventForm} from './eventForm'
+import { EventForm } from './eventForm';
 
 const onErrorToast = (error: ApolloError) => {
   toaster.push(
-    <Message type="error" showIcon closable duration={3000}>
+    <Message
+      type="error"
+      showIcon
+      closable
+      duration={3000}
+    >
       {error.message}
     </Message>
-  )
-}
+  );
+};
 
 export const EventCreateView = () => {
-  const navigate = useNavigate()
-  const {t} = useTranslation()
+  const navigate = useNavigate();
+  const { t } = useTranslation();
 
-  const closePath = '/events'
+  const closePath = '/events';
   const [event, setEvent] = useState({
-    name: ''
-  } as MutationCreateEventArgs & {image?: FullImageFragment | null})
+    name: '',
+  } as MutationCreateEventArgs & { image?: FullImageFragment | null });
 
-  const [shouldClose, setShouldClose] = useState(false)
+  const [shouldClose, setShouldClose] = useState(false);
 
-  const client = getApiClientV2()
-  const [createEvent, {loading}] = useCreateEventMutation({
+  const client = getApiClientV2();
+  const [createEvent, { loading }] = useCreateEventMutation({
     client,
     onError: onErrorToast,
     onCompleted: event => {
       if (shouldClose) {
-        navigate(closePath)
+        navigate(closePath);
       } else {
-        navigate(`/events/edit/${event.createEvent?.id}`)
+        navigate(`/events/edit/${event.createEvent?.id}`);
       }
-    }
-  })
+    },
+  });
 
   const onSubmit = () => {
-    const {image, ...eventWithoutImage} = event
-    createEvent({variables: eventWithoutImage})
-  }
+    const { image, ...eventWithoutImage } = event;
+    createEvent({ variables: eventWithoutImage });
+  };
 
-  const {StringType, DateType} = Schema.Types
+  const { StringType, DateType } = Schema.Types;
   const validationModel = Schema.Model({
     name: StringType().isRequired(),
     startsAt: DateType().isRequired(),
-    endsAt: DateType().min(new Date(event.startsAt))
-  })
+    endsAt: DateType().min(new Date(event.startsAt)),
+  });
 
   return (
     <Form
@@ -63,7 +68,8 @@ export const EventCreateView = () => {
       formValue={event}
       model={validationModel}
       disabled={loading}
-      onSubmit={validationPassed => validationPassed && onSubmit()}>
+      onSubmit={validationPassed => validationPassed && onSubmit()}
+    >
       <SingleViewTitle
         loading={loading}
         title={t('event.create.title')}
@@ -77,8 +83,10 @@ export const EventCreateView = () => {
       <EventForm
         event={event}
         create
-        onChange={changes => setEvent(oldEvent => ({...oldEvent, ...(changes as any)}))}
+        onChange={changes =>
+          setEvent(oldEvent => ({ ...oldEvent, ...(changes as any) }))
+        }
       />
     </Form>
-  )
-}
+  );
+};

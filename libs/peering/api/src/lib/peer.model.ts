@@ -1,29 +1,56 @@
-import {Field, ObjectType} from '@nestjs/graphql'
-import {PeerProfile} from './peer-profile.model.js'
+import {
+  ArgsType,
+  Field,
+  ObjectType,
+  PartialType,
+  PickType,
+} from '@nestjs/graphql';
+import { GraphQLRichText } from '@wepublish/richtext/api';
+import { Descendant } from 'slate';
+import { RemotePeerProfile } from './peer-profile.model';
 
-@ObjectType('Peer')
+@ObjectType()
 export class Peer {
   @Field()
-  id!: string
+  id!: string;
 
   @Field()
-  createdAt!: Date
+  createdAt!: Date;
 
   @Field()
-  modifiedAt!: Date
+  modifiedAt!: Date;
 
   @Field()
-  name!: string
+  name!: string;
 
   @Field()
-  slug!: string
+  slug!: string;
 
-  @Field(() => Boolean, {nullable: true})
-  isDisabled?: boolean
+  @Field(() => Boolean, { nullable: true })
+  isDisabled?: boolean;
 
   @Field()
-  hostURL!: string
+  hostURL!: string;
 
-  @Field(() => PeerProfile, {nullable: true})
-  profile?: PeerProfile
+  @Field()
+  token!: string;
+
+  @Field(() => GraphQLRichText, { nullable: true })
+  information?: Descendant[];
+
+  @Field(() => RemotePeerProfile, { nullable: true })
+  profile?: RemotePeerProfile;
+}
+
+@ArgsType()
+export class CreatePeerInput extends PickType(
+  Peer,
+  ['slug', 'name', 'isDisabled', 'information', 'hostURL', 'token'] as const,
+  ArgsType
+) {}
+
+@ArgsType()
+export class UpdatePeerInput extends PartialType(CreatePeerInput, ArgsType) {
+  @Field()
+  id!: string;
 }

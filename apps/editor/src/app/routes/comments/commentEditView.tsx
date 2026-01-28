@@ -1,14 +1,14 @@
-import {ApolloError} from '@apollo/client'
-import styled from '@emotion/styled'
+import { ApolloError } from '@apollo/client';
+import styled from '@emotion/styled';
 import {
   CommentRevisionUpdateInput,
   FullCommentFragment,
   stripTypename,
   TagType,
   useCommentQuery,
-  useRatingSystemQuery,
-  useUpdateCommentMutation
-} from '@wepublish/editor/api'
+  useUpdateCommentMutation,
+} from '@wepublish/editor/api';
+import { getApiClientV2, useRatingSystemQuery } from '@wepublish/editor/api-v2';
 import {
   CommentDeleteBtn,
   CommentHistory,
@@ -16,12 +16,12 @@ import {
   CommentUser,
   createCheckedPermissionComponent,
   SelectTags,
-  SingleViewTitle
-} from '@wepublish/ui/editor'
-import {memo, useEffect, useMemo, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MdVisibility} from 'react-icons/md'
-import {useNavigate, useParams} from 'react-router-dom'
+  SingleViewTitle,
+} from '@wepublish/ui/editor';
+import { memo, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdVisibility } from 'react-icons/md';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Checkbox,
   Col as RCol,
@@ -34,25 +34,30 @@ import {
   Row,
   Schema,
   SelectPicker,
-  toaster
-} from 'rsuite'
-import FormHelpText from 'rsuite/FormHelpText'
+  toaster,
+} from 'rsuite';
+import FormHelpText from 'rsuite/FormHelpText';
 
 const ColNoMargin = styled(RCol)`
   margin-top: 0px;
-`
+`;
 
 const FlexItem = styled(FlexboxGrid.Item)`
   margin-top: 10px;
-`
+`;
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
-    <Message type="error" showIcon closable duration={3000}>
+    <Message
+      type="error"
+      showIcon
+      closable
+      duration={3000}
+    >
       {error.message}
     </Message>
-  )
-}
+  );
+};
 
 /**
  * Helper function to parse comment revision input object out of full revision fragment.
@@ -61,19 +66,19 @@ const showErrors = (error: ApolloError): void => {
 export function getLastRevision(
   comment: FullCommentFragment
 ): CommentRevisionUpdateInput | undefined {
-  const revisions = comment.revisions
+  const revisions = comment.revisions;
   if (!revisions.length) {
-    return
+    return;
   }
 
-  const lastRevision = revisions[revisions.length - 1]
+  const lastRevision = revisions[revisions.length - 1];
   const parsedRevision = {
     title: lastRevision?.title,
     lead: lastRevision?.lead,
-    text: lastRevision?.text
-  } as CommentRevisionUpdateInput
+    text: lastRevision?.text,
+  } as CommentRevisionUpdateInput;
 
-  return parsedRevision
+  return parsedRevision;
 }
 
 /**
@@ -84,76 +89,89 @@ function hasRevisionChanged(
   revision: CommentRevisionUpdateInput | undefined
 ): boolean {
   if (!comment) {
-    return true
+    return true;
   }
 
-  const originalVersion = getLastRevision(comment)
+  const originalVersion = getLastRevision(comment);
 
-  return JSON.stringify(originalVersion) !== JSON.stringify(revision)
+  return JSON.stringify(originalVersion) !== JSON.stringify(revision);
 }
 
 const CommentEditView = memo(() => {
-  const {t} = useTranslation()
-  const navigate = useNavigate()
-  const {id} = useParams()
-  const commentId = id!
-  const closePath = '/comments'
-  const validationModel = Schema.Model({})
-  const [close, setClose] = useState<boolean>(false)
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const commentId = id!;
+  const closePath = '/comments';
+  const validationModel = Schema.Model({});
+  const [close, setClose] = useState<boolean>(false);
   // where the comment properties are handled
-  const [comment, setComment] = useState<FullCommentFragment | undefined>(undefined)
+  const [comment, setComment] = useState<FullCommentFragment | undefined>(
+    undefined
+  );
   // where the revisions are handled
-  const [revision, setRevision] = useState<CommentRevisionUpdateInput | undefined>(undefined)
+  const [revision, setRevision] = useState<
+    CommentRevisionUpdateInput | undefined
+  >(undefined);
   // where the tag list is handled
-  const [selectedTags, setSelectedTags] = useState<string[] | null>(null)
+  const [selectedTags, setSelectedTags] = useState<string[] | null>(null);
 
   /**
    * Queries
    */
-  const {data: commentData, loading: loadingComment} = useCommentQuery({
+  const { data: commentData, loading: loadingComment } = useCommentQuery({
     variables: {
-      id: commentId
+      id: commentId,
     },
     fetchPolicy: 'cache-and-network',
-    onError: showErrors
-  })
+    onError: showErrors,
+  });
 
-  const {data: ratingSystem, loading: loadingRatingSystem} = useRatingSystemQuery({
-    onError: showErrors
-  })
+  const client = getApiClientV2();
+  const { data: ratingSystem, loading: loadingRatingSystem } =
+    useRatingSystemQuery({
+      client,
+      onError: showErrors,
+    });
 
-  const [updateCommentMutation, {loading: updatingComment}] = useUpdateCommentMutation({
-    onCompleted: () =>
-      toaster.push(
-        <Message type="success" showIcon closable duration={3000}>
-          {t('comments.edit.success')}
-        </Message>
-      ),
-    onError: showErrors
-  })
+  const [updateCommentMutation, { loading: updatingComment }] =
+    useUpdateCommentMutation({
+      onCompleted: () =>
+        toaster.push(
+          <Message
+            type="success"
+            showIcon
+            closable
+            duration={3000}
+          >
+            {t('comments.edit.success')}
+          </Message>
+        ),
+      onError: showErrors,
+    });
 
   // compute loading state
-  const loading = updatingComment || loadingComment || loadingRatingSystem
+  const loading = updatingComment || loadingComment || loadingRatingSystem;
 
   /**
    * Initial set of variables "comment" and "revision"
    */
   useEffect(() => {
-    const tmpComment = commentData?.comment
+    const tmpComment = commentData?.comment;
     if (!tmpComment) {
-      return
+      return;
     }
-    setSelectedTags(null)
-    setComment(tmpComment)
+    setSelectedTags(null);
+    setComment(tmpComment);
 
-    const lastRevision = getLastRevision(tmpComment)
-    setRevision(lastRevision)
-  }, [commentData])
+    const lastRevision = getLastRevision(tmpComment);
+    setRevision(lastRevision);
+  }, [commentData]);
 
   const commentTags = useMemo(
     () => selectedTags ?? comment?.tags?.map(tag => tag.id),
     [comment, selectedTags]
-  )
+  );
 
   const ratingOverrides = useMemo(
     () =>
@@ -161,24 +179,25 @@ const CommentEditView = memo(() => {
         answerId: answer.id,
         name: answer.answer,
         value:
-          comment?.overriddenRatings?.find(override => override.answerId === answer.id)?.value ??
-          null
+          comment?.overriddenRatings?.find(
+            override => override.answerId === answer.id
+          )?.value ?? null,
       })) ?? [],
     [comment, ratingSystem]
-  )
+  );
 
   const ratingOverridePossibleValues = [
-    {label: t('commentEditView.noOverride'), value: null},
-    {label: '1', value: 1},
-    {label: '2', value: 2},
-    {label: '3', value: 3},
-    {label: '4', value: 4},
-    {label: '5', value: 5}
-  ]
+    { label: t('commentEditView.noOverride'), value: null },
+    { label: '1', value: 1 },
+    { label: '2', value: 2 },
+    { label: '3', value: 3 },
+    { label: '4', value: 4 },
+    { label: '5', value: 5 },
+  ];
 
   async function updateComment() {
     if (!comment) {
-      return
+      return;
     }
 
     await updateCommentMutation({
@@ -191,12 +210,12 @@ const CommentEditView = memo(() => {
         source: comment.source,
         tagIds: commentTags,
         featured: comment.featured,
-        ratingOverrides: comment.overriddenRatings?.map(stripTypename)
-      }
-    })
+        ratingOverrides: comment.overriddenRatings?.map(stripTypename),
+      },
+    });
 
     if (close) {
-      navigate(closePath)
+      navigate(closePath);
     }
   }
 
@@ -206,7 +225,11 @@ const CommentEditView = memo(() => {
       model={validationModel}
       fluid
       disabled={loading}
-      style={{maxHeight: 'calc(100vh - 135px)', maxWidth: 'calc(100vw - 260px - 80px)'}}>
+      style={{
+        maxHeight: 'calc(100vh - 135px)',
+        maxWidth: 'calc(100vw - 260px - 80px)',
+      }}
+    >
       <SingleViewTitle
         loading={loading}
         title={t('comments.edit.title')}
@@ -223,8 +246,15 @@ const CommentEditView = memo(() => {
           {/* comment content */}
           <RCol
             xs={14}
-            style={{maxHeight: 'calc(100vh - 80px - 60px - 15px)', overflowY: 'scroll'}}>
-            <RPanel bordered header={t('commentEditView.commentContextHeader')}>
+            style={{
+              maxHeight: 'calc(100vh - 80px - 60px - 15px)',
+              overflowY: 'scroll',
+            }}
+          >
+            <RPanel
+              bordered
+              header={t('commentEditView.commentContextHeader')}
+            >
               {comment && (
                 <CommentHistory
                   commentItemID={comment.itemID}
@@ -241,16 +271,23 @@ const CommentEditView = memo(() => {
             <Row>
               {/* some actions on the comment */}
               <ColNoMargin xs={24}>
-                <RPanel bordered header={t('commentEditView.actions')}>
+                <RPanel
+                  bordered
+                  header={t('commentEditView.actions')}
+                >
                   <FlexboxGrid>
-                    <FlexboxGrid.Item colspan={24} style={{textAlign: 'start'}}>
+                    <FlexboxGrid.Item
+                      colspan={24}
+                      style={{ textAlign: 'start' }}
+                    >
                       <IconButton
                         appearance="ghost"
                         color="violet"
                         icon={<MdVisibility />}
                         onClick={() => {
-                          navigate(`/articles/edit/${comment?.itemID}`)
-                        }}>
+                          navigate(`/articles/edit/${comment?.itemID}`);
+                        }}
+                      >
                         {t('commentEditView.goToArticle')}
                       </IconButton>
                     </FlexboxGrid.Item>
@@ -263,8 +300,8 @@ const CommentEditView = memo(() => {
                             setComment({
                               ...comment,
                               state,
-                              rejectionReason
-                            })
+                              rejectionReason,
+                            });
                           }}
                         />
                       )}
@@ -274,7 +311,7 @@ const CommentEditView = memo(() => {
                       <CommentDeleteBtn
                         comment={comment}
                         onCommentDeleted={() => {
-                          navigate(closePath)
+                          navigate(closePath);
                         }}
                       />
                     </FlexItem>
@@ -284,7 +321,10 @@ const CommentEditView = memo(() => {
 
               {/* tags & source */}
               <RCol xs={24}>
-                <RPanel bordered header={t('commentEditView.variousPanelHeader')}>
+                <RPanel
+                  bordered
+                  header={t('commentEditView.variousPanelHeader')}
+                >
                   <Row>
                     {/* featured comment (top comment) */}
                     {comment && (
@@ -294,18 +334,23 @@ const CommentEditView = memo(() => {
                           onChange={(value, checked) => {
                             setComment({
                               ...comment,
-                              featured: checked
-                            })
-                          }}>
+                              featured: checked,
+                            });
+                          }}
+                        >
                           {t('commentEditView.featured')}
                         </Checkbox>
-                        <FormHelpText>{t('commentEditView.featuredHelpText')}</FormHelpText>
+                        <FormHelpText>
+                          {t('commentEditView.featuredHelpText')}
+                        </FormHelpText>
                       </RCol>
                     )}
 
                     {/* tags */}
                     <RCol xs={24}>
-                      <Form.ControlLabel>{t('commentEditView.tags')}</Form.ControlLabel>
+                      <Form.ControlLabel>
+                        {t('commentEditView.tags')}
+                      </Form.ControlLabel>
                       <SelectTags
                         defaultTags={comment?.tags ?? []}
                         selectedTags={commentTags}
@@ -316,13 +361,18 @@ const CommentEditView = memo(() => {
 
                     {/* external source */}
                     <RCol xs={24}>
-                      <Form.ControlLabel>{t('commentEditView.source')}</Form.ControlLabel>
+                      <Form.ControlLabel>
+                        {t('commentEditView.source')}
+                      </Form.ControlLabel>
                       <Form.Control
                         name="externalSource"
                         placeholder={t('commentEditView.source')}
                         value={comment?.source || ''}
                         onChange={(source: string) => {
-                          setComment(oldComment => ({...oldComment, source} as FullCommentFragment))
+                          setComment(
+                            oldComment =>
+                              ({ ...oldComment, source }) as FullCommentFragment
+                          );
                         }}
                       />
                     </RCol>
@@ -332,17 +382,29 @@ const CommentEditView = memo(() => {
 
               {/* user or guest user */}
               <RCol xs={24}>
-                <RPanel bordered header={t('commentEditView.userPanelHeader')}>
-                  <CommentUser comment={comment} setComment={setComment} />
+                <RPanel
+                  bordered
+                  header={t('commentEditView.userPanelHeader')}
+                >
+                  <CommentUser
+                    comment={comment}
+                    setComment={setComment}
+                  />
                 </RPanel>
               </RCol>
 
               {/* rating overrides */}
               <ColNoMargin xs={24}>
-                <RPanel bordered header={t('commentEditView.ratingOverrides')}>
+                <RPanel
+                  bordered
+                  header={t('commentEditView.ratingOverrides')}
+                >
                   <FlexboxGrid>
                     {ratingOverrides.map(override => (
-                      <FlexItem key={override.answerId} colspan={24}>
+                      <FlexItem
+                        key={override.answerId}
+                        colspan={24}
+                      >
                         <Form.ControlLabel>{override.name}</Form.ControlLabel>
                         <SelectPicker
                           block
@@ -351,16 +413,23 @@ const CommentEditView = memo(() => {
                           value={override.value}
                           onChange={value =>
                             setComment(oldComment =>
-                              oldComment
-                                ? {
-                                    ...oldComment,
-                                    overriddenRatings: ratingOverrides.map(oldOverride =>
-                                      oldOverride.answerId === override.answerId
-                                        ? {answerId: override.answerId, value}
-                                        : {answerId: oldOverride.answerId, value: oldOverride.value}
-                                    )
-                                  }
-                                : undefined
+                              oldComment ?
+                                {
+                                  ...oldComment,
+                                  overriddenRatings: ratingOverrides.map(
+                                    oldOverride =>
+                                      (
+                                        oldOverride.answerId ===
+                                        override.answerId
+                                      ) ?
+                                        { answerId: override.answerId, value }
+                                      : {
+                                          answerId: oldOverride.answerId,
+                                          value: oldOverride.value,
+                                        }
+                                  ),
+                                }
+                              : undefined
                             )
                           }
                         />
@@ -374,11 +443,11 @@ const CommentEditView = memo(() => {
         </Row>
       </Grid>
     </Form>
-  )
-})
+  );
+});
 
 const CheckedPermissionComponent = createCheckedPermissionComponent([
   'CAN_UPDATE_COMMENTS',
-  'CAN_TAKE_COMMENT_ACTION'
-])(CommentEditView)
-export {CheckedPermissionComponent as CommentEditView}
+  'CAN_TAKE_COMMENT_ACTION',
+])(CommentEditView);
+export { CheckedPermissionComponent as CommentEditView };

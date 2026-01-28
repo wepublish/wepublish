@@ -8,5 +8,5 @@ export enum BlockFormat {
   ListItem = 'list-item',
   Table = 'table',
   TableRow = 'table-row',
-  TableCell = 'table-cell'
+  TableCell = 'table-cell',
 }

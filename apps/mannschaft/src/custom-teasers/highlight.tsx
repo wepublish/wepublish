@@ -1,14 +1,14 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import {
   TeaserLead,
   TeaserMetadata,
   TeaserPreTitle,
   TeaserPreTitleNoContent,
-  TeaserPreTitleWrapper
-} from '@wepublish/block-content/website'
-import {ImageWrapper} from '@wepublish/image/website'
+  TeaserPreTitleWrapper,
+} from '@wepublish/block-content/website';
+import { ImageWrapper } from '@wepublish/image/website';
 
-import {MannschaftBaseTeaser} from '../mannschaft-base-teaser'
+import { MannschaftBaseTeaser } from '../mannschaft-base-teaser';
 
 export const HighlightTeaser = styled(MannschaftBaseTeaser)`
   background-color: #000;
@@ -22,9 +22,9 @@ export const HighlightTeaser = styled(MannschaftBaseTeaser)`
     '. . .';
   grid-auto-rows: auto;
   grid-template-columns: 0 1fr 0;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({ theme }) => theme.spacing(2)};
 
-  ${({theme}) => theme.breakpoints.up('md')} {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-areas:
       'image . .'
       'image pretitle .'
@@ -33,7 +33,7 @@ export const HighlightTeaser = styled(MannschaftBaseTeaser)`
       'image tags .'
       'image . .';
     grid-template-columns: 2fr 1fr 0;
-    column-gap: ${({theme}) => theme.spacing(4)};
+    column-gap: ${({ theme }) => theme.spacing(4)};
   }
 
   ${TeaserPreTitleWrapper} {
@@ -65,9 +65,9 @@ export const HighlightTeaser = styled(MannschaftBaseTeaser)`
   ${ImageWrapper} {
     height: 100%;
 
-    ${({theme}) => theme.breakpoints.up('md')} {
+    ${({ theme }) => theme.breakpoints.up('md')} {
       aspect-ratio: 5/3;
       max-height: unset;
     }
   }
-`
+`;

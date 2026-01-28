@@ -1,15 +1,23 @@
-import {DynamicModule, Global, Module, ModuleMetadata, Provider, Type} from '@nestjs/common'
-import {URLAdapter} from './url-adapter'
+import {
+  DynamicModule,
+  Global,
+  Module,
+  ModuleMetadata,
+  Provider,
+  Type,
+} from '@nestjs/common';
+import { URLAdapter } from './url-adapter';
 
 export type URLAdapterFactory = {
-  createUrlAdapter(): Promise<URLAdapter> | URLAdapter
-}
+  createUrlAdapter(): Promise<URLAdapter> | URLAdapter;
+};
 
-export interface URLAdapterAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
-  useExisting?: Type<URLAdapterFactory>
-  useClass?: Type<URLAdapterFactory>
-  useFactory?: (...args: any[]) => Promise<URLAdapter> | URLAdapter
-  inject?: any[]
+export interface URLAdapterAsyncOptions
+  extends Pick<ModuleMetadata, 'imports'> {
+  useExisting?: Type<URLAdapterFactory>;
+  useClass?: Type<URLAdapterFactory>;
+  useFactory?: (...args: any[]) => Promise<URLAdapter> | URLAdapter;
+  inject?: any[];
 }
 
 @Global()
@@ -21,11 +29,11 @@ export class URLAdapterModule {
       providers: [
         {
           provide: URLAdapter,
-          useValue: config
-        }
+          useValue: config,
+        },
       ],
-      exports: [URLAdapter]
-    }
+      exports: [URLAdapter],
+    };
   }
 
   public static registerAsync(options: URLAdapterAsyncOptions): DynamicModule {
@@ -33,28 +41,32 @@ export class URLAdapterModule {
       module: URLAdapterModule,
       imports: [...(options.imports || [])],
       providers: this.createAsyncProviders(options),
-      exports: [URLAdapter]
-    }
+      exports: [URLAdapter],
+    };
   }
 
-  private static createAsyncProviders(options: URLAdapterAsyncOptions): Provider[] {
-    return [this.createAsyncOptionsProvider(options)]
+  private static createAsyncProviders(
+    options: URLAdapterAsyncOptions
+  ): Provider[] {
+    return [this.createAsyncOptionsProvider(options)];
   }
 
-  private static createAsyncOptionsProvider(options: URLAdapterAsyncOptions): Provider {
+  private static createAsyncOptionsProvider(
+    options: URLAdapterAsyncOptions
+  ): Provider {
     if (options.useFactory) {
       return {
         provide: URLAdapter,
         useFactory: options.useFactory,
-        inject: options.inject || []
-      }
+        inject: options.inject || [],
+      };
     }
 
     return {
       provide: URLAdapter,
       useFactory: async (optionsFactory: URLAdapterFactory) =>
         await optionsFactory.createUrlAdapter(),
-      inject: [options.useExisting || options.useClass!]
-    }
+      inject: [options.useExisting || options.useClass!],
+    };
   }
 }

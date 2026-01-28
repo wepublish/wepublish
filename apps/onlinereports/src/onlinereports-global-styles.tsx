@@ -1,4 +1,4 @@
-import {css, GlobalStyles} from '@mui/material'
+import { css, GlobalStyles } from '@mui/material';
 
 const globalCSS = css`
   html {
@@ -6,6 +6,8 @@ const globalCSS = css`
     -webkit-hyphenate-limit-before: 8;
     -webkit-hyphenate-limit-after: 8;
   }
-`
+`;
 
-export const OnlineReportsGlobalStyles = () => <GlobalStyles styles={globalCSS} />
+export const OnlineReportsGlobalStyles = () => (
+  <GlobalStyles styles={globalCSS} />
+);

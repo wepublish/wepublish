@@ -1,7 +1,11 @@
-import {Comment, Prisma, PrismaClient} from '@prisma/client'
-import {CommentFilter, CommentSort} from '../../db/comment'
-import {ConnectionResult} from '../../db/common'
-import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
+import { Comment, Prisma, PrismaClient } from '@prisma/client';
+import { CommentFilter, CommentSort } from '../../db/comment';
+import { ConnectionResult } from '../../db/common';
+import {
+  SortOrder,
+  getMaxTake,
+  graphQLSortOrderToPrisma,
+} from '@wepublish/utils/api';
 
 export const createCommentOrder = (
   field: CommentSort,
@@ -10,87 +14,99 @@ export const createCommentOrder = (
   switch (field) {
     case CommentSort.CreatedAt:
       return {
-        createdAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        createdAt: graphQLSortOrderToPrisma(sortOrder),
+      };
 
     case CommentSort.ModifiedAt:
       return {
-        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
-      }
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder),
+      };
   }
-}
+};
 
-const createTagFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereInput => {
+const createTagFilter = (
+  filter: Partial<CommentFilter>
+): Prisma.CommentWhereInput => {
   if (filter?.tags?.length) {
     return {
       tags: {
         some: {
           tagId: {
-            in: filter?.tags
-          }
-        }
-      }
-    }
+            in: filter?.tags,
+          },
+        },
+      },
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-const createStateFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereInput => {
+const createStateFilter = (
+  filter: Partial<CommentFilter>
+): Prisma.CommentWhereInput => {
   if (filter?.states) {
     return {
       state: {
-        in: filter.states
-      }
-    }
+        in: filter.states,
+      },
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-const createItemFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereInput => {
+const createItemFilter = (
+  filter: Partial<CommentFilter>
+): Prisma.CommentWhereInput => {
   if (filter?.item) {
     return {
-      itemID: filter.item
-    }
+      itemID: filter.item,
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-const createItemTypeFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereInput => {
+const createItemTypeFilter = (
+  filter: Partial<CommentFilter>
+): Prisma.CommentWhereInput => {
   if (filter?.itemType) {
     return {
       itemType: {
-        equals: filter.itemType
-      }
-    }
+        equals: filter.itemType,
+      },
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-const createItemIdFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereInput => {
+const createItemIdFilter = (
+  filter: Partial<CommentFilter>
+): Prisma.CommentWhereInput => {
   if (filter.itemID) {
     return {
       itemID: {
-        equals: filter.itemID
-      }
-    }
+        equals: filter.itemID,
+      },
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
-export const createCommentFilter = (filter: Partial<CommentFilter>): Prisma.CommentWhereInput => ({
+export const createCommentFilter = (
+  filter: Partial<CommentFilter>
+): Prisma.CommentWhereInput => ({
   AND: [
     createStateFilter(filter),
     createTagFilter(filter),
     createItemTypeFilter(filter),
     createItemIdFilter(filter),
-    createItemFilter(filter)
-  ]
-})
+    createItemFilter(filter),
+  ],
+});
 
 export const getComments = async (
   filter: Partial<CommentFilter>,
@@ -101,32 +117,32 @@ export const getComments = async (
   take: number,
   comment: PrismaClient['comment']
 ): Promise<ConnectionResult<Comment>> => {
-  const orderBy = createCommentOrder(sortedField, order)
-  const where = createCommentFilter(filter)
+  const orderBy = createCommentOrder(sortedField, order);
+  const where = createCommentFilter(filter);
 
   const [totalCount, comments] = await Promise.all([
     comment.count({
       where,
-      orderBy
+      orderBy,
     }),
     comment.findMany({
       where,
       skip,
       take: getMaxTake(take) + 1,
       orderBy,
-      cursor: cursorId ? {id: cursorId} : undefined,
+      cursor: cursorId ? { id: cursorId } : undefined,
       include: {
-        revisions: {orderBy: {createdAt: 'asc'}}
-      }
-    })
-  ])
+        revisions: { orderBy: { createdAt: 'asc' } },
+      },
+    }),
+  ]);
 
-  const nodes = comments.slice(0, take)
-  const firstComment = nodes[0]
-  const lastComment = nodes[nodes.length - 1]
+  const nodes = comments.slice(0, take);
+  const firstComment = nodes[0];
+  const lastComment = nodes[nodes.length - 1];
 
-  const hasPreviousPage = Boolean(skip)
-  const hasNextPage = comments.length > nodes.length
+  const hasPreviousPage = Boolean(skip);
+  const hasNextPage = comments.length > nodes.length;
 
   return {
     nodes,
@@ -135,7 +151,7 @@ export const getComments = async (
       hasPreviousPage,
       hasNextPage,
       startCursor: firstComment?.id,
-      endCursor: lastComment?.id
-    }
-  }
-}
+      endCursor: lastComment?.id,
+    },
+  };
+};

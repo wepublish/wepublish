@@ -1,7 +1,7 @@
 {
   "name": "editor",
   "pkg": {
-    "targets": [ "node16-linux" ]
+    "targets": [ "node22-linux" ]
   },
   "bin": {
     "main": "dist/apps/editor/main.js"

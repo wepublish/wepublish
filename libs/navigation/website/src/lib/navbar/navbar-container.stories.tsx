@@ -1,6 +1,10 @@
-import {Meta} from '@storybook/react'
-import {FullNavigationFragment, Navigation, NavigationListDocument} from '@wepublish/website/api'
-import {NavbarContainer} from './navbar-container'
+import { Meta } from '@storybook/react';
+import {
+  FullNavigationFragment,
+  Navigation,
+  NavigationListDocument,
+} from '@wepublish/website/api';
+import { NavbarContainer } from './navbar-container';
 
 const navigation = {
   __typename: 'Navigation',
@@ -12,23 +16,23 @@ const navigation = {
       __typename: 'PageNavigationLink',
       label: 'Home',
       page: {
-        url: '/'
-      }
+        url: '/',
+      },
     },
     {
       __typename: 'ArticleNavigationLink',
       label: 'Artikel',
       article: {
-        url: '/a/abcd'
-      }
+        url: '/a/abcd',
+      },
     },
     {
       __typename: 'ExternalNavigationLink',
       label: 'Google',
-      url: 'https://google.com'
-    }
-  ]
-} as FullNavigationFragment
+      url: 'https://google.com',
+    },
+  ],
+} as FullNavigationFragment;
 
 const navigations = [
   navigation,
@@ -36,19 +40,19 @@ const navigations = [
     ...navigation,
     id: '1234-1234',
     key: 'categories',
-    name: 'Kategorien'
+    name: 'Kategorien',
   },
   {
     ...navigation,
     id: '12345-12345',
     key: 'about',
-    name: 'Über Uns'
+    name: 'Über Uns',
   },
   {
     ...navigation,
     id: '123456-123456',
     key: 'header',
-    name: 'Header'
+    name: 'Header',
   },
   {
     id: '123456-123456',
@@ -59,29 +63,29 @@ const navigations = [
         __typename: 'PageNavigationLink',
         label: 'Search',
         page: {
-          url: '/search'
-        }
+          url: '/search',
+        },
       },
       {
         __typename: 'ExternalNavigationLink',
         label: 'X',
-        url: 'https://twitter.com/foobar'
-      }
-    ]
-  }
-] as Navigation[]
+        url: 'https://twitter.com/foobar',
+      },
+    ],
+  },
+] as Navigation[];
 
 export default {
   component: NavbarContainer,
-  title: 'Container/Navbar'
-} as Meta
+  title: 'Container/Navbar',
+} as Meta;
 
 export const Default = {
   args: {
     slug: 'main',
     categorySlugs: [['categories'], ['about']],
     headerSlug: 'header',
-    iconSlug: 'icons'
+    iconSlug: 'icons',
   },
 
   parameters: {
@@ -89,15 +93,15 @@ export const Default = {
       mocks: [
         {
           request: {
-            query: NavigationListDocument
+            query: NavigationListDocument,
           },
           result: {
             data: {
-              navigations
-            }
-          }
-        }
-      ]
-    }
-  }
-}
+              navigations,
+            },
+          },
+        },
+      ],
+    },
+  },
+};

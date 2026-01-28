@@ -50,15 +50,16 @@ services:
     depends_on:
       - api
   database:
-    image: bitnami/postgresql:14
+    image: postgres:17
     platform: linux/amd64
     ports:
       - '127.0.0.1:5432:5432'
     volumes:
-      - 'database_data:/bitnami/postgresql'
+      - database:/var/lib/postgresql/data
     environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-      - POSTGRESQL_DATABASE=wepublish
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=wepublish
+      - POSTGRES_HOST_AUTH_METHOD=trust
     networks:
       - app-tier
   media:
@@ -93,19 +94,26 @@ services:
       - app-tier
 
   storage:
-    image: bitnami/minio:latest
+    image: minio/minio:latest
+    entrypoint: ["/bin/sh"]
+    command:  ["-ec",
+      "mkdir -p /data/wepublish-staff /data/wepublish-transformed; \
+   minio server /data --console-address=:9001 & \
+   sleep 3; \
+   mc alias set local http://127.0.0.1:9000 ${S3_ACCESS_KEY} ${S3_SECRET_KEY}; \
+   mc anonymous set download local/wepublish-transformed; \
+   wait"]
     ports:
-      - '9000:9000'
-      - '9001:9001'
+      - "9000:9000"
+      - "9001:9001"
     environment:
-      - MINIO_ROOT_USER=${S3_ACCESS_KEY}
-      - MINIO_ROOT_PASSWORD=${S3_SECRET_KEY}
-      - MINIO_DEFAULT_BUCKETS=${S3_BUCKETS}
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY}
     volumes:
-      - storage_data:/data
+      - storage:/data
 
 volumes:
-  database_data:
+  database:
     driver: local
-  storage_data:
+  storage:
     driver: local

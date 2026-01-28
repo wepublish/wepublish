@@ -1,31 +1,31 @@
-import {TableCell} from '@mui/material'
-import {SubscriptionFlowModel} from '@wepublish/editor/api-v2'
-import {useCallback, useContext, useMemo} from 'react'
-import {useTranslation} from 'react-i18next'
-import {MailTemplateSelect} from '../mail-template-select'
+import { TableCell } from '@mui/material';
+import { SubscriptionFlowFragment } from '@wepublish/editor/api-v2';
+import { useCallback, useContext, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MailTemplateSelect } from '../mail-template-select';
 import {
   DecoratedSubscriptionInterval,
   IntervalColoring,
   MailTemplatesContext,
   NonUserActionInterval,
-  UserActionEvent
-} from '../subscription-flow-list'
+  UserActionEvent,
+} from '../subscription-flow-list';
 
 interface EventsBodyProps {
-  userActionEvents: UserActionEvent[]
-  subscriptionFlow: SubscriptionFlowModel
-  eventIcons: Record<string, JSX.Element>
-  eventColors: Record<string, IntervalColoring>
+  userActionEvents: UserActionEvent[];
+  subscriptionFlow: SubscriptionFlowFragment;
+  eventIcons: Record<string, JSX.Element>;
+  eventColors: Record<string, IntervalColoring>;
 }
 
 export function EventsBody({
   userActionEvents,
   subscriptionFlow,
   eventIcons,
-  eventColors
+  eventColors,
 }: EventsBodyProps) {
-  const {t} = useTranslation()
-  const mailTemplates = useContext(MailTemplatesContext)
+  const { t } = useTranslation();
+  const mailTemplates = useContext(MailTemplatesContext);
 
   const intervals = useMemo(
     () =>
@@ -36,25 +36,31 @@ export function EventsBody({
             subscriptionFlowId: subscriptionFlow.id,
             object: interval,
             icon: eventIcons[interval.event.toUpperCase()],
-            color: eventColors[interval.event.toUpperCase()]
-          } as DecoratedSubscriptionInterval<NonUserActionInterval>)
+            color: eventColors[interval.event.toUpperCase()],
+          }) as DecoratedSubscriptionInterval<NonUserActionInterval>
       ),
     [eventColors, eventIcons, subscriptionFlow, t]
-  )
+  );
 
   const intervalForEvent = useCallback(
-    (eventName: string) => intervals.find(interval => interval.object.event === eventName),
+    (eventName: string) =>
+      intervals.find(interval => interval.object.event === eventName),
     [intervals]
-  )
+  );
 
   return (
     <>
       {userActionEvents.map(event => (
-        <TableCell key={event.subscriptionEventKey} align="center">
+        <TableCell
+          key={event.subscriptionEventKey}
+          align="center"
+        >
           {mailTemplates && (
             <MailTemplateSelect
               mailTemplates={mailTemplates}
-              subscriptionInterval={intervalForEvent(event.subscriptionEventKey)}
+              subscriptionInterval={intervalForEvent(
+                event.subscriptionEventKey
+              )}
               subscriptionFlow={subscriptionFlow}
               event={event.subscriptionEventKey}
             />
@@ -62,5 +68,5 @@ export function EventsBody({
         </TableCell>
       ))}
     </>
-  )
+  );
 }
