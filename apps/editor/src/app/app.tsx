@@ -72,7 +72,6 @@ import { PeerList } from './routes/peers/peerList';
 import { PollEditView } from './routes/polls/pollEditView';
 import { PollList } from './routes/polls/pollList';
 import { PollVoteListContainer } from './routes/polls/PollVotesListContainer';
-import { Seed } from './routes/seed/seed';
 import { SubscriptionEditView } from './routes/subscriptions/subscriptionEditView';
 import { SubscriptionList } from './routes/subscriptions/subscriptionList';
 import { TagCreateView } from './routes/tags/tagCreateView';
@@ -249,10 +248,6 @@ export function App() {
             <Route
               path="login"
               element={<Login />}
-            />
-            <Route
-              path="seed"
-              element={<Seed />}
             />
             {/* Dashboard Routes */}
             <Route
