@@ -18,6 +18,7 @@ import {
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import getConfig from 'next/config';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
