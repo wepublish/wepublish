@@ -21,6 +21,7 @@ import { useMemo } from 'react';
 import { z } from 'zod';
 
 import { Container } from '../../src/components/layout/container';
+import Head from 'next/head';
 
 const Filter = styled('div')`
   display: grid;
@@ -82,7 +83,7 @@ export default function EventList() {
     return 1;
   }, [data?.events?.totalCount]);
 
-  const canonicalUrl = '/event'
+  const canonicalUrl = '/event';
 
   return (
     <Container>
@@ -141,22 +142,26 @@ export default function EventList() {
       {pageCount > 1 && (
         <>
           <Head>
-            <link rel="canonical" key="canonical" href={canonicalUrl} />
+            <link
+              rel="canonical"
+              key="canonical"
+              href={canonicalUrl}
+            />
           </Head>
 
-        <Pagination
-          page={page ?? 1}
-          count={pageCount}
-          onChange={(_, value) =>
-            replace(
-              {
-                query: { ...query, page: value },
-              },
-              undefined,
-              { shallow: true, scroll: true }
-            )
-          }
-        />
+          <Pagination
+            page={page ?? 1}
+            count={pageCount}
+            onChange={(_, value) =>
+              replace(
+                {
+                  query: { ...query, page: value },
+                },
+                undefined,
+                { shallow: true, scroll: true }
+              )
+            }
+          />
         </>
       )}
     </Container>

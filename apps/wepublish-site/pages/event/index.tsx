@@ -16,6 +16,7 @@ import {
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
@@ -80,7 +81,7 @@ export default function EventList() {
     return 1;
   }, [data?.events?.totalCount]);
 
-  const canonicalUrl = '/event'
+  const canonicalUrl = '/event';
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -139,22 +140,26 @@ export default function EventList() {
       {pageCount > 1 && (
         <>
           <Head>
-            <link rel="canonical" key="canonical" href={canonicalUrl} />
+            <link
+              rel="canonical"
+              key="canonical"
+              href={canonicalUrl}
+            />
           </Head>
 
-        <Pagination
-          page={page ?? 1}
-          count={pageCount}
-          onChange={(_, value) =>
-            replace(
-              {
-                query: { ...query, page: value },
-              },
-              undefined,
-              { shallow: true, scroll: true }
-            )
-          }
-        />
+          <Pagination
+            page={page ?? 1}
+            count={pageCount}
+            onChange={(_, value) =>
+              replace(
+                {
+                  query: { ...query, page: value },
+                },
+                undefined,
+                { shallow: true, scroll: true }
+              )
+            }
+          />
         </>
       )}
     </LocalizationProvider>

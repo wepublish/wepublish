@@ -17,6 +17,7 @@ import { useMemo } from 'react';
 import { z } from 'zod';
 
 import { Container } from '../../src/components/layout/container';
+import Head from 'next/head';
 
 const take = 25;
 
@@ -55,7 +56,7 @@ export default function AuthorList() {
     return 1;
   }, [data?.authors.totalCount]);
 
-  const canonicalUrl = '/author'
+  const canonicalUrl = '/author';
 
   return (
     <Container>
@@ -64,22 +65,26 @@ export default function AuthorList() {
       {pageCount > 1 && (
         <>
           <Head>
-            <link rel="canonical" key="canonical" href={canonicalUrl} />
+            <link
+              rel="canonical"
+              key="canonical"
+              href={canonicalUrl}
+            />
           </Head>
 
-        <Pagination
-          page={page ?? 1}
-          count={pageCount}
-          onChange={(_, value) =>
-            replace(
-              {
-                query: { ...query, page: value },
-              },
-              undefined,
-              { shallow: true, scroll: true }
-            )
-          }
-        />
+          <Pagination
+            page={page ?? 1}
+            count={pageCount}
+            onChange={(_, value) =>
+              replace(
+                {
+                  query: { ...query, page: value },
+                },
+                undefined,
+                { shallow: true, scroll: true }
+              )
+            }
+          />
         </>
       )}
     </Container>
