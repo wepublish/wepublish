@@ -75,6 +75,8 @@ export function AuthorPage({
     return 1;
   }, [articleListData?.articles.totalCount]);
 
+  const canonicalUrl = `/author/${slug}`;
+
   return (
     <ArticleWrapper className={className}>
       <AuthorContainer slug={slug as string} />
@@ -87,19 +89,28 @@ export function AuthorPage({
           <ArticleListContainer variables={variables} />
 
           {pageCount > 1 && (
-            <Pagination
-              page={page ?? 1}
-              count={pageCount}
-              onChange={(_, value) =>
-                replace(
-                  {
-                    query: { ...query, page: value },
-                  },
-                  undefined,
-                  { shallow: true, scroll: true }
-                )
-              }
-            />
+            <>
+              <Head>
+                <link
+                  rel="canonical"
+                  key="canonical"
+                  href={canonicalUrl}
+                />
+              </Head>
+              <Pagination
+                page={page ?? 1}
+                count={pageCount}
+                onChange={(_, value) =>
+                  replace(
+                    {
+                      query: { ...query, page: value },
+                    },
+                    undefined,
+                    { shallow: true, scroll: true }
+                  )
+                }
+              />
+            </>
           )}
         </>
       )}
