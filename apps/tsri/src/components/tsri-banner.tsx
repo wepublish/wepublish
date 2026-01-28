@@ -28,15 +28,15 @@ const TsriBanner = styled(Banner)(
   }
 
   [data-role='PRIMARY'] {
-    background-color: ${theme.palette.primary.contrastText};
-    color: ${theme.palette.secondary.main};
-    border: 2px solid ${theme.palette.primary.contrastText};
+    background-color: ${theme.palette.primary.main};
+    color: ${theme.palette.common.white};
+    border: 2px solid ${theme.palette.common.white};
   }
 
   [data-role='OTHER'] {
     background-color: ${theme.palette.primary.main};
-    color: ${theme.palette.primary.contrastText};
-    border: 2px solid ${theme.palette.primary.contrastText};
+    color: ${theme.palette.common.white};
+    border: 2px solid ${theme.palette.common.white};
   }
 `
 );
