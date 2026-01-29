@@ -1499,3 +1499,139 @@ model PaywallBypass {
 
   @@map("paywall_bypasses")
 }
+
+enum MailProvider {
+  MAILGUN   @map("mailgun")
+  MAILCHIMP @map("mailchimp")
+  SLACK     @map("slack")
+}
+
+model SettingMailProvider {
+  id         String   @id
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  type                  MailProvider
+  name                  String?
+  fromAddress           String?
+  webhookEndpointSecret String?
+  apiKey                String?
+  mailgun_mailDomain    String?
+  mailgun_baseDomain    String?
+  mailchimp_baseURL     String?
+  slack_webhookURL      String?
+
+  @@map("settings.mailprovider")
+}
+
+enum TrackingPixel {
+  PROLITTERIS @map("prolitteris")
+}
+
+model SettingTrackingPixel {
+  id                                     String        @id
+  createdAt                              DateTime      @default(now())
+  modifiedAt                             DateTime      @updatedAt
+  type                                   TrackingPixel
+  name                                   String?
+  prolitteris_memberNr                   String?
+  prolitteris_publisherInternalKeyDomain String?
+  prolitteris_usePublisherInternalKey    Boolean?
+  prolitteris_onlyPaidContentAccess      Boolean?
+
+  @@map("settings.trackingpixel")
+}
+
+enum PaymentProvider {
+  STRIPE_CHECKOUT      @map("stripe-checkout")
+  STRIPE               @map("stripe")
+  PAYREXX              @map("payrexx")
+  PAYREXX_SUBSCRIPTION @map("payrexx-subscription")
+  BEXIO                @map("bexio")
+  MOLLIE               @map("mollie")
+  NO_CHARGE            @map("no-charge")
+}
+
+model SettingPaymentProvider {
+  id         String   @id
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  type                  PaymentProvider
+  name                  String?
+  offSessionPayments    Boolean?
+  webhookEndpointSecret String? // Payrexx webhookApiKey
+  apiKey                String? // Stripe secretKey & payrex instance_api_secret
+
+  methods Json? // Molie & Stripe & Stripe checkout
+
+  payrexx_instancename String?
+  payrexx_psp          Json?
+  payrexx_pm           Json?
+  payrexx_vatrate      String?
+
+  bexio_userId                              String?
+  bexio_countryId                           String?
+  bexio_invoiceTemplateNewMembership        String?
+  bexio_invoiceTemplateRenewalMembership    String?
+  bexio_unitId                              String?
+  bexio_taxId                               String?
+  bexio_accountId                           String?
+  bexio_invoiceTitleNewMembership           String?
+  bexio_invoiceTitleRenewalMembership       String?
+  bexio_invoiceMailSubjectNewMembership     String?
+  bexio_invoiceMailBodyNewMembership        String?
+  bexio_invoiceMailSubjectRenewalMembership String?
+  bexio_invoiceMailBodyRenewalMembership    String?
+  bexio_markInvoiceAsOpen                   Boolean?
+
+  mollie_apiBaseUrl String?
+
+  @@map("settings.paymentprovider")
+}
+
+enum ChallengeProvider {
+  TURNSTILE @map("turnstile")
+}
+
+model SettingChallengeProvider {
+  id         String   @id
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+  name       String?
+
+  type    ChallengeProvider
+  secret  String?
+  siteKey String?
+
+  @@map("settings.challengeprovider")
+}
+
+model SettingHotAndTrending {
+  id         String   @id
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  credentials   String?
+  property      String?
+  articlePrefix String?
+
+  @@map("settings.hotandtrending")
+}
+
+enum AIProvider {
+  V0 @map("v0")
+}
+
+model SettingAIProvider {
+  id         String   @id
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  type         AIProvider
+  name         String?
+  apiKey       String?
+  systemPrompt String?
+
+  @@map("settings.aiprovider")
+}
