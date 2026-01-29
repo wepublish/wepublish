@@ -90,7 +90,7 @@ import { SessionModule } from '@wepublish/session/api';
 import { ChallengeModule } from '@wepublish/challenge/api';
 import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
 import { V0Module } from '@wepublish/ai/api';
-import { KvTtlCacheModule } from '../../../../libs/kv-ttl-cache/api/src';
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 
 @Global()
 @Module({
