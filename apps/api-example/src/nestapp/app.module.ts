@@ -79,8 +79,6 @@ import {
 import { UserModule } from '@wepublish/user/api';
 import { VersionInformationModule } from '@wepublish/versionInformation/api';
 import bodyParser from 'body-parser';
-import FormData from 'form-data';
-import Mailgun from 'mailgun.js';
 import { SlackMailProvider } from '../app/slack-mail-provider';
 import { readConfig } from '../readConfig';
 import { AuthorModule } from '@wepublish/author/api';
@@ -93,7 +91,7 @@ import { V0Module } from '@wepublish/ai/api';
 import {
   KvTtlCacheModule,
   KvTtlCacheService,
-} from '../../../../libs/kv-ttl-cache/api/src';
+} from '@wepublish/kv-ttl-cache/api';
 
 @Global()
 @Module({
