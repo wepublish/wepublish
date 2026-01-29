@@ -3,7 +3,7 @@ import { Chat, PromptHTMLArgs } from './v0.model';
 import { ChatsCreateResponse, createClient } from 'v0-sdk';
 import { Permissions } from '@wepublish/permissions/api';
 import { CanCreateArticle, CanCreatePage } from '@wepublish/permissions';
-import { BadRequestException, Inject } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
@@ -49,7 +49,7 @@ class V0Config {
 export class V0Resolver {
   private async getV0Client() {
     const config = new V0Config(this.prisma, this.kv);
-    let apiKey = await config.apiKey();
+    const apiKey = await config.apiKey();
 
     if (!apiKey) {
       throw new Error('V0 API key required');

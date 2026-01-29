@@ -27,5 +27,7 @@ export class FakeMailProvider extends BaseMailProvider {
   async initDatabaseConfiguration(
     id: string,
     type: PrismaMailProvider
-  ): Promise<void> {}
+  ): Promise<void> {
+    return;
+  }
 }

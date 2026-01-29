@@ -31,7 +31,6 @@ import {
   BaseMailProvider,
   MailchimpMailProvider,
   MailgunMailProvider,
-  MailProvider,
   MailsModule,
 } from '@wepublish/mail/api';
 import {
@@ -45,7 +44,6 @@ import {
   ApiModule,
   HauptstadtURLAdapter,
   PrismaModule,
-  PrismaService,
   URLAdapter,
   URLAdapterModule,
 } from '@wepublish/nest-modules';

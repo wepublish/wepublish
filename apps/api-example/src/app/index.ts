@@ -16,8 +16,6 @@ import { HotAndTrendingDataSource } from '@wepublish/article/api';
 import { MediaAdapter } from '@wepublish/image/api';
 import { MailProvider } from '@wepublish/mail/api';
 import { PaymentProvider } from '@wepublish/payment/api';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-import { Cache } from 'cache-manager';
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
