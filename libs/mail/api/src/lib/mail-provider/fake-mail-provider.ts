@@ -17,7 +17,10 @@ export class FakeMailProvider extends BaseMailProvider {
     return [];
   }
 
-  getTemplateUrl() {
+  async getTemplateUrl() {
     return 'http://example.com/';
+  }
+  async getName(): Promise<string> {
+    return 'fake-mail-provider';
   }
 }

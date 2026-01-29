@@ -5,7 +5,11 @@ import mailchimp, {
 } from '@mailchimp/mailchimp_transactional';
 import { AxiosError } from 'axios';
 
-import { MailLogState } from '@prisma/client';
+import {
+  MailLogState,
+  PrismaClient,
+  SettingMailProvider,
+} from '@prisma/client';
 import {
   MailLogStatus,
   MailProviderError,
@@ -15,13 +19,7 @@ import {
   WithExternalId,
 } from './mail-provider.interface';
 import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
-
-export interface MailchimpMailProviderProps extends MailProviderProps {
-  readonly apiKey: string;
-  readonly baseURL: string;
-  readonly webhookEndpointSecret: string;
-  readonly fromAddress: string;
-}
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 interface VerifyWebhookSignatureProps {
   signature: string;
@@ -82,21 +80,67 @@ function flattenObjForMandrill<T>(ob: T): Record<string, string> {
   return nestedObject;
 }
 
-export class MailchimpMailProvider extends BaseMailProvider {
-  readonly webhookEndpointSecret: string;
-  readonly mailchimpClient: mailchimp.ApiClient;
+class MailchimpConfig {
+  private readonly ttl = 60;
 
-  constructor(props: MailchimpMailProviderProps) {
-    super(props);
-    this.webhookEndpointSecret = props.webhookEndpointSecret;
-    this.mailchimpClient = mailchimp(props.apiKey);
+  constructor(
+    private readonly prisma: PrismaClient,
+    private readonly kv: KvTtlCacheService,
+    private readonly id: string
+  ) {}
+
+  private async load(): Promise<SettingMailProvider | null> {
+    return this.prisma.settingMailProvider.findUnique({
+      where: {
+        id: this.id,
+      },
+    });
   }
 
-  verifyWebhookSignature({
+  async getFromCache(): Promise<SettingMailProvider | null> {
+    return this.kv.getOrLoad<SettingMailProvider | null>(
+      `mailchimp:settings:${this.id}`,
+      () => this.load(),
+      this.ttl
+    );
+  }
+
+  async getConfig(): Promise<SettingMailProvider | null> {
+    return await this.getFromCache();
+  }
+}
+
+export class MailchimpMailProvider extends BaseMailProvider {
+  constructor(
+    private readonly prisma: PrismaClient,
+    private readonly kv: KvTtlCacheService,
+    props: MailProviderProps
+  ) {
+    super(props);
+  }
+
+  async getMailchimpClient(): Promise<mailchimp.ApiClient> {
+    const config = await new MailchimpConfig(
+      this.prisma,
+      this.kv,
+      this.id
+    ).getConfig();
+    if (!config?.apiKey) {
+      throw new Error('Missing mailchimp base domain or api key');
+    }
+    return mailchimp(config.apiKey);
+  }
+
+  async verifyWebhookSignature({
     signature,
     url,
     params,
-  }: VerifyWebhookSignatureProps): boolean {
+  }: VerifyWebhookSignatureProps): Promise<boolean> {
+    const config = await new MailchimpConfig(
+      this.prisma,
+      this.kv,
+      this.id
+    ).getConfig();
     const keys = Object.keys(params).sort();
 
     const longString = keys.reduce((sig, key) => {
@@ -104,7 +148,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
     }, url || '');
 
     const generatedSignature = crypto
-      .createHmac('sha1', this.webhookEndpointSecret)
+      .createHmac('sha1', config?.webhookEndpointSecret ?? '')
       .update(longString)
       .digest('base64');
 
@@ -152,6 +196,12 @@ export class MailchimpMailProvider extends BaseMailProvider {
   }
 
   async sendMail(props: SendMailProps): Promise<void> {
+    const config = await new MailchimpConfig(
+      this.prisma,
+      this.kv,
+      this.id
+    ).getConfig();
+    const mailchimpClient = await this.getMailchimpClient();
     if (props.template) {
       const templateContent: mailchimp.MergeVar[] = [];
       const flattenedObject = flattenObjForMandrill(props.templateData ?? {});
@@ -163,13 +213,13 @@ export class MailchimpMailProvider extends BaseMailProvider {
         });
       }
 
-      const response = await this.mailchimpClient.messages.sendTemplate({
+      const response = await mailchimpClient.messages.sendTemplate({
         template_name: props.template,
         template_content: [],
         message: {
           text: props.message,
           subject: props.subject,
-          from_email: this.fromAddress,
+          from_email: config?.fromAddress ?? '',
           to: [
             {
               email: props.recipient,
@@ -192,12 +242,12 @@ export class MailchimpMailProvider extends BaseMailProvider {
       return;
     }
 
-    const response = await this.mailchimpClient.messages.send({
+    const response = await mailchimpClient.messages.send({
       message: {
         html: props.messageHtml,
         text: props.message,
         subject: props.subject,
-        from_email: this.fromAddress,
+        from_email: config?.fromAddress || '',
         to: [
           {
             email: props.recipient,
@@ -214,7 +264,8 @@ export class MailchimpMailProvider extends BaseMailProvider {
 
   // beware: Mailchimp templates are still created and stored in Mandrill: https://mandrillapp.com/templates
   async getTemplates(): Promise<MailProviderTemplate[]> {
-    const response = await this.mailchimpClient.templates.list();
+    const mailchimpClient = await this.getMailchimpClient();
+    const response = await mailchimpClient.templates.list();
     if (this.responseIsError(response)) {
       throw new MailProviderError((response.response?.data as Error).message);
     }
@@ -231,11 +282,18 @@ export class MailchimpMailProvider extends BaseMailProvider {
     return templates;
   }
 
-  getTemplateUrl(template: WithExternalId): string {
+  async getTemplateUrl(template: WithExternalId): Promise<string> {
     return `https://mandrillapp.com/templates/code?id=${template.externalMailTemplateId}`;
   }
 
   private responseIsError<T>(response: T | AxiosError): response is AxiosError {
     return 'isAxiosError' in (response as object);
+  }
+
+  async getName(): Promise<string> {
+    return (
+      (await new MailchimpConfig(this.prisma, this.kv, this.id).getConfig())
+        ?.name ?? 'unknown'
+    );
   }
 }

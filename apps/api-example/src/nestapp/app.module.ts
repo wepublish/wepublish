@@ -90,7 +90,10 @@ import { SessionModule } from '@wepublish/session/api';
 import { ChallengeModule } from '@wepublish/challenge/api';
 import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
 import { V0Module } from '@wepublish/ai/api';
-import { KvTtlCacheModule } from '../../../../libs/kv-ttl-cache/api/src';
+import {
+  KvTtlCacheModule,
+  KvTtlCacheService,
+} from '../../../../libs/kv-ttl-cache/api/src';
 
 @Global()
 @Module({
@@ -126,8 +129,12 @@ import { KvTtlCacheModule } from '../../../../libs/kv-ttl-cache/api/src';
     AuthorModule,
     PrismaModule,
     MailsModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (config: ConfigService) => {
+      imports: [ConfigModule, PrismaModule, KvTtlCacheModule],
+      useFactory: async (
+        config: ConfigService,
+        prisma: PrismaClient,
+        kv: KvTtlCacheService
+      ) => {
         const configFile = await readConfig(
           config.getOrThrow('CONFIG_FILE_PATH')
         );
@@ -135,38 +142,18 @@ import { KvTtlCacheModule } from '../../../../libs/kv-ttl-cache/api/src';
         let mailProvider;
         if (mailProviderRaw) {
           if (mailProviderRaw.id === 'mailgun') {
-            const mailgunClient = new Mailgun(FormData).client({
-              username: 'api',
-              key: mailProviderRaw.apiKey,
-              url: `https://${mailProviderRaw.baseDomain}`,
-            });
-            mailProvider = new MailgunMailProvider({
+            mailProvider = new MailgunMailProvider(prisma, kv, {
               id: 'mailgun',
-              name: 'Mailgun',
-              fromAddress: mailProviderRaw.fromAddress,
-              webhookEndpointSecret: mailProviderRaw.webhookEndpointSecret,
-              baseDomain: mailProviderRaw.baseDomain,
-              mailDomain: mailProviderRaw.mailDomain,
-              apiKey: mailProviderRaw.apiKey,
               incomingRequestHandler: bodyParser.json(),
-              mailgunClient,
             });
           } else if (mailProviderRaw.id === 'mailchimp') {
-            mailProvider = new MailchimpMailProvider({
+            mailProvider = new MailchimpMailProvider(prisma, kv, {
               id: 'mailchimp',
-              name: 'Mailchimp',
-              fromAddress: mailProviderRaw.fromAddress,
-              webhookEndpointSecret: mailProviderRaw.webhookEndpointSecret,
-              apiKey: mailProviderRaw.apiKey,
-              baseURL: mailProviderRaw.baseURL,
               incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
             });
           } else if (mailProviderRaw.id === 'slackMail') {
-            mailProvider = new SlackMailProvider({
-              id: 'slackMail',
-              name: 'Slack Mail',
-              fromAddress: mailProviderRaw.fromAddress,
-              webhookURL: mailProviderRaw.webhookURL,
+            mailProvider = new SlackMailProvider(prisma, kv, {
+              id: 'slackmail',
             });
           } else {
             throw new Error(

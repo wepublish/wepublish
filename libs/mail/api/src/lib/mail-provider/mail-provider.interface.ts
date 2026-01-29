@@ -52,9 +52,6 @@ export class MailProviderError extends Error {}
 
 export interface MailProvider {
   readonly id: string;
-  readonly name: string;
-
-  readonly fromAddress: string;
 
   readonly incomingRequestHandler: NextHandleFunction;
 
@@ -64,5 +61,7 @@ export interface MailProvider {
 
   getTemplates(): Promise<MailProviderTemplate[]>;
 
-  getTemplateUrl(template: WithExternalId): string;
+  getTemplateUrl(template: WithExternalId): Promise<string>;
+
+  getName(): Promise<string>;
 }

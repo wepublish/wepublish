@@ -4,17 +4,46 @@ import {
   SendMailProps,
 } from '@wepublish/mail/api';
 import fetch from 'cross-fetch';
+import { PrismaClient, SettingMailProvider } from '@prisma/client';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
-export interface SlackMailProviderProps extends MailProviderProps {
-  webhookURL: string;
+class SlackMailConfig {
+  private readonly ttl = 60;
+
+  constructor(
+    private readonly prisma: PrismaClient,
+    private readonly kv: KvTtlCacheService,
+    private readonly id: string
+  ) {}
+
+  private async load(): Promise<SettingMailProvider | null> {
+    return this.prisma.settingMailProvider.findUnique({
+      where: {
+        id: this.id,
+      },
+    });
+  }
+
+  async getFromCache(): Promise<SettingMailProvider | null> {
+    return this.kv.getOrLoad<SettingMailProvider | null>(
+      `slackmail:settings:${this.id}`,
+      () => this.load(),
+      this.ttl
+    );
+  }
+
+  async getConfig(): Promise<SettingMailProvider | null> {
+    return await this.getFromCache();
+  }
 }
 
 export class SlackMailProvider extends BaseMailProvider {
-  readonly webhookURL: string;
-
-  constructor(props: SlackMailProviderProps) {
+  constructor(
+    private readonly prisma: PrismaClient,
+    private readonly kv: KvTtlCacheService,
+    props: MailProviderProps
+  ) {
     super(props);
-    this.webhookURL = props.webhookURL;
   }
 
   async webhookForSendMail() {
@@ -22,6 +51,11 @@ export class SlackMailProvider extends BaseMailProvider {
   }
 
   async sendMail(props: SendMailProps): Promise<void> {
+    const config = await new SlackMailConfig(
+      this.prisma,
+      this.kv,
+      this.id
+    ).getConfig();
     const message = {
       blocks: [
         {
@@ -36,7 +70,7 @@ export class SlackMailProvider extends BaseMailProvider {
       ],
     };
 
-    await fetch(this.webhookURL, {
+    await fetch(config.slack_webhookURL, {
       method: 'POST',
       headers: {
         'Conetent-type': 'application/json',
@@ -54,7 +88,14 @@ export class SlackMailProvider extends BaseMailProvider {
     }));
   }
 
-  getTemplateUrl() {
+  async getTemplateUrl() {
     return 'http://example.com/';
+  }
+
+  async getName(): Promise<string> {
+    return (
+      (await new SlackMailConfig(this.prisma, this.kv, this.id).getConfig())
+        ?.name ?? 'unknown'
+    );
   }
 }
