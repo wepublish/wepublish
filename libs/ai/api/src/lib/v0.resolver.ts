@@ -4,8 +4,8 @@ import { ChatsCreateResponse, createClient } from 'v0-sdk';
 import { Permissions } from '@wepublish/permissions/api';
 import { CanCreateArticle, CanCreatePage } from '@wepublish/permissions';
 import { BadRequestException, Inject } from '@nestjs/common';
-import {PrismaClient} from '@prisma/client'
-import {KvTtlCacheService} from '@wepublish/kv-ttl-cache/api'
+import { PrismaClient } from '@prisma/client';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 type V0Settings = { apiKey: string | null; systemPrompt: string | null };
 
@@ -16,7 +16,6 @@ export class V0Config {
     private readonly prisma: PrismaClient,
     private readonly kv: KvTtlCacheService
   ) {}
-
 
   private async loadV0(): Promise<V0Settings> {
     const row = await this.prisma.settingAIProvider.findFirst({
@@ -30,7 +29,11 @@ export class V0Config {
   }
 
   async getV0(): Promise<V0Settings> {
-    return this.kv.getOrLoad<V0Settings>('v0:settings', () => this.loadV0(), this.ttl);
+    return this.kv.getOrLoad<V0Settings>(
+      'v0:settings',
+      () => this.loadV0(),
+      this.ttl
+    );
   }
 
   async apiKey(): Promise<string | null> {
@@ -49,11 +52,11 @@ export class V0Resolver {
     let apiKey = await config.apiKey();
 
     if (!apiKey) {
-      throw new Error("V0 API key required");
+      throw new Error('V0 API key required');
     }
 
     return createClient({
-      apiKey
+      apiKey,
     });
   }
 
@@ -67,9 +70,9 @@ export class V0Resolver {
   async promptHTML(@Args() { query, chatId }: PromptHTMLArgs): Promise<Chat> {
     const v0 = await this.getV0Client();
     const config = new V0Config(this.prisma, this.kv);
-    let systemPrompt = await config.systemPrompt()
+    let systemPrompt = await config.systemPrompt();
     if (!systemPrompt) {
-      systemPrompt = ''
+      systemPrompt = '';
     }
 
     const chat =

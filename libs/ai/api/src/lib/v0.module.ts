@@ -1,8 +1,4 @@
-import {
-  DynamicModule,
-  Module,
-  ModuleMetadata,
-} from '@nestjs/common';
+import { DynamicModule, Module, ModuleMetadata } from '@nestjs/common';
 import { V0Resolver } from './v0.resolver';
 
 @Module({
