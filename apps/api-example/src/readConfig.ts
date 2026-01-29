@@ -2,11 +2,9 @@ import fs from 'fs';
 import YAML from 'yaml';
 import { MappedReplacer } from 'mapped-replacer';
 import StipeType from 'stripe';
-import {
-  ProLitterisCountPixelProps,
-  TrackingPixelProvider,
-} from '@wepublish/tracking-pixel/api';
+import { TrackingPixelProvider } from '@wepublish/tracking-pixel/api';
 import { GoogleAnalyticsConfig } from '@wepublish/google-analytics/api';
+import { MailProvider as MailProviderEnum } from '@prisma/client';
 
 type General = {
   apolloPlayground: boolean;
@@ -18,6 +16,7 @@ type General = {
 
 type MailProvider = {
   id: string;
+  type: MailProviderEnum;
   fromAddress: string;
   replyToAddress: string;
   webhookURL: string;
@@ -145,7 +144,7 @@ type Turnstile = {
   siteKey: string;
 };
 
-type ProLitteris = ProLitterisCountPixelProps & {
+type ProLitteris = {
   type: 'prolitteris';
 };
 

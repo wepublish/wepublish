@@ -4,7 +4,8 @@ general:
   bcryptHashCostFactor: 12
   urlAdapter: default
 mailProvider:
-  id: slackMail # allowed is mailchimp/mailgun
+  id: slackmail # allowed is mailchimp/mailgun
+  type: SLACK
   fromAddress: dev@wepublish.ch # Required for mailchimp/mailgun
   webhookURL: ${SLACK_DEV_MAIL_WEBHOOK_URL}
 paymentProviders:

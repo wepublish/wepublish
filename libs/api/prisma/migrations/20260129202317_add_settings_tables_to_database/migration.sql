@@ -2,9 +2,6 @@
 CREATE TYPE "MailProvider" AS ENUM ('mailgun', 'mailchimp', 'slack');
 
 -- CreateEnum
-CREATE TYPE "TrackingPixel" AS ENUM ('prolitteris');
-
--- CreateEnum
 CREATE TYPE "PaymentProvider" AS ENUM ('stripe-checkout', 'stripe', 'payrexx', 'payrexx-subscription', 'bexio', 'mollie', 'no-charge');
 
 -- CreateEnum
@@ -21,6 +18,7 @@ CREATE TABLE "settings.mailprovider" (
     "type" "MailProvider" NOT NULL,
     "name" TEXT,
     "fromAddress" TEXT,
+    "replyToAddress" TEXT,
     "webhookEndpointSecret" TEXT,
     "apiKey" TEXT,
     "mailgun_mailDomain" TEXT,
@@ -36,9 +34,11 @@ CREATE TABLE "settings.trackingpixel" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "modifiedAt" TIMESTAMP(3) NOT NULL,
-    "type" "TrackingPixel" NOT NULL,
+    "type" "TrackingPixelProviderType" NOT NULL,
     "name" TEXT,
     "prolitteris_memberNr" TEXT,
+    "prolitteris_username" TEXT,
+    "prolitteris_password" TEXT,
     "prolitteris_publisherInternalKeyDomain" TEXT,
     "prolitteris_usePublisherInternalKey" BOOLEAN,
     "prolitteris_onlyPaidContentAccess" BOOLEAN,

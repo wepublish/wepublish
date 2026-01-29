@@ -1525,17 +1525,15 @@ model SettingMailProvider {
   @@map("settings.mailprovider")
 }
 
-enum TrackingPixel {
-  PROLITTERIS @map("prolitteris")
-}
-
 model SettingTrackingPixel {
-  id                                     String        @id
-  createdAt                              DateTime      @default(now())
-  modifiedAt                             DateTime      @updatedAt
-  type                                   TrackingPixel
+  id                                     String                    @id
+  createdAt                              DateTime                  @default(now())
+  modifiedAt                             DateTime                  @updatedAt
+  type                                   TrackingPixelProviderType
   name                                   String?
   prolitteris_memberNr                   String?
+  prolitteris_username                   String?
+  prolitteris_password                   String?
   prolitteris_publisherInternalKeyDomain String?
   prolitteris_usePublisherInternalKey    Boolean?
   prolitteris_onlyPaidContentAccess      Boolean?

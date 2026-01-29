@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { TrackingPixelProvider } from './tracking-pixel-provider/tracking-pixel-provider';
+import { TrackingPixelProviderType } from '.prisma/client';
 
 export const TRACKING_PIXEL_MODULE_OPTIONS = 'TRACKING_PIXEL_MODULE_OPTIONS';
 
@@ -28,7 +29,8 @@ export class TrackingPixelService {
         },
         create: {
           trackingPixelProviderID: trackingPixelProvider.id,
-          trackingPixelProviderType: trackingPixelProvider.type,
+          trackingPixelProviderType:
+            await trackingPixelProvider.getTrackingPixelType(),
         },
         update: {},
       });
@@ -85,7 +87,8 @@ export class TrackingPixelService {
         },
         create: {
           trackingPixelProviderID: trackingPixelProvider.id,
-          trackingPixelProviderType: trackingPixelProvider.type,
+          trackingPixelProviderType:
+            await trackingPixelProvider.getTrackingPixelType(),
         },
         update: {},
       });

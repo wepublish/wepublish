@@ -8,6 +8,10 @@ import {
 } from './mail-provider.interface';
 import bodyParser from 'body-parser';
 import { NextHandleFunction } from 'connect';
+import {
+  PrismaClient,
+  MailProvider as PrismaMailProvider,
+} from '@prisma/client';
 
 export interface MailProviderProps {
   id: string;
@@ -36,4 +40,22 @@ export abstract class BaseMailProvider implements MailProvider {
   abstract getTemplates(): Promise<MailProviderTemplate[]>;
   abstract getTemplateUrl(template: WithExternalId): Promise<string>;
   abstract getName(): Promise<string>;
+  public async initDatabaseConfiguration(
+    id: string,
+    type: PrismaMailProvider,
+    prisma: PrismaClient
+  ): Promise<void> {
+    console.log('OK');
+    await prisma.settingMailProvider.upsert({
+      where: {
+        id,
+      },
+      create: {
+        id,
+        type,
+      },
+      update: {},
+    });
+    return;
+  }
 }

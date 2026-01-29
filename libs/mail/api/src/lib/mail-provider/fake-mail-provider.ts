@@ -1,4 +1,5 @@
 import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
+import { MailProvider as PrismaMailProvider } from '@prisma/client';
 
 export class FakeMailProvider extends BaseMailProvider {
   constructor(props: MailProviderProps) {
@@ -23,4 +24,8 @@ export class FakeMailProvider extends BaseMailProvider {
   async getName(): Promise<string> {
     return 'fake-mail-provider';
   }
+  async initDatabaseConfiguration(
+    id: string,
+    type: PrismaMailProvider
+  ): Promise<void> {}
 }

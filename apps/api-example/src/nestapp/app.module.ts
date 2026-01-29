@@ -5,7 +5,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ScheduleModule } from '@nestjs/schedule';
 
 import { HttpModule, HttpService } from '@nestjs/axios';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, MailProvider as MailProviderEnum } from '@prisma/client';
 import { ActionModule } from '@wepublish/action/api';
 import { NovaMediaAdapter } from '@wepublish/api';
 import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
@@ -28,8 +28,10 @@ import {
 import { HealthModule } from '@wepublish/health';
 import { MediaAdapterModule } from '@wepublish/image/api';
 import {
+  BaseMailProvider,
   MailchimpMailProvider,
   MailgunMailProvider,
+  MailProvider,
   MailsModule,
 } from '@wepublish/mail/api';
 import {
@@ -137,21 +139,21 @@ import {
           config.getOrThrow('CONFIG_FILE_PATH')
         );
         const mailProviderRaw = configFile.mailProvider;
-        let mailProvider;
+        let mailProvider: BaseMailProvider;
         if (mailProviderRaw) {
-          if (mailProviderRaw.id === 'mailgun') {
+          if (mailProviderRaw.type === MailProviderEnum.MAILGUN) {
             mailProvider = new MailgunMailProvider(prisma, kv, {
-              id: 'mailgun',
+              id: mailProviderRaw.id,
               incomingRequestHandler: bodyParser.json(),
             });
-          } else if (mailProviderRaw.id === 'mailchimp') {
+          } else if (mailProviderRaw.type === MailProviderEnum.MAILCHIMP) {
             mailProvider = new MailchimpMailProvider(prisma, kv, {
-              id: 'mailchimp',
+              id: mailProviderRaw.id,
               incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
             });
-          } else if (mailProviderRaw.id === 'slackMail') {
+          } else if (mailProviderRaw.type === MailProviderEnum.SLACK) {
             mailProvider = new SlackMailProvider(prisma, kv, {
-              id: 'slackmail',
+              id: mailProviderRaw.id,
             });
           } else {
             throw new Error(
@@ -163,16 +165,26 @@ import {
           throw new Error('A MailProvider must be configured.');
         }
 
+        await mailProvider.initDatabaseConfiguration(
+          mailProviderRaw.id,
+          mailProviderRaw.type,
+          prisma
+        );
         return {
           mailProvider,
         };
       },
-      inject: [ConfigService],
+      inject: [ConfigService, PrismaClient, KvTtlCacheService],
       global: true,
     }),
     TrackingPixelsModule.registerAsync({
-      imports: [ConfigModule, HttpModule],
-      useFactory: async (config: ConfigService, httpClient: HttpService) => {
+      imports: [ConfigModule, HttpModule, PrismaModule, KvTtlCacheModule],
+      useFactory: async (
+        config: ConfigService,
+        httpClient: HttpService,
+        prisma: PrismaClient,
+        kv: KvTtlCacheService
+      ) => {
         const trackingPixelProviders: TrackingPixelProvider[] = [];
         const configFile = await readConfig(
           config.getOrThrow('CONFIG_FILE_PATH')
@@ -186,33 +198,18 @@ import {
 
         for (const trackingPixelProvider of trackingPixelProvidersRaw) {
           if (trackingPixelProvider.type === 'prolitteris') {
-            trackingPixelProviders.push(
+            const trackingPixelProviderClass =
               new ProlitterisTrackingPixelProvider(
                 trackingPixelProvider.id,
-                trackingPixelProvider.name,
-                trackingPixelProvider.type,
-                trackingPixelProvider.usePublisherInternalKey ?
-                  {
-                    memberNr: trackingPixelProvider.memberNr,
-                    onlyPaidContentAccess: Boolean(
-                      trackingPixelProvider.onlyPaidContentAccess
-                    ),
-                    publisherInternalKeyDomain:
-                      trackingPixelProvider.publisherInternalKeyDomain,
-                    usePublisherInternalKey: true,
-                  }
-                : {
-                    memberNr: trackingPixelProvider.memberNr,
-                    username: trackingPixelProvider.username,
-                    password: trackingPixelProvider.password,
-                    onlyPaidContentAccess: Boolean(
-                      trackingPixelProvider.onlyPaidContentAccess
-                    ),
-                    usePublisherInternalKey: false,
-                  },
+                prisma,
+                kv,
                 httpClient
-              )
+              );
+            await trackingPixelProviderClass.initDatabaseConfiguration(
+              trackingPixelProvider.id,
+              trackingPixelProvider.type
             );
+            trackingPixelProviders.push(trackingPixelProviderClass);
           } else {
             throw new Error(
               `Unknown tracking Pixel type defined: ${(trackingPixelProvider as any).type}`
@@ -222,7 +219,7 @@ import {
 
         return { trackingPixelProviders };
       },
-      inject: [ConfigService, HttpService],
+      inject: [ConfigService, HttpService, PrismaClient, KvTtlCacheService],
     }),
     PaymentMethodModule.registerAsync({
       imports: [ConfigModule, PrismaModule],
