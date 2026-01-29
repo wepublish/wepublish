@@ -138,7 +138,8 @@
       "@wepublish/website/server": ["libs/website/src/server.ts"],
       "@wepublish/website/translations/*": [
         "libs/website/translations/src/lib/*"
-      ]
+      ],
+      "@wepublish/kv-ttl-cache/api": ["libs/kv-ttl-cache/api/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

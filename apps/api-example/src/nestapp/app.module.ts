@@ -90,6 +90,7 @@ import { SessionModule } from '@wepublish/session/api';
 import { ChallengeModule } from '@wepublish/challenge/api';
 import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
 import { V0Module } from '@wepublish/ai/api';
+import {KvTtlCacheModule} from '../../../../libs/kv-ttl-cache/api/src'
 
 @Global()
 @Module({
@@ -117,19 +118,9 @@ import { V0Module } from '@wepublish/ai/api';
         } as ApolloDriverConfig;
       },
     }),
+    KvTtlCacheModule,
     V0Module.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (config: ConfigService) => {
-        const configFile = await readConfig(
-          config.getOrThrow('CONFIG_FILE_PATH')
-        );
-
-        return {
-          apiKey: configFile.v0?.apiKey || config.get('V0_API_KEY'),
-          systemPrompt: configFile.v0?.systemPrompt,
-        };
-      },
-      inject: [ConfigService],
+      imports: [PrismaModule, KvTtlCacheModule],
     }),
     AuthorModule,
     PrismaModule,
