@@ -7,21 +7,19 @@ import {
   RichTextBlock,
 } from '@wepublish/website/builder';
 import { ImageWrapper } from '@wepublish/image/website';
-import { Theme, css } from '@emotion/react';
+import { CSSObject } from '@emotion/react';
 import { theme } from '@wepublish/ui';
 import { toPlaintext } from '@wepublish/richtext';
 
 export const PeerProfileWrapper = styled('div')`
   display: grid;
   align-items: center;
-  padding: ${({ theme }) => theme.spacing(2)}
-    ${({ theme }) => theme.spacing(2.5)};
+  padding: ${({ theme }) => theme.spacing(2, 2.5)};
   background-color: ${({ theme }) => theme.palette.grey['100']};
   gap: ${({ theme }) => theme.spacing(1)};
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    padding: ${({ theme }) => theme.spacing(2)}
-      ${({ theme }) => theme.spacing(3)};
+    padding: ${({ theme }) => theme.spacing(2, 3)};
     gap: ${({ theme }) => theme.spacing(2)};
   }
 `;
@@ -39,9 +37,9 @@ export const PeerProfileCTA = styled(Button)`
   justify-self: center;
 `;
 
-const richTextStyles = (theme: Theme) => css`
+const PeerInformationRichText = styled(RichTextBlock)`
   p {
-    ${theme.typography.peerInformation}
+    ${theme.typography.peerInformation as CSSObject}
   }
 `;
 
@@ -84,10 +82,7 @@ export function PeerInformation({
           />
         )}
 
-        <RichTextBlock
-          richText={information ?? []}
-          css={richTextStyles(theme)}
-        />
+        <PeerInformationRichText richText={information ?? []} />
 
         <PeerProfileCTA
           color="primary"
