@@ -45,7 +45,6 @@ export abstract class BaseMailProvider implements MailProvider {
     type: PrismaMailProvider,
     prisma: PrismaClient
   ): Promise<void> {
-    console.log('OK');
     await prisma.settingMailProvider.upsert({
       where: {
         id,

@@ -45,6 +45,7 @@ import {
   ApiModule,
   HauptstadtURLAdapter,
   PrismaModule,
+  PrismaService,
   URLAdapter,
   URLAdapterModule,
 } from '@wepublish/nest-modules';
@@ -437,7 +438,7 @@ import {
     UserSubscriptionModule,
     ChallengeModule.registerAsync({
       global: true,
-      imports: [ConfigModule],
+      imports: [ConfigModule, PrismaModule, KvTtlCacheModule],
       useFactory: async (config: ConfigService) => {
         const configFile = await readConfig(
           config.getOrThrow('CONFIG_FILE_PATH')

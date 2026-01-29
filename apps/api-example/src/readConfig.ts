@@ -124,6 +124,7 @@ type PaymentProvider =
 
 type AlgebraicCaptcha = {
   type: 'algebraic';
+  id: string;
   secret: string;
   validTime: number;
   width: number;
@@ -140,6 +141,7 @@ type AlgebraicCaptcha = {
 
 type Turnstile = {
   type: 'turnstile';
+  id: string;
   secret: string;
   siteKey: string;
 };

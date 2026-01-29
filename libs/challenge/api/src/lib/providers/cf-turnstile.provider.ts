@@ -7,21 +7,65 @@ import {
 import { ChallengeProvider } from '../challenge-provider.interface';
 import FormData from 'form-data';
 import fetch from 'node-fetch';
+import { PrismaClient, SettingChallengeProvider } from '@prisma/client';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
-export class CFTurnstileProvider implements ChallengeProvider {
+class TurnstileConfig {
+  private readonly ttl = 60;
+
   constructor(
-    private turnstileSecretKey: string,
-    private turnstileSiteKey: string
+    private readonly prisma: PrismaClient,
+    private readonly kv: KvTtlCacheService,
+    private readonly id: string
   ) {}
+
+  private async load(): Promise<SettingChallengeProvider | null> {
+    return this.prisma.settingChallengeProvider.findUnique({
+      where: {
+        id: this.id,
+      },
+    });
+  }
+
+  async getFromCache(): Promise<SettingChallengeProvider | null> {
+    return this.kv.getOrLoad<SettingChallengeProvider | null>(
+      `turnstile:settings:${this.id}`,
+      () => this.load(),
+      this.ttl
+    );
+  }
+
+  async getConfig(): Promise<SettingChallengeProvider | null> {
+    return await this.getFromCache();
+  }
+}
+
+export class CFTurnstileProvider extends ChallengeProvider {
+  constructor(
+    private readonly id: string,
+    private readonly prisma: PrismaClient,
+    private readonly kv: KvTtlCacheService
+  ) {
+    super();
+  }
 
   private testing = false;
 
   async generateChallenge(testing = false): Promise<Challenge> {
     this.testing = testing;
+    const config = await new TurnstileConfig(
+      this.prisma,
+      this.kv,
+      this.id
+    ).getConfig();
+
+    if (!testing && !config?.siteKey) {
+      throw new Error('Turnstile configuration mismatch');
+    }
 
     return {
       type: CaptchaType.CfTurnstile,
-      challengeID: this.turnstileSiteKey,
+      challengeID: config?.siteKey ?? '',
       challenge: undefined,
       validUntil: undefined,
     };
@@ -30,9 +74,19 @@ export class CFTurnstileProvider implements ChallengeProvider {
   async validateChallenge(
     props: ChallengeValidationProps
   ): Promise<ChallengeValidationReturn> {
+    const config = await new TurnstileConfig(
+      this.prisma,
+      this.kv,
+      this.id
+    ).getConfig();
+
+    if (!this.testing && !config?.secret) {
+      throw new Error('Turnstile configuration mismatch');
+    }
+
     const token = props.solution;
     const formData = new FormData();
-    formData.append('secret', this.turnstileSecretKey);
+    formData.append('secret', config?.secret);
     formData.append('response', `${token}`);
 
     const url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';

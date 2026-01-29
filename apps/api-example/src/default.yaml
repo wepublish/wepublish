@@ -86,6 +86,7 @@ paymentProviders:
     offSessionPayments: true
 challenge:
   type: 'turnstile'
+  id: 'turnstile'
   secret: ${TURNSTILE_SECRET}
   siteKey: ${TURNSTILE_SITE_KEY}
 trackingPixelProviders:
