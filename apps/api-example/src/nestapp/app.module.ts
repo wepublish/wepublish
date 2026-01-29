@@ -159,14 +159,11 @@ import {
             );
           }
         }
-
         if (!mailProvider) {
           throw new Error('A MailProvider must be configured.');
         }
 
         return {
-          defaultFromAddress: configFile.mailProvider.fromAddress,
-          defaultReplyToAddress: configFile.mailProvider.replyToAddress,
           mailProvider,
         };
       },

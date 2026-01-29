@@ -16,6 +16,8 @@ import { HotAndTrendingDataSource } from '@wepublish/article/api';
 import { MediaAdapter } from '@wepublish/image/api';
 import { MailProvider } from '@wepublish/mail/api';
 import { PaymentProvider } from '@wepublish/payment/api';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { Cache } from 'cache-manager';
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
@@ -141,6 +143,8 @@ export async function runServer({
     config.general.sessionTTLDays ? config.general.sessionTTLDays : 7;
   const sessionTTL = sessionTTLDays * MS_PER_DAY;
 
+  // Workaround since context will be deleted anyways
+  const kv: any = {};
   const server = new WepublishServer(
     {
       hostURL,
@@ -167,6 +171,7 @@ export async function runServer({
         : false,
       logger,
       challenge,
+      kv,
     },
     publicExpressApp
   );
