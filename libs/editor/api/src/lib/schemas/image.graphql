@@ -1,12 +1,12 @@
 fragment ImageURLs on Image {
   url
-  largeURL: transformURL(input: {width: 500})
-  mediumURL: transformURL(input: {width: 300})
-  thumbURL: transformURL(input: {width: 280, height: 200})
-  squareURL: transformURL(input: {width: 100, height: 100})
-  previewURL: transformURL(input: {width: 400, height: 200})
-  column1URL: transformURL(input: {width: 800, height: 300})
-  column6URL: transformURL(input: {width: 260, height: 300})
+  largeURL: transformURL(input: { width: 500 })
+  mediumURL: transformURL(input: { width: 300 })
+  thumbURL: transformURL(input: { width: 280, height: 200 })
+  squareURL: transformURL(input: { width: 100, height: 100 })
+  previewURL: transformURL(input: { width: 400, height: 200 })
+  column1URL: transformURL(input: { width: 800, height: 300 })
+  column6URL: transformURL(input: { width: 260, height: 300 })
 }
 
 fragment FullImage on Image {
@@ -35,45 +35,4 @@ fragment FullImage on Image {
   }
 
   ...ImageURLs
-}
-
-query ImageList($filter: String, $cursor: String, $take: Int, $skip: Int) {
-  images(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip) {
-    nodes {
-      ...FullImage
-    }
-
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-
-    totalCount
-  }
-}
-
-query Image($id: String!) {
-  image(id: $id) {
-    ...FullImage
-  }
-}
-
-mutation UploadImage($input: UploadImageInput!) {
-  uploadImage(input: $input) {
-    ...FullImage
-  }
-}
-
-mutation UpdateImage($id: String!, $input: UpdateImageInput!) {
-  updateImage(id: $id, input: $input) {
-    ...FullImage
-  }
-}
-
-mutation DeleteImage($id: String!) {
-  deleteImage(id: $id) {
-    ...FullImage
-  }
 }

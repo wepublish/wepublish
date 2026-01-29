@@ -4,8 +4,8 @@ import { PrismaModule } from '@wepublish/nest-modules';
 import { FakeMailProvider, MailsModule } from '@wepublish/mail/api';
 import {
   MolliePaymentProvider,
+  PaymentMethodModule,
   PaymentProvider,
-  PaymentsModule,
   PayrexxFactory,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
@@ -35,8 +35,8 @@ export function registerMailsModule(): DynamicModule {
   });
 }
 
-export function registerPaymentsModule(): DynamicModule {
-  return PaymentsModule.registerAsync({
+export function registerPaymentMethodModule(): DynamicModule {
+  return PaymentMethodModule.registerAsync({
     imports: [ConfigModule, PrismaModule],
     useFactory: (config: ConfigService, prisma: PrismaClient) => {
       const paymentProviders: PaymentProvider[] = [];
@@ -130,5 +130,6 @@ export function registerPaymentsModule(): DynamicModule {
       return { paymentProviders };
     },
     inject: [ConfigService, PrismaClient],
+    global: true,
   });
 }

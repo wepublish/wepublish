@@ -4,6 +4,7 @@
   "engines": {
     "node": "^22.20.0"
   },
+  "sideEffects": false,
   "scripts": {
     "migrate": "prisma migrate deploy && prisma db seed",
     "serve": "nx run-many  --parallel 10 -t serve --output-style stream",
@@ -291,7 +292,7 @@
     "i18next-browser-languagedetector": "^7.0.2",
     "i18next-icu": "^2.3.0",
     "i18next-resources-to-backend": "^1.2.1",
-    "iframe-resizer-react": "^1.1.0",
+    "iframe-resizer-react": "^5.1.5",
     "immer": "^10.0.2",
     "js-cookie": "^3.0.1",
     "jsonwebtoken": "^9.0.0",

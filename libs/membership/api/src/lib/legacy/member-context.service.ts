@@ -13,7 +13,7 @@ export class MemberContextService extends MemberContext {
   ) {
     super({
       mailContext,
-      paymentProviders: payments.paymentProviders,
+      paymentProviders: payments.getProviders(),
       prisma,
     });
   }

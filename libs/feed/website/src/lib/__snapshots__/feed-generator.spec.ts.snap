@@ -21,8 +21,8 @@ exports[`should generate the RSS feed 1`] = `
             <pubDate>Sun, 01 Jan 2023 00:00:00 GMT</pubDate>
             <description><![CDATA[This is an article lead]]></description>
             <content:encoded><![CDATA[This is an article lead]]></content:encoded>
-            <category>pupil</category>
-            <category>barracks</category>
+            <category>devastation</category>
+            <category>comparison</category>
             <enclosure url="https://unsplash.it/500/281" length="0" type="image//500/281"/>
         </item>
         <item>
@@ -32,8 +32,8 @@ exports[`should generate the RSS feed 1`] = `
             <pubDate>Sun, 01 Jan 2023 00:00:00 GMT</pubDate>
             <description><![CDATA[This is an article lead]]></description>
             <content:encoded><![CDATA[This is an article lead]]></content:encoded>
-            <category>certification</category>
-            <category>hamburger</category>
+            <category>popularity</category>
+            <category>castanet</category>
             <enclosure url="https://unsplash.it/500/281" length="0" type="image//500/281"/>
         </item>
     </channel>
@@ -69,8 +69,8 @@ exports[`should generate the atom feed 1`] = `
             <name>Foobar</name>
             <uri>https://example.com</uri>
         </author>
-        <category label="replacement" term="replacement"/>
-        <category label="jazz" term="jazz"/>
+        <category label="wombat" term="wombat"/>
+        <category label="valley" term="valley"/>
     </entry>
     <entry>
         <title type="html"><![CDATA[Title Block]]></title>
@@ -87,8 +87,8 @@ exports[`should generate the atom feed 1`] = `
             <name>Foobar</name>
             <uri>https://example.com</uri>
         </author>
-        <category label="cantaloupe" term="cantaloupe"/>
-        <category label="following" term="following"/>
+        <category label="cauliflower" term="cauliflower"/>
+        <category label="essence" term="essence"/>
     </entry>
 </feed>"
 `;
@@ -114,8 +114,8 @@ exports[`should generate the json feed 1`] = `
                 "url": "https://example.com"
             },
             "tags": [
-                "brochure",
-                "marathon"
+                "mom",
+                "kettledrum"
             ]
         },
         {
@@ -130,8 +130,8 @@ exports[`should generate the json feed 1`] = `
                 "url": "https://example.com"
             },
             "tags": [
-                "draft",
-                "mom"
+                "duffel",
+                "other"
             ]
         }
     ]
@@ -194,12 +194,12 @@ Feed {
       ],
       "category": [
         {
-          "name": "possession",
-          "term": "possession",
+          "name": "remark",
+          "term": "remark",
         },
         {
-          "name": "chasuble",
-          "term": "chasuble",
+          "name": "volleyball",
+          "term": "volleyball",
         },
       ],
       "content": "This is an article lead",

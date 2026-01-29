@@ -285,7 +285,7 @@ query CheckInvoiceStatus($id: String!) {
 
 query MemberPlanList(
   $filter: MemberPlanFilter
-  $cursor: String
+  $cursorId: String
   $take: Int
   $skip: Int
   $order: SortOrder
@@ -293,7 +293,7 @@ query MemberPlanList(
 ) {
   memberPlans(
     filter: $filter
-    cursor: $cursor
+    cursorId: $cursorId
     take: $take
     skip: $skip
     order: $order

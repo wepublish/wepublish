@@ -1,10 +1,12 @@
 import styled from '@emotion/styled';
-import { FullImageFragment, Maybe, TagType } from '@wepublish/editor/api';
 import {
   AuthorLink,
   AuthorListDocument,
   FullAuthorFragment,
+  FullImageFragment,
   getApiClientV2,
+  Maybe,
+  TagType,
   useAuthorQuery,
   useCreateAuthorMutation,
   useUpdateAuthorMutation,

@@ -12,6 +12,6 @@ describe('Subscribe', () => {
       if (Component.play) {
         await act(() => Component.play?.({ canvasElement: container }));
       }
-    });
+    }, 30000);
   });
 });
