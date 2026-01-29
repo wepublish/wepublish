@@ -24,7 +24,7 @@ export class KvTtlCacheService {
     const p = (async () => {
       const value = await Promise.resolve(loader());
 
-      await this.cache.set(key, value as any, ttlSeconds);
+      await this.cache.set(key, value as any, ttlSeconds * 1000);
 
       return value;
     })().finally(() => {

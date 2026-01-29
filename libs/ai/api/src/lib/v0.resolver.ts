@@ -10,7 +10,7 @@ import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 type V0Settings = { apiKey: string | null; systemPrompt: string | null };
 
 export class V0Config {
-  private readonly ttl = 5 * 60;
+  private readonly ttl = 60;
 
   constructor(
     private readonly prisma: PrismaClient,
