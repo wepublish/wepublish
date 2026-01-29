@@ -211,6 +211,7 @@ function ArticleEditor() {
 
   const [createJWT] = useCreateJwtForWebsiteLoginLazyQuery({
     errorPolicy: 'none',
+    fetchPolicy: 'no-cache',
   });
 
   const isNotFound = articleData && !articleData.article;
