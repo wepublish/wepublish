@@ -7,10 +7,14 @@ import {
 } from './payment-provider-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { PaymentProviderSettingsDataloaderService } from './payment-provider-settings-dataloader.service';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 @Injectable()
 export class PaymentProviderSettingsService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private kv: KvTtlCacheService
+  ) {}
 
   @PrimeDataLoader(PaymentProviderSettingsDataloaderService, 'id')
   async paymentProviderSettingsList(
@@ -44,9 +48,11 @@ export class PaymentProviderSettingsService {
   async createPaymentProviderSetting(
     input: CreateSettingPaymentProviderInput
   ): Promise<SettingPaymentProvider> {
-    return this.prisma.settingPaymentProvider.create({
+    const returnValue = this.prisma.settingPaymentProvider.create({
       data: input,
     });
+    await this.kv.resetNamespace('settings:paymentprovider');
+    return returnValue;
   }
 
   @PrimeDataLoader(PaymentProviderSettingsDataloaderService, 'id')
@@ -71,10 +77,12 @@ export class PaymentProviderSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
-    return this.prisma.settingPaymentProvider.update({
+    const returnValue = this.prisma.settingPaymentProvider.update({
       where: { id },
       data: filteredUpdateData,
     });
+    await this.kv.resetNamespace('settings:paymentprovider');
+    return returnValue;
   }
 
   @PrimeDataLoader(PaymentProviderSettingsDataloaderService, 'id')
@@ -93,8 +101,10 @@ export class PaymentProviderSettingsService {
       );
     }
 
-    return this.prisma.settingPaymentProvider.delete({
+    const returnValue = this.prisma.settingPaymentProvider.delete({
       where: { id },
     });
+    await this.kv.resetNamespace('settings:paymentprovider');
+    return returnValue;
   }
 }

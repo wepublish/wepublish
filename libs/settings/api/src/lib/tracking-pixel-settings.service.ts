@@ -7,10 +7,14 @@ import {
 } from './tracking-pixel-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { TrackingPixelSettingsDataloaderService } from './tracking-pixel-settings-dataloader.service';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 @Injectable()
 export class TrackingPixelSettingsService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private kv: KvTtlCacheService
+  ) {}
 
   @PrimeDataLoader(TrackingPixelSettingsDataloaderService, 'id')
   async trackingPixelSettingsList(
@@ -44,9 +48,11 @@ export class TrackingPixelSettingsService {
   async createTrackingPixelSetting(
     input: CreateSettingTrackingPixelInput
   ): Promise<SettingTrackingPixel> {
-    return this.prisma.settingTrackingPixel.create({
+    const returnValue = this.prisma.settingTrackingPixel.create({
       data: input,
     });
+    await this.kv.resetNamespace('settings:tracking-pixel');
+    return returnValue;
   }
 
   @PrimeDataLoader(TrackingPixelSettingsDataloaderService, 'id')
@@ -69,10 +75,12 @@ export class TrackingPixelSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
-    return this.prisma.settingTrackingPixel.update({
+    const returnValue = this.prisma.settingTrackingPixel.update({
       where: { id },
       data: filteredUpdateData,
     });
+    await this.kv.resetNamespace('settings:tracking-pixel');
+    return returnValue;
   }
 
   @PrimeDataLoader(TrackingPixelSettingsDataloaderService, 'id')
@@ -87,8 +95,10 @@ export class TrackingPixelSettingsService {
       );
     }
 
-    return this.prisma.settingTrackingPixel.delete({
+    const returnValue = this.prisma.settingTrackingPixel.delete({
       where: { id },
     });
+    await this.kv.resetNamespace('settings:tracking-pixel');
+    return returnValue;
   }
 }

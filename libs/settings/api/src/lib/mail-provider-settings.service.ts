@@ -7,10 +7,14 @@ import {
 } from './mail-provider-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { MailProviderSettingsDataloaderService } from './mail-provider-settings-dataloader.service';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 @Injectable()
 export class MailProviderSettingsService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private kv: KvTtlCacheService
+  ) {}
 
   @PrimeDataLoader(MailProviderSettingsDataloaderService, 'id')
   async mailProviderSettingsList(
@@ -44,9 +48,11 @@ export class MailProviderSettingsService {
   async createMailProviderSetting(
     input: CreateSettingMailProviderInput
   ): Promise<SettingMailProvider> {
-    return this.prisma.settingMailProvider.create({
+    const returnValue = this.prisma.settingMailProvider.create({
       data: input,
     });
+    await this.kv.resetNamespace('settings:mailprovider');
+    return returnValue;
   }
 
   @PrimeDataLoader(MailProviderSettingsDataloaderService, 'id')
@@ -69,10 +75,12 @@ export class MailProviderSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
-    return this.prisma.settingMailProvider.update({
+    const returnValue = this.prisma.settingMailProvider.update({
       where: { id },
       data: filteredUpdateData,
     });
+    await this.kv.resetNamespace('settings:mailprovider');
+    return returnValue;
   }
 
   @PrimeDataLoader(MailProviderSettingsDataloaderService, 'id')
@@ -87,8 +95,10 @@ export class MailProviderSettingsService {
       );
     }
 
-    return this.prisma.settingMailProvider.delete({
+    const returnValue = this.prisma.settingMailProvider.delete({
       where: { id },
     });
+    await this.kv.resetNamespace('settings:mailprovider');
+    return returnValue;
   }
 }

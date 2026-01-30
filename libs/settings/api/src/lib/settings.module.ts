@@ -21,9 +21,10 @@ import { TrackingPixelSettingsDataloaderService } from './tracking-pixel-setting
 import { MailProviderSettingsResolver } from './mail-provider-settings.resolver';
 import { MailProviderSettingsService } from './mail-provider-settings.service';
 import { MailProviderSettingsDataloaderService } from './mail-provider-settings-dataloader.service';
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, KvTtlCacheModule],
   providers: [
     SettingsGuard,
     SettingsResolver,

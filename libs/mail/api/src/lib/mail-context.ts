@@ -38,7 +38,7 @@ class MailContextConfig {
 
   async getFromCache(): Promise<SettingMailProvider | null> {
     return this.kv.getOrLoadNs<SettingMailProvider | null>(
-      `settings:mailcontext`,
+      `settings:mailprovider`,
       `${this.id}`,
       () => this.load(),
       this.ttl

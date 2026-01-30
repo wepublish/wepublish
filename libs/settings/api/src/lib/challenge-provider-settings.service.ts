@@ -7,10 +7,14 @@ import {
 } from './challenge-provider-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { ChallengeProviderSettingsDataloaderService } from './challenge-provider-settings-dataloader.service';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 @Injectable()
 export class ChallengeProviderSettingsService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private kv: KvTtlCacheService
+  ) {}
 
   @PrimeDataLoader(ChallengeProviderSettingsDataloaderService, 'id')
   async challengeProviderSettingsList(
@@ -46,9 +50,11 @@ export class ChallengeProviderSettingsService {
   async createChallengeProviderSetting(
     input: CreateSettingChallengeProviderInput
   ): Promise<SettingChallengeProvider> {
-    return this.prisma.settingChallengeProvider.create({
+    const returnValue = this.prisma.settingChallengeProvider.create({
       data: input,
     });
+    await this.kv.resetNamespace('settings:challenge');
+    return returnValue;
   }
 
   @PrimeDataLoader(ChallengeProviderSettingsDataloaderService, 'id')
@@ -72,10 +78,12 @@ export class ChallengeProviderSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
-    return this.prisma.settingChallengeProvider.update({
+    const returnValue = this.prisma.settingChallengeProvider.update({
       where: { id },
       data: filteredUpdateData,
     });
+    await this.kv.resetNamespace('settings:challenge');
+    return returnValue;
   }
 
   @PrimeDataLoader(ChallengeProviderSettingsDataloaderService, 'id')
@@ -93,8 +101,10 @@ export class ChallengeProviderSettingsService {
       );
     }
 
-    return this.prisma.settingChallengeProvider.delete({
+    const returnValue = this.prisma.settingChallengeProvider.delete({
       where: { id },
     });
+    await this.kv.resetNamespace('settings:challenge');
+    return returnValue;
   }
 }

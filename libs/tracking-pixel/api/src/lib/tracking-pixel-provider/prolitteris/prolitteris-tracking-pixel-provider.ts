@@ -29,7 +29,7 @@ class ProlitterisConfig {
 
   async getFromCache(): Promise<SettingTrackingPixel | null> {
     return this.kv.getOrLoadNs<SettingTrackingPixel | null>(
-      `settings:prolitteris`,
+      `settings:tracking-pixel`,
       `${this.id}`,
       () => this.load(),
       this.ttl
