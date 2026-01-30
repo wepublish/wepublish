@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next';
 import { Form, SelectPicker } from 'rsuite';
 
 import { SelectTags } from '../../atoms/tag/selectTags';
-import { de } from 'date-fns/locale';
 
 interface TeaserSlotsConfigPanelProps {
   config: TeaserSlotsAutofillConfigInput;
