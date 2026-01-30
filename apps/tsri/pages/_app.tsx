@@ -6,7 +6,6 @@ import {
   createEmotionCache,
 } from '@mui/material-nextjs/v15-pagesRouter';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
-import { TitleBlock, TitleBlockTitle } from '@wepublish/block-content/website';
 import { withErrorSnackbar } from '@wepublish/errors/website';
 import { PaymentAmountPicker } from '@wepublish/membership/website';
 import {
@@ -17,7 +16,6 @@ import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
   initWePublishTranslator,
-  NextWepublishLink,
   RoutedAdminBar,
   withBuilderRouter,
   withJwtHandler,
@@ -27,47 +25,57 @@ import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
 import { createWithV1ApiClient } from '@wepublish/website/api';
-import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import deTranlations from '@wepublish/website/translations/de.json';
+import {
+  BuilderBlockRendererProps,
+  WebsiteBuilderProvider,
+} from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
-import resourcesToBackend from 'i18next-resources-to-backend';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
+import { ComponentType } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import deOverriden from '../locales/deOverriden.json';
+import { TsriFlexBlock } from '../src/components/block-layouts/tsri-base-flex-block';
+import { TsriBreakBlock } from '../src/components/break-blocks/tsri-base-break-block';
+import { TsriContextBox } from '../src/components/break-blocks/tsri-context-box';
+import { TsriBaseTeaserSlots } from '../src/components/teaser-layouts/tsri-base-teaser-slots';
+import { TsriBaseTeaser } from '../src/components/teasers/tsri-base-teaser';
+import { TsriArticle } from '../src/components/tsri-article';
+import { TsriArticleAuthor } from '../src/components/tsri-article-author';
+import { TsriArticleAuthors } from '../src/components/tsri-article-authors';
 import { TsriArticleDate } from '../src/components/tsri-article-date';
+import { TsriArticleList } from '../src/components/tsri-article-list';
 import { TsriArticleMeta } from '../src/components/tsri-article-meta';
+import { TsriAuthor } from '../src/components/tsri-author';
+import { TsriAuthorChip } from '../src/components/tsri-author-chip';
+import { TsriAuthorLinks } from '../src/components/tsri-author-links';
+import { TsriAuthorList } from '../src/components/tsri-author-list';
 import { TsriBanner } from '../src/components/tsri-banner';
-import { TsriBreakBlock } from '../src/components/tsri-break-block';
-import { TsriContextBox } from '../src/components/tsri-context-box';
-import { TsriNavbar } from '../src/components/tsri-navbar';
+import { TsriBildwurfAdBlock } from '../src/components/tsri-bildwurf-ad-block';
+import { TsriBlockRenderer } from '../src/components/tsri-block-renderer';
+import { TsriBlocks } from '../src/components/tsri-block-renderer';
+import { TsriCommentList } from '../src/components/tsri-comment-list';
+import { TsriFooter } from '../src/components/tsri-footer';
+import { TsriGlobalStyles } from '../src/components/tsri-global-styles';
+import { TsriNextWepublishLink } from '../src/components/tsri-next-wepublish-link';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
-import { TsriTeaser } from '../src/components/tsri-teaser';
+import { TsriTag } from '../src/components/tsri-tag';
+import { TsriTextToIcon } from '../src/components/tsri-text-to-icon';
+import { TsriTitleBlock } from '../src/components/tsri-title-block';
+import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
 import theme from '../src/theme';
 
 setDefaultOptions({
   locale: de,
 });
 
-initWePublishTranslator()
-  .use(resourcesToBackend(() => deTranlations))
-  .init({
-    partialBundledLanguages: true,
-    lng: 'de',
-    fallbackLng: 'de',
-    supportedLngs: ['de'],
-    interpolation: {
-      escapeValue: false,
-    },
-    resources: {
-      de: { zod: deTranlations.zod },
-    },
-  });
+initWePublishTranslator(deOverriden);
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
@@ -82,6 +90,7 @@ const MainSpacer = styled(Container)`
   position: relative;
   display: grid;
   gap: ${({ theme }) => theme.spacing(5)};
+  container: main / inline-size;
 
   ${({ theme }) => css`
     ${theme.breakpoints.up('md')} {
@@ -90,17 +99,9 @@ const MainSpacer = styled(Container)`
   `}
 `;
 
-const TsriTitle = styled(TitleBlock)`
-  ${TitleBlockTitle} {
-    ${({ theme }) => theme.breakpoints.down('sm')} {
-      font-size: 2rem;
-    }
-  }
-`;
-
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime ?
-    `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
+    `${format(date, 'dd. MMMM yyyy')} | ${format(date, 'HH:mm')}`
   : format(date, 'dd. MMMM yyyy');
 
 type CustomAppProps = AppProps<{
@@ -120,18 +121,36 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
       <WebsiteProvider>
         <WebsiteBuilderProvider
           Head={Head}
+          Footer={TsriFooter}
           Script={Script}
-          Navbar={TsriNavbar}
+          Navbar={TsriV2Navbar}
+          Article={TsriArticle}
+          AuthorChip={TsriAuthorChip}
           ArticleDate={TsriArticleDate}
           ArticleMeta={TsriArticleMeta}
+          ArticleList={TsriArticleList}
           PaymentAmount={PaymentAmountPicker}
-          elements={{ Link: NextWepublishLink }}
+          ArticleAuthor={TsriArticleAuthor}
+          ArticleAuthors={TsriArticleAuthors}
+          Author={TsriAuthor}
+          AuthorLinks={TsriAuthorLinks}
+          AuthorList={TsriAuthorList}
+          TextToIcon={TsriTextToIcon}
+          Tag={TsriTag}
+          CommentList={TsriCommentList}
+          elements={{ Link: TsriNextWepublishLink }}
           blocks={{
-            BaseTeaser: TsriTeaser,
+            BaseTeaser: TsriBaseTeaser,
+            TeaserSlots: TsriBaseTeaserSlots,
             Break: TsriBreakBlock,
             Quote: TsriQuoteBlock,
             RichText: TsriRichText,
-            Title: TsriTitle,
+            Title: TsriTitleBlock,
+            Renderer:
+              TsriBlockRenderer as ComponentType<BuilderBlockRendererProps>,
+            Blocks: TsriBlocks,
+            FlexBlock: TsriFlexBlock,
+            BildwurfAd: TsriBildwurfAdBlock,
           }}
           blockStyles={{
             ContextBox: TsriContextBox,
@@ -145,6 +164,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
         >
           <ThemeProvider theme={theme}>
             <CssBaseline />
+            <TsriGlobalStyles />
 
             <Head>
               <title key="title">{siteTitle}</title>
@@ -217,7 +237,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 
             <Spacer>
               <NavbarContainer
-                categorySlugs={[['categories', 'about-us']]}
+                categorySlugs={[['about-us', 'categories', 'main']]}
                 slug="main"
                 headerSlug="header"
                 iconSlug="icons"
@@ -231,7 +251,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 
               <FooterContainer
                 slug="footer"
-                categorySlugs={[['categories', 'about-us']]}
+                categorySlugs={[['about-us', 'categories', 'main']]}
                 iconSlug="icons"
               />
             </Spacer>

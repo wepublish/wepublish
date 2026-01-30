@@ -3,9 +3,9 @@ import { PrismaModule } from '@wepublish/nest-modules';
 
 import { UpgradeSubscriptionResolver } from './upgrade-subscription.resolver';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
-import { PaymentMethodModule } from '@wepublish/payment-method/api';
 import { UpgradeSubscriptionService } from './upgrade-subscription.service';
 import { MemberContextModule } from '../legacy/member-context.module';
+import { PaymentMethodModule, PaymentsModule } from '@wepublish/payment/api';
 
 @Module({
   imports: [
@@ -13,6 +13,7 @@ import { MemberContextModule } from '../legacy/member-context.module';
     MemberPlanModule,
     PaymentMethodModule,
     MemberContextModule,
+    PaymentsModule,
   ],
   providers: [UpgradeSubscriptionResolver, UpgradeSubscriptionService],
 })

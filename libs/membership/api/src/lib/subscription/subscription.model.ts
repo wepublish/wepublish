@@ -1,7 +1,7 @@
 import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { PaymentPeriodicity } from '@prisma/client';
 import { MemberPlan } from '@wepublish/member-plan/api';
-import { HasPaymentMethod, PaymentMethod } from '@wepublish/payment-method/api';
+import { HasPaymentMethod, PaymentMethod } from '@wepublish/payment/api';
 import { SubscriptionDeactivationReason } from '.prisma/client';
 import { HasUser, User } from '@wepublish/user/api';
 import { Property } from '@wepublish/property/api';
@@ -62,7 +62,7 @@ export class PublicSubscription {
   @Field(() => SubscriptionDeactivation, { nullable: true })
   deactivation?: SubscriptionDeactivation;
 
-  @Field(() => String)
+  @Field()
   url!: string;
 
   @Field(() => Boolean)

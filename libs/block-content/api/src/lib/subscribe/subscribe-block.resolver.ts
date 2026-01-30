@@ -24,6 +24,8 @@ export class SubscribeBlockResolver {
       return await this.memberPlanService.getActiveMemberPlans();
     }
 
-    return this.memberPlanDataloader.loadMany(memberPlanIds);
+    return (await this.memberPlanDataloader.loadMany(memberPlanIds)).filter(
+      Boolean
+    );
   }
 }

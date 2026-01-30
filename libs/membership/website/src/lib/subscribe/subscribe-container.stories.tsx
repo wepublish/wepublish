@@ -81,11 +81,16 @@ const subscription = mockSubscription({
   monthlyAmount: memberPlan.amountPerMonthMin,
   paymentPeriodicity: PaymentPeriodicity.Yearly,
   canExtend: true,
+  deactivation: null,
+  extendable: true,
+  externalReward: 'https://example.com/external-reward-mock-url',
 });
 
 const invoice = mockInvoice({
   total: 5000,
   subscription,
+  canceledAt: null,
+  description: 'Mock Invoice',
 });
 
 const registerVariables = {
@@ -125,6 +130,8 @@ export const Default: StoryObj<typeof SubscribeContainer> = {
               memberPlans: {
                 nodes: [memberPlan, memberPlan2, memberPlan3],
                 pageInfo: {
+                  startCursor: null,
+                  endCursor: null,
                   hasNextPage: false,
                   hasPreviousPage: false,
                   __typename: 'PageInfo',
@@ -262,6 +269,8 @@ export const WithChallengeError: StoryObj<typeof SubscribeContainer> = {
               memberPlans: {
                 nodes: [memberPlan, memberPlan2, memberPlan3],
                 pageInfo: {
+                  startCursor: null,
+                  endCursor: null,
                   hasNextPage: false,
                   hasPreviousPage: false,
                   __typename: 'PageInfo',

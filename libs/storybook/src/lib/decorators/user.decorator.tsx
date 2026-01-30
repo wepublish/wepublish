@@ -1,9 +1,9 @@
 import { SessionTokenContext } from '@wepublish/authentication/website';
-import { User } from '@wepublish/website/api';
+import { SensitiveDataUser } from '@wepublish/website/api';
 import { ComponentType } from 'react';
 
 export const WithUserDecorator =
-  (user: User | null) => (Story: ComponentType) => {
+  (user: SensitiveDataUser | null) => (Story: ComponentType) => {
     return (
       <SessionTokenContext.Provider
         value={[

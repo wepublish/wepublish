@@ -17,13 +17,15 @@ import {
   SubscriptionToDeactivateDoesNotExist,
 } from '@wepublish/api';
 import { RemoteSubscriptionsService } from './remote-subscriptions.service';
-import { MemberPlanService } from '@wepublish/member-plan/api';
+import {
+  MemberPlanDataloader,
+  MemberPlanService,
+} from '@wepublish/member-plan/api';
 import {
   CreateSubscriptionArgs,
   CreateSubscriptionWithConfirmationArgs,
   ExtendSubscriptionArgs,
 } from './subscription.model';
-import { PaymentMethodService } from '@wepublish/payment-method/api';
 import { PaymentsService } from '@wepublish/payment/api';
 import { logger } from '@wepublish/utils/api';
 import { unselectPassword } from '@wepublish/authentication/api';
@@ -41,7 +43,7 @@ export class UserSubscriptionService {
     private prisma: PrismaClient,
     private payments: PaymentsService,
     private memberPlanService: MemberPlanService,
-    private paymentMethodService: PaymentMethodService,
+    private memberPlanDataloader: MemberPlanDataloader,
     private remoteSubscriptionsService: RemoteSubscriptionsService,
     private memberContext: MemberContextService
   ) {}
@@ -226,9 +228,9 @@ export class UserSubscriptionService {
       throw new InternalError();
     }
 
-    const paymentProvider = this.payments.paymentProviders.find(
-      obj => obj.id === paymentMethod.paymentProviderID
-    );
+    const paymentProvider = this.payments
+      .getProviders()
+      .find(obj => obj.id === paymentMethod.paymentProviderID);
 
     // Prevent user from creating new invoice while having unpaid invoices
     const unpaidInvoices = await this.prisma.invoice.findMany({
@@ -256,10 +258,13 @@ export class UserSubscriptionService {
 
     // If payment provider supports off session payment try to charge
     if (!paymentProvider || paymentProvider.offSessionPayments) {
-      const paymentMethod =
-        await this.paymentMethodService.findActivePaymentMethodById(
-          subscription.paymentMethodID
-        );
+      const paymentMethod = await this.prisma.paymentMethod.findUnique({
+        where: {
+          id: subscription.paymentMethodID,
+          active: true,
+        },
+      });
+
       if (!paymentMethod) {
         logger('extendSubscription').warn(
           'paymentMethod %s not found',
@@ -357,7 +362,7 @@ export class UserSubscriptionService {
       userID,
     } = input;
 
-    const memberPlan = await this.memberPlanService.getMemberPlanById(
+    const memberPlan = await this.memberPlanDataloader.load(
       memberPlanID as string
     );
     if (!memberPlan) {
@@ -510,7 +515,7 @@ export class UserSubscriptionService {
 
     const memberPlan =
       memberPlanID ?
-        await this.memberPlanService.getMemberPlanById(memberPlanID)
+        await this.memberPlanDataloader.load(memberPlanID)
       : await this.memberPlanService.getMemberPlanBySlug(memberPlanSlug ?? '');
     if (!memberPlan) {
       throw new BadRequestException(
@@ -518,14 +523,12 @@ export class UserSubscriptionService {
       );
     }
 
-    const paymentMethod =
-      paymentMethodID ?
-        await this.paymentMethodService.findActivePaymentMethodById(
-          paymentMethodID
-        )
-      : await this.paymentMethodService.findActivePaymentMethodBySlug(
-          paymentMethodSlug ?? ''
-        );
+    const paymentMethod = await this.prisma.paymentMethod.findFirst({
+      where: {
+        active: true,
+        OR: [{ id: paymentMethodID }, { slug: paymentMethodSlug }],
+      },
+    });
 
     if (!paymentMethod) {
       throw new BadRequestException(

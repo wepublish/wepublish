@@ -1,12 +1,10 @@
 import styled from '@emotion/styled';
-import {
-  FullImageFragment,
-  useCreateJwtForWebsiteLoginLazyQuery,
-} from '@wepublish/editor/api';
+import { useCreateJwtForWebsiteLoginLazyQuery } from '@wepublish/editor/api';
 import {
   CreateArticleMutationVariables,
   EditorBlockType,
   FullAuthorFragment,
+  FullImageFragment,
   getApiClientV2,
   SettingName,
   useArticleQuery,
