@@ -427,7 +427,16 @@
         "label": "6 Kol"
       },
       "teaserSlots": {
-        "label": "Teaser Slots"
+        "autoLoading": "Auto-loading:",
+        "fillManually": "Alle slots werden manuell gefüllt",
+        "teasersLoaded": "Teaser geladen",
+        "configure": "Konfigurieren",
+        "latest": "Neuste",
+        "addSlot": "Slot hinzufügen",
+        "label": "Teaser Slots",
+        "filter": "Nach Tags filtern",
+        "filterHelpText": "Tags kommasepariert eingeben. Leer lassen um keinen Tag-Filter anzuwenden.",
+        "autofillType": "Teaser-Typ der automatisch geladenen Teaser"
       },
       "title": {
         "label": "Titel",

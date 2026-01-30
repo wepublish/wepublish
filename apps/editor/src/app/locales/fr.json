@@ -270,7 +270,15 @@
         "unlockBlock": "Déverrouiller la position bloc"
       },
       "flexBlock": {
-        "label": "Flex Block"
+        "label": "Bloc flexible",
+        "addNestedBlock": "Ajouter un (sous-)bloc",
+        "chooseNestedBlock": "Choisir un (sous-)bloc",
+        "close": "Fermer",
+        "deleteNestedBlock": "Supprimer le (sous-)bloc",
+        "editNestedBlock": "Éditer le (sous-)bloc",
+        "lockNestedBlock": "Verrouiller le (sous-)bloc",
+        "removeNestedBlock": "Retirer le (sous-)bloc",
+        "unlockNestedBlock": "Déverrouiller le (sous-)bloc"
       },
       "html": {
         "close": "Fermer",
@@ -366,7 +374,16 @@
         "label": "6 Col"
       },
       "teaserSlots": {
-        "label": "Machines à sous tease"
+        "label": "Slots de teaser",
+        "autoLoading": "Chargement automatique :",
+        "fillManually": "Tous les emplacements sont remplis manuellement",
+        "teasersLoaded": "Teaser chargé",
+        "configure": "Configurer",
+        "latest": "Plus récent",
+        "addSlot": "Ajouter un emplacement",
+        "filter": "Filtrer par tags",
+        "filterHelpText": "Saisissez les tags séparés par des virgules. Laissez vide pour ne pas appliquer de filtre de tag.",
+        "autofillType": "Type de teaser des teasers chargés automatiquement"
       },
       "title": {
         "label": "Titre",
