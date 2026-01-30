@@ -1,12 +1,18 @@
 'use client';
 
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { TagType } from '@wepublish/editor/api';
-import { TeaserSlotsAutofillConfigInput } from '@wepublish/editor/api-v2';
+import {
+  TeaserSlotsAutofillConfigInput,
+  TeaserType,
+} from '@wepublish/editor/api-v2';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Form } from 'rsuite';
+import { Form, SelectPicker } from 'rsuite';
 
 import { SelectTags } from '../../atoms/tag/selectTags';
+import { de } from 'date-fns/locale';
 
 interface TeaserSlotsConfigPanelProps {
   config: TeaserSlotsAutofillConfigInput;
@@ -29,38 +35,105 @@ const HelpText = styled('div')`
   margin-top: 4px;
 `;
 
+const inputStyles = css`
+  width: 100%;
+`;
+
+export const useTeaserTypeText = () => {
+  const { t } = useTranslation();
+
+  return (tagType: TeaserType) =>
+    t(`resources.teaserType.${tagType.toLowerCase()}`);
+};
+
 export function TeaserSlotsAutofillConfigPanel({
   config,
   onChange,
 }: TeaserSlotsConfigPanelProps) {
+  const [teaserType, setTeaserType] = useState(config.teaserType);
   const { t } = useTranslation();
+  const teaserTypeText = useTeaserTypeText();
 
   const handleChange = (
-    key: keyof TeaserSlotsAutofillConfigInput,
-    value: any
+    partialConfig: Partial<TeaserSlotsAutofillConfigInput>
   ) => {
     onChange({
       ...config,
-      [key]: value,
+      ...partialConfig,
     });
   };
+
+  const handleTeaserTypeChange = (value: TeaserType) => {
+    setTeaserType(value);
+    handleChange({
+      filter: {
+        tags: [],
+      },
+      teaserType: value,
+    });
+  };
+
+  const tagType = useMemo(() => {
+    switch (teaserType) {
+      case TeaserType.Article:
+        return TagType.Article;
+      case TeaserType.Page:
+        return TagType.Page;
+      case TeaserType.Event:
+        return TagType.Event;
+      default:
+        return undefined;
+    }
+  }, [teaserType]);
 
   const sortOptions = [{ label: 'Published date', value: 'PublishedAt' }];
 
   return (
     <ConfigContainer>
       <FormGroup>
-        <Form.ControlLabel>{t('blocks.teaserSlots.filter')}</Form.ControlLabel>
-        <SelectTags
-          defaultTags={[]}
-          name="tags"
-          tagType={TagType.Article}
-          setSelectedTags={tags => handleChange('filter', { tags })}
-          selectedTags={config.filter?.tags}
+        <Form.ControlLabel>
+          {t('blocks.teaserSlots.autofillType')}
+        </Form.ControlLabel>
+        <SelectPicker
+          name="teaserType"
+          cleanable={false}
+          value={teaserType}
+          onChange={value => handleTeaserTypeChange(value!)}
+          data={[
+            {
+              label: teaserTypeText(TeaserType.Article),
+              value: TeaserType.Article,
+            },
+            {
+              label: teaserTypeText(TeaserType.Event),
+              value: TeaserType.Event,
+            },
+            /*
+            not supported yet
+            {
+              label: teaserTypeText(TeaserType.Page),
+              value: TeaserType.Page,
+            },
+            */
+          ]}
+          css={inputStyles}
         />
-
-        <HelpText>{t('blocks.teaserSlots.filterHelpText')}</HelpText>
       </FormGroup>
+      {tagType && (
+        <FormGroup>
+          <Form.ControlLabel>
+            {t('blocks.teaserSlots.filter')}
+          </Form.ControlLabel>
+          <SelectTags
+            defaultTags={[]}
+            name="tags"
+            tagType={tagType}
+            setSelectedTags={tags => handleChange({ filter: { tags } })}
+            selectedTags={config.filter?.tags}
+          />
+          <HelpText>{t('blocks.teaserSlots.filterHelpText')}</HelpText>
+        </FormGroup>
+      )}
     </ConfigContainer>
   );
 }
