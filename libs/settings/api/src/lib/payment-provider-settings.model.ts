@@ -45,8 +45,10 @@ export class SettingPaymentProvider {
   @Field(type => String, { nullable: true })
   webhookEndpointSecret?: string;
 
-  @Field(type => String, { nullable: true })
+  /** hide sensitive filds
+ @Field(type => String, { nullable: true })
   apiKey?: string;
+ **/
 
   @Field(() => [StripePaymentMethod], { nullable: true })
   stripe_methods?: StripePaymentMethod[];
@@ -221,10 +223,8 @@ export class UpdateSettingPaymentProviderInput {
 
   @Field(type => String, { nullable: true })
   webhookEndpointSecret?: string;
-  /** hide sensitive filds
   @Field(type => String, { nullable: true })
   apiKey?: string;
- **/
 
   @Field(() => [StripePaymentMethod], { nullable: true })
   stripe_methods?: StripePaymentMethod[];
