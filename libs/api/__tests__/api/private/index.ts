@@ -930,7 +930,7 @@ export type SubscriptionInput = {
 
 export type SubscriptionPeriod = {
   __typename?: 'SubscriptionPeriod';
-  amount: Scalars['Int'];
+  amount: Scalars['Float'];
   createdAt: Scalars['DateTime'];
   endsAt: Scalars['DateTime'];
   id: Scalars['String'];
