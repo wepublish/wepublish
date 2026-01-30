@@ -5,3 +5,7 @@ export * from './lib/settings.module';
 export * from './lib/settings.service';
 export * from './lib/setting-dataloader.service';
 export * from './lib/settings-utils';
+export * from './lib/ai-settings.model';
+export * from './lib/ai-settings.service';
+export * from './lib/ai-settings.resolver';
+export * from './lib/ai-settings-dataloader.service';

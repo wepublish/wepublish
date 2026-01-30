@@ -2,6 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+enum AIProviderType {
+  V0
+}
+
 union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
 
 enum ActionType {
@@ -622,6 +626,14 @@ input CreateCrowdfundingInput {
 
 input CreateCrowdfundingMemberPlan {
   id: String!
+}
+
+input CreateSettingAIProviderInput {
+  apiKey: String
+  id: String!
+  name: String
+  systemPrompt: String
+  type: AIProviderType!
 }
 
 type Crowdfunding {
@@ -1447,6 +1459,9 @@ type Mutation {
   """
   cancelUserSubscription(id: String!): PublicSubscription
 
+  """Creates a new AI provider setting."""
+  createAISetting(input: CreateSettingAIProviderInput!): SettingAIProvider!
+
   """Creates an article."""
   createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
@@ -1522,6 +1537,9 @@ type Mutation {
 
   """Creates a new userrole."""
   createUserRole(description: String, name: String!, permissionIDs: [String!]!): UserRole!
+
+  """Deletes an AI provider setting."""
+  deleteAISetting(id: String!): SettingAIProvider!
 
   """Deletes an article."""
   deleteArticle(id: String!): String!
@@ -1639,6 +1657,9 @@ type Mutation {
 
   """Unpublishes all revisions of an page."""
   unpublishPage(id: String!): Page!
+
+  """Updates an existing AI provider setting."""
+  updateAISetting(apiKey: String, id: String!, name: String, systemPrompt: String, type: AIProviderType): SettingAIProvider!
 
   """Updates an article."""
   updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
@@ -2268,6 +2289,12 @@ type Query {
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
 
+  """Returns a single AI provider setting by id."""
+  aiSetting(id: String!): SettingAIProvider!
+
+  """Returns all AI provider settings."""
+  aiSettings(filter: SettingAIProviderFilter): [SettingAIProvider!]!
+
   """Returns an article by id or slug."""
   article(id: String, slug: String): Article!
 
@@ -2588,6 +2615,22 @@ type Setting {
   name: SettingName!
   settingRestriction: SettingRestriction
   value: GraphQLSettingValueType
+}
+
+type SettingAIProvider {
+  apiKey: String
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  name: String
+  systemPrompt: String
+  type: AIProviderType!
+}
+
+input SettingAIProviderFilter {
+  id: String
+  name: String
+  type: AIProviderType
 }
 
 input SettingFilter {

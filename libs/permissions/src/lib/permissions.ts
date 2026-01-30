@@ -817,6 +817,33 @@ export const CanDeletePaywall: Permission = {
   deprecated: false,
 };
 
+/**
+ * AI Settings
+ */
+export const CanGetAISettings: Permission = {
+  id: 'CAN_GET_AI_SETTINGS',
+  description: 'Allows to get AI provider settings',
+  deprecated: false,
+};
+
+export const CanCreateAISettings: Permission = {
+  id: 'CAN_CREATE_AI_SETTINGS',
+  description: 'Allows to create AI provider settings',
+  deprecated: false,
+};
+
+export const CanUpdateAISettings: Permission = {
+  id: 'CAN_UPDATE_AI_SETTINGS',
+  description: 'Allows to update AI provider settings',
+  deprecated: false,
+};
+
+export const CanDeleteAISettings: Permission = {
+  id: 'CAN_DELETE_AI_SETTINGS',
+  description: 'Allows to delete AI provider settings',
+  deprecated: false,
+};
+
 export const AllPermissions: Permission[] = [
   CanGetCrowdfunding,
   CanGetCrowdfundings,
@@ -942,6 +969,10 @@ export const AllPermissions: Permission[] = [
   CanUpdatePaywall,
   CanDeletePaywall,
   CanGetAudienceStats,
+  CanGetAISettings,
+  CanCreateAISettings,
+  CanUpdateAISettings,
+  CanDeleteAISettings,
 ];
 
 export const EditorPermissions: Permission[] = [
