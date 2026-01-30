@@ -34,8 +34,10 @@ export class SettingTrackingPixel {
   @Field(type => String, { nullable: true })
   prolitteris_username?: string;
 
+  /** hide sensitive filds
   @Field(type => String, { nullable: true })
   prolitteris_password?: string;
+ **/
 
   @Field(type => String, { nullable: true })
   prolitteris_publisherInternalKeyDomain?: string;
@@ -93,9 +95,6 @@ export class CreateSettingTrackingPixelInput {
 export class UpdateSettingTrackingPixelInput {
   @Field(type => String)
   id!: string;
-
-  @Field(type => TrackingPixelProviderType, { nullable: true })
-  type?: TrackingPixelProviderType;
 
   @Field(type => String, { nullable: true })
   name?: string;

@@ -12,6 +12,10 @@ import {
   WebhookForPaymentIntentProps,
   WebhookResponse,
 } from './payment-provider';
+import {
+  mapStripePaymentMethodTypes,
+  mapStripePaymentMethodTypesTyped,
+} from '../payment.methode.mapper';
 
 function mapStripeCheckoutEventToPaymentStatue(
   event: string
@@ -47,13 +51,6 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
     return new Stripe(config.apiKey, {
       apiVersion: '2020-08-27',
     });
-  }
-
-  async getMethods(): Promise<
-    Stripe.Checkout.SessionCreateParams.PaymentMethodType[]
-  > {
-    const config = await this.getConfig();
-    return config.methods as Stripe.Checkout.SessionCreateParams.PaymentMethodType[];
   }
 
   async getWebhookEvent(body: any, signature: string): Promise<Stripe.Event> {
@@ -107,9 +104,11 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
     if (!props.successURL) throw new Error('SuccessURL is not defined');
     if (!props.failureURL) throw new Error('FailureURL is not defined');
     const stripe = await this.getStripeGateway();
-    const methods = await this.getMethods();
+    const config = await this.getConfig();
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: methods,
+      payment_method_types: mapStripePaymentMethodTypesTyped(
+        config.stripe_methods
+      ),
       line_items: props.invoice.items.map(item => ({
         price_data: {
           currency: props.currency,

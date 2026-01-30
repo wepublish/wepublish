@@ -13,6 +13,10 @@ import { PaymentState } from '@prisma/client';
 import { Gateway, GatewayStatus } from '../payrexx/gateway-client';
 import { Transaction, TransactionStatus } from '../payrexx/transaction-client';
 import { PayrexxFactory } from '../payrexx/payrexx-factory';
+import {
+  mapPayrexxPaymentMethods,
+  mapPayrexxPSPs,
+} from '../payment.methode.mapper';
 export class PayrexxPaymentProvider extends BasePaymentProvider {
   constructor(props: PaymentProviderProps) {
     super(props);
@@ -211,8 +215,8 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     const payrexx = await this.getPayrexxGateway();
     const config = await this.getConfig();
     const gateway = await payrexx.gatewayClient.createGateway({
-      psp: config.payrexx_psp as number[],
-      pm: config.payrexx_pm as string[],
+      psp: mapPayrexxPSPs(config.payrexx_psp),
+      pm: mapPayrexxPaymentMethods(config.payrexx_pm),
       referenceId: paymentID,
       amount,
       fields: {

@@ -28,8 +28,10 @@ export class SettingAIProvider {
   @Field(type => String, { nullable: true })
   name?: string;
 
+  /** hide sensitive filds
   @Field(type => String, { nullable: true })
   apiKey?: string;
+   **/
 
   @Field(type => String, { nullable: true })
   systemPrompt?: string;
@@ -69,9 +71,6 @@ export class CreateSettingAIProviderInput {
 export class UpdateSettingAIProviderInput {
   @Field(type => String)
   id!: string;
-
-  @Field(type => AIProviderType, { nullable: true })
-  type?: AIProviderType;
 
   @Field(type => String, { nullable: true })
   name?: string;

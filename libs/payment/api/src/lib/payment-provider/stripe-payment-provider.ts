@@ -11,6 +11,7 @@ import {
 import Stripe from 'stripe';
 import { logger } from '@wepublish/utils/api';
 import { PaymentState } from '@prisma/client';
+import { mapStripePaymentMethodTypes } from '../payment.methode.mapper';
 
 interface CreateStripeCustomerProps {
   intent: Stripe.PaymentIntent;
@@ -46,13 +47,6 @@ export class StripePaymentProvider extends BasePaymentProvider {
     return new Stripe(config.apiKey, {
       apiVersion: '2020-08-27',
     });
-  }
-
-  async getMethods(): Promise<
-    Stripe.Checkout.SessionCreateParams.PaymentMethodType[]
-  > {
-    const config = await this.getConfig();
-    return config.methods as Stripe.Checkout.SessionCreateParams.PaymentMethodType[];
   }
 
   async createStripeCustomer({
@@ -161,7 +155,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
     let intent;
     let errorCode;
     try {
-      const methods = await this.getMethods();
+      const config = await this.getConfig();
       intent = await stripe.paymentIntents.create({
         amount: invoice.items.reduce(
           (prevItem, currentItem) =>
@@ -174,10 +168,14 @@ export class StripePaymentProvider extends BasePaymentProvider {
             customer: customerID,
             off_session: true,
             payment_method: paymentMethodID,
-            payment_method_types: methods,
+            payment_method_types: mapStripePaymentMethodTypes(
+              config.stripe_methods
+            ),
           }
         : {
-            payment_method_types: methods,
+            payment_method_types: mapStripePaymentMethodTypes(
+              config.stripe_methods
+            ),
           }),
         currency: currency.toLowerCase(),
         // description: props.invoice.description, TODO: convert to text

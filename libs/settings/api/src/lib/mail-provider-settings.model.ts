@@ -37,8 +37,10 @@ export class SettingMailProvider {
   @Field(type => String, { nullable: true })
   webhookEndpointSecret?: string;
 
+  /** hide sensitive filds
   @Field(type => String, { nullable: true })
   apiKey?: string;
+ **/
 
   @Field(type => String, { nullable: true })
   mailgun_mailDomain?: string;
@@ -105,9 +107,6 @@ export class CreateSettingMailProviderInput {
 export class UpdateSettingMailProviderInput {
   @Field(type => String)
   id!: string;
-
-  @Field(type => MailProviderType, { nullable: true })
-  type?: MailProviderType;
 
   @Field(type => String, { nullable: true })
   name?: string;

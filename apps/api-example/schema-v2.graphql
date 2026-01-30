@@ -1346,11 +1346,6 @@ type InvoiceItem {
   total: Int!
 }
 
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON
-
 type ListicleBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -1666,7 +1661,7 @@ type Mutation {
   unpublishPage(id: String!): Page!
 
   """Updates an existing AI provider setting."""
-  updateAISetting(apiKey: String, id: String!, name: String, systemPrompt: String, type: AIProviderType): SettingAIProvider!
+  updateAISetting(apiKey: String, id: String!, name: String, systemPrompt: String): SettingAIProvider!
 
   """Updates an article."""
   updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
@@ -1679,7 +1674,7 @@ type Mutation {
   updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
 
   """Updates an existing challenge provider setting."""
-  updateChallengeProviderSetting(id: String!, name: String, secret: String, siteKey: String, type: ChallengeProviderType): SettingChallengeProvider!
+  updateChallengeProviderSetting(id: String!, name: String, secret: String, siteKey: String): SettingChallengeProvider!
 
   """Update an existing comment"""
   updateComment(input: CommentUpdateInput!): Comment!
@@ -1697,7 +1692,7 @@ type Mutation {
   updateImage(description: String, filename: String, focalPoint: FocalPointInput, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
 
   """Updates an existing mail provider setting."""
-  updateMailProviderSetting(apiKey: String, fromAddress: String, id: String!, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, type: MailProviderType, webhookEndpointSecret: String): SettingMailProvider!
+  updateMailProviderSetting(apiKey: String, fromAddress: String, id: String!, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, webhookEndpointSecret: String): SettingMailProvider!
 
   """Updates an existing memberplan."""
   updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
@@ -1720,7 +1715,7 @@ type Mutation {
   updatePaymentProviderCustomers(input: [PaymentProviderCustomerInput!]!): [PaymentProviderCustomer!]!
 
   """Updates an existing payment provider setting."""
-  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String!, methods: JSON, mollie_apiBaseUrl: String, name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: JSON, payrexx_psp: JSON, payrexx_vatrate: String, type: PaymentProviderType, webhookEndpointSecret: String): SettingPaymentProvider!
+  updatePaymentProviderSetting(bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Updates a paywall."""
   updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
@@ -1747,7 +1742,7 @@ type Mutation {
   updateTag(description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
 
   """Updates an existing tracking pixel setting."""
-  updateTrackingPixelSetting(id: String!, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String, type: TrackingPixelProviderType): SettingTrackingPixel!
+  updateTrackingPixelSetting(id: String!, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String): SettingTrackingPixel!
 
   """
   This mutation allows to update the user's data by taking an input of type UserInput.
@@ -1994,6 +1989,38 @@ type PaymentMethod implements HasImageLc {
   slug: Slug!
 }
 
+enum PaymentMethodMollie {
+  ALMA
+  APPLEPAY
+  BACS
+  BANCOMATPAY
+  BANCONTACT
+  BANKTRANSFER
+  BELFIUS
+  BILLIE
+  BLIK
+  CREDITCARD
+  DIRECTDEBIT
+  EPS
+  GIFTCARD
+  IDEAL
+  IN3
+  KBC
+  KLARNA
+  KLARNAPAYLATER
+  KLARNAPAYNOW
+  KLARNASLICEIT
+  MYBANK
+  PAYPAL
+  PAYSAFECARD
+  PRZELEWY24
+  RIVERTY
+  SATISPAY
+  TRUSTLY
+  TWINT
+  VOUCHER
+}
+
 enum PaymentPeriodicity {
   biannual
   biennial
@@ -2036,6 +2063,85 @@ enum PaymentState {
   processing
   requiresUserAction
   submitted
+}
+
+enum PayrexxPM {
+  ALIPAY
+  AMAZON_PAY
+  AMERICAN_EXPRESS
+  APPLE_PAY
+  BANCONTACT
+  BANK_TRANSFER
+  CARTES_BANCAIRES
+  CRYPTO
+  DINERS_CLUB
+  DISCOVER
+  EPS
+  GIROPAY
+  GOOGLE_PAY
+  IDEAL
+  INVOICE
+  JCB
+  KLARNA
+  MAESTRO
+  MASTERCARD
+  PAYPAL
+  PAY_BY_BANK
+  POST_FINANCE_PAY
+  POWERPAY
+  PREPAYMENT
+  SAMSUNG_PAY
+  SEPA_DIRECT_DEBIT
+  SWISSCOM_PAY
+  TWINT
+  UNIONPAY
+  VERD_CASH
+  VISA
+  V_PAY
+  WECHAT_PAY
+}
+
+enum PayrexxPSP {
+  AMAZON_PAY
+  BARZAHLEN_VIACASH
+  BRAINTREE
+  CCAVENUE
+  CEMBRAPAY
+  CLEARHAUS_ACQUIRING
+  COINBASE
+  CONCARDIS_BASIC
+  CONCARDIS_PAYENGINE
+  CONCARDIS_PAY_ENGINE
+  DATATRANS
+  GIROPAY
+  INVOICE
+  KLARNA
+  MOLLIE
+  OGONE_ALIAS_GATEWAY
+  OGONE_BASIC
+  PAYONE
+  PAYPAL
+  PAYREXX_PAY
+  PAYREXX_PAYMENTS_BY_STRIPE
+  PAYREXX_PAY_PLUS
+  PAYSAFECASH
+  POINTS_PAY
+  POSTFINANCE_ALIAS_GATEWAY
+  POSTFINANCE_CHECKOUT
+  POSTFINANCE_ECOMMERCE
+  POWERPAY
+  REKA
+  SAFERPAY
+  SKRILL
+  STRIPE
+  SWISSBILLING
+  TWINT
+  UTRUST
+  VIVEUM
+  VORKASSE
+  VRPAY
+  WIRPAY
+  WORLDPAY
 }
 
 type Paywall {
@@ -2671,7 +2777,6 @@ type Setting {
 }
 
 type SettingAIProvider {
-  apiKey: String
   createdAt: DateTime!
   id: String!
   modifiedAt: DateTime!
@@ -2691,8 +2796,6 @@ type SettingChallengeProvider {
   id: String!
   modifiedAt: DateTime!
   name: String
-  secret: String
-  siteKey: String
   type: ChallengeProviderType!
 }
 
@@ -2707,7 +2810,6 @@ input SettingFilter {
 }
 
 type SettingMailProvider {
-  apiKey: String
   createdAt: DateTime!
   fromAddress: String
   id: String!
@@ -2767,15 +2869,16 @@ type SettingPaymentProvider {
   bexio_userId: Float
   createdAt: DateTime!
   id: String!
-  methods: JSON
   modifiedAt: DateTime!
   mollie_apiBaseUrl: String
+  mollie_methods: [PaymentMethodMollie!]
   name: String
   offSessionPayments: Boolean
   payrexx_instancename: String
-  payrexx_pm: JSON
-  payrexx_psp: JSON
+  payrexx_pm: [PayrexxPM!]
+  payrexx_psp: [PayrexxPSP!]
   payrexx_vatrate: String
+  stripe_methods: [StripePaymentMethod!]
   type: PaymentProviderType!
   webhookEndpointSecret: String
 }
@@ -2800,7 +2903,6 @@ type SettingTrackingPixel {
   name: String
   prolitteris_memberNr: String
   prolitteris_onlyPaidContentAccess: Boolean
-  prolitteris_password: String
   prolitteris_publisherInternalKeyDomain: String
   prolitteris_usePublisherInternalKey: Boolean
   prolitteris_username: String
@@ -2855,6 +2957,31 @@ input StreamableVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   videoID: String
+}
+
+enum StripePaymentMethod {
+  ACSS_DEBIT
+  AFTERPAY_CLEARPAY
+  ALIPAY
+  AU_BECS_DEBIT
+  BACS_DEBIT
+  BANCONTACT
+  BOLETO
+  CARD
+  EPS
+  FPX
+  GIROPAY
+  GRABPAY
+  IDEAL
+  KLARNA
+  KONBINI
+  OXXO
+  P24
+  PAYNOW
+  SEPA_DEBIT
+  SOFORT
+  US_BANK_ACCOUNT
+  WECHAT_PAY
 }
 
 type SubscribeBlock implements BaseBlock {

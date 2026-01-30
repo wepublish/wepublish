@@ -5,12 +5,22 @@ import {
   ArgsType,
   registerEnumType,
 } from '@nestjs/graphql';
-import { PaymentProviderType } from '@prisma/client';
+
+import {
+  PaymentProviderType,
+  PayrexxPSP,
+  PayrexxPM,
+  StripePaymentMethod,
+  PaymentMethodMollie,
+} from '@prisma/client';
+
 import GraphQLJSON from 'graphql-type-json';
 
-registerEnumType(PaymentProviderType, {
-  name: 'PaymentProviderType',
-});
+registerEnumType(PaymentProviderType, { name: 'PaymentProviderType' });
+registerEnumType(PayrexxPSP, { name: 'PayrexxPSP' });
+registerEnumType(PayrexxPM, { name: 'PayrexxPM' });
+registerEnumType(StripePaymentMethod, { name: 'StripePaymentMethod' });
+registerEnumType(PaymentMethodMollie, { name: 'PaymentMethodMollie' });
 
 @ObjectType()
 export class SettingPaymentProvider {
@@ -38,17 +48,20 @@ export class SettingPaymentProvider {
   @Field(type => String, { nullable: true })
   apiKey?: string;
 
-  @Field(type => GraphQLJSON, { nullable: true })
-  methods?: any;
+  @Field(() => [StripePaymentMethod], { nullable: true })
+  stripe_methods?: StripePaymentMethod[];
+
+  @Field(() => [PayrexxPSP], { nullable: true })
+  payrexx_psp?: PayrexxPSP[];
+
+  @Field(() => [PayrexxPM], { nullable: true })
+  payrexx_pm?: PayrexxPM[];
+
+  @Field(() => [PaymentMethodMollie], { nullable: true })
+  mollie_methods?: PaymentMethodMollie[];
 
   @Field(type => String, { nullable: true })
   payrexx_instancename?: string;
-
-  @Field(type => GraphQLJSON, { nullable: true })
-  payrexx_psp?: any;
-
-  @Field(type => GraphQLJSON, { nullable: true })
-  payrexx_pm?: any;
 
   @Field(type => String, { nullable: true })
   payrexx_vatrate?: string;
@@ -131,17 +144,20 @@ export class CreateSettingPaymentProviderInput {
   @Field(type => String, { nullable: true })
   apiKey?: string;
 
-  @Field(type => GraphQLJSON, { nullable: true })
-  methods?: any;
+  @Field(() => [StripePaymentMethod], { nullable: true })
+  stripe_methods?: StripePaymentMethod[];
+
+  @Field(() => [PayrexxPSP], { nullable: true })
+  payrexx_psp?: PayrexxPSP[];
+
+  @Field(() => [PayrexxPM], { nullable: true })
+  payrexx_pm?: PayrexxPM[];
+
+  @Field(() => [PaymentMethodMollie], { nullable: true })
+  mollie_methods?: PaymentMethodMollie[];
 
   @Field(type => String, { nullable: true })
   payrexx_instancename?: string;
-
-  @Field(type => GraphQLJSON, { nullable: true })
-  payrexx_psp?: any;
-
-  @Field(type => GraphQLJSON, { nullable: true })
-  payrexx_pm?: any;
 
   @Field(type => String, { nullable: true })
   payrexx_vatrate?: string;
@@ -197,9 +213,6 @@ export class UpdateSettingPaymentProviderInput {
   @Field(type => String)
   id!: string;
 
-  @Field(type => PaymentProviderType, { nullable: true })
-  type?: PaymentProviderType;
-
   @Field(type => String, { nullable: true })
   name?: string;
 
@@ -208,21 +221,25 @@ export class UpdateSettingPaymentProviderInput {
 
   @Field(type => String, { nullable: true })
   webhookEndpointSecret?: string;
-
+  /** hide sensitive filds
   @Field(type => String, { nullable: true })
   apiKey?: string;
+ **/
 
-  @Field(type => GraphQLJSON, { nullable: true })
-  methods?: any;
+  @Field(() => [StripePaymentMethod], { nullable: true })
+  stripe_methods?: StripePaymentMethod[];
+
+  @Field(() => [PayrexxPSP], { nullable: true })
+  payrexx_psp?: PayrexxPSP[];
+
+  @Field(() => [PayrexxPM], { nullable: true })
+  payrexx_pm?: PayrexxPM[];
+
+  @Field(() => [PaymentMethodMollie], { nullable: true })
+  mollie_methods?: PaymentMethodMollie[];
 
   @Field(type => String, { nullable: true })
   payrexx_instancename?: string;
-
-  @Field(type => GraphQLJSON, { nullable: true })
-  payrexx_psp?: any;
-
-  @Field(type => GraphQLJSON, { nullable: true })
-  payrexx_pm?: any;
 
   @Field(type => String, { nullable: true })
   payrexx_vatrate?: string;

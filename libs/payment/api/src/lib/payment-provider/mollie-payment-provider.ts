@@ -10,12 +10,8 @@ import {
 } from './payment-provider';
 import { logger } from '@wepublish/utils/api';
 import { PaymentState } from '@prisma/client';
-import createMollieClient, {
-  SequenceType,
-  Payment,
-  PaymentMethod,
-} from '@mollie/api-client';
-import MaybeArray from '@mollie/api-client/dist/types/types/MaybeArray';
+import createMollieClient, { SequenceType, Payment } from '@mollie/api-client';
+import { mapMolliePaymentMethods } from '../payment.methode.mapper';
 
 const erroredPaymentIntent = {
   intentID: 'error',
@@ -71,29 +67,6 @@ export class MolliePaymentProvider extends BasePaymentProvider {
       throw new Error('Mollie missing api key');
     }
     return createMollieClient({ apiKey: config.apiKey });
-  }
-
-  async getPaymentMethod() {
-    const config = await this.getConfig();
-    if (!config.methods) {
-      throw new Error('Mollie missing methods');
-    }
-    return this.getPaymentMethode(config.methods as string[]);
-  }
-
-  getPaymentMethode(
-    methods: string[] | undefined
-  ): MaybeArray<PaymentMethod> | undefined {
-    if (!methods) {
-      return undefined;
-    }
-    const paymentMethods: MaybeArray<PaymentMethod> = [];
-    for (const paymentMethode of methods) {
-      paymentMethods.push(
-        PaymentMethod[paymentMethode as keyof typeof PaymentMethod]
-      );
-    }
-    return paymentMethods;
   }
 
   async generateWebhookUrl(): Promise<string> {
@@ -181,7 +154,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
       }
 
       const mollieClient = await this.getMollieGateway();
-      const methodes = await this.getPaymentMethod();
+      const config = await this.getConfig();
       payment = await mollieClient.payments.create({
         customerId,
         amount: {
@@ -195,7 +168,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
           (await this.isOffSession()) ?
             SequenceType.first
           : SequenceType.oneoff,
-        method: methodes,
+        method: mapMolliePaymentMethods(config.mollie_methods),
         metadata: {
           paymentID,
           mail: invoice.mail,

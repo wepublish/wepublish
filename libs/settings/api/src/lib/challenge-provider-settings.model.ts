@@ -28,12 +28,13 @@ export class SettingChallengeProvider {
 
   @Field(type => ChallengeProviderType)
   type!: ChallengeProviderType;
-
+  /** hide sensitive filds
   @Field(type => String, { nullable: true })
   secret?: string;
 
   @Field(type => String, { nullable: true })
   siteKey?: string;
+    **/
 }
 
 @InputType()
@@ -73,9 +74,6 @@ export class UpdateSettingChallengeProviderInput {
 
   @Field(type => String, { nullable: true })
   name?: string;
-
-  @Field(type => ChallengeProviderType, { nullable: true })
-  type?: ChallengeProviderType;
 
   @Field(type => String, { nullable: true })
   secret?: string;
