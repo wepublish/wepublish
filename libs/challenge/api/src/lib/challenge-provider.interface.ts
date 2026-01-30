@@ -3,10 +3,7 @@ import {
   ChallengeValidationProps,
   ChallengeValidationReturn,
 } from './challenge.model';
-import {
-  ChallengeProvider as PrismaChallengeProvider,
-  PrismaClient,
-} from '@prisma/client';
+import { ChallengeProviderType, PrismaClient } from '@prisma/client';
 
 export abstract class ChallengeProvider {
   abstract generateChallenge(): Promise<Challenge>;
@@ -17,7 +14,7 @@ export abstract class ChallengeProvider {
 
   public async initDatabaseConfiguration(
     id: string,
-    type: PrismaChallengeProvider,
+    type: ChallengeProviderType,
     prisma: PrismaClient
   ): Promise<void> {
     await prisma.settingChallengeProvider.upsert({

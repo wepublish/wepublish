@@ -11,7 +11,7 @@ import {
 import { createAsyncOptionsProvider } from '@wepublish/utils/api';
 import { PrismaService } from '@wepublish/nest-modules';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-import { ChallengeProvider as EnumChallengeProvider } from '@prisma/client';
+import { ChallengeProviderType } from '@prisma/client';
 
 export const CHALLENGE_MODULE_OPTIONS = 'CHALLENGE_MODULE_OPTIONS';
 
@@ -69,7 +69,7 @@ const createChallengeProviderFromConfig = async (
     const challengeProvider = new CFTurnstileProvider(challenge.id, prisma, kv);
     await challengeProvider.initDatabaseConfiguration(
       challenge.id,
-      EnumChallengeProvider.TURNSTILE,
+      ChallengeProviderType.TURNSTILE,
       prisma
     );
     return challengeProvider;

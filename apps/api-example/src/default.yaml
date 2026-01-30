@@ -5,7 +5,7 @@ general:
   urlAdapter: default
 mailProvider:
   id: slackmail # allowed is mailchimp/mailgun
-  type: SLACK
+  type: slackmail
   fromAddress: dev@wepublish.ch # Required for mailchimp/mailgun
   webhookURL: ${SLACK_DEV_MAIL_WEBHOOK_URL}
 paymentProviders:

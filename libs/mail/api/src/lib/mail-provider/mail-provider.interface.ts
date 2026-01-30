@@ -1,8 +1,4 @@
-import {
-  MailLogState,
-  MailProvider as PrismaMailProvider,
-  PrismaClient,
-} from '@prisma/client';
+import { MailLogState, MailProviderType, PrismaClient } from '@prisma/client';
 import { NextHandleFunction } from 'connect';
 import express from 'express';
 
@@ -71,7 +67,7 @@ export interface MailProvider {
 
   initDatabaseConfiguration(
     id: string,
-    type: PrismaMailProvider,
+    type: MailProviderType,
     prisma: PrismaClient
   ): Promise<void>;
 }

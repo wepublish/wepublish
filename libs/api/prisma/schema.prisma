@@ -1500,7 +1500,7 @@ model PaywallBypass {
   @@map("paywall_bypasses")
 }
 
-enum MailProvider {
+enum MailProviderType {
   MAILGUN   @map("mailgun")
   MAILCHIMP @map("mailchimp")
   SLACK     @map("slack")
@@ -1511,7 +1511,7 @@ model SettingMailProvider {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  type                  MailProvider
+  type                  MailProviderType
   name                  String?
   fromAddress           String?
   replyToAddress        String?
@@ -1541,7 +1541,7 @@ model SettingTrackingPixel {
   @@map("settings.trackingpixel")
 }
 
-enum PaymentProvider {
+enum PaymentProviderType {
   STRIPE_CHECKOUT      @map("stripe-checkout")
   STRIPE               @map("stripe")
   PAYREXX              @map("payrexx")
@@ -1556,7 +1556,7 @@ model SettingPaymentProvider {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  type                  PaymentProvider
+  type                  PaymentProviderType
   name                  String?
   offSessionPayments    Boolean?
   webhookEndpointSecret String? // Payrexx webhookApiKey
@@ -1567,15 +1567,15 @@ model SettingPaymentProvider {
   payrexx_instancename String?
   payrexx_psp          Json?
   payrexx_pm           Json?
-  payrexx_vatrate      String?
+  payrexx_vatrate      Decimal? @db.Decimal(5, 4)
 
-  bexio_userId                              String?
-  bexio_countryId                           String?
+  bexio_userId                              Int?
+  bexio_countryId                           Int?
   bexio_invoiceTemplateNewMembership        String?
   bexio_invoiceTemplateRenewalMembership    String?
-  bexio_unitId                              String?
-  bexio_taxId                               String?
-  bexio_accountId                           String?
+  bexio_unitId                              Int?
+  bexio_taxId                               Int?
+  bexio_accountId                           Int?
   bexio_invoiceTitleNewMembership           String?
   bexio_invoiceTitleRenewalMembership       String?
   bexio_invoiceMailSubjectNewMembership     String?
@@ -1589,7 +1589,7 @@ model SettingPaymentProvider {
   @@map("settings.paymentprovider")
 }
 
-enum ChallengeProvider {
+enum ChallengeProviderType {
   TURNSTILE @map("turnstile")
 }
 
@@ -1599,26 +1599,14 @@ model SettingChallengeProvider {
   modifiedAt DateTime @updatedAt
   name       String?
 
-  type    ChallengeProvider
+  type    ChallengeProviderType
   secret  String?
   siteKey String?
 
   @@map("settings.challengeprovider")
 }
 
-model SettingHotAndTrending {
-  id         String   @id
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
-
-  credentials   String?
-  property      String?
-  articlePrefix String?
-
-  @@map("settings.hotandtrending")
-}
-
-enum AIProvider {
+enum AIProviderType {
   V0 @map("v0")
 }
 
@@ -1627,7 +1615,7 @@ model SettingAIProvider {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  type         AIProvider
+  type         AIProviderType
   name         String?
   apiKey       String?
   systemPrompt String?

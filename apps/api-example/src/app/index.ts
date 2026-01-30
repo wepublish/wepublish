@@ -14,7 +14,7 @@ import { readConfig } from '../readConfig';
 import { URLAdapter, HauptstadtURLAdapter } from '@wepublish/nest-modules';
 import { HotAndTrendingDataSource } from '@wepublish/article/api';
 import { MediaAdapter } from '@wepublish/image/api';
-import { MailProvider } from '@wepublish/mail/api';
+import { BaseMailProvider } from '@wepublish/mail/api';
 import { PaymentProvider } from '@wepublish/payment/api';
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
@@ -23,7 +23,7 @@ type RunServerProps = {
   publicExpressApp?: Application;
   mediaAdapter: MediaAdapter;
   paymentProviders: PaymentProvider[];
-  mailProvider: MailProvider;
+  mailProvider: BaseMailProvider;
   hotAndTrendingDataSource: HotAndTrendingDataSource;
 };
 

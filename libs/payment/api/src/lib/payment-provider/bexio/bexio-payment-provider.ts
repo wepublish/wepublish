@@ -2,7 +2,6 @@ import {
   Invoice,
   MemberPlan,
   PaymentState,
-  PrismaClient,
   Subscription,
   User,
   UserAddress,
@@ -36,65 +35,17 @@ import {
 } from './bexio-utils';
 import fetch from 'node-fetch';
 
-export interface BexioPaymentProviderProps extends PaymentProviderProps {
-  apiKey: string;
-  userId: number;
-  countryId: number;
-  invoiceTemplateNewMembership: string;
-  invoiceTemplateRenewalMembership: string;
-  unitId: number;
-  taxId: number;
-  accountId: number;
-  invoiceTitleNewMembership: string;
-  invoiceTitleRenewalMembership: string;
-  invoiceMailSubjectNewMembership: string;
-  invoiceMailBodyNewMembership: string;
-  invoiceMailSubjectRenewalMembership: string;
-  invoiceMailBodyRenewalMembership: string;
-  markInvoiceAsOpen: boolean;
-  prisma: PrismaClient;
-}
-
 export class BexioPaymentProvider extends BasePaymentProvider {
-  readonly bexio: Bexio;
-  private apiKey: string;
-  private userId: number;
-  private countryId: number;
-  private invoiceTemplateNewMembership: string;
-  private invoiceTemplateRenewalMembership: string;
-  private unitId: number;
-  private taxId: number;
-  private accountId: number;
-  private invoiceTitleNewMembership: string;
-  private invoiceTitleRenewalMembership: string;
-  private invoiceMailSubjectNewMembership: string;
-  private invoiceMailBodyNewMembership: string;
-  private invoiceMailSubjectRenewalMembership: string;
-  private invoiceMailBodyRenewalMembership: string;
-  private markInvoiceAsOpen: boolean;
-
-  constructor(props: BexioPaymentProviderProps) {
+  constructor(props: PaymentProviderProps) {
     super(props);
-    this.apiKey = props.apiKey;
-    this.userId = props.userId;
-    this.countryId = props.countryId;
-    this.invoiceTemplateNewMembership = props.invoiceTemplateNewMembership;
-    this.invoiceTemplateRenewalMembership =
-      props.invoiceTemplateRenewalMembership;
-    this.unitId = props.unitId;
-    this.taxId = props.taxId;
-    this.accountId = props.accountId;
-    this.invoiceTitleNewMembership = props.invoiceTitleNewMembership;
-    this.invoiceTitleRenewalMembership = props.invoiceTitleRenewalMembership;
-    this.invoiceMailSubjectNewMembership =
-      props.invoiceMailSubjectNewMembership;
-    this.invoiceMailBodyNewMembership = props.invoiceMailBodyNewMembership;
-    this.invoiceMailSubjectRenewalMembership =
-      props.invoiceMailSubjectRenewalMembership;
-    this.invoiceMailBodyRenewalMembership =
-      props.invoiceMailBodyRenewalMembership;
-    this.markInvoiceAsOpen = props.markInvoiceAsOpen;
-    this.bexio = new Bexio(this.apiKey);
+  }
+
+  async getBexioGateway() {
+    const config = await this.getConfig();
+    if (!config.apiKey) {
+      throw new Error('Stripe missing api key');
+    }
+    return new Bexio(config.apiKey);
   }
 
   async webhookForPaymentIntent(
@@ -149,13 +100,17 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     intentID,
     paymentID,
   }: CheckIntentProps): Promise<IntentState> {
+    const config = await this.getConfig();
+    if (!config.apiKey) {
+      throw new Error('Stripe missing api key');
+    }
     // currently the bexio library we use doesn't return the status (kb_item_status_id)
     // when querying for invoice, so we need to do it "manually" using fetch api
     const bexioBaseUrl = 'https://api.bexio.com/2.0';
     const headers = {
       Method: 'GET',
       Accept: 'application/json',
-      Authorization: `Bearer ${this.apiKey}`,
+      Authorization: `Bearer ${config.apiKey}`,
     };
 
     const response = await fetch(`${bexioBaseUrl}/kb_invoice/${intentID}`, {
@@ -247,10 +202,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         throw new InvoiceNotFoundError(invoice);
       }
 
-      const contact = await searchForContact(
-        this.bexio,
-        invoice.subscription.user
-      );
+      const bexio = await this.getBexioGateway();
+      const contact = await searchForContact(bexio, invoice.subscription.user);
       const updatedContact = await this.createOrUpdateContact(
         contact,
         invoice.subscription.user
@@ -298,15 +251,17 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     contact: ContactsStatic.ContactSmall,
     user: User & { address: UserAddress | null }
   ) {
+    const config = await this.getConfig();
+    const bexio = await this.getBexioGateway();
     const upsertContact: ContactsStatic.ContactOverwrite = {
       nr: '',
       name_1: user?.address?.company ? user?.address.company : user.name, // lastname or company name
       name_2: user?.address?.company ? '' : (user.firstName ?? undefined), // Firstname or none
       mail: user.email,
-      user_id: this.userId,
+      user_id: config.bexio_userId,
       contact_type_id: user?.address?.company ? 1 : 2, // 1: Company 2: Person
-      country_id: this.countryId,
-      owner_id: this.userId,
+      country_id: config.bexio_countryId,
+      owner_id: config.bexio_userId,
       contact_group_ids: [],
       postcode: user?.address?.zipCode ?? undefined,
       city: user?.address?.city ?? undefined,
@@ -314,10 +269,10 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       house_number: user?.address?.streetAddressNumber ?? undefined,
     };
     if (!contact) {
-      return await this.bexio.contacts.create(upsertContact);
+      return await bexio.contacts.create(upsertContact);
     } else {
       upsertContact.nr = contact.nr;
-      return await this.bexio.contacts.edit(contact.id, upsertContact);
+      return await bexio.contacts.edit(contact.id, upsertContact);
     }
   }
 
@@ -366,27 +321,27 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       'memberPlan',
       invoice.subscription.memberPlan
     );
-
+    const config = await this.getConfig();
     const bexioInvoice: InvoicesStatic.InvoiceCreate = {
       title:
         isRenewal ?
-          this.invoiceTitleRenewalMembership
-        : this.invoiceTitleNewMembership,
+          config.bexio_invoiceTitleRenewalMembership
+        : config.bexio_invoiceTitleNewMembership,
       contact_id: contact.id,
-      user_id: this.userId,
+      user_id: config.bexio_userId,
       mwst_type: 0,
       mwst_is_net: false,
       api_reference: invoice.id,
       template_slug:
         isRenewal ?
-          this.invoiceTemplateRenewalMembership
-        : this.invoiceTemplateNewMembership,
+          config.bexio_invoiceTemplateRenewalMembership
+        : config.bexio_invoiceTemplateNewMembership,
       positions: [
         {
           amount: '1',
-          unit_id: this.unitId,
-          account_id: this.accountId,
-          tax_id: this.taxId,
+          unit_id: config.bexio_unitId,
+          account_id: config.bexio_accountId,
+          tax_id: config.bexio_taxId,
           text: invoice.subscription.memberPlan.name,
           unit_price: `${
             (invoice.subscription.monthlyAmount *
@@ -399,20 +354,21 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         },
       ],
     };
-    const invoiceUpdated = await this.bexio.invoices.create(bexioInvoice);
-    const sentInvoice = await this.bexio.invoices.sent(invoiceUpdated.id, {
+    const bexio = await this.getBexioGateway();
+    const invoiceUpdated = await bexio.invoices.create(bexioInvoice);
+    const sentInvoice = await bexio.invoices.sent(invoiceUpdated.id, {
       recipient_email: contact.mail,
       subject: stringReplaceMap.replace(
         isRenewal ?
-          this.invoiceMailSubjectRenewalMembership
-        : this.invoiceMailSubjectNewMembership
+          config.bexio_invoiceMailSubjectRenewalMembership
+        : config.bexio_invoiceMailSubjectNewMembership
       ),
       message: stringReplaceMap.replace(
         isRenewal ?
-          this.invoiceMailBodyRenewalMembership
-        : this.invoiceMailBodyNewMembership
+          config.bexio_invoiceMailBodyRenewalMembership
+        : config.bexio_invoiceMailBodyNewMembership
       ),
-      mark_as_open: this.markInvoiceAsOpen,
+      mark_as_open: config.bexio_markInvoiceAsOpen,
       attach_pdf: true,
     });
 

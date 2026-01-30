@@ -5,11 +5,7 @@ import mailchimp, {
 } from '@mailchimp/mailchimp_transactional';
 import { AxiosError } from 'axios';
 
-import {
-  MailLogState,
-  PrismaClient,
-  SettingMailProvider,
-} from '@prisma/client';
+import { MailLogState } from '@prisma/client';
 import {
   MailLogStatus,
   MailProviderError,
@@ -19,7 +15,6 @@ import {
   WithExternalId,
 } from './mail-provider.interface';
 import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 interface VerifyWebhookSignatureProps {
   signature: string;
@@ -80,51 +75,13 @@ function flattenObjForMandrill<T>(ob: T): Record<string, string> {
   return nestedObject;
 }
 
-class MailchimpConfig {
-  private readonly ttl = 60;
-
-  constructor(
-    private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
-    private readonly id: string
-  ) {}
-
-  private async load(): Promise<SettingMailProvider | null> {
-    return this.prisma.settingMailProvider.findUnique({
-      where: {
-        id: this.id,
-      },
-    });
-  }
-
-  async getFromCache(): Promise<SettingMailProvider | null> {
-    return this.kv.getOrLoad<SettingMailProvider | null>(
-      `mailchimp:settings:${this.id}`,
-      () => this.load(),
-      this.ttl
-    );
-  }
-
-  async getConfig(): Promise<SettingMailProvider | null> {
-    return await this.getFromCache();
-  }
-}
-
 export class MailchimpMailProvider extends BaseMailProvider {
-  constructor(
-    private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
-    props: MailProviderProps
-  ) {
+  constructor(props: MailProviderProps) {
     super(props);
   }
 
   async getMailchimpClient(): Promise<mailchimp.ApiClient> {
-    const config = await new MailchimpConfig(
-      this.prisma,
-      this.kv,
-      this.id
-    ).getConfig();
+    const config = await this.getConfig();
     if (!config?.apiKey) {
       throw new Error('Missing mailchimp base domain or api key');
     }
@@ -136,11 +93,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
     url,
     params,
   }: VerifyWebhookSignatureProps): Promise<boolean> {
-    const config = await new MailchimpConfig(
-      this.prisma,
-      this.kv,
-      this.id
-    ).getConfig();
+    const config = await this.getConfig();
     const keys = Object.keys(params).sort();
 
     const longString = keys.reduce((sig, key) => {
@@ -196,11 +149,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
   }
 
   async sendMail(props: SendMailProps): Promise<void> {
-    const config = await new MailchimpConfig(
-      this.prisma,
-      this.kv,
-      this.id
-    ).getConfig();
+    const config = await this.getConfig();
     const mailchimpClient = await this.getMailchimpClient();
     if (props.template) {
       const templateContent: mailchimp.MergeVar[] = [];
@@ -291,9 +240,6 @@ export class MailchimpMailProvider extends BaseMailProvider {
   }
 
   async getName(): Promise<string> {
-    return (
-      (await new MailchimpConfig(this.prisma, this.kv, this.id).getConfig())
-        ?.name ?? 'unknown'
-    );
+    return (await this.getConfig())?.name ?? 'unknown';
   }
 }

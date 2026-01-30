@@ -4,7 +4,6 @@ import { MappedReplacer } from 'mapped-replacer';
 import StipeType from 'stripe';
 import { TrackingPixelProvider } from '@wepublish/tracking-pixel/api';
 import { GoogleAnalyticsConfig } from '@wepublish/google-analytics/api';
-import { MailProvider as MailProviderEnum } from '@prisma/client';
 
 type General = {
   apolloPlayground: boolean;
@@ -16,7 +15,7 @@ type General = {
 
 type MailProvider = {
   id: string;
-  type: MailProviderEnum;
+  type: string;
   fromAddress: string;
   replyToAddress: string;
   webhookURL: string;

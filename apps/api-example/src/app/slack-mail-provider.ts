@@ -4,45 +4,9 @@ import {
   SendMailProps,
 } from '@wepublish/mail/api';
 import fetch from 'cross-fetch';
-import { PrismaClient, SettingMailProvider } from '@prisma/client';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-
-class SlackMailConfig {
-  private readonly ttl = 60;
-
-  constructor(
-    private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
-    private readonly id: string
-  ) {}
-
-  private async load(): Promise<SettingMailProvider | null> {
-    return this.prisma.settingMailProvider.findUnique({
-      where: {
-        id: this.id,
-      },
-    });
-  }
-
-  async getFromCache(): Promise<SettingMailProvider | null> {
-    return this.kv.getOrLoad<SettingMailProvider | null>(
-      `slackmail:settings:${this.id}`,
-      () => this.load(),
-      this.ttl
-    );
-  }
-
-  async getConfig(): Promise<SettingMailProvider | null> {
-    return await this.getFromCache();
-  }
-}
 
 export class SlackMailProvider extends BaseMailProvider {
-  constructor(
-    private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
-    props: MailProviderProps
-  ) {
+  constructor(props: MailProviderProps) {
     super(props);
   }
 
@@ -51,11 +15,7 @@ export class SlackMailProvider extends BaseMailProvider {
   }
 
   async sendMail(props: SendMailProps): Promise<void> {
-    const config = await new SlackMailConfig(
-      this.prisma,
-      this.kv,
-      this.id
-    ).getConfig();
+    const config = await this.getConfig();
     const message = {
       blocks: [
         {
@@ -93,9 +53,6 @@ export class SlackMailProvider extends BaseMailProvider {
   }
 
   async getName(): Promise<string> {
-    return (
-      (await new SlackMailConfig(this.prisma, this.kv, this.id).getConfig())
-        ?.name ?? 'unknown'
-    );
+    return (await this.getConfig())?.name ?? 'unknown';
   }
 }

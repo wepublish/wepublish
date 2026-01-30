@@ -1,8 +1,4 @@
-import {
-  MailLogState,
-  PrismaClient,
-  SettingMailProvider,
-} from '@prisma/client';
+import { MailLogState } from '@prisma/client';
 import crypto from 'crypto';
 import FormData from 'form-data';
 import Client from 'mailgun.js/client';
@@ -16,7 +12,6 @@ import {
 } from './mail-provider.interface';
 import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
 import Mailgun from 'mailgun.js';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 interface VerifyWebhookSignatureProps {
   timestamp: string;
@@ -44,51 +39,14 @@ function mapMailgunEventToMailLogState(event: string): MailLogState | null {
       return null;
   }
 }
-class MailGunConfig {
-  private readonly ttl = 60;
-
-  constructor(
-    private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
-    private readonly id: string
-  ) {}
-
-  private async load(): Promise<SettingMailProvider | null> {
-    return this.prisma.settingMailProvider.findUnique({
-      where: {
-        id: this.id,
-      },
-    });
-  }
-
-  async getFromCache(): Promise<SettingMailProvider | null> {
-    return this.kv.getOrLoad<SettingMailProvider | null>(
-      `mailgun:settings:${this.id}`,
-      () => this.load(),
-      this.ttl
-    );
-  }
-
-  async getConfig(): Promise<SettingMailProvider | null> {
-    return await this.getFromCache();
-  }
-}
 
 export class MailgunMailProvider extends BaseMailProvider {
-  constructor(
-    private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService,
-    props: MailProviderProps
-  ) {
+  constructor(props: MailProviderProps) {
     super(props);
   }
 
   async getMailgunClient(): Promise<Client> {
-    const config = await new MailGunConfig(
-      this.prisma,
-      this.kv,
-      this.id
-    ).getConfig();
+    const config = await this.getConfig();
     if (!config?.apiKey || !config?.mailgun_baseDomain) {
       throw new Error('Missing mailgun base domain or api key');
     }
@@ -102,11 +60,7 @@ export class MailgunMailProvider extends BaseMailProvider {
   async verifyWebhookSignature(
     props: VerifyWebhookSignatureProps
   ): Promise<boolean> {
-    const config = await new MailGunConfig(
-      this.prisma,
-      this.kv,
-      this.id
-    ).getConfig();
+    const config = await this.getConfig();
     const encodedToken = crypto
       .createHmac('sha256', config?.webhookEndpointSecret ?? '')
       .update(props.timestamp.concat(props.token))
@@ -160,11 +114,7 @@ export class MailgunMailProvider extends BaseMailProvider {
   }
 
   async sendMail(props: SendMailProps): Promise<void> {
-    const config = await new MailGunConfig(
-      this.prisma,
-      this.kv,
-      this.id
-    ).getConfig();
+    const config = await this.getConfig();
     const form = new FormData();
     form.append('from', config?.fromAddress ?? '');
     form.append('to', props.recipient);
@@ -213,11 +163,7 @@ export class MailgunMailProvider extends BaseMailProvider {
   }
 
   async getTemplates(): Promise<MailProviderTemplate[]> {
-    const config = await new MailGunConfig(
-      this.prisma,
-      this.kv,
-      this.id
-    ).getConfig();
+    const config = await this.getConfig();
     const mailgunClient = await this.getMailgunClient();
     try {
       const response = await mailgunClient.domains.domainTemplates.list(
@@ -249,18 +195,11 @@ export class MailgunMailProvider extends BaseMailProvider {
   }
 
   async getTemplateUrl(template: WithExternalId): Promise<string> {
-    const config = await new MailGunConfig(
-      this.prisma,
-      this.kv,
-      this.id
-    ).getConfig();
+    const config = await this.getConfig();
     return `https://app.mailgun.com/app/sending/domains/${config?.mailgun_mailDomain}/templates/details/${template.externalMailTemplateId}`;
   }
 
   async getName(): Promise<string> {
-    return (
-      (await new MailGunConfig(this.prisma, this.kv, this.id).getConfig())
-        ?.name ?? 'unknown'
-    );
+    return (await this.getConfig())?.name ?? 'unknown';
   }
 }

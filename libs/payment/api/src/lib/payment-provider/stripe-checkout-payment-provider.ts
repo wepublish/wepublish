@@ -13,13 +13,6 @@ import {
   WebhookResponse,
 } from './payment-provider';
 
-export interface StripeCheckoutPaymentProviderProps
-  extends PaymentProviderProps {
-  secretKey: string;
-  webhookEndpointSecret: string;
-  methods: Stripe.Checkout.SessionCreateParams.PaymentMethodType[];
-}
-
 function mapStripeCheckoutEventToPaymentStatue(
   event: string
 ): PaymentState | null {
@@ -40,24 +33,36 @@ function mapStripeCheckoutEventToPaymentStatue(
 }
 
 export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
-  readonly stripe: Stripe;
-  readonly webhookEndpointSecret: string;
-  readonly methods: Stripe.Checkout.SessionCreateParams.PaymentMethodType[];
+  remoteManagedSubscription: boolean;
 
-  constructor(props: StripeCheckoutPaymentProviderProps) {
+  constructor(props: PaymentProviderProps) {
     super(props);
-    this.methods = props.methods;
-    this.stripe = new Stripe(props.secretKey, {
-      apiVersion: '2020-08-27',
-    });
-    this.webhookEndpointSecret = props.webhookEndpointSecret;
   }
 
-  getWebhookEvent(body: any, signature: string): Stripe.Event {
-    return this.stripe.webhooks.constructEvent(
+  async getStripeGateway() {
+    const config = await this.getConfig();
+    if (!config.apiKey) {
+      throw new Error('Stripe missing api key');
+    }
+    return new Stripe(config.apiKey, {
+      apiVersion: '2020-08-27',
+    });
+  }
+
+  async getMethods(): Promise<
+    Stripe.Checkout.SessionCreateParams.PaymentMethodType[]
+  > {
+    const config = await this.getConfig();
+    return config.methods as Stripe.Checkout.SessionCreateParams.PaymentMethodType[];
+  }
+
+  async getWebhookEvent(body: any, signature: string): Promise<Stripe.Event> {
+    const config = await this.getConfig();
+    const stripe = await this.getStripeGateway();
+    return stripe.webhooks.constructEvent(
       body,
       signature,
-      this.webhookEndpointSecret
+      config.webhookEndpointSecret
     );
   }
 
@@ -65,7 +70,7 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
     props: WebhookForPaymentIntentProps
   ): Promise<WebhookResponse> {
     const signature = props.req.headers['stripe-signature'] as string;
-    const event = this.getWebhookEvent(props.req.body, signature);
+    const event = await this.getWebhookEvent(props.req.body, signature);
 
     if (!event.type.startsWith('checkout.session')) {
       return {
@@ -78,7 +83,8 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
     const intentStates: IntentState[] = [];
     switch (event.type) {
       case 'checkout.session.completed': {
-        const intent = await this.stripe.paymentIntents.retrieve(
+        const stripe = await this.getStripeGateway();
+        const intent = await stripe.paymentIntents.retrieve(
           session.payment_intent as string
         );
         const state = mapStripeCheckoutEventToPaymentStatue(intent.status);
@@ -100,9 +106,10 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
   async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
     if (!props.successURL) throw new Error('SuccessURL is not defined');
     if (!props.failureURL) throw new Error('FailureURL is not defined');
-
-    const session = await this.stripe.checkout.sessions.create({
-      payment_method_types: this.methods,
+    const stripe = await this.getStripeGateway();
+    const methods = await this.getMethods();
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: methods,
       line_items: props.invoice.items.map(item => ({
         price_data: {
           currency: props.currency,
@@ -144,7 +151,8 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
   async checkIntentStatus({
     intentID,
   }: CheckIntentProps): Promise<IntentState> {
-    const session = await this.stripe.checkout.sessions.retrieve(intentID);
+    const stripe = await this.getStripeGateway();
+    const session = await stripe.checkout.sessions.retrieve(intentID);
     const state =
       session.payment_status === 'paid' ?
         PaymentState.paid
