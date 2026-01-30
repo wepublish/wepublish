@@ -11,7 +11,7 @@ import { PrismaClient, SettingChallengeProvider } from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 class TurnstileConfig {
-  private readonly ttl = 60;
+  private readonly ttl = 21600; // 6h
 
   constructor(
     private readonly prisma: PrismaClient,
@@ -28,8 +28,9 @@ class TurnstileConfig {
   }
 
   async getFromCache(): Promise<SettingChallengeProvider | null> {
-    return this.kv.getOrLoad<SettingChallengeProvider | null>(
-      `turnstile:settings:${this.id}`,
+    return this.kv.getOrLoadNs<SettingChallengeProvider | null>(
+      `settings:challenge`,
+      `${this.id}`,
       () => this.load(),
       this.ttl
     );

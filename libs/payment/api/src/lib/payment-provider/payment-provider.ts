@@ -352,7 +352,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 }
 
 class PaymentProviderConfig {
-  private readonly ttl = 60;
+  private readonly ttl = 21600; // 6h
 
   constructor(
     private readonly prisma: PrismaClient,
@@ -369,8 +369,9 @@ class PaymentProviderConfig {
   }
 
   async getFromCache(): Promise<SettingPaymentProvider | null> {
-    return this.kv.getOrLoad<SettingPaymentProvider | null>(
-      `paymentprovider:settings:${this.id}`,
+    return this.kv.getOrLoadNs<SettingPaymentProvider | null>(
+      `settings:paymentprovider`,
+      `${this.id}`,
       () => this.load(),
       this.ttl
     );

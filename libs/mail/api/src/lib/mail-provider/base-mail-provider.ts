@@ -73,7 +73,7 @@ export abstract class BaseMailProvider implements MailProvider {
 }
 
 class MailProviderConfig {
-  private readonly ttl = 60;
+  private readonly ttl = 21600; // 6h
 
   constructor(
     private readonly prisma: PrismaClient,
@@ -90,8 +90,9 @@ class MailProviderConfig {
   }
 
   async getFromCache(): Promise<SettingMailProvider | null> {
-    return this.kv.getOrLoad<SettingMailProvider | null>(
-      `mailprovider:settings:${this.id}`,
+    return this.kv.getOrLoadNs<SettingMailProvider | null>(
+      `settings:mailprovider`,
+      `${this.id}`,
       () => this.load(),
       this.ttl
     );

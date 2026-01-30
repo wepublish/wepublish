@@ -20,7 +20,7 @@ export interface MailContextOptions {
 }
 
 class MailContextConfig {
-  private readonly ttl = 60;
+  private readonly ttl = 21600; // 6h
 
   constructor(
     private readonly prisma: PrismaClient,
@@ -37,8 +37,9 @@ class MailContextConfig {
   }
 
   async getFromCache(): Promise<SettingMailProvider | null> {
-    return this.kv.getOrLoad<SettingMailProvider | null>(
-      `mailcontext:settings:${this.id}`,
+    return this.kv.getOrLoadNs<SettingMailProvider | null>(
+      `settings:mailcontext`,
+      `${this.id}`,
       () => this.load(),
       this.ttl
     );

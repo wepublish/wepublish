@@ -11,7 +11,7 @@ import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { ProLitterisGenerator } from './types';
 
 class ProlitterisConfig {
-  private readonly ttl = 60;
+  private readonly ttl = 21600; // 6h
 
   constructor(
     private readonly prisma: PrismaClient,
@@ -28,8 +28,9 @@ class ProlitterisConfig {
   }
 
   async getFromCache(): Promise<SettingTrackingPixel | null> {
-    return this.kv.getOrLoad<SettingTrackingPixel | null>(
-      `prolitteris:settings:${this.id}`,
+    return this.kv.getOrLoadNs<SettingTrackingPixel | null>(
+      `settings:prolitteris`,
+      `${this.id}`,
       () => this.load(),
       this.ttl
     );

@@ -10,7 +10,7 @@ import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 type V0Settings = { apiKey: string | null; systemPrompt: string | null };
 
 class V0Config {
-  private readonly ttl = 60;
+  private readonly ttl = 21600; // 6h
 
   constructor(
     private readonly prisma: PrismaClient,
@@ -29,8 +29,9 @@ class V0Config {
   }
 
   async getV0(): Promise<V0Settings> {
-    return this.kv.getOrLoad<V0Settings>(
-      'v0:settings',
+    return this.kv.getOrLoadNs<V0Settings>(
+      'settings:ai',
+      'v0',
       () => this.loadV0(),
       this.ttl
     );
