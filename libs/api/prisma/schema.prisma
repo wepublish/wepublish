@@ -1492,10 +1492,11 @@ model PaywallBypass {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  token String @unique
+  token String
 
   paywall   Paywall @relation(fields: [paywallId], references: [id], onDelete: Cascade)
   paywallId String  @db.Uuid
 
+  @@unique([paywallId, token])
   @@map("paywall_bypasses")
 }

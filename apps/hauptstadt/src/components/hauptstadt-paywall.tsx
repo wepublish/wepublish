@@ -18,7 +18,7 @@ import theme from '../theme';
 
 const HauptstadtPaywall = styled((props: BuilderPaywallProps) => {
   const { hasUser } = useUser();
-  const url = props.alternativeSubscribeUrl ?? '/mitmachen';
+  const url = props.alternativeSubscribeUrl || '/mitmachen';
 
   const { data } = useSubscriptionsQuery({
     fetchPolicy: 'cache-only',

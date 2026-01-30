@@ -172,7 +172,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
                   LinkComponent={Link}
                   href={'/mitmachen'}
                 >
-                  Anderes Abo lösen.
+                  Anderes Abo lösen
                 </Button>
               </SubscriptionListItemContent>
             </SubscriptionListItemWrapper>

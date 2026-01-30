@@ -125,6 +125,7 @@ export const usePaymentText = ({
   autoRenew,
   extendable,
   productType,
+  memberPlan,
   paymentPeriodicity,
   monthlyAmount,
   currency,
@@ -134,6 +135,7 @@ export const usePaymentText = ({
   type?: 'button' | 'support';
   autoRenew: boolean;
   extendable: boolean;
+  memberPlan: string;
   productType: ProductType;
   paymentPeriodicity: PaymentPeriodicity;
   monthlyAmount: number;
@@ -156,6 +158,7 @@ export const usePaymentText = ({
         locale
       ),
       monthlyAmount,
+      memberPlan,
       siteTitle,
     };
 
@@ -177,6 +180,7 @@ export const usePaymentText = ({
     paymentPeriodicity,
     productType,
     type,
+    memberPlan,
     siteTitle,
     t,
   ]);
@@ -332,6 +336,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
 
   const paymentText = usePaymentText({
     autoRenew,
+    memberPlan: selectedMemberPlan?.name ?? '',
     extendable: selectedMemberPlan?.extendable ?? true,
     productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
     paymentPeriodicity: selectedPaymentPeriodicity,
@@ -344,6 +349,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const supportText = usePaymentText({
     type: 'support',
     autoRenew: true,
+    memberPlan: selectedMemberPlan?.name ?? '',
     extendable: selectedMemberPlan?.extendable ?? true,
     productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
     paymentPeriodicity: PaymentPeriodicity.Monthly,

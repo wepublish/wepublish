@@ -45,7 +45,7 @@ export const HauptstadtTitleBlockPreTitle: typeof TitleBlockPreTitle =
             label={premiumName}
             sx={theme => ({
               ...theme.typography.blockTitlePreTitle,
-              fontWeight: 500,
+              fontWeight: 400,
               padding: 0,
               margin: 0,
               height: 'initial',
@@ -58,7 +58,11 @@ export const HauptstadtTitleBlockPreTitle: typeof TitleBlockPreTitle =
 
 const HauptstadtTeaserPremiumIndicator = styled(HauptstadtPremiumIndicator)`
   grid-area: pretitle;
-  margin-bottom: ${({ theme }) => theme.spacing(2)};
+  margin-bottom: ${({ theme }) => theme.spacing(0.5)};
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    margin-bottom: ${({ theme }) => theme.spacing(2)};
+  }
 
   &:empty {
     margin-bottom: 0;
@@ -72,11 +76,6 @@ const HauptstadtTeaserPremiumIndicator = styled(HauptstadtPremiumIndicator)`
 export const HauptstadtTeaserPreTitle: typeof BaseTeaserPreTitle = props => {
   const paywall = useContext(CurrentPaywallContext);
   const premiumName = selectPremiumMemberplan(paywall?.memberPlans ?? [])?.name;
-  const show = Boolean(premiumName || props.preTitle);
-
-  if (!show) {
-    return;
-  }
 
   return (
     <HauptstadtTeaserPremiumIndicator>
@@ -89,7 +88,7 @@ export const HauptstadtTeaserPreTitle: typeof BaseTeaserPreTitle = props => {
           size="small"
           sx={theme => ({
             ...theme.typography.teaserPretitle,
-            fontWeight: 500,
+            fontWeight: 400,
             padding: 0,
             height: 'initial',
           })}
