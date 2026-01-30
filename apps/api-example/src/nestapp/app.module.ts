@@ -112,7 +112,7 @@ import { V0Module } from '@wepublish/ai/api';
           persistedQueries: false,
           introspection: configFile.general.apolloIntrospection,
           playground: configFile.general.apolloPlayground,
-          allowBatchedHttpRequests: false,
+          allowBatchedHttpRequests: true,
           inheritResolversFromInterfaces: true,
           csrfPrevention: false,
         } as ApolloDriverConfig;
