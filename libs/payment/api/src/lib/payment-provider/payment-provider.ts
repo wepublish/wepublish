@@ -127,7 +127,7 @@ export interface PaymentProvider {
 
   isOffSession(): Promise<boolean>;
 
-  getName(): Promise<string>;
+  getName(): Promise<string | null>;
 }
 
 export interface PaymentProviderProps {
@@ -173,21 +173,43 @@ export abstract class BasePaymentProvider implements PaymentProvider {
     return;
   }
 
-  async getConfig(): Promise<SettingPaymentProvider | null> {
-    return await new PaymentProviderConfig(
+  async getConfig(): Promise<SettingPaymentProvider> {
+    const config = await new PaymentProviderConfig(
       this.prisma,
       this.kv,
       this.id
     ).getConfig();
+    this.assertConfig(config);
+    return config;
+  }
+
+  private assertConfig(
+    config: SettingPaymentProvider | null
+  ): asserts config is SettingPaymentProvider {
+    if (!config)
+      throw new Error(`PaymentProvider config missing for ${this.id}`);
+  }
+
+  protected assertProperty<T>(
+    propertyName: string,
+    property: T | null | undefined
+  ): T {
+    if (property == null) {
+      throw new Error(
+        `PaymentProvider missing property ${propertyName}=${property} for ${this.id}`
+      );
+    }
+    return property;
   }
 
   async isOffSession(): Promise<boolean> {
     const config = await this.getConfig();
-    return config.offSessionPayments;
+    return !!config.offSessionPayments;
   }
 
-  async getName(): Promise<string> {
+  async getName(): Promise<string | null> {
     const config = await this.getConfig();
+    this.assertConfig(config);
     return config.name;
   }
 

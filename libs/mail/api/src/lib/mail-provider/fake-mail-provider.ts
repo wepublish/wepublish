@@ -22,9 +22,11 @@ export class FakeMailProvider extends BaseMailProvider {
     return 'http://example.com/';
   }
   async getName(): Promise<string> {
-    return 'fake-mail-provider';
+    return 'MockProvider';
   }
-  async initDatabaseConfiguration(type: MailProviderType): Promise<void> {
+  override async initDatabaseConfiguration(
+    type: MailProviderType
+  ): Promise<void> {
     return;
   }
 }

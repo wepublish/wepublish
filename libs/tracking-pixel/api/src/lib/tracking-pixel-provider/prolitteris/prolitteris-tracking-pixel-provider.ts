@@ -35,9 +35,17 @@ class ProlitterisConfig {
       this.ttl
     );
   }
+  private assertConfig(
+    config: SettingTrackingPixel | null
+  ): asserts config is SettingTrackingPixel {
+    if (!config)
+      throw new Error(`PaymentProvider config missing for ${this.id}`);
+  }
 
-  async getConfig(): Promise<SettingTrackingPixel | null> {
-    return await this.getFromCache();
+  async getConfig(): Promise<SettingTrackingPixel> {
+    const config = await this.getFromCache();
+    this.assertConfig(config);
+    return config;
   }
 }
 
@@ -55,15 +63,35 @@ export class ProlitterisTrackingPixelProvider implements TrackingPixelProvider {
       this.kv,
       this.id
     ).getConfig();
-    return config.prolitteris_usePublisherInternalKey ?
+    return (
+        this.assertProperty(
+          'prolitteris_usePublisherInternalKey',
+          config.prolitteris_usePublisherInternalKey
+        )
+      ) ?
         new InternalKey(
-          config.prolitteris_memberNr,
-          config.prolitteris_publisherInternalKeyDomain
+          this.assertProperty(
+            'prolitteris_memberNr',
+            config.prolitteris_memberNr
+          ),
+          this.assertProperty(
+            'prolitteris_publisherInternalKeyDomain',
+            config.prolitteris_publisherInternalKeyDomain
+          )
         )
       : new GatewayClient(
-          config.prolitteris_memberNr,
-          config.prolitteris_username,
-          config.prolitteris_password,
+          this.assertProperty(
+            'prolitteris_memberNr',
+            config.prolitteris_memberNr
+          ),
+          this.assertProperty(
+            'prolitteris_username',
+            config.prolitteris_username
+          ),
+          this.assertProperty(
+            'prolitteris_password',
+            config.prolitteris_password
+          ),
           this.httpClient
         );
   }
@@ -95,6 +123,18 @@ export class ProlitterisTrackingPixelProvider implements TrackingPixelProvider {
       pixelUid: trackingPixels.pixelUids[0],
       uri: `https://${trackingPixels.domain}/${paidContentIndicator}/${trackingPixels.pixelUids[0]}`,
     };
+  }
+
+  private assertProperty<T>(
+    propertyName: string,
+    property: T | null | undefined
+  ): T {
+    if (property == null) {
+      throw new Error(
+        `TrackingpixelProvider missing property ${propertyName}=${property} for ${this.id}`
+      );
+    }
+    return property;
   }
 
   public async initDatabaseConfiguration(

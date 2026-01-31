@@ -40,7 +40,15 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     const apiKey = props.req.query?.['apiKey'] as string;
     const config = await this.getConfig();
 
-    if (!this.timeConstantCompare(apiKey, config.webhookEndpointSecret)) {
+    if (
+      !this.timeConstantCompare(
+        apiKey,
+        this.assertProperty(
+          'webhookEndpointSecret',
+          config.webhookEndpointSecret
+        )
+      )
+    ) {
       return {
         status: 403,
         message: 'Invalid Api Key',
@@ -227,7 +235,10 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       successRedirectUrl: successURL as string,
       failedRedirectUrl: failureURL as string,
       cancelRedirectUrl: failureURL as string,
-      vatRate: config.payrexx_vatrate.toNumber(),
+      vatRate: this.assertProperty(
+        'payrexx_vatrate',
+        config.payrexx_vatrate
+      ).toNumber(),
       currency,
       ...tokenization,
     });

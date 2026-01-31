@@ -37,8 +37,6 @@ function mapStripeCheckoutEventToPaymentStatue(
 }
 
 export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
-  remoteManagedSubscription: boolean;
-
   constructor(props: PaymentProviderProps) {
     super(props);
   }
@@ -59,7 +57,7 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
     return stripe.webhooks.constructEvent(
       body,
       signature,
-      config.webhookEndpointSecret
+      this.assertProperty('webhookEndpointSecret', config.webhookEndpointSecret)
     );
   }
 

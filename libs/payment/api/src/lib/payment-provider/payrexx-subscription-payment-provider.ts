@@ -357,7 +357,15 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
     // Protect endpoint
     const apiKey = props.req.query['apiKey'] as string;
-    if (!this.timeConstantCompare(apiKey, config.webhookEndpointSecret)) {
+    if (
+      !this.timeConstantCompare(
+        apiKey,
+        this.assertProperty(
+          'webhookEndpointSecret',
+          config.webhookEndpointSecret
+        )
+      )
+    ) {
       return {
         status: 403,
         message: 'Invalid Api Key',

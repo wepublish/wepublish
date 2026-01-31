@@ -258,10 +258,13 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       name_1: user?.address?.company ? user?.address.company : user.name, // lastname or company name
       name_2: user?.address?.company ? '' : (user.firstName ?? undefined), // Firstname or none
       mail: user.email,
-      user_id: config.bexio_userId,
+      user_id: this.assertProperty('bexio_userId', config.bexio_userId),
       contact_type_id: user?.address?.company ? 1 : 2, // 1: Company 2: Person
-      country_id: config.bexio_countryId,
-      owner_id: config.bexio_userId,
+      country_id: this.assertProperty(
+        'bexio_countryId',
+        config.bexio_countryId
+      ),
+      owner_id: this.assertProperty('bexio_userId', config.bexio_userId),
       contact_group_ids: [],
       postcode: user?.address?.zipCode ?? undefined,
       city: user?.address?.city ?? undefined,
@@ -322,26 +325,30 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       invoice.subscription.memberPlan
     );
     const config = await this.getConfig();
+
     const bexioInvoice: InvoicesStatic.InvoiceCreate = {
       title:
         isRenewal ?
-          config.bexio_invoiceTitleRenewalMembership
-        : config.bexio_invoiceTitleNewMembership,
+          config.bexio_invoiceTitleRenewalMembership || ''
+        : config.bexio_invoiceTitleNewMembership || '',
       contact_id: contact.id,
-      user_id: config.bexio_userId,
+      user_id: this.assertProperty('bexio_userId', config.bexio_userId),
       mwst_type: 0,
       mwst_is_net: false,
       api_reference: invoice.id,
       template_slug:
         isRenewal ?
-          config.bexio_invoiceTemplateRenewalMembership
-        : config.bexio_invoiceTemplateNewMembership,
+          config.bexio_invoiceTemplateRenewalMembership || ''
+        : config.bexio_invoiceTemplateNewMembership || '',
       positions: [
         {
           amount: '1',
-          unit_id: config.bexio_unitId,
-          account_id: config.bexio_accountId,
-          tax_id: config.bexio_taxId,
+          unit_id: this.assertProperty('bexio_unitId', config.bexio_unitId),
+          account_id: this.assertProperty(
+            'bexio_accountId',
+            config.bexio_accountId
+          ),
+          tax_id: this.assertProperty('bexio_taxId', config.bexio_taxId),
           text: invoice.subscription.memberPlan.name,
           unit_price: `${
             (invoice.subscription.monthlyAmount *
@@ -360,15 +367,18 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       recipient_email: contact.mail,
       subject: stringReplaceMap.replace(
         isRenewal ?
-          config.bexio_invoiceMailSubjectRenewalMembership
-        : config.bexio_invoiceMailSubjectNewMembership
+          config.bexio_invoiceMailSubjectRenewalMembership || ''
+        : config.bexio_invoiceMailSubjectNewMembership || ''
       ),
       message: stringReplaceMap.replace(
         isRenewal ?
-          config.bexio_invoiceMailBodyRenewalMembership
-        : config.bexio_invoiceMailBodyNewMembership
+          config.bexio_invoiceMailBodyRenewalMembership || ''
+        : config.bexio_invoiceMailBodyNewMembership || ''
       ),
-      mark_as_open: config.bexio_markInvoiceAsOpen,
+      mark_as_open: this.assertProperty(
+        'bexio_markInvoiceAsOpen',
+        config.bexio_markInvoiceAsOpen
+      ),
       attach_pdf: true,
     });
 

@@ -81,7 +81,15 @@ export class MolliePaymentProvider extends BasePaymentProvider {
     const key = props.req.query?.['key'] as string;
 
     const config = await this.getConfig();
-    if (!this.timeConstantCompare(key, config.webhookEndpointSecret)) {
+    if (
+      !this.timeConstantCompare(
+        key,
+        this.assertProperty(
+          'webhookEndpointSecret',
+          config.webhookEndpointSecret
+        )
+      )
+    ) {
       return {
         status: 403,
         message: 'Invalid Api Key',

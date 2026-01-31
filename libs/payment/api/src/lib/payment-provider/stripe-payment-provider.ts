@@ -69,7 +69,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
     return stripe.webhooks.constructEvent(
       body,
       signature,
-      config.webhookEndpointSecret
+      this.assertProperty('webhookEndpointSecret', config.webhookEndpointSecret)
     );
   }
 
