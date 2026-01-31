@@ -6,7 +6,6 @@ import {
   MolliePaymentProvider,
   PaymentMethodModule,
   PaymentProvider,
-  PayrexxFactory,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   StripeCheckoutPaymentProvider,

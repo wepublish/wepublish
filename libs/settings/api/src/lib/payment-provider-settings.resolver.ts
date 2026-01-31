@@ -2,13 +2,10 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   CanGetPaymentProviderSettings,
   CanUpdatePaymentProviderSettings,
-  CanCreatePaymentProviderSettings,
-  CanDeletePaymentProviderSettings,
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
   SettingPaymentProvider,
-  CreateSettingPaymentProviderInput,
   UpdateSettingPaymentProviderInput,
   SettingPaymentProviderFilter,
 } from './payment-provider-settings.model';

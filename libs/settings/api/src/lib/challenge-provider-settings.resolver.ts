@@ -2,13 +2,10 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   CanGetChallengeProviderSettings,
   CanUpdateChallengeProviderSettings,
-  CanCreateChallengeProviderSettings,
-  CanDeleteChallengeProviderSettings,
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
   SettingChallengeProvider,
-  CreateSettingChallengeProviderInput,
   UpdateSettingChallengeProviderInput,
   SettingChallengeProviderFilter,
 } from './challenge-provider-settings.model';

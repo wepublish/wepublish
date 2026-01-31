@@ -2,13 +2,10 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   CanGetTrackingPixelSettings,
   CanUpdateTrackingPixelSettings,
-  CanCreateTrackingPixelSettings,
-  CanDeleteTrackingPixelSettings,
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
   SettingTrackingPixel,
-  CreateSettingTrackingPixelInput,
   UpdateSettingTrackingPixelInput,
   SettingTrackingPixelFilter,
 } from './tracking-pixel-settings.model';
@@ -62,6 +59,7 @@ export class TrackingPixelSettingsResolver {
     return this.trackingPixelSettingsService.updateTrackingPixelSetting(input);
   }
 
+  /** DISABLE FOR NOW
   @Permissions(CanDeleteTrackingPixelSettings)
   @Mutation(returns => SettingTrackingPixel, {
     name: 'deleteTrackingPixelSetting',
@@ -70,4 +68,5 @@ export class TrackingPixelSettingsResolver {
   deleteTrackingPixelSetting(@Args('id') id: string) {
     return this.trackingPixelSettingsService.deleteTrackingPixelSetting(id);
   }
+    **/
 }

@@ -2,13 +2,10 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   CanGetMailProviderSettings,
   CanUpdateMailProviderSettings,
-  CanCreateMailProviderSettings,
-  CanDeleteMailProviderSettings,
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
   SettingMailProvider,
-  CreateSettingMailProviderInput,
   UpdateSettingMailProviderInput,
   SettingMailProviderFilter,
 } from './mail-provider-settings.model';
@@ -62,6 +59,7 @@ export class MailProviderSettingsResolver {
     return this.mailProviderSettingsService.updateMailProviderSetting(input);
   }
 
+  /** DISABLE FOR NOW
   @Permissions(CanDeleteMailProviderSettings)
   @Mutation(returns => SettingMailProvider, {
     name: 'deleteMailProviderSetting',
@@ -70,4 +68,5 @@ export class MailProviderSettingsResolver {
   deleteMailProviderSetting(@Args('id') id: string) {
     return this.mailProviderSettingsService.deleteMailProviderSetting(id);
   }
+    **/
 }

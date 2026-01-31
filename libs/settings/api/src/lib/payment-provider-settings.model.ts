@@ -14,8 +14,6 @@ import {
   PaymentMethodMollie,
 } from '@prisma/client';
 
-import GraphQLJSON from 'graphql-type-json';
-
 registerEnumType(PaymentProviderType, { name: 'PaymentProviderType' });
 registerEnumType(PayrexxPSP, { name: 'PayrexxPSP' });
 registerEnumType(PayrexxPM, { name: 'PayrexxPM' });

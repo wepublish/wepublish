@@ -1,14 +1,8 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import {
-  CanGetAISettings,
-  CanUpdateAISettings,
-  CanCreateAISettings,
-  CanDeleteAISettings,
-} from '@wepublish/permissions';
+import { CanGetAISettings, CanUpdateAISettings } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
   SettingAIProvider,
-  CreateSettingAIProviderInput,
   UpdateSettingAIProviderInput,
   SettingAIProviderFilter,
 } from './ai-settings.model';

@@ -1557,9 +1557,6 @@ type Mutation {
   """Deletes an existing image."""
   deleteImage(id: String!): Image!
 
-  """Deletes a mail provider setting."""
-  deleteMailProviderSetting(id: String!): SettingMailProvider!
-
   """Deletes an existing memberplan."""
   deleteMemberPlan(id: String!): MemberPlan!
 
@@ -1595,9 +1592,6 @@ type Mutation {
 
   """Deletes a token."""
   deleteToken(id: String!): Token!
-
-  """Deletes a tracking pixel setting."""
-  deleteTrackingPixelSetting(id: String!): SettingTrackingPixel!
 
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!

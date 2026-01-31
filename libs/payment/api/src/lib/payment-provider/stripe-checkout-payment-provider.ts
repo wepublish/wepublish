@@ -12,10 +12,7 @@ import {
   WebhookForPaymentIntentProps,
   WebhookResponse,
 } from './payment-provider';
-import {
-  mapStripePaymentMethodTypes,
-  mapStripePaymentMethodTypesTyped,
-} from '../payment.methode.mapper';
+import { mapStripePaymentMethodTypesTyped } from '../payment.methode.mapper';
 
 function mapStripeCheckoutEventToPaymentStatue(
   event: string
