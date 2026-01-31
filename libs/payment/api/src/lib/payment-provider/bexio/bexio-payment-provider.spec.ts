@@ -1,4 +1,4 @@
-import { BexioPaymentProvider } from './bexio-payment-provider';
+import { BexioPaymentProvider } from '../bexio/bexio-payment-provider';
 import {
   Currency,
   PaymentPeriodicity,
@@ -6,7 +6,7 @@ import {
   PrismaClient,
 } from '@prisma/client';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
-import { CreatePaymentIntentProps } from '@wepublish/payment/api';
+import { CreatePaymentIntentProps } from '../payment-provider';
 
 jest.mock('axios');
 

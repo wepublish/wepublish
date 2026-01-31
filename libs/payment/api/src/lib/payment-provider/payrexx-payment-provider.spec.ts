@@ -7,7 +7,7 @@ import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 import Mock = jest.Mock;
 import { PartialDeep } from 'type-fest';
 import { Currency, Prisma, PrismaClient } from '@prisma/client';
-import { PayrexxFactory, PayrexxFactoryProps } from '@wepublish/payment/api';
+import { PayrexxFactoryProps } from '../payrexx/payrexx-factory';
 
 function mockInstance<Type = unknown>(implementation?: PartialDeep<Type>) {
   return new (jest
@@ -30,7 +30,7 @@ describe('PayrexxPaymentProvider', () => {
       chargePreAuthorizedTransaction: jest.fn(),
     });
     class PayrexxFactoryMock {
-      // keep signature compatible
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       constructor(_props: PayrexxFactoryProps) {}
 
       get gatewayClient(): GatewayClient {

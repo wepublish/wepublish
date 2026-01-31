@@ -134,7 +134,7 @@ export async function createGraphQLTestClient(
   });
 
   class PayrexxFactoryMock {
-    // keep signature compatible
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     constructor(_props: PayrexxFactoryProps) {}
 
     get transactionClient(): TransactionClient {

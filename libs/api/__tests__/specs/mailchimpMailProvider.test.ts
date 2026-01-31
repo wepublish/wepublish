@@ -13,8 +13,8 @@ let listTemplates: nock.Scope;
 let listTemplatesInvalidKey: nock.Scope;
 let sendMail: nock.Scope;
 let sendTemplate: nock.Scope;
-let prisma: PrismaClient = new PrismaClient();
-let kv: KvTtlCacheService = createKvMock();
+const prisma: PrismaClient = new PrismaClient();
+const kv: KvTtlCacheService = createKvMock();
 
 describe('Mailchimp Mail Provider', () => {
   beforeAll(() => {
