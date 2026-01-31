@@ -118,6 +118,7 @@ describe('MailController', () => {
               'settings:mailprovider',
               'mailchimp',
               JSON.stringify({
+                id: 'mailchimp',
                 type: 'mailchimp',
                 name: 'Mailchimp',
                 fromAddress: 'dev@wepublish.ch',
@@ -275,6 +276,7 @@ describe('MailController', () => {
       'settings:mailprovider',
       'mailgun',
       JSON.stringify({
+        id: 'mailgun',
         type: 'mailgun',
         name: 'Mailgun',
         fromAddress: 'dev@wepublish.ch',

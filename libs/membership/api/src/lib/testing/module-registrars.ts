@@ -33,6 +33,7 @@ export function registerMailsModule(): DynamicModule {
         'settings:mailprovider',
         'fakeMail',
         JSON.stringify({
+          id: 'slack',
           type: 'slack',
           name: 'Fake Mail',
           fromAddress: 'fakeMail@wepublish.media',

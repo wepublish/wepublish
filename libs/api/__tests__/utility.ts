@@ -16,11 +16,14 @@ import {
   CreateGatewayRequestData,
   Gateway,
   GatewayClient,
+  PayrexxFactoryProps,
   PayrexxPaymentProvider,
   TransactionClient,
 } from '@wepublish/payment/api';
 import { FakeMailProvider } from '@wepublish/mail/api';
 import { URLAdapter } from '@wepublish/nest-modules';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import cacheManager from 'cache-manager';
 
 export interface TestClient {
   testServerPublic: ApolloServer;
@@ -64,10 +67,17 @@ export async function createGraphQLTestClient(
   const prisma = new PrismaClient();
   await prisma.$connect();
 
-  const mailProvider = new FakeMailProvider({
-    id: 'fakeMail',
+  const cache = cacheManager.createCache();
+  const kv = new KvTtlCacheService(cache);
+  await kv.setNs('settings:mailprovider', 'fakeMail', {
     name: 'Fake Mail',
     fromAddress: 'fakeMail@wepublish.media',
+  });
+
+  const mailProvider = new FakeMailProvider({
+    id: 'fakeMail',
+    prisma,
+    kv,
   });
 
   const mediaAdapter = {
@@ -125,18 +135,37 @@ export async function createGraphQLTestClient(
     chargePreAuthorizedTransaction: jest.fn(),
   });
 
+  class PayrexxFactoryMock {
+    // keep signature compatible
+    constructor(_props: PayrexxFactoryProps) {}
+
+    get transactionClient(): TransactionClient {
+      return mockTransactionClient;
+    }
+  }
+
   const mockPaymentProvider = new PayrexxPaymentProvider({
     id: 'testing-payment-provider-id',
-    name: 'Payrexx Testing Payment Provider',
-    vatRate: 25,
-    gatewayClient: mockGatewayClient,
-    transactionClient: mockTransactionClient,
-    psp: [14],
-    offSessionPayments: true,
-    webhookApiKey: 'secret',
-    pm: ['foo'],
     prisma,
+    kv,
   });
+  await kv.setNs(
+    'settings:paymentprovider',
+    'testing-payment-provider-id',
+    JSON.stringify({
+      id: 'testing-payment-provider-id',
+      type: 'payrexx',
+      name: 'Payrexx Testing Payment Provider',
+      offSessionPayments: true,
+      apiKey: 'secret',
+      webhookEndpointSecret: 'secret',
+      payrexx_instancename: 'instance',
+      payrexx_psp: ['PAYPAL', 'TWINT', 'STRIPE'],
+      payrexx_pm: ['PAYPAL', 'TWINT', 'APPLE_PAY'],
+      payrexx_vatrate: 25,
+    })
+  );
+  mockPaymentProvider.overridePayrexxFactory(PayrexxFactoryMock as any);
 
   const testServerPublic = new ApolloServer({
     schema: GraphQLWepublishPublicSchema,
@@ -148,6 +177,7 @@ export async function createGraphQLTestClient(
         prisma,
         mediaAdapter,
         mailProvider,
+        kv,
         mailContextOptions: {
           defaultFromAddress: 'dev@fake.org',
           defaultReplyToAddress: 'reply-to@fake.org',
@@ -168,6 +198,7 @@ export async function createGraphQLTestClient(
         prisma,
         mediaAdapter,
         mailProvider,
+        kv,
         mailContextOptions: {
           defaultFromAddress: 'dev@fake.org',
           defaultReplyToAddress: 'reply-to@fake.org',
