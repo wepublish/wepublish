@@ -11,14 +11,14 @@ import {
   PayrexxPSP,
   PayrexxPM,
   StripePaymentMethod,
-  PaymentMethodMollie,
+  MolliePaymentMethod,
 } from '@prisma/client';
 
 registerEnumType(PaymentProviderType, { name: 'PaymentProviderType' });
 registerEnumType(PayrexxPSP, { name: 'PayrexxPSP' });
 registerEnumType(PayrexxPM, { name: 'PayrexxPM' });
 registerEnumType(StripePaymentMethod, { name: 'StripePaymentMethod' });
-registerEnumType(PaymentMethodMollie, { name: 'PaymentMethodMollie' });
+registerEnumType(MolliePaymentMethod, { name: 'PaymentMethodMollie' });
 
 @ObjectType()
 export class SettingPaymentProvider {
@@ -60,8 +60,8 @@ export class SettingPaymentProvider {
   @Field(() => [PayrexxPM], { nullable: true })
   payrexx_pm?: PayrexxPM[];
 
-  @Field(() => [PaymentMethodMollie], { nullable: true })
-  mollie_methods?: PaymentMethodMollie[];
+  @Field(() => [MolliePaymentMethod], { nullable: true })
+  mollie_methods?: MolliePaymentMethod[];
 
   @Field(type => String, { nullable: true })
   payrexx_instancename?: string;
@@ -156,8 +156,8 @@ export class CreateSettingPaymentProviderInput {
   @Field(() => [PayrexxPM], { nullable: true })
   payrexx_pm?: PayrexxPM[];
 
-  @Field(() => [PaymentMethodMollie], { nullable: true })
-  mollie_methods?: PaymentMethodMollie[];
+  @Field(() => [MolliePaymentMethod], { nullable: true })
+  mollie_methods?: MolliePaymentMethod[];
 
   @Field(type => String, { nullable: true })
   payrexx_instancename?: string;
@@ -236,8 +236,8 @@ export class UpdateSettingPaymentProviderInput {
   @Field(() => [PayrexxPM], { nullable: true })
   payrexx_pm?: PayrexxPM[];
 
-  @Field(() => [PaymentMethodMollie], { nullable: true })
-  mollie_methods?: PaymentMethodMollie[];
+  @Field(() => [MolliePaymentMethod], { nullable: true })
+  mollie_methods?: MolliePaymentMethod[];
 
   @Field(type => String, { nullable: true })
   payrexx_instancename?: string;

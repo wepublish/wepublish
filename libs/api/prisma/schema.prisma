@@ -1657,7 +1657,7 @@ enum StripePaymentMethod {
   WECHAT_PAY
 }
 
-enum PaymentMethodMollie {
+enum MolliePaymentMethod {
   ALMA
   APPLEPAY
   BACS
@@ -1724,7 +1724,7 @@ model SettingPaymentProvider {
   bexio_markInvoiceAsOpen                   Boolean?
 
   mollie_apiBaseUrl String?
-  mollie_methods    PaymentMethodMollie[]
+  mollie_methods    MolliePaymentMethod[]
 
   @@map("settings.paymentprovider")
 }

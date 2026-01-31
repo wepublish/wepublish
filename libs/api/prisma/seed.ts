@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { AIProviderType, PrismaClient } from '@prisma/client';
 import { SettingName } from '../../settings/api/src/lib/setting';
 
 const seedSettings = (prisma: PrismaClient) =>
@@ -188,6 +188,18 @@ const seedSettings = (prisma: PrismaClient) =>
         name: SettingName.NEW_ARTICLE_PEERING,
         value: true,
         settingRestriction: { allowedValues: { boolChoice: true } },
+      },
+    }),
+
+    prisma.settingAIProvider.upsert({
+      where: {
+        id: 'v0',
+      },
+      update: {},
+      create: {
+        id: 'id',
+        name: 'V0',
+        type: AIProviderType.V0,
       },
     }),
 
