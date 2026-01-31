@@ -45,7 +45,7 @@ export class MailsModule {
             mailProvider,
             kv,
           }),
-        inject: [MAILS_MODULE_OPTIONS, PrismaClient],
+        inject: [MAILS_MODULE_OPTIONS, PrismaClient, KvTtlCacheService],
       },
     ];
   }

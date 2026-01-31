@@ -1,9 +1,7 @@
 import nock from 'nock';
 import { MailgunMailProvider, MailProviderTemplate } from '@wepublish/mail/api';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { PrismaClient } from '@prisma/client';
-import { createKvMock } from '@wepublish/payment/api';
-import Mailgun from 'mailgun.js';
+import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 
 const mockSubmit = jest.fn();
 const mockAppend = jest.fn();

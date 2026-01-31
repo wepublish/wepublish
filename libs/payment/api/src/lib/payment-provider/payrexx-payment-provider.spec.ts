@@ -1,12 +1,9 @@
 import { Gateway, GatewayClient } from '../payrexx/gateway-client';
 import { TransactionClient, Transaction } from '../payrexx/transaction-client';
 import { PayrexxPaymentProvider } from './payrexx-payment-provider';
-import {
-  createKvMock,
-  IntentState,
-  InvoiceWithItems,
-} from './payment-provider';
+import { IntentState, InvoiceWithItems } from './payment-provider';
 import express from 'express';
+import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 import Mock = jest.Mock;
 import { PartialDeep } from 'type-fest';
 import { Currency, Prisma, PrismaClient } from '@prisma/client';

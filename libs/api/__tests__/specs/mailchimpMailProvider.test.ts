@@ -4,7 +4,7 @@ import {
 } from '@wepublish/mail/api';
 import nock from 'nock';
 import { PrismaClient } from '@prisma/client';
-import { createKvMock } from '@wepublish/payment/api';
+import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 let mailChimpMailProvider: MailchimpMailProvider;

@@ -29,19 +29,15 @@ export function registerMailsModule(): DynamicModule {
     imports: [PrismaModule, KvTtlCacheModule],
     inject: [PrismaClient, KvTtlCacheService],
     useFactory: async (prisma: PrismaClient, kv: KvTtlCacheService) => {
-      await kv.setNs(
-        'settings:mailprovider',
-        'fakeMail',
-        JSON.stringify({
-          id: 'slack',
-          type: 'slack',
-          name: 'Fake Mail',
-          fromAddress: 'fakeMail@wepublish.media',
-          replyTpAddress: 'dev@wepublish.ch',
-          webhookEndpointSecret: 'secret',
-          apiKey: 'key',
-        })
-      );
+      await kv.setNs('settings:mailprovider', 'fakeMail', {
+        id: 'slack',
+        type: 'slack',
+        name: 'Fake Mail',
+        fromAddress: 'fakeMail@wepublish.media',
+        replyTpAddress: 'dev@wepublish.ch',
+        webhookEndpointSecret: 'secret',
+        apiKey: 'key',
+      });
 
       return {
         mailProvider: new FakeMailProvider({
@@ -88,32 +84,24 @@ export function registerPaymentMethodModule(): DynamicModule {
           })
         );
 
-        await kv.setNs(
-          'settings:paymentprovider',
-          'stripe_checkout',
-          JSON.stringify({
-            id: 'stripe_checkout',
-            type: 'stripe-checkout',
-            name: 'Stripe Checkout',
-            offSessionPayments: false,
-            apiKey: config.getOrThrow('STRIPE_SECRET_KEY'),
-            webhookEndpointSecret: config.getOrThrow('STRIPE_SECRET_KEY'),
-            stripe_methods: ['CARD'],
-          })
-        );
-        await kv.setNs(
-          'settings:paymentprovider',
-          'stripe',
-          JSON.stringify({
-            id: 'stripe',
-            type: 'Stripe',
-            name: 'Stripe Checkout',
-            offSessionPayments: true,
-            apiKey: config.getOrThrow('STRIPE_SECRET_KEY'),
-            webhookEndpointSecret: config.getOrThrow('STRIPE_SECRET_KEY'),
-            stripe_methods: ['CARD'],
-          })
-        );
+        await kv.setNs('settings:paymentprovider', 'stripe_checkout', {
+          id: 'stripe_checkout',
+          type: 'stripe-checkout',
+          name: 'Stripe Checkout',
+          offSessionPayments: false,
+          apiKey: config.getOrThrow('STRIPE_SECRET_KEY'),
+          webhookEndpointSecret: config.getOrThrow('STRIPE_SECRET_KEY'),
+          stripe_methods: ['CARD'],
+        });
+        await kv.setNs('settings:paymentprovider', 'stripe', {
+          id: 'stripe',
+          type: 'Stripe',
+          name: 'Stripe',
+          offSessionPayments: true,
+          apiKey: config.getOrThrow('STRIPE_SECRET_KEY'),
+          webhookEndpointSecret: config.getOrThrow('STRIPE_SECRET_KEY'),
+          stripe_methods: ['CARD'],
+        });
       }
 
       if (
@@ -137,40 +125,28 @@ export function registerPaymentMethodModule(): DynamicModule {
           })
         );
 
-        await kv.setNs(
-          'settings:paymentprovider',
-          'payrexx',
-          JSON.stringify({
-            id: 'payrexx',
-            type: 'payrexx',
-            name: 'Payrexx',
-            offSessionPayments: false,
-            apiKey: config.getOrThrow('PAYREXX_API_SECRET'),
-            webhookEndpointSecret: config.getOrThrow('PAYREXX_WEBHOOK_SECRET'),
-            payrexx_instancename: config.getOrThrow('PAYREXX_INSTANCE_NAME'),
-            payrexx_psp: ['PAYPAL', 'TWINT', 'STRIPE'],
-            payrexx_pm: ['PAYPAL', 'TWINT', 'APPLE_PAY'],
-            payrexx_vatrate: 7.7,
-          })
-        );
+        await kv.setNs('settings:paymentprovider', 'payrexx', {
+          id: 'payrexx',
+          type: 'payrexx',
+          name: 'Payrexx',
+          offSessionPayments: false,
+          apiKey: config.getOrThrow('PAYREXX_API_SECRET'),
+          webhookEndpointSecret: config.getOrThrow('PAYREXX_WEBHOOK_SECRET'),
+          payrexx_instancename: config.getOrThrow('PAYREXX_INSTANCE_NAME'),
+          payrexx_psp: ['PAYPAL', 'TWINT', 'STRIPE'],
+          payrexx_pm: ['PAYPAL', 'TWINT', 'APPLE_PAY'],
+          payrexx_vatrate: 7.7,
+        });
 
-        await kv.setNs(
-          'settings:paymentprovider',
-          'payrexx-subscription',
-          JSON.stringify([
-            {
-              id: 'payrexx-subscription',
-              type: 'payrexx-subscription',
-              name: 'Payrexx Subscription',
-              offSessionPayments: false,
-              apiKey: config.getOrThrow('PAYREXX_API_SECRET'),
-              webhookEndpointSecret: config.getOrThrow(
-                'PAYREXX_WEBHOOK_SECRET'
-              ),
-              payrexx_instancename: config.getOrThrow('PAYREXX_INSTANCE_NAME'),
-            },
-          ])
-        );
+        await kv.setNs('settings:paymentprovider', 'payrexx-subscription', {
+          id: 'payrexx-subscription',
+          type: 'payrexx-subscription',
+          name: 'Payrexx Subscription',
+          offSessionPayments: false,
+          apiKey: config.getOrThrow('PAYREXX_API_SECRET'),
+          webhookEndpointSecret: config.getOrThrow('PAYREXX_WEBHOOK_SECRET'),
+          payrexx_instancename: config.getOrThrow('PAYREXX_INSTANCE_NAME'),
+        });
       }
       if (config.get('MOLLIE_API_SECRET')) {
         paymentProviders.push(
@@ -181,22 +157,16 @@ export function registerPaymentMethodModule(): DynamicModule {
             kv,
           })
         );
-        await kv.setNs(
-          'settings:paymentprovider',
-          'mollie',
-          JSON.stringify([
-            {
-              id: 'mollie',
-              type: 'mollie',
-              name: 'Mollie',
-              offSessionPayments: true,
-              apiKey: config.getOrThrow('MOLLIE_API_SECRET'),
-              webhookEndpointSecret: 'secret',
-              mollie_apiBaseUrl: "https://wepublish.ch'",
-              stripe_methods: ['PAYPAL', 'TWINT', 'IDEAL'],
-            },
-          ])
-        );
+        await kv.setNs('settings:paymentprovider', 'mollie', {
+          id: 'mollie',
+          type: 'mollie',
+          name: 'Mollie',
+          offSessionPayments: true,
+          apiKey: config.getOrThrow('MOLLIE_API_SECRET'),
+          webhookEndpointSecret: 'secret',
+          mollie_apiBaseUrl: "https://wepublish.ch'",
+          stripe_methods: ['PAYPAL', 'TWINT', 'IDEAL'],
+        });
       }
       return { paymentProviders };
     },

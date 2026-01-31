@@ -5,7 +5,8 @@ import {
   PaymentState,
   PrismaClient,
 } from '@prisma/client';
-import { createKvMock, CreatePaymentIntentProps } from '../payment-provider';
+import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import { CreatePaymentIntentProps } from '@wepublish/payment/api';
 
 jest.mock('axios');
 

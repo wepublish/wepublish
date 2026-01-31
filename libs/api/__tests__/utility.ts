@@ -20,10 +20,9 @@ import {
   PayrexxPaymentProvider,
   TransactionClient,
 } from '@wepublish/payment/api';
+import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 import { FakeMailProvider } from '@wepublish/mail/api';
 import { URLAdapter } from '@wepublish/nest-modules';
-import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-import cacheManager from 'cache-manager';
 
 export interface TestClient {
   testServerPublic: ApolloServer;
@@ -67,8 +66,7 @@ export async function createGraphQLTestClient(
   const prisma = new PrismaClient();
   await prisma.$connect();
 
-  const cache = cacheManager.createCache();
-  const kv = new KvTtlCacheService(cache);
+  const kv = createKvMock();
   await kv.setNs('settings:mailprovider', 'fakeMail', {
     name: 'Fake Mail',
     fromAddress: 'fakeMail@wepublish.media',
