@@ -1,7 +1,7 @@
 {
   "name": "kv-ttl-cache.module-api",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/kv-ttl-cache.module/api/src",
+  "sourceRoot": "libs/kv-ttl-cache/api/src",
   "projectType": "library",
   "tags": [],
   "targets": {
@@ -13,7 +13,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/kv-ttl-cache.module/api/jest.config.ts",
+        "jestConfig": "libs/kv-ttl-cache/api/jest.config.ts",
         "passWithNoTests": true
       }
     }
