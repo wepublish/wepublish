@@ -22,6 +22,9 @@ export class SettingTrackingPixel {
   @Field(type => Date)
   modifiedAt!: Date;
 
+  @Field(type => Date)
+  lastLoadedAt!: Date;
+
   @Field(type => TrackingPixelProviderType)
   type!: TrackingPixelProviderType;
 

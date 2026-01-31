@@ -22,6 +22,9 @@ export class SettingMailProvider {
   @Field(type => Date)
   modifiedAt!: Date;
 
+  @Field(type => Date)
+  lastLoadedAt!: Date;
+
   @Field(type => MailProviderType)
   type!: MailProviderType;
 

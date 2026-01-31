@@ -14,11 +14,17 @@ class V0Config {
 
   constructor(
     private readonly prisma: PrismaClient,
-    private readonly kv: KvTtlCacheService
+    private readonly kv: KvTtlCacheService,
+    private readonly id: string
   ) {}
 
   private async loadV0(): Promise<V0Settings> {
-    const row = await this.prisma.settingAIProvider.findFirst({
+    await this.prisma.settingAIProvider.update({
+      where: { id: this.id },
+      data: { lastLoadedAt: new Date() },
+    });
+    const row = await this.prisma.settingAIProvider.findUnique({
+      where: { id: this.id },
       select: { apiKey: true, systemPrompt: true },
     });
 
@@ -31,7 +37,7 @@ class V0Config {
   async getV0(): Promise<V0Settings> {
     return this.kv.getOrLoadNs<V0Settings>(
       'settings:ai',
-      'v0',
+      `${this.id}`,
       () => this.loadV0(),
       this.ttl
     );
@@ -49,7 +55,7 @@ class V0Config {
 @Resolver()
 export class V0Resolver {
   private async getV0Client() {
-    const config = new V0Config(this.prisma, this.kv);
+    const config = new V0Config(this.prisma, this.kv, 'v0');
     const apiKey = await config.apiKey();
 
     if (!apiKey) {
@@ -70,7 +76,7 @@ export class V0Resolver {
   @Query(() => Chat)
   async promptHTML(@Args() { query, chatId }: PromptHTMLArgs): Promise<Chat> {
     const v0 = await this.getV0Client();
-    const config = new V0Config(this.prisma, this.kv);
+    const config = new V0Config(this.prisma, this.kv, 'v0');
     let systemPrompt = await config.systemPrompt();
     if (!systemPrompt) {
       systemPrompt = '';

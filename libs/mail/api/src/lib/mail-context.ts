@@ -29,6 +29,10 @@ class MailContextConfig {
   ) {}
 
   private async load(): Promise<SettingMailProvider | null> {
+    await this.prisma.settingMailProvider.update({
+      where: { id: this.id },
+      data: { lastLoadedAt: new Date() },
+    });
     return this.prisma.settingMailProvider.findUnique({
       where: {
         id: this.id,

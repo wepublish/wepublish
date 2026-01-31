@@ -383,6 +383,10 @@ class PaymentProviderConfig {
   ) {}
 
   private async load(): Promise<SettingPaymentProvider | null> {
+    await this.prisma.settingPaymentProvider.update({
+      where: { id: this.id },
+      data: { lastLoadedAt: new Date() },
+    });
     return this.prisma.settingPaymentProvider.findUnique({
       where: {
         id: this.id,

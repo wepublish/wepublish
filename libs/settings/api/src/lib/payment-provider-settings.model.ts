@@ -31,6 +31,9 @@ export class SettingPaymentProvider {
   @Field(type => Date)
   modifiedAt!: Date;
 
+  @Field(type => Date)
+  lastLoadedAt!: Date;
+
   @Field(type => PaymentProviderType)
   type!: PaymentProviderType;
 

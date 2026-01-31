@@ -20,6 +20,10 @@ class TurnstileConfig {
   ) {}
 
   private async load(): Promise<SettingChallengeProvider | null> {
+    await this.prisma.settingChallengeProvider.update({
+      where: { id: this.id },
+      data: { lastLoadedAt: new Date() },
+    });
     return this.prisma.settingChallengeProvider.findUnique({
       where: {
         id: this.id,

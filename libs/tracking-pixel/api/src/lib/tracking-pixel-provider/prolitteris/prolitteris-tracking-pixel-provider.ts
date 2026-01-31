@@ -20,6 +20,10 @@ class ProlitterisConfig {
   ) {}
 
   private async load(): Promise<SettingTrackingPixel | null> {
+    await this.prisma.settingTrackingPixel.update({
+      where: { id: this.id },
+      data: { lastLoadedAt: new Date() },
+    });
     return this.prisma.settingTrackingPixel.findUnique({
       where: {
         id: this.id,

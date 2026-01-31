@@ -22,6 +22,9 @@ export class SettingAIProvider {
   @Field(type => Date)
   modifiedAt!: Date;
 
+  @Field(type => Date)
+  lastLoadedAt!: Date;
+
   @Field(type => AIProviderType)
   type!: AIProviderType;
 

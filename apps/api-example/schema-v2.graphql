@@ -2773,6 +2773,7 @@ type Setting {
 type SettingAIProvider {
   createdAt: DateTime!
   id: String!
+  lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
   systemPrompt: String
@@ -2788,6 +2789,7 @@ input SettingAIProviderFilter {
 type SettingChallengeProvider {
   createdAt: DateTime!
   id: String!
+  lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
   type: ChallengeProviderType!
@@ -2807,6 +2809,7 @@ type SettingMailProvider {
   createdAt: DateTime!
   fromAddress: String
   id: String!
+  lastLoadedAt: DateTime!
   mailchimp_baseURL: String
   mailgun_baseDomain: String
   mailgun_mailDomain: String
@@ -2862,6 +2865,7 @@ type SettingPaymentProvider {
   bexio_userId: Float
   createdAt: DateTime!
   id: String!
+  lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   mollie_apiBaseUrl: String
   mollie_methods: [PaymentMethodMollie!]
@@ -2892,6 +2896,7 @@ type SettingRestriction {
 type SettingTrackingPixel {
   createdAt: DateTime!
   id: String!
+  lastLoadedAt: DateTime!
   modifiedAt: DateTime!
   name: String
   prolitteris_memberNr: String

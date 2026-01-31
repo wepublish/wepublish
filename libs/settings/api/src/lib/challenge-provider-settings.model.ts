@@ -23,6 +23,9 @@ export class SettingChallengeProvider {
   @Field(type => Date)
   modifiedAt!: Date;
 
+  @Field(type => Date)
+  lastLoadedAt!: Date;
+
   @Field(type => String, { nullable: true })
   name?: string;
 

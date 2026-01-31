@@ -1507,9 +1507,10 @@ enum MailProviderType {
 }
 
 model SettingMailProvider {
-  id         String   @id
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id           String   @id
+  createdAt    DateTime @default(now())
+  modifiedAt   DateTime @updatedAt
+  lastLoadedAt DateTime @default(now())
 
   type                  MailProviderType
   name                  String?
@@ -1529,6 +1530,7 @@ model SettingTrackingPixel {
   id                                     String                    @id
   createdAt                              DateTime                  @default(now())
   modifiedAt                             DateTime                  @updatedAt
+  lastLoadedAt                           DateTime                  @default(now())
   type                                   TrackingPixelProviderType
   name                                   String?
   prolitteris_memberNr                   String?
@@ -1688,9 +1690,10 @@ enum PaymentMethodMollie {
 }
 
 model SettingPaymentProvider {
-  id         String   @id
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id           String   @id
+  createdAt    DateTime @default(now())
+  modifiedAt   DateTime @updatedAt
+  lastLoadedAt DateTime @default(now())
 
   type                  PaymentProviderType
   name                  String?
@@ -1731,10 +1734,11 @@ enum ChallengeProviderType {
 }
 
 model SettingChallengeProvider {
-  id         String   @id
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
-  name       String?
+  id           String   @id
+  createdAt    DateTime @default(now())
+  modifiedAt   DateTime @updatedAt
+  lastLoadedAt DateTime @default(now())
+  name         String?
 
   type    ChallengeProviderType
   secret  String?
@@ -1748,9 +1752,10 @@ enum AIProviderType {
 }
 
 model SettingAIProvider {
-  id         String   @id
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id           String   @id
+  createdAt    DateTime @default(now())
+  modifiedAt   DateTime @updatedAt
+  lastLoadedAt DateTime @default(now())
 
   type         AIProviderType
   name         String?
