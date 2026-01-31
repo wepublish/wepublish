@@ -1,12 +1,13 @@
 import {
   Invoice,
+  InvoiceItem,
   MemberPlan,
   PaymentState,
   Subscription,
   User,
   UserAddress,
 } from '@prisma/client';
-import { logger, mapPaymentPeriodToMonths } from '@wepublish/utils/api';
+import { logger } from '@wepublish/utils/api';
 import Bexio, { ContactsStatic, InvoicesStatic } from 'bexio';
 import { MappedReplacer } from 'mapped-replacer';
 import {
@@ -195,6 +196,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
               },
             },
           },
+          items: true,
         },
       });
 
@@ -303,6 +305,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   async createInvoice(
     contact: ContactsStatic.ContactFull,
     invoice: Invoice & {
+      items: InvoiceItem[];
       subscription:
         | (Subscription & { memberPlan: MemberPlan; user: User })
         | null;
@@ -350,13 +353,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
           ),
           tax_id: this.assertProperty('bexio_taxId', config.bexio_taxId),
           text: invoice.subscription.memberPlan.name,
-          unit_price: `${
-            (invoice.subscription.monthlyAmount *
-              mapPaymentPeriodToMonths(
-                invoice.subscription.paymentPeriodicity
-              )) /
-            100
-          }`,
+          unit_price: `${invoice.items.reduce((total, item) => total + item.amount * item.quantity, 0) / 100}`,
           type: 'KbPositionCustom',
         },
       ],

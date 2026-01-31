@@ -23,6 +23,7 @@
       "pay": "Ich unterstütze die {siteTitle} {monthlyAmount, select, 0 {gratis} other {mit {formattedAmount}}}"
     },
     "button": {
+      "subscribeForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{memberPlan} für {formattedAmount} {renewalPeriod}}}",
       "pay": "{productType, select, Subscription {{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}}} other {{formattedAmount}}}"
     },
     "cancellable": "Automatische Abo-Erneuerung. Du erhältst von uns jährlich eine Erinnerungsmail und kannst jederzeit kündigen."
@@ -32,7 +33,7 @@
   },
   "user": {
     "activeSubscriptions": "{type, select, Donation {Spenden} other {Aktive Abos}}",
-    "cancelledSubscriptions": "Gekündigte Abos & Alte Spenden",
-    "viewCancelledSubscriptions": "Gekündigte Abos & Alte Spenden anzeigen"
+    "cancelledSubscriptions": "Gekündigte Abos & frühere Spenden",
+    "viewCancelledSubscriptions": "Gekündigte Abos & frühere Spenden anzeigen"
   }
 }
