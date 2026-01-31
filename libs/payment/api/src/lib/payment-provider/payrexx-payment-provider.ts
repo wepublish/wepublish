@@ -18,8 +18,14 @@ import {
   mapPayrexxPSPs,
 } from '../payment.methode.mapper';
 export class PayrexxPaymentProvider extends BasePaymentProvider {
+  payrexxFactory = PayrexxFactory;
+
   constructor(props: PaymentProviderProps) {
     super(props);
+  }
+
+  public overridePayrexxFactory(payrexxFactory: typeof PayrexxFactory) {
+    this.payrexxFactory = payrexxFactory;
   }
 
   async getPayrexxGateway() {
@@ -27,7 +33,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     if (!config.apiKey || !config.payrexx_instancename) {
       throw new Error('Payrexx missing api key or instance name missing');
     }
-    return new PayrexxFactory({
+    return new this.payrexxFactory({
       baseUrl: 'https://api.payrexx.com/v1.0/',
       instance: config.payrexx_instancename,
       secret: config.apiKey,

@@ -3,11 +3,36 @@ import { MailTemplate, PrismaClient } from '@prisma/client';
 import { Test, TestingModule } from '@nestjs/testing';
 import { matches } from 'lodash';
 import bodyParser from 'body-parser';
-import Mailgun from 'mailgun.js';
-import FormData from 'form-data';
 import { MailContext } from './mail-context';
 import { MailchimpMailProvider, MailgunMailProvider } from './mail-provider';
 import { MailController, mailLogType } from './mail.controller';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+
+function createKvMock(): KvTtlCacheService {
+  const store = new Map<string, unknown>();
+
+  return {
+    async setNs(ns: string, key: string, value: any) {
+      const k = `${ns}:${key}`;
+      store.set(k, typeof value === 'string' ? JSON.parse(value) : value);
+    },
+
+    async getOrLoadNs<T>(
+      ns: string,
+      key: string,
+      load: () => Promise<T> | T,
+      _ttlSeconds: number
+    ): Promise<T> {
+      const k = `${ns}:${key}`;
+      if (store.has(k)) return store.get(k) as T;
+
+      const loaded = await load();
+      store.set(k, loaded as unknown);
+      return loaded;
+    },
+  } as unknown as KvTtlCacheService;
+}
+const kvMock = createKvMock();
 
 describe('MailController', () => {
   let mailContext: MailContext;
@@ -83,26 +108,40 @@ describe('MailController', () => {
           useValue: prismaMock,
         },
         {
+          provide: KvTtlCacheService,
+          useValue: kvMock,
+        },
+        {
           provide: MailContext,
-          useFactory: (prisma: PrismaClient) => {
-            return new MailContext({
-              prisma,
-              mailProvider: new MailchimpMailProvider({
-                id: 'mailchimp',
+          useFactory: async (prisma: PrismaClient, kv: KvTtlCacheService) => {
+            await kv.setNs(
+              'settings:mailprovider',
+              'mailchimp',
+              JSON.stringify({
+                type: 'mailchimp',
                 name: 'Mailchimp',
                 fromAddress: 'dev@wepublish.ch',
+                replyTpAddress: 'dev@wepublish.ch',
                 webhookEndpointSecret: 'secret',
                 apiKey: 'key',
-                baseURL: '',
+                mailchimp_baseURL: '',
+              })
+            );
+
+            return new MailContext({
+              mailProvider: new MailchimpMailProvider({
+                id: 'mailchimp',
                 incomingRequestHandler: bodyParser.urlencoded({
                   extended: true,
                 }),
+                kv,
+                prisma,
               }),
-              defaultFromAddress: 'defaultFromAddress@example.com',
-              defaultReplyToAddress: 'defaultReplyToAddress@example.com',
+              kv,
+              prisma,
             });
           },
-          inject: [PrismaClient],
+          inject: [PrismaClient, KvTtlCacheService],
         },
       ],
     }).compile();
@@ -232,20 +271,26 @@ describe('MailController', () => {
         'Content-Type': 'application/json',
       });
 
-    const mailgunClient = new Mailgun(FormData).client({
-      username: 'api',
-      key: 'fake-key',
-    });
+    await kvMock.setNs(
+      'settings:mailprovider',
+      'mailgun',
+      JSON.stringify({
+        type: 'mailgun',
+        name: 'Mailgun',
+        fromAddress: 'dev@wepublish.ch',
+        replyToAddress: 'dev@wepublish.ch',
+        webhookEndpointSecret: 'webhookEndpointSecret',
+        apiKey: 'key',
+        mailgun_mailDomain: 'test.wepublish.com',
+        mailgun_baseDomain: 'api.eu.mailgun.net',
+      })
+    );
+
     mailContext.mailProvider = new MailgunMailProvider({
       id: 'mailgun',
-      name: 'Mailgun',
-      fromAddress: 'dev@wepublish.ch',
-      webhookEndpointSecret: 'webhookEndpointSecret',
-      baseDomain: 'api.eu.mailgun.net',
-      mailDomain: 'test.wepublish.com',
-      apiKey: 'key',
       incomingRequestHandler: bodyParser.json(),
-      mailgunClient,
+      prisma: prismaMock as any,
+      kv: kvMock,
     });
 
     const periodicJobRunDate = new Date();
