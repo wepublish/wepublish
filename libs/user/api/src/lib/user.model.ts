@@ -217,7 +217,10 @@ export class CreateUserInput extends PickType(
 }
 
 @ArgsType()
-export class UpdateUserInput extends PartialType(CreateUserInput, ArgsType) {
+export class UpdateUserInput extends PartialType(
+  OmitType(CreateUserInput, ['password'] as const, ArgsType),
+  ArgsType
+) {
   @Field({ nullable: true })
   id?: string;
 }

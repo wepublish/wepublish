@@ -1,9 +1,6 @@
 type Query {
   remotePeerProfile(hostURL: String!, token: String!): PeerProfile
-  createJWTForUser(userId: String!, expiresInMinutes: Int!): JWTToken
-  createJWTForWebsiteLogin: JWTToken
   peerProfile: PeerProfile!
-  sessions: [Session!]!
   subscription(id: String!): Subscription
   subscriptions(cursor: String, take: Int = 10, skip: Int = 0, filter: SubscriptionFilter, sort: SubscriptionSort = modifiedAt, order: SortOrder = Descending): SubscriptionConnection!
   subscriptionsAsCsv(filter: SubscriptionFilter): String
@@ -87,16 +84,22 @@ scalar Color
 
 scalar RichText
 
-type JWTToken {
-  token: String!
-  expiresAt: String!
-}
-
-type Session {
+type Subscription {
   id: String!
-  user: User!
   createdAt: DateTime!
-  expiresAt: DateTime!
+  modifiedAt: DateTime!
+  user: User
+  memberPlan: MemberPlan!
+  paymentPeriodicity: PaymentPeriodicity!
+  monthlyAmount: Int!
+  autoRenew: Boolean!
+  extendable: Boolean!
+  startsAt: DateTime!
+  paidUntil: DateTime
+  paymentMethod: PaymentMethod!
+  properties: [Properties!]!
+  deactivation: SubscriptionDeactivation
+  currency: Currency!
 }
 
 type User {
@@ -290,24 +293,6 @@ type InvoiceItem {
   quantity: Int!
   amount: Int!
   total: Int!
-}
-
-type Subscription {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  user: User
-  memberPlan: MemberPlan!
-  paymentPeriodicity: PaymentPeriodicity!
-  monthlyAmount: Int!
-  autoRenew: Boolean!
-  extendable: Boolean!
-  startsAt: DateTime!
-  paidUntil: DateTime
-  paymentMethod: PaymentMethod!
-  properties: [Properties!]!
-  deactivation: SubscriptionDeactivation
-  currency: Currency!
 }
 
 type SubscriptionConnection {
@@ -597,13 +582,6 @@ scalar VoteValue
 
 type Mutation {
   updatePeerProfile(input: PeerProfileInput!): PeerProfile!
-  createSession(email: String!, password: String!): SessionWithToken!
-  createSessionWithJWT(jwt: String!): SessionWithToken!
-  revokeSession(id: String!): Boolean!
-  revokeActiveSession: Boolean!
-  sessions: [Session!]!
-  sendJWTLogin(url: String!, email: String!): String!
-  sendWebsiteLogin(email: String!): String!
   createSubscription(input: SubscriptionInput!): Subscription
   importSubscription(input: SubscriptionInput!): Subscription
   renewSubscription(id: String!): Invoice
@@ -643,14 +621,6 @@ input PeerProfileInput {
   callToActionURL: String!
   callToActionImageURL: String
   callToActionImageID: String
-}
-
-type SessionWithToken {
-  id: String!
-  user: User!
-  token: String!
-  createdAt: DateTime!
-  expiresAt: DateTime!
 }
 
 input SubscriptionInput {

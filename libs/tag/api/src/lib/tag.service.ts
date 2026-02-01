@@ -40,7 +40,7 @@ export class TagService {
       }),
     ]);
 
-    const nodes = tags.slice(0, take);
+    const nodes = tags.slice(0, getMaxTake(take));
     const firstTag = nodes[0];
     const lastTag = nodes[nodes.length - 1];
 

@@ -67,7 +67,7 @@ export class UserService {
       }),
     ]);
 
-    const nodes = users.slice(0, take);
+    const nodes = users.slice(0, getMaxTake(take));
     const firstUser = nodes[0];
     const lastUser = nodes[nodes.length - 1];
 
@@ -150,13 +150,7 @@ export class UserService {
   }
 
   @PrimeDataLoader(UserDataloaderService)
-  async updateUser({
-    id,
-    password,
-    address,
-    properties,
-    ...input
-  }: UpdateUserInput) {
+  async updateUser({ id, address, properties, ...input }: UpdateUserInput) {
     input.email =
       input.email ? (input.email as string).toLowerCase() : input.email;
     await Validator.createUser.parse(input);

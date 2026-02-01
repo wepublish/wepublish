@@ -1545,6 +1545,10 @@ export type Mutation = {
   createCrowdfunding: Crowdfunding;
   /** Creates a new event. */
   createEvent: Event;
+  /** Returns a JWT that can be used to login as another user. */
+  createJWTForUser: SessionWithToken;
+  /** Returns a JWT that is valid for 1min for the current logged in user. */
+  createJWTForWebsiteLogin: SessionWithToken;
   /** Creates a new memberplan. */
   createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
@@ -1670,6 +1674,8 @@ export type Mutation = {
   resetPassword: SensitiveDataUser;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
+  /** This mutation sends a login link to the email if the user exists. Method will always return email address */
+  sendJWTLogin: Scalars['String'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String'];
   syncTemplates?: Maybe<Scalars['Boolean']>;
@@ -1821,6 +1827,11 @@ export type MutationCreateEventArgs = {
   startsAt: Scalars['DateTime'];
   status?: EventStatus;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
+export type MutationCreateJwtForUserArgs = {
+  expiresInMinutes: Scalars['Float'];
+  userId: Scalars['String'];
 };
 
 export type MutationCreateMemberPlanArgs = {
@@ -2158,6 +2169,10 @@ export type MutationResetPasswordArgs = {
   sendMail?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type MutationSendJwtLoginArgs = {
+  email: Scalars['String'];
+};
+
 export type MutationSendWebsiteLoginArgs = {
   email: Scalars['String'];
 };
@@ -2399,7 +2414,6 @@ export type MutationUpdateUserArgs = {
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   note?: InputMaybe<Scalars['String']>;
-  password?: InputMaybe<Scalars['String']>;
   properties?: InputMaybe<Array<PropertyInput>>;
   roleIDs?: InputMaybe<Array<Scalars['String']>>;
   userImageID?: InputMaybe<Scalars['String']>;

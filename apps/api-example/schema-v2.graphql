@@ -1412,6 +1412,12 @@ type Mutation {
   """Creates a new event."""
   createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, status: EventStatus! = Scheduled, tagIds: [String!]): Event!
 
+  """Returns a JWT that can be used to login as another user."""
+  createJWTForUser(expiresInMinutes: Float!, userId: String!): SessionWithToken!
+
+  """Returns a JWT that is valid for 1min for the current logged in user."""
+  createJWTForWebsiteLogin: SessionWithToken!
+
   """Creates a new memberplan."""
   createMemberPlan(active: Boolean!, amountPerMonthMax: Int, amountPerMonthMin: Int!, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
 
@@ -1580,6 +1586,11 @@ type Mutation {
   """
   This mutation sends a login link to the email if the user exists. Method will always return email address
   """
+  sendJWTLogin(email: String!): String!
+
+  """
+  This mutation sends a login link to the email if the user exists. Method will always return email address
+  """
   sendWebsiteLogin(email: String!): String!
   syncTemplates: Boolean
 
@@ -1659,7 +1670,7 @@ type Mutation {
   updateTag(description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
 
   """Updates an existing user."""
-  updateUser(active: Boolean, address: UserAddressInput, birthday: DateTime, email: String, emailVerifiedAt: DateTime, firstName: String, flair: String, id: String, name: String, note: String, password: String, properties: [PropertyInput!], roleIDs: [String!], userImageID: String): SensitiveDataUser!
+  updateUser(active: Boolean, address: UserAddressInput, birthday: DateTime, email: String, emailVerifiedAt: DateTime, firstName: String, flair: String, id: String, name: String, note: String, properties: [PropertyInput!], roleIDs: [String!], userImageID: String): SensitiveDataUser!
 
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
   updateUserConsent(id: String!, value: Boolean!): UserConsent!

@@ -10,6 +10,7 @@ import {
 } from './author.model';
 import { AuthorDataloaderService } from './author-dataloader.service';
 import {
+  getMaxTake,
   graphQLSortOrderToPrisma,
   PrimeDataLoader,
   SortOrder,
@@ -66,7 +67,7 @@ export class AuthorService {
       this.prisma.author.count({ where }),
       this.prisma.author.findMany({
         where,
-        take: take + 1, // Take one more to check for next page
+        take: getMaxTake(take) + 1, // Take one more to check for next page
         skip,
         cursor: cursorId ? { id: cursorId } : undefined,
         orderBy,
@@ -77,7 +78,7 @@ export class AuthorService {
     ]);
 
     // Slice to the requested amount
-    const nodes = authors.slice(0, take) as unknown as Author[];
+    const nodes = authors.slice(0, getMaxTake(take)) as unknown as Author[];
     const firstAuthor = nodes[0];
     const lastAuthor = nodes[nodes.length - 1];
 

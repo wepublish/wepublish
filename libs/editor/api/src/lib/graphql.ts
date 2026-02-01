@@ -283,12 +283,6 @@ export enum InvoiceSort {
   PaidAt = 'paidAt'
 }
 
-export type JwtToken = {
-  __typename?: 'JWTToken';
-  expiresAt: Scalars['String'];
-  token: Scalars['String'];
-};
-
 export type MemberPlan = {
   __typename?: 'MemberPlan';
   active: Scalars['Boolean'];
@@ -326,8 +320,6 @@ export type Mutation = {
   createPoll?: Maybe<PollWithAnswers>;
   createPollAnswer?: Maybe<PollAnswer>;
   createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
-  createSession: SessionWithToken;
-  createSessionWithJWT: SessionWithToken;
   createSubscription?: Maybe<Subscription>;
   deleteComment: Comment;
   deleteImage?: Maybe<Image>;
@@ -341,11 +333,6 @@ export type Mutation = {
   rejectComment: Comment;
   renewSubscription?: Maybe<Invoice>;
   requestChangesOnComment: Comment;
-  revokeActiveSession: Scalars['Boolean'];
-  revokeSession: Scalars['Boolean'];
-  sendJWTLogin: Scalars['String'];
-  sendWebsiteLogin: Scalars['String'];
-  sessions: Array<Session>;
   updateComment: Comment;
   updateImage?: Maybe<Image>;
   updateInvoice?: Maybe<Invoice>;
@@ -402,17 +389,6 @@ export type MutationCreatePollAnswerArgs = {
 export type MutationCreatePollExternalVoteSourceArgs = {
   pollId: Scalars['String'];
   source?: InputMaybe<Scalars['String']>;
-};
-
-
-export type MutationCreateSessionArgs = {
-  email: Scalars['String'];
-  password: Scalars['String'];
-};
-
-
-export type MutationCreateSessionWithJwtArgs = {
-  jwt: Scalars['String'];
 };
 
 
@@ -480,22 +456,6 @@ export type MutationRenewSubscriptionArgs = {
 export type MutationRequestChangesOnCommentArgs = {
   id: Scalars['String'];
   rejectionReason: CommentRejectionReason;
-};
-
-
-export type MutationRevokeSessionArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationSendJwtLoginArgs = {
-  email: Scalars['String'];
-  url: Scalars['String'];
-};
-
-
-export type MutationSendWebsiteLoginArgs = {
-  email: Scalars['String'];
 };
 
 
@@ -764,8 +724,6 @@ export type Query = {
   __typename?: 'Query';
   comment?: Maybe<Comment>;
   comments: CommentConnection;
-  createJWTForUser?: Maybe<JwtToken>;
-  createJWTForWebsiteLogin?: Maybe<JwtToken>;
   image?: Maybe<Image>;
   images: ImageConnection;
   invoice?: Maybe<Invoice>;
@@ -776,7 +734,6 @@ export type Query = {
   poll?: Maybe<FullPoll>;
   polls?: Maybe<PollConnection>;
   remotePeerProfile?: Maybe<PeerProfile>;
-  sessions: Array<Session>;
   subscription?: Maybe<Subscription>;
   subscriptions: SubscriptionConnection;
   subscriptionsAsCsv?: Maybe<Scalars['String']>;
@@ -795,12 +752,6 @@ export type QueryCommentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<CommentSort>;
   take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryCreateJwtForUserArgs = {
-  expiresInMinutes: Scalars['Int'];
-  userId: Scalars['String'];
 };
 
 
@@ -887,23 +838,6 @@ export type QuerySubscriptionsArgs = {
 
 export type QuerySubscriptionsAsCsvArgs = {
   filter?: InputMaybe<SubscriptionFilter>;
-};
-
-export type Session = {
-  __typename?: 'Session';
-  createdAt: Scalars['DateTime'];
-  expiresAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  user: User;
-};
-
-export type SessionWithToken = {
-  __typename?: 'SessionWithToken';
-  createdAt: Scalars['DateTime'];
-  expiresAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  token: Scalars['String'];
-  user: User;
 };
 
 export enum SortOrder {
@@ -1132,26 +1066,6 @@ export type OverriddenRating = {
   answerId: Scalars['String'];
   value?: Maybe<Scalars['Int']>;
 };
-
-export type CreateSessionMutationVariables = Exact<{
-  email: Scalars['String'];
-  password: Scalars['String'];
-}>;
-
-
-export type CreateSessionMutation = { __typename?: 'Mutation', createSession: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'User', email: string, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } } };
-
-export type CreateSessionWithJwtMutationVariables = Exact<{
-  jwt: Scalars['String'];
-}>;
-
-
-export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'User', email: string, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } } };
-
-export type CreateJwtForWebsiteLoginQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type CreateJwtForWebsiteLoginQuery = { __typename?: 'Query', createJWTForWebsiteLogin?: { __typename?: 'JWTToken', token: string, expiresAt: string } | null };
 
 export type CommentRevisionFragment = { __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string };
 
@@ -1864,120 +1778,6 @@ ${FullMemberPlanFragmentDoc}
 ${MetadataPropertyFragmentDoc}
 ${FullPaymentMethodFragmentDoc}
 ${DeactivationFragmentDoc}`;
-export const CreateSessionDocument = gql`
-    mutation CreateSession($email: String!, $password: String!) {
-  createSession(email: $email, password: $password) {
-    user {
-      email
-      roles {
-        ...FullUserRole
-      }
-    }
-    token
-  }
-}
-    ${FullUserRoleFragmentDoc}`;
-export type CreateSessionMutationFn = Apollo.MutationFunction<CreateSessionMutation, CreateSessionMutationVariables>;
-
-/**
- * __useCreateSessionMutation__
- *
- * To run a mutation, you first call `useCreateSessionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateSessionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createSessionMutation, { data, loading, error }] = useCreateSessionMutation({
- *   variables: {
- *      email: // value for 'email'
- *      password: // value for 'password'
- *   },
- * });
- */
-export function useCreateSessionMutation(baseOptions?: Apollo.MutationHookOptions<CreateSessionMutation, CreateSessionMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateSessionMutation, CreateSessionMutationVariables>(CreateSessionDocument, options);
-      }
-export type CreateSessionMutationHookResult = ReturnType<typeof useCreateSessionMutation>;
-export type CreateSessionMutationResult = Apollo.MutationResult<CreateSessionMutation>;
-export type CreateSessionMutationOptions = Apollo.BaseMutationOptions<CreateSessionMutation, CreateSessionMutationVariables>;
-export const CreateSessionWithJwtDocument = gql`
-    mutation CreateSessionWithJWT($jwt: String!) {
-  createSessionWithJWT(jwt: $jwt) {
-    user {
-      email
-      roles {
-        ...FullUserRole
-      }
-    }
-    token
-  }
-}
-    ${FullUserRoleFragmentDoc}`;
-export type CreateSessionWithJwtMutationFn = Apollo.MutationFunction<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>;
-
-/**
- * __useCreateSessionWithJwtMutation__
- *
- * To run a mutation, you first call `useCreateSessionWithJwtMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateSessionWithJwtMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createSessionWithJwtMutation, { data, loading, error }] = useCreateSessionWithJwtMutation({
- *   variables: {
- *      jwt: // value for 'jwt'
- *   },
- * });
- */
-export function useCreateSessionWithJwtMutation(baseOptions?: Apollo.MutationHookOptions<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>(CreateSessionWithJwtDocument, options);
-      }
-export type CreateSessionWithJwtMutationHookResult = ReturnType<typeof useCreateSessionWithJwtMutation>;
-export type CreateSessionWithJwtMutationResult = Apollo.MutationResult<CreateSessionWithJwtMutation>;
-export type CreateSessionWithJwtMutationOptions = Apollo.BaseMutationOptions<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>;
-export const CreateJwtForWebsiteLoginDocument = gql`
-    query CreateJWTForWebsiteLogin {
-  createJWTForWebsiteLogin {
-    token
-    expiresAt
-  }
-}
-    `;
-
-/**
- * __useCreateJwtForWebsiteLoginQuery__
- *
- * To run a query within a React component, call `useCreateJwtForWebsiteLoginQuery` and pass it any options that fit your needs.
- * When your component renders, `useCreateJwtForWebsiteLoginQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useCreateJwtForWebsiteLoginQuery({
- *   variables: {
- *   },
- * });
- */
-export function useCreateJwtForWebsiteLoginQuery(baseOptions?: Apollo.QueryHookOptions<CreateJwtForWebsiteLoginQuery, CreateJwtForWebsiteLoginQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<CreateJwtForWebsiteLoginQuery, CreateJwtForWebsiteLoginQueryVariables>(CreateJwtForWebsiteLoginDocument, options);
-      }
-export function useCreateJwtForWebsiteLoginLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CreateJwtForWebsiteLoginQuery, CreateJwtForWebsiteLoginQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<CreateJwtForWebsiteLoginQuery, CreateJwtForWebsiteLoginQueryVariables>(CreateJwtForWebsiteLoginDocument, options);
-        }
-export type CreateJwtForWebsiteLoginQueryHookResult = ReturnType<typeof useCreateJwtForWebsiteLoginQuery>;
-export type CreateJwtForWebsiteLoginLazyQueryHookResult = ReturnType<typeof useCreateJwtForWebsiteLoginLazyQuery>;
-export type CreateJwtForWebsiteLoginQueryResult = Apollo.QueryResult<CreateJwtForWebsiteLoginQuery, CreateJwtForWebsiteLoginQueryVariables>;
 export const CommentListDocument = gql`
     query CommentList($filter: CommentFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
   comments(

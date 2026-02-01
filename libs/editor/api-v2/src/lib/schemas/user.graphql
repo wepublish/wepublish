@@ -146,7 +146,6 @@ mutation UpdateUser(
     email: $email
     emailVerifiedAt: $emailVerifiedAt
     userImageID: $userImageID
-    password: $password
     active: $active
     properties: $properties
     flair: $flair

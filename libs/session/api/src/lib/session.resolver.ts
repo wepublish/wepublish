@@ -6,6 +6,12 @@ import {
   Public,
   UserSession,
 } from '@wepublish/authentication/api';
+import { Permissions } from '@wepublish/permissions/api';
+import {
+  CanLoginAsOtherUser,
+  CanPreview,
+  CanSendJWTLogin,
+} from '@wepublish/permissions';
 
 @Resolver()
 export class SessionResolver {
@@ -46,6 +52,38 @@ export class SessionResolver {
   })
   async sendWebsiteLogin(@Args('email') email: string) {
     await this.sessionService.sendWebsiteLogin(email);
+
     return email;
+  }
+
+  @Permissions(CanSendJWTLogin)
+  @Mutation(() => String, {
+    description:
+      'This mutation sends a login link to the email if the user exists. Method will always return email address',
+  })
+  async sendJWTLogin(@Args('email') email: string) {
+    await this.sessionService.sendJWTLogin(email);
+
+    return email;
+  }
+
+  @Permissions(CanLoginAsOtherUser)
+  @Mutation(() => SessionWithToken, {
+    description: 'Returns a JWT that can be used to login as another user.',
+  })
+  async createJWTForUser(
+    @Args('userId') userId: string,
+    @Args('expiresInMinutes') expiresInMinutes: number
+  ) {
+    return this.sessionService.createJWTForUser(userId, expiresInMinutes);
+  }
+
+  @Permissions(CanPreview)
+  @Mutation(() => SessionWithToken, {
+    description:
+      'Returns a JWT that is valid for 1min for the current logged in user.',
+  })
+  async createJWTForWebsiteLogin(@CurrentUser() user: UserSession) {
+    return this.sessionService.createJWTForWebsiteLogin(user.user.id);
   }
 }

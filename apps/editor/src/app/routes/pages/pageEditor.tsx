@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import { useCreateJwtForWebsiteLoginLazyQuery } from '@wepublish/editor/api';
 import {
   CreatePageMutationVariables,
   getApiClientV2,
+  useCreateJwtForWebsiteLoginMutation,
   useCreatePageMutation,
   useMeQuery,
   usePageQuery,
@@ -138,7 +138,8 @@ function PageEditor() {
     client,
     fetchPolicy: 'cache-only',
   });
-  const [createJWT] = useCreateJwtForWebsiteLoginLazyQuery({
+  const [createJWT] = useCreateJwtForWebsiteLoginMutation({
+    client,
     errorPolicy: 'none',
   });
 

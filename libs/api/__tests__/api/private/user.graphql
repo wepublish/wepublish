@@ -8,21 +8,3 @@ fragment FullUser on User {
     ...FullUserRole
   }
 }
-
-mutation CreateSession($email: String!, $password: String!) {
-  createSession(email: $email, password: $password) {
-    user {
-      email
-    }
-    token
-  }
-}
-
-mutation CreateSessionWithJWT($jwt: String!) {
-  createSessionWithJWT(jwt: $jwt) {
-    user {
-      email
-    }
-    token
-  }
-}

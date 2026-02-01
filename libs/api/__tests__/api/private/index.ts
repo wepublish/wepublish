@@ -281,12 +281,6 @@ export enum InvoiceSort {
   PaidAt = 'paidAt'
 }
 
-export type JwtToken = {
-  __typename?: 'JWTToken';
-  expiresAt: Scalars['String'];
-  token: Scalars['String'];
-};
-
 export type MemberPlan = {
   __typename?: 'MemberPlan';
   active: Scalars['Boolean'];
@@ -324,8 +318,6 @@ export type Mutation = {
   createPoll?: Maybe<PollWithAnswers>;
   createPollAnswer?: Maybe<PollAnswer>;
   createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
-  createSession: SessionWithToken;
-  createSessionWithJWT: SessionWithToken;
   createSubscription?: Maybe<Subscription>;
   deleteComment: Comment;
   deleteImage?: Maybe<Image>;
@@ -339,11 +331,6 @@ export type Mutation = {
   rejectComment: Comment;
   renewSubscription?: Maybe<Invoice>;
   requestChangesOnComment: Comment;
-  revokeActiveSession: Scalars['Boolean'];
-  revokeSession: Scalars['Boolean'];
-  sendJWTLogin: Scalars['String'];
-  sendWebsiteLogin: Scalars['String'];
-  sessions: Array<Session>;
   updateComment: Comment;
   updateImage?: Maybe<Image>;
   updateInvoice?: Maybe<Invoice>;
@@ -400,17 +387,6 @@ export type MutationCreatePollAnswerArgs = {
 export type MutationCreatePollExternalVoteSourceArgs = {
   pollId: Scalars['String'];
   source?: InputMaybe<Scalars['String']>;
-};
-
-
-export type MutationCreateSessionArgs = {
-  email: Scalars['String'];
-  password: Scalars['String'];
-};
-
-
-export type MutationCreateSessionWithJwtArgs = {
-  jwt: Scalars['String'];
 };
 
 
@@ -478,22 +454,6 @@ export type MutationRenewSubscriptionArgs = {
 export type MutationRequestChangesOnCommentArgs = {
   id: Scalars['String'];
   rejectionReason: CommentRejectionReason;
-};
-
-
-export type MutationRevokeSessionArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationSendJwtLoginArgs = {
-  email: Scalars['String'];
-  url: Scalars['String'];
-};
-
-
-export type MutationSendWebsiteLoginArgs = {
-  email: Scalars['String'];
 };
 
 
@@ -762,8 +722,6 @@ export type Query = {
   __typename?: 'Query';
   comment?: Maybe<Comment>;
   comments: CommentConnection;
-  createJWTForUser?: Maybe<JwtToken>;
-  createJWTForWebsiteLogin?: Maybe<JwtToken>;
   image?: Maybe<Image>;
   images: ImageConnection;
   invoice?: Maybe<Invoice>;
@@ -774,7 +732,6 @@ export type Query = {
   poll?: Maybe<FullPoll>;
   polls?: Maybe<PollConnection>;
   remotePeerProfile?: Maybe<PeerProfile>;
-  sessions: Array<Session>;
   subscription?: Maybe<Subscription>;
   subscriptions: SubscriptionConnection;
   subscriptionsAsCsv?: Maybe<Scalars['String']>;
@@ -793,12 +750,6 @@ export type QueryCommentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<CommentSort>;
   take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryCreateJwtForUserArgs = {
-  expiresInMinutes: Scalars['Int'];
-  userId: Scalars['String'];
 };
 
 
@@ -885,23 +836,6 @@ export type QuerySubscriptionsArgs = {
 
 export type QuerySubscriptionsAsCsvArgs = {
   filter?: InputMaybe<SubscriptionFilter>;
-};
-
-export type Session = {
-  __typename?: 'Session';
-  createdAt: Scalars['DateTime'];
-  expiresAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  user: User;
-};
-
-export type SessionWithToken = {
-  __typename?: 'SessionWithToken';
-  createdAt: Scalars['DateTime'];
-  expiresAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  token: Scalars['String'];
-  user: User;
 };
 
 export enum SortOrder {
@@ -1275,21 +1209,6 @@ export type RenewSubscriptionMutation = { __typename?: 'Mutation', renewSubscrip
 
 export type FullUserFragment = { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> };
 
-export type CreateSessionMutationVariables = Exact<{
-  email: Scalars['String'];
-  password: Scalars['String'];
-}>;
-
-
-export type CreateSessionMutation = { __typename?: 'Mutation', createSession: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'User', email: string } } };
-
-export type CreateSessionWithJwtMutationVariables = Exact<{
-  jwt: Scalars['String'];
-}>;
-
-
-export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'User', email: string } } };
-
 export type FullPermissionFragment = { __typename?: 'Permission', id: string, description: string, deprecated: boolean };
 
 export type FullUserRoleFragment = { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> };
@@ -1602,26 +1521,6 @@ export const RenewSubscription = gql`
     mutation RenewSubscription($id: String!) {
   renewSubscription(id: $id) {
     id
-  }
-}
-    `;
-export const CreateSession = gql`
-    mutation CreateSession($email: String!, $password: String!) {
-  createSession(email: $email, password: $password) {
-    user {
-      email
-    }
-    token
-  }
-}
-    `;
-export const CreateSessionWithJwt = gql`
-    mutation CreateSessionWithJWT($jwt: String!) {
-  createSessionWithJWT(jwt: $jwt) {
-    user {
-      email
-    }
-    token
   }
 }
     `;

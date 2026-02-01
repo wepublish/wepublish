@@ -1,10 +1,15 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaClient, User, UserEvent } from '@prisma/client';
 import { InvalidCredentialsError, NotActiveError } from './session.errors';
 import nanoid from 'nanoid/generate';
 import { UserAuthenticationService } from './user-authentication.service';
 import { JwtAuthenticationService } from './jwt-authentication.service';
-import { UserSession } from '@wepublish/authentication/api';
+import { unselectPassword, UserSession } from '@wepublish/authentication/api';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
 import { Validator } from './validator';
@@ -14,6 +19,7 @@ import {
   logger,
   USER_PROPERTY_LAST_LOGIN_LINK_SEND,
 } from '@wepublish/utils/api';
+import { JwtService } from './jwt.service';
 
 const IDAlphabet =
   '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -28,6 +34,7 @@ export class SessionService {
     private userAuthenticationService: UserAuthenticationService,
     private userService: UserService,
     private jwtAuthenticationService: JwtAuthenticationService,
+    private jwtService: JwtService,
     private settingsService: SettingsService,
     private mailContext: MailContext
   ) {}
@@ -147,5 +154,79 @@ export class SessionService {
     });
 
     await this.userAuthenticationService.updateUserLastLoginLinkSend(user.id);
+  }
+
+  async sendJWTLogin(email: string) {
+    email = email.toLowerCase();
+    await Validator.login.parse({ email });
+
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      select: unselectPassword,
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} was not found.`);
+    }
+
+    const jwtExpiresSetting = await this.prisma.setting.findUnique({
+      where: { name: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN },
+    });
+    const jwtExpires =
+      (jwtExpiresSetting?.value as number) ??
+      parseInt(process.env['SEND_LOGIN_JWT_EXPIRES_MIN'] ?? '');
+
+    if (!jwtExpires) {
+      throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN');
+    }
+
+    const remoteTemplate = await this.mailContext.getUserTemplateName(
+      UserEvent.LOGIN_LINK
+    );
+
+    await this.mailContext.sendMail({
+      externalMailTemplateId: remoteTemplate,
+      recipient: user,
+      optionalData: {},
+      mailType: mailLogType.UserFlow,
+    });
+
+    return email;
+  }
+
+  async createJWTForUser(userId: string, expiresInMinutes: number) {
+    const TWO_YEARS_IN_MIN = 2 * 365 * 24 * 60;
+
+    if (expiresInMinutes > TWO_YEARS_IN_MIN) {
+      throw new BadRequestException(
+        `ExpiresInMinutes: ${expiresInMinutes} is too far in the future.`
+      );
+    }
+
+    const expiresAt = new Date(
+      new Date().getTime() + expiresInMinutes * 60 * 1000
+    ).toISOString();
+
+    const token = this.jwtService.generateJWT({ id: userId, expiresInMinutes });
+
+    return {
+      token,
+      expiresAt,
+    };
+  }
+
+  async createJWTForWebsiteLogin(userId: string) {
+    const expiresInMinutes = 1;
+
+    const expiresAt = new Date(
+      new Date().getTime() + expiresInMinutes * 60 * 1000
+    ).toISOString();
+
+    const token = this.jwtService.generateJWT({ id: userId, expiresInMinutes });
+
+    return {
+      token,
+      expiresAt,
+    };
   }
 }
