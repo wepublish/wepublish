@@ -1,4 +1,4 @@
-import { BexioPaymentProvider } from './bexio-payment-provider';
+import { BexioPaymentProvider } from '../bexio/bexio-payment-provider';
 import {
   Currency,
   InvoiceItem,
@@ -6,6 +6,7 @@ import {
   PaymentState,
   PrismaClient,
 } from '@prisma/client';
+import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 import { CreatePaymentIntentProps } from '../payment-provider';
 
 jest.mock('axios');
@@ -84,34 +85,42 @@ jest.mock('bexio', () => {
 describe('BexioPaymentProvider', () => {
   let mockProps;
   let bexioPaymentProvider;
+  let kvMock;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    kvMock = createKvMock();
+    await kvMock.setNs(
+      'settings:paymentprovider',
+      'bexio',
+      JSON.stringify({
+        id: 'bexio',
+        type: 'bexio',
+        name: 'Bexio',
+        offSessionPayments: false,
+        apiKey: 'sampleApiKey',
+        bexio_unitId: 6,
+        bexio_invoiceTemplateNewMembership: 'template1',
+        bexio_invoiceTemplateRenewalMembership: 'template2',
+        bexio_userId: 22,
+        bexio_taxId: 7,
+        bexio_accountId: 8,
+        bexio_countryId: 22,
+        bexio_invoiceTitleNewMembership: 'Title1',
+        bexio_invoiceTitleRenewalMembership: 'Title2',
+        bexio_invoiceMailSubjectNewMembership: 'Subject1',
+        bexio_invoiceMailBodyNewMembership: 'Body1',
+        bexio_invoiceMailSubjectRenewalMembership: 'Subject2',
+        bexio_invoiceMailBodyRenewalMembership: 'Body2',
+        bexio_markInvoiceAsOpen: true,
+      })
+    );
     mockProps = {
-      apiKey: 'sampleApiKey',
-      userId: 123,
-      countryId: 45,
-      invoiceTemplateNewMembership: 'template1',
-      invoiceTemplateRenewalMembership: 'template2',
-      unitId: 6,
-      taxId: 7,
-      accountId: 8,
-      invoiceTitleNewMembership: 'Title1',
-      invoiceTitleRenewalMembership: 'Title2',
-      invoiceMailSubjectNewMembership: 'Subject1',
-      invoiceMailBodyNewMembership: 'Body1',
-      invoiceMailSubjectRenewalMembership: 'Subject2',
-      invoiceMailBodyRenewalMembership: 'Body2',
-      markInvoiceAsOpen: true,
+      id: 'bexio',
       prisma: new PrismaClient(),
+      kv: kvMock,
     };
-    bexioPaymentProvider = new BexioPaymentProvider(mockProps);
-  });
 
-  describe('Initialization', () => {
-    it('should properly initialize properties', () => {
-      expect(bexioPaymentProvider).toHaveProperty('apiKey', 'sampleApiKey');
-      expect(bexioPaymentProvider).toHaveProperty('userId', 123);
-    });
+    bexioPaymentProvider = new BexioPaymentProvider(mockProps);
   });
 
   describe('Creating an invoice in Bexio', () => {

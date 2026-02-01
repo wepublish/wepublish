@@ -2,7 +2,7 @@ import { GatewayClient } from './gateway-client';
 import { PayrexxClient } from './payrexx-client';
 import { TransactionClient } from './transaction-client';
 
-type PayrexxFactoryProps = {
+export type PayrexxFactoryProps = {
   baseUrl: string;
   instance: string;
   secret: string;

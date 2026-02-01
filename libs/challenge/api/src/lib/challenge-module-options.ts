@@ -2,8 +2,7 @@ import { ModuleAsyncOptions } from '@wepublish/utils/api';
 
 interface TurnstileChallengeConfig {
   type: 'turnstile';
-  secret: string;
-  siteKey: string;
+  id: string;
 }
 
 interface AlgebraicChallengeConfig {

@@ -10,7 +10,7 @@ import { PrismaClient } from '@prisma/client';
     },
     PrismaService,
   ],
-  exports: [PrismaClient],
+  exports: [PrismaClient, PrismaService],
 })
 export class PrismaModule {
   // https://github.com/prisma/prisma/discussions/4399#discussioncomment-3126122
@@ -23,7 +23,7 @@ export class PrismaModule {
           useFactory: () => prismaClient as PrismaService,
         },
       ],
-      exports: [PrismaService],
+      exports: [PrismaClient, PrismaService],
     };
   }
 }

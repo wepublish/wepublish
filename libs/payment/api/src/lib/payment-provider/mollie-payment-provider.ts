@@ -10,20 +10,8 @@ import {
 } from './payment-provider';
 import { logger } from '@wepublish/utils/api';
 import { PaymentState } from '@prisma/client';
-import createMollieClient, {
-  MollieClient,
-  SequenceType,
-  Payment,
-  PaymentMethod,
-} from '@mollie/api-client';
-import MaybeArray from '@mollie/api-client/dist/types/types/MaybeArray';
-
-export interface MolliePaymentProviderProps extends PaymentProviderProps {
-  apiKey: string;
-  webhookEndpointSecret: string;
-  apiBaseUrl: string;
-  methods?: string[];
-}
+import createMollieClient, { SequenceType, Payment } from '@mollie/api-client';
+import { mapMolliePaymentMethods } from '../payment.methode.mapper';
 
 const erroredPaymentIntent = {
   intentID: 'error',
@@ -69,36 +57,21 @@ export function calculateAndFormatAmount(invoice: {
 }
 
 export class MolliePaymentProvider extends BasePaymentProvider {
-  readonly webhookEndpointSecret: string;
-  readonly mollieClient: MollieClient;
-  readonly apiBaseUrl: string;
-  readonly methods: MaybeArray<PaymentMethod> | undefined;
-
-  constructor(props: MolliePaymentProviderProps) {
+  constructor(props: PaymentProviderProps) {
     super(props);
-    this.webhookEndpointSecret = props.webhookEndpointSecret;
-    this.apiBaseUrl = props.apiBaseUrl;
-    this.mollieClient = createMollieClient({ apiKey: props.apiKey });
-    this.methods = this.getPaymentMethode(props.methods);
   }
 
-  getPaymentMethode(
-    methods: string[] | undefined
-  ): MaybeArray<PaymentMethod> | undefined {
-    if (!methods) {
-      return undefined;
+  async getMollieGateway() {
+    const config = await this.getConfig();
+    if (!config.apiKey) {
+      throw new Error('Mollie missing api key');
     }
-    const paymentMethods: MaybeArray<PaymentMethod> = [];
-    for (const paymentMethode of methods) {
-      paymentMethods.push(
-        PaymentMethod[paymentMethode as keyof typeof PaymentMethod]
-      );
-    }
-    return paymentMethods;
+    return createMollieClient({ apiKey: config.apiKey });
   }
 
-  generateWebhookUrl(): string {
-    return `${this.apiBaseUrl}/payment-webhooks/${this.id}?key=${this.webhookEndpointSecret}`;
+  async generateWebhookUrl(): Promise<string> {
+    const config = await this.getConfig();
+    return `${config.mollie_apiBaseUrl}/payment-webhooks/${this.id}?key=${config.webhookEndpointSecret}`;
   }
 
   async webhookForPaymentIntent(
@@ -107,7 +80,16 @@ export class MolliePaymentProvider extends BasePaymentProvider {
     const intentStates: IntentState[] = [];
     const key = props.req.query?.['key'] as string;
 
-    if (!this.timeConstantCompare(key, this.webhookEndpointSecret)) {
+    const config = await this.getConfig();
+    if (
+      !this.timeConstantCompare(
+        key,
+        this.assertProperty(
+          'webhookEndpointSecret',
+          config.webhookEndpointSecret
+        )
+      )
+    ) {
       return {
         status: 403,
         message: 'Invalid Api Key',
@@ -122,13 +104,14 @@ export class MolliePaymentProvider extends BasePaymentProvider {
         paymentStates: intentStates,
       };
     }
-    const payment = await this.mollieClient.payments.get(molliePaymentId);
+    const mollieClient = await this.getMollieGateway();
+    const payment = await mollieClient.payments.get(molliePaymentId);
     const state = mapMollieEventToPaymentStatus(payment.status);
     const metadata = payment.metadata as MolliePaymentMetadata;
     if (state && metadata.paymentID) {
       let customerID: undefined | string;
 
-      if (this.offSessionPayments && payment.customerId) {
+      if ((await this.isOffSession()) && payment.customerId) {
         customerID = payment.customerId;
       }
 
@@ -148,7 +131,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
   async createIntent(
     createPaymentIntentProps: CreatePaymentIntentProps
   ): Promise<Intent> {
-    if (this.offSessionPayments && createPaymentIntentProps.customerID) {
+    if ((await this.isOffSession()) && createPaymentIntentProps.customerID) {
       const offsiteTransactionIntent =
         await this.createOffsiteTransactionIntent(createPaymentIntentProps);
 
@@ -169,15 +152,18 @@ export class MolliePaymentProvider extends BasePaymentProvider {
     let payment: Payment;
     try {
       let customerId: undefined | string;
-      if (this.offSessionPayments) {
-        const customer = await this.mollieClient.customers.create({
+      if (await this.isOffSession()) {
+        const mollieClient = await this.getMollieGateway();
+        const customer = await mollieClient.customers.create({
           email: invoice.mail,
           name: invoice.mail,
         });
         customerId = customer.id;
       }
 
-      payment = await this.mollieClient.payments.create({
+      const mollieClient = await this.getMollieGateway();
+      const config = await this.getConfig();
+      payment = await mollieClient.payments.create({
         customerId,
         amount: {
           currency,
@@ -185,10 +171,12 @@ export class MolliePaymentProvider extends BasePaymentProvider {
         },
         description: invoice.description || 'Subscription',
         redirectUrl: successURL,
-        webhookUrl: this.generateWebhookUrl(),
+        webhookUrl: await this.generateWebhookUrl(),
         sequenceType:
-          this.offSessionPayments ? SequenceType.first : SequenceType.oneoff,
-        method: this.methods,
+          (await this.isOffSession()) ?
+            SequenceType.first
+          : SequenceType.oneoff,
+        method: mapMolliePaymentMethods(config.mollie_methods),
         metadata: {
           paymentID,
           mail: invoice.mail,
@@ -226,7 +214,8 @@ export class MolliePaymentProvider extends BasePaymentProvider {
     }
 
     try {
-      payment = await this.mollieClient.customerPayments.create({
+      const mollieClient = await this.getMollieGateway();
+      payment = await mollieClient.customerPayments.create({
         customerId: customerID,
         amount: {
           currency,
@@ -234,7 +223,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
         },
         description: invoice.description || 'Subscription',
         redirectUrl: successURL,
-        webhookUrl: this.generateWebhookUrl(),
+        webhookUrl: await this.generateWebhookUrl(),
         sequenceType: SequenceType.recurring,
         metadata: {
           paymentID,
@@ -256,7 +245,8 @@ export class MolliePaymentProvider extends BasePaymentProvider {
   async checkIntentStatus({
     intentID,
   }: CheckIntentProps): Promise<IntentState> {
-    const payment = await this.mollieClient.payments.get(intentID);
+    const mollieClient = await this.getMollieGateway();
+    const payment = await mollieClient.payments.get(intentID);
     const state = mapMollieEventToPaymentStatus(payment.status);
 
     const metadata = payment.metadata as MolliePaymentMetadata;

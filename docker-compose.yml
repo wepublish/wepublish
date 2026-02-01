@@ -53,7 +53,7 @@ services:
     image: postgres:17
     platform: linux/amd64
     ports:
-      - '127.0.0.1:5432:5432'
+      - '5432:5432'
     volumes:
       - database:/var/lib/postgresql/data
     environment:
