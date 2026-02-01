@@ -59,115 +59,100 @@ export function registerPaymentMethodModule(): DynamicModule {
       kv: KvTtlCacheService
     ) => {
       const paymentProviders: PaymentProvider[] = [];
-
-      if (
-        config.get('STRIPE_SECRET_KEY') &&
-        config.get('STRIPE_CHECKOUT_WEBHOOK_SECRET') &&
-        config.get('STRIPE_WEBHOOK_SECRET')
-      ) {
-        paymentProviders.push(
-          new StripeCheckoutPaymentProvider({
-            id: 'stripe_checkout',
-            incomingRequestHandler: bodyParser.raw({
-              type: 'application/json',
-            }),
-            prisma,
-            kv,
-          }),
-          new StripePaymentProvider({
-            id: 'stripe',
-            incomingRequestHandler: bodyParser.raw({
-              type: 'application/json',
-            }),
-            prisma,
-            kv,
-          })
-        );
-
-        await kv.setNs('settings:paymentprovider', 'stripe_checkout', {
+      paymentProviders.push(
+        new StripeCheckoutPaymentProvider({
           id: 'stripe_checkout',
-          type: 'stripe-checkout',
-          name: 'Stripe Checkout',
-          offSessionPayments: false,
-          apiKey: config.getOrThrow('STRIPE_SECRET_KEY'),
-          webhookEndpointSecret: config.getOrThrow('STRIPE_SECRET_KEY'),
-          stripe_methods: ['CARD'],
-        });
-        await kv.setNs('settings:paymentprovider', 'stripe', {
+          incomingRequestHandler: bodyParser.raw({
+            type: 'application/json',
+          }),
+          prisma,
+          kv,
+        }),
+        new StripePaymentProvider({
           id: 'stripe',
-          type: 'Stripe',
-          name: 'Stripe',
-          offSessionPayments: true,
-          apiKey: config.getOrThrow('STRIPE_SECRET_KEY'),
-          webhookEndpointSecret: config.getOrThrow('STRIPE_SECRET_KEY'),
-          stripe_methods: ['CARD'],
-        });
-      }
+          incomingRequestHandler: bodyParser.raw({
+            type: 'application/json',
+          }),
+          prisma,
+          kv,
+        })
+      );
 
-      if (
-        config.get('PAYREXX_INSTANCE_NAME') &&
-        config.get('PAYREXX_API_SECRET') &&
-        config.get('PAYREXX_WEBHOOK_SECRET')
-      ) {
-        paymentProviders.push(
-          new PayrexxPaymentProvider({
-            id: 'payrexx',
-            incomingRequestHandler: bodyParser.json(),
-            prisma,
-            kv,
-          })
-        );
-        paymentProviders.push(
-          new PayrexxSubscriptionPaymentProvider({
-            id: 'payrexx-subscription',
-            prisma,
-            kv,
-          })
-        );
+      await kv.setNs('settings:paymentprovider', 'stripe_checkout', {
+        id: 'stripe_checkout',
+        type: 'stripe-checkout',
+        name: 'Stripe Checkout',
+        offSessionPayments: false,
+        apiKey: '123',
+        webhookEndpointSecret: '123',
+        stripe_methods: ['CARD'],
+      });
+      await kv.setNs('settings:paymentprovider', 'stripe', {
+        id: 'stripe',
+        type: 'Stripe',
+        name: 'Stripe',
+        offSessionPayments: true,
+        apiKey: '123',
+        webhookEndpointSecret: '123',
+        stripe_methods: ['CARD'],
+      });
 
-        await kv.setNs('settings:paymentprovider', 'payrexx', {
+      paymentProviders.push(
+        new PayrexxPaymentProvider({
           id: 'payrexx',
-          type: 'payrexx',
-          name: 'Payrexx',
-          offSessionPayments: false,
-          apiKey: config.getOrThrow('PAYREXX_API_SECRET'),
-          webhookEndpointSecret: config.getOrThrow('PAYREXX_WEBHOOK_SECRET'),
-          payrexx_instancename: config.getOrThrow('PAYREXX_INSTANCE_NAME'),
-          payrexx_psp: ['PAYPAL', 'TWINT', 'STRIPE'],
-          payrexx_pm: ['PAYPAL', 'TWINT', 'APPLE_PAY'],
-          payrexx_vatrate: 7.7,
-        });
-
-        await kv.setNs('settings:paymentprovider', 'payrexx-subscription', {
+          incomingRequestHandler: bodyParser.json(),
+          prisma,
+          kv,
+        })
+      );
+      paymentProviders.push(
+        new PayrexxSubscriptionPaymentProvider({
           id: 'payrexx-subscription',
-          type: 'payrexx-subscription',
-          name: 'Payrexx Subscription',
-          offSessionPayments: false,
-          apiKey: config.getOrThrow('PAYREXX_API_SECRET'),
-          webhookEndpointSecret: config.getOrThrow('PAYREXX_WEBHOOK_SECRET'),
-          payrexx_instancename: config.getOrThrow('PAYREXX_INSTANCE_NAME'),
-        });
-      }
-      if (config.get('MOLLIE_API_SECRET')) {
-        paymentProviders.push(
-          new MolliePaymentProvider({
-            id: 'mollie',
-            incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
-            prisma,
-            kv,
-          })
-        );
-        await kv.setNs('settings:paymentprovider', 'mollie', {
+          prisma,
+          kv,
+        })
+      );
+
+      await kv.setNs('settings:paymentprovider', 'payrexx', {
+        id: 'payrexx',
+        type: 'payrexx',
+        name: 'Payrexx',
+        offSessionPayments: false,
+        apiKey: '1234',
+        webhookEndpointSecret: 'secret',
+        payrexx_instancename: 'test',
+        payrexx_psp: ['PAYPAL', 'TWINT', 'STRIPE'],
+        payrexx_pm: ['PAYPAL', 'TWINT', 'APPLE_PAY'],
+        payrexx_vatrate: 7.7,
+      });
+
+      await kv.setNs('settings:paymentprovider', 'payrexx-subscription', {
+        id: 'payrexx-subscription',
+        type: 'payrexx-subscription',
+        name: 'Payrexx Subscription',
+        offSessionPayments: false,
+        apiKey: '1234',
+        webhookEndpointSecret: 'secret',
+        payrexx_instancename: 'test',
+      });
+      paymentProviders.push(
+        new MolliePaymentProvider({
           id: 'mollie',
-          type: 'mollie',
-          name: 'Mollie',
-          offSessionPayments: true,
-          apiKey: config.getOrThrow('MOLLIE_API_SECRET'),
-          webhookEndpointSecret: 'secret',
-          mollie_apiBaseUrl: "https://wepublish.ch'",
-          stripe_methods: ['PAYPAL', 'TWINT', 'IDEAL'],
-        });
-      }
+          incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
+          prisma,
+          kv,
+        })
+      );
+      await kv.setNs('settings:paymentprovider', 'mollie', {
+        id: 'mollie',
+        type: 'mollie',
+        name: 'Mollie',
+        offSessionPayments: true,
+        apiKey: 'secret',
+        webhookEndpointSecret: 'secret',
+        mollie_apiBaseUrl: "https://wepublish.ch'",
+        stripe_methods: ['PAYPAL', 'TWINT', 'IDEAL'],
+      });
       return { paymentProviders };
     },
     inject: [ConfigService, PrismaClient, KvTtlCacheService],
