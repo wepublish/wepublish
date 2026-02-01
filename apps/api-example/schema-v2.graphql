@@ -2026,7 +2026,7 @@ enum PaymentPeriodicity {
 
 type PaymentProvider {
   id: String!
-  name: String!
+  name: String
 }
 
 type PaymentProviderCustomer {

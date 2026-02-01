@@ -11,7 +11,6 @@ import {
   CanDeletePaymentMethod,
   CanGetPaymentMethod,
   CanGetPaymentMethods,
-  CanGetPaymentProviders,
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
@@ -81,7 +80,7 @@ export class PaymentMethodResolver {
     return this.paymentMethodService.deletePaymentMethod(id);
   }
 
-  @Permissions(CanGetPaymentProviders)
+  @Permissions(CanGetPaymentMethods)
   @Query(() => [PaymentProvider], {
     description: `Returns all payment providers`,
   })
