@@ -15,7 +15,7 @@ export class PaymentProvider {
   id!: string;
 
   @Field()
-  name!: string;
+  name?: string;
 }
 
 @ObjectType({

@@ -20,6 +20,7 @@ export class PaymentMethodService {
 
   @PrimeDataLoader(PaymentMethodDataloader)
   async createPaymentMethod(input: CreatePaymentMethodInput) {
+    console.log(input);
     return this.prisma.paymentMethod.create({
       data: input,
     });

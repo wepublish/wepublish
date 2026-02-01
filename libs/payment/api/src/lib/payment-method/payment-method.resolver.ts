@@ -22,6 +22,7 @@ import {
 } from './payment-method.model';
 import { PaymentMethodService } from './payment-method.service';
 import { PaymentMethodDataloader } from './payment-method.dataloader';
+import { PaymentProviderService } from './payment-provider.service';
 import { PaymentMethod as PPaymentMethod } from '@prisma/client';
 import { Inject } from '@nestjs/common';
 import {
@@ -34,6 +35,7 @@ export class PaymentMethodResolver {
   constructor(
     private paymentMethodService: PaymentMethodService,
     private paymentMethodsDataloader: PaymentMethodDataloader,
+    private paymentProviderService: PaymentProviderService,
     @Inject(PAYMENT_METHOD_CONFIG) private moduleConfig: PaymentMethodConfig
   ) {}
 
@@ -82,13 +84,11 @@ export class PaymentMethodResolver {
     description: `Returns all payment providers`,
   })
   public paymentProviders() {
-    return this.moduleConfig.paymentProviders;
+    return this.paymentProviderService.getAllPaymentProviders();
   }
 
   @ResolveField(() => PaymentProvider, { nullable: true })
   public paymentProvider(@Parent() { paymentProviderID }: PPaymentMethod) {
-    return this.moduleConfig.paymentProviders.find(
-      paymentProvider => paymentProvider.id === paymentProviderID
-    );
+    return this.paymentProviderService.getByKey(paymentProviderID);
   }
 }

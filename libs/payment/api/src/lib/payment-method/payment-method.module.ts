@@ -14,6 +14,7 @@ import {
   PaymentMethodConfig,
   PAYMENT_METHOD_CONFIG,
 } from './payment-method.config';
+import { PaymentProviderService } from './payment-provider.service';
 
 type PaymentMethodConfigType = Type<PaymentMethodConfig>;
 
@@ -41,6 +42,7 @@ export interface PaymentMethodClientAsyncOptions
     PaymentMethodDataloader,
     PaymentMethodResolver,
     HasPaymentMethodResolver,
+    PaymentProviderService,
   ],
   exports: [PaymentMethodDataloader],
 })
