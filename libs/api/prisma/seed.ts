@@ -1,4 +1,4 @@
-import { AIProviderType, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { SettingName } from '../../settings/api/src/lib/setting';
 
 const seedSettings = (prisma: PrismaClient) =>
@@ -199,7 +199,7 @@ const seedSettings = (prisma: PrismaClient) =>
       create: {
         id: 'id',
         name: 'V0',
-        type: AIProviderType.V0,
+        type: 'V0',
       },
     }),
 
