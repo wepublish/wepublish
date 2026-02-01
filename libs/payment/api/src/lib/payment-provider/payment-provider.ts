@@ -222,6 +222,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
       },
       create: {
         id: this.id,
+        name: this.id,
         type,
       },
       update: {},
