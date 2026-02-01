@@ -2,6 +2,7 @@ import { FullPoll, Tag } from '@wepublish/editor/api';
 import {
   ArticleWithoutBlocksFragment,
   BlockContentInput,
+  BlockWithAlignment,
   CommentBlockCommentFragment,
   EditorBlockType,
   FullBlockFragment,
@@ -110,7 +111,16 @@ export interface LinkPageBreakBlockValue extends BaseBlockValue {
   linkText: string;
   linkTarget?: string;
   hideButton: boolean;
-  image?: FullImageFragment | undefined;
+  image?: FullImageFragment;
+}
+
+export type FlexBlockWithAlignment = {
+  alignment: BlockWithAlignment['alignment'];
+  block?: BlockValue | null;
+};
+
+export interface FlexBlockValue extends BaseBlockValue {
+  blocks: Array<FlexBlockWithAlignment>;
 }
 
 export enum EmbedType {
@@ -293,7 +303,7 @@ export interface FlexAlignment {
   y: number;
   w: number;
   h: number;
-  static?: boolean;
+  static: boolean;
 }
 
 export interface FlexTeaser {
@@ -397,6 +407,11 @@ export type EventBlockListValue = BlockListValue<
   EventBlockValue
 >;
 
+export type FlexBlockListValue = BlockListValue<
+  EditorBlockType.FlexBlock,
+  FlexBlockValue
+>;
+
 export type BlockValue =
   | TitleBlockListValue
   | RichTextBlockListValue
@@ -416,7 +431,8 @@ export type BlockValue =
   | CrowdfundingBlockListValue
   | CommentBlockListValue
   | EventBlockListValue
-  | TeaserListBlockListValue;
+  | TeaserListBlockListValue
+  | FlexBlockListValue;
 
 export function mapBlockValueToBlockInput(
   block: BlockValue
@@ -441,6 +457,7 @@ export function mapBlockValueToBlockInput(
           blockStyle: block.value.blockStyle,
         },
       };
+
     case EditorBlockType.Crowdfunding:
       return {
         crowdfunding: {
@@ -744,6 +761,19 @@ export function mapBlockValueToBlockInput(
           blockStyle: block.value.blockStyle,
         },
       };
+
+    case EditorBlockType.FlexBlock: {
+      const flexBlock = {
+        blocks: block.value.blocks.map(nb => ({
+          alignment: nb.alignment,
+          block:
+            nb.block ? mapBlockValueToBlockInput(nb.block as BlockValue) : null,
+        })),
+        blockStyle: block.value.blockStyle,
+      };
+
+      return { flexBlock };
+    }
   }
 }
 
@@ -1102,37 +1132,42 @@ export function blockForQueryBlock(
         value: {
           blockStyle: block.blockStyle,
           numColumns: block.numColumns,
-          teasers: block.teasers.map(
-            teaser => [nanoid(), mapTeaserToQueryTeaser(teaser)] as const
-          ),
+          teasers: block.teasers.map(teaser => [
+            nanoid(),
+            mapTeaserToQueryTeaser(teaser) as Teaser | null,
+          ]) as Array<[string, Teaser | null]>,
         },
       };
 
     case 'TeaserSlotsBlock':
-      return {
-        key,
-        type: EditorBlockType.TeaserSlots,
-        value: {
-          blockStyle: block.blockStyle,
-          slots: block.slots.map(({ teaser, type }) => ({
-            type,
-            teaser:
-              !teaser ? null : (
-                ({
-                  ...teaser,
-                  type:
-                    teaser?.__typename === 'ArticleTeaser' ? TeaserType.Article
-                    : teaser?.__typename === 'PageTeaser' ? TeaserType.Page
-                    : teaser?.__typename === 'EventTeaser' ? TeaserType.Event
-                    : TeaserType.Custom,
-                } as Teaser)
-              ),
-          })),
-          autofillConfig: block.autofillConfig,
-          autofillTeasers: block.autofillTeasers.map(mapTeaserToQueryTeaser),
-          teasers: block.autofillTeasers.map(mapTeaserToQueryTeaser),
-        },
-      };
+      return (() => {
+        return {
+          key,
+          type: EditorBlockType.TeaserSlots,
+          value: {
+            title: block.title,
+            blockStyle: block.blockStyle,
+            slots: block.slots.map(({ teaser, type }) => ({
+              type,
+              teaser:
+                !teaser ? null : (
+                  ({
+                    ...teaser,
+                    type:
+                      teaser?.__typename === 'ArticleTeaser' ?
+                        TeaserType.Article
+                      : teaser?.__typename === 'PageTeaser' ? TeaserType.Page
+                      : teaser?.__typename === 'EventTeaser' ? TeaserType.Event
+                      : TeaserType.Custom,
+                  } as Teaser)
+                ),
+            })),
+            autofillConfig: block.autofillConfig,
+            autofillTeasers: block.autofillTeasers.map(mapTeaserToQueryTeaser),
+            teasers: block.autofillTeasers.map(mapTeaserToQueryTeaser),
+          },
+        };
+      })();
 
     case 'BreakBlock':
       return {
@@ -1147,6 +1182,22 @@ export function blockForQueryBlock(
           linkTarget: block.linkTarget ?? '',
           hideButton: block.hideButton ?? false,
           image: block.image ?? undefined,
+        },
+      };
+
+    case 'FlexBlock':
+      return {
+        key,
+        type: EditorBlockType.FlexBlock,
+        value: {
+          blockStyle: block.blockStyle,
+          blocks: block.blocks.map(({ alignment, block }) => ({
+            alignment,
+            block:
+              block ?
+                blockForQueryBlock(block as FullBlockFragment)
+              : undefined,
+          })),
         },
       };
 

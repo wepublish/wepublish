@@ -7,9 +7,7 @@ import {
 } from 'graphql';
 import { Context } from '../context';
 import { CommentSort } from '../db/comment';
-import { ImageSort } from '../db/image';
 import { InvoiceSort } from '../db/invoice';
-import { PaymentSort } from '../db/payment';
 import { SubscriptionSort } from '../db/subscription';
 
 import {
@@ -23,13 +21,7 @@ import {
   getComment,
 } from './comment/comment.private-queries';
 import { GraphQLSortOrder } from './common';
-import {
-  GraphQLImage,
-  GraphQLImageConnection,
-  GraphQLImageFilter,
-  GraphQLImageSort,
-} from './image';
-import { getAdminImages, getImageById } from './image/image.private-queries';
+
 import {
   GraphQLInvoice,
   GraphQLInvoiceConnection,
@@ -41,17 +33,6 @@ import {
   getInvoiceById,
 } from './invoice/invoice.private-queries';
 
-import {
-  GraphQLPayment,
-  GraphQLPaymentConnection,
-  GraphQLPaymentFilter,
-  GraphQLPaymentSort,
-} from './payment';
-
-import {
-  getAdminPayments,
-  getPaymentById,
-} from './payment/payment.private-queries';
 import { GraphQLPeerProfile } from './peer';
 import {
   getAdminPeerProfile,
@@ -153,43 +134,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         getSubscriptionsAsCSV(filter, authenticate, subscription),
     },
 
-    // Image
-    // =====
-
-    image: {
-      type: GraphQLImage,
-      args: { id: { type: GraphQLString } },
-      resolve: (root, { id }, { authenticate, loaders: { images } }) =>
-        getImageById(id, authenticate, images),
-    },
-
-    images: {
-      type: new GraphQLNonNull(GraphQLImageConnection),
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 5 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLImageFilter },
-        sort: { type: GraphQLImageSort, defaultValue: ImageSort.ModifiedAt },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, skip, take, cursor },
-        { authenticate, prisma: { image } }
-      ) =>
-        getAdminImages(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          image
-        ),
-    },
-
     // Comments
     // =======
 
@@ -270,46 +214,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           take,
           authenticate,
           invoice
-        ),
-    },
-
-    // Payment
-    // ======
-
-    payment: {
-      type: GraphQLPayment,
-      args: { id: { type: GraphQLString } },
-      resolve: (root, { id }, { authenticate, loaders: { paymentsByID } }) =>
-        getPaymentById(id, authenticate, paymentsByID),
-    },
-
-    payments: {
-      type: new GraphQLNonNull(GraphQLPaymentConnection),
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 10 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLPaymentFilter },
-        sort: {
-          type: GraphQLPaymentSort,
-          defaultValue: PaymentSort.ModifiedAt,
-        },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, cursor, take, skip },
-        { authenticate, prisma: { payment } }
-      ) =>
-        getAdminPayments(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          payment
         ),
     },
 

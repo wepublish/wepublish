@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
-import { FullImageFragment } from '@wepublish/editor/api';
 import {
   CreateArticleMutationVariables,
   EditorBlockType,
   FullAuthorFragment,
+  FullImageFragment,
   getApiClientV2,
   SettingName,
   useArticleQuery,
@@ -210,6 +210,7 @@ function ArticleEditor() {
   const [createJWT] = useCreateJwtForWebsiteLoginMutation({
     client,
     errorPolicy: 'none',
+    fetchPolicy: 'no-cache',
   });
 
   const isNotFound = articleData && !articleData.article;

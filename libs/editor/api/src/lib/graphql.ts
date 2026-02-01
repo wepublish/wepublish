@@ -23,8 +23,6 @@ export type Scalars = {
   DateTime: string;
   RichText: Descendant[];
   Slug: string;
-  /** The `Upload` scalar type represents a file upload. */
-  Upload: File;
   /** A valid vote value */
   VoteValue: number;
 };
@@ -183,40 +181,9 @@ export type ImageTransformUrlArgs = {
   input?: InputMaybe<ImageTransformation>;
 };
 
-export type ImageConnection = {
-  __typename?: 'ImageConnection';
-  nodes: Array<Image>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type ImageFilter = {
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export enum ImageRotation {
-  Auto = 'Auto',
-  Rotate0 = 'Rotate0',
-  Rotate90 = 'Rotate90',
-  Rotate180 = 'Rotate180',
-  Rotate270 = 'Rotate270'
-}
-
-export enum ImageSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
-}
-
 export type ImageTransformation = {
   height?: InputMaybe<Scalars['Int']>;
-  rotation?: InputMaybe<ImageRotation>;
   width?: InputMaybe<Scalars['Int']>;
-};
-
-export type InputPoint = {
-  x: Scalars['Float'];
-  y: Scalars['Float'];
 };
 
 export type Invoice = {
@@ -322,24 +289,20 @@ export type Mutation = {
   createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
   createSubscription?: Maybe<Subscription>;
   deleteComment: Comment;
-  deleteImage?: Maybe<Image>;
   deleteInvoice?: Maybe<Invoice>;
   deletePoll?: Maybe<FullPoll>;
   deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
   deleteSubscription?: Maybe<Subscription>;
-  importSubscription?: Maybe<Subscription>;
   markInvoiceAsPaid?: Maybe<Invoice>;
   rejectComment: Comment;
   renewSubscription?: Maybe<Invoice>;
   requestChangesOnComment: Comment;
   updateComment: Comment;
-  updateImage?: Maybe<Image>;
   updateInvoice?: Maybe<Invoice>;
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
   updateSubscription?: Maybe<Subscription>;
-  uploadImage?: Maybe<Image>;
 };
 
 
@@ -402,11 +365,6 @@ export type MutationDeleteCommentArgs = {
 };
 
 
-export type MutationDeleteImageArgs = {
-  id: Scalars['String'];
-};
-
-
 export type MutationDeleteInvoiceArgs = {
   id: Scalars['String'];
 };
@@ -429,11 +387,6 @@ export type MutationDeletePollExternalVoteSourceArgs = {
 
 export type MutationDeleteSubscriptionArgs = {
   id: Scalars['String'];
-};
-
-
-export type MutationImportSubscriptionArgs = {
-  input: SubscriptionInput;
 };
 
 
@@ -472,12 +425,6 @@ export type MutationUpdateCommentArgs = {
 };
 
 
-export type MutationUpdateImageArgs = {
-  id: Scalars['String'];
-  input: UpdateImageInput;
-};
-
-
 export type MutationUpdateInvoiceArgs = {
   id: Scalars['String'];
   input: InvoiceInput;
@@ -505,11 +452,6 @@ export type MutationUpdateSubscriptionArgs = {
   input: SubscriptionInput;
 };
 
-
-export type MutationUploadImageArgs = {
-  input: UploadImageInput;
-};
-
 export type PageInfo = {
   __typename?: 'PageInfo';
   endCursor?: Maybe<Scalars['String']>;
@@ -530,17 +472,6 @@ export type Payment = {
   paymentData?: Maybe<Scalars['String']>;
   paymentMethod: PaymentMethod;
   state: PaymentState;
-};
-
-export type PaymentConnection = {
-  __typename?: 'PaymentConnection';
-  nodes: Array<Payment>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type PaymentFilter = {
-  intentID?: InputMaybe<Scalars['String']>;
 };
 
 export type PaymentFromInvoiceInput = {
@@ -586,11 +517,6 @@ export type PaymentProviderCustomer = {
   customerID: Scalars['String'];
   paymentProviderID: Scalars['String'];
 };
-
-export enum PaymentSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
-}
 
 export enum PaymentState {
   Canceled = 'canceled',
@@ -724,12 +650,8 @@ export type Query = {
   __typename?: 'Query';
   comment?: Maybe<Comment>;
   comments: CommentConnection;
-  image?: Maybe<Image>;
-  images: ImageConnection;
   invoice?: Maybe<Invoice>;
   invoices: InvoiceConnection;
-  payment?: Maybe<Payment>;
-  payments: PaymentConnection;
   peerProfile: PeerProfile;
   poll?: Maybe<FullPoll>;
   polls?: Maybe<PollConnection>;
@@ -755,21 +677,6 @@ export type QueryCommentsArgs = {
 };
 
 
-export type QueryImageArgs = {
-  id?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryImagesArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<ImageFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<ImageSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
 export type QueryInvoiceArgs = {
   id?: InputMaybe<Scalars['String']>;
 };
@@ -781,21 +688,6 @@ export type QueryInvoicesArgs = {
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<InvoiceSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryPaymentArgs = {
-  id?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryPaymentsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<PaymentFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<PaymentSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
 
@@ -960,17 +852,6 @@ export enum TagType {
   Page = 'Page'
 }
 
-export type UpdateImageInput = {
-  description?: InputMaybe<Scalars['String']>;
-  filename?: InputMaybe<Scalars['String']>;
-  focalPoint?: InputMaybe<InputPoint>;
-  license?: InputMaybe<Scalars['String']>;
-  link?: InputMaybe<Scalars['String']>;
-  source?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
 export type UpdatePollAnswer = {
   answer?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
@@ -985,18 +866,6 @@ export type UpdatePollExternalVoteSources = {
   id: Scalars['String'];
   source?: InputMaybe<Scalars['String']>;
   voteAmounts?: InputMaybe<Array<UpdatePollExternalVote>>;
-};
-
-export type UploadImageInput = {
-  description?: InputMaybe<Scalars['String']>;
-  file: Scalars['Upload'];
-  filename?: InputMaybe<Scalars['String']>;
-  focalPoint?: InputMaybe<InputPoint>;
-  license?: InputMaybe<Scalars['String']>;
-  link?: InputMaybe<Scalars['String']>;
-  source?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
 };
 
 export type User = {
@@ -1155,45 +1024,6 @@ export type PageInfoFragment = { __typename?: 'PageInfo', startCursor?: string |
 export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
 export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null };
-
-export type ImageListQueryVariables = Exact<{
-  filter?: InputMaybe<Scalars['String']>;
-  cursor?: InputMaybe<Scalars['String']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type ImageListQuery = { __typename?: 'Query', images: { __typename?: 'ImageConnection', totalCount: number, nodes: Array<{ __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
-
-export type ImageQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type ImageQuery = { __typename?: 'Query', image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
-
-export type UploadImageMutationVariables = Exact<{
-  input: UploadImageInput;
-}>;
-
-
-export type UploadImageMutation = { __typename?: 'Mutation', uploadImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
-
-export type UpdateImageMutationVariables = Exact<{
-  id: Scalars['String'];
-  input: UpdateImageInput;
-}>;
-
-
-export type UpdateImageMutation = { __typename?: 'Mutation', updateImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
-
-export type DeleteImageMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type DeleteImageMutation = { __typename?: 'Mutation', deleteImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
 
 export type InvoiceFragment = { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> };
 
@@ -2099,188 +1929,6 @@ export function useDeleteCommentMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteCommentMutationHookResult = ReturnType<typeof useDeleteCommentMutation>;
 export type DeleteCommentMutationResult = Apollo.MutationResult<DeleteCommentMutation>;
 export type DeleteCommentMutationOptions = Apollo.BaseMutationOptions<DeleteCommentMutation, DeleteCommentMutationVariables>;
-export const ImageListDocument = gql`
-    query ImageList($filter: String, $cursor: String, $take: Int, $skip: Int) {
-  images(filter: {title: $filter}, cursor: $cursor, take: $take, skip: $skip) {
-    nodes {
-      ...FullImage
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    ${FullImageFragmentDoc}`;
-
-/**
- * __useImageListQuery__
- *
- * To run a query within a React component, call `useImageListQuery` and pass it any options that fit your needs.
- * When your component renders, `useImageListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useImageListQuery({
- *   variables: {
- *      filter: // value for 'filter'
- *      cursor: // value for 'cursor'
- *      take: // value for 'take'
- *      skip: // value for 'skip'
- *   },
- * });
- */
-export function useImageListQuery(baseOptions?: Apollo.QueryHookOptions<ImageListQuery, ImageListQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ImageListQuery, ImageListQueryVariables>(ImageListDocument, options);
-      }
-export function useImageListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImageListQuery, ImageListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ImageListQuery, ImageListQueryVariables>(ImageListDocument, options);
-        }
-export type ImageListQueryHookResult = ReturnType<typeof useImageListQuery>;
-export type ImageListLazyQueryHookResult = ReturnType<typeof useImageListLazyQuery>;
-export type ImageListQueryResult = Apollo.QueryResult<ImageListQuery, ImageListQueryVariables>;
-export const ImageDocument = gql`
-    query Image($id: String!) {
-  image(id: $id) {
-    ...FullImage
-  }
-}
-    ${FullImageFragmentDoc}`;
-
-/**
- * __useImageQuery__
- *
- * To run a query within a React component, call `useImageQuery` and pass it any options that fit your needs.
- * When your component renders, `useImageQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useImageQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useImageQuery(baseOptions: Apollo.QueryHookOptions<ImageQuery, ImageQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ImageQuery, ImageQueryVariables>(ImageDocument, options);
-      }
-export function useImageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImageQuery, ImageQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ImageQuery, ImageQueryVariables>(ImageDocument, options);
-        }
-export type ImageQueryHookResult = ReturnType<typeof useImageQuery>;
-export type ImageLazyQueryHookResult = ReturnType<typeof useImageLazyQuery>;
-export type ImageQueryResult = Apollo.QueryResult<ImageQuery, ImageQueryVariables>;
-export const UploadImageDocument = gql`
-    mutation UploadImage($input: UploadImageInput!) {
-  uploadImage(input: $input) {
-    ...FullImage
-  }
-}
-    ${FullImageFragmentDoc}`;
-export type UploadImageMutationFn = Apollo.MutationFunction<UploadImageMutation, UploadImageMutationVariables>;
-
-/**
- * __useUploadImageMutation__
- *
- * To run a mutation, you first call `useUploadImageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUploadImageMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [uploadImageMutation, { data, loading, error }] = useUploadImageMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUploadImageMutation(baseOptions?: Apollo.MutationHookOptions<UploadImageMutation, UploadImageMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UploadImageMutation, UploadImageMutationVariables>(UploadImageDocument, options);
-      }
-export type UploadImageMutationHookResult = ReturnType<typeof useUploadImageMutation>;
-export type UploadImageMutationResult = Apollo.MutationResult<UploadImageMutation>;
-export type UploadImageMutationOptions = Apollo.BaseMutationOptions<UploadImageMutation, UploadImageMutationVariables>;
-export const UpdateImageDocument = gql`
-    mutation UpdateImage($id: String!, $input: UpdateImageInput!) {
-  updateImage(id: $id, input: $input) {
-    ...FullImage
-  }
-}
-    ${FullImageFragmentDoc}`;
-export type UpdateImageMutationFn = Apollo.MutationFunction<UpdateImageMutation, UpdateImageMutationVariables>;
-
-/**
- * __useUpdateImageMutation__
- *
- * To run a mutation, you first call `useUpdateImageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateImageMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateImageMutation, { data, loading, error }] = useUpdateImageMutation({
- *   variables: {
- *      id: // value for 'id'
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateImageMutation(baseOptions?: Apollo.MutationHookOptions<UpdateImageMutation, UpdateImageMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateImageMutation, UpdateImageMutationVariables>(UpdateImageDocument, options);
-      }
-export type UpdateImageMutationHookResult = ReturnType<typeof useUpdateImageMutation>;
-export type UpdateImageMutationResult = Apollo.MutationResult<UpdateImageMutation>;
-export type UpdateImageMutationOptions = Apollo.BaseMutationOptions<UpdateImageMutation, UpdateImageMutationVariables>;
-export const DeleteImageDocument = gql`
-    mutation DeleteImage($id: String!) {
-  deleteImage(id: $id) {
-    ...FullImage
-  }
-}
-    ${FullImageFragmentDoc}`;
-export type DeleteImageMutationFn = Apollo.MutationFunction<DeleteImageMutation, DeleteImageMutationVariables>;
-
-/**
- * __useDeleteImageMutation__
- *
- * To run a mutation, you first call `useDeleteImageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteImageMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteImageMutation, { data, loading, error }] = useDeleteImageMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeleteImageMutation(baseOptions?: Apollo.MutationHookOptions<DeleteImageMutation, DeleteImageMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteImageMutation, DeleteImageMutationVariables>(DeleteImageDocument, options);
-      }
-export type DeleteImageMutationHookResult = ReturnType<typeof useDeleteImageMutation>;
-export type DeleteImageMutationResult = Apollo.MutationResult<DeleteImageMutation>;
-export type DeleteImageMutationOptions = Apollo.BaseMutationOptions<DeleteImageMutation, DeleteImageMutationVariables>;
 export const InvoicesDocument = gql`
     query Invoices($cursor: String, $take: Int, $skip: Int, $filter: InvoiceFilter, $sort: InvoiceSort, $order: SortOrder) {
   invoices(

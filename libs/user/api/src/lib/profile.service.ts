@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ImageService, UploadImageInput } from '@wepublish/image/api';
+import { ImageUploadService, UploadImageInput } from '@wepublish/image/api';
 import { PrismaClient, User } from '@prisma/client';
 import { unselectPassword } from '@wepublish/authentication/api';
 
@@ -7,7 +7,7 @@ import { unselectPassword } from '@wepublish/authentication/api';
 export class ProfileService {
   constructor(
     readonly prisma: PrismaClient,
-    readonly imageService: ImageService
+    readonly imageService: ImageUploadService
   ) {}
 
   async uploadUserProfileImage(
@@ -24,7 +24,7 @@ export class ProfileService {
         );
       } else {
         // create new image
-        newImage = await this.imageService.uploadNewImage(uploadImageInput);
+        newImage = await this.imageService.uploadImage(uploadImageInput);
       }
       // cleanup existing user profile from file system
       if (newImage && user.userImageID) {

@@ -114,6 +114,7 @@ import { V0Module } from '@wepublish/ai/api';
           playground: configFile.general.apolloPlayground,
           allowBatchedHttpRequests: false,
           inheritResolversFromInterfaces: true,
+          csrfPrevention: false,
         } as ApolloDriverConfig;
       },
     }),

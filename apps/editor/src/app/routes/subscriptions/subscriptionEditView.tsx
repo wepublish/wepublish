@@ -237,6 +237,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     setPaidUntil(
       subscription.paidUntil ? new Date(subscription.paidUntil) : null
     );
+    // @ts-expect-error wrong image type for now. Will be fixed with subscription PR
     setPaymentMethod(subscription.paymentMethod);
     setProperties(
       subscription.properties.map(({ key, value, public: isPublic }) => ({

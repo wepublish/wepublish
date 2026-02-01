@@ -55,11 +55,7 @@ export class ProfileResolver {
     description: `This mutation allows to upload and update the user's profile image.`,
   })
   async uploadUserProfileImage(
-    @Args('uploadImageInput', {
-      type: () => UploadImageInput,
-      nullable: true,
-    })
-    uploadImageInput: UploadImageInput | null,
+    @Args() uploadImageInput: UploadImageInput,
     @CurrentUser() session: UserSession
   ) {
     return this.profileService.uploadUserProfileImage(

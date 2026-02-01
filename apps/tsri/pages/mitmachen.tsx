@@ -25,6 +25,7 @@ import getConfig from 'next/config';
 
 const MitmachenPage = styled(PageContainer)`
   ${SubscribeWrapper} {
+    padding-top: ${({ theme }) => theme.spacing(1.5)};
     grid-row: 2;
 
     ${({ theme }) => theme.breakpoints.up('md')} {

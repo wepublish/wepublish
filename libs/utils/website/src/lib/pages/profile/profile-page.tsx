@@ -78,9 +78,9 @@ export const ProfileWrapper = styled(ContentWrapper)`
 type ProfilePageProps = Omit<
   ComponentProps<typeof PersonalDataFormContainer>,
   ''
->;
+> & { className?: string };
 
-function ProfilePage(props: ProfilePageProps) {
+function ProfilePage({ className, ...props }: ProfilePageProps) {
   const {
     elements: { H4 },
   } = useWebsiteBuilder();
@@ -108,7 +108,7 @@ function ProfilePage(props: ProfilePageProps) {
 
   return (
     <>
-      <SubscriptionsWrapper>
+      <SubscriptionsWrapper className={className}>
         {hasUnpaidInvoices && (
           <SubscriptionListWrapper>
             <H4 component={'h1'}>Offene Rechnungen</H4>
@@ -172,7 +172,7 @@ function ProfilePage(props: ProfilePageProps) {
                   LinkComponent={Link}
                   href={'/mitmachen'}
                 >
-                  Anderes Abo lösen.
+                  Anderes Abo lösen
                 </Button>
               </SubscriptionListItemContent>
             </SubscriptionListItemWrapper>
@@ -188,7 +188,7 @@ function ProfilePage(props: ProfilePageProps) {
         </SubscriptionListWrapper>
       </SubscriptionsWrapper>
 
-      <ProfileWrapper>
+      <ProfileWrapper className={className}>
         <H4 component={'h1'}>Profil</H4>
 
         <PersonalDataFormContainer {...props} />

@@ -365,6 +365,7 @@ export type BlockContent =
   | EventBlock
   | FacebookPostBlock
   | FacebookVideoBlock
+  | FlexBlock
   | HtmlBlock
   | IFrameBlock
   | ImageBlock
@@ -397,6 +398,7 @@ export type BlockContentInput = {
   event?: InputMaybe<EventBlockInput>;
   facebookPost?: InputMaybe<FacebookPostBlockInput>;
   facebookVideo?: InputMaybe<FacebookVideoBlockInput>;
+  flexBlock?: InputMaybe<FlexBlockInput>;
   html?: InputMaybe<HtmlBlockInput>;
   image?: InputMaybe<ImageBlockInput>;
   imageGallery?: InputMaybe<ImageGalleryBlockInput>;
@@ -438,6 +440,7 @@ export enum BlockType {
   Event = 'Event',
   FacebookPost = 'FacebookPost',
   FacebookVideo = 'FacebookVideo',
+  FlexBlock = 'FlexBlock',
   Html = 'HTML',
   Image = 'Image',
   ImageGallery = 'ImageGallery',
@@ -461,6 +464,17 @@ export enum BlockType {
   VimeoVideo = 'VimeoVideo',
   YouTubeVideo = 'YouTubeVideo',
 }
+
+export type BlockWithAlignment = HasOneBlockContent & {
+  __typename?: 'BlockWithAlignment';
+  alignment: FlexAlignment;
+  block?: Maybe<BlockContent>;
+};
+
+export type BlockWithAlignmentInput = {
+  alignment: FlexAlignmentInput;
+  block?: InputMaybe<BlockContentInput>;
+};
 
 export type BreakBlock = BaseBlock &
   HasImage & {
@@ -884,6 +898,7 @@ export enum EditorBlockType {
   Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',
   Event = 'Event',
+  FlexBlock = 'FlexBlock',
   Html = 'HTML',
   Image = 'Image',
   ImageGallery = 'ImageGallery',
@@ -1064,7 +1079,7 @@ export type FlexAlignment = {
   __typename?: 'FlexAlignment';
   h: Scalars['Int'];
   i: Scalars['String'];
-  static: Scalars['Boolean'];
+  static?: Maybe<Scalars['Boolean']>;
   w: Scalars['Int'];
   x: Scalars['Int'];
   y: Scalars['Int'];
@@ -1073,10 +1088,24 @@ export type FlexAlignment = {
 export type FlexAlignmentInput = {
   h: Scalars['Int'];
   i: Scalars['String'];
-  static: Scalars['Boolean'];
+  static?: InputMaybe<Scalars['Boolean']>;
   w: Scalars['Int'];
   x: Scalars['Int'];
   y: Scalars['Int'];
+};
+
+export type FlexBlock = BaseBlock & {
+  __typename?: 'FlexBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  blockStyleName?: Maybe<Scalars['String']>;
+  blocks: Array<BlockWithAlignment>;
+  type: BlockType;
+};
+
+export type FlexBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
+  blockStyleName?: InputMaybe<Scalars['String']>;
+  blocks: Array<BlockWithAlignmentInput>;
 };
 
 export type FlexTeaser = {
@@ -1163,6 +1192,10 @@ export type HasImage = {
 export type HasImageLc = {
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
+};
+
+export type HasOneBlockContent = {
+  block?: Maybe<BlockContent>;
 };
 
 export type HasOptionalArticle = {
@@ -1269,7 +1302,7 @@ export type IFrameBlockInput = {
   width?: InputMaybe<Scalars['Int']>;
 };
 
-export type Image = {
+export type Image = HasOptionalPeerLc & {
   __typename?: 'Image';
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
@@ -1284,11 +1317,13 @@ export type Image = {
   link?: Maybe<Scalars['String']>;
   mimeType: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
+  peer?: Maybe<Peer>;
+  peerId?: Maybe<Scalars['String']>;
   source?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   transformURL?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
   width: Scalars['Int'];
 };
 
@@ -1314,6 +1349,11 @@ export type ImageBlockInput = {
   caption?: InputMaybe<Scalars['String']>;
   imageID?: InputMaybe<Scalars['String']>;
   linkUrl?: InputMaybe<Scalars['String']>;
+};
+
+export type ImageFilter = {
+  tags?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type ImageGalleryBlock = BaseBlock & {
@@ -1348,6 +1388,11 @@ export enum ImageRotation {
   Rotate90 = 'Rotate90',
   Rotate180 = 'Rotate180',
   Rotate270 = 'Rotate270',
+}
+
+export enum ImageSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
 }
 
 export type ImageTransformation = {
@@ -1608,6 +1653,8 @@ export type Mutation = {
   deleteCrowdfunding?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing event. */
   deleteEvent: Event;
+  /** Deletes an existing image. */
+  deleteImage: Image;
   /** Deletes an existing memberplan. */
   deleteMemberPlan: MemberPlan;
   /** Deletes an existing navigation. */
@@ -1706,6 +1753,8 @@ export type Mutation = {
   updateCurrentUser: SensitiveDataUser;
   /** Updates an existing event. */
   updateEvent: Event;
+  /** Updates an existing image. */
+  updateImage: Image;
   /** Updates an existing memberplan. */
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
@@ -1746,6 +1795,8 @@ export type Mutation = {
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
   upgradeSubscription: Payment;
+  /** Uploads a new image. */
+  uploadImage: Image;
   /** This mutation allows to upload and update the user's profile image. */
   uploadUserProfileImage?: Maybe<SensitiveDataUser>;
   /** This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous */
@@ -2043,6 +2094,10 @@ export type MutationDeleteEventArgs = {
   id: Scalars['String'];
 };
 
+export type MutationDeleteImageArgs = {
+  id: Scalars['String'];
+};
+
 export type MutationDeleteMemberPlanArgs = {
   id: Scalars['String'];
 };
@@ -2278,6 +2333,18 @@ export type MutationUpdateEventArgs = {
   tagIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
+export type MutationUpdateImageArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  filename?: InputMaybe<Scalars['String']>;
+  focalPoint?: InputMaybe<FocalPointInput>;
+  id: Scalars['String'];
+  license?: InputMaybe<Scalars['String']>;
+  link?: InputMaybe<Scalars['String']>;
+  source?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
 export type MutationUpdateMemberPlanArgs = {
   active?: InputMaybe<Scalars['Boolean']>;
   amountPerMonthMax?: InputMaybe<Scalars['Int']>;
@@ -2445,8 +2512,28 @@ export type MutationUpgradeSubscriptionArgs = {
   successURL?: InputMaybe<Scalars['String']>;
 };
 
+export type MutationUploadImageArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  file: Scalars['Upload'];
+  filename?: InputMaybe<Scalars['String']>;
+  focalPoint?: InputMaybe<FocalPointInput>;
+  license?: InputMaybe<Scalars['String']>;
+  link?: InputMaybe<Scalars['String']>;
+  source?: InputMaybe<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
 export type MutationUploadUserProfileImageArgs = {
-  uploadImageInput?: InputMaybe<UploadImageInput>;
+  description?: InputMaybe<Scalars['String']>;
+  file: Scalars['Upload'];
+  filename?: InputMaybe<Scalars['String']>;
+  focalPoint?: InputMaybe<FocalPointInput>;
+  license?: InputMaybe<Scalars['String']>;
+  link?: InputMaybe<Scalars['String']>;
+  source?: InputMaybe<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationVoteOnPollArgs = {
@@ -2626,6 +2713,13 @@ export type PaginatedEvents = {
 export type PaginatedEventsFromSources = {
   __typename?: 'PaginatedEventsFromSources';
   nodes: Array<EventFromSource>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedImages = {
+  __typename?: 'PaginatedImages';
+  nodes: Array<Image>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -2841,12 +2935,14 @@ export type PeerImage = {
   mSquare?: Maybe<Scalars['String']>;
   mimeType: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
+  peer?: Maybe<Peer>;
+  peerId?: Maybe<Scalars['String']>;
   s?: Maybe<Scalars['String']>;
   sSquare?: Maybe<Scalars['String']>;
   source?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
   width: Scalars['Int'];
   xl?: Maybe<Scalars['String']>;
   xlSquare?: Maybe<Scalars['String']>;
@@ -3105,14 +3201,16 @@ export type Query = {
    *
    */
   expectedRevenue: Array<DashboardInvoice>;
-  /** Returns an image by id. */
-  getImage: Image;
   /**
    *
    *       Returns the most viewed articles in descending order.
    *
    */
   hotAndTrending: Array<Article>;
+  /** Returns a image by id. */
+  image: Image;
+  /** Returns a paginated list of images based on the filters given. */
+  images: PaginatedImages;
   /**
    *
    *       Returns a more detailed version of a single importable event, by id and source.
@@ -3346,12 +3444,21 @@ export type QueryExpectedRevenueArgs = {
   start: Scalars['DateTime'];
 };
 
-export type QueryGetImageArgs = {
+export type QueryHotAndTrendingArgs = {
+  start?: InputMaybe<Scalars['DateTime']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+export type QueryImageArgs = {
   id: Scalars['String'];
 };
 
-export type QueryHotAndTrendingArgs = {
-  start?: InputMaybe<Scalars['DateTime']>;
+export type QueryImagesArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<ImageFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<ImageSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
 
@@ -4131,18 +4238,6 @@ export type UpgradeSubscription = {
   discountAmount: Scalars['Float'];
 };
 
-export type UploadImageInput = {
-  description?: InputMaybe<Scalars['String']>;
-  file: Scalars['Upload'];
-  filename?: InputMaybe<Scalars['String']>;
-  focalPoint?: InputMaybe<FocalPointInput>;
-  license?: InputMaybe<Scalars['String']>;
-  link?: InputMaybe<Scalars['String']>;
-  source?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
 export type User = BaseUser & {
   __typename?: 'User';
   active: Scalars['Boolean'];
@@ -4296,7 +4391,7 @@ export type AuthorRefFragment = {
     description?: string | null;
     width: number;
     height: number;
-    url?: string | null;
+    url: string;
     largeURL?: string | null;
     mediumURL?: string | null;
     thumbURL?: string | null;
@@ -4331,7 +4426,7 @@ export type FullAuthorFragment = {
     description?: string | null;
     width: number;
     height: number;
-    url?: string | null;
+    url: string;
     largeURL?: string | null;
     mediumURL?: string | null;
     thumbURL?: string | null;
@@ -4378,7 +4473,7 @@ export type AuthorListQuery = {
         description?: string | null;
         width: number;
         height: number;
-        url?: string | null;
+        url: string;
         largeURL?: string | null;
         mediumURL?: string | null;
         thumbURL?: string | null;
@@ -4428,7 +4523,7 @@ export type AuthorQuery = {
       description?: string | null;
       width: number;
       height: number;
-      url?: string | null;
+      url: string;
       largeURL?: string | null;
       mediumURL?: string | null;
       thumbURL?: string | null;
@@ -4525,7 +4620,7 @@ export type CommentsQuery = {
 
 export type ImageUrLsFragment = {
   __typename?: 'Image';
-  url?: string | null;
+  url: string;
   largeURL?: string | null;
   mediumURL?: string | null;
   thumbURL?: string | null;
@@ -4545,7 +4640,7 @@ export type ImageRefFragment = {
   description?: string | null;
   width: number;
   height: number;
-  url?: string | null;
+  url: string;
   largeURL?: string | null;
   mediumURL?: string | null;
   thumbURL?: string | null;
@@ -4571,7 +4666,7 @@ export type FullImageFragment = {
   link?: string | null;
   license?: string | null;
   title?: string | null;
-  url?: string | null;
+  url: string;
   largeURL?: string | null;
   mediumURL?: string | null;
   thumbURL?: string | null;
@@ -4608,7 +4703,7 @@ export type FullPeerProfileFragment = {
     link?: string | null;
     license?: string | null;
     title?: string | null;
-    url?: string | null;
+    url: string;
     largeURL?: string | null;
     mediumURL?: string | null;
     thumbURL?: string | null;
@@ -4634,7 +4729,7 @@ export type FullPeerProfileFragment = {
     link?: string | null;
     license?: string | null;
     title?: string | null;
-    url?: string | null;
+    url: string;
     largeURL?: string | null;
     mediumURL?: string | null;
     thumbURL?: string | null;
@@ -4660,7 +4755,7 @@ export type FullPeerProfileFragment = {
     link?: string | null;
     license?: string | null;
     title?: string | null;
-    url?: string | null;
+    url: string;
     largeURL?: string | null;
     mediumURL?: string | null;
     thumbURL?: string | null;
@@ -4747,7 +4842,7 @@ export type PeerProfileQuery = {
       link?: string | null;
       license?: string | null;
       title?: string | null;
-      url?: string | null;
+      url: string;
       largeURL?: string | null;
       mediumURL?: string | null;
       thumbURL?: string | null;
@@ -4773,7 +4868,7 @@ export type PeerProfileQuery = {
       link?: string | null;
       license?: string | null;
       title?: string | null;
-      url?: string | null;
+      url: string;
       largeURL?: string | null;
       mediumURL?: string | null;
       thumbURL?: string | null;
@@ -4799,7 +4894,7 @@ export type PeerProfileQuery = {
       link?: string | null;
       license?: string | null;
       title?: string | null;
-      url?: string | null;
+      url: string;
       largeURL?: string | null;
       mediumURL?: string | null;
       thumbURL?: string | null;

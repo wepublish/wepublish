@@ -297,7 +297,7 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
@@ -307,6 +307,7 @@ input BlockContentInput {
   event: EventBlockInput
   facebookPost: FacebookPostBlockInput
   facebookVideo: FacebookVideoBlockInput
+  flexBlock: FlexBlockInput
   html: HTMLBlockInput
   image: ImageBlockInput
   imageGallery: ImageGalleryBlockInput
@@ -347,6 +348,7 @@ enum BlockType {
   Event
   FacebookPost
   FacebookVideo
+  FlexBlock
   HTML
   Image
   ImageGallery
@@ -369,6 +371,16 @@ enum BlockType {
   TwitterTweet
   VimeoVideo
   YouTubeVideo
+}
+
+type BlockWithAlignment implements HasOneBlockContent {
+  alignment: FlexAlignment!
+  block: BlockContent
+}
+
+input BlockWithAlignmentInput {
+  alignment: FlexAlignmentInput!
+  block: BlockContentInput
 }
 
 type BreakBlock implements BaseBlock & HasImage {
@@ -779,6 +791,7 @@ enum EditorBlockType {
   Crowdfunding
   Embed
   Event
+  FlexBlock
   HTML
   Image
   ImageGallery
@@ -946,7 +959,7 @@ input FacebookVideoBlockInput {
 type FlexAlignment {
   h: Int!
   i: String!
-  static: Boolean!
+  static: Boolean
   w: Int!
   x: Int!
   y: Int!
@@ -955,10 +968,23 @@ type FlexAlignment {
 input FlexAlignmentInput {
   h: Int!
   i: String!
-  static: Boolean!
+  static: Boolean
   w: Int!
   x: Int!
   y: Int!
+}
+
+type FlexBlock implements BaseBlock {
+  blockStyle: String
+  blockStyleName: String
+  blocks: [BlockWithAlignment!]!
+  type: BlockType!
+}
+
+input FlexBlockInput {
+  blockStyle: String
+  blockStyleName: String
+  blocks: [BlockWithAlignmentInput!]!
 }
 
 type FlexTeaser {
@@ -1044,6 +1070,10 @@ interface HasImage {
 interface HasImageLc {
   image: Image
   imageId: String
+}
+
+interface HasOneBlockContent {
+  block: BlockContent
 }
 
 interface HasOptionalArticle {
@@ -1149,7 +1179,7 @@ input IFrameBlockInput {
   width: Int
 }
 
-type Image {
+type Image implements HasOptionalPeerLc {
   createdAt: DateTime!
   description: String
   extension: String!
@@ -1163,11 +1193,13 @@ type Image {
   link: String
   mimeType: String!
   modifiedAt: DateTime!
+  peer: Peer
+  peerId: String
   source: String
   tags: [String!]!
   title: String
   transformURL(input: ImageTransformation): String
-  url: String
+  url: String!
   width: Int!
 }
 
@@ -1187,6 +1219,11 @@ input ImageBlockInput {
   caption: String
   imageID: String
   linkUrl: String
+}
+
+input ImageFilter {
+  tags: [String!]
+  title: String
 }
 
 type ImageGalleryBlock implements BaseBlock {
@@ -1219,6 +1256,11 @@ enum ImageRotation {
   Rotate90
   Rotate180
   Rotate270
+}
+
+enum ImageSort {
+  CreatedAt
+  ModifiedAt
 }
 
 input ImageTransformation {
@@ -1495,6 +1537,9 @@ type Mutation {
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
 
+  """Deletes an existing image."""
+  deleteImage(id: String!): Image!
+
   """Deletes an existing memberplan."""
   deleteMemberPlan(id: String!): MemberPlan!
 
@@ -1628,6 +1673,9 @@ type Mutation {
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
 
+  """Updates an existing image."""
+  updateImage(description: String, filename: String, focalPoint: FocalPointInput, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
+
   """Updates an existing memberplan."""
   updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
 
@@ -1686,8 +1734,11 @@ type Mutation {
   """"""
   upgradeSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
 
+  """Uploads a new image."""
+  uploadImage(description: String, file: Upload!, filename: String, focalPoint: FocalPointInput, license: String, link: String, source: String, tags: [String!]!, title: String): Image!
+
   """This mutation allows to upload and update the user's profile image."""
-  uploadUserProfileImage(uploadImageInput: UploadImageInput): SensitiveDataUser
+  uploadUserProfileImage(description: String, file: Upload!, filename: String, focalPoint: FocalPointInput, license: String, link: String, source: String, tags: [String!]!, title: String): SensitiveDataUser
 
   """
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
@@ -1850,6 +1901,12 @@ type PaginatedEvents {
 
 type PaginatedEventsFromSources {
   nodes: [EventFromSource!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedImages {
+  nodes: [Image!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -2048,12 +2105,14 @@ type PeerImage {
   mSquare: String
   mimeType: String!
   modifiedAt: DateTime!
+  peer: Peer
+  peerId: String
   s: String
   sSquare: String
   source: String
   tags: [String!]!
   title: String
-  url: String
+  url: String!
   width: Int!
   xl: String
   xlSquare: String
@@ -2291,11 +2350,14 @@ type Query {
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
-  """Returns an image by id."""
-  getImage(id: String!): Image!
-
   "\n      Returns the most viewed articles in descending order.\n    "
   hotAndTrending(start: DateTime, take: Int = 10): [Article!]!
+
+  """Returns a image by id."""
+  image(id: String!): Image!
+
+  """Returns a paginated list of images based on the filters given."""
+  images(cursorId: String, filter: ImageFilter, order: SortOrder = Descending, skip: Int = 0, sort: ImageSort = ModifiedAt, take: Int = 10): PaginatedImages!
 
   "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
   importedEvent(filter: SingleEventFilter!): EventFromSource!
@@ -3025,18 +3087,6 @@ type UpgradeSubscription {
 
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
-
-input UploadImageInput {
-  description: String
-  file: Upload!
-  filename: String
-  focalPoint: FocalPointInput
-  license: String
-  link: String
-  source: String
-  tags: [String!]
-  title: String
-}
 
 type User implements BaseUser {
   active: Boolean!

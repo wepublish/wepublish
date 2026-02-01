@@ -141,6 +141,7 @@ function PageEditor() {
   const [createJWT] = useCreateJwtForWebsiteLoginMutation({
     client,
     errorPolicy: 'none',
+    fetchPolicy: 'no-cache',
   });
 
   const { t } = useTranslation();

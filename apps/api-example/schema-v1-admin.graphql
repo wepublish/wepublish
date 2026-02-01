@@ -4,14 +4,10 @@ type Query {
   subscription(id: String!): Subscription
   subscriptions(cursor: String, take: Int = 10, skip: Int = 0, filter: SubscriptionFilter, sort: SubscriptionSort = modifiedAt, order: SortOrder = Descending): SubscriptionConnection!
   subscriptionsAsCsv(filter: SubscriptionFilter): String
-  image(id: String): Image
-  images(cursor: String, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
   comment(id: String!): Comment
   comments(cursor: String, take: Int = 10, skip: Int = 0, filter: CommentFilter, sort: CommentSort = modifiedAt, order: SortOrder = Descending): CommentConnection!
   invoice(id: String): Invoice
   invoices(cursor: String, take: Int = 10, skip: Int = 0, filter: InvoiceFilter, sort: InvoiceSort = modifiedAt, order: SortOrder = Descending): InvoiceConnection!
-  payment(id: String): Payment
-  payments(cursor: String, take: Int = 10, skip: Int = 0, filter: PaymentFilter, sort: PaymentSort = modifiedAt, order: SortOrder = Descending): PaymentConnection!
   polls(cursor: String, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
   poll(id: String): FullPoll
 }
@@ -68,15 +64,6 @@ type FocalPoint {
 input ImageTransformation {
   width: Int
   height: Int
-  rotation: ImageRotation
-}
-
-enum ImageRotation {
-  Auto
-  Rotate0
-  Rotate90
-  Rotate180
-  Rotate270
 }
 
 """A hexidecimal color value."""
@@ -354,22 +341,6 @@ enum SortOrder {
   Descending
 }
 
-type ImageConnection {
-  nodes: [Image!]!
-  totalCount: Int!
-  pageInfo: PageInfo!
-}
-
-input ImageFilter {
-  title: String
-  tags: [String!]
-}
-
-enum ImageSort {
-  createdAt
-  modifiedAt
-}
-
 type Comment {
   id: String!
   guestUsername: String
@@ -487,44 +458,6 @@ enum InvoiceSort {
   paidAt
 }
 
-type Payment {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  intentID: String
-  intentSecret: String
-  state: PaymentState!
-  invoice: Invoice!
-  intentData: String
-  paymentMethod: PaymentMethod!
-  paymentData: String
-}
-
-enum PaymentState {
-  created
-  submitted
-  requiresUserAction
-  processing
-  paid
-  canceled
-  declined
-}
-
-type PaymentConnection {
-  nodes: [Payment!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input PaymentFilter {
-  intentID: String
-}
-
-enum PaymentSort {
-  createdAt
-  modifiedAt
-}
-
 type PollConnection {
   nodes: [Poll!]!
   pageInfo: PageInfo!
@@ -583,14 +516,10 @@ scalar VoteValue
 type Mutation {
   updatePeerProfile(input: PeerProfileInput!): PeerProfile!
   createSubscription(input: SubscriptionInput!): Subscription
-  importSubscription(input: SubscriptionInput!): Subscription
   renewSubscription(id: String!): Invoice
   updateSubscription(id: String!, input: SubscriptionInput!): Subscription
   deleteSubscription(id: String!): Subscription
   cancelSubscription(id: String!, reason: SubscriptionDeactivationReason!): Subscription
-  uploadImage(input: UploadImageInput!): Image
-  updateImage(id: String!, input: UpdateImageInput!): Image
-  deleteImage(id: String!): Image
   createInvoice(input: InvoiceInput!): Invoice
   createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment
   updateInvoice(id: String!, input: InvoiceInput!): Invoice
@@ -648,37 +577,6 @@ input SubscriptionDeactivationInput {
   reason: SubscriptionDeactivationReason!
 }
 
-input UploadImageInput {
-  file: Upload!
-  filename: String
-  title: String
-  description: String
-  tags: [String!]
-  link: String
-  source: String
-  license: String
-  focalPoint: InputPoint
-}
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
-
-input InputPoint {
-  x: Float!
-  y: Float!
-}
-
-input UpdateImageInput {
-  filename: String
-  title: String
-  description: String
-  tags: [String!]
-  link: String
-  source: String
-  license: String
-  focalPoint: InputPoint
-}
-
 input InvoiceInput {
   mail: String!
   description: String
@@ -694,6 +592,29 @@ input InvoiceItemInput {
   amount: Int!
   createdAt: DateTime!
   modifiedAt: DateTime!
+}
+
+type Payment {
+  id: String!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  intentID: String
+  intentSecret: String
+  state: PaymentState!
+  invoice: Invoice!
+  intentData: String
+  paymentMethod: PaymentMethod!
+  paymentData: String
+}
+
+enum PaymentState {
+  created
+  submitted
+  requiresUserAction
+  processing
+  paid
+  canceled
+  declined
 }
 
 input PaymentFromInvoiceInput {
