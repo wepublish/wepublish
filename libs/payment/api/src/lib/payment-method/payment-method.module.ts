@@ -1,5 +1,6 @@
 import { PaymentMethodService } from './payment-method.service';
 import { PaymentMethodDataloader } from './payment-method.dataloader';
+import { PaymentProviderDataloader } from './payment-provider.dataloader';
 import { HasPaymentMethodResolver } from './has-payment-method/has-payment-method.resolver';
 import { PaymentMethodResolver } from './payment-method.resolver';
 import {
@@ -40,11 +41,12 @@ export interface PaymentMethodClientAsyncOptions
   providers: [
     PaymentMethodService,
     PaymentMethodDataloader,
+    PaymentProviderDataloader,
     PaymentMethodResolver,
     HasPaymentMethodResolver,
     PaymentProviderService,
   ],
-  exports: [PaymentMethodDataloader],
+  exports: [PaymentMethodDataloader, PaymentProviderDataloader],
 })
 export class PaymentMethodModule {
   public static register(config: PaymentMethodConfigType): DynamicModule {

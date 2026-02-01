@@ -14,16 +14,4 @@ export class PaymentProviderService {
       },
     });
   }
-
-  async getByKey(id: string) {
-    return this.prisma.settingPaymentProvider.findUnique({
-      where: {
-        id,
-      },
-      select: {
-        id: true,
-        name: true,
-      },
-    });
-  }
 }
