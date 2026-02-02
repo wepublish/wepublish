@@ -9,9 +9,11 @@ import { InternalKey } from './internalKey';
 import { HttpService } from '@nestjs/axios';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { ProLitterisGenerator } from './types';
+import { SecretCrypto } from '@wepublish/settings/api';
 
 class ProlitterisConfig {
   private readonly ttl = 21600; // 6h
+  private readonly crypto = new SecretCrypto();
 
   constructor(
     private readonly prisma: PrismaClient,
@@ -24,11 +26,34 @@ class ProlitterisConfig {
       where: { id: this.id },
       data: { lastLoadedAt: new Date() },
     });
-    return this.prisma.settingTrackingPixel.findUnique({
+    const config = await this.prisma.settingTrackingPixel.findUnique({
       where: {
         id: this.id,
       },
     });
+
+    if (!config) {
+      return null;
+    }
+
+    let decryptedProlitterisPassword: string | null = null;
+    if (config.prolitteris_password) {
+      try {
+        decryptedProlitterisPassword = this.crypto.decrypt(
+          config.prolitteris_password
+        );
+      } catch (e) {
+        console.error(e);
+        throw new Error(
+          `Failed to decrypt apikey for Mail provider setting ${this.id}`
+        );
+      }
+    }
+
+    return {
+      ...config,
+      prolitteris_password: decryptedProlitterisPassword,
+    };
   }
 
   async getFromCache(): Promise<SettingTrackingPixel | null> {

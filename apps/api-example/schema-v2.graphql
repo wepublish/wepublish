@@ -2818,7 +2818,6 @@ type SettingMailProvider {
   replyToAddress: String
   slack_webhookURL: String
   type: MailProviderType!
-  webhookEndpointSecret: String
 }
 
 input SettingMailProviderFilter {
@@ -2877,7 +2876,6 @@ type SettingPaymentProvider {
   payrexx_vatrate: String
   stripe_methods: [StripePaymentMethod!]
   type: PaymentProviderType!
-  webhookEndpointSecret: String
 }
 
 input SettingPaymentProviderFilter {

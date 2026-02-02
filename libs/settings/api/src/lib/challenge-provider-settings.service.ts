@@ -8,13 +8,27 @@ import {
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { ChallengeProviderSettingsDataloaderService } from './challenge-provider-settings-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { SecretCrypto } from './secrets-cryto';
 
 @Injectable()
 export class ChallengeProviderSettingsService {
+  private readonly crypto = new SecretCrypto();
   constructor(
     private prisma: PrismaClient,
     private kv: KvTtlCacheService
   ) {}
+
+  private encryptSecretsIfPresent<T extends { secret?: string | null }>(
+    data: T
+  ): T {
+    if (typeof data.secret === 'string' && data.secret.length > 0) {
+      return {
+        ...data,
+        apiKey: this.crypto.encrypt(data.secret),
+      };
+    }
+    return data;
+  }
 
   @PrimeDataLoader(ChallengeProviderSettingsDataloaderService, 'id')
   async challengeProviderSettingsList(
@@ -50,8 +64,9 @@ export class ChallengeProviderSettingsService {
   async createChallengeProviderSetting(
     input: CreateSettingChallengeProviderInput
   ): Promise<SettingChallengeProvider> {
+    const data = this.encryptSecretsIfPresent(input);
     const returnValue = this.prisma.settingChallengeProvider.create({
-      data: input,
+      data: data,
     });
     await this.kv.resetNamespace('settings:challenge');
     return returnValue;
@@ -61,7 +76,8 @@ export class ChallengeProviderSettingsService {
   async updateChallengeProviderSetting(
     input: UpdateSettingChallengeProviderInput
   ): Promise<SettingChallengeProvider> {
-    const { id, ...updateData } = input;
+    const data = this.encryptSecretsIfPresent(input);
+    const { id, ...updateData } = data;
 
     const existingSetting =
       await this.prisma.settingChallengeProvider.findUnique({

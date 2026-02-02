@@ -16,6 +16,7 @@ import express from 'express';
 import DataLoader from 'dataloader';
 import { timingSafeEqual } from 'crypto';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { SecretCrypto } from '@wepublish/settings/api';
 
 export type InvoiceWithItems = Invoice & {
   items: InvoiceItem[];
@@ -375,6 +376,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 }
 
 class PaymentProviderConfig {
+  private readonly crypto = new SecretCrypto();
   private readonly ttl = 21600; // 6h
 
   constructor(
@@ -388,11 +390,46 @@ class PaymentProviderConfig {
       where: { id: this.id },
       data: { lastLoadedAt: new Date() },
     });
-    return this.prisma.settingPaymentProvider.findUnique({
+    const config = await this.prisma.settingPaymentProvider.findUnique({
       where: {
         id: this.id,
       },
     });
+
+    if (!config) {
+      return null;
+    }
+
+    let decryptedApiKey: string | null = null;
+    if (config.apiKey) {
+      try {
+        decryptedApiKey = this.crypto.decrypt(config.apiKey);
+      } catch (e) {
+        console.error(e);
+        throw new Error(
+          `Failed to decrypt apikey for Mail provider setting ${this.id}`
+        );
+      }
+    }
+    let decryptedWebhookEndpointSecret: string | null = null;
+    if (config.webhookEndpointSecret) {
+      try {
+        decryptedWebhookEndpointSecret = this.crypto.decrypt(
+          config.webhookEndpointSecret
+        );
+      } catch (e) {
+        console.error(e);
+        throw new Error(
+          `Failed to decrypt webhookEndpointSecret for Mail provider setting ${this.id}`
+        );
+      }
+    }
+
+    return {
+      ...config,
+      apiKey: decryptedApiKey,
+      webhookEndpointSecret: decryptedWebhookEndpointSecret,
+    };
   }
 
   async getFromCache(): Promise<SettingPaymentProvider | null> {

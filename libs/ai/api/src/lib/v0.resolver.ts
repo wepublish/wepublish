@@ -6,11 +6,13 @@ import { CanCreateArticle, CanCreatePage } from '@wepublish/permissions';
 import { BadRequestException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { SecretCrypto } from '@wepublish/settings/api';
 
 type V0Settings = { apiKey: string | null; systemPrompt: string | null };
 
 class V0Config {
   private readonly ttl = 21600; // 6h
+  private readonly crypto = new SecretCrypto();
 
   constructor(
     private readonly prisma: PrismaClient,
@@ -23,14 +25,24 @@ class V0Config {
       where: { id: this.id },
       data: { lastLoadedAt: new Date() },
     });
-    const row = await this.prisma.settingAIProvider.findUnique({
+    const config = await this.prisma.settingAIProvider.findUnique({
       where: { id: this.id },
       select: { apiKey: true, systemPrompt: true },
     });
 
+    let decryptedApiKey: string | null = null;
+    if (config?.apiKey) {
+      try {
+        decryptedApiKey = this.crypto.decrypt(config.apiKey);
+      } catch (e) {
+        console.error(e);
+        throw new Error(`Failed to decrypt API key for AI setting ${this.id}`);
+      }
+    }
+
     return {
-      apiKey: row?.apiKey ?? null,
-      systemPrompt: row?.systemPrompt ?? null,
+      apiKey: decryptedApiKey,
+      systemPrompt: config?.systemPrompt ?? null,
     };
   }
 
@@ -44,7 +56,7 @@ class V0Config {
   }
 
   async apiKey(): Promise<string | null> {
-    return (await this.getV0()).apiKey;
+    return this.crypto.decrypt((await this.getV0()).apiKey);
   }
 
   async systemPrompt(): Promise<string | null> {

@@ -8,13 +8,30 @@ import {
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { TrackingPixelSettingsDataloaderService } from './tracking-pixel-settings-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { SecretCrypto } from './secrets-cryto';
 
 @Injectable()
 export class TrackingPixelSettingsService {
+  private readonly crypto = new SecretCrypto();
   constructor(
     private prisma: PrismaClient,
     private kv: KvTtlCacheService
   ) {}
+
+  private encryptSecretsIfPresent<
+    T extends { prolitteris_password?: string | null },
+  >(data: T): T {
+    if (
+      typeof data.prolitteris_password === 'string' &&
+      data.prolitteris_password.length > 0
+    ) {
+      return {
+        ...data,
+        apiKey: this.crypto.encrypt(data.prolitteris_password),
+      };
+    }
+    return data;
+  }
 
   @PrimeDataLoader(TrackingPixelSettingsDataloaderService, 'id')
   async trackingPixelSettingsList(
@@ -48,8 +65,9 @@ export class TrackingPixelSettingsService {
   async createTrackingPixelSetting(
     input: CreateSettingTrackingPixelInput
   ): Promise<SettingTrackingPixel> {
+    const output = this.encryptSecretsIfPresent(input);
     const returnValue = this.prisma.settingTrackingPixel.create({
-      data: input,
+      data: output,
     });
     await this.kv.resetNamespace('settings:tracking-pixel');
     return returnValue;
@@ -59,7 +77,8 @@ export class TrackingPixelSettingsService {
   async updateTrackingPixelSetting(
     input: UpdateSettingTrackingPixelInput
   ): Promise<SettingTrackingPixel> {
-    const { id, ...updateData } = input;
+    const output = this.encryptSecretsIfPresent(input);
+    const { id, ...updateData } = output;
 
     const existingSetting = await this.prisma.settingTrackingPixel.findUnique({
       where: { id },

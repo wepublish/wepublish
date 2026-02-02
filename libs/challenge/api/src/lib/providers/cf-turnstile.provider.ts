@@ -9,9 +9,11 @@ import FormData from 'form-data';
 import fetch from 'node-fetch';
 import { PrismaClient, SettingChallengeProvider } from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { SecretCrypto } from '@wepublish/settings/api';
 
 class TurnstileConfig {
   private readonly ttl = 21600; // 6h
+  private readonly crypto = new SecretCrypto();
 
   constructor(
     private readonly prisma: PrismaClient,
@@ -24,11 +26,31 @@ class TurnstileConfig {
       where: { id: this.id },
       data: { lastLoadedAt: new Date() },
     });
-    return this.prisma.settingChallengeProvider.findUnique({
+    const config = await this.prisma.settingChallengeProvider.findUnique({
       where: {
         id: this.id,
       },
     });
+
+    if (!config) {
+      return null;
+    }
+
+    let decryptedSecret: string | null = null;
+    if (config?.secret) {
+      try {
+        decryptedSecret = this.crypto.decrypt(config.secret);
+      } catch (e) {
+        console.error(e);
+        throw new Error(
+          `Failed to decrypt secret for Challenge provider setting ${this.id}`
+        );
+      }
+    }
+    return {
+      ...config,
+      secret: decryptedSecret,
+    };
   }
 
   async getFromCache(): Promise<SettingChallengeProvider | null> {

@@ -25,3 +25,4 @@ export * from './lib/mail-provider-settings.model';
 export * from './lib/mail-provider-settings.service';
 export * from './lib/mail-provider-settings.resolver';
 export * from './lib/mail-provider-settings-dataloader.service';
+export * from './lib/secrets-cryto';

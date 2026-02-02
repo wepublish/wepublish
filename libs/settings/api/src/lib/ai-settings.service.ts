@@ -8,13 +8,28 @@ import {
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { AISettingsDataloaderService } from './ai-settings-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { SecretCrypto } from './secrets-cryto';
 
 @Injectable()
 export class AISettingsService {
+  private readonly crypto = new SecretCrypto();
+
   constructor(
     private prisma: PrismaClient,
     private kv: KvTtlCacheService
   ) {}
+
+  private encryptSecretsIfPresent<T extends { apiKey?: string | null }>(
+    data: T
+  ): T {
+    if (typeof data.apiKey === 'string' && data.apiKey.length > 0) {
+      return {
+        ...data,
+        apiKey: this.crypto.encrypt(data.apiKey),
+      };
+    }
+    return data;
+  }
 
   @PrimeDataLoader(AISettingsDataloaderService, 'id')
   async aiSettingsList(
@@ -46,8 +61,9 @@ export class AISettingsService {
   async createAISetting(
     input: CreateSettingAIProviderInput
   ): Promise<SettingAIProvider> {
+    const data = this.encryptSecretsIfPresent(input);
     const returnValue = await this.prisma.settingAIProvider.create({
-      data: input,
+      data,
     });
     await this.kv.resetNamespace('settings:ai');
     return returnValue;
@@ -57,7 +73,8 @@ export class AISettingsService {
   async updateAISetting(
     input: UpdateSettingAIProviderInput
   ): Promise<SettingAIProvider> {
-    const { id, ...updateData } = input;
+    const data = this.encryptSecretsIfPresent(input);
+    const { id, ...updateData } = data;
 
     const existingSetting = await this.prisma.settingAIProvider.findUnique({
       where: { id },

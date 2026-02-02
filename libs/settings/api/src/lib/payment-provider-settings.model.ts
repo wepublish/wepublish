@@ -43,10 +43,10 @@ export class SettingPaymentProvider {
   @Field(type => Boolean, { nullable: true })
   offSessionPayments?: boolean;
 
+  /** hide sensitive filds
   @Field(type => String, { nullable: true })
   webhookEndpointSecret?: string;
 
-  /** hide sensitive filds
  @Field(type => String, { nullable: true })
   apiKey?: string;
  **/

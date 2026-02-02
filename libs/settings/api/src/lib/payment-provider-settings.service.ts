@@ -8,13 +8,36 @@ import {
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { PaymentProviderSettingsDataloaderService } from './payment-provider-settings-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { SecretCrypto } from './secrets-cryto';
 
 @Injectable()
 export class PaymentProviderSettingsService {
+  private readonly crypto = new SecretCrypto();
   constructor(
     private prisma: PrismaClient,
     private kv: KvTtlCacheService
   ) {}
+
+  private encryptSecretsIfPresent<
+    T extends { apiKey?: string | null; webhookEndpointSecret?: string | null },
+  >(data: T): T {
+    if (typeof data.apiKey === 'string' && data.apiKey.length > 0) {
+      return {
+        ...data,
+        apiKey: this.crypto.encrypt(data.apiKey),
+      };
+    }
+    if (
+      typeof data.webhookEndpointSecret === 'string' &&
+      data.webhookEndpointSecret.length > 0
+    ) {
+      return {
+        ...data,
+        webhookEndpointSecret: this.crypto.encrypt(data.webhookEndpointSecret),
+      };
+    }
+    return data;
+  }
 
   @PrimeDataLoader(PaymentProviderSettingsDataloaderService, 'id')
   async paymentProviderSettingsList(
@@ -48,8 +71,9 @@ export class PaymentProviderSettingsService {
   async createPaymentProviderSetting(
     input: CreateSettingPaymentProviderInput
   ): Promise<SettingPaymentProvider> {
+    const output = this.encryptSecretsIfPresent(input);
     const returnValue = this.prisma.settingPaymentProvider.create({
-      data: input,
+      data: output,
     });
     await this.kv.resetNamespace('settings:paymentprovider');
     return returnValue;
@@ -59,7 +83,8 @@ export class PaymentProviderSettingsService {
   async updatePaymentProviderSetting(
     input: UpdateSettingPaymentProviderInput
   ): Promise<SettingPaymentProvider> {
-    const { id, ...updateData } = input;
+    const output = this.encryptSecretsIfPresent(input);
+    const { id, ...updateData } = output;
 
     const existingSetting = await this.prisma.settingPaymentProvider.findUnique(
       {

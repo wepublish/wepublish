@@ -197,7 +197,7 @@ const seedSettings = (prisma: PrismaClient) =>
       },
       update: {},
       create: {
-        id: 'id',
+        id: 'v0',
         name: 'V0',
         type: 'V0',
       },

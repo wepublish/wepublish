@@ -37,10 +37,10 @@ export class SettingMailProvider {
   @Field(type => String, { nullable: true })
   replyToAddress?: string;
 
+  /** hide sensitive filds
   @Field(type => String, { nullable: true })
   webhookEndpointSecret?: string;
 
-  /** hide sensitive filds
   @Field(type => String, { nullable: true })
   apiKey?: string;
  **/
