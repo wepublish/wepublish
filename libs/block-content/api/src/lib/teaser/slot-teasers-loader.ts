@@ -113,9 +113,11 @@ export class SlotTeasersLoader {
   }
 
   async loadSlotTeasersIntoBlocks(revisionBlocks: BaseBlock<BlockType>[]) {
-    const blocks = await Promise.all(
-      revisionBlocks.map(block => this.processBlock(block))
-    );
+    const blocks: (BaseBlock<BlockType> | undefined)[] = [];
+
+    for (const block of revisionBlocks) {
+      blocks.push(await this.processBlock(block));
+    }
 
     return blocks as BaseBlock<BlockType>[];
   }
