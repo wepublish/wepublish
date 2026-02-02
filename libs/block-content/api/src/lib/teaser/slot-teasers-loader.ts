@@ -12,7 +12,11 @@ import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
 import { isTeaserGridFlexBlock } from './teaser-flex.model';
 import { isTeaserGridBlock } from './teaser-grid.model';
-import { FlexBlock, isFlexBlock } from '../flex/flex-block.model';
+import {
+  BlockWithAlignment,
+  FlexBlock,
+  isFlexBlock,
+} from '../flex/flex-block.model';
 
 const extractTeasers = <Block extends BaseBlock<BlockType>>(block: Block) => {
   if (isTeaserSlotsBlock(block)) {
@@ -99,12 +103,14 @@ export class SlotTeasersLoader {
     }
 
     if (isFlexBlock(block)) {
-      const updatedBlocks = await Promise.all(
-        block.blocks.map(async nested => ({
+      const updatedBlocks: BlockWithAlignment[] = [];
+      for (const nested of block.blocks) {
+        const updatedNestedBlock = await this.processBlock(nested.block);
+        updatedBlocks.push({
           ...nested,
-          block: await this.processBlock(nested.block),
-        }))
-      );
+          block: updatedNestedBlock,
+        } as BlockWithAlignment);
+      }
 
       return { ...block, blocks: updatedBlocks } as FlexBlock;
     }
