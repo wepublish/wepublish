@@ -18,8 +18,25 @@ export class SecretCrypto {
   private keyVersion: number;
 
   constructor() {
-    this.masterSecret = process.env.APP_SECRET_KEY || '';
-    this.keyVersion = parseInt(process.env.APP_SECRET_KEY_VERSION || '');
+    const secret = process.env['APP_SECRET_KEY'];
+    if (!secret || secret.length < 16) {
+      throw new Error(
+        'APP_SECRET_KEY is missing or too short (must be >= 16 characters)'
+      );
+    }
+    this.masterSecret = secret;
+
+    const parsedVersion = Number.parseInt(
+      process.env['APP_SECRET_KEY_VERSION'] ?? '',
+      10
+    );
+    this.keyVersion =
+      Number.isInteger(parsedVersion) && parsedVersion > 0 ? parsedVersion : 1;
+    if (!Number.isInteger(this.keyVersion) || this.keyVersion <= 0) {
+      throw new Error(
+        'SecretCrypto.encrypt: keyVersion must be a positive integer'
+      );
+    }
     if (!this.masterSecret || this.masterSecret.length < 16) {
       throw new Error('SecretCrypto: masterSecret must be >= 16 characters');
     }
@@ -28,11 +45,6 @@ export class SecretCrypto {
     if (typeof plaintext !== 'string' || plaintext.length === 0) {
       throw new Error(
         'SecretCrypto.encrypt: plaintext must be a non-empty string'
-      );
-    }
-    if (!Number.isInteger(this.keyVersion) || this.keyVersion <= 0) {
-      throw new Error(
-        'SecretCrypto.encrypt: keyVersion must be a positive integer'
       );
     }
 
