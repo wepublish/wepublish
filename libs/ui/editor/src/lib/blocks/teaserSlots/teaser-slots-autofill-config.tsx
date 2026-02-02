@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { Form, SelectPicker } from 'rsuite';
 
 import { SelectTags } from '../../atoms/tag/selectTags';
+import { useTeaserTypeText } from '../../panel/teaserListConfigPanel';
 
 interface TeaserSlotsConfigPanelProps {
   config: TeaserSlotsAutofillConfigInput;
@@ -37,13 +38,6 @@ const HelpText = styled('div')`
 const inputStyles = css`
   width: 100%;
 `;
-
-export const useTeaserTypeText = () => {
-  const { t } = useTranslation();
-
-  return (tagType: TeaserType) =>
-    t(`resources.teaserType.${tagType.toLowerCase()}`);
-};
 
 export function TeaserSlotsAutofillConfigPanel({
   config,
