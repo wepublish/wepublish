@@ -116,6 +116,7 @@ export class SlotTeasersLoader {
     const blocks: (BaseBlock<BlockType> | undefined)[] = [];
 
     for (const block of revisionBlocks) {
+      // force pr
       blocks.push(await this.processBlock(block));
     }
 
