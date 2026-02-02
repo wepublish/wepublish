@@ -235,12 +235,13 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
    * [Fixed with Zod 4](https://github.com/colinhacks/zod/issues/2474)
    */
   const loggedOutSchema = useMemo(() => {
-    const result = requiredRegisterSchema.merge(
-      schema.pick(fieldsToDisplay).merge(subscribeSchema)
-    );
+    let result: z.ZodEffects<any> | z.ZodObject<any> =
+      requiredRegisterSchema.merge(
+        schema.pick(fieldsToDisplay).merge(subscribeSchema)
+      );
 
     if (fieldsToDisplay.passwordRepeated) {
-      return zodAlwaysRefine(result).refine(
+      result = zodAlwaysRefine(result).refine(
         data => data.password === data.passwordRepeated,
         {
           message: 'Passwörter stimmen nicht überein.',
@@ -250,7 +251,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     }
 
     if (fieldsToDisplay.emailRepeated) {
-      return zodAlwaysRefine(result).refine(
+      result = zodAlwaysRefine(result).refine(
         data => data.email === data.emailRepeated,
         {
           message: 'E-Mailadressen stimmen nicht überein.',
@@ -263,11 +264,35 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   }, [fieldsToDisplay, schema]);
 
   const loggedInSchema = subscribeSchema;
+  const schem = useMemo(
+    () =>
+      zodAlwaysRefine(hasUserContext ? loggedInSchema : loggedOutSchema).refine(
+        data => {
+          const memberPlan = memberPlans.data?.memberPlans.nodes.find(
+            mb => mb.id === data.memberPlanId
+          );
+
+          return (
+            !memberPlan || data.monthlyAmount > memberPlan.amountPerMonthMin
+          );
+        },
+        {
+          message: `Betrag kleiner wie der Mindestbetrag.`,
+          path: ['monthlyAmount'],
+        }
+      ),
+    [
+      hasUserContext,
+      loggedInSchema,
+      loggedOutSchema,
+      memberPlans.data?.memberPlans.nodes,
+    ]
+  );
 
   const { control, handleSubmit, watch, setValue, resetField } = useForm<
     z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>
   >({
-    resolver: zodResolver(hasUserContext ? loggedInSchema : loggedOutSchema),
+    resolver: zodResolver(schem),
     defaultValues: {
       ...defaults,
       monthlyAmount: 0,
