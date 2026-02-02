@@ -322,7 +322,15 @@
         "unlockBlock": "Unlock"
       },
       "flexBlock": {
-        "label": "Flex Block"
+        "label": "Flex Block",
+        "addNestedBlock": "Add (Sub-)Block",
+        "chooseNestedBlock": "Choose (Sub-)Block",
+        "close": "Close",
+        "deleteNestedBlock": "Delete (Sub-)Block",
+        "editNestedBlock": "Edit (Sub-)Block",
+        "lockNestedBlock": "Lock (Sub-)Block",
+        "removeNestedBlock": "Remove (Sub-)Block",
+        "unlockNestedBlock": "Unlock (Sub-)Block"
       },
       "html": {
         "close": "Close",
@@ -426,7 +434,8 @@
         "addSlot": "Add slot",
         "label": "Teaser Slots",
         "filter": "Filter by tags",
-        "filterHelpText": "Enter tags separated by commas. Leave empty for no tag filtering."
+        "filterHelpText": "Enter tags separated by commas. Leave empty for no tag filtering.",
+        "autofillType": "Teaser type to autofill"
       },
       "title": {
         "label": "Title",
