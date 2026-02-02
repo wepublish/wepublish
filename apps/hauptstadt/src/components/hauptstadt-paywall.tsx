@@ -10,7 +10,7 @@ import {
   BuilderPaywallProps,
   Paywall as BuilderPaywall,
 } from '@wepublish/website/builder';
-import { ascend, prop, sortWith } from 'ramda';
+import { ascend, descend, prop, sortWith } from 'ramda';
 import { createContext, useMemo } from 'react';
 
 import { isSubscriptionUpgradeable } from '../hooks/inform-user-upgrade';
@@ -41,7 +41,13 @@ const HauptstadtPaywall = styled((props: BuilderPaywallProps) => {
 
   const cheapestSubscription = useMemo(
     () =>
-      sortWith([ascend(prop('monthlyAmount'))], filteredSubscriptions).at(0),
+      sortWith(
+        [
+          descend(prop('monthlyAmount')),
+          ascend(sub => Number(!!sub.deactivation)),
+        ],
+        filteredSubscriptions
+      ).at(0),
     [filteredSubscriptions]
   );
 

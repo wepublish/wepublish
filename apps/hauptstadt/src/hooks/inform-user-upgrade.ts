@@ -19,7 +19,6 @@ export const isSubscriptionUpgradeable = (
   subscription: FullSubscriptionFragment
 ) =>
   subscription.extendable &&
-  subscription.autoRenew &&
   subscription.isActive &&
   isMemberplanUpgradeable(subscription.memberPlan);
 
