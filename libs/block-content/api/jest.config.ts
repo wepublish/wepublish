@@ -4,8 +4,16 @@ export default {
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
-    '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
+    '^.+\\.(js|jsx|ts|tsx)$': [
+      'ts-jest',
+      {
+        tsconfig: '<rootDir>/tsconfig.spec.json',
+      },
+    ],
   },
-  moduleFileExtensions: ['ts', 'js', 'html'],
+  moduleNameMapper: {
+    '^@faker-js/faker$': '<rootDir>/../../../__mocks__/faker.ts',
+  },
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../../coverage/libs/block-content/api',
 };

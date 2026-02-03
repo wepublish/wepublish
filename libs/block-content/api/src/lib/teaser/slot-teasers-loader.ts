@@ -12,7 +12,11 @@ import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
 import { isTeaserGridFlexBlock } from './teaser-flex.model';
 import { isTeaserGridBlock } from './teaser-grid.model';
-import { FlexBlock, isFlexBlock } from '../flex/flex-block.model';
+import {
+  BlockWithAlignment,
+  FlexBlock,
+  isFlexBlock,
+} from '../flex/flex-block.model';
 
 const extractTeasers = <Block extends BaseBlock<BlockType>>(block: Block) => {
   if (isTeaserSlotsBlock(block)) {
@@ -48,16 +52,6 @@ const extractTeasers = <Block extends BaseBlock<BlockType>>(block: Block) => {
     );
   }
 
-  if (isFlexBlock(block)) {
-    return block.blocks.reduce((teasers: (typeof Teaser)[], nestedBlock) => {
-      if (nestedBlock.block) {
-        teasers.push(...extractTeasers(nestedBlock.block));
-      }
-
-      return teasers;
-    }, []);
-  }
-
   return [];
 };
 
@@ -87,24 +81,66 @@ export class SlotTeasersLoader {
     return block;
   }
 
-  async processBlock(
+  async processBlock__raceCondition(
     block: BaseBlock<BlockType> | undefined
   ): Promise<BaseBlock<BlockType> | undefined> {
     if (!block) return block;
 
+    // if block has teasers load them into loaded teasers to make sure there will be no duplicates
     this.addLoadedTeaser(...extractTeasers(block));
 
     if (isTeaserSlotsBlock(block)) {
       return await this.populateTeaserSlots(block);
     }
 
+    // if block is a flex block, process its nested blocks recursively --> the same way "top level blocks" are processed
     if (isFlexBlock(block)) {
       const updatedBlocks = await Promise.all(
         block.blocks.map(async nested => ({
           ...nested,
-          block: await this.processBlock(nested.block),
+          block: await this.processBlock__raceCondition(nested.block),
         }))
       );
+
+      return { ...block, blocks: updatedBlocks } as FlexBlock;
+    }
+
+    return block;
+  }
+
+  async loadSlotTeasersIntoBlocks__raceCondition(
+    revisionBlocks: BaseBlock<BlockType>[]
+  ) {
+    this.loadedTeasers = [];
+    const blocks = await Promise.all(
+      revisionBlocks.map(block => this.processBlock__raceCondition(block))
+    );
+
+    return blocks as BaseBlock<BlockType>[];
+  }
+
+  async processBlock(
+    block: BaseBlock<BlockType> | undefined
+  ): Promise<BaseBlock<BlockType> | undefined> {
+    if (!block) return block;
+
+    // if block has teasers load them into loaded teasers to make sure there will be no duplicates
+    this.addLoadedTeaser(...extractTeasers(block));
+
+    if (isTeaserSlotsBlock(block)) {
+      return await this.populateTeaserSlots(block);
+    }
+
+    // if block is a flex block, process its nested blocks recursively --> the same way "top level blocks" are processed
+    if (isFlexBlock(block)) {
+      const updatedBlocks: BlockWithAlignment[] = [];
+      for (const nested of block.blocks) {
+        const updatedNestedBlock = await this.processBlock(nested.block);
+        updatedBlocks.push({
+          ...nested,
+          block: updatedNestedBlock,
+        } as BlockWithAlignment);
+      }
 
       return { ...block, blocks: updatedBlocks } as FlexBlock;
     }
