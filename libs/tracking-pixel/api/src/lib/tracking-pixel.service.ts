@@ -28,7 +28,8 @@ export class TrackingPixelService {
         },
         create: {
           trackingPixelProviderID: trackingPixelProvider.id,
-          trackingPixelProviderType: trackingPixelProvider.type,
+          trackingPixelProviderType:
+            await trackingPixelProvider.getTrackingPixelType(),
         },
         update: {},
       });
@@ -85,7 +86,8 @@ export class TrackingPixelService {
         },
         create: {
           trackingPixelProviderID: trackingPixelProvider.id,
-          trackingPixelProviderType: trackingPixelProvider.type,
+          trackingPixelProviderType:
+            await trackingPixelProvider.getTrackingPixelType(),
         },
         update: {},
       });

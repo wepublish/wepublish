@@ -1,9 +1,11 @@
-import { PrismaClient, UserEvent } from '@prisma/client';
+import { PrismaClient, SettingMailProvider, UserEvent } from '@prisma/client';
 import { BaseMailProvider } from './mail-provider/base-mail-provider';
 import { MailProviderTemplate } from './mail-provider/mail-provider.interface';
 
 import { Injectable } from '@nestjs/common';
 import { MailController, MailControllerConfig } from './mail.controller';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { SecretCrypto } from '@wepublish/settings/api';
 
 export interface SendRemoteEMailProps {
   readonly remoteTemplate: string;
@@ -12,36 +14,103 @@ export interface SendRemoteEMailProps {
   readonly data: Record<string, any>;
 }
 
+// LEGACY
 export interface MailContextOptions {
   readonly defaultFromAddress: string;
   readonly defaultReplyToAddress?: string;
 }
 
-export interface MailContextInterface {
-  defaultFromAddress: string;
-  defaultReplyToAddress?: string;
+class MailContextConfig {
+  private readonly ttl = 21600; // 6h
+  private readonly crypto = new SecretCrypto();
 
+  constructor(
+    private readonly prisma: PrismaClient,
+    private readonly kv: KvTtlCacheService,
+    private readonly id: string
+  ) {}
+
+  private async load(): Promise<SettingMailProvider | null> {
+    await this.prisma.settingMailProvider.update({
+      where: { id: this.id },
+      data: { lastLoadedAt: new Date() },
+    });
+    const config = await this.prisma.settingMailProvider.findUnique({
+      where: {
+        id: this.id,
+      },
+    });
+
+    if (!config) {
+      return null;
+    }
+
+    let decryptedApiKey: string | null = null;
+    if (config.apiKey) {
+      try {
+        decryptedApiKey = this.crypto.decrypt(config.apiKey);
+      } catch (e) {
+        console.error(e);
+        throw new Error(
+          `Failed to decrypt apikey for Mail provider setting ${this.id}`
+        );
+      }
+    }
+    let decryptedWebhookEndpointSecret: string | null = null;
+    if (config.webhookEndpointSecret) {
+      try {
+        decryptedWebhookEndpointSecret = this.crypto.decrypt(
+          config.webhookEndpointSecret
+        );
+      } catch (e) {
+        console.error(e);
+        throw new Error(
+          `Failed to decrypt webhookEndpointSecret for Mail provider setting ${this.id}`
+        );
+      }
+    }
+
+    return {
+      ...config,
+      apiKey: decryptedApiKey,
+      webhookEndpointSecret: decryptedWebhookEndpointSecret,
+    };
+  }
+
+  async getFromCache(): Promise<SettingMailProvider | null> {
+    return this.kv.getOrLoadNs<SettingMailProvider | null>(
+      `settings:mailprovider`,
+      `${this.id}`,
+      () => this.load(),
+      this.ttl
+    );
+  }
+
+  async getConfig(): Promise<SettingMailProvider | null> {
+    return await this.getFromCache();
+  }
+}
+
+export interface MailContextInterface {
   sendMail(opts: MailControllerConfig): Promise<void>;
 }
 
-export interface MailContextProps extends MailContextOptions {
+export interface MailContextProps {
   readonly mailProvider: BaseMailProvider;
   readonly prisma: PrismaClient;
+  readonly kv: KvTtlCacheService;
 }
 
 @Injectable()
 export class MailContext implements MailContextInterface {
   mailProvider: BaseMailProvider;
   prisma: PrismaClient;
-  defaultFromAddress: string;
-  defaultReplyToAddress?: string;
+  kv: KvTtlCacheService;
 
   constructor(props: MailContextProps) {
     this.mailProvider = props.mailProvider;
     this.prisma = props.prisma;
-
-    this.defaultFromAddress = props.defaultFromAddress;
-    this.defaultReplyToAddress = props.defaultReplyToAddress;
+    this.kv = props.kv;
   }
 
   async sendMail(
@@ -67,11 +136,16 @@ export class MailContext implements MailContextInterface {
     if (!this.mailProvider) {
       throw new Error('MailProvider is not set!');
     }
+    const config = await new MailContextConfig(
+      this.prisma,
+      this.kv,
+      this.mailProvider.id
+    ).getConfig();
 
     await this.mailProvider.sendMail({
       mailLogID,
       recipient,
-      replyToAddress: this.defaultReplyToAddress ?? this.defaultFromAddress,
+      replyToAddress: config?.replyToAddress ?? config?.fromAddress ?? '',
       subject: '',
       template: remoteTemplate,
       templateData: data,

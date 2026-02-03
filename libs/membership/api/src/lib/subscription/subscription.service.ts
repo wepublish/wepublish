@@ -410,7 +410,7 @@ export class SubscriptionService {
       );
     }
 
-    if (paymentProvider.offSessionPayments) {
+    if (await paymentProvider.isOffSession()) {
       return await this.offSessionPayment(
         invoice,
         paymentProvider,
@@ -469,7 +469,7 @@ export class SubscriptionService {
           'Checking payment <%s> with intent %s on payment provider %s soft failed with error: %s',
           payment.id,
           payment.intentID,
-          paymentProvider.name,
+          paymentProvider.getName(),
           e
         );
       }

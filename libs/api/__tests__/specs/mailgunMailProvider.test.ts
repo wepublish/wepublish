@@ -1,7 +1,7 @@
 import nock from 'nock';
-import Mailgun from 'mailgun.js';
-import FormData from 'form-data';
 import { MailgunMailProvider, MailProviderTemplate } from '@wepublish/mail/api';
+import { PrismaClient } from '@prisma/client';
+import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 
 const mockSubmit = jest.fn();
 const mockAppend = jest.fn();
@@ -46,38 +46,36 @@ describe('Mailgun Mail Provider', () => {
       );
   });
 
-  test('can be created', () => {
-    const mailgunClient = new Mailgun(FormData).client({
-      username: 'api',
-      key: 'fakeAPIkey',
-    });
+  test('can be created', async () => {
+    const prisma = new PrismaClient();
+    const kv = createKvMock();
     const mailgunMailProvider = new MailgunMailProvider({
       id: 'mailgun',
-      name: 'Mailgun',
-      apiKey: 'fakeAPIkey',
-      baseDomain: 'https://mailgun.com',
-      mailDomain: 'https://mailgun.com',
-      webhookEndpointSecret: 'fakeSecret',
-      fromAddress: 'dev@wepublish.ch',
-      mailgunClient,
+      prisma,
+      kv,
     });
     expect(mailgunMailProvider).toBeDefined();
   });
 
   test('loads templates', async () => {
-    const mailgunClient = new Mailgun(FormData).client({
-      username: 'api',
-      key: 'mg-12345678',
+    const prisma = new PrismaClient();
+    const kv = createKvMock();
+    await kv.setNs('settings:mailprovider', 'mailgun', {
+      id: 'mailgun',
+      type: 'mailgun',
+      name: 'Mailgun',
+      fromAddress: 'dev@wepublish.ch',
+      replyToAddress: 'dev@wepublish.ch',
+      webhookEndpointSecret: 'fakeSecret',
+      apiKey: 'mg-12345678',
+      mailgun_mailDomain: 'sandbox8a2185cfb29c48d4941d51c261fc3e03.mailgun.org',
+      mailgun_baseDomain: 'api.mailgun.net',
     });
+
     const mailgunMailProvider = new MailgunMailProvider({
       id: 'mailgun',
-      name: 'Mailgun',
-      apiKey: 'mg-12345678',
-      baseDomain: 'https://mailgun.com',
-      mailDomain: 'sandbox8a2185cfb29c48d4941d51c261fc3e03.mailgun.org',
-      webhookEndpointSecret: 'fakeSecret',
-      fromAddress: 'dev@wepublish.ch',
-      mailgunClient,
+      prisma,
+      kv,
     });
 
     const response = await mailgunMailProvider.getTemplates();
@@ -90,19 +88,23 @@ describe('Mailgun Mail Provider', () => {
   });
 
   test('returns error when using invalid key', async () => {
-    const mailgunClient = new Mailgun(FormData).client({
-      username: 'api',
-      key: 'invalid-key',
+    const prisma = new PrismaClient();
+    const kv = createKvMock();
+    await kv.setNs('settings:mailprovider', 'mailgun', {
+      id: 'mailgun',
+      type: 'mailgun',
+      name: 'Mailgun',
+      fromAddress: 'dev@wepublish.ch',
+      replyToAddress: 'dev@wepublish.ch',
+      webhookEndpointSecret: 'fakeSecret',
+      apiKey: 'invalid-key',
+      mailgun_mailDomain: 'sandbox8a2185cfb29c48d4941d51c261fc3e03.mailgun.org',
+      mailgun_baseDomain: 'api.mailgun.net',
     });
     const mailgunMailProvider = new MailgunMailProvider({
       id: 'mailgun',
-      name: 'Mailgun',
-      apiKey: 'invalid-key',
-      baseDomain: 'https://mailgun.com',
-      mailDomain: 'sandbox8a2185cfb29c48d4941d51c261fc3e03.mailgun.org',
-      webhookEndpointSecret: 'fakeSecret',
-      fromAddress: 'dev@wepublish.ch',
-      mailgunClient,
+      prisma,
+      kv,
     });
 
     await expect(mailgunMailProvider.getTemplates()).rejects.toThrow(

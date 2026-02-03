@@ -11,7 +11,6 @@ import {
   CanDeletePaymentMethod,
   CanGetPaymentMethod,
   CanGetPaymentMethods,
-  CanGetPaymentProviders,
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
@@ -22,6 +21,8 @@ import {
 } from './payment-method.model';
 import { PaymentMethodService } from './payment-method.service';
 import { PaymentMethodDataloader } from './payment-method.dataloader';
+import { PaymentProviderDataloader } from './payment-provider.dataloader';
+import { PaymentProviderService } from './payment-provider.service';
 import { PaymentMethod as PPaymentMethod } from '@prisma/client';
 import { Inject } from '@nestjs/common';
 import {
@@ -34,6 +35,8 @@ export class PaymentMethodResolver {
   constructor(
     private paymentMethodService: PaymentMethodService,
     private paymentMethodsDataloader: PaymentMethodDataloader,
+    private paymentProviderDataloader: PaymentProviderDataloader,
+    private paymentProviderService: PaymentProviderService,
     @Inject(PAYMENT_METHOD_CONFIG) private moduleConfig: PaymentMethodConfig
   ) {}
 
@@ -77,18 +80,21 @@ export class PaymentMethodResolver {
     return this.paymentMethodService.deletePaymentMethod(id);
   }
 
-  @Permissions(CanGetPaymentProviders)
+  @Permissions(CanGetPaymentMethods)
   @Query(() => [PaymentProvider], {
     description: `Returns all payment providers`,
   })
-  public paymentProviders() {
-    return this.moduleConfig.paymentProviders;
+  public async paymentProviders() {
+    const providers =
+      await this.paymentProviderService.getAllPaymentProviders();
+    providers.forEach(provider => {
+      this.paymentProviderDataloader.prime(provider.id, provider);
+    });
+    return providers;
   }
 
   @ResolveField(() => PaymentProvider, { nullable: true })
   public paymentProvider(@Parent() { paymentProviderID }: PPaymentMethod) {
-    return this.moduleConfig.paymentProviders.find(
-      paymentProvider => paymentProvider.id === paymentProviderID
-    );
+    return this.paymentProviderDataloader.load(paymentProviderID);
   }
 }

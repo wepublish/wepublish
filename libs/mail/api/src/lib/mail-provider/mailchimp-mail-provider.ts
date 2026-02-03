@@ -16,13 +16,6 @@ import {
 } from './mail-provider.interface';
 import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
 
-export interface MailchimpMailProviderProps extends MailProviderProps {
-  readonly apiKey: string;
-  readonly baseURL: string;
-  readonly webhookEndpointSecret: string;
-  readonly fromAddress: string;
-}
-
 interface VerifyWebhookSignatureProps {
   signature: string;
   url: string;
@@ -83,20 +76,24 @@ function flattenObjForMandrill<T>(ob: T): Record<string, string> {
 }
 
 export class MailchimpMailProvider extends BaseMailProvider {
-  readonly webhookEndpointSecret: string;
-  readonly mailchimpClient: mailchimp.ApiClient;
-
-  constructor(props: MailchimpMailProviderProps) {
+  constructor(props: MailProviderProps) {
     super(props);
-    this.webhookEndpointSecret = props.webhookEndpointSecret;
-    this.mailchimpClient = mailchimp(props.apiKey);
   }
 
-  verifyWebhookSignature({
+  async getMailchimpClient(): Promise<mailchimp.ApiClient> {
+    const config = await this.getConfig();
+    if (!config?.apiKey) {
+      throw new Error('Missing mailchimp base domain or api key');
+    }
+    return mailchimp(config.apiKey);
+  }
+
+  async verifyWebhookSignature({
     signature,
     url,
     params,
-  }: VerifyWebhookSignatureProps): boolean {
+  }: VerifyWebhookSignatureProps): Promise<boolean> {
+    const config = await this.getConfig();
     const keys = Object.keys(params).sort();
 
     const longString = keys.reduce((sig, key) => {
@@ -104,7 +101,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
     }, url || '');
 
     const generatedSignature = crypto
-      .createHmac('sha1', this.webhookEndpointSecret)
+      .createHmac('sha1', config?.webhookEndpointSecret ?? '')
       .update(longString)
       .digest('base64');
 
@@ -152,6 +149,8 @@ export class MailchimpMailProvider extends BaseMailProvider {
   }
 
   async sendMail(props: SendMailProps): Promise<void> {
+    const config = await this.getConfig();
+    const mailchimpClient = await this.getMailchimpClient();
     if (props.template) {
       const templateContent: mailchimp.MergeVar[] = [];
       const flattenedObject = flattenObjForMandrill(props.templateData ?? {});
@@ -163,13 +162,13 @@ export class MailchimpMailProvider extends BaseMailProvider {
         });
       }
 
-      const response = await this.mailchimpClient.messages.sendTemplate({
+      const response = await mailchimpClient.messages.sendTemplate({
         template_name: props.template,
         template_content: [],
         message: {
           text: props.message,
           subject: props.subject,
-          from_email: this.fromAddress,
+          from_email: config?.fromAddress ?? '',
           to: [
             {
               email: props.recipient,
@@ -192,12 +191,12 @@ export class MailchimpMailProvider extends BaseMailProvider {
       return;
     }
 
-    const response = await this.mailchimpClient.messages.send({
+    const response = await mailchimpClient.messages.send({
       message: {
         html: props.messageHtml,
         text: props.message,
         subject: props.subject,
-        from_email: this.fromAddress,
+        from_email: config?.fromAddress || '',
         to: [
           {
             email: props.recipient,
@@ -214,7 +213,8 @@ export class MailchimpMailProvider extends BaseMailProvider {
 
   // beware: Mailchimp templates are still created and stored in Mandrill: https://mandrillapp.com/templates
   async getTemplates(): Promise<MailProviderTemplate[]> {
-    const response = await this.mailchimpClient.templates.list();
+    const mailchimpClient = await this.getMailchimpClient();
+    const response = await mailchimpClient.templates.list();
     if (this.responseIsError(response)) {
       throw new MailProviderError((response.response?.data as Error).message);
     }
@@ -231,11 +231,15 @@ export class MailchimpMailProvider extends BaseMailProvider {
     return templates;
   }
 
-  getTemplateUrl(template: WithExternalId): string {
+  async getTemplateUrl(template: WithExternalId): Promise<string> {
     return `https://mandrillapp.com/templates/code?id=${template.externalMailTemplateId}`;
   }
 
   private responseIsError<T>(response: T | AxiosError): response is AxiosError {
     return 'isAxiosError' in (response as object);
+  }
+
+  async getName(): Promise<string> {
+    return (await this.getConfig())?.name ?? 'unknown';
   }
 }

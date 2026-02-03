@@ -22,7 +22,8 @@ import {
 } from '../testing/module-registrars';
 import { PeriodicJobService } from './periodic-job.service';
 import { PaymentsModule } from '@wepublish/payment/api';
-
+import { createKvMock, KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+const kvMock = createKvMock();
 describe('PeriodicJobService', () => {
   let service: PeriodicJobService;
   const prismaClient = new PrismaClient();
@@ -45,6 +46,7 @@ describe('PeriodicJobService', () => {
         SubscriptionFlowService,
         PeriodicJobService,
         SubscriptionService,
+        { provide: KvTtlCacheService, useValue: kvMock },
       ],
     }).compile();
 
