@@ -8,6 +8,7 @@ import { ContentWrapper } from '@wepublish/content/website';
 import { ArticleListWrapper } from '@wepublish/article/website';
 import { useMemo } from 'react';
 import { capitalize } from '@mui/material';
+import Head from 'next/head';
 
 export const TagWrapper = styled(ContentWrapper)`
   ${({ theme }) => theme.breakpoints.up('md')} {
@@ -57,6 +58,8 @@ export function Tag({
     return;
   }
 
+  const canonicalUrl = `/a/tag/${tag}`;
+
   return (
     <TagWrapper className={className}>
       <TagSEO tag={tag} />
@@ -78,15 +81,25 @@ export function Tag({
       />
 
       {pageCount > 1 && (
-        <Pagination
-          page={page ?? 1}
-          count={pageCount}
-          onChange={(_, value) =>
-            onVariablesChange?.({
-              skip: (value - 1) * take,
-            })
-          }
-        />
+        <>
+          <Head>
+            <link
+              rel="canonical"
+              key="canonical"
+              href={canonicalUrl}
+            />
+          </Head>
+
+          <Pagination
+            page={page ?? 1}
+            count={pageCount}
+            onChange={(_, value) =>
+              onVariablesChange?.({
+                skip: (value - 1) * take,
+              })
+            }
+          />
+        </>
       )}
     </TagWrapper>
   );
