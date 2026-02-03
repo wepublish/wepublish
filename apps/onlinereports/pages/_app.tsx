@@ -300,12 +300,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                 src="//servedby.revive-adserver.net/asyncjs.php"
                 async
               />
-              <Script id="catch-errors">
-                {`window.onerror = function(message, source, lineno, colno, error) {
-                  console.log("an error has occured: " + message, source, lineno, colno, error);
-                  return true;
-                };`}
-              </Script>
 
               <AdblockOverlay />
 
