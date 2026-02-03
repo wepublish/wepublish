@@ -3,6 +3,6 @@ import { RichTextBlock } from '@wepublish/block-content/website';
 
 export const TsriRichText = styled(RichTextBlock)`
   .MuiTypography-body1 {
-    font-size: 1.25em;
+    font-size: 20px;
   }
 `;
