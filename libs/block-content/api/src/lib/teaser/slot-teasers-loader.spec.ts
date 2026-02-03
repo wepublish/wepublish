@@ -204,7 +204,7 @@ describe('SlotTeasersLoader', () => {
       }
     }
 
-    console.log('shouldBeUniqueTeaserIds:', shouldBeUniqueTeaserIds);
+    //console.log('shouldBeUniqueTeaserIds:', shouldBeUniqueTeaserIds);
 
     const filteredTeaserIds = shouldBeUniqueTeaserIds.filter(unique);
     expect(filteredTeaserIds).toEqual(shouldBeUniqueTeaserIds);

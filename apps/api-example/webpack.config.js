@@ -4,14 +4,21 @@ const swcDefaultConfig =
   require('@nestjs/cli/lib/compiler/defaults/swc-defaults').swcDefaultsFactory()
     .swcOptions;
 
-module.exports = composePlugins(withNx(), config => {
-  config.module.rules.push({
-    test: /\.ts$/,
-    exclude: /node_modules/,
-    use: {
-      loader: 'swc-loader',
-      options: swcDefaultConfig,
-    },
-  });
-  return config;
-});
+module.exports = composePlugins(
+  withNx({
+    // Exclude block-content-api from inline builds to prevent circular dependency stack overflow
+    skipTypeChecking: false,
+    externalDependencies: 'none',
+  }),
+  config => {
+    config.module.rules.push({
+      test: /\.ts$/,
+      exclude: /node_modules/,
+      use: {
+        loader: 'swc-loader',
+        options: swcDefaultConfig,
+      },
+    });
+    return config;
+  }
+);
