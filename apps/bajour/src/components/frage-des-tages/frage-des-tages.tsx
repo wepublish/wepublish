@@ -14,6 +14,7 @@ import {
 import {
   BuilderCommentProps,
   BuilderTeaserListBlockProps,
+  BuilderTeaserSlotsBlockProps,
 } from '@wepublish/website/builder';
 import Link from 'next/link';
 import { useMemo } from 'react';
@@ -40,6 +41,7 @@ const countComments = (comments: CommentWithChildren[] | []): number => {
 };
 
 export const FrageDesTagesContainer = styled('div')`
+  grid-column: -1/1;
   padding: ${({ theme }) => `${theme.spacing(1.5)}`};
 
   ${({ theme }) => css`
@@ -155,7 +157,7 @@ const ReadMoreButton = styled(Button)`
 export const FrageDesTages = ({
   teasers,
   className,
-}: BuilderTeaserListBlockProps) => {
+}: BuilderTeaserListBlockProps | BuilderTeaserSlotsBlockProps) => {
   const article = (teasers[0] as ArticleTeaser | undefined)?.article;
 
   const { data: commentsData } = useCommentListQuery({
