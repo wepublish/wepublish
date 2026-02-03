@@ -16,4 +16,18 @@ export default {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../../coverage/libs/block-content/api',
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    '!src/**/*.model.ts',
+    '!src/**/*.resolver.ts',
+    '!src/**/index.ts',
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 50,
+      functions: 50,
+      lines: 50,
+      statements: 50,
+    },
+  },
 };
