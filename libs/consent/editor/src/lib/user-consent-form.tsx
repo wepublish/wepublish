@@ -1,11 +1,10 @@
 import { ApolloError } from '@apollo/client';
-import { useUserListQuery } from '@wepublish/editor/api';
+import { useUserListQuery } from '@wepublish/editor/api-v2';
 import {
   MutationCreateUserConsentArgs,
   MutationUpdateUserConsentArgs,
   useConsentsQuery,
 } from '@wepublish/editor/api-v2';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Checkbox,
@@ -46,7 +45,7 @@ export const UserConsentForm = ({
   onChange,
   isEdit,
 }: UserConsentFormProps) => {
-  const client = useMemo(() => getApiClientV2(), []);
+  const client = getApiClientV2();
   const { t } = useTranslation();
 
   const consentValues = [
@@ -61,6 +60,7 @@ export const UserConsentForm = ({
   ];
 
   const { loading: loadingUsers, data: userData } = useUserListQuery({
+    client,
     variables: {
       take: 100,
     },

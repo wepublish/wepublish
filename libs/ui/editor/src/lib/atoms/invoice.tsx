@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
 import {
-  FullUserFragment,
   InvoiceFragment,
   InvoiceItem,
   useMarkInvoiceAsPaidMutation,
 } from '@wepublish/editor/api';
+import { FullUserFragment } from '@wepublish/editor/api-v2';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdClose, MdDone, MdMail } from 'react-icons/md';

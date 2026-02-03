@@ -2,6 +2,9 @@ mutation CreateSession($email: String!, $password: String!) {
   createSession(email: $email, password: $password) {
     user {
       email
+      roles {
+        ...FullUserRole
+      }
     }
     token
   }
@@ -11,16 +14,17 @@ mutation CreateSessionWithJWT($jwt: String!) {
   createSessionWithJWT(jwt: $jwt) {
     user {
       email
+      roles {
+        ...FullUserRole
+      }
     }
     token
   }
 }
 
-mutation UpdatePaymentProviderCustomers(
-  $customers: [PaymentProviderCustomerInput!]!
-) {
-  updatePaymentProviderCustomers(input: $customers) {
-    customerID
-    paymentProviderID
+mutation CreateJWTForWebsiteLogin {
+  createJWTForWebsiteLogin {
+    token
+    expiresAt
   }
 }

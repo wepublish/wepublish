@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
+import { FullUserRoleFragment } from '@wepublish/editor/api';
 import {
-  FullUserRoleFragment,
+  getApiClientV2,
+  LocalStorageKey,
   useCreateSessionMutation,
   useCreateSessionWithJwtMutation,
-} from '@wepublish/editor/api';
-import { LocalStorageKey } from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api-v2';
 import {
   AuthDispatchActionType,
   AuthDispatchContext,
@@ -61,11 +62,12 @@ export function Login() {
   const authDispatch = useContext(AuthDispatchContext);
   const navigate = useNavigate();
 
+  const client = getApiClientV2();
   const [authenticate, { loading, error: errorLogin }] =
-    useCreateSessionMutation();
+    useCreateSessionMutation({ client });
 
   const [authenticateWithJWT, { loading: loadingJWT, error: errorJWT }] =
-    useCreateSessionWithJwtMutation();
+    useCreateSessionWithJwtMutation({ client });
 
   const { t } = useTranslation();
 

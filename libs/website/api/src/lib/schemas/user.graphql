@@ -40,7 +40,9 @@ fragment FullSensitiveDataUser on SensitiveDataUser {
 fragment FullAddress on UserAddress {
   company
   streetAddress
+  streetAddressNumber
   streetAddress2
+  streetAddress2Number
   zipCode
   city
   country
@@ -82,6 +84,7 @@ mutation LoginWithJWT($jwt: String!) {
 
 mutation Register(
   $name: String!
+  $flair: String
   $firstName: String
   $birthday: DateTime
   $address: UserAddressInput
@@ -91,6 +94,7 @@ mutation Register(
 ) {
   registerMember(
     name: $name
+    flair: $flair
     firstName: $firstName
     birthday: $birthday
     address: $address
@@ -108,8 +112,24 @@ mutation Register(
   }
 }
 
-mutation UpdateUser($input: UserInput!) {
-  updateUser(input: $input) {
+mutation UpdateUser(
+  $firstName: String
+  $flair: String
+  $name: String
+  $email: String
+  $password: String
+  $address: UserAddressInput
+  $birthday: DateTime
+) {
+  updateCurrentUser(
+    name: $name
+    firstName: $firstName
+    flair: $flair
+    email: $email
+    password: $password
+    address: $address
+    birthday: $birthday
+  ) {
     ...FullSensitiveDataUser
   }
 }

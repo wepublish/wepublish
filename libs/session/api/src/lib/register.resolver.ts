@@ -1,9 +1,10 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { Public } from '@wepublish/authentication/api';
-import { MemberRegistrationInput, Registration } from './register.model';
+import { Registration } from './register.model';
 import { ChallengeService } from '@wepublish/challenge/api';
 import { CommentAuthenticationError } from '@wepublish/api';
 import { RegisterService } from './register.service';
+import { RegisterUserInput } from '@wepublish/user/api';
 
 @Resolver()
 export class RegisterResolver {
@@ -17,7 +18,7 @@ export class RegisterResolver {
     description: `This mutation registers a new member by providing name, email, and other required information.`,
   })
   async registerMember(
-    @Args() { challengeAnswer, ...input }: MemberRegistrationInput
+    @Args() { challengeAnswer, ...input }: RegisterUserInput
   ) {
     const challengeValidationResult =
       await this.challengeService.validateChallenge({

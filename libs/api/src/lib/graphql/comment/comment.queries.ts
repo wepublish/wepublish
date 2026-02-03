@@ -137,7 +137,7 @@ export const getComments = async (
     }),
   ]);
 
-  const nodes = comments.slice(0, take);
+  const nodes = comments.slice(0, getMaxTake(take));
   const firstComment = nodes[0];
   const lastComment = nodes[nodes.length - 1];
 

@@ -104,7 +104,7 @@ export const getPolls = async (
     }),
   ]);
 
-  const nodes = polls.slice(0, take);
+  const nodes = polls.slice(0, getMaxTake(take));
   const firstPoll = nodes[0];
   const lastPoll = nodes[nodes.length - 1];
 

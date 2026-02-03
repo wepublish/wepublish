@@ -1,4 +1,4 @@
-import { CommentState, UserEvent } from '@prisma/client';
+import { CommentState } from '@prisma/client';
 import {
   GraphQLBoolean,
   GraphQLList,
@@ -8,10 +8,6 @@ import {
 } from 'graphql';
 import { GraphQLDateTime } from 'graphql-scalars';
 import { Context } from '../context';
-import { SettingName } from '@wepublish/settings/api';
-import { unselectPassword } from '@wepublish/authentication/api';
-import { NotFound } from '../error';
-import { Validator } from '../validator';
 
 import {
   GraphQLComment,
@@ -42,7 +38,6 @@ import { createPaymentFromInvoice } from './payment/payment.private-mutation';
 
 import { GraphQLPeerProfile, GraphQLPeerProfileInput } from './peer';
 import { upsertPeerProfile } from './peer-profile/peer-profile.private-mutation';
-import { authorise } from './permissions';
 import {
   GraphQLFullPoll,
   GraphQLPollAnswer,
@@ -62,14 +57,6 @@ import {
   updatePoll,
 } from './poll/poll.private-mutation';
 import { GraphQLRichText } from '@wepublish/richtext/api';
-import { GraphQLSession, GraphQLSessionWithToken } from './session';
-import {
-  createJWTSession,
-  createSession,
-  revokeSessionByToken,
-} from './session/session.mutation';
-import { revokeSessionById } from './session/session.private-mutation';
-import { getSessionsForUser } from './session/session.private-queries';
 import { GraphQLSubscription, GraphQLSubscriptionInput } from './subscription';
 import {
   cancelSubscriptionById,
@@ -78,16 +65,7 @@ import {
   renewSubscription,
   updateAdminSubscription,
 } from './subscription/subscription.private-mutation';
-import { GraphQLUser, GraphQLUserInput } from './user';
-import {
-  createAdminUser,
-  deleteUserById,
-  resetUserPassword,
-  updateAdminUser,
-} from './user/user.private-mutation';
 
-import { CanSendJWTLogin } from '@wepublish/permissions';
-import { mailLogType } from '@wepublish/mail/api';
 import { GraphQLSubscriptionDeactivationReason } from './subscriptionDeactivation';
 
 export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
@@ -104,223 +82,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         { input },
         { hostURL, authenticate, prisma: { peerProfile } }
       ) => upsertPeerProfile(input, hostURL, authenticate, peerProfile),
-    },
-
-    // Session
-    // =======
-
-    createSession: {
-      type: new GraphQLNonNull(GraphQLSessionWithToken),
-      args: {
-        email: { type: new GraphQLNonNull(GraphQLString) },
-        password: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { email, password }, { sessionTTL, prisma }) =>
-        createSession(
-          email,
-          password,
-          sessionTTL,
-          prisma.session,
-          prisma.user,
-          prisma.userRole
-        ),
-    },
-
-    createSessionWithJWT: {
-      type: new GraphQLNonNull(GraphQLSessionWithToken),
-      args: {
-        jwt: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { jwt }, { sessionTTL, prisma, verifyJWT }) =>
-        createJWTSession(
-          jwt,
-          sessionTTL,
-          verifyJWT,
-          prisma.session,
-          prisma.user,
-          prisma.userRole
-        ),
-    },
-
-    revokeSession: {
-      type: new GraphQLNonNull(GraphQLBoolean),
-      args: { id: { type: new GraphQLNonNull(GraphQLString) } },
-      resolve: (root, { id }, { authenticateUser, prisma: { session } }) =>
-        revokeSessionById(id, authenticateUser, session),
-    },
-
-    revokeActiveSession: {
-      type: new GraphQLNonNull(GraphQLBoolean),
-      args: {},
-      resolve: (root, _, { authenticateUser, prisma: { session } }) =>
-        revokeSessionByToken(authenticateUser, session),
-    },
-
-    sessions: {
-      type: new GraphQLNonNull(
-        new GraphQLList(new GraphQLNonNull(GraphQLSession))
-      ),
-      args: {},
-      resolve: (root, _, { authenticateUser, prisma: { session, userRole } }) =>
-        getSessionsForUser(authenticateUser, session, userRole),
-    },
-
-    sendJWTLogin: {
-      type: new GraphQLNonNull(GraphQLString),
-      args: {
-        url: { type: new GraphQLNonNull(GraphQLString) },
-        email: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      async resolve(
-        root,
-        { url, email },
-        { authenticate, prisma, generateJWT, mailContext }
-      ) {
-        const { roles } = authenticate();
-        authorise(CanSendJWTLogin, roles);
-
-        email = email.toLowerCase();
-        await Validator.login.parse({ email });
-
-        const user = await prisma.user.findUnique({
-          where: { email },
-          select: unselectPassword,
-        });
-        if (!user) throw new NotFound('User', email);
-
-        const jwtExpiresSetting = await prisma.setting.findUnique({
-          where: { name: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN },
-        });
-        const jwtExpires =
-          (jwtExpiresSetting?.value as number) ??
-          parseInt(process.env['SEND_LOGIN_JWT_EXPIRES_MIN'] ?? '');
-
-        if (!jwtExpires) {
-          throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN');
-        }
-
-        const remoteTemplate = await mailContext.getUserTemplateName(
-          UserEvent.LOGIN_LINK
-        );
-        await mailContext.sendMail({
-          externalMailTemplateId: remoteTemplate,
-          recipient: user,
-          optionalData: {},
-          mailType: mailLogType.UserFlow,
-        });
-        return email;
-      },
-    },
-
-    sendWebsiteLogin: {
-      type: new GraphQLNonNull(GraphQLString),
-      args: {
-        email: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      async resolve(
-        root,
-        { url, email },
-        { authenticate, prisma, generateJWT, mailContext, urlAdapter }
-      ) {
-        email = email.toLowerCase();
-        await Validator.login.parse({ email });
-        const { roles } = authenticate();
-        authorise(CanSendJWTLogin, roles);
-
-        const jwtExpiresSetting = await prisma.setting.findUnique({
-          where: { name: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN },
-        });
-        const jwtExpires =
-          (jwtExpiresSetting?.value as number) ??
-          parseInt(process.env['SEND_LOGIN_JWT_EXPIRES_MIN'] ?? '');
-
-        if (!jwtExpires)
-          throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN');
-
-        const user = await prisma.user.findUnique({
-          where: { email },
-          select: unselectPassword,
-        });
-
-        if (!user) throw new NotFound('User', email);
-
-        const remoteTemplate = await mailContext.getUserTemplateName(
-          UserEvent.LOGIN_LINK
-        );
-        await mailContext.sendMail({
-          externalMailTemplateId: remoteTemplate,
-          recipient: user,
-          optionalData: {},
-          mailType: mailLogType.UserFlow,
-        });
-
-        return email;
-      },
-    },
-
-    // User
-    // ====
-
-    createUser: {
-      type: GraphQLUser,
-      args: {
-        input: { type: new GraphQLNonNull(GraphQLUserInput) },
-        password: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (
-        root,
-        { input, password },
-        { hashCostFactor, authenticate, prisma, mailContext }
-      ) =>
-        createAdminUser(
-          { ...input, password },
-          authenticate,
-          hashCostFactor,
-          prisma,
-          mailContext
-        ),
-    },
-
-    updateUser: {
-      type: GraphQLUser,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        input: { type: new GraphQLNonNull(GraphQLUserInput) },
-      },
-      resolve: (root, { id, input }, { authenticate, prisma: { user } }) =>
-        updateAdminUser(id, input, authenticate, user),
-    },
-
-    resetUserPassword: {
-      type: GraphQLUser,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        password: { type: new GraphQLNonNull(GraphQLString) },
-        sendMail: { type: GraphQLBoolean },
-      },
-      resolve: (
-        root,
-        { id, password, sendMail },
-        { authenticate, mailContext, prisma: { user }, hashCostFactor }
-      ) =>
-        resetUserPassword(
-          id,
-          password,
-          sendMail,
-          hashCostFactor,
-          authenticate,
-          mailContext,
-          user
-        ),
-    },
-
-    deleteUser: {
-      type: GraphQLUser,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { user } }) =>
-        deleteUserById(id, authenticate, user),
     },
 
     // Subscriptions

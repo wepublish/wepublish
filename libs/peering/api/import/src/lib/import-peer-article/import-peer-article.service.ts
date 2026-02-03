@@ -17,7 +17,7 @@ import { pipe, replace, toLower } from 'ramda';
 import { ValueOf } from 'type-fest';
 import {
   ImportArticleOptions,
-  PaginatedPeerArticle,
+  PaginatedPeerArticles,
   PeerArticleFilter,
   PeerArticleListArgs,
 } from './peer-article.model';
@@ -56,7 +56,7 @@ export class ImportPeerArticleService {
     order,
     take = 10,
     skip = 0,
-  }: PeerArticleListArgs): Promise<PaginatedPeerArticle> {
+  }: PeerArticleListArgs): Promise<PaginatedPeerArticles> {
     const peers = await this.prisma.peer.findMany({
       where: {
         id: filter?.peerId ?? undefined,
@@ -107,7 +107,7 @@ export class ImportPeerArticleService {
                 new Date(article.publishedAt)
               : article.publishedAt,
           })),
-        } as unknown as PaginatedPeerArticle;
+        } as unknown as PaginatedPeerArticles;
       })
     );
 

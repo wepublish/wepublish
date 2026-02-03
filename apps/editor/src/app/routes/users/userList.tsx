@@ -1,12 +1,13 @@
 import { ApolloError } from '@apollo/client';
 import {
   FullUserFragment,
+  getApiClientV2,
   useDeleteUserMutation,
   UserFilter,
   UserRole,
   UserSort,
   useUserListQuery,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -71,12 +72,14 @@ function UserList() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [users, setUsers] = useState<FullUserFragment[]>([]);
 
+  const client = getApiClientV2();
   const {
     data,
     refetch,
     loading: isLoading,
     error: userListQueryError,
   } = useUserListQuery({
+    client,
     variables: {
       filter: filter || undefined,
       take: limit,
@@ -102,7 +105,9 @@ function UserList() {
     });
   }, [filter, page, limit, sortOrder, sortField, refetch]);
 
-  const [deleteUser, { loading: isDeleting }] = useDeleteUserMutation();
+  const [deleteUser, { loading: isDeleting }] = useDeleteUserMutation({
+    client,
+  });
 
   const { t } = useTranslation();
 
@@ -123,12 +128,14 @@ function UserList() {
    * UI helpers
    */
   function getSubscriptionCellView(user: FullUserFragment) {
-    const subscriptions = user.subscriptions;
+    // @ts-expect-error Wrong type for now
+    const subscriptions = user.subscriptions ?? [];
     const totalSubscriptions = subscriptions?.length;
     // one subscription
     if (subscriptions?.length === 1) {
       return <>{t('userList.overview.oneSubscription')}</>;
     }
+
     // multiple subscriptions
     if (subscriptions?.length) {
       return (

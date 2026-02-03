@@ -1,8 +1,6 @@
-import { CanLoginAsOtherUser } from '@wepublish/permissions';
 import { SortOrder } from '@wepublish/utils/api';
 import {
   GraphQLInt,
-  GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLString,
@@ -11,10 +9,6 @@ import { Context } from '../context';
 import { CommentSort } from '../db/comment';
 import { InvoiceSort } from '../db/invoice';
 import { SubscriptionSort } from '../db/subscription';
-import { UserSort } from '../db/user';
-import { GivenTokeExpiryToLongError, UserIdNotFound } from '../error';
-
-import { GraphQLJWTToken } from './auth';
 
 import {
   GraphQLComment,
@@ -44,7 +38,6 @@ import {
   getAdminPeerProfile,
   getRemotePeerProfile,
 } from './peer-profile/peer-profile.private-queries';
-import { authorise } from './permissions';
 import {
   GraphQLFullPoll,
   GraphQLPollConnection,
@@ -53,8 +46,6 @@ import {
 } from './poll/poll';
 import { PollSort, getPolls } from './poll/poll.private-queries';
 import { getPoll } from './poll/poll.public-queries';
-import { GraphQLSession } from './session';
-import { getSessionsForUser } from './session/session.private-queries';
 import {
   GraphQLSubscription,
   GraphQLSubscriptionConnection,
@@ -66,14 +57,6 @@ import {
   getSubscriptionById,
   getSubscriptionsAsCSV,
 } from './subscription/subscription.private-queries';
-
-import {
-  GraphQLUser,
-  GraphQLUserConnection,
-  GraphQLUserFilter,
-  GraphQLUserSort,
-} from './user';
-import { getAdminUsers, getMe, getUserById } from './user/user.private-queries';
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -95,67 +78,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       ) => getRemotePeerProfile(hostURL, token, authenticate, info, setting),
     },
 
-    createJWTForUser: {
-      type: GraphQLJWTToken,
-      args: {
-        userId: { type: new GraphQLNonNull(GraphQLString) },
-        expiresInMinutes: { type: new GraphQLNonNull(GraphQLInt) },
-      },
-      async resolve(
-        root,
-        { userId, expiresInMinutes },
-        { authenticate, generateJWT, prisma },
-        info
-      ) {
-        const TWO_YEARS_IN_MIN = 2 * 365 * 24 * 60;
-        const { roles } = authenticate();
-        authorise(CanLoginAsOtherUser, roles);
-
-        if (expiresInMinutes > TWO_YEARS_IN_MIN) {
-          throw new GivenTokeExpiryToLongError();
-        }
-
-        const user = await prisma.user.findUnique({
-          where: { id: userId },
-        });
-
-        if (!user) {
-          throw new UserIdNotFound();
-        }
-
-        const expiresAt = new Date(
-          new Date().getTime() + expiresInMinutes * 60 * 1000
-        ).toISOString();
-
-        const token = generateJWT({ id: userId, expiresInMinutes });
-
-        return {
-          token,
-          expiresAt,
-        };
-      },
-    },
-
-    createJWTForWebsiteLogin: {
-      type: GraphQLJWTToken,
-      args: {},
-      async resolve(root, _, { authenticateUser, generateJWT }) {
-        const expiresInMinutes = 1;
-        const { user } = authenticateUser();
-
-        const expiresAt = new Date(
-          new Date().getTime() + expiresInMinutes * 60 * 1000
-        ).toISOString();
-
-        const token = generateJWT({ id: user.id, expiresInMinutes });
-
-        return {
-          token,
-          expiresAt,
-        };
-      },
-    },
-
     peerProfile: {
       type: new GraphQLNonNull(GraphQLPeerProfile),
       resolve: (
@@ -163,62 +85,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         args,
         { authenticate, hostURL, websiteURL, prisma: { peerProfile } }
       ) => getAdminPeerProfile(hostURL, websiteURL, authenticate, peerProfile),
-    },
-
-    // User
-    // ====
-
-    me: {
-      type: GraphQLUser,
-      resolve: (root, args, { authenticate }) => getMe(authenticate),
-    },
-
-    // Session
-    // =======
-
-    sessions: {
-      type: new GraphQLNonNull(
-        new GraphQLList(new GraphQLNonNull(GraphQLSession))
-      ),
-      resolve: (root, _, { authenticateUser, prisma: { session, userRole } }) =>
-        getSessionsForUser(authenticateUser, session, userRole),
-    },
-
-    // Users
-    // ==========
-    user: {
-      type: GraphQLUser,
-      args: { id: { type: GraphQLString } },
-      resolve: (root, { id }, { authenticate, prisma: { user } }) => {
-        return getUserById(id, authenticate, user);
-      },
-    },
-
-    users: {
-      type: new GraphQLNonNull(GraphQLUserConnection),
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 10 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLUserFilter },
-        sort: { type: GraphQLUserSort, defaultValue: UserSort.ModifiedAt },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, take, skip, cursor },
-        { authenticate, prisma: { user } }
-      ) =>
-        getAdminUsers(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          user
-        ),
     },
 
     // Subscriptions

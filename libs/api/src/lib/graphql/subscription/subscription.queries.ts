@@ -377,7 +377,7 @@ export const getSubscriptions = async (
     }),
   ]);
 
-  const nodes = subscriptions.slice(0, take);
+  const nodes = subscriptions.slice(0, getMaxTake(take));
   const firstSubscription = nodes[0];
   const lastSubscription = nodes[nodes.length - 1];
 

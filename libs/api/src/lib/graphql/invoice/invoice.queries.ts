@@ -147,7 +147,7 @@ export const getInvoices = async (
     }),
   ]);
 
-  const nodes = invoices.slice(0, take);
+  const nodes = invoices.slice(0, getMaxTake(take));
   const firstInvoice = nodes[0];
   const lastInvoice = nodes[nodes.length - 1];
 

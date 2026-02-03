@@ -62,7 +62,7 @@ export class PageService {
       }),
     ]);
 
-    const nodes = pages.slice(0, take);
+    const nodes = pages.slice(0, getMaxTake(take));
     const firstPage = nodes[0];
     const lastPage = nodes[nodes.length - 1];
 

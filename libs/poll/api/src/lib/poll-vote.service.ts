@@ -67,7 +67,7 @@ export class PollVoteService {
       }),
     ]);
 
-    const nodes = items.slice(0, take);
+    const nodes = items.slice(0, getMaxTake(take));
     const firstItem = nodes[0];
     const lastItem = nodes[nodes.length - 1];
 

@@ -19,8 +19,13 @@ fragment FullAuthor on Author {
   ...AuthorRef
 }
 
-query AuthorList($filter: String, $cursor: String, $take: Int, $skip: Int) {
-  authors(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
+query AuthorList($filter: String, $cursorId: String, $take: Int, $skip: Int) {
+  authors(
+    filter: { name: $filter }
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+  ) {
     nodes {
       ...FullAuthor
     }
