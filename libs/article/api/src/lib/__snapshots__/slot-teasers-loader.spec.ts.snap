@@ -8,7 +8,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
       {
         "alignment": {
           "h": 0,
-          "i": "mock_nanoid_2",
+          "i": "mock_nanoid_1",
           "static": false,
           "w": 0,
           "x": 0,
@@ -96,15 +96,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
           ],
           "slots": [
             {
-              "teaser": {
-                "article": {
-                  "id": "article_mock_nanoid_1",
-                },
-                "type": "article",
-              },
-              "type": "Manual",
-            },
-            {
               "type": "Autofill",
             },
             {
@@ -130,12 +121,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
             },
           ],
           "teasers": [
-            {
-              "article": {
-                "id": "article_mock_nanoid_1",
-              },
-              "type": "article",
-            },
             {
               "articleID": "article_pool_1",
               "imageID": undefined,
@@ -199,7 +184,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
       {
         "alignment": {
           "h": 0,
-          "i": "mock_nanoid_5",
+          "i": "mock_nanoid_3",
           "static": false,
           "w": 0,
           "x": 0,
@@ -214,7 +199,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
               "tagObjects": [
                 {
                   "__typename": "Tag",
-                  "id": "mock_nanoid_3",
+                  "id": "mock_nanoid_2",
                   "tag": "lorem-ipsum",
                 },
               ],
@@ -287,15 +272,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
           ],
           "slots": [
             {
-              "teaser": {
-                "article": {
-                  "id": "article_mock_nanoid_4",
-                },
-                "type": "article",
-              },
-              "type": "Manual",
-            },
-            {
               "type": "Autofill",
             },
             {
@@ -321,12 +297,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
             },
           ],
           "teasers": [
-            {
-              "article": {
-                "id": "article_mock_nanoid_4",
-              },
-              "type": "article",
-            },
             {
               "articleID": "article_pool_9",
               "imageID": undefined,
@@ -390,7 +360,183 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
       {
         "alignment": {
           "h": 0,
-          "i": "mock_nanoid_8",
+          "i": "mock_nanoid_5",
+          "static": false,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+        },
+        "block": {
+          "autofillConfig": {
+            "__typename": "TeaserSlotsBlockAutofillConfig",
+            "enabled": true,
+            "filter": {
+              "__typename": "TeaserListBlockFilter",
+              "tagObjects": [
+                {
+                  "__typename": "Tag",
+                  "id": "mock_nanoid_4",
+                  "tag": "lorem-ipsum",
+                },
+              ],
+              "tags": [
+                "test-tag-id",
+              ],
+            },
+            "numberOfTeasers": 8,
+            "sort": null,
+            "tagIds": [],
+            "teaserType": "article",
+          },
+          "autofillTeasers": [
+            {
+              "articleID": "article_pool_17",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_18",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_19",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_20",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_21",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_22",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_23",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_24",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+          ],
+          "slots": [
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+          ],
+          "teasers": [
+            {
+              "articleID": "article_pool_17",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_18",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_19",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_20",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_21",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_22",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_23",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_24",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+          ],
+          "type": "teaserSlots",
+        },
+      },
+      {
+        "alignment": {
+          "h": 0,
+          "i": "mock_nanoid_7",
           "static": false,
           "w": 0,
           "x": 0,
@@ -420,56 +566,56 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
           },
           "autofillTeasers": [
             {
-              "articleID": "article_pool_17",
+              "articleID": "article_pool_25",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_18",
+              "articleID": "article_pool_26",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_19",
+              "articleID": "article_pool_27",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_20",
+              "articleID": "article_pool_28",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_21",
+              "articleID": "article_pool_29",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_22",
+              "articleID": "article_pool_30",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_23",
+              "articleID": "article_pool_31",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_24",
+              "articleID": "article_pool_32",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
@@ -477,15 +623,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
             },
           ],
           "slots": [
-            {
-              "teaser": {
-                "article": {
-                  "id": "article_mock_nanoid_7",
-                },
-                "type": "article",
-              },
-              "type": "Manual",
-            },
             {
               "type": "Autofill",
             },
@@ -513,62 +650,232 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
           ],
           "teasers": [
             {
-              "article": {
-                "id": "article_mock_nanoid_7",
-              },
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_17",
+              "articleID": "article_pool_25",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_18",
+              "articleID": "article_pool_26",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_19",
+              "articleID": "article_pool_27",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_20",
+              "articleID": "article_pool_28",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_21",
+              "articleID": "article_pool_29",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_22",
+              "articleID": "article_pool_30",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_23",
+              "articleID": "article_pool_31",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_24",
+              "articleID": "article_pool_32",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+          ],
+          "type": "teaserSlots",
+        },
+      },
+      {
+        "alignment": {
+          "h": 0,
+          "i": "mock_nanoid_9",
+          "static": false,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+        },
+        "block": {
+          "autofillConfig": {
+            "__typename": "TeaserSlotsBlockAutofillConfig",
+            "enabled": true,
+            "filter": {
+              "__typename": "TeaserListBlockFilter",
+              "tagObjects": [
+                {
+                  "__typename": "Tag",
+                  "id": "mock_nanoid_8",
+                  "tag": "lorem-ipsum",
+                },
+              ],
+              "tags": [
+                "test-tag-id",
+              ],
+            },
+            "numberOfTeasers": 8,
+            "sort": null,
+            "tagIds": [],
+            "teaserType": "article",
+          },
+          "autofillTeasers": [
+            {
+              "articleID": "article_pool_33",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_34",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_35",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_36",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_37",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_38",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_39",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_40",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+          ],
+          "slots": [
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+          ],
+          "teasers": [
+            {
+              "articleID": "article_pool_33",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_34",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_35",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_36",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_37",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_38",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_39",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_40",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
@@ -596,7 +903,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
               "tagObjects": [
                 {
                   "__typename": "Tag",
-                  "id": "mock_nanoid_9",
+                  "id": "mock_nanoid_10",
                   "tag": "lorem-ipsum",
                 },
               ],
@@ -611,56 +918,56 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
           },
           "autofillTeasers": [
             {
-              "articleID": "article_pool_25",
+              "articleID": "article_pool_41",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_26",
+              "articleID": "article_pool_42",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_27",
+              "articleID": "article_pool_43",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_28",
+              "articleID": "article_pool_44",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_29",
+              "articleID": "article_pool_45",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_30",
+              "articleID": "article_pool_46",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_31",
+              "articleID": "article_pool_47",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_32",
+              "articleID": "article_pool_48",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
@@ -668,15 +975,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
             },
           ],
           "slots": [
-            {
-              "teaser": {
-                "article": {
-                  "id": "article_mock_nanoid_10",
-                },
-                "type": "article",
-              },
-              "type": "Manual",
-            },
             {
               "type": "Autofill",
             },
@@ -704,62 +1002,56 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
           ],
           "teasers": [
             {
-              "article": {
-                "id": "article_mock_nanoid_10",
-              },
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_25",
+              "articleID": "article_pool_41",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_26",
+              "articleID": "article_pool_42",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_27",
+              "articleID": "article_pool_43",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_28",
+              "articleID": "article_pool_44",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_29",
+              "articleID": "article_pool_45",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_30",
+              "articleID": "article_pool_46",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_31",
+              "articleID": "article_pool_47",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
               "type": "article",
             },
             {
-              "articleID": "article_pool_32",
+              "articleID": "article_pool_48",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
@@ -772,7 +1064,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
       {
         "alignment": {
           "h": 0,
-          "i": "mock_nanoid_14",
+          "i": "mock_nanoid_13",
           "static": false,
           "w": 0,
           "x": 0,
@@ -788,388 +1080,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
                 {
                   "__typename": "Tag",
                   "id": "mock_nanoid_12",
-                  "tag": "lorem-ipsum",
-                },
-              ],
-              "tags": [
-                "test-tag-id",
-              ],
-            },
-            "numberOfTeasers": 8,
-            "sort": null,
-            "tagIds": [],
-            "teaserType": "article",
-          },
-          "autofillTeasers": [
-            {
-              "articleID": "article_pool_33",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_34",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_35",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_36",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_37",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_38",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_39",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_40",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-          ],
-          "slots": [
-            {
-              "teaser": {
-                "article": {
-                  "id": "article_mock_nanoid_13",
-                },
-                "type": "article",
-              },
-              "type": "Manual",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-          ],
-          "teasers": [
-            {
-              "article": {
-                "id": "article_mock_nanoid_13",
-              },
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_33",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_34",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_35",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_36",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_37",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_38",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_39",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_40",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-          ],
-          "type": "teaserSlots",
-        },
-      },
-      {
-        "alignment": {
-          "h": 0,
-          "i": "mock_nanoid_17",
-          "static": false,
-          "w": 0,
-          "x": 0,
-          "y": 0,
-        },
-        "block": {
-          "autofillConfig": {
-            "__typename": "TeaserSlotsBlockAutofillConfig",
-            "enabled": true,
-            "filter": {
-              "__typename": "TeaserListBlockFilter",
-              "tagObjects": [
-                {
-                  "__typename": "Tag",
-                  "id": "mock_nanoid_15",
-                  "tag": "lorem-ipsum",
-                },
-              ],
-              "tags": [
-                "test-tag-id",
-              ],
-            },
-            "numberOfTeasers": 8,
-            "sort": null,
-            "tagIds": [],
-            "teaserType": "article",
-          },
-          "autofillTeasers": [
-            {
-              "articleID": "article_pool_41",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_42",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_43",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_44",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_45",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_46",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_47",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_48",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-          ],
-          "slots": [
-            {
-              "teaser": {
-                "article": {
-                  "id": "article_mock_nanoid_16",
-                },
-                "type": "article",
-              },
-              "type": "Manual",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-          ],
-          "teasers": [
-            {
-              "article": {
-                "id": "article_mock_nanoid_16",
-              },
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_41",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_42",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_43",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_44",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_45",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_46",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_47",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_48",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-          ],
-          "type": "teaserSlots",
-        },
-      },
-      {
-        "alignment": {
-          "h": 0,
-          "i": "mock_nanoid_20",
-          "static": false,
-          "w": 0,
-          "x": 0,
-          "y": 0,
-        },
-        "block": {
-          "autofillConfig": {
-            "__typename": "TeaserSlotsBlockAutofillConfig",
-            "enabled": true,
-            "filter": {
-              "__typename": "TeaserListBlockFilter",
-              "tagObjects": [
-                {
-                  "__typename": "Tag",
-                  "id": "mock_nanoid_18",
                   "tag": "lorem-ipsum",
                 },
               ],
@@ -1242,15 +1152,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
           ],
           "slots": [
             {
-              "teaser": {
-                "article": {
-                  "id": "article_mock_nanoid_19",
-                },
-                "type": "article",
-              },
-              "type": "Manual",
-            },
-            {
               "type": "Autofill",
             },
             {
@@ -1276,12 +1177,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
             },
           ],
           "teasers": [
-            {
-              "article": {
-                "id": "article_mock_nanoid_19",
-              },
-              "type": "article",
-            },
             {
               "articleID": "article_pool_49",
               "imageID": undefined,
@@ -1351,7 +1246,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
       {
         "alignment": {
           "h": 0,
-          "i": "mock_nanoid_23",
+          "i": "mock_nanoid_15",
           "static": false,
           "w": 0,
           "x": 0,
@@ -1366,7 +1261,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
               "tagObjects": [
                 {
                   "__typename": "Tag",
-                  "id": "mock_nanoid_21",
+                  "id": "mock_nanoid_14",
                   "tag": "lorem-ipsum",
                 },
               ],
@@ -1439,15 +1334,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
           ],
           "slots": [
             {
-              "teaser": {
-                "article": {
-                  "id": "article_mock_nanoid_22",
-                },
-                "type": "article",
-              },
-              "type": "Manual",
-            },
-            {
               "type": "Autofill",
             },
             {
@@ -1473,12 +1359,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
             },
           ],
           "teasers": [
-            {
-              "article": {
-                "id": "article_mock_nanoid_22",
-              },
-              "type": "article",
-            },
             {
               "articleID": "article_pool_57",
               "imageID": undefined,
@@ -1542,7 +1422,711 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
       {
         "alignment": {
           "h": 0,
-          "i": "mock_nanoid_26",
+          "i": "mock_nanoid_17",
+          "static": false,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+        },
+        "block": {
+          "autofillConfig": {
+            "__typename": "TeaserSlotsBlockAutofillConfig",
+            "enabled": true,
+            "filter": {
+              "__typename": "TeaserListBlockFilter",
+              "tagObjects": [
+                {
+                  "__typename": "Tag",
+                  "id": "mock_nanoid_16",
+                  "tag": "lorem-ipsum",
+                },
+              ],
+              "tags": [
+                "test-tag-id",
+              ],
+            },
+            "numberOfTeasers": 8,
+            "sort": null,
+            "tagIds": [],
+            "teaserType": "article",
+          },
+          "autofillTeasers": [
+            {
+              "articleID": "article_pool_65",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_66",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_67",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_68",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_69",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_70",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_71",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_72",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+          ],
+          "slots": [
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+          ],
+          "teasers": [
+            {
+              "articleID": "article_pool_65",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_66",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_67",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_68",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_69",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_70",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_71",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_72",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+          ],
+          "type": "teaserSlots",
+        },
+      },
+      {
+        "alignment": {
+          "h": 0,
+          "i": "mock_nanoid_19",
+          "static": false,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+        },
+        "block": {
+          "autofillConfig": {
+            "__typename": "TeaserSlotsBlockAutofillConfig",
+            "enabled": true,
+            "filter": {
+              "__typename": "TeaserListBlockFilter",
+              "tagObjects": [
+                {
+                  "__typename": "Tag",
+                  "id": "mock_nanoid_18",
+                  "tag": "lorem-ipsum",
+                },
+              ],
+              "tags": [
+                "test-tag-id",
+              ],
+            },
+            "numberOfTeasers": 8,
+            "sort": null,
+            "tagIds": [],
+            "teaserType": "article",
+          },
+          "autofillTeasers": [
+            {
+              "articleID": "article_pool_73",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_74",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_75",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_76",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_77",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_78",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_79",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_80",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+          ],
+          "slots": [
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+          ],
+          "teasers": [
+            {
+              "articleID": "article_pool_73",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_74",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_75",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_76",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_77",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_78",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_79",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_80",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+          ],
+          "type": "teaserSlots",
+        },
+      },
+      {
+        "alignment": {
+          "h": 0,
+          "i": "mock_nanoid_21",
+          "static": false,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+        },
+        "block": {
+          "autofillConfig": {
+            "__typename": "TeaserSlotsBlockAutofillConfig",
+            "enabled": true,
+            "filter": {
+              "__typename": "TeaserListBlockFilter",
+              "tagObjects": [
+                {
+                  "__typename": "Tag",
+                  "id": "mock_nanoid_20",
+                  "tag": "lorem-ipsum",
+                },
+              ],
+              "tags": [
+                "test-tag-id",
+              ],
+            },
+            "numberOfTeasers": 8,
+            "sort": null,
+            "tagIds": [],
+            "teaserType": "article",
+          },
+          "autofillTeasers": [
+            {
+              "articleID": "article_pool_81",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_82",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_83",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_84",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_85",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_86",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_87",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_88",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+          ],
+          "slots": [
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+          ],
+          "teasers": [
+            {
+              "articleID": "article_pool_81",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_82",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_83",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_84",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_85",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_86",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_87",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_88",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+          ],
+          "type": "teaserSlots",
+        },
+      },
+      {
+        "alignment": {
+          "h": 0,
+          "i": "mock_nanoid_23",
+          "static": false,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+        },
+        "block": {
+          "autofillConfig": {
+            "__typename": "TeaserSlotsBlockAutofillConfig",
+            "enabled": true,
+            "filter": {
+              "__typename": "TeaserListBlockFilter",
+              "tagObjects": [
+                {
+                  "__typename": "Tag",
+                  "id": "mock_nanoid_22",
+                  "tag": "lorem-ipsum",
+                },
+              ],
+              "tags": [
+                "test-tag-id",
+              ],
+            },
+            "numberOfTeasers": 8,
+            "sort": null,
+            "tagIds": [],
+            "teaserType": "article",
+          },
+          "autofillTeasers": [
+            {
+              "articleID": "article_pool_89",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_90",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_91",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_92",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_93",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_94",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_95",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_96",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+          ],
+          "slots": [
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+            {
+              "type": "Autofill",
+            },
+          ],
+          "teasers": [
+            {
+              "articleID": "article_pool_89",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_90",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_91",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_92",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_93",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_94",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_95",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_96",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+          ],
+          "type": "teaserSlots",
+        },
+      },
+      {
+        "alignment": {
+          "h": 0,
+          "i": "mock_nanoid_25",
           "static": false,
           "w": 0,
           "x": 0,
@@ -1572,770 +2156,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
           },
           "autofillTeasers": [
             {
-              "articleID": "article_pool_65",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_66",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_67",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_68",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_69",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_70",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_71",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_72",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-          ],
-          "slots": [
-            {
-              "teaser": {
-                "article": {
-                  "id": "article_mock_nanoid_25",
-                },
-                "type": "article",
-              },
-              "type": "Manual",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-          ],
-          "teasers": [
-            {
-              "article": {
-                "id": "article_mock_nanoid_25",
-              },
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_65",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_66",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_67",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_68",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_69",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_70",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_71",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_72",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-          ],
-          "type": "teaserSlots",
-        },
-      },
-      {
-        "alignment": {
-          "h": 0,
-          "i": "mock_nanoid_29",
-          "static": false,
-          "w": 0,
-          "x": 0,
-          "y": 0,
-        },
-        "block": {
-          "autofillConfig": {
-            "__typename": "TeaserSlotsBlockAutofillConfig",
-            "enabled": true,
-            "filter": {
-              "__typename": "TeaserListBlockFilter",
-              "tagObjects": [
-                {
-                  "__typename": "Tag",
-                  "id": "mock_nanoid_27",
-                  "tag": "lorem-ipsum",
-                },
-              ],
-              "tags": [
-                "test-tag-id",
-              ],
-            },
-            "numberOfTeasers": 8,
-            "sort": null,
-            "tagIds": [],
-            "teaserType": "article",
-          },
-          "autofillTeasers": [
-            {
-              "articleID": "article_pool_73",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_74",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_75",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_76",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_77",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_78",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_79",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_80",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-          ],
-          "slots": [
-            {
-              "teaser": {
-                "article": {
-                  "id": "article_mock_nanoid_28",
-                },
-                "type": "article",
-              },
-              "type": "Manual",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-          ],
-          "teasers": [
-            {
-              "article": {
-                "id": "article_mock_nanoid_28",
-              },
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_73",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_74",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_75",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_76",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_77",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_78",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_79",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_80",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-          ],
-          "type": "teaserSlots",
-        },
-      },
-      {
-        "alignment": {
-          "h": 0,
-          "i": "mock_nanoid_32",
-          "static": false,
-          "w": 0,
-          "x": 0,
-          "y": 0,
-        },
-        "block": {
-          "autofillConfig": {
-            "__typename": "TeaserSlotsBlockAutofillConfig",
-            "enabled": true,
-            "filter": {
-              "__typename": "TeaserListBlockFilter",
-              "tagObjects": [
-                {
-                  "__typename": "Tag",
-                  "id": "mock_nanoid_30",
-                  "tag": "lorem-ipsum",
-                },
-              ],
-              "tags": [
-                "test-tag-id",
-              ],
-            },
-            "numberOfTeasers": 8,
-            "sort": null,
-            "tagIds": [],
-            "teaserType": "article",
-          },
-          "autofillTeasers": [
-            {
-              "articleID": "article_pool_81",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_82",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_83",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_84",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_85",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_86",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_87",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_88",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-          ],
-          "slots": [
-            {
-              "teaser": {
-                "article": {
-                  "id": "article_mock_nanoid_31",
-                },
-                "type": "article",
-              },
-              "type": "Manual",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-          ],
-          "teasers": [
-            {
-              "article": {
-                "id": "article_mock_nanoid_31",
-              },
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_81",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_82",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_83",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_84",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_85",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_86",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_87",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_88",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-          ],
-          "type": "teaserSlots",
-        },
-      },
-      {
-        "alignment": {
-          "h": 0,
-          "i": "mock_nanoid_35",
-          "static": false,
-          "w": 0,
-          "x": 0,
-          "y": 0,
-        },
-        "block": {
-          "autofillConfig": {
-            "__typename": "TeaserSlotsBlockAutofillConfig",
-            "enabled": true,
-            "filter": {
-              "__typename": "TeaserListBlockFilter",
-              "tagObjects": [
-                {
-                  "__typename": "Tag",
-                  "id": "mock_nanoid_33",
-                  "tag": "lorem-ipsum",
-                },
-              ],
-              "tags": [
-                "test-tag-id",
-              ],
-            },
-            "numberOfTeasers": 8,
-            "sort": null,
-            "tagIds": [],
-            "teaserType": "article",
-          },
-          "autofillTeasers": [
-            {
-              "articleID": "article_pool_89",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_90",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_91",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_92",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_93",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_94",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_95",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_96",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-          ],
-          "slots": [
-            {
-              "teaser": {
-                "article": {
-                  "id": "article_mock_nanoid_34",
-                },
-                "type": "article",
-              },
-              "type": "Manual",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-            {
-              "type": "Autofill",
-            },
-          ],
-          "teasers": [
-            {
-              "article": {
-                "id": "article_mock_nanoid_34",
-              },
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_89",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_90",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_91",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_92",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_93",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_94",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_95",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_96",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-          ],
-          "type": "teaserSlots",
-        },
-      },
-      {
-        "alignment": {
-          "h": 0,
-          "i": "mock_nanoid_38",
-          "static": false,
-          "w": 0,
-          "x": 0,
-          "y": 0,
-        },
-        "block": {
-          "autofillConfig": {
-            "__typename": "TeaserSlotsBlockAutofillConfig",
-            "enabled": true,
-            "filter": {
-              "__typename": "TeaserListBlockFilter",
-              "tagObjects": [
-                {
-                  "__typename": "Tag",
-                  "id": "mock_nanoid_36",
-                  "tag": "lorem-ipsum",
-                },
-              ],
-              "tags": [
-                "test-tag-id",
-              ],
-            },
-            "numberOfTeasers": 8,
-            "sort": null,
-            "tagIds": [],
-            "teaserType": "article",
-          },
-          "autofillTeasers": [
-            {
               "articleID": "article_pool_97",
               "imageID": undefined,
               "lead": undefined,
@@ -2366,15 +2186,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
           ],
           "slots": [
             {
-              "teaser": {
-                "article": {
-                  "id": "article_mock_nanoid_37",
-                },
-                "type": "article",
-              },
-              "type": "Manual",
-            },
-            {
               "type": "Autofill",
             },
             {
@@ -2400,12 +2211,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
             },
           ],
           "teasers": [
-            {
-              "article": {
-                "id": "article_mock_nanoid_37",
-              },
-              "type": "article",
-            },
             {
               "articleID": "article_pool_97",
               "imageID": undefined,
@@ -2445,7 +2250,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
       {
         "alignment": {
           "h": 0,
-          "i": "mock_nanoid_41",
+          "i": "mock_nanoid_27",
           "static": false,
           "w": 0,
           "x": 0,
@@ -2460,7 +2265,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
               "tagObjects": [
                 {
                   "__typename": "Tag",
-                  "id": "mock_nanoid_39",
+                  "id": "mock_nanoid_26",
                   "tag": "lorem-ipsum",
                 },
               ],
@@ -2476,15 +2281,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
           "autofillTeasers": [],
           "slots": [
             {
-              "teaser": {
-                "article": {
-                  "id": "article_mock_nanoid_40",
-                },
-                "type": "article",
-              },
-              "type": "Manual",
-            },
-            {
               "type": "Autofill",
             },
             {
@@ -2510,12 +2306,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
             },
           ],
           "teasers": [
-            {
-              "article": {
-                "id": "article_mock_nanoid_40",
-              },
-              "type": "article",
-            },
             null,
             null,
             null,

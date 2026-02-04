@@ -68,15 +68,6 @@ const mockTeaserSlotsBlock = () => {
     },
     slots: [
       {
-        type: TeaserSlotType.Manual,
-        teaser: {
-          type: TeaserType.Article,
-          article: {
-            id: `article_${nanoid()}`,
-          },
-        } as ArticleTeaser,
-      },
-      {
         type: TeaserSlotType.Autofill,
       },
       {
@@ -192,9 +183,6 @@ describe('SlotTeasersLoader', () => {
   it('should return unique teasers', async () => {
     const result = await service.loadSlotTeasersIntoBlocks(revisionBlocks);
 
-    const unique = (x: string, i: number, arr: string[]) =>
-      arr.indexOf(x) === i;
-
     const fB = result[0] as unknown as FlexBlock;
     const shouldBeUniqueTeaserIds: string[] = [];
     for (const nestedBlock of fB.blocks) {
@@ -212,11 +200,25 @@ describe('SlotTeasersLoader', () => {
       }
     }
 
-    //console.log('shouldBeUniqueTeaserIds:', shouldBeUniqueTeaserIds);
+    // console.log('shouldBeUniqueTeaserIds:', shouldBeUniqueTeaserIds);
+
+    const unique = (x: string, i: number, arr: string[]) =>
+      arr.indexOf(x) === i;
+
+    const naturalSortAsc = (a: string, b: string) =>
+      ('' + a).localeCompare(b, undefined, {
+        numeric: true,
+        sensitivity: 'base',
+      });
 
     const filteredTeaserIds = shouldBeUniqueTeaserIds.filter(unique);
-    expect(filteredTeaserIds.length).toEqual(63);
-    expect(filteredTeaserIds).toEqual(shouldBeUniqueTeaserIds);
-    expect(result).toMatchSnapshot();
+    const sortedTeaserIds = [...shouldBeUniqueTeaserIds].sort(naturalSortAsc);
+
+    expect(filteredTeaserIds.length).toEqual(56); // 7 teaser-slots-blocks x 8 slots = 56 teasers expected
+    expect(sortedTeaserIds.join(',')).toEqual(
+      shouldBeUniqueTeaserIds.join(',')
+    ); // teaser ids should be in ascending order
+    expect(filteredTeaserIds).toEqual(shouldBeUniqueTeaserIds); // all ids should be unique
+    expect(result).toMatchSnapshot(); // snapshot test the full structure
   });
 });

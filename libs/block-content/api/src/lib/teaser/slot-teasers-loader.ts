@@ -64,59 +64,20 @@ export class SlotTeasersLoader {
     private articleService: ArticleService
   ) {}
 
-  async populateTeaserSlots(block: BaseBlock<BlockType> | undefined) {
-    if (!block) {
-      return block;
-    }
-    if (isTeaserSlotsBlock(block)) {
-      const autofillTeasers = await this.getAutofillTeasers(block);
-      const teasers = await this.getTeasers(block, autofillTeasers);
-
-      return {
-        ...block,
-        autofillTeasers,
-        teasers,
-      };
-    }
-    return block;
-  }
-
-  async processBlock__raceCondition(
-    block: BaseBlock<BlockType> | undefined
-  ): Promise<BaseBlock<BlockType> | undefined> {
-    if (!block) return block;
-
-    // if block has teasers load them into loaded teasers to make sure there will be no duplicates
-    this.addLoadedTeaser(...extractTeasers(block));
-
-    if (isTeaserSlotsBlock(block)) {
-      return await this.populateTeaserSlots(block);
-    }
-
-    // if block is a flex block, process its nested blocks recursively --> the same way "top level blocks" are processed
-    if (isFlexBlock(block)) {
-      const updatedBlocks = await Promise.all(
-        block.blocks.map(async nested => ({
-          ...nested,
-          block: await this.processBlock__raceCondition(nested.block),
-        }))
-      );
-
-      return { ...block, blocks: updatedBlocks } as FlexBlock;
-    }
-
-    return block;
-  }
-
-  async loadSlotTeasersIntoBlocks__raceCondition(
-    revisionBlocks: BaseBlock<BlockType>[]
-  ) {
-    this.loadedTeasers = [];
-    const blocks = await Promise.all(
-      revisionBlocks.map(block => this.processBlock__raceCondition(block))
+  async populateTeaserSlots(block: BaseBlock<BlockType>) {
+    const autofillTeasers = await this.getAutofillTeasers(
+      block as TeaserSlotsBlock
+    );
+    const teasers = await this.getTeasers(
+      block as TeaserSlotsBlock,
+      autofillTeasers
     );
 
-    return blocks as BaseBlock<BlockType>[];
+    return {
+      ...block,
+      autofillTeasers,
+      teasers,
+    };
   }
 
   async processBlock(
@@ -124,14 +85,7 @@ export class SlotTeasersLoader {
   ): Promise<BaseBlock<BlockType> | undefined> {
     if (!block) return block;
 
-    // if block has teasers load them into loaded teasers to make sure there will be no duplicates
-    this.addLoadedTeaser(...extractTeasers(block));
-
-    if (isTeaserSlotsBlock(block)) {
-      return await this.populateTeaserSlots(block);
-    }
-
-    // if block is a flex block, process its nested blocks recursively --> the same way "top level blocks" are processed
+    // 1. if block is a flex block --> process its nested blocks recursively
     if (isFlexBlock(block)) {
       const updatedBlocks: BlockWithAlignment[] = [];
       for (const nested of block.blocks) {
@@ -144,6 +98,15 @@ export class SlotTeasersLoader {
 
       return { ...block, blocks: updatedBlocks } as FlexBlock;
     }
+
+    // 2. if block is a teaser slots block --> populate teasers
+    if (isTeaserSlotsBlock(block)) {
+      return await this.populateTeaserSlots(block);
+    }
+
+    // 3. if block has teasers --> store them so they can be excluded
+    // when next teaser-slots-blocks will be populated
+    this.addLoadedTeaser(...extractTeasers(block));
 
     return block;
   }
