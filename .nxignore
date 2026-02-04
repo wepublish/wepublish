@@ -2,8 +2,8 @@ libs/testing
 libs/storybook
 apps/api-example/schema-v2.graphql
 libs/**/*/seed.ts
-# Block content requires pages & articles which require block-content
-# Without this, the build fails with maximum stack call
+// Block content requires pages & articles which require block-content
+// Without this, the build fails with maximum stack call
 libs/block-content/api
 // Image requires peers which require Image
 // Without this, the build fails with maximum stack call

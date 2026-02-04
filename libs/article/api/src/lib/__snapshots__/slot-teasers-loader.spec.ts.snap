@@ -3,7 +3,7 @@
 exports[`SlotTeasersLoader should return unique teasers 1`] = `
 [
   {
-    "blockStyle": null,
+    "blockStyle": undefined,
     "blocks": [
       {
         "alignment": {
@@ -1346,7 +1346,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
     "type": "flexBlock",
   },
   {
-    "blockStyle": null,
+    "blockStyle": undefined,
     "blocks": [
       {
         "alignment": {
