@@ -64,7 +64,14 @@ query CommentList(
   $order: SortOrder
   $sort: CommentSort
 ) {
-  comments(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  comments(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...FullComment
     }
@@ -83,26 +90,6 @@ query CommentList(
 query Comment($id: String!) {
   comment(id: $id) {
     ...FullComment
-  }
-}
-
-mutation ApproveComment($id: String!) {
-  approveComment(id: $id) {
-    state
-  }
-}
-
-mutation RejectComment($id: String!, $rejectionReason: CommentRejectionReason) {
-  rejectComment(id: $id, rejectionReason: $rejectionReason) {
-    state
-    rejectionReason
-  }
-}
-
-mutation RequestChangesOnComment($id: String!, $rejectionReason: CommentRejectionReason!) {
-  requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
-    state
-    rejectionReason
   }
 }
 

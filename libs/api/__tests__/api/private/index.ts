@@ -277,7 +277,6 @@ export type MemberPlan = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  approveComment: Comment;
   cancelSubscription?: Maybe<Subscription>;
   createComment: Comment;
   createInvoice?: Maybe<Invoice>;
@@ -293,19 +292,12 @@ export type Mutation = {
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
   deleteSubscription?: Maybe<Subscription>;
   markInvoiceAsPaid?: Maybe<Invoice>;
-  rejectComment: Comment;
   renewSubscription?: Maybe<Invoice>;
-  requestChangesOnComment: Comment;
   updateComment: Comment;
   updateInvoice?: Maybe<Invoice>;
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
   updateSubscription?: Maybe<Subscription>;
-};
-
-
-export type MutationApproveCommentArgs = {
-  id: Scalars['String'];
 };
 
 
@@ -393,20 +385,8 @@ export type MutationMarkInvoiceAsPaidArgs = {
 };
 
 
-export type MutationRejectCommentArgs = {
-  id: Scalars['String'];
-  rejectionReason?: InputMaybe<CommentRejectionReason>;
-};
-
-
 export type MutationRenewSubscriptionArgs = {
   id: Scalars['String'];
-};
-
-
-export type MutationRequestChangesOnCommentArgs = {
-  id: Scalars['String'];
-  rejectionReason: CommentRejectionReason;
 };
 
 
@@ -961,29 +941,6 @@ export type CommentQueryVariables = Exact<{
 
 export type CommentQuery = { __typename?: 'Query', comment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, firstName?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null } | null };
 
-export type ApproveCommentMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type ApproveCommentMutation = { __typename?: 'Mutation', approveComment: { __typename?: 'Comment', state: CommentState } };
-
-export type RejectCommentMutationVariables = Exact<{
-  id: Scalars['String'];
-  rejectionReason?: InputMaybe<CommentRejectionReason>;
-}>;
-
-
-export type RejectCommentMutation = { __typename?: 'Mutation', rejectComment: { __typename?: 'Comment', state: CommentState, rejectionReason?: CommentRejectionReason | null } };
-
-export type RequestChangesOnCommentMutationVariables = Exact<{
-  id: Scalars['String'];
-  rejectionReason: CommentRejectionReason;
-}>;
-
-
-export type RequestChangesOnCommentMutation = { __typename?: 'Mutation', requestChangesOnComment: { __typename?: 'Comment', state: CommentState, rejectionReason?: CommentRejectionReason | null } };
-
 export type UpdateCommentMutationVariables = Exact<{
   id: Scalars['String'];
   revision?: InputMaybe<CommentRevisionUpdateInput>;
@@ -1224,29 +1181,6 @@ export const Comment = gql`
   }
 }
     ${FullComment}`;
-export const ApproveComment = gql`
-    mutation ApproveComment($id: String!) {
-  approveComment(id: $id) {
-    state
-  }
-}
-    `;
-export const RejectComment = gql`
-    mutation RejectComment($id: String!, $rejectionReason: CommentRejectionReason) {
-  rejectComment(id: $id, rejectionReason: $rejectionReason) {
-    state
-    rejectionReason
-  }
-}
-    `;
-export const RequestChangesOnComment = gql`
-    mutation RequestChangesOnComment($id: String!, $rejectionReason: CommentRejectionReason!) {
-  requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
-    state
-    rejectionReason
-  }
-}
-    `;
 export const UpdateComment = gql`
     mutation updateComment($id: String!, $revision: CommentRevisionUpdateInput, $userID: String, $guestUsername: String, $guestUserImageID: String, $featured: Boolean, $source: String, $tagIds: [String!], $ratingOverrides: [CommentRatingOverrideUpdateInput!]) {
   updateComment(

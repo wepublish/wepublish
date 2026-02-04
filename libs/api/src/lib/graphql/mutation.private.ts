@@ -1,4 +1,3 @@
-import { CommentState } from '@prisma/client';
 import {
   GraphQLBoolean,
   GraphQLList,
@@ -13,14 +12,11 @@ import {
   GraphQLComment,
   GraphQLCommentItemType,
   GraphQLCommentRatingOverrideUpdateInput,
-  GraphQLCommentRejectionReason,
   GraphQLCommentRevisionUpdateInput,
 } from './comment/comment';
 
 import {
   createAdminComment,
-  deleteComment,
-  takeActionOnComment,
   updateComment,
 } from './comment/comment.private-mutation';
 
@@ -310,69 +306,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           authenticate,
           comment
         ),
-    },
-
-    approveComment: {
-      type: new GraphQLNonNull(GraphQLComment),
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { comment } }) =>
-        takeActionOnComment(
-          id,
-          { state: CommentState.approved },
-          authenticate,
-          comment
-        ),
-    },
-
-    rejectComment: {
-      type: new GraphQLNonNull(GraphQLComment),
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        rejectionReason: { type: GraphQLCommentRejectionReason },
-      },
-      resolve: (
-        root,
-        { id, rejectionReason },
-        { authenticate, prisma: { comment } }
-      ) =>
-        takeActionOnComment(
-          id,
-          { state: CommentState.rejected, rejectionReason },
-          authenticate,
-          comment
-        ),
-    },
-
-    requestChangesOnComment: {
-      type: new GraphQLNonNull(GraphQLComment),
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        rejectionReason: {
-          type: new GraphQLNonNull(GraphQLCommentRejectionReason),
-        },
-      },
-      resolve: (
-        root,
-        { id, rejectionReason },
-        { authenticate, prisma: { comment } }
-      ) =>
-        takeActionOnComment(
-          id,
-          { state: CommentState.pendingUserChanges, rejectionReason },
-          authenticate,
-          comment
-        ),
-    },
-
-    deleteComment: {
-      type: new GraphQLNonNull(GraphQLComment),
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { comment } }) =>
-        deleteComment(id, authenticate, comment),
     },
 
     // Poll

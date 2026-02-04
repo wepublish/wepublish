@@ -25,3 +25,29 @@ fragment CommentBlockComment on Comment {
 
   featured
 }
+
+mutation ApproveComment($id: String!) {
+  approveComment(id: $id) {
+    state
+  }
+}
+
+mutation RejectComment(
+  $id: String!
+  $rejectionReason: CommentRejectionReason!
+) {
+  rejectComment(id: $id, rejectionReason: $rejectionReason) {
+    state
+    rejectionReason
+  }
+}
+
+mutation RequestChangesOnComment(
+  $id: String!
+  $rejectionReason: CommentRejectionReason!
+) {
+  requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
+    state
+    rejectionReason
+  }
+}

@@ -3,15 +3,14 @@ import {
   Comment,
   CommentAuthorType,
   CommentRating,
+  CommentRatingOverride,
   CommentRatingSystemAnswer,
   CommentsRevisions,
   CommentState,
+  Prisma,
   PrismaClient,
   RatingSystemType,
 } from '@prisma/client';
-import { SortOrder } from '@wepublish/utils/api';
-import { CommentSort } from './comment.model';
-import { RatingSystemService } from './rating-system';
 import {
   AnonymousCommentError,
   AnonymousCommentRatingDisabledError,
@@ -19,166 +18,418 @@ import {
   ChallengeMissingCommentError,
   CommentAuthenticationError,
   CommentLengthError,
-  countRichtextChars,
   InvalidStarRatingValueError,
   NotAuthorisedError,
   NotFound,
 } from '@wepublish/api';
-import { CanCreateApprovedComment } from '@wepublish/permissions';
 import { ChallengeService } from '@wepublish/challenge/api';
-import { CommentInput, CommentUpdateInput } from './comment.input';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
-import { CommentWithTags } from './comment.types';
-import { hasPermission } from '@wepublish/permissions/api';
 import { UserSession } from '@wepublish/authentication/api';
 import { CalculatedRating } from './rating-system/rating-system.model';
+import { groupBy } from 'ramda';
+import {
+  AddUserCommentInput,
+  CommentFilter,
+  CommentListArgs,
+  CommentsForItemArgs,
+  CommentSort,
+  CreateCommentInput,
+  UpdateCommentInput,
+  UpdateUserCommentInput,
+} from './comment.model';
+import {
+  getMaxTake,
+  graphQLSortOrderToPrisma,
+  SortOrder,
+} from '@wepublish/utils/api';
+import { hasPermission } from '@wepublish/permissions/api';
+import { CanCreateApprovedComment } from '@wepublish/permissions';
+import { toPlaintext } from '@wepublish/richtext';
 
-export interface CommentWithRevisions {
-  title: string | null;
-  lead: string | null;
-  text: string | null;
+export type CommentWithRequiredRelations = Comment & {
+  ratings: (CommentRating & { answer: CommentRatingSystemAnswer })[];
+  overriddenRatings: CommentRatingOverride[];
+  revisions: CommentsRevisions[];
+};
 
-  [key: string]: any;
-}
+export type DecoratedComment = CommentWithRequiredRelations & {
+  children: DecoratedComment[];
+  calculatedRatings: CalculatedRating[];
+};
+
+const calculateRating = (
+  answers: CommentRatingSystemAnswer[],
+  ratings: CommentRating[]
+) => {
+  return answers.map(answer => {
+    const sortedRatings = ratings
+      .filter(rating => rating.answerId === answer.id)
+      .map(rating => rating.value)
+      .sort((a, b) => a - b);
+    const total = sortedRatings.reduce((value, rating) => value + rating, 0);
+    const mean = total / Math.max(sortedRatings.length, 1);
+
+    return {
+      answer: {
+        ...answer,
+        answer: answer.answer ?? undefined,
+      },
+      count: sortedRatings.length,
+      mean,
+      total,
+    };
+  });
+};
+
+const sortCommentsByRating = (
+  comments: DecoratedComment[],
+  order: SortOrder
+) => {
+  return [...comments].sort((a, b) => {
+    const totalA = a.calculatedRatings.reduce(
+      (total: number, rating) => total + rating.mean,
+      0
+    );
+    const totalB = b.calculatedRatings.reduce(
+      (total: number, rating) => total + rating.mean,
+      0
+    );
+    const ratingDiff =
+      order === SortOrder.Ascending ? totalA - totalB : totalB - totalA;
+
+    if (ratingDiff === 0) {
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    }
+
+    return ratingDiff;
+  });
+};
+
+const sortComments = (
+  comments: DecoratedComment[],
+  sort: CommentSort,
+  order: SortOrder
+) => {
+  switch (sort) {
+    case CommentSort.Rating: {
+      return sortCommentsByRating(comments, order);
+    }
+  }
+
+  return comments;
+};
+
+const decorateComments = (
+  comments: CommentWithRequiredRelations[],
+  ratingSystemAnswers: CommentRatingSystemAnswer[],
+  { sort, order }: { sort: CommentSort; order: SortOrder }
+) => {
+  const groupedComments = groupBy(
+    comment => comment.parentID ?? 'null',
+    comments
+  );
+
+  const decorate = (
+    comment: CommentWithRequiredRelations
+  ): DecoratedComment => ({
+    ...comment,
+    calculatedRatings: calculateRating(ratingSystemAnswers, comment.ratings),
+    children: sortComments(
+      (groupedComments[comment.id] ?? []).map(decorate),
+      sort,
+      order
+    ),
+  });
+
+  return sortComments(groupedComments['null'].map(decorate), sort, order);
+};
+
+const decorateAdminComments = (
+  comments: CommentWithRequiredRelations[],
+  ratingSystemAnswers: CommentRatingSystemAnswer[]
+) => {
+  return comments.map((comment: CommentWithRequiredRelations) => ({
+    ...comment,
+    calculatedRatings: calculateRating(ratingSystemAnswers, comment.ratings),
+    children: [],
+  }));
+};
 
 @Injectable()
 export class CommentService {
   constructor(
     private prisma: PrismaClient,
-    private ratingSystem: RatingSystemService,
     private settingsService: SettingsService,
     private challengeService: ChallengeService
   ) {}
 
-  async getPublicChildrenCommentsByParentId(
-    parentId: string,
-    userId: string | null
-  ) {
-    const comments = await this.prisma.comment.findMany({
-      where: {
-        AND: [
-          { parentID: parentId },
-          {
-            OR: [
-              userId ? { userID: userId } : {},
-              { state: CommentState.approved },
-            ],
+  async getAdminCommennts({
+    filter,
+    cursorId,
+    sort = CommentSort.ModifiedAt,
+    order = SortOrder.Descending,
+    take = 10,
+    skip,
+  }: CommentListArgs) {
+    const orderBy = createCommentOrder(sort, order);
+    const where = createCommentFilter(filter ?? {});
+
+    const [totalCount, comments, ratingSystemAnswers] = await Promise.all([
+      this.prisma.comment.count({
+        where,
+        orderBy,
+      }),
+      this.prisma.comment.findMany({
+        where,
+        skip,
+        take: getMaxTake(take) + 1,
+        orderBy,
+        cursor: cursorId ? { id: cursorId } : undefined,
+        include: {
+          revisions: {
+            orderBy: {
+              createdAt: 'asc',
+            },
           },
-        ],
-      },
-      orderBy: {
-        modifiedAt: 'desc',
-      },
-      include: {
-        revisions: { orderBy: { createdAt: 'asc' } },
-        overriddenRatings: true,
-      },
-    });
-
-    return comments.map(this.mapCommentToPublicComment);
-  }
-
-  getCalculatedRatingsForComment(
-    answers: CommentRatingSystemAnswer[],
-    ratings: CommentRating[]
-  ): CalculatedRating[] {
-    return answers.map(answer => {
-      const sortedRatings = ratings
-        .filter(rating => rating.answerId === answer.id)
-        .map(rating => rating.value)
-        .sort((a, b) => a - b);
-      const total = sortedRatings.reduce((value, rating) => value + rating, 0);
-      const mean = total / Math.max(sortedRatings.length, 1);
-
-      return {
-        answer: {
-          ...answer,
-          answer: answer.answer ?? undefined,
+          overriddenRatings: true,
+          ratings: {
+            include: {
+              answer: true,
+            },
+          },
         },
-        count: sortedRatings.length,
-        mean,
-        total,
-      };
-    });
-  }
+      }),
+      this.prisma.commentRatingSystemAnswer.findMany(),
+    ]);
 
-  sortCommentsByRating(ascending: boolean) {
-    return (comments: any[]) => {
-      return [...comments].sort((a, b) => {
-        const totalA = a.calculatedRatings.reduce(
-          (total: number, rating: CalculatedRating) => total + rating.mean,
-          0
-        );
-        const totalB = b.calculatedRatings.reduce(
-          (total: number, rating: CalculatedRating) => total + rating.mean,
-          0
-        );
-        const ratingDiff = ascending ? totalA - totalB : totalB - totalA;
+    const nodes = decorateAdminComments(
+      comments.slice(0, getMaxTake(take)),
+      ratingSystemAnswers
+    );
+    const firstComment = nodes[0];
+    const lastComment = nodes[nodes.length - 1];
 
-        if (ratingDiff === 0) {
-          return (
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-          );
-        }
+    const hasPreviousPage = Boolean(skip);
+    const hasNextPage = comments.length > nodes.length;
 
-        return ratingDiff;
-      });
+    return {
+      nodes,
+      totalCount,
+      pageInfo: {
+        hasPreviousPage,
+        hasNextPage,
+        startCursor: firstComment?.id,
+        endCursor: lastComment?.id,
+      },
     };
   }
 
-  async getPublicCommentsForItemById(
-    itemId: string,
-    userId: string | null,
-    sort: CommentSort | null,
-    order: SortOrder
+  public async getCommentsForItem(
+    {
+      itemId,
+      itemType,
+      order = SortOrder.Ascending,
+      sort = CommentSort.Rating,
+    }: CommentsForItemArgs,
+    filter?: Prisma.CommentWhereInput
   ) {
-    const ratingSystem = await this.ratingSystem.getRatingSystem();
-    const answers = ratingSystem?.answers || [];
+    const [comments, ratingSystemAnswers] = await Promise.all([
+      this.prisma.comment.findMany({
+        where: {
+          itemID: itemId,
+          itemType,
+          AND: filter ? [filter] : [],
+        },
+        include: {
+          revisions: {
+            orderBy: {
+              createdAt: 'asc',
+            },
+          },
+          overriddenRatings: true,
+          ratings: {
+            include: {
+              answer: true,
+            },
+          },
+        },
+      }),
+      this.prisma.commentRatingSystemAnswer.findMany(),
+    ]);
 
-    const comments = await this.prisma.comment.findMany({
-      where: {
-        OR: [
-          { itemID: itemId, state: CommentState.approved, parentID: null },
-          userId ? { itemID: itemId, userID: userId, parentID: null } : {},
-        ],
-      },
-      include: {
-        revisions: { orderBy: { createdAt: 'asc' } },
-        ratings: true,
-        overriddenRatings: true,
-        tags: { include: { tag: true } },
-      },
-      orderBy: {
-        createdAt: order === SortOrder.Ascending ? 'asc' : 'desc',
-      },
-    });
-
-    const commentsWithRating = comments.map(comment => {
-      return {
-        ...this.mapCommentToPublicComment(comment),
-        calculatedRatings: this.getCalculatedRatingsForComment(
-          answers,
-          comment.ratings || []
-        ),
-        tags: comment.tags?.map((t: any) => t.tag) || [],
-        featured: !!comment.featured,
-      };
-    });
-
-    const topComments = commentsWithRating.filter(comment => comment.featured);
-    let otherComments = commentsWithRating.filter(comment => !comment.featured);
-
-    if (sort === CommentSort.rating) {
-      const isAscending = order === SortOrder.Ascending;
-      otherComments = this.sortCommentsByRating(isAscending)(otherComments);
-    }
-
-    return [...topComments, ...otherComments];
+    return decorateComments(comments, ratingSystemAnswers, { sort, order });
   }
 
-  async addPublicComment(input: CommentInput, session?: UserSession | null) {
+  public async getComment(commentId: string) {
+    const [comments, ratingSystemAnswers] = await Promise.all([
+      this.prisma.comment.findMany({
+        where: {
+          OR: [{ id: commentId }, { parentID: commentId }],
+        },
+        include: {
+          revisions: {
+            orderBy: {
+              createdAt: 'asc',
+            },
+          },
+          overriddenRatings: true,
+          ratings: {
+            include: {
+              answer: true,
+            },
+          },
+        },
+      }),
+      this.prisma.commentRatingSystemAnswer.findMany(),
+    ]);
+
+    return decorateComments(comments, ratingSystemAnswers, {
+      sort: CommentSort.Rating,
+      order: SortOrder.Ascending,
+    }).at(-1);
+  }
+
+  public async createAdminComment({
+    text,
+    lead,
+    tagIds,
+    ...input
+  }: CreateCommentInput) {
+    const comment = await this.prisma.comment.create({
+      data: {
+        ...input,
+        state: CommentState.approved,
+        authorType: CommentAuthorType.team,
+        revisions: {
+          create: {
+            text: text as any,
+            lead,
+          },
+        },
+        tags: {
+          create: tagIds?.map(tagId => ({
+            tagId,
+          })),
+        },
+      },
+    });
+
+    return this.getComment(comment.id);
+  }
+
+  public async updateAdminComment({
+    id,
+    tagIds,
+    revision,
+    ratingOverrides,
+    ...input
+  }: UpdateCommentInput) {
+    if (ratingOverrides?.length) {
+      const answerIds = ratingOverrides.map(override => override.answerId);
+      const answers = await this.prisma.commentRatingSystemAnswer.findMany({
+        where: {
+          id: {
+            in: answerIds,
+          },
+        },
+      });
+
+      ratingOverrides.forEach(override => {
+        const answer = answers.find(a => a.id === override.answerId);
+
+        if (!answer) {
+          throw new NotFound('CommentRatingSystemAnswer', override.answerId);
+        }
+
+        this.validateCommentRatingValue(answer.type, override.value ?? 0);
+      });
+    }
+
+    const comment = await this.prisma.comment.update({
+      where: { id },
+      data: {
+        ...input,
+        revisions:
+          revision ?
+            {
+              create: {
+                text: revision.text as unknown as string,
+                title: revision.title,
+                lead: revision.lead,
+              },
+            }
+          : undefined,
+        tags:
+          tagIds ?
+            {
+              connectOrCreate: tagIds.map(tagId => ({
+                where: {
+                  commentId_tagId: {
+                    commentId: id,
+                    tagId,
+                  },
+                },
+                create: {
+                  tagId,
+                },
+              })),
+              deleteMany: {
+                commentId: id,
+                tagId: {
+                  notIn: tagIds,
+                },
+              },
+            }
+          : undefined,
+        overriddenRatings: {
+          upsert: ratingOverrides?.map(override => ({
+            where: {
+              answerId_commentId: {
+                answerId: override.answerId,
+                commentId: id,
+              },
+            },
+            create: {
+              answerId: override.answerId,
+              value: override.value,
+            },
+            update: {
+              value: override.value ?? null,
+            },
+          })),
+        },
+      },
+    });
+
+    return this.getComment(comment.id);
+  }
+
+  deleteComment(id: string) {
+    return this.prisma.comment.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async takeActionOnComment(
+    id: string,
+    input: Pick<Comment, 'state' | 'rejectionReason'>
+  ) {
+    await this.prisma.comment.update({
+      where: { id },
+      data: input,
+    });
+
+    return this.getComment(id);
+  }
+
+  async addUserComment(
+    input: AddUserCommentInput,
+    session?: UserSession | null
+  ) {
     let authorType: CommentAuthorType = CommentAuthorType.verifiedUser;
-    const commentLength = countRichtextChars(0, input.text);
+    const commentLength = toPlaintext(input.text)?.length ?? 0;
 
     const maxCommentLength = (
       await this.settingsService.settingByName(SettingName.COMMENT_CHAR_LIMIT)
@@ -204,8 +455,13 @@ export class CommentService {
         throw new AnonymousCommentsDisabledError();
       }
 
-      if (!input.guestUsername) throw new AnonymousCommentError();
-      if (!input.challenge) throw new ChallengeMissingCommentError();
+      if (!input.guestUsername) {
+        throw new AnonymousCommentError();
+      }
+
+      if (!input.challenge) {
+        throw new ChallengeMissingCommentError();
+      }
 
       const challengeValidationResult =
         await this.challengeService.validateChallenge({
@@ -213,13 +469,12 @@ export class CommentService {
           solution: input.challenge.challengeSolution,
         });
 
-      if (!challengeValidationResult.valid)
+      if (!challengeValidationResult.valid) {
         throw new CommentAuthenticationError(challengeValidationResult.message);
+      }
     }
 
-    // Cleanup
     const { challenge: _, title, text, ...commentInput } = input;
-
     const comment = await this.prisma.comment.create({
       data: {
         ...commentInput,
@@ -236,17 +491,14 @@ export class CommentService {
             CommentState.approved
           : CommentState.pendingApproval,
       },
-      include: {
-        revisions: { orderBy: { createdAt: 'asc' } },
-        overriddenRatings: true,
-      },
     });
-    return { ...comment, title, text };
+
+    return this.getComment(comment.id);
   }
 
-  async updatePublicComment(
-    input: CommentUpdateInput,
-    { user, roles }: Pick<UserSession, 'user' | 'roles'>
+  async updateUserComment(
+    input: UpdateUserCommentInput,
+    { user, roles }: UserSession
   ) {
     const canSkipApproval = hasPermission(CanCreateApprovedComment, roles);
 
@@ -295,18 +547,9 @@ export class CommentService {
             CommentState.approved
           : CommentState.pendingApproval,
       },
-      select: {
-        revisions: { orderBy: { createdAt: 'asc' } },
-        overriddenRatings: true,
-      },
     });
 
-    return {
-      ...updatedComment,
-      text: updatedComment.revisions.at(-1)?.text,
-      title: updatedComment.revisions.at(-1)?.title,
-      lead: updatedComment.revisions.at(-1)?.lead,
-    };
+    return this.getComment(updatedComment.id);
   }
 
   async rateComment(
@@ -358,30 +601,7 @@ export class CommentService {
       },
     });
 
-    const comment = await this.prisma.comment.findFirst({
-      where: {
-        id: commentId,
-      },
-      include: {
-        revisions: { orderBy: { createdAt: 'asc' } },
-        overriddenRatings: true,
-      },
-    });
-
-    return comment ? this.mapCommentToPublicComment(comment) : null;
-  }
-
-  private mapCommentToPublicComment(
-    comment: Comment & { revisions: CommentsRevisions[] }
-  ) {
-    const { revisions } = comment;
-
-    return {
-      title: revisions.length ? revisions[revisions.length - 1].title : null,
-      lead: revisions.length ? revisions[revisions.length - 1].lead : null,
-      text: revisions.length ? revisions[revisions.length - 1].text : null,
-      ...comment,
-    } as CommentWithTags;
+    return this.getComment(commentId);
   }
 
   private validateCommentRatingValue(type: RatingSystemType, value: number) {
@@ -394,3 +614,105 @@ export class CommentService {
     }
   }
 }
+
+export const createCommentOrder = (
+  field: CommentSort,
+  sortOrder: SortOrder
+): Prisma.CommentFindManyArgs['orderBy'] => {
+  switch (field) {
+    case CommentSort.CreatedAt:
+      return {
+        createdAt: graphQLSortOrderToPrisma(sortOrder),
+      };
+
+    default:
+    case CommentSort.ModifiedAt:
+      return {
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder),
+      };
+  }
+};
+
+const createTagFilter = (
+  filter: Partial<CommentFilter>
+): Prisma.CommentWhereInput => {
+  if (filter?.tags?.length) {
+    return {
+      tags: {
+        some: {
+          tagId: {
+            in: filter?.tags,
+          },
+        },
+      },
+    };
+  }
+
+  return {};
+};
+
+const createStateFilter = (
+  filter: Partial<CommentFilter>
+): Prisma.CommentWhereInput => {
+  if (filter?.states) {
+    return {
+      state: {
+        in: filter.states,
+      },
+    };
+  }
+
+  return {};
+};
+
+const createItemFilter = (
+  filter: Partial<CommentFilter>
+): Prisma.CommentWhereInput => {
+  if (filter?.item) {
+    return {
+      itemID: filter.item,
+    };
+  }
+
+  return {};
+};
+
+const createItemTypeFilter = (
+  filter: Partial<CommentFilter>
+): Prisma.CommentWhereInput => {
+  if (filter?.itemType) {
+    return {
+      itemType: {
+        equals: filter.itemType,
+      },
+    };
+  }
+
+  return {};
+};
+
+const createItemIdFilter = (
+  filter: Partial<CommentFilter>
+): Prisma.CommentWhereInput => {
+  if (filter.itemID) {
+    return {
+      itemID: {
+        equals: filter.itemID,
+      },
+    };
+  }
+
+  return {};
+};
+
+export const createCommentFilter = (
+  filter: Partial<CommentFilter>
+): Prisma.CommentWhereInput => ({
+  AND: [
+    createStateFilter(filter),
+    createTagFilter(filter),
+    createItemTypeFilter(filter),
+    createItemIdFilter(filter),
+    createItemFilter(filter),
+  ],
+});

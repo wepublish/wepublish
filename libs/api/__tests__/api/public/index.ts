@@ -600,6 +600,11 @@ export type CommentRatingSystemAnswer = {
   type: RatingSystemType;
 };
 
+export enum CommentRejectionReason {
+  Misconduct = 'misconduct',
+  Spam = 'spam'
+}
+
 export enum CommentSort {
   Rating = 'rating'
 }
@@ -843,7 +848,6 @@ export enum EditorBlockType {
   Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',
   Event = 'Event',
-  FlexBlock = 'FlexBlock',
   Html = 'HTML',
   Image = 'Image',
   ImageGallery = 'ImageGallery',
@@ -1513,6 +1517,8 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** Create a new comment */
   addComment: Comment;
+  /** Approves a comment */
+  approveComment: Comment;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   cancelUserSubscription?: Maybe<PublicSubscription>;
   /** Creates an article. */
@@ -1586,6 +1592,8 @@ export type Mutation = {
   deleteBanner?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing block style. */
   deleteBlockStyle: BlockStyle;
+  /** Deletes a comment */
+  deleteComment: Comment;
   /**
    *
    *       Deletes an existing consent.
@@ -1659,6 +1667,10 @@ export type Mutation = {
   rateComment: Comment;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
+  /** Rejects a comment */
+  rejectComment: Comment;
+  /** Requests the user to change the comment's content */
+  requestChangesOnComment: Comment;
   /** Resets the password of a user. */
   resetPassword: SensitiveDataUser;
   /** This mutation revokes and deletes the active session. */
@@ -1748,6 +1760,11 @@ export type Mutation = {
 
 export type MutationAddCommentArgs = {
   input: CommentInput;
+};
+
+
+export type MutationApproveCommentArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -2059,6 +2076,11 @@ export type MutationDeleteBlockStyleArgs = {
 };
 
 
+export type MutationDeleteCommentArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteConsentArgs = {
   id: Scalars['String'];
 };
@@ -2222,6 +2244,18 @@ export type MutationRegisterMemberArgs = {
   flair?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   password?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationRejectCommentArgs = {
+  id: Scalars['String'];
+  rejectionReason: CommentRejectionReason;
+};
+
+
+export type MutationRequestChangesOnCommentArgs = {
+  id: Scalars['String'];
+  rejectionReason: CommentRejectionReason;
 };
 
 

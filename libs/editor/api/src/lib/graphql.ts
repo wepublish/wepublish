@@ -279,7 +279,6 @@ export type MemberPlan = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  approveComment: Comment;
   cancelSubscription?: Maybe<Subscription>;
   createComment: Comment;
   createInvoice?: Maybe<Invoice>;
@@ -295,19 +294,12 @@ export type Mutation = {
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
   deleteSubscription?: Maybe<Subscription>;
   markInvoiceAsPaid?: Maybe<Invoice>;
-  rejectComment: Comment;
   renewSubscription?: Maybe<Invoice>;
-  requestChangesOnComment: Comment;
   updateComment: Comment;
   updateInvoice?: Maybe<Invoice>;
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
   updateSubscription?: Maybe<Subscription>;
-};
-
-
-export type MutationApproveCommentArgs = {
-  id: Scalars['String'];
 };
 
 
@@ -395,20 +387,8 @@ export type MutationMarkInvoiceAsPaidArgs = {
 };
 
 
-export type MutationRejectCommentArgs = {
-  id: Scalars['String'];
-  rejectionReason?: InputMaybe<CommentRejectionReason>;
-};
-
-
 export type MutationRenewSubscriptionArgs = {
   id: Scalars['String'];
-};
-
-
-export type MutationRequestChangesOnCommentArgs = {
-  id: Scalars['String'];
-  rejectionReason: CommentRejectionReason;
 };
 
 
@@ -960,29 +940,6 @@ export type CommentQueryVariables = Exact<{
 
 
 export type CommentQuery = { __typename?: 'Query', comment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, note?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Descendant[] | null, shortDescription?: Descendant[] | null, slug: string, active: boolean, productType: ProductType, tags?: Array<string> | null, externalReward?: string | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, flair?: string | null, birthday?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, note?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, currency: Currency, autoRenew: boolean, confirmed: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Descendant[] | null, shortDescription?: Descendant[] | null, slug: string, active: boolean, productType: ProductType, tags?: Array<string> | null, externalReward?: string | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null } | null };
-
-export type ApproveCommentMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type ApproveCommentMutation = { __typename?: 'Mutation', approveComment: { __typename?: 'Comment', state: CommentState } };
-
-export type RejectCommentMutationVariables = Exact<{
-  id: Scalars['String'];
-  rejectionReason?: InputMaybe<CommentRejectionReason>;
-}>;
-
-
-export type RejectCommentMutation = { __typename?: 'Mutation', rejectComment: { __typename?: 'Comment', state: CommentState, rejectionReason?: CommentRejectionReason | null } };
-
-export type RequestChangesOnCommentMutationVariables = Exact<{
-  id: Scalars['String'];
-  rejectionReason: CommentRejectionReason;
-}>;
-
-
-export type RequestChangesOnCommentMutation = { __typename?: 'Mutation', requestChangesOnComment: { __typename?: 'Comment', state: CommentState, rejectionReason?: CommentRejectionReason | null } };
 
 export type UpdateCommentMutationVariables = Exact<{
   id: Scalars['String'];
@@ -1699,109 +1656,6 @@ export function useCommentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Co
 export type CommentQueryHookResult = ReturnType<typeof useCommentQuery>;
 export type CommentLazyQueryHookResult = ReturnType<typeof useCommentLazyQuery>;
 export type CommentQueryResult = Apollo.QueryResult<CommentQuery, CommentQueryVariables>;
-export const ApproveCommentDocument = gql`
-    mutation ApproveComment($id: String!) {
-  approveComment(id: $id) {
-    state
-  }
-}
-    `;
-export type ApproveCommentMutationFn = Apollo.MutationFunction<ApproveCommentMutation, ApproveCommentMutationVariables>;
-
-/**
- * __useApproveCommentMutation__
- *
- * To run a mutation, you first call `useApproveCommentMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useApproveCommentMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [approveCommentMutation, { data, loading, error }] = useApproveCommentMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useApproveCommentMutation(baseOptions?: Apollo.MutationHookOptions<ApproveCommentMutation, ApproveCommentMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ApproveCommentMutation, ApproveCommentMutationVariables>(ApproveCommentDocument, options);
-      }
-export type ApproveCommentMutationHookResult = ReturnType<typeof useApproveCommentMutation>;
-export type ApproveCommentMutationResult = Apollo.MutationResult<ApproveCommentMutation>;
-export type ApproveCommentMutationOptions = Apollo.BaseMutationOptions<ApproveCommentMutation, ApproveCommentMutationVariables>;
-export const RejectCommentDocument = gql`
-    mutation RejectComment($id: String!, $rejectionReason: CommentRejectionReason) {
-  rejectComment(id: $id, rejectionReason: $rejectionReason) {
-    state
-    rejectionReason
-  }
-}
-    `;
-export type RejectCommentMutationFn = Apollo.MutationFunction<RejectCommentMutation, RejectCommentMutationVariables>;
-
-/**
- * __useRejectCommentMutation__
- *
- * To run a mutation, you first call `useRejectCommentMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRejectCommentMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [rejectCommentMutation, { data, loading, error }] = useRejectCommentMutation({
- *   variables: {
- *      id: // value for 'id'
- *      rejectionReason: // value for 'rejectionReason'
- *   },
- * });
- */
-export function useRejectCommentMutation(baseOptions?: Apollo.MutationHookOptions<RejectCommentMutation, RejectCommentMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RejectCommentMutation, RejectCommentMutationVariables>(RejectCommentDocument, options);
-      }
-export type RejectCommentMutationHookResult = ReturnType<typeof useRejectCommentMutation>;
-export type RejectCommentMutationResult = Apollo.MutationResult<RejectCommentMutation>;
-export type RejectCommentMutationOptions = Apollo.BaseMutationOptions<RejectCommentMutation, RejectCommentMutationVariables>;
-export const RequestChangesOnCommentDocument = gql`
-    mutation RequestChangesOnComment($id: String!, $rejectionReason: CommentRejectionReason!) {
-  requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
-    state
-    rejectionReason
-  }
-}
-    `;
-export type RequestChangesOnCommentMutationFn = Apollo.MutationFunction<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
-
-/**
- * __useRequestChangesOnCommentMutation__
- *
- * To run a mutation, you first call `useRequestChangesOnCommentMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRequestChangesOnCommentMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [requestChangesOnCommentMutation, { data, loading, error }] = useRequestChangesOnCommentMutation({
- *   variables: {
- *      id: // value for 'id'
- *      rejectionReason: // value for 'rejectionReason'
- *   },
- * });
- */
-export function useRequestChangesOnCommentMutation(baseOptions?: Apollo.MutationHookOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>(RequestChangesOnCommentDocument, options);
-      }
-export type RequestChangesOnCommentMutationHookResult = ReturnType<typeof useRequestChangesOnCommentMutation>;
-export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<RequestChangesOnCommentMutation>;
-export type RequestChangesOnCommentMutationOptions = Apollo.BaseMutationOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
 export const UpdateCommentDocument = gql`
     mutation updateComment($id: String!, $revision: CommentRevisionUpdateInput, $userID: String, $guestUsername: String, $guestUserImageID: String, $featured: Boolean, $source: String, $tagIds: [String!], $ratingOverrides: [CommentRatingOverrideUpdateInput!]) {
   updateComment(

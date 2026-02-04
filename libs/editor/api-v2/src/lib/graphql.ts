@@ -602,6 +602,11 @@ export type CommentRatingSystemAnswer = {
   type: RatingSystemType;
 };
 
+export enum CommentRejectionReason {
+  Misconduct = 'misconduct',
+  Spam = 'spam'
+}
+
 export enum CommentSort {
   Rating = 'rating'
 }
@@ -845,7 +850,6 @@ export enum EditorBlockType {
   Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',
   Event = 'Event',
-  FlexBlock = 'FlexBlock',
   Html = 'HTML',
   Image = 'Image',
   ImageGallery = 'ImageGallery',
@@ -1515,6 +1519,8 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** Create a new comment */
   addComment: Comment;
+  /** Approves a comment */
+  approveComment: Comment;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   cancelUserSubscription?: Maybe<PublicSubscription>;
   /** Creates an article. */
@@ -1588,6 +1594,8 @@ export type Mutation = {
   deleteBanner?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing block style. */
   deleteBlockStyle: BlockStyle;
+  /** Deletes a comment */
+  deleteComment: Comment;
   /**
    *
    *       Deletes an existing consent.
@@ -1661,6 +1669,10 @@ export type Mutation = {
   rateComment: Comment;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
+  /** Rejects a comment */
+  rejectComment: Comment;
+  /** Requests the user to change the comment's content */
+  requestChangesOnComment: Comment;
   /** Resets the password of a user. */
   resetPassword: SensitiveDataUser;
   /** This mutation revokes and deletes the active session. */
@@ -1750,6 +1762,11 @@ export type Mutation = {
 
 export type MutationAddCommentArgs = {
   input: CommentInput;
+};
+
+
+export type MutationApproveCommentArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -2061,6 +2078,11 @@ export type MutationDeleteBlockStyleArgs = {
 };
 
 
+export type MutationDeleteCommentArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteConsentArgs = {
   id: Scalars['String'];
 };
@@ -2224,6 +2246,18 @@ export type MutationRegisterMemberArgs = {
   flair?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   password?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationRejectCommentArgs = {
+  id: Scalars['String'];
+  rejectionReason: CommentRejectionReason;
+};
+
+
+export type MutationRequestChangesOnCommentArgs = {
+  id: Scalars['String'];
+  rejectionReason: CommentRejectionReason;
 };
 
 
@@ -4929,6 +4963,29 @@ export type DeleteRatingSystemAnswerMutationVariables = Exact<{
 export type DeleteRatingSystemAnswerMutation = { __typename?: 'Mutation', deleteRatingSystemAnswer: { __typename?: 'CommentRatingSystemAnswer', id: string } };
 
 export type CommentBlockCommentFragment = { __typename?: 'Comment', id: string, state: CommentState, guestUsername?: string | null, text?: Descendant[] | null, source?: string | null, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings: Array<{ __typename?: 'OverriddenRating', answerId: string, value?: number | null }> };
+
+export type ApproveCommentMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type ApproveCommentMutation = { __typename?: 'Mutation', approveComment: { __typename?: 'Comment', state: CommentState } };
+
+export type RejectCommentMutationVariables = Exact<{
+  id: Scalars['String'];
+  rejectionReason: CommentRejectionReason;
+}>;
+
+
+export type RejectCommentMutation = { __typename?: 'Mutation', rejectComment: { __typename?: 'Comment', state: CommentState, rejectionReason?: string | null } };
+
+export type RequestChangesOnCommentMutationVariables = Exact<{
+  id: Scalars['String'];
+  rejectionReason: CommentRejectionReason;
+}>;
+
+
+export type RequestChangesOnCommentMutation = { __typename?: 'Mutation', requestChangesOnComment: { __typename?: 'Comment', state: CommentState, rejectionReason?: string | null } };
 
 export type FullConsentFragment = { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string };
 
@@ -8619,6 +8676,109 @@ export function useDeleteRatingSystemAnswerMutation(baseOptions?: Apollo.Mutatio
 export type DeleteRatingSystemAnswerMutationHookResult = ReturnType<typeof useDeleteRatingSystemAnswerMutation>;
 export type DeleteRatingSystemAnswerMutationResult = Apollo.MutationResult<DeleteRatingSystemAnswerMutation>;
 export type DeleteRatingSystemAnswerMutationOptions = Apollo.BaseMutationOptions<DeleteRatingSystemAnswerMutation, DeleteRatingSystemAnswerMutationVariables>;
+export const ApproveCommentDocument = gql`
+    mutation ApproveComment($id: String!) {
+  approveComment(id: $id) {
+    state
+  }
+}
+    `;
+export type ApproveCommentMutationFn = Apollo.MutationFunction<ApproveCommentMutation, ApproveCommentMutationVariables>;
+
+/**
+ * __useApproveCommentMutation__
+ *
+ * To run a mutation, you first call `useApproveCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useApproveCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [approveCommentMutation, { data, loading, error }] = useApproveCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useApproveCommentMutation(baseOptions?: Apollo.MutationHookOptions<ApproveCommentMutation, ApproveCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ApproveCommentMutation, ApproveCommentMutationVariables>(ApproveCommentDocument, options);
+      }
+export type ApproveCommentMutationHookResult = ReturnType<typeof useApproveCommentMutation>;
+export type ApproveCommentMutationResult = Apollo.MutationResult<ApproveCommentMutation>;
+export type ApproveCommentMutationOptions = Apollo.BaseMutationOptions<ApproveCommentMutation, ApproveCommentMutationVariables>;
+export const RejectCommentDocument = gql`
+    mutation RejectComment($id: String!, $rejectionReason: CommentRejectionReason!) {
+  rejectComment(id: $id, rejectionReason: $rejectionReason) {
+    state
+    rejectionReason
+  }
+}
+    `;
+export type RejectCommentMutationFn = Apollo.MutationFunction<RejectCommentMutation, RejectCommentMutationVariables>;
+
+/**
+ * __useRejectCommentMutation__
+ *
+ * To run a mutation, you first call `useRejectCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRejectCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [rejectCommentMutation, { data, loading, error }] = useRejectCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      rejectionReason: // value for 'rejectionReason'
+ *   },
+ * });
+ */
+export function useRejectCommentMutation(baseOptions?: Apollo.MutationHookOptions<RejectCommentMutation, RejectCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RejectCommentMutation, RejectCommentMutationVariables>(RejectCommentDocument, options);
+      }
+export type RejectCommentMutationHookResult = ReturnType<typeof useRejectCommentMutation>;
+export type RejectCommentMutationResult = Apollo.MutationResult<RejectCommentMutation>;
+export type RejectCommentMutationOptions = Apollo.BaseMutationOptions<RejectCommentMutation, RejectCommentMutationVariables>;
+export const RequestChangesOnCommentDocument = gql`
+    mutation RequestChangesOnComment($id: String!, $rejectionReason: CommentRejectionReason!) {
+  requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
+    state
+    rejectionReason
+  }
+}
+    `;
+export type RequestChangesOnCommentMutationFn = Apollo.MutationFunction<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
+
+/**
+ * __useRequestChangesOnCommentMutation__
+ *
+ * To run a mutation, you first call `useRequestChangesOnCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRequestChangesOnCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [requestChangesOnCommentMutation, { data, loading, error }] = useRequestChangesOnCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      rejectionReason: // value for 'rejectionReason'
+ *   },
+ * });
+ */
+export function useRequestChangesOnCommentMutation(baseOptions?: Apollo.MutationHookOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>(RequestChangesOnCommentDocument, options);
+      }
+export type RequestChangesOnCommentMutationHookResult = ReturnType<typeof useRequestChangesOnCommentMutation>;
+export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<RequestChangesOnCommentMutation>;
+export type RequestChangesOnCommentMutationOptions = Apollo.BaseMutationOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
 export const ConsentsDocument = gql`
     query Consents {
   consents {
