@@ -142,7 +142,7 @@ const mockEventService = {
 };
 
 // simulate database with a fixed pool of articles
-const ARTICLE_POOL = Array.from({ length: 100 }, (_, i) => ({
+const ARTICLE_POOL = Array.from({ length: 150 }, (_, i) => ({
   id: `article_pool_${i + 1}`,
   title: `Article ${i + 1}`,
 }));
@@ -183,18 +183,20 @@ describe('SlotTeasersLoader', () => {
   it('should return unique teasers', async () => {
     const result = await service.loadSlotTeasersIntoBlocks(revisionBlocks);
 
-    const fB = result[0] as unknown as FlexBlock;
     const shouldBeUniqueTeaserIds: string[] = [];
-    for (const nestedBlock of fB.blocks) {
-      const block = (nestedBlock as BlockWithAlignment)
-        .block as TeaserSlotsBlock;
 
-      for (const t of block.teasers) {
-        if (t && t.type === TeaserType.Article) {
-          const teaser = t as ArticleTeaser;
-          const id = teaser.article?.id || teaser.articleID;
-          if (id) {
-            shouldBeUniqueTeaserIds.push(id);
+    for (const fB of result as FlexBlock[]) {
+      for (const nestedBlock of fB.blocks) {
+        const block = (nestedBlock as BlockWithAlignment)
+          .block as TeaserSlotsBlock;
+
+        for (const t of block.teasers) {
+          if (t && t.type === TeaserType.Article) {
+            const teaser = t as ArticleTeaser;
+            const id = teaser.article?.id || teaser.articleID;
+            if (id) {
+              shouldBeUniqueTeaserIds.push(id);
+            }
           }
         }
       }
@@ -214,7 +216,7 @@ describe('SlotTeasersLoader', () => {
     const filteredTeaserIds = shouldBeUniqueTeaserIds.filter(unique);
     const sortedTeaserIds = [...shouldBeUniqueTeaserIds].sort(naturalSortAsc);
 
-    expect(filteredTeaserIds.length).toEqual(56); // 7 teaser-slots-blocks x 8 slots = 56 teasers expected
+    expect(filteredTeaserIds.length).toEqual(112); // 2 flex-blocks x 7 teaser-slots-blocks x 8 slots = 112 teasers expected
     expect(sortedTeaserIds.join(',')).toEqual(
       shouldBeUniqueTeaserIds.join(',')
     ); // teaser ids should be in ascending order
