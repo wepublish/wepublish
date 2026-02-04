@@ -20,7 +20,7 @@ import {
   CrowdfundingList,
   EditCrowdfundingForm,
 } from '@wepublish/crowdfunding/editor';
-import { TagType } from '@wepublish/editor/api';
+import { TagType } from '@wepublish/editor/api-v2';
 import { LocalStorageKey } from '@wepublish/editor/api-v2';
 import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {

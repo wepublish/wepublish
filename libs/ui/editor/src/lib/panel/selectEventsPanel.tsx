@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import { TagType } from '@wepublish/editor/api';
+import { TagType } from '@wepublish/editor/api-v2';
 import {
   FullEventFragment,
   getApiClientV2,

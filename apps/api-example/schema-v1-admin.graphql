@@ -431,8 +431,6 @@ type Mutation {
   updateInvoice(id: String!, input: InvoiceInput!): Invoice
   deleteInvoice(id: String!): Invoice
   markInvoiceAsPaid(id: String!): Invoice
-  updateComment(id: String!, revision: CommentRevisionUpdateInput, userID: String, guestUsername: String, guestUserImageID: String, featured: Boolean, source: String, tagIds: [String!], ratingOverrides: [CommentRatingOverrideUpdateInput!]): Comment!
-  createComment(text: RichText, tagIds: [String!], itemID: String!, parentID: String, itemType: CommentItemType!): Comment!
   createPoll(opensAt: DateTime, closedAt: DateTime, question: String): PollWithAnswers
   createPollAnswer(pollId: String!, answer: String): PollAnswer
   createPollExternalVoteSource(pollId: String!, source: String): PollExternalVoteSource
@@ -525,90 +523,6 @@ input PaymentFromInvoiceInput {
   paymentMethodSlug: Slug
   successURL: String
   failureURL: String
-}
-
-type Comment {
-  id: String!
-  guestUsername: String
-  guestUserImage: Image
-  user: User
-  tags: [Tag!]!
-  authorType: CommentAuthorType!
-  itemID: String!
-  itemType: CommentItemType!
-  parentComment: Comment
-  revisions: [CommentRevision!]!
-  source: String
-  state: CommentState!
-  rejectionReason: CommentRejectionReason
-  featured: Boolean
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  overriddenRatings: [overriddenRating!]
-}
-
-type Tag {
-  id: String!
-  tag: String
-  type: TagType
-  main: Boolean!
-  description: RichText
-  url: String!
-}
-
-enum TagType {
-  Comment
-  Event
-  Author
-  Article
-  Page
-}
-
-enum CommentAuthorType {
-  author
-  team
-  verifiedUser
-  guestUser
-}
-
-enum CommentItemType {
-  article
-  page
-}
-
-type CommentRevision {
-  text: RichText
-  title: String
-  lead: String
-  createdAt: DateTime!
-}
-
-enum CommentState {
-  approved
-  pendingApproval
-  pendingUserChanges
-  rejected
-}
-
-enum CommentRejectionReason {
-  misconduct
-  spam
-}
-
-type overriddenRating {
-  answerId: String!
-  value: Int
-}
-
-input CommentRevisionUpdateInput {
-  text: RichText
-  title: String
-  lead: String
-}
-
-input CommentRatingOverrideUpdateInput {
-  answerId: String!
-  value: Int
 }
 
 type PollWithAnswers {

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { TagType } from '@wepublish/editor/api';
+import { TagType } from '@wepublish/editor/api-v2';
 import { TeaserListBlockSort, TeaserType } from '@wepublish/editor/api-v2';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -90,8 +90,8 @@ export class Comment extends HasOptionalUser {
 
   @Field(() => CommentState)
   state!: CommentState;
-  @Field(() => String, { nullable: true })
-  rejectionReason?: string;
+  @Field(() => CommentRejectionReason, { nullable: true })
+  rejectionReason?: CommentRejectionReason;
   @Field(() => CommentAuthorType)
   authorType!: CommentAuthorType;
   @Field(() => String, { nullable: true })

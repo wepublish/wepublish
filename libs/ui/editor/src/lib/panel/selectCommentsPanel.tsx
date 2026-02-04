@@ -1,11 +1,12 @@
 import { ApolloError } from '@apollo/client';
 import styled from '@emotion/styled';
 import {
+  CommentBlockCommentFragment,
   FullCommentFragment,
+  getApiClientV2,
   TagType,
   useCommentListLazyQuery,
-} from '@wepublish/editor/api';
-import { CommentBlockCommentFragment } from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api-v2';
 import { TFunction } from 'i18next';
 import React, { useEffect, useMemo, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -109,7 +110,9 @@ export function SelectCommentPanel({
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const { t } = useTranslation();
+  const client = getApiClientV2();
   const [fetchComments, { data, loading }] = useCommentListLazyQuery({
+    client,
     onError: onErrorToast,
     fetchPolicy: 'cache-and-network',
   });

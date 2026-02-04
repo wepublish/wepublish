@@ -63,13 +63,13 @@ export type BuilderCommentListProps = Pick<
   add: MutationResult<AddCommentMutation>;
   onAddComment: (
     variables: Omit<
-      AddCommentMutationVariables['input'],
+      AddCommentMutationVariables,
       'itemID' | 'itemType' | 'peerId'
     >
   ) => void;
 
   edit: MutationResult<EditCommentMutation>;
-  onEditComment: (variables: EditCommentMutationVariables['input']) => void;
+  onEditComment: (variables: EditCommentMutationVariables) => void;
 
   openEditorsState: BuilderCommentListState;
   openEditorsStateDispatch: Dispatch<BuilderCommentListActions>;
@@ -139,7 +139,7 @@ type CreateCommentProps = {
   > | null;
   onSubmit: (
     data: Omit<
-      AddCommentMutationVariables['input'],
+      AddCommentMutationVariables,
       'itemID' | 'itemType' | 'parentID' | 'peerId'
     >
   ) => void;
@@ -150,7 +150,7 @@ type EditCommentProps = {
   title?: string | null;
   lead?: string | null;
   challenge?: never;
-  onSubmit: (data: Omit<EditCommentMutationVariables['input'], 'id'>) => void;
+  onSubmit: (data: Omit<EditCommentMutationVariables, 'id'>) => void;
 };
 
 export type BuilderCommentEditorProps = {

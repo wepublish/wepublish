@@ -46,8 +46,13 @@ export class SessionService {
         password
       );
 
-    if (!user) throw new InvalidCredentialsError();
-    if (!user.active) throw new NotActiveError();
+    if (!user) {
+      throw new InvalidCredentialsError();
+    }
+
+    if (!user.active) {
+      throw new NotActiveError();
+    }
 
     return this.createUserSession(user);
   }
@@ -107,7 +112,7 @@ export class SessionService {
   async sendWebsiteLogin(email: string) {
     Validator.login.parse({ email });
 
-    const user = await this.userService.getUserByEmail(email);
+    const user = await this.userService.getUserByEmailWithPassword(email);
 
     if (!user) {
       return;

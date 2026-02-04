@@ -28,7 +28,7 @@ export class UserService {
   ) {}
 
   @PrimeDataLoader(UserDataloaderService)
-  async getUserByEmail(email: string) {
+  async getUserByEmailWithPassword(email: string) {
     return this.prisma.user.findFirst({
       where: {
         email: {
@@ -36,7 +36,11 @@ export class UserService {
           equals: email,
         },
       },
-      select: unselectPassword,
+      include: {
+        address: true,
+        paymentProviderCustomers: true,
+        properties: true,
+      },
     });
   }
 

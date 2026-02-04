@@ -15,7 +15,10 @@ export class UserAuthenticationService {
   ) {}
 
   async authenticateUserWithEmailAndPassword(email: string, password: string) {
-    const user = await this.userService.getUserByEmail(email.toLowerCase());
+    const user = await this.userService.getUserByEmailWithPassword(
+      email.toLowerCase()
+    );
+
     if (!user) {
       return null;
     }

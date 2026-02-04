@@ -458,7 +458,7 @@ type Comment implements HasOptionalUser {
   overriddenRatings: [OverriddenRating!]!
   parentComment: Comment
   parentID: String
-  rejectionReason: String
+  rejectionReason: CommentRejectionReason
   revisions: [CommentRevision!]!
   source: String
   state: CommentState!
@@ -557,7 +557,13 @@ enum CommentRejectionReason {
 type CommentRevision {
   createdAt: DateTime!
   lead: String
-  text: String
+  text: RichText
+  title: String
+}
+
+input CommentRevisionInput {
+  lead: String
+  text: RichText
   title: String
 }
 
@@ -797,6 +803,7 @@ enum EditorBlockType {
   Crowdfunding
   Embed
   Event
+  FlexBlock
   HTML
   Image
   ImageGallery
@@ -1432,7 +1439,7 @@ enum MemberPlanSort {
 }
 
 type Mutation {
-  """Adds a new comment"""
+  """Adds a new comment made by you."""
   addUserComment(challenge: ChallengeInput, guestUsername: String, itemID: String!, itemType: CommentItemType!, parentID: String, text: RichText!, title: String): Comment!
 
   """Approves a comment"""
@@ -1452,6 +1459,9 @@ type Mutation {
 
   """Creates a new block style."""
   createBlockStyle(blocks: [EditorBlockType!]!, name: String!): BlockStyle!
+
+  """Creates a comment for any user"""
+  createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, tagIds: [String!], text: RichText): Comment!
 
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
@@ -1675,6 +1685,9 @@ type Mutation {
   """Updates an existing block style."""
   updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
 
+  """Update any existing comment"""
+  updateComment(featured: Boolean, guestUserImageID: String, guestUsername: String, id: String!, ratingOverrides: [OverriddenRatingInput!], revision: CommentRevisionInput, source: String, tagIds: [String!], userID: String): Comment!
+
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
 
@@ -1734,7 +1747,7 @@ type Mutation {
   """Updates an existing user."""
   updateUser(active: Boolean, address: UserAddressInput, birthday: DateTime, email: String, emailVerifiedAt: DateTime, firstName: String, flair: String, id: String, name: String, note: String, properties: [PropertyInput!], roleIDs: [String!], userImageID: String): SensitiveDataUser!
 
-  """Update an existing comment"""
+  """Updates a comment you made."""
   updateUserComment(id: String!, lead: String, text: RichText, title: String): Comment!
 
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
@@ -1793,6 +1806,11 @@ type NonDbProperty {
 }
 
 type OverriddenRating {
+  answerId: String!
+  value: Int
+}
+
+input OverriddenRatingInput {
   answerId: String!
   value: Int
 }

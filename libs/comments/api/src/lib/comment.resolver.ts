@@ -15,6 +15,8 @@ import {
   CommentListArgs,
   UpdateUserCommentInput,
   AddUserCommentInput,
+  UpdateCommentInput,
+  CreateCommentInput,
 } from './comment.model';
 import { CommentService, DecoratedComment } from './comment.service';
 import {
@@ -39,6 +41,7 @@ import {
   CanDeleteComments,
   CanGetComments,
   CanTakeActionOnComment,
+  CanUpdateComments,
 } from '@wepublish/permissions';
 import { hasPermission, Permissions } from '@wepublish/permissions/api';
 import { CommentRejectionReason, CommentState } from '@prisma/client';
@@ -99,7 +102,7 @@ export class CommentResolver {
 
   @Public()
   @Mutation(() => Comment, {
-    description: `Adds a new comment`,
+    description: `Adds a new comment made by you.`,
   })
   async addUserComment(
     @Args() input: AddUserCommentInput,
@@ -110,13 +113,29 @@ export class CommentResolver {
 
   @Authenticated()
   @Mutation(() => Comment, {
-    description: `Update an existing comment`,
+    description: `Updates a comment you made.`,
   })
   async updateUserComment(
     @Args() input: UpdateUserCommentInput,
     @CurrentUser() session: UserSession
   ) {
     return this.commentService.updateUserComment(input, session);
+  }
+
+  @Permissions(CanUpdateComments)
+  @Mutation(() => Comment, {
+    description: `Creates a comment for any user`,
+  })
+  async createComment(@Args() input: CreateCommentInput) {
+    return this.commentService.createAdminComment(input);
+  }
+
+  @Permissions(CanUpdateComments)
+  @Mutation(() => Comment, {
+    description: `Update any existing comment`,
+  })
+  async updateComment(@Args() input: UpdateCommentInput) {
+    return this.commentService.updateAdminComment(input);
   }
 
   @Public()
@@ -180,7 +199,7 @@ export class CommentResolver {
     @Args('id') id: string,
     @Args('rejectionReason') rejectionReason: CommentRejectionReason
   ) {
-    this.commentService.takeActionOnComment(id, {
+    return this.commentService.takeActionOnComment(id, {
       state: CommentState.pendingUserChanges,
       rejectionReason,
     });

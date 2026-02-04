@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { CommentItemType } from '@wepublish/editor/api';
 import {
+  CommentItemType,
   FullAuthorFragment,
   FullImageFragment,
   FullTrackingPixelFragment,

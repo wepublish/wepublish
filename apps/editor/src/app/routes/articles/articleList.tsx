@@ -1,16 +1,14 @@
 import {
-  CommentItemType,
-  TagType,
-  useCreateCommentMutation,
-} from '@wepublish/editor/api';
-import {
   ArticleFilter,
   ArticleListDocument,
   ArticleListQuery,
   ArticleSort,
+  CommentItemType,
   FullArticleFragment,
   getApiClientV2,
+  TagType,
   useArticleListQuery,
+  useCreateCommentMutation,
   useDeleteArticleMutation,
   useDuplicateArticleMutation,
   useUnpublishArticleMutation,
@@ -122,7 +120,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
     variables: articleListVariables,
     fetchPolicy: 'cache-and-network',
   });
-  const [createComment] = useCreateCommentMutation();
+  const [createComment] = useCreateCommentMutation({ client });
 
   const articles = useMemo(() => data?.articles?.nodes ?? [], [data]);
   const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null);

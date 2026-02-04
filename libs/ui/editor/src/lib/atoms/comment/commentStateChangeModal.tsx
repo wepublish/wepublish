@@ -4,10 +4,11 @@ import {
   CommentRevision,
   CommentState,
   FullCommentFragment,
+  getApiClientV2,
   useApproveCommentMutation,
   useRejectCommentMutation,
   useRequestChangesOnCommentMutation,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdReplay } from 'react-icons/md';
@@ -84,14 +85,15 @@ export function CommentStateChangeModal({
   const [open, setOpen] = useState<boolean>(false);
   const [rejectionReason, setRejectionReason] =
     useState<CommentRejectionReason>();
+  const client = getApiClientV2();
   const [approveComment, { loading: isApproving, error: errorApprove }] =
-    useApproveCommentMutation();
+    useApproveCommentMutation({ client });
   const [
     requestChanges,
     { loading: isRequestingChanges, error: errorRequestingChanges },
-  ] = useRequestChangesOnCommentMutation();
+  ] = useRequestChangesOnCommentMutation({ client });
   const [rejectComment, { loading: isRejecting, error: errorRejecting }] =
-    useRejectCommentMutation();
+    useRejectCommentMutation({ client });
 
   useEffect(() => {
     const error =
@@ -128,7 +130,10 @@ export function CommentStateChangeModal({
         setOpen(false);
         break;
       case CommentState.PendingUserChanges:
-        if (!rejectionReason) return;
+        if (!rejectionReason) {
+          return;
+        }
+
         await requestChanges({
           variables: {
             id: comment.id,
@@ -147,7 +152,8 @@ export function CommentStateChangeModal({
         await rejectComment({
           variables: {
             id: comment.id,
-            rejectionReason,
+            rejectionReason:
+              rejectionReason ?? CommentRejectionReason.Misconduct,
           },
           onCompleted: data => {
             if (onStateChanged) {

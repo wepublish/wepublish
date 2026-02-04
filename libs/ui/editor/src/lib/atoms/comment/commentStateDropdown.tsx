@@ -3,7 +3,7 @@ import {
   CommentRejectionReason,
   CommentState,
   FullCommentFragment,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdArrowDropDown } from 'react-icons/md';

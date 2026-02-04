@@ -1,15 +1,13 @@
 import {
   CommentItemType,
-  TagType,
-  useCreateCommentMutation,
-} from '@wepublish/editor/api';
-import {
   FullPageFragment,
   getApiClientV2,
   PageFilter,
   PageListDocument,
   PageListQuery,
   PageSort,
+  TagType,
+  useCreateCommentMutation,
   useDeletePageMutation,
   useDuplicatePageMutation,
   usePageListQuery,
@@ -134,7 +132,7 @@ function PageList() {
     refetch(pageListVariables);
   }, [filter, page, limit, sortOrder, sortField]);
 
-  const [createComment] = useCreateCommentMutation();
+  const [createComment] = useCreateCommentMutation({ client });
 
   return (
     <>

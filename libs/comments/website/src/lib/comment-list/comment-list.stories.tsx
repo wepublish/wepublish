@@ -59,7 +59,7 @@ export default {
 export const Default: StoryObj = {
   args: {
     data: {
-      comments: [
+      commentsForItem: [
         verifiedUserComment,
         { ...verifiedUserComment, children: nestedChildren('2'), id: '2' },
         { ...mockComment({ id: '3' }), children: nestedChildren('3') },
@@ -90,7 +90,7 @@ export const Empty: StoryObj = {
   args: {
     ...Default.args,
     data: {
-      comments: [],
+      commentsForItem: [],
     },
   },
 };
