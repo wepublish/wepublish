@@ -795,7 +795,8 @@
       "users": "Utilisateur/Utilisatrices",
       "audience": "Audience",
       "authorTags": "Tags",
-      "audienceDashboard": "Dashboard"
+      "audienceDashboard": "Dashboard",
+      "integrations": "Intégrations"
     },
     "navigation": {
       "overview": {

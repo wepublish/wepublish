@@ -871,7 +871,8 @@
       "users": "User",
       "audience": "Audience",
       "authorTags": "Tags",
-      "audienceDashboard": "Dashboard"
+      "audienceDashboard": "Dashboard",
+      "integrations": "Integrationen"
     },
     "navigation": {
       "overview": {
