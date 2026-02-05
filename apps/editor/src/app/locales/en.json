@@ -1800,7 +1800,13 @@
       "aiSettings": {
         "apiKey": "API Key",
         "systemPrompt": "System Prompt"
-      }
+      },
+      "challengeSettings": {
+        "secret": "Secret",
+        "siteKey": "Site Key",
+        "type": "Type"
+      },
+      "placeholderSecret": "Unchanged (Hidden)"
     }
   }
 }

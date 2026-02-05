@@ -6005,6 +6005,21 @@ export type UpdateSettingsIntegrationsAiMutationVariables = Exact<{
 
 export type UpdateSettingsIntegrationsAiMutation = { __typename?: 'Mutation', updateAISetting: { __typename?: 'SettingAIProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, systemPrompt?: string | null, type: AiProviderType } };
 
+export type SettingsIntegrationsChallengeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SettingsIntegrationsChallengeQuery = { __typename?: 'Query', challengeProviderSettings: Array<{ __typename?: 'SettingChallengeProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, type: ChallengeProviderType }> };
+
+export type UpdateSettingsIntegrationsChallengeMutationVariables = Exact<{
+  updateChallengeProviderSettingId: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  secret?: InputMaybe<Scalars['String']>;
+  siteKey?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type UpdateSettingsIntegrationsChallengeMutation = { __typename?: 'Mutation', updateChallengeProviderSetting: { __typename?: 'SettingChallengeProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, type: ChallengeProviderType } };
+
 export type SubscriptionFlowsQueryVariables = Exact<{
   defaultFlowOnly: Scalars['Boolean'];
   memberPlanId?: InputMaybe<Scalars['String']>;
@@ -11882,6 +11897,91 @@ export function useUpdateSettingsIntegrationsAiMutation(baseOptions?: Apollo.Mut
 export type UpdateSettingsIntegrationsAiMutationHookResult = ReturnType<typeof useUpdateSettingsIntegrationsAiMutation>;
 export type UpdateSettingsIntegrationsAiMutationResult = Apollo.MutationResult<UpdateSettingsIntegrationsAiMutation>;
 export type UpdateSettingsIntegrationsAiMutationOptions = Apollo.BaseMutationOptions<UpdateSettingsIntegrationsAiMutation, UpdateSettingsIntegrationsAiMutationVariables>;
+export const SettingsIntegrationsChallengeDocument = gql`
+    query SettingsIntegrationsChallenge {
+  challengeProviderSettings {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+  }
+}
+    `;
+
+/**
+ * __useSettingsIntegrationsChallengeQuery__
+ *
+ * To run a query within a React component, call `useSettingsIntegrationsChallengeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSettingsIntegrationsChallengeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSettingsIntegrationsChallengeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSettingsIntegrationsChallengeQuery(baseOptions?: Apollo.QueryHookOptions<SettingsIntegrationsChallengeQuery, SettingsIntegrationsChallengeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SettingsIntegrationsChallengeQuery, SettingsIntegrationsChallengeQueryVariables>(SettingsIntegrationsChallengeDocument, options);
+      }
+export function useSettingsIntegrationsChallengeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SettingsIntegrationsChallengeQuery, SettingsIntegrationsChallengeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SettingsIntegrationsChallengeQuery, SettingsIntegrationsChallengeQueryVariables>(SettingsIntegrationsChallengeDocument, options);
+        }
+export type SettingsIntegrationsChallengeQueryHookResult = ReturnType<typeof useSettingsIntegrationsChallengeQuery>;
+export type SettingsIntegrationsChallengeLazyQueryHookResult = ReturnType<typeof useSettingsIntegrationsChallengeLazyQuery>;
+export type SettingsIntegrationsChallengeQueryResult = Apollo.QueryResult<SettingsIntegrationsChallengeQuery, SettingsIntegrationsChallengeQueryVariables>;
+export const UpdateSettingsIntegrationsChallengeDocument = gql`
+    mutation UpdateSettingsIntegrationsChallenge($updateChallengeProviderSettingId: String!, $name: String, $secret: String, $siteKey: String) {
+  updateChallengeProviderSetting(
+    id: $updateChallengeProviderSettingId
+    name: $name
+    secret: $secret
+    siteKey: $siteKey
+  ) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+  }
+}
+    `;
+export type UpdateSettingsIntegrationsChallengeMutationFn = Apollo.MutationFunction<UpdateSettingsIntegrationsChallengeMutation, UpdateSettingsIntegrationsChallengeMutationVariables>;
+
+/**
+ * __useUpdateSettingsIntegrationsChallengeMutation__
+ *
+ * To run a mutation, you first call `useUpdateSettingsIntegrationsChallengeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSettingsIntegrationsChallengeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSettingsIntegrationsChallengeMutation, { data, loading, error }] = useUpdateSettingsIntegrationsChallengeMutation({
+ *   variables: {
+ *      updateChallengeProviderSettingId: // value for 'updateChallengeProviderSettingId'
+ *      name: // value for 'name'
+ *      secret: // value for 'secret'
+ *      siteKey: // value for 'siteKey'
+ *   },
+ * });
+ */
+export function useUpdateSettingsIntegrationsChallengeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSettingsIntegrationsChallengeMutation, UpdateSettingsIntegrationsChallengeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSettingsIntegrationsChallengeMutation, UpdateSettingsIntegrationsChallengeMutationVariables>(UpdateSettingsIntegrationsChallengeDocument, options);
+      }
+export type UpdateSettingsIntegrationsChallengeMutationHookResult = ReturnType<typeof useUpdateSettingsIntegrationsChallengeMutation>;
+export type UpdateSettingsIntegrationsChallengeMutationResult = Apollo.MutationResult<UpdateSettingsIntegrationsChallengeMutation>;
+export type UpdateSettingsIntegrationsChallengeMutationOptions = Apollo.BaseMutationOptions<UpdateSettingsIntegrationsChallengeMutation, UpdateSettingsIntegrationsChallengeMutationVariables>;
 export const SubscriptionFlowsDocument = gql`
     query SubscriptionFlows($defaultFlowOnly: Boolean!, $memberPlanId: String) {
   subscriptionFlows(

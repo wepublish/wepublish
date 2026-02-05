@@ -12,6 +12,7 @@ import { MdArrowBack } from 'react-icons/md';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Col, Grid, Panel, Row } from 'rsuite';
 import { AIIntegrationForm } from './aiIntegrationForm';
+import { ChallengeIntegrationForm } from './challengeIntegrationForm';
 
 export function IntegrationEditView() {
   const { t } = useTranslation();
@@ -59,6 +60,8 @@ export function IntegrationEditView() {
     switch (type) {
       case 'ai':
         return <AIIntegrationForm />;
+      case 'challenge':
+        return <ChallengeIntegrationForm />;
       default:
         return <p>{t('integrations.configure', { integration: title })}</p>;
     }
