@@ -8,19 +8,6 @@ import {
 } from '@wepublish/author/website';
 
 export const TsriAuthorChip = styled(AuthorChip)`
-  /*
-  display: grid;
-  grid-column: -1 / 1;
-  grid-template-columns: subgrid;
-  grid-template-rows: min-content;
-  padding-bottom: 0;
-  border-bottom: none;
-  align-items: start;
-  &:first-of-type {
-    grid-row: 1 / 2;
-  }
-    */
-
   display: contents;
 
   ${AuthorChipImageWrapper} {

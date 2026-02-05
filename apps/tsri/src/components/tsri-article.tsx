@@ -34,7 +34,6 @@ export const TsriArticle = styled(ArticleDefault)`
     display: grid;
     row-gap: 0;
     column-gap: 0.5rem;
-    grid-template-columns: unset;
     grid-template-columns: min-content 1fr;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
