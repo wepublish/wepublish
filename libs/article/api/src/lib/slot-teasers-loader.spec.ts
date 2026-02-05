@@ -7,6 +7,8 @@ import {
   BlockWithAlignment,
   FlexBlock,
   TeaserSlotType,
+  isFlexBlock,
+  isTeaserSlotsBlock,
 } from '@wepublish/block-content/api';
 import { EventService } from '@wepublish/event/api';
 import { ArticleService } from './article.service';
@@ -35,7 +37,7 @@ jest.mock('nanoid', () => {
   };
 });
 
-const mockFlexBock = ({
+const mockFlexBlock = ({
   blockStyle = undefined,
   blocks = [] as BlockWithAlignment[],
 } = {}) =>
@@ -93,10 +95,10 @@ const mockTeaserSlotsBlock = () => {
       },
     ],
     type: BlockType.TeaserSlots,
-  } as unknown as TeaserSlotsBlock;
+  } as unknown as BaseBlock<BlockType>;
 };
 
-const mockNestedBlock = ({
+const mockBlockWithAlignment = ({
   alignment = {
     i: nanoid(),
     x: 0,
@@ -105,34 +107,94 @@ const mockNestedBlock = ({
     h: 0,
     static: false,
   },
-  block = mockTeaserSlotsBlock(),
-} = {}) =>
+  block = mockTeaserSlotsBlock() as unknown as BaseBlock<BlockType>,
+} = {}): BlockWithAlignment =>
   ({
     alignment,
     block,
   }) as unknown as BlockWithAlignment;
 
+type TeaserWithAlignment = {
+  alignment: {
+    i: string;
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    static: boolean;
+  };
+  teaser: BaseBlock<BlockType>;
+};
+
+const mockTeaserWithAlignment = ({
+  alignment = {
+    i: nanoid(),
+    x: 0,
+    y: 0,
+    w: 0,
+    h: 0,
+    static: false,
+  },
+  teaser = mockTeaserSlotsBlock() as unknown as BaseBlock<BlockType>,
+} = {}): TeaserWithAlignment =>
+  ({
+    alignment,
+    teaser,
+  }) as unknown as TeaserWithAlignment;
+
+const mockTeaserGridFlexBlock = ({
+  blockStyle = undefined,
+  flexTeasers = [] as TeaserWithAlignment[],
+} = {}) =>
+  ({
+    type: BlockType.TeaserGridFlex,
+    blockStyle,
+    flexTeasers,
+  }) as unknown as FlexBlock;
+
+const mockArticleTeaser = ({ articleID = 'mock_article_id' } = {}) =>
+  ({
+    type: TeaserType.Article,
+    articleID,
+  }) as unknown as ArticleTeaser;
+
 const revisionBlocks: BaseBlock<BlockType>[] = [
-  mockFlexBock({
+  mockFlexBlock({
     blocks: [
-      mockNestedBlock({ block: mockTeaserSlotsBlock() }),
-      mockNestedBlock({ block: mockTeaserSlotsBlock() }),
-      mockNestedBlock({ block: mockTeaserSlotsBlock() }),
-      mockNestedBlock({ block: mockTeaserSlotsBlock() }),
-      mockNestedBlock({ block: mockTeaserSlotsBlock() }),
-      mockNestedBlock({ block: mockTeaserSlotsBlock() }),
-      mockNestedBlock({ block: mockTeaserSlotsBlock() }),
+      mockBlockWithAlignment({ block: mockTeaserSlotsBlock() }),
+      mockBlockWithAlignment({ block: mockTeaserSlotsBlock() }),
+      mockBlockWithAlignment({ block: mockTeaserSlotsBlock() }),
+      mockBlockWithAlignment({ block: mockTeaserSlotsBlock() }),
+      mockBlockWithAlignment({ block: mockTeaserSlotsBlock() }),
+      mockBlockWithAlignment({ block: mockTeaserSlotsBlock() }),
+      mockBlockWithAlignment({ block: mockTeaserSlotsBlock() }),
     ],
   }),
-  mockFlexBock({
+  mockTeaserSlotsBlock() as unknown as BaseBlock<BlockType>,
+  // teasers in grid-flex-block must not be repeated in teaser-slots-blocks
+  mockTeaserGridFlexBlock({
+    flexTeasers: [
+      mockTeaserWithAlignment({
+        teaser: mockArticleTeaser({
+          articleID: 'article_pool_66',
+        }) as unknown as BaseBlock<BlockType>,
+      }),
+      mockTeaserWithAlignment({
+        teaser: mockArticleTeaser({
+          articleID: 'article_pool_67',
+        }) as unknown as BaseBlock<BlockType>,
+      }),
+    ],
+  }) as unknown as BaseBlock<BlockType>,
+  mockFlexBlock({
     blocks: [
-      mockNestedBlock({ block: mockTeaserSlotsBlock() }),
-      mockNestedBlock({ block: mockTeaserSlotsBlock() }),
-      mockNestedBlock({ block: mockTeaserSlotsBlock() }),
-      mockNestedBlock({ block: mockTeaserSlotsBlock() }),
-      mockNestedBlock({ block: mockTeaserSlotsBlock() }),
-      mockNestedBlock({ block: mockTeaserSlotsBlock() }),
-      mockNestedBlock({ block: mockTeaserSlotsBlock() }),
+      mockBlockWithAlignment({ block: mockTeaserSlotsBlock() }),
+      mockBlockWithAlignment({ block: mockTeaserSlotsBlock() }),
+      mockBlockWithAlignment({ block: mockTeaserSlotsBlock() }),
+      mockBlockWithAlignment({ block: mockTeaserSlotsBlock() }),
+      mockBlockWithAlignment({ block: mockTeaserSlotsBlock() }),
+      mockBlockWithAlignment({ block: mockTeaserSlotsBlock() }),
+      mockBlockWithAlignment({ block: mockTeaserSlotsBlock() }),
     ],
   }),
 ];
@@ -180,29 +242,49 @@ describe('SlotTeasersLoader', () => {
     service = await module.resolve<SlotTeasersLoader>(SlotTeasersLoader);
   });
 
-  it('should return unique teasers', async () => {
-    const result = await service.loadSlotTeasersIntoBlocks(revisionBlocks);
-
-    const shouldBeUniqueTeaserIds: string[] = [];
-
-    for (const fB of result as FlexBlock[]) {
-      for (const nestedBlock of fB.blocks) {
-        const block = (nestedBlock as BlockWithAlignment)
-          .block as TeaserSlotsBlock;
-
-        for (const t of block.teasers) {
-          if (t && t.type === TeaserType.Article) {
-            const teaser = t as ArticleTeaser;
-            const id = teaser.article?.id || teaser.articleID;
-            if (id) {
-              shouldBeUniqueTeaserIds.push(id);
-            }
-          }
+  const extractTeasers = (block: TeaserSlotsBlock): string[] => {
+    const teaserIds: string[] = [];
+    for (const t of block.teasers) {
+      if (t && t.type === TeaserType.Article) {
+        const teaser = t as ArticleTeaser;
+        const id = teaser.article?.id || teaser.articleID;
+        if (id) {
+          teaserIds.push(id);
         }
       }
     }
+    return teaserIds;
+  };
 
-    // console.log('shouldBeUniqueTeaserIds:', shouldBeUniqueTeaserIds);
+  const processBlock = (block: BaseBlock<BlockType>) => {
+    if (isFlexBlock(block)) {
+      const teaserIds: string[] = [];
+      for (const nestedBlock of (block as FlexBlock).blocks) {
+        teaserIds.push(
+          ...processBlock(
+            (nestedBlock as BlockWithAlignment).block as BaseBlock<BlockType>
+          )
+        );
+      }
+      return teaserIds;
+    }
+
+    if (isTeaserSlotsBlock(block)) {
+      return extractTeasers(block as unknown as TeaserSlotsBlock);
+    }
+
+    return [];
+  };
+
+  it('should return unique teasers', async () => {
+    const result = await service.loadSlotTeasersIntoBlocks(revisionBlocks);
+    const shouldBeUniqueTeaserIds: string[] = [];
+
+    for (const block of result as BaseBlock<BlockType>[]) {
+      shouldBeUniqueTeaserIds.push(...processBlock(block));
+    }
+
+    console.log('shouldBeUniqueTeaserIds:', shouldBeUniqueTeaserIds);
 
     const unique = (x: string, i: number, arr: string[]) =>
       arr.indexOf(x) === i;
@@ -216,7 +298,16 @@ describe('SlotTeasersLoader', () => {
     const filteredTeaserIds = shouldBeUniqueTeaserIds.filter(unique);
     const sortedTeaserIds = [...shouldBeUniqueTeaserIds].sort(naturalSortAsc);
 
-    expect(filteredTeaserIds.length).toEqual(112); // 2 flex-blocks x 7 teaser-slots-blocks x 8 slots = 112 teasers expected
+    const hasItem66 = shouldBeUniqueTeaserIds.some(
+      item => item === 'article_pool_66'
+    );
+    const hasItem67 = shouldBeUniqueTeaserIds.some(
+      item => item === 'article_pool_67'
+    );
+
+    expect(hasItem66).toBe(false);
+    expect(hasItem67).toBe(false);
+    expect(shouldBeUniqueTeaserIds.length).toEqual(120); // 1 teaser-slots-block x 8 slots + 2 flex-blocks x 7 teaser-slots-blocks x 8 slots = 120 teasers expected
     expect(sortedTeaserIds.join(',')).toEqual(
       shouldBeUniqueTeaserIds.join(',')
     ); // teaser ids should be in ascending order

@@ -45,7 +45,6 @@ const extractTeasers = <Block extends BaseBlock<BlockType>>(block: Block) => {
         if (flexTeaser.teaser) {
           teasers.push(flexTeaser.teaser);
         }
-
         return teasers;
       },
       []
