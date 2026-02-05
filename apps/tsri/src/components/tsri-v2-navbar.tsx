@@ -52,6 +52,30 @@ enum ScrollDirection {
   Down,
 }
 
+const AnimatedLoadingDots = styled('span')`
+  &::after {
+    content: '.';
+    animation: loadingDots 1.2s steps(4, end) infinite;
+  }
+
+  @keyframes loadingDots {
+    0%,
+    25% {
+      content: '.';
+    }
+    40% {
+      content: '..';
+    }
+    60% {
+      content: '...';
+    }
+    80%,
+    100% {
+      content: '.....';
+    }
+  }
+`;
+
 const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
   :root {
     ${isHomePage ?
@@ -848,7 +872,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
             return 'Melde dich in deinem Konto an';
         }
       }
-      return '';
+      return '......';
     }, [pageTypeBasedProps]);
 
     const mainItems = data?.navigations?.find(({ key }) => key === slug);
@@ -1034,7 +1058,9 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
               isHomePage={isHomePage}
             >
               <PreTitleTab>
-                <span>{tabText}</span>
+                {tabText === '......' ?
+                  <AnimatedLoadingDots />
+                : <span>{tabText}</span>}
               </PreTitleTab>
 
               {!hasUser &&

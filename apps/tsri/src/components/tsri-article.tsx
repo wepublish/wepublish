@@ -32,12 +32,16 @@ export const TsriArticle = styled(ArticleDefault)`
   ${ArticleInfoWrapper} {
     grid-row-start: 3;
     display: grid;
-    gap: 0;
+    row-gap: 0;
+    column-gap: 0.5rem;
     grid-template-columns: unset;
     grid-template-columns: min-content 1fr;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
-      grid-template-columns: min-content 1fr;
+      row-gap: 0;
+      column-gap: 1rem;
+      grid-template-columns: min-content 1fr auto;
+      grid-template-rows: min-content min-content 1fr min-content;
     }
   }
 

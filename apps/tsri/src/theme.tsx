@@ -381,6 +381,9 @@ export const teaserTopicMetaTheme = createTheme(theme, {
         backgroundColor: 'transparent',
         color: colors.common.black,
       },
+      [breakpoints.up('md')]: {
+        margin: 0,
+      },
     },
   },
   components: {
