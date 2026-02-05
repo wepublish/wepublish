@@ -284,7 +284,7 @@ describe('SlotTeasersLoader', () => {
       shouldBeUniqueTeaserIds.push(...processBlock(block));
     }
 
-    console.log('shouldBeUniqueTeaserIds:', shouldBeUniqueTeaserIds);
+    //console.log('shouldBeUniqueTeaserIds:', shouldBeUniqueTeaserIds);
 
     const unique = (x: string, i: number, arr: string[]) =>
       arr.indexOf(x) === i;
