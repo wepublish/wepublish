@@ -1789,7 +1789,11 @@
       "paymentProvider": "Payment Provider Integration",
       "trackingPixel": "Tracking Pixel Integration",
       "mailProvider": "Mail Provider Integration",
-      "manage": "Manage {{integration}}"
+      "manage": "Manage {{integration}}",
+      "back": "Back to Integrations",
+      "unknown": "Unknown Integration",
+      "notFound": "Integration not found",
+      "configure": "Configure {{integration}}"
     }
   }
 }

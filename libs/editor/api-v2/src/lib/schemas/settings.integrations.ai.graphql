@@ -1,0 +1,23 @@
+query SettingsIntegrationsAI($filter: SettingAIProviderFilter) {
+  aiSettings(filter: $filter) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    systemPrompt
+    type
+  }
+}
+
+mutation UpdateSettingsIntegrationsAI($apiKey: String, $updateAiSettingId: String!, $name: String, $systemPrompt: String) {
+  updateAISetting(apiKey: $apiKey, id: $updateAiSettingId, name: $name, systemPrompt: $systemPrompt) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    systemPrompt
+    type
+  }
+}

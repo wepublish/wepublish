@@ -67,6 +67,7 @@ export function IntegrationList() {
               xs={24}
               md={12}
               lg={8}
+              xl={6}
               style={{ marginBottom: 20 }}
             >
               <Panel
