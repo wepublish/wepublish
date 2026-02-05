@@ -1793,7 +1793,14 @@
       "back": "Back to Integrations",
       "unknown": "Unknown Integration",
       "notFound": "Integration not found",
-      "configure": "Configure {{integration}}"
+      "configure": "Configure {{integration}}",
+      "updateSuccess": "Settings updated successfully",
+      "updateError": "Settings update failed",
+      "noSettingsFound": "No settings found",
+      "aiSettings": {
+        "apiKey": "API Key",
+        "systemPrompt": "System Prompt"
+      }
     }
   }
 }

@@ -5990,9 +5990,7 @@ export type UpdateSettingMutationVariables = Exact<{
 
 export type UpdateSettingMutation = { __typename?: 'Mutation', updateSetting: { __typename?: 'Setting', name: SettingName, value?: any | null } };
 
-export type SettingsIntegrationsAiQueryVariables = Exact<{
-  filter?: InputMaybe<SettingAiProviderFilter>;
-}>;
+export type SettingsIntegrationsAiQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type SettingsIntegrationsAiQuery = { __typename?: 'Query', aiSettings: Array<{ __typename?: 'SettingAIProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, systemPrompt?: string | null, type: AiProviderType }> };
@@ -11798,8 +11796,8 @@ export type UpdateSettingMutationHookResult = ReturnType<typeof useUpdateSetting
 export type UpdateSettingMutationResult = Apollo.MutationResult<UpdateSettingMutation>;
 export type UpdateSettingMutationOptions = Apollo.BaseMutationOptions<UpdateSettingMutation, UpdateSettingMutationVariables>;
 export const SettingsIntegrationsAiDocument = gql`
-    query SettingsIntegrationsAI($filter: SettingAIProviderFilter) {
-  aiSettings(filter: $filter) {
+    query SettingsIntegrationsAI {
+  aiSettings {
     createdAt
     id
     lastLoadedAt
@@ -11823,7 +11821,6 @@ export const SettingsIntegrationsAiDocument = gql`
  * @example
  * const { data, loading, error } = useSettingsIntegrationsAiQuery({
  *   variables: {
- *      filter: // value for 'filter'
  *   },
  * });
  */

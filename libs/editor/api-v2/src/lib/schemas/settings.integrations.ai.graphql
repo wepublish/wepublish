@@ -1,5 +1,5 @@
-query SettingsIntegrationsAI($filter: SettingAIProviderFilter) {
-  aiSettings(filter: $filter) {
+query SettingsIntegrationsAI {
+  aiSettings {
     createdAt
     id
     lastLoadedAt

@@ -1,4 +1,3 @@
-import { useSettingsIntegrationsAiQuery } from '@wepublish/editor/api-v2';
 import {
   CanGetAISettings,
   CanGetChallengeProviderSettings,
@@ -12,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { MdArrowBack } from 'react-icons/md';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Col, Grid, Panel, Row } from 'rsuite';
+import { AIIntegrationForm } from './aiIntegrationForm';
 
 export function IntegrationEditView() {
   const { t } = useTranslation();
@@ -55,6 +55,15 @@ export function IntegrationEditView() {
   const permission = getPermission(type);
   const title = getIntegrationTitle(type);
 
+  const renderConfiguration = () => {
+    switch (type) {
+      case 'ai':
+        return <AIIntegrationForm />;
+      default:
+        return <p>{t('integrations.configure', { integration: title })}</p>;
+    }
+  };
+
   return (
     <PermissionControl
       qualifyingPermissions={permission ? [permission.id] : []}
@@ -76,11 +85,9 @@ export function IntegrationEditView() {
           <Col xs={24}>
             <Panel
               bordered
-              shaded
               style={{ backgroundColor: 'white' }}
             >
-              {/* Placeholder for settings configuration */}
-              <p>{t('integrations.configure', { integration: title })}</p>
+              {renderConfiguration()}
             </Panel>
           </Col>
         </Row>
