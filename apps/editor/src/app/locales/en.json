@@ -1781,6 +1781,15 @@
     },
     "audienceCsvBtn": {
       "exportUsers": "Download CSV"
+    },
+    "integrations": {
+      "title": "Integrations",
+      "ai": "AI Integration",
+      "challengeProvider": "Challenge Provider Integration",
+      "paymentProvider": "Payment Provider Integration",
+      "trackingPixel": "Tracking Pixel Integration",
+      "mailProvider": "Mail Provider Integration",
+      "manage": "Manage {{integration}}"
     }
   }
 }
