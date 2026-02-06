@@ -1994,6 +1994,7 @@ export type MutationCreateSubscriptionWithConfirmationArgs = {
 
 
 export type MutationCreateTagArgs = {
+  color?: InputMaybe<Scalars['Color']>;
   description?: InputMaybe<Scalars['RichText']>;
   main?: Scalars['Boolean'];
   tag?: InputMaybe<Scalars['String']>;
@@ -2454,6 +2455,7 @@ export type MutationUpdateSystemMailArgs = {
 
 
 export type MutationUpdateTagArgs = {
+  color?: InputMaybe<Scalars['Color']>;
   description?: InputMaybe<Scalars['RichText']>;
   id: Scalars['String'];
   main?: InputMaybe<Scalars['Boolean']>;

@@ -1512,7 +1512,7 @@ type Mutation {
   createSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
   """Creates a new tag."""
-  createTag(description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
+  createTag(color: Color, description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
 
   """Creates a token and returns it's secret once."""
   createToken(name: String!): TokenWithSecret!
@@ -1707,7 +1707,7 @@ type Mutation {
   updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
 
   """Updates an existing tag."""
-  updateTag(description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
+  updateTag(color: Color, description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
 
   """
   This mutation allows to update the user's data by taking an input of type UserInput.

@@ -1994,6 +1994,7 @@ export type MutationCreateSubscriptionWithConfirmationArgs = {
 
 
 export type MutationCreateTagArgs = {
+  color?: InputMaybe<Scalars['Color']>;
   description?: InputMaybe<Scalars['RichText']>;
   main?: Scalars['Boolean'];
   tag?: InputMaybe<Scalars['String']>;
@@ -2454,6 +2455,7 @@ export type MutationUpdateSystemMailArgs = {
 
 
 export type MutationUpdateTagArgs = {
+  color?: InputMaybe<Scalars['Color']>;
   description?: InputMaybe<Scalars['RichText']>;
   id: Scalars['String'];
   main?: InputMaybe<Scalars['Boolean']>;
@@ -5686,6 +5688,7 @@ export type CreateTagMutationVariables = Exact<{
   tag?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['RichText']>;
   type: TagType;
+  color?: InputMaybe<Scalars['Color']>;
 }>;
 
 
@@ -5696,6 +5699,7 @@ export type UpdateTagMutationVariables = Exact<{
   description?: InputMaybe<Scalars['RichText']>;
   tag?: InputMaybe<Scalars['String']>;
   main?: InputMaybe<Scalars['Boolean']>;
+  color?: InputMaybe<Scalars['Color']>;
 }>;
 
 
@@ -11848,8 +11852,8 @@ export type TagListQueryHookResult = ReturnType<typeof useTagListQuery>;
 export type TagListLazyQueryHookResult = ReturnType<typeof useTagListLazyQuery>;
 export type TagListQueryResult = Apollo.QueryResult<TagListQuery, TagListQueryVariables>;
 export const CreateTagDocument = gql`
-    mutation CreateTag($tag: String, $description: RichText, $type: TagType!) {
-  createTag(tag: $tag, description: $description, type: $type) {
+    mutation CreateTag($tag: String, $description: RichText, $type: TagType!, $color: Color) {
+  createTag(tag: $tag, description: $description, type: $type, color: $color) {
     ...FullTag
   }
 }
@@ -11872,6 +11876,7 @@ export type CreateTagMutationFn = Apollo.MutationFunction<CreateTagMutation, Cre
  *      tag: // value for 'tag'
  *      description: // value for 'description'
  *      type: // value for 'type'
+ *      color: // value for 'color'
  *   },
  * });
  */
@@ -11883,8 +11888,14 @@ export type CreateTagMutationHookResult = ReturnType<typeof useCreateTagMutation
 export type CreateTagMutationResult = Apollo.MutationResult<CreateTagMutation>;
 export type CreateTagMutationOptions = Apollo.BaseMutationOptions<CreateTagMutation, CreateTagMutationVariables>;
 export const UpdateTagDocument = gql`
-    mutation UpdateTag($id: String!, $description: RichText, $tag: String, $main: Boolean) {
-  updateTag(id: $id, tag: $tag, description: $description, main: $main) {
+    mutation UpdateTag($id: String!, $description: RichText, $tag: String, $main: Boolean, $color: Color) {
+  updateTag(
+    id: $id
+    tag: $tag
+    description: $description
+    main: $main
+    color: $color
+  ) {
     ...FullTag
   }
 }
@@ -11908,6 +11919,7 @@ export type UpdateTagMutationFn = Apollo.MutationFunction<UpdateTagMutation, Upd
  *      description: // value for 'description'
  *      tag: // value for 'tag'
  *      main: // value for 'main'
+ *      color: // value for 'color'
  *   },
  * });
  */

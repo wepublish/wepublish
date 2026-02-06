@@ -102,7 +102,7 @@ export class TagsArgs {
 @ArgsType()
 export class CreateTagInput extends PickType(
   Tag,
-  ['tag', 'main', 'type', 'description'] as const,
+  ['tag', 'main', 'type', 'description', 'color'] as const,
   ArgsType
 ) {}
 
