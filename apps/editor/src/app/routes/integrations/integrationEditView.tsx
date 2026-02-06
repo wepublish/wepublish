@@ -74,30 +74,19 @@ export function IntegrationEditView() {
     <PermissionControl
       qualifyingPermissions={permission ? [permission.id] : []}
     >
-      <Grid fluid>
-        <Row>
-          <Col xs={24}>
-            <Button
-              onClick={() => navigate('/integrations')}
-              appearance="subtle"
-              startIcon={<MdArrowBack />}
-            >
-              {t('integrations.back')}
-            </Button>
-            <h1>{title}</h1>
-          </Col>
-        </Row>
-        <Row style={{ marginTop: 20 }}>
-          <Col xs={24}>
-            <Panel
-              bordered
-              style={{ backgroundColor: 'white' }}
-            >
-              {renderConfiguration()}
-            </Panel>
-          </Col>
-        </Row>
-      </Grid>
+      <div>
+        <Button
+          onClick={() => navigate('/integrations')}
+          appearance="subtle"
+          startIcon={<MdArrowBack />}
+        >
+          {t('integrations.back')}
+        </Button>
+
+        <h1>{title}</h1>
+
+        <div style={{ marginTop: 20 }}>{renderConfiguration()}</div>
+      </div>
     </PermissionControl>
   );
 }

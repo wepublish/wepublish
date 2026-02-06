@@ -42,7 +42,13 @@ export function GenericIntegrationList<
     );
 
   return (
-    <div>
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(450px, 1fr))',
+        gap: '20px',
+      }}
+    >
       {settings.map(setting => (
         <SingleGenericIntegrationForm
           key={setting.id}

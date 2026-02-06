@@ -205,6 +205,8 @@ export function SingleGenericIntegrationForm<
         <Button
           appearance="primary"
           type="submit"
+          size="lg"
+          block
           loading={updating}
         >
           {t('save')}
