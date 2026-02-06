@@ -6020,6 +6020,43 @@ export type UpdateSettingsIntegrationsChallengeMutationVariables = Exact<{
 
 export type UpdateSettingsIntegrationsChallengeMutation = { __typename?: 'Mutation', updateChallengeProviderSetting: { __typename?: 'SettingChallengeProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, type: ChallengeProviderType } };
 
+export type PaymentProviderSettingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PaymentProviderSettingsQuery = { __typename?: 'Query', paymentProviderSettings: Array<{ __typename?: 'SettingPaymentProvider', bexio_accountId?: number | null, bexio_countryId?: number | null, bexio_invoiceMailBodyNewMembership?: string | null, bexio_invoiceMailBodyRenewalMembership?: string | null, bexio_invoiceMailSubjectNewMembership?: string | null, bexio_invoiceMailSubjectRenewalMembership?: string | null, bexio_invoiceTemplateNewMembership?: string | null, bexio_invoiceTemplateRenewalMembership?: string | null, bexio_invoiceTitleNewMembership?: string | null, bexio_invoiceTitleRenewalMembership?: string | null, bexio_markInvoiceAsOpen?: boolean | null, bexio_taxId?: number | null, bexio_unitId?: number | null, bexio_userId?: number | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, mollie_apiBaseUrl?: string | null, mollie_methods?: Array<PaymentMethodMollie> | null, name?: string | null, offSessionPayments?: boolean | null, payrexx_instancename?: string | null, payrexx_pm?: Array<PayrexxPm> | null, payrexx_psp?: Array<PayrexxPsp> | null, payrexx_vatrate?: string | null, stripe_methods?: Array<StripePaymentMethod> | null, type: PaymentProviderType }> };
+
+export type UpdatePaymentProviderSettingMutationVariables = Exact<{
+  updatePaymentProviderSettingId: Scalars['String'];
+  apiKey?: InputMaybe<Scalars['String']>;
+  bexioAccountId?: InputMaybe<Scalars['Float']>;
+  bexioCountryId?: InputMaybe<Scalars['Float']>;
+  bexioInvoiceMailBodyNewMembership?: InputMaybe<Scalars['String']>;
+  bexioInvoiceMailBodyRenewalMembership?: InputMaybe<Scalars['String']>;
+  bexioInvoiceMailSubjectNewMembership?: InputMaybe<Scalars['String']>;
+  bexioInvoiceMailSubjectRenewalMembership?: InputMaybe<Scalars['String']>;
+  bexioInvoiceTemplateNewMembership?: InputMaybe<Scalars['String']>;
+  bexioInvoiceTemplateRenewalMembership?: InputMaybe<Scalars['String']>;
+  bexioInvoiceTitleNewMembership?: InputMaybe<Scalars['String']>;
+  bexioInvoiceTitleRenewalMembership?: InputMaybe<Scalars['String']>;
+  bexioMarkInvoiceAsOpen?: InputMaybe<Scalars['Boolean']>;
+  bexioTaxId?: InputMaybe<Scalars['Float']>;
+  bexioUnitId?: InputMaybe<Scalars['Float']>;
+  bexioUserId?: InputMaybe<Scalars['Float']>;
+  mollieApiBaseUrl?: InputMaybe<Scalars['String']>;
+  mollieMethods?: InputMaybe<Array<PaymentMethodMollie> | PaymentMethodMollie>;
+  name?: InputMaybe<Scalars['String']>;
+  offSessionPayments?: InputMaybe<Scalars['Boolean']>;
+  payrexxInstancename?: InputMaybe<Scalars['String']>;
+  payrexxPm?: InputMaybe<Array<PayrexxPm> | PayrexxPm>;
+  payrexxPsp?: InputMaybe<Array<PayrexxPsp> | PayrexxPsp>;
+  payrexxVatrate?: InputMaybe<Scalars['String']>;
+  stripeMethods?: InputMaybe<Array<StripePaymentMethod> | StripePaymentMethod>;
+  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type UpdatePaymentProviderSettingMutation = { __typename?: 'Mutation', updatePaymentProviderSetting: { __typename?: 'SettingPaymentProvider', bexio_accountId?: number | null, bexio_countryId?: number | null, bexio_invoiceMailBodyNewMembership?: string | null, bexio_invoiceMailBodyRenewalMembership?: string | null, bexio_invoiceMailSubjectNewMembership?: string | null, bexio_invoiceMailSubjectRenewalMembership?: string | null, bexio_invoiceTemplateNewMembership?: string | null, bexio_invoiceTemplateRenewalMembership?: string | null, bexio_invoiceTitleNewMembership?: string | null, bexio_invoiceTitleRenewalMembership?: string | null, bexio_markInvoiceAsOpen?: boolean | null, bexio_taxId?: number | null, bexio_unitId?: number | null, bexio_userId?: number | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, mollie_apiBaseUrl?: string | null, mollie_methods?: Array<PaymentMethodMollie> | null, name?: string | null, offSessionPayments?: boolean | null, payrexx_instancename?: string | null, payrexx_pm?: Array<PayrexxPm> | null, payrexx_psp?: Array<PayrexxPsp> | null, payrexx_vatrate?: string | null, stripe_methods?: Array<StripePaymentMethod> | null, type: PaymentProviderType } };
+
 export type SubscriptionFlowsQueryVariables = Exact<{
   defaultFlowOnly: Scalars['Boolean'];
   memberPlanId?: InputMaybe<Scalars['String']>;
@@ -11982,6 +12019,179 @@ export function useUpdateSettingsIntegrationsChallengeMutation(baseOptions?: Apo
 export type UpdateSettingsIntegrationsChallengeMutationHookResult = ReturnType<typeof useUpdateSettingsIntegrationsChallengeMutation>;
 export type UpdateSettingsIntegrationsChallengeMutationResult = Apollo.MutationResult<UpdateSettingsIntegrationsChallengeMutation>;
 export type UpdateSettingsIntegrationsChallengeMutationOptions = Apollo.BaseMutationOptions<UpdateSettingsIntegrationsChallengeMutation, UpdateSettingsIntegrationsChallengeMutationVariables>;
+export const PaymentProviderSettingsDocument = gql`
+    query PaymentProviderSettings {
+  paymentProviderSettings {
+    bexio_accountId
+    bexio_countryId
+    bexio_invoiceMailBodyNewMembership
+    bexio_invoiceMailBodyRenewalMembership
+    bexio_invoiceMailSubjectNewMembership
+    bexio_invoiceMailSubjectRenewalMembership
+    bexio_invoiceTemplateNewMembership
+    bexio_invoiceTemplateRenewalMembership
+    bexio_invoiceTitleNewMembership
+    bexio_invoiceTitleRenewalMembership
+    bexio_markInvoiceAsOpen
+    bexio_taxId
+    bexio_unitId
+    bexio_userId
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    mollie_apiBaseUrl
+    mollie_methods
+    name
+    offSessionPayments
+    payrexx_instancename
+    payrexx_pm
+    payrexx_psp
+    payrexx_vatrate
+    stripe_methods
+    type
+  }
+}
+    `;
+
+/**
+ * __usePaymentProviderSettingsQuery__
+ *
+ * To run a query within a React component, call `usePaymentProviderSettingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePaymentProviderSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePaymentProviderSettingsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePaymentProviderSettingsQuery(baseOptions?: Apollo.QueryHookOptions<PaymentProviderSettingsQuery, PaymentProviderSettingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PaymentProviderSettingsQuery, PaymentProviderSettingsQueryVariables>(PaymentProviderSettingsDocument, options);
+      }
+export function usePaymentProviderSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaymentProviderSettingsQuery, PaymentProviderSettingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PaymentProviderSettingsQuery, PaymentProviderSettingsQueryVariables>(PaymentProviderSettingsDocument, options);
+        }
+export type PaymentProviderSettingsQueryHookResult = ReturnType<typeof usePaymentProviderSettingsQuery>;
+export type PaymentProviderSettingsLazyQueryHookResult = ReturnType<typeof usePaymentProviderSettingsLazyQuery>;
+export type PaymentProviderSettingsQueryResult = Apollo.QueryResult<PaymentProviderSettingsQuery, PaymentProviderSettingsQueryVariables>;
+export const UpdatePaymentProviderSettingDocument = gql`
+    mutation UpdatePaymentProviderSetting($updatePaymentProviderSettingId: String!, $apiKey: String, $bexioAccountId: Float, $bexioCountryId: Float, $bexioInvoiceMailBodyNewMembership: String, $bexioInvoiceMailBodyRenewalMembership: String, $bexioInvoiceMailSubjectNewMembership: String, $bexioInvoiceMailSubjectRenewalMembership: String, $bexioInvoiceTemplateNewMembership: String, $bexioInvoiceTemplateRenewalMembership: String, $bexioInvoiceTitleNewMembership: String, $bexioInvoiceTitleRenewalMembership: String, $bexioMarkInvoiceAsOpen: Boolean, $bexioTaxId: Float, $bexioUnitId: Float, $bexioUserId: Float, $mollieApiBaseUrl: String, $mollieMethods: [PaymentMethodMollie!], $name: String, $offSessionPayments: Boolean, $payrexxInstancename: String, $payrexxPm: [PayrexxPM!], $payrexxPsp: [PayrexxPSP!], $payrexxVatrate: String, $stripeMethods: [StripePaymentMethod!], $webhookEndpointSecret: String) {
+  updatePaymentProviderSetting(
+    id: $updatePaymentProviderSettingId
+    apiKey: $apiKey
+    bexio_accountId: $bexioAccountId
+    bexio_countryId: $bexioCountryId
+    bexio_invoiceMailBodyNewMembership: $bexioInvoiceMailBodyNewMembership
+    bexio_invoiceMailBodyRenewalMembership: $bexioInvoiceMailBodyRenewalMembership
+    bexio_invoiceMailSubjectNewMembership: $bexioInvoiceMailSubjectNewMembership
+    bexio_invoiceMailSubjectRenewalMembership: $bexioInvoiceMailSubjectRenewalMembership
+    bexio_invoiceTemplateNewMembership: $bexioInvoiceTemplateNewMembership
+    bexio_invoiceTemplateRenewalMembership: $bexioInvoiceTemplateRenewalMembership
+    bexio_invoiceTitleNewMembership: $bexioInvoiceTitleNewMembership
+    bexio_invoiceTitleRenewalMembership: $bexioInvoiceTitleRenewalMembership
+    bexio_markInvoiceAsOpen: $bexioMarkInvoiceAsOpen
+    bexio_taxId: $bexioTaxId
+    bexio_unitId: $bexioUnitId
+    bexio_userId: $bexioUserId
+    mollie_apiBaseUrl: $mollieApiBaseUrl
+    mollie_methods: $mollieMethods
+    name: $name
+    offSessionPayments: $offSessionPayments
+    payrexx_instancename: $payrexxInstancename
+    payrexx_pm: $payrexxPm
+    payrexx_psp: $payrexxPsp
+    payrexx_vatrate: $payrexxVatrate
+    stripe_methods: $stripeMethods
+    webhookEndpointSecret: $webhookEndpointSecret
+  ) {
+    bexio_accountId
+    bexio_countryId
+    bexio_invoiceMailBodyNewMembership
+    bexio_invoiceMailBodyRenewalMembership
+    bexio_invoiceMailSubjectNewMembership
+    bexio_invoiceMailSubjectRenewalMembership
+    bexio_invoiceTemplateNewMembership
+    bexio_invoiceTemplateRenewalMembership
+    bexio_invoiceTitleNewMembership
+    bexio_invoiceTitleRenewalMembership
+    bexio_markInvoiceAsOpen
+    bexio_taxId
+    bexio_unitId
+    bexio_userId
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    mollie_apiBaseUrl
+    mollie_methods
+    name
+    offSessionPayments
+    payrexx_instancename
+    payrexx_pm
+    payrexx_psp
+    payrexx_vatrate
+    stripe_methods
+    type
+  }
+}
+    `;
+export type UpdatePaymentProviderSettingMutationFn = Apollo.MutationFunction<UpdatePaymentProviderSettingMutation, UpdatePaymentProviderSettingMutationVariables>;
+
+/**
+ * __useUpdatePaymentProviderSettingMutation__
+ *
+ * To run a mutation, you first call `useUpdatePaymentProviderSettingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePaymentProviderSettingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePaymentProviderSettingMutation, { data, loading, error }] = useUpdatePaymentProviderSettingMutation({
+ *   variables: {
+ *      updatePaymentProviderSettingId: // value for 'updatePaymentProviderSettingId'
+ *      apiKey: // value for 'apiKey'
+ *      bexioAccountId: // value for 'bexioAccountId'
+ *      bexioCountryId: // value for 'bexioCountryId'
+ *      bexioInvoiceMailBodyNewMembership: // value for 'bexioInvoiceMailBodyNewMembership'
+ *      bexioInvoiceMailBodyRenewalMembership: // value for 'bexioInvoiceMailBodyRenewalMembership'
+ *      bexioInvoiceMailSubjectNewMembership: // value for 'bexioInvoiceMailSubjectNewMembership'
+ *      bexioInvoiceMailSubjectRenewalMembership: // value for 'bexioInvoiceMailSubjectRenewalMembership'
+ *      bexioInvoiceTemplateNewMembership: // value for 'bexioInvoiceTemplateNewMembership'
+ *      bexioInvoiceTemplateRenewalMembership: // value for 'bexioInvoiceTemplateRenewalMembership'
+ *      bexioInvoiceTitleNewMembership: // value for 'bexioInvoiceTitleNewMembership'
+ *      bexioInvoiceTitleRenewalMembership: // value for 'bexioInvoiceTitleRenewalMembership'
+ *      bexioMarkInvoiceAsOpen: // value for 'bexioMarkInvoiceAsOpen'
+ *      bexioTaxId: // value for 'bexioTaxId'
+ *      bexioUnitId: // value for 'bexioUnitId'
+ *      bexioUserId: // value for 'bexioUserId'
+ *      mollieApiBaseUrl: // value for 'mollieApiBaseUrl'
+ *      mollieMethods: // value for 'mollieMethods'
+ *      name: // value for 'name'
+ *      offSessionPayments: // value for 'offSessionPayments'
+ *      payrexxInstancename: // value for 'payrexxInstancename'
+ *      payrexxPm: // value for 'payrexxPm'
+ *      payrexxPsp: // value for 'payrexxPsp'
+ *      payrexxVatrate: // value for 'payrexxVatrate'
+ *      stripeMethods: // value for 'stripeMethods'
+ *      webhookEndpointSecret: // value for 'webhookEndpointSecret'
+ *   },
+ * });
+ */
+export function useUpdatePaymentProviderSettingMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePaymentProviderSettingMutation, UpdatePaymentProviderSettingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePaymentProviderSettingMutation, UpdatePaymentProviderSettingMutationVariables>(UpdatePaymentProviderSettingDocument, options);
+      }
+export type UpdatePaymentProviderSettingMutationHookResult = ReturnType<typeof useUpdatePaymentProviderSettingMutation>;
+export type UpdatePaymentProviderSettingMutationResult = Apollo.MutationResult<UpdatePaymentProviderSettingMutation>;
+export type UpdatePaymentProviderSettingMutationOptions = Apollo.BaseMutationOptions<UpdatePaymentProviderSettingMutation, UpdatePaymentProviderSettingMutationVariables>;
 export const SubscriptionFlowsDocument = gql`
     query SubscriptionFlows($defaultFlowOnly: Boolean!, $memberPlanId: String) {
   subscriptionFlows(

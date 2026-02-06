@@ -767,6 +767,7 @@
       "password": "Password",
       "unauthorized": "User is not authorized for login"
     },
+    "name": "Name",
     "mailTemplates": {
       "availableTemplates": "Available templates",
       "content": "Content",
@@ -1805,6 +1806,18 @@
         "secret": "Secret",
         "siteKey": "Site Key",
         "type": "Type"
+      },
+      "paymentSettings": {
+        "apiKey": "API Key",
+        "apiUrl": "API URL",
+        "instanceName": "Instance Name",
+        "methods": "Payment Methods",
+        "offSessionPayments": "Off Session Payments",
+        "pm": "Payment Methods",
+        "psp": "Payment Service Providers",
+        "type": "Type",
+        "vatRate": "VAT Rate",
+        "webhookEndpointSecret": "Webhook Endpoint Secret"
       },
       "placeholderSecret": "Unchanged (Hidden)"
     }

@@ -10,14 +10,29 @@ import {
   useForm,
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Button, Form, Message, Panel, SelectPicker, toaster } from 'rsuite';
+import {
+  Button,
+  CheckPicker,
+  Checkbox,
+  Form,
+  Message,
+  Panel,
+  SelectPicker,
+  toaster,
+} from 'rsuite';
 import { z } from 'zod';
 import { getApiClientV2 } from '@wepublish/editor/api-v2';
 
 export type FieldDefinition<TFormValues> = {
   name: Path<TFormValues>;
   label: string;
-  type?: 'text' | 'password' | 'textarea' | 'select';
+  type?:
+    | 'text'
+    | 'password'
+    | 'textarea'
+    | 'select'
+    | 'checkPicker'
+    | 'checkbox';
   placeholder?: string;
   disabled?: boolean;
   options?: { label: string; value: string | number }[];
@@ -37,7 +52,9 @@ export interface GenericIntegrationFormProps<
     formData: TFormValues,
     setting: TSetting
   ) => Record<string, any>;
-  fields: FieldDefinition<TFormValues>[];
+  fields:
+    | FieldDefinition<TFormValues>[]
+    | ((setting: TSetting) => FieldDefinition<TFormValues>[]);
 }
 
 export function SingleGenericIntegrationForm<
@@ -60,6 +77,11 @@ export function SingleGenericIntegrationForm<
   const initialValues = useMemo(
     () => mapSettingToInitialValues(setting),
     [setting, mapSettingToInitialValues]
+  );
+
+  const resolvedFields = useMemo(
+    () => (typeof fields === 'function' ? fields(setting) : fields),
+    [fields, setting]
   );
 
   const { control, handleSubmit } = useForm<TFormValues>({
@@ -96,12 +118,14 @@ export function SingleGenericIntegrationForm<
         onSubmit={() => handleSubmit(onSubmit)()}
         disabled={updating}
       >
-        {fields.map(field => (
+        {resolvedFields.map(field => (
           <Form.Group
             controlId={`${String(field.name)}-${setting.id}`}
             key={String(field.name)}
           >
-            <Form.ControlLabel>{field.label}</Form.ControlLabel>
+            <Form.ControlLabel>
+              {field.type === 'checkbox' ? ' ' : field.label}
+            </Form.ControlLabel>
             <Controller
               name={field.name}
               control={control}
@@ -120,6 +144,33 @@ export function SingleGenericIntegrationForm<
                       searchable={false}
                       {...restField}
                     />
+                  );
+                }
+
+                if (field.type === 'checkPicker') {
+                  return (
+                    <CheckPicker
+                      data={field.options || []}
+                      value={value || []}
+                      onChange={val => onChange(val)}
+                      disabled={field.disabled}
+                      cleanable={false}
+                      searchable={false}
+                      {...restField}
+                    />
+                  );
+                }
+
+                if (field.type === 'checkbox') {
+                  return (
+                    <Checkbox
+                      checked={!!value}
+                      onChange={(_, c) => onChange(c)}
+                      disabled={field.disabled}
+                      {...restField}
+                    >
+                      {field.label}
+                    </Checkbox>
                   );
                 }
 

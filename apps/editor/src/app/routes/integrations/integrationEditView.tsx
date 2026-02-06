@@ -13,6 +13,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Col, Grid, Panel, Row } from 'rsuite';
 import { AIIntegrationForm } from './aiIntegrationForm';
 import { ChallengeIntegrationForm } from './challengeIntegrationForm';
+import { PaymentIntegrationForm } from './paymentIntegrationForm';
 
 export function IntegrationEditView() {
   const { t } = useTranslation();
@@ -62,6 +63,8 @@ export function IntegrationEditView() {
         return <AIIntegrationForm />;
       case 'challenge':
         return <ChallengeIntegrationForm />;
+      case 'payment':
+        return <PaymentIntegrationForm />;
       default:
         return <p>{t('integrations.configure', { integration: title })}</p>;
     }
