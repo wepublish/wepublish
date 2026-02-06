@@ -51,6 +51,10 @@ export function EmbedEditPanel({ value, onClose, onConfirm }: EmbedEditPanel) {
     );
     const bildwurfAdMatch = input.match(/data-zone="([0-9a-zA-Z-_]+)"/);
 
+    const streamableVideoMatch = input.match(
+      /nostreamable\.com\/(?:e\/)?([0-9a-zA-Z-_]+)/
+    );
+
     if (facebookPostMatch) {
       const [, userID, postID] = facebookPostMatch;
       setEmbed({ type: EmbedType.FacebookPost, userID, postID });
@@ -78,6 +82,9 @@ export function EmbedEditPanel({ value, onClose, onConfirm }: EmbedEditPanel) {
     } else if (bildwurfAdMatch) {
       const [, zoneID] = bildwurfAdMatch;
       setEmbed({ type: EmbedType.BildwurfAd, zoneID });
+    } else if (streamableVideoMatch) {
+      const [, videoID] = streamableVideoMatch;
+      setEmbed({ type: EmbedType.StreamableVideo, videoID });
     } else {
       if (input) {
         const parser = new DOMParser();
@@ -204,6 +211,9 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
 
     case EmbedType.BildwurfAd:
       return `<div id="bildwurf-injection-wrapper"><ins className="aso-zone" data-zone="${embed.zoneID}"></ins></div>`;
+
+    case EmbedType.StreamableVideo:
+      return `https://streamable.com/${embed.videoID}`;
 
     case EmbedType.Other: {
       const hasTitle = !!embed.title;

@@ -17,13 +17,14 @@ import {
   SliderWrapper,
   SlidesContainer,
   useSlidesPadding,
-  useSlidesPerViewResponsive,
+  useSlidesPerView,
 } from '../teaser-slider/teaser-slider';
 import { BlockContent, ImageGalleryBlock } from '@wepublish/website/api';
 import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
 
 export const ImageSlider = ({
   images,
+  slidesPerViewConfig = {},
 }: BuilderBlockStyleProps['ImageSlider']) => {
   const {
     blocks: { Image },
@@ -31,7 +32,7 @@ export const ImageSlider = ({
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
 
-  const slidesPerView = useSlidesPerViewResponsive();
+  const slidesPerView = useSlidesPerView(slidesPerViewConfig);
   const slidePadding = useSlidesPadding();
   const [ref, sliderRef] = useKeenSlider({
     mode: 'free-snap',

@@ -31,29 +31,6 @@ const nextConfig = {
 
     return config;
   },
-  async headers() {
-    return [
-      {
-        // Apply these headers to all routes except /profile/*
-        source: '/((?!profile).*)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 's-maxage=59, stale-while-revalidate=59, maxage=59, public',
-          },
-        ],
-      },
-      {
-        source: '/',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 's-maxage=59, stale-while-revalidate=59, maxage=59, public',
-          },
-        ],
-      },
-    ];
-  },
   async redirects() {
     return [
       {
@@ -63,6 +40,58 @@ const nextConfig = {
       },
     ];
   },
+  headers: async () =>
+    process.env.NODE_ENV === 'production' ?
+      [
+        {
+          source: '/:path*',
+          headers: [
+            {
+              key: 'cache-control',
+              value:
+                'public, max-age=59, s-maxage=59, stale-while-revalidate=604800, stale-if-error=86400',
+            },
+          ],
+        },
+        {
+          source: '/_next/data/:path*',
+          headers: [
+            {
+              key: 'cache-control',
+              value:
+                's-maxage=59, stale-while-revalidate=59, max-age=59, stale-while-revalidate=604800, stale-if-error=86400, public',
+            },
+          ],
+        },
+        {
+          source: '/_next/static/:path*',
+          headers: [
+            {
+              key: 'cache-control',
+              value: 'public, max-age=31536000, immutable',
+            },
+          ],
+        },
+        {
+          source: '/profile',
+          headers: [
+            {
+              key: 'cache-control',
+              value: 'no-store',
+            },
+          ],
+        },
+        {
+          source: '/profile/:path*',
+          headers: [
+            {
+              key: 'cache-control',
+              value: 'no-store',
+            },
+          ],
+        },
+      ]
+    : [],
   experimental: {
     scrollRestoration: true,
   },
@@ -81,7 +110,12 @@ const nextConfig = {
   // Not needed for the monorepository but for demo purposes.
   // @wepublish/ui and @wepublish/website are ES Modules which Next does not support yet.
   // This will transpile the ES Modules to CommonJS
-  transpilePackages: ['@wepublish/ui', '@wepublish/website', 'react-tweet'],
+  transpilePackages: [
+    '@wepublish/ui',
+    '@wepublish/website',
+    'react-tweet',
+    '@faker-js/faker',
+  ],
 };
 
 module.exports = nextConfig;

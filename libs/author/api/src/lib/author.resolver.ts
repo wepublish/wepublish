@@ -1,24 +1,29 @@
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { Public } from '@wepublish/authentication/api';
-import { Author } from './author.model';
+import { Author, CreateAuthorInput, UpdateAuthorInput } from './author.model';
 import { AuthorService } from './author.service';
 import { AuthorDataloaderService } from './author-dataloader.service';
-import { BadRequestException } from '@nestjs/common';
-import {
-  AuthorArgs,
-  AuthorsQueryArgs,
-  PaginatedAuthors,
-} from './authors.query';
+import { AuthorArgs, AuthorsQueryArgs, PaginatedAuthors } from './author.model';
 import { URLAdapter } from '@wepublish/nest-modules';
-import { Tag, TagService } from '@wepublish/tag/api';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, BadRequestException } from '@nestjs/common';
+import { Permissions } from '@wepublish/permissions/api';
+import { CanCreateAuthor, CanDeleteAuthor } from '@wepublish/permissions';
+import { AuthorTagDataloader, Tag } from '@wepublish/tag/api';
+import { Author as PAuthor } from '@prisma/client';
 
 @Resolver(() => Author)
 export class AuthorResolver {
   constructor(
     private authorService: AuthorService,
     private authorDataloader: AuthorDataloaderService,
-    private tagService: TagService,
+    private tagDataLoader: AuthorTagDataloader,
     private urlAdapter: URLAdapter
   ) {}
 
@@ -69,14 +74,31 @@ export class AuthorResolver {
     );
   }
 
-  @ResolveField(() => String, { nullable: true })
-  async url(@Parent() parent: Author) {
-    return this.urlAdapter.getAuthorURL(parent);
+  @Permissions(CanCreateAuthor)
+  @Mutation(returns => Author, { description: `Creates a new author.` })
+  public createAuthor(@Args() author: CreateAuthorInput) {
+    return this.authorService.createAuthor(author);
+  }
+
+  @Permissions(CanCreateAuthor)
+  @Mutation(returns => Author, { description: `Updates an existing author.` })
+  public updateAuthor(@Args() author: UpdateAuthorInput) {
+    return this.authorService.updateAuthor(author);
+  }
+
+  @Permissions(CanDeleteAuthor)
+  @Mutation(returns => Author, { description: `Deletes an existing author.` })
+  public deleteAuthor(@Args('id') id: string) {
+    return this.authorService.deleteAuthor(id);
   }
 
   @ResolveField(() => [Tag])
-  async tags(@Parent() parent: Author) {
-    const { id: articleId } = parent;
-    return this.tagService.getTagsByAuthorId(articleId);
+  async tags(@Parent() parent: PAuthor) {
+    return this.tagDataLoader.load(parent.id);
+  }
+
+  @ResolveField(() => String, { nullable: true })
+  async url(@Parent() parent: PAuthor) {
+    return this.urlAdapter.getAuthorURL(parent);
   }
 }

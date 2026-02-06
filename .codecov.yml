@@ -11,3 +11,16 @@ coverage:
         target: 35%
         if_not_found: success
         if_ci_failed: error
+ignore:
+  - "apps"
+  - "build"
+  - "config"
+  - "deployment"
+  - "docker"
+  - "docks"
+  - "helm"
+  - "scripts"
+  - "tools"
+  - "**/*.stories.tsx"
+  - "libs/testing"
+  - "libs/storybook"

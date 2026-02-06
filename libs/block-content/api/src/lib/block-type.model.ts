@@ -8,6 +8,7 @@ export enum BlockType {
   InstagramPost = 'instagramPost',
   TwitterTweet = 'twitterTweet',
   VimeoVideo = 'vimeoVideo',
+  StreamableVideo = 'streamableVideo',
   YouTubeVideo = 'youTubeVideo',
   SoundCloudTrack = 'soundCloudTrack',
   PolisConversation = 'polisConversation',
@@ -29,6 +30,7 @@ export enum BlockType {
   Comment = 'comment',
   Event = 'event',
   Subscribe = 'subscribe',
+  FlexBlock = 'flexBlock',
 }
 
 registerEnumType(BlockType, {

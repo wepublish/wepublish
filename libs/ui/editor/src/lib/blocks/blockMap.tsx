@@ -1,5 +1,6 @@
 import {
   EditorBlockType,
+  SubscribeBlockField,
   TeaserListBlockSort,
   TeaserSlotType,
   TeaserType,
@@ -33,6 +34,7 @@ import { CommentBlock } from './commentBlock';
 import { CrowdfundingBlock } from './CrowdfundingBlock';
 import { EmbedBlock } from './embedBlock';
 import { EventBlock } from './eventBlock';
+import { FlexBlock } from './flexBlock';
 import { HTMLBlock } from './htmlBlock';
 import { ImageBlock } from './imageBlock';
 import { ImageGalleryBlock } from './imageGalleryBlock';
@@ -260,7 +262,16 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
 
   [EditorBlockType.Subscribe]: {
     field: props => <SubscribeBlock {...props} />,
-    defaultValue: { blockStyle: undefined },
+    defaultValue: {
+      blockStyle: undefined,
+      memberPlanIds: [],
+      fields: [
+        SubscribeBlockField.FirstName,
+        SubscribeBlockField.Password,
+        SubscribeBlockField.PasswordRepeated,
+        SubscribeBlockField.Address,
+      ],
+    },
     label: 'blocks.subscribe.label',
     icon: <MdAccountBox />,
   },
@@ -291,5 +302,22 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: { filter: {}, events: [], blockStyle: undefined },
     label: 'blocks.event.label',
     icon: <MdEvent />,
+  },
+
+  [EditorBlockType.FlexBlock]: {
+    field: props => <FlexBlock {...props} />,
+    defaultValue: {
+      blocks: [
+        {
+          alignment: { i: nanoid(), x: 0, y: 0, w: 3, h: 6, static: false },
+          block: null,
+        },
+      ],
+      blockStyle: undefined,
+    },
+    label: (() => {
+      return 'blocks.flexBlock.label';
+    })(),
+    icon: <MdAccountBox />,
   },
 };

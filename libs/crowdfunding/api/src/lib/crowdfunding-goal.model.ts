@@ -1,21 +1,13 @@
 import {
-  ArgsType,
-  Directive,
   Field,
   InputType,
+  InterfaceType,
   ObjectType,
   PickType,
 } from '@nestjs/graphql';
 
-@ArgsType()
-export class CrowdfundingGoalArgs {
-  @Field()
-  crowdfundingId!: string;
-}
-
-@ObjectType()
-@Directive('@key(fields: "id")')
-export class CrowdfundingGoal {
+@InterfaceType()
+export class BaseCrowdfundingGoal {
   @Field()
   id!: string;
 
@@ -35,8 +27,15 @@ export class CrowdfundingGoal {
   amount!: number;
 }
 
-@ObjectType()
-export class CrowdfundingGoalWithProgress extends CrowdfundingGoal {
+@ObjectType({
+  implements: () => [BaseCrowdfundingGoal],
+})
+export class CrowdfundingGoal extends BaseCrowdfundingGoal {}
+
+@ObjectType({
+  implements: () => [BaseCrowdfundingGoal],
+})
+export class CrowdfundingGoalWithProgress extends BaseCrowdfundingGoal {
   @Field(() => Number, { nullable: true })
   progress?: number;
 }

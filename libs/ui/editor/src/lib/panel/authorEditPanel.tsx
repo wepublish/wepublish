@@ -4,12 +4,13 @@ import {
   AuthorListDocument,
   FullAuthorFragment,
   FullImageFragment,
+  getApiClientV2,
   Maybe,
   TagType,
   useAuthorQuery,
   useCreateAuthorMutation,
   useUpdateAuthorMutation,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import { slugify } from '@wepublish/utils';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -103,11 +104,13 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
 
   const isAuthorized = useAuthorisation('CAN_CREATE_AUTHOR');
 
+  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
     error: loadError,
   } = useAuthorQuery({
+    client,
     variables: { id: id! },
     fetchPolicy: 'network-only',
     skip: id === undefined,
@@ -115,11 +118,14 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
 
   const [createAuthor, { loading: isCreating, error: createError }] =
     useCreateAuthorMutation({
+      client,
       refetchQueries: [getOperationNameFromDocument(AuthorListDocument)],
     });
 
   const [updateAuthor, { loading: isUpdating, error: updateError }] =
-    useUpdateAuthorMutation();
+    useUpdateAuthorMutation({
+      client,
+    });
 
   const isDisabled =
     isLoading ||
@@ -180,18 +186,16 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
       const { data } = await updateAuthor({
         variables: {
           id,
-          input: {
-            name,
-            slug,
-            jobTitle,
-            imageID: image?.id || null,
-            links: links.map(({ value }) => value),
-            bio,
-            tagIds,
-            hideOnArticle,
-            hideOnTeaser,
-            hideOnTeam,
-          },
+          name,
+          slug,
+          jobTitle,
+          imageID: image?.id || null,
+          links: links.map(({ value }) => value),
+          bio,
+          tagIds,
+          hideOnArticle,
+          hideOnTeaser,
+          hideOnTeam,
         },
       });
 
@@ -199,18 +203,16 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
     } else {
       const { data } = await createAuthor({
         variables: {
-          input: {
-            name,
-            slug,
-            jobTitle,
-            imageID: image?.id,
-            links: links.map(({ value }) => value),
-            bio,
-            tagIds,
-            hideOnArticle,
-            hideOnTeaser,
-            hideOnTeam,
-          },
+          name,
+          slug,
+          jobTitle,
+          imageID: image?.id,
+          links: links.map(({ value }) => value),
+          bio,
+          tagIds,
+          hideOnArticle: !!hideOnArticle,
+          hideOnTeaser: !!hideOnTeaser,
+          hideOnTeam: !!hideOnTeam,
         },
       });
 

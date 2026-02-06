@@ -16,7 +16,7 @@ import {
   useAuthorQuery,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
-import { GetStaticPaths, GetStaticProps } from 'next';
+import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
@@ -29,7 +29,11 @@ const pageSchema = z.object({
   slug: z.string(),
 });
 
-export function AuthorPage() {
+export function AuthorPage({
+  className,
+}: InferGetStaticPropsType<typeof getAuthorStaticProps> & {
+  className?: string;
+}) {
   const {
     elements: { Pagination, H3 },
   } = useWebsiteBuilder();
@@ -72,7 +76,7 @@ export function AuthorPage() {
   }, [articleListData?.articles.totalCount]);
 
   return (
-    <ArticleWrapper>
+    <ArticleWrapper className={className}>
       <AuthorContainer slug={slug as string} />
 
       {data?.author && (
@@ -103,12 +107,10 @@ export function AuthorPage() {
   );
 }
 
-export const getAuthorStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: 'blocking',
-  };
-};
+export const getAuthorStaticPaths = async () => ({
+  paths: [],
+  fallback: 'blocking',
+});
 
 export const getAuthorStaticProps: GetStaticProps = async ({ params }) => {
   const { slug } = params || {};

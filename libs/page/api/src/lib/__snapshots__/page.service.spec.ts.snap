@@ -1,0 +1,819 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PageService should create an page 1`] = `
+[
+  {
+    "data": {
+      "hidden": false,
+      "revisions": {
+        "create": {
+          "blocks": [
+            undefined,
+          ],
+          "properties": {
+            "createMany": {
+              "data": [
+                {
+                  "id": "123",
+                  "key": "key",
+                  "public": true,
+                  "value": "value",
+                },
+              ],
+            },
+          },
+          "userId": "1234",
+        },
+      },
+      "slug": undefined,
+      "tags": {
+        "createMany": {
+          "data": [
+            {
+              "tagId": "1234",
+            },
+            {
+              "tagId": "12345",
+            },
+          ],
+          "skipDuplicates": true,
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`PageService should create an page 2`] = `
+[
+  {
+    "title": {
+      "lead": "Lead",
+      "title": "Title",
+    },
+  },
+  0,
+  [
+    {
+      "title": {
+        "lead": "Lead",
+        "title": "Title",
+      },
+    },
+  ],
+]
+`;
+
+exports[`PageService should delete an page 1`] = `
+[
+  {
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;
+
+exports[`PageService should not override the original publication date if newer 1`] = `
+[
+  {
+    "data": {
+      "modifiedAt": 2023-01-01T00:00:00.000Z,
+      "publishedAt": 2022-01-01T00:00:00.000Z,
+      "revisions": {
+        "update": {
+          "data": {
+            "publishedAt": 2023-01-01T00:00:00.000Z,
+          },
+          "where": {
+            "id": "1234-1234",
+          },
+        },
+      },
+    },
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;
+
+exports[`PageService should override the original publication date if older 1`] = `
+[
+  {
+    "data": {
+      "modifiedAt": 2023-01-01T00:00:00.000Z,
+      "publishedAt": 2022-01-01T00:00:00.000Z,
+      "revisions": {
+        "update": {
+          "data": {
+            "publishedAt": 2022-01-01T00:00:00.000Z,
+          },
+          "where": {
+            "id": "1234-1234",
+          },
+        },
+      },
+    },
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;
+
+exports[`PageService should override the original publication date if the original date is in the future 1`] = `
+[
+  {
+    "data": {
+      "modifiedAt": 2023-01-01T00:00:00.000Z,
+      "publishedAt": 2026-01-01T00:00:00.000Z,
+      "revisions": {
+        "update": {
+          "data": {
+            "publishedAt": 2026-01-01T00:00:00.000Z,
+          },
+          "where": {
+            "id": "1234-1234",
+          },
+        },
+      },
+    },
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;
+
+exports[`PageService should publish a revision 1`] = `
+[
+  {
+    "data": {
+      "modifiedAt": 2023-01-01T00:00:00.000Z,
+      "publishedAt": 2025-01-01T00:00:00.000Z,
+      "revisions": {
+        "update": {
+          "data": {
+            "publishedAt": 2025-01-01T00:00:00.000Z,
+          },
+          "where": {
+            "id": "1234-1234",
+          },
+        },
+      },
+    },
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;
+
+exports[`PageService should query an page by slug 1`] = `
+[
+  {
+    "orderBy": {
+      "publishedAt": "asc",
+    },
+    "where": {
+      "slug": {
+        "equals": "1234",
+        "mode": "insensitive",
+      },
+    },
+  },
+]
+`;
+
+exports[`PageService should query pages based on filter 1`] = `undefined`;
+
+exports[`PageService should query pages based on filter 2`] = `
+[
+  {
+    "cursor": undefined,
+    "orderBy": {
+      "publishedAt": "asc",
+    },
+    "skip": 5,
+    "take": 6,
+    "where": {
+      "AND": [
+        {
+          "PagesRevisionDraft": {
+            "pageRevision": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "PagesRevisionPending": {
+            "pageRevision": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "PagesRevisionPublished": {
+            "pageRevision": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "publishedAt": {
+            "lt": Date { NaN },
+          },
+        },
+        {
+          "publishedAt": {
+            "lt": 2030-01-01T00:00:00.000Z,
+          },
+        },
+        {
+          "PagesRevisionDraft": {
+            "pageRevision": {
+              "description": {
+                "contains": "description",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "PagesRevisionPending": {
+            "pageRevision": {
+              "description": {
+                "contains": "description",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "PagesRevisionPublished": {
+            "pageRevision": {
+              "description": {
+                "contains": "description",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
+        {
+          "hidden": false,
+        },
+        {
+          "OR": [
+            {
+              "publishedAt": {
+                "lte": 2023-01-01T00:00:00.000Z,
+              },
+            },
+            {
+              "revisions": {
+                "some": {
+                  "archivedAt": null,
+                  "publishedAt": null,
+                },
+              },
+            },
+            {
+              "revisions": {
+                "some": {
+                  "publishedAt": {
+                    "gt": 2023-01-01T00:00:00.000Z,
+                  },
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`PageService should query pages based on filter 3`] = `
+[
+  {
+    "orderBy": {
+      "publishedAt": "asc",
+    },
+    "where": {
+      "AND": [
+        {
+          "PagesRevisionDraft": {
+            "pageRevision": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "PagesRevisionPending": {
+            "pageRevision": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "PagesRevisionPublished": {
+            "pageRevision": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "publishedAt": {
+            "lt": Date { NaN },
+          },
+        },
+        {
+          "publishedAt": {
+            "lt": 2030-01-01T00:00:00.000Z,
+          },
+        },
+        {
+          "PagesRevisionDraft": {
+            "pageRevision": {
+              "description": {
+                "contains": "description",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "PagesRevisionPending": {
+            "pageRevision": {
+              "description": {
+                "contains": "description",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "PagesRevisionPublished": {
+            "pageRevision": {
+              "description": {
+                "contains": "description",
+                "mode": "insensitive",
+              },
+            },
+          },
+          "revisions": undefined,
+        },
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
+        {
+          "hidden": false,
+        },
+        {
+          "OR": [
+            {
+              "publishedAt": {
+                "lte": 2023-01-01T00:00:00.000Z,
+              },
+            },
+            {
+              "revisions": {
+                "some": {
+                  "archivedAt": null,
+                  "publishedAt": null,
+                },
+              },
+            },
+            {
+              "revisions": {
+                "some": {
+                  "publishedAt": {
+                    "gt": 2023-01-01T00:00:00.000Z,
+                  },
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`PageService should query pages on all revisions 1`] = `undefined`;
+
+exports[`PageService should query pages on all revisions 2`] = `
+[
+  {
+    "cursor": undefined,
+    "orderBy": {
+      "publishedAt": "asc",
+    },
+    "skip": 5,
+    "take": 6,
+    "where": {
+      "AND": [
+        {
+          "PagesRevisionDraft": undefined,
+          "PagesRevisionPending": undefined,
+          "PagesRevisionPublished": undefined,
+          "revisions": {
+            "some": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+        },
+        {
+          "publishedAt": {
+            "lt": Date { NaN },
+          },
+        },
+        {
+          "publishedAt": {
+            "lt": 2030-01-01T00:00:00.000Z,
+          },
+        },
+        {
+          "PagesRevisionDraft": undefined,
+          "PagesRevisionPending": undefined,
+          "PagesRevisionPublished": undefined,
+          "revisions": {
+            "some": {
+              "description": {
+                "contains": "description",
+                "mode": "insensitive",
+              },
+            },
+          },
+        },
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
+        {
+          "hidden": false,
+        },
+        {
+          "OR": [
+            {},
+            {},
+            {},
+          ],
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`PageService should query pages on all revisions 3`] = `
+[
+  {
+    "orderBy": {
+      "publishedAt": "asc",
+    },
+    "where": {
+      "AND": [
+        {
+          "PagesRevisionDraft": undefined,
+          "PagesRevisionPending": undefined,
+          "PagesRevisionPublished": undefined,
+          "revisions": {
+            "some": {
+              "title": {
+                "contains": "title",
+                "mode": "insensitive",
+              },
+            },
+          },
+        },
+        {
+          "publishedAt": {
+            "lt": Date { NaN },
+          },
+        },
+        {
+          "publishedAt": {
+            "lt": 2030-01-01T00:00:00.000Z,
+          },
+        },
+        {
+          "PagesRevisionDraft": undefined,
+          "PagesRevisionPending": undefined,
+          "PagesRevisionPublished": undefined,
+          "revisions": {
+            "some": {
+              "description": {
+                "contains": "description",
+                "mode": "insensitive",
+              },
+            },
+          },
+        },
+        {
+          "tags": {
+            "some": {
+              "tag": {
+                "id": {
+                  "in": [
+                    "1234",
+                  ],
+                },
+              },
+            },
+          },
+        },
+        {
+          "hidden": false,
+        },
+        {
+          "OR": [
+            {},
+            {},
+            {},
+          ],
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`PageService should query pages using cursor based pagination 1`] = `
+[
+  {
+    "cursor": {
+      "id": "1234",
+    },
+    "orderBy": {
+      "publishedAt": "desc",
+    },
+    "skip": undefined,
+    "take": 11,
+    "where": {
+      "AND": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "hidden": false,
+        },
+        {
+          "OR": [
+            {},
+            {},
+            {},
+          ],
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`PageService should query pages using cursor based pagination 2`] = `
+[
+  {
+    "orderBy": {
+      "publishedAt": "desc",
+    },
+    "where": {
+      "AND": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "hidden": false,
+        },
+        {
+          "OR": [
+            {},
+            {},
+            {},
+          ],
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`PageService should return paginated pages 1`] = `
+{
+  "nodes": [
+    {
+      "id": "123",
+    },
+  ],
+  "pageInfo": {
+    "endCursor": "123",
+    "hasNextPage": true,
+    "hasPreviousPage": true,
+    "startCursor": "123",
+  },
+  "totalCount": 1000,
+}
+`;
+
+exports[`PageService should unpublish & archive all pending revisions on publish 1`] = `
+[
+  {
+    "data": {
+      "archivedAt": 2023-01-01T00:00:00.000Z,
+      "publishedAt": null,
+    },
+    "where": {
+      "pageId": "1234",
+      "publishedAt": {
+        "gte": 2023-01-01T00:00:00.000Z,
+      },
+    },
+  },
+]
+`;
+
+exports[`PageService should unpublish an page 1`] = `
+[
+  {
+    "data": {
+      "publishedAt": null,
+      "revisions": {
+        "updateMany": {
+          "data": {
+            "archivedAt": 2023-01-01T00:00:00.000Z,
+            "publishedAt": null,
+          },
+          "where": {
+            "publishedAt": {
+              "not": null,
+            },
+          },
+        },
+      },
+    },
+    "include": {
+      "revisions": {
+        "orderBy": {
+          "createdAt": "desc",
+        },
+        "take": 1,
+      },
+    },
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;
+
+exports[`PageService should unpublish an page 2`] = `
+[
+  {
+    "data": {
+      "archivedAt": null,
+    },
+    "where": {
+      "id": "1234-1234",
+    },
+  },
+]
+`;
+
+exports[`PageService should update an page 1`] = `
+[
+  {
+    "include": {
+      "tags": true,
+    },
+    "where": {
+      "id": "123",
+    },
+  },
+]
+`;
+
+exports[`PageService should update an page 2`] = `
+[
+  {
+    "data": {
+      "hidden": false,
+      "revisions": {
+        "create": {
+          "blocks": [
+            undefined,
+          ],
+          "properties": {
+            "createMany": {
+              "data": [
+                {
+                  "key": "key",
+                  "public": true,
+                  "value": "value",
+                },
+              ],
+            },
+          },
+          "userId": "1234",
+        },
+        "updateMany": {
+          "data": {
+            "archivedAt": 2023-01-01T00:00:00.000Z,
+          },
+          "where": {
+            "archivedAt": null,
+            "publishedAt": null,
+          },
+        },
+      },
+      "slug": undefined,
+      "tags": {
+        "createMany": {
+          "data": [
+            {
+              "tagId": "12345",
+            },
+          ],
+        },
+        "deleteMany": {
+          "tagId": {
+            "notIn": [
+              "1234",
+              "12345",
+            ],
+          },
+        },
+      },
+    },
+    "where": {
+      "id": "123",
+    },
+  },
+]
+`;
+
+exports[`PageService should update an page 3`] = `
+[
+  {
+    "title": {
+      "lead": "Lead",
+      "title": "Title",
+    },
+  },
+  0,
+  [
+    {
+      "title": {
+        "lead": "Lead",
+        "title": "Title",
+      },
+    },
+  ],
+]
+`;

@@ -22,7 +22,7 @@ import {
 import { EventService } from './event.service';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
 import { EventDataloaderService } from './event-dataloader.service';
-import { Tag, TagService } from '@wepublish/tag/api';
+import { EventTagDataloader, Tag } from '@wepublish/tag/api';
 import { URLAdapter } from '@wepublish/nest-modules';
 import { Event as PEvent } from '@prisma/client';
 import { Permissions } from '@wepublish/permissions/api';
@@ -34,7 +34,7 @@ export class EventResolver {
     private eventService: EventService,
     private eventDataloader: EventDataloaderService,
     private urlAdapter: URLAdapter,
-    private tagService: TagService,
+    private tagDataLoader: EventTagDataloader,
     private imageDataloaderService: ImageDataloaderService
   ) {}
 
@@ -58,21 +58,18 @@ export class EventResolver {
     return event;
   }
 
-  @Mutation(() => Event, { description: `Creates a new event.` })
   @Permissions(CanCreateEvent)
   @Mutation(returns => Event, { description: `Creates a new event.` })
   public createEvent(@Args() event: CreateEventInput) {
     return this.eventService.createEvent(event);
   }
 
-  @Mutation(() => Event, { description: `Updates an existing event.` })
   @Permissions(CanUpdateEvent)
   @Mutation(returns => Event, { description: `Updates an existing event.` })
   public updateEvent(@Args() event: UpdateEventInput) {
     return this.eventService.updateEvent(event);
   }
 
-  @Mutation(() => Event, { description: `Deletes an existing event.` })
   @Permissions(CanDeleteEvent)
   @Mutation(returns => Event, { description: `Deletes an existing event.` })
   public deleteEvent(@Args('id') id: string) {
@@ -92,8 +89,7 @@ export class EventResolver {
 
   @ResolveField(() => [Tag], { nullable: true })
   async tags(@Parent() parent: Event) {
-    const { id: eventId } = parent;
-    return this.tagService.getTagsByEventId(eventId);
+    return this.tagDataLoader.load(parent.id);
   }
 
   @ResolveField(() => String, { nullable: true })

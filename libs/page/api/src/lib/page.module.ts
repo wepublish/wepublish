@@ -6,7 +6,6 @@ import { PageResolver } from './page.resolver';
 import { PageService } from './page.service';
 import { PageRevisionDataloaderService } from './page-revision-dataloader.service';
 import { PageRevisionResolver } from './page-revision.resolver';
-import { PageRevisionService } from './page-revision.service';
 import {
   HasOptionalPageLcResolver,
   HasOptionalPageResolver,
@@ -15,12 +14,14 @@ import {
 } from './has-page/has-page.resolver';
 import { BlockContentModule } from '@wepublish/block-content/api';
 import { TagModule } from '@wepublish/tag/api';
+import { PropertyModule } from '@wepublish/property/api';
 
 @Module({
   imports: [
     PrismaModule,
     ImageModule,
     TagModule,
+    PropertyModule,
     forwardRef(() => BlockContentModule),
   ],
   providers: [
@@ -29,17 +30,11 @@ import { TagModule } from '@wepublish/tag/api';
     PageService,
     PageResolver,
     PageRevisionResolver,
-    PageRevisionService,
     HasPageResolver,
     HasPageLcResolver,
     HasOptionalPageResolver,
     HasOptionalPageLcResolver,
   ],
-  exports: [
-    PageDataloaderService,
-    PageRevisionDataloaderService,
-    PageService,
-    PageRevisionService,
-  ],
+  exports: [PageDataloaderService, PageRevisionDataloaderService, PageService],
 })
 export class PageModule {}

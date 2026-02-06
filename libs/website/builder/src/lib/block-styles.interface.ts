@@ -1,5 +1,5 @@
 import {
-  BuilderBreakBlockProps,
+  BuilderBreakBlockProps, // IGNORE
   BuilderImageGalleryBlockProps,
   BuilderTeaserGridBlockProps,
   BuilderTeaserListBlockProps,
@@ -7,12 +7,26 @@ import {
 } from './blocks.interface';
 import { BuilderTeaserProps } from './teaser.interface';
 
+export type BuilderSlidesPerView = Partial<{
+  xs: number;
+  sm: number;
+  md: number;
+  lg: number;
+  xl: number;
+}>;
+
+export type BuilderSliderConfig = {
+  slidesPerViewConfig?: BuilderSlidesPerView;
+};
+
 export type BuilderBlockStyleProps = {
-  ImageSlider: BuilderImageGalleryBlockProps;
-  TeaserSlider:
+  ImageSlider: BuilderImageGalleryBlockProps & BuilderSliderConfig;
+  TeaserSlider: (
     | BuilderTeaserListBlockProps
     | BuilderTeaserGridBlockProps
-    | BuilderTeaserSlotsBlockProps;
+    | BuilderTeaserSlotsBlockProps
+  ) &
+    BuilderSliderConfig;
   AlternatingTeaserGrid: BuilderTeaserGridBlockProps;
   AlternatingTeaserList: BuilderTeaserListBlockProps;
   AlternatingTeaserSlots: BuilderTeaserSlotsBlockProps;

@@ -2,7 +2,6 @@ import { ApolloError } from '@apollo/client';
 import styled from '@emotion/styled';
 import {
   Crowdfunding,
-  CrowdfundingWithActiveGoal,
   getApiClientV2,
   useCrowdfundingsQuery,
 } from '@wepublish/editor/api-v2';
@@ -106,7 +105,7 @@ export function SelectCrowdfundingPanel({
                     circle
                     size="xs"
                     onClick={() => {
-                      onSelect(rowData as CrowdfundingWithActiveGoal);
+                      onSelect(rowData as Crowdfunding);
                       onClose();
                     }}
                   />

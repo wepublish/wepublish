@@ -7,8 +7,8 @@ fragment FullPeerProfile on PeerProfile {
     ...FullImage
   }
 
-  # themeColor
-  # themeFontColor
+  themeColor
+  themeFontColor
 
   hostURL
   websiteURL
@@ -30,8 +30,8 @@ fragment FullRemotePeerProfile on RemotePeerProfile {
     ...FullPeerImage
   }
 
-  # themeColor
-  # themeFontColor
+  themeColor
+  themeFontColor
 
   hostURL
   websiteURL
@@ -52,9 +52,76 @@ fragment FullPeer on Peer {
   name
   slug
   isDisabled
+  information
   hostURL
+  token
 
   profile {
     ...FullRemotePeerProfile
+  }
+}
+
+query PeerProfile {
+  peerProfile {
+    ...FullPeerProfile
+  }
+}
+
+query PeerList {
+  peers {
+    ...FullPeer
+  }
+}
+
+query Peer($id: String!) {
+  peer(id: $id) {
+    ...FullPeer
+  }
+}
+
+mutation CreatePeer(
+  $hostURL: String!
+  $information: RichText
+  $name: String!
+  $slug: String!
+  $token: String!
+) {
+  createPeer(
+    hostURL: $hostURL
+    information: $information
+    isDisabled: false
+    name: $name
+    slug: $slug
+    token: $token
+  ) {
+    ...FullPeer
+  }
+}
+
+mutation UpdatePeer(
+  $id: String!
+  $hostURL: String
+  $information: RichText
+  $name: String
+  $slug: String
+  $isDisabled: Boolean
+  $token: String
+) {
+  updatePeer(
+    id: $id
+    hostURL: $hostURL
+    information: $information
+    isDisabled: $isDisabled
+    name: $name
+    slug: $slug
+    token: $token
+  ) {
+    ...FullPeer
+  }
+}
+
+mutation DeletePeer($id: String!) {
+  deletePeer(id: $id) {
+    ...FullPeer
   }
 }

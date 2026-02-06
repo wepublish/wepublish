@@ -19,6 +19,7 @@ import { useEffect, useRef } from 'react';
 const LoginWrapper = styled('div')`
   display: grid;
   justify-content: center;
+  padding-top: calc(var(--navbar-height) / 2);
 `;
 
 type LoginProps = { sessionToken?: SessionWithTokenWithoutUser };

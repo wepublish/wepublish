@@ -9,6 +9,7 @@ import {
 } from '@wepublish/website/builder';
 import { differenceInHours } from 'date-fns';
 import { useEffect, useState } from 'react';
+import { BANNER_STORAGE_KEY, collapseBanner } from './collapse-banner';
 
 export const BannerImage = styled('div')(
   ({ theme }) => `
@@ -105,7 +106,6 @@ export const Banner = ({
 }: BuilderBannerProps) => {
   const [showBanner, setShowBanner] = useState(false);
   const [collapsed, setCollapsed] = useState(true);
-  const storageKey = `banner-last-closed-${data?.primaryBanner?.id}`;
   const {
     elements: { Link },
   } = useWebsiteBuilder();
@@ -117,9 +117,7 @@ export const Banner = ({
     }
 
     const timer = setTimeout(
-      () => {
-        setShowBanner(true);
-      },
+      () => setShowBanner(true),
       (data?.primaryBanner?.delay ?? 0) * 1000
     );
 
@@ -127,7 +125,8 @@ export const Banner = ({
   }, [data?.primaryBanner]);
 
   useEffect(() => {
-    const lastClosedTime = Number(localStorage.getItem(storageKey)) ?? 0;
+    const lastClosedTime =
+      Number(localStorage.getItem(BANNER_STORAGE_KEY)) ?? 0;
     const currentTime = new Date().getTime();
 
     const isClosedRecently =
@@ -138,7 +137,7 @@ export const Banner = ({
 
   const handleClose = () => {
     setCollapsed(true);
-    localStorage.setItem(storageKey, new Date().getTime().toString());
+    collapseBanner();
   };
 
   const handleActionClick = (e: React.MouseEvent, action: BannerAction) => {

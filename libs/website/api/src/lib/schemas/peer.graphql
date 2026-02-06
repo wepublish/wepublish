@@ -7,8 +7,8 @@ fragment FullPeerProfile on PeerProfile {
     ...FullImage
   }
 
-  # themeColor
-  # themeFontColor
+  themeColor
+  themeFontColor
 
   hostURL
   websiteURL
@@ -30,8 +30,8 @@ fragment FullRemotePeerProfile on RemotePeerProfile {
     ...FullPeerImage
   }
 
-  # themeColor
-  # themeFontColor
+  themeColor
+  themeFontColor
 
   hostURL
   websiteURL
@@ -66,7 +66,7 @@ query PeerProfile {
   }
 }
 
-query Peer($id: String, $slug: Slug) {
+query Peer($id: String, $slug: String) {
   peer(id: $id, slug: $slug) {
     ...FullPeer
   }

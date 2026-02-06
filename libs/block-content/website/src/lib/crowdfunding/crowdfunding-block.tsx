@@ -1,24 +1,19 @@
 import styled from '@emotion/styled';
-import {
-  Alert,
-  AlertTitle,
-  css,
-  IconButton,
-  LinearProgress,
-  Theme,
-  Tooltip,
-} from '@mui/material';
+import { css, IconButton, LinearProgress, Theme, Tooltip } from '@mui/material';
 import { formatCurrency } from '@wepublish/membership/website';
 import {
   BlockContent,
   CrowdfundingBlock as CrowdfundingBlockType,
+  CrowdfundingGoalType,
   Currency,
 } from '@wepublish/website/api';
 import {
   BuilderCrowdfundingBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { Trans, useTranslation } from 'react-i18next';
 import { MdOutlineInfo } from 'react-icons/md';
+import { formatNumber } from './format-number';
 
 export const isCrowdfundingBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -81,19 +76,18 @@ export const CrowdfundingBlock = ({
     elements: { H5 },
   } = useWebsiteBuilder();
 
-  const activeCrowdfunding = crowdfunding?.activeCrowdfundingGoal;
-  const progress = activeCrowdfunding?.progress ?? 0;
-  const revenue = crowdfunding?.revenue ?? 0;
-  const goalAmount = activeCrowdfunding?.amount ?? 0;
-  const goalDescription = activeCrowdfunding?.description;
+  const { t } = useTranslation();
 
   if (!crowdfunding) {
-    return (
-      <Alert severity="error">
-        <AlertTitle>Crowdfunding nicht verfügbar.</AlertTitle>
-      </Alert>
-    );
+    return;
   }
+
+  const activeCrowdfunding = crowdfunding?.activeGoal;
+  const progress = activeCrowdfunding?.progress ?? 0;
+  const revenue = crowdfunding?.revenue ?? 0;
+  const subscriptions = crowdfunding?.subscriptions ?? 0;
+  const goalAmount = activeCrowdfunding?.amount ?? 0;
+  const goalDescription = activeCrowdfunding?.description;
 
   return (
     <CrowdfundingContainer>
@@ -102,11 +96,15 @@ export const CrowdfundingBlock = ({
           component="div"
           css={titleStyles}
         >
-          Bereits{' '}
-          <strong css={noWrap}>
-            {formatCurrency(revenue / 100, Currency.Chf)}
-          </strong>{' '}
-          finanziert
+          <Trans
+            i18nKey="crowdfunding.goal"
+            values={{
+              type: crowdfunding.goalType,
+              revenue: formatCurrency(revenue / 100, Currency.Chf),
+              subscriptions,
+            }}
+            components={{ bold: <strong css={noWrap} /> }}
+          />
         </H5>
 
         <CfProgressBarContainer>
@@ -130,11 +128,13 @@ export const CrowdfundingBlock = ({
 
             <CfProgressBarInnerItem>
               <CfProgressBarInnerAmount>
-                {formatCurrency(goalAmount / 100, Currency.Chf)}
+                {crowdfunding?.goalType === CrowdfundingGoalType.Revenue ?
+                  formatCurrency(goalAmount / 100, Currency.Chf)
+                : formatNumber(goalAmount)}
               </CfProgressBarInnerAmount>
 
               <CfProgressBarInnerTitle>
-                {crowdfunding.activeCrowdfundingGoal?.title || ''}
+                {crowdfunding.activeGoal?.title || ''}
               </CfProgressBarInnerTitle>
             </CfProgressBarInnerItem>
           </CfProgressBarInner>

@@ -1,10 +1,14 @@
 import React from 'react';
-import { CreateCrowdfundingGoalInput } from '@wepublish/editor/api-v2';
+import {
+  CreateCrowdfundingGoalInput,
+  CrowdfundingGoalType,
+} from '@wepublish/editor/api-v2';
 import { useTranslation } from 'react-i18next';
 import { Button, Col, Form, Grid, Row } from 'rsuite';
 import { CurrencyInput } from '@wepublish/ui/editor';
 
 interface CrowdfundingGoalListProps {
+  goalType: CrowdfundingGoalType;
   goals: CreateCrowdfundingGoalInput[];
   onAdd: (goal: CreateCrowdfundingGoalInput) => void;
   onRemove: (index: number) => void;
@@ -12,6 +16,7 @@ interface CrowdfundingGoalListProps {
 }
 
 export const CrowdfundingGoalList = ({
+  goalType,
   goals,
   onAdd,
   onRemove,
@@ -54,12 +59,25 @@ export const CrowdfundingGoalList = ({
               />
             </Col>
             <Col xs={5}>
-              <CurrencyInput
-                name="goalAmount"
-                currency=""
-                centAmount={goal.amount}
-                onChange={value => handleChange(index, 'amount', value || 0)}
-              />
+              {goalType === CrowdfundingGoalType.Revenue && (
+                <CurrencyInput
+                  name="goalAmount"
+                  currency=""
+                  centAmount={goal.amount}
+                  onChange={value => handleChange(index, 'amount', value || 0)}
+                />
+              )}
+
+              {goalType === CrowdfundingGoalType.Subscription && (
+                <Form.Control
+                  name="goalAmount"
+                  type="number"
+                  value={goal.amount}
+                  onChange={value =>
+                    handleChange(index, 'amount', +(value || 0))
+                  }
+                />
+              )}
             </Col>
             <Col xs={4}>
               <Button onClick={() => onRemove(index)}>

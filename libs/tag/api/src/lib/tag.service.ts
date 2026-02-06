@@ -1,8 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
-import { TagFilter, TagSort } from './tags.query';
+import { Prisma, PrismaClient, TagType } from '@prisma/client';
 import { getMaxTake, PrimeDataLoader, SortOrder } from '@wepublish/utils/api';
 import { TagDataloader } from './tag.dataloader';
+import {
+  CreateTagInput,
+  TagFilter,
+  TagSort,
+  UpdateTagInput,
+} from './tag.model';
 
 @Injectable()
 export class TagService {
@@ -54,66 +59,45 @@ export class TagService {
   }
 
   @PrimeDataLoader(TagDataloader)
-  async getTagsByAuthorId(authorId: string) {
-    return this.prisma.tag.findMany({
+  async getTagByName(tag: string, type: TagType) {
+    return this.prisma.tag.findFirst({
       where: {
-        authors: {
-          some: {
-            authorId,
-          },
+        type,
+        tag: {
+          mode: 'insensitive',
+          equals: tag,
         },
       },
     });
   }
 
   @PrimeDataLoader(TagDataloader)
-  async getTagsByEventId(eventId: string) {
-    return this.prisma.tag.findMany({
+  async updateTag({ id, description, ...input }: UpdateTagInput) {
+    return this.prisma.tag.update({
       where: {
-        events: {
-          some: {
-            eventId,
-          },
-        },
+        id,
+      },
+      data: {
+        ...input,
+        description: description as any[],
       },
     });
   }
 
   @PrimeDataLoader(TagDataloader)
-  async getTagsByArticleId(articleId: string) {
-    return this.prisma.tag.findMany({
-      where: {
-        articles: {
-          some: {
-            articleId,
-          },
-        },
+  async createTag({ description, ...input }: CreateTagInput) {
+    return this.prisma.tag.create({
+      data: {
+        ...input,
+        description: description as any[],
       },
     });
   }
 
-  @PrimeDataLoader(TagDataloader)
-  async getTagsByPageId(pageId: string) {
-    return this.prisma.tag.findMany({
+  async deleteTag(id: string) {
+    return this.prisma.tag.delete({
       where: {
-        pages: {
-          some: {
-            pageId,
-          },
-        },
-      },
-    });
-  }
-
-  @PrimeDataLoader(TagDataloader)
-  async getTagsByCommentId(commentId: string) {
-    return this.prisma.tag.findMany({
-      where: {
-        comments: {
-          some: {
-            commentId,
-          },
-        },
+        id,
       },
     });
   }
@@ -122,7 +106,7 @@ export class TagService {
 function createTagOrder(
   field: TagSort,
   sortOrder: SortOrder
-): Prisma.TagOrderByWithRelationAndSearchRelevanceInput {
+): Prisma.TagOrderByWithRelationInput {
   switch (field) {
     case TagSort.Tag:
       return {
@@ -155,7 +139,7 @@ function createTagFilter(filter?: TagFilter): Prisma.TagWhereInput {
     conditions.push({
       tag: {
         mode: 'insensitive',
-        equals: filter.tag,
+        contains: filter.tag,
       },
     });
   }

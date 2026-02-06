@@ -1,5 +1,5 @@
 export * from './lib/atoms';
-export * from './lib/atoms/crowdfunding/CrowdfundingProgressBar';
+export * from './lib/atoms/crowdfunding/crowdfundingProgressBar';
 export * from './lib/atoms/inlineAvatar';
 export * from './lib/atoms/page/selectPage';
 export * from './lib/atoms/peer/peerAvatar';

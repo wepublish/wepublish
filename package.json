@@ -4,6 +4,7 @@
   "engines": {
     "node": "^22.20.0"
   },
+  "sideEffects": false,
   "scripts": {
     "migrate": "prisma migrate deploy && prisma db seed",
     "serve": "nx run-many  --parallel 10 -t serve --output-style stream",
@@ -46,7 +47,7 @@
     "@chromatic-com/storybook": "^3.2.6",
     "@emotion/babel-plugin": "11.11.0",
     "@emotion/jest": "^11.11.0",
-    "@faker-js/faker": "^8.0.2",
+    "@faker-js/faker": "^10.1.0",
     "@graphql-codegen/add": "^2.0.1",
     "@graphql-codegen/cli": "^2.15.0",
     "@graphql-codegen/fragment-matcher": "^5.0.0",
@@ -215,6 +216,7 @@
     "@apollo/gateway": "^2.8.4",
     "@apollo/server": "^4.9.1",
     "@apollo/subgraph": "^2.2.3",
+    "@base-ui-components/react": "^1.0.0-beta.4",
     "@dnd-kit/core": "^6.0.7",
     "@emotion/cache": "^11.13.1",
     "@emotion/react": "^11.11.1",
@@ -259,7 +261,7 @@
     "async": "^3.2.6",
     "axios": "^1.0.0",
     "bcrypt": "^5.0.0",
-    "bexio": "^3.1.1",
+    "bexio": "^3.2.1",
     "body-parser": "^1.19.0",
     "browser-image-compression": "^1.0.16",
     "buffer": "^6.0.3",
@@ -290,7 +292,7 @@
     "i18next-browser-languagedetector": "^7.0.2",
     "i18next-icu": "^2.3.0",
     "i18next-resources-to-backend": "^1.2.1",
-    "iframe-resizer-react": "^1.1.0",
+    "iframe-resizer-react": "^5.1.5",
     "immer": "^10.0.2",
     "js-cookie": "^3.0.1",
     "jsonwebtoken": "^9.0.0",
@@ -345,6 +347,7 @@
     "stripe": "^8.126.0",
     "tslib": "^2.3.0",
     "usehooks-ts": "^3.1.1",
+    "v0-sdk": "^0.15.1",
     "zod": "^3.23.8",
     "zod-i18n-map": "^2.27.0"
   },

@@ -2,16 +2,11 @@ import { Tag, TagType } from '@prisma/client';
 import {
   GraphQLBoolean,
   GraphQLEnumType,
-  GraphQLInputObjectType,
-  GraphQLInt,
-  GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
 import { Context } from '../../context';
-import { GraphQLPageInfo } from '../common';
-import { TagSort } from './tag.query';
 import { createProxyingResolver } from '../../utility';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { ColorScalar } from '@wepublish/utils/api';
@@ -42,33 +37,5 @@ export const GraphQLTag = new GraphQLObjectType<Tag, Context>({
       }),
     },
     color: { type: ColorScalar },
-  },
-});
-
-export const GraphQLTagConnection = new GraphQLObjectType({
-  name: 'TagConnection',
-  fields: {
-    nodes: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
-    },
-    pageInfo: { type: new GraphQLNonNull(GraphQLPageInfo) },
-    totalCount: { type: new GraphQLNonNull(GraphQLInt) },
-  },
-});
-
-export const GraphQLTagFilter = new GraphQLInputObjectType({
-  name: 'TagFilter',
-  fields: {
-    type: { type: GraphQLTagType },
-    tag: { type: GraphQLString },
-  },
-});
-
-export const GraphQLTagSort = new GraphQLEnumType({
-  name: 'TagSort',
-  values: {
-    [TagSort.CreatedAt]: { value: TagSort.CreatedAt },
-    [TagSort.ModifiedAt]: { value: TagSort.ModifiedAt },
-    [TagSort.Tag]: { value: TagSort.Tag },
   },
 });

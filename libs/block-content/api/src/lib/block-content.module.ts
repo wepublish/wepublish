@@ -16,6 +16,8 @@ import {
 import { BaseBlockResolver } from './base-block.resolver';
 import { SlotTeasersLoader } from './teaser/slot-teasers-loader';
 import { TagModule } from '@wepublish/tag/api';
+import { SubscribeBlockResolver } from './subscribe/subscribe-block.resolver';
+import { MemberPlanModule } from '@wepublish/member-plan/api';
 
 @Module({
   imports: [
@@ -28,6 +30,7 @@ import { TagModule } from '@wepublish/tag/api';
     PeerModule,
     CommentModule,
     TagModule,
+    forwardRef(() => MemberPlanModule),
   ],
   providers: [
     BaseBlockResolver,
@@ -36,6 +39,7 @@ import { TagModule } from '@wepublish/tag/api';
     TeaserListBlockResolver,
     TeaserListBlockFilterResolver,
     SlotTeasersLoader,
+    SubscribeBlockResolver,
   ],
   exports: [SlotTeasersLoader],
 })

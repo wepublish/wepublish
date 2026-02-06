@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import {
   MutationCreateTagArgs,
   MutationUpdateTagArgs,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import {
   ColorPicker,
   RichTextBlock,
@@ -40,7 +40,6 @@ export const TagForm = ({ tag, onChange }: TagFormProps) => {
             onChange={(tag: string) => onChange({ tag })}
           />
         </Form.Group>
-
         <Form.Group controlId="color">
           <Form.ControlLabel>{t('tags.overview.color')}</Form.ControlLabel>
           <ColorPicker

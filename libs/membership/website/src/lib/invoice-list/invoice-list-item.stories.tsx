@@ -10,7 +10,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { userEvent, within } from '@storybook/test';
 import { ApolloError } from '@apollo/client';
-import { mockImage } from '@wepublish/storybook/mocks';
+import { mockMemberPlan } from '@wepublish/storybook/mocks';
 
 export default {
   component: InvoiceListItem,
@@ -37,13 +37,10 @@ const subscription = {
   monthlyAmount: 250000,
   paymentPeriodicity: PaymentPeriodicity.Quarterly,
   url: 'https://example.com',
-  paymentMethod: {},
-  memberPlan: {
-    image: mockImage(),
-    name: 'Foobar Memberplan',
-    extendable: true,
-    currency: Currency.Chf,
+  paymentMethod: {
+    slug: 'foo',
   },
+  memberPlan: mockMemberPlan(),
   extendable: true,
 } as Exact<FullSubscriptionFragment>;
 
@@ -64,7 +61,9 @@ export const Default: StoryObj<typeof InvoiceListItem> = {
   args: {
     ...invoice,
     canPay: false,
-    pay: action('pay'),
+    pay: async (...args: unknown[]): Promise<void> => {
+      action('pay')(...args);
+    },
   },
 };
 
@@ -152,6 +151,6 @@ export const WithCurrency: StoryObj<typeof InvoiceListItem> = {
         ...invoice.subscription!.memberPlan,
         currency: Currency.Eur,
       },
-    },
+    } as FullSubscriptionFragment,
   },
 };

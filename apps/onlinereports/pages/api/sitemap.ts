@@ -13,8 +13,17 @@ export default async function handler(
   res
     .status(200)
     .setHeader('Content-Type', 'application/xml')
-    .setHeader('Cache-Control', 'public, s-maxage=60')
-    .setHeader('CDN-Cache-Control', 'public, s-maxage=60')
-    .setHeader('Vercel-CDN-Cache-Control', 'public, s-maxage=3600')
+    .setHeader(
+      'Cache-Control',
+      's-maxage=599, stale-while-revalidate=599, max-age=599, stale-while-revalidate=604800, stale-if-error=86400, public'
+    )
+    .setHeader(
+      'CDN-Cache-Control',
+      's-maxage=599, stale-while-revalidate=599, max-age=599, stale-while-revalidate=604800, stale-if-error=86400, public'
+    )
+    .setHeader(
+      'Vercel-CDN-Cache-Control',
+      's-maxage=599, stale-while-revalidate=599, max-age=599, stale-while-revalidate=604800, stale-if-error=86400, public'
+    )
     .send(await getSitemap(req));
 }

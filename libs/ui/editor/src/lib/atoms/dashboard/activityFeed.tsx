@@ -225,9 +225,7 @@ function TimelineItemContainer(props: TimelineItemContainerProps) {
             />
           }
           date={action.date}
-          details={`${action.user.firstName ? action.user.firstName + ' ' : ''}${action.user.name}${
-            action.user.address?.city ? ', ' + action.user.address?.city : ''
-          }`}
+          details={`${action.user.firstName ? action.user.firstName + ' ' : ''}${action.user.name}`}
         />
       );
     case 'AuthorCreatedAction':

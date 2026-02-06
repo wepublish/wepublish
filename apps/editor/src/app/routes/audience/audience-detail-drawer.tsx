@@ -2,17 +2,20 @@ import { DailySubscriptionStatsUser } from '@wepublish/editor/api-v2';
 import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  MdAutorenew,
   MdCancel,
   MdCreditCardOff,
   MdLibraryAdd,
   MdOpenInNew,
   MdRefresh,
   MdSpaceBar,
+  MdStopCircle,
 } from 'react-icons/md';
 import { Button, Col, Drawer, Nav, Row, Sidenav, Table } from 'rsuite';
 
 import { AggregatedUsers, AudienceStatsComputed } from './useAudience';
 import { TimeResolution } from './useAudienceFilter';
+import { AudienceCsvBtn } from './audience-csv-btn';
 
 const { Cell, Column, HeaderCell } = Table;
 const { Body, Header } = Sidenav;
@@ -23,6 +26,9 @@ const availableStats: AggregatedUsers[] = [
   'deactivatedSubscriptionUsers',
   'renewedSubscriptionUsers',
   'replacedSubscriptionUsers',
+  'predictedSubscriptionRenewalUsersHighProbability',
+  'predictedSubscriptionRenewalUsersLowProbability',
+  'endingSubscriptionUsers',
 ];
 
 function getIconByUserFilter(filterProp: AggregatedUsers) {
@@ -37,14 +43,27 @@ function getIconByUserFilter(filterProp: AggregatedUsers) {
       return <MdRefresh />;
     case 'replacedSubscriptionUsers':
       return <MdSpaceBar />;
+    case 'predictedSubscriptionRenewalUsersHighProbability':
+      return <MdAutorenew />;
+    case 'predictedSubscriptionRenewalUsersLowProbability':
+      return <MdAutorenew />;
+    case 'endingSubscriptionUsers':
+      return <MdStopCircle />;
     default:
       break;
   }
 }
 
 interface AudienceDetailDrawerProps {
-  audienceStats: AudienceStatsComputed | undefined;
-  setOpen: Dispatch<SetStateAction<AudienceStatsComputed | undefined>>;
+  audienceStats:
+    | Omit<AudienceStatsComputed, 'predictedSubscriptionRenewalCount'>
+    | undefined;
+  setOpen: Dispatch<
+    SetStateAction<
+      | Omit<AudienceStatsComputed, 'predictedSubscriptionRenewalCount'>
+      | undefined
+    >
+  >;
   timeResolution: TimeResolution;
 }
 
@@ -86,6 +105,11 @@ export function AudienceDetailDrawer({
       <Drawer.Header>
         <Drawer.Title>{date}</Drawer.Title>
         <Drawer.Actions>
+          <AudienceCsvBtn
+            audienceStats={audienceStats}
+            selectedStatKey={selectedStat}
+            fileNameDate={date}
+          />
           <Button
             onClick={() => setOpen(undefined)}
             appearance="primary"
@@ -101,8 +125,9 @@ export function AudienceDetailDrawer({
               <Header>{t('audienceDetailDrawer.selectStat')}</Header>
               <Body>
                 <Nav>
-                  {availableStats.map(availableStat => (
+                  {availableStats.map((availableStat, index) => (
                     <Nav.Item
+                      key={index}
                       active={selectedStat === availableStat}
                       onClick={() => setSelectedStat(availableStat)}
                       icon={getIconByUserFilter(availableStat)}

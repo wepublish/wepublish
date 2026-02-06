@@ -11,7 +11,6 @@ import { ArticleAuthor } from '@wepublish/author/website';
 import { PollBlock } from '@wepublish/block-content/website';
 import { Comment } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
-import { getArticlePathsBasedOnPage } from '@wepublish/utils/website';
 import {
   addClientCacheToV1Props,
   Article as ArticleType,
@@ -180,7 +179,10 @@ export default function ArticleBySlugOrId() {
   );
 }
 
-export const getStaticPaths = getArticlePathsBasedOnPage('home');
+export const getStaticPaths = () => ({
+  paths: [],
+  fallback: 'blocking',
+});
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id, slug } = params || {};

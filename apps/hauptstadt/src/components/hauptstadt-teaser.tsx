@@ -24,8 +24,12 @@ import {
 } from '@wepublish/block-content/website';
 import { ImageWrapper } from '@wepublish/image/website';
 import { createWithTheme } from '@wepublish/ui';
+import { BuilderTeaserProps } from '@wepublish/website/builder';
+import { memo } from 'react';
 
 import { alternatingTeaserTheme } from '../theme';
+import { CurrentPaywallContext } from './hauptstadt-paywall';
+import { HauptstadtTeaserPreTitle } from './hauptstadt-premium-indicator';
 
 const teaserGaps = ({ theme }: { theme: Theme }) => css`
   padding-bottom: var(--page-content-row-gap);
@@ -54,7 +58,17 @@ export const HauptstadtTeaserGrid = styled(TeaserGridBlock)`
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-template-columns: repeat(12, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  // Ignore TeaserWrapper layout and follow parent columns
+  ${TeaserWrapper} {
+    grid-column: unset;
+    grid-row: unset;
+
+    &:only-child {
+      grid-column-start: 2;
+    }
   }
 `;
 
@@ -102,10 +116,28 @@ const revertTeaserToDefault = ({ theme }: { theme: Theme }) => css`
 
   ${TeaserImageWrapper} {
     padding-bottom: ${theme.spacing(1.5)};
+    align-items: center;
   }
 `;
 
-export const HauptstadtTeaser = styled(BaseTeaser)`
+const TeaserWithPaywall = memo<BuilderTeaserProps>(function WithPaywall(props) {
+  return (
+    <CurrentPaywallContext.Provider
+      value={
+        props.teaser?.__typename === 'ArticleTeaser' ?
+          props.teaser.article?.paywall
+        : null
+      }
+    >
+      <BaseTeaser
+        {...props}
+        PreTitle={HauptstadtTeaserPreTitle}
+      />
+    </CurrentPaywallContext.Provider>
+  );
+});
+
+export const HauptstadtTeaser = styled(TeaserWithPaywall)`
   border-bottom: 1px solid ${({ theme }) => theme.palette.primary.main};
   grid-template-rows: repeat(5, minmax(0, auto));
   grid-template-areas:
@@ -121,7 +153,7 @@ export const HauptstadtTeaser = styled(BaseTeaser)`
     margin-bottom: 0;
     padding-bottom: 0;
     display: grid;
-    align-items: center;
+    align-items: start;
   }
 
   ${TeaserImage} {

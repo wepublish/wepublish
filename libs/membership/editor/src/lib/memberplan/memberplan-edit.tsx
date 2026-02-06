@@ -1,16 +1,16 @@
 import { ApolloError } from '@apollo/client';
 import {
-  AvailablePaymentMethod,
+  CreateMemberPlanMutationVariables,
   Currency,
+  FullAvailablePaymentMethodFragment,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
-  MemberPlanInput,
   PaymentMethod,
+  ProductType,
   useCreateMemberPlanMutation,
   useMemberPlanLazyQuery,
-  usePaymentMethodListQuery,
   useUpdateMemberPlanMutation,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import {
   createCheckedPermissionComponent,
   generateID,
@@ -24,6 +24,10 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
 import { MemberPlanForm } from './memberplan-form';
+import {
+  getApiClientV2,
+  usePaymentMethodListQuery,
+} from '@wepublish/editor/api-v2';
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
@@ -48,31 +52,36 @@ function MemberPlanEdit() {
   const [memberPlan, setMemberPlan] = useState<FullMemberPlanFragment | null>();
   const [close, setClose] = useState<boolean>(false);
   const [availablePaymentMethods, setAvailablePaymentMethods] = useState<
-    ListValue<AvailablePaymentMethod>[]
+    ListValue<FullAvailablePaymentMethodFragment>[]
   >([]);
 
+  const client = getApiClientV2();
   const [
     fetchMemberPlan,
     { loading: memberPlanLoading, data: memberPlanData },
   ] = useMemberPlanLazyQuery({
+    client,
     fetchPolicy: 'network-only',
     onError: showErrors,
   });
 
   const { data: paymentMethodData, loading: paymentMethodLoading } =
     usePaymentMethodListQuery({
+      client,
       fetchPolicy: 'network-only',
       onError: showErrors,
     });
 
   const [updateMemberPlanMutation, { loading: memberPlanUpdating }] =
     useUpdateMemberPlanMutation({
+      client,
       fetchPolicy: 'network-only',
       onError: showErrors,
     });
 
   const [createMemberPlanMutation, { loading: memberPlanCreating }] =
     useCreateMemberPlanMutation({
+      client,
       fetchPolicy: 'network-only',
       onError: showErrors,
     });
@@ -97,6 +106,7 @@ function MemberPlanEdit() {
       description: [],
       currency: Currency.Chf,
       amountPerMonthMin: 0,
+      amountPerMonthMax: null,
       amountPerMonthTarget: null,
       image: undefined,
       active: true,
@@ -106,6 +116,7 @@ function MemberPlanEdit() {
       externalReward: undefined,
       extendable: true,
       maxCount: undefined,
+      productType: ProductType.Subscription,
     };
 
     setMemberPlan(initMemberPlan);
@@ -160,6 +171,12 @@ function MemberPlanEdit() {
     amountPerMonthMin: Schema.Types.NumberType()
       .isRequired(t('memberPlanEdit.amountPerMonthMinRequired'))
       .min(0, t('memberPlanEdit.amountPerMonthMinZero')),
+
+    amountPerMonthMax: Schema.Types.NumberType().min(
+      (memberPlan?.amountPerMonthMin || 0) / 100,
+      t('memberPlanEdit.maxPriceMustBeGreaterThanMin')
+    ),
+
     amountPerMonthTarget: Schema.Types.NumberType().min(
       ((memberPlan?.amountPerMonthMin || 0) + 1) / 100,
       t('memberPlanEdit.targetPriceMustBeGreaterThanMin')
@@ -185,28 +202,28 @@ function MemberPlanEdit() {
       availablePaymentMethods: availablePaymentMethods.map(({ value }) => ({
         paymentPeriodicities: value.paymentPeriodicities,
         forceAutoRenewal: value.forceAutoRenewal,
-        paymentMethodIDs: value.paymentMethods.map(
-          (pm: PaymentMethod) => pm.id
-        ),
+        paymentMethodIDs: value.paymentMethods.map(pm => pm.id),
       })),
       currency: memberPlan.currency,
       amountPerMonthMin: memberPlan.amountPerMonthMin,
+      amountPerMonthMax: memberPlan.amountPerMonthMax,
       amountPerMonthTarget: memberPlan.amountPerMonthTarget,
       extendable: memberPlan.extendable,
       externalReward: memberPlan.externalReward,
       maxCount: memberPlan.maxCount,
+      productType: memberPlan.productType,
       migrateToTargetPaymentMethodID: memberPlan.migrateToTargetPaymentMethodID,
       successPageId: memberPlan.successPageId,
       failPageId: memberPlan.failPageId,
       confirmationPageId: memberPlan.confirmationPageId,
-    } as MemberPlanInput;
+    } as CreateMemberPlanMutationVariables;
 
     // update member plan
     if (memberPlanId) {
       await updateMemberPlanMutation({
         variables: {
           id: memberPlanId,
-          input: memberPlanInput,
+          ...memberPlanInput,
         },
         onCompleted: data => {
           toaster.push(
@@ -222,9 +239,7 @@ function MemberPlanEdit() {
     } else {
       // create new member plan
       await createMemberPlanMutation({
-        variables: {
-          input: memberPlanInput,
-        },
+        variables: memberPlanInput,
         onCompleted: data => {
           toaster.push(
             <Message
@@ -255,6 +270,7 @@ function MemberPlanEdit() {
           name: memberPlan?.name,
           slug: memberPlan?.slug,
           amountPerMonthMin: memberPlan?.amountPerMonthMin,
+          amountPerMonthMax: memberPlan?.amountPerMonthMax,
           currency: memberPlan?.currency,
         }}
       >

@@ -562,6 +562,11 @@ enum Currency {
   EUR @map("EUR")
 }
 
+enum ProductType {
+  Subscription @map("Subscription")
+  Donation     @map("Donation")
+}
+
 model MemberPlan {
   id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
@@ -575,12 +580,14 @@ model MemberPlan {
   active                         Boolean
   currency                       Currency
   amountPerMonthMin              Float
+  amountPerMonthMax              Float?
   amountPerMonthTarget           Float?
   availablePaymentMethods        AvailablePaymentMethod[]
   migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
   migrateToTargetPaymentMethodID String?
   extendable                     Boolean                  @default(true)
   maxCount                       Int?
+  productType                    ProductType              @default(Subscription)
   externalReward                 String?
 
   imageID String?
@@ -935,12 +942,14 @@ model UserAddress {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  company        String?
-  streetAddress  String?
-  streetAddress2 String?
-  zipCode        String?
-  city           String?
-  country        String?
+  company              String?
+  streetAddress        String?
+  streetAddressNumber  String?
+  streetAddress2       String?
+  streetAddress2Number String?
+  zipCode              String?
+  city                 String?
+  country              String?
 
   userId String @unique
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -1015,8 +1024,8 @@ model Setting {
   createdAt          DateTime @default(now())
   modifiedAt         DateTime @updatedAt
   name               String   @unique
-  value              Json
-  settingRestriction Json
+  value              Json?
+  settingRestriction Json?
 
   @@map("settings")
 }
@@ -1334,6 +1343,7 @@ enum BlockType {
   Poll           @map("poll")
   Comment        @map("comment")
   Event          @map("event")
+  FlexBlock      @map("flexBlock")
 }
 
 model BlockStyle {
@@ -1404,28 +1414,35 @@ enum BannerActionRole {
   OTHER   @map("other")
 }
 
+enum CrowdfundingGoalType {
+  Revenue      @map("Revenue")
+  Subscription @map("Subscription")
+}
+
 model Crowdfunding {
-  id                      String             @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt               DateTime           @default(now())
-  modifiedAt              DateTime           @updatedAt
+  id                      String               @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt               DateTime             @default(now())
+  modifiedAt              DateTime             @updatedAt
   name                    String
   countSubscriptionsFrom  DateTime?
   countSubscriptionsUntil DateTime?
   additionalRevenue       Int?
   memberPlans             MemberPlan[]
   goals                   CrowdfundingGoal[]
+  goalType                CrowdfundingGoalType @default(Revenue)
 
   @@map("crowdfundings")
 }
 
 model CrowdfundingGoal {
-  id             String       @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt      DateTime     @default(now())
-  modifiedAt     DateTime     @updatedAt
-  title          String
-  description    String?
-  amount         Int
-  Crowdfunding   Crowdfunding @relation(fields: [crowdfundingId], references: [id], onDelete: Cascade)
+  id          String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt   DateTime @default(now())
+  modifiedAt  DateTime @updatedAt
+  title       String
+  description String?
+  amount      Int
+
+  crowdfunding   Crowdfunding @relation(fields: [crowdfundingId], references: [id], onDelete: Cascade)
   crowdfundingId String
 
   @@map("crowdfunding_goals")
@@ -1436,11 +1453,19 @@ model Paywall {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name                  String? @unique
-  description           Json?
-  circumventDescription Json?
-  anyMemberPlan         Boolean @default(false)
-  active                Boolean @default(true)
+  name String? @unique
+
+  description                  Json?
+  upgradeDescription           Json?
+  circumventDescription        Json?
+  upgradeCircumventDescription Json?
+
+  anyMemberPlan           Boolean @default(false)
+  active                  Boolean @default(true)
+  alternativeSubscribeUrl String?
+
+  hideContentAfter Int     @default(3)
+  fadeout          Boolean @default(true)
 
   memberPlans PaywallMemberplan[]
   articles    Article[]
@@ -1468,10 +1493,11 @@ model PaywallBypass {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  token String @unique
+  token String
 
   paywall   Paywall @relation(fields: [paywallId], references: [id], onDelete: Cascade)
   paywallId String  @db.Uuid
 
+  @@unique([paywallId, token])
   @@map("paywall_bypasses")
 }

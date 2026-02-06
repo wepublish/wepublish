@@ -2,12 +2,17 @@ import { ApolloError } from '@apollo/client';
 import { Meta } from '@storybook/react';
 import { Page } from './page';
 import { mockPage, mockPageRevision } from '@wepublish/storybook/mocks';
+import {
+  WithPollBlockDecorators,
+  WithSubscribeBlockDecorators,
+} from '@wepublish/storybook';
 
 const page = mockPage();
 
 export default {
   component: Page,
   title: 'Components/Page',
+  decorators: [WithSubscribeBlockDecorators({}), WithPollBlockDecorators({})],
 } as Meta;
 
 export const Default = {

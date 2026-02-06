@@ -8,7 +8,8 @@ import {
 } from '@nestjs/graphql';
 import type { PaymentPeriodicity as PaymentPeriodicityType } from '@prisma/client';
 import { PaymentPeriodicity } from '@prisma/client';
-import { GraphQLSlug, PropertyInput } from '@wepublish/utils/api';
+import { PropertyInput } from '@wepublish/property/api';
+import { GraphQLSlug } from '@wepublish/utils/api';
 
 registerEnumType(PaymentPeriodicity, {
   name: 'PaymentPeriodicity',

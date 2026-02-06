@@ -7,7 +7,7 @@ import {
   Image,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { PropsWithChildren } from 'react';
+import { ComponentType, PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isImageBlock } from '../image/image-block';
 import { isTitleBlock } from '../title/title-block';
@@ -242,6 +242,8 @@ export const TeaserImageWrapper = styled('div')`
 // This causes the TeaserLogo to not be properly positioned if a margin exists
 export const TeaserImageInnerWrapper = styled('div')`
   position: relative;
+  height: 100%;
+  width: 100%;
 `;
 
 export const TeaserImage = styled(Image)`
@@ -398,11 +400,36 @@ const TeaserContent = ({
   );
 };
 
+type BaseTeaserComponents = {
+  PreTitle?: ComponentType<{ preTitle?: string | null }>;
+};
+
+export const BaseTeaserPreTitle: Exclude<
+  BaseTeaserComponents['PreTitle'],
+  undefined
+> = ({ preTitle }) => {
+  if (!preTitle) {
+    <TeaserPreTitleNoContent />;
+  }
+
+  return (
+    <TeaserPreTitleWrapper>
+      <Typography
+        variant="teaserPretitle"
+        component={TeaserPreTitle}
+      >
+        {preTitle}
+      </Typography>
+    </TeaserPreTitleWrapper>
+  );
+};
+
 export const BaseTeaser = ({
   teaser,
   alignment,
   className,
-}: BuilderTeaserProps) => {
+  PreTitle = BaseTeaserPreTitle,
+}: BuilderTeaserProps & BaseTeaserComponents) => {
   const title = teaser && selectTeaserTitle(teaser);
   const preTitle = teaser && selectTeaserPreTitle(teaser);
   const lead = teaser && selectTeaserLead(teaser);
@@ -438,17 +465,7 @@ export const BaseTeaser = ({
           </TeaserImageInnerWrapper>
         </TeaserImageWrapper>
 
-        {preTitle && (
-          <TeaserPreTitleWrapper>
-            <Typography
-              variant="teaserPretitle"
-              component={TeaserPreTitle}
-            >
-              {preTitle}
-            </Typography>
-          </TeaserPreTitleWrapper>
-        )}
-        {!preTitle && <TeaserPreTitleNoContent />}
+        <PreTitle preTitle={preTitle} />
 
         <Typography
           variant="teaserTitle"

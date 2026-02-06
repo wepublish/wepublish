@@ -2,11 +2,11 @@
 
 import styled from '@emotion/styled';
 import GearIcon from '@rsuite/icons/Gear';
-import { useTagListQuery } from '@wepublish/editor/api';
 import {
+  getApiClientV2,
   TeaserListBlockSort,
   TeaserSlotsAutofillConfigInput,
-  TeaserType,
+  useTagListQuery,
 } from '@wepublish/editor/api-v2';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -56,7 +56,9 @@ export function TeaserSlotsAutofillControls({
   const { t } = useTranslation();
   const [configDialogOpen, setConfigDialogOpen] = useState(false);
 
+  const client = getApiClientV2();
   const { data: tagsData, refetch } = useTagListQuery({
+    client,
     skip: !config.filter?.tags?.length,
   });
 
@@ -76,7 +78,7 @@ export function TeaserSlotsAutofillControls({
       ...newConfig,
       enabled: true,
       sort: TeaserListBlockSort.PublishedAt,
-      teaserType: TeaserType.Article,
+      teaserType: newConfig.teaserType,
     });
     setConfigDialogOpen(false);
     refetch({ filter: { tag: newConfig.filter?.tags?.join(' ') } });

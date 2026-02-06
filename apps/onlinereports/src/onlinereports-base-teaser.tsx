@@ -163,12 +163,17 @@ export const OnlineReportsBaseTeaserStyled = styled(BaseTeaser)`
   ${TeaserTags} {
     display: ${({ teaser }) => (hasTags(teaser) ? 'block' : 'none')};
 
-    .MuiChip-root {
+    & .MuiChip-root {
       background-color: #7c7c7c;
       border-radius: 5px;
       border: none;
       color: #fff;
       padding: 4px 12px;
+      margin-top: 6px;
+
+      ${({ theme }) => theme.breakpoints.up('lg')} {
+        margin-top: 2px;
+      }
     }
   }
 

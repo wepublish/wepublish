@@ -54,7 +54,7 @@ export class StorageClient {
     const data: BucketItem[] = [];
     return new Promise((resolve, reject) => {
       const stream = this.client.listObjects(...params);
-      stream.on('data', function (obj) {
+      stream.on('data', function (obj: BucketItem) {
         data.push(obj);
       });
       stream.on('end', function () {

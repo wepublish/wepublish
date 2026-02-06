@@ -76,6 +76,48 @@ const theme = createTheme(WePTheme, {
       fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
     },
     fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+    allVariants: {
+      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+    },
+    // Article
+    articleAuthors: {
+      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+    },
+    // Blocks
+    blockBreakTitle: {
+      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+    },
+    blockBreakBody: {
+      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+    },
+    blockQuote: {
+      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+    },
+    blockTitlePreTitle: {
+      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserTitle: {
+      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserLead: {
+      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserMeta: {
+      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+    },
+    teaserPretitle: {
+      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+    },
+    // Banner
+    bannerCta: {
+      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+    },
+    bannerText: {
+      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+    },
+    bannerTitle: {
+      fontFamily: [plainFont.style.fontFamily, 'sans-serif'].join(','),
+    },
   },
   components: {
     MuiLink: {

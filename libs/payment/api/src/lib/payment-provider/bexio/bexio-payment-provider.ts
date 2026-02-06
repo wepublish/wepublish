@@ -1,5 +1,6 @@
 import {
   Invoice,
+  InvoiceItem,
   MemberPlan,
   PaymentState,
   PrismaClient,
@@ -7,7 +8,7 @@ import {
   User,
   UserAddress,
 } from '@prisma/client';
-import { logger, mapPaymentPeriodToMonths } from '@wepublish/utils/api';
+import { logger } from '@wepublish/utils/api';
 import Bexio, { ContactsStatic, InvoicesStatic } from 'bexio';
 import { MappedReplacer } from 'mapped-replacer';
 import {
@@ -240,6 +241,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
               },
             },
           },
+          items: true,
         },
       });
 
@@ -310,7 +312,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       contact_group_ids: [],
       postcode: user?.address?.zipCode ?? undefined,
       city: user?.address?.city ?? undefined,
-      address: user?.address?.streetAddress ?? undefined,
+      street_name: user?.address?.streetAddress ?? undefined,
+      house_number: user?.address?.streetAddressNumber ?? undefined,
     };
     if (!contact) {
       return await this.bexio.contacts.create(upsertContact);
@@ -344,6 +347,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   async createInvoice(
     contact: ContactsStatic.ContactFull,
     invoice: Invoice & {
+      items: InvoiceItem[];
       subscription:
         | (Subscription & { memberPlan: MemberPlan; user: User })
         | null;
@@ -387,13 +391,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
           account_id: this.accountId,
           tax_id: this.taxId,
           text: invoice.subscription.memberPlan.name,
-          unit_price: `${
-            (invoice.subscription.monthlyAmount *
-              mapPaymentPeriodToMonths(
-                invoice.subscription.paymentPeriodicity
-              )) /
-            100
-          }`,
+          unit_price: `${invoice.items.reduce((total, item) => total + item.amount * item.quantity, 0) / 100}`,
           type: 'KbPositionCustom',
         },
       ],

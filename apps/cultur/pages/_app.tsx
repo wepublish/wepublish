@@ -1,5 +1,10 @@
+import { EmotionCache } from '@emotion/cache';
 import styled from '@emotion/styled';
 import { Container, css, CssBaseline, ThemeProvider } from '@mui/material';
+import {
+  AppCacheProvider,
+  createEmotionCache,
+} from '@mui/material-nextjs/v13-pagesRouter';
 import { withErrorSnackbar } from '@wepublish/errors/website';
 import {
   FooterContainer,
@@ -9,8 +14,10 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
+  initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
+  withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
@@ -21,18 +28,12 @@ import {
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import deTranlations from '@wepublish/website/translations/de.json';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
-import i18next from 'i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import ICU from 'i18next-icu';
-import resourcesToBackend from 'i18next-resources-to-backend';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
-import { initReactI18next } from 'react-i18next';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
@@ -45,23 +46,7 @@ setDefaultOptions({
   locale: de,
 });
 
-i18next
-  .use(ICU)
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .use(resourcesToBackend(() => deTranlations))
-  .init({
-    partialBundledLanguages: true,
-    lng: 'de',
-    fallbackLng: 'de',
-    supportedLngs: ['de'],
-    interpolation: {
-      escapeValue: false,
-    },
-    resources: {
-      de: { zod: deTranlations.zod },
-    },
-  });
+initWePublishTranslator();
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
@@ -99,118 +84,125 @@ const dateFormatter = (date: Date, includeTime = true) =>
 
 type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}>;
+}> & { emotionCache?: EmotionCache };
 
-function CustomApp({ Component, pageProps }: CustomAppProps) {
+function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   const siteTitle = 'Cültür';
 
+  // Emotion cache from _document is not supplied when client side rendering
+  // Compat removes certain warnings that are irrelevant to us
+  const cache = emotionCache ?? createEmotionCache();
+  cache.compat = true;
+
   return (
-    <WebsiteProvider>
-      <WebsiteBuilderProvider
-        Head={Head}
-        Script={Script}
-        Footer={Footer}
-        elements={{ Link: NextWepublishLink }}
-        blocks={{
-          BaseTeaser: CulturTeaser,
-          Break: CulturBreakBlock,
-        }}
-        date={{ format: dateFormatter }}
-        meta={{ siteTitle }}
-      >
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
+    <AppCacheProvider emotionCache={cache}>
+      <WebsiteProvider>
+        <WebsiteBuilderProvider
+          Head={Head}
+          Script={Script}
+          Footer={Footer}
+          elements={{ Link: NextWepublishLink }}
+          blocks={{
+            BaseTeaser: CulturTeaser,
+            Break: CulturBreakBlock,
+          }}
+          date={{ format: dateFormatter }}
+          meta={{ siteTitle }}
+        >
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
 
-          <Head>
-            <title key="title">{siteTitle}</title>
-            <meta
-              name="viewport"
-              content="width=device-width, initial-scale=1.0"
-            />
+            <Head>
+              <title key="title">{siteTitle}</title>
+              <meta
+                name="viewport"
+                content="width=device-width, initial-scale=1.0"
+              />
 
-            {/* Feeds */}
-            <link
-              rel="alternate"
-              type="application/rss+xml"
-              href="/api/rss-feed"
-            />
-            <link
-              rel="alternate"
-              type="application/atom+xml"
-              href="/api/atom-feed"
-            />
-            <link
-              rel="alternate"
-              type="application/feed+json"
-              href="/api/json-feed"
-            />
+              {/* Feeds */}
+              <link
+                rel="alternate"
+                type="application/rss+xml"
+                href="/api/rss-feed"
+              />
+              <link
+                rel="alternate"
+                type="application/atom+xml"
+                href="/api/atom-feed"
+              />
+              <link
+                rel="alternate"
+                type="application/feed+json"
+                href="/api/json-feed"
+              />
 
-            {/* Sitemap */}
-            <link
-              rel="sitemap"
-              type="application/xml"
-              title="Sitemap"
-              href="/api/sitemap"
-            />
+              {/* Sitemap */}
+              <link
+                rel="sitemap"
+                type="application/xml"
+                title="Sitemap"
+                href="/api/sitemap"
+              />
 
-            {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-            <link
-              rel="icon"
-              type="image/png"
-              href="/favicon-96x96.png"
-              sizes="96x96"
-            />
-            <link
-              rel="icon"
-              type="image/svg+xml"
-              href="/favicon.svg"
-            />
-            <link
-              rel="shortcut icon"
-              href="/favicon.ico"
-            />
-            <link
-              rel="apple-touch-icon"
-              sizes="180x180"
-              href="/apple-touch-icon.png"
-            />
-            <meta
-              name="apple-mobile-web-app-title"
-              content="Cültür"
-            />
-            <link
-              rel="manifest"
-              href="/site.webmanifest"
-            />
-          </Head>
+              {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+              <link
+                rel="icon"
+                type="image/png"
+                href="/favicon-96x96.png"
+                sizes="96x96"
+              />
+              <link
+                rel="icon"
+                type="image/svg+xml"
+                href="/favicon.svg"
+              />
+              <link
+                rel="shortcut icon"
+                href="/favicon.ico"
+              />
+              <link
+                rel="apple-touch-icon"
+                sizes="180x180"
+                href="/apple-touch-icon.png"
+              />
+              <meta
+                name="apple-mobile-web-app-title"
+                content="Cültür"
+              />
+              <link
+                rel="manifest"
+                href="/site.webmanifest"
+              />
+            </Head>
 
-          <Spacer>
-            <NavBar
-              categorySlugs={[['categories']]}
-              slug="main"
-              headerSlug="header"
-              iconSlug="icons"
-              loginBtn={null}
-              subscribeBtn={null}
-            />
+            <Spacer>
+              <NavBar
+                categorySlugs={[['categories']]}
+                slug="main"
+                headerSlug="header"
+                iconSlug="icons"
+                loginBtn={null}
+                subscribeBtn={null}
+              />
 
-            <main>
-              <MainSpacer maxWidth="lg">
-                <Component {...pageProps} />
-              </MainSpacer>
-            </main>
+              <main>
+                <MainSpacer maxWidth="lg">
+                  <Component {...pageProps} />
+                </MainSpacer>
+              </main>
 
-            <FooterContainer
-              slug="footer"
-              categorySlugs={[['categories']]}
-              iconSlug="icons"
-            />
-          </Spacer>
+              <FooterContainer
+                slug="footer"
+                categorySlugs={[['categories']]}
+                iconSlug="icons"
+              />
+            </Spacer>
 
-          <RoutedAdminBar />
-        </ThemeProvider>
-      </WebsiteBuilderProvider>
-    </WebsiteProvider>
+            <RoutedAdminBar />
+          </ThemeProvider>
+        </WebsiteBuilderProvider>
+      </WebsiteProvider>
+    </AppCacheProvider>
   );
 }
 
@@ -220,8 +212,10 @@ const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   previewLink,
 ]);
 const ConnectedApp = withApollo(
-  withErrorSnackbar(
-    withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+  withBuilderRouter(
+    withErrorSnackbar(
+      withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+    )
   )
 );
 

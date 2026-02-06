@@ -98,12 +98,9 @@ type noCharge = {
   offSessionPayments: boolean;
 };
 
-type karmaMediaServer = {
-  type: 'karma';
-};
-
 type novaMediaServer = {
   type: 'nova';
+  quality: number;
 };
 
 type Mollie = {
@@ -155,14 +152,20 @@ type ProLitteris = ProLitterisCountPixelProps & {
 type TrackingPixels = ProLitteris &
   Omit<TrackingPixelProvider, 'createPixelUri'>;
 
+type V0 = {
+  apiKey: string;
+  systemPrompt: string;
+};
+
 type Config = {
   general: General;
   mailProvider: MailProvider;
   paymentProviders: PaymentProvider[];
-  mediaServer: karmaMediaServer | novaMediaServer;
+  mediaServer: novaMediaServer;
   challenge: AlgebraicCaptcha | Turnstile;
   trackingPixelProviders: TrackingPixels[];
   ga?: GoogleAnalyticsConfig;
+  v0?: V0;
 };
 
 function extractReplacer(input: string): string[] {

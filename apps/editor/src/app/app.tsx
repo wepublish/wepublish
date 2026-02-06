@@ -64,7 +64,9 @@ import { NavigationList } from './routes/navigations/navigationList';
 import { PageEditor } from './routes/pages/pageEditor';
 import { PageList } from './routes/pages/pageList';
 import { PaymentMethodList } from './routes/paymentMethods/paymentMethodList';
+import { PaywallCreateView } from './routes/paywall/paywallCreateView';
 import { PaywallEditView } from './routes/paywall/paywallEditView';
+import { PaywallList } from './routes/paywall/paywallList';
 import { PeerArticleList } from './routes/peerArticles/peerArticleList';
 import { PeerList } from './routes/peers/peerList';
 import { PollEditView } from './routes/polls/pollEditView';
@@ -314,10 +316,26 @@ export function App() {
               }
             />
             <Route
-              path="articles/paywall"
+              path="articles/paywalls"
+              element={
+                <Base>
+                  <PaywallList />
+                </Base>
+              }
+            />
+            <Route
+              path="articles/paywalls/edit/:id"
               element={
                 <Base>
                   <PaywallEditView />
+                </Base>
+              }
+            />
+            <Route
+              path="articles/paywalls/create"
+              element={
+                <Base>
+                  <PaywallCreateView />
                 </Base>
               }
             />

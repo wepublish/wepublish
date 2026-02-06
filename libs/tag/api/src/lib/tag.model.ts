@@ -1,6 +1,16 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import {
+  ArgsType,
+  Field,
+  InputType,
+  Int,
+  ObjectType,
+  PartialType,
+  PickType,
+  registerEnumType,
+} from '@nestjs/graphql';
 import { TagType } from '@prisma/client';
 import { GraphQLRichText } from '@wepublish/richtext/api';
+import { PaginatedType, SortOrder } from '@wepublish/utils/api';
 import { Descendant } from 'slate';
 import { ColorScalar } from '@wepublish/utils/api';
 
@@ -12,10 +22,10 @@ export class Tag {
   @Field(() => String, { nullable: true })
   tag?: string;
 
-  @Field(() => TagType, { nullable: true })
-  type?: TagType;
+  @Field(() => TagType)
+  type!: TagType;
 
-  @Field()
+  @Field({ defaultValue: false })
   main!: boolean;
 
   @Field(() => GraphQLRichText, { nullable: true })
@@ -26,4 +36,78 @@ export class Tag {
 
   @Field(() => ColorScalar, { nullable: true })
   color?: string;
+}
+
+@InputType()
+export class TagFilter {
+  @Field(() => String, { nullable: true })
+  tag?: string;
+
+  @Field(() => TagType, { nullable: true })
+  type?: TagType;
+
+  @Field(() => [String], { nullable: true })
+  tags?: string[];
+}
+
+registerEnumType(TagType, {
+  name: 'TagType',
+  description: 'Type of tag.',
+});
+
+export enum TagSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Tag = 'Tag',
+}
+
+registerEnumType(TagSort, {
+  name: 'TagSort',
+});
+
+@ObjectType()
+export class TagConnection extends PaginatedType(Tag) {}
+
+@ArgsType()
+export class TagsArgs {
+  @Field(() => String, { nullable: true, description: 'Cursor for pagination' })
+  cursor?: string;
+
+  @Field(() => Int, {
+    defaultValue: 10,
+    description: 'Number of items to fetch',
+  })
+  take?: number;
+
+  @Field(() => Int, { defaultValue: 0, description: 'Number of items to skip' })
+  skip?: number;
+
+  @Field(() => TagFilter, { nullable: true, description: 'Filter for tags' })
+  filter?: TagFilter;
+
+  @Field(() => TagSort, {
+    defaultValue: TagSort.CreatedAt,
+    description: 'Field to sort by',
+  })
+  sort?: TagSort;
+
+  @Field(() => SortOrder, {
+    defaultValue: SortOrder.Descending,
+    description: 'Sort order',
+    nullable: true,
+  })
+  order?: SortOrder;
+}
+
+@ArgsType()
+export class CreateTagInput extends PickType(
+  Tag,
+  ['tag', 'main', 'type', 'description'] as const,
+  ArgsType
+) {}
+
+@ArgsType()
+export class UpdateTagInput extends PartialType(CreateTagInput, ArgsType) {
+  @Field()
+  id!: string;
 }

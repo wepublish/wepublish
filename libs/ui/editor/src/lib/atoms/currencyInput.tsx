@@ -3,11 +3,14 @@ import { Form, InputGroup } from 'rsuite';
 
 export interface CurrencyInputProps {
   currency: string;
-  centAmount: number;
+  centAmount: number | null;
   onChange(centAmount: number | null): void;
   disabled?: boolean;
   name: string;
 }
+
+const toDisplayValue = (value: number | null) =>
+  value != null ? (value / 100).toFixed(2) : '';
 
 export function CurrencyInput({
   currency,
@@ -16,10 +19,12 @@ export function CurrencyInput({
   name,
   onChange,
 }: CurrencyInputProps) {
-  const [amount, setAmount] = useState<number | string | any>(centAmount / 100);
+  const [amount, setAmount] = useState<number | string | any>(() =>
+    toDisplayValue(centAmount)
+  );
 
   useEffect(() => {
-    setAmount((centAmount / 100).toFixed(2));
+    setAmount(toDisplayValue(centAmount));
   }, [centAmount]);
 
   const toFloat = (text: string) =>

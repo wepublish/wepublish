@@ -2,6 +2,7 @@
 export * from './comment';
 export * from './dashboard';
 export * from './memberPlan/selectMemberPlan';
+export * from './paywall/selectPaywall';
 export * from './poll';
 export * from './searchAndFilter';
 export * from './tag/selectTags';
