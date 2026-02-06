@@ -9,6 +9,10 @@ import { z } from 'zod';
 import { GenericIntegrationList } from './genericIntegrationList';
 import { FieldDefinition } from './genericIntegrationForm';
 
+import mailChimpLogo from '../../../assets/integrations/mailchimp.avif';
+import slackLogo from '../../../assets/integrations/slack.png';
+import mailgunLogo from '../../../assets/integrations/mailgun.svg';
+
 const mailSettingsSchema = z.object({
   id: z.string(),
   name: z.string().optional(),
@@ -64,6 +68,18 @@ export function MailIntegrationForm() {
         mailgunMailDomain: formData.mailgunMailDomain,
         slackWebhookUrl: formData.slackWebhookUrl,
       })}
+      getLogo={setting => {
+        switch (setting.type) {
+          case MailProviderType.Mailchimp:
+            return mailChimpLogo;
+          case MailProviderType.Mailgun:
+            return mailgunLogo;
+          case MailProviderType.Slack:
+            return slackLogo;
+          default:
+            return undefined;
+        }
+      }}
       fields={setting => {
         const commonFields: FieldDefinition<IntegrationFormValues>[] = [
           {

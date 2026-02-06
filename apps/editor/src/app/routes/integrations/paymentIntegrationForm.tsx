@@ -144,8 +144,10 @@ export function PaymentIntegrationForm() {
           case PaymentProviderType.Mollie:
             return mollieLogo;
           case PaymentProviderType.Payrexx:
+          case PaymentProviderType.PayrexxSubscription:
             return payrexxLogo;
           case PaymentProviderType.Stripe:
+          case PaymentProviderType.StripeCheckout:
             return stripeLogo;
           default:
             return undefined;

@@ -81,7 +81,7 @@ export function GenericIntegrationList<
           <Input
             value={searchValue}
             onChange={setSearchValue}
-            placeholder={t('search') === 'search' ? 'Search...' : t('search')}
+            placeholder={t('search')}
             size="lg"
           />
         </StyledInputGroup>

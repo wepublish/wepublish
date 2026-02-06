@@ -25,12 +25,14 @@ const StyledPanel = styled(Panel)`
 const HeaderWrapper = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
 `;
 
 const HeaderLogo = styled.img`
-  max-height: 24px;
-  max-width: 100px;
+  min-height: 16px;
+  max-height: 28px;
+  max-width: 150px;
 `;
 
 export type FieldDefinition<TFormValues> = {
@@ -126,13 +128,13 @@ export function SingleGenericIntegrationForm<
     <StyledPanel
       header={
         <HeaderWrapper>
+          {setting.name || setting.type}
           {logo && (
             <HeaderLogo
               src={logo}
               alt=""
             />
           )}
-          {setting.name || setting.type}
         </HeaderWrapper>
       }
       bordered

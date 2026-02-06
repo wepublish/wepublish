@@ -9,6 +9,8 @@ import { z } from 'zod';
 import { GenericIntegrationList } from './genericIntegrationList';
 import { FieldDefinition } from './genericIntegrationForm';
 
+import proLitterisLogo from '../../../assets/integrations/proLitteris.svg';
+
 const trackingPixelSettingsSchema = z.object({
   id: z.string(),
   name: z.string().optional(),
@@ -60,6 +62,14 @@ export function TrackingPixelIntegrationForm() {
           formData.prolitterisUsePublisherInternalKey,
         prolitterisUsername: formData.prolitterisUsername,
       })}
+      getLogo={setting => {
+        switch (setting.type) {
+          case TrackingPixelProviderType.Prolitteris:
+            return proLitterisLogo;
+          default:
+            return undefined;
+        }
+      }}
       fields={setting => {
         const commonFields: FieldDefinition<IntegrationFormValues>[] = [
           {
