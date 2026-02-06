@@ -74,16 +74,15 @@ export const ImageBlock = ({
         }
 
         const parentWidth = imageRef.current.parentElement?.clientWidth ?? 0;
-        const cssRawObjectPositionX = window
+        const cssObjectPosition = window
           .getComputedStyle(imageRef.current, null)
           .getPropertyValue('object-position');
-        const cssObjectPositionX =
-          parseFloat(
-            (cssRawObjectPositionX.split(' ')[0] || '50%').split('%')[0]
-          ) / 100;
+        const cssObjectPositionXUnitless =
+          parseFloat((cssObjectPosition.split(' ')[0] || '50%').split('%')[0]) /
+          100;
 
         const captionMarginLeft =
-          (parentWidth - newImageWidth) * (-1 + 2 * cssObjectPositionX);
+          (parentWidth - newImageWidth) * (-1 + 2 * cssObjectPositionXUnitless);
 
         captionRef.current.setAttribute(
           'style',
