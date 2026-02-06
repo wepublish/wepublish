@@ -1833,7 +1833,27 @@
         "bexioInvoiceTitleNewMembership": "Invoice Title (New Membership)",
         "bexioInvoiceTitleRenewalMembership": "Invoice Title (Renewal Membership)"
       },
-      "placeholderSecret": "Unchanged (Hidden)"
+      "placeholderSecret": "Unchanged (Hidden)",
+      "mailSettings": {
+        "type": "Type",
+        "fromAddress": "From Address",
+        "replyToAddress": "Reply To Address",
+        "apiKey": "API Key",
+        "mailchimpBaseUrl": "Base URL",
+        "mailgunBaseDomain": "Base Domain",
+        "mailgunMailDomain": "Mail Domain",
+        "slackWebhookUrl": "Webhook URL",
+        "webhookEndpointSecret": "Webhook Endpoint Secret"
+      },
+      "trackingPixelSettings": {
+        "type": "Type",
+        "prolitterisMemberNr": "Member Nr",
+        "prolitterisOnlyPaidContentAccess": "Only Paid Content Access",
+        "prolitterisPassword": "Password",
+        "prolitterisPublisherInternalKeyDomain": "Publisher Internal Key Domain",
+        "prolitterisUsePublisherInternalKey": "Use Publisher Internal Key",
+        "prolitterisUsername": "Username"
+      }
     }
   }
 }

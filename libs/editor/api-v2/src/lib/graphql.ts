@@ -6020,6 +6020,27 @@ export type UpdateSettingsIntegrationsChallengeMutationVariables = Exact<{
 
 export type UpdateSettingsIntegrationsChallengeMutation = { __typename?: 'Mutation', updateChallengeProviderSetting: { __typename?: 'SettingChallengeProvider', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, type: ChallengeProviderType } };
 
+export type MailProviderSettingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MailProviderSettingsQuery = { __typename?: 'Query', mailProviderSettings: Array<{ __typename?: 'SettingMailProvider', createdAt: string, fromAddress?: string | null, id: string, lastLoadedAt: string, mailchimp_baseURL?: string | null, mailgun_baseDomain?: string | null, mailgun_mailDomain?: string | null, modifiedAt: string, name?: string | null, replyToAddress?: string | null, slack_webhookURL?: string | null, type: MailProviderType }> };
+
+export type UpdateMailProviderSettingMutationVariables = Exact<{
+  apiKey?: InputMaybe<Scalars['String']>;
+  fromAddress?: InputMaybe<Scalars['String']>;
+  updateMailProviderSettingId: Scalars['String'];
+  mailchimpBaseUrl?: InputMaybe<Scalars['String']>;
+  mailgunBaseDomain?: InputMaybe<Scalars['String']>;
+  mailgunMailDomain?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  replyToAddress?: InputMaybe<Scalars['String']>;
+  slackWebhookUrl?: InputMaybe<Scalars['String']>;
+  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type UpdateMailProviderSettingMutation = { __typename?: 'Mutation', updateMailProviderSetting: { __typename?: 'SettingMailProvider', createdAt: string, fromAddress?: string | null, id: string, lastLoadedAt: string, mailchimp_baseURL?: string | null, mailgun_baseDomain?: string | null, mailgun_mailDomain?: string | null, modifiedAt: string, name?: string | null, replyToAddress?: string | null, slack_webhookURL?: string | null, type: MailProviderType } };
+
 export type PaymentProviderSettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -6056,6 +6077,25 @@ export type UpdatePaymentProviderSettingMutationVariables = Exact<{
 
 
 export type UpdatePaymentProviderSettingMutation = { __typename?: 'Mutation', updatePaymentProviderSetting: { __typename?: 'SettingPaymentProvider', bexio_accountId?: number | null, bexio_countryId?: number | null, bexio_invoiceMailBodyNewMembership?: string | null, bexio_invoiceMailBodyRenewalMembership?: string | null, bexio_invoiceMailSubjectNewMembership?: string | null, bexio_invoiceMailSubjectRenewalMembership?: string | null, bexio_invoiceTemplateNewMembership?: string | null, bexio_invoiceTemplateRenewalMembership?: string | null, bexio_invoiceTitleNewMembership?: string | null, bexio_invoiceTitleRenewalMembership?: string | null, bexio_markInvoiceAsOpen?: boolean | null, bexio_taxId?: number | null, bexio_unitId?: number | null, bexio_userId?: number | null, createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, mollie_apiBaseUrl?: string | null, mollie_methods?: Array<PaymentMethodMollie> | null, name?: string | null, offSessionPayments?: boolean | null, payrexx_instancename?: string | null, payrexx_pm?: Array<PayrexxPm> | null, payrexx_psp?: Array<PayrexxPsp> | null, payrexx_vatrate?: string | null, stripe_methods?: Array<StripePaymentMethod> | null, type: PaymentProviderType } };
+
+export type TrackingPixelSettingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TrackingPixelSettingsQuery = { __typename?: 'Query', trackingPixelSettings: Array<{ __typename?: 'SettingTrackingPixel', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, prolitteris_memberNr?: string | null, prolitteris_onlyPaidContentAccess?: boolean | null, prolitteris_publisherInternalKeyDomain?: string | null, prolitteris_usePublisherInternalKey?: boolean | null, prolitteris_username?: string | null, type: TrackingPixelProviderType }> };
+
+export type UpdateTrackingPixelSettingMutationVariables = Exact<{
+  updateTrackingPixelSettingId: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  prolitterisMemberNr?: InputMaybe<Scalars['String']>;
+  prolitterisOnlyPaidContentAccess?: InputMaybe<Scalars['Boolean']>;
+  prolitterisPassword?: InputMaybe<Scalars['String']>;
+  prolitterisPublisherInternalKeyDomain?: InputMaybe<Scalars['String']>;
+  prolitterisUsePublisherInternalKey?: InputMaybe<Scalars['Boolean']>;
+  prolitterisUsername?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type UpdateTrackingPixelSettingMutation = { __typename?: 'Mutation', updateTrackingPixelSetting: { __typename?: 'SettingTrackingPixel', createdAt: string, id: string, lastLoadedAt: string, modifiedAt: string, name?: string | null, prolitteris_memberNr?: string | null, prolitteris_onlyPaidContentAccess?: boolean | null, prolitteris_publisherInternalKeyDomain?: string | null, prolitteris_usePublisherInternalKey?: boolean | null, prolitteris_username?: string | null, type: TrackingPixelProviderType } };
 
 export type SubscriptionFlowsQueryVariables = Exact<{
   defaultFlowOnly: Scalars['Boolean'];
@@ -12019,6 +12059,115 @@ export function useUpdateSettingsIntegrationsChallengeMutation(baseOptions?: Apo
 export type UpdateSettingsIntegrationsChallengeMutationHookResult = ReturnType<typeof useUpdateSettingsIntegrationsChallengeMutation>;
 export type UpdateSettingsIntegrationsChallengeMutationResult = Apollo.MutationResult<UpdateSettingsIntegrationsChallengeMutation>;
 export type UpdateSettingsIntegrationsChallengeMutationOptions = Apollo.BaseMutationOptions<UpdateSettingsIntegrationsChallengeMutation, UpdateSettingsIntegrationsChallengeMutationVariables>;
+export const MailProviderSettingsDocument = gql`
+    query MailProviderSettings {
+  mailProviderSettings {
+    createdAt
+    fromAddress
+    id
+    lastLoadedAt
+    mailchimp_baseURL
+    mailgun_baseDomain
+    mailgun_mailDomain
+    modifiedAt
+    name
+    replyToAddress
+    slack_webhookURL
+    type
+  }
+}
+    `;
+
+/**
+ * __useMailProviderSettingsQuery__
+ *
+ * To run a query within a React component, call `useMailProviderSettingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMailProviderSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMailProviderSettingsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMailProviderSettingsQuery(baseOptions?: Apollo.QueryHookOptions<MailProviderSettingsQuery, MailProviderSettingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MailProviderSettingsQuery, MailProviderSettingsQueryVariables>(MailProviderSettingsDocument, options);
+      }
+export function useMailProviderSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailProviderSettingsQuery, MailProviderSettingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MailProviderSettingsQuery, MailProviderSettingsQueryVariables>(MailProviderSettingsDocument, options);
+        }
+export type MailProviderSettingsQueryHookResult = ReturnType<typeof useMailProviderSettingsQuery>;
+export type MailProviderSettingsLazyQueryHookResult = ReturnType<typeof useMailProviderSettingsLazyQuery>;
+export type MailProviderSettingsQueryResult = Apollo.QueryResult<MailProviderSettingsQuery, MailProviderSettingsQueryVariables>;
+export const UpdateMailProviderSettingDocument = gql`
+    mutation UpdateMailProviderSetting($apiKey: String, $fromAddress: String, $updateMailProviderSettingId: String!, $mailchimpBaseUrl: String, $mailgunBaseDomain: String, $mailgunMailDomain: String, $name: String, $replyToAddress: String, $slackWebhookUrl: String, $webhookEndpointSecret: String) {
+  updateMailProviderSetting(
+    apiKey: $apiKey
+    fromAddress: $fromAddress
+    id: $updateMailProviderSettingId
+    mailchimp_baseURL: $mailchimpBaseUrl
+    mailgun_baseDomain: $mailgunBaseDomain
+    mailgun_mailDomain: $mailgunMailDomain
+    name: $name
+    replyToAddress: $replyToAddress
+    slack_webhookURL: $slackWebhookUrl
+    webhookEndpointSecret: $webhookEndpointSecret
+  ) {
+    createdAt
+    fromAddress
+    id
+    lastLoadedAt
+    mailchimp_baseURL
+    mailgun_baseDomain
+    mailgun_mailDomain
+    modifiedAt
+    name
+    replyToAddress
+    slack_webhookURL
+    type
+  }
+}
+    `;
+export type UpdateMailProviderSettingMutationFn = Apollo.MutationFunction<UpdateMailProviderSettingMutation, UpdateMailProviderSettingMutationVariables>;
+
+/**
+ * __useUpdateMailProviderSettingMutation__
+ *
+ * To run a mutation, you first call `useUpdateMailProviderSettingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMailProviderSettingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMailProviderSettingMutation, { data, loading, error }] = useUpdateMailProviderSettingMutation({
+ *   variables: {
+ *      apiKey: // value for 'apiKey'
+ *      fromAddress: // value for 'fromAddress'
+ *      updateMailProviderSettingId: // value for 'updateMailProviderSettingId'
+ *      mailchimpBaseUrl: // value for 'mailchimpBaseUrl'
+ *      mailgunBaseDomain: // value for 'mailgunBaseDomain'
+ *      mailgunMailDomain: // value for 'mailgunMailDomain'
+ *      name: // value for 'name'
+ *      replyToAddress: // value for 'replyToAddress'
+ *      slackWebhookUrl: // value for 'slackWebhookUrl'
+ *      webhookEndpointSecret: // value for 'webhookEndpointSecret'
+ *   },
+ * });
+ */
+export function useUpdateMailProviderSettingMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMailProviderSettingMutation, UpdateMailProviderSettingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateMailProviderSettingMutation, UpdateMailProviderSettingMutationVariables>(UpdateMailProviderSettingDocument, options);
+      }
+export type UpdateMailProviderSettingMutationHookResult = ReturnType<typeof useUpdateMailProviderSettingMutation>;
+export type UpdateMailProviderSettingMutationResult = Apollo.MutationResult<UpdateMailProviderSettingMutation>;
+export type UpdateMailProviderSettingMutationOptions = Apollo.BaseMutationOptions<UpdateMailProviderSettingMutation, UpdateMailProviderSettingMutationVariables>;
 export const PaymentProviderSettingsDocument = gql`
     query PaymentProviderSettings {
   paymentProviderSettings {
@@ -12192,6 +12341,109 @@ export function useUpdatePaymentProviderSettingMutation(baseOptions?: Apollo.Mut
 export type UpdatePaymentProviderSettingMutationHookResult = ReturnType<typeof useUpdatePaymentProviderSettingMutation>;
 export type UpdatePaymentProviderSettingMutationResult = Apollo.MutationResult<UpdatePaymentProviderSettingMutation>;
 export type UpdatePaymentProviderSettingMutationOptions = Apollo.BaseMutationOptions<UpdatePaymentProviderSettingMutation, UpdatePaymentProviderSettingMutationVariables>;
+export const TrackingPixelSettingsDocument = gql`
+    query TrackingPixelSettings {
+  trackingPixelSettings {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    prolitteris_memberNr
+    prolitteris_onlyPaidContentAccess
+    prolitteris_publisherInternalKeyDomain
+    prolitteris_usePublisherInternalKey
+    prolitteris_username
+    type
+  }
+}
+    `;
+
+/**
+ * __useTrackingPixelSettingsQuery__
+ *
+ * To run a query within a React component, call `useTrackingPixelSettingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTrackingPixelSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTrackingPixelSettingsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTrackingPixelSettingsQuery(baseOptions?: Apollo.QueryHookOptions<TrackingPixelSettingsQuery, TrackingPixelSettingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TrackingPixelSettingsQuery, TrackingPixelSettingsQueryVariables>(TrackingPixelSettingsDocument, options);
+      }
+export function useTrackingPixelSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TrackingPixelSettingsQuery, TrackingPixelSettingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TrackingPixelSettingsQuery, TrackingPixelSettingsQueryVariables>(TrackingPixelSettingsDocument, options);
+        }
+export type TrackingPixelSettingsQueryHookResult = ReturnType<typeof useTrackingPixelSettingsQuery>;
+export type TrackingPixelSettingsLazyQueryHookResult = ReturnType<typeof useTrackingPixelSettingsLazyQuery>;
+export type TrackingPixelSettingsQueryResult = Apollo.QueryResult<TrackingPixelSettingsQuery, TrackingPixelSettingsQueryVariables>;
+export const UpdateTrackingPixelSettingDocument = gql`
+    mutation UpdateTrackingPixelSetting($updateTrackingPixelSettingId: String!, $name: String, $prolitterisMemberNr: String, $prolitterisOnlyPaidContentAccess: Boolean, $prolitterisPassword: String, $prolitterisPublisherInternalKeyDomain: String, $prolitterisUsePublisherInternalKey: Boolean, $prolitterisUsername: String) {
+  updateTrackingPixelSetting(
+    id: $updateTrackingPixelSettingId
+    name: $name
+    prolitteris_memberNr: $prolitterisMemberNr
+    prolitteris_onlyPaidContentAccess: $prolitterisOnlyPaidContentAccess
+    prolitteris_password: $prolitterisPassword
+    prolitteris_publisherInternalKeyDomain: $prolitterisPublisherInternalKeyDomain
+    prolitteris_usePublisherInternalKey: $prolitterisUsePublisherInternalKey
+    prolitteris_username: $prolitterisUsername
+  ) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    prolitteris_memberNr
+    prolitteris_onlyPaidContentAccess
+    prolitteris_publisherInternalKeyDomain
+    prolitteris_usePublisherInternalKey
+    prolitteris_username
+    type
+  }
+}
+    `;
+export type UpdateTrackingPixelSettingMutationFn = Apollo.MutationFunction<UpdateTrackingPixelSettingMutation, UpdateTrackingPixelSettingMutationVariables>;
+
+/**
+ * __useUpdateTrackingPixelSettingMutation__
+ *
+ * To run a mutation, you first call `useUpdateTrackingPixelSettingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTrackingPixelSettingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTrackingPixelSettingMutation, { data, loading, error }] = useUpdateTrackingPixelSettingMutation({
+ *   variables: {
+ *      updateTrackingPixelSettingId: // value for 'updateTrackingPixelSettingId'
+ *      name: // value for 'name'
+ *      prolitterisMemberNr: // value for 'prolitterisMemberNr'
+ *      prolitterisOnlyPaidContentAccess: // value for 'prolitterisOnlyPaidContentAccess'
+ *      prolitterisPassword: // value for 'prolitterisPassword'
+ *      prolitterisPublisherInternalKeyDomain: // value for 'prolitterisPublisherInternalKeyDomain'
+ *      prolitterisUsePublisherInternalKey: // value for 'prolitterisUsePublisherInternalKey'
+ *      prolitterisUsername: // value for 'prolitterisUsername'
+ *   },
+ * });
+ */
+export function useUpdateTrackingPixelSettingMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTrackingPixelSettingMutation, UpdateTrackingPixelSettingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTrackingPixelSettingMutation, UpdateTrackingPixelSettingMutationVariables>(UpdateTrackingPixelSettingDocument, options);
+      }
+export type UpdateTrackingPixelSettingMutationHookResult = ReturnType<typeof useUpdateTrackingPixelSettingMutation>;
+export type UpdateTrackingPixelSettingMutationResult = Apollo.MutationResult<UpdateTrackingPixelSettingMutation>;
+export type UpdateTrackingPixelSettingMutationOptions = Apollo.BaseMutationOptions<UpdateTrackingPixelSettingMutation, UpdateTrackingPixelSettingMutationVariables>;
 export const SubscriptionFlowsDocument = gql`
     query SubscriptionFlows($defaultFlowOnly: Boolean!, $memberPlanId: String) {
   subscriptionFlows(

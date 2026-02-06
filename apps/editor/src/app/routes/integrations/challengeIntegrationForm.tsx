@@ -7,6 +7,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { GenericIntegrationList } from './genericIntegrationList';
+import cloudflareLogo from '../../../assets/integrations/cloudflare.svg';
 
 const challengeSettingsSchema = z.object({
   id: z.string(),
@@ -40,6 +41,7 @@ export function ChallengeIntegrationForm() {
         secret: formData.secret || undefined,
         siteKey: formData.siteKey || undefined,
       })}
+      getLogo={() => cloudflareLogo}
       fields={[
         {
           name: 'type',

@@ -1,4 +1,5 @@
 import { PermissionControl } from '@wepublish/ui/editor';
+import styled from '@emotion/styled';
 import { useTranslation } from 'react-i18next';
 import {
   MdAnalytics,
@@ -9,6 +10,27 @@ import {
 } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { Col, Grid, Panel, Row } from 'rsuite';
+
+const StyledRow = styled(Row)`
+  margin-top: 20px;
+`;
+
+const StyledCol = styled(Col)`
+  margin-bottom: 20px;
+`;
+
+const StyledPanel = styled(Panel)`
+  cursor: pointer;
+  background-color: white;
+`;
+
+const StyledHeader = styled.h3`
+  display: flex;
+  align-items: center;
+  svg {
+    margin-right: 10px;
+  }
+`;
 
 export function IntegrationList() {
   const { t } = useTranslation();
@@ -54,42 +76,37 @@ export function IntegrationList() {
           <h1>{t('integrations.title')}</h1>
         </Col>
       </Row>
-      <Row
-        gutter={20}
-        style={{ marginTop: 20 }}
-      >
+      <StyledRow gutter={20}>
         {integrations.map(integration => (
           <PermissionControl
             key={integration.permission}
             qualifyingPermissions={[integration.permission as any]}
           >
-            <Col
+            <StyledCol
               xs={24}
               md={12}
               lg={8}
               xl={6}
-              style={{ marginBottom: 20 }}
             >
-              <Panel
+              <StyledPanel
                 shaded
                 bordered
                 header={
-                  <h3>
-                    <integration.icon style={{ marginRight: 10 }} />
+                  <StyledHeader>
+                    <integration.icon />
                     {integration.title}
-                  </h3>
+                  </StyledHeader>
                 }
-                style={{ cursor: 'pointer', backgroundColor: 'white' }}
                 onClick={() => navigate(integration.path)}
               >
                 <p>
                   {t('integrations.manage', { integration: integration.title })}
                 </p>
-              </Panel>
-            </Col>
+              </StyledPanel>
+            </StyledCol>
           </PermissionControl>
         ))}
-      </Row>
+      </StyledRow>
     </Grid>
   );
 }

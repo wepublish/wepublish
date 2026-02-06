@@ -2,20 +2,14 @@ import { useMutation } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DocumentNode } from 'graphql';
 import { useMemo } from 'react';
-import {
-  Control,
-  Controller,
-  FieldValues,
-  Path,
-  useForm,
-} from 'react-hook-form';
+import { Controller, FieldValues, Path, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import styled from '@emotion/styled';
 import {
   Button,
   CheckPicker,
   Checkbox,
   Form,
-  Input,
   Message,
   Panel,
   SelectPicker,
@@ -23,6 +17,21 @@ import {
 } from 'rsuite';
 import { z } from 'zod';
 import { getApiClientV2 } from '@wepublish/editor/api-v2';
+
+const StyledPanel = styled(Panel)`
+  margin-bottom: 20px;
+`;
+
+const HeaderWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const HeaderLogo = styled.img`
+  max-height: 24px;
+  max-width: 100px;
+`;
 
 export type FieldDefinition<TFormValues> = {
   name: Path<TFormValues>;
@@ -57,6 +66,7 @@ export interface GenericIntegrationFormProps<
   fields:
     | FieldDefinition<TFormValues>[]
     | ((setting: TSetting) => FieldDefinition<TFormValues>[]);
+  getLogo?: (setting: TSetting) => string | undefined;
 }
 
 export function SingleGenericIntegrationForm<
@@ -69,6 +79,7 @@ export function SingleGenericIntegrationForm<
   mapSettingToInitialValues,
   mapFormValuesToVariables,
   fields,
+  getLogo,
 }: GenericIntegrationFormProps<TSetting, TFormValues>) {
   const { t } = useTranslation();
   const client = getApiClientV2();
@@ -109,11 +120,22 @@ export function SingleGenericIntegrationForm<
     }
   };
 
+  const logo = getLogo?.(setting);
+
   return (
-    <Panel
-      header={setting.name || setting.type}
+    <StyledPanel
+      header={
+        <HeaderWrapper>
+          {logo && (
+            <HeaderLogo
+              src={logo}
+              alt=""
+            />
+          )}
+          {setting.name || setting.type}
+        </HeaderWrapper>
+      }
       bordered
-      style={{ marginBottom: 20 }}
     >
       <Form
         fluid
@@ -212,6 +234,6 @@ export function SingleGenericIntegrationForm<
           {t('save')}
         </Button>
       </Form>
-    </Panel>
+    </StyledPanel>
   );
 }

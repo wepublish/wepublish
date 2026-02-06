@@ -13,7 +13,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Col, Grid, Panel, Row } from 'rsuite';
 import { AIIntegrationForm } from './aiIntegrationForm';
 import { ChallengeIntegrationForm } from './challengeIntegrationForm';
+import { MailIntegrationForm } from './mailIntegrationForm';
 import { PaymentIntegrationForm } from './paymentIntegrationForm';
+import { TrackingPixelIntegrationForm } from './trackingPixelIntegrationForm';
 
 export function IntegrationEditView() {
   const { t } = useTranslation();
@@ -65,6 +67,10 @@ export function IntegrationEditView() {
         return <ChallengeIntegrationForm />;
       case 'payment':
         return <PaymentIntegrationForm />;
+      case 'mail':
+        return <MailIntegrationForm />;
+      case 'tracking-pixel':
+        return <TrackingPixelIntegrationForm />;
       default:
         return <p>{t('integrations.configure', { integration: title })}</p>;
     }

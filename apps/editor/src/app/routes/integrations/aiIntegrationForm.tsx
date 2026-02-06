@@ -6,6 +6,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { GenericIntegrationList } from './genericIntegrationList';
+import vercelLogo from '../../../assets/integrations/vercel.svg';
 
 const aiSettingsSchema = z.object({
   id: z.string(),
@@ -36,6 +37,7 @@ export function AIIntegrationForm() {
         apiKey: formData.apiKey,
         systemPrompt: formData.systemPrompt,
       })}
+      getLogo={() => vercelLogo}
       fields={[
         {
           name: 'apiKey',

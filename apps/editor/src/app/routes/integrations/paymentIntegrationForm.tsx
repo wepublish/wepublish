@@ -13,6 +13,11 @@ import { z } from 'zod';
 import { GenericIntegrationList } from './genericIntegrationList';
 import { FieldDefinition } from './genericIntegrationForm';
 
+import bexioLogo from '../../../assets/integrations/bexio.png';
+import mollieLogo from '../../../assets/integrations/mollie.png';
+import payrexxLogo from '../../../assets/integrations/payrexx.png';
+import stripeLogo from '../../../assets/integrations/stripe.svg';
+
 const paymentSettingsSchema = z.object({
   // Common
   id: z.string(),
@@ -132,6 +137,20 @@ export function PaymentIntegrationForm() {
         bexioInvoiceTitleRenewalMembership:
           formData.bexio_invoiceTitleRenewalMembership,
       })}
+      getLogo={setting => {
+        switch (setting.type) {
+          case PaymentProviderType.Bexio:
+            return bexioLogo;
+          case PaymentProviderType.Mollie:
+            return mollieLogo;
+          case PaymentProviderType.Payrexx:
+            return payrexxLogo;
+          case PaymentProviderType.Stripe:
+            return stripeLogo;
+          default:
+            return undefined;
+        }
+      }}
       fields={setting => {
         const fields: FieldDefinition<IntegrationFormValues>[] = [
           {

@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client';
 import { useMemo, useState } from 'react';
 import { MdSearch } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
+import styled from '@emotion/styled';
 import { Input, InputGroup, Loader, Message } from 'rsuite';
 import { getApiClientV2 } from '@wepublish/editor/api-v2';
 import {
@@ -18,6 +19,16 @@ interface GenericIntegrationListProps<
   query: DocumentNode;
   dataKey: string;
 }
+
+const StyledInputGroup = styled(InputGroup)`
+  margin-bottom: 20px;
+`;
+
+const GenericIntegrationGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+  gap: 20px;
+`;
 
 export function GenericIntegrationList<
   TSetting extends { id: string; name?: string | null; type?: string },
@@ -63,7 +74,7 @@ export function GenericIntegrationList<
   return (
     <>
       {settings?.length > 3 && (
-        <InputGroup style={{ marginBottom: 20 }}>
+        <StyledInputGroup>
           <InputGroup.Addon>
             <MdSearch />
           </InputGroup.Addon>
@@ -73,16 +84,10 @@ export function GenericIntegrationList<
             placeholder={t('search') === 'search' ? 'Search...' : t('search')}
             size="lg"
           />
-        </InputGroup>
+        </StyledInputGroup>
       )}
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(450px, 1fr))',
-          gap: '20px',
-        }}
-      >
+      <GenericIntegrationGrid>
         {sortedSettings?.map(setting => (
           <SingleGenericIntegrationForm
             key={setting.id}
@@ -90,7 +95,7 @@ export function GenericIntegrationList<
             {...formProps}
           />
         ))}
-      </div>
+      </GenericIntegrationGrid>
     </>
   );
 }
