@@ -2025,6 +2025,7 @@ export type MutationCreateSubscriptionWithConfirmationArgs = {
 };
 
 export type MutationCreateTagArgs = {
+  color?: InputMaybe<Scalars['Color']>;
   description?: InputMaybe<Scalars['RichText']>;
   main?: Scalars['Boolean'];
   tag?: InputMaybe<Scalars['String']>;
@@ -2422,6 +2423,7 @@ export type MutationUpdateSystemMailArgs = {
 };
 
 export type MutationUpdateTagArgs = {
+  color?: InputMaybe<Scalars['Color']>;
   description?: InputMaybe<Scalars['RichText']>;
   id: Scalars['String'];
   main?: InputMaybe<Scalars['Boolean']>;
@@ -3838,6 +3840,7 @@ export type SystemMailModel = {
 
 export type Tag = {
   __typename?: 'Tag';
+  color?: Maybe<Scalars['Color']>;
   description?: Maybe<Scalars['RichText']>;
   id: Scalars['String'];
   main: Scalars['Boolean'];
@@ -4844,6 +4847,7 @@ export type TagListQuery = {
       id: string;
       tag?: string | null;
       url: string;
+      color?: string | null;
     }>;
     pageInfo: {
       __typename?: 'PageInfo';
@@ -5140,6 +5144,7 @@ export const TagList = `
       id
       tag
       url
+      color
     }
     pageInfo {
       startCursor

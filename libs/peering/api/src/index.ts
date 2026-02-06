@@ -10,5 +10,4 @@ export * from './lib/peer-profile.resolver';
 export * from './lib/peer.service';
 export * from './lib/peer-profile.service';
 export * from './lib/peer.constants';
-
 export * as remote from './lib/remote/graphql';

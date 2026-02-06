@@ -72,7 +72,7 @@ input ImageTransformation {
   height: Int
 }
 
-"""A hexidecimal color value."""
+"""A hexadecimal color value (#RRGGBB)"""
 scalar Color
 
 scalar RichText
@@ -405,6 +405,7 @@ type Tag {
   main: Boolean!
   description: RichText
   url: String!
+  color: Color
 }
 
 enum TagType {

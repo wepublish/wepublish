@@ -9,6 +9,7 @@ import {
 import { Context } from '../../context';
 import { createProxyingResolver } from '../../utility';
 import { GraphQLRichText } from '@wepublish/richtext/api';
+import { ColorScalar } from '@wepublish/utils/api';
 
 export const GraphQLTagType = new GraphQLEnumType({
   name: 'TagType',
@@ -35,5 +36,6 @@ export const GraphQLTag = new GraphQLObjectType<Tag, Context>({
         return await urlAdapter.getTagURL(tag);
       }),
     },
+    color: { type: ColorScalar },
   },
 });
