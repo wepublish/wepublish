@@ -73,7 +73,21 @@ export const ImageBlock = ({
           setRealImageWidth(newImageWidth);
         }
 
-        captionRef.current.setAttribute('style', '');
+        const parentWidth = imageRef.current.parentElement?.clientWidth ?? 0;
+        const cssObjectPosition = window
+          .getComputedStyle(imageRef.current, null)
+          .getPropertyValue('object-position');
+        const cssObjectPositionXUnitless =
+          parseFloat((cssObjectPosition.split(' ')[0] || '50%').split('%')[0]) /
+          100;
+
+        const captionMarginLeft =
+          (parentWidth - newImageWidth) * (-1 + 2 * cssObjectPositionXUnitless);
+
+        captionRef.current.setAttribute(
+          'style',
+          `margin-left:${captionMarginLeft}px;`
+        );
       }
     };
 
