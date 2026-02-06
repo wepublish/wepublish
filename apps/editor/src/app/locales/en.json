@@ -767,6 +767,7 @@
       "password": "Password",
       "unauthorized": "User is not authorized for login"
     },
+    "name": "Name",
     "mailTemplates": {
       "availableTemplates": "Available templates",
       "content": "Content",
@@ -879,7 +880,8 @@
       "users": "Users",
       "audience": "Audience",
       "authorTags": "Tags",
-      "audienceDashboard": "Dashboard"
+      "audienceDashboard": "Dashboard",
+      "integrations": "Integrations"
     },
     "navigation": {
       "overview": {
@@ -1780,6 +1782,78 @@
     },
     "audienceCsvBtn": {
       "exportUsers": "Download CSV"
+    },
+    "search": "Search",
+    "integrations": {
+      "title": "Integrations",
+      "ai": "AI",
+      "challengeProvider": "Challenge Provider",
+      "paymentProvider": "Payment Provider",
+      "trackingPixel": "Tracking Pixel",
+      "mailProvider": "Mail Provider",
+      "back": "Back to Integrations",
+      "unknown": "Unknown Integration",
+      "notFound": "Integration not found",
+      "configure": "Configure {{integration}}",
+      "updateSuccess": "Settings updated successfully",
+      "updateError": "Settings update failed",
+      "noSettingsFound": "No settings found",
+      "aiSettings": {
+        "apiKey": "API Key",
+        "systemPrompt": "System Prompt"
+      },
+      "challengeSettings": {
+        "secret": "Secret",
+        "siteKey": "Site Key",
+        "type": "Type"
+      },
+      "paymentSettings": {
+        "apiKey": "API Key",
+        "apiUrl": "API URL",
+        "instanceName": "Instance Name",
+        "methods": "Payment Methods",
+        "offSessionPayments": "Off Session Payments",
+        "pm": "Payment Methods",
+        "psp": "Payment Service Providers",
+        "type": "Type",
+        "vatRate": "VAT Rate",
+        "webhookEndpointSecret": "Webhook Endpoint Secret",
+        "bexioUserId": "Bexio User ID",
+        "bexioCountryId": "Bexio Country ID",
+        "bexioUnitId": "Bexio Unit ID",
+        "bexioTaxId": "Bexio Tax ID",
+        "bexioAccountId": "Bexio Account ID",
+        "bexioInvoiceTemplateNewMembership": "Invoice Template (New Membership)",
+        "bexioInvoiceTemplateRenewalMembership": "Invoice Template (Renewal Membership)",
+        "bexioInvoiceMailSubjectNewMembership": "Invoice Mail Subject (New Membership)",
+        "bexioInvoiceMailSubjectRenewalMembership": "Invoice Mail Subject (Renewal Membership)",
+        "bexioInvoiceMailBodyNewMembership": "Invoice Mail Body (New Membership)",
+        "bexioInvoiceMailBodyRenewalMembership": "Invoice Mail Body (Renewal Membership)",
+        "bexioMarkInvoiceAsOpen": "Mark Invoice As Open",
+        "bexioInvoiceTitleNewMembership": "Invoice Title (New Membership)",
+        "bexioInvoiceTitleRenewalMembership": "Invoice Title (Renewal Membership)"
+      },
+      "placeholderSecret": "Unchanged (Hidden)",
+      "mailSettings": {
+        "type": "Type",
+        "fromAddress": "From Address",
+        "replyToAddress": "Reply To Address",
+        "apiKey": "API Key",
+        "mailchimpBaseUrl": "Base URL",
+        "mailgunBaseDomain": "Base Domain",
+        "mailgunMailDomain": "Mail Domain",
+        "slackWebhookUrl": "Webhook URL",
+        "webhookEndpointSecret": "Webhook Endpoint Secret"
+      },
+      "trackingPixelSettings": {
+        "type": "Type",
+        "prolitterisMemberNr": "Member Nr",
+        "prolitterisOnlyPaidContentAccess": "Only Paid Content Access",
+        "prolitterisPassword": "Password",
+        "prolitterisPublisherInternalKeyDomain": "Publisher Internal Key Domain",
+        "prolitterisUsePublisherInternalKey": "Use Publisher Internal Key",
+        "prolitterisUsername": "Username"
+      }
     }
   }
 }
