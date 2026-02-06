@@ -34,9 +34,6 @@ export function GenericIntegrationList<
     client,
   });
 
-  if (loading) return <Loader center />;
-  if (error) return <Message type="error">{error.message}</Message>;
-
   const settings = data?.[dataKey] as TSetting[] | undefined;
 
   const sortedSettings = useMemo(() => {
@@ -55,6 +52,9 @@ export function GenericIntegrationList<
       });
   }, [settings, searchValue]);
 
+  if (loading) return <Loader center />;
+  if (error) return <Message type="error">{error.message}</Message>;
+
   if (!settings?.length)
     return (
       <Message type="warning">{t('integrations.noSettingsFound')}</Message>
@@ -62,7 +62,7 @@ export function GenericIntegrationList<
 
   return (
     <>
-      {settings.length > 3 && (
+      {settings?.length > 3 && (
         <InputGroup style={{ marginBottom: 20 }}>
           <InputGroup.Addon>
             <MdSearch />
