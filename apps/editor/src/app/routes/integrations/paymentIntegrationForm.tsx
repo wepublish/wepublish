@@ -31,6 +31,21 @@ const paymentSettingsSchema = z.object({
   payrexx_vatrate: z.string().optional(),
   payrexx_psp: z.array(z.nativeEnum(PayrexxPsp)).optional(),
   payrexx_pm: z.array(z.nativeEnum(PayrexxPm)).optional(),
+  // Bexio
+  bexio_userId: z.coerce.number().optional(),
+  bexio_countryId: z.coerce.number().optional(),
+  bexio_unitId: z.coerce.number().optional(),
+  bexio_taxId: z.coerce.number().optional(),
+  bexio_accountId: z.coerce.number().optional(),
+  bexio_invoiceTemplateNewMembership: z.string().optional(),
+  bexio_invoiceTemplateRenewalMembership: z.string().optional(),
+  bexio_invoiceMailSubjectNewMembership: z.string().optional(),
+  bexio_invoiceMailSubjectRenewalMembership: z.string().optional(),
+  bexio_invoiceMailBodyNewMembership: z.string().optional(),
+  bexio_invoiceMailBodyRenewalMembership: z.string().optional(),
+  bexio_markInvoiceAsOpen: z.boolean().optional(),
+  bexio_invoiceTitleNewMembership: z.string().optional(),
+  bexio_invoiceTitleRenewalMembership: z.string().optional(),
 });
 
 type IntegrationFormValues = z.infer<typeof paymentSettingsSchema>;
@@ -58,6 +73,28 @@ export function PaymentIntegrationForm() {
         payrexx_vatrate: setting.payrexx_vatrate || undefined,
         payrexx_psp: setting.payrexx_psp ?? undefined,
         payrexx_pm: setting.payrexx_pm ?? undefined,
+        bexio_userId: setting.bexio_userId ?? undefined,
+        bexio_countryId: setting.bexio_countryId ?? undefined,
+        bexio_unitId: setting.bexio_unitId ?? undefined,
+        bexio_taxId: setting.bexio_taxId ?? undefined,
+        bexio_accountId: setting.bexio_accountId ?? undefined,
+        bexio_invoiceTemplateNewMembership:
+          setting.bexio_invoiceTemplateNewMembership ?? undefined,
+        bexio_invoiceTemplateRenewalMembership:
+          setting.bexio_invoiceTemplateRenewalMembership ?? undefined,
+        bexio_invoiceMailSubjectNewMembership:
+          setting.bexio_invoiceMailSubjectNewMembership ?? undefined,
+        bexio_invoiceMailSubjectRenewalMembership:
+          setting.bexio_invoiceMailSubjectRenewalMembership ?? undefined,
+        bexio_invoiceMailBodyNewMembership:
+          setting.bexio_invoiceMailBodyNewMembership ?? undefined,
+        bexio_invoiceMailBodyRenewalMembership:
+          setting.bexio_invoiceMailBodyRenewalMembership ?? undefined,
+        bexio_markInvoiceAsOpen: setting.bexio_markInvoiceAsOpen ?? undefined,
+        bexio_invoiceTitleNewMembership:
+          setting.bexio_invoiceTitleNewMembership ?? undefined,
+        bexio_invoiceTitleRenewalMembership:
+          setting.bexio_invoiceTitleRenewalMembership ?? undefined,
       })}
       mapFormValuesToVariables={(formData, setting) => ({
         updatePaymentProviderSettingId: setting.id,
@@ -72,6 +109,28 @@ export function PaymentIntegrationForm() {
         payrexxVatrate: formData.payrexx_vatrate,
         payrexxPsp: formData.payrexx_psp,
         payrexxPm: formData.payrexx_pm,
+        bexioUserId: formData.bexio_userId,
+        bexioCountryId: formData.bexio_countryId,
+        bexioUnitId: formData.bexio_unitId,
+        bexioTaxId: formData.bexio_taxId,
+        bexioAccountId: formData.bexio_accountId,
+        bexioInvoiceTemplateNewMembership:
+          formData.bexio_invoiceTemplateNewMembership,
+        bexioInvoiceTemplateRenewalMembership:
+          formData.bexio_invoiceTemplateRenewalMembership,
+        bexioInvoiceMailSubjectNewMembership:
+          formData.bexio_invoiceMailSubjectNewMembership,
+        bexioInvoiceMailSubjectRenewalMembership:
+          formData.bexio_invoiceMailSubjectRenewalMembership,
+        bexioInvoiceMailBodyNewMembership:
+          formData.bexio_invoiceMailBodyNewMembership,
+        bexioInvoiceMailBodyRenewalMembership:
+          formData.bexio_invoiceMailBodyRenewalMembership,
+        bexioMarkInvoiceAsOpen: formData.bexio_markInvoiceAsOpen,
+        bexioInvoiceTitleNewMembership:
+          formData.bexio_invoiceTitleNewMembership,
+        bexioInvoiceTitleRenewalMembership:
+          formData.bexio_invoiceTitleRenewalMembership,
       })}
       fields={setting => {
         const fields: FieldDefinition<IntegrationFormValues>[] = [
@@ -106,8 +165,90 @@ export function PaymentIntegrationForm() {
         ];
 
         if (setting.type === PaymentProviderType.Bexio) {
-          // Bexio fields not fully implemented in this example based on schema complexity
-          // But adding basic ones or leaving empty if not needed right now
+          fields.push(
+            {
+              name: 'bexio_userId',
+              label: t('integrations.paymentSettings.bexioUserId'),
+              type: 'number',
+            },
+            {
+              name: 'bexio_countryId',
+              label: t('integrations.paymentSettings.bexioCountryId'),
+              type: 'number',
+            },
+            {
+              name: 'bexio_unitId',
+              label: t('integrations.paymentSettings.bexioUnitId'),
+              type: 'number',
+            },
+            {
+              name: 'bexio_taxId',
+              label: t('integrations.paymentSettings.bexioTaxId'),
+              type: 'number',
+            },
+            {
+              name: 'bexio_accountId',
+              label: t('integrations.paymentSettings.bexioAccountId'),
+              type: 'number',
+            },
+            {
+              name: 'bexio_invoiceTemplateNewMembership',
+              label: t(
+                'integrations.paymentSettings.bexioInvoiceTemplateNewMembership'
+              ),
+            },
+            {
+              name: 'bexio_invoiceTemplateRenewalMembership',
+              label: t(
+                'integrations.paymentSettings.bexioInvoiceTemplateRenewalMembership'
+              ),
+            },
+            {
+              name: 'bexio_invoiceTitleNewMembership',
+              label: t(
+                'integrations.paymentSettings.bexioInvoiceTitleNewMembership'
+              ),
+            },
+            {
+              name: 'bexio_invoiceTitleRenewalMembership',
+              label: t(
+                'integrations.paymentSettings.bexioInvoiceTitleRenewalMembership'
+              ),
+            },
+            {
+              name: 'bexio_invoiceMailSubjectNewMembership',
+              label: t(
+                'integrations.paymentSettings.bexioInvoiceMailSubjectNewMembership'
+              ),
+            },
+            {
+              name: 'bexio_invoiceMailSubjectRenewalMembership',
+              label: t(
+                'integrations.paymentSettings.bexioInvoiceMailSubjectRenewalMembership'
+              ),
+            },
+            {
+              name: 'bexio_invoiceMailBodyNewMembership',
+              label: t(
+                'integrations.paymentSettings.bexioInvoiceMailBodyNewMembership'
+              ),
+              type: 'textarea',
+              textareaRows: 10,
+            },
+            {
+              name: 'bexio_invoiceMailBodyRenewalMembership',
+              label: t(
+                'integrations.paymentSettings.bexioInvoiceMailBodyRenewalMembership'
+              ),
+              type: 'textarea',
+              textareaRows: 10,
+            },
+            {
+              name: 'bexio_markInvoiceAsOpen',
+              label: t('integrations.paymentSettings.bexioMarkInvoiceAsOpen'),
+              type: 'checkbox',
+            }
+          );
         }
 
         if (setting.type === PaymentProviderType.Stripe) {

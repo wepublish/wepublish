@@ -15,6 +15,7 @@ import {
   CheckPicker,
   Checkbox,
   Form,
+  Input,
   Message,
   Panel,
   SelectPicker,
@@ -28,6 +29,7 @@ export type FieldDefinition<TFormValues> = {
   label: string;
   type?:
     | 'text'
+    | 'number'
     | 'password'
     | 'textarea'
     | 'select'
@@ -179,7 +181,12 @@ export function SingleGenericIntegrationForm<
                     value={value}
                     onChange={onChange}
                     errorMessage={fieldState.error?.message}
-                    type={field.type === 'password' ? 'password' : 'text'}
+                    type={
+                      field.type === 'password' ? 'password'
+                      : field.type === 'number' ?
+                        'number'
+                      : 'text'
+                    }
                     accepter={
                       field.type === 'textarea' ? 'textarea' : undefined
                     }

@@ -1817,7 +1817,21 @@
         "psp": "Payment Service Providers",
         "type": "Type",
         "vatRate": "VAT Rate",
-        "webhookEndpointSecret": "Webhook Endpoint Secret"
+        "webhookEndpointSecret": "Webhook Endpoint Secret",
+        "bexioUserId": "Bexio User ID",
+        "bexioCountryId": "Bexio Country ID",
+        "bexioUnitId": "Bexio Unit ID",
+        "bexioTaxId": "Bexio Tax ID",
+        "bexioAccountId": "Bexio Account ID",
+        "bexioInvoiceTemplateNewMembership": "Invoice Template (New Membership)",
+        "bexioInvoiceTemplateRenewalMembership": "Invoice Template (Renewal Membership)",
+        "bexioInvoiceMailSubjectNewMembership": "Invoice Mail Subject (New Membership)",
+        "bexioInvoiceMailSubjectRenewalMembership": "Invoice Mail Subject (Renewal Membership)",
+        "bexioInvoiceMailBodyNewMembership": "Invoice Mail Body (New Membership)",
+        "bexioInvoiceMailBodyRenewalMembership": "Invoice Mail Body (Renewal Membership)",
+        "bexioMarkInvoiceAsOpen": "Mark Invoice As Open",
+        "bexioInvoiceTitleNewMembership": "Invoice Title (New Membership)",
+        "bexioInvoiceTitleRenewalMembership": "Invoice Title (Renewal Membership)"
       },
       "placeholderSecret": "Unchanged (Hidden)"
     }
