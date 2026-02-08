@@ -28,12 +28,15 @@ export const TeaserSlotsXLFullsizeImage = styled(TeaserSlots)`
   row-gap: 4cqw;
   grid-template-columns: unset;
 
-  & > * {
-    grid-column-start: unset;
-    grid-column-end: unset;
-    grid-row-start: unset;
-    grid-row-end: unset;
-    height: 100%;
+  ${({ theme }) => theme.breakpoints.up('xs')} {
+    & > * {
+      grid-template-columns: unset;
+      grid-column-start: unset;
+      grid-column-end: unset;
+      grid-row-start: unset;
+      grid-row-end: unset;
+      height: 100%;
+    }
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {

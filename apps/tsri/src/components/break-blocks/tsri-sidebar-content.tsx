@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 import { css, Theme, Typography, useTheme } from '@mui/material';
+import { useMemo } from 'react';
+import { allPass } from 'ramda';
 import { hasBlockStyle, isBreakBlock } from '@wepublish/block-content/website';
 import { BlockContent, BreakBlock } from '@wepublish/website/api';
 import {
@@ -9,7 +11,6 @@ import {
   Link,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { allPass } from 'ramda';
 
 import { BlockSiblings } from '../tsri-block-renderer';
 import { TsriBreakBlockType } from './tsri-base-break-block';
@@ -106,6 +107,43 @@ export const SidebarContentButton = styled(Button)`
   margin-top: calc(var(--sizing-factor) * 1cqw);
 `;
 
+const sidebarContentWrapperStyles = (
+  theme: Theme,
+  index: number,
+  nextOfTypeIndex: number | undefined,
+  count: number,
+  text: string | null | undefined
+) => css`
+  ${siblingSidebarContentWrapperStyles};
+
+  ${theme.breakpoints.up('md')} {
+    grid-row-start: ${index};
+    grid-row-end: ${nextOfTypeIndex ?? count + 4};
+    background-color: ${theme.palette.common.white};
+    margin-bottom: ${nextOfTypeIndex ? theme.spacing(-4) : 0};
+  }
+
+  & ${SidebarContentBox} {
+    background: ${text && text === 'Shop' ?
+      `linear-gradient(to bottom, ${theme.palette.primary.light}, color-mix(in srgb, ${theme.palette.common.white} 60%, ${theme.palette.primary.light}))`
+    : `linear-gradient(to bottom, ${theme.palette.primary.main}, color-mix(in srgb, ${theme.palette.common.white} 60%, ${theme.palette.primary.main}))`};
+  }
+`;
+
+const sidebarContentButtonStyles = (
+  theme: Theme,
+  text: string | null | undefined
+) => css`
+  &:hover {
+    background-color: ${text && text === 'Shop' ?
+      theme.palette.primary.main
+    : theme.palette.primary.light};
+    color: ${text && text === 'Shop' ?
+      theme.palette.common.white
+    : theme.palette.common.black};
+  }
+`;
+
 export const isTsriSidebarContent = (
   block: Pick<BlockContent, '__typename'>
 ): block is BreakBlock =>
@@ -138,7 +176,7 @@ export const TsriSidebarContent = ({
 
   const theme = useTheme();
 
-  const nextOfTypeIndex = (() => {
+  const nextOfTypeIndex = useMemo(() => {
     for (let i = index + 1; i < count; i++) {
       if (
         siblings[i].typeName === 'BreakBlock' &&
@@ -149,38 +187,18 @@ export const TsriSidebarContent = ({
     }
 
     return undefined;
-  })();
-
-  const sidebarContentWrapperStyles = (theme: Theme) => css`
-    ${siblingSidebarContentWrapperStyles};
-
-    ${theme.breakpoints.up('md')} {
-      grid-row-start: ${index};
-      grid-row-end: ${nextOfTypeIndex ?? count + 4};
-      background-color: ${theme.palette.common.white};
-      margin-bottom: ${nextOfTypeIndex ? theme.spacing(-4) : 0};
-    }
-
-    & ${SidebarContentBox} {
-      background: ${text && text === 'Shop' ?
-        `linear-gradient(to bottom, ${theme.palette.primary.light}, color-mix(in srgb, ${theme.palette.common.white} 60%, ${theme.palette.primary.light}))`
-      : `linear-gradient(to bottom, ${theme.palette.primary.main}, color-mix(in srgb, ${theme.palette.common.white} 60%, ${theme.palette.primary.main}))`};
-    }
-  `;
-
-  const sidebarContentButtonStyles = (theme: Theme) => css`
-    &:hover {
-      background-color: ${text && text === 'Shop' ?
-        theme.palette.primary.main
-      : theme.palette.primary.light};
-      color: ${text && text === 'Shop' ?
-        theme.palette.common.white
-      : theme.palette.common.black};
-    }
-  `;
+  }, [index, count, siblings]);
 
   return (
-    <SidebarContentWrapper css={sidebarContentWrapperStyles}>
+    <SidebarContentWrapper
+      css={sidebarContentWrapperStyles(
+        theme,
+        index,
+        nextOfTypeIndex,
+        count,
+        text
+      )}
+    >
       <SidebarContentBox>
         {text && (
           <Typography component={SidebarContentHeading}>{text}</Typography>
@@ -202,7 +220,7 @@ export const TsriSidebarContent = ({
 
           {!hideButton && linkURL && linkText && (
             <SidebarContentButton
-              css={sidebarContentButtonStyles}
+              css={sidebarContentButtonStyles(theme, text)}
               variant="contained"
               size="medium"
               LinkComponent={Link}

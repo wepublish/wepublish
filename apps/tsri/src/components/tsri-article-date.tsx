@@ -6,27 +6,23 @@ import {
 } from '@wepublish/website/builder';
 
 const TsriArticleDateWrapper = styled(ArticleDateWrapper)`
-  grid-column: -1 / 1;
-  grid-row: 1 / 2;
-  grid-template-columns: subgrid;
   font-size: 0.7rem;
-  display: grid;
-  margin-top: unset;
-  gap: 4px;
-  padding: 1.9rem 0 0 0;
-  pointer-events: none;
+  display: contents;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-template-columns: subgrid;
     font-size: 0.875em;
-    gap: 8px;
-    padding: 2.75rem 0 0 0;
   }
 `;
 
 export const TsriArticleTime = styled('time')`
-  grid-column: 2 / 3;
-  padding: 0 0 0 0.2rem;
+  grid-column: 2 / 4;
+  grid-row: 2 / 3;
+  padding: 0;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-column: 2 / 3;
+    grid-row: 2 / 4;
+  }
 `;
 
 export const TsriArticleDate = ({

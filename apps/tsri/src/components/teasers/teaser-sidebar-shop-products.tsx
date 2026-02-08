@@ -8,6 +8,7 @@ import { TsriTeaserType } from './tsri-base-teaser';
 import {
   TeaserAuthorImageWrapper,
   TeaserContentWrapper,
+  TeaserImageCaption,
   TeaserImageWrapper,
   TeaserLead,
   TeaserMetadata,
@@ -50,6 +51,10 @@ export const StyledTeaserShopProducts = styled(TsriTeaser)`
     grid-row: 2 / 3;
   }
 
+  ${TeaserImageCaption} {
+    display: none;
+  }
+
   ${TeaserImageWrapper} {
     display: grid;
     z-index: 1;
@@ -59,16 +64,28 @@ export const StyledTeaserShopProducts = styled(TsriTeaser)`
     width: calc(var(--sizing-factor) * 6.69cqw);
     margin: auto;
     border-radius: 1cqw;
+    position: relative;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
       border-radius: 0.5cqw;
     }
 
+    & picture {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      overflow: hidden;
+    }
+
     & img {
-      width: auto;
-      height: calc(var(--sizing-factor) * 6.69cqw);
+      max-width: 100%;
+      max-height: 100%;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      max-height: unset;
+      aspect-ratio: unset;
     }
   }
 
