@@ -773,8 +773,6 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
       children,
       categorySlugs,
       slug,
-      headerSlug,
-      iconSlug,
       data,
       hasRunningSubscription,
       hasUnpaidInvoices,
@@ -849,11 +847,24 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
 
     const router = useRouter();
 
-    const tabText = useMemo(() => {
+    const tabText = useMemo((): string => {
       if (pageTypeBasedProps) {
         switch (pageTypeBasedProps.pageType) {
+          // text from queries
           case PageType.Article:
             return pageTypeBasedProps.Article?.preTitle || '';
+          case PageType.ArticleList:
+            return capitalize(pageTypeBasedProps.ArticleList?.tag || '');
+          case PageType.Event:
+            return pageTypeBasedProps.Event?.name || '';
+          case PageType.Page:
+            return pageTypeBasedProps.Page?.title || '';
+          case PageType.SearchResults:
+            return pageTypeBasedProps.Search?.phrase ?
+                `${pageTypeBasedProps.Search.totalCount && pageTypeBasedProps.Search.totalCount !== 0 ? pageTypeBasedProps.Search.totalCount : 'Keine'} Suchergebnisse für "${pageTypeBasedProps.Search?.phrase}"`
+              : '';
+
+          // static text
           case PageType.Author:
             return 'Ich bin Tsüri!';
           case PageType.AuthorList:
@@ -862,8 +873,6 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
             return 'Suche';
           case PageType.SubscriptionPage:
             return 'Jetzt Tsüri unterstützen!';
-          case PageType.ArticleList:
-            return capitalize(pageTypeBasedProps.ArticleList?.tag || '');
           case PageType.EventList:
             return 'Unsere Events';
           case PageType.Profile:
@@ -907,7 +916,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
       (!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn) as boolean
     );
 
-    const isHomePage = pageTypeBasedProps?.Page?.slug === '';
+    const isHomePage = pageTypeBasedProps.pageType === PageType.Home;
 
     const navbarStyles = useMemo(
       () => cssVariables(navbarState, isHomePage),
@@ -915,6 +924,15 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
     );
 
     useImperativeHandle(forwardRef, () => ref.current!, []);
+
+    const handleResize = useCallback((): void => {
+      if (ref?.current) {
+        ref.current.ownerDocument.documentElement.setAttribute(
+          'style',
+          `--navbar-height: ${ref.current.getBoundingClientRect().height}px`
+        );
+      }
+    }, [ref]);
 
     useEffect(() => {
       if (typeof ResizeObserver !== 'undefined') {
@@ -935,16 +953,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
       window.addEventListener('resize', handleResize);
 
       return () => window.removeEventListener('resize', handleResize);
-    }, [ref]);
-
-    function handleResize() {
-      if (ref?.current) {
-        ref.current.ownerDocument.documentElement.setAttribute(
-          'style',
-          `--navbar-height: ${ref.current.getBoundingClientRect().height}px`
-        );
-      }
-    }
+    }, [ref, handleResize]);
 
     return (
       <NavbarWrapper

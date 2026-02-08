@@ -18,6 +18,7 @@ const TsriAuthorPage = styled(AuthorPage)`
   }
 
   ${TsriAuthorLinks} {
+    grid-column: 1 / 2;
     grid-row: unset;
     justify-self: start;
   }
