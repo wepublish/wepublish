@@ -47,22 +47,24 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
   });
 
   const { data: pageData, loading: pageLoading } = usePageQuery({
+    skip: !slug && !id,
     variables: {
-      id,
-      slug,
+      id: (id as string) || undefined,
+      slug: (slug as string) || undefined,
     },
   });
 
   const { data: eventData, loading: eventLoading } = useEventQuery({
+    skip: !id,
     variables: {
-      id,
+      id: id as string,
     },
   });
 
-  const { data: searchData, searchLoading } = usePhraseQuery({
+  const { data: searchData, loading: searchLoading } = usePhraseQuery({
     skip: !phraseQuery,
     variables: {
-      query: phraseQuery!,
+      query: phraseQuery! as string,
     },
   });
 
@@ -74,14 +76,18 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
       };
     }
 
-    if ((slug || id) && !articleLoading && articleData?.article?.latest) {
+    if (
+      (slug || id) &&
+      !articleLoading &&
+      articleData?.article?.latest?.preTitle
+    ) {
       return {
         pageType: PageType.Article,
         Article: { preTitle: articleData.article.latest?.preTitle },
       };
     }
 
-    if (id && !eventLoading && eventData.event?.name) {
+    if (id && !eventLoading && eventData?.event?.name) {
       return {
         pageType: PageType.Event,
         Event: { name: eventData.event?.name },
@@ -94,14 +100,14 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
       };
     }
 
-    if (slug && !pageLoading && pageData?.page) {
+    if (slug && !pageLoading && pageData?.page?.latest?.title) {
       return {
         pageType: PageType.Page,
-        Page: { title: pageData.page.title },
+        Page: { title: pageData.page.latest?.title },
       };
     }
 
-    if (phraseQuery) {
+    if (!searchLoading && phraseQuery) {
       return {
         pageType: PageType.SearchResults,
         Search: {
@@ -156,6 +162,7 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
     pageData,
     phraseQuery,
     searchData,
+    searchLoading,
   ]);
 
   return pageTypeBasedProps;
