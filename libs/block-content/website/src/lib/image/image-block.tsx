@@ -82,7 +82,7 @@ export const ImageBlock = ({
           100;
 
         const captionMarginLeft =
-          (parentWidth - newImageWidth) * (-1 + 2 * cssObjectPositionXUnitless);
+          (parentWidth - newImageWidth) * (2 * cssObjectPositionXUnitless - 1);
 
         captionRef.current.setAttribute(
           'style',
