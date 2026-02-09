@@ -31,7 +31,7 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
   const { slug, id, tag, q: phraseQuery } = router.query;
 
   const { data: articleData, loading: articleLoading } = useArticleQuery({
-    skip: !slug && !id,
+    skip: (!slug && !id) || !router.asPath.startsWith('/a'),
     variables: {
       slug: (slug as string) || undefined,
       id: (id as string) || undefined,
@@ -39,7 +39,7 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
   });
 
   const { data: tagData, loading: tagLoading } = useTagQuery({
-    skip: !tag,
+    skip: !tag || !router.asPath.startsWith('/a/tag'),
     variables: {
       tag: (tag as string) || '',
       type: TagType.Article,
@@ -55,7 +55,7 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
   });
 
   const { data: eventData, loading: eventLoading } = useEventQuery({
-    skip: !id,
+    skip: !id || !router.asPath.startsWith('/event'),
     variables: {
       id: id as string,
     },
