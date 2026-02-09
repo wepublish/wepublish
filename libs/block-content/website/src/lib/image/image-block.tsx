@@ -73,21 +73,16 @@ export const ImageBlock = ({
           setRealImageWidth(newImageWidth);
         }
 
-        const parentWidth = imageRef.current.parentElement?.clientWidth ?? 0;
-        const cssObjectPosition = window
+        const cssObjectFit = window
           .getComputedStyle(imageRef.current, null)
-          .getPropertyValue('object-position');
-        const cssObjectPositionXUnitless =
-          parseFloat((cssObjectPosition.split(' ')[0] || '50%').split('%')[0]) /
-          100;
+          .getPropertyValue('object-fit');
 
-        const captionMarginLeft =
-          (parentWidth - newImageWidth) * (2 * cssObjectPositionXUnitless - 1);
+        // make sure images are centered
+        if (cssObjectFit === 'contain') {
+          imageRef.current.setAttribute('style', 'object-position: unset;');
+        }
 
-        captionRef.current.setAttribute(
-          'style',
-          `margin-left:${captionMarginLeft}px;`
-        );
+        captionRef.current.setAttribute('style', '');
       }
     };
 
