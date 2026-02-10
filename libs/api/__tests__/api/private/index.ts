@@ -32,90 +32,6 @@ export type AvailablePaymentMethod = {
   paymentPeriodicities: Array<PaymentPeriodicity>;
 };
 
-export type Comment = {
-  __typename?: 'Comment';
-  authorType: CommentAuthorType;
-  createdAt: Scalars['DateTime'];
-  featured?: Maybe<Scalars['Boolean']>;
-  guestUserImage?: Maybe<Image>;
-  guestUsername?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  itemID: Scalars['String'];
-  itemType: CommentItemType;
-  modifiedAt: Scalars['DateTime'];
-  overriddenRatings?: Maybe<Array<OverriddenRating>>;
-  parentComment?: Maybe<Comment>;
-  rejectionReason?: Maybe<CommentRejectionReason>;
-  revisions: Array<CommentRevision>;
-  source?: Maybe<Scalars['String']>;
-  state: CommentState;
-  tags: Array<Tag>;
-  user?: Maybe<User>;
-};
-
-export enum CommentAuthorType {
-  Author = 'author',
-  GuestUser = 'guestUser',
-  Team = 'team',
-  VerifiedUser = 'verifiedUser'
-}
-
-export type CommentConnection = {
-  __typename?: 'CommentConnection';
-  nodes: Array<Comment>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type CommentFilter = {
-  item?: InputMaybe<Scalars['String']>;
-  itemID?: InputMaybe<Scalars['String']>;
-  itemType?: InputMaybe<CommentItemType>;
-  states?: InputMaybe<Array<CommentState>>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export enum CommentItemType {
-  Article = 'article',
-  Page = 'page'
-}
-
-export type CommentRatingOverrideUpdateInput = {
-  answerId: Scalars['String'];
-  value?: InputMaybe<Scalars['Int']>;
-};
-
-export enum CommentRejectionReason {
-  Misconduct = 'misconduct',
-  Spam = 'spam'
-}
-
-export type CommentRevision = {
-  __typename?: 'CommentRevision';
-  createdAt: Scalars['DateTime'];
-  lead?: Maybe<Scalars['String']>;
-  text?: Maybe<Scalars['RichText']>;
-  title?: Maybe<Scalars['String']>;
-};
-
-export type CommentRevisionUpdateInput = {
-  lead?: InputMaybe<Scalars['String']>;
-  text?: InputMaybe<Scalars['RichText']>;
-  title?: InputMaybe<Scalars['String']>;
-};
-
-export enum CommentSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
-}
-
-export enum CommentState {
-  Approved = 'approved',
-  PendingApproval = 'pendingApproval',
-  PendingUserChanges = 'pendingUserChanges',
-  Rejected = 'rejected'
-}
-
 export enum Currency {
   Chf = 'CHF',
   Eur = 'EUR'
@@ -277,26 +193,20 @@ export type MemberPlan = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  approveComment: Comment;
   cancelSubscription?: Maybe<Subscription>;
-  createComment: Comment;
   createInvoice?: Maybe<Invoice>;
   createPaymentFromInvoice?: Maybe<Payment>;
   createPoll?: Maybe<PollWithAnswers>;
   createPollAnswer?: Maybe<PollAnswer>;
   createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
   createSubscription?: Maybe<Subscription>;
-  deleteComment: Comment;
   deleteInvoice?: Maybe<Invoice>;
   deletePoll?: Maybe<FullPoll>;
   deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
   deleteSubscription?: Maybe<Subscription>;
   markInvoiceAsPaid?: Maybe<Invoice>;
-  rejectComment: Comment;
   renewSubscription?: Maybe<Invoice>;
-  requestChangesOnComment: Comment;
-  updateComment: Comment;
   updateInvoice?: Maybe<Invoice>;
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
@@ -304,23 +214,9 @@ export type Mutation = {
 };
 
 
-export type MutationApproveCommentArgs = {
-  id: Scalars['String'];
-};
-
-
 export type MutationCancelSubscriptionArgs = {
   id: Scalars['String'];
   reason: SubscriptionDeactivationReason;
-};
-
-
-export type MutationCreateCommentArgs = {
-  itemID: Scalars['String'];
-  itemType: CommentItemType;
-  parentID?: InputMaybe<Scalars['String']>;
-  tagIds?: InputMaybe<Array<Scalars['String']>>;
-  text?: InputMaybe<Scalars['RichText']>;
 };
 
 
@@ -358,11 +254,6 @@ export type MutationCreateSubscriptionArgs = {
 };
 
 
-export type MutationDeleteCommentArgs = {
-  id: Scalars['String'];
-};
-
-
 export type MutationDeleteInvoiceArgs = {
   id: Scalars['String'];
 };
@@ -393,33 +284,8 @@ export type MutationMarkInvoiceAsPaidArgs = {
 };
 
 
-export type MutationRejectCommentArgs = {
-  id: Scalars['String'];
-  rejectionReason?: InputMaybe<CommentRejectionReason>;
-};
-
-
 export type MutationRenewSubscriptionArgs = {
   id: Scalars['String'];
-};
-
-
-export type MutationRequestChangesOnCommentArgs = {
-  id: Scalars['String'];
-  rejectionReason: CommentRejectionReason;
-};
-
-
-export type MutationUpdateCommentArgs = {
-  featured?: InputMaybe<Scalars['Boolean']>;
-  guestUserImageID?: InputMaybe<Scalars['String']>;
-  guestUsername?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
-  ratingOverrides?: InputMaybe<Array<CommentRatingOverrideUpdateInput>>;
-  revision?: InputMaybe<CommentRevisionUpdateInput>;
-  source?: InputMaybe<Scalars['String']>;
-  tagIds?: InputMaybe<Array<Scalars['String']>>;
-  userID?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -646,8 +512,6 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
-  comment?: Maybe<Comment>;
-  comments: CommentConnection;
   invoice?: Maybe<Invoice>;
   invoices: InvoiceConnection;
   peerProfile: PeerProfile;
@@ -657,21 +521,6 @@ export type Query = {
   subscription?: Maybe<Subscription>;
   subscriptions: SubscriptionConnection;
   subscriptionsAsCsv?: Maybe<Scalars['String']>;
-};
-
-
-export type QueryCommentArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QueryCommentsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<CommentFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<CommentSort>;
-  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -832,24 +681,6 @@ export enum SubscriptionSort {
   ModifiedAt = 'modifiedAt'
 }
 
-export type Tag = {
-  __typename?: 'Tag';
-  description?: Maybe<Scalars['RichText']>;
-  id: Scalars['String'];
-  main: Scalars['Boolean'];
-  tag?: Maybe<Scalars['String']>;
-  type?: Maybe<TagType>;
-  url: Scalars['String'];
-};
-
-export enum TagType {
-  Article = 'Article',
-  Author = 'Author',
-  Comment = 'Comment',
-  Event = 'Event',
-  Page = 'Page'
-}
-
 export type UpdatePollAnswer = {
   answer?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
@@ -928,95 +759,6 @@ export type UserSubscription = {
   startsAt: Scalars['DateTime'];
 };
 
-export type OverriddenRating = {
-  __typename?: 'overriddenRating';
-  answerId: Scalars['String'];
-  value?: Maybe<Scalars['Int']>;
-};
-
-export type CommentRevisionFragment = { __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string };
-
-export type FullParentCommentFragment = { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }> };
-
-export type FullCommentUserFragment = { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, email: string };
-
-export type FullCommentFragment = { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, firstName?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null };
-
-export type CommentListQueryVariables = Exact<{
-  filter?: InputMaybe<CommentFilter>;
-  cursor?: InputMaybe<Scalars['String']>;
-  take?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<SortOrder>;
-  sort?: InputMaybe<CommentSort>;
-}>;
-
-
-export type CommentListQuery = { __typename?: 'Query', comments: { __typename?: 'CommentConnection', totalCount: number, nodes: Array<{ __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, firstName?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
-
-export type CommentQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type CommentQuery = { __typename?: 'Query', comment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, firstName?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null } | null };
-
-export type ApproveCommentMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type ApproveCommentMutation = { __typename?: 'Mutation', approveComment: { __typename?: 'Comment', state: CommentState } };
-
-export type RejectCommentMutationVariables = Exact<{
-  id: Scalars['String'];
-  rejectionReason?: InputMaybe<CommentRejectionReason>;
-}>;
-
-
-export type RejectCommentMutation = { __typename?: 'Mutation', rejectComment: { __typename?: 'Comment', state: CommentState, rejectionReason?: CommentRejectionReason | null } };
-
-export type RequestChangesOnCommentMutationVariables = Exact<{
-  id: Scalars['String'];
-  rejectionReason: CommentRejectionReason;
-}>;
-
-
-export type RequestChangesOnCommentMutation = { __typename?: 'Mutation', requestChangesOnComment: { __typename?: 'Comment', state: CommentState, rejectionReason?: CommentRejectionReason | null } };
-
-export type UpdateCommentMutationVariables = Exact<{
-  id: Scalars['String'];
-  revision?: InputMaybe<CommentRevisionUpdateInput>;
-  userID?: InputMaybe<Scalars['String']>;
-  guestUsername?: InputMaybe<Scalars['String']>;
-  guestUserImageID?: InputMaybe<Scalars['String']>;
-  featured?: InputMaybe<Scalars['Boolean']>;
-  source?: InputMaybe<Scalars['String']>;
-  tagIds?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
-  ratingOverrides?: InputMaybe<Array<CommentRatingOverrideUpdateInput> | CommentRatingOverrideUpdateInput>;
-}>;
-
-
-export type UpdateCommentMutation = { __typename?: 'Mutation', updateComment: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, firstName?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null } };
-
-export type CreateCommentMutationVariables = Exact<{
-  itemID: Scalars['String'];
-  itemType: CommentItemType;
-  parentID?: InputMaybe<Scalars['String']>;
-  text?: InputMaybe<Scalars['RichText']>;
-  tagIds?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
-}>;
-
-
-export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, featured?: boolean | null, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, firstName?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Descendant[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null }>, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null } };
-
-export type DeleteCommentMutationVariables = Exact<{
-  deleteCommentId: Scalars['String'];
-}>;
-
-
-export type DeleteCommentMutation = { __typename?: 'Mutation', deleteComment: { __typename?: 'Comment', id: string } };
-
 export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
 export type ImageRefFragment = { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
@@ -1067,6 +809,28 @@ export const ImageRef = gql`
   ...ImageURLs
 }
     ${ImageUrLs}`;
+export const FullImage = gql`
+    fragment FullImage on Image {
+  id
+  createdAt
+  modifiedAt
+  filename
+  extension
+  width
+  height
+  fileSize
+  description
+  tags
+  source
+  link
+  license
+  focalPoint {
+    x
+    y
+  }
+  ...ImageRef
+}
+    ${ImageRef}`;
 export const FullPermission = gql`
     fragment FullPermission on Permission {
   id
@@ -1097,193 +861,6 @@ export const FullUser = gql`
   }
 }
     ${FullUserRole}`;
-export const CommentRevision = gql`
-    fragment CommentRevision on CommentRevision {
-  text
-  title
-  lead
-  createdAt
-}
-    `;
-export const FullCommentUser = gql`
-    fragment FullCommentUser on User {
-  id
-  name
-  firstName
-  flair
-  email
-}
-    `;
-export const FullParentComment = gql`
-    fragment FullParentComment on Comment {
-  id
-  state
-  rejectionReason
-  user {
-    ...FullUser
-  }
-  guestUsername
-  revisions {
-    ...CommentRevision
-  }
-  createdAt
-  modifiedAt
-}
-    ${FullUser}
-${CommentRevision}`;
-export const FullComment = gql`
-    fragment FullComment on Comment {
-  id
-  state
-  rejectionReason
-  guestUsername
-  guestUserImage {
-    ...ImageRef
-  }
-  user {
-    ...FullUser
-  }
-  revisions {
-    ...CommentRevision
-  }
-  source
-  user {
-    ...FullCommentUser
-  }
-  createdAt
-  modifiedAt
-  itemID
-  itemType
-  parentComment {
-    ...FullParentComment
-  }
-  tags {
-    id
-    tag
-  }
-  overriddenRatings {
-    answerId
-    value
-  }
-  featured
-}
-    ${ImageRef}
-${FullUser}
-${CommentRevision}
-${FullCommentUser}
-${FullParentComment}`;
-export const FullImage = gql`
-    fragment FullImage on Image {
-  id
-  createdAt
-  modifiedAt
-  filename
-  extension
-  width
-  height
-  fileSize
-  description
-  tags
-  source
-  link
-  license
-  focalPoint {
-    x
-    y
-  }
-  ...ImageRef
-}
-    ${ImageRef}`;
-export const CommentList = gql`
-    query CommentList($filter: CommentFilter, $cursor: String, $take: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
-  comments(
-    filter: $filter
-    cursor: $cursor
-    take: $take
-    skip: $skip
-    order: $order
-    sort: $sort
-  ) {
-    nodes {
-      ...FullComment
-    }
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-    totalCount
-  }
-}
-    ${FullComment}`;
-export const Comment = gql`
-    query Comment($id: String!) {
-  comment(id: $id) {
-    ...FullComment
-  }
-}
-    ${FullComment}`;
-export const ApproveComment = gql`
-    mutation ApproveComment($id: String!) {
-  approveComment(id: $id) {
-    state
-  }
-}
-    `;
-export const RejectComment = gql`
-    mutation RejectComment($id: String!, $rejectionReason: CommentRejectionReason) {
-  rejectComment(id: $id, rejectionReason: $rejectionReason) {
-    state
-    rejectionReason
-  }
-}
-    `;
-export const RequestChangesOnComment = gql`
-    mutation RequestChangesOnComment($id: String!, $rejectionReason: CommentRejectionReason!) {
-  requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
-    state
-    rejectionReason
-  }
-}
-    `;
-export const UpdateComment = gql`
-    mutation updateComment($id: String!, $revision: CommentRevisionUpdateInput, $userID: String, $guestUsername: String, $guestUserImageID: String, $featured: Boolean, $source: String, $tagIds: [String!], $ratingOverrides: [CommentRatingOverrideUpdateInput!]) {
-  updateComment(
-    id: $id
-    revision: $revision
-    userID: $userID
-    guestUsername: $guestUsername
-    guestUserImageID: $guestUserImageID
-    featured: $featured
-    source: $source
-    tagIds: $tagIds
-    ratingOverrides: $ratingOverrides
-  ) {
-    ...FullComment
-  }
-}
-    ${FullComment}`;
-export const CreateComment = gql`
-    mutation createComment($itemID: String!, $itemType: CommentItemType!, $parentID: String, $text: RichText, $tagIds: [String!]) {
-  createComment(
-    itemID: $itemID
-    itemType: $itemType
-    parentID: $parentID
-    text: $text
-    tagIds: $tagIds
-  ) {
-    ...FullComment
-  }
-}
-    ${FullComment}`;
-export const DeleteComment = gql`
-    mutation DeleteComment($deleteCommentId: String!) {
-  deleteComment(id: $deleteCommentId) {
-    id
-  }
-}
-    `;
 export const CreateSubscription = gql`
     mutation CreateSubscription($input: SubscriptionInput!) {
   createSubscription(input: $input) {

@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import {
   FullUserRoleFragment,
   PollAnswerWithVoteCount,
-  TagType,
   usePollLazyQuery,
 } from '@wepublish/editor/api';
 import {
@@ -16,6 +15,7 @@ import {
   PeerArticleFilter,
   PollVoteFilter,
   Scalars,
+  TagType,
   useEventProvidersLazyQuery,
   usePeerListLazyQuery,
   UserFilter,

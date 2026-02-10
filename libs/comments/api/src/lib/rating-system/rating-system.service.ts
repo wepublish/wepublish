@@ -17,18 +17,6 @@ export class RatingSystemService {
     });
   }
 
-  getRatingSystemAnswers() {
-    return this.prisma.commentRatingSystemAnswer.findMany();
-  }
-
-  getCommentRatings(commentId: string) {
-    return this.prisma.commentRating.findMany({
-      where: {
-        commentId,
-      },
-    });
-  }
-
   updateRatingSystem({
     id,
     answers,

@@ -458,7 +458,8 @@ type Comment implements HasOptionalUser {
   overriddenRatings: [OverriddenRating!]!
   parentComment: Comment
   parentID: String
-  rejectionReason: String
+  rejectionReason: CommentRejectionReason
+  revisions: [CommentRevision!]!
   source: String
   state: CommentState!
   tags: [Tag!]!
@@ -510,14 +511,12 @@ type CommentCreatedAction implements BaseAction & HasComment {
   date: DateTime!
 }
 
-input CommentInput {
-  challenge: ChallengeInput
-  guestUsername: String
-  itemID: String!
-  itemType: CommentItemType!
-  parentID: String
-  text: RichText!
-  title: String
+input CommentFilter {
+  item: String
+  itemID: String
+  itemType: CommentItemType
+  states: [CommentState!]
+  tags: [String!]
 }
 
 enum CommentItemType {
@@ -550,8 +549,28 @@ type CommentRatingSystemAnswer {
   type: RatingSystemType!
 }
 
+enum CommentRejectionReason {
+  misconduct
+  spam
+}
+
+type CommentRevision {
+  createdAt: DateTime!
+  lead: String
+  text: RichText
+  title: String
+}
+
+input CommentRevisionInput {
+  lead: String
+  text: RichText
+  title: String
+}
+
 enum CommentSort {
-  rating
+  CreatedAt
+  ModifiedAt
+  Rating
 }
 
 enum CommentState {
@@ -559,13 +578,6 @@ enum CommentState {
   pendingApproval
   pendingUserChanges
   rejected
-}
-
-input CommentUpdateInput {
-  id: String!
-  lead: String
-  text: RichText
-  title: String
 }
 
 type Consent {
@@ -1427,8 +1439,11 @@ enum MemberPlanSort {
 }
 
 type Mutation {
-  """Create a new comment"""
-  addComment(input: CommentInput!): Comment!
+  """Adds a new comment made by you."""
+  addUserComment(challenge: ChallengeInput, guestUsername: String, itemID: String!, itemType: CommentItemType!, parentID: String, text: RichText!, title: String): Comment!
+
+  """Approves a comment"""
+  approveComment(id: String!): Comment!
 
   """
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
@@ -1444,6 +1459,9 @@ type Mutation {
 
   """Creates a new block style."""
   createBlockStyle(blocks: [EditorBlockType!]!, name: String!): BlockStyle!
+
+  """Creates a comment for any user"""
+  createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, tagIds: [String!], text: RichText): Comment!
 
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
@@ -1529,6 +1547,9 @@ type Mutation {
 
   """Deletes an existing block style."""
   deleteBlockStyle(id: String!): BlockStyle!
+
+  """Deletes a comment"""
+  deleteComment(id: String!): Comment!
 
   "\n      Deletes an existing consent.\n    "
   deleteConsent(id: String!): Consent!
@@ -1622,6 +1643,12 @@ type Mutation {
   """
   registerMember(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput!, email: String!, firstName: String, flair: String, name: String!, password: String): Registration!
 
+  """Rejects a comment"""
+  rejectComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
+
+  """Requests the user to change the comment's content"""
+  requestChangesOnComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
+
   """Resets the password of a user."""
   resetPassword(id: String!, password: String, sendMail: Boolean): SensitiveDataUser!
 
@@ -1658,8 +1685,8 @@ type Mutation {
   """Updates an existing block style."""
   updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
 
-  """Update an existing comment"""
-  updateComment(input: CommentUpdateInput!): Comment!
+  """Update any existing comment"""
+  updateComment(featured: Boolean, guestUserImageID: String, guestUsername: String, id: String!, ratingOverrides: [OverriddenRatingInput!], revision: CommentRevisionInput, source: String, tagIds: [String!], userID: String): Comment!
 
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
@@ -1720,6 +1747,9 @@ type Mutation {
   """Updates an existing user."""
   updateUser(active: Boolean, address: UserAddressInput, birthday: DateTime, email: String, emailVerifiedAt: DateTime, firstName: String, flair: String, id: String, name: String, note: String, properties: [PropertyInput!], roleIDs: [String!], userImageID: String): SensitiveDataUser!
 
+  """Updates a comment you made."""
+  updateUserComment(id: String!, lead: String, text: RichText, title: String): Comment!
+
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
 
@@ -1776,6 +1806,11 @@ type NonDbProperty {
 }
 
 type OverriddenRating {
+  answerId: String!
+  value: Int
+}
+
+input OverriddenRatingInput {
   answerId: String!
   value: Int
 }
@@ -1889,6 +1924,12 @@ type PaginatedArticles {
 
 type PaginatedAuthors {
   nodes: [Author!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedComments {
+  nodes: [Comment!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -2320,8 +2361,14 @@ type Query {
   """
   checkInvoiceStatus(id: String!): Invoice
 
-  """This query returns the comments of an item."""
-  comments(itemId: String!, order: SortOrder = Descending, sort: CommentSort): [Comment!]!
+  """Returns a comment by id."""
+  comment(id: String!): Comment!
+
+  """Returns a paginated list of comments based on the filters given."""
+  comments(cursorId: String, filter: CommentFilter, order: SortOrder = Descending, skip: Int = 0, sort: CommentSort = ModifiedAt, take: Int = 10): PaginatedComments!
+
+  """Returns a sorted and nested list of comments for an item."""
+  commentsForItem(itemId: String!, itemType: CommentItemType!, order: SortOrder = Descending, sort: CommentSort = Rating): [Comment!]!
 
   "\n      Returns a consent by id.\n    "
   consent(id: String!): Consent!

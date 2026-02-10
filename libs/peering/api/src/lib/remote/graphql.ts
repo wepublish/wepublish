@@ -502,7 +502,8 @@ export type Comment = HasOptionalUser & {
   overriddenRatings: Array<OverriddenRating>;
   parentComment?: Maybe<Comment>;
   parentID?: Maybe<Scalars['String']>;
-  rejectionReason?: Maybe<Scalars['String']>;
+  rejectionReason?: Maybe<CommentRejectionReason>;
+  revisions: Array<CommentRevision>;
   source?: Maybe<Scalars['String']>;
   state: CommentState;
   tags: Array<Tag>;
@@ -557,14 +558,12 @@ export type CommentCreatedAction = BaseAction & HasComment & {
   date: Scalars['DateTime'];
 };
 
-export type CommentInput = {
-  challenge?: InputMaybe<ChallengeInput>;
-  guestUsername?: InputMaybe<Scalars['String']>;
-  itemID: Scalars['String'];
-  itemType: CommentItemType;
-  parentID?: InputMaybe<Scalars['String']>;
-  text: Scalars['RichText'];
-  title?: InputMaybe<Scalars['String']>;
+export type CommentFilter = {
+  item?: InputMaybe<Scalars['String']>;
+  itemID?: InputMaybe<Scalars['String']>;
+  itemType?: InputMaybe<CommentItemType>;
+  states?: InputMaybe<Array<CommentState>>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export enum CommentItemType {
@@ -600,8 +599,29 @@ export type CommentRatingSystemAnswer = {
   type: RatingSystemType;
 };
 
+export enum CommentRejectionReason {
+  Misconduct = 'misconduct',
+  Spam = 'spam'
+}
+
+export type CommentRevision = {
+  __typename?: 'CommentRevision';
+  createdAt: Scalars['DateTime'];
+  lead?: Maybe<Scalars['String']>;
+  text?: Maybe<Scalars['RichText']>;
+  title?: Maybe<Scalars['String']>;
+};
+
+export type CommentRevisionInput = {
+  lead?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['RichText']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
 export enum CommentSort {
-  Rating = 'rating'
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Rating = 'Rating'
 }
 
 export enum CommentState {
@@ -610,13 +630,6 @@ export enum CommentState {
   PendingUserChanges = 'pendingUserChanges',
   Rejected = 'rejected'
 }
-
-export type CommentUpdateInput = {
-  id: Scalars['String'];
-  lead?: InputMaybe<Scalars['String']>;
-  text?: InputMaybe<Scalars['RichText']>;
-  title?: InputMaybe<Scalars['String']>;
-};
 
 export type Consent = {
   __typename?: 'Consent';
@@ -1511,8 +1524,10 @@ export enum MemberPlanSort {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  /** Create a new comment */
-  addComment: Comment;
+  /** Adds a new comment made by you. */
+  addUserComment: Comment;
+  /** Approves a comment */
+  approveComment: Comment;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   cancelUserSubscription?: Maybe<PublicSubscription>;
   /** Creates an article. */
@@ -1522,6 +1537,8 @@ export type Mutation = {
   createBanner: Banner;
   /** Creates a new block style. */
   createBlockStyle: BlockStyle;
+  /** Creates a comment for any user */
+  createComment: Comment;
   /**
    *
    *       Create a new consent.
@@ -1586,6 +1603,8 @@ export type Mutation = {
   deleteBanner?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing block style. */
   deleteBlockStyle: BlockStyle;
+  /** Deletes a comment */
+  deleteComment: Comment;
   /**
    *
    *       Deletes an existing consent.
@@ -1659,6 +1678,10 @@ export type Mutation = {
   rateComment: Comment;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
+  /** Rejects a comment */
+  rejectComment: Comment;
+  /** Requests the user to change the comment's content */
+  requestChangesOnComment: Comment;
   /** Resets the password of a user. */
   resetPassword: SensitiveDataUser;
   /** This mutation revokes and deletes the active session. */
@@ -1681,7 +1704,7 @@ export type Mutation = {
   updateBanner: Banner;
   /** Updates an existing block style. */
   updateBlockStyle: BlockStyle;
-  /** Update an existing comment */
+  /** Update any existing comment */
   updateComment: Comment;
   /**
    *
@@ -1725,6 +1748,8 @@ export type Mutation = {
   updateTag: Tag;
   /** Updates an existing user. */
   updateUser: SensitiveDataUser;
+  /** Updates a comment you made. */
+  updateUserComment: Comment;
   /**
    *
    *       Updates an existing userConsent based on input.
@@ -1746,8 +1771,19 @@ export type Mutation = {
 };
 
 
-export type MutationAddCommentArgs = {
-  input: CommentInput;
+export type MutationAddUserCommentArgs = {
+  challenge?: InputMaybe<ChallengeInput>;
+  guestUsername?: InputMaybe<Scalars['String']>;
+  itemID: Scalars['String'];
+  itemType: CommentItemType;
+  parentID?: InputMaybe<Scalars['String']>;
+  text: Scalars['RichText'];
+  title?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationApproveCommentArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -1804,6 +1840,16 @@ export type MutationCreateBannerArgs = {
 export type MutationCreateBlockStyleArgs = {
   blocks: Array<EditorBlockType>;
   name: Scalars['String'];
+};
+
+
+export type MutationCreateCommentArgs = {
+  itemID: Scalars['String'];
+  itemType: CommentItemType;
+  lead?: InputMaybe<Scalars['String']>;
+  parentID?: InputMaybe<Scalars['String']>;
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
+  text?: InputMaybe<Scalars['RichText']>;
 };
 
 
@@ -2059,6 +2105,11 @@ export type MutationDeleteBlockStyleArgs = {
 };
 
 
+export type MutationDeleteCommentArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteConsentArgs = {
   id: Scalars['String'];
 };
@@ -2225,6 +2276,18 @@ export type MutationRegisterMemberArgs = {
 };
 
 
+export type MutationRejectCommentArgs = {
+  id: Scalars['String'];
+  rejectionReason: CommentRejectionReason;
+};
+
+
+export type MutationRequestChangesOnCommentArgs = {
+  id: Scalars['String'];
+  rejectionReason: CommentRejectionReason;
+};
+
+
 export type MutationResetPasswordArgs = {
   id: Scalars['String'];
   password?: InputMaybe<Scalars['String']>;
@@ -2312,7 +2375,15 @@ export type MutationUpdateBlockStyleArgs = {
 
 
 export type MutationUpdateCommentArgs = {
-  input: CommentUpdateInput;
+  featured?: InputMaybe<Scalars['Boolean']>;
+  guestUserImageID?: InputMaybe<Scalars['String']>;
+  guestUsername?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  ratingOverrides?: InputMaybe<Array<OverriddenRatingInput>>;
+  revision?: InputMaybe<CommentRevisionInput>;
+  source?: InputMaybe<Scalars['String']>;
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
+  userID?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2523,6 +2594,14 @@ export type MutationUpdateUserArgs = {
 };
 
 
+export type MutationUpdateUserCommentArgs = {
+  id: Scalars['String'];
+  lead?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['RichText']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationUpdateUserConsentArgs = {
   id: Scalars['String'];
   value: Scalars['Boolean'];
@@ -2618,6 +2697,11 @@ export type OverriddenRating = {
   __typename?: 'OverriddenRating';
   answerId: Scalars['String'];
   value?: Maybe<Scalars['Int']>;
+};
+
+export type OverriddenRatingInput = {
+  answerId: Scalars['String'];
+  value?: InputMaybe<Scalars['Int']>;
 };
 
 export type Page = {
@@ -2738,6 +2822,13 @@ export type PaginatedArticles = {
 export type PaginatedAuthors = {
   __typename?: 'PaginatedAuthors';
   nodes: Array<Author>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedComments = {
+  __typename?: 'PaginatedComments';
+  nodes: Array<Comment>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -3196,8 +3287,12 @@ export type Query = {
   challenge: Challenge;
   /** Check the status of an invoice and update with information from the payment provider */
   checkInvoiceStatus?: Maybe<Invoice>;
-  /** This query returns the comments of an item. */
-  comments: Array<Comment>;
+  /** Returns a comment by id. */
+  comment: Comment;
+  /** Returns a paginated list of comments based on the filters given. */
+  comments: PaginatedComments;
+  /** Returns a sorted and nested list of comments for an item. */
+  commentsForItem: Array<Comment>;
   /**
    *
    *       Returns a consent by id.
@@ -3446,8 +3541,24 @@ export type QueryCheckInvoiceStatusArgs = {
 };
 
 
+export type QueryCommentArgs = {
+  id: Scalars['String'];
+};
+
+
 export type QueryCommentsArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<CommentFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<CommentSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryCommentsForItemArgs = {
   itemId: Scalars['String'];
+  itemType: CommentItemType;
   order?: InputMaybe<SortOrder>;
   sort?: InputMaybe<CommentSort>;
 };

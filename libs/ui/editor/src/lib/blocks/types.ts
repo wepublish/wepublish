@@ -1,4 +1,4 @@
-import { FullPoll, Tag } from '@wepublish/editor/api';
+import { FullPoll } from '@wepublish/editor/api';
 import {
   ArticleWithoutBlocksFragment,
   BlockContentInput,
@@ -12,6 +12,7 @@ import {
   FullTeaserFragment,
   PageWithoutBlocksFragment,
   SubscribeBlockField,
+  Tag,
   TeaserInput,
   TeaserListBlockSort,
   TeaserSlotsAutofillConfigInput,

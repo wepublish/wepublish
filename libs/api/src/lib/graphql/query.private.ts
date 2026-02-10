@@ -6,20 +6,9 @@ import {
   GraphQLString,
 } from 'graphql';
 import { Context } from '../context';
-import { CommentSort } from '../db/comment';
 import { InvoiceSort } from '../db/invoice';
 import { SubscriptionSort } from '../db/subscription';
 
-import {
-  GraphQLComment,
-  GraphQLCommentConnection,
-  GraphQLCommentFilter,
-  GraphQLCommentSort,
-} from './comment/comment';
-import {
-  getAdminComments,
-  getComment,
-} from './comment/comment.private-queries';
 import { GraphQLSortOrder } from './common';
 
 import {
@@ -132,49 +121,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       args: { filter: { type: GraphQLSubscriptionFilter } },
       resolve: (root, { filter }, { prisma: { subscription }, authenticate }) =>
         getSubscriptionsAsCSV(filter, authenticate, subscription),
-    },
-
-    // Comments
-    // =======
-
-    comment: {
-      type: GraphQLComment,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { comment } }) => {
-        return getComment(id, authenticate, comment);
-      },
-    },
-
-    comments: {
-      type: new GraphQLNonNull(GraphQLCommentConnection),
-      args: {
-        cursor: { type: GraphQLString },
-        take: { type: GraphQLInt, defaultValue: 10 },
-        skip: { type: GraphQLInt, defaultValue: 0 },
-        filter: { type: GraphQLCommentFilter },
-        sort: {
-          type: GraphQLCommentSort,
-          defaultValue: CommentSort.ModifiedAt,
-        },
-        order: { type: GraphQLSortOrder, defaultValue: SortOrder.Descending },
-      },
-      resolve: (
-        root,
-        { filter, sort, order, skip, take, cursor },
-        { authenticate, prisma: { comment } }
-      ) =>
-        getAdminComments(
-          filter,
-          sort,
-          order,
-          cursor,
-          skip,
-          take,
-          authenticate,
-          comment
-        ),
     },
 
     // Invoice

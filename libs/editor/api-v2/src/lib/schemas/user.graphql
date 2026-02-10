@@ -34,16 +34,6 @@ fragment FullUser on SensitiveDataUser {
   }
 }
 
-fragment CommentUser on User {
-  id
-  name
-  firstName
-  flair
-  image {
-    ...FullImage
-  }
-}
-
 query UserList(
   $filter: UserFilter
   $cursorId: String
@@ -130,7 +120,6 @@ mutation UpdateUser(
   $address: UserAddressInput
   $email: String
   $emailVerifiedAt: DateTime
-  $password: String
   $userImageID: String
   $active: Boolean
   $note: String
