@@ -10,12 +10,18 @@ import { SubscriptionService } from './subscription.service';
 import { SubscriptionDataloader } from './subscription.dataloader';
 import { PublicSubscriptionResolver } from './subscription.resolver';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
-import { PaymentMethodModule } from '@wepublish/payment-method/api';
+import { PaymentMethodModule, PaymentsModule } from '@wepublish/payment/api';
 import { SubscriptionDeactivationDataloader } from './subscription-deactivation.dataloader';
-import { SubscriptionPropertyDataloader } from './subscription-properties.dataloader';
+import { PropertyModule } from '@wepublish/property/api';
 
 @Module({
-  imports: [PrismaModule, MemberPlanModule, PaymentMethodModule],
+  imports: [
+    PrismaModule,
+    MemberPlanModule,
+    PaymentsModule,
+    PaymentMethodModule,
+    PropertyModule,
+  ],
   providers: [
     HasSubscriptionResolver,
     HasOptionalSubscriptionResolver,
@@ -24,14 +30,12 @@ import { SubscriptionPropertyDataloader } from './subscription-properties.datalo
     SubscriptionService,
     SubscriptionDataloader,
     SubscriptionDeactivationDataloader,
-    SubscriptionPropertyDataloader,
     PublicSubscriptionResolver,
   ],
   exports: [
     SubscriptionService,
     SubscriptionDataloader,
     SubscriptionDeactivationDataloader,
-    SubscriptionPropertyDataloader,
   ],
 })
 export class SubscriptionModule {}

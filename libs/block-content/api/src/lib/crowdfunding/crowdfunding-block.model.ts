@@ -1,20 +1,18 @@
 import { Field, InputType, ObjectType, OmitType } from '@nestjs/graphql';
 import { BaseBlock } from '../base-block.model';
-import { CrowdfundingWithActiveGoal } from '@wepublish/crowdfunding/api';
+import { Crowdfunding } from '@wepublish/crowdfunding/api';
 import { BlockType } from '../block-type.model';
 import { HasOptionalCrowdfunding } from '@wepublish/crowdfunding/api';
 
 @ObjectType({
-  implements: [BaseBlock, HasOptionalCrowdfunding],
+  implements: () => [BaseBlock, HasOptionalCrowdfunding],
 })
-export class CrowdfundingBlock extends BaseBlock<
-  typeof BlockType.Crowdfunding
-> {
-  @Field({ nullable: true })
+export class CrowdfundingBlock
+  extends BaseBlock<typeof BlockType.Crowdfunding>
+  implements HasOptionalCrowdfunding
+{
   crowdfundingId?: string;
-
-  @Field(() => CrowdfundingWithActiveGoal, { nullable: true })
-  crowdfunding?: CrowdfundingWithActiveGoal;
+  crowdfunding?: Crowdfunding;
 }
 
 @InputType()

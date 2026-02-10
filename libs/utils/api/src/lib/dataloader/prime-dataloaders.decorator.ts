@@ -30,12 +30,12 @@ export function PrimeDataLoader<T extends Primeable<unknown>>(
       }
 
       const results =
-        Array.isArray(resultItem) ? resultItem
+        Array.isArray(resultItem) ? resultItem.flat()
         : Array.isArray(resultItem.nodes) ? resultItem.nodes
         : [resultItem];
 
       for (const result of results) {
-        if ('id' in result) {
+        if (primeKey in result) {
           const that = this as any;
           const loader = that[injectProperty] as T;
           loader.prime(result[primeKey], result);

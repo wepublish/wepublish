@@ -2,29 +2,22 @@ import {
   CreateCrowdfundingGoalInput,
   CreateCrowdfundingInput,
   UpdateCrowdfundingInput,
-  FullCrowdfundingWithActiveGoalFragment,
+  FullCrowdfundingFragment,
+  CrowdfundingGoalType,
+  getApiClientV2,
 } from '@wepublish/editor/api-v2';
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CheckPicker, Form, Panel } from 'rsuite';
-import {
-  MemberPlanRefFragment,
-  useMemberPlanListQuery,
-} from '@wepublish/editor/api';
-import React from 'react';
+import { CheckPicker, Form, Panel, SelectPicker } from 'rsuite';
+import { useMemberPlanListQuery } from '@wepublish/editor/api-v2';
 import { CrowdfundingGoalList } from './crowdfunding-goal-list';
 import {
   CurrencyInput,
   DateTimePicker,
   CrowdfundingProgressBar,
 } from '@wepublish/ui/editor';
+import styled from '@emotion/styled';
 
-type CrowdfundingFormData = (
-  | CreateCrowdfundingInput
-  | UpdateCrowdfundingInput
-) & {
-  goals?: CreateCrowdfundingGoalInput[] | null;
-};
+type CrowdfundingFormData = CreateCrowdfundingInput | UpdateCrowdfundingInput;
 
 interface CrowdfundingFormProps {
   create?: boolean;
@@ -34,41 +27,41 @@ interface CrowdfundingFormProps {
   onRemoveGoal: (index: number) => void;
 }
 
+const CrowdfundingFormWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 12px;
+`;
+
 export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
   const { t } = useTranslation();
-  const [memberPlans, setmemberPlans] = useState<MemberPlanRefFragment[]>([]);
 
-  const handleChange = (value: any, event: React.SyntheticEvent) => {
-    const name = (event.target as HTMLInputElement).name;
-    props.onChange({ ...props.crowdfunding, [name]: value });
-  };
-
+  const client = getApiClientV2();
   const { data: memberPlanData } = useMemberPlanListQuery({
+    client,
     variables: { take: 50 },
     fetchPolicy: 'no-cache',
   });
 
-  useEffect(() => {
-    if (memberPlanData?.memberPlans?.nodes) {
-      setmemberPlans(memberPlanData.memberPlans.nodes);
-    }
-  }, [memberPlanData?.memberPlans]);
+  const memberPlans = memberPlanData?.memberPlans?.nodes ?? [];
 
   return (
-    <div
-      style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '12px' }}
-    >
+    <CrowdfundingFormWrapper>
       <Panel
         bordered
         style={{ overflow: 'initial' }}
       >
         <Form.Group controlId="name">
-          <h3>Crowdfunding</h3>
+          <h3>{t('crowdfunding.form.crowdfunding')}</h3>
+
           <Form.ControlLabel>{t('crowdfunding.form.name')}</Form.ControlLabel>
+
           <Form.Control
             name="name"
             value={props.crowdfunding.name}
-            onChange={handleChange}
+            onChange={value =>
+              props.onChange({ ...props.crowdfunding, name: value })
+            }
           />
         </Form.Group>
 
@@ -76,6 +69,7 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
           <Form.ControlLabel>
             {t('crowdfunding.form.additionalRevenue')}
           </Form.ControlLabel>
+
           <CurrencyInput
             name="additionalRevenue"
             currency={'CHF'}
@@ -92,9 +86,7 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
         style={{ overflow: 'initial' }}
       >
         <CrowdfundingProgressBar
-          crowdfunding={
-            props.crowdfunding as Partial<FullCrowdfundingWithActiveGoalFragment>
-          }
+          crowdfunding={props.crowdfunding as Partial<FullCrowdfundingFragment>}
         />
       </Panel>
 
@@ -107,6 +99,7 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
           <Form.ControlLabel>
             {t('crowdfunding.form.memberPlans')}
           </Form.ControlLabel>
+
           <CheckPicker
             block
             virtualized
@@ -173,7 +166,31 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
       >
         <Form.Group controlId="goals">
           <h3>{t('crowdfunding.form.goals')}</h3>
+
+          <Form.Group controlId="goalType">
+            <Form.ControlLabel>
+              {t('crowdfunding.form.goalType')}
+            </Form.ControlLabel>
+
+            <SelectPicker
+              cleanable={false}
+              value={props.crowdfunding.goalType}
+              onChange={(value: CrowdfundingGoalType | null) =>
+                props.onChange({ ...props.crowdfunding, goalType: value! })
+              }
+              data={Object.entries(CrowdfundingGoalType).map(
+                ([label, value]) => ({
+                  label: t(`crowdfunding.form.goalType_${label}`),
+                  value,
+                })
+              )}
+            />
+          </Form.Group>
+
           <CrowdfundingGoalList
+            goalType={
+              props.crowdfunding.goalType ?? CrowdfundingGoalType.Subscription
+            }
             goals={props.crowdfunding.goals || []}
             onAdd={goal =>
               props.onChange({
@@ -200,6 +217,6 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
           />
         </Form.Group>
       </Panel>
-    </div>
+    </CrowdfundingFormWrapper>
   );
 };

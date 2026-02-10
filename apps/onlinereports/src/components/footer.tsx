@@ -80,13 +80,13 @@ export const FooterWrapper = styled(FooterWrapperDefault)`
   }
 
   ${FooterIcons} {
-    display: block;
+    display: block !important;
     overflow: hidden;
     width: 100%;
 
     & > a {
       float: left;
-      margin: ${({ theme }) => theme.spacing(0, 2, 2, 0)};
+      margin: ${({ theme }) => theme.spacing(0, 2, 2, 0)} !important;
       display: block;
 
       &[href*='wepublish'] {

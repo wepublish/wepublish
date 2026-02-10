@@ -1,12 +1,13 @@
 import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import {
-  AvailablePaymentMethod,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
   FullImageFragment,
   PaymentMethod,
   Currency,
-} from '@wepublish/editor/api';
+  ProductType,
+  FullAvailablePaymentMethodFragment,
+} from '@wepublish/editor/api-v2';
 import {
   Button,
   CheckPicker,
@@ -66,14 +67,14 @@ const RowPaddingTop = styled(Row)`
 interface MemberPlanFormProps {
   memberPlanId?: string;
   memberPlan?: FullMemberPlanFragment | null;
-  availablePaymentMethods: ListValue<AvailablePaymentMethod>[];
+  availablePaymentMethods: ListValue<FullAvailablePaymentMethodFragment>[];
   paymentMethods: FullPaymentMethodFragment[];
   loading: boolean;
   setMemberPlan: Dispatch<
     SetStateAction<FullMemberPlanFragment | null | undefined>
   >;
   setAvailablePaymentMethods: Dispatch<
-    SetStateAction<ListValue<AvailablePaymentMethod>[]>
+    SetStateAction<ListValue<FullAvailablePaymentMethodFragment>[]>
   >;
 }
 
@@ -89,6 +90,19 @@ export function MemberPlanForm({
   const { t } = useTranslation();
   const [isChooseModalOpen, setChooseModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+
+  const productType = memberPlan?.productType ?? ProductType.Subscription;
+  const isDonationProduct = productType === ProductType.Donation;
+  const maxCountLabel = t(
+    isDonationProduct ?
+      'memberplanForm.maxCountDonation'
+    : 'memberplanForm.maxCount'
+  );
+  const maxCountHelpText = t(
+    isDonationProduct ?
+      'memberplanForm.maxCountDonationHelpText'
+    : 'memberplanForm.maxCountHelpText'
+  );
 
   const isTrialSubscription = useMemo(
     () => !memberPlan?.extendable && !!memberPlan?.maxCount,
@@ -132,8 +146,10 @@ export function MemberPlanForm({
 
   function setForceAutoRenewal(
     forceAutoRenewal: boolean,
-    onChange: React.Dispatch<React.SetStateAction<AvailablePaymentMethod>>,
-    availablePaymentMethod: AvailablePaymentMethod
+    onChange: React.Dispatch<
+      React.SetStateAction<FullAvailablePaymentMethodFragment>
+    >,
+    availablePaymentMethod: FullAvailablePaymentMethodFragment
   ): void {
     // if subscription plan ist not extendable, a subscription can not be forced to be auto-renew.
     if (!memberPlan?.extendable && forceAutoRenewal) {
@@ -176,6 +192,41 @@ export function MemberPlanForm({
       <Col xs={12}>
         <PanelWidth100 bordered>
           <Row>
+            {/* product type */}
+            <Col xs={24}>
+              <Form.ControlLabel>
+                {t('memberplanForm.productType')}
+              </Form.ControlLabel>
+              <SelectPicker
+                cleanable={false}
+                searchable={false}
+                block
+                value={memberPlan?.productType ?? ProductType.Subscription}
+                data={[
+                  {
+                    value: ProductType.Subscription,
+                    label: t('memberplanForm.productTypeSubscription'),
+                  },
+                  {
+                    value: ProductType.Donation,
+                    label: t('memberplanForm.productTypeDonation'),
+                  },
+                ]}
+                disabled={loading}
+                onChange={(productType: ProductType | null) => {
+                  if (!memberPlan) {
+                    return;
+                  }
+
+                  setMemberPlan({
+                    ...memberPlan,
+                    productType: productType ?? ProductType.Subscription,
+                  });
+                }}
+              />
+              <HelpText>{t('memberplanForm.productTypeHelpText')}</HelpText>
+            </Col>
+
             {/* image */}
             <Col xs={12}>
               <ChooseEditImage
@@ -402,6 +453,31 @@ export function MemberPlanForm({
               </HelpText>
             </Col>
 
+            {/* maximal monthly amount */}
+            <Col xs={12}>
+              <Form.ControlLabel>
+                {t('memberPlanEdit.amountPerMonthMax')}
+              </Form.ControlLabel>
+              <CurrencyInput
+                name="amountPerMonthMax"
+                currency={memberPlan?.currency ?? 'CHF'}
+                centAmount={memberPlan?.amountPerMonthMax ?? null}
+                disabled={loading}
+                onChange={centAmount => {
+                  if (!memberPlan) {
+                    return;
+                  }
+                  setMemberPlan({
+                    ...memberPlan,
+                    amountPerMonthMax: centAmount ?? null,
+                  });
+                }}
+              />
+              <HelpText>
+                {t('memberplanForm.amountPerMonthMaxHelpText')}
+              </HelpText>
+            </Col>
+
             {/* target monthly amount */}
             <Col xs={12}>
               <Form.ControlLabel>
@@ -494,6 +570,7 @@ export function MemberPlanForm({
                           }
                           block
                           placement="auto"
+                          cleanable
                         />
                       </Col>
 
@@ -640,9 +717,9 @@ export function MemberPlanForm({
             </Col>
             {/* max count */}
             <Col xs={12}>
-              <ControlLabel>{t('memberplanForm.maxCount')}</ControlLabel>
+              <ControlLabel>{maxCountLabel}</ControlLabel>
               <Input
-                placeholder={t('memberplanForm.maxCount')}
+                placeholder={maxCountLabel}
                 type={'number'}
                 min={0}
                 value={memberPlan?.maxCount || undefined}
@@ -656,7 +733,7 @@ export function MemberPlanForm({
                   });
                 }}
               />
-              <HelpText>{t('memberplanForm.maxCountHelpText')}</HelpText>
+              <HelpText>{maxCountHelpText}</HelpText>
             </Col>
           </RowPaddingTop>
           <RowPaddingTop>

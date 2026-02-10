@@ -82,7 +82,13 @@ export const AktuelleBild = ({
           teasers={filledTeasers}
           blockStyle={blockStyle}
           numColumns={numColumns}
-          useSlidesPerView={() => 1}
+          slidesPerViewConfig={{
+            xs: 1,
+            sm: 1,
+            md: 1,
+            lg: 1,
+            xl: 1,
+          }}
         />
       </TeaserSliderWrapper>
     </AktuelleBildWrapper>
@@ -130,7 +136,7 @@ const AktuelleBildWrapper = styled(Box)`
       color: #fff;
       font-size: ${({ theme }) => theme.typography.body2.fontSize};
       font-weight: 300;
-      line-height: 1.2em;
+      line-height: 1.2;
       width: 100%;
     }
   }
@@ -143,7 +149,7 @@ const AktuelleBildWrapper = styled(Box)`
     display: block;
     opacity: 0;
     position: absolute;
-    bottom: 22px;
+    bottom: 25px;
     width: 100%;
     padding: 4px 10px 2px 10px;
     margin: 0;
@@ -154,11 +160,17 @@ const AktuelleBildWrapper = styled(Box)`
     font-size: ${({ theme }) => theme.typography.body2.fontSize};
     font-weight: 300;
     color: #fff;
+
+    /* target webkit browsers only */
+    @supports (background: -webkit-canvas(squares)) {
+      bottom: 24px;
+    }
   }
 
   ${TeaserWrapper} {
     ${TeaserTitle} {
       opacity: 1;
+      font-weight: 600;
     }
     ${TeaserMetadata} {
       opacity: 1;
@@ -166,8 +178,23 @@ const AktuelleBildWrapper = styled(Box)`
       background: rgba(0, 0, 0, 0.7);
       transition: opacity 500ms ease;
       position: absolute;
-      bottom: 0;
+      bottom: 2px;
       width: 100%;
+
+      &::before {
+        content: ' ';
+        position: absolute;
+        left: 10px;
+        height: 100%;
+        top: -2px;
+        width: 30px;
+        font-size: ${({ theme }) => theme.typography.body2.fontSize};
+        font-weight: 300;
+        color: ${({ theme }) => theme.palette.common.white};
+        background-color: transparent;
+        display: block;
+        z-index: 20;
+      }
     }
 
     ${({ theme }) => theme.breakpoints.up('sm')} {

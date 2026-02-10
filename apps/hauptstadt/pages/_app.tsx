@@ -5,7 +5,7 @@ import {
   AppCacheProvider,
   createEmotionCache,
 } from '@mui/material-nextjs/v15-pagesRouter';
-import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
+import { GoogleTagManager } from '@next/third-parties/google';
 import { withErrorSnackbar } from '@wepublish/errors/website';
 import {
   FooterContainer,
@@ -15,8 +15,10 @@ import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   AsyncSessionProvider,
   authLink,
+  initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
+  withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
@@ -27,19 +29,12 @@ import {
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import deTranlations from '@wepublish/website/translations/de.json';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
-import i18next from 'i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import ICU from 'i18next-icu';
-import resourcesToBackend from 'i18next-resources-to-backend';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
-import { mergeDeepRight } from 'ramda';
-import { initReactI18next } from 'react-i18next';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
@@ -52,6 +47,7 @@ import {
 } from '../src/components/hauptstadt-article';
 import { HauptstadtAuthorChip } from '../src/components/hauptstadt-author-chip';
 import { HauptstadtBanner } from '../src/components/hauptstadt-banner';
+import { HauptstadtBlockRenderer } from '../src/components/hauptstadt-block-renderer';
 import { HauptstadtBreakBlock } from '../src/components/hauptstadt-break';
 import { HauptstadtCommentList } from '../src/components/hauptstadt-comment';
 import { HauptstadtContentWrapper } from '../src/components/hauptstadt-content-wrapper';
@@ -70,6 +66,8 @@ import { HauptstadtFooter } from '../src/components/hauptstadt-navigation';
 import { HauptstadtPage } from '../src/components/hauptstadt-page';
 import { HauptstadtPaywall } from '../src/components/hauptstadt-paywall';
 import { HauptstadtQuoteBlock } from '../src/components/hauptstadt-quote';
+import { HauptstadtSubscribe } from '../src/components/hauptstadt-subscribe';
+import { HauptstadtSubscriptionListItem } from '../src/components/hauptstadt-subscription-list-item';
 import {
   HauptstadtAlternatingTeaser,
   HauptstadtFocusTeaser,
@@ -81,31 +79,15 @@ import {
 } from '../src/components/hauptstadt-teaser';
 import { HauptstadtTitleBlock } from '../src/components/hauptstadt-title-block';
 import { PrintLogo } from '../src/components/print-logo';
+import { withTrackFirstRoute } from '../src/hooks/use-is-first-route';
 import { printStyles } from '../src/print-styles';
 import theme from '../src/theme';
-import { MitmachenInner } from './mitmachen';
 
 setDefaultOptions({
   locale: de,
 });
 
-i18next
-  .use(ICU)
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverriden)))
-  .init({
-    partialBundledLanguages: true,
-    lng: 'de',
-    fallbackLng: 'de',
-    supportedLngs: ['de'],
-    interpolation: {
-      escapeValue: false,
-    },
-    resources: {
-      de: { zod: deTranlations.zod },
-    },
-  });
+initWePublishTranslator(deOverriden);
 
 z.setErrorMap(zodI18nMap);
 
@@ -169,8 +151,9 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           MemberPlanPicker={HauptstadtMemberPlanPicker}
           MemberPlanItem={HauptstadtMemberPlanItem}
           CommentList={HauptstadtCommentList}
+          SubscriptionListItem={HauptstadtSubscriptionListItem}
           blocks={{
-            Subscribe: MitmachenInner,
+            Renderer: HauptstadtBlockRenderer,
             Title: HauptstadtTitleBlock,
             Quote: HauptstadtQuoteBlock,
             BaseTeaser: HauptstadtTeaser,
@@ -181,6 +164,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             ImageGallery: HauptstadtImageGalleryBlock,
             Break: HauptstadtBreakBlock,
             Listicle: HauptstadtListicle,
+            Subscribe: HauptstadtSubscribe,
           }}
           blockStyles={{
             FocusTeaser: HauptstadtFocusTeaser,
@@ -283,10 +267,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 
               <RoutedAdminBar />
 
-              {publicRuntimeConfig.env.GA_ID && (
-                <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
-              )}
-
               {publicRuntimeConfig.env.GTM_ID && (
                 <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
               )}
@@ -304,9 +284,14 @@ const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   previewLink,
 ]);
 const ConnectedApp = withApollo(
-  withErrorSnackbar(
-    withPaywallBypassToken(
-      withSessionProvider(withJwtHandler(CustomApp), AsyncSessionProvider)
+  withBuilderRouter(
+    withErrorSnackbar(
+      withPaywallBypassToken(
+        withSessionProvider(
+          withJwtHandler(withTrackFirstRoute(CustomApp)),
+          AsyncSessionProvider
+        )
+      )
     )
   )
 );

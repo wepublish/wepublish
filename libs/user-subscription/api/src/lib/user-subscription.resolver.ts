@@ -15,7 +15,7 @@ import { UserSubscriptionService } from './user-subscription.service';
 import { PublicSubscription } from '@wepublish/membership/api';
 import { Payment } from '@wepublish/payment/api';
 import { UserDataloaderService } from '@wepublish/user/api';
-import { UserInputError } from '@nestjs/apollo';
+import { BadRequestException } from '@nestjs/common';
 
 @Resolver()
 export class UserSubscriptionResolver {
@@ -53,9 +53,11 @@ export class UserSubscriptionResolver {
   ) {
     const user =
       userId ? await this.userDataloader.load(userId) : session?.user;
+
     if (!user) {
-      throw new UserInputError('User not found');
+      throw new BadRequestException('User not found');
     }
+
     await this.userSubscriptionService.createSubscriptionWithConfirmation(
       user.id,
       args

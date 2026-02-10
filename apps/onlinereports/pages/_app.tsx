@@ -9,6 +9,7 @@ import { GoogleTagManager } from '@next/third-parties/google';
 import {
   TitleBlock,
   TitleBlockLead,
+  TitleBlockPreTitleWrapper,
   TitleBlockTitle,
 } from '@wepublish/block-content/website';
 import { withErrorSnackbar } from '@wepublish/errors/website';
@@ -19,8 +20,10 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
+  initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
+  withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
@@ -34,16 +37,12 @@ import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import deTranlations from '@wepublish/website/translations/de.json';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
-import i18next from 'i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import ICU from 'i18next-icu';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
 import { mergeDeepRight } from 'ramda';
-import { initReactI18next } from 'react-i18next';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
@@ -71,16 +70,12 @@ import { OnlineReportsTeaserListBlock } from '../src/onlinereports-teaser-list-b
 import { OnlineReportsRenderElement } from '../src/render-element';
 import { Structure } from '../src/structure';
 import theme from '../src/theme';
-import Mitmachen from './mitmachen';
 
 setDefaultOptions({
   locale: de,
 });
 
-i18next
-  .use(ICU)
-  .use(LanguageDetector)
-  .use(initReactI18next)
+initWePublishTranslator()
   .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverridden)))
   .init({
     partialBundledLanguages: true,
@@ -96,8 +91,9 @@ i18next
   });
 z.setErrorMap(zodI18nMap);
 
+// 0-height of last row is needed to make sticky ads work correctly
 const Spacer = styled(Structure)`
-  grid-template-rows: min-content 1fr min-content;
+  grid-template-rows: min-content 1fr 0;
   min-height: 100vh;
 
   main {
@@ -155,7 +151,14 @@ const OnlineReportsTitle = styled(TitleBlock)`
   }
 
   ${TitleBlockLead} {
-    font-size: -${({ theme }) => theme.typography.body1.fontSize};
+    font-size: ${({ theme }) => theme.typography.body1.fontSize}px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  ${TitleBlockPreTitleWrapper} {
+    display: none;
   }
 `;
 
@@ -215,7 +218,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
               TeaserGridFlex: OnlineReportsTeaserGridFlexBlock,
               TeaserGrid: OnlineReportsTeaserGridBlock,
               Quote: OnlineReportsQuoteBlock,
-              Subscribe: Mitmachen,
               Title: OnlineReportsTitle,
             }}
             date={{ format: dateFormatter }}
@@ -350,8 +352,10 @@ const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   previewLink,
 ]);
 const ConnectedApp = withApollo(
-  withErrorSnackbar(
-    withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+  withBuilderRouter(
+    withErrorSnackbar(
+      withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+    )
   )
 );
 

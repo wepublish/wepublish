@@ -8,10 +8,8 @@ fragment FullTag on Tag {
 }
 
 query Tag($tag: String!, $type: TagType!) {
-  tags(filter: {tag: $tag, type: $type}, take: 1) {
-    nodes {
-      ...FullTag
-    }
+  tag(tag: $tag, type: $type) {
+    ...FullTag
   }
 }
 
@@ -23,7 +21,14 @@ query TagList(
   $order: SortOrder
   $sort: TagSort
 ) {
-  tags(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  tags(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...FullTag
     }

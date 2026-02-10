@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
 import {
+  BreakBlockButton,
   BreakBlockHeading,
   BreakBlockWrapper,
   EventBlockWrapper,
@@ -21,6 +22,11 @@ export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
 }>`
   display: grid;
   row-gap: ${({ theme }) => theme.spacing(4)};
+  ${({ theme }) => theme.breakpoints.down('md')} {
+    & > *:not(:has([data-revive-id])) {
+      max-width: calc(100vw - ${({ theme }) => theme.spacing(5)});
+    }
+  }
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
     gap: ${({ theme }) => theme.spacing(7)};
@@ -57,6 +63,29 @@ export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
         font-family: ${theme.typography.subtitle2.fontFamily};
         font-style: ${theme.typography.subtitle2.fontStyle};
         font-weight: ${theme.typography.subtitle2.fontWeight};
+        font-size: ${theme.typography.h2.fontSize};
+
+        ${theme.breakpoints.up('md')} {
+          font-size: ${(
+            theme.typography.h2[theme.breakpoints.up('md')] as {
+              fontSize: string;
+            }
+          ).fontSize};
+        }
+      }
+
+      ${BreakBlockButton} {
+        text-transform: none;
+        background-color: ${theme.palette.common.black};
+        margin-top: ${theme.spacing(2)};
+        width: fit-content;
+        padding: ${theme.spacing(1)} ${theme.spacing(3)};
+        border-radius: ${theme.spacing(4)};
+        color: ${theme.palette.common.white};
+
+        &:hover {
+          background-color: ${theme.palette.common.black};
+        }
       }
 
       ${ImageBlockInnerWrapper} {

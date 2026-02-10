@@ -52,6 +52,10 @@ const fallbackImageRatios: FallbackImageRatio[] = [
     heightRatio: 16,
   },
 ];
+export type ImageURIObject = {
+  uri: string;
+  exists: boolean;
+};
 
 @Injectable()
 export class MediaService {
@@ -75,26 +79,20 @@ export class MediaService {
     });
   }
 
-  public async getImage(imageId: string, transformations: TransformationsDto) {
+  public async getImageUri(
+    imageId: string,
+    transformations: TransformationsDto
+  ): Promise<ImageURIObject> {
     const transformationsKey = getTransformationKey(
       removeSignatureFromTransformations(transformations)
     );
-
-    let file: Readable;
-    try {
-      file = await this.storage.getFile(
-        this.config.transformationBucket,
-        `images/${imageId}/${transformationsKey}`
-      );
-    } catch (e: any) {
-      if (e.code == 'NoSuchKey') {
-        return await this.transformImage(imageId, transformations);
-      }
-      throw e;
+    const objectUri = `images/${imageId}/${transformationsKey}`;
+    if (
+      !(await this.storage.hasFile(this.config.transformationBucket, objectUri))
+    ) {
+      return await this.transformImage(imageId, transformations);
     }
-    const fileBuffer = await this.bufferStream(file);
-
-    return await Promise.all([Readable.from(fileBuffer), true]);
+    return { uri: objectUri, exists: true };
   }
 
   private getFallbackImage(transformations: TransformationsDto): Readable {
@@ -135,7 +133,8 @@ export class MediaService {
   private async transformImage(
     imageId: string,
     transformations: TransformationsDto
-  ) {
+  ): Promise<ImageURIObject> {
+    const originalTransformations = structuredClone(transformations);
     let imageStream: Readable;
     let imageExists = true;
     try {
@@ -157,20 +156,20 @@ export class MediaService {
     const transformationsKey = getTransformationKey(
       removeSignatureFromTransformations(transformations)
     );
+
     if (!imageExists) {
-      try {
-        imageStream = await this.storage.getFile(
+      if (
+        await this.storage.hasFile(
           this.config.transformationBucket,
           `images/fallback/${transformationsKey}`
-        );
-        return Promise.all([imageStream, imageExists]);
-      } catch (e: any) {
-        // Intentionally ignore if fallback image is not found
+        )
+      ) {
+        return { uri: `images/fallback/${transformationsKey}`, exists: false };
       }
     }
 
     const transformGuard = new TransformGuard();
-    transformGuard.validateSignature(imageId, transformations);
+    transformGuard.validateSignature(imageId, originalTransformations);
 
     const sharpInstance = imageStream.pipe(
       sharp({
@@ -233,24 +232,29 @@ export class MediaService {
     ).metadata();
     transformGuard.checkImageSize(metadata);
 
+    let uri;
+    let exists = true;
     if (imageExists) {
+      uri = `images/${imageId}/${transformationsKey}`;
       await this.storage.saveFile(
         this.config.transformationBucket,
-        `images/${imageId}/${transformationsKey}`,
+        uri,
         transformedImage.clone(),
         metadata.size,
         { ContentType: `image/${metadata.format}` }
       );
     } else {
+      exists = false;
+      uri = `images/fallback/${transformationsKey}`;
       await this.storage.saveFile(
         this.config.transformationBucket,
-        `images/fallback/${transformationsKey}`,
+        uri,
         transformedImage.clone(),
         metadata.size,
         { ContentType: `image/${metadata.format}` }
       );
     }
-    return Promise.all([transformedImage, imageExists]);
+    return { uri, exists };
   }
 
   public async saveImage(imageId: string, image: Buffer) {

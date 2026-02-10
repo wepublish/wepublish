@@ -27,10 +27,13 @@ import {
   TitleBlock,
   TwitterTweetBlock,
   VimeoVideoBlock,
+  StreamableVideoBlock,
   YouTubeVideoBlock,
+  FlexBlock,
 } from '@wepublish/website/api';
 
 export type BuilderBlockRendererProps = {
+  className?: string;
   block: BlockContent;
   index: number;
   count: number;
@@ -40,6 +43,10 @@ export type BuilderBlockRendererProps = {
 export type BuilderBlocksProps = {
   blocks: BlockContent[];
   type: BuilderBlockRendererProps['type'];
+};
+
+export type BuilderFlexBlockProps = FlexBlock & {
+  className?: string;
 };
 
 export type BuilderTitleBlockProps = Omit<TitleBlock, 'type'> & {
@@ -81,6 +88,12 @@ export type BuilderTwitterTweetBlockProps = Omit<TwitterTweetBlock, 'type'> & {
   className?: string;
 };
 export type BuilderVimeoVideoBlockProps = Omit<VimeoVideoBlock, 'type'> & {
+  className?: string;
+};
+export type BuilderStreamableVideoBlockProps = Omit<
+  StreamableVideoBlock,
+  'type'
+> & {
   className?: string;
 };
 export type BuilderYouTubeVideoBlockProps = Omit<YouTubeVideoBlock, 'type'> & {

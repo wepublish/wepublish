@@ -1,11 +1,12 @@
 import { ApolloError } from '@apollo/client';
 import styled from '@emotion/styled';
 import {
+  getApiClientV2,
   MemberPlan,
   MemberPlanSort,
   SortOrder,
   useMemberPlanListQuery,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -70,10 +71,9 @@ export function SelectMemberPlans({
     );
   };
 
-  /**
-   * Loading memberplans
-   */
+  const client = getApiClientV2();
   const { data: memberplansData, refetch } = useMemberPlanListQuery({
+    client,
     variables: {
       sort: MemberPlanSort.CreatedAt,
       order: SortOrder.Ascending,
@@ -109,7 +109,10 @@ export function SelectMemberPlans({
       cacheData={cacheData}
       onSearch={word => {
         refetch({
-          filter: word,
+          filter: word ? { name: word } : undefined,
+          sort: MemberPlanSort.CreatedAt,
+          order: SortOrder.Ascending,
+          take: 50,
         });
       }}
       onSelect={(value, item, event) => {

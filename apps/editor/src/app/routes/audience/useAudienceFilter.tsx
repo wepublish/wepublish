@@ -26,6 +26,8 @@ export type AudienceClientFilter = Pick<
   | 'deactivatedSubscriptionCount'
   | 'renewedSubscriptionCount'
   | 'replacedSubscriptionCount'
+  | 'predictedSubscriptionRenewalCount'
+  | 'endingSubscriptionCount'
 >;
 
 export interface AudienceComponentFilter {
@@ -55,6 +57,8 @@ export function useAudienceFilter({ fetchStats }: UseAudienceFilterProps) {
       deactivatedSubscriptionCount: true,
       renewedSubscriptionCount: true,
       replacedSubscriptionCount: true,
+      predictedSubscriptionRenewalCount: false,
+      endingSubscriptionCount: false,
     });
   const [audienceComponentFilter, setAudienceComponentFilter] =
     useState<AudienceComponentFilter>({
@@ -106,6 +110,10 @@ export interface PreDefinedDates {
   lastMonth: Date;
   lastQuarter: Date;
   lastYear: Date;
+  nextWeek: Date;
+  nextMonth: Date;
+  nextQuarter: Date;
+  nextYear: Date;
 }
 
 export function preDefinedDates(): PreDefinedDates {
@@ -114,11 +122,20 @@ export function preDefinedDates(): PreDefinedDates {
   const lastMonth = new Date(new Date().setMonth(today.getMonth() - 1));
   const lastQuarter = new Date(new Date().setMonth(today.getMonth() - 3));
   const lastYear = new Date(new Date().setFullYear(today.getFullYear() - 1));
+
+  const nextWeek = new Date(new Date().setDate(today.getDate() + 7));
+  const nextMonth = new Date(new Date().setMonth(today.getMonth() + 1));
+  const nextQuarter = new Date(new Date().setMonth(today.getMonth() + 3));
+  const nextYear = new Date(new Date().setFullYear(today.getFullYear() + 1));
   return {
     today,
     lastWeek,
     lastMonth,
     lastQuarter,
     lastYear,
+    nextWeek,
+    nextMonth,
+    nextQuarter,
+    nextYear,
   };
 }

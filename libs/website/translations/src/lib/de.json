@@ -17,26 +17,51 @@
   },
   "subscribe": {
     "memberplan": {
-      "price": "{amountPerMonthMin, select, 0 {Kostenlos} other {Ab {monthlyPrice} {extendable, select, true {pro Monat} other {}}}}"
+      "price": "{amountPerMonthMin, select, 0 {Gratis} other {Ab {monthlyPrice} {extendable, select, true {pro Monat} other {}}}}"
     },
-    "cancellable": "Jederzeit kündbar"
+    "cancellable": "Jederzeit kündbar",
+    "upgrade": {
+      "infoTitle": "Dein Upgrade",
+      "info": "Mach jetzt ein Upgrade von deinem {oldMemberPlan} auf das {newMemberPlan}. <bold>Dein Restguthaben von {discount} bei deinem {oldMemberPlan} wird Dir dabei angerechnet.</bold> Weiter unten siehst du Deinen noch zu zahlenden Upgrade-Preis für den Wechsel zum {newMemberPlan}.",
+      "button": "Für {formattedAmount} auf {memberPlan} upgraden"
+    },
+    "support": {
+      "subscribeForPeriod": "Ich unterstütze {siteTitle} {monthlyAmount, select, 0 {gratis} other {{renewalPeriodL} mit {formattedAmount}}}",
+      "payForPeriod": "Ich unterstütze {siteTitle} {monthlyAmount, select, 0 {gratis} other {{paymentPeriodL} mit {formattedAmount}}}",
+      "pay": "Ich unterstütze {siteTitle} {monthlyAmount, select, 0 {gratis} other {mit {formattedAmount}}}"
+    },
+    "button": {
+      "subscribeForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{renewalPeriod} für {formattedAmount}}}",
+      "payForPeriod": "{monthlyAmount, select, 0 {Gratis} other {{paymentPeriod} für {formattedAmount}}}",
+      "pay": "{monthlyAmount, select, 0 {Gratis} other {Für {formattedAmount}}}"
+    }
+  },
+  "login": {
+    "alertLoginLinkSent": "Falls ein Account unter der Email \"{email}\" besteht, sollte bald ein Login-Link in deinem Email Postfach sein. Dies kann einen Moment dauern. Bitte prüfe auch deinen Spam-Ordner."
+  },
+  "crowdfunding": {
+    "goal": "{type, select, Revenue {Bereits <bold>{revenue}</bold> finanziert} other {Bereits <bold>{subscriptions, number}</bold> {subscriptions, plural, =1 {Person} other {Personen}} abonniert}}"
   },
   "image": {
     "caption": "{caption} {source, select, EMPTY {} other {<ImageSource>(Bild: {source})</ImageSource>}}"
   },
   "subscription": {
-    "unpaid": "Abo ist unbezahlt",
     "externalReward": "{isLink, select, true {Link zu externer Belohnung} other {{externalReward}}}",
-    "cancel": "Abo kündigen",
-    "cancelConfirmation": "Das Abo wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offenen Rechnungen des Abos werden storniert.",
-    "renewConfirmation": "Wir freuen uns, dass du dein Abo frühzeitig um ein {subscriptionDuration} verlängern willst. Weiterfahren?",
+    "unpaid": "{type, select, Donation {Spende} other {Abo}} ist unbezahlt",
+    "cancel": "{type, select, Donation {Spende} other {Abo}} kündigen",
+    "cancelConfirmation": "{type, select, Donation {Alle offenen Rechnungen zur Spende werden storniert.} other {Das Abo wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene Rechnungen des Abos werden storniert.}}",
+    "extendEarly": "{type, select, Donation {Spende} other {Abo}} frühzeitig verlängern?",
+    "extendEarlyConfirmation": "Wir freuen uns, dass du dein {type, select, Donation {Spende} other {Abo}} frühzeitig um ein {subscriptionDuration} verlängern willst. Weiterfahren?",
     "noActiveSubscriptions": "Du hast noch kein aktives Abo.",
-    "subscribeNow": "Jetzt ein Abo lösen."
+    "subscribeNow": "Jetzt ein Abo lösen.",
+    "startsAt": "Abgeschlossen am <time>{startsAt}</time>"
   },
   "user": {
     "changeEmailRequest": "Klicke hier um deine Email zu ändern",
-    "activeSubscriptions": "Aktive Abos",
-    "viewCancelledSubscriptions": "Gekündigte Abos anzeigen"
+    "activeSubscriptions": "Aktive {type, select, Donation {Spenden} other {Abos}}",
+    "cancelledSubscriptions": "Gekündigte Abos & Inaktive Spenden",
+    "subscriptionsDetail": "{type, select, Donation {Spende} other {Abo}}",
+    "viewCancelledSubscriptions": "Gekündigte Abos & Inaktive Spenden anzeigen"
   },
   "zod": {
     "errors": {

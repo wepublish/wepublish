@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
-import { Author } from './author.model';
+import {
+  Author,
+  AuthorFilter,
+  AuthorSort,
+  CreateAuthorInput,
+  UpdateAuthorInput,
+} from './author.model';
 import { AuthorDataloaderService } from './author-dataloader.service';
 import {
   graphQLSortOrderToPrisma,
@@ -8,7 +14,6 @@ import {
   PrimeDataLoader,
   SortOrder,
 } from '@wepublish/utils/api';
-import { AuthorFilter, AuthorSort } from './authors.query';
 
 function lowercaseFirstLetter(str: string): string {
   return str.charAt(0).toLowerCase() + str.slice(1);
@@ -42,6 +47,7 @@ export class AuthorService {
     });
   }
 
+  @PrimeDataLoader(AuthorDataloaderService)
   async getAuthors(
     filter?: Partial<AuthorFilter>,
     sort: AuthorSort = AuthorSort.ModifiedAt,
@@ -89,6 +95,70 @@ export class AuthorService {
         endCursor: lastAuthor?.id,
       },
     };
+  }
+
+  @PrimeDataLoader(AuthorDataloaderService)
+  async updateAuthor({ id, bio, links, tagIds, ...input }: UpdateAuthorInput) {
+    return this.prisma.author.update({
+      where: {
+        id,
+      },
+      data: {
+        ...input,
+        bio: bio as any[],
+        links: {
+          deleteMany: {
+            authorId: {
+              equals: id,
+            },
+          },
+          create: links,
+        },
+        tags: {
+          deleteMany: {
+            tagId: {
+              notIn: tagIds,
+            },
+          },
+          createMany: {
+            skipDuplicates: true,
+            data:
+              tagIds?.map(tagId => ({
+                tagId,
+              })) ?? [],
+          },
+        },
+      },
+    });
+  }
+
+  @PrimeDataLoader(AuthorDataloaderService)
+  async createAuthor({ bio, tagIds, links, ...input }: CreateAuthorInput) {
+    return this.prisma.author.create({
+      data: {
+        ...input,
+        bio: bio as any[],
+        links: {
+          create: links,
+        },
+        tags: {
+          createMany: {
+            data: tagIds.map(tagId => ({
+              tagId,
+            })),
+            skipDuplicates: true,
+          },
+        },
+      },
+    });
+  }
+
+  async deleteAuthor(id: string) {
+    return this.prisma.author.delete({
+      where: {
+        id,
+      },
+    });
   }
 }
 

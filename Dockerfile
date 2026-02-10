@@ -90,6 +90,7 @@ RUN groupadd -r wepublish && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 COPY --chown=wepublish:wepublish apps/api-example/src/default.yaml /wepublish/config/default.yaml
+COPY --chown=wepublish:wepublish libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY --chown=wepublish:wepublish .version /wepublish/.version
 COPY --chown=wepublish:wepublish --from=build-api /wepublish/api /wepublish
 COPY --chown=wepublish:wepublish --from=build-api /wepublish/node_modules/bcrypt node_modules/bcrypt
@@ -133,8 +134,9 @@ WORKDIR /wepublish
 COPY libs/settings/api/src/lib/setting.ts settings/api/src/lib/setting.ts
 COPY libs/api/prisma/run-seed.ts api/prisma/run-seed.ts
 COPY libs/api/prisma/seed.ts api/prisma/seed.ts
+COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY docker/tsconfig.yaml_seed tsconfig.yaml
-RUN npm install prisma @prisma/client @types/node bcrypt typescript && \
+RUN npm install prisma@5.0.0 @prisma/client@5.0.0 @types/node bcrypt typescript && \
     npx tsc -p tsconfig.yaml
 
 FROM ${PLAIN_BUILD_IMAGE} AS migration
@@ -151,7 +153,7 @@ RUN groupadd -r wepublish && \
     apt-get install -y --no-install-recommends openssl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    npm install prisma bcrypt && \
+    npm install prisma@5.0.0 bcrypt && \
     npx prisma generate \
     USER wepublish
 CMD ["bash", "./start.sh"]

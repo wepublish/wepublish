@@ -1,4 +1,4 @@
-import { PrismaClient, Subscription } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { Context } from '../../context';
 import { SubscriptionFilter, SubscriptionSort } from '../../db/subscription';
 import { unselectPassword } from '@wepublish/authentication/api';
@@ -13,7 +13,6 @@ import {
   createSubscriptionFilter,
   getSubscriptions,
 } from './subscription.queries';
-import { format, lastDayOfMonth, startOfMonth, subMonths } from 'date-fns';
 import { SortOrder } from '@wepublish/utils/api';
 
 export const getSubscriptionById = (
@@ -87,47 +86,4 @@ export const getSubscriptionsAsCSV = async (
   });
 
   return mapSubscriptionsAsCsv(subscriptions);
-};
-
-export const getNewSubscribersPerMonth = async (
-  authenticate: Context['authenticate'],
-  subscription: PrismaClient['subscription'],
-  monthsBack: number
-) => {
-  const { roles } = authenticate();
-  authorise(CanGetSubscriptions, roles);
-
-  const subscriptions = await subscription.findMany({
-    where: {
-      startsAt: {
-        gte: startOfMonth(subMonths(new Date(), monthsBack - 1)),
-      },
-      AND: {
-        startsAt: {
-          lte: lastDayOfMonth(new Date()),
-        },
-      },
-    },
-  });
-
-  return getSubscriberCount(subscriptions, monthsBack);
-};
-
-const getSubscriberCount = (
-  subscribers: Subscription[],
-  monthsBack: number
-) => {
-  const res = [];
-  for (let i = monthsBack - 1; i >= 0; i--) {
-    const count = subscribers.filter(subsc => {
-      return (
-        subsc.startsAt > startOfMonth(subMonths(new Date(), i)) &&
-        subsc.startsAt < lastDayOfMonth(subMonths(new Date(), i))
-      );
-    }).length;
-    const month = new Date();
-    month.setMonth(month.getMonth() - i);
-    res.push({ month: format(month, 'MMM-yy'), subscriberCount: count });
-  }
-  return res;
 };

@@ -1,5 +1,4 @@
 export * from './lib/graphql/session';
-export * from './lib/graphql/author';
 export * from './lib/graphql/image';
 export * from './lib/graphql/comment/comment';
 export * from './lib/graphql/peer';
@@ -21,7 +20,6 @@ export * from './lib/db/payment';
 export * from './lib/db/mailLog';
 export * from './lib/db/subscription';
 
-export * from './lib/media/karmaMediaAdapter';
 export * from './lib/media/novaMediaAdapter';
 
 export * from './lib/utility';
@@ -33,7 +31,5 @@ export * from './lib/payments';
 export * from './lib/challenges/challengeProvider';
 export * from './lib/challenges/algebraicCaptchaChallenge';
 export * from './lib/challenges/cfTurnstile';
-
-export * from './lib/memberContext';
 
 export { getUserForCredentials } from './lib/graphql/user/user.queries';

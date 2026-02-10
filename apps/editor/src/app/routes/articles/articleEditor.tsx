@@ -1,17 +1,14 @@
 import styled from '@emotion/styled';
-import {
-  AuthorRefFragment,
-  FullImageFragment,
-  useCreateJwtForWebsiteLoginLazyQuery,
-} from '@wepublish/editor/api';
+import { useCreateJwtForWebsiteLoginLazyQuery } from '@wepublish/editor/api';
 import {
   CreateArticleMutationVariables,
   EditorBlockType,
+  FullAuthorFragment,
+  FullImageFragment,
   getApiClientV2,
   SettingName,
   useArticleQuery,
   useCreateArticleMutation,
-  usePaywallListQuery,
   usePublishArticleMutation,
   useSettingsListQuery,
   useUpdateArticleMutation,
@@ -184,14 +181,11 @@ function ArticleEditor() {
           )?.value,
         paywall:
           meta.paywall ??
-          !!data.settings.find(
+          data.settings.find(
             setting => setting.name === SettingName.NewArticlePaywall
           )?.value,
       }));
     },
-  });
-  const { data: paywallData } = usePaywallListQuery({
-    client,
   });
 
   const isNew = id === undefined;
@@ -215,6 +209,7 @@ function ArticleEditor() {
 
   const [createJWT] = useCreateJwtForWebsiteLoginLazyQuery({
     errorPolicy: 'none',
+    fetchPolicy: 'no-cache',
   });
 
   const isNotFound = articleData && !articleData.article;
@@ -284,20 +279,20 @@ function ArticleEditor() {
         properties,
         canonicalUrl: canonicalUrl ?? '',
         shared,
-        paywall: !!paywallId,
+        paywall: paywallId,
         hidden,
         disableComments,
         breaking,
         authors: authors.filter(
           author => author != null
-        ) as AuthorRefFragment[],
+        ) as FullAuthorFragment[],
         image: (image as FullImageFragment) || undefined,
         hideAuthor,
         socialMediaTitle: socialMediaTitle || '',
         socialMediaDescription: socialMediaDescription || '',
         socialMediaAuthors: socialMediaAuthors?.filter(
           socialMediaAuthor => socialMediaAuthor != null
-        ) as AuthorRefFragment[],
+        ) as FullAuthorFragment[],
         socialMediaImage: (socialMediaImage as FullImageFragment) || undefined,
         likes: likes ?? 0,
         trackingPixels: trackingPixels || undefined,
@@ -406,7 +401,7 @@ function ArticleEditor() {
       imageID: metadata.image?.id,
       breaking: metadata.breaking,
       shared: !!metadata.shared,
-      paywallId: metadata.paywall ? paywallData?.paywalls?.[0]?.id : null,
+      paywallId: metadata.paywall,
       hidden: metadata.hidden ?? false,
       disableComments: metadata.disableComments ?? false,
       tagIds: metadata.tags,

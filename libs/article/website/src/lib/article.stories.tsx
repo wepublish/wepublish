@@ -2,12 +2,17 @@ import { ApolloError } from '@apollo/client';
 import { Meta } from '@storybook/react';
 import { Article } from './article';
 import { mockArticle, mockArticleRevision } from '@wepublish/storybook/mocks';
+import {
+  WithPollBlockDecorators,
+  WithSubscribeBlockDecorators,
+} from '@wepublish/storybook';
 
 const article = mockArticle();
 
 export default {
   component: Article,
   title: 'Components/Article',
+  decorators: [WithSubscribeBlockDecorators({}), WithPollBlockDecorators({})],
 } as Meta;
 
 export const Default = {

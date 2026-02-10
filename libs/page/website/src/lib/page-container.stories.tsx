@@ -2,12 +2,17 @@ import { Meta } from '@storybook/react';
 import { PageDocument } from '@wepublish/website/api';
 import { PageContainer } from './page-container';
 import { mockPage } from '@wepublish/storybook/mocks';
+import {
+  WithPollBlockDecorators,
+  WithSubscribeBlockDecorators,
+} from '@wepublish/storybook';
 
 const page = mockPage();
 
 export default {
   component: PageContainer,
   title: 'Container/Page',
+  decorators: [WithSubscribeBlockDecorators({}), WithPollBlockDecorators({})],
 } as Meta;
 
 export const ById = {

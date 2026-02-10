@@ -1,39 +1,32 @@
 import {
   ArgsType,
-  Directive,
   Field,
   InputType,
+  Int,
   ObjectType,
+  PartialType,
   PickType,
+  registerEnumType,
 } from '@nestjs/graphql';
 import {
   CreateCrowdfundingGoalInput,
   CrowdfundingGoal,
   CrowdfundingGoalWithProgress,
 } from './crowdfunding-goal.model';
+import { MemberPlan } from '@wepublish/member-plan/api';
+import { CrowdfundingGoalType } from '@prisma/client';
 
-/**
- * This Memberplan is only here to provide the interface and
- * can be removed when MemberPlans are moved to APIv2
- */
-@ObjectType()
-class CrowdfundingMemberPlan {
-  @Field()
-  id!: string;
-
-  @Field()
-  name!: string;
-}
+registerEnumType(CrowdfundingGoalType, {
+  name: 'CrowdfundingGoalType',
+});
 
 @InputType()
-export class CreateCrowdfundingMemberPlan extends PickType(
-  CrowdfundingMemberPlan,
-  ['id'],
-  InputType
-) {}
+export class CreateCrowdfundingMemberPlan {
+  @Field()
+  id!: string;
+}
 
 @ObjectType()
-@Directive('@key(fields: "id")')
 export class Crowdfunding {
   @Field()
   id!: string;
@@ -56,20 +49,23 @@ export class Crowdfunding {
   @Field(() => Number, { nullable: true })
   additionalRevenue!: number | null;
 
-  @Field(() => Number, { nullable: true })
-  revenue?: number;
+  @Field(() => CrowdfundingGoalType)
+  goalType!: CrowdfundingGoalType;
 
   @Field(type => [CrowdfundingGoal])
   goals?: CrowdfundingGoal[];
 
-  @Field(type => [CrowdfundingMemberPlan])
-  memberPlans?: CrowdfundingMemberPlan[];
-}
+  @Field(type => [MemberPlan])
+  memberPlans?: MemberPlan[];
 
-@ObjectType()
-export class CrowdfundingWithActiveGoal extends Crowdfunding {
+  @Field(() => Number, { nullable: true })
+  revenue?: number;
+
+  @Field(() => Int, { nullable: true })
+  subscriptions?: number;
+
   @Field(() => CrowdfundingGoalWithProgress, { nullable: true })
-  activeCrowdfundingGoal?: CrowdfundingGoalWithProgress;
+  activeGoal?: CrowdfundingGoalWithProgress;
 }
 
 @ArgsType()
@@ -86,6 +82,7 @@ export class CreateCrowdfundingInput extends PickType(
     'countSubscriptionsFrom',
     'countSubscriptionsUntil',
     'additionalRevenue',
+    'goalType',
   ],
   InputType
 ) {
@@ -97,20 +94,10 @@ export class CreateCrowdfundingInput extends PickType(
 }
 
 @InputType()
-export class UpdateCrowdfundingInput extends PickType(
-  Crowdfunding,
-  [
-    'id',
-    'name',
-    'countSubscriptionsFrom',
-    'countSubscriptionsUntil',
-    'additionalRevenue',
-  ],
+export class UpdateCrowdfundingInput extends PartialType(
+  CreateCrowdfundingInput,
   InputType
 ) {
-  @Field(() => [CreateCrowdfundingGoalInput], { nullable: true })
-  goals!: CreateCrowdfundingGoalInput[];
-
-  @Field(() => [CreateCrowdfundingMemberPlan], { nullable: true })
-  memberPlans?: CreateCrowdfundingMemberPlan[];
+  @Field()
+  id!: string;
 }

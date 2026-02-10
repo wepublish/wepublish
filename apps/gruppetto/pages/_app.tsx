@@ -24,8 +24,10 @@ import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import { theme } from '@wepublish/ui';
 import {
   authLink,
+  initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
+  withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
@@ -34,19 +36,12 @@ import { previewLink } from '@wepublish/website/admin';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
 import { createWithV1ApiClient } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import deTranlations from '@wepublish/website/translations/de.json';
 import { setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
-import i18next from 'i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import ICU from 'i18next-icu';
-import resourcesToBackend from 'i18next-resources-to-backend';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
-import { mergeDeepRight } from 'ramda';
-import { initReactI18next } from 'react-i18next';
 import { PartialDeep } from 'type-fest';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
@@ -55,29 +50,12 @@ import deOverriden from '../locales/deOverriden.json';
 import background from '../src/background.svg';
 import { GruppettoBreakBlock } from '../src/break-block';
 import { Footer } from '../src/footer';
-import Mitmachen from './mitmachen';
 
 setDefaultOptions({
   locale: de,
 });
 
-i18next
-  .use(ICU)
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverriden)))
-  .init({
-    partialBundledLanguages: true,
-    lng: 'de',
-    fallbackLng: 'de',
-    supportedLngs: ['de'],
-    interpolation: {
-      escapeValue: false,
-    },
-    resources: {
-      de: { zod: deTranlations.zod },
-    },
-  });
+initWePublishTranslator(deOverriden);
 z.setErrorMap(zodI18nMap);
 
 const gruppettoTheme = createTheme(theme, {
@@ -149,7 +127,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Script={Script}
           Footer={Footer}
           elements={{ Link: NextWepublishLink }}
-          blocks={{ Break: GruppettoBreakBlock, Subscribe: Mitmachen }}
+          blocks={{ Break: GruppettoBreakBlock }}
         >
           <ThemeProvider theme={gruppettoTheme}>
             <CssBaseline />
@@ -225,8 +203,10 @@ const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   previewLink,
 ]);
 const ConnectedApp = withApollo(
-  withErrorSnackbar(
-    withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+  withBuilderRouter(
+    withErrorSnackbar(
+      withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+    )
   )
 );
 

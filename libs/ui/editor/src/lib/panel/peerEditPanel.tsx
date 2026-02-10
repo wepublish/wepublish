@@ -1,12 +1,15 @@
 import styled from '@emotion/styled';
 import {
-  FullPeerProfileFragment,
-  PeerListDocument,
+  FullPeerProfileFragment as V1FullPeerProfileFragment,
+  useRemotePeerProfileQuery,
+} from '@wepublish/editor/api';
+import {
+  FullRemotePeerProfileFragment as V2FullPeerProfileFragment,
+  getApiClientV2,
   useCreatePeerMutation,
   usePeerQuery,
-  useRemotePeerProfileQuery,
   useUpdatePeerMutation,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import { slugify } from '@wepublish/utils';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +34,6 @@ import {
 } from '../atoms';
 import { RichTextBlock, RichTextBlockValue } from '../blocks';
 import { toggleRequiredLabel } from '../toggleRequiredLabel';
-import { getOperationNameFromDocument } from '../utility';
 
 export interface PeerEditPanelProps {
   id?: string;
@@ -68,13 +70,17 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
   const [information, setInformation] = useState<Descendant[]>();
   const [urlString, setURLString] = useState('');
   const [token, setToken] = useState('');
-  const [profile, setProfile] = useState<FullPeerProfileFragment | null>(null);
+  const [profile, setProfile] = useState<
+    V1FullPeerProfileFragment | V2FullPeerProfileFragment | null
+  >(null);
 
+  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
     error: loadError,
   } = usePeerQuery({
+    client,
     variables: { id: id! },
     fetchPolicy: 'network-only',
     skip: id === undefined,
@@ -82,12 +88,12 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
 
   const [createPeer, { loading: isCreating, error: createError }] =
     useCreatePeerMutation({
-      refetchQueries: [getOperationNameFromDocument(PeerListDocument)],
+      client,
     });
 
   const [updatePeer, { loading: isUpdating, error: updateError }] =
     useUpdatePeerMutation({
-      refetchQueries: [getOperationNameFromDocument(PeerListDocument)],
+      client,
     });
 
   const { refetch: fetchRemote } = useRemotePeerProfileQuery({ skip: true });
@@ -122,6 +128,7 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
       setSlug(data.peer.slug);
       setInformation(data.peer.information ?? undefined);
       setURLString(data.peer.hostURL);
+      setToken(data.peer.token);
       setTimeout(() => {
         // setProfile in timeout because the useEffect that listens on
         // urlString and token will set it otherwise to null
@@ -155,25 +162,21 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
       await updatePeer({
         variables: {
           id,
-          input: {
-            name,
-            slug,
-            hostURL: new URL(urlString).toString(),
-            token: token || undefined,
-            information,
-          },
+          name,
+          slug,
+          hostURL: new URL(urlString).toString(),
+          token: token || undefined,
+          information,
         },
       });
     } else {
       await createPeer({
         variables: {
-          input: {
-            name,
-            slug,
-            hostURL: new URL(urlString).toString(),
-            token,
-            information,
-          },
+          name,
+          slug,
+          hostURL: new URL(urlString).toString(),
+          token,
+          information,
         },
       });
     }
@@ -315,16 +318,19 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
                 disabled
                 image={profile?.logo}
               />
+
               <DescriptionList>
                 <DescriptionListItem label={t('peerList.panels.name')}>
                   {profile?.name}
                 </DescriptionListItem>
+
                 <DescriptionListItem label={t('peerList.panels.themeColor')}>
                   <ThemeColor>
                     <p>{profile?.themeColor}</p>
                     <ThemeColorBox themeColor={profile.themeColor} />
                   </ThemeColor>
                 </DescriptionListItem>
+
                 <DescriptionListItem
                   label={t('peerList.panels.themeFontColor')}
                 >
@@ -333,6 +339,7 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
                     <ThemeColorBox themeColor={profile?.themeFontColor} />
                   </ThemeColor>
                 </DescriptionListItem>
+
                 <DescriptionListItem
                   label={t('peerList.panels.callToActionText')}
                 >
@@ -346,19 +353,22 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
                     />
                   )}
                 </DescriptionListItem>
+
                 <DescriptionListItem
                   label={t('peerList.panels.callToActionURL')}
                 >
                   {profile?.callToActionURL}
                 </DescriptionListItem>
+
                 <DescriptionListItem
                   label={t('peerList.panels.callToActionImage')}
                 >
                   <img
-                    src={profile?.callToActionImage?.thumbURL || undefined}
+                    src={profile?.callToActionImage?.url || undefined}
                     alt={t('peerList.panels.callToActionImage')}
                   />
                 </DescriptionListItem>
+
                 <DescriptionListItem
                   label={t('peerList.panels.callToActionImageURL')}
                 >

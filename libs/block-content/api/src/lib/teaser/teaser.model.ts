@@ -11,7 +11,7 @@ import { Article, HasOptionalArticle } from '@wepublish/article/api';
 import { HasOptionalPage, Page } from '@wepublish/page/api';
 import { HasImage } from '@wepublish/image/api';
 import { Event, HasOptionalEvent } from '@wepublish/event/api';
-import { Property, PropertyInput } from '@wepublish/utils/api';
+import { Property, PropertyInput } from '@wepublish/property/api';
 
 export enum TeaserType {
   Article = 'article',
@@ -25,7 +25,7 @@ registerEnumType(TeaserType, {
 });
 
 @InterfaceType({
-  implements: [HasImage],
+  implements: () => [HasImage],
 })
 export abstract class BaseTeaser<Type extends TeaserType> extends HasImage {
   @Field(() => String)

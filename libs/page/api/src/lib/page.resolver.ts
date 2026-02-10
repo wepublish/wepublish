@@ -15,7 +15,7 @@ import {
   PaginatedPages,
   UpdatePageInput,
 } from './page.model';
-import { Tag, TagService } from '@wepublish/tag/api';
+import { PageTagDataloader, Tag } from '@wepublish/tag/api';
 import { PageService } from './page.service';
 import { PageRevisionDataloaderService } from './page-revision-dataloader.service';
 import { URLAdapter } from '@wepublish/nest-modules';
@@ -40,7 +40,7 @@ export class PageResolver {
     private pageDataloader: PageDataloaderService,
     private pageRevisionsDataloader: PageRevisionDataloaderService,
     private pageService: PageService,
-    private tagService: TagService,
+    private tagDataLoader: PageTagDataloader,
     private urlAdapter: URLAdapter
   ) {}
 
@@ -201,7 +201,6 @@ export class PageResolver {
 
   @ResolveField(() => [Tag])
   async tags(@Parent() parent: PPage) {
-    const { id: pageId } = parent;
-    return this.tagService.getTagsByPageId(pageId);
+    return this.tagDataLoader.load(parent.id);
   }
 }

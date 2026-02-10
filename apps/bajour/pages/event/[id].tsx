@@ -6,7 +6,7 @@ import {
   NavigationListDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
-import { GetStaticPaths, GetStaticProps } from 'next';
+import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 
@@ -24,12 +24,10 @@ export default function EventById() {
   );
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: 'blocking',
-  };
-};
+export const getStaticPaths = () => ({
+  paths: [],
+  fallback: 'blocking',
+});
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id } = params || {};
@@ -59,6 +57,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   if (is404) {
     return {
       notFound: true,
+      revalidate: 1,
     };
   }
 

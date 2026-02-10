@@ -8,6 +8,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { Typography } from '@mui/material';
+import { ComponentType } from 'react';
 
 export const isTitleBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -20,7 +21,7 @@ export const TitleBlockWrapper = styled('div')`
 `;
 export const TitleBlockTitle = styled('h1')``;
 
-export const TitleBlockPreTitle = styled('div')`
+export const TitleBlockPreTitleWrapper = styled('div')`
   padding: ${({ theme }) => `${theme.spacing(0.5)} ${theme.spacing(2)}`};
   background-color: ${({ theme }) => theme.palette.accent.main};
   color: ${({ theme }) => theme.palette.accent.contrastText};
@@ -29,26 +30,37 @@ export const TitleBlockPreTitle = styled('div')`
 `;
 export const TitleBlockLead = styled('p')``;
 
+type TitleBlockComponents = {
+  PreTitle?: ComponentType<Pick<BuilderTitleBlockProps, 'preTitle'>>;
+};
+
+export const TitleBlockPreTitle: Exclude<
+  TitleBlockComponents['PreTitle'],
+  undefined
+> = ({ preTitle }) =>
+  preTitle && (
+    <Typography
+      variant="blockTitlePreTitle"
+      component={TitleBlockPreTitleWrapper}
+    >
+      {preTitle}
+    </Typography>
+  );
+
 export const TitleBlock = ({
   title,
-  lead,
   preTitle,
+  lead,
   className,
-}: BuilderTitleBlockProps) => {
+  PreTitle = TitleBlockPreTitle,
+}: BuilderTitleBlockProps & TitleBlockComponents) => {
   const {
     elements: { H2 },
   } = useWebsiteBuilder();
 
   return (
     <TitleBlockWrapper className={className}>
-      {preTitle && (
-        <Typography
-          variant="blockTitlePreTitle"
-          component={TitleBlockPreTitle}
-        >
-          {preTitle}
-        </Typography>
-      )}
+      <PreTitle preTitle={preTitle} />
 
       <H2 component={TitleBlockTitle}>{title}</H2>
 

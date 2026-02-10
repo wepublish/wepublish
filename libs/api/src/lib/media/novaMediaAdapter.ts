@@ -4,30 +4,31 @@ import fetch from 'node-fetch';
 import type { FileUpload } from 'graphql-upload';
 import {
   ArrayBufferUpload,
-  Image,
   ImageTransformation,
+  ImageWithFocalPoint,
   MediaAdapter,
   UploadImage,
 } from '@wepublish/image/api';
-import { MediaServerError } from './karmaMediaAdapter';
 import {
   getSignatureForImage,
-  sanitizeImageQuality,
   TransformationsDto,
   TransformationsSchema,
 } from '@wepublish/media-transform-guard';
 import { validateImageDimension } from '@wepublish/media-transform-guard';
 
-export class NovaMediaAdapter implements MediaAdapter {
-  readonly url: URL;
-  readonly token: string;
-  readonly internalURL: URL;
-
-  constructor(url: URL, token: string, internalURL: URL = url) {
-    this.url = url;
-    this.token = token;
-    this.internalURL = internalURL;
+export class MediaServerError extends Error {
+  constructor(message: string) {
+    super(`Received error from media server. Message: ${message}`);
   }
+}
+
+export class NovaMediaAdapter implements MediaAdapter {
+  constructor(
+    private url: URL,
+    private token: string,
+    private config: { quality: number },
+    private internalURL: URL = url
+  ) {}
 
   async _uploadImage(form: FormData): Promise<UploadImage> {
     // The form-data module reports a known length for the stream returned by createReadStream,
@@ -119,7 +120,7 @@ export class NovaMediaAdapter implements MediaAdapter {
   }
 
   async getImageURL(
-    image: Image,
+    image: ImageWithFocalPoint,
     transformations?: ImageTransformation
   ): Promise<string> {
     const queryParameters = [] as string[];
@@ -185,12 +186,8 @@ export class NovaMediaAdapter implements MediaAdapter {
     }
     **/
 
-    const quality =
-      transformations?.quality ?
-        sanitizeImageQuality(transformations.quality)
-      : 0.65;
     // Max quality is 80 so 1 => 80
-    queryParameters.push(`quality=${Math.ceil(quality * 80)}`);
+    queryParameters.push(`quality=${Math.ceil(this.config.quality * 80)}`);
 
     const transformationsDto = this.parseTransformations(queryParameters);
 
@@ -209,7 +206,11 @@ export class NovaMediaAdapter implements MediaAdapter {
 
     for (const entry of params) {
       const eq = entry.indexOf('=');
-      if (eq === -1) continue;
+
+      if (eq === -1) {
+        continue;
+      }
+
       const key = entry.slice(0, eq).trim();
       const value = entry.slice(eq + 1).trim();
       raw[key] = value;

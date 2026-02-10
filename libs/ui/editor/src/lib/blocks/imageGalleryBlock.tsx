@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { FullImageFragment } from '@wepublish/editor/api';
+import { FullImageFragment } from '@wepublish/editor/api-v2';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {

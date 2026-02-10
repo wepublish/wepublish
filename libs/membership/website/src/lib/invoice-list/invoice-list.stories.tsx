@@ -3,13 +3,12 @@ import { action } from '@storybook/addon-actions';
 import { Meta } from '@storybook/react';
 import { InvoiceList } from './invoice-list';
 import {
-  Currency,
   Exact,
   FullInvoiceFragment,
   FullSubscriptionFragment,
   PaymentPeriodicity,
 } from '@wepublish/website/api';
-import { mockImage } from '@wepublish/storybook/mocks';
+import { mockMemberPlan } from '@wepublish/storybook/mocks';
 
 export default {
   component: InvoiceList,
@@ -24,12 +23,10 @@ const subscription = {
   monthlyAmount: 250000,
   paymentPeriodicity: PaymentPeriodicity.Quarterly,
   url: 'https://example.com',
-  paymentMethod: {},
-  memberPlan: {
-    image: mockImage(),
-    name: 'Foobar Memberplan',
-    currency: Currency.Chf,
+  paymentMethod: {
+    slug: 'foo',
   },
+  memberPlan: mockMemberPlan(),
 } as Exact<FullSubscriptionFragment>;
 
 const invoice = {

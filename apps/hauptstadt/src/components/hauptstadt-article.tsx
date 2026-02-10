@@ -15,22 +15,33 @@ import {
   Article as ArticleType,
   useCommentListQuery,
 } from '@wepublish/website/api';
-import { Button } from '@wepublish/website/builder';
+import { BuilderArticleProps, Button } from '@wepublish/website/builder';
 import {
   BuilderArticleAuthorsProps,
   BuilderArticleMetaProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { Fragment, useState } from 'react';
+import { Fragment, memo, useState } from 'react';
 import { FaCommentSlash, FaRegComment, FaShare } from 'react-icons/fa6';
 import { MdFormatSize, MdPrint } from 'react-icons/md';
 
 import { contentTheme } from '../theme';
 import { breakoutContainerOnXs } from '../utils/breakout-container';
 import { FontSizePicker } from './font-size-picker';
+import { CurrentPaywallContext } from './hauptstadt-paywall';
+
+const ArticleWithPaywall = memo<BuilderArticleProps>(
+  function WithPaywall(props) {
+    return (
+      <CurrentPaywallContext.Provider value={props.data?.article.paywall}>
+        <Article {...props} />
+      </CurrentPaywallContext.Provider>
+    );
+  }
+);
 
 export const HauptstadtArticle = createWithTheme(
-  styled(Article)`
+  styled(ArticleWithPaywall)`
     row-gap: ${({ theme }) => theme.spacing(3.5)};
 
     > ${ImageBlockWrapper}:first-of-type img {
@@ -56,7 +67,9 @@ export const HauptstadtArticle = createWithTheme(
     }
 
     ${({ data }) =>
-      data?.article.latest.properties.find(prop => prop.key === 'opinion') &&
+      data?.article.latest.properties.find(
+        prop => prop.key === 'type' && prop.value === 'opinion'
+      ) &&
       css`
         ${TitleBlockLead} {
           font-style: italic;

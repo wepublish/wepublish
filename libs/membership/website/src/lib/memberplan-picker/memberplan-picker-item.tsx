@@ -59,6 +59,7 @@ export const MemberPlanItem = forwardRef<
       name,
       slug,
       shortDescription,
+      amountPerMonthMax,
       amountPerMonthMin,
       currency,
       extendable,
@@ -73,6 +74,9 @@ export const MemberPlanItem = forwardRef<
     const radioGroup = useRadioGroup();
     const isChecked = props.checked ?? radioGroup?.value === id;
     const { t } = useTranslation();
+
+    const hasFixedAmount =
+      amountPerMonthMax != null && amountPerMonthMax === amountPerMonthMin;
 
     return (
       <MemberPlanItemWrapper className={className}>
@@ -94,7 +98,7 @@ export const MemberPlanItem = forwardRef<
                   locale
                 ),
                 extendable,
-                exactAmount: props.tags?.includes('hide-payment-amount'),
+                exactAmount: hasFixedAmount,
               })}
             </MemberPlanItemPrice>
           </MemberPlanItemContent>

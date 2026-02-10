@@ -94,7 +94,7 @@ fragment BlockWithoutTeaser on BlockContent {
     crowdfunding {
       id
       name
-      activeCrowdfundingGoal {
+      activeGoal {
         id
         title
         description
@@ -163,6 +163,12 @@ fragment BlockWithoutTeaser on BlockContent {
     videoID
   }
 
+  ... on StreamableVideoBlock {
+    blockStyle
+    type
+    videoID
+  }
+
   ... on YouTubeVideoBlock {
     blockStyle
     type
@@ -207,6 +213,8 @@ fragment BlockWithoutTeaser on BlockContent {
 
   ... on SubscribeBlock {
     blockStyle
+    memberPlanIds
+    fields
     type
   }
 }
@@ -366,6 +374,74 @@ fragment FullBlock on BlockContent {
     }
     autofillTeasers {
       ...FullTeaser
+    }
+  }
+  
+  ... on FlexBlock {
+    blockStyle
+    type
+    blocks {
+      alignment {
+        i
+        x
+        y
+        w
+        h
+        static
+      }
+      block {
+        __typename
+        
+        ... on TeaserSlotsBlock {
+          title
+          blockStyle
+          type
+          autofillConfig {
+            enabled
+            filter {
+              tags
+              tagObjects {
+                id
+                tag
+              }
+            }
+            sort
+            teaserType
+          }
+          slots {
+            type
+            teaser {
+              __typename
+              ...FullTeaser
+            }
+          }
+          autofillTeasers {
+            ...FullTeaser
+          }
+        }
+        
+        ... on TeaserListBlock {
+          title
+          blockStyle
+          type
+          skip
+          take
+          sort
+          teaserType
+          filter {
+            tags
+            tagObjects {
+              id
+              tag
+            }
+          }
+          teasers {
+            ...FullTeaser
+          }
+        }
+        
+        ...BlockWithoutTeaser
+      }
     }
   }
 }

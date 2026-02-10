@@ -269,16 +269,41 @@
         "removeBlock": "Supprimer le bloc",
         "unlockBlock": "Déverrouiller la position bloc"
       },
+      "flexBlock": {
+        "label": "Bloc flexible",
+        "addNestedBlock": "Ajouter un (sous-)bloc",
+        "chooseNestedBlock": "Choisir un (sous-)bloc",
+        "close": "Fermer",
+        "deleteNestedBlock": "Supprimer le (sous-)bloc",
+        "editNestedBlock": "Éditer le (sous-)bloc",
+        "lockNestedBlock": "Verrouiller le (sous-)bloc",
+        "removeNestedBlock": "Retirer le (sous-)bloc",
+        "unlockNestedBlock": "Déverrouiller le (sous-)bloc"
+      },
       "html": {
         "close": "Fermer",
         "confirm": "Confirmer",
         "edit": "Editer l’HTML",
         "label": "HTML",
         "placeholder": "Copiez votre bloc HTML ici..",
-        "warning": "Veuillez noter que l’utilisation d’HTML personnalisé peut à l’utilisateur·trice ou rompre la mise en page. Veuillez vous assurer que le HTML que vous fournissez est exempt de scripts malveillants et qu’il est structuré correctement."
+        "warning": "Veuillez noter que l’utilisation d’HTML personnalisé peut à l’utilisateur·trice ou rompre la mise en page. Veuillez vous assurer que le HTML que vous fournissez est exempt de scripts malveillants et qu’il est structuré correctement.",
+        "generate": "Générez votre HTML via l'IA",
+        "prompt": "Envoyer le prompt",
+        "promptSuccess": "HTML généré avec succès et bloc mis à jour. L'historique du chat est enregistré et vous pouvez continuer la conversation."
       },
       "subscribe": {
-        "label": "S'abonner"
+        "label": "S'abonner",
+        "selectMemberPlans": "Plans affichés",
+        "selectMemberPlansPlaceholder": "Afficher tous les plans",
+        "selectMemberPlansSelectionHintAll": "Sans sélection, tous les plans actifs sont affichés.",
+        "selectFields": "Champs de saisie",
+        "selectFieldsSelectionHint": "L’email et le nom de famille sont toujours demandés. L’ordre n’a pas d’importance",
+        "FirstName": "Prénom",
+        "Birthday": "Date de naissance",
+        "Address": "Adresse",
+        "EmailRepeated": "Répéter l’email",
+        "Password": "Mot de passe",
+        "PasswordRepeated": "Répéter le mot de passe"
       },
       "image": {
         "label": "Image",
@@ -349,7 +374,16 @@
         "label": "6 Col"
       },
       "teaserSlots": {
-        "label": "Machines à sous tease"
+        "label": "Slots de teaser",
+        "autoLoading": "Chargement automatique :",
+        "fillManually": "Tous les emplacements sont remplis manuellement",
+        "teasersLoaded": "Teaser chargé",
+        "configure": "Configurer",
+        "latest": "Plus récent",
+        "addSlot": "Ajouter un emplacement",
+        "filter": "Filtrer par tags",
+        "filterHelpText": "Saisissez les tags séparés par des virgules. Laissez vide pour ne pas appliquer de filtre de tag.",
+        "autofillType": "Type de teaser des teasers chargés automatiquement"
       },
       "title": {
         "label": "Titre",
@@ -740,7 +774,8 @@
         "quarterly": "Trimestriel",
         "yearly": "Annuel",
         "biennial": "Biennal",
-        "lifetime": "À vie"
+        "lifetime": "À vie",
+        "donationOnce": "Don unique"
       },
       "title": "Plans membres"
     },
@@ -1218,7 +1253,9 @@
       "sendWebsiteLogin": "Envoyer le lien de login",
       "sendWebsiteLoginSuccessMessage": "Lien de login envoyé à {{email}}.",
       "streetAddress": "Rue",
+      "streetAddressNumber": "Numéro de maison",
       "streetAddress2": "Rue 2",
+      "streetAddress2Number": "Numéro de maison",
       "subscriptionsHeader": "Abonnements",
       "successfullyCreatedUser": "Utilisateur·trice créé·e avec succès",
       "successfullyUpdatedUser": "Utilisateur·trice mis·e à jour avec succès",
@@ -1349,13 +1386,20 @@
       "extendableHelpText": "Détermine si l'abonnement d'un utilisateur peut être renouvelé - automatiquement ou manuellement - ou non. En règle générale, les abonnements d'essai ne peuvent pas être prolongés.",
       "maxCount": "Nombre maximum d'abonnements par utilisateur",
       "maxCountHelpText": "Limite le nombre d'abonnements qu'un:e utilisateur:trice peut souscrire pour ce plan d'abonnement. Cela inclut les abonnements désactivés.",
+      "maxCountDonation": "Nombre maximum de dons par utilisateur:trice",
+      "maxCountDonationHelpText": "Limite le nombre de dons qu'un:e utilisateur:trice peut effectuer pour ce plan.",
       "trialMemberplanAlert": "Ce plan d'abonnement est configuré pour des abonnements d'essai.",
       "forceAutoRenewNotPossible": "Le renouvellement automatique n'est pas possible, car le plan d'abonnement n'est pas extensible.",
       "trialSubscriptionNotPossible": "Le plan d'abonnement doit rester extensible, car un renouvellement automatique est paramétré dans un paramètre de paiement. Tu peux bien sûr changer cela.",
       "migratePMTitle": "Migrer les abonnements vers le mode de paiement cible",
       "migratePMHelptext": "Migre les abonnements de ce plan vers un nouveau mode de paiement. Les abonnements qui sont encore débités automatiquement ne sont pas migrés. La migration n'a lieu que lorsqu'un utilisateur agit lui-même et veut par exemple payer une facture ouverte dans son profil ou prolonger un abonnement de manière anticipée.",
       "confirmationPage": "Redirection vers la page en cas d'utilisateur existant (retargeting)",
-      "confirmationPageHelptext": "Si l'identifiant de l'utilisateur est connu lors de la souscription d'un abonnement, la personne reçoit un e-mail pour payer l'abonnement. Cela pourrait être signalé sur cette page."
+      "confirmationPageHelptext": "Si l'identifiant de l'utilisateur est connu lors de la souscription d'un abonnement, la personne reçoit un e-mail pour payer l'abonnement. Cela pourrait être signalé sur cette page.",
+      "productType": "Type de produit",
+      "productTypeHelpText": "Choisissez si le plan doit être proposé comme abonnement ou don. ",
+      "productTypeSubscription": "Abonnement",
+      "productTypeDonation": "Don",
+      "amountPerMonthMaxHelpText": "Le montant maximum par mois qu'un utilisateur peut payer pour ce plan d'abonnement."
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Paramètres avancés",
@@ -1421,7 +1465,12 @@
         "countSubscriptionsFrom": "Inclure uniquement les abonnements payés à partir de la date",
         "countSubscriptionsUntil": "Inclure uniquement les abonnements payés jusqu'à la date",
         "revenue": "Déjà CHF {{revenue}} financé",
-        "goals": "Objectifs"
+        "goals": "Objectifs",
+        "subscriptions": "Déjà {{subscriptions}} abonnés",
+        "crowdfunding": "Crowdfunding",
+        "goalType": "Type d’objectif",
+        "goalType_Revenue": "Revenus",
+        "goalType_Subscription": "Nombre d’abonnements"
       },
       "goalsForm": {
         "title": "Titre",
@@ -1442,7 +1491,11 @@
       "rangeLastWeek": "Semaine dernière",
       "rangeLastMonth": "Mois dernier",
       "rangeLastQuarter": "Dernier trimestre",
-      "rangeLastYear": "Année dernière"
+      "rangeLastYear": "Année dernière",
+      "rangeNextWeek": "Semaine prochaine",
+      "rangeNextMonth": "Mois prochain",
+      "rangeNextQuarter": "Trimestre prochain",
+      "rangeNextYear": "Année prochaine"
     },
     "audience": {
       "legend": {
@@ -1452,7 +1505,9 @@
           "renewedSubscriptionCount": "Abonnements renouvelés et payés pour une nouvelle période.",
           "createdSubscriptionCount": "Abonnements entièrement nouveaux avec seulement une période payée jusqu'à présent.",
           "deactivatedSubscriptionCount": "Abonnements désactivés/résiliés et non renouvelés.",
-          "replacedSubscriptionCount": "Abonnements remplacés par un autre (par ex. abonnements d'essai)."
+          "replacedSubscriptionCount": "Abonnements remplacés par un autre (par ex. abonnements d'essai).",
+          "predictedSubscriptionRenewalCount": "Nombre d'abonnements arrivant à expiration et prêts à être renouvelés.\n Abonnements pour la première fois, par rapport aux... \n Abonnements avec un historique de renouvellement\n Les renouvellements sont affichés depuis le début de la période sélectionnée (ou la date actuelle, si la période commence dans le passé)\n Les renouvellements sont représentés par le nombre d'abonnements actuellement payés et actifs configurés pour se renouveler automatiquement.",
+          "endingSubscriptionCount": "Abonnements qui expirent à la fin de leur période, excluant ceux configurés pour se renouveler automatiquement."
         },
         "totalActiveSubscriptionCount": "Total des abonnements actifs & payés",
         "overdueSubscriptionCount": "Abonnements renouvelés et non payés",
@@ -1460,14 +1515,32 @@
         "createdSubscriptionCount": "Nouveaux abonnements payés",
         "deactivatedSubscriptionCount": "Abonnements désactivés",
         "replacedSubscriptionCount": "Abonnements remplacés",
+        "predictedSubscriptionRenewalCount": "Renouvellements d'abonnement",
+        "predictedSubscriptionRenewalCount_variants": {
+          "low": "Renouvellements pour la première fois",
+          "high": "Renouvellements subséquents",
+          "total": "Somme des renouvellements à venir",
+          "perDayHighProbability": "Renouvellements pour la première fois",
+          "perDayLowProbability": "Renouvellements subséquents"
+        },
+        "predictedSubscriptionRenewalCountPerDay": {
+          "lowProbability": "Renouvellements pour la première fois",
+          "highProbability": "Renouvellements subséquents"
+        },
+        "endingSubscriptionCount": "Abonnements expirants",
         "totalNewSubscriptions": "Total des nouveaux abonnements payés & des abonnements renouvelés",
         "renewalRate": "Taux de renouvellement",
         "cancellationRate": "Taux de résiliation",
         "createdSubscriptionUsers": "Nouveaux abonnements payés",
         "overdueSubscriptionUsers": "Abonnements renouvelés et non payés",
+        "predictedSubscriptionRenewalUsers": "Predicted renewals",
+        "createdUnpaidSubscriptionUsers": "Renewed unpaid subscriptions",
         "deactivatedSubscriptionUsers": "Abonnements désactivés",
         "renewedSubscriptionUsers": "Abonnements renouvelés payés",
-        "replacedSubscriptionUsers": "Abonnements remplacés"
+        "replacedSubscriptionUsers": "Abonnements remplacés",
+        "predictedSubscriptionRenewalUsersLowProbability": "Renouvellements pour la première fois",
+        "predictedSubscriptionRenewalUsersHighProbability": "Renouvellements subséquents",
+        "endingSubscriptionUsers": "Abonnements expirants"
       }
     },
     "audienceDetailDrawer": {
@@ -1489,17 +1562,24 @@
       "byDate": "Par",
       "totalNewSubscriptionsInfo": "Somme des abonnements remplacés, nouveaux et renouvelés. Seules les colonnes actives sont additionnées.",
       "renewalRateInfo": "Part des abonnements qui ont été renouvelés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés réduisent le taux de renouvellement jusqu'à ce qu'ils soient payés.",
-      "cancellationRateInfo": "Part des abonnements qui n'ont pas été renouvelés mais résiliés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés augmentent le taux de résiliation jusqu'à ce qu'ils soient payés."
+      "cancellationRateInfo": "Part des abonnements qui n'ont pas été renouvelés mais résiliés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés augmentent le taux de résiliation jusqu'à ce qu'ils soient payés.",
+      "predictedSubscriptionRenewalCountPerDay": {
+        "lowProbability": "Renouvellements d'abonnement pour la première fois",
+        "highProbability": "Renouvellements d'abonnement subséquents"
+      }
     },
     "paywall": {
       "navbar": "Paywall",
       "form": {
-        "title": "Modifier le paywall",
+        "editTitle": "Modifier le paywall",
+        "createTitle": "Créer un paywall",
         "name": "Nom du paywall (NON visible par l'utilisateur)",
         "description": "Texte du paywall (visible par l'utilisateur)",
         "circumventDescription": "Texte du paywall lorsque le contenu de l'article n'est pas masqué (visible par l'utilisateur)",
         "active": "Actif",
         "activeHelpText": "Permet de désactiver rapidement le paywall sur tous les articles",
+        "alternativeSubscribeUrl": "URL alternative vers la page d’abonnement",
+        "alternativeSubscribeUrlHelpText": "Peut être utilisée en combinaison avec un bloc d’abonnement sur une page. Si laissé vide, la page par défaut sera utilisée.",
         "anyMemberPlan": "Autoriser tout abonnement à franchir le paywall",
         "memberPlans": "Seuls certains abonnements peuvent franchir le paywall",
         "bypasses": "Contournements",
@@ -1508,13 +1588,32 @@
         "addBypass": "Ajouter",
         "qrCodeTitle": "Code QR pour le token de contournement",
         "downloadSvg": "Télécharger SVG",
-        "baseUrl": "URL du site web (baseurl). Par ex. https://wepublish.ch"
+        "baseUrl": "URL du site web (baseurl). Par ex. https://wepublish.ch",
+        "upgrade": "Textes lorsque le paywall permet et prend en charge la mise à niveau",
+        "display": "Options d’affichage",
+        "hideContentAfter": "Masquer le contenu après X blocs",
+        "fadeout": "Fondu des blocs masqués",
+        "fadeoutHelpText": "Le fondu permet d’afficher un aperçu du reste du contenu."
+      },
+      "overview": {
+        "areYouSure": "Êtes-vous sûr ?",
+        "areYouSureBody": "Le paywall « {{ paywall }} » sera supprimé définitivement et ne peut pas être annulé.",
+        "areYouSureConfirmation": "Supprimer le paywall",
+        "createPaywall": "Nouveau paywall",
+        "title": "Paywalls",
+        "name": "Nom",
+        "active": "Actif",
+        "memberPlans": "Plans d’abonnement",
+        "anyMemberPlan": "Tous les plans d’abonnement"
       }
     },
     "paymentMethodEditPanel": {
       "gracePeriod": "Délai de paiement",
       "gracePeriodHelpText": "Si votre site web utilise un paywall, les utilisateurs peuvent lire immédiatement ou continuer à lire tous les contenus, même s'ils n'ont pas souscrit d'abonnement payant, pendant le délai de paiement. Cela est utile, par exemple, en cas de virement bancaire.",
       "days": "Jours"
+    },
+    "audienceCsvBtn": {
+      "exportUsers": "Télécharger CSV"
     }
   }
 }

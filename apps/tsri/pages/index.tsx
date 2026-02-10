@@ -11,7 +11,7 @@ import {
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 
-import { DailyBriefingContext } from '../src/components/daily-briefing/daily-briefing-teaser';
+import { DailyBriefingContext } from '../src/components/teasers/teaser-sidebar-daily-briefing-context';
 
 type IndexProps = {
   campaigns: campaigns.Campaigns[];

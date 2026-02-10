@@ -7,14 +7,14 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { HttpModule, HttpService } from '@nestjs/axios';
 import { PrismaClient } from '@prisma/client';
 import { ActionModule } from '@wepublish/action/api';
-import { KarmaMediaAdapter, NovaMediaAdapter } from '@wepublish/api';
+import { NovaMediaAdapter } from '@wepublish/api';
 import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
 import { AuthenticationModule } from '@wepublish/authentication/api';
 import { BannerApiModule } from '@wepublish/banner/api';
 import { BlockContentModule } from '@wepublish/block-content/api';
 import { CommentModule } from '@wepublish/comments/api';
 import { ConsentModule } from '@wepublish/consent/api';
-import { CrowdfundingApiModule } from '@wepublish/crowdfunding/api';
+import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
 import { EventModule } from '@wepublish/event/api';
 import {
   AgendaBaselService,
@@ -36,6 +36,7 @@ import {
   DashboardModule,
   MembershipModule,
   SubscriptionModule,
+  UpgradeSubscriptionModule,
 } from '@wepublish/membership/api';
 import { NavigationModule } from '@wepublish/navigation/api';
 import {
@@ -52,6 +53,7 @@ import {
   NeverChargePaymentProvider,
   PaymentProvider,
   PaymentsModule,
+  PaymentMethodModule,
   PayrexxFactory,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
@@ -79,16 +81,15 @@ import { VersionInformationModule } from '@wepublish/versionInformation/api';
 import bodyParser from 'body-parser';
 import FormData from 'form-data';
 import Mailgun from 'mailgun.js';
-import { URL } from 'url';
 import { SlackMailProvider } from '../app/slack-mail-provider';
 import { readConfig } from '../readConfig';
-import { PaymentMethodModule } from '@wepublish/payment-method/api';
 import { AuthorModule } from '@wepublish/author/api';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
 import { InvoiceModule } from '@wepublish/invoice/api';
 import { SessionModule } from '@wepublish/session/api';
 import { ChallengeModule } from '@wepublish/challenge/api';
 import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
+import { V0Module } from '@wepublish/ai/api';
 
 @Global()
 @Module({
@@ -111,10 +112,25 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
           persistedQueries: false,
           introspection: configFile.general.apolloIntrospection,
           playground: configFile.general.apolloPlayground,
-          allowBatchedHttpRequests: true,
+          allowBatchedHttpRequests: false,
           inheritResolversFromInterfaces: true,
+          csrfPrevention: false,
         } as ApolloDriverConfig;
       },
+    }),
+    V0Module.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (config: ConfigService) => {
+        const configFile = await readConfig(
+          config.getOrThrow('CONFIG_FILE_PATH')
+        );
+
+        return {
+          apiKey: configFile.v0?.apiKey || config.get('V0_API_KEY'),
+          systemPrompt: configFile.v0?.systemPrompt,
+        };
+      },
+      inject: [ConfigService],
     }),
     AuthorModule,
     PrismaModule,
@@ -235,8 +251,7 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
       },
       inject: [ConfigService, HttpService],
     }),
-    PaymentMethodModule,
-    PaymentsModule.registerAsync({
+    PaymentMethodModule.registerAsync({
       imports: [ConfigModule, PrismaModule],
       useFactory: async (config: ConfigService, prisma: PrismaClient) => {
         const paymentProviders: PaymentProvider[] = [];
@@ -380,6 +395,7 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
       inject: [ConfigService, PrismaClient],
       global: true,
     }),
+    PaymentsModule,
     MemberPlanModule,
     ApiModule,
     MembershipModule,
@@ -477,6 +493,7 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
       inject: [ConfigService],
     }),
     SubscriptionModule,
+    UpgradeSubscriptionModule,
     NavigationModule,
     TagModule,
     EventsImportModule.registerAsync({
@@ -513,7 +530,7 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
     }),
     BannerApiModule,
     VersionInformationModule,
-    CrowdfundingApiModule,
+    CrowdfundingModule,
     ImportPeerArticleModule,
     URLAdapterModule.registerAsync({
       imports: [ConfigModule],
@@ -540,21 +557,11 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
         const internalUrl = config.get('MEDIA_SERVER_INTERNAL_URL');
         const token = config.getOrThrow('MEDIA_SERVER_TOKEN');
 
-        if (configFile.mediaServer?.type === 'nova') {
-          return new NovaMediaAdapter(
-            config.getOrThrow('MEDIA_SERVER_URL'),
-            token,
-            internalUrl ? internalUrl : undefined
-          );
-        }
-
-        console.warn(
-          'Running on deprecated karma media server migrate to nova media server!'
-        );
-        return new KarmaMediaAdapter(
-          new URL(config.getOrThrow('MEDIA_SERVER_URL')),
+        return new NovaMediaAdapter(
+          config.getOrThrow('MEDIA_SERVER_URL'),
           token,
-          internalUrl ? new URL(internalUrl) : undefined
+          { quality: configFile.mediaServer.quality ?? 0.8 },
+          internalUrl ? internalUrl : undefined
         );
       },
       inject: [ConfigService],

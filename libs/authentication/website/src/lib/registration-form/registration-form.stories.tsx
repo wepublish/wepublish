@@ -127,13 +127,20 @@ const fillRepeatPassword: StoryObj['play'] = async ({
 const fillStreetName: StoryObj['play'] = async ({ canvasElement, step }) => {
   const canvas = within(canvasElement);
 
-  const input = canvas.getByLabelText('Strasse und Hausnummer', {
+  const streetInput = canvas.getByLabelText('Strasse', {
+    selector: 'input',
+  });
+
+  const numberInput = canvas.getByLabelText('Hausnummer', {
     selector: 'input',
   });
 
   await step('Enter streetName', async () => {
-    await userEvent.click(input);
-    await userEvent.type(input, 'Musterstrasse 1');
+    await userEvent.click(streetInput);
+    await userEvent.type(streetInput, 'Musterstrasse');
+
+    await userEvent.click(numberInput);
+    await userEvent.type(numberInput, '1');
   });
 };
 

@@ -31,7 +31,9 @@ import {
 import { useTranslation } from 'react-i18next';
 // Feather icons as we can change the stroke width and Hauptstadt wants a thinner icon
 import { FiMenu, FiPlus } from 'react-icons/fi';
-import { MdSearch, MdWarning } from 'react-icons/md';
+import { MdInfo, MdSearch, MdWarning } from 'react-icons/md';
+
+import { useInformUserAboutUpgrade } from '../hooks/inform-user-upgrade';
 
 import { Tiempos } from '../theme';
 
@@ -225,9 +227,9 @@ const NavBackgroundWrapper = styled('div', {
     : 'none'};
   width: 100%;
   clip-path: inset(0 5px -20px 5px);
-
+  
   margin: 0 auto;
-
+  
   ${({ theme }) => theme.breakpoints.up('xs')} {
     max-width: ${({ theme }) =>
       (theme as Theme & { containerMaxWidth: any }).containerMaxWidth.xs}px;
@@ -476,6 +478,10 @@ const HauptstadtOpenInvoices = styled('div')`
   font-weight: 600;
 `;
 
+const HauptstadtUpgrade = styled(HauptstadtOpenInvoices)`
+  color: ${({ theme }) => theme.palette.primary.dark};
+`;
+
 export interface ExtendedNavbarProps extends BuilderNavbarProps {
   isMenuOpen?: boolean;
   onMenuToggle?: (isOpen: boolean) => void;
@@ -584,6 +590,8 @@ export function HauptstadtNavbar({
     hasActiveSubscription
   );
   const navbarHeight = useMemo(() => cssVariables(navbarState), [navbarState]);
+  
+  const [canUpgrade] = useInformUserAboutUpgrade();
 
   return (
     <NavbarWrapper className={className}>
@@ -596,88 +604,96 @@ export function HauptstadtNavbar({
         color={'transparent'}
       >
         <NavBackgroundWrapper navbarState={navbarState}>
-          <NavbarInnerWrapper navbarState={navbarState}>
-            <NavbarMain>
-              <NavbarIconButtonWrapper>
-                <NavbarMenuButton
-                  size="small"
-                  aria-label="Menu"
-                  onClick={toggleMenu}
-                  color={'inherit'}
-                >
-                  {!isMenuOpen && <FiMenu />}
-                  {isMenuOpen && (
-                    <FiPlus css={{ transform: 'rotate(45deg)' }} />
-                  )}
+        <NavbarInnerWrapper navbarState={navbarState}>
+          <NavbarMain>
+            <NavbarIconButtonWrapper>
+              <NavbarMenuButton
+                size="small"
+                aria-label="Menu"
+                onClick={toggleMenu}
+                color={'inherit'}
+              >
+                {!isMenuOpen && <FiMenu />}
+                {isMenuOpen && <FiPlus css={{ transform: 'rotate(45deg)' }} />}
 
-                  {hasUnpaidInvoices && profileBtn && (
-                    <HauptstadtOpenInvoices>
-                      <MdWarning size={24} />
+                {hasUnpaidInvoices && profileBtn && (
+                  <HauptstadtOpenInvoices>
+                    <MdWarning size={24} />
 
-                      <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
-                        Abo Jetzt Bezahlen
-                      </Box>
-                    </HauptstadtOpenInvoices>
-                  )}
-                </NavbarMenuButton>
-              </NavbarIconButtonWrapper>
+                    <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
+                      Offene Rechnungen
+                    </Box>
+                  </HauptstadtOpenInvoices>
+                )}
 
-              {!!headerItems?.links.length && (
-                <NavbarLinks isMenuOpen={isMenuOpen}>
-                  {headerItems.links.map((link, index) => (
-                    <NavbarLink
-                      key={index}
-                      href={navigationLinkToUrl(link)}
-                    >
-                      {link.label}
-                    </NavbarLink>
-                  ))}
-                </NavbarLinks>
-              )}
-            </NavbarMain>
+                {!hasUnpaidInvoices && subscribeBtn && canUpgrade && (
+                  <HauptstadtUpgrade>
+                    <MdInfo size={24} />
 
-            <NavbarLoginLink
-              href="/"
-              aria-label="Startseite"
-              isMenuOpen={isMenuOpen}
-            >
-              <NavbarLogoWrapper>
-                <HauptstadtLogo
-                  src="/logo.svg"
-                  alt="Hauptstadt"
-                  isScrolled={isScrolled}
-                  isMenuOpen={isMenuOpen}
-                />
-              </NavbarLogoWrapper>
-            </NavbarLoginLink>
+                    <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
+                      Jetzt upgraden
+                    </Box>
+                  </HauptstadtUpgrade>
+                )}
+              </NavbarMenuButton>
+            </NavbarIconButtonWrapper>
 
-            <NavbarActions isMenuOpen={isMenuOpen}>
-              {(!isScrolled || isMenuOpen) && (
-                <Link
-                  href="/search"
-                  color="inherit"
-                >
-                  <NavbarSearchIconButtonWrapper>
-                    <NavbarMenuButton
-                      color="inherit"
-                      size="small"
-                    >
-                      <MdSearch aria-label="Suche" />
-                    </NavbarMenuButton>
-                  </NavbarSearchIconButtonWrapper>
-                </Link>
-              )}
-            </NavbarActions>
+            {!!headerItems?.links.length && (
+              <NavbarLinks isMenuOpen={isMenuOpen}>
+                {headerItems.links.map((link, index) => (
+                  <NavbarLink
+                    key={index}
+                    href={navigationLinkToUrl(link)}
+                  >
+                    {link.label}
+                  </NavbarLink>
+                ))}
+              </NavbarLinks>
+            )}
+          </NavbarMain>
 
-            <HauptstadtClaimWrapper>
-              <HauptstadtClaim
-                src="/logo-claim.svg"
-                alt="Neuer Berner Journalismus"
+          <NavbarLoginLink
+            href="/"
+            aria-label="Startseite"
+            isMenuOpen={isMenuOpen}
+          >
+            <NavbarLogoWrapper>
+              <HauptstadtLogo
+                src="/logo.svg"
+                alt="Hauptstadt"
                 isScrolled={isScrolled}
                 isMenuOpen={isMenuOpen}
               />
-            </HauptstadtClaimWrapper>
-          </NavbarInnerWrapper>
+            </NavbarLogoWrapper>
+          </NavbarLoginLink>
+
+          <NavbarActions isMenuOpen={isMenuOpen}>
+            {(!isScrolled || isMenuOpen) && (
+              <Link
+                href="/search"
+                color="inherit"
+              >
+                <NavbarSearchIconButtonWrapper>
+                  <NavbarMenuButton
+                    color="inherit"
+                    size="small"
+                  >
+                    <MdSearch aria-label="Suche" />
+                  </NavbarMenuButton>
+                </NavbarSearchIconButtonWrapper>
+              </Link>
+            )}
+          </NavbarActions>
+
+          <HauptstadtClaimWrapper>
+            <HauptstadtClaim
+              src="/logo-claim.svg"
+              alt="Neuer Berner Journalismus"
+              isScrolled={isScrolled}
+              isMenuOpen={isMenuOpen}
+            />
+          </HauptstadtClaimWrapper>
+        </NavbarInnerWrapper>
         </NavBackgroundWrapper>
       </AppBar>
 
@@ -866,12 +882,7 @@ const NavPaper = ({
   const { t } = useTranslation();
   const { hasUser, logout } = useUser();
   const theme = useTheme();
-
-  const showMenu = true;
-
-  if (!showMenu) {
-    return null;
-  }
+  const [canUpgrade] = useInformUserAboutUpgrade();
 
   return (
     <NavPaperWrapper
@@ -915,6 +926,18 @@ const NavPaper = ({
               {...profileBtn}
             >
               Offene Rechnung
+            </Button>
+          )}
+          {!hasUnpaidInvoices && canUpgrade && (
+            <Button
+              LinkComponent={Link}
+              variant="contained"
+              color="warning"
+              onClick={closeMenu}
+              startIcon={<MdWarning />}
+              {...subscribeBtn}
+            >
+              Jetzt upgraden
             </Button>
           )}
 

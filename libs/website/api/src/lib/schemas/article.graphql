@@ -5,13 +5,21 @@ fragment FullPaywall on Paywall {
   name
   description
   circumventDescription
+  alternativeSubscribeUrl
+  upgradeDescription
+  upgradeCircumventDescription
   memberPlans {
     id
+    name
+    tags
   }
   bypasses {
     id
     token
   }
+
+  fadeout
+  hideContentAfter
 }
 
 fragment ArticleRevisionWithoutBlocks on ArticleRevision {
@@ -24,6 +32,7 @@ fragment ArticleRevisionWithoutBlocks on ArticleRevision {
   lead
   title
   canonicalUrl
+  breaking
 
   authors {
     ...FullAuthor

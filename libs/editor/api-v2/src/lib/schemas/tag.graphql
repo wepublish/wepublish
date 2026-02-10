@@ -6,3 +6,63 @@ fragment FullTag on Tag {
   main
   url
 }
+
+query Tag($id: String!) {
+  tag(id: $id) {
+    ...FullTag
+  }
+}
+
+query TagList(
+  $filter: TagFilter
+  $cursor: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: TagSort
+) {
+  tags(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullTag
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+mutation CreateTag($tag: String, $description: RichText, $type: TagType!) {
+  createTag(tag: $tag, description: $description, type: $type) {
+    ...FullTag
+  }
+}
+
+mutation UpdateTag(
+  $id: String!
+  $description: RichText
+  $tag: String
+  $main: Boolean
+) {
+  updateTag(id: $id, tag: $tag, description: $description, main: $main) {
+    ...FullTag
+  }
+}
+
+mutation DeleteTag($id: String!) {
+  deleteTag(id: $id) {
+    ...FullTag
+  }
+}

@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import {
   MutationCreateTagArgs,
   MutationUpdateTagArgs,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import { RichTextBlock, RichTextBlockValue } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { Checkbox, Form, Panel } from 'rsuite';

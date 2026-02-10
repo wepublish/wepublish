@@ -21,6 +21,7 @@ import {
   AvailablePaymentMethod,
   Currency,
   PaymentPeriodicity,
+  ProductType,
 } from '@prisma/client';
 
 export const GraphQLSupportedCurrency = new GraphQLEnumType({
@@ -28,6 +29,14 @@ export const GraphQLSupportedCurrency = new GraphQLEnumType({
   values: {
     CHF: { value: Currency.CHF },
     EUR: { value: Currency.EUR },
+  },
+});
+
+export const GraphQLProductType = new GraphQLEnumType({
+  name: 'ProductType',
+  values: {
+    Subscription: { value: ProductType.Subscription },
+    Donation: { value: ProductType.Donation },
   },
 });
 
@@ -98,10 +107,12 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     tags: { type: new GraphQLList(new GraphQLNonNull(GraphQLString)) },
     active: { type: new GraphQLNonNull(GraphQLBoolean) },
     amountPerMonthMin: { type: new GraphQLNonNull(GraphQLInt) },
+    amountPerMonthMax: { type: GraphQLInt },
     amountPerMonthTarget: { type: GraphQLInt },
     currency: { type: new GraphQLNonNull(GraphQLSupportedCurrency) },
     maxCount: { type: GraphQLInt },
     extendable: { type: new GraphQLNonNull(GraphQLBoolean) },
+    productType: { type: new GraphQLNonNull(GraphQLProductType) },
     externalReward: { type: GraphQLString },
     availablePaymentMethods: {
       type: new GraphQLNonNull(
@@ -121,6 +132,7 @@ export const GraphQLMemberPlanFilter = new GraphQLInputObjectType({
     name: { type: GraphQLString },
     active: { type: GraphQLBoolean },
     tags: { type: new GraphQLList(new GraphQLNonNull(GraphQLString)) },
+    productType: { type: GraphQLProductType },
   }),
 });
 
@@ -159,33 +171,5 @@ export const GraphQLAvailablePaymentMethodInput = new GraphQLInputObjectType({
       ),
     },
     forceAutoRenewal: { type: new GraphQLNonNull(GraphQLBoolean) },
-  }),
-});
-
-export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
-  name: 'MemberPlanInput',
-  fields: () => ({
-    name: { type: new GraphQLNonNull(GraphQLString) },
-    slug: { type: new GraphQLNonNull(GraphQLString) },
-    imageID: { type: GraphQLString },
-    description: { type: GraphQLRichText },
-    shortDescription: { type: GraphQLRichText },
-    tags: { type: new GraphQLList(new GraphQLNonNull(GraphQLString)) },
-    active: { type: new GraphQLNonNull(GraphQLBoolean) },
-    amountPerMonthMin: { type: new GraphQLNonNull(GraphQLInt) },
-    amountPerMonthTarget: { type: GraphQLInt },
-    currency: { type: new GraphQLNonNull(GraphQLSupportedCurrency) },
-    extendable: { type: new GraphQLNonNull(GraphQLBoolean) },
-    externalReward: { type: GraphQLString },
-    maxCount: { type: GraphQLInt },
-    availablePaymentMethods: {
-      type: new GraphQLNonNull(
-        new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethodInput))
-      ),
-    },
-    migrateToTargetPaymentMethodID: { type: GraphQLString },
-    successPageId: { type: GraphQLString },
-    failPageId: { type: GraphQLString },
-    confirmationPageId: { type: GraphQLString },
   }),
 });
