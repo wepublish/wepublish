@@ -34,7 +34,6 @@ import { FiMenu, FiPlus } from 'react-icons/fi';
 import { MdInfo, MdSearch, MdWarning } from 'react-icons/md';
 
 import { useInformUserAboutUpgrade } from '../hooks/inform-user-upgrade';
-
 import { Tiempos } from '../theme';
 
 enum NavbarState {
@@ -226,34 +225,37 @@ const NavBackgroundWrapper = styled('div', {
       'drop-shadow(0px 1px 5px rgba(0,0,0,0.19))'
     : 'none'};
   width: 100%;
-  clip-path: inset(0 5px -20px 5px);
-  
+  clip-path: inset(0 0 -20px 0);
   margin: 0 auto;
-  
-  ${({ theme }) => theme.breakpoints.up('xs')} {
-    max-width: ${({ theme }) =>
-      (theme as Theme & { containerMaxWidth: any }).containerMaxWidth.xs}px;
-  }
-  ${({ theme }) => theme.breakpoints.up('sm')} {
-    max-width: ${({ theme }) =>
-      (theme as Theme & { containerMaxWidth: any }).containerMaxWidth.sm}px;
-  }
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    max-width: ${({ theme }) =>
-      (theme as Theme & { containerMaxWidth: any }).containerMaxWidth.md}px;
-  }
-  ${({ theme }) => theme.breakpoints.up('lg')} {
-    max-width: ${({ theme }) =>
-      (theme as Theme & { containerMaxWidth: any }).containerMaxWidth.lg}px;
-  }
-  ${({ theme }) => theme.breakpoints.up('xl')} {
-    max-width: ${({ theme }) =>
-      (theme as Theme & { containerMaxWidth: any }).containerMaxWidth.xl}px;
-  }
-  ${({ theme }) => theme.breakpoints.up('xxl')} {
-    max-width: ${({ theme }) =>
-      (theme as Theme & { containerMaxWidth: any }).containerMaxWidth.xxl}px;
-  }
+
+  ${({ theme }: { theme: any }): string => {
+    return `
+      ${theme.breakpoints.up('xs')} {
+        max-width: ${theme.containerMaxWidth.xs}px;
+      }
+
+      ${theme.breakpoints.up('sm')} {
+        max-width: ${theme.containerMaxWidth.sm}px;
+      }
+
+      ${theme.breakpoints.up('md')} {
+        max-width: ${theme.containerMaxWidth.md}px;
+        clip-path: inset(0 5px -20px 5px);
+      }
+
+      ${theme.breakpoints.up('lg')} {
+        max-width: ${theme.containerMaxWidth.lg}px;
+      }
+
+      ${theme.breakpoints.up('xl')} {
+        max-width: ${theme.containerMaxWidth.xl}px;
+      }
+
+      ${theme.breakpoints.up('xxl')} {
+        max-width: ${theme.containerMaxWidth.xxl}px;
+      }
+    `;
+  }}
 `;
 
 export const NavbarLinks = styled('div', {
@@ -590,7 +592,7 @@ export function HauptstadtNavbar({
     hasActiveSubscription
   );
   const navbarHeight = useMemo(() => cssVariables(navbarState), [navbarState]);
-  
+
   const [canUpgrade] = useInformUserAboutUpgrade();
 
   return (
@@ -604,96 +606,98 @@ export function HauptstadtNavbar({
         color={'transparent'}
       >
         <NavBackgroundWrapper navbarState={navbarState}>
-        <NavbarInnerWrapper navbarState={navbarState}>
-          <NavbarMain>
-            <NavbarIconButtonWrapper>
-              <NavbarMenuButton
-                size="small"
-                aria-label="Menu"
-                onClick={toggleMenu}
-                color={'inherit'}
-              >
-                {!isMenuOpen && <FiMenu />}
-                {isMenuOpen && <FiPlus css={{ transform: 'rotate(45deg)' }} />}
+          <NavbarInnerWrapper navbarState={navbarState}>
+            <NavbarMain>
+              <NavbarIconButtonWrapper>
+                <NavbarMenuButton
+                  size="small"
+                  aria-label="Menu"
+                  onClick={toggleMenu}
+                  color={'inherit'}
+                >
+                  {!isMenuOpen && <FiMenu />}
+                  {isMenuOpen && (
+                    <FiPlus css={{ transform: 'rotate(45deg)' }} />
+                  )}
 
-                {hasUnpaidInvoices && profileBtn && (
-                  <HauptstadtOpenInvoices>
-                    <MdWarning size={24} />
+                  {hasUnpaidInvoices && profileBtn && (
+                    <HauptstadtOpenInvoices>
+                      <MdWarning size={24} />
 
-                    <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
-                      Offene Rechnungen
-                    </Box>
-                  </HauptstadtOpenInvoices>
-                )}
+                      <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
+                        Offene Rechnungen
+                      </Box>
+                    </HauptstadtOpenInvoices>
+                  )}
 
-                {!hasUnpaidInvoices && subscribeBtn && canUpgrade && (
-                  <HauptstadtUpgrade>
-                    <MdInfo size={24} />
+                  {!hasUnpaidInvoices && subscribeBtn && canUpgrade && (
+                    <HauptstadtUpgrade>
+                      <MdInfo size={24} />
 
-                    <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
-                      Jetzt upgraden
-                    </Box>
-                  </HauptstadtUpgrade>
-                )}
-              </NavbarMenuButton>
-            </NavbarIconButtonWrapper>
+                      <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
+                        Jetzt upgraden
+                      </Box>
+                    </HauptstadtUpgrade>
+                  )}
+                </NavbarMenuButton>
+              </NavbarIconButtonWrapper>
 
-            {!!headerItems?.links.length && (
-              <NavbarLinks isMenuOpen={isMenuOpen}>
-                {headerItems.links.map((link, index) => (
-                  <NavbarLink
-                    key={index}
-                    href={navigationLinkToUrl(link)}
-                  >
-                    {link.label}
-                  </NavbarLink>
-                ))}
-              </NavbarLinks>
-            )}
-          </NavbarMain>
+              {!!headerItems?.links.length && (
+                <NavbarLinks isMenuOpen={isMenuOpen}>
+                  {headerItems.links.map((link, index) => (
+                    <NavbarLink
+                      key={index}
+                      href={navigationLinkToUrl(link)}
+                    >
+                      {link.label}
+                    </NavbarLink>
+                  ))}
+                </NavbarLinks>
+              )}
+            </NavbarMain>
 
-          <NavbarLoginLink
-            href="/"
-            aria-label="Startseite"
-            isMenuOpen={isMenuOpen}
-          >
-            <NavbarLogoWrapper>
-              <HauptstadtLogo
-                src="/logo.svg"
-                alt="Hauptstadt"
+            <NavbarLoginLink
+              href="/"
+              aria-label="Startseite"
+              isMenuOpen={isMenuOpen}
+            >
+              <NavbarLogoWrapper>
+                <HauptstadtLogo
+                  src="/logo.svg"
+                  alt="Hauptstadt"
+                  isScrolled={isScrolled}
+                  isMenuOpen={isMenuOpen}
+                />
+              </NavbarLogoWrapper>
+            </NavbarLoginLink>
+
+            <NavbarActions isMenuOpen={isMenuOpen}>
+              {(!isScrolled || isMenuOpen) && (
+                <Link
+                  href="/search"
+                  color="inherit"
+                >
+                  <NavbarSearchIconButtonWrapper>
+                    <NavbarMenuButton
+                      color="inherit"
+                      size="small"
+                    >
+                      <MdSearch aria-label="Suche" />
+                    </NavbarMenuButton>
+                  </NavbarSearchIconButtonWrapper>
+                </Link>
+              )}
+            </NavbarActions>
+
+            <HauptstadtClaimWrapper>
+              <HauptstadtClaim
+                src="/logo-claim.svg"
+                alt="Neuer Berner Journalismus"
                 isScrolled={isScrolled}
                 isMenuOpen={isMenuOpen}
               />
-            </NavbarLogoWrapper>
-          </NavbarLoginLink>
-
-          <NavbarActions isMenuOpen={isMenuOpen}>
-            {(!isScrolled || isMenuOpen) && (
-              <Link
-                href="/search"
-                color="inherit"
-              >
-                <NavbarSearchIconButtonWrapper>
-                  <NavbarMenuButton
-                    color="inherit"
-                    size="small"
-                  >
-                    <MdSearch aria-label="Suche" />
-                  </NavbarMenuButton>
-                </NavbarSearchIconButtonWrapper>
-              </Link>
-            )}
-          </NavbarActions>
-
-          <HauptstadtClaimWrapper>
-            <HauptstadtClaim
-              src="/logo-claim.svg"
-              alt="Neuer Berner Journalismus"
-              isScrolled={isScrolled}
-              isMenuOpen={isMenuOpen}
-            />
-          </HauptstadtClaimWrapper>
-        </NavbarInnerWrapper>
+            </HauptstadtClaimWrapper>
+          </NavbarInnerWrapper>
         </NavBackgroundWrapper>
       </AppBar>
 
