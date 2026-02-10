@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import { useTranslation } from 'react-i18next';
 import {
   MdAnalytics,
-  MdChevronRight,
   MdCreditCard,
   MdEdit,
   MdEmail,
@@ -11,7 +10,7 @@ import {
   MdSmartToy,
 } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import { Button, Col, Grid, IconButton, Panel, Row } from 'rsuite';
+import { Col, Grid, IconButton, Panel, Row } from 'rsuite';
 
 import mailChimpLogo from '../../../assets/integrations/mailchimp.avif';
 import slackLogo from '../../../assets/integrations/slack.png';

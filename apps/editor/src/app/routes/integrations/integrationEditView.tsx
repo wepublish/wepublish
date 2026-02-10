@@ -10,7 +10,7 @@ import { PermissionControl } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBack } from 'react-icons/md';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Col, Grid, Panel, Row } from 'rsuite';
+import { Button } from 'rsuite';
 import { AIIntegrationForm } from './aiIntegrationForm';
 import { ChallengeIntegrationForm } from './challengeIntegrationForm';
 import { MailIntegrationForm } from './mailIntegrationForm';

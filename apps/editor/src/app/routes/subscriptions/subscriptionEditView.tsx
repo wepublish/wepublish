@@ -4,7 +4,6 @@ import { Alert } from '@mui/material';
 import {
   Currency,
   DeactivationFragment,
-  FullMemberPlanFragment,
   FullSubscriptionFragment,
   FullUserFragment,
   InvoiceFragment,
@@ -24,6 +23,7 @@ import {
   getApiClientV2,
   useMemberPlanListQuery,
   usePaymentMethodListQuery,
+  FullMemberPlanFragment,
 } from '@wepublish/editor/api-v2';
 import {
   ALL_PAYMENT_PERIODICITIES,
@@ -228,6 +228,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
       return;
     }
     setUser(subscription.user);
+    // @ts-expect-error wrong image type for now. Will be fixed with subscription PR
     setMemberPlan(subscription.memberPlan);
     setPaymentPeriodicity(subscription.paymentPeriodicity);
     setMonthlyAmount(subscription.monthlyAmount);
