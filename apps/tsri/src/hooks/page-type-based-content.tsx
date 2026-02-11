@@ -1,201 +1,174 @@
-import { NormalizedCacheObject, useApolloClient } from '@apollo/client';
-import { Tag } from '@wepublish/website/api';
-import { ArticleRevision, Page } from '@wepublish/website/api';
+import {
+  ArticleRevision,
+  Event,
+  PageRevision,
+  Tag,
+  TagType,
+  useArticleQuery,
+  useEventQuery,
+  usePageQuery,
+  usePhraseQuery,
+  useTagQuery,
+} from '@wepublish/website/api';
 import { PageType } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
+import { useMemo } from 'react';
 
 export type PageTypeBasedProps = {
-  Page?: Pick<Page, 'slug' | 'url'>;
+  Page?: Pick<PageRevision, 'title'>;
   Article?: Pick<ArticleRevision, 'preTitle'>;
   ArticleList?: Pick<Tag, 'tag'>;
+  Event?: Pick<Event, 'name'>;
+  Search?: {
+    phrase: string;
+    totalCount: number;
+  };
   pageType: PageType;
 };
 
-export const getPageType = (
-  pageProps: NormalizedCacheObject,
-  path: string
-): PageType => {
-  let pageType: PageType = PageType.Unknown;
-
-  const rootQuery = pageProps ? pageProps['ROOT_QUERY'] : undefined;
-
-  if (rootQuery) {
-    const propNames = Object.getOwnPropertyNames(rootQuery);
-    propNames.some(propName => {
-      switch (propName.match(/^[^(]+/)?.[0]) {
-        case 'page': {
-          pageType = PageType.Page;
-          return true;
-        }
-        case 'articles': {
-          pageType = PageType.ArticleList;
-          propNames.some(name => {
-            if (name.startsWith('article(')) {
-              pageType = PageType.Article;
-              return true;
-            } else if (name.startsWith('tags(')) {
-              pageType = PageType.ArticleListByTag;
-              return true;
-            } else if (name.startsWith('author(')) {
-              pageType = PageType.Author;
-              return true;
-            }
-            return false;
-          });
-          return true;
-        }
-        case 'authors': {
-          pageType = PageType.AuthorList;
-          return true;
-        }
-        case 'events': {
-          pageType = PageType.EventList;
-          return true;
-        }
-        case 'event': {
-          pageType = PageType.Event;
-          return true;
-        }
-        case 'profiles': {
-          pageType = PageType.ProfileList;
-          return true;
-        }
-        case 'profile': {
-          pageType = PageType.Profile;
-          return true;
-        }
-        case 'phrase': {
-          pageType = PageType.SearchResults;
-          return true;
-        }
-        case 'navigations': {
-          switch (true) {
-            case path.startsWith('/search'):
-              pageType = PageType.SearchPage;
-              return true;
-            case path.startsWith('/mitmachen'):
-              pageType = PageType.SubscriptionPage;
-              return true;
-            case path.startsWith('/profile'):
-              pageType = PageType.Profile;
-              return true;
-            default:
-          }
-          return false;
-        }
-        case 'peerProfile':
-        case 'ratingSystem':
-        case 'comments':
-        case 'author':
-        case 'article':
-        case 'tags':
-        case 'tag':
-        case '__typename':
-        default:
-      }
-      return false;
-    });
-  } else {
-    switch (true) {
-      case path.startsWith('/login'):
-        return PageType.Login;
-      case path.startsWith('/profile'):
-        return PageType.Profile;
-    }
-  }
-
-  return pageType;
-};
-
-const getPageData = (pageProps: NormalizedCacheObject) => {
-  let pageData: Pick<Page, 'slug' | 'url'> | undefined = undefined;
-  const rootQuery = pageProps.ROOT_QUERY;
-  if (rootQuery) {
-    Object.getOwnPropertyNames(rootQuery).some(propName => {
-      switch (propName.match(/^[^(]+/)?.[0]) {
-        case 'page':
-          pageData = pageProps[
-            (rootQuery[propName] as { __ref: string }).__ref
-          ] as Pick<Page, 'slug' | 'url'>;
-          return true;
-      }
-      return false;
-    });
-  }
-
-  return pageData;
-};
-
-const getArticleData = (pageProps: NormalizedCacheObject) => {
-  let articleData: Pick<ArticleRevision, 'preTitle'> | undefined = undefined;
-  const rootQuery = pageProps.ROOT_QUERY;
-
-  if (rootQuery) {
-    Object.getOwnPropertyNames(rootQuery).some(propName => {
-      switch (propName.match(/^[^(]+/)?.[0]) {
-        case 'article':
-          articleData = pageProps[
-            (
-              pageProps[(rootQuery[propName] as { __ref: string }).__ref]
-                ?.latest as { __ref: string }
-            ).__ref
-          ] as Pick<ArticleRevision, 'preTitle'>;
-          return true;
-      }
-      return false;
-    });
-  }
-
-  return articleData;
-};
-
-const getArticleListData = (pageProps: NormalizedCacheObject) => {
-  let articleListTag: Pick<Tag, 'tag'> | undefined = undefined;
-  const rootQuery = pageProps.ROOT_QUERY;
-  if (rootQuery) {
-    Object.getOwnPropertyNames(rootQuery).some(propName => {
-      switch (propName.match(/^[^(]+/)?.[0]) {
-        case 'tag':
-          articleListTag = {
-            tag: pageProps[(rootQuery[propName] as { __ref: string }).__ref]
-              ?.tag as string,
-          };
-          return true;
-        default:
-      }
-      return false;
-    });
-  }
-  return articleListTag;
-};
-
-export const useGetPageTypeBasedContent = () => {
+export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
   const router = useRouter();
-  const path = router.asPath;
-  const client = useApolloClient();
+  const { slug, id, tag, q: phraseQuery } = router.query;
 
-  const pageProps = client.cache.extract() as NormalizedCacheObject;
-  const pageType = getPageType(pageProps, path);
-  const essentialProps: PageTypeBasedProps = {
-    pageType,
-  };
+  const { data: articleData, loading: articleLoading } = useArticleQuery({
+    skip: (!slug && !id) || !router.asPath.startsWith('/a'),
+    fetchPolicy: 'cache-only',
+    variables: {
+      slug: (slug as string) || undefined,
+      id: (id as string) || undefined,
+    },
+  });
 
-  const rootQuery = pageProps ? pageProps['ROOT_QUERY'] : undefined;
+  const { data: tagData, loading: tagLoading } = useTagQuery({
+    skip: !tag || !router.asPath.startsWith('/a/tag'),
+    fetchPolicy: 'cache-only',
+    variables: {
+      tag: (tag as string) || '',
+      type: TagType.Article,
+    },
+  });
 
-  if (rootQuery) {
-    switch (pageType) {
-      case PageType.Page:
-        essentialProps.Page = getPageData(pageProps);
-        break;
-      case PageType.Article:
-        essentialProps.Article = getArticleData(pageProps);
-        break;
-      case PageType.ArticleList:
-        essentialProps.ArticleList = getArticleListData(pageProps);
-        break;
-      default:
+  const { data: pageData, loading: pageLoading } = usePageQuery({
+    skip: !slug && !id,
+    fetchPolicy: 'cache-only',
+    variables: {
+      id: (id as string) || undefined,
+      slug: (slug as string) || undefined,
+    },
+  });
+
+  const { data: eventData, loading: eventLoading } = useEventQuery({
+    skip: !id || !router.asPath.startsWith('/event'),
+    fetchPolicy: 'cache-only',
+    variables: {
+      id: id as string,
+    },
+  });
+
+  const { data: searchData, loading: searchLoading } = usePhraseQuery({
+    skip: !phraseQuery,
+    fetchPolicy: 'cache-only',
+    variables: {
+      query: phraseQuery! as string,
+    },
+  });
+
+  const pageTypeBasedProps = useMemo<PageTypeBasedProps>(() => {
+    if (tag && !tagLoading && tagData?.tag?.tag) {
+      return {
+        pageType: PageType.ArticleList,
+        ArticleList: { tag: tagData.tag.tag },
+      };
     }
-  }
 
-  return essentialProps;
+    if (
+      (slug || id) &&
+      !articleLoading &&
+      articleData?.article?.latest?.preTitle
+    ) {
+      return {
+        pageType: PageType.Article,
+        Article: { preTitle: articleData.article.latest?.preTitle },
+      };
+    }
+
+    if (id && !eventLoading && eventData?.event?.name) {
+      return {
+        pageType: PageType.Event,
+        Event: { name: eventData.event?.name },
+      };
+    }
+
+    if (router.asPath === '/') {
+      return {
+        pageType: PageType.Home,
+      };
+    }
+
+    if (slug && !pageLoading && pageData?.page?.latest?.title) {
+      return {
+        pageType: PageType.Page,
+        Page: { title: pageData.page.latest?.title },
+      };
+    }
+
+    if (!searchLoading && phraseQuery) {
+      return {
+        pageType: PageType.SearchResults,
+        Search: {
+          phrase: phraseQuery as string,
+          totalCount: searchData?.phrase?.articles?.totalCount ?? 0,
+        },
+      };
+    }
+
+    switch (router.asPath.split('/')[1]) {
+      case 'login':
+        return {
+          pageType: PageType.Login,
+        };
+      case 'profile':
+        return {
+          pageType: PageType.Profile,
+        };
+      case 'author':
+        return {
+          pageType: slug ? PageType.Author : PageType.AuthorList,
+        };
+      case 'event':
+        return {
+          pageType: PageType.EventList,
+        };
+      case 'search':
+        return {
+          pageType: PageType.SearchPage,
+        };
+      case 'mitmachen':
+        return {
+          pageType: PageType.SubscriptionPage,
+        };
+    }
+
+    return {
+      pageType: PageType.Unknown,
+    };
+  }, [
+    tag,
+    tagLoading,
+    tagData,
+    slug,
+    id,
+    articleLoading,
+    articleData,
+    eventLoading,
+    eventData,
+    router.asPath,
+    pageLoading,
+    pageData,
+    phraseQuery,
+    searchData,
+    searchLoading,
+  ]);
+
+  return pageTypeBasedProps;
 };

@@ -15,23 +15,22 @@ export const FlexBlockWrapper = styled('div')`
   column-gap: ${({ theme }) => theme.spacing(2)};
   row-gap: ${({ theme }) => theme.spacing(8)};
   grid-template-columns: repeat(12, 1fr);
-  grid-column: 1 / -1;
+  grid-column: -1 / 1;
 `;
 
 export const BlockWithAlignment = styled('div')<FlexAlignment>`
-  grid-column: 1 / -1;
+  grid-column: -1 / 1;
 
   ${({ theme, w }) =>
     w > 6 &&
     css`
-      grid-column: 1 / -1;
+      grid-column: -1 / 1;
     `}
 
   ${({ theme, h, w, x, y }) => css`
     ${theme.breakpoints.up('md')} {
       grid-column-start: ${x + 1};
       grid-column-end: ${x + 1 + w};
-
       grid-row-start: ${y + 1};
       grid-row-end: ${y + 1 + h};
     }
