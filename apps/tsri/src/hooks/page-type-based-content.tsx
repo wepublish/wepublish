@@ -32,6 +32,7 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
 
   const { data: articleData, loading: articleLoading } = useArticleQuery({
     skip: (!slug && !id) || !router.asPath.startsWith('/a'),
+    fetchPolicy: 'cache-only',
     variables: {
       slug: (slug as string) || undefined,
       id: (id as string) || undefined,
@@ -40,6 +41,7 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
 
   const { data: tagData, loading: tagLoading } = useTagQuery({
     skip: !tag || !router.asPath.startsWith('/a/tag'),
+    fetchPolicy: 'cache-only',
     variables: {
       tag: (tag as string) || '',
       type: TagType.Article,
@@ -48,6 +50,7 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
 
   const { data: pageData, loading: pageLoading } = usePageQuery({
     skip: !slug && !id,
+    fetchPolicy: 'cache-only',
     variables: {
       id: (id as string) || undefined,
       slug: (slug as string) || undefined,
@@ -56,6 +59,7 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
 
   const { data: eventData, loading: eventLoading } = useEventQuery({
     skip: !id || !router.asPath.startsWith('/event'),
+    fetchPolicy: 'cache-only',
     variables: {
       id: id as string,
     },
@@ -63,6 +67,7 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
 
   const { data: searchData, loading: searchLoading } = usePhraseQuery({
     skip: !phraseQuery,
+    fetchPolicy: 'cache-only',
     variables: {
       query: phraseQuery! as string,
     },
