@@ -38,6 +38,7 @@ export const ImageBlockInnerWrapper = styled('div')`
 
 export const ImageBlockImage = styled(Image)`
   justify-self: center;
+  object-position: unset;
 `;
 
 export const ImageBlockCaption = styled('figcaption')`
@@ -71,15 +72,6 @@ export const ImageBlock = ({
 
         if (realImageWidth !== newImageWidth) {
           setRealImageWidth(newImageWidth);
-        }
-
-        const cssObjectFit = window
-          .getComputedStyle(imageRef.current, null)
-          .getPropertyValue('object-fit');
-
-        // make sure images are centered
-        if (cssObjectFit === 'contain') {
-          imageRef.current.setAttribute('style', 'object-position: unset;');
         }
 
         captionRef.current.setAttribute('style', '');
