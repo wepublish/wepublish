@@ -1296,6 +1296,7 @@
         "areYouSure": "Bist Du sicher?",
         "areYouSureBody": "Das Tag \"{{ tag }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
         "areYouSureConfirmation": "Tag löschen",
+        "color": "Farbe",
         "createTag": "Neuer Tag",
         "editTag": "{{tag}} Bearbeiten",
         "placeholder": "Name des Tags",

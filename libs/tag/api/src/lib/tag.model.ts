@@ -12,6 +12,7 @@ import { TagType } from '@prisma/client';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { PaginatedType, SortOrder } from '@wepublish/utils/api';
 import { Descendant } from 'slate';
+import { ColorScalar } from '@wepublish/utils/api';
 
 @ObjectType()
 export class Tag {
@@ -32,6 +33,9 @@ export class Tag {
 
   @Field()
   url!: string;
+
+  @Field(() => ColorScalar, { nullable: true })
+  color?: string;
 }
 
 @InputType()
@@ -98,7 +102,7 @@ export class TagsArgs {
 @ArgsType()
 export class CreateTagInput extends PickType(
   Tag,
-  ['tag', 'main', 'type', 'description'] as const,
+  ['tag', 'main', 'type', 'description', 'color'] as const,
   ArgsType
 ) {}
 
