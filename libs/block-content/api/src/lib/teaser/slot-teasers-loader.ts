@@ -12,7 +12,11 @@ import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
 import { isTeaserGridFlexBlock } from './teaser-flex.model';
 import { isTeaserGridBlock } from './teaser-grid.model';
-import { FlexBlock, isFlexBlock } from '../flex/flex-block.model';
+import {
+  BlockWithAlignment,
+  FlexBlock,
+  isFlexBlock,
+} from '../flex/flex-block.model';
 
 const extractTeasers = <Block extends BaseBlock<BlockType>>(block: Block) => {
   if (isTeaserSlotsBlock(block)) {
@@ -41,21 +45,10 @@ const extractTeasers = <Block extends BaseBlock<BlockType>>(block: Block) => {
         if (flexTeaser.teaser) {
           teasers.push(flexTeaser.teaser);
         }
-
         return teasers;
       },
       []
     );
-  }
-
-  if (isFlexBlock(block)) {
-    return block.blocks.reduce((teasers: (typeof Teaser)[], nestedBlock) => {
-      if (nestedBlock.block) {
-        teasers.push(...extractTeasers(nestedBlock.block));
-      }
-
-      return teasers;
-    }, []);
   }
 
   return [];
@@ -70,44 +63,50 @@ export class SlotTeasersLoader {
     private articleService: ArticleService
   ) {}
 
-  async populateTeaserSlots(block: BaseBlock<BlockType> | undefined) {
-    if (!block) {
-      return block;
-    }
-    if (isTeaserSlotsBlock(block)) {
-      const autofillTeasers = await this.getAutofillTeasers(block);
-      const teasers = await this.getTeasers(block, autofillTeasers);
+  async populateTeaserSlots(block: TeaserSlotsBlock) {
+    // get autofill teasers: load & store them in the loaded teasers list
+    const autofillTeasers = await this.getAutofillTeasers(block);
+    // get all teasers (manual & autofill)
+    const teasers = await this.getTeasers(block, autofillTeasers);
 
-      return {
-        ...block,
-        autofillTeasers,
-        teasers,
-      };
-    }
-    return block;
+    return {
+      ...block,
+      autofillTeasers,
+      teasers,
+    };
   }
 
+  // process a block recursively
   async processBlock(
     block: BaseBlock<BlockType> | undefined
   ): Promise<BaseBlock<BlockType> | undefined> {
-    if (!block) return block;
+    if (!block) {
+      return block;
+    }
 
-    this.addLoadedTeaser(...extractTeasers(block));
+    // 1. if block is a flex block --> process its nested blocks
+    if (isFlexBlock(block)) {
+      const updatedBlocks: BlockWithAlignment[] = [];
+      for (const nested of block.blocks) {
+        const updatedNestedBlock = await this.processBlock(nested.block);
+        updatedBlocks.push({
+          ...nested,
+          block: updatedNestedBlock,
+        } as BlockWithAlignment);
+      }
 
+      return { ...block, blocks: updatedBlocks } as FlexBlock;
+    }
+
+    // 2. else if block is a teaser-slots-block --> populate teasers ...
+    //    ... & extract/store them so they can be excluded when next teaser-slots-blocks will be populated
     if (isTeaserSlotsBlock(block)) {
       return await this.populateTeaserSlots(block);
     }
 
-    if (isFlexBlock(block)) {
-      const updatedBlocks = await Promise.all(
-        block.blocks.map(async nested => ({
-          ...nested,
-          block: await this.processBlock(nested.block),
-        }))
-      );
-
-      return { ...block, blocks: updatedBlocks } as FlexBlock;
-    }
+    // 3. else check if block has teasers --> extract/store them so they can be excluded ...
+    //    ... when next teaser-slots-blocks will be populated
+    this.addLoadedTeaser(...extractTeasers(block));
 
     return block;
   }
@@ -115,6 +114,7 @@ export class SlotTeasersLoader {
   async loadSlotTeasersIntoBlocks(revisionBlocks: BaseBlock<BlockType>[]) {
     const blocks: (BaseBlock<BlockType> | undefined)[] = [];
 
+    // process each block
     for (const block of revisionBlocks) {
       blocks.push(await this.processBlock(block));
     }
@@ -171,7 +171,6 @@ export class SlotTeasersLoader {
       );
 
       this.addLoadedTeaser(...teasers);
-
       return teasers;
     }
 
