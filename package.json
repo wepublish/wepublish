@@ -348,5 +348,8 @@
   "optionalDependencies": {
     "@img/sharp-darwin-arm64": "^0.33.5",
     "@img/sharp-linux-x64": "^0.33.5"
+  },
+  "overrides": {
+    "tar": "^7.5.7"
   }
 }
