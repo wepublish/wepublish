@@ -605,6 +605,8 @@ export const NavPaperCategory = styled('div')`
   grid-row: 1 / 2;
   row-gap: 0.8cqw;
   padding-left: 2cqw;
+  max-width: 44vw;
+  overflow-x: hidden;
 
   &:nth-of-type(n + 2) {
     grid-column: 1 / 2;
@@ -635,12 +637,13 @@ export const NavPaperLinksGroup = styled('div')`
   grid-template-columns: repeat(2, auto);
   grid-template-rows: repeat(2, auto);
   row-gap: 12cqw;
-  margin: 0 0 0 3cqw;
+  margin: 0;
 
   ${theme.breakpoints.up('md')} {
     row-gap: unset;
     grid-template-rows: unset;
     grid-template-columns: repeat(3, min-content);
+    margin: 0 0 0 3cqw;
   }
 `;
 

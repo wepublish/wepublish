@@ -324,6 +324,8 @@ export const FooterCategory = styled(FooterCategoryDefault)`
   grid-row: 2 / 3;
   row-gap: 0.8cqw;
   padding-left: 2cqw;
+  max-width: 44vw;
+  overflow-x: hidden;
 
   &:nth-of-type(n + 2) {
     grid-column: 1 / 2;

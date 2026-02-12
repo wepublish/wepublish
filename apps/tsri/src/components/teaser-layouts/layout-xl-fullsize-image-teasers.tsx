@@ -3,6 +3,7 @@ import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
 import { TsriTeaserType } from '../teasers/tsri-base-teaser';
+import { TeaserWrapper } from '../teasers/tsri-teaser';
 import { TsriLayoutType } from './tsri-layout';
 import {
   alignmentForTeaserBlock as alignmentFunc,
@@ -29,7 +30,7 @@ export const TeaserSlotsXLFullsizeImage = styled(TeaserSlots)`
   grid-template-columns: unset;
 
   ${({ theme }) => theme.breakpoints.up('xs')} {
-    & > * {
+    & > ${TeaserWrapper} {
       grid-template-columns: unset;
       grid-column-start: unset;
       grid-column-end: unset;
