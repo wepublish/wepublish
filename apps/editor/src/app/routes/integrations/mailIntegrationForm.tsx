@@ -1,17 +1,17 @@
 import {
-  MailProviderType,
   MailProviderSettingsDocument,
-  UpdateMailProviderSettingDocument,
+  MailProviderType,
   SettingMailProvider,
+  UpdateMailProviderSettingDocument,
 } from '@wepublish/editor/api-v2';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
-import { GenericIntegrationList } from './genericIntegrationList';
-import { FieldDefinition } from './genericIntegrationForm';
 
 import mailChimpLogo from '../../../assets/integrations/mailchimp.avif';
-import slackLogo from '../../../assets/integrations/slack.png';
 import mailgunLogo from '../../../assets/integrations/mailgun.svg';
+import slackLogo from '../../../assets/integrations/slack.png';
+import { FieldDefinition } from './genericIntegrationForm';
+import { GenericIntegrationList } from './genericIntegrationList';
 
 const mailSettingsSchema = z.object({
   id: z.string(),
