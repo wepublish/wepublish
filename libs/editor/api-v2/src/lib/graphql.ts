@@ -1357,16 +1357,35 @@ export type Invoice = HasOptionalSubscription & {
   __typename?: 'Invoice';
   canceledAt?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
+  currency: Currency;
   description?: Maybe<Scalars['String']>;
   dueAt: Scalars['DateTime'];
   id: Scalars['String'];
   items: Array<InvoiceItem>;
   mail: Scalars['String'];
+  manuallySetAsPaidByUser?: Maybe<User>;
+  manuallySetAsPaidByUserId?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   paidAt?: Maybe<Scalars['DateTime']>;
+  scheduledDeactivationAt: Scalars['DateTime'];
   subscription?: Maybe<PublicSubscription>;
   subscriptionID?: Maybe<Scalars['String']>;
   total: Scalars['Int'];
+};
+
+export type InvoiceConnection = {
+  __typename?: 'InvoiceConnection';
+  nodes: Array<Invoice>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type InvoiceFilter = {
+  canceledAt?: InputMaybe<DateFilter>;
+  mail?: InputMaybe<Scalars['String']>;
+  paidAt?: InputMaybe<DateFilter>;
+  subscriptionID?: InputMaybe<Scalars['String']>;
+  userID?: InputMaybe<Scalars['String']>;
 };
 
 export type InvoiceItem = {
@@ -1374,11 +1393,25 @@ export type InvoiceItem = {
   amount: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   quantity: Scalars['Int'];
   total: Scalars['Int'];
 };
+
+export type InvoiceItemInput = {
+  amount: Scalars['Int'];
+  description?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  quantity: Scalars['Int'];
+};
+
+export enum InvoiceSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  PaidAt = 'PaidAt'
+}
 
 export type ListicleBlock = BaseBlock & {
   __typename?: 'ListicleBlock';
@@ -1512,6 +1545,8 @@ export type Mutation = {
   createCrowdfunding: Crowdfunding;
   /** Creates a new event. */
   createEvent: Event;
+  /** Creates a new invoice. */
+  createInvoice: Invoice;
   /** Creates a new memberplan. */
   createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
@@ -1571,6 +1606,8 @@ export type Mutation = {
   deleteCrowdfunding?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing event. */
   deleteEvent: Event;
+  /** Deletes an existing invoice. */
+  deleteInvoice: Invoice;
   /** Deletes an existing memberplan. */
   deleteMemberPlan: MemberPlan;
   /** Deletes an existing navigation. */
@@ -1627,6 +1664,8 @@ export type Mutation = {
   importSubscription: PublicSubscription;
   /** Likes an article. */
   likeArticle: Article;
+  /** Marks an invoice as paid. */
+  markInvoiceAsPaid: Invoice;
   /** Publishes an article at the given time. */
   publishArticle: Article;
   /** Publishes an page at the given time. */
@@ -1635,6 +1674,8 @@ export type Mutation = {
   rateComment: Comment;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
+  /** Renews a subscription. */
+  renewSubscription: PublicSubscription;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
@@ -1665,6 +1706,8 @@ export type Mutation = {
   updateCrowdfunding: Crowdfunding;
   /** Updates an existing event. */
   updateEvent: Event;
+  /** Updates an existing invoice. */
+  updateInvoice: Invoice;
   /** Updates an existing memberplan. */
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
@@ -1805,6 +1848,18 @@ export type MutationCreateEventArgs = {
   startsAt: Scalars['DateTime'];
   status?: EventStatus;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type MutationCreateInvoiceArgs = {
+  currency: Currency;
+  description?: InputMaybe<Scalars['String']>;
+  dueAt: Scalars['DateTime'];
+  items: Array<InvoiceItemInput>;
+  mail: Scalars['String'];
+  manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
+  scheduledDeactivationAt: Scalars['DateTime'];
+  subscriptionID?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2041,6 +2096,11 @@ export type MutationDeleteEventArgs = {
 };
 
 
+export type MutationDeleteInvoiceArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteMemberPlanArgs = {
   id: Scalars['String'];
 };
@@ -2170,6 +2230,11 @@ export type MutationLikeArticleArgs = {
 };
 
 
+export type MutationMarkInvoiceAsPaidArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationPublishArticleArgs = {
   id: Scalars['String'];
   publishedAt: Scalars['DateTime'];
@@ -2197,6 +2262,11 @@ export type MutationRegisterMemberArgs = {
   firstName?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   password?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationRenewSubscriptionArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -2303,6 +2373,19 @@ export type MutationUpdateEventArgs = {
   startsAt?: InputMaybe<Scalars['DateTime']>;
   status?: InputMaybe<EventStatus>;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type MutationUpdateInvoiceArgs = {
+  currency?: InputMaybe<Currency>;
+  description?: InputMaybe<Scalars['String']>;
+  dueAt?: InputMaybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  items?: InputMaybe<Array<InvoiceItemInput>>;
+  mail?: InputMaybe<Scalars['String']>;
+  manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
+  scheduledDeactivationAt?: InputMaybe<Scalars['DateTime']>;
+  subscriptionID?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -3101,7 +3184,7 @@ export type Query = {
   /** This query generates a challenge which can be used to access protected endpoints. */
   challenge: Challenge;
   /** Check the status of an invoice and update with information from the payment provider */
-  checkInvoiceStatus?: Maybe<Invoice>;
+  checkInvoiceStatus: Invoice;
   /** This query returns the comments of an item. */
   comments: Array<Comment>;
   /**
@@ -3169,8 +3252,10 @@ export type Query = {
    *
    */
   importedEventsIds: Array<Scalars['String']>;
-  /** Get all invoices for the authenticated user */
-  invoices: Array<Invoice>;
+  /** Returns a invoice by id. */
+  invoice: Invoice;
+  /** Returns a paginated list of invoices based on the filters given. */
+  invoices: InvoiceConnection;
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /** This query returns the user. */
@@ -3293,6 +3378,8 @@ export type Query = {
    *
    */
   userConsents: Array<UserConsent>;
+  /** Get all invoices for the authenticated user */
+  userInvoices: Array<Invoice>;
   userPollVote?: Maybe<Scalars['String']>;
   /** Returns a userrole by id. */
   userRole: UserRole;
@@ -3423,6 +3510,21 @@ export type QueryImportedEventsArgs = {
   order?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<ImportedEventSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryInvoiceArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryInvoicesArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<InvoiceFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<InvoiceSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
 
@@ -5096,6 +5198,27 @@ export type ImportEventMutationVariables = Exact<{
 
 export type ImportEventMutation = { __typename?: 'Mutation', importEvent: string };
 
+export type InvoiceFragment = { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> };
+
+export type InvoicesQueryVariables = Exact<{
+  cursorId?: InputMaybe<Scalars['String']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  filter?: InputMaybe<InvoiceFilter>;
+  sort?: InputMaybe<InvoiceSort>;
+  order?: InputMaybe<SortOrder>;
+}>;
+
+
+export type InvoicesQuery = { __typename?: 'Query', invoices: { __typename?: 'InvoiceConnection', totalCount: number, nodes: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type MarkInvoiceAsPaidMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type MarkInvoiceAsPaidMutation = { __typename?: 'Mutation', markInvoiceAsPaid: { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, currency: Currency, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> } };
+
 export type MailTemplateQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -5740,6 +5863,13 @@ export type DeleteSubscriptionMutationVariables = Exact<{
 
 
 export type DeleteSubscriptionMutation = { __typename?: 'Mutation', deleteSubscription: { __typename?: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Currency, user: { __typename?: 'User', id: string, name: string, firstName?: string | null }, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Descendant[] | null, shortDescription?: Descendant[] | null, slug: string, active: boolean, productType: ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> }, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } };
+
+export type RenewSubscriptionMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type RenewSubscriptionMutation = { __typename?: 'Mutation', renewSubscription: { __typename?: 'PublicSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, currency: Currency, user: { __typename?: 'User', id: string, name: string, firstName?: string | null }, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Descendant[] | null, shortDescription?: Descendant[] | null, slug: string, active: boolean, productType: ProductType, tags?: Array<string> | null, externalReward?: string | null, currency: Currency, extendable: boolean, maxCount?: number | null, migrateToTargetPaymentMethodID?: string | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }> }> }, properties: Array<{ __typename?: 'Property', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, gracePeriod: number, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, title?: string | null, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } };
 
 export type SystemMailsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -6879,6 +7009,29 @@ export const ImportableEventRefFragmentDoc = gql`
   imageUrl
   startsAt
   endsAt
+}
+    `;
+export const InvoiceFragmentDoc = gql`
+    fragment Invoice on Invoice {
+  id
+  total
+  items {
+    createdAt
+    modifiedAt
+    name
+    description
+    quantity
+    amount
+    total
+  }
+  paidAt
+  description
+  mail
+  manuallySetAsPaidByUserId
+  canceledAt
+  modifiedAt
+  createdAt
+  currency
 }
     `;
 export const FullMailTemplateFragmentDoc = gql`
@@ -9365,6 +9518,93 @@ export function useImportEventMutation(baseOptions?: Apollo.MutationHookOptions<
 export type ImportEventMutationHookResult = ReturnType<typeof useImportEventMutation>;
 export type ImportEventMutationResult = Apollo.MutationResult<ImportEventMutation>;
 export type ImportEventMutationOptions = Apollo.BaseMutationOptions<ImportEventMutation, ImportEventMutationVariables>;
+export const InvoicesDocument = gql`
+    query Invoices($cursorId: String, $take: Int, $skip: Int, $filter: InvoiceFilter, $sort: InvoiceSort, $order: SortOrder) {
+  invoices(
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    filter: $filter
+    sort: $sort
+    order: $order
+  ) {
+    nodes {
+      ...Invoice
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    ${InvoiceFragmentDoc}`;
+
+/**
+ * __useInvoicesQuery__
+ *
+ * To run a query within a React component, call `useInvoicesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useInvoicesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useInvoicesQuery({
+ *   variables: {
+ *      cursorId: // value for 'cursorId'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      filter: // value for 'filter'
+ *      sort: // value for 'sort'
+ *      order: // value for 'order'
+ *   },
+ * });
+ */
+export function useInvoicesQuery(baseOptions?: Apollo.QueryHookOptions<InvoicesQuery, InvoicesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<InvoicesQuery, InvoicesQueryVariables>(InvoicesDocument, options);
+      }
+export function useInvoicesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<InvoicesQuery, InvoicesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<InvoicesQuery, InvoicesQueryVariables>(InvoicesDocument, options);
+        }
+export type InvoicesQueryHookResult = ReturnType<typeof useInvoicesQuery>;
+export type InvoicesLazyQueryHookResult = ReturnType<typeof useInvoicesLazyQuery>;
+export type InvoicesQueryResult = Apollo.QueryResult<InvoicesQuery, InvoicesQueryVariables>;
+export const MarkInvoiceAsPaidDocument = gql`
+    mutation MarkInvoiceAsPaid($id: String!) {
+  markInvoiceAsPaid(id: $id) {
+    ...Invoice
+  }
+}
+    ${InvoiceFragmentDoc}`;
+export type MarkInvoiceAsPaidMutationFn = Apollo.MutationFunction<MarkInvoiceAsPaidMutation, MarkInvoiceAsPaidMutationVariables>;
+
+/**
+ * __useMarkInvoiceAsPaidMutation__
+ *
+ * To run a mutation, you first call `useMarkInvoiceAsPaidMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMarkInvoiceAsPaidMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [markInvoiceAsPaidMutation, { data, loading, error }] = useMarkInvoiceAsPaidMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useMarkInvoiceAsPaidMutation(baseOptions?: Apollo.MutationHookOptions<MarkInvoiceAsPaidMutation, MarkInvoiceAsPaidMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MarkInvoiceAsPaidMutation, MarkInvoiceAsPaidMutationVariables>(MarkInvoiceAsPaidDocument, options);
+      }
+export type MarkInvoiceAsPaidMutationHookResult = ReturnType<typeof useMarkInvoiceAsPaidMutation>;
+export type MarkInvoiceAsPaidMutationResult = Apollo.MutationResult<MarkInvoiceAsPaidMutation>;
+export type MarkInvoiceAsPaidMutationOptions = Apollo.BaseMutationOptions<MarkInvoiceAsPaidMutation, MarkInvoiceAsPaidMutationVariables>;
 export const MailTemplateDocument = gql`
     query MailTemplate {
   mailTemplates {
@@ -11853,6 +12093,39 @@ export function useDeleteSubscriptionMutation(baseOptions?: Apollo.MutationHookO
 export type DeleteSubscriptionMutationHookResult = ReturnType<typeof useDeleteSubscriptionMutation>;
 export type DeleteSubscriptionMutationResult = Apollo.MutationResult<DeleteSubscriptionMutation>;
 export type DeleteSubscriptionMutationOptions = Apollo.BaseMutationOptions<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>;
+export const RenewSubscriptionDocument = gql`
+    mutation RenewSubscription($id: String!) {
+  renewSubscription(id: $id) {
+    ...FullSubscription
+  }
+}
+    ${FullSubscriptionFragmentDoc}`;
+export type RenewSubscriptionMutationFn = Apollo.MutationFunction<RenewSubscriptionMutation, RenewSubscriptionMutationVariables>;
+
+/**
+ * __useRenewSubscriptionMutation__
+ *
+ * To run a mutation, you first call `useRenewSubscriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRenewSubscriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [renewSubscriptionMutation, { data, loading, error }] = useRenewSubscriptionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRenewSubscriptionMutation(baseOptions?: Apollo.MutationHookOptions<RenewSubscriptionMutation, RenewSubscriptionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RenewSubscriptionMutation, RenewSubscriptionMutationVariables>(RenewSubscriptionDocument, options);
+      }
+export type RenewSubscriptionMutationHookResult = ReturnType<typeof useRenewSubscriptionMutation>;
+export type RenewSubscriptionMutationResult = Apollo.MutationResult<RenewSubscriptionMutation>;
+export type RenewSubscriptionMutationOptions = Apollo.BaseMutationOptions<RenewSubscriptionMutation, RenewSubscriptionMutationVariables>;
 export const SystemMailsDocument = gql`
     query SystemMails {
   systemMails {

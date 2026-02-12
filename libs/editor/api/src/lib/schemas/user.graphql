@@ -69,7 +69,8 @@ fragment UserSubscription on UserSubscription {
     ...MemberPlanRef
   }
   invoices {
-    ...Invoice
+    id
+    paidAt
   }
 }
 

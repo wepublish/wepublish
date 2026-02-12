@@ -147,7 +147,7 @@ export const Default: StoryObj<typeof SubscribeContainer> = {
             query: SubscriptionsDocument,
           },
           result: {
-            data: { subscriptions: [subscription] },
+            data: { userSubscriptions: [subscription] },
           },
         },
         {

@@ -1412,16 +1412,35 @@ export type Invoice = HasOptionalSubscription & {
   __typename?: 'Invoice';
   canceledAt?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
+  currency: Currency;
   description?: Maybe<Scalars['String']>;
   dueAt: Scalars['DateTime'];
   id: Scalars['String'];
   items: Array<InvoiceItem>;
   mail: Scalars['String'];
+  manuallySetAsPaidByUser?: Maybe<User>;
+  manuallySetAsPaidByUserId?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   paidAt?: Maybe<Scalars['DateTime']>;
+  scheduledDeactivationAt: Scalars['DateTime'];
   subscription?: Maybe<PublicSubscription>;
   subscriptionID?: Maybe<Scalars['String']>;
   total: Scalars['Int'];
+};
+
+export type InvoiceConnection = {
+  __typename?: 'InvoiceConnection';
+  nodes: Array<Invoice>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type InvoiceFilter = {
+  canceledAt?: InputMaybe<DateFilter>;
+  mail?: InputMaybe<Scalars['String']>;
+  paidAt?: InputMaybe<DateFilter>;
+  subscriptionID?: InputMaybe<Scalars['String']>;
+  userID?: InputMaybe<Scalars['String']>;
 };
 
 export type InvoiceItem = {
@@ -1429,11 +1448,25 @@ export type InvoiceItem = {
   amount: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   quantity: Scalars['Int'];
   total: Scalars['Int'];
 };
+
+export type InvoiceItemInput = {
+  amount: Scalars['Int'];
+  description?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  quantity: Scalars['Int'];
+};
+
+export enum InvoiceSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  PaidAt = 'PaidAt',
+}
 
 export type ListicleBlock = BaseBlock & {
   __typename?: 'ListicleBlock';
@@ -1567,6 +1600,8 @@ export type Mutation = {
   createCrowdfunding: Crowdfunding;
   /** Creates a new event. */
   createEvent: Event;
+  /** Creates a new invoice. */
+  createInvoice: Invoice;
   /** Creates a new memberplan. */
   createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
@@ -1626,6 +1661,8 @@ export type Mutation = {
   deleteCrowdfunding?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing event. */
   deleteEvent: Event;
+  /** Deletes an existing invoice. */
+  deleteInvoice: Invoice;
   /** Deletes an existing memberplan. */
   deleteMemberPlan: MemberPlan;
   /** Deletes an existing navigation. */
@@ -1682,6 +1719,8 @@ export type Mutation = {
   importSubscription: PublicSubscription;
   /** Likes an article. */
   likeArticle: Article;
+  /** Marks an invoice as paid. */
+  markInvoiceAsPaid: Invoice;
   /** Publishes an article at the given time. */
   publishArticle: Article;
   /** Publishes an page at the given time. */
@@ -1690,6 +1729,8 @@ export type Mutation = {
   rateComment: Comment;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
+  /** Renews a subscription. */
+  renewSubscription: PublicSubscription;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
@@ -1720,6 +1761,8 @@ export type Mutation = {
   updateCrowdfunding: Crowdfunding;
   /** Updates an existing event. */
   updateEvent: Event;
+  /** Updates an existing invoice. */
+  updateInvoice: Invoice;
   /** Updates an existing memberplan. */
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
@@ -1850,6 +1893,17 @@ export type MutationCreateEventArgs = {
   startsAt: Scalars['DateTime'];
   status?: EventStatus;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
+export type MutationCreateInvoiceArgs = {
+  currency: Currency;
+  description?: InputMaybe<Scalars['String']>;
+  dueAt: Scalars['DateTime'];
+  items: Array<InvoiceItemInput>;
+  mail: Scalars['String'];
+  manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
+  scheduledDeactivationAt: Scalars['DateTime'];
+  subscriptionID?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationCreateMemberPlanArgs = {
@@ -2058,6 +2112,10 @@ export type MutationDeleteEventArgs = {
   id: Scalars['String'];
 };
 
+export type MutationDeleteInvoiceArgs = {
+  id: Scalars['String'];
+};
+
 export type MutationDeleteMemberPlanArgs = {
   id: Scalars['String'];
 };
@@ -2164,6 +2222,10 @@ export type MutationLikeArticleArgs = {
   id: Scalars['String'];
 };
 
+export type MutationMarkInvoiceAsPaidArgs = {
+  id: Scalars['String'];
+};
+
 export type MutationPublishArticleArgs = {
   id: Scalars['String'];
   publishedAt: Scalars['DateTime'];
@@ -2188,6 +2250,10 @@ export type MutationRegisterMemberArgs = {
   firstName?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   password?: InputMaybe<Scalars['String']>;
+};
+
+export type MutationRenewSubscriptionArgs = {
+  id: Scalars['String'];
 };
 
 export type MutationSendWebsiteLoginArgs = {
@@ -2282,6 +2348,18 @@ export type MutationUpdateEventArgs = {
   startsAt?: InputMaybe<Scalars['DateTime']>;
   status?: InputMaybe<EventStatus>;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
+export type MutationUpdateInvoiceArgs = {
+  currency?: InputMaybe<Currency>;
+  description?: InputMaybe<Scalars['String']>;
+  dueAt?: InputMaybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  items?: InputMaybe<Array<InvoiceItemInput>>;
+  mail?: InputMaybe<Scalars['String']>;
+  manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
+  scheduledDeactivationAt?: InputMaybe<Scalars['DateTime']>;
+  subscriptionID?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationUpdateMemberPlanArgs = {
@@ -3066,7 +3144,7 @@ export type Query = {
   /** This query generates a challenge which can be used to access protected endpoints. */
   challenge: Challenge;
   /** Check the status of an invoice and update with information from the payment provider */
-  checkInvoiceStatus?: Maybe<Invoice>;
+  checkInvoiceStatus: Invoice;
   /** This query returns the comments of an item. */
   comments: Array<Comment>;
   /**
@@ -3134,8 +3212,10 @@ export type Query = {
    *
    */
   importedEventsIds: Array<Scalars['String']>;
-  /** Get all invoices for the authenticated user */
-  invoices: Array<Invoice>;
+  /** Returns a invoice by id. */
+  invoice: Invoice;
+  /** Returns a paginated list of invoices based on the filters given. */
+  invoices: InvoiceConnection;
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /** This query returns the user. */
@@ -3258,6 +3338,8 @@ export type Query = {
    *
    */
   userConsents: Array<UserConsent>;
+  /** Get all invoices for the authenticated user */
+  userInvoices: Array<Invoice>;
   userPollVote?: Maybe<Scalars['String']>;
   /** Returns a userrole by id. */
   userRole: UserRole;
@@ -3369,6 +3451,19 @@ export type QueryImportedEventsArgs = {
   order?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<ImportedEventSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+export type QueryInvoiceArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryInvoicesArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<InvoiceFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<InvoiceSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
 
