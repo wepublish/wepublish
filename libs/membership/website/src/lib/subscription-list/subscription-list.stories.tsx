@@ -3,13 +3,12 @@ import { action } from '@storybook/addon-actions';
 import { Meta } from '@storybook/react';
 import { SubscriptionList } from './subscription-list';
 import {
-  Currency,
   Exact,
   FullInvoiceFragment,
   FullSubscriptionFragment,
   PaymentPeriodicity,
 } from '@wepublish/website/api';
-import { mockImage } from '@wepublish/storybook/mocks';
+import { mockMemberPlan, mockPaymentMethod } from '@wepublish/storybook/mocks';
 
 export default {
   component: SubscriptionList,
@@ -18,19 +17,15 @@ export default {
 
 const subscription = {
   id: '1234-1234',
+  isActive: true,
   startsAt: '2023-01-01',
   paidUntil: '2032-01-01',
   autoRenew: true,
   monthlyAmount: 250000,
   paymentPeriodicity: PaymentPeriodicity.Quarterly,
   url: 'https://example.com',
-  paymentMethod: {},
-  memberPlan: {
-    image: mockImage(),
-    name: 'Foobar Memberplan',
-    extendable: true,
-    currency: Currency.Chf,
-  },
+  paymentMethod: mockPaymentMethod(),
+  memberPlan: mockMemberPlan(),
   extendable: true,
   canExtend: true,
   properties: [],
@@ -51,7 +46,7 @@ const invoice = {
 export const Default = {
   args: {
     data: {
-      subscriptions: [
+      userSubscriptions: [
         { ...subscription, id: '1' },
         { ...subscription, id: '2' },
         { ...subscription, id: '3' },
@@ -60,7 +55,7 @@ export const Default = {
     },
     invoices: {
       data: {
-        invoices: [
+        userInvoices: [
           { ...invoice, id: '1', subscriptionID: '1' },
           {
             ...invoice,
@@ -95,7 +90,7 @@ export const WithPayrexxSubscriptionsWorkaround = {
   args: {
     ...Default.args,
     data: {
-      subscriptions: [
+      userSubscriptions: [
         {
           ...subscription,
           id: '1',
@@ -119,7 +114,7 @@ export const Empty = {
   args: {
     ...Default.args,
     data: {
-      subscriptions: [],
+      userSubscriptions: [],
     },
   },
 };
@@ -147,7 +142,7 @@ export const WithoutImage = {
   args: {
     ...Default.args,
     data: {
-      subscriptions: [
+      userSubscriptions: [
         { ...subscription, id: '1' },
         { ...subscription, id: '2', image: null },
         { ...subscription, id: '3' },

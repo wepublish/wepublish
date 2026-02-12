@@ -20,6 +20,7 @@ export const mockArticleRevision = ({
   authors = [mockAuthor(), mockAuthor()],
   blocks = mockBlockContent(),
   canonicalUrl = 'https://example.com',
+  breaking = false,
 }: Partial<FullArticleRevisionFragment> = {}): FullArticleRevisionFragment => ({
   __typename: 'ArticleRevision',
   id: nanoid(),
@@ -36,6 +37,7 @@ export const mockArticleRevision = ({
   socialMediaImage,
   socialMediaTitle,
   canonicalUrl,
+  breaking,
 });
 
 export const mockArticle = ({

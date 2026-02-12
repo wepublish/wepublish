@@ -10,26 +10,28 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { differenceInDays, endOfDay, startOfDay } from 'date-fns';
-import { descend, sort } from 'ramda';
 import { MemberContextService } from '../legacy/member-context.service';
 import { PaymentsService } from '@wepublish/payment/api';
 
 const roundUpTo5Cents = (amount: number) =>
   (Math.ceil((amount / 100) * 20) / 20) * 100;
 
-const leftoverSubscriptionPeriodAmount = (period: SubscriptionPeriod) => {
+const leftoverSubscriptionPeriodAmount = (periods: SubscriptionPeriod[]) => {
   const today = startOfDay(new Date());
-  const start = startOfDay(period.startsAt);
-  const end = endOfDay(period.endsAt);
 
-  const totalDurationInDays = Math.min(
-    differenceInDays(end, start),
-    365 // don't give discounts for leap years
-  );
-  const leftoverDays = differenceInDays(end, today);
-  const leftoverPercentage = leftoverDays / totalDurationInDays;
+  const discountAmount = periods.reduce((discount, period) => {
+    const start = startOfDay(period.startsAt);
+    const end = endOfDay(period.endsAt);
 
-  const discountAmount = roundUpTo5Cents(period.amount * leftoverPercentage);
+    const totalDurationInDays = Math.min(
+      differenceInDays(end, start),
+      365 // don't give discounts for leap years
+    );
+    const leftoverDays = differenceInDays(end, today);
+    const leftoverPercentage = leftoverDays / totalDurationInDays;
+
+    return discount + roundUpTo5Cents(period.amount * leftoverPercentage);
+  }, 0);
 
   return discountAmount;
 };
@@ -145,24 +147,21 @@ export class UpgradeSubscriptionService {
       );
     }
 
-    // In case a user has extended the subscription before running out
-    // We ignore the period before the extension that might still be running.
-    const oldSubscriptionPeriods = sort(
-      descend(period => period.endsAt),
-      oldSubscription.periods
-    );
+    const oldSubscriptionPeriods = oldSubscription.periods.filter(period => {
+      if (!period.invoice.paidAt || new Date() > period.endsAt) {
+        return false;
+      }
 
-    const oldSubscriptionPeriod =
-      oldSubscriptionPeriods.filter(period => !!period.invoice.paidAt).at(0) ??
-      oldSubscriptionPeriods.at(0);
+      return true;
+    });
 
-    if (!oldSubscriptionPeriod) {
+    if (!oldSubscriptionPeriods.length) {
       throw new BadRequestException(
         `Subscription has no subscription period ${subscriptionId}`
       );
     }
 
-    return { newMemberplan, oldSubscription, oldSubscriptionPeriod };
+    return { newMemberplan, oldSubscription, oldSubscriptionPeriods };
   }
 
   async upgradeSubscription({
@@ -182,7 +181,7 @@ export class UpgradeSubscriptionService {
     failureURL?: string;
     monthlyAmount: number;
   }) {
-    const { oldSubscription, oldSubscriptionPeriod } =
+    const { oldSubscription, oldSubscriptionPeriods } =
       await this.validateForUpgrade({
         memberPlanId,
         subscriptionId,
@@ -192,18 +191,18 @@ export class UpgradeSubscriptionService {
 
     const { invoice } = await this.memberContext.createSubscription({
       userID: userId,
-      paymentMethodId,
+      paymentMethodID: paymentMethodId,
       paymentPeriodicity: oldSubscription.paymentPeriodicity,
       monthlyAmount,
-      memberPlanId,
+      memberPlanID: memberPlanId,
       properties: [],
       autoRenew: oldSubscription.autoRenew,
       extendable: oldSubscription.extendable,
       replacedSubscriptionId: oldSubscription.id,
       startsAt: new Date(),
       discount:
-        oldSubscriptionPeriod.invoice.paidAt ?
-          leftoverSubscriptionPeriodAmount(oldSubscriptionPeriod)
+        oldSubscriptionPeriods.length ?
+          leftoverSubscriptionPeriodAmount(oldSubscriptionPeriods)
         : undefined,
     });
 
@@ -228,9 +227,11 @@ export class UpgradeSubscriptionService {
           },
         },
         periods: {
-          update: {
+          updateMany: {
             where: {
-              id: oldSubscriptionPeriod.id,
+              id: {
+                in: oldSubscriptionPeriods.map(({ id }) => id),
+              },
             },
             data: {
               endsAt: new Date(),
@@ -259,15 +260,15 @@ export class UpgradeSubscriptionService {
     subscriptionId: string;
     memberPlanId: string;
   }) {
-    const { oldSubscriptionPeriod } = await this.validateForUpgrade({
+    const { oldSubscriptionPeriods } = await this.validateForUpgrade({
       memberPlanId,
       subscriptionId,
       paymentMethodId: null,
       userId,
     });
 
-    return oldSubscriptionPeriod.invoice.paidAt ?
-        leftoverSubscriptionPeriodAmount(oldSubscriptionPeriod)
+    return oldSubscriptionPeriods.length ?
+        leftoverSubscriptionPeriodAmount(oldSubscriptionPeriods)
       : 0;
   }
 }

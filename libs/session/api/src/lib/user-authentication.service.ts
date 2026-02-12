@@ -15,7 +15,10 @@ export class UserAuthenticationService {
   ) {}
 
   async authenticateUserWithEmailAndPassword(email: string, password: string) {
-    const user = await this.userService.getUserByEmail(email.toLowerCase());
+    const user = await this.userService.getUserByEmailWithPassword(
+      email.toLowerCase()
+    );
+
     if (!user) {
       return null;
     }
@@ -26,10 +29,6 @@ export class UserAuthenticationService {
     }
 
     return user;
-  }
-
-  async getUserByEmail(email: string) {
-    return this.userService.getUserByEmail(email);
   }
 
   async updateUserLastLoginLinkSend(userId: string) {

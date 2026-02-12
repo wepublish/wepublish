@@ -47,7 +47,7 @@ export class EventResolver {
   }
 
   @Public()
-  @Query(() => Event, { description: `Returns a event by id.` })
+  @Query(() => Event, { description: `Returns an event by id.` })
   public async event(@Args('id') id: string) {
     const event = await this.eventDataloader.load(id);
 
@@ -58,21 +58,18 @@ export class EventResolver {
     return event;
   }
 
-  @Mutation(() => Event, { description: `Creates a new event.` })
   @Permissions(CanCreateEvent)
   @Mutation(returns => Event, { description: `Creates a new event.` })
   public createEvent(@Args() event: CreateEventInput) {
     return this.eventService.createEvent(event);
   }
 
-  @Mutation(() => Event, { description: `Updates an existing event.` })
   @Permissions(CanUpdateEvent)
   @Mutation(returns => Event, { description: `Updates an existing event.` })
   public updateEvent(@Args() event: UpdateEventInput) {
     return this.eventService.updateEvent(event);
   }
 
-  @Mutation(() => Event, { description: `Deletes an existing event.` })
   @Permissions(CanDeleteEvent)
   @Mutation(returns => Event, { description: `Deletes an existing event.` })
   public deleteEvent(@Args('id') id: string) {

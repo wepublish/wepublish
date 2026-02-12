@@ -1,5 +1,5 @@
 import { TableCell } from '@mui/material';
-import { FullMemberPlanFragment } from '@wepublish/editor/api';
+import { FullMemberPlanFragment } from '@wepublish/editor/api-v2';
 import {
   ListPaymentMethodsQuery,
   PaymentPeriodicity,

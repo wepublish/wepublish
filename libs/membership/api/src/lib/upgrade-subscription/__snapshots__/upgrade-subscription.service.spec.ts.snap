@@ -28,9 +28,9 @@ exports[`UpgradeSubscriptionService happy path should upgrade a subscription 1`]
       "autoRenew": true,
       "discount": 600,
       "extendable": true,
-      "memberPlanId": "memberPlanId",
+      "memberPlanID": "memberPlanId",
       "monthlyAmount": 80,
-      "paymentMethodId": "paymentMethodId",
+      "paymentMethodID": "paymentMethodId",
       "paymentPeriodicity": "yearly",
       "properties": [],
       "replacedSubscriptionId": "subscriptionId",
@@ -49,12 +49,17 @@ exports[`UpgradeSubscriptionService happy path should upgrade a subscription 1`]
         },
         "paidUntil": 2025-01-01T00:00:00.000Z,
         "periods": {
-          "update": {
+          "updateMany": {
             "data": {
               "endsAt": 2025-01-01T00:00:00.000Z,
             },
             "where": {
-              "id": "4",
+              "id": {
+                "in": [
+                  "3",
+                  "4",
+                ],
+              },
             },
           },
         },

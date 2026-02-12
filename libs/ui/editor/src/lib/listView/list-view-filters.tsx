@@ -1,14 +1,10 @@
 import styled from '@emotion/styled';
 import {
-  FullUserRoleFragment,
-  TagType,
-  UserFilter,
-} from '@wepublish/editor/api';
-import {
   ArticleFilter,
   DateFilterComparison,
   EventFilter,
   FullAuthorFragment,
+  FullUserRoleFragment,
   getApiClientV2,
   InputMaybe,
   PageFilter,
@@ -16,9 +12,11 @@ import {
   PollAnswer,
   PollVoteFilter,
   Scalars,
+  TagType,
   useEventProvidersLazyQuery,
   usePeerListLazyQuery,
   usePollLazyQuery,
+  UserFilter,
   useUserRoleListLazyQuery,
 } from '@wepublish/editor/api-v2';
 import { useEffect, useState } from 'react';

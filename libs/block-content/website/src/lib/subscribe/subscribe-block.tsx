@@ -41,10 +41,11 @@ export const SubscribeBlock = ({
   } = useContext(BuilderRouterContext);
 
   const subscriptionToUpgrade = useMemo(() => {
-    return userSubscriptions.data?.subscriptions.find(
-      subscription => subscription.id === upgradeSubscriptionId
+    return userSubscriptions.data?.userSubscriptions.find(
+      subscription =>
+        subscription.isActive && subscription.id === upgradeSubscriptionId
     );
-  }, [upgradeSubscriptionId, userSubscriptions.data?.subscriptions]);
+  }, [upgradeSubscriptionId, userSubscriptions.data?.userSubscriptions]);
 
   const memberPlansObj = useMemo(
     () =>

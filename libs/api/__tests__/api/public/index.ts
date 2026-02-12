@@ -337,7 +337,7 @@ export type BildwurfAdBlockInput = {
   zoneID?: InputMaybe<Scalars['String']>;
 };
 
-export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HtmlBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type BlockContentInput = {
   bildwurfAd?: InputMaybe<BildwurfAdBlockInput>;
@@ -347,6 +347,7 @@ export type BlockContentInput = {
   event?: InputMaybe<EventBlockInput>;
   facebookPost?: InputMaybe<FacebookPostBlockInput>;
   facebookVideo?: InputMaybe<FacebookVideoBlockInput>;
+  flexBlock?: InputMaybe<FlexBlockInput>;
   html?: InputMaybe<HtmlBlockInput>;
   image?: InputMaybe<ImageBlockInput>;
   imageGallery?: InputMaybe<ImageGalleryBlockInput>;
@@ -388,6 +389,7 @@ export enum BlockType {
   Event = 'Event',
   FacebookPost = 'FacebookPost',
   FacebookVideo = 'FacebookVideo',
+  FlexBlock = 'FlexBlock',
   Html = 'HTML',
   Image = 'Image',
   ImageGallery = 'ImageGallery',
@@ -411,6 +413,17 @@ export enum BlockType {
   VimeoVideo = 'VimeoVideo',
   YouTubeVideo = 'YouTubeVideo'
 }
+
+export type BlockWithAlignment = HasOneBlockContent & {
+  __typename?: 'BlockWithAlignment';
+  alignment: FlexAlignment;
+  block?: Maybe<BlockContent>;
+};
+
+export type BlockWithAlignmentInput = {
+  alignment: FlexAlignmentInput;
+  block?: InputMaybe<BlockContentInput>;
+};
 
 export type BreakBlock = BaseBlock & HasImage & {
   __typename?: 'BreakBlock';
@@ -489,7 +502,8 @@ export type Comment = HasOptionalUser & {
   overriddenRatings: Array<OverriddenRating>;
   parentComment?: Maybe<Comment>;
   parentID?: Maybe<Scalars['String']>;
-  rejectionReason?: Maybe<Scalars['String']>;
+  rejectionReason?: Maybe<CommentRejectionReason>;
+  revisions: Array<CommentRevision>;
   source?: Maybe<Scalars['String']>;
   state: CommentState;
   tags: Array<Tag>;
@@ -544,14 +558,12 @@ export type CommentCreatedAction = BaseAction & HasComment & {
   date: Scalars['DateTime'];
 };
 
-export type CommentInput = {
-  challenge?: InputMaybe<ChallengeInput>;
-  guestUsername?: InputMaybe<Scalars['String']>;
-  itemID: Scalars['String'];
-  itemType: CommentItemType;
-  parentID?: InputMaybe<Scalars['String']>;
-  text: Scalars['RichText'];
-  title?: InputMaybe<Scalars['String']>;
+export type CommentFilter = {
+  item?: InputMaybe<Scalars['String']>;
+  itemID?: InputMaybe<Scalars['String']>;
+  itemType?: InputMaybe<CommentItemType>;
+  states?: InputMaybe<Array<CommentState>>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export enum CommentItemType {
@@ -587,8 +599,29 @@ export type CommentRatingSystemAnswer = {
   type: RatingSystemType;
 };
 
+export enum CommentRejectionReason {
+  Misconduct = 'misconduct',
+  Spam = 'spam'
+}
+
+export type CommentRevision = {
+  __typename?: 'CommentRevision';
+  createdAt: Scalars['DateTime'];
+  lead?: Maybe<Scalars['String']>;
+  text?: Maybe<Scalars['RichText']>;
+  title?: Maybe<Scalars['String']>;
+};
+
+export type CommentRevisionInput = {
+  lead?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['RichText']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
 export enum CommentSort {
-  Rating = 'rating'
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Rating = 'Rating'
 }
 
 export enum CommentState {
@@ -597,13 +630,6 @@ export enum CommentState {
   PendingUserChanges = 'pendingUserChanges',
   Rejected = 'rejected'
 }
-
-export type CommentUpdateInput = {
-  id: Scalars['String'];
-  lead?: InputMaybe<Scalars['String']>;
-  text?: InputMaybe<Scalars['RichText']>;
-  title?: InputMaybe<Scalars['String']>;
-};
 
 export type Consent = {
   __typename?: 'Consent';
@@ -830,6 +856,7 @@ export enum EditorBlockType {
   Crowdfunding = 'Crowdfunding',
   Embed = 'Embed',
   Event = 'Event',
+  FlexBlock = 'FlexBlock',
   Html = 'HTML',
   Image = 'Image',
   ImageGallery = 'ImageGallery',
@@ -1007,7 +1034,7 @@ export type FlexAlignment = {
   __typename?: 'FlexAlignment';
   h: Scalars['Int'];
   i: Scalars['String'];
-  static: Scalars['Boolean'];
+  static?: Maybe<Scalars['Boolean']>;
   w: Scalars['Int'];
   x: Scalars['Int'];
   y: Scalars['Int'];
@@ -1016,10 +1043,24 @@ export type FlexAlignment = {
 export type FlexAlignmentInput = {
   h: Scalars['Int'];
   i: Scalars['String'];
-  static: Scalars['Boolean'];
+  static?: InputMaybe<Scalars['Boolean']>;
   w: Scalars['Int'];
   x: Scalars['Int'];
   y: Scalars['Int'];
+};
+
+export type FlexBlock = BaseBlock & {
+  __typename?: 'FlexBlock';
+  blockStyle?: Maybe<Scalars['String']>;
+  blockStyleName?: Maybe<Scalars['String']>;
+  blocks: Array<BlockWithAlignment>;
+  type: BlockType;
+};
+
+export type FlexBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
+  blockStyleName?: InputMaybe<Scalars['String']>;
+  blocks: Array<BlockWithAlignmentInput>;
 };
 
 export type FlexTeaser = {
@@ -1106,6 +1147,16 @@ export type HasImage = {
 export type HasImageLc = {
   image?: Maybe<Image>;
   imageId?: Maybe<Scalars['String']>;
+};
+
+export type HasMemberPlan = {
+  memberPlan: MemberPlan;
+  memberPlanID: Scalars['String'];
+  memberplan?: Maybe<MemberPlan>;
+};
+
+export type HasOneBlockContent = {
+  block?: Maybe<BlockContent>;
 };
 
 export type HasOptionalArticle = {
@@ -1212,7 +1263,7 @@ export type IFrameBlockInput = {
   width?: InputMaybe<Scalars['Int']>;
 };
 
-export type Image = {
+export type Image = HasOptionalPeerLc & {
   __typename?: 'Image';
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
@@ -1227,11 +1278,13 @@ export type Image = {
   link?: Maybe<Scalars['String']>;
   mimeType: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
+  peer?: Maybe<Peer>;
+  peerId?: Maybe<Scalars['String']>;
   source?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   transformURL?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
   width: Scalars['Int'];
 };
 
@@ -1257,6 +1310,11 @@ export type ImageBlockInput = {
   caption?: InputMaybe<Scalars['String']>;
   imageID?: InputMaybe<Scalars['String']>;
   linkUrl?: InputMaybe<Scalars['String']>;
+};
+
+export type ImageFilter = {
+  tags?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type ImageGalleryBlock = BaseBlock & {
@@ -1293,6 +1351,11 @@ export enum ImageRotation {
   Rotate270 = 'Rotate270'
 }
 
+export enum ImageSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt'
+}
+
 export type ImageTransformation = {
   blur?: InputMaybe<Scalars['Boolean']>;
   grayscale?: InputMaybe<Scalars['Boolean']>;
@@ -1324,13 +1387,6 @@ export enum ImportedEventSort {
   StartsAt = 'STARTS_AT'
 }
 
-export type ImportedEventsDocument = {
-  __typename?: 'ImportedEventsDocument';
-  nodes: Array<EventFromSource>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
 export type InstagramPostBlock = BaseBlock & {
   __typename?: 'InstagramPostBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -1349,16 +1405,35 @@ export type Invoice = HasOptionalSubscription & {
   __typename?: 'Invoice';
   canceledAt?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
+  currency: Currency;
   description?: Maybe<Scalars['String']>;
   dueAt: Scalars['DateTime'];
   id: Scalars['String'];
   items: Array<InvoiceItem>;
   mail: Scalars['String'];
+  manuallySetAsPaidByUser?: Maybe<User>;
+  manuallySetAsPaidByUserId?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   paidAt?: Maybe<Scalars['DateTime']>;
+  scheduledDeactivationAt: Scalars['DateTime'];
   subscription?: Maybe<PublicSubscription>;
   subscriptionID?: Maybe<Scalars['String']>;
   total: Scalars['Int'];
+};
+
+export type InvoiceConnection = {
+  __typename?: 'InvoiceConnection';
+  nodes: Array<Invoice>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type InvoiceFilter = {
+  canceledAt?: InputMaybe<DateFilter>;
+  mail?: InputMaybe<Scalars['String']>;
+  paidAt?: InputMaybe<DateFilter>;
+  subscriptionID?: InputMaybe<Scalars['String']>;
+  userID?: InputMaybe<Scalars['String']>;
 };
 
 export type InvoiceItem = {
@@ -1366,11 +1441,25 @@ export type InvoiceItem = {
   amount: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   quantity: Scalars['Int'];
   total: Scalars['Int'];
 };
+
+export type InvoiceItemInput = {
+  amount: Scalars['Int'];
+  description?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  quantity: Scalars['Int'];
+};
+
+export enum InvoiceSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  PaidAt = 'PaidAt'
+}
 
 export type ListicleBlock = BaseBlock & {
   __typename?: 'ListicleBlock';
@@ -1460,13 +1549,6 @@ export type MemberPlan = HasImage & {
   tags?: Maybe<Array<Scalars['String']>>;
 };
 
-export type MemberPlanConnection = {
-  __typename?: 'MemberPlanConnection';
-  nodes: Array<MemberPlan>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
 export type MemberPlanFilter = {
   active?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
@@ -1481,8 +1563,12 @@ export enum MemberPlanSort {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  /** Create a new comment */
-  addComment: Comment;
+  /** Adds a new comment made by you. */
+  addUserComment: Comment;
+  /** Approves a comment */
+  approveComment: Comment;
+  /** Cancels a subscription. */
+  cancelSubscription: PublicSubscription;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   cancelUserSubscription?: Maybe<PublicSubscription>;
   /** Creates an article. */
@@ -1492,6 +1578,8 @@ export type Mutation = {
   createBanner: Banner;
   /** Creates a new block style. */
   createBlockStyle: BlockStyle;
+  /** Creates a comment for any user */
+  createComment: Comment;
   /**
    *
    *       Create a new consent.
@@ -1502,6 +1590,12 @@ export type Mutation = {
   createCrowdfunding: Crowdfunding;
   /** Creates a new event. */
   createEvent: Event;
+  /** Creates a new invoice. */
+  createInvoice: Invoice;
+  /** Returns a JWT that can be used to login as another user. */
+  createJWTForUser: SessionWithToken;
+  /** Returns a JWT that is valid for 1min for the current logged in user. */
+  createJWTForWebsiteLogin: SessionWithToken;
   /** Creates a new memberplan. */
   createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
@@ -1528,18 +1622,18 @@ export type Mutation = {
   createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
-  /** Allows authenticated users to create additional subscriptions */
-  createSubscription: Payment;
+  /** Creates a new subscription. */
+  createSubscription: PublicSubscription;
   /** Create a new subscription flow */
   createSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Create a subscription interval */
   createSubscriptionInterval: Array<SubscriptionFlowModel>;
-  /** Allows guests and authenticated users to create additional subscriptions */
-  createSubscriptionWithConfirmation: Scalars['Boolean'];
   /** Creates a new tag. */
   createTag: Tag;
   /** Creates a token and returns it's secret once. */
   createToken: TokenWithSecret;
+  /** Creates a new user. */
+  createUser: SensitiveDataUser;
   /**
    *
    *       Creates a new userConsent based on input.
@@ -1549,6 +1643,10 @@ export type Mutation = {
   createUserConsent: UserConsent;
   /** Creates a new userrole. */
   createUserRole: UserRole;
+  /** Allows authenticated users to create additional subscriptions */
+  createUserSubscription: Payment;
+  /** Allows guests and authenticated users to create additional subscriptions */
+  createUserSubscriptionWithConfirmation: Scalars['Boolean'];
   /** Deletes an article. */
   deleteArticle: Scalars['String'];
   /** Deletes an existing author. */
@@ -1556,6 +1654,8 @@ export type Mutation = {
   deleteBanner?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing block style. */
   deleteBlockStyle: BlockStyle;
+  /** Deletes a comment */
+  deleteComment: Comment;
   /**
    *
    *       Deletes an existing consent.
@@ -1565,6 +1665,10 @@ export type Mutation = {
   deleteCrowdfunding?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing event. */
   deleteEvent: Event;
+  /** Deletes an existing image. */
+  deleteImage: Image;
+  /** Deletes an existing invoice. */
+  deleteInvoice: Invoice;
   /** Deletes an existing memberplan. */
   deleteMemberPlan: MemberPlan;
   /** Deletes an existing navigation. */
@@ -1587,6 +1691,8 @@ export type Mutation = {
   deletePollVotes: DeletePollVotesResult;
   /** Deletes a rating system answer. */
   deleteRatingSystemAnswer: CommentRatingSystemAnswer;
+  /** Deletes an existing subscription. */
+  deleteSubscription: PublicSubscription;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
@@ -1595,6 +1701,8 @@ export type Mutation = {
   deleteTag: Tag;
   /** Deletes a token. */
   deleteToken: Token;
+  /** Deletes an existing user. */
+  deleteUser: SensitiveDataUser;
   /**
    *
    *       Delete an existing userConsent by id.
@@ -1611,7 +1719,7 @@ export type Mutation = {
   /** Duplicates an page. */
   duplicatePage: Page;
   /** Allows authenticated users to extend existing subscriptions */
-  extendSubscription: Payment;
+  extendUserSubscription: Payment;
   /**
    *
    *       Creates and event based on data from importable events list and an id and provider.
@@ -1621,8 +1729,12 @@ export type Mutation = {
   importEvent: Scalars['String'];
   /** Imports an article from a peer as a draft. */
   importPeerArticle: Article;
+  /** Imports a subscription. */
+  importSubscription: PublicSubscription;
   /** Likes an article. */
   likeArticle: Article;
+  /** Marks an invoice as paid. */
+  markInvoiceAsPaid: Invoice;
   /** Publishes an article at the given time. */
   publishArticle: Article;
   /** Publishes an page at the given time. */
@@ -1631,8 +1743,18 @@ export type Mutation = {
   rateComment: Comment;
   /** This mutation registers a new member by providing name, email, and other required information. */
   registerMember: Registration;
+  /** Rejects a comment */
+  rejectComment: Comment;
+  /** Renews a subscription. */
+  renewSubscription: PublicSubscription;
+  /** Requests the user to change the comment's content */
+  requestChangesOnComment: Comment;
+  /** Resets the password of a user. */
+  resetPassword: SensitiveDataUser;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
+  /** This mutation sends a login link to the email if the user exists. Method will always return email address */
+  sendJWTLogin: Scalars['String'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String'];
   syncTemplates?: Maybe<Scalars['Boolean']>;
@@ -1649,7 +1771,7 @@ export type Mutation = {
   updateBanner: Banner;
   /** Updates an existing block style. */
   updateBlockStyle: BlockStyle;
-  /** Update an existing comment */
+  /** Update any existing comment */
   updateComment: Comment;
   /**
    *
@@ -1659,8 +1781,14 @@ export type Mutation = {
   updateConsent: Consent;
   /** Updates a single crowdfunding */
   updateCrowdfunding: Crowdfunding;
+  /** Updates the current logged in user. */
+  updateCurrentUser: SensitiveDataUser;
   /** Updates an existing event. */
   updateEvent: Event;
+  /** Updates an existing image. */
+  updateImage: Image;
+  /** Updates an existing invoice. */
+  updateInvoice: Invoice;
   /** Updates an existing memberplan. */
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
@@ -1671,8 +1799,6 @@ export type Mutation = {
   updatePassword: SensitiveDataUser;
   /** Updates an existing payment method. */
   updatePaymentMethod: PaymentMethod;
-  /** This mutation allows to update the Payment Provider Customers */
-  updatePaymentProviderCustomers: Array<PaymentProviderCustomer>;
   /** Updates a paywall. */
   updatePaywall: Paywall;
   /** Updates an existing peer. */
@@ -1683,6 +1809,8 @@ export type Mutation = {
   updateRatingSystem: CommentRatingSystem;
   /** Updates an existing setting. */
   updateSetting: Setting;
+  /** Updates an existing subscription. */
+  updateSubscription: PublicSubscription;
   /** Update an existing subscription flow */
   updateSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Update an existing subscription interval */
@@ -1691,8 +1819,10 @@ export type Mutation = {
   updateSystemMail: Array<SystemMailModel>;
   /** Updates an existing tag. */
   updateTag: Tag;
-  /** This mutation allows to update the user's data by taking an input of type UserInput. */
-  updateUser?: Maybe<SensitiveDataUser>;
+  /** Updates an existing user. */
+  updateUser: SensitiveDataUser;
+  /** Updates a comment you made. */
+  updateUserComment: Comment;
   /**
    *
    *       Updates an existing userConsent based on input.
@@ -1704,7 +1834,9 @@ export type Mutation = {
   updateUserRole: UserRole;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
-  upgradeSubscription: Payment;
+  upgradeUserSubscription: Payment;
+  /** Uploads a new image. */
+  uploadImage: Image;
   /** This mutation allows to upload and update the user's profile image. */
   uploadUserProfileImage?: Maybe<SensitiveDataUser>;
   /** This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous */
@@ -1712,8 +1844,25 @@ export type Mutation = {
 };
 
 
-export type MutationAddCommentArgs = {
-  input: CommentInput;
+export type MutationAddUserCommentArgs = {
+  challenge?: InputMaybe<ChallengeInput>;
+  guestUsername?: InputMaybe<Scalars['String']>;
+  itemID: Scalars['String'];
+  itemType: CommentItemType;
+  parentID?: InputMaybe<Scalars['String']>;
+  text: Scalars['RichText'];
+  title?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationApproveCommentArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationCancelSubscriptionArgs = {
+  id: Scalars['String'];
+  reason: SubscriptionDeactivationReason;
 };
 
 
@@ -1773,6 +1922,16 @@ export type MutationCreateBlockStyleArgs = {
 };
 
 
+export type MutationCreateCommentArgs = {
+  itemID: Scalars['String'];
+  itemType: CommentItemType;
+  lead?: InputMaybe<Scalars['String']>;
+  parentID?: InputMaybe<Scalars['String']>;
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
+  text?: InputMaybe<Scalars['RichText']>;
+};
+
+
 export type MutationCreateConsentArgs = {
   defaultValue: Scalars['Boolean'];
   name: Scalars['String'];
@@ -1795,6 +1954,24 @@ export type MutationCreateEventArgs = {
   startsAt: Scalars['DateTime'];
   status?: EventStatus;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type MutationCreateInvoiceArgs = {
+  currency: Currency;
+  description?: InputMaybe<Scalars['String']>;
+  dueAt: Scalars['DateTime'];
+  items: Array<InvoiceItemInput>;
+  mail: Scalars['String'];
+  manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
+  scheduledDeactivationAt: Scalars['DateTime'];
+  subscriptionID?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationCreateJwtForUserArgs = {
+  expiresInMinutes: Scalars['Float'];
+  userId: Scalars['String'];
 };
 
 
@@ -1933,16 +2110,15 @@ export type MutationCreateSessionWithJwtArgs = {
 
 export type MutationCreateSubscriptionArgs = {
   autoRenew: Scalars['Boolean'];
-  deactivateSubscriptionId?: InputMaybe<Scalars['String']>;
-  failureURL?: InputMaybe<Scalars['String']>;
-  memberPlanID?: InputMaybe<Scalars['String']>;
-  memberPlanSlug?: InputMaybe<Scalars['Slug']>;
+  extendable: Scalars['Boolean'];
+  memberPlanID: Scalars['String'];
   monthlyAmount: Scalars['Int'];
-  paymentMethodID?: InputMaybe<Scalars['String']>;
-  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
+  paidUntil?: InputMaybe<Scalars['DateTime']>;
+  paymentMethodID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
-  subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
-  successURL?: InputMaybe<Scalars['String']>;
+  properties: Array<PropertyInput>;
+  startsAt: Scalars['DateTime'];
+  userID: Scalars['String'];
 };
 
 
@@ -1962,19 +2138,6 @@ export type MutationCreateSubscriptionIntervalArgs = {
 };
 
 
-export type MutationCreateSubscriptionWithConfirmationArgs = {
-  autoRenew: Scalars['Boolean'];
-  memberPlanID?: InputMaybe<Scalars['String']>;
-  memberPlanSlug?: InputMaybe<Scalars['Slug']>;
-  monthlyAmount: Scalars['Int'];
-  paymentMethodID?: InputMaybe<Scalars['String']>;
-  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
-  paymentPeriodicity: PaymentPeriodicity;
-  subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
-  userId?: InputMaybe<Scalars['String']>;
-};
-
-
 export type MutationCreateTagArgs = {
   description?: InputMaybe<Scalars['RichText']>;
   main?: Scalars['Boolean'];
@@ -1985,6 +2148,23 @@ export type MutationCreateTagArgs = {
 
 export type MutationCreateTokenArgs = {
   name: Scalars['String'];
+};
+
+
+export type MutationCreateUserArgs = {
+  active: Scalars['Boolean'];
+  address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
+  email: Scalars['String'];
+  emailVerifiedAt?: InputMaybe<Scalars['DateTime']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  note?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+  properties: Array<PropertyInput>;
+  roleIDs: Array<Scalars['String']>;
+  userImageID?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -1999,6 +2179,34 @@ export type MutationCreateUserRoleArgs = {
   description?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   permissionIDs: Array<Scalars['String']>;
+};
+
+
+export type MutationCreateUserSubscriptionArgs = {
+  autoRenew: Scalars['Boolean'];
+  deactivateSubscriptionId?: InputMaybe<Scalars['String']>;
+  failureURL?: InputMaybe<Scalars['String']>;
+  memberPlanID?: InputMaybe<Scalars['String']>;
+  memberPlanSlug?: InputMaybe<Scalars['Slug']>;
+  monthlyAmount: Scalars['Int'];
+  paymentMethodID?: InputMaybe<Scalars['String']>;
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
+  paymentPeriodicity: PaymentPeriodicity;
+  subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
+  successURL?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationCreateUserSubscriptionWithConfirmationArgs = {
+  autoRenew: Scalars['Boolean'];
+  memberPlanID?: InputMaybe<Scalars['String']>;
+  memberPlanSlug?: InputMaybe<Scalars['Slug']>;
+  monthlyAmount: Scalars['Int'];
+  paymentMethodID?: InputMaybe<Scalars['String']>;
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
+  paymentPeriodicity: PaymentPeriodicity;
+  subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2022,6 +2230,11 @@ export type MutationDeleteBlockStyleArgs = {
 };
 
 
+export type MutationDeleteCommentArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteConsentArgs = {
   id: Scalars['String'];
 };
@@ -2033,6 +2246,16 @@ export type MutationDeleteCrowdfundingArgs = {
 
 
 export type MutationDeleteEventArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteImageArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteInvoiceArgs = {
   id: Scalars['String'];
 };
 
@@ -2092,6 +2315,11 @@ export type MutationDeleteRatingSystemAnswerArgs = {
 };
 
 
+export type MutationDeleteSubscriptionArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteSubscriptionFlowArgs = {
   id: Scalars['String'];
 };
@@ -2108,6 +2336,11 @@ export type MutationDeleteTagArgs = {
 
 
 export type MutationDeleteTokenArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteUserArgs = {
   id: Scalars['String'];
 };
 
@@ -2137,7 +2370,7 @@ export type MutationDuplicatePageArgs = {
 };
 
 
-export type MutationExtendSubscriptionArgs = {
+export type MutationExtendUserSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>;
   subscriptionId: Scalars['String'];
   successURL?: InputMaybe<Scalars['String']>;
@@ -2157,7 +2390,26 @@ export type MutationImportPeerArticleArgs = {
 };
 
 
+export type MutationImportSubscriptionArgs = {
+  autoRenew: Scalars['Boolean'];
+  extendable: Scalars['Boolean'];
+  memberPlanID: Scalars['String'];
+  monthlyAmount: Scalars['Int'];
+  paidUntil?: InputMaybe<Scalars['DateTime']>;
+  paymentMethodID: Scalars['String'];
+  paymentPeriodicity: PaymentPeriodicity;
+  properties: Array<PropertyInput>;
+  startsAt: Scalars['DateTime'];
+  userID: Scalars['String'];
+};
+
+
 export type MutationLikeArticleArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationMarkInvoiceAsPaidArgs = {
   id: Scalars['String'];
 };
 
@@ -2187,8 +2439,38 @@ export type MutationRegisterMemberArgs = {
   challengeAnswer: ChallengeInput;
   email: Scalars['String'];
   firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   password?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationRejectCommentArgs = {
+  id: Scalars['String'];
+  rejectionReason: CommentRejectionReason;
+};
+
+
+export type MutationRenewSubscriptionArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationRequestChangesOnCommentArgs = {
+  id: Scalars['String'];
+  rejectionReason: CommentRejectionReason;
+};
+
+
+export type MutationResetPasswordArgs = {
+  id: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
+  sendMail?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationSendJwtLoginArgs = {
+  email: Scalars['String'];
 };
 
 
@@ -2267,7 +2549,15 @@ export type MutationUpdateBlockStyleArgs = {
 
 
 export type MutationUpdateCommentArgs = {
-  input: CommentUpdateInput;
+  featured?: InputMaybe<Scalars['Boolean']>;
+  guestUserImageID?: InputMaybe<Scalars['String']>;
+  guestUsername?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  ratingOverrides?: InputMaybe<Array<OverriddenRatingInput>>;
+  revision?: InputMaybe<CommentRevisionInput>;
+  source?: InputMaybe<Scalars['String']>;
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
+  userID?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2284,6 +2574,18 @@ export type MutationUpdateCrowdfundingArgs = {
 };
 
 
+export type MutationUpdateCurrentUserArgs = {
+  address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
+  challengeAnswer?: InputMaybe<ChallengeInput>;
+  email?: InputMaybe<Scalars['String']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationUpdateEventArgs = {
   description?: InputMaybe<Scalars['RichText']>;
   endsAt?: InputMaybe<Scalars['DateTime']>;
@@ -2295,6 +2597,32 @@ export type MutationUpdateEventArgs = {
   startsAt?: InputMaybe<Scalars['DateTime']>;
   status?: InputMaybe<EventStatus>;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type MutationUpdateImageArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  filename?: InputMaybe<Scalars['String']>;
+  focalPoint?: InputMaybe<FocalPointInput>;
+  id: Scalars['String'];
+  license?: InputMaybe<Scalars['String']>;
+  link?: InputMaybe<Scalars['String']>;
+  source?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateInvoiceArgs = {
+  currency?: InputMaybe<Currency>;
+  description?: InputMaybe<Scalars['String']>;
+  dueAt?: InputMaybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  items?: InputMaybe<Array<InvoiceItemInput>>;
+  mail?: InputMaybe<Scalars['String']>;
+  manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
+  scheduledDeactivationAt?: InputMaybe<Scalars['DateTime']>;
+  subscriptionID?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2365,11 +2693,6 @@ export type MutationUpdatePaymentMethodArgs = {
 };
 
 
-export type MutationUpdatePaymentProviderCustomersArgs = {
-  input: Array<PaymentProviderCustomerInput>;
-};
-
-
 export type MutationUpdatePaywallArgs = {
   active?: InputMaybe<Scalars['Boolean']>;
   alternativeSubscribeUrl?: InputMaybe<Scalars['String']>;
@@ -2422,6 +2745,21 @@ export type MutationUpdateSettingArgs = {
 };
 
 
+export type MutationUpdateSubscriptionArgs = {
+  autoRenew?: InputMaybe<Scalars['Boolean']>;
+  extendable?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['String'];
+  memberPlanID?: InputMaybe<Scalars['String']>;
+  monthlyAmount?: InputMaybe<Scalars['Int']>;
+  paidUntil?: InputMaybe<Scalars['DateTime']>;
+  paymentMethodID?: InputMaybe<Scalars['String']>;
+  paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
+  properties?: InputMaybe<Array<PropertyInput>>;
+  startsAt?: InputMaybe<Scalars['DateTime']>;
+  userID?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationUpdateSubscriptionFlowArgs = {
   autoRenewal?: InputMaybe<Array<Scalars['Boolean']>>;
   id: Scalars['String'];
@@ -2453,7 +2791,27 @@ export type MutationUpdateTagArgs = {
 
 
 export type MutationUpdateUserArgs = {
-  input: UserInput;
+  active?: InputMaybe<Scalars['Boolean']>;
+  address?: InputMaybe<UserAddressInput>;
+  birthday?: InputMaybe<Scalars['DateTime']>;
+  email?: InputMaybe<Scalars['String']>;
+  emailVerifiedAt?: InputMaybe<Scalars['DateTime']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  note?: InputMaybe<Scalars['String']>;
+  properties?: InputMaybe<Array<PropertyInput>>;
+  roleIDs?: InputMaybe<Array<Scalars['String']>>;
+  userImageID?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateUserCommentArgs = {
+  id: Scalars['String'];
+  lead?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['RichText']>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2473,11 +2831,11 @@ export type MutationUpdateUserRoleArgs = {
 
 export type MutationUpdateUserSubscriptionArgs = {
   id: Scalars['String'];
-  input: UserSubscriptionInput;
+  input: UpdateUserSubscriptionInput;
 };
 
 
-export type MutationUpgradeSubscriptionArgs = {
+export type MutationUpgradeUserSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>;
   memberPlanId: Scalars['String'];
   monthlyAmount: Scalars['Int'];
@@ -2487,8 +2845,29 @@ export type MutationUpgradeSubscriptionArgs = {
 };
 
 
+export type MutationUploadImageArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  file: Scalars['Upload'];
+  filename?: InputMaybe<Scalars['String']>;
+  focalPoint?: InputMaybe<FocalPointInput>;
+  license?: InputMaybe<Scalars['String']>;
+  link?: InputMaybe<Scalars['String']>;
+  source?: InputMaybe<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationUploadUserProfileImageArgs = {
-  uploadImageInput?: InputMaybe<UploadImageInput>;
+  description?: InputMaybe<Scalars['String']>;
+  file: Scalars['Upload'];
+  filename?: InputMaybe<Scalars['String']>;
+  focalPoint?: InputMaybe<FocalPointInput>;
+  license?: InputMaybe<Scalars['String']>;
+  link?: InputMaybe<Scalars['String']>;
+  source?: InputMaybe<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2531,6 +2910,11 @@ export type OverriddenRating = {
   __typename?: 'OverriddenRating';
   answerId: Scalars['String'];
   value?: Maybe<Scalars['Int']>;
+};
+
+export type OverriddenRatingInput = {
+  answerId: Scalars['String'];
+  value?: InputMaybe<Scalars['Int']>;
 };
 
 export type Page = {
@@ -2655,9 +3039,37 @@ export type PaginatedAuthors = {
   totalCount: Scalars['Int'];
 };
 
+export type PaginatedComments = {
+  __typename?: 'PaginatedComments';
+  nodes: Array<Comment>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type PaginatedEvents = {
   __typename?: 'PaginatedEvents';
   nodes: Array<Event>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedEventsFromSources = {
+  __typename?: 'PaginatedEventsFromSources';
+  nodes: Array<EventFromSource>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedImages = {
+  __typename?: 'PaginatedImages';
+  nodes: Array<Image>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedMemberPlans = {
+  __typename?: 'PaginatedMemberPlans';
+  nodes: Array<MemberPlan>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -2669,8 +3081,8 @@ export type PaginatedPages = {
   totalCount: Scalars['Int'];
 };
 
-export type PaginatedPeerArticle = {
-  __typename?: 'PaginatedPeerArticle';
+export type PaginatedPeerArticles = {
+  __typename?: 'PaginatedPeerArticles';
   nodes: Array<PeerArticle>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
@@ -2686,6 +3098,20 @@ export type PaginatedPollVotes = {
 export type PaginatedPolls = {
   __typename?: 'PaginatedPolls';
   nodes: Array<Poll>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedSensitiveDataUsers = {
+  __typename?: 'PaginatedSensitiveDataUsers';
+  nodes: Array<SensitiveDataUser>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedTags = {
+  __typename?: 'PaginatedTags';
+  nodes: Array<Tag>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -2747,11 +3173,6 @@ export type PaymentProvider = {
 
 export type PaymentProviderCustomer = {
   __typename?: 'PaymentProviderCustomer';
-  customerID: Scalars['String'];
-  paymentProviderID: Scalars['String'];
-};
-
-export type PaymentProviderCustomerInput = {
   customerID: Scalars['String'];
   paymentProviderID: Scalars['String'];
 };
@@ -2864,12 +3285,14 @@ export type PeerImage = {
   mSquare?: Maybe<Scalars['String']>;
   mimeType: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
+  peer?: Maybe<Peer>;
+  peerId?: Maybe<Scalars['String']>;
   s?: Maybe<Scalars['String']>;
   sSquare?: Maybe<Scalars['String']>;
   source?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
   width: Scalars['Int'];
   xl?: Maybe<Scalars['String']>;
   xlSquare?: Maybe<Scalars['String']>;
@@ -3070,26 +3493,40 @@ export type PropertyInput = {
   value: Scalars['String'];
 };
 
-export type PublicSubscription = HasPaymentMethod & HasUser & {
+export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   __typename?: 'PublicSubscription';
   autoRenew: Scalars['Boolean'];
   canExtend: Scalars['Boolean'];
+  confirmed: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
+  currency: Currency;
   deactivation?: Maybe<SubscriptionDeactivation>;
   extendable: Scalars['Boolean'];
   externalReward?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   isActive: Scalars['Boolean'];
   memberPlan: MemberPlan;
+  memberPlanID: Scalars['String'];
+  memberplan?: Maybe<MemberPlan>;
+  modifiedAt: Scalars['DateTime'];
   monthlyAmount: Scalars['Int'];
   paidUntil?: Maybe<Scalars['DateTime']>;
   paymentMethod: PaymentMethod;
   paymentMethodID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
+  periods: Array<SubscriptionPeriod>;
   properties: Array<Property>;
   startsAt: Scalars['DateTime'];
   url: Scalars['String'];
   user: User;
   userID: Scalars['String'];
+};
+
+export type PublicSubscriptionConnection = {
+  __typename?: 'PublicSubscriptionConnection';
+  nodes: Array<PublicSubscription>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
 };
 
 export type Query = {
@@ -3118,9 +3555,13 @@ export type Query = {
   /** This query generates a challenge which can be used to access protected endpoints. */
   challenge: Challenge;
   /** Check the status of an invoice and update with information from the payment provider */
-  checkInvoiceStatus?: Maybe<Invoice>;
-  /** This query returns the comments of an item. */
-  comments: Array<Comment>;
+  checkInvoiceStatus: Invoice;
+  /** Returns a comment by id. */
+  comment: Comment;
+  /** Returns a paginated list of comments based on the filters given. */
+  comments: PaginatedComments;
+  /** Returns a sorted and nested list of comments for an item. */
+  commentsForItem: Array<Comment>;
   /**
    *
    *       Returns a consent by id.
@@ -3143,7 +3584,7 @@ export type Query = {
    *
    */
   dailySubscriptionStats: Array<DailySubscriptionStats>;
-  /** Returns a event by id. */
+  /** Returns an event by id. */
   event: Event;
   /**
    *
@@ -3160,14 +3601,16 @@ export type Query = {
    *
    */
   expectedRevenue: Array<DashboardInvoice>;
-  /** Returns an image by id. */
-  getImage: Image;
   /**
    *
    *       Returns the most viewed articles in descending order.
    *
    */
   hotAndTrending: Array<Article>;
+  /** Returns a image by id. */
+  image: Image;
+  /** Returns a paginated list of images based on the filters given. */
+  images: PaginatedImages;
   /**
    *
    *       Returns a more detailed version of a single importable event, by id and source.
@@ -3179,15 +3622,17 @@ export type Query = {
    *       Returns a list of imported events from external sources, transformed to match our model.
    *
    */
-  importedEvents: ImportedEventsDocument;
+  importedEvents: PaginatedEventsFromSources;
   /**
    *
    *       Returns a list of external source ids of already imported events.
    *
    */
   importedEventsIds: Array<Scalars['String']>;
-  /** Get all invoices for the authenticated user */
-  invoices: Array<Invoice>;
+  /** Returns a invoice by id. */
+  invoice: Invoice;
+  /** Returns a paginated list of invoices based on the filters given. */
+  invoices: InvoiceConnection;
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /** This query returns the user. */
@@ -3195,7 +3640,7 @@ export type Query = {
   /** Returns a memberplan by id or slug. */
   memberPlan: MemberPlan;
   /** Returns a paginated list of memberplans based on the filters given. */
-  memberPlans: MemberPlanConnection;
+  memberPlans: PaginatedMemberPlans;
   /** Returns a navigation by id. */
   navigation: Navigation;
   /** Returns a list of navigations. */
@@ -3231,7 +3676,7 @@ export type Query = {
   /** This query takes either the ID or the slug and returns the peer profile. */
   peer?: Maybe<Peer>;
   /** Returns a paginated list of peer articles based on the filters given. */
-  peerArticles: PaginatedPeerArticle;
+  peerArticles: PaginatedPeerArticles;
   /** This query returns the peer profile. */
   peerProfile: PeerProfile;
   /** Returns a list of all peers. */
@@ -3283,19 +3728,25 @@ export type Query = {
    */
   settings: Array<Setting>;
   stats?: Maybe<Stats>;
+  /** Returns a subscription by id. */
+  subscription: PublicSubscription;
   /** Returns all subscription flows */
   subscriptionFlows: Array<SubscriptionFlowModel>;
-  /** This query returns the subscriptions of the authenticated user. */
-  subscriptions: Array<PublicSubscription>;
+  /** Returns a paginated list of subscriptions based on the filters given. */
+  subscriptions: PublicSubscriptionConnection;
+  /** Returns a paginated list of subscriptions based on the filters given. */
+  subscriptionsAsCsv: Scalars['String'];
   /** Returns all mail flows */
   systemMails: Array<SystemMailModel>;
   /** Returns an tag by id or tag. */
   tag: Tag;
   /** This query returns a list of tags */
-  tags: TagConnection;
+  tags: PaginatedTags;
   /** Returns a list of all tokens. */
   tokens: Array<Token>;
-  upgradeSubscriptionInfo: UpgradeSubscription;
+  upgradeUserSubscriptionInfo: UpgradeSubscription;
+  /** Returns a user by id. */
+  user: SensitiveDataUser;
   /**
    *
    *       Returns a single userConsent by id.
@@ -3308,11 +3759,17 @@ export type Query = {
    *
    */
   userConsents: Array<UserConsent>;
+  /** Get all invoices for the authenticated user */
+  userInvoices: Array<Invoice>;
   userPollVote?: Maybe<Scalars['String']>;
   /** Returns a userrole by id. */
   userRole: UserRole;
   /** Returns a paginated list of userroles based on the filters given. */
   userRoles: PaginatedUserRoles;
+  /** This query returns the subscriptions of the authenticated user. */
+  userSubscriptions: Array<PublicSubscription>;
+  /** Returns a paginated list of users based on the filters given. */
+  users: PaginatedSensitiveDataUsers;
   versionInformation: VersionInformation;
 };
 
@@ -3335,12 +3792,12 @@ export type QueryArticlesArgs = {
 
 export type QueryAuthorArgs = {
   id?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['Slug']>;
+  slug?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryAuthorsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<AuthorFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -3365,8 +3822,24 @@ export type QueryCheckInvoiceStatusArgs = {
 };
 
 
+export type QueryCommentArgs = {
+  id: Scalars['String'];
+};
+
+
 export type QueryCommentsArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<CommentFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<CommentSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryCommentsForItemArgs = {
   itemId: Scalars['String'];
+  itemType: CommentItemType;
   order?: InputMaybe<SortOrder>;
   sort?: InputMaybe<CommentSort>;
 };
@@ -3415,13 +3888,23 @@ export type QueryExpectedRevenueArgs = {
 };
 
 
-export type QueryGetImageArgs = {
+export type QueryHotAndTrendingArgs = {
+  start?: InputMaybe<Scalars['DateTime']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryImageArgs = {
   id: Scalars['String'];
 };
 
 
-export type QueryHotAndTrendingArgs = {
-  start?: InputMaybe<Scalars['DateTime']>;
+export type QueryImagesArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<ImageFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<ImageSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
 
@@ -3436,6 +3919,21 @@ export type QueryImportedEventsArgs = {
   order?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<ImportedEventSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryInvoiceArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryInvoicesArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<InvoiceFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<InvoiceSort>;
   take?: InputMaybe<Scalars['Int']>;
 };
 
@@ -3596,9 +4094,46 @@ export type QuerySettingsArgs = {
 };
 
 
+export type QuerySubscriptionArgs = {
+  id: Scalars['String'];
+};
+
+
 export type QuerySubscriptionFlowsArgs = {
   defaultFlowOnly: Scalars['Boolean'];
   memberPlanId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QuerySubscriptionsArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<SubscriptionFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<SubscriptionSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QuerySubscriptionsAsCsvArgs = {
+  autoRenew?: InputMaybe<Scalars['Boolean']>;
+  cancellationDateFrom?: InputMaybe<DateFilter>;
+  cancellationDateTo?: InputMaybe<DateFilter>;
+  deactivationDateFrom?: InputMaybe<DateFilter>;
+  deactivationDateTo?: InputMaybe<DateFilter>;
+  deactivationReason?: InputMaybe<Scalars['String']>;
+  extendable?: InputMaybe<Scalars['Boolean']>;
+  memberPlanID?: InputMaybe<Scalars['String']>;
+  paidUntilFrom?: InputMaybe<DateFilter>;
+  paidUntilTo?: InputMaybe<DateFilter>;
+  paymentMethodID?: InputMaybe<Scalars['String']>;
+  paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
+  startsAtFrom?: InputMaybe<DateFilter>;
+  startsAtTo?: InputMaybe<DateFilter>;
+  subscriptionIDs?: InputMaybe<Array<Scalars['String']>>;
+  userHasAddress?: InputMaybe<Scalars['Boolean']>;
+  userID?: InputMaybe<Scalars['String']>;
+  userIDs?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
@@ -3610,7 +4145,7 @@ export type QueryTagArgs = {
 
 
 export type QueryTagsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
+  cursorId?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<TagFilter>;
   order?: InputMaybe<SortOrder>;
   skip?: Scalars['Int'];
@@ -3619,9 +4154,14 @@ export type QueryTagsArgs = {
 };
 
 
-export type QueryUpgradeSubscriptionInfoArgs = {
+export type QueryUpgradeUserSubscriptionInfoArgs = {
   memberPlanId: Scalars['String'];
   subscriptionId: Scalars['String'];
+};
+
+
+export type QueryUserArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -3654,6 +4194,16 @@ export type QueryUserRolesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<UserRoleSort>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryUsersArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<UserFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int'];
+  sort?: UserSort;
+  take?: Scalars['Int'];
 };
 
 export type QuoteBlock = BaseBlock & HasImage & {
@@ -3722,16 +4272,22 @@ export type SensitiveDataUser = BaseUser & {
   active: Scalars['Boolean'];
   address?: Maybe<UserAddress>;
   birthday?: Maybe<Scalars['DateTime']>;
+  createdAt: Scalars['DateTime'];
   email: Scalars['String'];
+  emailVerifiedAt?: Maybe<Scalars['DateTime']>;
   firstName?: Maybe<Scalars['String']>;
   flair?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
+  lastLogin?: Maybe<Scalars['DateTime']>;
+  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  note?: Maybe<Scalars['String']>;
   paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
   permissions: Array<Scalars['String']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
+  roles: Array<UserRole>;
   userImageID?: Maybe<Scalars['String']>;
 };
 
@@ -3894,6 +4450,27 @@ export enum SubscriptionEvent {
   Subscribe = 'SUBSCRIBE'
 }
 
+export type SubscriptionFilter = {
+  autoRenew?: InputMaybe<Scalars['Boolean']>;
+  cancellationDateFrom?: InputMaybe<DateFilter>;
+  cancellationDateTo?: InputMaybe<DateFilter>;
+  deactivationDateFrom?: InputMaybe<DateFilter>;
+  deactivationDateTo?: InputMaybe<DateFilter>;
+  deactivationReason?: InputMaybe<Scalars['String']>;
+  extendable?: InputMaybe<Scalars['Boolean']>;
+  memberPlanID?: InputMaybe<Scalars['String']>;
+  paidUntilFrom?: InputMaybe<DateFilter>;
+  paidUntilTo?: InputMaybe<DateFilter>;
+  paymentMethodID?: InputMaybe<Scalars['String']>;
+  paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
+  startsAtFrom?: InputMaybe<DateFilter>;
+  startsAtTo?: InputMaybe<DateFilter>;
+  subscriptionIDs?: InputMaybe<Array<Scalars['String']>>;
+  userHasAddress?: InputMaybe<Scalars['Boolean']>;
+  userID?: InputMaybe<Scalars['String']>;
+  userIDs?: InputMaybe<Array<Scalars['String']>>;
+};
+
 export type SubscriptionFlowModel = {
   __typename?: 'SubscriptionFlowModel';
   autoRenewal: Array<Scalars['Boolean']>;
@@ -3914,6 +4491,24 @@ export type SubscriptionInterval = {
   mailTemplate?: Maybe<MailTemplateRef>;
 };
 
+export type SubscriptionPeriod = {
+  __typename?: 'SubscriptionPeriod';
+  amount: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
+  endsAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  invoiceID: Scalars['String'];
+  isPaid: Scalars['Boolean'];
+  modifiedAt: Scalars['DateTime'];
+  paymentPeriodicity: PaymentPeriodicity;
+  startsAt: Scalars['DateTime'];
+};
+
+export enum SubscriptionSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt'
+}
+
 export type SystemMailModel = {
   __typename?: 'SystemMailModel';
   event: UserEvent;
@@ -3928,13 +4523,6 @@ export type Tag = {
   tag?: Maybe<Scalars['String']>;
   type: TagType;
   url: Scalars['String'];
-};
-
-export type TagConnection = {
-  __typename?: 'TagConnection';
-  nodes: Array<Tag>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
 };
 
 export type TagFilter = {
@@ -4225,21 +4813,18 @@ export type UpdateCrowdfundingInput = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+export type UpdateUserSubscriptionInput = {
+  autoRenew: Scalars['Boolean'];
+  id: Scalars['String'];
+  memberPlanID: Scalars['String'];
+  monthlyAmount: Scalars['Int'];
+  paymentMethodID: Scalars['String'];
+  paymentPeriodicity: PaymentPeriodicity;
+};
+
 export type UpgradeSubscription = {
   __typename?: 'UpgradeSubscription';
   discountAmount: Scalars['Float'];
-};
-
-export type UploadImageInput = {
-  description?: InputMaybe<Scalars['String']>;
-  file: Scalars['Upload'];
-  filename?: InputMaybe<Scalars['String']>;
-  focalPoint?: InputMaybe<FocalPointInput>;
-  license?: InputMaybe<Scalars['String']>;
-  link?: InputMaybe<Scalars['String']>;
-  source?: InputMaybe<Scalars['String']>;
-  tags?: InputMaybe<Array<Scalars['String']>>;
-  title?: InputMaybe<Scalars['String']>;
 };
 
 export type User = BaseUser & {
@@ -4250,6 +4835,7 @@ export type User = BaseUser & {
   id: Scalars['String'];
   image?: Maybe<Image>;
   name: Scalars['String'];
+  note?: Maybe<Scalars['String']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
   userImageID?: Maybe<Scalars['String']>;
@@ -4303,14 +4889,10 @@ export enum UserEvent {
   TestMail = 'TEST_MAIL'
 }
 
-export type UserInput = {
-  address?: InputMaybe<UserAddressInput>;
-  birthday?: InputMaybe<Scalars['DateTime']>;
-  email: Scalars['String'];
-  firstName?: InputMaybe<Scalars['String']>;
-  flair?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  uploadImageInput?: InputMaybe<UploadImageInput>;
+export type UserFilter = {
+  name?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['String']>;
+  userRole?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export type UserRole = {
@@ -4334,14 +4916,12 @@ export enum UserRoleSort {
   ModifiedAt = 'ModifiedAt'
 }
 
-export type UserSubscriptionInput = {
-  autoRenew: Scalars['Boolean'];
-  id: Scalars['String'];
-  memberPlanID: Scalars['String'];
-  monthlyAmount: Scalars['Int'];
-  paymentMethodID: Scalars['String'];
-  paymentPeriodicity: PaymentPeriodicity;
-};
+export enum UserSort {
+  CreatedAt = 'CreatedAt',
+  FirstName = 'FirstName',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name'
+}
 
 export type VersionInformation = {
   __typename?: 'VersionInformation';
@@ -4381,35 +4961,13 @@ export type ChallengeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ChallengeQuery = { __typename?: 'Query', challenge: { __typename?: 'Challenge', challenge?: string | null, challengeID?: string | null, validUntil?: string | null } };
 
-export type FullCommentUserFragment = { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null };
+export type ImageUrLsFragment = { __typename?: 'Image', url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
-export type MutationCommentFragment = { __typename?: 'Comment', id: string, itemID: string, itemType: CommentItemType, state: CommentState, text?: Descendant[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null };
+export type ImageRefFragment = { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
-export type FullCommentFragment = { __typename?: 'Comment', id: string, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null };
+export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null };
 
-export type AddCommentMutationVariables = Exact<{
-  input: CommentInput;
-}>;
-
-
-export type AddCommentMutation = { __typename?: 'Mutation', addComment: { __typename?: 'Comment', id: string, itemID: string, itemType: CommentItemType, state: CommentState, text?: Descendant[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null } };
-
-export type CommentsQueryVariables = Exact<{
-  itemID: Scalars['String'];
-  order?: InputMaybe<SortOrder>;
-  sort?: InputMaybe<CommentSort>;
-}>;
-
-
-export type CommentsQuery = { __typename?: 'Query', comments: Array<{ __typename?: 'Comment', id: string, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null } | null }> };
-
-export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
-
-export type ImageRefFragment = { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
-
-export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null };
-
-export type FullPeerProfileFragment = { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
+export type FullPeerProfileFragment = { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
 export type FullRemotePeerProfileFragment = { __typename?: 'RemotePeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'PeerImage', id: string } | null, squareLogo?: { __typename?: 'PeerImage', id: string } | null };
 
@@ -4420,7 +4978,7 @@ export type PeerWithProfileFragment = { __typename?: 'Peer', id: string, name: s
 export type PeerProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PeerProfileQuery = { __typename?: 'Query', peerProfile: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
+export type PeerProfileQuery = { __typename?: 'Query', peerProfile: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, squareLogo?: { __typename?: 'Image', id: string, link?: string | null, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url: string, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } };
 
 export type PeerQueryVariables = Exact<{
   id: Scalars['String'];
@@ -4429,41 +4987,6 @@ export type PeerQueryVariables = Exact<{
 
 export type PeerQuery = { __typename?: 'Query', peer?: { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string } | null };
 
-export type CreateSessionMutationVariables = Exact<{
-  email: Scalars['String'];
-  password: Scalars['String'];
-}>;
-
-
-export type CreateSessionMutation = { __typename?: 'Mutation', createSession: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'SensitiveDataUser', email: string } } };
-
-export type CreateSessionWithJwtMutationVariables = Exact<{
-  jwt: Scalars['String'];
-}>;
-
-
-export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'SensitiveDataUser', email: string } } };
-
-export type UpdatePaymentProviderCustomersMutationVariables = Exact<{
-  customers: Array<PaymentProviderCustomerInput> | PaymentProviderCustomerInput;
-}>;
-
-
-export type UpdatePaymentProviderCustomersMutation = { __typename?: 'Mutation', updatePaymentProviderCustomers: Array<{ __typename?: 'PaymentProviderCustomer', customerID: string, paymentProviderID: string }> };
-
-export const MutationComment = gql`
-    fragment MutationComment on Comment {
-  id
-  itemID
-  itemType
-  state
-  user {
-    id
-  }
-  text
-  parentID
-}
-    `;
 export const ImageUrLs = gql`
     fragment ImageURLs on Image {
   url
@@ -4511,29 +5034,6 @@ export const FullImage = gql`
   ...ImageRef
 }
     ${ImageRef}`;
-export const FullCommentUser = gql`
-    fragment FullCommentUser on User {
-  id
-  name
-  firstName
-  flair
-  image {
-    ...FullImage
-  }
-}
-    ${FullImage}`;
-export const FullComment = gql`
-    fragment FullComment on Comment {
-  id
-  user {
-    ...FullCommentUser
-  }
-  createdAt
-  modifiedAt
-  itemID
-  itemType
-}
-    ${FullCommentUser}`;
 export const FullPeerProfile = gql`
     fragment FullPeerProfile on PeerProfile {
   name
@@ -4588,20 +5088,6 @@ export const Challenge = gql`
   }
 }
     `;
-export const AddComment = gql`
-    mutation AddComment($input: CommentInput!) {
-  addComment(input: $input) {
-    ...MutationComment
-  }
-}
-    ${MutationComment}`;
-export const Comments = gql`
-    query Comments($itemID: String!, $order: SortOrder, $sort: CommentSort) {
-  comments(itemId: $itemID, order: $order, sort: $sort) {
-    ...FullComment
-  }
-}
-    ${FullComment}`;
 export const PeerProfile = gql`
     query PeerProfile {
   peerProfile {
@@ -4616,31 +5102,3 @@ export const Peer = gql`
   }
 }
     ${PeerRef}`;
-export const CreateSession = gql`
-    mutation CreateSession($email: String!, $password: String!) {
-  createSession(email: $email, password: $password) {
-    user {
-      email
-    }
-    token
-  }
-}
-    `;
-export const CreateSessionWithJwt = gql`
-    mutation CreateSessionWithJWT($jwt: String!) {
-  createSessionWithJWT(jwt: $jwt) {
-    user {
-      email
-    }
-    token
-  }
-}
-    `;
-export const UpdatePaymentProviderCustomers = gql`
-    mutation UpdatePaymentProviderCustomers($customers: [PaymentProviderCustomerInput!]!) {
-  updatePaymentProviderCustomers(input: $customers) {
-    customerID
-    paymentProviderID
-  }
-}
-    `;

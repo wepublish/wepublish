@@ -2,7 +2,6 @@ import { Meta, StoryObj } from '@storybook/react';
 import { SubscriptionListContainer } from './subscription-list-container';
 import {
   CancelSubscriptionDocument,
-  Currency,
   Exact,
   ExtendSubscriptionDocument,
   FullInvoiceFragment,
@@ -11,17 +10,17 @@ import {
   InvoicesDocument,
   PaySubscriptionDocument,
   PaymentPeriodicity,
-  Subscription,
   SubscriptionDeactivationReason,
   SubscriptionsDocument,
 } from '@wepublish/website/api';
+
+import { mockMemberPlan, mockPaymentMethod } from '@wepublish/storybook/mocks';
+import { InvoiceListContainer } from '../invoice-list/invoice-list-container';
+import { waitFor, within } from '@storybook/test';
 import {
   WithCancelError,
   WithExtendError,
 } from './subscription-list-item.stories';
-import { waitFor, within } from '@storybook/test';
-import { InvoiceListContainer } from '../invoice-list/invoice-list-container';
-import { mockImage } from '@wepublish/storybook/mocks';
 
 export default {
   component: SubscriptionListContainer,
@@ -31,37 +30,20 @@ export default {
 const subscription = {
   __typename: 'PublicSubscription',
   id: '1234-1234',
+  isActive: true,
   startsAt: '2023-01-01',
   paidUntil: '2032-01-01',
   autoRenew: true,
   monthlyAmount: 250000,
   paymentPeriodicity: PaymentPeriodicity.Quarterly,
   url: 'https://example.com',
-  paymentMethod: {
-    __typename: 'PaymentMethod',
-    description: '',
-    id: '123',
-    name: '',
-    paymentProviderID: '',
-    slug: '',
-  },
-  memberPlan: {
-    __typename: 'MemberPlan',
-    image: mockImage(),
-    name: 'Foobar Memberplan',
-    amountPerMonthMin: 5000,
-    availablePaymentMethods: [],
-    id: '123',
-    slug: '',
-    description: [],
-    tags: [],
-    extendable: true,
-    currency: Currency.Chf,
-  },
+  paymentMethod: mockPaymentMethod(),
+  memberPlan: mockMemberPlan(),
   properties: [],
   deactivation: null,
   extendable: true,
   canExtend: true,
+  externalReward: 'https://example.com/external-reward-mock-url',
 } as Exact<FullSubscriptionFragment>;
 
 const deactivation = {
@@ -82,7 +64,7 @@ const invoice = {
   mail: 'foobar@example.com',
   total: 50000,
   description: null,
-  canceledAt: null,
+  canceledAt: '2023-01-01',
   paidAt: null,
 } as Exact<FullInvoiceFragment>;
 
@@ -104,7 +86,7 @@ export const Default: StoryObj = {
           },
           result: {
             data: {
-              subscriptions: [subscription],
+              userSubscriptions: [subscription],
             },
           },
         },
@@ -114,7 +96,7 @@ export const Default: StoryObj = {
           },
           result: {
             data: {
-              invoices: [invoice],
+              userInvoices: [invoice],
             },
           },
         },
@@ -177,7 +159,7 @@ export const Unpaid: StoryObj = {
           },
           result: {
             data: {
-              subscriptions: [{ ...subscription, paidUntil: null }],
+              userSubscriptions: [{ ...subscription, paidUntil: null }],
             },
           },
         },
@@ -187,7 +169,7 @@ export const Unpaid: StoryObj = {
           },
           result: {
             data: {
-              invoices: [invoice],
+              userInvoices: [invoice],
             },
           },
         },
@@ -201,7 +183,7 @@ export const WithFilter: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
-    filter: (subscriptions: Subscription[]) => [],
+    filter: (subscriptions: FullSubscriptionFragment[]) => [],
   },
 };
 
@@ -223,7 +205,7 @@ export const Extend: StoryObj = {
           },
           result: {
             data: {
-              invoices: [{ ...invoice, paidAt: new Date('2023-01-01') }],
+              userInvoices: [{ ...invoice, paidAt: new Date('2023-01-01') }],
             },
           },
         },
@@ -260,7 +242,7 @@ export const CancelWithInvoiceList: StoryObj = {
           },
           result: {
             data: {
-              invoices: [invoice],
+              userInvoices: [invoice],
             },
           },
         },

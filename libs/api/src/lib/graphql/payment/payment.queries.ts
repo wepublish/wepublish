@@ -68,7 +68,7 @@ export const getPayments = async (
     }),
   ]);
 
-  const nodes = payments.slice(0, take);
+  const nodes = payments.slice(0, getMaxTake(take));
   const firstPayment = nodes[0];
   const lastPayment = nodes[nodes.length - 1];
 

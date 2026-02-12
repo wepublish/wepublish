@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import {
   CheckInvoiceStatusDocument,
-  Currency,
   Exact,
   FullInvoiceFragment,
   FullSubscriptionFragment,
@@ -10,7 +9,7 @@ import {
   PaymentPeriodicity,
 } from '@wepublish/website/api';
 import { InvoiceListContainer } from './invoice-list-container';
-import { mockImage } from '@wepublish/storybook/mocks';
+import { mockMemberPlan, mockPaymentMethod } from '@wepublish/storybook/mocks';
 
 export default {
   component: InvoiceListContainer,
@@ -19,6 +18,7 @@ export default {
 
 const subscription = {
   __typename: 'PublicSubscription',
+  isActive: true,
   id: '1234-1234',
   startsAt: '2023-01-01',
   paidUntil: '2032-01-01',
@@ -26,31 +26,13 @@ const subscription = {
   monthlyAmount: 250000,
   paymentPeriodicity: PaymentPeriodicity.Quarterly,
   url: 'https://example.com',
-  paymentMethod: {
-    __typename: 'PaymentMethod',
-    description: '',
-    id: '123',
-    name: '',
-    paymentProviderID: '',
-    slug: '',
-  },
-  memberPlan: {
-    __typename: 'MemberPlan',
-    image: mockImage(),
-    name: 'Foobar Memberplan',
-    amountPerMonthMin: 5000,
-    availablePaymentMethods: [],
-    id: '123',
-    slug: '',
-    description: [],
-    tags: [],
-    extendable: true,
-    currency: Currency.Chf,
-  },
+  paymentMethod: mockPaymentMethod(),
+  memberPlan: mockMemberPlan(),
   properties: [],
   deactivation: null,
   extendable: true,
   canExtend: true,
+  externalReward: 'https://example.com/external-reward-mock-url',
 } as Exact<FullSubscriptionFragment>;
 
 const invoice = {
@@ -84,7 +66,7 @@ export const Default: StoryObj = {
           },
           result: {
             data: {
-              invoices: [invoice, { ...invoice, id: '4321-4321' }],
+              userInvoices: [invoice, { ...invoice, id: '4321-4321' }],
             },
           },
         },

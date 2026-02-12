@@ -15,7 +15,7 @@ import { GraphQLSlug } from '@wepublish/utils/api';
 import {
   CreateMemberPlanInput,
   MemberPlan,
-  MemberPlanConnection,
+  PaginatedMemberPlans,
   MemberPlanListArgs,
   UpdateMemberPlanInput,
 } from './member-plan.model';
@@ -81,7 +81,7 @@ export class MemberPlanResolver {
   }
 
   @Public()
-  @Query(() => MemberPlanConnection, {
+  @Query(() => PaginatedMemberPlans, {
     description: `Returns a paginated list of memberplans based on the filters given.`,
   })
   async memberPlans(@Args() input: MemberPlanListArgs) {

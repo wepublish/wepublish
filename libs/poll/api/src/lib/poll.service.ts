@@ -51,7 +51,7 @@ export class PollService {
       }),
     ]);
 
-    const nodes = polls.slice(0, take);
+    const nodes = polls.slice(0, getMaxTake(take));
     const firstPoll = nodes[0];
     const lastPoll = nodes[nodes.length - 1];
 
@@ -68,21 +68,6 @@ export class PollService {
         endCursor: lastPoll?.id,
       },
     };
-  }
-
-  @PrimeDataLoader(PollDataloaderService)
-  async getPollById(id: string) {
-    const poll = await this.prisma.poll.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!poll) {
-      throw new NotFoundException();
-    }
-
-    return poll;
   }
 
   @PrimeDataLoader(PollDataloaderService)

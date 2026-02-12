@@ -10,7 +10,7 @@ import { Public } from '@wepublish/authentication/api';
 import { Author, CreateAuthorInput, UpdateAuthorInput } from './author.model';
 import { AuthorService } from './author.service';
 import { AuthorDataloaderService } from './author-dataloader.service';
-import { AuthorArgs, AuthorsQueryArgs, PaginatedAuthors } from './author.model';
+import { AuthorArgs, AuthorListArgs, PaginatedAuthors } from './author.model';
 import { URLAdapter } from '@wepublish/nest-modules';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { Permissions } from '@wepublish/permissions/api';
@@ -63,15 +63,8 @@ export class AuthorResolver {
     description:
       'Get a paginated list of authors with optional filtering and sorting',
   })
-  async authors(@Args() args: AuthorsQueryArgs) {
-    return this.authorService.getAuthors(
-      args.filter,
-      args.sort,
-      args.order,
-      args.cursor || null,
-      args.skip || 0,
-      args.take || 10
-    );
+  async authors(@Args() args: AuthorListArgs) {
+    return this.authorService.getAuthors(args);
   }
 
   @Permissions(CanCreateAuthor)

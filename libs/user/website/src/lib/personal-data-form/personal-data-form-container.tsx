@@ -38,29 +38,26 @@ export function PersonalDataFormContainer<
 
   const handleOnImageUpload = useCallback(
     async (input: ChangeEvent<HTMLInputElement> | null) => {
-      await uploadImage({
-        variables: {
-          uploadImageInput:
-            input ? { file: input.target?.files![0] as File } : null,
-        },
-      });
+      if (input) {
+        await uploadImage({
+          variables: { file: input.target?.files![0] as File },
+        });
+      }
     },
     [uploadImage]
   );
 
   const handleOnUpdate = useCallback(
     async (
-      variables: UpdateUserMutationVariables['input'] &
+      variables: UpdateUserMutationVariables &
         Partial<UpdatePasswordMutationVariables>
     ) => {
       const { password, passwordRepeated, ...userInput } = variables;
       const updates = [
         updateUser({
-          variables: {
-            input: userInput,
-          },
+          variables: userInput,
         }),
-      ];
+      ] as Promise<unknown>[];
 
       if (password && passwordRepeated) {
         updates.push(
