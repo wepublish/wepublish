@@ -7,21 +7,25 @@ import {
 
 const TsriArticleDateWrapper = styled(ArticleDateWrapper)`
   font-size: 0.7rem;
-  display: contents;
+  display: grid;
+  grid-column: 2 / 4;
+  grid-row: 2 / 3;
+  margin: 0;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-column: 2 / 3;
+    grid-row: 2 / 4;
     font-size: 0.875em;
   }
 `;
 
 export const TsriArticleTime = styled('time')`
-  grid-column: 2 / 4;
-  grid-row: 2 / 3;
   padding: 0;
+  grid-row: 1 / 2;
+  grid-column: -1 / 1;
 
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-column: 2 / 3;
-    grid-row: 2 / 4;
+  &:is(time + time) {
+    grid-row: 2 / 3;
   }
 `;
 
