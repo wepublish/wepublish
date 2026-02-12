@@ -120,7 +120,12 @@ fragment FullRatingSystem on CommentRatingSystem {
 }
 
 query CommentList($itemId: String!, $order: SortOrder, $sort: CommentSort) {
-  comments(itemId: $itemId, order: $order, sort: $sort) {
+  commentsForItem(
+    itemId: $itemId
+    itemType: article
+    order: $order
+    sort: $sort
+  ) {
     ...FullComment
   }
 
@@ -129,14 +134,32 @@ query CommentList($itemId: String!, $order: SortOrder, $sort: CommentSort) {
   }
 }
 
-mutation AddComment($input: CommentInput!) {
-  addComment(input: $input) {
+mutation AddComment(
+  $itemID: String!
+  $parentID: String
+  $guestUsername: String
+  $title: String
+  $text: RichText!
+) {
+  addUserComment(
+    itemID: $itemID
+    itemType: article
+    parentID: $parentID
+    guestUsername: $guestUsername
+    title: $title
+    text: $text
+  ) {
     ...FullComment
   }
 }
 
-mutation EditComment($input: CommentUpdateInput!) {
-  updateComment(input: $input) {
+mutation EditComment(
+  $id: String!
+  $title: String
+  $lead: String
+  $text: RichText!
+) {
+  updateUserComment(id: $id, title: $title, lead: $lead, text: $text) {
     ...FullComment
   }
 }

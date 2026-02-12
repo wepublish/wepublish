@@ -49,7 +49,6 @@ import { DefaultBcryptHashCostFactor, DefaultSessionTTL } from './db/common';
 import { MemberPlanWithPaymentMethods } from './db/memberPlan';
 import { SubscriptionWithRelations } from './db/subscription';
 import { TokenExpiredError } from './error';
-import { FullPoll, getPoll } from './graphql/poll/poll.public-queries';
 import { Hooks } from './hooks';
 import { MemberContext } from '@wepublish/membership/api';
 import { BlockStylesDataloaderService } from '@wepublish/block-content/api';
@@ -106,8 +105,6 @@ export interface DataLoaderContext {
   readonly activePaymentMethodsBySlug: DataLoader<string, PaymentMethod | null>;
   readonly invoicesByID: DataLoader<string, InvoiceWithItems | null>;
   readonly paymentsByID: DataLoader<string, Payment | null>;
-
-  readonly pollById: DataLoader<string, FullPoll | null>;
 
   readonly commentsById: DataLoader<string, Comment | null>;
   readonly commentRatingSystemAnswers: DataLoader<
@@ -557,10 +554,6 @@ export async function contextFromRequest(
         }),
         'id'
       )
-    ),
-
-    pollById: new DataLoader(async ids =>
-      Promise.all(ids.map(id => getPoll(id, prisma.poll)))
     ),
 
     commentsById: new DataLoader(async ids =>

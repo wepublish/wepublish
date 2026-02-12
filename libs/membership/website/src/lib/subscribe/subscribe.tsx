@@ -468,7 +468,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     }
 
     return (
-      userSubscriptions.data?.subscriptions.some(
+      userSubscriptions.data?.userSubscriptions.some(
         ({ memberPlan, deactivation }) =>
           memberPlan.id === selectedMemberPlanId &&
           memberPlan.productType === ProductType.Subscription &&
@@ -477,7 +477,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     );
   }, [
     deactivateSubscriptionId,
-    userSubscriptions.data?.subscriptions,
+    userSubscriptions.data?.userSubscriptions,
     selectedMemberPlanId,
   ]);
 
@@ -487,11 +487,11 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     }
 
     return (
-      userInvoices.data?.invoices.some(
+      userInvoices.data?.userInvoices.some(
         invoice => !invoice.canceledAt && !invoice.paidAt
       ) ?? false
     );
-  }, [deactivateSubscriptionId, userInvoices.data?.invoices]);
+  }, [deactivateSubscriptionId, userInvoices.data?.userInvoices]);
 
   const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin || 500;
 

@@ -1,5 +1,12 @@
-import { PermissionControl } from '@wepublish/ui/editor';
 import styled from '@emotion/styled';
+import {
+  CanGetAISettings,
+  CanGetChallengeProviderSettings,
+  CanGetMailProviderSettings,
+  CanGetPaymentProviderSettings,
+  CanGetTrackingPixelSettings,
+} from '@wepublish/permissions';
+import { PermissionControl } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import {
   MdAnalytics,
@@ -12,16 +19,16 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { Col, Grid, IconButton, Panel, Row } from 'rsuite';
 
-import mailChimpLogo from '../../../assets/integrations/mailchimp.avif';
-import slackLogo from '../../../assets/integrations/slack.png';
-import mailgunLogo from '../../../assets/integrations/mailgun.svg';
 import bexioLogo from '../../../assets/integrations/bexio.png';
+import cloudflareLogo from '../../../assets/integrations/cloudflare.svg';
+import mailChimpLogo from '../../../assets/integrations/mailchimp.avif';
+import mailgunLogo from '../../../assets/integrations/mailgun.svg';
 import mollieLogo from '../../../assets/integrations/mollie.png';
 import payrexxLogo from '../../../assets/integrations/payrexx.png';
-import stripeLogo from '../../../assets/integrations/stripe.svg';
 import proLitterisLogo from '../../../assets/integrations/proLitteris.svg';
+import slackLogo from '../../../assets/integrations/slack.png';
+import stripeLogo from '../../../assets/integrations/stripe.svg';
 import vercelLogo from '../../../assets/integrations/vercel.svg';
-import cloudflareLogo from '../../../assets/integrations/cloudflare.svg';
 
 const StyledRow = styled(Row)`
   margin-top: 20px;
@@ -62,35 +69,35 @@ export function IntegrationList() {
   const integrations = [
     {
       title: t('integrations.ai'),
-      permission: 'CAN_GET_AI_SETTINGS',
+      permission: CanGetAISettings.id,
       path: '/integrations/ai',
       icon: MdSmartToy,
       logos: [vercelLogo],
     },
     {
       title: t('integrations.challengeProvider'),
-      permission: 'CAN_GET_CHALLENGE_PROVIDER_SETTINGS',
+      permission: CanGetChallengeProviderSettings.id,
       path: '/integrations/challenge',
       icon: MdSecurity,
       logos: [cloudflareLogo],
     },
     {
       title: t('integrations.paymentProvider'),
-      permission: 'CAN_GET_PAYMENT_PROVIDER_SETTINGS',
+      permission: CanGetPaymentProviderSettings.id,
       path: '/integrations/payment',
       icon: MdCreditCard,
       logos: [payrexxLogo, stripeLogo, mollieLogo, bexioLogo],
     },
     {
       title: t('integrations.trackingPixel'),
-      permission: 'CAN_GET_TRACKING_PIXEL_SETTINGS',
+      permission: CanGetTrackingPixelSettings.id,
       path: '/integrations/tracking-pixel',
       icon: MdAnalytics,
       logos: [proLitterisLogo],
     },
     {
       title: t('integrations.mailProvider'),
-      permission: 'CAN_GET_MAIL_PROVIDER_SETTINGS',
+      permission: CanGetMailProviderSettings.id,
       path: '/integrations/mail',
       icon: MdEmail,
       logos: [mailgunLogo, mailChimpLogo, slackLogo],
@@ -104,11 +111,12 @@ export function IntegrationList() {
           <h1>{t('integrations.title')}</h1>
         </Col>
       </Row>
+
       <StyledRow gutter={20}>
         {integrations.map(integration => (
           <PermissionControl
             key={integration.permission}
-            qualifyingPermissions={[integration.permission as any]}
+            qualifyingPermissions={[integration.permission]}
           >
             <StyledCol
               xs={24}

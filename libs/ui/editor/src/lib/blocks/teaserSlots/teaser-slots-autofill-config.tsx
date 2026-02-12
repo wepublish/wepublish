@@ -2,8 +2,8 @@
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { TagType } from '@wepublish/editor/api';
 import {
+  TagType,
   TeaserSlotsAutofillConfigInput,
   TeaserType,
 } from '@wepublish/editor/api-v2';

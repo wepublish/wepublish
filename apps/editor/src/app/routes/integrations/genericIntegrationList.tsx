@@ -1,16 +1,17 @@
-import { DocumentNode } from 'graphql';
 import { useQuery } from '@apollo/client';
-import { useMemo, useState } from 'react';
-import { MdSearch } from 'react-icons/md';
-import { useTranslation } from 'react-i18next';
 import styled from '@emotion/styled';
-import { Input, InputGroup, Loader, Message } from 'rsuite';
 import { getApiClientV2 } from '@wepublish/editor/api-v2';
+import { DocumentNode } from 'graphql';
+import { useMemo, useState } from 'react';
+import { FieldValues } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { MdSearch } from 'react-icons/md';
+import { Input, InputGroup, Loader, Message } from 'rsuite';
+
 import {
   GenericIntegrationFormProps,
   SingleGenericIntegrationForm,
 } from './genericIntegrationForm';
-import { FieldValues } from 'react-hook-form';
 
 interface GenericIntegrationListProps<
   TSetting extends { id: string; name?: string | null; type?: string },
@@ -48,9 +49,11 @@ export function GenericIntegrationList<
   const settings = data?.[dataKey] as TSetting[] | undefined;
 
   const sortedSettings = useMemo(() => {
-    if (!settings) return undefined;
+    if (!settings) {
+      return undefined;
+    }
 
-    return [...settings]
+    return settings
       .filter(setting => {
         const name = setting.name || setting.type || '';
         return name.toLowerCase().includes(searchValue.toLowerCase());
@@ -63,13 +66,19 @@ export function GenericIntegrationList<
       });
   }, [settings, searchValue]);
 
-  if (loading) return <Loader center />;
-  if (error) return <Message type="error">{error.message}</Message>;
+  if (loading) {
+    return <Loader center />;
+  }
 
-  if (!settings?.length)
+  if (error) {
+    return <Message type="error">{error.message}</Message>;
+  }
+
+  if (!settings?.length) {
     return (
       <Message type="warning">{t('integrations.noSettingsFound')}</Message>
     );
+  }
 
   return (
     <>
@@ -78,6 +87,7 @@ export function GenericIntegrationList<
           <InputGroup.Addon>
             <MdSearch />
           </InputGroup.Addon>
+
           <Input
             value={searchValue}
             onChange={setSearchValue}

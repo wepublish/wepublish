@@ -23,6 +23,7 @@ import {
   HasOptionalSensitiveDataUserResolver,
   HasOptionalSensitiveDataUserLcResolver,
 } from './has-sensitive-data-user/has-sensitive-data-user.resolver';
+import { UserResolver } from './user.resolver';
 
 @Module({
   imports: [PrismaModule, ImageModule, PropertyModule],
@@ -44,6 +45,7 @@ import {
     UserRoleResolver,
     UserRoleService,
     UserRoleDataloader,
+    UserResolver,
   ],
   exports: [UserDataloaderService, UserRoleDataloader, UserService],
 })

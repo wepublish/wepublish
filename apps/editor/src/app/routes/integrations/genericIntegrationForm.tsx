@@ -1,14 +1,15 @@
 import { useMutation } from '@apollo/client';
+import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { getApiClientV2 } from '@wepublish/editor/api-v2';
 import { DocumentNode } from 'graphql';
 import { useMemo } from 'react';
 import { Controller, FieldValues, Path, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import styled from '@emotion/styled';
 import {
   Button,
-  CheckPicker,
   Checkbox,
+  CheckPicker,
   Form,
   Message,
   Panel,
@@ -16,7 +17,6 @@ import {
   toaster,
 } from 'rsuite';
 import { z } from 'zod';
-import { getApiClientV2 } from '@wepublish/editor/api-v2';
 
 const StyledPanel = styled(Panel)`
   margin-bottom: 20px;
@@ -103,14 +103,14 @@ export function SingleGenericIntegrationForm<
     resolver: zodResolver(schema),
     mode: 'onTouched',
     reValidateMode: 'onChange',
-    values: initialValues,
   });
 
-  const onSubmit = async (formData: TFormValues) => {
+  const onSubmit = handleSubmit(async (formData: TFormValues) => {
     try {
       await updateSettings({
         variables: mapFormValuesToVariables(formData, setting),
       });
+
       toaster.push(
         <Message type="success">{t('integrations.updateSuccess')}</Message>
       );
@@ -118,9 +118,10 @@ export function SingleGenericIntegrationForm<
       toaster.push(
         <Message type="error">{t('integrations.updateError')}</Message>
       );
+
       console.error(e);
     }
-  };
+  });
 
   const logo = getLogo?.(setting);
 
@@ -141,7 +142,7 @@ export function SingleGenericIntegrationForm<
     >
       <Form
         fluid
-        onSubmit={() => handleSubmit(onSubmit)()}
+        onSubmit={() => onSubmit()}
         disabled={updating}
       >
         {resolvedFields.map(field => (
@@ -152,9 +153,11 @@ export function SingleGenericIntegrationForm<
             <Form.ControlLabel>
               {field.type === 'checkbox' ? ' ' : field.label}
             </Form.ControlLabel>
+
             <Controller
               name={field.name}
               control={control}
+              defaultValue={initialValues[field.name]}
               render={({
                 field: { value, onChange, ...restField },
                 fieldState,

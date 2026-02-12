@@ -75,7 +75,7 @@ export class PeerArticle
 }
 
 @ObjectType()
-export class PaginatedPeerArticle extends PaginatedType(PeerArticle) {}
+export class PaginatedPeerArticles extends PaginatedType(PeerArticle) {}
 
 @InputType()
 export class ImportArticleOptions {

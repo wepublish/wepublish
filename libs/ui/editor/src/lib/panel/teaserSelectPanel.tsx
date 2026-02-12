@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { PageInfo } from '@wepublish/editor/api';
 import {
   ArticleFilter,
   ArticleListQueryVariables,
@@ -7,6 +6,7 @@ import {
   EventFilter,
   getApiClientV2,
   PageFilter,
+  PageInfo,
   PageListQueryVariables,
   PageSort,
   SortOrder,

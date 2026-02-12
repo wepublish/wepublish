@@ -47,7 +47,7 @@ export class EventResolver {
   }
 
   @Public()
-  @Query(() => Event, { description: `Returns a event by id.` })
+  @Query(() => Event, { description: `Returns an event by id.` })
   public async event(@Args('id') id: string) {
     const event = await this.eventDataloader.load(id);
 

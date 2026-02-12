@@ -207,7 +207,7 @@ export const Upgrade = ({
     productType: subscriptionToUpgrade.memberPlan.productType,
     paymentPeriodicity: subscriptionToUpgrade.paymentPeriodicity,
     monthlyAmount,
-    discount: upgradeInfo.data?.upgradeSubscriptionInfo.discountAmount ?? 0,
+    discount: upgradeInfo.data?.upgradeUserSubscriptionInfo.discountAmount ?? 0,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     locale,
   });
@@ -268,7 +268,7 @@ export const Upgrade = ({
               oldMemberPlan: subscriptionToUpgrade.memberPlan.name,
               newMemberPlan: selectedMemberPlan?.name,
               discount: formatCurrency(
-                (upgradeInfo.data?.upgradeSubscriptionInfo.discountAmount ??
+                (upgradeInfo.data?.upgradeUserSubscriptionInfo.discountAmount ??
                   0) / 100,
                 selectedMemberPlan?.currency ?? Currency.Chf,
                 locale

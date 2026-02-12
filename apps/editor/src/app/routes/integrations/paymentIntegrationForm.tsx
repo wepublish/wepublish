@@ -10,13 +10,13 @@ import {
 } from '@wepublish/editor/api-v2';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
-import { GenericIntegrationList } from './genericIntegrationList';
-import { FieldDefinition } from './genericIntegrationForm';
 
 import bexioLogo from '../../../assets/integrations/bexio.png';
 import mollieLogo from '../../../assets/integrations/mollie.png';
 import payrexxLogo from '../../../assets/integrations/payrexx.png';
 import stripeLogo from '../../../assets/integrations/stripe.svg';
+import { FieldDefinition } from './genericIntegrationForm';
+import { GenericIntegrationList } from './genericIntegrationList';
 
 const paymentSettingsSchema = z.object({
   // Common

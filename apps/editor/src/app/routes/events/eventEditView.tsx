@@ -1,5 +1,4 @@
 import { ApolloError } from '@apollo/client';
-import { stripTypename } from '@wepublish/editor/api';
 import {
   FullEventFragment,
   FullImageFragment,
@@ -32,7 +31,7 @@ const onErrorToast = (error: ApolloError) => {
 const mapApiDataToInput = (
   event: FullEventFragment
 ): MutationUpdateEventArgs & { image?: FullImageFragment | null } => ({
-  ...stripTypename(event),
+  ...event,
   imageId: event.image?.id,
   tagIds: event.tags?.map(tag => tag.id),
 });

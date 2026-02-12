@@ -4,26 +4,24 @@ import { Alert } from '@mui/material';
 import {
   Currency,
   DeactivationFragment,
+  FullMemberPlanFragment,
+  FullPaymentMethodFragment,
   FullSubscriptionFragment,
   FullUserFragment,
+  getApiClientV2,
   InvoiceFragment,
-  MetadataPropertyFragment,
   PaymentPeriodicity,
+  PropertyInput,
   SubscriptionDeactivationReason,
   useCancelSubscriptionMutation,
   useCreateSubscriptionMutation,
   useInvoicesQuery,
+  useMemberPlanListQuery,
+  usePaymentMethodListQuery,
   useRenewSubscriptionMutation,
   useSubscriptionQuery,
   useUpdateSubscriptionMutation,
   useUserQuery,
-} from '@wepublish/editor/api';
-import {
-  FullPaymentMethodFragment,
-  getApiClientV2,
-  useMemberPlanListQuery,
-  usePaymentMethodListQuery,
-  FullMemberPlanFragment,
 } from '@wepublish/editor/api-v2';
 import {
   ALL_PAYMENT_PERIODICITIES,
@@ -142,7 +140,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   const [paidUntil, setPaidUntil] = useState<Date | null>();
   const [paymentMethod, setPaymentMethod] =
     useState<FullPaymentMethodFragment>();
-  const [properties, setProperties] = useState<MetadataPropertyFragment[]>([]);
+  const [properties, setProperties] = useState<PropertyInput[]>([]);
   const [deactivation, setDeactivation] =
     useState<DeactivationFragment | null>();
   const [extendable, setExtendable] = useState<boolean>(false);
@@ -159,15 +157,14 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
 
   const [extendModal, setExtendModal] = useState<boolean>(false);
 
-  /**
-   * Loading the subscription
-   */
+  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
     error: loadError,
     refetch: reloadSubscription,
   } = useSubscriptionQuery({
+    client,
     variables: { id: id! },
     fetchPolicy: 'network-only',
     skip: id === undefined,
@@ -179,6 +176,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     error: loadErrorInvoices,
     refetch: reloadInvoices,
   } = useInvoicesQuery({
+    client,
     variables: {
       take: 100,
       filter: {
@@ -205,10 +203,13 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     if (!memberPlan) {
       return;
     }
+
     if (memberPlan.extendable === extendable) {
       return;
     }
+
     setExtendable(memberPlan.extendable);
+
     toaster.push(
       <Message
         type="info"
@@ -227,8 +228,8 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     if (!subscription) {
       return;
     }
+    // @ts-expect-error Wrong type for now
     setUser(subscription.user);
-    // @ts-expect-error wrong image type for now. Will be fixed with subscription PR
     setMemberPlan(subscription.memberPlan);
     setPaymentPeriodicity(subscription.paymentPeriodicity);
     setMonthlyAmount(subscription.monthlyAmount);
@@ -237,7 +238,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     setPaidUntil(
       subscription.paidUntil ? new Date(subscription.paidUntil) : null
     );
-    // @ts-expect-error wrong image type for now. Will be fixed with subscription PR
     setPaymentMethod(subscription.paymentMethod);
     setProperties(
       subscription.properties.map(({ key, value, public: isPublic }) => ({
@@ -251,7 +251,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     setCurrency(subscription.currency);
   }
 
-  const client = getApiClientV2();
   const {
     data: memberPlanData,
     loading: isMemberPlanLoading,
@@ -274,19 +273,20 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   });
 
   const [updateSubscription, { loading: isUpdating }] =
-    useUpdateSubscriptionMutation();
+    useUpdateSubscriptionMutation({ client });
   const [cancelSubscription, { loading: isCancel, error: cancelError }] =
-    useCancelSubscriptionMutation();
+    useCancelSubscriptionMutation({ client });
 
   const [createSubscription, { loading: isCreating }] =
-    useCreateSubscriptionMutation();
-  const [renewSubscription, { loading: isRenewing, error: renewalError }] =
-    useRenewSubscriptionMutation();
+    useCreateSubscriptionMutation({ client });
+  const [renewSubscription, { error: renewalError }] =
+    useRenewSubscriptionMutation({ client });
 
   /**
    * fetch edited user from api
    */
   const { data: editedUserData } = useUserQuery({
+    client,
     variables: { id: editedUserId! },
     fetchPolicy: 'network-only',
     skip: editedUserId === undefined,
@@ -436,34 +436,32 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   }
 
   async function handleSave() {
-    if (!memberPlan) return;
-    if (!paymentMethod) return;
-    if (!user) return;
+    if (!memberPlan || !paymentMethod || !user) {
+      return;
+    }
 
     try {
       if (id) {
         const { data } = await updateSubscription({
           variables: {
             id,
-            input: {
-              ...inputBase,
-              userID: user?.id,
-              paymentMethodID: paymentMethod.id,
-              memberPlanID: memberPlan.id,
-            },
+            ...inputBase,
+            userID: user?.id,
+            paymentMethodID: paymentMethod.id,
+            memberPlanID: memberPlan.id,
           },
         });
 
-        if (data?.updateSubscription) onSave?.(data.updateSubscription);
+        if (data?.updateSubscription) {
+          onSave?.(data.updateSubscription);
+        }
       } else {
         const { data } = await createSubscription({
           variables: {
-            input: {
-              ...inputBase,
-              userID: user.id,
-              paymentMethodID: paymentMethod.id,
-              memberPlanID: memberPlan.id,
-            },
+            ...inputBase,
+            userID: user.id,
+            paymentMethodID: paymentMethod.id,
+            memberPlanID: memberPlan.id,
           },
         });
 
@@ -476,7 +474,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
           navigate(`/subscriptions/edit/${newSubscription.id}`);
         }
 
-        if (data?.createSubscription) onSave?.(data.createSubscription);
+        if (data?.createSubscription) {
+          onSave?.(data.createSubscription);
+        }
       }
 
       toaster.push(

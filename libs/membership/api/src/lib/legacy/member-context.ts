@@ -603,6 +603,40 @@ export class MemberContext implements MemberContextInterface {
     return updatedSubscription;
   }
 
+  async updateRemoteSubscription({
+    paymentProvider,
+    input,
+    originalSubscription,
+  }: {
+    paymentProvider: PaymentProvider;
+    input: Subscription;
+    originalSubscription: Subscription & { properties: MetadataProperty[] };
+  }) {
+    // not updatable subscription properties for externally managed subscriptions
+    if (
+      (input.paymentMethodID &&
+        input.paymentMethodID !== originalSubscription.paymentMethodID) ||
+      (input.memberPlanID &&
+        input.memberPlanID !== originalSubscription.memberPlanID) ||
+      (input.paidUntil && input.paidUntil !== originalSubscription.paidUntil) ||
+      (input.paymentPeriodicity &&
+        input.paymentPeriodicity !== originalSubscription.paymentPeriodicity) ||
+      input?.autoRenew === false
+    ) {
+      throw new Error(
+        `It is not possible to update the subscription with payment provider "${paymentProvider.getName()}".`
+      );
+    }
+
+    // update amount is possible
+    if (input.monthlyAmount !== originalSubscription.monthlyAmount) {
+      await paymentProvider.updateRemoteSubscriptionAmount({
+        subscription: originalSubscription,
+        newAmount: parseInt(`${input.monthlyAmount}`, 10),
+      });
+    }
+  }
+
   async cancelRemoteSubscription({
     subscriptionId,
     reason,
@@ -709,10 +743,10 @@ export class MemberContext implements MemberContextInterface {
 
   async createSubscription({
     userID,
-    paymentMethodId,
+    paymentMethodID,
     paymentPeriodicity,
     monthlyAmount,
-    memberPlanId,
+    memberPlanID,
     properties,
     autoRenew,
     extendable,
@@ -722,10 +756,10 @@ export class MemberContext implements MemberContextInterface {
     discount,
   }: {
     userID: string;
-    paymentMethodId: string;
+    paymentMethodID: string;
     paymentPeriodicity: PaymentPeriodicity;
     monthlyAmount: number;
-    memberPlanId: string;
+    memberPlanID: string;
     properties: Pick<MetadataProperty, 'key' | 'value' | 'public'>[];
     autoRenew: boolean;
     extendable: boolean;
@@ -744,7 +778,7 @@ export class MemberContext implements MemberContextInterface {
     }
 
     const memberPlan = await this.prisma.memberPlan.findUnique({
-      where: { id: memberPlanId },
+      where: { id: memberPlanID },
     });
 
     if (!memberPlan) {
@@ -754,7 +788,7 @@ export class MemberContext implements MemberContextInterface {
     const memberPlanSubscriptionCount = await this.prisma.subscription.count({
       where: {
         userID,
-        memberPlanID: memberPlanId,
+        memberPlanID,
       },
     });
 
@@ -765,7 +799,7 @@ export class MemberContext implements MemberContextInterface {
       throw new Error(
         `Subscription count exceeded limit (given: ${memberPlanSubscriptionCount + 1} | max: ${
           memberPlan.maxCount
-        }) for ${memberPlanId} memberplan!`
+        }) for ${memberPlanID} memberplan!`
       );
     }
 
@@ -773,11 +807,11 @@ export class MemberContext implements MemberContextInterface {
       data: {
         userID,
         startsAt,
-        paymentMethodID: paymentMethodId,
+        paymentMethodID,
         paymentPeriodicity,
         paidUntil: null,
         monthlyAmount,
-        memberPlanID: memberPlanId,
+        memberPlanID,
         properties: {
           createMany: {
             data: properties,
@@ -860,19 +894,29 @@ export class MemberContext implements MemberContextInterface {
     return this.sendMailForSubscriptionEvent(event, subscription, {});
   }
 
-  async importSubscription(
-    prisma: PrismaClient,
-    userID: string,
-    paymentMethodId: string,
-    paymentPeriodicity: PaymentPeriodicity,
-    monthlyAmount: number,
-    memberPlanId: string,
-    properties: Pick<MetadataProperty, 'key' | 'value' | 'public'>[],
-    autoRenew: boolean,
-    extendable: boolean,
-    startsAt: Date | string = new Date(),
-    paidUntil?: Date | string
-  ): Promise<{
+  async importSubscription({
+    userID,
+    paymentMethodID,
+    paymentPeriodicity,
+    monthlyAmount,
+    memberPlanID,
+    properties,
+    autoRenew,
+    extendable,
+    startsAt = new Date(),
+    paidUntil,
+  }: {
+    userID: string;
+    paymentMethodID: string;
+    paymentPeriodicity: PaymentPeriodicity;
+    monthlyAmount: number;
+    memberPlanID: string;
+    properties: Pick<MetadataProperty, 'key' | 'value' | 'public'>[];
+    autoRenew: boolean;
+    extendable: boolean;
+    startsAt?: Date | string;
+    paidUntil?: Date | string;
+  }): Promise<{
     subscription: SubscriptionWithRelations;
     invoice: InvoiceWithItems;
   }> {
@@ -885,18 +929,18 @@ export class MemberContext implements MemberContextInterface {
     startsAt = new Date(startsAt);
     paidUntil = paidUntil ? new Date(paidUntil) : undefined;
 
-    const memberPlan = await prisma.memberPlan.findUnique({
-      where: { id: memberPlanId },
+    const memberPlan = await this.prisma.memberPlan.findUnique({
+      where: { id: memberPlanID },
     });
 
     if (!memberPlan) {
       throw new Error('Memberplan not found.');
     }
 
-    const memberPlanSubscriptionCount = await prisma.subscription.count({
+    const memberPlanSubscriptionCount = await this.prisma.subscription.count({
       where: {
         userID,
-        memberPlanID: memberPlanId,
+        memberPlanID,
       },
     });
 
@@ -907,22 +951,22 @@ export class MemberContext implements MemberContextInterface {
       throw new Error(
         `Subscription count exceeded limit (given: ${memberPlanSubscriptionCount + 1} | max: ${
           memberPlan.maxCount
-        }) for ${memberPlanId} memberplan!`
+        }) for ${memberPlanID} memberplan!`
       );
     }
 
     const now = new Date();
 
-    const subscription = await prisma.subscription.create({
+    const subscription = await this.prisma.subscription.create({
       data: {
         userID,
         startsAt,
         modifiedAt: new Date(),
-        paymentMethodID: paymentMethodId,
+        paymentMethodID,
         paymentPeriodicity,
         paidUntil,
         monthlyAmount,
-        memberPlanID: memberPlanId,
+        memberPlanID,
         properties: {
           createMany: {
             data: properties,
@@ -985,7 +1029,7 @@ export class MemberContext implements MemberContextInterface {
         },
       });
 
-      await prisma.subscription.update({
+      await this.prisma.subscription.update({
         where: { id: subscription.id },
         data: {
           periods: {

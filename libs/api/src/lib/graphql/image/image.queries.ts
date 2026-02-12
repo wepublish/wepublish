@@ -98,7 +98,7 @@ export const getImages = async (
     }),
   ]);
 
-  const nodes = images.slice(0, take);
+  const nodes = images.slice(0, getMaxTake(take));
   const firstImage = nodes[0];
   const lastImage = nodes[nodes.length - 1];
 

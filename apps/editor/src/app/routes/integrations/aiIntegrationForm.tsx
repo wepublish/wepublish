@@ -5,8 +5,9 @@ import {
 } from '@wepublish/editor/api-v2';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
-import { GenericIntegrationList } from './genericIntegrationList';
+
 import vercelLogo from '../../../assets/integrations/vercel.svg';
+import { GenericIntegrationList } from './genericIntegrationList';
 
 const aiSettingsSchema = z.object({
   id: z.string(),

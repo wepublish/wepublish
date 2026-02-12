@@ -1,14 +1,14 @@
 import { ApolloError } from '@apollo/client';
 import styled from '@emotion/styled';
 import {
-  CommentRevisionUpdateInput,
+  CommentRevisionInput,
   FullCommentFragment,
-  stripTypename,
+  getApiClientV2,
   TagType,
   useCommentQuery,
+  useRatingSystemQuery,
   useUpdateCommentMutation,
-} from '@wepublish/editor/api';
-import { getApiClientV2, useRatingSystemQuery } from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api-v2';
 import {
   CommentDeleteBtn,
   CommentHistory,
@@ -65,7 +65,7 @@ const showErrors = (error: ApolloError): void => {
  */
 export function getLastRevision(
   comment: FullCommentFragment
-): CommentRevisionUpdateInput | undefined {
+): CommentRevisionInput | undefined {
   const revisions = comment.revisions;
   if (!revisions.length) {
     return;
@@ -76,7 +76,7 @@ export function getLastRevision(
     title: lastRevision?.title,
     lead: lastRevision?.lead,
     text: lastRevision?.text,
-  } as CommentRevisionUpdateInput;
+  } as CommentRevisionInput;
 
   return parsedRevision;
 }
@@ -86,7 +86,7 @@ export function getLastRevision(
  */
 function hasRevisionChanged(
   comment: FullCommentFragment | undefined,
-  revision: CommentRevisionUpdateInput | undefined
+  revision: CommentRevisionInput | undefined
 ): boolean {
   if (!comment) {
     return true;
@@ -110,16 +110,15 @@ const CommentEditView = memo(() => {
     undefined
   );
   // where the revisions are handled
-  const [revision, setRevision] = useState<
-    CommentRevisionUpdateInput | undefined
-  >(undefined);
+  const [revision, setRevision] = useState<CommentRevisionInput | undefined>(
+    undefined
+  );
   // where the tag list is handled
   const [selectedTags, setSelectedTags] = useState<string[] | null>(null);
 
-  /**
-   * Queries
-   */
+  const client = getApiClientV2();
   const { data: commentData, loading: loadingComment } = useCommentQuery({
+    client,
     variables: {
       id: commentId,
     },
@@ -127,7 +126,6 @@ const CommentEditView = memo(() => {
     onError: showErrors,
   });
 
-  const client = getApiClientV2();
   const { data: ratingSystem, loading: loadingRatingSystem } =
     useRatingSystemQuery({
       client,
@@ -136,6 +134,7 @@ const CommentEditView = memo(() => {
 
   const [updateCommentMutation, { loading: updatingComment }] =
     useUpdateCommentMutation({
+      client,
       onCompleted: () =>
         toaster.push(
           <Message
@@ -210,7 +209,7 @@ const CommentEditView = memo(() => {
         source: comment.source,
         tagIds: commentTags,
         featured: comment.featured,
-        ratingOverrides: comment.overriddenRatings?.map(stripTypename),
+        ratingOverrides: comment.overriddenRatings,
       },
     });
 

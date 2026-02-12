@@ -13,7 +13,6 @@ import { CrowdfundingForm } from './crowdfunding-form';
 import { SingleViewTitle } from '@wepublish/ui/editor';
 import { Form, Message, Schema, toaster } from 'rsuite';
 import { ApolloError } from '@apollo/client';
-import { stripTypename } from '@wepublish/editor/api';
 
 const showError = (error: ApolloError): void => {
   toaster.push(
@@ -58,7 +57,7 @@ export const EditCrowdfundingForm = () => {
     },
     skip: !id,
     onError: showError,
-    onCompleted: data => setCrowdfunding(stripTypename(data.crowdfunding)),
+    onCompleted: data => setCrowdfunding(data.crowdfunding),
   });
 
   const { StringType } = Schema.Types;
@@ -72,7 +71,7 @@ export const EditCrowdfundingForm = () => {
     client,
     onError: showError,
     onCompleted: data => {
-      setCrowdfunding(stripTypename(data.updateCrowdfunding));
+      setCrowdfunding(data.updateCrowdfunding);
 
       if (shouldClose) {
         navigate(closePath);
@@ -94,7 +93,7 @@ export const EditCrowdfundingForm = () => {
   };
 
   const removeIdAndTypename = (goal: CreateCrowdfundingGoalInput) => {
-    const { id, ...goalCleaned } = stripTypename(goal as CrowdfundingGoal);
+    const { id, ...goalCleaned } = goal as CrowdfundingGoal;
     return goalCleaned;
   };
 

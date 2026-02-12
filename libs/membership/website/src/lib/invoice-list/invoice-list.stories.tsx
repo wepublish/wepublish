@@ -44,7 +44,7 @@ const invoice = {
 export const Default = {
   args: {
     data: {
-      invoices: [
+      userInvoices: [
         { ...invoice, id: '1' },
         { ...invoice, id: '2' },
         { ...invoice, id: '3' },
@@ -59,7 +59,7 @@ export const Empty = {
   args: {
     ...Default.args,
     data: {
-      invoices: [],
+      userInvoices: [],
     },
   },
 };

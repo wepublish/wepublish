@@ -6,36 +6,37 @@ import {
   HasSubscriptionLcResolver,
   HasSubscriptionResolver,
 } from './has-subscription/has-subscription.resolver';
-import { SubscriptionService } from './subscription.service';
 import { SubscriptionDataloader } from './subscription.dataloader';
 import { PublicSubscriptionResolver } from './subscription.resolver';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
-import { PaymentMethodModule, PaymentsModule } from '@wepublish/payment/api';
+import { PaymentMethodModule } from '@wepublish/payment/api';
 import { SubscriptionDeactivationDataloader } from './subscription-deactivation.dataloader';
 import { PropertyModule } from '@wepublish/property/api';
+import { SubscriptionService } from './subscription.service';
+import { SubscriptionPeriodDataloader } from './subscription-periods.dataloader';
+import { MemberContextModule } from '../legacy/member-context.module';
+import { SubscriptionPeriodResolver } from './subscription-period.resolver';
 
 @Module({
   imports: [
     PrismaModule,
     MemberPlanModule,
-    PaymentsModule,
     PaymentMethodModule,
     PropertyModule,
+    MemberContextModule,
   ],
   providers: [
+    SubscriptionPeriodResolver,
     HasSubscriptionResolver,
     HasOptionalSubscriptionResolver,
     HasSubscriptionLcResolver,
     HasOptionalSubscriptionLcResolver,
-    SubscriptionService,
     SubscriptionDataloader,
     SubscriptionDeactivationDataloader,
+    SubscriptionPeriodDataloader,
     PublicSubscriptionResolver,
-  ],
-  exports: [
     SubscriptionService,
-    SubscriptionDataloader,
-    SubscriptionDeactivationDataloader,
   ],
+  exports: [SubscriptionDataloader],
 })
 export class SubscriptionModule {}

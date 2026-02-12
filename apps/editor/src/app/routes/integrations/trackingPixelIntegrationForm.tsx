@@ -1,15 +1,15 @@
 import {
+  SettingTrackingPixel,
   TrackingPixelProviderType,
   TrackingPixelSettingsDocument,
   UpdateTrackingPixelSettingDocument,
-  SettingTrackingPixel,
 } from '@wepublish/editor/api-v2';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
-import { GenericIntegrationList } from './genericIntegrationList';
-import { FieldDefinition } from './genericIntegrationForm';
 
 import proLitterisLogo from '../../../assets/integrations/proLitteris.svg';
+import { FieldDefinition } from './genericIntegrationForm';
+import { GenericIntegrationList } from './genericIntegrationList';
 
 const trackingPixelSettingsSchema = z.object({
   id: z.string(),
