@@ -204,6 +204,9 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                   categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
                   headerSlug="header"
                   iconSlug="icons"
+                  subscribeBtn={{
+                    href: 'mitmachen?memberPlanBySlug=bajour-member&additionalMemberPlans=upsell',
+                  }}
                 />
               </ThemeProvider>
 
