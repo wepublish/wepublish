@@ -7,7 +7,7 @@ import {
   RichTextBlock,
 } from '@wepublish/website/builder';
 import { ImageWrapper } from '@wepublish/image/website';
-import { Theme, css } from '@emotion/react';
+import { CSSObject } from '@emotion/react';
 import { theme } from '@wepublish/ui';
 import { toPlaintext } from '@wepublish/richtext';
 
@@ -37,9 +37,9 @@ export const PeerProfileCTA = styled(Button)`
   justify-self: center;
 `;
 
-const richTextStyles = (theme: Theme) => css`
+const PeerInformationRichText = styled(RichTextBlock)`
   p {
-    ${theme.typography.peerInformation}
+    ${theme.typography.peerInformation as CSSObject}
   }
 `;
 
@@ -82,10 +82,7 @@ export function PeerInformation({
           />
         )}
 
-        <RichTextBlock
-          richText={information ?? []}
-          css={richTextStyles(theme)}
-        />
+        <PeerInformationRichText richText={information ?? []} />
 
         <PeerProfileCTA
           color="primary"
