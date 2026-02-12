@@ -64,6 +64,29 @@ const ArticleMetaBadge = styled(Badge)`
       scale: 1;
     }
   }
+
+  @supports (-webkit-text-size-adjust: none) and (font: -apple-system-body) {
+    & .MuiBadge-badge {
+      border: none;
+      height: 16px;
+      min-width: 16px;
+      left: -19px;
+      outline: 2px solid ${({ theme }) => theme.palette.common.white};
+    }
+  }
+
+  @supports (not (-webkit-text-size-adjust: none)) and
+    (font: -apple-system-body) {
+    & .MuiBadge-badge {
+      ${({ theme }) => theme.breakpoints.up('md')} {
+        border: none;
+        height: 16px;
+        min-width: 16px;
+        left: -19px;
+        outline: 2px solid ${({ theme }) => theme.palette.common.white};
+      }
+    }
+  }
 `;
 
 const FiMessageCircle = styled(FiMessageCircleDefault)`
