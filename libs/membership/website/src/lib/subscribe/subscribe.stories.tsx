@@ -652,7 +652,7 @@ export const NoWarningDeactivatedSubscription: StoryObj<typeof Subscribe> = {
     ...LoggedIn.args,
     userSubscriptions: {
       data: {
-        subscriptions: [
+        userSubscriptions: [
           {
             ...subscription,
             deactivation: {
