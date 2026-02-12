@@ -1020,7 +1020,7 @@ input FocalPointInput {
 }
 
 type FullPoll {
-  answers: [PollAnswerWithVoteCount!]!
+  answers: [PollAnswer!]!
   closedAt: DateTime
   externalVoteSources: [PollExternalVoteSource!]!
   id: String!
@@ -1548,6 +1548,15 @@ type Mutation {
   """Creates a new peer."""
   createPeer(hostURL: String!, information: RichText, isDisabled: Boolean, name: String!, slug: String!, token: String!): Peer!
 
+  """Creates a new poll."""
+  createPoll(closedAt: DateTime, infoText: RichText, opensAt: DateTime!, question: String): FullPoll!
+
+  """Creates a new poll answer."""
+  createPollAnswer(answer: String, pollId: String!): PollAnswer!
+
+  """Creates a new external vote source."""
+  createPollExternalVoteSource(pollId: String!, source: String): PollExternalVoteSource!
+
   """Creates a rating system answer."""
   createRatingSystemAnswer(answer: String, ratingSystemId: String!, type: RatingSystemType!): CommentRatingSystemAnswer!
   createSession(email: String!, password: String!): SessionWithToken!
@@ -1628,6 +1637,15 @@ type Mutation {
 
   """Deletes an existing peer."""
   deletePeer(id: String!): Peer!
+
+  """Deletes an existing poll."""
+  deletePoll(id: String!): FullPoll!
+
+  """Deletes an existing poll answer."""
+  deletePollAnswer(id: String!): PollAnswer!
+
+  """Deletes an existing external vote source."""
+  deletePollExternalVoteSource(id: String!): PollExternalVoteSource!
 
   """Delete poll votes"""
   deletePollVotes(ids: [String!]!): DeletePollVotesResult!
@@ -1790,6 +1808,9 @@ type Mutation {
 
   """Updates an existing peer."""
   updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
+
+  """Updates an existing poll."""
+  updatePoll(answers: [PollAnswerInput!]!, closedAt: DateTime, externalVoteSources: [PollExternalVoteSourceInput!]!, id: String!, infoText: RichText, opensAt: DateTime, question: String): FullPoll!
 
   """Update the comment rating system."""
   updateRatingSystem(answers: [UpdateCommentRatingSystemAnswerInput!], id: String!, name: String): CommentRatingSystem!
@@ -2044,6 +2065,12 @@ type PaginatedPollVotes {
   totalCount: Int!
 }
 
+type PaginatedPolls {
+  nodes: [Poll!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type PaginatedSensitiveDataUsers {
   nodes: [SensitiveDataUser!]!
   pageInfo: PageInfo!
@@ -2286,16 +2313,29 @@ input PolisConversationBlockInput {
   conversationID: String
 }
 
+type Poll {
+  closedAt: DateTime
+  id: String!
+  infoText: RichText
+  opensAt: DateTime!
+  question: String
+}
+
+type PollAnswer {
+  answer: String
+  id: String!
+  pollId: String!
+  votes: Int!
+}
+
 type PollAnswerInVote {
   answer: String!
   id: String!
 }
 
-type PollAnswerWithVoteCount {
+input PollAnswerInput {
   answer: String
   id: String!
-  pollId: String!
-  votes: Int!
 }
 
 type PollBlock implements BaseBlock & HasOptionalPoll {
@@ -2318,10 +2358,31 @@ type PollExternalVote {
   id: String!
 }
 
+input PollExternalVoteInput {
+  amount: VoteValue!
+  id: String!
+}
+
 type PollExternalVoteSource {
   id: String!
   source: String
   voteAmounts: [PollExternalVote!]!
+}
+
+input PollExternalVoteSourceInput {
+  id: String!
+  source: String
+  voteAmounts: [PollExternalVoteInput!]!
+}
+
+input PollFilter {
+  openOnly: Boolean
+}
+
+enum PollSort {
+  CreatedAt
+  ModifiedAt
+  OpensAt
 }
 
 type PollStartedAction implements BaseAction & HasPoll {
@@ -2573,6 +2634,9 @@ type Query {
 
   """Returns a paginated list of poll votes"""
   pollVotes(cursorId: String, filter: PollVoteFilter, order: SortOrder = Ascending, skip: Int = 0, sort: PollVoteSort = CreatedAt, take: Int = 10): PaginatedPollVotes!
+
+  """Returns a paginated list of polls based on the filters given."""
+  polls(cursorId: String, filter: PollFilter, order: SortOrder = Descending, skip: Int = 0, sort: PollSort = OpensAt, take: Int = 10): PaginatedPolls!
   primaryBanner(documentId: String!, documentType: BannerDocumentType!, hasSubscription: Boolean!, loggedIn: Boolean!): Banner
   promptHTML(chatId: String, query: String!): Chat!
   provider: MailProviderModel!

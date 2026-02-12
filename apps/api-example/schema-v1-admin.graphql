@@ -1,8 +1,6 @@
 type Query {
   remotePeerProfile(hostURL: String!, token: String!): PeerProfile
   peerProfile: PeerProfile!
-  polls(cursor: String, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
-  poll(id: String): FullPoll
 }
 
 type PeerProfile {
@@ -64,82 +62,8 @@ scalar Color
 
 scalar RichText
 
-type PollConnection {
-  nodes: [Poll!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-type Poll {
-  id: String!
-  question: String
-  opensAt: DateTime!
-  closedAt: DateTime
-}
-
-type PageInfo {
-  startCursor: String
-  endCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-}
-
-input PollFilter {
-  openOnly: Boolean
-}
-
-enum PollSort {
-  OpensAt
-  CreatedAt
-  ModifiedAt
-}
-
-enum SortOrder {
-  Ascending
-  Descending
-}
-
-type FullPoll {
-  id: String!
-  question: String
-  opensAt: DateTime!
-  closedAt: DateTime
-  infoText: RichText
-  answers: [PollAnswerWithVoteCount!]!
-  externalVoteSources: [PollExternalVoteSource!]!
-}
-
-type PollAnswerWithVoteCount {
-  id: String!
-  pollId: String!
-  answer: String
-  votes: Int!
-}
-
-type PollExternalVoteSource {
-  id: String!
-  source: String
-  voteAmounts: [PollExternalVote!]!
-}
-
-type PollExternalVote {
-  id: String!
-  answerId: String!
-  amount: VoteValue!
-}
-
-"""A valid vote value"""
-scalar VoteValue
-
 type Mutation {
   updatePeerProfile(input: PeerProfileInput!): PeerProfile!
-  createPoll(opensAt: DateTime, closedAt: DateTime, question: String): PollWithAnswers
-  createPollAnswer(pollId: String!, answer: String): PollAnswer
-  createPollExternalVoteSource(pollId: String!, source: String): PollExternalVoteSource
-  updatePoll(pollId: String!, opensAt: DateTime, closedAt: DateTime, question: String, infoText: RichText, answers: [UpdatePollAnswer!], externalVoteSources: [UpdatePollExternalVoteSources!]): FullPoll
-  deletePoll(id: String!): FullPoll
-  deletePollAnswer(id: String!): PollAnswerWithVoteCount
-  deletePollExternalVoteSource(id: String!): PollExternalVoteSource
 }
 
 input PeerProfileInput {
@@ -152,34 +76,4 @@ input PeerProfileInput {
   callToActionURL: String!
   callToActionImageURL: String
   callToActionImageID: String
-}
-
-type PollWithAnswers {
-  id: String!
-  question: String
-  opensAt: DateTime!
-  closedAt: DateTime
-  answers: [PollAnswer!]
-}
-
-type PollAnswer {
-  id: String!
-  pollId: String!
-  answer: String
-}
-
-input UpdatePollAnswer {
-  id: String!
-  answer: String
-}
-
-input UpdatePollExternalVoteSources {
-  id: String!
-  source: String
-  voteAmounts: [UpdatePollExternalVote!]
-}
-
-input UpdatePollExternalVote {
-  id: String!
-  amount: VoteValue
 }

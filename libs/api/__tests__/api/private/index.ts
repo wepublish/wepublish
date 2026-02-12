@@ -18,25 +18,12 @@ export type Scalars = {
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: string;
   RichText: Descendant[];
-  /** A valid vote value */
-  VoteValue: number;
 };
 
 export type FocalPoint = {
   __typename?: 'FocalPoint';
   x: Scalars['Float'];
   y: Scalars['Float'];
-};
-
-export type FullPoll = {
-  __typename?: 'FullPoll';
-  answers: Array<PollAnswerWithVoteCount>;
-  closedAt?: Maybe<Scalars['DateTime']>;
-  externalVoteSources: Array<PollExternalVoteSource>;
-  id: Scalars['String'];
-  infoText?: Maybe<Scalars['RichText']>;
-  opensAt: Scalars['DateTime'];
-  question?: Maybe<Scalars['String']>;
 };
 
 export type Image = {
@@ -74,72 +61,12 @@ export type ImageTransformation = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createPoll?: Maybe<PollWithAnswers>;
-  createPollAnswer?: Maybe<PollAnswer>;
-  createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
-  deletePoll?: Maybe<FullPoll>;
-  deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
-  deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
   updatePeerProfile: PeerProfile;
-  updatePoll?: Maybe<FullPoll>;
-};
-
-
-export type MutationCreatePollArgs = {
-  closedAt?: InputMaybe<Scalars['DateTime']>;
-  opensAt?: InputMaybe<Scalars['DateTime']>;
-  question?: InputMaybe<Scalars['String']>;
-};
-
-
-export type MutationCreatePollAnswerArgs = {
-  answer?: InputMaybe<Scalars['String']>;
-  pollId: Scalars['String'];
-};
-
-
-export type MutationCreatePollExternalVoteSourceArgs = {
-  pollId: Scalars['String'];
-  source?: InputMaybe<Scalars['String']>;
-};
-
-
-export type MutationDeletePollArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeletePollAnswerArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeletePollExternalVoteSourceArgs = {
-  id: Scalars['String'];
 };
 
 
 export type MutationUpdatePeerProfileArgs = {
   input: PeerProfileInput;
-};
-
-
-export type MutationUpdatePollArgs = {
-  answers?: InputMaybe<Array<UpdatePollAnswer>>;
-  closedAt?: InputMaybe<Scalars['DateTime']>;
-  externalVoteSources?: InputMaybe<Array<UpdatePollExternalVoteSources>>;
-  infoText?: InputMaybe<Scalars['RichText']>;
-  opensAt?: InputMaybe<Scalars['DateTime']>;
-  pollId: Scalars['String'];
-  question?: InputMaybe<Scalars['String']>;
-};
-
-export type PageInfo = {
-  __typename?: 'PageInfo';
-  endCursor?: Maybe<Scalars['String']>;
-  hasNextPage: Scalars['Boolean'];
-  hasPreviousPage: Scalars['Boolean'];
-  startCursor?: Maybe<Scalars['String']>;
 };
 
 export type PeerProfile = {
@@ -172,117 +99,16 @@ export type PeerProfileInput = {
   themeFontColor: Scalars['Color'];
 };
 
-export type Poll = {
-  __typename?: 'Poll';
-  closedAt?: Maybe<Scalars['DateTime']>;
-  id: Scalars['String'];
-  opensAt: Scalars['DateTime'];
-  question?: Maybe<Scalars['String']>;
-};
-
-export type PollAnswer = {
-  __typename?: 'PollAnswer';
-  answer?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  pollId: Scalars['String'];
-};
-
-export type PollAnswerWithVoteCount = {
-  __typename?: 'PollAnswerWithVoteCount';
-  answer?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  pollId: Scalars['String'];
-  votes: Scalars['Int'];
-};
-
-export type PollConnection = {
-  __typename?: 'PollConnection';
-  nodes: Array<Poll>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type PollExternalVote = {
-  __typename?: 'PollExternalVote';
-  amount: Scalars['VoteValue'];
-  answerId: Scalars['String'];
-  id: Scalars['String'];
-};
-
-export type PollExternalVoteSource = {
-  __typename?: 'PollExternalVoteSource';
-  id: Scalars['String'];
-  source?: Maybe<Scalars['String']>;
-  voteAmounts: Array<PollExternalVote>;
-};
-
-export type PollFilter = {
-  openOnly?: InputMaybe<Scalars['Boolean']>;
-};
-
-export enum PollSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt',
-  OpensAt = 'OpensAt'
-}
-
-export type PollWithAnswers = {
-  __typename?: 'PollWithAnswers';
-  answers?: Maybe<Array<PollAnswer>>;
-  closedAt?: Maybe<Scalars['DateTime']>;
-  id: Scalars['String'];
-  opensAt: Scalars['DateTime'];
-  question?: Maybe<Scalars['String']>;
-};
-
 export type Query = {
   __typename?: 'Query';
   peerProfile: PeerProfile;
-  poll?: Maybe<FullPoll>;
-  polls?: Maybe<PollConnection>;
   remotePeerProfile?: Maybe<PeerProfile>;
-};
-
-
-export type QueryPollArgs = {
-  id?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryPollsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<PollFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<PollSort>;
-  take?: InputMaybe<Scalars['Int']>;
 };
 
 
 export type QueryRemotePeerProfileArgs = {
   hostURL: Scalars['String'];
   token: Scalars['String'];
-};
-
-export enum SortOrder {
-  Ascending = 'Ascending',
-  Descending = 'Descending'
-}
-
-export type UpdatePollAnswer = {
-  answer?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
-};
-
-export type UpdatePollExternalVote = {
-  amount?: InputMaybe<Scalars['VoteValue']>;
-  id: Scalars['String'];
-};
-
-export type UpdatePollExternalVoteSources = {
-  id: Scalars['String'];
-  source?: InputMaybe<Scalars['String']>;
-  voteAmounts?: InputMaybe<Array<UpdatePollExternalVote>>;
 };
 
 export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };

@@ -1,9 +1,5 @@
 import styled from '@emotion/styled';
 import {
-  PollAnswerWithVoteCount,
-  usePollLazyQuery,
-} from '@wepublish/editor/api';
-import {
   ArticleFilter,
   DateFilterComparison,
   EventFilter,
@@ -13,11 +9,13 @@ import {
   InputMaybe,
   PageFilter,
   PeerArticleFilter,
+  PollAnswer,
   PollVoteFilter,
   Scalars,
   TagType,
   useEventProvidersLazyQuery,
   usePeerListLazyQuery,
+  usePollLazyQuery,
   UserFilter,
   useUserRoleListLazyQuery,
 } from '@wepublish/editor/api-v2';
@@ -134,7 +132,7 @@ export function ListViewFilters({
     new Date().getTime().toString()
   );
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([]);
-  const [answers, setAnswers] = useState<PollAnswerWithVoteCount[]>([]);
+  const [answers, setAnswers] = useState<PollAnswer[]>([]);
 
   const [providersFetch, { data: providersData }] = useEventProvidersLazyQuery({
     client,
@@ -155,6 +153,7 @@ export function ListViewFilters({
   });
 
   const [pollFetch, { data: pollData }] = usePollLazyQuery({
+    client,
     fetchPolicy: 'network-only',
   });
 
@@ -187,7 +186,7 @@ export function ListViewFilters({
     if (isAnswerFilter && filter.pollId) {
       pollFetch({
         variables: {
-          pollId: filter.pollId,
+          id: filter.pollId,
         },
       });
     }
