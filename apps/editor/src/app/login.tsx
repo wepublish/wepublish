@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { FullUserRoleFragment } from '@wepublish/editor/api';
 import {
+  FullUserRoleFragment,
   getApiClientV2,
   LocalStorageKey,
   useCreateSessionMutation,

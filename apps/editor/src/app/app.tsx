@@ -20,8 +20,11 @@ import {
   CrowdfundingList,
   EditCrowdfundingForm,
 } from '@wepublish/crowdfunding/editor';
-import { TagType } from '@wepublish/editor/api-v2';
-import { LocalStorageKey } from '@wepublish/editor/api-v2';
+import {
+  getApiClientV2,
+  LocalStorageKey,
+  TagType,
+} from '@wepublish/editor/api-v2';
 import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
   MailTemplateList,
@@ -89,7 +92,9 @@ const LogoutMutation = gql`
 `;
 
 const Logout = () => {
-  const [logout] = useMutation(LogoutMutation);
+  const [logout] = useMutation(LogoutMutation, {
+    client: getApiClientV2(),
+  });
   const { session } = useContext(AuthContext);
   const authDispatch = useContext(AuthDispatchContext);
 

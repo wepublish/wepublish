@@ -7,18 +7,6 @@ import {
 import { GraphQLDateTime } from 'graphql-scalars';
 import { Context } from '../context';
 
-import { GraphQLInvoice, GraphQLInvoiceInput } from './invoice';
-import {
-  createInvoice,
-  deleteInvoiceById,
-  markInvoiceAsPaid,
-  updateInvoice,
-} from './invoice/invoice.private-mutation';
-
-import { GraphQLPayment, GraphQLPaymentFromInvoiceInput } from './payment';
-
-import { createPaymentFromInvoice } from './payment/payment.private-mutation';
-
 import { GraphQLPeerProfile, GraphQLPeerProfileInput } from './peer';
 import { upsertPeerProfile } from './peer-profile/peer-profile.private-mutation';
 import {
@@ -40,16 +28,6 @@ import {
   updatePoll,
 } from './poll/poll.private-mutation';
 import { GraphQLRichText } from '@wepublish/richtext/api';
-import { GraphQLSubscription, GraphQLSubscriptionInput } from './subscription';
-import {
-  cancelSubscriptionById,
-  createSubscription,
-  deleteSubscriptionById,
-  renewSubscription,
-  updateAdminSubscription,
-} from './subscription/subscription.private-mutation';
-
-import { GraphQLSubscriptionDeactivationReason } from './subscriptionDeactivation';
 
 export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -65,157 +43,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         { input },
         { hostURL, authenticate, prisma: { peerProfile } }
       ) => upsertPeerProfile(input, hostURL, authenticate, peerProfile),
-    },
-
-    // Subscriptions
-    // ====
-
-    createSubscription: {
-      type: GraphQLSubscription,
-      args: {
-        input: { type: new GraphQLNonNull(GraphQLSubscriptionInput) },
-      },
-      resolve: (root, { input }, { authenticate, prisma, memberContext }) =>
-        createSubscription(input, authenticate, memberContext, prisma),
-    },
-
-    renewSubscription: {
-      type: GraphQLInvoice,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (
-        root,
-        { id },
-        { authenticate, prisma: { subscription, invoice }, memberContext }
-      ) =>
-        renewSubscription(
-          id,
-          authenticate,
-          subscription,
-          invoice,
-          memberContext
-        ),
-    },
-
-    updateSubscription: {
-      type: GraphQLSubscription,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        input: { type: new GraphQLNonNull(GraphQLSubscriptionInput) },
-      },
-      resolve: (
-        root,
-        { id, input },
-        { authenticate, prisma, memberContext, paymentProviders, loaders }
-      ) =>
-        updateAdminSubscription(
-          id,
-          input,
-          authenticate,
-          memberContext,
-          loaders,
-          prisma.subscription,
-          prisma.user,
-          paymentProviders,
-          prisma.memberPlan
-        ),
-    },
-
-    deleteSubscription: {
-      type: GraphQLSubscription,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { subscription } }) =>
-        deleteSubscriptionById(id, authenticate, subscription),
-    },
-
-    cancelSubscription: {
-      type: GraphQLSubscription,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        reason: {
-          type: new GraphQLNonNull(GraphQLSubscriptionDeactivationReason),
-        },
-      },
-      resolve: (
-        root,
-        { id, reason },
-        { authenticate, prisma: { subscription }, memberContext }
-      ) =>
-        cancelSubscriptionById(
-          id,
-          reason,
-          authenticate,
-          subscription,
-          memberContext
-        ),
-    },
-
-    // Invoice
-    // ======
-
-    createInvoice: {
-      type: GraphQLInvoice,
-      args: { input: { type: new GraphQLNonNull(GraphQLInvoiceInput) } },
-      resolve: (root, { input }, { authenticate, prisma: { invoice } }) =>
-        createInvoice(input, authenticate, invoice),
-    },
-
-    createPaymentFromInvoice: {
-      type: GraphQLPayment,
-      args: {
-        input: { type: new GraphQLNonNull(GraphQLPaymentFromInvoiceInput) },
-      },
-      resolve: (
-        root,
-        { input },
-        {
-          authenticate,
-          loaders,
-          paymentProviders,
-          prisma: { payment, memberPlan, subscription },
-        }
-      ) =>
-        createPaymentFromInvoice(
-          input,
-          authenticate,
-          paymentProviders,
-          loaders.invoicesByID,
-          loaders.paymentMethodsByID,
-          memberPlan,
-          payment,
-          subscription
-        ),
-    },
-
-    updateInvoice: {
-      type: GraphQLInvoice,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        input: { type: new GraphQLNonNull(GraphQLInvoiceInput) },
-      },
-      resolve: (root, { id, input }, { authenticate, prisma: { invoice } }) =>
-        updateInvoice(id, input, authenticate, invoice),
-    },
-
-    deleteInvoice: {
-      type: GraphQLInvoice,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { invoice } }) =>
-        deleteInvoiceById(id, authenticate, invoice),
-    },
-
-    markInvoiceAsPaid: {
-      type: GraphQLInvoice,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma, authenticateUser }) =>
-        markInvoiceAsPaid(id, authenticate, authenticateUser, prisma),
     },
 
     // Poll

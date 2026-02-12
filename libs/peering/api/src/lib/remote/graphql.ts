@@ -1149,6 +1149,12 @@ export type HasImageLc = {
   imageId?: Maybe<Scalars['String']>;
 };
 
+export type HasMemberPlan = {
+  memberPlan: MemberPlan;
+  memberPlanID: Scalars['String'];
+  memberplan?: Maybe<MemberPlan>;
+};
+
 export type HasOneBlockContent = {
   block?: Maybe<BlockContent>;
 };
@@ -1399,16 +1405,35 @@ export type Invoice = HasOptionalSubscription & {
   __typename?: 'Invoice';
   canceledAt?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
+  currency: Currency;
   description?: Maybe<Scalars['String']>;
   dueAt: Scalars['DateTime'];
   id: Scalars['String'];
   items: Array<InvoiceItem>;
   mail: Scalars['String'];
+  manuallySetAsPaidByUser?: Maybe<User>;
+  manuallySetAsPaidByUserId?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   paidAt?: Maybe<Scalars['DateTime']>;
+  scheduledDeactivationAt: Scalars['DateTime'];
   subscription?: Maybe<PublicSubscription>;
   subscriptionID?: Maybe<Scalars['String']>;
   total: Scalars['Int'];
+};
+
+export type InvoiceConnection = {
+  __typename?: 'InvoiceConnection';
+  nodes: Array<Invoice>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type InvoiceFilter = {
+  canceledAt?: InputMaybe<DateFilter>;
+  mail?: InputMaybe<Scalars['String']>;
+  paidAt?: InputMaybe<DateFilter>;
+  subscriptionID?: InputMaybe<Scalars['String']>;
+  userID?: InputMaybe<Scalars['String']>;
 };
 
 export type InvoiceItem = {
@@ -1416,11 +1441,25 @@ export type InvoiceItem = {
   amount: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   quantity: Scalars['Int'];
   total: Scalars['Int'];
 };
+
+export type InvoiceItemInput = {
+  amount: Scalars['Int'];
+  description?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  quantity: Scalars['Int'];
+};
+
+export enum InvoiceSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  PaidAt = 'PaidAt'
+}
 
 export type ListicleBlock = BaseBlock & {
   __typename?: 'ListicleBlock';
@@ -1528,6 +1567,8 @@ export type Mutation = {
   addUserComment: Comment;
   /** Approves a comment */
   approveComment: Comment;
+  /** Cancels a subscription. */
+  cancelSubscription: PublicSubscription;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   cancelUserSubscription?: Maybe<PublicSubscription>;
   /** Creates an article. */
@@ -1549,6 +1590,8 @@ export type Mutation = {
   createCrowdfunding: Crowdfunding;
   /** Creates a new event. */
   createEvent: Event;
+  /** Creates a new invoice. */
+  createInvoice: Invoice;
   /** Returns a JWT that can be used to login as another user. */
   createJWTForUser: SessionWithToken;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
@@ -1573,14 +1616,12 @@ export type Mutation = {
   createRatingSystemAnswer: CommentRatingSystemAnswer;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
-  /** Allows authenticated users to create additional subscriptions */
-  createSubscription: Payment;
+  /** Creates a new subscription. */
+  createSubscription: PublicSubscription;
   /** Create a new subscription flow */
   createSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Create a subscription interval */
   createSubscriptionInterval: Array<SubscriptionFlowModel>;
-  /** Allows guests and authenticated users to create additional subscriptions */
-  createSubscriptionWithConfirmation: Scalars['Boolean'];
   /** Creates a new tag. */
   createTag: Tag;
   /** Creates a token and returns it's secret once. */
@@ -1596,6 +1637,10 @@ export type Mutation = {
   createUserConsent: UserConsent;
   /** Creates a new userrole. */
   createUserRole: UserRole;
+  /** Allows authenticated users to create additional subscriptions */
+  createUserSubscription: Payment;
+  /** Allows guests and authenticated users to create additional subscriptions */
+  createUserSubscriptionWithConfirmation: Scalars['Boolean'];
   /** Deletes an article. */
   deleteArticle: Scalars['String'];
   /** Deletes an existing author. */
@@ -1616,6 +1661,8 @@ export type Mutation = {
   deleteEvent: Event;
   /** Deletes an existing image. */
   deleteImage: Image;
+  /** Deletes an existing invoice. */
+  deleteInvoice: Invoice;
   /** Deletes an existing memberplan. */
   deleteMemberPlan: MemberPlan;
   /** Deletes an existing navigation. */
@@ -1632,6 +1679,8 @@ export type Mutation = {
   deletePollVotes: DeletePollVotesResult;
   /** Deletes a rating system answer. */
   deleteRatingSystemAnswer: CommentRatingSystemAnswer;
+  /** Deletes an existing subscription. */
+  deleteSubscription: PublicSubscription;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
@@ -1658,7 +1707,7 @@ export type Mutation = {
   /** Duplicates an page. */
   duplicatePage: Page;
   /** Allows authenticated users to extend existing subscriptions */
-  extendSubscription: Payment;
+  extendUserSubscription: Payment;
   /**
    *
    *       Creates and event based on data from importable events list and an id and provider.
@@ -1668,8 +1717,12 @@ export type Mutation = {
   importEvent: Scalars['String'];
   /** Imports an article from a peer as a draft. */
   importPeerArticle: Article;
+  /** Imports a subscription. */
+  importSubscription: PublicSubscription;
   /** Likes an article. */
   likeArticle: Article;
+  /** Marks an invoice as paid. */
+  markInvoiceAsPaid: Invoice;
   /** Publishes an article at the given time. */
   publishArticle: Article;
   /** Publishes an page at the given time. */
@@ -1680,6 +1733,8 @@ export type Mutation = {
   registerMember: Registration;
   /** Rejects a comment */
   rejectComment: Comment;
+  /** Renews a subscription. */
+  renewSubscription: PublicSubscription;
   /** Requests the user to change the comment's content */
   requestChangesOnComment: Comment;
   /** Resets the password of a user. */
@@ -1720,6 +1775,8 @@ export type Mutation = {
   updateEvent: Event;
   /** Updates an existing image. */
   updateImage: Image;
+  /** Updates an existing invoice. */
+  updateInvoice: Invoice;
   /** Updates an existing memberplan. */
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
@@ -1738,6 +1795,8 @@ export type Mutation = {
   updateRatingSystem: CommentRatingSystem;
   /** Updates an existing setting. */
   updateSetting: Setting;
+  /** Updates an existing subscription. */
+  updateSubscription: PublicSubscription;
   /** Update an existing subscription flow */
   updateSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Update an existing subscription interval */
@@ -1761,7 +1820,7 @@ export type Mutation = {
   updateUserRole: UserRole;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
-  upgradeSubscription: Payment;
+  upgradeUserSubscription: Payment;
   /** Uploads a new image. */
   uploadImage: Image;
   /** This mutation allows to upload and update the user's profile image. */
@@ -1784,6 +1843,12 @@ export type MutationAddUserCommentArgs = {
 
 export type MutationApproveCommentArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationCancelSubscriptionArgs = {
+  id: Scalars['String'];
+  reason: SubscriptionDeactivationReason;
 };
 
 
@@ -1875,6 +1940,18 @@ export type MutationCreateEventArgs = {
   startsAt: Scalars['DateTime'];
   status?: EventStatus;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type MutationCreateInvoiceArgs = {
+  currency: Currency;
+  description?: InputMaybe<Scalars['String']>;
+  dueAt: Scalars['DateTime'];
+  items: Array<InvoiceItemInput>;
+  mail: Scalars['String'];
+  manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
+  scheduledDeactivationAt: Scalars['DateTime'];
+  subscriptionID?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -1999,16 +2076,15 @@ export type MutationCreateSessionWithJwtArgs = {
 
 export type MutationCreateSubscriptionArgs = {
   autoRenew: Scalars['Boolean'];
-  deactivateSubscriptionId?: InputMaybe<Scalars['String']>;
-  failureURL?: InputMaybe<Scalars['String']>;
-  memberPlanID?: InputMaybe<Scalars['String']>;
-  memberPlanSlug?: InputMaybe<Scalars['Slug']>;
+  extendable: Scalars['Boolean'];
+  memberPlanID: Scalars['String'];
   monthlyAmount: Scalars['Int'];
-  paymentMethodID?: InputMaybe<Scalars['String']>;
-  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
+  paidUntil?: InputMaybe<Scalars['DateTime']>;
+  paymentMethodID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
-  subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
-  successURL?: InputMaybe<Scalars['String']>;
+  properties: Array<PropertyInput>;
+  startsAt: Scalars['DateTime'];
+  userID: Scalars['String'];
 };
 
 
@@ -2025,19 +2101,6 @@ export type MutationCreateSubscriptionIntervalArgs = {
   event: SubscriptionEvent;
   mailTemplateId?: InputMaybe<Scalars['String']>;
   subscriptionFlowId: Scalars['String'];
-};
-
-
-export type MutationCreateSubscriptionWithConfirmationArgs = {
-  autoRenew: Scalars['Boolean'];
-  memberPlanID?: InputMaybe<Scalars['String']>;
-  memberPlanSlug?: InputMaybe<Scalars['Slug']>;
-  monthlyAmount: Scalars['Int'];
-  paymentMethodID?: InputMaybe<Scalars['String']>;
-  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
-  paymentPeriodicity: PaymentPeriodicity;
-  subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
-  userId?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2082,6 +2145,34 @@ export type MutationCreateUserRoleArgs = {
   description?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   permissionIDs: Array<Scalars['String']>;
+};
+
+
+export type MutationCreateUserSubscriptionArgs = {
+  autoRenew: Scalars['Boolean'];
+  deactivateSubscriptionId?: InputMaybe<Scalars['String']>;
+  failureURL?: InputMaybe<Scalars['String']>;
+  memberPlanID?: InputMaybe<Scalars['String']>;
+  memberPlanSlug?: InputMaybe<Scalars['Slug']>;
+  monthlyAmount: Scalars['Int'];
+  paymentMethodID?: InputMaybe<Scalars['String']>;
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
+  paymentPeriodicity: PaymentPeriodicity;
+  subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
+  successURL?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationCreateUserSubscriptionWithConfirmationArgs = {
+  autoRenew: Scalars['Boolean'];
+  memberPlanID?: InputMaybe<Scalars['String']>;
+  memberPlanSlug?: InputMaybe<Scalars['Slug']>;
+  monthlyAmount: Scalars['Int'];
+  paymentMethodID?: InputMaybe<Scalars['String']>;
+  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
+  paymentPeriodicity: PaymentPeriodicity;
+  subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2130,6 +2221,11 @@ export type MutationDeleteImageArgs = {
 };
 
 
+export type MutationDeleteInvoiceArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteMemberPlanArgs = {
   id: Scalars['String'];
 };
@@ -2166,6 +2262,11 @@ export type MutationDeletePollVotesArgs = {
 
 
 export type MutationDeleteRatingSystemAnswerArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteSubscriptionArgs = {
   id: Scalars['String'];
 };
 
@@ -2220,7 +2321,7 @@ export type MutationDuplicatePageArgs = {
 };
 
 
-export type MutationExtendSubscriptionArgs = {
+export type MutationExtendUserSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>;
   subscriptionId: Scalars['String'];
   successURL?: InputMaybe<Scalars['String']>;
@@ -2240,7 +2341,26 @@ export type MutationImportPeerArticleArgs = {
 };
 
 
+export type MutationImportSubscriptionArgs = {
+  autoRenew: Scalars['Boolean'];
+  extendable: Scalars['Boolean'];
+  memberPlanID: Scalars['String'];
+  monthlyAmount: Scalars['Int'];
+  paidUntil?: InputMaybe<Scalars['DateTime']>;
+  paymentMethodID: Scalars['String'];
+  paymentPeriodicity: PaymentPeriodicity;
+  properties: Array<PropertyInput>;
+  startsAt: Scalars['DateTime'];
+  userID: Scalars['String'];
+};
+
+
 export type MutationLikeArticleArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationMarkInvoiceAsPaidArgs = {
   id: Scalars['String'];
 };
 
@@ -2279,6 +2399,11 @@ export type MutationRegisterMemberArgs = {
 export type MutationRejectCommentArgs = {
   id: Scalars['String'];
   rejectionReason: CommentRejectionReason;
+};
+
+
+export type MutationRenewSubscriptionArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -2439,6 +2564,19 @@ export type MutationUpdateImageArgs = {
 };
 
 
+export type MutationUpdateInvoiceArgs = {
+  currency?: InputMaybe<Currency>;
+  description?: InputMaybe<Scalars['String']>;
+  dueAt?: InputMaybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  items?: InputMaybe<Array<InvoiceItemInput>>;
+  mail?: InputMaybe<Scalars['String']>;
+  manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
+  scheduledDeactivationAt?: InputMaybe<Scalars['DateTime']>;
+  subscriptionID?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationUpdateMemberPlanArgs = {
   active?: InputMaybe<Scalars['Boolean']>;
   amountPerMonthMax?: InputMaybe<Scalars['Int']>;
@@ -2547,6 +2685,21 @@ export type MutationUpdateSettingArgs = {
 };
 
 
+export type MutationUpdateSubscriptionArgs = {
+  autoRenew?: InputMaybe<Scalars['Boolean']>;
+  extendable?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['String'];
+  memberPlanID?: InputMaybe<Scalars['String']>;
+  monthlyAmount?: InputMaybe<Scalars['Int']>;
+  paidUntil?: InputMaybe<Scalars['DateTime']>;
+  paymentMethodID?: InputMaybe<Scalars['String']>;
+  paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
+  properties?: InputMaybe<Array<PropertyInput>>;
+  startsAt?: InputMaybe<Scalars['DateTime']>;
+  userID?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationUpdateSubscriptionFlowArgs = {
   autoRenewal?: InputMaybe<Array<Scalars['Boolean']>>;
   id: Scalars['String'];
@@ -2618,11 +2771,11 @@ export type MutationUpdateUserRoleArgs = {
 
 export type MutationUpdateUserSubscriptionArgs = {
   id: Scalars['String'];
-  input: UserSubscriptionInput;
+  input: UpdateUserSubscriptionInput;
 };
 
 
-export type MutationUpgradeSubscriptionArgs = {
+export type MutationUpgradeUserSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>;
   memberPlanId: Scalars['String'];
   monthlyAmount: Scalars['Int'];
@@ -3238,26 +3391,40 @@ export type PropertyInput = {
   value: Scalars['String'];
 };
 
-export type PublicSubscription = HasPaymentMethod & HasUser & {
+export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   __typename?: 'PublicSubscription';
   autoRenew: Scalars['Boolean'];
   canExtend: Scalars['Boolean'];
+  confirmed: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
+  currency: Currency;
   deactivation?: Maybe<SubscriptionDeactivation>;
   extendable: Scalars['Boolean'];
   externalReward?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   isActive: Scalars['Boolean'];
   memberPlan: MemberPlan;
+  memberPlanID: Scalars['String'];
+  memberplan?: Maybe<MemberPlan>;
+  modifiedAt: Scalars['DateTime'];
   monthlyAmount: Scalars['Int'];
   paidUntil?: Maybe<Scalars['DateTime']>;
   paymentMethod: PaymentMethod;
   paymentMethodID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
+  periods: Array<SubscriptionPeriod>;
   properties: Array<Property>;
   startsAt: Scalars['DateTime'];
   url: Scalars['String'];
   user: User;
   userID: Scalars['String'];
+};
+
+export type PublicSubscriptionConnection = {
+  __typename?: 'PublicSubscriptionConnection';
+  nodes: Array<PublicSubscription>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
 };
 
 export type Query = {
@@ -3286,7 +3453,7 @@ export type Query = {
   /** This query generates a challenge which can be used to access protected endpoints. */
   challenge: Challenge;
   /** Check the status of an invoice and update with information from the payment provider */
-  checkInvoiceStatus?: Maybe<Invoice>;
+  checkInvoiceStatus: Invoice;
   /** Returns a comment by id. */
   comment: Comment;
   /** Returns a paginated list of comments based on the filters given. */
@@ -3315,7 +3482,7 @@ export type Query = {
    *
    */
   dailySubscriptionStats: Array<DailySubscriptionStats>;
-  /** Returns a event by id. */
+  /** Returns an event by id. */
   event: Event;
   /**
    *
@@ -3360,8 +3527,10 @@ export type Query = {
    *
    */
   importedEventsIds: Array<Scalars['String']>;
-  /** Get all invoices for the authenticated user */
-  invoices: Array<Invoice>;
+  /** Returns a invoice by id. */
+  invoice: Invoice;
+  /** Returns a paginated list of invoices based on the filters given. */
+  invoices: InvoiceConnection;
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /** This query returns the user. */
@@ -3455,10 +3624,14 @@ export type Query = {
    */
   settings: Array<Setting>;
   stats?: Maybe<Stats>;
+  /** Returns a subscription by id. */
+  subscription: PublicSubscription;
   /** Returns all subscription flows */
   subscriptionFlows: Array<SubscriptionFlowModel>;
-  /** This query returns the subscriptions of the authenticated user. */
-  subscriptions: Array<PublicSubscription>;
+  /** Returns a paginated list of subscriptions based on the filters given. */
+  subscriptions: PublicSubscriptionConnection;
+  /** Returns a paginated list of subscriptions based on the filters given. */
+  subscriptionsAsCsv: Scalars['String'];
   /** Returns all mail flows */
   systemMails: Array<SystemMailModel>;
   /** Returns an tag by id or tag. */
@@ -3467,7 +3640,7 @@ export type Query = {
   tags: PaginatedTags;
   /** Returns a list of all tokens. */
   tokens: Array<Token>;
-  upgradeSubscriptionInfo: UpgradeSubscription;
+  upgradeUserSubscriptionInfo: UpgradeSubscription;
   /** Returns a user by id. */
   user: SensitiveDataUser;
   /**
@@ -3482,11 +3655,15 @@ export type Query = {
    *
    */
   userConsents: Array<UserConsent>;
+  /** Get all invoices for the authenticated user */
+  userInvoices: Array<Invoice>;
   userPollVote?: Maybe<Scalars['String']>;
   /** Returns a userrole by id. */
   userRole: UserRole;
   /** Returns a paginated list of userroles based on the filters given. */
   userRoles: PaginatedUserRoles;
+  /** This query returns the subscriptions of the authenticated user. */
+  userSubscriptions: Array<PublicSubscription>;
   /** Returns a paginated list of users based on the filters given. */
   users: PaginatedSensitiveDataUsers;
   versionInformation: VersionInformation;
@@ -3642,6 +3819,21 @@ export type QueryImportedEventsArgs = {
 };
 
 
+export type QueryInvoiceArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryInvoicesArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<InvoiceFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<InvoiceSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type QueryMemberPlanArgs = {
   id?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['Slug']>;
@@ -3788,9 +3980,46 @@ export type QuerySettingsArgs = {
 };
 
 
+export type QuerySubscriptionArgs = {
+  id: Scalars['String'];
+};
+
+
 export type QuerySubscriptionFlowsArgs = {
   defaultFlowOnly: Scalars['Boolean'];
   memberPlanId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QuerySubscriptionsArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<SubscriptionFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<SubscriptionSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QuerySubscriptionsAsCsvArgs = {
+  autoRenew?: InputMaybe<Scalars['Boolean']>;
+  cancellationDateFrom?: InputMaybe<DateFilter>;
+  cancellationDateTo?: InputMaybe<DateFilter>;
+  deactivationDateFrom?: InputMaybe<DateFilter>;
+  deactivationDateTo?: InputMaybe<DateFilter>;
+  deactivationReason?: InputMaybe<Scalars['String']>;
+  extendable?: InputMaybe<Scalars['Boolean']>;
+  memberPlanID?: InputMaybe<Scalars['String']>;
+  paidUntilFrom?: InputMaybe<DateFilter>;
+  paidUntilTo?: InputMaybe<DateFilter>;
+  paymentMethodID?: InputMaybe<Scalars['String']>;
+  paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
+  startsAtFrom?: InputMaybe<DateFilter>;
+  startsAtTo?: InputMaybe<DateFilter>;
+  subscriptionIDs?: InputMaybe<Array<Scalars['String']>>;
+  userHasAddress?: InputMaybe<Scalars['Boolean']>;
+  userID?: InputMaybe<Scalars['String']>;
+  userIDs?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
@@ -3811,7 +4040,7 @@ export type QueryTagsArgs = {
 };
 
 
-export type QueryUpgradeSubscriptionInfoArgs = {
+export type QueryUpgradeUserSubscriptionInfoArgs = {
   memberPlanId: Scalars['String'];
   subscriptionId: Scalars['String'];
 };
@@ -4107,6 +4336,27 @@ export enum SubscriptionEvent {
   Subscribe = 'SUBSCRIBE'
 }
 
+export type SubscriptionFilter = {
+  autoRenew?: InputMaybe<Scalars['Boolean']>;
+  cancellationDateFrom?: InputMaybe<DateFilter>;
+  cancellationDateTo?: InputMaybe<DateFilter>;
+  deactivationDateFrom?: InputMaybe<DateFilter>;
+  deactivationDateTo?: InputMaybe<DateFilter>;
+  deactivationReason?: InputMaybe<Scalars['String']>;
+  extendable?: InputMaybe<Scalars['Boolean']>;
+  memberPlanID?: InputMaybe<Scalars['String']>;
+  paidUntilFrom?: InputMaybe<DateFilter>;
+  paidUntilTo?: InputMaybe<DateFilter>;
+  paymentMethodID?: InputMaybe<Scalars['String']>;
+  paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
+  startsAtFrom?: InputMaybe<DateFilter>;
+  startsAtTo?: InputMaybe<DateFilter>;
+  subscriptionIDs?: InputMaybe<Array<Scalars['String']>>;
+  userHasAddress?: InputMaybe<Scalars['Boolean']>;
+  userID?: InputMaybe<Scalars['String']>;
+  userIDs?: InputMaybe<Array<Scalars['String']>>;
+};
+
 export type SubscriptionFlowModel = {
   __typename?: 'SubscriptionFlowModel';
   autoRenewal: Array<Scalars['Boolean']>;
@@ -4126,6 +4376,24 @@ export type SubscriptionInterval = {
   id: Scalars['String'];
   mailTemplate?: Maybe<MailTemplateRef>;
 };
+
+export type SubscriptionPeriod = {
+  __typename?: 'SubscriptionPeriod';
+  amount: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
+  endsAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  invoiceID: Scalars['String'];
+  isPaid: Scalars['Boolean'];
+  modifiedAt: Scalars['DateTime'];
+  paymentPeriodicity: PaymentPeriodicity;
+  startsAt: Scalars['DateTime'];
+};
+
+export enum SubscriptionSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt'
+}
 
 export type SystemMailModel = {
   __typename?: 'SystemMailModel';
@@ -4431,6 +4699,15 @@ export type UpdateCrowdfundingInput = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+export type UpdateUserSubscriptionInput = {
+  autoRenew: Scalars['Boolean'];
+  id: Scalars['String'];
+  memberPlanID: Scalars['String'];
+  monthlyAmount: Scalars['Int'];
+  paymentMethodID: Scalars['String'];
+  paymentPeriodicity: PaymentPeriodicity;
+};
+
 export type UpgradeSubscription = {
   __typename?: 'UpgradeSubscription';
   discountAmount: Scalars['Float'];
@@ -4531,15 +4808,6 @@ export enum UserSort {
   ModifiedAt = 'ModifiedAt',
   Name = 'Name'
 }
-
-export type UserSubscriptionInput = {
-  autoRenew: Scalars['Boolean'];
-  id: Scalars['String'];
-  memberPlanID: Scalars['String'];
-  monthlyAmount: Scalars['Int'];
-  paymentMethodID: Scalars['String'];
-  paymentPeriodicity: PaymentPeriodicity;
-};
 
 export type VersionInformation = {
   __typename?: 'VersionInformation';
@@ -5095,6 +5363,9 @@ export const PeerProfile = gql`
     ],
     "HasImageLc": [
       "PaymentMethod"
+    ],
+    "HasMemberPlan": [
+      "PublicSubscription"
     ],
     "HasOneBlockContent": [
       "BlockWithAlignment"

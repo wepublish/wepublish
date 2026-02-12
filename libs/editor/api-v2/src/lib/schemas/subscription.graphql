@@ -1,0 +1,224 @@
+fragment FullSubscription on PublicSubscription {
+  id
+  createdAt
+  modifiedAt
+
+  confirmed
+  user {
+    id
+    name
+    firstName
+  }
+  memberPlan {
+    ...FullMemberPlan
+  }
+  paymentPeriodicity
+  monthlyAmount
+  autoRenew
+  startsAt
+  paidUntil
+  properties {
+    key
+    value
+    public
+  }
+  paymentMethod {
+    ...FullPaymentMethod
+  }
+  deactivation {
+    ...Deactivation
+  }
+  extendable
+  currency
+}
+
+fragment Deactivation on SubscriptionDeactivation {
+  date
+  reason
+}
+
+query SubscriptionList(
+  $filter: SubscriptionFilter
+  $cursor: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: SubscriptionSort
+) {
+  subscriptions(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullSubscription
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query Subscription($id: String!) {
+  subscription(id: $id) {
+    ...FullSubscription
+  }
+}
+
+query SubscriptionsAsCsv(
+  $autoRenew: Boolean
+  $userHasAddress: Boolean
+  $extendable: Boolean
+  $cancellationDateTo: DateFilter
+  $cancellationDateFrom: DateFilter
+  $deactivationDateTo: DateFilter
+  $deactivationDateFrom: DateFilter
+  $paidUntilTo: DateFilter
+  $paidUntilFrom: DateFilter
+  $startsAtTo: DateFilter
+  $startsAtFrom: DateFilter
+  $deactivationReason: String
+  $memberPlanID: String
+  $paymentMethodID: String
+  $subscriptionIDs: [String!]
+  $userID: String
+  $userIDs: [String!]
+  $paymentPeriodicity: PaymentPeriodicity
+) {
+  subscriptionsAsCsv(
+    autoRenew: $autoRenew
+    userHasAddress: $userHasAddress
+    extendable: $extendable
+
+    cancellationDateTo: $cancellationDateTo
+    cancellationDateFrom: $cancellationDateFrom
+
+    deactivationDateTo: $deactivationDateTo
+    deactivationDateFrom: $deactivationDateFrom
+
+    paidUntilTo: $paidUntilTo
+    paidUntilFrom: $paidUntilFrom
+
+    startsAtTo: $startsAtTo
+    startsAtFrom: $startsAtFrom
+
+    deactivationReason: $deactivationReason
+
+    memberPlanID: $memberPlanID
+    paymentMethodID: $paymentMethodID
+    subscriptionIDs: $subscriptionIDs
+    userID: $userID
+    userIDs: $userIDs
+    paymentPeriodicity: $paymentPeriodicity
+  )
+}
+
+mutation CreateSubscription(
+  $autoRenew: Boolean!
+  $extendable: Boolean!
+  $monthlyAmount: Int!
+  $paidUntil: DateTime
+  $startsAt: DateTime!
+  $paymentPeriodicity: PaymentPeriodicity!
+  $properties: [PropertyInput!]!
+  $userID: String!
+  $paymentMethodID: String!
+  $memberPlanID: String!
+) {
+  createSubscription(
+    autoRenew: $autoRenew
+    extendable: $extendable
+    monthlyAmount: $monthlyAmount
+    paidUntil: $paidUntil
+    startsAt: $startsAt
+    paymentPeriodicity: $paymentPeriodicity
+    properties: $properties
+    userID: $userID
+    paymentMethodID: $paymentMethodID
+    memberPlanID: $memberPlanID
+  ) {
+    ...FullSubscription
+  }
+}
+
+mutation UpdateSubscription(
+  $id: String!
+  $autoRenew: Boolean
+  $extendable: Boolean
+  $monthlyAmount: Int
+  $paidUntil: DateTime
+  $startsAt: DateTime
+  $paymentPeriodicity: PaymentPeriodicity
+  $properties: [PropertyInput!]
+  $userID: String
+  $paymentMethodID: String
+  $memberPlanID: String
+) {
+  updateSubscription(
+    id: $id
+    autoRenew: $autoRenew
+    extendable: $extendable
+    monthlyAmount: $monthlyAmount
+    paidUntil: $paidUntil
+    startsAt: $startsAt
+    paymentPeriodicity: $paymentPeriodicity
+    properties: $properties
+    userID: $userID
+    paymentMethodID: $paymentMethodID
+    memberPlanID: $memberPlanID
+  ) {
+    ...FullSubscription
+  }
+}
+
+mutation CancelSubscription(
+  $cancelSubscriptionId: String!
+  $reason: SubscriptionDeactivationReason!
+) {
+  cancelSubscription(id: $cancelSubscriptionId, reason: $reason) {
+    ...FullSubscription
+  }
+}
+
+mutation DeleteSubscription($id: String!) {
+  deleteSubscription(id: $id) {
+    ...FullSubscription
+  }
+}
+
+mutation RenewSubscription($id: String!) {
+  renewSubscription(id: $id) {
+    ...FullSubscription
+  }
+}
+
+fragment UserSubscription on PublicSubscription {
+  ...FullSubscription
+
+  periods {
+    id
+    createdAt
+    startsAt
+    endsAt
+    amount
+    invoiceID
+    isPaid
+  }
+}
+
+query UserSubscriptionList($userId: String!) {
+  subscriptions(filter: { userID: $userId }, take: 50, skip: 0) {
+    nodes {
+      ...UserSubscription
+    }
+  }
+}

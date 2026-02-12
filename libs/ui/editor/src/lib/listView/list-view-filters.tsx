@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import {
-  FullUserRoleFragment,
   PollAnswerWithVoteCount,
   usePollLazyQuery,
 } from '@wepublish/editor/api';
@@ -9,6 +8,7 @@ import {
   DateFilterComparison,
   EventFilter,
   FullAuthorFragment,
+  FullUserRoleFragment,
   getApiClientV2,
   InputMaybe,
   PageFilter,

@@ -1,5 +1,4 @@
 import { ApolloError } from '@apollo/client';
-import { stripTypename } from '@wepublish/editor/api';
 import {
   FullConsentFragment,
   MutationCreateConsentArgs,
@@ -19,7 +18,7 @@ import { ConsentForm } from './consent-form';
 const mapApiDataToInput = (
   consent: FullConsentFragment
 ): MutationUpdateConsentArgs => ({
-  ...stripTypename(consent),
+  ...consent,
   name: consent.name,
   slug: consent.slug,
   defaultValue: consent.defaultValue,

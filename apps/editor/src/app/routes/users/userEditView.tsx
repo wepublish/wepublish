@@ -1,9 +1,6 @@
 import styled from '@emotion/styled';
 import {
   FullImageFragment,
-  useSubscriptionListQuery,
-} from '@wepublish/editor/api';
-import {
   FullUserFragment,
   FullUserRoleFragment,
   getApiClientV2,
@@ -12,6 +9,7 @@ import {
   useUpdateUserMutation,
   useUserQuery,
   useUserRoleListQuery,
+  useUserSubscriptionListQuery,
 } from '@wepublish/editor/api-v2';
 import {
   ChooseEditImage,
@@ -129,18 +127,17 @@ function UserEditView() {
   const [metaDataProperties, setMetadataProperties] = useState<
     ListValue<UserProperty>[]
   >([]);
-  const { data: subscriptionData } = useSubscriptionListQuery({
+  const client = getApiClientV2();
+  const { data: subscriptionData } = useUserSubscriptionListQuery({
+    client,
     skip: !userId,
     variables: {
-      filter: {
-        userID: userId,
-      },
+      userId: userId!,
     },
   });
 
   // getting user id from url param
   const [id] = useState<string | undefined>(isEditRoute ? userId : undefined);
-  const client = getApiClientV2();
   const { data: userRoleData, loading: isUserRoleLoading } =
     useUserRoleListQuery({
       client,
@@ -886,7 +883,6 @@ function UserEditView() {
                     header={t('userCreateOrEditView.subscriptionsHeader')}
                   >
                     <UserSubscriptionsList
-                      // @ts-expect-error Wrong type for now
                       subscriptions={subscriptionData.subscriptions.nodes}
                       userId={user?.id}
                     />

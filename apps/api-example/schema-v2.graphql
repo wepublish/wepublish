@@ -1084,6 +1084,12 @@ interface HasImageLc {
   imageId: String
 }
 
+interface HasMemberPlan {
+  memberPlan: MemberPlan!
+  memberPlanID: String!
+  memberplan: MemberPlan
+}
+
 interface HasOneBlockContent {
   block: BlockContent
 }
@@ -1322,26 +1328,58 @@ input InstagramPostBlockInput {
 type Invoice implements HasOptionalSubscription {
   canceledAt: DateTime
   createdAt: DateTime!
+  currency: Currency!
   description: String
   dueAt: DateTime!
   id: String!
   items: [InvoiceItem!]!
   mail: String!
+  manuallySetAsPaidByUser: User
+  manuallySetAsPaidByUserId: String
   modifiedAt: DateTime!
   paidAt: DateTime
+  scheduledDeactivationAt: DateTime!
   subscription: PublicSubscription
   subscriptionID: String
   total: Int!
+}
+
+type InvoiceConnection {
+  nodes: [Invoice!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input InvoiceFilter {
+  canceledAt: DateFilter
+  mail: String
+  paidAt: DateFilter
+  subscriptionID: String
+  userID: String
 }
 
 type InvoiceItem {
   amount: Int!
   createdAt: DateTime!
   description: String
+  id: String!
   modifiedAt: DateTime!
   name: String!
   quantity: Int!
   total: Int!
+}
+
+input InvoiceItemInput {
+  amount: Int!
+  description: String
+  name: String!
+  quantity: Int!
+}
+
+enum InvoiceSort {
+  CreatedAt
+  ModifiedAt
+  PaidAt
 }
 
 type ListicleBlock implements BaseBlock {
@@ -1445,6 +1483,9 @@ type Mutation {
   """Approves a comment"""
   approveComment(id: String!): Comment!
 
+  """Cancels a subscription."""
+  cancelSubscription(id: String!, reason: SubscriptionDeactivationReason!): PublicSubscription!
+
   """
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
   """
@@ -1471,6 +1512,9 @@ type Mutation {
 
   """Creates a new event."""
   createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, status: EventStatus! = Scheduled, tagIds: [String!]): Event!
+
+  """Creates a new invoice."""
+  createInvoice(currency: Currency!, description: String, dueAt: DateTime!, items: [InvoiceItemInput!]!, mail: String!, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime!, subscriptionID: String): Invoice!
 
   """Returns a JWT that can be used to login as another user."""
   createJWTForUser(expiresInMinutes: Float!, userId: String!): SessionWithToken!
@@ -1509,19 +1553,14 @@ type Mutation {
   createSession(email: String!, password: String!): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
 
-  """Allows authenticated users to create additional subscriptions"""
-  createSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
+  """Creates a new subscription."""
+  createSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Int!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
 
   """Create a subscription interval"""
   createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
-
-  """
-  Allows guests and authenticated users to create additional subscriptions
-  """
-  createSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
   """Creates a new tag."""
   createTag(description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
@@ -1537,6 +1576,14 @@ type Mutation {
 
   """Creates a new userrole."""
   createUserRole(description: String, name: String!, permissionIDs: [String!]!): UserRole!
+
+  """Allows authenticated users to create additional subscriptions"""
+  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
+
+  """
+  Allows guests and authenticated users to create additional subscriptions
+  """
+  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
   """Deletes an article."""
   deleteArticle(id: String!): String!
@@ -1561,6 +1608,9 @@ type Mutation {
   """Deletes an existing image."""
   deleteImage(id: String!): Image!
 
+  """Deletes an existing invoice."""
+  deleteInvoice(id: String!): Invoice!
+
   """Deletes an existing memberplan."""
   deleteMemberPlan(id: String!): MemberPlan!
 
@@ -1584,6 +1634,9 @@ type Mutation {
 
   """Deletes a rating system answer."""
   deleteRatingSystemAnswer(id: String!): CommentRatingSystemAnswer!
+
+  """Deletes an existing subscription."""
+  deleteSubscription(id: String!): PublicSubscription!
 
   """Delete an existing subscription flow"""
   deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
@@ -1616,7 +1669,7 @@ type Mutation {
   duplicatePage(id: String!): Page!
 
   """Allows authenticated users to extend existing subscriptions"""
-  extendSubscription(failureURL: String, subscriptionId: String!, successURL: String): Payment!
+  extendUserSubscription(failureURL: String, subscriptionId: String!, successURL: String): Payment!
 
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!
@@ -1624,8 +1677,14 @@ type Mutation {
   """Imports an article from a peer as a draft."""
   importPeerArticle(articleId: String!, options: ImportArticleOptions! = {importAuthors: true, importContentImages: true, importTags: true}, peerId: String!): Article!
 
+  """Imports a subscription."""
+  importSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Int!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!
+
   """Likes an article."""
   likeArticle(id: String!): Article!
+
+  """Marks an invoice as paid."""
+  markInvoiceAsPaid(id: String!): Invoice!
 
   """Publishes an article at the given time."""
   publishArticle(id: String!, publishedAt: DateTime!): Article!
@@ -1645,6 +1704,9 @@ type Mutation {
 
   """Rejects a comment"""
   rejectComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
+
+  """Renews a subscription."""
+  renewSubscription(id: String!): PublicSubscription!
 
   """Requests the user to change the comment's content"""
   requestChangesOnComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
@@ -1703,6 +1765,9 @@ type Mutation {
   """Updates an existing image."""
   updateImage(description: String, filename: String, focalPoint: FocalPointInput, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
 
+  """Updates an existing invoice."""
+  updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
+
   """Updates an existing memberplan."""
   updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
 
@@ -1732,6 +1797,9 @@ type Mutation {
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
 
+  """Updates an existing subscription."""
+  updateSubscription(autoRenew: Boolean, extendable: Boolean, id: String!, memberPlanID: String, monthlyAmount: Int, paidUntil: DateTime, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, properties: [PropertyInput!], startsAt: DateTime, userID: String): PublicSubscription!
+
   """Update an existing subscription flow"""
   updateSubscriptionFlow(autoRenewal: [Boolean!], id: String!, paymentMethodIds: [String!], periodicities: [PaymentPeriodicity!]): [SubscriptionFlowModel!]!
 
@@ -1759,10 +1827,10 @@ type Mutation {
   """
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
   """
-  updateUserSubscription(id: String!, input: UserSubscriptionInput!): PublicSubscription
+  updateUserSubscription(id: String!, input: UpdateUserSubscriptionInput!): PublicSubscription
 
   """"""
-  upgradeSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
+  upgradeUserSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
 
   """Uploads a new image."""
   uploadImage(description: String, file: Upload!, filename: String, focalPoint: FocalPointInput, license: String, link: String, source: String, tags: [String!]!, title: String): Image!
@@ -2306,25 +2374,38 @@ input PropertyInput {
   value: String!
 }
 
-type PublicSubscription implements HasPaymentMethod & HasUser {
+type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   autoRenew: Boolean!
   canExtend: Boolean!
+  confirmed: Boolean!
+  createdAt: DateTime!
+  currency: Currency!
   deactivation: SubscriptionDeactivation
   extendable: Boolean!
   externalReward: String
   id: String!
   isActive: Boolean!
   memberPlan: MemberPlan!
+  memberPlanID: String!
+  memberplan: MemberPlan
+  modifiedAt: DateTime!
   monthlyAmount: Int!
   paidUntil: DateTime
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
   paymentPeriodicity: PaymentPeriodicity!
+  periods: [SubscriptionPeriod!]!
   properties: [Property!]!
   startsAt: DateTime!
   url: String!
   user: User!
   userID: String!
+}
+
+type PublicSubscriptionConnection {
+  nodes: [PublicSubscription!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 type Query {
@@ -2359,7 +2440,7 @@ type Query {
   """
   Check the status of an invoice and update with information from the payment provider
   """
-  checkInvoiceStatus(id: String!): Invoice
+  checkInvoiceStatus(id: String!): Invoice!
 
   """Returns a comment by id."""
   comment(id: String!): Comment!
@@ -2385,7 +2466,7 @@ type Query {
   "\n      Returns daily stats in a given timeframe.\n    "
   dailySubscriptionStats(end: DateTime, memberPlanIds: [String!], start: DateTime!): [DailySubscriptionStats!]!
 
-  """Returns a event by id."""
+  """Returns an event by id."""
   event(id: String!): Event!
 
   "\n      Returns a list of Importable Event Providers\n    "
@@ -2415,8 +2496,11 @@ type Query {
   "\n      Returns a list of external source ids of already imported events.\n    "
   importedEventsIds: [String!]!
 
-  """Get all invoices for the authenticated user"""
-  invoices: [Invoice!]!
+  """Returns a invoice by id."""
+  invoice(id: String!): Invoice!
+
+  """Returns a paginated list of invoices based on the filters given."""
+  invoices(cursorId: String, filter: InvoiceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: InvoiceSort = ModifiedAt, take: Int = 10): InvoiceConnection!
 
   """Return all mail templates"""
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
@@ -2512,11 +2596,17 @@ type Query {
   settings(filter: SettingFilter): [Setting!]!
   stats: Stats
 
+  """Returns a subscription by id."""
+  subscription(id: String!): PublicSubscription!
+
   """Returns all subscription flows"""
   subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
 
-  """This query returns the subscriptions of the authenticated user."""
-  subscriptions: [PublicSubscription!]!
+  """Returns a paginated list of subscriptions based on the filters given."""
+  subscriptions(cursorId: String, filter: SubscriptionFilter, order: SortOrder = Ascending, skip: Int = 0, sort: SubscriptionSort = ModifiedAt, take: Int = 10): PublicSubscriptionConnection!
+
+  """Returns a paginated list of subscriptions based on the filters given."""
+  subscriptionsAsCsv(autoRenew: Boolean, cancellationDateFrom: DateFilter, cancellationDateTo: DateFilter, deactivationDateFrom: DateFilter, deactivationDateTo: DateFilter, deactivationReason: String, extendable: Boolean, memberPlanID: String, paidUntilFrom: DateFilter, paidUntilTo: DateFilter, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, startsAtFrom: DateFilter, startsAtTo: DateFilter, subscriptionIDs: [String!], userHasAddress: Boolean, userID: String, userIDs: [String!]): String!
 
   """Returns all mail flows"""
   systemMails: [SystemMailModel!]!
@@ -2549,7 +2639,7 @@ type Query {
   tokens: [Token!]!
 
   """"""
-  upgradeSubscriptionInfo(memberPlanId: String!, subscriptionId: String!): UpgradeSubscription!
+  upgradeUserSubscriptionInfo(memberPlanId: String!, subscriptionId: String!): UpgradeSubscription!
 
   """Returns a user by id."""
   user(id: String!): SensitiveDataUser!
@@ -2559,6 +2649,9 @@ type Query {
 
   "\n      Returns a list of userConsents. Possible to filter.\n    "
   userConsents(name: String, slug: String, value: Boolean): [UserConsent!]!
+
+  """Get all invoices for the authenticated user"""
+  userInvoices: [Invoice!]!
   userPollVote(pollId: String!): String
 
   """Returns a userrole by id."""
@@ -2566,6 +2659,9 @@ type Query {
 
   """Returns a paginated list of userroles based on the filters given."""
   userRoles(cursorId: String, filter: UserRoleFilter, order: SortOrder = Ascending, skip: Int = 0, sort: UserRoleSort = CreatedAt, take: Int = 10): PaginatedUserRoles!
+
+  """This query returns the subscriptions of the authenticated user."""
+  userSubscriptions: [PublicSubscription!]!
 
   """Returns a paginated list of users based on the filters given."""
   users(
@@ -2823,6 +2919,27 @@ enum SubscriptionEvent {
   SUBSCRIBE
 }
 
+input SubscriptionFilter {
+  autoRenew: Boolean
+  cancellationDateFrom: DateFilter
+  cancellationDateTo: DateFilter
+  deactivationDateFrom: DateFilter
+  deactivationDateTo: DateFilter
+  deactivationReason: String
+  extendable: Boolean
+  memberPlanID: String
+  paidUntilFrom: DateFilter
+  paidUntilTo: DateFilter
+  paymentMethodID: String
+  paymentPeriodicity: PaymentPeriodicity
+  startsAtFrom: DateFilter
+  startsAtTo: DateFilter
+  subscriptionIDs: [String!]
+  userHasAddress: Boolean
+  userID: String
+  userIDs: [String!]
+}
+
 type SubscriptionFlowModel {
   autoRenewal: [Boolean!]!
   default: Boolean!
@@ -2839,6 +2956,23 @@ type SubscriptionInterval {
   event: SubscriptionEvent!
   id: String!
   mailTemplate: MailTemplateRef
+}
+
+type SubscriptionPeriod {
+  amount: Float!
+  createdAt: DateTime!
+  endsAt: DateTime!
+  id: String!
+  invoiceID: String!
+  isPaid: Boolean!
+  modifiedAt: DateTime!
+  paymentPeriodicity: PaymentPeriodicity!
+  startsAt: DateTime!
+}
+
+enum SubscriptionSort {
+  CreatedAt
+  ModifiedAt
 }
 
 type SystemMailModel {
@@ -3128,6 +3262,15 @@ input UpdateCrowdfundingInput {
   name: String
 }
 
+input UpdateUserSubscriptionInput {
+  autoRenew: Boolean!
+  id: String!
+  memberPlanID: String!
+  monthlyAmount: Int!
+  paymentMethodID: String!
+  paymentPeriodicity: PaymentPeriodicity!
+}
+
 type UpgradeSubscription {
   discountAmount: Float!
 }
@@ -3224,15 +3367,6 @@ enum UserSort {
   FirstName
   ModifiedAt
   Name
-}
-
-input UserSubscriptionInput {
-  autoRenew: Boolean!
-  id: String!
-  memberPlanID: String!
-  monthlyAmount: Int!
-  paymentMethodID: String!
-  paymentPeriodicity: PaymentPeriodicity!
 }
 
 type VersionInformation {

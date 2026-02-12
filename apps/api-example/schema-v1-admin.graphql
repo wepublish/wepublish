@@ -1,11 +1,6 @@
 type Query {
   remotePeerProfile(hostURL: String!, token: String!): PeerProfile
   peerProfile: PeerProfile!
-  subscription(id: String!): Subscription
-  subscriptions(cursor: String, take: Int = 10, skip: Int = 0, filter: SubscriptionFilter, sort: SubscriptionSort = modifiedAt, order: SortOrder = Descending): SubscriptionConnection!
-  subscriptionsAsCsv(filter: SubscriptionFilter): String
-  invoice(id: String): Invoice
-  invoices(cursor: String, take: Int = 10, skip: Int = 0, filter: InvoiceFilter, sort: InvoiceSort = modifiedAt, order: SortOrder = Descending): InvoiceConnection!
   polls(cursor: String, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
   poll(id: String): FullPoll
 }
@@ -69,301 +64,6 @@ scalar Color
 
 scalar RichText
 
-type Subscription {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  user: User
-  memberPlan: MemberPlan!
-  paymentPeriodicity: PaymentPeriodicity!
-  monthlyAmount: Int!
-  autoRenew: Boolean!
-  extendable: Boolean!
-  startsAt: DateTime!
-  paidUntil: DateTime
-  paymentMethod: PaymentMethod!
-  properties: [Properties!]!
-  deactivation: SubscriptionDeactivation
-  currency: Currency!
-}
-
-type User {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  firstName: String
-  email: String!
-  emailVerifiedAt: DateTime
-  birthday: DateTime
-  address: UserAddress
-  flair: String
-  note: String
-  userImage: Image
-  active: Boolean!
-  lastLogin: DateTime
-  properties: [Properties!]!
-  roles: [UserRole!]!
-  paymentProviderCustomers: [PaymentProviderCustomer!]!
-  subscriptions: [UserSubscription!]!
-}
-
-type UserAddress {
-  company: String
-  streetAddress: String
-  streetAddressNumber: String
-  streetAddress2: String
-  streetAddress2Number: String
-  zipCode: String
-  city: String
-  country: String
-}
-
-type Properties {
-  key: String!
-  value: String!
-  public: Boolean!
-}
-
-type UserRole {
-  id: String!
-  name: String!
-  description: String
-  systemRole: Boolean!
-  permissions: [Permission!]!
-}
-
-type Permission {
-  id: String!
-  description: String!
-  deprecated: Boolean!
-}
-
-type PaymentProviderCustomer {
-  paymentProviderID: String!
-  customerID: String!
-}
-
-type UserSubscription {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  paymentPeriodicity: PaymentPeriodicity!
-  monthlyAmount: Int!
-  currency: Currency!
-  autoRenew: Boolean!
-  confirmed: Boolean!
-  startsAt: DateTime!
-  paidUntil: DateTime
-  properties: [Properties!]!
-  deactivation: SubscriptionDeactivation
-  periods: [SubscriptionPeriod!]!
-  memberPlan: MemberPlan!
-  invoices: [Invoice!]!
-}
-
-enum PaymentPeriodicity {
-  monthly
-  quarterly
-  biannual
-  yearly
-  biennial
-  lifetime
-}
-
-enum Currency {
-  CHF
-  EUR
-}
-
-type SubscriptionDeactivation {
-  date: DateTime!
-  reason: SubscriptionDeactivationReason!
-}
-
-enum SubscriptionDeactivationReason {
-  none
-  userSelfDeactivated
-  invoiceNotPaid
-  userReplacedSubscription
-}
-
-type SubscriptionPeriod {
-  id: String!
-  invoiceID: String!
-  amount: Int!
-  createdAt: DateTime!
-  startsAt: DateTime!
-  endsAt: DateTime!
-  paymentPeriodicity: PaymentPeriodicity!
-}
-
-type MemberPlan {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  slug: String!
-  image: Image
-  description: RichText
-  shortDescription: RichText
-  tags: [String!]
-  active: Boolean!
-  amountPerMonthMin: Int!
-  amountPerMonthMax: Int
-  amountPerMonthTarget: Int
-  currency: Currency!
-  maxCount: Int
-  extendable: Boolean!
-  productType: ProductType!
-  externalReward: String
-  availablePaymentMethods: [AvailablePaymentMethod!]!
-  migrateToTargetPaymentMethodID: String
-  successPageId: String
-  failPageId: String
-  confirmationPageId: String
-}
-
-enum ProductType {
-  Subscription
-  Donation
-}
-
-type AvailablePaymentMethod {
-  paymentMethods: [PaymentMethod!]!
-  paymentPeriodicities: [PaymentPeriodicity!]!
-  forceAutoRenewal: Boolean!
-}
-
-type PaymentMethod {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  slug: Slug!
-  description: String!
-  paymentProvider: PaymentProvider
-  active: Boolean!
-  gracePeriod: Int!
-  imageId: String
-  image: Image
-}
-
-scalar Slug
-
-type PaymentProvider {
-  id: String!
-  name: String!
-}
-
-type Invoice {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  mail: String!
-  description: String
-  paidAt: DateTime
-  manuallySetAsPaidByUserId: String
-  items: [InvoiceItem!]!
-  canceledAt: DateTime
-  currency: Currency!
-  total: Int!
-}
-
-type InvoiceItem {
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  description: String
-  quantity: Int!
-  amount: Int!
-  total: Int!
-}
-
-type SubscriptionConnection {
-  nodes: [Subscription!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-type PageInfo {
-  startCursor: String
-  endCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-}
-
-input SubscriptionFilter {
-  startsAt: DateFilter
-  paidUntil: DateFilter
-  startsAtFrom: DateFilter
-  startsAtTo: DateFilter
-  paidUntilFrom: DateFilter
-  paidUntilTo: DateFilter
-  deactivationDateFrom: DateFilter
-  deactivationDateTo: DateFilter
-  cancellationDateFrom: DateFilter
-  cancellationDateTo: DateFilter
-  deactivationReason: SubscriptionDeactivationReason
-  autoRenew: Boolean
-  paymentMethodID: String
-  memberPlanID: String
-  paymentPeriodicity: PaymentPeriodicity
-  userHasAddress: Boolean
-  userID: String
-  userIDs: [String!]
-  subscriptionIDs: [String!]
-  extendable: Boolean
-}
-
-input DateFilter {
-  date: DateTime = null
-  comparison: DateFilterComparison!
-}
-
-enum DateFilterComparison {
-  GreaterThan
-  GreaterThanOrEqual
-  Equal
-  LowerThan
-  LowerThanOrEqual
-}
-
-enum SubscriptionSort {
-  createdAt
-  modifiedAt
-}
-
-enum SortOrder {
-  Ascending
-  Descending
-}
-
-type InvoiceConnection {
-  nodes: [Invoice!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input InvoiceFilter {
-  mail: String
-  paidAt: Date
-  canceledAt: Date
-  userID: String
-  subscriptionID: String
-}
-
-"""
-A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-"""
-scalar Date
-
-enum InvoiceSort {
-  createdAt
-  modifiedAt
-  paidAt
-}
-
 type PollConnection {
   nodes: [Poll!]!
   pageInfo: PageInfo!
@@ -377,6 +77,13 @@ type Poll {
   closedAt: DateTime
 }
 
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
 input PollFilter {
   openOnly: Boolean
 }
@@ -385,6 +92,11 @@ enum PollSort {
   OpensAt
   CreatedAt
   ModifiedAt
+}
+
+enum SortOrder {
+  Ascending
+  Descending
 }
 
 type FullPoll {
@@ -421,16 +133,6 @@ scalar VoteValue
 
 type Mutation {
   updatePeerProfile(input: PeerProfileInput!): PeerProfile!
-  createSubscription(input: SubscriptionInput!): Subscription
-  renewSubscription(id: String!): Invoice
-  updateSubscription(id: String!, input: SubscriptionInput!): Subscription
-  deleteSubscription(id: String!): Subscription
-  cancelSubscription(id: String!, reason: SubscriptionDeactivationReason!): Subscription
-  createInvoice(input: InvoiceInput!): Invoice
-  createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment
-  updateInvoice(id: String!, input: InvoiceInput!): Invoice
-  deleteInvoice(id: String!): Invoice
-  markInvoiceAsPaid(id: String!): Invoice
   createPoll(opensAt: DateTime, closedAt: DateTime, question: String): PollWithAnswers
   createPollAnswer(pollId: String!, answer: String): PollAnswer
   createPollExternalVoteSource(pollId: String!, source: String): PollExternalVoteSource
@@ -450,79 +152,6 @@ input PeerProfileInput {
   callToActionURL: String!
   callToActionImageURL: String
   callToActionImageID: String
-}
-
-input SubscriptionInput {
-  userID: String!
-  memberPlanID: String!
-  paymentPeriodicity: PaymentPeriodicity!
-  monthlyAmount: Int!
-  autoRenew: Boolean!
-  startsAt: DateTime!
-  paidUntil: DateTime
-  paymentMethodID: String!
-  extendable: Boolean!
-  properties: [PropertiesInput!]!
-  deactivation: SubscriptionDeactivationInput
-}
-
-input PropertiesInput {
-  key: String!
-  value: String!
-  public: Boolean!
-}
-
-input SubscriptionDeactivationInput {
-  date: DateTime!
-  reason: SubscriptionDeactivationReason!
-}
-
-input InvoiceInput {
-  mail: String!
-  description: String
-  subscriptionID: String
-  manuallySetAsPaidByUserId: String
-  items: [InvoiceItemInput!]!
-}
-
-input InvoiceItemInput {
-  name: String!
-  description: String
-  quantity: Int!
-  amount: Int!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-}
-
-type Payment {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  intentID: String
-  intentSecret: String
-  state: PaymentState!
-  invoice: Invoice!
-  intentData: String
-  paymentMethod: PaymentMethod!
-  paymentData: String
-}
-
-enum PaymentState {
-  created
-  submitted
-  requiresUserAction
-  processing
-  paid
-  canceled
-  declined
-}
-
-input PaymentFromInvoiceInput {
-  invoiceID: String!
-  paymentMethodID: String
-  paymentMethodSlug: Slug
-  successURL: String
-  failureURL: String
 }
 
 type PollWithAnswers {

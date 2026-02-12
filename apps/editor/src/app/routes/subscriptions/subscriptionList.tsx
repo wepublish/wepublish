@@ -1,11 +1,12 @@
 import styled from '@emotion/styled';
 import {
   FullSubscriptionFragment,
+  getApiClientV2,
   SubscriptionFilter,
   SubscriptionSort,
   useDeleteSubscriptionMutation,
   useSubscriptionListQuery,
-} from '@wepublish/editor/api';
+} from '@wepublish/editor/api-v2';
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -126,11 +127,13 @@ function SubscriptionList() {
     }
   });
 
+  const client = getApiClientV2();
   const {
     data,
     refetch,
     loading: isLoading,
   } = useSubscriptionListQuery({
+    client,
     variables: {
       filter,
       take: limit,
@@ -152,7 +155,7 @@ function SubscriptionList() {
   }, [filter, page, limit, sortOrder, sortField]);
 
   const [deleteSubscription, { loading: isDeleting }] =
-    useDeleteSubscriptionMutation();
+    useDeleteSubscriptionMutation({ client });
 
   const { t } = useTranslation();
 
@@ -264,18 +267,6 @@ function SubscriptionList() {
               {(rowData: RowDataType<FullSubscriptionFragment>) =>
                 userNameView(rowData as FullSubscriptionFragment)
               }
-            </RCell>
-          </Column>
-          {/* email */}
-          <Column width={250}>
-            <HeaderCell>{t('subscriptionList.overview.email')}</HeaderCell>
-            <RCell dataKey={'email'}>
-              {(rowData: RowDataType<FullSubscriptionFragment>) => (
-                <div>
-                  {rowData.user?.email ||
-                    t('subscriptionList.overview.deleted')}
-                </div>
-              )}
             </RCell>
           </Column>
           {/* action */}

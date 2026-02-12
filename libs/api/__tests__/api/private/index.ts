@@ -15,40 +15,12 @@ export type Scalars = {
   Float: number;
   /** A hexidecimal color value. */
   Color: string;
-  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
-  Date: string;
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: string;
   RichText: Descendant[];
-  Slug: string;
   /** A valid vote value */
   VoteValue: number;
 };
-
-export type AvailablePaymentMethod = {
-  __typename?: 'AvailablePaymentMethod';
-  forceAutoRenewal: Scalars['Boolean'];
-  paymentMethods: Array<PaymentMethod>;
-  paymentPeriodicities: Array<PaymentPeriodicity>;
-};
-
-export enum Currency {
-  Chf = 'CHF',
-  Eur = 'EUR'
-}
-
-export type DateFilter = {
-  comparison: DateFilterComparison;
-  date?: InputMaybe<Scalars['DateTime']>;
-};
-
-export enum DateFilterComparison {
-  Equal = 'Equal',
-  GreaterThan = 'GreaterThan',
-  GreaterThanOrEqual = 'GreaterThanOrEqual',
-  LowerThan = 'LowerThan',
-  LowerThanOrEqual = 'LowerThanOrEqual'
-}
 
 export type FocalPoint = {
   __typename?: 'FocalPoint';
@@ -100,133 +72,16 @@ export type ImageTransformation = {
   width?: InputMaybe<Scalars['Int']>;
 };
 
-export type Invoice = {
-  __typename?: 'Invoice';
-  canceledAt?: Maybe<Scalars['DateTime']>;
-  createdAt: Scalars['DateTime'];
-  currency: Currency;
-  description?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  items: Array<InvoiceItem>;
-  mail: Scalars['String'];
-  manuallySetAsPaidByUserId?: Maybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
-  paidAt?: Maybe<Scalars['DateTime']>;
-  total: Scalars['Int'];
-};
-
-export type InvoiceConnection = {
-  __typename?: 'InvoiceConnection';
-  nodes: Array<Invoice>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type InvoiceFilter = {
-  canceledAt?: InputMaybe<Scalars['Date']>;
-  mail?: InputMaybe<Scalars['String']>;
-  paidAt?: InputMaybe<Scalars['Date']>;
-  subscriptionID?: InputMaybe<Scalars['String']>;
-  userID?: InputMaybe<Scalars['String']>;
-};
-
-export type InvoiceInput = {
-  description?: InputMaybe<Scalars['String']>;
-  items: Array<InvoiceItemInput>;
-  mail: Scalars['String'];
-  manuallySetAsPaidByUserId?: InputMaybe<Scalars['String']>;
-  subscriptionID?: InputMaybe<Scalars['String']>;
-};
-
-export type InvoiceItem = {
-  __typename?: 'InvoiceItem';
-  amount: Scalars['Int'];
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  quantity: Scalars['Int'];
-  total: Scalars['Int'];
-};
-
-export type InvoiceItemInput = {
-  amount: Scalars['Int'];
-  createdAt: Scalars['DateTime'];
-  description?: InputMaybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  quantity: Scalars['Int'];
-};
-
-export enum InvoiceSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt',
-  PaidAt = 'paidAt'
-}
-
-export type MemberPlan = {
-  __typename?: 'MemberPlan';
-  active: Scalars['Boolean'];
-  amountPerMonthMax?: Maybe<Scalars['Int']>;
-  amountPerMonthMin: Scalars['Int'];
-  amountPerMonthTarget?: Maybe<Scalars['Int']>;
-  availablePaymentMethods: Array<AvailablePaymentMethod>;
-  confirmationPageId?: Maybe<Scalars['String']>;
-  createdAt: Scalars['DateTime'];
-  currency: Currency;
-  description?: Maybe<Scalars['RichText']>;
-  extendable: Scalars['Boolean'];
-  externalReward?: Maybe<Scalars['String']>;
-  failPageId?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  image?: Maybe<Image>;
-  maxCount?: Maybe<Scalars['Int']>;
-  migrateToTargetPaymentMethodID?: Maybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  productType: ProductType;
-  shortDescription?: Maybe<Scalars['RichText']>;
-  slug: Scalars['String'];
-  successPageId?: Maybe<Scalars['String']>;
-  tags?: Maybe<Array<Scalars['String']>>;
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
-  cancelSubscription?: Maybe<Subscription>;
-  createInvoice?: Maybe<Invoice>;
-  createPaymentFromInvoice?: Maybe<Payment>;
   createPoll?: Maybe<PollWithAnswers>;
   createPollAnswer?: Maybe<PollAnswer>;
   createPollExternalVoteSource?: Maybe<PollExternalVoteSource>;
-  createSubscription?: Maybe<Subscription>;
-  deleteInvoice?: Maybe<Invoice>;
   deletePoll?: Maybe<FullPoll>;
   deletePollAnswer?: Maybe<PollAnswerWithVoteCount>;
   deletePollExternalVoteSource?: Maybe<PollExternalVoteSource>;
-  deleteSubscription?: Maybe<Subscription>;
-  markInvoiceAsPaid?: Maybe<Invoice>;
-  renewSubscription?: Maybe<Invoice>;
-  updateInvoice?: Maybe<Invoice>;
   updatePeerProfile: PeerProfile;
   updatePoll?: Maybe<FullPoll>;
-  updateSubscription?: Maybe<Subscription>;
-};
-
-
-export type MutationCancelSubscriptionArgs = {
-  id: Scalars['String'];
-  reason: SubscriptionDeactivationReason;
-};
-
-
-export type MutationCreateInvoiceArgs = {
-  input: InvoiceInput;
-};
-
-
-export type MutationCreatePaymentFromInvoiceArgs = {
-  input: PaymentFromInvoiceInput;
 };
 
 
@@ -249,16 +104,6 @@ export type MutationCreatePollExternalVoteSourceArgs = {
 };
 
 
-export type MutationCreateSubscriptionArgs = {
-  input: SubscriptionInput;
-};
-
-
-export type MutationDeleteInvoiceArgs = {
-  id: Scalars['String'];
-};
-
-
 export type MutationDeletePollArgs = {
   id: Scalars['String'];
 };
@@ -271,27 +116,6 @@ export type MutationDeletePollAnswerArgs = {
 
 export type MutationDeletePollExternalVoteSourceArgs = {
   id: Scalars['String'];
-};
-
-
-export type MutationDeleteSubscriptionArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationMarkInvoiceAsPaidArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationRenewSubscriptionArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationUpdateInvoiceArgs = {
-  id: Scalars['String'];
-  input: InvoiceInput;
 };
 
 
@@ -310,12 +134,6 @@ export type MutationUpdatePollArgs = {
   question?: InputMaybe<Scalars['String']>;
 };
 
-
-export type MutationUpdateSubscriptionArgs = {
-  id: Scalars['String'];
-  input: SubscriptionInput;
-};
-
 export type PageInfo = {
   __typename?: 'PageInfo';
   endCursor?: Maybe<Scalars['String']>;
@@ -323,74 +141,6 @@ export type PageInfo = {
   hasPreviousPage: Scalars['Boolean'];
   startCursor?: Maybe<Scalars['String']>;
 };
-
-export type Payment = {
-  __typename?: 'Payment';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  intentData?: Maybe<Scalars['String']>;
-  intentID?: Maybe<Scalars['String']>;
-  intentSecret?: Maybe<Scalars['String']>;
-  invoice: Invoice;
-  modifiedAt: Scalars['DateTime'];
-  paymentData?: Maybe<Scalars['String']>;
-  paymentMethod: PaymentMethod;
-  state: PaymentState;
-};
-
-export type PaymentFromInvoiceInput = {
-  failureURL?: InputMaybe<Scalars['String']>;
-  invoiceID: Scalars['String'];
-  paymentMethodID?: InputMaybe<Scalars['String']>;
-  paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
-  successURL?: InputMaybe<Scalars['String']>;
-};
-
-export type PaymentMethod = {
-  __typename?: 'PaymentMethod';
-  active: Scalars['Boolean'];
-  createdAt: Scalars['DateTime'];
-  description: Scalars['String'];
-  gracePeriod: Scalars['Int'];
-  id: Scalars['String'];
-  image?: Maybe<Image>;
-  imageId?: Maybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  paymentProvider?: Maybe<PaymentProvider>;
-  slug: Scalars['Slug'];
-};
-
-export enum PaymentPeriodicity {
-  Biannual = 'biannual',
-  Biennial = 'biennial',
-  Lifetime = 'lifetime',
-  Monthly = 'monthly',
-  Quarterly = 'quarterly',
-  Yearly = 'yearly'
-}
-
-export type PaymentProvider = {
-  __typename?: 'PaymentProvider';
-  id: Scalars['String'];
-  name: Scalars['String'];
-};
-
-export type PaymentProviderCustomer = {
-  __typename?: 'PaymentProviderCustomer';
-  customerID: Scalars['String'];
-  paymentProviderID: Scalars['String'];
-};
-
-export enum PaymentState {
-  Canceled = 'canceled',
-  Created = 'created',
-  Declined = 'declined',
-  Paid = 'paid',
-  Processing = 'processing',
-  RequiresUserAction = 'requiresUserAction',
-  Submitted = 'submitted'
-}
 
 export type PeerProfile = {
   __typename?: 'PeerProfile';
@@ -420,13 +170,6 @@ export type PeerProfileInput = {
   squareLogoId?: InputMaybe<Scalars['String']>;
   themeColor: Scalars['Color'];
   themeFontColor: Scalars['Color'];
-};
-
-export type Permission = {
-  __typename?: 'Permission';
-  deprecated: Scalars['Boolean'];
-  description: Scalars['String'];
-  id: Scalars['String'];
 };
 
 export type Poll = {
@@ -492,50 +235,12 @@ export type PollWithAnswers = {
   question?: Maybe<Scalars['String']>;
 };
 
-export enum ProductType {
-  Donation = 'Donation',
-  Subscription = 'Subscription'
-}
-
-export type Properties = {
-  __typename?: 'Properties';
-  key: Scalars['String'];
-  public: Scalars['Boolean'];
-  value: Scalars['String'];
-};
-
-export type PropertiesInput = {
-  key: Scalars['String'];
-  public: Scalars['Boolean'];
-  value: Scalars['String'];
-};
-
 export type Query = {
   __typename?: 'Query';
-  invoice?: Maybe<Invoice>;
-  invoices: InvoiceConnection;
   peerProfile: PeerProfile;
   poll?: Maybe<FullPoll>;
   polls?: Maybe<PollConnection>;
   remotePeerProfile?: Maybe<PeerProfile>;
-  subscription?: Maybe<Subscription>;
-  subscriptions: SubscriptionConnection;
-  subscriptionsAsCsv?: Maybe<Scalars['String']>;
-};
-
-
-export type QueryInvoiceArgs = {
-  id?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryInvoicesArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<InvoiceFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<InvoiceSort>;
-  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -559,126 +264,9 @@ export type QueryRemotePeerProfileArgs = {
   token: Scalars['String'];
 };
 
-
-export type QuerySubscriptionArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QuerySubscriptionsArgs = {
-  cursor?: InputMaybe<Scalars['String']>;
-  filter?: InputMaybe<SubscriptionFilter>;
-  order?: InputMaybe<SortOrder>;
-  skip?: InputMaybe<Scalars['Int']>;
-  sort?: InputMaybe<SubscriptionSort>;
-  take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QuerySubscriptionsAsCsvArgs = {
-  filter?: InputMaybe<SubscriptionFilter>;
-};
-
 export enum SortOrder {
   Ascending = 'Ascending',
   Descending = 'Descending'
-}
-
-export type Subscription = {
-  __typename?: 'Subscription';
-  autoRenew: Scalars['Boolean'];
-  createdAt: Scalars['DateTime'];
-  currency: Currency;
-  deactivation?: Maybe<SubscriptionDeactivation>;
-  extendable: Scalars['Boolean'];
-  id: Scalars['String'];
-  memberPlan: MemberPlan;
-  modifiedAt: Scalars['DateTime'];
-  monthlyAmount: Scalars['Int'];
-  paidUntil?: Maybe<Scalars['DateTime']>;
-  paymentMethod: PaymentMethod;
-  paymentPeriodicity: PaymentPeriodicity;
-  properties: Array<Properties>;
-  startsAt: Scalars['DateTime'];
-  user?: Maybe<User>;
-};
-
-export type SubscriptionConnection = {
-  __typename?: 'SubscriptionConnection';
-  nodes: Array<Subscription>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type SubscriptionDeactivation = {
-  __typename?: 'SubscriptionDeactivation';
-  date: Scalars['DateTime'];
-  reason: SubscriptionDeactivationReason;
-};
-
-export type SubscriptionDeactivationInput = {
-  date: Scalars['DateTime'];
-  reason: SubscriptionDeactivationReason;
-};
-
-export enum SubscriptionDeactivationReason {
-  InvoiceNotPaid = 'invoiceNotPaid',
-  None = 'none',
-  UserReplacedSubscription = 'userReplacedSubscription',
-  UserSelfDeactivated = 'userSelfDeactivated'
-}
-
-export type SubscriptionFilter = {
-  autoRenew?: InputMaybe<Scalars['Boolean']>;
-  cancellationDateFrom?: InputMaybe<DateFilter>;
-  cancellationDateTo?: InputMaybe<DateFilter>;
-  deactivationDateFrom?: InputMaybe<DateFilter>;
-  deactivationDateTo?: InputMaybe<DateFilter>;
-  deactivationReason?: InputMaybe<SubscriptionDeactivationReason>;
-  extendable?: InputMaybe<Scalars['Boolean']>;
-  memberPlanID?: InputMaybe<Scalars['String']>;
-  paidUntil?: InputMaybe<DateFilter>;
-  paidUntilFrom?: InputMaybe<DateFilter>;
-  paidUntilTo?: InputMaybe<DateFilter>;
-  paymentMethodID?: InputMaybe<Scalars['String']>;
-  paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
-  startsAt?: InputMaybe<DateFilter>;
-  startsAtFrom?: InputMaybe<DateFilter>;
-  startsAtTo?: InputMaybe<DateFilter>;
-  subscriptionIDs?: InputMaybe<Array<Scalars['String']>>;
-  userHasAddress?: InputMaybe<Scalars['Boolean']>;
-  userID?: InputMaybe<Scalars['String']>;
-  userIDs?: InputMaybe<Array<Scalars['String']>>;
-};
-
-export type SubscriptionInput = {
-  autoRenew: Scalars['Boolean'];
-  deactivation?: InputMaybe<SubscriptionDeactivationInput>;
-  extendable: Scalars['Boolean'];
-  memberPlanID: Scalars['String'];
-  monthlyAmount: Scalars['Int'];
-  paidUntil?: InputMaybe<Scalars['DateTime']>;
-  paymentMethodID: Scalars['String'];
-  paymentPeriodicity: PaymentPeriodicity;
-  properties: Array<PropertiesInput>;
-  startsAt: Scalars['DateTime'];
-  userID: Scalars['String'];
-};
-
-export type SubscriptionPeriod = {
-  __typename?: 'SubscriptionPeriod';
-  amount: Scalars['Int'];
-  createdAt: Scalars['DateTime'];
-  endsAt: Scalars['DateTime'];
-  id: Scalars['String'];
-  invoiceID: Scalars['String'];
-  paymentPeriodicity: PaymentPeriodicity;
-  startsAt: Scalars['DateTime'];
-};
-
-export enum SubscriptionSort {
-  CreatedAt = 'createdAt',
-  ModifiedAt = 'modifiedAt'
 }
 
 export type UpdatePollAnswer = {
@@ -697,93 +285,11 @@ export type UpdatePollExternalVoteSources = {
   voteAmounts?: InputMaybe<Array<UpdatePollExternalVote>>;
 };
 
-export type User = {
-  __typename?: 'User';
-  active: Scalars['Boolean'];
-  address?: Maybe<UserAddress>;
-  birthday?: Maybe<Scalars['DateTime']>;
-  createdAt: Scalars['DateTime'];
-  email: Scalars['String'];
-  emailVerifiedAt?: Maybe<Scalars['DateTime']>;
-  firstName?: Maybe<Scalars['String']>;
-  flair?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  lastLogin?: Maybe<Scalars['DateTime']>;
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  note?: Maybe<Scalars['String']>;
-  paymentProviderCustomers: Array<PaymentProviderCustomer>;
-  properties: Array<Properties>;
-  roles: Array<UserRole>;
-  subscriptions: Array<UserSubscription>;
-  userImage?: Maybe<Image>;
-};
-
-export type UserAddress = {
-  __typename?: 'UserAddress';
-  city?: Maybe<Scalars['String']>;
-  company?: Maybe<Scalars['String']>;
-  country?: Maybe<Scalars['String']>;
-  streetAddress?: Maybe<Scalars['String']>;
-  streetAddress2?: Maybe<Scalars['String']>;
-  streetAddress2Number?: Maybe<Scalars['String']>;
-  streetAddressNumber?: Maybe<Scalars['String']>;
-  zipCode?: Maybe<Scalars['String']>;
-};
-
-export type UserRole = {
-  __typename?: 'UserRole';
-  description?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  name: Scalars['String'];
-  permissions: Array<Permission>;
-  systemRole: Scalars['Boolean'];
-};
-
-export type UserSubscription = {
-  __typename?: 'UserSubscription';
-  autoRenew: Scalars['Boolean'];
-  confirmed: Scalars['Boolean'];
-  createdAt: Scalars['DateTime'];
-  currency: Currency;
-  deactivation?: Maybe<SubscriptionDeactivation>;
-  id: Scalars['String'];
-  invoices: Array<Invoice>;
-  memberPlan: MemberPlan;
-  modifiedAt: Scalars['DateTime'];
-  monthlyAmount: Scalars['Int'];
-  paidUntil?: Maybe<Scalars['DateTime']>;
-  paymentPeriodicity: PaymentPeriodicity;
-  periods: Array<SubscriptionPeriod>;
-  properties: Array<Properties>;
-  startsAt: Scalars['DateTime'];
-};
-
 export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
 export type ImageRefFragment = { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null };
 
 export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null };
-
-export type CreateSubscriptionMutationVariables = Exact<{
-  input: SubscriptionInput;
-}>;
-
-
-export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', autoRenew: boolean, id: string, paidUntil?: string | null, monthlyAmount: number, extendable: boolean, user?: { __typename?: 'User', id: string } | null, memberPlan: { __typename?: 'MemberPlan', id: string }, paymentMethod: { __typename?: 'PaymentMethod', id: string } } | null };
-
-export type RenewSubscriptionMutationVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type RenewSubscriptionMutation = { __typename?: 'Mutation', renewSubscription?: { __typename?: 'Invoice', id: string } | null };
-
-export type FullUserFragment = { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> };
-
-export type FullPermissionFragment = { __typename?: 'Permission', id: string, description: string, deprecated: boolean };
-
-export type FullUserRoleFragment = { __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> };
 
 export const ImageUrLs = gql`
     fragment ImageURLs on Image {
@@ -831,60 +337,3 @@ export const FullImage = gql`
   ...ImageRef
 }
     ${ImageRef}`;
-export const FullPermission = gql`
-    fragment FullPermission on Permission {
-  id
-  description
-  deprecated
-}
-    `;
-export const FullUserRole = gql`
-    fragment FullUserRole on UserRole {
-  id
-  name
-  description
-  systemRole
-  permissions {
-    ...FullPermission
-  }
-}
-    ${FullPermission}`;
-export const FullUser = gql`
-    fragment FullUser on User {
-  id
-  name
-  email
-  emailVerifiedAt
-  flair
-  roles {
-    ...FullUserRole
-  }
-}
-    ${FullUserRole}`;
-export const CreateSubscription = gql`
-    mutation CreateSubscription($input: SubscriptionInput!) {
-  createSubscription(input: $input) {
-    autoRenew
-    id
-    paidUntil
-    user {
-      id
-    }
-    monthlyAmount
-    memberPlan {
-      id
-    }
-    extendable
-    paymentMethod {
-      id
-    }
-  }
-}
-    `;
-export const RenewSubscription = gql`
-    mutation RenewSubscription($id: String!) {
-  renewSubscription(id: $id) {
-    id
-  }
-}
-    `;
