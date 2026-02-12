@@ -1,4 +1,0 @@
-fragment Deactivation on SubscriptionDeactivation {
-  date
-  reason
-}

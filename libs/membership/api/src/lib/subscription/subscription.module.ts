@@ -15,6 +15,7 @@ import { PropertyModule } from '@wepublish/property/api';
 import { SubscriptionService } from './subscription.service';
 import { SubscriptionPeriodDataloader } from './subscription-periods.dataloader';
 import { MemberContextModule } from '../legacy/member-context.module';
+import { SubscriptionPeriodResolver } from './subscription-period.resolver';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { MemberContextModule } from '../legacy/member-context.module';
     MemberContextModule,
   ],
   providers: [
+    SubscriptionPeriodResolver,
     HasSubscriptionResolver,
     HasOptionalSubscriptionResolver,
     HasSubscriptionLcResolver,

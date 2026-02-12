@@ -170,9 +170,9 @@ export const FrageDesTages = ({
 
   const numberOfComments = useMemo(() => {
     return countComments(
-      (commentsData?.comments as CommentWithChildren[]) || []
+      (commentsData?.commentsForItem as CommentWithChildren[]) || []
     );
-  }, [commentsData?.comments]);
+  }, [commentsData?.commentsForItem]);
 
   return (
     <FrageDesTagesContainer>
@@ -198,7 +198,7 @@ export const FrageDesTages = ({
 
           <TopComments>Top antworten</TopComments>
           <Comments>
-            {commentsData?.comments
+            {commentsData?.commentsForItem
               .slice(0, 2)
               .map(
                 ({

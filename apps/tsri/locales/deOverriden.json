@@ -1,0 +1,7 @@
+{
+  "teaser": {
+    "author": {
+      "text": "<TeaserAuthorTextWrapper>Von </TeaserAuthorTextWrapper><TeaserAuthorWrapper>{authors}</TeaserAuthorWrapper>"
+    }
+  }
+}

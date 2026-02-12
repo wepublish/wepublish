@@ -7,9 +7,18 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { Comment, CommentSort } from './comment.model';
-import { CommentService } from './comment.service';
-import { SortOrder } from '@wepublish/utils/api';
+import {
+  Comment,
+  CommentsForItemArgs,
+  CommentRevision,
+  PaginatedComments,
+  CommentListArgs,
+  UpdateUserCommentInput,
+  AddUserCommentInput,
+  UpdateCommentInput,
+  CreateCommentInput,
+} from './comment.model';
+import { CommentService, DecoratedComment } from './comment.service';
 import {
   Authenticated,
   CurrentUser,
@@ -20,13 +29,23 @@ import {
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
 import { CommentTagDataloader, Tag } from '@wepublish/tag/api';
 import { CommentDataloaderService } from './comment-dataloader.service';
-import { RatingSystemService } from './rating-system';
-import { CommentInput, CommentUpdateInput } from './comment.input';
 import { URLAdapter } from '@wepublish/nest-modules';
 import { ArticleDataloaderService } from '@wepublish/article/api';
 import { PageDataloaderService } from '@wepublish/page/api';
-import { CommentRating } from './rating-system/rating-system.model';
+import {
+  CommentRating,
+  OverriddenRating,
+} from './rating-system/rating-system.model';
 import { forwardRef, Inject } from '@nestjs/common';
+import {
+  CanDeleteComments,
+  CanGetComments,
+  CanTakeActionOnComment,
+  CanUpdateComments,
+} from '@wepublish/permissions';
+import { hasPermission, Permissions } from '@wepublish/permissions/api';
+import { CommentRejectionReason, CommentState } from '@prisma/client';
+import { GraphQLRichText } from '@wepublish/richtext/api';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -34,7 +53,6 @@ export class CommentResolver {
     private commentService: CommentService,
     private commentDataloader: CommentDataloaderService,
     private tagDataLoader: CommentTagDataloader,
-    private ratingSystemService: RatingSystemService,
     private imageDataloaderService: ImageDataloaderService,
     private urlAdapter: URLAdapter,
     @Inject(forwardRef(() => ArticleDataloaderService))
@@ -43,51 +61,81 @@ export class CommentResolver {
     private pageDataloader: PageDataloaderService
   ) {}
 
-  @Query(() => [Comment], {
-    description: 'This query returns the comments of an item.',
+  @Permissions(CanGetComments)
+  @Query(() => PaginatedComments, {
+    description: `Returns a paginated list of comments based on the filters given.`,
   })
+  public comments(@Args() filter: CommentListArgs) {
+    return this.commentService.getAdminCommennts(filter);
+  }
+
+  @Permissions(CanGetComments)
+  @Query(() => Comment, {
+    description: `Returns a comment by id.`,
+  })
+  async comment(@Args('id') id: string) {
+    return this.commentService.getComment(id);
+  }
+
   @Public()
-  async comments(
-    @Args('itemId') itemId: string,
-    @Args('sort', { type: () => CommentSort, nullable: true })
-    sort?: CommentSort,
-    @Args('order', {
-      type: () => SortOrder,
-      nullable: true,
-      defaultValue: SortOrder.Descending,
-    })
-    order?: SortOrder,
-    @CurrentUser() session?: UserSession | null
+  @Query(() => [Comment], {
+    description: `Returns a sorted and nested list of comments for an item.`,
+  })
+  async commentsForItem(
+    @Args() input: CommentsForItemArgs,
+    @CurrentUser() session: UserSession | null
   ) {
-    const userId = session?.user?.id || null;
-    return this.commentService.getPublicCommentsForItemById(
-      itemId,
-      userId,
-      sort || null,
-      order || SortOrder.Descending
+    const publicFilter = {
+      OR: [
+        session?.user.id ? { userID: session?.user.id } : {},
+        { state: CommentState.approved },
+      ],
+    };
+
+    return this.commentService.getCommentsForItem(
+      input,
+      !hasPermission(CanGetComments, session?.roles ?? []) ? publicFilter : (
+        undefined
+      )
     );
   }
 
   @Public()
   @Mutation(() => Comment, {
-    description: `Create a new comment`,
+    description: `Adds a new comment made by you.`,
   })
-  async addComment(
-    @Args('input') input: CommentInput,
+  async addUserComment(
+    @Args() input: AddUserCommentInput,
     @CurrentUser() session?: UserSession | null
   ) {
-    return await this.commentService.addPublicComment(input, session);
+    return await this.commentService.addUserComment(input, session);
   }
 
   @Authenticated()
   @Mutation(() => Comment, {
-    description: `Update an existing comment`,
+    description: `Updates a comment you made.`,
   })
-  async updateComment(
-    @Args('input') input: CommentUpdateInput,
+  async updateUserComment(
+    @Args() input: UpdateUserCommentInput,
     @CurrentUser() session: UserSession
   ) {
-    return this.commentService.updatePublicComment(input, session);
+    return this.commentService.updateUserComment(input, session);
+  }
+
+  @Permissions(CanUpdateComments)
+  @Mutation(() => Comment, {
+    description: `Creates a comment for any user`,
+  })
+  async createComment(@Args() input: CreateCommentInput) {
+    return this.commentService.createAdminComment(input);
+  }
+
+  @Permissions(CanUpdateComments)
+  @Mutation(() => Comment, {
+    description: `Update any existing comment`,
+  })
+  async updateComment(@Args() input: UpdateCommentInput) {
+    return this.commentService.updateAdminComment(input);
   }
 
   @Public()
@@ -110,41 +158,132 @@ export class CommentResolver {
     );
   }
 
-  @ResolveField(() => [CommentRating])
-  @Public()
-  async calculatedRatings(@Parent() comment: Comment) {
-    const [answers, ratings] = await Promise.all([
-      this.ratingSystemService.getRatingSystemAnswers(),
-      this.ratingSystemService.getCommentRatings(comment.id),
-    ]);
+  @Permissions(CanDeleteComments)
+  @Mutation(() => Comment, {
+    description: `Deletes a comment`,
+  })
+  async deleteComment(@Args('id') id: string) {
+    return this.commentService.deleteComment(id);
+  }
 
-    return this.commentService.getCalculatedRatingsForComment(answers, ratings);
+  @Permissions(CanTakeActionOnComment)
+  @Mutation(() => Comment, {
+    description: `Approves a comment`,
+  })
+  async approveComment(@Args('id') id: string) {
+    return this.commentService.takeActionOnComment(id, {
+      state: CommentState.approved,
+      rejectionReason: null,
+    });
+  }
+
+  @Permissions(CanTakeActionOnComment)
+  @Mutation(() => Comment, {
+    description: `Rejects a comment`,
+  })
+  async rejectComment(
+    @Args('id') id: string,
+    @Args('rejectionReason') rejectionReason: CommentRejectionReason
+  ) {
+    return this.commentService.takeActionOnComment(id, {
+      state: CommentState.rejected,
+      rejectionReason,
+    });
+  }
+
+  @Permissions(CanTakeActionOnComment)
+  @Mutation(() => Comment, {
+    description: `Requests the user to change the comment's content`,
+  })
+  async requestChangesOnComment(
+    @Args('id') id: string,
+    @Args('rejectionReason') rejectionReason: CommentRejectionReason
+  ) {
+    return this.commentService.takeActionOnComment(id, {
+      state: CommentState.pendingUserChanges,
+      rejectionReason,
+    });
+  }
+
+  @ResolveField(() => [CommentRevision])
+  async revisions(
+    @Parent() comment: DecoratedComment,
+    @CurrentUser() session?: UserSession
+  ) {
+    const revisions = comment.revisions ?? [];
+
+    if (hasPermission(CanGetComments, session?.roles ?? [])) {
+      return revisions;
+    }
+
+    return revisions.length ? [revisions.at(-1)] : [];
+  }
+  @ResolveField(() => String)
+  async title(@Parent() comment: DecoratedComment) {
+    const revisions = comment.revisions ?? [];
+
+    return revisions.at(-1)?.title;
+  }
+  @ResolveField(() => String)
+  async lead(@Parent() comment: DecoratedComment) {
+    const revisions = comment.revisions ?? [];
+
+    return revisions.at(-1)?.lead;
+  }
+  @ResolveField(() => GraphQLRichText)
+  async text(@Parent() comment: DecoratedComment) {
+    const revisions = comment.revisions ?? [];
+
+    return revisions.at(-1)?.text;
+  }
+
+  @ResolveField(() => [CommentRating])
+  async calculatedRatings(@Parent() comment: DecoratedComment) {
+    return comment.calculatedRatings;
+  }
+
+  @ResolveField(() => [CommentRating])
+  async userRatings(
+    @Parent() comment: DecoratedComment,
+    @CurrentUser() session?: UserSession
+  ) {
+    const userId = session?.user?.id;
+
+    if (!userId) {
+      return [];
+    }
+
+    return comment.ratings.filter(rating => rating.userId === userId);
+  }
+
+  @ResolveField(() => [OverriddenRating])
+  async overriddenRatings(
+    @Parent() comment: DecoratedComment,
+    @CurrentUser() session?: UserSession
+  ) {
+    if (!hasPermission(CanGetComments, session?.roles ?? [])) {
+      return [];
+    }
+
+    return comment.overriddenRatings;
   }
 
   @ResolveField(() => Image, { nullable: true })
-  async guestUserImage(@Parent() comment: Comment) {
+  async guestUserImage(@Parent() comment: DecoratedComment) {
     if (!comment.guestUserImageID) {
       return null;
     }
+
     return this.imageDataloaderService.load(comment.guestUserImageID);
   }
 
   @ResolveField(() => [Tag])
-  async tags(@Parent() comment: Comment) {
+  async tags(@Parent() comment: DecoratedComment) {
     return this.tagDataLoader.load(comment.id);
   }
 
   @ResolveField(() => Comment, { nullable: true })
-  async parentComment(@Parent() comment: Comment) {
-    if (!comment.parentID) {
-      return null;
-    }
-
-    return this.commentDataloader.load(comment.parentID);
-  }
-
-  @ResolveField(() => Comment, { nullable: true })
-  async url(@Parent() comment: Comment) {
+  async url(@Parent() comment: DecoratedComment) {
     let item;
     if (comment.itemType === 'article') {
       item = await this.articleDataloader.load(comment.itemID);
@@ -161,17 +300,17 @@ export class CommentResolver {
     return this.urlAdapter.getCommentURL(item, comment);
   }
 
-  @ResolveField(() => [Comment])
-  @Public()
-  async children(
-    @Parent() comment: Comment,
-    @CurrentUser() session?: UserSession
-  ) {
-    const userId = session?.user?.id ?? null;
+  @ResolveField(() => Comment, { nullable: true })
+  async parentComment(@Parent() comment: DecoratedComment) {
+    if (!comment.parentID) {
+      return null;
+    }
 
-    return this.commentService.getPublicChildrenCommentsByParentId(
-      comment.id,
-      userId
-    );
+    return this.commentDataloader.load(comment.parentID);
+  }
+
+  @ResolveField(() => [Comment])
+  async children(@Parent() comment: DecoratedComment) {
+    return comment.children;
   }
 }

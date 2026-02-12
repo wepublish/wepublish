@@ -1,9 +1,166 @@
-fragment CommentUser on User {
+fragment FullUser on SensitiveDataUser {
   id
+  createdAt
+  modifiedAt
   name
   firstName
+  address {
+    company
+    streetAddress
+    streetAddressNumber
+    streetAddress2
+    streetAddress2Number
+    zipCode
+    city
+    country
+  }
   flair
+  birthday
   image {
     ...FullImage
   }
+  active
+  lastLogin
+  properties {
+    key
+    value
+    public
+  }
+  email
+  emailVerifiedAt
+  note
+  roles {
+    ...FullUserRole
+  }
+}
+
+query UserList(
+  $filter: UserFilter
+  $cursorId: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: UserSort
+) {
+  users(
+    filter: $filter
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullUser
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query User($id: String!) {
+  user(id: $id) {
+    ...FullUser
+  }
+}
+
+query Me {
+  me {
+    ...FullUser
+  }
+}
+
+mutation CreateUser(
+  $name: String!
+  $flair: String
+  $firstName: String
+  $birthday: DateTime
+  $address: UserAddressInput
+  $email: String!
+  $emailVerifiedAt: DateTime
+  $userImageID: String
+  $password: String
+  $active: Boolean!
+  $note: String
+  $properties: [PropertyInput!]!
+  $roleIDs: [String!]!
+) {
+  createUser(
+    name: $name
+    flair: $flair
+    firstName: $firstName
+    birthday: $birthday
+    address: $address
+    email: $email
+    emailVerifiedAt: $emailVerifiedAt
+    userImageID: $userImageID
+    password: $password
+    active: $active
+    properties: $properties
+    note: $note
+    roleIDs: $roleIDs
+  ) {
+    ...FullUser
+  }
+}
+
+mutation UpdateUser(
+  $id: String!
+  $flair: String
+  $name: String
+  $firstName: String
+  $birthday: DateTime
+  $address: UserAddressInput
+  $email: String
+  $emailVerifiedAt: DateTime
+  $userImageID: String
+  $active: Boolean
+  $note: String
+  $roleIDs: [String!]
+  $properties: [PropertyInput!]
+) {
+  updateUser(
+    id: $id
+    name: $name
+    firstName: $firstName
+    birthday: $birthday
+    address: $address
+    email: $email
+    emailVerifiedAt: $emailVerifiedAt
+    userImageID: $userImageID
+    active: $active
+    properties: $properties
+    flair: $flair
+    note: $note
+    roleIDs: $roleIDs
+  ) {
+    ...FullUser
+  }
+}
+
+mutation ResetUserPassword(
+  $id: String!
+  $password: String!
+  $sendMail: Boolean
+) {
+  resetPassword(id: $id, password: $password, sendMail: $sendMail) {
+    ...FullUser
+  }
+}
+
+mutation DeleteUser($id: String!) {
+  deleteUser(id: $id) {
+    ...FullUser
+  }
+}
+
+mutation SendWebsiteLogin($email: String!) {
+  sendWebsiteLogin(email: $email)
 }

@@ -1,4 +1,7 @@
-import { useResetUserPasswordMutation } from '@wepublish/editor/api';
+import {
+  getApiClientV2,
+  useResetUserPasswordMutation,
+} from '@wepublish/editor/api-v2';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Checkbox, Form, Notification, Schema, toaster } from 'rsuite';
@@ -17,8 +20,9 @@ export function ResetUserPasswordForm({
   const [password, setPassword] = useState('');
   const [sendMail, setSendMail] = useState<boolean>(false);
 
+  const client = getApiClientV2();
   const [resetUserPassword, { loading: isUpdating, error: updateError }] =
-    useResetUserPasswordMutation();
+    useResetUserPasswordMutation({ client });
 
   const isDisabled = isUpdating;
 
@@ -48,7 +52,7 @@ export function ResetUserPasswordForm({
             sendMail,
           },
         });
-        if (data?.resetUserPassword) {
+        if (data?.resetPassword) {
           toaster.push(
             <Notification
               type="success"

@@ -1,16 +1,14 @@
 import styled from '@emotion/styled';
 import {
-  FullImageFragment,
-  useCreateJwtForWebsiteLoginLazyQuery,
-} from '@wepublish/editor/api';
-import {
   CreateArticleMutationVariables,
   EditorBlockType,
   FullAuthorFragment,
+  FullImageFragment,
   getApiClientV2,
   SettingName,
   useArticleQuery,
   useCreateArticleMutation,
+  useCreateJwtForWebsiteLoginMutation,
   usePublishArticleMutation,
   useSettingsListQuery,
   useUpdateArticleMutation,
@@ -209,8 +207,10 @@ function ArticleEditor() {
     skip: !articleID,
   });
 
-  const [createJWT] = useCreateJwtForWebsiteLoginLazyQuery({
+  const [createJWT] = useCreateJwtForWebsiteLoginMutation({
+    client,
     errorPolicy: 'none',
+    fetchPolicy: 'no-cache',
   });
 
   const isNotFound = articleData && !articleData.article;

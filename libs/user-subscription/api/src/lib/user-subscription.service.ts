@@ -316,6 +316,16 @@ export class UserSubscriptionService {
         }
       }
     }
+
+    return await this.payments.createPaymentWithProvider({
+      invoice,
+      saveCustomer: true,
+      paymentMethodID: subscription.paymentMethodID,
+      successURL,
+      failureURL,
+      migrateToTargetPaymentMethodID:
+        subscription.memberPlan.migrateToTargetPaymentMethodID ?? undefined,
+    });
   }
 
   async updateSubscription(

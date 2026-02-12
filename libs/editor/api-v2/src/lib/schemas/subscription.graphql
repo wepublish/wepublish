@@ -3,6 +3,7 @@ fragment FullSubscription on PublicSubscription {
   createdAt
   modifiedAt
 
+  confirmed
   user {
     id
     name
@@ -197,5 +198,27 @@ mutation DeleteSubscription($id: String!) {
 mutation RenewSubscription($id: String!) {
   renewSubscription(id: $id) {
     ...FullSubscription
+  }
+}
+
+fragment UserSubscription on PublicSubscription {
+  ...FullSubscription
+
+  periods {
+    id
+    createdAt
+    startsAt
+    endsAt
+    amount
+    invoiceID
+    isPaid
+  }
+}
+
+query UserSubscriptionList($userId: String!) {
+  subscriptions(filter: { userID: $userId }, take: 50, skip: 0) {
+    nodes {
+      ...UserSubscription
+    }
   }
 }

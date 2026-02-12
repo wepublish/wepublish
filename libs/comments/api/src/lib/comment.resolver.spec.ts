@@ -145,7 +145,7 @@ describe('CommentResolver', () => {
   });
 
   test('Public: comment from a user with approval permission is approved', async () => {
-    commentService.addPublicComment?.mockResolvedValue(mockComment as any);
+    commentService.addComment?.mockResolvedValue(mockComment as any);
     const res = await request(app.getHttpServer())
       .post('/')
       .send({
@@ -169,7 +169,7 @@ describe('CommentResolver', () => {
   });
 
   test('can be created with bare minimum', async () => {
-    commentService.addPublicComment?.mockResolvedValue(mockComment as any);
+    commentService.addComment?.mockResolvedValue(mockComment as any);
     const input: CommentInput = {
       itemID: 'item-id',
       itemType: CommentItemType.Article,
@@ -183,7 +183,7 @@ describe('CommentResolver', () => {
       },
     });
 
-    expect(commentService.addPublicComment?.mock.calls).toMatchSnapshot();
+    expect(commentService.addComment?.mock.calls).toMatchSnapshot();
     expect(res.body.errors).toBeUndefined();
     expect(res.body.data).toMatchSnapshot();
   });

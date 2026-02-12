@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { SubscriptionDeactivationReason } from '@wepublish/editor/api';
+import { SubscriptionDeactivationReason } from '@wepublish/editor/api-v2';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {

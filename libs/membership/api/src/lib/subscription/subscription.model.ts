@@ -50,7 +50,7 @@ export class SubscriptionDeactivation {
   reason!: SubscriptionDeactivationReason;
 }
 
-@ObjectType()
+@ObjectType({})
 export class SubscriptionPeriod {
   @Field()
   id!: string;
@@ -67,8 +67,14 @@ export class SubscriptionPeriod {
   @Field(() => PaymentPeriodicity)
   paymentPeriodicity!: PaymentPeriodicity;
 
-  @Field(() => Int)
+  @Field()
+  invoiceID!: string;
+
+  @Field()
   amount!: number;
+
+  @Field()
+  isPaid!: boolean;
 }
 
 @ObjectType({
@@ -83,6 +89,9 @@ export class PublicSubscription
   createdAt!: Date;
   @Field()
   modifiedAt!: Date;
+
+  @Field(() => Boolean)
+  confirmed!: boolean;
 
   @Field(() => PaymentPeriodicity)
   paymentPeriodicity!: PaymentPeriodicity;

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { FullUserFragment } from '@wepublish/editor/api';
 import {
+  FullUserFragment,
   getApiClientV2,
   InvoiceFragment,
   useMarkInvoiceAsPaidMutation,

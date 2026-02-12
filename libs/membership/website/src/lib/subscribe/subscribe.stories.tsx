@@ -94,6 +94,8 @@ const subscription = mockSubscription({
 const invoice = mockInvoice({
   total: 5000,
   subscription,
+  canceledAt: null,
+  description: 'Mock Invoice',
 });
 
 const fillFirstName: StoryObj['play'] = async ({ canvasElement, step }) => {
@@ -243,9 +245,12 @@ const clickPayTransactionFees: StoryObj['play'] = async ({
 
 const clickSubscribe: StoryObj['play'] = async ({ canvasElement, step }) => {
   const canvas = within(canvasElement);
-  const submitButton = canvas.getByText('Abonnieren', {
-    exact: false,
-  });
+  let submitButton;
+  try {
+    submitButton = canvas.getByText(new RegExp('Abonnieren', 'i'));
+  } catch {
+    submitButton = canvas.getByText(new RegExp('Spenden', 'i'));
+  }
 
   await step('Submit form', async () => {
     await userEvent.click(submitButton);

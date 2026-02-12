@@ -1,19 +1,29 @@
+import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
 import { SubscribeBlock } from '@wepublish/block-content/website';
+import { SubscribeButton } from '@wepublish/membership/website';
 import { useSubscriptionsQuery } from '@wepublish/website/api';
 import { BuilderSubscribeBlockProps } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
 import { ascend, prop, sortWith } from 'ramda';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 
 import {
   isMemberplanUpgradeableTo,
   isSubscriptionUpgradeable,
 } from '../hooks/inform-user-upgrade';
+import { ForceUpgradeContext } from './hauptstadt-page';
+
+const StyledSubscribeBlock = styled(SubscribeBlock)`
+  ${SubscribeButton} {
+    font-weight: 500;
+  }
+`;
 
 export const HauptstadtSubscribe = (props: BuilderSubscribeBlockProps) => {
   const { hasUser } = useUser();
   const router = useRouter();
+  const forceUpgrade = useContext(ForceUpgradeContext);
 
   const { data } = useSubscriptionsQuery({
     fetchPolicy: 'cache-only',
@@ -46,11 +56,15 @@ export const HauptstadtSubscribe = (props: BuilderSubscribeBlockProps) => {
 
   const canUpgrade = !!upgradeableTo.length && cheapestSubscription;
 
-  if (canUpgrade && !router.query.upgradeSubscriptionId) {
-    router.replace(
-      `?upgradeSubscriptionId=${encodeURIComponent(cheapestSubscription.id)}`
-    );
+  if (canUpgrade && !router.query.upgradeSubscriptionId && forceUpgrade) {
+    router.replace({
+      query: {
+        ...router.query,
+        upgradeSubscriptionId: encodeURIComponent(cheapestSubscription.id),
+      },
+      pathname: router.pathname,
+    });
   }
 
-  return <SubscribeBlock {...props} />;
+  return <StyledSubscribeBlock {...props} />;
 };

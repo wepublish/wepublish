@@ -62,12 +62,12 @@ registerEnumType(TagSort, {
 });
 
 @ObjectType()
-export class TagConnection extends PaginatedType(Tag) {}
+export class PaginatedTags extends PaginatedType(Tag) {}
 
 @ArgsType()
-export class TagsArgs {
+export class TagListArgs {
   @Field(() => String, { nullable: true, description: 'Cursor for pagination' })
-  cursor?: string;
+  cursorId?: string;
 
   @Field(() => Int, {
     defaultValue: 10,

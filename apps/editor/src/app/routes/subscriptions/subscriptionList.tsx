@@ -269,18 +269,6 @@ function SubscriptionList() {
               }
             </RCell>
           </Column>
-          {/* email */}
-          <Column width={250}>
-            <HeaderCell>{t('subscriptionList.overview.email')}</HeaderCell>
-            <RCell dataKey={'email'}>
-              {(rowData: RowDataType<FullSubscriptionFragment>) => (
-                <div>
-                  {rowData.user?.email ||
-                    t('subscriptionList.overview.deleted')}
-                </div>
-              )}
-            </RCell>
-          </Column>
           {/* action */}
           <Column
             width={100}

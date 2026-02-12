@@ -3,19 +3,16 @@ import styled from '@emotion/styled';
 import { Alert } from '@mui/material';
 import {
   Currency,
-  FullMemberPlanFragment,
-  FullUserFragment,
-  MetadataPropertyFragment,
-  PaymentPeriodicity,
-  SubscriptionDeactivationReason,
-  useUserQuery,
-} from '@wepublish/editor/api';
-import {
   DeactivationFragment,
+  FullMemberPlanFragment,
   FullPaymentMethodFragment,
   FullSubscriptionFragment,
+  FullUserFragment,
   getApiClientV2,
   InvoiceFragment,
+  PaymentPeriodicity,
+  PropertyInput,
+  SubscriptionDeactivationReason,
   useCancelSubscriptionMutation,
   useCreateSubscriptionMutation,
   useInvoicesQuery,
@@ -24,6 +21,7 @@ import {
   useRenewSubscriptionMutation,
   useSubscriptionQuery,
   useUpdateSubscriptionMutation,
+  useUserQuery,
 } from '@wepublish/editor/api-v2';
 import {
   ALL_PAYMENT_PERIODICITIES,
@@ -142,7 +140,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   const [paidUntil, setPaidUntil] = useState<Date | null>();
   const [paymentMethod, setPaymentMethod] =
     useState<FullPaymentMethodFragment>();
-  const [properties, setProperties] = useState<MetadataPropertyFragment[]>([]);
+  const [properties, setProperties] = useState<PropertyInput[]>([]);
   const [deactivation, setDeactivation] =
     useState<DeactivationFragment | null>();
   const [extendable, setExtendable] = useState<boolean>(false);
@@ -205,10 +203,13 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     if (!memberPlan) {
       return;
     }
+
     if (memberPlan.extendable === extendable) {
       return;
     }
+
     setExtendable(memberPlan.extendable);
+
     toaster.push(
       <Message
         type="info"
@@ -227,7 +228,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     if (!subscription) {
       return;
     }
-    // @ts-expect-error Will be fixed with user v2
+    // @ts-expect-error Wrong type for now
     setUser(subscription.user);
     setMemberPlan(subscription.memberPlan);
     setPaymentPeriodicity(subscription.paymentPeriodicity);
@@ -285,6 +286,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
    * fetch edited user from api
    */
   const { data: editedUserData } = useUserQuery({
+    client,
     variables: { id: editedUserId! },
     fetchPolicy: 'network-only',
     skip: editedUserId === undefined,

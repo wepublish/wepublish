@@ -1,12 +1,20 @@
 import {
+  ArgsType,
   Field,
   InputType,
+  Int,
   InterfaceType,
   ObjectType,
   OmitType,
+  PartialType,
+  PickType,
+  registerEnumType,
 } from '@nestjs/graphql';
-import { Image, UploadImageInput } from '@wepublish/image/api';
-import { Property } from '@wepublish/property/api';
+import { Image } from '@wepublish/image/api';
+import { Property, PropertyInput } from '@wepublish/property/api';
+import { PaginatedType, SortOrder } from '@wepublish/utils/api';
+import { UserRole } from './user-role.model';
+import { ChallengeInput } from '@wepublish/challenge/api';
 
 @ObjectType()
 export class UserAddress {
@@ -83,29 +91,95 @@ export class User extends BaseUser {}
   implements: [BaseUser],
 })
 export class SensitiveDataUser extends BaseUser {
+  @Field(() => Date)
+  createdAt!: Date;
+  @Field(() => Date)
+  modifiedAt!: Date;
+
   @Field(() => Date, { nullable: true })
-  birthday!: Date | null;
+  birthday?: Date;
 
   @Field()
   email!: string;
+  @Field(() => Date, { nullable: true })
+  emailVerifiedAt?: Date;
+
+  @Field(() => Date, { nullable: true })
+  lastLogin?: Date;
 
   @Field(() => UserAddress, { nullable: true })
   address?: UserAddress | null;
+
+  @Field({ nullable: true })
+  note?: string;
 
   @Field(() => [String])
   permissions?: string[];
 
   @Field(() => [PaymentProviderCustomer], { nullable: true })
   paymentProviderCustomers?: PaymentProviderCustomer[];
+
+  @Field(() => [UserRole])
+  roles!: UserRole[];
 }
 
-@InputType()
-export class PaymentProviderCustomerInput {
-  @Field()
-  paymentProviderID!: string;
+@ObjectType()
+export class PaginatedSensitiveDataUsers extends PaginatedType(
+  SensitiveDataUser
+) {}
 
-  @Field()
-  customerID!: string;
+@InputType()
+export class UserFilter {
+  @Field(() => String, { nullable: true })
+  name?: string;
+
+  @Field(() => String, { nullable: true })
+  text?: string;
+
+  @Field(() => [String], { nullable: true })
+  userRole?: string[];
+}
+
+export enum UserSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+  Name = 'Name',
+  FirstName = 'FirstName',
+}
+
+registerEnumType(UserSort, {
+  name: 'UserSort',
+});
+
+@ArgsType()
+export class UserListArgs {
+  @Field(() => String, { nullable: true, description: 'Cursor for pagination' })
+  cursorId?: string;
+
+  @Field(() => Int, {
+    defaultValue: 10,
+    description: 'Number of items to fetch',
+  })
+  take?: number;
+
+  @Field(() => Int, { defaultValue: 0, description: 'Number of items to skip' })
+  skip?: number;
+
+  @Field(() => UserFilter, { nullable: true, description: 'Filter for users' })
+  filter?: UserFilter;
+
+  @Field(() => UserSort, {
+    defaultValue: UserSort.CreatedAt,
+    description: 'Field to sort by',
+  })
+  sort?: UserSort;
+
+  @Field(() => SortOrder, {
+    defaultValue: SortOrder.Descending,
+    description: 'Sort order',
+    nullable: true,
+  })
+  order?: SortOrder;
 }
 
 @InputType()
@@ -115,26 +189,61 @@ export class UserAddressInput extends OmitType(
   InputType
 ) {}
 
-@InputType()
-export class UserInput {
-  @Field()
-  name!: string;
-
+@ArgsType()
+export class CreateUserInput extends PickType(
+  SensitiveDataUser,
+  [
+    'firstName',
+    'name',
+    'birthday',
+    'email',
+    'emailVerifiedAt',
+    'userImageID',
+    'roleIDs',
+    'flair',
+    'active',
+    'note',
+  ] as const,
+  ArgsType
+) {
   @Field({ nullable: true })
-  firstName?: string;
-
-  @Field()
-  email!: string;
+  password?: string;
 
   @Field(() => UserAddressInput, { nullable: true })
   address?: UserAddressInput;
 
-  @Field({ nullable: true })
-  flair?: string;
-
-  @Field(() => Date, { nullable: true })
-  birthday?: Date;
-
-  @Field(() => UploadImageInput, { nullable: true })
-  uploadImageInput?: UploadImageInput;
+  @Field(type => [PropertyInput])
+  properties!: PropertyInput[];
 }
+
+@ArgsType()
+export class UpdateUserInput extends PartialType(
+  OmitType(CreateUserInput, ['password'] as const, ArgsType),
+  ArgsType
+) {
+  @Field({ nullable: true })
+  id?: string;
+}
+
+@ArgsType()
+export class RegisterUserInput extends OmitType(
+  CreateUserInput,
+  [
+    'active',
+    'note',
+    'emailVerifiedAt',
+    'userImageID',
+    'roleIDs',
+    'properties',
+  ] as const,
+  ArgsType
+) {
+  @Field(() => ChallengeInput)
+  challengeAnswer!: ChallengeInput;
+}
+
+@ArgsType()
+export class UpdateCurrentUserInput extends PartialType(
+  RegisterUserInput,
+  ArgsType
+) {}

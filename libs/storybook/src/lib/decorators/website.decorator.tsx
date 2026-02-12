@@ -7,7 +7,10 @@ import {
   useCallback,
   useState,
 } from 'react';
-import { User, SessionWithTokenWithoutUser } from '@wepublish/website/api';
+import {
+  SensitiveDataUser,
+  SessionWithTokenWithoutUser,
+} from '@wepublish/website/api';
 import { SessionTokenContext } from '@wepublish/authentication/website';
 
 import { WebsiteProvider } from '@wepublish/website';
@@ -15,7 +18,7 @@ import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 
 const SessionProvider = memo<PropsWithChildren>(({ children }) => {
   const [token, setToken] = useState<SessionWithTokenWithoutUser | null>();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<SensitiveDataUser | null>(null);
 
   const setTokenAndGetMe = useCallback(
     async (newToken: SessionWithTokenWithoutUser | null) => {

@@ -1,16 +1,6 @@
 type Query {
   remotePeerProfile(hostURL: String!, token: String!): PeerProfile
-  createJWTForUser(userId: String!, expiresInMinutes: Int!): JWTToken
-  createJWTForWebsiteLogin: JWTToken
   peerProfile: PeerProfile!
-  me: User
-  sessions: [Session!]!
-  user(id: String): User
-  users(cursor: String, take: Int = 10, skip: Int = 0, filter: UserFilter, sort: UserSort = modifiedAt, order: SortOrder = Descending): UserConnection!
-  image(id: String): Image
-  images(cursor: String, take: Int = 5, skip: Int = 0, filter: ImageFilter, sort: ImageSort = modifiedAt, order: SortOrder = Descending): ImageConnection!
-  comment(id: String!): Comment
-  comments(cursor: String, take: Int = 10, skip: Int = 0, filter: CommentFilter, sort: CommentSort = modifiedAt, order: SortOrder = Descending): CommentConnection!
   polls(cursor: String, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
   poll(id: String): FullPoll
 }
@@ -67,365 +57,12 @@ type FocalPoint {
 input ImageTransformation {
   width: Int
   height: Int
-  rotation: ImageRotation
-}
-
-enum ImageRotation {
-  Auto
-  Rotate0
-  Rotate90
-  Rotate180
-  Rotate270
 }
 
 """A hexidecimal color value."""
 scalar Color
 
 scalar RichText
-
-type JWTToken {
-  token: String!
-  expiresAt: String!
-}
-
-type User {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  firstName: String
-  email: String!
-  emailVerifiedAt: DateTime
-  birthday: DateTime
-  address: UserAddress
-  flair: String
-  note: String
-  userImage: Image
-  active: Boolean!
-  lastLogin: DateTime
-  properties: [Properties!]!
-  roles: [UserRole!]!
-  paymentProviderCustomers: [PaymentProviderCustomer!]!
-  subscriptions: [UserSubscription!]!
-}
-
-type UserAddress {
-  company: String
-  streetAddress: String
-  streetAddressNumber: String
-  streetAddress2: String
-  streetAddress2Number: String
-  zipCode: String
-  city: String
-  country: String
-}
-
-type Properties {
-  key: String!
-  value: String!
-  public: Boolean!
-}
-
-type UserRole {
-  id: String!
-  name: String!
-  description: String
-  systemRole: Boolean!
-  permissions: [Permission!]!
-}
-
-type Permission {
-  id: String!
-  description: String!
-  deprecated: Boolean!
-}
-
-type PaymentProviderCustomer {
-  paymentProviderID: String!
-  customerID: String!
-}
-
-type UserSubscription {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  paymentPeriodicity: PaymentPeriodicity!
-  monthlyAmount: Int!
-  currency: Currency!
-  autoRenew: Boolean!
-  confirmed: Boolean!
-  startsAt: DateTime!
-  paidUntil: DateTime
-  properties: [Properties!]!
-  deactivation: SubscriptionDeactivation
-  periods: [SubscriptionPeriod!]!
-  memberPlan: MemberPlan!
-  invoices: [Invoice!]!
-}
-
-enum PaymentPeriodicity {
-  monthly
-  quarterly
-  biannual
-  yearly
-  biennial
-  lifetime
-}
-
-enum Currency {
-  CHF
-  EUR
-}
-
-type SubscriptionDeactivation {
-  date: DateTime!
-  reason: SubscriptionDeactivationReason!
-}
-
-enum SubscriptionDeactivationReason {
-  none
-  userSelfDeactivated
-  invoiceNotPaid
-  userReplacedSubscription
-}
-
-type SubscriptionPeriod {
-  id: String!
-  invoiceID: String!
-  amount: Int!
-  createdAt: DateTime!
-  startsAt: DateTime!
-  endsAt: DateTime!
-  paymentPeriodicity: PaymentPeriodicity!
-}
-
-type MemberPlan {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  slug: String!
-  image: Image
-  description: RichText
-  shortDescription: RichText
-  tags: [String!]
-  active: Boolean!
-  amountPerMonthMin: Int!
-  amountPerMonthMax: Int
-  amountPerMonthTarget: Int
-  currency: Currency!
-  maxCount: Int
-  extendable: Boolean!
-  productType: ProductType!
-  externalReward: String
-  availablePaymentMethods: [AvailablePaymentMethod!]!
-  migrateToTargetPaymentMethodID: String
-  successPageId: String
-  failPageId: String
-  confirmationPageId: String
-}
-
-enum ProductType {
-  Subscription
-  Donation
-}
-
-type AvailablePaymentMethod {
-  paymentMethods: [PaymentMethod!]!
-  paymentPeriodicities: [PaymentPeriodicity!]!
-  forceAutoRenewal: Boolean!
-}
-
-type PaymentMethod {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  slug: Slug!
-  description: String!
-  paymentProvider: PaymentProvider
-  active: Boolean!
-  gracePeriod: Int!
-  imageId: String
-  image: Image
-}
-
-scalar Slug
-
-type PaymentProvider {
-  id: String!
-  name: String!
-}
-
-type Invoice {
-  id: String!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  mail: String!
-  description: String
-  paidAt: DateTime
-  manuallySetAsPaidByUserId: String
-  items: [InvoiceItem!]!
-  canceledAt: DateTime
-  currency: Currency!
-  total: Int!
-}
-
-type InvoiceItem {
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  name: String!
-  description: String
-  quantity: Int!
-  amount: Int!
-  total: Int!
-}
-
-type Session {
-  id: String!
-  user: User!
-  createdAt: DateTime!
-  expiresAt: DateTime!
-}
-
-type UserConnection {
-  nodes: [User!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-type PageInfo {
-  startCursor: String
-  endCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-}
-
-input UserFilter {
-  name: String
-  text: String
-  userRole: [String]
-}
-
-enum UserSort {
-  createdAt
-  modifiedAt
-  name
-  firstName
-}
-
-enum SortOrder {
-  Ascending
-  Descending
-}
-
-type ImageConnection {
-  nodes: [Image!]!
-  totalCount: Int!
-  pageInfo: PageInfo!
-}
-
-input ImageFilter {
-  title: String
-  tags: [String!]
-}
-
-enum ImageSort {
-  createdAt
-  modifiedAt
-}
-
-type Comment {
-  id: String!
-  guestUsername: String
-  guestUserImage: Image
-  user: User
-  tags: [Tag!]!
-  authorType: CommentAuthorType!
-  itemID: String!
-  itemType: CommentItemType!
-  parentComment: Comment
-  revisions: [CommentRevision!]!
-  source: String
-  state: CommentState!
-  rejectionReason: CommentRejectionReason
-  featured: Boolean
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  overriddenRatings: [overriddenRating!]
-}
-
-type Tag {
-  id: String!
-  tag: String
-  type: TagType
-  main: Boolean!
-  description: RichText
-  url: String!
-}
-
-enum TagType {
-  Comment
-  Event
-  Author
-  Article
-  Page
-}
-
-enum CommentAuthorType {
-  author
-  team
-  verifiedUser
-  guestUser
-}
-
-enum CommentItemType {
-  article
-  page
-}
-
-type CommentRevision {
-  text: RichText
-  title: String
-  lead: String
-  createdAt: DateTime!
-}
-
-enum CommentState {
-  approved
-  pendingApproval
-  pendingUserChanges
-  rejected
-}
-
-enum CommentRejectionReason {
-  misconduct
-  spam
-}
-
-type overriddenRating {
-  answerId: String!
-  value: Int
-}
-
-type CommentConnection {
-  nodes: [Comment!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input CommentFilter {
-  item: String
-  tags: [String!]
-  states: [CommentState!]
-  itemType: CommentItemType
-  itemID: String
-}
-
-enum CommentSort {
-  modifiedAt
-  createdAt
-}
 
 type PollConnection {
   nodes: [Poll!]!
@@ -440,6 +77,13 @@ type Poll {
   closedAt: DateTime
 }
 
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
 input PollFilter {
   openOnly: Boolean
 }
@@ -448,6 +92,11 @@ enum PollSort {
   OpensAt
   CreatedAt
   ModifiedAt
+}
+
+enum SortOrder {
+  Ascending
+  Descending
 }
 
 type FullPoll {
@@ -484,26 +133,6 @@ scalar VoteValue
 
 type Mutation {
   updatePeerProfile(input: PeerProfileInput!): PeerProfile!
-  createSession(email: String!, password: String!): SessionWithToken!
-  createSessionWithJWT(jwt: String!): SessionWithToken!
-  revokeSession(id: String!): Boolean!
-  revokeActiveSession: Boolean!
-  sessions: [Session!]!
-  sendJWTLogin(url: String!, email: String!): String!
-  sendWebsiteLogin(email: String!): String!
-  createUser(input: UserInput!, password: String!): User
-  updateUser(id: String!, input: UserInput!): User
-  resetUserPassword(id: String!, password: String!, sendMail: Boolean): User
-  deleteUser(id: String!): User
-  uploadImage(input: UploadImageInput!): Image
-  updateImage(id: String!, input: UpdateImageInput!): Image
-  deleteImage(id: String!): Image
-  updateComment(id: String!, revision: CommentRevisionUpdateInput, userID: String, guestUsername: String, guestUserImageID: String, featured: Boolean, source: String, tagIds: [String!], ratingOverrides: [CommentRatingOverrideUpdateInput!]): Comment!
-  createComment(text: RichText, tagIds: [String!], itemID: String!, parentID: String, itemType: CommentItemType!): Comment!
-  approveComment(id: String!): Comment!
-  rejectComment(id: String!, rejectionReason: CommentRejectionReason): Comment!
-  requestChangesOnComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
-  deleteComment(id: String!): Comment!
   createPoll(opensAt: DateTime, closedAt: DateTime, question: String): PollWithAnswers
   createPollAnswer(pollId: String!, answer: String): PollAnswer
   createPollExternalVoteSource(pollId: String!, source: String): PollExternalVoteSource
@@ -523,88 +152,6 @@ input PeerProfileInput {
   callToActionURL: String!
   callToActionImageURL: String
   callToActionImageID: String
-}
-
-type SessionWithToken {
-  id: String!
-  user: User!
-  token: String!
-  createdAt: DateTime!
-  expiresAt: DateTime!
-}
-
-input UserInput {
-  name: String!
-  firstName: String
-  email: String!
-  emailVerifiedAt: DateTime
-  birthday: DateTime
-  address: UserAddressInput
-  flair: String
-  note: String
-  userImageID: String
-  active: Boolean!
-  properties: [PropertiesInput!]!
-  roleIDs: [String!]
-}
-
-input UserAddressInput {
-  company: String
-  streetAddress: String
-  streetAddressNumber: String
-  streetAddress2: String
-  streetAddress2Number: String
-  zipCode: String
-  city: String
-  country: String
-}
-
-input PropertiesInput {
-  key: String!
-  value: String!
-  public: Boolean!
-}
-
-input UploadImageInput {
-  file: Upload!
-  filename: String
-  title: String
-  description: String
-  tags: [String!]
-  link: String
-  source: String
-  license: String
-  focalPoint: InputPoint
-}
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
-
-input InputPoint {
-  x: Float!
-  y: Float!
-}
-
-input UpdateImageInput {
-  filename: String
-  title: String
-  description: String
-  tags: [String!]
-  link: String
-  source: String
-  license: String
-  focalPoint: InputPoint
-}
-
-input CommentRevisionUpdateInput {
-  text: RichText
-  title: String
-  lead: String
-}
-
-input CommentRatingOverrideUpdateInput {
-  answerId: String!
-  value: Int
 }
 
 type PollWithAnswers {

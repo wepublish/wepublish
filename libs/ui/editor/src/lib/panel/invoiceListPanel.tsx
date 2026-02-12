@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
-import { useMeQuery } from '@wepublish/editor/api';
-import { InvoiceFragment } from '@wepublish/editor/api-v2';
+import {
+  getApiClientV2,
+  InvoiceFragment,
+  useMeQuery,
+} from '@wepublish/editor/api-v2';
 import { useTranslation } from 'react-i18next';
 import { Drawer, Message } from 'rsuite';
 
@@ -26,7 +29,10 @@ function InvoiceListPanel({
   onClose,
   onInvoicePaid,
 }: InvoiceListPanelProps) {
-  const { data: me } = useMeQuery();
+  const client = getApiClientV2();
+  const { data: me } = useMeQuery({
+    client,
+  });
   const { t } = useTranslation();
 
   /**

@@ -297,7 +297,7 @@ input BildwurfAdBlockInput {
   zoneID: String
 }
 
-union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
+union BlockContent = BildwurfAdBlock | BreakBlock | CommentBlock | CrowdfundingBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | FlexBlock | HTMLBlock | IFrameBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | StreamableVideoBlock | SubscribeBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TeaserSlotsBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | UnknownBlock | VimeoVideoBlock | YouTubeVideoBlock
 
 input BlockContentInput {
   bildwurfAd: BildwurfAdBlockInput
@@ -307,6 +307,7 @@ input BlockContentInput {
   event: EventBlockInput
   facebookPost: FacebookPostBlockInput
   facebookVideo: FacebookVideoBlockInput
+  flexBlock: FlexBlockInput
   html: HTMLBlockInput
   image: ImageBlockInput
   imageGallery: ImageGalleryBlockInput
@@ -347,6 +348,7 @@ enum BlockType {
   Event
   FacebookPost
   FacebookVideo
+  FlexBlock
   HTML
   Image
   ImageGallery
@@ -369,6 +371,16 @@ enum BlockType {
   TwitterTweet
   VimeoVideo
   YouTubeVideo
+}
+
+type BlockWithAlignment implements HasOneBlockContent {
+  alignment: FlexAlignment!
+  block: BlockContent
+}
+
+input BlockWithAlignmentInput {
+  alignment: FlexAlignmentInput!
+  block: BlockContentInput
 }
 
 type BreakBlock implements BaseBlock & HasImage {
@@ -446,7 +458,8 @@ type Comment implements HasOptionalUser {
   overriddenRatings: [OverriddenRating!]!
   parentComment: Comment
   parentID: String
-  rejectionReason: String
+  rejectionReason: CommentRejectionReason
+  revisions: [CommentRevision!]!
   source: String
   state: CommentState!
   tags: [Tag!]!
@@ -498,14 +511,12 @@ type CommentCreatedAction implements BaseAction & HasComment {
   date: DateTime!
 }
 
-input CommentInput {
-  challenge: ChallengeInput
-  guestUsername: String
-  itemID: String!
-  itemType: CommentItemType!
-  parentID: String
-  text: RichText!
-  title: String
+input CommentFilter {
+  item: String
+  itemID: String
+  itemType: CommentItemType
+  states: [CommentState!]
+  tags: [String!]
 }
 
 enum CommentItemType {
@@ -538,8 +549,28 @@ type CommentRatingSystemAnswer {
   type: RatingSystemType!
 }
 
+enum CommentRejectionReason {
+  misconduct
+  spam
+}
+
+type CommentRevision {
+  createdAt: DateTime!
+  lead: String
+  text: RichText
+  title: String
+}
+
+input CommentRevisionInput {
+  lead: String
+  text: RichText
+  title: String
+}
+
 enum CommentSort {
-  rating
+  CreatedAt
+  ModifiedAt
+  Rating
 }
 
 enum CommentState {
@@ -547,13 +578,6 @@ enum CommentState {
   pendingApproval
   pendingUserChanges
   rejected
-}
-
-input CommentUpdateInput {
-  id: String!
-  lead: String
-  text: RichText
-  title: String
 }
 
 type Consent {
@@ -779,6 +803,7 @@ enum EditorBlockType {
   Crowdfunding
   Embed
   Event
+  FlexBlock
   HTML
   Image
   ImageGallery
@@ -946,7 +971,7 @@ input FacebookVideoBlockInput {
 type FlexAlignment {
   h: Int!
   i: String!
-  static: Boolean!
+  static: Boolean
   w: Int!
   x: Int!
   y: Int!
@@ -955,10 +980,23 @@ type FlexAlignment {
 input FlexAlignmentInput {
   h: Int!
   i: String!
-  static: Boolean!
+  static: Boolean
   w: Int!
   x: Int!
   y: Int!
+}
+
+type FlexBlock implements BaseBlock {
+  blockStyle: String
+  blockStyleName: String
+  blocks: [BlockWithAlignment!]!
+  type: BlockType!
+}
+
+input FlexBlockInput {
+  blockStyle: String
+  blockStyleName: String
+  blocks: [BlockWithAlignmentInput!]!
 }
 
 type FlexTeaser {
@@ -1050,6 +1088,10 @@ interface HasMemberPlan {
   memberPlan: MemberPlan!
   memberPlanID: String!
   memberplan: MemberPlan
+}
+
+interface HasOneBlockContent {
+  block: BlockContent
 }
 
 interface HasOptionalArticle {
@@ -1155,7 +1197,7 @@ input IFrameBlockInput {
   width: Int
 }
 
-type Image {
+type Image implements HasOptionalPeerLc {
   createdAt: DateTime!
   description: String
   extension: String!
@@ -1169,11 +1211,13 @@ type Image {
   link: String
   mimeType: String!
   modifiedAt: DateTime!
+  peer: Peer
+  peerId: String
   source: String
   tags: [String!]!
   title: String
   transformURL(input: ImageTransformation): String
-  url: String
+  url: String!
   width: Int!
 }
 
@@ -1193,6 +1237,11 @@ input ImageBlockInput {
   caption: String
   imageID: String
   linkUrl: String
+}
+
+input ImageFilter {
+  tags: [String!]
+  title: String
 }
 
 type ImageGalleryBlock implements BaseBlock {
@@ -1227,6 +1276,11 @@ enum ImageRotation {
   Rotate270
 }
 
+enum ImageSort {
+  CreatedAt
+  ModifiedAt
+}
+
 input ImageTransformation {
   blur: Boolean
   grayscale: Boolean
@@ -1256,12 +1310,6 @@ enum ImportedEventSort {
   ENDS_AT
   MODIFIED_AT
   STARTS_AT
-}
-
-type ImportedEventsDocument {
-  nodes: [EventFromSource!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
 }
 
 type InstagramPostBlock implements BaseBlock {
@@ -1416,12 +1464,6 @@ type MemberPlan implements HasImage {
   tags: [String!]
 }
 
-type MemberPlanConnection {
-  nodes: [MemberPlan!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
 input MemberPlanFilter {
   active: Boolean
   name: String
@@ -1435,8 +1477,11 @@ enum MemberPlanSort {
 }
 
 type Mutation {
-  """Create a new comment"""
-  addComment(input: CommentInput!): Comment!
+  """Adds a new comment made by you."""
+  addUserComment(challenge: ChallengeInput, guestUsername: String, itemID: String!, itemType: CommentItemType!, parentID: String, text: RichText!, title: String): Comment!
+
+  """Approves a comment"""
+  approveComment(id: String!): Comment!
 
   """Cancels a subscription."""
   cancelSubscription(id: String!, reason: SubscriptionDeactivationReason!): PublicSubscription!
@@ -1456,6 +1501,9 @@ type Mutation {
   """Creates a new block style."""
   createBlockStyle(blocks: [EditorBlockType!]!, name: String!): BlockStyle!
 
+  """Creates a comment for any user"""
+  createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, tagIds: [String!], text: RichText): Comment!
+
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
 
@@ -1467,6 +1515,12 @@ type Mutation {
 
   """Creates a new invoice."""
   createInvoice(currency: Currency!, description: String, dueAt: DateTime!, items: [InvoiceItemInput!]!, mail: String!, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime!, subscriptionID: String): Invoice!
+
+  """Returns a JWT that can be used to login as another user."""
+  createJWTForUser(expiresInMinutes: Float!, userId: String!): SessionWithToken!
+
+  """Returns a JWT that is valid for 1min for the current logged in user."""
+  createJWTForWebsiteLogin: SessionWithToken!
 
   """Creates a new memberplan."""
   createMemberPlan(active: Boolean!, amountPerMonthMax: Int, amountPerMonthMin: Int!, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
@@ -1514,6 +1568,9 @@ type Mutation {
   """Creates a token and returns it's secret once."""
   createToken(name: String!): TokenWithSecret!
 
+  """Creates a new user."""
+  createUser(active: Boolean!, address: UserAddressInput, birthday: DateTime, email: String!, emailVerifiedAt: DateTime, firstName: String, flair: String, name: String!, note: String, password: String, properties: [PropertyInput!]!, roleIDs: [String!]!, userImageID: String): SensitiveDataUser!
+
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
 
@@ -1538,12 +1595,18 @@ type Mutation {
   """Deletes an existing block style."""
   deleteBlockStyle(id: String!): BlockStyle!
 
+  """Deletes a comment"""
+  deleteComment(id: String!): Comment!
+
   "\n      Deletes an existing consent.\n    "
   deleteConsent(id: String!): Consent!
   deleteCrowdfunding(id: String!): Boolean
 
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
+
+  """Deletes an existing image."""
+  deleteImage(id: String!): Image!
 
   """Deletes an existing invoice."""
   deleteInvoice(id: String!): Invoice!
@@ -1586,6 +1649,9 @@ type Mutation {
 
   """Deletes a token."""
   deleteToken(id: String!): Token!
+
+  """Deletes an existing user."""
+  deleteUser(id: String!): SensitiveDataUser!
 
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
@@ -1634,13 +1700,27 @@ type Mutation {
   """
   This mutation registers a new member by providing name, email, and other required information.
   """
-  registerMember(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput!, email: String!, firstName: String, name: String!, password: String): Registration!
+  registerMember(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput!, email: String!, firstName: String, flair: String, name: String!, password: String): Registration!
+
+  """Rejects a comment"""
+  rejectComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
 
   """Renews a subscription."""
   renewSubscription(id: String!): PublicSubscription!
 
+  """Requests the user to change the comment's content"""
+  requestChangesOnComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
+
+  """Resets the password of a user."""
+  resetPassword(id: String!, password: String, sendMail: Boolean): SensitiveDataUser!
+
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
+
+  """
+  This mutation sends a login link to the email if the user exists. Method will always return email address
+  """
+  sendJWTLogin(email: String!): String!
 
   """
   This mutation sends a login link to the email if the user exists. Method will always return email address
@@ -1667,8 +1747,8 @@ type Mutation {
   """Updates an existing block style."""
   updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
 
-  """Update an existing comment"""
-  updateComment(input: CommentUpdateInput!): Comment!
+  """Update any existing comment"""
+  updateComment(featured: Boolean, guestUserImageID: String, guestUsername: String, id: String!, ratingOverrides: [OverriddenRatingInput!], revision: CommentRevisionInput, source: String, tagIds: [String!], userID: String): Comment!
 
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
@@ -1676,8 +1756,14 @@ type Mutation {
   """Updates a single crowdfunding"""
   updateCrowdfunding(input: UpdateCrowdfundingInput!): Crowdfunding!
 
+  """Updates the current logged in user."""
+  updateCurrentUser(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput, email: String, firstName: String, flair: String, name: String, password: String): SensitiveDataUser!
+
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
+
+  """Updates an existing image."""
+  updateImage(description: String, filename: String, focalPoint: FocalPointInput, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
 
   """Updates an existing invoice."""
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
@@ -1698,9 +1784,6 @@ type Mutation {
 
   """Updates an existing payment method."""
   updatePaymentMethod(active: Boolean, description: String, gracePeriod: Int, id: String!, imageId: String, name: String, paymentProviderID: String, slug: Slug): PaymentMethod!
-
-  """This mutation allows to update the Payment Provider Customers"""
-  updatePaymentProviderCustomers(input: [PaymentProviderCustomerInput!]!): [PaymentProviderCustomer!]!
 
   """Updates a paywall."""
   updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
@@ -1729,10 +1812,11 @@ type Mutation {
   """Updates an existing tag."""
   updateTag(description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
 
-  """
-  This mutation allows to update the user's data by taking an input of type UserInput.
-  """
-  updateUser(input: UserInput!): SensitiveDataUser
+  """Updates an existing user."""
+  updateUser(active: Boolean, address: UserAddressInput, birthday: DateTime, email: String, emailVerifiedAt: DateTime, firstName: String, flair: String, id: String, name: String, note: String, properties: [PropertyInput!], roleIDs: [String!], userImageID: String): SensitiveDataUser!
+
+  """Updates a comment you made."""
+  updateUserComment(id: String!, lead: String, text: RichText, title: String): Comment!
 
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
@@ -1748,8 +1832,11 @@ type Mutation {
   """"""
   upgradeUserSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
 
+  """Uploads a new image."""
+  uploadImage(description: String, file: Upload!, filename: String, focalPoint: FocalPointInput, license: String, link: String, source: String, tags: [String!]!, title: String): Image!
+
   """This mutation allows to upload and update the user's profile image."""
-  uploadUserProfileImage(uploadImageInput: UploadImageInput): SensitiveDataUser
+  uploadUserProfileImage(description: String, file: Upload!, filename: String, focalPoint: FocalPointInput, license: String, link: String, source: String, tags: [String!]!, title: String): SensitiveDataUser
 
   """
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
@@ -1787,6 +1874,11 @@ type NonDbProperty {
 }
 
 type OverriddenRating {
+  answerId: String!
+  value: Int
+}
+
+input OverriddenRatingInput {
   answerId: String!
   value: Int
 }
@@ -1904,8 +1996,32 @@ type PaginatedAuthors {
   totalCount: Int!
 }
 
+type PaginatedComments {
+  nodes: [Comment!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type PaginatedEvents {
   nodes: [Event!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedEventsFromSources {
+  nodes: [EventFromSource!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedImages {
+  nodes: [Image!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedMemberPlans {
+  nodes: [MemberPlan!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -1916,7 +2032,7 @@ type PaginatedPages {
   totalCount: Int!
 }
 
-type PaginatedPeerArticle {
+type PaginatedPeerArticles {
   nodes: [PeerArticle!]!
   pageInfo: PageInfo!
   totalCount: Int!
@@ -1924,6 +2040,18 @@ type PaginatedPeerArticle {
 
 type PaginatedPollVotes {
   nodes: [PollVote!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedSensitiveDataUsers {
+  nodes: [SensitiveDataUser!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedTags {
+  nodes: [Tag!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -1980,11 +2108,6 @@ type PaymentProvider {
 }
 
 type PaymentProviderCustomer {
-  customerID: String!
-  paymentProviderID: String!
-}
-
-input PaymentProviderCustomerInput {
   customerID: String!
   paymentProviderID: String!
 }
@@ -2091,12 +2214,14 @@ type PeerImage {
   mSquare: String
   mimeType: String!
   modifiedAt: DateTime!
+  peer: Peer
+  peerId: String
   s: String
   sSquare: String
   source: String
   tags: [String!]!
   title: String
-  url: String
+  url: String!
   width: Int!
   xl: String
   xlSquare: String
@@ -2252,6 +2377,7 @@ input PropertyInput {
 type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   autoRenew: Boolean!
   canExtend: Boolean!
+  confirmed: Boolean!
   createdAt: DateTime!
   currency: Currency!
   deactivation: SubscriptionDeactivation
@@ -2296,10 +2422,10 @@ type Query {
   articles(cursorId: String, filter: ArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedArticles!
 
   """Get an author by ID or slug"""
-  author(id: String, slug: Slug): Author
+  author(id: String, slug: String): Author
 
   """Get a paginated list of authors with optional filtering and sorting"""
-  authors(cursor: String, filter: AuthorFilter, order: SortOrder = Descending, skip: Int, sort: AuthorSort = ModifiedAt, take: Int): PaginatedAuthors!
+  authors(cursorId: String, filter: AuthorFilter, order: SortOrder = Descending, skip: Int, sort: AuthorSort = ModifiedAt, take: Int): PaginatedAuthors!
   banner(id: String!): Banner!
   banners(skip: Int!, take: Int!): [Banner!]!
 
@@ -2316,8 +2442,14 @@ type Query {
   """
   checkInvoiceStatus(id: String!): Invoice!
 
-  """This query returns the comments of an item."""
-  comments(itemId: String!, order: SortOrder = Descending, sort: CommentSort): [Comment!]!
+  """Returns a comment by id."""
+  comment(id: String!): Comment!
+
+  """Returns a paginated list of comments based on the filters given."""
+  comments(cursorId: String, filter: CommentFilter, order: SortOrder = Descending, skip: Int = 0, sort: CommentSort = ModifiedAt, take: Int = 10): PaginatedComments!
+
+  """Returns a sorted and nested list of comments for an item."""
+  commentsForItem(itemId: String!, itemType: CommentItemType!, order: SortOrder = Descending, sort: CommentSort = Rating): [Comment!]!
 
   "\n      Returns a consent by id.\n    "
   consent(id: String!): Consent!
@@ -2346,17 +2478,20 @@ type Query {
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
-  """Returns an image by id."""
-  getImage(id: String!): Image!
-
   "\n      Returns the most viewed articles in descending order.\n    "
   hotAndTrending(start: DateTime, take: Int = 10): [Article!]!
+
+  """Returns a image by id."""
+  image(id: String!): Image!
+
+  """Returns a paginated list of images based on the filters given."""
+  images(cursorId: String, filter: ImageFilter, order: SortOrder = Descending, skip: Int = 0, sort: ImageSort = ModifiedAt, take: Int = 10): PaginatedImages!
 
   "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
   importedEvent(filter: SingleEventFilter!): EventFromSource!
 
   "\n      Returns a list of imported events from external sources, transformed to match our model.\n    "
-  importedEvents(filter: ImportedEventFilter, order: Int, skip: Int, sort: ImportedEventSort, take: Int): ImportedEventsDocument!
+  importedEvents(filter: ImportedEventFilter, order: Int, skip: Int, sort: ImportedEventSort, take: Int): PaginatedEventsFromSources!
 
   "\n      Returns a list of external source ids of already imported events.\n    "
   importedEventsIds: [String!]!
@@ -2377,7 +2512,7 @@ type Query {
   memberPlan(id: String, slug: Slug): MemberPlan!
 
   """Returns a paginated list of memberplans based on the filters given."""
-  memberPlans(cursorId: String, filter: MemberPlanFilter, order: SortOrder = Ascending, skip: Int = 0, sort: MemberPlanSort = ModifiedAt, take: Int = 10): MemberPlanConnection!
+  memberPlans(cursorId: String, filter: MemberPlanFilter, order: SortOrder = Ascending, skip: Int = 0, sort: MemberPlanSort = ModifiedAt, take: Int = 10): PaginatedMemberPlans!
 
   """Returns a navigation by id."""
   navigation(id: String!): Navigation!
@@ -2418,7 +2553,7 @@ type Query {
   peer(id: String, slug: String): Peer
 
   """Returns a paginated list of peer articles based on the filters given."""
-  peerArticles(filter: PeerArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedPeerArticle!
+  peerArticles(filter: PeerArticleFilter, order: SortOrder = Descending, skip: Int = 0, sort: ArticleSort = PublishedAt, take: Int = 10): PaginatedPeerArticles!
 
   """This query returns the peer profile."""
   peerProfile: PeerProfile!
@@ -2482,7 +2617,7 @@ type Query {
   """This query returns a list of tags"""
   tags(
     """Cursor for pagination"""
-    cursor: String
+    cursorId: String
 
     """Filter for tags"""
     filter: TagFilter
@@ -2498,13 +2633,16 @@ type Query {
 
     """Number of items to fetch"""
     take: Int! = 10
-  ): TagConnection!
+  ): PaginatedTags!
 
   """Returns a list of all tokens."""
   tokens: [Token!]!
 
   """"""
   upgradeUserSubscriptionInfo(memberPlanId: String!, subscriptionId: String!): UpgradeSubscription!
+
+  """Returns a user by id."""
+  user(id: String!): SensitiveDataUser!
 
   "\n      Returns a single userConsent by id.\n    "
   userConsent(id: String!): UserConsent!
@@ -2524,6 +2662,27 @@ type Query {
 
   """This query returns the subscriptions of the authenticated user."""
   userSubscriptions: [PublicSubscription!]!
+
+  """Returns a paginated list of users based on the filters given."""
+  users(
+    """Cursor for pagination"""
+    cursorId: String
+
+    """Filter for users"""
+    filter: UserFilter
+
+    """Sort order"""
+    order: SortOrder = Descending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: UserSort! = CreatedAt
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedSensitiveDataUsers!
   versionInformation: VersionInformation!
 }
 
@@ -2590,16 +2749,22 @@ type SensitiveDataUser implements BaseUser {
   active: Boolean!
   address: UserAddress
   birthday: DateTime
+  createdAt: DateTime!
   email: String!
+  emailVerifiedAt: DateTime
   firstName: String
   flair: String
   id: String!
   image: Image
+  lastLogin: DateTime
+  modifiedAt: DateTime!
   name: String!
+  note: String
   paymentProviderCustomers: [PaymentProviderCustomer!]
   permissions: [String!]!
   properties: [Property!]!
   roleIDs: [String!]!
+  roles: [UserRole!]!
   userImageID: String
 }
 
@@ -2794,10 +2959,12 @@ type SubscriptionInterval {
 }
 
 type SubscriptionPeriod {
-  amount: Int!
+  amount: Float!
   createdAt: DateTime!
   endsAt: DateTime!
   id: String!
+  invoiceID: String!
+  isPaid: Boolean!
   modifiedAt: DateTime!
   paymentPeriodicity: PaymentPeriodicity!
   startsAt: DateTime!
@@ -2820,12 +2987,6 @@ type Tag {
   tag: String
   type: TagType!
   url: String!
-}
-
-type TagConnection {
-  nodes: [Tag!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
 }
 
 input TagFilter {
@@ -3117,18 +3278,6 @@ type UpgradeSubscription {
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
-input UploadImageInput {
-  description: String
-  file: Upload!
-  filename: String
-  focalPoint: FocalPointInput
-  license: String
-  link: String
-  source: String
-  tags: [String!]
-  title: String
-}
-
 type User implements BaseUser {
   active: Boolean!
   firstName: String
@@ -3136,6 +3285,7 @@ type User implements BaseUser {
   id: String!
   image: Image
   name: String!
+  note: String
   properties: [Property!]!
   roleIDs: [String!]!
   userImageID: String
@@ -3186,14 +3336,10 @@ enum UserEvent {
   TEST_MAIL
 }
 
-input UserInput {
-  address: UserAddressInput
-  birthday: DateTime
-  email: String!
-  firstName: String
-  flair: String
-  name: String!
-  uploadImageInput: UploadImageInput
+input UserFilter {
+  name: String
+  text: String
+  userRole: [String!]
 }
 
 type UserRole {
@@ -3214,6 +3360,13 @@ input UserRoleFilter {
 enum UserRoleSort {
   CreatedAt
   ModifiedAt
+}
+
+enum UserSort {
+  CreatedAt
+  FirstName
+  ModifiedAt
+  Name
 }
 
 type VersionInformation {
