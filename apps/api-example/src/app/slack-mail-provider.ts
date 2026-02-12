@@ -5,16 +5,9 @@ import {
 } from '@wepublish/mail/api';
 import fetch from 'cross-fetch';
 
-export interface SlackMailProviderProps extends MailProviderProps {
-  webhookURL: string;
-}
-
 export class SlackMailProvider extends BaseMailProvider {
-  readonly webhookURL: string;
-
-  constructor(props: SlackMailProviderProps) {
+  constructor(props: MailProviderProps) {
     super(props);
-    this.webhookURL = props.webhookURL;
   }
 
   async webhookForSendMail() {
@@ -22,6 +15,7 @@ export class SlackMailProvider extends BaseMailProvider {
   }
 
   async sendMail(props: SendMailProps): Promise<void> {
+    const config = await this.getConfig();
     const message = {
       blocks: [
         {
@@ -36,7 +30,7 @@ export class SlackMailProvider extends BaseMailProvider {
       ],
     };
 
-    await fetch(this.webhookURL, {
+    await fetch(config.slack_webhookURL, {
       method: 'POST',
       headers: {
         'Conetent-type': 'application/json',
@@ -54,7 +48,11 @@ export class SlackMailProvider extends BaseMailProvider {
     }));
   }
 
-  getTemplateUrl() {
+  async getTemplateUrl() {
     return 'http://example.com/';
+  }
+
+  async getName(): Promise<string> {
+    return (await this.getConfig())?.name ?? 'unknown';
   }
 }

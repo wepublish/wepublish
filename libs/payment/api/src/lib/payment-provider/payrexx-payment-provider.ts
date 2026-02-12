@@ -10,50 +10,51 @@ import {
 } from './payment-provider';
 import { logger } from '@wepublish/utils/api';
 import { PaymentState } from '@prisma/client';
+import { Gateway, GatewayStatus } from '../payrexx/gateway-client';
+import { Transaction, TransactionStatus } from '../payrexx/transaction-client';
+import { PayrexxFactory } from '../payrexx/payrexx-factory';
 import {
-  Gateway,
-  GatewayClient,
-  GatewayStatus,
-} from '../payrexx/gateway-client';
-import {
-  Transaction,
-  TransactionClient,
-  TransactionStatus,
-} from '../payrexx/transaction-client';
-
-export interface PayrexxPaymentProviderProps extends PaymentProviderProps {
-  gatewayClient: GatewayClient;
-  transactionClient: TransactionClient;
-  webhookApiKey: string;
-  psp: number[];
-  pm: string[];
-  vatRate: number;
-}
-
+  mapPayrexxPaymentMethods,
+  mapPayrexxPSPs,
+} from '../payment.methode.mapper';
 export class PayrexxPaymentProvider extends BasePaymentProvider {
-  readonly gatewayClient: GatewayClient;
-  readonly transactionClient: TransactionClient;
-  readonly webhookApiKey: string;
-  readonly psp: number[];
-  readonly pm: string[];
-  readonly vatRate: number;
+  payrexxFactory = PayrexxFactory;
 
-  constructor(props: PayrexxPaymentProviderProps) {
+  constructor(props: PaymentProviderProps) {
     super(props);
-    this.gatewayClient = props.gatewayClient;
-    this.transactionClient = props.transactionClient;
-    this.webhookApiKey = props.webhookApiKey;
-    this.psp = props.psp;
-    this.pm = props.pm;
-    this.vatRate = props.vatRate;
+  }
+
+  public overridePayrexxFactory(payrexxFactory: typeof PayrexxFactory) {
+    this.payrexxFactory = payrexxFactory;
+  }
+
+  async getPayrexxGateway() {
+    const config = await this.getConfig();
+    if (!config.apiKey || !config.payrexx_instancename) {
+      throw new Error('Payrexx missing api key or instance name missing');
+    }
+    return new this.payrexxFactory({
+      baseUrl: 'https://api.payrexx.com/v1.0/',
+      instance: config.payrexx_instancename,
+      secret: config.apiKey,
+    });
   }
 
   async webhookForPaymentIntent(
     props: WebhookForPaymentIntentProps
   ): Promise<WebhookResponse> {
     const apiKey = props.req.query?.['apiKey'] as string;
+    const config = await this.getConfig();
 
-    if (!this.timeConstantCompare(apiKey, this.webhookApiKey)) {
+    if (
+      !this.timeConstantCompare(
+        apiKey,
+        this.assertProperty(
+          'webhookEndpointSecret',
+          config.webhookEndpointSecret
+        )
+      )
+    ) {
       return {
         status: 403,
         message: 'Invalid Api Key',
@@ -131,14 +132,15 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
   async checkIntentStatus({
     intentID,
   }: CheckIntentProps): Promise<IntentState> {
+    const payrexx = await this.getPayrexxGateway();
     const transaction =
-      await this.transactionClient.retrieveTransaction(intentID);
+      await payrexx.transactionClient.retrieveTransaction(intentID);
 
     if (transaction) {
       return this.checkTransactionIntentStatus(transaction);
     }
 
-    const gateway = await this.gatewayClient.getGateway(intentID);
+    const gateway = await payrexx.gatewayClient.getGateway(intentID);
 
     if (gateway) {
       return this.checkGatewayIntentStatus(gateway);
@@ -170,14 +172,16 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       if (!customerID) {
         throw new Error('No customerID given');
       }
+      const payrexx = await this.getPayrexxGateway();
 
-      transaction = await this.transactionClient.chargePreAuthorizedTransaction(
-        +customerID,
-        {
-          amount,
-          referenceId: paymentID,
-        }
-      );
+      transaction =
+        await payrexx.transactionClient.chargePreAuthorizedTransaction(
+          +customerID,
+          {
+            amount,
+            referenceId: paymentID,
+          }
+        );
     } catch (e) {
       if (backgroundTask) {
         throw e;
@@ -216,16 +220,17 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       preAuthorization?: boolean;
       chargeOnAuthorization?: boolean;
     } = {};
-    if (this.offSessionPayments) {
+    if (await this.isOffSession()) {
       tokenization = {
         preAuthorization: true,
         chargeOnAuthorization: true,
       };
     }
-
-    const gateway = await this.gatewayClient.createGateway({
-      psp: this.psp,
-      pm: this.pm,
+    const payrexx = await this.getPayrexxGateway();
+    const config = await this.getConfig();
+    const gateway = await payrexx.gatewayClient.createGateway({
+      psp: mapPayrexxPSPs(config.payrexx_psp),
+      pm: mapPayrexxPaymentMethods(config.payrexx_pm),
       referenceId: paymentID,
       amount,
       fields: {
@@ -236,7 +241,10 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       successRedirectUrl: successURL as string,
       failedRedirectUrl: failureURL as string,
       cancelRedirectUrl: failureURL as string,
-      vatRate: this.vatRate,
+      vatRate: this.assertProperty(
+        'payrexx_vatrate',
+        config.payrexx_vatrate
+      ).toNumber(),
       currency,
       ...tokenization,
     });

@@ -25,7 +25,7 @@ export class RemoteSubscriptionsService {
       input?.autoRenew === false
     ) {
       throw new Error(
-        `It is not possible to update the subscription with payment provider "${paymentProvider.name}".`
+        `It is not possible to update the subscription with payment provider "${paymentProvider.getName()}".`
       );
     }
 

@@ -1,0 +1,65 @@
+query PaymentProviderSettings {
+  paymentProviderSettings {
+    bexio_accountId
+    bexio_countryId
+    bexio_invoiceMailBodyNewMembership
+    bexio_invoiceMailBodyRenewalMembership
+    bexio_invoiceMailSubjectNewMembership
+    bexio_invoiceMailSubjectRenewalMembership
+    bexio_invoiceTemplateNewMembership
+    bexio_invoiceTemplateRenewalMembership
+    bexio_invoiceTitleNewMembership
+    bexio_invoiceTitleRenewalMembership
+    bexio_markInvoiceAsOpen
+    bexio_taxId
+    bexio_unitId
+    bexio_userId
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    mollie_apiBaseUrl
+    mollie_methods
+    name
+    offSessionPayments
+    payrexx_instancename
+    payrexx_pm
+    payrexx_psp
+    payrexx_vatrate
+    stripe_methods
+    type
+  }
+}
+
+mutation UpdatePaymentProviderSetting($updatePaymentProviderSettingId: String!, $apiKey: String, $bexioAccountId: Float, $bexioCountryId: Float, $bexioInvoiceMailBodyNewMembership: String, $bexioInvoiceMailBodyRenewalMembership: String, $bexioInvoiceMailSubjectNewMembership: String, $bexioInvoiceMailSubjectRenewalMembership: String, $bexioInvoiceTemplateNewMembership: String, $bexioInvoiceTemplateRenewalMembership: String, $bexioInvoiceTitleNewMembership: String, $bexioInvoiceTitleRenewalMembership: String, $bexioMarkInvoiceAsOpen: Boolean, $bexioTaxId: Float, $bexioUnitId: Float, $bexioUserId: Float, $mollieApiBaseUrl: String, $mollieMethods: [PaymentMethodMollie!], $name: String, $offSessionPayments: Boolean, $payrexxInstancename: String, $payrexxPm: [PayrexxPM!], $payrexxPsp: [PayrexxPSP!], $payrexxVatrate: String, $stripeMethods: [StripePaymentMethod!], $webhookEndpointSecret: String) {
+  updatePaymentProviderSetting(id: $updatePaymentProviderSettingId, apiKey: $apiKey, bexio_accountId: $bexioAccountId, bexio_countryId: $bexioCountryId, bexio_invoiceMailBodyNewMembership: $bexioInvoiceMailBodyNewMembership, bexio_invoiceMailBodyRenewalMembership: $bexioInvoiceMailBodyRenewalMembership, bexio_invoiceMailSubjectNewMembership: $bexioInvoiceMailSubjectNewMembership, bexio_invoiceMailSubjectRenewalMembership: $bexioInvoiceMailSubjectRenewalMembership, bexio_invoiceTemplateNewMembership: $bexioInvoiceTemplateNewMembership, bexio_invoiceTemplateRenewalMembership: $bexioInvoiceTemplateRenewalMembership, bexio_invoiceTitleNewMembership: $bexioInvoiceTitleNewMembership, bexio_invoiceTitleRenewalMembership: $bexioInvoiceTitleRenewalMembership, bexio_markInvoiceAsOpen: $bexioMarkInvoiceAsOpen, bexio_taxId: $bexioTaxId, bexio_unitId: $bexioUnitId, bexio_userId: $bexioUserId, mollie_apiBaseUrl: $mollieApiBaseUrl, mollie_methods: $mollieMethods, name: $name, offSessionPayments: $offSessionPayments, payrexx_instancename: $payrexxInstancename, payrexx_pm: $payrexxPm, payrexx_psp: $payrexxPsp, payrexx_vatrate: $payrexxVatrate, stripe_methods: $stripeMethods, webhookEndpointSecret: $webhookEndpointSecret) {
+    bexio_accountId
+    bexio_countryId
+    bexio_invoiceMailBodyNewMembership
+    bexio_invoiceMailBodyRenewalMembership
+    bexio_invoiceMailSubjectNewMembership
+    bexio_invoiceMailSubjectRenewalMembership
+    bexio_invoiceTemplateNewMembership
+    bexio_invoiceTemplateRenewalMembership
+    bexio_invoiceTitleNewMembership
+    bexio_invoiceTitleRenewalMembership
+    bexio_markInvoiceAsOpen
+    bexio_taxId
+    bexio_unitId
+    bexio_userId
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    mollie_apiBaseUrl
+    mollie_methods
+    name
+    offSessionPayments
+    payrexx_instancename
+    payrexx_pm
+    payrexx_psp
+    payrexx_vatrate
+    stripe_methods
+    type
+  }
+}

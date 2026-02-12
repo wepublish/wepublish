@@ -55,6 +55,7 @@ import { MemberContext } from '@wepublish/membership/api';
 import { BlockStylesDataloaderService } from '@wepublish/block-content/api';
 import { URLAdapter } from '@wepublish/nest-modules';
 import { createSafeHostUrl } from '@wepublish/peering/api';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 /**
  * Peered article cache configuration and setup
@@ -189,6 +190,7 @@ export interface ContextOptions {
   readonly paymentProviders: PaymentProvider[];
   readonly hooks?: Hooks;
   readonly challenge: ChallengeProvider;
+  readonly kv: KvTtlCacheService;
 }
 
 export interface SendMailFromProviderProps {
@@ -616,11 +618,12 @@ export async function contextFromRequest(
     blockStyleById: new BlockStylesDataloaderService(prisma),
   };
 
+  // Workaround since context will be deleted anyways
+  const kv: any = {};
   const mailContext = new MailContext({
     prisma,
     mailProvider,
-    defaultFromAddress: mailContextOptions.defaultFromAddress,
-    defaultReplyToAddress: mailContextOptions.defaultReplyToAddress,
+    kv,
   });
 
   const generateJWTWrapper: Context['generateJWT'] = ({

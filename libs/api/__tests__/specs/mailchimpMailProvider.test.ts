@@ -3,6 +3,9 @@ import {
   MailProviderTemplate,
 } from '@wepublish/mail/api';
 import nock from 'nock';
+import { PrismaClient } from '@prisma/client';
+import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 let mailChimpMailProvider: MailchimpMailProvider;
 
@@ -10,6 +13,8 @@ let listTemplates: nock.Scope;
 let listTemplatesInvalidKey: nock.Scope;
 let sendMail: nock.Scope;
 let sendTemplate: nock.Scope;
+const prisma: PrismaClient = new PrismaClient();
+const kv: KvTtlCacheService = createKvMock();
 
 describe('Mailchimp Mail Provider', () => {
   beforeAll(() => {
@@ -62,14 +67,26 @@ describe('Mailchimp Mail Provider', () => {
       );
   });
 
-  test('should be able to be created', () => {
+  test('should be able to be created', async () => {
+    await kv.setNs(
+      'settings:mailprovider',
+      'mailchimp',
+      JSON.stringify({
+        id: 'mailchimp',
+        type: 'mailchimp',
+        name: 'Mailchimp',
+        fromAddress: 'dev@wepublish.ch',
+        replyTpAddress: 'dev@wepublish.ch',
+        webhookEndpointSecret: 'fakeSecret',
+        apiKey: 'fakeAPIkey',
+        mailchimp_baseURL: 'https://mailchimp.com',
+      })
+    );
+
     mailChimpMailProvider = new MailchimpMailProvider({
-      baseURL: 'https://mailchimp.com',
-      apiKey: 'fakeAPIkey',
-      webhookEndpointSecret: 'fakeSecret',
-      fromAddress: 'dev@wepublish.ch',
       id: 'mailchimp',
-      name: 'Mailchimp',
+      prisma,
+      kv,
     });
 
     expect(mailChimpMailProvider).toBeDefined();
@@ -101,13 +118,25 @@ describe('Mailchimp Mail Provider', () => {
   });
 
   test('loads templates', async () => {
+    await kv.setNs(
+      'settings:mailprovider',
+      'mailchimp',
+      JSON.stringify({
+        id: 'mailchimp',
+        type: 'mailchimp',
+        name: 'Mailchimp',
+        fromAddress: 'dev@wepublish.ch',
+        replyTpAddress: 'dev@wepublish.ch',
+        webhookEndpointSecret: 'fakeSecret',
+        apiKey: 'md-12345678',
+        mailchimp_baseURL: 'https://mailchimp.com',
+      })
+    );
+
     mailChimpMailProvider = new MailchimpMailProvider({
-      baseURL: 'https://mailchimp.com',
-      apiKey: 'md-12345678',
-      webhookEndpointSecret: 'fakeSecret',
-      fromAddress: 'dev@wepublish.ch',
       id: 'mailchimp',
-      name: 'Mailchimp',
+      prisma,
+      kv,
     });
 
     const response = await mailChimpMailProvider.getTemplates();
@@ -120,13 +149,24 @@ describe('Mailchimp Mail Provider', () => {
   });
 
   test('returns error when using invalid key', async () => {
+    await kv.setNs(
+      'settings:mailprovider',
+      'mailchimp',
+      JSON.stringify({
+        id: 'mailchimp',
+        type: 'mailchimp',
+        name: 'Mailchimp',
+        fromAddress: 'dev@wepublish.ch',
+        replyTpAddress: 'dev@wepublish.ch',
+        webhookEndpointSecret: 'fakeSecret',
+        apiKey: 'invalid-key',
+        mailchimp_baseURL: 'https://mailchimp.com',
+      })
+    );
     mailChimpMailProvider = new MailchimpMailProvider({
-      baseURL: 'https://mailchimp.com',
-      apiKey: 'invalid-key',
-      webhookEndpointSecret: 'fakeSecret',
-      fromAddress: 'dev@wepublish.ch',
       id: 'mailchimp',
-      name: 'Mailchimp',
+      kv,
+      prisma,
     });
 
     await expect(mailChimpMailProvider.getTemplates()).rejects.toThrow(
