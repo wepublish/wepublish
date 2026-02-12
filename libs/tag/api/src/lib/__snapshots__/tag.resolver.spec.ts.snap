@@ -56,13 +56,11 @@ exports[`TagResolver can query a list of tags and return a list of tags each wit
   "tags": {
     "nodes": [
       {
-        "color": "#ffffff",
         "id": "id2",
         "tag": "tag2",
         "url": "url-id2",
       },
       {
-        "color": "#ffffff",
         "id": "id3",
         "tag": "tag3",
         "url": "url-id3",
@@ -118,7 +116,6 @@ exports[`TagResolver can query a list of tags and return one tag with its URL 3`
   "tags": {
     "nodes": [
       {
-        "color": "#ffffff",
         "id": "id1",
         "tag": "tag1",
         "url": "url-id1",
