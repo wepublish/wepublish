@@ -1,6 +1,4 @@
-import { CommentState } from '@prisma/client';
 import {
-  GraphQLBoolean,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
@@ -8,21 +6,6 @@ import {
 } from 'graphql';
 import { GraphQLDateTime } from 'graphql-scalars';
 import { Context } from '../context';
-
-import {
-  GraphQLComment,
-  GraphQLCommentItemType,
-  GraphQLCommentRatingOverrideUpdateInput,
-  GraphQLCommentRejectionReason,
-  GraphQLCommentRevisionUpdateInput,
-} from './comment/comment';
-
-import {
-  createAdminComment,
-  deleteComment,
-  takeActionOnComment,
-  updateComment,
-} from './comment/comment.private-mutation';
 
 import { GraphQLInvoice, GraphQLInvoiceInput } from './invoice';
 import {
@@ -233,146 +216,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, { id }, { authenticate, prisma, authenticateUser }) =>
         markInvoiceAsPaid(id, authenticate, authenticateUser, prisma),
-    },
-
-    // Comment
-    // ======
-    updateComment: {
-      type: new GraphQLNonNull(GraphQLComment),
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        revision: { type: GraphQLCommentRevisionUpdateInput },
-        userID: { type: GraphQLString },
-        guestUsername: { type: GraphQLString },
-        guestUserImageID: { type: GraphQLString },
-        featured: { type: GraphQLBoolean },
-        source: { type: GraphQLString },
-        tagIds: { type: new GraphQLList(new GraphQLNonNull(GraphQLString)) },
-        ratingOverrides: {
-          type: new GraphQLList(
-            new GraphQLNonNull(GraphQLCommentRatingOverrideUpdateInput)
-          ),
-        },
-      },
-      resolve: (
-        root,
-        {
-          id,
-          revision,
-          ratingOverrides,
-          userID,
-          guestUsername,
-          guestUserImageID,
-          featured,
-          source,
-          tagIds,
-        },
-        { authenticate, prisma: { comment, commentRatingSystemAnswer } }
-      ) =>
-        updateComment(
-          id,
-          revision,
-          userID,
-          guestUsername,
-          guestUserImageID,
-          source,
-          featured,
-          tagIds,
-          ratingOverrides,
-          authenticate,
-          commentRatingSystemAnswer,
-          comment
-        ),
-    },
-
-    createComment: {
-      type: new GraphQLNonNull(GraphQLComment),
-      args: {
-        text: { type: GraphQLRichText },
-        tagIds: { type: new GraphQLList(new GraphQLNonNull(GraphQLString)) },
-        itemID: { type: new GraphQLNonNull(GraphQLString) },
-        parentID: { type: GraphQLString },
-        itemType: {
-          type: new GraphQLNonNull(GraphQLCommentItemType),
-        },
-      },
-      resolve: (
-        root,
-        { text, tagIds, itemID, itemType, parentID },
-        { authenticate, prisma: { comment } }
-      ) =>
-        createAdminComment(
-          itemID,
-          itemType,
-          parentID,
-          text,
-          tagIds,
-          authenticate,
-          comment
-        ),
-    },
-
-    approveComment: {
-      type: new GraphQLNonNull(GraphQLComment),
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { comment } }) =>
-        takeActionOnComment(
-          id,
-          { state: CommentState.approved },
-          authenticate,
-          comment
-        ),
-    },
-
-    rejectComment: {
-      type: new GraphQLNonNull(GraphQLComment),
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        rejectionReason: { type: GraphQLCommentRejectionReason },
-      },
-      resolve: (
-        root,
-        { id, rejectionReason },
-        { authenticate, prisma: { comment } }
-      ) =>
-        takeActionOnComment(
-          id,
-          { state: CommentState.rejected, rejectionReason },
-          authenticate,
-          comment
-        ),
-    },
-
-    requestChangesOnComment: {
-      type: new GraphQLNonNull(GraphQLComment),
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-        rejectionReason: {
-          type: new GraphQLNonNull(GraphQLCommentRejectionReason),
-        },
-      },
-      resolve: (
-        root,
-        { id, rejectionReason },
-        { authenticate, prisma: { comment } }
-      ) =>
-        takeActionOnComment(
-          id,
-          { state: CommentState.pendingUserChanges, rejectionReason },
-          authenticate,
-          comment
-        ),
-    },
-
-    deleteComment: {
-      type: new GraphQLNonNull(GraphQLComment),
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (root, { id }, { authenticate, prisma: { comment } }) =>
-        deleteComment(id, authenticate, comment),
     },
 
     // Poll

@@ -4,8 +4,6 @@ type Query {
   subscription(id: String!): Subscription
   subscriptions(cursor: String, take: Int = 10, skip: Int = 0, filter: SubscriptionFilter, sort: SubscriptionSort = modifiedAt, order: SortOrder = Descending): SubscriptionConnection!
   subscriptionsAsCsv(filter: SubscriptionFilter): String
-  comment(id: String!): Comment
-  comments(cursor: String, take: Int = 10, skip: Int = 0, filter: CommentFilter, sort: CommentSort = modifiedAt, order: SortOrder = Descending): CommentConnection!
   invoice(id: String): Invoice
   invoices(cursor: String, take: Int = 10, skip: Int = 0, filter: InvoiceFilter, sort: InvoiceSort = modifiedAt, order: SortOrder = Descending): InvoiceConnection!
   polls(cursor: String, take: Int = 10, skip: Int = 0, filter: PollFilter, sort: PollSort = OpensAt, order: SortOrder = Descending): PollConnection
@@ -341,98 +339,6 @@ enum SortOrder {
   Descending
 }
 
-type Comment {
-  id: String!
-  guestUsername: String
-  guestUserImage: Image
-  user: User
-  tags: [Tag!]!
-  authorType: CommentAuthorType!
-  itemID: String!
-  itemType: CommentItemType!
-  parentComment: Comment
-  revisions: [CommentRevision!]!
-  source: String
-  state: CommentState!
-  rejectionReason: CommentRejectionReason
-  featured: Boolean
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  overriddenRatings: [overriddenRating!]
-}
-
-type Tag {
-  id: String!
-  tag: String
-  type: TagType
-  main: Boolean!
-  description: RichText
-  url: String!
-}
-
-enum TagType {
-  Comment
-  Event
-  Author
-  Article
-  Page
-}
-
-enum CommentAuthorType {
-  author
-  team
-  verifiedUser
-  guestUser
-}
-
-enum CommentItemType {
-  article
-  page
-}
-
-type CommentRevision {
-  text: RichText
-  title: String
-  lead: String
-  createdAt: DateTime!
-}
-
-enum CommentState {
-  approved
-  pendingApproval
-  pendingUserChanges
-  rejected
-}
-
-enum CommentRejectionReason {
-  misconduct
-  spam
-}
-
-type overriddenRating {
-  answerId: String!
-  value: Int
-}
-
-type CommentConnection {
-  nodes: [Comment!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-input CommentFilter {
-  item: String
-  tags: [String!]
-  states: [CommentState!]
-  itemType: CommentItemType
-  itemID: String
-}
-
-enum CommentSort {
-  modifiedAt
-  createdAt
-}
-
 type InvoiceConnection {
   nodes: [Invoice!]!
   pageInfo: PageInfo!
@@ -525,12 +431,6 @@ type Mutation {
   updateInvoice(id: String!, input: InvoiceInput!): Invoice
   deleteInvoice(id: String!): Invoice
   markInvoiceAsPaid(id: String!): Invoice
-  updateComment(id: String!, revision: CommentRevisionUpdateInput, userID: String, guestUsername: String, guestUserImageID: String, featured: Boolean, source: String, tagIds: [String!], ratingOverrides: [CommentRatingOverrideUpdateInput!]): Comment!
-  createComment(text: RichText, tagIds: [String!], itemID: String!, parentID: String, itemType: CommentItemType!): Comment!
-  approveComment(id: String!): Comment!
-  rejectComment(id: String!, rejectionReason: CommentRejectionReason): Comment!
-  requestChangesOnComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
-  deleteComment(id: String!): Comment!
   createPoll(opensAt: DateTime, closedAt: DateTime, question: String): PollWithAnswers
   createPollAnswer(pollId: String!, answer: String): PollAnswer
   createPollExternalVoteSource(pollId: String!, source: String): PollExternalVoteSource
@@ -623,17 +523,6 @@ input PaymentFromInvoiceInput {
   paymentMethodSlug: Slug
   successURL: String
   failureURL: String
-}
-
-input CommentRevisionUpdateInput {
-  text: RichText
-  title: String
-  lead: String
-}
-
-input CommentRatingOverrideUpdateInput {
-  answerId: String!
-  value: Int
 }
 
 type PollWithAnswers {
