@@ -643,6 +643,7 @@ export const NavPaperLinksGroup = styled('div')`
     row-gap: unset;
     grid-template-rows: unset;
     grid-template-columns: repeat(3, min-content);
+    margin: 0 0 0 3cqw;
   }
 `;
 
