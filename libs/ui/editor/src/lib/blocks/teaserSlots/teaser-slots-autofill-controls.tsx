@@ -6,7 +6,6 @@ import {
   getApiClientV2,
   TeaserListBlockSort,
   TeaserSlotsAutofillConfigInput,
-  TeaserType,
   useTagListQuery,
 } from '@wepublish/editor/api-v2';
 import { useState } from 'react';
@@ -79,7 +78,7 @@ export function TeaserSlotsAutofillControls({
       ...newConfig,
       enabled: true,
       sort: TeaserListBlockSort.PublishedAt,
-      teaserType: TeaserType.Article,
+      teaserType: newConfig.teaserType,
     });
     setConfigDialogOpen(false);
     refetch({ filter: { tag: newConfig.filter?.tags?.join(' ') } });

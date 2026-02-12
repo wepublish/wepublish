@@ -191,6 +191,18 @@ const seedSettings = (prisma: PrismaClient) =>
       },
     }),
 
+    prisma.settingAIProvider.upsert({
+      where: {
+        id: 'v0',
+      },
+      update: {},
+      create: {
+        id: 'v0',
+        name: 'V0',
+        type: 'V0',
+      },
+    }),
+
     // remove non-used settings
     prisma.setting.deleteMany({
       where: {

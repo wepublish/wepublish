@@ -2,6 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+enum AIProviderType {
+  V0
+}
+
 union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
 
 enum ActionType {
@@ -431,6 +435,10 @@ type Challenge {
 input ChallengeInput {
   challengeID: String!
   challengeSolution: String!
+}
+
+enum ChallengeProviderType {
+  TURNSTILE
 }
 
 type Chat {
@@ -1420,6 +1428,12 @@ type MailProviderModel {
   name: String!
 }
 
+enum MailProviderType {
+  MAILCHIMP
+  MAILGUN
+  SLACK
+}
+
 type MailTemplateRef {
   id: String!
   name: String!
@@ -1572,7 +1586,7 @@ type Mutation {
   createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
 
   """Creates a new tag."""
-  createTag(description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
+  createTag(color: Color, description: RichText, main: Boolean! = false, tag: String, type: TagType!): Tag!
 
   """Creates a token and returns it's secret once."""
   createToken(name: String!): TokenWithSecret!
@@ -1755,6 +1769,9 @@ type Mutation {
   """Unpublishes all revisions of an page."""
   unpublishPage(id: String!): Page!
 
+  """Updates an existing AI provider setting."""
+  updateAISetting(apiKey: String, id: String!, name: String, systemPrompt: String): SettingAIProvider!
+
   """Updates an article."""
   updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
@@ -1764,6 +1781,9 @@ type Mutation {
 
   """Updates an existing block style."""
   updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
+
+  """Updates an existing challenge provider setting."""
+  updateChallengeProviderSetting(id: String!, name: String, secret: String, siteKey: String): SettingChallengeProvider!
 
   """Update any existing comment"""
   updateComment(featured: Boolean, guestUserImageID: String, guestUsername: String, id: String!, ratingOverrides: [OverriddenRatingInput!], revision: CommentRevisionInput, source: String, tagIds: [String!], userID: String): Comment!
@@ -1786,6 +1806,9 @@ type Mutation {
   """Updates an existing invoice."""
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
 
+  """Updates an existing mail provider setting."""
+  updateMailProviderSetting(apiKey: String, fromAddress: String, id: String!, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, webhookEndpointSecret: String): SettingMailProvider!
+
   """Updates an existing memberplan."""
   updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
 
@@ -1802,6 +1825,9 @@ type Mutation {
 
   """Updates an existing payment method."""
   updatePaymentMethod(active: Boolean, description: String, gracePeriod: Int, id: String!, imageId: String, name: String, paymentProviderID: String, slug: Slug): PaymentMethod!
+
+  """Updates an existing payment provider setting."""
+  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Updates a paywall."""
   updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
@@ -1831,7 +1857,10 @@ type Mutation {
   updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
 
   """Updates an existing tag."""
-  updateTag(description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
+  updateTag(color: Color, description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
+
+  """Updates an existing tracking pixel setting."""
+  updateTrackingPixelSetting(id: String!, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String): SettingTrackingPixel!
 
   """Updates an existing user."""
   updateUser(active: Boolean, address: UserAddressInput, birthday: DateTime, email: String, emailVerifiedAt: DateTime, firstName: String, flair: String, id: String, name: String, note: String, properties: [PropertyInput!], roleIDs: [String!], userImageID: String): SensitiveDataUser!
@@ -2120,6 +2149,38 @@ type PaymentMethod implements HasImageLc {
   slug: Slug!
 }
 
+enum PaymentMethodMollie {
+  ALMA
+  APPLEPAY
+  BACS
+  BANCOMATPAY
+  BANCONTACT
+  BANKTRANSFER
+  BELFIUS
+  BILLIE
+  BLIK
+  CREDITCARD
+  DIRECTDEBIT
+  EPS
+  GIFTCARD
+  IDEAL
+  IN3
+  KBC
+  KLARNA
+  KLARNAPAYLATER
+  KLARNAPAYNOW
+  KLARNASLICEIT
+  MYBANK
+  PAYPAL
+  PAYSAFECARD
+  PRZELEWY24
+  RIVERTY
+  SATISPAY
+  TRUSTLY
+  TWINT
+  VOUCHER
+}
+
 enum PaymentPeriodicity {
   biannual
   biennial
@@ -2131,12 +2192,22 @@ enum PaymentPeriodicity {
 
 type PaymentProvider {
   id: String!
-  name: String!
+  name: String
 }
 
 type PaymentProviderCustomer {
   customerID: String!
   paymentProviderID: String!
+}
+
+enum PaymentProviderType {
+  BEXIO
+  MOLLIE
+  NO_CHARGE
+  PAYREXX
+  PAYREXX_SUBSCRIPTION
+  STRIPE
+  STRIPE_CHECKOUT
 }
 
 enum PaymentState {
@@ -2147,6 +2218,85 @@ enum PaymentState {
   processing
   requiresUserAction
   submitted
+}
+
+enum PayrexxPM {
+  ALIPAY
+  AMAZON_PAY
+  AMERICAN_EXPRESS
+  APPLE_PAY
+  BANCONTACT
+  BANK_TRANSFER
+  CARTES_BANCAIRES
+  CRYPTO
+  DINERS_CLUB
+  DISCOVER
+  EPS
+  GIROPAY
+  GOOGLE_PAY
+  IDEAL
+  INVOICE
+  JCB
+  KLARNA
+  MAESTRO
+  MASTERCARD
+  PAYPAL
+  PAY_BY_BANK
+  POST_FINANCE_PAY
+  POWERPAY
+  PREPAYMENT
+  SAMSUNG_PAY
+  SEPA_DIRECT_DEBIT
+  SWISSCOM_PAY
+  TWINT
+  UNIONPAY
+  VERD_CASH
+  VISA
+  V_PAY
+  WECHAT_PAY
+}
+
+enum PayrexxPSP {
+  AMAZON_PAY
+  BARZAHLEN_VIACASH
+  BRAINTREE
+  CCAVENUE
+  CEMBRAPAY
+  CLEARHAUS_ACQUIRING
+  COINBASE
+  CONCARDIS_BASIC
+  CONCARDIS_PAYENGINE
+  CONCARDIS_PAY_ENGINE
+  DATATRANS
+  GIROPAY
+  INVOICE
+  KLARNA
+  MOLLIE
+  OGONE_ALIAS_GATEWAY
+  OGONE_BASIC
+  PAYONE
+  PAYPAL
+  PAYREXX_PAY
+  PAYREXX_PAYMENTS_BY_STRIPE
+  PAYREXX_PAY_PLUS
+  PAYSAFECASH
+  POINTS_PAY
+  POSTFINANCE_ALIAS_GATEWAY
+  POSTFINANCE_CHECKOUT
+  POSTFINANCE_ECOMMERCE
+  POWERPAY
+  REKA
+  SAFERPAY
+  SKRILL
+  STRIPE
+  SWISSBILLING
+  TWINT
+  UTRUST
+  VIVEUM
+  VORKASSE
+  VRPAY
+  WIRPAY
+  WORLDPAY
 }
 
 type Paywall {
@@ -2476,6 +2626,12 @@ type Query {
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
 
+  """Returns a single AI provider setting by id."""
+  aiSetting(id: String!): SettingAIProvider!
+
+  """Returns all AI provider settings."""
+  aiSettings(filter: SettingAIProviderFilter): [SettingAIProvider!]!
+
   """Returns an article by id or slug."""
   article(id: String, slug: String): Article!
 
@@ -2497,6 +2653,12 @@ type Query {
   This query generates a challenge which can be used to access protected endpoints.
   """
   challenge: Challenge!
+
+  """Returns a single challenge provider setting by id."""
+  challengeProviderSetting(id: String!): SettingChallengeProvider!
+
+  """Returns all challenge provider settings."""
+  challengeProviderSettings(filter: SettingChallengeProviderFilter): [SettingChallengeProvider!]!
 
   """
   Check the status of an invoice and update with information from the payment provider
@@ -2563,6 +2725,12 @@ type Query {
   """Returns a paginated list of invoices based on the filters given."""
   invoices(cursorId: String, filter: InvoiceFilter, order: SortOrder = Ascending, skip: Int = 0, sort: InvoiceSort = ModifiedAt, take: Int = 10): InvoiceConnection!
 
+  """Returns a single mail provider setting by id."""
+  mailProviderSetting(id: String!): SettingMailProvider!
+
+  """Returns all mail provider settings."""
+  mailProviderSettings(filter: SettingMailProviderFilter): [SettingMailProvider!]!
+
   """Return all mail templates"""
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
 
@@ -2598,6 +2766,12 @@ type Query {
 
   """Returns all payment methods"""
   paymentMethods: [PaymentMethod!]!
+
+  """Returns a single payment provider setting by id."""
+  paymentProviderSetting(id: String!): SettingPaymentProvider!
+
+  """Returns all payment provider settings."""
+  paymentProviderSettings(filter: SettingPaymentProviderFilter): [SettingPaymentProvider!]!
 
   """Returns all payment providers"""
   paymentProviders: [PaymentProvider!]!
@@ -2701,6 +2875,12 @@ type Query {
 
   """Returns a list of all tokens."""
   tokens: [Token!]!
+
+  """Returns a single tracking pixel setting by id."""
+  trackingPixelSetting(id: String!): SettingTrackingPixel!
+
+  """Returns all tracking pixel settings."""
+  trackingPixelSettings(filter: SettingTrackingPixelFilter): [SettingTrackingPixel!]!
 
   """"""
   upgradeUserSubscriptionInfo(memberPlanId: String!, subscriptionId: String!): UpgradeSubscription!
@@ -2852,8 +3032,60 @@ type Setting {
   value: GraphQLSettingValueType
 }
 
+type SettingAIProvider {
+  createdAt: DateTime!
+  id: String!
+  lastLoadedAt: DateTime!
+  modifiedAt: DateTime!
+  name: String
+  systemPrompt: String
+  type: AIProviderType!
+}
+
+input SettingAIProviderFilter {
+  id: String
+  name: String
+  type: AIProviderType
+}
+
+type SettingChallengeProvider {
+  createdAt: DateTime!
+  id: String!
+  lastLoadedAt: DateTime!
+  modifiedAt: DateTime!
+  name: String
+  type: ChallengeProviderType!
+}
+
+input SettingChallengeProviderFilter {
+  id: String
+  name: String
+  type: ChallengeProviderType
+}
+
 input SettingFilter {
   name: String
+}
+
+type SettingMailProvider {
+  createdAt: DateTime!
+  fromAddress: String
+  id: String!
+  lastLoadedAt: DateTime!
+  mailchimp_baseURL: String
+  mailgun_baseDomain: String
+  mailgun_mailDomain: String
+  modifiedAt: DateTime!
+  name: String
+  replyToAddress: String
+  slack_webhookURL: String
+  type: MailProviderType!
+}
+
+input SettingMailProviderFilter {
+  id: String
+  name: String
+  type: MailProviderType
 }
 
 enum SettingName {
@@ -2877,11 +3109,68 @@ enum SettingName {
   SHOW_PENDING_WHEN_NOT_PUBLISHED
 }
 
+type SettingPaymentProvider {
+  bexio_accountId: Float
+  bexio_countryId: Float
+  bexio_invoiceMailBodyNewMembership: String
+  bexio_invoiceMailBodyRenewalMembership: String
+  bexio_invoiceMailSubjectNewMembership: String
+  bexio_invoiceMailSubjectRenewalMembership: String
+  bexio_invoiceTemplateNewMembership: String
+  bexio_invoiceTemplateRenewalMembership: String
+  bexio_invoiceTitleNewMembership: String
+  bexio_invoiceTitleRenewalMembership: String
+  bexio_markInvoiceAsOpen: Boolean
+  bexio_taxId: Float
+  bexio_unitId: Float
+  bexio_userId: Float
+  createdAt: DateTime!
+  id: String!
+  lastLoadedAt: DateTime!
+  modifiedAt: DateTime!
+  mollie_apiBaseUrl: String
+  mollie_methods: [PaymentMethodMollie!]
+  name: String
+  offSessionPayments: Boolean
+  payrexx_instancename: String
+  payrexx_pm: [PayrexxPM!]
+  payrexx_psp: [PayrexxPSP!]
+  payrexx_vatrate: String
+  stripe_methods: [StripePaymentMethod!]
+  type: PaymentProviderType!
+}
+
+input SettingPaymentProviderFilter {
+  id: String
+  name: String
+  type: PaymentProviderType
+}
+
 type SettingRestriction {
   allowedValues: AllowedSettingVals
   inputLength: Int
   maxValue: Int
   minValue: Int
+}
+
+type SettingTrackingPixel {
+  createdAt: DateTime!
+  id: String!
+  lastLoadedAt: DateTime!
+  modifiedAt: DateTime!
+  name: String
+  prolitteris_memberNr: String
+  prolitteris_onlyPaidContentAccess: Boolean
+  prolitteris_publisherInternalKeyDomain: String
+  prolitteris_usePublisherInternalKey: Boolean
+  prolitteris_username: String
+  type: TrackingPixelProviderType!
+}
+
+input SettingTrackingPixelFilter {
+  id: String
+  name: String
+  type: TrackingPixelProviderType
 }
 
 input SingleEventFilter {
@@ -2926,6 +3215,31 @@ input StreamableVideoBlockInput {
   blockStyle: String
   blockStyleName: String
   videoID: String
+}
+
+enum StripePaymentMethod {
+  ACSS_DEBIT
+  AFTERPAY_CLEARPAY
+  ALIPAY
+  AU_BECS_DEBIT
+  BACS_DEBIT
+  BANCONTACT
+  BOLETO
+  CARD
+  EPS
+  FPX
+  GIROPAY
+  GRABPAY
+  IDEAL
+  KLARNA
+  KONBINI
+  OXXO
+  P24
+  PAYNOW
+  SEPA_DEBIT
+  SOFORT
+  US_BANK_ACCOUNT
+  WECHAT_PAY
 }
 
 type SubscribeBlock implements BaseBlock {
@@ -3045,6 +3359,7 @@ type SystemMailModel {
 }
 
 type Tag {
+  color: Color
   description: RichText
   id: String!
   main: Boolean!

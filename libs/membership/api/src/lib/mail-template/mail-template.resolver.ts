@@ -42,7 +42,7 @@ export class MailTemplatesResolver {
   @Query(() => MailProviderModel)
   async provider() {
     const provider = await this.mailContext.mailProvider;
-    return { name: provider.name };
+    return { name: provider.getName() };
   }
 
   @Permissions(CanSyncMailTemplates)

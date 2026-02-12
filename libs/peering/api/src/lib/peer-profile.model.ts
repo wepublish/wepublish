@@ -1,7 +1,7 @@
 import { Field, ObjectType, OmitType } from '@nestjs/graphql';
 import { Image, PeerImage } from '@wepublish/image/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
-import { ColorScalar } from './scalars/color.scalar';
+import { ColorScalar } from '@wepublish/utils/api';
 import { Descendant } from 'slate';
 
 @ObjectType()

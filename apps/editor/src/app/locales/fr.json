@@ -270,7 +270,15 @@
         "unlockBlock": "Déverrouiller la position bloc"
       },
       "flexBlock": {
-        "label": "Flex Block"
+        "label": "Bloc flexible",
+        "addNestedBlock": "Ajouter un (sous-)bloc",
+        "chooseNestedBlock": "Choisir un (sous-)bloc",
+        "close": "Fermer",
+        "deleteNestedBlock": "Supprimer le (sous-)bloc",
+        "editNestedBlock": "Éditer le (sous-)bloc",
+        "lockNestedBlock": "Verrouiller le (sous-)bloc",
+        "removeNestedBlock": "Retirer le (sous-)bloc",
+        "unlockNestedBlock": "Déverrouiller le (sous-)bloc"
       },
       "html": {
         "close": "Fermer",
@@ -366,7 +374,16 @@
         "label": "6 Col"
       },
       "teaserSlots": {
-        "label": "Machines à sous tease"
+        "label": "Slots de teaser",
+        "autoLoading": "Chargement automatique :",
+        "fillManually": "Tous les emplacements sont remplis manuellement",
+        "teasersLoaded": "Teaser chargé",
+        "configure": "Configurer",
+        "latest": "Plus récent",
+        "addSlot": "Ajouter un emplacement",
+        "filter": "Filtrer par tags",
+        "filterHelpText": "Saisissez les tags séparés par des virgules. Laissez vide pour ne pas appliquer de filtre de tag.",
+        "autofillType": "Type de teaser des teasers chargés automatiquement"
       },
       "title": {
         "label": "Titre",
@@ -795,7 +812,8 @@
       "users": "Utilisateur/Utilisatrices",
       "audience": "Audience",
       "authorTags": "Tags",
-      "audienceDashboard": "Dashboard"
+      "audienceDashboard": "Dashboard",
+      "integrations": "Intégrations"
     },
     "navigation": {
       "overview": {
@@ -1172,13 +1190,17 @@
     },
     "tags": {
       "overview": {
-        "areYouSure": "Are you sure?",
-        "areYouSureBody": "The tag \"{{ tag }}\" will be deleted permanently and can not be reversed.",
-        "areYouSureConfirmation": "Delete tag",
-        "createTag": "New Tag",
-        "placeholder": "Name of tag",
+        "areYouSure": "Êtes-vous sûr ?",
+        "areYouSureBody": "Le tag \"{{ tag }}\" sera supprimé définitivement et ne pourra pas être annulé.",
+        "areYouSureConfirmation": "Supprimer le tag",
+        "color": "Couleur",
+        "createTag": "Nouveau tag",
+        "editTag": "Modifier {{tag}}",
+        "placeholder": "Nom du tag",
         "title": "Tags",
-        "markAsMain": "Use as main tag"
+        "name": "Nom",
+        "description": "Description",
+        "markAsMain": "Utiliser comme tag principal"
       }
     },
     "tokenList": {
@@ -1597,6 +1619,78 @@
     },
     "audienceCsvBtn": {
       "exportUsers": "Télécharger CSV"
+    },
+    "search": "Rechercher",
+    "integrations": {
+      "title": "Intégrations",
+      "ai": "Intégration AI",
+      "challengeProvider": "Fournisseur de challenge",
+      "paymentProvider": "Fournisseur de paiement",
+      "trackingPixel": "Pixel de suivi",
+      "mailProvider": "Fournisseur de messagerie",
+      "back": "Retour aux intégrations",
+      "unknown": "Intégration inconnue",
+      "notFound": "Intégration non trouvée",
+      "configure": "Configurer {{integration}}",
+      "updateSuccess": "Paramètres mis à jour avec succès",
+      "updateError": "Échec de la mise à jour des paramètres",
+      "noSettingsFound": "Aucun paramètre trouvé",
+      "aiSettings": {
+        "apiKey": "Clé API",
+        "systemPrompt": "Invite système (System Prompt)"
+      },
+      "challengeSettings": {
+        "secret": "Secret",
+        "siteKey": "Clé du site (Site Key)",
+        "type": "Type"
+      },
+      "paymentSettings": {
+        "apiKey": "Clé API",
+        "apiUrl": "URL de l'API",
+        "instanceName": "Nom de l'instance",
+        "methods": "Méthodes de paiement",
+        "offSessionPayments": "Paiements hors session",
+        "pm": "Méthodes de paiement",
+        "psp": "Prestataires de services de paiement",
+        "type": "Type",
+        "vatRate": "Taux de TVA",
+        "webhookEndpointSecret": "Secret du point de terminaison du webhook",
+        "bexioUserId": "ID utilisateur Bexio",
+        "bexioCountryId": "ID pays Bexio",
+        "bexioUnitId": "ID unité Bexio",
+        "bexioTaxId": "ID taxe Bexio",
+        "bexioAccountId": "ID compte Bexio",
+        "bexioInvoiceTemplateNewMembership": "Modèle de facture (Nouvelle adhésion)",
+        "bexioInvoiceTemplateRenewalMembership": "Modèle de facture (Renouvellement d'adhésion)",
+        "bexioInvoiceMailSubjectNewMembership": "Objet du mail de facture (Nouvelle adhésion)",
+        "bexioInvoiceMailSubjectRenewalMembership": "Objet du mail de facture (Renouvellement d'adhésion)",
+        "bexioInvoiceMailBodyNewMembership": "Corps du mail de facture (Nouvelle adhésion)",
+        "bexioInvoiceMailBodyRenewalMembership": "Corps du mail de facture (Renouvellement d'adhésion)",
+        "bexioMarkInvoiceAsOpen": "Marquer la facture comme ouverte",
+        "bexioInvoiceTitleNewMembership": "Titre de la facture (Nouvelle adhésion)",
+        "bexioInvoiceTitleRenewalMembership": "Titre de la facture (Renouvellement d'adhésion)"
+      },
+      "placeholderSecret": "Inchangé (Masqué)",
+      "mailSettings": {
+        "type": "Type",
+        "fromAddress": "Adresse de l'expéditeur",
+        "replyToAddress": "Adresse de réponse",
+        "apiKey": "Clé API",
+        "mailchimpBaseUrl": "URL de base",
+        "mailgunBaseDomain": "Domaine de base",
+        "mailgunMailDomain": "Domaine de messagerie",
+        "slackWebhookUrl": "URL du webhook",
+        "webhookEndpointSecret": "Secret du point de terminaison du webhook"
+      },
+      "trackingPixelSettings": {
+        "type": "Type",
+        "prolitterisMemberNr": "Numéro de membre",
+        "prolitterisOnlyPaidContentAccess": "Accès au contenu payant uniquement",
+        "prolitterisPassword": "Mot de passe",
+        "prolitterisPublisherInternalKeyDomain": "Domaine de clé interne de l'éditeur",
+        "prolitterisUsePublisherInternalKey": "Utiliser la clé interne de l'éditeur",
+        "prolitterisUsername": "Nom d'utilisateur"
+      }
     }
   }
 }

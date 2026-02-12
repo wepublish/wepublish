@@ -1,0 +1,129 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaClient, SettingMailProvider } from '@prisma/client';
+import {
+  CreateSettingMailProviderInput,
+  UpdateSettingMailProviderInput,
+  SettingMailProviderFilter,
+} from './mail-provider-settings.model';
+import { PrimeDataLoader } from '@wepublish/utils/api';
+import { MailProviderSettingsDataloaderService } from './mail-provider-settings-dataloader.service';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { SecretCrypto } from './secrets-cryto';
+
+@Injectable()
+export class MailProviderSettingsService {
+  private readonly crypto = new SecretCrypto();
+
+  constructor(
+    private prisma: PrismaClient,
+    private kv: KvTtlCacheService
+  ) {}
+
+  private encryptSecretsIfPresent<
+    T extends { apiKey?: string | null; webhookEndpointSecret?: string | null },
+  >(data: T): T {
+    if (typeof data.apiKey === 'string' && data.apiKey.length > 0) {
+      return {
+        ...data,
+        apiKey: this.crypto.encrypt(data.apiKey),
+      };
+    }
+    if (
+      typeof data.webhookEndpointSecret === 'string' &&
+      data.webhookEndpointSecret.length > 0
+    ) {
+      return {
+        ...data,
+        webhookEndpointSecret: this.crypto.encrypt(data.webhookEndpointSecret),
+      };
+    }
+    return data;
+  }
+
+  @PrimeDataLoader(MailProviderSettingsDataloaderService, 'id')
+  async mailProviderSettingsList(
+    filter?: SettingMailProviderFilter
+  ): Promise<SettingMailProvider[]> {
+    const data = await this.prisma.settingMailProvider.findMany({
+      where: filter,
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    return data;
+  }
+
+  @PrimeDataLoader(MailProviderSettingsDataloaderService, 'id')
+  async mailProviderSetting(id: string): Promise<SettingMailProvider> {
+    const data = await this.prisma.settingMailProvider.findUnique({
+      where: { id },
+    });
+
+    if (!data) {
+      throw new NotFoundException(
+        `Mail Provider Setting with id ${id} not found`
+      );
+    }
+
+    return data;
+  }
+
+  @PrimeDataLoader(MailProviderSettingsDataloaderService, 'id')
+  async createMailProviderSetting(
+    input: CreateSettingMailProviderInput
+  ): Promise<SettingMailProvider> {
+    const output = this.encryptSecretsIfPresent(input);
+    const returnValue = this.prisma.settingMailProvider.create({
+      data: output,
+    });
+    await this.kv.resetNamespace('settings:mailprovider');
+    return returnValue;
+  }
+
+  @PrimeDataLoader(MailProviderSettingsDataloaderService, 'id')
+  async updateMailProviderSetting(
+    input: UpdateSettingMailProviderInput
+  ): Promise<SettingMailProvider> {
+    const output = this.encryptSecretsIfPresent(input);
+    const { id, ...updateData } = output;
+    const existingSetting = await this.prisma.settingMailProvider.findUnique({
+      where: { id },
+    });
+
+    if (!existingSetting) {
+      throw new NotFoundException(
+        `Mail Provider Setting with id ${id} not found`
+      );
+    }
+
+    const filteredUpdateData = Object.fromEntries(
+      Object.entries(updateData).filter(([_, value]) => value !== undefined)
+    );
+
+    const returnValue = this.prisma.settingMailProvider.update({
+      where: { id },
+      data: filteredUpdateData,
+    });
+    await this.kv.resetNamespace('settings:mailprovider');
+    return returnValue;
+  }
+
+  @PrimeDataLoader(MailProviderSettingsDataloaderService, 'id')
+  async deleteMailProviderSetting(id: string): Promise<SettingMailProvider> {
+    const existingSetting = await this.prisma.settingMailProvider.findUnique({
+      where: { id },
+    });
+
+    if (!existingSetting) {
+      throw new NotFoundException(
+        `Mail Provider Setting with id ${id} not found`
+      );
+    }
+
+    const returnValue = this.prisma.settingMailProvider.delete({
+      where: { id },
+    });
+    await this.kv.resetNamespace('settings:mailprovider');
+    return returnValue;
+  }
+}

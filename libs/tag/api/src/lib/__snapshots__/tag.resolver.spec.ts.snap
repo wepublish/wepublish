@@ -24,6 +24,7 @@ exports[`TagResolver can query a list of tags and return a list of tags each wit
 [
   [
     {
+      "color": "#ffffff",
       "createdAt": 2023-01-01T00:00:00.000Z,
       "description": [],
       "id": "id2",
@@ -36,6 +37,7 @@ exports[`TagResolver can query a list of tags and return a list of tags each wit
   ],
   [
     {
+      "color": "#ffffff",
       "createdAt": 2023-01-01T00:00:00.000Z,
       "description": [],
       "id": "id3",
@@ -54,11 +56,13 @@ exports[`TagResolver can query a list of tags and return a list of tags each wit
   "tags": {
     "nodes": [
       {
+        "color": "#ffffff",
         "id": "id2",
         "tag": "tag2",
         "url": "url-id2",
       },
       {
+        "color": "#ffffff",
         "id": "id3",
         "tag": "tag3",
         "url": "url-id3",
@@ -95,6 +99,7 @@ exports[`TagResolver can query a list of tags and return one tag with its URL 2`
 [
   [
     {
+      "color": "#ffffff",
       "createdAt": 2023-01-01T00:00:00.000Z,
       "description": [],
       "id": "id1",
@@ -113,6 +118,7 @@ exports[`TagResolver can query a list of tags and return one tag with its URL 3`
   "tags": {
     "nodes": [
       {
+        "color": "#ffffff",
         "id": "id1",
         "tag": "tag1",
         "url": "url-id1",

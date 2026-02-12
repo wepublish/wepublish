@@ -26,7 +26,8 @@ export type TeaserListConfigPanelProps = {
 export const useTeaserTypeText = () => {
   const { t } = useTranslation();
 
-  return (tagType: TeaserType) => t(`resources.teaserType.${tagType}`);
+  return (tagType: TeaserType) =>
+    t(`resources.teaserType.${tagType.toLowerCase()}`);
 };
 
 export function TeaserListConfigPanel({

@@ -27,13 +27,6 @@ import {
   WebhookResponse,
 } from './payment-provider';
 
-export interface PayrexxSubscripionsPaymentProviderProps
-  extends PaymentProviderProps {
-  instanceName: string;
-  instanceAPISecret: string;
-  webhookSecret: string;
-}
-
 function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
   switch (event) {
     case 'waiting':
@@ -50,16 +43,10 @@ function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
 }
 
 export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
-  readonly instanceName: string;
-  readonly instanceAPISecret: string;
-  readonly webhookSecret: string;
   override readonly remoteManagedSubscription: boolean;
 
-  constructor(props: PayrexxSubscripionsPaymentProviderProps) {
+  constructor(props: PaymentProviderProps) {
     super(props);
-    this.instanceName = props.instanceName;
-    this.instanceAPISecret = props.instanceAPISecret;
-    this.webhookSecret = props.webhookSecret;
     this.remoteManagedSubscription = true;
   }
 
@@ -286,15 +273,18 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       amount,
       currency,
     };
-
+    const config = await this.getConfig();
+    if (!config.apiKey || !config.payrexx_instancename) {
+      throw new Error('Payrexx missing api key or instancename');
+    }
     const signature = crypto
-      .createHmac('sha256', this.instanceAPISecret)
+      .createHmac('sha256', config.apiKey)
       .update(qs.stringify(data))
       .digest('base64');
 
     const res = await fetch(
       `https://api.payrexx.com/v1.0/Subscription/${subscriptionId}/?instance=${encodeURIComponent(
-        this.instanceName
+        config.payrexx_instancename
       )}`,
       {
         method: 'PUT',
@@ -323,12 +313,17 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
   }
 
   async cancelSubscriptionUpstream(subscriptionId: number) {
+    const config = await this.getConfig();
+    if (!config.apiKey || !config.payrexx_instancename) {
+      throw new Error('Payrexx missing api key or instancename');
+    }
+
     const signature = crypto
-      .createHmac('sha256', this.instanceAPISecret)
+      .createHmac('sha256', config.apiKey)
       .digest('base64');
 
     const res = await fetch(
-      `https://api.payrexx.com/v1.0/Subscription/${subscriptionId}/?instance=${this.instanceName}`,
+      `https://api.payrexx.com/v1.0/Subscription/${subscriptionId}/?instance=${config.payrexx_instancename}`,
       {
         method: 'DELETE',
         body: qs.stringify({ ApiSignature: signature }),
@@ -358,10 +353,19 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     props: WebhookForPaymentIntentProps
   ): Promise<WebhookResponse> {
     const intentStates: IntentState[] = [];
+    const config = await this.getConfig();
 
     // Protect endpoint
     const apiKey = props.req.query['apiKey'] as string;
-    if (!this.timeConstantCompare(apiKey, this.webhookSecret)) {
+    if (
+      !this.timeConstantCompare(
+        apiKey,
+        this.assertProperty(
+          'webhookEndpointSecret',
+          config.webhookEndpointSecret
+        )
+      )
+    ) {
       return {
         status: 403,
         message: 'Invalid Api Key',

@@ -62,6 +62,8 @@ import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
 import { EventListView } from './routes/events/eventListView';
 import { ImageList } from './routes/images/imageList';
+import { IntegrationList } from './routes/integrations/integrationList';
+import { IntegrationEditView } from './routes/integrations/integrationEditView';
 import { MemberPlanList } from './routes/memberPlans/memberPlanList';
 import { NavigationList } from './routes/navigations/navigationList';
 import { PageEditor } from './routes/pages/pageEditor';
@@ -952,6 +954,23 @@ export function App() {
               element={
                 <Base>
                   <TokenList />
+                </Base>
+              }
+            />
+            {/* Integrations Routes */}
+            <Route
+              path="integrations"
+              element={
+                <Base>
+                  <IntegrationList />
+                </Base>
+              }
+            />
+            <Route
+              path="integrations/:type"
+              element={
+                <Base>
+                  <IntegrationEditView />
                 </Base>
               }
             />

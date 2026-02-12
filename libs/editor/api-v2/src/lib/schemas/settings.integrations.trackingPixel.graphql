@@ -1,0 +1,31 @@
+query TrackingPixelSettings {
+  trackingPixelSettings {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    prolitteris_memberNr
+    prolitteris_onlyPaidContentAccess
+    prolitteris_publisherInternalKeyDomain
+    prolitteris_usePublisherInternalKey
+    prolitteris_username
+    type
+  }
+}
+
+mutation UpdateTrackingPixelSetting($updateTrackingPixelSettingId: String!, $name: String, $prolitterisMemberNr: String, $prolitterisOnlyPaidContentAccess: Boolean, $prolitterisPassword: String, $prolitterisPublisherInternalKeyDomain: String, $prolitterisUsePublisherInternalKey: Boolean, $prolitterisUsername: String) {
+  updateTrackingPixelSetting(id: $updateTrackingPixelSettingId, name: $name, prolitteris_memberNr: $prolitterisMemberNr, prolitteris_onlyPaidContentAccess: $prolitterisOnlyPaidContentAccess, prolitteris_password: $prolitterisPassword, prolitteris_publisherInternalKeyDomain: $prolitterisPublisherInternalKeyDomain, prolitteris_usePublisherInternalKey: $prolitterisUsePublisherInternalKey, prolitteris_username: $prolitterisUsername) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    prolitteris_memberNr
+    prolitteris_onlyPaidContentAccess
+    prolitteris_publisherInternalKeyDomain
+    prolitteris_usePublisherInternalKey
+    prolitteris_username
+    type
+  }
+}

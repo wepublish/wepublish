@@ -8,6 +8,7 @@ import {
 } from './mails-module-options';
 import { PrismaClient } from '@prisma/client';
 import { createAsyncOptionsProvider } from '@wepublish/utils/api';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 @Module({
   imports: [PrismaModule],
@@ -35,20 +36,16 @@ export class MailsModule {
       {
         provide: MailContext,
         useFactory: (
-          {
-            defaultFromAddress,
-            defaultReplyToAddress,
-            mailProvider,
-          }: MailsModuleOptions,
-          prisma: PrismaClient
+          { mailProvider }: MailsModuleOptions,
+          prisma: PrismaClient,
+          kv: KvTtlCacheService
         ) =>
           new MailContext({
             prisma,
             mailProvider,
-            defaultFromAddress,
-            defaultReplyToAddress,
+            kv,
           }),
-        inject: [MAILS_MODULE_OPTIONS, PrismaClient],
+        inject: [MAILS_MODULE_OPTIONS, PrismaClient, KvTtlCacheService],
       },
     ];
   }

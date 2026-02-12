@@ -254,7 +254,7 @@ export class UserSubscriptionService {
     }
 
     // If payment provider supports off session payment try to charge
-    if (!paymentProvider || paymentProvider.offSessionPayments) {
+    if (!paymentProvider || (await paymentProvider.isOffSession())) {
       const paymentMethod = await this.prisma.paymentMethod.findUnique({
         where: {
           id: subscription.paymentMethodID,

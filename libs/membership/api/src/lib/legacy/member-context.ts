@@ -373,10 +373,12 @@ export class MemberContext implements MemberContextInterface {
     return null;
   }
 
-  private getOffSessionPaymentProviderIDs(): string[] {
-    return this.paymentProviders
-      .filter(provider => provider.offSessionPayments)
-      .map(provider => provider.id);
+  private async getOffSessionPaymentProviderIDs(): Promise<string[]> {
+    const flags = await Promise.all(
+      this.paymentProviders.map(p => p.isOffSession())
+    );
+
+    return this.paymentProviders.filter((_, i) => flags[i]).map(p => p.id);
   }
 
   async chargeInvoice({
@@ -385,7 +387,8 @@ export class MemberContext implements MemberContextInterface {
     paymentMethodID,
     customer,
   }: ChargeInvoiceProps): Promise<boolean | Payment> {
-    const offSessionPaymentProvidersID = this.getOffSessionPaymentProviderIDs();
+    const offSessionPaymentProvidersID =
+      await this.getOffSessionPaymentProviderIDs();
     const paymentMethods = await this.prisma.paymentMethod.findMany();
     const paymentMethodIDs = paymentMethods
       .filter(method =>
@@ -621,7 +624,7 @@ export class MemberContext implements MemberContextInterface {
       input?.autoRenew === false
     ) {
       throw new Error(
-        `It is not possible to update the subscription with payment provider "${paymentProvider.name}".`
+        `It is not possible to update the subscription with payment provider "${paymentProvider.getName()}".`
       );
     }
 
