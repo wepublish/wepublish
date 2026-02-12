@@ -214,7 +214,7 @@
   "dependencies": {
     "@apollo/client": "^3.12.8",
     "@apollo/gateway": "^2.8.4",
-    "@apollo/server": "^4.9.1",
+    "@apollo/server": "^5.4.0",
     "@apollo/subgraph": "^2.2.3",
     "@base-ui-components/react": "^1.0.0-beta.4",
     "@dnd-kit/core": "^6.0.7",
