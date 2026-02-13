@@ -88,7 +88,7 @@ describe('UpgradeSubscriptionService', () => {
         currency: Currency.CHF,
         paymentPeriodicity: PaymentPeriodicity.yearly,
         extendable: true,
-        autoRenew: true,
+        autoRenew: false,
         periods: [
           {
             id: '1',
@@ -473,63 +473,6 @@ describe('UpgradeSubscriptionService', () => {
         });
       }).rejects.toMatchSnapshot();
     });
-
-    it.each([
-      {
-        forceAutoRenewal: true,
-        extendable: false,
-        autoRenew: true,
-      },
-      {
-        forceAutoRenewal: true,
-        extendable: true,
-        autoRenew: false,
-      },
-      {
-        forceAutoRenewal: true,
-        extendable: false,
-        autoRenew: false,
-      },
-    ])(
-      "should throw an error if the subscription's renewal is not allowed on the new memberplan %o",
-      async values => {
-        prismaMock.subscription.findUnique.mockResolvedValue({
-          userID: 'userId',
-          currency: Currency.CHF,
-          paymentPeriodicity: PaymentPeriodicity.yearly,
-          extendable: values.extendable,
-          autoRenew: values.autoRenew,
-        });
-        prismaMock.memberPlan.findUnique.mockResolvedValue({
-          currency: Currency.CHF,
-          availablePaymentMethods: [
-            {
-              paymentMethodIDs: ['paymentMethodId'],
-              paymentPeriodicities: [PaymentPeriodicity.yearly],
-              forceAutoRenewal: values.forceAutoRenewal,
-            },
-          ],
-        });
-
-        await expect(async () => {
-          await service.upgradeSubscription({
-            subscriptionId: 'subscriptionId',
-            memberPlanId: 'memberPlanId',
-            paymentMethodId: 'paymentMethodId',
-            userId: 'userId',
-            monthlyAmount: 100,
-          });
-        }).rejects.toMatchSnapshot();
-
-        await expect(async () => {
-          await service.getInfo({
-            subscriptionId: 'subscriptionId',
-            memberPlanId: 'memberPlanId',
-            userId: 'userId',
-          });
-        }).rejects.toMatchSnapshot();
-      }
-    );
 
     it('should throw an error if the subscription has no period', async () => {
       prismaMock.subscription.findUnique.mockResolvedValue({

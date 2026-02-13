@@ -5,7 +5,7 @@ import { SubscribeButton } from '@wepublish/membership/website';
 import { useSubscriptionsQuery } from '@wepublish/website/api';
 import { BuilderSubscribeBlockProps } from '@wepublish/website/builder';
 import { useRouter } from 'next/router';
-import { ascend, prop, sortWith } from 'ramda';
+import { ascend, descend, prop, sortWith } from 'ramda';
 import { useContext, useMemo } from 'react';
 
 import {
@@ -50,7 +50,13 @@ export const HauptstadtSubscribe = (props: BuilderSubscribeBlockProps) => {
 
   const cheapestSubscription = useMemo(
     () =>
-      sortWith([ascend(prop('monthlyAmount'))], filteredSubscriptions).at(0),
+      sortWith(
+        [
+          descend(prop('monthlyAmount')),
+          ascend(sub => Number(!!sub.deactivation)),
+        ],
+        filteredSubscriptions
+      ).at(0),
     [filteredSubscriptions]
   );
 
