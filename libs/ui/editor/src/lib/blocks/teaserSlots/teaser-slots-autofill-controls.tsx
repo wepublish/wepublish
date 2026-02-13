@@ -3,11 +3,10 @@
 import styled from '@emotion/styled';
 import GearIcon from '@rsuite/icons/Gear';
 import {
-  getApiClientV2,
   TeaserListBlockSort,
   TeaserSlotsAutofillConfigInput,
   useTagListQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Panel, Tag, Toggle } from 'rsuite';
@@ -56,9 +55,7 @@ export function TeaserSlotsAutofillControls({
   const { t } = useTranslation();
   const [configDialogOpen, setConfigDialogOpen] = useState(false);
 
-  const client = getApiClientV2();
   const { data: tagsData, refetch } = useTagListQuery({
-    client,
     skip: !config.filter?.tags?.length,
   });
 

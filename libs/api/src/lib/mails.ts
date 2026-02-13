@@ -1,11 +1,12 @@
 import { Router } from 'express';
-import { contextFromRequest } from './context';
 import { WepublishServerOpts } from './server';
 import { logger } from '@wepublish/utils/api';
 
 export function setupMailProvider(opts: WepublishServerOpts): Router {
   const { mailProvider } = opts;
+
   const mailProviderWebhookRouter = Router();
+
   if (mailProvider) {
     mailProviderWebhookRouter
       .route(`/${mailProvider.id}`)
@@ -21,13 +22,15 @@ export function setupMailProvider(opts: WepublishServerOpts): Router {
           const mailLogStatuses = await mailProvider.webhookForSendMail({
             req,
           });
-          const context = await contextFromRequest(req, opts);
 
           for (const mailLogStatus of mailLogStatuses) {
             const mailLog = await context.loaders.mailLogsByID.load(
               mailLogStatus.mailLogID
             );
-            if (!mailLog) continue; // TODO: handle missing mailLog
+
+            if (!mailLog) {
+              continue; // TODO: handle missing mailLog
+            }
 
             await context.prisma.mailLog.update({
               where: { id: mailLog.id },

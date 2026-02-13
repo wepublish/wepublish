@@ -1,10 +1,5 @@
 import { ApolloError, ApolloQueryResult } from '@apollo/client';
-import {
-  getApiClientV2,
-  Poll,
-  PollsQuery,
-  useDeletePollMutation,
-} from '@wepublish/editor/api-v2';
+import { Poll, PollsQuery, useDeletePollMutation } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { Button, Message, Modal, toaster } from 'rsuite';
@@ -46,8 +41,8 @@ const onCompletedToast = (t: TFunction) => () => {
 
 export function DeletePollModal({ poll, onClose, onDelete }: DeletePollProps) {
   const { t } = useTranslation();
-  const client = getApiClientV2();
-  const [deletePollMutation] = useDeletePollMutation({ client });
+
+  const [deletePollMutation] = useDeletePollMutation();
 
   /**
    * FUNCTIONS

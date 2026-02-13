@@ -5,13 +5,12 @@ import {
   MutationUpdateConsentArgs,
   useConsentQuery,
   useUpdateConsentMutation,
-} from '@wepublish/editor/api-v2';
-import { useMemo, useState } from 'react';
+} from '@wepublish/editor/api';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
 
-import { getApiClientV2 } from '@wepublish/editor/api-v2';
 import { SingleViewTitle } from '@wepublish/ui/editor';
 import { ConsentForm } from './consent-form';
 
@@ -28,7 +27,6 @@ export const ConsentEditView = () => {
   const { id } = useParams();
   const consentId = id!;
 
-  const client = useMemo(() => getApiClientV2(), []);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -70,7 +68,6 @@ export const ConsentEditView = () => {
   const [shouldClose, setShouldClose] = useState<boolean>(false);
 
   const { loading: dataLoading } = useConsentQuery({
-    client,
     variables: {
       id: consentId,
     },
@@ -83,7 +80,6 @@ export const ConsentEditView = () => {
   });
 
   const [updateConsent, { loading: updateLoading }] = useUpdateConsentMutation({
-    client,
     onError: error => onErrorToast(error, consent.slug ?? ''),
     onCompleted: data => {
       if (shouldClose) {

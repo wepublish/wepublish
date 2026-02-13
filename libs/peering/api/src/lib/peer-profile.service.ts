@@ -1,25 +1,29 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { PeerProfile, RemotePeerProfile } from './peer-profile.model';
-import { Image } from '@wepublish/image/api';
-import { PEER_MODULE_OPTIONS, PeerModuleOptions } from './peer.constants';
-import { Descendant } from 'slate';
+import {
+  UpsertPeerProfileInput,
+  RemotePeerProfile,
+} from './peer-profile.model';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { RemotePeerProfileDataloaderService } from './remote-peer-profile.dataloader';
 import { Cache } from 'cache-manager';
+import { createSafeHostUrl } from './create-safe-host-url';
+import { GraphQLClient } from 'graphql-request';
+import {
+  PeerProfile as RemoteGqlPeerProfile,
+  PeerProfileQuery,
+  PeerProfileQueryVariables,
+} from './remote/graphql';
+import { PeerDataloaderService } from './peer-dataloader.service';
 
 @Injectable()
 export class PeerProfileService {
   constructor(
     private prisma: PrismaClient,
-    private peerProfile: RemotePeerProfileDataloaderService,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
-    @Inject(PEER_MODULE_OPTIONS) private options: PeerModuleOptions
+    protected peer: PeerDataloaderService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache
   ) {}
 
-  async getPeerProfile(): Promise<PeerProfile> {
-    const { hostURL, websiteURL } = this.options;
-
+  async getPeerProfile() {
     // @TODO: move fallback to seed
     const profile = (await this.prisma.peerProfile.findFirst({})) ?? {
       name: '',
@@ -27,60 +31,93 @@ export class PeerProfileService {
       themeFontColor: '#ffffff',
       callToActionURL: '',
       callToActionText: [],
-      logoID: null,
-      squareLogoId: null,
-      callToActionImageID: null,
+      logoID: undefined,
+      squareLogoId: undefined,
+      callToActionImageID: undefined,
       callToActionImageURL: '',
     };
 
-    let logo: Image | undefined = undefined;
-    let squareLogo: Image | undefined = undefined;
-    let callToActionImage: Image | undefined = undefined;
-
-    if (profile.logoID) {
-      logo = { id: profile.logoID } as Image;
-    }
-
-    if (profile.squareLogoId) {
-      squareLogo = { id: profile.squareLogoId } as Image;
-    }
-
-    if (profile.callToActionImageID) {
-      callToActionImage = { id: profile.callToActionImageID } as Image;
-    }
-
-    return {
-      name: profile.name,
-      themeColor: profile.themeColor,
-      themeFontColor: profile.themeFontColor,
-      callToActionText: profile.callToActionText as Descendant[],
-      callToActionURL: profile.callToActionURL,
-      callToActionImageURL: profile.callToActionImageURL ?? undefined,
-      logoID: profile.logoID ?? undefined,
-      squareLogoId: profile.squareLogoId ?? undefined,
-      callToActionImageID: profile.callToActionImageID ?? undefined,
-      hostURL,
-      websiteURL,
-      logo,
-      squareLogo,
-      callToActionImage,
-    };
+    return profile;
   }
 
-  async getRemotePeerProfile(peerId: string) {
-    const key = `REMOTE-PEER-PROFILE:${peerId}`;
+  async getRemotePeerProfile(
+    hostURL: string,
+    token: string
+  ): Promise<RemotePeerProfile> {
+    const key = `REMOTE-PEER-PROFILE:${hostURL}`;
     const cached = await this.cacheManager.get<RemotePeerProfile>(key);
 
     if (cached) {
       return cached;
     }
 
-    const profile = await this.peerProfile.load(peerId);
+    const link = createSafeHostUrl(hostURL, 'v1');
+    const client = new GraphQLClient(link, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-    if (process.env['NODE_ENV'] === 'production' && profile) {
-      await this.cacheManager.set(key, profile, 1000 * 3600 * 24);
+    const profile = await client.request<
+      PeerProfileQuery,
+      PeerProfileQueryVariables
+    >(RemoteGqlPeerProfile);
+
+    const updatedProfile = {
+      ...profile.peerProfile,
+      logo:
+        profile.peerProfile.logo ?
+          {
+            ...profile.peerProfile.logo,
+            createdAt: new Date(profile.peerProfile.logo.createdAt),
+            modifiedAt: new Date(profile.peerProfile.logo.modifiedAt),
+          }
+        : profile.peerProfile.logo,
+      squareLogo:
+        profile.peerProfile.squareLogo ?
+          {
+            ...profile.peerProfile.squareLogo,
+            createdAt: new Date(profile.peerProfile.squareLogo.createdAt),
+            modifiedAt: new Date(profile.peerProfile.squareLogo.modifiedAt),
+          }
+        : profile.peerProfile.squareLogo,
+      callToActionImage:
+        profile.peerProfile.callToActionImage ?
+          {
+            ...profile.peerProfile.callToActionImage,
+            createdAt: new Date(
+              profile.peerProfile.callToActionImage.createdAt
+            ),
+            modifiedAt: new Date(
+              profile.peerProfile.callToActionImage.modifiedAt
+            ),
+          }
+        : profile.peerProfile.callToActionImage,
+    };
+
+    if (process.env['NODE_ENV'] === 'production' && updatedProfile) {
+      await this.cacheManager.set(key, updatedProfile, 1000 * 3600 * 24);
     }
 
-    return profile;
+    return updatedProfile as RemotePeerProfile;
+  }
+
+  async upsertPeerProfile(peerProfile: UpsertPeerProfileInput) {
+    const oldProfile = await this.prisma.peerProfile.findFirst({});
+
+    return this.prisma.peerProfile.upsert({
+      where: {
+        id: oldProfile?.id,
+      },
+      create: {
+        ...peerProfile,
+        callToActionText: peerProfile.callToActionText as any,
+      },
+      update: {
+        ...peerProfile,
+        callToActionText: peerProfile.callToActionText as any,
+      },
+    });
   }
 }

@@ -1,9 +1,8 @@
 import { ApolloError } from '@apollo/client';
 import {
   CommentItemType,
-  getApiClientV2,
   useCreateCommentMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconType } from 'react-icons';
@@ -55,9 +54,7 @@ export function CreateCommentBtn({
     );
   };
 
-  const client = getApiClientV2();
   const [createComment] = useCreateCommentMutation({
-    client,
     onError,
   });
 

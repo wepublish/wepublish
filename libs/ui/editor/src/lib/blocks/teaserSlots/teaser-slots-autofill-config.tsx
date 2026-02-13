@@ -6,7 +6,7 @@ import {
   TagType,
   TeaserSlotsAutofillConfigInput,
   TeaserType,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, SelectPicker } from 'rsuite';

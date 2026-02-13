@@ -2,7 +2,7 @@ import {
   CommentRevision,
   CommentRevisionInput,
   FullCommentFragment,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {

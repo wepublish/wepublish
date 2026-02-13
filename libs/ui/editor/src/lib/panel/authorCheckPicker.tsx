@@ -2,10 +2,9 @@ import styled from '@emotion/styled';
 import {
   AuthorListDocument,
   FullAuthorFragment,
-  getApiClientV2,
   useAuthorListQuery,
   useCreateAuthorMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { slugify } from '@wepublish/utils';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -35,9 +34,8 @@ export function AuthorCheckPicker({
   const [authorsFilter, setAuthorsFilter] = useState('');
 
   const authorsVariables = { filter: authorsFilter || undefined, take: 10 };
-  const client = getApiClientV2();
+
   const { data } = useAuthorListQuery({
-    client,
     variables: authorsVariables,
     fetchPolicy: 'network-only',
   });
@@ -53,7 +51,6 @@ export function AuthorCheckPicker({
   }, [data?.authors, list]);
 
   const [createAuthor] = useCreateAuthorMutation({
-    client,
     refetchQueries: [getOperationNameFromDocument(AuthorListDocument)],
   });
 

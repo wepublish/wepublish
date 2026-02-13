@@ -1,13 +1,12 @@
 import { ApolloError } from '@apollo/client';
 import styled from '@emotion/styled';
 import {
-  getApiClientV2,
   SortOrder,
   Tag,
   TagSort,
   TagType,
   useTagListQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -80,9 +79,8 @@ export function SelectTags({
    * Loading tags
    */
   const take = 50;
-  const client = getApiClientV2();
+
   const { data: tagsData, refetch } = useTagListQuery({
-    client,
     variables: {
       filter: {
         type: tagType,

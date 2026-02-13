@@ -1,10 +1,9 @@
 import styled from '@emotion/styled';
 import {
   FullUserFragment,
-  getApiClientV2,
   InvoiceFragment,
   useMarkInvoiceAsPaidMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdClose, MdDone, MdMail } from 'react-icons/md';
@@ -57,8 +56,8 @@ export function Invoice({
 }: InvoiceProps) {
   // variable definitions
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const client = getApiClientV2();
-  const [markInvoiceAsPaid] = useMarkInvoiceAsPaidMutation({ client });
+
+  const [markInvoiceAsPaid] = useMarkInvoiceAsPaidMutation();
   const { t } = useTranslation();
 
   /**

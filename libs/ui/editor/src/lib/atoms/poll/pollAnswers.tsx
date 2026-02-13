@@ -2,12 +2,11 @@ import { ApolloError } from '@apollo/client';
 import styled from '@emotion/styled';
 import {
   FullPoll,
-  getApiClientV2,
   PollAnswer,
   PollExternalVote,
   useCreatePollAnswerMutation,
   useDeletePollAnswerMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdContentCopy, MdDelete } from 'react-icons/md';
@@ -113,11 +112,9 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     undefined
   );
   const [newAnswer, setNewAnswer] = useState<string>('');
-  const client = getApiClientV2();
-  const [createAnswerMutation, { loading }] = useCreatePollAnswerMutation({
-    client,
-  });
-  const [deleteAnswerMutation] = useDeletePollAnswerMutation({ client });
+
+  const [createAnswerMutation, { loading }] = useCreatePollAnswerMutation({});
+  const [deleteAnswerMutation] = useDeletePollAnswerMutation();
 
   const onErrorToast = (error: ApolloError) => {
     toaster.push(

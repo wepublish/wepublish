@@ -1,0 +1,17 @@
+fragment FullPeriodicJob on PeriodicJob {
+  id
+  date
+  error
+  executionTime
+  finishedWithError
+  modifiedAt
+  successfullyFinished
+  tries
+  createdAt
+}
+
+query PeriodicJobLogs($skip: Int, $take: Int) {
+  periodicJobLog(skip: $skip, take: $take) {
+    ...FullPeriodicJob
+  }
+}

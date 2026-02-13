@@ -1,15 +1,11 @@
 import styled from '@emotion/styled';
 import {
-  FullPeerProfileFragment as V1FullPeerProfileFragment,
-  useRemotePeerProfileQuery,
-} from '@wepublish/editor/api';
-import {
-  FullRemotePeerProfileFragment as V2FullPeerProfileFragment,
-  getApiClientV2,
+  FullRemotePeerProfileFragment,
   useCreatePeerMutation,
   usePeerQuery,
+  useRemotePeerProfileQuery,
   useUpdatePeerMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { slugify } from '@wepublish/utils';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -70,33 +66,29 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
   const [information, setInformation] = useState<Descendant[]>();
   const [urlString, setURLString] = useState('');
   const [token, setToken] = useState('');
-  const [profile, setProfile] = useState<
-    V1FullPeerProfileFragment | V2FullPeerProfileFragment | null
-  >(null);
+  const [profile, setProfile] = useState<FullRemotePeerProfileFragment | null>(
+    null
+  );
 
-  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
     error: loadError,
   } = usePeerQuery({
-    client,
     variables: { id: id! },
     fetchPolicy: 'network-only',
     skip: id === undefined,
   });
 
   const [createPeer, { loading: isCreating, error: createError }] =
-    useCreatePeerMutation({
-      client,
-    });
+    useCreatePeerMutation({});
 
   const [updatePeer, { loading: isUpdating, error: updateError }] =
-    useUpdatePeerMutation({
-      client,
-    });
+    useUpdatePeerMutation({});
 
-  const { refetch: fetchRemote } = useRemotePeerProfileQuery({ skip: true });
+  const { refetch: fetchRemote } = useRemotePeerProfileQuery({
+    skip: true,
+  });
 
   const isDisabled = isLoading || isCreating || isUpdating;
   const { t } = useTranslation();

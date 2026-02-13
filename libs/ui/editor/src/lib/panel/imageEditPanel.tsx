@@ -1,12 +1,11 @@
 import styled from '@emotion/styled';
 import {
   FullImageFragment,
-  getApiClientV2,
   ImageListDocument,
   useImageQuery,
   useUpdateImageMutation,
   useUploadImageMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import imageCompression from 'browser-image-compression';
 import prettyBytes from 'pretty-bytes';
 import { useEffect, useState } from 'react';
@@ -92,20 +91,17 @@ function ImageEditPanel({
 
   const [focalPoint, setFocalPoint] = useState<Point>();
 
-  const client = getApiClientV2();
   const { data, error: loadingError } = useImageQuery({
-    client,
     variables: { id: id! },
     fetchPolicy: 'network-only',
     skip: id === undefined,
   });
 
   const [updateImage, { loading: isUpdating, error: savingError }] =
-    useUpdateImageMutation({ client });
+    useUpdateImageMutation();
 
   const [uploadImage, { loading: isUploading, error: uploadError }] =
     useUploadImageMutation({
-      client,
       refetchQueries: [getOperationNameFromDocument(ImageListDocument)],
     });
 

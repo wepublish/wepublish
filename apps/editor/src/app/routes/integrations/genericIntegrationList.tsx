@@ -1,6 +1,5 @@
 import { useQuery } from '@apollo/client';
 import styled from '@emotion/styled';
-import { getApiClientV2 } from '@wepublish/editor/api-v2';
 import { DocumentNode } from 'graphql';
 import { useMemo, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
@@ -41,10 +40,8 @@ export function GenericIntegrationList<
 }: GenericIntegrationListProps<TSetting, TFormValues>) {
   const { t } = useTranslation();
   const [searchValue, setSearchValue] = useState('');
-  const client = getApiClientV2();
-  const { data, loading, error } = useQuery(query, {
-    client,
-  });
+
+  const { data, loading, error } = useQuery(query, {});
 
   const settings = data?.[dataKey] as TSetting[] | undefined;
 

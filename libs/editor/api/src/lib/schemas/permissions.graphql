@@ -1,0 +1,11 @@
+fragment FullPermission on Permission {
+  id
+  description
+  deprecated
+}
+
+query PermissionList {
+  permissions {
+    ...FullPermission
+  }
+}
