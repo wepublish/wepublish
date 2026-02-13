@@ -74,6 +74,15 @@ export const ImageBlock = ({
           setRealImageWidth(newImageWidth);
         }
 
+        const cssObjectFit = window
+          .getComputedStyle(imageRef.current, null)
+          .getPropertyValue('object-fit');
+
+        // make sure images are centered
+        if (cssObjectFit === 'contain') {
+          imageRef.current.setAttribute('style', 'object-position: unset;');
+        }
+
         captionRef.current.setAttribute('style', '');
       }
     };
