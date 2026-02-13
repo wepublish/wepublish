@@ -1,8 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import {
-  getApiClientV2,
-  useCreatePollMutation,
-} from '@wepublish/editor/api-v2';
+import { useCreatePollMutation } from '@wepublish/editor/api';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
@@ -10,9 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { IconButton, Message, toaster } from 'rsuite';
 
 export function CreatePollBtn() {
-  const client = getApiClientV2();
   const [createPollMutation, { data: newPoll, loading }] =
-    useCreatePollMutation({ client });
+    useCreatePollMutation();
   const navigate = useNavigate();
   const { t } = useTranslation();
 

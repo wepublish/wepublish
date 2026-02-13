@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import {
   MutationCreateTagArgs,
   MutationUpdateTagArgs,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   ColorPicker,
   RichTextBlock,
@@ -44,7 +44,7 @@ export const TagForm = ({ tag, onChange }: TagFormProps) => {
           <Form.ControlLabel>{t('tags.overview.color')}</Form.ControlLabel>
           <ColorPicker
             setColor={color => {
-              onChange({ color: color });
+              onChange({ color });
             }}
             currentColor={tag.color || '#000000'}
           />

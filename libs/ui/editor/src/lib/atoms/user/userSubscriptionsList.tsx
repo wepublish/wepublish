@@ -5,7 +5,7 @@ import {
   PaymentPeriodicity,
   SubscriptionDeactivationReason,
   UserSubscriptionFragment,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import {

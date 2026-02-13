@@ -3,13 +3,12 @@ import styled from '@emotion/styled';
 import {
   CommentRatingSystemAnswer,
   FullCommentRatingSystemFragment,
-  getApiClientV2,
   RatingSystemType,
   useCreateRatingSystemAnswerMutation,
   useDeleteRatingSystemAnswerMutation,
   useRatingSystemLazyQuery,
   useUpdateRatingSystemMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   IconButtonTooltip,
@@ -77,10 +76,8 @@ function CommentRatingEditView() {
 
   const [t] = useTranslation();
 
-  const client = getApiClientV2();
   const [fetchRatingSystem, { loading: isFetching }] = useRatingSystemLazyQuery(
     {
-      client,
       onError: showErrors,
       onCompleted: data => setRatingSystem(data.ratingSystem),
     }
@@ -88,7 +85,6 @@ function CommentRatingEditView() {
 
   const [addAnswer, { loading: isAdding }] =
     useCreateRatingSystemAnswerMutation({
-      client,
       onCompleted: ({ createRatingSystemAnswer }) => {
         setRatingSystem(old =>
           old ?
@@ -103,7 +99,6 @@ function CommentRatingEditView() {
 
   const [deleteAnswer, { loading: isDeleting }] =
     useDeleteRatingSystemAnswerMutation({
-      client,
       onError: showErrors,
       onCompleted: data => {
         setRatingSystem(old =>
@@ -121,7 +116,6 @@ function CommentRatingEditView() {
 
   const [updateAnswer, { loading: isUpdating }] = useUpdateRatingSystemMutation(
     {
-      client,
       onError: showErrors,
       onCompleted: () =>
         toaster.push(

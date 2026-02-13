@@ -24,7 +24,7 @@ import {
   getApiClientV2,
   LocalStorageKey,
   TagType,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
   MailTemplateList,
@@ -62,8 +62,8 @@ import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
 import { EventListView } from './routes/events/eventListView';
 import { ImageList } from './routes/images/imageList';
-import { IntegrationList } from './routes/integrations/integrationList';
 import { IntegrationEditView } from './routes/integrations/integrationEditView';
+import { IntegrationList } from './routes/integrations/integrationList';
 import { MemberPlanList } from './routes/memberPlans/memberPlanList';
 import { NavigationList } from './routes/navigations/navigationList';
 import { PageEditor } from './routes/pages/pageEditor';

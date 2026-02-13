@@ -4,13 +4,12 @@ import {
   AuthorListDocument,
   FullAuthorFragment,
   FullImageFragment,
-  getApiClientV2,
   Maybe,
   TagType,
   useAuthorQuery,
   useCreateAuthorMutation,
   useUpdateAuthorMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { slugify } from '@wepublish/utils';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -104,13 +103,11 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
 
   const isAuthorized = useAuthorisation('CAN_CREATE_AUTHOR');
 
-  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
     error: loadError,
   } = useAuthorQuery({
-    client,
     variables: { id: id! },
     fetchPolicy: 'network-only',
     skip: id === undefined,
@@ -118,14 +115,11 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
 
   const [createAuthor, { loading: isCreating, error: createError }] =
     useCreateAuthorMutation({
-      client,
       refetchQueries: [getOperationNameFromDocument(AuthorListDocument)],
     });
 
   const [updateAuthor, { loading: isUpdating, error: updateError }] =
-    useUpdateAuthorMutation({
-      client,
-    });
+    useUpdateAuthorMutation({});
 
   const isDisabled =
     isLoading ||

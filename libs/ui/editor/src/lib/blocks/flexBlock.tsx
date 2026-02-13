@@ -2,7 +2,7 @@ import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
 import styled from '@emotion/styled';
-import { BlockType } from '@wepublish/editor/api-v2';
+import { BlockType } from '@wepublish/editor/api';
 import i18next from 'i18next';
 import nanoid from 'nanoid';
 import React, {

@@ -1,20 +1,64 @@
 fragment FullPeerProfile on PeerProfile {
   name
-  hostURL
-  themeColor
-  themeFontColor
   logo {
     ...FullImage
   }
   squareLogo {
     ...FullImage
   }
+
+  themeColor
+  themeFontColor
+
+  hostURL
+  websiteURL
+
   callToActionText
   callToActionURL
+  callToActionImageURL
   callToActionImage {
     ...FullImage
   }
+}
+
+fragment FullRemotePeerProfile on RemotePeerProfile {
+  name
+  logo {
+    ...FullPeerImage
+  }
+  squareLogo {
+    ...FullPeerImage
+  }
+
+  themeColor
+  themeFontColor
+
+  hostURL
+  websiteURL
+
+  callToActionText
+  callToActionURL
   callToActionImageURL
+  callToActionImage {
+    ...FullPeerImage
+  }
+}
+
+fragment FullPeer on Peer {
+  id
+  createdAt
+  modifiedAt
+
+  name
+  slug
+  isDisabled
+  information
+  hostURL
+  token
+
+  profile {
+    ...FullRemotePeerProfile
+  }
 }
 
 query PeerProfile {
@@ -23,14 +67,93 @@ query PeerProfile {
   }
 }
 
-query RemotePeerProfile($hostURL: String!, $token: String!) {
-  remotePeerProfile(hostURL: $hostURL, token: $token) {
+query PeerList {
+  peers {
+    ...FullPeer
+  }
+}
+
+query Peer($id: String!) {
+  peer(id: $id) {
+    ...FullPeer
+  }
+}
+
+mutation CreatePeer(
+  $hostURL: String!
+  $information: RichText
+  $name: String!
+  $slug: String!
+  $token: String!
+) {
+  createPeer(
+    hostURL: $hostURL
+    information: $information
+    isDisabled: false
+    name: $name
+    slug: $slug
+    token: $token
+  ) {
+    ...FullPeer
+  }
+}
+
+mutation UpdatePeer(
+  $id: String!
+  $hostURL: String
+  $information: RichText
+  $name: String
+  $slug: String
+  $isDisabled: Boolean
+  $token: String
+) {
+  updatePeer(
+    id: $id
+    hostURL: $hostURL
+    information: $information
+    isDisabled: $isDisabled
+    name: $name
+    slug: $slug
+    token: $token
+  ) {
+    ...FullPeer
+  }
+}
+
+mutation DeletePeer($id: String!) {
+  deletePeer(id: $id) {
+    ...FullPeer
+  }
+}
+
+mutation UpdatePeerProfile(
+  $name: String!
+  $themeColor: Color!
+  $themeFontColor: Color!
+  $logoID: String!
+  $squareLogoId: String!
+  $callToActionText: RichText!
+  $callToActionURL: String!
+  $callToActionImageURL: String
+  $callToActionImageID: String!
+) {
+  updatePeerProfile(
+    name: $name
+    themeColor: $themeColor
+    themeFontColor: $themeFontColor
+    logoID: $logoID
+    squareLogoId: $squareLogoId
+    callToActionText: $callToActionText
+    callToActionURL: $callToActionURL
+    callToActionImageURL: $callToActionImageURL
+    callToActionImageID: $callToActionImageID
+  ) {
     ...FullPeerProfile
   }
 }
 
-mutation UpdatePeerProfile($input: PeerProfileInput!) {
-  updatePeerProfile(input: $input) {
-    ...FullPeerProfile
+query RemotePeerProfile($hostURL: String!, $token: String!) {
+  remotePeerProfile(hostURL: $hostURL, token: $token) {
+    ...FullRemotePeerProfile
   }
 }

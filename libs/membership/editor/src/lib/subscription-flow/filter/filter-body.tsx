@@ -6,7 +6,7 @@ import {
   UpdateSubscriptionFlowMutationVariables,
   SubscriptionFlowFragment,
   FullMemberPlanFragment,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useAuthorisation } from '@wepublish/ui/editor';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';

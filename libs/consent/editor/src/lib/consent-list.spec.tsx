@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { MockLink } from '@apollo/client/testing';
 import fetch from 'jest-fetch-mock';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
-import * as v2Client from '@wepublish/editor/api-v2';
+import * as v2Client from '@wepublish/editor/api';
 
 jest.setMock('node-fetch', fetch);
 

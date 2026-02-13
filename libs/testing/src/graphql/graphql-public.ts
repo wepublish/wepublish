@@ -1883,6 +1883,8 @@ export type Mutation = {
   updatePaywall: Paywall;
   /** Updates an existing peer. */
   updatePeer: Peer;
+  /** Updates the peer profile of the current media. */
+  updatePeerProfile: PeerProfile;
   /** Updates an existing poll. */
   updatePoll: FullPoll;
   /** Update the comment rating system. */
@@ -2750,6 +2752,18 @@ export type MutationUpdatePeerArgs = {
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
   token?: InputMaybe<Scalars['String']>;
+};
+
+export type MutationUpdatePeerProfileArgs = {
+  callToActionImageID: Scalars['String'];
+  callToActionImageURL?: InputMaybe<Scalars['String']>;
+  callToActionText: Scalars['RichText'];
+  callToActionURL: Scalars['String'];
+  logoID: Scalars['String'];
+  name: Scalars['String'];
+  squareLogoId: Scalars['String'];
+  themeColor: Scalars['Color'];
+  themeFontColor: Scalars['Color'];
 };
 
 export type MutationUpdatePollArgs = {
@@ -3868,6 +3882,8 @@ export type Query = {
   provider: MailProviderModel;
   /** This query returns the comment rating system. */
   ratingSystem: CommentRatingSystem;
+  /** Returns a remote peer profile based on hostURL and token supplied. */
+  remotePeerProfile: RemotePeerProfile;
   /**
    *
    *       Returns all renewing subscribers in a given timeframe.
@@ -4230,6 +4246,11 @@ export type QueryPrimaryBannerArgs = {
 export type QueryPromptHtmlArgs = {
   chatId?: InputMaybe<Scalars['String']>;
   query: Scalars['String'];
+};
+
+export type QueryRemotePeerProfileArgs = {
+  hostURL: Scalars['String'];
+  token: Scalars['String'];
 };
 
 export type QueryRenewingSubscribersArgs = {

@@ -1,12 +1,11 @@
 import { ApolloError } from '@apollo/client';
 import styled from '@emotion/styled';
 import {
-  getApiClientV2,
   MemberPlan,
   MemberPlanSort,
   SortOrder,
   useMemberPlanListQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -71,9 +70,7 @@ export function SelectMemberPlans({
     );
   };
 
-  const client = getApiClientV2();
   const { data: memberplansData, refetch } = useMemberPlanListQuery({
-    client,
     variables: {
       sort: MemberPlanSort.CreatedAt,
       order: SortOrder.Ascending,

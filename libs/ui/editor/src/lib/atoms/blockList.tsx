@@ -2,9 +2,8 @@ import styled from '@emotion/styled';
 import {
   BlockStyle,
   EditorBlockType,
-  getApiClientV2,
   useBlockStylesQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import nanoid from 'nanoid';
 import React, {
   Fragment,
@@ -345,8 +344,6 @@ interface ListItemWrapperProps {
   onStyleChange?: (blockStyle?: BlockStyle['id']) => void;
 }
 
-const client = getApiClientV2();
-
 function ListItemWrapper({
   value,
   children,
@@ -358,7 +355,7 @@ function ListItemWrapper({
   onStyleChange,
 }: ListItemWrapperProps) {
   const { t } = useTranslation();
-  const { data } = useBlockStylesQuery({ client });
+  const { data } = useBlockStylesQuery();
 
   const stylesForBlock = useMemo(
     () =>

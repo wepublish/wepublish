@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { FullImageFragment, Tag, TagType } from '@wepublish/editor/api-v2';
+import { FullImageFragment, Tag, TagType } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdListAlt, MdSettings, MdShare } from 'react-icons/md';

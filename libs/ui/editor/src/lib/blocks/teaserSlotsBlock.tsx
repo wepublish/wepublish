@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import {
   TeaserSlotsAutofillConfigInput,
   TeaserSlotType,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import arrayMove from 'array-move';
 import { ChangeEvent, ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

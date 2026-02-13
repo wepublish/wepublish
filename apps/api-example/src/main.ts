@@ -2,21 +2,14 @@ import { runServer } from './app';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './nestapp/app.module';
-import { MediaAdapter } from '@wepublish/image/api';
-import {
-  PAYMENT_METHOD_CONFIG,
-  PaymentMethodConfig,
-} from '@wepublish/payment/api';
-import { MAIL_WEBHOOK_PATH_PREFIX, MailContext } from '@wepublish/mail/api';
+
+import { MAIL_WEBHOOK_PATH_PREFIX } from '@wepublish/mail/api';
 import helmet from 'helmet';
-import {
-  HotAndTrendingDataSource,
-  HOT_AND_TRENDING_DATA_SOURCE,
-} from '@wepublish/article/api';
+
 import { MAX_PAYLOAD_SIZE } from '@wepublish/utils/api';
-import { PAYMENT_WEBHOOK_PATH_PREFIX } from '@wepublish/api';
 import { json, urlencoded } from 'body-parser';
 import type { Request, Response, NextFunction, RequestHandler } from 'express';
+import { graphqlUploadExpress } from 'graphql-upload';
 
 async function bootstrap() {
   const port = process.env.PORT ?? 4000;
@@ -30,7 +23,7 @@ async function bootstrap() {
 
   const skipPrefixes = [
     `/${MAIL_WEBHOOK_PATH_PREFIX}`,
-    `/${PAYMENT_WEBHOOK_PATH_PREFIX}`,
+    // `/${PAYMENT_WEBHOOK_PATH_PREFIX}`,
   ] as const;
   const jsonParser = json({ limit: MAX_PAYLOAD_SIZE });
 
@@ -50,25 +43,13 @@ async function bootstrap() {
     return jsonParser(req, res, next);
   };
   nestApp.use(conditionalJson);
-
   nestApp.use(urlencoded({ extended: true, limit: MAX_PAYLOAD_SIZE }));
-  const mediaAdapter = nestApp.get(MediaAdapter);
-  const paymentProviders = nestApp.get<PaymentMethodConfig>(
-    PAYMENT_METHOD_CONFIG
-  ).paymentProviders;
-  const mailProvider = nestApp.get(MailContext).mailProvider;
-  const hotAndTrendingDataSource = nestApp.get<HotAndTrendingDataSource>(
-    HOT_AND_TRENDING_DATA_SOURCE
-  );
+  nestApp.use(graphqlUploadExpress());
 
   const publicExpressApp = nestApp.getHttpAdapter().getInstance();
 
   await runServer({
     publicExpressApp,
-    mediaAdapter,
-    paymentProviders,
-    mailProvider,
-    hotAndTrendingDataSource,
   }).catch(err => {
     console.error(err);
     process.exit(1);

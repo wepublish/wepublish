@@ -1,10 +1,9 @@
 import { ApolloError } from '@apollo/client';
 import {
-  getApiClientV2,
   MutationCreateTagArgs,
   TagType,
   useCreateTagMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { CanCreateTag } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
@@ -46,9 +45,7 @@ const TagCreateView = ({ type }: TagCreateViewProps) => {
   const [shouldClose, setShouldClose] = useState(false);
   const closePath = './..';
 
-  const client = getApiClientV2();
   const [createTag, { loading: createLoading }] = useCreateTagMutation({
-    client,
     onError: onErrorToast,
     onCompleted: data => {
       if (data.createTag) {

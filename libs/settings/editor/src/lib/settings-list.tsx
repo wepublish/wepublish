@@ -4,7 +4,7 @@ import {
   SettingName,
   useSettingsListQuery,
   useUpdateSettingMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   DescriptionList,
@@ -40,7 +40,6 @@ import {
 } from 'rsuite';
 import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon';
 import FormControl from 'rsuite/FormControl';
-import { getApiClientV2 } from '@wepublish/editor/api-v2';
 
 const Panel = styled(RPanel)`
   margin-bottom: 10px;
@@ -109,14 +108,12 @@ function SettingList() {
 
   const isAuthorized = useAuthorisation('CAN_UPDATE_SETTINGS');
 
-  const client = getApiClientV2();
   const {
     data: settingListData,
     loading,
     refetch,
     error: fetchError,
   } = useSettingsListQuery({
-    client,
     fetchPolicy: 'network-only',
   });
 
@@ -216,7 +213,6 @@ function SettingList() {
 
   const [updateSetting, { error: updateSettingError }] =
     useUpdateSettingMutation({
-      client,
       fetchPolicy: 'network-only',
     });
 

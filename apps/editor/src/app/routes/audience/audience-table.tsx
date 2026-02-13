@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import ListIcon from '@rsuite/icons/List';
-import { DailySubscriptionStats } from '@wepublish/editor/api-v2';
+import { DailySubscriptionStats } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdInfo } from 'react-icons/md';

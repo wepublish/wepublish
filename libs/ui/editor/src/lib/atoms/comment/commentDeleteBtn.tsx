@@ -1,9 +1,8 @@
 import { ApolloError } from '@apollo/client';
 import {
   FullCommentFragment,
-  getApiClientV2,
   useDeleteCommentMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdDelete } from 'react-icons/md';
@@ -35,9 +34,8 @@ export function CommentDeleteBtn({
 }: CommentDeleteBtnProps): JSX.Element {
   const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const client = getApiClientV2();
+
   const [deleteComment, { loading }] = useDeleteCommentMutation({
-    client,
     onCompleted: () => {
       setModalOpen(false);
       if (onCommentDeleted) {

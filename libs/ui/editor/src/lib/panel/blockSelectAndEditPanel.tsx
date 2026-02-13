@@ -1,4 +1,4 @@
-import { EditorBlockType } from '@wepublish/editor/api-v2';
+import { EditorBlockType } from '@wepublish/editor/api';
 
 import { BlockSelectPanel } from './blockSelectPanel';
 

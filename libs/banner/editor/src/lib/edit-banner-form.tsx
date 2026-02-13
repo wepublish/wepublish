@@ -4,11 +4,10 @@ import {
   FullImageFragment,
   LoginStatus,
   UpdateBannerInput,
-  getApiClientV2,
   useBannerQuery,
   useUpdateBannerMutation,
-} from '@wepublish/editor/api-v2';
-import { useMemo, useState } from 'react';
+} from '@wepublish/editor/api';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BannerForm } from './banner-form';
@@ -36,9 +35,7 @@ export const EditBannerForm = () => {
     //tags: []
   });
 
-  const client = useMemo(() => getApiClientV2(), []);
   useBannerQuery({
-    client,
     variables: {
       id: id!,
     },
@@ -57,7 +54,6 @@ export const EditBannerForm = () => {
   const [shouldClose, setShouldClose] = useState(false);
 
   const [updateBanner, { loading }] = useUpdateBannerMutation({
-    client,
     onError: error => {
       console.log(error);
     },

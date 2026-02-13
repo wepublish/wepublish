@@ -4,7 +4,7 @@ import {
   FullMailTemplateFragment,
   SubscriptionEvent,
   SubscriptionFlowFragment,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useMemo } from 'react';
 import { MdDragIndicator } from 'react-icons/md';
 import { MailTemplateSelect } from './mail-template-select';

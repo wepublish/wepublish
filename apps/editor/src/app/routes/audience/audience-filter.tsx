@@ -1,8 +1,5 @@
 import styled from '@emotion/styled';
-import {
-  getApiClientV2,
-  useMemberPlanListQuery,
-} from '@wepublish/editor/api-v2';
+import { useMemberPlanListQuery } from '@wepublish/editor/api';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -65,10 +62,7 @@ export function AudienceFilter({
 }: AudienceFilterProps) {
   const { t } = useTranslation();
 
-  const client = getApiClientV2();
-  const { data: memberPlans } = useMemberPlanListQuery({
-    client,
-  });
+  const { data: memberPlans } = useMemberPlanListQuery({});
 
   const memberPlansForPicker = useMemo<
     { label: string; value: string }[]

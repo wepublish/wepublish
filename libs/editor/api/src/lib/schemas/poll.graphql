@@ -1,0 +1,201 @@
+fragment FullPoll on FullPoll {
+  id
+  question
+  opensAt
+  closedAt
+  infoText
+
+  answers {
+    id
+    pollId
+    answer
+    votes
+  }
+
+  externalVoteSources {
+    id
+    source
+
+    voteAmounts {
+      id
+      answerId
+      amount
+    }
+  }
+}
+
+fragment FullPollVote on PollVote {
+  id
+  createdAt
+  pollId
+  answerId
+  userId
+  fingerprint
+}
+
+fragment FullPollVoteWithAnswer on PollVote {
+  ...FullPollVote
+  answer {
+    id
+    answer
+  }
+}
+
+fragment PollExternalVoteSource on PollExternalVoteSource {
+  id
+  source
+  voteAmounts {
+    id
+    answerId
+    amount
+  }
+}
+
+mutation CreatePoll(
+  $opensAt: DateTime!
+  $closedAt: DateTime
+  $question: String
+) {
+  createPoll(opensAt: $opensAt, closedAt: $closedAt, question: $question) {
+    id
+    question
+    opensAt
+    closedAt
+    answers {
+      id
+      pollId
+      answer
+    }
+  }
+}
+
+mutation UpdatePoll(
+  $id: String!
+  $opensAt: DateTime
+  $closedAt: DateTime
+  $question: String
+  $infoText: RichText
+  $answers: [PollAnswerInput!]!
+  $externalVoteSources: [PollExternalVoteSourceInput!]!
+) {
+  updatePoll(
+    id: $id
+    opensAt: $opensAt
+    closedAt: $closedAt
+    question: $question
+    infoText: $infoText
+    answers: $answers
+    externalVoteSources: $externalVoteSources
+  ) {
+    ...FullPoll
+  }
+}
+
+mutation DeletePoll($deletePollId: String!) {
+  deletePoll(id: $deletePollId) {
+    id
+  }
+}
+
+mutation CreatePollAnswer($pollId: String!, $answer: String) {
+  createPollAnswer(pollId: $pollId, answer: $answer) {
+    answer
+    id
+    pollId
+  }
+}
+
+mutation DeletePollAnswer($deletePollAnswerId: String!) {
+  deletePollAnswer(id: $deletePollAnswerId) {
+    id
+  }
+}
+
+mutation CreatePollExternalVoteSource($pollId: String!, $source: String) {
+  createPollExternalVoteSource(pollId: $pollId, source: $source) {
+    ...PollExternalVoteSource
+  }
+}
+
+mutation DeletePollExternalVoteSource(
+  $deletePollExternalVoteSourceId: String!
+) {
+  deletePollExternalVoteSource(id: $deletePollExternalVoteSourceId) {
+    ...PollExternalVoteSource
+  }
+}
+
+query Polls(
+  $cursorId: String
+  $take: Int
+  $skip: Int
+  $filter: PollFilter
+  $sort: PollSort
+  $order: SortOrder
+) {
+  polls(
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    filter: $filter
+    sort: $sort
+    order: $order
+  ) {
+    nodes {
+      id
+      question
+      opensAt
+      closedAt
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+
+query Poll($id: String!) {
+  poll(id: $id) {
+    ...FullPoll
+  }
+}
+
+query PollVoteList(
+  $filter: PollVoteFilter
+  $cursor: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: PollVoteSort
+) {
+  pollVotes(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullPollVoteWithAnswer
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+mutation DeletePollVotes($ids: [String!]!) {
+  deletePollVotes(ids: $ids) {
+    count
+  }
+}

@@ -2,10 +2,9 @@ import {
   CreateCrowdfundingGoalInput,
   CrowdfundingGoal,
   UpdateCrowdfundingInput,
-  getApiClientV2,
   useCrowdfundingQuery,
   useUpdateCrowdfundingMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -49,9 +48,7 @@ export const EditCrowdfundingForm = () => {
     }
   );
 
-  const client = getApiClientV2();
   useCrowdfundingQuery({
-    client,
     variables: {
       id: id!,
     },
@@ -68,7 +65,6 @@ export const EditCrowdfundingForm = () => {
   const [shouldClose, setShouldClose] = useState(false);
 
   const [updateCrowdfunding, { loading }] = useUpdateCrowdfundingMutation({
-    client,
     onError: showError,
     onCompleted: data => {
       setCrowdfunding(data.updateCrowdfunding);

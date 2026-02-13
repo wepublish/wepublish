@@ -1,4 +1,4 @@
-import { TeaserType } from '@wepublish/editor/api-v2';
+import { TeaserType } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Drawer } from 'rsuite';

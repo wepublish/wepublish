@@ -1,12 +1,11 @@
 import styled from '@emotion/styled';
 import {
-  getApiClientV2,
   Tag,
   TagListQueryVariables,
   TagType,
   useDeleteTagMutation,
   useTagListQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   CanCreateTag,
   CanDeleteTag,
@@ -67,14 +66,11 @@ function TagList({ type }: TagListProps) {
     skip: (page - 1) * limit,
   } as TagListQueryVariables;
 
-  const client = getApiClientV2();
   const { data, loading, refetch } = useTagListQuery({
-    client,
     variables: tagListVariables,
     fetchPolicy: 'cache-and-network',
   });
   const [deleteTag] = useDeleteTagMutation({
-    client,
     onCompleted() {
       refetch();
     },

@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/client';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getApiClientV2 } from '@wepublish/editor/api-v2';
 import { DocumentNode } from 'graphql';
 import { useMemo } from 'react';
 import { Controller, FieldValues, Path, useForm } from 'react-hook-form';
@@ -84,10 +83,8 @@ export function SingleGenericIntegrationForm<
   getLogo,
 }: GenericIntegrationFormProps<TSetting, TFormValues>) {
   const { t } = useTranslation();
-  const client = getApiClientV2();
-  const [updateSettings, { loading: updating }] = useMutation(mutation, {
-    client,
-  });
+
+  const [updateSettings, { loading: updating }] = useMutation(mutation, {});
 
   const initialValues = useMemo(
     () => mapSettingToInitialValues(setting),

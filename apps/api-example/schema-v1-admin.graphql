@@ -1,6 +1,5 @@
 type Query {
   remotePeerProfile(hostURL: String!, token: String!): PeerProfile
-  peerProfile: PeerProfile!
 }
 
 type PeerProfile {

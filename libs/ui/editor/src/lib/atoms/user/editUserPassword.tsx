@@ -1,9 +1,8 @@
 import styled from '@emotion/styled';
 import {
   FullUserFragment,
-  getApiClientV2,
   useSendWebsiteLoginMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdReplay, MdSend } from 'react-icons/md';
@@ -41,8 +40,8 @@ export function EditUserPassword({
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] =
     useState<boolean>(false);
   const [sendLoginModalOpen, setSendLoginModalOpen] = useState<boolean>(false);
-  const client = getApiClientV2();
-  const [sendWebsiteLogin] = useSendWebsiteLoginMutation({ client });
+
+  const [sendWebsiteLogin] = useSendWebsiteLoginMutation();
 
   async function sendLoginLink() {
     if (!user) {

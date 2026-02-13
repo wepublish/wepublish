@@ -4,7 +4,7 @@ import {
   TeaserListBlockSort,
   TeaserSlotType,
   TeaserType,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import nanoid from 'nanoid';
 import {
   MdAccountBox,

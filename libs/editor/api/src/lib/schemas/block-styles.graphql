@@ -1,0 +1,31 @@
+fragment FullBlockStyle on BlockStyle {
+  id
+  createdAt
+  modifiedAt
+  name
+  blocks
+}
+
+query BlockStyles {
+  blockStyles {
+    ...FullBlockStyle
+  }
+}
+
+mutation CreateBlockStyle($name: String!, $blocks: [EditorBlockType!]!) {
+  createBlockStyle(name: $name, blocks: $blocks) {
+    ...FullBlockStyle
+  }
+}
+
+mutation UpdateBlockStyle($id: String!, $name: String, $blocks: [EditorBlockType!]!) {
+  updateBlockStyle(id: $id, name: $name, blocks: $blocks) {
+    ...FullBlockStyle
+  }
+}
+
+mutation DeleteBlockStyle($id: String!) {
+  deleteBlockStyle(id: $id) {
+    ...FullBlockStyle
+  }
+}

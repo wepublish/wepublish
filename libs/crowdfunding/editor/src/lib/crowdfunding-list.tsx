@@ -13,11 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Table as RTable, Table } from 'rsuite';
 import { RowDataType } from 'rsuite/esm/Table';
-import {
-  Crowdfunding,
-  getApiClientV2,
-  useCrowdfundingsQuery,
-} from '@wepublish/editor/api-v2';
+import { Crowdfunding, useCrowdfundingsQuery } from '@wepublish/editor/api';
 import { CrowdfundingDeleteModal } from './crowdfunding-delete-modal';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
@@ -29,10 +25,7 @@ function CrowdfundingList() {
     Crowdfunding | undefined
   >(undefined);
 
-  const client = getApiClientV2();
-
   const { data, loading, error, refetch } = useCrowdfundingsQuery({
-    client,
     fetchPolicy: 'cache-and-network',
   });
 

@@ -1,5 +1,5 @@
 import { TableCell } from '@mui/material';
-import { SubscriptionFlowFragment } from '@wepublish/editor/api-v2';
+import { SubscriptionFlowFragment } from '@wepublish/editor/api';
 import { useCallback, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MailTemplateSelect } from '../mail-template-select';

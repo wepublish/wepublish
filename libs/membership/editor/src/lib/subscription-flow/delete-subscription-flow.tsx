@@ -1,4 +1,4 @@
-import { SubscriptionFlowFragment } from '@wepublish/editor/api-v2';
+import { SubscriptionFlowFragment } from '@wepublish/editor/api';
 import { PermissionControl } from '@wepublish/ui/editor';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';

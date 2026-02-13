@@ -1,4 +1,4 @@
-import { FullPeerFragment } from '@wepublish/editor/api-v2';
+import { FullPeerFragment } from '@wepublish/editor/api';
 import { PropsWithChildren } from 'react';
 
 import { InlineAvatar } from '../inlineAvatar';

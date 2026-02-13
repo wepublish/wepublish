@@ -5,7 +5,7 @@ import {
   Exact,
   InputMaybe,
   Scalars,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useReducer, useState } from 'react';
 import { DateRange } from 'rsuite/esm/DateRangePicker';
 

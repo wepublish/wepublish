@@ -2,7 +2,7 @@ import FileDownloadIcon from '@rsuite/icons/FileDownload';
 import {
   DailySubscriptionStatsUser,
   SubscriptionFilter,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useExportSubscriptionsAsCsv } from '@wepublish/ui/editor';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { TeaserType } from '@wepublish/editor/api-v2';
+import { TeaserType } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';

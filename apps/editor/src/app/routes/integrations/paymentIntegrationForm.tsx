@@ -7,7 +7,7 @@ import {
   SettingPaymentProvider,
   StripePaymentMethod,
   UpdatePaymentProviderSettingDocument,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 

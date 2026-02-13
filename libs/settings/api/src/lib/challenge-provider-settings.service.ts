@@ -66,7 +66,7 @@ export class ChallengeProviderSettingsService {
   ): Promise<SettingChallengeProvider> {
     const data = this.encryptSecretsIfPresent(input);
     const returnValue = this.prisma.settingChallengeProvider.create({
-      data: data,
+      data,
     });
     await this.kv.resetNamespace('settings:challenge');
     return returnValue;

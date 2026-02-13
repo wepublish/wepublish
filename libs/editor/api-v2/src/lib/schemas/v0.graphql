@@ -1,6 +1,0 @@
-query PromptHTML($query: String!, $chatId: String) {
-  promptHTML(query: $query, chatId: $chatId) {
-    chatId
-    message
-  }
-}

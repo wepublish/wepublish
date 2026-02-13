@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { contextFromRequest } from './context';
 import { WepublishServerOpts } from './server';
 import { logger } from '@wepublish/utils/api';
 
@@ -26,8 +25,6 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
           switch (webhookResponse.status) {
             case 200:
               if (webhookResponse.paymentStates) {
-                const context = await contextFromRequest(req, opts);
-
                 for (const paymentStatus of webhookResponse.paymentStates) {
                   // TODO: handle errors properly
                   await paymentProvider.updatePaymentWithIntentState({

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Typography } from '@mui/material';
 import { createWithTheme } from '@wepublish/ui';
 import {
   BuilderTeaserProps,
@@ -11,7 +12,6 @@ import { sidebarDailyBriefingTheme } from '../../theme';
 import { DailyBriefingContext } from './teaser-sidebar-daily-briefing-context';
 import { TsriTeaserType } from './tsri-base-teaser';
 import { TeaserWrapper as TeaserWrapperDefault } from './tsri-teaser';
-import { Typography } from '@mui/material';
 
 export const isDailyBriefingTeaser = allPass([
   ({ blockStyle }: BuilderTeaserProps) => {

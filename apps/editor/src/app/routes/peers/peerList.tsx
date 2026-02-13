@@ -1,13 +1,12 @@
 import styled from '@emotion/styled';
-import { usePeerProfileQuery } from '@wepublish/editor/api';
 import {
-  getApiClientV2,
   PeerListDocument,
   PeerListQuery,
   useDeletePeerMutation,
   usePeerListQuery,
+  usePeerProfileQuery,
   useUpdatePeerMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   DescriptionList,
@@ -102,23 +101,17 @@ function PeerList() {
     error: peerInfoError,
   } = usePeerProfileQuery({ fetchPolicy: 'network-only' });
 
-  const client = getApiClientV2();
   const {
     data: peerListData,
     loading: isPeerListLoading,
     error: peerListError,
   } = usePeerListQuery({
-    client,
     fetchPolicy: 'network-only',
     errorPolicy: 'ignore',
   });
 
-  const [deletePeer, { loading: isDeleting }] = useDeletePeerMutation({
-    client,
-  });
-  const [updatePeer, { loading: isUpdating }] = useUpdatePeerMutation({
-    client,
-  });
+  const [deletePeer, { loading: isDeleting }] = useDeletePeerMutation({});
+  const [updatePeer, { loading: isUpdating }] = useUpdatePeerMutation({});
 
   const { t } = useTranslation();
 

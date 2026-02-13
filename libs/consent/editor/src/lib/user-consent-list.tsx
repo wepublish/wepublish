@@ -14,10 +14,8 @@ import {
   useUserConsentsQuery,
   useDeleteUserConsentMutation,
   UserConsent,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { RowDataType } from 'rsuite-table';
-import { useMemo } from 'react';
-import { getApiClientV2 } from '@wepublish/editor/api-v2';
 
 const { Column, HeaderCell, Cell } = RTable;
 
@@ -49,17 +47,14 @@ const consentValues = [
 ];
 
 export function UserConsentList(props: UserConsentListProps) {
-  const client = useMemo(() => getApiClientV2(), []);
   const { t } = useTranslation();
 
   const { loading, data, refetch } = useUserConsentsQuery({
-    client,
     fetchPolicy: 'cache-and-network',
     onError: onErrorToast,
   });
 
   const [deleteUserConsent] = useDeleteUserConsentMutation({
-    client,
     onError: onErrorToast,
     onCompleted: () => {
       toaster.push(

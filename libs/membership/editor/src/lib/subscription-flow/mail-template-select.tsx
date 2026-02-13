@@ -3,7 +3,7 @@ import {
   FullMailTemplateFragment,
   SubscriptionEvent,
   SubscriptionFlowFragment,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { SelectPicker } from 'rsuite';
 import { SubscriptionClientContext } from './graphql-client-context';
 import {

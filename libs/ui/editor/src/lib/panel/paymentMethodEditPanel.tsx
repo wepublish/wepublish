@@ -3,12 +3,11 @@ import {
   FullImageFragment,
   FullPaymentMethodFragment,
   FullPaymentProviderFragment,
-  getApiClientV2,
   useCreatePaymentMethodMutation,
   usePaymentMethodQuery,
   usePaymentProviderListQuery,
   useUpdatePaymentMethodMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { slugify } from '@wepublish/utils';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -68,13 +67,11 @@ function PaymentMethodEditPanel({
   const [imageSelectionOpen, setImageSelectionOpen] = useState(false);
   const [image, setImage] = useState<FullImageFragment>();
 
-  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
     error: loadError,
   } = usePaymentMethodQuery({
-    client,
     variables: { id: id! },
     fetchPolicy: 'network-only',
     skip: id === undefined,
@@ -85,15 +82,14 @@ function PaymentMethodEditPanel({
     loading: isLoadingPaymentProvider,
     error: loadPaymentProviderError,
   } = usePaymentProviderListQuery({
-    client,
     fetchPolicy: 'network-only',
   });
 
   const [createPaymentMethod, { loading: isCreating, error: createError }] =
-    useCreatePaymentMethodMutation({ client });
+    useCreatePaymentMethodMutation();
 
   const [updatePaymentMethod, { loading: isUpdating, error: updateError }] =
-    useUpdatePaymentMethodMutation({ client });
+    useUpdatePaymentMethodMutation();
 
   const isDisabled =
     isLoading ||

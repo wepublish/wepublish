@@ -9,10 +9,9 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useMemberPlanListQuery } from '@wepublish/editor/api-v2';
+import { useMemberPlanListQuery } from '@wepublish/editor/api';
 import {
   FullMailTemplateFragment,
-  getApiClientV2,
   SubscriptionEvent,
   SubscriptionInterval,
   useCreateSubscriptionFlowMutation,
@@ -24,7 +23,7 @@ import {
   useSubscriptionFlowsQuery,
   useUpdateSubscriptionFlowMutation,
   useUpdateSubscriptionIntervalMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   ListViewContainer,
@@ -120,9 +119,8 @@ function SubscriptionFlowList() {
   const params = useParams();
   const { id: memberPlanId } = params;
   const [newDay, setNewDay] = useState<number | undefined>(undefined);
-  const client = getApiClientV2();
+
   const { data: memberPlans } = useMemberPlanListQuery({
-    client,
     variables: { take: 100 },
   });
 
@@ -140,7 +138,7 @@ function SubscriptionFlowList() {
     loading: loadingSubscriptionFlows,
     refetch: refetchSubscriptionFlows,
   } = useSubscriptionFlowsQuery({
-    ...DEFAULT_QUERY_OPTIONS(client),
+    ...DEFAULT_QUERY_OPTIONS(),
     variables: {
       defaultFlowOnly,
       memberPlanId,
@@ -148,31 +146,31 @@ function SubscriptionFlowList() {
   });
 
   const { data: mailTemplates, loading: loadingMailTemplates } =
-    useMailTemplateQuery(DEFAULT_QUERY_OPTIONS(client));
+    useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
   const { data: paymentMethods } = useListPaymentMethodsQuery(
-    DEFAULT_QUERY_OPTIONS(client)
+    DEFAULT_QUERY_OPTIONS()
   );
 
   // Mutation methods are later passed to the SubscriptionClientContext, so they can reuse the same client everywhere. This makes the GraphQL cache work across all requests.
   const [createSubscriptionInterval] = useCreateSubscriptionIntervalMutation(
-    DEFAULT_MUTATION_OPTIONS(client, t)
+    DEFAULT_MUTATION_OPTIONS(t)
   );
 
   const [updateSubscriptionInterval] = useUpdateSubscriptionIntervalMutation(
-    DEFAULT_MUTATION_OPTIONS(client, t)
+    DEFAULT_MUTATION_OPTIONS(t)
   );
   const [deleteSubscriptionInterval] = useDeleteSubscriptionIntervalMutation(
-    DEFAULT_MUTATION_OPTIONS(client, t)
+    DEFAULT_MUTATION_OPTIONS(t)
   );
   const [createSubscriptionFlow] = useCreateSubscriptionFlowMutation({
-    ...DEFAULT_MUTATION_OPTIONS(client, t),
+    ...DEFAULT_MUTATION_OPTIONS(t),
     onCompleted: () => refetchSubscriptionFlows(),
   });
   const [updateSubscriptionFlow] = useUpdateSubscriptionFlowMutation(
-    DEFAULT_MUTATION_OPTIONS(client, t)
+    DEFAULT_MUTATION_OPTIONS(t)
   );
   const [deleteSubscriptionFlow] = useDeleteSubscriptionFlowMutation({
-    ...DEFAULT_MUTATION_OPTIONS(client, t),
+    ...DEFAULT_MUTATION_OPTIONS(t),
     onCompleted: () => refetchSubscriptionFlows(),
   });
 
