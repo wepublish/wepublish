@@ -273,7 +273,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           );
 
           return (
-            !memberPlan || data.monthlyAmount > memberPlan.amountPerMonthMin
+            !memberPlan || data.monthlyAmount >= memberPlan.amountPerMonthMin
           );
         },
         {
@@ -430,7 +430,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       register: registerData,
       subscribe: subscribeData,
     });
-  });
+  }, console.warn);
+
+  console.warn(watch('monthlyAmount'));
 
   useEffect(() => {
     if (selectedMemberPlan) {
