@@ -67,7 +67,6 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
 
   const { data: searchData, loading: searchLoading } = usePhraseQuery({
     skip: !phraseQuery,
-    fetchPolicy: 'cache-only',
     variables: {
       query: phraseQuery! as string,
     },
@@ -113,11 +112,18 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
     }
 
     if (!searchLoading && phraseQuery) {
+      let totalCount = 0;
+      if (searchData?.phrase?.articles?.totalCount) {
+        totalCount += searchData?.phrase?.articles?.totalCount;
+      }
+      if (searchData?.phrase?.pages?.totalCount) {
+        totalCount += searchData.phrase.pages.totalCount;
+      }
       return {
         pageType: PageType.SearchResults,
         Search: {
           phrase: phraseQuery as string,
-          totalCount: searchData?.phrase?.articles?.totalCount ?? 0,
+          totalCount,
         },
       };
     }

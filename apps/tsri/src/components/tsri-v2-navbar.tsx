@@ -864,7 +864,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
             return pageTypeBasedProps.Page?.title || '';
           case PageType.SearchResults:
             return pageTypeBasedProps.Search?.phrase ?
-                `${pageTypeBasedProps.Search.totalCount && pageTypeBasedProps.Search.totalCount !== 0 ? pageTypeBasedProps.Search.totalCount : 'Keine'} Suchergebnisse für "${pageTypeBasedProps.Search?.phrase}"`
+                `${pageTypeBasedProps.Search.totalCount <= 0 ? 'Keine' : pageTypeBasedProps.Search.totalCount} Suchergebnisse für "${pageTypeBasedProps.Search?.phrase}"`
               : '';
 
           // static text
