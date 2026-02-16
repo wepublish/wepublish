@@ -432,8 +432,6 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     });
   }, console.warn);
 
-  console.warn(watch('monthlyAmount'));
-
   useEffect(() => {
     if (selectedMemberPlan) {
       setValue<'monthlyAmount'>(
