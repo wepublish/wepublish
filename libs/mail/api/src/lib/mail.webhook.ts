@@ -77,8 +77,6 @@ export class MailWebhookController {
             mailData: mailLogStatus.mailData,
           },
         });
-
-        return res.status(200).send();
       }
     } catch (error) {
       this.logger.error(
@@ -89,6 +87,8 @@ export class MailWebhookController {
 
       throw error;
     }
+
+    return res.status(200).send();
   }
 }
 
