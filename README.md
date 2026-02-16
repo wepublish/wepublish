@@ -30,89 +30,96 @@
 <div align="center">
   <img src="assets/wepublish.svg" alt="We.Publish Logo" width="300" />
   <h3>Open Source Headless CMS & Peering Network</h3>
-  <p>Empowering independent media with shared technology and content.</p>
+  <p>For independent media with shared technology and content.</p>
 
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-  
-  [**Explore the Docs »**](https://we-publish.gitbook.io/we.publish)
-  
-  [View Demo](#demo) · [Report Bug](https://github.com/wepublish/wepublish/issues) · [Request Feature](https://github.com/wepublish/wepublish/issues)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+[**Read the full Docs »**](https://we-publish.gitbook.io/we.publish)
+
+[View Demo](#demo) · [Report Bug](https://github.com/wepublish/wepublish/issues) · [Request Feature](https://github.com/wepublish/wepublish/issues)
+
 </div>
 
 ---
 
-## 📖 About The Project
+## The Project
 
-**We.Publish** is more than just a CMS; it is a digital infrastructure foundation designed to strengthen independent journalism.
+**We.Publish** is more than just a CMS; it is a journalistic ecosystem designed to strengthen independent journalism and freedom of the press.
 
 By providing a modern, open-source **Headless CMS**, we enable publishers to create, manage, and engage with their audience effectively. Unlike traditional CMS platforms, We.Publish features a unique **Peering Network**, allowing connected newsrooms to share content seamlessly, expand their reach, and collaborate on stories.
 
 In addition to its headless capabilities, We.Publish includes a powerful **Website Builder**. This tool allows developers to quickly spin up fully functional websites for media outlets, complete with necessary components and pre-configured connections to the API and CMS editor.
 
-**We are experts in launching new media.**
-With our specialized product **we.start**, we empower local initiatives to found and grow independent journalistic media in their city, town, or region. By joining our network, you not only get the technology but also access to shared expertise and experience from a community dedicated to the success of independent journalism and the freedom of the press.
+**We are experienced in launching new media.**
+With our specialized product **we.start**, we support local initiatives to found and grow independent journalistic media in their city, town, or region. By joining our network, you not only get the technology but also access to shared expertise and experience from a community dedicated to the success of independent journalism and the freedom of the press.
 
 ### Key Features
 
-#### ✍️ Editorial & Content
-*   **Advanced Block Editor**: Create rich content with titles, galleries, listicles, quotes, embeds, polls, events, and tables.
-*   **Media Management**: Integrated image library with automatic metadata import and optimized delivery for all devices.
-*   **SEO & Scheduling**: Built-in SEO optimizations and scheduled publication features.
+#### Editorial & Content
 
-#### 🤝 Community & Peering
-*   **Peering Network**: Seamlessly share and publish articles across different newsrooms within the network.
-*   **Engagement Tools**: Moderated comment system, polls, and integrated crowdfunding to build a loyal community.
-*   **Author Profiles**: Dedicated pages and profiles for your journalists.
+- **Advanced Block Editor**: Create rich content with titles, galleries, listicles, quotes, embeds, polls, events, and tables.
+- **Media Management**: Integrated image library with automatic metadata import and optimized delivery for all devices.
+- **SEO & Scheduling**: Built-in SEO optimizations and scheduled publication features.
 
-#### 💼 Business & Memberships
-*   **Powerful Subscription System**: Flexible subscription models, paywalls, and automatic renewal management.
-*   **Dashboard & Analytics**: Track audience engagement and subscription metrics.
-*   **Integrations**: Native support for payments (Stripe, Payrexx, Mollie), invoicing (Bexio), and email marketing (Mailchimp, Mailgun).
+#### Community & Peering
 
-#### 🛠 Technical & Architecture
-*   **Headless & API-First**: Decoupled architecture using GraphQL, NestJS, and React.
-*   **Website Builder**: Rapidly spin up connected websites with pre-built components.
-*   **Granular Permissions**: Role-based access control for editors, community managers, and admin staff.
-*   **Monorepo**: Managed with [Nx](https://nx.dev) for scalable development.
+- **Peering Network**: Seamlessly share and publish articles across different newsrooms within the network.
+- **Engagement Tools**: Moderated comment system, polls, and integrated crowdfunding to build a loyal community.
+- **Author Profiles**: Dedicated pages and profiles for your journalists.
 
-## 🛠 Tech Stack
+#### Business & Memberships
 
-We use a modern stack to ensure performance, scalability, and developer experience:
+- **Powerful Subscription System**: Flexible subscription models, paywalls, and automatic renewal management.
+- **Dashboard & Analytics**: Track audience engagement and subscription metrics.
+- **Integrations**: Native support for payments (Stripe, Payrexx, Mollie), invoicing (Bexio), and email marketing (Mailchimp, Mailgun).
 
-*   **Runtime**: [Node.js](https://nodejs.org/) (v22+)
-*   **Language**: [TypeScript](https://www.typescriptlang.org/)
-*   **API**: [NestJS](https://nestjs.com/) & [GraphQL](https://graphql.org/)
-*   **Frontend**: [Next.js](https://nextjs.org/) & [React](https://reactjs.org/)
-*   **UI Framework**: [MUI](https://mui.com/)
-*   **Database**: [PostgreSQL](https://www.postgresql.org/) & [Prisma](https://www.prisma.io/)
-*   **Workspace**: [Nx](https://nx.dev/)
+#### Technical & Architecture
 
-## 🚀 Getting Started
+- **Headless & API-First**: Decoupled architecture using GraphQL, NestJS, and React.
+- **Website Builder**: Rapidly spin up connected websites with pre-built components.
+- **Granular Permissions**: Role-based access control for editors, community managers, and admin staff.
+- **Monorepo**: Managed with [Nx](https://nx.dev) for scalable development.
+
+## Tech Stack
+
+- **Runtime**: [Node.js](https://nodejs.org/) (v22+)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **API**: [NestJS](https://nestjs.com/) & [GraphQL](https://graphql.org/)
+- **Frontend**: [Next.js](https://nextjs.org/) & [React](https://reactjs.org/)
+- **UI Framework**: [MUI](https://mui.com/)
+- **Database**: [PostgreSQL](https://www.postgresql.org/) & [Prisma](https://www.prisma.io/)
+- **Workspace**: [Nx](https://nx.dev/)
+
+## Getting Started
 
 Follow these steps to set up your local development environment.
 
 ### Prerequisites
 
 Ensure you have the following installed:
-*   [Node.js](https://nodejs.org/en/download/) (v22.20.0 or higher)
-*   [Docker](https://www.docker.com/products/docker-desktop) & Docker Compose
-*   [Git](https://git-scm.com/)
+
+- [Node.js](https://nodejs.org/en/download/) (v22.20.0 or higher)
+- [Docker](https://www.docker.com/products/docker-desktop) & Docker Compose
+- [Git](https://git-scm.com/)
 
 ### Installation
 
 1.  **Clone the repository**
+
     ```bash
     git clone https://github.com/wepublish/wepublish.git
     cd wepublish
     ```
 
 2.  **Install dependencies**
+
     ```bash
     npm install
     ```
 
 3.  **Start the development environment**
     This command starts the database and storage services via Docker, runs migrations, and launches the API, Editor, and Website in watch mode.
+
     ```bash
     npm run dev
     ```
@@ -124,28 +131,28 @@ Ensure you have the following installed:
 
 Once the development server is running, you can access the applications at:
 
-| Application | URL | Default Credentials |
-|:---|:---|:---|
-| **Editor (CMS)** | [http://localhost:4200](http://localhost:4200) | `dev@wepublish.ch` / `123` |
-| **Website Example** | [http://localhost:4300](http://localhost:4300) | - |
-| **API** | [http://localhost:4000/graphql](http://localhost:4000/graphql) | - |
-| **Media Server** | [http://localhost:3000](http://localhost:4000) | - |
+| Application         | URL                                                            | Default Credentials        |
+| :------------------ | :------------------------------------------------------------- | :------------------------- |
+| **Editor (CMS)**    | [http://localhost:4200](http://localhost:4200)                 | `dev@wepublish.ch` / `123` |
+| **Website Example** | [http://localhost:4300](http://localhost:4300)                 | -                          |
+| **API**             | [http://localhost:4000/graphql](http://localhost:4000/graphql) | -                          |
+| **Media Server**    | [http://localhost:3000](http://localhost:4000)                 | -                          |
 
-*(Note: Port numbers may vary based on your local configuration or `nx.json` setups. Check terminal output for exact URLs.)*
+_(Note: Port numbers may vary based on your local configuration or `nx.json` setups. Check terminal output for exact URLs.)_
 
-## 🏗 Project Structure
+## Project Structure
 
 This project is organized as an Nx monorepo:
 
-*   **`apps/`**
-    *   `api-example`: The backend GraphQL API server.
-    *   `editor`: The back-office React application for content management.
-    *   `website-example`: A reference frontend implementation.
-    *   `media`: Service for handling image and file assets.
-*   **`libs/`**: Shared libraries containing core logic (api, utils, ui components).
-    *   *Note*: Many libraries (e.g., `article`, `page`) include a `website/` folder. These modular components power our **Website Builder**, facilitating the rapid assembly of connected websites.
+- **`apps/`**
+  - `api-example`: The backend GraphQL API server.
+  - `editor`: The back-office React application for content management.
+  - `website-example`: A reference frontend implementation.
+  - `media`: Service for handling image and file assets.
+- **`libs/`**: Shared libraries containing core logic (api, utils, ui components).
+  - _Note_: Many libraries (e.g., `article`, `page`) include a `website/` folder. These modular components power our **Website Builder**, facilitating the rapid assembly of connected websites.
 
-## 🧪 Running Tests
+## Running Tests
 
 To run the test suite across the entire workspace:
 
@@ -159,26 +166,22 @@ Or run tests for a specific project:
 npx nx test api-example
 ```
 
-## 📚 Documentation
+## Documentation
 
 For comprehensive guides on architecture, deployment, and usage, please visit our official documentation:
 
-👉 **[https://we-publish.gitbook.io/we.publish](https://we-publish.gitbook.io/we.publish)**
+**[https://we-publish.gitbook.io/we.publish](https://we-publish.gitbook.io/we.publish)**
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions from the community!
 
 1.  Fork the Project
-3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4.  Push to the Branch (`git push origin feature/AmazingFeature`)
-5.  Open a Pull Request
+2.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+3.  Push to the Branch (`git push origin feature/AmazingFeature`)
+4.  Open a Pull Request
 
 Please review our [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for more details.
-
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Demo
 
@@ -189,14 +192,15 @@ Distributed under the MIT License. See `LICENSE` for more information.
 - [API V1](https://api-wepublish-site.wepublish.dev/v1)
 - [API Admin](https://api-wepublish-site.wepublish.dev/v1/admin)
 
-## 💎 Services & Offers
+## Services & Offers
 
 While We.Publish is open source and free to use, the **We.Publish Foundation** offers professional services to help you get the most out of the platform.
 
 **Get we.start | New Media Launchpad**: A specialized package for startups founding new media in their city or region. Includes technical setup, network access, and guidance to succeed in the market.
-*   **Managed Hosting & Maintenance**: Secure and reliable hosting solutions.
-*   **Custom Development**: Tailored feature implementation and modifications.
-*   **Consulting & Support**: Expert guidance for your media project and access to our network's shared expertise for the good of press freedom
+
+- **Managed Hosting & Maintenance**: Secure and reliable hosting solutions.
+- **Custom Development**: Tailored feature implementation and modifications.
+- **Consulting & Support**: Expert guidance for your media project and access to our network's shared expertise for the good of press freedom
 
 ### Trusted by Independent Media
 
@@ -223,9 +227,13 @@ Many news sites have been successfully powered by We.Publish for years. We are p
   </tr>
 </table>
 
-👉 **Contact us at [info@wepublish.ch](mailto:info@wepublish.ch)**
+**Contact us at [info@wepublish.ch](mailto:info@wepublish.ch)**
 
 **Self-Hosting & Community Support**:
 If you are self-hosting We.Publish, please reach out to us via email. We would love to add you to our Slack channel, connecting you directly with our IT team and the wider We.Publish developer community.
 
 Project Link: [https://github.com/wepublish/wepublish](https://github.com/wepublish/wepublish)
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
