@@ -178,7 +178,7 @@ We welcome contributions from the community!
 
 1.  Fork the Project
 2.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-3.  Push to the Branch (`git push origin feature/AmazingFeature`)
+3.  Push to the Branch (`git push origin f/AmazingFeature`)
 4.  Open a Pull Request
 
 Please review our [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for more details.
