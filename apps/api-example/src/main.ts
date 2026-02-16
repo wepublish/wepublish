@@ -1,4 +1,3 @@
-import { runServer } from './app';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './nestapp/app.module';
@@ -10,6 +9,7 @@ import { MAX_PAYLOAD_SIZE } from '@wepublish/utils/api';
 import { json, urlencoded } from 'body-parser';
 import type { Request, Response, NextFunction, RequestHandler } from 'express';
 import { graphqlUploadExpress } from 'graphql-upload';
+import { PAYMENT_WEBHOOK_PATH_PREFIX } from '@wepublish/payment/api';
 
 async function bootstrap() {
   const port = process.env.PORT ?? 4000;
@@ -23,7 +23,7 @@ async function bootstrap() {
 
   const skipPrefixes = [
     `/${MAIL_WEBHOOK_PATH_PREFIX}`,
-    // `/${PAYMENT_WEBHOOK_PATH_PREFIX}`,
+    `/${PAYMENT_WEBHOOK_PATH_PREFIX}`,
   ] as const;
   const jsonParser = json({ limit: MAX_PAYLOAD_SIZE });
 
@@ -45,15 +45,6 @@ async function bootstrap() {
   nestApp.use(conditionalJson);
   nestApp.use(urlencoded({ extended: true, limit: MAX_PAYLOAD_SIZE }));
   nestApp.use(graphqlUploadExpress());
-
-  const publicExpressApp = nestApp.getHttpAdapter().getInstance();
-
-  await runServer({
-    publicExpressApp,
-  }).catch(err => {
-    console.error(err);
-    process.exit(1);
-  });
 
   await nestApp.listen(port);
   Logger.log(`🚀 Public api is running on: http://localhost:${port}`);

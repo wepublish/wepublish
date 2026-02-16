@@ -2,8 +2,6 @@ import { MailLogState, MailProviderType, PrismaClient } from '@prisma/client';
 import { NextHandleFunction } from 'connect';
 import express from 'express';
 
-export const MAIL_WEBHOOK_PATH_PREFIX = 'mail-webhooks';
-
 export interface WebhookForSendMailProps {
   req: express.Request;
 }

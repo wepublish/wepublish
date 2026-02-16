@@ -4,10 +4,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { matches } from 'lodash';
 import bodyParser from 'body-parser';
 import { MailContext } from './mail-context';
-import { MailchimpMailProvider, MailgunMailProvider } from './mail-provider';
 import { MailController, mailLogType } from './mail.controller';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
+import { MailchimpMailProvider } from './mail-provider/mailchimp-mail-provider';
+import { MailgunMailProvider } from './mail-provider/mailgun-mail-provider';
 const kvMock = createKvMock();
 
 describe('MailController', () => {
