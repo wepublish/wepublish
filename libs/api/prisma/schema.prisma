@@ -1773,14 +1773,14 @@ enum ExternalAppsTarget {
 }
 
 model ExternalApps {
-  id           String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt    DateTime @default(now())
-  modifiedAt   DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
 
-  name         String
-  url          String
-  target       ExternalAppsTarget
-  icon         String?
+  name   String
+  url    String
+  target ExternalAppsTarget
+  icon   String?
 
   @@map("apps.external")
 }
