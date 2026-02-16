@@ -3,7 +3,7 @@ CREATE TYPE "ExternalAppsTarget" AS ENUM ('blank', 'iframe');
 
 -- CreateTable
 CREATE TABLE "apps.external" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "modifiedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT NOT NULL,

@@ -1773,7 +1773,7 @@ enum ExternalAppsTarget {
 }
 
 model ExternalApps {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
