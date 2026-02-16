@@ -54,6 +54,7 @@
       "@wepublish/errors": ["libs/errors/src/index.ts"],
       "@wepublish/errors/website": ["libs/errors/website/src/index.ts"],
       "@wepublish/event/api": ["libs/event/api/src/index.ts"],
+      "@wepublish/external-apps/api": ["libs/external-apps/api/src/index.ts"],
       "@wepublish/event/import/api": ["libs/event/import/api/src/index.ts"],
       "@wepublish/event/import/editor": [
         "libs/event/import/editor/src/index.ts"

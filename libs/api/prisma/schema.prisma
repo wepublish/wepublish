@@ -1047,7 +1047,7 @@ model Tag {
   tag         String?
   description Json?
   main        Boolean @default(false)
-  color     String?
+  color       String?
 
   peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
   peerId String?
@@ -1765,4 +1765,22 @@ model SettingAIProvider {
   systemPrompt String?
 
   @@map("settings.aiprovider")
+}
+
+enum ExternalAppsTarget {
+  BLANK  @map("blank")
+  IFRAME @map("iframe")
+}
+
+model ExternalApps {
+  id           String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt    DateTime @default(now())
+  modifiedAt   DateTime @updatedAt
+
+  name         String
+  url          String
+  target       ExternalAppsTarget
+  icon         String?
+
+  @@map("apps.external")
 }

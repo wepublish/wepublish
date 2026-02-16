@@ -845,6 +845,27 @@ export const CanDeleteAISettings: Permission = {
 };
 
 /**
+ * External Apps
+ */
+export const CanCreateExternalApp: Permission = {
+  id: 'CAN_CREATE_EXTERNAL_APP',
+  description: 'Allows to create external app',
+  deprecated: false,
+};
+
+export const CanUpdateExternalApp: Permission = {
+  id: 'CAN_UPDATE_EXTERNAL_APP',
+  description: 'Allows to update external app',
+  deprecated: false,
+};
+
+export const CanDeleteExternalApp: Permission = {
+  id: 'CAN_DELETE_EXTERNAL_APP',
+  description: 'Allows to delete external app',
+  deprecated: false,
+};
+
+/**
  * Challenge Provider Settings
  */
 export const CanGetChallengeProviderSettings: Permission = {
@@ -1097,6 +1118,9 @@ export const AllPermissions: Permission[] = [
   CanCreateMailProviderSettings,
   CanUpdateMailProviderSettings,
   CanDeleteMailProviderSettings,
+  CanCreateExternalApp,
+  CanUpdateExternalApp,
+  CanDeleteExternalApp,
 ];
 
 export const EditorPermissions: Permission[] = [

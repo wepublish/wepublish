@@ -644,6 +644,13 @@ input CreateCrowdfundingMemberPlan {
   id: String!
 }
 
+input CreateExternalAppInput {
+  icon: String
+  name: String!
+  target: ExternalAppsTarget!
+  url: String!
+}
+
 type Crowdfunding {
   activeGoal: CrowdfundingGoalWithProgress
   additionalRevenue: Float
@@ -935,6 +942,27 @@ input EventTeaserInput {
   lead: String
   preTitle: String
   title: String
+}
+
+type ExternalApp {
+  createdAt: DateTime!
+  icon: String
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+  target: ExternalAppsTarget!
+  url: String!
+}
+
+input ExternalAppFilter {
+  id: String
+  name: String
+  target: ExternalAppsTarget
+}
+
+enum ExternalAppsTarget {
+  BLANK
+  IFRAME
 }
 
 type ExternalNavigationLink implements BaseNavigationLink {
@@ -1527,6 +1555,9 @@ type Mutation {
   """Creates a new event."""
   createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, status: EventStatus! = Scheduled, tagIds: [String!]): Event!
 
+  """Creates a new external app."""
+  createExternalApp(input: CreateExternalAppInput!): ExternalApp!
+
   """Creates a new invoice."""
   createInvoice(currency: Currency!, description: String, dueAt: DateTime!, items: [InvoiceItemInput!]!, mail: String!, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime!, subscriptionID: String): Invoice!
 
@@ -1627,6 +1658,9 @@ type Mutation {
 
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
+
+  """Deletes an external app."""
+  deleteExternalApp(id: String!): ExternalApp!
 
   """Deletes an existing image."""
   deleteImage(id: String!): Image!
@@ -1799,6 +1833,9 @@ type Mutation {
 
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
+
+  """Updates an existing external app."""
+  updateExternalApp(icon: String, id: String!, name: String, target: ExternalAppsTarget, url: String): ExternalApp!
 
   """Updates an existing image."""
   updateImage(description: String, filename: String, focalPoint: FocalPointInput, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
@@ -2700,6 +2737,12 @@ type Query {
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+
+  """Returns a single external app by id. Requires authentication."""
+  externalApp(id: String!): ExternalApp!
+
+  """Returns all external apps. Requires authentication."""
+  externalApps(filter: ExternalAppFilter): [ExternalApp!]!
 
   "\n      Returns the most viewed articles in descending order.\n    "
   hotAndTrending(start: DateTime, take: Int = 10): [Article!]!
