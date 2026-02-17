@@ -19,7 +19,6 @@ export const isSubscriptionUpgradeable = (
   subscription: FullSubscriptionFragment
 ) =>
   subscription.extendable &&
-  subscription.autoRenew &&
   subscription.isActive &&
   // isActive includes grace period which we want to ignore here
   (!subscription.deactivation ||
