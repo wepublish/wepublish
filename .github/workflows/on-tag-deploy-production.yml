@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       value: ${{ steps.read-deployment-config.outputs.value }}
-    needs: [ get-tag]
+    needs: [ get-tag, deploy-wepublish-production]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

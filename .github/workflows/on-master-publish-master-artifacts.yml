@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       value: ${{ steps.read-deployment-config.outputs.value }}
-    needs: [ setup-website-matrix ]
+    needs: [ setup-website-matrix, publish_master_docker ]
     strategy:
       fail-fast: false
       matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
