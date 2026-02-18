@@ -56,14 +56,26 @@ jobs:
       - id: read-deployment-config
         run: ./deployment/read_deployment_config.sh '.website.production.deployment' true ${{ needs.get-tag.outputs.project }}
 
+  # Can be removed after migration from media -> cloud domain
+  get-tdl:
+    runs-on: ubuntu-latest
+    outputs:
+      value: ${{ steps.read-deployment-config.outputs.value }}
+    needs: [ get-tag]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - id: read-deployment-config
+        run: ./deployment/read_deployment_config.sh '.tdl.production' true ${{ needs.get-tag.outputs.project }} getValue
+
   deploy_website_production:
     name: ${{ needs.get-tag.outputs.project }} website
-    needs: [ get-tag, check-if-website-deployment, publish-docker-base-image]
+    needs: [ get-tag, check-if-website-deployment, publish-docker-base-image, get-tdl]
     if: ${{ needs.check-if-website-deployment.outputs.has-website == 'true' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     with:
       website_project: ${{ needs.get-tag.outputs.project }}
-      api_url: https://api-${{ needs.get-tag.outputs.project }}.wepublish.media
+      api_url: https://api-${{ needs.get-tag.outputs.project }}.${{ needs.get-tdl.outputs.value }}
       website_tags: |
         ghcr.io/wepublish/website-${{ needs.get-tag.outputs.project }}:production-${{ needs.get-tag.outputs.version }}
       environment: production

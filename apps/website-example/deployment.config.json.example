@@ -1,4 +1,8 @@
 {
+  "tdl": {
+    "production": "wepublish.cloud",
+    "staging": "wepublish.works"
+  },
   "website": {
     "production": {
       "deployment": true,

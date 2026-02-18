@@ -65,9 +65,24 @@ jobs:
         wepublishch/storybook:${{ github.ref_name }}
     secrets: inherit
 
+  # Can be removed after migration from media -> cloud domain
+  get-tdl:
+    runs-on: ubuntu-latest
+    outputs:
+      value: ${{ steps.read-deployment-config.outputs.value }}
+    needs: [ setup-website-matrix ]
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - id: read-deployment-config
+        run: ./deployment/read_deployment_config.sh '.tdl.staging' true ${{ matrix.target }} getValue
+
   publish_master_docker_website:
     name: Website
-    needs: [ setup-website-matrix, date_sha_tag, publish_master_docker, publish-docker-base-image]
+    needs: [ setup-website-matrix, date_sha_tag, publish_master_docker, publish-docker-base-image, get-tdl]
     if: ${{ needs.publish_master_docker.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     strategy:
@@ -75,7 +90,7 @@ jobs:
       matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
     with:
       website_project: ${{ matrix.target }}
-      api_url: https://api-${{ matrix.target }}.wepublish.dev
+      api_url: https://api-${{ matrix.target }}.${{needs.get-tdl.outputs.value}}
       environment: ${{ github.ref_name == 'master' && 'staging' || github.ref_name == 'development' && 'development' || 'staging' }}
       website_tags: |
         ghcr.io/wepublish/website-${{ matrix.target }}:${{ github.ref_name }}-${{ needs.date_sha_tag.outputs.tag }}
