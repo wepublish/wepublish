@@ -113,7 +113,7 @@ import {
           resolvers: { RichText: GraphQLRichText },
           autoSchemaFile:
             process.env.NODE_ENV === 'production' ?
-              false
+              true
             : './apps/api-example/schema-v2.graphql',
           sortSchema: true,
           path: 'v1',
