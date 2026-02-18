@@ -26,6 +26,10 @@ registerEnumType(MemberPlanSort, {
   name: 'MemberPlanSort',
 });
 
+registerEnumType(PaymentPeriodicity, {
+  name: 'PaymentPeriodicity',
+});
+
 registerEnumType(Currency, {
   name: 'Currency',
 });

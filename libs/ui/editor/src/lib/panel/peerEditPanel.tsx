@@ -21,7 +21,6 @@ import {
 import { Descendant } from 'slate';
 
 import {
-  ChooseEditImage,
   createCheckedPermissionComponent,
   DescriptionList,
   DescriptionListItem,
@@ -42,6 +41,13 @@ export interface PeerEditPanelProps {
 const { Group, ControlLabel, Control } = RForm;
 
 const Form = styled(RForm)`
+  height: 100%;
+`;
+
+const Image = styled.img`
+  object-fit: contain;
+  object-position: top left;
+  width: 100%;
   height: 100%;
 `;
 
@@ -306,9 +312,8 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
 
           {profile && (
             <Panel header={t('peerList.panels.information')}>
-              <ChooseEditImage
-                disabled
-                image={profile?.logo}
+              <Image
+                src={profile?.logo?.xl ?? '/static/placeholder-240x240.png'}
               />
 
               <DescriptionList>

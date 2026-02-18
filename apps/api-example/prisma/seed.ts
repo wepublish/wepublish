@@ -19,7 +19,6 @@ import { faker } from '@faker-js/faker';
 import { createReadStream } from 'fs';
 import { Descendant, Node } from 'slate';
 import { seed as rootSeed } from '../../../libs/api/prisma/seed';
-import { hashPassword } from '../../../libs/api/src/lib/db/user';
 import { NovaMediaAdapter } from '../../../libs/api/src/lib/media/novaMediaAdapter';
 import { capitalize } from '@mui/material';
 import { bootstrap } from '../../media/src/bootstrap';
@@ -38,6 +37,13 @@ import {
   EventBlock,
 } from '@wepublish/block-content/api';
 import { TrackingPixel } from '@wepublish/tracking-pixel/api';
+import bcrypt from 'bcrypt';
+
+async function hashPassword(password: string) {
+  const hashCostFactor = 12;
+
+  return await bcrypt.hash(password, hashCostFactor);
+}
 
 const shuffle = <T>(list: T[]): T[] => {
   let idx = -1;
@@ -1048,7 +1054,7 @@ async function seedSettings(prisma: PrismaClient) {
   5. Use the font family Roboto
   6. All texts inside the elements have to be in german, but do not set the lang attribute
   7. Use randomly generated class names to avoid conflicts
-  
+
   DONT's:
   1. Do not generate <html>, <body>, <head> or doctype tags
   2. Do not use inline styles
@@ -1060,21 +1066,19 @@ async function seedSettings(prisma: PrismaClient) {
     },
   });
 
-  await Promise.all(
-    [
-      mailprovider,
-      payrexx,
-      payrexxSubscription,
-      stripe,
-      stripeCheckout,
-      mollie,
-      bexio,
-      noCharge,
-      turnstile,
-      prolitteris,
-    ],
-    v0
-  );
+  await Promise.all([
+    mailprovider,
+    payrexx,
+    payrexxSubscription,
+    stripe,
+    stripeCheckout,
+    mollie,
+    bexio,
+    noCharge,
+    turnstile,
+    prolitteris,
+    v0,
+  ]);
 }
 
 async function seed() {
