@@ -111,7 +111,10 @@ import {
 
         return {
           resolvers: { RichText: GraphQLRichText },
-          autoSchemaFile: './apps/api-example/schema-v2.graphql',
+          autoSchemaFile:
+            process.env.NODE_ENV === 'production' ?
+              false
+            : './apps/api-example/schema-v2.graphql',
           sortSchema: true,
           path: 'v1',
           cache: 'bounded',
