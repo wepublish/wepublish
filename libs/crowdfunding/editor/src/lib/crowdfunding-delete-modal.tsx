@@ -2,12 +2,10 @@ import { ApolloError, ApolloQueryResult } from '@apollo/client';
 import {
   Crowdfunding,
   CrowdfundingsQuery,
-  getApiClientV2,
   useDeleteCrowdfundingMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 import React from 'react';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Message, Modal, toaster } from 'rsuite';
 
@@ -50,9 +48,7 @@ export function CrowdfundingDeleteModal({
 }: DeleteCrowdfundingProps) {
   const { t } = useTranslation();
 
-  const client = useMemo(() => getApiClientV2(), []);
   const [deleteCrowdfundingMutation] = useDeleteCrowdfundingMutation({
-    client,
     onError: onErrorToast,
     onCompleted: onCompletedToast(t),
   });

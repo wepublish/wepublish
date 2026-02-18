@@ -26,8 +26,8 @@ const HauptstadtPaywall = styled((props: BuilderPaywallProps) => {
   });
 
   const filteredSubscriptions = useMemo(
-    () => data?.subscriptions.filter(isSubscriptionUpgradeable) ?? [],
-    [data?.subscriptions]
+    () => data?.userSubscriptions.filter(isSubscriptionUpgradeable) ?? [],
+    [data?.userSubscriptions]
   );
 
   const hasRequiredSubscription = useMemo(

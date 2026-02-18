@@ -1,0 +1,5 @@
+query VersionInformation {
+    versionInformation {
+        version
+    }
+}

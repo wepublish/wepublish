@@ -1,0 +1,208 @@
+fragment CommentBlockComment on Comment {
+  id
+  state
+  guestUsername
+  guestUserImage {
+    ...FullImage
+  }
+  user {
+    ...CommentUser
+  }
+  text
+  source
+  itemID
+  itemType
+
+  tags {
+    id
+    tag
+  }
+
+  overriddenRatings {
+    answerId
+    value
+  }
+
+  featured
+}
+
+mutation ApproveComment($id: String!) {
+  approveComment(id: $id) {
+    state
+  }
+}
+
+mutation RejectComment(
+  $id: String!
+  $rejectionReason: CommentRejectionReason!
+) {
+  rejectComment(id: $id, rejectionReason: $rejectionReason) {
+    state
+    rejectionReason
+  }
+}
+
+mutation RequestChangesOnComment(
+  $id: String!
+  $rejectionReason: CommentRejectionReason!
+) {
+  requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
+    state
+    rejectionReason
+  }
+}
+
+fragment CommentRevision on CommentRevision {
+  text
+  title
+  lead
+  createdAt
+}
+
+fragment CommentUser on User {
+  id
+  name
+  firstName
+  flair
+  image {
+    ...FullImage
+  }
+}
+
+fragment FullParentComment on Comment {
+  id
+  state
+  rejectionReason
+  user {
+    ...CommentUser
+  }
+  guestUsername
+  revisions {
+    ...CommentRevision
+  }
+  createdAt
+  modifiedAt
+}
+
+fragment FullComment on Comment {
+  id
+  state
+  rejectionReason
+  guestUsername
+  guestUserImage {
+    ...FullImage
+  }
+  user {
+    ...CommentUser
+  }
+  revisions {
+    ...CommentRevision
+  }
+  source
+  createdAt
+  modifiedAt
+  itemID
+  itemType
+  parentComment {
+    ...FullParentComment
+  }
+
+  tags {
+    id
+    tag
+  }
+
+  overriddenRatings {
+    answerId
+    value
+  }
+
+  featured
+}
+
+query CommentList(
+  $filter: CommentFilter
+  $cursorId: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: CommentSort
+) {
+  comments(
+    filter: $filter
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullComment
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query Comment($id: String!) {
+  comment(id: $id) {
+    ...FullComment
+  }
+}
+
+mutation UpdateComment(
+  $id: String!
+  $revision: CommentRevisionInput
+  $userID: String
+  $guestUsername: String
+  $guestUserImageID: String
+  $featured: Boolean
+  $source: String
+  $tagIds: [String!]
+  $ratingOverrides: [OverriddenRatingInput!]
+) {
+  updateComment(
+    id: $id
+    revision: $revision
+    userID: $userID
+    guestUsername: $guestUsername
+    guestUserImageID: $guestUserImageID
+    featured: $featured
+    source: $source
+    tagIds: $tagIds
+    ratingOverrides: $ratingOverrides
+  ) {
+    ...FullComment
+  }
+}
+
+mutation CreateComment(
+  $itemID: String!
+  $itemType: CommentItemType!
+  $parentID: String
+  $text: RichText
+  $tagIds: [String!]
+) {
+  createComment(
+    itemID: $itemID
+    itemType: $itemType
+    parentID: $parentID
+    text: $text
+    tagIds: $tagIds
+  ) {
+    id
+  }
+}
+
+mutation DeleteComment($deleteCommentId: String!) {
+  deleteComment(id: $deleteCommentId) {
+    id
+  }
+}

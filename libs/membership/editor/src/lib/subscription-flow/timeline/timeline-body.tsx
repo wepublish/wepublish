@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import {
   SubscriptionEvent,
   SubscriptionFlowFragment,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DraggableSubscriptionInterval } from '../draggable-subscription-interval';

@@ -10,12 +10,12 @@ import {
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
 
 import { Container } from '../../src/components/layout/container';
-import Head from 'next/head';
 
 const take = 25;
 

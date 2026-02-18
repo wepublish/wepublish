@@ -1,9 +1,8 @@
 import {
   FullUserRoleFragment,
-  getApiClientV2,
   LocalStorageKey,
   useMeQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   createContext,
   Dispatch,
@@ -72,8 +71,7 @@ export interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const client = getApiClientV2();
-  const { data, loading, refetch, error } = useMeQuery({ client });
+  const { data, loading, refetch, error } = useMeQuery();
   console.log(data);
   const [state, dispatch] = useReducer(authReducer, {});
 

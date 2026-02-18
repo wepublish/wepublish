@@ -1,0 +1,85 @@
+query Crowdfundings {
+  crowdfundings {
+    ...FullCrowdfunding
+  }
+}
+
+query Crowdfunding($id: String!) {
+  crowdfunding(id: $id) {
+    ...FullCrowdfunding
+  }
+}
+
+mutation CreateCrowdfunding($input: CreateCrowdfundingInput!) {
+  createCrowdfunding(input: $input) {
+    ...FullCrowdfunding
+  }
+}
+
+mutation UpdateCrowdfunding($input: UpdateCrowdfundingInput!) {
+  updateCrowdfunding(input: $input) {
+    ...FullCrowdfunding
+  }
+}
+
+mutation DeleteCrowdfunding($id: String!) {
+  deleteCrowdfunding(id: $id)
+}
+
+input CreateCrowdfundingInput {
+  name: String!
+  countSubscriptionsFrom: DateTime
+  countSubscriptionsUntil: DateTime
+  additionalRevenue: Int
+  goals: [CreateCrowdfundingGoalInput]!
+}
+
+input CreateCrowdfundingGoalInput {
+  title: String!
+  description: String!
+  amount: Int!
+}
+
+input UpdateCrowdfundingInput {
+  id: String!
+  name: String!
+  countSubscriptionsFrom: DateTime
+  countSubscriptionsUntil: DateTime
+  additionalRevenue: Int
+  goals: [CreateCrowdfundingGoalInput!]
+}
+
+fragment FullCrowdfunding on Crowdfunding {
+  id
+  name
+  countSubscriptionsFrom
+  countSubscriptionsUntil
+  additionalRevenue
+  revenue
+  goalType
+  subscriptions
+  goals {
+    ...FullCrowdfundingGoal
+  }
+  activeGoal {
+    ...FullCrowdfundingGoalWithProgress
+  }
+  memberPlans {
+    id
+  }
+}
+
+fragment FullCrowdfundingGoal on CrowdfundingGoal {
+  id
+  title
+  description
+  amount
+}
+
+fragment FullCrowdfundingGoalWithProgress on CrowdfundingGoalWithProgress {
+  id
+  title
+  description
+  amount
+  progress
+}

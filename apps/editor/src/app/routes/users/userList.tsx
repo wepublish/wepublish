@@ -1,13 +1,12 @@
 import { ApolloError } from '@apollo/client';
 import {
   FullUserFragment,
-  getApiClientV2,
   useDeleteUserMutation,
   UserFilter,
   UserRole,
   UserSort,
   useUserListQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -72,14 +71,12 @@ function UserList() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [users, setUsers] = useState<FullUserFragment[]>([]);
 
-  const client = getApiClientV2();
   const {
     data,
     refetch,
     loading: isLoading,
     error: userListQueryError,
   } = useUserListQuery({
-    client,
     variables: {
       filter: filter || undefined,
       take: limit,
@@ -105,9 +102,7 @@ function UserList() {
     });
   }, [filter, page, limit, sortOrder, sortField, refetch]);
 
-  const [deleteUser, { loading: isDeleting }] = useDeleteUserMutation({
-    client,
-  });
+  const [deleteUser, { loading: isDeleting }] = useDeleteUserMutation({});
 
   const { t } = useTranslation();
 

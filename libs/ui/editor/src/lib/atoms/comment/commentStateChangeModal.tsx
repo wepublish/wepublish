@@ -4,11 +4,10 @@ import {
   CommentRevision,
   CommentState,
   FullCommentFragment,
-  getApiClientV2,
   useApproveCommentMutation,
   useRejectCommentMutation,
   useRequestChangesOnCommentMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdReplay } from 'react-icons/md';
@@ -85,15 +84,15 @@ export function CommentStateChangeModal({
   const [open, setOpen] = useState<boolean>(false);
   const [rejectionReason, setRejectionReason] =
     useState<CommentRejectionReason>();
-  const client = getApiClientV2();
+
   const [approveComment, { loading: isApproving, error: errorApprove }] =
-    useApproveCommentMutation({ client });
+    useApproveCommentMutation();
   const [
     requestChanges,
     { loading: isRequestingChanges, error: errorRequestingChanges },
-  ] = useRequestChangesOnCommentMutation({ client });
+  ] = useRequestChangesOnCommentMutation();
   const [rejectComment, { loading: isRejecting, error: errorRejecting }] =
-    useRejectCommentMutation({ client });
+    useRejectCommentMutation();
 
   useEffect(() => {
     const error =

@@ -1835,6 +1835,9 @@ type Mutation {
   """Updates an existing peer."""
   updatePeer(hostURL: String, id: String!, information: RichText, isDisabled: Boolean, name: String, slug: String, token: String): Peer!
 
+  """Updates the peer profile of the current media."""
+  updatePeerProfile(callToActionImageID: String!, callToActionImageURL: String, callToActionText: RichText!, callToActionURL: String!, logoID: String!, name: String!, squareLogoId: String!, themeColor: Color!, themeFontColor: Color!): PeerProfile!
+
   """Updates an existing poll."""
   updatePoll(answers: [PollAnswerInput!]!, closedAt: DateTime, externalVoteSources: [PollExternalVoteSourceInput!]!, id: String!, infoText: RichText, opensAt: DateTime, question: String): FullPoll!
 
@@ -2817,6 +2820,9 @@ type Query {
 
   """This query returns the comment rating system."""
   ratingSystem: CommentRatingSystem!
+
+  """Returns a remote peer profile based on hostURL and token supplied."""
+  remotePeerProfile(hostURL: String!, token: String!): RemotePeerProfile!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "
   renewingSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!

@@ -1,8 +1,4 @@
-import {
-  Banner,
-  getApiClientV2,
-  useBannersQuery,
-} from '@wepublish/editor/api-v2';
+import { Banner, useBannersQuery } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   IconButton,
@@ -13,7 +9,7 @@ import {
   Table,
   TableWrapper,
 } from '@wepublish/ui/editor';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
@@ -30,10 +26,7 @@ function BannerList() {
     undefined
   );
 
-  const client = useMemo(() => getApiClientV2(), []);
-
   const { data, loading, error, refetch } = useBannersQuery({
-    client,
     variables: {
       take: 100,
       skip: 0,

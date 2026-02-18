@@ -1,4 +1,10 @@
-import { Field, ObjectType, OmitType } from '@nestjs/graphql';
+import {
+  ArgsType,
+  Field,
+  ObjectType,
+  OmitType,
+  PickType,
+} from '@nestjs/graphql';
 import { Image, PeerImage } from '@wepublish/image/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { ColorScalar } from '@wepublish/utils/api';
@@ -47,6 +53,27 @@ export class PeerProfile {
 
   @Field(() => Image, { nullable: true })
   callToActionImage?: Image;
+}
+
+@ArgsType()
+export class UpsertPeerProfileInput extends PickType(
+  PeerProfile,
+  [
+    'name',
+    'themeColor',
+    'themeFontColor',
+    'callToActionImageURL',
+    'callToActionText',
+    'callToActionURL',
+  ] as const,
+  ArgsType
+) {
+  @Field()
+  logoID!: string;
+  @Field()
+  squareLogoId!: string;
+  @Field()
+  callToActionImageID!: string;
 }
 
 @ObjectType()

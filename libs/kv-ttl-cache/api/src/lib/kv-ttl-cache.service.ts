@@ -4,9 +4,10 @@ import type { Cache } from 'cache-manager';
 
 @Injectable()
 export class KvTtlCacheService {
-  private readonly inFlight = new Map<string, Promise<unknown>>();
+  private inFlight = new Map<string, Promise<unknown>>();
+  private nsVersionInFlight = new Map<string, Promise<string>>();
 
-  constructor(@Inject(CACHE_MANAGER) private readonly cache: Cache) {}
+  constructor(@Inject(CACHE_MANAGER) private cache: Cache) {}
 
   private versionKey(namespace: string): string {
     return `ns:${namespace}:version`;
@@ -20,20 +21,23 @@ export class KvTtlCacheService {
     return `ns:${namespace}:v${version}:${key}`;
   }
 
-  private nsVersionInFlight = new Map<string, Promise<string>>();
-
   async getNamespaceVersion(namespace: string): Promise<string> {
     const vk = this.versionKey(namespace);
 
     const cached = await this.cache.get<string>(vk);
-    if (cached) return cached;
+    if (cached) {
+      return cached;
+    }
 
     const existing = this.nsVersionInFlight.get(vk);
-    if (existing) return existing;
+    if (existing) {
+      return existing;
+    }
 
     const p = (async () => {
       const version = Date.now().toString(36);
-      await this.cache.set(vk, version as any);
+      await this.cache.set(vk, version);
+
       return version;
     })().finally(() => this.nsVersionInFlight.delete(vk));
 
@@ -44,10 +48,12 @@ export class KvTtlCacheService {
   async resetNamespace(namespace: string): Promise<void> {
     const vk = this.versionKey(namespace);
     const newVersion = Date.now().toString(36);
-    await this.cache.set(vk, newVersion as any);
+    await this.cache.set(vk, newVersion);
 
     for (const k of this.inFlight.keys()) {
-      if (k.startsWith(`ns:${namespace}:`)) this.inFlight.delete(k);
+      if (k.startsWith(`ns:${namespace}:`)) {
+        this.inFlight.delete(k);
+      }
     }
   }
 
@@ -58,17 +64,13 @@ export class KvTtlCacheService {
   ): Promise<T> {
     const cached = await this.cache.get<T>(key);
     if (cached !== undefined && cached !== null) {
-      console.log('cached ' + key);
       return cached;
     }
-    console.log('new ' + key);
 
     const existing = this.inFlight.get(key) as Promise<T> | undefined;
     if (existing) {
       return existing;
     }
-    console.log('load ' + key);
-    console.log();
 
     const p = (async () => {
       const value = await Promise.resolve(loader());
@@ -79,19 +81,20 @@ export class KvTtlCacheService {
     });
 
     this.inFlight.set(key, p as Promise<unknown>);
+
     return p;
   }
 
   async set<T>(key: string, value: T, ttlSeconds?: number): Promise<void> {
-    if (ttlSeconds === undefined) {
-      await this.cache.set(key, value as any);
-    } else {
-      await this.cache.set(key, value as any, ttlSeconds * 1000);
-    }
+    await this.cache.set(
+      key,
+      value,
+      ttlSeconds ? ttlSeconds * 1000 : undefined
+    );
   }
 
   async get<T>(key: string): Promise<T | undefined> {
-    return (await this.cache.get<T>(key)) ?? undefined;
+    return this.cache.get<T>(key);
   }
 
   async del(key: string): Promise<void> {
@@ -106,6 +109,7 @@ export class KvTtlCacheService {
   ): Promise<T> {
     const version = await this.getNamespaceVersion(namespace);
     const fullKey = this.namespacedKey(namespace, version, key);
+
     return this.getOrLoad(fullKey, loader, ttlSeconds);
   }
 
@@ -123,6 +127,7 @@ export class KvTtlCacheService {
   async getNs<T>(namespace: string, key: string): Promise<T | undefined> {
     const version = await this.getNamespaceVersion(namespace);
     const fullKey = this.namespacedKey(namespace, version, key);
+
     return this.get<T>(fullKey);
   }
 

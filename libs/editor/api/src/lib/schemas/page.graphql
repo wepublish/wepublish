@@ -1,0 +1,190 @@
+fragment FullPageRevisionWithoutBlocks on PageRevision {
+  id
+  createdAt
+  publishedAt
+  title
+  description
+  socialMediaTitle
+  socialMediaDescription
+
+  image {
+    ...FullImage
+  }
+
+  socialMediaImage {
+    ...FullImage
+  }
+
+  properties {
+    key
+    value
+    public
+  }
+}
+
+fragment FullPageRevision on PageRevision {
+  ...FullPageRevisionWithoutBlocks
+
+  blocks {
+    ...FullBlock
+  }
+}
+
+fragment PageWithoutBlocks on Page {
+  id
+  publishedAt
+  createdAt
+  modifiedAt
+  slug
+  url
+  previewUrl
+  hidden
+
+  tags {
+    ...FullTag
+  }
+
+  latest {
+    ...FullPageRevisionWithoutBlocks
+  }
+
+  draft {
+    id
+  }
+
+  pending {
+    id
+    publishedAt
+  }
+
+  published {
+    id
+    publishedAt
+  }
+}
+
+fragment FullPage on Page {
+  ...PageWithoutBlocks
+
+  latest {
+    ...FullPageRevision
+  }
+}
+
+query PageList(
+  $filter: PageFilter
+  $cursor: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: PageSort
+) {
+  pages(filter: $filter, cursorId: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...PageWithoutBlocks
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+mutation CreatePage(
+  $blocks: [BlockContentInput!]!
+  $imageID: String
+  $description: String
+  $properties: [PropertyInput!]!
+  $slug: String
+  $hidden: Boolean = false
+  $socialMediaDescription: String
+  $socialMediaImageID: String
+  $socialMediaTitle: String
+  $tagIds: [String!]!
+  $title: String
+) {
+  createPage(
+    blocks: $blocks
+    imageID: $imageID
+    description: $description
+    properties: $properties
+    slug: $slug
+    hidden: $hidden
+    socialMediaDescription: $socialMediaDescription
+    socialMediaImageID: $socialMediaImageID
+    socialMediaTitle: $socialMediaTitle
+    tagIds: $tagIds
+    title: $title
+  ) {
+    ...FullPage
+  }
+}
+
+mutation UpdatePage(
+  $id: String!
+  $blocks: [BlockContentInput!]!
+  $imageID: String
+  $description: String
+  $properties: [PropertyInput!]!
+  $slug: String
+  $hidden: Boolean = false
+  $socialMediaDescription: String
+  $socialMediaImageID: String
+  $socialMediaTitle: String
+  $tagIds: [String!]!
+  $title: String
+) {
+  updatePage(
+    id: $id
+    blocks: $blocks
+    imageID: $imageID
+    description: $description
+    properties: $properties
+    slug: $slug
+    hidden: $hidden
+    socialMediaDescription: $socialMediaDescription
+    socialMediaImageID: $socialMediaImageID
+    socialMediaTitle: $socialMediaTitle
+    tagIds: $tagIds
+    title: $title
+  ) {
+    ...FullPage
+  }
+}
+
+mutation PublishPage($id: String!, $publishedAt: DateTime!) {
+  publishPage(id: $id, publishedAt: $publishedAt) {
+    ...FullPage
+  }
+}
+
+mutation UnpublishPage($id: String!) {
+  unpublishPage(id: $id) {
+    ...FullPage
+  }
+}
+
+mutation DeletePage($id: String!) {
+  deletePage(id: $id)
+}
+
+mutation DuplicatePage($id: String!) {
+  duplicatePage(id: $id) {
+    ...FullPage
+  }
+}
+
+# query PagePreviewLink($id: String!, $hours: Int!) {
+#   pagePreviewLink(id: $id, hours: $hours)
+# }
+
+query Page($id: String!) {
+  page(id: $id) {
+    ...FullPage
+  }
+}

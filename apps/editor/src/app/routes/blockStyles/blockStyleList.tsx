@@ -3,12 +3,11 @@ import styled from '@emotion/styled';
 import {
   BlockStyle,
   EditorBlockType,
-  getApiClientV2,
   useBlockStylesQuery,
   useCreateBlockStyleMutation,
   useDeleteBlockStyleMutation,
   useUpdateBlockStyleMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   IconButtonTooltip,
@@ -134,8 +133,6 @@ const showErrors = (error: ApolloError): void => {
   );
 };
 
-const client = getApiClientV2();
-
 const BlockStyleList = memo(() => {
   const { t } = useTranslation();
   const [formValue, dispatchFormValue] = useReducer(
@@ -153,7 +150,6 @@ const BlockStyleList = memo(() => {
   const hasEmptyStyle = Object.values(apiValue).some(style => !style.name);
 
   const { loading } = useBlockStylesQuery({
-    client,
     fetchPolicy: 'cache-and-network',
     onError: showErrors,
     onCompleted(newData) {
@@ -174,7 +170,6 @@ const BlockStyleList = memo(() => {
       blocks: [],
       name: '',
     },
-    client,
     onError: showErrors,
     onCompleted(createdBlockStyle) {
       if (!createdBlockStyle.createBlockStyle) {
@@ -194,7 +189,6 @@ const BlockStyleList = memo(() => {
   });
 
   const [updateBlockStyle] = useUpdateBlockStyleMutation({
-    client,
     onError: showErrors,
     onCompleted(updatedBlockStyle) {
       if (!updatedBlockStyle.updateBlockStyle) {
@@ -214,7 +208,6 @@ const BlockStyleList = memo(() => {
   });
 
   const [deleteBlockStyle] = useDeleteBlockStyleMutation({
-    client,
     onError: showErrors,
     onCompleted(deletedBlockStyle) {
       if (!deletedBlockStyle.deleteBlockStyle) {

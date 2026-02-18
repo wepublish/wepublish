@@ -1,12 +1,11 @@
 import styled from '@emotion/styled';
 import {
   FullSubscriptionFragment,
-  getApiClientV2,
   SubscriptionFilter,
   SubscriptionSort,
   useDeleteSubscriptionMutation,
   useSubscriptionListQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -127,13 +126,11 @@ function SubscriptionList() {
     }
   });
 
-  const client = getApiClientV2();
   const {
     data,
     refetch,
     loading: isLoading,
   } = useSubscriptionListQuery({
-    client,
     variables: {
       filter,
       take: limit,
@@ -155,7 +152,7 @@ function SubscriptionList() {
   }, [filter, page, limit, sortOrder, sortField]);
 
   const [deleteSubscription, { loading: isDeleting }] =
-    useDeleteSubscriptionMutation({ client });
+    useDeleteSubscriptionMutation();
 
   const { t } = useTranslation();
 

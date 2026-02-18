@@ -145,42 +145,43 @@ import {
         );
         const mailProviderRaw = configFile.mailProvider;
         let mailProvider: BaseMailProvider;
-        if (mailProviderRaw) {
-          if (mailProviderRaw.type === 'mailgun') {
-            mailProvider = new MailgunMailProvider({
-              id: mailProviderRaw.id,
-              incomingRequestHandler: bodyParser.json(),
-              prisma,
-              kv,
-            });
-            await mailProvider.initDatabaseConfiguration(
-              MailProviderType.MAILGUN
-            );
-          } else if (mailProviderRaw.type === 'mailchimp') {
-            mailProvider = new MailchimpMailProvider({
-              id: mailProviderRaw.id,
-              incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
-              kv,
-              prisma,
-            });
-            await mailProvider.initDatabaseConfiguration(
-              MailProviderType.MAILCHIMP
-            );
-          } else if (mailProviderRaw.type === 'slackmail') {
-            mailProvider = new SlackMailProvider({
-              id: mailProviderRaw.id,
-              kv,
-              prisma,
-            });
-            await mailProvider.initDatabaseConfiguration(
-              MailProviderType.SLACK
-            );
-          } else {
-            throw new Error(
-              `Unknown mail provider type defined: ${mailProviderRaw.id}`
-            );
-          }
+
+        if (mailProviderRaw?.type === 'mailgun') {
+          mailProvider = new MailgunMailProvider({
+            id: mailProviderRaw.id,
+            incomingRequestHandler: bodyParser.json(),
+            prisma,
+            kv,
+          });
+
+          await mailProvider.initDatabaseConfiguration(
+            MailProviderType.MAILGUN
+          );
+        } else if (mailProviderRaw?.type === 'mailchimp') {
+          mailProvider = new MailchimpMailProvider({
+            id: mailProviderRaw.id,
+            incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
+            kv,
+            prisma,
+          });
+
+          await mailProvider.initDatabaseConfiguration(
+            MailProviderType.MAILCHIMP
+          );
+        } else if (mailProviderRaw?.type === 'slackmail') {
+          mailProvider = new SlackMailProvider({
+            id: mailProviderRaw.id,
+            kv,
+            prisma,
+          });
+
+          await mailProvider.initDatabaseConfiguration(MailProviderType.SLACK);
+        } else {
+          throw new Error(
+            `Unknown mail provider type defined: ${mailProviderRaw.id}`
+          );
         }
+
         if (!mailProvider) {
           throw new Error('A MailProvider must be configured.');
         }
@@ -220,10 +221,12 @@ import {
                 kv,
                 httpClient
               );
+
             await trackingPixelProviderClass.initDatabaseConfiguration(
               trackingPixelProvider.id,
               trackingPixelProvider.type
             );
+
             trackingPixelProviders.push(trackingPixelProviderClass);
           } else {
             throw new Error(
@@ -249,95 +252,108 @@ import {
         );
         const paymentProvidersRaw = configFile.paymentProviders;
 
-        if (paymentProvidersRaw) {
-          for (const paymentProvider of paymentProvidersRaw) {
-            if (paymentProvider.type === 'stripe-checkout') {
-              const paymentMethode = new StripeCheckoutPaymentProvider({
-                id: paymentProvider.id,
-                incomingRequestHandler: bodyParser.raw({
-                  type: 'application/json',
-                }),
-                prisma,
-                kv,
-              });
-              await paymentMethode.initDatabaseConfiguration(
-                PaymentProviderType.STRIPE_CHECKOUT
-              );
-              paymentProviders.push(paymentMethode);
-            } else if (paymentProvider.type === 'stripe') {
-              const paymentMethode = new StripePaymentProvider({
-                id: paymentProvider.id,
-                incomingRequestHandler: bodyParser.raw({
-                  type: 'application/json',
-                }),
-                prisma,
-                kv,
-              });
-              await paymentMethode.initDatabaseConfiguration(
-                PaymentProviderType.STRIPE
-              );
-              paymentProviders.push(paymentMethode);
-            } else if (paymentProvider.type === 'payrexx') {
-              const paymentMethode = new PayrexxPaymentProvider({
-                id: paymentProvider.id,
-                incomingRequestHandler: bodyParser.json(),
-                prisma,
-                kv,
-              });
-              await paymentMethode.initDatabaseConfiguration(
-                PaymentProviderType.PAYREXX
-              );
-              paymentProviders.push(paymentMethode);
-            } else if (paymentProvider.type === 'payrexx-subscription') {
-              const paymentMethode = new PayrexxSubscriptionPaymentProvider({
-                id: paymentProvider.id,
-                prisma,
-                kv,
-              });
-              await paymentMethode.initDatabaseConfiguration(
-                PaymentProviderType.PAYREXX_SUBSCRIPTION
-              );
-              paymentProviders.push(paymentMethode);
-            } else if (paymentProvider.type === 'bexio') {
-              const paymentMethode = new BexioPaymentProvider({
-                id: paymentProvider.id,
-                prisma,
-                kv,
-              });
-              paymentProviders.push(paymentMethode);
-              await paymentMethode.initDatabaseConfiguration(
-                PaymentProviderType.BEXIO
-              );
-            } else if (paymentProvider.type === 'mollie') {
-              const paymentMethode = new MolliePaymentProvider({
-                id: paymentProvider.id,
-                incomingRequestHandler: bodyParser.urlencoded({
-                  extended: true,
-                }),
-                prisma,
-                kv,
-              });
-              await paymentMethode.initDatabaseConfiguration(
-                PaymentProviderType.MOLLIE
-              );
-              paymentProviders.push(paymentMethode);
-            } else if (paymentProvider.type === 'no-charge') {
-              const paymentMethode = new NeverChargePaymentProvider({
-                id: paymentProvider.id,
-                prisma,
-                kv,
-              });
-              await paymentMethode.initDatabaseConfiguration(
-                PaymentProviderType.NO_CHARGE
-              );
-              paymentProviders.push(paymentMethode);
-            } else {
-              throw new Error(
-                `Unknown payment provider type defined: ${(paymentProvider as any).type}`
-              );
-            }
+        if (!paymentProvidersRaw) {
+          return { paymentProviders };
+        }
+
+        for (const paymentProvider of paymentProvidersRaw) {
+          if (paymentProvider.type === 'stripe-checkout') {
+            const paymentMethod = new StripeCheckoutPaymentProvider({
+              id: paymentProvider.id,
+              incomingRequestHandler: bodyParser.raw({
+                type: 'application/json',
+              }),
+              prisma,
+              kv,
+            });
+
+            await paymentMethod.initDatabaseConfiguration(
+              PaymentProviderType.STRIPE_CHECKOUT
+            );
+
+            paymentProviders.push(paymentMethod);
+          } else if (paymentProvider.type === 'stripe') {
+            const paymentMethod = new StripePaymentProvider({
+              id: paymentProvider.id,
+              incomingRequestHandler: bodyParser.raw({
+                type: 'application/json',
+              }),
+              prisma,
+              kv,
+            });
+
+            await paymentMethod.initDatabaseConfiguration(
+              PaymentProviderType.STRIPE
+            );
+
+            paymentProviders.push(paymentMethod);
+          } else if (paymentProvider.type === 'payrexx') {
+            const paymentMethod = new PayrexxPaymentProvider({
+              id: paymentProvider.id,
+              incomingRequestHandler: bodyParser.json(),
+              prisma,
+              kv,
+            });
+
+            await paymentMethod.initDatabaseConfiguration(
+              PaymentProviderType.PAYREXX
+            );
+
+            paymentProviders.push(paymentMethod);
+          } else if (paymentProvider.type === 'payrexx-subscription') {
+            const paymentMethod = new PayrexxSubscriptionPaymentProvider({
+              id: paymentProvider.id,
+              prisma,
+              kv,
+            });
+            await paymentMethod.initDatabaseConfiguration(
+              PaymentProviderType.PAYREXX_SUBSCRIPTION
+            );
+            paymentProviders.push(paymentMethod);
+          } else if (paymentProvider.type === 'bexio') {
+            const paymentMethod = new BexioPaymentProvider({
+              id: paymentProvider.id,
+              prisma,
+              kv,
+            });
+            paymentProviders.push(paymentMethod);
+            await paymentMethod.initDatabaseConfiguration(
+              PaymentProviderType.BEXIO
+            );
+          } else if (paymentProvider.type === 'mollie') {
+            const paymentMethod = new MolliePaymentProvider({
+              id: paymentProvider.id,
+              incomingRequestHandler: bodyParser.urlencoded({
+                extended: true,
+              }),
+              prisma,
+              kv,
+            });
+
+            await paymentMethod.initDatabaseConfiguration(
+              PaymentProviderType.MOLLIE
+            );
+
+            paymentProviders.push(paymentMethod);
+          } else if (paymentProvider.type === 'no-charge') {
+            const paymentMethod = new NeverChargePaymentProvider({
+              id: paymentProvider.id,
+              prisma,
+              kv,
+            });
+
+            await paymentMethod.initDatabaseConfiguration(
+              PaymentProviderType.NO_CHARGE
+            );
+
+            paymentProviders.push(paymentMethod);
+          } else {
+            throw new Error(
+              `Unknown payment provider type defined: ${(paymentProvider as any).type}`
+            );
           }
         }
+
         return { paymentProviders };
       },
       inject: [ConfigService, PrismaClient, KvTtlCacheService],

@@ -1,15 +1,11 @@
 import styled from '@emotion/styled';
 import {
-  FullPeerProfileFragment as V1FullPeerProfileFragment,
-  useRemotePeerProfileQuery,
-} from '@wepublish/editor/api';
-import {
-  FullRemotePeerProfileFragment as V2FullPeerProfileFragment,
-  getApiClientV2,
+  FullRemotePeerProfileFragment,
   useCreatePeerMutation,
   usePeerQuery,
+  useRemotePeerProfileQuery,
   useUpdatePeerMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { slugify } from '@wepublish/utils';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -25,7 +21,6 @@ import {
 import { Descendant } from 'slate';
 
 import {
-  ChooseEditImage,
   createCheckedPermissionComponent,
   DescriptionList,
   DescriptionListItem,
@@ -46,6 +41,13 @@ export interface PeerEditPanelProps {
 const { Group, ControlLabel, Control } = RForm;
 
 const Form = styled(RForm)`
+  height: 100%;
+`;
+
+const Image = styled.img`
+  object-fit: contain;
+  object-position: top left;
+  width: 100%;
   height: 100%;
 `;
 
@@ -70,33 +72,29 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
   const [information, setInformation] = useState<Descendant[]>();
   const [urlString, setURLString] = useState('');
   const [token, setToken] = useState('');
-  const [profile, setProfile] = useState<
-    V1FullPeerProfileFragment | V2FullPeerProfileFragment | null
-  >(null);
+  const [profile, setProfile] = useState<FullRemotePeerProfileFragment | null>(
+    null
+  );
 
-  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
     error: loadError,
   } = usePeerQuery({
-    client,
     variables: { id: id! },
     fetchPolicy: 'network-only',
     skip: id === undefined,
   });
 
   const [createPeer, { loading: isCreating, error: createError }] =
-    useCreatePeerMutation({
-      client,
-    });
+    useCreatePeerMutation({});
 
   const [updatePeer, { loading: isUpdating, error: updateError }] =
-    useUpdatePeerMutation({
-      client,
-    });
+    useUpdatePeerMutation({});
 
-  const { refetch: fetchRemote } = useRemotePeerProfileQuery({ skip: true });
+  const { refetch: fetchRemote } = useRemotePeerProfileQuery({
+    skip: true,
+  });
 
   const isDisabled = isLoading || isCreating || isUpdating;
   const { t } = useTranslation();
@@ -314,9 +312,8 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
 
           {profile && (
             <Panel header={t('peerList.panels.information')}>
-              <ChooseEditImage
-                disabled
-                image={profile?.logo}
+              <Image
+                src={profile?.logo?.xl ?? '/static/placeholder-240x240.png'}
               />
 
               <DescriptionList>
