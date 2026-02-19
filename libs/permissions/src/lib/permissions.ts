@@ -952,6 +952,33 @@ export const CanDeleteMailProviderSettings: Permission = {
   deprecated: false,
 };
 
+/**
+ * Analytics Provider Settings Permissions
+ */
+export const CanGetAnalyticsProviderSettings: Permission = {
+  id: 'CAN_GET_ANALYTICS_PROVIDER_SETTINGS',
+  description: 'Allows to get analytics provider settings',
+  deprecated: false,
+};
+
+export const CanCreateAnalyticsProviderSettings: Permission = {
+  id: 'CAN_CREATE_ANALYTICS_PROVIDER_SETTINGS',
+  description: 'Allows to create analytics provider settings',
+  deprecated: false,
+};
+
+export const CanUpdateAnalyticsProviderSettings: Permission = {
+  id: 'CAN_UPDATE_ANALYTICS_PROVIDER_SETTINGS',
+  description: 'Allows to update analytics provider settings',
+  deprecated: false,
+};
+
+export const CanDeleteAnalyticsProviderSettings: Permission = {
+  id: 'CAN_DELETE_ANALYTICS_PROVIDER_SETTINGS',
+  description: 'Allows to delete analytics provider settings',
+  deprecated: false,
+};
+
 export const AllPermissions: Permission[] = [
   CanGetCrowdfunding,
   CanGetCrowdfundings,
@@ -1097,6 +1124,10 @@ export const AllPermissions: Permission[] = [
   CanCreateMailProviderSettings,
   CanUpdateMailProviderSettings,
   CanDeleteMailProviderSettings,
+  CanGetAnalyticsProviderSettings,
+  CanCreateAnalyticsProviderSettings,
+  CanUpdateAnalyticsProviderSettings,
+  CanDeleteAnalyticsProviderSettings,
 ];
 
 export const EditorPermissions: Permission[] = [

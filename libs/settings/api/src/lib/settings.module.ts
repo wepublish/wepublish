@@ -21,6 +21,9 @@ import { TrackingPixelSettingsProviderDataloaderService } from './integrations/t
 import { MailProviderSettingsResolver } from './integrations/mail-provider-settings.resolver';
 import { MailProviderSettingsService } from './integrations/mail-provider-settings.service';
 import { MailProviderSettingsDataloaderService } from './integrations/mail-provider-settings-dataloader.service';
+import { AnalyticsProviderSettingsResolver } from './integrations/analytics-provider-settings.resolver';
+import { AnalyticsProviderSettingsService } from './integrations/analytics-provider-settings.service';
+import { AnalyticsProviderSettingsDataloaderService } from './integrations/analytics-provider-settings-dataloader.service';
 import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 
 @Module({
@@ -46,6 +49,9 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
     MailProviderSettingsResolver,
     MailProviderSettingsService,
     MailProviderSettingsDataloaderService,
+    AnalyticsProviderSettingsResolver,
+    AnalyticsProviderSettingsService,
+    AnalyticsProviderSettingsDataloaderService,
   ],
   exports: [
     SettingsGuard,
@@ -61,6 +67,8 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
     TrackingPixelSettingsProviderDataloaderService,
     MailProviderSettingsService,
     MailProviderSettingsDataloaderService,
+    AnalyticsProviderSettingsService,
+    AnalyticsProviderSettingsDataloaderService,
   ],
 })
 export class SettingModule {}
