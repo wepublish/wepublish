@@ -2587,7 +2587,7 @@ export type MutationUpdateBlockStyleArgs = {
 
 
 export type MutationUpdateChallengeProviderSettingArgs = {
-  id: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   secret?: InputMaybe<Scalars['String']>;
   siteKey?: InputMaybe<Scalars['String']>;
@@ -2675,7 +2675,7 @@ export type MutationUpdateInvoiceArgs = {
 export type MutationUpdateMailProviderSettingArgs = {
   apiKey?: InputMaybe<Scalars['String']>;
   fromAddress?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
   mailchimp_baseURL?: InputMaybe<Scalars['String']>;
   mailgun_baseDomain?: InputMaybe<Scalars['String']>;
   mailgun_mailDomain?: InputMaybe<Scalars['String']>;
@@ -2895,7 +2895,7 @@ export type MutationUpdateTagArgs = {
 
 
 export type MutationUpdateTrackingPixelSettingArgs = {
-  id: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   prolitteris_memberNr?: InputMaybe<Scalars['String']>;
   prolitteris_onlyPaidContentAccess?: InputMaybe<Scalars['Boolean']>;
@@ -4763,7 +4763,7 @@ export type SettingRestriction = {
   minValue?: Maybe<Scalars['Int']>;
 };
 
-export type SettingTrackingPixel = {
+export type SettingTrackingPixel = SettingProvider & {
   __typename?: 'SettingTrackingPixel';
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
@@ -9602,7 +9602,8 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
       "SettingAIProvider",
       "SettingChallengeProvider",
       "SettingMailProvider",
-      "SettingPaymentProvider"
+      "SettingPaymentProvider",
+      "SettingTrackingPixel"
     ],
     "Teaser": [
       "ArticleTeaser",

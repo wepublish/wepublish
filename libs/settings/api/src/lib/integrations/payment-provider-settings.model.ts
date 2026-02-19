@@ -34,7 +34,7 @@ export class SettingPaymentProvider extends SettingProvider {
   @Field(type => Boolean, { nullable: true })
   offSessionPayments?: boolean;
 
-  /** hide sensitive filds
+  /** hide sensitive fields
   @Field(type => String, { nullable: true })
   webhookEndpointSecret?: string;
 

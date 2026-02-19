@@ -28,7 +28,7 @@ export class SettingMailProvider extends SettingProvider {
   @Field(type => String, { nullable: true })
   replyToAddress?: string;
 
-  /** hide sensitive filds
+  /** hide sensitive fields
   @Field(type => String, { nullable: true })
   webhookEndpointSecret?: string;
 
@@ -78,7 +78,4 @@ export class CreateSettingMailProviderInput extends OmitType(
 export class UpdateSettingMailProviderInput extends PartialType(
   OmitType(CreateSettingMailProviderInput, ['type'] as const, ArgsType),
   ArgsType
-) {
-  @Field(type => String)
-  id!: string;
-}
+) {}

@@ -15,9 +15,9 @@ import { ChallengeProviderSettingsDataloaderService } from './integrations/chall
 import { PaymentProviderSettingsResolver } from './integrations/payment-provider-settings.resolver';
 import { PaymentProviderSettingsService } from './integrations/payment-provider-settings.service';
 import { PaymentProviderSettingsDataloaderService } from './integrations/payment-provider-settings-dataloader.service';
-import { TrackingPixelSettingsResolver } from './tracking-pixel-settings.resolver';
-import { TrackingPixelSettingsService } from './tracking-pixel-settings.service';
-import { TrackingPixelSettingsDataloaderService } from './tracking-pixel-settings-dataloader.service';
+import { TrackingPixelSettingsResolver } from './integrations/tracking-pixel-settings.resolver';
+import { TrackingPixelSettingsService } from './integrations/tracking-pixel-settings.service';
+import { TrackingPixelSettingsDataloaderService } from './integrations/tracking-pixel-settings-dataloader.service';
 import { MailProviderSettingsResolver } from './integrations/mail-provider-settings.resolver';
 import { MailProviderSettingsService } from './integrations/mail-provider-settings.service';
 import { MailProviderSettingsDataloaderService } from './integrations/mail-provider-settings-dataloader.service';
