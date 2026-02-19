@@ -56,7 +56,7 @@ class V0Config {
   }
 
   async apiKey(): Promise<string | null> {
-    return this.crypto.decrypt((await this.getV0()).apiKey);
+    return (await this.getV0()).apiKey;
   }
 
   async systemPrompt(): Promise<string | null> {
