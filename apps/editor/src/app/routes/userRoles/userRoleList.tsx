@@ -70,7 +70,6 @@ function UserRoleList() {
       filter: filter || undefined,
       take: 200,
     },
-    fetchPolicy: 'network-only',
   });
 
   const [deleteUserRole, { loading: isDeleting }] = useDeleteUserRoleMutation(

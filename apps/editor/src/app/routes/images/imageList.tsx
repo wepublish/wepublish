@@ -179,7 +179,6 @@ function ImageList() {
     refetch,
     loading: isLoading,
   } = useImageListQuery({
-    fetchPolicy: 'network-only',
     variables: listVariables,
   });
 

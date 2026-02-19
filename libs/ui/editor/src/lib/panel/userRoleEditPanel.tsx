@@ -53,7 +53,6 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
     error: loadError,
   } = useUserRoleQuery({
     variables: { id: id! },
-    fetchPolicy: 'network-only',
     skip: id === undefined,
   });
 
@@ -61,9 +60,7 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
     data: permissionData,
     loading: isPermissionLoading,
     error: loadPermissionError,
-  } = usePermissionListQuery({
-    fetchPolicy: 'network-only',
-  });
+  } = usePermissionListQuery({});
 
   const [createUserRole, { loading: isCreating, error: createError }] =
     useCreateUserRoleMutation();

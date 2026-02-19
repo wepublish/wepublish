@@ -62,9 +62,7 @@ const TimelineIcon = styled(Avatar)`
 type Action = NonNullable<RecentActionsQuery['actions']>[number];
 
 export function ActivityFeed() {
-  const { data, error } = useRecentActionsQuery({
-    fetchPolicy: 'cache-and-network',
-  });
+  const { data, error } = useRecentActionsQuery({});
 
   const actions = data?.actions ?? [];
 

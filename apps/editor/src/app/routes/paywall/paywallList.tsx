@@ -42,9 +42,7 @@ function PaywallList() {
     undefined
   );
 
-  const { data, loading, refetch } = usePaywallListQuery({
-    fetchPolicy: 'cache-and-network',
-  });
+  const { data, loading, refetch } = usePaywallListQuery({});
   const [deletePaywall] = useDeletePaywallMutation({
     onCompleted() {
       refetch();

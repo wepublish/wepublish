@@ -72,7 +72,6 @@ function ImageSelectPanel({ onClose, onSelect }: ImageSelectPanelProps) {
     fetchMore,
     loading: isLoading,
   } = useImageListQuery({
-    fetchPolicy: 'network-only',
     variables: {
       filter,
       take: ImagesPerPage,

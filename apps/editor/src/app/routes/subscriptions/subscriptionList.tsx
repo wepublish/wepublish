@@ -138,7 +138,6 @@ function SubscriptionList() {
       sort: mapColumFieldToGraphQLField(sortField),
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
-    fetchPolicy: 'network-only',
   });
 
   useEffect(() => {

@@ -132,24 +132,19 @@ export function ListViewFilters({
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([]);
   const [answers, setAnswers] = useState<PollAnswer[]>([]);
 
-  const [providersFetch, { data: providersData }] = useEventProvidersLazyQuery({
-    fetchPolicy: 'network-only',
-  });
+  const [providersFetch, { data: providersData }] = useEventProvidersLazyQuery(
+    {}
+  );
 
   const [userRoleFetch, { data: userRoleData }] = useUserRoleListLazyQuery({
-    fetchPolicy: 'network-only',
     variables: {
       take: 200,
     },
   });
 
-  const [peerListFetch, { data: peerListData }] = usePeerListLazyQuery({
-    fetchPolicy: 'network-only',
-  });
+  const [peerListFetch, { data: peerListData }] = usePeerListLazyQuery({});
 
-  const [pollFetch, { data: pollData }] = usePollLazyQuery({
-    fetchPolicy: 'network-only',
-  });
+  const [pollFetch, { data: pollData }] = usePollLazyQuery({});
 
   // check whether or not we need to get some data based on which filters are required
   const isAnswerFilter = fields.includes('answerIds');

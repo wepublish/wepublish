@@ -90,7 +90,6 @@ function EventListView() {
     loading: isLoading,
     refetch,
   } = useEventListQuery({
-    fetchPolicy: 'cache-and-network',
     variables: eventListVariables,
     onError: onErrorToast,
   });

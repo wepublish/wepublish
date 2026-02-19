@@ -94,7 +94,6 @@ function PollEditView() {
       id: params.id!,
     },
     onError: onErrorToast,
-    fetchPolicy: 'cache-and-network',
   });
 
   // updating poll

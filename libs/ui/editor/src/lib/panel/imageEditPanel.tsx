@@ -93,7 +93,6 @@ function ImageEditPanel({
 
   const { data, error: loadingError } = useImageQuery({
     variables: { id: id! },
-    fetchPolicy: 'network-only',
     skip: id === undefined,
   });
 

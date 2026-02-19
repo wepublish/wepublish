@@ -107,7 +107,6 @@ function PageList() {
     loading: isLoading,
   } = usePageListQuery({
     variables: pageListVariables,
-    fetchPolicy: 'cache-and-network',
   });
 
   const pages = useMemo(() => data?.pages?.nodes ?? [], [data]);

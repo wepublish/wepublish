@@ -99,14 +99,13 @@ function PeerList() {
     data: peerInfoData,
     loading: isPeerInfoLoading,
     error: peerInfoError,
-  } = usePeerProfileQuery({ fetchPolicy: 'network-only' });
+  } = usePeerProfileQuery({});
 
   const {
     data: peerListData,
     loading: isPeerListLoading,
     error: peerListError,
   } = usePeerListQuery({
-    fetchPolicy: 'network-only',
     errorPolicy: 'ignore',
   });
 

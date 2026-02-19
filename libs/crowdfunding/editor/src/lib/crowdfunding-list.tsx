@@ -25,9 +25,7 @@ function CrowdfundingList() {
     Crowdfunding | undefined
   >(undefined);
 
-  const { data, loading, error, refetch } = useCrowdfundingsQuery({
-    fetchPolicy: 'cache-and-network',
-  });
+  const { data, loading, error, refetch } = useCrowdfundingsQuery({});
 
   return (
     <>

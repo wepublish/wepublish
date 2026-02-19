@@ -76,7 +76,6 @@ export function SelectMemberPlans({
       order: SortOrder.Ascending,
       take: 50,
     },
-    fetchPolicy: 'cache-and-network',
     onError: showErrors,
   });
 

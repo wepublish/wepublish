@@ -103,7 +103,6 @@ export default function ImportableEventListView() {
   };
 
   const { data, loading: queryLoading } = useImportedEventListQuery({
-    fetchPolicy: 'cache-and-network',
     variables: importedEventListVariables,
     onError: onErrorToast,
   });
@@ -125,9 +124,7 @@ export default function ImportableEventListView() {
     onError: onErrorToast,
   });
 
-  const { data: ids } = useImportedEventsIdsQuery({
-    fetchPolicy: 'cache-and-network',
-  });
+  const { data: ids } = useImportedEventsIdsQuery({});
   const alreadyImported = ids?.importedEventsIds;
 
   const importEvent = async (id: string, source: string) => {

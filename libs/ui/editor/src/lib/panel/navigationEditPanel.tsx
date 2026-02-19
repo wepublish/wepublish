@@ -83,7 +83,6 @@ function NavigationEditPanel({
     error: loadError,
   } = useNavigationQuery({
     variables: { id: id! },
-    fetchPolicy: 'cache-and-network',
     skip: id === undefined,
   });
 
@@ -93,7 +92,6 @@ function NavigationEditPanel({
     error: pageLoadError,
   } = usePageListQuery({
     variables: { take: 50 },
-    fetchPolicy: 'cache-and-network',
   });
 
   const {
@@ -102,7 +100,6 @@ function NavigationEditPanel({
     error: articleLoadError,
   } = useArticleListQuery({
     variables: { take: 50 },
-    fetchPolicy: 'cache-and-network',
   });
 
   const [createNavigation, { loading: isCreating, error: createError }] =

@@ -83,7 +83,6 @@ export function SelectPollPanel({
 
   const [fetchPolls, { data, loading }] = usePollsLazyQuery({
     onError: onErrorToast,
-    fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {

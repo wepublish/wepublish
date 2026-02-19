@@ -34,7 +34,6 @@ export function UserSearch({
         text: userSearch,
       },
     },
-    fetchPolicy: 'network-only',
   });
 
   useEffect(() => {
