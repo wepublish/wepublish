@@ -251,7 +251,7 @@ jobs:
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgres.reviews.svc.cluster.local:5432/wepublish?schema=public
               MEDIA_SERVER_TOKEN: 'media-token'
               JWT_SECRET_KEY: 'jwt-token'
-              APP_SECRET_KEY: 'app-secret'
+              APP_SECRET_KEY: 'app-secret-1234567890'
               DEFAULT_FROM_ADDRESS: 'dev@wepublish.ch'
               DEFAULT_REPLY_TO_ADDRESS: 'dev@wepublish.ch'
               SYSTEM_INFO_KEY: 'review'
