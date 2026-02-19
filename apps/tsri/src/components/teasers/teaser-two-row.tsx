@@ -10,7 +10,9 @@ import {
   TeaserImage,
   TeaserImageCaption,
   TeaserImageWrapper,
+  TeaserLead,
   TeaserPreTitleWrapper,
+  TeaserTitle,
   TsriTeaser,
 } from './tsri-teaser';
 
@@ -36,14 +38,33 @@ export const StyledTeaserTwoRow = styled(TsriTeaser)`
     }
 
     ${({ theme }) => theme.breakpoints.up('md')} {
-      grid-template-rows: 58.42cqw min-content auto min-content;
+      grid-template-rows: 46.75cqw min-content auto min-content;
     }
+  }
+
+  ${TeaserTitle} {
+    padding: 1.8cqw 1cqw;
+    font-size: 4.5cqw !important;
+    line-height: 4.5cqw !important;
+    word-wrap: nowrap;
+    text-wrap: wrap;
+    white-space: pre-wrap;
+    word-break: break-word;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      font-size: 2.6cqw !important;
+      line-height: 3cqw !important;
+    }
+  }
+
+  ${TeaserLead} {
+    line-height: 2.25cqw;
   }
 
   ${TeaserImageWrapper} {
     display: grid;
     z-index: 1;
-    aspect-ratio: 1;
+    aspect-ratio: 3 / 2;
     border-top-left-radius: 1.3cqw;
     border-top-right-radius: 1.3cqw;
     grid-column: 1 / 2;
@@ -51,6 +72,10 @@ export const StyledTeaserTwoRow = styled(TsriTeaser)`
 
     ${TeaserImageCaption} {
       display: none;
+    }
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      aspect-ratio: 5 / 4;
     }
 
     ${TeaserImage} {
@@ -63,7 +88,7 @@ export const StyledTeaserTwoRow = styled(TsriTeaser)`
       ${({ theme }) => theme.breakpoints.up('md')} {
         width: auto;
         max-height: unset;
-        height: 58.42cqw;
+        height: 46.75cqw;
       }
     }
   }

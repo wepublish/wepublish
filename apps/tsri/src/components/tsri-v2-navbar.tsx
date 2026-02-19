@@ -87,6 +87,7 @@ const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
       ${theme.breakpoints.up('md')} {
         --navbar-height: -10px;
         --navbar-aspect-ratio: 6.5 / 1;
+        --navbar-aspect-ratio: 7.5 / 1;
         --scrolled-navbar-aspect-ratio: 9 / 1;
       }
     `
@@ -314,6 +315,7 @@ const TsriLogo = styled('img', {
       isHomePage &&
       css`
         width: 32.55cqw;
+        width: 27cqw;
       `}
 
       // on home page, scrolled --> black logo, smaller
@@ -340,6 +342,7 @@ const TsriClaim = styled('img', {
   height: auto;
   top: 13.5cqw;
   top: 12.8cqw;
+  top: 10.5cqw;
   left: 2cqw;
   display: none;
 
@@ -561,7 +564,7 @@ export const NavPaperWrapper = styled('div', {
   display: grid;
   grid-template-rows: min-content 6cqw;
   row-gap: 12cqw;
-  grid-template-columns: 1fr minmax(max-content, 1285px) 1fr;
+  grid-template-columns: 1fr minmax(max-content, 1075px) 1fr;
   position: absolute;
 
   ${theme.breakpoints.up('md')} {
