@@ -1622,6 +1622,8 @@
     },
     "search": "Rechercher",
     "integrations": {
+      "whatAreIntegrations": "Que sont les intégrations ?",
+      "infoText": "Les intégrations sont des interfaces tierces intégrées à We.Publish. Elles sont utilisées, par exemple, pour envoyer des e-mails ou traiter des paiements en toute sécurité.",
       "title": "Intégrations",
       "ai": "Intégration AI",
       "challengeProvider": "Fournisseur de challenge",
