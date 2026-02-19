@@ -28,6 +28,7 @@ import {
 import {
   GoogleAnalyticsModule,
   GoogleAnalyticsService,
+  GoogleAnalyticsDbConfig,
 } from '@wepublish/google-analytics/api';
 import { HealthModule } from '@wepublish/health';
 import { MediaAdapterModule } from '@wepublish/image/api';
@@ -477,9 +478,6 @@ import {
           imports: [PrismaModule, KvTtlCacheModule],
           inject: [PrismaClient, KvTtlCacheService],
           useFactory: async (prisma: PrismaClient, kv: KvTtlCacheService) => {
-            const { GoogleAnalyticsDbConfig } = await import(
-              '@wepublish/google-analytics/api'
-            );
             const dbConfig = new GoogleAnalyticsDbConfig(
               prisma,
               kv,

@@ -2,15 +2,12 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   CanGetAnalyticsProviderSettings,
   CanUpdateAnalyticsProviderSettings,
-  CanCreateAnalyticsProviderSettings,
-  CanDeleteAnalyticsProviderSettings,
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
   SettingAnalyticsProvider,
   UpdateSettingAnalyticsProviderInput,
   SettingAnalyticsProviderFilter,
-  CreateSettingAnalyticsProviderInput,
 } from './analytics-provider-settings.model';
 import { AnalyticsProviderSettingsService } from './analytics-provider-settings.service';
 import { AnalyticsProviderSettingsDataloaderService } from './analytics-provider-settings-dataloader.service';

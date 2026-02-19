@@ -212,7 +212,8 @@ const seedSettings = (prisma: PrismaClient) =>
         id: 'google-analytics',
         name: 'Google-Analytic',
         type: 'GOOGLE',
-        credentials: 'v1.KifaaS2fiO757Rrx.34Pdfn8gka8uZjLH8RXhnQ==.u9CeEA==',
+        credentials:
+          'v1.joXbh+gkDHyDSWR8.xx9rJ27ZN9VWALNkm3ET0w==.Hl8G9f69NSAH5A==',
         property: '1',
         articlePrefix: '/a/',
       },

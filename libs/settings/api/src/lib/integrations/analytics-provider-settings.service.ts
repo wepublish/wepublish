@@ -23,6 +23,14 @@ export class AnalyticsProviderSettingsService {
   ): T {
     let encryptedCredentials;
     if (typeof data.credentials === 'string' && data.credentials.length > 0) {
+      // Validate that credentials is valid JSON
+      try {
+        JSON.parse(data.credentials);
+      } catch (e) {
+        throw new Error(
+          'Invalid credentials format: must be a valid JSON string'
+        );
+      }
       encryptedCredentials = this.crypto.encrypt(data.credentials);
     }
     return {
