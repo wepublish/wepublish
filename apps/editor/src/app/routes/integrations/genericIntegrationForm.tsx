@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SettingProvider } from '@wepublish/editor/api';
 import { DocumentNode } from 'graphql';
 import { useMemo } from 'react';
 import { Controller, FieldValues, Path, useForm } from 'react-hook-form';
@@ -60,12 +61,7 @@ export type FieldDefinition<TFormValues> = {
 };
 
 export interface GenericIntegrationFormProps<
-  TSetting extends {
-    id: string;
-    name?: string | null;
-    type?: string;
-    lastLoadedAt?: string;
-  },
+  TSetting extends SettingProvider & { type?: string },
   TFormValues extends FieldValues,
 > {
   setting: TSetting;
@@ -83,12 +79,7 @@ export interface GenericIntegrationFormProps<
 }
 
 export function SingleGenericIntegrationForm<
-  TSetting extends {
-    id: string;
-    name?: string | null;
-    type?: string;
-    lastLoadedAt?: string;
-  },
+  TSetting extends SettingProvider & { type?: string },
   TFormValues extends FieldValues,
 >({
   setting,
