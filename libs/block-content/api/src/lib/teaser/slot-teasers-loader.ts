@@ -131,11 +131,19 @@ export class SlotTeasersLoader {
         .slice(0, index)
         .filter(slot => slot.type === TeaserSlotType.Autofill).length;
 
-      return (
-        (type === TeaserSlotType.Manual ?
-          manualTeaser
-        : autofillTeasers[autofillIndex]) ?? null
-      );
+      if (type === TeaserSlotType.Manual) {
+        // store a teaser that has been manually added...
+        // ... so it can be excluded when next teaser-slots-blocks will...
+        // ... be populated with autofill teasers.
+        // with custom teasers, this has no effect, because they are never automatically...
+        // ... loaded into slots, but with article- & event-teasers it is relevant
+        this.addLoadedTeaser(manualTeaser as typeof Teaser);
+        return manualTeaser as typeof Teaser;
+      } else if (autofillTeasers[autofillIndex]) {
+        return autofillTeasers[autofillIndex];
+      } else {
+        return null;
+      }
     });
   }
 
