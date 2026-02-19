@@ -139,7 +139,7 @@ export function SingleGenericIntegrationForm<
     >
       <Form
         fluid
-        onSubmit={() => onSubmit()}
+        onSubmit={onSubmit}
         disabled={updating}
       >
         {resolvedFields.map(field => (
