@@ -1735,6 +1735,8 @@
     },
     "search": "Suche",
     "integrations": {
+      "whatAreIntegrations": "Was sind Integrationen?",
+      "infoText": " Integrationen sind in We.Publish eingebaute Schnittstellen von Drittanbietern. Diese werden etwa verwendet, um Mails zu versenden oder Zahlungen sicher abzuwickeln.",
       "title": "Integrationen",
       "ai": "AI",
       "challengeProvider": "Challenge Provider",

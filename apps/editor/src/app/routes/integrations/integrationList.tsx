@@ -17,7 +17,15 @@ import {
   MdSmartToy,
 } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import { Col, Grid, IconButton, Panel, Row } from 'rsuite';
+import {
+  Col,
+  Grid,
+  IconButton,
+  Message,
+  Notification,
+  Panel,
+  Row,
+} from 'rsuite';
 
 import bexioLogo from '../../../assets/integrations/bexio.png';
 import cloudflareLogo from '../../../assets/integrations/cloudflare.svg';
@@ -127,8 +135,24 @@ export function IntegrationList() {
       style={{ width: '100%' }}
     >
       <Row>
-        <Col xs={24}>
+        <Col
+          xs={24}
+          md={12}
+        >
           <h1>{t('integrations.title')}</h1>
+        </Col>
+        <Col
+          xs={24}
+          md={12}
+        >
+          <Message
+            type="info"
+            showIcon
+            header={t('integrationList.whatAreIntegrations')}
+          >
+            {t('integrationList.infoText')}
+          </Message>
+          <p></p>
         </Col>
       </Row>
 

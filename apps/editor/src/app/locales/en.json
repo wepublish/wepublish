@@ -1795,6 +1795,8 @@
     },
     "search": "Search",
     "integrations": {
+      "whatAreIntegrations": "What are integrations?",
+      "infoText": "Integrations are third-party interfaces built into We.Publish. These are used, for example, to send emails or process payments securely.",
       "title": "Integrations",
       "ai": "AI",
       "challengeProvider": "Challenge Provider",
