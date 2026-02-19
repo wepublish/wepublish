@@ -6,7 +6,7 @@ import DataLoader from 'dataloader';
 @Injectable({
   scope: Scope.REQUEST,
 })
-export class TrackingPixelSettingsDataloaderService
+export class TrackingPixelSettingsProviderDataloaderService
   implements Primeable<SettingTrackingPixel>
 {
   private dataloader = new DataLoader<string, SettingTrackingPixel | null>(

@@ -6,10 +6,10 @@ export * from './lib/settings.service';
 export * from './lib/setting-dataloader.service';
 export * from './lib/settings-utils';
 
-export * from './lib/integrations/tracking-pixel-settings.model';
-export * from './lib/integrations/tracking-pixel-settings.service';
-export * from './lib/integrations/tracking-pixel-settings.resolver';
-export * from './lib/integrations/tracking-pixel-settings-dataloader.service';
+export * from './lib/integrations/tracking-pixel-provider-settings.model';
+export * from './lib/integrations/tracking-pixel-provider-settings.service';
+export * from './lib/integrations/tracking-pixel-provider-settings.resolver';
+export * from './lib/integrations/tracking-pixel-settings-provider-dataloader.service';
 export * from './lib/integrations/ai-settings.model';
 export * from './lib/integrations/ai-settings.service';
 export * from './lib/integrations/ai-settings.resolver';
