@@ -144,7 +144,7 @@ function PeerList() {
       setEditID(id);
       setEditModalOpen(true);
     }
-  }, [location]);
+  }, [id, isCreateRoute, isPeerEditRoute, isPeerProfileEditRoute, location]);
 
   const peers = peerListData?.peers?.map(peer => {
     const { id, name, profile, hostURL, isDisabled } = peer;
@@ -366,12 +366,16 @@ function PeerList() {
             </DescriptionListItem>
           </DescriptionList>
         </Modal.Body>
+
         <Modal.Footer>
           <Button
             disabled={isDeleting}
             color="red"
             onClick={async () => {
-              if (!currentPeer) return;
+              if (!currentPeer) {
+                return;
+              }
+
               await deletePeer({
                 variables: { id: currentPeer.id },
                 update: cache => {
@@ -379,7 +383,9 @@ function PeerList() {
                     query: PeerListDocument,
                   });
 
-                  if (!query) return;
+                  if (!query) {
+                    return;
+                  }
 
                   cache.writeQuery<PeerListQuery>({
                     query: PeerListDocument,

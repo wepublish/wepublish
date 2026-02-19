@@ -46,6 +46,9 @@ export class ImageService {
         take: getMaxTake(take) + 1,
         orderBy,
         cursor: cursorId ? { id: cursorId } : undefined,
+        include: {
+          focalPoint: true,
+        },
       }),
     ]);
 
@@ -82,6 +85,9 @@ export class ImageService {
             update: focalPoint ?? {},
           },
         },
+      },
+      include: {
+        focalPoint: true,
       },
     });
   }

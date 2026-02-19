@@ -96,5 +96,7 @@ export class ImageUploadService {
   async deleteImage(imageId: string) {
     await this.mediaAdapter.deleteImage(imageId);
     await this.prisma.image.delete({ where: { id: imageId } });
+
+    return imageId;
   }
 }
