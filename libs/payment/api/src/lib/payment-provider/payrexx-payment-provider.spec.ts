@@ -72,6 +72,7 @@ describe('PayrexxPaymentProvider', () => {
       const response = await payrexx.webhookForPaymentIntent({
         req: {
           body: {},
+          query: {},
         } as unknown as express.Request,
       });
       expect(response.status).toEqual(403);
