@@ -1808,6 +1808,7 @@
       "updateSuccess": "Settings updated successfully",
       "updateError": "Settings update failed",
       "noSettingsFound": "No settings found",
+      "lastLoaded": "Last loaded",
       "aiSettings": {
         "apiKey": "API Key",
         "systemPrompt": "System Prompt"
