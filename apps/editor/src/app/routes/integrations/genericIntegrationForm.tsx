@@ -1,26 +1,29 @@
 import { useMutation } from '@apollo/client';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CircularProgress,
+  Typography,
+} from '@mui/material';
 import { SettingProvider } from '@wepublish/editor/api';
+import { Textarea } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
 import { useMemo } from 'react';
 import { Controller, FieldValues, Path, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
-  Button,
   Checkbox,
   CheckPicker,
   Form,
   Message,
-  Panel,
   SelectPicker,
   toaster,
 } from 'rsuite';
 import { z } from 'zod';
-
-const StyledPanel = styled(Panel)`
-  margin-bottom: 20px;
-`;
 
 const HeaderWrapper = styled.div`
   display: flex;
@@ -33,13 +36,6 @@ const HeaderLogo = styled.img`
   min-height: 16px;
   max-height: 28px;
   max-width: 150px;
-`;
-
-const LastLoadedInfo = styled.div`
-  font-size: 0.75rem;
-  color: #999;
-  margin-bottom: 12px;
-  text-align: right;
 `;
 
 export type FieldDefinition<TFormValues> = {
@@ -114,7 +110,6 @@ export function SingleGenericIntegrationForm<
   );
 
   const { control, handleSubmit } = useForm<TFormValues>({
-    defaultValues: initialValues as any,
     resolver: zodResolver(schema),
     mode: 'onTouched',
     reValidateMode: 'onChange',
@@ -144,126 +139,145 @@ export function SingleGenericIntegrationForm<
   const logo = getLogo?.(setting);
 
   return (
-    <StyledPanel
-      header={
-        <HeaderWrapper>
-          {setting.name || setting.type}
-          {logo && (
-            <HeaderLogo
-              src={logo}
-              alt=""
-            />
-          )}
-        </HeaderWrapper>
-      }
-      bordered
+    <Form
+      fluid
+      onSubmit={() => onSubmit()}
     >
-      <Form
-        fluid
-        disabled={updating}
-        onSubmit={() => onSubmit()}
+      <Card
+        variant="outlined"
+        sx={{ alignSelf: 'start' }}
       >
-        {resolvedFields.map(field => (
-          <Form.Group
-            controlId={`${String(field.name)}-${setting.id}`}
-            key={String(field.name)}
+        <CardContent>
+          <Typography
+            variant="h5"
+            component={HeaderWrapper}
+            marginBottom={2}
           >
-            <Form.ControlLabel>
-              {field.type === 'checkbox' ? ' ' : field.label}
-            </Form.ControlLabel>
+            {setting.name || setting.type}
 
-            <Controller
-              name={field.name}
-              control={control}
-              defaultValue={initialValues[field.name]}
-              render={({
-                field: { value, onChange, ...restField },
-                fieldState,
-              }) => {
-                if (field.type === 'select') {
+            {logo && (
+              <HeaderLogo
+                src={logo}
+                alt=""
+              />
+            )}
+          </Typography>
+
+          {resolvedFields.map(field => (
+            <Form.Group
+              controlId={`${String(field.name)}-${setting.id}`}
+              key={String(field.name)}
+            >
+              <Form.ControlLabel>
+                {field.type === 'checkbox' ? ' ' : field.label}
+              </Form.ControlLabel>
+
+              <Controller
+                name={field.name}
+                control={control}
+                defaultValue={initialValues[field.name]}
+                render={({
+                  field: { value, onChange, ...restField },
+                  fieldState,
+                }) => {
+                  if (field.type === 'select') {
+                    return (
+                      <SelectPicker
+                        data={field.options || []}
+                        value={value}
+                        onChange={onChange}
+                        disabled={field.disabled}
+                        cleanable={false}
+                        searchable={false}
+                        {...restField}
+                      />
+                    );
+                  }
+
+                  if (field.type === 'checkPicker') {
+                    return (
+                      <CheckPicker
+                        data={field.options || []}
+                        value={value || []}
+                        onChange={val => onChange(val)}
+                        disabled={field.disabled}
+                        cleanable={false}
+                        searchable={false}
+                        {...restField}
+                      />
+                    );
+                  }
+
+                  if (field.type === 'checkbox') {
+                    return (
+                      <Checkbox
+                        checked={!!value}
+                        onChange={(_, c) => onChange(c)}
+                        disabled={field.disabled}
+                        {...restField}
+                      >
+                        {field.label}
+                      </Checkbox>
+                    );
+                  }
+
                   return (
-                    <SelectPicker
-                      data={field.options || []}
+                    <Form.Control
                       value={value}
                       onChange={onChange}
+                      errorMessage={fieldState.error?.message}
+                      type={
+                        field.type === 'password' ? 'password'
+                        : field.type === 'number' ?
+                          'number'
+                        : 'text'
+                      }
+                      accepter={
+                        field.type === 'textarea' ? Textarea : undefined
+                      }
+                      rows={field.textareaRows}
+                      placeholder={field.placeholder}
+                      autoComplete={field.autoComplete}
                       disabled={field.disabled}
-                      cleanable={false}
-                      searchable={false}
                       {...restField}
                     />
                   );
-                }
+                }}
+              />
+            </Form.Group>
+          ))}
 
-                if (field.type === 'checkPicker') {
-                  return (
-                    <CheckPicker
-                      data={field.options || []}
-                      value={value || []}
-                      onChange={val => onChange(val)}
-                      disabled={field.disabled}
-                      cleanable={false}
-                      searchable={false}
-                      {...restField}
-                    />
-                  );
-                }
+          {setting.lastLoadedAt && (
+            <Typography
+              align="right"
+              color="gray"
+            >
+              <small>
+                {t('integrations.lastLoaded')}:{' '}
+                {formatLastLoaded(setting.lastLoadedAt)}
+              </small>
+            </Typography>
+          )}
+        </CardContent>
 
-                if (field.type === 'checkbox') {
-                  return (
-                    <Checkbox
-                      checked={!!value}
-                      onChange={(_, c) => onChange(c)}
-                      disabled={field.disabled}
-                      {...restField}
-                    >
-                      {field.label}
-                    </Checkbox>
-                  );
-                }
+        <CardActions>
+          <Button
+            variant="contained"
+            type="submit"
+            disabled={updating}
+          >
+            {updating && (
+              <CircularProgress
+                size={14}
+                color="inherit"
+                sx={{ mr: 1 }}
+              />
+            )}
 
-                return (
-                  <Form.Control
-                    value={value}
-                    onChange={onChange}
-                    errorMessage={fieldState.error?.message}
-                    type={
-                      field.type === 'password' ? 'password'
-                      : field.type === 'number' ?
-                        'number'
-                      : 'text'
-                    }
-                    accepter={
-                      field.type === 'textarea' ? 'textarea' : undefined
-                    }
-                    rows={field.textareaRows}
-                    placeholder={field.placeholder}
-                    autoComplete={field.autoComplete}
-                    disabled={field.disabled}
-                    {...restField}
-                  />
-                );
-              }}
-            />
-          </Form.Group>
-        ))}
-
-        {setting.lastLoadedAt && (
-          <LastLoadedInfo>
-            {t('integrations.lastLoaded')}:{' '}
-            {formatLastLoaded(setting.lastLoadedAt)}
-          </LastLoadedInfo>
-        )}
-
-        <Button
-          appearance="primary"
-          type="submit"
-          size="lg"
-          block
-          loading={updating}
-        >
-          {t('save')}
-        </Button>
-      </Form>
-    </StyledPanel>
+            {t('save')}
+          </Button>
+        </CardActions>
+      </Card>
+    </Form>
   );
 }

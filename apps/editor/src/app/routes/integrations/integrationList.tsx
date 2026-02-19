@@ -1,5 +1,12 @@
 import styled from '@emotion/styled';
 import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Typography,
+} from '@mui/material';
+import {
   CanGetAISettings,
   CanGetChallengeProviderSettings,
   CanGetMailProviderSettings,
@@ -11,21 +18,11 @@ import { useTranslation } from 'react-i18next';
 import {
   MdAnalytics,
   MdCreditCard,
-  MdEdit,
   MdEmail,
   MdSecurity,
   MdSmartToy,
 } from 'react-icons/md';
-import { useNavigate } from 'react-router-dom';
-import {
-  Col,
-  Grid,
-  IconButton,
-  Message,
-  Notification,
-  Panel,
-  Row,
-} from 'rsuite';
+import { Link } from 'react-router-dom';
 
 import bexioLogo from '../../../assets/integrations/bexio.png';
 import cloudflareLogo from '../../../assets/integrations/cloudflare.svg';
@@ -38,40 +35,22 @@ import slackLogo from '../../../assets/integrations/slack.png';
 import stripeLogo from '../../../assets/integrations/stripe.svg';
 import vercelLogo from '../../../assets/integrations/vercel.svg';
 
-const StyledGrid = styled(Grid)`
-  width: 100%;
-`;
+const Wrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
 
-const StyledRow = styled(Row)`
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 20px;
-`;
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
-const StyledCol = styled(Col)`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-`;
-
-const StyledPanel = styled(Panel)`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-
-  .rs-panel-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+  ${({ theme }) => theme.breakpoints.up('lg')} {
+    grid-template-columns: repeat(3, 1fr);
   }
 `;
 
-const StyledHeader = styled.h3`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+const Title = styled.h3`
+  grid-column: -1/1;
 `;
 
 const LogoList = styled.div`
@@ -89,7 +68,6 @@ const IntegrationLogo = styled.img`
 
 export function IntegrationList() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const integrations = [
     {
@@ -130,74 +108,42 @@ export function IntegrationList() {
   ];
 
   return (
-    <StyledGrid
-      fluid
-      style={{ width: '100%' }}
-    >
-      <Row>
-        <Col
-          xs={24}
-          md={12}
-        >
-          <h1>{t('integrations.title')}</h1>
-        </Col>
-        <Col
-          xs={24}
-          md={12}
-        >
-          <Message
-            type="info"
-            showIcon
-            header={t('integrations.whatAreIntegrations')}
-          >
-            {t('integrations.infoText')}
-          </Message>
-          <p></p>
-        </Col>
-      </Row>
+    <Wrapper>
+      <Title>{t('integrations.title')}</Title>
 
-      <StyledRow gutter={24}>
-        {integrations.map(integration => (
-          <PermissionControl
-            key={integration.permission}
-            qualifyingPermissions={[integration.permission]}
-          >
-            <StyledCol
-              xs={24}
-              md={12}
-              lg={12}
-              xl={8}
-              xxl={6}
-            >
-              <StyledPanel
-                bordered
-                header={
-                  <StyledHeader>
-                    {integration.title}
-                    <IconButton
-                      icon={<MdEdit />}
-                      circle
-                      appearance="primary"
-                    />
-                  </StyledHeader>
-                }
-                onClick={() => navigate(integration.path)}
+      {integrations.map(integration => (
+        <PermissionControl
+          key={integration.title}
+          qualifyingPermissions={[integration.permission]}
+        >
+          <Card variant="outlined">
+            <CardContent>
+              <Typography
+                variant="h6"
+                component="div"
+                marginBottom={2}
               >
-                {integration.logos.length > 0 && (
-                  <LogoList>
-                    {integration.logos.map((logo, index) => (
-                      <IntegrationLogo
-                        key={index}
-                        src={logo}
-                      />
-                    ))}
-                  </LogoList>
-                )}
-              </StyledPanel>
-            </StyledCol>
-          </PermissionControl>
-        ))}
-      </StyledRow>
-    </StyledGrid>
+                {integration.title}
+              </Typography>
+
+              <LogoList>
+                {integration.logos.map((logo, index) => (
+                  <IntegrationLogo
+                    key={index}
+                    src={logo}
+                  />
+                ))}
+              </LogoList>
+            </CardContent>
+
+            <CardActions>
+              <Link to={integration.path}>
+                <Button size="small">{t('edit')}</Button>
+              </Link>
+            </CardActions>
+          </Card>
+        </PermissionControl>
+      ))}
+    </Wrapper>
   );
 }
