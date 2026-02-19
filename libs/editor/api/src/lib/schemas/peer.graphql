@@ -121,9 +121,7 @@ mutation UpdatePeer(
 }
 
 mutation DeletePeer($id: String!) {
-  deletePeer(id: $id) {
-    ...FullPeer
-  }
+  deletePeer(id: $id)
 }
 
 mutation UpdatePeerProfile(

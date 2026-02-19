@@ -106,15 +106,20 @@ export class PeerProfileService {
   async upsertPeerProfile(peerProfile: UpsertPeerProfileInput) {
     const oldProfile = await this.prisma.peerProfile.findFirst({});
 
-    return this.prisma.peerProfile.upsert({
-      where: {
-        id: oldProfile?.id,
-      },
-      create: {
-        ...peerProfile,
-        callToActionText: peerProfile.callToActionText as any,
-      },
-      update: {
+    if (oldProfile) {
+      return this.prisma.peerProfile.update({
+        where: {
+          id: oldProfile.id,
+        },
+        data: {
+          ...peerProfile,
+          callToActionText: peerProfile.callToActionText as any,
+        },
+      });
+    }
+
+    return this.prisma.peerProfile.create({
+      data: {
         ...peerProfile,
         callToActionText: peerProfile.callToActionText as any,
       },

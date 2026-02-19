@@ -72,7 +72,6 @@ export interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const { data, loading, refetch, error } = useMeQuery();
-  console.log(data);
   const [state, dispatch] = useReducer(authReducer, {});
 
   const isPageActive = usePageVisibility();

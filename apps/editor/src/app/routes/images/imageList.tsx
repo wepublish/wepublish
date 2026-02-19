@@ -358,7 +358,9 @@ function ImageList() {
           <Button
             disabled={isDeleting}
             onClick={async () => {
-              if (!currentImage) return;
+              if (!currentImage) {
+                return;
+              }
 
               await deleteImage({
                 variables: { id: currentImage.id },
