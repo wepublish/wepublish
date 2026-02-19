@@ -123,6 +123,7 @@ export function SingleGenericIntegrationForm<
   );
 
   const { control, handleSubmit } = useForm<TFormValues>({
+    defaultValues: initialValues as any,
     resolver: zodResolver(schema),
     mode: 'onTouched',
     reValidateMode: 'onChange',
