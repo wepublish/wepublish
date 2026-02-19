@@ -43,12 +43,14 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
   async webhookForPaymentIntent(
     props: WebhookForPaymentIntentProps
   ): Promise<WebhookResponse> {
-    const apiKey = props.req.query?.['apiKey'] as string;
+    const key =
+      (props.req.query['key'] as string | undefined) ??
+      (props.req.query['apiKey'] as string | undefined);
     const config = await this.getConfig();
 
     if (
       !this.timeConstantCompare(
-        apiKey,
+        key,
         this.assertProperty(
           'webhookEndpointSecret',
           config.webhookEndpointSecret

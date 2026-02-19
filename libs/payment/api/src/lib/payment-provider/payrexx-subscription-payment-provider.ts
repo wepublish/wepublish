@@ -356,10 +356,12 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     const config = await this.getConfig();
 
     // Protect endpoint
-    const apiKey = props.req.query['apiKey'] as string;
+    const key =
+      (props.req.query['key'] as string | undefined) ??
+      (props.req.query['apiKey'] as string | undefined);
     if (
       !this.timeConstantCompare(
-        apiKey,
+        key,
         this.assertProperty(
           'webhookEndpointSecret',
           config.webhookEndpointSecret
