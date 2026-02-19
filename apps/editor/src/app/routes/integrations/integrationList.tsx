@@ -148,9 +148,9 @@ export function IntegrationList() {
           <Message
             type="info"
             showIcon
-            header={t('integrationList.whatAreIntegrations')}
+            header={t('integrations.whatAreIntegrations')}
           >
-            {t('integrationList.infoText')}
+            {t('integrations.infoText')}
           </Message>
           <p></p>
         </Col>
