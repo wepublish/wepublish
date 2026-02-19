@@ -24,7 +24,7 @@ export class ChallengeProviderSettingsService {
     if (typeof data.secret === 'string' && data.secret.length > 0) {
       return {
         ...data,
-        apiKey: this.crypto.encrypt(data.secret),
+        secret: this.crypto.encrypt(data.secret),
       };
     }
     return data;
