@@ -3,7 +3,6 @@ import YAML from 'yaml';
 import { MappedReplacer } from 'mapped-replacer';
 import StipeType from 'stripe';
 import { TrackingPixelProvider } from '@wepublish/tracking-pixel/api';
-import { GoogleAnalyticsConfig } from '@wepublish/google-analytics/api';
 
 type General = {
   apolloPlayground: boolean;
@@ -164,7 +163,6 @@ type Config = {
   mediaServer: novaMediaServer;
   challenge: AlgebraicCaptcha | Turnstile;
   trackingPixelProviders: TrackingPixels[];
-  ga?: GoogleAnalyticsConfig;
   v0?: V0;
 };
 
