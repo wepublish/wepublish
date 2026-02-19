@@ -552,6 +552,7 @@
     "draggableSubscriptionInterval": {
       "ignoreDeactivatedSubscriptions": "Les e-mails destinés aux abonnements désactivés ne sont pas envoyés!"
     },
+    "edit": "Modifier",
     "errorMessages": {
       "invalidEmailErrorMessage": "Veuillez entrer une adresse email valide",
       "invalidRange": "La valeur doit être comprise entre {{min}} et {{max}}.",
