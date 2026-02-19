@@ -35,16 +35,29 @@ const StyledGrid = styled(Grid)`
 `;
 
 const StyledRow = styled(Row)`
+  display: flex;
+  flex-wrap: wrap;
   margin-top: 20px;
 `;
 
 const StyledCol = styled(Col)`
+  display: flex;
+  flex-direction: column;
   margin-bottom: 20px;
 `;
 
 const StyledPanel = styled(Panel)`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   cursor: pointer;
-  background-color: white;
+
+  .rs-panel-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
 `;
 
 const StyledHeader = styled.h3`
@@ -119,7 +132,7 @@ export function IntegrationList() {
         </Col>
       </Row>
 
-      <StyledRow gutter={20}>
+      <StyledRow gutter={24}>
         {integrations.map(integration => (
           <PermissionControl
             key={integration.permission}
