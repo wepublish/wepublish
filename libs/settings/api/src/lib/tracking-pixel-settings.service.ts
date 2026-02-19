@@ -8,7 +8,7 @@ import {
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { TrackingPixelSettingsDataloaderService } from './tracking-pixel-settings-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-import { SecretCrypto } from './secrets-cryto';
+import { SecretCrypto } from './integrations/secrets-cryto';
 
 @Injectable()
 export class TrackingPixelSettingsService {

@@ -12,7 +12,6 @@ import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
 
 const trackingPixelSettingsSchema = z.object({
-  id: z.string(),
   name: z.string().optional(),
   type: z.nativeEnum(TrackingPixelProviderType).optional(),
 

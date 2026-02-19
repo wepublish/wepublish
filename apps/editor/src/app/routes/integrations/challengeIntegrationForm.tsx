@@ -11,7 +11,6 @@ import cloudflareLogo from '../../../assets/integrations/cloudflare.svg';
 import { GenericIntegrationList } from './genericIntegrationList';
 
 const challengeSettingsSchema = z.object({
-  id: z.string(),
   name: z.string().optional(),
   type: z.nativeEnum(ChallengeProviderType).optional(),
   secret: z.string().optional(),
