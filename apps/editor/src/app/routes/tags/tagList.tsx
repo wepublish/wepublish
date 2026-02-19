@@ -68,7 +68,6 @@ function TagList({ type }: TagListProps) {
 
   const { data, loading, refetch } = useTagListQuery({
     variables: tagListVariables,
-    fetchPolicy: 'cache-and-network',
   });
   const [deleteTag] = useDeleteTagMutation({
     onCompleted() {

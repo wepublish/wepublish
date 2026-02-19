@@ -37,7 +37,6 @@ export function AuthorCheckPicker({
 
   const { data } = useAuthorListQuery({
     variables: authorsVariables,
-    fetchPolicy: 'network-only',
   });
 
   useEffect(() => {

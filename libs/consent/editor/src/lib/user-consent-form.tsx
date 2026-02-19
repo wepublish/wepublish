@@ -61,11 +61,9 @@ export const UserConsentForm = ({
     variables: {
       take: 100,
     },
-    fetchPolicy: 'network-only',
   });
 
   const { loading: loadingConsents, data: consentsData } = useConsentsQuery({
-    fetchPolicy: 'cache-and-network',
     onError: onErrorToast,
   });
 

@@ -113,7 +113,6 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
     loading: isLoading,
   } = useArticleListQuery({
     variables: articleListVariables,
-    fetchPolicy: 'cache-and-network',
   });
   const [createComment] = useCreateCommentMutation();
 

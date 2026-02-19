@@ -59,9 +59,7 @@ function TokenList() {
     data: tokenListData,
     loading: isTokenListLoading,
     error: tokenListError,
-  } = useTokenListQuery({
-    fetchPolicy: 'network-only',
-  });
+  } = useTokenListQuery({});
 
   const [deleteToken, { loading: isDeleting, error: deleteTokenError }] =
     useDeleteTokenMutation({

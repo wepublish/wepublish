@@ -194,7 +194,6 @@ function ArticleEditor() {
     loading: isLoading,
   } = useArticleQuery({
     errorPolicy: 'all',
-    fetchPolicy: 'cache-and-network',
     variables: { id: articleID! },
     skip: !articleID,
   });

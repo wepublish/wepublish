@@ -69,7 +69,6 @@ export function SelectEventPanel({
 
   const [fetchEvents, { data, loading }] = useEventListLazyQuery({
     onError: onErrorToast,
-    fetchPolicy: 'cache-and-network',
   });
 
   const saveSelection = () => {

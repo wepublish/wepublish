@@ -150,7 +150,6 @@ const BlockStyleList = memo(() => {
   const hasEmptyStyle = Object.values(apiValue).some(style => !style.name);
 
   const { loading } = useBlockStylesQuery({
-    fetchPolicy: 'cache-and-network',
     onError: showErrors,
     onCompleted(newData) {
       dispatchApiValue({

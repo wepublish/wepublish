@@ -84,7 +84,6 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
     error: loadError,
   } = usePeerQuery({
     variables: { id: id! },
-    fetchPolicy: 'network-only',
     skip: !id,
   });
 

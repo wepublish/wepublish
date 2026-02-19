@@ -84,7 +84,6 @@ function UserList() {
       sort: mapColumFieldToGraphQLField(sortField),
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
-    fetchPolicy: 'network-only',
   });
 
   const updateFilter = (filter: UserFilter) => {

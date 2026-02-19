@@ -50,7 +50,6 @@ export function UserConsentList(props: UserConsentListProps) {
   const { t } = useTranslation();
 
   const { loading, data, refetch } = useUserConsentsQuery({
-    fetchPolicy: 'cache-and-network',
     onError: onErrorToast,
   });
 

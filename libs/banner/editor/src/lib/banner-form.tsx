@@ -55,7 +55,6 @@ export const BannerForm = (props: BannerFormProps) => {
 
   const { data: pageData } = usePageListQuery({
     variables: { take: 50 },
-    fetchPolicy: 'cache-and-network',
   });
 
   const pages = pageData?.pages.nodes ?? [];

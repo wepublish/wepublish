@@ -65,9 +65,7 @@ export function ExportSubscriptionsAsCsv({
 }: ExportSubscriptionAsCsvProps) {
   const { t } = useTranslation();
 
-  const [getCsv, { loading }] = useSubscriptionsAsCsvLazyQuery({
-    fetchPolicy: 'network-only',
-  });
+  const [getCsv, { loading }] = useSubscriptionsAsCsvLazyQuery({});
 
   return (
     <IconButton
@@ -82,9 +80,7 @@ export function ExportSubscriptionsAsCsv({
 }
 
 export function useExportSubscriptionsAsCsv() {
-  const [getCsv, { loading }] = useSubscriptionsAsCsvLazyQuery({
-    fetchPolicy: 'network-only',
-  });
+  const [getCsv, { loading }] = useSubscriptionsAsCsvLazyQuery({});
 
   return { initDownload, loading, getCsv };
 }
