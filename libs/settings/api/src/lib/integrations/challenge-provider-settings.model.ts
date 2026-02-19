@@ -22,7 +22,7 @@ registerEnumType(ChallengeProviderType, {
 export class SettingChallengeProvider extends SettingProvider {
   @Field(type => ChallengeProviderType)
   type!: ChallengeProviderType;
-  /** hide sensitive filds
+  /** hide sensitive fields
   @Field(type => String, { nullable: true })
   secret?: string;
 
@@ -64,7 +64,4 @@ export class CreateSettingChallengeProviderInput extends OmitType(
 export class UpdateSettingChallengeProviderInput extends PartialType(
   OmitType(CreateSettingChallengeProviderInput, ['type'] as const, ArgsType),
   ArgsType
-) {
-  @Field(type => String)
-  id!: string;
-}
+) {}
