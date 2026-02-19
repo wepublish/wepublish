@@ -5,22 +5,22 @@ import {
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
 import {
-  SettingTrackingPixel,
-  UpdateSettingTrackingPixelInput,
+  SettingTrackingPixelProvider,
+  UpdateSettingTrackingPixelProviderInput,
   SettingTrackingPixelFilter,
-} from './tracking-pixel-settings.model';
-import { TrackingPixelSettingsService } from './tracking-pixel-settings.service';
-import { TrackingPixelSettingsDataloaderService } from './tracking-pixel-settings-dataloader.service';
+} from './tracking-pixel-provider-settings.model';
+import { TrackingPixelProviderSettingsService } from './tracking-pixel-provider-settings.service';
+import { TrackingPixelSettingsProviderDataloaderService } from './tracking-pixel-settings-provider-dataloader.service';
 
 @Resolver()
-export class TrackingPixelSettingsResolver {
+export class TrackingPixelProviderSettingsResolver {
   constructor(
-    private trackingPixelSettingsService: TrackingPixelSettingsService,
-    private trackingPixelSettingsDataloader: TrackingPixelSettingsDataloaderService
+    private trackingPixelSettingsService: TrackingPixelProviderSettingsService,
+    private trackingPixelSettingsDataloader: TrackingPixelSettingsProviderDataloaderService
   ) {}
 
   @Permissions(CanGetTrackingPixelSettings)
-  @Query(returns => [SettingTrackingPixel], {
+  @Query(returns => [SettingTrackingPixelProvider], {
     name: 'trackingPixelSettings',
     description: 'Returns all tracking pixel settings.',
   })
@@ -31,7 +31,7 @@ export class TrackingPixelSettingsResolver {
   }
 
   @Permissions(CanGetTrackingPixelSettings)
-  @Query(returns => SettingTrackingPixel, {
+  @Query(returns => SettingTrackingPixelProvider, {
     name: 'trackingPixelSetting',
     description: 'Returns a single tracking pixel setting by id.',
   })
@@ -51,11 +51,13 @@ export class TrackingPixelSettingsResolver {
  **/
 
   @Permissions(CanUpdateTrackingPixelSettings)
-  @Mutation(returns => SettingTrackingPixel, {
+  @Mutation(returns => SettingTrackingPixelProvider, {
     name: 'updateTrackingPixelSetting',
     description: 'Updates an existing tracking pixel setting.',
   })
-  updateTrackingPixelSetting(@Args() input: UpdateSettingTrackingPixelInput) {
+  updateTrackingPixelSetting(
+    @Args() input: UpdateSettingTrackingPixelProviderInput
+  ) {
     return this.trackingPixelSettingsService.updateTrackingPixelSetting(input);
   }
 

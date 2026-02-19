@@ -1863,7 +1863,7 @@ type Mutation {
   updateTag(color: Color, description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
 
   """Updates an existing tracking pixel setting."""
-  updateTrackingPixelSetting(id: String, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String): SettingTrackingPixel!
+  updateTrackingPixelSetting(id: String, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String): SettingTrackingPixelProvider!
 
   """Updates an existing user."""
   updateUser(active: Boolean, address: UserAddressInput, birthday: DateTime, email: String, emailVerifiedAt: DateTime, firstName: String, flair: String, id: String, name: String, note: String, properties: [PropertyInput!], roleIDs: [String!], userImageID: String): SensitiveDataUser!
@@ -2883,10 +2883,10 @@ type Query {
   tokens: [Token!]!
 
   """Returns a single tracking pixel setting by id."""
-  trackingPixelSetting(id: String!): SettingTrackingPixel!
+  trackingPixelSetting(id: String!): SettingTrackingPixelProvider!
 
   """Returns all tracking pixel settings."""
-  trackingPixelSettings(filter: SettingTrackingPixelFilter): [SettingTrackingPixel!]!
+  trackingPixelSettings(filter: SettingTrackingPixelFilter): [SettingTrackingPixelProvider!]!
 
   """"""
   upgradeUserSubscriptionInfo(memberPlanId: String!, subscriptionId: String!): UpgradeSubscription!
@@ -3167,7 +3167,13 @@ type SettingRestriction {
   minValue: Int
 }
 
-type SettingTrackingPixel implements SettingProvider {
+input SettingTrackingPixelFilter {
+  id: String
+  name: String
+  type: TrackingPixelProviderType
+}
+
+type SettingTrackingPixelProvider implements SettingProvider {
   createdAt: DateTime!
   id: String!
   lastLoadedAt: DateTime!
@@ -3179,12 +3185,6 @@ type SettingTrackingPixel implements SettingProvider {
   prolitteris_usePublisherInternalKey: Boolean
   prolitteris_username: String
   type: TrackingPixelProviderType!
-}
-
-input SettingTrackingPixelFilter {
-  id: String
-  name: String
-  type: TrackingPixelProviderType
 }
 
 input SingleEventFilter {
