@@ -34,6 +34,13 @@ const HeaderLogo = styled.img`
   max-width: 150px;
 `;
 
+const LastLoadedInfo = styled.div`
+  font-size: 0.75rem;
+  color: #999;
+  margin-bottom: 12px;
+  text-align: right;
+`;
+
 export type FieldDefinition<TFormValues> = {
   name: Path<TFormValues>;
   label: string;
@@ -53,7 +60,12 @@ export type FieldDefinition<TFormValues> = {
 };
 
 export interface GenericIntegrationFormProps<
-  TSetting extends { id: string; name?: string | null; type?: string },
+  TSetting extends {
+    id: string;
+    name?: string | null;
+    type?: string;
+    lastLoadedAt?: Date | string;
+  },
   TFormValues extends FieldValues,
 > {
   setting: TSetting;
@@ -71,7 +83,12 @@ export interface GenericIntegrationFormProps<
 }
 
 export function SingleGenericIntegrationForm<
-  TSetting extends { id: string; name?: string | null; type?: string },
+  TSetting extends {
+    id: string;
+    name?: string | null;
+    type?: string;
+    lastLoadedAt?: Date | string;
+  },
   TFormValues extends FieldValues,
 >({
   setting,
@@ -85,6 +102,15 @@ export function SingleGenericIntegrationForm<
   const { t } = useTranslation();
 
   const [updateSettings, { loading: updating }] = useMutation(mutation, {});
+
+  const formatLastLoaded = (date?: Date | string) => {
+    if (!date) return null;
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return new Intl.DateTimeFormat('default', {
+      dateStyle: 'short',
+      timeStyle: 'short',
+    }).format(dateObj);
+  };
 
   const initialValues = useMemo(
     () => mapSettingToInitialValues(setting),
@@ -139,7 +165,10 @@ export function SingleGenericIntegrationForm<
     >
       <Form
         fluid
-        onSubmit={onSubmit}
+        onSubmit={(checkStatus, event) => {
+          event.preventDefault();
+          onSubmit();
+        }}
         disabled={updating}
       >
         {resolvedFields.map(field => (
@@ -225,6 +254,13 @@ export function SingleGenericIntegrationForm<
             />
           </Form.Group>
         ))}
+
+        {setting.lastLoadedAt && (
+          <LastLoadedInfo>
+            {t('integrations.lastLoaded')}:{' '}
+            {formatLastLoaded(setting.lastLoadedAt)}
+          </LastLoadedInfo>
+        )}
 
         <Button
           appearance="primary"

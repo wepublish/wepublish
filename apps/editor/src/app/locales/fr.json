@@ -1635,6 +1635,7 @@
       "updateSuccess": "Paramètres mis à jour avec succès",
       "updateError": "Échec de la mise à jour des paramètres",
       "noSettingsFound": "Aucun paramètre trouvé",
+      "lastLoaded": "Dernière chargement",
       "aiSettings": {
         "apiKey": "Clé API",
         "systemPrompt": "Invite système (System Prompt)"

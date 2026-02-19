@@ -1748,6 +1748,7 @@
       "updateSuccess": "Einstellungen erfolgreich aktualisiert",
       "updateError": "Fehler beim Aktualisieren der Einstellungen",
       "noSettingsFound": "Keine Einstellungen gefunden",
+      "lastLoaded": "Zuletzt geladen",
       "aiSettings": {
         "apiKey": "API Key",
         "systemPrompt": "System Prompt"
