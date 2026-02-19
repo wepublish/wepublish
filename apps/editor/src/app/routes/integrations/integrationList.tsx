@@ -30,6 +30,10 @@ import slackLogo from '../../../assets/integrations/slack.png';
 import stripeLogo from '../../../assets/integrations/stripe.svg';
 import vercelLogo from '../../../assets/integrations/vercel.svg';
 
+const StyledGrid = styled(Grid)`
+  width: 100%;
+`;
+
 const StyledRow = styled(Row)`
   margin-top: 20px;
 `;
@@ -58,7 +62,7 @@ const LogoList = styled.div`
 `;
 
 const IntegrationLogo = styled.img`
-  width: 64px;
+  height: 32px;
   object-fit: contain;
 `;
 
@@ -105,7 +109,10 @@ export function IntegrationList() {
   ];
 
   return (
-    <Grid fluid>
+    <StyledGrid
+      fluid
+      style={{ width: '100%' }}
+    >
       <Row>
         <Col xs={24}>
           <h1>{t('integrations.title')}</h1>
@@ -121,10 +128,11 @@ export function IntegrationList() {
             <StyledCol
               xs={24}
               md={12}
-              lg={8}
+              lg={12}
+              xl={8}
+              xxl={6}
             >
               <StyledPanel
-                shaded
                 bordered
                 header={
                   <StyledHeader>
@@ -153,6 +161,6 @@ export function IntegrationList() {
           </PermissionControl>
         ))}
       </StyledRow>
-    </Grid>
+    </StyledGrid>
   );
 }
