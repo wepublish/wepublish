@@ -203,6 +203,21 @@ const seedSettings = (prisma: PrismaClient) =>
       },
     }),
 
+    prisma.settingAnalyticsProvider.upsert({
+      where: {
+        id: 'google-analytics',
+      },
+      update: {},
+      create: {
+        id: 'google-analytics',
+        name: 'Google-Analytic',
+        type: 'GOOGLE',
+        credentials: 'v1.KifaaS2fiO757Rrx.34Pdfn8gka8uZjLH8RXhnQ==.u9CeEA==',
+        property: '1',
+        articlePrefix: '/a/',
+      },
+    }),
+
     // remove non-used settings
     prisma.setting.deleteMany({
       where: {
