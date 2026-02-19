@@ -24,6 +24,10 @@ type AllowedSettingVals {
   stringChoice: [String!]
 }
 
+enum AnalyticsProviderType {
+  GOOGLE
+}
+
 type Article implements HasOptionalPaywall & HasOptionalPeerLc {
   createdAt: DateTime!
   disableComments: Boolean!
@@ -1772,6 +1776,9 @@ type Mutation {
   """Updates an existing AI provider setting."""
   updateAISetting(apiKey: String, id: String, name: String, systemPrompt: String, webhookEndpointSecret: String): SettingAIProvider!
 
+  """Updates an existing analytics provider setting."""
+  updateAnalyticsProviderSetting(articlePrefix: String, credentials: String, id: String, name: String, property: String): SettingAnalyticsProvider!
+
   """Updates an article."""
   updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
@@ -2635,6 +2642,12 @@ type Query {
   """Returns all AI provider settings."""
   aiSettings(filter: SettingAIProviderFilter): [SettingAIProvider!]!
 
+  """Returns a single analytics provider setting by id."""
+  analyticsProviderSetting(id: String!): SettingAnalyticsProvider!
+
+  """Returns all analytics provider settings."""
+  analyticsProviderSettings(filter: SettingAnalyticsProviderFilter): [SettingAnalyticsProvider!]!
+
   """Returns an article by id or slug."""
   article(id: String, slug: String): Article!
 
@@ -3052,6 +3065,23 @@ input SettingAIProviderFilter {
   id: String
   name: String
   type: AIProviderType
+}
+
+type SettingAnalyticsProvider implements SettingProvider {
+  articlePrefix: String
+  createdAt: DateTime!
+  id: String!
+  lastLoadedAt: DateTime!
+  modifiedAt: DateTime!
+  name: String
+  property: String
+  type: AnalyticsProviderType!
+}
+
+input SettingAnalyticsProviderFilter {
+  id: String
+  name: String
+  type: AnalyticsProviderType
 }
 
 type SettingChallengeProvider implements SettingProvider {
