@@ -27,7 +27,7 @@ export class TrackingPixelSettingsService {
     ) {
       return {
         ...data,
-        apiKey: this.crypto.encrypt(data.prolitteris_password),
+        prolitteris_password: this.crypto.encrypt(data.prolitteris_password),
       };
     }
     return data;
