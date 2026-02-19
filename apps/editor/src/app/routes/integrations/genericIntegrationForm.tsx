@@ -126,25 +126,35 @@ export function SingleGenericIntegrationForm<
     resolver: zodResolver(schema),
     mode: 'onTouched',
     reValidateMode: 'onChange',
+    defaultValues: initialValues,
   });
 
-  const onSubmit = handleSubmit(async (formData: TFormValues) => {
-    try {
-      await updateSettings({
-        variables: mapFormValuesToVariables(formData, setting),
-      });
+  const onSubmit = handleSubmit(
+    async (formData: TFormValues) => {
+      console.log('Form submitted with data:', formData);
+      try {
+        const variables = mapFormValuesToVariables(formData, setting);
+        console.log('Mutation variables:', variables);
 
-      toaster.push(
-        <Message type="success">{t('integrations.updateSuccess')}</Message>
-      );
-    } catch (e) {
-      toaster.push(
-        <Message type="error">{t('integrations.updateError')}</Message>
-      );
+        await updateSettings({
+          variables,
+        });
 
-      console.error(e);
+        toaster.push(
+          <Message type="success">{t('integrations.updateSuccess')}</Message>
+        );
+      } catch (e) {
+        toaster.push(
+          <Message type="error">{t('integrations.updateError')}</Message>
+        );
+
+        console.error('Mutation error:', e);
+      }
+    },
+    errors => {
+      console.log('Form validation errors:', errors);
     }
-  });
+  );
 
   const logo = getLogo?.(setting);
 
