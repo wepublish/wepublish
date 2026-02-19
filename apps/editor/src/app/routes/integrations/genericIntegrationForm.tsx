@@ -106,7 +106,7 @@ export function SingleGenericIntegrationForm<
   const formatLastLoaded = (date?: Date | string) => {
     if (!date) return null;
     const dateObj = typeof date === 'string' ? new Date(date) : date;
-    return new Intl.DateTimeFormat('de-CH', {
+    return new Intl.DateTimeFormat('default', {
       dateStyle: 'short',
       timeStyle: 'short',
     }).format(dateObj);
@@ -175,6 +175,10 @@ export function SingleGenericIntegrationForm<
     >
       <Form
         fluid
+        onSubmit={(checkStatus, event) => {
+          event.preventDefault();
+          onSubmit();
+        }}
         disabled={updating}
       >
         {resolvedFields.map(field => (
@@ -270,7 +274,7 @@ export function SingleGenericIntegrationForm<
 
         <Button
           appearance="primary"
-          onClick={onSubmit}
+          type="submit"
           size="lg"
           block
           loading={updating}
