@@ -357,8 +357,8 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
     // Protect endpoint
     const key =
-      (props.req.query['key'] as string | undefined) ??
-      (props.req.query['apiKey'] as string | undefined);
+      (props.req.query?.['key'] as string) ??
+      (props.req.query?.['apiKey'] as string);
     if (
       !this.timeConstantCompare(
         key,
