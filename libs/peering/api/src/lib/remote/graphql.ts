@@ -2523,9 +2523,10 @@ export type MutationUnpublishPageArgs = {
 
 export type MutationUpdateAiSettingArgs = {
   apiKey?: InputMaybe<Scalars['String']>;
-  id: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   systemPrompt?: InputMaybe<Scalars['String']>;
+  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2766,7 +2767,7 @@ export type MutationUpdatePaymentProviderSettingArgs = {
   bexio_taxId?: InputMaybe<Scalars['Float']>;
   bexio_unitId?: InputMaybe<Scalars['Float']>;
   bexio_userId?: InputMaybe<Scalars['Float']>;
-  id: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
   mollie_apiBaseUrl?: InputMaybe<Scalars['String']>;
   mollie_methods?: InputMaybe<Array<PaymentMethodMollie>>;
   name?: InputMaybe<Scalars['String']>;
@@ -4626,7 +4627,7 @@ export type Setting = {
   value?: Maybe<Scalars['GraphQLSettingValueType']>;
 };
 
-export type SettingAiProvider = {
+export type SettingAiProvider = SettingProvider & {
   __typename?: 'SettingAIProvider';
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
@@ -4643,7 +4644,7 @@ export type SettingAiProviderFilter = {
   type?: InputMaybe<AiProviderType>;
 };
 
-export type SettingChallengeProvider = {
+export type SettingChallengeProvider = SettingProvider & {
   __typename?: 'SettingChallengeProvider';
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
@@ -4663,7 +4664,7 @@ export type SettingFilter = {
   name?: InputMaybe<Scalars['String']>;
 };
 
-export type SettingMailProvider = {
+export type SettingMailProvider = SettingProvider & {
   __typename?: 'SettingMailProvider';
   createdAt: Scalars['DateTime'];
   fromAddress?: Maybe<Scalars['String']>;
@@ -4706,7 +4707,7 @@ export enum SettingName {
   ShowPendingWhenNotPublished = 'SHOW_PENDING_WHEN_NOT_PUBLISHED'
 }
 
-export type SettingPaymentProvider = {
+export type SettingPaymentProvider = SettingProvider & {
   __typename?: 'SettingPaymentProvider';
   bexio_accountId?: Maybe<Scalars['Float']>;
   bexio_countryId?: Maybe<Scalars['Float']>;
@@ -4742,6 +4743,14 @@ export type SettingPaymentProviderFilter = {
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<PaymentProviderType>;
+};
+
+export type SettingProvider = {
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  lastLoadedAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
 };
 
 export type SettingRestriction = {
@@ -5987,6 +5996,12 @@ export const PeerProfile = gql`
     ],
     "HasUserLc": [
       "UserCreatedAction"
+    ],
+    "SettingProvider": [
+      "SettingAIProvider",
+      "SettingChallengeProvider",
+      "SettingMailProvider",
+      "SettingPaymentProvider"
     ],
     "Teaser": [
       "ArticleTeaser",

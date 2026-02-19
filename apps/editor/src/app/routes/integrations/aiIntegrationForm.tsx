@@ -10,7 +10,6 @@ import vercelLogo from '../../../assets/integrations/vercel.svg';
 import { GenericIntegrationList } from './genericIntegrationList';
 
 const aiSettingsSchema = z.object({
-  id: z.string(),
   apiKey: z.string().optional(),
   systemPrompt: z.string().optional(),
 });

@@ -64,7 +64,7 @@ export interface GenericIntegrationFormProps<
     id: string;
     name?: string | null;
     type?: string;
-    lastLoadedAt?: Date | string;
+    lastLoadedAt?: string;
   },
   TFormValues extends FieldValues,
 > {
@@ -87,7 +87,7 @@ export function SingleGenericIntegrationForm<
     id: string;
     name?: string | null;
     type?: string;
-    lastLoadedAt?: Date | string;
+    lastLoadedAt?: string;
   },
   TFormValues extends FieldValues,
 >({
@@ -132,7 +132,10 @@ export function SingleGenericIntegrationForm<
   const onSubmit = handleSubmit(async (formData: TFormValues) => {
     try {
       await updateSettings({
-        variables: mapFormValuesToVariables(formData, setting),
+        variables: {
+          ...mapFormValuesToVariables(formData, setting),
+          id: setting.id,
+        },
       });
 
       toaster.push(
@@ -167,6 +170,7 @@ export function SingleGenericIntegrationForm<
       <Form
         fluid
         disabled={updating}
+        onSubmit={() => onSubmit()}
       >
         {resolvedFields.map(field => (
           <Form.Group
@@ -261,7 +265,7 @@ export function SingleGenericIntegrationForm<
 
         <Button
           appearance="primary"
-          onClick={onSubmit}
+          type="submit"
           size="lg"
           block
           loading={updating}

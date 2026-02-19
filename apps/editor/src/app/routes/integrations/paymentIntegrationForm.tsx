@@ -19,24 +19,22 @@ import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
 
 const paymentSettingsSchema = z.object({
-  // Common
-  id: z.string(),
   name: z.string().optional(),
   type: z.nativeEnum(PaymentProviderType).optional(),
   offSessionPayments: z.boolean().optional(),
   apiKey: z.string().optional(),
   webhookEndpointSecret: z.string().optional(),
-  // Stripe
+
   stripe_methods: z.array(z.nativeEnum(StripePaymentMethod)).optional(),
-  // Mollie
+
   mollie_apiBaseUrl: z.string().optional(),
   mollie_methods: z.array(z.nativeEnum(PaymentMethodMollie)).optional(),
-  // Payrexx
+
   payrexx_instancename: z.string().optional(),
   payrexx_vatrate: z.string().optional(),
   payrexx_psp: z.array(z.nativeEnum(PayrexxPsp)).optional(),
   payrexx_pm: z.array(z.nativeEnum(PayrexxPm)).optional(),
-  // Bexio
+
   bexio_userId: z.coerce.number().optional(),
   bexio_countryId: z.coerce.number().optional(),
   bexio_unitId: z.coerce.number().optional(),
