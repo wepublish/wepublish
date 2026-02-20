@@ -1,3 +1,4 @@
+import { Button } from '@mui/material';
 import {
   CanGetAISettings,
   CanGetChallengeProviderSettings,
@@ -9,8 +10,7 @@ import {
 import { PermissionControl } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBack } from 'react-icons/md';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Button } from 'rsuite';
+import { Link, useParams } from 'react-router-dom';
 
 import { AIIntegrationForm } from './aiIntegrationForm';
 import { ChallengeIntegrationForm } from './challengeIntegrationForm';
@@ -56,7 +56,6 @@ const getPermission = (type: string | undefined): Permission | undefined => {
 
 export function IntegrationEditView() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { type } = useParams();
 
   const permission = getPermission(type);
@@ -84,13 +83,15 @@ export function IntegrationEditView() {
       qualifyingPermissions={permission ? [permission.id] : []}
     >
       <div>
-        <Button
-          onClick={() => navigate('/integrations')}
-          appearance="subtle"
-          startIcon={<MdArrowBack />}
-        >
-          {t('integrations.back')}
-        </Button>
+        <Link to={'/integrations'}>
+          <Button
+            size="small"
+            variant="text"
+            startIcon={<MdArrowBack />}
+          >
+            {t('integrations.back')}
+          </Button>
+        </Link>
 
         <h1>{title}</h1>
 

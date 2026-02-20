@@ -14,7 +14,6 @@ import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
 
 const mailSettingsSchema = z.object({
-  id: z.string(),
   name: z.string().optional(),
   type: z.nativeEnum(MailProviderType).optional(),
 

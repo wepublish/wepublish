@@ -605,6 +605,7 @@
     "draggableSubscriptionInterval": {
       "ignoreDeactivatedSubscriptions": "No mails will be sent to deactivated subscriptions!"
     },
+    "edit": "Edit",
     "errorMessages": {
       "invalidEmailErrorMessage": "Please enter a valid email address",
       "invalidRange": "Value out of range. Please input a number between {{min}} and {{max}}.",
