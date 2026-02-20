@@ -9,6 +9,7 @@ import {
   TeaserSlotType,
   isFlexBlock,
   isTeaserSlotsBlock,
+  Teaser,
 } from '@wepublish/block-content/api';
 import { EventService } from '@wepublish/event/api';
 import { ArticleService } from './article.service';
@@ -98,6 +99,30 @@ const mockTeaserSlotsBlock = () => {
   } as unknown as BaseBlock<BlockType>;
 };
 
+const mockTeaserSlotsBlockWithManualTeaser = () => {
+  return {
+    autofillConfig: {
+      __typename: 'TeaserSlotsBlockAutofillConfig',
+      tagIds: [],
+      enabled: false,
+      numberOfTeasers: 8,
+      sort: null,
+      teaserType: 'article' as TeaserType.Article, // explicit lowercase string to match enum value
+      filter: {},
+    },
+    slots: [
+      {
+        type: TeaserSlotType.Manual,
+        teaser: {
+          type: TeaserType.Article,
+          articleID: 'article_pool_100',
+        } as unknown as typeof Teaser,
+      },
+    ],
+    type: BlockType.TeaserSlots,
+  } as unknown as BaseBlock<BlockType>;
+};
+
 const mockBlockWithAlignment = ({
   alignment = {
     i: nanoid(),
@@ -168,6 +193,7 @@ const revisionBlocks: BaseBlock<BlockType>[] = [
       mockBlockWithAlignment({ block: mockTeaserSlotsBlock() }),
       mockBlockWithAlignment({ block: mockTeaserSlotsBlock() }),
       mockBlockWithAlignment({ block: mockTeaserSlotsBlock() }),
+      mockBlockWithAlignment({ block: mockTeaserSlotsBlockWithManualTeaser() }),
     ],
   }),
   mockTeaserSlotsBlock() as unknown as BaseBlock<BlockType>,
@@ -297,6 +323,15 @@ describe('SlotTeasersLoader', () => {
 
     const filteredTeaserIds = shouldBeUniqueTeaserIds.filter(unique);
     const sortedTeaserIds = [...shouldBeUniqueTeaserIds].sort(naturalSortAsc);
+    // in the sorted array, move id of manually added teaser (id 'article_pool_100')...
+    // ...to its expected position (after 'article_pool_56')
+    const manualTeaserId = 'article_pool_100';
+    const indexOfManualTeaser = sortedTeaserIds.indexOf(manualTeaserId);
+    if (indexOfManualTeaser > -1) {
+      sortedTeaserIds.splice(indexOfManualTeaser, 1);
+      const expectedIndex = shouldBeUniqueTeaserIds.indexOf(manualTeaserId);
+      sortedTeaserIds.splice(expectedIndex, 0, manualTeaserId);
+    }
 
     const hasItem66 = shouldBeUniqueTeaserIds.some(
       item => item === 'article_pool_66'
@@ -305,12 +340,20 @@ describe('SlotTeasersLoader', () => {
       item => item === 'article_pool_67'
     );
 
-    expect(hasItem66).toBe(false);
-    expect(hasItem67).toBe(false);
-    expect(shouldBeUniqueTeaserIds.length).toEqual(120); // 1 teaser-slots-block x 8 slots + 2 flex-blocks x 7 teaser-slots-blocks x 8 slots = 120 teasers expected
+    expect(hasItem66).toBe(false); // teaser from grid-flex-block should not be repeated in autofilled teaser-slots-blocks
+    expect(hasItem67).toBe(false); // teaser from grid-flex-block should not be repeated in autofilled teaser-slots-blocks
+    //      1 teaser-slots-block x 8 slots --> 8 teasers
+    // +    1 flex-blocks
+    // +      7 teaser-slots-blocks x 8 slots --> 56 teasers
+    // +      1 teaser-slots-blocks x 1 manual slot --> 1 teasers
+    // +    1 flex-blocks x 7 teaser-slots-blocks x 8 slots --> 56 teasers
+    // --------------------------------------------------------
+    // =  121 teasers expected
+    //
+    expect(shouldBeUniqueTeaserIds.length).toEqual(121);
     expect(sortedTeaserIds.join(',')).toEqual(
       shouldBeUniqueTeaserIds.join(',')
-    ); // teaser ids should be in ascending order
+    ); // teaser ids should be in the order they were loaded into blocks
     expect(filteredTeaserIds).toEqual(shouldBeUniqueTeaserIds); // all ids should be unique
     expect(result).toMatchSnapshot(); // snapshot test the full structure
   });

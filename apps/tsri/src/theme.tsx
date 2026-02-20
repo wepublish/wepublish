@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material';
+import { ThemeOptions } from '@mui/material/styles';
 import { theme as WePTheme } from '@wepublish/ui';
 import { Hanken_Grotesk } from 'next/font/google';
 
@@ -311,6 +312,28 @@ const theme = createTheme(WePTheme, {
         },
       ],
     },
+    MuiContainer: {
+      styleOverrides: {
+        root: ({ theme }: { theme: any }) => ({
+          maxWidth: '492px',
+          [theme.breakpoints.up('sm')]: {
+            maxWidth: '760px',
+          },
+          [theme.breakpoints.up('md')]: {
+            maxWidth: '868px',
+          },
+          [theme.breakpoints.up('lg')]: {
+            maxWidth: '1123px',
+          },
+          [theme.breakpoints.up('xl')]: {
+            maxWidth: '1123px',
+          },
+          [theme.breakpoints.up('xxl')]: {
+            maxWidth: '1123px',
+          },
+        }),
+      },
+    },
     MuiToolbar: {
       variants: [
         {
@@ -336,9 +359,34 @@ const theme = createTheme(WePTheme, {
           },
         },
       ],
+      // set the navbar to be the same width as MuiContainer
+      styleOverrides: {
+        root: ({ theme }: { theme: any }) => ({
+          ['&&']: {
+            // since Appbar sets max width for Toolbar with specifity of 2...
+            // ...we have to increase the specifity to override
+            maxWidth: '492px',
+            [theme.breakpoints.up('sm')]: {
+              maxWidth: '760px',
+            },
+            [theme.breakpoints.up('md')]: {
+              maxWidth: '868px',
+            },
+            [theme.breakpoints.up('lg')]: {
+              maxWidth: '1123px',
+            },
+            [theme.breakpoints.up('xl')]: {
+              maxWidth: '1123px',
+            },
+            [theme.breakpoints.up('xxl')]: {
+              maxWidth: '1123px',
+            },
+          },
+        }),
+      },
     },
   },
-});
+} as unknown as ThemeOptions);
 
 export const teaserTopicMetaTheme = createTheme(theme, {
   typography: {

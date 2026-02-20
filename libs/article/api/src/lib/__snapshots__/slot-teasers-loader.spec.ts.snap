@@ -1237,6 +1237,44 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
           "type": "teaserSlots",
         },
       },
+      {
+        "alignment": {
+          "h": 0,
+          "i": "mock_nanoid_14",
+          "static": false,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+        },
+        "block": {
+          "autofillConfig": {
+            "__typename": "TeaserSlotsBlockAutofillConfig",
+            "enabled": false,
+            "filter": {},
+            "numberOfTeasers": 8,
+            "sort": null,
+            "tagIds": [],
+            "teaserType": "article",
+          },
+          "autofillTeasers": [],
+          "slots": [
+            {
+              "teaser": {
+                "articleID": "article_pool_100",
+                "type": "article",
+              },
+              "type": "Manual",
+            },
+          ],
+          "teasers": [
+            {
+              "articleID": "article_pool_100",
+              "type": "article",
+            },
+          ],
+          "type": "teaserSlots",
+        },
+      },
     ],
     "type": "flexBlock",
   },
@@ -1249,7 +1287,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
         "tagObjects": [
           {
             "__typename": "Tag",
-            "id": "mock_nanoid_14",
+            "id": "mock_nanoid_15",
             "tag": "lorem-ipsum",
           },
         ],
@@ -1412,7 +1450,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
       {
         "alignment": {
           "h": 0,
-          "i": "mock_nanoid_15",
+          "i": "mock_nanoid_16",
           "static": false,
           "w": 0,
           "x": 0,
@@ -1426,7 +1464,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
       {
         "alignment": {
           "h": 0,
-          "i": "mock_nanoid_16",
+          "i": "mock_nanoid_17",
           "static": false,
           "w": 0,
           "x": 0,
@@ -1446,7 +1484,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
       {
         "alignment": {
           "h": 0,
-          "i": "mock_nanoid_18",
+          "i": "mock_nanoid_19",
           "static": false,
           "w": 0,
           "x": 0,
@@ -1461,7 +1499,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
               "tagObjects": [
                 {
                   "__typename": "Tag",
-                  "id": "mock_nanoid_17",
+                  "id": "mock_nanoid_18",
                   "tag": "lorem-ipsum",
                 },
               ],
@@ -1622,7 +1660,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
       {
         "alignment": {
           "h": 0,
-          "i": "mock_nanoid_20",
+          "i": "mock_nanoid_21",
           "static": false,
           "w": 0,
           "x": 0,
@@ -1637,7 +1675,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
               "tagObjects": [
                 {
                   "__typename": "Tag",
-                  "id": "mock_nanoid_19",
+                  "id": "mock_nanoid_20",
                   "tag": "lorem-ipsum",
                 },
               ],
@@ -1798,7 +1836,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
       {
         "alignment": {
           "h": 0,
-          "i": "mock_nanoid_22",
+          "i": "mock_nanoid_23",
           "static": false,
           "w": 0,
           "x": 0,
@@ -1813,7 +1851,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
               "tagObjects": [
                 {
                   "__typename": "Tag",
-                  "id": "mock_nanoid_21",
+                  "id": "mock_nanoid_22",
                   "tag": "lorem-ipsum",
                 },
               ],
@@ -1974,7 +2012,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
       {
         "alignment": {
           "h": 0,
-          "i": "mock_nanoid_24",
+          "i": "mock_nanoid_25",
           "static": false,
           "w": 0,
           "x": 0,
@@ -1989,7 +2027,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
               "tagObjects": [
                 {
                   "__typename": "Tag",
-                  "id": "mock_nanoid_23",
+                  "id": "mock_nanoid_24",
                   "tag": "lorem-ipsum",
                 },
               ],
@@ -2150,7 +2188,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
       {
         "alignment": {
           "h": 0,
-          "i": "mock_nanoid_26",
+          "i": "mock_nanoid_27",
           "static": false,
           "w": 0,
           "x": 0,
@@ -2165,7 +2203,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
               "tagObjects": [
                 {
                   "__typename": "Tag",
-                  "id": "mock_nanoid_25",
+                  "id": "mock_nanoid_26",
                   "tag": "lorem-ipsum",
                 },
               ],
@@ -2181,13 +2219,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
           "autofillTeasers": [
             {
               "articleID": "article_pool_99",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
-              "articleID": "article_pool_100",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
@@ -2230,6 +2261,13 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
             },
             {
               "articleID": "article_pool_106",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_107",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
@@ -2271,13 +2309,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
               "type": "article",
             },
             {
-              "articleID": "article_pool_100",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
               "articleID": "article_pool_101",
               "imageID": undefined,
               "lead": undefined,
@@ -2319,6 +2350,13 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
               "title": undefined,
               "type": "article",
             },
+            {
+              "articleID": "article_pool_107",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
           ],
           "type": "teaserSlots",
         },
@@ -2326,7 +2364,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
       {
         "alignment": {
           "h": 0,
-          "i": "mock_nanoid_28",
+          "i": "mock_nanoid_29",
           "static": false,
           "w": 0,
           "x": 0,
@@ -2341,7 +2379,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
               "tagObjects": [
                 {
                   "__typename": "Tag",
-                  "id": "mock_nanoid_27",
+                  "id": "mock_nanoid_28",
                   "tag": "lorem-ipsum",
                 },
               ],
@@ -2355,13 +2393,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
             "teaserType": "article",
           },
           "autofillTeasers": [
-            {
-              "articleID": "article_pool_107",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
             {
               "articleID": "article_pool_108",
               "imageID": undefined,
@@ -2411,6 +2442,13 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
               "title": undefined,
               "type": "article",
             },
+            {
+              "articleID": "article_pool_115",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
           ],
           "slots": [
             {
@@ -2439,13 +2477,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
             },
           ],
           "teasers": [
-            {
-              "articleID": "article_pool_107",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
             {
               "articleID": "article_pool_108",
               "imageID": undefined,
@@ -2495,6 +2526,13 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
               "title": undefined,
               "type": "article",
             },
+            {
+              "articleID": "article_pool_115",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
           ],
           "type": "teaserSlots",
         },
@@ -2502,7 +2540,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
       {
         "alignment": {
           "h": 0,
-          "i": "mock_nanoid_30",
+          "i": "mock_nanoid_31",
           "static": false,
           "w": 0,
           "x": 0,
@@ -2517,7 +2555,7 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
               "tagObjects": [
                 {
                   "__typename": "Tag",
-                  "id": "mock_nanoid_29",
+                  "id": "mock_nanoid_30",
                   "tag": "lorem-ipsum",
                 },
               ],
@@ -2531,13 +2569,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
             "teaserType": "article",
           },
           "autofillTeasers": [
-            {
-              "articleID": "article_pool_115",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
             {
               "articleID": "article_pool_116",
               "imageID": undefined,
@@ -2582,6 +2613,13 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
             },
             {
               "articleID": "article_pool_122",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_123",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
@@ -2616,13 +2654,6 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
           ],
           "teasers": [
             {
-              "articleID": "article_pool_115",
-              "imageID": undefined,
-              "lead": undefined,
-              "title": undefined,
-              "type": "article",
-            },
-            {
               "articleID": "article_pool_116",
               "imageID": undefined,
               "lead": undefined,
@@ -2666,6 +2697,13 @@ exports[`SlotTeasersLoader should return unique teasers 1`] = `
             },
             {
               "articleID": "article_pool_122",
+              "imageID": undefined,
+              "lead": undefined,
+              "title": undefined,
+              "type": "article",
+            },
+            {
+              "articleID": "article_pool_123",
               "imageID": undefined,
               "lead": undefined,
               "title": undefined,
