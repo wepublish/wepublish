@@ -14,6 +14,7 @@ import {
   SettingMailProvider,
 } from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { SecretCrypto } from '@wepublish/settings/api';
 
 export interface MailProviderProps {
   id: string;
@@ -74,6 +75,7 @@ export abstract class BaseMailProvider implements MailProvider {
 
 class MailProviderConfig {
   private readonly ttl = 21600; // 6h
+  private readonly crypto = new SecretCrypto();
 
   constructor(
     private readonly prisma: PrismaClient,
@@ -86,11 +88,44 @@ class MailProviderConfig {
       where: { id: this.id },
       data: { lastLoadedAt: new Date() },
     });
-    return this.prisma.settingMailProvider.findUnique({
+    const config = await this.prisma.settingMailProvider.findUnique({
       where: {
         id: this.id,
       },
     });
+    if (!config) {
+      return null;
+    }
+
+    let decryptedApiKey: string | null = null;
+    if (config.apiKey) {
+      try {
+        decryptedApiKey = this.crypto.decrypt(config.apiKey);
+      } catch (e) {
+        console.error(e);
+        throw new Error(
+          `Failed to decrypt apikey for Mail provider setting ${this.id}`
+        );
+      }
+    }
+    let decryptedWebhookEndpointSecret: string | null = null;
+    if (config.webhookEndpointSecret) {
+      try {
+        decryptedWebhookEndpointSecret = this.crypto.decrypt(
+          config.webhookEndpointSecret
+        );
+      } catch (e) {
+        console.error(e);
+        throw new Error(
+          `Failed to decrypt webhookEndpointSecret for Mail provider setting ${this.id}`
+        );
+      }
+    }
+    return {
+      ...config,
+      apiKey: decryptedApiKey,
+      webhookEndpointSecret: decryptedWebhookEndpointSecret,
+    };
   }
 
   async getFromCache(): Promise<SettingMailProvider | null> {

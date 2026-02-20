@@ -1,17 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaClient, SettingTrackingPixel } from '@prisma/client';
 import {
-  CreateSettingTrackingPixelInput,
-  UpdateSettingTrackingPixelInput,
+  CreateSettingTrackingPixelProviderInput,
+  UpdateSettingTrackingPixelProviderInput,
   SettingTrackingPixelFilter,
-} from './tracking-pixel-settings.model';
+} from './tracking-pixel-provider-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
-import { TrackingPixelSettingsDataloaderService } from './tracking-pixel-settings-dataloader.service';
+import { TrackingPixelSettingsProviderDataloaderService } from './tracking-pixel-settings-provider-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from './secrets-cryto';
 
 @Injectable()
-export class TrackingPixelSettingsService {
+export class TrackingPixelProviderSettingsService {
   private readonly crypto = new SecretCrypto();
   constructor(
     private prisma: PrismaClient,
@@ -33,7 +33,7 @@ export class TrackingPixelSettingsService {
     return data;
   }
 
-  @PrimeDataLoader(TrackingPixelSettingsDataloaderService, 'id')
+  @PrimeDataLoader(TrackingPixelSettingsProviderDataloaderService, 'id')
   async trackingPixelSettingsList(
     filter?: SettingTrackingPixelFilter
   ): Promise<SettingTrackingPixel[]> {
@@ -46,7 +46,7 @@ export class TrackingPixelSettingsService {
     return data;
   }
 
-  @PrimeDataLoader(TrackingPixelSettingsDataloaderService, 'id')
+  @PrimeDataLoader(TrackingPixelSettingsProviderDataloaderService, 'id')
   async trackingPixelSetting(id: string): Promise<SettingTrackingPixel> {
     const data = await this.prisma.settingTrackingPixel.findUnique({
       where: { id },
@@ -61,9 +61,9 @@ export class TrackingPixelSettingsService {
     return data;
   }
 
-  @PrimeDataLoader(TrackingPixelSettingsDataloaderService, 'id')
+  @PrimeDataLoader(TrackingPixelSettingsProviderDataloaderService, 'id')
   async createTrackingPixelSetting(
-    input: CreateSettingTrackingPixelInput
+    input: CreateSettingTrackingPixelProviderInput
   ): Promise<SettingTrackingPixel> {
     const output = this.encryptSecretsIfPresent(input);
     const returnValue = this.prisma.settingTrackingPixel.create({
@@ -73,9 +73,9 @@ export class TrackingPixelSettingsService {
     return returnValue;
   }
 
-  @PrimeDataLoader(TrackingPixelSettingsDataloaderService, 'id')
+  @PrimeDataLoader(TrackingPixelSettingsProviderDataloaderService, 'id')
   async updateTrackingPixelSetting(
-    input: UpdateSettingTrackingPixelInput
+    input: UpdateSettingTrackingPixelProviderInput
   ): Promise<SettingTrackingPixel> {
     const output = this.encryptSecretsIfPresent(input);
     const { id, ...updateData } = output;
@@ -102,7 +102,7 @@ export class TrackingPixelSettingsService {
     return returnValue;
   }
 
-  @PrimeDataLoader(TrackingPixelSettingsDataloaderService, 'id')
+  @PrimeDataLoader(TrackingPixelSettingsProviderDataloaderService, 'id')
   async deleteTrackingPixelSetting(id: string): Promise<SettingTrackingPixel> {
     const existingSetting = await this.prisma.settingTrackingPixel.findUnique({
       where: { id },

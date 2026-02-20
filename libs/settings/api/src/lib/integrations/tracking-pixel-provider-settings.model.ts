@@ -18,7 +18,7 @@ registerEnumType(TrackingPixelProviderType, {
 @ObjectType({
   implements: () => [SettingProvider],
 })
-export class SettingTrackingPixel extends SettingProvider {
+export class SettingTrackingPixelProvider extends SettingProvider {
   @Field(type => TrackingPixelProviderType)
   type!: TrackingPixelProviderType;
 
@@ -45,13 +45,17 @@ export class SettingTrackingPixel extends SettingProvider {
 
 @InputType()
 export class SettingTrackingPixelFilter extends PartialType(
-  PickType(SettingTrackingPixel, ['id', 'type', 'name'] as const, InputType),
+  PickType(
+    SettingTrackingPixelProvider,
+    ['id', 'type', 'name'] as const,
+    InputType
+  ),
   InputType
 ) {}
 
 @ArgsType()
-export class CreateSettingTrackingPixelInput extends OmitType(
-  SettingTrackingPixel,
+export class CreateSettingTrackingPixelProviderInput extends OmitType(
+  SettingTrackingPixelProvider,
   ['id', 'type', 'createdAt', 'lastLoadedAt', 'modifiedAt'] as const,
   ArgsType
 ) {
@@ -66,7 +70,11 @@ export class CreateSettingTrackingPixelInput extends OmitType(
 }
 
 @ArgsType()
-export class UpdateSettingTrackingPixelInput extends PartialType(
-  OmitType(CreateSettingTrackingPixelInput, ['type'] as const, ArgsType),
+export class UpdateSettingTrackingPixelProviderInput extends PartialType(
+  OmitType(
+    CreateSettingTrackingPixelProviderInput,
+    ['type'] as const,
+    ArgsType
+  ),
   ArgsType
 ) {}

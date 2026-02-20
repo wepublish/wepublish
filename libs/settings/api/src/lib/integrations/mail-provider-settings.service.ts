@@ -22,22 +22,24 @@ export class MailProviderSettingsService {
   private encryptSecretsIfPresent<
     T extends { apiKey?: string | null; webhookEndpointSecret?: string | null },
   >(data: T): T {
+    let encryptedApiKey;
     if (typeof data.apiKey === 'string' && data.apiKey.length > 0) {
-      return {
-        ...data,
-        apiKey: this.crypto.encrypt(data.apiKey),
-      };
+      encryptedApiKey = this.crypto.encrypt(data.apiKey);
     }
+    let encryptedWebhookEndpointSecret;
     if (
       typeof data.webhookEndpointSecret === 'string' &&
       data.webhookEndpointSecret.length > 0
     ) {
-      return {
-        ...data,
-        webhookEndpointSecret: this.crypto.encrypt(data.webhookEndpointSecret),
-      };
+      encryptedWebhookEndpointSecret = this.crypto.encrypt(
+        data.webhookEndpointSecret
+      );
     }
-    return data;
+    return {
+      ...data,
+      apiKey: encryptedApiKey,
+      webhookEndpointSecret: encryptedWebhookEndpointSecret,
+    };
   }
 
   @PrimeDataLoader(MailProviderSettingsDataloaderService, 'id')

@@ -1,19 +1,19 @@
 import { Injectable, Scope } from '@nestjs/common';
-import { SettingTrackingPixel, PrismaClient } from '@prisma/client';
+import { SettingAnalyticsProvider, PrismaClient } from '@prisma/client';
 import { Primeable, createOptionalsArray } from '@wepublish/utils/api';
 import DataLoader from 'dataloader';
 
 @Injectable({
   scope: Scope.REQUEST,
 })
-export class TrackingPixelSettingsDataloaderService
-  implements Primeable<SettingTrackingPixel>
+export class AnalyticsProviderSettingsDataloaderService
+  implements Primeable<SettingAnalyticsProvider>
 {
-  private dataloader = new DataLoader<string, SettingTrackingPixel | null>(
+  private dataloader = new DataLoader<string, SettingAnalyticsProvider | null>(
     async (ids: readonly string[]) =>
       createOptionalsArray(
         ids as string[],
-        await this.prisma.settingTrackingPixel.findMany({
+        await this.prisma.settingAnalyticsProvider.findMany({
           where: {
             id: {
               in: ids as string[],
@@ -22,14 +22,14 @@ export class TrackingPixelSettingsDataloaderService
         }),
         'id'
       ),
-    { name: 'TrackingPixelSettingsDataLoader' }
+    { name: 'AnalyticsProviderSettingsDataLoader' }
   );
 
   constructor(private prisma: PrismaClient) {}
 
   public prime(
     ...parameters: Parameters<
-      DataLoader<string, SettingTrackingPixel | null>['prime']
+      DataLoader<string, SettingAnalyticsProvider | null>['prime']
     >
   ) {
     return this.dataloader.prime(...parameters);
@@ -37,7 +37,7 @@ export class TrackingPixelSettingsDataloaderService
 
   public load(
     ...parameters: Parameters<
-      DataLoader<string, SettingTrackingPixel | null>['load']
+      DataLoader<string, SettingAnalyticsProvider | null>['load']
     >
   ) {
     return this.dataloader.load(...parameters);
@@ -45,7 +45,7 @@ export class TrackingPixelSettingsDataloaderService
 
   public loadMany(
     ...parameters: Parameters<
-      DataLoader<string, SettingTrackingPixel | null>['loadMany']
+      DataLoader<string, SettingAnalyticsProvider | null>['loadMany']
     >
   ) {
     return this.dataloader.loadMany(...parameters);
