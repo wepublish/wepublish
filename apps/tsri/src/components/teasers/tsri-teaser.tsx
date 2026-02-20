@@ -96,7 +96,6 @@ export const TeaserBreakingNewsBadge = styled('div')`
   font-weight: 700;
   padding: 0;
   margin: 0;
-  box-sizing: border-box;
   transform: rotate(-20deg);
   color: ${({ theme }) => theme.palette.common.black};
   background-color: ${({ theme }) => theme.palette.primary.light};
