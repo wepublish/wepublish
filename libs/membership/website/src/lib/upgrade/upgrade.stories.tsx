@@ -158,7 +158,7 @@ export const Default: StoryObj<typeof Upgrade> = {
     },
     upgradeInfo: {
       data: {
-        upgradeSubscriptionInfo: {
+        upgradeUserSubscriptionInfo: {
           discountAmount: 500,
         },
       },
@@ -172,6 +172,7 @@ export const Default: StoryObj<typeof Upgrade> = {
 
 export const Filled: StoryObj<typeof Upgrade> = {
   ...Default,
+  parameters: { chromatic: { disableSnapshot: true } }, // play function relies on i18n text not available in headless Chrome
   play: async ctx => {
     await clickPayTransactionFees(ctx);
   },
@@ -189,6 +190,7 @@ export const WithUpgradeError: StoryObj<typeof Upgrade> = {
       });
     },
   },
+  parameters: { chromatic: { disableSnapshot: true } }, // play function relies on i18n text not available in headless Chrome
   play: async ctx => {
     await clickUpgrade(ctx);
   },
@@ -196,6 +198,7 @@ export const WithUpgradeError: StoryObj<typeof Upgrade> = {
 
 export const ResetPaymentOptionsOnMemberPlanChange: StoryObj<typeof Upgrade> = {
   ...Default,
+  parameters: { chromatic: { disableSnapshot: true } }, // play function relies on i18n text not available in headless Chrome
   play: async ctx => {
     await changeMemberPlan(memberPlan3)(ctx);
     await clickUpgrade(ctx);
@@ -206,6 +209,7 @@ export const ResetPaymentOptionsOnPaymentMethodChange: StoryObj<
   typeof Upgrade
 > = {
   ...Default,
+  parameters: { chromatic: { disableSnapshot: true } }, // play function relies on faker-generated payment method labels
   play: async ctx => {
     await changePaymentMethod(
       memberPlan.availablePaymentMethods[2].paymentMethods[0]
@@ -216,6 +220,7 @@ export const ResetPaymentOptionsOnPaymentMethodChange: StoryObj<
 
 export const WithDonate: StoryObj<typeof Upgrade> = {
   ...Default,
+  parameters: { chromatic: { disableSnapshot: true } }, // play function relies on i18n text not available in headless Chrome
   play: async ctx => {
     await changeMemberPlan(memberPlan4)(ctx);
   },

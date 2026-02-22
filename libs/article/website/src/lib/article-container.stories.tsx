@@ -100,6 +100,7 @@ export const WithPeer = {
   },
 
   parameters: {
+    chromatic: { disableSnapshot: true }, // article content exceeds Chromatic's 25M px limit
     apolloClient: {
       mocks: [
         {

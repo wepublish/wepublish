@@ -266,7 +266,7 @@ export function Navbar({
 
   const categories = useMemo(
     () =>
-      categorySlugs.map(categorySlugArray =>
+      (categorySlugs ?? []).map(categorySlugArray =>
         categorySlugArray.reduce((navigations, categorySlug) => {
           const navItem = data?.navigations?.find(
             ({ key }) => key === categorySlug

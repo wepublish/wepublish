@@ -137,6 +137,9 @@ export const Filled: StoryObj = {
   args: {
     ...Default.args,
   },
+  parameters: {
+    ...Default.parameters,
+  },
   play: async ctx => {
     await personalDataFormStories.Filled.play?.(ctx);
   },
