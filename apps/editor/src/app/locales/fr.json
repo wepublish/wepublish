@@ -804,6 +804,7 @@
       "peering": "Peering",
       "peers": "Peers",
       "settings": "Paramètres",
+      "websiteSettings": "Paramètres du site web",
       "subscriptionPlans": "Plans d'abonnement",
       "subscriptions": "Abonnements",
       "subscriptionSettings": "Default Mailing",
@@ -1694,6 +1695,27 @@
         "prolitterisPublisherInternalKeyDomain": "Domaine de clé interne de l'éditeur",
         "prolitterisUsePublisherInternalKey": "Utiliser la clé interne de l'éditeur",
         "prolitterisUsername": "Nom d'utilisateur"
+      }
+    },
+    "websiteSettings": {
+      "navbar": "Paramètres du site",
+      "list": {
+        "title": "Paramètres du site"
+      },
+      "analytics": {
+        "title": "Analytics",
+        "google": {
+          "title": "Google",
+          "ga": "<url>Google Analytics</url> est un outil d’analyse web de Google qui suit comment les utilisateurs utilisent ton site.",
+          "gaLocator": "Tu le trouves dans le <url>tableau de bord admin</url> sous Flux de données",
+          "gtm": "<url>Google Tag Manager</url> est un outil de Google qui te permet de gérer les scripts de suivi et de marketing sur ton site sans modifier le code à chaque fois.",
+          "gtmLocator": "Tu le trouves dans le <url>tableau de bord admin</url> sous Balise Google"
+        },
+        "plausible": {
+          "title": "Plausible",
+          "pa": "<url>Plausible Analytics</url> est une alternative respectueuse de la vie privée à Google Analytics.",
+          "paLocator": "Tu le trouves dans les <url>paramètres du site</url> dans le tableau de bord admin"
+        }
       }
     }
   }

@@ -86,6 +86,8 @@ import { TokenList } from './routes/tokens/tokenList';
 import { UserRoleList } from './routes/userRoles/userRoleList';
 import { UserEditView } from './routes/users/userEditView';
 import { UserList } from './routes/users/userList';
+import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
+import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -980,6 +982,22 @@ export function App() {
               element={
                 <Base>
                   <SettingList />
+                </Base>
+              }
+            />
+            <Route
+              path="settings/website"
+              element={
+                <Base>
+                  <WebsiteSettingsList />
+                </Base>
+              }
+            />
+            <Route
+              path="settings/website/:category"
+              element={
+                <Base>
+                  <WebsiteSettingsItem />
                 </Base>
               }
             />

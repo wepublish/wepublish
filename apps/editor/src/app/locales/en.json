@@ -1868,6 +1868,27 @@
         "prolitterisUsePublisherInternalKey": "Use Publisher Internal Key",
         "prolitterisUsername": "Username"
       }
+    },
+    "websiteSettings": {
+      "navbar": "Webseite Settings",
+      "list": {
+        "title": "Website Settings"
+      },
+      "analytics": {
+        "title": "Analytics",
+        "google": {
+          "title": "Google",
+          "ga": "<url>Google Analytics</url> is a web analytics tool from Google that tracks how readers use your website.",
+          "gaLocator": "You can find it in the <url>admin dashboard</url> under data streams",
+          "gtm": "<url>Google Tag Manager</url> is a tool from Google that lets you manage tracking and marketing scripts on your website without changing the site’s code each time.",
+          "gtmLocator": "You can find it in the <url>admin dashboard</url> under Google tag"
+        },
+        "plausible": {
+          "title": "Plausible",
+          "pa": "<url>Plausible Analytics</url> is a privacy-focused alternative to Google Analytics.",
+          "paLocator": "You can find it in the <url>website settings</url> of your admin dashboard"
+        }
+      }
     }
   }
 }
