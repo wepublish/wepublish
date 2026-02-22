@@ -113,14 +113,17 @@ export class SlotTeasersLoader {
   }
 
   async loadSlotTeasersIntoBlocks(revisionBlocks: BaseBlock<BlockType>[]) {
-    const blocks: (BaseBlock<BlockType> | undefined)[] = [];
+    const blocks: BaseBlock<BlockType>[] = [];
 
     // process each block
     for (const block of revisionBlocks) {
-      blocks.push(await this.processBlock(block));
+      const processed = await this.processBlock(block);
+      if (processed) {
+        blocks.push(processed);
+      }
     }
 
-    return blocks as BaseBlock<BlockType>[];
+    return blocks;
   }
 
   getTeasers(
@@ -250,7 +253,7 @@ export class SlotTeasersLoader {
   }
 
   addLoadedTeaser(...teaser: (typeof Teaser)[]) {
-    this.loadedTeasers.push(...teaser);
+    this.loadedTeasers.push(...teaser.filter(Boolean));
   }
 
   getLoadedTeasers(type: TeaserType): string[] {
