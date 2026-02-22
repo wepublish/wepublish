@@ -17,6 +17,7 @@ import {
   FlexBlock,
   isFlexBlock,
 } from '../flex/flex-block.model';
+import { logger } from '@wepublish/utils/api';
 
 const extractTeasers = <Block extends BaseBlock<BlockType>>(block: Block) => {
   if (isTeaserSlotsBlock(block)) {
@@ -130,12 +131,22 @@ export class SlotTeasersLoader {
     autofillTeasers: (typeof Teaser)[];
     allTeasers: (typeof Teaser | null)[];
   } {
+    logger('slotTeasersLoader').info(
+      'Autofill candidates for block %s: %o',
+      autofillConfig?.teaserType,
+      autofillCandidates
+    );
     const teasers = slots?.map(({ teaser: manualTeaser, type }, index) => {
       const autofillIndex = slots
         .slice(0, index)
         .filter(slot => slot.type === TeaserSlotType.Autofill).length;
 
       if (type === TeaserSlotType.Manual) {
+        logger('slotTeasersLoader').info(
+          'Manual teaser for block %s: %o',
+          autofillConfig?.teaserType,
+          manualTeaser
+        );
         // store the manual teaser
         //  - it will be excluded when next teaser-slots-blocks will be populated with autofill teasers
         this.addLoadedTeaser(manualTeaser as typeof Teaser);
@@ -163,18 +174,43 @@ export class SlotTeasersLoader {
           }
         }
 
+        logger('slotTeasersLoader').info(
+          'autofill candidates for block %s after filtering manual teaser: %o',
+          autofillConfig?.teaserType,
+          autofillCandidates
+        );
+
         // if the manual teaser was not part of the autofill-candidates
         // - remove the last candidate as it will never be loaded into this block
         if (autofillCandidatesLength === autofillCandidates.length) {
           autofillCandidates.pop();
         }
 
+        logger('slotTeasersLoader').info(
+          'autofill candidates for block %s after popping last candidate: %o',
+          autofillConfig?.teaserType,
+          autofillCandidates
+        );
+
         return manualTeaser as typeof Teaser;
       }
+
+      logger('slotTeasersLoader').info(
+        'Autofill teaser for block %s and slot index %d: %o',
+        autofillConfig?.teaserType,
+        index,
+        autofillCandidates[autofillIndex]
+      );
 
       if (autofillCandidates[autofillIndex]) {
         return autofillCandidates[autofillIndex];
       }
+
+      logger('slotTeasersLoader').info(
+        'No autofill teaser available for block %s and slot index %d',
+        autofillConfig?.teaserType,
+        index
+      );
 
       return null;
     });
@@ -182,6 +218,14 @@ export class SlotTeasersLoader {
     // store the loaded autofill teasers
     // - they will be excluded when next teaser-slots-blocks will be populated
     this.addLoadedTeaser(...autofillCandidates);
+
+    logger('slotTeasersLoader').info(
+      'Autofill teasers for block %s: %o',
+      autofillConfig?.teaserType,
+      autofillCandidates,
+      'All teasers for block:',
+      teasers
+    );
 
     return {
       autofillTeasers: autofillCandidates,
