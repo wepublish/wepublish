@@ -25,6 +25,8 @@ fragment FullPageRevision on PageRevision {
   blocks {
     ...FullBlock
   }
+
+  _debug
 }
 
 fragment PageWithoutBlocks on Page {

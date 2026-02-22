@@ -32,6 +32,15 @@ export function Page({
         />
       )}
 
+      {data?.page?.latest?._debug && (
+        <pre
+          id="slot-teaser-debug"
+          style={{ display: 'none' }}
+        >
+          {data.page.latest._debug}
+        </pre>
+      )}
+
       {children}
     </PageWrapper>
   );

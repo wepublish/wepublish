@@ -57,4 +57,9 @@ export class PageRevisionResolver {
       parent.blocks
     );
   }
+
+  @ResolveField(() => String, { nullable: true })
+  async _debug(@Parent() parent: PageRevision) {
+    return this.slotTeasersLoader.getDebugInfo(parent.blocks);
+  }
 }

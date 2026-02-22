@@ -19,16 +19,6 @@ import {
 } from '../flex/flex-block.model';
 
 const extractTeasers = <Block extends BaseBlock<BlockType>>(block: Block) => {
-  if (isTeaserSlotsBlock(block)) {
-    return block.slots.reduce((teasers: (typeof Teaser)[], slot) => {
-      if (slot.type === TeaserSlotType.Manual && slot.teaser) {
-        teasers.push(slot.teaser);
-      }
-
-      return teasers;
-    }, []);
-  }
-
   if (isTeaserGridBlock(block)) {
     return block.teasers.reduce((teasers: (typeof Teaser)[], teaser) => {
       if (teaser) {
@@ -57,6 +47,8 @@ const extractTeasers = <Block extends BaseBlock<BlockType>>(block: Block) => {
 @Injectable({ scope: Scope.REQUEST })
 export class SlotTeasersLoader {
   private loadedTeasers: (typeof Teaser)[] = [];
+  private debugLog: string[] = [];
+  private _blocksPromise: Promise<BaseBlock<BlockType>[]> | null = null;
 
   constructor(
     private eventService: EventService,
@@ -69,6 +61,7 @@ export class SlotTeasersLoader {
 
     // get the teasers to be loaded into the teaser-slots-block, store them to exclude them from the next teaser-slots-blocks
     const teasers = this.getTeasers(block, autofillCandidates);
+    //console.log('populateTeaserSlots:debugLog', this.debugLog);
 
     return {
       ...block,
@@ -113,6 +106,15 @@ export class SlotTeasersLoader {
   }
 
   async loadSlotTeasersIntoBlocks(revisionBlocks: BaseBlock<BlockType>[]) {
+    if (!this._blocksPromise) {
+      this._blocksPromise = this._doLoadSlotTeasersIntoBlocks(revisionBlocks);
+    }
+    return this._blocksPromise;
+  }
+
+  private async _doLoadSlotTeasersIntoBlocks(
+    revisionBlocks: BaseBlock<BlockType>[]
+  ) {
     const blocks: BaseBlock<BlockType>[] = [];
 
     // process each block
@@ -124,6 +126,12 @@ export class SlotTeasersLoader {
     }
 
     return blocks;
+  }
+
+  async getDebugInfo(revisionBlocks: BaseBlock<BlockType>[]): Promise<string> {
+    await this.loadSlotTeasersIntoBlocks(revisionBlocks);
+    console.log('SlotTeasersLoader debug info:', this.debugLog);
+    return JSON.stringify(this.debugLog, null, 2);
   }
 
   getTeasers(
@@ -139,6 +147,18 @@ export class SlotTeasersLoader {
         .filter(slot => slot.type === TeaserSlotType.Autofill).length;
 
       if (type === TeaserSlotType.Manual) {
+        this.debugLog.push(
+          `[Manual] slot ${index}: ${JSON.stringify({
+            type:
+              (manualTeaser as ArticleTeaser)?.articleID ? 'Article'
+              : (manualTeaser as EventTeaser)?.eventID ? 'Event'
+              : 'unknown',
+            id:
+              (manualTeaser as ArticleTeaser)?.articleID ??
+              (manualTeaser as EventTeaser)?.eventID ??
+              null,
+          })}`
+        );
         // store the manual teaser
         //  - it will be excluded when next teaser-slots-blocks will be populated with autofill teasers
         this.addLoadedTeaser(manualTeaser as typeof Teaser);
@@ -182,9 +202,13 @@ export class SlotTeasersLoader {
       return null;
     });
 
-    // store the loaded autofill teasers
+    // store the remaining autofillCandidates that will be autofilled/loaded
     // - they will be excluded when next teaser-slots-blocks will be populated
     this.addLoadedTeaser(...autofillCandidates);
+
+    this.debugLog.push(
+      `[Autofill] final IDs: ${JSON.stringify(autofillCandidates.map(t => (t as ArticleTeaser).articleID ?? (t as EventTeaser).eventID))}`
+    );
 
     return {
       autofillTeasers: autofillCandidates,
@@ -199,6 +223,10 @@ export class SlotTeasersLoader {
     const take = slotsBlock.slots.length;
 
     if (teaserType === TeaserType.Article) {
+      this.debugLog.push(
+        `[Article] loadedTeasers before fetch: ${JSON.stringify(this.getLoadedTeasers(TeaserType.Article))}`
+      );
+
       const articles = await this.articleService.getArticles({
         filter: {
           tags: filter?.tags,
@@ -219,6 +247,10 @@ export class SlotTeasersLoader {
             lead: undefined,
             title: undefined,
           }) as ArticleTeaser
+      );
+
+      this.debugLog.push(
+        `[Article] fetched IDs: ${JSON.stringify(teasers.map(t => t.articleID))}`
       );
 
       return teasers;
