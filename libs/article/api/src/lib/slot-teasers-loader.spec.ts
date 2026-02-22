@@ -104,11 +104,21 @@ const mockTeaserSlotsBlockWithManualTeaser = () => {
     autofillConfig: {
       __typename: 'TeaserSlotsBlockAutofillConfig',
       tagIds: [],
-      enabled: false,
-      numberOfTeasers: 8,
+      enabled: true,
+      numberOfTeasers: 1,
       sort: null,
       teaserType: 'article' as TeaserType.Article, // explicit lowercase string to match enum value
-      filter: {},
+      filter: {
+        __typename: 'TeaserListBlockFilter',
+        tags: ['test-tag-id'],
+        tagObjects: [
+          {
+            __typename: 'Tag',
+            id: nanoid(),
+            tag: `lorem-ipsum`,
+          },
+        ],
+      },
     },
     slots: [
       {
@@ -117,6 +127,9 @@ const mockTeaserSlotsBlockWithManualTeaser = () => {
           type: TeaserType.Article,
           articleID: 'article_pool_100',
         } as unknown as typeof Teaser,
+      },
+      {
+        type: TeaserSlotType.Autofill,
       },
     ],
     type: BlockType.TeaserSlots,
@@ -340,21 +353,29 @@ describe('SlotTeasersLoader', () => {
       item => item === 'article_pool_67'
     );
 
-    expect(hasItem66).toBe(false); // teaser from grid-flex-block should not be repeated in autofilled teaser-slots-blocks
-    expect(hasItem67).toBe(false); // teaser from grid-flex-block should not be repeated in autofilled teaser-slots-blocks
+    // teasers from grid-flex-block should not be repeated in autofilled teaser-slots-blocks
+    expect(hasItem66).toBe(false);
+    expect(hasItem67).toBe(false);
+
     //      1 teaser-slots-block x 8 slots --> 8 teasers
     // +    1 flex-blocks
     // +      7 teaser-slots-blocks x 8 slots --> 56 teasers
-    // +      1 teaser-slots-blocks x 1 manual slot --> 1 teasers
+    // +      1 teaser-slots-blocks x (1 manual slot + 1 autofill slot) --> 2 teasers
     // +    1 flex-blocks x 7 teaser-slots-blocks x 8 slots --> 56 teasers
     // --------------------------------------------------------
-    // =  121 teasers expected
+    // =  122 teasers expected
     //
-    expect(shouldBeUniqueTeaserIds.length).toEqual(121);
+    expect(shouldBeUniqueTeaserIds.length).toEqual(122);
+
+    // teaser ids should be in the order they were loaded into blocks
     expect(sortedTeaserIds.join(',')).toEqual(
       shouldBeUniqueTeaserIds.join(',')
-    ); // teaser ids should be in the order they were loaded into blocks
-    expect(filteredTeaserIds).toEqual(shouldBeUniqueTeaserIds); // all ids should be unique
-    expect(result).toMatchSnapshot(); // snapshot test the full structure
+    );
+
+    // all ids should be unique
+    expect(filteredTeaserIds).toEqual(shouldBeUniqueTeaserIds);
+
+    // snapshot test the full structure
+    expect(result).toMatchSnapshot();
   });
 });

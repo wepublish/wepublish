@@ -64,15 +64,16 @@ export class SlotTeasersLoader {
   ) {}
 
   async populateTeaserSlots(block: TeaserSlotsBlock) {
-    // get autofill teasers: load & store them in the loaded teasers list
-    const autofillTeasers = await this.getAutofillTeasers(block);
-    // get all teasers (manual & autofill)
-    const teasers = await this.getTeasers(block, autofillTeasers);
+    // get an array of teasers (arr.length === slots.length) that have never been loaded before
+    const autofillCandidates = await this.getAutofillCandidateTeasers(block);
+
+    // get the teasers to be loaded into the teaser-slots-block, store them to exclude them from the next teaser-slots-blocks
+    const teasers = this.getTeasers(block, autofillCandidates);
 
     return {
       ...block,
-      autofillTeasers,
-      teasers,
+      autofillTeasers: teasers.autofillTeasers,
+      teasers: teasers.allTeasers,
     };
   }
 
@@ -122,38 +123,77 @@ export class SlotTeasersLoader {
     return blocks as BaseBlock<BlockType>[];
   }
 
-  async getTeasers(
-    { slots }: TeaserSlotsBlock,
-    autofillTeasers: (typeof Teaser)[]
-  ): Promise<(typeof Teaser | null)[]> {
-    return slots?.map(({ teaser: manualTeaser, type }, index) => {
+  getTeasers(
+    { slots, autofillConfig }: TeaserSlotsBlock,
+    autofillCandidates: (typeof Teaser)[]
+  ): {
+    autofillTeasers: (typeof Teaser)[];
+    allTeasers: (typeof Teaser | null)[];
+  } {
+    const teasers = slots?.map(({ teaser: manualTeaser, type }, index) => {
       const autofillIndex = slots
         .slice(0, index)
         .filter(slot => slot.type === TeaserSlotType.Autofill).length;
 
       if (type === TeaserSlotType.Manual) {
-        // store a teaser that has been manually added...
-        // ... so it can be excluded when next teaser-slots-blocks will...
-        // ... be populated with autofill teasers.
-        // with custom teasers, this has no effect, because they are never automatically...
-        // ... loaded into slots, but with article- & event-teasers it is relevant
+        // store the manual teaser
+        //  - it will be excluded when next teaser-slots-blocks will be populated with autofill teasers
         this.addLoadedTeaser(manualTeaser as typeof Teaser);
+
+        // a slot was manually filled:
+        // - check if the manual-teaser is also part of the autofill-candidates for this block
+        // - if so, remove it from the list of candidates
+        // - otherwise remove the last candidate as it will never be loaded into this block
+        const autofillCandidatesLength = autofillCandidates.length;
+        if (manualTeaser?.type === autofillConfig.teaserType) {
+          if (autofillConfig.teaserType === TeaserType.Article) {
+            autofillCandidates = autofillCandidates.filter(teaser => {
+              return (
+                (teaser as ArticleTeaser).articleID !==
+                (manualTeaser as ArticleTeaser).articleID
+              );
+            });
+          } else if (autofillConfig.teaserType === TeaserType.Event) {
+            autofillCandidates = autofillCandidates.filter(teaser => {
+              return (
+                (teaser as EventTeaser).eventID !==
+                (manualTeaser as EventTeaser).eventID
+              );
+            });
+          }
+        }
+
+        // if the manual teaser was not part of the autofill-candidates
+        // - remove the last candidate as it will never be loaded into this block
+        if (autofillCandidatesLength === autofillCandidates.length) {
+          autofillCandidates.pop();
+        }
+
         return manualTeaser as typeof Teaser;
-      } else if (autofillTeasers[autofillIndex]) {
-        return autofillTeasers[autofillIndex];
-      } else {
-        return null;
       }
+
+      if (autofillCandidates[autofillIndex]) {
+        return autofillCandidates[autofillIndex];
+      }
+
+      return null;
     });
+
+    // store the loaded autofill teasers
+    // - they will be excluded when next teaser-slots-blocks will be populated
+    this.addLoadedTeaser(...autofillCandidates);
+
+    return {
+      autofillTeasers: autofillCandidates,
+      allTeasers: teasers as (typeof Teaser | null)[],
+    };
   }
 
-  async getAutofillTeasers(
+  async getAutofillCandidateTeasers(
     slotsBlock: TeaserSlotsBlock
   ): Promise<(typeof Teaser)[]> {
     const { teaserType, filter } = slotsBlock.autofillConfig;
-    const take = slotsBlock.slots.filter(
-      ({ type }) => type === TeaserSlotType.Autofill
-    ).length;
+    const take = slotsBlock.slots.length;
 
     if (teaserType === TeaserType.Article) {
       const articles = await this.articleService.getArticles({
@@ -178,7 +218,6 @@ export class SlotTeasersLoader {
           }) as ArticleTeaser
       );
 
-      this.addLoadedTeaser(...teasers);
       return teasers;
     }
 

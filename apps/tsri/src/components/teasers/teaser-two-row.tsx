@@ -43,7 +43,7 @@ export const StyledTeaserTwoRow = styled(TsriTeaser)`
   }
 
   ${TeaserTitle} {
-    padding: 1.8cqw 1cqw;
+    padding: 1.8cqw 2cqw;
     font-size: 4.5cqw !important;
     line-height: 4.5cqw !important;
     word-wrap: nowrap;
@@ -52,13 +52,22 @@ export const StyledTeaserTwoRow = styled(TsriTeaser)`
     word-break: break-word;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
+      padding-left: 1cqw;
+      padding-right: 1cqw;
       font-size: 2.6cqw !important;
       line-height: 3cqw !important;
     }
   }
 
   ${TeaserLead} {
-    line-height: 2.25cqw;
+    font-size: 3.5cqw !important;
+    line-height: 4cqw !important;
+    font-weight: 700 !important;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      font-size: 1.67cqw !important;
+      line-height: 2.25cqw !important;
+    }
   }
 
   ${TeaserImageWrapper} {
