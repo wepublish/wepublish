@@ -115,6 +115,29 @@ import { V0Module } from '@wepublish/ai/api';
           allowBatchedHttpRequests: false,
           inheritResolversFromInterfaces: true,
           csrfPrevention: false,
+          plugins: [
+            {
+              async requestDidStart({ contextValue }) {
+                (contextValue as any).req.debugLogs = [];
+                return {
+                  async willSendResponse(requestContext) {
+                    const logs = (requestContext.contextValue as any).req
+                      ?.debugLogs as unknown[] | undefined;
+                    if (
+                      logs?.length &&
+                      requestContext.response.body.kind === 'single'
+                    ) {
+                      const result = requestContext.response.body.singleResult;
+                      result.extensions = {
+                        ...result.extensions,
+                        debugLogs: logs,
+                      };
+                    }
+                  },
+                };
+              },
+            },
+          ],
         } as ApolloDriverConfig;
       },
     }),

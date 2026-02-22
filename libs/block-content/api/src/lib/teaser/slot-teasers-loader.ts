@@ -1,4 +1,5 @@
-import { Injectable, Scope } from '@nestjs/common';
+import { Inject, Injectable, Scope } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { ArticleTeaser, EventTeaser, Teaser, TeaserType } from './teaser.model';
 import {
   isTeaserSlotsBlock,
@@ -61,8 +62,17 @@ export class SlotTeasersLoader {
 
   constructor(
     private eventService: EventService,
-    private articleService: ArticleService
+    private articleService: ArticleService,
+    @Inject(REQUEST) private request: Record<string, unknown>
   ) {}
+
+  private debugLog(label: string, data: unknown) {
+    logger('slotTeasersLoader').info(label, data);
+    const logs = this.request['debugLogs'];
+    if (Array.isArray(logs)) {
+      logs.push({ label, data });
+    }
+  }
 
   async populateTeaserSlots(block: TeaserSlotsBlock) {
     // get an array of teasers (arr.length === slots.length) that have never been loaded before
@@ -131,22 +141,20 @@ export class SlotTeasersLoader {
     autofillTeasers: (typeof Teaser)[];
     allTeasers: (typeof Teaser | null)[];
   } {
-    logger('slotTeasersLoader').info(
-      'Autofill candidates for block %s: %o',
-      autofillConfig?.teaserType,
-      autofillCandidates
-    );
+    this.debugLog('autofillCandidates', {
+      teaserType: autofillConfig?.teaserType,
+      candidates: autofillCandidates,
+    });
     const teasers = slots?.map(({ teaser: manualTeaser, type }, index) => {
       const autofillIndex = slots
         .slice(0, index)
         .filter(slot => slot.type === TeaserSlotType.Autofill).length;
 
       if (type === TeaserSlotType.Manual) {
-        logger('slotTeasersLoader').info(
-          'Manual teaser for block %s: %o',
-          autofillConfig?.teaserType,
-          manualTeaser
-        );
+        this.debugLog('manualTeaser', {
+          teaserType: autofillConfig?.teaserType,
+          teaser: manualTeaser,
+        });
         // store the manual teaser
         //  - it will be excluded when next teaser-slots-blocks will be populated with autofill teasers
         this.addLoadedTeaser(manualTeaser as typeof Teaser);
@@ -174,11 +182,10 @@ export class SlotTeasersLoader {
           }
         }
 
-        logger('slotTeasersLoader').info(
-          'autofill candidates for block %s after filtering manual teaser: %o',
-          autofillConfig?.teaserType,
-          autofillCandidates
-        );
+        this.debugLog('autofillCandidates:afterFilteringManual', {
+          teaserType: autofillConfig?.teaserType,
+          candidates: autofillCandidates,
+        });
 
         // if the manual teaser was not part of the autofill-candidates
         // - remove the last candidate as it will never be loaded into this block
@@ -186,31 +193,28 @@ export class SlotTeasersLoader {
           autofillCandidates.pop();
         }
 
-        logger('slotTeasersLoader').info(
-          'autofill candidates for block %s after popping last candidate: %o',
-          autofillConfig?.teaserType,
-          autofillCandidates
-        );
+        this.debugLog('autofillCandidates:afterPop', {
+          teaserType: autofillConfig?.teaserType,
+          candidates: autofillCandidates,
+        });
 
         return manualTeaser as typeof Teaser;
       }
 
-      logger('slotTeasersLoader').info(
-        'Autofill teaser for block %s and slot index %d: %o',
-        autofillConfig?.teaserType,
-        index,
-        autofillCandidates[autofillIndex]
-      );
+      this.debugLog('autofillTeaser', {
+        teaserType: autofillConfig?.teaserType,
+        slotIndex: index,
+        teaser: autofillCandidates[autofillIndex],
+      });
 
       if (autofillCandidates[autofillIndex]) {
         return autofillCandidates[autofillIndex];
       }
 
-      logger('slotTeasersLoader').info(
-        'No autofill teaser available for block %s and slot index %d',
-        autofillConfig?.teaserType,
-        index
-      );
+      this.debugLog('autofillTeaser:empty', {
+        teaserType: autofillConfig?.teaserType,
+        slotIndex: index,
+      });
 
       return null;
     });
@@ -219,13 +223,11 @@ export class SlotTeasersLoader {
     // - they will be excluded when next teaser-slots-blocks will be populated
     this.addLoadedTeaser(...autofillCandidates);
 
-    logger('slotTeasersLoader').info(
-      'Autofill teasers for block %s: %o',
-      autofillConfig?.teaserType,
-      autofillCandidates,
-      'All teasers for block:',
-      teasers
-    );
+    this.debugLog('result', {
+      teaserType: autofillConfig?.teaserType,
+      autofillTeasers: autofillCandidates,
+      allTeasers: teasers,
+    });
 
     return {
       autofillTeasers: autofillCandidates,
