@@ -152,7 +152,7 @@ export function PaymentIntegrationForm() {
         }
       }}
       fields={setting => {
-        const fields: FieldDefinition<IntegrationFormValues>[] = [
+        let fields: FieldDefinition<IntegrationFormValues>[] = [
           {
             name: 'name',
             label: t('name'),
@@ -184,6 +184,10 @@ export function PaymentIntegrationForm() {
         ];
 
         if (setting.type === PaymentProviderType.Bexio) {
+          fields = fields.filter(
+            ({ name }) => name !== 'webhookEndpointSecret'
+          );
+
           fields.push(
             {
               name: 'bexio_userId',
