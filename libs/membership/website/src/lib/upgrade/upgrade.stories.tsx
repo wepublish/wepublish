@@ -5,6 +5,7 @@ import { userEvent, within } from '@storybook/test';
 import {
   mockAvailablePaymentMethod,
   mockMemberPlan,
+  mockPaymentMethod,
   mockSubscription,
 } from '@wepublish/storybook/mocks';
 import { WithUserDecorator } from '@wepublish/storybook';
@@ -34,14 +35,24 @@ const memberPlan = mockMemberPlan({
         PaymentPeriodicity.Biennial,
         PaymentPeriodicity.Lifetime,
       ],
+      paymentMethods: [
+        mockPaymentMethod({ name: 'Visa', description: 'Kreditkarte' }),
+        mockPaymentMethod({ name: 'Twint', description: 'Mobiles Bezahlen' }),
+      ],
     }),
     mockAvailablePaymentMethod({
       forceAutoRenewal: false,
       paymentPeriodicities: [PaymentPeriodicity.Lifetime],
+      paymentMethods: [
+        mockPaymentMethod({ name: 'Mastercard', description: 'Prepaid' }),
+      ],
     }),
     mockAvailablePaymentMethod({
       forceAutoRenewal: true,
       paymentPeriodicities: [PaymentPeriodicity.Lifetime],
+      paymentMethods: [
+        mockPaymentMethod({ name: 'PayPal', description: 'Online Bezahlen' }),
+      ],
     }),
   ],
 });
@@ -209,7 +220,7 @@ export const ResetPaymentOptionsOnPaymentMethodChange: StoryObj<
   typeof Upgrade
 > = {
   ...Default,
-  parameters: { chromatic: { disableSnapshot: true } }, // play function relies on faker-generated payment method labels
+  parameters: { chromatic: { disableSnapshot: true } }, // play function relies on i18n text not available in headless Chrome
   play: async ctx => {
     await changePaymentMethod(
       memberPlan.availablePaymentMethods[2].paymentMethods[0]

@@ -7,6 +7,7 @@ import {
   mockChallenge,
   mockInvoice,
   mockMemberPlan,
+  mockPaymentMethod,
   mockSubscription,
 } from '@wepublish/storybook/mocks';
 import { WithUserDecorator } from '@wepublish/storybook';
@@ -39,14 +40,24 @@ const memberPlan = mockMemberPlan({
         PaymentPeriodicity.Biennial,
         PaymentPeriodicity.Lifetime,
       ],
+      paymentMethods: [
+        mockPaymentMethod({ name: 'Visa', description: 'Kreditkarte' }),
+        mockPaymentMethod({ name: 'Twint', description: 'Mobiles Bezahlen' }),
+      ],
     }),
     mockAvailablePaymentMethod({
       forceAutoRenewal: false,
       paymentPeriodicities: [PaymentPeriodicity.Lifetime],
+      paymentMethods: [
+        mockPaymentMethod({ name: 'Mastercard', description: 'Prepaid' }),
+      ],
     }),
     mockAvailablePaymentMethod({
       forceAutoRenewal: true,
       paymentPeriodicities: [PaymentPeriodicity.Lifetime],
+      paymentMethods: [
+        mockPaymentMethod({ name: 'PayPal', description: 'Online Bezahlen' }),
+      ],
     }),
   ],
 });
