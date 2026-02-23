@@ -14,11 +14,7 @@ export const mockUser = ({
   id = faker.string.nanoid(),
   name = faker.person.lastName(),
   image = mockImage(),
-  birthday = faker.date
-    .past({
-      years: 18,
-    })
-    .toISOString(),
+  birthday = '1990-06-15T00:00:00.000Z',
   email = faker.internet.email(),
   firstName = faker.person.firstName(),
   flair = faker.person.jobTitle(),
@@ -50,11 +46,7 @@ export const mockSensitiveDataUser = ({
   id = faker.string.nanoid(),
   name = faker.person.lastName(),
   image = mockImage(),
-  birthday = faker.date
-    .past({
-      years: 18,
-    })
-    .toISOString(),
+  birthday = '1990-06-15T00:00:00.000Z',
   email = faker.internet.email(),
   firstName = faker.person.firstName(),
   flair = faker.person.jobTitle(),

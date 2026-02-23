@@ -33,18 +33,15 @@ const mockedUser = mockUser({
 }) as SensitiveDataUser;
 
 const onUpdateVariables = {
-  input: {
-    email: 'some-example@mail.com',
-    name: 'WasylBar',
-    firstName: 'KamilFoo',
-    flair: 'Financial Advisor & CEO',
-    address: {
-      streetAddress: 'Cool StreetMusterstrasse',
-      streetAddressNumber: '1',
-      zipCode: '123458047',
-      city: 'Surfers ParadiseZürich',
-      country: 'Schweiz',
-    },
+  name: 'WasylBar',
+  firstName: 'KamilFoo',
+  flair: 'Financial Advisor & CEO',
+  address: {
+    streetAddress: 'Cool StreetMusterstrasse',
+    streetAddressNumber: '12341',
+    zipCode: '123458047',
+    city: 'Surfers ParadiseZürich',
+    country: 'Schweiz',
   },
 };
 
