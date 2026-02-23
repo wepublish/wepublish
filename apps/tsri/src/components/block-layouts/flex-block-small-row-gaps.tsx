@@ -18,8 +18,6 @@ export const FlexBlockSmallRowGaps = styled(FlexBlock)`
       &:has(${TeaserSlotsXLFullsizeImage}) {
         grid-column-start: unset;
         grid-column-end: unset;
-        grid-row-start: unset;
-        grid-row-end: unset;
         grid-column: -1 / 1;
       }
     }
