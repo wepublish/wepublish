@@ -103,7 +103,7 @@ export function Rating({
 
   return (
     <RatingContainer onClick={handleContainerClick}>
-      {!isRatingMode && internalRating === 0 ?
+      {!isRatingMode && !internalRating ?
         <AverageRatingWrapper
           filledColor={averageFilledColor}
           emptyColor={averageEmptyColor}
