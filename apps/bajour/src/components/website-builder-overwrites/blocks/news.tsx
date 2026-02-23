@@ -128,6 +128,32 @@ const NewsTeaserListWrapper = styled(Box)`
   }
 `;
 
+const NewsTeaserPreTitle = styled('span')`
+  font-weight: 500;
+  font-size: 18px;
+`;
+
+const NewsTeaserContent = styled('div')`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const NewsTeaserTitle = styled('div')`
+  flex-grow: 1;
+
+  h4 {
+    font-weight: 300;
+    font-size: 18px;
+  }
+`;
+
+const NewsTeaserIcon = styled(MdEast)`
+  min-width: 18px;
+  font-size: 18px;
+  color: ${({ theme }) => theme.palette.primary.main};
+`;
+
 const NewsTeaserUnstyled = ({
   teaser,
   alignment,
@@ -145,11 +171,13 @@ const NewsTeaserUnstyled = ({
       href={href}
       className={className}
     >
-      <span>{preTitle}</span>
-      <div>
-        <H4 gutterBottom>{title}</H4>
-        <MdEast />
-      </div>
+      <NewsTeaserPreTitle>{preTitle}</NewsTeaserPreTitle>
+      <NewsTeaserContent>
+        <NewsTeaserTitle>
+          <H4 gutterBottom>{title}</H4>
+        </NewsTeaserTitle>
+        <NewsTeaserIcon />
+      </NewsTeaserContent>
     </Link>
   );
 };
@@ -159,31 +187,4 @@ const NewsTeaser = styled(NewsTeaserUnstyled)`
   padding: ${({ theme }) => `${theme.spacing(1)} ${theme.spacing(0)}`};
   border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
   text-decoration: none;
-
-  * {
-    font-size: 18px !important;
-  }
-
-  > div {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-
-    :first-child {
-      flex-grow: 1;
-    }
-
-    svg {
-      min-width: 18px;
-      color: ${({ theme }) => theme.palette.primary.main};
-    }
-  }
-
-  > span {
-    font-weight: 500;
-  }
-
-  h4 {
-    font-weight: 300;
-  }
 `;
