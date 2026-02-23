@@ -8,6 +8,7 @@ import { PermissionControl, Version } from '@wepublish/ui/editor';
 import { de, enUS, fr } from 'date-fns/locale';
 import { forwardRef, ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { WpSupportWidget } from './wp-support-widget';
 import {
   MdAccountCircle,
   MdApproval,
@@ -1020,6 +1021,7 @@ export function Base({ children }: BaseProps) {
         </Sidebar>
         <ChildrenContainer>{children}</ChildrenContainer>
       </Container>
+      <WpSupportWidget />
     </Wrapper>
   );
 }
