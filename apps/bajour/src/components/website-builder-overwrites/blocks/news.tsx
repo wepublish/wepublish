@@ -11,21 +11,20 @@ import {
 } from '@wepublish/block-content/website';
 import {
   BlockContent,
-  TeaserGridBlock,
   TeaserListBlock,
   useGetImagesByTagQuery,
 } from '@wepublish/website/api';
 import {
   BuilderTeaserListBlockProps,
   BuilderTeaserProps,
+  Image,
+  Link,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 import { MdEast } from 'react-icons/md';
 
-export const isNewsTeasers = (
-  block: BlockContent
-): block is TeaserGridBlock | TeaserListBlock =>
+export const isNewsTeasers = (block: BlockContent): block is TeaserListBlock =>
   allPass([hasBlockStyle('News'), isTeaserListBlock])(block);
 
 export const NewsBlockStyle = ({
@@ -39,7 +38,7 @@ export const NewsBlockStyle = ({
   const filledTeasers = teasers.filter(isFilledTeaser);
   const numColumns = 1;
   const {
-    elements: { H2, Link, Image },
+    elements: { H2 },
   } = useWebsiteBuilder();
 
   const { data: imagesData } = useGetImagesByTagQuery({

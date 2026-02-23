@@ -101,12 +101,16 @@ export class ImageService {
     return this.upload.deleteImage(id);
   }
 
+  @PrimeDataLoader(ImageDataloaderService)
   public async getImagesByTag(tag: string) {
     return this.prisma.image.findMany({
       where: {
         tags: {
           has: tag,
         },
+      },
+      include: {
+        focalPoint: true,
       },
     });
   }
