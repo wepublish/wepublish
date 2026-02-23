@@ -94,8 +94,8 @@ export const mockComment = ({
   text = mockRichText(),
   source = 'Source',
   title = 'Foobar',
-  lead = faker.lorem.sentence(),
-  rejectionReason = faker.lorem.sentence(),
+  lead = 'Das ist ein interessanter Kommentar zum Thema.',
+  rejectionReason = 'Dieser Kommentar entspricht nicht den Richtlinien.',
   user = mockUser(),
 }: Partial<Comment> = {}): Comment => ({
   id,

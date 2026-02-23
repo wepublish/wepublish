@@ -1,3 +1,10 @@
+import { faker } from '@faker-js/faker';
+
+// Fixed seed + reference date so all faker-generated values are identical
+// across every Chromatic build, regardless of module load order.
+faker.seed(123);
+faker.setDefaultRefDate(new Date('2020-01-01'));
+
 export * from './lib/author';
 export * from './lib/image';
 export * from './lib/tag';

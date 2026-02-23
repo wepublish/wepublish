@@ -131,7 +131,7 @@ export const mockShortRichText = () =>
       type: 'paragraph',
       children: [
         {
-          text: faker.lorem.sentence(),
+          text: 'Dies ist eine kurze Beschreibung des Inhalts.',
         },
       ],
     },
