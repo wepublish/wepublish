@@ -8,7 +8,7 @@ import {
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { PaymentProviderSettingsDataloaderService } from './payment-provider-settings-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-import { SecretCrypto } from './secrets-cryto';
+import { SecretCrypto } from './secrets-crypto';
 
 @Injectable()
 export class PaymentProviderSettingsService {
@@ -76,7 +76,7 @@ export class PaymentProviderSettingsService {
     input: CreateSettingPaymentProviderInput
   ): Promise<SettingPaymentProvider> {
     const output = this.encryptSecretsIfPresent(input);
-    const returnValue = this.prisma.settingPaymentProvider.create({
+    const returnValue = await this.prisma.settingPaymentProvider.create({
       data: output,
     });
 
@@ -108,7 +108,7 @@ export class PaymentProviderSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
-    const returnValue = this.prisma.settingPaymentProvider.update({
+    const returnValue = await this.prisma.settingPaymentProvider.update({
       where: { id },
       data: filteredUpdateData,
     });
@@ -132,7 +132,7 @@ export class PaymentProviderSettingsService {
       );
     }
 
-    const returnValue = this.prisma.settingPaymentProvider.delete({
+    const returnValue = await this.prisma.settingPaymentProvider.delete({
       where: { id },
     });
     await this.kv.resetNamespace('settings:paymentprovider');

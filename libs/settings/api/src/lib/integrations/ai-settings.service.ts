@@ -8,7 +8,7 @@ import {
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { AISettingsDataloaderService } from './ai-settings-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-import { SecretCrypto } from './secrets-cryto';
+import { SecretCrypto } from './secrets-crypto';
 
 @Injectable()
 export class AISettingsService {
@@ -105,7 +105,7 @@ export class AISettingsService {
       throw new NotFoundException(`AI Setting with id ${id} not found`);
     }
 
-    const returnValue = this.prisma.settingAIProvider.delete({
+    const returnValue = await this.prisma.settingAIProvider.delete({
       where: { id },
     });
     await this.kv.resetNamespace('settings:ai');

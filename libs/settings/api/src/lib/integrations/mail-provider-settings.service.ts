@@ -8,7 +8,7 @@ import {
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { MailProviderSettingsDataloaderService } from './mail-provider-settings-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-import { SecretCrypto } from './secrets-cryto';
+import { SecretCrypto } from './secrets-crypto';
 
 @Injectable()
 export class MailProviderSettingsService {
@@ -75,7 +75,7 @@ export class MailProviderSettingsService {
     input: CreateSettingMailProviderInput
   ): Promise<SettingMailProvider> {
     const output = this.encryptSecretsIfPresent(input);
-    const returnValue = this.prisma.settingMailProvider.create({
+    const returnValue = await this.prisma.settingMailProvider.create({
       data: output,
     });
     await this.kv.resetNamespace('settings:mailprovider');
@@ -102,7 +102,7 @@ export class MailProviderSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
-    const returnValue = this.prisma.settingMailProvider.update({
+    const returnValue = await this.prisma.settingMailProvider.update({
       where: { id },
       data: filteredUpdateData,
     });
@@ -122,7 +122,7 @@ export class MailProviderSettingsService {
       );
     }
 
-    const returnValue = this.prisma.settingMailProvider.delete({
+    const returnValue = await this.prisma.settingMailProvider.delete({
       where: { id },
     });
     await this.kv.resetNamespace('settings:mailprovider');

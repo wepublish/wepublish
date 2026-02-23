@@ -8,7 +8,7 @@ import {
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { AnalyticsProviderSettingsDataloaderService } from './analytics-provider-settings-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-import { SecretCrypto } from './secrets-cryto';
+import { SecretCrypto } from './secrets-crypto';
 
 @Injectable()
 export class AnalyticsProviderSettingsService {
@@ -74,7 +74,7 @@ export class AnalyticsProviderSettingsService {
     input: CreateSettingAnalyticsProviderInput
   ): Promise<SettingAnalyticsProvider> {
     const output = this.encryptSecretsIfPresent(input);
-    const returnValue = this.prisma.settingAnalyticsProvider.create({
+    const returnValue = await this.prisma.settingAnalyticsProvider.create({
       data: output,
     });
 
@@ -105,7 +105,7 @@ export class AnalyticsProviderSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
-    const returnValue = this.prisma.settingAnalyticsProvider.update({
+    const returnValue = await this.prisma.settingAnalyticsProvider.update({
       where: { id },
       data: filteredUpdateData,
     });
@@ -128,7 +128,7 @@ export class AnalyticsProviderSettingsService {
       );
     }
 
-    const returnValue = this.prisma.settingAnalyticsProvider.delete({
+    const returnValue = await this.prisma.settingAnalyticsProvider.delete({
       where: { id },
     });
     await this.kv.resetNamespace('settings:analyticsprovider');
