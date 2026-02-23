@@ -289,16 +289,17 @@ export class CommentService {
     }).at(-1);
   }
 
-  public async createAdminComment({
-    text,
-    lead,
-    tagIds,
-    ...input
-  }: CreateCommentInput) {
+  public async createAdminComment(
+    { text, lead, tagIds, approve, ...input }: CreateCommentInput,
+    session?: UserSession | null
+  ) {
+    const approved =
+      approve && hasPermission(CanCreateApprovedComment, session?.roles ?? []);
+
     const comment = await this.prisma.comment.create({
       data: {
         ...input,
-        state: CommentState.approved,
+        state: approved ? CommentState.approved : CommentState.pendingApproval,
         authorType: CommentAuthorType.team,
         revisions: {
           create: {
