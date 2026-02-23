@@ -103,7 +103,6 @@ export function CommentHistory({
       sort: CommentSort.CreatedAt,
       take: 1000,
     },
-    fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {

@@ -73,7 +73,6 @@ function PaymentMethodEditPanel({
     error: loadError,
   } = usePaymentMethodQuery({
     variables: { id: id! },
-    fetchPolicy: 'network-only',
     skip: id === undefined,
   });
 
@@ -81,9 +80,7 @@ function PaymentMethodEditPanel({
     data: paymentProviderData,
     loading: isLoadingPaymentProvider,
     error: loadPaymentProviderError,
-  } = usePaymentProviderListQuery({
-    fetchPolicy: 'network-only',
-  });
+  } = usePaymentProviderListQuery({});
 
   const [createPaymentMethod, { loading: isCreating, error: createError }] =
     useCreatePaymentMethodMutation();

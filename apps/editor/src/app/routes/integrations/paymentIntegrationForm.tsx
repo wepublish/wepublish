@@ -152,7 +152,7 @@ export function PaymentIntegrationForm() {
         }
       }}
       fields={setting => {
-        const fields: FieldDefinition<IntegrationFormValues>[] = [
+        let fields: FieldDefinition<IntegrationFormValues>[] = [
           {
             name: 'name',
             label: t('name'),
@@ -171,19 +171,23 @@ export function PaymentIntegrationForm() {
             name: 'apiKey',
             label: t('integrations.paymentSettings.apiKey'),
             type: 'password',
-            autoComplete: 'off',
+            autoComplete: 'one-time-code',
             placeholder: t('integrations.placeholderSecret'),
           },
           {
             name: 'webhookEndpointSecret',
             label: t('integrations.paymentSettings.webhookEndpointSecret'),
             type: 'password',
-            autoComplete: 'off',
+            autoComplete: 'one-time-code',
             placeholder: t('integrations.placeholderSecret'),
           },
         ];
 
         if (setting.type === PaymentProviderType.Bexio) {
+          fields = fields.filter(
+            ({ name }) => name !== 'webhookEndpointSecret'
+          );
+
           fields.push(
             {
               name: 'bexio_userId',
@@ -270,11 +274,17 @@ export function PaymentIntegrationForm() {
           );
         }
 
-        if (setting.type === PaymentProviderType.Stripe) {
+        if (
+          [
+            PaymentProviderType.Stripe,
+            PaymentProviderType.StripeCheckout,
+          ].includes(setting.type)
+        ) {
           fields.push({
             name: 'stripe_methods',
             label: t('integrations.paymentSettings.methods'),
             type: 'checkPicker',
+            searchable: true,
             options: Object.values(StripePaymentMethod).map(v => ({
               label: v,
               value: v,
@@ -291,6 +301,7 @@ export function PaymentIntegrationForm() {
             name: 'mollie_methods',
             label: t('integrations.paymentSettings.methods'),
             type: 'checkPicker',
+            searchable: true,
             options: Object.values(PaymentMethodMollie).map(v => ({
               label: v,
               value: v,
@@ -311,6 +322,7 @@ export function PaymentIntegrationForm() {
             name: 'payrexx_psp',
             label: t('integrations.paymentSettings.psp'),
             type: 'checkPicker',
+            searchable: true,
             options: Object.values(PayrexxPsp).map(v => ({
               label: v,
               value: v,
@@ -320,10 +332,18 @@ export function PaymentIntegrationForm() {
             name: 'payrexx_pm',
             label: t('integrations.paymentSettings.pm'),
             type: 'checkPicker',
+            searchable: true,
             options: Object.values(PayrexxPm).map(v => ({
               label: v,
               value: v,
             })),
+          });
+        }
+
+        if (setting.type === PaymentProviderType.PayrexxSubscription) {
+          fields.push({
+            name: 'payrexx_instancename',
+            label: t('integrations.paymentSettings.instanceName'),
           });
         }
 

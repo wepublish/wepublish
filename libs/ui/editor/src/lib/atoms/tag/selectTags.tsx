@@ -90,7 +90,6 @@ export function SelectTags({
       take,
       skip: (page - 1) * take,
     },
-    fetchPolicy: 'cache-and-network',
     onError: showErrors,
   });
 

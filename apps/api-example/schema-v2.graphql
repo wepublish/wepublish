@@ -1633,7 +1633,7 @@ type Mutation {
   deleteEvent(id: String!): Event!
 
   """Deletes an existing image."""
-  deleteImage(id: String!): Image!
+  deleteImage(id: String!): String!
 
   """Deletes an existing invoice."""
   deleteInvoice(id: String!): Invoice!
@@ -1654,7 +1654,7 @@ type Mutation {
   deletePaywall(id: String!): Paywall!
 
   """Deletes an existing peer."""
-  deletePeer(id: String!): Peer!
+  deletePeer(id: String!): String!
 
   """Deletes an existing poll."""
   deletePoll(id: String!): FullPoll!
@@ -1852,7 +1852,7 @@ type Mutation {
   updateRatingSystem(answers: [UpdateCommentRatingSystemAnswerInput!], id: String!, name: String): CommentRatingSystem!
 
   """Updates an existing setting."""
-  updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
+  updateSetting(name: SettingName!, value: GraphQLSettingValueType): Setting!
 
   """Updates an existing subscription."""
   updateSubscription(autoRenew: Boolean, extendable: Boolean, id: String!, memberPlanID: String, monthlyAmount: Int, paidUntil: DateTime, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, properties: [PropertyInput!], startsAt: DateTime, userID: String): PublicSubscription!

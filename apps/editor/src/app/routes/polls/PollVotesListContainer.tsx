@@ -30,7 +30,6 @@ function PollVoteListContainer() {
 
   const listQuery = usePollVoteListQuery({
     variables,
-    fetchPolicy: 'network-only',
   });
   const [deletePollVotes] = useDeletePollVotesMutation({});
 
@@ -44,7 +43,6 @@ function PollVoteListContainer() {
 
   const pollQuery = usePollQuery({
     variables: { id: pollId! },
-    fetchPolicy: 'network-only',
   });
 
   return (

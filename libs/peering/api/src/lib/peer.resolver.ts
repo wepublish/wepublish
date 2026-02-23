@@ -64,7 +64,7 @@ export class PeerResolver {
   }
 
   @Permissions(CanDeletePeer)
-  @Mutation(returns => Peer, { description: `Deletes an existing peer.` })
+  @Mutation(returns => String, { description: `Deletes an existing peer.` })
   public deletePeer(@Args('id') id: string) {
     return this.peerService.deletePeer(id);
   }

@@ -163,7 +163,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     refetch: reloadSubscription,
   } = useSubscriptionQuery({
     variables: { id: id! },
-    fetchPolicy: 'network-only',
     skip: id === undefined,
   });
 
@@ -252,7 +251,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     loading: isMemberPlanLoading,
     error: loadMemberPlanError,
   } = useMemberPlanListQuery({
-    fetchPolicy: 'network-only',
     variables: {
       take: 100, // TODO: Pagination
     },
@@ -262,9 +260,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     data: paymentMethodData,
     loading: isPaymentMethodLoading,
     error: paymentMethodLoadError,
-  } = usePaymentMethodListQuery({
-    fetchPolicy: 'network-only',
-  });
+  } = usePaymentMethodListQuery({});
 
   const [updateSubscription, { loading: isUpdating }] =
     useUpdateSubscriptionMutation();
@@ -281,7 +277,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
    */
   const { data: editedUserData } = useUserQuery({
     variables: { id: editedUserId! },
-    fetchPolicy: 'network-only',
     skip: editedUserId === undefined,
   });
 

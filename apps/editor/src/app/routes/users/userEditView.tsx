@@ -138,7 +138,6 @@ function UserEditView() {
   const [id] = useState<string | undefined>(isEditRoute ? userId : undefined);
   const { data: userRoleData, loading: isUserRoleLoading } =
     useUserRoleListQuery({
-      fetchPolicy: 'network-only',
       variables: {
         take: 200,
       },
@@ -153,7 +152,6 @@ function UserEditView() {
     error: loadError,
   } = useUserQuery({
     variables: { id: id! },
-    fetchPolicy: 'network-only',
     skip: id === undefined,
   });
   /**

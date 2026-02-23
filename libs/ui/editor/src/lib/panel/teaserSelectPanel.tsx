@@ -184,7 +184,6 @@ export function TeaserSelectPanel({
     error: eventListError,
     loading: isEventListLoading,
   } = useEventListQuery({
-    fetchPolicy: 'network-only',
     variables: eventVariables,
   });
 
@@ -213,7 +212,6 @@ export function TeaserSelectPanel({
     loading: isArticleListLoading,
   } = useArticleListQuery({
     variables: listVariables,
-    fetchPolicy: 'network-only',
   });
 
   const {
@@ -223,7 +221,6 @@ export function TeaserSelectPanel({
     loading: isPageListLoading,
   } = usePageListQuery({
     variables: pageListVariables,
-    fetchPolicy: 'cache-and-network',
   });
 
   const articles = articleListData?.articles.nodes ?? [];

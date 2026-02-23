@@ -125,7 +125,6 @@ function PageEditor() {
     loading: isLoading,
   } = usePageQuery({
     errorPolicy: 'all',
-    fetchPolicy: 'cache-and-network',
     variables: { id: pageID! },
     skip: !pageID,
   });

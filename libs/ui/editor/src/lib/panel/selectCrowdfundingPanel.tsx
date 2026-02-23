@@ -48,7 +48,6 @@ export function SelectCrowdfundingPanel({
 
   const { data, loading } = useCrowdfundingsQuery({
     onError: onErrorToast,
-    fetchPolicy: 'cache-and-network',
   });
 
   return (

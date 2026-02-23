@@ -55,7 +55,6 @@ export const BannerForm = (props: BannerFormProps) => {
 
   const { data: pageData } = usePageListQuery({
     variables: { take: 50 },
-    fetchPolicy: 'cache-and-network',
   });
 
   const pages = pageData?.pages.nodes ?? [];
@@ -209,7 +208,6 @@ export const BannerForm = (props: BannerFormProps) => {
                 image: undefined,
               });
             }}
-            onChange={x => console.log(x)}
             accepter={ChooseEditImage}
             minHeight={200}
           />
@@ -272,7 +270,7 @@ export const BannerForm = (props: BannerFormProps) => {
           onClose={() => setChooseModalOpen(false)}
           onSelect={image => {
             setChooseModalOpen(false);
-            props.onChange({ ...props.banner, imageId: image.id });
+            props.onChange({ ...props.banner, imageId: image.id, image });
           }}
         />
       </Drawer>

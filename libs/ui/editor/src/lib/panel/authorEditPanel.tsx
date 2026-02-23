@@ -109,7 +109,6 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
     error: loadError,
   } = useAuthorQuery({
     variables: { id: id! },
-    fetchPolicy: 'network-only',
     skip: id === undefined,
   });
 

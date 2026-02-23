@@ -41,7 +41,6 @@ export function SelectPaywall({
   const { t } = useTranslation();
 
   const { data: paywallsData } = usePaywallListQuery({
-    fetchPolicy: 'cache-and-network',
     onError: showErrors,
   });
 

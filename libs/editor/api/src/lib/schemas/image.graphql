@@ -165,7 +165,5 @@ mutation UpdateImage(
 }
 
 mutation DeleteImage($id: String!) {
-  deleteImage(id: $id) {
-    ...FullImage
-  }
+  deleteImage(id: $id)
 }

@@ -34,7 +34,6 @@ import proLitterisLogo from '../../../assets/integrations/proLitteris.svg';
 import slackLogo from '../../../assets/integrations/slack.png';
 import stripeLogo from '../../../assets/integrations/stripe.svg';
 import vercelLogo from '../../../assets/integrations/vercel.svg';
-import { Message } from 'rsuite';
 
 const Wrapper = styled.div`
   display: grid;
@@ -47,16 +46,6 @@ const Wrapper = styled.div`
 
   ${({ theme }) => theme.breakpoints.up('lg')} {
     grid-template-columns: repeat(3, 1fr);
-  }
-`;
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: unset;
-
-  &:hover {
-    text-decoration: none;
-    color: unset;
   }
 `;
 
@@ -121,47 +110,38 @@ export function IntegrationList() {
   return (
     <Wrapper>
       <Title>{t('integrations.title')}</Title>
-      <Message
-        type="info"
-        showIcon
-        header={t('integrations.whatAreIntegrations')}
-      >
-        {t('integrations.infoText')}
-      </Message>
 
       {integrations.map(integration => (
         <PermissionControl
           key={integration.title}
           qualifyingPermissions={[integration.permission]}
         >
-          <StyledLink to={integration.path}>
-            <Card variant="outlined">
-              <CardContent>
-                <Typography
-                  variant="h6"
-                  component="div"
-                  marginBottom={2}
-                >
-                  {integration.title}
-                </Typography>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography
+                variant="h6"
+                component="div"
+                marginBottom={2}
+              >
+                {integration.title}
+              </Typography>
 
-                <LogoList>
-                  {integration.logos.map((logo, index) => (
-                    <IntegrationLogo
-                      key={index}
-                      src={logo}
-                    />
-                  ))}
-                </LogoList>
-              </CardContent>
+              <LogoList>
+                {integration.logos.map((logo, index) => (
+                  <IntegrationLogo
+                    key={index}
+                    src={logo}
+                  />
+                ))}
+              </LogoList>
+            </CardContent>
 
-              <CardActions>
-                <Link to={integration.path}>
-                  <Button size="small">{t('edit')}</Button>
-                </Link>
-              </CardActions>
-            </Card>
-          </StyledLink>
+            <CardActions>
+              <Link to={integration.path}>
+                <Button size="small">{t('edit')}</Button>
+              </Link>
+            </CardActions>
+          </Card>
         </PermissionControl>
       ))}
     </Wrapper>

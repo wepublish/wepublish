@@ -1738,7 +1738,7 @@ export type Mutation = {
   /** Deletes an existing event. */
   deleteEvent: Event;
   /** Deletes an existing image. */
-  deleteImage: Image;
+  deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
   /** Deletes an existing memberplan. */
@@ -1752,7 +1752,7 @@ export type Mutation = {
   /** Deletes a paywall. */
   deletePaywall: Paywall;
   /** Deletes an existing peer. */
-  deletePeer: Peer;
+  deletePeer: Scalars['String'];
   /** Deletes an existing poll. */
   deletePoll: FullPoll;
   /** Deletes an existing poll answer. */
@@ -2785,7 +2785,7 @@ export type MutationUpdateRatingSystemArgs = {
 
 export type MutationUpdateSettingArgs = {
   name: SettingName;
-  value: Scalars['GraphQLSettingValueType'];
+  value?: InputMaybe<Scalars['GraphQLSettingValueType']>;
 };
 
 export type MutationUpdateSubscriptionArgs = {

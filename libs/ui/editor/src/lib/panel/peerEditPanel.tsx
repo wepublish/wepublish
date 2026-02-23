@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
 import {
   FullRemotePeerProfileFragment,
+  PeerListDocument,
+  PeerListQuery,
   useCreatePeerMutation,
   usePeerQuery,
   useRemotePeerProfileQuery,
@@ -82,8 +84,7 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
     error: loadError,
   } = usePeerQuery({
     variables: { id: id! },
-    fetchPolicy: 'network-only',
-    skip: id === undefined,
+    skip: !id,
   });
 
   const [createPeer, { loading: isCreating, error: createError }] =
@@ -175,6 +176,22 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
           hostURL: new URL(urlString).toString(),
           token,
           information,
+        },
+        update: (cache, { data }) => {
+          const query = cache.readQuery<PeerListQuery>({
+            query: PeerListDocument,
+          });
+
+          if (!query || !data?.createPeer) {
+            return;
+          }
+
+          cache.writeQuery<PeerListQuery>({
+            query: PeerListDocument,
+            data: {
+              peers: [data.createPeer, ...query.peers],
+            },
+          });
         },
       });
     }
@@ -361,7 +378,7 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
                   label={t('peerList.panels.callToActionImage')}
                 >
                   <img
-                    src={profile?.callToActionImage?.url || undefined}
+                    src={profile?.callToActionImage?.xsSquare ?? ''}
                     alt={t('peerList.panels.callToActionImage')}
                   />
                 </DescriptionListItem>

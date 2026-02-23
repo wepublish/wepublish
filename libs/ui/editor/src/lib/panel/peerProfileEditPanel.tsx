@@ -84,9 +84,7 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
     data,
     loading: isLoading,
     error: fetchError,
-  } = usePeerProfileQuery({
-    fetchPolicy: 'network-only',
-  });
+  } = usePeerProfileQuery({});
 
   const [updateSettings, { loading: isSaving, error: saveError }] =
     useUpdatePeerProfileMutation({

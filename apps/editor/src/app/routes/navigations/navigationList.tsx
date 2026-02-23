@@ -61,13 +61,7 @@ function NavigationList() {
   const [currentNavigation, setCurrentNavigation] =
     useState<FullNavigationFragment>();
 
-  const {
-    data,
-    refetch,
-    loading: isLoading,
-  } = useNavigationListQuery({
-    fetchPolicy: 'cache-and-network',
-  });
+  const { data, refetch, loading: isLoading } = useNavigationListQuery({});
 
   const [deleteNavigation, { loading: isDeleting }] =
     useDeleteNavigationMutation();

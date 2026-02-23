@@ -54,7 +54,6 @@ function MemberPlanList() {
       filter: filter ? { name: filter } : undefined,
       take: 50,
     },
-    fetchPolicy: 'network-only',
   });
 
   const [deleteMemberPlan, { loading: isDeleting }] =

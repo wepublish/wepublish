@@ -53,7 +53,6 @@ const PaywallEditView = () => {
   >();
 
   const { loading: dataLoading } = usePaywallListQuery({
-    fetchPolicy: 'cache-and-network',
     onError: onErrorToast,
     onCompleted: data => {
       const paywallToEdit = data.paywalls.find(paywall => paywall.id === id);

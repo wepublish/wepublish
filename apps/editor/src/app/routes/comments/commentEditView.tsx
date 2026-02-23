@@ -119,7 +119,6 @@ const CommentEditView = memo(() => {
     variables: {
       id: commentId,
     },
-    fetchPolicy: 'cache-and-network',
     onError: showErrors,
   });
 

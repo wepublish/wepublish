@@ -112,7 +112,6 @@ export function SelectCommentPanel({
 
   const [fetchComments, { data, loading }] = useCommentListLazyQuery({
     onError: onErrorToast,
-    fetchPolicy: 'cache-and-network',
   });
 
   const getUsername = useMemo(() => commentUsernameGenerator(t), [t]);

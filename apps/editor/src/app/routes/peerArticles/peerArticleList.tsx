@@ -119,7 +119,6 @@ function PeerArticleList() {
   const { data: peerArticleListData, loading: isLoading } =
     usePeerArticleListQuery({
       variables: listVariables,
-      fetchPolicy: 'cache-and-network',
       onError(error) {
         toaster.push(
           <Message

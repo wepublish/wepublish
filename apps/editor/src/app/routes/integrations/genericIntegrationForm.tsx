@@ -54,6 +54,7 @@ export type FieldDefinition<TFormValues> = {
   options?: { label: string; value: string | number }[];
   textareaRows?: number;
   autoComplete?: string;
+  searchable?: boolean;
 };
 
 export interface GenericIntegrationFormProps<
@@ -188,7 +189,7 @@ export function SingleGenericIntegrationForm<
                         onChange={onChange}
                         disabled={field.disabled}
                         cleanable={false}
-                        searchable={false}
+                        searchable={field.searchable ?? false}
                         {...restField}
                       />
                     );
@@ -202,7 +203,7 @@ export function SingleGenericIntegrationForm<
                         onChange={val => onChange(val)}
                         disabled={field.disabled}
                         cleanable={false}
-                        searchable={false}
+                        searchable={field.searchable ?? false}
                         {...restField}
                       />
                     );

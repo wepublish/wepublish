@@ -61,9 +61,7 @@ export function SubscriptionListFilter({
     data: paymentMethodData,
     loading: isPaymentMethodLoading,
     error: paymentMethodLoadError,
-  } = usePaymentMethodListQuery({
-    fetchPolicy: 'network-only',
-  });
+  } = usePaymentMethodListQuery({});
 
   const formInputStyle = {
     marginRight: '15px',
@@ -76,7 +74,6 @@ export function SubscriptionListFilter({
     loading: isMemberPlanLoading,
     error: loadMemberPlanError,
   } = useMemberPlanListQuery({
-    fetchPolicy: 'network-only',
     variables: {
       take: 200,
     },

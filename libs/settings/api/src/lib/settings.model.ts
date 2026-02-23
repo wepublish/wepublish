@@ -96,6 +96,6 @@ export class UpdateSettingInput {
   @Field(type => SettingName)
   name!: SettingName;
 
-  @Field(type => GraphQLSettingValueType)
-  value!: unknown;
+  @Field(type => GraphQLSettingValueType, { nullable: true })
+  value?: unknown;
 }

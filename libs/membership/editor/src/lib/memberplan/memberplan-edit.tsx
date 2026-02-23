@@ -56,25 +56,21 @@ function MemberPlanEdit() {
     fetchMemberPlan,
     { loading: memberPlanLoading, data: memberPlanData },
   ] = useMemberPlanLazyQuery({
-    fetchPolicy: 'network-only',
     onError: showErrors,
   });
 
   const { data: paymentMethodData, loading: paymentMethodLoading } =
     usePaymentMethodListQuery({
-      fetchPolicy: 'network-only',
       onError: showErrors,
     });
 
   const [updateMemberPlanMutation, { loading: memberPlanUpdating }] =
     useUpdateMemberPlanMutation({
-      fetchPolicy: 'network-only',
       onError: showErrors,
     });
 
   const [createMemberPlanMutation, { loading: memberPlanCreating }] =
     useCreateMemberPlanMutation({
-      fetchPolicy: 'network-only',
       onError: showErrors,
     });
 

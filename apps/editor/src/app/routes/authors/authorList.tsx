@@ -107,7 +107,6 @@ function AuthorList() {
     refetch: authorListRefetch,
   } = useAuthorListQuery({
     variables: authorListQueryVariables,
-    fetchPolicy: 'network-only',
   });
 
   useEffect(() => {

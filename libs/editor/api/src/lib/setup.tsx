@@ -93,6 +93,16 @@ export function getApiClientV2() {
       cache: new InMemoryCache({
         possibleTypes: possibleTypes.possibleTypes,
       }),
+      defaultOptions: {
+        query: {
+          fetchPolicy: 'network-only',
+          errorPolicy: 'all',
+        },
+        watchQuery: {
+          fetchPolicy: 'network-only',
+          errorPolicy: 'all',
+        },
+      },
     });
   }
 

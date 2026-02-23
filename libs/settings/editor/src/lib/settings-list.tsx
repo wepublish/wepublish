@@ -113,9 +113,7 @@ function SettingList() {
     loading,
     refetch,
     error: fetchError,
-  } = useSettingsListQuery({
-    fetchPolicy: 'network-only',
-  });
+  } = useSettingsListQuery({});
 
   const isDisabled = loading || !settingListData || !isAuthorized;
 
@@ -212,9 +210,7 @@ function SettingList() {
   }, [settingListData]);
 
   const [updateSetting, { error: updateSettingError }] =
-    useUpdateSettingMutation({
-      fetchPolicy: 'network-only',
-    });
+    useUpdateSettingMutation({});
 
   const [changedSetting, setChangedSetting] = useState(
     settingListData?.settings.filter(
