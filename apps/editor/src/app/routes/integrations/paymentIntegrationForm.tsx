@@ -274,7 +274,12 @@ export function PaymentIntegrationForm() {
           );
         }
 
-        if (setting.type === PaymentProviderType.Stripe) {
+        if (
+          [
+            PaymentProviderType.Stripe,
+            PaymentProviderType.StripeCheckout,
+          ].includes(setting.type)
+        ) {
           fields.push({
             name: 'stripe_methods',
             label: t('integrations.paymentSettings.methods'),
