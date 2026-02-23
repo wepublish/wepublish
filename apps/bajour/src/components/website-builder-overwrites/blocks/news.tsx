@@ -32,7 +32,6 @@ export const NewsBlockStyle = ({
   title,
   teasers,
   blockStyle,
-  className,
 }: Pick<
   BuilderTeaserListBlockProps,
   'teasers' | 'title' | 'blockStyle' | 'className'
@@ -58,6 +57,7 @@ export const NewsBlockStyle = ({
             {filledTeasers.map((teaser, index) => (
               <NewsTeaser
                 key={index}
+                index={index}
                 teaser={teaser}
                 numColumns={numColumns}
                 alignment={alignmentForTeaserBlock(index, numColumns)}
@@ -69,7 +69,7 @@ export const NewsBlockStyle = ({
             href={'/a/tag/news'}
             style={{ textDecoration: 'none' }}
           >
-            <b>Weitere Kurz-News &rarr;</b>
+            <b>weitere Kurz-News &rarr;</b>
           </Link>
         </OrangeBox>
 
@@ -92,7 +92,7 @@ const OrangeBox = styled('div')`
   padding: ${({ theme }) => theme.spacing(3)};
   color: ${({ theme }) => theme.palette.secondary.contrastText};
   border-color: ${({ theme }) => theme.palette.primary.main};
-  border-width: ${({ theme }) => theme.spacing(0.25)};
+  border-width: ${({ theme }) => theme.spacing(0.5)};
   border-style: solid;
   gap: ${({ theme }) => theme.spacing(1.5)};
 
@@ -176,6 +176,7 @@ const NewsTeaser = styled(NewsTeaserUnstyled)`
 
     svg {
       min-width: 18px;
+      color: ${({ theme }) => theme.palette.primary.main};
     }
   }
 
