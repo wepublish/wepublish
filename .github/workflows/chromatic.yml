@@ -5,6 +5,10 @@ on:
     branches:
       - development
   pull_request:
+    types: [opened, ready_for_review, reopened, labeled]
+    paths:
+      - 'libs/**'
+      - 'apps/**'
 
 concurrency:
   group: chromatic-${{ github.head_ref || github.ref }}
@@ -14,6 +18,10 @@ jobs:
   chromatic:
     name: Run Chromatic
     runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' ||
+      github.event.action != 'labeled' ||
+      github.event.label.name == 'run-chromatic'
     steps:
       - uses: actions/checkout@v4
         with:
