@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, css, TextField, Theme, Typography } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { Widget } from '@typeform/embed-react';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { BaseSyntheticEvent, FormEvent, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
-
-import theme from '../../theme';
 
 const formStyles = css`
   display: block;
@@ -30,6 +30,16 @@ const autofocus = (node: HTMLElement | null) => {
   const inputNode = node?.querySelector('input') ?? node;
   inputNode?.focus();
 };
+
+const typeFormStyles = (theme: Theme) => css`
+  width: 100%;
+  height: 100vh;
+
+  ${theme.breakpoints.up('md')} {
+    width: 1200px;
+    height: 1000px;
+  }
+`;
 
 export type MailchimpSubscribeFormProps = {
   mc_u: string;
@@ -59,6 +69,7 @@ export default function MailchimpSubscribeForm(
   } = props;
   const [email, setEmail] = useState('');
   const [showTypeForm, setShowTypeForm] = useState(false);
+  const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
   type FormInput = z.infer<typeof RegisterMCNewsletterFormSchema>;
 
   const {
@@ -194,14 +205,14 @@ export default function MailchimpSubscribeForm(
         </form>
       )}
       {showTypeForm && (
-        <IFrame
-          css={{
-            marginTop: theme.spacing(5) as string,
-            border: 'none',
-          }}
-          url={`${tf_baseURL}/${tf_id}#email=${encodeURIComponent(email)}`}
-          width={1200}
-          height={1000}
+        <Widget
+          id={tf_id}
+          css={typeFormStyles}
+          autoFocus={false}
+          iframeProps={{ id: 'typeform' }}
+          inlineOnMobile={true}
+          autoResize={!isDesktop}
+          hidden={{ email }}
         />
       )}
     </>

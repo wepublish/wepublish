@@ -315,13 +315,6 @@ const theme = createTheme(WePTheme, {
     MuiContainer: {
       styleOverrides: {
         root: ({ theme }: { theme: any }) => ({
-          maxWidth: '492px',
-          [theme.breakpoints.up('sm')]: {
-            maxWidth: '760px',
-          },
-          [theme.breakpoints.up('md')]: {
-            maxWidth: '868px',
-          },
           [theme.breakpoints.up('lg')]: {
             maxWidth: '1123px',
           },
@@ -365,13 +358,6 @@ const theme = createTheme(WePTheme, {
           ['&&']: {
             // since Appbar sets max width for Toolbar with specifity of 2...
             // ...we have to increase the specifity to override
-            maxWidth: '492px',
-            [theme.breakpoints.up('sm')]: {
-              maxWidth: '760px',
-            },
-            [theme.breakpoints.up('md')]: {
-              maxWidth: '868px',
-            },
             [theme.breakpoints.up('lg')]: {
               maxWidth: '1123px',
             },
