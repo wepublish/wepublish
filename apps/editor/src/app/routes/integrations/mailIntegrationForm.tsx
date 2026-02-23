@@ -110,13 +110,13 @@ export function MailIntegrationForm() {
             name: 'apiKey',
             label: t('integrations.mailSettings.apiKey'),
             type: 'password',
-            autoComplete: 'off',
+            autoComplete: 'one-time-code',
           });
           commonFields.push({
             name: 'webhookEndpointSecret',
             label: t('integrations.mailSettings.webhookEndpointSecret'),
             type: 'password',
-            autoComplete: 'off',
+            autoComplete: 'one-time-code',
           });
           commonFields.push({
             name: 'mailchimpBaseUrl',
@@ -129,13 +129,13 @@ export function MailIntegrationForm() {
             name: 'apiKey',
             label: t('integrations.mailSettings.apiKey'),
             type: 'password',
-            autoComplete: 'off',
+            autoComplete: 'one-time-code',
           });
           commonFields.push({
             name: 'webhookEndpointSecret',
             label: t('integrations.mailSettings.webhookEndpointSecret'),
             type: 'password',
-            autoComplete: 'off',
+            autoComplete: 'one-time-code',
           });
           commonFields.push({
             name: 'mailgunBaseDomain',

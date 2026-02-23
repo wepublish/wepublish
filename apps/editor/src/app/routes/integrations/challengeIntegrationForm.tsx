@@ -58,16 +58,17 @@ export function ChallengeIntegrationForm() {
           label: t('name'),
         },
         {
+          name: 'siteKey',
+          label: t('integrations.challengeSettings.siteKey'),
+          placeholder: t('integrations.placeholderSecret'),
+          autoComplete: 'one-time-code',
+        },
+        {
           name: 'secret',
           label: t('integrations.challengeSettings.secret'),
           type: 'password',
           placeholder: t('integrations.placeholderSecret'),
-          autoComplete: 'off',
-        },
-        {
-          name: 'siteKey',
-          label: t('integrations.challengeSettings.siteKey'),
-          placeholder: t('integrations.placeholderSecret'),
+          autoComplete: 'one-time-code',
         },
       ]}
     />

@@ -43,7 +43,7 @@ export function AIIntegrationForm() {
           name: 'apiKey',
           label: t('integrations.aiSettings.apiKey'),
           type: 'password',
-          autoComplete: 'off',
+          autoComplete: 'one-time-code',
         },
         {
           name: 'systemPrompt',

@@ -100,7 +100,7 @@ export function TrackingPixelIntegrationForm() {
             name: 'prolitterisPassword',
             label: t('integrations.trackingPixelSettings.prolitterisPassword'),
             type: 'password',
-            autoComplete: 'off',
+            autoComplete: 'one-time-code',
           });
           commonFields.push({
             name: 'prolitterisOnlyPaidContentAccess',

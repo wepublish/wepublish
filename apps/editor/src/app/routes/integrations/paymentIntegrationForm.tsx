@@ -171,14 +171,14 @@ export function PaymentIntegrationForm() {
             name: 'apiKey',
             label: t('integrations.paymentSettings.apiKey'),
             type: 'password',
-            autoComplete: 'off',
+            autoComplete: 'one-time-code',
             placeholder: t('integrations.placeholderSecret'),
           },
           {
             name: 'webhookEndpointSecret',
             label: t('integrations.paymentSettings.webhookEndpointSecret'),
             type: 'password',
-            autoComplete: 'off',
+            autoComplete: 'one-time-code',
             placeholder: t('integrations.placeholderSecret'),
           },
         ];
