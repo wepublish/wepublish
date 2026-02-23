@@ -279,6 +279,7 @@ export function PaymentIntegrationForm() {
             name: 'stripe_methods',
             label: t('integrations.paymentSettings.methods'),
             type: 'checkPicker',
+            searchable: true,
             options: Object.values(StripePaymentMethod).map(v => ({
               label: v,
               value: v,
@@ -295,6 +296,7 @@ export function PaymentIntegrationForm() {
             name: 'mollie_methods',
             label: t('integrations.paymentSettings.methods'),
             type: 'checkPicker',
+            searchable: true,
             options: Object.values(PaymentMethodMollie).map(v => ({
               label: v,
               value: v,
@@ -315,6 +317,7 @@ export function PaymentIntegrationForm() {
             name: 'payrexx_psp',
             label: t('integrations.paymentSettings.psp'),
             type: 'checkPicker',
+            searchable: true,
             options: Object.values(PayrexxPsp).map(v => ({
               label: v,
               value: v,
@@ -324,6 +327,7 @@ export function PaymentIntegrationForm() {
             name: 'payrexx_pm',
             label: t('integrations.paymentSettings.pm'),
             type: 'checkPicker',
+            searchable: true,
             options: Object.values(PayrexxPm).map(v => ({
               label: v,
               value: v,
