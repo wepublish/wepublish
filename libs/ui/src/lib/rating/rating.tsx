@@ -3,7 +3,7 @@ import {
   Rating as MuiRating,
   RatingProps as MuiRatingProps,
 } from '@mui/material';
-import { SyntheticEvent, useEffect, useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import { MdStar, MdStarBorder } from 'react-icons/md';
 
 export type RatingProps = Omit<MuiRatingProps, 'value' | 'onChange'> & {
@@ -63,19 +63,13 @@ export function Rating({
   onChange,
   ...props
 }: RatingProps) {
-  const [internalRating, setInternalRating] = useState(userRating);
   const [isRatingMode, setIsRatingMode] = useState(false);
-
-  useEffect(() => {
-    setInternalRating(userRating);
-  }, [userRating]);
 
   const handleRatingChange = (
     event: SyntheticEvent<Element, Event>,
     newValue: number | null
   ) => {
     if (newValue !== null) {
-      setInternalRating(newValue);
       onChange?.(event, newValue);
     }
   };
@@ -98,12 +92,12 @@ export function Rating({
   const emptyIcon = props.emptyIcon ?? <MdStarBorder />;
 
   const displayValue =
-    isRatingMode || internalRating > 0 ? internalRating : averageRating;
+    isRatingMode || userRating > 0 ? userRating : averageRating;
   const isReadOnly = props.readOnly || !isRatingMode;
 
   return (
     <RatingContainer onClick={handleContainerClick}>
-      {!isRatingMode && !internalRating ?
+      {!isRatingMode && !userRating ?
         <AverageRatingWrapper
           filledColor={averageFilledColor}
           emptyColor={averageEmptyColor}
