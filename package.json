@@ -226,6 +226,7 @@
     "@hookform/resolvers": "^3.1.1",
     "@mailchimp/mailchimp_marketing": "^3.0.80",
     "@mailchimp/mailchimp_transactional": "^1.0.50",
+    "@modelcontextprotocol/sdk": "^1.26.0",
     "@mollie/api-client": "^4.1.0",
     "@mui/material": "^5.16.7",
     "@mui/material-nextjs": "^7.2.0",
@@ -345,7 +346,7 @@
     "tslib": "^2.3.0",
     "usehooks-ts": "^3.1.1",
     "v0-sdk": "^0.15.1",
-    "zod": "^3.23.8",
+    "zod": "^3.25.76",
     "zod-i18n-map": "^2.27.0"
   },
   "optionalDependencies": {
