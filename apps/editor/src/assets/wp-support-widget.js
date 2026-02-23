@@ -11,6 +11,8 @@
         'Hallo! Ich bin dein WePublish CMS-Assistent. Stell mir gerne Fragen zu WePublish.',
       error: 'Verbindungsfehler. Bitte nochmal versuchen.',
       serverError: 'Etwas ist schiefgelaufen.',
+      rateLimit:
+        'Du hast zu viele Anfragen gestellt. Bitte warte einen Moment und versuche es erneut.',
     },
     en: {
       title: 'WePublish Support',
@@ -20,6 +22,7 @@
         "Hi! I'm your WePublish CMS assistant. Ask me anything about WePublish.",
       error: 'Connection error. Please try again.',
       serverError: 'Something went wrong.',
+      rateLimit: 'Too many requests. Please wait a moment and try again.',
     },
     fr: {
       title: 'Support WePublish',
@@ -29,6 +32,8 @@
         'Bonjour ! Je suis votre assistant WePublish CMS. Posez-moi vos questions.',
       error: 'Erreur de connexion. Veuillez réessayer.',
       serverError: 'Une erreur est survenue.',
+      rateLimit:
+        'Trop de requêtes. Veuillez patienter un moment avant de réessayer.',
     },
     it: {
       title: 'Supporto WePublish',
@@ -38,6 +43,7 @@
         'Ciao! Sono il tuo assistente WePublish CMS. Chiedimi pure qualsiasi cosa.',
       error: 'Errore di connessione. Riprova.',
       serverError: 'Qualcosa è andato storto.',
+      rateLimit: 'Troppe richieste. Attendi un momento e riprova.',
     },
   };
 
@@ -343,6 +349,16 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: history, lang: cfg.lang || 'de' }),
       });
+      if (res.status === 429) {
+        typing.textContent = t.rateLimit;
+        typing.classList.remove('wps-typing');
+        // Remove the user message we just added — it was never processed
+        history.pop();
+        saveHistory();
+        sendBtn.disabled = false;
+        input.focus();
+        return;
+      }
       const data = await res.json();
       const reply = data.reply || data.error || t.serverError;
       typing.remove();
