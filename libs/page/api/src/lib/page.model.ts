@@ -72,9 +72,6 @@ export class PageRevision implements HasBlockContent {
 
   @Field(() => Image, { nullable: true })
   socialMediaImage?: Image;
-
-  @Field(() => String, { nullable: true })
-  _debug?: string;
 }
 
 @ObjectType()

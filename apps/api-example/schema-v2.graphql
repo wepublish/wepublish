@@ -1473,7 +1473,7 @@ type Mutation {
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
 
   """Creates an page."""
-  createPage(_debug: String, blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  createPage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """
   This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.
@@ -1672,7 +1672,7 @@ type Mutation {
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
 
   """Updates an page."""
-  updatePage(_debug: String, blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, id: String!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
+  updatePage(blocks: [BlockContentInput!]!, description: String, hidden: Boolean!, id: String!, imageID: String, properties: [PropertyInput!]!, slug: String, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Page!
 
   """
   This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.
@@ -1835,7 +1835,6 @@ type PageNavigationLink implements BaseNavigationLink & HasPage {
 }
 
 type PageRevision implements HasBlockContent {
-  _debug: String
   blocks: [BlockContent!]!
   createdAt: DateTime!
   description: String

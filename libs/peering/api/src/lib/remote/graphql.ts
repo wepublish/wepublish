@@ -1866,7 +1866,6 @@ export type MutationCreateNavigationArgs = {
 
 
 export type MutationCreatePageArgs = {
-  _debug?: InputMaybe<Scalars['String']>;
   blocks: Array<BlockContentInput>;
   description?: InputMaybe<Scalars['String']>;
   hidden: Scalars['Boolean'];
@@ -2352,7 +2351,6 @@ export type MutationUpdateNavigationArgs = {
 
 
 export type MutationUpdatePageArgs = {
-  _debug?: InputMaybe<Scalars['String']>;
   blocks: Array<BlockContentInput>;
   description?: InputMaybe<Scalars['String']>;
   hidden: Scalars['Boolean'];
@@ -2631,7 +2629,6 @@ export type PageNavigationLink = BaseNavigationLink & HasPage & {
 
 export type PageRevision = HasBlockContent & {
   __typename?: 'PageRevision';
-  _debug?: Maybe<Scalars['String']>;
   blocks: Array<BlockContent>;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
