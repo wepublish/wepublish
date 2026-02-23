@@ -28,6 +28,11 @@ app.get('/', (req, res) => {
   res.sendFile(indexPath);
 });
 
+app.get('/assets/wp-support-widget.js', (req, res) => {
+  res.setHeader('Cache-Control', 'public, max-age=300');
+  res.sendFile(path.join(browserDist, 'assets/wp-support-widget.js'));
+});
+
 app.use(
   express.static(browserDist, {
     setHeaders: (res, filePath) => {
