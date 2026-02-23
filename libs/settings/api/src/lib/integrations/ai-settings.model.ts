@@ -50,9 +50,6 @@ export class CreateSettingAIProviderInput extends OmitType(
   type!: AIProviderType;
 
   @Field(type => String, { nullable: true })
-  webhookEndpointSecret?: string;
-
-  @Field(type => String, { nullable: true })
   apiKey?: string;
 }
 
