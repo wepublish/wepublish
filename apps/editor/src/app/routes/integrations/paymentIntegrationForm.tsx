@@ -340,6 +340,13 @@ export function PaymentIntegrationForm() {
           });
         }
 
+        if (setting.type === PaymentProviderType.PayrexxSubscription) {
+          fields.push({
+            name: 'payrexx_instancename',
+            label: t('integrations.paymentSettings.instanceName'),
+          });
+        }
+
         return fields;
       }}
     />
