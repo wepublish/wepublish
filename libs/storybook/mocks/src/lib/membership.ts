@@ -53,7 +53,10 @@ export const mockAvailablePaymentMethod = ({
     PaymentPeriodicity.Yearly,
     PaymentPeriodicity.Lifetime,
   ],
-  paymentMethods = [mockPaymentMethod(), mockPaymentMethod()],
+  paymentMethods = [
+    mockPaymentMethod({ name: 'Visa', description: 'Kreditkarte' }),
+    mockPaymentMethod({ name: 'Twint', description: 'Mobiles Bezahlen' }),
+  ],
   paymentMethodIDs = [],
 }: Partial<
   AvailablePaymentMethod & {

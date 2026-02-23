@@ -54,7 +54,7 @@ const memberPlan = mockMemberPlan({
 const memberPlan2 = mockMemberPlan({
   ...memberPlan,
   id: undefined,
-  name: undefined,
+  name: 'Premium Abo',
   shortDescription: undefined,
   amountPerMonthMin: 800,
   amountPerMonthTarget: 800,
@@ -65,7 +65,7 @@ const memberPlan2 = mockMemberPlan({
 const memberPlan3 = mockMemberPlan({
   ...memberPlan,
   id: undefined,
-  name: undefined,
+  name: 'Enterprise Abo',
   shortDescription: undefined,
   amountPerMonthMin: 1200,
   amountPerMonthTarget: 1200,

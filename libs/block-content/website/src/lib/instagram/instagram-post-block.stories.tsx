@@ -9,4 +9,7 @@ export default {
 
 export const Default = {
   args: mockInstagramPostBlock(),
+  parameters: {
+    chromatic: { disableSnapshot: true }, // loads live Instagram embed — snapshot would always differ
+  },
 };

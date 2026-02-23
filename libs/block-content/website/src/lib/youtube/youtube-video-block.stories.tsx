@@ -9,4 +9,7 @@ export default {
 
 export const Default = {
   args: mockYouTubeVideoBlock(),
+  parameters: {
+    chromatic: { disableSnapshot: true }, // loads live YouTube embed — snapshot would always differ
+  },
 };

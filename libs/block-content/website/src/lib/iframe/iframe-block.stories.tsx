@@ -9,4 +9,7 @@ export default {
 
 export const Default = {
   args: mockIFrameBlock(),
+  parameters: {
+    chromatic: { disableSnapshot: true }, // loads external URL in iframe — snapshot would always differ
+  },
 };
