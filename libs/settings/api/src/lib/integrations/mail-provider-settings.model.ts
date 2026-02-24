@@ -22,30 +22,30 @@ export class SettingMailProvider extends SettingProvider {
   @Field(type => MailProviderType)
   type!: MailProviderType;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   fromAddress?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   replyToAddress?: string;
 
   /** hide sensitive fields
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   webhookEndpointSecret?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   apiKey?: string;
  **/
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   mailgun_mailDomain?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   mailgun_baseDomain?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   mailchimp_baseURL?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   slack_webhookURL?: string;
 }
 
@@ -61,16 +61,16 @@ export class CreateSettingMailProviderInput extends OmitType(
   ['id', 'type', 'createdAt', 'lastLoadedAt', 'modifiedAt'] as const,
   ArgsType
 ) {
-  @Field(type => String)
+  @Field()
   id!: string;
 
   @Field(type => MailProviderType)
   type!: MailProviderType;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   webhookEndpointSecret?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   apiKey?: string;
 }
 

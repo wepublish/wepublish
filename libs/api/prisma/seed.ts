@@ -210,7 +210,7 @@ const seedSettings = (prisma: PrismaClient) =>
       update: {},
       create: {
         id: 'google-analytics',
-        name: 'Google-Analytic',
+        name: 'Google-Analytics',
         type: 'GOOGLE',
         credentials:
           'v1.joXbh+gkDHyDSWR8.xx9rJ27ZN9VWALNkm3ET0w==.Hl8G9f69NSAH5A==',

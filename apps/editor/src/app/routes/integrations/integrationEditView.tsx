@@ -1,6 +1,7 @@
 import { Button } from '@mui/material';
 import {
   CanGetAISettings,
+  CanGetAnalyticsProviderSettings,
   CanGetChallengeProviderSettings,
   CanGetMailProviderSettings,
   CanGetPaymentProviderSettings,
@@ -13,6 +14,7 @@ import { MdArrowBack } from 'react-icons/md';
 import { Link, useParams } from 'react-router-dom';
 
 import { AIIntegrationForm } from './aiIntegrationForm';
+import { AnalyticsIntegrationForm } from './analyticsIntegrationForm';
 import { ChallengeIntegrationForm } from './challengeIntegrationForm';
 import { MailIntegrationForm } from './mailIntegrationForm';
 import { PaymentIntegrationForm } from './paymentIntegrationForm';
@@ -30,6 +32,8 @@ const useIntegrationTitle = (type: string | undefined) => {
       return t('integrations.paymentProvider');
     case 'tracking-pixel':
       return t('integrations.trackingPixel');
+    case 'analytics':
+      return t('integrations.analytics');
     case 'mail':
       return t('integrations.mailProvider');
     default:
@@ -47,6 +51,8 @@ const getPermission = (type: string | undefined): Permission | undefined => {
       return CanGetPaymentProviderSettings;
     case 'tracking-pixel':
       return CanGetTrackingPixelSettings;
+    case 'analytics':
+      return CanGetAnalyticsProviderSettings;
     case 'mail':
       return CanGetMailProviderSettings;
     default:
@@ -73,6 +79,8 @@ export function IntegrationEditView() {
         return <MailIntegrationForm />;
       case 'tracking-pixel':
         return <TrackingPixelIntegrationForm />;
+      case 'analytics':
+        return <AnalyticsIntegrationForm />;
       default:
         return <p>{t('integrations.configure', { integration: title })}</p>;
     }

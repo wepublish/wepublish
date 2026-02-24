@@ -89,8 +89,8 @@ const requiredSchema = requiredRegisterSchema.omit({
 });
 
 const defaultSchema = z.object({
-  firstName: z.string().optional().or(z.literal('')),
-  flair: z.string().optional().or(z.literal('')),
+  firstName: z.string().optional().or(z.literal('')).or(z.literal('')),
+  flair: z.string().optional().or(z.literal('')).or(z.literal('')),
   birthday: z.coerce.date().max(new Date()).optional(),
   address: z.object({
     streetAddress: z.string().min(1),

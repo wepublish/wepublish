@@ -65,6 +65,10 @@ export type AllowedSettingVals = {
   stringChoice?: Maybe<Array<Scalars['String']>>;
 };
 
+export enum AnalyticsProviderType {
+  Google = 'GOOGLE',
+}
+
 export type Article = HasOptionalPaywall &
   HasOptionalPeerLc & {
     __typename?: 'Article';
@@ -1838,6 +1842,8 @@ export type Mutation = {
   unpublishPage: Page;
   /** Updates an existing AI provider setting. */
   updateAISetting: SettingAiProvider;
+  /** Updates an existing analytics provider setting. */
+  updateAnalyticsProviderSetting: SettingAnalyticsProvider;
   /** Updates an article. */
   updateArticle: Article;
   /** Updates an existing author. */
@@ -1902,7 +1908,7 @@ export type Mutation = {
   /** Updates an existing tag. */
   updateTag: Tag;
   /** Updates an existing tracking pixel setting. */
-  updateTrackingPixelSetting: SettingTrackingPixel;
+  updateTrackingPixelSetting: SettingTrackingPixelProvider;
   /** Updates an existing user. */
   updateUser: SensitiveDataUser;
   /** Updates a comment you made. */
@@ -2495,6 +2501,14 @@ export type MutationUpdateAiSettingArgs = {
   name?: InputMaybe<Scalars['String']>;
   systemPrompt?: InputMaybe<Scalars['String']>;
   webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+};
+
+export type MutationUpdateAnalyticsProviderSettingArgs = {
+  articlePrefix?: InputMaybe<Scalars['String']>;
+  credentials?: InputMaybe<SettingAnalyticsCredentialsInput>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  property?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationUpdateArticleArgs = {
@@ -3715,6 +3729,10 @@ export type Query = {
   aiSetting: SettingAiProvider;
   /** Returns all AI provider settings. */
   aiSettings: Array<SettingAiProvider>;
+  /** Returns a single analytics provider setting by id. */
+  analyticsProviderSetting: SettingAnalyticsProvider;
+  /** Returns all analytics provider settings. */
+  analyticsProviderSettings: Array<SettingAnalyticsProvider>;
   /** Returns an article by id or slug. */
   article: Article;
   /** Returns a paginated list of articles based on the filters given. */
@@ -3934,9 +3952,9 @@ export type Query = {
   /** Returns a list of all tokens. */
   tokens: Array<Token>;
   /** Returns a single tracking pixel setting by id. */
-  trackingPixelSetting: SettingTrackingPixel;
+  trackingPixelSetting: SettingTrackingPixelProvider;
   /** Returns all tracking pixel settings. */
-  trackingPixelSettings: Array<SettingTrackingPixel>;
+  trackingPixelSettings: Array<SettingTrackingPixelProvider>;
   upgradeUserSubscriptionInfo: UpgradeSubscription;
   /** Returns a user by id. */
   user: SensitiveDataUser;
@@ -3972,6 +3990,14 @@ export type QueryAiSettingArgs = {
 
 export type QueryAiSettingsArgs = {
   filter?: InputMaybe<SettingAiProviderFilter>;
+};
+
+export type QueryAnalyticsProviderSettingArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryAnalyticsProviderSettingsArgs = {
+  filter?: InputMaybe<SettingAnalyticsProviderFilter>;
 };
 
 export type QueryArticleArgs = {
@@ -4509,6 +4535,33 @@ export type SettingAiProviderFilter = {
   type?: InputMaybe<AiProviderType>;
 };
 
+export type SettingAnalyticsCredentialsInput = {
+  client_email: Scalars['String'];
+  client_id: Scalars['String'];
+  private_key: Scalars['String'];
+  private_key_id: Scalars['String'];
+  project_id: Scalars['String'];
+  type: Scalars['String'];
+};
+
+export type SettingAnalyticsProvider = SettingProvider & {
+  __typename?: 'SettingAnalyticsProvider';
+  articlePrefix?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  lastLoadedAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
+  property?: Maybe<Scalars['String']>;
+  type: AnalyticsProviderType;
+};
+
+export type SettingAnalyticsProviderFilter = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<AnalyticsProviderType>;
+};
+
 export type SettingChallengeProvider = SettingProvider & {
   __typename?: 'SettingChallengeProvider';
   createdAt: Scalars['DateTime'];
@@ -4626,8 +4679,14 @@ export type SettingRestriction = {
   minValue?: Maybe<Scalars['Int']>;
 };
 
-export type SettingTrackingPixel = SettingProvider & {
-  __typename?: 'SettingTrackingPixel';
+export type SettingTrackingPixelFilter = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<TrackingPixelProviderType>;
+};
+
+export type SettingTrackingPixelProvider = SettingProvider & {
+  __typename?: 'SettingTrackingPixelProvider';
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
   lastLoadedAt: Scalars['DateTime'];
@@ -4639,12 +4698,6 @@ export type SettingTrackingPixel = SettingProvider & {
   prolitteris_usePublisherInternalKey?: Maybe<Scalars['Boolean']>;
   prolitteris_username?: Maybe<Scalars['String']>;
   type: TrackingPixelProviderType;
-};
-
-export type SettingTrackingPixelFilter = {
-  id?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<TrackingPixelProviderType>;
 };
 
 export type SingleEventFilter = {

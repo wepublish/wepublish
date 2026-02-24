@@ -1777,7 +1777,7 @@ type Mutation {
   updateAISetting(apiKey: String, id: String, name: String, systemPrompt: String, webhookEndpointSecret: String): SettingAIProvider!
 
   """Updates an existing analytics provider setting."""
-  updateAnalyticsProviderSetting(articlePrefix: String, credentials: String, id: String, name: String, property: String): SettingAnalyticsProvider!
+  updateAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String, name: String, property: String): SettingAnalyticsProvider!
 
   """Updates an article."""
   updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
@@ -3065,6 +3065,15 @@ input SettingAIProviderFilter {
   id: String
   name: String
   type: AIProviderType
+}
+
+input SettingAnalyticsCredentialsInput {
+  client_email: String!
+  client_id: String!
+  private_key: String!
+  private_key_id: String!
+  project_id: String!
+  type: String!
 }
 
 type SettingAnalyticsProvider implements SettingProvider {

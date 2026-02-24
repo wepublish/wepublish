@@ -1807,6 +1807,16 @@
         "prolitterisPublisherInternalKeyDomain": "Publisher Internal Key Domain",
         "prolitterisUsePublisherInternalKey": "Publisher Internal Key verwenden",
         "prolitterisUsername": "Benutzername"
+      },
+      "analyticsSettings": {
+        "analytics": "Analytik",
+        "invalidFile": "Die Google-Analytics Anmeldedatei ist ungültig",
+        "credentialsReadyToBeSaved": "Die Anmeldedaten sind bereit zum Speichern!",
+        "dropCredentialsFile": "Anmeldedatei hier ablegen!",
+        "dragCredentialsFileHere": "Google-Analytics Anmeldedatei hierher ziehen und ablegen",
+        "articlePrefix": "We.Publish Artikel-URL-Präfix (normalerweise /a/)",
+        "property": "Google-Analytics Property-ID",
+        "credentials": "Anmeldedatei"
       }
     }
   }

@@ -6,12 +6,12 @@ import {
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import vercelLogo from '../../../assets/integrations/vercel.svg';
+import vercelLogo from './assets/vercel.svg';
 import { GenericIntegrationList } from './genericIntegrationList';
 
 const aiSettingsSchema = z.object({
-  apiKey: z.string().optional(),
-  systemPrompt: z.string().optional(),
+  apiKey: z.string().nullish().or(z.literal('')),
+  systemPrompt: z.string().nullish().or(z.literal('')),
 });
 
 type IntegrationFormValues = z.infer<typeof aiSettingsSchema>;
@@ -25,18 +25,6 @@ export function AIIntegrationForm() {
       mutation={UpdateSettingsIntegrationsAiDocument}
       dataKey="aiSettings"
       schema={aiSettingsSchema}
-      mapSettingToInitialValues={setting => ({
-        id: setting.id,
-        // apiKey is sensitive and not returned, assume empty/undefined
-        apiKey: undefined,
-        // systemPrompt is in the GQL type
-        systemPrompt: setting.systemPrompt || '',
-      })}
-      mapFormValuesToVariables={(formData, setting) => ({
-        updateAiSettingId: setting.id,
-        apiKey: formData.apiKey,
-        systemPrompt: formData.systemPrompt,
-      })}
       getLogo={() => vercelLogo}
       fields={[
         {
@@ -49,7 +37,7 @@ export function AIIntegrationForm() {
           name: 'systemPrompt',
           label: t('integrations.aiSettings.systemPrompt'),
           type: 'textarea',
-          textareaRows: 5,
+          rows: 5,
         },
       ]}
     />

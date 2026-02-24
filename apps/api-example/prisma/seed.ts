@@ -1050,14 +1050,13 @@ async function seedSettings(prisma: PrismaClient) {
     },
   });
 
-  const v0 = prisma.settingAIProvider.create({
-    data: {
-      id: 'v0',
-      type: AIProviderType.V0,
-      name: 'V0',
-      apiKey:
-        'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
-      systemPrompt: `DO's:
+  const v0Data = {
+    id: 'v0',
+    type: AIProviderType.V0,
+    name: 'V0',
+    apiKey:
+      'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
+    systemPrompt: `DO's:
   1. Use plain HTML and CSS
   2. Use <style> tags
   3. Center horizontally
@@ -1076,7 +1075,13 @@ async function seedSettings(prisma: PrismaClient) {
   5. Do not set a min-height of 100vh or similar on the container
   6. Do not generate or reference any external images, inline if possible
   7. Do not return anything but HTML, does not matter what is given in the prompt`,
+  };
+  const v0 = prisma.settingAIProvider.upsert({
+    where: {
+      id: 'v0',
     },
+    update: v0Data,
+    create: v0Data,
   });
 
   await Promise.all([

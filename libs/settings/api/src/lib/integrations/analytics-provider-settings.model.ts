@@ -22,14 +22,14 @@ export class SettingAnalyticsProvider extends SettingProvider {
   type!: AnalyticsProviderType;
 
   /** hide sensitive field
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   credentials?: string;
   **/
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   property?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   articlePrefix?: string;
 }
 
@@ -43,20 +43,41 @@ export class SettingAnalyticsProviderFilter extends PartialType(
   InputType
 ) {}
 
+@InputType()
+export class SettingAnalyticsCredentialsInput {
+  @Field()
+  type!: string;
+
+  @Field()
+  project_id!: string;
+
+  @Field()
+  private_key_id!: string;
+
+  @Field()
+  private_key!: string;
+
+  @Field()
+  client_email!: string;
+
+  @Field()
+  client_id!: string;
+}
+
 @ArgsType()
 export class CreateSettingAnalyticsProviderInput extends OmitType(
   SettingAnalyticsProvider,
   ['id', 'type', 'createdAt', 'lastLoadedAt', 'modifiedAt'] as const,
   ArgsType
 ) {
-  @Field(type => String)
+  @Field()
   id!: string;
 
   @Field(type => AnalyticsProviderType)
   type!: AnalyticsProviderType;
 
-  @Field(type => String, { nullable: true })
-  credentials?: string;
+  @Field(type => SettingAnalyticsCredentialsInput, { nullable: true })
+  credentials?: SettingAnalyticsCredentialsInput;
 }
 
 @ArgsType()

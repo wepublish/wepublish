@@ -7,28 +7,28 @@ import {
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import mailChimpLogo from '../../../assets/integrations/mailchimp.avif';
-import mailgunLogo from '../../../assets/integrations/mailgun.svg';
-import slackLogo from '../../../assets/integrations/slack.png';
+import mailChimpLogo from './assets/mailchimp.avif';
+import mailgunLogo from './assets/mailgun.svg';
+import slackLogo from './assets/slack.png';
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
 
 const mailSettingsSchema = z.object({
-  name: z.string().optional(),
+  name: z.string().nullish().or(z.literal('')),
   type: z.nativeEnum(MailProviderType).optional(),
 
-  fromAddress: z.string().optional(),
-  replyToAddress: z.string().optional(),
+  fromAddress: z.string().nullish().or(z.literal('')),
+  replyToAddress: z.string().nullish().or(z.literal('')),
 
-  apiKey: z.string().optional(),
-  webhookEndpointSecret: z.string().optional(),
+  apiKey: z.string().nullish().or(z.literal('')),
+  webhookEndpointSecret: z.string().nullish().or(z.literal('')),
 
-  mailchimpBaseUrl: z.string().optional(),
+  mailchimp_baseURL: z.string().nullish().or(z.literal('')),
 
-  mailgunBaseDomain: z.string().optional(),
-  mailgunMailDomain: z.string().optional(),
+  mailgun_baseDomain: z.string().nullish().or(z.literal('')),
+  mailgun_mailDomain: z.string().nullish().or(z.literal('')),
 
-  slackWebhookUrl: z.string().optional(),
+  slack_webhookURL: z.string().nullish().or(z.literal('')),
 });
 
 type IntegrationFormValues = z.infer<typeof mailSettingsSchema>;
@@ -42,31 +42,6 @@ export function MailIntegrationForm() {
       mutation={UpdateMailProviderSettingDocument}
       dataKey="mailProviderSettings"
       schema={mailSettingsSchema}
-      mapSettingToInitialValues={setting => ({
-        id: setting.id,
-        name: setting.name || undefined,
-        type: setting.type,
-        fromAddress: setting.fromAddress || undefined,
-        replyToAddress: setting.replyToAddress || undefined,
-        apiKey: undefined,
-        webhookEndpointSecret: undefined,
-        mailchimpBaseUrl: setting.mailchimp_baseURL || undefined,
-        mailgunBaseDomain: setting.mailgun_baseDomain || undefined,
-        mailgunMailDomain: setting.mailgun_mailDomain || undefined,
-        slackWebhookUrl: setting.slack_webhookURL || undefined,
-      })}
-      mapFormValuesToVariables={(formData, setting) => ({
-        updateMailProviderSettingId: setting.id,
-        name: formData.name,
-        fromAddress: formData.fromAddress,
-        replyToAddress: formData.replyToAddress,
-        apiKey: formData.apiKey,
-        webhookEndpointSecret: formData.webhookEndpointSecret,
-        mailchimpBaseUrl: formData.mailchimpBaseUrl,
-        mailgunBaseDomain: formData.mailgunBaseDomain,
-        mailgunMailDomain: formData.mailgunMailDomain,
-        slackWebhookUrl: formData.slackWebhookUrl,
-      })}
       getLogo={setting => {
         switch (setting.type) {
           case MailProviderType.Mailchimp:
@@ -92,14 +67,17 @@ export function MailIntegrationForm() {
             disabled: true,
           },
           {
+            type: 'text',
             name: 'name',
             label: t('name'),
           },
           {
+            type: 'text',
             name: 'fromAddress',
             label: t('integrations.mailSettings.fromAddress'),
           },
           {
+            type: 'text',
             name: 'replyToAddress',
             label: t('integrations.mailSettings.replyToAddress'),
           },
@@ -119,7 +97,8 @@ export function MailIntegrationForm() {
             autoComplete: 'one-time-code',
           });
           commonFields.push({
-            name: 'mailchimpBaseUrl',
+            type: 'text',
+            name: 'mailchimp_baseURL',
             label: t('integrations.mailSettings.mailchimpBaseUrl'),
           });
         }
@@ -138,18 +117,21 @@ export function MailIntegrationForm() {
             autoComplete: 'one-time-code',
           });
           commonFields.push({
-            name: 'mailgunBaseDomain',
+            type: 'text',
+            name: 'mailgun_baseDomain',
             label: t('integrations.mailSettings.mailgunBaseDomain'),
           });
           commonFields.push({
-            name: 'mailgunMailDomain',
+            type: 'text',
+            name: 'mailgun_mailDomain',
             label: t('integrations.mailSettings.mailgunMailDomain'),
           });
         }
 
         if (setting.type === MailProviderType.Slack) {
           commonFields.push({
-            name: 'slackWebhookUrl',
+            type: 'text',
+            name: 'slack_webhookURL',
             label: t('integrations.mailSettings.slackWebhookUrl'),
           });
         }

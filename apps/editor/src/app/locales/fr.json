@@ -1694,6 +1694,16 @@
         "prolitterisPublisherInternalKeyDomain": "Domaine de clé interne de l'éditeur",
         "prolitterisUsePublisherInternalKey": "Utiliser la clé interne de l'éditeur",
         "prolitterisUsername": "Nom d'utilisateur"
+      },
+      "analyticsSettings": {
+        "analytics": "Analytique",
+        "invalidFile": "Le fichier d’identifiants Google Analytics est invalide",
+        "credentialsReadyToBeSaved": "Les identifiants sont prêts à être enregistrés !",
+        "dropCredentialsFile": "Déposez le fichier d’identifiants ici !",
+        "dragCredentialsFileHere": "Glissez-déposez le fichier d’identifiants Google Analytics ici",
+        "articlePrefix": "Préfixe d’URL des articles We.Publish (généralement /a/)",
+        "property": "ID de la propriété Google Analytics",
+        "credentials": "Fichier d’identifiants"
       }
     }
   }

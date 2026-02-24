@@ -7,9 +7,10 @@ import { HotAndTrendingDataSource } from '@wepublish/article/api';
 import { getMaxTake } from '@wepublish/utils/api';
 
 export const GA_CLIENT_OPTIONS = Symbol('GA_CLIENT_OPTIONS');
+
 export type GoogleAnalyticsConfig = {
   credentials?: JWTInput;
-  property?: string;
+  property?: string | null;
   articlePrefix: string;
 };
 

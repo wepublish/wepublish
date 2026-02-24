@@ -4,12 +4,6 @@ import { SecretCrypto } from '@wepublish/settings/api';
 import { JWTInput } from 'google-auth-library';
 import { GoogleAnalyticsConfig } from './google-analytics.service';
 
-type GoogleAnalyticsSettings = {
-  credentials: JWTInput | null;
-  property: string | null;
-  articlePrefix: string;
-};
-
 export class GoogleAnalyticsDbConfig {
   private readonly ttl = 21600; // 6h
   private readonly crypto = new SecretCrypto();
@@ -42,7 +36,7 @@ export class GoogleAnalyticsDbConfig {
     }
   }
 
-  private async loadGoogleAnalytics(): Promise<GoogleAnalyticsSettings> {
+  private async loadGoogleAnalytics(): Promise<GoogleAnalyticsConfig> {
     await this.prisma.settingAnalyticsProvider.update({
       where: { id: this.id },
       data: { lastLoadedAt: new Date() },
@@ -53,7 +47,8 @@ export class GoogleAnalyticsDbConfig {
       select: { credentials: true, property: true, articlePrefix: true },
     });
 
-    let decryptedCredentials: JWTInput | null = null;
+    let decryptedCredentials: JWTInput | undefined;
+
     if (config?.credentials) {
       try {
         const decrypted = this.crypto.decrypt(config.credentials);
@@ -68,13 +63,13 @@ export class GoogleAnalyticsDbConfig {
 
     return {
       credentials: decryptedCredentials,
-      property: config?.property ?? null,
-      articlePrefix: config?.articlePrefix ?? '',
+      property: config?.property,
+      articlePrefix: config?.articlePrefix ?? '/a',
     };
   }
 
-  async getGoogleAnalytics(): Promise<GoogleAnalyticsSettings> {
-    return this.kv.getOrLoadNs<GoogleAnalyticsSettings>(
+  async getGoogleAnalytics(): Promise<GoogleAnalyticsConfig> {
+    return this.kv.getOrLoadNs<GoogleAnalyticsConfig>(
       'settings:analyticsprovider',
       `${this.id}`,
       () => this.loadGoogleAnalytics(),
@@ -84,9 +79,10 @@ export class GoogleAnalyticsDbConfig {
 
   async getConfig(): Promise<GoogleAnalyticsConfig> {
     const settings = await this.getGoogleAnalytics();
+
     return {
       credentials: settings.credentials ?? undefined,
-      property: settings.property ?? undefined,
+      property: settings.property,
       articlePrefix: settings.articlePrefix,
     };
   }
