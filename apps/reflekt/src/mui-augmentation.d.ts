@@ -72,6 +72,13 @@ declare module '@mui/material/Typography' {
   }
 }
 
+declare module '@mui/material/Button' {
+  interface ButtonPropsVariantOverrides {
+    'cta-yellow': true;
+    'cta-black': true;
+  }
+}
+
 declare module '@mui/material/Link' {
   interface LinkPropsVariantOverrides {
     categoryLink: true;

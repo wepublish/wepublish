@@ -140,6 +140,33 @@ const theme = createTheme(WePTheme, {
     },
   },
   components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 9999,
+          textTransform: 'uppercase',
+          fontWeight: 700,
+        },
+      },
+      variants: [
+        {
+          props: { variant: 'cta-yellow' } as any,
+          style: {
+            background: '#f5ff64',
+            color: '#000000',
+            '&:hover': { background: '#e8f250' },
+          },
+        },
+        {
+          props: { variant: 'cta-black' } as any,
+          style: {
+            background: '#000000',
+            color: '#ffffff',
+            '&:hover': { background: '#1a1a1a' },
+          },
+        },
+      ],
+    },
     MuiCssBaseline: {
       styleOverrides: `
         @font-face {

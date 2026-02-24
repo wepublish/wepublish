@@ -35,8 +35,10 @@ import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import { ReflektBlockRenderer } from '../src/components/block-renderer/reflekt-block-renderer';
 import { RefFooter } from '../src/components/reflekt-footer';
 import { ReflektNavbar } from '../src/components/reflekt-navbar';
+import { ReflektPaywall } from '../src/components/reflekt-paywall';
 import theme from '../src/theme';
 
 setDefaultOptions({
@@ -96,9 +98,11 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Script={Script}
           Footer={RefFooter}
           Navbar={ReflektNavbar}
+          Paywall={ReflektPaywall}
           elements={{ Link: NextWepublishLink }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
+          blocks={{ Renderer: ReflektBlockRenderer }}
         >
           <ThemeProvider theme={theme}>
             <CssBaseline />

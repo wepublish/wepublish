@@ -778,6 +778,18 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                   &nbsp;Rechnung
                 </Button>
               )}
+
+              {!hasRunningSubscription && subscribeBtn && (
+                <Button
+                  variant="cta-black"
+                  LinkComponent={Link}
+                  size="medium"
+                  sx={buttonStyles}
+                  {...subscribeBtn}
+                >
+                  Unterstützen
+                </Button>
+              )}
             </NavbarActions>
           </NavbarInnerWrapper>
 

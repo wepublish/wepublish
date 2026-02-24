@@ -13,7 +13,39 @@ import { useIntersectionObserver } from 'usehooks-ts';
 
 export const FooterWrapper = styled('footer')`
   display: grid;
-  grid-template-rows: repeat(2, min-content);
+  grid-template-rows: repeat(3, min-content);
+`;
+
+export const FooterLogoStrip = styled('div')`
+  background-color: #0800ff;
+  grid-row: 2 / 3;
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: ${({ theme }) => theme.spacing(3)};
+  padding: ${({ theme }) => theme.spacing(3)} ${({ theme }) => theme.spacing(3)};
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    gap: ${({ theme }) => theme.spacing(5)};
+    padding: ${({ theme }) => theme.spacing(3)}
+      ${({ theme }) => theme.spacing(6)};
+    justify-content: space-between;
+  }
+`;
+
+const PartnerLogo = styled('img')`
+  height: 32px;
+  width: auto;
+  opacity: 0.9;
+  filter: brightness(0) invert(1);
+  transition: opacity 200ms ease;
+
+  &:hover {
+    opacity: 1;
+  }
 `;
 
 export const FooterMain = styled('div')`
@@ -75,6 +107,16 @@ export function Footer({
     }, [] as FullNavigationFragment[]);
   });
 
+  const partnerLogos = [
+    { src: '/logos/eimc.svg', alt: 'EIMC' },
+    { src: '/logos/reporters-shield.svg', alt: 'Reporters Shield' },
+    { src: '/logos/gijn.svg', alt: 'Global Investigative Journalism Network' },
+    { src: '/logos/new-sector.svg', alt: 'The New Sector' },
+    { src: '/logos/medien-mit-zukunft.svg', alt: 'Verband Medien mit Zukunft' },
+    { src: '/logos/impressum.svg', alt: 'Impressum' },
+    { src: '/logos/wepublish.svg', alt: 'Powered by WePublish' },
+  ];
+
   return (
     <FooterWrapper
       className={className}
@@ -85,6 +127,16 @@ export function Footer({
         categories={categories}
         children={children} // eslint-disable-line react/no-children-prop
       />
+
+      <FooterLogoStrip>
+        {partnerLogos.map(({ src, alt }) => (
+          <PartnerLogo
+            key={src}
+            src={src}
+            alt={alt}
+          />
+        ))}
+      </FooterLogoStrip>
 
       {isIntersecting && hideBannerOnIntersecting && forceHideBanner}
     </FooterWrapper>
