@@ -65,7 +65,7 @@ export const NewsBlockStyle = ({
             ))}
           </TeaserList>
           <Link
-            href={'/a/tag/news'}
+            href={'/a/tag/Kurznews'}
             style={{ textDecoration: 'none' }}
           >
             <b>weitere Kurz-News &rarr;</b>
