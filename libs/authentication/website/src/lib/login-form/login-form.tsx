@@ -30,7 +30,7 @@ export const LoginFormButton = styled(Button)`
 const withEmailFormSchema = z.object({
   email: z.string().email().min(1),
   requirePassword: z.literal(false),
-  password: z.string().optional().or(z.literal('')),
+  password: z.string().optional(),
 });
 
 const withCredentialsFormSchema = z.object({
