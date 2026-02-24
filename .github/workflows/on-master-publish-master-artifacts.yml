@@ -31,6 +31,7 @@ jobs:
         id: set-matrix
         run: deployment/read_deployment_config.sh '.website.staging.deployment' true
 
+      # Can be removed after migration from media -> cloud domain
       - name: Add TDL to matrix
         id: set-matrix-with-tdl
         run: |
@@ -38,7 +39,7 @@ jobs:
           INCLUDE="["
           FIRST=true
           for TARGET in $(echo "$MATRIX" | jq -r '.target[]'); do
-            TDL=$(jq -r '.tdl.staging // "wepublish.dev"' "apps/${TARGET}/deployment.config.json")
+            TDL=$(jq -r '.tdl.staging // "wepublish.works"' "apps/${TARGET}/deployment.config.json")
             if [ "$FIRST" = true ]; then FIRST=false; else INCLUDE="${INCLUDE},"; fi
             INCLUDE="${INCLUDE}{\"target\":\"${TARGET}\",\"tdl\":\"${TDL}\"}"
           done
