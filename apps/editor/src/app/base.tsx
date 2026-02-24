@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import {
   MdAccountCircle,
   MdApproval,
+  MdAutoFixHigh,
   MdAutorenew,
   MdBadge,
   MdBookOnline,
@@ -956,6 +957,19 @@ export function Base({ children }: BaseProps) {
                         icon={<MdExtension />}
                       >
                         {t('navbar.integrations')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={['CAN_GET_AI_SETTINGS']}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/settings/website"
+                        active={path.startsWith('settings/website')}
+                        icon={<MdAutoFixHigh />}
+                      >
+                        {t('websiteSettings.navbar')}
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>

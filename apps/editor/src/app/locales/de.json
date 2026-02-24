@@ -1818,6 +1818,29 @@
         "property": "Google-Analytics Property-ID",
         "credentials": "Anmeldedatei"
       }
+    },
+    "websiteSettings": {
+      "websiteSettings": {
+        "navbar": "Website Einstellungen",
+        "list": {
+          "title": "Website Einstellungen"
+        },
+        "analytics": {
+          "title": "Analytics",
+          "google": {
+            "title": "Google",
+            "ga": "<url>Google Analytics</url> ist ein Webanalyse-Tool von Google, das erfasst, wie Nutzer deine Website verwenden.",
+            "gaLocator": "Du findest es im <url>Admin-Dashboard</url> unter Datenstreams",
+            "gtm": "<url>Google Tag Manager</url> ist ein Tool von Google, mit dem du Tracking- und Marketing-Skripte auf deiner Website verwalten kannst, ohne jedes Mal den Code zu ändern.",
+            "gtmLocator": "Du findest es im <url>Admin-Dashboard</url> unter Google-Tag"
+          },
+          "plausible": {
+            "title": "Plausible",
+            "pa": "<url>Plausible Analytics</url> ist eine datenschutzfreundliche Alternative zu Google Analytics.",
+            "paLocator": "Du findest es in den <url>Website-Einstellungen</url> im Admin-Dashboard"
+          }
+        }
+      }
     }
   }
 }
