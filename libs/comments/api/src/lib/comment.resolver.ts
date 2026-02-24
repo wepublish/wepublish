@@ -25,8 +25,8 @@ import { CommentInput, CommentUpdateInput } from './comment.input';
 import { URLAdapter } from '@wepublish/nest-modules';
 import { ArticleDataloaderService } from '@wepublish/article/api';
 import { PageDataloaderService } from '@wepublish/page/api';
-import { CommentRating } from './rating-system/rating-system.model';
 import { forwardRef, Inject } from '@nestjs/common';
+import { CommentRating } from './rating-system/rating-system.model';
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -112,12 +112,26 @@ export class CommentResolver {
 
   @ResolveField(() => [CommentRating])
   @Public()
+  async userRatings(
+    @Parent() comment: Comment,
+    @CurrentUser() session?: UserSession | null
+  ) {
+    const userId = session?.user?.id;
+
+    if (!userId) {
+      return [];
+    }
+
+    return this.ratingSystemService.getUserCommentRatings(comment.id, userId);
+  }
+
+  @ResolveField(() => [CommentRating])
+  @Public()
   async calculatedRatings(@Parent() comment: Comment) {
     const [answers, ratings] = await Promise.all([
       this.ratingSystemService.getRatingSystemAnswers(),
       this.ratingSystemService.getCommentRatings(comment.id),
     ]);
-
     return this.commentService.getCalculatedRatingsForComment(answers, ratings);
   }
 

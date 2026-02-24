@@ -3,6 +3,7 @@ import {
   Currency,
   PaymentMethod,
   PaymentPeriodicity,
+  ProductType,
   UpgradeMutationVariables,
 } from '@wepublish/website/api';
 import {
@@ -18,7 +19,7 @@ import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
 
 import { ApolloError } from '@apollo/client';
 import { ApiAlert } from '@wepublish/errors/website';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import {
   SubscribeAmount,
   SubscribeAmountText,
@@ -41,47 +42,61 @@ const upgradeSchema = subscribeSchema.pick({
   payTransactionFee: true,
 });
 
-export const getUpgradeText = (
-  autoRenew: boolean,
-  extendable: boolean,
-  paymentPeriodicity: PaymentPeriodicity,
-  monthlyAmount: number,
-  discount: number,
-  currency: Currency,
-  locale: string
-) => {
-  if (!monthlyAmount) {
-    return 'Kostenlos';
-  }
+export const useUpgradeText = ({
+  productType,
+  discount,
+  paymentPeriodicity,
+  monthlyAmount,
+  memberPlan,
+  currency,
+  locale,
+}: {
+  discount: number;
+  productType: ProductType;
+  paymentPeriodicity: PaymentPeriodicity;
+  monthlyAmount: number;
+  memberPlan: string;
+  currency: Currency;
+  locale: string;
+}) => {
+  const { t } = useTranslation();
 
-  if (autoRenew && extendable) {
-    return `Für ${formatCurrency(
-      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity) -
-        discount / 100,
-      currency,
-      locale
-    )}`;
-  }
+  return useMemo(() => {
+    const variables = {
+      productType,
+      formattedAmount: formatCurrency(
+        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity) -
+          discount / 100,
+        currency,
+        locale
+      ),
+      monthlyAmount,
+      memberPlan,
+    };
 
-  if (extendable) {
-    return `Für ${formatCurrency(
-      (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity) -
-        discount / 100,
-      currency,
-      locale
-    )}`;
-  }
-
-  return `Für ${formatCurrency(
-    (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity) -
-      discount / 100,
+    return t(`subscribe.upgrade.button`, variables);
+  }, [
+    productType,
+    monthlyAmount,
+    paymentPeriodicity,
+    discount,
     currency,
-    locale
-  )}`;
+    locale,
+    memberPlan,
+    t,
+  ]);
 };
 
 export const UpgradeContinuation = styled(SubscribeCancelable)`
   margin-bottom: ${({ theme }) => theme.spacing(1)};
+`;
+
+export const UpgradeInformation = styled('div')`
+  padding: ${({ theme }) => theme.spacing(2)};
+  background-color: ${({ theme }) => theme.palette.grey['100']};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  max-width: 65ch;
+  justify-self: center;
 `;
 
 export const Upgrade = ({
@@ -163,35 +178,37 @@ export const Upgrade = ({
   );
 
   const paymentText = usePaymentText({
-    autoRenew: subscriptionToUpgrade.autoRenew,
+    autoRenew: true,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     extendable: selectedMemberPlan?.extendable ?? true,
     paymentPeriodicity: subscriptionToUpgrade.paymentPeriodicity,
     productType: subscriptionToUpgrade.memberPlan.productType,
+    memberPlan: selectedMemberPlan?.name ?? '',
     siteTitle,
     monthlyAmount,
     locale,
   });
 
-  const upgradeText = getUpgradeText(
-    subscriptionToUpgrade.autoRenew,
-    selectedMemberPlan?.extendable ?? true,
-    subscriptionToUpgrade.paymentPeriodicity,
-    monthlyAmount,
-    upgradeInfo.data?.upgradeSubscriptionInfo.discountAmount ?? 0,
-    selectedMemberPlan?.currency ?? Currency.Chf,
-    locale
-  );
-
   const supportText = usePaymentText({
     type: 'support',
     autoRenew: true,
     extendable: selectedMemberPlan?.extendable ?? true,
+    memberPlan: selectedMemberPlan?.name ?? '',
     paymentPeriodicity: PaymentPeriodicity.Monthly,
     monthlyAmount: watch('monthlyAmount'),
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     productType: subscriptionToUpgrade.memberPlan.productType,
     siteTitle,
+    locale,
+  });
+
+  const upgradeText = useUpgradeText({
+    memberPlan: selectedMemberPlan?.name ?? '',
+    productType: subscriptionToUpgrade.memberPlan.productType,
+    paymentPeriodicity: subscriptionToUpgrade.paymentPeriodicity,
+    monthlyAmount,
+    discount: upgradeInfo.data?.upgradeSubscriptionInfo.discountAmount ?? 0,
+    currency: selectedMemberPlan?.currency ?? Currency.Chf,
     locale,
   });
 
@@ -204,7 +221,7 @@ export const Upgrade = ({
     };
 
     return callAction(onUpgrade)(upgradeData);
-  });
+  }, console.warn);
 
   useEffect(() => {
     if (selectedMemberPlan) {
@@ -241,19 +258,28 @@ export const Upgrade = ({
       onSubmit={onSubmit}
       noValidate
     >
-      <Paragraph gutterBottom={false}>
-        Mach jetzt ein Upgrade von deinem{' '}
-        {subscriptionToUpgrade.memberPlan.name} auf das{' '}
-        {selectedMemberPlan?.name}. Dein Restguthaben von{' '}
-        {formatCurrency(
-          (upgradeInfo.data?.upgradeSubscriptionInfo.discountAmount ?? 0) / 100,
-          selectedMemberPlan?.currency ?? Currency.Chf,
-          locale
-        )}{' '}
-        Franken bei deinem {subscriptionToUpgrade.memberPlan.name} wird Dir
-        dabei angerechnet. Weiter unten siehst du Deinen noch zu zahlenden
-        Upgrade-Preis für den Wechsel zum {selectedMemberPlan?.name}.
-      </Paragraph>
+      <UpgradeInformation>
+        <H5 gutterBottom>{t('subscribe.upgrade.infoTitle')}</H5>
+
+        <Paragraph gutterBottom={false}>
+          <Trans
+            i18nKey="subscribe.upgrade.info"
+            values={{
+              oldMemberPlan: subscriptionToUpgrade.memberPlan.name,
+              newMemberPlan: selectedMemberPlan?.name,
+              discount: formatCurrency(
+                (upgradeInfo.data?.upgradeSubscriptionInfo.discountAmount ??
+                  0) / 100,
+                selectedMemberPlan?.currency ?? Currency.Chf,
+                locale
+              ),
+            }}
+            components={{
+              bold: <strong />,
+            }}
+          />
+        </Paragraph>
+      </UpgradeInformation>
 
       <SubscribeSection area="memberPlans">
         {availableMemberplans.length > 1 && <H5 component="h2">Abo wählen</H5>}
@@ -277,6 +303,7 @@ export const Upgrade = ({
           />
         )}
       </SubscribeSection>
+
       <SubscribeSection area="monthlyAmount">
         {!shouldHidePaymentAmount && (
           <Controller
@@ -308,6 +335,7 @@ export const Upgrade = ({
           />
         )}
       </SubscribeSection>
+
       <SubscribeSection area="paymentPeriodicity">
         {allPaymentMethods.length > 1 && (
           <H5 component="h2">Zahlungsmethode wählen</H5>
@@ -331,17 +359,20 @@ export const Upgrade = ({
           />
         </SubscribePayment>
       </SubscribeSection>
+
       {error && (
         <ApiAlert
           error={error as ApolloError}
           severity="error"
         />
       )}
+
       {!!watch('monthlyAmount') && (
         <SubscribeSection area="transactionFee">
           <Controller
             name={'payTransactionFee'}
             control={control}
+            defaultValue={false}
             render={({ field: feeField }) => (
               <TransactionFee
                 text={transactionFeeText}
@@ -351,18 +382,19 @@ export const Upgrade = ({
           />
         </SubscribeSection>
       )}
+
       <SubscribeNarrowSection area="submit">
         <SubscribeButton
           size={'large'}
           disabled={loading}
           type="submit"
         >
-          {upgradeText} upgraden
+          {upgradeText}
         </SubscribeButton>
 
         <UpgradeContinuation>Danach {paymentText}</UpgradeContinuation>
 
-        {subscriptionToUpgrade.autoRenew && termsOfServiceUrl ?
+        {termsOfServiceUrl ?
           <Link
             underline={'hover'}
             href={termsOfServiceUrl}
@@ -371,11 +403,9 @@ export const Upgrade = ({
               {t('subscribe.cancellable')}
             </SubscribeCancelable>
           </Link>
-        : subscriptionToUpgrade.autoRenew && (
-            <SubscribeCancelable>
-              {t('subscribe.cancellable')}
-            </SubscribeCancelable>
-          )
+        : <SubscribeCancelable>
+            {t('subscribe.cancellable')}
+          </SubscribeCancelable>
         }
       </SubscribeNarrowSection>
     </SubscribeWrapper>

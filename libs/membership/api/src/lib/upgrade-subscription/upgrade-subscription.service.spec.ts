@@ -88,7 +88,7 @@ describe('UpgradeSubscriptionService', () => {
         currency: Currency.CHF,
         paymentPeriodicity: PaymentPeriodicity.yearly,
         extendable: true,
-        autoRenew: true,
+        autoRenew: false,
         periods: [
           {
             id: '1',
@@ -229,6 +229,17 @@ describe('UpgradeSubscriptionService', () => {
             id: '4',
             paymentPeriodicity: PaymentPeriodicity.yearly,
             amount: 600,
+            endsAt: new Date('2025-01-03'),
+            createdAt: new Date('2024-01-03'),
+            startsAt: new Date('2024-01-03'),
+            invoice: {
+              paidAt: new Date('2024-01-03'),
+            },
+          },
+          {
+            id: '5',
+            paymentPeriodicity: PaymentPeriodicity.yearly,
+            amount: 600,
             endsAt: new Date('2026-01-01'),
             createdAt: new Date('2025-01-01'),
             startsAt: new Date('2025-01-01'),
@@ -237,7 +248,7 @@ describe('UpgradeSubscriptionService', () => {
             },
           },
           {
-            id: '5',
+            id: '6',
             paymentPeriodicity: PaymentPeriodicity.yearly,
             amount: 700,
             endsAt: new Date('2027-01-01'),
@@ -267,8 +278,9 @@ describe('UpgradeSubscriptionService', () => {
       });
 
       // Should not be 700 as the period with 700 is unpaid
-      // Should not be 500 but 600 because the period with 500 got extended and paid already
-      expect(result).toBe(600);
+      // Should not be 500 as the period has ended
+      // Should not be 600 because 2 periods are still active and 5 comes from the nearly ended one
+      expect(result).toBe(605);
     });
   });
 
@@ -461,63 +473,6 @@ describe('UpgradeSubscriptionService', () => {
         });
       }).rejects.toMatchSnapshot();
     });
-
-    it.each([
-      {
-        forceAutoRenewal: true,
-        extendable: false,
-        autoRenew: true,
-      },
-      {
-        forceAutoRenewal: true,
-        extendable: true,
-        autoRenew: false,
-      },
-      {
-        forceAutoRenewal: true,
-        extendable: false,
-        autoRenew: false,
-      },
-    ])(
-      "should throw an error if the subscription's renewal is not allowed on the new memberplan %o",
-      async values => {
-        prismaMock.subscription.findUnique.mockResolvedValue({
-          userID: 'userId',
-          currency: Currency.CHF,
-          paymentPeriodicity: PaymentPeriodicity.yearly,
-          extendable: values.extendable,
-          autoRenew: values.autoRenew,
-        });
-        prismaMock.memberPlan.findUnique.mockResolvedValue({
-          currency: Currency.CHF,
-          availablePaymentMethods: [
-            {
-              paymentMethodIDs: ['paymentMethodId'],
-              paymentPeriodicities: [PaymentPeriodicity.yearly],
-              forceAutoRenewal: values.forceAutoRenewal,
-            },
-          ],
-        });
-
-        await expect(async () => {
-          await service.upgradeSubscription({
-            subscriptionId: 'subscriptionId',
-            memberPlanId: 'memberPlanId',
-            paymentMethodId: 'paymentMethodId',
-            userId: 'userId',
-            monthlyAmount: 100,
-          });
-        }).rejects.toMatchSnapshot();
-
-        await expect(async () => {
-          await service.getInfo({
-            subscriptionId: 'subscriptionId',
-            memberPlanId: 'memberPlanId',
-            userId: 'userId',
-          });
-        }).rejects.toMatchSnapshot();
-      }
-    );
 
     it('should throw an error if the subscription has no period', async () => {
       prismaMock.subscription.findUnique.mockResolvedValue({

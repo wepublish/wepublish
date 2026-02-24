@@ -19,8 +19,10 @@ export const isSubscriptionUpgradeable = (
   subscription: FullSubscriptionFragment
 ) =>
   subscription.extendable &&
-  subscription.autoRenew &&
   subscription.isActive &&
+  // isActive includes grace period which we want to ignore here
+  (!subscription.deactivation ||
+    new Date(subscription.deactivation.date) > new Date()) &&
   isMemberplanUpgradeable(subscription.memberPlan);
 
 export const useInformUserAboutUpgrade = () => {
@@ -36,7 +38,7 @@ export const useInformUserAboutUpgrade = () => {
     },
   });
 
-  const memberPlanToUpgrade = useMemo(() => {
+  const memberPlanToUpgradeTo = useMemo(() => {
     if (!userSubscriptions?.length) {
       return undefined;
     }
@@ -45,10 +47,10 @@ export const useInformUserAboutUpgrade = () => {
       mb =>
         mb.tags?.includes('navbar-upgrade') &&
         isMemberplanUpgradeableTo(mb) &&
-        !userSubscriptions?.some(
+        userSubscriptions?.some(
           allPass([
             isSubscriptionUpgradeable,
-            (sub: FullSubscriptionFragment) => sub.memberPlan.id === mb.id,
+            (sub: FullSubscriptionFragment) => mb.id !== sub.memberPlan.id,
             (sub: FullSubscriptionFragment) =>
               mb.amountPerMonthMin > sub.memberPlan.amountPerMonthMin,
           ])
@@ -56,5 +58,5 @@ export const useInformUserAboutUpgrade = () => {
     );
   }, [memberPlanList?.memberPlans.nodes, userSubscriptions]);
 
-  return [!!memberPlanToUpgrade, memberPlanToUpgrade];
+  return [!!memberPlanToUpgradeTo, memberPlanToUpgradeTo];
 };

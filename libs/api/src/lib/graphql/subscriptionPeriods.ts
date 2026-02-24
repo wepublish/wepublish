@@ -1,5 +1,5 @@
 import {
-  GraphQLInt,
+  GraphQLFloat,
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLString,
@@ -12,7 +12,7 @@ export const GraphQLSubscriptionPeriod = new GraphQLObjectType({
   fields: {
     id: { type: new GraphQLNonNull(GraphQLString) },
     invoiceID: { type: new GraphQLNonNull(GraphQLString) },
-    amount: { type: new GraphQLNonNull(GraphQLInt) },
+    amount: { type: new GraphQLNonNull(GraphQLFloat) },
     createdAt: { type: new GraphQLNonNull(GraphQLDateTime) },
     startsAt: { type: new GraphQLNonNull(GraphQLDateTime) },
     endsAt: { type: new GraphQLNonNull(GraphQLDateTime) },

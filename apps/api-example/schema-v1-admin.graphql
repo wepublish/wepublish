@@ -186,7 +186,7 @@ enum SubscriptionDeactivationReason {
 type SubscriptionPeriod {
   id: String!
   invoiceID: String!
-  amount: Int!
+  amount: Float!
   createdAt: DateTime!
   startsAt: DateTime!
   endsAt: DateTime!

@@ -42,7 +42,8 @@ export const SubscribeBlock = ({
 
   const subscriptionToUpgrade = useMemo(() => {
     return userSubscriptions.data?.subscriptions.find(
-      subscription => subscription.id === upgradeSubscriptionId
+      subscription =>
+        subscription.isActive && subscription.id === upgradeSubscriptionId
     );
   }, [upgradeSubscriptionId, userSubscriptions.data?.subscriptions]);
 

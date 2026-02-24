@@ -36,6 +36,10 @@ import {
   FlexAlignment,
   CrowdfundingBlock,
   SubscribeBlock,
+  FlexBlock,
+  BlockWithAlignment,
+  Maybe,
+  BlockContent,
 } from '@wepublish/website/api';
 import { mockImage } from './image';
 import { mockRichText } from './richtext';
@@ -157,7 +161,24 @@ export const mockEventBlock = ({
 });
 
 export const mockHTMLBlock = ({
-  html = '<script>console.log("html block");</script>',
+  html = `<script>
+    window.__niceDiv = document.createElement("div");
+    with(window.__niceDiv.style) {
+      width = '100%';
+      height = '100px';
+      border = '2px solid red';
+      display = 'flex';
+      alignItems = 'center';
+      justifyContent = 'center';
+      fontSize = '20px';
+      fontWeight = 'bold';
+      margin = '2rem 0';
+    };
+    window.__niceDiv.innerText = "This is a nice <HTML block />";
+    (function(script) {
+      script.parentNode.appendChild(window.__niceDiv);
+  })(document.currentScript);
+ </script>`,
 }: Partial<HtmlBlock> = {}): HtmlBlock => ({
   type: BlockType.Html,
   __typename: 'HTMLBlock',
@@ -437,6 +458,9 @@ export const mockCustomTeaser = ({
   lead = 'This is a lead',
   preTitle = 'This is a pretitle',
   title = 'This is a title',
+  contentUrl = 'https://example.com',
+  properties = [],
+  openInNewTab = false,
 }: Partial<CustomTeaser> = {}): CustomTeaser => ({
   __typename: 'CustomTeaser',
   type: TeaserType.Article,
@@ -445,9 +469,9 @@ export const mockCustomTeaser = ({
   lead,
   title,
   preTitle,
-  properties: [],
-  contentUrl: 'https://example.com',
-  openInNewTab: false,
+  properties,
+  contentUrl,
+  openInNewTab,
 });
 
 export const mockTeaserListBlock = ({
@@ -482,6 +506,107 @@ export const mockTeaserGridBlock = ({
   blockStyle,
   teasers,
   numColumns,
+});
+
+export const mockTeaserSlotsBlock = ({
+  title = 'test title',
+  teasers = [
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+    mockCustomTeaser({ preTitle: 'More about this topic' }),
+  ],
+  blockStyle = '',
+  className = '',
+  autofillConfig = {
+    __typename: 'TeaserSlotsAutofillConfig',
+    enabled: true,
+    strategy: 'manual',
+    numberOfTeasers: 7,
+    tagIds: [],
+    maxAgeInDays: 30,
+    sort: null,
+    filter: {
+      __typename: 'TeaserListBlockFilter',
+      tags: ['test-tag-id'],
+      tagObjects: [
+        {
+          __typename: 'Tag',
+          id: 'test-tag-id',
+          tag: 'lorem-ipsum',
+        },
+      ],
+    },
+    teaserType: TeaserType.Article,
+  },
+  autofillTeasers = [
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+    mockArticleTeaser(),
+  ],
+  slots = [
+    {
+      __typename: 'TeaserSlot',
+      type: 'Autofill',
+      teaser: null,
+    },
+    {
+      __typename: 'TeaserSlot',
+      type: 'Autofill',
+      teaser: null,
+    },
+    {
+      __typename: 'TeaserSlot',
+      type: 'Autofill',
+      teaser: null,
+    },
+    {
+      __typename: 'TeaserSlot',
+      type: 'Autofill',
+      teaser: null,
+    },
+    {
+      __typename: 'TeaserSlot',
+      type: 'Autofill',
+      teaser: null,
+    },
+    {
+      __typename: 'TeaserSlot',
+      type: 'Autofill',
+      teaser: null,
+    },
+    {
+      __typename: 'TeaserSlot',
+      type: 'Manual',
+      teaser: {
+        __typename: 'CustomTeaser',
+        image: null,
+        type: 'custom',
+        preTitle: null,
+        title: 'More about this topic',
+        lead: null,
+        contentUrl: '/some/topic/url',
+        openInNewTab: false,
+        properties: [],
+      },
+    },
+  ],
+} = {}) => ({
+  __typename: 'TeaserSlotsBlock',
+  title,
+  teasers,
+  blockStyle,
+  className,
+  autofillConfig,
+  autofillTeasers,
+  slots,
+  type: BlockType.TeaserSlots,
 });
 
 export const mockFlexAlignment = (
@@ -523,10 +648,11 @@ export const mockTeaserGridFlexBlock = ({
       teaser: mockArticleTeaser(),
     },
   ],
+  blockStyle = '',
 }: Partial<FullTeaserGridFlexBlockFragment> = {}): FullTeaserGridFlexBlockFragment => ({
   type: BlockType.TeaserGridFlex,
   __typename: 'TeaserGridFlexBlock',
-  blockStyle: null,
+  blockStyle,
   flexTeasers,
 });
 
@@ -546,8 +672,88 @@ export const mockSubscribeBlock = ({
   memberPlans,
   memberPlanIds,
 });
+export type MockTabbedContent = (args?: {
+  blockStyle?: string;
+  blocks?: BlockWithAlignment[];
+}) => FlexBlock;
+export const mockTabbedContentTeaserSlots: MockTabbedContent = ({
+  blockStyle = 'TabbedContent',
+  blocks = [
+    {
+      alignment: mockFlexAlignment({
+        h: 0,
+        w: 0,
+        x: 0,
+        y: 0,
+      }) as FlexAlignment,
+      block: mockTeaserSlotsBlock({
+        title: 'First Tab',
+      }) as Maybe<BlockContent> | undefined,
+    },
+    {
+      alignment: mockFlexAlignment({
+        h: 0,
+        w: 0,
+        x: 0,
+        y: 0,
+      }) as FlexAlignment,
+      block: mockTeaserSlotsBlock({
+        title: 'Second Tab',
+      }) as Maybe<BlockContent> | undefined,
+    },
+    {
+      alignment: mockFlexAlignment({
+        h: 0,
+        w: 0,
+        x: 0,
+        y: 0,
+      }) as FlexAlignment,
+      block: mockTeaserSlotsBlock({
+        title: 'Third Tab',
+      }) as Maybe<BlockContent> | undefined,
+    },
+    {
+      alignment: mockFlexAlignment({
+        h: 0,
+        w: 0,
+        x: 0,
+        y: 0,
+      }) as FlexAlignment,
+      block: mockTeaserSlotsBlock({
+        title: 'Fourth Tab',
+      }) as Maybe<BlockContent> | undefined,
+    },
+    {
+      alignment: mockFlexAlignment({
+        h: 0,
+        w: 0,
+        x: 0,
+        y: 0,
+      }) as FlexAlignment,
+      block: mockTeaserSlotsBlock({
+        title: 'Fifth Tab',
+      }) as Maybe<BlockContent> | undefined,
+    },
+    {
+      alignment: mockFlexAlignment({
+        h: 0,
+        w: 0,
+        x: 0,
+        y: 0,
+      }) as FlexAlignment,
+      block: mockTeaserSlotsBlock({
+        title: 'Sixth Tab',
+      }) as Maybe<BlockContent> | undefined,
+    },
+  ],
+}: Partial<FlexBlock> = {}): FlexBlock => ({
+  blockStyle,
+  blocks,
+  type: BlockType.FlexBlock,
+  __typename: 'FlexBlock',
+});
 
-export const mockBlockContent = ({
+export const mockBlockContent: any = ({
   title = mockTitleBlock(),
   image = mockImageBlock(),
   richtext = mockRichTextBlock(),
@@ -573,6 +779,7 @@ export const mockBlockContent = ({
   col6 = mockTeaserGridBlock(),
   col1 = mockTeaserGridBlock({ numColumns: 1, teasers: [mockEventTeaser()] }),
   flex = mockTeaserGridFlexBlock(),
+  slots = mockTeaserSlotsBlock(),
 } = {}) =>
   [
     title,
@@ -600,4 +807,5 @@ export const mockBlockContent = ({
     col6,
     col1,
     flex,
+    slots,
   ].filter(block => !!block) as FullBlockFragment[];
