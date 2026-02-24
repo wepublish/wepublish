@@ -27,14 +27,11 @@ import { MdEast } from 'react-icons/md';
 export const isNewsTeasers = (block: BlockContent): block is TeaserListBlock =>
   allPass([hasBlockStyle('News'), isTeaserListBlock])(block);
 
-export const NewsBlockStyle = ({
+export const NewsBlock = ({
   title,
   teasers,
   blockStyle,
-}: Pick<
-  BuilderTeaserListBlockProps,
-  'teasers' | 'title' | 'blockStyle' | 'className'
->) => {
+}: Pick<BuilderTeaserListBlockProps, 'title' | 'teasers' | 'blockStyle'>) => {
   const filledTeasers = teasers.filter(isFilledTeaser);
   const numColumns = 1;
   const {

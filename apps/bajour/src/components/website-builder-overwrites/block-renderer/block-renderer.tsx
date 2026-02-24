@@ -25,7 +25,7 @@ import { FrageDesTages } from '../../frage-des-tages/frage-des-tages';
 import { isFrageDesTages } from '../../frage-des-tages/is-frage-des-tages';
 import { isSearchSlider } from '../../search-slider/is-search-slider';
 import { SearchSliderBlock } from '../../search-slider/search-slider-block';
-import { isNewsTeasers, NewsBlockStyle } from '../blocks/news';
+import { isNewsTeasers, NewsBlock } from '../blocks/news';
 import { isSmallTeaser, SmallTeaser } from '../blocks/small-teaser';
 import { isWideTeaser, WideTeaser } from '../blocks/wide-teaser';
 import {
@@ -84,7 +84,7 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
         ],
         [isLightBreak, block => <BajourLightBreakBlock {...block} />],
         [isSponsoredBreak, block => <BajourSponsoredBreakBlock {...block} />],
-        [isNewsTeasers, block => <NewsBlockStyle {...block} />],
+        [isNewsTeasers, block => <NewsBlock {...block} />],
       ]),
     [TeaserGrid, TeaserList, isOldRelatedArticles]
   );
