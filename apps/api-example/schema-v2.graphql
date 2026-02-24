@@ -1774,7 +1774,7 @@ type Mutation {
   unpublishPage(id: String!): Page!
 
   """Updates an existing AI provider setting."""
-  updateAISetting(apiKey: String, id: String, name: String, systemPrompt: String, webhookEndpointSecret: String): SettingAIProvider!
+  updateAISetting(apiKey: String, id: String, name: String, systemPrompt: String): SettingAIProvider!
 
   """Updates an existing analytics provider setting."""
   updateAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String, name: String, property: String): SettingAnalyticsProvider!

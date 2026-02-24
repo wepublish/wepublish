@@ -45,7 +45,7 @@ class ProlitterisConfig {
       } catch (e) {
         console.error(e);
         throw new Error(
-          `Failed to decrypt apikey for Mail provider setting ${this.id}`
+          `Failed to decrypt password for Tracking Pixel provider setting ${this.id}`
         );
       }
     }
@@ -68,7 +68,7 @@ class ProlitterisConfig {
     config: SettingTrackingPixel | null
   ): asserts config is SettingTrackingPixel {
     if (!config)
-      throw new Error(`PaymentProvider config missing for ${this.id}`);
+      throw new Error(`TrackingPixelProvider config missing for ${this.id}`);
   }
 
   async getConfig(): Promise<SettingTrackingPixel> {

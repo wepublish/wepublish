@@ -26,4 +26,4 @@ export * from './lib/integrations/mail-provider-settings.model';
 export * from './lib/integrations/mail-provider-settings.service';
 export * from './lib/integrations/mail-provider-settings.resolver';
 export * from './lib/integrations/mail-provider-settings-dataloader.service';
-export * from './lib/integrations/secrets-cryto';
+export * from './lib/integrations/secrets-crypto';

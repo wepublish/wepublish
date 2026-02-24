@@ -8,7 +8,7 @@ import {
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { ChallengeProviderSettingsDataloaderService } from './challenge-provider-settings-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-import { SecretCrypto } from './secrets-cryto';
+import { SecretCrypto } from './secrets-crypto';
 
 @Injectable()
 export class ChallengeProviderSettingsService {
@@ -65,7 +65,7 @@ export class ChallengeProviderSettingsService {
     input: CreateSettingChallengeProviderInput
   ): Promise<SettingChallengeProvider> {
     const data = this.encryptSecretsIfPresent(input);
-    const returnValue = this.prisma.settingChallengeProvider.create({
+    const returnValue = await this.prisma.settingChallengeProvider.create({
       data,
     });
     await this.kv.resetNamespace('settings:challenge');
@@ -94,7 +94,7 @@ export class ChallengeProviderSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
-    const returnValue = this.prisma.settingChallengeProvider.update({
+    const returnValue = await this.prisma.settingChallengeProvider.update({
       where: { id },
       data: filteredUpdateData,
     });
@@ -117,7 +117,7 @@ export class ChallengeProviderSettingsService {
       );
     }
 
-    const returnValue = this.prisma.settingChallengeProvider.delete({
+    const returnValue = await this.prisma.settingChallengeProvider.delete({
       where: { id },
     });
     await this.kv.resetNamespace('settings:challenge');

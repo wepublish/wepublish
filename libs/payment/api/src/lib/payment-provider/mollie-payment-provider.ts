@@ -253,7 +253,7 @@ export class MolliePaymentProvider extends BasePaymentProvider {
 
     if (!metadata.paymentID) {
       logger('molliePaymentProvider').error(
-        'Stripe intent with ID: %s for paymentProvider %s returned with empty paymentID',
+        'Mollie payment with ID: %s for paymentProvider %s returned with empty paymentID',
         payment.id,
         this.id
       );
