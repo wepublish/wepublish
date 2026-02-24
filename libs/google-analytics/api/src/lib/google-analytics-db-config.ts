@@ -76,14 +76,4 @@ export class GoogleAnalyticsDbConfig {
       this.ttl
     );
   }
-
-  async getConfig(): Promise<GoogleAnalyticsConfig> {
-    const settings = await this.getGoogleAnalytics();
-
-    return {
-      credentials: settings.credentials ?? undefined,
-      property: settings.property,
-      articlePrefix: settings.articlePrefix,
-    };
-  }
 }

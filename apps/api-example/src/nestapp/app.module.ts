@@ -484,7 +484,7 @@ import {
               'google-analytics'
             );
             await dbConfig.initDatabaseConfiguration();
-            return dbConfig.getConfig();
+            return dbConfig;
           },
         }),
       ],
