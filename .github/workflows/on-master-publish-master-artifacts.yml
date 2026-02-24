@@ -22,7 +22,7 @@ jobs:
   setup-website-matrix:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix: ${{ steps.set-matrix-with-tdl.outputs.matrix }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,6 +30,20 @@ jobs:
       - name: Set up matrix
         id: set-matrix
         run: deployment/read_deployment_config.sh '.website.staging.deployment' true
+
+      - name: Add TDL to matrix
+        id: set-matrix-with-tdl
+        run: |
+          MATRIX='${{ steps.set-matrix.outputs.matrix }}'
+          INCLUDE="["
+          FIRST=true
+          for TARGET in $(echo "$MATRIX" | jq -r '.target[]'); do
+            TDL=$(jq -r '.tdl.staging // "wepublish.dev"' "apps/${TARGET}/deployment.config.json")
+            if [ "$FIRST" = true ]; then FIRST=false; else INCLUDE="${INCLUDE},"; fi
+            INCLUDE="${INCLUDE}{\"target\":\"${TARGET}\",\"tdl\":\"${TDL}\"}"
+          done
+          INCLUDE="${INCLUDE}]"
+          echo "matrix={\"include\":${INCLUDE}}" >> $GITHUB_OUTPUT
 
   publish-docker-base-image:
     name: ${{ needs.get-tag.outputs.project }} base image
@@ -65,24 +79,9 @@ jobs:
         wepublishch/storybook:${{ github.ref_name }}
     secrets: inherit
 
-  # Can be removed after migration from media -> cloud domain
-  get-tdl:
-    runs-on: ubuntu-latest
-    outputs:
-      value: ${{ steps.read-deployment-config.outputs.value }}
-    needs: [ setup-website-matrix, publish_master_docker ]
-    strategy:
-      fail-fast: false
-      matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - id: read-deployment-config
-        run: ./deployment/read_deployment_config.sh '.tdl.staging' true ${{ matrix.target }} getValue
-
   publish_master_docker_website:
     name: Website
-    needs: [ setup-website-matrix, date_sha_tag, publish_master_docker, publish-docker-base-image, get-tdl]
+    needs: [ setup-website-matrix, date_sha_tag, publish_master_docker, publish-docker-base-image]
     if: ${{ needs.publish_master_docker.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     strategy:
@@ -90,7 +89,7 @@ jobs:
       matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
     with:
       website_project: ${{ matrix.target }}
-      api_url: https://api-${{ matrix.target }}.${{needs.get-tdl.outputs.value}}
+      api_url: https://api-${{ matrix.target }}.${{ matrix.tdl }}
       environment: ${{ github.ref_name == 'master' && 'staging' || github.ref_name == 'development' && 'development' || 'staging' }}
       website_tags: |
         ghcr.io/wepublish/website-${{ matrix.target }}:${{ github.ref_name }}-${{ needs.date_sha_tag.outputs.tag }}
