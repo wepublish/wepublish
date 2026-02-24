@@ -605,6 +605,7 @@
     "draggableSubscriptionInterval": {
       "ignoreDeactivatedSubscriptions": "No mails will be sent to deactivated subscriptions!"
     },
+    "edit": "Edit",
     "errorMessages": {
       "invalidEmailErrorMessage": "Please enter a valid email address",
       "invalidRange": "Value out of range. Please input a number between {{min}} and {{max}}.",
@@ -1795,11 +1796,14 @@
     },
     "search": "Search",
     "integrations": {
+      "whatAreIntegrations": "What are integrations?",
+      "infoText": "Integrations are third-party interfaces built into We.Publish. These are used, for example, to send emails or process payments securely.",
       "title": "Integrations",
       "ai": "AI",
       "challengeProvider": "Challenge Provider",
       "paymentProvider": "Payment Provider",
       "trackingPixel": "Tracking Pixel",
+      "analytics": "Analytics Provider",
       "mailProvider": "Mail Provider",
       "back": "Back to Integrations",
       "unknown": "Unknown Integration",
@@ -1808,6 +1812,7 @@
       "updateSuccess": "Settings updated successfully",
       "updateError": "Settings update failed",
       "noSettingsFound": "No settings found",
+      "lastLoaded": "Last loaded",
       "aiSettings": {
         "apiKey": "API Key",
         "systemPrompt": "System Prompt"
@@ -1863,6 +1868,16 @@
         "prolitterisPublisherInternalKeyDomain": "Publisher Internal Key Domain",
         "prolitterisUsePublisherInternalKey": "Use Publisher Internal Key",
         "prolitterisUsername": "Username"
+      },
+      "analyticsSettings": {
+        "analytics": "Analytics",
+        "invalidFile": "Google Analytics credentials file is invalid",
+        "credentialsReadyToBeSaved": "Credentials are ready to be saved!",
+        "dropCredentialsFile": "Drop the credential file here!",
+        "dragCredentialsFileHere": "Drag and drop the Google Analytics credential file here",
+        "articlePrefix": "We.Publish article url prefix (usually /a/)",
+        "property": "Google Analytics Property-ID",
+        "credentials": "Credential file"
       }
     }
   }

@@ -552,6 +552,7 @@
     "draggableSubscriptionInterval": {
       "ignoreDeactivatedSubscriptions": "Les e-mails destinés aux abonnements désactivés ne sont pas envoyés!"
     },
+    "edit": "Modifier",
     "errorMessages": {
       "invalidEmailErrorMessage": "Veuillez entrer une adresse email valide",
       "invalidRange": "La valeur doit être comprise entre {{min}} et {{max}}.",
@@ -1622,6 +1623,8 @@
     },
     "search": "Rechercher",
     "integrations": {
+      "whatAreIntegrations": "Que sont les intégrations ?",
+      "infoText": "Les intégrations sont des interfaces tierces intégrées à We.Publish. Elles sont utilisées, par exemple, pour envoyer des e-mails ou traiter des paiements en toute sécurité.",
       "title": "Intégrations",
       "ai": "Intégration AI",
       "challengeProvider": "Fournisseur de challenge",
@@ -1635,6 +1638,7 @@
       "updateSuccess": "Paramètres mis à jour avec succès",
       "updateError": "Échec de la mise à jour des paramètres",
       "noSettingsFound": "Aucun paramètre trouvé",
+      "lastLoaded": "Dernière chargement",
       "aiSettings": {
         "apiKey": "Clé API",
         "systemPrompt": "Invite système (System Prompt)"
@@ -1690,6 +1694,16 @@
         "prolitterisPublisherInternalKeyDomain": "Domaine de clé interne de l'éditeur",
         "prolitterisUsePublisherInternalKey": "Utiliser la clé interne de l'éditeur",
         "prolitterisUsername": "Nom d'utilisateur"
+      },
+      "analyticsSettings": {
+        "analytics": "Analytique",
+        "invalidFile": "Le fichier d’identifiants Google Analytics est invalide",
+        "credentialsReadyToBeSaved": "Les identifiants sont prêts à être enregistrés !",
+        "dropCredentialsFile": "Déposez le fichier d’identifiants ici !",
+        "dragCredentialsFileHere": "Glissez-déposez le fichier d’identifiants Google Analytics ici",
+        "articlePrefix": "Préfixe d’URL des articles We.Publish (généralement /a/)",
+        "property": "ID de la propriété Google Analytics",
+        "credentials": "Fichier d’identifiants"
       }
     }
   }

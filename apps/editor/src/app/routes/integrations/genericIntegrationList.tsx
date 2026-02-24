@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client';
 import styled from '@emotion/styled';
+import { SettingProvider } from '@wepublish/editor/api';
 import { DocumentNode } from 'graphql';
 import { useMemo, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
@@ -13,7 +14,7 @@ import {
 } from './genericIntegrationForm';
 
 interface GenericIntegrationListProps<
-  TSetting extends { id: string; name?: string | null; type?: string },
+  TSetting extends SettingProvider & { type?: string },
   TFormValues extends FieldValues,
 > extends Omit<GenericIntegrationFormProps<TSetting, TFormValues>, 'setting'> {
   query: DocumentNode;
@@ -31,7 +32,7 @@ const GenericIntegrationGrid = styled.div`
 `;
 
 export function GenericIntegrationList<
-  TSetting extends { id: string; name?: string | null; type?: string },
+  TSetting extends SettingProvider & { type?: string },
   TFormValues extends FieldValues,
 >({
   query,

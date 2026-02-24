@@ -1,5 +1,5 @@
 import {
-  SettingTrackingPixel,
+  SettingTrackingPixelProvider,
   TrackingPixelProviderType,
   TrackingPixelSettingsDocument,
   UpdateTrackingPixelSettingDocument,
@@ -7,21 +7,23 @@ import {
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import proLitterisLogo from '../../../assets/integrations/proLitteris.svg';
+import proLitterisLogo from './assets/proLitteris.svg';
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
 
 const trackingPixelSettingsSchema = z.object({
-  id: z.string(),
-  name: z.string().optional(),
+  name: z.string().nullish().or(z.literal('')),
   type: z.nativeEnum(TrackingPixelProviderType).optional(),
 
-  prolitterisMemberNr: z.string().optional(),
-  prolitterisOnlyPaidContentAccess: z.boolean().optional(),
-  prolitterisPassword: z.string().optional(),
-  prolitterisPublisherInternalKeyDomain: z.string().optional(),
-  prolitterisUsePublisherInternalKey: z.boolean().optional(),
-  prolitterisUsername: z.string().optional(),
+  prolitteris_memberNr: z.string().nullish().or(z.literal('')),
+  prolitteris_onlyPaidContentAccess: z.boolean().optional(),
+  prolitteris_password: z.string().nullish().or(z.literal('')),
+  prolitteris_publisherInternalKeyDomain: z
+    .string()
+    .optional()
+    .or(z.literal('')),
+  prolitteris_usePublisherInternalKey: z.boolean().optional(),
+  prolitteris_username: z.string().nullish().or(z.literal('')),
 });
 
 type IntegrationFormValues = z.infer<typeof trackingPixelSettingsSchema>;
@@ -30,38 +32,11 @@ export function TrackingPixelIntegrationForm() {
   const { t } = useTranslation();
 
   return (
-    <GenericIntegrationList<SettingTrackingPixel, IntegrationFormValues>
+    <GenericIntegrationList<SettingTrackingPixelProvider, IntegrationFormValues>
       query={TrackingPixelSettingsDocument}
       mutation={UpdateTrackingPixelSettingDocument}
       dataKey="trackingPixelSettings"
       schema={trackingPixelSettingsSchema}
-      mapSettingToInitialValues={setting => ({
-        id: setting.id,
-        name: setting.name || undefined,
-        type: setting.type,
-        prolitterisMemberNr: setting.prolitteris_memberNr || undefined,
-        prolitterisOnlyPaidContentAccess:
-          setting.prolitteris_onlyPaidContentAccess || false,
-        prolitterisPassword: undefined,
-        prolitterisPublisherInternalKeyDomain:
-          setting.prolitteris_publisherInternalKeyDomain || undefined,
-        prolitterisUsePublisherInternalKey:
-          setting.prolitteris_usePublisherInternalKey || false,
-        prolitterisUsername: setting.prolitteris_username || undefined,
-      })}
-      mapFormValuesToVariables={(formData, setting) => ({
-        updateTrackingPixelSettingId: setting.id,
-        name: formData.name,
-        prolitterisMemberNr: formData.prolitterisMemberNr,
-        prolitterisOnlyPaidContentAccess:
-          formData.prolitterisOnlyPaidContentAccess,
-        prolitterisPassword: formData.prolitterisPassword,
-        prolitterisPublisherInternalKeyDomain:
-          formData.prolitterisPublisherInternalKeyDomain,
-        prolitterisUsePublisherInternalKey:
-          formData.prolitterisUsePublisherInternalKey,
-        prolitterisUsername: formData.prolitterisUsername,
-      })}
       getLogo={setting => {
         switch (setting.type) {
           case TrackingPixelProviderType.Prolitteris:
@@ -83,6 +58,7 @@ export function TrackingPixelIntegrationForm() {
             disabled: true,
           },
           {
+            type: 'text',
             name: 'name',
             label: t('name'),
           },
@@ -90,35 +66,38 @@ export function TrackingPixelIntegrationForm() {
 
         if (setting.type === TrackingPixelProviderType.Prolitteris) {
           commonFields.push({
-            name: 'prolitterisMemberNr',
+            type: 'text',
+            name: 'prolitteris_memberNr',
             label: t('integrations.trackingPixelSettings.prolitterisMemberNr'),
           });
           commonFields.push({
-            name: 'prolitterisUsername',
+            type: 'text',
+            name: 'prolitteris_username',
             label: t('integrations.trackingPixelSettings.prolitterisUsername'),
           });
           commonFields.push({
-            name: 'prolitterisPassword',
+            name: 'prolitteris_password',
             label: t('integrations.trackingPixelSettings.prolitterisPassword'),
             type: 'password',
-            autoComplete: 'off',
+            autoComplete: 'one-time-code',
           });
           commonFields.push({
-            name: 'prolitterisOnlyPaidContentAccess',
+            name: 'prolitteris_onlyPaidContentAccess',
             label: t(
               'integrations.trackingPixelSettings.prolitterisOnlyPaidContentAccess'
             ),
             type: 'checkbox',
           });
           commonFields.push({
-            name: 'prolitterisUsePublisherInternalKey',
+            name: 'prolitteris_usePublisherInternalKey',
             label: t(
               'integrations.trackingPixelSettings.prolitterisUsePublisherInternalKey'
             ),
             type: 'checkbox',
           });
           commonFields.push({
-            name: 'prolitterisPublisherInternalKeyDomain',
+            type: 'text',
+            name: 'prolitteris_publisherInternalKeyDomain',
             label: t(
               'integrations.trackingPixelSettings.prolitterisPublisherInternalKeyDomain'
             ),

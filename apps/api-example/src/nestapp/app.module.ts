@@ -28,6 +28,7 @@ import {
 import {
   GoogleAnalyticsModule,
   GoogleAnalyticsService,
+  GoogleAnalyticsDbConfig,
 } from '@wepublish/google-analytics/api';
 import { HealthModule } from '@wepublish/health';
 import { MediaAdapterModule } from '@wepublish/image/api';
@@ -474,18 +475,16 @@ import {
     HotAndTrendingModule.registerAsync({
       imports: [
         GoogleAnalyticsModule.registerAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: async (config: ConfigService) => {
-            const configFile = await readConfig(
-              config.getOrThrow('CONFIG_FILE_PATH')
+          imports: [PrismaModule, KvTtlCacheModule],
+          inject: [PrismaClient, KvTtlCacheService],
+          useFactory: async (prisma: PrismaClient, kv: KvTtlCacheService) => {
+            const dbConfig = new GoogleAnalyticsDbConfig(
+              prisma,
+              kv,
+              'google-analytics'
             );
-
-            return {
-              credentials: configFile.ga?.credentials,
-              property: configFile.ga?.property,
-              articlePrefix: configFile.ga?.articlePrefix,
-            };
+            await dbConfig.initDatabaseConfiguration();
+            return dbConfig;
           },
         }),
       ],

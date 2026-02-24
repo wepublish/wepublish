@@ -24,6 +24,10 @@ type AllowedSettingVals {
   stringChoice: [String!]
 }
 
+enum AnalyticsProviderType {
+  GOOGLE
+}
+
 type Article implements HasOptionalPaywall & HasOptionalPeerLc {
   createdAt: DateTime!
   disableComments: Boolean!
@@ -1770,7 +1774,10 @@ type Mutation {
   unpublishPage(id: String!): Page!
 
   """Updates an existing AI provider setting."""
-  updateAISetting(apiKey: String, id: String!, name: String, systemPrompt: String): SettingAIProvider!
+  updateAISetting(apiKey: String, id: String, name: String, systemPrompt: String): SettingAIProvider!
+
+  """Updates an existing analytics provider setting."""
+  updateAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String, name: String, property: String): SettingAnalyticsProvider!
 
   """Updates an article."""
   updateArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, id: String!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
@@ -1783,7 +1790,7 @@ type Mutation {
   updateBlockStyle(blocks: [EditorBlockType!], id: String!, name: String): BlockStyle!
 
   """Updates an existing challenge provider setting."""
-  updateChallengeProviderSetting(id: String!, name: String, secret: String, siteKey: String): SettingChallengeProvider!
+  updateChallengeProviderSetting(id: String, name: String, secret: String, siteKey: String): SettingChallengeProvider!
 
   """Update any existing comment"""
   updateComment(featured: Boolean, guestUserImageID: String, guestUsername: String, id: String!, ratingOverrides: [OverriddenRatingInput!], revision: CommentRevisionInput, source: String, tagIds: [String!], userID: String): Comment!
@@ -1807,7 +1814,7 @@ type Mutation {
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
 
   """Updates an existing mail provider setting."""
-  updateMailProviderSetting(apiKey: String, fromAddress: String, id: String!, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, webhookEndpointSecret: String): SettingMailProvider!
+  updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, webhookEndpointSecret: String): SettingMailProvider!
 
   """Updates an existing memberplan."""
   updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
@@ -1827,7 +1834,7 @@ type Mutation {
   updatePaymentMethod(active: Boolean, description: String, gracePeriod: Int, id: String!, imageId: String, name: String, paymentProviderID: String, slug: Slug): PaymentMethod!
 
   """Updates an existing payment provider setting."""
-  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String!, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
+  updatePaymentProviderSetting(apiKey: String, bexio_accountId: Float, bexio_countryId: Float, bexio_invoiceMailBodyNewMembership: String, bexio_invoiceMailBodyRenewalMembership: String, bexio_invoiceMailSubjectNewMembership: String, bexio_invoiceMailSubjectRenewalMembership: String, bexio_invoiceTemplateNewMembership: String, bexio_invoiceTemplateRenewalMembership: String, bexio_invoiceTitleNewMembership: String, bexio_invoiceTitleRenewalMembership: String, bexio_markInvoiceAsOpen: Boolean, bexio_taxId: Float, bexio_unitId: Float, bexio_userId: Float, id: String, mollie_apiBaseUrl: String, mollie_methods: [PaymentMethodMollie!], name: String, offSessionPayments: Boolean, payrexx_instancename: String, payrexx_pm: [PayrexxPM!], payrexx_psp: [PayrexxPSP!], payrexx_vatrate: String, stripe_methods: [StripePaymentMethod!], webhookEndpointSecret: String): SettingPaymentProvider!
 
   """Updates a paywall."""
   updatePaywall(active: Boolean, alternativeSubscribeUrl: String, anyMemberPlan: Boolean, bypassTokens: [String!], circumventDescription: RichText, description: RichText, fadeout: Boolean, hideContentAfter: Int, id: String!, memberPlanIds: [String!], name: String, upgradeCircumventDescription: RichText, upgradeDescription: RichText): Paywall!
@@ -1863,7 +1870,7 @@ type Mutation {
   updateTag(color: Color, description: RichText, id: String!, main: Boolean = false, tag: String, type: TagType): Tag!
 
   """Updates an existing tracking pixel setting."""
-  updateTrackingPixelSetting(id: String!, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String): SettingTrackingPixel!
+  updateTrackingPixelSetting(id: String, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String): SettingTrackingPixelProvider!
 
   """Updates an existing user."""
   updateUser(active: Boolean, address: UserAddressInput, birthday: DateTime, email: String, emailVerifiedAt: DateTime, firstName: String, flair: String, id: String, name: String, note: String, properties: [PropertyInput!], roleIDs: [String!], userImageID: String): SensitiveDataUser!
@@ -2635,6 +2642,12 @@ type Query {
   """Returns all AI provider settings."""
   aiSettings(filter: SettingAIProviderFilter): [SettingAIProvider!]!
 
+  """Returns a single analytics provider setting by id."""
+  analyticsProviderSetting(id: String!): SettingAnalyticsProvider!
+
+  """Returns all analytics provider settings."""
+  analyticsProviderSettings(filter: SettingAnalyticsProviderFilter): [SettingAnalyticsProvider!]!
+
   """Returns an article by id or slug."""
   article(id: String, slug: String): Article!
 
@@ -2883,10 +2896,10 @@ type Query {
   tokens: [Token!]!
 
   """Returns a single tracking pixel setting by id."""
-  trackingPixelSetting(id: String!): SettingTrackingPixel!
+  trackingPixelSetting(id: String!): SettingTrackingPixelProvider!
 
   """Returns all tracking pixel settings."""
-  trackingPixelSettings(filter: SettingTrackingPixelFilter): [SettingTrackingPixel!]!
+  trackingPixelSettings(filter: SettingTrackingPixelFilter): [SettingTrackingPixelProvider!]!
 
   """"""
   upgradeUserSubscriptionInfo(memberPlanId: String!, subscriptionId: String!): UpgradeSubscription!
@@ -3038,7 +3051,7 @@ type Setting {
   value: GraphQLSettingValueType
 }
 
-type SettingAIProvider {
+type SettingAIProvider implements SettingProvider {
   createdAt: DateTime!
   id: String!
   lastLoadedAt: DateTime!
@@ -3054,7 +3067,33 @@ input SettingAIProviderFilter {
   type: AIProviderType
 }
 
-type SettingChallengeProvider {
+input SettingAnalyticsCredentialsInput {
+  client_email: String!
+  client_id: String!
+  private_key: String!
+  private_key_id: String!
+  project_id: String!
+  type: String!
+}
+
+type SettingAnalyticsProvider implements SettingProvider {
+  articlePrefix: String
+  createdAt: DateTime!
+  id: String!
+  lastLoadedAt: DateTime!
+  modifiedAt: DateTime!
+  name: String
+  property: String
+  type: AnalyticsProviderType!
+}
+
+input SettingAnalyticsProviderFilter {
+  id: String
+  name: String
+  type: AnalyticsProviderType
+}
+
+type SettingChallengeProvider implements SettingProvider {
   createdAt: DateTime!
   id: String!
   lastLoadedAt: DateTime!
@@ -3073,7 +3112,7 @@ input SettingFilter {
   name: String
 }
 
-type SettingMailProvider {
+type SettingMailProvider implements SettingProvider {
   createdAt: DateTime!
   fromAddress: String
   id: String!
@@ -3115,7 +3154,7 @@ enum SettingName {
   SHOW_PENDING_WHEN_NOT_PUBLISHED
 }
 
-type SettingPaymentProvider {
+type SettingPaymentProvider implements SettingProvider {
   bexio_accountId: Float
   bexio_countryId: Float
   bexio_invoiceMailBodyNewMembership: String
@@ -3152,6 +3191,14 @@ input SettingPaymentProviderFilter {
   type: PaymentProviderType
 }
 
+interface SettingProvider {
+  createdAt: DateTime!
+  id: String!
+  lastLoadedAt: DateTime!
+  modifiedAt: DateTime!
+  name: String
+}
+
 type SettingRestriction {
   allowedValues: AllowedSettingVals
   inputLength: Int
@@ -3159,7 +3206,13 @@ type SettingRestriction {
   minValue: Int
 }
 
-type SettingTrackingPixel {
+input SettingTrackingPixelFilter {
+  id: String
+  name: String
+  type: TrackingPixelProviderType
+}
+
+type SettingTrackingPixelProvider implements SettingProvider {
   createdAt: DateTime!
   id: String!
   lastLoadedAt: DateTime!
@@ -3171,12 +3224,6 @@ type SettingTrackingPixel {
   prolitteris_usePublisherInternalKey: Boolean
   prolitteris_username: String
   type: TrackingPixelProviderType!
-}
-
-input SettingTrackingPixelFilter {
-  id: String
-  name: String
-  type: TrackingPixelProviderType
 }
 
 input SingleEventFilter {

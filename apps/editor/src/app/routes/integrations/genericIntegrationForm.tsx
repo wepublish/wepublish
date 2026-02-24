@@ -1,25 +1,29 @@
 import { useMutation } from '@apollo/client';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CircularProgress,
+  Typography,
+} from '@mui/material';
+import { SettingProvider } from '@wepublish/editor/api';
+import { Textarea } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
-import { useMemo } from 'react';
+import { ComponentType, useMemo } from 'react';
 import { Controller, FieldValues, Path, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
-  Button,
   Checkbox,
   CheckPicker,
   Form,
   Message,
-  Panel,
   SelectPicker,
   toaster,
 } from 'rsuite';
 import { z } from 'zod';
-
-const StyledPanel = styled(Panel)`
-  margin-bottom: 20px;
-`;
 
 const HeaderWrapper = styled.div`
   display: flex;
@@ -34,36 +38,79 @@ const HeaderLogo = styled.img`
   max-width: 150px;
 `;
 
-export type FieldDefinition<TFormValues> = {
+type TextField = {
+  type: 'text';
+};
+
+type EmailField = {
+  type: 'email';
+};
+
+type PasswordField = {
+  type: 'password';
+};
+
+type NumberField = {
+  type: 'number';
+};
+
+type TextAreaField = {
+  type: 'textarea';
+  rows?: number;
+};
+
+type CheckboxField = {
+  type: 'checkbox';
+};
+
+type SelectField = {
+  type: 'select';
+  options?: { label: string; value: string | number }[];
+  searchable?: boolean;
+};
+
+type CheckPickerField = {
+  type: 'checkPicker';
+  options?: { label: string; value: string | number }[];
+  searchable?: boolean;
+};
+
+export type CustomField<T = any> = {
+  type: 'custom';
+  render: ComponentType<{
+    disabled?: boolean;
+    name?: string;
+    value: T | null | undefined;
+    onChange: (val: T | null | undefined) => void;
+  }>;
+};
+
+type Fields =
+  | TextField
+  | EmailField
+  | PasswordField
+  | NumberField
+  | TextAreaField
+  | SelectField
+  | CheckboxField
+  | CheckPickerField
+  | CustomField;
+
+export type FieldDefinition<TFormValues> = Fields & {
   name: Path<TFormValues>;
   label: string;
-  type?:
-    | 'text'
-    | 'number'
-    | 'password'
-    | 'textarea'
-    | 'select'
-    | 'checkPicker'
-    | 'checkbox';
   placeholder?: string;
   disabled?: boolean;
-  options?: { label: string; value: string | number }[];
-  textareaRows?: number;
   autoComplete?: string;
 };
 
 export interface GenericIntegrationFormProps<
-  TSetting extends { id: string; name?: string | null; type?: string },
+  TSetting extends SettingProvider & { type?: string },
   TFormValues extends FieldValues,
 > {
   setting: TSetting;
   schema: z.ZodType<TFormValues>;
   mutation: DocumentNode;
-  mapSettingToInitialValues: (setting: TSetting) => TFormValues;
-  mapFormValuesToVariables: (
-    formData: TFormValues,
-    setting: TSetting
-  ) => Record<string, any>;
   fields:
     | FieldDefinition<TFormValues>[]
     | ((setting: TSetting) => FieldDefinition<TFormValues>[]);
@@ -71,14 +118,12 @@ export interface GenericIntegrationFormProps<
 }
 
 export function SingleGenericIntegrationForm<
-  TSetting extends { id: string; name?: string | null; type?: string },
+  TSetting extends SettingProvider & { type?: string },
   TFormValues extends FieldValues,
 >({
   setting,
   schema,
   mutation,
-  mapSettingToInitialValues,
-  mapFormValuesToVariables,
   fields,
   getLogo,
 }: GenericIntegrationFormProps<TSetting, TFormValues>) {
@@ -86,26 +131,32 @@ export function SingleGenericIntegrationForm<
 
   const [updateSettings, { loading: updating }] = useMutation(mutation, {});
 
-  const initialValues = useMemo(
-    () => mapSettingToInitialValues(setting),
-    [setting, mapSettingToInitialValues]
-  );
-
+  const formatLastLoaded = (date?: Date | string) => {
+    if (!date) return null;
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return new Intl.DateTimeFormat('de-CH', {
+      dateStyle: 'short',
+      timeStyle: 'short',
+    }).format(dateObj);
+  };
   const resolvedFields = useMemo(
     () => (typeof fields === 'function' ? fields(setting) : fields),
     [fields, setting]
   );
 
-  const { control, handleSubmit } = useForm<TFormValues>({
+  const { control, handleSubmit } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     mode: 'onTouched',
     reValidateMode: 'onChange',
   });
 
-  const onSubmit = handleSubmit(async (formData: TFormValues) => {
+  const onSubmit = handleSubmit(async formData => {
     try {
       await updateSettings({
-        variables: mapFormValuesToVariables(formData, setting),
+        variables: {
+          ...formData,
+          id: setting.id,
+        },
       });
 
       toaster.push(
@@ -123,119 +174,151 @@ export function SingleGenericIntegrationForm<
   const logo = getLogo?.(setting);
 
   return (
-    <StyledPanel
-      header={
-        <HeaderWrapper>
-          {setting.name || setting.type}
-          {logo && (
-            <HeaderLogo
-              src={logo}
-              alt=""
-            />
-          )}
-        </HeaderWrapper>
-      }
-      bordered
+    <Form
+      fluid
+      onSubmit={() => onSubmit()}
     >
-      <Form
-        fluid
-        onSubmit={() => onSubmit()}
-        disabled={updating}
+      <Card
+        variant="outlined"
+        sx={{ alignSelf: 'start' }}
       >
-        {resolvedFields.map(field => (
-          <Form.Group
-            controlId={`${String(field.name)}-${setting.id}`}
-            key={String(field.name)}
+        <CardContent>
+          <Typography
+            variant="h5"
+            component={HeaderWrapper}
+            marginBottom={2}
           >
-            <Form.ControlLabel>
-              {field.type === 'checkbox' ? ' ' : field.label}
-            </Form.ControlLabel>
+            {setting.name || setting.type}
 
-            <Controller
-              name={field.name}
-              control={control}
-              defaultValue={initialValues[field.name]}
-              render={({
-                field: { value, onChange, ...restField },
-                fieldState,
-              }) => {
-                if (field.type === 'select') {
+            {logo && (
+              <HeaderLogo
+                src={logo}
+                alt=""
+              />
+            )}
+          </Typography>
+
+          {resolvedFields.map(field => (
+            <Form.Group
+              controlId={`${String(field.name)}-${setting.id}`}
+              key={String(field.name)}
+            >
+              <Form.ControlLabel>
+                {field.type === 'checkbox' ? ' ' : field.label}
+              </Form.ControlLabel>
+
+              <Controller
+                name={field.name}
+                control={control}
+                defaultValue={
+                  (setting as Record<typeof field.name, unknown>)[
+                    field.name
+                  ] as any
+                }
+                render={({
+                  field: { value, onChange, ...restField },
+                  fieldState,
+                }) => {
+                  if (field.type === 'select') {
+                    return (
+                      <SelectPicker
+                        data={field.options || []}
+                        value={value}
+                        onChange={onChange}
+                        disabled={field.disabled}
+                        cleanable={false}
+                        searchable={field.searchable ?? false}
+                        {...restField}
+                      />
+                    );
+                  }
+
+                  if (field.type === 'checkPicker') {
+                    return (
+                      <CheckPicker
+                        data={field.options || []}
+                        value={value || []}
+                        onChange={val => onChange(val)}
+                        disabled={field.disabled}
+                        cleanable={false}
+                        searchable={field.searchable ?? false}
+                        {...restField}
+                      />
+                    );
+                  }
+
+                  if (field.type === 'checkbox') {
+                    return (
+                      <Checkbox
+                        checked={!!value}
+                        onChange={(_, c) => onChange(c)}
+                        disabled={field.disabled}
+                        {...restField}
+                      >
+                        {field.label}
+                      </Checkbox>
+                    );
+                  }
+
+                  if (field.type === 'custom') {
+                    return (
+                      <field.render
+                        value={value}
+                        onChange={val => onChange(val)}
+                        disabled={field.disabled}
+                        {...restField}
+                      />
+                    );
+                  }
+
                   return (
-                    <SelectPicker
-                      data={field.options || []}
+                    <Form.Control
                       value={value}
                       onChange={onChange}
-                      disabled={field.disabled}
-                      cleanable={false}
-                      searchable={false}
+                      errorMessage={fieldState.error?.message}
+                      accepter={
+                        field.type === 'textarea' ? Textarea : undefined
+                      }
+                      {...field}
                       {...restField}
                     />
                   );
-                }
+                }}
+              />
+            </Form.Group>
+          ))}
 
-                if (field.type === 'checkPicker') {
-                  return (
-                    <CheckPicker
-                      data={field.options || []}
-                      value={value || []}
-                      onChange={val => onChange(val)}
-                      disabled={field.disabled}
-                      cleanable={false}
-                      searchable={false}
-                      {...restField}
-                    />
-                  );
-                }
+          {setting.lastLoadedAt && (
+            <Typography
+              align="right"
+              color="gray"
+            >
+              <small>
+                {t('integrations.lastLoaded')}:{' '}
+                {formatLastLoaded(setting.lastLoadedAt)}
+              </small>
+            </Typography>
+          )}
+        </CardContent>
 
-                if (field.type === 'checkbox') {
-                  return (
-                    <Checkbox
-                      checked={!!value}
-                      onChange={(_, c) => onChange(c)}
-                      disabled={field.disabled}
-                      {...restField}
-                    >
-                      {field.label}
-                    </Checkbox>
-                  );
-                }
+        <CardActions>
+          <Button
+            variant="contained"
+            type="submit"
+            disabled={updating}
+          >
+            {updating && (
+              <CircularProgress
+                size={14}
+                color="inherit"
+                sx={{ mr: 1 }}
+              />
+            )}
 
-                return (
-                  <Form.Control
-                    value={value}
-                    onChange={onChange}
-                    errorMessage={fieldState.error?.message}
-                    type={
-                      field.type === 'password' ? 'password'
-                      : field.type === 'number' ?
-                        'number'
-                      : 'text'
-                    }
-                    accepter={
-                      field.type === 'textarea' ? 'textarea' : undefined
-                    }
-                    rows={field.textareaRows}
-                    placeholder={field.placeholder}
-                    autoComplete={field.autoComplete}
-                    disabled={field.disabled}
-                    {...restField}
-                  />
-                );
-              }}
-            />
-          </Form.Group>
-        ))}
-
-        <Button
-          appearance="primary"
-          type="submit"
-          size="lg"
-          block
-          loading={updating}
-        >
-          {t('save')}
-        </Button>
-      </Form>
-    </StyledPanel>
+            {t('save')}
+          </Button>
+        </CardActions>
+      </Card>
+    </Form>
   );
 }
