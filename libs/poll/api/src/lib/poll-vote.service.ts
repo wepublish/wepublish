@@ -10,13 +10,12 @@ import {
   graphQLSortOrderToPrisma,
   SortOrder,
 } from '@wepublish/utils/api';
-import { Injectable } from '@nestjs/common';
 import {
-  AnonymousPollVotingDisabledError,
-  NotFound,
-  PollClosedError,
-  PollNotOpenError,
-} from '@wepublish/api';
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { AnonymousPollVotingDisabledError } from '@wepublish/api';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
 
 @Injectable()
@@ -67,7 +66,7 @@ export class PollVoteService {
       }),
     ]);
 
-    const nodes = items.slice(0, take);
+    const nodes = items.slice(0, getMaxTake(take));
     const firstItem = nodes[0];
     const lastItem = nodes[nodes.length - 1];
 
@@ -119,17 +118,17 @@ export class PollVoteService {
     });
 
     if (!answer) {
-      throw new NotFound('PollAnswer', answerId);
+      throw new NotFoundException('PollAnswer', answerId);
     }
 
     const { poll } = answer;
 
     if (poll.opensAt > new Date()) {
-      throw new PollNotOpenError();
+      throw new BadRequestException('Poll has not been opened for voting yet!');
     }
 
     if (poll.closedAt && poll.closedAt < new Date()) {
-      throw new PollClosedError();
+      throw new BadRequestException('Poll voting has been closed already!');
     }
 
     return this.prisma.pollVote.upsert({

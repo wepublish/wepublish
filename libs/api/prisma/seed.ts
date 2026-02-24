@@ -191,6 +191,34 @@ const seedSettings = (prisma: PrismaClient) =>
       },
     }),
 
+    prisma.settingAIProvider.upsert({
+      where: {
+        id: 'v0',
+      },
+      update: {},
+      create: {
+        id: 'v0',
+        name: 'V0',
+        type: 'V0',
+      },
+    }),
+
+    prisma.settingAnalyticsProvider.upsert({
+      where: {
+        id: 'google-analytics',
+      },
+      update: {},
+      create: {
+        id: 'google-analytics',
+        name: 'Google-Analytics',
+        type: 'GOOGLE',
+        credentials:
+          'v1.joXbh+gkDHyDSWR8.xx9rJ27ZN9VWALNkm3ET0w==.Hl8G9f69NSAH5A==',
+        property: '1',
+        articlePrefix: '/a/',
+      },
+    }),
+
     // remove non-used settings
     prisma.setting.deleteMany({
       where: {

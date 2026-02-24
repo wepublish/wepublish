@@ -57,7 +57,7 @@ export const useSubscribe = (
         onCompleted: data => {
           callbackParams[0]?.onCompleted?.(data);
           handlePayment({
-            intent: data.createSubscription ?? undefined,
+            intent: data.createUserSubscription ?? undefined,
             successUrl,
             failUrl,
             setStripeClientSecret,
@@ -113,7 +113,7 @@ export const useUpgrade = (
         onCompleted: data => {
           callbackParams[0]?.onCompleted?.(data);
           handlePayment({
-            intent: data.upgradeSubscription ?? undefined,
+            intent: data.upgradeUserSubscription ?? undefined,
             successUrl,
             failUrl,
             setStripeClientSecret,

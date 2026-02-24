@@ -168,7 +168,7 @@ export const TsriArticleMeta = ({
     },
   });
 
-  const commentCount = data?.comments.length;
+  const commentCount = data?.commentsForItem.length;
 
   return (
     <ArticleMetaWrapper className={className}>

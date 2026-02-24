@@ -49,7 +49,7 @@ export class EventService {
       }),
     ]);
 
-    const nodes = events.slice(0, take);
+    const nodes = events.slice(0, getMaxTake(take));
     const firstEvent = nodes[0];
     const lastEvent = nodes[nodes.length - 1];
 

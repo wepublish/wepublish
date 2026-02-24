@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { TeaserSlotsAutofillConfigInput } from '@wepublish/editor/api-v2';
+import { TeaserSlotsAutofillConfigInput } from '@wepublish/editor/api';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Modal } from 'rsuite';

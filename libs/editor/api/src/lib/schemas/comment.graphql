@@ -1,3 +1,57 @@
+fragment CommentBlockComment on Comment {
+  id
+  state
+  guestUsername
+  guestUserImage {
+    ...FullImage
+  }
+  user {
+    ...CommentUser
+  }
+  text
+  source
+  itemID
+  itemType
+
+  tags {
+    id
+    tag
+  }
+
+  overriddenRatings {
+    answerId
+    value
+  }
+
+  featured
+}
+
+mutation ApproveComment($id: String!) {
+  approveComment(id: $id) {
+    state
+  }
+}
+
+mutation RejectComment(
+  $id: String!
+  $rejectionReason: CommentRejectionReason!
+) {
+  rejectComment(id: $id, rejectionReason: $rejectionReason) {
+    state
+    rejectionReason
+  }
+}
+
+mutation RequestChangesOnComment(
+  $id: String!
+  $rejectionReason: CommentRejectionReason!
+) {
+  requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
+    state
+    rejectionReason
+  }
+}
+
 fragment CommentRevision on CommentRevision {
   text
   title
@@ -5,12 +59,22 @@ fragment CommentRevision on CommentRevision {
   createdAt
 }
 
+fragment CommentUser on User {
+  id
+  name
+  firstName
+  flair
+  image {
+    ...FullImage
+  }
+}
+
 fragment FullParentComment on Comment {
   id
   state
   rejectionReason
   user {
-    ...FullUser
+    ...CommentUser
   }
   guestUsername
   revisions {
@@ -29,7 +93,7 @@ fragment FullComment on Comment {
     ...FullImage
   }
   user {
-    ...FullUser
+    ...CommentUser
   }
   revisions {
     ...CommentRevision
@@ -58,13 +122,20 @@ fragment FullComment on Comment {
 
 query CommentList(
   $filter: CommentFilter
-  $cursor: String
+  $cursorId: String
   $take: Int
   $skip: Int
   $order: SortOrder
   $sort: CommentSort
 ) {
-  comments(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  comments(
+    filter: $filter
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...FullComment
     }
@@ -86,36 +157,16 @@ query Comment($id: String!) {
   }
 }
 
-mutation ApproveComment($id: String!) {
-  approveComment(id: $id) {
-    state
-  }
-}
-
-mutation RejectComment($id: String!, $rejectionReason: CommentRejectionReason) {
-  rejectComment(id: $id, rejectionReason: $rejectionReason) {
-    state
-    rejectionReason
-  }
-}
-
-mutation RequestChangesOnComment($id: String!, $rejectionReason: CommentRejectionReason!) {
-  requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
-    state
-    rejectionReason
-  }
-}
-
-mutation updateComment(
+mutation UpdateComment(
   $id: String!
-  $revision: CommentRevisionUpdateInput
+  $revision: CommentRevisionInput
   $userID: String
   $guestUsername: String
   $guestUserImageID: String
   $featured: Boolean
   $source: String
   $tagIds: [String!]
-  $ratingOverrides: [CommentRatingOverrideUpdateInput!]
+  $ratingOverrides: [OverriddenRatingInput!]
 ) {
   updateComment(
     id: $id
@@ -132,7 +183,7 @@ mutation updateComment(
   }
 }
 
-mutation createComment(
+mutation CreateComment(
   $itemID: String!
   $itemType: CommentItemType!
   $parentID: String

@@ -1,20 +1,17 @@
 import {
-  CommentItemType,
-  TagType,
-  useCreateCommentMutation,
-} from '@wepublish/editor/api';
-import {
   ArticleFilter,
   ArticleListDocument,
   ArticleListQuery,
   ArticleSort,
+  CommentItemType,
   FullArticleFragment,
-  getApiClientV2,
+  TagType,
   useArticleListQuery,
+  useCreateCommentMutation,
   useDeleteArticleMutation,
   useDuplicateArticleMutation,
   useUnpublishArticleMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
@@ -93,14 +90,11 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
   const [sortField, setSortField] = useState('modifiedAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  const client = getApiClientV2();
-  const [deleteArticle, { loading: isDeleting }] = useDeleteArticleMutation({
-    client,
-  });
+  const [deleteArticle, { loading: isDeleting }] = useDeleteArticleMutation({});
   const [unpublishArticle, { loading: isUnpublishing }] =
-    useUnpublishArticleMutation({ client });
+    useUnpublishArticleMutation();
   const [duplicateArticle, { loading: isDuplicating }] =
-    useDuplicateArticleMutation({ client });
+    useDuplicateArticleMutation();
 
   const articleListVariables = useMemo(
     () => ({
@@ -118,9 +112,7 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
     refetch,
     loading: isLoading,
   } = useArticleListQuery({
-    client,
     variables: articleListVariables,
-    fetchPolicy: 'cache-and-network',
   });
   const [createComment] = useCreateCommentMutation();
 

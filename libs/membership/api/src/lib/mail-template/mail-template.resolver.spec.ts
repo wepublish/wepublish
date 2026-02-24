@@ -67,7 +67,7 @@ const prismaServiceMock = {
 };
 
 const mailProviderServiceMock = {
-  name: 'MockProvider',
+  getName: jest.fn(async () => 'MockProvider'),
   getTemplateUrl: jest.fn((): string => 'https://example.com/template.html'),
 };
 
@@ -151,7 +151,7 @@ describe('MailTemplatesResolver', () => {
 
   it('resolves the provider', async () => {
     const result = await resolver.provider();
-    expect(result.name).toEqual('MockProvider');
+    expect(await (result as any).name).toBe('MockProvider');
   });
 
   it('synchronizes the mail templates', async () => {

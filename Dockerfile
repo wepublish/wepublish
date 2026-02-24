@@ -154,8 +154,8 @@ RUN groupadd -r wepublish && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     npm install prisma@5.0.0 bcrypt && \
-    npx prisma generate \
-    USER wepublish
+    npx prisma generate
+USER wepublish
 CMD ["bash", "./start.sh"]
 
 

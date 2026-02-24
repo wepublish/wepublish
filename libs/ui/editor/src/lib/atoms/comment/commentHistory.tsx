@@ -87,6 +87,7 @@ export function CommentHistory({
 }: CommentHistoryProps) {
   const { t } = useTranslation();
   const [comments, setComments] = useState<FullCommentFragment[] | undefined>();
+
   const [fetchCommentList, { data }] = useCommentListLazyQuery({
     variables: {
       filter: {
@@ -102,7 +103,6 @@ export function CommentHistory({
       sort: CommentSort.CreatedAt,
       take: 1000,
     },
-    fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {

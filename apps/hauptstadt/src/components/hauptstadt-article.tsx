@@ -152,7 +152,7 @@ export const HauptstadtArticleMeta = ({
     },
   });
 
-  const commentCount = data?.comments.length;
+  const commentCount = data?.commentsForItem.length;
   const canShare = typeof window !== 'undefined' && 'share' in navigator;
 
   return (

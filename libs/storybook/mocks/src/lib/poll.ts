@@ -1,18 +1,15 @@
-import {
-  FullPollFragment,
-  PollAnswerWithVoteCount,
-} from '@wepublish/website/api';
+import { FullPollFragment, PollAnswer } from '@wepublish/website/api';
 import { mockRichText } from './richtext';
 import nanoid from 'nanoid';
 
 export const mockPollAnswer = ({ votes = 1000, answer = 'Foobar' } = {}) =>
   ({
-    __typename: 'PollAnswerWithVoteCount',
+    __typename: 'PollAnswer',
     id: nanoid(),
     pollId: nanoid(),
     votes,
     answer,
-  }) as PollAnswerWithVoteCount;
+  }) as PollAnswer;
 
 export const mockPoll = ({
   infoText = mockRichText(),

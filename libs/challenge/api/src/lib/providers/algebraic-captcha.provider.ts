@@ -18,7 +18,7 @@ export interface TestingChallengeAnswer {
   challengeSolution: string;
 }
 
-export class AlgebraicCaptchaChallenge implements ChallengeProvider {
+export class AlgebraicCaptchaChallenge extends ChallengeProvider {
   // Hash list to prevent replay attacks
   private validHashes: Store;
   // counter to prevent reuse!
@@ -38,6 +38,7 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
     challengeValidTime: number,
     algebraicCaptchaOptions: IParams
   ) {
+    super();
     this.challengeSecret = challengeSecret;
     this.challengeValidTime = challengeValidTime * 1000;
     this.validHashes = {};

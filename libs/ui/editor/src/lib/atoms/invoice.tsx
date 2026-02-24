@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import {
   FullUserFragment,
   InvoiceFragment,
-  InvoiceItem,
   useMarkInvoiceAsPaidMutation,
 } from '@wepublish/editor/api';
 import { useState } from 'react';
@@ -57,6 +56,7 @@ export function Invoice({
 }: InvoiceProps) {
   // variable definitions
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+
   const [markInvoiceAsPaid] = useMarkInvoiceAsPaidMutation();
   const { t } = useTranslation();
 
@@ -76,33 +76,12 @@ export function Invoice({
       return;
     }
 
-    // talk with the private api
-    const items = prepareInvoiceItemsForApi(invoice.items);
-
     await markInvoiceAsPaid({
       variables: {
         id: invoice.id,
       },
     });
     onInvoicePaid();
-  }
-
-  /**
-   * helper function
-   * to be compatible with the api, we have to prepare the current invoice items
-   */
-  function prepareInvoiceItemsForApi(items: InvoiceItem[]): InvoiceItem[] {
-    return items.map(item => {
-      return {
-        name: item.name,
-        description: item.description,
-        quantity: item.quantity,
-        amount: item.amount,
-        createdAt: new Date(item.createdAt).toISOString(),
-        modifiedAt: new Date(item.modifiedAt).toISOString(),
-        total: item.total,
-      };
-    });
   }
 
   /**

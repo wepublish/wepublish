@@ -1,10 +1,9 @@
 import styled from '@emotion/styled';
 import {
-  getApiClientV2,
   Paywall,
   useDeletePaywallMutation,
   usePaywallListQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   CanCreatePaywall,
   CanDeletePaywall,
@@ -43,13 +42,8 @@ function PaywallList() {
     undefined
   );
 
-  const client = getApiClientV2();
-  const { data, loading, refetch } = usePaywallListQuery({
-    fetchPolicy: 'cache-and-network',
-    client,
-  });
+  const { data, loading, refetch } = usePaywallListQuery({});
   const [deletePaywall] = useDeletePaywallMutation({
-    client,
     onCompleted() {
       refetch();
     },

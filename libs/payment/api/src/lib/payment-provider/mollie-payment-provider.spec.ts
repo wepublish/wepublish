@@ -13,7 +13,8 @@ import bodyParser from 'body-parser';
 import { PaymentState } from '@prisma/client';
 import { PaymentMethod } from '@mollie/api-client';
 import { PrismaClient } from '@prisma/client';
-
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { mapMolliePaymentMethods } from '../payment.methode.mapper';
 const mollieApiPaymentGet = {
   status: 'paid',
   price: 22,
@@ -92,27 +93,40 @@ describe('MolliePaymentProvider', () => {
 
   beforeEach(() => {
     const mockPrisma = {} as PrismaClient;
+    const mockKvOffSession = {
+      getOrLoadNs: jest.fn().mockResolvedValue({
+        name: 'Mollie',
+        offSessionPayments: true,
+        webhookEndpointSecret: 'secret',
+        mollie_apiBaseUrl: 'https://api.wepublish.dev',
+        apiKey: 'secret',
+        mollie_methods: ['PAYPAL'],
+      }),
+    } as unknown as KvTtlCacheService;
+
+    const mockKvOnSession = {
+      getOrLoadNs: jest.fn().mockResolvedValue({
+        name: 'Mollie',
+        offSessionPayments: false,
+        webhookEndpointSecret: 'secret',
+        mollie_apiBaseUrl: 'https://api.wepublish.dev',
+        apiKey: 'secret',
+        mollie_methods: ['PAYPAL'],
+      }),
+    } as unknown as KvTtlCacheService;
 
     mollieOffSession = new MolliePaymentProvider({
       id: 'mollie',
-      name: 'Mollie',
-      offSessionPayments: true,
-      webhookEndpointSecret: 'secret',
-      apiBaseUrl: 'https://api.wepublish.dev',
-      apiKey: 'secret',
       incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
       prisma: mockPrisma,
+      kv: mockKvOffSession,
     });
 
     mollieOnSession = new MolliePaymentProvider({
       id: 'mollie',
-      name: 'Mollie',
-      offSessionPayments: false,
-      webhookEndpointSecret: 'secret',
-      apiBaseUrl: 'https://api.wepublish.dev',
-      apiKey: 'secret',
       incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
       prisma: mockPrisma,
+      kv: mockKvOnSession,
     });
   });
 
@@ -257,15 +271,16 @@ describe('MolliePaymentProvider', () => {
 
   describe('getPaymentMethode', () => {
     it('should parse payment methods', async () => {
-      expect(
-        mollieOffSession.getPaymentMethode(['paypal', 'creditcard'])
-      ).toEqual([PaymentMethod.paypal, PaymentMethod.creditcard]);
+      expect(mapMolliePaymentMethods(['PAYPAL', 'CREDITCARD'])).toEqual([
+        PaymentMethod.paypal,
+        PaymentMethod.creditcard,
+      ]);
     });
   });
 
   describe('generateWebhookUrl', () => {
     it('should generate correct webhook url', async () => {
-      expect(mollieOffSession.generateWebhookUrl()).toEqual(
+      expect(await mollieOffSession.generateWebhookUrl()).toEqual(
         'https://api.wepublish.dev/payment-webhooks/mollie?key=secret'
       );
     });
@@ -325,24 +340,25 @@ describe('MolliePaymentProvider', () => {
 
   describe('createOffsiteTransactionIntent', () => {
     it('should return no payment url for valid offsession customer', async () => {
-      const modifiedCreatePaymentIntentProps = structuredClone(
-        defaultCreatePaymentIntentProps
-      );
-      modifiedCreatePaymentIntentProps.customerID = '22';
-      (
-        mollieOffSession.mollieClient.customerPayments.create as jest.Mock
-      ).mockImplementationOnce(() =>
-        Promise.resolve({
-          customerId: '22',
-          id: 'test_payment_id',
-          status: 'paid',
-          getCheckoutUrl: () => '',
-        })
-      );
+      const props = structuredClone(defaultCreatePaymentIntentProps);
+      props.customerID = '22';
+
+      const mockClient = {
+        customerPayments: {
+          create: jest.fn().mockResolvedValue({
+            customerId: '22',
+            id: 'test_payment_id',
+            status: 'paid',
+            getCheckoutUrl: () => '',
+          }),
+        },
+      };
+
+      jest
+        .spyOn(mollieOffSession, 'getMollieGateway')
+        .mockResolvedValue(mockClient as any);
       expect(
-        await mollieOffSession.createOffsiteTransactionIntent(
-          modifiedCreatePaymentIntentProps
-        )
+        await mollieOffSession.createOffsiteTransactionIntent(props)
       ).toEqual({
         intentData:
           '{"customerId":"22","id":"test_payment_id","status":"paid"}',
@@ -355,7 +371,8 @@ describe('MolliePaymentProvider', () => {
       // Workaround to make linter happy :-)
       const x = 'tt';
       (
-        mollieOffSession.mollieClient.customerPayments.create as jest.Mock
+        (await mollieOffSession.getMollieGateway()).customerPayments
+          .create as jest.Mock
       ).mockImplementationOnce(() =>
         Promise.resolve({
           customerId: '22',
@@ -379,78 +396,86 @@ describe('MolliePaymentProvider', () => {
   });
 
   describe('checkIntentStatus', () => {
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
     it('offsession paid payment', async () => {
-      const intent: CheckIntentProps = {
-        intentID: '1',
-        paymentID: '1',
+      const intent: CheckIntentProps = { intentID: '1', paymentID: '1' };
+
+      const mockClient = {
+        payments: {
+          get: jest.fn().mockResolvedValue({
+            id: 'test_payment_id',
+            status: 'paid',
+            customerId: 'customer_id',
+            metadata: { paymentID: '22' },
+          }),
+        },
       };
 
-      (
-        mollieOffSession.mollieClient.payments.get as jest.Mock
-      ).mockImplementationOnce(() =>
-        Promise.resolve({
-          id: 'test_payment_id',
-          status: 'paid',
-          customerId: 'customer_id',
-          metadata: {
-            paymentID: '22',
-          },
-        })
+      jest
+        .spyOn(mollieOffSession, 'getMollieGateway')
+        .mockResolvedValue(mockClient as any);
+
+      await expect(mollieOffSession.checkIntentStatus(intent)).resolves.toEqual(
+        {
+          customerID: 'customer_id',
+          paymentData:
+            '{"id":"test_payment_id","status":"paid","customerId":"customer_id","metadata":{"paymentID":"22"}}',
+          paymentID: '22',
+          state: 'paid',
+        }
       );
-      expect(await mollieOffSession.checkIntentStatus(intent)).toEqual({
-        customerID: 'customer_id',
-        paymentData:
-          '{"id":"test_payment_id","status":"paid","customerId":"customer_id","metadata":{"paymentID":"22"}}',
-        paymentID: '22',
-        state: 'paid',
-      });
     });
 
     it('offsession failed payment', async () => {
-      const intent: CheckIntentProps = {
-        intentID: '1',
-        paymentID: '1',
+      const intent: CheckIntentProps = { intentID: '1', paymentID: '1' };
+
+      const mockClient = {
+        payments: {
+          get: jest.fn().mockResolvedValue({
+            id: 'test_payment_id',
+            status: 'failed',
+            customerId: 'customer_id',
+            metadata: { paymentID: '22' },
+          }),
+        },
       };
 
-      (
-        mollieOffSession.mollieClient.payments.get as jest.Mock
-      ).mockImplementationOnce(() =>
-        Promise.resolve({
-          id: 'test_payment_id',
-          status: 'failed',
-          customerId: 'customer_id',
-          metadata: {
-            paymentID: '22',
-          },
-        })
+      jest
+        .spyOn(mollieOffSession, 'getMollieGateway')
+        .mockResolvedValue(mockClient as any);
+
+      await expect(mollieOffSession.checkIntentStatus(intent)).resolves.toEqual(
+        {
+          customerID: 'customer_id',
+          paymentData:
+            '{"id":"test_payment_id","status":"failed","customerId":"customer_id","metadata":{"paymentID":"22"}}',
+          paymentID: '22',
+          state: 'requiresUserAction',
+        }
       );
-      expect(await mollieOffSession.checkIntentStatus(intent)).toEqual({
-        customerID: 'customer_id',
-        paymentData:
-          '{"id":"test_payment_id","status":"failed","customerId":"customer_id","metadata":{"paymentID":"22"}}',
-        paymentID: '22',
-        state: 'requiresUserAction',
-      });
     });
 
     it('onsession paid payment', async () => {
-      const intent: CheckIntentProps = {
-        intentID: '1',
-        paymentID: '1',
+      const intent: CheckIntentProps = { intentID: '1', paymentID: '1' };
+
+      const mockClient = {
+        payments: {
+          get: jest.fn().mockResolvedValue({
+            id: 'test_payment_id',
+            status: 'paid',
+            metadata: { paymentID: '22' },
+          }),
+        },
       };
 
-      (
-        mollieOnSession.mollieClient.payments.get as jest.Mock
-      ).mockImplementationOnce(() =>
-        Promise.resolve({
-          id: 'test_payment_id',
-          status: 'paid',
-          metadata: {
-            paymentID: '22',
-          },
-        })
-      );
-      expect(await mollieOnSession.checkIntentStatus(intent)).toEqual({
+      jest
+        .spyOn(mollieOnSession, 'getMollieGateway')
+        .mockResolvedValue(mockClient as any);
+
+      await expect(mollieOnSession.checkIntentStatus(intent)).resolves.toEqual({
         customerID: undefined,
         paymentData:
           '{"id":"test_payment_id","status":"paid","metadata":{"paymentID":"22"}}',
@@ -460,25 +485,25 @@ describe('MolliePaymentProvider', () => {
     });
 
     it('missing paymentID', async () => {
-      const intent: CheckIntentProps = {
-        intentID: '1',
-        paymentID: '1',
+      const intent: CheckIntentProps = { intentID: '1', paymentID: '1' };
+
+      const mockClient = {
+        payments: {
+          get: jest.fn().mockResolvedValue({
+            id: 'test_payment_id',
+            status: 'paid',
+            metadata: { email: 'admin@wepublish.ch' }, // no paymentID
+          }),
+        },
       };
 
-      (
-        mollieOffSession.mollieClient.payments.get as jest.Mock
-      ).mockImplementationOnce(() =>
-        Promise.resolve({
-          id: 'test_payment_id',
-          status: 'paid',
-          metadata: {
-            email: 'admin@wepublish.ch',
-          },
-        })
+      jest
+        .spyOn(mollieOffSession, 'getMollieGateway')
+        .mockResolvedValue(mockClient as any);
+
+      await expect(mollieOffSession.checkIntentStatus(intent)).rejects.toThrow(
+        'empty paymentID'
       );
-      await expect(
-        mollieOffSession.checkIntentStatus(intent)
-      ).rejects.toThrowError(new Error('empty paymentID'));
     });
   });
 });

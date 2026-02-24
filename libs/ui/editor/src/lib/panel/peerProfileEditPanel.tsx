@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import {
+  FullImageFragment,
   Maybe,
   PeerProfileDocument,
   PeerProfileQuery,
   usePeerProfileQuery,
   useUpdatePeerProfileMutation,
 } from '@wepublish/editor/api';
-import { FullImageFragment } from '@wepublish/editor/api-v2';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -84,9 +84,7 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
     data,
     loading: isLoading,
     error: fetchError,
-  } = usePeerProfileQuery({
-    fetchPolicy: 'network-only',
-  });
+  } = usePeerProfileQuery({});
 
   const [updateSettings, { loading: isSaving, error: saveError }] =
     useUpdatePeerProfileMutation({
@@ -109,7 +107,6 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
         : createDefaultValue()
       );
       setCallToActionTextURL(data.peerProfile.callToActionURL);
-      // @ts-expect-error wrong image type for now. Will be fixed with peer PR
       setCallToActionImage(data?.peerProfile?.callToActionImage);
       setCallToActionImageURL(data.peerProfile.callToActionImageURL ?? '');
     }
@@ -133,19 +130,18 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
   async function handleSave() {
     await updateSettings({
       variables: {
-        input: {
-          name,
-          logoID: logoImage?.id,
-          squareLogoId: squareLogoImage?.id,
-          themeColor,
-          themeFontColor,
-          callToActionText: callToActionText!,
-          callToActionURL: callToActionTextURL,
-          callToActionImageID: callToActionImage?.id,
-          callToActionImageURL,
-        },
+        name,
+        logoID: logoImage!.id,
+        squareLogoId: squareLogoImage!.id,
+        themeColor,
+        themeFontColor,
+        callToActionText: callToActionText!,
+        callToActionURL: callToActionTextURL,
+        callToActionImageID: callToActionImage!.id,
+        callToActionImageURL,
       },
     });
+
     toaster.push(
       <Message
         type="success"

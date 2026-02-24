@@ -1,7 +1,7 @@
 import {
   CreateBannerActionInput,
   BannerActionRole,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { Button, Col, Form, Grid, Row, SelectPicker } from 'rsuite';
 

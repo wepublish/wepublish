@@ -26,6 +26,10 @@ registerEnumType(MemberPlanSort, {
   name: 'MemberPlanSort',
 });
 
+registerEnumType(PaymentPeriodicity, {
+  name: 'PaymentPeriodicity',
+});
+
 registerEnumType(Currency, {
   name: 'Currency',
 });
@@ -130,7 +134,7 @@ export class MemberPlan extends HasImage {
 }
 
 @ObjectType()
-export class MemberPlanConnection extends PaginatedType(MemberPlan) {}
+export class PaginatedMemberPlans extends PaginatedType(MemberPlan) {}
 
 @InputType()
 export class MemberPlanFilter {

@@ -10,9 +10,8 @@ import {
   SubscriptionEvent,
   useMailTemplateQuery,
   UserEvent,
-  getApiClientV2,
   useSystemMailsQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   Grid,
   Table,
@@ -80,13 +79,9 @@ function getPlaceholderExample(
 
 export function PlaceholderList() {
   const { t } = useTranslation();
-  const client = useMemo(() => getApiClientV2(), []);
-  const { data: systemMails } = useSystemMailsQuery(
-    DEFAULT_QUERY_OPTIONS(client)
-  );
-  const { data: mailTemplate } = useMailTemplateQuery(
-    DEFAULT_QUERY_OPTIONS(client)
-  );
+
+  const { data: systemMails } = useSystemMailsQuery(DEFAULT_QUERY_OPTIONS());
+  const { data: mailTemplate } = useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
 
   const defaultPlaceholders = useMemo(
     () =>

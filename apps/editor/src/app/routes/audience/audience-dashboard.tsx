@@ -1,8 +1,5 @@
 import styled from '@emotion/styled';
-import {
-  getApiClientV2,
-  useDailySubscriptionStatsLazyQuery,
-} from '@wepublish/editor/api-v2';
+import { useDailySubscriptionStatsLazyQuery } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   ListViewContainer,
@@ -47,11 +44,9 @@ function AudienceDashboard({
   initialDateRange = 'lastMonth',
 }: AudienceDashboardProps) {
   const { t } = useTranslation();
-  const client = getApiClientV2();
+
   const [fetchStats, { data: rawAudienceStats, loading }] =
-    useDailySubscriptionStatsLazyQuery({
-      client,
-    });
+    useDailySubscriptionStatsLazyQuery({});
 
   const {
     audienceApiFilter,

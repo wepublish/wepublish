@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import ListIcon from '@rsuite/icons/List';
-import { DailySubscriptionStats } from '@wepublish/editor/api-v2';
+import { DailySubscriptionStats } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdInfo } from 'react-icons/md';
@@ -184,7 +184,7 @@ export function AudienceTable({
           </HeaderCell>
           <Cell dataKey="totalNewSubscriptions">
             {(rowData: RowDataType<AudienceStatsComputed>) => (
-              <b>{rowData.totalNewSubscriptions}</b>
+              <strong>{rowData.totalNewSubscriptions}</strong>
             )}
           </Cell>
         </Column>
@@ -235,7 +235,7 @@ export function AudienceTable({
                 <span>
                   ({rowData.renewedAndReplaced} / {rowData.totalToBeRenewed})
                 </span>{' '}
-                <b>{rowData.renewalRate}%</b>
+                <strong>{rowData.renewalRate}%</strong>
               </>
             )}
           </Cell>
@@ -257,7 +257,7 @@ export function AudienceTable({
                     rowData.overdueSubscriptionCount * -1}{' '}
                   / {rowData.totalToBeRenewed})
                 </span>{' '}
-                <b>{rowData.cancellationRate}%</b>
+                <strong>{rowData.cancellationRate}%</strong>
               </>
             )}
           </Cell>

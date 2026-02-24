@@ -31,8 +31,8 @@ export const HauptstadtSubscribe = (props: BuilderSubscribeBlockProps) => {
   });
 
   const filteredSubscriptions = useMemo(
-    () => data?.subscriptions.filter(isSubscriptionUpgradeable) ?? [],
-    [data?.subscriptions]
+    () => data?.userSubscriptions.filter(isSubscriptionUpgradeable) ?? [],
+    [data?.userSubscriptions]
   );
 
   const upgradeableTo = useMemo(

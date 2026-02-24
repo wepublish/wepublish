@@ -1,10 +1,6 @@
 import { ApolloError } from '@apollo/client';
 import styled from '@emotion/styled';
-import {
-  Crowdfunding,
-  getApiClientV2,
-  useCrowdfundingsQuery,
-} from '@wepublish/editor/api-v2';
+import { Crowdfunding, useCrowdfundingsQuery } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { MdAddCircle } from 'react-icons/md';
 import { Button, Drawer, IconButton, Message, Table, toaster } from 'rsuite';
@@ -49,12 +45,9 @@ export function SelectCrowdfundingPanel({
   onSelect,
 }: SelectCrowdfundingPanelProps) {
   const { t } = useTranslation();
-  const client = getApiClientV2();
 
   const { data, loading } = useCrowdfundingsQuery({
     onError: onErrorToast,
-    fetchPolicy: 'cache-and-network',
-    client,
   });
 
   return (

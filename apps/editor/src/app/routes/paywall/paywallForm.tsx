@@ -5,7 +5,7 @@ import {
   MemberPlan,
   MutationCreatePaywallArgs,
   MutationUpdatePaywallArgs,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   RichTextBlock,
   RichTextBlockValue,

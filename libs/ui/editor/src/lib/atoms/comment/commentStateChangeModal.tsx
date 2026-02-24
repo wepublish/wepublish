@@ -84,6 +84,7 @@ export function CommentStateChangeModal({
   const [open, setOpen] = useState<boolean>(false);
   const [rejectionReason, setRejectionReason] =
     useState<CommentRejectionReason>();
+
   const [approveComment, { loading: isApproving, error: errorApprove }] =
     useApproveCommentMutation();
   const [
@@ -128,7 +129,10 @@ export function CommentStateChangeModal({
         setOpen(false);
         break;
       case CommentState.PendingUserChanges:
-        if (!rejectionReason) return;
+        if (!rejectionReason) {
+          return;
+        }
+
         await requestChanges({
           variables: {
             id: comment.id,
@@ -147,7 +151,8 @@ export function CommentStateChangeModal({
         await rejectComment({
           variables: {
             id: comment.id,
-            rejectionReason,
+            rejectionReason:
+              rejectionReason ?? CommentRejectionReason.Misconduct,
           },
           onCompleted: data => {
             if (onStateChanged) {

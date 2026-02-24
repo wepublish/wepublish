@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   MemberPlan,
   MetadataProperty,
@@ -10,13 +15,6 @@ import {
   SubscriptionDeactivationReason,
   SubscriptionPeriod,
 } from '@prisma/client';
-import {
-  InternalError,
-  MonthlyAmountNotEnough,
-  NotFound,
-  SubscriptionToDeactivateDoesNotExist,
-} from '@wepublish/api';
-import { RemoteSubscriptionsService } from './remote-subscriptions.service';
 import {
   MemberPlanDataloader,
   MemberPlanService,
@@ -44,7 +42,6 @@ export class UserSubscriptionService {
     private payments: PaymentsService,
     private memberPlanService: MemberPlanService,
     private memberPlanDataloader: MemberPlanDataloader,
-    private remoteSubscriptionsService: RemoteSubscriptionsService,
     private memberContext: MemberContextService
   ) {}
 
@@ -88,8 +85,8 @@ export class UserSubscriptionService {
         },
       });
       if (!subscriptionToDeactivate)
-        throw new SubscriptionToDeactivateDoesNotExist(
-          deactivateSubscriptionId
+        throw new BadRequestException(
+          `Subscription to deactivate with id ${deactivateSubscriptionId} not found or the subscription is already deactivated!`
         );
     }
 
@@ -100,10 +97,10 @@ export class UserSubscriptionService {
     const { subscription, invoice } =
       await this.memberContext.createSubscription({
         userID: userId,
-        paymentMethodId: paymentMethod.id,
+        paymentMethodID: paymentMethod.id,
         paymentPeriodicity,
         monthlyAmount,
-        memberPlanId: memberPlan.id,
+        memberPlanID: memberPlan.id,
         properties,
         autoRenew,
         extendable: memberPlan.extendable,
@@ -115,7 +112,7 @@ export class UserSubscriptionService {
         'Could not create new invoice for subscription with ID "%s"',
         subscription.id
       );
-      throw new InternalError();
+      throw new InternalServerErrorException();
     }
 
     if (subscriptionToDeactivate) {
@@ -158,10 +155,10 @@ export class UserSubscriptionService {
       const { subscription, invoice } =
         await this.memberContext.createSubscription({
           userID: userId,
-          paymentMethodId: paymentMethod.id,
+          paymentMethodID: paymentMethod.id,
           paymentPeriodicity,
           monthlyAmount,
-          memberPlanId: memberPlan.id,
+          memberPlanID: memberPlan.id,
           properties,
           autoRenew,
           extendable: memberPlan.extendable,
@@ -175,7 +172,7 @@ export class UserSubscriptionService {
           'Could not create new invoice for subscription with ID "%s"',
           subscription.id
         );
-        throw new InternalError();
+        throw new InternalServerErrorException();
       }
 
       return true;
@@ -225,7 +222,7 @@ export class UserSubscriptionService {
         'Could not find paymentMethod with ID "%s"',
         subscription.paymentMethodID
       );
-      throw new InternalError();
+      throw new InternalServerErrorException();
     }
 
     const paymentProvider = this.payments
@@ -253,11 +250,11 @@ export class UserSubscriptionService {
         'Could not create new invoice for subscription with ID "%s"',
         subscription.id
       );
-      throw new InternalError();
+      throw new InternalServerErrorException();
     }
 
     // If payment provider supports off session payment try to charge
-    if (!paymentProvider || paymentProvider.offSessionPayments) {
+    if (!paymentProvider || (await paymentProvider.isOffSession())) {
       const paymentMethod = await this.prisma.paymentMethod.findUnique({
         where: {
           id: subscription.paymentMethodID,
@@ -270,7 +267,7 @@ export class UserSubscriptionService {
           'paymentMethod %s not found',
           subscription.paymentMethodID
         );
-        throw new InternalError();
+        throw new InternalServerErrorException();
       }
 
       const fullUser = await this.prisma.user.findUnique({
@@ -283,7 +280,7 @@ export class UserSubscriptionService {
           'user %s not found',
           subscription.userID
         );
-        throw new InternalError();
+        throw new InternalServerErrorException();
       }
 
       const customer = fullUser.paymentProviderCustomers.find(
@@ -351,7 +348,7 @@ export class UserSubscriptionService {
       },
     });
 
-    if (!subscription) throw new NotFound('subscription', id);
+    if (!subscription) throw new NotFoundException('subscription', id);
 
     const {
       memberPlanID,
@@ -366,7 +363,7 @@ export class UserSubscriptionService {
       memberPlanID as string
     );
     if (!memberPlan) {
-      throw new NotFound('MemberPlan', memberPlanID as string);
+      throw new NotFoundException('MemberPlan', memberPlanID as string);
     }
 
     const paymentMethod = await this.prisma.paymentMethod.findUnique({
@@ -374,14 +371,14 @@ export class UserSubscriptionService {
     });
 
     if (!paymentMethod) {
-      throw new NotFound('PaymentMethod', paymentMethodID as string);
+      throw new NotFoundException('PaymentMethod', paymentMethodID as string);
     }
 
     if (
       !monthlyAmount ||
       (monthlyAmount as number) < memberPlan.amountPerMonthMin
     )
-      throw new MonthlyAmountNotEnough();
+      throw new BadRequestException(`Monthly amount is not enough`);
 
     if (subscription.deactivation) {
       throw new Error(
@@ -414,7 +411,7 @@ export class UserSubscriptionService {
       );
 
     if (paymentProvider?.remoteManagedSubscription) {
-      await this.remoteSubscriptionsService.updateSubscription({
+      await this.memberContext.updateRemoteSubscription({
         paymentProvider,
         originalSubscription: subscription,
         input: input as Subscription,
@@ -521,6 +518,10 @@ export class UserSubscriptionService {
       throw new BadRequestException(
         `MemberPlan not found ${memberPlanID || memberPlanSlug}`
       );
+    }
+
+    if (!memberPlan.active) {
+      throw new BadRequestException(`MemberPlan ${memberPlan.id} not active`);
     }
 
     const paymentMethod = await this.prisma.paymentMethod.findFirst({

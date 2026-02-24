@@ -174,10 +174,10 @@ export class UpgradeSubscriptionService {
 
     const { invoice } = await this.memberContext.createSubscription({
       userID: userId,
-      paymentMethodId,
+      paymentMethodID: paymentMethodId,
       paymentPeriodicity: oldSubscription.paymentPeriodicity,
       monthlyAmount,
-      memberPlanId,
+      memberPlanID: memberPlanId,
       properties: [],
       autoRenew: true,
       extendable: oldSubscription.extendable,

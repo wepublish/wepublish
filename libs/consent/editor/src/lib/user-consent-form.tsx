@@ -4,8 +4,7 @@ import {
   MutationCreateUserConsentArgs,
   MutationUpdateUserConsentArgs,
   useConsentsQuery,
-} from '@wepublish/editor/api-v2';
-import { useMemo } from 'react';
+} from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import {
   Checkbox,
@@ -16,7 +15,6 @@ import {
   SelectPicker,
   toaster,
 } from 'rsuite';
-import { getApiClientV2 } from '@wepublish/editor/api-v2';
 
 type UserConsentFormData = Partial<
   MutationCreateUserConsentArgs & MutationUpdateUserConsentArgs
@@ -46,7 +44,6 @@ export const UserConsentForm = ({
   onChange,
   isEdit,
 }: UserConsentFormProps) => {
-  const client = useMemo(() => getApiClientV2(), []);
   const { t } = useTranslation();
 
   const consentValues = [
@@ -64,12 +61,9 @@ export const UserConsentForm = ({
     variables: {
       take: 100,
     },
-    fetchPolicy: 'network-only',
   });
 
   const { loading: loadingConsents, data: consentsData } = useConsentsQuery({
-    client,
-    fetchPolicy: 'cache-and-network',
     onError: onErrorToast,
   });
 

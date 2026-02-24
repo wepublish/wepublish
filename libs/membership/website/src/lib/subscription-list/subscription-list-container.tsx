@@ -9,7 +9,6 @@ import {
   ExtendSubscriptionMutation,
   FullMemberPlanFragment,
   FullSubscriptionFragment,
-  usePageLazyQuery,
 } from '@wepublish/website/api';
 import {
   BuilderContainerProps,
@@ -41,32 +40,28 @@ export function SubscriptionListContainer({
   const [cancel] = useCancelSubscriptionMutationWithCacheUpdate();
   const [extend] = useExtendSubscriptionMutation({
     onCompleted(data: ExtendSubscriptionMutation) {
-      if (!data.extendSubscription?.intentSecret) {
+      if (!data.extendUserSubscription?.intentSecret) {
         invoices.refetch();
         return;
       }
 
       if (
-        data.extendSubscription.paymentMethod.paymentProviderID === 'stripe'
+        data.extendUserSubscription.paymentMethod.paymentProviderID === 'stripe'
       ) {
-        setStripeClientSecret(data.extendSubscription.intentSecret);
+        setStripeClientSecret(data.extendUserSubscription.intentSecret);
       }
 
-      if (data.extendSubscription.intentSecret.startsWith('http')) {
-        window.location.href = data.extendSubscription.intentSecret;
+      if (data.extendUserSubscription.intentSecret.startsWith('http')) {
+        window.location.href = data.extendUserSubscription.intentSecret;
       }
     },
   });
 
-  // @TODO: Replace with objects on Memberplan when Memberplan has been migrated to V2
-  // Pages are currently in V2 and Memberplan are in V1, so we have no access to page objects.
-  const [fetchPage] = usePageLazyQuery();
-
   const filteredSubscriptions = useMemo(
     () =>
       produce(data, draftData => {
-        if (filter && draftData?.subscriptions) {
-          draftData.subscriptions = filter(draftData.subscriptions);
+        if (filter && draftData?.userSubscriptions) {
+          draftData.userSubscriptions = filter(draftData.userSubscriptions);
         }
       }),
     [data, filter]
@@ -79,20 +74,10 @@ export function SubscriptionListContainer({
           <StripePayment
             onClose={async success => {
               if (stripeMemberPlan) {
-                const page = await fetchPage({
-                  variables: {
-                    id:
-                      success ?
-                        stripeMemberPlan.successPageId
-                      : stripeMemberPlan.failPageId,
-                  },
-                });
-
-                window.location.href = page.data?.page.url ?? '';
-
-                // window.location.href = success
-                //   ? stripeMemberPlan.successPage?.url ?? ''
-                //   : stripeMemberPlan.failPage?.url ?? ''
+                window.location.href =
+                  success ?
+                    (stripeMemberPlan.successPage?.url ?? '')
+                  : (stripeMemberPlan.failPage?.url ?? '');
               }
             }}
           />
@@ -114,31 +99,16 @@ export function SubscriptionListContainer({
           });
         }}
         onExtend={async subscriptionId => {
-          const memberPlan = filteredSubscriptions?.subscriptions?.find(
+          const memberPlan = filteredSubscriptions?.userSubscriptions?.find(
             subscription => subscription.id === subscriptionId
           )?.memberPlan;
           setStripeMemberPlan(memberPlan);
 
-          const [successPage, failPage] = await Promise.all([
-            fetchPage({
-              variables: {
-                id: memberPlan?.successPageId,
-              },
-            }),
-            fetchPage({
-              variables: {
-                id: memberPlan?.successPageId,
-              },
-            }),
-          ]);
-
           await extend({
             variables: {
               subscriptionId,
-              successURL: successPage.data?.page.url,
-              failureURL: failPage.data?.page.url,
-              // failureURL: memberPlan?.failPage?.url,
-              // successURL: memberPlan?.successPage?.url
+              failureURL: memberPlan?.failPage?.url,
+              successURL: memberPlan?.successPage?.url,
             },
           });
         }}
@@ -157,8 +127,8 @@ const useCancelSubscriptionMutationWithCacheUpdate = (
 
       if (newSubscription) {
         cache.updateQuery<InvoicesQuery>({ query: InvoicesDocument }, data => ({
-          invoices:
-            data?.invoices.map(invoice => {
+          userInvoices:
+            data?.userInvoices.map(invoice => {
               if (
                 invoice.subscriptionID === newSubscription.id &&
                 !invoice.paidAt &&
