@@ -427,7 +427,16 @@
         "label": "6 Kol"
       },
       "teaserSlots": {
-        "label": "Teaser Slots"
+        "autoLoading": "Auto-loading:",
+        "fillManually": "Alle slots werden manuell gefüllt",
+        "teasersLoaded": "Teaser geladen",
+        "configure": "Konfigurieren",
+        "latest": "Neuste",
+        "addSlot": "Slot hinzufügen",
+        "label": "Teaser Slots",
+        "filter": "Nach Tags filtern",
+        "filterHelpText": "Tags kommasepariert eingeben. Leer lassen um keinen Tag-Filter anzuwenden.",
+        "autofillType": "Teaser-Typ der automatisch geladenen Teaser"
       },
       "title": {
         "label": "Titel",
@@ -596,6 +605,7 @@
     "draggableSubscriptionInterval": {
       "ignoreDeactivatedSubscriptions": "Mails an deaktivierte Abos werden nicht verschickt!"
     },
+    "edit": "Editieren",
     "errorMessages": {
       "invalidEmailErrorMessage": "Bitte eine gültige E-Mail eingeben",
       "invalidRange": "Ungültiger Wert. Bitte Zahl zwischen {{min}} und {{max}} eingeben.",
@@ -871,7 +881,8 @@
       "users": "User",
       "audience": "Audience",
       "authorTags": "Tags",
-      "audienceDashboard": "Dashboard"
+      "audienceDashboard": "Dashboard",
+      "integrations": "Integrationen"
     },
     "navigation": {
       "overview": {
@@ -1287,6 +1298,7 @@
         "areYouSure": "Bist Du sicher?",
         "areYouSureBody": "Das Tag \"{{ tag }}\" wird für immer gelöscht und kann nicht rückgängig gemacht werden.",
         "areYouSureConfirmation": "Tag löschen",
+        "color": "Farbe",
         "createTag": "Neuer Tag",
         "editTag": "{{tag}} Bearbeiten",
         "placeholder": "Name des Tags",
@@ -1721,6 +1733,91 @@
     },
     "audienceCsvBtn": {
       "exportUsers": "CSV herunterladen"
+    },
+    "search": "Suche",
+    "integrations": {
+      "whatAreIntegrations": "Was sind Integrationen?",
+      "infoText": " Integrationen sind in We.Publish eingebaute Schnittstellen von Drittanbietern. Diese werden etwa verwendet, um Mails zu versenden oder Zahlungen sicher abzuwickeln.",
+      "title": "Integrationen",
+      "ai": "AI",
+      "challengeProvider": "Challenge Provider",
+      "paymentProvider": "Zahlungsanbieter",
+      "trackingPixel": "Tracking Pixel",
+      "mailProvider": "E-Mail Provider",
+      "back": "Zurück zu Integrationen",
+      "unknown": "Unbekannte Integration",
+      "notFound": "Integration nicht gefunden",
+      "configure": "Konfiguriere {{integration}}",
+      "updateSuccess": "Einstellungen erfolgreich aktualisiert",
+      "updateError": "Fehler beim Aktualisieren der Einstellungen",
+      "noSettingsFound": "Keine Einstellungen gefunden",
+      "lastLoaded": "Zuletzt geladen",
+      "aiSettings": {
+        "apiKey": "API Key",
+        "systemPrompt": "System Prompt"
+      },
+      "challengeSettings": {
+        "secret": "Geheimnis (Secret)",
+        "siteKey": "Webseiten-Schlüssel (Site Key)",
+        "type": "Typ"
+      },
+      "paymentSettings": {
+        "apiKey": "API Key",
+        "apiUrl": "API URL",
+        "instanceName": "Instanz Name",
+        "methods": "Zahlungsmethoden",
+        "offSessionPayments": "Off-Session Zahlungen",
+        "pm": "Zahlungsmethoden",
+        "psp": "Zahlungsdienstleister (PSPs)",
+        "type": "Typ",
+        "vatRate": "Mehrwertsteuersatz",
+        "webhookEndpointSecret": "Webhook Endpoint Secret",
+        "bexioUserId": "Bexio Benutzer ID",
+        "bexioCountryId": "Bexio Länder ID",
+        "bexioUnitId": "Bexio Einheits ID",
+        "bexioTaxId": "Bexio Steuer ID",
+        "bexioAccountId": "Bexio Konto ID",
+        "bexioInvoiceTemplateNewMembership": "Rechnungsvorlage (Neue Mitgliedschaft)",
+        "bexioInvoiceTemplateRenewalMembership": "Rechnungsvorlage (Mitgliedschafts-Erneuerung)",
+        "bexioInvoiceMailSubjectNewMembership": "Rechnungs-E-Mail Betreff (Neue Mitgliedschaft)",
+        "bexioInvoiceMailSubjectRenewalMembership": "Rechnungs-E-Mail Betreff (Mitgliedschafts-Erneuerung)",
+        "bexioInvoiceMailBodyNewMembership": "Rechnungs-E-Mail Inhalt (Neue Mitgliedschaft)",
+        "bexioInvoiceMailBodyRenewalMembership": "Rechnungs-E-Mail Inhalt (Mitgliedschafts-Erneuerung)",
+        "bexioMarkInvoiceAsOpen": "Rechnung als offen markieren",
+        "bexioInvoiceTitleNewMembership": "Rechnungstitel (Neue Mitgliedschaft)",
+        "bexioInvoiceTitleRenewalMembership": "Rechnungstitel (Mitgliedschafts-Erneuerung)"
+      },
+      "placeholderSecret": "Unverändert (Versteckt)",
+      "mailSettings": {
+        "type": "Typ",
+        "fromAddress": "Absender-Adresse",
+        "replyToAddress": "Antwort-Adresse",
+        "apiKey": "API Key",
+        "mailchimpBaseUrl": "Base URL",
+        "mailgunBaseDomain": "Base Domain",
+        "mailgunMailDomain": "Mail Domain",
+        "slackWebhookUrl": "Webhook URL",
+        "webhookEndpointSecret": "Webhook Endpoint Secret"
+      },
+      "trackingPixelSettings": {
+        "type": "Typ",
+        "prolitterisMemberNr": "Mitgliedernummer",
+        "prolitterisOnlyPaidContentAccess": "Zugriff nur auf bezahlten Inhalt",
+        "prolitterisPassword": "Passwort",
+        "prolitterisPublisherInternalKeyDomain": "Publisher Internal Key Domain",
+        "prolitterisUsePublisherInternalKey": "Publisher Internal Key verwenden",
+        "prolitterisUsername": "Benutzername"
+      },
+      "analyticsSettings": {
+        "analytics": "Analytik",
+        "invalidFile": "Die Google-Analytics Anmeldedatei ist ungültig",
+        "credentialsReadyToBeSaved": "Die Anmeldedaten sind bereit zum Speichern!",
+        "dropCredentialsFile": "Anmeldedatei hier ablegen!",
+        "dragCredentialsFileHere": "Google-Analytics Anmeldedatei hierher ziehen und ablegen",
+        "articlePrefix": "We.Publish Artikel-URL-Präfix (normalerweise /a/)",
+        "property": "Google-Analytics Property-ID",
+        "credentials": "Anmeldedatei"
+      }
     }
   }
 }

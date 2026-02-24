@@ -6,10 +6,16 @@ import {
 } from './user.model';
 import { PrismaClient } from '@prisma/client';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
+import { UserRoleDataloader } from './user-role.dataloader';
+import { UserRole } from './user-role.model';
+import { User as PUser } from '@prisma/client';
 
 @Resolver(() => SensitiveDataUser)
 export class SensitiveDataUserResolver {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private userRoleDataloader: UserRoleDataloader
+  ) {}
 
   @ResolveField(() => UserAddress, { nullable: true })
   public async address(@Parent() { id, address }: SensitiveDataUser) {
@@ -45,5 +51,10 @@ export class SensitiveDataUserResolver {
     }
 
     return [];
+  }
+
+  @ResolveField(() => [UserRole])
+  public roles(@Parent() user: PUser) {
+    return this.userRoleDataloader.loadMany(user.roleIDs);
   }
 }

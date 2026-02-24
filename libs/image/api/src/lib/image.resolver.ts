@@ -70,7 +70,7 @@ export class ImageResolver {
   }
 
   @Permissions(CanDeleteImage)
-  @Mutation(returns => Image, { description: `Deletes an existing image.` })
+  @Mutation(returns => String, { description: `Deletes an existing image.` })
   public deleteImage(@Args('id') id: string) {
     return this.service.deleteImage(id);
   }

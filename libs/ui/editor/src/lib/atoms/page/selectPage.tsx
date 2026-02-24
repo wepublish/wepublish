@@ -1,10 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import {
-  getApiClientV2,
-  PageSort,
-  SortOrder,
-  usePageListQuery,
-} from '@wepublish/editor/api-v2';
+import { PageSort, SortOrder, usePageListQuery } from '@wepublish/editor/api';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Message, SelectPicker, toaster } from 'rsuite';
@@ -46,9 +41,8 @@ export function SelectPage({
   /**
    * Loading page
    */
-  const client = getApiClientV2();
+
   const { data: pageData, refetch } = usePageListQuery({
-    client,
     variables: {
       sort: PageSort.PublishedAt,
       order: SortOrder.Ascending,

@@ -1,5 +1,8 @@
-import { useMeQuery, UserRole } from '@wepublish/editor/api';
-import { LocalStorageKey } from '@wepublish/editor/api-v2';
+import {
+  FullUserRoleFragment,
+  LocalStorageKey,
+  useMeQuery,
+} from '@wepublish/editor/api';
 import {
   createContext,
   Dispatch,
@@ -13,7 +16,7 @@ export interface AuthContextState {
   readonly session?: {
     readonly email: string;
     readonly sessionToken: string;
-    readonly sessionRoles?: UserRole[];
+    readonly sessionRoles?: FullUserRoleFragment[];
   } | null;
 }
 
@@ -29,7 +32,7 @@ export interface AuthDispatchLoginAction {
   readonly payload: {
     readonly email: string;
     readonly sessionToken: string;
-    readonly sessionRoles?: UserRole[];
+    readonly sessionRoles?: FullUserRoleFragment[];
   } | null;
 }
 
@@ -85,6 +88,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     if (data?.me) {
       const { email, roles } = data.me;
+
       dispatch({
         type: AuthDispatchActionType.Login,
         payload: {

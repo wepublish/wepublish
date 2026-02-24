@@ -40,6 +40,7 @@ export function EditUserPassword({
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] =
     useState<boolean>(false);
   const [sendLoginModalOpen, setSendLoginModalOpen] = useState<boolean>(false);
+
   const [sendWebsiteLogin] = useSendWebsiteLoginMutation();
 
   async function sendLoginLink() {

@@ -1,17 +1,15 @@
 import styled from '@emotion/styled';
 import {
+  FullImageFragment,
   FullUserFragment,
   FullUserRoleFragment,
   useCreateUserMutation,
   UserAddress,
   useUpdateUserMutation,
   useUserQuery,
-} from '@wepublish/editor/api';
-import {
-  FullImageFragment,
-  getApiClientV2,
   useUserRoleListQuery,
-} from '@wepublish/editor/api-v2';
+  useUserSubscriptionListQuery,
+} from '@wepublish/editor/api';
 import {
   ChooseEditImage,
   createCheckedPermissionComponent,
@@ -129,13 +127,17 @@ function UserEditView() {
     ListValue<UserProperty>[]
   >([]);
 
+  const { data: subscriptionData } = useUserSubscriptionListQuery({
+    skip: !userId,
+    variables: {
+      userId: userId!,
+    },
+  });
+
   // getting user id from url param
   const [id] = useState<string | undefined>(isEditRoute ? userId : undefined);
-  const client = getApiClientV2();
   const { data: userRoleData, loading: isUserRoleLoading } =
     useUserRoleListQuery({
-      client,
-      fetchPolicy: 'network-only',
       variables: {
         take: 200,
       },
@@ -150,7 +152,6 @@ function UserEditView() {
     error: loadError,
   } = useUserQuery({
     variables: { id: id! },
-    fetchPolicy: 'network-only',
     skip: id === undefined,
   });
   /**
@@ -183,8 +184,7 @@ function UserEditView() {
     );
     setActive(tmpUser.active);
     setAddress(tmpUser.address ? tmpUser.address : null);
-    // @ts-expect-error wrong image type for now. Will be fixed with User PR
-    setUserImage(tmpUser.userImage ? tmpUser.userImage : undefined);
+    setUserImage(tmpUser.image ? tmpUser.image : undefined);
 
     if (tmpUser.roles) {
       setRoles(tmpUser.roles as FullUserRoleFragment[]);
@@ -200,8 +200,8 @@ function UserEditView() {
     }
   }, [userRoleData?.userRoles]);
 
-  const [createUser, { loading: isCreating }] = useCreateUserMutation();
-  const [updateUser, { loading: isUpdating }] = useUpdateUserMutation();
+  const [createUser, { loading: isCreating }] = useCreateUserMutation({});
+  const [updateUser, { loading: isUpdating }] = useUpdateUserMutation({});
 
   const isDisabled =
     isLoading ||
@@ -280,42 +280,38 @@ function UserEditView() {
         await updateUser({
           variables: {
             id: user.id,
-            input: {
-              name,
-              firstName: firstName || undefined,
-              note,
-              flair,
-              birthday: birthday?.toISOString() ?? null,
-              email,
-              emailVerifiedAt: emailVerifiedAt?.toISOString() ?? null,
-              active,
-              userImageID: userImage?.id ?? null,
-              roleIDs: roles.map(role => role.id),
-              properties: metaDataProperties.map(
-                ({ value: { key, public: isPublic, value: newValue } }) => ({
-                  key,
-                  public: isPublic,
-                  value: newValue,
-                })
-              ),
-              address: {
-                company: address?.company ? address.company : '',
-                streetAddress:
-                  address?.streetAddress ? address.streetAddress : '',
-                streetAddressNumber:
-                  address?.streetAddressNumber ?
-                    address.streetAddressNumber
-                  : '',
-                streetAddress2:
-                  address?.streetAddress2 ? address.streetAddress2 : '',
-                streetAddress2Number:
-                  address?.streetAddress2Number ?
-                    address.streetAddress2Number
-                  : '',
-                zipCode: address?.zipCode ? address.zipCode : '',
-                city: address?.city ? address.city : '',
-                country: address?.country ? address.country : '',
-              },
+            name,
+            firstName: firstName || undefined,
+            note,
+            flair,
+            birthday: birthday?.toISOString() ?? null,
+            email,
+            emailVerifiedAt: emailVerifiedAt?.toISOString() ?? null,
+            active,
+            userImageID: userImage?.id ?? null,
+            roleIDs: roles.map(role => role.id),
+            properties: metaDataProperties.map(
+              ({ value: { key, public: isPublic, value: newValue } }) => ({
+                key,
+                public: isPublic,
+                value: newValue,
+              })
+            ),
+            address: {
+              company: address?.company ? address.company : '',
+              streetAddress:
+                address?.streetAddress ? address.streetAddress : '',
+              streetAddressNumber:
+                address?.streetAddressNumber ? address.streetAddressNumber : '',
+              streetAddress2:
+                address?.streetAddress2 ? address.streetAddress2 : '',
+              streetAddress2Number:
+                address?.streetAddress2Number ?
+                  address.streetAddress2Number
+                : '',
+              zipCode: address?.zipCode ? address.zipCode : '',
+              city: address?.city ? address.city : '',
+              country: address?.country ? address.country : '',
             },
           },
         });
@@ -349,26 +345,24 @@ function UserEditView() {
       try {
         const { data } = await createUser({
           variables: {
-            input: {
-              name,
-              firstName,
-              note,
-              flair,
-              birthday: birthday?.toISOString(),
-              email,
-              emailVerifiedAt: null,
-              active,
-              properties: metaDataProperties.map(
-                ({ value: { key, public: isPublic, value: newValue } }) => ({
-                  key,
-                  public: isPublic,
-                  value: newValue,
-                })
-              ),
-              roleIDs: roles.map(role => role.id),
-              address,
-              userImageID: userImage?.id || null,
-            },
+            name,
+            firstName,
+            note,
+            flair,
+            birthday: birthday?.toISOString(),
+            email,
+            emailVerifiedAt: null,
+            active,
+            properties: metaDataProperties.map(
+              ({ value: { key, public: isPublic, value: newValue } }) => ({
+                key,
+                public: isPublic,
+                value: newValue,
+              })
+            ),
+            roleIDs: roles.map(role => role.id),
+            address,
+            userImageID: userImage?.id || null,
             password,
           },
         });
@@ -871,7 +865,7 @@ function UserEditView() {
               </RGrid>
             </Col>
             {/* subscriptions */}
-            {user && (
+            {subscriptionData?.subscriptions.nodes && (
               <Col xs={12}>
                 <Grid fluid>
                   <RPanel
@@ -879,7 +873,7 @@ function UserEditView() {
                     header={t('userCreateOrEditView.subscriptionsHeader')}
                   >
                     <UserSubscriptionsList
-                      subscriptions={user.subscriptions}
+                      subscriptions={subscriptionData.subscriptions.nodes}
                       userId={user?.id}
                     />
                   </RPanel>

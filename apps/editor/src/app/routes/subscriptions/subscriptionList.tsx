@@ -138,7 +138,6 @@ function SubscriptionList() {
       sort: mapColumFieldToGraphQLField(sortField),
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
-    fetchPolicy: 'network-only',
   });
 
   useEffect(() => {
@@ -264,18 +263,6 @@ function SubscriptionList() {
               {(rowData: RowDataType<FullSubscriptionFragment>) =>
                 userNameView(rowData as FullSubscriptionFragment)
               }
-            </RCell>
-          </Column>
-          {/* email */}
-          <Column width={250}>
-            <HeaderCell>{t('subscriptionList.overview.email')}</HeaderCell>
-            <RCell dataKey={'email'}>
-              {(rowData: RowDataType<FullSubscriptionFragment>) => (
-                <div>
-                  {rowData.user?.email ||
-                    t('subscriptionList.overview.deleted')}
-                </div>
-              )}
             </RCell>
           </Column>
           {/* action */}

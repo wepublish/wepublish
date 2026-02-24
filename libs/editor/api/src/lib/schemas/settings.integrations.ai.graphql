@@ -1,0 +1,33 @@
+query SettingsIntegrationsAI {
+  aiSettings {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    systemPrompt
+    type
+  }
+}
+
+mutation UpdateSettingsIntegrationsAI(
+  $apiKey: String
+  $id: String!
+  $name: String
+  $systemPrompt: String
+) {
+  updateAISetting(
+    apiKey: $apiKey
+    id: $id
+    name: $name
+    systemPrompt: $systemPrompt
+  ) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    systemPrompt
+    type
+  }
+}

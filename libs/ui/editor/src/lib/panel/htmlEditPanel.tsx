@@ -1,8 +1,5 @@
 import styled from '@emotion/styled';
-import {
-  getApiClientV2,
-  usePromptHtmlLazyQuery,
-} from '@wepublish/editor/api-v2';
+import { getApiClientV2, usePromptHtmlLazyQuery } from '@wepublish/editor/api';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAutoFixHigh } from 'react-icons/md';

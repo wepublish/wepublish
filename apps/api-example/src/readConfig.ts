@@ -2,11 +2,7 @@ import fs from 'fs';
 import YAML from 'yaml';
 import { MappedReplacer } from 'mapped-replacer';
 import StipeType from 'stripe';
-import {
-  ProLitterisCountPixelProps,
-  TrackingPixelProvider,
-} from '@wepublish/tracking-pixel/api';
-import { GoogleAnalyticsConfig } from '@wepublish/google-analytics/api';
+import { TrackingPixelProvider } from '@wepublish/tracking-pixel/api';
 
 type General = {
   apolloPlayground: boolean;
@@ -18,6 +14,7 @@ type General = {
 
 type MailProvider = {
   id: string;
+  type: string;
   fromAddress: string;
   replyToAddress: string;
   webhookURL: string;
@@ -125,6 +122,7 @@ type PaymentProvider =
 
 type AlgebraicCaptcha = {
   type: 'algebraic';
+  id: string;
   secret: string;
   validTime: number;
   width: number;
@@ -141,11 +139,12 @@ type AlgebraicCaptcha = {
 
 type Turnstile = {
   type: 'turnstile';
+  id: string;
   secret: string;
   siteKey: string;
 };
 
-type ProLitteris = ProLitterisCountPixelProps & {
+type ProLitteris = {
   type: 'prolitteris';
 };
 
@@ -164,7 +163,6 @@ type Config = {
   mediaServer: novaMediaServer;
   challenge: AlgebraicCaptcha | Turnstile;
   trackingPixelProviders: TrackingPixels[];
-  ga?: GoogleAnalyticsConfig;
   v0?: V0;
 };
 

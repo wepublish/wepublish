@@ -2,11 +2,9 @@ import { ApolloError, ApolloQueryResult } from '@apollo/client';
 import {
   Banner,
   BannersQuery,
-  getApiClientV2,
   useDeleteBannerMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Message, Modal, toaster } from 'rsuite';
 
@@ -49,9 +47,7 @@ export function BannerDeleteModal({
 }: DeleteBannerProps) {
   const { t } = useTranslation();
 
-  const client = useMemo(() => getApiClientV2(), []);
   const [deleteBannerMutation] = useDeleteBannerMutation({
-    client,
     onError: onErrorToast,
     onCompleted: onCompletedToast(t),
   });

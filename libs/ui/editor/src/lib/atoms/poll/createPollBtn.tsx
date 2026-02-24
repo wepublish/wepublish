@@ -36,6 +36,9 @@ export function CreatePollBtn() {
 
   async function createPoll() {
     await createPollMutation({
+      variables: {
+        opensAt: new Date().toISOString(),
+      },
       onError: onErrorToast,
     });
   }

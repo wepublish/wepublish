@@ -1,10 +1,9 @@
 import { ApolloError } from '@apollo/client';
-import { TagType } from '@wepublish/editor/api';
 import {
   FullEventFragment,
-  getApiClientV2,
+  TagType,
   useEventListLazyQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useEffect, useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit } from 'react-icons/md';
@@ -67,11 +66,9 @@ export function SelectEventPanel({
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const { t } = useTranslation();
-  const client = getApiClientV2();
+
   const [fetchEvents, { data, loading }] = useEventListLazyQuery({
-    client,
     onError: onErrorToast,
-    fetchPolicy: 'cache-and-network',
   });
 
   const saveSelection = () => {

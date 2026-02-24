@@ -51,13 +51,13 @@ export const CommentList = ({
 
   return (
     <CommentListWrapper className={className}>
-      {!loading && !error && !data?.comments.length && (
+      {!loading && !error && !data?.commentsForItem.length && (
         <Alert severity="info">Keine Kommentare vorhanden.</Alert>
       )}
 
       {error && <Alert severity="error">{error.message}</Alert>}
 
-      {data?.comments?.map((comment, index) => (
+      {data?.commentsForItem?.map((comment, index) => (
         <CommentListItem
           key={comment.id}
           {...comment}

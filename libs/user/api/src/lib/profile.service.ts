@@ -1,12 +1,6 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ImageUploadService, UploadImageInput } from '@wepublish/image/api';
-import { PrismaClient } from '@prisma/client';
-import {
-  PaymentProviderCustomerInput,
-  SensitiveDataUser,
-  UserInput,
-} from './user.model';
-import { Validator } from '@wepublish/user';
+import { PrismaClient, User } from '@prisma/client';
 import { unselectPassword } from '@wepublish/authentication/api';
 
 @Injectable()
@@ -17,7 +11,7 @@ export class ProfileService {
   ) {}
 
   async uploadUserProfileImage(
-    user: SensitiveDataUser,
+    user: User,
     uploadImageInput: UploadImageInput | null
   ) {
     let newImage = null;
@@ -49,66 +43,6 @@ export class ProfileService {
       },
       data: {
         userImageID: newImage?.id,
-      },
-      select: unselectPassword,
-    });
-  }
-
-  async updatePublicUser(
-    user: SensitiveDataUser,
-    { address, name, email, birthday, firstName, flair }: UserInput
-  ) {
-    email = email ? (email as string).toLowerCase() : email;
-
-    Validator.createUser.parse({ name, email, birthday, firstName });
-    Validator.createAddress.parse(address);
-
-    if (email && user.email !== email) {
-      const userExists = await this.prisma.user.findUnique({
-        where: { email: email as string },
-      });
-
-      if (userExists) {
-        throw new BadRequestException(`Email already in use`);
-      }
-    }
-
-    return this.prisma.user.update({
-      where: { id: user.id },
-      data: {
-        birthday,
-        name,
-        firstName,
-        address:
-          address ?
-            {
-              upsert: {
-                create: address,
-                update: address,
-              },
-            }
-          : undefined,
-        flair,
-      },
-      select: unselectPassword,
-    });
-  }
-
-  async updatePaymentProviderCustomers(
-    userId: string,
-    paymentProviderCustomers: PaymentProviderCustomerInput[]
-  ): Promise<SensitiveDataUser> {
-    return this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        paymentProviderCustomers: {
-          deleteMany: {
-            userId,
-          },
-          createMany: {
-            data: paymentProviderCustomers,
-          },
-        },
       },
       select: unselectPassword,
     });

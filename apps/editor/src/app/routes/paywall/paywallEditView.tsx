@@ -1,11 +1,10 @@
 import { ApolloError } from '@apollo/client';
 import {
   FullPaywallFragment,
-  getApiClientV2,
   MutationUpdatePaywallArgs,
   usePaywallListQuery,
   useUpdatePaywallMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { CanUpdatePaywall } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
@@ -53,10 +52,7 @@ const PaywallEditView = () => {
     }
   >();
 
-  const client = getApiClientV2();
   const { loading: dataLoading } = usePaywallListQuery({
-    client,
-    fetchPolicy: 'cache-and-network',
     onError: onErrorToast,
     onCompleted: data => {
       const paywallToEdit = data.paywalls.find(paywall => paywall.id === id);
@@ -68,7 +64,6 @@ const PaywallEditView = () => {
   });
 
   const [updatePaywall, { loading: updateLoading }] = useUpdatePaywallMutation({
-    client,
     onError: onErrorToast,
     onCompleted: data => {
       if (data.updatePaywall) {

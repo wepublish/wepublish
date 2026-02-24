@@ -74,7 +74,7 @@ export class ArticleService {
       }),
     ]);
 
-    const nodes = articles.slice(0, take);
+    const nodes = articles.slice(0, getMaxTake(take));
     const firstArticle = nodes[0];
     const lastArticle = nodes[nodes.length - 1];
 

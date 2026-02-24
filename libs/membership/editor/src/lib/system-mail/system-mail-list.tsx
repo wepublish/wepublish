@@ -13,9 +13,7 @@ import {
   UserEvent,
   useTestSystemMailMutation,
   useUpdateSystemMailMutation,
-  getApiClientV2,
-} from '@wepublish/editor/api-v2';
-import { useMemo } from 'react';
+} from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { Button, SelectPicker, Stack, Tag } from 'rsuite';
 import { TypeAttributes } from 'rsuite/esm/@types/common';
@@ -53,18 +51,13 @@ const userEventIcons: UserEventIconMap = {
 function SystemMailList() {
   const { t } = useTranslation();
 
-  const client = useMemo(() => getApiClientV2(), []);
-  const { data: systemMails } = useSystemMailsQuery(
-    DEFAULT_QUERY_OPTIONS(client)
-  );
-  const { data: mailTemplates } = useMailTemplateQuery(
-    DEFAULT_QUERY_OPTIONS(client)
-  );
+  const { data: systemMails } = useSystemMailsQuery(DEFAULT_QUERY_OPTIONS());
+  const { data: mailTemplates } = useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
   const [updateSystemMail] = useUpdateSystemMailMutation(
-    DEFAULT_MUTATION_OPTIONS(client, t)
+    DEFAULT_MUTATION_OPTIONS(t)
   );
   const [testSystemMail] = useTestSystemMailMutation(
-    DEFAULT_MUTATION_OPTIONS(client, t)
+    DEFAULT_MUTATION_OPTIONS(t)
   );
 
   return (

@@ -23,7 +23,7 @@ const PopTextComponent = styled('p')`
 
 const RegisterMCNewsletterFormSchema = z.object({
   email: z.string().email().min(1),
-  SOURCE: z.string().optional(),
+  SOURCE: z.string().optional().or(z.literal('')),
 });
 
 const autofocus = (node: HTMLElement | null) => {

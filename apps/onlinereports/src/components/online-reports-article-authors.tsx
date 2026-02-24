@@ -156,13 +156,15 @@ export function OnlineReportsArticleAuthors({
       <CommentsShareBox>
         {!article?.disableComments && (
           <CommentListItemShareWrapper>
-            {data?.comments?.length ?
+            {data?.commentsForItem?.length ?
               <ShareButton
                 onClick={scrollToComments}
                 endIcon={<MdOutlineModeComment />}
                 size={'small'}
               >
-                {data?.comments?.length ? data.comments.length : ''}
+                {data?.commentsForItem?.length ?
+                  data.commentsForItem.length
+                : ''}
               </ShareButton>
             : <IconButton
                 onClick={scrollToComments}

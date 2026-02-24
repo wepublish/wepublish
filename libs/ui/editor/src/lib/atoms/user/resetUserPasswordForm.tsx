@@ -48,7 +48,7 @@ export function ResetUserPasswordForm({
             sendMail,
           },
         });
-        if (data?.resetUserPassword) {
+        if (data?.resetPassword) {
           toaster.push(
             <Notification
               type="success"

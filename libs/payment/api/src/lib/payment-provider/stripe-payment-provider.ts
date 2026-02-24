@@ -11,12 +11,7 @@ import {
 import Stripe from 'stripe';
 import { logger } from '@wepublish/utils/api';
 import { PaymentState } from '@prisma/client';
-
-export interface StripePaymentProviderProps extends PaymentProviderProps {
-  secretKey: string;
-  webhookEndpointSecret: string;
-  methods: Stripe.Checkout.SessionCreateParams.PaymentMethodType[];
-}
+import { mapStripePaymentMethodTypes } from '../payment.methode.mapper';
 
 interface CreateStripeCustomerProps {
   intent: Stripe.PaymentIntent;
@@ -40,23 +35,25 @@ function mapStripeEventToPaymentStatus(event: string): PaymentState | null {
 }
 
 export class StripePaymentProvider extends BasePaymentProvider {
-  readonly stripe: Stripe;
-  readonly webhookEndpointSecret: string;
-  readonly methods: Stripe.Checkout.SessionCreateParams.PaymentMethodType[];
-
-  constructor(props: StripePaymentProviderProps) {
+  constructor(props: PaymentProviderProps) {
     super(props);
-    this.methods = props.methods;
-    this.stripe = new Stripe(props.secretKey, {
+  }
+
+  async getStripeGateway() {
+    const config = await this.getConfig();
+    if (!config.apiKey) {
+      throw new Error('Stripe missing api key');
+    }
+    return new Stripe(config.apiKey, {
       apiVersion: '2020-08-27',
     });
-    this.webhookEndpointSecret = props.webhookEndpointSecret;
   }
 
   async createStripeCustomer({
     intent,
   }: CreateStripeCustomerProps): Promise<string> {
-    const customer = await this.stripe.customers.create({
+    const stripe = await this.getStripeGateway();
+    const customer = await stripe.customers.create({
       email: intent.metadata['mail'] ?? '',
       payment_method: intent.payment_method as string,
       invoice_settings: {
@@ -66,11 +63,13 @@ export class StripePaymentProvider extends BasePaymentProvider {
     return customer.id;
   }
 
-  getWebhookEvent(body: any, signature: string): Stripe.Event {
-    return this.stripe.webhooks.constructEvent(
+  async getWebhookEvent(body: any, signature: string): Promise<Stripe.Event> {
+    const config = await this.getConfig();
+    const stripe = await this.getStripeGateway();
+    return stripe.webhooks.constructEvent(
       body,
       signature,
-      this.webhookEndpointSecret
+      this.assertProperty('webhookEndpointSecret', config.webhookEndpointSecret)
     );
   }
 
@@ -78,7 +77,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
     props: WebhookForPaymentIntentProps
   ): Promise<WebhookResponse> {
     const signature = props.req.headers['stripe-signature'] as string;
-    const event = this.getWebhookEvent(props.req.body, signature);
+    const event = await this.getWebhookEvent(props.req.body, signature);
 
     if (!event.type.startsWith('payment_intent')) {
       return {
@@ -130,12 +129,12 @@ export class StripePaymentProvider extends BasePaymentProvider {
     currency,
   }: CreatePaymentIntentProps): Promise<Intent> {
     let paymentMethodID: string | null = null;
-
+    const stripe = await this.getStripeGateway();
     if (customerID) {
       // For an off_session payment the default_payment_method or the default_source of the customer will be used.
       // If both are available the default_payment_method will be used.
       // If no user, deleted user, no default_payment_method or no default_source the intent will be created without an customer.
-      const customer = await this.stripe.customers.retrieve(customerID);
+      const customer = await stripe.customers.retrieve(customerID);
       if (this.isCustomerDeleted(customer)) {
         logger('stripePaymentProvider').warn(
           'Provided customerID "%s" returns a deleted stripe customer',
@@ -156,7 +155,8 @@ export class StripePaymentProvider extends BasePaymentProvider {
     let intent;
     let errorCode;
     try {
-      intent = await this.stripe.paymentIntents.create({
+      const config = await this.getConfig();
+      intent = await stripe.paymentIntents.create({
         amount: invoice.items.reduce(
           (prevItem, currentItem) =>
             prevItem + currentItem.amount * currentItem.quantity,
@@ -168,10 +168,14 @@ export class StripePaymentProvider extends BasePaymentProvider {
             customer: customerID,
             off_session: true,
             payment_method: paymentMethodID,
-            payment_method_types: this.methods,
+            payment_method_types: mapStripePaymentMethodTypes(
+              config.stripe_methods
+            ),
           }
         : {
-            payment_method_types: this.methods,
+            payment_method_types: mapStripePaymentMethodTypes(
+              config.stripe_methods
+            ),
           }),
         currency: currency.toLowerCase(),
         // description: props.invoice.description, TODO: convert to text
@@ -222,7 +226,8 @@ export class StripePaymentProvider extends BasePaymentProvider {
   async checkIntentStatus({
     intentID,
   }: CheckIntentProps): Promise<IntentState> {
-    const intent = await this.stripe.paymentIntents.retrieve(intentID);
+    const stripe = await this.getStripeGateway();
+    const intent = await stripe.paymentIntents.retrieve(intentID);
     const state = mapStripeEventToPaymentStatus(intent.status);
 
     if (!state) {

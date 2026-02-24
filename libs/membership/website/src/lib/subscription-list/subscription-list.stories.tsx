@@ -46,7 +46,7 @@ const invoice = {
 export const Default = {
   args: {
     data: {
-      subscriptions: [
+      userSubscriptions: [
         { ...subscription, id: '1' },
         { ...subscription, id: '2' },
         { ...subscription, id: '3' },
@@ -55,7 +55,7 @@ export const Default = {
     },
     invoices: {
       data: {
-        invoices: [
+        userInvoices: [
           { ...invoice, id: '1', subscriptionID: '1' },
           {
             ...invoice,
@@ -90,7 +90,7 @@ export const WithPayrexxSubscriptionsWorkaround = {
   args: {
     ...Default.args,
     data: {
-      subscriptions: [
+      userSubscriptions: [
         {
           ...subscription,
           id: '1',
@@ -114,7 +114,7 @@ export const Empty = {
   args: {
     ...Default.args,
     data: {
-      subscriptions: [],
+      userSubscriptions: [],
     },
   },
 };
@@ -142,7 +142,7 @@ export const WithoutImage = {
   args: {
     ...Default.args,
     data: {
-      subscriptions: [
+      userSubscriptions: [
         { ...subscription, id: '1' },
         { ...subscription, id: '2', image: null },
         { ...subscription, id: '3' },

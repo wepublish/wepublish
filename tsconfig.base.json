@@ -50,7 +50,6 @@
         "libs/crowdfunding/editor/src/index.ts"
       ],
       "@wepublish/editor/api": ["libs/editor/api/src/index.ts"],
-      "@wepublish/editor/api-v2": ["libs/editor/api-v2/src/index.ts"],
       "@wepublish/errors": ["libs/errors/src/index.ts"],
       "@wepublish/errors/website": ["libs/errors/website/src/index.ts"],
       "@wepublish/event/api": ["libs/event/api/src/index.ts"],
@@ -66,7 +65,6 @@
       "@wepublish/health": ["libs/health/api/src/index.ts"],
       "@wepublish/image/api": ["libs/image/api/src/index.ts"],
       "@wepublish/image/website": ["libs/image/website/src/index.ts"],
-      "@wepublish/invoice/api": ["libs/invoice/api/src/index.ts"],
       "@wepublish/jobs": ["libs/jobs/src/index.ts"],
       "@wepublish/mail/api": ["libs/mail/api/src/index.ts"],
       "@wepublish/media-transform-guard": [
@@ -137,7 +135,8 @@
       "@wepublish/website/server": ["libs/website/src/server.ts"],
       "@wepublish/website/translations/*": [
         "libs/website/translations/src/lib/*"
-      ]
+      ],
+      "@wepublish/kv-ttl-cache/api": ["libs/kv-ttl-cache/api/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
