@@ -38,7 +38,12 @@ import { zodI18nMap } from 'zod-i18n-map';
 import { ReflektBlockRenderer } from '../src/components/block-renderer/reflekt-block-renderer';
 import { RefFooter } from '../src/components/reflekt-footer';
 import { ReflektNavbar } from '../src/components/reflekt-navbar';
+import { ReflektNewsletterBanner } from '../src/components/reflekt-newsletter-banner';
 import { ReflektPaywall } from '../src/components/reflekt-paywall';
+import {
+  ReflektAuthorList,
+  ReflektAuthorListItem,
+} from '../src/components/reflekt-author-list';
 import theme from '../src/theme';
 
 setDefaultOptions({
@@ -99,6 +104,8 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Footer={RefFooter}
           Navbar={ReflektNavbar}
           Paywall={ReflektPaywall}
+          AuthorList={ReflektAuthorList}
+          AuthorListItem={ReflektAuthorListItem}
           elements={{ Link: NextWepublishLink }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
@@ -197,6 +204,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
               />
             </Spacer>
 
+            <ReflektNewsletterBanner />
             <RoutedAdminBar />
           </ThemeProvider>
         </WebsiteBuilderProvider>

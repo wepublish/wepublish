@@ -23,6 +23,7 @@ import {
 } from '@wepublish/website/builder';
 
 import { ReflektHeroBlock } from '../blocks/reflekt-hero-block';
+import { ReflektTextOnImageBlock } from '../blocks/reflekt-text-on-image-block';
 import { ReflektTeaser } from '../blocks/reflekt-teaser';
 import { ReflektTeaserMono } from '../blocks/reflekt-teaser-mono';
 
@@ -89,6 +90,11 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
   // Hero header: FlexBlock with blockStyle "Header"
   if (isFlexBlock(block) && hasBlockStyle('Header')(block)) {
     return <ReflektHeroBlock {...block} />;
+  }
+
+  // Text-on-image: FlexBlock with blockStyle "text-on-image"
+  if (isFlexBlock(block) && hasBlockStyle('text-on-image')(block)) {
+    return <ReflektTextOnImageBlock {...block} />;
   }
 
   // TeaserSlotsBlock — dispatch teaser variant by blockStyle
