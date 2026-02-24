@@ -19,6 +19,7 @@ import {
   MdFormatColorText,
   MdFormatQuote,
   MdIntegrationInstructions,
+  MdInterests,
   MdMoney,
   MdPhoto,
   MdPhotoLibrary,
@@ -318,6 +319,6 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     label: (() => {
       return 'blocks.flexBlock.label';
     })(),
-    icon: <MdAccountBox />,
+    icon: <MdInterests />,
   },
 };

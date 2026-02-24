@@ -9,8 +9,8 @@ export const TsriTitleBlock = styled(TitleBlock)`
     font-weight: 700;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
-      font-size: 3rem;
-      line-height: 3.5rem;
+      font-size: 2.5rem;
+      line-height: 3rem;
     }
   }
 `;
