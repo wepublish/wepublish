@@ -25,8 +25,6 @@
     "src/**/*.jsx",
     "src/**/*.ts",
     "src/**/*.tsx",
-    "../sentry/sentry.client.config.ts",
-    "../sentry/sentry.edge.config.ts",
-    "../sentry/sentry.server.config.ts"
+    "../sentry/*.ts"
   ]
 }
