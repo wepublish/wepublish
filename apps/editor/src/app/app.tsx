@@ -58,7 +58,7 @@ import { CommentRatingEditView } from './routes/commentRatings/commentRatingEdit
 import { CommentEditView } from './routes/comments/commentEditView';
 import { CommentList } from './routes/comments/commentList';
 import { Dashboard } from './routes/dashboard/dashboard';
-import { ExternalApps } from './routes/externalApps/externalApps';
+import { ExternalApps } from './routes/externalApps/externalAppsEdit';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
 import { EventListView } from './routes/events/eventListView';

@@ -1883,6 +1883,14 @@
     },
     "externalApps": {
       "apps": "Apps"
+    },
+    "addExternalAppForm": {
+      "create": "Create",
+      "update": "Update",
+      "name": "Name",
+      "url": "URL",
+      "target": "Target",
+      "icon": "Icon URL"
     }
   }
 }

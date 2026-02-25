@@ -1822,6 +1822,14 @@
     },
     "externalApps": {
       "apps": "Apps"
+    },
+    "addExternalAppForm": {
+      "create": "Erstellen",
+      "update": "Aktualisieren",
+      "name": "Name",
+      "url": "URL",
+      "target": "Ziel",
+      "icon": "Icon URL"
     }
   }
 }
