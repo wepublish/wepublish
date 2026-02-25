@@ -69,6 +69,7 @@ RUN groupadd -r wepublish && \
     chown -R wepublish:wepublish /entrypoint.sh && \
     chmod +x /entrypoint.sh
 COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/standalone /wepublish
+COPY --chown=wepublish:wepublish --from=build-website /wepublish/node_modules/@sentry/profiling-node/lib/*.node /wepublish/node_modules/@sentry/profiling-node/lib/
 COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/public /wepublish/apps/${NEXT_PROJECT}/public
 COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/static /wepublish/apps/${NEXT_PROJECT}/public/_next/static
 COPY --chown=wepublish:wepublish version /wepublish/apps/${NEXT_PROJECT}/public/deployed_version
