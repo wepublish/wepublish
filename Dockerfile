@@ -45,6 +45,7 @@ ENV APP_RELEASE_ID=${APP_RELEASE_ID}
 ### FRONT_ARG_REPLACER ###
 
 COPY . .
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && update-ca-certificates && rm -rf /var/lib/apt/lists/*
 RUN npm install -g @sentry/cli && \
     npx prisma generate && \
     npx nx build ${NEXT_PROJECT} ${NX_NEXT_PROJECT_BUILD_OPTIONS} && \
@@ -91,6 +92,7 @@ ARG SENTRY_PROJECT
 ARG SENTRY_RELEASE
 ARG APP_RELEASE_ID
 COPY . .
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && update-ca-certificates && rm -rf /var/lib/apt/lists/*
 RUN npm install -g @yao-pkg/pkg @sentry/cli && \
     npx prisma generate && \
     npx nx build api-example && \
@@ -135,6 +137,7 @@ ARG SENTRY_PROJECT
 ARG SENTRY_RELEASE
 ARG APP_RELEASE_ID
 COPY . .
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && update-ca-certificates && rm -rf /var/lib/apt/lists/*
 RUN npm install -g @yao-pkg/pkg @sentry/cli && \
     npx prisma generate && \
     npx nx build editor && \
@@ -177,6 +180,7 @@ COPY libs/api/prisma/run-seed.ts api/prisma/run-seed.ts
 COPY libs/api/prisma/seed.ts api/prisma/seed.ts
 COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY docker/tsconfig.yaml_seed tsconfig.yaml
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && update-ca-certificates && rm -rf /var/lib/apt/lists/*
 RUN npm install prisma@5.0.0 @prisma/client@5.0.0 @types/node bcrypt typescript @sentry/cli && \
     npx tsc -p tsconfig.yaml && \
     sentry-cli sourcemaps inject ./dist && \
@@ -219,7 +223,7 @@ ARG APP_RELEASE_ID
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 WORKDIR /app
 RUN apt-get update
-RUN apt-get install -y libjemalloc-dev
+RUN apt-get install -y libjemalloc-dev ca-certificates && update-ca-certificates
 COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
