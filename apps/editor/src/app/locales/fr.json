@@ -814,7 +814,8 @@
       "audience": "Audience",
       "authorTags": "Tags",
       "audienceDashboard": "Dashboard",
-      "integrations": "Intégrations"
+      "integrations": "Intégrations",
+      "apps": "Apps"
     },
     "navigation": {
       "overview": {
@@ -1705,6 +1706,9 @@
         "property": "ID de la propriété Google Analytics",
         "credentials": "Fichier d’identifiants"
       }
+    },
+    "externalApps": {
+      "apps": "Apps"
     }
   }
 }
