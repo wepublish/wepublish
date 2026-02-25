@@ -14,6 +14,7 @@ import {
   PeerProfileQueryVariables,
 } from './remote/graphql';
 import { PeerDataloaderService } from './peer-dataloader.service';
+import { PEER_USER_AGENT } from '@wepublish/authentication/api';
 
 @Injectable()
 export class PeerProfileService {
@@ -56,6 +57,7 @@ export class PeerProfileService {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
+        'User-Agent': PEER_USER_AGENT,
       },
     });
 
