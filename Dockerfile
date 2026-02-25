@@ -61,6 +61,7 @@ COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEX
 COPY --chown=wepublish:wepublish version /wepublish/apps/${NEXT_PROJECT}/public/deployed_version
 COPY --chown=wepublish:wepublish --from=build-website /wepublish/secrets_name.list /wepublish/secrets_name.list
 COPY --chown=wepublish:wepublish --from=build-website /wepublish/deployment/map-secrets.sh /wepublish/map-secrets.sh
+RUN chmod -R g=u /wepublish
 EXPOSE 4001
 USER wepublish
 ENTRYPOINT ["/entrypoint.sh"]
@@ -94,6 +95,7 @@ COPY --chown=wepublish:wepublish libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY --chown=wepublish:wepublish .version /wepublish/.version
 COPY --chown=wepublish:wepublish --from=build-api /wepublish/api /wepublish
 COPY --chown=wepublish:wepublish --from=build-api /wepublish/node_modules/bcrypt node_modules/bcrypt
+RUN chmod -R g=u /wepublish
 EXPOSE 4000
 USER wepublish
 CMD /wepublish/api
@@ -121,6 +123,7 @@ RUN groupadd -r wepublish && \
     chown -R wepublish:wepublish /wepublish
 COPY --chown=wepublish:wepublish --from=build-editor /wepublish/editor /wepublish
 COPY --chown=wepublish:wepublish --from=build-editor /wepublish/dist/apps/editor/browser dist/apps/editor/browser
+RUN chmod -R g=u /wepublish
 EXPOSE 3000
 USER wepublish
 CMD /wepublish/editor
@@ -154,7 +157,8 @@ RUN groupadd -r wepublish && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     npm install prisma@5.0.0 bcrypt && \
-    npx prisma generate
+    npx prisma generate && \
+    chmod -R g=u /wepublish
 USER wepublish
 CMD ["bash", "./start.sh"]
 
@@ -188,6 +192,7 @@ RUN groupadd -r wepublish && \
     rm -rf /var/lib/apt/lists/*
 COPY --from=build-media /app/dist/apps/media/ .
 COPY --from=build-media --chown=wepublish:wepublish /app/node_modules ./node_modules
+RUN chmod -R g=u /wepublish
 USER wepublish
 EXPOSE 4100
 CMD ["node", "main.js"]
