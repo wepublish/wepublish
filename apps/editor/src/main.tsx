@@ -18,6 +18,7 @@ import { ElementID } from './shared/elementID';
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
+  release: process.env.APP_RELEASE_ID,
   integrations: [
     Sentry.browserTracingIntegration(),
     Sentry.replayIntegration(),

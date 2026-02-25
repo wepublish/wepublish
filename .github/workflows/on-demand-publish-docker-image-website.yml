@@ -95,6 +95,11 @@ jobs:
           build-args: |
             BUILD_IMAGE=${{ env.BUILD_IMAGE_TAG }}
             ${{ steps.get-env.outputs.envvars }}
+            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+            SENTRY_ORG=wepublish-foundation
+            SENTRY_PROJECT=wepublish-cms
+            SENTRY_RELEASE=${{ github.sha }}
+            APP_RELEASE_ID=${{ github.sha }}
           push: true
           tags: |
             ${{ inputs.website_tags }}
