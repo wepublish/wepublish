@@ -24,6 +24,20 @@ module.exports = composePlugins(withNx(), config => {
   config.devtool = 'source-map';
   config.module.rules = removeTsLoader(config.module.rules);
 
+  // Bundle @sentry packages instead of externalizing them.
+  // pkg cannot resolve subpath exports like @sentry/nestjs/setup.
+  if (Array.isArray(config.externals)) {
+    config.externals = config.externals.map(external => {
+      if (typeof external !== 'function') return external;
+      return (ctx, callback) => {
+        if (ctx.request && ctx.request.startsWith('@sentry/')) {
+          return callback();
+        }
+        return external(ctx, callback);
+      };
+    });
+  }
+
   config.module.rules.push({
     test: /\.ts$/,
     exclude: /node_modules/,

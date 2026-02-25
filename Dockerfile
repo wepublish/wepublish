@@ -46,12 +46,8 @@ ENV APP_RELEASE_ID=${APP_RELEASE_ID}
 
 COPY . .
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && update-ca-certificates && rm -rf /var/lib/apt/lists/*
-RUN npm install -g @sentry/cli && \
-    npx prisma generate && \
+RUN npx prisma generate && \
     npx nx build ${NEXT_PROJECT} ${NX_NEXT_PROJECT_BUILD_OPTIONS} && \
-    sentry-cli sourcemaps inject ./dist/apps/${NEXT_PROJECT}/.next && \
-    sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/${NEXT_PROJECT}/.next && \
-    find ./dist/apps/${NEXT_PROJECT}/.next -name '*.map' -delete && \
     bash /wepublish/deployment/map-secrets.sh clean
 
 FROM ${PLAIN_BUILD_IMAGE} AS website

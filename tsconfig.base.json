@@ -115,7 +115,7 @@
       "@wepublish/user/website": ["libs/user/website/src/index.ts"],
       "@wepublish/utils": ["libs/utils/src/index.ts"],
       "@wepublish/utils/api": ["libs/utils/api/src/index.ts"],
-      "@wepublish/utils/sentry": ["libs/utils/sentry/instrumentation.ts"],
+      "@wepublish/utils/sentry": ["libs/utils/sentry/config.ts"],
       "@wepublish/utils/sentry/server": [
         "libs/utils/sentry/instrumentation.server.ts"
       ],
