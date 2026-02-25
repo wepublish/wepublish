@@ -45,7 +45,7 @@ export class MailProviderSettingsResolver {
     name: 'createMailProviderSetting',
     description: 'Creates a new mail provider setting.',
   })
-  createMailProviderSetting(@Args('input') input: CreateSettingMailProviderInput) {
+  createMailProviderSetting(@Args() input: CreateSettingMailProviderInput) {
     return this.mailProviderSettingsService.createMailProviderSetting(input);
   }
  **/

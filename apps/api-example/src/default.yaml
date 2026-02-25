@@ -4,8 +4,8 @@ general:
   bcryptHashCostFactor: 12
   urlAdapter: default
 mailProvider:
-  id: slackmail # allowed is mailchimp/mailgun
-  type: slackmail
+  id: mailchimp # allowed is mailchimp/mailgun
+  type: mailchimp
 paymentProviders:
   - type: payrexx # Allowed are stripe-checkout / stripe / payrexx / bexio
     id: payrexx # Required for stripe-checkout / stripe / payrexx /bexio
@@ -30,10 +30,6 @@ trackingPixelProviders:
 mediaServer:
   type: 'nova'
   quality: 1
-ga:
-  credentials:
-  property:
-  articlePrefix: /a/
 v0:
   type: VO
   id: v0

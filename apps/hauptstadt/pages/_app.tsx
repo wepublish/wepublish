@@ -64,6 +64,7 @@ import {
 import { HauptstadtNavbar } from '../src/components/hauptstadt-navbar';
 import { HauptstadtFooter } from '../src/components/hauptstadt-navigation';
 import { HauptstadtPage } from '../src/components/hauptstadt-page';
+import { HauptstadtPaymentMethodPicker } from '../src/components/hauptstadt-payment-method-picker';
 import { HauptstadtPaywall } from '../src/components/hauptstadt-paywall';
 import { HauptstadtQuoteBlock } from '../src/components/hauptstadt-quote';
 import { HauptstadtSubscribe } from '../src/components/hauptstadt-subscribe';
@@ -152,6 +153,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           MemberPlanItem={HauptstadtMemberPlanItem}
           CommentList={HauptstadtCommentList}
           SubscriptionListItem={HauptstadtSubscriptionListItem}
+          PaymentMethodPicker={HauptstadtPaymentMethodPicker}
           blocks={{
             Renderer: HauptstadtBlockRenderer,
             Title: HauptstadtTitleBlock,

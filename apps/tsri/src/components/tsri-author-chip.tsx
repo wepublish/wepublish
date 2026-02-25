@@ -8,69 +8,63 @@ import {
 } from '@wepublish/author/website';
 
 export const TsriAuthorChip = styled(AuthorChip)`
-  display: grid;
-  grid-column: -1 / 1;
-  grid-template-columns: subgrid;
-  grid-template-rows: min-content;
-  padding-bottom: 0;
-  border-bottom: none;
-  align-items: start;
-  &:first-of-type {
-    grid-row: 1 / 2;
-  }
+  display: contents;
 
   ${AuthorChipImageWrapper} {
     margin-left: unset;
     width: 80px;
     grid-column: 1 / 2;
+    grid-row: 1 / 4;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
+      grid-row: 1 / 5;
       width: 140px;
     }
   }
 
   ${AuthorChipContent} {
     padding: 0.7rem 0 0 0;
-    align-items: start;
-    row-gap: 2rem;
-    display: grid;
+    display: contents;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
-      display: flex;
       padding: 1rem 0 0 0;
-      row-gap: unset;
     }
 
     & > div {
-      display: flex;
-      flex-direction: row;
-      gap: 0.2rem;
-
+      padding: 0.2rem 0 0 0;
+      grid-column: 2 / 4;
+      grid-row: 1 / 2;
+      display: block;
       font-size: 0.7rem;
       font-weight: 700;
 
       ${({ theme }) => theme.breakpoints.up('md')} {
+        grid-column: 2 / 3;
+        padding: 1.25rem 0 0 0;
         font-size: 1rem;
         gap: 0.5rem;
       }
 
       ${AuthorChipName} {
-        position: relative;
         font-weight: 700;
-
-        &:after {
-          content: ',';
-          position: absolute;
-          bottom: 0;
-          right: 0;
-          width: 0.2rem;
-          height: 100%;
-        }
+        display: contents;
 
         & .MuiTypography-root {
-          padding: 0.2rem 0.2rem;
           color: ${({ theme }) => theme.palette.common.black};
           text-decoration: underline;
+          display: unset;
+          padding: 0 0.2rem;
+          margin: 0 0.4rem 0 0;
+          position: relative;
+
+          &:after {
+            content: ',';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0.2rem;
+            height: 100%;
+          }
 
           &:hover {
             background-color: ${({ theme }) => theme.palette.primary.light};
@@ -82,6 +76,7 @@ export const TsriAuthorChip = styled(AuthorChip)`
 
       ${AuthorChipJob} {
         padding-left: 0;
+        display: contents;
       }
     }
   }

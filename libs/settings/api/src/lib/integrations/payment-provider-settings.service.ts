@@ -8,7 +8,7 @@ import {
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { PaymentProviderSettingsDataloaderService } from './payment-provider-settings-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-import { SecretCrypto } from './secrets-cryto';
+import { SecretCrypto } from './secrets-crypto';
 
 @Injectable()
 export class PaymentProviderSettingsService {
@@ -21,22 +21,20 @@ export class PaymentProviderSettingsService {
   private encryptSecretsIfPresent<
     T extends { apiKey?: string | null; webhookEndpointSecret?: string | null },
   >(data: T): T {
+    let result = { ...data };
     if (typeof data.apiKey === 'string' && data.apiKey.length > 0) {
-      return {
-        ...data,
-        apiKey: this.crypto.encrypt(data.apiKey),
-      };
+      result = { ...result, apiKey: this.crypto.encrypt(data.apiKey) };
     }
     if (
       typeof data.webhookEndpointSecret === 'string' &&
       data.webhookEndpointSecret.length > 0
     ) {
-      return {
-        ...data,
+      result = {
+        ...result,
         webhookEndpointSecret: this.crypto.encrypt(data.webhookEndpointSecret),
       };
     }
-    return data;
+    return result;
   }
 
   @PrimeDataLoader(PaymentProviderSettingsDataloaderService, 'id')
@@ -72,10 +70,12 @@ export class PaymentProviderSettingsService {
     input: CreateSettingPaymentProviderInput
   ): Promise<SettingPaymentProvider> {
     const output = this.encryptSecretsIfPresent(input);
-    const returnValue = this.prisma.settingPaymentProvider.create({
+    const returnValue = await this.prisma.settingPaymentProvider.create({
       data: output,
     });
+
     await this.kv.resetNamespace('settings:paymentprovider');
+
     return returnValue;
   }
 
@@ -102,7 +102,7 @@ export class PaymentProviderSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
-    const returnValue = this.prisma.settingPaymentProvider.update({
+    const returnValue = await this.prisma.settingPaymentProvider.update({
       where: { id },
       data: filteredUpdateData,
     });
@@ -126,7 +126,7 @@ export class PaymentProviderSettingsService {
       );
     }
 
-    const returnValue = this.prisma.settingPaymentProvider.delete({
+    const returnValue = await this.prisma.settingPaymentProvider.delete({
       where: { id },
     });
     await this.kv.resetNamespace('settings:paymentprovider');

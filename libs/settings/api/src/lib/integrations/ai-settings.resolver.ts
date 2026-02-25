@@ -42,7 +42,7 @@ export class AISettingsResolver {
     name: 'createAISetting',
     description: 'Creates a new AI provider setting.',
   })
-  createAISetting(@Args('input') input: CreateSettingAIProviderInput) {
+  createAISetting(@Args() input: CreateSettingAIProviderInput) {
     return this.aiSettingsService.createAISetting(input);
   }
    **/

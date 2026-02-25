@@ -421,17 +421,32 @@ function ListItemWrapper({
           {icon} {t('blockStyles.style')}
         </Icon>
 
-        <BlockStyleSelect
-          cleanable
-          value={blockStyleValue?.id}
-          data={stylesForBlock.map(style => ({
-            value: style.id,
-            label: style.name,
-          }))}
-          onChange={blockStyle => {
-            onStyleChange?.(blockStyle as string | undefined);
-          }}
-        />
+        {!!blockStyleValue && (
+          <BlockStyleSelect
+            cleanable
+            value={blockStyleValue?.id}
+            data={stylesForBlock.map(style => ({
+              value: style.id,
+              label: style.name,
+            }))}
+            onChange={blockStyle => {
+              onStyleChange?.(blockStyle as string | undefined);
+            }}
+          />
+        )}
+        {!blockStyleValue && (
+          <BlockStyleSelect
+            cleanable
+            value={undefined}
+            data={stylesForBlock.map(style => ({
+              value: style.id,
+              label: style.name,
+            }))}
+            onChange={blockStyle => {
+              onStyleChange?.(blockStyle as string | undefined);
+            }}
+          />
+        )}
       </BlockStyleIconWrapper>
     </ListItem>
   );

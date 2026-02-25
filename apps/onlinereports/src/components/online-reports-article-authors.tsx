@@ -48,6 +48,9 @@ const AuthorNames = styled('div')`
 
   ${AuthorChipName} {
     line-height: 1.25rem;
+    &:has(+ ${AuthorChipName}) {
+      padding-right: ${({ theme }) => theme.spacing(0.5)};
+    }
 
     a {
       color: ${({ theme }) => theme.palette.text.primary};

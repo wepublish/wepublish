@@ -120,7 +120,12 @@ export const TsriNextWepublishLink = forwardRef<
     if (props.onClick) {
       props.onClick(event);
     }
-    if (href?.startsWith('/newsletter')) {
+    if (
+      href?.startsWith('/newsletter') &&
+      queryParams.mc_u &&
+      queryParams.mc_id &&
+      queryParams.mc_f_id
+    ) {
       event.preventDefault();
       setModalOpen(true);
       return;

@@ -14,7 +14,7 @@ import {
 } from './payment-provider';
 import { mapStripePaymentMethodTypesTyped } from '../payment.methode.mapper';
 
-function mapStripeCheckoutEventToPaymentStatue(
+function mapStripeCheckoutEventToPaymentStatus(
   event: string
 ): PaymentState | null {
   switch (event) {
@@ -79,7 +79,7 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
         const intent = await stripe.paymentIntents.retrieve(
           session.payment_intent as string
         );
-        const state = mapStripeCheckoutEventToPaymentStatue(intent.status);
+        const state = mapStripeCheckoutEventToPaymentStatus(intent.status);
         if (state !== null && session.client_reference_id !== null) {
           intentStates.push({
             paymentID: session.client_reference_id,
@@ -154,7 +154,7 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
 
     if (!session.client_reference_id) {
       logger('stripePaymentProvider').error(
-        'Stripe checkout session with ID: %s for paymentProvider %s returned with client_reference_id',
+        'Stripe checkout session with ID: %s for paymentProvider %s returned without client_reference_id',
         session.id,
         this.id
       );

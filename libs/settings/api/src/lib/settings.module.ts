@@ -6,21 +6,24 @@ import { SettingsResolver } from './settings.resolver';
 import { SettingsService } from './settings.service';
 import { GraphQLSettingValueType } from './settings.model';
 import { SettingDataloaderService } from './setting-dataloader.service';
-import { AISettingsResolver } from './ai-settings.resolver';
-import { AISettingsService } from './ai-settings.service';
-import { AISettingsDataloaderService } from './ai-settings-dataloader.service';
-import { ChallengeProviderSettingsResolver } from './challenge-provider-settings.resolver';
-import { ChallengeProviderSettingsService } from './challenge-provider-settings.service';
-import { ChallengeProviderSettingsDataloaderService } from './challenge-provider-settings-dataloader.service';
-import { PaymentProviderSettingsResolver } from './payment-provider-settings.resolver';
-import { PaymentProviderSettingsService } from './payment-provider-settings.service';
-import { PaymentProviderSettingsDataloaderService } from './payment-provider-settings-dataloader.service';
-import { TrackingPixelSettingsResolver } from './tracking-pixel-settings.resolver';
-import { TrackingPixelSettingsService } from './tracking-pixel-settings.service';
-import { TrackingPixelSettingsDataloaderService } from './tracking-pixel-settings-dataloader.service';
-import { MailProviderSettingsResolver } from './mail-provider-settings.resolver';
-import { MailProviderSettingsService } from './mail-provider-settings.service';
-import { MailProviderSettingsDataloaderService } from './mail-provider-settings-dataloader.service';
+import { AISettingsResolver } from './integrations/ai-settings.resolver';
+import { AISettingsService } from './integrations/ai-settings.service';
+import { AISettingsDataloaderService } from './integrations/ai-settings-dataloader.service';
+import { ChallengeProviderSettingsResolver } from './integrations/challenge-provider-settings.resolver';
+import { ChallengeProviderSettingsService } from './integrations/challenge-provider-settings.service';
+import { ChallengeProviderSettingsDataloaderService } from './integrations/challenge-provider-settings-dataloader.service';
+import { PaymentProviderSettingsResolver } from './integrations/payment-provider-settings.resolver';
+import { PaymentProviderSettingsService } from './integrations/payment-provider-settings.service';
+import { PaymentProviderSettingsDataloaderService } from './integrations/payment-provider-settings-dataloader.service';
+import { TrackingPixelProviderSettingsResolver } from './integrations/tracking-pixel-provider-settings.resolver';
+import { TrackingPixelProviderSettingsService } from './integrations/tracking-pixel-provider-settings.service';
+import { TrackingPixelSettingsProviderDataloaderService } from './integrations/tracking-pixel-settings-provider-dataloader.service';
+import { MailProviderSettingsResolver } from './integrations/mail-provider-settings.resolver';
+import { MailProviderSettingsService } from './integrations/mail-provider-settings.service';
+import { MailProviderSettingsDataloaderService } from './integrations/mail-provider-settings-dataloader.service';
+import { AnalyticsProviderSettingsResolver } from './integrations/analytics-provider-settings.resolver';
+import { AnalyticsProviderSettingsService } from './integrations/analytics-provider-settings.service';
+import { AnalyticsProviderSettingsDataloaderService } from './integrations/analytics-provider-settings-dataloader.service';
 import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 
 @Module({
@@ -40,12 +43,15 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
     PaymentProviderSettingsResolver,
     PaymentProviderSettingsService,
     PaymentProviderSettingsDataloaderService,
-    TrackingPixelSettingsResolver,
-    TrackingPixelSettingsService,
-    TrackingPixelSettingsDataloaderService,
+    TrackingPixelProviderSettingsResolver,
+    TrackingPixelProviderSettingsService,
+    TrackingPixelSettingsProviderDataloaderService,
     MailProviderSettingsResolver,
     MailProviderSettingsService,
     MailProviderSettingsDataloaderService,
+    AnalyticsProviderSettingsResolver,
+    AnalyticsProviderSettingsService,
+    AnalyticsProviderSettingsDataloaderService,
   ],
   exports: [
     SettingsGuard,
@@ -57,10 +63,12 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
     ChallengeProviderSettingsDataloaderService,
     PaymentProviderSettingsService,
     PaymentProviderSettingsDataloaderService,
-    TrackingPixelSettingsService,
-    TrackingPixelSettingsDataloaderService,
+    TrackingPixelProviderSettingsService,
+    TrackingPixelSettingsProviderDataloaderService,
     MailProviderSettingsService,
     MailProviderSettingsDataloaderService,
+    AnalyticsProviderSettingsService,
+    AnalyticsProviderSettingsDataloaderService,
   ],
 })
 export class SettingModule {}

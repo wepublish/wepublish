@@ -112,11 +112,16 @@ jobs:
           SHA_HASH=${{ github.sha }}
           ENVIRONMENT=${{ inputs.environment }}
           PROJECT_NAME=${{ inputs.website_project }}
-          DEFAULT_TOP_LEVEL_DOMAIN="dev"
-          if [[ $ENVIRONMENT == "production" ]]; then
-            DEFAULT_TOP_LEVEL_DOMAIN="media"
+          # Can be removed after migration from media -> cloud domain
+          TDL=$(jq -r ".tdl.${ENVIRONMENT} // null" "apps/${PROJECT_NAME}/deployment.config.json")
+          if [[ "$TDL" == "null" || -z "$TDL" ]]; then
+            if [[ $ENVIRONMENT == "production" ]]; then
+              TDL="wepublish.cloud"
+            else
+              TDL="wepublish.works"
+            fi
           fi
-          FRONTEND_BASE_URL=$(./deployment/read_deployment_config.sh ".website.${ENVIRONMENT}.custom_domain" true ${PROJECT_NAME} getValue https://${PROJECT_NAME}.wepublish.${DEFAULT_TOP_LEVEL_DOMAIN} | awk -F "::" '{print $3}')
+          FRONTEND_BASE_URL=$(./deployment/read_deployment_config.sh ".website.${ENVIRONMENT}.custom_domain" true ${PROJECT_NAME} getValue https://${PROJECT_NAME}.${TDL} | awk -F "::" '{print $3}')
           echo "Looking for frontent version at ${FRONTEND_BASE_URL}/deployed_version"
           for ((i=1; i<=MAX_RETRIES; i++)); do
             HTTP_CODE=$(curl -s -o response_body.txt -w "%{http_code}"  ${FRONTEND_BASE_URL}/deployed_version)

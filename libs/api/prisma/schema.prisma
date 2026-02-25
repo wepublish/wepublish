@@ -1047,7 +1047,7 @@ model Tag {
   tag         String?
   description Json?
   main        Boolean @default(false)
-  color     String?
+  color       String?
 
   peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
   peerId String?
@@ -1765,4 +1765,23 @@ model SettingAIProvider {
   systemPrompt String?
 
   @@map("settings.aiprovider")
+}
+
+enum AnalyticsProviderType {
+  GOOGLE @map("google")
+}
+
+model SettingAnalyticsProvider {
+  id           String   @id
+  createdAt    DateTime @default(now())
+  modifiedAt   DateTime @updatedAt
+  lastLoadedAt DateTime @default(now())
+
+  type          AnalyticsProviderType
+  name          String?
+  credentials   String?
+  property      String?
+  articlePrefix String?
+
+  @@map("settings.analyticsProvider")
 }

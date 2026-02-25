@@ -47,7 +47,7 @@ export class PaymentProviderSettingsResolver {
     name: 'createPaymentProviderSetting',
     description: 'Creates a new payment provider setting.',
   })
-  createPaymentProviderSetting(@Args('input') input: CreateSettingPaymentProviderInput) {
+  createPaymentProviderSetting(@Args() input: CreateSettingPaymentProviderInput) {
     return this.paymentProviderSettingsService.createPaymentProviderSetting(input);
   }
  **/

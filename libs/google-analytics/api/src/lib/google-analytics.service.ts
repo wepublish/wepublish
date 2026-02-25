@@ -5,24 +5,22 @@ import { JWTInput } from 'google-auth-library';
 import { format } from 'date-fns';
 import { HotAndTrendingDataSource } from '@wepublish/article/api';
 import { getMaxTake } from '@wepublish/utils/api';
+import { GoogleAnalyticsDbConfig } from './google-analytics-db-config';
 
 export const GA_CLIENT_OPTIONS = Symbol('GA_CLIENT_OPTIONS');
+
 export type GoogleAnalyticsConfig = {
   credentials?: JWTInput;
-  property?: string;
+  property?: string | null;
   articlePrefix: string;
 };
 
 @Injectable()
 export class GoogleAnalyticsService implements HotAndTrendingDataSource {
-  private analyticsDataClient = new BetaAnalyticsDataClient({
-    credentials: this.config.credentials,
-  });
-
   constructor(
     private prisma: PrismaClient,
     @Inject(GA_CLIENT_OPTIONS)
-    private config: GoogleAnalyticsConfig
+    private configProvider: GoogleAnalyticsDbConfig
   ) {}
 
   async getMostViewedArticles({
@@ -30,7 +28,9 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
     take,
     skip,
   }: Parameters<HotAndTrendingDataSource['getMostViewedArticles']>[0]) {
-    if (!this.config.credentials || !this.config.property) {
+    const config = await this.configProvider.getGoogleAnalytics();
+
+    if (!config.credentials || !config.property) {
       console.warn(
         'GoogleAnalyticsService.getMostViewedArticles: No Google Analytics credentials set, returning empty array'
       );
@@ -38,12 +38,16 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
       return [];
     }
 
+    const analyticsDataClient = new BetaAnalyticsDataClient({
+      credentials: config.credentials,
+    });
+
     const thirtyDaysAgo = new Date(
       new Date().getTime() - 60 * 60 * 24 * 31 * 1000
     );
 
-    const [{ rows }] = await this.analyticsDataClient.runReport({
-      property: `properties/${this.config.property}`,
+    const [{ rows }] = await analyticsDataClient.runReport({
+      property: `properties/${config.property}`,
       dateRanges: [
         {
           startDate: format(start ?? thirtyDaysAgo, 'yyyy-MM-dd'),
@@ -71,19 +75,18 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
         const [{ value: slug }] = dimensionValues;
         const [{ value: views }] = metricValues;
 
-        if (!slug?.startsWith(this.config.articlePrefix) || !views) {
+        if (!slug?.startsWith(config.articlePrefix) || !views) {
           return object;
         }
 
         // Don't include sub pages of the article prefix
         if (
-          slug?.split('/').length !==
-          this.config.articlePrefix.split('/').length
+          slug?.split('/').length !== config.articlePrefix.split('/').length
         ) {
           return object;
         }
 
-        object[slug.replace(this.config.articlePrefix, '')] = +views;
+        object[slug.replace(config.articlePrefix, '')] = +views;
 
         return object;
       },

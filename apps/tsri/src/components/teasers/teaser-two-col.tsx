@@ -38,11 +38,22 @@ export const TeaserTwoCol = styled(TsriTeaser)`
     width: 41.74cqw;
     margin: auto;
 
+    & picture {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      overflow: hidden;
+    }
+
     & img {
-      width: auto;
-      height: 41.74cqw;
+      max-width: 100%;
+      max-height: 100%;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      max-height: unset;
+      aspect-ratio: unset;
     }
   }
 

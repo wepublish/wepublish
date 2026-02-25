@@ -46,7 +46,7 @@ export class ChallengeProviderSettingsResolver {
     name: 'createChallengeProviderSetting',
     description: 'Creates a new challenge provider setting.',
   })
-  createChallengeProviderSetting(@Args('input') input: CreateSettingChallengeProviderInput) {
+  createChallengeProviderSetting(@Args() input: CreateSettingChallengeProviderInput) {
     return this.challengeProviderSettingsService.createChallengeProviderSetting(input);
   }
  **/

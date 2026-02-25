@@ -72,7 +72,7 @@ export class SettingRestriction {
 
 @ObjectType()
 export class Setting {
-  @Field(type => String)
+  @Field()
   id!: string;
 
   @Field(type => SettingName)
