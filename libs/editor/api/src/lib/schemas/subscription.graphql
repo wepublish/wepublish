@@ -37,6 +37,25 @@ fragment Deactivation on SubscriptionDeactivation {
   reason
 }
 
+fragment TinySubscription on PublicSubscription {
+  id
+  createdAt
+  modifiedAt
+
+  user {
+    id
+    name
+    firstName
+  }
+  memberPlan {
+    id
+    name
+  }
+  deactivation {
+    ...Deactivation
+  }
+}
+
 query SubscriptionList(
   $filter: SubscriptionFilter
   $cursor: String
@@ -54,7 +73,7 @@ query SubscriptionList(
     sort: $sort
   ) {
     nodes {
-      ...FullSubscription
+      ...TinySubscription
     }
 
     pageInfo {
