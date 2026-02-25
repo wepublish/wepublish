@@ -72,7 +72,7 @@ FROM ${BUILD_IMAGE} AS build-api
 COPY . .
 RUN npm install -g @yao-pkg/pkg && \
     npx prisma generate && \
-    npx nx build api-example && \
+    npx nx build api-example --ignore-nx-cache && \
     cp docker/api_build_package.json package.json && \
     pkg package.json
 
@@ -106,7 +106,7 @@ FROM ${BUILD_IMAGE} AS build-editor
 COPY . .
 RUN npm install -g @yao-pkg/pkg && \
     npx prisma generate && \
-    npx nx build editor && \
+    npx nx build editor --ignore-nx-cache && \
     cp docker/editor_build_package.json package.json && \
     pkg package.json
 
@@ -173,7 +173,7 @@ COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
 RUN npm ci
-RUN npx nx build media
+RUN npx nx build media --ignore-nx-cache
 
 FROM base-media AS media
 ENV NODE_ENV=production
