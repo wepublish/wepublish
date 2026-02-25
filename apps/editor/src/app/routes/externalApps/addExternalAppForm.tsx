@@ -22,6 +22,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdEdit, MdSave } from 'react-icons/md';
 import { z } from 'zod';
+import { IconPickerSelect } from './iconPicker';
 
 const Form = styled('form')`
   display: flex;
@@ -180,16 +181,17 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
           name="icon"
           control={control}
           render={({ field, fieldState }) => (
-            <TextField
-              {...field}
-              label={t('addExternalAppForm.icon')}
-              variant="outlined"
-              fullWidth
-              placeholder="https://example.com/icon.png"
-              error={!!fieldState.error}
-              helperText={fieldState.error?.message}
-              disabled={loading}
-            />
+            <>
+              <IconPickerSelect
+                value={field.value}
+                onChange={field.onChange}
+              />
+              {fieldState.error && (
+                <FormHelperText error>
+                  {fieldState.error.message}
+                </FormHelperText>
+              )}
+            </>
           )}
         />
 
