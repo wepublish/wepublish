@@ -14,7 +14,7 @@ import { getBaseConfig, setCommonTags } from './config';
 
 Sentry.init({
   ...getBaseConfig(),
-  integrations: [nodeProfilingIntegration()],
+  integrations: [nodeProfilingIntegration(), Sentry.prismaIntegration()],
   profilesSampleRate: 1.0,
 });
 
