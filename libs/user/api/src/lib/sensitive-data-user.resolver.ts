@@ -19,7 +19,7 @@ export class SensitiveDataUserResolver {
 
   @ResolveField(() => UserAddress, { nullable: true })
   public async address(@Parent() { id, address }: SensitiveDataUser) {
-    if (address !== undefined) {
+    if (!address) {
       return address;
     }
 
@@ -54,7 +54,9 @@ export class SensitiveDataUserResolver {
   }
 
   @ResolveField(() => [UserRole])
-  public roles(@Parent() user: PUser) {
-    return this.userRoleDataloader.loadMany(user.roleIDs);
+  async roles(@Parent() user: PUser) {
+    return (await this.userRoleDataloader.loadMany(user.roleIDs)).filter(
+      Boolean
+    );
   }
 }
