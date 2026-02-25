@@ -12,12 +12,21 @@ import { getBaseConfig, setCommonTags } from './config';
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
-    const { nodeProfilingIntegration } = await import('@sentry/profiling-node');
+    const integrations = [];
+
+    try {
+      const { nodeProfilingIntegration } = await import(
+        '@sentry/profiling-node'
+      );
+      integrations.push(nodeProfilingIntegration() as any);
+    } catch {
+      // Native binary not available (e.g. Next.js standalone mode)
+    }
 
     Sentry.init({
       ...getBaseConfig(),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      integrations: [nodeProfilingIntegration() as any],
+      integrations,
     });
 
     setCommonTags(Sentry, 'server');
