@@ -11,15 +11,25 @@ import * as Sentry from '@sentry/nextjs';
 import { getBaseConfig, setCommonTags } from './config';
 
 export async function register() {
-  const { nodeProfilingIntegration } = await import('@sentry/profiling-node');
+  if (process.env.NEXT_RUNTIME === 'nodejs') {
+    const { nodeProfilingIntegration } = await import('@sentry/profiling-node');
 
-  Sentry.init({
-    ...getBaseConfig(),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    integrations: [nodeProfilingIntegration() as any],
-  });
+    Sentry.init({
+      ...getBaseConfig(),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      integrations: [nodeProfilingIntegration() as any],
+    });
 
-  setCommonTags(Sentry, 'server');
+    setCommonTags(Sentry, 'server');
+  }
+
+  if (process.env.NEXT_RUNTIME === 'edge') {
+    Sentry.init({
+      ...getBaseConfig(),
+    });
+
+    setCommonTags(Sentry, 'edge');
+  }
 }
 
 export const onRequestError = Sentry.captureRequestError;

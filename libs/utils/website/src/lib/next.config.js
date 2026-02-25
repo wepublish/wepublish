@@ -95,6 +95,7 @@ const nextConfig = {
     : [],
   experimental: {
     scrollRestoration: true,
+    serverComponentsExternalPackages: ['@sentry/profiling-node'],
   },
   outputFileTracingRoot: join(__dirname, '../../../../../'),
   outputFileTracingExcludes: {
