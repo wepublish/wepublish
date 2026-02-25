@@ -5,12 +5,12 @@ import {
   useImportEventMutation,
   useImportedEventListQuery,
   useImportedEventsIdsQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Message, Pagination, Table as RTable, toaster } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
-import { Event } from '@wepublish/editor/api-v2';
+import { Event } from '@wepublish/editor/api';
 
 import styled from '@emotion/styled';
 import {
@@ -103,7 +103,6 @@ export default function ImportableEventListView() {
   };
 
   const { data, loading: queryLoading } = useImportedEventListQuery({
-    fetchPolicy: 'cache-and-network',
     variables: importedEventListVariables,
     onError: onErrorToast,
   });
@@ -125,9 +124,7 @@ export default function ImportableEventListView() {
     onError: onErrorToast,
   });
 
-  const { data: ids } = useImportedEventsIdsQuery({
-    fetchPolicy: 'cache-and-network',
-  });
+  const { data: ids } = useImportedEventsIdsQuery({});
   const alreadyImported = ids?.importedEventsIds;
 
   const importEvent = async (id: string, source: string) => {

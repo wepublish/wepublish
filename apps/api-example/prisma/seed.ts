@@ -19,7 +19,6 @@ import { faker } from '@faker-js/faker';
 import { createReadStream } from 'fs';
 import { Descendant, Node } from 'slate';
 import { seed as rootSeed } from '../../../libs/api/prisma/seed';
-import { hashPassword } from '../../../libs/api/src/lib/db/user';
 import { NovaMediaAdapter } from '../../../libs/api/src/lib/media/novaMediaAdapter';
 import { capitalize } from '@mui/material';
 import { bootstrap } from '../../media/src/bootstrap';
@@ -38,6 +37,13 @@ import {
   EventBlock,
 } from '@wepublish/block-content/api';
 import { TrackingPixel } from '@wepublish/tracking-pixel/api';
+import bcrypt from 'bcrypt';
+
+async function hashPassword(password: string) {
+  const hashCostFactor = 12;
+
+  return await bcrypt.hash(password, hashCostFactor);
+}
 
 const shuffle = <T>(list: T[]): T[] => {
   let idx = -1;
@@ -917,8 +923,10 @@ async function seedSettings(prisma: PrismaClient) {
       type: PaymentProviderType.PAYREXX,
       name: 'Payrexx',
       offSessionPayments: true,
-      apiKey: 'secret',
-      webhookEndpointSecret: 'secret',
+      apiKey:
+        'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
+      webhookEndpointSecret:
+        'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
       payrexx_instancename: 'payrexx',
       payrexx_vatrate: 8.1,
       payrexx_pm: [PayrexxPM.MASTERCARD, PayrexxPM.VISA],
@@ -932,8 +940,10 @@ async function seedSettings(prisma: PrismaClient) {
       type: PaymentProviderType.PAYREXX_SUBSCRIPTION,
       name: 'Payrexx Subscription',
       offSessionPayments: false,
-      apiKey: 'secret',
-      webhookEndpointSecret: 'secret',
+      apiKey:
+        'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
+      webhookEndpointSecret:
+        'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
       payrexx_instancename: 'payrexx',
     },
   });
@@ -943,8 +953,10 @@ async function seedSettings(prisma: PrismaClient) {
       type: PaymentProviderType.STRIPE,
       name: 'Stripe',
       offSessionPayments: true,
-      apiKey: 'secret',
-      webhookEndpointSecret: 'secret',
+      apiKey:
+        'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
+      webhookEndpointSecret:
+        'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
       stripe_methods: [StripePaymentMethod.CARD],
     },
   });
@@ -955,8 +967,10 @@ async function seedSettings(prisma: PrismaClient) {
       type: PaymentProviderType.STRIPE_CHECKOUT,
       name: 'Stripe Checkout',
       offSessionPayments: false,
-      apiKey: 'secret',
-      webhookEndpointSecret: 'secret',
+      apiKey:
+        'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
+      webhookEndpointSecret:
+        'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
       stripe_methods: [StripePaymentMethod.CARD],
     },
   });
@@ -967,8 +981,10 @@ async function seedSettings(prisma: PrismaClient) {
       type: PaymentProviderType.MOLLIE,
       name: 'Mollie',
       offSessionPayments: true,
-      apiKey: 'secret',
-      webhookEndpointSecret: 'secret',
+      apiKey:
+        'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
+      webhookEndpointSecret:
+        'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
       mollie_methods: [MolliePaymentMethod.CREDITCARD],
       mollie_apiBaseUrl: 'https://api.wepublish.dev',
     },
@@ -980,7 +996,8 @@ async function seedSettings(prisma: PrismaClient) {
       type: PaymentProviderType.BEXIO,
       name: 'Bexio',
       offSessionPayments: true,
-      apiKey: 'secret',
+      apiKey:
+        'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
       bexio_userId: 1,
       bexio_countryId: 1,
       bexio_invoiceTemplateNewMembership: '1',
@@ -1015,7 +1032,8 @@ async function seedSettings(prisma: PrismaClient) {
       id: 'turnstile',
       name: 'Turnstile',
       type: ChallengeProviderType.TURNSTILE,
-      secret: '1x0000000000000000000000000000000AA',
+      secret:
+        'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
       siteKey: '1x00000000000000000000AA',
     },
   });
@@ -1032,13 +1050,13 @@ async function seedSettings(prisma: PrismaClient) {
     },
   });
 
-  const v0 = prisma.settingAIProvider.create({
-    data: {
-      id: 'v0',
-      type: AIProviderType.V0,
-      name: 'V0',
-      apiKey: 'secret',
-      systemPrompt: `DO's:
+  const v0Data = {
+    id: 'v0',
+    type: AIProviderType.V0,
+    name: 'V0',
+    apiKey:
+      'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
+    systemPrompt: `DO's:
   1. Use plain HTML and CSS
   2. Use <style> tags
   3. Center horizontally
@@ -1048,7 +1066,7 @@ async function seedSettings(prisma: PrismaClient) {
   5. Use the font family Roboto
   6. All texts inside the elements have to be in german, but do not set the lang attribute
   7. Use randomly generated class names to avoid conflicts
-  
+
   DONT's:
   1. Do not generate <html>, <body>, <head> or doctype tags
   2. Do not use inline styles
@@ -1057,24 +1075,28 @@ async function seedSettings(prisma: PrismaClient) {
   5. Do not set a min-height of 100vh or similar on the container
   6. Do not generate or reference any external images, inline if possible
   7. Do not return anything but HTML, does not matter what is given in the prompt`,
+  };
+  const v0 = prisma.settingAIProvider.upsert({
+    where: {
+      id: 'v0',
     },
+    update: v0Data,
+    create: v0Data,
   });
 
-  await Promise.all(
-    [
-      mailprovider,
-      payrexx,
-      payrexxSubscription,
-      stripe,
-      stripeCheckout,
-      mollie,
-      bexio,
-      noCharge,
-      turnstile,
-      prolitteris,
-    ],
-    v0
-  );
+  await Promise.all([
+    mailprovider,
+    payrexx,
+    payrexxSubscription,
+    stripe,
+    stripeCheckout,
+    mollie,
+    bexio,
+    noCharge,
+    turnstile,
+    prolitteris,
+    v0,
+  ]);
 }
 
 async function seed() {
@@ -1116,10 +1138,6 @@ async function seed() {
     if (hasUsers) {
       throw 'Website Example seeding has already been done. Skipping';
     }
-
-    console.log('Seeding Settings');
-    await seedSettings(prisma);
-
     console.log('Seeding users');
     await Promise.all([
       prisma.user.create({
@@ -1143,6 +1161,9 @@ async function seed() {
         },
       }),
     ]);
+
+    console.log('Seeding Settings');
+    await seedSettings(prisma);
 
     const tags = Array.from({ length: 5 }, () =>
       faker.word.noun().toLowerCase()

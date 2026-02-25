@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   Comment,
   CommentAuthorType,
@@ -20,7 +24,6 @@ import {
   CommentLengthError,
   InvalidStarRatingValueError,
   NotAuthorisedError,
-  NotFound,
 } from '@wepublish/api';
 import { ChallengeService } from '@wepublish/challenge/api';
 import { SettingName, SettingsService } from '@wepublish/settings/api';
@@ -338,7 +341,10 @@ export class CommentService {
         const answer = answers.find(a => a.id === override.answerId);
 
         if (!answer) {
-          throw new NotFound('CommentRatingSystemAnswer', override.answerId);
+          throw new NotFoundException(
+            'CommentRatingSystemAnswer',
+            override.answerId
+          );
         }
 
         this.validateCommentRatingValue(answer.type, override.value ?? 0);
@@ -510,7 +516,7 @@ export class CommentService {
     });
 
     if (!comment) {
-      throw new NotFound('comment', input.id);
+      throw new NotFoundException('comment', input.id);
     }
 
     if (user.id !== comment?.userID) {
@@ -575,7 +581,7 @@ export class CommentService {
     });
 
     if (!answer) {
-      throw new NotFound('CommentRatingSystemAnswer', answerId);
+      throw new NotFoundException('CommentRatingSystemAnswer', answerId);
     }
 
     this.validateCommentRatingValue(answer.type as RatingSystemType, value);

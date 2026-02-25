@@ -1,20 +1,18 @@
 import { createOptionalsArray, DataLoaderService } from '@wepublish/utils/api';
 import { Injectable, NotFoundException, Scope } from '@nestjs/common';
 import { PeerDataloaderService } from './peer-dataloader.service';
-import { createSafeHostUrl } from './create-safe-host-url';
-import { GraphQLClient } from 'graphql-request';
-import {
-  PeerProfile,
-  PeerProfileQuery,
-  PeerProfileQueryVariables,
-} from './remote/graphql';
+
 import { RemotePeerProfile } from './peer-profile.model';
+import { PeerProfileService } from './peer-profile.service';
 
 @Injectable({
   scope: Scope.REQUEST,
 })
 export class RemotePeerProfileDataloaderService extends DataLoaderService<RemotePeerProfile> {
-  constructor(protected peer: PeerDataloaderService) {
+  constructor(
+    protected peer: PeerDataloaderService,
+    protected peerProfile: PeerProfileService
+  ) {
     super();
   }
 
@@ -27,50 +25,14 @@ export class RemotePeerProfileDataloaderService extends DataLoaderService<Remote
           throw new NotFoundException(`Peer with id ${peerId} not found`);
         }
 
-        const link = createSafeHostUrl(peer.hostURL, 'v1');
-        const client = new GraphQLClient(link, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${peer.token}`,
-          },
-        });
-
-        const profile = await client.request<
-          PeerProfileQuery,
-          PeerProfileQueryVariables
-        >(PeerProfile);
+        const profile = await this.peerProfile.getRemotePeerProfile(
+          peer.hostURL,
+          peer.token
+        );
 
         return {
           id: peerId,
-          ...profile.peerProfile,
-          logo:
-            profile.peerProfile.logo ?
-              {
-                ...profile.peerProfile.logo,
-                createdAt: new Date(profile.peerProfile.logo.createdAt),
-                modifiedAt: new Date(profile.peerProfile.logo.modifiedAt),
-              }
-            : profile.peerProfile.logo,
-          squareLogo:
-            profile.peerProfile.squareLogo ?
-              {
-                ...profile.peerProfile.squareLogo,
-                createdAt: new Date(profile.peerProfile.squareLogo.createdAt),
-                modifiedAt: new Date(profile.peerProfile.squareLogo.modifiedAt),
-              }
-            : profile.peerProfile.squareLogo,
-          callToActionImage:
-            profile.peerProfile.callToActionImage ?
-              {
-                ...profile.peerProfile.callToActionImage,
-                createdAt: new Date(
-                  profile.peerProfile.callToActionImage.createdAt
-                ),
-                modifiedAt: new Date(
-                  profile.peerProfile.callToActionImage.modifiedAt
-                ),
-              }
-            : profile.peerProfile.callToActionImage,
+          ...profile,
         };
       })
     );
@@ -79,6 +41,6 @@ export class RemotePeerProfileDataloaderService extends DataLoaderService<Remote
       ids,
       profiles,
       'id'
-    ) as unknown as Array<RemotePeerProfile | null>;
+    ) as Array<RemotePeerProfile | null>;
   }
 }

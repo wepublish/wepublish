@@ -1,11 +1,10 @@
 import { ApolloError } from '@apollo/client';
-import { TagType } from '@wepublish/editor/api-v2';
 import {
   Event,
   EventFilter,
-  getApiClientV2,
+  TagType,
   useEventListQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -86,14 +85,11 @@ function EventListView() {
     skip: (page - 1) * limit,
   };
 
-  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
     refetch,
   } = useEventListQuery({
-    client,
-    fetchPolicy: 'cache-and-network',
     variables: eventListVariables,
     onError: onErrorToast,
   });

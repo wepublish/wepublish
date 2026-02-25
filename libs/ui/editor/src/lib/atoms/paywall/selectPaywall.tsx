@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import { getApiClientV2, usePaywallListQuery } from '@wepublish/editor/api-v2';
+import { usePaywallListQuery } from '@wepublish/editor/api';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Message, SelectPicker, toaster } from 'rsuite';
@@ -40,10 +40,7 @@ export function SelectPaywall({
 }: SelectPaywallsProps) {
   const { t } = useTranslation();
 
-  const client = getApiClientV2();
   const { data: paywallsData } = usePaywallListQuery({
-    client,
-    fetchPolicy: 'cache-and-network',
     onError: showErrors,
   });
 

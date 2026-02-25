@@ -1,5 +1,7 @@
+import { Button } from '@mui/material';
 import {
   CanGetAISettings,
+  CanGetAnalyticsProviderSettings,
   CanGetChallengeProviderSettings,
   CanGetMailProviderSettings,
   CanGetPaymentProviderSettings,
@@ -9,10 +11,10 @@ import {
 import { PermissionControl } from '@wepublish/ui/editor';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBack } from 'react-icons/md';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Button } from 'rsuite';
+import { Link, useParams } from 'react-router-dom';
 
 import { AIIntegrationForm } from './aiIntegrationForm';
+import { AnalyticsIntegrationForm } from './analyticsIntegrationForm';
 import { ChallengeIntegrationForm } from './challengeIntegrationForm';
 import { MailIntegrationForm } from './mailIntegrationForm';
 import { PaymentIntegrationForm } from './paymentIntegrationForm';
@@ -30,6 +32,8 @@ const useIntegrationTitle = (type: string | undefined) => {
       return t('integrations.paymentProvider');
     case 'tracking-pixel':
       return t('integrations.trackingPixel');
+    case 'analytics':
+      return t('integrations.analytics');
     case 'mail':
       return t('integrations.mailProvider');
     default:
@@ -47,6 +51,8 @@ const getPermission = (type: string | undefined): Permission | undefined => {
       return CanGetPaymentProviderSettings;
     case 'tracking-pixel':
       return CanGetTrackingPixelSettings;
+    case 'analytics':
+      return CanGetAnalyticsProviderSettings;
     case 'mail':
       return CanGetMailProviderSettings;
     default:
@@ -56,7 +62,6 @@ const getPermission = (type: string | undefined): Permission | undefined => {
 
 export function IntegrationEditView() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { type } = useParams();
 
   const permission = getPermission(type);
@@ -74,6 +79,8 @@ export function IntegrationEditView() {
         return <MailIntegrationForm />;
       case 'tracking-pixel':
         return <TrackingPixelIntegrationForm />;
+      case 'analytics':
+        return <AnalyticsIntegrationForm />;
       default:
         return <p>{t('integrations.configure', { integration: title })}</p>;
     }
@@ -84,13 +91,15 @@ export function IntegrationEditView() {
       qualifyingPermissions={permission ? [permission.id] : []}
     >
       <div>
-        <Button
-          onClick={() => navigate('/integrations')}
-          appearance="subtle"
-          startIcon={<MdArrowBack />}
-        >
-          {t('integrations.back')}
-        </Button>
+        <Link to={'/integrations'}>
+          <Button
+            size="small"
+            variant="text"
+            startIcon={<MdArrowBack />}
+          >
+            {t('integrations.back')}
+          </Button>
+        </Link>
 
         <h1>{title}</h1>
 

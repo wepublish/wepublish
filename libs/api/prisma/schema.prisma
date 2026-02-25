@@ -1784,3 +1784,22 @@ model ExternalApps {
 
   @@map("apps.external")
 }
+
+enum AnalyticsProviderType {
+  GOOGLE @map("google")
+}
+
+model SettingAnalyticsProvider {
+  id           String   @id
+  createdAt    DateTime @default(now())
+  modifiedAt   DateTime @updatedAt
+  lastLoadedAt DateTime @default(now())
+
+  type          AnalyticsProviderType
+  name          String?
+  credentials   String?
+  property      String?
+  articlePrefix String?
+
+  @@map("settings.analyticsProvider")
+}

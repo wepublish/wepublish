@@ -1,8 +1,7 @@
 import {
-  getApiClientV2,
   SubscriptionFilter,
   useSubscriptionsAsCsvLazyQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { MdFileDownload } from 'react-icons/md';
 import { IconButton } from 'rsuite';
@@ -65,11 +64,8 @@ export function ExportSubscriptionsAsCsv({
   filter,
 }: ExportSubscriptionAsCsvProps) {
   const { t } = useTranslation();
-  const client = getApiClientV2();
-  const [getCsv, { loading }] = useSubscriptionsAsCsvLazyQuery({
-    client,
-    fetchPolicy: 'network-only',
-  });
+
+  const [getCsv, { loading }] = useSubscriptionsAsCsvLazyQuery({});
 
   return (
     <IconButton
@@ -84,9 +80,7 @@ export function ExportSubscriptionsAsCsv({
 }
 
 export function useExportSubscriptionsAsCsv() {
-  const [getCsv, { loading }] = useSubscriptionsAsCsvLazyQuery({
-    fetchPolicy: 'network-only',
-  });
+  const [getCsv, { loading }] = useSubscriptionsAsCsvLazyQuery({});
 
   return { initDownload, loading, getCsv };
 }

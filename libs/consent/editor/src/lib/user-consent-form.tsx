@@ -1,10 +1,10 @@
 import { ApolloError } from '@apollo/client';
-import { useUserListQuery } from '@wepublish/editor/api-v2';
+import { useUserListQuery } from '@wepublish/editor/api';
 import {
   MutationCreateUserConsentArgs,
   MutationUpdateUserConsentArgs,
   useConsentsQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import {
   Checkbox,
@@ -15,7 +15,6 @@ import {
   SelectPicker,
   toaster,
 } from 'rsuite';
-import { getApiClientV2 } from '@wepublish/editor/api-v2';
 
 type UserConsentFormData = Partial<
   MutationCreateUserConsentArgs & MutationUpdateUserConsentArgs
@@ -45,7 +44,6 @@ export const UserConsentForm = ({
   onChange,
   isEdit,
 }: UserConsentFormProps) => {
-  const client = getApiClientV2();
   const { t } = useTranslation();
 
   const consentValues = [
@@ -60,16 +58,12 @@ export const UserConsentForm = ({
   ];
 
   const { loading: loadingUsers, data: userData } = useUserListQuery({
-    client,
     variables: {
       take: 100,
     },
-    fetchPolicy: 'network-only',
   });
 
   const { loading: loadingConsents, data: consentsData } = useConsentsQuery({
-    client,
-    fetchPolicy: 'cache-and-network',
     onError: onErrorToast,
   });
 

@@ -1,18 +1,16 @@
 import {
-  getApiClientV2,
   PollVoteListQueryResult,
   PollVoteSort,
   SortOrder as SortOrderV2,
   useDeletePollVotesMutation,
   usePollQuery,
   usePollVoteListQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   createOptionalMapper,
   usePaginatedQueryContainer,
 } from '@wepublish/ui/editor';
-import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { PollVoteList } from './PollVoteList';
@@ -30,15 +28,10 @@ function PollVoteListContainer() {
       }),
     });
 
-  const client = useMemo(() => getApiClientV2(), []);
   const listQuery = usePollVoteListQuery({
-    client,
     variables,
-    fetchPolicy: 'network-only',
   });
-  const [deletePollVotes] = useDeletePollVotesMutation({
-    client,
-  });
+  const [deletePollVotes] = useDeletePollVotesMutation({});
 
   const handleDeletePollVotes = async (selectedItems: string[]) => {
     try {
@@ -49,9 +42,7 @@ function PollVoteListContainer() {
   };
 
   const pollQuery = usePollQuery({
-    client,
     variables: { id: pollId! },
-    fetchPolicy: 'network-only',
   });
 
   return (

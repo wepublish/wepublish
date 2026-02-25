@@ -2,7 +2,7 @@ import {
   getSettings,
   PaymentPeriodicity,
   SortOrder,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { DocumentNode, OperationDefinitionNode } from 'graphql';
 import nanoid from 'nanoid';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';

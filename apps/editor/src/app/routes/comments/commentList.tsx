@@ -4,9 +4,8 @@ import {
   CommentSort,
   CommentState,
   FullCommentFragment,
-  getApiClientV2,
   useCommentListQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   CommentStateDropdown,
   createCheckedPermissionComponent,
@@ -74,15 +73,12 @@ function CommentList() {
     filter,
   };
 
-  const client = getApiClientV2();
   const {
     data,
     refetch,
     loading: isLoading,
   } = useCommentListQuery({
-    client,
     variables: commentListVariables,
-    fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {

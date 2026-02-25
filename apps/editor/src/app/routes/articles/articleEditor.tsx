@@ -4,7 +4,6 @@ import {
   EditorBlockType,
   FullAuthorFragment,
   FullImageFragment,
-  getApiClientV2,
   SettingName,
   useArticleQuery,
   useCreateArticleMutation,
@@ -12,7 +11,7 @@ import {
   usePublishArticleMutation,
   useSettingsListQuery,
   useUpdateArticleMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
 import {
   ArticleMetadata,
@@ -123,19 +122,14 @@ function ArticleEditor() {
 
   const { t } = useTranslation();
 
-  const client = getApiClientV2();
   const [
     createArticle,
     { data: createData, loading: isCreating, error: createError },
-  ] = useCreateArticleMutation({ client });
+  ] = useCreateArticleMutation();
   const [updateArticle, { loading: isUpdating, error: updateError }] =
-    useUpdateArticleMutation({
-      client,
-    });
+    useUpdateArticleMutation({});
   const [publishArticle, { loading: isPublishing, error: publishError }] =
-    usePublishArticleMutation({
-      client,
-    });
+    usePublishArticleMutation({});
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false);
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
@@ -170,7 +164,6 @@ function ArticleEditor() {
   });
 
   useSettingsListQuery({
-    client,
     onCompleted(data) {
       setMetadata(meta => ({
         ...meta,
@@ -200,15 +193,12 @@ function ArticleEditor() {
     refetch,
     loading: isLoading,
   } = useArticleQuery({
-    client,
     errorPolicy: 'all',
-    fetchPolicy: 'cache-and-network',
     variables: { id: articleID! },
     skip: !articleID,
   });
 
   const [createJWT] = useCreateJwtForWebsiteLoginMutation({
-    client,
     errorPolicy: 'none',
     fetchPolicy: 'no-cache',
   });

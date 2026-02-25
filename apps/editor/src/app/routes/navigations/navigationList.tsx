@@ -1,10 +1,9 @@
 import {
   FullNavigationFragment,
-  getApiClientV2,
   SlimNavigationFragment,
   useDeleteNavigationMutation,
   useNavigationListQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   DescriptionList,
@@ -62,18 +61,10 @@ function NavigationList() {
   const [currentNavigation, setCurrentNavigation] =
     useState<FullNavigationFragment>();
 
-  const client = getApiClientV2();
-  const {
-    data,
-    refetch,
-    loading: isLoading,
-  } = useNavigationListQuery({
-    client,
-    fetchPolicy: 'cache-and-network',
-  });
+  const { data, refetch, loading: isLoading } = useNavigationListQuery({});
 
   const [deleteNavigation, { loading: isDeleting }] =
-    useDeleteNavigationMutation({ client });
+    useDeleteNavigationMutation();
 
   useEffect(() => {
     if (isCreateRoute) {

@@ -1,8 +1,4 @@
-import {
-  FullUserFragment,
-  getApiClientV2,
-  useUserListQuery,
-} from '@wepublish/editor/api-v2';
+import { FullUserFragment, useUserListQuery } from '@wepublish/editor/api';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Form, Message, SelectPicker, toaster } from 'rsuite';
 
@@ -25,21 +21,19 @@ export function UserSearch({
   const [users, setUsers] = useState<(FullUserFragment | undefined | null)[]>(
     []
   );
-  const client = getApiClientV2();
+
   const {
     data: userData,
     loading,
     error,
     refetch,
   } = useUserListQuery({
-    client,
     variables: {
       take: 100,
       filter: {
         text: userSearch,
       },
     },
-    fetchPolicy: 'network-only',
   });
 
   useEffect(() => {

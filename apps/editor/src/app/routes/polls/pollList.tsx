@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import { getApiClientV2, Poll, usePollsQuery } from '@wepublish/editor/api-v2';
+import { Poll, usePollsQuery } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   CreatePollBtn,
@@ -53,10 +53,7 @@ function PollList() {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
 
-  const client = getApiClientV2();
   const { data, loading, refetch } = usePollsQuery({
-    client,
-    fetchPolicy: 'cache-and-network',
     variables: {
       take: limit,
       skip: (page - 1) * limit,

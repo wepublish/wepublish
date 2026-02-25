@@ -1,8 +1,4 @@
-import {
-  ApolloClient,
-  ApolloError,
-  NormalizedCacheObject,
-} from '@apollo/client';
+import { ApolloError } from '@apollo/client';
 import { TFunction } from 'i18next';
 import { Message, toaster } from 'rsuite';
 
@@ -38,12 +34,9 @@ const showSavedToast = (t: TFunction): void => {
  * @param t the translation instance
  * @returns QueryHookOptions for the GraphQL client
  */
-export const DEFAULT_MUTATION_OPTIONS = (
-  client: ApolloClient<NormalizedCacheObject>,
-  t: TFunction
-) => {
+export const DEFAULT_MUTATION_OPTIONS = (t: TFunction) => {
   return {
-    ...DEFAULT_QUERY_OPTIONS(client),
+    ...DEFAULT_QUERY_OPTIONS(),
     onCompleted: () => showSavedToast(t),
   };
 };
@@ -53,11 +46,8 @@ export const DEFAULT_MUTATION_OPTIONS = (
  * @param client the graphql client to make the request with
  * @returns QueryHookOptions for the GraphQL client
  */
-export const DEFAULT_QUERY_OPTIONS = (
-  client: ApolloClient<NormalizedCacheObject>
-) => {
+export const DEFAULT_QUERY_OPTIONS = () => {
   return {
-    client,
     onError: showErrors,
   };
 };

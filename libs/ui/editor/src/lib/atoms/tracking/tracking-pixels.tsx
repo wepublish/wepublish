@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { FullTrackingPixelFragment } from '@wepublish/editor/api-v2';
+import { FullTrackingPixelFragment } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { Message, Panel } from 'rsuite';
 

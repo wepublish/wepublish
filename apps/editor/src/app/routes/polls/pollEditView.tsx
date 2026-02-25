@@ -2,12 +2,11 @@ import { ApolloError } from '@apollo/client';
 import styled from '@emotion/styled';
 import {
   FullPoll,
-  getApiClientV2,
   PollExternalVote,
   PollExternalVoteSource,
   usePollQuery,
   useUpdatePollMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   PollAnswers,
@@ -89,20 +88,17 @@ function PollEditView() {
   };
 
   // get polls
-  const client = getApiClientV2();
+
   const { data, loading: createLoading } = usePollQuery({
-    client,
     variables: {
       id: params.id!,
     },
     onError: onErrorToast,
-    fetchPolicy: 'cache-and-network',
   });
 
   // updating poll
   const [updatePoll, { loading: updateLoading, data: updateData }] =
     useUpdatePollMutation({
-      client,
       onError: onErrorToast,
       onCompleted: onCompletedToast,
     });

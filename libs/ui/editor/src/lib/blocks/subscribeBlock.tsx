@@ -1,10 +1,9 @@
 import styled from '@emotion/styled';
 import {
-  getApiClientV2,
   ProductType,
   SubscribeBlockField,
   useMemberPlanListQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { CheckPickerProps } from 'rsuite';
@@ -53,9 +52,8 @@ export const SubscribeBlock = ({
   disabled,
 }: BlockProps<SubscribeBlockValue>) => {
   const { t } = useTranslation();
-  const client = getApiClientV2();
+
   const { data, loading } = useMemberPlanListQuery({
-    client,
     variables: {
       take: 200,
       filter: {

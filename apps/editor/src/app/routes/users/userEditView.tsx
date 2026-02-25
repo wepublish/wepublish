@@ -3,14 +3,13 @@ import {
   FullImageFragment,
   FullUserFragment,
   FullUserRoleFragment,
-  getApiClientV2,
   useCreateUserMutation,
   UserAddress,
   useUpdateUserMutation,
   useUserQuery,
   useUserRoleListQuery,
   useUserSubscriptionListQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   ChooseEditImage,
   createCheckedPermissionComponent,
@@ -127,9 +126,8 @@ function UserEditView() {
   const [metaDataProperties, setMetadataProperties] = useState<
     ListValue<UserProperty>[]
   >([]);
-  const client = getApiClientV2();
+
   const { data: subscriptionData } = useUserSubscriptionListQuery({
-    client,
     skip: !userId,
     variables: {
       userId: userId!,
@@ -140,8 +138,6 @@ function UserEditView() {
   const [id] = useState<string | undefined>(isEditRoute ? userId : undefined);
   const { data: userRoleData, loading: isUserRoleLoading } =
     useUserRoleListQuery({
-      client,
-      fetchPolicy: 'network-only',
       variables: {
         take: 200,
       },
@@ -155,9 +151,7 @@ function UserEditView() {
     loading: isLoading,
     error: loadError,
   } = useUserQuery({
-    client,
     variables: { id: id! },
-    fetchPolicy: 'network-only',
     skip: id === undefined,
   });
   /**
@@ -206,12 +200,8 @@ function UserEditView() {
     }
   }, [userRoleData?.userRoles]);
 
-  const [createUser, { loading: isCreating }] = useCreateUserMutation({
-    client,
-  });
-  const [updateUser, { loading: isUpdating }] = useUpdateUserMutation({
-    client,
-  });
+  const [createUser, { loading: isCreating }] = useCreateUserMutation({});
+  const [updateUser, { loading: isUpdating }] = useUpdateUserMutation({});
 
   const isDisabled =
     isLoading ||

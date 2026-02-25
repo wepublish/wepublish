@@ -50,7 +50,6 @@
         "libs/crowdfunding/editor/src/index.ts"
       ],
       "@wepublish/editor/api": ["libs/editor/api/src/index.ts"],
-      "@wepublish/editor/api-v2": ["libs/editor/api-v2/src/index.ts"],
       "@wepublish/errors": ["libs/errors/src/index.ts"],
       "@wepublish/errors/website": ["libs/errors/website/src/index.ts"],
       "@wepublish/event/api": ["libs/event/api/src/index.ts"],

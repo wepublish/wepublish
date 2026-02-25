@@ -605,6 +605,7 @@
     "draggableSubscriptionInterval": {
       "ignoreDeactivatedSubscriptions": "Mails an deaktivierte Abos werden nicht verschickt!"
     },
+    "edit": "Editieren",
     "errorMessages": {
       "invalidEmailErrorMessage": "Bitte eine gültige E-Mail eingeben",
       "invalidRange": "Ungültiger Wert. Bitte Zahl zwischen {{min}} und {{max}} eingeben.",
@@ -1735,6 +1736,8 @@
     },
     "search": "Suche",
     "integrations": {
+      "whatAreIntegrations": "Was sind Integrationen?",
+      "infoText": " Integrationen sind in We.Publish eingebaute Schnittstellen von Drittanbietern. Diese werden etwa verwendet, um Mails zu versenden oder Zahlungen sicher abzuwickeln.",
       "title": "Integrationen",
       "ai": "AI",
       "challengeProvider": "Challenge Provider",
@@ -1748,6 +1751,7 @@
       "updateSuccess": "Einstellungen erfolgreich aktualisiert",
       "updateError": "Fehler beim Aktualisieren der Einstellungen",
       "noSettingsFound": "Keine Einstellungen gefunden",
+      "lastLoaded": "Zuletzt geladen",
       "aiSettings": {
         "apiKey": "API Key",
         "systemPrompt": "System Prompt"
@@ -1803,6 +1807,16 @@
         "prolitterisPublisherInternalKeyDomain": "Publisher Internal Key Domain",
         "prolitterisUsePublisherInternalKey": "Publisher Internal Key verwenden",
         "prolitterisUsername": "Benutzername"
+      },
+      "analyticsSettings": {
+        "analytics": "Analytik",
+        "invalidFile": "Die Google-Analytics Anmeldedatei ist ungültig",
+        "credentialsReadyToBeSaved": "Die Anmeldedaten sind bereit zum Speichern!",
+        "dropCredentialsFile": "Anmeldedatei hier ablegen!",
+        "dragCredentialsFileHere": "Google-Analytics Anmeldedatei hierher ziehen und ablegen",
+        "articlePrefix": "We.Publish Artikel-URL-Präfix (normalerweise /a/)",
+        "property": "Google-Analytics Property-ID",
+        "credentials": "Anmeldedatei"
       }
     }
   }

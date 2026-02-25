@@ -1,4 +1,4 @@
-import { FullEventFragment } from '@wepublish/editor/api-v2';
+import { FullEventFragment } from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit } from 'react-icons/md';

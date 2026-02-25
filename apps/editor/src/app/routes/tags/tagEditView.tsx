@@ -1,10 +1,9 @@
 import { ApolloError } from '@apollo/client';
 import {
-  getApiClientV2,
   MutationUpdateTagArgs,
   useTagQuery,
   useUpdateTagMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { CanUpdateTag } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
@@ -39,9 +38,7 @@ const TagEditView = () => {
   const params = useParams();
   const { id } = params;
 
-  const client = getApiClientV2();
   const { loading: dataLoading } = useTagQuery({
-    client,
     variables: {
       id: id!,
     },
@@ -54,7 +51,6 @@ const TagEditView = () => {
   });
 
   const [updateTag, { loading: updateLoading }] = useUpdateTagMutation({
-    client,
     onError: onErrorToast,
     onCompleted: data => {
       if (data.updateTag) {

@@ -8,7 +8,6 @@ import {
   FullPaymentMethodFragment,
   FullSubscriptionFragment,
   FullUserFragment,
-  getApiClientV2,
   InvoiceFragment,
   PaymentPeriodicity,
   PropertyInput,
@@ -22,7 +21,7 @@ import {
   useSubscriptionQuery,
   useUpdateSubscriptionMutation,
   useUserQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   ALL_PAYMENT_PERIODICITIES,
   createCheckedPermissionComponent,
@@ -157,16 +156,13 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
 
   const [extendModal, setExtendModal] = useState<boolean>(false);
 
-  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
     error: loadError,
     refetch: reloadSubscription,
   } = useSubscriptionQuery({
-    client,
     variables: { id: id! },
-    fetchPolicy: 'network-only',
     skip: id === undefined,
   });
 
@@ -176,7 +172,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     error: loadErrorInvoices,
     refetch: reloadInvoices,
   } = useInvoicesQuery({
-    client,
     variables: {
       take: 100,
       filter: {
@@ -256,8 +251,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     loading: isMemberPlanLoading,
     error: loadMemberPlanError,
   } = useMemberPlanListQuery({
-    client,
-    fetchPolicy: 'network-only',
     variables: {
       take: 100, // TODO: Pagination
     },
@@ -267,28 +260,23 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     data: paymentMethodData,
     loading: isPaymentMethodLoading,
     error: paymentMethodLoadError,
-  } = usePaymentMethodListQuery({
-    client,
-    fetchPolicy: 'network-only',
-  });
+  } = usePaymentMethodListQuery({});
 
   const [updateSubscription, { loading: isUpdating }] =
-    useUpdateSubscriptionMutation({ client });
+    useUpdateSubscriptionMutation();
   const [cancelSubscription, { loading: isCancel, error: cancelError }] =
-    useCancelSubscriptionMutation({ client });
+    useCancelSubscriptionMutation();
 
   const [createSubscription, { loading: isCreating }] =
-    useCreateSubscriptionMutation({ client });
+    useCreateSubscriptionMutation();
   const [renewSubscription, { error: renewalError }] =
-    useRenewSubscriptionMutation({ client });
+    useRenewSubscriptionMutation();
 
   /**
    * fetch edited user from api
    */
   const { data: editedUserData } = useUserQuery({
-    client,
     variables: { id: editedUserId! },
-    fetchPolicy: 'network-only',
     skip: editedUserId === undefined,
   });
 

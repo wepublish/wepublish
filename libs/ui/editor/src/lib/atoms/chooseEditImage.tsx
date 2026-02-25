@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { FullImageFragment } from '@wepublish/editor/api';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdClose, MdEdit, MdPhoto } from 'react-icons/md';
@@ -7,7 +8,7 @@ import { Dropdown, IconButton, Panel as RPanel, Placeholder } from 'rsuite';
 import { PlaceholderInput } from './placeholderInput';
 
 export interface ChooseEditImageProps {
-  image: any;
+  image?: FullImageFragment | null;
   header?: string;
   disabled: boolean;
   left?: number;
@@ -74,6 +75,7 @@ export function ChooseEditImage({
         {image && (
           <ImageWrapper maxHeight={maxHeight}>
             <Image src={image?.largeURL ?? '/static/placeholder-240x240.png'} />
+
             {(openChooseModalOpen || openEditModalOpen || removeImage) && (
               <DropdownWrapper
                 top={top}

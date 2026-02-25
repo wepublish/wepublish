@@ -35,7 +35,7 @@ export const teaserBlockStyleByIndex = (index: number): TsriTeaserType => {
   switch (index) {
     case 0:
       return TsriTeaserType.TwoRow;
-    case 6:
+    case 5:
       return TsriTeaserType.MoreAbout;
     default:
       return TsriTeaserType.NoImage;
@@ -54,7 +54,7 @@ export const alignmentForTeaserBlock = (index: number): FlexAlignment => {
   switch (index) {
     case 0:
       return { ...alignment, h: 5 };
-    case 6:
+    case 5:
       return { ...alignment, w: 2, y: 6 };
     default:
       return { ...alignment, x: 1, y: index - 1 };
@@ -80,7 +80,7 @@ export const TeaserSlotsArchiveTopic = ({
     <TeaserSlotsArchiveTopicWrapper className={className}>
       {filledTeasers.map(
         (teaser, index) =>
-          index < 7 && (
+          index < 6 && (
             <Teaser
               key={index}
               index={index}

@@ -2,11 +2,10 @@ import { ApolloError } from '@apollo/client';
 import {
   FullEventFragment,
   FullImageFragment,
-  getApiClientV2,
   MutationUpdateEventArgs,
   useEventQuery,
   useUpdateEventMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { SingleViewTitle } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -51,9 +50,7 @@ export const EventEditView = () => {
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const client = getApiClientV2();
   const { loading: dataLoading } = useEventQuery({
-    client,
     variables: {
       id: eventId,
     },
@@ -66,7 +63,6 @@ export const EventEditView = () => {
   });
 
   const [updateEvent, { loading: updateLoading }] = useUpdateEventMutation({
-    client,
     onError: onErrorToast,
     onCompleted: data => {
       if (shouldClose) {

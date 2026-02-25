@@ -5,7 +5,6 @@ import {
   EventFilter,
   FullAuthorFragment,
   FullUserRoleFragment,
-  getApiClientV2,
   InputMaybe,
   PageFilter,
   PeerArticleFilter,
@@ -18,7 +17,7 @@ import {
   usePollLazyQuery,
   UserFilter,
   useUserRoleListLazyQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdClose } from 'react-icons/md';
@@ -126,7 +125,6 @@ export function ListViewFilters({
   className,
   tagType,
 }: ListViewFiltersProps) {
-  const client = getApiClientV2();
   const { t } = useTranslation();
   const [resetFilterKey, setResetFilterkey] = useState<string>(
     new Date().getTime().toString()
@@ -134,28 +132,19 @@ export function ListViewFilters({
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([]);
   const [answers, setAnswers] = useState<PollAnswer[]>([]);
 
-  const [providersFetch, { data: providersData }] = useEventProvidersLazyQuery({
-    client,
-    fetchPolicy: 'network-only',
-  });
+  const [providersFetch, { data: providersData }] = useEventProvidersLazyQuery(
+    {}
+  );
 
   const [userRoleFetch, { data: userRoleData }] = useUserRoleListLazyQuery({
-    client,
-    fetchPolicy: 'network-only',
     variables: {
       take: 200,
     },
   });
 
-  const [peerListFetch, { data: peerListData }] = usePeerListLazyQuery({
-    client,
-    fetchPolicy: 'network-only',
-  });
+  const [peerListFetch, { data: peerListData }] = usePeerListLazyQuery({});
 
-  const [pollFetch, { data: pollData }] = usePollLazyQuery({
-    client,
-    fetchPolicy: 'network-only',
-  });
+  const [pollFetch, { data: pollData }] = usePollLazyQuery({});
 
   // check whether or not we need to get some data based on which filters are required
   const isAnswerFilter = fields.includes('answerIds');

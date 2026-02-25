@@ -3,19 +3,18 @@ import {
   SettingChallengeProvider,
   SettingsIntegrationsChallengeDocument,
   UpdateSettingsIntegrationsChallengeDocument,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import cloudflareLogo from '../../../assets/integrations/cloudflare.svg';
+import cloudflareLogo from './assets/cloudflare.svg';
 import { GenericIntegrationList } from './genericIntegrationList';
 
 const challengeSettingsSchema = z.object({
-  id: z.string(),
-  name: z.string().optional(),
+  name: z.string().nullish().or(z.literal('')),
   type: z.nativeEnum(ChallengeProviderType).optional(),
-  secret: z.string().optional(),
-  siteKey: z.string().optional(),
+  secret: z.string().nullish().or(z.literal('')),
+  siteKey: z.string().nullish().or(z.literal('')),
 });
 
 type IntegrationFormValues = z.infer<typeof challengeSettingsSchema>;
@@ -29,19 +28,6 @@ export function ChallengeIntegrationForm() {
       mutation={UpdateSettingsIntegrationsChallengeDocument}
       dataKey="challengeProviderSettings"
       schema={challengeSettingsSchema}
-      mapSettingToInitialValues={setting => ({
-        id: setting.id,
-        name: setting.name || '',
-        type: setting.type,
-        secret: undefined,
-        siteKey: undefined,
-      })}
-      mapFormValuesToVariables={(formData, setting) => ({
-        updateChallengeProviderSettingId: setting.id,
-        name: formData.name,
-        secret: formData.secret || undefined,
-        siteKey: formData.siteKey || undefined,
-      })}
       getLogo={() => cloudflareLogo}
       fields={[
         {
@@ -55,20 +41,23 @@ export function ChallengeIntegrationForm() {
           disabled: true,
         },
         {
+          type: 'text',
           name: 'name',
           label: t('name'),
+        },
+        {
+          type: 'text',
+          name: 'siteKey',
+          label: t('integrations.challengeSettings.siteKey'),
+          placeholder: t('integrations.placeholderSecret'),
+          autoComplete: 'one-time-code',
         },
         {
           name: 'secret',
           label: t('integrations.challengeSettings.secret'),
           type: 'password',
           placeholder: t('integrations.placeholderSecret'),
-          autoComplete: 'off',
-        },
-        {
-          name: 'siteKey',
-          label: t('integrations.challengeSettings.siteKey'),
-          placeholder: t('integrations.placeholderSecret'),
+          autoComplete: 'one-time-code',
         },
       ]}
     />

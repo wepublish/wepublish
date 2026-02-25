@@ -3,9 +3,8 @@ import {
   CommentSort,
   CommentState,
   FullCommentFragment,
-  getApiClientV2,
   useCommentListLazyQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
@@ -88,9 +87,8 @@ export function CommentHistory({
 }: CommentHistoryProps) {
   const { t } = useTranslation();
   const [comments, setComments] = useState<FullCommentFragment[] | undefined>();
-  const client = getApiClientV2();
+
   const [fetchCommentList, { data }] = useCommentListLazyQuery({
-    client,
     variables: {
       filter: {
         itemType: commentItemType,
@@ -105,7 +103,6 @@ export function CommentHistory({
       sort: CommentSort.CreatedAt,
       take: 1000,
     },
-    fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {

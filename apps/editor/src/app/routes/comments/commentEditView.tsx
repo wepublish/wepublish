@@ -3,12 +3,11 @@ import styled from '@emotion/styled';
 import {
   CommentRevisionInput,
   FullCommentFragment,
-  getApiClientV2,
   TagType,
   useCommentQuery,
   useRatingSystemQuery,
   useUpdateCommentMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   CommentDeleteBtn,
   CommentHistory,
@@ -116,25 +115,20 @@ const CommentEditView = memo(() => {
   // where the tag list is handled
   const [selectedTags, setSelectedTags] = useState<string[] | null>(null);
 
-  const client = getApiClientV2();
   const { data: commentData, loading: loadingComment } = useCommentQuery({
-    client,
     variables: {
       id: commentId,
     },
-    fetchPolicy: 'cache-and-network',
     onError: showErrors,
   });
 
   const { data: ratingSystem, loading: loadingRatingSystem } =
     useRatingSystemQuery({
-      client,
       onError: showErrors,
     });
 
   const [updateCommentMutation, { loading: updatingComment }] =
     useUpdateCommentMutation({
-      client,
       onCompleted: () =>
         toaster.push(
           <Message

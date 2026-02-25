@@ -2,13 +2,12 @@ import { ApolloError } from '@apollo/client';
 import styled from '@emotion/styled';
 import {
   FullPoll,
-  getApiClientV2,
   PollAnswer,
   PollExternalVote,
   PollExternalVoteSource,
   useCreatePollExternalVoteSourceMutation,
   useDeletePollExternalVoteSourceMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete } from 'react-icons/md';
@@ -159,9 +158,8 @@ export function AddSource({ poll, setLoading, onPollChange }: AddSourceProps) {
   const { t } = useTranslation();
   const [newSource, setNewSource] = useState<string | undefined>(undefined);
 
-  const client = getApiClientV2();
   const [createExternalVoteSource, { loading }] =
-    useCreatePollExternalVoteSourceMutation({ client });
+    useCreatePollExternalVoteSourceMutation();
 
   useEffect(() => {
     setLoading(loading);
@@ -266,10 +264,10 @@ export function DeleteModal({
   onPollChange,
 }: DeleteModalProps) {
   const { t } = useTranslation();
-  const client = getApiClientV2();
-  const [deleteExternalVoteSource] = useDeletePollExternalVoteSourceMutation({
-    client,
-  });
+
+  const [deleteExternalVoteSource] = useDeletePollExternalVoteSourceMutation(
+    {}
+  );
 
   async function deletePoll() {
     const id = sourceToDelete?.id;
