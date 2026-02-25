@@ -45,14 +45,8 @@ ENV APP_RELEASE_ID=${APP_RELEASE_ID}
 ### FRONT_ARG_REPLACER ###
 
 COPY . .
-<<<<<<< HEAD
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && update-ca-certificates && rm -rf /var/lib/apt/lists/*
-RUN npx prisma generate && \
-=======
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates patch && update-ca-certificates && rm -rf /var/lib/apt/lists/*
-RUN npm install -g @sentry/cli && \
-    npx prisma generate && \
->>>>>>> e39bfb7f2632d595a6466b6beee3a603437b08e0
+RUN npx prisma generate && \
     npx nx build ${NEXT_PROJECT} ${NX_NEXT_PROJECT_BUILD_OPTIONS} && \
     bash /wepublish/deployment/map-secrets.sh clean
 
