@@ -3,7 +3,6 @@ import {
   SubscriptionFilter,
   SubscriptionSort,
   TinySubscriptionFragment,
-  TinySubscriptionFragment,
   useDeleteSubscriptionMutation,
   useSubscriptionListQuery,
 } from '@wepublish/editor/api';
