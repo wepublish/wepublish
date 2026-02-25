@@ -24,16 +24,6 @@ exports[`AuthenticationService should return a token session 3`] = `
 [
   {
     "where": {
-      "token": "1234",
-    },
-  },
-]
-`;
-
-exports[`AuthenticationService should return a token session 4`] = `
-[
-  {
-    "where": {
       "id": {
         "in": [
           "1234",
@@ -54,10 +44,7 @@ exports[`AuthenticationService should return a user session 1`] = `
   "token": undefined,
   "type": "user",
   "user": {
-    "roleIDs": [
-      "1111",
-      "2222",
-    ],
+    "id": "12345",
   },
 }
 `;
@@ -65,6 +52,30 @@ exports[`AuthenticationService should return a user session 1`] = `
 exports[`AuthenticationService should return a user session 2`] = `
 [
   {
+    "include": {
+      "user": {
+        "select": {
+          "active": true,
+          "address": true,
+          "birthday": true,
+          "createdAt": true,
+          "email": true,
+          "emailVerifiedAt": true,
+          "firstName": true,
+          "flair": true,
+          "id": true,
+          "lastLogin": true,
+          "modifiedAt": true,
+          "name": true,
+          "note": true,
+          "password": false,
+          "paymentProviderCustomers": true,
+          "properties": true,
+          "roleIDs": true,
+          "userImageID": true,
+        },
+      },
+    },
     "where": {
       "token": "1234",
     },
@@ -76,39 +87,41 @@ exports[`AuthenticationService should return a user session 3`] = `
 [
   {
     "where": {
-      "token": "1234",
-    },
-  },
-]
-`;
-
-exports[`AuthenticationService should return a user session 4`] = `
-[
-  {
-    "where": {
       "id": {
-        "in": [
-          "1111",
-          "2222",
-        ],
+        "in": undefined,
       },
     },
   },
 ]
 `;
 
-exports[`AuthenticationService should return a user session 5`] = `
-{
-  "select": Any<Object>,
-  "where": {
-    "id": "12345",
-  },
-}
-`;
-
 exports[`AuthenticationService should return null if user can't be found 1`] = `
 [
   {
+    "include": {
+      "user": {
+        "select": {
+          "active": true,
+          "address": true,
+          "birthday": true,
+          "createdAt": true,
+          "email": true,
+          "emailVerifiedAt": true,
+          "firstName": true,
+          "flair": true,
+          "id": true,
+          "lastLogin": true,
+          "modifiedAt": true,
+          "name": true,
+          "note": true,
+          "password": false,
+          "paymentProviderCustomers": true,
+          "properties": true,
+          "roleIDs": true,
+          "userImageID": true,
+        },
+      },
+    },
     "where": {
       "token": "1234",
     },
@@ -116,23 +129,4 @@ exports[`AuthenticationService should return null if user can't be found 1`] = `
 ]
 `;
 
-exports[`AuthenticationService should return null if user can't be found 2`] = `
-[
-  {
-    "where": {
-      "token": "1234",
-    },
-  },
-]
-`;
-
-exports[`AuthenticationService should return null if user can't be found 3`] = `undefined`;
-
-exports[`AuthenticationService should return null if user can't be found 4`] = `
-{
-  "select": Any<Object>,
-  "where": {
-    "id": "12345",
-  },
-}
-`;
+exports[`AuthenticationService should return null if user can't be found 2`] = `undefined`;

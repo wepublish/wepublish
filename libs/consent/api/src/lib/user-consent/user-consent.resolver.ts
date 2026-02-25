@@ -68,7 +68,7 @@ export class UserConsentResolver {
       !user.user.roleIDs.includes('admin') &&
       user.user.id !== userConsent.userId
     ) {
-      throw new ForbiddenException(`Unauthorized`);
+      throw new ForbiddenException();
     }
 
     return this.userConsents.createUserConsent(userConsent);
