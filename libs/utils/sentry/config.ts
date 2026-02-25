@@ -5,8 +5,13 @@
 export const getBaseConfig = () => ({
   dsn: process.env.SENTRY_DSN,
   sendDefaultPii: true,
-  tracesSampleRate: process.env.APP_ENVIRONMENT === 'production' ? 0.1 : 1.0,
   release: process.env.APP_RELEASE_ID,
+  tracesSampleRate: process.env.APP_ENVIRONMENT === 'production' ? 0.1 : 1.0,
+  profilesSampleRate: 1.0,
+  profileSessionSampleRate: 1.0,
+  profileLifecycle: 'trace',
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0,
 });
 
 export const setCommonTags = (

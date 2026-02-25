@@ -18,4 +18,4 @@ Sentry.init({
   profilesSampleRate: 1.0,
 });
 
-setCommonTags(Sentry, 'nestjs');
+setCommonTags(Sentry, 'api');

@@ -12,9 +12,11 @@ import { getBaseConfig, setCommonTags } from './config';
 
 Sentry.init({
   ...getBaseConfig(),
-  integrations: [Sentry.replayIntegration()],
-  replaysSessionSampleRate: 0.1,
-  replaysOnErrorSampleRate: 1.0,
+  integrations: [
+    Sentry.replayIntegration(),
+    Sentry.browserTracingIntegration(),
+    Sentry.browserProfilingIntegration(),
+  ],
 });
 
-setCommonTags(Sentry, 'nextjs-client');
+setCommonTags(Sentry, 'website');

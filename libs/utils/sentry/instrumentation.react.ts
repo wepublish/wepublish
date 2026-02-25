@@ -21,4 +21,4 @@ Sentry.init({
   replaysOnErrorSampleRate: 1.0,
 });
 
-setCommonTags(Sentry, 'react');
+setCommonTags(Sentry, 'editor');

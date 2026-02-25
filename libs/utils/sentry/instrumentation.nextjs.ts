@@ -14,11 +14,11 @@ import { getBaseConfig, setCommonTags } from './config';
 export async function register() {
   Sentry.init({
     ...getBaseConfig(),
-    integrations: [nodeProfilingIntegration()],
-    profilesSampleRate: 1.0,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    integrations: [nodeProfilingIntegration() as any],
   });
 
-  setCommonTags(Sentry, 'nextjs-server');
+  setCommonTags(Sentry, 'website-backend');
 }
 
 export const onRequestError = Sentry.captureRequestError;
