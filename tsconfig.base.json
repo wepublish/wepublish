@@ -125,6 +125,9 @@
       "@wepublish/utils/sentry/nestjs": [
         "libs/utils/sentry/instrumentation.nestjs.ts"
       ],
+      "@wepublish/utils/sentry/react": [
+        "libs/utils/sentry/instrumentation.react.ts"
+      ],
       "@wepublish/utils/website": ["libs/utils/website/src/index.ts"],
       "@wepublish/versionInformation/api": [
         "libs/versionInformation/api/src/index.ts"
