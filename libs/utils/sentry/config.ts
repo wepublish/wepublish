@@ -9,7 +9,7 @@ export const getBaseConfig = () => ({
   tracesSampleRate: process.env.APP_ENVIRONMENT === 'production' ? 0.1 : 1.0,
   profilesSampleRate: 1.0,
   profileSessionSampleRate: 1.0,
-  profileLifecycle: 'trace',
+  profileLifecycle: 'trace' as const,
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
 });
