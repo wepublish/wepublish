@@ -19,6 +19,11 @@
     "build": {
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
+      "inputs": [
+        "default",
+        "{workspaceRoot}/libs/block-content/api/**/*",
+        "{workspaceRoot}/libs/image/api/**/*"
+      ],
       "options": {
         "outputPath": "dist/libs/api",
         "tsConfig": "libs/api/tsconfig.lib.json",
