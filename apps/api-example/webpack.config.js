@@ -5,6 +5,7 @@ const swcDefaultConfig =
     .swcOptions;
 
 module.exports = composePlugins(withNx(), config => {
+  config.devtool = 'source-map';
   config.module.rules.push({
     test: /\.ts$/,
     exclude: /node_modules/,
