@@ -83,7 +83,7 @@
           ],
           "optimization": true,
           "outputHashing": "all",
-          "sourceMap": false,
+          "sourceMap": true,
           "namedChunks": false,
           "extractLicenses": true,
           "vendorChunk": false
@@ -118,7 +118,7 @@
               "with": "apps/editor/src/environments/environment.prod.ts"
             }
           ],
-          "sourceMap": false
+          "sourceMap": true
         }
       }
     },

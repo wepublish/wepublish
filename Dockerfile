@@ -51,6 +51,7 @@ RUN npm install -g @sentry/cli && \
     npx nx build ${NEXT_PROJECT} ${NX_NEXT_PROJECT_BUILD_OPTIONS} && \
     sentry-cli sourcemaps inject ./dist/apps/${NEXT_PROJECT}/.next && \
     sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/${NEXT_PROJECT}/.next && \
+    find ./dist/apps/${NEXT_PROJECT}/.next -name '*.map' -delete && \
     bash /wepublish/deployment/map-secrets.sh clean
 
 FROM ${PLAIN_BUILD_IMAGE} AS website
@@ -143,6 +144,7 @@ RUN npm install -g @yao-pkg/pkg @sentry/cli && \
     npx nx build editor && \
     sentry-cli sourcemaps inject ./dist/apps/editor && \
     sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/editor && \
+    find ./dist/apps/editor -name '*.map' -delete && \
     cp docker/editor_build_package.json package.json && \
     pkg package.json
 
@@ -184,7 +186,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
 RUN npm install prisma@5.0.0 @prisma/client@5.0.0 @types/node bcrypt typescript @sentry/cli && \
     npx tsc -p tsconfig.yaml && \
     npx sentry-cli sourcemaps inject ./dist && \
-    npx sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist
+    npx sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist && \
+    find ./dist -name '*.map' -delete
 
 FROM ${PLAIN_BUILD_IMAGE} AS migration
 ARG APP_RELEASE_ID
@@ -231,7 +234,8 @@ RUN npm ci
 RUN npm install -g @sentry/cli && \
     npx nx build media && \
     sentry-cli sourcemaps inject ./dist/apps/media && \
-    sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media
+    sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media && \
+    find ./dist/apps/media -name '*.map' -delete
 
 FROM base-media AS media
 ARG APP_RELEASE_ID

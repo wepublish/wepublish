@@ -12,6 +12,7 @@ const nextConfig = {
   },
   poweredByHeader: false,
   reactStrictMode: true,
+  productionBrowserSourceMaps: true,
   compiler: {
     emotion: true,
   },

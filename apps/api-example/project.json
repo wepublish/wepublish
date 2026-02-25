@@ -20,7 +20,8 @@
         "main": "apps/api-example/src/main.ts",
         "tsConfig": "apps/api-example/tsconfig.app.json",
         "assets": ["apps/api-example/src/assets"],
-        "webpackConfig": "apps/api-example/webpack.config.js"
+        "webpackConfig": "apps/api-example/webpack.config.js",
+        "sourceMap": true
       },
       "configurations": {
         "production": {
