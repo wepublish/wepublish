@@ -183,8 +183,8 @@ COPY docker/tsconfig.yaml_seed tsconfig.yaml
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && update-ca-certificates && rm -rf /var/lib/apt/lists/*
 RUN npm install prisma@5.0.0 @prisma/client@5.0.0 @types/node bcrypt typescript @sentry/cli && \
     npx tsc -p tsconfig.yaml && \
-    sentry-cli sourcemaps inject ./dist && \
-    sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist
+    npx sentry-cli sourcemaps inject ./dist && \
+    npx sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist
 
 FROM ${PLAIN_BUILD_IMAGE} AS migration
 ARG APP_RELEASE_ID
