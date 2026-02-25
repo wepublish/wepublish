@@ -1,4 +1,4 @@
-import '@wepublish/utils/sentry/react';
+import '@wepublish/utils/sentry/editor';
 
 import { ApolloProvider } from '@apollo/client';
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';

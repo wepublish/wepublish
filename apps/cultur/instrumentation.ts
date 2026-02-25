@@ -1,1 +1,1 @@
-export { onRequestError, register } from '@wepublish/utils/sentry/nextjs';
+export { onRequestError, register } from '@wepublish/utils/sentry/server';

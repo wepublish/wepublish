@@ -4,7 +4,7 @@
  *
  * @example
  * // apps/myapp/instrumentation.ts
- * export { onRequestError, register } from '@wepublish/utils/sentry/nextjs';
+ * export { onRequestError, register } from '@wepublish/utils/sentry/server';
  */
 import * as Sentry from '@sentry/nextjs';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
@@ -18,7 +18,7 @@ export async function register() {
     integrations: [nodeProfilingIntegration() as any],
   });
 
-  setCommonTags(Sentry, 'website-backend');
+  setCommonTags(Sentry, 'server');
 }
 
 export const onRequestError = Sentry.captureRequestError;

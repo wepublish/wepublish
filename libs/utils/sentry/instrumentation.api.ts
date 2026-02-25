@@ -4,7 +4,7 @@
  *
  * @example
  * // apps/api-example/src/main.ts
- * import '@wepublish/utils/sentry/nestjs';
+ * import '@wepublish/utils/sentry/api';
  * // ... rest of imports
  */
 import * as Sentry from '@sentry/nestjs';

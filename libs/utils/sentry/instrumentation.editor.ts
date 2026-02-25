@@ -4,7 +4,7 @@
  *
  * @example
  * // apps/editor/src/main.tsx
- * import '@wepublish/utils/sentry/react';
+ * import '@wepublish/utils/sentry/editor';
  * // ... rest of imports
  */
 import * as Sentry from '@sentry/react';

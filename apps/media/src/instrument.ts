@@ -1,1 +1,1 @@
-import '@wepublish/utils/sentry/nestjs';
+import '@wepublish/utils/sentry/api';

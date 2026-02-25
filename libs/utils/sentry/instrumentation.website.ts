@@ -4,7 +4,7 @@
  *
  * @example
  * // apps/myapp/sentry.client.config.ts
- * import '@wepublish/utils/sentry/client';
+ * import '@wepublish/utils/sentry/website';
  */
 import * as Sentry from '@sentry/nextjs';
 
