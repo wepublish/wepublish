@@ -30,7 +30,11 @@ module.exports = composePlugins(withNx(), config => {
     config.externals = config.externals.map(external => {
       if (typeof external !== 'function') return external;
       return (ctx, callback) => {
-        if (ctx.request && ctx.request.startsWith('@sentry/')) {
+        if (
+          ctx.request &&
+          ctx.request.startsWith('@sentry/') &&
+          !ctx.request.startsWith('@sentry/profiling-node')
+        ) {
           return callback();
         }
         return external(ctx, callback);
