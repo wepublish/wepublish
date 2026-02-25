@@ -32,11 +32,24 @@ RUN chmod -R g=u /wepublish
 #######
 
 FROM ${BUILD_IMAGE} AS  build-website
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
+ARG SENTRY_RELEASE
+ARG APP_RELEASE_ID
+ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+ENV SENTRY_ORG=${SENTRY_ORG}
+ENV SENTRY_PROJECT=${SENTRY_PROJECT}
+ENV SENTRY_RELEASE=${SENTRY_RELEASE}
+ENV APP_RELEASE_ID=${APP_RELEASE_ID}
 ### FRONT_ARG_REPLACER ###
 
 COPY . .
-RUN npx prisma generate && \
+RUN npm install -g @sentry/cli && \
+    npx prisma generate && \
     npx nx build ${NEXT_PROJECT} ${NX_NEXT_PROJECT_BUILD_OPTIONS} && \
+    sentry-cli sourcemaps inject ./dist/apps/${NEXT_PROJECT}/.next && \
+    sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/${NEXT_PROJECT}/.next && \
     node /wepublish/deployment/map-secrets.js clean
 
 FROM ${PLAIN_BUILD_IMAGE} AS website-setup
@@ -46,6 +59,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV HOSTNAME=0.0.0.0
 ENV ADDRESS=0.0.0.0
 ENV PORT=4000
+ARG APP_RELEASE_ID
+ENV APP_RELEASE_ID=${APP_RELEASE_ID}
 ### FRONT_ARG_REPLACER ###
 
 WORKDIR /wepublish
@@ -74,12 +89,20 @@ CMD ["node", "/wepublish/map-secrets.js", "restore", "--start"]
 ## API
 #######
 FROM ${BUILD_IMAGE} AS build-api
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
+ARG SENTRY_RELEASE
+ARG APP_RELEASE_ID
 COPY . .
-RUN npx prisma generate && \
+RUN npm install -g @sentry/cli && \
     grep -q "require('#main-entry-point')" node_modules/.prisma/client/default.js || \
       (echo "ERROR: Prisma client no longer uses #main-entry-point — update the pkg workaround" && exit 1) && \
     sed -i "s|require('#main-entry-point')|require('./index.js')|" node_modules/.prisma/client/default.js && \
+    npx prisma generate && \
     npx nx build api-example --ignore-nx-cache && \
+    sentry-cli sourcemaps inject ./dist/apps/api-example && \
+    sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/api-example && \
     cp docker/api_build_package.json package.json && \
     npx @yao-pkg/pkg package.json
 
@@ -111,6 +134,8 @@ RUN mkdir -p /wepublish/.cache/pkg && \
 
 FROM ${RUNTIME_IMAGE} AS api
 LABEL org.opencontainers.image.authors="WePublish Foundation"
+ARG APP_RELEASE_ID
+ENV APP_RELEASE_ID=${APP_RELEASE_ID}
 ENV NODE_ENV=production
 ENV ADDRESS=0.0.0.0
 ENV PORT=4000
@@ -131,9 +156,17 @@ CMD ["/wepublish/api"]
 #######
 
 FROM ${BUILD_IMAGE} AS build-editor
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
+ARG SENTRY_RELEASE
+ARG APP_RELEASE_ID
 COPY . .
-RUN npx prisma generate && \
+RUN npm install -g @yao-pkg/pkg @sentry/cli && \
+    npx prisma generate && \
     npx nx build editor --ignore-nx-cache && \
+    sentry-cli sourcemaps inject ./dist/apps/editor && \
+    sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/editor && \
     cp docker/editor_build_package.json package.json && \
     npx @yao-pkg/pkg package.json
 
@@ -145,6 +178,8 @@ RUN chmod -R g=u /wepublish
 
 FROM ${RUNTIME_IMAGE} AS editor
 LABEL org.opencontainers.image.authors="WePublish Foundation"
+ARG APP_RELEASE_ID
+ENV APP_RELEASE_ID=${APP_RELEASE_ID}
 ENV NODE_ENV=production
 ENV ADDRESS=0.0.0.0
 ENV PORT=3000
@@ -158,6 +193,11 @@ CMD ["/wepublish/editor"]
 ## Migrations (needs bash + npm at runtime)
 #######
 FROM ${PLAIN_BUILD_IMAGE} AS build-migration
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
+ARG SENTRY_RELEASE
+ARG APP_RELEASE_ID
 ENV NODE_ENV=production
 WORKDIR /wepublish
 COPY libs/settings/api/src/lib/setting.ts settings/api/src/lib/setting.ts
@@ -167,11 +207,15 @@ COPY libs/api/prisma/schema.prisma prisma/schema.prisma
 COPY prisma.config.ts prisma.config.ts
 COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY docker/tsconfig.yaml_seed tsconfig.yaml
-RUN npm install prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @types/node @node-rs/argon2 typescript@~5.7.3 && \
+RUN npm install prisma@5.0.0 @prisma/client@5.0.0 @types/node @node-rs/argon2 typescript@~5.7.3 && \
     npx prisma generate && \
-    npx tsc -p tsconfig.yaml
+    npx tsc -p tsconfig.yaml && \
+    sentry-cli sourcemaps inject ./dist && \
+    sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist
 
 FROM ${PLAIN_BUILD_IMAGE} AS migration-setup
+ARG APP_RELEASE_ID
+ENV APP_RELEASE_ID=${APP_RELEASE_ID}
 ENV NODE_ENV=production
 WORKDIR /wepublish
 COPY --from=build-migration /wepublish/dist ./dist
@@ -206,6 +250,12 @@ CMD ["node", "start.js"]
 #######
 
 FROM ${PLAIN_BUILD_IMAGE} AS build-media
+FROM base-media AS build-media
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
+ARG SENTRY_RELEASE
+ARG APP_RELEASE_ID
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 WORKDIR /app
 RUN apt-get update && apt-get install -y libjemalloc-dev
@@ -213,7 +263,10 @@ COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
 RUN npm ci
-RUN npx nx build media --ignore-nx-cache
+RUN npm install -g @sentry/cli && \
+    npx nx build media --ignore-nx-cache && \
+    sentry-cli sourcemaps inject ./dist/apps/media && \
+    sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media
 
 FROM ${PLAIN_BUILD_IMAGE} AS media-setup
 WORKDIR /wepublish
@@ -223,6 +276,8 @@ RUN chmod -R g=u /wepublish
 
 FROM ${RUNTIME_IMAGE} AS media
 ARG MEDIA_FALLBACK_URL
+ARG APP_RELEASE_ID
+ENV APP_RELEASE_ID=${APP_RELEASE_ID}
 ENV NODE_ENV=production
 ENV MEDIA_FALLBACK_URL=${MEDIA_FALLBACK_URL}
 LABEL org.opencontainers.image.authors="WePublish Foundation"
