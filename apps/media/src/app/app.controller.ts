@@ -65,7 +65,7 @@ export class AppController {
     @UploadedFile(
       new ParseFilePipe({
         fileIsRequired: true,
-        validators: [new SupportedImagesValidator()],
+        validators: [],
       })
     )
     uploadedFile: Express.Multer.File
