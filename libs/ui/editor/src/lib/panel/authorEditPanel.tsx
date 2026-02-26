@@ -109,7 +109,6 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
     error: loadError,
   } = useAuthorQuery({
     variables: { id: id! },
-    fetchPolicy: 'network-only',
     skip: id === undefined,
   });
 
@@ -119,7 +118,7 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
     });
 
   const [updateAuthor, { loading: isUpdating, error: updateError }] =
-    useUpdateAuthorMutation();
+    useUpdateAuthorMutation({});
 
   const isDisabled =
     isLoading ||
@@ -180,18 +179,16 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
       const { data } = await updateAuthor({
         variables: {
           id,
-          input: {
-            name,
-            slug,
-            jobTitle,
-            imageID: image?.id || null,
-            links: links.map(({ value }) => value),
-            bio,
-            tagIds,
-            hideOnArticle,
-            hideOnTeaser,
-            hideOnTeam,
-          },
+          name,
+          slug,
+          jobTitle,
+          imageID: image?.id || null,
+          links: links.map(({ value }) => value),
+          bio,
+          tagIds,
+          hideOnArticle,
+          hideOnTeaser,
+          hideOnTeam,
         },
       });
 
@@ -199,18 +196,16 @@ function AuthorEditPanel({ id, onClose, onSave }: AuthorEditPanelProps) {
     } else {
       const { data } = await createAuthor({
         variables: {
-          input: {
-            name,
-            slug,
-            jobTitle,
-            imageID: image?.id,
-            links: links.map(({ value }) => value),
-            bio,
-            tagIds,
-            hideOnArticle,
-            hideOnTeaser,
-            hideOnTeam,
-          },
+          name,
+          slug,
+          jobTitle,
+          imageID: image?.id,
+          links: links.map(({ value }) => value),
+          bio,
+          tagIds,
+          hideOnArticle: !!hideOnArticle,
+          hideOnTeaser: !!hideOnTeaser,
+          hideOnTeam: !!hideOnTeam,
         },
       });
 

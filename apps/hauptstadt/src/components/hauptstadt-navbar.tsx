@@ -31,8 +31,9 @@ import {
 import { useTranslation } from 'react-i18next';
 // Feather icons as we can change the stroke width and Hauptstadt wants a thinner icon
 import { FiMenu, FiPlus } from 'react-icons/fi';
-import { MdSearch, MdWarning } from 'react-icons/md';
+import { MdInfo, MdSearch, MdWarning } from 'react-icons/md';
 
+import { useInformUserAboutUpgrade } from '../hooks/inform-user-upgrade';
 import { Tiempos } from '../theme';
 
 enum NavbarState {
@@ -111,6 +112,8 @@ export const NavbarInnerWrapper = styled(Toolbar, {
 })<{
   navbarState: NavbarState[];
 }>`
+  position: relative;
+  z-index: 2;
   display: grid;
   grid-template-columns: 1fr max-content 1fr;
   row-gap: ${({ theme }) => theme.spacing(0.5)};
@@ -143,8 +146,8 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     clip-path: polygon(
       0 100%,
       100% 100%,
-      100% calc(100% - 1px),
-      0 calc(100% - 1px)
+      100% calc(100% - 10px),
+      0 calc(100% - 10px)
     );
     z-index: 2;
   }
@@ -174,7 +177,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     navbarState.includes(NavbarState.Diagonal) &&
     css`
       clip-path: polygon(0px 0px, 100% 0px, 100% 50%, 0px 100%);
-      box-shadow: 0 7px 10px -3px rgba(0, 0, 0, 0.18);
+      filter: drop-shadow(0 10px 14px rgba(255, 0, 0, 0.75));
 
       &::before {
         clip-path: polygon(0 88%, 100% 38%, 100% 50%, 0 100%);
@@ -210,6 +213,49 @@ export const NavbarInnerWrapper = styled(Toolbar, {
     padding: 0;
     row-gap: ${({ theme }) => theme.spacing(1.5)};
   }
+`;
+
+const NavBackgroundWrapper = styled('div', {
+  shouldForwardProp: propName => propName !== 'navbarState',
+})<{
+  navbarState: NavbarState[];
+}>`
+  filter: ${({ navbarState }) =>
+    navbarState.includes(NavbarState.Diagonal) ?
+      'drop-shadow(0px 1px 5px rgba(0,0,0,0.19))'
+    : 'none'};
+  width: 100%;
+  clip-path: inset(0 0 -20px 0);
+  margin: 0 auto;
+
+  ${({ theme }: { theme: any }): string => {
+    return `
+      ${theme.breakpoints.up('xs')} {
+        max-width: ${theme.containerMaxWidth.xs}px;
+      }
+
+      ${theme.breakpoints.up('sm')} {
+        max-width: ${theme.containerMaxWidth.sm}px;
+      }
+
+      ${theme.breakpoints.up('md')} {
+        max-width: ${theme.containerMaxWidth.md}px;
+        clip-path: inset(0 5px -20px 5px);
+      }
+
+      ${theme.breakpoints.up('lg')} {
+        max-width: ${theme.containerMaxWidth.lg}px;
+      }
+
+      ${theme.breakpoints.up('xl')} {
+        max-width: ${theme.containerMaxWidth.xl}px;
+      }
+
+      ${theme.breakpoints.up('xxl')} {
+        max-width: ${theme.containerMaxWidth.xxl}px;
+      }
+    `;
+  }}
 `;
 
 export const NavbarLinks = styled('div', {
@@ -434,6 +480,10 @@ const HauptstadtOpenInvoices = styled('div')`
   font-weight: 600;
 `;
 
+const HauptstadtUpgrade = styled(HauptstadtOpenInvoices)`
+  color: ${({ theme }) => theme.palette.primary.dark};
+`;
+
 export interface ExtendedNavbarProps extends BuilderNavbarProps {
   isMenuOpen?: boolean;
   onMenuToggle?: (isOpen: boolean) => void;
@@ -543,6 +593,8 @@ export function HauptstadtNavbar({
   );
   const navbarHeight = useMemo(() => cssVariables(navbarState), [navbarState]);
 
+  const [canUpgrade] = useInformUserAboutUpgrade();
+
   return (
     <NavbarWrapper className={className}>
       <GlobalStyles styles={navbarHeight} />
@@ -553,86 +605,100 @@ export function HauptstadtNavbar({
         elevation={0}
         color={'transparent'}
       >
-        <NavbarInnerWrapper navbarState={navbarState}>
-          <NavbarMain>
-            <NavbarIconButtonWrapper>
-              <NavbarMenuButton
-                size="small"
-                aria-label="Menu"
-                onClick={toggleMenu}
-                color={'inherit'}
-              >
-                {!isMenuOpen && <FiMenu />}
-                {isMenuOpen && <FiPlus css={{ transform: 'rotate(45deg)' }} />}
+        <NavBackgroundWrapper navbarState={navbarState}>
+          <NavbarInnerWrapper navbarState={navbarState}>
+            <NavbarMain>
+              <NavbarIconButtonWrapper>
+                <NavbarMenuButton
+                  size="small"
+                  aria-label="Menu"
+                  onClick={toggleMenu}
+                  color={'inherit'}
+                >
+                  {!isMenuOpen && <FiMenu />}
+                  {isMenuOpen && (
+                    <FiPlus css={{ transform: 'rotate(45deg)' }} />
+                  )}
 
-                {hasUnpaidInvoices && profileBtn && (
-                  <HauptstadtOpenInvoices>
-                    <MdWarning size={24} />
+                  {hasUnpaidInvoices && profileBtn && (
+                    <HauptstadtOpenInvoices>
+                      <MdWarning size={24} />
 
-                    <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
-                      Abo Jetzt Bezahlen
-                    </Box>
-                  </HauptstadtOpenInvoices>
-                )}
-              </NavbarMenuButton>
-            </NavbarIconButtonWrapper>
+                      <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
+                        Offene Rechnungen
+                      </Box>
+                    </HauptstadtOpenInvoices>
+                  )}
 
-            {!!headerItems?.links.length && (
-              <NavbarLinks isMenuOpen={isMenuOpen}>
-                {headerItems.links.map((link, index) => (
-                  <NavbarLink
-                    key={index}
-                    href={navigationLinkToUrl(link)}
-                  >
-                    {link.label}
-                  </NavbarLink>
-                ))}
-              </NavbarLinks>
-            )}
-          </NavbarMain>
+                  {!hasUnpaidInvoices && subscribeBtn && canUpgrade && (
+                    <HauptstadtUpgrade>
+                      <MdInfo size={24} />
 
-          <NavbarLoginLink
-            href="/"
-            aria-label="Startseite"
-            isMenuOpen={isMenuOpen}
-          >
-            <NavbarLogoWrapper>
-              <HauptstadtLogo
-                src="/logo.svg"
-                alt="Hauptstadt"
+                      <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
+                        Jetzt upgraden
+                      </Box>
+                    </HauptstadtUpgrade>
+                  )}
+                </NavbarMenuButton>
+              </NavbarIconButtonWrapper>
+
+              {!!headerItems?.links.length && (
+                <NavbarLinks isMenuOpen={isMenuOpen}>
+                  {headerItems.links.map((link, index) => (
+                    <NavbarLink
+                      key={index}
+                      href={navigationLinkToUrl(link)}
+                    >
+                      {link.label}
+                    </NavbarLink>
+                  ))}
+                </NavbarLinks>
+              )}
+            </NavbarMain>
+
+            <NavbarLoginLink
+              href="/"
+              aria-label="Startseite"
+              isMenuOpen={isMenuOpen}
+            >
+              <NavbarLogoWrapper>
+                <HauptstadtLogo
+                  src="/logo.svg"
+                  alt="Hauptstadt"
+                  isScrolled={isScrolled}
+                  isMenuOpen={isMenuOpen}
+                />
+              </NavbarLogoWrapper>
+            </NavbarLoginLink>
+
+            <NavbarActions isMenuOpen={isMenuOpen}>
+              {(!isScrolled || isMenuOpen) && (
+                <Link
+                  href="/search"
+                  color="inherit"
+                >
+                  <NavbarSearchIconButtonWrapper>
+                    <NavbarMenuButton
+                      color="inherit"
+                      size="small"
+                    >
+                      <MdSearch aria-label="Suche" />
+                    </NavbarMenuButton>
+                  </NavbarSearchIconButtonWrapper>
+                </Link>
+              )}
+            </NavbarActions>
+
+            <HauptstadtClaimWrapper>
+              <HauptstadtClaim
+                src="/logo-claim.svg"
+                alt="Neuer Berner Journalismus"
                 isScrolled={isScrolled}
                 isMenuOpen={isMenuOpen}
               />
-            </NavbarLogoWrapper>
-          </NavbarLoginLink>
-
-          <NavbarActions isMenuOpen={isMenuOpen}>
-            {(!isScrolled || isMenuOpen) && (
-              <Link
-                href="/search"
-                color="inherit"
-              >
-                <NavbarSearchIconButtonWrapper>
-                  <NavbarMenuButton
-                    color="inherit"
-                    size="small"
-                  >
-                    <MdSearch aria-label="Suche" />
-                  </NavbarMenuButton>
-                </NavbarSearchIconButtonWrapper>
-              </Link>
-            )}
-          </NavbarActions>
-
-          <HauptstadtClaimWrapper>
-            <HauptstadtClaim
-              src="/logo-claim.svg"
-              alt="Neuer Berner Journalismus"
-              isScrolled={isScrolled}
-              isMenuOpen={isMenuOpen}
-            />
-          </HauptstadtClaimWrapper>
-        </NavbarInnerWrapper>
+            </HauptstadtClaimWrapper>
+          </NavbarInnerWrapper>
+        </NavBackgroundWrapper>
       </AppBar>
 
       {Boolean(mainItems || categories?.length) && (
@@ -820,12 +886,7 @@ const NavPaper = ({
   const { t } = useTranslation();
   const { hasUser, logout } = useUser();
   const theme = useTheme();
-
-  const showMenu = true;
-
-  if (!showMenu) {
-    return null;
-  }
+  const [canUpgrade] = useInformUserAboutUpgrade();
 
   return (
     <NavPaperWrapper
@@ -869,6 +930,18 @@ const NavPaper = ({
               {...profileBtn}
             >
               Offene Rechnung
+            </Button>
+          )}
+          {!hasUnpaidInvoices && canUpgrade && (
+            <Button
+              LinkComponent={Link}
+              variant="contained"
+              color="warning"
+              onClick={closeMenu}
+              startIcon={<MdWarning />}
+              {...subscribeBtn}
+            >
+              Jetzt upgraden
             </Button>
           )}
 

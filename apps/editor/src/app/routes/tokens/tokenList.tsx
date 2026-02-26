@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import {
+  FullTokenFragment,
   TokenListDocument,
-  TokenRefFragment,
   useDeleteTokenMutation,
   useTokenListQuery,
 } from '@wepublish/editor/api';
@@ -53,15 +53,13 @@ function TokenList() {
   const [isTokenGeneratePanelOpen, setTokenGeneratePanelOpen] =
     useState(isGenerateRoute);
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
-  const [currentToken, setCurrentToken] = useState<TokenRefFragment>();
+  const [currentToken, setCurrentToken] = useState<FullTokenFragment>();
 
   const {
     data: tokenListData,
     loading: isTokenListLoading,
     error: tokenListError,
-  } = useTokenListQuery({
-    fetchPolicy: 'network-only',
-  });
+  } = useTokenListQuery({});
 
   const [deleteToken, { loading: isDeleting, error: deleteTokenError }] =
     useDeleteTokenMutation({

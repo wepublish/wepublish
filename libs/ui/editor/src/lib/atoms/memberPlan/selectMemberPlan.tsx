@@ -70,16 +70,12 @@ export function SelectMemberPlans({
     );
   };
 
-  /**
-   * Loading memberplans
-   */
   const { data: memberplansData, refetch } = useMemberPlanListQuery({
     variables: {
       sort: MemberPlanSort.CreatedAt,
       order: SortOrder.Ascending,
       take: 50,
     },
-    fetchPolicy: 'cache-and-network',
     onError: showErrors,
   });
 

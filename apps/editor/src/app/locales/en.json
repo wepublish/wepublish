@@ -321,13 +321,27 @@
         "removeBlock": "Remove Block",
         "unlockBlock": "Unlock"
       },
+      "flexBlock": {
+        "label": "Flex Block",
+        "addNestedBlock": "Add (Sub-)Block",
+        "chooseNestedBlock": "Choose (Sub-)Block",
+        "close": "Close",
+        "deleteNestedBlock": "Delete (Sub-)Block",
+        "editNestedBlock": "Edit (Sub-)Block",
+        "lockNestedBlock": "Lock (Sub-)Block",
+        "removeNestedBlock": "Remove (Sub-)Block",
+        "unlockNestedBlock": "Unlock (Sub-)Block"
+      },
       "html": {
         "close": "Close",
         "confirm": "Confirm",
         "edit": "Edit HTML",
         "label": "HTML",
         "placeholder": "Paste your HTML block here..",
-        "warning": "Please note, rendering custom HTML may be harmful to the user or break the page layout. Please make sure that the HTML you provide is free of malicious scripts and is structured correctly."
+        "warning": "Please note, rendering custom HTML may be harmful to the user or break the page layout. Please make sure that the HTML you provide is free of malicious scripts and is structured correctly.",
+        "generate": "Generate your HTML via AI",
+        "prompt": "Send prompt",
+        "promptSuccess": "Successfully generated HTML and updated block. Chat history is saved and you can continue the chat."
       },
       "subscribe": {
         "label": "Subscribe",
@@ -420,7 +434,8 @@
         "addSlot": "Add slot",
         "label": "Teaser Slots",
         "filter": "Filter by tags",
-        "filterHelpText": "Enter tags separated by commas. Leave empty for no tag filtering."
+        "filterHelpText": "Enter tags separated by commas. Leave empty for no tag filtering.",
+        "autofillType": "Teaser type to autofill"
       },
       "title": {
         "label": "Title",
@@ -590,6 +605,7 @@
     "draggableSubscriptionInterval": {
       "ignoreDeactivatedSubscriptions": "No mails will be sent to deactivated subscriptions!"
     },
+    "edit": "Edit",
     "errorMessages": {
       "invalidEmailErrorMessage": "Please enter a valid email address",
       "invalidRange": "Value out of range. Please input a number between {{min}} and {{max}}.",
@@ -761,6 +777,7 @@
       "password": "Password",
       "unauthorized": "User is not authorized for login"
     },
+    "name": "Name",
     "mailTemplates": {
       "availableTemplates": "Available templates",
       "content": "Content",
@@ -873,7 +890,8 @@
       "users": "Users",
       "audience": "Audience",
       "authorTags": "Tags",
-      "audienceDashboard": "Dashboard"
+      "audienceDashboard": "Dashboard",
+      "integrations": "Integrations"
     },
     "navigation": {
       "overview": {
@@ -1322,6 +1340,7 @@
         "areYouSure": "Are you sure?",
         "areYouSureBody": "The tag \"{{ tag }}\" will be deleted permanently and can not be reversed.",
         "areYouSureConfirmation": "Delete tag",
+        "color": "Color",
         "createTag": "New Tag",
         "editTag": "Edit {{tag}}",
         "placeholder": "Name of tag",
@@ -1393,7 +1412,9 @@
       "sendWebsiteLogin": "Send Login Link for Website",
       "sendWebsiteLoginSuccessMessage": "Login Link sent to {{email}}",
       "streetAddress": "Street",
+      "streetAddressNumber": "House number",
       "streetAddress2": "Street 2",
+      "streetAddress2Number": "House number",
       "subscriptionsHeader": "Subscriptions",
       "successfullyCreatedUser": "User successfully created",
       "successfullyUpdatedUser": "User successfully updated",
@@ -1664,7 +1685,7 @@
           "createdSubscriptionCount": "Completely new and paid subscriptions with only one period so far.",
           "deactivatedSubscriptionCount": "Subscriptions that have been deactivated/canceled and not renewed.",
           "replacedSubscriptionCount": "Subscriptions that have been replaced by another (e.g. trial subscriptions).",
-          "predictedSubscriptionRenewalCount": "Predicted number of subscriptions that will be renewed at the end of their term.\n Lower probability: First-time subscriptions\n Higher probability: Subscriptions with a history of renewal\n Sum: The total number of potential upcoming renewals\n Renewals are summarized from the start of the selected period (or current date, if period starts in the past) \n Renewals are represented by the number of currently paid and active subscriptions set to auto-renew.",
+          "predictedSubscriptionRenewalCount": "Number of subscriptions that are ready to be renewed at the end of their term.\n First-time subscriptions vs. \n Subscriptions with a history of renewal (subsequent renewals)\n Renewals are shown from the start of the selected period (or current date, if period starts in the past) \n Renewals are represented by the number of currently paid and active subscriptions set to auto-renew.",
           "endingSubscriptionCount": "Subscriptions that will expire at the end of their term, excluding those set to auto-renew."
         },
         "totalActiveSubscriptionCount": "Total active & paid subscriptions",
@@ -1673,15 +1694,17 @@
         "createdSubscriptionCount": "New paid subscriptions",
         "deactivatedSubscriptionCount": "Deactivated subscriptions",
         "replacedSubscriptionCount": "Replaced subscriptions",
-        "predictedSubscriptionRenewalCount": "Potential renewals in period",
+        "predictedSubscriptionRenewalCount": "Upcoming renewals in period",
         "predictedSubscriptionRenewalCount_variants": {
-          "low": "Lower probability",
-          "high": "Higher probability",
-          "total": "Sum of potential renewals"
+          "low": "First time renewals",
+          "high": "Subsequent renewals",
+          "total": "Sum of upcoming renewals",
+          "perDayHighProbability": "First time renewals",
+          "perDayLowProbability": "Subsequent renewals"
         },
         "predictedSubscriptionRenewalCountPerDay": {
-          "lowProbability": "Low probability renewals",
-          "highProbability": "High probability renewals"
+          "lowProbability": "First time renewals",
+          "highProbability": "Subsequent renewals"
         },
         "endingSubscriptionCount": "Expiring subscriptions",
         "totalNewSubscriptions": "Total new and renewed paid subscriptions",
@@ -1694,8 +1717,8 @@
         "deactivatedSubscriptionUsers": "Deactivated subscriptions",
         "renewedSubscriptionUsers": "Renewed paid subscriptions",
         "replacedSubscriptionUsers": "Replaced subscriptions",
-        "predictedSubscriptionRenewalUsersLowProbability": "Low probability renewals",
-        "predictedSubscriptionRenewalUsersHighProbability": "High probability renewals",
+        "predictedSubscriptionRenewalUsersLowProbability": "First time renewals",
+        "predictedSubscriptionRenewalUsersHighProbability": "Subsequent renewals",
         "endingSubscriptionUsers": "Expiring subscriptions"
       }
     },
@@ -1720,19 +1743,22 @@
       "renewalRateInfo": "Share of subscriptions that were renewed at the end of their term. Replaced, renewed, and deactivated subscriptions are included. Renewed unpaid subscriptions reduce the renewal rate until they are paid.",
       "cancellationRateInfo": "Share of subscriptions that were not renewed but canceled at the end of their term. Renewed unpaid subscriptions increase the cancellation rate until they are paid.",
       "predictedSubscriptionRenewalCountPerDay": {
-        "lowProbability": "Predicted renewals with lower probability, per day or cumulated per month if set to monthly view",
-        "highProbability": "Predicted renewals with higher probability, per day or cumulated per month if set to monthly view"
+        "lowProbability": "First time renewals ",
+        "highProbability": "Subsequent renewals "
       }
     },
     "paywall": {
       "navbar": "Paywall",
       "form": {
-        "title": "Edit Paywall",
-        "name": "Name of the paywall (NOT visible to the user)",
+        "editTitle": "Edit Paywall",
+        "createTitle": "Create Paywall",
+        "name": "Name of the paywall (Not visible to the user)",
         "description": "Paywall text (visible to the user)",
         "circumventDescription": "Paywall text when the article content is not hidden (visible to the user)",
         "active": "Active",
         "activeHelpText": "Allows to quickly deactivate the paywall on all articles",
+        "alternativeSubscribeUrl": "Alternative URL to the subscribe page",
+        "alternativeSubscribeUrlHelpText": "Can be used in combination with a subscribe block on a page. If left empty will use the default page.",
         "anyMemberPlan": "Allow any subscription to pass the paywall",
         "memberPlans": "Only specific subscriptions can pass the paywall",
         "bypasses": "Bypasses",
@@ -1741,7 +1767,23 @@
         "addBypass": "add",
         "qrCodeTitle": "QR Code for Bypass Token",
         "downloadSvg": "Download SVG",
-        "baseUrl": "Website URL (baseurl). E.g. https://wepublish.ch"
+        "baseUrl": "Website URL (baseurl). E.g. https://wepublish.ch",
+        "upgrade": "Texts when paywall allows and supports upgrading",
+        "display": "Display options",
+        "hideContentAfter": "Hide content after X amount of blocks",
+        "fadeout": "Fade out hidden blocks",
+        "fadeoutHelpText": "Fading out allows to show a preview of the rest of the content."
+      },
+      "overview": {
+        "areYouSure": "Are you sure?",
+        "areYouSureBody": "The paywall \"{{ paywall }}\" will be deleted permanently and can not be reversed.",
+        "areYouSureConfirmation": "Delete paywall",
+        "createPaywall": "New Paywall",
+        "title": "Paywalls",
+        "name": "Name",
+        "active": "Active",
+        "memberPlans": "Memberplans",
+        "anyMemberPlan": "All memberplans"
       }
     },
     "paymentMethodEditPanel": {
@@ -1751,6 +1793,92 @@
     },
     "audienceCsvBtn": {
       "exportUsers": "Download CSV"
+    },
+    "search": "Search",
+    "integrations": {
+      "whatAreIntegrations": "What are integrations?",
+      "infoText": "Integrations are third-party interfaces built into We.Publish. These are used, for example, to send emails or process payments securely.",
+      "title": "Integrations",
+      "ai": "AI",
+      "challengeProvider": "Challenge Provider",
+      "paymentProvider": "Payment Provider",
+      "trackingPixel": "Tracking Pixel",
+      "analytics": "Analytics Provider",
+      "mailProvider": "Mail Provider",
+      "back": "Back to Integrations",
+      "unknown": "Unknown Integration",
+      "notFound": "Integration not found",
+      "configure": "Configure {{integration}}",
+      "updateSuccess": "Settings updated successfully",
+      "updateError": "Settings update failed",
+      "noSettingsFound": "No settings found",
+      "lastLoaded": "Last loaded",
+      "aiSettings": {
+        "apiKey": "API Key",
+        "systemPrompt": "System Prompt"
+      },
+      "challengeSettings": {
+        "secret": "Secret",
+        "siteKey": "Site Key",
+        "type": "Type"
+      },
+      "paymentSettings": {
+        "apiKey": "API Key",
+        "apiUrl": "API URL",
+        "instanceName": "Instance Name",
+        "methods": "Payment Methods",
+        "offSessionPayments": "Off Session Payments",
+        "pm": "Payment Methods",
+        "psp": "Payment Service Providers",
+        "type": "Type",
+        "vatRate": "VAT Rate",
+        "webhookEndpointSecret": "Webhook Endpoint Secret",
+        "bexioUserId": "Bexio User ID",
+        "bexioCountryId": "Bexio Country ID",
+        "bexioUnitId": "Bexio Unit ID",
+        "bexioTaxId": "Bexio Tax ID",
+        "bexioAccountId": "Bexio Account ID",
+        "bexioInvoiceTemplateNewMembership": "Invoice Template (New Membership)",
+        "bexioInvoiceTemplateRenewalMembership": "Invoice Template (Renewal Membership)",
+        "bexioInvoiceMailSubjectNewMembership": "Invoice Mail Subject (New Membership)",
+        "bexioInvoiceMailSubjectRenewalMembership": "Invoice Mail Subject (Renewal Membership)",
+        "bexioInvoiceMailBodyNewMembership": "Invoice Mail Body (New Membership)",
+        "bexioInvoiceMailBodyRenewalMembership": "Invoice Mail Body (Renewal Membership)",
+        "bexioMarkInvoiceAsOpen": "Mark Invoice As Open",
+        "bexioInvoiceTitleNewMembership": "Invoice Title (New Membership)",
+        "bexioInvoiceTitleRenewalMembership": "Invoice Title (Renewal Membership)"
+      },
+      "placeholderSecret": "Unchanged (Hidden)",
+      "mailSettings": {
+        "type": "Type",
+        "fromAddress": "From Address",
+        "replyToAddress": "Reply To Address",
+        "apiKey": "API Key",
+        "mailchimpBaseUrl": "Base URL",
+        "mailgunBaseDomain": "Base Domain",
+        "mailgunMailDomain": "Mail Domain",
+        "slackWebhookUrl": "Webhook URL",
+        "webhookEndpointSecret": "Webhook Endpoint Secret"
+      },
+      "trackingPixelSettings": {
+        "type": "Type",
+        "prolitterisMemberNr": "Member Nr",
+        "prolitterisOnlyPaidContentAccess": "Only Paid Content Access",
+        "prolitterisPassword": "Password",
+        "prolitterisPublisherInternalKeyDomain": "Publisher Internal Key Domain",
+        "prolitterisUsePublisherInternalKey": "Use Publisher Internal Key",
+        "prolitterisUsername": "Username"
+      },
+      "analyticsSettings": {
+        "analytics": "Analytics",
+        "invalidFile": "Google Analytics credentials file is invalid",
+        "credentialsReadyToBeSaved": "Credentials are ready to be saved!",
+        "dropCredentialsFile": "Drop the credential file here!",
+        "dragCredentialsFileHere": "Drag and drop the Google Analytics credential file here",
+        "articlePrefix": "We.Publish article url prefix (usually /a/)",
+        "property": "Google Analytics Property-ID",
+        "credentials": "Credential file"
+      }
     }
   }
 }

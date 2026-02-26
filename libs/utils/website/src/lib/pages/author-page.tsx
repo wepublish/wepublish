@@ -16,8 +16,9 @@ import {
   useAuthorQuery,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
-import { GetStaticProps } from 'next';
+import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import getConfig from 'next/config';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
@@ -29,7 +30,11 @@ const pageSchema = z.object({
   slug: z.string(),
 });
 
-export function AuthorPage() {
+export function AuthorPage({
+  className,
+}: InferGetStaticPropsType<typeof getAuthorStaticProps> & {
+  className?: string;
+}) {
   const {
     elements: { Pagination, H3 },
   } = useWebsiteBuilder();
@@ -71,8 +76,10 @@ export function AuthorPage() {
     return 1;
   }, [articleListData?.articles.totalCount]);
 
+  const canonicalUrl = `/author/${slug}`;
+
   return (
-    <ArticleWrapper>
+    <ArticleWrapper className={className}>
       <AuthorContainer slug={slug as string} />
 
       {data?.author && (
@@ -83,19 +90,28 @@ export function AuthorPage() {
           <ArticleListContainer variables={variables} />
 
           {pageCount > 1 && (
-            <Pagination
-              page={page ?? 1}
-              count={pageCount}
-              onChange={(_, value) =>
-                replace(
-                  {
-                    query: { ...query, page: value },
-                  },
-                  undefined,
-                  { shallow: true, scroll: true }
-                )
-              }
-            />
+            <>
+              <Head>
+                <link
+                  rel="canonical"
+                  key="canonical"
+                  href={canonicalUrl}
+                />
+              </Head>
+              <Pagination
+                page={page ?? 1}
+                count={pageCount}
+                onChange={(_, value) =>
+                  replace(
+                    {
+                      query: { ...query, page: value },
+                    },
+                    undefined,
+                    { shallow: true, scroll: true }
+                  )
+                }
+              />
+            </>
           )}
         </>
       )}

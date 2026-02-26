@@ -8,6 +8,7 @@ import { ContentWrapper } from '@wepublish/content/website';
 import { ArticleListWrapper } from '@wepublish/article/website';
 import { useMemo } from 'react';
 import { capitalize } from '@mui/material';
+import Head from 'next/head';
 
 export const TagWrapper = styled(ContentWrapper)`
   ${({ theme }) => theme.breakpoints.up('md')} {
@@ -27,7 +28,7 @@ export const TagTitleWrapper = styled('div')`
 
 export function Tag({
   className,
-  tags,
+  tag: tagData,
   articles,
   variables,
   onVariablesChange,
@@ -38,7 +39,7 @@ export function Tag({
     blocks: { RichText },
   } = useWebsiteBuilder();
 
-  const tag = tags.data?.tags?.nodes.at(0);
+  const tag = tagData.data?.tag;
   const take = variables?.take ?? 1;
   const page = variables?.skip ? variables.skip / take + 1 : 1;
 
@@ -56,6 +57,8 @@ export function Tag({
   if (!tag) {
     return;
   }
+
+  const canonicalUrl = `/a/tag/${tag}`;
 
   return (
     <TagWrapper className={className}>
@@ -78,15 +81,25 @@ export function Tag({
       />
 
       {pageCount > 1 && (
-        <Pagination
-          page={page ?? 1}
-          count={pageCount}
-          onChange={(_, value) =>
-            onVariablesChange?.({
-              skip: (value - 1) * take,
-            })
-          }
-        />
+        <>
+          <Head>
+            <link
+              rel="canonical"
+              key="canonical"
+              href={canonicalUrl}
+            />
+          </Head>
+
+          <Pagination
+            page={page ?? 1}
+            count={pageCount}
+            onChange={(_, value) =>
+              onVariablesChange?.({
+                skip: (value - 1) * take,
+              })
+            }
+          />
+        </>
       )}
     </TagWrapper>
   );

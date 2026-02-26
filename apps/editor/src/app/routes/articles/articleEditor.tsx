@@ -1,21 +1,17 @@
 import styled from '@emotion/styled';
 import {
-  AuthorRefFragment,
-  FullImageFragment,
-  useCreateJwtForWebsiteLoginLazyQuery,
-} from '@wepublish/editor/api';
-import {
   CreateArticleMutationVariables,
   EditorBlockType,
-  getApiClientV2,
+  FullAuthorFragment,
+  FullImageFragment,
   SettingName,
   useArticleQuery,
   useCreateArticleMutation,
-  usePaywallListQuery,
+  useCreateJwtForWebsiteLoginMutation,
   usePublishArticleMutation,
   useSettingsListQuery,
   useUpdateArticleMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
 import {
   ArticleMetadata,
@@ -126,19 +122,14 @@ function ArticleEditor() {
 
   const { t } = useTranslation();
 
-  const client = getApiClientV2();
   const [
     createArticle,
     { data: createData, loading: isCreating, error: createError },
-  ] = useCreateArticleMutation({ client });
+  ] = useCreateArticleMutation();
   const [updateArticle, { loading: isUpdating, error: updateError }] =
-    useUpdateArticleMutation({
-      client,
-    });
+    useUpdateArticleMutation({});
   const [publishArticle, { loading: isPublishing, error: publishError }] =
-    usePublishArticleMutation({
-      client,
-    });
+    usePublishArticleMutation({});
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false);
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
@@ -173,7 +164,6 @@ function ArticleEditor() {
   });
 
   useSettingsListQuery({
-    client,
     onCompleted(data) {
       setMetadata(meta => ({
         ...meta,
@@ -184,14 +174,11 @@ function ArticleEditor() {
           )?.value,
         paywall:
           meta.paywall ??
-          !!data.settings.find(
+          data.settings.find(
             setting => setting.name === SettingName.NewArticlePaywall
           )?.value,
       }));
     },
-  });
-  const { data: paywallData } = usePaywallListQuery({
-    client,
   });
 
   const isNew = id === undefined;
@@ -206,15 +193,14 @@ function ArticleEditor() {
     refetch,
     loading: isLoading,
   } = useArticleQuery({
-    client,
     errorPolicy: 'all',
-    fetchPolicy: 'cache-and-network',
     variables: { id: articleID! },
     skip: !articleID,
   });
 
-  const [createJWT] = useCreateJwtForWebsiteLoginLazyQuery({
+  const [createJWT] = useCreateJwtForWebsiteLoginMutation({
     errorPolicy: 'none',
+    fetchPolicy: 'no-cache',
   });
 
   const isNotFound = articleData && !articleData.article;
@@ -284,20 +270,20 @@ function ArticleEditor() {
         properties,
         canonicalUrl: canonicalUrl ?? '',
         shared,
-        paywall: !!paywallId,
+        paywall: paywallId,
         hidden,
         disableComments,
         breaking,
         authors: authors.filter(
           author => author != null
-        ) as AuthorRefFragment[],
+        ) as FullAuthorFragment[],
         image: (image as FullImageFragment) || undefined,
         hideAuthor,
         socialMediaTitle: socialMediaTitle || '',
         socialMediaDescription: socialMediaDescription || '',
         socialMediaAuthors: socialMediaAuthors?.filter(
           socialMediaAuthor => socialMediaAuthor != null
-        ) as AuthorRefFragment[],
+        ) as FullAuthorFragment[],
         socialMediaImage: (socialMediaImage as FullImageFragment) || undefined,
         likes: likes ?? 0,
         trackingPixels: trackingPixels || undefined,
@@ -406,7 +392,7 @@ function ArticleEditor() {
       imageID: metadata.image?.id,
       breaking: metadata.breaking,
       shared: !!metadata.shared,
-      paywallId: metadata.paywall ? paywallData?.paywalls?.[0]?.id : null,
+      paywallId: metadata.paywall,
       hidden: metadata.hidden ?? false,
       disableComments: metadata.disableComments ?? false,
       tagIds: metadata.tags,

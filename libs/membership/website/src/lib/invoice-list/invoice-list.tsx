@@ -19,7 +19,7 @@ export const isSepa = (invoice: FullInvoiceFragment) =>
   invoice.subscription?.paymentMethod.description === 'sepa';
 
 export const isBexio = (invoice: FullInvoiceFragment) =>
-  invoice.subscription?.paymentMethod.slug === 'bexio';
+  invoice.subscription?.paymentMethod.slug.includes('bexio');
 
 export const isPayrexxSubscription = (invoice: FullInvoiceFragment) =>
   invoice.subscription?.paymentMethod.paymentProviderID ===
@@ -47,7 +47,7 @@ export const InvoiceList = ({
     <InvoiceListWrapper className={className}>
       {loading && <Skeleton variant={'rectangular'} />}
 
-      {!loading && !error && !data?.invoices?.length && (
+      {!loading && !error && !data?.userInvoices?.length && (
         <InvoiceListItemWrapper>
           <InvoiceListItemContent>
             <strong>Keine offenen Rechnungen</strong>
@@ -58,7 +58,7 @@ export const InvoiceList = ({
       {error && <Alert severity="error">{error.message}</Alert>}
 
       {!loading &&
-        data?.invoices?.map(invoice => (
+        data?.userInvoices?.map(invoice => (
           <InvoiceListItem
             key={invoice.id}
             {...invoice}

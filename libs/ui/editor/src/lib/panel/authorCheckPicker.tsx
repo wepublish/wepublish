@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import {
   AuthorListDocument,
-  AuthorRefFragment,
+  FullAuthorFragment,
   useAuthorListQuery,
   useCreateAuthorMutation,
 } from '@wepublish/editor/api';
@@ -18,10 +18,10 @@ const ButtonWrapper = styled.div`
 `;
 
 export interface AuthorCheckPickerProps {
-  readonly list: AuthorRefFragment[];
+  readonly list: FullAuthorFragment[];
   disabled?: boolean;
   onClose?(): void;
-  onChange?(authors: AuthorRefFragment[]): void;
+  onChange?(authors: FullAuthorFragment[]): void;
 }
 
 export function AuthorCheckPicker({
@@ -30,13 +30,13 @@ export function AuthorCheckPicker({
   onChange,
 }: AuthorCheckPickerProps) {
   const { t } = useTranslation();
-  const [foundAuthors, setFoundAuthors] = useState<AuthorRefFragment[]>([]);
+  const [foundAuthors, setFoundAuthors] = useState<FullAuthorFragment[]>([]);
   const [authorsFilter, setAuthorsFilter] = useState('');
 
   const authorsVariables = { filter: authorsFilter || undefined, take: 10 };
+
   const { data } = useAuthorListQuery({
     variables: authorsVariables,
-    fetchPolicy: 'network-only',
   });
 
   useEffect(() => {
@@ -56,10 +56,14 @@ export function AuthorCheckPicker({
   async function handleCreateAuthor() {
     await createAuthor({
       variables: {
-        input: {
-          name: authorsFilter,
-          slug: slugify(authorsFilter),
-        },
+        name: authorsFilter,
+        slug: slugify(authorsFilter),
+        hideOnArticle: false,
+        hideOnTeam: false,
+        hideOnTeaser: false,
+        links: [],
+        tagIds: [],
+        bio: [],
       },
     });
   }

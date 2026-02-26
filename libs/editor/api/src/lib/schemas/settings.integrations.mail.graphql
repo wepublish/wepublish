@@ -1,0 +1,55 @@
+query MailProviderSettings {
+  mailProviderSettings {
+    createdAt
+    fromAddress
+    id
+    lastLoadedAt
+    mailchimp_baseURL
+    mailgun_baseDomain
+    mailgun_mailDomain
+    modifiedAt
+    name
+    replyToAddress
+    slack_webhookURL
+    type
+  }
+}
+
+mutation UpdateMailProviderSetting(
+  $apiKey: String
+  $fromAddress: String
+  $id: String!
+  $mailchimp_baseURL: String
+  $mailgun_baseDomain: String
+  $mailgun_mailDomain: String
+  $name: String
+  $replyToAddress: String
+  $slack_webhookURL: String
+  $webhookEndpointSecret: String
+) {
+  updateMailProviderSetting(
+    apiKey: $apiKey
+    fromAddress: $fromAddress
+    id: $id
+    mailchimp_baseURL: $mailchimp_baseURL
+    mailgun_baseDomain: $mailgun_baseDomain
+    mailgun_mailDomain: $mailgun_mailDomain
+    name: $name
+    replyToAddress: $replyToAddress
+    slack_webhookURL: $slack_webhookURL
+    webhookEndpointSecret: $webhookEndpointSecret
+  ) {
+    createdAt
+    fromAddress
+    id
+    lastLoadedAt
+    mailchimp_baseURL
+    mailgun_baseDomain
+    mailgun_mailDomain
+    modifiedAt
+    name
+    replyToAddress
+    slack_webhookURL
+    type
+  }
+}

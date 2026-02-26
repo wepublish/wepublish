@@ -88,12 +88,12 @@ function PollEditView() {
   };
 
   // get polls
+
   const { data, loading: createLoading } = usePollQuery({
     variables: {
-      pollId: params.id,
+      id: params.id!,
     },
     onError: onErrorToast,
-    fetchPolicy: 'cache-and-network',
   });
 
   // updating poll
@@ -153,7 +153,7 @@ function PollEditView() {
 
     await updatePoll({
       variables: {
-        pollId: poll.id,
+        id: poll.id,
         question: poll.question,
         infoText: poll.infoText,
         opensAt,

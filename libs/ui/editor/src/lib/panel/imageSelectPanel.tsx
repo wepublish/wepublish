@@ -66,12 +66,12 @@ function ImageSelectPanel({ onClose, onSelect }: ImageSelectPanelProps) {
     link: '',
     licence: '',
   });
+
   const {
     data,
     fetchMore,
     loading: isLoading,
   } = useImageListQuery({
-    fetchPolicy: 'network-only',
     variables: {
       filter,
       take: ImagesPerPage,

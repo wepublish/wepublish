@@ -53,7 +53,6 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
     error: loadError,
   } = useUserRoleQuery({
     variables: { id: id! },
-    fetchPolicy: 'network-only',
     skip: id === undefined,
   });
 
@@ -61,9 +60,7 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
     data: permissionData,
     loading: isPermissionLoading,
     error: loadPermissionError,
-  } = usePermissionListQuery({
-    fetchPolicy: 'network-only',
-  });
+  } = usePermissionListQuery({});
 
   const [createUserRole, { loading: isCreating, error: createError }] =
     useCreateUserRoleMutation();
@@ -120,27 +117,27 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
       const { data } = await updateUserRole({
         variables: {
           id,
-          input: {
-            name,
-            description,
-            permissionIDs: permissions.map(({ id }) => id),
-          },
+          name,
+          description,
+          permissionIDs: permissions.map(({ id }) => id),
         },
       });
 
-      if (data?.updateUserRole) onSave?.(data.updateUserRole);
+      if (data?.updateUserRole) {
+        onSave?.(data.updateUserRole);
+      }
     } else {
       const { data } = await createUserRole({
         variables: {
-          input: {
-            name,
-            description,
-            permissionIDs: permissions.map(({ id }) => id),
-          },
+          name,
+          description,
+          permissionIDs: permissions.map(({ id }) => id),
         },
       });
 
-      if (data?.createUserRole) onSave?.(data.createUserRole);
+      if (data?.createUserRole) {
+        onSave?.(data.createUserRole);
+      }
     }
   }
 

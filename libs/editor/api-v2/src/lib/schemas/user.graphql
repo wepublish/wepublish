@@ -1,9 +1,0 @@
-fragment CommentUser on User {
-  id
-  name
-  firstName
-  flair
-  image {
-    ...FullImage
-  }
-}

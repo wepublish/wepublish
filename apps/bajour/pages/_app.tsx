@@ -18,6 +18,7 @@ import {
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
+  withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
@@ -39,6 +40,7 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import { BajourArticleDateWithShare } from '../src/bajour-article-date-with-share';
+import { BajourTitleBlock } from '../src/components/bajour-title-block';
 import { MainGrid } from '../src/components/layout/main-grid';
 import { BajourBanner } from '../src/components/website-builder-overwrites/banner/bajour-banner';
 import { BajourBlockRenderer } from '../src/components/website-builder-overwrites/block-renderer/block-renderer';
@@ -180,6 +182,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             TeaserList: BajourTeaserList,
             Break: BajourBreakBlock,
             Quote: BajourQuoteBlock,
+            Title: BajourTitleBlock,
           }}
           blockStyles={{
             ContextBox: BajourContextBox,
@@ -236,8 +239,10 @@ const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   previewLink,
 ]);
 const ConnectedApp = withApollo(
-  withErrorSnackbar(
-    withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+  withBuilderRouter(
+    withErrorSnackbar(
+      withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
+    )
   )
 );
 

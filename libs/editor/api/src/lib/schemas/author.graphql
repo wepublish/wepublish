@@ -1,29 +1,31 @@
-fragment AuthorRef on Author {
+fragment FullAuthor on Author {
   id
   name
   jobTitle
-  image {
-    ...FullImage
-  }
+  slug
+  bio
+  url
+  createdAt
+  modifiedAt
+
   peer {
     ...FullPeer
   }
-}
 
-fragment FullAuthor on Author {
-  ...AuthorRef
-
-  slug
   links {
     title
     url
   }
-  bio
+
   tags {
-    id
-    tag
+    ...FullTag
   }
-  createdAt
+
+  imageID
+  image {
+    ...FullImage
+  }
+
   hideOnArticle
   hideOnTeaser
   hideOnTeam
@@ -31,15 +33,15 @@ fragment FullAuthor on Author {
 
 query AuthorList(
   $filter: String
-  $cursor: String
+  $cursorId: String
   $take: Int
   $skip: Int
   $order: SortOrder
   $sort: AuthorSort
 ) {
   authors(
-    filter: {name: $filter}
-    cursor: $cursor
+    filter: { name: $filter }
+    cursorId: $cursorId
     take: $take
     skip: $skip
     order: $order
@@ -66,14 +68,60 @@ query Author($id: String!) {
   }
 }
 
-mutation CreateAuthor($input: AuthorInput!) {
-  createAuthor(input: $input) {
+mutation CreateAuthor(
+  $slug: Slug!
+  $name: String!
+  $jobTitle: String
+  $bio: RichText
+  $hideOnArticle: Boolean!
+  $hideOnTeam: Boolean!
+  $hideOnTeaser: Boolean!
+  $links: [AuthorLinkInput!]!
+  $tagIds: [String!]!
+  $imageID: String
+) {
+  createAuthor(
+    slug: $slug
+    name: $name
+    jobTitle: $jobTitle
+    bio: $bio
+    hideOnArticle: $hideOnArticle
+    hideOnTeam: $hideOnTeam
+    hideOnTeaser: $hideOnTeaser
+    links: $links
+    tagIds: $tagIds
+    imageID: $imageID
+  ) {
     ...FullAuthor
   }
 }
 
-mutation UpdateAuthor($id: String!, $input: AuthorInput!) {
-  updateAuthor(id: $id, input: $input) {
+mutation UpdateAuthor(
+  $id: String!
+  $slug: Slug
+  $name: String
+  $jobTitle: String
+  $bio: RichText
+  $hideOnArticle: Boolean
+  $hideOnTeam: Boolean
+  $hideOnTeaser: Boolean
+  $links: [AuthorLinkInput!]
+  $tagIds: [String!]
+  $imageID: String
+) {
+  updateAuthor(
+    id: $id
+    slug: $slug
+    name: $name
+    jobTitle: $jobTitle
+    bio: $bio
+    hideOnArticle: $hideOnArticle
+    hideOnTeam: $hideOnTeam
+    hideOnTeaser: $hideOnTeaser
+    links: $links
+    tagIds: $tagIds
+    imageID: $imageID
+  ) {
     ...FullAuthor
   }
 }

@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
 import {
   FullUserRoleFragment,
+  LocalStorageKey,
   useCreateSessionMutation,
   useCreateSessionWithJwtMutation,
 } from '@wepublish/editor/api';
-import { LocalStorageKey } from '@wepublish/editor/api-v2';
 import {
   AuthDispatchActionType,
   AuthDispatchContext,

@@ -84,9 +84,7 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
     data,
     loading: isLoading,
     error: fetchError,
-  } = usePeerProfileQuery({
-    fetchPolicy: 'network-only',
-  });
+  } = usePeerProfileQuery({});
 
   const [updateSettings, { loading: isSaving, error: saveError }] =
     useUpdatePeerProfileMutation({
@@ -132,19 +130,18 @@ function PeerInfoEditPanel({ onClose, onSave }: ImageEditPanelProps) {
   async function handleSave() {
     await updateSettings({
       variables: {
-        input: {
-          name,
-          logoID: logoImage?.id,
-          squareLogoId: squareLogoImage?.id,
-          themeColor,
-          themeFontColor,
-          callToActionText: callToActionText!,
-          callToActionURL: callToActionTextURL,
-          callToActionImageID: callToActionImage?.id,
-          callToActionImageURL,
-        },
+        name,
+        logoID: logoImage!.id,
+        squareLogoId: squareLogoImage!.id,
+        themeColor,
+        themeFontColor,
+        callToActionText: callToActionText!,
+        callToActionURL: callToActionTextURL,
+        callToActionImageID: callToActionImage!.id,
+        callToActionImageURL,
       },
     });
+
     toaster.push(
       <Message
         type="success"

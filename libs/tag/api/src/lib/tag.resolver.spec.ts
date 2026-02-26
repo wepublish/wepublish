@@ -12,14 +12,17 @@ import { URLAdapter } from '@wepublish/nest-modules';
 import { TagResolver } from './tag.resolver';
 import { TagService } from './tag.service';
 import request from 'supertest';
+import { TagDataloader } from './tag.dataloader';
 
 describe('TagResolver', () => {
   let app: INestApplication;
   let tagService: PartialMocked<TagService>;
+  let tagDataloader: PartialMocked<TagDataloader>;
   let urlAdapter: PartialMocked<URLAdapter>;
 
   beforeEach(async () => {
     tagService = createMock(TagService);
+    tagDataloader = createMock(TagDataloader);
     urlAdapter = createMock(URLAdapter);
 
     const module: TestingModule = await Test.createTestingModule({
@@ -36,6 +39,10 @@ describe('TagResolver', () => {
         {
           provide: TagService,
           useValue: tagService,
+        },
+        {
+          provide: TagDataloader,
+          useValue: tagDataloader,
         },
         {
           provide: URLAdapter,
@@ -65,6 +72,7 @@ describe('TagResolver', () => {
           modifiedAt: new Date('2023-01-01'),
           peerId: null,
           type: TagType.Article,
+          color: '#ffffff',
         },
       ],
       pageInfo: {
@@ -108,6 +116,7 @@ describe('TagResolver', () => {
           modifiedAt: new Date('2023-01-01'),
           peerId: null,
           type: TagType.Article,
+          color: '#ffffff',
         },
         {
           id: 'id3',
@@ -118,6 +127,7 @@ describe('TagResolver', () => {
           modifiedAt: new Date('2023-01-01'),
           peerId: null,
           type: TagType.Article,
+          color: '#ffffff',
         },
       ],
       pageInfo: {

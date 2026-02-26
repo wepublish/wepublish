@@ -33,7 +33,7 @@ import {
 import { inspect } from 'util';
 import { SubscriptionEventDictionary } from '../subscription-event-dictionary/subscription-event-dictionary';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
-import { SubscriptionService } from '../subscription/subscription.service';
+import { SubscriptionService } from './subscription.service';
 import { PeriodicJobRunObject } from './periodic-job.type';
 import { getMaxTake } from '@wepublish/utils/api';
 

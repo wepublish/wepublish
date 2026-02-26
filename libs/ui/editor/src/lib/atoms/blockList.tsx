@@ -2,9 +2,8 @@ import styled from '@emotion/styled';
 import {
   BlockStyle,
   EditorBlockType,
-  getApiClientV2,
   useBlockStylesQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import nanoid from 'nanoid';
 import React, {
   Fragment,
@@ -28,7 +27,7 @@ import {
 } from '../utility';
 import { AddBlockInput } from './addBlockInput';
 
-const IconWrapper = styled.div`
+export const BlockStyleIconWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 10px;
@@ -54,31 +53,31 @@ const Panel = styled(RPanel)`
   width: 100%;
 `;
 
-const PanelWrapper = styled.div`
+export const PanelWrapper = styled.div`
   display: flex;
   width: 100%;
 `;
 
-const DownwardButtonWrapper = styled.div`
+export const DownwardButtonWrapper = styled.div`
   margin-bottom: 10px;
 `;
 
-const UpwardButtonWrapper = styled.div`
+export const UpwardButtonWrapper = styled.div`
   margin-top: 10px;
   margin-bottom: 5px;
 `;
 
-const FlexGrow = styled.div`
+export const FlexGrow = styled.div`
   flex-grow: 1;
 `;
 
-const Wrapper = styled.div`
+export const LeftButtonsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-right: 10px;
 `;
 
-const ListItem = styled.div`
+export const ListItem = styled.div`
   display: flex;
   width: 100%;
 `;
@@ -117,7 +116,7 @@ export interface BlockListValue<T extends string = string, V = any> {
   value: V;
 }
 
-type BlockMap = Record<string, BlockCaseProps>;
+export type BlockMapType = Record<string, BlockCaseProps>;
 
 export type BlockMapForValue<R extends BlockListValue> = UnionToIntersection<
   R extends BlockListValue<infer T, infer V> ? { [K in T]: BlockCaseProps<V> }
@@ -142,7 +141,7 @@ export interface BlockListItemProps<T extends string = string, V = any> {
   children: (props: BlockProps<V>) => JSX.Element;
 }
 
-const BlockListItem = memo(function BlockListItem({
+export const BlockListItem = memo(function BlockListItem({
   itemId,
   index,
   value,
@@ -209,7 +208,7 @@ export function BlockList<V extends BlockListValue>({
   onChange,
 }: BlockListProps<V>) {
   const [focusIndex, setFocusIndex] = useState<number | null>(null);
-  const blockMap = blocMap as BlockMap;
+  const blockMap = blocMap as BlockMapType;
 
   const handleItemChange = useCallback(
     (index: number, itemValue: React.SetStateAction<BlockListValue>) => {
@@ -345,8 +344,6 @@ interface ListItemWrapperProps {
   onStyleChange?: (blockStyle?: BlockStyle['id']) => void;
 }
 
-const client = getApiClientV2();
-
 function ListItemWrapper({
   value,
   children,
@@ -358,7 +355,7 @@ function ListItemWrapper({
   onStyleChange,
 }: ListItemWrapperProps) {
   const { t } = useTranslation();
-  const { data } = useBlockStylesQuery({ client });
+  const { data } = useBlockStylesQuery();
 
   const stylesForBlock = useMemo(
     () =>
@@ -385,7 +382,7 @@ function ListItemWrapper({
 
   return (
     <ListItem>
-      <Wrapper>
+      <LeftButtonsWrapper>
         <IconButton
           icon={<MdDelete />}
           onClick={onDelete}
@@ -411,7 +408,7 @@ function ListItemWrapper({
           />
         </DownwardButtonWrapper>
         <FlexGrow />
-      </Wrapper>
+      </LeftButtonsWrapper>
 
       <PanelWrapper>
         <Panel bordered>
@@ -419,23 +416,38 @@ function ListItemWrapper({
         </Panel>
       </PanelWrapper>
 
-      <IconWrapper>
+      <BlockStyleIconWrapper>
         <Icon>
           {icon} {t('blockStyles.style')}
         </Icon>
 
-        <BlockStyleSelect
-          cleanable
-          value={blockStyleValue?.id}
-          data={stylesForBlock.map(style => ({
-            value: style.id,
-            label: style.name,
-          }))}
-          onChange={blockStyle => {
-            onStyleChange?.(blockStyle as string | undefined);
-          }}
-        />
-      </IconWrapper>
+        {!!blockStyleValue && (
+          <BlockStyleSelect
+            cleanable
+            value={blockStyleValue?.id}
+            data={stylesForBlock.map(style => ({
+              value: style.id,
+              label: style.name,
+            }))}
+            onChange={blockStyle => {
+              onStyleChange?.(blockStyle as string | undefined);
+            }}
+          />
+        )}
+        {!blockStyleValue && (
+          <BlockStyleSelect
+            cleanable
+            value={undefined}
+            data={stylesForBlock.map(style => ({
+              value: style.id,
+              label: style.name,
+            }))}
+            onChange={blockStyle => {
+              onStyleChange?.(blockStyle as string | undefined);
+            }}
+          />
+        )}
+      </BlockStyleIconWrapper>
     </ListItem>
   );
 }

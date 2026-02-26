@@ -17,7 +17,7 @@ import { Button, DateRangePicker, Form as RForm, SelectPicker } from 'rsuite';
 import { ALL_PAYMENT_PERIODICITIES } from '../../utility';
 import { UserSearch } from './userSearch';
 
-const { Group, ControlLabel } = RForm;
+const { Group } = RForm;
 
 const Form = styled(RForm)`
   display: flex;
@@ -32,10 +32,6 @@ const CloseIcon = styled(MdClose)`
 const FormGroup = styled(Group)`
   margin-right: 15px;
   margin-top: 15px;
-`;
-
-const FormControlLabelMarginLeft = styled(ControlLabel)`
-  margin-left: 10px;
 `;
 
 export interface SubscriptionListFilterProps {
@@ -61,16 +57,11 @@ export function SubscriptionListFilter({
     undefined
   );
 
-  /**
-   * fetch payment methods
-   */
   const {
     data: paymentMethodData,
     loading: isPaymentMethodLoading,
     error: paymentMethodLoadError,
-  } = usePaymentMethodListQuery({
-    fetchPolicy: 'network-only',
-  });
+  } = usePaymentMethodListQuery({});
 
   const formInputStyle = {
     marginRight: '15px',
@@ -78,15 +69,11 @@ export function SubscriptionListFilter({
     marginBottom: '10px',
   };
 
-  /**
-   * fetch member plans
-   */
   const {
     data: memberPlanData,
     loading: isMemberPlanLoading,
     error: loadMemberPlanError,
   } = useMemberPlanListQuery({
-    fetchPolicy: 'network-only',
     variables: {
       take: 200,
     },

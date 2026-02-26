@@ -80,7 +80,3 @@ export const validateImageDimension = (
     );
   }
 };
-
-export const sanitizeImageQuality = (quality: number) => {
-  return ALLOWED_QUALITIES.includes(quality) ? quality : 0.8;
-};

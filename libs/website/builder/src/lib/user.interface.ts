@@ -3,7 +3,7 @@ import {
   RegisterMutationVariables,
   UpdatePasswordMutationVariables,
   UpdateUserMutationVariables,
-  User,
+  SensitiveDataUser,
 } from '@wepublish/website/api';
 import { ChangeEvent } from 'react';
 import { OptionalKeysOf } from 'type-fest';
@@ -30,7 +30,7 @@ export type BuilderImageUploadProps = {
   className?: string;
 };
 
-export type PersonalDataFormFields = UpdateUserMutationVariables['input'] &
+export type PersonalDataFormFields = UpdateUserMutationVariables &
   Partial<UpdatePasswordMutationVariables>;
 
 export type BuilderPersonalDataFormFields =
@@ -54,11 +54,10 @@ export type BuilderPersonalDataFormProps<
       birthday: z.ZodDate | z.ZodOptional<z.ZodDate>;
     }>
   >;
-  user: User;
+  user: SensitiveDataUser;
   className?: string;
   onUpdate?: (
-    data: UpdateUserMutationVariables['input'] &
-      Partial<UpdatePasswordMutationVariables>
+    data: UpdateUserMutationVariables & Partial<UpdatePasswordMutationVariables>
   ) => Promise<void>;
   onImageUpload: (image: ChangeEvent<HTMLInputElement> | null) => Promise<void>;
   mediaEmail?: string;

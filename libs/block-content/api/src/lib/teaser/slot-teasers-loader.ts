@@ -1,5 +1,4 @@
 import { Injectable, Scope } from '@nestjs/common';
-import { Article } from '@prisma/client';
 import { ArticleTeaser, EventTeaser, Teaser, TeaserType } from './teaser.model';
 import {
   isTeaserSlotsBlock,
@@ -13,6 +12,62 @@ import { BaseBlock } from '../base-block.model';
 import { BlockType } from '../block-type.model';
 import { isTeaserGridFlexBlock } from './teaser-flex.model';
 import { isTeaserGridBlock } from './teaser-grid.model';
+import {
+  BlockWithAlignment,
+  FlexBlock,
+  isFlexBlock,
+} from '../flex/flex-block.model';
+
+// extract teasers recursively
+const extractManualTeasers = <Block extends BaseBlock<BlockType>>(
+  block: Block
+) => {
+  if (isFlexBlock(block)) {
+    const teasers: (typeof Teaser)[] = [];
+
+    for (const nested of block.blocks) {
+      teasers.push(
+        ...extractManualTeasers(nested.block as BaseBlock<BlockType>)
+      );
+    }
+
+    return teasers;
+  }
+
+  if (isTeaserSlotsBlock(block)) {
+    return block.slots.reduce((teasers: (typeof Teaser)[], slot) => {
+      if (slot.type === TeaserSlotType.Manual && slot.teaser) {
+        teasers.push(slot.teaser);
+      }
+
+      return teasers;
+    }, []);
+  }
+
+  if (isTeaserGridBlock(block)) {
+    return block.teasers.reduce((teasers: (typeof Teaser)[], teaser) => {
+      if (teaser) {
+        teasers.push(teaser);
+      }
+
+      return teasers;
+    }, []);
+  }
+
+  if (isTeaserGridFlexBlock(block)) {
+    return block.flexTeasers.reduce(
+      (teasers: (typeof Teaser)[], flexTeaser) => {
+        if (flexTeaser.teaser) {
+          teasers.push(flexTeaser.teaser);
+        }
+        return teasers;
+      },
+      []
+    );
+  }
+
+  return [];
+};
 
 @Injectable({ scope: Scope.REQUEST })
 export class SlotTeasersLoader {
@@ -23,57 +78,65 @@ export class SlotTeasersLoader {
     private articleService: ArticleService
   ) {}
 
+  async populateTeaserSlots(block: TeaserSlotsBlock) {
+    // get autofill teasers: load & store them in the loaded teasers list
+    const autofillTeasers = await this.getAutofillTeasers(block);
+    // get all teasers (manual & autofill)
+    const teasers = await this.getTeasers(block, autofillTeasers);
+
+    return {
+      ...block,
+      autofillTeasers,
+      teasers,
+    };
+  }
+
+  // process a block recursively
+  async processBlock(
+    block: BaseBlock<BlockType> | undefined
+  ): Promise<BaseBlock<BlockType> | undefined> {
+    if (!block) {
+      return block;
+    }
+
+    // 1. if block is a flex block --> process its nested blocks
+    if (isFlexBlock(block)) {
+      const updatedBlocks: BlockWithAlignment[] = [];
+      for (const nested of block.blocks) {
+        const updatedNestedBlock = await this.processBlock(nested.block);
+        updatedBlocks.push({
+          ...nested,
+          block: updatedNestedBlock,
+        } as BlockWithAlignment);
+      }
+
+      return { ...block, blocks: updatedBlocks } as FlexBlock;
+    }
+
+    // 2. else if block is a teaser-slots-block
+    // - populate its teaser slots with manual & autofill teasers
+    // - extract/store them so they can be excluded when next teaser-slots-blocks will be populated
+    if (isTeaserSlotsBlock(block)) {
+      return await this.populateTeaserSlots(block);
+    }
+
+    return block;
+  }
+
   async loadSlotTeasersIntoBlocks(revisionBlocks: BaseBlock<BlockType>[]) {
-    revisionBlocks.forEach(block => {
-      if (isTeaserSlotsBlock(block)) {
-        this.addLoadedTeaser(
-          ...block.slots.reduce((teasers: (typeof Teaser)[], slot) => {
-            if (slot.type === TeaserSlotType.Manual && slot.teaser) {
-              teasers.push(slot.teaser);
-            }
-            return teasers;
-          }, [])
-        );
-      }
+    const blocks: (BaseBlock<BlockType> | undefined)[] = [];
 
-      if (isTeaserGridBlock(block)) {
-        this.addLoadedTeaser(
-          ...block.teasers.reduce((teasers: (typeof Teaser)[], teaser) => {
-            if (teaser) {
-              teasers.push(teaser);
-            }
-            return teasers;
-          }, [])
-        );
-      }
-
-      if (isTeaserGridFlexBlock(block)) {
-        this.addLoadedTeaser(
-          ...block.flexTeasers.reduce(
-            (teasers: (typeof Teaser)[], flexTeaser) => {
-              if (flexTeaser.teaser) {
-                teasers.push(flexTeaser.teaser);
-              }
-              return teasers;
-            },
-            []
-          )
-        );
-      }
-    });
-
-    const blocks = [];
+    // extract & store all manual teasers
+    // - they will be completely excluded from being autofilled
     for (const block of revisionBlocks) {
-      if (isTeaserSlotsBlock(block)) {
-        const autofillTeasers = await this.getAutofillTeasers(block);
-        const teasers = await this.getTeasers(block, autofillTeasers);
-        blocks.push({
-          ...block,
-          autofillTeasers,
-          teasers,
-        });
-      } else {
-        blocks.push(block);
+      this.addLoadedTeaser(...extractManualTeasers(block));
+    }
+
+    // process each block
+    for (const block of revisionBlocks) {
+      const processed = await this.processBlock(block);
+      if (processed) {
+        blocks.push(processed);
       }
     }
 
@@ -100,27 +163,24 @@ export class SlotTeasersLoader {
   async getAutofillTeasers(
     slotsBlock: TeaserSlotsBlock
   ): Promise<(typeof Teaser)[]> {
-    const { teaserType, sort, filter } = slotsBlock.autofillConfig;
+    const { teaserType, filter } = slotsBlock.autofillConfig;
     const take = slotsBlock.slots.filter(
       ({ type }) => type === TeaserSlotType.Autofill
     ).length;
 
     if (teaserType === TeaserType.Article) {
-      let articles: Article[] = [];
-      articles = (
-        await this.articleService.getArticles({
-          filter: {
-            tags: filter?.tags,
-            published: true,
-            excludeIds: this.getLoadedTeasers(TeaserType.Article),
-          },
-          sort: ArticleSort.PublishedAt,
-          order: SortOrder.Descending,
-          take,
-        })
-      )?.nodes;
+      const articles = await this.articleService.getArticles({
+        filter: {
+          tags: filter?.tags,
+          published: true,
+          excludeIds: this.getLoadedTeasers(TeaserType.Article),
+        },
+        sort: ArticleSort.PublishedAt,
+        order: SortOrder.Descending,
+        take,
+      });
 
-      const teasers = articles.map(
+      const teasers = articles.nodes.map(
         article =>
           ({
             articleID: article.id,
@@ -155,6 +215,7 @@ export class SlotTeasersLoader {
             title: undefined,
           }) as EventTeaser
       );
+
       this.addLoadedTeaser(...teasers);
       return teasers;
     }
@@ -163,7 +224,7 @@ export class SlotTeasersLoader {
   }
 
   addLoadedTeaser(...teaser: (typeof Teaser)[]) {
-    this.loadedTeasers.push(...teaser);
+    this.loadedTeasers.push(...teaser.filter(Boolean));
   }
 
   getLoadedTeasers(type: TeaserType): string[] {

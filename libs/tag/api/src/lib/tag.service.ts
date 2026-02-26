@@ -1,22 +1,28 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
-import { TagFilter, TagSort } from './tags.query';
+import { Prisma, PrismaClient, TagType } from '@prisma/client';
 import { getMaxTake, PrimeDataLoader, SortOrder } from '@wepublish/utils/api';
 import { TagDataloader } from './tag.dataloader';
+import {
+  CreateTagInput,
+  TagFilter,
+  TagListArgs,
+  TagSort,
+  UpdateTagInput,
+} from './tag.model';
 
 @Injectable()
 export class TagService {
   constructor(private prisma: PrismaClient) {}
 
   @PrimeDataLoader(TagDataloader)
-  async getTags(
-    filter?: TagFilter,
-    sort: TagSort = TagSort.CreatedAt,
-    order: SortOrder = SortOrder.Descending,
-    cursorId: string | null = null,
+  async getTags({
+    filter,
+    sort = TagSort.CreatedAt,
+    order = SortOrder.Descending,
+    cursorId,
     skip = 0,
-    take = 10
-  ) {
+    take = 10,
+  }: TagListArgs) {
     const where = createTagFilter(filter);
     const orderBy = createTagOrder(sort, order);
 
@@ -34,7 +40,7 @@ export class TagService {
       }),
     ]);
 
-    const nodes = tags.slice(0, take);
+    const nodes = tags.slice(0, getMaxTake(take));
     const firstTag = nodes[0];
     const lastTag = nodes[nodes.length - 1];
 
@@ -53,25 +59,48 @@ export class TagService {
     };
   }
 
-  private createTagFilter(filter?: TagFilter): Prisma.TagWhereInput {
-    const conditions: Prisma.TagWhereInput[] = [];
-
-    if (filter?.type) {
-      conditions.push({
-        type: filter.type,
-      });
-    }
-
-    if (filter?.tag) {
-      conditions.push({
+  @PrimeDataLoader(TagDataloader)
+  async getTagByName(tag: string, type: TagType) {
+    return this.prisma.tag.findFirst({
+      where: {
+        type,
         tag: {
           mode: 'insensitive',
-          equals: filter.tag,
+          equals: tag,
         },
-      });
-    }
+      },
+    });
+  }
 
-    return conditions.length ? { AND: conditions } : {};
+  @PrimeDataLoader(TagDataloader)
+  async updateTag({ id, description, ...input }: UpdateTagInput) {
+    return this.prisma.tag.update({
+      where: {
+        id,
+      },
+      data: {
+        ...input,
+        description: description as any[],
+      },
+    });
+  }
+
+  @PrimeDataLoader(TagDataloader)
+  async createTag({ description, ...input }: CreateTagInput) {
+    return this.prisma.tag.create({
+      data: {
+        ...input,
+        description: description as any[],
+      },
+    });
+  }
+
+  async deleteTag(id: string) {
+    return this.prisma.tag.delete({
+      where: {
+        id,
+      },
+    });
   }
 }
 
@@ -111,7 +140,7 @@ function createTagFilter(filter?: TagFilter): Prisma.TagWhereInput {
     conditions.push({
       tag: {
         mode: 'insensitive',
-        equals: filter.tag,
+        contains: filter.tag,
       },
     });
   }

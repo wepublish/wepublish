@@ -25,8 +25,8 @@ export const chartColors: {
   replacedSubscriptionCount: 'var(--rs-cyan-900)',
   totalActiveSubscriptionCount: 'var(--rs-red-900)',
   predictedSubscriptionRenewalCount: [
-    'var(--rs-yellow-900)',
-    'var(--rs-green-900)',
+    'var(--rs-cyan-500)',
+    'var(--rs-orange-300)',
     'var(--rs-blue-900)',
   ],
   endingSubscriptionCount: 'var(--rs-red-300)',
@@ -162,32 +162,19 @@ export function AudienceChart({
             )}
             {predictedSubscriptionRenewalCount && (
               <>
-                <Line
-                  type={'monotone'}
-                  dataKey={'predictedSubscriptionRenewalCount.total'}
-                  stroke={chartColors.predictedSubscriptionRenewalCount[2]}
-                  strokeWidth={1}
-                  fill={chartColors.predictedSubscriptionRenewalCount[2]}
-                  dot={false}
-                  activeDot={1 > 0}
-                />
-                <Line
-                  type={'monotone'}
-                  dataKey={'predictedSubscriptionRenewalCount.high'}
-                  stroke={chartColors.predictedSubscriptionRenewalCount[0]}
-                  strokeWidth={1}
+                <Bar
+                  stackId={'renewal'}
+                  dataKey={
+                    'predictedSubscriptionRenewalCount.perDayHighProbability'
+                  }
                   fill={chartColors.predictedSubscriptionRenewalCount[0]}
-                  dot={false}
-                  activeDot={1 > 0}
                 />
-                <Line
-                  type={'monotone'}
-                  dataKey={'predictedSubscriptionRenewalCount.low'}
-                  stroke={chartColors.predictedSubscriptionRenewalCount[1]}
-                  strokeWidth={1}
+                <Bar
+                  stackId={'renewal'}
+                  dataKey={
+                    'predictedSubscriptionRenewalCount.perDayLowProbability'
+                  }
                   fill={chartColors.predictedSubscriptionRenewalCount[1]}
-                  dot={false}
-                  activeDot={1 > 0}
                 />
               </>
             )}

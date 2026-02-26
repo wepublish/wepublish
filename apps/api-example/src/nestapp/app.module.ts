@@ -5,9 +5,13 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ScheduleModule } from '@nestjs/schedule';
 
 import { HttpModule, HttpService } from '@nestjs/axios';
-import { PrismaClient } from '@prisma/client';
+import {
+  PrismaClient,
+  MailProviderType,
+  PaymentProviderType,
+} from '@prisma/client';
 import { ActionModule } from '@wepublish/action/api';
-import { KarmaMediaAdapter, NovaMediaAdapter } from '@wepublish/api';
+import { NovaMediaAdapter } from '@wepublish/api';
 import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
 import { AuthenticationModule } from '@wepublish/authentication/api';
 import { BannerApiModule } from '@wepublish/banner/api';
@@ -24,10 +28,12 @@ import {
 import {
   GoogleAnalyticsModule,
   GoogleAnalyticsService,
+  GoogleAnalyticsDbConfig,
 } from '@wepublish/google-analytics/api';
 import { HealthModule } from '@wepublish/health';
 import { MediaAdapterModule } from '@wepublish/image/api';
 import {
+  BaseMailProvider,
   MailchimpMailProvider,
   MailgunMailProvider,
   MailsModule,
@@ -36,6 +42,7 @@ import {
   DashboardModule,
   MembershipModule,
   SubscriptionModule,
+  UpgradeSubscriptionModule,
 } from '@wepublish/membership/api';
 import { NavigationModule } from '@wepublish/navigation/api';
 import {
@@ -52,7 +59,7 @@ import {
   NeverChargePaymentProvider,
   PaymentProvider,
   PaymentsModule,
-  PayrexxFactory,
+  PaymentMethodModule,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   StripeCheckoutPaymentProvider,
@@ -77,18 +84,19 @@ import {
 import { UserModule } from '@wepublish/user/api';
 import { VersionInformationModule } from '@wepublish/versionInformation/api';
 import bodyParser from 'body-parser';
-import FormData from 'form-data';
-import Mailgun from 'mailgun.js';
-import { URL } from 'url';
 import { SlackMailProvider } from '../app/slack-mail-provider';
 import { readConfig } from '../readConfig';
-import { PaymentMethodModule } from '@wepublish/payment-method/api';
 import { AuthorModule } from '@wepublish/author/api';
 import { MemberPlanModule } from '@wepublish/member-plan/api';
-import { InvoiceModule } from '@wepublish/invoice/api';
+import { InvoiceModule } from '@wepublish/membership/api';
 import { SessionModule } from '@wepublish/session/api';
 import { ChallengeModule } from '@wepublish/challenge/api';
 import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
+import { V0Module } from '@wepublish/ai/api';
+import {
+  KvTtlCacheModule,
+  KvTtlCacheService,
+} from '@wepublish/kv-ttl-cache/api';
 
 @Global()
 @Module({
@@ -104,7 +112,10 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
 
         return {
           resolvers: { RichText: GraphQLRichText },
-          autoSchemaFile: './apps/api-example/schema-v2.graphql',
+          autoSchemaFile:
+            process.env.NODE_ENV === 'production' ?
+              true
+            : './apps/api-example/schema-v2.graphql',
           sortSchema: true,
           path: 'v1',
           cache: 'bounded',
@@ -113,59 +124,63 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
           playground: configFile.general.apolloPlayground,
           allowBatchedHttpRequests: true,
           inheritResolversFromInterfaces: true,
+          csrfPrevention: false,
         } as ApolloDriverConfig;
       },
+    }),
+    KvTtlCacheModule,
+    V0Module.registerAsync({
+      imports: [PrismaModule, KvTtlCacheModule],
     }),
     AuthorModule,
     PrismaModule,
     MailsModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (config: ConfigService) => {
+      imports: [ConfigModule, PrismaModule, KvTtlCacheModule],
+      useFactory: async (
+        config: ConfigService,
+        prisma: PrismaClient,
+        kv: KvTtlCacheService
+      ) => {
         const configFile = await readConfig(
           config.getOrThrow('CONFIG_FILE_PATH')
         );
         const mailProviderRaw = configFile.mailProvider;
-        let mailProvider;
-        if (mailProviderRaw) {
-          if (mailProviderRaw.id === 'mailgun') {
-            const mailgunClient = new Mailgun(FormData).client({
-              username: 'api',
-              key: mailProviderRaw.apiKey,
-              url: `https://${mailProviderRaw.baseDomain}`,
-            });
-            mailProvider = new MailgunMailProvider({
-              id: 'mailgun',
-              name: 'Mailgun',
-              fromAddress: mailProviderRaw.fromAddress,
-              webhookEndpointSecret: mailProviderRaw.webhookEndpointSecret,
-              baseDomain: mailProviderRaw.baseDomain,
-              mailDomain: mailProviderRaw.mailDomain,
-              apiKey: mailProviderRaw.apiKey,
-              incomingRequestHandler: bodyParser.json(),
-              mailgunClient,
-            });
-          } else if (mailProviderRaw.id === 'mailchimp') {
-            mailProvider = new MailchimpMailProvider({
-              id: 'mailchimp',
-              name: 'Mailchimp',
-              fromAddress: mailProviderRaw.fromAddress,
-              webhookEndpointSecret: mailProviderRaw.webhookEndpointSecret,
-              apiKey: mailProviderRaw.apiKey,
-              baseURL: mailProviderRaw.baseURL,
-              incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
-            });
-          } else if (mailProviderRaw.id === 'slackMail') {
-            mailProvider = new SlackMailProvider({
-              id: 'slackMail',
-              name: 'Slack Mail',
-              fromAddress: mailProviderRaw.fromAddress,
-              webhookURL: mailProviderRaw.webhookURL,
-            });
-          } else {
-            throw new Error(
-              `Unknown mail provider type defined: ${mailProviderRaw.id}`
-            );
-          }
+        let mailProvider: BaseMailProvider;
+
+        if (mailProviderRaw?.type === 'mailgun') {
+          mailProvider = new MailgunMailProvider({
+            id: mailProviderRaw.id,
+            incomingRequestHandler: bodyParser.json(),
+            prisma,
+            kv,
+          });
+
+          await mailProvider.initDatabaseConfiguration(
+            MailProviderType.MAILGUN
+          );
+        } else if (mailProviderRaw?.type === 'mailchimp') {
+          mailProvider = new MailchimpMailProvider({
+            id: mailProviderRaw.id,
+            incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
+            kv,
+            prisma,
+          });
+
+          await mailProvider.initDatabaseConfiguration(
+            MailProviderType.MAILCHIMP
+          );
+        } else if (mailProviderRaw?.type === 'slackmail') {
+          mailProvider = new SlackMailProvider({
+            id: mailProviderRaw.id,
+            kv,
+            prisma,
+          });
+
+          await mailProvider.initDatabaseConfiguration(MailProviderType.SLACK);
+        } else {
+          throw new Error(
+            `Unknown mail provider type defined: ${mailProviderRaw.id}`
+          );
         }
 
         if (!mailProvider) {
@@ -173,17 +188,20 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
         }
 
         return {
-          defaultFromAddress: configFile.mailProvider.fromAddress,
-          defaultReplyToAddress: configFile.mailProvider.replyToAddress,
           mailProvider,
         };
       },
-      inject: [ConfigService],
+      inject: [ConfigService, PrismaClient, KvTtlCacheService],
       global: true,
     }),
     TrackingPixelsModule.registerAsync({
-      imports: [ConfigModule, HttpModule],
-      useFactory: async (config: ConfigService, httpClient: HttpService) => {
+      imports: [ConfigModule, HttpModule, PrismaModule, KvTtlCacheModule],
+      useFactory: async (
+        config: ConfigService,
+        httpClient: HttpService,
+        prisma: PrismaClient,
+        kv: KvTtlCacheService
+      ) => {
         const trackingPixelProviders: TrackingPixelProvider[] = [];
         const configFile = await readConfig(
           config.getOrThrow('CONFIG_FILE_PATH')
@@ -197,33 +215,20 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
 
         for (const trackingPixelProvider of trackingPixelProvidersRaw) {
           if (trackingPixelProvider.type === 'prolitteris') {
-            trackingPixelProviders.push(
+            const trackingPixelProviderClass =
               new ProlitterisTrackingPixelProvider(
                 trackingPixelProvider.id,
-                trackingPixelProvider.name,
-                trackingPixelProvider.type,
-                trackingPixelProvider.usePublisherInternalKey ?
-                  {
-                    memberNr: trackingPixelProvider.memberNr,
-                    onlyPaidContentAccess: Boolean(
-                      trackingPixelProvider.onlyPaidContentAccess
-                    ),
-                    publisherInternalKeyDomain:
-                      trackingPixelProvider.publisherInternalKeyDomain,
-                    usePublisherInternalKey: true,
-                  }
-                : {
-                    memberNr: trackingPixelProvider.memberNr,
-                    username: trackingPixelProvider.username,
-                    password: trackingPixelProvider.password,
-                    onlyPaidContentAccess: Boolean(
-                      trackingPixelProvider.onlyPaidContentAccess
-                    ),
-                    usePublisherInternalKey: false,
-                  },
+                prisma,
+                kv,
                 httpClient
-              )
+              );
+
+            await trackingPixelProviderClass.initDatabaseConfiguration(
+              trackingPixelProvider.id,
+              trackingPixelProvider.type
             );
+
+            trackingPixelProviders.push(trackingPixelProviderClass);
           } else {
             throw new Error(
               `Unknown tracking Pixel type defined: ${(trackingPixelProvider as any).type}`
@@ -233,153 +238,129 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
 
         return { trackingPixelProviders };
       },
-      inject: [ConfigService, HttpService],
+      inject: [ConfigService, HttpService, PrismaClient, KvTtlCacheService],
     }),
-    PaymentMethodModule,
-    PaymentsModule.registerAsync({
-      imports: [ConfigModule, PrismaModule],
-      useFactory: async (config: ConfigService, prisma: PrismaClient) => {
+    PaymentMethodModule.registerAsync({
+      imports: [ConfigModule, PrismaModule, KvTtlCacheModule],
+      useFactory: async (
+        config: ConfigService,
+        prisma: PrismaClient,
+        kv: KvTtlCacheService
+      ) => {
         const paymentProviders: PaymentProvider[] = [];
         const configFile = await readConfig(
           config.getOrThrow('CONFIG_FILE_PATH')
         );
         const paymentProvidersRaw = configFile.paymentProviders;
 
-        if (paymentProvidersRaw) {
-          for (const paymentProvider of paymentProvidersRaw) {
-            if (paymentProvider.type === 'stripe-checkout') {
-              paymentProviders.push(
-                new StripeCheckoutPaymentProvider({
-                  id: paymentProvider.id,
-                  name: paymentProvider.name,
-                  offSessionPayments: paymentProvider.offSessionPayments,
-                  secretKey: paymentProvider.secretKey,
-                  webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
-                  incomingRequestHandler: bodyParser.raw({
-                    type: 'application/json',
-                  }),
-                  methods: paymentProvider.methods,
-                  prisma,
-                })
-              );
-            } else if (paymentProvider.type === 'stripe') {
-              paymentProviders.push(
-                new StripePaymentProvider({
-                  id: paymentProvider.id,
-                  name: paymentProvider.name,
-                  offSessionPayments: paymentProvider.offSessionPayments,
-                  secretKey: paymentProvider.secretKey,
-                  webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
-                  incomingRequestHandler: bodyParser.raw({
-                    type: 'application/json',
-                  }),
-                  methods: paymentProvider.methods,
-                  prisma,
-                })
-              );
-            } else if (paymentProvider.type === 'payrexx') {
-              const payrexxFactory = new PayrexxFactory({
-                baseUrl: 'https://api.payrexx.com/v1.0/',
-                instance: paymentProvider.instanceName,
-                secret: paymentProvider.instanceAPISecret,
-              });
+        if (!paymentProvidersRaw) {
+          return { paymentProviders };
+        }
 
-              paymentProviders.push(
-                new PayrexxPaymentProvider({
-                  id: paymentProvider.id,
-                  name: paymentProvider.name,
-                  offSessionPayments: paymentProvider.offSessionPayments,
-                  transactionClient: payrexxFactory.transactionClient,
-                  gatewayClient: payrexxFactory.gatewayClient,
-                  webhookApiKey: paymentProvider.webhookApiKey,
-                  psp: paymentProvider.psp,
-                  pm: paymentProvider.pm,
-                  vatRate: paymentProvider.vatRate,
-                  incomingRequestHandler: bodyParser.json(),
-                  prisma,
-                })
-              );
-            } else if (paymentProvider.type === 'payrexx-subscription') {
-              paymentProviders.push(
-                new PayrexxSubscriptionPaymentProvider({
-                  id: paymentProvider.id,
-                  name: paymentProvider.name,
-                  offSessionPayments: true,
-                  instanceName: paymentProvider.instanceName,
-                  instanceAPISecret: paymentProvider.instanceAPISecret,
-                  webhookSecret: paymentProvider.webhookEndpointSecret,
-                  prisma,
-                })
-              );
-            } else if (paymentProvider.type === 'bexio') {
-              paymentProviders.push(
-                new BexioPaymentProvider({
-                  id: paymentProvider.id,
-                  name: paymentProvider.name,
-                  offSessionPayments: false,
-                  apiKey: paymentProvider.apiKey,
-                  userId: paymentProvider.userId,
-                  countryId: paymentProvider.countryId,
-                  invoiceTemplateNewMembership:
-                    paymentProvider.invoiceTemplateNewMembership,
-                  invoiceTemplateRenewalMembership:
-                    paymentProvider.invoiceTemplateRenewalMembership,
-                  unitId: paymentProvider.unitId,
-                  taxId: paymentProvider.taxId,
-                  accountId: paymentProvider.accountId,
-                  invoiceTitleNewMembership:
-                    paymentProvider.invoiceTitleNewMembership,
-                  invoiceTitleRenewalMembership:
-                    paymentProvider.invoiceTitleRenewalMembership,
-                  invoiceMailSubjectNewMembership:
-                    paymentProvider.invoiceMailSubjectNewMembership,
-                  invoiceMailBodyNewMembership:
-                    paymentProvider.invoiceMailBodyNewMembership,
-                  invoiceMailSubjectRenewalMembership:
-                    paymentProvider.invoiceMailSubjectRenewalMembership,
-                  invoiceMailBodyRenewalMembership:
-                    paymentProvider.invoiceMailBodyRenewalMembership,
-                  markInvoiceAsOpen: paymentProvider.markInvoiceAsOpen,
-                  prisma,
-                })
-              );
-            } else if (paymentProvider.type === 'mollie') {
-              paymentProviders.push(
-                new MolliePaymentProvider({
-                  id: paymentProvider.id,
-                  name: paymentProvider.name,
-                  offSessionPayments: paymentProvider.offSessionPayments,
-                  apiKey: paymentProvider.apiKey,
-                  webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
-                  apiBaseUrl: paymentProvider.apiBaseUrl,
-                  incomingRequestHandler: bodyParser.urlencoded({
-                    extended: true,
-                  }),
-                  methods: paymentProvider.methods,
-                  prisma,
-                })
-              );
-            } else if (paymentProvider.type === 'no-charge') {
-              paymentProviders.push(
-                new NeverChargePaymentProvider({
-                  id: paymentProvider.id,
-                  name: paymentProvider.name,
-                  offSessionPayments: paymentProvider.offSessionPayments,
-                  prisma,
-                })
-              );
-            } else {
-              throw new Error(
-                `Unknown payment provider type defined: ${(paymentProvider as any).type}`
-              );
-            }
+        for (const paymentProvider of paymentProvidersRaw) {
+          if (paymentProvider.type === 'stripe-checkout') {
+            const paymentMethod = new StripeCheckoutPaymentProvider({
+              id: paymentProvider.id,
+              incomingRequestHandler: bodyParser.raw({
+                type: 'application/json',
+              }),
+              prisma,
+              kv,
+            });
+
+            await paymentMethod.initDatabaseConfiguration(
+              PaymentProviderType.STRIPE_CHECKOUT
+            );
+
+            paymentProviders.push(paymentMethod);
+          } else if (paymentProvider.type === 'stripe') {
+            const paymentMethod = new StripePaymentProvider({
+              id: paymentProvider.id,
+              incomingRequestHandler: bodyParser.raw({
+                type: 'application/json',
+              }),
+              prisma,
+              kv,
+            });
+
+            await paymentMethod.initDatabaseConfiguration(
+              PaymentProviderType.STRIPE
+            );
+
+            paymentProviders.push(paymentMethod);
+          } else if (paymentProvider.type === 'payrexx') {
+            const paymentMethod = new PayrexxPaymentProvider({
+              id: paymentProvider.id,
+              incomingRequestHandler: bodyParser.json(),
+              prisma,
+              kv,
+            });
+
+            await paymentMethod.initDatabaseConfiguration(
+              PaymentProviderType.PAYREXX
+            );
+
+            paymentProviders.push(paymentMethod);
+          } else if (paymentProvider.type === 'payrexx-subscription') {
+            const paymentMethod = new PayrexxSubscriptionPaymentProvider({
+              id: paymentProvider.id,
+              prisma,
+              kv,
+            });
+            await paymentMethod.initDatabaseConfiguration(
+              PaymentProviderType.PAYREXX_SUBSCRIPTION
+            );
+            paymentProviders.push(paymentMethod);
+          } else if (paymentProvider.type === 'bexio') {
+            const paymentMethod = new BexioPaymentProvider({
+              id: paymentProvider.id,
+              prisma,
+              kv,
+            });
+            paymentProviders.push(paymentMethod);
+            await paymentMethod.initDatabaseConfiguration(
+              PaymentProviderType.BEXIO
+            );
+          } else if (paymentProvider.type === 'mollie') {
+            const paymentMethod = new MolliePaymentProvider({
+              id: paymentProvider.id,
+              incomingRequestHandler: bodyParser.urlencoded({
+                extended: true,
+              }),
+              prisma,
+              kv,
+            });
+
+            await paymentMethod.initDatabaseConfiguration(
+              PaymentProviderType.MOLLIE
+            );
+
+            paymentProviders.push(paymentMethod);
+          } else if (paymentProvider.type === 'no-charge') {
+            const paymentMethod = new NeverChargePaymentProvider({
+              id: paymentProvider.id,
+              prisma,
+              kv,
+            });
+
+            await paymentMethod.initDatabaseConfiguration(
+              PaymentProviderType.NO_CHARGE
+            );
+
+            paymentProviders.push(paymentMethod);
+          } else {
+            throw new Error(
+              `Unknown payment provider type defined: ${(paymentProvider as any).type}`
+            );
           }
         }
+
         return { paymentProviders };
       },
-      inject: [ConfigService, PrismaClient],
+      inject: [ConfigService, PrismaClient, KvTtlCacheService],
       global: true,
     }),
+    PaymentsModule,
     MemberPlanModule,
     ApiModule,
     MembershipModule,
@@ -451,7 +432,7 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
     UserSubscriptionModule,
     ChallengeModule.registerAsync({
       global: true,
-      imports: [ConfigModule],
+      imports: [ConfigModule, PrismaModule, KvTtlCacheModule],
       useFactory: async (config: ConfigService) => {
         const configFile = await readConfig(
           config.getOrThrow('CONFIG_FILE_PATH')
@@ -477,6 +458,7 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
       inject: [ConfigService],
     }),
     SubscriptionModule,
+    UpgradeSubscriptionModule,
     NavigationModule,
     TagModule,
     EventsImportModule.registerAsync({
@@ -493,18 +475,16 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
     HotAndTrendingModule.registerAsync({
       imports: [
         GoogleAnalyticsModule.registerAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: async (config: ConfigService) => {
-            const configFile = await readConfig(
-              config.getOrThrow('CONFIG_FILE_PATH')
+          imports: [PrismaModule, KvTtlCacheModule],
+          inject: [PrismaClient, KvTtlCacheService],
+          useFactory: async (prisma: PrismaClient, kv: KvTtlCacheService) => {
+            const dbConfig = new GoogleAnalyticsDbConfig(
+              prisma,
+              kv,
+              'google-analytics'
             );
-
-            return {
-              credentials: configFile.ga?.credentials,
-              property: configFile.ga?.property,
-              articlePrefix: configFile.ga?.articlePrefix,
-            };
+            await dbConfig.initDatabaseConfiguration();
+            return dbConfig;
           },
         }),
       ],
@@ -540,21 +520,11 @@ import { UserSubscriptionModule } from '@wepublish/user-subscription/api';
         const internalUrl = config.get('MEDIA_SERVER_INTERNAL_URL');
         const token = config.getOrThrow('MEDIA_SERVER_TOKEN');
 
-        if (configFile.mediaServer?.type === 'nova') {
-          return new NovaMediaAdapter(
-            config.getOrThrow('MEDIA_SERVER_URL'),
-            token,
-            internalUrl ? internalUrl : undefined
-          );
-        }
-
-        console.warn(
-          'Running on deprecated karma media server migrate to nova media server!'
-        );
-        return new KarmaMediaAdapter(
-          new URL(config.getOrThrow('MEDIA_SERVER_URL')),
+        return new NovaMediaAdapter(
+          config.getOrThrow('MEDIA_SERVER_URL'),
           token,
-          internalUrl ? new URL(internalUrl) : undefined
+          { quality: configFile.mediaServer.quality ?? 0.8 },
+          internalUrl ? internalUrl : undefined
         );
       },
       inject: [ConfigService],

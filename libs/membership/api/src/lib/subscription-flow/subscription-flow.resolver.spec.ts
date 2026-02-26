@@ -17,13 +17,13 @@ import {
 import { PrismaModule } from '@wepublish/nest-modules';
 import { PermissionsGuard } from '@wepublish/permissions/api';
 import request from 'supertest';
-import { SubscriptionService } from '../subscription/subscription.service';
 import {
   registerMailsModule,
-  registerPaymentsModule,
+  registerPaymentMethodModule,
 } from '../testing/module-registrars';
 import { SubscriptionFlowResolver } from './subscription-flow.resolver';
 import { SubscriptionFlowService } from './subscription-flow.service';
+import { PaymentsModule } from '@wepublish/payment/api';
 
 @Injectable()
 export class TestPermissionsGuard implements CanActivate {
@@ -138,12 +138,12 @@ const paymentMethodsQuery = `
     }),
     PrismaModule,
     registerMailsModule(),
-    registerPaymentsModule(),
+    registerPaymentMethodModule(),
+    PaymentsModule,
   ],
   providers: [
     SubscriptionFlowResolver,
     SubscriptionFlowService,
-    SubscriptionService,
     {
       provide: APP_GUARD,
       useClass: PermissionsGuard,
@@ -161,12 +161,11 @@ export class AppUnauthenticatedModule {}
     }),
     PrismaModule,
     registerMailsModule(),
-    registerPaymentsModule(),
+    PaymentsModule,
   ],
   providers: [
     SubscriptionFlowResolver,
     SubscriptionFlowService,
-    SubscriptionService,
     {
       provide: APP_GUARD,
       useClass: TestPermissionsGuard,

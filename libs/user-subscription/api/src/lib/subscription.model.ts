@@ -16,7 +16,7 @@ registerEnumType(PaymentPeriodicity, {
 });
 
 @InputType()
-export class UserSubscriptionInput {
+export class UpdateUserSubscriptionInput {
   @Field()
   id!: string;
 

@@ -1,9 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { mockComment, mockImage } from '@wepublish/storybook/mocks';
+import { mockComment, mockUser } from '@wepublish/storybook/mocks';
 import { WithUserDecorator } from '@wepublish/storybook';
-import { CommentAuthorType, CommentState } from '@wepublish/website/api';
+import { CommentState, SensitiveDataUser } from '@wepublish/website/api';
 import { Comment } from './comment';
-import nanoid from 'nanoid';
 
 const anonymousComment = mockComment({
   id: '1',
@@ -11,22 +10,7 @@ const anonymousComment = mockComment({
 
 const verifiedUserComment = mockComment({
   id: '2',
-  user: {
-    __typename: 'User',
-    id: nanoid(),
-    name: 'User',
-    firstName: 'Fallback',
-    email: 'foobar@example.com',
-    address: null,
-    flair: 'Flair',
-    paymentProviderCustomers: [],
-    image: mockImage(),
-    properties: [],
-    permissions: [],
-  },
-  guestUsername: null,
-  guestUserImage: null,
-  authorType: CommentAuthorType.VerifiedUser,
+  user: mockUser(),
 });
 
 export default {
@@ -108,7 +92,9 @@ export const PendingUserChanges: StoryObj = {
     ...verifiedUserComment,
     state: CommentState.PendingUserChanges,
   },
-  decorators: [WithUserDecorator(verifiedUserComment.user ?? null)],
+  decorators: [
+    WithUserDecorator((verifiedUserComment.user as SensitiveDataUser) ?? null),
+  ],
 };
 
 export const Rejected: StoryObj = {

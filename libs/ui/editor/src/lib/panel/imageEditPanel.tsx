@@ -93,7 +93,6 @@ function ImageEditPanel({
 
   const { data, error: loadingError } = useImageQuery({
     variables: { id: id! },
-    fetchPolicy: 'network-only',
     skip: id === undefined,
   });
 
@@ -234,7 +233,8 @@ function ImageEditPanel({
       const optimizedImage: File = await resizeImage(file!);
       const { data } = await uploadImage({
         variables: {
-          input: { file: optimizedImage!, ...commonInput },
+          file: optimizedImage!,
+          ...commonInput,
         },
       });
 
@@ -243,7 +243,7 @@ function ImageEditPanel({
       }
     } else {
       const { data } = await updateImage({
-        variables: { id: id!, input: commonInput },
+        variables: { id: id!, ...commonInput },
       });
 
       toaster.push(

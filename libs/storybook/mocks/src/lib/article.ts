@@ -3,7 +3,6 @@ import {
   FullArticleRevisionFragment,
 } from '@wepublish/website/api';
 import { mockTag } from './tag';
-import nanoid from 'nanoid';
 import { mockBlockContent } from './block-content';
 import { mockAuthor } from './author';
 import { mockImage } from './image';
@@ -20,9 +19,10 @@ export const mockArticleRevision = ({
   authors = [mockAuthor(), mockAuthor()],
   blocks = mockBlockContent(),
   canonicalUrl = 'https://example.com',
+  breaking = false,
 }: Partial<FullArticleRevisionFragment> = {}): FullArticleRevisionFragment => ({
   __typename: 'ArticleRevision',
-  id: nanoid(),
+  id: faker.string.nanoid(),
   publishedAt: new Date('2023-01-01').toISOString(),
   createdAt: new Date('2023-01-01').toISOString(),
   blocks,
@@ -36,6 +36,7 @@ export const mockArticleRevision = ({
   socialMediaImage,
   socialMediaTitle,
   canonicalUrl,
+  breaking,
 });
 
 export const mockArticle = ({

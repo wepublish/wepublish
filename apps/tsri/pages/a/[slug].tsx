@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
 import {
-  ArticleContainer,
+  ArticleContainer as AricleContainerDefault,
   ArticleListContainer,
-  ArticleWrapper,
+  ArticleWrapper as DefaultArticleWrapper,
 } from '@wepublish/article/website';
-import { ArticleAuthor } from '@wepublish/author/website';
+import { ArticleListWrapper } from '@wepublish/article/website';
 import { CommentListContainer } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import { H2 } from '@wepublish/ui';
@@ -19,24 +19,53 @@ import {
   PeerProfileDocument,
   useArticleQuery,
 } from '@wepublish/website/api';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
 
+import { TsriAttentionCatcher } from '../../src/components/break-blocks/tsri-attention-catcher';
 import TsriAdHeader from '../../src/components/tsri-ad-header';
 
+const AfterArticleWrapper = styled(DefaultArticleWrapper)`
+  background-color: transparent !important;
+`;
+
 const AfterArticleTitle = styled(H2)`
-  ${({ theme }) => theme.breakpoints.down('sm')} {
-    font-size: 2rem;
+  background-color: ${({ theme }) => theme.palette.common.black};
+  color: ${({ theme }) => theme.palette.common.white};
+  border-top-left-radius: 0.8rem;
+  border-top-right-radius: 0.8rem;
+  padding: 0.33rem 1rem;
+  font-size: 1rem !important;
+  line-height: 1.5rem !important;
+  grid-column: -1 / 1;
+  scroll-margin-top: ${({ theme }) => theme.spacing(8)};
+
+  &:has(+ ${ArticleListWrapper}) {
+    margin-bottom: ${({ theme }) => theme.spacing(-5)};
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    scroll-margin-top: ${({ theme }) => theme.spacing(5)};
   }
 `;
 
-export const AuthorWrapper = styled(ContentWrapper)`
-  margin: 0 ${({ theme }) => theme.spacing(6)};
+export const AfterArticleAuthorWrapper = styled(ContentWrapper)`
+  display: grid;
+  grid-template-columns: unset;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    margin: 0;
+    grid-template-columns: min-content 1fr min-content;
+  }
+`;
+
+const ArticleContainer = styled(AricleContainerDefault)`
+  ${TsriAttentionCatcher} {
+    .MuiButton-root {
+      padding-right: 2cqw;
+    }
   }
 `;
 
@@ -53,6 +82,8 @@ export default function ArticleBySlugOrId() {
     },
   });
 
+  const { ArticleAuthor } = useWebsiteBuilder();
+
   const containerProps = {
     slug,
     id,
@@ -64,18 +95,35 @@ export default function ArticleBySlugOrId() {
 
       <ArticleContainer {...containerProps}>
         {data?.article?.latest.authors.map(author => (
-          <AuthorWrapper
+          <AfterArticleAuthorWrapper
             key={author.id}
             fullWidth
           >
             <ArticleAuthor author={author} />
-          </AuthorWrapper>
+          </AfterArticleAuthorWrapper>
         ))}
+
+        {data?.article && !data.article.disableComments && (
+          <AfterArticleWrapper>
+            <AfterArticleTitle
+              component={'h2'}
+              id="comments"
+            >
+              Kommentare
+            </AfterArticleTitle>
+
+            <CommentListContainer
+              id={data.article.id}
+              type={CommentItemType.Article}
+              signUpUrl="/mitmachen"
+            />
+          </AfterArticleWrapper>
+        )}
       </ArticleContainer>
 
       {data?.article && (
         <>
-          <ArticleWrapper>
+          <AfterArticleWrapper>
             <AfterArticleTitle component={'h2'}>
               Das könnte dich auch interessieren
             </AfterArticleTitle>
@@ -83,32 +131,15 @@ export default function ArticleBySlugOrId() {
             <ArticleListContainer
               variables={{
                 filter: { tags: data.article.tags.map(tag => tag.id) },
-                take: 4,
+                take: 7,
               }}
               filter={articles =>
                 articles
                   .filter(article => article.id !== data.article?.id)
-                  .splice(0, 3)
+                  .splice(0, 6)
               }
             />
-          </ArticleWrapper>
-
-          {!data.article.disableComments && (
-            <ArticleWrapper>
-              <AfterArticleTitle
-                component={'h2'}
-                id="comments"
-              >
-                Kommentare
-              </AfterArticleTitle>
-
-              <CommentListContainer
-                id={data.article.id}
-                type={CommentItemType.Article}
-                signUpUrl="/mitmachen"
-              />
-            </ArticleWrapper>
-          )}
+          </AfterArticleWrapper>
         </>
       )}
     </>
@@ -161,7 +192,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           filter: {
             tags: article.data.article.tags.map((tag: Tag) => tag.id),
           },
-          take: 4,
+          take: 7,
         },
       }),
       client.query({

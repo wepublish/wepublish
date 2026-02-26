@@ -41,7 +41,7 @@ import { ApiAlert } from '@wepublish/errors/website';
 import { Modal } from '@wepublish/website/builder';
 import { useTranslation } from 'react-i18next';
 
-const subscribeSchema = z.object({
+export const subscribeSchema = z.object({
   memberPlanId: z.string().min(1),
   paymentMethodId: z.string().min(1),
   monthlyAmount: z.coerce.number().gte(0),
@@ -125,6 +125,7 @@ export const usePaymentText = ({
   autoRenew,
   extendable,
   productType,
+  memberPlan,
   paymentPeriodicity,
   monthlyAmount,
   currency,
@@ -134,6 +135,7 @@ export const usePaymentText = ({
   type?: 'button' | 'support';
   autoRenew: boolean;
   extendable: boolean;
+  memberPlan: string;
   productType: ProductType;
   paymentPeriodicity: PaymentPeriodicity;
   monthlyAmount: number;
@@ -156,6 +158,7 @@ export const usePaymentText = ({
         locale
       ),
       monthlyAmount,
+      memberPlan,
       siteTitle,
     };
 
@@ -177,6 +180,7 @@ export const usePaymentText = ({
     paymentPeriodicity,
     productType,
     type,
+    memberPlan,
     siteTitle,
     t,
   ]);
@@ -231,12 +235,13 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
    * [Fixed with Zod 4](https://github.com/colinhacks/zod/issues/2474)
    */
   const loggedOutSchema = useMemo(() => {
-    const result = requiredRegisterSchema.merge(
-      schema.pick(fieldsToDisplay).merge(subscribeSchema)
-    );
+    let result: z.ZodEffects<any> | z.ZodObject<any> =
+      requiredRegisterSchema.merge(
+        schema.pick(fieldsToDisplay).merge(subscribeSchema)
+      );
 
     if (fieldsToDisplay.passwordRepeated) {
-      return zodAlwaysRefine(result).refine(
+      result = zodAlwaysRefine(result).refine(
         data => data.password === data.passwordRepeated,
         {
           message: 'Passwörter stimmen nicht überein.',
@@ -246,7 +251,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     }
 
     if (fieldsToDisplay.emailRepeated) {
-      return zodAlwaysRefine(result).refine(
+      result = zodAlwaysRefine(result).refine(
         data => data.email === data.emailRepeated,
         {
           message: 'E-Mailadressen stimmen nicht überein.',
@@ -259,11 +264,35 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   }, [fieldsToDisplay, schema]);
 
   const loggedInSchema = subscribeSchema;
+  const schem = useMemo(
+    () =>
+      zodAlwaysRefine(hasUserContext ? loggedInSchema : loggedOutSchema).refine(
+        data => {
+          const memberPlan = memberPlans.data?.memberPlans.nodes.find(
+            mb => mb.id === data.memberPlanId
+          );
+
+          return (
+            !memberPlan || data.monthlyAmount >= memberPlan.amountPerMonthMin
+          );
+        },
+        {
+          message: `Betrag kleiner wie der Mindestbetrag.`,
+          path: ['monthlyAmount'],
+        }
+      ),
+    [
+      hasUserContext,
+      loggedInSchema,
+      loggedOutSchema,
+      memberPlans.data?.memberPlans.nodes,
+    ]
+  );
 
   const { control, handleSubmit, watch, setValue, resetField } = useForm<
     z.infer<typeof loggedInSchema> | z.infer<typeof loggedOutSchema>
   >({
-    resolver: zodResolver(hasUserContext ? loggedInSchema : loggedOutSchema),
+    resolver: zodResolver(schem),
     defaultValues: {
       ...defaults,
       monthlyAmount: 0,
@@ -327,13 +356,12 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const isDonation = selectedMemberPlan?.productType === ProductType.Donation;
 
   const shouldHidePaymentAmount =
-    selectedMemberPlan ?
-      selectedMemberPlan.amountPerMonthMin ===
-      selectedMemberPlan.amountPerMonthMax
-    : false;
+    selectedMemberPlan?.amountPerMonthMin ===
+    selectedMemberPlan?.amountPerMonthMax;
 
   const paymentText = usePaymentText({
     autoRenew,
+    memberPlan: selectedMemberPlan?.name ?? '',
     extendable: selectedMemberPlan?.extendable ?? true,
     productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
     paymentPeriodicity: selectedPaymentPeriodicity,
@@ -346,6 +374,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   const supportText = usePaymentText({
     type: 'support',
     autoRenew: true,
+    memberPlan: selectedMemberPlan?.name ?? '',
     extendable: selectedMemberPlan?.extendable ?? true,
     productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
     paymentPeriodicity: PaymentPeriodicity.Monthly,
@@ -401,7 +430,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       register: registerData,
       subscribe: subscribeData,
     });
-  });
+  }, console.warn);
 
   useEffect(() => {
     if (selectedMemberPlan) {
@@ -464,7 +493,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     }
 
     return (
-      userSubscriptions.data?.subscriptions.some(
+      userSubscriptions.data?.userSubscriptions.some(
         ({ memberPlan, deactivation }) =>
           memberPlan.id === selectedMemberPlanId &&
           memberPlan.productType === ProductType.Subscription &&
@@ -473,7 +502,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     );
   }, [
     deactivateSubscriptionId,
-    userSubscriptions.data?.subscriptions,
+    userSubscriptions.data?.userSubscriptions,
     selectedMemberPlanId,
   ]);
 
@@ -483,11 +512,11 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     }
 
     return (
-      userInvoices.data?.invoices.some(
+      userInvoices.data?.userInvoices.some(
         invoice => !invoice.canceledAt && !invoice.paidAt
       ) ?? false
     );
-  }, [deactivateSubscriptionId, userInvoices.data?.invoices]);
+  }, [deactivateSubscriptionId, userInvoices.data?.userInvoices]);
 
   const amountPerMonthMin = selectedMemberPlan?.amountPerMonthMin || 500;
 
@@ -590,7 +619,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       )}
 
       <SubscribeSection area="paymentPeriodicity">
-        {allPaymentMethods && allPaymentMethods.length > 1 && (
+        {allPaymentMethods.length > 1 && (
           <H5 component="h2">Zahlungsmethode wählen</H5>
         )}
 
@@ -656,6 +685,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
               render={({ field, fieldState: { error } }) => (
                 <Challenge
                   {...field}
+                  value={field.value || ''}
                   onChange={field.onChange}
                   challenge={challenge.data!.challenge}
                   label={'Captcha'}

@@ -1,8 +1,0 @@
-fragment FullTag on Tag {
-  id
-  tag
-  description
-  type
-  main
-  url
-}

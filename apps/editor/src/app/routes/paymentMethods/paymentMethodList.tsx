@@ -57,13 +57,7 @@ function PaymentMethodList() {
   const [currentPaymentMethod, setCurrentPaymentMethod] =
     useState<FullPaymentMethodFragment>();
 
-  const {
-    data,
-    loading: isLoading,
-    refetch,
-  } = usePaymentMethodListQuery({
-    fetchPolicy: 'network-only',
-  });
+  const { data, loading: isLoading, refetch } = usePaymentMethodListQuery({});
 
   const [deletePaymentMethod, { loading: isDeleting }] =
     useDeletePaymentMethodMutation();

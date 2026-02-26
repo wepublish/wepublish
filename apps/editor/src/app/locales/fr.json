@@ -269,13 +269,27 @@
         "removeBlock": "Supprimer le bloc",
         "unlockBlock": "Déverrouiller la position bloc"
       },
+      "flexBlock": {
+        "label": "Bloc flexible",
+        "addNestedBlock": "Ajouter un (sous-)bloc",
+        "chooseNestedBlock": "Choisir un (sous-)bloc",
+        "close": "Fermer",
+        "deleteNestedBlock": "Supprimer le (sous-)bloc",
+        "editNestedBlock": "Éditer le (sous-)bloc",
+        "lockNestedBlock": "Verrouiller le (sous-)bloc",
+        "removeNestedBlock": "Retirer le (sous-)bloc",
+        "unlockNestedBlock": "Déverrouiller le (sous-)bloc"
+      },
       "html": {
         "close": "Fermer",
         "confirm": "Confirmer",
         "edit": "Editer l’HTML",
         "label": "HTML",
         "placeholder": "Copiez votre bloc HTML ici..",
-        "warning": "Veuillez noter que l’utilisation d’HTML personnalisé peut à l’utilisateur·trice ou rompre la mise en page. Veuillez vous assurer que le HTML que vous fournissez est exempt de scripts malveillants et qu’il est structuré correctement."
+        "warning": "Veuillez noter que l’utilisation d’HTML personnalisé peut à l’utilisateur·trice ou rompre la mise en page. Veuillez vous assurer que le HTML que vous fournissez est exempt de scripts malveillants et qu’il est structuré correctement.",
+        "generate": "Générez votre HTML via l'IA",
+        "prompt": "Envoyer le prompt",
+        "promptSuccess": "HTML généré avec succès et bloc mis à jour. L'historique du chat est enregistré et vous pouvez continuer la conversation."
       },
       "subscribe": {
         "label": "S'abonner",
@@ -360,7 +374,16 @@
         "label": "6 Col"
       },
       "teaserSlots": {
-        "label": "Machines à sous tease"
+        "label": "Slots de teaser",
+        "autoLoading": "Chargement automatique :",
+        "fillManually": "Tous les emplacements sont remplis manuellement",
+        "teasersLoaded": "Teaser chargé",
+        "configure": "Configurer",
+        "latest": "Plus récent",
+        "addSlot": "Ajouter un emplacement",
+        "filter": "Filtrer par tags",
+        "filterHelpText": "Saisissez les tags séparés par des virgules. Laissez vide pour ne pas appliquer de filtre de tag.",
+        "autofillType": "Type de teaser des teasers chargés automatiquement"
       },
       "title": {
         "label": "Titre",
@@ -529,6 +552,7 @@
     "draggableSubscriptionInterval": {
       "ignoreDeactivatedSubscriptions": "Les e-mails destinés aux abonnements désactivés ne sont pas envoyés!"
     },
+    "edit": "Modifier",
     "errorMessages": {
       "invalidEmailErrorMessage": "Veuillez entrer une adresse email valide",
       "invalidRange": "La valeur doit être comprise entre {{min}} et {{max}}.",
@@ -789,7 +813,8 @@
       "users": "Utilisateur/Utilisatrices",
       "audience": "Audience",
       "authorTags": "Tags",
-      "audienceDashboard": "Dashboard"
+      "audienceDashboard": "Dashboard",
+      "integrations": "Intégrations"
     },
     "navigation": {
       "overview": {
@@ -1166,13 +1191,17 @@
     },
     "tags": {
       "overview": {
-        "areYouSure": "Are you sure?",
-        "areYouSureBody": "The tag \"{{ tag }}\" will be deleted permanently and can not be reversed.",
-        "areYouSureConfirmation": "Delete tag",
-        "createTag": "New Tag",
-        "placeholder": "Name of tag",
+        "areYouSure": "Êtes-vous sûr ?",
+        "areYouSureBody": "Le tag \"{{ tag }}\" sera supprimé définitivement et ne pourra pas être annulé.",
+        "areYouSureConfirmation": "Supprimer le tag",
+        "color": "Couleur",
+        "createTag": "Nouveau tag",
+        "editTag": "Modifier {{tag}}",
+        "placeholder": "Nom du tag",
         "title": "Tags",
-        "markAsMain": "Use as main tag"
+        "name": "Nom",
+        "description": "Description",
+        "markAsMain": "Utiliser comme tag principal"
       }
     },
     "tokenList": {
@@ -1230,7 +1259,9 @@
       "sendWebsiteLogin": "Envoyer le lien de login",
       "sendWebsiteLoginSuccessMessage": "Lien de login envoyé à {{email}}.",
       "streetAddress": "Rue",
+      "streetAddressNumber": "Numéro de maison",
       "streetAddress2": "Rue 2",
+      "streetAddress2Number": "Numéro de maison",
       "subscriptionsHeader": "Abonnements",
       "successfullyCreatedUser": "Utilisateur·trice créé·e avec succès",
       "successfullyUpdatedUser": "Utilisateur·trice mis·e à jour avec succès",
@@ -1481,7 +1512,7 @@
           "createdSubscriptionCount": "Abonnements entièrement nouveaux avec seulement une période payée jusqu'à présent.",
           "deactivatedSubscriptionCount": "Abonnements désactivés/résiliés et non renouvelés.",
           "replacedSubscriptionCount": "Abonnements remplacés par un autre (par ex. abonnements d'essai).",
-          "predictedSubscriptionRenewalCount": "Abonnements qui seront probablement renouvelés à la fin de leur période.\n Faible probabilité: Abonnements pour la première fois\n Forte probabilité: Abonnements avec un historique de renouvellement\n Somme: Le nombre total de renouvellements potentiels dans la période sélectionnée\n Les renouvellements sont résumés depuis le début de la période sélectionnée (ou la date actuelle, si la période commence dans le passé)\n Les renouvellements sont représentés par le nombre d'abonnements actuellement payés et actifs configurés pour se renouveler automatiquement.",
+          "predictedSubscriptionRenewalCount": "Nombre d'abonnements arrivant à expiration et prêts à être renouvelés.\n Abonnements pour la première fois, par rapport aux... \n Abonnements avec un historique de renouvellement\n Les renouvellements sont affichés depuis le début de la période sélectionnée (ou la date actuelle, si la période commence dans le passé)\n Les renouvellements sont représentés par le nombre d'abonnements actuellement payés et actifs configurés pour se renouveler automatiquement.",
           "endingSubscriptionCount": "Abonnements qui expirent à la fin de leur période, excluant ceux configurés pour se renouveler automatiquement."
         },
         "totalActiveSubscriptionCount": "Total des abonnements actifs & payés",
@@ -1490,15 +1521,17 @@
         "createdSubscriptionCount": "Nouveaux abonnements payés",
         "deactivatedSubscriptionCount": "Abonnements désactivés",
         "replacedSubscriptionCount": "Abonnements remplacés",
-        "predictedSubscriptionRenewalCount": "Renouvellements d'abonnement prévus",
+        "predictedSubscriptionRenewalCount": "Renouvellements d'abonnement",
         "predictedSubscriptionRenewalCount_variants": {
-          "low": "Faible probabilité",
-          "high": "Forte probabilité",
-          "total": "Somme des renouvellements potentiels"
+          "low": "Renouvellements pour la première fois",
+          "high": "Renouvellements subséquents",
+          "total": "Somme des renouvellements à venir",
+          "perDayHighProbability": "Renouvellements pour la première fois",
+          "perDayLowProbability": "Renouvellements subséquents"
         },
         "predictedSubscriptionRenewalCountPerDay": {
-          "lowProbability": "Renouvellements faible probabilité",
-          "highProbability": "Renouvellements forte probabilité"
+          "lowProbability": "Renouvellements pour la première fois",
+          "highProbability": "Renouvellements subséquents"
         },
         "endingSubscriptionCount": "Abonnements expirants",
         "totalNewSubscriptions": "Total des nouveaux abonnements payés & des abonnements renouvelés",
@@ -1511,8 +1544,8 @@
         "deactivatedSubscriptionUsers": "Abonnements désactivés",
         "renewedSubscriptionUsers": "Abonnements renouvelés payés",
         "replacedSubscriptionUsers": "Abonnements remplacés",
-        "predictedSubscriptionRenewalUsersLowProbability": "Renouvellements faible probabilité",
-        "predictedSubscriptionRenewalUsersHighProbability": "Renouvellements forte probabilité",
+        "predictedSubscriptionRenewalUsersLowProbability": "Renouvellements pour la première fois",
+        "predictedSubscriptionRenewalUsersHighProbability": "Renouvellements subséquents",
         "endingSubscriptionUsers": "Abonnements expirants"
       }
     },
@@ -1537,19 +1570,22 @@
       "renewalRateInfo": "Part des abonnements qui ont été renouvelés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés réduisent le taux de renouvellement jusqu'à ce qu'ils soient payés.",
       "cancellationRateInfo": "Part des abonnements qui n'ont pas été renouvelés mais résiliés à la fin de leur période. Les abonnements remplacés, renouvelés et désactivés sont pris en compte. Les abonnements renouvelés et non payés augmentent le taux de résiliation jusqu'à ce qu'ils soient payés.",
       "predictedSubscriptionRenewalCountPerDay": {
-        "lowProbability": "Renouvellements d'abonnement prévus avec une faible probabilité, par jour ou cumulés par mois si affichés en vue mensuelle",
-        "highProbability": "Renouvellements d'abonnement prévus avec une forte probabilité, par jour ou cumulés par mois si affichés en vue mensuelle"
+        "lowProbability": "Renouvellements d'abonnement pour la première fois",
+        "highProbability": "Renouvellements d'abonnement subséquents"
       }
     },
     "paywall": {
       "navbar": "Paywall",
       "form": {
-        "title": "Modifier le paywall",
+        "editTitle": "Modifier le paywall",
+        "createTitle": "Créer un paywall",
         "name": "Nom du paywall (NON visible par l'utilisateur)",
         "description": "Texte du paywall (visible par l'utilisateur)",
         "circumventDescription": "Texte du paywall lorsque le contenu de l'article n'est pas masqué (visible par l'utilisateur)",
         "active": "Actif",
         "activeHelpText": "Permet de désactiver rapidement le paywall sur tous les articles",
+        "alternativeSubscribeUrl": "URL alternative vers la page d’abonnement",
+        "alternativeSubscribeUrlHelpText": "Peut être utilisée en combinaison avec un bloc d’abonnement sur une page. Si laissé vide, la page par défaut sera utilisée.",
         "anyMemberPlan": "Autoriser tout abonnement à franchir le paywall",
         "memberPlans": "Seuls certains abonnements peuvent franchir le paywall",
         "bypasses": "Contournements",
@@ -1558,7 +1594,23 @@
         "addBypass": "Ajouter",
         "qrCodeTitle": "Code QR pour le token de contournement",
         "downloadSvg": "Télécharger SVG",
-        "baseUrl": "URL du site web (baseurl). Par ex. https://wepublish.ch"
+        "baseUrl": "URL du site web (baseurl). Par ex. https://wepublish.ch",
+        "upgrade": "Textes lorsque le paywall permet et prend en charge la mise à niveau",
+        "display": "Options d’affichage",
+        "hideContentAfter": "Masquer le contenu après X blocs",
+        "fadeout": "Fondu des blocs masqués",
+        "fadeoutHelpText": "Le fondu permet d’afficher un aperçu du reste du contenu."
+      },
+      "overview": {
+        "areYouSure": "Êtes-vous sûr ?",
+        "areYouSureBody": "Le paywall « {{ paywall }} » sera supprimé définitivement et ne peut pas être annulé.",
+        "areYouSureConfirmation": "Supprimer le paywall",
+        "createPaywall": "Nouveau paywall",
+        "title": "Paywalls",
+        "name": "Nom",
+        "active": "Actif",
+        "memberPlans": "Plans d’abonnement",
+        "anyMemberPlan": "Tous les plans d’abonnement"
       }
     },
     "paymentMethodEditPanel": {
@@ -1568,6 +1620,91 @@
     },
     "audienceCsvBtn": {
       "exportUsers": "Télécharger CSV"
+    },
+    "search": "Rechercher",
+    "integrations": {
+      "whatAreIntegrations": "Que sont les intégrations ?",
+      "infoText": "Les intégrations sont des interfaces tierces intégrées à We.Publish. Elles sont utilisées, par exemple, pour envoyer des e-mails ou traiter des paiements en toute sécurité.",
+      "title": "Intégrations",
+      "ai": "Intégration AI",
+      "challengeProvider": "Fournisseur de challenge",
+      "paymentProvider": "Fournisseur de paiement",
+      "trackingPixel": "Pixel de suivi",
+      "mailProvider": "Fournisseur de messagerie",
+      "back": "Retour aux intégrations",
+      "unknown": "Intégration inconnue",
+      "notFound": "Intégration non trouvée",
+      "configure": "Configurer {{integration}}",
+      "updateSuccess": "Paramètres mis à jour avec succès",
+      "updateError": "Échec de la mise à jour des paramètres",
+      "noSettingsFound": "Aucun paramètre trouvé",
+      "lastLoaded": "Dernière chargement",
+      "aiSettings": {
+        "apiKey": "Clé API",
+        "systemPrompt": "Invite système (System Prompt)"
+      },
+      "challengeSettings": {
+        "secret": "Secret",
+        "siteKey": "Clé du site (Site Key)",
+        "type": "Type"
+      },
+      "paymentSettings": {
+        "apiKey": "Clé API",
+        "apiUrl": "URL de l'API",
+        "instanceName": "Nom de l'instance",
+        "methods": "Méthodes de paiement",
+        "offSessionPayments": "Paiements hors session",
+        "pm": "Méthodes de paiement",
+        "psp": "Prestataires de services de paiement",
+        "type": "Type",
+        "vatRate": "Taux de TVA",
+        "webhookEndpointSecret": "Secret du point de terminaison du webhook",
+        "bexioUserId": "ID utilisateur Bexio",
+        "bexioCountryId": "ID pays Bexio",
+        "bexioUnitId": "ID unité Bexio",
+        "bexioTaxId": "ID taxe Bexio",
+        "bexioAccountId": "ID compte Bexio",
+        "bexioInvoiceTemplateNewMembership": "Modèle de facture (Nouvelle adhésion)",
+        "bexioInvoiceTemplateRenewalMembership": "Modèle de facture (Renouvellement d'adhésion)",
+        "bexioInvoiceMailSubjectNewMembership": "Objet du mail de facture (Nouvelle adhésion)",
+        "bexioInvoiceMailSubjectRenewalMembership": "Objet du mail de facture (Renouvellement d'adhésion)",
+        "bexioInvoiceMailBodyNewMembership": "Corps du mail de facture (Nouvelle adhésion)",
+        "bexioInvoiceMailBodyRenewalMembership": "Corps du mail de facture (Renouvellement d'adhésion)",
+        "bexioMarkInvoiceAsOpen": "Marquer la facture comme ouverte",
+        "bexioInvoiceTitleNewMembership": "Titre de la facture (Nouvelle adhésion)",
+        "bexioInvoiceTitleRenewalMembership": "Titre de la facture (Renouvellement d'adhésion)"
+      },
+      "placeholderSecret": "Inchangé (Masqué)",
+      "mailSettings": {
+        "type": "Type",
+        "fromAddress": "Adresse de l'expéditeur",
+        "replyToAddress": "Adresse de réponse",
+        "apiKey": "Clé API",
+        "mailchimpBaseUrl": "URL de base",
+        "mailgunBaseDomain": "Domaine de base",
+        "mailgunMailDomain": "Domaine de messagerie",
+        "slackWebhookUrl": "URL du webhook",
+        "webhookEndpointSecret": "Secret du point de terminaison du webhook"
+      },
+      "trackingPixelSettings": {
+        "type": "Type",
+        "prolitterisMemberNr": "Numéro de membre",
+        "prolitterisOnlyPaidContentAccess": "Accès au contenu payant uniquement",
+        "prolitterisPassword": "Mot de passe",
+        "prolitterisPublisherInternalKeyDomain": "Domaine de clé interne de l'éditeur",
+        "prolitterisUsePublisherInternalKey": "Utiliser la clé interne de l'éditeur",
+        "prolitterisUsername": "Nom d'utilisateur"
+      },
+      "analyticsSettings": {
+        "analytics": "Analytique",
+        "invalidFile": "Le fichier d’identifiants Google Analytics est invalide",
+        "credentialsReadyToBeSaved": "Les identifiants sont prêts à être enregistrés !",
+        "dropCredentialsFile": "Déposez le fichier d’identifiants ici !",
+        "dragCredentialsFileHere": "Glissez-déposez le fichier d’identifiants Google Analytics ici",
+        "articlePrefix": "Préfixe d’URL des articles We.Publish (généralement /a/)",
+        "property": "ID de la propriété Google Analytics",
+        "credentials": "Fichier d’identifiants"
+      }
     }
   }
 }

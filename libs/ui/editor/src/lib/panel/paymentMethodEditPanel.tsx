@@ -41,7 +41,7 @@ export interface PaymentMethodEditPanelProps {
 }
 
 const FormGroupWithPadding = styled(Form.Group)`
-  padding-top: ${({ theme }) => theme.spacing(2)};
+  padding-top: 16px;
 `;
 
 function PaymentMethodEditPanel({
@@ -73,7 +73,6 @@ function PaymentMethodEditPanel({
     error: loadError,
   } = usePaymentMethodQuery({
     variables: { id: id! },
-    fetchPolicy: 'network-only',
     skip: id === undefined,
   });
 
@@ -81,9 +80,7 @@ function PaymentMethodEditPanel({
     data: paymentProviderData,
     loading: isLoadingPaymentProvider,
     error: loadPaymentProviderError,
-  } = usePaymentProviderListQuery({
-    fetchPolicy: 'network-only',
-  });
+  } = usePaymentProviderListQuery({});
 
   const [createPaymentMethod, { loading: isCreating, error: createError }] =
     useCreatePaymentMethodMutation();
@@ -146,38 +143,37 @@ function PaymentMethodEditPanel({
       const { data } = await updatePaymentMethod({
         variables: {
           id,
-          input: {
-            name,
-            slug,
-            description,
-            active,
-            gracePeriod,
-            paymentProviderID: paymentProvider.id,
-            imageId: image?.id,
-          },
+          name,
+          slug,
+          description,
+          active,
+          gracePeriod,
+          paymentProviderID: paymentProvider.id,
+          imageId: image?.id,
         },
       });
 
-      if (data?.updatePaymentMethod) onSave?.(data.updatePaymentMethod);
+      if (data?.updatePaymentMethod) {
+        onSave?.(data.updatePaymentMethod);
+      }
     } else {
       const { data } = await createPaymentMethod({
         variables: {
-          input: {
-            name,
-            slug,
-            description,
-            active,
-            gracePeriod,
-            paymentProviderID: paymentProvider.id,
-          },
+          name,
+          slug,
+          description,
+          active,
+          gracePeriod,
+          paymentProviderID: paymentProvider.id,
         },
       });
 
-      if (data?.createPaymentMethod) onSave?.(data.createPaymentMethod);
+      if (data?.createPaymentMethod) {
+        onSave?.(data.createPaymentMethod);
+      }
     }
   }
 
-  // Schema used for form validation
   const { StringType } = Schema.Types;
   const validationModel = Schema.Model({
     name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),
@@ -214,6 +210,7 @@ function PaymentMethodEditPanel({
                 {id ? t('save') : t('create')}
               </Button>
             </PermissionControl>
+
             <Button
               appearance={'subtle'}
               onClick={() => onClose?.()}
@@ -240,6 +237,7 @@ function PaymentMethodEditPanel({
               <Form.ControlLabel>
                 {toggleRequiredLabel(t('paymentMethodList.name'))}
               </Form.ControlLabel>
+
               <Form.Control
                 name="name"
                 value={name}
@@ -250,33 +248,40 @@ function PaymentMethodEditPanel({
                 }}
               />
             </Form.Group>
+
             <Form.Group controlId="paymentMethodSlug">
               <Form.ControlLabel>
                 {t('paymentMethodList.slug')}
               </Form.ControlLabel>
+
               <Form.Control
                 name={t('paymentMethodList.slug')}
                 value={slug}
                 plaintext
               />
             </Form.Group>
+
             <Form.Group controlId="paymentMethodIsActive">
               <Form.ControlLabel>
                 {t('paymentMethodList.active')}
               </Form.ControlLabel>
+
               <Toggle
                 checked={active}
                 disabled={isDisabled}
                 onChange={value => setActive(value)}
               />
+
               <Form.HelpText>
                 {t('paymentMethodList.activeDescription')}
               </Form.HelpText>
             </Form.Group>
+
             <Form.Group controlId="paymentMethodAdapter">
               <Form.ControlLabel>
                 {toggleRequiredLabel(t('paymentMethodList.adapter'))}
               </Form.ControlLabel>
+
               <Form.Control
                 name="paymentProvider"
                 virtualized
@@ -296,10 +301,12 @@ function PaymentMethodEditPanel({
                 }
               />
             </Form.Group>
+
             <Form.Group controlId="paymentMethodDescription">
               <Form.ControlLabel>
                 {t('paymentMethodList.description')}
               </Form.ControlLabel>
+
               <Form.Control
                 name="description"
                 value={description}
@@ -308,10 +315,12 @@ function PaymentMethodEditPanel({
                   setDescription(value);
                 }}
               />
+
               <FormGroupWithPadding controlId="paymentMethodGracePeriod">
                 <Form.ControlLabel>
                   {t('paymentMethodEditPanel.gracePeriod')}
                 </Form.ControlLabel>
+
                 <InputNumber
                   name="gracePeriod"
                   value={gracePeriod}
@@ -323,6 +332,7 @@ function PaymentMethodEditPanel({
                     );
                   }}
                 />
+
                 <Form.HelpText>
                   {t('paymentMethodEditPanel.gracePeriodHelpText')}
                 </Form.HelpText>

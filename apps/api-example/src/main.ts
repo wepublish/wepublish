@@ -1,22 +1,15 @@
-import { runServer } from './app';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './nestapp/app.module';
-import { MediaAdapter } from '@wepublish/image/api';
-import {
-  PAYMENTS_MODULE_OPTIONS,
-  PaymentsModuleOptions,
-} from '@wepublish/payment/api';
-import { MAIL_WEBHOOK_PATH_PREFIX, MailContext } from '@wepublish/mail/api';
+
+import { MAIL_WEBHOOK_PATH_PREFIX } from '@wepublish/mail/api';
 import helmet from 'helmet';
-import {
-  HotAndTrendingDataSource,
-  HOT_AND_TRENDING_DATA_SOURCE,
-} from '@wepublish/article/api';
+
 import { MAX_PAYLOAD_SIZE } from '@wepublish/utils/api';
-import { PAYMENT_WEBHOOK_PATH_PREFIX } from '@wepublish/api';
 import { json, urlencoded } from 'body-parser';
 import type { Request, Response, NextFunction, RequestHandler } from 'express';
+import { graphqlUploadExpress } from 'graphql-upload';
+import { PAYMENT_WEBHOOK_PATH_PREFIX } from '@wepublish/payment/api';
 
 async function bootstrap() {
   const port = process.env.PORT ?? 4000;
@@ -50,29 +43,8 @@ async function bootstrap() {
     return jsonParser(req, res, next);
   };
   nestApp.use(conditionalJson);
-
   nestApp.use(urlencoded({ extended: true, limit: MAX_PAYLOAD_SIZE }));
-  const mediaAdapter = nestApp.get(MediaAdapter);
-  const paymentProviders = nestApp.get<PaymentsModuleOptions>(
-    PAYMENTS_MODULE_OPTIONS
-  ).paymentProviders;
-  const mailProvider = nestApp.get(MailContext).mailProvider;
-  const hotAndTrendingDataSource = nestApp.get<HotAndTrendingDataSource>(
-    HOT_AND_TRENDING_DATA_SOURCE
-  );
-
-  const publicExpressApp = nestApp.getHttpAdapter().getInstance();
-
-  await runServer({
-    publicExpressApp,
-    mediaAdapter,
-    paymentProviders,
-    mailProvider,
-    hotAndTrendingDataSource,
-  }).catch(err => {
-    console.error(err);
-    process.exit(1);
-  });
+  nestApp.use(graphqlUploadExpress());
 
   await nestApp.listen(port);
   Logger.log(`🚀 Public api is running on: http://localhost:${port}`);

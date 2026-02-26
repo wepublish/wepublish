@@ -1,13 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { redirectMap } from './redirectMap';
-import path from 'path';
+
+function normalizePath(pathname: string): string {
+  const segments = pathname.split('/');
+  const stack: string[] = [];
+
+  for (const segment of segments) {
+    if (!segment || segment === '.') continue;
+    if (segment === '..') {
+      stack.pop();
+    } else {
+      stack.push(segment);
+    }
+  }
+
+  return '/' + stack.join('/');
+}
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  console.log(`Checking ${pathname}`);
 
   // Normalize path to prevent traversal attacks like "/../" or "//"
-  const normalizedPath = path.posix.normalize(pathname);
+  const normalizedPath = normalizePath(pathname);
 
   // Reject if normalization changed the path (means suspicious input)
   if (normalizedPath !== pathname) {
@@ -18,7 +33,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Validate pathname to prevent SSRF attacks
-  const pathValidation = /^\/[a-zA-Z0-9\-_/]+\.html$/;
+  const pathValidation = /^\/[a-zA-Z0-9\-_/.+]+\.html$/;
   if (!pathValidation.test(pathname)) {
     console.warn(`Invalid pathname pattern: ${pathname}`);
     return NextResponse.next();

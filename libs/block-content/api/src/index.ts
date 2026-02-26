@@ -28,6 +28,8 @@ export * from './lib/teaser-slot/teaser-slots-autofill-config.model';
 export * from './lib/teaser-slot/teaser-slot.model';
 export * from './lib/teaser-slot/teaser-slots.model';
 
+export * from './lib/flex/flex-block.model';
+
 export * from './lib/block-content.model';
 export * from './lib/block-type.model';
 export * from './lib/block-content.module';

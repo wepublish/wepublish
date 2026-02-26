@@ -94,6 +94,8 @@ const subscription = mockSubscription({
 const invoice = mockInvoice({
   total: 5000,
   subscription,
+  canceledAt: null,
+  description: 'Mock Invoice',
 });
 
 const fillFirstName: StoryObj['play'] = async ({ canvasElement, step }) => {
@@ -158,13 +160,20 @@ const fillPassword: StoryObj['play'] = async ({ canvasElement, step }) => {
 const fillStreetName: StoryObj['play'] = async ({ canvasElement, step }) => {
   const canvas = within(canvasElement);
 
-  const input = canvas.getByLabelText('Strasse und Hausnummer', {
+  const streetInput = canvas.getByLabelText('Strasse', {
+    selector: 'input',
+  });
+
+  const numberInput = canvas.getByLabelText('Hausnummer', {
     selector: 'input',
   });
 
   await step('Enter streetName', async () => {
-    await userEvent.click(input);
-    await userEvent.type(input, 'Musterstrasse 1');
+    await userEvent.click(streetInput);
+    await userEvent.type(streetInput, 'Musterstrasse');
+
+    await userEvent.click(numberInput);
+    await userEvent.type(numberInput, '1');
   });
 };
 
@@ -236,9 +245,12 @@ const clickPayTransactionFees: StoryObj['play'] = async ({
 
 const clickSubscribe: StoryObj['play'] = async ({ canvasElement, step }) => {
   const canvas = within(canvasElement);
-  const submitButton = canvas.getByText('Abonnieren', {
-    exact: false,
-  });
+  let submitButton;
+  try {
+    submitButton = canvas.getByText(new RegExp('Abonnieren', 'i'));
+  } catch {
+    submitButton = canvas.getByText(new RegExp('Spenden', 'i'));
+  }
 
   await step('Submit form', async () => {
     await userEvent.click(submitButton);
@@ -365,13 +377,13 @@ export const LoggedIn: StoryObj<typeof Subscribe> = {
     },
     userSubscriptions: {
       data: {
-        subscriptions: [subscription],
+        userSubscriptions: [subscription],
       },
       loading: false,
     },
     userInvoices: {
       data: {
-        invoices: [invoice],
+        userInvoices: [invoice],
       },
       loading: false,
     },
@@ -640,7 +652,7 @@ export const NoWarningDeactivatedSubscription: StoryObj<typeof Subscribe> = {
     ...LoggedIn.args,
     userSubscriptions: {
       data: {
-        subscriptions: [
+        userSubscriptions: [
           {
             ...subscription,
             deactivation: {
@@ -661,7 +673,7 @@ export const NoWarningPaidInvoice: StoryObj<typeof Subscribe> = {
     ...LoggedIn.args,
     userInvoices: {
       data: {
-        invoices: [
+        userInvoices: [
           { ...invoice, paidAt: new Date('2023-01-01').toISOString() },
           { ...invoice, canceledAt: new Date('2023-01-01').toISOString() },
         ],

@@ -53,6 +53,7 @@ import {
   BuilderSubscribeBlockProps,
   BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
+  BuilderFlexBlockProps,
   BuilderTeaserListBlockProps,
   BuilderTikTokVideoBlockProps,
   BuilderTitleBlockProps,
@@ -96,6 +97,7 @@ import {
   BuilderSubscriptionListItemProps,
   BuilderSubscriptionListProps,
   BuilderTransactionFeeProps,
+  BuilderUpgradeProps,
 } from './membership.interface';
 import { BuilderNavbarProps } from './navbar.interface';
 import { BuilderPageProps, BuilderPageSEOProps } from './page.interface';
@@ -128,6 +130,7 @@ import { BuilderContentWrapperProps } from './content-wrapper.interface';
 import { BuilderTeaserProps } from './teaser.interface';
 import { BuilderPaywallProps } from './paywall.interface';
 import { BuilderTagProps, BuilderTagSEOProps } from './tag.interface';
+import { BuilderTextToIconProps } from './text-to-icon.interface';
 
 const NoComponent: any = () => null;
 
@@ -152,6 +155,7 @@ export type WebsiteBuilderProps = {
   AuthorChip: ComponentType<BuilderAuthorChipProps>;
   AuthorListItem: ComponentType<BuilderAuthorListItemProps>;
   AuthorList: ComponentType<BuilderAuthorListProps>;
+  ArticleAuthor: ComponentType<BuilderAuthorChipProps>;
   ArticleList: ComponentType<BuilderArticleListProps>;
   ArticleAuthors: ComponentType<BuilderArticleAuthorsProps>;
   Banner: ComponentType<BuilderBannerProps>;
@@ -180,8 +184,10 @@ export type WebsiteBuilderProps = {
   PeriodicityPicker: ComponentType<BuilderPeriodicityPickerProps>;
   TransactionFee: ComponentType<BuilderTransactionFeeProps>;
   Subscribe: ComponentType<BuilderSubscribeProps>;
+  Upgrade: ComponentType<BuilderUpgradeProps>;
   ContentWrapper: ComponentType<BuilderContentWrapperProps>;
   Paywall: ComponentType<BuilderPaywallProps>;
+  TextToIcon: ComponentType<BuilderTextToIconProps>;
 
   elements: {
     Rating: ComponentType<BuilderRatingProps>;
@@ -239,6 +245,7 @@ export type WebsiteBuilderProps = {
     Poll: ComponentType<BuilderPollBlockProps>;
     Crowdfunding: ComponentType<BuilderCrowdfundingBlockProps>;
     Listicle: ComponentType<BuilderListicleBlockProps>;
+    FlexBlock: ComponentType<BuilderFlexBlockProps>;
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>;
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>;
     TeaserList: ComponentType<BuilderTeaserListBlockProps>;
@@ -278,6 +285,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   InvoiceList: NoComponent,
   InvoiceListItem: NoComponent,
   Subscribe: NoComponent,
+  Upgrade: NoComponent,
   TransactionFee: NoComponent,
   MemberPlanPicker: NoComponent,
   MemberPlanItem: NoComponent,
@@ -294,6 +302,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   ArticleDate: NoComponent,
   ArticleAuthors: NoComponent,
   PeerInformation: NoComponent,
+  ArticleAuthor: NoComponent,
   Author: NoComponent,
   AuthorLinks: NoComponent,
   AuthorChip: NoComponent,
@@ -317,6 +326,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   PersonalDataForm: NoComponent,
   ContentWrapper: NoComponent,
   Paywall: NoComponent,
+  TextToIcon: NoComponent,
 
   elements: {
     Rating: NoComponent,
@@ -381,6 +391,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     TeaserSlots: NoComponent,
     Teaser: NoComponent,
     Break: NoComponent,
+    FlexBlock: NoComponent,
   },
 
   blockStyles: {

@@ -62,8 +62,7 @@ export function AudienceFilter({
 }: AudienceFilterProps) {
   const { t } = useTranslation();
 
-  // load available subscription plans
-  const { data: memberPlans } = useMemberPlanListQuery();
+  const { data: memberPlans } = useMemberPlanListQuery({});
 
   const memberPlansForPicker = useMemo<
     { label: string; value: string }[]

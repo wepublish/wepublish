@@ -54,7 +54,7 @@ export class PeerArticleRevision extends PickType(
 }
 
 @ObjectType({
-  implements: [HasOptionalPeerLc],
+  implements: () => [HasOptionalPeerLc],
 })
 export class PeerArticle
   extends PickType(
@@ -75,7 +75,7 @@ export class PeerArticle
 }
 
 @ObjectType()
-export class PaginatedPeerArticle extends PaginatedType(PeerArticle) {}
+export class PaginatedPeerArticles extends PaginatedType(PeerArticle) {}
 
 @InputType()
 export class ImportArticleOptions {

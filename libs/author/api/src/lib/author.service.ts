@@ -1,14 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
-import { Author } from './author.model';
+import {
+  Author,
+  AuthorFilter,
+  AuthorSort,
+  AuthorListArgs,
+  CreateAuthorInput,
+  UpdateAuthorInput,
+} from './author.model';
 import { AuthorDataloaderService } from './author-dataloader.service';
 import {
+  getMaxTake,
   graphQLSortOrderToPrisma,
-  PageInfo,
   PrimeDataLoader,
   SortOrder,
 } from '@wepublish/utils/api';
-import { AuthorFilter, AuthorSort } from './authors.query';
 
 function lowercaseFirstLetter(str: string): string {
   return str.charAt(0).toLowerCase() + str.slice(1);
@@ -42,14 +48,15 @@ export class AuthorService {
     });
   }
 
-  async getAuthors(
-    filter?: Partial<AuthorFilter>,
-    sort: AuthorSort = AuthorSort.ModifiedAt,
-    order: SortOrder = SortOrder.Descending,
-    cursorId: string | null = null,
+  @PrimeDataLoader(AuthorDataloaderService)
+  async getAuthors({
+    filter,
+    sort = AuthorSort.ModifiedAt,
+    order = SortOrder.Descending,
+    cursorId,
     skip = 0,
-    take = 10
-  ): Promise<{ nodes: Author[]; totalCount: number; pageInfo: PageInfo }> {
+    take = 10,
+  }: AuthorListArgs) {
     const where = createAuthorFilter(filter);
     const prismaOrder = graphQLSortOrderToPrisma(order);
 
@@ -60,7 +67,7 @@ export class AuthorService {
       this.prisma.author.count({ where }),
       this.prisma.author.findMany({
         where,
-        take: take + 1, // Take one more to check for next page
+        take: getMaxTake(take) + 1, // Take one more to check for next page
         skip,
         cursor: cursorId ? { id: cursorId } : undefined,
         orderBy,
@@ -71,7 +78,7 @@ export class AuthorService {
     ]);
 
     // Slice to the requested amount
-    const nodes = authors.slice(0, take) as unknown as Author[];
+    const nodes = authors.slice(0, getMaxTake(take)) as unknown as Author[];
     const firstAuthor = nodes[0];
     const lastAuthor = nodes[nodes.length - 1];
 
@@ -89,6 +96,70 @@ export class AuthorService {
         endCursor: lastAuthor?.id,
       },
     };
+  }
+
+  @PrimeDataLoader(AuthorDataloaderService)
+  async updateAuthor({ id, bio, links, tagIds, ...input }: UpdateAuthorInput) {
+    return this.prisma.author.update({
+      where: {
+        id,
+      },
+      data: {
+        ...input,
+        bio: bio as any[],
+        links: {
+          deleteMany: {
+            authorId: {
+              equals: id,
+            },
+          },
+          create: links,
+        },
+        tags: {
+          deleteMany: {
+            tagId: {
+              notIn: tagIds,
+            },
+          },
+          createMany: {
+            skipDuplicates: true,
+            data:
+              tagIds?.map(tagId => ({
+                tagId,
+              })) ?? [],
+          },
+        },
+      },
+    });
+  }
+
+  @PrimeDataLoader(AuthorDataloaderService)
+  async createAuthor({ bio, tagIds, links, ...input }: CreateAuthorInput) {
+    return this.prisma.author.create({
+      data: {
+        ...input,
+        bio: bio as any[],
+        links: {
+          create: links,
+        },
+        tags: {
+          createMany: {
+            data: tagIds.map(tagId => ({
+              tagId,
+            })),
+            skipDuplicates: true,
+          },
+        },
+      },
+    });
+  }
+
+  async deleteAuthor(id: string) {
+    return this.prisma.author.delete({
+      where: {
+        id,
+      },
+    });
   }
 }
 

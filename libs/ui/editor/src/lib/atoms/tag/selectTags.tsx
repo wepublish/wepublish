@@ -79,6 +79,7 @@ export function SelectTags({
    * Loading tags
    */
   const take = 50;
+
   const { data: tagsData, refetch } = useTagListQuery({
     variables: {
       filter: {
@@ -89,7 +90,6 @@ export function SelectTags({
       take,
       skip: (page - 1) * take,
     },
-    fetchPolicy: 'cache-and-network',
     onError: showErrors,
   });
 

@@ -14,14 +14,16 @@ import { matches } from 'lodash';
 import nock from 'nock';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { SubscriptionFlowService } from '../subscription-flow/subscription-flow.service';
-import { SubscriptionService } from '../subscription/subscription.service';
+import { SubscriptionService } from './subscription.service';
 import {
   registerMailsModule,
-  registerPaymentsModule,
+  registerPaymentMethodModule,
   registerPrismaModule,
 } from '../testing/module-registrars';
 import { PeriodicJobService } from './periodic-job.service';
-
+import { PaymentsModule } from '@wepublish/payment/api';
+import { createKvMock, KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+const kvMock = createKvMock();
 describe('PeriodicJobService', () => {
   let service: PeriodicJobService;
   const prismaClient = new PrismaClient();
@@ -37,12 +39,14 @@ describe('PeriodicJobService', () => {
         PrismaModule,
         forwardRef(() => registerPrismaModule(prismaClient)),
         registerMailsModule(),
-        registerPaymentsModule(),
+        registerPaymentMethodModule(),
+        PaymentsModule,
       ],
       providers: [
         SubscriptionFlowService,
         PeriodicJobService,
         SubscriptionService,
+        { provide: KvTtlCacheService, useValue: kvMock },
       ],
     }).compile();
 

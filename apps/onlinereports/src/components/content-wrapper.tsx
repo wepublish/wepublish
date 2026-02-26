@@ -23,7 +23,7 @@ export const OnlineReportsContentWrapperStyled = styled(ContentWrapperStyled)<{
   display: grid;
   row-gap: ${({ theme }) => theme.spacing(4)};
   ${({ theme }) => theme.breakpoints.down('md')} {
-    & > * {
+    & > *:not(:has([data-revive-id])) {
       max-width: calc(100vw - ${({ theme }) => theme.spacing(5)});
     }
   }

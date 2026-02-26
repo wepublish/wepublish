@@ -113,6 +113,12 @@ export class CrowdfundingService {
 
     const subscriptions = await this.prisma.subscription.findMany({
       where: {
+        startsAt:
+          crowdfunding.countSubscriptionsFrom ?
+            {
+              gte: crowdfunding.countSubscriptionsFrom.toISOString(),
+            }
+          : undefined,
         memberPlanID: {
           in: memberPlanIds,
         },

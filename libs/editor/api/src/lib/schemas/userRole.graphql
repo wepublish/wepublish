@@ -1,9 +1,3 @@
-fragment FullPermission on Permission {
-  id
-  description
-  deprecated
-}
-
 fragment FullUserRole on UserRole {
   id
   name
@@ -14,8 +8,22 @@ fragment FullUserRole on UserRole {
   }
 }
 
-query UserRoleList($filter: String, $cursor: String, $take: Int, $skip: Int) {
-  userRoles(filter: {name: $filter}, cursor: $cursor, take: $take, skip: $skip) {
+query UserRoleList(
+  $filter: String
+  $cursorId: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: UserRoleSort
+) {
+  userRoles(
+    filter: { name: $filter }
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...FullUserRole
     }
@@ -31,26 +39,38 @@ query UserRoleList($filter: String, $cursor: String, $take: Int, $skip: Int) {
   }
 }
 
-query PermissionList {
-  permissions {
-    ...FullPermission
-  }
-}
-
 query UserRole($id: String!) {
   userRole(id: $id) {
     ...FullUserRole
   }
 }
 
-mutation CreateUserRole($input: UserRoleInput!) {
-  createUserRole(input: $input) {
+mutation CreateUserRole(
+  $name: String!
+  $description: String
+  $permissionIDs: [String!]!
+) {
+  createUserRole(
+    name: $name
+    description: $description
+    permissionIDs: $permissionIDs
+  ) {
     ...FullUserRole
   }
 }
 
-mutation UpdateUserRole($id: String!, $input: UserRoleInput!) {
-  updateUserRole(id: $id, input: $input) {
+mutation UpdateUserRole(
+  $id: String!
+  $name: String
+  $description: String
+  $permissionIDs: [String!]
+) {
+  updateUserRole(
+    id: $id
+    name: $name
+    description: $description
+    permissionIDs: $permissionIDs
+  ) {
     ...FullUserRole
   }
 }

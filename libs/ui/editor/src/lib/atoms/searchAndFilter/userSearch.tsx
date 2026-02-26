@@ -21,6 +21,7 @@ export function UserSearch({
   const [users, setUsers] = useState<(FullUserFragment | undefined | null)[]>(
     []
   );
+
   const {
     data: userData,
     loading,
@@ -33,7 +34,6 @@ export function UserSearch({
         text: userSearch,
       },
     },
-    fetchPolicy: 'network-only',
   });
 
   useEffect(() => {
@@ -80,7 +80,7 @@ export function UserSearch({
     if (user.name) userLabel += `${user.name} `;
     if (user.email) userLabel += `| ${user.email} `;
     if (user.address?.streetAddress)
-      userLabel += `| ${user.address.streetAddress} `;
+      userLabel += `| ${user.address.streetAddress} ${user.address.streetAddressNumber ?? ''}`;
     if (user.address?.zipCode) userLabel += `| ${user.address.zipCode} `;
     if (user.address?.city) userLabel += `| ${user.address.city} `;
     return userLabel;

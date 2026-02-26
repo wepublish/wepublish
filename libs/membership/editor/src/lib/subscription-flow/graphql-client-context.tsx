@@ -5,7 +5,7 @@ import {
   useDeleteSubscriptionIntervalMutation,
   useUpdateSubscriptionFlowMutation,
   useUpdateSubscriptionIntervalMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { createContext } from 'react';
 
 export const SubscriptionClientContext = createContext({

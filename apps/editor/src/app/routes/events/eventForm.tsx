@@ -1,9 +1,11 @@
-import { FullImageFragment, Tag, TagType } from '@wepublish/editor/api';
 import {
   EventStatus,
+  FullImageFragment,
   MutationCreateEventArgs,
   MutationUpdateEventArgs,
-} from '@wepublish/editor/api-v2';
+  Tag,
+  TagType,
+} from '@wepublish/editor/api';
 import {
   ChooseEditImage,
   DateTimePicker,

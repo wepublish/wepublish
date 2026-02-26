@@ -3,7 +3,7 @@ import {
   CreateSubscriptionArgs,
   CreateSubscriptionWithConfirmationArgs,
   ExtendSubscriptionArgs,
-  UserSubscriptionInput,
+  UpdateUserSubscriptionInput,
 } from './subscription.model';
 import {
   Authenticated,
@@ -15,7 +15,7 @@ import { UserSubscriptionService } from './user-subscription.service';
 import { PublicSubscription } from '@wepublish/membership/api';
 import { Payment } from '@wepublish/payment/api';
 import { UserDataloaderService } from '@wepublish/user/api';
-import { UserInputError } from '@nestjs/apollo';
+import { BadRequestException } from '@nestjs/common';
 
 @Resolver()
 export class UserSubscriptionResolver {
@@ -28,7 +28,7 @@ export class UserSubscriptionResolver {
   @Query(() => [PublicSubscription], {
     description: `This query returns the subscriptions of the authenticated user.`,
   })
-  async subscriptions(@CurrentUser() session: UserSession) {
+  async userSubscriptions(@CurrentUser() session: UserSession) {
     return this.userSubscriptionService.getUserSubscriptions(session.user.id);
   }
 
@@ -36,7 +36,7 @@ export class UserSubscriptionResolver {
   @Mutation(() => Payment, {
     description: `Allows authenticated users to create additional subscriptions`,
   })
-  async createSubscription(
+  async createUserSubscription(
     @Args() args: CreateSubscriptionArgs,
     @CurrentUser() { user }: UserSession
   ) {
@@ -47,15 +47,17 @@ export class UserSubscriptionResolver {
   @Mutation(() => Boolean, {
     description: `Allows guests and authenticated users to create additional subscriptions`,
   })
-  async createSubscriptionWithConfirmation(
+  async createUserSubscriptionWithConfirmation(
     @Args() { userId, ...args }: CreateSubscriptionWithConfirmationArgs,
     @CurrentUser() session?: UserSession
   ) {
     const user =
       userId ? await this.userDataloader.load(userId) : session?.user;
+
     if (!user) {
-      throw new UserInputError('User not found');
+      throw new BadRequestException('User not found');
     }
+
     await this.userSubscriptionService.createSubscriptionWithConfirmation(
       user.id,
       args
@@ -67,7 +69,7 @@ export class UserSubscriptionResolver {
   @Mutation(() => Payment, {
     description: `Allows authenticated users to extend existing subscriptions`,
   })
-  async extendSubscription(
+  async extendUserSubscription(
     @Args() args: ExtendSubscriptionArgs,
     @CurrentUser() { user }: UserSession
   ) {
@@ -81,7 +83,7 @@ export class UserSubscriptionResolver {
   })
   async updateUserSubscription(
     @Args('id') id: string,
-    @Args('input') input: UserSubscriptionInput,
+    @Args('input') input: UpdateUserSubscriptionInput,
     @CurrentUser() { user }: UserSession
   ) {
     return this.userSubscriptionService.updateSubscription(id, {

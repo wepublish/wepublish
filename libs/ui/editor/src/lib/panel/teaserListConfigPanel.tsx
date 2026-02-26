@@ -1,7 +1,10 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { TagType } from '@wepublish/editor/api';
-import { TeaserListBlockSort, TeaserType } from '@wepublish/editor/api-v2';
+import {
+  TagType,
+  TeaserListBlockSort,
+  TeaserType,
+} from '@wepublish/editor/api';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Drawer, Form, Schema, SelectPicker } from 'rsuite';
@@ -26,7 +29,8 @@ export type TeaserListConfigPanelProps = {
 export const useTeaserTypeText = () => {
   const { t } = useTranslation();
 
-  return (tagType: TeaserType) => t(`resources.teaserType.${tagType}`);
+  return (tagType: TeaserType) =>
+    t(`resources.teaserType.${tagType.toLowerCase()}`);
 };
 
 export function TeaserListConfigPanel({

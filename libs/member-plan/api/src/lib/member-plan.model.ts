@@ -1,24 +1,33 @@
 import {
+  ArgsType,
   Field,
   InputType,
   Int,
   ObjectType,
+  OmitType,
+  PartialType,
+  PickType,
   registerEnumType,
 } from '@nestjs/graphql';
-import { PaginatedType } from '@wepublish/utils/api';
-import { HasImage, Image } from '@wepublish/image/api';
+import { PaginatedType, SortOrder } from '@wepublish/utils/api';
+import { HasImage } from '@wepublish/image/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { Descendant } from 'slate';
-import { PaymentMethod } from '@wepublish/payment-method/api';
+import { PaymentMethod } from '@wepublish/payment/api';
 import { Currency, PaymentPeriodicity, ProductType } from '@prisma/client';
+import { Page } from '@wepublish/page/api';
 
 export enum MemberPlanSort {
-  createdAt = 'createdAt',
-  modifiedAt = 'modifiedAt',
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
 }
 
 registerEnumType(MemberPlanSort, {
   name: 'MemberPlanSort',
+});
+
+registerEnumType(PaymentPeriodicity, {
+  name: 'PaymentPeriodicity',
 });
 
 registerEnumType(Currency, {
@@ -31,6 +40,7 @@ registerEnumType(ProductType, {
 
 @ObjectType()
 export class AvailablePaymentMethod {
+  @Field(() => [String])
   paymentMethodIDs!: string[];
 
   @Field(() => [PaymentMethod])
@@ -43,10 +53,17 @@ export class AvailablePaymentMethod {
   forceAutoRenewal!: boolean;
 }
 
+@InputType()
+export class AvailablePaymentMethodInput extends OmitType(
+  AvailablePaymentMethod,
+  ['paymentMethods'] as const,
+  InputType
+) {}
+
 @ObjectType({
   implements: () => [HasImage],
 })
-export class MemberPlan {
+export class MemberPlan extends HasImage {
   @Field()
   id!: string;
 
@@ -54,9 +71,10 @@ export class MemberPlan {
   name!: string;
 
   @Field()
-  slug!: string;
+  active!: boolean;
 
-  image?: Image;
+  @Field()
+  slug!: string;
 
   @Field(() => GraphQLRichText, { nullable: true })
   description?: Descendant[];
@@ -95,17 +113,28 @@ export class MemberPlan {
   externalReward?: string;
 
   @Field({ nullable: true })
+  migrateToTargetPaymentMethodID?: string;
+  @Field(() => PaymentMethod, { nullable: true })
+  migrateToTargetPaymentMethod?: PaymentMethod;
+
+  @Field({ nullable: true })
   successPageId?: string;
+  @Field(() => Page, { nullable: true })
+  successPage?: Page;
 
   @Field({ nullable: true })
   failPageId?: string;
+  @Field(() => Page, { nullable: true })
+  failPage?: Page;
 
   @Field({ nullable: true })
   confirmationPageId?: string;
+  @Field(() => Page, { nullable: true })
+  confirmationPage?: Page;
 }
 
 @ObjectType()
-export class MemberPlanConnection extends PaginatedType(MemberPlan) {}
+export class PaginatedMemberPlans extends PaginatedType(MemberPlan) {}
 
 @InputType()
 export class MemberPlanFilter {
@@ -120,4 +149,70 @@ export class MemberPlanFilter {
 
   @Field(() => ProductType, { nullable: true })
   productType?: ProductType;
+}
+
+@ArgsType()
+export class CreateMemberPlanInput extends PickType(
+  MemberPlan,
+  [
+    'name',
+    'slug',
+    'imageID',
+    'description',
+    'shortDescription',
+    'tags',
+    'active',
+    'amountPerMonthMin',
+    'amountPerMonthMax',
+    'amountPerMonthTarget',
+    'currency',
+    'extendable',
+    'productType',
+    'externalReward',
+    'maxCount',
+    'migrateToTargetPaymentMethodID',
+    'successPageId',
+    'failPageId',
+    'confirmationPageId',
+  ] as const,
+  ArgsType
+) {
+  @Field(() => [AvailablePaymentMethodInput])
+  availablePaymentMethods!: AvailablePaymentMethodInput[];
+}
+
+@ArgsType()
+export class UpdateMemberPlanInput extends PartialType(
+  CreateMemberPlanInput,
+  ArgsType
+) {
+  @Field()
+  id!: string;
+}
+
+@ArgsType()
+export class MemberPlanListArgs {
+  @Field(type => MemberPlanFilter, { nullable: true })
+  filter?: MemberPlanFilter;
+
+  @Field(type => MemberPlanSort, {
+    nullable: true,
+    defaultValue: MemberPlanSort.ModifiedAt,
+  })
+  sort?: MemberPlanSort;
+
+  @Field(type => SortOrder, {
+    nullable: true,
+    defaultValue: SortOrder.Ascending,
+  })
+  order?: SortOrder;
+
+  @Field(type => Int, { nullable: true, defaultValue: 10 })
+  take?: number;
+
+  @Field(type => Int, { nullable: true, defaultValue: 0 })
+  skip?: number;
+
+  @Field({ nullable: true })
+  cursorId?: string;
 }

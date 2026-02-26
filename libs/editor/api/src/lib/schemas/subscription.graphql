@@ -1,10 +1,13 @@
-fragment FullSubscription on Subscription {
+fragment FullSubscription on PublicSubscription {
   id
   createdAt
   modifiedAt
 
+  confirmed
   user {
-    ...FullUser
+    id
+    name
+    firstName
   }
   memberPlan {
     ...FullMemberPlan
@@ -15,7 +18,9 @@ fragment FullSubscription on Subscription {
   startsAt
   paidUntil
   properties {
-    ...MetadataProperty
+    key
+    value
+    public
   }
   paymentMethod {
     ...FullPaymentMethod
@@ -42,7 +47,7 @@ query SubscriptionList(
 ) {
   subscriptions(
     filter: $filter
-    cursor: $cursor
+    cursorId: $cursor
     take: $take
     skip: $skip
     order: $order
@@ -69,18 +74,108 @@ query Subscription($id: String!) {
   }
 }
 
-query SubscriptionsAsCsv($filter: SubscriptionFilter) {
-  subscriptionsAsCsv(filter: $filter)
+query SubscriptionsAsCsv(
+  $autoRenew: Boolean
+  $userHasAddress: Boolean
+  $extendable: Boolean
+  $cancellationDateTo: DateFilter
+  $cancellationDateFrom: DateFilter
+  $deactivationDateTo: DateFilter
+  $deactivationDateFrom: DateFilter
+  $paidUntilTo: DateFilter
+  $paidUntilFrom: DateFilter
+  $startsAtTo: DateFilter
+  $startsAtFrom: DateFilter
+  $deactivationReason: String
+  $memberPlanID: String
+  $paymentMethodID: String
+  $subscriptionIDs: [String!]
+  $userID: String
+  $userIDs: [String!]
+  $paymentPeriodicity: PaymentPeriodicity
+) {
+  subscriptionsAsCsv(
+    autoRenew: $autoRenew
+    userHasAddress: $userHasAddress
+    extendable: $extendable
+
+    cancellationDateTo: $cancellationDateTo
+    cancellationDateFrom: $cancellationDateFrom
+
+    deactivationDateTo: $deactivationDateTo
+    deactivationDateFrom: $deactivationDateFrom
+
+    paidUntilTo: $paidUntilTo
+    paidUntilFrom: $paidUntilFrom
+
+    startsAtTo: $startsAtTo
+    startsAtFrom: $startsAtFrom
+
+    deactivationReason: $deactivationReason
+
+    memberPlanID: $memberPlanID
+    paymentMethodID: $paymentMethodID
+    subscriptionIDs: $subscriptionIDs
+    userID: $userID
+    userIDs: $userIDs
+    paymentPeriodicity: $paymentPeriodicity
+  )
 }
 
-mutation CreateSubscription($input: SubscriptionInput!) {
-  createSubscription(input: $input) {
+mutation CreateSubscription(
+  $autoRenew: Boolean!
+  $extendable: Boolean!
+  $monthlyAmount: Int!
+  $paidUntil: DateTime
+  $startsAt: DateTime!
+  $paymentPeriodicity: PaymentPeriodicity!
+  $properties: [PropertyInput!]!
+  $userID: String!
+  $paymentMethodID: String!
+  $memberPlanID: String!
+) {
+  createSubscription(
+    autoRenew: $autoRenew
+    extendable: $extendable
+    monthlyAmount: $monthlyAmount
+    paidUntil: $paidUntil
+    startsAt: $startsAt
+    paymentPeriodicity: $paymentPeriodicity
+    properties: $properties
+    userID: $userID
+    paymentMethodID: $paymentMethodID
+    memberPlanID: $memberPlanID
+  ) {
     ...FullSubscription
   }
 }
 
-mutation UpdateSubscription($id: String!, $input: SubscriptionInput!) {
-  updateSubscription(id: $id, input: $input) {
+mutation UpdateSubscription(
+  $id: String!
+  $autoRenew: Boolean
+  $extendable: Boolean
+  $monthlyAmount: Int
+  $paidUntil: DateTime
+  $startsAt: DateTime
+  $paymentPeriodicity: PaymentPeriodicity
+  $properties: [PropertyInput!]
+  $userID: String
+  $paymentMethodID: String
+  $memberPlanID: String
+) {
+  updateSubscription(
+    id: $id
+    autoRenew: $autoRenew
+    extendable: $extendable
+    monthlyAmount: $monthlyAmount
+    paidUntil: $paidUntil
+    startsAt: $startsAt
+    paymentPeriodicity: $paymentPeriodicity
+    properties: $properties
+    userID: $userID
+    paymentMethodID: $paymentMethodID
+    memberPlanID: $memberPlanID
+  ) {
     ...FullSubscription
   }
 }
@@ -102,13 +197,28 @@ mutation DeleteSubscription($id: String!) {
 
 mutation RenewSubscription($id: String!) {
   renewSubscription(id: $id) {
-    ...Invoice
+    ...FullSubscription
   }
 }
 
-query NewSubscribersPerMonth($months: Int!) {
-  newSubscribersPerMonth(monthsBack: $months) {
-    month
-    subscriberCount
+fragment UserSubscription on PublicSubscription {
+  ...FullSubscription
+
+  periods {
+    id
+    createdAt
+    startsAt
+    endsAt
+    amount
+    invoiceID
+    isPaid
+  }
+}
+
+query UserSubscriptionList($userId: String!) {
+  subscriptions(filter: { userID: $userId }, take: 50, skip: 0) {
+    nodes {
+      ...UserSubscription
+    }
   }
 }

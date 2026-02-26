@@ -1,17 +1,37 @@
+fragment FullTag on Tag {
+  id
+  tag
+  description
+  type
+  main
+  url
+  color
+}
+
+query Tag($id: String!) {
+  tag(id: $id) {
+    ...FullTag
+  }
+}
+
 query TagList(
   $filter: TagFilter
-  $cursor: String
+  $cursorId: String
   $take: Int
   $skip: Int
   $order: SortOrder
   $sort: TagSort
 ) {
-  tags(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  tags(
+    filter: $filter
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
-      id
-      tag
-      description
-      main
+      ...FullTag
     }
 
     pageInfo {
@@ -25,38 +45,26 @@ query TagList(
   }
 }
 
-query Tag($id: String!) {
-  tag(id: $id) {
-    id
-    tag
-    description
-    main
+mutation CreateTag($tag: String, $description: RichText, $type: TagType!, $color: Color) {
+  createTag(tag: $tag, description: $description, type: $type, color: $color) {
+    ...FullTag
   }
 }
 
-mutation CreateTag($tag: String, $description: RichText, $type: TagType!) {
-  createTag(tag: $tag, description: $description, type: $type) {
-    id
-    tag
-    description
-    main
-  }
-}
-
-mutation UpdateTag($id: String!, $description: RichText, $tag: String, $main: Boolean) {
-  updateTag(id: $id, tag: $tag, description: $description, main: $main) {
-    id
-    tag
-    description
-    main
+mutation UpdateTag(
+  $id: String!
+  $description: RichText
+  $tag: String
+  $main: Boolean
+  $color: Color
+) {
+  updateTag(id: $id, tag: $tag, description: $description, main: $main, color: $color) {
+    ...FullTag
   }
 }
 
 mutation DeleteTag($id: String!) {
   deleteTag(id: $id) {
-    id
-    tag
-    description
-    main
+    ...FullTag
   }
 }

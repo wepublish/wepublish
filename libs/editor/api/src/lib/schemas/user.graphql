@@ -1,4 +1,4 @@
-fragment FullUser on User {
+fragment FullUser on SensitiveDataUser {
   id
   createdAt
   modifiedAt
@@ -7,14 +7,16 @@ fragment FullUser on User {
   address {
     company
     streetAddress
+    streetAddressNumber
     streetAddress2
+    streetAddress2Number
     zipCode
     city
     country
   }
   flair
   birthday
-  userImage {
+  image {
     ...FullImage
   }
   active
@@ -30,50 +32,11 @@ fragment FullUser on User {
   roles {
     ...FullUserRole
   }
-  subscriptions {
-    ...UserSubscription
-  }
-}
-
-fragment UserSubscription on UserSubscription {
-  id
-  createdAt
-  modifiedAt
-  paymentPeriodicity
-  monthlyAmount
-  currency
-  autoRenew
-  confirmed
-  startsAt
-  paidUntil
-  periods {
-    id
-    amount
-    createdAt
-    endsAt
-    invoiceID
-    paymentPeriodicity
-    startsAt
-  }
-  properties {
-    key
-    value
-    public
-  }
-  deactivation {
-    ...Deactivation
-  }
-  memberPlan {
-    ...MemberPlanRef
-  }
-  invoices {
-    ...Invoice
-  }
 }
 
 query UserList(
   $filter: UserFilter
-  $cursor: String
+  $cursorId: String
   $take: Int
   $skip: Int
   $order: SortOrder
@@ -81,7 +44,7 @@ query UserList(
 ) {
   users(
     filter: $filter
-    cursor: $cursor
+    cursorId: $cursorId
     take: $take
     skip: $skip
     order: $order
@@ -114,14 +77,70 @@ query Me {
   }
 }
 
-mutation CreateUser($input: UserInput!, $password: String!) {
-  createUser(input: $input, password: $password) {
+mutation CreateUser(
+  $name: String!
+  $flair: String
+  $firstName: String
+  $birthday: DateTime
+  $address: UserAddressInput
+  $email: String!
+  $emailVerifiedAt: DateTime
+  $userImageID: String
+  $password: String
+  $active: Boolean!
+  $note: String
+  $properties: [PropertyInput!]!
+  $roleIDs: [String!]!
+) {
+  createUser(
+    name: $name
+    flair: $flair
+    firstName: $firstName
+    birthday: $birthday
+    address: $address
+    email: $email
+    emailVerifiedAt: $emailVerifiedAt
+    userImageID: $userImageID
+    password: $password
+    active: $active
+    properties: $properties
+    note: $note
+    roleIDs: $roleIDs
+  ) {
     ...FullUser
   }
 }
 
-mutation UpdateUser($id: String!, $input: UserInput!) {
-  updateUser(id: $id, input: $input) {
+mutation UpdateUser(
+  $id: String!
+  $flair: String
+  $name: String
+  $firstName: String
+  $birthday: DateTime
+  $address: UserAddressInput
+  $email: String
+  $emailVerifiedAt: DateTime
+  $userImageID: String
+  $active: Boolean
+  $note: String
+  $roleIDs: [String!]
+  $properties: [PropertyInput!]
+) {
+  updateUser(
+    id: $id
+    name: $name
+    firstName: $firstName
+    birthday: $birthday
+    address: $address
+    email: $email
+    emailVerifiedAt: $emailVerifiedAt
+    userImageID: $userImageID
+    active: $active
+    properties: $properties
+    flair: $flair
+    note: $note
+    roleIDs: $roleIDs
+  ) {
     ...FullUser
   }
 }
@@ -131,7 +150,7 @@ mutation ResetUserPassword(
   $password: String!
   $sendMail: Boolean
 ) {
-  resetUserPassword(id: $id, password: $password, sendMail: $sendMail) {
+  resetPassword(id: $id, password: $password, sendMail: $sendMail) {
     ...FullUser
   }
 }

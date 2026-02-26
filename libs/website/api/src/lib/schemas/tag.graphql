@@ -5,25 +5,31 @@ fragment FullTag on Tag {
   type
   main
   url
+  color
 }
 
 query Tag($tag: String!, $type: TagType!) {
-  tags(filter: {tag: $tag, type: $type}, take: 1) {
-    nodes {
-      ...FullTag
-    }
+  tag(tag: $tag, type: $type) {
+    ...FullTag
   }
 }
 
 query TagList(
   $filter: TagFilter
-  $cursor: String
+  $cursorId: String
   $take: Int
   $skip: Int
   $order: SortOrder
   $sort: TagSort
 ) {
-  tags(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  tags(
+    filter: $filter
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...FullTag
     }

@@ -40,19 +40,19 @@ fragment FullMemberPlan on MemberPlan {
   extendable
   productType
   successPageId
-  # successPage {
-  #   url
-  # }
+  successPage {
+    url
+  }
 
   failPageId
-  # failPage {
-  #   url
-  # }
+  failPage {
+    url
+  }
 
   confirmationPageId
-  # confirmationPage {
-  #   url
-  # }
+  confirmationPage {
+    url
+  }
 }
 
 fragment FullPayment on Payment {
@@ -150,7 +150,7 @@ mutation Subscribe(
   $failureURL: String
   $deactivateSubscriptionId: String
 ) {
-  createSubscription(
+  createUserSubscription(
     memberPlanID: $memberPlanId
     memberPlanSlug: $memberPlanSlug
     autoRenew: $autoRenew
@@ -178,7 +178,7 @@ mutation Resubscribe(
   $paymentMethodSlug: Slug
   $subscriptionProperties: [PropertyInput!]
 ) {
-  createSubscriptionWithConfirmation(
+  createUserSubscriptionWithConfirmation(
     userId: $userId
     memberPlanID: $memberPlanId
     memberPlanSlug: $memberPlanSlug
@@ -189,6 +189,26 @@ mutation Resubscribe(
     paymentMethodSlug: $paymentMethodSlug
     subscriptionProperties: $subscriptionProperties
   )
+}
+
+mutation Upgrade(
+  $subscriptionId: String!
+  $memberPlanId: String!
+  $paymentMethodId: String!
+  $monthlyAmount: Int!
+  $successURL: String
+  $failureURL: String
+) {
+  upgradeUserSubscription(
+    subscriptionId: $subscriptionId
+    memberPlanId: $memberPlanId
+    paymentMethodId: $paymentMethodId
+    monthlyAmount: $monthlyAmount
+    successURL: $successURL
+    failureURL: $failureURL
+  ) {
+    ...FullPayment
+  }
 }
 
 mutation PayInvoice(
@@ -236,7 +256,7 @@ mutation ExtendSubscription(
   $successURL: String
   $failureURL: String
 ) {
-  extendSubscription(
+  extendUserSubscription(
     subscriptionId: $subscriptionId
     successURL: $successURL
     failureURL: $failureURL
@@ -246,13 +266,13 @@ mutation ExtendSubscription(
 }
 
 query Invoices {
-  invoices {
+  userInvoices {
     ...FullInvoice
   }
 }
 
 query Subscriptions {
-  subscriptions {
+  userSubscriptions {
     ...FullSubscription
   }
 }
@@ -265,7 +285,7 @@ query CheckInvoiceStatus($id: String!) {
 
 query MemberPlanList(
   $filter: MemberPlanFilter
-  $cursor: String
+  $cursorId: String
   $take: Int
   $skip: Int
   $order: SortOrder
@@ -273,7 +293,7 @@ query MemberPlanList(
 ) {
   memberPlans(
     filter: $filter
-    cursor: $cursor
+    cursorId: $cursorId
     take: $take
     skip: $skip
     order: $order
@@ -306,5 +326,17 @@ query NewSubscribers($start: DateTime!, $end: DateTime) {
   newSubscribers(start: $start, end: $end) {
     monthlyAmount
     memberPlan
+  }
+}
+
+query UpgradeSubscriptionInfo(
+  $memberPlanId: String!
+  $subscriptionId: String!
+) {
+  upgradeUserSubscriptionInfo(
+    memberPlanId: $memberPlanId
+    subscriptionId: $subscriptionId
+  ) {
+    discountAmount
   }
 }

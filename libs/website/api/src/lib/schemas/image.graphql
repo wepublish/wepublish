@@ -1,21 +1,21 @@
 fragment ImageURLs on Image {
   url
 
-  xxl: transformURL(input: {width: 1500, output: png, quality: 0.8})
-  xl: transformURL(input: {width: 1200, output: png, quality: 0.8})
-  l: transformURL(input: {width: 1000, output: png, quality: 0.8})
-  m: transformURL(input: {width: 800, output: png, quality: 0.8})
-  s: transformURL(input: {width: 500, output: png, quality: 0.8})
-  xs: transformURL(input: {width: 300, output: png, quality: 0.8})
-  xxs: transformURL(input: {width: 200, output: png, quality: 0.8})
+  xxl: transformURL(input: { width: 1500 })
+  xl: transformURL(input: { width: 1200 })
+  l: transformURL(input: { width: 1000 })
+  m: transformURL(input: { width: 800 })
+  s: transformURL(input: { width: 500 })
+  xs: transformURL(input: { width: 300 })
+  xxs: transformURL(input: { width: 200 })
 
-  xxlSquare: transformURL(input: {width: 1500, height: 1500, output: png, quality: 0.8})
-  xlSquare: transformURL(input: {width: 1200, height: 1200, output: png, quality: 0.8})
-  lSquare: transformURL(input: {width: 1000, height: 1000, output: png, quality: 0.8})
-  mSquare: transformURL(input: {width: 800, height: 800, output: png, quality: 0.8})
-  sSquare: transformURL(input: {width: 500, height: 500, output: png, quality: 0.8})
-  xsSquare: transformURL(input: {width: 300, height: 300, output: png, quality: 0.8})
-  xxsSquare: transformURL(input: {width: 200, height: 200, output: png, quality: 0.8})
+  xxlSquare: transformURL(input: { width: 1500, height: 1500 })
+  xlSquare: transformURL(input: { width: 1200, height: 1200 })
+  lSquare: transformURL(input: { width: 1000, height: 1000 })
+  mSquare: transformURL(input: { width: 800, height: 800 })
+  sSquare: transformURL(input: { width: 500, height: 500 })
+  xsSquare: transformURL(input: { width: 300, height: 300 })
+  xxsSquare: transformURL(input: { width: 200, height: 200 })
 }
 
 fragment FullImage on Image {
@@ -94,8 +94,27 @@ fragment FullPeerImage on PeerImage {
   xxsSquare
 }
 
-mutation UploadImage($uploadImageInput: UploadImageInput) {
-  uploadUserProfileImage(uploadImageInput: $uploadImageInput) {
-    ...FullUser
+mutation UploadImage(
+  $title: String
+  $description: String
+  $focalPoint: FocalPointInput
+  $license: String
+  $link: String
+  $source: String
+  $file: Upload!
+  $filename: String
+) {
+  uploadUserProfileImage(
+    title: $title
+    description: $description
+    focalPoint: $focalPoint
+    license: $license
+    link: $link
+    source: $source
+    tags: []
+    file: $file
+    filename: $filename
+  ) {
+    ...FullSensitiveDataUser
   }
 }

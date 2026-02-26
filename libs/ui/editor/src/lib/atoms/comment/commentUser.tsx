@@ -1,8 +1,4 @@
-import {
-  FullCommentFragment,
-  FullImageFragment,
-  FullUserFragment,
-} from '@wepublish/editor/api';
+import { FullCommentFragment, FullImageFragment } from '@wepublish/editor/api';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Col, Drawer, Form, Row } from 'rsuite';
@@ -22,9 +18,14 @@ export function CommentUser({ comment, setComment }: CommentUserProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
-  function setUser(user: FullUserFragment) {
+  function setUser(user: FullCommentFragment['user']) {
     setComment(oldComment =>
-      oldComment ? { ...oldComment, user } : oldComment
+      oldComment ?
+        {
+          ...oldComment,
+          user,
+        }
+      : oldComment
     );
   }
 
@@ -47,11 +48,14 @@ export function CommentUser({ comment, setComment }: CommentUserProps) {
           <Form.ControlLabel>
             {t('commentUser.selectExistingUser')}
           </Form.ControlLabel>
+
           <UserSearch
             key={`user-${comment?.user}`}
             name="selectFromExistingUser"
             placeholder={t('commentUser.selectExistingUser')}
+            // @ts-expect-error test
             onUpdateUser={setUser}
+            // @ts-expect-error test
             user={comment?.user}
           />
         </Col>

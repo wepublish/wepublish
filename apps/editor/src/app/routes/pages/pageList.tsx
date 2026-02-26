@@ -1,20 +1,17 @@
 import {
   CommentItemType,
-  TagType,
-  useCreateCommentMutation,
-} from '@wepublish/editor/api';
-import {
   FullPageFragment,
-  getApiClientV2,
   PageFilter,
   PageListDocument,
   PageListQuery,
   PageSort,
+  TagType,
+  useCreateCommentMutation,
   useDeletePageMutation,
   useDuplicatePageMutation,
   usePageListQuery,
   useUnpublishPageMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
@@ -88,16 +85,13 @@ function PageList() {
   const [sortField, setSortField] = useState('modifiedAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  const client = getApiClientV2();
-  const [deletePage, { loading: isDeleting }] = useDeletePageMutation({
-    client,
-  });
+  const [deletePage, { loading: isDeleting }] = useDeletePageMutation({});
   const [unpublishPage, { loading: isUnpublishing }] = useUnpublishPageMutation(
-    { client }
+    {}
   );
-  const [duplicatePage, { loading: isDuplicating }] = useDuplicatePageMutation({
-    client,
-  });
+  const [duplicatePage, { loading: isDuplicating }] = useDuplicatePageMutation(
+    {}
+  );
 
   const pageListVariables = {
     filter: filter || undefined,
@@ -112,9 +106,7 @@ function PageList() {
     refetch,
     loading: isLoading,
   } = usePageListQuery({
-    client,
     variables: pageListVariables,
-    fetchPolicy: 'cache-and-network',
   });
 
   const pages = useMemo(() => data?.pages?.nodes ?? [], [data]);
@@ -134,7 +126,7 @@ function PageList() {
     refetch(pageListVariables);
   }, [filter, page, limit, sortOrder, sortField]);
 
-  const [createComment] = useCreateCommentMutation();
+  const [createComment] = useCreateCommentMutation({});
 
   return (
     <>

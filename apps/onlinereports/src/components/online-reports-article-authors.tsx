@@ -47,13 +47,16 @@ const AuthorNames = styled('div')`
   font-size: 16px;
 
   ${AuthorChipName} {
-    white-space: pre;
+    line-height: 1.25rem;
+    &:has(+ ${AuthorChipName}) {
+      padding-right: ${({ theme }) => theme.spacing(0.5)};
+    }
 
     a {
       color: ${({ theme }) => theme.palette.text.primary};
       text-decoration: none;
       font-weight: 500;
-      white-space: pre;
+      white-space: break-spaces;
     }
   }
 `;
@@ -153,13 +156,15 @@ export function OnlineReportsArticleAuthors({
       <CommentsShareBox>
         {!article?.disableComments && (
           <CommentListItemShareWrapper>
-            {data?.comments?.length ?
+            {data?.commentsForItem?.length ?
               <ShareButton
                 onClick={scrollToComments}
                 endIcon={<MdOutlineModeComment />}
                 size={'small'}
               >
-                {data?.comments?.length ? data.comments.length : ''}
+                {data?.commentsForItem?.length ?
+                  data.commentsForItem.length
+                : ''}
               </ShareButton>
             : <IconButton
                 onClick={scrollToComments}

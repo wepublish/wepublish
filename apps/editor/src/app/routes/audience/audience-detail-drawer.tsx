@@ -1,4 +1,4 @@
-import { DailySubscriptionStatsUser } from '@wepublish/editor/api-v2';
+import { DailySubscriptionStatsUser } from '@wepublish/editor/api';
 import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -13,6 +13,7 @@ import {
 } from 'react-icons/md';
 import { Button, Col, Drawer, Nav, Row, Sidenav, Table } from 'rsuite';
 
+import { AudienceCsvBtn } from './audience-csv-btn';
 import { AggregatedUsers, AudienceStatsComputed } from './useAudience';
 import { TimeResolution } from './useAudienceFilter';
 import { AudienceCsvBtn } from './audience-csv-btn';

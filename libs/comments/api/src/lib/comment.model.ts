@@ -1,182 +1,257 @@
 import {
+  ArgsType,
   Field,
-  Float,
+  InputType,
   Int,
   ObjectType,
+  PartialType,
+  PickType,
   registerEnumType,
 } from '@nestjs/graphql';
-import { Tag } from '@wepublish/tag/api';
-import { User } from '@wepublish/user/api';
+import {
+  CommentAuthorType,
+  CommentItemType,
+  CommentRejectionReason,
+  CommentState,
+} from '@prisma/client';
+import { ChallengeInput } from '@wepublish/challenge/api';
 import { Image } from '@wepublish/image/api';
-import { Descendant } from 'slate';
 import { GraphQLRichText } from '@wepublish/richtext/api';
-import { RatingSystemType as PrismaRatingSystemType } from '@prisma/client';
-
-export enum CommentAuthorType {
-  author = 'author',
-  team = 'team',
-  verifiedUser = 'verifiedUser',
-  guestUser = 'guestUser',
-}
+import { Tag } from '@wepublish/tag/api';
+import { HasOptionalUser } from '@wepublish/user/api';
+import { PaginatedType, SortOrder } from '@wepublish/utils/api';
+import { Descendant } from 'slate';
+import {
+  CalculatedRating,
+  CommentRating,
+  OverriddenRating,
+  OverriddenRatingInput,
+} from './rating-system/rating-system.model';
 
 registerEnumType(CommentAuthorType, {
   name: 'CommentAuthorType',
 });
-
-export enum CommentItemType {
-  article = 'article',
-  page = 'page',
-}
-
 registerEnumType(CommentItemType, {
   name: 'CommentItemType',
 });
-
-export enum CommentState {
-  approved = 'approved',
-  pendingApproval = 'pendingApproval',
-  pendingUserChanges = 'pendingUserChanges',
-  rejected = 'rejected',
-}
-
 registerEnumType(CommentState, {
   name: 'CommentState',
 });
-
-export enum RatingSystemType {
-  star = 'star',
-}
-
-registerEnumType(RatingSystemType, {
-  name: 'RatingSystemType',
+registerEnumType(CommentRejectionReason, {
+  name: 'CommentRejectionReason',
 });
 
 export enum CommentSort {
-  rating = 'rating',
+  Rating = 'Rating',
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
 }
-
 registerEnumType(CommentSort, {
   name: 'CommentSort',
 });
 
 @ObjectType()
-export class CommentRatingSystemAnswer {
-  @Field()
-  id!: string;
-
-  @Field()
-  ratingSystemId!: string;
-
-  @Field(() => String, { nullable: true })
-  answer?: string | null;
-
-  @Field(() => RatingSystemType)
-  type!: PrismaRatingSystemType;
-}
-
-@ObjectType()
-export class overriddenRating {
-  @Field()
-  answerId!: string;
-
-  @Field(() => Int, { nullable: true })
-  value?: number | null;
-}
-
-@ObjectType()
-export class CommentRating {
-  @Field()
-  id!: string;
-
-  @Field(() => String, { nullable: true })
-  userId?: string | null;
-
-  @Field()
-  commentId!: string;
-
-  @Field(() => Int)
-  value!: number;
-
-  @Field(() => Date)
-  createdAt!: Date;
-
-  @Field(() => String, { nullable: true })
-  fingerprint?: string | null;
-
-  @Field(() => Boolean, { nullable: true })
-  disabled?: boolean | null;
-
-  @Field(() => CommentRatingSystemAnswer)
-  answer!: CommentRatingSystemAnswer;
-}
-
-@ObjectType()
-export class CalculatedRating {
-  @Field(() => Int)
-  count!: number;
-
-  @Field(() => Int)
-  total!: number;
-
-  @Field(() => Float)
-  mean!: number;
-
-  @Field(() => CommentRatingSystemAnswer)
-  answer!: CommentRatingSystemAnswer;
-}
-
-@ObjectType()
-export class FullCommentRatingSystem {
-  @Field()
-  id!: string;
-
-  @Field(() => String, { nullable: true })
-  name?: string | null;
-
-  @Field(() => [CommentRatingSystemAnswer])
-  answers!: CommentRatingSystemAnswer[];
-}
-
-@ObjectType()
 export class CommentRevision {
   @Field(() => String, { nullable: true })
-  title?: string | null;
+  title?: string;
 
   @Field(() => String, { nullable: true })
-  lead?: string | null;
+  lead?: string;
 
-  @Field(() => String, { nullable: true })
-  text?: string | null;
+  @Field(() => GraphQLRichText, { nullable: true })
+  text?: Descendant[];
 
   @Field(() => Date)
   createdAt!: Date;
 }
 
-@ObjectType()
-export class Comment {
+@InputType()
+export class CommentRevisionInput extends PickType(
+  CommentRevision,
+  ['title', 'lead', 'text'] as const,
+  InputType
+) {}
+
+@ObjectType({
+  implements: [HasOptionalUser],
+})
+export class Comment extends HasOptionalUser {
   @Field()
   id!: string;
+  @Field(() => Date)
+  createdAt!: Date;
+  @Field(() => Date)
+  modifiedAt!: Date;
 
+  @Field()
+  itemID!: string;
+  @Field(() => CommentItemType)
+  itemType!: CommentItemType;
+
+  @Field(() => CommentState)
+  state!: CommentState;
+  @Field(() => CommentRejectionReason, { nullable: true })
+  rejectionReason?: CommentRejectionReason;
+  @Field(() => CommentAuthorType)
+  authorType!: CommentAuthorType;
   @Field(() => String, { nullable: true })
-  parentID?: string | null;
-
-  @Field(() => String, { nullable: true })
-  guestUsername?: string | null;
-
-  guestUserImageID?: string | null;
-
-  @Field(() => Image, { nullable: true })
-  guestUserImage?: Image | null;
-
-  userID?: string | null;
-  @Field(() => User, { nullable: true })
-  user?: User | null;
+  source?: string;
 
   @Field(() => [Tag])
   tags!: Tag[];
+  @Field(() => Boolean, { nullable: true })
+  featured?: boolean;
 
-  @Field(() => CommentAuthorType)
-  authorType!: CommentAuthorType;
+  @Field(() => String, { nullable: true })
+  parentID?: string;
+  @Field(() => Comment, { nullable: true })
+  parentComment?: Comment;
+
+  @Field(() => String, { nullable: true })
+  guestUsername?: string;
+  @Field(() => String, { nullable: true })
+  guestUserImageID?: string;
+  @Field(() => Image, { nullable: true })
+  guestUserImage?: Image;
+
+  @Field(() => [CommentRevision])
+  revisions!: CommentRevision[];
+
+  @Field(() => String, { nullable: true })
+  title?: string;
+  @Field(() => String, { nullable: true })
+  lead?: string;
+  @Field(() => GraphQLRichText, { nullable: true })
+  text?: Descendant[];
+
+  @Field(() => [Comment])
+  children!: Comment[];
+
+  @Field()
+  url?: string;
+  @Field(() => [CalculatedRating])
+  calculatedRatings!: CalculatedRating[];
+  @Field(() => [CommentRating])
+  userRatings!: CommentRating[];
+  @Field(() => [OverriddenRating])
+  overriddenRatings!: OverriddenRating[];
+}
+
+@ObjectType()
+export class PaginatedComments extends PaginatedType(Comment) {}
+
+@InputType()
+export class CommentFilter {
+  @Field(() => [CommentState], { nullable: true })
+  states?: CommentState[];
+  @Field(() => [String], { nullable: true })
+  tags?: string[];
+  @Field(() => CommentItemType, { nullable: true })
+  itemType?: CommentItemType;
+  @Field({ nullable: true })
+  itemID?: string;
+  @Field({ nullable: true })
+  item?: string;
+}
+
+@ArgsType()
+export class CommentListArgs {
+  @Field(type => CommentFilter, { nullable: true })
+  filter?: CommentFilter;
+
+  @Field(type => CommentSort, {
+    nullable: true,
+    defaultValue: CommentSort.ModifiedAt,
+  })
+  sort?: CommentSort;
+
+  @Field(type => SortOrder, {
+    nullable: true,
+    defaultValue: SortOrder.Descending,
+  })
+  order?: SortOrder;
+
+  @Field(type => Int, { nullable: true, defaultValue: 10 })
+  take?: number;
+
+  @Field(type => Int, { nullable: true, defaultValue: 0 })
+  skip?: number;
+
+  @Field({ nullable: true })
+  cursorId?: string;
+}
+
+@ArgsType()
+export class CommentsForItemArgs extends PickType(
+  CommentListArgs,
+  [] as const,
+  ArgsType
+) {
+  @Field(type => CommentSort, {
+    nullable: true,
+    defaultValue: CommentSort.Rating,
+  })
+  sort?: CommentSort;
+  @Field(type => SortOrder, {
+    nullable: true,
+    defaultValue: SortOrder.Descending,
+  })
+  order?: SortOrder;
+
+  @Field()
+  itemId!: string;
+  @Field(() => CommentItemType)
+  itemType!: CommentItemType;
+}
+
+@ArgsType()
+export class CreateCommentInput extends PickType(
+  Comment,
+  ['text', 'lead', 'itemID', 'parentID', 'itemType'] as const,
+  ArgsType
+) {
+  @Field(type => [String], { nullable: true })
+  tagIds?: string[];
+}
+
+@ArgsType()
+export class UpdateCommentInput extends PartialType(
+  PickType(
+    Comment,
+    [
+      'userID',
+      'guestUsername',
+      'guestUserImageID',
+      'featured',
+      'source',
+    ] as const,
+    ArgsType
+  ),
+  ArgsType
+) {
+  @Field()
+  id!: string;
+
+  @Field(type => [String], { nullable: true })
+  tagIds?: string[];
+
+  @Field(type => CommentRevisionInput, { nullable: true })
+  revision?: CommentRevisionInput;
+
+  @Field(type => [OverriddenRatingInput], { nullable: true })
+  ratingOverrides?: OverriddenRatingInput[];
+}
+
+@ArgsType()
+export class AddUserCommentInput {
+  @Field(() => String, { nullable: true })
+  parentID?: string;
+
+  @Field(() => String, { nullable: true })
+  guestUsername?: string;
+
+  @Field(() => ChallengeInput, { nullable: true })
+  challenge?: ChallengeInput;
 
   @Field()
   itemID!: string;
@@ -184,48 +259,24 @@ export class Comment {
   @Field(() => CommentItemType)
   itemType!: CommentItemType;
 
-  @Field(() => Comment, { nullable: true })
-  parentComment?: Comment | null;
-
   @Field(() => String, { nullable: true })
-  source?: string | null;
+  title?: string;
 
-  @Field(() => CommentState)
-  state!: CommentState;
+  @Field(() => GraphQLRichText)
+  text!: Descendant[];
+}
 
-  @Field(() => String, { nullable: true })
-  rejectionReason?: string | null;
-
-  @Field(() => Boolean, { nullable: true })
-  featured?: boolean | null;
-
-  @Field(() => Date)
-  createdAt!: Date;
-
-  @Field(() => Date)
-  modifiedAt!: Date;
-
-  @Field(() => [overriddenRating])
-  overriddenRatings!: overriddenRating[];
-
-  @Field(() => [Comment])
-  children!: Comment[];
-
-  @Field(() => String, { nullable: true })
-  title?: string | null;
-
-  @Field(() => String, { nullable: true })
-  lead?: string | null;
+@ArgsType()
+export class UpdateUserCommentInput {
+  @Field()
+  id!: string;
 
   @Field(() => GraphQLRichText, { nullable: true })
   text?: Descendant[];
 
-  @Field(() => String)
-  url?: string;
+  @Field(() => String, { nullable: true })
+  title?: string;
 
-  @Field(() => [CalculatedRating])
-  calculatedRatings!: CalculatedRating[];
-
-  @Field(() => [CommentRating])
-  userRatings!: CommentRating[];
+  @Field(() => String, { nullable: true })
+  lead?: string;
 }

@@ -1,23 +1,27 @@
+fragment FullCommentRatingSystem on CommentRatingSystem {
+  id
+  name
+
+  answers {
+    id
+    type
+    answer
+    ratingSystemId
+  }
+}
+
 query RatingSystem {
   ratingSystem {
-    id
-    name
-
-    answers {
-      id
-      type
-      answer
-      ratingSystemId
-    }
+    ...FullCommentRatingSystem
   }
 }
 
 mutation UpdateRatingSystem(
-  $ratingSystemId: String!
+  $id: String!
   $name: String
-  $answers: [UpdateCommentRatingSystemAnswer!]
+  $answers: [UpdateCommentRatingSystemAnswerInput!]
 ) {
-  updateRatingSystem(ratingSystemId: $ratingSystemId, name: $name, answers: $answers) {
+  updateRatingSystem(id: $id, name: $name, answers: $answers) {
     id
     name
 
@@ -35,7 +39,11 @@ mutation CreateRatingSystemAnswer(
   $type: RatingSystemType!
   $answer: String
 ) {
-  createRatingSystemAnswer(ratingSystemId: $ratingSystemId, type: $type, answer: $answer) {
+  createRatingSystemAnswer(
+    ratingSystemId: $ratingSystemId
+    type: $type
+    answer: $answer
+  ) {
     answer
     id
     type

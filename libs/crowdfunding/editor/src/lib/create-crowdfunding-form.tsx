@@ -1,11 +1,10 @@
 import {
   CreateCrowdfundingGoalInput,
   CreateCrowdfundingInput,
-  getApiClientV2,
   useCreateCrowdfundingMutation,
   CreateCrowdfundingMutation,
-} from '@wepublish/editor/api-v2';
-import { useMemo, useReducer, useState } from 'react';
+} from '@wepublish/editor/api';
+import { useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { CrowdfundingForm } from './crowdfunding-form';
@@ -29,7 +28,6 @@ const showError = (error: ApolloError): void => {
 export const CreateCrowdfundingForm = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const client = useMemo(() => getApiClientV2(), []);
 
   const closePath = '/crowdfundings';
 
@@ -52,7 +50,6 @@ export const CreateCrowdfundingForm = () => {
   });
 
   const [createCrowdfunding, { loading }] = useCreateCrowdfundingMutation({
-    client,
     onError: showError,
     onCompleted: (crowdfunding: CreateCrowdfundingMutation) => {
       if (shouldClose) {

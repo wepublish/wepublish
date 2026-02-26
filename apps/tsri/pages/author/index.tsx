@@ -1,4 +1,5 @@
-import { AuthorListContainer } from '@wepublish/author/website';
+import styled from '@emotion/styled';
+import { AuthorListContainer as AuthorListContainerDefault } from '@wepublish/author/website';
 import { AuthorSort, SortOrder } from '@wepublish/website/api';
 import {
   addClientCacheToV1Props,
@@ -12,6 +13,7 @@ import {
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
@@ -21,6 +23,22 @@ const take = 25;
 const pageSchema = z.object({
   page: z.coerce.number().gte(1).optional(),
 });
+
+const AuthorListContainer = styled(AuthorListContainerDefault)`
+  padding-top: calc(var(--navbar-height) / 2);
+
+  & > a.MuiTypography-root {
+    h6 {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+    }
+    &:hover {
+      & h6 {
+        background-color: ${({ theme }) => theme.palette.primary.light};
+      }
+    }
+  }
+`;
 
 export default function AuthorList() {
   const {
@@ -57,24 +75,36 @@ export default function AuthorList() {
     return 1;
   }, [data?.authors.totalCount]);
 
+  const canonicalUrl = '/author';
+
   return (
     <>
       <AuthorListContainer variables={variables} />
 
       {pageCount > 1 && (
-        <Pagination
-          page={page ?? 1}
-          count={pageCount}
-          onChange={(_, value) =>
-            replace(
-              {
-                query: { ...query, page: value },
-              },
-              undefined,
-              { shallow: true, scroll: true }
-            )
-          }
-        />
+        <>
+          <Head>
+            <link
+              rel="canonical"
+              key="canonical"
+              href={canonicalUrl}
+            />
+          </Head>
+
+          <Pagination
+            page={page ?? 1}
+            count={pageCount}
+            onChange={(_, value) =>
+              replace(
+                {
+                  query: { ...query, page: value },
+                },
+                undefined,
+                { shallow: true, scroll: true }
+              )
+            }
+          />
+        </>
       )}
     </>
   );

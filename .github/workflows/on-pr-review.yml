@@ -251,6 +251,7 @@ jobs:
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgres.reviews.svc.cluster.local:5432/wepublish?schema=public
               MEDIA_SERVER_TOKEN: 'media-token'
               JWT_SECRET_KEY: 'jwt-token'
+              APP_SECRET_KEY: 'app-secret-1234567890'
               DEFAULT_FROM_ADDRESS: 'dev@wepublish.ch'
               DEFAULT_REPLY_TO_ADDRESS: 'dev@wepublish.ch'
               SYSTEM_INFO_KEY: 'review'
@@ -262,82 +263,30 @@ jobs:
                 urlAdapter: default
               mailProvider:
                 id: slackMail
-                fromAddress: dev@wepublish.ch
-                webhookURL: 'SLACK_DEV_MAIL_WEBHOOK_URL'
-
+                type: slackmail
               paymentProviders:
-                - type: payrexx
-                  id: payrexx
-                  name: Payrexx
-                  offSessionPayments: true
-                  instanceName: wepublish-sandbox
-                  instanceAPISecret: ${{ secrets.PAYREXX_API_SECRET }}
-                  webhookApiKey: ${{ secrets.PAYREXX_WEBHOOK_SECRET }}
-                  psp: [ 0, 15, 17, 2, 3, 36 ]
-                  pm: ['visa', 'mastercard']
-                  vatRate: 8.1
-
-                - type: stripe
-                  id: stripe
-                  name: Stripe
-                  offSessionPayments: true
-                  secretKey: key
-                  webhookEndpointSecret: wh_secret
-
-                - type: stripe-checkout
-                  id: stripe-checkout
-                  name: Stripe Checkout
-                  offSessionPayments: false
-                  secretKey: key
-                  webhookEndpointSecret: wh_secret
-
-                - type: payrexx-subscription
-                  id: payrexx-subscription
-                  name: Payrexx Subscription
-                  instanceName: wepublish-sandbox
-                  instanceAPISecret: ${{ secrets.PAYREXX_API_SECRET }}
-                  webhookEndpointSecret: ${{ secrets.PAYREXX_WEBHOOK_SECRET }}
-
-                - type: bexio
-                  id: bexio
-                  name: Bexio
-                  apiKey: secret
-                  userId: '1'
-                  countryId: '1'
-                  invoiceTemplateNewMembership: 'template-name'
-                  invoiceTemplateRenewalMembership: 'template-name'
-                  unitId: '1'
-                  taxId: '17'
-                  accountId: '139'
-                  invoiceTitleNewMembership: "New Invoice"
-                  invoiceTitleRenewalMembership: "New Invoice"
-                  invoiceMailSubjectNewMembership: "Invoice for :memberPlan.name:"
-                  invoiceMailBodyNewMembership: "Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team"
-                  invoiceMailSubjectRenewalMembership: "Invoice for :memberPlan.name:"
-                  invoiceMailBodyRenewalMembership: "Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team"
-                  markInvoiceAsOpen: False
-
-                - type: mollie
-                  id: mollie
-                  name: Mollie
-                  offSessionPayments: true
-                  apiKey: ${{ secrets.MOLLIE_API_KEY }}
-                  webhookEndpointSecret: secret
-                  apiBaseUrl: ${{ env.API_URL }}
+              - type: payrexx # Allowed are stripe-checkout / stripe / payrexx / bexio
+                id: payrexx # Required for stripe-checkout / stripe / payrexx /bexio
+              - type: stripe
+                id: stripe
+              - type: stripe-checkout
+                id: stripe-checkout
+              - type: mollie
+                id: mollie
+              - type: payrexx-subscription
+                id: payrexx-subscription
+              - type: bexio
+                id: bexio
+              - type: no-charge
+                id: no-charge
 
               challenge:
-                type: 'turnstile'
-                secret: 1x0000000000000000000000000000000AA
-                siteKey: 1x00000000000000000000AA
+                type: turnstile
+                id: 'turnstile'
 
               trackingPixelProviders:
-                - type: prolitteris
-                  id: prolitteris
-                  name: "Pro Litteris"
-                  memberNr: '892761'
-                  onlyPaidContentAccess: false
-                  publisherInternalKeyDomain: 'pl02.owen.prolitteris.ch'
-                  usePublisherInternalKey: true
+              - type: prolitteris
+                id: prolitteris
 
               mediaServer:
                 type: 'nova'

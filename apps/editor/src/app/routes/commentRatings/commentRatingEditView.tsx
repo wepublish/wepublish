@@ -2,7 +2,7 @@ import { ApolloError } from '@apollo/client';
 import styled from '@emotion/styled';
 import {
   CommentRatingSystemAnswer,
-  FullCommentRatingSystem,
+  FullCommentRatingSystemFragment,
   RatingSystemType,
   useCreateRatingSystemAnswerMutation,
   useDeleteRatingSystemAnswerMutation,
@@ -71,7 +71,7 @@ const showErrors = (error: ApolloError): void => {
 
 function CommentRatingEditView() {
   const [ratingSystem, setRatingSystem] =
-    useState<FullCommentRatingSystem | null>(null);
+    useState<FullCommentRatingSystemFragment | null>(null);
   const [answerToDelete, setAnswerToDelete] = useState<string | null>(null);
 
   const [t] = useTranslation();
@@ -190,7 +190,7 @@ function CommentRatingEditView() {
               onClick={() =>
                 updateAnswer({
                   variables: {
-                    ratingSystemId: ratingSystem.id,
+                    id: ratingSystem.id,
                     answers: ratingSystem.answers.map(
                       ({ id, type, answer }) => ({ id, type, answer })
                     ),

@@ -1,9 +1,12 @@
 {
+  "tdl": {
+    "production": "wepublish.media",
+    "staging": "wepublish.dev"
+  },
   "website": {
     "production": {
       "deployment": true,
       "env": {
-        "GA_ID": "G-44TZTJNQ6H",
         "GTM_ID": "GTM-KBR8Z6M8",
         "DEPLOY_ENV": "production"
       },

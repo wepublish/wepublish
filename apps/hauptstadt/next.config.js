@@ -16,7 +16,6 @@ const nextConfig = {
   publicRuntimeConfig: {
     env: {
       API_URL: process.env.API_URL || '',
-      GA_ID: process.env.GA_ID || '',
       GTM_ID: process.env.GTM_ID || '',
       HTTP_ONLY_COOKIE: true,
     },
@@ -225,6 +224,131 @@ const nextConfig = {
       {
         source: '/a-stadtrat-brief',
         destination: '/a/tag/stadtrat-brief',
+        permanent: true,
+      },
+      {
+        source: '/breitsch_spezial',
+        destination: '/a/tag/breitsch_spezial',
+        permanent: true,
+      },
+      {
+        source: '/zukunftsangst',
+        destination: '/a/tag/zukunftsangst',
+        permanent: true,
+      },
+      {
+        source: '/durch_das_berner_bauernjahr',
+        destination: '/a/tag/durch_das_berner_bauernjahr',
+        permanent: true,
+      },
+      {
+        source: '/ostermundigen-spezial',
+        destination: '/a/tag/ostermundigen-spezial',
+        permanent: true,
+      },
+      {
+        source: '/Stadtlandwirtschaft',
+        destination: '/a/tag/Stadtlandwirtschaft',
+        permanent: true,
+      },
+      {
+        source: '/verkehrswende',
+        destination: '/a/tag/verkehrswende',
+        permanent: true,
+      },
+      {
+        source: '/zollikofen_spezial',
+        destination: '/a/tag/zollikofen_spezial',
+        permanent: true,
+      },
+      {
+        source: '/fachkräftemangel',
+        destination: '/a/tag/fachkräftemangel',
+        permanent: true,
+      },
+      {
+        source: '/muri_spezial',
+        destination: '/a/tag/muri_spezial',
+        permanent: true,
+      },
+      {
+        source: '/geld',
+        destination: '/a/tag/geld',
+        permanent: true,
+      },
+      {
+        source: '/bern_west_spezial',
+        destination: '/a/tag/bern_west_spezial',
+        permanent: true,
+      },
+      {
+        source: '/inklusion',
+        destination: '/a/tag/inklusion',
+        permanent: true,
+      },
+      {
+        source: '/altstadt_spezial',
+        destination: '/a/tag/altstadt_spezial',
+        permanent: true,
+      },
+      {
+        source: '/wabern_spezial',
+        destination: '/a/tag/wabern_spezial',
+        permanent: true,
+      },
+      {
+        source: '/wahlen_2023',
+        destination: '/a/tag/wahlen_2023',
+        permanent: true,
+      },
+      {
+        source: '/bernapark_stettlen',
+        destination: '/a/tag/bernapark_stettlen',
+        permanent: true,
+      },
+      {
+        source: '/uni_bern_spezial',
+        destination: '/a/tag/uni_bern_spezial',
+        permanent: true,
+      },
+      {
+        source: '/kehrsatz_spezial',
+        destination: '/a/tag/kehrsatz_spezial',
+        permanent: true,
+      },
+      {
+        source: '/sommer-serie',
+        destination: '/a/tag/sommer-serie',
+        permanent: true,
+      },
+      {
+        source: '/unsichtbare_arbeit',
+        destination: '/a/tag/unsichtbare_arbeit',
+        permanent: true,
+      },
+      {
+        source: '/«hauptstadt»_auf_der_Bühne',
+        destination: '/a/tag/«hauptstadt»_auf_der_Bühne',
+        permanent: true,
+      },
+      {
+        source: '/wahlen_2024',
+        destination: '/a/tag/wahlen_2024',
+        permanent: true,
+      },
+      {
+        source: '/europaplatz_spezial',
+        destination: '/a/tag/europaplatz_spezial',
+        permanent: true,
+      },
+      {
+        source: '/köniz_spezial',
+        destination: '/a/tag/köniz_spezial',
+        permanent: true,
+      },
+      {
+        source: '/ittigen_spezial',
+        destination: '/a/tag/ittigen_spezial',
         permanent: true,
       },
     ];

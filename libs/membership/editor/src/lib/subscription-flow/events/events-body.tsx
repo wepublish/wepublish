@@ -1,5 +1,5 @@
 import { TableCell } from '@mui/material';
-import { SubscriptionFlowModel } from '@wepublish/editor/api-v2';
+import { SubscriptionFlowFragment } from '@wepublish/editor/api';
 import { useCallback, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MailTemplateSelect } from '../mail-template-select';
@@ -13,7 +13,7 @@ import {
 
 interface EventsBodyProps {
   userActionEvents: UserActionEvent[];
-  subscriptionFlow: SubscriptionFlowModel;
+  subscriptionFlow: SubscriptionFlowFragment;
   eventIcons: Record<string, JSX.Element>;
   eventColors: Record<string, IntervalColoring>;
 }

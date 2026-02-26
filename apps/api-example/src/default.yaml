@@ -4,100 +4,32 @@ general:
   bcryptHashCostFactor: 12
   urlAdapter: default
 mailProvider:
-  id: slackMail # allowed is mailchimp/mailgun
-  fromAddress: dev@wepublish.ch # Required for mailchimp/mailgun
-  webhookURL: ${SLACK_DEV_MAIL_WEBHOOK_URL}
+  id: mailchimp # allowed is mailchimp/mailgun
+  type: mailchimp
 paymentProviders:
   - type: payrexx # Allowed are stripe-checkout / stripe / payrexx / bexio
     id: payrexx # Required for stripe-checkout / stripe / payrexx /bexio
-    name: Payrexx # Required for stripe-checkout / stripe / payrexx /bexio
-    offSessionPayments: true # Required for stripe-checkout / stripe / payrexx
-    secretKey: secret # Required for stripe-checkout / stripe
-    webhookApiKey: ${PAYREXX_WEBHOOK_SECRET}
-    instanceName: ${PAYREXX_INSTANCE_NAME} # Required for payrexx
-    instanceAPISecret: ${PAYREXX_API_SECRET} # Required for payrexx
-    psp: # Required for payrexx
-      - 0
-      - 15
-      - 17
-      - 2
-      - 3
-      - 36
-    pm: # Required for payrexx
-      - 'postfinance_card'
-      - 'postfinance_efinance'
-      - 'mastercard'
-      - 'visa'
-      - 'twint'
-      - 'invoice'
-      - 'paypal'
-    vatRate: 8.1 # Required for payrexx
   - type: stripe
     id: stripe
-    name: Stripe
-    offSessionPayments: true
-    secretKey: ${STRIPE_SECRET_KEY}
-    methods:
-      - 'card'
-    webhookEndpointSecret: ${STRIPE_WEBHOOK_SECRET}
   - type: stripe-checkout
     id: stripe-checkout
-    name: Stripe Checkout
-    offSessionPayments: false
-    secretKey: ${STRIPE_SECRET_KEY}
-    methods:
-      - 'card'
-    webhookEndpointSecret: ${STRIPE_CHECKOUT_WEBHOOK_SECRET}
   - type: mollie
     id: mollie
-    name: Mollie
-    offSessionPayments: true
-    apiKey: ${MOLLIE_API_SECRET}
-    webhookEndpointSecret: secret
-    apiBaseUrl: https://api.wepublish.dev
   - type: payrexx-subscription
     id: payrexx-subscription
-    name: Payrexx Subscription
-    webhookEndpointSecret: secret
-    instanceName: wepublish-dev
-    instanceAPISecret: secret
   - type: bexio
     id: bexio
-    name: Bexio
-    apiKey: ${BEXIO_API_KEY}
-    userId: ${BEXIO_USER_ID}
-    countryId: ${BEXIO_COUNTRY_ID}
-    invoiceTemplateNewMembership: ${BEXIO_INVOICE_TEMPLATE}
-    invoiceTemplateRenewalMembership: ${BEXIO_INVOICE_TEMPLATE}
-    unitId: ${BEXIO_UNIT_ID}
-    taxId: ${BEXIO_TAX_ID}
-    accountId: ${BEXIO_ACCOUNT_ID}
-    invoiceTitleNewMembership: "New Invoice"
-    invoiceTitleRenewalMembership: "New Invoice"
-    invoiceMailSubjectNewMembership: "Invoice for :memberPlan.name:"
-    invoiceMailBodyNewMembership: "Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team"
-    invoiceMailSubjectRenewalMembership: "Invoice for :memberPlan.name:"
-    invoiceMailBodyRenewalMembership: "Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team"
-    markInvoiceAsOpen: False
   - type: no-charge
     id: no-charge
-    name: No Charge
-    offSessionPayments: true
 challenge:
-  type: 'turnstile'
-  secret: ${TURNSTILE_SECRET}
-  siteKey: ${TURNSTILE_SITE_KEY}
+  type: turnstile
+  id: 'turnstile'
 trackingPixelProviders:
   - type: prolitteris
     id: prolitteris
-    name: "Pro Litteris"
-    memberNr: '892761'
-    onlyPaidContentAccess: false
-    publisherInternalKeyDomain: 'pl02.owen.prolitteris.ch'
-    usePublisherInternalKey: true
 mediaServer:
   type: 'nova'
-ga:
-  credentials:
-  property:
-  articlePrefix: /a/
+  quality: 1
+v0:
+  type: VO
+  id: v0

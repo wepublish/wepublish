@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import {
-  AuthorRefFragment,
   CommentItemType,
+  FullAuthorFragment,
   FullImageFragment,
+  FullTrackingPixelFragment,
   Tag,
   TagType,
 } from '@wepublish/editor/api';
-import { FullTrackingPixelFragment } from '@wepublish/editor/api-v2';
 import { slugify } from '@wepublish/utils';
 import { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -43,6 +43,7 @@ import {
   ListInput,
   ListValue,
   PermissionControl,
+  SelectPaywall,
   SelectTags,
   Textarea,
   useAuthorisation,
@@ -118,7 +119,7 @@ export interface ArticleMetadata {
   readonly title: string;
   readonly lead: string;
   readonly seoTitle: string;
-  readonly authors: AuthorRefFragment[];
+  readonly authors: FullAuthorFragment[];
   readonly tags: string[];
   readonly defaultTags: Pick<Tag, 'id' | 'tag'>[];
   readonly url: string;
@@ -126,14 +127,14 @@ export interface ArticleMetadata {
   readonly canonicalUrl: string;
   readonly image?: FullImageFragment;
   readonly shared?: boolean;
-  readonly paywall?: boolean;
+  readonly paywall?: string | null;
   readonly hidden?: boolean | null;
   readonly disableComments?: boolean | null;
   readonly breaking: boolean;
   readonly hideAuthor: boolean;
   readonly socialMediaTitle?: string;
   readonly socialMediaDescription?: string;
-  readonly socialMediaAuthors: AuthorRefFragment[];
+  readonly socialMediaAuthors: FullAuthorFragment[];
   readonly socialMediaImage?: FullImageFragment;
   readonly likes: number;
   readonly trackingPixels?: (FullTrackingPixelFragment | null)[];
@@ -603,10 +604,12 @@ function ArticleMetadataPanel({
             <Group controlId="paywall">
               <ControlLabel>{t('articleEditor.panels.paywall')}</ControlLabel>
 
-              <Toggle
-                checked={paywall}
+              <SelectPaywall
                 disabled={!isAuthorized}
-                onChange={paywall => onChange?.({ ...value, paywall })}
+                selectedPaywall={paywall}
+                setSelectedPaywall={paywall =>
+                  onChange?.({ ...value, paywall })
+                }
               />
             </Group>
 

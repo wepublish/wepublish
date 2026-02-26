@@ -54,7 +54,7 @@ function TokenGeneratePanel({ onClose }: TokenGeneratePanelProps) {
   }, [createError]);
 
   async function handleSave() {
-    await createToken({ variables: { input: { name } } });
+    await createToken({ variables: { name } });
   }
 
   return (

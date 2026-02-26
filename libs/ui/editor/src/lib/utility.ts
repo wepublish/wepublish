@@ -1,5 +1,8 @@
-import { PaymentPeriodicity, SortOrder } from '@wepublish/editor/api';
-import { getSettings } from '@wepublish/editor/api-v2';
+import {
+  getSettings,
+  PaymentPeriodicity,
+  SortOrder,
+} from '@wepublish/editor/api';
 import { de, enUS, fr } from 'date-fns/locale';
 import { DocumentNode, OperationDefinitionNode } from 'graphql';
 import nanoid from 'nanoid';

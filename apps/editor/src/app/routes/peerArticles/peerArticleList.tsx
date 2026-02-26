@@ -1,13 +1,12 @@
 import styled from '@emotion/styled';
 import {
   ArticleSort,
-  getApiClientV2,
   ImportArticleOptions,
   PeerArticle,
   PeerArticleFilter,
   useImportPeerArticleMutation,
   usePeerArticleListQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -99,10 +98,8 @@ function PeerArticleList() {
     [filter, limit, page, sortField, sortOrder]
   );
 
-  const client = getApiClientV2();
   const [importPeerArticle, { loading: importingInProgress, error, reset }] =
     useImportPeerArticleMutation({
-      client,
       onCompleted(data) {
         toaster.push(
           <Message
@@ -121,9 +118,7 @@ function PeerArticleList() {
 
   const { data: peerArticleListData, loading: isLoading } =
     usePeerArticleListQuery({
-      client,
       variables: listVariables,
-      fetchPolicy: 'cache-and-network',
       onError(error) {
         toaster.push(
           <Message

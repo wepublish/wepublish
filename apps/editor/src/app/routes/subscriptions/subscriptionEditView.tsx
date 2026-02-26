@@ -9,8 +9,8 @@ import {
   FullSubscriptionFragment,
   FullUserFragment,
   InvoiceFragment,
-  MetadataPropertyFragment,
   PaymentPeriodicity,
+  PropertyInput,
   SubscriptionDeactivationReason,
   useCancelSubscriptionMutation,
   useCreateSubscriptionMutation,
@@ -139,7 +139,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   const [paidUntil, setPaidUntil] = useState<Date | null>();
   const [paymentMethod, setPaymentMethod] =
     useState<FullPaymentMethodFragment>();
-  const [properties, setProperties] = useState<MetadataPropertyFragment[]>([]);
+  const [properties, setProperties] = useState<PropertyInput[]>([]);
   const [deactivation, setDeactivation] =
     useState<DeactivationFragment | null>();
   const [extendable, setExtendable] = useState<boolean>(false);
@@ -156,9 +156,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
 
   const [extendModal, setExtendModal] = useState<boolean>(false);
 
-  /**
-   * Loading the subscription
-   */
   const {
     data,
     loading: isLoading,
@@ -166,7 +163,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     refetch: reloadSubscription,
   } = useSubscriptionQuery({
     variables: { id: id! },
-    fetchPolicy: 'network-only',
     skip: id === undefined,
   });
 
@@ -202,10 +198,13 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     if (!memberPlan) {
       return;
     }
+
     if (memberPlan.extendable === extendable) {
       return;
     }
+
     setExtendable(memberPlan.extendable);
+
     toaster.push(
       <Message
         type="info"
@@ -224,6 +223,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     if (!subscription) {
       return;
     }
+    // @ts-expect-error Wrong type for now
     setUser(subscription.user);
     setMemberPlan(subscription.memberPlan);
     setPaymentPeriodicity(subscription.paymentPeriodicity);
@@ -251,7 +251,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     loading: isMemberPlanLoading,
     error: loadMemberPlanError,
   } = useMemberPlanListQuery({
-    fetchPolicy: 'network-only',
     variables: {
       take: 100, // TODO: Pagination
     },
@@ -261,9 +260,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     data: paymentMethodData,
     loading: isPaymentMethodLoading,
     error: paymentMethodLoadError,
-  } = usePaymentMethodListQuery({
-    fetchPolicy: 'network-only',
-  });
+  } = usePaymentMethodListQuery({});
 
   const [updateSubscription, { loading: isUpdating }] =
     useUpdateSubscriptionMutation();
@@ -272,7 +269,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
 
   const [createSubscription, { loading: isCreating }] =
     useCreateSubscriptionMutation();
-  const [renewSubscription, { loading: isRenewing, error: renewalError }] =
+  const [renewSubscription, { error: renewalError }] =
     useRenewSubscriptionMutation();
 
   /**
@@ -280,7 +277,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
    */
   const { data: editedUserData } = useUserQuery({
     variables: { id: editedUserId! },
-    fetchPolicy: 'network-only',
     skip: editedUserId === undefined,
   });
 
@@ -428,34 +424,32 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   }
 
   async function handleSave() {
-    if (!memberPlan) return;
-    if (!paymentMethod) return;
-    if (!user) return;
+    if (!memberPlan || !paymentMethod || !user) {
+      return;
+    }
 
     try {
       if (id) {
         const { data } = await updateSubscription({
           variables: {
             id,
-            input: {
-              ...inputBase,
-              userID: user?.id,
-              paymentMethodID: paymentMethod.id,
-              memberPlanID: memberPlan.id,
-            },
+            ...inputBase,
+            userID: user?.id,
+            paymentMethodID: paymentMethod.id,
+            memberPlanID: memberPlan.id,
           },
         });
 
-        if (data?.updateSubscription) onSave?.(data.updateSubscription);
+        if (data?.updateSubscription) {
+          onSave?.(data.updateSubscription);
+        }
       } else {
         const { data } = await createSubscription({
           variables: {
-            input: {
-              ...inputBase,
-              userID: user.id,
-              paymentMethodID: paymentMethod.id,
-              memberPlanID: memberPlan.id,
-            },
+            ...inputBase,
+            userID: user.id,
+            paymentMethodID: paymentMethod.id,
+            memberPlanID: memberPlan.id,
           },
         });
 
@@ -468,7 +462,9 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
           navigate(`/subscriptions/edit/${newSubscription.id}`);
         }
 
-        if (data?.createSubscription) onSave?.(data.createSubscription);
+        if (data?.createSubscription) {
+          onSave?.(data.createSubscription);
+        }
       }
 
       toaster.push(

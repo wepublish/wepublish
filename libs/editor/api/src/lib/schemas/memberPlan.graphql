@@ -1,4 +1,12 @@
-fragment MemberPlanRef on MemberPlan {
+fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
+  paymentMethods {
+    ...FullPaymentMethod
+  }
+  paymentPeriodicities
+  forceAutoRenewal
+}
+
+fragment FullMemberPlan on MemberPlan {
   id
   name
   description
@@ -7,38 +15,33 @@ fragment MemberPlanRef on MemberPlan {
   active
   productType
   tags
-  image {
-    ...FullImage
-  }
   externalReward
+  tags
+  currency
+  extendable
+  maxCount
+  migrateToTargetPaymentMethodID
+
+  amountPerMonthMin
+  amountPerMonthMax
+  amountPerMonthTarget
 
   successPageId
   failPageId
   confirmationPageId
-}
 
-fragment FullMemberPlan on MemberPlan {
-  tags
-  amountPerMonthMin
-  amountPerMonthMax
-  amountPerMonthTarget
-  currency
-  availablePaymentMethods {
-    paymentMethods {
-      ...FullPaymentMethod
-    }
-    paymentPeriodicities
-    forceAutoRenewal
+  image {
+    ...FullImage
   }
-  ...MemberPlanRef
-  extendable
-  maxCount
-  migrateToTargetPaymentMethodID
+
+  availablePaymentMethods {
+    ...FullAvailablePaymentMethod
+  }
 }
 
 query MemberPlanList(
   $filter: MemberPlanFilter
-  $cursor: String
+  $cursorId: String
   $take: Int
   $skip: Int
   $order: SortOrder
@@ -46,7 +49,7 @@ query MemberPlanList(
 ) {
   memberPlans(
     filter: $filter
-    cursor: $cursor
+    cursorId: $cursorId
     take: $take
     skip: $skip
     order: $order
@@ -73,14 +76,110 @@ query MemberPlan($id: String!) {
   }
 }
 
-mutation CreateMemberPlan($input: MemberPlanInput!) {
-  createMemberPlan(input: $input) {
+mutation CreateMemberPlan(
+  $name: String!
+  $slug: String!
+  $active: Boolean!
+  $shortDescription: RichText
+  $description: RichText
+  $imageID: String
+  $amountPerMonthMax: Int
+  $amountPerMonthMin: Int!
+  $amountPerMonthTarget: Int
+  $confirmationPageId: String
+  $failPageId: String
+  $successPageId: String
+  $productType: ProductType!
+  $currency: Currency!
+  $extendable: Boolean!
+  $externalReward: String
+  $maxCount: Int
+  $availablePaymentMethods: [AvailablePaymentMethodInput!]!
+  $migrateToTargetPaymentMethodID: String
+  $tags: [String!]!
+) {
+  createMemberPlan(
+    name: $name
+    slug: $slug
+    active: $active
+
+    shortDescription: $shortDescription
+    description: $description
+    imageID: $imageID
+
+    amountPerMonthMax: $amountPerMonthMax
+    amountPerMonthMin: $amountPerMonthMin
+    amountPerMonthTarget: $amountPerMonthTarget
+
+    confirmationPageId: $confirmationPageId
+    failPageId: $failPageId
+    successPageId: $successPageId
+
+    productType: $productType
+    currency: $currency
+    extendable: $extendable
+    externalReward: $externalReward
+    maxCount: $maxCount
+    availablePaymentMethods: $availablePaymentMethods
+    migrateToTargetPaymentMethodID: $migrateToTargetPaymentMethodID
+
+    tags: $tags
+  ) {
     ...FullMemberPlan
   }
 }
 
-mutation UpdateMemberPlan($id: String!, $input: MemberPlanInput!) {
-  updateMemberPlan(id: $id, input: $input) {
+mutation UpdateMemberPlan(
+  $id: String!
+  $name: String
+  $slug: String
+  $active: Boolean
+  $shortDescription: RichText
+  $description: RichText
+  $imageID: String
+  $amountPerMonthMax: Int
+  $amountPerMonthMin: Int
+  $amountPerMonthTarget: Int
+  $confirmationPageId: String
+  $failPageId: String
+  $successPageId: String
+  $productType: ProductType!
+  $currency: Currency!
+  $extendable: Boolean!
+  $externalReward: String
+  $maxCount: Int
+  $availablePaymentMethods: [AvailablePaymentMethodInput!]
+  $migrateToTargetPaymentMethodID: String
+  $tags: [String!]
+) {
+  updateMemberPlan(
+    id: $id
+    name: $name
+    slug: $slug
+    active: $active
+
+    shortDescription: $shortDescription
+    description: $description
+    imageID: $imageID
+
+    amountPerMonthMax: $amountPerMonthMax
+    amountPerMonthMin: $amountPerMonthMin
+    amountPerMonthTarget: $amountPerMonthTarget
+
+    confirmationPageId: $confirmationPageId
+    failPageId: $failPageId
+    successPageId: $successPageId
+
+    productType: $productType
+    currency: $currency
+    extendable: $extendable
+    externalReward: $externalReward
+    maxCount: $maxCount
+    availablePaymentMethods: $availablePaymentMethods
+    migrateToTargetPaymentMethodID: $migrateToTargetPaymentMethodID
+
+    tags: $tags
+  ) {
     ...FullMemberPlan
   }
 }

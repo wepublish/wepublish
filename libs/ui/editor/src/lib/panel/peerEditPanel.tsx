@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 import {
-  FullPeerProfileFragment,
+  FullRemotePeerProfileFragment,
   PeerListDocument,
+  PeerListQuery,
   useCreatePeerMutation,
   usePeerQuery,
   useRemotePeerProfileQuery,
@@ -22,7 +23,6 @@ import {
 import { Descendant } from 'slate';
 
 import {
-  ChooseEditImage,
   createCheckedPermissionComponent,
   DescriptionList,
   DescriptionListItem,
@@ -31,7 +31,6 @@ import {
 } from '../atoms';
 import { RichTextBlock, RichTextBlockValue } from '../blocks';
 import { toggleRequiredLabel } from '../toggleRequiredLabel';
-import { getOperationNameFromDocument } from '../utility';
 
 export interface PeerEditPanelProps {
   id?: string;
@@ -44,6 +43,13 @@ export interface PeerEditPanelProps {
 const { Group, ControlLabel, Control } = RForm;
 
 const Form = styled(RForm)`
+  height: 100%;
+`;
+
+const Image = styled.img`
+  object-fit: contain;
+  object-position: top left;
+  width: 100%;
   height: 100%;
 `;
 
@@ -68,7 +74,9 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
   const [information, setInformation] = useState<Descendant[]>();
   const [urlString, setURLString] = useState('');
   const [token, setToken] = useState('');
-  const [profile, setProfile] = useState<FullPeerProfileFragment | null>(null);
+  const [profile, setProfile] = useState<FullRemotePeerProfileFragment | null>(
+    null
+  );
 
   const {
     data,
@@ -76,21 +84,18 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
     error: loadError,
   } = usePeerQuery({
     variables: { id: id! },
-    fetchPolicy: 'network-only',
-    skip: id === undefined,
+    skip: !id,
   });
 
   const [createPeer, { loading: isCreating, error: createError }] =
-    useCreatePeerMutation({
-      refetchQueries: [getOperationNameFromDocument(PeerListDocument)],
-    });
+    useCreatePeerMutation({});
 
   const [updatePeer, { loading: isUpdating, error: updateError }] =
-    useUpdatePeerMutation({
-      refetchQueries: [getOperationNameFromDocument(PeerListDocument)],
-    });
+    useUpdatePeerMutation({});
 
-  const { refetch: fetchRemote } = useRemotePeerProfileQuery({ skip: true });
+  const { refetch: fetchRemote } = useRemotePeerProfileQuery({
+    skip: true,
+  });
 
   const isDisabled = isLoading || isCreating || isUpdating;
   const { t } = useTranslation();
@@ -122,6 +127,7 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
       setSlug(data.peer.slug);
       setInformation(data.peer.information ?? undefined);
       setURLString(data.peer.hostURL);
+      setToken(data.peer.token);
       setTimeout(() => {
         // setProfile in timeout because the useEffect that listens on
         // urlString and token will set it otherwise to null
@@ -155,25 +161,37 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
       await updatePeer({
         variables: {
           id,
-          input: {
-            name,
-            slug,
-            hostURL: new URL(urlString).toString(),
-            token: token || undefined,
-            information,
-          },
+          name,
+          slug,
+          hostURL: new URL(urlString).toString(),
+          token: token || undefined,
+          information,
         },
       });
     } else {
       await createPeer({
         variables: {
-          input: {
-            name,
-            slug,
-            hostURL: new URL(urlString).toString(),
-            token,
-            information,
-          },
+          name,
+          slug,
+          hostURL: new URL(urlString).toString(),
+          token,
+          information,
+        },
+        update: (cache, { data }) => {
+          const query = cache.readQuery<PeerListQuery>({
+            query: PeerListDocument,
+          });
+
+          if (!query || !data?.createPeer) {
+            return;
+          }
+
+          cache.writeQuery<PeerListQuery>({
+            query: PeerListDocument,
+            data: {
+              peers: [data.createPeer, ...query.peers],
+            },
+          });
         },
       });
     }
@@ -311,20 +329,22 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
 
           {profile && (
             <Panel header={t('peerList.panels.information')}>
-              <ChooseEditImage
-                disabled
-                image={profile?.logo}
+              <Image
+                src={profile?.logo?.xl ?? '/static/placeholder-240x240.png'}
               />
+
               <DescriptionList>
                 <DescriptionListItem label={t('peerList.panels.name')}>
                   {profile?.name}
                 </DescriptionListItem>
+
                 <DescriptionListItem label={t('peerList.panels.themeColor')}>
                   <ThemeColor>
                     <p>{profile?.themeColor}</p>
                     <ThemeColorBox themeColor={profile.themeColor} />
                   </ThemeColor>
                 </DescriptionListItem>
+
                 <DescriptionListItem
                   label={t('peerList.panels.themeFontColor')}
                 >
@@ -333,6 +353,7 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
                     <ThemeColorBox themeColor={profile?.themeFontColor} />
                   </ThemeColor>
                 </DescriptionListItem>
+
                 <DescriptionListItem
                   label={t('peerList.panels.callToActionText')}
                 >
@@ -346,19 +367,22 @@ function PeerEditPanel({ id, hostURL, onClose, onSave }: PeerEditPanelProps) {
                     />
                   )}
                 </DescriptionListItem>
+
                 <DescriptionListItem
                   label={t('peerList.panels.callToActionURL')}
                 >
                   {profile?.callToActionURL}
                 </DescriptionListItem>
+
                 <DescriptionListItem
                   label={t('peerList.panels.callToActionImage')}
                 >
                   <img
-                    src={profile?.callToActionImage?.thumbURL || undefined}
+                    src={profile?.callToActionImage?.xsSquare ?? ''}
                     alt={t('peerList.panels.callToActionImage')}
                   />
                 </DescriptionListItem>
+
                 <DescriptionListItem
                   label={t('peerList.panels.callToActionImageURL')}
                 >

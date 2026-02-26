@@ -4,11 +4,10 @@ import {
   UpdateCrowdfundingInput,
   FullCrowdfundingFragment,
   CrowdfundingGoalType,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { CheckPicker, Form, Panel, SelectPicker } from 'rsuite';
 import { useMemberPlanListQuery } from '@wepublish/editor/api';
-import React from 'react';
 import { CrowdfundingGoalList } from './crowdfunding-goal-list';
 import {
   CurrencyInput,
@@ -31,13 +30,6 @@ const CrowdfundingFormWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr;
   gap: 12px;
-`;
-
-const SameLine = styled.div`
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-  gap: 24px;
 `;
 
 export const CrowdfundingForm = (props: CrowdfundingFormProps) => {

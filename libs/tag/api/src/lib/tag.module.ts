@@ -22,7 +22,6 @@ import { PageTagDataloader } from './page-tag.dataloader';
     PageTagDataloader,
   ],
   exports: [
-    TagService,
     TagDataloader,
     ArticleTagDataloader,
     AuthorTagDataloader,

@@ -5,7 +5,7 @@ import {
   AppCacheProvider,
   createEmotionCache,
 } from '@mui/material-nextjs/v15-pagesRouter';
-import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
+import { GoogleTagManager } from '@next/third-parties/google';
 import { withErrorSnackbar } from '@wepublish/errors/website';
 import {
   FooterContainer,
@@ -18,6 +18,7 @@ import {
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
+  withBuilderRouter,
   withJwtHandler,
   withSessionProvider,
 } from '@wepublish/utils/website';
@@ -63,8 +64,10 @@ import {
 import { HauptstadtNavbar } from '../src/components/hauptstadt-navbar';
 import { HauptstadtFooter } from '../src/components/hauptstadt-navigation';
 import { HauptstadtPage } from '../src/components/hauptstadt-page';
+import { HauptstadtPaymentMethodPicker } from '../src/components/hauptstadt-payment-method-picker';
 import { HauptstadtPaywall } from '../src/components/hauptstadt-paywall';
 import { HauptstadtQuoteBlock } from '../src/components/hauptstadt-quote';
+import { HauptstadtSubscribe } from '../src/components/hauptstadt-subscribe';
 import { HauptstadtSubscriptionListItem } from '../src/components/hauptstadt-subscription-list-item';
 import {
   HauptstadtAlternatingTeaser,
@@ -77,6 +80,7 @@ import {
 } from '../src/components/hauptstadt-teaser';
 import { HauptstadtTitleBlock } from '../src/components/hauptstadt-title-block';
 import { PrintLogo } from '../src/components/print-logo';
+import { withTrackFirstRoute } from '../src/hooks/use-is-first-route';
 import { printStyles } from '../src/print-styles';
 import theme from '../src/theme';
 
@@ -149,6 +153,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           MemberPlanItem={HauptstadtMemberPlanItem}
           CommentList={HauptstadtCommentList}
           SubscriptionListItem={HauptstadtSubscriptionListItem}
+          PaymentMethodPicker={HauptstadtPaymentMethodPicker}
           blocks={{
             Renderer: HauptstadtBlockRenderer,
             Title: HauptstadtTitleBlock,
@@ -161,6 +166,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             ImageGallery: HauptstadtImageGalleryBlock,
             Break: HauptstadtBreakBlock,
             Listicle: HauptstadtListicle,
+            Subscribe: HauptstadtSubscribe,
           }}
           blockStyles={{
             FocusTeaser: HauptstadtFocusTeaser,
@@ -263,10 +269,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 
               <RoutedAdminBar />
 
-              {publicRuntimeConfig.env.GA_ID && (
-                <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
-              )}
-
               {publicRuntimeConfig.env.GTM_ID && (
                 <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
               )}
@@ -284,9 +286,14 @@ const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   previewLink,
 ]);
 const ConnectedApp = withApollo(
-  withErrorSnackbar(
-    withPaywallBypassToken(
-      withSessionProvider(withJwtHandler(CustomApp), AsyncSessionProvider)
+  withBuilderRouter(
+    withErrorSnackbar(
+      withPaywallBypassToken(
+        withSessionProvider(
+          withJwtHandler(withTrackFirstRoute(CustomApp)),
+          AsyncSessionProvider
+        )
+      )
     )
   )
 );

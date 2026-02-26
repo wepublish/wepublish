@@ -38,14 +38,48 @@ query PaymentMethod($id: String!) {
   }
 }
 
-mutation CreatePaymentMethod($input: PaymentMethodInput!) {
-  createPaymentMethod(input: $input) {
+mutation CreatePaymentMethod(
+  $name: String!
+  $slug: Slug!
+  $description: String!
+  $paymentProviderID: String!
+  $gracePeriod: Int!
+  $imageId: String
+  $active: Boolean!
+) {
+  createPaymentMethod(
+    name: $name
+    slug: $slug
+    description: $description
+    paymentProviderID: $paymentProviderID
+    gracePeriod: $gracePeriod
+    imageId: $imageId
+    active: $active
+  ) {
     ...FullPaymentMethod
   }
 }
 
-mutation UpdatePaymentMethod($id: String!, $input: PaymentMethodInput!) {
-  updatePaymentMethod(id: $id, input: $input) {
+mutation UpdatePaymentMethod(
+  $id: String!
+  $name: String
+  $slug: Slug
+  $description: String
+  $paymentProviderID: String
+  $gracePeriod: Int
+  $imageId: String
+  $active: Boolean
+) {
+  updatePaymentMethod(
+    id: $id
+    name: $name
+    slug: $slug
+    description: $description
+    paymentProviderID: $paymentProviderID
+    gracePeriod: $gracePeriod
+    imageId: $imageId
+    active: $active
+  ) {
     ...FullPaymentMethod
   }
 }

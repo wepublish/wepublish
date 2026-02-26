@@ -6,12 +6,12 @@ import {
   ChallengeQuery,
   CommentListQuery,
   CommentListQueryVariables,
-  CommentRating,
   CommentWithoutNestingFragment,
   EditCommentMutation,
   EditCommentMutationVariables,
   FullCommentFragment,
-  FullCommentRatingSystem,
+  FullCommentRatingFragment,
+  CommentRatingSystem,
   OverriddenRating,
 } from '@wepublish/website/api';
 import { Dispatch, PropsWithChildren } from 'react';
@@ -63,13 +63,13 @@ export type BuilderCommentListProps = Pick<
   add: MutationResult<AddCommentMutation>;
   onAddComment: (
     variables: Omit<
-      AddCommentMutationVariables['input'],
+      AddCommentMutationVariables,
       'itemID' | 'itemType' | 'peerId'
     >
   ) => void;
 
   edit: MutationResult<EditCommentMutation>;
-  onEditComment: (variables: EditCommentMutationVariables['input']) => void;
+  onEditComment: (variables: EditCommentMutationVariables) => void;
 
   openEditorsState: BuilderCommentListState;
   openEditorsStateDispatch: Dispatch<BuilderCommentListActions>;
@@ -89,7 +89,7 @@ export type BuilderCommentListItemProps = (CommentWithoutNestingFragment & {
   children?: CommentWithoutNestingFragment[] | null;
 }) & {
   className?: string;
-  ratingSystem: FullCommentRatingSystem;
+  ratingSystem: CommentRatingSystem;
   signUpUrl: string;
   commentDepth?: number;
   maxCommentDepth?: number;
@@ -139,7 +139,7 @@ type CreateCommentProps = {
   > | null;
   onSubmit: (
     data: Omit<
-      AddCommentMutationVariables['input'],
+      AddCommentMutationVariables,
       'itemID' | 'itemType' | 'parentID' | 'peerId'
     >
   ) => void;
@@ -150,7 +150,7 @@ type EditCommentProps = {
   title?: string | null;
   lead?: string | null;
   challenge?: never;
-  onSubmit: (data: Omit<EditCommentMutationVariables['input'], 'id'>) => void;
+  onSubmit: (data: Omit<EditCommentMutationVariables, 'id'>) => void;
 };
 
 export type BuilderCommentEditorProps = {
@@ -167,8 +167,8 @@ export type BuilderCommentEditorProps = {
 
 export type BuilderCommentRatingsProps = {
   commentId: string;
-  ratingSystem: FullCommentRatingSystem;
-  userRatings: CommentRating[];
+  ratingSystem: CommentRatingSystem;
+  userRatings: FullCommentRatingFragment[];
   calculatedRatings: CalculatedRating[];
   overriddenRatings: OverriddenRating[];
 };

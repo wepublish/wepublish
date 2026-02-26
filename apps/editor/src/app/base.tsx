@@ -22,6 +22,7 @@ import {
   MdDescription,
   MdEvent,
   MdEventAvailable,
+  MdExtension,
   MdFactCheck,
   MdFileCopy,
   MdGroup,
@@ -162,7 +163,7 @@ export function Base({ children }: BaseProps) {
 
   useEffect(() => {
     i18n.changeLanguage(uiLanguage);
-  }, [uiLanguage]);
+  }, [i18n, uiLanguage]);
 
   return (
     <Wrapper>
@@ -283,9 +284,9 @@ export function Base({ children }: BaseProps) {
                     >
                       <Nav.Item
                         as={NavLink}
-                        href="/articles/paywall"
+                        href="/articles/paywalls"
                         icon={<MdPayment />}
-                        active={path === 'articles/paywall'}
+                        active={path === 'articles/paywalls'}
                       >
                         {t('paywall.navbar')}
                       </Nav.Item>
@@ -861,6 +862,7 @@ export function Base({ children }: BaseProps) {
                     'CAN_GET_USER_ROLE',
                     'CAN_CREATE_USER_ROLE',
                     'CAN_DELETE_USER_ROLE',
+                    'CAN_GET_INTEGRATIONS',
                   ]}
                 >
                   <Nav.Menu
@@ -934,6 +936,26 @@ export function Base({ children }: BaseProps) {
                         icon={<MdBadge />}
                       >
                         {t('navbar.userRoles')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    {/* INTEGRATIONS */}
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_AI_SETTINGS',
+                        'CAN_GET_CHALLENGE_PROVIDER_SETTINGS',
+                        'CAN_GET_PAYMENT_PROVIDER_SETTINGS',
+                        'CAN_GET_TRACKING_PIXEL_SETTINGS',
+                        'CAN_GET_MAIL_PROVIDER_SETTINGS',
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/integrations"
+                        active={path === 'integrations'}
+                        icon={<MdExtension />}
+                      >
+                        {t('navbar.integrations')}
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>

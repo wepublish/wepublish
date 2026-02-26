@@ -3,10 +3,10 @@ import {
   FullImageFragment,
   ImageListDocument,
   ImageListQuery,
+  LocalStorageKey,
   useDeleteImageMutation,
   useImageListQuery,
 } from '@wepublish/editor/api';
-import { LocalStorageKey } from '@wepublish/editor/api-v2';
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -179,11 +179,10 @@ function ImageList() {
     refetch,
     loading: isLoading,
   } = useImageListQuery({
-    fetchPolicy: 'network-only',
     variables: listVariables,
   });
 
-  const [deleteImage, { loading: isDeleting }] = useDeleteImageMutation();
+  const [deleteImage, { loading: isDeleting }] = useDeleteImageMutation({});
 
   const { t } = useTranslation();
 
@@ -358,7 +357,9 @@ function ImageList() {
           <Button
             disabled={isDeleting}
             onClick={async () => {
-              if (!currentImage) return;
+              if (!currentImage) {
+                return;
+              }
 
               await deleteImage({
                 variables: { id: currentImage.id },
