@@ -1,9 +1,6 @@
 {
   "name": "api",
   "pkg": {
-    "scripts": [
-      "node_modules/@prisma/instrumentation/**/*.js"
-    ],
     "assets": [
       "node_modules/.prisma",
       "node_modules/axios/dist/node/axios.cjs",
