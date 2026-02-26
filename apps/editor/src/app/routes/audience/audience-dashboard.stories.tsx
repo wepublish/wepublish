@@ -1,11 +1,11 @@
 import { Meta, StoryObj } from '@storybook/react';
 import {
   Currency,
+  DailySubscriptionStatsDocument,
   MemberPlan,
   MemberPlanListDocument,
   PaymentPeriodicity,
 } from '@wepublish/editor/api';
-import { DailySubscriptionStatsDocument } from '@wepublish/editor/api-v2';
 import {
   mockAvailablePaymentMethod,
   mockImage,
@@ -28,7 +28,7 @@ const availablePaymentMethod = mockAvailablePaymentMethod({
 availablePaymentMethod.forceAutoRenewal = false;
 availablePaymentMethod.paymentMethods = [];
 availablePaymentMethod.paymentPeriodicities = [];
-availablePaymentMethod.active = true;
+//availablePaymentMethod.active = true;
 
 const memberPlan = mockMemberPlan({
   availablePaymentMethods: [availablePaymentMethod],

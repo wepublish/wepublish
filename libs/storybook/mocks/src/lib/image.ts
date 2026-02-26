@@ -42,16 +42,6 @@ export const mockImage = () =>
     sSquare: 'https://unsplash.it/500/500',
     xsSquare: 'https://unsplash.it/300/300',
     xxsSquare: 'https://unsplash.it/200/200',
-    column6URL: 'https://unsplash.it/600/400',
-    column4URL: 'https://unsplash.it/400/400',
-    column3URL: 'https://unsplash.it/300/400',
-    column2URL: 'https://unsplash.it/200/400',
-    column1URL: 'https://unsplash.it/100/400',
-    previewURL: 'https://unsplash.it/100/100',
-    squareURL: 'https://unsplash.it/400/400',
-    thumbURL: 'https://unsplash.it/50/50',
-    mediumURL: 'https://unsplash.it/150/150',
-    largeURL: 'https://unsplash.it/800/800',
   }) as FullImageFragment;
 
 export const mockPeerImage = () =>
