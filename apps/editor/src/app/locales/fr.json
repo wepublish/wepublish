@@ -1526,8 +1526,8 @@
           "low": "Renouvellements pour la première fois",
           "high": "Renouvellements subséquents",
           "total": "Somme des renouvellements à venir",
-          "perDayHighProbability": "Renouvellements pour la première fois",
-          "perDayLowProbability": "Renouvellements subséquents"
+          "perDayHighProbability": "Renouvellements subséquents",
+          "perDayLowProbability": "Renouvellements pour la première fois"
         },
         "predictedSubscriptionRenewalCountPerDay": {
           "lowProbability": "Renouvellements pour la première fois",
