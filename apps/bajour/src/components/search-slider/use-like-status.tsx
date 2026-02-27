@@ -23,7 +23,7 @@ export function useLikeStatus(articleId: string, articleLikes: number) {
       try {
         likedArticles = JSON.parse(localStorage.getItem(LIKED_KEY) || '[]');
       } catch {
-        likedArticles = [];
+        // keep default empty array
       }
 
       if (liked && !likedArticles.includes(articleId)) {
@@ -96,7 +96,7 @@ export function useLikeStatus(articleId: string, articleLikes: number) {
       try {
         likedArticles = JSON.parse(localStorage.getItem(LIKED_KEY) || '[]');
       } catch {
-        likedArticles = [];
+        // keep default empty array
       }
       setIsLiked(likedArticles.includes(articleId));
       setIsReady(true);
