@@ -100,8 +100,8 @@ export function LinkMenu() {
 
       const nodeUrl = node.url as string;
       if (
-        !nodeUrl.startsWith(prefixType.https) ||
-        !nodeUrl.startsWith(prefixType.http) ||
+        !nodeUrl.startsWith(prefixType.https) &&
+        !nodeUrl.startsWith(prefixType.http) &&
         !nodeUrl.startsWith(prefixType.mailto)
       ) {
         setPrefix(prefixType.other);

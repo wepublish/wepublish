@@ -19,7 +19,12 @@ export function useLikeStatus(articleId: string, articleLikes: number) {
 
   const updateLikeStatus = useCallback(
     (liked: boolean) => {
-      const likedArticles = JSON.parse(localStorage.getItem(LIKED_KEY) || '[]');
+      let likedArticles: string[] = [];
+      try {
+        likedArticles = JSON.parse(localStorage.getItem(LIKED_KEY) || '[]');
+      } catch {
+        likedArticles = [];
+      }
 
       if (liked && !likedArticles.includes(articleId)) {
         likedArticles.push(articleId);
@@ -87,7 +92,12 @@ export function useLikeStatus(articleId: string, articleLikes: number) {
     }
 
     if (typeof window !== 'undefined') {
-      const likedArticles = JSON.parse(localStorage.getItem(LIKED_KEY) || '[]');
+      let likedArticles: string[] = [];
+      try {
+        likedArticles = JSON.parse(localStorage.getItem(LIKED_KEY) || '[]');
+      } catch {
+        likedArticles = [];
+      }
       setIsLiked(likedArticles.includes(articleId));
       setIsReady(true);
     }

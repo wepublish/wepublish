@@ -83,7 +83,14 @@ export const AVAILABLE_LANG = [
 function useStickyState(defaultValue: string, key: string) {
   const [value, setValue] = useState(() => {
     const stickyValue = window.localStorage.getItem(key);
-    return stickyValue !== null ? JSON.parse(stickyValue) : defaultValue;
+    if (stickyValue !== null) {
+      try {
+        return JSON.parse(stickyValue);
+      } catch {
+        return defaultValue;
+      }
+    }
+    return defaultValue;
   });
 
   useEffect(() => {

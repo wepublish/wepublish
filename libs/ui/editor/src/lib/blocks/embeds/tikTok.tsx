@@ -28,10 +28,18 @@ export function TikTokVideoEmbed({ userID, videoID }: TikTokVideoEmbedProps) {
   const [tikTokData, setTikTokData] = useState<any>();
 
   const fetchTiktokData = async () => {
-    const response = await fetch(
-      `https://www.tiktok.com/oembed?url=https://www.tiktok.com/@${userID}/video/${videoID}`
-    );
-    await response.json().then(value => setTikTokData(value));
+    try {
+      const response = await fetch(
+        `https://www.tiktok.com/oembed?url=https://www.tiktok.com/@${userID}/video/${videoID}`
+      );
+      if (!response.ok) {
+        return;
+      }
+      const value = await response.json();
+      setTikTokData(value);
+    } catch {
+      // Silently handle fetch failures for embed
+    }
   };
 
   useEffect(() => {
