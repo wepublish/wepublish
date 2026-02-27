@@ -93,4 +93,18 @@ export class ImageService {
     await this.mediaAdapter.deleteImage(imageId);
     await this.prisma.image.delete({ where: { id: imageId } });
   }
+
+  @PrimeDataLoader(ImageDataloaderService)
+  public async getImagesByTag(tag: string) {
+    return this.prisma.image.findMany({
+      where: {
+        tags: {
+          has: tag,
+        },
+      },
+      include: {
+        focalPoint: true,
+      },
+    });
+  }
 }

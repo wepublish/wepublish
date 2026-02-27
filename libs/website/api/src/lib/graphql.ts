@@ -6463,6 +6463,41 @@ export function useEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Even
 export type EventQueryHookResult = ReturnType<typeof useEventQuery>;
 export type EventLazyQueryHookResult = ReturnType<typeof useEventLazyQuery>;
 export type EventQueryResult = Apollo.QueryResult<EventQuery, EventQueryVariables>;
+export const GetImagesByTagDocument = gql`
+    query GetImagesByTag($tag: String!) {
+  getImagesByTag(tag: $tag) {
+    ...FullImage
+  }
+}
+    ${FullImageFragmentDoc}`;
+
+/**
+ * __useGetImagesByTagQuery__
+ *
+ * To run a query within a React component, call `useGetImagesByTagQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetImagesByTagQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetImagesByTagQuery({
+ *   variables: {
+ *      tag: // value for 'tag'
+ *   },
+ * });
+ */
+export function useGetImagesByTagQuery(baseOptions: Apollo.QueryHookOptions<GetImagesByTagQuery, GetImagesByTagQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetImagesByTagQuery, GetImagesByTagQueryVariables>(GetImagesByTagDocument, options);
+      }
+export function useGetImagesByTagLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetImagesByTagQuery, GetImagesByTagQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetImagesByTagQuery, GetImagesByTagQueryVariables>(GetImagesByTagDocument, options);
+        }
+export type GetImagesByTagQueryHookResult = ReturnType<typeof useGetImagesByTagQuery>;
+export type GetImagesByTagLazyQueryHookResult = ReturnType<typeof useGetImagesByTagLazyQuery>;
+export type GetImagesByTagQueryResult = Apollo.QueryResult<GetImagesByTagQuery, GetImagesByTagQueryVariables>;
 export const UploadImageDocument = gql`
     mutation UploadImage($uploadImageInput: UploadImageInput) {
   uploadUserProfileImage(uploadImageInput: $uploadImageInput) {
