@@ -84,10 +84,14 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
         ],
         [isLightBreak, block => <BajourLightBreakBlock {...block} />],
         [isSponsoredBreak, block => <BajourSponsoredBreakBlock {...block} />],
-        [isNewsTeasers, block => <NewsBlock {...block} />],
       ]),
     [TeaserGrid, TeaserList, isOldRelatedArticles]
   );
 
-  return extraBlockMap(props.block) ?? <BlockRenderer {...props} />;
+  return (
+    extraBlockMap(props.block) ??
+    (isNewsTeasers(props.block) ? <NewsBlock {...props.block} /> : null) ?? (
+      <BlockRenderer {...props} />
+    )
+  );
 };
