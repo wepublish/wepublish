@@ -3798,6 +3798,8 @@ export type Query = {
    *
    */
   expectedRevenue: Array<DashboardInvoice>;
+  /** Returns images by tag. */
+  getImagesByTag: Array<Image>;
   /**
    *
    *       Returns the most viewed articles in descending order.
@@ -4103,6 +4105,10 @@ export type QueryEventsArgs = {
 export type QueryExpectedRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
+};
+
+export type QueryGetImagesByTagArgs = {
+  tag: Scalars['String'];
 };
 
 export type QueryHotAndTrendingArgs = {
