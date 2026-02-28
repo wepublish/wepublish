@@ -964,6 +964,11 @@ input ExternalAppFilter {
   target: ExternalAppsTarget
 }
 
+type ExternalAppToken {
+  expiresAt: DateTime!
+  token: String!
+}
+
 enum ExternalAppsTarget {
   BLANK
   IFRAME
@@ -1561,6 +1566,11 @@ type Mutation {
 
   """Creates a new external app."""
   createExternalApp(input: CreateExternalAppInput!): ExternalApp!
+
+  """
+  Generates a short-lived JWT token for authenticating with an external app.
+  """
+  createExternalAppToken(externalAppId: String!): ExternalAppToken!
 
   """Creates a new invoice."""
   createInvoice(currency: Currency!, description: String, dueAt: DateTime!, items: [InvoiceItemInput!]!, mail: String!, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime!, subscriptionID: String): Invoice!

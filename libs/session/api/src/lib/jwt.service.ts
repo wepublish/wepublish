@@ -45,9 +45,11 @@ export class JwtService {
   async generateJWT({
     id,
     expiresInMinutes = 60,
+    audience,
   }: {
     id: string;
     expiresInMinutes?: number;
+    audience?: string;
   }): Promise<string> {
     const key = await this.privateKey;
 
@@ -55,18 +57,18 @@ export class JwtService {
       .setProtectedHeader({ alg: 'EdDSA', kid: this.kid })
       .setSubject(id)
       .setIssuer(this.hostURL)
-      .setAudience(this.websiteURL)
+      .setAudience(audience ?? this.websiteURL)
       .setExpirationTime(`${expiresInMinutes}m`)
       .sign(key);
   }
 
-  async verifyJWT(token: string): Promise<string> {
+  async verifyJWT(token: string, audience?: string): Promise<string> {
     try {
       const key = await this.publicKey;
       const { payload } = await jwtVerify(token, key, {
         algorithms: ['EdDSA'],
         issuer: this.hostURL,
-        audience: this.websiteURL,
+        audience: audience ?? this.websiteURL,
       });
       return payload.sub ?? '';
     } catch (error) {
