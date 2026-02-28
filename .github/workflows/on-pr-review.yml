@@ -79,6 +79,8 @@ jobs:
 
   setup-website-matrix:
     runs-on: ubuntu-latest
+    if: needs.check-review-deploy-label.outputs.has_label == 'false'
+    needs: [ check-review-deploy-label ]
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -91,7 +93,6 @@ jobs:
   publish_docker_website_image:
     name: Build Docker Website
     needs: [setup-website-matrix, publish_docker_base_image]
-    if: ${{ needs.helm_deployment.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     strategy:
       fail-fast: false
