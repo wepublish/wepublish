@@ -66,6 +66,7 @@ jobs:
 
   publish_docker_base_image:
     name: Docker base image
+    needs:  [ check-review-deploy-label ]
     if: needs.check-review-deploy-label.outputs.has_label == 'true'
     uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
     secrets: inherit

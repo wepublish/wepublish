@@ -78,6 +78,7 @@ jobs:
       - uses: docker/setup-qemu-action@v1
       - uses: docker/setup-buildx-action@v1
       - name: Random delay to break API peak
+        if: ${{ inputs.environment != 'development' && inputs.environment != 'review' }}
         run: |
           DELAY=$((RANDOM % 60))
           echo "Delaying to break API peak: $DELAY seconds"
