@@ -62,7 +62,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - id: read-deployment-config
-        run: ./deployment/read_deployment_config.sh '.website.review.deployment' true ${{ needs.check-deploy-label.outputs.project_name }}
+        run: ./deployment/read_deployment_config.sh '.website.review.deployment' true ${{ needs.check-review-deploy-label.outputs.project_name }}
 
   publish_docker_base_image:
     name: Docker base image
