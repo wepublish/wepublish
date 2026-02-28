@@ -68,8 +68,8 @@ export class MailController {
     recipient.password = 'hidden';
     recipient.roleIDs = ['hidden'];
 
-    if (!process.env['JWT_SECRET_KEY'])
-      throw new Error('No JWT_SECRET_KEY defined in environment.');
+    if (!process.env['JWT_PRIVATE_KEY'])
+      throw new Error('No JWT_PRIVATE_KEY defined in environment.');
 
     return {
       user: recipient,
@@ -79,7 +79,7 @@ export class MailController {
         audience: 'audience',
         id: recipient.id,
         expiresInMinutes: ONE_WEEK_IN_MINUTES,
-        secret: process.env['JWT_SECRET_KEY'],
+        privateKey: process.env['JWT_PRIVATE_KEY'].replace(/\\n/g, '\n'),
       }),
     };
   }

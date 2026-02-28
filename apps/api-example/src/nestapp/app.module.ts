@@ -384,23 +384,30 @@ import {
             configFile.general.sessionTTLDays
           : 7;
         const sessionTTL = MS_PER_DAY * sessionTTLDays;
-        const jwtSecretKey =
-          config.get('JWT_SECRET_KEY') || 'development-secret-key';
+        const jwtPrivateKey = (config.get('JWT_PRIVATE_KEY') || '').replace(
+          /\\n/g,
+          '\n'
+        );
+        const jwtPublicKey = (config.get('JWT_PUBLIC_KEY') || '').replace(
+          /\\n/g,
+          '\n'
+        );
         const hostURL = config.get('HOST_URL') || 'http://localhost:4000';
         const websiteURL = config.get('WEBSITE_URL') || 'http://localhost:3000';
 
         if (
           process.env.NODE_ENV === 'production' &&
-          jwtSecretKey === 'development-secret-key'
+          (!jwtPrivateKey || !jwtPublicKey)
         ) {
           console.warn(
-            'WARNING: Using default JWT secret key in production environment!'
+            'WARNING: JWT_PRIVATE_KEY or JWT_PUBLIC_KEY not set in production environment!'
           );
         }
 
         return {
           sessionTTL,
-          jwtSecretKey,
+          jwtPrivateKey,
+          jwtPublicKey,
           hostURL,
           websiteURL,
         };
