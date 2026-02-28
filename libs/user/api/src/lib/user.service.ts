@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient, UserEvent } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import { hash as bcryptHash } from '@node-rs/bcrypt';
 import { Validator } from '@wepublish/user';
 import { unselectPassword } from '@wepublish/authentication/api';
 import {
@@ -103,7 +103,7 @@ export class UserService {
   private async hashPassword(password: string) {
     const hashCostFactor = 12;
 
-    return await bcrypt.hash(password, hashCostFactor);
+    return await bcryptHash(password, hashCostFactor);
   }
 
   @PrimeDataLoader(UserDataloaderService)

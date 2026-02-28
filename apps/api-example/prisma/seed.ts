@@ -37,12 +37,12 @@ import {
   EventBlock,
 } from '@wepublish/block-content/api';
 import { TrackingPixel } from '@wepublish/tracking-pixel/api';
-import bcrypt from 'bcrypt';
+import { hash as bcryptHash } from '@node-rs/bcrypt';
 
 async function hashPassword(password: string) {
   const hashCostFactor = 12;
 
-  return await bcrypt.hash(password, hashCostFactor);
+  return await bcryptHash(password, hashCostFactor);
 }
 
 const shuffle = <T>(list: T[]): T[] => {

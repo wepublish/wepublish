@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import bcrypt from 'bcrypt';
+import { compare as bcryptCompare } from '@node-rs/bcrypt';
 import { UserService } from '@wepublish/user/api';
 import { PrismaClient } from '@prisma/client';
 import {
@@ -23,7 +23,7 @@ export class UserAuthenticationService {
       return null;
     }
 
-    const theSame = await bcrypt.compare(password, user.password);
+    const theSame = await bcryptCompare(password, user.password);
     if (!theSame) {
       return null;
     }

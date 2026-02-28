@@ -94,7 +94,6 @@ COPY --chown=wepublish:wepublish apps/api-example/src/default.yaml /wepublish/co
 COPY --chown=wepublish:wepublish libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY --chown=wepublish:wepublish .version /wepublish/.version
 COPY --chown=wepublish:wepublish --from=build-api /wepublish/api /wepublish
-COPY --chown=wepublish:wepublish --from=build-api /wepublish/node_modules/bcrypt node_modules/bcrypt
 RUN chmod -R g=u /wepublish
 EXPOSE 4000
 USER wepublish
@@ -139,7 +138,7 @@ COPY libs/api/prisma/run-seed.ts api/prisma/run-seed.ts
 COPY libs/api/prisma/seed.ts api/prisma/seed.ts
 COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY docker/tsconfig.yaml_seed tsconfig.yaml
-RUN npm install prisma@5.0.0 @prisma/client@5.0.0 @types/node bcrypt typescript && \
+RUN npm install prisma@5.0.0 @prisma/client@5.0.0 @types/node @node-rs/bcrypt typescript && \
     npx tsc -p tsconfig.yaml
 
 FROM ${PLAIN_BUILD_IMAGE} AS migration
@@ -156,7 +155,7 @@ RUN groupadd -r wepublish && \
     apt-get install -y --no-install-recommends openssl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    npm install prisma@5.0.0 bcrypt && \
+    npm install prisma@5.0.0 @node-rs/bcrypt && \
     npx prisma generate && \
     chmod -R g=u /wepublish
 USER wepublish
