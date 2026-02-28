@@ -1,6 +1,6 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 import { Public } from '@wepublish/authentication/api';
-import { JWT_PUBLIC_KEY_TOKEN } from './jwt.service';
+import { HOST_URL_TOKEN, JWT_PUBLIC_KEY_TOKEN } from './jwt.service';
 import { createPublicKey } from 'crypto';
 import { computeKid } from './jwk-utils';
 
@@ -14,7 +14,10 @@ interface JwksKey extends JsonWebKey {
 export class JwksController {
   private cachedJwks: { keys: JwksKey[] } | null = null;
 
-  constructor(@Inject(JWT_PUBLIC_KEY_TOKEN) private jwtPublicKey: string) {}
+  constructor(
+    @Inject(JWT_PUBLIC_KEY_TOKEN) private jwtPublicKey: string,
+    @Inject(HOST_URL_TOKEN) private hostURL: string
+  ) {}
 
   @Public()
   @Get('jwks.json')
@@ -41,5 +44,15 @@ export class JwksController {
     }
 
     return this.cachedJwks;
+  }
+
+  @Public()
+  @Get('openid-configuration')
+  getOpenIdConfiguration() {
+    return {
+      issuer: this.hostURL,
+      jwks_uri: `${this.hostURL}/.well-known/jwks.json`,
+      id_token_signing_alg_values_supported: ['ES256'],
+    };
   }
 }
