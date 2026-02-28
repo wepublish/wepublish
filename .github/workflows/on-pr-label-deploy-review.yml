@@ -78,15 +78,15 @@ jobs:
     uses: ./.github/workflows/on-demand-publish-docker-image.yml
     with:
       editor_tags: |
-        ghcr.io/wepublish/editor:review_${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
+        ghcr.io/wepublish/editor:review${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
       api_tags: |
-        ghcr.io/wepublish/api:review_${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
+        ghcr.io/wepublish/api:review${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
       migration_tags: |
-        ghcr.io/wepublish/migration:review_${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
+        ghcr.io/wepublish/migration:review${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
       storybook_tags: |
-        ghcr.io/wepublish/storybook:review_${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
+        ghcr.io/wepublish/storybook:review${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
       media_tags: |
-        ghcr.io/wepublish/media:review_${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
+        ghcr.io/wepublish/media:review${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
     secrets: inherit
 
   publish_docker_website_image:
@@ -96,10 +96,10 @@ jobs:
     uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
     with:
       website_project: ${{ needs.check-review-deploy-label.outputs.project_name }}
-      api_url: https://api-review-${{ needs.check-review-deploy-label.outputs.review_version }}.wepublish.works
+      api_url: https://api-review${{ needs.check-review-deploy-label.outputs.review_version }}.wepublish.works
       environment: review_deployed
       website_tags: |
-        ghcr.io/wepublish/website-review:review_${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
+        ghcr.io/wepublish/website-review${{ needs.check-review-deploy-label.outputs.review_version }}:review-${{ needs.date_sha_tag.outputs.tag }}
     secrets: inherit
 
   notify:
@@ -120,10 +120,10 @@ jobs:
         env:
           BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          API_URL: https://api-review-${{ needs.check-review-deploy-label.outputs.review_version }}.wepublish.works
-          MEDIA_SERVER_URL: https://media-review-${{ needs.check-review-deploy-label.outputs.review_version }}.wepublish.works
-          WEBSITE_URL: https://review-${{ needs.check-review-deploy-label.outputs.review_version }}.wepublish.works
-          EDITOR_URL: https://editor-review-${{ needs.check-review-deploy-label.outputs.review_version }}.wepublish.works
+          API_URL: https://api-review${{ needs.check-review-deploy-label.outputs.review_version }}.wepublish.works
+          MEDIA_SERVER_URL: https://media-review${{ needs.check-review-deploy-label.outputs.review_version }}.wepublish.works
+          WEBSITE_URL: https://review${{ needs.check-review-deploy-label.outputs.review_version }}.wepublish.works
+          EDITOR_URL: https://editor-review${{ needs.check-review-deploy-label.outputs.review_version }}.wepublish.works
           HAS_LABEL: ${{ needs.check-review-deploy-label.outputs.has_label }}
         run: |
           cd ./config
