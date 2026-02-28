@@ -212,7 +212,10 @@ export class SessionService {
       new Date().getTime() + expiresInMinutes * 60 * 1000
     ).toISOString();
 
-    const token = this.jwtService.generateJWT({ id: userId, expiresInMinutes });
+    const token = await this.jwtService.generateJWT({
+      id: userId,
+      expiresInMinutes,
+    });
 
     return {
       token,
@@ -227,7 +230,10 @@ export class SessionService {
       new Date().getTime() + expiresInMinutes * 60 * 1000
     ).toISOString();
 
-    const token = this.jwtService.generateJWT({ id: userId, expiresInMinutes });
+    const token = await this.jwtService.generateJWT({
+      id: userId,
+      expiresInMinutes,
+    });
 
     return {
       token,

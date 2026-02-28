@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import jwt from 'jsonwebtoken';
+import { SignJWT, jwtVerify, importPKCS8, importSPKI } from 'jose';
 import { createPublicKey } from 'crypto';
 import { computeKid } from './jwk-utils';
 
@@ -11,6 +11,8 @@ export const WEBSITE_URL_TOKEN = 'WEBSITE_URL_TOKEN';
 @Injectable()
 export class JwtService {
   private kid: string;
+  private privateKey: Promise<CryptoKey>;
+  private publicKey: Promise<CryptoKey>;
 
   constructor(
     @Inject(JWT_PRIVATE_KEY_TOKEN) private jwtPrivateKey: string,
@@ -18,6 +20,9 @@ export class JwtService {
     @Inject(HOST_URL_TOKEN) private hostURL: string,
     @Inject(WEBSITE_URL_TOKEN) private websiteURL: string
   ) {
+    this.privateKey = importPKCS8(this.jwtPrivateKey, 'EdDSA');
+    this.publicKey = importSPKI(this.jwtPublicKey, 'EdDSA');
+
     if (this.jwtPublicKey) {
       const publicKey = createPublicKey({
         key: this.jwtPublicKey,
@@ -29,33 +34,33 @@ export class JwtService {
     }
   }
 
-  generateJWT({
+  async generateJWT({
     id,
     expiresInMinutes = 60,
   }: {
     id: string;
     expiresInMinutes?: number;
-  }): string {
-    return jwt.sign({}, this.jwtPrivateKey, {
-      algorithm: 'ES256',
-      keyid: this.kid,
-      expiresIn: expiresInMinutes * 60,
-      audience: this.websiteURL,
-      issuer: this.hostURL,
-      subject: id,
-    });
+  }): Promise<string> {
+    const key = await this.privateKey;
+
+    return new SignJWT({})
+      .setProtectedHeader({ alg: 'EdDSA', kid: this.kid })
+      .setSubject(id)
+      .setIssuer(this.hostURL)
+      .setAudience(this.websiteURL)
+      .setExpirationTime(`${expiresInMinutes}m`)
+      .sign(key);
   }
 
-  verifyJWT(token: string): string {
+  async verifyJWT(token: string): Promise<string> {
     if (!this.jwtPublicKey) throw new Error('No JWT_PUBLIC_KEY defined.');
 
     try {
-      const decoded = jwt.verify(token, this.jwtPublicKey, {
-        algorithms: ['ES256'],
+      const key = await this.publicKey;
+      const { payload } = await jwtVerify(token, key, {
+        algorithms: ['EdDSA'],
       });
-      return typeof decoded === 'object' && 'sub' in decoded ?
-          (decoded.sub as string)
-        : '';
+      return payload.sub ?? '';
     } catch (error) {
       throw new Error('Invalid JWT token');
     }

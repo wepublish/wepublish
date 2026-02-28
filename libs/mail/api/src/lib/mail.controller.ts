@@ -62,7 +62,7 @@ export class MailController {
    * Build the data for passing it to the mail templates
    * @returns a HashMap of configuration data
    */
-  private buildData() {
+  private async buildData() {
     // avoid unwanted data mutation by reference
     const recipient = JSON.parse(JSON.stringify(this.config.recipient));
     recipient.password = 'hidden';
@@ -74,7 +74,7 @@ export class MailController {
     return {
       user: recipient,
       optional: this.config.optionalData,
-      jwt: generateJWT({
+      jwt: await generateJWT({
         issuer: 'mailer',
         audience: 'audience',
         id: recipient.id,
@@ -105,7 +105,7 @@ export class MailController {
       mailLogID: mailLogId,
       remoteTemplate: this.config.externalMailTemplateId,
       recipient: this.config.recipient.email,
-      data: this.buildData(),
+      data: await this.buildData(),
     });
 
     await this.prismaService.mailLog.create({
