@@ -1,0 +1,139 @@
+name: Review Deployment on PR Label
+
+on:
+  pull_request:
+    types: [labeled, opened, synchronize, reopened]
+
+concurrency:
+  group: review-label-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-review-deploy-label:
+    runs-on: ubuntu-latest
+    outputs:
+      project_name: ${{ steps.extract_project_name.outputs.project_name }}
+      review_version: ${{ steps.extract_project_name.outputs.review_version }}
+      has_label: ${{ steps.extract_project_name.outputs.has_label }}
+    steps:
+      - name: Check for Deploy_ Label and Extract Project Name
+        id: extract_project_name
+        run: |
+          project_name=""
+          review_version=""
+          has_label="false"
+          labels=$(echo '${{ toJSON(github.event.pull_request.labels) }}' | jq -r '.[].name')
+          for label in $labels; do
+            if [[ "$label" == review_* ]]; then
+                review_version=$(echo "$label" | cut -d'_' -f2)
+                project_name=$(echo "$label" | cut -d'_' -f3)
+                has_label="true"
+                break
+            fi
+          done
+
+          echo "has_label=$has_label" >> "$GITHUB_OUTPUT"
+          echo "review_version=$review_version" >> "$GITHUB_OUTPUT"
+          echo "project_name=$project_name" >> "$GITHUB_OUTPUT"
+
+          if [[ "$has_label" == "false" ]]; then
+            echo "No review label found. Skipping."
+          else
+            echo "Review Build Found: $review_version and found project: $project_name"
+          fi
+
+  date_sha_tag:
+    runs-on: ubuntu-latest
+    needs: [ check-review-deploy-label]
+    if: needs.check-review-deploy-label.outputs.has_label == 'true'
+    outputs:
+      tag: ${{ steps.image_tag.outputs.tag }}
+    steps:
+      - id: image_tag
+        run: echo "::set-output name=tag::$(date +%s)-${{ github.sha }}"
+              
+  check-if-website-deployment:
+    runs-on: ubuntu-latest
+    outputs:
+      has-website: ${{ steps.read-deployment-config.outputs.has-website }}
+    needs: [ check-review-deploy-label]
+    if: needs.check-review-deploy-label.outputs.has_label == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - id: read-deployment-config
+        run: ./deployment/read_deployment_config.sh '.website.review.deployment' true ${{ needs.check-review-deploy-label.outputs.project_name }}
+
+  publish_docker_base_image:
+    name: Docker base image
+    needs:  [ check-review-deploy-label ]
+    if: needs.check-review-deploy-label.outputs.has_label == 'true'
+    uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
+    secrets: inherit
+
+  publish_docker_backend_images:
+    needs: [publish_docker_base_image, check-review-deploy-label, date_sha_tag]
+    if: needs.check-review-deploy-label.outputs.has_label == 'true'
+    name: Docker backend images
+    uses: ./.github/workflows/on-demand-publish-docker-image.yml
+    with:
+      editor_tags: |
+        ghcr.io/wepublish/editor:review${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
+      api_tags: |
+        ghcr.io/wepublish/api:review${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
+      migration_tags: |
+        ghcr.io/wepublish/migration:review${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
+      storybook_tags: |
+        ghcr.io/wepublish/storybook:review${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
+      media_tags: |
+        ghcr.io/wepublish/media:review${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
+    secrets: inherit
+
+  publish_docker_website_image:
+    name: Build Docker Website
+    needs: [publish_docker_base_image, check-review-deploy-label, publish_docker_backend_images, date_sha_tag]
+    if: ${{ needs.publish_docker_backend_images.result == 'success' }}
+    uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
+    with:
+      website_project: ${{ needs.check-review-deploy-label.outputs.project_name }}
+      api_url: https://api-review${{ needs.check-review-deploy-label.outputs.review_version }}.wepublish.works
+      environment: review_deployed
+      website_tags: |
+        ghcr.io/wepublish/website-review${{ needs.check-review-deploy-label.outputs.review_version }}:review-${{ needs.date_sha_tag.outputs.tag }}
+    secrets: inherit
+
+  notify:
+    name: Notify
+    needs: [publish_docker_website_image, check-review-deploy-label]
+    if: ${{ needs.publish_docker_website_image.result == 'success' }}
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Create Deployment Text
+        id: deploymentComment
+        env:
+          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          API_URL: https://api-review${{ needs.check-review-deploy-label.outputs.review_version }}.wepublish.works
+          MEDIA_SERVER_URL: https://media-review${{ needs.check-review-deploy-label.outputs.review_version }}.wepublish.works
+          WEBSITE_URL: https://review${{ needs.check-review-deploy-label.outputs.review_version }}.wepublish.works
+          EDITOR_URL: https://editor-review${{ needs.check-review-deploy-label.outputs.review_version }}.wepublish.works
+          HAS_LABEL: ${{ needs.check-review-deploy-label.outputs.has_label }}
+        run: |
+          cd ./config
+          npm ci
+          OUTPUT=$(node ./notify-github.js)
+          OUTPUT="${OUTPUT//$'\n'/'%0A'}"
+          OUTPUT="${OUTPUT//$'\r'/'%0D'}"
+          echo "::set-OUTPUT name=result::$OUTPUT"
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            ${{ steps.deploymentComment.outputs.result }}

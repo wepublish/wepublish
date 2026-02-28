@@ -77,7 +77,7 @@ RUN npm install -g @yao-pkg/pkg && \
     cp docker/api_build_package.json package.json && \
     pkg package.json
 
-FROM debian:bookworm-slim AS api
+FROM ${PLAIN_BUILD_IMAGE}  AS api
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 ENV ADDRESS=0.0.0.0
