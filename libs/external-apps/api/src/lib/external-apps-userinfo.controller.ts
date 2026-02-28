@@ -9,12 +9,14 @@ import { Public } from '@wepublish/authentication/api';
 import { JwtService } from '@wepublish/session/api';
 import { addPredefinedPermissions } from '@wepublish/permissions/api';
 import { decodeJwt } from 'jose';
+import { ExternalAppsService } from './external-apps.service';
 
 @Controller('external-apps')
 export class ExternalAppsUserinfoController {
   constructor(
     private jwtService: JwtService,
-    private prisma: PrismaClient
+    private prisma: PrismaClient,
+    private externalAppsService: ExternalAppsService
   ) {}
 
   @Public()
@@ -36,10 +38,9 @@ export class ExternalAppsUserinfoController {
       throw new UnauthorizedException('Token missing audience claim');
     }
 
-    // Verify the audience is a registered external app
-    const externalApp = await this.prisma.externalApps.findFirst({
-      where: { url: audience },
-    });
+    // Verify the audience is a registered external app (compare by origin)
+    const apps = await this.externalAppsService.externalAppsList();
+    const externalApp = apps.find(app => new URL(app.url).origin === audience);
 
     if (!externalApp) {
       throw new UnauthorizedException(
