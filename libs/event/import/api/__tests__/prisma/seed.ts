@@ -1,11 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import { seed as rootSeed } from '../../../../../api/prisma/seed';
-import { hash as bcryptHash } from '@node-rs/bcrypt';
+import { hash as argon2Hash } from '@node-rs/argon2';
 
 async function hashPassword(password: string) {
-  const hashCostFactor = 12;
-
-  return await bcryptHash(password, hashCostFactor);
+  return await argon2Hash(password);
 }
 
 async function seed() {
