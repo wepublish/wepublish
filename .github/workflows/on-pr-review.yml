@@ -18,8 +18,44 @@ env:
   PROJECT_URL_SUFFIX: -${{ github.event.pull_request.number }}.reviews.wepublish.dev
 
 jobs:
+
+  check-review-deploy-label:
+    runs-on: ubuntu-latest
+    outputs:
+      project_name: ${{ steps.extract_project_name.outputs.project_name }}
+      review_version: ${{ steps.extract_project_name.outputs.review_version }}
+      has_label: ${{ steps.extract_project_name.outputs.has_label }}
+    steps:
+      - name: Check for Deploy_ Label and Extract Project Name
+        id: extract_project_name
+        run: |
+          project_name=""
+          review_version=""
+          has_label="false"
+          labels=$(echo '${{ toJSON(github.event.pull_request.labels) }}' | jq -r '.[].name')
+          for label in $labels; do
+            if [[ "$label" == review_* ]]; then
+                review_version=$(echo "$label" | cut -d'_' -f2)
+                project_name=$(echo "$label" | cut -d'_' -f3)
+                has_label="true"
+                break
+            fi
+          done
+
+          echo "has_label=$has_label" >> "$GITHUB_OUTPUT"
+          echo "review_version=$review_version" >> "$GITHUB_OUTPUT"
+          echo "project_name=$project_name" >> "$GITHUB_OUTPUT"
+
+          if [[ "$has_label" == "false" ]]; then
+            echo "No review label found. Skipping."
+          else
+            echo "Review Build Found: $review_version and found project: $project_name"
+          fi
+
   publish_docker_base_image:
     name: Docker base image
+    if: needs.check-review-deploy-label.outputs.has_label == 'false'
+    needs: [ check-review-deploy-label ]
     uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
     secrets: inherit
 

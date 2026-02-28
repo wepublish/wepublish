@@ -9,13 +9,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  date_sha_tag:
-    runs-on: ubuntu-latest
-    outputs:
-      tag: ${{ steps.image_tag.outputs.tag }}
-    steps:
-      - id: image_tag
-        run: echo "::set-output name=tag::$(date +%s)-${{ github.sha }}"
   check-review-deploy-label:
     runs-on: ubuntu-latest
     outputs:
@@ -49,12 +42,22 @@ jobs:
             echo "Review Build Found: $review_version and found project: $project_name"
           fi
 
+  date_sha_tag:
+    runs-on: ubuntu-latest
+    needs: [ check-review-deploy-label]
+    if: needs.check-review-deploy-label.outputs.has_label == 'true'
+    outputs:
+      tag: ${{ steps.image_tag.outputs.tag }}
+    steps:
+      - id: image_tag
+        run: echo "::set-output name=tag::$(date +%s)-${{ github.sha }}"
+              
   check-if-website-deployment:
     runs-on: ubuntu-latest
     outputs:
       has-website: ${{ steps.read-deployment-config.outputs.has-website }}
     needs: [ check-review-deploy-label]
-    if: ${{ needs.check-review-deploy-label.result == 'success' &&  needs.check-review-deploy-label.outputs.project_name != '' }}
+    if: needs.check-review-deploy-label.outputs.has_label == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -63,11 +66,13 @@ jobs:
 
   publish_docker_base_image:
     name: Docker base image
+    if: needs.check-review-deploy-label.outputs.has_label == 'true'
     uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
     secrets: inherit
 
   publish_docker_backend_images:
     needs: [publish_docker_base_image, check-review-deploy-label, date_sha_tag]
+    if: needs.check-review-deploy-label.outputs.has_label == 'true'
     name: Docker backend images
     uses: ./.github/workflows/on-demand-publish-docker-image.yml
     with:
