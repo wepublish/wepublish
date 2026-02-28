@@ -65,6 +65,8 @@ export class JwtService {
       const key = await this.publicKey;
       const { payload } = await jwtVerify(token, key, {
         algorithms: ['EdDSA'],
+        issuer: this.hostURL,
+        audience: this.websiteURL,
       });
       return payload.sub ?? '';
     } catch (error) {
