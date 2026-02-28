@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient, UserEvent } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import { hash as argon2Hash } from '@node-rs/argon2';
 import { Validator } from '@wepublish/user';
 import { unselectPassword } from '@wepublish/authentication/api';
 import {
@@ -101,9 +101,7 @@ export class UserService {
   }
 
   private async hashPassword(password: string) {
-    const hashCostFactor = 12;
-
-    return await bcrypt.hash(password, hashCostFactor);
+    return await argon2Hash(password);
   }
 
   @PrimeDataLoader(UserDataloaderService)
@@ -113,6 +111,9 @@ export class UserService {
     properties,
     ...input
   }: CreateUserInput) {
+    if (password) {
+      await Validator.password.parseAsync(password);
+    }
     const hashedPassword = await this.hashPassword(
       password ?? crypto.randomBytes(48).toString('base64')
     );
@@ -200,6 +201,10 @@ export class UserService {
 
   @PrimeDataLoader(UserDataloaderService)
   async resetPassword(id: string, password?: string, sendMail?: boolean) {
+    if (password) {
+      await Validator.password.parseAsync(password);
+    }
+
     const user = await this.prisma.user.update({
       where: { id },
       data: {

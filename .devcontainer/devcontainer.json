@@ -17,6 +17,7 @@
   "postCreateCommand": "npm install",
 
   "containerEnv": {
+    "TZ": "Europe/Zurich",
     "GIT_EDITOR": "nano",
     "DATABASE_URL": "postgresql://postgres@database:5432/wepublish?schema=public",
     "S3_ENDPOINT": "storage",

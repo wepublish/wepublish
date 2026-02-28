@@ -61,6 +61,7 @@ COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEX
 COPY --chown=wepublish:wepublish version /wepublish/apps/${NEXT_PROJECT}/public/deployed_version
 COPY --chown=wepublish:wepublish --from=build-website /wepublish/secrets_name.list /wepublish/secrets_name.list
 COPY --chown=wepublish:wepublish --from=build-website /wepublish/deployment/map-secrets.sh /wepublish/map-secrets.sh
+RUN chmod -R g=u /wepublish
 EXPOSE 4001
 USER wepublish
 ENTRYPOINT ["/entrypoint.sh"]
@@ -76,7 +77,7 @@ RUN npm install -g @yao-pkg/pkg && \
     cp docker/api_build_package.json package.json && \
     pkg package.json
 
-FROM debian:bookworm-slim AS api
+FROM ${PLAIN_BUILD_IMAGE}  AS api
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 ENV ADDRESS=0.0.0.0
@@ -93,7 +94,7 @@ COPY --chown=wepublish:wepublish apps/api-example/src/default.yaml /wepublish/co
 COPY --chown=wepublish:wepublish libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY --chown=wepublish:wepublish .version /wepublish/.version
 COPY --chown=wepublish:wepublish --from=build-api /wepublish/api /wepublish
-COPY --chown=wepublish:wepublish --from=build-api /wepublish/node_modules/bcrypt node_modules/bcrypt
+RUN chmod -R g=u /wepublish
 EXPOSE 4000
 USER wepublish
 CMD /wepublish/api
@@ -121,6 +122,7 @@ RUN groupadd -r wepublish && \
     chown -R wepublish:wepublish /wepublish
 COPY --chown=wepublish:wepublish --from=build-editor /wepublish/editor /wepublish
 COPY --chown=wepublish:wepublish --from=build-editor /wepublish/dist/apps/editor/browser dist/apps/editor/browser
+RUN chmod -R g=u /wepublish
 EXPOSE 3000
 USER wepublish
 CMD /wepublish/editor
@@ -136,7 +138,7 @@ COPY libs/api/prisma/run-seed.ts api/prisma/run-seed.ts
 COPY libs/api/prisma/seed.ts api/prisma/seed.ts
 COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY docker/tsconfig.yaml_seed tsconfig.yaml
-RUN npm install prisma@5.0.0 @prisma/client@5.0.0 @types/node bcrypt typescript && \
+RUN npm install prisma@5.0.0 @prisma/client@5.0.0 @types/node @node-rs/argon2 typescript && \
     npx tsc -p tsconfig.yaml
 
 FROM ${PLAIN_BUILD_IMAGE} AS migration
@@ -153,8 +155,9 @@ RUN groupadd -r wepublish && \
     apt-get install -y --no-install-recommends openssl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    npm install prisma@5.0.0 bcrypt && \
-    npx prisma generate
+    npm install prisma@5.0.0 @node-rs/argon2 && \
+    npx prisma generate && \
+    chmod -R g=u /wepublish
 USER wepublish
 CMD ["bash", "./start.sh"]
 
@@ -188,6 +191,7 @@ RUN groupadd -r wepublish && \
     rm -rf /var/lib/apt/lists/*
 COPY --from=build-media /app/dist/apps/media/ .
 COPY --from=build-media --chown=wepublish:wepublish /app/node_modules ./node_modules
+RUN chmod -R g=u /wepublish
 USER wepublish
 EXPOSE 4100
 CMD ["node", "main.js"]
