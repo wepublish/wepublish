@@ -20,18 +20,26 @@ export class JwtService {
     @Inject(HOST_URL_TOKEN) private hostURL: string,
     @Inject(WEBSITE_URL_TOKEN) private websiteURL: string
   ) {
+    if (!this.jwtPrivateKey) {
+      throw new Error(
+        'JWT_PRIVATE_KEY is not set. The API cannot start without a valid Ed25519 private key.'
+      );
+    }
+
+    if (!this.jwtPublicKey) {
+      throw new Error(
+        'JWT_PUBLIC_KEY is not set. The API cannot start without a valid Ed25519 public key.'
+      );
+    }
+
     this.privateKey = importPKCS8(this.jwtPrivateKey, 'EdDSA');
     this.publicKey = importSPKI(this.jwtPublicKey, 'EdDSA');
 
-    if (this.jwtPublicKey) {
-      const publicKey = createPublicKey({
-        key: this.jwtPublicKey,
-        format: 'pem',
-      });
-      this.kid = computeKid(publicKey.export({ format: 'jwk' }));
-    } else {
-      this.kid = '';
-    }
+    const publicKey = createPublicKey({
+      key: this.jwtPublicKey,
+      format: 'pem',
+    });
+    this.kid = computeKid(publicKey.export({ format: 'jwk' }));
   }
 
   async generateJWT({
@@ -53,8 +61,6 @@ export class JwtService {
   }
 
   async verifyJWT(token: string): Promise<string> {
-    if (!this.jwtPublicKey) throw new Error('No JWT_PUBLIC_KEY defined.');
-
     try {
       const key = await this.publicKey;
       const { payload } = await jwtVerify(token, key, {
