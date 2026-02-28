@@ -1,0 +1,97 @@
+name: Review Deployment on PR Label
+
+on:
+  pull_request:
+    types: [labeled, opened, synchronize, reopened]
+
+concurrency:
+  group: review-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  date_sha_tag:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.image_tag.outputs.tag }}
+    steps:
+      - id: image_tag
+        run: echo "::set-output name=tag::$(date +%s)-${{ github.sha }}"
+  check-review-deploy-label:
+    runs-on: ubuntu-latest
+    outputs:
+      project_name: ${{ steps.extract_project_name.outputs.project_name }}
+      review_version: ${{ steps.extract_project_name.outputs.review_version }}
+      has_label: ${{ steps.extract_project_name.outputs.has_label }}
+    steps:
+      - name: Check for Deploy_ Label and Extract Project Name
+        id: extract_project_name
+        run: |
+          project_name=""
+          review_version=""
+          has_label="false"
+          labels=$(echo '${{ toJSON(github.event.pull_request.labels) }}' | jq -r '.[].name')
+          for label in $labels; do
+            if [[ "$label" == review_* ]]; then
+                review_version=$(echo "$label" | cut -d'_' -f2)
+                project_name=$(echo "$label" | cut -d'_' -f3)
+                has_label="true"
+                break
+            fi
+          done
+
+          echo "has_label=$has_label" >> "$GITHUB_OUTPUT"
+          echo "review_version=$review_version" >> "$GITHUB_OUTPUT"
+          echo "project_name=$project_name" >> "$GITHUB_OUTPUT"
+
+          if [[ "$has_label" == "false" ]]; then
+            echo "No review label found. Skipping."
+          else
+            echo "Review Build Found: $review_version and found project: $project_name"
+          fi
+
+  check-if-website-deployment:
+    runs-on: ubuntu-latest
+    outputs:
+      has-website: ${{ steps.read-deployment-config.outputs.has-website }}
+    needs: [ check-review-deploy-label]
+    if: ${{ needs.check-review-deploy-label.result == 'success' &&  needs.check-review-deploy-label.outputs.project_name != '' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - id: read-deployment-config
+        run: ./deployment/read_deployment_config.sh '.website.review.deployment' true ${{ needs.check-deploy-label.outputs.project_name }}
+
+  publish_docker_base_image:
+    name: Docker base image
+    uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
+    secrets: inherit
+
+  publish_docker_backend_images:
+    needs: [publish_docker_base_image, check-review-deploy-label, date_sha_tag]
+    name: Docker backend images
+    uses: ./.github/workflows/on-demand-publish-docker-image.yml
+    with:
+      editor_tags: |
+        ghcr.io/wepublish/editor:review_${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
+      api_tags: |
+        ghcr.io/wepublish/api:review_${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
+      migration_tags: |
+        ghcr.io/wepublish/migration:review_${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
+      storybook_tags: |
+        ghcr.io/wepublish/storybook:review_${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
+      media_tags: |
+        ghcr.io/wepublish/media:review_${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
+    secrets: inherit
+
+  publish_docker_website_image:
+    name: Build Docker Website
+    needs: [publish_docker_base_image, check-review-deploy-label, publish_docker_backend_images, date_sha_tag]
+    if: ${{ needs.publish_docker_backend_images.result == 'success' }}
+    uses: ./.github/workflows/on-demand-publish-docker-image-website.yml
+    with:
+      website_project: ${{ needs.check-review-deploy-label.outputs.project_name }}
+      api_url: https://api-review-${{ needs.check-review-deploy-label.outputs.review_version }}.wepublish.works
+      environment: review_deployed
+      website_tags: |
+        ghcr.io/wepublish/website-review:review_${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
+    secrets: inherit

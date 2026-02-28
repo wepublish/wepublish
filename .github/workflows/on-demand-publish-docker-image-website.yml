@@ -47,11 +47,11 @@ jobs:
       - name: Get environment variables
         id: get-env
         run: |
-          ./deployment/website_read_env.sh ${{ inputs.environment }} ${{ inputs.website_project }} docker NEXT_PROJECT=${{ inputs.website_project }} API_URL=${{ inputs.api_url }} NX_NEXT_PROJECT_BUILD_OPTIONS="\"${{ inputs.environment == 'development' && '--skip-nx-cache --experimental-build-mode compile' || '--skip-nx-cache' }}\""
+          ./deployment/website_read_env.sh ${{ inputs.environment }} ${{ inputs.website_project }} docker NEXT_PROJECT=${{ inputs.website_project }} API_URL=${{ inputs.api_url }} NX_NEXT_PROJECT_BUILD_OPTIONS="\"${{ (inputs.environment == 'development' || inputs.environment == 'review') && '--skip-nx-cache --experimental-build-mode compile' || '--skip-nx-cache' }}\""
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
       - name: Wait for api version to be deployed
-        if: ${{ inputs.environment != 'development' }}
+        if: ${{ inputs.environment != 'development' && inputs.environment != 'review' }}
         id: wait-for-version
         run: |
           MAX_RETRIES=120
@@ -100,7 +100,7 @@ jobs:
             ${{ inputs.website_tags }}
       - name: Wait for frontend to be deployed
         id: wait-for-frontend-deployment
-        if: ${{ inputs.environment != 'review' && inputs.environment != 'development' }}
+        if: ${{ inputs.environment != 'review' && inputs.environment != 'development'  && inputs.environment != 'review_deployed' }}
         run: |
           MAX_RETRIES=120
           RETRY_DELAY=10
