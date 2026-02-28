@@ -19,13 +19,12 @@ async function main() {
 
   - Website: ${WEBSITE_URL}
   - Editor: ${EDITOR_URL}
-  - Public API: ${API_URL}/v1
-  - Private API: ${API_URL}/v1/admin
+  - API: ${API_URL}/v1
   - Media: ${MEDIA_SERVER_URL}
 
 <h2>Projects:</h2>
 
-To deploy frontend create a label with the prefix "deploy_" followed by the project name eg. deploy_bajour
+To deploy frontend create a label with the prefix "review_" followed by the review runner number and the project name eg. deploy_01_bajour.
  
 `
 

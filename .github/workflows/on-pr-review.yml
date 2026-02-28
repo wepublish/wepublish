@@ -104,35 +104,3 @@ jobs:
       website_tags: |
         ghcr.io/wepublish/website-${{ matrix.target }}:${{ github.sha }}
     secrets: inherit
-
-  notify:
-    name: Notify
-    needs: [setup-website-matrix, publish_docker_website_image]
-    if: ${{ needs.publish_docker_website_image.result == 'success' }}
-    runs-on: ubuntu-latest
-    continue-on-error: true
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
-      - name: Create Deployment Text
-        id: deploymentComment
-        env:
-          PROJECTS: ${{needs.setup-website-matrix.outputs.matrix}}
-          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: |
-          cd ./config
-          npm ci
-          OUTPUT=$(node ./notify-github.js)
-          OUTPUT="${OUTPUT//$'\n'/'%0A'}"
-          OUTPUT="${OUTPUT//$'\r'/'%0D'}"
-          echo "::set-OUTPUT name=result::$OUTPUT"
-
-      - uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          message: |
-            ${{ steps.deploymentComment.outputs.result }}
