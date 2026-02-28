@@ -120,7 +120,9 @@ import {
           path: 'v1',
           cache: 'bounded',
           persistedQueries: false,
-          introspection: configFile.general.apolloIntrospection,
+          introspection:
+            process.env.NODE_ENV !== 'production' &&
+            configFile.general.apolloIntrospection,
           playground: configFile.general.apolloPlayground,
           allowBatchedHttpRequests: true,
           inheritResolversFromInterfaces: true,

@@ -111,6 +111,9 @@ export class UserService {
     properties,
     ...input
   }: CreateUserInput) {
+    if (password) {
+      await Validator.password.parseAsync(password);
+    }
     const hashedPassword = await this.hashPassword(
       password ?? crypto.randomBytes(48).toString('base64')
     );
@@ -198,6 +201,10 @@ export class UserService {
 
   @PrimeDataLoader(UserDataloaderService)
   async resetPassword(id: string, password?: string, sendMail?: boolean) {
+    if (password) {
+      await Validator.password.parseAsync(password);
+    }
+
     const user = await this.prisma.user.update({
       where: { id },
       data: {

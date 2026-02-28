@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { PrismaClient, User, UserEvent } from '@prisma/client';
 import { InvalidCredentialsError, NotActiveError } from './session.errors';
 import nanoid from 'nanoid/generate';
@@ -171,7 +166,7 @@ export class SessionService {
     });
 
     if (!user) {
-      throw new NotFoundException(`User with email ${email} was not found.`);
+      return email;
     }
 
     const jwtExpiresSetting = await this.prisma.setting.findUnique({
