@@ -69,7 +69,14 @@ export const NewsBlock = ({
           </Link>
         </OrangeBox>
 
-        <Filler>{firstImage && <Image image={firstImage} />}</Filler>
+        <Filler>
+          {firstImage &&
+            (firstImage.link ?
+              <Link href={firstImage.link}>
+                <Image image={firstImage} />
+              </Link>
+            : <Image image={firstImage} />)}
+        </Filler>
       </NewsTeaserListWrapper>
     </>
   );
