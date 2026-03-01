@@ -9,4 +9,7 @@ export default {
 
 export const Default = {
   args: mockTwitterTweetBlock(),
+  parameters: {
+    chromatic: { disableSnapshot: true }, // loads live Twitter/X embed — snapshot would always differ
+  },
 };

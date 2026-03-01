@@ -12,16 +12,12 @@ type UserExtensionProperties = {
 
 export const mockUser = ({
   id = faker.string.nanoid(),
-  name = faker.person.lastName(),
+  name = 'Müller',
   image = mockImage(),
-  birthday = faker.date
-    .past({
-      years: 18,
-    })
-    .toISOString(),
-  email = faker.internet.email(),
-  firstName = faker.person.firstName(),
-  flair = faker.person.jobTitle(),
+  birthday = '1990-06-15T00:00:00.000Z',
+  email = 'mock@example.com',
+  firstName = 'Anna',
+  flair = 'Software Engineer',
   permissions = [],
   address = mockUserAdress(),
   properties = [],
@@ -48,16 +44,12 @@ export const mockUser = ({
 
 export const mockSensitiveDataUser = ({
   id = faker.string.nanoid(),
-  name = faker.person.lastName(),
+  name = 'Müller',
   image = mockImage(),
-  birthday = faker.date
-    .past({
-      years: 18,
-    })
-    .toISOString(),
-  email = faker.internet.email(),
-  firstName = faker.person.firstName(),
-  flair = faker.person.jobTitle(),
+  birthday = '1990-06-15T00:00:00.000Z',
+  email = 'mock@example.com',
+  firstName = 'Anna',
+  flair = 'Software Engineer',
   permissions = [],
   address = mockUserAdress(),
   properties = [],
@@ -84,12 +76,12 @@ export const mockSensitiveDataUser = ({
 });
 
 export const mockUserAdress = ({
-  streetAddress = faker.location.streetAddress(),
-  streetAddress2 = faker.location.secondaryAddress(),
-  city = faker.location.city(),
-  zipCode = faker.location.zipCode(),
-  country = faker.location.country(),
-  company = faker.company.name(),
+  streetAddress = 'Musterstrasse 1',
+  streetAddress2 = 'c/o Beispiel AG',
+  city = 'Zürich',
+  zipCode = '8001',
+  country = 'Schweiz',
+  company = 'Beispiel AG',
 }: Partial<UserAddress> = {}): UserAddress => ({
   __typename: 'UserAddress',
   streetAddress,

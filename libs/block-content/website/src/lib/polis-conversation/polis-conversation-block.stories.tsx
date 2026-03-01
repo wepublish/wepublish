@@ -9,4 +9,7 @@ export default {
 
 export const Default = {
   args: mockPolisConversationBlock(),
+  parameters: {
+    chromatic: { disableSnapshot: true }, // loads live Polis embed — snapshot would always differ
+  },
 };

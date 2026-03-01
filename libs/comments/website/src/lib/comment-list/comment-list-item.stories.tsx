@@ -134,6 +134,9 @@ export const CommentingWithError: StoryObj = {
       }),
     },
   },
+  parameters: {
+    chromatic: { disableSnapshot: true }, // play function triggers unhandled errors in headless Chrome
+  },
   play: async ctx => {
     await openAddEditor(ctx);
     await LoggedInFilled.play?.(ctx);

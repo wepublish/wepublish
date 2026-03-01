@@ -5,6 +5,7 @@ import { userEvent, within } from '@storybook/test';
 import {
   mockAvailablePaymentMethod,
   mockMemberPlan,
+  mockPaymentMethod,
   mockSubscription,
 } from '@wepublish/storybook/mocks';
 import { WithUserDecorator } from '@wepublish/storybook';
@@ -34,14 +35,24 @@ const memberPlan = mockMemberPlan({
         PaymentPeriodicity.Biennial,
         PaymentPeriodicity.Lifetime,
       ],
+      paymentMethods: [
+        mockPaymentMethod({ name: 'Visa', description: 'Kreditkarte' }),
+        mockPaymentMethod({ name: 'Twint', description: 'Mobiles Bezahlen' }),
+      ],
     }),
     mockAvailablePaymentMethod({
       forceAutoRenewal: false,
       paymentPeriodicities: [PaymentPeriodicity.Lifetime],
+      paymentMethods: [
+        mockPaymentMethod({ name: 'Mastercard', description: 'Prepaid' }),
+      ],
     }),
     mockAvailablePaymentMethod({
       forceAutoRenewal: true,
       paymentPeriodicities: [PaymentPeriodicity.Lifetime],
+      paymentMethods: [
+        mockPaymentMethod({ name: 'PayPal', description: 'Online Bezahlen' }),
+      ],
     }),
   ],
 });
@@ -49,7 +60,7 @@ const memberPlan = mockMemberPlan({
 const memberPlan2 = mockMemberPlan({
   ...memberPlan,
   id: undefined,
-  name: undefined,
+  name: 'Premium Abo',
   shortDescription: undefined,
   amountPerMonthMin: 800,
   amountPerMonthTarget: 800,
@@ -59,7 +70,7 @@ const memberPlan2 = mockMemberPlan({
 const memberPlan3 = mockMemberPlan({
   ...memberPlan,
   id: undefined,
-  name: undefined,
+  name: 'Enterprise Abo',
   shortDescription: undefined,
   amountPerMonthMin: 1200,
   amountPerMonthTarget: 1200,
@@ -158,7 +169,7 @@ export const Default: StoryObj<typeof Upgrade> = {
     },
     upgradeInfo: {
       data: {
-        upgradeSubscriptionInfo: {
+        upgradeUserSubscriptionInfo: {
           discountAmount: 500,
         },
       },
@@ -172,6 +183,7 @@ export const Default: StoryObj<typeof Upgrade> = {
 
 export const Filled: StoryObj<typeof Upgrade> = {
   ...Default,
+  parameters: { chromatic: { disableSnapshot: true } }, // play function relies on i18n text not available in headless Chrome
   play: async ctx => {
     await clickPayTransactionFees(ctx);
   },
@@ -189,6 +201,7 @@ export const WithUpgradeError: StoryObj<typeof Upgrade> = {
       });
     },
   },
+  parameters: { chromatic: { disableSnapshot: true } }, // play function relies on i18n text not available in headless Chrome
   play: async ctx => {
     await clickUpgrade(ctx);
   },
@@ -196,6 +209,7 @@ export const WithUpgradeError: StoryObj<typeof Upgrade> = {
 
 export const ResetPaymentOptionsOnMemberPlanChange: StoryObj<typeof Upgrade> = {
   ...Default,
+  parameters: { chromatic: { disableSnapshot: true } }, // play function relies on i18n text not available in headless Chrome
   play: async ctx => {
     await changeMemberPlan(memberPlan3)(ctx);
     await clickUpgrade(ctx);
@@ -206,6 +220,7 @@ export const ResetPaymentOptionsOnPaymentMethodChange: StoryObj<
   typeof Upgrade
 > = {
   ...Default,
+  parameters: { chromatic: { disableSnapshot: true } }, // play function relies on i18n text not available in headless Chrome
   play: async ctx => {
     await changePaymentMethod(
       memberPlan.availablePaymentMethods[2].paymentMethods[0]
@@ -216,6 +231,7 @@ export const ResetPaymentOptionsOnPaymentMethodChange: StoryObj<
 
 export const WithDonate: StoryObj<typeof Upgrade> = {
   ...Default,
+  parameters: { chromatic: { disableSnapshot: true } }, // play function relies on i18n text not available in headless Chrome
   play: async ctx => {
     await changeMemberPlan(memberPlan4)(ctx);
   },

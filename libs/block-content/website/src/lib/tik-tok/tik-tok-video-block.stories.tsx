@@ -9,4 +9,7 @@ export default {
 
 export const Default = {
   args: mockTikTokVideoBlock(),
+  parameters: {
+    chromatic: { disableSnapshot: true }, // loads live TikTok embed — snapshot would always differ
+  },
 };

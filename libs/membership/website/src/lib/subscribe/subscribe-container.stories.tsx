@@ -221,6 +221,9 @@ export const LoggedIn: StoryObj<typeof SubscribeContainer> = {
 
 export const Filled: StoryObj<typeof SubscribeContainer> = {
   ...Default,
+  parameters: {
+    ...Default.parameters,
+  },
   render: function Render(args) {
     const { user } = useUser();
 

@@ -9,4 +9,7 @@ export default {
 
 export const Default = {
   args: mockStreamableVideoBlock(),
+  parameters: {
+    chromatic: { disableSnapshot: true }, // loads live Streamable embed — snapshot would always differ
+  },
 };

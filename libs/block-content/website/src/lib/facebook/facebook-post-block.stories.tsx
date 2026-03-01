@@ -9,4 +9,7 @@ export default {
 
 export const Default = {
   args: mockFacebookPostBlock(),
+  parameters: {
+    chromatic: { disableSnapshot: true }, // loads live Facebook embed — snapshot would always differ
+  },
 };

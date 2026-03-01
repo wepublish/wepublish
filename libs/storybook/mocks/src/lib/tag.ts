@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker';
 
 export const mockTag = ({
   id = faker.string.nanoid(),
-  tag = faker.word.noun(),
+  tag = 'technologie',
   main = false,
   description = mockRichText(),
 }: Partial<FullTagFragment> = {}): FullTagFragment => ({
@@ -13,6 +13,6 @@ export const mockTag = ({
   tag,
   description,
   main,
-  url: faker.internet.url(),
+  url: 'https://example.com',
   type: TagType.Article,
 });

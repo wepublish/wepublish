@@ -9,4 +9,7 @@ export default {
 
 export const Default = {
   args: mockSoundCloudTrackBlock(),
+  parameters: {
+    chromatic: { disableSnapshot: true }, // loads live SoundCloud embed — snapshot would always differ
+  },
 };

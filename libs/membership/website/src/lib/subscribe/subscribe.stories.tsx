@@ -7,6 +7,7 @@ import {
   mockChallenge,
   mockInvoice,
   mockMemberPlan,
+  mockPaymentMethod,
   mockSubscription,
 } from '@wepublish/storybook/mocks';
 import { WithUserDecorator } from '@wepublish/storybook';
@@ -39,14 +40,24 @@ const memberPlan = mockMemberPlan({
         PaymentPeriodicity.Biennial,
         PaymentPeriodicity.Lifetime,
       ],
+      paymentMethods: [
+        mockPaymentMethod({ name: 'Visa', description: 'Kreditkarte' }),
+        mockPaymentMethod({ name: 'Twint', description: 'Mobiles Bezahlen' }),
+      ],
     }),
     mockAvailablePaymentMethod({
       forceAutoRenewal: false,
       paymentPeriodicities: [PaymentPeriodicity.Lifetime],
+      paymentMethods: [
+        mockPaymentMethod({ name: 'Mastercard', description: 'Prepaid' }),
+      ],
     }),
     mockAvailablePaymentMethod({
       forceAutoRenewal: true,
       paymentPeriodicities: [PaymentPeriodicity.Lifetime],
+      paymentMethods: [
+        mockPaymentMethod({ name: 'PayPal', description: 'Online Bezahlen' }),
+      ],
     }),
   ],
 });
@@ -54,7 +65,7 @@ const memberPlan = mockMemberPlan({
 const memberPlan2 = mockMemberPlan({
   ...memberPlan,
   id: undefined,
-  name: undefined,
+  name: 'Premium Abo',
   shortDescription: undefined,
   amountPerMonthMin: 800,
   amountPerMonthTarget: 800,
@@ -65,7 +76,7 @@ const memberPlan2 = mockMemberPlan({
 const memberPlan3 = mockMemberPlan({
   ...memberPlan,
   id: undefined,
-  name: undefined,
+  name: 'Enterprise Abo',
   shortDescription: undefined,
   amountPerMonthMin: 1200,
   amountPerMonthTarget: 1200,

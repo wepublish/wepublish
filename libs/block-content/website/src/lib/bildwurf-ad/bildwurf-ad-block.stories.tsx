@@ -9,4 +9,7 @@ export default {
 
 export const Default = {
   args: mockBildwurfBlock(),
+  parameters: {
+    chromatic: { disableSnapshot: true }, // loads live ad server — snapshot would always differ
+  },
 };

@@ -9,4 +9,7 @@ export default {
 
 export const Default = {
   args: mockVimeoVideoBlock(),
+  parameters: {
+    chromatic: { disableSnapshot: true }, // loads live Vimeo embed — snapshot would always differ
+  },
 };

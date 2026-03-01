@@ -91,7 +91,7 @@ export function Footer({
 
   const mainItems = data?.navigations?.find(({ key }) => key === slug);
 
-  const categories = categorySlugs.map(categorySlugArray => {
+  const categories = (categorySlugs ?? []).map(categorySlugArray => {
     return categorySlugArray.reduce((navigations, categorySlug) => {
       const navItem = data?.navigations?.find(
         ({ key }) => key === categorySlug
@@ -118,10 +118,10 @@ export function Footer({
         children={children}
       />
 
-      {(!!iconItems?.links.length || wepublishLogo !== 'hidden') && (
+      {(!!iconItems?.links?.length || wepublishLogo !== 'hidden') && (
         <FooterIconsWrapper>
           <FooterIcons>
-            {iconItems?.links.map((link, index) => (
+            {iconItems?.links?.map((link, index) => (
               <Link
                 key={index}
                 href={navigationLinkToUrl(link)}
@@ -231,7 +231,7 @@ export const FooterPaper = ({
 
   return (
     <FooterPaperWrapper>
-      {!!main?.links.length && (
+      {!!main?.links?.length && (
         <FooterMainLinks>
           {main.links.map((link, index) => (
             <Link
