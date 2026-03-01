@@ -521,7 +521,6 @@ export type CalculatedRating = {
 };
 
 export enum CaptchaType {
-  Algebraic = 'Algebraic',
   CfTurnstile = 'CfTurnstile',
 }
 

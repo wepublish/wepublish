@@ -5,23 +5,7 @@ interface TurnstileChallengeConfig {
   id: string;
 }
 
-interface AlgebraicChallengeConfig {
-  type: 'algebraic';
-  secret: string;
-  validTime?: number;
-  width?: number;
-  height?: number;
-  background?: string;
-  noise?: number;
-  minValue?: number;
-  maxValue?: number;
-  operandAmount?: number;
-  operandTypes?: string[];
-  mode?: string;
-  targetSymbol?: string;
-}
-
-type ChallengeConfig = TurnstileChallengeConfig | AlgebraicChallengeConfig;
+type ChallengeConfig = TurnstileChallengeConfig;
 
 export const CHALLENGE_MODULE_OPTIONS = 'CHALLENGE_MODULE_OPTIONS';
 
