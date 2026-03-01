@@ -20,6 +20,7 @@ import {
   TeaserSlider,
   TeaserSlotsBlock,
   TeaserSlotsBlockTeasers,
+  TeaserUpdateTime,
   TeaserWrapper,
 } from '@wepublish/block-content/website';
 import { ImageWrapper } from '@wepublish/image/website';
@@ -189,6 +190,10 @@ export const HauptstadtTeaser = styled(TeaserWithPaywall)`
 
   ${TeaserLead} {
     display: none;
+  }
+
+  ${TeaserUpdateTime} {
+    display: initial;
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
