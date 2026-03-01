@@ -814,7 +814,8 @@
       "audience": "Audience",
       "authorTags": "Tags",
       "audienceDashboard": "Dashboard",
-      "integrations": "Intégrations"
+      "integrations": "Intégrations",
+      "apps": "Apps"
     },
     "navigation": {
       "overview": {
@@ -1705,6 +1706,17 @@
         "property": "ID de la propriété Google Analytics",
         "credentials": "Fichier d’identifiants"
       }
+    },
+    "externalApps": {
+      "apps": "Apps"
+    },
+    "addExternalAppForm": {
+      "create": "Créer",
+      "update": "Mettre à jour",
+      "name": "Nom",
+      "url": "URL",
+      "target": "Cible",
+      "icon": "URL de l'icône"
     }
   }
 }

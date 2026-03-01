@@ -36,7 +36,7 @@ export class JwksController {
           {
             ...jwk,
             use: 'sig',
-            alg: 'ES256',
+            alg: 'EdDSA',
             kid,
           },
         ],
@@ -52,7 +52,7 @@ export class JwksController {
     return {
       issuer: this.hostURL,
       jwks_uri: `${this.hostURL}/.well-known/jwks.json`,
-      id_token_signing_alg_values_supported: ['ES256'],
+      id_token_signing_alg_values_supported: ['EdDSA'],
     };
   }
 }

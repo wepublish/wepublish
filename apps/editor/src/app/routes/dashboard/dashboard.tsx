@@ -10,68 +10,91 @@ import {
 import { useTranslation } from 'react-i18next';
 import { MdChevronRight } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Button, FlexboxGrid, Panel as RPanel } from 'rsuite';
+import { Button, Col, Grid, Panel as RPanel, Row } from 'rsuite';
 
 import { AudienceDashboard } from '../audience/audience-dashboard';
+import { ExternalAppsDashboard } from './externalAppsDashboard';
 
-const Item = styled(FlexboxGrid.Item)`
-  display: grid;
-  margin-top: ${({ theme }) => theme.spacing(4)};
+const StyledGrid = styled(Grid)`
+  width: 100%;
 `;
 
 export function Dashboard() {
   const { t } = useTranslation();
 
   return (
-    <FlexboxGrid justify="space-between">
-      <FlexboxGrid.Item colspan={24}>
-        <RPanel
-          header={
-            <ListViewContainer>
-              <ListViewHeader>
-                <h2>{t('dashboard.audience')}</h2>
-              </ListViewHeader>
-              <ListViewActions>
-                <Link to="/audience/dashboard">
-                  <Button
-                    appearance="primary"
-                    endIcon={<MdChevronRight />}
-                  >
-                    {t('dashboard.goToAudienceDashboard')}
-                  </Button>
-                </Link>
-              </ListViewActions>
-            </ListViewContainer>
-          }
-          bordered
-        >
-          <AudienceDashboard
-            hideHeader
-            hideFilter
-            initialDateRange="lastWeek"
-          />
-        </RPanel>
-      </FlexboxGrid.Item>
+    <StyledGrid fluid>
+      <Row>
+        {/* left column stack */}
+        <Col xs={12}>
+          <Row gutter={12}>
+            <Col xs={24}>
+              <RPanel
+                header={<h2>{t('dashboard.externalApps')}</h2>}
+                bordered
+              >
+                <ExternalAppsDashboard />
+              </RPanel>
+            </Col>
 
-      <Item colspan={14}>
-        <RPanel
-          header={<h2>{t('dashboard.activity')}</h2>}
-          bordered
-        >
-          <ActivityFeed />
-        </RPanel>
-      </Item>
+            <Col xs={24}>
+              <RPanel
+                header={<h2>{t('dashboard.activity')}</h2>}
+                bordered
+              >
+                <ActivityFeed />
+              </RPanel>
+            </Col>
+          </Row>
+        </Col>
 
-      <Item colspan={9}>
-        <PermissionControl qualifyingPermissions={['CAN_GET_PERIODIC_JOB_LOG']}>
-          <RPanel
-            header={<h2>{t('periodicJobsLog.title')}</h2>}
-            bordered
-          >
-            <PeriodicJobsLog />
-          </RPanel>
-        </PermissionControl>
-      </Item>
-    </FlexboxGrid>
+        {/* right column stack */}
+        <Col xs={12}>
+          <Row gutter={12}>
+            <Col xs={24}>
+              <RPanel
+                header={
+                  <ListViewContainer>
+                    <ListViewHeader>
+                      <h2>{t('dashboard.audience')}</h2>
+                    </ListViewHeader>
+                    <ListViewActions>
+                      <Link to="/audience/dashboard">
+                        <Button
+                          appearance="primary"
+                          endIcon={<MdChevronRight />}
+                        >
+                          {t('dashboard.goToAudienceDashboard')}
+                        </Button>
+                      </Link>
+                    </ListViewActions>
+                  </ListViewContainer>
+                }
+                bordered
+              >
+                <AudienceDashboard
+                  hideHeader
+                  hideFilter
+                  initialDateRange="lastWeek"
+                />
+              </RPanel>
+            </Col>
+
+            <Col xs={24}>
+              <PermissionControl
+                qualifyingPermissions={['CAN_GET_PERIODIC_JOB_LOG']}
+              >
+                <RPanel
+                  header={<h2>{t('periodicJobsLog.title')}</h2>}
+                  bordered
+                >
+                  <PeriodicJobsLog />
+                </RPanel>
+              </PermissionControl>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    </StyledGrid>
   );
 }

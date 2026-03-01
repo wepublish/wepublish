@@ -10,6 +10,7 @@ import { UploadImageInput } from '@wepublish/image/api';
 import { ProfileService } from './profile.service';
 import { BadRequestException } from '@nestjs/common';
 import { UserService } from './user.service';
+import { Validator } from '@wepublish/user';
 
 @Resolver()
 export class ProfileResolver {
@@ -45,6 +46,8 @@ export class ProfileResolver {
         'password and passwordRepeated are not equal'
       );
     }
+
+    await Validator.password.parseAsync(password);
 
     return this.userService.updateUserPassword(user.id, password);
   }

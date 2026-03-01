@@ -1,0 +1,51 @@
+fragment ExternalApp on ExternalApp {
+  createdAt
+  icon
+  id
+  modifiedAt
+  name
+  target
+  url
+}
+
+query ExternalApp($externalAppId: String!) {
+  externalApp(id: $externalAppId) {
+    ...ExternalApp
+  }
+}
+
+query ExternalApps($filter: ExternalAppFilter) {
+  externalApps(filter: $filter) {
+    ...ExternalApp
+  }
+}
+
+mutation CreateExternalApp($input: CreateExternalAppInput!) {
+  createExternalApp(input: $input) {
+    ...ExternalApp
+  }
+}
+
+mutation UpdateExternalApp(
+  $icon: String
+  $name: String
+  $target: ExternalAppsTarget
+  $url: String
+  $updateExternalAppId: String!
+) {
+  updateExternalApp(
+    icon: $icon
+    name: $name
+    target: $target
+    url: $url
+    id: $updateExternalAppId
+  ) {
+    ...ExternalApp
+  }
+}
+
+mutation DeleteExternalApp($deleteExternalAppId: String!) {
+  deleteExternalApp(id: $deleteExternalAppId) {
+    ...ExternalApp
+  }
+}

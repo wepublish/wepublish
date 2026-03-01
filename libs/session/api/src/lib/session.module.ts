@@ -42,10 +42,12 @@ export interface SessionModuleAsyncOptions
 export class SessionModule {
   static registerAsync(options: SessionModuleAsyncOptions): DynamicModule {
     return {
+      global: true,
       module: SessionModule,
       imports: options.imports || [],
       controllers: [JwksController],
       providers: [...this.createAsyncProviders(options)],
+      exports: [SessionService, JwtService],
     };
   }
 

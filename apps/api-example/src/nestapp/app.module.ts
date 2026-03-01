@@ -74,6 +74,7 @@ import { PollModule } from '@wepublish/poll/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { SettingModule } from '@wepublish/settings/api';
 import { StatsModule } from '@wepublish/stats/api';
+import { ExternalAppsModule } from '@wepublish/external-apps/api';
 import { SystemInfoModule } from '@wepublish/system-info';
 import { TagModule } from '@wepublish/tag/api';
 import {
@@ -120,7 +121,9 @@ import {
           path: 'v1',
           cache: 'bounded',
           persistedQueries: false,
-          introspection: configFile.general.apolloIntrospection,
+          introspection:
+            process.env.NODE_ENV !== 'production' &&
+            configFile.general.apolloIntrospection,
           playground: configFile.general.apolloPlayground,
           allowBatchedHttpRequests: true,
           inheritResolversFromInterfaces: true,
@@ -417,6 +420,7 @@ import {
     ConsentModule,
     StatsModule,
     SettingModule,
+    ExternalAppsModule,
     EventModule,
     PageModule,
     PeerModule.registerAsync({

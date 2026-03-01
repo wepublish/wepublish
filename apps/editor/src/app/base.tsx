@@ -38,6 +38,8 @@ import {
   MdPersonAddAlt1,
   MdPhoto,
   MdPieChartOutline,
+  MdPower,
+  MdPowerInput,
   MdQueryStats,
   MdSell,
   MdSettings,
@@ -193,14 +195,37 @@ export function Base({ children }: BaseProps) {
               />
 
               <Navigation>
-                <Nav.Item
-                  as={NavLink}
-                  href="/dashboard"
+                <Nav.Menu
+                  eventKey={'dashboard'}
+                  title={t('navbar.dashboard')}
                   icon={<MdPieChartOutline />}
-                  active={path === 'dashboard' || path === ''}
                 >
-                  {t('navbar.dashboard')}
-                </Nav.Item>
+                  <Nav.Item
+                    as={NavLink}
+                    href="/dashboard"
+                    icon={<MdPieChartOutline />}
+                    active={path === 'dashboard' || path === ''}
+                  >
+                    {t('navbar.dashboard')}
+                  </Nav.Item>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      'CAN_CREATE_EXTERNAL_APP',
+                      'CAN_UPDATE_EXTERNAL_APP',
+                      'CAN_DELETE_EXTERNAL_APP',
+                    ]}
+                  >
+                    <Nav.Item
+                      as={NavLink}
+                      href="/dashboard/apps"
+                      icon={<MdExtension />}
+                      active={path === 'dashboard/apps'}
+                    >
+                      {t('navbar.apps')}
+                    </Nav.Item>
+                  </PermissionControl>
+                </Nav.Menu>
 
                 <PermissionControl
                   qualifyingPermissions={[
@@ -953,7 +978,7 @@ export function Base({ children }: BaseProps) {
                         as={NavLink}
                         href="/integrations"
                         active={path === 'integrations'}
-                        icon={<MdExtension />}
+                        icon={<MdPower />}
                       >
                         {t('navbar.integrations')}
                       </Nav.Item>

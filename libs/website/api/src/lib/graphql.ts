@@ -702,6 +702,13 @@ export type CreateCrowdfundingMemberPlan = {
   id: Scalars['String'];
 };
 
+export type CreateExternalAppInput = {
+  icon?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  target: ExternalAppsTarget;
+  url: Scalars['String'];
+};
+
 export type Crowdfunding = {
   __typename?: 'Crowdfunding';
   activeGoal?: Maybe<CrowdfundingGoalWithProgress>;
@@ -1001,6 +1008,28 @@ export type EventTeaserInput = {
   preTitle?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
 };
+
+export type ExternalApp = {
+  __typename?: 'ExternalApp';
+  createdAt: Scalars['DateTime'];
+  icon?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  target: ExternalAppsTarget;
+  url: Scalars['String'];
+};
+
+export type ExternalAppFilter = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  target?: InputMaybe<ExternalAppsTarget>;
+};
+
+export enum ExternalAppsTarget {
+  Blank = 'BLANK',
+  Iframe = 'IFRAME'
+}
 
 export type ExternalNavigationLink = BaseNavigationLink & {
   __typename?: 'ExternalNavigationLink';
@@ -1610,6 +1639,8 @@ export type Mutation = {
   createCrowdfunding: Crowdfunding;
   /** Creates a new event. */
   createEvent: Event;
+  /** Creates a new external app. */
+  createExternalApp: ExternalApp;
   /** Creates a new invoice. */
   createInvoice: Invoice;
   /** Returns a JWT that can be used to login as another user. */
@@ -1685,6 +1716,8 @@ export type Mutation = {
   deleteCrowdfunding?: Maybe<Scalars['Boolean']>;
   /** Deletes an existing event. */
   deleteEvent: Event;
+  /** Deletes an external app. */
+  deleteExternalApp: ExternalApp;
   /** Deletes an existing image. */
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
@@ -1811,6 +1844,8 @@ export type Mutation = {
   updateCurrentUser: SensitiveDataUser;
   /** Updates an existing event. */
   updateEvent: Event;
+  /** Updates an existing external app. */
+  updateExternalApp: ExternalApp;
   /** Updates an existing image. */
   updateImage: Image;
   /** Updates an existing invoice. */
@@ -1988,6 +2023,11 @@ export type MutationCreateEventArgs = {
   startsAt: Scalars['DateTime'];
   status?: EventStatus;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type MutationCreateExternalAppArgs = {
+  input: CreateExternalAppInput;
 };
 
 
@@ -2285,6 +2325,11 @@ export type MutationDeleteEventArgs = {
 };
 
 
+export type MutationDeleteExternalAppArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteImageArgs = {
   id: Scalars['String'];
 };
@@ -2534,7 +2579,6 @@ export type MutationUpdateAiSettingArgs = {
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   systemPrompt?: InputMaybe<Scalars['String']>;
-  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2658,6 +2702,15 @@ export type MutationUpdateEventArgs = {
   startsAt?: InputMaybe<Scalars['DateTime']>;
   status?: InputMaybe<EventStatus>;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type MutationUpdateExternalAppArgs = {
+  icon?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  target?: InputMaybe<ExternalAppsTarget>;
+  url?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -3865,6 +3918,10 @@ export type Query = {
    *
    */
   expectedRevenue: Array<DashboardInvoice>;
+  /** Returns a single external app by id. Requires authentication. */
+  externalApp: ExternalApp;
+  /** Returns all external apps. Requires authentication. */
+  externalApps: Array<ExternalApp>;
   /** Returns images by tag. */
   getImagesByTag: Array<Image>;
   /**
@@ -4195,6 +4252,16 @@ export type QueryEventsArgs = {
 export type QueryExpectedRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
+};
+
+
+export type QueryExternalAppArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryExternalAppsArgs = {
+  filter?: InputMaybe<ExternalAppFilter>;
 };
 
 

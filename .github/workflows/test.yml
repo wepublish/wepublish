@@ -29,8 +29,8 @@ jobs:
       - run: npm run test-backend -- --code-coverage
         env:
           NODE_OPTIONS: '--max-old-space-size=4096'
-          JWT_PRIVATE_KEY: "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIOV1p/inrIQsvsHL2zQ/o+yzSVRa/77iYMnCByl5aEBYoAoGCCqGSM49\nAwEHoUQDQgAENCbksKO5MXCkyACZPFX85f1EXDP7Fba98aFTZAxBz3USbwyN9akU\nG+7DE1sX0qBAUbclp84NZZqheSAJN6rgcQ==\n-----END EC PRIVATE KEY-----"
-          JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAENCbksKO5MXCkyACZPFX85f1EXDP7\nFba98aFTZAxBz3USbwyN9akUG+7DE1sX0qBAUbclp84NZZqheSAJN6rgcQ==\n-----END PUBLIC KEY-----"
+          JWT_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIJWbdZ23hpurtFiEpnulSfJ1U4TwbkiDWmbGZSDVx3nR\n-----END PRIVATE KEY-----"
+          JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA93mjXbSful1W9nAVHuYHdRfgKEF+pvkwm4/5P27J4RA=\n-----END PUBLIC KEY-----"
           DATABASE_URL: 'postgresql://postgres:test@localhost:5432/wepublish_test?schema=public'
 
       - name: Upload coverage to Codecov

@@ -882,7 +882,8 @@
       "audience": "Audience",
       "authorTags": "Tags",
       "audienceDashboard": "Dashboard",
-      "integrations": "Integrationen"
+      "integrations": "Integrationen",
+      "apps": "Apps"
     },
     "navigation": {
       "overview": {
@@ -1818,6 +1819,17 @@
         "property": "Google-Analytics Property-ID",
         "credentials": "Anmeldedatei"
       }
+    },
+    "externalApps": {
+      "apps": "Apps"
+    },
+    "addExternalAppForm": {
+      "create": "Erstellen",
+      "update": "Aktualisieren",
+      "name": "Name",
+      "url": "URL",
+      "target": "Ziel",
+      "icon": "Icon URL"
     }
   }
 }
