@@ -1,70 +1,129 @@
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { Rating as MuiRating, useTheme } from '@mui/material';
-import { ComponentProps } from 'react';
-import { useHover } from 'react-aria';
+import {
+  Rating as MuiRating,
+  RatingProps as MuiRatingProps,
+} from '@mui/material';
+import { SyntheticEvent, useState } from 'react';
 import { MdStar, MdStarBorder } from 'react-icons/md';
 
-export type RatingProps = ComponentProps<typeof MuiRating> & {
-  filledColor?: string;
-  hoverColor?: string;
-  emptyColor?: string;
-  showFilledIcon?: boolean;
+export type RatingProps = Omit<MuiRatingProps, 'value' | 'onChange'> & {
+  averageFilledColor?: string;
+  averageEmptyColor?: string;
+  userFilledColor?: string;
+  userEmptyColor?: string;
+  averageRating?: number;
+  userRating?: number;
+  onChange?: (event: SyntheticEvent<Element, Event>, newValue: number) => void;
 };
 
-export const RatingWrapper = styled('div')<RatingProps>`
-  ${({ filledColor, theme }) =>
-    filledColor &&
-    css`
-      & .MuiRating-iconFilled {
-        color: ${filledColor};
-      }
-    `}
+type RatingColors = {
+  filledColor?: string;
+  emptyColor?: string;
+};
 
-  ${({ hoverColor }) =>
-    hoverColor &&
-    css`
-      & .MuiRating-iconHover {
-        color: ${hoverColor};
-      }
-    `}
+export const RatingContainer = styled('div')`
+  display: inline-flex;
+  cursor: pointer;
+`;
 
-    ${({ emptyColor }) =>
-    emptyColor &&
-    css`
-      & .MuiRating-iconEmpty {
-        color: ${emptyColor};
-      }
-    `}
+export const AverageRatingWrapper = styled('div')<Partial<RatingColors>>`
+  .MuiRating-iconFilled {
+    color: ${({ theme, filledColor }) =>
+      filledColor || theme.palette.primary.main};
+  }
+
+  .MuiRating-iconEmpty {
+    color: ${({ theme, emptyColor }) => emptyColor || theme.palette.grey[400]};
+  }
+`;
+
+export const UserRatingWrapper = styled('div')<Partial<RatingColors>>`
+  .MuiRating-iconFilled {
+    color: ${({ theme, filledColor }) =>
+      filledColor || theme.palette.primary.main};
+  }
+
+  .MuiRating-iconEmpty {
+    color: ${({ theme, emptyColor }) => emptyColor || theme.palette.grey[400]};
+  }
+
+  .MuiRating-iconHover {
+    color: ${({ theme, filledColor }) =>
+      filledColor || theme.palette.primary.main};
+  }
 `;
 
 export function Rating({
-  filledColor,
-  hoverColor,
-  emptyColor,
-  showFilledIcon = true,
+  averageFilledColor,
+  averageEmptyColor,
+  userFilledColor,
+  userEmptyColor,
+  averageRating = 0,
+  userRating = 0,
+  onChange,
   ...props
 }: RatingProps) {
-  const { hoverProps, isHovered } = useHover({});
-  const theme = useTheme();
+  const [isRatingMode, setIsRatingMode] = useState(false);
+
+  const handleRatingChange = (
+    event: SyntheticEvent<Element, Event>,
+    newValue: number | null
+  ) => {
+    if (newValue !== null) {
+      onChange?.(event, newValue);
+    }
+  };
+
+  const handleContainerClick = () => {
+    if (!props.readOnly) {
+      setIsRatingMode(true);
+    }
+  };
+
+  const handleRatingComplete = (
+    event: SyntheticEvent<Element, Event>,
+    newValue: number | null
+  ) => {
+    handleRatingChange(event, newValue);
+    setIsRatingMode(false);
+  };
 
   const icon = props.icon ?? <MdStar />;
   const emptyIcon = props.emptyIcon ?? <MdStarBorder />;
 
+  const displayValue =
+    isRatingMode || userRating > 0 ? userRating : averageRating;
+  const isReadOnly = props.readOnly || !isRatingMode;
+
   return (
-    <RatingWrapper
-      {...(hoverProps as object)}
-      emptyColor={emptyColor || theme.palette.grey[400]}
-      filledColor={filledColor || theme.palette.primary.main}
-      hoverColor={hoverColor || theme.palette.primary.main}
-    >
-      <MuiRating
-        {...props}
-        icon={
-          (isHovered && !props.readOnly) || showFilledIcon ? icon : emptyIcon
-        }
-        emptyIcon={null}
-      />
-    </RatingWrapper>
+    <RatingContainer onClick={handleContainerClick}>
+      {!isRatingMode && !userRating ?
+        <AverageRatingWrapper
+          filledColor={averageFilledColor}
+          emptyColor={averageEmptyColor}
+        >
+          <MuiRating
+            value={averageRating}
+            icon={emptyIcon}
+            emptyIcon={emptyIcon}
+            readOnly
+            {...props}
+          />
+        </AverageRatingWrapper>
+      : <UserRatingWrapper
+          filledColor={userFilledColor}
+          emptyColor={userEmptyColor}
+        >
+          <MuiRating
+            value={displayValue}
+            onChange={isRatingMode ? handleRatingComplete : undefined}
+            icon={icon}
+            emptyIcon={emptyIcon}
+            readOnly={isReadOnly}
+            {...props}
+          />
+        </UserRatingWrapper>
+      }
+    </RatingContainer>
   );
 }
