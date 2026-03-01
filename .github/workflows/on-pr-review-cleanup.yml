@@ -2,17 +2,19 @@ name: Review cleanup (Deprected can be removed after migration)
 
 on:
   pull_request:
-    types: [ closed ]
+    types: [closed]
+  pull_request_target:
+    types: [closed]
 
 concurrency:
-  group: review-${{ github.head_ref }}
+  group: review-${{ github.event.pull_request.number }}-${{ github.event.action }}
   cancel-in-progress: true
 
 
 jobs:
   uninstall_helm_release:
     name: Uninstall helm release
-    if: ${{ github.event_name == 'pull_request' && !(
+    if: ${{!(
       (github.event.pull_request.base.ref == 'development' && github.event.pull_request.head.ref == 'master') ||
       (github.event.pull_request.base.ref == 'master' && github.event.pull_request.head.ref == 'development')
       ) }}
@@ -22,7 +24,10 @@ jobs:
       id-token: 'write'
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        # safe for pull_request_target (don’t run PR code)
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
 
       - name: Set up Helm
         uses: azure/setup-helm@v1
@@ -49,7 +54,6 @@ jobs:
           
           # Delete Helm releases if they exist
           helm get all review-$PR_NUM-app -n reviews && helm uninstall review-$PR_NUM-app -n reviews
-          helm get all review-$PR_NUM-media -n reviews && helm uninstall review-$PR_NUM-media-server -n reviews
           helm get all review-$PR_NUM-database -n reviews && helm uninstall review-$PR_NUM-database -n reviews
           helm get all review-$PR_NUM-minio -n reviews && helm uninstall review-$PR_NUM-minio -n reviews
           # Delete PVCs associated with the PR
@@ -57,15 +61,17 @@ jobs:
 
   cleanup-website-matrix:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' && !(
+    if: ${{!(
       (github.event.pull_request.base.ref == 'development' && github.event.pull_request.head.ref == 'master') ||
       (github.event.pull_request.base.ref == 'master' && github.event.pull_request.head.ref == 'development')
       ) }}
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        # safe for pull_request_target (don’t run PR code)
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
 
       - name: Set up matrix
         id: set-matrix
@@ -84,7 +90,10 @@ jobs:
       id-token: 'write'
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        # safe for pull_request_target (don’t run PR code)
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
 
       - name: Set up Helm
         uses: azure/setup-helm@v1
