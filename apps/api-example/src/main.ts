@@ -18,6 +18,7 @@ async function bootstrap() {
   nestApp.enableCors({
     origin: true,
     credentials: true,
+    exposedHeaders: ['mcp-session-id'],
   });
   nestApp.use(helmet());
 

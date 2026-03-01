@@ -97,6 +97,7 @@ import {
   KvTtlCacheModule,
   KvTtlCacheService,
 } from '@wepublish/kv-ttl-cache/api';
+import { McpModule } from '@wepublish/mcp/api';
 
 @Global()
 @Module({
@@ -537,6 +538,7 @@ import {
       inject: [ConfigService],
     }),
     PaywallModule,
+    McpModule,
   ],
   exports: ['SYSTEM_INFO_KEY'],
   providers: [
