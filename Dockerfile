@@ -32,9 +32,20 @@ COPY --chown=wepublish:wepublish --from=base-image-build /wepublish/node_modules
 #######
 
 FROM ${BUILD_IMAGE} AS  build-website
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
+ARG SENTRY_RELEASE
+ARG APP_RELEASE_ID
+ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+ENV SENTRY_ORG=${SENTRY_ORG}
+ENV SENTRY_PROJECT=${SENTRY_PROJECT}
+ENV SENTRY_RELEASE=${SENTRY_RELEASE}
+ENV APP_RELEASE_ID=${APP_RELEASE_ID}
 ### FRONT_ARG_REPLACER ###
 
 COPY . .
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates patch && update-ca-certificates && rm -rf /var/lib/apt/lists/*
 RUN npx prisma generate && \
     npx nx build ${NEXT_PROJECT} ${NX_NEXT_PROJECT_BUILD_OPTIONS} && \
     bash /wepublish/deployment/map-secrets.sh clean
@@ -46,6 +57,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV HOSTNAME=0.0.0.0
 ENV ADDRESS=0.0.0.0
 ENV PORT=4000
+ARG APP_RELEASE_ID
+ENV APP_RELEASE_ID=${APP_RELEASE_ID}
 ### FRONT_ARG_REPLACER ###
 
 WORKDIR /wepublish
@@ -56,6 +69,7 @@ RUN groupadd -r wepublish && \
     chown -R wepublish:wepublish /entrypoint.sh && \
     chmod +x /entrypoint.sh
 COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/standalone /wepublish
+COPY --chown=wepublish:wepublish --from=build-website /wepublish/node_modules/@sentry/profiling-node/lib/*.node /wepublish/node_modules/@sentry/profiling-node/lib/
 COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/public /wepublish/apps/${NEXT_PROJECT}/public
 COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/static /wepublish/apps/${NEXT_PROJECT}/public/_next/static
 COPY --chown=wepublish:wepublish version /wepublish/apps/${NEXT_PROJECT}/public/deployed_version
@@ -70,15 +84,25 @@ ENTRYPOINT ["/entrypoint.sh"]
 ## API
 #######
 FROM ${BUILD_IMAGE} AS build-api
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
+ARG SENTRY_RELEASE
+ARG APP_RELEASE_ID
 COPY . .
-RUN npm install -g @yao-pkg/pkg && \
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && update-ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN npm install -g @yao-pkg/pkg @sentry/cli && \
     npx prisma generate && \
     npx nx build api-example && \
+    sentry-cli sourcemaps inject ./dist/apps/api-example && \
+    sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/api-example && \
     cp docker/api_build_package.json package.json && \
     pkg package.json
 
 FROM ${PLAIN_BUILD_IMAGE}  AS api
 LABEL org.opencontainers.image.authors="WePublish Foundation"
+ARG APP_RELEASE_ID
+ENV APP_RELEASE_ID=${APP_RELEASE_ID}
 ENV NODE_ENV=production
 ENV ADDRESS=0.0.0.0
 ENV PORT=4000
@@ -105,15 +129,26 @@ CMD /wepublish/api
 #######
 
 FROM ${BUILD_IMAGE} AS build-editor
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
+ARG SENTRY_RELEASE
+ARG APP_RELEASE_ID
 COPY . .
-RUN npm install -g @yao-pkg/pkg && \
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && update-ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN npm install -g @yao-pkg/pkg @sentry/cli && \
     npx prisma generate && \
     npx nx build editor && \
+    sentry-cli sourcemaps inject ./dist/apps/editor && \
+    sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/editor && \
+    find ./dist/apps/editor -name '*.map' -delete && \
     cp docker/editor_build_package.json package.json && \
     pkg package.json
 
 FROM debian:bookworm-slim AS editor
 LABEL org.opencontainers.image.authors="WePublish Foundation"
+ARG APP_RELEASE_ID
+ENV APP_RELEASE_ID=${APP_RELEASE_ID}
 ENV NODE_ENV=production
 ENV ADDRESS=0.0.0.0
 ENV PORT=3000
@@ -132,6 +167,11 @@ CMD /wepublish/editor
 ## Migrations
 #######
 FROM ${PLAIN_BUILD_IMAGE} AS build-migration
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
+ARG SENTRY_RELEASE
+ARG APP_RELEASE_ID
 ENV NODE_ENV=production
 WORKDIR /wepublish
 COPY libs/settings/api/src/lib/setting.ts settings/api/src/lib/setting.ts
@@ -139,10 +179,16 @@ COPY libs/api/prisma/run-seed.ts api/prisma/run-seed.ts
 COPY libs/api/prisma/seed.ts api/prisma/seed.ts
 COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY docker/tsconfig.yaml_seed tsconfig.yaml
-RUN npm install prisma@5.0.0 @prisma/client@5.0.0 @types/node bcrypt typescript && \
-    npx tsc -p tsconfig.yaml
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && update-ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN npm install prisma@5.0.0 @prisma/client@5.0.0 @types/node bcrypt typescript @sentry/cli && \
+    npx tsc -p tsconfig.yaml && \
+    npx sentry-cli sourcemaps inject ./dist && \
+    npx sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist && \
+    find ./dist -name '*.map' -delete
 
 FROM ${PLAIN_BUILD_IMAGE} AS migration
+ARG APP_RELEASE_ID
+ENV APP_RELEASE_ID=${APP_RELEASE_ID}
 ENV NODE_ENV=production
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 WORKDIR /wepublish
@@ -169,17 +215,28 @@ CMD ["bash", "./start.sh"]
 
 FROM ${PLAIN_BUILD_IMAGE} AS base-media
 FROM base-media AS build-media
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
+ARG SENTRY_RELEASE
+ARG APP_RELEASE_ID
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 WORKDIR /app
 RUN apt-get update
-RUN apt-get install -y libjemalloc-dev
+RUN apt-get install -y libjemalloc-dev ca-certificates && update-ca-certificates
 COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
 RUN npm ci
-RUN npx nx build media
+RUN npm install -g @sentry/cli && \
+    npx nx build media && \
+    sentry-cli sourcemaps inject ./dist/apps/media && \
+    sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media && \
+    find ./dist/apps/media -name '*.map' -delete
 
 FROM base-media AS media
+ARG APP_RELEASE_ID
+ENV APP_RELEASE_ID=${APP_RELEASE_ID}
 ENV NODE_ENV=production
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 WORKDIR /wepublish

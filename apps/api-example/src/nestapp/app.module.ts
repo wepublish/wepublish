@@ -10,6 +10,7 @@ import {
   MailProviderType,
   PaymentProviderType,
 } from '@prisma/client';
+import { SentryModule } from '@sentry/nestjs/setup';
 import { ActionModule } from '@wepublish/action/api';
 import { NovaMediaAdapter } from '@wepublish/api';
 import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
@@ -101,6 +102,7 @@ import {
 @Global()
 @Module({
   imports: [
+    SentryModule.forRoot(),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
       imports: [ConfigModule],

@@ -16,7 +16,8 @@
         "tsConfig": "apps/media/tsconfig.app.json",
         "assets": ["apps/media/src/assets"],
         "isolatedConfig": true,
-        "webpackConfig": "apps/media/webpack.config.js"
+        "webpackConfig": "apps/media/webpack.config.js",
+        "sourceMap": true
       },
       "configurations": {
         "development": {},

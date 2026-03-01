@@ -2,6 +2,7 @@
 
 const { composePlugins, withNx } = require('@nx/next');
 const wepNextConfig = require('../../libs/utils/website/src/lib/next.config');
+const withSentry = require('../../libs/utils/website/src/lib/withSentry');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled:
     process.env.NODE_ENV === 'production' && !!process.env.ANALYZE_BUNDLE,
@@ -85,4 +86,4 @@ const plugins = [
   withBundleAnalyzer,
 ];
 
-module.exports = composePlugins(...plugins)(nextConfig);
+module.exports = withSentry(composePlugins(...plugins)(nextConfig));

@@ -115,16 +115,20 @@
       "@wepublish/user/website": ["libs/user/website/src/index.ts"],
       "@wepublish/utils": ["libs/utils/src/index.ts"],
       "@wepublish/utils/api": ["libs/utils/api/src/index.ts"],
+      "@wepublish/utils/sentry": ["libs/utils/sentry/config.ts"],
+      "@wepublish/utils/sentry/server": [
+        "libs/utils/sentry/instrumentation.server.ts"
+      ],
+      "@wepublish/utils/sentry/website": [
+        "libs/utils/sentry/instrumentation.website.ts"
+      ],
+      "@wepublish/utils/sentry/api": [
+        "libs/utils/sentry/instrumentation.api.ts"
+      ],
+      "@wepublish/utils/sentry/editor": [
+        "libs/utils/sentry/instrumentation.editor.ts"
+      ],
       "@wepublish/utils/website": ["libs/utils/website/src/index.ts"],
-      "@wepublish/utils/website/sentry/client": [
-        "libs/utils/sentry/sentry.client.config.ts"
-      ],
-      "@wepublish/utils/website/sentry/edge": [
-        "libs/utils/sentry/sentry.edge.config.ts"
-      ],
-      "@wepublish/utils/website/sentry/server": [
-        "libs/utils/sentry/sentry.server.config.ts"
-      ],
       "@wepublish/versionInformation/api": [
         "libs/versionInformation/api/src/index.ts"
       ],

@@ -1,6 +1,7 @@
+import '@wepublish/utils/sentry/editor';
+
 import { ApolloProvider } from '@apollo/client';
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
-import * as Sentry from '@sentry/react';
 import { getApiClientV2 } from '@wepublish/editor/api';
 import { theme as WePTheme } from '@wepublish/ui';
 import {
@@ -15,17 +16,6 @@ import { IconContext } from 'react-icons';
 import { App } from './app/app';
 import { initI18N } from './app/i18n';
 import { ElementID } from './shared/elementID';
-
-Sentry.init({
-  dsn: process.env.SENTRY_DSN,
-  integrations: [
-    Sentry.browserTracingIntegration(),
-    Sentry.replayIntegration(),
-  ],
-  tracesSampleRate: 1.0,
-  replaysSessionSampleRate: 0.1,
-  replaysOnErrorSampleRate: 1.0,
-});
 
 // Just so we have the typings
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

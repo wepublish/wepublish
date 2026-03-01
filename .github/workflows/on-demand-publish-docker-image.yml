@@ -73,8 +73,13 @@ jobs:
           push: true
           tags: |
             ${{ inputs.api_tags }}
-          build-args:
+          build-args: |
             BUILD_IMAGE=${{ env.BUILD_IMAGE_TAG }}
+            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+            SENTRY_ORG=wepublish-foundation
+            SENTRY_PROJECT=wepublish-cms
+            SENTRY_RELEASE=${{ github.sha }}
+            APP_RELEASE_ID=${{ github.sha }}
   build-and-push-docker-editor:
     name: Build and push editor
     runs-on: ubuntu-latest
@@ -102,8 +107,13 @@ jobs:
           push: true
           tags: |
             ${{ inputs.editor_tags }}
-          build-args:
+          build-args: |
             BUILD_IMAGE=${{ env.BUILD_IMAGE_TAG }}
+            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+            SENTRY_ORG=wepublish-foundation
+            SENTRY_PROJECT=wepublish-cms
+            SENTRY_RELEASE=${{ github.sha }}
+            APP_RELEASE_ID=${{ github.sha }}
   build-and-push-docker-migration:
     name: Build and push migration
     runs-on: ubuntu-latest
@@ -128,6 +138,12 @@ jobs:
           push: true
           tags: |
             ${{ inputs.migration_tags }}
+          build-args: |
+            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+            SENTRY_ORG=wepublish-foundation
+            SENTRY_PROJECT=wepublish-cms
+            SENTRY_RELEASE=${{ github.sha }}
+            APP_RELEASE_ID=${{ github.sha }}
   build-and-push-docker-media:
     name: Build and push media
     runs-on: ubuntu-latest
@@ -152,6 +168,12 @@ jobs:
           push: true
           tags: |
             ${{ inputs.media_tags }}
+          build-args: |
+            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+            SENTRY_ORG=wepublish-foundation
+            SENTRY_PROJECT=wepublish-cms
+            SENTRY_RELEASE=${{ github.sha }}
+            APP_RELEASE_ID=${{ github.sha }}
   build-and-push-storybook:
     name: Build and push storybook
     runs-on: ubuntu-latest
