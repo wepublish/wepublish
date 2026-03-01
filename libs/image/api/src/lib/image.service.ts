@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { MediaAdapter } from './media-adapter';
 import { PrismaClient } from '@prisma/client';
 import { UploadImageInput } from './image.model';
-import { ImageWithFocalPoint } from './image-dataloader.service';
+import {
+  ImageDataloaderService,
+  ImageWithFocalPoint,
+} from './image-dataloader.service';
+import { PrimeDataLoader } from '@wepublish/utils/api';
 
 @Injectable()
 export class ImageService {
