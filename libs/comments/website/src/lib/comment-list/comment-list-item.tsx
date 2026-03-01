@@ -1,9 +1,10 @@
-import { css, lighten, Theme } from '@mui/material';
+import { lighten } from '@mui/material';
 import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
 import { CommentState } from '@wepublish/website/api';
 import {
   BuilderCommentListItemProps,
+  Button,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { cond } from 'ramda';
@@ -35,12 +36,13 @@ export const CommentListItemActionsButtons = styled('div')`
   justify-content: space-between;
 `;
 
-export const buttonStyles = (theme: Theme) => css`
+export const ReplyButton = styled(Button)`
   border-width: 1px;
 
   &:hover {
     border-width: 1px;
-    background-color: ${lighten(theme.palette.primary.main, 0.9)};
+    background-color: ${({ theme }) =>
+      lighten(theme.palette.primary.main, 0.9)};
   }
 `;
 
@@ -157,11 +159,10 @@ export const CommentListItem = ({
           )}
 
           {canReply && (
-            <Button
+            <ReplyButton
               startIcon={<MdReply />}
               variant="outlined"
               size="small"
-              css={buttonStyles}
               onClick={() => {
                 dispatch({
                   type: 'add',
@@ -171,7 +172,7 @@ export const CommentListItem = ({
               }}
             >
               Antworten
-            </Button>
+            </ReplyButton>
           )}
         </CommentListItemActionsButtons>
       </CommentListItemActions>

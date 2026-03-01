@@ -1,18 +1,11 @@
-import {
-  AppBar,
-  Box,
-  css,
-  GlobalStyles,
-  SxProps,
-  Theme,
-  Toolbar,
-  useTheme,
-} from '@mui/material';
+import { AppBar, Box, css, Theme, Toolbar, useTheme } from '@mui/material';
 import styled from '@emotion/styled';
 import { useUser } from '@wepublish/authentication/website';
 import { FullNavigationFragment } from '@wepublish/website/api';
 import {
   BuilderNavbarProps,
+  Button,
+  Image,
   Link,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
@@ -29,20 +22,6 @@ declare module 'react' {
   }
 }
 
-const cssVariables = (theme: Theme) => css`
-  :root {
-    --navbar-height: ${theme.spacing(6.5)};
-
-    ${theme.breakpoints.up('md')} {
-      --navbar-height: ${theme.spacing(7.5)};
-    }
-
-    ${theme.breakpoints.up('lg')} {
-      --navbar-height: ${theme.spacing(12.5)};
-    }
-  }
-`;
-
 export const NavbarWrapper = styled('nav')`
   position: sticky;
   top: 0;
@@ -50,6 +29,18 @@ export const NavbarWrapper = styled('nav')`
   right: 0;
   z-index: 10;
   background-color: ${({ theme }) => theme.palette.background.default};
+
+  :root {
+    --navbar-height: ${({ theme }) => theme.spacing(6.5)};
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      --navbar-height: ${({ theme }) => theme.spacing(7.5)};
+    }
+
+    ${({ theme }) => theme.breakpoints.up('lg')} {
+      --navbar-height: ${({ theme }) => theme.spacing(12.5)};
+    }
+  }
 `;
 
 const appBarStyles = (isMenuOpen: boolean) => (theme: Theme) =>
@@ -190,12 +181,12 @@ export const NavbarLoginLink = styled(Link, {
     `}
 `;
 
-const buttonStyles: SxProps<Theme> = theme => ({
-  [theme.breakpoints.up('sm')]: {
-    fontSize: `calc(${theme.typography.button.fontSize} * 1.1)`,
-    padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`,
-  },
-});
+export const NavbarButton = styled(Button)`
+  ${({ theme }) => theme.breakpoints.up('sm')} {
+    font-size: calc(${({ theme }) => theme.typography.button.fontSize} * 1.1);
+    padding: ${({ theme }) => theme.spacing(1, 1.5)};
+  }
+`;
 
 export const NavbarLogoWrapper = styled('div')`
   fill: currentColor;
@@ -204,18 +195,18 @@ export const NavbarLogoWrapper = styled('div')`
 
 export const NavbarSpacer = styled('div')``;
 
-const imageStyles = (theme: Theme) => css`
-  max-height: ${theme.spacing(5)};
-  max-width: ${theme.spacing(15)};
+export const NavbarLogo = styled(Image)`
+  max-height: ${({ theme }) => theme.spacing(5)};
+  max-width: ${({ theme }) => theme.spacing(15)};
 
-  ${theme.breakpoints.up('md')} {
-    max-height: ${theme.spacing(6)};
-    max-width: ${theme.spacing(30)};
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    max-height: ${({ theme }) => theme.spacing(6)};
+    max-width: ${({ theme }) => theme.spacing(30)};
   }
 
-  ${theme.breakpoints.up('lg')} {
-    max-height: ${theme.spacing(9)};
-    max-width: ${theme.spacing(38)};
+  ${({ theme }) => theme.breakpoints.up('lg')} {
+    max-height: ${({ theme }) => theme.spacing(9)};
+    max-width: ${({ theme }) => theme.spacing(38)};
   }
 `;
 
@@ -288,8 +279,6 @@ export function Navbar({
 
   return (
     <NavbarWrapper className={className}>
-      <GlobalStyles styles={theme => cssVariables(theme)} />
-
       <AppBar
         position="static"
         elevation={0}
@@ -331,9 +320,8 @@ export function Navbar({
           >
             <NavbarLogoWrapper>
               {!!logo && (
-                <Image
+                <NavbarLogo
                   image={logo}
-                  css={imageStyles}
                   loading="eager"
                   fetchPriority="high"
                 />
@@ -343,39 +331,36 @@ export function Navbar({
 
           <NavbarActions isMenuOpen={isMenuOpen}>
             {hasUnpaidInvoices && profileBtn && (
-              <Button
+              <NavbarButton
                 LinkComponent={Link}
                 color="warning"
                 startIcon={<MdWarning />}
-                sx={buttonStyles}
                 size="medium"
                 {...profileBtn}
               >
                 <Box sx={{ display: { xs: 'none', md: 'unset' } }}>Offene</Box>
                 &nbsp;Rechnung
-              </Button>
+              </NavbarButton>
             )}
 
             {!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn && (
-              <Button
+              <NavbarButton
                 LinkComponent={Link}
-                sx={buttonStyles}
                 size="medium"
                 {...subscribeBtn}
               >
                 {t('navbar.subscribe')}
-              </Button>
+              </NavbarButton>
             )}
 
             {hasRunningSubscription && !hasUnpaidInvoices && profileBtn && (
-              <Button
+              <NavbarButton
                 LinkComponent={Link}
-                sx={buttonStyles}
                 size="medium"
                 {...profileBtn}
               >
                 Mein Konto
-              </Button>
+              </NavbarButton>
             )}
           </NavbarActions>
         </NavbarInnerWrapper>
@@ -481,8 +466,8 @@ export const NavPaperLinksGroup = styled('div')`
   `}
 `;
 
-const navPaperLinkStyling = (theme: Theme) => css`
-  ${theme.breakpoints.up('sm')} {
+export const NavPaperLink = styled(Link)`
+  ${({ theme }) => theme.breakpoints.up('sm')} {
     border-bottom: 0;
   }
 `;
@@ -672,12 +657,11 @@ const NavPaper = ({
                     const url = navigationLinkToUrl(link);
 
                     return (
-                      <Link
+                      <NavPaperLink
                         href={url}
                         key={index}
                         color="inherit"
                         underline="none"
-                        css={navPaperLinkStyling(theme)}
                         onClick={closeMenu}
                       >
                         <H6
@@ -686,7 +670,7 @@ const NavPaper = ({
                         >
                           {link.label}
                         </H6>
-                      </Link>
+                      </NavPaperLink>
                     );
                   })}
                 </NavPaperCategoryLinks>

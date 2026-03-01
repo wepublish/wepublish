@@ -1,5 +1,5 @@
-import { Theme, Typography, css, useTheme } from '@mui/material';
-import styled from '@emotion/styled';
+import { Typography, useTheme } from '@mui/material';
+import styled, { CSSObject } from '@emotion/styled';
 import {
   BlockContent,
   BreakBlock as BreakBlockType,
@@ -9,7 +9,7 @@ import {
   Button,
   Image,
   Link,
-  useWebsiteBuilder,
+  RichTextBlock,
 } from '@wepublish/website/builder';
 
 export const isBreakBlock = (
@@ -55,11 +55,11 @@ export const BreakBlockButton = styled(Button)`
   width: fit-content;
 `;
 
-const richTextStyles = (theme: Theme) => css`
-  max-width: ${theme.spacing(55)};
+const BreakBlockRichText = styled(RichTextBlock)`
+  max-width: ${({ theme }) => theme.spacing(55)};
 
   p {
-    ${theme.typography.blockBreakBody}
+    ${({ theme }) => theme.typography.blockBreakBody as CSSObject}
   }
 `;
 
@@ -73,10 +73,6 @@ export const BreakBlock = ({
   linkText,
   linkURL,
 }: BuilderBreakBlockProps) => {
-  const {
-    blocks: { RichText },
-  } = useWebsiteBuilder();
-
   const theme = useTheme();
 
   return (
@@ -105,10 +101,8 @@ export const BreakBlock = ({
             {text}
           </Typography>
         )}
-        <RichText
-          richText={richText}
-          css={richTextStyles(theme)}
-        />
+
+        <BreakBlockRichText richText={richText} />
 
         {!hideButton && linkURL && linkText && (
           <BreakBlockButton
