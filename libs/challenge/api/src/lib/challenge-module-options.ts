@@ -5,7 +5,12 @@ interface TurnstileChallengeConfig {
   id: string;
 }
 
-type ChallengeConfig = TurnstileChallengeConfig;
+interface HCaptchaChallengeConfig {
+  type: 'hcaptcha';
+  id: string;
+}
+
+type ChallengeConfig = TurnstileChallengeConfig | HCaptchaChallengeConfig;
 
 export const CHALLENGE_MODULE_OPTIONS = 'CHALLENGE_MODULE_OPTIONS';
 

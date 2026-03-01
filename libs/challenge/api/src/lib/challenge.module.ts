@@ -2,6 +2,7 @@ import { DynamicModule, Module, Provider } from '@nestjs/common';
 import { ChallengeService } from './challenge.service';
 import { ChallengeResolver } from './challenge.resolver';
 import { CFTurnstileProvider } from './providers/cf-turnstile.provider';
+import { HCaptchaProvider } from './providers/h-captcha.provider';
 import { ChallengeProvider } from './challenge-provider.interface';
 import {
   ChallengeModuleAsyncOptions,
@@ -64,11 +65,29 @@ const createChallengeProviderFromConfig = async (
   prisma: PrismaService,
   kv: KvTtlCacheService
 ) => {
-  const challengeProvider = new CFTurnstileProvider(challenge.id, prisma, kv);
-  await challengeProvider.initDatabaseConfiguration(
-    challenge.id,
-    ChallengeProviderType.TURNSTILE,
-    prisma
-  );
-  return challengeProvider;
+  switch (challenge.type) {
+    case 'hcaptcha': {
+      const challengeProvider = new HCaptchaProvider(challenge.id, prisma, kv);
+      await challengeProvider.initDatabaseConfiguration(
+        challenge.id,
+        ChallengeProviderType.HCAPTCHA,
+        prisma
+      );
+      return challengeProvider;
+    }
+    case 'turnstile':
+    default: {
+      const challengeProvider = new CFTurnstileProvider(
+        challenge.id,
+        prisma,
+        kv
+      );
+      await challengeProvider.initDatabaseConfiguration(
+        challenge.id,
+        ChallengeProviderType.TURNSTILE,
+        prisma
+      );
+      return challengeProvider;
+    }
+  }
 };

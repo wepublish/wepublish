@@ -25,3 +25,18 @@ export const Turnstile: StoryObj<typeof Challenge> = {
     onChange: action('onChange'),
   },
 };
+
+const hCaptchaChallenge = {
+  type: CaptchaType.HCaptcha,
+  challengeID: '10000000-ffff-ffff-ffff-000000000001',
+  challenge: null,
+  validUntil: null,
+  __typename: 'Challenge',
+} as ChallengeType;
+
+export const HCaptcha: StoryObj<typeof Challenge> = {
+  args: {
+    challenge: hCaptchaChallenge,
+    onChange: action('onChange'),
+  },
+};

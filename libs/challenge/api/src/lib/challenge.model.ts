@@ -3,6 +3,7 @@ import { GraphQLDate } from 'graphql-scalars';
 
 export enum CaptchaType {
   CfTurnstile = 'CfTurnstile',
+  HCaptcha = 'HCaptcha',
 }
 
 registerEnumType(CaptchaType, {

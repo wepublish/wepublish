@@ -27,6 +27,7 @@ import { Link } from 'react-router-dom';
 
 import bexioLogo from './assets/bexio.png';
 import cloudflareLogo from './assets/cloudflare.svg';
+import hcaptchaLogo from './assets/hcaptcha.webp';
 import googleLogo from './assets/google.svg';
 import mailChimpLogo from './assets/mailchimp.avif';
 import mailgunLogo from './assets/mailgun.svg';
@@ -84,7 +85,7 @@ export function IntegrationList() {
       permission: CanGetChallengeProviderSettings.id,
       path: '/integrations/challenge',
       icon: MdSecurity,
-      logos: [cloudflareLogo],
+      logos: [cloudflareLogo, hcaptchaLogo],
     },
     {
       title: t('integrations.paymentProvider'),

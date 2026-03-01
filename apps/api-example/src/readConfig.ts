@@ -127,6 +127,13 @@ type Turnstile = {
   siteKey: string;
 };
 
+type HCaptcha = {
+  type: 'hcaptcha';
+  id: string;
+  secret: string;
+  siteKey: string;
+};
+
 type ProLitteris = {
   type: 'prolitteris';
 };
@@ -144,7 +151,7 @@ type Config = {
   mailProvider: MailProvider;
   paymentProviders: PaymentProvider[];
   mediaServer: novaMediaServer;
-  challenge: Turnstile;
+  challenge: Turnstile | HCaptcha;
   trackingPixelProviders: TrackingPixels[];
   v0?: V0;
 };
