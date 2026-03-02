@@ -624,7 +624,8 @@
       "noTokenErrorMessage": "Please enter a token",
       "noUrlErrorMessage": "Please enter a url",
       "noUserErrorMessage": "Please select a user",
-      "passwordTooShortErrorMessage": "Password must be at least 8 characters long",
+      "passwordTooShortErrorMessage": "Password must be at least 12 characters long",
+      "passwordCompromisedErrorMessage": "This password has appeared in a data breach. Please choose a different password.",
       "required": "This field is required",
       "invalidCountry": "Please select a valid country"
     },

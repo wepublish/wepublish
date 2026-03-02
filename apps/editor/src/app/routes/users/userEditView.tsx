@@ -255,9 +255,12 @@ function UserEditView() {
   const { StringType } = Schema.Types;
   const validatePassword: any =
     id ?
-      StringType().minLength(8, t('errorMessages.passwordTooShortErrorMessage'))
+      StringType().minLength(
+        12,
+        t('errorMessages.passwordTooShortErrorMessage')
+      )
     : StringType()
-        .minLength(8, t('errorMessages.passwordTooShortErrorMessage'))
+        .minLength(12, t('errorMessages.passwordTooShortErrorMessage'))
         .isRequired(t('errorMessages.noPasswordErrorMessage'));
   const validationModel = Schema.Model({
     name: StringType().isRequired(t('errorMessages.noNameErrorMessage')),

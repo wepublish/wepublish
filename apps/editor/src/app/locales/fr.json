@@ -571,7 +571,8 @@
       "noTokenErrorMessage": "Veuillez entrer un token",
       "noUrlErrorMessage": "Veuillez entrer une url",
       "noUserErrorMessage": "Veuillez sélectionner un·e utilisateur·trice",
-      "passwordTooShortErrorMessage": "Le mot de passe doit comporter au moins 8 caractères.",
+      "passwordTooShortErrorMessage": "Le mot de passe doit comporter au moins 12 caractères.",
+      "passwordCompromisedErrorMessage": "Ce mot de passe est apparu dans une fuite de données. Veuillez choisir un autre mot de passe.",
       "required": "Ce champ est requis",
       "invalidCountry": "Please select a valid country"
     },

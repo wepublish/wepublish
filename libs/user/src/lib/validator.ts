@@ -4,7 +4,7 @@ import z from 'zod';
 export class Validator {
   static password = z
     .string()
-    .min(8, 'Password must be at least 8 characters long');
+    .min(12, 'Password must be at least 12 characters long');
 
   static createUser = z.object({
     email: z.string().email(),
