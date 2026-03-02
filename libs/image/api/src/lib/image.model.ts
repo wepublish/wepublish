@@ -12,7 +12,7 @@ import {
 } from '@nestjs/graphql';
 import { HasOptionalPeerLc } from '@wepublish/peering/api';
 import { SortOrder, PaginatedType } from '@wepublish/utils/api';
-import { FileUpload, GraphQLUpload } from 'graphql-upload';
+import { FileUpload, GraphQLUpload } from 'graphql-upload-ts';
 
 export enum ImageSort {
   CreatedAt = 'CreatedAt',
