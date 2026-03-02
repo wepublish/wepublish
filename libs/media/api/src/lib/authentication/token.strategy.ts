@@ -1,6 +1,7 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-http-bearer';
+import { timingSafeEqual } from 'crypto';
 
 export const TOKEN_MODULE_OPTIONS = 'TOKEN_MODULE_OPTIONS';
 
@@ -15,7 +16,13 @@ export class TokenStrategy extends PassportStrategy(Strategy, 'token') {
   }
 
   public async validate(token: string) {
-    if (token !== this.config.token) {
+    const expected = Buffer.from(this.config.token);
+    const received = Buffer.from(token);
+
+    if (
+      expected.length !== received.length ||
+      !timingSafeEqual(expected, received)
+    ) {
       throw new UnauthorizedException();
     }
 

@@ -216,19 +216,6 @@ const fillCountry: StoryObj['play'] = async ({ canvasElement, step }) => {
   });
 };
 
-const fillCaptcha: StoryObj['play'] = async ({ canvasElement, step }) => {
-  const canvas = within(canvasElement);
-
-  const input = canvas.getByLabelText('Captcha', {
-    selector: 'input',
-  });
-
-  await step('Enter captcha', async () => {
-    await userEvent.click(input);
-    await userEvent.type(input, '1');
-  });
-};
-
 const clickPayTransactionFees: StoryObj['play'] = async ({
   canvasElement,
   step,
@@ -263,7 +250,6 @@ const fillRequired: StoryObj['play'] = async ctx => {
   await step('Enter required credentials', async () => {
     await fillName(ctx);
     await fillEmail(ctx);
-    await fillCaptcha(ctx);
   });
 };
 

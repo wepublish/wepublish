@@ -62,24 +62,24 @@ export class MailController {
    * Build the data for passing it to the mail templates
    * @returns a HashMap of configuration data
    */
-  private buildData() {
+  private async buildData() {
     // avoid unwanted data mutation by reference
     const recipient = JSON.parse(JSON.stringify(this.config.recipient));
     recipient.password = 'hidden';
     recipient.roleIDs = ['hidden'];
 
-    if (!process.env['JWT_SECRET_KEY'])
-      throw new Error('No JWT_SECRET_KEY defined in environment.');
+    if (!process.env['JWT_PRIVATE_KEY'])
+      throw new Error('No JWT_PRIVATE_KEY defined in environment.');
 
     return {
       user: recipient,
       optional: this.config.optionalData,
-      jwt: generateJWT({
+      jwt: await generateJWT({
         issuer: 'mailer',
         audience: 'audience',
         id: recipient.id,
         expiresInMinutes: ONE_WEEK_IN_MINUTES,
-        secret: process.env['JWT_SECRET_KEY'],
+        privateKey: process.env['JWT_PRIVATE_KEY'].replace(/\\n/g, '\n'),
       }),
     };
   }
@@ -105,7 +105,7 @@ export class MailController {
       mailLogID: mailLogId,
       remoteTemplate: this.config.externalMailTemplateId,
       recipient: this.config.recipient.email,
-      data: this.buildData(),
+      data: await this.buildData(),
     });
 
     await this.prismaService.mailLog.create({

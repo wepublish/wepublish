@@ -46,6 +46,8 @@ export class ProfileResolver {
       );
     }
 
+    await this.userService.validatePassword(password);
+
     return this.userService.updateUserPassword(user.id, password);
   }
 
