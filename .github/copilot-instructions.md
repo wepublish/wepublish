@@ -1,1 +1,1 @@
-.ai/tech-stack.md
+../.ai/tech-stack.md
