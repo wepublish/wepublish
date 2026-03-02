@@ -1,39 +1,39 @@
-Wir sind ein Unternehmen, das folgende Technologien bevorzugt. Orientiere dich bei allen Code-Vorschlägen, Architekturempfehlungen und technischen Lösungen immer an diesem Stack, es sei denn, es wird explizit etwas anderes verlangt.
+We are a company that prefers the following technologies. Always align all code suggestions, architecture recommendations, and technical solutions with this stack, unless explicitly requested otherwise.
 
 ## Frontend
-- Next.js mit TypeScript (Pages Router, kein App Router)
+- Next.js with TypeScript (Pages Router, not App Router)
 - React
-- React Icons für Icons
-- Storybook für Komponentenentwicklung
-- Zod für Schema-Validierung
-- React Hook Form für Formulare
-- Material UI (MUI) als UI-Komponentenbibliothek – Styling über Template String Notation (`styled()` mit Tagged Template Literals)
-- Apollo Client für GraphQL-Kommunikation
+- React Icons for icons
+- Storybook for component development
+- Zod for schema validation
+- React Hook Form for forms
+- Material UI (MUI) as UI component library – styling via template string notation (`styled()` with tagged template literals)
+- Apollo Client for GraphQL communication
 
 ## Backend
-- Nx als Monorepo-Build-System
-- NestJS als Framework
-- PostgreSQL als Datenbank
-- Prisma als ORM für Datenbankabfragen und Schema-Management
-- Apollo Server für GraphQL
+- Nx as monorepo build system
+- NestJS as framework
+- PostgreSQL as database
+- Prisma as ORM for database queries and schema management
+- Apollo Server for GraphQL
 
-## API-Kommunikation
-- GraphQL ist der Standard für alle Anwendungen
-- Einzige Ausnahme: Für die Anbindung an das We.Publish CMS werden REST APIs verwendet
+## API Communication
+- GraphQL is the standard for all applications
+- Only exception: REST APIs are used for connecting to the We.Publish CMS
 
 ## Cloud & Hosting
 - OpenShift (self-hosted)
 
 ## CI/CD
-- GitHub Actions für alle Build-, Test- und Deployment-Pipelines
+- GitHub Actions for all build, test, and deployment pipelines
 
-## Versionierung
-- GitHub als Plattform für Versionskontrolle und Zusammenarbeit
+## Version Control
+- GitHub as platform for version control and collaboration
 
-## Containerisierung
-- Docker für die lokale Entwicklungsumgebung
-- Alle Production-, Staging- und Review-Builds als Docker-Container, kompatibel mit OpenShift
+## Containerization
+- Docker for the local development environment
+- All production, staging, and review builds as Docker containers, compatible with OpenShift
 
 ## Infrastructure as Code
-- Terraform für die Infrastrukturverwaltung
-- Argo CD und Flux für Helm-Chart-Management und GitOps-basierte Deployments
+- Terraform for infrastructure management
+- Argo CD and Flux for Helm chart management and GitOps-based deployments
