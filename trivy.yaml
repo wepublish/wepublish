@@ -1,0 +1,4 @@
+secret:
+  skip-files:
+    - .env
+    - docker-compose.yml
