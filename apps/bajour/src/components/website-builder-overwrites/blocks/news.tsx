@@ -5,7 +5,7 @@ import {
   hasBlockStyle,
   isFilledTeaser,
   isTeaserListBlock,
-  selectTeaserPreTitle,
+  selectTeaserLead,
   selectTeaserTitle,
   selectTeaserUrl,
 } from '@wepublish/block-content/website';
@@ -62,7 +62,7 @@ export const NewsBlock = ({
             ))}
           </TeaserList>
           <Link
-            href={'/a/tag/Kurznews'}
+            href={'/a/tag/Kurz-News'}
             style={{ textDecoration: 'none' }}
           >
             <b>weitere Kurz-News &rarr;</b>
@@ -80,7 +80,13 @@ const TeaserList = styled('div')`
   flex-direction: column;
 `;
 
-const Filler = styled(Box)``;
+const Filler = styled(Box)`
+  display: none;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    display: block;
+  }
+`;
 
 const OrangeBox = styled('div')`
   display: flex;
@@ -157,7 +163,7 @@ const NewsTeaserUnstyled = ({
   className,
 }: BuilderTeaserProps) => {
   const title = teaser && selectTeaserTitle(teaser);
-  const preTitle = teaser && selectTeaserPreTitle(teaser);
+  const lead = teaser && selectTeaserLead(teaser);
   const href = (teaser && selectTeaserUrl(teaser)) ?? '';
 
   const {
@@ -168,10 +174,10 @@ const NewsTeaserUnstyled = ({
       href={href}
       className={className}
     >
-      <NewsTeaserPreTitle>{preTitle}</NewsTeaserPreTitle>
+      <NewsTeaserPreTitle>{title}</NewsTeaserPreTitle>
       <NewsTeaserContent>
         <NewsTeaserTitle>
-          <H4 gutterBottom>{title}</H4>
+          <H4 gutterBottom>{lead}</H4>
         </NewsTeaserTitle>
         <NewsTeaserIcon />
       </NewsTeaserContent>
