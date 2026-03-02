@@ -73,6 +73,8 @@ jobs:
           PGPASSWORD: ${{ secrets.MAIN_DATABASE_PASSWORD }}
           PGHOST: ${{ secrets.MAIN_DATABASE_HOSTNAME }}
           PGUSER: ${{ secrets.MAIN_DATABASE_USERNAME }}
+          PGSSLMODE: verify-full
+          PGSSLROOTCERT: libs/api/prisma/ca.crt
           INSTANCE_NAME: ${{ steps.resolve.outputs.instance_name }}
         run: |
           psql -h "$PGHOST" -U "$PGUSER" -d "wepublish-${INSTANCE_NAME}-staging" --set ON_ERROR_STOP=1 <<'SQL'
@@ -85,6 +87,8 @@ jobs:
           PGPASSWORD: ${{ secrets.MAIN_DATABASE_PASSWORD }}
           PGHOST: ${{ secrets.MAIN_DATABASE_HOSTNAME }}
           PGUSER: ${{ secrets.MAIN_DATABASE_USERNAME }}
+          PGSSLMODE: verify-full
+          PGSSLROOTCERT: libs/api/prisma/ca.crt
           INSTANCE_NAME: ${{ steps.resolve.outputs.instance_name }}
         run: |
           psql -h "$PGHOST" -U "$PGUSER" -d "wepublish-${INSTANCE_NAME}-staging" --set ON_ERROR_STOP=1 -f database.dump
