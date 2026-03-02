@@ -79,7 +79,7 @@ const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
 export const AppBar = styled(MuiAppBar, {
   shouldForwardProp: propName => propName !== 'isMenuOpen',
 })<{ isMenuOpen?: boolean }>`
-  background-color: ${theme.palette.common.white};
+  background-color: var(--navbar-bg-color-hero-off-screen, white);
   position: relative;
   overflow-y: visible;
 
@@ -91,7 +91,7 @@ export const AppBar = styled(MuiAppBar, {
 `;
 
 export const NavbarWrapper = styled('nav')`
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -99,6 +99,7 @@ export const NavbarWrapper = styled('nav')`
   height: auto;
   pointer-events: none;
   margin-bottom: calc(${theme.spacing(-3)} + 1px);
+  background-color: var(--navbar-bg-color-hero-off-screen, white);
 
   > * {
     pointer-events: all;
@@ -176,7 +177,7 @@ export const NavbarHamburgerButton = styled(IconButton, {
   shouldForwardProp: propName =>
     propName !== 'isMenuOpen' && propName !== 'isTransitioning',
 })<{ isMenuOpen: boolean; isTransitioning: boolean }>`
-  background-color: ${theme.palette.primary.main};
+  background-color: ${theme.palette.primary.dark};
   width: 5rem;
   height: 5rem;
   border-radius: 0;
@@ -194,7 +195,7 @@ export const NavbarHamburgerButton = styled(IconButton, {
         transform: scale(1.05);
       `;
     }}
-    background-color: ${theme.palette.primary.main};
+    background-color: ${theme.palette.primary.dark};
   }
 
   ${({ isMenuOpen }) =>
@@ -311,6 +312,22 @@ export const NavbarHomeLink = styled(Link)`
   align-items: center;
   justify-items: center;
   justify-self: left;
+
+  & > svg {
+  transition: width 300ms ease-out;
+  transform: translate3d(0, 0, 0);
+  position: absolute;
+
+  width: 15.5rem;
+  height: auto;
+  top: 1.25rem;
+  left: calc(50vw - 15.5rem);
+
+  mix-blend-mode: difference;
+
+  ${theme.breakpoints.up('md')} {
+    width: 15.5rem;
+  }
 `;
 
 const ReflektLogo = styled('img', {
@@ -321,10 +338,12 @@ const ReflektLogo = styled('img', {
   transform: translate3d(0, 0, 0);
   position: absolute;
 
-  width: 10rem;
+  width: 15.5rem;
   height: auto;
-  top: 2rem;
-  left: 2rem;
+  top: 1.25rem;
+  left: calc(50vw - 15.5rem);
+
+  mix-blend-mode: difference;
 
   ${theme.breakpoints.up('md')} {
     width: 10rem;
@@ -333,14 +352,14 @@ const ReflektLogo = styled('img', {
     ${({ isScrolled }) =>
       isScrolled &&
       css`
-        width: 10rem;
+        width: 15.5rem;
       `}
 
     // on home page, not scrolled
     ${({ isHomePage }) =>
       isHomePage &&
       css`
-        width: 10rem;
+        width: 15.5rem;
       `}
 
       // on home page, scrolled
@@ -348,7 +367,7 @@ const ReflektLogo = styled('img', {
       isHomePage &&
       isScrolled &&
       css`
-        width: 10rem;
+        width: 15.5rem;
       `}
   }
 `;
@@ -426,7 +445,7 @@ export const NavPaperWrapper = styled('div', {
     propName !== 'isMenuOpen' && propName !== 'isTransitioning',
 })<{ isMenuOpen: boolean; isTransitioning: boolean }>`
   padding: 8cqw ${theme.spacing(2)} 0 ${theme.spacing(2)};
-  background: ${theme.palette.primary.main};
+  background-color: ${theme.palette.primary.dark};
   color: ${theme.palette.common.white};
   top: 0;
   left: 0;
@@ -528,7 +547,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
   ${({ isMenuOpen }) =>
     isMenuOpen &&
     css`
-      background-color: transparent;
+      background-color: var(--navbar-bg-color-hero-off-screen, white);
       pointer-events: none;
 
       ${NavbarHomeLink} {
@@ -748,12 +767,22 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
               href="/"
               aria-label="Startseite"
             >
-              <ReflektLogo
-                src={'/logo_desktop.svg'}
-                alt="Reflekt Logo"
-                isScrolled={isScrolled}
-                isHomePage={isHomePage}
-              />
+              <svg
+                id="Ebene_1"
+                xmlns="http://www.w3.org/2000/svg"
+                version="1.1"
+                viewBox="0 0 82.34 13.77"
+              >
+                <g style={{ fill: '#ffffff' }}>
+                  <polygon points="13.35 13.77 22.19 13.77 22.19 12.22 15 12.22 15 7.71 21.43 7.71 21.43 6.16 15 6.16 15 1.56 22.19 1.56 22.19 .01 13.35 .01 13.35 13.77" />
+                  <polygon points="25.73 13.77 27.38 13.77 27.38 7.84 33.63 7.84 33.63 6.28 27.38 6.28 27.38 1.56 34.39 1.56 34.39 .01 25.73 .01 25.73 13.77" />
+                  <polygon points="38.98 .01 37.33 .01 37.33 13.77 45.79 13.77 45.79 12.22 38.98 12.22 38.98 .01" />
+                  <polygon points="48.34 13.77 57.17 13.77 57.17 12.22 49.98 12.22 49.98 7.71 56.42 7.71 56.42 6.16 49.98 6.16 49.98 1.56 57.17 1.56 57.17 .01 48.34 .01 48.34 13.77" />
+                  <polygon points="72.64 .01 72.64 1.56 76.67 1.56 76.67 13.77 78.31 13.77 78.31 1.56 82.34 1.56 82.34 .01 72.64 .01" />
+                  <path d="M69.06,6.33c-.44-.23-.91-.39-1.4-.45L70.66,0h-2l-2.88,5.88h-3.48V0h-1.64v13.76h1.64v-6.23h4.7c.44,0,.87.1,1.27.27.35.17.65.44.85.78.21.35.31.76.3,1.17v4h1.55v-3.92c.02-.73-.15-1.45-.49-2.1-.33-.6-.82-1.08-1.42-1.4Z" />
+                  <path d="M6.89,7.77c.23-.09.45-.19.66-.31.61-.31,1.12-.8,1.45-1.4.67-1.31.67-2.86,0-4.17-.32-.59-.81-1.08-1.4-1.4C6.95.16,6.24-.01,5.51,0H0v13.77h1.65v-5.82h3.48l2.94,5.82h2l-3.18-6ZM5.53,6.4H1.65V1.55h3.88c.41,0,.82.09,1.18.3.33.2.6.5.77.85.19.4.29.83.28,1.27,0,.44-.1.88-.29,1.28-.17.34-.44.62-.77.81-.35.22-.76.34-1.17.34Z" />
+                </g>
+              </svg>
             </NavbarHomeLink>
 
             <NavbarActions isMenuOpen={isMenuOpen}>
@@ -799,3 +828,16 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
     );
   }
 );
+
+export const heroOffScreen = (isIntersecting: boolean) => {
+  return (
+    <GlobalStyles
+      styles={css`
+        :root {
+          --navbar-bg-color-hero-off-screen: ${isIntersecting ? 'transparent'
+          : 'white'};
+        }
+      `}
+    />
+  );
+};

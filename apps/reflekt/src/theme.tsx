@@ -3,11 +3,11 @@ import { theme as WePTheme } from '@wepublish/ui';
 import { Hanken_Grotesk } from 'next/font/google';
 import { PartialDeep } from 'type-fest';
 
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import euclidCircularB_Bold from './fonts/euclid/EuclidCircularB-Bold-WebS.woff2';
 import euclidCircularB_LightItalic from './fonts/euclid/EuclidCircularB-LightItalic-WebS.woff2';
 import euclidCircularB_Medium from './fonts/euclid/EuclidCircularB-Medium-WebS.woff2';
 import euclidCircularB_MediumItalic from './fonts/euclid/EuclidCircularB-MediumItalic-WebS.woff2';
+import recife_Medium from './fonts/recife/RecifeTextWeb-Regular.woff2';
 
 const hankenGrotesk = Hanken_Grotesk({
   weight: ['100', '300', '400', '500', '600', '700'],
@@ -21,7 +21,13 @@ const colors = {
   primary: {
     main: '#0800ff',
     light: '#f5ff64',
-    dark: '#aeb3be',
+    dark: '#1F1F1F',
+    contrastText: '#ffffff',
+  },
+  secondary: {
+    main: '#0800ff',
+    light: '#E7FF04', // link-button main background
+    dark: '#2B4E47',
     contrastText: '#ffffff',
   },
   common: {
@@ -53,6 +59,14 @@ const theme = createTheme(WePTheme, {
         contrastText: colors.primary.contrastText,
       },
     }),
+    secondary: augmentColor({
+      color: {
+        main: colors.secondary.main,
+        light: colors.secondary.light,
+        dark: colors.secondary.dark,
+        contrastText: colors.secondary.contrastText,
+      },
+    }),
   },
   typography: {
     h1: {
@@ -68,7 +82,7 @@ const theme = createTheme(WePTheme, {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
     },
     h5: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: ['Euclid', 'sans-serif'].join(','),
     },
     h6: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
@@ -138,6 +152,69 @@ const theme = createTheme(WePTheme, {
         lineHeight: '3rem',
       },
     },
+    // TeaserSlots
+    teaserSlotsTitle: {
+      fontFamily: ['Euclid', 'sans-serif'].join(','),
+      fontWeight: 500,
+      color: colors.common.black,
+      textTransform: 'uppercase',
+      textAlign: 'center',
+      fontSize: '2.5rem',
+      paddingBottom: '2rem',
+    },
+    // Teaser
+    teaserTitle: {
+      [breakpoints.up('xs')]: {
+        fontFamily: ['Euclid', 'sans-serif'].join(','),
+        backgroundColor: 'transparent',
+        margin: 0,
+        padding: '0 4cqw',
+        textAlign: 'center',
+        textTransform: 'uppercase',
+        fontWeight: 700,
+        fontSize: '8cqw',
+        lineHeight: '9cqw',
+      },
+    },
+    teaserTitleLink: {
+      [breakpoints.up('xs')]: {
+        ['&:after']: {
+          content: "''",
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'transparent',
+          cursor: 'pointer',
+        },
+      },
+    },
+    teaserPretitle: {
+      [breakpoints.up('xs')]: {
+        fontFamily: ['Euclid', 'sans-serif'].join(','),
+        color: colors.common.white,
+        backgroundColor: colors.common.black,
+        fontSize: 'calc((9 * 100cqw / 16) * 0.045)',
+        lineHeight: 'calc((9 * 100cqw / 16) * 0.045)',
+        fontWeight: 700,
+        padding: '0.5cqw 1.5cqw',
+      },
+    },
+    teaserLead: {
+      fontFamily: ['Recife', 'serif'].join(','),
+    },
+    teaserMeta: {
+      [breakpoints.up('xs')]: {
+        fontFamily: ['Euclid', 'sans-serif'].join(','),
+        backgroundColor: colors.common.white,
+        margin: 0,
+        fontSize: 'calc((9 * 100cqw / 16) * 0.04)',
+        fontWeight: 700,
+        padding: '0 1.5cqw',
+      },
+    },
   },
   components: {
     MuiCssBaseline: {
@@ -169,6 +246,13 @@ const theme = createTheme(WePTheme, {
           font-style: normal;
           font-weight: 700;
           src: local('Euclid'), local('Euclid-Bold'), url(${euclidCircularB_Bold}) format('woff2');
+        }
+        @font-face {
+          font-family: 'Recife';
+          font-display: swap;
+          font-style: normal;
+          font-weight: 500;
+          src: local('Recife'), local('Recife-Medium'), url(${recife_Medium}) format('woff2');
         }
       `,
     },
@@ -210,9 +294,128 @@ const theme = createTheme(WePTheme, {
             },
           },
         },
+
+        // Button-Links
+        {
+          props: { variant: 'buttonLinkMain' },
+          style: {
+            fontFamily: ['Euclid', 'sans-serif'].join(','),
+            fontWeight: 500,
+            textTransform: 'uppercase',
+            color: colors.common.black,
+            backgroundColor: colors.secondary.light,
+            padding: '0.5cqw 1.5cqw',
+            display: 'inline-block',
+            textDecoration: 'none',
+            fontSize: 'calc((9 * 100cqw / 16) * 0.04)',
+            lineHeight: 'calc((9 * 100cqw / 16) * 0.04)',
+            '&:hover': {
+              backgroundColor: colors.secondary.light,
+              color: colors.common.black,
+              textDecoration: 'none',
+            },
+          },
+        },
+        {
+          props: { variant: 'buttonLinkSecondary' },
+          style: {
+            fontFamily: ['Euclid', 'sans-serif'].join(','),
+            fontWeight: 500,
+            textTransform: 'uppercase',
+            borderRadius: '9999px',
+            color: colors.common.white,
+            backgroundColor: colors.common.black,
+            padding: '0.5cqw 1.5cqw',
+            display: 'inline-block',
+            textDecoration: 'none',
+            fontSize: '1rem',
+            lineHeight: '1.5rem',
+            '&:hover': {
+              backgroundColor: colors.common.black,
+              color: colors.common.white,
+              textDecoration: 'none',
+            },
+          },
+        },
       ],
     },
   },
 } as PartialDeep<Theme> | ThemeOptions);
+
+export const teaserMoreAboutTheme = createTheme(theme, {
+  typography: {
+    teaserTitle: {
+      [breakpoints.up('xs')]: {
+        fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+        padding: 0,
+        margin: '0 0 calc(var(--sizing-factor) * 1cqw) 0',
+        fontSize: 'calc(var(--sizing-factor) * 1.67cqw)',
+        lineHeight: 'calc(var(--sizing-factor) * 1.8cqw)',
+        fontWeight: 700,
+        color: colors.common.black,
+        backgroundColor: 'transparent',
+      },
+    },
+    teaserPretitle: {
+      [breakpoints.up('xs')]: {
+        fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+        fontSize: 'calc(var(--sizing-factor) * 1.1cqw)',
+        fontWeight: 700,
+        lineHeight: 'calc(var(--sizing-factor) * 1.2cqw)',
+        textAlign: 'right',
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'flex-end',
+        backgroundColor: 'transparent',
+        color: colors.common.black,
+        justifySelf: 'end',
+        paddingRight: 0,
+      },
+    },
+    teaserLead: {
+      [breakpoints.up('xs')]: {
+        fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+        display: 'block',
+        fontSize: 'calc(var(--sizing-factor) * 1.3cqw)',
+        lineHeight: 'calc(var(--sizing-factor) * 1.4cqw)',
+        fontWeight: 400,
+        padding: 0,
+        backgroundColor: 'transparent',
+        color: colors.common.black,
+      },
+      [breakpoints.up('md')]: {
+        margin: 0,
+      },
+    },
+  },
+  components: {
+    MuiLink: {
+      variants: [
+        // keep base variants
+        ...(theme.components?.MuiLink?.variants ?? []),
+        // add teaser-specific variants
+        {
+          props: { variant: 'teaserPretitleLink' },
+          style: {
+            fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(
+              ','
+            ),
+            display: 'inline',
+            textDecoration: 'underline',
+            flexGrow: 0,
+            padding:
+              'calc(var(--sizing-factor) * 0.3cqw) calc(var(--sizing-factor) * 0.5cqw)',
+            color: colors.common.black,
+            '&:hover': {
+              backgroundColor: colors.primary.light,
+              color: colors.common.black,
+              textDecoration: 'none',
+            },
+          },
+        },
+      ],
+    },
+  },
+});
 
 export { theme as default };

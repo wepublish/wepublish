@@ -144,7 +144,11 @@ const decorateComments = (
     ),
   });
 
-  return sortComments(groupedComments['null'].map(decorate), sort, order);
+  return sortComments(
+    (groupedComments['null'] ?? []).map(decorate),
+    sort,
+    order
+  );
 };
 
 const decorateAdminComments = (
@@ -286,10 +290,25 @@ export class CommentService {
       this.prisma.commentRatingSystemAnswer.findMany(),
     ]);
 
-    return decorateComments(comments, ratingSystemAnswers, {
-      sort: CommentSort.Rating,
-      order: SortOrder.Ascending,
-    }).at(-1);
+    const groupedComments = groupBy(
+      comment => comment.parentID ?? 'null',
+      comments
+    );
+
+    const decorate = (
+      comment: CommentWithRequiredRelations
+    ): DecoratedComment => ({
+      ...comment,
+      calculatedRatings: calculateRating(ratingSystemAnswers, comment.ratings),
+      children: sortComments(
+        (groupedComments[comment.id] ?? []).map(decorate),
+        CommentSort.Rating,
+        SortOrder.Ascending
+      ),
+    });
+
+    const target = comments.find(c => c.id === commentId);
+    return target ? decorate(target) : undefined;
   }
 
   public async createAdminComment({

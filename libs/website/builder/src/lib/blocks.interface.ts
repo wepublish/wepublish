@@ -37,7 +37,7 @@ export type BuilderBlockRendererProps = {
   block: BlockContent;
   index: number;
   count: number;
-  type: 'Page' | 'Article';
+  type: 'Page' | 'Article' | 'PageNested' | 'ArticleNested';
 };
 
 export type BuilderBlocksProps = {

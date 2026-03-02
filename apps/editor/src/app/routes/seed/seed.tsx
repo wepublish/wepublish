@@ -1,17 +1,5 @@
-import { useApolloClient } from '@apollo/client';
 import { faker } from '@faker-js/faker';
 import { capitalize } from '@mui/material';
-import {
-  CommentAuthorType,
-  CommentItemType,
-  CommentListDocument,
-  CommentState,
-  ProductType,
-  SubscriptionListDocument,
-  useCreateCommentMutation,
-  useDeleteCommentMutation,
-  useDeleteSubscriptionMutation,
-} from '@wepublish/editor/api';
 import {
   ArticleListDocument,
   ArticleListQueryVariables,
@@ -19,9 +7,13 @@ import {
   BlockContentInput,
   BlockStyle,
   BlockStylesDocument,
+  BlockWithAlignment,
   BreakBlockInput,
+  CommentItemType,
+  CommentListDocument,
   CreateArticleMutationVariables,
   EventListDocument,
+  FlexBlockInput,
   getApiClientV2,
   IFrameBlockInput,
   ImageBlockInput,
@@ -31,21 +23,25 @@ import {
   NavigationListDocument,
   PageListDocument,
   PaymentMethodListDocument,
+  ProductType,
+  PropertyInput,
   RichTextBlockInput,
   SubscriptionFlowsDocument,
+  SubscriptionListDocument,
   Tag,
   TagListDocument,
   TagListQueryVariables,
   TagType,
   TeaserListBlockSort,
-  TeaserSlotInput,
   TeaserSlotsAutofillConfig,
-  TeaserSlotsBlockInput,
+  TeaserSlotsBlock,
   TeaserType,
   TitleBlockInput,
+  useApproveCommentMutation,
   useCreateArticleMutation,
   useCreateAuthorMutation,
   useCreateBlockStyleMutation,
+  useCreateCommentMutation,
   useCreateEventMutation,
   useCreateMemberPlanMutation,
   useCreateNavigationMutation,
@@ -55,6 +51,7 @@ import {
   useDeleteArticleMutation,
   useDeleteAuthorMutation,
   useDeleteBlockStyleMutation,
+  useDeleteCommentMutation,
   useDeleteEventMutation,
   useDeleteImageMutation,
   useDeleteMemberPlanMutation,
@@ -62,12 +59,14 @@ import {
   useDeletePageMutation,
   useDeletePaymentMethodMutation,
   useDeleteSubscriptionFlowMutation,
+  useDeleteSubscriptionMutation,
   useDeleteTagMutation,
   usePublishArticleMutation,
   usePublishPageMutation,
   useUpdateArticleMutation,
+  useUpdateCommentMutation,
   useUploadImageMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   getImgMinSizeToCompress,
   getOperationNameFromDocument,
@@ -185,7 +184,8 @@ function willImageResize(file: File, imgMinSizeToResize: number) {
 
 async function seedArticleTags(createTag: any) {
   return Promise.all(
-    Array.from(faker.helpers.uniqueArray(faker.lorem.word, 10), tag =>
+    //faker.helpers.uniqueArray(faker.lorem.word, 10)
+    Array.from(['research', 'news'], tag =>
       createTag({
         variables: {
           tag,
@@ -276,32 +276,121 @@ const createArticleInput = (
       lead: faker.lorem.paragraph(),
       seoTitle: `SEO - ${title}`,
       authorIds: [shuffle(authorIds).at(0)],
-      imageID: imageIds[i],
+      imageID: (() => {
+        let imageId = imageIds[i % imageIds.length];
+        const predefinedImageIds = [
+          '10b0625c-6a01-4b89-acb8-1522cf7c1102',
+          '99ec3c29-3371-44af-804f-1c17fa2fab6b',
+          'f24cf6f5-dfdb-4777-82c0-599a88f71b73',
+        ];
+
+        if (i < 10) {
+          imageId =
+            (
+              imageIds.find(
+                imageId =>
+                  imageId === predefinedImageIds[i % predefinedImageIds.length]
+              )
+            ) ?
+              predefinedImageIds[i % predefinedImageIds.length]
+            : imageId;
+        }
+        return imageId;
+      })(),
       breaking: pickRandom(true, 0.1).length ? true : false,
       paywallId: null,
       hidden: false,
       disableComments: false,
       tagIds: (() => {
         if (tagIds.length) {
-          let _tagIds = [...tagIds];
-          let picks: string[] | never[] = [];
-          for (let i = 0; i < 4; i++) {
-            picks = [
-              ...picks,
-              ...pickRandom(
-                (_tagIds = shuffle(_tagIds)).splice(0, 1)[0],
-                Math.random()
-              ),
-            ];
+          if (i < 10) {
+            return [tagIds[0]];
           }
-          picks = picks.filter((tagId, i) => !!tagId);
-          return [..._tagIds.splice(i % tagIds.length, 1), ...picks];
+          return [tagIds[1]];
         }
         return [];
       })(),
       canonicalUrl: faker.internet.url(),
-      properties: [],
+      properties:
+        i % 3 === 2 ?
+          ([
+            { key: 'leadColor', value: 'black', public: true },
+          ] as PropertyInput[])
+        : ([] as PropertyInput[]),
       blocks: [
+        // hero block
+        {
+          flexBlock: {
+            blockStyle: getBlockStyle(blockStyles, 'FlexBlockHero'),
+            blocks: [
+              // desktop image
+              {
+                alignment: {
+                  i: '0',
+                  x: 0,
+                  y: 0,
+                  w: 6,
+                  h: 7,
+                  static: false,
+                },
+                block: {
+                  image: {
+                    imageID: imageIds[12],
+                    caption: faker.lorem.sentence(),
+                  } as ImageBlockInput,
+                } as BlockContentInput,
+              },
+
+              // mobile image
+              {
+                alignment: {
+                  i: '1',
+                  x: 6,
+                  y: 0,
+                  w: 6,
+                  h: 7,
+                  static: false,
+                },
+                block: {
+                  image: {
+                    imageID: imageIds[13],
+                    caption: faker.lorem.sentence(),
+                  } as ImageBlockInput,
+                } as BlockContentInput,
+              },
+
+              // overlay text
+              {
+                alignment: {
+                  i: '2',
+                  x: 0,
+                  y: 7,
+                  w: 12,
+                  h: 3,
+                  static: false,
+                },
+                block: {
+                  richText: {
+                    richText: [
+                      {
+                        type: 'heading-one',
+                        children: [
+                          {
+                            text: capitalize(
+                              faker.lorem.words({ min: 3, max: 8 })
+                            ),
+                          },
+                        ],
+                      },
+                      ...(getText(1, 2) as Descendant[]),
+                    ] as Descendant[],
+                  } as RichTextBlockInput,
+                } as BlockContentInput,
+              },
+            ] as BlockWithAlignment[],
+          } as FlexBlockInput,
+        } as BlockContentInput,
+
         // a title block
         {
           title: {
@@ -458,7 +547,7 @@ Jetzt im Shop erhältlich.`,
   };
 };
 
-const nrOfArticlesPerTag = 7;
+const nrOfArticlesPerTag = 10;
 async function seedArticlesByTag(
   createArticle: any,
   updateArticle: any,
@@ -492,6 +581,7 @@ async function seedArticlesByTag(
   return articles;
 }
 
+/*
 async function seedArticles(
   createArticle: any,
   updateArticle: any,
@@ -524,6 +614,7 @@ async function seedArticles(
 
   return articles;
 }
+*/
 
 async function seedNavigations(createNavigation: any, tags: string[] = []) {
   /*
@@ -693,78 +784,11 @@ const getBlockStyle = (blockStyles: any, blockStyleName: string) => {
   return retVal;
 };
 
-const createBlockWithAlignmentForArchiveLayout = (tag: any, index: number) => {
-  return {
-    alignment: {
-      i: index.toString(),
-      x: index * 2,
-      y: 0,
-      w: 2,
-      h: 7,
-      static: false,
-    },
-    block: {
-      teaserSlots: {
-        title: capitalize(tag.tag as string),
-        autofillConfig: {
-          enabled: true,
-          filter: {
-            tags: [tag.id],
-          },
-          teaserType: TeaserType.Article,
-          sort: TeaserListBlockSort.PublishedAt,
-        } as TeaserSlotsAutofillConfig,
-        slots: [
-          {
-            type: 'Autofill',
-            teaser: null,
-          },
-          {
-            type: 'Autofill',
-            teaser: null,
-          },
-          {
-            type: 'Autofill',
-            teaser: null,
-          },
-          {
-            type: 'Autofill',
-            teaser: null,
-          },
-          {
-            type: 'Autofill',
-            teaser: null,
-          },
-          {
-            type: 'Autofill',
-            teaser: null,
-          },
-          {
-            type: 'Manual',
-            teaser: {
-              custom: {
-                preTitle: `Mehr über ${capitalize(tag.tag as string)}`,
-                title: '',
-                lead: null,
-                contentUrl: new URL(tag.url).pathname,
-                openInNewTab: false,
-                properties: [],
-                imageID: null,
-              },
-            },
-          },
-        ],
-      } as TeaserSlotsBlockInput,
-    } as BlockContentInput,
-  };
-};
-
 async function seedPages(
   createPage: any,
   imageIds: string[] = [],
   tags: Tag[] = [],
   articleIds: string[] = [],
-  heroArticleId: string[] = [],
   blockStyles: any
 ) {
   const pages = await Promise.all([
@@ -777,36 +801,91 @@ async function seedPages(
         canonicalUrl: null,
         properties: [],
         blocks: [
+          // hero block
           {
-            linkPageBreak: {
-              blockStyle: getBlockStyle(blockStyles, 'AttentionCatcher'),
-              hideButton: false,
-              text: 'Shop',
-              imageID: imageIds[imageIds.length - 15],
-              linkTarget: null,
-              linkText: capitalize(faker.lorem.words({ min: 1, max: 3 })),
-              linkURL: 'https://shop.tsri.ch/products/cap-tsuri',
-              richText: [
+            flexBlock: {
+              blockStyle: getBlockStyle(blockStyles, 'FlexBlockHero'),
+              blocks: [
+                // desktop image
                 {
-                  type: 'heading-two',
-                  children: [
-                    {
-                      text: capitalize(faker.lorem.words({ min: 2, max: 4 })),
-                    },
-                  ],
+                  alignment: {
+                    i: '0',
+                    x: 0,
+                    y: 0,
+                    w: 6,
+                    h: 7,
+                    static: false,
+                  },
+                  block: {
+                    image: {
+                      imageID: imageIds[12],
+                      caption: faker.lorem.sentence(),
+                    } as ImageBlockInput,
+                  } as BlockContentInput,
                 },
-                ...(getText(2, 2) as Descendant[]),
-              ] as Descendant[],
-            } as BreakBlockInput,
+
+                // mobile image
+                {
+                  alignment: {
+                    i: '1',
+                    x: 6,
+                    y: 0,
+                    w: 6,
+                    h: 7,
+                    static: false,
+                  },
+                  block: {
+                    image: {
+                      imageID: imageIds[13],
+                      caption: faker.lorem.sentence(),
+                    } as ImageBlockInput,
+                  } as BlockContentInput,
+                },
+
+                // overlay text
+                {
+                  alignment: {
+                    i: '2',
+                    x: 0,
+                    y: 7,
+                    w: 12,
+                    h: 3,
+                    static: false,
+                  },
+                  block: {
+                    richText: {
+                      richText: [
+                        {
+                          type: 'heading-one',
+                          children: [
+                            {
+                              text: capitalize(
+                                faker.lorem.words({ min: 3, max: 8 })
+                              ),
+                            },
+                          ],
+                        },
+                        ...(getText(1, 2) as Descendant[]),
+                      ] as Descendant[],
+                    } as RichTextBlockInput,
+                  } as BlockContentInput,
+                },
+              ] as BlockWithAlignment[],
+            } as FlexBlockInput,
           } as BlockContentInput,
 
+          // research teasers
           {
             teaserSlots: {
-              title: 'XLFullsizeImage - 2 Teasers',
-              blockStyle: undefined,
+              title: 'Recherchen',
+              blockStyle: getBlockStyle(blockStyles, 'TeaserResearch'),
               autofillConfig: {
                 enabled: true,
-                filter: {},
+                filter: {
+                  tags: tags
+                    .filter(tag => tag.tag === 'research')
+                    .map(tag => tag.id) as string[],
+                },
                 teaserType: TeaserType.Article,
                 sort: TeaserListBlockSort.PublishedAt,
               } as TeaserSlotsAutofillConfig,
@@ -824,19 +903,67 @@ async function seedPages(
                   teaser: null,
                 },
                 {
-                  type: 'Autofill',
-                  teaser: null,
-                },
-                {
-                  type: 'Autofill',
-                  teaser: null,
-                },
-                {
-                  type: 'Autofill',
-                  teaser: null,
+                  type: 'Manual',
+                  teaser: {
+                    custom: {
+                      preTitle: 'Alle Recherchen',
+                      title: '',
+                      lead: null,
+                      contentUrl: '/a/tag/research',
+                      openInNewTab: false,
+                      properties: [],
+                      imageID: null,
+                    },
+                  },
                 },
               ],
-            } as TeaserSlotInput,
+            } as TeaserSlotsBlock,
+          } as BlockContentInput,
+
+          // news teasers
+          {
+            teaserSlots: {
+              title: 'News',
+              blockStyle: getBlockStyle(blockStyles, 'TeaserNews'),
+              autofillConfig: {
+                enabled: true,
+                filter: {
+                  tags: tags
+                    .filter(tag => tag.tag === 'news')
+                    .map(tag => tag.id) as string[],
+                },
+                teaserType: TeaserType.Article,
+                sort: TeaserListBlockSort.PublishedAt,
+              } as TeaserSlotsAutofillConfig,
+              slots: [
+                {
+                  type: 'Autofill',
+                  teaser: null,
+                },
+                {
+                  type: 'Autofill',
+                  teaser: null,
+                },
+                {
+                  type: 'Autofill',
+                  teaser: null,
+                },
+                {
+                  type: 'Manual',
+                  teaser: {
+                    custom: {
+                      preTitle: 'Alle News',
+                      title: '',
+                      lead: null,
+                      contentUrl: '/a/tag/news',
+                      openInNewTab: false,
+                      properties: [],
+                      imageID: null,
+                    },
+                  },
+                },
+              ],
+            } as TeaserSlotsBlock,
           } as BlockContentInput,
         ] as BlockContentInput[],
       },
@@ -848,54 +975,90 @@ async function seedPages(
 
 async function seedComments(
   createComment: any,
+  updateComment: any,
+  approveComment: any,
   articleIds: string[],
   imageIds: string[] = []
 ) {
+  const createAndApproveComment = async (variables: {
+    text: Descendant[];
+    tagIds: string[];
+    itemID: string;
+    parentID: string | null;
+    itemType: CommentItemType;
+    source: string;
+    guestUsername: string;
+    guestUserImageID: string | undefined;
+  }) => {
+    const comment = await createComment({
+      variables: {
+        text: variables.text,
+        tagIds: variables.tagIds,
+        itemID: variables.itemID,
+        parentID: variables.parentID,
+        itemType: variables.itemType,
+      },
+    });
+    const id = comment.data.createComment.id;
+    await updateComment({
+      variables: {
+        id,
+        guestUsername: variables.guestUsername,
+        guestUserImageID: variables.guestUserImageID,
+        source: variables.source,
+      },
+    });
+    await approveComment({ variables: { id } });
+    return comment;
+  };
+
   const comments = await Promise.all(
-    articleIds.flatMap(async articleId => {
+    articleIds.map(async articleId => {
       const firstBatchOfComments = await Promise.all(
-        Array.from({ length: faker.number.int({ min: 0, max: 8 }) }, () =>
-          createComment({
-            variables: {
+        Array.from(
+          { length: faker.number.int({ min: 0, max: 8 }) },
+          async () => {
+            const comment = await createAndApproveComment({
               text: getText(2, 4) as Descendant[],
               tagIds: [],
               itemID: articleId,
               parentID: null,
               itemType: CommentItemType.Article,
-              authorType: CommentAuthorType.GuestUser,
               source: capitalize(faker.lorem.words({ min: 3, max: 8 })),
-              state: CommentState.Approved,
               guestUsername: faker.person.fullName(),
               guestUserImageID: shuffle(imageIds).at(0),
-              userRatings: [],
-            },
-          })
+            });
+            return comment;
+          }
         )
       );
 
-      const repliesToFirstBatchOfComments = await Promise.all(
-        firstBatchOfComments.flatMap(async parentComment => {
-          return Promise.all(
-            Array.from({ length: faker.number.int({ min: 0, max: 4 }) }, () =>
-              createComment({
-                variables: {
-                  text: getText(1, 3) as Descendant[],
-                  tagIds: [],
-                  itemID: articleId,
-                  parentID: parentComment.data.createComment.id,
-                  itemType: CommentItemType.Article,
-                  authorType: CommentAuthorType.GuestUser,
-                  source: capitalize(faker.lorem.words({ min: 3, max: 8 })),
-                  state: CommentState.Approved,
-                  guestUsername: faker.person.fullName(),
-                  guestUserImageID: shuffle(imageIds).at(0),
-                  userRatings: [],
-                },
-              })
-            )
-          );
-        })
-      );
+      let repliesToFirstBatchOfComments: any[] = [];
+      if (firstBatchOfComments.length) {
+        repliesToFirstBatchOfComments = await Promise.all(
+          firstBatchOfComments.map(
+            async parentComment =>
+              await Promise.all(
+                Array.from(
+                  { length: faker.number.int({ min: 0, max: 4 }) },
+                  async () => {
+                    const reply = await createAndApproveComment({
+                      text: getText(1, 3) as Descendant[],
+                      tagIds: [],
+                      itemID: articleId,
+                      parentID: parentComment.data.createComment.id,
+                      itemType: CommentItemType.Article,
+                      source: capitalize(faker.lorem.words({ min: 3, max: 8 })),
+                      guestUsername: faker.person.fullName(),
+                      guestUserImageID: shuffle(imageIds).at(0),
+                    });
+                    return reply;
+                  }
+                )
+              )
+          )
+        );
+      }
 
       return [...firstBatchOfComments, ...repliesToFirstBatchOfComments];
     })
@@ -905,7 +1068,6 @@ async function seedComments(
 
 async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
   const blockStylesData = [
-    /*
     {
       name: 'Banner',
       blocks: ['LinkPageBreak'],
@@ -926,78 +1088,20 @@ async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
       name: 'Slider',
       blocks: ['TeaserList', 'TeaserGrid6', 'TeaserSlots', 'ImageGallery'],
     },
-    */
 
-    // archive layouts
     {
-      name: 'ArchiveTopic',
-      blocks: ['TeaserSlots'],
+      name: 'FlexBlockHero',
+      blocks: ['FlexBlock'],
     },
+
     {
-      name: 'ArchiveTopicWithTwoCol',
-      blocks: ['TeaserSlots'],
-    },
-    {
-      name: 'ArchiveTopicAuthor',
+      name: 'TeaserResearch',
       blocks: ['TeaserSlots'],
     },
 
-    // archive sidebar layouts
     {
-      name: 'SB_DailyBriefing',
+      name: 'TeaserNews',
       blocks: ['TeaserSlots'],
-    },
-    {
-      name: 'SB_ShopProducts',
-      blocks: ['TeaserSlots'],
-    },
-    {
-      name: 'SB_Events',
-      blocks: ['TeaserSlots'],
-    },
-    {
-      name: 'SB_TsriLove',
-      blocks: ['TeaserSlots'],
-    },
-
-    // normal teaser layouts
-    {
-      name: 'T_FullsizeImage',
-      blocks: ['TeaserSlots'],
-    },
-    {
-      name: 'T_XLFullsizeImage',
-      blocks: ['TeaserSlots'],
-    },
-    {
-      name: 'T_NoImage',
-      blocks: ['TeaserSlots'],
-    },
-    {
-      name: 'T_NoImageAltColor',
-      blocks: ['TeaserSlots'],
-    },
-    {
-      name: 'T_TwoCol',
-      blocks: ['TeaserSlots'],
-    },
-    {
-      name: 'T_TwoColAltColor',
-      blocks: ['TeaserSlots'],
-    },
-
-    // break block styles
-    {
-      name: 'AttentionCatcher',
-      blocks: ['LinkPageBreak'],
-    },
-    {
-      name: 'SB_SidebarContent',
-      blocks: ['LinkPageBreak'],
-    },
-    {
-      name: 'ContextBox',
-      blocks: ['LinkPageBreak'],
     },
   ];
 
@@ -1349,13 +1453,13 @@ async function fetchAllPages(client: any) {
   return all;
 }
 
-async function fetchAllComments(clientV1: any) {
+async function fetchAllComments(client: any) {
   let skip = 0;
   const all: Array<{ id: string }> = [];
 
   let hasMore = true;
   while (hasMore) {
-    const { data } = await clientV1.query({
+    const { data } = await client.query({
       query: CommentListDocument,
       variables: {
         filter: {},
@@ -1375,13 +1479,13 @@ async function fetchAllComments(clientV1: any) {
   return all;
 }
 
-async function fetchAllSubscriptions(clientV1: any) {
+async function fetchAllSubscriptions(client: any) {
   let skip = 0;
   const all: Array<{ id: string }> = [];
 
   let hasMore = true;
   while (hasMore) {
-    const { data } = await clientV1.query({
+    const { data } = await client.query({
       query: SubscriptionListDocument,
       variables: {
         take: PAGE_SIZE,
@@ -1503,7 +1607,6 @@ async function handleDelete(
   >[0],
   deleteSubscription: ReturnType<typeof useDeleteSubscriptionMutation>[0],
   client: any,
-  clientV1: any,
   params?: URLSearchParams
 ) {
   const [
@@ -1531,11 +1634,11 @@ async function handleDelete(
     fetchAllPages(client),
     fetchAllEvents(client),
     fetchAllBlockStyles(client),
-    fetchAllComments(clientV1),
+    fetchAllComments(client),
     fetchAllMemberPlans(client),
     fetchAllPaymentMethods(client),
     fetchAllSubscriptionFlows(client),
-    fetchAllSubscriptions(clientV1),
+    fetchAllSubscriptions(client),
   ]);
 
   await Promise.all(
@@ -1658,11 +1761,12 @@ async function handleSeed(
   createEvent: ReturnType<typeof useCreateEventMutation>[0],
   createPage: ReturnType<typeof useCreatePageMutation>[0],
   createComment: ReturnType<typeof useCreateCommentMutation>[0],
+  updateComment: ReturnType<typeof useUpdateCommentMutation>[0],
+  approveComment: ReturnType<typeof useApproveCommentMutation>[0],
   publishPage: ReturnType<typeof usePublishPageMutation>[0],
   fetchAllImages: (client: any) => Promise<Array<{ id: string }>>,
   createMemberPlan: ReturnType<typeof useCreateMemberPlanMutation>[0],
   createPaymentMethod: ReturnType<typeof useCreatePaymentMethodMutation>[0],
-  clientV1: any,
   client: any,
   params?: URLSearchParams
 ) {
@@ -1678,28 +1782,29 @@ async function handleSeed(
   const articles = await seedArticlesByTag(
     createArticle,
     updateArticle,
-    tags.map(tag => tag.data?.createTag.id),
+    tags
+      .sort((a, b) => {
+        return (a.data?.createTag.tag || '').localeCompare(
+          b.data?.createTag.tag || ''
+        );
+      })
+      .reverse()
+      .map(tag => tag.data?.createTag.id),
     authors.map(author => author.data?.createAuthor.id),
     images,
     blockStyles
   );
 
-  const heroArticle = await seedArticles(
-    createArticle,
-    updateArticle,
-    tags.map(tag => tag.data?.createTag.id),
-    authors.map(author => author.data?.createAuthor.id),
-    images,
-    blockStyles
-  );
+  const publishedArticles = [];
 
-  for (const article of [...articles, ...heroArticle]) {
-    await publishArticle({
+  for (const article of [...articles]) {
+    const { data: publishData } = await publishArticle({
       variables: {
         id: article.id,
         publishedAt: new Date().toISOString(),
       },
     });
+    publishedArticles.push(publishData?.publishArticle);
   }
 
   const navigations = await seedNavigations(
@@ -1713,8 +1818,9 @@ async function handleSeed(
     createPage,
     images,
     tags.map(tag => tag.data?.createTag),
-    articles.map(article => article.id),
-    heroArticle.map(article => article.id),
+    publishedArticles
+      .map(article => article?.latest?.id)
+      .filter(id => !!id) as string[],
     blockStyles
   );
 
@@ -1729,7 +1835,11 @@ async function handleSeed(
 
   const comments = await seedComments(
     createComment,
-    articles.map(article => article.id),
+    updateComment,
+    approveComment,
+    publishedArticles
+      .map(article => article?.id)
+      .filter(id => !!id) as string[],
     images
   );
 
@@ -1742,7 +1852,6 @@ type SeedProps = { type?: string };
 
 export const Seed = ({ type }: SeedProps) => {
   const client = getApiClientV2();
-  const clientV1 = useApolloClient(); // used handle comments --> api v1
 
   // delete hooks
   const [deleteTag] = useDeleteTagMutation({ client });
@@ -1781,6 +1890,8 @@ export const Seed = ({ type }: SeedProps) => {
     client,
   });
   const [createComment] = useCreateCommentMutation();
+  const [updateComment] = useUpdateCommentMutation();
+  const [approveComment] = useApproveCommentMutation();
   const [publishArticle] = usePublishArticleMutation({ client });
   const [publishPage] = usePublishPageMutation({ client });
   const [updateArticle] = useUpdateArticleMutation({ client });
@@ -1861,11 +1972,12 @@ export const Seed = ({ type }: SeedProps) => {
                 createEvent,
                 createPage,
                 createComment,
+                updateComment,
+                approveComment,
                 publishPage,
                 fetchAllImages,
                 createMemberPlan,
                 createPaymentMethod,
-                clientV1,
                 client,
                 params
               );
@@ -1906,7 +2018,6 @@ export const Seed = ({ type }: SeedProps) => {
                 deleteSubscriptionFlow,
                 deleteSubscription,
                 client,
-                clientV1,
                 params
               );
             } catch (error) {

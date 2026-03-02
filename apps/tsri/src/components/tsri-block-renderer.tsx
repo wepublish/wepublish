@@ -48,11 +48,7 @@ export const TsriBlockRenderer = (
     <BlockRenderer {...props} />
   );
 
-  if (props.type === 'Page') {
-    return block;
-  }
-
-  return <>{block}</>;
+  return block;
 };
 
 // eslint-disable-next-line react/display-name

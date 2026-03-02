@@ -92,7 +92,7 @@ export function Footer({
 }
 
 export const FooterPaperWrapper = styled('div')`
-  background-color: ${({ theme }) => theme.palette.primary.main};
+  background-color: ${({ theme }) => theme.palette.primary.dark};
   color: ${({ theme }) => theme.palette.common.white};
   display: grid;
   grid-template-rows: repeat(3, auto);

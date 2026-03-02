@@ -1,6 +1,6 @@
 import { EmotionCache } from '@emotion/cache';
 import styled from '@emotion/styled';
-import { Container, css, CssBaseline, ThemeProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import {
   AppCacheProvider,
   createEmotionCache,
@@ -35,8 +35,17 @@ import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import { ReflektFlexBlock } from '../src/components/block-layouts/reflekt-base-flex-block';
+import { MainSpacer } from '../src/components/main-spacer';
+import { ReflektArticle } from '../src/components/reflekt-article';
+import { ReflektBlockRenderer } from '../src/components/reflekt-block-renderer';
 import { RefFooter } from '../src/components/reflekt-footer';
+import { ReflektGlobalStyles } from '../src/components/reflekt-global-styles';
 import { ReflektNavbar } from '../src/components/reflekt-navbar';
+import { ReflektPage } from '../src/components/reflekt-page';
+import { ReflektArticleList } from '../src/components/teaser-layouts/reflekt-article-list';
+import { ReflektBaseTeaserSlots } from '../src/components/teaser-layouts/reflekt-base-teaser-slots';
+import { ReflektBaseTeaser } from '../src/components/teasers/reflekt-base-teaser';
 import theme from '../src/theme';
 
 setDefaultOptions({
@@ -49,21 +58,10 @@ z.setErrorMap(zodI18nMap);
 const Spacer = styled('div')`
   display: grid;
   align-items: flex-start;
-  grid-template-rows: min-content 1fr min-content;
+  grid-template-rows: min-content 1fr;
   gap: ${({ theme }) => theme.spacing(3)};
   min-height: 100vh;
   overflow-x: hidden;
-`;
-
-const MainSpacer = styled(Container)`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing(5)};
-
-  ${({ theme }) => css`
-    ${theme.breakpoints.up('md')} {
-      gap: ${theme.spacing(10)};
-    }
-  `}
 `;
 
 const NavBar = styled(NavbarContainer)`
@@ -94,14 +92,24 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
+          Page={ReflektPage}
           Footer={RefFooter}
           Navbar={ReflektNavbar}
+          ArticleList={ReflektArticleList}
+          Article={ReflektArticle}
           elements={{ Link: NextWepublishLink }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
+          blocks={{
+            TeaserSlots: ReflektBaseTeaserSlots,
+            BaseTeaser: ReflektBaseTeaser,
+            FlexBlock: ReflektFlexBlock,
+            Renderer: ReflektBlockRenderer,
+          }}
         >
           <ThemeProvider theme={theme}>
             <CssBaseline />
+            <ReflektGlobalStyles />
 
             <Head>
               <title key="title">{siteTitle}</title>

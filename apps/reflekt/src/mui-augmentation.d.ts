@@ -12,6 +12,10 @@ declare module '@mui/material/styles' {
     teaserLead: CSSProperties;
     teaserMeta: CSSProperties;
 
+    // Teaser Slots
+
+    teaserSlotsTitle: CSSProperties;
+
     // Footer / Header
     categoryLinkTitle: CSSProperties;
     categoryLinkList: CSSProperties;
@@ -19,6 +23,10 @@ declare module '@mui/material/styles' {
 
     categoryAddress: CSSProperties;
     categoryAddressText: CSSProperties;
+
+    // Button Links
+    buttonLinkMain: CSSProperties;
+    buttonLinkSecondary: CSSProperties;
 
     // Banner
     bannerTitle: CSSProperties;
@@ -38,11 +46,14 @@ declare module '@mui/material/styles' {
     teaserPretitle?: CSSProperties;
     teaserLead?: CSSProperties;
     teaserMeta?: CSSProperties;
+    teaserSlotsTitle?: CSSProperties;
     categoryLinkTitle?: CSSProperties;
     categoryLinkList?: CSSProperties;
     categoryLinkItem?: CSSProperties;
     categoryAddress?: CSSProperties;
     categoryAddressText?: CSSProperties;
+    buttonLinkMain?: CSSProperties;
+    buttonLinkSecondary?: CSSProperties;
     bannerTitle?: CSSProperties;
     bannerText?: CSSProperties;
     bannerCta?: CSSProperties;
@@ -59,11 +70,14 @@ declare module '@mui/material/Typography' {
     teaserPretitleLink: true;
     teaserLead: true;
     teaserMeta: true;
+    teaserSlotsTitle: true;
     categoryLinkTitle: true;
     categoryLinkList: true;
     categoryLinkItem: true;
     categoryAddress: true;
     categoryAddressText: true;
+    buttonLinkMain: true;
+    buttonLinkSecondary: true;
     bannerTitle: true;
     bannerText: true;
     bannerCta: true;
@@ -77,5 +91,7 @@ declare module '@mui/material/Link' {
     categoryLink: true;
     teaserTitleLink: true;
     teaserPretitleLink: true;
+    buttonLinkMain: true;
+    buttonLinkSecondary: true;
   }
 }

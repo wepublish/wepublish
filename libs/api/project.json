@@ -7,7 +7,12 @@
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+      "outputs": ["{options.outputFile}"],
+      "inputs": [
+        "default",
+        "{workspaceRoot}/libs/block-content/api/**/*",
+        "{workspaceRoot}/libs/image/api/**/*"
+      ]
     },
     "test": {
       "executor": "@nx/jest:jest",
