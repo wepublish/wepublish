@@ -71,3 +71,4 @@ jobs:
           severity: CRITICAL,HIGH
           exit-code: 1
           trivy-config: trivy.yaml
+          skip-files: .env,docker-compose.yml

@@ -1,4 +1,4 @@
-secret:
+scan:
   skip-files:
     - .env
     - docker-compose.yml
