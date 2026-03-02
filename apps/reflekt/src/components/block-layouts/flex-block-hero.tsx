@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { FlexBlock } from '@wepublish/block-content/website';
 import {
   hasBlockStyle,
   ImageBlockCaption,
@@ -152,66 +151,3 @@ export const FlexBlockHero = ({
     </FlexBlockHeroWrapper>
   );
 };
-
-export const FlexBlockHero__ = styled(FlexBlock)`
-  gap: 0;
-  height: 100vh;
-
-  ${BlockWithAlignment} {
-    grid-column: -1 / 1;
-    grid-row: 1 / 2;
-    display: none;
-
-    &:nth-of-type(1):has(${ImageBlockWrapper}) {
-      ${({ theme }) => theme.breakpoints.down('md')} {
-        display: block;
-      }
-    }
-
-    &:nth-of-type(2):has(${ImageBlockWrapper}) {
-      ${({ theme }) => theme.breakpoints.up('md')} {
-        display: block;
-      }
-    }
-
-    &:nth-of-type(3) {
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-  }
-
-  ${ImageBlockWrapper} {
-    background-color: yellow;
-    height: 100vh;
-  }
-
-  ${RichTextBlockWrapper} {
-    background-color: transparent;
-    color: white;
-    width: 50%;
-    margin: 0 auto;
-  }
-
-  ${ImageBlockImage} {
-    max-width: 100%;
-    max-height: 100%;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    aspect-ratio: unset;
-  }
-
-  ${ImageBlockCaption} {
-    display: none;
-  }
-
-  ${ImageBlockInnerWrapper} {
-    background-color: cyan;
-    height: 100vh;
-    overflow: hidden;
-  }
-`;

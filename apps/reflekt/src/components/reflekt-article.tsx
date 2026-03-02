@@ -15,6 +15,9 @@ import {
   TeaserGridFlexBlockWrapper,
   TeaserListBlockWrapper,
   TeaserSlotsBlockWrapper,
+  TitleBlockPreTitleWrapper,
+  TitleBlockTitle,
+  TitleBlockWrapper,
 } from '@wepublish/block-content/website';
 import { CommentListWrapper } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
@@ -22,7 +25,6 @@ import { SubscribeWrapper } from '@wepublish/membership/website';
 import { Article as ArticleType, BlockContent } from '@wepublish/website/api';
 import {
   BuilderArticleProps,
-  PeerInformation,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { Paywall } from '@wepublish/website/builder';
@@ -59,6 +61,16 @@ export const ArticleWrapper = styled(ContentWrapper)<{
   fadeoutStyles?: SerializedStyles;
 }>`
   padding-top: var(--navbar-height);
+
+  ${TitleBlockWrapper} {
+    ${TitleBlockPreTitleWrapper} {
+      display: none;
+    }
+
+    ${TitleBlockTitle} {
+      display: none;
+    }
+  }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-columns:
@@ -140,8 +152,8 @@ export function ReflektArticle({
 }: BuilderArticleProps) {
   const {
     ArticleSEO,
-    ArticleAuthors,
-    ArticleMeta,
+    //ArticleAuthors,
+    //ArticleMeta,
     blocks: { Blocks },
   } = useWebsiteBuilder();
 
@@ -166,6 +178,7 @@ export function ReflektArticle({
         />
       )}
 
+      {/*
       <ArticleInfoWrapper>
         {article && <ArticleAuthors article={article} />}
         {article && <ArticleMeta article={article} />}
@@ -177,7 +190,7 @@ export function ReflektArticle({
           />
         )}
       </ArticleInfoWrapper>
-
+*/}
       {showPaywall && article?.paywall && (
         <Paywall
           {...article.paywall}
