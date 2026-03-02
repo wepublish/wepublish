@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions';
+import { action } from 'storybook/actions';
 import { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { TransactionFee } from './transaction-fee';

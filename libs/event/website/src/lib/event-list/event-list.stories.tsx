@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/react';
 import { EventList } from './event-list';
 import { ApolloError } from '@apollo/client';
-import { action } from '@storybook/addon-actions';
+import { action } from 'storybook/actions';
 import { mockEvent } from '@wepublish/storybook/mocks';
 
 export default {

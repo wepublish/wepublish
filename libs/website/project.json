@@ -17,27 +17,25 @@
       }
     },
     "storybook": {
-      "executor": "@nx/storybook:storybook",
+      "executor": "nx:run-commands",
       "options": {
-        "port": 4400,
-        "configDir": "libs/website/.storybook"
+        "command": "storybook dev --port 4400 --config-dir libs/website/.storybook"
       },
       "configurations": {
         "ci": {
-          "quiet": true
+          "command": "storybook dev --port 4400 --config-dir libs/website/.storybook --quiet"
         }
       }
     },
     "build-storybook": {
-      "executor": "@nx/storybook:build",
-      "outputs": ["{options.outputDir}"],
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/storybook/website"],
       "options": {
-        "configDir": "libs/website/.storybook",
-        "outputDir": "dist/storybook/website"
+        "command": "storybook build --config-dir libs/website/.storybook --output-dir dist/storybook/website"
       },
       "configurations": {
         "ci": {
-          "quiet": true
+          "command": "storybook build --config-dir libs/website/.storybook --output-dir dist/storybook/website --quiet"
         }
       }
     }

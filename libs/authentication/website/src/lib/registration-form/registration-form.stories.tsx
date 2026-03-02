@@ -1,11 +1,11 @@
-import { action } from '@storybook/addon-actions';
+import { action } from 'storybook/actions';
 import { Meta, StoryObj } from '@storybook/react';
 import { RegistrationForm } from './registration-form';
 import { ApolloError } from '@apollo/client';
 import { CaptchaType, Challenge } from '@wepublish/website/api';
-import { userEvent, within } from '@storybook/test';
+import { userEvent, within } from 'storybook/test';
 import { ComponentProps } from 'react';
-import { useArgs } from '@storybook/preview-api';
+import { useArgs } from 'storybook/preview-api';
 import z from 'zod';
 
 const Render = () => {

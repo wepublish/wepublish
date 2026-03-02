@@ -1,8 +1,8 @@
 import { ApolloError } from '@apollo/client';
-import { action } from '@storybook/addon-actions';
-import { useArgs } from '@storybook/preview-api';
+import { action } from 'storybook/actions';
+import { useArgs } from 'storybook/preview-api';
 import { Meta, StoryObj } from '@storybook/react';
-import { userEvent, within } from '@storybook/test';
+import { userEvent, within } from 'storybook/test';
 import { User } from '@wepublish/website/api';
 import { ComponentProps } from 'react';
 import z from 'zod';

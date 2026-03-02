@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
+import { action } from 'storybook/actions';
 import { AuthorList } from './author-list';
 import { ApolloError } from '@apollo/client';
 import { mockAuthor } from '@wepublish/storybook/mocks';

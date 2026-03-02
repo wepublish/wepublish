@@ -11,7 +11,7 @@ import { WithUserDecorator } from '@wepublish/storybook';
 import { mockImage } from '@wepublish/storybook/mocks';
 import nanoid from 'nanoid';
 import React from 'react';
-import { userEvent, within } from '@storybook/test';
+import { userEvent, within } from 'storybook/test';
 import { wait } from '@wepublish/testing';
 import { mockUser } from '@wepublish/storybook/mocks';
 import { MeDocument } from '@wepublish/website/api';

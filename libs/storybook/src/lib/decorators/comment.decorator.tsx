@@ -4,7 +4,7 @@ import {
 } from '@wepublish/comments/website';
 import { RateCommentMutationResult } from '@wepublish/website/api';
 import { ComponentType } from 'react';
-import { action } from '@storybook/addon-actions';
+import { action } from 'storybook/actions';
 
 type CommentRatingsDecoratorProps = Partial<{
   rateResult: Pick<RateCommentMutationResult, 'data' | 'error'>;

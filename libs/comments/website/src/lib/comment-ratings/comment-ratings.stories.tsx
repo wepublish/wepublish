@@ -6,9 +6,9 @@ import {
   WithCommentRatingsDecorators,
   WithUserDecorator,
 } from '@wepublish/storybook';
-import { userEvent, within } from '@storybook/test';
+import { userEvent, within } from 'storybook/test';
 import { ComponentProps } from 'react';
-import { useArgs } from '@storybook/preview-api';
+import { useArgs } from 'storybook/preview-api';
 import { CommentRatingContext } from './comment-ratings.context';
 
 export default {

@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions';
+import { action } from 'storybook/actions';
 import { StoryObj } from '@storybook/react';
 import { WithUserDecorator } from '@wepublish/storybook';
 import {
