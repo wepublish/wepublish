@@ -2,8 +2,8 @@ import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { GraphQLDate } from 'graphql-scalars';
 
 export enum CaptchaType {
-  Algebraic = 'Algebraic',
   CfTurnstile = 'CfTurnstile',
+  HCaptcha = 'HCaptcha',
 }
 
 registerEnumType(CaptchaType, {

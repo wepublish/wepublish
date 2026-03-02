@@ -425,8 +425,8 @@ type CalculatedRating {
 }
 
 enum CaptchaType {
-  Algebraic
   CfTurnstile
+  HCaptcha
 }
 
 type Challenge {
@@ -442,6 +442,7 @@ input ChallengeInput {
 }
 
 enum ChallengeProviderType {
+  HCAPTCHA
   TURNSTILE
 }
 

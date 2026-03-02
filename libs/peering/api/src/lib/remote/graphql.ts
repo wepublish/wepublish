@@ -469,8 +469,8 @@ export type CalculatedRating = {
 };
 
 export enum CaptchaType {
-  Algebraic = 'Algebraic',
-  CfTurnstile = 'CfTurnstile'
+  CfTurnstile = 'CfTurnstile',
+  HCaptcha = 'HCaptcha'
 }
 
 export type Challenge = {
@@ -487,6 +487,7 @@ export type ChallengeInput = {
 };
 
 export enum ChallengeProviderType {
+  Hcaptcha = 'HCAPTCHA',
   Turnstile = 'TURNSTILE'
 }
 

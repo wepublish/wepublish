@@ -11,9 +11,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import bexioLogo from './assets/bexio.png';
-import mollieLogo from './assets/mollie.png';
-import payrexxLogo from './assets/payrexx.png';
+import bexioLogo from './assets/bexio.webp';
+import mollieLogo from './assets/mollie.webp';
+import payrexxLogo from './assets/payrexx.webp';
 import stripeLogo from './assets/stripe.svg';
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';

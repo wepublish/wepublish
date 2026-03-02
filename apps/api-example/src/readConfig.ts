@@ -120,25 +120,15 @@ type PaymentProvider =
   | noCharge
   | Mollie;
 
-type AlgebraicCaptcha = {
-  type: 'algebraic';
-  id: string;
-  secret: string;
-  validTime: number;
-  width: number;
-  height: number;
-  background: string;
-  noise: number;
-  minValue: number;
-  maxValue: number;
-  operandAmount: number;
-  operandTypes: string[];
-  mode: string;
-  targetSymbol: string;
-};
-
 type Turnstile = {
   type: 'turnstile';
+  id: string;
+  secret: string;
+  siteKey: string;
+};
+
+type HCaptcha = {
+  type: 'hcaptcha';
   id: string;
   secret: string;
   siteKey: string;
@@ -161,7 +151,7 @@ type Config = {
   mailProvider: MailProvider;
   paymentProviders: PaymentProvider[];
   mediaServer: novaMediaServer;
-  challenge: AlgebraicCaptcha | Turnstile;
+  challenge: Turnstile | HCaptcha;
   trackingPixelProviders: TrackingPixels[];
   v0?: V0;
 };

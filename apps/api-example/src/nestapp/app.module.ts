@@ -446,19 +446,8 @@ import {
         );
         return {
           challenge: configFile.challenge || {
-            type: 'algebraic',
-            secret: 'default-challenge-secret',
-            validTime: 600,
-            width: 300,
-            height: 100,
-            background: '#ffffff',
-            noise: 1,
-            minValue: 1,
-            maxValue: 10,
-            operandAmount: 2,
-            operandTypes: ['+'],
-            mode: 'formula',
-            targetSymbol: '?',
+            type: 'turnstile',
+            id: 'default-turnstile',
           },
         };
       },

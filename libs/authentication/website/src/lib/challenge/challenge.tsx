@@ -1,12 +1,11 @@
-import { useWebsiteBuilder } from '@wepublish/website/builder';
 import {
   CaptchaType,
   Challenge as ChallengeType,
 } from '@wepublish/website/api';
-import styled from '@emotion/styled';
 import { forwardRef } from 'react';
 import { TextFieldProps } from '@wepublish/ui';
 import Turnstile from 'react-turnstile';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 export type BuilderChallengeProps = {
   challenge: ChallengeType;
@@ -28,67 +27,36 @@ export const CfTurnstileChallenge = forwardRef<
   );
 });
 
-export const AlgebraicChallengeWrapper = styled('div')`
-  display: grid;
-  grid-template-columns: minmax(max-content, 200px) 200px;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing(3)};
-  justify-content: flex-start;
-`;
-
-export const AlgebraicChallenge = styled('div')`
-  height: 100%;
-  display: grid;
-
-  svg {
-    height: 100%;
-  }
-`;
-
-export const MathChallenge = forwardRef<
+export const HCaptchaChallenge = forwardRef<
   HTMLInputElement,
   BuilderChallengeProps
 >(({ challenge, ...inputProps }: BuilderChallengeProps, ref) => {
-  const {
-    elements: { TextField },
-  } = useWebsiteBuilder();
-
   return (
-    <AlgebraicChallengeWrapper>
-      <AlgebraicChallenge
-        dangerouslySetInnerHTML={{
-          __html:
-            challenge.challenge
-              ?.replace('#ffffff', 'transparent')
-              .replace('width="200"', '')
-              .replace('height="200"', '') ?? '',
-        }}
-      />
-
-      <TextField
-        ref={ref}
-        {...inputProps}
-      />
-    </AlgebraicChallengeWrapper>
+    <HCaptcha
+      sitekey={challenge.challengeID ?? ''}
+      onVerify={token => inputProps.onChange?.(token)}
+    />
   );
 });
 
 export const Challenge = forwardRef<HTMLInputElement, BuilderChallengeProps>(
   (props: BuilderChallengeProps, ref) => {
-    if (props.challenge.type === CaptchaType.CfTurnstile) {
-      return (
-        <CfTurnstileChallenge
-          {...props}
-          ref={ref}
-        />
-      );
+    switch (props.challenge.type) {
+      case CaptchaType.HCaptcha:
+        return (
+          <HCaptchaChallenge
+            {...props}
+            ref={ref}
+          />
+        );
+      case CaptchaType.CfTurnstile:
+      default:
+        return (
+          <CfTurnstileChallenge
+            {...props}
+            ref={ref}
+          />
+        );
     }
-
-    return (
-      <MathChallenge
-        {...props}
-        ref={ref}
-      />
-    );
   }
 );
