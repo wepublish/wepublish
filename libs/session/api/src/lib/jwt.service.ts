@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import jwt from 'jsonwebtoken';
+import { SignJWT, jwtVerify, importPKCS8, importSPKI } from 'jose';
 import { createPublicKey } from 'crypto';
 import { computeKid } from './jwk-utils';
 
@@ -11,6 +11,8 @@ export const WEBSITE_URL_TOKEN = 'WEBSITE_URL_TOKEN';
 @Injectable()
 export class JwtService {
   private kid: string;
+  private privateKey: Promise<CryptoKey>;
+  private publicKey: Promise<CryptoKey>;
 
   constructor(
     @Inject(JWT_PRIVATE_KEY_TOKEN) private jwtPrivateKey: string,
@@ -18,44 +20,55 @@ export class JwtService {
     @Inject(HOST_URL_TOKEN) private hostURL: string,
     @Inject(WEBSITE_URL_TOKEN) private websiteURL: string
   ) {
-    if (this.jwtPublicKey) {
-      const publicKey = createPublicKey({
-        key: this.jwtPublicKey,
-        format: 'pem',
-      });
-      this.kid = computeKid(publicKey.export({ format: 'jwk' }));
-    } else {
-      this.kid = '';
+    if (!this.jwtPrivateKey) {
+      throw new Error(
+        'JWT_PRIVATE_KEY is not set. The API cannot start without a valid Ed25519 private key.'
+      );
     }
+
+    if (!this.jwtPublicKey) {
+      throw new Error(
+        'JWT_PUBLIC_KEY is not set. The API cannot start without a valid Ed25519 public key.'
+      );
+    }
+
+    this.privateKey = importPKCS8(this.jwtPrivateKey, 'EdDSA');
+    this.publicKey = importSPKI(this.jwtPublicKey, 'EdDSA');
+
+    const publicKey = createPublicKey({
+      key: this.jwtPublicKey,
+      format: 'pem',
+    });
+    this.kid = computeKid(publicKey.export({ format: 'jwk' }));
   }
 
-  generateJWT({
+  async generateJWT({
     id,
     expiresInMinutes = 60,
   }: {
     id: string;
     expiresInMinutes?: number;
-  }): string {
-    return jwt.sign({}, this.jwtPrivateKey, {
-      algorithm: 'ES256',
-      keyid: this.kid,
-      expiresIn: expiresInMinutes * 60,
-      audience: this.websiteURL,
-      issuer: this.hostURL,
-      subject: id,
-    });
+  }): Promise<string> {
+    const key = await this.privateKey;
+
+    return new SignJWT({})
+      .setProtectedHeader({ alg: 'EdDSA', kid: this.kid })
+      .setSubject(id)
+      .setIssuer(this.hostURL)
+      .setAudience(this.websiteURL)
+      .setExpirationTime(`${expiresInMinutes}m`)
+      .sign(key);
   }
 
-  verifyJWT(token: string): string {
-    if (!this.jwtPublicKey) throw new Error('No JWT_PUBLIC_KEY defined.');
-
+  async verifyJWT(token: string): Promise<string> {
     try {
-      const decoded = jwt.verify(token, this.jwtPublicKey, {
-        algorithms: ['ES256'],
+      const key = await this.publicKey;
+      const { payload } = await jwtVerify(token, key, {
+        algorithms: ['EdDSA'],
+        issuer: this.hostURL,
+        audience: this.websiteURL,
       });
-      return typeof decoded === 'object' && 'sub' in decoded ?
-          (decoded.sub as string)
-        : '';
+      return payload.sub ?? '';
     } catch (error) {
       throw new Error('Invalid JWT token');
     }

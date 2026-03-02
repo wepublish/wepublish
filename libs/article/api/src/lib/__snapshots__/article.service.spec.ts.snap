@@ -696,7 +696,7 @@ exports[`ArticleService should query articles based on full text search 1`] = `
                 'german',
                 jsonb_path_query_array(ar.blocks, 'strict $.**.richText'),
                 '["string"]'
-              ) @@ to_tsquery('german', ",
+              ) @@ websearch_to_tsquery('german', ",
     ");
       ",
   ],
@@ -1146,7 +1146,7 @@ exports[`ArticleService should query articles on all revisions 1`] = `
                 'german',
                 jsonb_path_query_array(ar.blocks, 'strict $.**.richText'),
                 '["string"]'
-              ) @@ to_tsquery('german', ",
+              ) @@ websearch_to_tsquery('german', ",
     ");
       ",
   ],
