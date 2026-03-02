@@ -8,7 +8,7 @@ import helmet from 'helmet';
 import { MAX_PAYLOAD_SIZE } from '@wepublish/utils/api';
 import { json, urlencoded } from 'body-parser';
 import type { Request, Response, NextFunction, RequestHandler } from 'express';
-import { graphqlUploadExpress } from 'graphql-upload';
+import { graphqlUploadExpress } from 'graphql-upload-ts';
 import { PAYMENT_WEBHOOK_PATH_PREFIX } from '@wepublish/payment/api';
 
 async function bootstrap() {
