@@ -339,6 +339,62 @@ const theme = createTheme(WePTheme, {
         },
       ],
     },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          '&.MuiAccordion-root': {
+            boxShadow: 'none',
+            border: `1px solid ${colors.common.black}`,
+            borderLeft: 'none',
+            borderRight: 'none',
+            display: 'grid',
+            gridTemplateColumns: 'subgrid',
+            gridTemplateRows: 'repeat(2, auto)',
+            '&:before': {
+              display: 'none',
+            },
+          },
+          '.MuiAccordionSummary-root': {
+            fontFamily: ['Euclid', 'sans-serif'].join(','),
+            fontWeight: 500,
+            padding: '0',
+            gridColumn: '-1 / 1',
+            gridRow: '1 / 2',
+            display: 'grid',
+            gridTemplateColumns: 'subgrid',
+            textTransform: 'uppercase',
+            '.MuiAccordionSummary-content': {
+              margin: 0,
+              gridColumn: '3 / 9',
+            },
+            '.MuiTypography-root': {
+              textWrap: 'wrap',
+            },
+          },
+          '.MuiCollapse-root': {
+            padding: '0',
+            gridColumn: '3 / 9',
+            gridRow: '2 / 3',
+          },
+          '.MuiAccordionDetails-root': {
+            padding: '0 0 0 .75cqw',
+          },
+          '.MuiAccordionSummary-expandIconWrapper': {
+            fontFamily: ['Euclid', 'sans-serif'].join(','),
+            position: 'absolute',
+            top: '50%',
+            right: '0.75cqw',
+            transform: 'translateY(-50%)',
+            color: colors.common.black,
+            fontWeight: 700,
+          },
+          '&.Mui-expanded': {
+            margin: 0,
+            paddingBottom: '1cqw',
+          },
+        },
+      },
+    },
   },
 } as PartialDeep<Theme> | ThemeOptions);
 

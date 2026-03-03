@@ -14,7 +14,7 @@ import {
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { allPass } from 'ramda';
 
-import { ReflektBlockType } from '../reflekt-block-types';
+import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 
 export const isTeaserSlotsTopic = allPass([
   ({ blockStyle }: BuilderTeaserProps) => {

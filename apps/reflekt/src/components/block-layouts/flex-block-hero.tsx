@@ -21,7 +21,7 @@ import {
 import { allPass } from 'ramda';
 import { useIntersectionObserver } from 'usehooks-ts';
 
-import { ReflektBlockType } from '../reflekt-block-types';
+import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 import { heroOffScreen } from '../reflekt-navbar';
 
 export const isFlexBlockHero = (
@@ -67,7 +67,6 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
   }
 
   ${ImageBlockWrapper} {
-    background-color: yellow;
     height: 100vh;
     width: 100vw;
   }
@@ -78,7 +77,6 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
     left: 0;
     bottom: 0;
     right: 0;
-    background-color: cyan;
     overflow: hidden;
   }
 

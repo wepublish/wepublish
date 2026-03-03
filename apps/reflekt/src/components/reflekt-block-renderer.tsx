@@ -6,9 +6,24 @@ import { cond } from 'ramda';
 import { useMemo } from 'react';
 
 import { isFlexBlockHero } from './block-layouts/flex-block-hero';
+import {
+  isCollapsibleRichText,
+  ReflektCollapsibleRichText,
+} from './block-styles/reflekt-collapsible-richtext';
 import { MainSpacer } from './main-spacer';
 export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
   const theme = useTheme();
+
+  const extraBlockMap = useMemo(
+    () =>
+      cond([
+        [
+          isCollapsibleRichText,
+          block => <ReflektCollapsibleRichText {...block} />,
+        ],
+      ]),
+    []
+  );
 
   const styles = useMemo(
     () =>
@@ -16,7 +31,6 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
         [
           isFlexBlockHero,
           () => css`
-            background-color: blue;
             grid-template-columns: auto !important;
             padding: 0 !important;
           `,
@@ -25,35 +39,16 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
     [theme]
   );
 
-  const articlesStyles = useMemo(
-    () =>
-      cond([
-        [
-          () => true,
-          () => css`
-            background-color: green;
-            grid-template-columns: repeat(12, 1fr) !important;
-            padding: 0 !important;
-          `,
-        ],
-      ]),
-    []
-  );
-
   if (props.type === 'Page') {
     return (
       <MainSpacer
         maxWidth="lg"
         css={styles(props.block)}
       >
-        <BlockRenderer {...props} />
+        {extraBlockMap(props.block) ?? <BlockRenderer {...props} />}
       </MainSpacer>
     );
   }
 
-  if (props.type === 'Article') {
-    return <BlockRenderer {...props} />;
-  }
-
-  return <BlockRenderer {...props} />;
+  return extraBlockMap(props.block) ?? <BlockRenderer {...props} />;
 };

@@ -15,7 +15,7 @@ import {
 import { allPass } from 'ramda';
 
 import { teaserMoreAboutTheme } from '../../theme';
-import { ReflektBlockType } from '../reflekt-block-types';
+import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 import {
   TeaserContentWrapper,
   TeaserLead,

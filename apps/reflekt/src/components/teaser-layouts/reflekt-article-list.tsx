@@ -9,7 +9,7 @@ import {
 } from '@wepublish/website/builder';
 import { useMemo } from 'react';
 
-import { ReflektBlockType } from '../reflekt-block-types';
+import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 
 export const ReflektArticleList = ({
   data,

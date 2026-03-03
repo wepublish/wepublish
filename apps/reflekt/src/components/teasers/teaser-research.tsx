@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
-import { ReflektBlockType } from '../reflekt-block-types';
+import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 import {
   ReflektTeaser,
   TeaserContentWrapper,

@@ -400,6 +400,24 @@ const createArticleInput = (
           } as TitleBlockInput,
         } as BlockContentInput,
 
+        // a collapsible rich text block
+        {
+          richText: {
+            blockStyle: getBlockStyle(blockStyles, 'CollapsibleRichText'),
+            richText: [
+              {
+                type: 'heading-one',
+                children: [
+                  {
+                    text: capitalize(faker.lorem.words({ min: 3, max: 8 })),
+                  },
+                ],
+              },
+              ...(getText(1, 2) as Descendant[]),
+            ] as Descendant[],
+          } as RichTextBlockInput,
+        } as BlockContentInput,
+
         // an image block
         {
           image: {
@@ -1102,6 +1120,11 @@ async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
     {
       name: 'TeaserNews',
       blocks: ['TeaserSlots'],
+    },
+
+    {
+      name: 'CollapsibleRichText',
+      blocks: ['RichText'],
     },
   ];
 

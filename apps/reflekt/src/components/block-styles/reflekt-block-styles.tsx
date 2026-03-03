@@ -3,4 +3,5 @@ export enum ReflektBlockType {
   TeaserResearch = 'TeaserResearch',
   TeaserMoreAbout = 'TeaserMoreAbout',
   TeaserNews = 'TeaserNews',
+  CollapsibleRichText = 'CollapsibleRichText',
 }

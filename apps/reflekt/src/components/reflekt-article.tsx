@@ -30,6 +30,7 @@ import {
 import { Paywall } from '@wepublish/website/builder';
 
 import { FlexBlockHeroWrapper } from './block-layouts/flex-block-hero';
+import { ReflektCollapsibleRichTextWrapper } from './block-styles/reflekt-collapsible-richtext';
 
 const fullWidthMainSpacer = (theme: Theme) => css`
   main > .MuiContainer-root {
@@ -86,7 +87,8 @@ export const ArticleWrapper = styled(ContentWrapper)<{
         ${ImageBlockWrapper},
           ${SliderWrapper},
           ${EventBlockWrapper},
-          ${BreakBlockWrapper}
+          ${BreakBlockWrapper},
+          ${ReflektCollapsibleRichTextWrapper}
       ) {
       grid-column: 3/13;
     }
