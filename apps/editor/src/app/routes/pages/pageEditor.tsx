@@ -3,7 +3,6 @@ import {
   CreatePageMutationVariables,
   useCreateJwtForWebsiteLoginMutation,
   useCreatePageMutation,
-  useMeQuery,
   usePageQuery,
   usePublishPageMutation,
   useUpdatePageMutation,
@@ -127,9 +126,6 @@ function PageEditor() {
     errorPolicy: 'all',
     variables: { id: pageID! },
     skip: !pageID,
-  });
-  const { data: user } = useMeQuery({
-    fetchPolicy: 'cache-only',
   });
   const [createJWT] = useCreateJwtForWebsiteLoginMutation({
     errorPolicy: 'none',
