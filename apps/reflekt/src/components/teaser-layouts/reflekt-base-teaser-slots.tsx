@@ -1,4 +1,5 @@
-import { TeaserSlotsBlock } from '@wepublish/website/builder';
+import { TeaserSlotsBlock } from '@wepublish/block-content/website';
+import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { cond, T } from 'ramda';
 
 import { isTeaserSlotsTopic, TeaserSlotsTopic } from './teaser-slots-topic';

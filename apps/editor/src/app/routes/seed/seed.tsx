@@ -25,6 +25,7 @@ import {
   PaymentMethodListDocument,
   ProductType,
   PropertyInput,
+  QuoteBlockInput,
   RichTextBlockInput,
   SubscriptionFlowsDocument,
   SubscriptionListDocument,
@@ -319,77 +320,80 @@ const createArticleInput = (
         : ([] as PropertyInput[]),
       blocks: [
         // hero block
-        {
-          flexBlock: {
-            blockStyle: getBlockStyle(blockStyles, 'FlexBlockHero'),
-            blocks: [
-              // desktop image
-              {
-                alignment: {
-                  i: '0',
-                  x: 0,
-                  y: 0,
-                  w: 6,
-                  h: 7,
-                  static: false,
+        ...pickRandom(
+          {
+            flexBlock: {
+              blockStyle: getBlockStyle(blockStyles, 'FlexBlockHero'),
+              blocks: [
+                // desktop image
+                {
+                  alignment: {
+                    i: '0',
+                    x: 0,
+                    y: 0,
+                    w: 6,
+                    h: 7,
+                    static: false,
+                  },
+                  block: {
+                    image: {
+                      imageID: imageIds[12],
+                      caption: faker.lorem.sentence(),
+                    } as ImageBlockInput,
+                  } as BlockContentInput,
                 },
-                block: {
-                  image: {
-                    imageID: imageIds[12],
-                    caption: faker.lorem.sentence(),
-                  } as ImageBlockInput,
-                } as BlockContentInput,
-              },
 
-              // mobile image
-              {
-                alignment: {
-                  i: '1',
-                  x: 6,
-                  y: 0,
-                  w: 6,
-                  h: 7,
-                  static: false,
+                // mobile image
+                {
+                  alignment: {
+                    i: '1',
+                    x: 6,
+                    y: 0,
+                    w: 6,
+                    h: 7,
+                    static: false,
+                  },
+                  block: {
+                    image: {
+                      imageID: imageIds[13],
+                      caption: faker.lorem.sentence(),
+                    } as ImageBlockInput,
+                  } as BlockContentInput,
                 },
-                block: {
-                  image: {
-                    imageID: imageIds[13],
-                    caption: faker.lorem.sentence(),
-                  } as ImageBlockInput,
-                } as BlockContentInput,
-              },
 
-              // overlay text
-              {
-                alignment: {
-                  i: '2',
-                  x: 0,
-                  y: 7,
-                  w: 12,
-                  h: 3,
-                  static: false,
+                // overlay text
+                {
+                  alignment: {
+                    i: '2',
+                    x: 0,
+                    y: 7,
+                    w: 12,
+                    h: 3,
+                    static: false,
+                  },
+                  block: {
+                    richText: {
+                      richText: [
+                        {
+                          type: 'heading-one',
+                          children: [
+                            {
+                              text: capitalize(
+                                faker.lorem.words({ min: 3, max: 8 })
+                              ),
+                            },
+                          ],
+                        },
+                        ...(getText(1, 2) as Descendant[]),
+                      ] as Descendant[],
+                    } as RichTextBlockInput,
+                  } as BlockContentInput,
                 },
-                block: {
-                  richText: {
-                    richText: [
-                      {
-                        type: 'heading-one',
-                        children: [
-                          {
-                            text: capitalize(
-                              faker.lorem.words({ min: 3, max: 8 })
-                            ),
-                          },
-                        ],
-                      },
-                      ...(getText(1, 2) as Descendant[]),
-                    ] as Descendant[],
-                  } as RichTextBlockInput,
-                } as BlockContentInput,
-              },
-            ] as BlockWithAlignment[],
-          } as FlexBlockInput,
-        } as BlockContentInput,
+              ] as BlockWithAlignment[],
+            } as FlexBlockInput,
+          } as BlockContentInput,
+          0.3
+        ),
 
         // a title block
         {
@@ -409,13 +413,102 @@ const createArticleInput = (
                 type: 'heading-one',
                 children: [
                   {
-                    text: capitalize(faker.lorem.words({ min: 3, max: 8 })),
+                    text: 'Das Wichtigste in Kürze',
+                  },
+                ],
+              },
+              {
+                type: 'unordered-list',
+                children: [
+                  {
+                    type: 'list-item',
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                  },
+                  {
+                    type: 'list-item',
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                  },
+                  {
+                    type: 'list-item',
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                  },
+                ],
+              },
+              {
+                type: 'unordered-list',
+                children: [
+                  {
+                    type: 'list-item',
+                    children: [
+                      {
+                        type: 'link',
+                        url: faker.internet.url(),
+                        title: capitalize(
+                          faker.lorem.words({ min: 2, max: 4 })
+                        ),
+                        children: [
+                          { text: capitalize(faker.lorem.sentence()) },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    type: 'list-item',
+                    children: [
+                      {
+                        type: 'link',
+                        url: faker.internet.url(),
+                        title: capitalize(
+                          faker.lorem.words({ min: 2, max: 4 })
+                        ),
+                        children: [
+                          { text: capitalize(faker.lorem.sentence()) },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    type: 'list-item',
+                    children: [
+                      {
+                        type: 'link',
+                        url: faker.internet.url(),
+                        title: capitalize(
+                          faker.lorem.words({ min: 2, max: 4 })
+                        ),
+                        children: [
+                          { text: capitalize(faker.lorem.sentence()) },
+                        ],
+                      },
+                    ],
                   },
                 ],
               },
               ...(getText(1, 2) as Descendant[]),
             ] as Descendant[],
           } as RichTextBlockInput,
+        } as BlockContentInput,
+
+        // a quote block without author
+        {
+          quote: {
+            quote: capitalize(
+              'How can you make sure that this money is being considered as legal or legalized? Because I’m not sure whether it’s really legal. Can you help  him with it?'
+            ),
+            imageID: undefined,
+            author: undefined,
+          } as QuoteBlockInput,
+        } as BlockContentInput,
+
+        // a quote block with author
+        {
+          quote: {
+            quote: capitalize(
+              'Yeah, but to answer this  question, we would need to have more information. And then it’s the way  we will present it to the banks, you know.'
+            ),
+            imageID: undefined,
+            author: capitalize(faker.person.fullName()),
+          } as QuoteBlockInput,
         } as BlockContentInput,
 
         // an image block

@@ -25,24 +25,33 @@ import {
   createWithV1ApiClient,
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
-import { WebsiteBuilderProvider } from '@wepublish/website/builder';
+import {
+  BuilderBlockRendererProps,
+  WebsiteBuilderProvider,
+} from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
+import { ComponentType } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import { ReflektFlexBlock } from '../src/components/block-layouts/reflekt-base-flex-block';
 import { MainSpacer } from '../src/components/main-spacer';
 import { ReflektArticle } from '../src/components/reflekt-article';
-import { ReflektBlockRenderer } from '../src/components/reflekt-block-renderer';
+import {
+  ReflektBlockRenderer,
+  ReflektBlocks,
+} from '../src/components/reflekt-block-renderer';
 import { RefFooter } from '../src/components/reflekt-footer';
 import { ReflektGlobalStyles } from '../src/components/reflekt-global-styles';
 import { ReflektNavbar } from '../src/components/reflekt-navbar';
 import { ReflektPage } from '../src/components/reflekt-page';
+import { ReflektQuoteBlock } from '../src/components/reflekt-quote-block';
+import { ReflektTitleBlock } from '../src/components/reflekt-title-block';
 import { ReflektArticleList } from '../src/components/teaser-layouts/reflekt-article-list';
 import { ReflektBaseTeaserSlots } from '../src/components/teaser-layouts/reflekt-base-teaser-slots';
 import { ReflektBaseTeaser } from '../src/components/teasers/reflekt-base-teaser';
@@ -104,7 +113,11 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             TeaserSlots: ReflektBaseTeaserSlots,
             BaseTeaser: ReflektBaseTeaser,
             FlexBlock: ReflektFlexBlock,
-            Renderer: ReflektBlockRenderer,
+            Quote: ReflektQuoteBlock,
+            Title: ReflektTitleBlock,
+            Renderer:
+              ReflektBlockRenderer as ComponentType<BuilderBlockRendererProps>,
+            Blocks: ReflektBlocks,
           }}
         >
           <ThemeProvider theme={theme}>

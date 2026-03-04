@@ -15,9 +15,6 @@ import {
   TeaserGridFlexBlockWrapper,
   TeaserListBlockWrapper,
   TeaserSlotsBlockWrapper,
-  TitleBlockPreTitleWrapper,
-  TitleBlockTitle,
-  TitleBlockWrapper,
 } from '@wepublish/block-content/website';
 import { CommentListWrapper } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
@@ -25,12 +22,18 @@ import { SubscribeWrapper } from '@wepublish/membership/website';
 import { Article as ArticleType, BlockContent } from '@wepublish/website/api';
 import {
   BuilderArticleProps,
+  PeerInformation,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { Paywall } from '@wepublish/website/builder';
 
-import { FlexBlockHeroWrapper } from './block-layouts/flex-block-hero';
+import { robotoMono } from '../theme';
+import {
+  FlexBlockHeroWrapper,
+  isFlexBlockHero,
+} from './block-layouts/flex-block-hero';
 import { ReflektCollapsibleRichTextWrapper } from './block-styles/reflekt-collapsible-richtext';
+import { ReflektQuoteBlock } from './reflekt-quote-block';
 
 const fullWidthMainSpacer = (theme: Theme) => css`
   main > .MuiContainer-root {
@@ -38,6 +41,22 @@ const fullWidthMainSpacer = (theme: Theme) => css`
     padding: 0;
   }
 `;
+
+const articleDate = (isFlexBlockHero: boolean) => (theme: Theme) => css`
+  ${isFlexBlockHero &&
+  css`
+    margin-top: ${theme.spacing(-6)};
+  `}
+`;
+
+const ArticleDateWrapper = styled('span')`
+  font-family: ${robotoMono.style.fontFamily};
+
+  & time {
+    padding-left: ${({ theme }) => theme.spacing(1)};
+  }
+`;
+
 export const ArticleInfoWrapper = styled('aside')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(4)};
@@ -63,16 +82,6 @@ export const ArticleWrapper = styled(ContentWrapper)<{
 }>`
   padding-top: var(--navbar-height);
 
-  ${TitleBlockWrapper} {
-    ${TitleBlockPreTitleWrapper} {
-      display: none;
-    }
-
-    ${TitleBlockTitle} {
-      display: none;
-    }
-  }
-
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-columns:
       max(calc(100vw - 1333px) / 2, 0px) repeat(12, 1fr)
@@ -88,7 +97,8 @@ export const ArticleWrapper = styled(ContentWrapper)<{
           ${SliderWrapper},
           ${EventBlockWrapper},
           ${BreakBlockWrapper},
-          ${ReflektCollapsibleRichTextWrapper}
+          ${ReflektCollapsibleRichTextWrapper},
+          ${ReflektQuoteBlock}
       ) {
       grid-column: 3/13;
     }
@@ -154,8 +164,7 @@ export function ReflektArticle({
 }: BuilderArticleProps) {
   const {
     ArticleSEO,
-    //ArticleAuthors,
-    //ArticleMeta,
+    ArticleDate,
     blocks: { Blocks },
   } = useWebsiteBuilder();
 
@@ -180,10 +189,15 @@ export function ReflektArticle({
         />
       )}
 
-      {/*
       <ArticleInfoWrapper>
-        {article && <ArticleAuthors article={article} />}
-        {article && <ArticleMeta article={article} />}
+        {article && (
+          <ArticleDateWrapper
+            css={articleDate(isFlexBlockHero(article.latest.blocks[0]))}
+          >
+            Veröffentlicht am:
+            <ArticleDate article={article} />
+          </ArticleDateWrapper>
+        )}
 
         {data?.article?.peer && (
           <PeerInformation
@@ -192,7 +206,7 @@ export function ReflektArticle({
           />
         )}
       </ArticleInfoWrapper>
-*/}
+
       {showPaywall && article?.paywall && (
         <Paywall
           {...article.paywall}

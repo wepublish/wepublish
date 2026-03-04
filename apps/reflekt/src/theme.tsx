@@ -1,17 +1,62 @@
 import { createTheme, Theme, ThemeOptions } from '@mui/material';
 import { theme as WePTheme } from '@wepublish/ui';
-import { Hanken_Grotesk } from 'next/font/google';
+import { Roboto_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
 import { PartialDeep } from 'type-fest';
 
-import euclidCircularB_Bold from './fonts/euclid/EuclidCircularB-Bold-WebS.woff2';
-import euclidCircularB_LightItalic from './fonts/euclid/EuclidCircularB-LightItalic-WebS.woff2';
-import euclidCircularB_Medium from './fonts/euclid/EuclidCircularB-Medium-WebS.woff2';
-import euclidCircularB_MediumItalic from './fonts/euclid/EuclidCircularB-MediumItalic-WebS.woff2';
-import recife_Medium from './fonts/recife/RecifeTextWeb-Regular.woff2';
+export const recife = localFont({
+  src: [
+    {
+      path: '../public/fonts/recife/RecifeTextWeb-Regular.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/recife/RecifeTextWeb-RegularItalic.woff2',
+      weight: '400',
+      style: 'italic',
+    },
+    {
+      path: '../public/fonts/recife/RecifeTextWeb-Bold.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
+});
 
-const hankenGrotesk = Hanken_Grotesk({
-  weight: ['100', '300', '400', '500', '600', '700'],
-  style: ['italic', 'normal'],
+export const euclidCircularB = localFont({
+  src: [
+    {
+      path: '../public/fonts/euclid/EuclidCircularB-Light-WebS.woff2',
+      weight: '300',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/euclid/EuclidCircularB-LightItalic-WebS.woff2',
+      weight: '300',
+      style: 'italic',
+    },
+    {
+      path: '../public/fonts/euclid/EuclidCircularB-Medium-WebS.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/euclid/EuclidCircularB-MediumItalic-WebS.woff2',
+      weight: '400',
+      style: 'italic',
+    },
+    {
+      path: '../public/fonts/euclid/EuclidCircularB-Bold-WebS.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
+});
+
+export const robotoMono = Roboto_Mono({
+  weight: ['400'],
+  style: ['normal'],
   subsets: ['latin'],
   display: 'swap',
   preload: true,
@@ -70,47 +115,66 @@ const theme = createTheme(WePTheme, {
   },
   typography: {
     h1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
     },
     h2: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
     },
     h3: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
     },
     h4: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
     },
     h5: {
-      fontFamily: ['Euclid', 'sans-serif'].join(','),
+      fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
     },
     h6: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
     },
     body1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [recife.style.fontFamily, 'serif'].join(','),
     },
     body2: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [recife.style.fontFamily, 'serif'].join(','),
     },
     button: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
     },
     caption: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
     },
     overline: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
     },
     subtitle1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: 400,
+      fontStyle: 'normal',
     },
     subtitle2: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: 400,
+      fontStyle: 'normal',
+    },
+    // BlockQuote
+    blockQuote: {
+      fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: 400,
+      lineHeight: 1.15,
+      fontSize: '3rem',
+      '& + cite': {
+        fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
+        fontStyle: 'normal',
+        textTransform: 'uppercase',
+        fontSize: '1rem',
+        lineHeight: '1.25rem',
+        fontWeight: 400,
+      },
     },
     // Footer / Header
     categoryLinkTitle: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
       color: colors.common.white,
       display: 'inline-block',
       whiteSpace: 'nowrap',
@@ -154,7 +218,7 @@ const theme = createTheme(WePTheme, {
     },
     // TeaserSlots
     teaserSlotsTitle: {
-      fontFamily: ['Euclid', 'sans-serif'].join(','),
+      fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
       fontWeight: 500,
       color: colors.common.black,
       textTransform: 'uppercase',
@@ -165,7 +229,7 @@ const theme = createTheme(WePTheme, {
     // Teaser
     teaserTitle: {
       [breakpoints.up('xs')]: {
-        fontFamily: ['Euclid', 'sans-serif'].join(','),
+        fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
         backgroundColor: 'transparent',
         margin: 0,
         padding: '0 4cqw',
@@ -217,45 +281,6 @@ const theme = createTheme(WePTheme, {
     },
   },
   components: {
-    MuiCssBaseline: {
-      styleOverrides: `
-        @font-face {
-          font-family: 'Euclid';
-          font-display: swap;
-          font-style: italic;
-          font-weight: 300;
-          src: local('Euclid'), local('Euclid-Light-Italic'), url(${euclidCircularB_LightItalic}) format('woff2');
-        }
-        @font-face {
-          font-family: 'Euclid';
-          font-display: swap;
-          font-style: normal;
-          font-weight: 500;
-          src: local('Euclid'), local('Euclid-Medium'), url(${euclidCircularB_Medium}) format('woff2');
-        }
-        @font-face {
-          font-family: 'Euclid';
-          font-display: swap;
-          font-style: italic;
-          font-weight: 500;
-          src: local('Euclid'), local('Euclid-Medium-Italic'), url(${euclidCircularB_MediumItalic}) format('woff2');
-        }
-        @font-face {
-          font-family: 'Euclid';
-          font-display: swap;
-          font-style: normal;
-          font-weight: 700;
-          src: local('Euclid'), local('Euclid-Bold'), url(${euclidCircularB_Bold}) format('woff2');
-        }
-        @font-face {
-          font-family: 'Recife';
-          font-display: swap;
-          font-style: normal;
-          font-weight: 500;
-          src: local('Recife'), local('Recife-Medium'), url(${recife_Medium}) format('woff2');
-        }
-      `,
-    },
     MuiTypography: {
       defaultProps: {
         variantMapping: {
@@ -299,7 +324,9 @@ const theme = createTheme(WePTheme, {
         {
           props: { variant: 'buttonLinkMain' },
           style: {
-            fontFamily: ['Euclid', 'sans-serif'].join(','),
+            fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
+              ','
+            ),
             fontWeight: 500,
             textTransform: 'uppercase',
             color: colors.common.black,
@@ -319,7 +346,9 @@ const theme = createTheme(WePTheme, {
         {
           props: { variant: 'buttonLinkSecondary' },
           style: {
-            fontFamily: ['Euclid', 'sans-serif'].join(','),
+            fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
+              ','
+            ),
             fontWeight: 500,
             textTransform: 'uppercase',
             borderRadius: '9999px',
@@ -355,7 +384,9 @@ const theme = createTheme(WePTheme, {
             },
           },
           '.MuiAccordionSummary-root': {
-            fontFamily: ['Euclid', 'sans-serif'].join(','),
+            fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
+              ','
+            ),
             fontWeight: 500,
             padding: '0',
             gridColumn: '-1 / 1',
@@ -363,6 +394,7 @@ const theme = createTheme(WePTheme, {
             display: 'grid',
             gridTemplateColumns: 'subgrid',
             textTransform: 'uppercase',
+            fontSize: '2rem',
             '.MuiAccordionSummary-content': {
               margin: 0,
               gridColumn: '3 / 9',
@@ -370,23 +402,38 @@ const theme = createTheme(WePTheme, {
             '.MuiTypography-root': {
               textWrap: 'wrap',
             },
+            '&.Mui-expanded': {
+              minHeight: '48px',
+            },
           },
           '.MuiCollapse-root': {
             padding: '0',
             gridColumn: '3 / 9',
             gridRow: '2 / 3',
+            '.MuiCollapse-wrapper': {
+              marginTop: '0.75rem',
+            },
           },
           '.MuiAccordionDetails-root': {
             padding: '0 0 0 .75cqw',
           },
           '.MuiAccordionSummary-expandIconWrapper': {
-            fontFamily: ['Euclid', 'sans-serif'].join(','),
+            fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
+              ','
+            ),
             position: 'absolute',
             top: '50%',
             right: '0.75cqw',
             transform: 'translateY(-50%)',
             color: colors.common.black,
             fontWeight: 700,
+            transition:
+              'transform 500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important',
+            '&.Mui-expanded': {
+              transition:
+                'transform 500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important',
+              transform: 'translateY(-50%) rotate(0deg)',
+            },
           },
           '&.Mui-expanded': {
             margin: 0,
@@ -402,7 +449,7 @@ export const teaserMoreAboutTheme = createTheme(theme, {
   typography: {
     teaserTitle: {
       [breakpoints.up('xs')]: {
-        fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+        fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
         padding: 0,
         margin: '0 0 calc(var(--sizing-factor) * 1cqw) 0',
         fontSize: 'calc(var(--sizing-factor) * 1.67cqw)',
@@ -414,7 +461,7 @@ export const teaserMoreAboutTheme = createTheme(theme, {
     },
     teaserPretitle: {
       [breakpoints.up('xs')]: {
-        fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+        fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
         fontSize: 'calc(var(--sizing-factor) * 1.1cqw)',
         fontWeight: 700,
         lineHeight: 'calc(var(--sizing-factor) * 1.2cqw)',
@@ -430,7 +477,7 @@ export const teaserMoreAboutTheme = createTheme(theme, {
     },
     teaserLead: {
       [breakpoints.up('xs')]: {
-        fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+        fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
         display: 'block',
         fontSize: 'calc(var(--sizing-factor) * 1.3cqw)',
         lineHeight: 'calc(var(--sizing-factor) * 1.4cqw)',
@@ -453,9 +500,7 @@ export const teaserMoreAboutTheme = createTheme(theme, {
         {
           props: { variant: 'teaserPretitleLink' },
           style: {
-            fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(
-              ','
-            ),
+            fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
             display: 'inline',
             textDecoration: 'underline',
             flexGrow: 0,
