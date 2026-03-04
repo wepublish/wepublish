@@ -16,6 +16,10 @@ import {
   isCollapsibleRichText,
   ReflektCollapsibleRichText,
 } from './block-styles/reflekt-collapsible-richtext';
+import {
+  isTocRichText,
+  ReflektTocRichText,
+} from './block-styles/reflekt-toc-richtext';
 import { MainSpacer } from './main-spacer';
 
 export type BlockSiblings = Array<{
@@ -23,7 +27,9 @@ export type BlockSiblings = Array<{
   blockStyle?: string;
 }>;
 
-export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
+export const ReflektBlockRenderer = (
+  props: BuilderBlockRendererProps & { siblings: BlockSiblings }
+) => {
   const theme = useTheme();
 
   const extraBlockMap = useMemo(
@@ -33,6 +39,15 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
           isCollapsibleRichText,
           block => (
             <ReflektCollapsibleRichText
+              {...block}
+              siblings={props.siblings}
+            />
+          ),
+        ],
+        [
+          isTocRichText,
+          block => (
+            <ReflektTocRichText
               {...block}
               siblings={props.siblings}
             />

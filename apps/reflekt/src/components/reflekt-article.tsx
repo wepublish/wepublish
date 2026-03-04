@@ -33,6 +33,7 @@ import {
   isFlexBlockHero,
 } from './block-layouts/flex-block-hero';
 import { ReflektCollapsibleRichTextWrapper } from './block-styles/reflekt-collapsible-richtext';
+import { ReflektTocRichTextWrapper } from './block-styles/reflekt-toc-richtext';
 import { ReflektQuoteBlock } from './reflekt-quote-block';
 
 const fullWidthMainSpacer = (theme: Theme) => css`
@@ -98,6 +99,7 @@ export const ArticleWrapper = styled(ContentWrapper)<{
           ${EventBlockWrapper},
           ${BreakBlockWrapper},
           ${ReflektCollapsibleRichTextWrapper},
+          ${ReflektTocRichTextWrapper},
           ${ReflektQuoteBlock}
       ) {
       grid-column: 3/13;

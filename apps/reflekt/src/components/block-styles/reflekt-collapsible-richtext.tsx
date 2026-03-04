@@ -33,8 +33,6 @@ export const ExpandIcon = styled(MdArrowDownward)`
   transform: rotate(0deg);
   transition: transform 0.2s ease-in-out;
   transform-origin: center;
-  text-transform: uppercase;
-  font-family: 'Euclid', sans-serif;
 
   ${ReflektCollapsibleRichTextWrapper}.Mui-expanded & {
     transform: rotate(180deg);
@@ -69,6 +67,7 @@ export const ReflektCollapsibleRichText = ({
           richText.length > 0 &&
           (richText[0] as any).children[0].text}
       </AccordionSummary>
+
       <AccordionDetails id={`${thisId}-panel-content`}>
         {richText && richText.length > 1 && (
           <RichText richText={[...richText].splice(1, richText.length - 1)} />

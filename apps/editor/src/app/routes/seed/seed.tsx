@@ -554,6 +554,74 @@ Jetzt im Shop erhältlich.`,
           } as BreakBlockInput,
         } as BlockContentInput,
 
+        // a collapsible rich text block
+        {
+          richText: {
+            blockStyle: getBlockStyle(blockStyles, 'TableOfContents'),
+            richText: [
+              {
+                type: 'heading-one',
+                children: [
+                  {
+                    text: 'Kapitel',
+                  },
+                ],
+              },
+              {
+                type: 'unordered-list',
+                children: [
+                  {
+                    type: 'list-item',
+                    children: [
+                      {
+                        type: 'link',
+                        url: faker.internet.url(),
+                        title: capitalize(
+                          faker.lorem.words({ min: 2, max: 4 })
+                        ),
+                        children: [
+                          { text: capitalize(faker.lorem.sentence()) },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    type: 'list-item',
+                    children: [
+                      {
+                        type: 'link',
+                        url: faker.internet.url(),
+                        title: capitalize(
+                          faker.lorem.words({ min: 2, max: 4 })
+                        ),
+                        children: [
+                          { text: capitalize(faker.lorem.sentence()) },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    type: 'list-item',
+                    children: [
+                      {
+                        type: 'link',
+                        url: faker.internet.url(),
+                        title: capitalize(
+                          faker.lorem.words({ min: 2, max: 4 })
+                        ),
+                        children: [
+                          { text: capitalize(faker.lorem.sentence()) },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              ...(getText(1, 2) as Descendant[]),
+            ] as Descendant[],
+          } as RichTextBlockInput,
+        } as BlockContentInput,
+
         // a rich text block
         {
           richText: {
@@ -1217,6 +1285,11 @@ async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
 
     {
       name: 'CollapsibleRichText',
+      blocks: ['RichText'],
+    },
+
+    {
+      name: 'TableOfContents',
       blocks: ['RichText'],
     },
   ];
