@@ -210,7 +210,7 @@ export class SessionService {
 
     const expiresAt = new Date(
       new Date().getTime() + expiresInMinutes * 60 * 1000
-    ).toISOString();
+    );
 
     const token = this.jwtService.generateJWT({ id: userId, expiresInMinutes });
 
@@ -225,7 +225,7 @@ export class SessionService {
 
     const expiresAt = new Date(
       new Date().getTime() + expiresInMinutes * 60 * 1000
-    ).toISOString();
+    );
 
     const token = this.jwtService.generateJWT({ id: userId, expiresInMinutes });
 
