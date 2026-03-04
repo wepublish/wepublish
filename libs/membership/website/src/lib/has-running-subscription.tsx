@@ -11,7 +11,9 @@ export const useHasRunningSubscription = () => {
 
   return useMemo(
     () =>
-      !!data?.subscriptions.find(subscription => !subscription.deactivation),
-    [data?.subscriptions]
+      !!data?.userSubscriptions.find(
+        subscription => !subscription.deactivation
+      ),
+    [data?.userSubscriptions]
   );
 };

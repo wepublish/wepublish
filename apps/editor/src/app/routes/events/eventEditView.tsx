@@ -1,13 +1,11 @@
 import { ApolloError } from '@apollo/client';
-import { stripTypename } from '@wepublish/editor/api';
 import {
   FullEventFragment,
   FullImageFragment,
-  getApiClientV2,
   MutationUpdateEventArgs,
   useEventQuery,
   useUpdateEventMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { SingleViewTitle } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +30,7 @@ const onErrorToast = (error: ApolloError) => {
 const mapApiDataToInput = (
   event: FullEventFragment
 ): MutationUpdateEventArgs & { image?: FullImageFragment | null } => ({
-  ...stripTypename(event),
+  ...event,
   imageId: event.image?.id,
   tagIds: event.tags?.map(tag => tag.id),
 });
@@ -52,9 +50,7 @@ export const EventEditView = () => {
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const client = getApiClientV2();
   const { loading: dataLoading } = useEventQuery({
-    client,
     variables: {
       id: eventId,
     },
@@ -67,7 +63,6 @@ export const EventEditView = () => {
   });
 
   const [updateEvent, { loading: updateLoading }] = useUpdateEventMutation({
-    client,
     onError: onErrorToast,
     onCompleted: data => {
       if (shouldClose) {

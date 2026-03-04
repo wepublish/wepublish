@@ -1,17 +1,14 @@
 import styled from '@emotion/styled';
 import {
   DateFilterComparison,
+  FullMemberPlanFragment,
   FullPaymentMethodFragment,
   FullUserFragment,
   SubscriptionDeactivationReason,
   SubscriptionFilter,
-} from '@wepublish/editor/api';
-import {
-  FullMemberPlanFragment,
-  getApiClientV2,
   useMemberPlanListQuery,
   usePaymentMethodListQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdClose } from 'react-icons/md';
@@ -60,15 +57,11 @@ export function SubscriptionListFilter({
     undefined
   );
 
-  const client = getApiClientV2();
   const {
     data: paymentMethodData,
     loading: isPaymentMethodLoading,
     error: paymentMethodLoadError,
-  } = usePaymentMethodListQuery({
-    client,
-    fetchPolicy: 'network-only',
-  });
+  } = usePaymentMethodListQuery({});
 
   const formInputStyle = {
     marginRight: '15px',
@@ -81,8 +74,6 @@ export function SubscriptionListFilter({
     loading: isMemberPlanLoading,
     error: loadMemberPlanError,
   } = useMemberPlanListQuery({
-    client,
-    fetchPolicy: 'network-only',
     variables: {
       take: 200,
     },

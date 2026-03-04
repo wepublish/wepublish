@@ -45,7 +45,7 @@ export class UserRoleService {
       }),
     ]);
 
-    const nodes = userRoles.slice(0, take);
+    const nodes = userRoles.slice(0, getMaxTake(take));
     const firstUserRole = nodes[0];
     const lastUserRole = nodes[nodes.length - 1];
 

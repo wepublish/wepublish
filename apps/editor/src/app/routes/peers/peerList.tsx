@@ -1,13 +1,12 @@
 import styled from '@emotion/styled';
-import { usePeerProfileQuery } from '@wepublish/editor/api';
 import {
-  getApiClientV2,
   PeerListDocument,
   PeerListQuery,
   useDeletePeerMutation,
   usePeerListQuery,
+  usePeerProfileQuery,
   useUpdatePeerMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   DescriptionList,
@@ -100,25 +99,18 @@ function PeerList() {
     data: peerInfoData,
     loading: isPeerInfoLoading,
     error: peerInfoError,
-  } = usePeerProfileQuery({ fetchPolicy: 'network-only' });
+  } = usePeerProfileQuery({});
 
-  const client = getApiClientV2();
   const {
     data: peerListData,
     loading: isPeerListLoading,
     error: peerListError,
   } = usePeerListQuery({
-    client,
-    fetchPolicy: 'network-only',
     errorPolicy: 'ignore',
   });
 
-  const [deletePeer, { loading: isDeleting }] = useDeletePeerMutation({
-    client,
-  });
-  const [updatePeer, { loading: isUpdating }] = useUpdatePeerMutation({
-    client,
-  });
+  const [deletePeer, { loading: isDeleting }] = useDeletePeerMutation({});
+  const [updatePeer, { loading: isUpdating }] = useUpdatePeerMutation({});
 
   const { t } = useTranslation();
 
@@ -151,7 +143,7 @@ function PeerList() {
       setEditID(id);
       setEditModalOpen(true);
     }
-  }, [location]);
+  }, [id, isCreateRoute, isPeerEditRoute, isPeerProfileEditRoute, location]);
 
   const peers = peerListData?.peers?.map(peer => {
     const { id, name, profile, hostURL, isDisabled } = peer;
@@ -373,12 +365,16 @@ function PeerList() {
             </DescriptionListItem>
           </DescriptionList>
         </Modal.Body>
+
         <Modal.Footer>
           <Button
             disabled={isDeleting}
             color="red"
             onClick={async () => {
-              if (!currentPeer) return;
+              if (!currentPeer) {
+                return;
+              }
+
               await deletePeer({
                 variables: { id: currentPeer.id },
                 update: cache => {
@@ -386,7 +382,9 @@ function PeerList() {
                     query: PeerListDocument,
                   });
 
-                  if (!query) return;
+                  if (!query) {
+                    return;
+                  }
 
                   cache.writeQuery<PeerListQuery>({
                     query: PeerListDocument,

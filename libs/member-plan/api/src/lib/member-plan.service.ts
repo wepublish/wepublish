@@ -60,7 +60,7 @@ export class MemberPlanService {
       }),
     ]);
 
-    const nodes = memberplans.slice(0, take);
+    const nodes = memberplans.slice(0, getMaxTake(take));
     const firstMemberPlan = nodes[0];
     const lastMemberPlan = nodes[nodes.length - 1];
 

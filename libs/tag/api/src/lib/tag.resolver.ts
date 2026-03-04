@@ -13,8 +13,8 @@ import { Tag as PTag, TagType } from '@prisma/client';
 import {
   CreateTagInput,
   Tag,
-  TagConnection,
-  TagsArgs,
+  PaginatedTags,
+  TagListArgs,
   UpdateTagInput,
 } from './tag.model';
 import {
@@ -71,12 +71,11 @@ export class TagResolver {
   }
 
   @Public()
-  @Query(() => TagConnection, {
+  @Query(() => PaginatedTags, {
     description: 'This query returns a list of tags',
   })
-  async tags(@Args() args: TagsArgs) {
-    const { filter, sort, order, cursor, take, skip } = args;
-    return this.tagService.getTags(filter, sort, order, cursor, skip, take);
+  async tags(@Args() args: TagListArgs) {
+    return this.tagService.getTags(args);
   }
 
   @Permissions(CanCreateTag)

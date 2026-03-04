@@ -40,7 +40,7 @@ const verifiedUserComment = mockComment({
 
 const ratingSystem = {
   id: nanoid(),
-  __typename: 'FullCommentRatingSystem',
+  __typename: 'CommentRatingSystem',
   name: 'Default',
   answers: anonymousComment.userRatings.map(rating => rating.answer),
 } as CommentListQuery['ratingSystem'];

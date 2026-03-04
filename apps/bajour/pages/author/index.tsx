@@ -12,6 +12,7 @@ import {
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
@@ -55,24 +56,36 @@ export default function AuthorList() {
     return 1;
   }, [data?.authors.totalCount]);
 
+  const canonicalUrl = '/author';
+
   return (
     <Container>
       <AuthorListContainer variables={variables} />
 
       {pageCount > 1 && (
-        <Pagination
-          page={page ?? 1}
-          count={pageCount}
-          onChange={(_, value) =>
-            replace(
-              {
-                query: { ...query, page: value },
-              },
-              undefined,
-              { shallow: true, scroll: true }
-            )
-          }
-        />
+        <>
+          <Head>
+            <link
+              rel="canonical"
+              key="canonical"
+              href={canonicalUrl}
+            />
+          </Head>
+
+          <Pagination
+            page={page ?? 1}
+            count={pageCount}
+            onChange={(_, value) =>
+              replace(
+                {
+                  query: { ...query, page: value },
+                },
+                undefined,
+                { shallow: true, scroll: true }
+              )
+            }
+          />
+        </>
       )}
     </Container>
   );

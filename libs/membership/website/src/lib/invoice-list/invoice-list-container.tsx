@@ -51,7 +51,7 @@ export function InvoiceListContainer({
     error,
   } = useInvoicesQuery({
     onCompleted(data) {
-      for (const { id, paidAt, canceledAt } of data.invoices) {
+      for (const { id, paidAt, canceledAt } of data.userInvoices) {
         if (paidAt || canceledAt || typeof window === 'undefined') {
           continue;
         }
@@ -71,8 +71,8 @@ export function InvoiceListContainer({
   const filteredInvoices = useMemo(
     () =>
       produce(data, draftData => {
-        if (filter && draftData?.invoices) {
-          draftData.invoices = filter(draftData.invoices);
+        if (filter && draftData?.userInvoices) {
+          draftData.userInvoices = filter(draftData.userInvoices);
         }
       }),
     [data, filter]
@@ -142,7 +142,7 @@ export function InvoiceListContainer({
         error={error}
         className={className}
         onPay={async invoiceId => {
-          const invoice = filteredInvoices?.invoices?.find(
+          const invoice = filteredInvoices?.userInvoices?.find(
             invoice => invoice.id === invoiceId
           );
 

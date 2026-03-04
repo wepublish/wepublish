@@ -27,12 +27,12 @@ import {
 import { useRouter } from 'next/router';
 import { descend, eqBy, sortWith, uniqWith } from 'ramda';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import { useDebounceCallback } from 'usehooks-ts';
 
 import { LikeButton, VideoLikeButton } from './like-button';
 import { SearchBar } from './search-bar';
 import { useLikeStatus } from './use-like-status';
-import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 
 export const SEARCH_SLIDER_TAG = 'search-slider';
 

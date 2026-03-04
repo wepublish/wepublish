@@ -34,6 +34,7 @@ export function CommentDeleteBtn({
 }: CommentDeleteBtnProps): JSX.Element {
   const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+
   const [deleteComment, { loading }] = useDeleteCommentMutation({
     onCompleted: () => {
       setModalOpen(false);

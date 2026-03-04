@@ -1,13 +1,12 @@
 import styled from '@emotion/styled';
 import {
   FullImageFragment,
-  getApiClientV2,
   ImageListDocument,
   ImageListQuery,
   LocalStorageKey,
   useDeleteImageMutation,
   useImageListQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
@@ -175,20 +174,15 @@ function ImageList() {
     skip: (activePage - 1) * limit,
   };
 
-  const client = getApiClientV2();
   const {
     data,
     refetch,
     loading: isLoading,
   } = useImageListQuery({
-    client,
-    fetchPolicy: 'network-only',
     variables: listVariables,
   });
 
-  const [deleteImage, { loading: isDeleting }] = useDeleteImageMutation({
-    client,
-  });
+  const [deleteImage, { loading: isDeleting }] = useDeleteImageMutation({});
 
   const { t } = useTranslation();
 
@@ -363,7 +357,9 @@ function ImageList() {
           <Button
             disabled={isDeleting}
             onClick={async () => {
-              if (!currentImage) return;
+              if (!currentImage) {
+                return;
+              }
 
               await deleteImage({
                 variables: { id: currentImage.id },

@@ -1,13 +1,12 @@
 import styled from '@emotion/styled';
 import {
   FullUserRoleFragment,
-  getApiClientV2,
   Permission,
   useCreateUserRoleMutation,
   usePermissionListQuery,
   useUpdateUserRoleMutation,
   useUserRoleQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -48,15 +47,12 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [allPermissions, setAllPermissions] = useState<Permission[]>([]);
 
-  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
     error: loadError,
   } = useUserRoleQuery({
-    client,
     variables: { id: id! },
-    fetchPolicy: 'network-only',
     skip: id === undefined,
   });
 
@@ -64,15 +60,12 @@ function UserRoleEditPanel({ id, onClose, onSave }: UserRoleEditPanelProps) {
     data: permissionData,
     loading: isPermissionLoading,
     error: loadPermissionError,
-  } = usePermissionListQuery({
-    client,
-    fetchPolicy: 'network-only',
-  });
+  } = usePermissionListQuery({});
 
   const [createUserRole, { loading: isCreating, error: createError }] =
-    useCreateUserRoleMutation({ client });
+    useCreateUserRoleMutation();
   const [updateUserRole, { loading: isUpdating, error: updateError }] =
-    useUpdateUserRoleMutation({ client });
+    useUpdateUserRoleMutation();
 
   const isDisabled =
     systemRole ||

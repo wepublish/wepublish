@@ -1,14 +1,17 @@
 import { DynamicModule, Module, Provider } from '@nestjs/common';
 import { ChallengeService } from './challenge.service';
 import { ChallengeResolver } from './challenge.resolver';
-import { AlgebraicCaptchaChallenge } from './providers/algebraic-captcha.provider';
 import { CFTurnstileProvider } from './providers/cf-turnstile.provider';
+import { HCaptchaProvider } from './providers/h-captcha.provider';
 import { ChallengeProvider } from './challenge-provider.interface';
 import {
   ChallengeModuleAsyncOptions,
   ChallengeModuleOptions,
 } from './challenge-module-options';
 import { createAsyncOptionsProvider } from '@wepublish/utils/api';
+import { PrismaService } from '@wepublish/nest-modules';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { ChallengeProviderType } from '@prisma/client';
 
 export const CHALLENGE_MODULE_OPTIONS = 'CHALLENGE_MODULE_OPTIONS';
 
@@ -41,43 +44,50 @@ export class ChallengeModule {
       ),
       {
         provide: ChallengeProvider,
-        useFactory: (challengeModuleOptions: ChallengeModuleOptions) =>
-          createChallengeProviderFromConfig(challengeModuleOptions.challenge),
-        inject: [CHALLENGE_MODULE_OPTIONS],
+        useFactory: (
+          challengeModuleOptions: ChallengeModuleOptions,
+          prisma: PrismaService,
+          kv: KvTtlCacheService
+        ) =>
+          createChallengeProviderFromConfig(
+            challengeModuleOptions.challenge,
+            prisma,
+            kv
+          ),
+        inject: [CHALLENGE_MODULE_OPTIONS, PrismaService, KvTtlCacheService],
       },
     ];
   }
 }
 
-const createChallengeProviderFromConfig = (
-  challenge: ChallengeModuleOptions['challenge']
+const createChallengeProviderFromConfig = async (
+  challenge: ChallengeModuleOptions['challenge'],
+  prisma: PrismaService,
+  kv: KvTtlCacheService
 ) => {
-  if (challenge.type === 'turnstile') {
-    return new CFTurnstileProvider(challenge.secret, challenge.siteKey);
+  switch (challenge.type) {
+    case 'hcaptcha': {
+      const challengeProvider = new HCaptchaProvider(challenge.id, prisma, kv);
+      await challengeProvider.initDatabaseConfiguration(
+        challenge.id,
+        ChallengeProviderType.HCAPTCHA,
+        prisma
+      );
+      return challengeProvider;
+    }
+    case 'turnstile':
+    default: {
+      const challengeProvider = new CFTurnstileProvider(
+        challenge.id,
+        prisma,
+        kv
+      );
+      await challengeProvider.initDatabaseConfiguration(
+        challenge.id,
+        ChallengeProviderType.TURNSTILE,
+        prisma
+      );
+      return challengeProvider;
+    }
   }
-
-  if (challenge.type === 'algebraic') {
-    const algebraicConfig = challenge;
-    return new AlgebraicCaptchaChallenge(
-      algebraicConfig.secret,
-      algebraicConfig.validTime || 600, // default 10 minutes
-      {
-        width: algebraicConfig.width,
-        height: algebraicConfig.height,
-        background: algebraicConfig.background,
-        noise: algebraicConfig.noise,
-        minValue: algebraicConfig.minValue,
-        maxValue: algebraicConfig.maxValue,
-        operandAmount: algebraicConfig.operandAmount,
-        operandTypes: algebraicConfig.operandTypes,
-        mode: algebraicConfig.mode,
-        targetSymbol: algebraicConfig.targetSymbol,
-      }
-    );
-  }
-
-  const exhaustiveCheck: never = challenge;
-  throw new Error(
-    `Unsupported challenge type: ${(exhaustiveCheck as any).type}`
-  );
 };

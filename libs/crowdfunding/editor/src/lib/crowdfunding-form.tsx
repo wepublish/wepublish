@@ -4,11 +4,10 @@ import {
   UpdateCrowdfundingInput,
   FullCrowdfundingFragment,
   CrowdfundingGoalType,
-  getApiClientV2,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { CheckPicker, Form, Panel, SelectPicker } from 'rsuite';
-import { useMemberPlanListQuery } from '@wepublish/editor/api-v2';
+import { useMemberPlanListQuery } from '@wepublish/editor/api';
 import { CrowdfundingGoalList } from './crowdfunding-goal-list';
 import {
   CurrencyInput,
@@ -36,9 +35,7 @@ const CrowdfundingFormWrapper = styled.div`
 export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
   const { t } = useTranslation();
 
-  const client = getApiClientV2();
   const { data: memberPlanData } = useMemberPlanListQuery({
-    client,
     variables: { take: 50 },
     fetchPolicy: 'no-cache',
   });

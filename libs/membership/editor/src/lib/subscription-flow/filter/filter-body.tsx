@@ -1,12 +1,12 @@
 import { TableCell } from '@mui/material';
-import { FullMemberPlanFragment } from '@wepublish/editor/api';
 import {
   ListPaymentMethodsQuery,
   PaymentPeriodicity,
   CreateSubscriptionFlowMutationVariables,
   UpdateSubscriptionFlowMutationVariables,
   SubscriptionFlowFragment,
-} from '@wepublish/editor/api-v2';
+  FullMemberPlanFragment,
+} from '@wepublish/editor/api';
 import { useAuthorisation } from '@wepublish/ui/editor';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';

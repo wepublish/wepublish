@@ -62,7 +62,7 @@ export class PageService {
       }),
     ]);
 
-    const nodes = pages.slice(0, take);
+    const nodes = pages.slice(0, getMaxTake(take));
     const firstPage = nodes[0];
     const lastPage = nodes[nodes.length - 1];
 
@@ -388,8 +388,6 @@ export class PageService {
 
   async performPageFullTextSearch(searchQuery: string): Promise<string[]> {
     try {
-      const formattedQuery = searchQuery.replace(/\s+/g, '&');
-
       const foundPageIds = await this.prisma.$queryRaw<Array<{ id: string }>>`
         SELECT p.id
         FROM pages p
@@ -403,7 +401,7 @@ export class PageService {
                 'german',
                 jsonb_path_query_array(pr.blocks, 'strict $.**.text'),
                 '["string"]'
-              ) @@ to_tsquery('german', ${formattedQuery});
+              ) @@ websearch_to_tsquery('german', ${searchQuery});
       `;
 
       return foundPageIds.map(item => item.id);

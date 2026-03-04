@@ -57,6 +57,13 @@ export class OverriddenRating {
   value?: number;
 }
 
+@InputType()
+export class OverriddenRatingInput extends PickType(
+  OverriddenRating,
+  ['answerId', 'value'] as const,
+  InputType
+) {}
+
 @ObjectType()
 export class CommentRating {
   @Field()

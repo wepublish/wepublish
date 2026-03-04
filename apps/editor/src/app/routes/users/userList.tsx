@@ -84,7 +84,6 @@ function UserList() {
       sort: mapColumFieldToGraphQLField(sortField),
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder),
     },
-    fetchPolicy: 'network-only',
   });
 
   const updateFilter = (filter: UserFilter) => {
@@ -102,7 +101,7 @@ function UserList() {
     });
   }, [filter, page, limit, sortOrder, sortField, refetch]);
 
-  const [deleteUser, { loading: isDeleting }] = useDeleteUserMutation();
+  const [deleteUser, { loading: isDeleting }] = useDeleteUserMutation({});
 
   const { t } = useTranslation();
 
@@ -123,12 +122,14 @@ function UserList() {
    * UI helpers
    */
   function getSubscriptionCellView(user: FullUserFragment) {
-    const subscriptions = user.subscriptions;
+    // @ts-expect-error Wrong type for now
+    const subscriptions = user.subscriptions ?? [];
     const totalSubscriptions = subscriptions?.length;
     // one subscription
     if (subscriptions?.length === 1) {
       return <>{t('userList.overview.oneSubscription')}</>;
     }
+
     // multiple subscriptions
     if (subscriptions?.length) {
       return (

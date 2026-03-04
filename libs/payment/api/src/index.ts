@@ -24,4 +24,7 @@ export * from './lib/payment-method/payment-method.module';
 export * from './lib/payment-method/payment-method.config';
 export * from './lib/payment-method/payment-method.service';
 export * from './lib/payment-method/payment-method.dataloader';
+
 export { PaymentMethod } from './lib/payment-method/payment-method.model';
+
+export * from './lib/payment.webhook';

@@ -1,25 +1,32 @@
 query TagList(
-    $filter: TagFilter
-    $cursor: String
-    $take: Int
-    $skip: Int
-    $order: SortOrder
-    $sort: TagSort
+  $filter: TagFilter
+  $cursorId: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: TagSort
 ) {
-    tags(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
-        nodes {
-            id
-            tag
-            url
-        }
-
-        pageInfo {
-            startCursor
-            endCursor
-            hasNextPage
-            hasPreviousPage
-        }
-
-        totalCount
+  tags(
+    filter: $filter
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      id
+      tag
+      url
     }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
 }

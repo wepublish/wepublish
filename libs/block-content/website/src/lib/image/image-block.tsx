@@ -38,6 +38,7 @@ export const ImageBlockInnerWrapper = styled('div')`
 
 export const ImageBlockImage = styled(Image)`
   justify-self: center;
+  object-position: unset;
 `;
 
 export const ImageBlockCaption = styled('figcaption')`

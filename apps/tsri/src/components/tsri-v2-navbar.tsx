@@ -52,6 +52,30 @@ enum ScrollDirection {
   Down,
 }
 
+const AnimatedLoadingDots = styled('span')`
+  &::after {
+    content: '.';
+    animation: loadingDots 1.2s steps(4, end) infinite;
+  }
+
+  @keyframes loadingDots {
+    0%,
+    25% {
+      content: '.';
+    }
+    40% {
+      content: '..';
+    }
+    60% {
+      content: '...';
+    }
+    80%,
+    100% {
+      content: '.....';
+    }
+  }
+`;
+
 const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
   :root {
     ${isHomePage ?
@@ -63,6 +87,7 @@ const cssVariables = (state: NavbarState[], isHomePage: boolean) => css`
       ${theme.breakpoints.up('md')} {
         --navbar-height: -10px;
         --navbar-aspect-ratio: 6.5 / 1;
+        --navbar-aspect-ratio: 7.5 / 1;
         --scrolled-navbar-aspect-ratio: 9 / 1;
       }
     `
@@ -290,6 +315,7 @@ const TsriLogo = styled('img', {
       isHomePage &&
       css`
         width: 32.55cqw;
+        width: 27cqw;
       `}
 
       // on home page, scrolled --> black logo, smaller
@@ -316,6 +342,7 @@ const TsriClaim = styled('img', {
   height: auto;
   top: 13.5cqw;
   top: 12.8cqw;
+  top: 10.5cqw;
   left: 2cqw;
   display: none;
 
@@ -537,7 +564,7 @@ export const NavPaperWrapper = styled('div', {
   display: grid;
   grid-template-rows: min-content 6cqw;
   row-gap: 12cqw;
-  grid-template-columns: 1fr minmax(max-content, 1285px) 1fr;
+  grid-template-columns: 1fr minmax(max-content, 1075px) 1fr;
   position: absolute;
 
   ${theme.breakpoints.up('md')} {
@@ -581,6 +608,8 @@ export const NavPaperCategory = styled('div')`
   grid-row: 1 / 2;
   row-gap: 0.8cqw;
   padding-left: 2cqw;
+  max-width: 44vw;
+  overflow-x: hidden;
 
   &:nth-of-type(n + 2) {
     grid-column: 1 / 2;
@@ -611,12 +640,13 @@ export const NavPaperLinksGroup = styled('div')`
   grid-template-columns: repeat(2, auto);
   grid-template-rows: repeat(2, auto);
   row-gap: 12cqw;
-  margin: 0 0 0 3cqw;
+  margin: 0;
 
   ${theme.breakpoints.up('md')} {
     row-gap: unset;
     grid-template-rows: unset;
     grid-template-columns: repeat(3, min-content);
+    margin: 0 0 0 3cqw;
   }
 `;
 
@@ -749,8 +779,6 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
       children,
       categorySlugs,
       slug,
-      headerSlug,
-      iconSlug,
       data,
       hasRunningSubscription,
       hasUnpaidInvoices,
@@ -825,11 +853,24 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
 
     const router = useRouter();
 
-    const tabText = useMemo(() => {
+    const tabText = useMemo((): string => {
       if (pageTypeBasedProps) {
         switch (pageTypeBasedProps.pageType) {
+          // text from queries
           case PageType.Article:
             return pageTypeBasedProps.Article?.preTitle || '';
+          case PageType.ArticleList:
+            return capitalize(pageTypeBasedProps.ArticleList?.tag || '');
+          case PageType.Event:
+            return pageTypeBasedProps.Event?.name || '';
+          case PageType.Page:
+            return pageTypeBasedProps.Page?.title || '';
+          case PageType.SearchResults:
+            return pageTypeBasedProps.Search?.phrase ?
+                `${pageTypeBasedProps.Search.totalCount <= 0 ? 'Keine' : pageTypeBasedProps.Search.totalCount} Suchergebnisse für "${pageTypeBasedProps.Search?.phrase}"`
+              : '';
+
+          // static text
           case PageType.Author:
             return 'Ich bin Tsüri!';
           case PageType.AuthorList:
@@ -838,8 +879,6 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
             return 'Suche';
           case PageType.SubscriptionPage:
             return 'Jetzt Tsüri unterstützen!';
-          case PageType.ArticleList:
-            return capitalize(pageTypeBasedProps.ArticleList?.tag || '');
           case PageType.EventList:
             return 'Unsere Events';
           case PageType.Profile:
@@ -848,7 +887,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
             return 'Melde dich in deinem Konto an';
         }
       }
-      return '';
+      return '......';
     }, [pageTypeBasedProps]);
 
     const mainItems = data?.navigations?.find(({ key }) => key === slug);
@@ -883,7 +922,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
       (!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn) as boolean
     );
 
-    const isHomePage = pageTypeBasedProps?.Page?.slug === '';
+    const isHomePage = pageTypeBasedProps.pageType === PageType.Home;
 
     const navbarStyles = useMemo(
       () => cssVariables(navbarState, isHomePage),
@@ -891,6 +930,15 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
     );
 
     useImperativeHandle(forwardRef, () => ref.current!, []);
+
+    const handleResize = useCallback((): void => {
+      if (ref?.current) {
+        ref.current.ownerDocument.documentElement.setAttribute(
+          'style',
+          `--navbar-height: ${ref.current.getBoundingClientRect().height}px`
+        );
+      }
+    }, [ref]);
 
     useEffect(() => {
       if (typeof ResizeObserver !== 'undefined') {
@@ -911,16 +959,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
       window.addEventListener('resize', handleResize);
 
       return () => window.removeEventListener('resize', handleResize);
-    }, [ref]);
-
-    function handleResize() {
-      if (ref?.current) {
-        ref.current.ownerDocument.documentElement.setAttribute(
-          'style',
-          `--navbar-height: ${ref.current.getBoundingClientRect().height}px`
-        );
-      }
-    }
+    }, [ref, handleResize]);
 
     return (
       <NavbarWrapper
@@ -1034,7 +1073,9 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
               isHomePage={isHomePage}
             >
               <PreTitleTab>
-                <span>{tabText}</span>
+                {tabText === '......' ?
+                  <AnimatedLoadingDots />
+                : <span>{tabText}</span>}
               </PreTitleTab>
 
               {!hasUser &&

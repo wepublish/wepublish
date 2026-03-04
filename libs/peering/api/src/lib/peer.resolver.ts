@@ -14,7 +14,6 @@ import {
 import { CreatePeerInput, Peer, UpdatePeerInput } from './peer.model';
 import { PeerService } from './peer.service';
 import { RemotePeerProfile } from './peer-profile.model';
-import { PeerProfileService } from './peer-profile.service';
 import { hasPermission, Permissions } from '@wepublish/permissions/api';
 import {
   CanCreatePeer,
@@ -22,12 +21,13 @@ import {
   CanGetPeer,
   CanGetPeers,
 } from '@wepublish/permissions';
+import { RemotePeerProfileDataloaderService } from './remote-peer-profile.dataloader';
 
 @Resolver(() => Peer)
 export class PeerResolver {
   constructor(
     private peerService: PeerService,
-    private peerProfileService: PeerProfileService
+    private remotePeerProfile: RemotePeerProfileDataloaderService
   ) {}
 
   @Public()
@@ -64,14 +64,14 @@ export class PeerResolver {
   }
 
   @Permissions(CanDeletePeer)
-  @Mutation(returns => Peer, { description: `Deletes an existing peer.` })
+  @Mutation(returns => String, { description: `Deletes an existing peer.` })
   public deletePeer(@Args('id') id: string) {
     return this.peerService.deletePeer(id);
   }
 
   @ResolveField(() => RemotePeerProfile, { nullable: true })
   async profile(@Parent() peer: Peer): Promise<RemotePeerProfile | null> {
-    return this.peerProfileService.getRemotePeerProfile(peer.id);
+    return this.remotePeerProfile.load(peer.id);
   }
 
   @ResolveField(() => String)

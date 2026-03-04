@@ -9,6 +9,16 @@ export const TsriAuthorLinks = styled(AuthorLinksDefault)`
   column-gap: ${({ theme }) => theme.spacing(1)};
   justify-self: end;
 
+  padding: 0.25rem 0 0;
+  grid-column: 2 / 4;
+  grid-row: 3 / 4;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    padding: 1.25rem 0 0 0;
+    grid-column: 3 / 4;
+    grid-row: 1 / 3;
+  }
+
   ${AuthorLink} {
     color: ${({ theme }) => theme.palette.common.white};
     background-color: ${({ theme }) => theme.palette.common.black};
@@ -21,8 +31,8 @@ export const TsriAuthorLinks = styled(AuthorLinksDefault)`
     }
 
     & > svg {
-      width: 1.2rem;
-      height: 1.2rem;
+      width: 1rem;
+      height: 1rem;
     }
 
     ${({ theme }) => theme.breakpoints.up('md')} {

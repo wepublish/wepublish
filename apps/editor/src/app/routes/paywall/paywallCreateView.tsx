@@ -1,9 +1,8 @@
 import { ApolloError } from '@apollo/client';
 import {
-  getApiClientV2,
   MutationCreatePaywallArgs,
   useCreatePaywallMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { CanCreatePaywall } from '@wepublish/permissions';
 import {
   createCheckedPermissionComponent,
@@ -48,9 +47,7 @@ const PaywallCreateView = () => {
     hideContentAfter: 3,
   }));
 
-  const client = getApiClientV2();
   const [createPaywall, { loading: updateLoading }] = useCreatePaywallMutation({
-    client,
     onError: onErrorToast,
     onCompleted: data => {
       if (data.createPaywall) {

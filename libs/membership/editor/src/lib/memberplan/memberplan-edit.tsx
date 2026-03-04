@@ -10,7 +10,7 @@ import {
   useCreateMemberPlanMutation,
   useMemberPlanLazyQuery,
   useUpdateMemberPlanMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
   generateID,
@@ -24,10 +24,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
 import { MemberPlanForm } from './memberplan-form';
-import {
-  getApiClientV2,
-  usePaymentMethodListQuery,
-} from '@wepublish/editor/api-v2';
+import { usePaymentMethodListQuery } from '@wepublish/editor/api';
 
 const showErrors = (error: ApolloError): void => {
   toaster.push(
@@ -55,34 +52,25 @@ function MemberPlanEdit() {
     ListValue<FullAvailablePaymentMethodFragment>[]
   >([]);
 
-  const client = getApiClientV2();
   const [
     fetchMemberPlan,
     { loading: memberPlanLoading, data: memberPlanData },
   ] = useMemberPlanLazyQuery({
-    client,
-    fetchPolicy: 'network-only',
     onError: showErrors,
   });
 
   const { data: paymentMethodData, loading: paymentMethodLoading } =
     usePaymentMethodListQuery({
-      client,
-      fetchPolicy: 'network-only',
       onError: showErrors,
     });
 
   const [updateMemberPlanMutation, { loading: memberPlanUpdating }] =
     useUpdateMemberPlanMutation({
-      client,
-      fetchPolicy: 'network-only',
       onError: showErrors,
     });
 
   const [createMemberPlanMutation, { loading: memberPlanCreating }] =
     useCreateMemberPlanMutation({
-      client,
-      fetchPolicy: 'network-only',
       onError: showErrors,
     });
 

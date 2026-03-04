@@ -2,7 +2,7 @@ import { ApolloError } from '@apollo/client';
 import styled from '@emotion/styled';
 import {
   FullPoll,
-  PollAnswerWithVoteCount,
+  PollAnswer,
   PollExternalVote,
   useCreatePollAnswerMutation,
   useDeletePollAnswerMutation,
@@ -97,9 +97,7 @@ interface PollAnswersProps {
   onPollChange(poll: FullPoll): void;
 }
 
-function generateUrlParams(
-  answer: PollAnswerWithVoteCount
-): undefined | string {
+function generateUrlParams(answer: PollAnswer): undefined | string {
   if (!answer) {
     return undefined;
   }
@@ -110,11 +108,12 @@ function generateUrlParams(
 export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
   const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [answerToDelete, setAnswerToDelete] = useState<
-    PollAnswerWithVoteCount | undefined
-  >(undefined);
+  const [answerToDelete, setAnswerToDelete] = useState<PollAnswer | undefined>(
+    undefined
+  );
   const [newAnswer, setNewAnswer] = useState<string>('');
-  const [createAnswerMutation, { loading }] = useCreatePollAnswerMutation();
+
+  const [createAnswerMutation, { loading }] = useCreatePollAnswerMutation({});
   const [deleteAnswerMutation] = useDeletePollAnswerMutation();
 
   const onErrorToast = (error: ApolloError) => {
@@ -159,7 +158,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     const savedAnswer = answer?.data?.createPollAnswer;
     if (savedAnswer) {
       const updatedPoll = { ...poll };
-      updatedPoll.answers?.push(savedAnswer as PollAnswerWithVoteCount);
+      updatedPoll.answers?.push(savedAnswer as PollAnswer);
       onPollChange(updatedPoll);
     }
     setNewAnswer('');
@@ -177,7 +176,10 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
       onError: onErrorToast,
     });
 
-    const updatedPoll = { ...poll } as FullPoll | undefined;
+    const updatedPoll = {
+      ...poll,
+      answers: poll?.answers ? [...poll.answers] : [],
+    } as FullPoll | undefined;
     // delete answer
     const deletedAnswer = answer?.data?.deletePollAnswer;
     if (!deletedAnswer || !updatedPoll?.answers) {
@@ -186,9 +188,11 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     const deleteIndex = updatedPoll?.answers?.findIndex(
       tmpAnswer => tmpAnswer.id === deletedAnswer.id
     );
+
     if (deleteIndex < 0) {
       return;
     }
+
     updatedPoll.answers.splice(deleteIndex, 1);
 
     // delete external vote sources
@@ -201,7 +205,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     onPollChange(updatedPoll);
   }
 
-  async function updateAnswer(updatedAnswer: PollAnswerWithVoteCount) {
+  async function updateAnswer(updatedAnswer: PollAnswer) {
     if (!poll) {
       return;
     }
@@ -220,9 +224,7 @@ export function PollAnswers({ poll, onPollChange }: PollAnswersProps) {
     });
   }
 
-  async function copyUrlParamsIntoClipboard(
-    answer: PollAnswerWithVoteCount
-  ): Promise<void> {
+  async function copyUrlParamsIntoClipboard(answer: PollAnswer): Promise<void> {
     const urlParams = generateUrlParams(answer);
 
     if (!urlParams) {

@@ -1,4 +1,3 @@
-import { FullPoll, Tag } from '@wepublish/editor/api';
 import {
   ArticleWithoutBlocksFragment,
   BlockContentInput,
@@ -9,15 +8,17 @@ import {
   FullCrowdfundingFragment,
   FullEventFragment,
   FullImageFragment,
+  FullPoll,
   FullTeaserFragment,
   PageWithoutBlocksFragment,
   SubscribeBlockField,
+  Tag,
   TeaserInput,
   TeaserListBlockSort,
   TeaserSlotsAutofillConfigInput,
   TeaserSlotType,
   TeaserType,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import nanoid from 'nanoid';
 import { Descendant } from 'slate';
 

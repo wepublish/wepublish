@@ -1,8 +1,7 @@
-/** @jsxImportSource @emotion/react */
-
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import {
+  FullSubscriptionFragment,
   PaymentPeriodicity,
   SubscriptionDeactivationReason,
   UserSubscriptionFragment,
@@ -124,7 +123,7 @@ function UserSubscriptionsList({
   /**
    * UI helpers
    */
-  function autoRenewalView(subscription: UserSubscriptionFragment) {
+  function autoRenewalView(subscription: FullSubscriptionFragment) {
     if (subscription.autoRenew && !subscription.deactivation) {
       return (
         <>
@@ -146,7 +145,7 @@ function UserSubscriptionsList({
     );
   }
 
-  function getDeactivationString(subscription: UserSubscriptionFragment) {
+  function getDeactivationString(subscription: FullSubscriptionFragment) {
     const deactivation = subscription.deactivation;
     if (deactivation) {
       return (
@@ -176,7 +175,7 @@ function UserSubscriptionsList({
     }
   }
 
-  function paidUntilView(subscription: UserSubscriptionFragment) {
+  function paidUntilView(subscription: FullSubscriptionFragment) {
     if (subscription.paidUntil) {
       return t('userSubscriptionList.paidUntil', {
         date: new Intl.DateTimeFormat('de-CH').format(
@@ -187,7 +186,7 @@ function UserSubscriptionsList({
     return t('userSubscriptionList.invoiceUnpaid');
   }
 
-  function paymentPeriodicity(subscription: UserSubscriptionFragment) {
+  function paymentPeriodicity(subscription: FullSubscriptionFragment) {
     switch (subscription.paymentPeriodicity) {
       case PaymentPeriodicity.Monthly:
         return t('memberPlanList.paymentPeriodicity.monthly');
@@ -206,24 +205,16 @@ function UserSubscriptionsList({
     }
   }
 
-  function getInvoiceView(
-    subscription: UserSubscriptionFragment,
-    invoiceId: string
-  ) {
-    const invoice = subscription.invoices.find(
-      invoice => invoice.id === invoiceId
-    );
-    if (!invoice) {
-      return t('userSubscriptionList.unexpectedErrorNoInvoice');
-    }
+  function getInvoiceView(period: UserSubscriptionFragment['periods'][0]) {
     return (
       <div>
-        {t('userSubscriptionList.invoiceNr', { invoiceId: invoice.id })} &nbsp;
-        <b style={invoice.paidAt ? { color: 'green' } : { color: 'red' }}>
-          {invoice.paidAt ?
+        {t('userSubscriptionList.invoiceNr', { invoiceId: period.invoiceID })}{' '}
+        &nbsp;
+        <strong style={period.isPaid ? { color: 'green' } : { color: 'red' }}>
+          {period.isPaid ?
             t('userSubscriptionList.invoicePaid')
           : t('userSubscriptionList.invoiceUnpaid')}
-        </b>
+        </strong>
       </div>
     );
   }
@@ -320,6 +311,7 @@ function UserSubscriptionsList({
                 </PanelMTop>
               </FlexboxGrid>
             </SubscriptionDetails>
+
             {/* periods with invoices */}
             <InvoicesPeriods colspan={12}>
               <FlexboxGrid>
@@ -367,7 +359,7 @@ function UserSubscriptionsList({
                           </FlexboxGrid.Item>
                           {/* related invoice */}
                           <FlexboxGrid.Item colspan={24}>
-                            {getInvoiceView(subscription, period.invoiceID)}
+                            {getInvoiceView(period)}
                           </FlexboxGrid.Item>
                         </FlexboxGrid>
                       </PanelMBottom>

@@ -36,7 +36,9 @@ export class EventFromSource extends OmitType(Event, [
 }
 
 @ObjectType()
-export class ImportedEventsDocument extends PaginatedType(EventFromSource) {}
+export class PaginatedEventsFromSources extends PaginatedType(
+  EventFromSource
+) {}
 
 @InputType()
 export class ImportedEventFilter {

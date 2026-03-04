@@ -2,9 +2,8 @@ import styled from '@emotion/styled';
 import {
   BlockStyle,
   EditorBlockType,
-  getApiClientV2,
   useBlockStylesQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import nanoid from 'nanoid';
 import React, {
   Fragment,
@@ -345,8 +344,6 @@ interface ListItemWrapperProps {
   onStyleChange?: (blockStyle?: BlockStyle['id']) => void;
 }
 
-const client = getApiClientV2();
-
 function ListItemWrapper({
   value,
   children,
@@ -358,7 +355,7 @@ function ListItemWrapper({
   onStyleChange,
 }: ListItemWrapperProps) {
   const { t } = useTranslation();
-  const { data } = useBlockStylesQuery({ client });
+  const { data } = useBlockStylesQuery();
 
   const stylesForBlock = useMemo(
     () =>
@@ -424,17 +421,32 @@ function ListItemWrapper({
           {icon} {t('blockStyles.style')}
         </Icon>
 
-        <BlockStyleSelect
-          cleanable
-          value={blockStyleValue?.id}
-          data={stylesForBlock.map(style => ({
-            value: style.id,
-            label: style.name,
-          }))}
-          onChange={blockStyle => {
-            onStyleChange?.(blockStyle as string | undefined);
-          }}
-        />
+        {!!blockStyleValue && (
+          <BlockStyleSelect
+            cleanable
+            value={blockStyleValue?.id}
+            data={stylesForBlock.map(style => ({
+              value: style.id,
+              label: style.name,
+            }))}
+            onChange={blockStyle => {
+              onStyleChange?.(blockStyle as string | undefined);
+            }}
+          />
+        )}
+        {!blockStyleValue && (
+          <BlockStyleSelect
+            cleanable
+            value={undefined}
+            data={stylesForBlock.map(style => ({
+              value: style.id,
+              label: style.name,
+            }))}
+            onChange={blockStyle => {
+              onStyleChange?.(blockStyle as string | undefined);
+            }}
+          />
+        )}
       </BlockStyleIconWrapper>
     </ListItem>
   );

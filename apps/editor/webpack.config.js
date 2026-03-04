@@ -14,6 +14,13 @@ module.exports = composePlugins(
     if (config.devServer) {
       config.devServer.client.overlay.runtimeErrors = false;
     }
+
+    // Add webp support
+    config.module.rules.push({
+      test: /\.webp$/,
+      type: 'asset/resource',
+    });
+
     return config;
   }
 );

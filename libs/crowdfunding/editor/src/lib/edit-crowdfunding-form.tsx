@@ -2,10 +2,9 @@ import {
   CreateCrowdfundingGoalInput,
   CrowdfundingGoal,
   UpdateCrowdfundingInput,
-  getApiClientV2,
   useCrowdfundingQuery,
   useUpdateCrowdfundingMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useReducer, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -13,7 +12,6 @@ import { CrowdfundingForm } from './crowdfunding-form';
 import { SingleViewTitle } from '@wepublish/ui/editor';
 import { Form, Message, Schema, toaster } from 'rsuite';
 import { ApolloError } from '@apollo/client';
-import { stripTypename } from '@wepublish/editor/api';
 
 const showError = (error: ApolloError): void => {
   toaster.push(
@@ -50,15 +48,13 @@ export const EditCrowdfundingForm = () => {
     }
   );
 
-  const client = getApiClientV2();
   useCrowdfundingQuery({
-    client,
     variables: {
       id: id!,
     },
     skip: !id,
     onError: showError,
-    onCompleted: data => setCrowdfunding(stripTypename(data.crowdfunding)),
+    onCompleted: data => setCrowdfunding(data.crowdfunding),
   });
 
   const { StringType } = Schema.Types;
@@ -69,10 +65,9 @@ export const EditCrowdfundingForm = () => {
   const [shouldClose, setShouldClose] = useState(false);
 
   const [updateCrowdfunding, { loading }] = useUpdateCrowdfundingMutation({
-    client,
     onError: showError,
     onCompleted: data => {
-      setCrowdfunding(stripTypename(data.updateCrowdfunding));
+      setCrowdfunding(data.updateCrowdfunding);
 
       if (shouldClose) {
         navigate(closePath);
@@ -94,7 +89,7 @@ export const EditCrowdfundingForm = () => {
   };
 
   const removeIdAndTypename = (goal: CreateCrowdfundingGoalInput) => {
-    const { id, ...goalCleaned } = stripTypename(goal as CrowdfundingGoal);
+    const { id, ...goalCleaned } = goal as CrowdfundingGoal;
     return goalCleaned;
   };
 

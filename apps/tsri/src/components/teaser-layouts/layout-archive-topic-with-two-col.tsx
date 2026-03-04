@@ -9,7 +9,7 @@ export const teaserBlockStyleByIndex = (index: number): TsriTeaserType => {
   switch (index) {
     case 0:
       return TsriTeaserType.TwoRow;
-    case 6:
+    case 5:
       return TsriTeaserType.MoreAbout;
     default:
       return TsriTeaserType.TwoCol;

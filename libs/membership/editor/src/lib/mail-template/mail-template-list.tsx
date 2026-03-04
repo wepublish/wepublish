@@ -10,17 +10,15 @@ import {
   keyframes,
 } from '@mui/material';
 import {
-  getApiClientV2,
   useMailTemplateQuery,
   useSynchronizeMailTemplatesMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   ListViewContainer,
   ListViewHeader,
   PermissionControl,
   createCheckedPermissionComponent,
 } from '@wepublish/ui/editor';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdCheck, MdDataObject, MdSync, MdWarning } from 'react-icons/md';
 import { Link } from 'react-router-dom';
@@ -43,14 +41,12 @@ const iconSpin = css`
 
 function MailTemplateList() {
   const { t } = useTranslation();
-  const client = useMemo(() => getApiClientV2(), []);
-  const { data: queryData } = useMailTemplateQuery(
-    DEFAULT_QUERY_OPTIONS(client)
-  );
+
+  const { data: queryData } = useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
 
   const [syncTemplates, { loading: mutationLoading }] =
     useSynchronizeMailTemplatesMutation({
-      ...DEFAULT_MUTATION_OPTIONS(client, t),
+      ...DEFAULT_MUTATION_OPTIONS(t),
       refetchQueries: ['MailTemplate'],
     });
 

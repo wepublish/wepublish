@@ -21,27 +21,29 @@ fragment Invoice on Invoice {
 }
 
 query Invoices(
-  $cursor: String
+  $cursorId: String
   $take: Int
   $skip: Int
   $filter: InvoiceFilter
   $sort: InvoiceSort
   $order: SortOrder
 ) {
-  invoices(cursor: $cursor, take: $take, skip: $skip, filter: $filter, sort: $sort, order: $order) {
+  invoices(
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    filter: $filter
+    sort: $sort
+    order: $order
+  ) {
     nodes {
       ...Invoice
     }
     pageInfo {
-      ...PageInfo
+      hasNextPage
+      hasPreviousPage
     }
     totalCount
-  }
-}
-
-mutation UpdateInvoice($updateInvoiceId: String!, $input: InvoiceInput!) {
-  updateInvoice(id: $updateInvoiceId, input: $input) {
-    ...Invoice
   }
 }
 

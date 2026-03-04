@@ -1,16 +1,13 @@
 import styled from '@emotion/styled';
 import {
-  useCreateJwtForWebsiteLoginLazyQuery,
-  useMeQuery,
-} from '@wepublish/editor/api';
-import {
   CreatePageMutationVariables,
-  getApiClientV2,
+  useCreateJwtForWebsiteLoginMutation,
   useCreatePageMutation,
+  useMeQuery,
   usePageQuery,
   usePublishPageMutation,
   useUpdatePageMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
 import {
   blockForQueryBlock,
@@ -89,17 +86,14 @@ function PageEditor() {
   const params = useParams();
   const { id } = params;
 
-  const client = getApiClientV2();
   const [
     createPage,
     { data: createData, loading: isCreating, error: createError },
-  ] = useCreatePageMutation({ client });
+  ] = useCreatePageMutation();
   const [updatePage, { loading: isUpdating, error: updateError }] =
-    useUpdatePageMutation({ client });
+    useUpdatePageMutation();
   const [publishPage, { loading: isPublishing, error: publishError }] =
-    usePublishPageMutation({
-      client,
-    });
+    usePublishPageMutation({});
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false);
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
@@ -130,16 +124,14 @@ function PageEditor() {
     refetch,
     loading: isLoading,
   } = usePageQuery({
-    client,
     errorPolicy: 'all',
-    fetchPolicy: 'cache-and-network',
     variables: { id: pageID! },
     skip: !pageID,
   });
   const { data: user } = useMeQuery({
     fetchPolicy: 'cache-only',
   });
-  const [createJWT] = useCreateJwtForWebsiteLoginLazyQuery({
+  const [createJWT] = useCreateJwtForWebsiteLoginMutation({
     errorPolicy: 'none',
     fetchPolicy: 'no-cache',
   });

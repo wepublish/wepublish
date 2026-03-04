@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import { MockedProvider } from '@apollo/client/testing';
 
 import { ConsentCreateView } from './consent-create-view';
 import { BrowserRouter } from 'react-router-dom';
@@ -10,7 +11,9 @@ describe('ConsentCreateView', () => {
   it('should render successfully', () => {
     const { baseElement } = render(
       <BrowserRouter>
-        <ConsentCreateView />
+        <MockedProvider>
+          <ConsentCreateView />
+        </MockedProvider>
       </BrowserRouter>
     );
     expect(baseElement).toBeTruthy();

@@ -1,0 +1,31 @@
+query SettingsIntegrationsChallenge {
+  challengeProviderSettings {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+  }
+}
+
+mutation UpdateSettingsIntegrationsChallenge(
+  $id: String!
+  $name: String
+  $secret: String
+  $siteKey: String
+) {
+  updateChallengeProviderSetting(
+    id: $id
+    name: $name
+    secret: $secret
+    siteKey: $siteKey
+  ) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    type
+  }
+}

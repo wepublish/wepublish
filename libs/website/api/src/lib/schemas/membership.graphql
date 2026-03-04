@@ -150,7 +150,7 @@ mutation Subscribe(
   $failureURL: String
   $deactivateSubscriptionId: String
 ) {
-  createSubscription(
+  createUserSubscription(
     memberPlanID: $memberPlanId
     memberPlanSlug: $memberPlanSlug
     autoRenew: $autoRenew
@@ -178,7 +178,7 @@ mutation Resubscribe(
   $paymentMethodSlug: Slug
   $subscriptionProperties: [PropertyInput!]
 ) {
-  createSubscriptionWithConfirmation(
+  createUserSubscriptionWithConfirmation(
     userId: $userId
     memberPlanID: $memberPlanId
     memberPlanSlug: $memberPlanSlug
@@ -199,7 +199,7 @@ mutation Upgrade(
   $successURL: String
   $failureURL: String
 ) {
-  upgradeSubscription(
+  upgradeUserSubscription(
     subscriptionId: $subscriptionId
     memberPlanId: $memberPlanId
     paymentMethodId: $paymentMethodId
@@ -256,7 +256,7 @@ mutation ExtendSubscription(
   $successURL: String
   $failureURL: String
 ) {
-  extendSubscription(
+  extendUserSubscription(
     subscriptionId: $subscriptionId
     successURL: $successURL
     failureURL: $failureURL
@@ -266,13 +266,13 @@ mutation ExtendSubscription(
 }
 
 query Invoices {
-  invoices {
+  userInvoices {
     ...FullInvoice
   }
 }
 
 query Subscriptions {
-  subscriptions {
+  userSubscriptions {
     ...FullSubscription
   }
 }
@@ -333,7 +333,7 @@ query UpgradeSubscriptionInfo(
   $memberPlanId: String!
   $subscriptionId: String!
 ) {
-  upgradeSubscriptionInfo(
+  upgradeUserSubscriptionInfo(
     memberPlanId: $memberPlanId
     subscriptionId: $subscriptionId
   ) {

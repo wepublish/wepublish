@@ -25,7 +25,7 @@ function InvoiceListPanel({
   onClose,
   onInvoicePaid,
 }: InvoiceListPanelProps) {
-  const { data: me } = useMeQuery();
+  const { data: me } = useMeQuery({});
   const { t } = useTranslation();
 
   /**

@@ -1,7 +1,7 @@
 import {
   MutationCreateConsentArgs,
   MutationUpdateConsentArgs,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
 import { Checkbox, Form, Panel } from 'rsuite';
 

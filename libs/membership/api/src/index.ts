@@ -19,3 +19,7 @@ export * from './lib/upgrade-subscription/upgrade-subscription.module';
 export * from './lib/legacy/member-context';
 export * from './lib/legacy/member-context.service';
 export * from './lib/legacy/member-context.module';
+
+export * from './lib/invoice/invoice.model';
+export * from './lib/invoice/invoice.module';
+export * from './lib/invoice/has-invoice/has-invoice.model';

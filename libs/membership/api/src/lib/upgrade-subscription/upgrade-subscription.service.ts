@@ -124,26 +124,9 @@ export class UpgradeSubscriptionService {
       );
     });
 
-    const hasCompatibleRenewability = paymentMethods.some(av => {
-      if (
-        av.forceAutoRenewal &&
-        (!oldSubscription.extendable || !oldSubscription.autoRenew)
-      ) {
-        return false;
-      }
-
-      return true;
-    });
-
     if (!hasPeriodicity) {
       throw new BadRequestException(
         `New memberplan with id ${memberPlanId} does not support the same payment periodicity as memberplan with id ${oldSubscription.memberPlanID}`
-      );
-    }
-
-    if (!hasCompatibleRenewability) {
-      throw new BadRequestException(
-        `New memberplan with id ${memberPlanId} does not support non extending subscriptiosn but the subscription with id ${subscriptionId} does not renew.`
       );
     }
 
@@ -191,12 +174,12 @@ export class UpgradeSubscriptionService {
 
     const { invoice } = await this.memberContext.createSubscription({
       userID: userId,
-      paymentMethodId,
+      paymentMethodID: paymentMethodId,
       paymentPeriodicity: oldSubscription.paymentPeriodicity,
       monthlyAmount,
-      memberPlanId,
+      memberPlanID: memberPlanId,
       properties: [],
-      autoRenew: oldSubscription.autoRenew,
+      autoRenew: true,
       extendable: oldSubscription.extendable,
       replacedSubscriptionId: oldSubscription.id,
       startsAt: new Date(),

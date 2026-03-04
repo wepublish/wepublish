@@ -86,7 +86,7 @@ export const Default: StoryObj = {
           },
           result: {
             data: {
-              subscriptions: [subscription],
+              userSubscriptions: [subscription],
             },
           },
         },
@@ -96,7 +96,7 @@ export const Default: StoryObj = {
           },
           result: {
             data: {
-              invoices: [invoice],
+              userInvoices: [invoice],
             },
           },
         },
@@ -159,7 +159,7 @@ export const Unpaid: StoryObj = {
           },
           result: {
             data: {
-              subscriptions: [{ ...subscription, paidUntil: null }],
+              userSubscriptions: [{ ...subscription, paidUntil: null }],
             },
           },
         },
@@ -169,7 +169,7 @@ export const Unpaid: StoryObj = {
           },
           result: {
             data: {
-              invoices: [invoice],
+              userInvoices: [invoice],
             },
           },
         },
@@ -205,7 +205,7 @@ export const Extend: StoryObj = {
           },
           result: {
             data: {
-              invoices: [{ ...invoice, paidAt: new Date('2023-01-01') }],
+              userInvoices: [{ ...invoice, paidAt: new Date('2023-01-01') }],
             },
           },
         },
@@ -242,7 +242,7 @@ export const CancelWithInvoiceList: StoryObj = {
           },
           result: {
             data: {
-              invoices: [invoice],
+              userInvoices: [invoice],
             },
           },
         },

@@ -79,7 +79,6 @@ function CommentList() {
     loading: isLoading,
   } = useCommentListQuery({
     variables: commentListVariables,
-    fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {

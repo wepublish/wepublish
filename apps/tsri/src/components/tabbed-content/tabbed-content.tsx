@@ -158,7 +158,7 @@ export const Tab = styled(MuiTab, {
     flex: 1 1 auto;
     font-size: 1.4cqw;
     line-height: 1.4cqw;
-    padding: 0.7cqw 2.8cqw 0.5cqw 2.8cqw;
+    padding: 0.85cqw 2.8cqw 0.7cqw 2.8cqw;
   }
 
   ${({ cssByBlockStyle }) => cssByBlockStyle}

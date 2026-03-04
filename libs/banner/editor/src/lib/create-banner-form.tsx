@@ -2,12 +2,11 @@ import React from 'react';
 import {
   CreateBannerActionInput,
   CreateBannerInput,
-  getApiClientV2,
   FullImageFragment,
   useCreateBannerMutation,
   LoginStatus,
-} from '@wepublish/editor/api-v2';
-import { useMemo, useState } from 'react';
+} from '@wepublish/editor/api';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { BannerForm } from './banner-form';
@@ -35,9 +34,7 @@ export const CreateBannerForm = () => {
 
   const [shouldClose, setShouldClose] = useState(false);
 
-  const client = useMemo(() => getApiClientV2(), []);
   const [createBanner, { loading }] = useCreateBannerMutation({
-    client,
     onError: error => {
       console.log(error);
     },

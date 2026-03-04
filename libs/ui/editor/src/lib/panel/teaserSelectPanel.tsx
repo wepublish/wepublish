@@ -1,12 +1,11 @@
 import styled from '@emotion/styled';
-import { PageInfo } from '@wepublish/editor/api';
 import {
   ArticleFilter,
   ArticleListQueryVariables,
   ArticleSort,
   EventFilter,
-  getApiClientV2,
   PageFilter,
+  PageInfo,
   PageListQueryVariables,
   PageSort,
   SortOrder,
@@ -14,7 +13,7 @@ import {
   useArticleListQuery,
   useEventListQuery,
   usePageListQuery,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -171,7 +170,6 @@ export function TeaserSelectPanel({
     : []
   );
 
-  const client = getApiClientV2();
   /**
    * EVENTS
    */
@@ -186,8 +184,6 @@ export function TeaserSelectPanel({
     error: eventListError,
     loading: isEventListLoading,
   } = useEventListQuery({
-    client,
-    fetchPolicy: 'network-only',
     variables: eventVariables,
   });
 
@@ -215,9 +211,7 @@ export function TeaserSelectPanel({
     error: articleListError,
     loading: isArticleListLoading,
   } = useArticleListQuery({
-    client,
     variables: listVariables,
-    fetchPolicy: 'network-only',
   });
 
   const {
@@ -226,9 +220,7 @@ export function TeaserSelectPanel({
     error: pageListError,
     loading: isPageListLoading,
   } = usePageListQuery({
-    client,
     variables: pageListVariables,
-    fetchPolicy: 'cache-and-network',
   });
 
   const articles = articleListData?.articles.nodes ?? [];

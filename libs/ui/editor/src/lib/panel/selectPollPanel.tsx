@@ -80,9 +80,9 @@ export function SelectPollPanel({
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const { t } = useTranslation();
+
   const [fetchPolls, { data, loading }] = usePollsLazyQuery({
     onError: onErrorToast,
-    fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {
@@ -92,7 +92,7 @@ export function SelectPollPanel({
         skip: (page - 1) * limit,
       },
     });
-  }, [page, limit]);
+  }, [page, limit, fetchPolls]);
 
   return (
     <>

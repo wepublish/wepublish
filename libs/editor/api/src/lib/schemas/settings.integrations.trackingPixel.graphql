@@ -1,0 +1,49 @@
+query TrackingPixelSettings {
+  trackingPixelSettings {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    prolitteris_memberNr
+    prolitteris_onlyPaidContentAccess
+    prolitteris_publisherInternalKeyDomain
+    prolitteris_usePublisherInternalKey
+    prolitteris_username
+    type
+  }
+}
+
+mutation UpdateTrackingPixelSetting(
+  $id: String!
+  $name: String
+  $prolitteris_memberNr: String
+  $prolitteris_onlyPaidContentAccess: Boolean
+  $prolitteris_password: String
+  $prolitteris_publisherInternalKeyDomain: String
+  $prolitteris_usePublisherInternalKey: Boolean
+  $prolitteris_username: String
+) {
+  updateTrackingPixelSetting(
+    id: $id
+    name: $name
+    prolitteris_memberNr: $prolitteris_memberNr
+    prolitteris_onlyPaidContentAccess: $prolitteris_onlyPaidContentAccess
+    prolitteris_password: $prolitteris_password
+    prolitteris_publisherInternalKeyDomain: $prolitteris_publisherInternalKeyDomain
+    prolitteris_usePublisherInternalKey: $prolitteris_usePublisherInternalKey
+    prolitteris_username: $prolitteris_username
+  ) {
+    createdAt
+    id
+    lastLoadedAt
+    modifiedAt
+    name
+    prolitteris_memberNr
+    prolitteris_onlyPaidContentAccess
+    prolitteris_publisherInternalKeyDomain
+    prolitteris_usePublisherInternalKey
+    prolitteris_username
+    type
+  }
+}

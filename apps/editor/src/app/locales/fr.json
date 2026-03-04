@@ -552,6 +552,7 @@
     "draggableSubscriptionInterval": {
       "ignoreDeactivatedSubscriptions": "Les e-mails destinés aux abonnements désactivés ne sont pas envoyés!"
     },
+    "edit": "Modifier",
     "errorMessages": {
       "invalidEmailErrorMessage": "Veuillez entrer une adresse email valide",
       "invalidRange": "La valeur doit être comprise entre {{min}} et {{max}}.",
@@ -570,7 +571,8 @@
       "noTokenErrorMessage": "Veuillez entrer un token",
       "noUrlErrorMessage": "Veuillez entrer une url",
       "noUserErrorMessage": "Veuillez sélectionner un·e utilisateur·trice",
-      "passwordTooShortErrorMessage": "Le mot de passe doit comporter au moins 8 caractères.",
+      "passwordTooShortErrorMessage": "Le mot de passe doit comporter au moins 12 caractères.",
+      "passwordCompromisedErrorMessage": "Ce mot de passe est apparu dans une fuite de données. Veuillez choisir un autre mot de passe.",
       "required": "Ce champ est requis",
       "invalidCountry": "Please select a valid country"
     },
@@ -812,7 +814,8 @@
       "users": "Utilisateur/Utilisatrices",
       "audience": "Audience",
       "authorTags": "Tags",
-      "audienceDashboard": "Dashboard"
+      "audienceDashboard": "Dashboard",
+      "integrations": "Intégrations"
     },
     "navigation": {
       "overview": {
@@ -1189,13 +1192,17 @@
     },
     "tags": {
       "overview": {
-        "areYouSure": "Are you sure?",
-        "areYouSureBody": "The tag \"{{ tag }}\" will be deleted permanently and can not be reversed.",
-        "areYouSureConfirmation": "Delete tag",
-        "createTag": "New Tag",
-        "placeholder": "Name of tag",
+        "areYouSure": "Êtes-vous sûr ?",
+        "areYouSureBody": "Le tag \"{{ tag }}\" sera supprimé définitivement et ne pourra pas être annulé.",
+        "areYouSureConfirmation": "Supprimer le tag",
+        "color": "Couleur",
+        "createTag": "Nouveau tag",
+        "editTag": "Modifier {{tag}}",
+        "placeholder": "Nom du tag",
         "title": "Tags",
-        "markAsMain": "Use as main tag"
+        "name": "Nom",
+        "description": "Description",
+        "markAsMain": "Utiliser comme tag principal"
       }
     },
     "tokenList": {
@@ -1520,8 +1527,8 @@
           "low": "Renouvellements pour la première fois",
           "high": "Renouvellements subséquents",
           "total": "Somme des renouvellements à venir",
-          "perDayHighProbability": "Renouvellements pour la première fois",
-          "perDayLowProbability": "Renouvellements subséquents"
+          "perDayHighProbability": "Renouvellements subséquents",
+          "perDayLowProbability": "Renouvellements pour la première fois"
         },
         "predictedSubscriptionRenewalCountPerDay": {
           "lowProbability": "Renouvellements pour la première fois",
@@ -1614,6 +1621,91 @@
     },
     "audienceCsvBtn": {
       "exportUsers": "Télécharger CSV"
+    },
+    "search": "Rechercher",
+    "integrations": {
+      "whatAreIntegrations": "Que sont les intégrations ?",
+      "infoText": "Les intégrations sont des interfaces tierces intégrées à We.Publish. Elles sont utilisées, par exemple, pour envoyer des e-mails ou traiter des paiements en toute sécurité.",
+      "title": "Intégrations",
+      "ai": "Intégration AI",
+      "challengeProvider": "Fournisseur de challenge",
+      "paymentProvider": "Fournisseur de paiement",
+      "trackingPixel": "Pixel de suivi",
+      "mailProvider": "Fournisseur de messagerie",
+      "back": "Retour aux intégrations",
+      "unknown": "Intégration inconnue",
+      "notFound": "Intégration non trouvée",
+      "configure": "Configurer {{integration}}",
+      "updateSuccess": "Paramètres mis à jour avec succès",
+      "updateError": "Échec de la mise à jour des paramètres",
+      "noSettingsFound": "Aucun paramètre trouvé",
+      "lastLoaded": "Dernière chargement",
+      "aiSettings": {
+        "apiKey": "Clé API",
+        "systemPrompt": "Invite système (System Prompt)"
+      },
+      "challengeSettings": {
+        "secret": "Secret",
+        "siteKey": "Clé du site (Site Key)",
+        "type": "Type"
+      },
+      "paymentSettings": {
+        "apiKey": "Clé API",
+        "apiUrl": "URL de l'API",
+        "instanceName": "Nom de l'instance",
+        "methods": "Méthodes de paiement",
+        "offSessionPayments": "Paiements hors session",
+        "pm": "Méthodes de paiement",
+        "psp": "Prestataires de services de paiement",
+        "type": "Type",
+        "vatRate": "Taux de TVA",
+        "webhookEndpointSecret": "Secret du point de terminaison du webhook",
+        "bexioUserId": "ID utilisateur Bexio",
+        "bexioCountryId": "ID pays Bexio",
+        "bexioUnitId": "ID unité Bexio",
+        "bexioTaxId": "ID taxe Bexio",
+        "bexioAccountId": "ID compte Bexio",
+        "bexioInvoiceTemplateNewMembership": "Modèle de facture (Nouvelle adhésion)",
+        "bexioInvoiceTemplateRenewalMembership": "Modèle de facture (Renouvellement d'adhésion)",
+        "bexioInvoiceMailSubjectNewMembership": "Objet du mail de facture (Nouvelle adhésion)",
+        "bexioInvoiceMailSubjectRenewalMembership": "Objet du mail de facture (Renouvellement d'adhésion)",
+        "bexioInvoiceMailBodyNewMembership": "Corps du mail de facture (Nouvelle adhésion)",
+        "bexioInvoiceMailBodyRenewalMembership": "Corps du mail de facture (Renouvellement d'adhésion)",
+        "bexioMarkInvoiceAsOpen": "Marquer la facture comme ouverte",
+        "bexioInvoiceTitleNewMembership": "Titre de la facture (Nouvelle adhésion)",
+        "bexioInvoiceTitleRenewalMembership": "Titre de la facture (Renouvellement d'adhésion)"
+      },
+      "placeholderSecret": "Inchangé (Masqué)",
+      "mailSettings": {
+        "type": "Type",
+        "fromAddress": "Adresse de l'expéditeur",
+        "replyToAddress": "Adresse de réponse",
+        "apiKey": "Clé API",
+        "mailchimpBaseUrl": "URL de base",
+        "mailgunBaseDomain": "Domaine de base",
+        "mailgunMailDomain": "Domaine de messagerie",
+        "slackWebhookUrl": "URL du webhook",
+        "webhookEndpointSecret": "Secret du point de terminaison du webhook"
+      },
+      "trackingPixelSettings": {
+        "type": "Type",
+        "prolitterisMemberNr": "Numéro de membre",
+        "prolitterisOnlyPaidContentAccess": "Accès au contenu payant uniquement",
+        "prolitterisPassword": "Mot de passe",
+        "prolitterisPublisherInternalKeyDomain": "Domaine de clé interne de l'éditeur",
+        "prolitterisUsePublisherInternalKey": "Utiliser la clé interne de l'éditeur",
+        "prolitterisUsername": "Nom d'utilisateur"
+      },
+      "analyticsSettings": {
+        "analytics": "Analytique",
+        "invalidFile": "Le fichier d’identifiants Google Analytics est invalide",
+        "credentialsReadyToBeSaved": "Les identifiants sont prêts à être enregistrés !",
+        "dropCredentialsFile": "Déposez le fichier d’identifiants ici !",
+        "dragCredentialsFileHere": "Glissez-déposez le fichier d’identifiants Google Analytics ici",
+        "articlePrefix": "Préfixe d’URL des articles We.Publish (généralement /a/)",
+        "property": "ID de la propriété Google Analytics",
+        "credentials": "Fichier d’identifiants"
+      }
     }
   }
 }

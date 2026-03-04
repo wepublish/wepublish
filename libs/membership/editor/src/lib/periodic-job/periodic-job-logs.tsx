@@ -1,10 +1,6 @@
 import styled from '@emotion/styled';
 import { Alert, AlertColor, AlertTitle } from '@mui/material';
-import {
-  getApiClientV2,
-  PeriodicJob,
-  usePeriodicJobLogsQuery,
-} from '@wepublish/editor/api-v2';
+import { PeriodicJob, usePeriodicJobLogsQuery } from '@wepublish/editor/api';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdOutlineHourglassEmpty } from 'react-icons/md';
@@ -31,10 +27,8 @@ const Information = styled.div`
 
 export function PeriodicJobsLog() {
   const { t } = useTranslation();
-  const client = useMemo(() => getApiClientV2(), []);
 
   const { data } = usePeriodicJobLogsQuery({
-    client,
     variables: {
       take: 5,
     },

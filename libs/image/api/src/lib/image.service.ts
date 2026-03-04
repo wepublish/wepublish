@@ -46,10 +46,13 @@ export class ImageService {
         take: getMaxTake(take) + 1,
         orderBy,
         cursor: cursorId ? { id: cursorId } : undefined,
+        include: {
+          focalPoint: true,
+        },
       }),
     ]);
 
-    const nodes = images.slice(0, take);
+    const nodes = images.slice(0, getMaxTake(take));
     const firstImage = nodes[0];
     const lastImage = nodes[nodes.length - 1];
 
@@ -83,6 +86,9 @@ export class ImageService {
           },
         },
       },
+      include: {
+        focalPoint: true,
+      },
     });
   }
 
@@ -93,6 +99,23 @@ export class ImageService {
 
   async deleteImage(id: string) {
     return this.upload.deleteImage(id);
+  }
+
+  @PrimeDataLoader(ImageDataloaderService)
+  public async getImagesByTag(tag: string) {
+    return this.prisma.image.findMany({
+      where: {
+        tags: {
+          has: tag,
+        },
+      },
+      include: {
+        focalPoint: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
   }
 }
 

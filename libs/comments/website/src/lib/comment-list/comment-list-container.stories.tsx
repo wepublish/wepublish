@@ -76,14 +76,14 @@ const nestedChildren = (id: string) => [
   },
 ];
 
-const comments = [
+const commentsForItem = [
   { ...verifiedUserComment },
   { ...verifiedUserComment, children: nestedChildren('1'), id: '3' },
   { ...anonymousComment, children: nestedChildren('2'), id: '4' },
   { ...verifiedUserComment, id: '5' },
   { ...anonymousComment, children: nestedChildren('4'), id: '6' },
   { ...verifiedUserComment, children: nestedChildren('5'), id: '7' },
-] as CommentListQuery['comments'];
+] as CommentListQuery['commentsForItem'];
 
 export default {
   component: CommentListContainer,
@@ -109,7 +109,7 @@ export const Default: StoryObj = {
           },
           result: {
             data: {
-              comments,
+              commentsForItem,
               ratingSystem: {
                 __typename: 'CommentRatingSystem',
                 answers: [],

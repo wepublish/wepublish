@@ -4,7 +4,6 @@ import {
   PrismaClient,
   SubscriptionEvent,
 } from '@prisma/client';
-import { SubscriptionService } from '../subscription/subscription.service';
 import { SubscriptionFlowService } from './subscription-flow.service';
 import { BadRequestException } from '@nestjs/common';
 
@@ -25,7 +24,6 @@ describe('SubscriptionFlowService', () => {
       [method in keyof PrismaClient['mailTemplate']]?: jest.Mock;
     };
   };
-  let subscriptionServiceMock: Partial<SubscriptionService>;
 
   const mockMemberPlan = {
     id: 'plan-1',
@@ -92,13 +90,10 @@ describe('SubscriptionFlowService', () => {
     // Add transaction method separately
     (prismaMock as any).$transaction = jest.fn();
 
-    subscriptionServiceMock = {};
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SubscriptionFlowService,
         { provide: PrismaClient, useValue: prismaMock },
-        { provide: SubscriptionService, useValue: subscriptionServiceMock },
       ],
     }).compile();
 

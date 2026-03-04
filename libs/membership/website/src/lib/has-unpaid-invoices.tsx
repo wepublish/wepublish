@@ -11,7 +11,9 @@ export const useHasUnpaidInvoices = () => {
 
   return useMemo(
     () =>
-      data?.invoices.some(invoice => !invoice.canceledAt && !invoice.paidAt),
-    [data?.invoices]
+      data?.userInvoices.some(
+        invoice => !invoice.canceledAt && !invoice.paidAt
+      ),
+    [data?.userInvoices]
   );
 };

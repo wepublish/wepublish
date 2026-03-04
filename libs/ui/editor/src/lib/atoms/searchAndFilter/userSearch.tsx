@@ -21,6 +21,7 @@ export function UserSearch({
   const [users, setUsers] = useState<(FullUserFragment | undefined | null)[]>(
     []
   );
+
   const {
     data: userData,
     loading,
@@ -33,7 +34,6 @@ export function UserSearch({
         text: userSearch,
       },
     },
-    fetchPolicy: 'network-only',
   });
 
   useEffect(() => {

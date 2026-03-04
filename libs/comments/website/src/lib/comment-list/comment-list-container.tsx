@@ -69,7 +69,7 @@ export function CommentListContainer({
         dispatch({
           type: 'add',
           action: 'close',
-          commentId: data.addComment.parentID,
+          commentId: data.addUserComment.parentID,
         });
 
         if (!hasUser) {
@@ -89,7 +89,7 @@ export function CommentListContainer({
       dispatch({
         type: 'edit',
         action: 'close',
-        commentId: data.updateComment.id,
+        commentId: data.updateUserComment.id,
       });
 
       if (!hasUser) {
@@ -125,20 +125,15 @@ export function CommentListContainer({
         onAddComment={input => {
           addComment({
             variables: {
-              input: {
-                ...input,
-                itemID: id,
-                itemType: type,
-              },
+              ...input,
+              itemID: id,
             },
           });
         }}
         edit={edit}
         onEditComment={input => {
           editComment({
-            variables: {
-              input,
-            },
+            variables: input,
           });
         }}
         maxCommentLength={
@@ -196,27 +191,27 @@ const useAddCommentMutationWithCacheUpdate = (
         variables,
       });
 
-      if (!query || !data?.addComment) {
+      if (!query || !data?.addUserComment) {
         return;
       }
 
-      const updatedComments = produce(query.comments, comments => {
+      const updatedComments = produce(query.commentsForItem, comments => {
         const allComments = extractAllComments(comments);
         const parentComment = allComments.find(
-          comment => comment.id === data.addComment.parentID
+          comment => comment.id === data.addUserComment.parentID
         );
 
         if (parentComment) {
-          parentComment.children.unshift(data.addComment as Comment);
+          parentComment.children.unshift(data.addUserComment as Comment);
         } else {
-          comments.unshift(data.addComment);
+          comments.unshift(data.addUserComment);
         }
       });
 
       cache.writeQuery<CommentListQuery>({
         query: CommentListDocument,
         data: {
-          comments: updatedComments,
+          commentsForItem: updatedComments,
           ratingSystem: query.ratingSystem,
         },
         variables,

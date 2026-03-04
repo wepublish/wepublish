@@ -2,13 +2,12 @@ import { ApolloError } from '@apollo/client';
 import {
   MutationCreateConsentArgs,
   useCreateConsentMutation,
-} from '@wepublish/editor/api-v2';
-import { useMemo, useState } from 'react';
+} from '@wepublish/editor/api';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Form, Message, Schema, toaster } from 'rsuite';
 
-import { getApiClientV2 } from '@wepublish/editor/api-v2';
 import { SingleViewTitle } from '@wepublish/ui/editor';
 import { ConsentForm } from './consent-form';
 
@@ -39,7 +38,6 @@ const onErrorToast = (error: ApolloError, slug?: string) => {
 };
 
 export const ConsentCreateView = () => {
-  const client = useMemo(() => getApiClientV2(), []);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -53,7 +51,6 @@ export const ConsentCreateView = () => {
   const [shouldClose, setShouldClose] = useState(false);
 
   const [createConsent, { loading }] = useCreateConsentMutation({
-    client,
     onError: error => onErrorToast(error, consent.slug),
     onCompleted: consent => {
       toaster.push(

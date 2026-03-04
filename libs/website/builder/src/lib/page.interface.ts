@@ -10,6 +10,7 @@ export enum PageType {
   AuthorList = 'AuthorList',
   Event = 'Event',
   EventList = 'EventList',
+  Home = 'Home',
   Profile = 'Profile',
   ProfileList = 'ProfileList',
   SearchResults = 'SearchResults',

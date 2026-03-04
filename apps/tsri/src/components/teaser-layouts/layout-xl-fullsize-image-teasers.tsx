@@ -3,6 +3,7 @@ import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
 import { TsriTeaserType } from '../teasers/tsri-base-teaser';
+import { TeaserWrapper } from '../teasers/tsri-teaser';
 import { TsriLayoutType } from './tsri-layout';
 import {
   alignmentForTeaserBlock as alignmentFunc,
@@ -28,12 +29,15 @@ export const TeaserSlotsXLFullsizeImage = styled(TeaserSlots)`
   row-gap: 4cqw;
   grid-template-columns: unset;
 
-  & > * {
-    grid-column-start: unset;
-    grid-column-end: unset;
-    grid-row-start: unset;
-    grid-row-end: unset;
-    height: 100%;
+  ${({ theme }) => theme.breakpoints.up('xs')} {
+    & > ${TeaserWrapper} {
+      grid-template-columns: unset;
+      grid-column-start: unset;
+      grid-column-end: unset;
+      grid-row-start: unset;
+      grid-row-end: unset;
+      height: 100%;
+    }
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {

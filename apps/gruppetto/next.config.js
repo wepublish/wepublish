@@ -17,6 +17,7 @@ const nextConfig = {
     env: {
       API_URL: process.env.API_URL || '',
       GA_ID: process.env.GA_ID || '',
+      GTM_ID: process.env.GTM_ID || '',
     },
   },
   async redirects() {

@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import {
   ArticleWithoutBlocksFragment,
   FullNavigationFragment,
-  getApiClientV2,
   NavigationLinkInput,
   NavigationLinkType,
   NavigationListDocument,
@@ -12,7 +11,7 @@ import {
   useNavigationQuery,
   usePageListQuery,
   useUpdateNavigationMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -78,15 +77,12 @@ function NavigationEditPanel({
     { label: 'External Link', value: 'ExternalNavigationLink' },
   ];
 
-  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
     error: loadError,
   } = useNavigationQuery({
-    client,
     variables: { id: id! },
-    fetchPolicy: 'cache-and-network',
     skip: id === undefined,
   });
 
@@ -95,9 +91,7 @@ function NavigationEditPanel({
     loading: isLoadingPageData,
     error: pageLoadError,
   } = usePageListQuery({
-    client,
     variables: { take: 50 },
-    fetchPolicy: 'cache-and-network',
   });
 
   const {
@@ -105,19 +99,16 @@ function NavigationEditPanel({
     loading: isLoadingArticleData,
     error: articleLoadError,
   } = useArticleListQuery({
-    client,
     variables: { take: 50 },
-    fetchPolicy: 'cache-and-network',
   });
 
   const [createNavigation, { loading: isCreating, error: createError }] =
     useCreateNavigationMutation({
-      client,
       refetchQueries: [getOperationNameFromDocument(NavigationListDocument)],
     });
 
   const [updateNavigation, { loading: isUpdating, error: updateError }] =
-    useUpdateNavigationMutation({ client });
+    useUpdateNavigationMutation();
 
   const isDisabled =
     isLoading ||

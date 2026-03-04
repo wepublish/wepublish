@@ -216,19 +216,6 @@ const fillCountry: StoryObj['play'] = async ({ canvasElement, step }) => {
   });
 };
 
-const fillCaptcha: StoryObj['play'] = async ({ canvasElement, step }) => {
-  const canvas = within(canvasElement);
-
-  const input = canvas.getByLabelText('Captcha', {
-    selector: 'input',
-  });
-
-  await step('Enter captcha', async () => {
-    await userEvent.click(input);
-    await userEvent.type(input, '1');
-  });
-};
-
 const clickPayTransactionFees: StoryObj['play'] = async ({
   canvasElement,
   step,
@@ -263,7 +250,6 @@ const fillRequired: StoryObj['play'] = async ctx => {
   await step('Enter required credentials', async () => {
     await fillName(ctx);
     await fillEmail(ctx);
-    await fillCaptcha(ctx);
   });
 };
 
@@ -377,13 +363,13 @@ export const LoggedIn: StoryObj<typeof Subscribe> = {
     },
     userSubscriptions: {
       data: {
-        subscriptions: [subscription],
+        userSubscriptions: [subscription],
       },
       loading: false,
     },
     userInvoices: {
       data: {
-        invoices: [invoice],
+        userInvoices: [invoice],
       },
       loading: false,
     },
@@ -652,7 +638,7 @@ export const NoWarningDeactivatedSubscription: StoryObj<typeof Subscribe> = {
     ...LoggedIn.args,
     userSubscriptions: {
       data: {
-        subscriptions: [
+        userSubscriptions: [
           {
             ...subscription,
             deactivation: {
@@ -673,7 +659,7 @@ export const NoWarningPaidInvoice: StoryObj<typeof Subscribe> = {
     ...LoggedIn.args,
     userInvoices: {
       data: {
-        invoices: [
+        userInvoices: [
           { ...invoice, paidAt: new Date('2023-01-01').toISOString() },
           { ...invoice, canceledAt: new Date('2023-01-01').toISOString() },
         ],

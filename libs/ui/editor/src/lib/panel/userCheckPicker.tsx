@@ -18,9 +18,9 @@ export function UserCheckPicker({ list, onChange }: UserCheckPickerProps) {
     },
     take: 10,
   };
+
   const { data } = useUserListQuery({
     variables: usersVariables,
-    fetchPolicy: 'network-only',
   });
 
   useEffect(() => {

@@ -108,7 +108,7 @@ export const FooterSupportWrapper = styled('div')`
   grid-template-columns: unset;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-template-columns: 1fr minmax(max-content, 1285px) 1fr;
+    grid-template-columns: 1fr minmax(max-content, 1075px) 1fr;
   }
 `;
 
@@ -312,7 +312,7 @@ export const FooterPaperWrapper = styled('div')`
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-rows: min-content 6cqw;
-    grid-template-columns: 1fr minmax(max-content, 1285px) 1fr;
+    grid-template-columns: 1fr minmax(max-content, 1075px) 1fr;
     padding: 1cqw ${({ theme }) => theme.spacing(3)} 0
       ${({ theme }) => theme.spacing(3)};
     row-gap: 0;
@@ -324,6 +324,8 @@ export const FooterCategory = styled(FooterCategoryDefault)`
   grid-row: 2 / 3;
   row-gap: 0.8cqw;
   padding-left: 2cqw;
+  max-width: 44vw;
+  overflow-x: hidden;
 
   &:nth-of-type(n + 2) {
     grid-column: 1 / 2;

@@ -1,8 +1,6 @@
-import { MailLogState } from '@prisma/client';
+import { MailLogState, MailProviderType, PrismaClient } from '@prisma/client';
 import { NextHandleFunction } from 'connect';
 import express from 'express';
-
-export const MAIL_WEBHOOK_PATH_PREFIX = 'mail-webhooks';
 
 export interface WebhookForSendMailProps {
   req: express.Request;
@@ -52,9 +50,6 @@ export class MailProviderError extends Error {}
 
 export interface MailProvider {
   readonly id: string;
-  readonly name: string;
-
-  readonly fromAddress: string;
 
   readonly incomingRequestHandler: NextHandleFunction;
 
@@ -64,5 +59,13 @@ export interface MailProvider {
 
   getTemplates(): Promise<MailProviderTemplate[]>;
 
-  getTemplateUrl(template: WithExternalId): string;
+  getTemplateUrl(template: WithExternalId): Promise<string>;
+
+  getName(): Promise<string>;
+
+  initDatabaseConfiguration(
+    id: string,
+    type: MailProviderType,
+    prisma: PrismaClient
+  ): Promise<void>;
 }

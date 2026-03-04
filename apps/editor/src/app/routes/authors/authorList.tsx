@@ -2,10 +2,9 @@ import styled from '@emotion/styled';
 import {
   AuthorSort,
   FullAuthorFragment,
-  getApiClientV2,
   useAuthorListQuery,
   useDeleteAuthorMutation,
-} from '@wepublish/editor/api-v2';
+} from '@wepublish/editor/api';
 import {
   AuthorEditPanel,
   createCheckedPermissionComponent,
@@ -102,15 +101,12 @@ function AuthorList() {
     [filter, limit, page, sortField, sortOrder]
   );
 
-  const client = getApiClientV2();
   const {
     data,
     loading: isLoading,
     refetch: authorListRefetch,
   } = useAuthorListQuery({
-    client,
     variables: authorListQueryVariables,
-    fetchPolicy: 'network-only',
   });
 
   useEffect(() => {
@@ -125,9 +121,7 @@ function AuthorList() {
     authorListQueryVariables,
   ]);
 
-  const [deleteAuthor, { loading: isDeleting }] = useDeleteAuthorMutation({
-    client,
-  });
+  const [deleteAuthor, { loading: isDeleting }] = useDeleteAuthorMutation({});
 
   useEffect(() => {
     if (isCreateRoute) {

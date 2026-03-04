@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { FullImageFragment, TeaserType } from '@wepublish/editor/api-v2';
+import { FullImageFragment, TeaserType } from '@wepublish/editor/api';
 import arrayMove from 'array-move';
 import nanoid from 'nanoid';
 import { ReactNode, useState } from 'react';

@@ -1,5 +1,6 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { INestApplication } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BlockStyle, PrismaClient } from '@prisma/client';
@@ -33,7 +34,7 @@ const blockstyleListQuery = `
 const createBlockStyleQuery = `
   mutation CreateBlockStyle(
     $name: String!
-    $blocks: [BlockType!]!
+    $blocks: [EditorBlockType!]!
   ) {
     createBlockStyle(
       name: $name
@@ -50,7 +51,7 @@ const updateBlockStyleQuery = `
   mutation UpdateBlockStyle(
     $id: String!,
     $name: String!
-    $blocks: [BlockType!]
+    $blocks: [EditorBlockType!]
   ) {
     updateBlockStyle(
       id: $id
@@ -117,6 +118,14 @@ describe('BlockStyleService', () => {
         {
           provide: PrismaClient,
           useValue: jest.fn(), // not used due to mocks but needs to be provided
+        },
+        {
+          provide: APP_GUARD,
+          useClass: class MockPermissionsGuard {
+            canActivate() {
+              return true;
+            }
+          },
         },
       ],
     }).compile();

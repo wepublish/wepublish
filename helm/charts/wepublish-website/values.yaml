@@ -5,6 +5,30 @@ deployment:
     API_URL: https://api
     FRONTEND_URL: https://front
 
+# Routing configuration
+# Set routingType to "ingress" (default) or "route" (for OpenShift)
+routing:
+  type: ingress  # Options: "ingress" or "route"
+  ingress:
+    enabled: true
+    className: ""
+    annotations: {}
+    # Example annotations:
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+    # nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    tls: []
+    # Example TLS configuration:
+    # - secretName: wepublish-website-tls
+    #   hosts:
+    #     - website.example.com
+  route:
+    enabled: false
+    annotations: {}
+    tls:
+      enabled: true
+      termination: edge  # Options: edge, passthrough, reencrypt
+      insecureEdgeTerminationPolicy: Redirect  # Options: Redirect, Allow, None
+
 website:
   image: ghcr.io/wepublish/website
   env:

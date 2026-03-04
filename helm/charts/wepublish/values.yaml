@@ -7,6 +7,31 @@ deployment:
     WEBSITE_URL: https://website
     MEDIA_SERVER_URL: https://media
 
+# Routing configuration
+# Set routingType to "ingress" (default) or "route" (for OpenShift)
+routing:
+  type: ingress  # Options: "ingress" or "route"
+  ingress:
+    enabled: true
+    className: ""
+    annotations: {}
+    # Example annotations:
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+    # nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    tls: []
+    # Example TLS configuration:
+    # - secretName: wepublish-tls
+    #   hosts:
+    #     - api.example.com
+    #     - editor.example.com
+  route:
+    enabled: false
+    annotations: {}
+    tls:
+      enabled: true
+      termination: edge  # Options: edge, passthrough, reencrypt
+      insecureEdgeTerminationPolicy: Redirect  # Options: Redirect, Allow, None
+
 api:
   image: ghcr.io/wepublish/api
   resources:
@@ -20,7 +45,8 @@ api:
     GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
     DATABASE_URL: postgres://
     MEDIA_SERVER_TOKEN: ''
-    JWT_SECRET_KEY: ''
+    JWT_PRIVATE_KEY: ''
+    JWT_PUBLIC_KEY: ''
     SENTRY_DSN: ''
     DEFAULT_FROM_ADDRESS: ''
     DEFAULT_REPLY_TO_ADDRESS: ''

@@ -2,7 +2,7 @@ import { ApolloError } from '@apollo/client';
 import styled from '@emotion/styled';
 import {
   FullPoll,
-  PollAnswerWithVoteCount,
+  PollAnswer,
   PollExternalVote,
   PollExternalVoteSource,
   useCreatePollExternalVoteSourceMutation,
@@ -29,28 +29,26 @@ const Row = styled(RRow)`
   margin-top: 20px;
 `;
 
-/**
- *  COMPONENT HELPERS
- */
 interface ExternalVoteTableProps {
   poll: FullPoll | undefined;
   loading: boolean;
   onPollChange(poll: FullPoll): void;
   onClickDeleteBtn(voteSource: PollExternalVoteSource): void;
 }
+
 export function ExternalVoteTable({
   poll,
   loading,
   onPollChange,
   onClickDeleteBtn,
-}: ExternalVoteTableProps): JSX.Element {
+}: ExternalVoteTableProps) {
   const { t } = useTranslation();
   if (!poll?.externalVoteSources?.length) {
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    return <></>;
+    return null;
   }
+
   function changeSource(
-    answer: PollAnswerWithVoteCount,
+    answer: PollAnswer,
     externalVoteSource: PollExternalVoteSource,
     newAmount: string | number
   ) {
@@ -88,7 +86,7 @@ export function ExternalVoteTable({
    * UI helper function
    */
   function iterateAnswerColumns() {
-    return poll?.answers?.map((answer: PollAnswerWithVoteCount) => (
+    return poll?.answers?.map((answer: PollAnswer) => (
       <Table.Column
         key={answer.id}
         width={150}
@@ -266,19 +264,25 @@ export function DeleteModal({
   onPollChange,
 }: DeleteModalProps) {
   const { t } = useTranslation();
-  const [deleteExternalVoteSource] = useDeletePollExternalVoteSourceMutation();
+
+  const [deleteExternalVoteSource] = useDeletePollExternalVoteSourceMutation(
+    {}
+  );
 
   async function deletePoll() {
     const id = sourceToDelete?.id;
+
     if (!id || !poll?.externalVoteSources) {
       return;
     }
+
     const deletedSource = await deleteExternalVoteSource({
       variables: {
         deletePollExternalVoteSourceId: id,
       },
     });
     const source = deletedSource?.data?.deletePollExternalVoteSource;
+
     if (!source || !poll?.externalVoteSources) {
       return;
     }

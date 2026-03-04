@@ -1,6 +1,6 @@
 import {
   CommentRevision,
-  CommentRevisionUpdateInput,
+  CommentRevisionInput,
   FullCommentFragment,
 } from '@wepublish/editor/api';
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
@@ -104,10 +104,8 @@ function CommentSource({
 }
 
 export interface RevisionProps {
-  revision?: CommentRevisionUpdateInput;
-  setRevision?: Dispatch<
-    SetStateAction<CommentRevisionUpdateInput | undefined>
-  >;
+  revision?: CommentRevisionInput;
+  setRevision?: Dispatch<SetStateAction<CommentRevisionInput | undefined>>;
 }
 
 interface CommentPreviewProps extends RevisionProps {

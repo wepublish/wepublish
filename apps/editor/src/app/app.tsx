@@ -20,8 +20,11 @@ import {
   CrowdfundingList,
   EditCrowdfundingForm,
 } from '@wepublish/crowdfunding/editor';
-import { TagType } from '@wepublish/editor/api';
-import { LocalStorageKey } from '@wepublish/editor/api-v2';
+import {
+  getApiClientV2,
+  LocalStorageKey,
+  TagType,
+} from '@wepublish/editor/api';
 import { ImportableEventListView } from '@wepublish/event/import/editor';
 import {
   MailTemplateList,
@@ -59,6 +62,8 @@ import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
 import { EventListView } from './routes/events/eventListView';
 import { ImageList } from './routes/images/imageList';
+import { IntegrationEditView } from './routes/integrations/integrationEditView';
+import { IntegrationList } from './routes/integrations/integrationList';
 import { MemberPlanList } from './routes/memberPlans/memberPlanList';
 import { NavigationList } from './routes/navigations/navigationList';
 import { PageEditor } from './routes/pages/pageEditor';
@@ -89,7 +94,9 @@ const LogoutMutation = gql`
 `;
 
 const Logout = () => {
-  const [logout] = useMutation(LogoutMutation);
+  const [logout] = useMutation(LogoutMutation, {
+    client: getApiClientV2(),
+  });
   const { session } = useContext(AuthContext);
   const authDispatch = useContext(AuthDispatchContext);
 
@@ -947,6 +954,23 @@ export function App() {
               element={
                 <Base>
                   <TokenList />
+                </Base>
+              }
+            />
+            {/* Integrations Routes */}
+            <Route
+              path="integrations"
+              element={
+                <Base>
+                  <IntegrationList />
+                </Base>
+              }
+            />
+            <Route
+              path="integrations/:type"
+              element={
+                <Base>
+                  <IntegrationEditView />
                 </Base>
               }
             />

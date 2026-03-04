@@ -178,7 +178,7 @@ export const Upgrade = ({
   );
 
   const paymentText = usePaymentText({
-    autoRenew: subscriptionToUpgrade.autoRenew,
+    autoRenew: true,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     extendable: selectedMemberPlan?.extendable ?? true,
     paymentPeriodicity: subscriptionToUpgrade.paymentPeriodicity,
@@ -207,7 +207,7 @@ export const Upgrade = ({
     productType: subscriptionToUpgrade.memberPlan.productType,
     paymentPeriodicity: subscriptionToUpgrade.paymentPeriodicity,
     monthlyAmount,
-    discount: upgradeInfo.data?.upgradeSubscriptionInfo.discountAmount ?? 0,
+    discount: upgradeInfo.data?.upgradeUserSubscriptionInfo.discountAmount ?? 0,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     locale,
   });
@@ -268,7 +268,7 @@ export const Upgrade = ({
               oldMemberPlan: subscriptionToUpgrade.memberPlan.name,
               newMemberPlan: selectedMemberPlan?.name,
               discount: formatCurrency(
-                (upgradeInfo.data?.upgradeSubscriptionInfo.discountAmount ??
+                (upgradeInfo.data?.upgradeUserSubscriptionInfo.discountAmount ??
                   0) / 100,
                 selectedMemberPlan?.currency ?? Currency.Chf,
                 locale
@@ -394,7 +394,7 @@ export const Upgrade = ({
 
         <UpgradeContinuation>Danach {paymentText}</UpgradeContinuation>
 
-        {subscriptionToUpgrade.autoRenew && termsOfServiceUrl ?
+        {termsOfServiceUrl ?
           <Link
             underline={'hover'}
             href={termsOfServiceUrl}
@@ -403,11 +403,9 @@ export const Upgrade = ({
               {t('subscribe.cancellable')}
             </SubscribeCancelable>
           </Link>
-        : subscriptionToUpgrade.autoRenew && (
-            <SubscribeCancelable>
-              {t('subscribe.cancellable')}
-            </SubscribeCancelable>
-          )
+        : <SubscribeCancelable>
+            {t('subscribe.cancellable')}
+          </SubscribeCancelable>
         }
       </SubscribeNarrowSection>
     </SubscribeWrapper>

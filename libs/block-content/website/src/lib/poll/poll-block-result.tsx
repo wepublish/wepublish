@@ -1,6 +1,6 @@
 import { css } from '@mui/material';
 import styled from '@emotion/styled';
-import { PollAnswerWithVoteCount } from '@wepublish/website/api';
+import { PollAnswer } from '@wepublish/website/api';
 
 export const PollBlockResultWrapper = styled('div')`
   display: grid;
@@ -62,7 +62,7 @@ export const PollBlockVoteBarText = styled('div')<{ highlight: boolean }>`
 type PollBlockResultProps = {
   highlight: boolean;
   voteCount: number;
-  answer: PollAnswerWithVoteCount['answer'];
+  answer: PollAnswer['answer'];
   totalVotes: number;
 };
 

@@ -5,7 +5,7 @@ import {
   EventFromSource,
   ImportedEventFilter,
   ImportedEventSort,
-  ImportedEventsDocument,
+  PaginatedEventsFromSources,
   SingleEventFilter,
 } from './events-import.model';
 import { PrismaClient } from '@prisma/client';
@@ -51,7 +51,7 @@ export class EventsImportService {
     filter,
     skip,
     take,
-  }: ImportedEventsResolverParams): Promise<ImportedEventsDocument> {
+  }: ImportedEventsResolverParams): Promise<PaginatedEventsFromSources> {
     const importableEvents = Promise.all(
       this.providers.map(async provider => await provider.importedEvents())
     );

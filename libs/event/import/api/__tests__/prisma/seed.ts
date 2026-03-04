@@ -1,6 +1,10 @@
 import { PrismaClient } from '@prisma/client';
 import { seed as rootSeed } from '../../../../../api/prisma/seed';
-import { hashPassword } from '../../../../../api/src/lib/db/user';
+import { hash as argon2Hash } from '@node-rs/argon2';
+
+async function hashPassword(password: string) {
+  return await argon2Hash(password);
+}
 
 async function seed() {
   const prisma = new PrismaClient();

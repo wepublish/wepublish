@@ -49,17 +49,15 @@ export function PersonalDataFormContainer<
 
   const handleOnUpdate = useCallback(
     async (
-      variables: UpdateUserMutationVariables['input'] &
+      variables: UpdateUserMutationVariables &
         Partial<UpdatePasswordMutationVariables>
     ) => {
       const { password, passwordRepeated, ...userInput } = variables;
       const updates = [
         updateUser({
-          variables: {
-            input: userInput,
-          },
+          variables: userInput,
         }),
-      ];
+      ] as Promise<unknown>[];
 
       if (password && passwordRepeated) {
         updates.push(

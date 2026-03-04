@@ -58,7 +58,7 @@ export class Image extends HasOptionalPeerLc {
   filename?: string;
   @Field(() => String, { nullable: true })
   title?: string;
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   description?: string;
   @Field(() => String, { nullable: true })
   link?: string;

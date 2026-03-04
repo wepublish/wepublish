@@ -99,8 +99,8 @@ const defaultSchema = z.object({
     city: z.string().min(1),
     country: z.enum(userCountryNames),
   }),
-  password: z.string().min(8).optional().or(z.literal('')),
-  passwordRepeated: z.string().min(8).optional().or(z.literal('')),
+  password: z.string().min(12).optional().or(z.literal('')),
+  passwordRepeated: z.string().min(12).optional().or(z.literal('')),
   emailRepeated: z.string().email().min(1).optional().or(z.literal('')),
 });
 

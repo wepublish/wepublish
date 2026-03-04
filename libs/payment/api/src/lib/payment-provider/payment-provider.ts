@@ -2,10 +2,12 @@ import {
   Currency,
   Invoice,
   InvoiceItem,
+  PaymentProviderType,
   MetadataProperty,
   Payment,
   PaymentState,
   PrismaClient,
+  SettingPaymentProvider,
   Subscription,
 } from '@prisma/client';
 import bodyParser from 'body-parser';
@@ -13,6 +15,8 @@ import { NextHandleFunction } from 'connect';
 import express from 'express';
 import DataLoader from 'dataloader';
 import { timingSafeEqual } from 'crypto';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { SecretCrypto } from '@wepublish/settings/api';
 
 export type InvoiceWithItems = Invoice & {
   items: InvoiceItem[];
@@ -96,8 +100,6 @@ export type WebhookResponse = {
 
 export interface PaymentProvider {
   id: string;
-  name: string;
-  offSessionPayments: boolean;
   remoteManagedSubscription: boolean;
 
   incomingRequestHandler: NextHandleFunction;
@@ -121,32 +123,35 @@ export interface PaymentProvider {
   cancelRemoteSubscription(props: CancelRemoteSubscriptionProps): Promise<void>;
 
   createRemoteInvoice(props: CreateRemoteInvoiceProps): Promise<void>;
+
+  getConfig(): Promise<SettingPaymentProvider | null>;
+
+  isOffSession(): Promise<boolean>;
+
+  getName(): Promise<string | null>;
 }
 
 export interface PaymentProviderProps {
   id: string;
-  name: string;
-  offSessionPayments: boolean;
   incomingRequestHandler?: NextHandleFunction;
   prisma: PrismaClient;
+  kv: KvTtlCacheService;
 }
 
 export abstract class BasePaymentProvider implements PaymentProvider {
   readonly id: string;
-  readonly name: string;
-  readonly offSessionPayments: boolean;
-  readonly remoteManagedSubscription: boolean = false;
   readonly prisma: PrismaClient;
+  readonly kv: KvTtlCacheService;
+  readonly remoteManagedSubscription: boolean = false;
 
   readonly incomingRequestHandler: NextHandleFunction;
 
   protected constructor(props: PaymentProviderProps) {
     this.id = props.id;
-    this.name = props.name;
-    this.offSessionPayments = props.offSessionPayments;
     this.incomingRequestHandler =
       props.incomingRequestHandler ?? bodyParser.json();
     this.prisma = props.prisma;
+    this.kv = props.kv;
   }
 
   abstract webhookForPaymentIntent(
@@ -166,6 +171,63 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   async cancelRemoteSubscription(
     props: CancelRemoteSubscriptionProps
   ): Promise<void> {
+    return;
+  }
+
+  async getConfig(): Promise<SettingPaymentProvider> {
+    const config = await new PaymentProviderConfig(
+      this.prisma,
+      this.kv,
+      this.id
+    ).getConfig();
+    this.assertConfig(config);
+    return config;
+  }
+
+  private assertConfig(
+    config: SettingPaymentProvider | null
+  ): asserts config is SettingPaymentProvider {
+    if (!config)
+      throw new Error(`PaymentProvider config missing for ${this.id}`);
+  }
+
+  protected assertProperty<T>(
+    propertyName: string,
+    property: T | null | undefined
+  ): T {
+    if (property == null) {
+      throw new Error(
+        `PaymentProvider missing property ${propertyName}=${property} for ${this.id}`
+      );
+    }
+    return property;
+  }
+
+  async isOffSession(): Promise<boolean> {
+    const config = await this.getConfig();
+    return !!config.offSessionPayments;
+  }
+
+  async getName(): Promise<string | null> {
+    const config = await this.getConfig();
+    this.assertConfig(config);
+    return config.name;
+  }
+
+  public async initDatabaseConfiguration(
+    type: PaymentProviderType
+  ): Promise<void> {
+    await this.prisma.settingPaymentProvider.upsert({
+      where: {
+        id: this.id,
+      },
+      create: {
+        id: this.id,
+        name: this.id,
+        type,
+      },
+      update: {},
+    });
     return;
   }
 
@@ -310,5 +372,76 @@ export abstract class BasePaymentProvider implements PaymentProvider {
     } catch {
       return false;
     }
+  }
+}
+
+class PaymentProviderConfig {
+  private readonly crypto = new SecretCrypto();
+  private readonly ttl = 21600; // 6h
+
+  constructor(
+    private readonly prisma: PrismaClient,
+    private readonly kv: KvTtlCacheService,
+    private readonly id: string
+  ) {}
+
+  private async load(): Promise<SettingPaymentProvider | null> {
+    await this.prisma.settingPaymentProvider.update({
+      where: { id: this.id },
+      data: { lastLoadedAt: new Date() },
+    });
+    const config = await this.prisma.settingPaymentProvider.findUnique({
+      where: {
+        id: this.id,
+      },
+    });
+
+    if (!config) {
+      return null;
+    }
+
+    let decryptedApiKey: string | null = null;
+    if (config.apiKey) {
+      try {
+        decryptedApiKey = this.crypto.decrypt(config.apiKey);
+      } catch (e) {
+        console.error(e);
+        throw new Error(
+          `Failed to decrypt apiKey for Payment provider setting ${this.id}`
+        );
+      }
+    }
+    let decryptedWebhookEndpointSecret: string | null = null;
+    if (config.webhookEndpointSecret) {
+      try {
+        decryptedWebhookEndpointSecret = this.crypto.decrypt(
+          config.webhookEndpointSecret
+        );
+      } catch (e) {
+        console.error(e);
+        throw new Error(
+          `Failed to decrypt webhookEndpointSecret for Payment provider setting ${this.id}`
+        );
+      }
+    }
+
+    return {
+      ...config,
+      apiKey: decryptedApiKey,
+      webhookEndpointSecret: decryptedWebhookEndpointSecret,
+    };
+  }
+
+  async getFromCache(): Promise<SettingPaymentProvider | null> {
+    return this.kv.getOrLoadNs<SettingPaymentProvider | null>(
+      `settings:paymentprovider`,
+      `${this.id}`,
+      () => this.load(),
+      this.ttl
+    );
+  }
+
+  async getConfig(): Promise<SettingPaymentProvider | null> {
+    return await this.getFromCache();
   }
 }

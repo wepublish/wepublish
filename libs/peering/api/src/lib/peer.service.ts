@@ -71,10 +71,12 @@ export class PeerService {
   }
 
   async deletePeer(id: string) {
-    return this.prisma.peer.delete({
+    await this.prisma.peer.delete({
       where: {
         id,
       },
     });
+
+    return id;
   }
 }

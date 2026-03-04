@@ -29,7 +29,7 @@ export function ResetUserPasswordForm({
   const validationModel = Schema.Model({
     password: StringType()
       .isRequired(t('errorMessages.noPasswordErrorMessage'))
-      .minLength(8, t('errorMessages.passwordTooShortErrorMessage')),
+      .minLength(12, t('errorMessages.passwordTooShortErrorMessage')),
   });
 
   return (
@@ -48,7 +48,7 @@ export function ResetUserPasswordForm({
             sendMail,
           },
         });
-        if (data?.resetUserPassword) {
+        if (data?.resetPassword) {
           toaster.push(
             <Notification
               type="success"

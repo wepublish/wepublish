@@ -22,7 +22,7 @@ mutation CreateSessionWithJWT($jwt: String!) {
   }
 }
 
-query CreateJWTForWebsiteLogin {
+mutation CreateJWTForWebsiteLogin {
   createJWTForWebsiteLogin {
     token
     expiresAt

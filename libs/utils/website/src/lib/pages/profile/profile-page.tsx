@@ -90,15 +90,15 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
     fetchPolicy: 'cache-only',
   });
 
-  const hasDeactivatedSubscriptions = subscriptonData?.subscriptions.some(
+  const hasDeactivatedSubscriptions = subscriptonData?.userSubscriptions.some(
     subscription => subscription.deactivation
   );
-  const hasActiveSubscriptions = subscriptonData?.subscriptions.some(
+  const hasActiveSubscriptions = subscriptonData?.userSubscriptions.some(
     subscription =>
       !subscription.deactivation &&
       subscription.memberPlan.productType === ProductType.Subscription
   );
-  const hasActiveDonations = subscriptonData?.subscriptions.some(
+  const hasActiveDonations = subscriptonData?.userSubscriptions.some(
     subscription =>
       !subscription.deactivation &&
       subscription.memberPlan.productType === ProductType.Donation
