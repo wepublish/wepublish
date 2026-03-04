@@ -1733,6 +1733,7 @@ model SettingPaymentProvider {
 
 enum ChallengeProviderType {
   TURNSTILE @map("turnstile")
+  HCAPTCHA  @map("hcaptcha")
 }
 
 model SettingChallengeProvider {

@@ -5,23 +5,12 @@ interface TurnstileChallengeConfig {
   id: string;
 }
 
-interface AlgebraicChallengeConfig {
-  type: 'algebraic';
-  secret: string;
-  validTime?: number;
-  width?: number;
-  height?: number;
-  background?: string;
-  noise?: number;
-  minValue?: number;
-  maxValue?: number;
-  operandAmount?: number;
-  operandTypes?: string[];
-  mode?: string;
-  targetSymbol?: string;
+interface HCaptchaChallengeConfig {
+  type: 'hcaptcha';
+  id: string;
 }
 
-type ChallengeConfig = TurnstileChallengeConfig | AlgebraicChallengeConfig;
+type ChallengeConfig = TurnstileChallengeConfig | HCaptchaChallengeConfig;
 
 export const CHALLENGE_MODULE_OPTIONS = 'CHALLENGE_MODULE_OPTIONS';
 

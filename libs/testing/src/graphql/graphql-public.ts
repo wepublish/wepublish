@@ -521,8 +521,8 @@ export type CalculatedRating = {
 };
 
 export enum CaptchaType {
-  Algebraic = 'Algebraic',
   CfTurnstile = 'CfTurnstile',
+  HCaptcha = 'HCaptcha',
 }
 
 export type Challenge = {
@@ -539,6 +539,7 @@ export type ChallengeInput = {
 };
 
 export enum ChallengeProviderType {
+  Hcaptcha = 'HCAPTCHA',
   Turnstile = 'TURNSTILE',
 }
 
@@ -3797,6 +3798,8 @@ export type Query = {
    *
    */
   expectedRevenue: Array<DashboardInvoice>;
+  /** Returns images by tag. */
+  getImagesByTag: Array<Image>;
   /**
    *
    *       Returns the most viewed articles in descending order.
@@ -4102,6 +4105,10 @@ export type QueryEventsArgs = {
 export type QueryExpectedRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
+};
+
+export type QueryGetImagesByTagArgs = {
+  tag: Scalars['String'];
 };
 
 export type QueryHotAndTrendingArgs = {

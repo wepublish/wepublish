@@ -20,6 +20,7 @@ import {
 import { MediaAdapter } from './media-adapter';
 import { ImageTransformation } from './image-transformation.model';
 import { NotFoundException } from '@nestjs/common';
+import { Public } from '@wepublish/authentication/api';
 import { Permissions } from '@wepublish/permissions/api';
 import {
   CanCreateImage,
@@ -34,7 +35,8 @@ export class ImageResolver {
   constructor(
     private service: ImageService,
     private imageDataloader: ImageDataloaderService,
-    private mediaAdapter: MediaAdapter
+    private mediaAdapter: MediaAdapter,
+    private imageService: ImageService
   ) {}
 
   @Permissions(CanGetImages)
@@ -73,6 +75,12 @@ export class ImageResolver {
   @Mutation(returns => String, { description: `Deletes an existing image.` })
   public deleteImage(@Args('id') id: string) {
     return this.service.deleteImage(id);
+  }
+
+  @Public()
+  @Query(() => [Image], { description: `Returns images by tag.` })
+  public getImagesByTag(@Args('tag') tag: string) {
+    return this.imageService.getImagesByTag(tag);
   }
 
   @ResolveField(() => String)

@@ -1,4 +1,4 @@
-name: Review cleanup
+name: Review cleanup (Deprected can be removed after migration)
 
 on:
   pull_request:

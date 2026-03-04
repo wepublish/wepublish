@@ -1,8 +1,8 @@
 import { DynamicModule, Module, Provider } from '@nestjs/common';
 import { ChallengeService } from './challenge.service';
 import { ChallengeResolver } from './challenge.resolver';
-import { AlgebraicCaptchaChallenge } from './providers/algebraic-captcha.provider';
 import { CFTurnstileProvider } from './providers/cf-turnstile.provider';
+import { HCaptchaProvider } from './providers/h-captcha.provider';
 import { ChallengeProvider } from './challenge-provider.interface';
 import {
   ChallengeModuleAsyncOptions,
@@ -65,38 +65,29 @@ const createChallengeProviderFromConfig = async (
   prisma: PrismaService,
   kv: KvTtlCacheService
 ) => {
-  if (challenge.type === 'turnstile') {
-    const challengeProvider = new CFTurnstileProvider(challenge.id, prisma, kv);
-    await challengeProvider.initDatabaseConfiguration(
-      challenge.id,
-      ChallengeProviderType.TURNSTILE,
-      prisma
-    );
-    return challengeProvider;
+  switch (challenge.type) {
+    case 'hcaptcha': {
+      const challengeProvider = new HCaptchaProvider(challenge.id, prisma, kv);
+      await challengeProvider.initDatabaseConfiguration(
+        challenge.id,
+        ChallengeProviderType.HCAPTCHA,
+        prisma
+      );
+      return challengeProvider;
+    }
+    case 'turnstile':
+    default: {
+      const challengeProvider = new CFTurnstileProvider(
+        challenge.id,
+        prisma,
+        kv
+      );
+      await challengeProvider.initDatabaseConfiguration(
+        challenge.id,
+        ChallengeProviderType.TURNSTILE,
+        prisma
+      );
+      return challengeProvider;
+    }
   }
-
-  if (challenge.type === 'algebraic') {
-    const algebraicConfig = challenge;
-    return new AlgebraicCaptchaChallenge(
-      algebraicConfig.secret,
-      algebraicConfig.validTime || 600, // default 10 minutes
-      {
-        width: algebraicConfig.width,
-        height: algebraicConfig.height,
-        background: algebraicConfig.background,
-        noise: algebraicConfig.noise,
-        minValue: algebraicConfig.minValue,
-        maxValue: algebraicConfig.maxValue,
-        operandAmount: algebraicConfig.operandAmount,
-        operandTypes: algebraicConfig.operandTypes,
-        mode: algebraicConfig.mode,
-        targetSymbol: algebraicConfig.targetSymbol,
-      }
-    );
-  }
-
-  const exhaustiveCheck: never = challenge;
-  throw new Error(
-    `Unsupported challenge type: ${(exhaustiveCheck as any).type}`
-  );
 };

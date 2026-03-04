@@ -60,8 +60,8 @@ export const defaultRegisterSchema = z.object({
     city: z.string().min(1),
     country: z.enum(userCountryNames),
   }),
-  password: z.string().min(8),
-  passwordRepeated: z.string().min(8),
+  password: z.string().min(12),
+  passwordRepeated: z.string().min(12),
   emailRepeated: z.string().email().min(1),
   birthday: z.coerce.date().max(new Date()),
 });

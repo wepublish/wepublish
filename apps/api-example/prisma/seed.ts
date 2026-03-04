@@ -37,12 +37,10 @@ import {
   EventBlock,
 } from '@wepublish/block-content/api';
 import { TrackingPixel } from '@wepublish/tracking-pixel/api';
-import bcrypt from 'bcrypt';
+import { hash as argon2Hash } from '@node-rs/argon2';
 
 async function hashPassword(password: string) {
-  const hashCostFactor = 12;
-
-  return await bcrypt.hash(password, hashCostFactor);
+  return await argon2Hash(password);
 }
 
 const shuffle = <T>(list: T[]): T[] => {

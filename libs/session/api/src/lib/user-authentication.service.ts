@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import bcrypt from 'bcrypt';
+import { compare as bcryptCompare } from '@node-rs/bcrypt';
+import { hash as argon2Hash, verify as argon2Verify } from '@node-rs/argon2';
 import { UserService } from '@wepublish/user/api';
 import { PrismaClient } from '@prisma/client';
 import {
@@ -23,9 +24,26 @@ export class UserAuthenticationService {
       return null;
     }
 
-    const theSame = await bcrypt.compare(password, user.password);
-    if (!theSame) {
+    const isLegacyBcrypt = user.password.startsWith('$2');
+    let isValid: boolean;
+
+    if (isLegacyBcrypt) {
+      isValid = await bcryptCompare(password, user.password);
+    } else {
+      isValid = await argon2Verify(user.password, password);
+    }
+
+    if (!isValid) {
       return null;
+    }
+
+    // Re-hash legacy bcrypt passwords to argon2 on successful login
+    if (isLegacyBcrypt) {
+      const newHash = await argon2Hash(password);
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: { password: newHash },
+      });
     }
 
     return user;
