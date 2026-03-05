@@ -157,6 +157,23 @@ const theme = createTheme(WePTheme, {
       fontWeight: 400,
       fontStyle: 'normal',
     },
+    // Table of Contents - RichText
+    tocHeading: {
+      fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: 500,
+      lineHeight: 1.15,
+      fontSize: '2rem',
+      textTransform: 'uppercase',
+      color: colors.common.white,
+      padding: '1.5cqw 0',
+    },
+    tocDetails: {
+      fontFamily: [recife.style.fontFamily, 'serif'].join(','),
+      fontWeight: 400,
+      lineHeight: 1.5,
+      fontSize: '1.25rem',
+      color: colors.common.white,
+    },
     // BlockQuote
     blockQuote: {
       fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
@@ -290,6 +307,9 @@ const theme = createTheme(WePTheme, {
           categoryLinkTitle: 'h6',
           categoryAddress: 'address',
           categoryAddressText: 'p',
+          // Table of Contents - RichText
+          tocHeading: 'h2',
+          tocDetails: 'div',
         },
       },
     },

@@ -35,6 +35,10 @@ declare module '@mui/material/styles' {
     // Link -- MuiLink.variant is based on Typography variants
     categoryLink: CSSProperties;
     navbarTab: CSSProperties;
+
+    // Table of Contents - RichText
+    tocHeading: CSSProperties;
+    tocDetails: CSSProperties;
   }
 
   // Optional
@@ -58,6 +62,8 @@ declare module '@mui/material/styles' {
     bannerText?: CSSProperties;
     bannerCta?: CSSProperties;
     categoryLink?: CSSProperties;
+    tocHeading?: CSSProperties;
+    tocDetails?: CSSProperties;
   }
 }
 
@@ -83,6 +89,8 @@ declare module '@mui/material/Typography' {
     bannerCta: true;
     categoryLink: true;
     navbarTab: true;
+    tocHeading: true;
+    tocDetails: true;
   }
 }
 

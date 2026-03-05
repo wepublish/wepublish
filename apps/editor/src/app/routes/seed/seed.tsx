@@ -554,7 +554,7 @@ Jetzt im Shop erhältlich.`,
           } as BreakBlockInput,
         } as BlockContentInput,
 
-        // a collapsible rich text block
+        // a table of contents rich text block
         {
           richText: {
             blockStyle: getBlockStyle(blockStyles, 'TableOfContents'),
@@ -617,7 +617,6 @@ Jetzt im Shop erhältlich.`,
                   },
                 ],
               },
-              ...(getText(1, 2) as Descendant[]),
             ] as Descendant[],
           } as RichTextBlockInput,
         } as BlockContentInput,

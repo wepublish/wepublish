@@ -51,6 +51,8 @@ import { ReflektGlobalStyles } from '../src/components/reflekt-global-styles';
 import { ReflektNavbar } from '../src/components/reflekt-navbar';
 import { ReflektPage } from '../src/components/reflekt-page';
 import { ReflektQuoteBlock } from '../src/components/reflekt-quote-block';
+import { ReflektRenderElement } from '../src/components/reflekt-render-element';
+import { ReflektRichTextBlock } from '../src/components/reflekt-richtext-block';
 import { ReflektTitleBlock } from '../src/components/reflekt-title-block';
 import { ReflektArticleList } from '../src/components/teaser-layouts/reflekt-article-list';
 import { ReflektBaseTeaserSlots } from '../src/components/teaser-layouts/reflekt-base-teaser-slots';
@@ -109,12 +111,14 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           elements={{ Link: NextWepublishLink }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
+          richtext={{ RenderElement: ReflektRenderElement }}
           blocks={{
             TeaserSlots: ReflektBaseTeaserSlots,
             BaseTeaser: ReflektBaseTeaser,
             FlexBlock: ReflektFlexBlock,
             Quote: ReflektQuoteBlock,
             Title: ReflektTitleBlock,
+            RichText: ReflektRichTextBlock,
             Renderer:
               ReflektBlockRenderer as ComponentType<BuilderBlockRendererProps>,
             Blocks: ReflektBlocks,

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Typography } from '@mui/material';
 import {
   hasBlockStyle,
   isRichTextBlock,
@@ -23,14 +24,15 @@ export const ReflektTocRichTextWrapper = styled('div')`
   display: grid;
   grid-template-columns: subgrid;
   grid-template-rows: repeat(2, auto);
+  padding-bottom: 2.5cqw;
 `;
 
-export const TocTitle = styled('div')`
+export const TocTitle = styled(Typography)`
   grid-column: 3 / 9;
   grid-row: 1 / 2;
 `;
 
-export const TocDetails = styled('div')`
+export const TocDetails = styled(Typography)`
   grid-column: 3 / 9;
   grid-row: 2 / 3;
 `;
@@ -52,12 +54,12 @@ export const ReflektTocRichText = ({
 
   return (
     <ReflektTocRichTextWrapper className={className}>
-      <TocTitle>
+      <TocTitle variant="tocHeading">
         {richText &&
           richText.length > 0 &&
           (richText[0] as any).children[0].text}
       </TocTitle>
-      <TocDetails>
+      <TocDetails variant="tocDetails">
         {richText && richText.length > 1 && (
           <RichText richText={[...richText].splice(1, richText.length - 1)} />
         )}
