@@ -13,6 +13,7 @@ type ExternalApps = {
   createdAt: Date;
   modifiedAt: Date;
   name: string;
+  description: string | null;
   url: string;
   target: string;
   icon: string | null;

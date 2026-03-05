@@ -1777,10 +1777,11 @@ model ExternalApps {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name   String
-  url    String
-  target ExternalAppsTarget
-  icon   String?
+  name        String
+  description String?
+  url         String
+  target      ExternalAppsTarget
+  icon        String?
 
   @@map("apps.external")
 }

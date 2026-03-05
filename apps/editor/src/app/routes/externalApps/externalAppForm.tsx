@@ -53,6 +53,7 @@ const FormRow = styled('div')`
 
 const validationSchema = z.object({
   name: z.string().min(1),
+  description: z.string().optional(),
   url: z.string().url(),
   target: z.nativeEnum(ExternalAppsTarget),
   icon: z.string().optional(),
@@ -88,6 +89,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
     resolver: zodResolver(validationSchema),
     defaultValues: {
       name: app?.name || '',
+      description: app?.description || '',
       url: app?.url || '',
       target: app?.target || ExternalAppsTarget.Blank,
       icon: app?.icon || '',
@@ -146,6 +148,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
         variables: {
           updateExternalAppId: app.id,
           name: data.name,
+          description: data.description,
           url: data.url,
           target: data.target,
           icon: data.icon,
@@ -188,6 +191,7 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
         variables: {
           input: {
             name: data.name,
+            description: data.description,
             url: data.url,
             target: data.target,
             icon: data.icon,
@@ -242,6 +246,26 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
               label={t('externalAppForm.name')}
               variant="outlined"
               fullWidth
+              error={!!fieldState.error}
+              helperText={fieldState.error?.message}
+              disabled={loading}
+            />
+          )}
+        />
+
+        <Controller
+          name="description"
+          control={control}
+          render={({ field, fieldState }) => (
+            <TextField
+              {...field}
+              label={t('externalAppForm.description', {
+                defaultValue: 'Description',
+              })}
+              variant="outlined"
+              fullWidth
+              multiline
+              rows={3}
               error={!!fieldState.error}
               helperText={fieldState.error?.message}
               disabled={loading}

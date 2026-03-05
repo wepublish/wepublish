@@ -1828,6 +1828,7 @@
       "update": "Aktualisieren",
       "delete": "Löschen",
       "name": "Name",
+      "description": "Beschreibung",
       "url": "URL",
       "target": "Ziel",
       "successUpdate": "Externe App erfolgreich aktualisiert",

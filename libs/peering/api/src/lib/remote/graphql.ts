@@ -701,6 +701,7 @@ export type CreateCrowdfundingMemberPlan = {
 };
 
 export type CreateExternalAppInput = {
+  description?: InputMaybe<Scalars['String']>;
   icon?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   target: ExternalAppsTarget;
@@ -1010,6 +1011,7 @@ export type EventTeaserInput = {
 export type ExternalApp = {
   __typename?: 'ExternalApp';
   createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
@@ -1019,9 +1021,16 @@ export type ExternalApp = {
 };
 
 export type ExternalAppFilter = {
+  description?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   target?: InputMaybe<ExternalAppsTarget>;
+};
+
+export type ExternalAppToken = {
+  __typename?: 'ExternalAppToken';
+  expiresAt: Scalars['DateTime'];
+  token: Scalars['String'];
 };
 
 export enum ExternalAppsTarget {
@@ -1639,6 +1648,8 @@ export type Mutation = {
   createEvent: Event;
   /** Creates a new external app. */
   createExternalApp: ExternalApp;
+  /** Generates a short-lived JWT token for authenticating with an external app. */
+  createExternalAppToken: ExternalAppToken;
   /** Creates a new invoice. */
   createInvoice: Invoice;
   /** Returns a JWT that can be used to login as another user. */
@@ -2026,6 +2037,11 @@ export type MutationCreateEventArgs = {
 
 export type MutationCreateExternalAppArgs = {
   input: CreateExternalAppInput;
+};
+
+
+export type MutationCreateExternalAppTokenArgs = {
+  externalAppId: Scalars['String'];
 };
 
 
@@ -2704,6 +2720,7 @@ export type MutationUpdateEventArgs = {
 
 
 export type MutationUpdateExternalAppArgs = {
+  description?: InputMaybe<Scalars['String']>;
   icon?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
   name?: InputMaybe<Scalars['String']>;

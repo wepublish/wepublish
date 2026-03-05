@@ -4,6 +4,7 @@ fragment ExternalApp on ExternalApp {
   id
   modifiedAt
   name
+  description
   target
   url
 }
@@ -29,6 +30,7 @@ mutation CreateExternalApp($input: CreateExternalAppInput!) {
 mutation UpdateExternalApp(
   $icon: String
   $name: String
+  $description: String
   $target: ExternalAppsTarget
   $url: String
   $updateExternalAppId: String!
@@ -36,6 +38,7 @@ mutation UpdateExternalApp(
   updateExternalApp(
     icon: $icon
     name: $name
+    description: $description
     target: $target
     url: $url
     id: $updateExternalAppId

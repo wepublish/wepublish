@@ -1889,6 +1889,7 @@
       "update": "Update",
       "delete": "Delete",
       "name": "Name",
+      "description": "Description",
       "url": "URL",
       "target": "Target",
       "successUpdate": "External app updated successfully",

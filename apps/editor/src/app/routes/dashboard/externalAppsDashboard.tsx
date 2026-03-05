@@ -139,6 +139,15 @@ export function ExternalAppsDashboard() {
                 >
                   {app.name}
                 </Typography>
+                {app.description && (
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    sx={{ mt: 1 }}
+                  >
+                    {app.description}
+                  </Typography>
+                )}
               </AppBox>
             </CardActionArea>
           </Card>

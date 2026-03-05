@@ -649,6 +649,7 @@ input CreateCrowdfundingMemberPlan {
 }
 
 input CreateExternalAppInput {
+  description: String
   icon: String
   name: String!
   target: ExternalAppsTarget!
@@ -950,6 +951,7 @@ input EventTeaserInput {
 
 type ExternalApp {
   createdAt: DateTime!
+  description: String
   icon: String
   id: String!
   modifiedAt: DateTime!
@@ -959,6 +961,7 @@ type ExternalApp {
 }
 
 input ExternalAppFilter {
+  description: String
   id: String
   name: String
   target: ExternalAppsTarget
@@ -1852,7 +1855,7 @@ type Mutation {
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
 
   """Updates an existing external app."""
-  updateExternalApp(icon: String, id: String!, name: String, target: ExternalAppsTarget, url: String): ExternalApp!
+  updateExternalApp(description: String, icon: String, id: String!, name: String, target: ExternalAppsTarget, url: String): ExternalApp!
 
   """Updates an existing image."""
   updateImage(description: String, filename: String, focalPoint: FocalPointInput, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!

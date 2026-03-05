@@ -28,6 +28,8 @@ export class ExternalApp {
 
   @Field(type => String)
   name!: string;
+  @Field(type => String, { nullable: true })
+  description?: string | null;
 
   @Field(type => String)
   url!: string;
@@ -46,6 +48,8 @@ export class ExternalAppFilter {
 
   @Field(type => String, { nullable: true })
   name?: string;
+  @Field(type => String, { nullable: true })
+  description?: string | null;
 
   @Field(type => ExternalAppsTarget, { nullable: true })
   target?: ExternalAppsTarget;
@@ -55,6 +59,8 @@ export class ExternalAppFilter {
 export class CreateExternalAppInput {
   @Field(type => String)
   name!: string;
+  @Field(type => String, { nullable: true })
+  description?: string | null;
 
   @Field(type => String)
   url!: string;
@@ -82,6 +88,8 @@ export class UpdateExternalAppInput {
 
   @Field(type => String, { nullable: true })
   name?: string;
+  @Field(type => String, { nullable: true })
+  description?: string | null;
 
   @Field(type => String, { nullable: true })
   url?: string;

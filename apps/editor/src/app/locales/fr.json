@@ -1715,6 +1715,7 @@
       "update": "Mettre à jour",
       "delete": "Supprimer",
       "name": "Nom",
+      "description": "Description",
       "url": "URL",
       "target": "Cible",
       "successUpdate": "Application externe mise à jour avec succès",
