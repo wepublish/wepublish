@@ -1829,6 +1829,10 @@
       "name": "Name",
       "url": "URL",
       "target": "Ziel",
+      "successUpdate": "Externe App erfolgreich aktualisiert",
+      "errorUpdate": "Fehler beim Aktualisieren der externen App",
+      "successCreate": "Externe App erfolgreich erstellt",
+      "errorCreate": "Fehler beim Erstellen der externen App",
       "icon": "Icon URL"
     }
   }

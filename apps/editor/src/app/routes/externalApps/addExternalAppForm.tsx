@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  Alert,
   Button,
   Card,
   CircularProgress,
@@ -20,7 +21,8 @@ import {
 } from '@wepublish/editor/api';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdEdit, MdSave } from 'react-icons/md';
+import { MdAdd, MdSave } from 'react-icons/md';
+import { toaster } from 'rsuite';
 import { z } from 'zod';
 import { IconPickerSelect } from './iconPicker';
 
@@ -90,7 +92,29 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
           target: data.target,
           icon: data.icon,
         },
-      }).catch(console.error);
+      })
+        .then(() => {
+          toaster.push(
+            <Alert severity="success">
+              {t('addExternalAppForm.successUpdate', {
+                defaultValue: 'External app updated successfully',
+              })}
+            </Alert>,
+            { placement: 'topCenter', duration: 3000 }
+          );
+        })
+        .catch(err => {
+          console.error(err);
+          toaster.push(
+            <Alert severity="error">
+              {err.message ||
+                t('addExternalAppForm.errorUpdate', {
+                  defaultValue: 'Failed to update external app',
+                })}
+            </Alert>,
+            { placement: 'topCenter', duration: 3000 }
+          );
+        });
     } else {
       createExternalApp({
         variables: {
@@ -104,8 +128,27 @@ export function ExternalAppForm({ app }: ExternalAppFormProps) {
       })
         .then(() => {
           reset();
+          toaster.push(
+            <Alert severity="success">
+              {t('addExternalAppForm.successCreate', {
+                defaultValue: 'External app created successfully',
+              })}
+            </Alert>,
+            { placement: 'topCenter', duration: 3000 }
+          );
         })
-        .catch(console.error);
+        .catch(err => {
+          console.error(err);
+          toaster.push(
+            <Alert severity="error">
+              {err.message ||
+                t('addExternalAppForm.errorCreate', {
+                  defaultValue: 'Failed to create external app',
+                })}
+            </Alert>,
+            { placement: 'topCenter', duration: 3000 }
+          );
+        });
     }
   };
 

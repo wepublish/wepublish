@@ -1716,6 +1716,10 @@
       "name": "Nom",
       "url": "URL",
       "target": "Cible",
+      "successUpdate": "Application externe mise à jour avec succès",
+      "errorUpdate": "Échec de la mise à jour de l'application externe",
+      "successCreate": "Application externe créée avec succès",
+      "errorCreate": "Échec de la création de l'application externe",
       "icon": "URL de l'icône"
     }
   }

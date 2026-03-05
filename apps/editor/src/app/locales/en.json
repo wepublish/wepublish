@@ -1890,6 +1890,10 @@
       "name": "Name",
       "url": "URL",
       "target": "Target",
+      "successUpdate": "External app updated successfully",
+      "errorUpdate": "Failed to update external app",
+      "successCreate": "External app created successfully",
+      "errorCreate": "Failed to create external app",
       "icon": "Icon URL"
     }
   }
