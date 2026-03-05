@@ -186,6 +186,42 @@ const theme = createTheme(WePTheme, {
       lineHeight: 0,
       marginBottom: 0,
     },
+    // Downloads - CollapsibleRichText
+    ulDownloads: {
+      listStyle: 'none',
+      margin: 0,
+      padding: 0,
+    },
+    liDownloads: {
+      listStyle: 'none',
+      padding: 0,
+      lineHeight: 0,
+      marginBottom: 0,
+      display: 'flex',
+      alignItems: 'center',
+      gap: '1rem',
+      margin: '0.5rem 0',
+      '&:before': {
+        content: "''",
+        width: '1.5rem',
+        height: '1.5rem',
+        display: 'flex',
+        flexShrink: 0,
+        flexGrow: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundImage: `url("data:image/svg+xml,%3Csvg stroke='%23000000' fill='%23000000' stroke-width='0' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='none' d='M0 0h24v24H0z'%3E%3C/path%3E%3Cpath d='M18 15v3H6v-3H4v3c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-3h-2zm-1-4-1.41-1.41L13 12.17V4h-2v8.17L8.41 9.59 7 11l5 5 5-5z'%3E%3C/path%3E%3C/svg%3E")`,
+        backgroundSize: 'contain',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        opacity: 0.3,
+      },
+      '&:hover': {
+        '&:before': {
+          opacity: 1,
+        },
+      },
+    },
     // BlockQuote
     blockQuote: {
       fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
@@ -324,6 +360,9 @@ const theme = createTheme(WePTheme, {
           tocDetails: 'div',
           ulToc: 'ul',
           liToc: 'li',
+          // Downloads - CollapsibleRichText
+          ulDownloads: 'ul',
+          liDownloads: 'li',
         },
       },
     },
@@ -360,13 +399,28 @@ const theme = createTheme(WePTheme, {
         {
           props: { variant: 'linkToc' },
           style: {
-            fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
-              ','
-            ),
-            fontWeight: 400,
+            fontFamily: [recife.style.fontFamily, 'sans-serif'].join(','),
+            fontWeight: 700,
             lineHeight: 1,
             fontSize: '1.25rem',
             color: colors.common.white,
+            textDecoration: 'none',
+            '&:hover': {
+              textDecoration: 'underline',
+            },
+          },
+        },
+
+        // Downloads - CollapsibleRichText
+        {
+          props: { variant: 'linkDownloads' },
+          style: {
+            fontFamily: [recife.style.fontFamily, 'sans-serif'].join(','),
+            fontWeight: 400,
+            lineHeight: 1,
+            fontSize: '1.25rem',
+            color: colors.common.black,
+
             textDecoration: 'none',
             '&:hover': {
               textDecoration: 'underline',
@@ -430,6 +484,7 @@ const theme = createTheme(WePTheme, {
             border: `1px solid ${colors.common.black}`,
             borderLeft: 'none',
             borderRight: 'none',
+            borderRadius: 0,
             display: 'grid',
             gridTemplateColumns: 'subgrid',
             gridTemplateRows: 'repeat(2, auto)',

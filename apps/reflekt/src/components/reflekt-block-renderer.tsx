@@ -14,6 +14,10 @@ import { memo, useMemo } from 'react';
 
 import { isFlexBlockHero } from './block-layouts/flex-block-hero';
 import {
+  isCollapsibleDownloads,
+  ReflektCollapsibleDownloads,
+} from './block-styles/reflekt-collapsible-downloads';
+import {
   isCollapsibleRichText,
   ReflektCollapsibleRichText,
 } from './block-styles/reflekt-collapsible-richtext';
@@ -40,6 +44,15 @@ export const ReflektBlockRenderer = (
           isCollapsibleRichText,
           block => (
             <ReflektCollapsibleRichText
+              {...block}
+              siblings={props.siblings}
+            />
+          ),
+        ],
+        [
+          isCollapsibleDownloads,
+          block => (
+            <ReflektCollapsibleDownloads
               {...block}
               siblings={props.siblings}
             />

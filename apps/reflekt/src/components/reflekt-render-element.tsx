@@ -21,12 +21,44 @@ export function ReflektRenderElement({
   variant,
 }: BuilderRenderElementProps & { variant?: string }): ReactNode {
   const {
-    elements: { UnorderedList, ListItem },
+    elements: { H3, H4, H5, UnorderedList, ListItem },
     richtext: { RenderRichtext },
   } = useWebsiteBuilder();
   const theme = useTheme();
 
   switch (element.type) {
+    case BlockFormat.H1:
+      return (
+        <H3
+          component="h2"
+          gutterBottom
+          css={lastChildNoGutter}
+        >
+          <RenderRichtext elements={element.children} />
+        </H3>
+      );
+
+    case BlockFormat.H2:
+      return (
+        <H4
+          component="h3"
+          gutterBottom
+          css={lastChildNoGutter}
+        >
+          <RenderRichtext elements={element.children} />
+        </H4>
+      );
+
+    case BlockFormat.H3:
+      return (
+        <H5
+          component="h4"
+          gutterBottom
+          css={lastChildNoGutter}
+        >
+          <RenderRichtext elements={element.children} />
+        </H5>
+      );
     case BlockFormat.UnorderedList:
       return (
         <UnorderedList

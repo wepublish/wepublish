@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import {
@@ -16,38 +15,26 @@ import {
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 import React from 'react';
-import { MdArrowDownward } from 'react-icons/md';
 
 import { ReflektBlockType } from './reflekt-block-styles';
-export const ReflektCollapsibleRichTextWrapper = styled(Accordion)`
-  overflow-anchor: auto;
-  margin: 0;
+import {
+  ExpandIcon,
+  ReflektCollapsibleRichTextWrapper,
+} from './reflekt-collapsible-richtext';
 
-  &::before {
-    display: none;
-  }
-`;
+export const ReflektCollapsibleDownloadsWrapper = styled(
+  ReflektCollapsibleRichTextWrapper
+)``;
 
-export const ExpandIcon = styled(MdArrowDownward)`
-  font-size: 1.5rem;
-  transform: rotate(0deg);
-  transition: transform 0.2s ease-in-out;
-  transform-origin: center;
-
-  .Mui-expanded & {
-    transform: rotate(180deg);
-  }
-`;
-
-export const isCollapsibleRichText = (
+export const isCollapsibleDownloads = (
   block: Pick<BlockContent, '__typename'>
 ): block is RichTextBlockType =>
   allPass([
-    hasBlockStyle(ReflektBlockType.CollapsibleRichText),
+    hasBlockStyle(ReflektBlockType.CollapsibleDownloads),
     isRichTextBlock,
   ])(block);
 
-export const ReflektCollapsibleRichText = ({
+export const ReflektCollapsibleDownloads = ({
   className,
   richText,
 }: BuilderRichTextBlockProps) => {
@@ -57,7 +44,7 @@ export const ReflektCollapsibleRichText = ({
   const thisId = `AC-${React.useId()}`;
 
   return (
-    <ReflektCollapsibleRichTextWrapper className={className}>
+    <ReflektCollapsibleDownloadsWrapper className={className}>
       <AccordionSummary
         expandIcon={<ExpandIcon />}
         aria-controls={`${thisId}-panel-content`}
@@ -70,9 +57,12 @@ export const ReflektCollapsibleRichText = ({
 
       <AccordionDetails id={`${thisId}-panel-content`}>
         {richText && richText.length > 1 && (
-          <RichText richText={[...richText].splice(1, richText.length - 1)} />
+          <RichText
+            richText={[...richText].splice(1, richText.length - 1)}
+            variant="downloads"
+          />
         )}
       </AccordionDetails>
-    </ReflektCollapsibleRichTextWrapper>
+    </ReflektCollapsibleDownloadsWrapper>
   );
 };

@@ -42,6 +42,9 @@ declare module '@mui/material/styles' {
     ulToc: CSSProperties;
     liToc: CSSProperties;
     linkToc: CSSProperties;
+    ulDownloads: CSSProperties;
+    liDownloads: CSSProperties;
+    linkDownloads: CSSProperties;
   }
 
   // Optional
@@ -70,6 +73,9 @@ declare module '@mui/material/styles' {
     ulToc?: CSSProperties;
     liToc?: CSSProperties;
     linkToc?: CSSProperties;
+    ulDownloads?: CSSProperties;
+    liDownloads?: CSSProperties;
+    linkDownloads?: CSSProperties;
   }
 }
 
@@ -100,6 +106,9 @@ declare module '@mui/material/Typography' {
     ulToc: true;
     liToc: true;
     linkToc: true;
+    ulDownloads: true;
+    liDownloads: true;
+    linkDownloads: true;
   }
 }
 
@@ -111,5 +120,6 @@ declare module '@mui/material/Link' {
     buttonLinkMain: true;
     buttonLinkSecondary: true;
     linkToc: true;
+    linkDownloads: true;
   }
 }

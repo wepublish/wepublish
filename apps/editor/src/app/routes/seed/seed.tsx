@@ -15,7 +15,6 @@ import {
   EventListDocument,
   FlexBlockInput,
   getApiClientV2,
-  IFrameBlockInput,
   ImageBlockInput,
   ImageListDocument,
   MemberPlanListDocument,
@@ -628,13 +627,6 @@ Jetzt im Shop erhältlich.`,
           } as RichTextBlockInput,
         } as BlockContentInput,
 
-        // a bildwurf ad block
-        {
-          bildwurfAd: {
-            zoneID: '77348',
-          } as IFrameBlockInput,
-        } as BlockContentInput,
-
         // some alternating image and rich text blocks
         ...Array.from({ length: faker.number.int({ min: 5, max: 9 }) }, () => {
           const imageBlock = pickRandom<BlockContentInput>(
@@ -713,6 +705,73 @@ Jetzt im Shop erhältlich.`,
             } as RichTextBlockInput,
           } as BlockContentInput;
         }),
+
+        // a collapsible downloads list block
+        {
+          richText: {
+            blockStyle: getBlockStyle(blockStyles, 'CollapsibleDownloads'),
+            richText: [
+              {
+                type: 'heading-one',
+                children: [
+                  {
+                    text: 'Downloads',
+                  },
+                ],
+              },
+              {
+                type: 'unordered-list',
+                children: [
+                  {
+                    type: 'list-item',
+                    children: [
+                      {
+                        type: 'link',
+                        url: faker.internet.url(),
+                        title: capitalize(
+                          faker.lorem.words({ min: 2, max: 4 })
+                        ),
+                        children: [
+                          { text: capitalize(faker.lorem.sentence()) },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    type: 'list-item',
+                    children: [
+                      {
+                        type: 'link',
+                        url: faker.internet.url(),
+                        title: capitalize(
+                          faker.lorem.words({ min: 2, max: 4 })
+                        ),
+                        children: [
+                          { text: capitalize(faker.lorem.sentence()) },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    type: 'list-item',
+                    children: [
+                      {
+                        type: 'link',
+                        url: faker.internet.url(),
+                        title: capitalize(
+                          faker.lorem.words({ min: 2, max: 4 })
+                        ),
+                        children: [
+                          { text: capitalize(faker.lorem.sentence()) },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ] as Descendant[],
+          } as RichTextBlockInput,
+        } as BlockContentInput,
       ] as BlockContentInput[],
 
       hideAuthor: false,
@@ -1284,6 +1343,11 @@ async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
 
     {
       name: 'CollapsibleRichText',
+      blocks: ['RichText'],
+    },
+
+    {
+      name: 'CollapsibleDownloads',
       blocks: ['RichText'],
     },
 

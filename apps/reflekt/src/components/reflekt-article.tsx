@@ -32,6 +32,7 @@ import {
   FlexBlockHeroWrapper,
   isFlexBlockHero,
 } from './block-layouts/flex-block-hero';
+import { ReflektCollapsibleDownloadsWrapper } from './block-styles/reflekt-collapsible-downloads';
 import { ReflektCollapsibleRichTextWrapper } from './block-styles/reflekt-collapsible-richtext';
 import { ReflektTocRichTextWrapper } from './block-styles/reflekt-toc-richtext';
 import { ReflektQuoteBlock } from './reflekt-quote-block';
@@ -99,6 +100,7 @@ export const ArticleWrapper = styled(ContentWrapper)<{
           ${EventBlockWrapper},
           ${BreakBlockWrapper},
           ${ReflektCollapsibleRichTextWrapper},
+          ${ReflektCollapsibleDownloadsWrapper},
           ${ReflektTocRichTextWrapper},
           ${ReflektQuoteBlock}
       ) {
