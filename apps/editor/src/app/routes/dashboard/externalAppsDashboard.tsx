@@ -5,6 +5,7 @@ import {
   CardActionArea,
   CircularProgress,
   Grid,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import {
@@ -110,7 +111,6 @@ export function ExternalAppsDashboard() {
           xs={12}
           sm={6}
           md={4}
-          lg={3}
           key={app.id}
         >
           <Card
@@ -140,13 +140,24 @@ export function ExternalAppsDashboard() {
                   {app.name}
                 </Typography>
                 {app.description && (
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    sx={{ mt: 1 }}
+                  <Tooltip
+                    title={app.description}
+                    placement="top"
                   >
-                    {app.description}
-                  </Typography>
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      sx={{
+                        mt: 1,
+                        display: '-webkit-box',
+                        overflow: 'hidden',
+                        WebkitBoxOrient: 'vertical',
+                        WebkitLineClamp: 3,
+                      }}
+                    >
+                      {app.description}
+                    </Typography>
+                  </Tooltip>
                 )}
               </AppBox>
             </CardActionArea>
