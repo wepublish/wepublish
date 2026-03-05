@@ -48,6 +48,13 @@ fragment FullImage on Image {
   ...ImageURLs
 }
 
+# Add queries section
+query GetImagesByTag($tag: String!) {
+  getImagesByTag(tag: $tag) {
+    ...FullImage
+  }
+}
+
 fragment FullPeerImage on PeerImage {
   id
 

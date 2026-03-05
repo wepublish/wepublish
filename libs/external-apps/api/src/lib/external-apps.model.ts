@@ -66,6 +66,15 @@ export class CreateExternalAppInput {
   icon?: string;
 }
 
+@ObjectType()
+export class ExternalAppToken {
+  @Field(type => String)
+  token!: string;
+
+  @Field(type => Date)
+  expiresAt!: Date;
+}
+
 @ArgsType()
 export class UpdateExternalAppInput {
   @Field(type => String)

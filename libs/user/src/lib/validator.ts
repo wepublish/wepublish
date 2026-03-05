@@ -2,6 +2,10 @@ import { userCountryNames } from './user-countries';
 import z from 'zod';
 
 export class Validator {
+  static password = z
+    .string()
+    .min(8, 'Password must be at least 8 characters long');
+
   static createUser = z.object({
     email: z.string().email(),
     name: z.string().max(50),

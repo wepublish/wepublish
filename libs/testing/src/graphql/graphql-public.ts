@@ -3852,6 +3852,8 @@ export type Query = {
   externalApp: ExternalApp;
   /** Returns all external apps. Requires authentication. */
   externalApps: Array<ExternalApp>;
+  /** Returns images by tag. */
+  getImagesByTag: Array<Image>;
   /**
    *
    *       Returns the most viewed articles in descending order.
@@ -4165,6 +4167,10 @@ export type QueryExternalAppArgs = {
 
 export type QueryExternalAppsArgs = {
   filter?: InputMaybe<ExternalAppFilter>;
+};
+
+export type QueryGetImagesByTagArgs = {
+  tag: Scalars['String'];
 };
 
 export type QueryHotAndTrendingArgs = {

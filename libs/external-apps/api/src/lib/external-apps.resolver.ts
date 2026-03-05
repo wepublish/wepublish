@@ -7,19 +7,26 @@ import {
 import { Permissions } from '@wepublish/permissions/api';
 import {
   ExternalApp,
+  ExternalAppToken,
   CreateExternalAppInput,
   UpdateExternalAppInput,
   ExternalAppFilter,
 } from './external-apps.model';
 import { ExternalAppsService } from './external-apps.service';
 import { ExternalAppsDataloaderService } from './external-apps-dataloader.service';
-import { Authenticated } from '@wepublish/authentication/api';
+import {
+  Authenticated,
+  CurrentUser,
+  UserSession,
+} from '@wepublish/authentication/api';
+import { JwtService } from '@wepublish/session/api';
 
 @Resolver()
 export class ExternalAppsResolver {
   constructor(
     private externalAppsService: ExternalAppsService,
-    private externalAppsDataloader: ExternalAppsDataloaderService
+    private externalAppsDataloader: ExternalAppsDataloaderService,
+    private jwtService: JwtService
   ) {}
 
   @Authenticated()
@@ -66,5 +73,34 @@ export class ExternalAppsResolver {
   })
   deleteExternalApp(@Args('id') id: string) {
     return this.externalAppsService.deleteExternalApp(id);
+  }
+
+  @Authenticated()
+  @Mutation(returns => ExternalAppToken, {
+    name: 'createExternalAppToken',
+    description:
+      'Generates a short-lived JWT token for authenticating with an external app.',
+  })
+  async createExternalAppToken(
+    @Args('externalAppId') externalAppId: string,
+    @CurrentUser() session: UserSession
+  ): Promise<ExternalAppToken> {
+    const app = await this.externalAppsDataloader.load(externalAppId);
+
+    if (!app) {
+      throw new Error(`External app with id ${externalAppId} not found`);
+    }
+
+    const expiresInMinutes = 240;
+    const token = await this.jwtService.generateJWT({
+      id: session.user.id,
+      expiresInMinutes,
+      audience: app.url,
+    });
+
+    return {
+      token,
+      expiresAt: new Date(Date.now() + expiresInMinutes * 60 * 1000),
+    };
   }
 }

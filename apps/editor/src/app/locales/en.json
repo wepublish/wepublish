@@ -1700,8 +1700,8 @@
           "low": "First time renewals",
           "high": "Subsequent renewals",
           "total": "Sum of upcoming renewals",
-          "perDayHighProbability": "First time renewals",
-          "perDayLowProbability": "Subsequent renewals"
+          "perDayHighProbability": "Subsequent renewals",
+          "perDayLowProbability": "First time renewals"
         },
         "predictedSubscriptionRenewalCountPerDay": {
           "lowProbability": "First time renewals",

@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { seed as rootSeed } from './seed';
-import bcrypt from 'bcrypt';
+import { hash as argon2Hash } from '@node-rs/argon2';
 import { randomBytes } from 'crypto';
 
 const generateSecureRandomPassword = (length: number) => {
@@ -35,7 +35,7 @@ export async function runSeed() {
       email: 'admin@wepublish.ch',
       name: 'WePublish Admin',
       active: true,
-      password: await bcrypt.hash(password, 11),
+      password: await argon2Hash(password),
       roleIDs: [adminUserRole.id],
     };
     console.log('\x1b[31m\x1b[1m%s\x1b[0m', `Ensuring admin user`);

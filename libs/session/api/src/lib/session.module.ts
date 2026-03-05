@@ -5,7 +5,8 @@ import { ModuleMetadata } from '@nestjs/common/interfaces';
 import { PrismaModule } from '@wepublish/nest-modules';
 import {
   HOST_URL_TOKEN,
-  JWT_SECRET_KEY_TOKEN,
+  JWT_PRIVATE_KEY_TOKEN,
+  JWT_PUBLIC_KEY_TOKEN,
   JwtService,
   WEBSITE_URL_TOKEN,
 } from './jwt.service';
@@ -16,10 +17,12 @@ import { RegisterResolver } from './register.resolver';
 import { RegisterService } from './register.service';
 import { ChallengeModule } from '@wepublish/challenge/api';
 import { SettingModule } from '@wepublish/settings/api';
+import { JwksController } from './jwks.controller';
 
 export interface SessionModuleOptions {
   sessionTTL: number;
-  jwtSecretKey: string;
+  jwtPrivateKey: string;
+  jwtPublicKey: string;
   hostURL: string;
   websiteURL: string;
 }
@@ -39,9 +42,12 @@ export interface SessionModuleAsyncOptions
 export class SessionModule {
   static registerAsync(options: SessionModuleAsyncOptions): DynamicModule {
     return {
+      global: true,
       module: SessionModule,
       imports: options.imports || [],
+      controllers: [JwksController],
       providers: [...this.createAsyncProviders(options)],
+      exports: [SessionService, JwtService],
     };
   }
 
@@ -65,10 +71,18 @@ export class SessionModule {
         inject: options.inject || [],
       },
       {
-        provide: JWT_SECRET_KEY_TOKEN,
+        provide: JWT_PRIVATE_KEY_TOKEN,
         useFactory: async (...args: any[]) => {
           const config = await options.useFactory(...args);
-          return config.jwtSecretKey;
+          return config.jwtPrivateKey;
+        },
+        inject: options.inject || [],
+      },
+      {
+        provide: JWT_PUBLIC_KEY_TOKEN,
+        useFactory: async (...args: any[]) => {
+          const config = await options.useFactory(...args);
+          return config.jwtPublicKey;
         },
         inject: options.inject || [],
       },

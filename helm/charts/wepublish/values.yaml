@@ -45,7 +45,8 @@ api:
     GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
     DATABASE_URL: postgres://
     MEDIA_SERVER_TOKEN: ''
-    JWT_SECRET_KEY: ''
+    JWT_PRIVATE_KEY: ''
+    JWT_PUBLIC_KEY: ''
     SENTRY_DSN: ''
     DEFAULT_FROM_ADDRESS: ''
     DEFAULT_REPLY_TO_ADDRESS: ''
