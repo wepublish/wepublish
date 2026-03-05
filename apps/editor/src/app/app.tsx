@@ -58,6 +58,7 @@ import { CommentRatingEditView } from './routes/commentRatings/commentRatingEdit
 import { CommentEditView } from './routes/comments/commentEditView';
 import { CommentList } from './routes/comments/commentList';
 import { Dashboard } from './routes/dashboard/dashboard';
+import { ExternalAppIframeView } from './routes/externalApps/externalAppIframeView';
 import { ExternalApps } from './routes/externalApps/externalAppsEdit';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
@@ -280,6 +281,14 @@ export function App() {
               element={
                 <Base>
                   <ExternalApps />
+                </Base>
+              }
+            />
+            <Route
+              path="external-app/:id"
+              element={
+                <Base>
+                  <ExternalAppIframeView />
                 </Base>
               }
             />
