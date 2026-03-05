@@ -129,18 +129,13 @@ export function ExternalAppsDashboard() {
               sx={{ height: '100%' }}
             >
               <AppBox p={2}>
-                <AppIconBox>
+                <AppIconBox style={{ color: '#ea726e' }}>
                   <AppIcon iconName={app.icon} />
                 </AppIconBox>
                 <Typography
                   variant="h6"
                   component="div"
-                  noWrap
-                  sx={{
-                    width: '100%',
-                    textOverflow: 'ellipsis',
-                    overflow: 'hidden',
-                  }}
+                  sx={{ lineHeight: '1.15em' }}
                 >
                   {app.name}
                 </Typography>

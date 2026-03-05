@@ -1884,9 +1884,10 @@
     "externalApps": {
       "apps": "Apps"
     },
-    "addExternalAppForm": {
+    "externalAppForm": {
       "create": "Create",
       "update": "Update",
+      "delete": "Delete",
       "name": "Name",
       "url": "URL",
       "target": "Target",
@@ -1894,6 +1895,10 @@
       "errorUpdate": "Failed to update external app",
       "successCreate": "External app created successfully",
       "errorCreate": "Failed to create external app",
+      "successDelete": "External app deleted successfully",
+      "errorDelete": "Failed to delete external app",
+      "deleteConfirmationTitle": "Delete External App",
+      "deleteConfirmationText": "Are you sure you want to delete this external app? This action cannot be undone.",
       "icon": "Icon URL"
     }
   }

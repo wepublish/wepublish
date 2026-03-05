@@ -1710,9 +1710,10 @@
     "externalApps": {
       "apps": "Apps"
     },
-    "addExternalAppForm": {
+    "externalAppForm": {
       "create": "Créer",
       "update": "Mettre à jour",
+      "delete": "Supprimer",
       "name": "Nom",
       "url": "URL",
       "target": "Cible",
@@ -1720,6 +1721,10 @@
       "errorUpdate": "Échec de la mise à jour de l'application externe",
       "successCreate": "Application externe créée avec succès",
       "errorCreate": "Échec de la création de l'application externe",
+      "successDelete": "Application externe supprimée avec succès",
+      "errorDelete": "Échec de la suppression de l'application externe",
+      "deleteConfirmationTitle": "Supprimer l'application externe",
+      "deleteConfirmationText": "Êtes-vous sûr de vouloir supprimer cette application externe ? Cette action est irréversible.",
       "icon": "URL de l'icône"
     }
   }

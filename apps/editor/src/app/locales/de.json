@@ -1823,9 +1823,10 @@
     "externalApps": {
       "apps": "Apps"
     },
-    "addExternalAppForm": {
+    "externalAppForm": {
       "create": "Erstellen",
       "update": "Aktualisieren",
+      "delete": "Löschen",
       "name": "Name",
       "url": "URL",
       "target": "Ziel",
@@ -1833,6 +1834,10 @@
       "errorUpdate": "Fehler beim Aktualisieren der externen App",
       "successCreate": "Externe App erfolgreich erstellt",
       "errorCreate": "Fehler beim Erstellen der externen App",
+      "successDelete": "Externe App erfolgreich gelöscht",
+      "errorDelete": "Fehler beim Löschen der externen App",
+      "deleteConfirmationTitle": "Externe App löschen",
+      "deleteConfirmationText": "Möchten Sie diese externe App wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
       "icon": "Icon URL"
     }
   }
