@@ -61,7 +61,10 @@ export const ReflektTocRichText = ({
       </TocTitle>
       <TocDetails variant="tocDetails">
         {richText && richText.length > 1 && (
-          <RichText richText={[...richText].splice(1, richText.length - 1)} />
+          <RichText
+            richText={[...richText].splice(1, richText.length - 1)}
+            variant="toc"
+          />
         )}
       </TocDetails>
     </ReflektTocRichTextWrapper>

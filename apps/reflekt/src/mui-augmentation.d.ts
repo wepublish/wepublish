@@ -39,6 +39,9 @@ declare module '@mui/material/styles' {
     // Table of Contents - RichText
     tocHeading: CSSProperties;
     tocDetails: CSSProperties;
+    ulToc: CSSProperties;
+    liToc: CSSProperties;
+    linkToc: CSSProperties;
   }
 
   // Optional
@@ -64,6 +67,9 @@ declare module '@mui/material/styles' {
     categoryLink?: CSSProperties;
     tocHeading?: CSSProperties;
     tocDetails?: CSSProperties;
+    ulToc?: CSSProperties;
+    liToc?: CSSProperties;
+    linkToc?: CSSProperties;
   }
 }
 
@@ -91,6 +97,9 @@ declare module '@mui/material/Typography' {
     navbarTab: true;
     tocHeading: true;
     tocDetails: true;
+    ulToc: true;
+    liToc: true;
+    linkToc: true;
   }
 }
 
@@ -101,5 +110,6 @@ declare module '@mui/material/Link' {
     teaserPretitleLink: true;
     buttonLinkMain: true;
     buttonLinkSecondary: true;
+    linkToc: true;
   }
 }

@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { useTheme } from '@emotion/react';
 import { BlockRenderer } from '@wepublish/block-content/website';
 import { ImageContext } from '@wepublish/image/website';
+import { BlockContent } from '@wepublish/website/api';
 import {
   BuilderBlockRendererProps,
   BuilderBlocksProps,

@@ -174,6 +174,18 @@ const theme = createTheme(WePTheme, {
       fontSize: '1.25rem',
       color: colors.common.white,
     },
+    ulToc: {
+      listStyle: 'none',
+      margin: 0,
+      padding: 0,
+    },
+    liToc: {
+      listStyle: 'none',
+      margin: 0,
+      padding: 0,
+      lineHeight: 0,
+      marginBottom: 0,
+    },
     // BlockQuote
     blockQuote: {
       fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
@@ -310,6 +322,8 @@ const theme = createTheme(WePTheme, {
           // Table of Contents - RichText
           tocHeading: 'h2',
           tocDetails: 'div',
+          ulToc: 'ul',
+          liToc: 'li',
         },
       },
     },
@@ -319,7 +333,9 @@ const theme = createTheme(WePTheme, {
           // Footer / Header
           props: { variant: 'categoryLink' },
           style: {
-            fontFamily: ['Euclid', 'sans-serif'].join(','),
+            fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
+              ','
+            ),
             fontWeight: 500,
             fontStyle: 'normal',
             color: colors.common.white,
@@ -336,6 +352,24 @@ const theme = createTheme(WePTheme, {
             [breakpoints.up('md')]: {
               fontSize: '2rem',
               lineHeight: '4rem',
+            },
+          },
+        },
+
+        // Table of Contents - RichText
+        {
+          props: { variant: 'linkToc' },
+          style: {
+            fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
+              ','
+            ),
+            fontWeight: 400,
+            lineHeight: 1,
+            fontSize: '1.25rem',
+            color: colors.common.white,
+            textDecoration: 'none',
+            '&:hover': {
+              textDecoration: 'underline',
             },
           },
         },

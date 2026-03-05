@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { Link, useTheme } from '@mui/material';
+import { capitalize, Link, useTheme } from '@mui/material';
 import { BlockFormat, InlineFormat } from '@wepublish/richtext';
 import { RenderElement } from '@wepublish/richtext/website';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
@@ -18,7 +18,8 @@ const lastChildNoGutter = css`
 
 export function ReflektRenderElement({
   element,
-}: BuilderRenderElementProps): ReactNode {
+  variant,
+}: BuilderRenderElementProps & { variant?: string }): ReactNode {
   const {
     elements: { UnorderedList, ListItem },
     richtext: { RenderRichtext },
@@ -28,15 +29,27 @@ export function ReflektRenderElement({
   switch (element.type) {
     case BlockFormat.UnorderedList:
       return (
-        <UnorderedList css={lastChildNoGutter}>
-          <RenderRichtext elements={element.children} />
+        <UnorderedList
+          css={lastChildNoGutter}
+          variant={variant}
+        >
+          <RenderRichtext
+            elements={element.children}
+            variant={variant}
+          />
         </UnorderedList>
       );
 
     case BlockFormat.ListItem:
       return (
-        <ListItem css={lastChildNoGutter}>
-          <RenderRichtext elements={element.children} />
+        <ListItem
+          css={lastChildNoGutter}
+          variant={variant}
+        >
+          <RenderRichtext
+            elements={element.children}
+            variant={variant}
+          />
         </ListItem>
       );
 
@@ -56,8 +69,12 @@ export function ReflektRenderElement({
           href={element.url as string}
           title={element.title as string}
           data-test="link"
+          variant={variant ? `link${capitalize(variant)}` : undefined}
         >
-          <RenderRichtext elements={element.children} />
+          <RenderRichtext
+            elements={element.children}
+            variant={variant}
+          />
         </Link>
       );
 

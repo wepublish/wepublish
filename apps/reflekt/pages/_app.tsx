@@ -48,10 +48,15 @@ import {
 } from '../src/components/reflekt-block-renderer';
 import { RefFooter } from '../src/components/reflekt-footer';
 import { ReflektGlobalStyles } from '../src/components/reflekt-global-styles';
+import {
+  ReflektListItem,
+  ReflektUnorderedList,
+} from '../src/components/reflekt-lists';
 import { ReflektNavbar } from '../src/components/reflekt-navbar';
 import { ReflektPage } from '../src/components/reflekt-page';
 import { ReflektQuoteBlock } from '../src/components/reflekt-quote-block';
 import { ReflektRenderElement } from '../src/components/reflekt-render-element';
+import { ReflektRenderRichtext } from '../src/components/reflekt-render-richtext';
 import { ReflektRichTextBlock } from '../src/components/reflekt-richtext-block';
 import { ReflektTitleBlock } from '../src/components/reflekt-title-block';
 import { ReflektArticleList } from '../src/components/teaser-layouts/reflekt-article-list';
@@ -108,10 +113,17 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Navbar={ReflektNavbar}
           ArticleList={ReflektArticleList}
           Article={ReflektArticle}
-          elements={{ Link: NextWepublishLink }}
+          elements={{
+            Link: NextWepublishLink,
+            UnorderedList: ReflektUnorderedList,
+            ListItem: ReflektListItem,
+          }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
-          richtext={{ RenderElement: ReflektRenderElement }}
+          richtext={{
+            RenderElement: ReflektRenderElement,
+            RenderRichtext: ReflektRenderRichtext,
+          }}
           blocks={{
             TeaserSlots: ReflektBaseTeaserSlots,
             BaseTeaser: ReflektBaseTeaser,
