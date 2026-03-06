@@ -125,9 +125,7 @@ export const TeaserTitle = styled('h1')`
 export const TeaserLead = styled('p')`
   grid-row: 3 / 4;
   grid-column: -1 / 1;
-  padding: 0 4cqw;
-  font-size: 5cqw !important;
-  line-height: 6.5cqw !important;
+  padding: 0 1.125rem;
 `;
 
 export const TeaserMetadata = styled('div')`
@@ -139,9 +137,7 @@ export const TeaserTime = styled('time')`
   grid-row: 1 / 2;
   grid-column: -1 / 1;
   visibility: visible;
-  padding: 3cqw 4cqw 0 4cqw;
   text-align: center;
-  font-size: 3.5cqw;
 `;
 
 export const TeaserImageWrapper = styled('figure')`

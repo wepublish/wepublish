@@ -16,6 +16,16 @@ const lastChildNoGutter = css`
   }
 `;
 
+export const createIdFromText = (descendants: Descendant[]) =>
+  descendants
+    .filter(child => 'text' in child)
+    .map(child => child.text)
+    .join(' ')
+    .toLowerCase()
+    .replace(/^/, 'id-')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
 export function ReflektRenderElement({
   element,
   variant,
@@ -31,8 +41,9 @@ export function ReflektRenderElement({
       return (
         <H3
           component="h2"
-          gutterBottom
+          gutterBottom={false}
           css={lastChildNoGutter}
+          id={createIdFromText(element.children)}
         >
           <RenderRichtext elements={element.children} />
         </H3>
@@ -42,8 +53,9 @@ export function ReflektRenderElement({
       return (
         <H4
           component="h3"
-          gutterBottom
+          gutterBottom={false}
           css={lastChildNoGutter}
+          id={createIdFromText(element.children)}
         >
           <RenderRichtext elements={element.children} />
         </H4>
@@ -53,8 +65,9 @@ export function ReflektRenderElement({
       return (
         <H5
           component="h4"
-          gutterBottom
+          gutterBottom={false}
           css={lastChildNoGutter}
+          id={createIdFromText(element.children)}
         >
           <RenderRichtext elements={element.children} />
         </H5>
@@ -97,8 +110,8 @@ export function ReflektRenderElement({
             : '_blank'
           }
           rel="noreferrer"
-          id={element.id as string}
-          href={element.url as string}
+          id={undefined}
+          href={`${element.url as string}${element.id ? `${(element.url as string).endsWith('#') ? '' : '#'}${createIdFromText([{ text: element.id as string }])}` : ''}`}
           title={element.title as string}
           data-test="link"
           variant={variant ? `link${capitalize(variant)}` : undefined}

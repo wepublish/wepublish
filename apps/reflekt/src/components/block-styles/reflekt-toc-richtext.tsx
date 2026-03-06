@@ -24,7 +24,6 @@ export const ReflektTocRichTextWrapper = styled('div')`
   display: grid;
   grid-template-columns: subgrid;
   grid-template-rows: repeat(2, auto);
-  padding-bottom: 2.5cqw;
 `;
 
 export const TocTitle = styled(Typography)`

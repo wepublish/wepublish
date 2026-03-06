@@ -1,4 +1,5 @@
 import { createTheme, Theme, ThemeOptions } from '@mui/material';
+import { createBreakpoints } from '@mui/system';
 import { theme as WePTheme } from '@wepublish/ui';
 import { Roboto_Mono } from 'next/font/google';
 import localFont from 'next/font/local';
@@ -85,12 +86,24 @@ const colors = {
   },
 };
 
+const breakPointValues = {
+  xs: 0,
+  sm: 600,
+  md: 900,
+  lg: 1133,
+  xl: 1133,
+  xxl: 1133,
+};
+
 const {
   palette: { augmentColor },
   breakpoints,
 } = WePTheme;
 
 const theme = createTheme(WePTheme, {
+  breakpoints: createBreakpoints({
+    values: breakPointValues,
+  }),
   palette: {
     common: {
       black: colors.common.black,
@@ -117,17 +130,29 @@ const theme = createTheme(WePTheme, {
     h1: {
       fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
     },
+    // heading 1 (part of the hero block, or standalone if no hero block is used)
     h2: {
       fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+      textTransform: 'uppercase',
+      fontWeight: 500,
+      fontSize: '3rem',
+      lineHeight: 1.2,
     },
     h3: {
       fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
     },
+    // heading 2 with number
     h4: {
       fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+      textTransform: 'uppercase',
+      fontWeight: 500,
+      fontSize: '1.125rem',
     },
+    // zwischentitel
     h5: {
-      fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [recife.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: 700,
+      fontSize: '1.125rem',
     },
     h6: {
       fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
@@ -143,6 +168,8 @@ const theme = createTheme(WePTheme, {
     },
     caption: {
       fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
+      fontSize: '0.75rem',
+      lineHeight: 1.2,
     },
     overline: {
       fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
@@ -150,6 +177,8 @@ const theme = createTheme(WePTheme, {
     subtitle1: {
       fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
       fontWeight: 400,
+      fontSize: '1.5rem',
+      lineHeight: 1.2,
       fontStyle: 'normal',
     },
     subtitle2: {
@@ -162,17 +191,14 @@ const theme = createTheme(WePTheme, {
       fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
       fontWeight: 500,
       lineHeight: 1.15,
-      fontSize: '2rem',
+      fontSize: '1.5rem',
       textTransform: 'uppercase',
       color: colors.common.white,
-      padding: '1.5cqw 0',
+      padding: '1.5rem 0',
     },
     tocDetails: {
       fontFamily: [recife.style.fontFamily, 'serif'].join(','),
-      fontWeight: 400,
-      lineHeight: 1.5,
-      fontSize: '1.25rem',
-      color: colors.common.white,
+      paddingBottom: '2rem',
     },
     ulToc: {
       listStyle: 'none',
@@ -225,15 +251,15 @@ const theme = createTheme(WePTheme, {
     // BlockQuote
     blockQuote: {
       fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
-      fontWeight: 400,
-      lineHeight: 1.15,
+      fontWeight: 500,
+      lineHeight: 1.2,
       fontSize: '3rem',
       '& + cite': {
         fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
         fontStyle: 'normal',
         textTransform: 'uppercase',
-        fontSize: '1rem',
-        lineHeight: '1.25rem',
+        fontSize: '1.125rem',
+        lineHeight: 1,
         fontWeight: 400,
       },
     },
@@ -356,7 +382,7 @@ const theme = createTheme(WePTheme, {
           categoryAddress: 'address',
           categoryAddressText: 'p',
           // Table of Contents - RichText
-          tocHeading: 'h2',
+          tocHeading: 'div',
           tocDetails: 'div',
           ulToc: 'ul',
           liToc: 'li',
@@ -402,9 +428,8 @@ const theme = createTheme(WePTheme, {
             fontFamily: [recife.style.fontFamily, 'sans-serif'].join(','),
             fontWeight: 700,
             lineHeight: 1,
-            fontSize: '1.25rem',
+            fontSize: '1.125rem',
             color: colors.common.white,
-            textDecoration: 'none',
             '&:hover': {
               textDecoration: 'underline',
             },
@@ -551,6 +576,24 @@ const theme = createTheme(WePTheme, {
         },
       },
     },
+    MuiContainer: {
+      styleOverrides: {
+        root: ({ theme }: { theme: any }) => ({
+          [theme.breakpoints.up('md')]: {
+            maxWidth: `${breakPointValues.md + 48}px`,
+          },
+          [theme.breakpoints.up('lg')]: {
+            maxWidth: `${breakPointValues.lg + 48}px`,
+          },
+          [theme.breakpoints.up('xl')]: {
+            maxWidth: `${breakPointValues.xl + 48}px`,
+          },
+          [theme.breakpoints.up('xxl')]: {
+            maxWidth: `${breakPointValues.xxl + 48}px`,
+          },
+        }),
+      },
+    },
   },
 } as PartialDeep<Theme> | ThemeOptions);
 
@@ -588,8 +631,8 @@ export const teaserMoreAboutTheme = createTheme(theme, {
       [breakpoints.up('xs')]: {
         fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
         display: 'block',
-        fontSize: 'calc(var(--sizing-factor) * 1.3cqw)',
-        lineHeight: 'calc(var(--sizing-factor) * 1.4cqw)',
+        fontSize: '1.125rem',
+        lineHeight: '1.4rem',
         fontWeight: 400,
         padding: 0,
         backgroundColor: 'transparent',

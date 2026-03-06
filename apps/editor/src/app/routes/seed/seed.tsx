@@ -258,6 +258,526 @@ async function seedAuthors(createAuthor: any, imageIds: string[] = []) {
   );
 }
 
+const addRichTextHeading = (
+  text: string,
+  level: string,
+  headings: string[],
+  headingTwo: string[]
+): Descendant => {
+  if (level === 'two') {
+    headingTwo.push(text);
+  }
+  const t = {
+    text: `${level === 'two' ? `${headingTwo.length}. ` : ''}${text}`,
+  };
+  const heading = {
+    type: `heading-${level}`,
+    children: [t],
+  };
+  headings.push(t.text);
+  return heading as Descendant;
+};
+
+const getBlockStyle = (blockStyles: any, blockStyleName: string) => {
+  let retVal = blockStyles.find((style: any) =>
+    [style.id, style.name].includes(blockStyleName)
+  );
+  if (!retVal) {
+    retVal = undefined;
+  } else {
+    retVal = retVal.id;
+  }
+  return retVal;
+};
+
+const updateToc = (
+  blocks: BlockContentInput[],
+  headings: string[],
+  blockStyles: BlockStyle[]
+): BlockContentInput[] => {
+  return blocks.map(block => {
+    if (
+      'richText' in block &&
+      block.richText?.blockStyle ===
+        getBlockStyle(blockStyles, 'TableOfContents')
+    ) {
+      return {
+        richText: {
+          blockStyle: block.richText?.blockStyle,
+          richText: [
+            {
+              type: 'heading-one',
+              children: [
+                {
+                  text: 'Kapitel',
+                },
+              ],
+            },
+            {
+              type: 'unordered-list',
+              children: headings.map(heading => ({
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: `#`,
+                    title: `Zum Kapitel: ${heading}`,
+                    children: [{ text: heading }],
+                    id: heading,
+                  },
+                ],
+              })),
+            },
+          ],
+        },
+      };
+    }
+    return block;
+  }) as BlockContentInput[];
+};
+
+const createArticleBlocksInput = (
+  tagIds: string[],
+  authorIds: string[],
+  imageIds: string[],
+  i: number,
+  blockStyles: BlockStyle[],
+  title: string,
+  headings: string[],
+  headingTwo: string[]
+): BlockContentInput[] => {
+  const blocks: BlockContentInput[] = [
+    // hero block
+    ...pickRandom(
+      {
+        flexBlock: {
+          blockStyle: getBlockStyle(blockStyles, 'FlexBlockHero'),
+          blocks: [
+            // desktop image
+            {
+              alignment: {
+                i: '0',
+                x: 0,
+                y: 0,
+                w: 6,
+                h: 7,
+                static: false,
+              },
+              block: {
+                image: {
+                  imageID: imageIds[12],
+                  caption: faker.lorem.sentence(),
+                } as ImageBlockInput,
+              } as BlockContentInput,
+            },
+
+            // mobile image
+            {
+              alignment: {
+                i: '1',
+                x: 6,
+                y: 0,
+                w: 6,
+                h: 7,
+                static: false,
+              },
+              block: {
+                image: {
+                  imageID: imageIds[13],
+                  caption: faker.lorem.sentence(),
+                } as ImageBlockInput,
+              } as BlockContentInput,
+            },
+
+            // overlay text
+            {
+              alignment: {
+                i: '2',
+                x: 0,
+                y: 7,
+                w: 12,
+                h: 3,
+                static: false,
+              },
+              block: {
+                richText: {
+                  richText: [
+                    {
+                      type: 'heading-one',
+                      children: [
+                        {
+                          text: capitalize(
+                            faker.lorem.words({ min: 3, max: 8 })
+                          ),
+                        },
+                      ],
+                    },
+                    ...(getText(1, 2) as Descendant[]),
+                  ] as Descendant[],
+                } as RichTextBlockInput,
+              } as BlockContentInput,
+            },
+          ] as BlockWithAlignment[],
+        } as FlexBlockInput,
+      } as BlockContentInput,
+      0.3
+    ),
+
+    // a title block
+    {
+      title: {
+        title,
+        preTitle: capitalize(faker.lorem.words({ min: 3, max: 8 })),
+        lead: faker.lorem.sentences({ min: 3, max: 5 }),
+      } as TitleBlockInput,
+    } as BlockContentInput,
+
+    // a collapsible rich text block
+    {
+      richText: {
+        blockStyle: getBlockStyle(blockStyles, 'CollapsibleRichText'),
+        richText: [
+          {
+            type: 'heading-one',
+            children: [
+              {
+                text: 'Das Wichtigste in Kürze',
+              },
+            ],
+          },
+          {
+            type: 'unordered-list',
+            children: [
+              {
+                type: 'list-item',
+                children: [{ text: capitalize(faker.lorem.sentence()) }],
+              },
+              {
+                type: 'list-item',
+                children: [{ text: capitalize(faker.lorem.sentence()) }],
+              },
+              {
+                type: 'list-item',
+                children: [{ text: capitalize(faker.lorem.sentence()) }],
+              },
+            ],
+          },
+          {
+            type: 'unordered-list',
+            children: [
+              {
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: faker.internet.url(),
+                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                  },
+                ],
+              },
+              {
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: faker.internet.url(),
+                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                  },
+                ],
+              },
+              {
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: faker.internet.url(),
+                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                  },
+                ],
+              },
+            ],
+          },
+          ...(getText(1, 2) as Descendant[]),
+        ] as Descendant[],
+      } as RichTextBlockInput,
+    } as BlockContentInput,
+
+    // a quote block without author
+    {
+      quote: {
+        quote: capitalize(
+          'How can you make sure that this money is being considered as legal or legalized? Because I’m not sure whether it’s really legal. Can you help  him with it?'
+        ),
+        imageID: undefined,
+        author: undefined,
+      } as QuoteBlockInput,
+    } as BlockContentInput,
+
+    // a quote block with author
+    {
+      quote: {
+        quote: capitalize(
+          'Yeah, but to answer this  question, we would need to have more information. And then it’s the way  we will present it to the banks, you know.'
+        ),
+        imageID: undefined,
+        author: capitalize(faker.person.fullName()),
+      } as QuoteBlockInput,
+    } as BlockContentInput,
+
+    // an image block
+    {
+      image: {
+        imageID: imageIds[(i + 1) % imageIds.length],
+        caption: faker.lorem.sentence(),
+      } as ImageBlockInput,
+    } as BlockContentInput,
+
+    // a break block --> on large screens placed in sidebar
+    {
+      linkPageBreak: {
+        blockStyle: getBlockStyle(blockStyles, 'SB_SidebarContent'),
+        hideButton: false,
+        text: 'Shop',
+        imageID: imageIds[imageIds.length - 25],
+        linkTarget: null,
+        linkText: capitalize(faker.lorem.words({ min: 1, max: 3 })),
+        linkURL: 'https://shop.tsri.ch/products/cap-tsuri',
+        richText: [
+          {
+            type: 'paragraph',
+            children: [
+              {
+                text: `Neu! ${capitalize(faker.lorem.words({ min: 2, max: 4 }))}`,
+              },
+            ],
+          },
+          ...(getText(1, 1) as Descendant[]),
+          {
+            type: 'paragraph',
+            children: [
+              {
+                text: `Design von Armanda Asani
+CHF 42.00
+
+Jetzt im Shop erhältlich.`,
+              },
+            ],
+          },
+        ] as Descendant[],
+      } as BreakBlockInput,
+    } as BlockContentInput,
+
+    // a table of contents rich text block
+    {
+      richText: {
+        blockStyle: getBlockStyle(blockStyles, 'TableOfContents'),
+        richText: [
+          {
+            type: 'heading-one',
+            children: [
+              {
+                text: 'Kapitel',
+              },
+            ],
+          },
+          {
+            type: 'unordered-list',
+            children: [
+              {
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: faker.internet.url(),
+                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                  },
+                ],
+              },
+              {
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: faker.internet.url(),
+                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                  },
+                ],
+              },
+              {
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: faker.internet.url(),
+                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                  },
+                ],
+              },
+            ],
+          },
+        ] as Descendant[],
+      } as RichTextBlockInput,
+    } as BlockContentInput,
+
+    // a rich text block
+    {
+      richText: {
+        richText: [
+          addRichTextHeading(
+            capitalize(faker.lorem.words({ min: 3, max: 9 })),
+            'three',
+            headings,
+            headingTwo
+          ),
+          ...(getText(3, 7) as Descendant[]),
+        ] as Descendant[],
+      } as RichTextBlockInput,
+    } as BlockContentInput,
+
+    // some alternating image and rich text blocks
+    ...Array.from({ length: faker.number.int({ min: 5, max: 9 }) }, () => {
+      const imageBlock = pickRandom<BlockContentInput>(
+        {
+          image: {
+            imageID:
+              imageIds[faker.number.int({ min: 0, max: imageIds.length - 1 })],
+            caption: faker.lorem.sentence(),
+          } as ImageBlockInput,
+        },
+        0.1
+      );
+      if (imageBlock.length) {
+        return imageBlock[0];
+      } else {
+        return {
+          richText: {
+            richText: [
+              addRichTextHeading(
+                capitalize(faker.lorem.words({ min: 3, max: 9 })),
+                'two',
+                headings,
+                headingTwo
+              ),
+              ...(getText(3, 5) as Descendant[]),
+              addRichTextHeading(
+                capitalize(faker.lorem.words({ min: 3, max: 9 })),
+                'three',
+                headings,
+                headingTwo
+              ),
+              ...(getText(3, 5) as Descendant[]),
+            ] as Descendant[],
+          } as RichTextBlockInput,
+        } as BlockContentInput;
+      }
+    }),
+
+    // another break block (newsletter registration) --> on large screens placed in sidebar
+    {
+      linkPageBreak: {
+        blockStyle: getBlockStyle(blockStyles, 'SB_SidebarContent'),
+        hideButton: false,
+        imageID: imageIds[imageIds.length - 30],
+        linkTarget: null,
+        linkText: capitalize(faker.lorem.words({ min: 1, max: 3 })),
+        linkURL: `/newsletter?mc_u=56ee24de7341c744008a13c9e&mc_id=32c65d081a&mc_f_id=00e5c2e1f0&source=tsri&tf_id=jExhxiVv&popTitle=${encodeURIComponent(faker.lorem.words({ min: 2, max: 5 }).toUpperCase())}&popButtonText=${encodeURIComponent(capitalize(faker.lorem.words({ min: 2, max: 3 })))}&popText=${encodeURIComponent(faker.lorem.sentence({ min: 16, max: 30 }))}`,
+        richText: [
+          {
+            type: 'heading-two',
+            children: [
+              {
+                text: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+              },
+            ],
+          },
+          ...(getText(1, 1) as Descendant[]),
+        ] as Descendant[],
+        text: 'Newsletter',
+      } as BreakBlockInput,
+    } as BlockContentInput,
+
+    // more rich text blocks
+    ...Array.from({ length: faker.number.int({ min: 1, max: 4 }) }, () => {
+      return {
+        richText: {
+          richText: [
+            addRichTextHeading(
+              capitalize(faker.lorem.words({ min: 3, max: 9 })),
+              'three',
+              headings,
+              headingTwo
+            ),
+            ...(getText(3, 5) as Descendant[]),
+          ] as Descendant[],
+        } as RichTextBlockInput,
+      } as BlockContentInput;
+    }),
+
+    // a collapsible downloads list block
+    {
+      richText: {
+        blockStyle: getBlockStyle(blockStyles, 'CollapsibleDownloads'),
+        richText: [
+          {
+            type: 'heading-one',
+            children: [
+              {
+                text: 'Downloads',
+              },
+            ],
+          },
+          {
+            type: 'unordered-list',
+            children: [
+              {
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: faker.internet.url(),
+                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                  },
+                ],
+              },
+              {
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: faker.internet.url(),
+                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                  },
+                ],
+              },
+              {
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: faker.internet.url(),
+                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                  },
+                ],
+              },
+            ],
+          },
+        ] as Descendant[],
+      } as RichTextBlockInput,
+    } as BlockContentInput,
+  ] as BlockContentInput[];
+
+  return blocks;
+};
+
 const createArticleInput = (
   tagIds: string[],
   authorIds: string[],
@@ -265,6 +785,8 @@ const createArticleInput = (
   i: number,
   blockStyles: BlockStyle[]
 ) => {
+  const headings: string[] = [];
+  const headingTwo: string[] = [];
   const title = capitalize(faker.lorem.words({ min: 3, max: 8 }));
   return {
     variables: {
@@ -318,460 +840,20 @@ const createArticleInput = (
           ] as PropertyInput[])
         : ([] as PropertyInput[]),
       blocks: [
-        // hero block
-        ...pickRandom(
-          {
-            flexBlock: {
-              blockStyle: getBlockStyle(blockStyles, 'FlexBlockHero'),
-              blocks: [
-                // desktop image
-                {
-                  alignment: {
-                    i: '0',
-                    x: 0,
-                    y: 0,
-                    w: 6,
-                    h: 7,
-                    static: false,
-                  },
-                  block: {
-                    image: {
-                      imageID: imageIds[12],
-                      caption: faker.lorem.sentence(),
-                    } as ImageBlockInput,
-                  } as BlockContentInput,
-                },
-
-                // mobile image
-                {
-                  alignment: {
-                    i: '1',
-                    x: 6,
-                    y: 0,
-                    w: 6,
-                    h: 7,
-                    static: false,
-                  },
-                  block: {
-                    image: {
-                      imageID: imageIds[13],
-                      caption: faker.lorem.sentence(),
-                    } as ImageBlockInput,
-                  } as BlockContentInput,
-                },
-
-                // overlay text
-                {
-                  alignment: {
-                    i: '2',
-                    x: 0,
-                    y: 7,
-                    w: 12,
-                    h: 3,
-                    static: false,
-                  },
-                  block: {
-                    richText: {
-                      richText: [
-                        {
-                          type: 'heading-one',
-                          children: [
-                            {
-                              text: capitalize(
-                                faker.lorem.words({ min: 3, max: 8 })
-                              ),
-                            },
-                          ],
-                        },
-                        ...(getText(1, 2) as Descendant[]),
-                      ] as Descendant[],
-                    } as RichTextBlockInput,
-                  } as BlockContentInput,
-                },
-              ] as BlockWithAlignment[],
-            } as FlexBlockInput,
-          } as BlockContentInput,
-          0.3
-        ),
-
-        // a title block
-        {
-          title: {
+        ...updateToc(
+          createArticleBlocksInput(
+            tagIds,
+            authorIds,
+            imageIds,
+            i,
+            blockStyles,
             title,
-            preTitle: capitalize(faker.lorem.words({ min: 3, max: 8 })),
-            lead: faker.lorem.sentences({ min: 3, max: 5 }),
-          } as TitleBlockInput,
-        } as BlockContentInput,
-
-        // a collapsible rich text block
-        {
-          richText: {
-            blockStyle: getBlockStyle(blockStyles, 'CollapsibleRichText'),
-            richText: [
-              {
-                type: 'heading-one',
-                children: [
-                  {
-                    text: 'Das Wichtigste in Kürze',
-                  },
-                ],
-              },
-              {
-                type: 'unordered-list',
-                children: [
-                  {
-                    type: 'list-item',
-                    children: [{ text: capitalize(faker.lorem.sentence()) }],
-                  },
-                  {
-                    type: 'list-item',
-                    children: [{ text: capitalize(faker.lorem.sentence()) }],
-                  },
-                  {
-                    type: 'list-item',
-                    children: [{ text: capitalize(faker.lorem.sentence()) }],
-                  },
-                ],
-              },
-              {
-                type: 'unordered-list',
-                children: [
-                  {
-                    type: 'list-item',
-                    children: [
-                      {
-                        type: 'link',
-                        url: faker.internet.url(),
-                        title: capitalize(
-                          faker.lorem.words({ min: 2, max: 4 })
-                        ),
-                        children: [
-                          { text: capitalize(faker.lorem.sentence()) },
-                        ],
-                      },
-                    ],
-                  },
-                  {
-                    type: 'list-item',
-                    children: [
-                      {
-                        type: 'link',
-                        url: faker.internet.url(),
-                        title: capitalize(
-                          faker.lorem.words({ min: 2, max: 4 })
-                        ),
-                        children: [
-                          { text: capitalize(faker.lorem.sentence()) },
-                        ],
-                      },
-                    ],
-                  },
-                  {
-                    type: 'list-item',
-                    children: [
-                      {
-                        type: 'link',
-                        url: faker.internet.url(),
-                        title: capitalize(
-                          faker.lorem.words({ min: 2, max: 4 })
-                        ),
-                        children: [
-                          { text: capitalize(faker.lorem.sentence()) },
-                        ],
-                      },
-                    ],
-                  },
-                ],
-              },
-              ...(getText(1, 2) as Descendant[]),
-            ] as Descendant[],
-          } as RichTextBlockInput,
-        } as BlockContentInput,
-
-        // a quote block without author
-        {
-          quote: {
-            quote: capitalize(
-              'How can you make sure that this money is being considered as legal or legalized? Because I’m not sure whether it’s really legal. Can you help  him with it?'
-            ),
-            imageID: undefined,
-            author: undefined,
-          } as QuoteBlockInput,
-        } as BlockContentInput,
-
-        // a quote block with author
-        {
-          quote: {
-            quote: capitalize(
-              'Yeah, but to answer this  question, we would need to have more information. And then it’s the way  we will present it to the banks, you know.'
-            ),
-            imageID: undefined,
-            author: capitalize(faker.person.fullName()),
-          } as QuoteBlockInput,
-        } as BlockContentInput,
-
-        // an image block
-        {
-          image: {
-            imageID: imageIds[(i + 1) % imageIds.length],
-            caption: faker.lorem.sentence(),
-          } as ImageBlockInput,
-        } as BlockContentInput,
-
-        // a break block --> on large screens placed in sidebar
-        {
-          linkPageBreak: {
-            blockStyle: getBlockStyle(blockStyles, 'SB_SidebarContent'),
-            hideButton: false,
-            text: 'Shop',
-            imageID: imageIds[imageIds.length - 25],
-            linkTarget: null,
-            linkText: capitalize(faker.lorem.words({ min: 1, max: 3 })),
-            linkURL: 'https://shop.tsri.ch/products/cap-tsuri',
-            richText: [
-              {
-                type: 'paragraph',
-                children: [
-                  {
-                    text: `Neu! ${capitalize(faker.lorem.words({ min: 2, max: 4 }))}`,
-                  },
-                ],
-              },
-              ...(getText(1, 1) as Descendant[]),
-              {
-                type: 'paragraph',
-                children: [
-                  {
-                    text: `Design von Armanda Asani
-CHF 42.00
-
-Jetzt im Shop erhältlich.`,
-                  },
-                ],
-              },
-            ] as Descendant[],
-          } as BreakBlockInput,
-        } as BlockContentInput,
-
-        // a table of contents rich text block
-        {
-          richText: {
-            blockStyle: getBlockStyle(blockStyles, 'TableOfContents'),
-            richText: [
-              {
-                type: 'heading-one',
-                children: [
-                  {
-                    text: 'Kapitel',
-                  },
-                ],
-              },
-              {
-                type: 'unordered-list',
-                children: [
-                  {
-                    type: 'list-item',
-                    children: [
-                      {
-                        type: 'link',
-                        url: faker.internet.url(),
-                        title: capitalize(
-                          faker.lorem.words({ min: 2, max: 4 })
-                        ),
-                        children: [
-                          { text: capitalize(faker.lorem.sentence()) },
-                        ],
-                      },
-                    ],
-                  },
-                  {
-                    type: 'list-item',
-                    children: [
-                      {
-                        type: 'link',
-                        url: faker.internet.url(),
-                        title: capitalize(
-                          faker.lorem.words({ min: 2, max: 4 })
-                        ),
-                        children: [
-                          { text: capitalize(faker.lorem.sentence()) },
-                        ],
-                      },
-                    ],
-                  },
-                  {
-                    type: 'list-item',
-                    children: [
-                      {
-                        type: 'link',
-                        url: faker.internet.url(),
-                        title: capitalize(
-                          faker.lorem.words({ min: 2, max: 4 })
-                        ),
-                        children: [
-                          { text: capitalize(faker.lorem.sentence()) },
-                        ],
-                      },
-                    ],
-                  },
-                ],
-              },
-            ] as Descendant[],
-          } as RichTextBlockInput,
-        } as BlockContentInput,
-
-        // a rich text block
-        {
-          richText: {
-            richText: getText(3, 7),
-          } as RichTextBlockInput,
-        } as BlockContentInput,
-
-        // some alternating image and rich text blocks
-        ...Array.from({ length: faker.number.int({ min: 5, max: 9 }) }, () => {
-          const imageBlock = pickRandom<BlockContentInput>(
-            {
-              image: {
-                imageID:
-                  imageIds[
-                    faker.number.int({ min: 0, max: imageIds.length - 1 })
-                  ],
-                caption: faker.lorem.sentence(),
-              } as ImageBlockInput,
-            },
-            0.1
-          );
-          const richTextBlock = {
-            richText: {
-              richText: [
-                {
-                  type: 'heading-three',
-                  children: [
-                    {
-                      text: capitalize(faker.lorem.words({ min: 3, max: 9 })),
-                    },
-                  ],
-                },
-                ...(getText(3, 5) as Descendant[]),
-              ] as Descendant[],
-            } as RichTextBlockInput,
-          } as BlockContentInput;
-          if (imageBlock.length) {
-            return imageBlock[0];
-          } else {
-            return richTextBlock;
-          }
-        }),
-
-        // another break block (newsletter registration) --> on large screens placed in sidebar
-        {
-          linkPageBreak: {
-            blockStyle: getBlockStyle(blockStyles, 'SB_SidebarContent'),
-            hideButton: false,
-            imageID: imageIds[imageIds.length - 30],
-            linkTarget: null,
-            linkText: capitalize(faker.lorem.words({ min: 1, max: 3 })),
-            linkURL: `/newsletter?mc_u=56ee24de7341c744008a13c9e&mc_id=32c65d081a&mc_f_id=00e5c2e1f0&source=tsri&tf_id=jExhxiVv&popTitle=${encodeURIComponent(faker.lorem.words({ min: 2, max: 5 }).toUpperCase())}&popButtonText=${encodeURIComponent(capitalize(faker.lorem.words({ min: 2, max: 3 })))}&popText=${encodeURIComponent(faker.lorem.sentence({ min: 16, max: 30 }))}`,
-            richText: [
-              {
-                type: 'heading-two',
-                children: [
-                  {
-                    text: capitalize(faker.lorem.words({ min: 2, max: 4 })),
-                  },
-                ],
-              },
-              ...(getText(1, 1) as Descendant[]),
-            ] as Descendant[],
-            text: 'Newsletter',
-          } as BreakBlockInput,
-        } as BlockContentInput,
-
-        // more rich text blocks
-        ...Array.from({ length: faker.number.int({ min: 1, max: 4 }) }, () => {
-          return {
-            richText: {
-              richText: [
-                {
-                  type: 'heading-three',
-                  children: [
-                    {
-                      text: capitalize(faker.lorem.words({ min: 3, max: 9 })),
-                    },
-                  ],
-                },
-                ...(getText(3, 5) as Descendant[]),
-              ] as Descendant[],
-            } as RichTextBlockInput,
-          } as BlockContentInput;
-        }),
-
-        // a collapsible downloads list block
-        {
-          richText: {
-            blockStyle: getBlockStyle(blockStyles, 'CollapsibleDownloads'),
-            richText: [
-              {
-                type: 'heading-one',
-                children: [
-                  {
-                    text: 'Downloads',
-                  },
-                ],
-              },
-              {
-                type: 'unordered-list',
-                children: [
-                  {
-                    type: 'list-item',
-                    children: [
-                      {
-                        type: 'link',
-                        url: faker.internet.url(),
-                        title: capitalize(
-                          faker.lorem.words({ min: 2, max: 4 })
-                        ),
-                        children: [
-                          { text: capitalize(faker.lorem.sentence()) },
-                        ],
-                      },
-                    ],
-                  },
-                  {
-                    type: 'list-item',
-                    children: [
-                      {
-                        type: 'link',
-                        url: faker.internet.url(),
-                        title: capitalize(
-                          faker.lorem.words({ min: 2, max: 4 })
-                        ),
-                        children: [
-                          { text: capitalize(faker.lorem.sentence()) },
-                        ],
-                      },
-                    ],
-                  },
-                  {
-                    type: 'list-item',
-                    children: [
-                      {
-                        type: 'link',
-                        url: faker.internet.url(),
-                        title: capitalize(
-                          faker.lorem.words({ min: 2, max: 4 })
-                        ),
-                        children: [
-                          { text: capitalize(faker.lorem.sentence()) },
-                        ],
-                      },
-                    ],
-                  },
-                ],
-              },
-            ] as Descendant[],
-          } as RichTextBlockInput,
-        } as BlockContentInput,
+            headings,
+            headingTwo
+          ),
+          headings,
+          blockStyles
+        ),
       ] as BlockContentInput[],
 
       hideAuthor: false,
@@ -1008,18 +1090,6 @@ async function seedEvents(createEvent: any, imageIds: string[] = []) {
     )
   );
 }
-
-const getBlockStyle = (blockStyles: any, blockStyleName: string) => {
-  let retVal = blockStyles.find((style: any) =>
-    [style.id, style.name].includes(blockStyleName)
-  );
-  if (!retVal) {
-    retVal = undefined;
-  } else {
-    retVal = retVal.id;
-  }
-  return retVal;
-};
 
 async function seedPages(
   createPage: any,

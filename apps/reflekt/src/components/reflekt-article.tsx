@@ -53,6 +53,8 @@ const articleDate = (isFlexBlockHero: boolean) => (theme: Theme) => css`
 
 const ArticleDateWrapper = styled('span')`
   font-family: ${robotoMono.style.fontFamily};
+  font-size: 0.75rem;
+  line-height: 1;
 
   & time {
     padding-left: ${({ theme }) => theme.spacing(1)};
@@ -85,9 +87,7 @@ export const ArticleWrapper = styled(ContentWrapper)<{
   padding-top: var(--navbar-height);
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-template-columns:
-      max(calc(100vw - 1333px) / 2, 0px) repeat(12, 1fr)
-      max(calc(100vw - 1333px) / 2, 0px) !important;
+    justify-content: center;
 
     & > * {
       grid-column: 5/11;
@@ -123,6 +123,11 @@ export const ArticleWrapper = styled(ContentWrapper)<{
       grid-column: -1/1;
     }
   }
+
+  grid-template-columns:
+    max(calc(100vw - var(--breakpoint-width) + 48px) / 2, 0px)
+    repeat(12, 1fr)
+    max(calc(100vw - var(--breakpoint-width) + 48px) / 2, 0px) !important;
 
   ${({
     hideContent,
