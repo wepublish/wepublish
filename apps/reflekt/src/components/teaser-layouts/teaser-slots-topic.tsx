@@ -19,7 +19,7 @@ import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 export const isTeaserSlotsTopic = allPass([
   ({ blockStyle }: BuilderTeaserProps) => {
     return (
-      blockStyle === ReflektBlockType.TeaserResearch ||
+      blockStyle === ReflektBlockType.TeaserRecherchen ||
       blockStyle === ReflektBlockType.TeaserNews
     );
   },

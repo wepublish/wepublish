@@ -2,9 +2,23 @@ import { css } from '@emotion/react';
 import { capitalize, Link, useTheme } from '@mui/material';
 import { BlockFormat, InlineFormat } from '@wepublish/richtext';
 import { RenderElement } from '@wepublish/richtext/website';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
-import { BuilderRenderElementProps } from '@wepublish/website/builder';
-import { ReactNode } from 'react';
+import {
+  BuilderListItemProps,
+  BuilderRenderElementProps,
+  BuilderUnorderedListProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
+import { ComponentType, ReactNode } from 'react';
+import { Descendant } from 'slate';
+
+import { ReflektRenderRichtextType } from './reflekt-render-richtext';
+
+type ReflektUnorderedListType = ComponentType<
+  BuilderUnorderedListProps & { variant?: string }
+>;
+type ReflektListItemType = ComponentType<
+  BuilderListItemProps & { variant?: string }
+>;
 
 const lastChildNoGutter = css`
   &&:first-child {
@@ -34,6 +48,10 @@ export function ReflektRenderElement({
     elements: { H3, H4, H5, UnorderedList, ListItem },
     richtext: { RenderRichtext },
   } = useWebsiteBuilder();
+
+  const ReflektRenderRichtext = RenderRichtext as ReflektRenderRichtextType;
+  const ReflektUnorderedList = UnorderedList as ReflektUnorderedListType;
+  const ReflektListItem = ListItem as ReflektListItemType;
   const theme = useTheme();
 
   switch (element.type) {
@@ -74,28 +92,28 @@ export function ReflektRenderElement({
       );
     case BlockFormat.UnorderedList:
       return (
-        <UnorderedList
+        <ReflektUnorderedList
           css={lastChildNoGutter}
           variant={variant}
         >
-          <RenderRichtext
+          <ReflektRenderRichtext
             elements={element.children}
             variant={variant}
           />
-        </UnorderedList>
+        </ReflektUnorderedList>
       );
 
     case BlockFormat.ListItem:
       return (
-        <ListItem
+        <ReflektListItem
           css={lastChildNoGutter}
           variant={variant}
         >
-          <RenderRichtext
+          <ReflektRenderRichtext
             elements={element.children}
             variant={variant}
           />
-        </ListItem>
+        </ReflektListItem>
       );
 
     case InlineFormat.Link:
@@ -116,7 +134,7 @@ export function ReflektRenderElement({
           data-test="link"
           variant={variant ? `link${capitalize(variant)}` : undefined}
         >
-          <RenderRichtext
+          <ReflektRenderRichtext
             elements={element.children}
             variant={variant}
           />

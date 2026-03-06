@@ -34,7 +34,7 @@ import {
   TagType,
   TeaserListBlockSort,
   TeaserSlotsAutofillConfig,
-  TeaserSlotsBlock,
+  TeaserSlotsBlockInput,
   TeaserType,
   TitleBlockInput,
   useApproveCommentMutation,
@@ -185,7 +185,7 @@ function willImageResize(file: File, imgMinSizeToResize: number) {
 async function seedArticleTags(createTag: any) {
   return Promise.all(
     //faker.helpers.uniqueArray(faker.lorem.word, 10)
-    Array.from(['research', 'news'], tag =>
+    Array.from(['recherchen', 'news'], tag =>
       createTag({
         variables: {
           tag,
@@ -535,41 +535,6 @@ const createArticleBlocksInput = (
       } as ImageBlockInput,
     } as BlockContentInput,
 
-    // a break block --> on large screens placed in sidebar
-    {
-      linkPageBreak: {
-        blockStyle: getBlockStyle(blockStyles, 'SB_SidebarContent'),
-        hideButton: false,
-        text: 'Shop',
-        imageID: imageIds[imageIds.length - 25],
-        linkTarget: null,
-        linkText: capitalize(faker.lorem.words({ min: 1, max: 3 })),
-        linkURL: 'https://shop.tsri.ch/products/cap-tsuri',
-        richText: [
-          {
-            type: 'paragraph',
-            children: [
-              {
-                text: `Neu! ${capitalize(faker.lorem.words({ min: 2, max: 4 }))}`,
-              },
-            ],
-          },
-          ...(getText(1, 1) as Descendant[]),
-          {
-            type: 'paragraph',
-            children: [
-              {
-                text: `Design von Armanda Asani
-CHF 42.00
-
-Jetzt im Shop erhältlich.`,
-              },
-            ],
-          },
-        ] as Descendant[],
-      } as BreakBlockInput,
-    } as BlockContentInput,
-
     // a table of contents rich text block
     {
       richText: {
@@ -594,6 +559,7 @@ Jetzt im Shop erhältlich.`,
                     url: faker.internet.url(),
                     title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
                     children: [{ text: capitalize(faker.lorem.sentence()) }],
+                    id: faker.lorem.words({ min: 2, max: 4 }),
                   },
                 ],
               },
@@ -605,6 +571,7 @@ Jetzt im Shop erhältlich.`,
                     url: faker.internet.url(),
                     title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
                     children: [{ text: capitalize(faker.lorem.sentence()) }],
+                    id: faker.lorem.words({ min: 2, max: 4 }),
                   },
                 ],
               },
@@ -616,6 +583,7 @@ Jetzt im Shop erhältlich.`,
                     url: faker.internet.url(),
                     title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
                     children: [{ text: capitalize(faker.lorem.sentence()) }],
+                    id: faker.lorem.words({ min: 2, max: 4 }),
                   },
                 ],
               },
@@ -678,27 +646,26 @@ Jetzt im Shop erhältlich.`,
       }
     }),
 
-    // another break block (newsletter registration) --> on large screens placed in sidebar
+    // a break block
     {
       linkPageBreak: {
-        blockStyle: getBlockStyle(blockStyles, 'SB_SidebarContent'),
+        blockStyle: null,
         hideButton: false,
         imageID: imageIds[imageIds.length - 30],
+        text: 'Lust auf mehr investigative Recherchen?',
         linkTarget: null,
-        linkText: capitalize(faker.lorem.words({ min: 1, max: 3 })),
-        linkURL: `/newsletter?mc_u=56ee24de7341c744008a13c9e&mc_id=32c65d081a&mc_f_id=00e5c2e1f0&source=tsri&tf_id=jExhxiVv&popTitle=${encodeURIComponent(faker.lorem.words({ min: 2, max: 5 }).toUpperCase())}&popButtonText=${encodeURIComponent(capitalize(faker.lorem.words({ min: 2, max: 3 })))}&popText=${encodeURIComponent(faker.lorem.sentence({ min: 16, max: 30 }))}`,
+        linkText: 'Jetzt unterstützen',
+        linkURL: '/mitmachen',
         richText: [
           {
-            type: 'heading-two',
+            type: 'paragraph',
             children: [
               {
-                text: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                text: 'Dieser Beitrag wurde durch unsere Mitglieder ermöglicht. Unterstütze auch du mutigen Journalismus!',
               },
             ],
           },
-          ...(getText(1, 1) as Descendant[]),
         ] as Descendant[],
-        text: 'Newsletter',
       } as BreakBlockInput,
     } as BlockContentInput,
 
@@ -709,7 +676,7 @@ Jetzt im Shop erhältlich.`,
           richText: [
             addRichTextHeading(
               capitalize(faker.lorem.words({ min: 3, max: 9 })),
-              'three',
+              pickRandom('two', 0.5)[0] ? 'two' : 'three',
               headings,
               headingTwo
             ),
@@ -718,6 +685,16 @@ Jetzt im Shop erhältlich.`,
         } as RichTextBlockInput,
       } as BlockContentInput;
     }),
+
+    // a fullsize image block
+    {
+      image: {
+        blockStyle: getBlockStyle(blockStyles, 'ImageFullsize'),
+        imageID:
+          imageIds[faker.number.int({ min: 0, max: imageIds.length - 5 })],
+        caption: faker.lorem.sentence(),
+      } as ImageBlockInput,
+    } as BlockContentInput,
 
     // a collapsible downloads list block
     {
@@ -772,6 +749,41 @@ Jetzt im Shop erhältlich.`,
           },
         ] as Descendant[],
       } as RichTextBlockInput,
+    } as BlockContentInput,
+
+    // a credits teaser block
+    {
+      teaserSlots: {
+        title: 'Credits',
+        blockStyle: getBlockStyle(blockStyles, 'TeaserCredits'),
+        autofillConfig: {
+          enabled: false,
+          filter: {},
+          teaserType: TeaserType.Article,
+          sort: TeaserListBlockSort.PublishedAt,
+        } as TeaserSlotsAutofillConfig,
+        slots: [
+          ...Array.from(
+            { length: faker.number.int({ min: 5, max: 9 }) },
+            () => {
+              return {
+                type: 'Manual',
+                teaser: {
+                  custom: {
+                    preTitle: null,
+                    title: faker.person.fullName(),
+                    lead: faker.person.jobTitle(),
+                    contentUrl: null,
+                    openInNewTab: false,
+                    properties: [],
+                    imageID: null,
+                  },
+                },
+              };
+            }
+          ),
+        ],
+      } as TeaserSlotsBlockInput,
     } as BlockContentInput,
   ] as BlockContentInput[];
 
@@ -1181,16 +1193,16 @@ async function seedPages(
             } as FlexBlockInput,
           } as BlockContentInput,
 
-          // research teasers
+          // recherchen teasers
           {
             teaserSlots: {
               title: 'Recherchen',
-              blockStyle: getBlockStyle(blockStyles, 'TeaserResearch'),
+              blockStyle: getBlockStyle(blockStyles, 'TeaserRecherchen'),
               autofillConfig: {
                 enabled: true,
                 filter: {
                   tags: tags
-                    .filter(tag => tag.tag === 'research')
+                    .filter(tag => tag.tag === 'recherchen')
                     .map(tag => tag.id) as string[],
                 },
                 teaserType: TeaserType.Article,
@@ -1216,7 +1228,7 @@ async function seedPages(
                       preTitle: 'Alle Recherchen',
                       title: '',
                       lead: null,
-                      contentUrl: '/a/tag/research',
+                      contentUrl: '/a/tag/recherchen',
                       openInNewTab: false,
                       properties: [],
                       imageID: null,
@@ -1224,7 +1236,7 @@ async function seedPages(
                   },
                 },
               ],
-            } as TeaserSlotsBlock,
+            } as TeaserSlotsBlockInput,
           } as BlockContentInput,
 
           // news teasers
@@ -1270,7 +1282,7 @@ async function seedPages(
                   },
                 },
               ],
-            } as TeaserSlotsBlock,
+            } as TeaserSlotsBlockInput,
           } as BlockContentInput,
         ] as BlockContentInput[],
       },
@@ -1402,12 +1414,17 @@ async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
     },
 
     {
-      name: 'TeaserResearch',
+      name: 'TeaserRecherchen',
       blocks: ['TeaserSlots'],
     },
 
     {
       name: 'TeaserNews',
+      blocks: ['TeaserSlots'],
+    },
+
+    {
+      name: 'TeaserCredits',
       blocks: ['TeaserSlots'],
     },
 
@@ -1424,6 +1441,11 @@ async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
     {
       name: 'TableOfContents',
       blocks: ['RichText'],
+    },
+
+    {
+      name: 'ImageFullsize',
+      blocks: ['Image'],
     },
   ];
 

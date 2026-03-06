@@ -30,8 +30,8 @@ export const ReflektArticleList = ({
 
   const blockStyle = useMemo(() => {
     if (tag) {
-      if (tag === 'research') {
-        return ReflektBlockType.TeaserResearch;
+      if (tag === 'recherchen') {
+        return ReflektBlockType.TeaserRecherchen;
       }
 
       if (tag === 'news') {

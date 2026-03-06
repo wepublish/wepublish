@@ -94,7 +94,6 @@ export const StyledTeaserMoreAbout = styled(TeaserMoreAboutBase)`
   container: unset;
   background-color: transparent;
   cursor: default;
-  //padding: 0 calc(var(--sizing-factor) * 1cqw) 0 0;
   grid-row: unset !important;
   grid-column: -1 / 1 !important;
 
@@ -122,7 +121,7 @@ export const StyledTeaserMoreAbout = styled(TeaserMoreAboutBase)`
 
   & ${TeaserPreTitle} {
     padding: 0;
-    margin: 0 0 6rem 0;
+    margin: 0 0 4rem 0;
     text-transform: uppercase;
   }
 `;

@@ -49,7 +49,12 @@ export type BuilderBlocksProps = {
   type: BuilderBlockRendererProps['type'];
 };
 
+/*
 export type BuilderFlexBlockProps = FlexBlock & {
+  className?: string;
+};
+*/
+export type BuilderFlexBlockProps = Omit<FlexBlock, 'type'> & {
   className?: string;
 };
 

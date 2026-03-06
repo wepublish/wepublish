@@ -43,16 +43,19 @@ export const selectTeaserAuthors = (teaser: TeaserType) => {
 };
 
 export const selectTeaserLeadColor = (teaser: TeaserType) => {
-  const leadColor =
-    teaser &&
-    teaser.article.latest.properties.find(
-      property => property.key === 'leadColor'
-    )?.value;
-  if (leadColor) {
-    return 'black';
-  }
+  let leadColor = 'white';
 
-  return 'white';
+  if (teaser.__typename === 'ArticleTeaser') {
+    leadColor =
+      (
+        teaser.article?.latest?.properties.find(
+          property => property.key === 'leadColor'
+        )?.value
+      ) ?
+        'black'
+      : 'white';
+  }
+  return leadColor;
 };
 
 export const TeaserWrapper = styled('div')<FlexAlignment>`
@@ -97,7 +100,7 @@ export const TeaserContentWrapper = styled('article')`
   grid-template-rows: 10% 40% 50%;
   grid-template-columns: 1fr;
   gap: 0;
-  row-gap: 2cqw;
+  row-gap: 1.125rem;
   background-color: ${({ theme }) => theme.palette.secondary.dark};
   color: ${({ theme }) => theme.palette.common.white};
 

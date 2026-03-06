@@ -14,13 +14,13 @@ import {
   TeaserTitle,
 } from './reflekt-teaser';
 
-export const isTeaserResearch = allPass([
+export const isTeaserRecherchen = allPass([
   ({ blockStyle }: BuilderTeaserProps) => {
-    return blockStyle === ReflektBlockType.TeaserResearch;
+    return blockStyle === ReflektBlockType.TeaserRecherchen;
   },
 ]);
 
-export const TeaserResearch = styled(ReflektTeaser)`
+export const TeaserRecherchen = styled(ReflektTeaser)`
   aspect-ratio: 365/528;
 
   ${TeaserContentWrapper} {

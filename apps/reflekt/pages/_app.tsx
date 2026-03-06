@@ -27,6 +27,7 @@ import {
 } from '@wepublish/website/api';
 import {
   BuilderBlockRendererProps,
+  BuilderTeaserSlotsBlockProps,
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
@@ -46,6 +47,7 @@ import {
   ReflektBlockRenderer,
   ReflektBlocks,
 } from '../src/components/reflekt-block-renderer';
+import { ReflektBreakBlock } from '../src/components/reflekt-break-block';
 import { RefFooter } from '../src/components/reflekt-footer';
 import { ReflektGlobalStyles } from '../src/components/reflekt-global-styles';
 import {
@@ -58,6 +60,7 @@ import { ReflektQuoteBlock } from '../src/components/reflekt-quote-block';
 import { ReflektRenderElement } from '../src/components/reflekt-render-element';
 import { ReflektRenderRichtext } from '../src/components/reflekt-render-richtext';
 import { ReflektRichTextBlock } from '../src/components/reflekt-richtext-block';
+import { ReflektTag } from '../src/components/reflekt-tag';
 import { ReflektTitleBlock } from '../src/components/reflekt-title-block';
 import { ReflektArticleList } from '../src/components/teaser-layouts/reflekt-article-list';
 import { ReflektBaseTeaserSlots } from '../src/components/teaser-layouts/reflekt-base-teaser-slots';
@@ -113,6 +116,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Navbar={ReflektNavbar}
           ArticleList={ReflektArticleList}
           Article={ReflektArticle}
+          Tag={ReflektTag}
           elements={{
             Link: NextWepublishLink,
             UnorderedList: ReflektUnorderedList,
@@ -125,8 +129,10 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             RenderRichtext: ReflektRenderRichtext,
           }}
           blocks={{
-            TeaserSlots: ReflektBaseTeaserSlots,
+            TeaserSlots:
+              ReflektBaseTeaserSlots as ComponentType<BuilderTeaserSlotsBlockProps>,
             BaseTeaser: ReflektBaseTeaser,
+            Break: ReflektBreakBlock,
             FlexBlock: ReflektFlexBlock,
             Quote: ReflektQuoteBlock,
             Title: ReflektTitleBlock,

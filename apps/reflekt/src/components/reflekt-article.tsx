@@ -34,8 +34,10 @@ import {
 } from './block-layouts/flex-block-hero';
 import { ReflektCollapsibleDownloadsWrapper } from './block-styles/reflekt-collapsible-downloads';
 import { ReflektCollapsibleRichTextWrapper } from './block-styles/reflekt-collapsible-richtext';
+import { ReflektImageBlockFullsize } from './block-styles/reflekt-image-block-fullsize';
 import { ReflektTocRichTextWrapper } from './block-styles/reflekt-toc-richtext';
 import { ReflektQuoteBlock } from './reflekt-quote-block';
+import { TeaserSlotsCreditsWrapper } from './teaser-layouts/teaser-slots-credits';
 
 const fullWidthMainSpacer = (theme: Theme) => css`
   main > .MuiContainer-root {
@@ -85,26 +87,32 @@ export const ArticleWrapper = styled(ContentWrapper)<{
   fadeoutStyles?: SerializedStyles;
 }>`
   padding-top: var(--navbar-height);
+  padding-bottom: ${({ theme }) => theme.spacing(14)};
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     justify-content: center;
 
-    & > * {
-      grid-column: 5/11;
+    & > *,
+    & > :is(${ImageBlockWrapper}) {
+      grid-column: 4/12;
+      margin-left: ${({ theme }) => theme.spacing(4)};
+      margin-right: ${({ theme }) => theme.spacing(4)};
     }
 
     &
       > :is(
-        ${ImageBlockWrapper},
-          ${SliderWrapper},
+        ${SliderWrapper},
           ${EventBlockWrapper},
           ${BreakBlockWrapper},
           ${ReflektCollapsibleRichTextWrapper},
           ${ReflektCollapsibleDownloadsWrapper},
           ${ReflektTocRichTextWrapper},
-          ${ReflektQuoteBlock}
+          ${ReflektQuoteBlock},
+          ${TeaserSlotsCreditsWrapper}
       ) {
-      grid-column: 3/13;
+      grid-column: 2/14;
+      margin-left: 0;
+      margin-right: 0;
     }
 
     &
@@ -117,17 +125,21 @@ export const ArticleWrapper = styled(ContentWrapper)<{
           ${SubscribeWrapper}
       ) {
       grid-column: 2/12;
+      margin-left: 0;
+      margin-right: 0;
     }
 
-    & > :is(${FlexBlockHeroWrapper}) {
+    & > :is(${FlexBlockHeroWrapper}, ${ReflektImageBlockFullsize}) {
       grid-column: -1/1;
+      margin-left: 0;
+      margin-right: 0;
     }
   }
 
   grid-template-columns:
-    max(calc(100vw - var(--breakpoint-width) + 48px) / 2, 0px)
+    max(calc(100vw - var(--breakpoint-width)) / 2, 0px)
     repeat(12, 1fr)
-    max(calc(100vw - var(--breakpoint-width) + 48px) / 2, 0px) !important;
+    max(calc(100vw - var(--breakpoint-width)) / 2, 0px) !important;
 
   ${({
     hideContent,

@@ -13,7 +13,11 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
-import React from 'react';
+import { ComponentType } from 'react';
+
+type ReflektRichTextBlockType = ComponentType<
+  BuilderRichTextBlockProps & { variant?: string }
+>;
 
 import { ReflektBlockType } from './reflekt-block-styles';
 
@@ -27,13 +31,23 @@ export const ReflektTocRichTextWrapper = styled('div')`
 `;
 
 export const TocTitle = styled(Typography)`
-  grid-column: 3 / 9;
+  grid-column: 3 / 11;
   grid-row: 1 / 2;
+
+  & > * {
+    margin-left: ${({ theme }) => theme.spacing(4)};
+    margin-right: ${({ theme }) => theme.spacing(4)};
+  }
 `;
 
 export const TocDetails = styled(Typography)`
-  grid-column: 3 / 9;
+  grid-column: 3 / 11;
   grid-row: 2 / 3;
+
+  & > * {
+    margin-left: ${({ theme }) => theme.spacing(4)};
+    margin-right: ${({ theme }) => theme.spacing(4)};
+  }
 `;
 
 export const isTocRichText = (
@@ -51,6 +65,8 @@ export const ReflektTocRichText = ({
     blocks: { RichText },
   } = useWebsiteBuilder();
 
+  const ReflektRichText = RichText as ReflektRichTextBlockType;
+
   return (
     <ReflektTocRichTextWrapper className={className}>
       <TocTitle variant="tocHeading">
@@ -60,7 +76,7 @@ export const ReflektTocRichText = ({
       </TocTitle>
       <TocDetails variant="tocDetails">
         {richText && richText.length > 1 && (
-          <RichText
+          <ReflektRichText
             richText={[...richText].splice(1, richText.length - 1)}
             variant="toc"
           />

@@ -1,9 +1,18 @@
 import {
+  BuilderRenderElementProps,
   BuilderRenderRichtextProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { Fragment } from 'react';
+import { ComponentType, Fragment } from 'react';
 import { Element, Text } from 'slate';
+
+type ReflektRenderElementType = ComponentType<
+  BuilderRenderElementProps & { variant?: string }
+>;
+
+export type ReflektRenderRichtextType = ComponentType<
+  BuilderRenderRichtextProps & { variant?: string }
+>;
 
 export function ReflektRenderRichtext({
   elements,
@@ -13,12 +22,14 @@ export function ReflektRenderRichtext({
     richtext: { RenderLeaf, RenderElement },
   } = useWebsiteBuilder();
 
+  const ReflektRenderElement = RenderElement as ReflektRenderElementType;
+
   return (
     <Fragment>
       {elements.map((element, index) => {
         if (Element.isElement(element)) {
           return (
-            <RenderElement
+            <ReflektRenderElement
               key={index}
               element={element}
               variant={variant}

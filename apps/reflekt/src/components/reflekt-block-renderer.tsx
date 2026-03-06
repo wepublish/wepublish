@@ -9,7 +9,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { cond } from 'ramda';
-import type { ComponentType } from 'react';
+import type { ComponentProps, ComponentType } from 'react';
 import { memo, useMemo } from 'react';
 
 import { isFlexBlockHero } from './block-layouts/flex-block-hero';
@@ -22,6 +22,10 @@ import {
   ReflektCollapsibleRichText,
 } from './block-styles/reflekt-collapsible-richtext';
 import {
+  isReflektImageBlockFullsize,
+  ReflektImageBlockFullsize,
+} from './block-styles/reflekt-image-block-fullsize';
+import {
   isTocRichText,
   ReflektTocRichText,
 } from './block-styles/reflekt-toc-richtext';
@@ -31,6 +35,26 @@ export type BlockSiblings = Array<{
   typeName: string;
   blockStyle?: string;
 }>;
+
+type CollapsibleRichTextWithSiblings = ComponentType<
+  ComponentProps<typeof ReflektCollapsibleRichText> & {
+    siblings?: BlockSiblings;
+  }
+>;
+type CollapsibleDownloadsWithSiblings = ComponentType<
+  ComponentProps<typeof ReflektCollapsibleDownloads> & {
+    siblings?: BlockSiblings;
+  }
+>;
+type TocRichTextWithSiblings = ComponentType<
+  ComponentProps<typeof ReflektTocRichText> & { siblings?: BlockSiblings }
+>;
+
+const CollapsibleRichText =
+  ReflektCollapsibleRichText as CollapsibleRichTextWithSiblings;
+const CollapsibleDownloads =
+  ReflektCollapsibleDownloads as CollapsibleDownloadsWithSiblings;
+const TocRichText = ReflektTocRichText as TocRichTextWithSiblings;
 
 export const ReflektBlockRenderer = (
   props: BuilderBlockRendererProps & { siblings: BlockSiblings }
@@ -43,7 +67,7 @@ export const ReflektBlockRenderer = (
         [
           isCollapsibleRichText,
           block => (
-            <ReflektCollapsibleRichText
+            <CollapsibleRichText
               {...block}
               siblings={props.siblings}
             />
@@ -52,7 +76,7 @@ export const ReflektBlockRenderer = (
         [
           isCollapsibleDownloads,
           block => (
-            <ReflektCollapsibleDownloads
+            <CollapsibleDownloads
               {...block}
               siblings={props.siblings}
             />
@@ -61,14 +85,18 @@ export const ReflektBlockRenderer = (
         [
           isTocRichText,
           block => (
-            <ReflektTocRichText
+            <TocRichText
               {...block}
               siblings={props.siblings}
             />
           ),
         ],
+        [
+          isReflektImageBlockFullsize,
+          block => <ReflektImageBlockFullsize {...block} />,
+        ],
       ]),
-    []
+    [props.siblings]
   );
 
   const styles = useMemo(

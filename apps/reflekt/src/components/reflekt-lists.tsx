@@ -1,5 +1,5 @@
 import { capitalize, Typography } from '@mui/material';
-import { ListItemProps, UnorderedListProps } from '@wepublish/ui/lists';
+import { ListItemProps, UnorderedListProps } from '@wepublish/ui';
 import { ForwardedRef, forwardRef } from 'react';
 
 // eslint-disable-next-line react/display-name
