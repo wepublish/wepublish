@@ -250,25 +250,8 @@ function insertLink(
   title?: string,
   id?: string
 ) {
-  console.log(
-    'Inserting link with URL:',
-    url,
-    'and title:',
-    title,
-    'and id:',
-    id,
-    'at selection:',
-    selection,
-    'in editor:',
-    editor
-  );
   if (selection) {
-    console.log('Current selection:', selection);
-
     if (Range.isCollapsed(selection)) {
-      console.log(
-        'Selection is collapsed. Inserting link text and selecting it.'
-      );
       const nodes = Array.from(
         WepublishEditor.nodes(editor, {
           at: selection,
@@ -279,15 +262,9 @@ function insertLink(
       const tuple = nodes[0];
 
       if (tuple) {
-        console.log(
-          'Found existing link node at selection. Selecting it for editing.'
-        );
         const [, path] = tuple;
         Transforms.select(editor, path);
       } else {
-        console.log(
-          'No existing link node at selection. Inserting new link text.'
-        );
         Transforms.insertText(editor, title ?? '');
         Transforms.select(editor, {
           anchor: {
@@ -298,9 +275,6 @@ function insertLink(
         });
       }
     } else {
-      console.log(
-        'Selection is not collapsed. Wrapping selected text with link.'
-      );
       Transforms.select(editor, selection);
     }
   }

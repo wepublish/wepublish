@@ -370,23 +370,8 @@ const theme = createTheme(WePTheme, {
           textAlign: 'center',
           textTransform: 'uppercase',
           fontWeight: 700,
-          fontSize: '1rem',
+          fontSize: '2rem',
           lineHeight: 1.2,
-        },
-      },
-      teaserTitleLink: {
-        [breakpoints.up('xs')]: {
-          ['&:after']: {
-            content: "''",
-            display: 'block',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'transparent',
-            cursor: 'pointer',
-          },
         },
       },
       teaserPretitle: {
@@ -402,6 +387,12 @@ const theme = createTheme(WePTheme, {
       },
       teaserLead: {
         fontFamily: ['Recife', 'serif'].join(','),
+        fontSize: '1.125rem',
+        lineHeight: 1.2,
+        fontWeight: 400,
+        padding: '0 1rem',
+        backgroundColor: 'transparent',
+        color: colors.common.black,
       },
       teaserMeta: {
         [breakpoints.up('xs')]: {
@@ -450,6 +441,28 @@ const theme = createTheme(WePTheme, {
         },
       },
       variants: [
+        {
+          props: { variant: 'teaserTitleLink' },
+          style: {
+            [breakpoints.up('xs')]: {
+              textDecoration: 'none',
+              ['&:hover']: {
+                textDecoration: 'none',
+              },
+              ['&:after']: {
+                content: "''",
+                display: 'block',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'transparent',
+                cursor: 'pointer',
+              },
+            },
+          },
+        },
         {
           // Footer / Header
           props: { variant: 'categoryLink' },
@@ -535,6 +548,7 @@ const theme = createTheme(WePTheme, {
             },
           },
         },
+
         {
           props: { variant: 'buttonLinkSecondary' },
           style: {
