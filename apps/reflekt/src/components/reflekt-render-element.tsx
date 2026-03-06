@@ -2,10 +2,9 @@ import { css } from '@emotion/react';
 import { capitalize, Link, useTheme } from '@mui/material';
 import { BlockFormat, InlineFormat } from '@wepublish/richtext';
 import { RenderElement } from '@wepublish/richtext/website';
+import { ListItemProps, UnorderedListProps } from '@wepublish/ui';
 import {
-  BuilderListItemProps,
   BuilderRenderElementProps,
-  BuilderUnorderedListProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { ComponentType, ReactNode } from 'react';
@@ -14,11 +13,9 @@ import { Descendant } from 'slate';
 import { ReflektRenderRichtextType } from './reflekt-render-richtext';
 
 type ReflektUnorderedListType = ComponentType<
-  BuilderUnorderedListProps & { variant?: string }
+  UnorderedListProps & { variant?: string }
 >;
-type ReflektListItemType = ComponentType<
-  BuilderListItemProps & { variant?: string }
->;
+type ReflektListItemType = ComponentType<ListItemProps & { variant?: string }>;
 
 const lastChildNoGutter = css`
   &&:first-child {
@@ -132,7 +129,7 @@ export function ReflektRenderElement({
           href={`${element.url as string}${element.id ? `${(element.url as string).endsWith('#') ? '' : '#'}${createIdFromText([{ text: element.id as string }])}` : ''}`}
           title={element.title as string}
           data-test="link"
-          variant={variant ? `link${capitalize(variant)}` : undefined}
+          variant={(variant ? `link${capitalize(variant)}` : undefined) as any}
         >
           <ReflektRenderRichtext
             elements={element.children}

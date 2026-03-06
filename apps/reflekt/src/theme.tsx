@@ -745,22 +745,4 @@ export const teaserMoreAboutTheme = createTheme(theme, {
   },
 });
 
-export const hasVariant = (
-  theme: Theme,
-  componentName: keyof Theme['components'],
-  variantName: string
-) => {
-  //const variants = undefined; // TODO: fix this typing issue
-  //console.log('hasVariant:', { theme, componentName, variantName, variants });
-
-  const variants = (
-    theme?.components?.[componentName] as unknown as Components<
-      typeof BaseTheme
-    > & { variants?: any[] }
-  ).variants;
-  if (!variants) return false;
-
-  return variants.some((v: any) => v.props.variant === variantName);
-};
-
 export { theme as default };

@@ -5,7 +5,7 @@ import {
   TeaserSlotsBlockTeasers as TeaserSlotsBlockTeasersDefault,
   TeaserSlotsBlockWrapper as TeaserSlotsBlockWrapperDefault,
 } from '@wepublish/block-content/website';
-import { TeaserSlotsBlock } from '@wepublish/website/api';
+import { FlexAlignment } from '@wepublish/website/api';
 import {
   BuilderTeaserSlotsBlockProps,
   useWebsiteBuilder,
@@ -15,7 +15,7 @@ import { allPass } from 'ramda';
 import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 
 export const isTeaserSlotsCredits = allPass([
-  ({ blockStyle }: TeaserSlotsBlock) => {
+  ({ blockStyle }: BuilderTeaserSlotsBlockProps) => {
     return blockStyle === ReflektBlockType.TeaserCredits;
   },
 ]);

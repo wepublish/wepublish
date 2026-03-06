@@ -48,7 +48,7 @@ export const FlexBlock = ({
   className,
   blocks,
   type,
-}: BuilderFlexBlockProps) => {
+}: BuilderFlexBlockProps & { type?: BuilderBlockRendererProps['type'] }) => {
   const {
     blocks: { Renderer },
   } = useWebsiteBuilder();

@@ -7,7 +7,6 @@ import {
   TeaserSlotsBlockWrapper as TeaserSlotsBlockWrapperDefault,
 } from '@wepublish/block-content/website';
 import {
-  BuilderTeaserProps,
   BuilderTeaserSlotsBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
@@ -17,7 +16,7 @@ import { allPass } from 'ramda';
 import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 
 export const isTeaserSlotsTopic = allPass([
-  ({ blockStyle }: BuilderTeaserProps) => {
+  ({ blockStyle }: BuilderTeaserSlotsBlockProps) => {
     return (
       blockStyle === ReflektBlockType.TeaserRecherchen ||
       blockStyle === ReflektBlockType.TeaserNews

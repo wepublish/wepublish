@@ -1,11 +1,6 @@
 import styled from '@emotion/styled';
 import { BreakBlock, BreakBlockButton } from '@wepublish/block-content/website';
 
-import theme, { hasVariant } from '../theme';
-
-const x = hasVariant(theme, 'MuiButton', 'contained');
-console.log('reflekt-break-block:', x);
-
 export const ReflektBreakBlock = styled(BreakBlock)`
   background-color: ${({ theme }) => theme.palette.secondary.light};
   color: ${({ theme }) => theme.palette.common.black};

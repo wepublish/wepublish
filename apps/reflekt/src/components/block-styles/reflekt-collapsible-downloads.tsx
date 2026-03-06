@@ -14,7 +14,11 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
-import React from 'react';
+import React, { ComponentType } from 'react';
+
+type ReflektRichTextBlockType = ComponentType<
+  BuilderRichTextBlockProps & { variant?: string }
+>;
 
 import { ReflektBlockType } from './reflekt-block-styles';
 import {
@@ -41,6 +45,8 @@ export const ReflektCollapsibleDownloads = ({
   const {
     blocks: { RichText },
   } = useWebsiteBuilder();
+
+  const ReflektRichText = RichText as ReflektRichTextBlockType;
   const thisId = `AC-${React.useId()}`;
 
   return (
@@ -57,7 +63,7 @@ export const ReflektCollapsibleDownloads = ({
 
       <AccordionDetails id={`${thisId}-panel-content`}>
         {richText && richText.length > 1 && (
-          <RichText
+          <ReflektRichText
             richText={[...richText].splice(1, richText.length - 1)}
             variant="downloads"
           />

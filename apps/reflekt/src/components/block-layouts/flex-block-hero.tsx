@@ -105,7 +105,7 @@ export const FlexBlockHero = ({
   className,
   blocks,
   type,
-}: BuilderFlexBlockProps) => {
+}: BuilderFlexBlockProps & { type?: BuilderBlockRendererProps['type'] }) => {
   const {
     blocks: { Renderer },
   } = useWebsiteBuilder();

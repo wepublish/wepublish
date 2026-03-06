@@ -18,7 +18,7 @@ export const ReflektUnorderedList = forwardRef(
         {...props}
         ref={ref}
         component="ul"
-        variant={variant ? `ul${capitalize(variant)}` : 'body1'}
+        variant={(variant ? `ul${capitalize(variant)}` : 'body1') as any}
         gutterBottom={gutterBottom}
       >
         {children}
@@ -43,7 +43,7 @@ export const ReflektListItem = forwardRef(
         {...props}
         ref={ref}
         component="li"
-        variant={variant ? `li${capitalize(variant)}` : 'body1'}
+        variant={(variant ? `li${capitalize(variant)}` : 'body1') as any}
         gutterBottom={gutterBottom}
       >
         {children}
