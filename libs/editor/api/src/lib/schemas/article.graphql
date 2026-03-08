@@ -114,6 +114,18 @@ query ArticleList(
   ) {
     nodes {
       ...ArticleWithoutBlocks
+
+      latest {
+        id
+        createdAt
+        publishedAt
+        title
+
+        authors {
+          id
+          name
+        }
+      }
     }
 
     pageInfo {
