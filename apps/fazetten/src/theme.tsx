@@ -239,7 +239,7 @@ const theme = createTheme(WePTheme, {
             if (ownerState.variant === 'outlined') {
               return {
                 ...baseStyles,
-                color: theme.palette.primary.main,
+                color: theme.palette.common.black,
               };
             }
           }
