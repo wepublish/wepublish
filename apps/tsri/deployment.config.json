@@ -19,6 +19,7 @@
     },
     "staging": {
       "deployment": true,
+      "has_staging": true,
       "env": {
         "MAILCHIMP_SERVER_PREFIX": "us9",
         "GTM_ID": "GTM-PFGZDXQ",

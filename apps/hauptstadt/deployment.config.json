@@ -15,6 +15,7 @@
     },
     "staging": {
       "deployment": true,
+      "has_staging": true,
       "env": {
         "DEPLOY_ENV": "staging"
       },

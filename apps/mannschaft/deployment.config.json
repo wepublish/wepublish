@@ -15,6 +15,7 @@
     },
     "staging": {
       "deployment": true,
+      "has_staging": true,
       "env": {
         "GTM_ID": "GTM-WPT97GP",
         "DEPLOY_ENV": "staging"
