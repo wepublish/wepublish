@@ -19,7 +19,7 @@ export class SensitiveDataUserResolver {
 
   @ResolveField(() => UserAddress, { nullable: true })
   public async address(@Parent() { id, address }: SensitiveDataUser) {
-    if (!address) {
+    if (address) {
       return address;
     }
 
