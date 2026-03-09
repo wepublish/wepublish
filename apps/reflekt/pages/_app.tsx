@@ -41,13 +41,13 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import { ReflektFlexBlock } from '../src/components/block-layouts/reflekt-base-flex-block';
+import { ReflektBaseBreakBlock } from '../src/components/break-blocks/reflekt-base-break-block';
 import { MainSpacer } from '../src/components/main-spacer';
 import { ReflektArticle } from '../src/components/reflekt-article';
 import {
   ReflektBlockRenderer,
   ReflektBlocks,
 } from '../src/components/reflekt-block-renderer';
-import { ReflektBreakBlock } from '../src/components/reflekt-break-block';
 import { RefFooter } from '../src/components/reflekt-footer';
 import { ReflektGlobalStyles } from '../src/components/reflekt-global-styles';
 import {
@@ -132,7 +132,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             TeaserSlots:
               ReflektBaseTeaserSlots as ComponentType<BuilderTeaserSlotsBlockProps>,
             BaseTeaser: ReflektBaseTeaser,
-            Break: ReflektBreakBlock,
+            Break: ReflektBaseBreakBlock,
             FlexBlock: ReflektFlexBlock,
             Quote: ReflektQuoteBlock,
             Title: ReflektTitleBlock,

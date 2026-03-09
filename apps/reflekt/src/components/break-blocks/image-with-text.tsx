@@ -1,7 +1,17 @@
 import styled from '@emotion/styled';
 import { BreakBlock, BreakBlockButton } from '@wepublish/block-content/website';
+import { BuilderBreakBlockProps } from '@wepublish/website/builder';
+import { allPass } from 'ramda';
 
-export const ReflektBreakBlock = styled(BreakBlock)`
+import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
+
+export const isImageWithTextBreakBlock = allPass([
+  ({ blockStyle }: BuilderBreakBlockProps) => {
+    return blockStyle === ReflektBlockType.ImageWithText;
+  },
+]);
+
+export const ImageWithTextBreakBlock = styled(BreakBlock)`
   background-color: ${({ theme }) => theme.palette.secondary.light};
   color: ${({ theme }) => theme.palette.common.black};
 

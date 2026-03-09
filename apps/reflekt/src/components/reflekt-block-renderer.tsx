@@ -29,6 +29,14 @@ import {
   isTocRichText,
   ReflektTocRichText,
 } from './block-styles/reflekt-toc-richtext';
+import {
+  isTextWithImageBreakBlock,
+  TextWithImageBreakBlock,
+} from './break-blocks/text-with-image';
+import {
+  isTextWithImageAltColorBreakBlock,
+  TextWithImageAltColorBreakBlock,
+} from './break-blocks/text-with-image-alt-color';
 import { MainSpacer } from './main-spacer';
 
 export type BlockSiblings = Array<{
@@ -77,6 +85,24 @@ export const ReflektBlockRenderer = (
           isCollapsibleDownloads,
           block => (
             <CollapsibleDownloads
+              {...block}
+              siblings={props.siblings}
+            />
+          ),
+        ],
+        [
+          isTextWithImageBreakBlock,
+          block => (
+            <TextWithImageBreakBlock
+              {...block}
+              siblings={props.siblings}
+            />
+          ),
+        ],
+        [
+          isTextWithImageAltColorBreakBlock,
+          block => (
+            <TextWithImageAltColorBreakBlock
               {...block}
               siblings={props.siblings}
             />

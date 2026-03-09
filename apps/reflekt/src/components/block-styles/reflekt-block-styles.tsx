@@ -8,4 +8,9 @@ export enum ReflektBlockType {
   CollapsibleDownloads = 'CollapsibleDownloads',
   TableOfContents = 'TableOfContents',
   ImageFullsize = 'ImageFullsize',
+  TextWithImage = 'TextWithImage',
+  TextWithImageAltColor = 'TextWithImageAltColor',
+  ImageWithText = 'ImageWithText',
+  ImageWithTextAltColor = 'ImageWithTextAltColor',
+  Team = 'Team',
 }

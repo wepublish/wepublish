@@ -650,7 +650,7 @@ const createArticleBlocksInput = (
     // a break block
     {
       linkPageBreak: {
-        blockStyle: null,
+        blockStyle: getBlockStyle(blockStyles, 'ImageWithTextAltColor'),
         hideButton: false,
         imageID: imageIds[imageIds.length - 30],
         text: 'Lust auf mehr investigative Recherchen?',
@@ -1286,6 +1286,103 @@ async function seedPages(
               ],
             } as TeaserSlotsBlockInput,
           } as BlockContentInput,
+
+          // a break block
+          {
+            linkPageBreak: {
+              blockStyle: getBlockStyle(blockStyles, 'ImageWithText'),
+              hideButton: false,
+              imageID: imageIds[imageIds.length - 40],
+              text: 'Verpasse keine Story unseres preisgekrönten Recherche-Teams:',
+              linkTarget: null,
+              linkText: 'Ich bin dabei',
+              linkURL: '/mitmachen',
+              richText: [] as Descendant[],
+            } as BreakBlockInput,
+          } as BlockContentInput,
+
+          // team break block
+          {
+            linkPageBreak: {
+              blockStyle: getBlockStyle(blockStyles, 'Team'),
+              hideButton: false,
+              imageID: imageIds[imageIds.length - 50],
+              text: 'Wir gehen hin wo andere wegschauen',
+              linkTarget: null,
+              linkText: 'Mehr über uns',
+              linkURL: '/authors',
+              richText: [
+                {
+                  type: 'unordered-list',
+                  children: [
+                    {
+                      type: 'list-item',
+                      children: [
+                        {
+                          text: 'REFLEKT recherchiert gegen Missstände und Machtmissbrauch',
+                        },
+                      ],
+                    },
+                    {
+                      type: 'list-item',
+                      children: [
+                        {
+                          text: 'Unabhängig, preisgekrönt, effektiv',
+                        },
+                      ],
+                    },
+                    {
+                      type: 'list-item',
+                      children: [
+                        {
+                          text: 'Finanziert durch unsere 750+ Mitglieder',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'Wir recherchieren mutig minutiös und oft monatelang zu Themen die für die Schweiz relevant sind. ',
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'Dabei stets im Fokus: der Kampf gegen Missstände und Machtmissbrauch. Unter anderem haben wir Strukturen organisierter Kriminalität aufgedeckt eritreische Folteropfer aufgespürt oder die Rolle der Credit Suisse im grössten Finanzskandal Moçambiques beleuchtet.',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as BreakBlockInput,
+          } as BlockContentInput,
+
+          // a break block
+          {
+            linkPageBreak: {
+              blockStyle: getBlockStyle(blockStyles, 'ImageWithText'),
+              hideButton: false,
+              imageID: imageIds[imageIds.length - 42],
+              text: 'Lust auf mehr investigative Recherchen?',
+              linkTarget: null,
+              linkText: 'Jetzt unterstützen',
+              linkURL: '/mitmachen',
+              richText: [
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'Dieser Beitrag wurde durch unsere Mitglieder ermöglicht. Unterstütze auch du mutigen Journalismus!',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as BreakBlockInput,
+          } as BlockContentInput,
         ] as BlockContentInput[],
       },
     }),
@@ -1301,7 +1398,7 @@ async function seedPages(
           // a break block
           {
             linkPageBreak: {
-              blockStyle: getBlockStyle(blockStyles, 'TextWithImage'),
+              blockStyle: getBlockStyle(blockStyles, 'TextWithImageAltColor'),
               hideButton: true,
               imageID: imageIds[imageIds.length - 31],
               text: '923 Mitglieder unterstützen REFLEKT: \nDeine Unterstützung macht den Unterschied!',
@@ -1728,7 +1825,27 @@ async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
     },
 
     {
+      name: 'ImageWithText',
+      blocks: ['LinkPageBreak'],
+    },
+
+    {
+      name: 'ImageWithTextAltColor',
+      blocks: ['LinkPageBreak'],
+    },
+
+    {
       name: 'TextWithImage',
+      blocks: ['LinkPageBreak'],
+    },
+
+    {
+      name: 'TextWithImageAltColor',
+      blocks: ['LinkPageBreak'],
+    },
+
+    {
+      name: 'Team',
       blocks: ['LinkPageBreak'],
     },
   ];

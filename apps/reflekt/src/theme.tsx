@@ -3,7 +3,6 @@ import { createBreakpoints } from '@mui/system';
 import { theme as WePTheme } from '@wepublish/ui';
 import { Roboto_Mono } from 'next/font/google';
 import localFont from 'next/font/local';
-import { o } from 'ramda';
 import { PartialDeep } from 'type-fest';
 
 export const recife = localFont({
