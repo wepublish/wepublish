@@ -1,6 +1,8 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './nestapp/app.module';
+import { PrismaClient } from '@prisma/client';
+import { runExampleSeed } from '../prisma/seed';
 
 import { MAIL_WEBHOOK_PATH_PREFIX } from '@wepublish/mail/api';
 import helmet from 'helmet';
@@ -45,6 +47,20 @@ async function bootstrap() {
   nestApp.use(conditionalJson);
   nestApp.use(urlencoded({ extended: true, limit: MAX_PAYLOAD_SIZE }));
   nestApp.use(graphqlUploadExpress());
+
+  if (process.env.RUN_SEED === 'true') {
+    Logger.log('RUN_SEED=true detected, running example seed...');
+    const prisma = new PrismaClient();
+    await prisma.$connect();
+    try {
+      await runExampleSeed(prisma);
+      Logger.log('Seeding completed successfully');
+    } catch (e) {
+      Logger.error('Seeding failed', e);
+    } finally {
+      await prisma.$disconnect();
+    }
+  }
 
   await nestApp.listen(port);
   Logger.log(`🚀 Public api is running on: http://localhost:${port}`);
