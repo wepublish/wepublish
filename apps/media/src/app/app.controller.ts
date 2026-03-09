@@ -133,6 +133,13 @@ export class AppController {
       return;
     }
 
+    const fallbackUrl = process.env['MEDIA_FALLBACK_URL'];
+    if (fallbackUrl && !(await this.media.hasImage(imageId))) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_FOUND, `${fallbackUrl}${(req as any).url}`);
+      return;
+    }
+
     const { uri, exists } = await this.media.getImageUri(
       imageId,
       transformations
