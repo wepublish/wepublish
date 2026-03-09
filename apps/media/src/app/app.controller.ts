@@ -110,6 +110,14 @@ export class AppController {
     }
 
     if (uriFromCache) {
+      if (!uriFromCache.exists && process.env['MEDIA_FALLBACK_URL']) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        res.redirect(
+          HTTP_CODE_FOUND,
+          `${process.env['MEDIA_FALLBACK_URL']}${(req as any).url}`
+        );
+        return;
+      }
       let httpCode = HTTP_CODE_FOUND;
       if (!uriFromCache.exists) {
         res.setHeader('Cache-Control', `public, max-age=600`);
@@ -139,7 +147,9 @@ export class AppController {
     if (!exists) {
       res.setHeader('Cache-Control', `public, max-age=600`);
       res.redirect(HTTP_CODE_NOT_FOUND, url);
-      await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
+      if (!process.env['MEDIA_FALLBACK_URL']) {
+        await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
+      }
       return;
     } else {
       await this.linkCache.set(cacheKey, { uri, exists: true });

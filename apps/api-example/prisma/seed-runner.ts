@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { bootstrap } from '../../media/src/bootstrap';
 import { runExampleSeed } from './seed';
 
