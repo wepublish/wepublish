@@ -45,6 +45,7 @@ import {
   HauptstadtArticleAuthors,
   HauptstadtArticleMeta,
 } from '../src/components/hauptstadt-article';
+import { HauptstadtArticleDate } from '../src/components/hauptstadt-article-date';
 import { HauptstadtAuthorChip } from '../src/components/hauptstadt-author-chip';
 import { HauptstadtBanner } from '../src/components/hauptstadt-banner';
 import { HauptstadtBlockRenderer } from '../src/components/hauptstadt-block-renderer';
@@ -146,6 +147,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Article={HauptstadtArticle}
           ArticleAuthors={HauptstadtArticleAuthors}
           ArticleMeta={HauptstadtArticleMeta}
+          ArticleDate={HauptstadtArticleDate}
           Event={HauptstadtEvent}
           Banner={HauptstadtBanner}
           Paywall={HauptstadtPaywall}
