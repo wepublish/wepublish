@@ -59,7 +59,7 @@
     "@mui/x-date-pickers": "^7.13.0",
     "@nestjs/cli": "^10.1.11",
     "@nestjs/schematics": "^10.0.1",
-    "@nestjs/testing": "^10.1.0",
+    "@nestjs/testing": "^11.1.16",
     "@next/bundle-analyzer": "^15.1.5",
     "@nx/cypress": "20.8.2",
     "@nx/eslint": "20.8.2",
