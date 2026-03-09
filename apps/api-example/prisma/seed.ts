@@ -20,7 +20,6 @@ import { createReadStream } from 'fs';
 import { seed as rootSeed } from '../../../libs/api/prisma/seed';
 import { NovaMediaAdapter } from '../../../libs/api/src/lib/media/novaMediaAdapter';
 import { capitalize } from '@mui/material';
-import { bootstrap } from '../../media/src/bootstrap';
 import { NavigationLinkType } from 'libs/navigation/api/src/lib/navigation.model';
 import {
   TeaserGridFlexBlock,
@@ -1201,27 +1200,4 @@ export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
 
   console.log('Seeding Member Plans');
   await seedMemberPlans(prisma);
-}
-
-async function seed() {
-  const { app } = await bootstrap(['error']);
-  const prisma = new PrismaClient();
-  await prisma.$connect();
-
-  try {
-    await runExampleSeed(prisma);
-  } catch (e) {
-    if (typeof e === 'string') {
-      console.warn(e);
-    } else {
-      throw e;
-    }
-  } finally {
-    await app.close();
-    await prisma.$disconnect();
-  }
-}
-
-if (require.main === module) {
-  seed();
 }
