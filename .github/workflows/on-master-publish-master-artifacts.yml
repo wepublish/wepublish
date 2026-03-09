@@ -40,7 +40,7 @@ jobs:
           FIRST=true
           for TARGET in $(echo "$MATRIX" | jq -r '.target[]'); do
             TDL=$(jq -r '.tdl.staging // "wepublish.works"' "apps/${TARGET}/deployment.config.json")
-            CHECKS_ENABLED=$(jq -r '.website.staging.has_staging // false' "apps/${TARGET}/deployment.config.json")
+            CHECKS_ENABLED=$(jq -r '.has_staging // false' "apps/${TARGET}/deployment.config.json")
             if [ "$FIRST" = true ]; then FIRST=false; else INCLUDE="${INCLUDE},"; fi
             INCLUDE="${INCLUDE}{\"target\":\"${TARGET}\",\"tdl\":\"${TDL}\",\"has_staging\":${CHECKS_ENABLED}}"
           done

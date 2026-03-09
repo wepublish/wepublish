@@ -3,6 +3,7 @@
     "production": "wepublish.media",
     "staging": "wepublish.dev"
   },
+  "has_staging": true,
   "website": {
     "production": {
       "deployment": true,
@@ -17,7 +18,6 @@
     },
     "staging": {
       "deployment": true,
-      "has_staging": true,
       "env": {
         "MAILCHIMP_POPUP_SCRIPT_URL": "https://chimpstatic.com/mcjs-connected/js/users/c30add995be4a0a845d9e933a/30862514707cdff67aa2a6483.js",
         "GA_ID": "G-JVGEEW3L24",
