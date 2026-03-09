@@ -2501,7 +2501,6 @@ export type MutationUpdateAiSettingArgs = {
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   systemPrompt?: InputMaybe<Scalars['String']>;
-  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationUpdateAnalyticsProviderSettingArgs = {

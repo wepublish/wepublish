@@ -117,6 +117,7 @@ describe('MailController', () => {
               }),
               kv,
               prisma,
+              jwtGenerator: async () => 'test-jwt-token',
             });
           },
           inject: [PrismaClient, KvTtlCacheService],

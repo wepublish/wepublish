@@ -3,6 +3,7 @@
     "production": "wepublish.media",
     "staging": "wepublish.dev"
   },
+  "has_staging": true,
   "website": {
     "production": {
       "deployment": true,

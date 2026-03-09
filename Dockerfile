@@ -61,7 +61,7 @@ COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEX
 COPY --chown=wepublish:wepublish version /wepublish/apps/${NEXT_PROJECT}/public/deployed_version
 COPY --chown=wepublish:wepublish --from=build-website /wepublish/secrets_name.list /wepublish/secrets_name.list
 COPY --chown=wepublish:wepublish --from=build-website /wepublish/deployment/map-secrets.sh /wepublish/map-secrets.sh
-RUN chmod -R g=u /wepublish
+RUN chgrp -R 0 /wepublish /entrypoint.sh && chmod -R g=u /wepublish /entrypoint.sh
 EXPOSE 4001
 USER wepublish
 ENTRYPOINT ["/entrypoint.sh"]
@@ -73,7 +73,7 @@ FROM ${BUILD_IMAGE} AS build-api
 COPY . .
 RUN npm install -g @yao-pkg/pkg && \
     npx prisma generate && \
-    npx nx build api-example && \
+    npx nx build api-example --ignore-nx-cache && \
     cp docker/api_build_package.json package.json && \
     pkg package.json
 
@@ -107,7 +107,7 @@ FROM ${BUILD_IMAGE} AS build-editor
 COPY . .
 RUN npm install -g @yao-pkg/pkg && \
     npx prisma generate && \
-    npx nx build editor && \
+    npx nx build editor --ignore-nx-cache && \
     cp docker/editor_build_package.json package.json && \
     pkg package.json
 
@@ -176,7 +176,7 @@ COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
 RUN npm ci
-RUN npx nx build media
+RUN npx nx build media --ignore-nx-cache
 
 FROM base-media AS media
 ENV NODE_ENV=production

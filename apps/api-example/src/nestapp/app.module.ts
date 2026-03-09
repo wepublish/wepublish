@@ -38,6 +38,7 @@ import {
   MailgunMailProvider,
   MailsModule,
 } from '@wepublish/mail/api';
+import { generateJWT } from '@wepublish/utils/api';
 import {
   DashboardModule,
   MembershipModule,
@@ -189,8 +190,23 @@ import {
           throw new Error('A MailProvider must be configured.');
         }
 
+        const jwtPrivateKey = (config.get('JWT_PRIVATE_KEY') || '').replace(
+          /\\n/g,
+          '\n'
+        );
+        const hostURL = config.get('HOST_URL') || 'http://localhost:4000';
+        const websiteURL = config.get('WEBSITE_URL') || 'http://localhost:3000';
+
         return {
           mailProvider,
+          jwtGenerator: (userId: string) =>
+            generateJWT({
+              id: userId,
+              privateKey: jwtPrivateKey,
+              issuer: hostURL,
+              audience: websiteURL,
+              expiresInMinutes: 6 * 60,
+            }),
         };
       },
       inject: [ConfigService, PrismaClient, KvTtlCacheService],
