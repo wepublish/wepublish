@@ -121,6 +121,7 @@ jobs:
       website_project: ${{ needs.check-review-deploy-label.outputs.project_name }}
       api_url: https://api-review${{ needs.check-review-deploy-label.outputs.review_version }}.wepublish.works
       environment: review_deployed
+      has_staging: true
       website_tags: |
         ghcr.io/wepublish/website-review${{ needs.check-review-deploy-label.outputs.review_version }}:review-${{ needs.date_sha_tag.outputs.tag }}
     secrets: inherit
