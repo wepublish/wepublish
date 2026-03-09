@@ -28,6 +28,7 @@ import {
   RichTextBlockInput,
   SubscriptionFlowsDocument,
   SubscriptionListDocument,
+  SubscribeBlockInput,
   Tag,
   TagListDocument,
   TagListQueryVariables,
@@ -1108,7 +1109,8 @@ async function seedPages(
   imageIds: string[] = [],
   tags: Tag[] = [],
   articleIds: string[] = [],
-  blockStyles: any
+  blockStyles: any,
+  memberPlandIds: string[] = []
 ) {
   const pages = await Promise.all([
     createPage({
@@ -1287,6 +1289,283 @@ async function seedPages(
         ] as BlockContentInput[],
       },
     }),
+    createPage({
+      variables: {
+        publishedAt: new Date().toISOString(),
+        slug: 'mitmachen',
+        tagIds: [],
+        imageID: null,
+        canonicalUrl: null,
+        properties: [],
+        blocks: [
+          // a break block
+          {
+            linkPageBreak: {
+              blockStyle: getBlockStyle(blockStyles, 'TextWithImage'),
+              hideButton: true,
+              imageID: imageIds[imageIds.length - 31],
+              text: '923 Mitglieder unterstützen REFLEKT: \nDeine Unterstützung macht den Unterschied!',
+              linkTarget: null,
+              linkText: undefined,
+              linkURL: undefined,
+              richText: [
+                {
+                  type: 'unordered-list',
+                  children: [
+                    {
+                      type: 'list-item',
+                      children: [
+                        {
+                          text: 'REFLEKT recherchiert gegen Missstände und Machtmissbrauch',
+                        },
+                      ],
+                    },
+                    {
+                      type: 'list-item',
+                      children: [
+                        {
+                          text: 'Unabhängig, preisgekrönt, effektiv',
+                        },
+                      ],
+                    },
+                    {
+                      type: 'list-item',
+                      children: [
+                        {
+                          text: 'Finanziert durch unsere 750+ Mitglieder',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as BreakBlockInput,
+          } as BlockContentInput,
+
+          // the subscribe block
+          {
+            subscribe: {
+              blockStyle: null,
+              fields: [],
+              memberPlanIds: [...memberPlandIds],
+            } as SubscribeBlockInput,
+          } as BlockContentInput,
+
+          // heading - rich text block
+          {
+            richText: {
+              blockStyle: undefined,
+              richText: [
+                {
+                  type: 'heading-one',
+                  children: [
+                    {
+                      text: 'Wir gehen hin, wo andere wegschauen',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput,
+
+          // reflekt ist gemeinnützig - collapsible rich text block
+          {
+            richText: {
+              blockStyle: getBlockStyle(blockStyles, 'CollapsibleRichText'),
+              richText: [
+                {
+                  type: 'heading-one',
+                  children: [
+                    {
+                      text: 'REFLEKT ist gemeinnützig',
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'Spenden und Mitgliederbeiträge kannst du von den Steuern absetzen.',
+                    },
+                    {
+                      text: 'Einmal jährlich erhältst du eine Spendenbescheinigung für deine Steuererklärung. Hinter REFLEKT steht ein Verein, der von der Steuerverwaltung des Kantons Bern offiziell als gemeinnützig und damit steuerbefreit anerkannt ist. Den Begriff «Mitglied» benutzen wir nicht im vereinsrechtlichen Sinn, sondern als Bezeichnung für Unterstützer:innen unserer Arbeit.',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput,
+
+          // reflekt ist preisgekrönt - collapsible rich text block
+          {
+            richText: {
+              blockStyle: getBlockStyle(blockStyles, 'CollapsibleRichText'),
+              richText: [
+                {
+                  type: 'heading-one',
+                  children: [
+                    {
+                      text: 'REFLEKT ist preisgekrönt',
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'In vier Jahren wurden wir sechsmal ausgezeichnet.',
+                    },
+                    {
+                      text: 'Seit der Gründung 2019 wurde REFLEKT mit drei der renommiertesten Journalismus-Preisen der Schweiz ausgezeichnet: je einem Swiss Press Award 2020 und 2021 sowie einem Zürcher Journalismuspreis 2020. Zudem gewann unsere Recherche-Kooperation “Cities for Rent” einen European Press Prize 2022 (Innovation Award) und zwei Recherchen schafften es aufs Podest (Swiss Press Award 2022, Medienpreis für digitale Aufklärung 2022).',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput,
+
+          // reflekt hat reichweite - collapsible rich text block
+          {
+            richText: {
+              blockStyle: getBlockStyle(blockStyles, 'CollapsibleRichText'),
+              richText: [
+                {
+                  type: 'heading-one',
+                  children: [
+                    {
+                      text: 'REFLEKT hat Reichweite',
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'Wir publizieren lokal, national und international.',
+                    },
+                    {
+                      text: 'Wir verkaufen Teile unserer Recherchen an reichweitenstarke Medien, publizieren Originalquellen sowie Hintergrundinformationen auf unserer Webseite und produzieren attraktive Inhalte für Social Media. So gelingt es uns, Entscheidungsträger:innen und ein breites Publikum gleichermassen anzusprechen.Auf internationaler Ebene erschienen unsere Publikationen in sieben Sprachen – unter anderem in Bangladesch, Moçambique und den Niederlanden. Auf lokaler Ebene arbeiteten wir mit Medien wie Tsüri, Bajour oder dem Frutigländer zusammen, um grosse Recherchen auch im Kleinen zu ermöglichen.',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput,
+
+          // reflekt hat impact - collapsible rich text block
+          {
+            richText: {
+              blockStyle: getBlockStyle(blockStyles, 'CollapsibleRichText'),
+              richText: [
+                {
+                  type: 'heading-one',
+                  children: [
+                    {
+                      text: 'REFLEKT hat Impact',
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'Wir erarbeiten Wissen mit Wirkung.',
+                    },
+                    {
+                      text: 'REFLEKT-Recherchen werden regelmässig von renommierten Medien im In- und Ausland aufgenommen und erreichten in den vergangenen Jahren hunderttausende Menschen auf drei Kontinenten. Basierend auf unserer Arbeit wurden parlamentarische Interpellationen eingereicht, Entscheide gefällt oder Verfahren von Kontroll- und Strafverfolgungsbehörden ausgelöst. Den Impact einzelner Recherchen kannst du in unseren Jahresberichten nachlesen. REFLEKT stärkt den Qualitätsjournalismus, fördert die politische Bildung und leistet so einen Beitrag zur informierten Demokratie.',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput,
+
+          // reflekt funktioniert - dank dir - collapsible rich text block
+          {
+            richText: {
+              blockStyle: getBlockStyle(blockStyles, 'CollapsibleRichText'),
+              richText: [
+                {
+                  type: 'heading-one',
+                  children: [
+                    {
+                      text: 'REFLEKT funktioniert - dank dir',
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'Wir sind auf die Unterstützung von Einzelpersonen angewiesen.',
+                    },
+                    {
+                      text: 'Um  unabhängig zu bleiben, verzichten wir auf Werbung und finanzieren unsere Arbeit ausschliesslich durch den Verkauf von Recherche-Ergebnissen  sowie Spenden von Einzelpersonen und Institutionen. Da die  Anschubfinanzierung durch Stiftungen stetig abnimmt, sind wir auf  Mitglieder angewiesen, die unsere Arbeit unterstützen. Werde auch du  Teil der Community und hilf uns, unabhängig und mutig zu recherchieren.',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput,
+
+          // reflekt ist unabhängig - collapsible rich text block
+          {
+            richText: {
+              blockStyle: getBlockStyle(blockStyles, 'CollapsibleRichText'),
+              richText: [
+                {
+                  type: 'heading-one',
+                  children: [
+                    {
+                      text: 'REFLEKT ist unabhängig',
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'Wir recherchieren ohne Einfluss von Politik, Lobbying oder Wirtschaft.',
+                    },
+                    {
+                      text: 'REFLEKT setzt auf ein Finanzierungsmodell, das die Einflussnahme von Dritten minimiert. Dafür verzichten wir auf Werbung und finanzieren unsere Arbeit ausschliesslich über Spenden von Einzelpersonen und Institutionen sowie den Verkauf von Recherche-Ergebnissen. Rund 80 Prozent unseres Budgets fliessen direkt in die Realisierung und Publikation investigativer Recherchen. Kein Geldgeber und keine Geldgeberin kann redaktionelle Entscheide beeinflussen.',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput,
+
+          // reflekt ist investigativ - collapsible rich text block
+          {
+            richText: {
+              blockStyle: getBlockStyle(blockStyles, 'CollapsibleRichText'),
+              richText: [
+                {
+                  type: 'heading-one',
+                  children: [
+                    {
+                      text: 'REFLEKT ist investigativ',
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'Wir decken Missstände auf und schaffen Transparenz.',
+                    },
+                    {
+                      text: '«Seit drei Jahren gehört REFLEKT zu den ersten Adressen für die ganz grossen Recherchen in der Schweiz» (Branchenportal Medienwoche, 6.9.2022). Wir recherchieren mutig, minutiös und oft monatelang zu Themen, die für die Schweiz relevant sind. Dabei stets im Fokus: der Kampf gegen Missstände und Machtmissbrauch. Unter anderem haben wir Strukturen organisierter Kriminalität aufgedeckt, eritreische Folteropfer aufgespürt oder die Rolle der Credit Suisse im grössten Finanzskandal Moçambiques beleuchtet.',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput,
+        ] as BlockContentInput[],
+      },
+    }),
   ]);
 
   return pages;
@@ -1446,6 +1725,11 @@ async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
     {
       name: 'ImageFullsize',
       blocks: ['Image'],
+    },
+
+    {
+      name: 'TextWithImage',
+      blocks: ['LinkPageBreak'],
     },
   ];
 
@@ -2158,6 +2442,10 @@ async function handleSeed(
 
   const events = await seedEvents(createEvent, images);
 
+  const paymentMethods = await seedPaymentMethods(createPaymentMethod);
+
+  const memberPlans = await seedMemberPlans(createMemberPlan, paymentMethods);
+
   const pages = await seedPages(
     createPage,
     images,
@@ -2165,7 +2453,10 @@ async function handleSeed(
     publishedArticles
       .map(article => article?.latest?.id)
       .filter(id => !!id) as string[],
-    blockStyles
+    blockStyles,
+    memberPlans
+      .map(plan => plan.data?.createMemberPlan.id)
+      .filter(id => !!id) as string[]
   );
 
   for (const page of pages) {
@@ -2186,10 +2477,6 @@ async function handleSeed(
       .filter(id => !!id) as string[],
     images
   );
-
-  const paymentMethods = await seedPaymentMethods(createPaymentMethod);
-
-  const memberPlans = await seedMemberPlans(createMemberPlan, paymentMethods);
 }
 
 type SeedProps = { type?: string };

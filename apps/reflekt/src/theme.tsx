@@ -1,10 +1,9 @@
 import { createTheme, Theme, ThemeOptions } from '@mui/material';
-import { Components } from '@mui/material/styles/components';
-import BaseTheme from '@mui/material/styles/createTheme';
 import { createBreakpoints } from '@mui/system';
 import { theme as WePTheme } from '@wepublish/ui';
 import { Roboto_Mono } from 'next/font/google';
 import localFont from 'next/font/local';
+import { o } from 'ramda';
 import { PartialDeep } from 'type-fest';
 
 export const recife = localFont({
@@ -73,7 +72,7 @@ const colors = {
     contrastText: '#ffffff',
   },
   secondary: {
-    main: '#0800ff',
+    main: '#F3FF89',
     light: '#E7FF04', // link-button main background
     dark: '#2B4E47',
     contrastText: '#ffffff',
@@ -142,8 +141,13 @@ const theme = createTheme(WePTheme, {
         fontSize: '3rem',
         lineHeight: 1.2,
       },
+      // same as heading 1 / h2
       h3: {
         fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+        textTransform: 'uppercase',
+        fontWeight: 500,
+        fontSize: '3rem',
+        lineHeight: 1.2,
       },
       // heading 2 with number
       h4: {
@@ -337,12 +341,12 @@ const theme = createTheme(WePTheme, {
       categoryAddressText: {
         fontFamily: ['Euclid', 'sans-serif'].join(','),
         color: colors.common.white,
-        fontSize: '2rem',
+        fontSize: '1.5rem',
         lineHeight: '3rem',
         fontWeight: 500,
         fontStyle: 'normal',
         [breakpoints.up('md')]: {
-          fontSize: '2rem',
+          fontSize: '1.5rem',
           lineHeight: '3rem',
         },
       },
@@ -477,15 +481,15 @@ const theme = createTheme(WePTheme, {
             whiteSpace: 'nowrap',
             padding: '0',
             textDecoration: 'none',
-            fontSize: '2rem',
-            lineHeight: '4rem',
+            fontSize: '1.5rem',
+            lineHeight: '3rem',
             '&:hover': {
               backgroundColor: 'transparent',
               textDecoration: 'underline',
             },
             [breakpoints.up('md')]: {
-              fontSize: '2rem',
-              lineHeight: '4rem',
+              fontSize: '1.5rem',
+              lineHeight: '3rem',
             },
           },
         },
@@ -548,7 +552,6 @@ const theme = createTheme(WePTheme, {
             },
           },
         },
-
         {
           props: { variant: 'buttonLinkSecondary' },
           style: {
@@ -582,6 +585,7 @@ const theme = createTheme(WePTheme, {
             border: `1px solid ${colors.common.black}`,
             borderLeft: 'none',
             borderRight: 'none',
+            backgroundColor: 'transparent',
             borderRadius: 0,
             display: 'grid',
             gridTemplateColumns: 'subgrid',
@@ -667,6 +671,31 @@ const theme = createTheme(WePTheme, {
             maxWidth: `${breakPointValues.xxl + 48}px`,
           },
         }),
+      },
+    },
+    MuiSlider: {
+      styleOverrides: {
+        root: {
+          color: colors.secondary.main,
+          height: 4,
+          '& .MuiSlider-thumb': {
+            width: 20,
+            height: 20,
+            backgroundColor: colors.common.white,
+            border: `2px solid ${colors.common.black}`,
+            '&:hover, &.Mui-focusVisible, &.Mui-active': {
+              boxShadow: 'none',
+            },
+          },
+          '& .MuiSlider-rail': {
+            opacity: 0.5,
+            backgroundColor: colors.common.black,
+          },
+          '& .MuiSlider-track': {
+            backgroundColor: colors.common.black,
+            opacity: 1,
+          },
+        },
       },
     },
   },

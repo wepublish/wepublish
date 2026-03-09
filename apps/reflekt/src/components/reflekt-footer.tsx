@@ -24,8 +24,7 @@ export const FooterMain = styled('div')`
   flex-direction: row;
   align-content: flex-end;
   justify-content: flex-end;
-  column-gap: 2.5cqw;
-  padding-right: 2cqw;
+  column-gap: 3rem;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-row: 1/2;
@@ -97,14 +96,13 @@ export const FooterPaperWrapper = styled('div')`
   display: grid;
   grid-template-rows: repeat(3, auto);
   grid-template-columns: repeat(2, auto);
-  row-gap: 10cqw;
-  padding: 0 ${({ theme }) => theme.spacing(2)} 20cqw
+  padding: 0 ${({ theme }) => theme.spacing(2)} 10rem
     ${({ theme }) => theme.spacing(2)};
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-template-rows: min-content 6cqw;
-    grid-template-columns: 1fr minmax(max-content, 1285px) 1fr;
-    padding: 1cqw ${({ theme }) => theme.spacing(3)} 0
+    grid-template-rows: min-content;
+    grid-template-columns: 1fr minmax(max-content, 1130px) 1fr;
+    padding: 3rem ${({ theme }) => theme.spacing(3)} 10rem
       ${({ theme }) => theme.spacing(3)};
     row-gap: 0;
   }
@@ -113,8 +111,6 @@ export const FooterPaperWrapper = styled('div')`
 export const FooterCategory = styled(FooterCategoryDefault)`
   grid-column: 1 / 2;
   grid-row: 2 / 3;
-  row-gap: 0.8cqw;
-  padding-left: 2cqw;
 
   &:nth-of-type(n + 2) {
     grid-column: 1 / 2;
@@ -125,7 +121,6 @@ export const FooterCategory = styled(FooterCategoryDefault)`
     grid-column: 2 / 3;
     grid-row: 3 / 4;
     padding-left: 0;
-    padding-right: 2cqw;
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
@@ -146,10 +141,8 @@ export const FooterLinksGroup = styled('div')`
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-columns: repeat(2, auto);
-    column-gap: 2cqw;
     grid-row: 1 / 2;
     grid-column: 2 / 3;
-    margin: 0 0 0 3cqw;
   }
 `;
 
