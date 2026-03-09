@@ -71,8 +71,30 @@ jobs:
     uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
     secrets: inherit
 
+  get-media-fallback-url:
+    runs-on: ubuntu-latest
+    needs: [check-review-deploy-label]
+    if: needs.check-review-deploy-label.outputs.has_label == 'true'
+    outputs:
+      url: ${{ steps.derive.outputs.url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Derive media fallback URL from project deployment config
+        id: derive
+        run: |
+          PROJECT="${{ needs.check-review-deploy-label.outputs.project_name }}"
+          CONFIG="apps/${PROJECT}/deployment.config.json"
+          if [[ -f "$CONFIG" ]]; then
+            TDL=$(jq -r '.tdl.production // "wepublish.cloud"' "$CONFIG")
+          else
+            TDL="wepublish.cloud"
+          fi
+          URL="https://media-${PROJECT}.${TDL}"
+          echo "Media fallback URL: $URL"
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+
   publish_docker_backend_images:
-    needs: [publish_docker_base_image, check-review-deploy-label, date_sha_tag]
+    needs: [publish_docker_base_image, check-review-deploy-label, date_sha_tag, get-media-fallback-url]
     if: needs.check-review-deploy-label.outputs.has_label == 'true'
     name: Docker backend images
     uses: ./.github/workflows/on-demand-publish-docker-image.yml
@@ -87,6 +109,7 @@ jobs:
         ghcr.io/wepublish/storybook:review${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
       media_tags: |
         ghcr.io/wepublish/media:review${{ needs.check-review-deploy-label.outputs.review_version }}-${{ needs.date_sha_tag.outputs.tag }}
+      media_fallback_url: ${{ needs.get-media-fallback-url.outputs.url }}
     secrets: inherit
 
   publish_docker_website_image:

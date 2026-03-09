@@ -65,7 +65,7 @@ export class AppController {
     @UploadedFile(
       new ParseFilePipe({
         fileIsRequired: true,
-        validators: [new SupportedImagesValidator()],
+        validators: [],
       })
     )
     uploadedFile: Express.Multer.File
@@ -122,6 +122,13 @@ export class AppController {
         httpCode,
         `${process.env['S3_PUBLIC_HOST']}/${uriFromCache.uri}`
       );
+      return;
+    }
+
+    const fallbackUrl = process.env['MEDIA_FALLBACK_URL'];
+    if (fallbackUrl && !(await this.media.hasImage(imageId))) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_FOUND, `${fallbackUrl}${(req as any).url}`);
       return;
     }
 

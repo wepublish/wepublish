@@ -179,7 +179,9 @@ RUN npm ci
 RUN npx nx build media
 
 FROM base-media AS media
+ARG MEDIA_FALLBACK_URL
 ENV NODE_ENV=production
+ENV MEDIA_FALLBACK_URL=${MEDIA_FALLBACK_URL}
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 WORKDIR /wepublish
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
