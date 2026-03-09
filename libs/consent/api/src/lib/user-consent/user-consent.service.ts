@@ -78,7 +78,7 @@ export class UserConsentService {
       !user.user.roleIDs.includes('admin') &&
       user.user.id !== toUpdate?.user.id
     ) {
-      throw new ForbiddenException(`Unauthorized`);
+      throw new ForbiddenException();
     }
 
     const updated = await this.prisma.userConsent.update({
@@ -103,7 +103,7 @@ export class UserConsentService {
       !user.user.roleIDs.includes('admin') &&
       user.user.id !== toDelete?.user.id
     ) {
-      throw new ForbiddenException(`Unauthorized`);
+      throw new ForbiddenException();
     }
 
     const deleted = await this.prisma.userConsent.delete({

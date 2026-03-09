@@ -144,7 +144,11 @@ const decorateComments = (
     ),
   });
 
-  return sortComments(groupedComments['null'].map(decorate), sort, order);
+  return sortComments(
+    (groupedComments['null'] ?? []).map(decorate),
+    sort,
+    order
+  );
 };
 
 const decorateAdminComments = (
