@@ -81,7 +81,8 @@ COPY --chown=1001:0 apps/api-example/src/default.yaml /wepublish/config/default.
 COPY --chown=1001:0 libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY --chown=1001:0 .version /wepublish/.version
 COPY --chown=1001:0 --from=build-api /wepublish/api /wepublish/
-RUN chmod -R g=u /wepublish
+RUN mkdir -p /wepublish/.cache/pkg && \
+    chmod -R g=u /wepublish
 
 FROM ${RUNTIME_IMAGE} AS api
 LABEL org.opencontainers.image.authors="WePublish Foundation"
