@@ -88,7 +88,7 @@ LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 ENV ADDRESS=0.0.0.0
 ENV PORT=4000
-ENV PKG_CACHE_PATH=/wepublish/.cache
+ENV HOME=/wepublish
 WORKDIR /wepublish
 COPY --from=api-setup /usr/lib/x86_64-linux-gnu/libssl.so* /usr/lib/x86_64-linux-gnu/
 COPY --from=api-setup /usr/lib/x86_64-linux-gnu/libcrypto.so* /usr/lib/x86_64-linux-gnu/
