@@ -1,5 +1,5 @@
-ARG BUILD_IMAGE=dhi.io/node:22
-ARG PLAIN_BUILD_IMAGE=dhi.io/node:22
+ARG BUILD_IMAGE=dhi.io/node:22-debian13-dev
+ARG PLAIN_BUILD_IMAGE=dhi.io/node:22-debian13-dev
 
 #######
 ## Base Image
