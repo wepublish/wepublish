@@ -94,6 +94,7 @@ WORKDIR /wepublish
 COPY --from=api-setup /usr/lib/x86_64-linux-gnu/libssl.so* /usr/lib/x86_64-linux-gnu/
 COPY --from=api-setup /usr/lib/x86_64-linux-gnu/libcrypto.so* /usr/lib/x86_64-linux-gnu/
 COPY --from=api-setup /usr/lib/x86_64-linux-gnu/libz.so* /usr/lib/x86_64-linux-gnu/
+COPY --from=api-setup /usr/lib/x86_64-linux-gnu/libzstd.so* /usr/lib/x86_64-linux-gnu/
 COPY --from=api-setup /wepublish /wepublish
 EXPOSE 4000
 USER 1001
