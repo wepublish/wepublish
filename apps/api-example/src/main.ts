@@ -8,13 +8,15 @@ import helmet from 'helmet';
 import { MAX_PAYLOAD_SIZE } from '@wepublish/utils/api';
 import { json, urlencoded } from 'body-parser';
 import type { Request, Response, NextFunction, RequestHandler } from 'express';
-import { graphqlUploadExpress } from 'graphql-upload';
 import { PAYMENT_WEBHOOK_PATH_PREFIX } from '@wepublish/payment/api';
+import { graphqlUploadExpress } from 'graphql-upload';
 
 async function bootstrap() {
   const port = process.env.PORT ?? 4000;
 
-  const nestApp = await NestFactory.create(AppModule);
+  const nestApp = await NestFactory.create(AppModule, {
+    bodyParser: false,
+  });
   nestApp.enableCors({
     origin: true,
     credentials: true,
@@ -36,10 +38,12 @@ async function bootstrap() {
     const path: string = req.path ?? req.url;
     for (let i = 0; i < skipPrefixes.length; i++) {
       const p = skipPrefixes[i];
+
       if (path === p || path.startsWith(p + '/')) {
         return next();
       }
     }
+
     return jsonParser(req, res, next);
   };
   nestApp.use(conditionalJson);
