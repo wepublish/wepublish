@@ -66,11 +66,10 @@ ENTRYPOINT ["/entrypoint.sh"]
 #######
 FROM ${BUILD_IMAGE} AS build-api
 COPY . .
-RUN npm install -g @yao-pkg/pkg && \
-    npx prisma generate && \
+RUN npx prisma generate && \
     npx nx build api-example --ignore-nx-cache && \
     cp docker/api_build_package.json package.json && \
-    pkg package.json
+    npx @yao-pkg/pkg package.json
 
 FROM ${PLAIN_BUILD_IMAGE} AS api-setup
 WORKDIR /wepublish
@@ -103,11 +102,10 @@ CMD ["/wepublish/api"]
 
 FROM ${BUILD_IMAGE} AS build-editor
 COPY . .
-RUN npm install -g @yao-pkg/pkg && \
-    npx prisma generate && \
+RUN npx prisma generate && \
     npx nx build editor --ignore-nx-cache && \
     cp docker/editor_build_package.json package.json && \
-    pkg package.json
+    npx @yao-pkg/pkg package.json
 
 FROM ${PLAIN_BUILD_IMAGE} AS editor-setup
 WORKDIR /wepublish
