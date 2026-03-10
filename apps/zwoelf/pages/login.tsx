@@ -37,7 +37,7 @@ export default function Login({ sessionToken }: LoginProps) {
   if (hasUser && typeof window !== 'undefined') {
     const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString();
     deleteCookie(IntendedRouteStorageKey);
-    const route = intendedRoute ?? '/';
+    const route = intendedRoute ?? '/after-login';
 
     router.replace(route);
   }
