@@ -1,5 +1,5 @@
-ARG BUILD_IMAGE=node:22.20.0-bookworm-slim
-ARG PLAIN_BUILD_IMAGE=node:22.20.0-bookworm-slim
+ARG BUILD_IMAGE=dhi.io/node:22
+ARG PLAIN_BUILD_IMAGE=dhi.io/node:22
 
 #######
 ## Base Image
