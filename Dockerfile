@@ -23,10 +23,8 @@ FROM ${PLAIN_BUILD_IMAGE} AS base-image
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 WORKDIR /wepublish
-RUN groupadd -r wepublish && \
-    useradd -r -g wepublish -d /wepublish wepublish && \
-    chown -R wepublish:wepublish /wepublish
-COPY --chown=wepublish:wepublish --from=base-image-build /wepublish/node_modules/ node_modules/
+COPY --chown=1001:0 --from=base-image-build /wepublish/node_modules/ node_modules/
+RUN chmod -R g=u /wepublish
 
 #######
 ## Website (needs bash at runtime for entrypoint)
@@ -50,21 +48,17 @@ ENV PORT=4000
 ### FRONT_ARG_REPLACER ###
 
 WORKDIR /wepublish
-RUN groupadd -r wepublish && \
-    useradd -r -g wepublish -d /wepublish wepublish && \
-    chown -R wepublish:wepublish /wepublish && \
-    echo "#!/bin/bash\n bash /wepublish/map-secrets.sh restore && node /wepublish/apps/${NEXT_PROJECT}/server.js" > /entrypoint.sh && \
-    chown -R wepublish:wepublish /entrypoint.sh && \
+RUN echo "#!/bin/bash\n bash /wepublish/map-secrets.sh restore && node /wepublish/apps/${NEXT_PROJECT}/server.js" > /entrypoint.sh && \
     chmod +x /entrypoint.sh
-COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/standalone /wepublish
-COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/public /wepublish/apps/${NEXT_PROJECT}/public
-COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/static /wepublish/apps/${NEXT_PROJECT}/public/_next/static
-COPY --chown=wepublish:wepublish version /wepublish/apps/${NEXT_PROJECT}/public/deployed_version
-COPY --chown=wepublish:wepublish --from=build-website /wepublish/secrets_name.list /wepublish/secrets_name.list
-COPY --chown=wepublish:wepublish --from=build-website /wepublish/deployment/map-secrets.sh /wepublish/map-secrets.sh
-RUN chgrp -R 0 /wepublish /entrypoint.sh && chmod -R g=u /wepublish /entrypoint.sh
+COPY --chown=1001:0 --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/standalone /wepublish
+COPY --chown=1001:0 --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/public /wepublish/apps/${NEXT_PROJECT}/public
+COPY --chown=1001:0 --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/static /wepublish/apps/${NEXT_PROJECT}/public/_next/static
+COPY --chown=1001:0 version /wepublish/apps/${NEXT_PROJECT}/public/deployed_version
+COPY --chown=1001:0 --from=build-website /wepublish/secrets_name.list /wepublish/secrets_name.list
+COPY --chown=1001:0 --from=build-website /wepublish/deployment/map-secrets.sh /wepublish/map-secrets.sh
+RUN chown 1001:0 /entrypoint.sh && chmod -R g=u /wepublish /entrypoint.sh
 EXPOSE 4001
-USER wepublish
+USER 1001
 ENTRYPOINT ["/entrypoint.sh"]
 
 #######
@@ -154,16 +148,14 @@ COPY --from=build-migration /wepublish/dist ./dist
 COPY libs/api/prisma/migrations prisma/migrations
 COPY libs/api/prisma/schema.prisma prisma/schema.prisma
 COPY docker/migrate_start.sh start.sh
-RUN groupadd -r wepublish && \
-    useradd -r -g wepublish -d /wepublish wepublish && \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     npm install prisma@5.0.0 @node-rs/argon2 && \
     npx prisma generate && \
     chmod -R g=u /wepublish
-USER wepublish
+USER 1001
 CMD ["bash", "./start.sh"]
 
 
