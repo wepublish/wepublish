@@ -1,5 +1,6 @@
 ARG BUILD_IMAGE=dhi.io/node:22-debian13-dev
 ARG PLAIN_BUILD_IMAGE=dhi.io/node:22-debian13-dev
+ARG RUNTIME_IMAGE=dhi.io/node:22-debian13
 
 #######
 ## Base Image
@@ -28,7 +29,7 @@ RUN groupadd -r wepublish && \
 COPY --chown=wepublish:wepublish --from=base-image-build /wepublish/node_modules/ node_modules/
 
 #######
-## Website
+## Website (needs bash at runtime for entrypoint)
 #######
 
 FROM ${BUILD_IMAGE} AS  build-website
@@ -77,27 +78,30 @@ RUN npm install -g @yao-pkg/pkg && \
     cp docker/api_build_package.json package.json && \
     pkg package.json
 
-FROM ${PLAIN_BUILD_IMAGE}  AS api
+FROM ${PLAIN_BUILD_IMAGE} AS api-setup
+WORKDIR /wepublish
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends openssl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+COPY --chown=1001:0 apps/api-example/src/default.yaml /wepublish/config/default.yaml
+COPY --chown=1001:0 libs/api/prisma/ca.crt /wepublish/ca.crt
+COPY --chown=1001:0 .version /wepublish/.version
+COPY --chown=1001:0 --from=build-api /wepublish/api /wepublish/
+RUN chmod -R g=u /wepublish
+
+FROM ${RUNTIME_IMAGE} AS api
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 ENV ADDRESS=0.0.0.0
 ENV PORT=4000
 WORKDIR /wepublish
-RUN groupadd -r wepublish && \
-    useradd -r -g wepublish -d /wepublish wepublish && \
-    chown -R wepublish:wepublish /wepublish && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends openssl && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-COPY --chown=wepublish:wepublish apps/api-example/src/default.yaml /wepublish/config/default.yaml
-COPY --chown=wepublish:wepublish libs/api/prisma/ca.crt /wepublish/ca.crt
-COPY --chown=wepublish:wepublish .version /wepublish/.version
-COPY --chown=wepublish:wepublish --from=build-api /wepublish/api /wepublish
-RUN chmod -R g=u /wepublish
+COPY --from=api-setup /usr/lib/x86_64-linux-gnu/libssl.so* /usr/lib/x86_64-linux-gnu/
+COPY --from=api-setup /usr/lib/x86_64-linux-gnu/libcrypto.so* /usr/lib/x86_64-linux-gnu/
+COPY --from=api-setup /wepublish /wepublish
 EXPOSE 4000
-USER wepublish
-CMD /wepublish/api
+USER 1001
+CMD ["/wepublish/api"]
 
 #######
 ## Editor
@@ -111,24 +115,25 @@ RUN npm install -g @yao-pkg/pkg && \
     cp docker/editor_build_package.json package.json && \
     pkg package.json
 
-FROM debian:bookworm-slim AS editor
+FROM ${PLAIN_BUILD_IMAGE} AS editor-setup
+WORKDIR /wepublish
+COPY --chown=1001:0 --from=build-editor /wepublish/editor /wepublish/
+COPY --chown=1001:0 --from=build-editor /wepublish/dist/apps/editor/browser dist/apps/editor/browser
+RUN chmod -R g=u /wepublish
+
+FROM ${RUNTIME_IMAGE} AS editor
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 ENV ADDRESS=0.0.0.0
 ENV PORT=3000
 WORKDIR /wepublish
-RUN groupadd -r wepublish && \
-    useradd -r -g wepublish -d /wepublish wepublish && \
-    chown -R wepublish:wepublish /wepublish
-COPY --chown=wepublish:wepublish --from=build-editor /wepublish/editor /wepublish
-COPY --chown=wepublish:wepublish --from=build-editor /wepublish/dist/apps/editor/browser dist/apps/editor/browser
-RUN chmod -R g=u /wepublish
+COPY --from=editor-setup /wepublish /wepublish
 EXPOSE 3000
-USER wepublish
-CMD /wepublish/editor
+USER 1001
+CMD ["/wepublish/editor"]
 
 #######
-## Migrations
+## Migrations (needs bash + npm at runtime)
 #######
 FROM ${PLAIN_BUILD_IMAGE} AS build-migration
 ENV NODE_ENV=production
@@ -166,34 +171,31 @@ CMD ["bash", "./start.sh"]
 ## Media Server
 #######
 
-FROM ${PLAIN_BUILD_IMAGE} AS base-media
-FROM base-media AS build-media
+FROM ${PLAIN_BUILD_IMAGE} AS build-media
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 WORKDIR /app
-RUN apt-get update
-RUN apt-get install -y libjemalloc-dev
+RUN apt-get update && apt-get install -y libjemalloc-dev
 COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
 RUN npm ci
 RUN npx nx build media --ignore-nx-cache
 
-FROM base-media AS media
+FROM ${PLAIN_BUILD_IMAGE} AS media-setup
+WORKDIR /wepublish
+COPY --chown=1001:0 --from=build-media /app/dist/apps/media/ .
+COPY --chown=1001:0 --from=build-media /app/node_modules ./node_modules
+RUN chmod -R g=u /wepublish
+
+FROM ${RUNTIME_IMAGE} AS media
 ENV NODE_ENV=production
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 WORKDIR /wepublish
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
-RUN groupadd -r wepublish && \
-    useradd -r -g wepublish -d /wepublish wepublish && \
-    apt-get update && \
-    apt-get install -y libjemalloc-dev && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-COPY --from=build-media /app/dist/apps/media/ .
-COPY --from=build-media --chown=wepublish:wepublish /app/node_modules ./node_modules
-RUN chmod -R g=u /wepublish
-USER wepublish
+COPY --from=build-media /usr/lib/x86_64-linux-gnu/libjemalloc* /usr/lib/x86_64-linux-gnu/
+COPY --from=media-setup /wepublish /wepublish
 EXPOSE 4100
+USER 1001
 CMD ["node", "main.js"]
 
 ######
