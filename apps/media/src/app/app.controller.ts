@@ -26,6 +26,7 @@ import {
   removeSignatureFromTransformations,
   TransformationsDto,
 } from '@wepublish/media-transform-guard';
+import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import 'multer';
 import { v4 as uuidv4 } from 'uuid';
@@ -41,10 +42,15 @@ let S3_HOST_CHECKED = false;
   version: '1',
 })
 export class AppController {
+  private readonly fallbackUrl?: string;
+
   constructor(
     private media: MediaService,
-    @Inject(CACHE_MANAGER) private linkCache: Cache
-  ) {}
+    @Inject(CACHE_MANAGER) private linkCache: Cache,
+    config: ConfigService
+  ) {
+    this.fallbackUrl = config.get<string>('MEDIA_FALLBACK_URL');
+  }
 
   @Get('/health')
   async healthCheck(@Res() res: Response) {
@@ -110,12 +116,9 @@ export class AppController {
     }
 
     if (uriFromCache) {
-      if (!uriFromCache.exists && process.env['MEDIA_FALLBACK_URL']) {
+      if (!uriFromCache.exists && this.fallbackUrl) {
         res.setHeader('Cache-Control', `public, max-age=600`);
-        res.redirect(
-          HTTP_CODE_FOUND,
-          `${process.env['MEDIA_FALLBACK_URL']}${(req as any).url}`
-        );
+        res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
         return;
       }
       let httpCode = HTTP_CODE_FOUND;
@@ -133,10 +136,9 @@ export class AppController {
       return;
     }
 
-    const fallbackUrl = process.env['MEDIA_FALLBACK_URL'];
-    if (fallbackUrl && !(await this.media.hasImage(imageId))) {
+    if (this.fallbackUrl && !(await this.media.hasImage(imageId))) {
       res.setHeader('Cache-Control', `public, max-age=600`);
-      res.redirect(HTTP_CODE_FOUND, `${fallbackUrl}${(req as any).url}`);
+      res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
       return;
     }
 
@@ -154,7 +156,7 @@ export class AppController {
     if (!exists) {
       res.setHeader('Cache-Control', `public, max-age=600`);
       res.redirect(HTTP_CODE_NOT_FOUND, url);
-      if (!process.env['MEDIA_FALLBACK_URL']) {
+      if (!this.fallbackUrl) {
         await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
       }
       return;
