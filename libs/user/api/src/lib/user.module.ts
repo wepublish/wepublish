@@ -26,6 +26,7 @@ import {
 } from './has-sensitive-data-user/has-sensitive-data-user.resolver';
 import { UserResolver } from './user.resolver';
 import { HibpService } from './hibp.service';
+import { UserSubscriptionCountDataloader } from './user-subscription-count.dataloader';
 
 @Module({
   imports: [PrismaModule, ImageModule, PropertyModule, HttpModule],
@@ -40,6 +41,7 @@ import { HibpService } from './hibp.service';
     HasSensitiveDataUserLcResolver,
     HasOptionalSensitiveDataUserResolver,
     HasOptionalSensitiveDataUserLcResolver,
+    UserSubscriptionCountDataloader,
     UserService,
     SensitiveDataUserResolver,
     BaseUserResolver,
