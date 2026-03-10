@@ -48,7 +48,7 @@ ENV PORT=4000
 ### FRONT_ARG_REPLACER ###
 
 WORKDIR /wepublish
-RUN echo "#!/bin/bash\n bash /wepublish/map-secrets.sh restore && node /wepublish/apps/${NEXT_PROJECT}/server.js" > /entrypoint.sh && \
+RUN printf '#!/bin/sh\n/usr/bin/bash /wepublish/map-secrets.sh restore && node /wepublish/apps/${NEXT_PROJECT}/server.js\n' > /entrypoint.sh && \
     chmod +x /entrypoint.sh
 COPY --chown=1001:0 --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/standalone /wepublish
 COPY --chown=1001:0 --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/public /wepublish/apps/${NEXT_PROJECT}/public
