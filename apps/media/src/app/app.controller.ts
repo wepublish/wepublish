@@ -26,6 +26,7 @@ import {
   removeSignatureFromTransformations,
   TransformationsDto,
 } from '@wepublish/media-transform-guard';
+import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import 'multer';
 import { v4 as uuidv4 } from 'uuid';
@@ -41,10 +42,15 @@ let S3_HOST_CHECKED = false;
   version: '1',
 })
 export class AppController {
+  private readonly fallbackUrl?: string;
+
   constructor(
     private media: MediaService,
-    @Inject(CACHE_MANAGER) private linkCache: Cache
-  ) {}
+    @Inject(CACHE_MANAGER) private linkCache: Cache,
+    config: ConfigService
+  ) {
+    this.fallbackUrl = config.get<string>('MEDIA_FALLBACK_URL');
+  }
 
   @Get('/health')
   async healthCheck(@Res() res: Response) {
@@ -110,6 +116,11 @@ export class AppController {
     }
 
     if (uriFromCache) {
+      if (!uriFromCache.exists && this.fallbackUrl) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+        return;
+      }
       let httpCode = HTTP_CODE_FOUND;
       if (!uriFromCache.exists) {
         res.setHeader('Cache-Control', `public, max-age=600`);
@@ -122,6 +133,12 @@ export class AppController {
         httpCode,
         `${process.env['S3_PUBLIC_HOST']}/${uriFromCache.uri}`
       );
+      return;
+    }
+
+    if (this.fallbackUrl && !(await this.media.hasImage(imageId))) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
       return;
     }
 
@@ -139,7 +156,9 @@ export class AppController {
     if (!exists) {
       res.setHeader('Cache-Control', `public, max-age=600`);
       res.redirect(HTTP_CODE_NOT_FOUND, url);
-      await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
+      if (!this.fallbackUrl) {
+        await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
+      }
       return;
     } else {
       await this.linkCache.set(cacheKey, { uri, exists: true });

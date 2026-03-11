@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import {
-  FullSubscriptionFragment,
   SubscriptionFilter,
   SubscriptionSort,
+  TinySubscriptionFragment,
   useDeleteSubscriptionMutation,
   useSubscriptionListQuery,
 } from '@wepublish/editor/api';
@@ -109,14 +109,14 @@ function SubscriptionList() {
   const [filter, setFilter] = useState({} as SubscriptionFilter);
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [currentSubscription, setCurrentSubscription] =
-    useState<FullSubscriptionFragment>();
+    useState<TinySubscriptionFragment>();
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [sortField, setSortField] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [subscriptions, setSubscriptions] = useState<
-    FullSubscriptionFragment[]
+    TinySubscriptionFragment[]
   >([]);
 
   // double check
@@ -167,7 +167,7 @@ function SubscriptionList() {
   /**
    * UI helper
    */
-  function userNameView(fullUser: FullSubscriptionFragment): ReactNode {
+  function userNameView(fullUser: TinySubscriptionFragment): ReactNode {
     const user = fullUser.user;
     // user deleted
     if (!user) {
@@ -218,7 +218,7 @@ function SubscriptionList() {
           >
             <HeaderCell>{t('subscriptionList.overview.createdAt')}</HeaderCell>
             <RCell dataKey="createdAt">
-              {({ createdAt }: RowDataType<FullSubscriptionFragment>) =>
+              {({ createdAt }: RowDataType<TinySubscriptionFragment>) =>
                 t('subscriptionList.overview.createdAtDate', {
                   createdAtDate: new Date(createdAt),
                 })
@@ -233,7 +233,7 @@ function SubscriptionList() {
           >
             <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
             <RCell dataKey="modifiedAt">
-              {({ modifiedAt }: RowDataType<FullSubscriptionFragment>) =>
+              {({ modifiedAt }: RowDataType<TinySubscriptionFragment>) =>
                 t('subscriptionList.overview.modifiedAtDate', {
                   modifiedAtDate: new Date(modifiedAt),
                 })
@@ -244,7 +244,7 @@ function SubscriptionList() {
           <Column width={200}>
             <HeaderCell>{t('subscriptionList.overview.memberPlan')}</HeaderCell>
             <RCell dataKey={'subscription'}>
-              {(rowData: RowDataType<FullSubscriptionFragment>) => (
+              {(rowData: RowDataType<TinySubscriptionFragment>) => (
                 <Link to={`/subscriptions/edit/${rowData.id}`}>
                   {rowData.memberPlan.name}
                 </Link>
@@ -260,8 +260,8 @@ function SubscriptionList() {
           >
             <HeaderCell>{t('subscriptionList.overview.name')}</HeaderCell>
             <RCell dataKey={'name'}>
-              {(rowData: RowDataType<FullSubscriptionFragment>) =>
-                userNameView(rowData as FullSubscriptionFragment)
+              {(rowData: RowDataType<TinySubscriptionFragment>) =>
+                userNameView(rowData as TinySubscriptionFragment)
               }
             </RCell>
           </Column>
@@ -273,7 +273,7 @@ function SubscriptionList() {
           >
             <HeaderCell>{t('action')}</HeaderCell>
             <PaddedCell>
-              {(rowData: RowDataType<FullSubscriptionFragment>) => (
+              {(rowData: RowDataType<TinySubscriptionFragment>) => (
                 <>
                   <IconButtonTooltip caption={t('delete')}>
                     <IconButtonSmallMargin
@@ -285,7 +285,7 @@ function SubscriptionList() {
                       onClick={e => {
                         e.preventDefault();
                         setCurrentSubscription(
-                          rowData as FullSubscriptionFragment
+                          rowData as TinySubscriptionFragment
                         );
                         setConfirmationDialogOpen(true);
                       }}

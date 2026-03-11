@@ -197,7 +197,6 @@ function ArticleEditor() {
     variables: { id: articleID! },
     skip: !articleID,
   });
-
   const [createJWT] = useCreateJwtForWebsiteLoginMutation({
     errorPolicy: 'none',
     fetchPolicy: 'no-cache',

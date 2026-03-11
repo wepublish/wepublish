@@ -1,2 +1,2 @@
 -- AlterEnum
-ALTER TYPE "BlockType" ADD VALUE 'flexBlock';
+ALTER TYPE "BlockType" ADD VALUE IF NOT EXISTS 'flexBlock';

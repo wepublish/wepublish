@@ -1,3 +1,5 @@
+export { PEER_USER_AGENT } from './lib/session.strategy';
+
 export * from './lib/auth-session';
 export * from './lib/authentication.module';
 export * from './lib/optional-authentication.guard';

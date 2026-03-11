@@ -19,9 +19,6 @@ describe('AuthenticationService', () => {
   });
 
   it('should return a token session', async () => {
-    const sessionSpy = jest
-      .spyOn(prisma.session, 'findFirst')
-      .mockReturnValue(Promise.resolve(null) as any);
     const tokenSpy = jest.spyOn(prisma.token, 'findFirst').mockReturnValue(
       Promise.resolve({
         id: '1234-1234',
@@ -33,42 +30,30 @@ describe('AuthenticationService', () => {
     const userRoleSpy = jest
       .spyOn(prisma.userRole, 'findMany')
       .mockReturnValue(Promise.resolve([]) as any);
-    const userSpy = jest.spyOn(prisma.user, 'findUnique');
 
-    const result = await service.getSessionByToken('1234');
+    const result = await service.getPeerSession('1234');
     expect(result).toMatchSnapshot();
-    expect(sessionSpy.mock.calls[0]).toMatchSnapshot();
     expect(tokenSpy.mock.calls[0]).toMatchSnapshot();
     expect(userRoleSpy.mock.calls[0]).toMatchSnapshot();
-    expect(userSpy).not.toHaveBeenCalled();
   });
 
   it('should return a user session', async () => {
     const sessionSpy = jest.spyOn(prisma.session, 'findFirst').mockReturnValue(
       Promise.resolve({
         userID: '12345',
+        user: {
+          id: '12345',
+        },
       }) as any
     );
-    const tokenSpy = jest
-      .spyOn(prisma.token, 'findFirst')
-      .mockReturnValue(Promise.resolve(null) as any);
     const userRoleSpy = jest
       .spyOn(prisma.userRole, 'findMany')
       .mockReturnValue(Promise.resolve([]) as any);
-    const userSpy = jest.spyOn(prisma.user, 'findUnique').mockReturnValue(
-      Promise.resolve({
-        roleIDs: ['1111', '2222'],
-      }) as any
-    );
 
-    const result = await service.getSessionByToken('1234');
+    const result = await service.getUserSession('1234');
     expect(result).toMatchSnapshot();
     expect(sessionSpy.mock.calls[0]).toMatchSnapshot();
-    expect(tokenSpy.mock.calls[0]).toMatchSnapshot();
     expect(userRoleSpy.mock.calls[0]).toMatchSnapshot();
-    expect(userSpy.mock.calls[0][0]).toMatchSnapshot({
-      select: expect.any(Object),
-    });
   });
 
   it("should return null if user can't be found", async () => {
@@ -77,24 +62,14 @@ describe('AuthenticationService', () => {
         userID: '12345',
       }) as any
     );
-    const tokenSpy = jest
-      .spyOn(prisma.token, 'findFirst')
-      .mockReturnValue(Promise.resolve(null) as any);
     const userRoleSpy = jest
       .spyOn(prisma.userRole, 'findMany')
       .mockReturnValue(Promise.resolve([]) as any);
-    const userSpy = jest
-      .spyOn(prisma.user, 'findUnique')
-      .mockReturnValue(Promise.resolve(null) as any);
 
-    const result = await service.getSessionByToken('1234');
+    const result = await service.getUserSession('1234');
     expect(result).toBeNull();
     expect(sessionSpy.mock.calls[0]).toMatchSnapshot();
-    expect(tokenSpy.mock.calls[0]).toMatchSnapshot();
     expect(userRoleSpy.mock.calls[0]).toMatchSnapshot();
-    expect(userSpy.mock.calls[0][0]).toMatchSnapshot({
-      select: expect.any(Object),
-    });
   });
 
   it('should return that the session is valid if expiresAt is in the future', () => {
