@@ -29,9 +29,7 @@ export const ImageWithTextBreakBlock = styled(BreakBlock)`
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-template-columns: calc((100% - 3rem) / 7 * 5) calc(
-        (100% - 3rem) / 7 * 2
-      );
+    grid-template-columns: 5fr 2fr;
     padding: 2rem 1rem;
     column-gap: 3rem;
     row-gap: 0;
