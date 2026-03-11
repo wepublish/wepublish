@@ -36,9 +36,9 @@ FROM ${BUILD_IMAGE} AS  build-website
 COPY . .
 RUN npx prisma generate && \
     npx nx build ${NEXT_PROJECT} ${NX_NEXT_PROJECT_BUILD_OPTIONS} && \
-    bash /wepublish/deployment/map-secrets.sh clean
+    node /wepublish/deployment/map-secrets.js clean
 
-FROM ${PLAIN_BUILD_IMAGE} AS website
+FROM ${PLAIN_BUILD_IMAGE} AS website-setup
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -48,18 +48,26 @@ ENV PORT=4000
 ### FRONT_ARG_REPLACER ###
 
 WORKDIR /wepublish
-RUN printf '#!/bin/sh\n/usr/bin/bash /wepublish/map-secrets.sh restore && node /wepublish/apps/${NEXT_PROJECT}/server.js\n' > /entrypoint.sh && \
-    chmod +x /entrypoint.sh
 COPY --chown=1001:0 --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/standalone /wepublish
 COPY --chown=1001:0 --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/public /wepublish/apps/${NEXT_PROJECT}/public
 COPY --chown=1001:0 --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/static /wepublish/apps/${NEXT_PROJECT}/public/_next/static
 COPY --chown=1001:0 version /wepublish/apps/${NEXT_PROJECT}/public/deployed_version
 COPY --chown=1001:0 --from=build-website /wepublish/secrets_name.list /wepublish/secrets_name.list
-COPY --chown=1001:0 --from=build-website /wepublish/deployment/map-secrets.sh /wepublish/map-secrets.sh
-RUN chown 1001:0 /entrypoint.sh && chmod -R g=u /wepublish /entrypoint.sh
+COPY --chown=1001:0 --from=build-website /wepublish/deployment/map-secrets.js /wepublish/map-secrets.js
+RUN printf '{"serverPath":"/wepublish/apps/%s/server.js"}' "${NEXT_PROJECT}" > /wepublish/startup-config.json && \
+    chmod -R g=u /wepublish
+
+FROM ${RUNTIME_IMAGE} AS website
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV HOSTNAME=0.0.0.0
+ENV ADDRESS=0.0.0.0
+ENV PORT=4000
+WORKDIR /wepublish
+COPY --from=website-setup /wepublish /wepublish
 EXPOSE 4001
 USER 1001
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["node", "/wepublish/map-secrets.js", "restore", "--start"]
 
 #######
 ## API
@@ -142,14 +150,13 @@ COPY docker/tsconfig.yaml_seed tsconfig.yaml
 RUN npm install prisma@5.0.0 @prisma/client@5.0.0 @types/node @node-rs/argon2 typescript && \
     npx tsc -p tsconfig.yaml
 
-FROM ${PLAIN_BUILD_IMAGE} AS migration
+FROM ${PLAIN_BUILD_IMAGE} AS migration-setup
 ENV NODE_ENV=production
-LABEL org.opencontainers.image.authors="WePublish Foundation"
 WORKDIR /wepublish
 COPY --from=build-migration /wepublish/dist ./dist
 COPY libs/api/prisma/migrations prisma/migrations
 COPY libs/api/prisma/schema.prisma prisma/schema.prisma
-COPY docker/migrate_start.sh start.sh
+COPY docker/migrate_start.js start.js
 RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl && \
     apt-get clean && \
@@ -157,8 +164,18 @@ RUN apt-get update && \
     npm install prisma@5.0.0 @node-rs/argon2 && \
     npx prisma generate && \
     chmod -R g=u /wepublish
+
+FROM ${RUNTIME_IMAGE} AS migration
+ENV NODE_ENV=production
+LABEL org.opencontainers.image.authors="WePublish Foundation"
+WORKDIR /wepublish
+COPY --from=migration-setup /usr/lib/x86_64-linux-gnu/libssl.so* /usr/lib/x86_64-linux-gnu/
+COPY --from=migration-setup /usr/lib/x86_64-linux-gnu/libcrypto.so* /usr/lib/x86_64-linux-gnu/
+COPY --from=migration-setup /usr/lib/x86_64-linux-gnu/libz.so* /usr/lib/x86_64-linux-gnu/
+COPY --from=migration-setup /usr/lib/x86_64-linux-gnu/libzstd.so* /usr/lib/x86_64-linux-gnu/
+COPY --from=migration-setup /wepublish /wepublish
 USER 1001
-CMD ["bash", "./start.sh"]
+CMD ["node", "start.js"]
 
 
 #######
