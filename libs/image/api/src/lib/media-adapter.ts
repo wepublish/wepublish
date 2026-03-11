@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FileUpload } from 'graphql-upload';
+import { FileUpload } from 'graphql-upload-ts';
 import { ImageTransformation } from './image-transformation.model';
 import { ImageWithFocalPoint } from './image-dataloader.service';
 import { UploadImage } from './image-upload.service';

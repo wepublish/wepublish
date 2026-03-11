@@ -16,7 +16,7 @@ import {
 
 import { mockMemberPlan, mockPaymentMethod } from '@wepublish/storybook/mocks';
 import { InvoiceListContainer } from '../invoice-list/invoice-list-container';
-import { waitFor, within } from '@storybook/test';
+import { waitFor, within } from 'storybook/test';
 import {
   WithCancelError,
   WithExtendError,

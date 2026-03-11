@@ -1,6 +1,6 @@
 import { SubscribeBlockContext } from '@wepublish/block-content/website';
 import { ComponentProps, ComponentType } from 'react';
-import { action } from '@storybook/addon-actions';
+import { action } from 'storybook/actions';
 import {
   RegisterMutationResult,
   ResubscribeMutationResult,

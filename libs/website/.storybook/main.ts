@@ -25,25 +25,8 @@ export default {
 
   addons: [
     '@nx/react/plugins/storybook',
-    '@storybook/addon-essentials',
+    '@storybook/addon-docs',
     'storybook-addon-apollo-client',
-    '@storybook/addon-interactions',
-    {
-      name: '@storybook/addon-storysource',
-      options: {
-        loaderOptions: {
-          prettierConfig: {
-            printWidth: 100,
-            semi: false,
-            singleQuote: true,
-            bracketSpacing: false,
-            jsxBracketSameLine: true,
-            trailingComma: 'none',
-            arrowParens: 'avoid',
-          },
-        },
-      },
-    },
     '@storybook/addon-a11y',
     '@storybook/addon-links',
     '@storybook/addon-themes',
