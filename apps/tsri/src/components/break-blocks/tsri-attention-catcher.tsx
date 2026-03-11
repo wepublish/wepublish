@@ -11,6 +11,11 @@ import { allPass } from 'ramda';
 
 import { TsriBreakBlockType } from './tsri-base-break-block';
 
+export const BreakBlockSegment = styled('div')`
+  display: grid;
+  align-items: start;
+`;
+
 export const BreakBlockWrapper = styled('div')`
   --sizing-factor: 2.7;
   display: grid;
@@ -36,6 +41,10 @@ export const BreakBlockWrapper = styled('div')`
     grid-template-columns: 57% calc(100% - 57%);
     width: 69.4%;
     border-radius: 1cqw;
+
+    &:has(${BreakBlockSegment}:empty) {
+      //grid-template-columns: 100%;
+    }
   }
 `;
 
@@ -57,11 +66,6 @@ export const BreakBlockHeading = styled('div')`
     border-top-left-radius: 1cqw;
     border-top-right-radius: 1cqw;
   }
-`;
-
-export const BreakBlockSegment = styled('div')`
-  display: grid;
-  align-items: start;
 `;
 
 export const BreakBlockImage = styled(Image)`
@@ -108,6 +112,9 @@ const richTextStyles = (theme: Theme) => css`
 const firstSegmentStyles = (theme: Theme) => css`
   padding: 0 calc(var(--sizing-factor) * 1cqw) calc(var(--sizing-factor) * 1cqw)
     calc(var(--sizing-factor) * 1cqw);
+  &:empty {
+    display: none;
+  }
 
   ${theme.breakpoints.up('md')} {
     padding-right: 0;
@@ -125,6 +132,10 @@ const secondSegmentStyles = (theme: Theme) => css`
     grid-column: 2 / 3;
     grid-row: 2 / 3;
     grid-template-rows: auto min-content;
+
+    &:is(${BreakBlockSegment}:empty + ${BreakBlockSegment}) {
+      grid-column: 1 / 3;
+    }
   }
 `;
 
