@@ -37,7 +37,11 @@ export type BuilderBlockRendererProps = {
   block: BlockContent;
   index: number;
   count: number;
-  type: 'Page' | 'Article';
+  type: 'Page' | 'Article' | 'PageNested' | 'ArticleNested';
+  siblings?: Array<{
+    typeName: string;
+    blockStyle?: string;
+  }>;
 };
 
 export type BuilderBlocksProps = {
@@ -45,7 +49,7 @@ export type BuilderBlocksProps = {
   type: BuilderBlockRendererProps['type'];
 };
 
-export type BuilderFlexBlockProps = FlexBlock & {
+export type BuilderFlexBlockProps = Omit<FlexBlock, 'type'> & {
   className?: string;
 };
 

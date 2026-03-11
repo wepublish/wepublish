@@ -1,0 +1,2785 @@
+import { faker } from '@faker-js/faker';
+import { capitalize } from '@mui/material';
+import {
+  ArticleListDocument,
+  ArticleListQueryVariables,
+  AuthorListDocument,
+  BlockContentInput,
+  BlockStyle,
+  BlockStylesDocument,
+  BlockWithAlignment,
+  BreakBlockInput,
+  CommentItemType,
+  CommentListDocument,
+  CreateArticleMutationVariables,
+  EventListDocument,
+  FlexBlockInput,
+  getApiClientV2,
+  ImageBlockInput,
+  ImageListDocument,
+  MemberPlanListDocument,
+  NavigationLinkType,
+  NavigationListDocument,
+  PageListDocument,
+  PaymentMethodListDocument,
+  ProductType,
+  PropertyInput,
+  QuoteBlockInput,
+  RichTextBlockInput,
+  SubscriptionFlowsDocument,
+  SubscriptionListDocument,
+  SubscribeBlockInput,
+  Tag,
+  TagListDocument,
+  TagListQueryVariables,
+  TagType,
+  TeaserListBlockSort,
+  TeaserSlotsAutofillConfig,
+  TeaserSlotsBlockInput,
+  TeaserType,
+  TitleBlockInput,
+  useApproveCommentMutation,
+  useCreateArticleMutation,
+  useCreateAuthorMutation,
+  useCreateBlockStyleMutation,
+  useCreateCommentMutation,
+  useCreateEventMutation,
+  useCreateMemberPlanMutation,
+  useCreateNavigationMutation,
+  useCreatePageMutation,
+  useCreatePaymentMethodMutation,
+  useCreateTagMutation,
+  useDeleteArticleMutation,
+  useDeleteAuthorMutation,
+  useDeleteBlockStyleMutation,
+  useDeleteCommentMutation,
+  useDeleteEventMutation,
+  useDeleteImageMutation,
+  useDeleteMemberPlanMutation,
+  useDeleteNavigationMutation,
+  useDeletePageMutation,
+  useDeletePaymentMethodMutation,
+  useDeleteSubscriptionFlowMutation,
+  useDeleteSubscriptionMutation,
+  useDeleteTagMutation,
+  usePublishArticleMutation,
+  usePublishPageMutation,
+  useUpdateArticleMutation,
+  useUpdateCommentMutation,
+  useUploadImageMutation,
+} from '@wepublish/editor/api';
+import {
+  getImgMinSizeToCompress,
+  getOperationNameFromDocument,
+} from '@wepublish/ui/editor';
+import imageCompression from 'browser-image-compression';
+import { useEffect, useState } from 'react';
+import { Descendant } from 'slate';
+
+import imageData from './image-data.json';
+import { useQueryState } from './useQueryState';
+
+const shuffle = <T,>(list: T[]): T[] => {
+  let idx = -1;
+  const len = list.length;
+  let position;
+  const result: T[] = [];
+
+  while (++idx < len) {
+    position = Math.floor((idx + 1) * Math.random());
+    result[idx] = result[position];
+    result[position] = list[idx];
+  }
+
+  return result;
+};
+
+const pickRandom = <T,>(value: T, chance = 0.5): T[] | never[] => {
+  const seed = Math.random();
+
+  if (seed > chance) {
+    return [];
+  }
+
+  return [value];
+};
+
+const getText = (min = 1, max = 10): Descendant[] => {
+  const text: Descendant[] = Array.from(
+    { length: faker.number.int({ min, max }) },
+    () => ({
+      type: 'paragraph',
+      children: [
+        {
+          text: faker.lorem.paragraph(),
+        },
+      ],
+    })
+  ) as Descendant[];
+
+  return text;
+};
+
+const waitForMs = async (msToWait: number) =>
+  new Promise(resolve => setTimeout(resolve, msToWait));
+
+async function seedImages(
+  uploadImage: ReturnType<typeof useUploadImageMutation>[0]
+) {
+  console.log('Seeding images...');
+  const getCommonInput = (imgConf: any) => ({
+    filename: `image${imgConf.id}.jpg`,
+    title: imgConf.author,
+    description: faker.lorem.sentence(),
+    tags: [] as string[],
+
+    source: imgConf.url,
+    link: faker.internet.url(),
+    license: faker.lorem.word(),
+
+    focalPoint: { x: 0, y: 0 },
+  });
+  const imageIds: string[] = [];
+
+  for await (const imgConf of imageData) {
+    const file = new File(
+      [await fetch(imgConf.download_url).then(res => res.blob())],
+      `image${imgConf.id}.jpg`,
+      { type: 'image/jpg' }
+    );
+    console.log(`Uploading image ${imgConf.id}...`);
+
+    const optimizedImage: File = await resizeImage(file!);
+    const { data } = await uploadImage({
+      variables: {
+        file: optimizedImage!,
+        ...getCommonInput(imgConf),
+      },
+    });
+    await waitForMs(200);
+    if (data?.uploadImage?.id) {
+      imageIds.push(data.uploadImage.id);
+    }
+  }
+  return imageIds;
+}
+
+async function resizeImage(file: File): Promise<File> {
+  const imgMinSizeToCompress: number = getImgMinSizeToCompress();
+  if (!willImageResize(file, imgMinSizeToCompress)) {
+    return file;
+  }
+  const options = {
+    maxSizeMB: imgMinSizeToCompress, // the max size in MB, defaults to 2MB
+  };
+  return imageCompression(file, options);
+}
+
+function willImageResize(file: File, imgMinSizeToResize: number) {
+  const originalFileSize: number = file.size / (1024 * 1024);
+  if (originalFileSize > imgMinSizeToResize) {
+    return true;
+  }
+  return false;
+}
+
+async function seedArticleTags(createTag: any) {
+  return Promise.all(
+    //faker.helpers.uniqueArray(faker.lorem.word, 10)
+    Array.from(['recherchen', 'news'], tag =>
+      createTag({
+        variables: {
+          tag,
+          type: TagType.Article,
+          description: [],
+          main: false,
+        },
+      })
+    )
+  );
+}
+
+async function seedAuthors(createAuthor: any, imageIds: string[] = []) {
+  const nameAndSlug = () => {
+    const name = faker.person.fullName();
+
+    return {
+      name,
+      slug: faker.helpers.slugify(name.toLowerCase()),
+    };
+  };
+
+  return Promise.all(
+    Array.from({ length: 10 }, (_, i) => {
+      const accounts = [
+        'github',
+        'reddit',
+        //'vimeo',
+        'discord',
+        //'bluesky',
+        'youtube',
+        //'strava',
+        'twitter',
+        'tiktok',
+        'facebook',
+        'instagram',
+        'linkedin',
+        'email',
+        'website',
+      ];
+      return createAuthor({
+        variables: {
+          ...nameAndSlug(),
+          bio: getText(1, 2) as Descendant[],
+          jobTitle: faker.person.jobTitle(),
+          imageID: imageIds[imageIds.length - 1 - i],
+          links: Array.from(
+            { length: faker.number.int({ min: 1, max: 5 }) },
+            () => {
+              const account = accounts.splice(
+                shuffle(Array.from(accounts, (e, i) => i)).at(0)!,
+                1
+              )[0];
+              return {
+                title: account,
+                url:
+                  account === 'email' ?
+                    faker.internet.email()
+                  : faker.internet.url(),
+              };
+            }
+          ),
+          tagIds: [],
+          hideOnArticle: false,
+          hideOnTeaser: false,
+          hideOnTeam: false,
+        },
+      });
+    })
+  );
+}
+
+const addRichTextHeading = (
+  text: string,
+  level: string,
+  headings: string[],
+  headingTwo: string[]
+): Descendant => {
+  if (level === 'two') {
+    headingTwo.push(text);
+  }
+  const t = {
+    text: `${level === 'two' ? `${headingTwo.length}. ` : ''}${text}`,
+  };
+  const heading = {
+    type: `heading-${level}`,
+    children: [t],
+  };
+  headings.push(t.text);
+  return heading as Descendant;
+};
+
+const getBlockStyle = (blockStyles: any, blockStyleName: string) => {
+  let retVal = blockStyles.find((style: any) =>
+    [style.id, style.name].includes(blockStyleName)
+  );
+  if (!retVal) {
+    retVal = undefined;
+  } else {
+    retVal = retVal.id;
+  }
+  return retVal;
+};
+
+const updateToc = (
+  blocks: BlockContentInput[],
+  headings: string[],
+  blockStyles: BlockStyle[]
+): BlockContentInput[] => {
+  return blocks.map(block => {
+    if (
+      'richText' in block &&
+      block.richText?.blockStyle ===
+        getBlockStyle(blockStyles, 'TableOfContents')
+    ) {
+      return {
+        richText: {
+          blockStyle: block.richText?.blockStyle,
+          richText: [
+            {
+              type: 'heading-one',
+              children: [
+                {
+                  text: 'Kapitel',
+                },
+              ],
+            },
+            {
+              type: 'unordered-list',
+              children: headings.map(heading => ({
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: `#`,
+                    title: `Zum Kapitel: ${heading}`,
+                    children: [{ text: heading }],
+                    id: heading,
+                  },
+                ],
+              })),
+            },
+          ],
+        },
+      };
+    }
+    return block;
+  }) as BlockContentInput[];
+};
+
+const createArticleBlocksInput = (
+  tagIds: string[],
+  authorIds: string[],
+  imageIds: string[],
+  i: number,
+  blockStyles: BlockStyle[],
+  title: string,
+  headings: string[],
+  headingTwo: string[]
+): BlockContentInput[] => {
+  const blocks: BlockContentInput[] = [
+    // hero block
+    ...pickRandom(
+      {
+        flexBlock: {
+          blockStyle: getBlockStyle(blockStyles, 'FlexBlockHero'),
+          blocks: [
+            // desktop image
+            {
+              alignment: {
+                i: '0',
+                x: 0,
+                y: 0,
+                w: 6,
+                h: 7,
+                static: false,
+              },
+              block: {
+                image: {
+                  imageID: imageIds[12],
+                  caption: faker.lorem.sentence(),
+                } as ImageBlockInput,
+              } as BlockContentInput,
+            },
+
+            // mobile image
+            {
+              alignment: {
+                i: '1',
+                x: 6,
+                y: 0,
+                w: 6,
+                h: 7,
+                static: false,
+              },
+              block: {
+                image: {
+                  imageID: imageIds[13],
+                  caption: faker.lorem.sentence(),
+                } as ImageBlockInput,
+              } as BlockContentInput,
+            },
+
+            // overlay text
+            {
+              alignment: {
+                i: '2',
+                x: 0,
+                y: 7,
+                w: 12,
+                h: 3,
+                static: false,
+              },
+              block: {
+                richText: {
+                  richText: [
+                    {
+                      type: 'heading-one',
+                      children: [
+                        {
+                          text: capitalize(
+                            faker.lorem.words({ min: 3, max: 8 })
+                          ),
+                        },
+                      ],
+                    },
+                    ...(getText(1, 2) as Descendant[]),
+                  ] as Descendant[],
+                } as RichTextBlockInput,
+              } as BlockContentInput,
+            },
+          ] as BlockWithAlignment[],
+        } as FlexBlockInput,
+      } as BlockContentInput,
+      0.3
+    ),
+
+    // a title block
+    {
+      title: {
+        title,
+        preTitle: capitalize(faker.lorem.words({ min: 3, max: 8 })),
+        lead: faker.lorem.sentences({ min: 3, max: 5 }),
+      } as TitleBlockInput,
+    } as BlockContentInput,
+
+    // a collapsible rich text block
+    {
+      richText: {
+        blockStyle: getBlockStyle(blockStyles, 'CollapsibleRichText'),
+        richText: [
+          {
+            type: 'heading-one',
+            children: [
+              {
+                text: 'Das Wichtigste in Kürze',
+              },
+            ],
+          },
+          {
+            type: 'unordered-list',
+            children: [
+              {
+                type: 'list-item',
+                children: [{ text: capitalize(faker.lorem.sentence()) }],
+              },
+              {
+                type: 'list-item',
+                children: [{ text: capitalize(faker.lorem.sentence()) }],
+              },
+              {
+                type: 'list-item',
+                children: [{ text: capitalize(faker.lorem.sentence()) }],
+              },
+            ],
+          },
+          {
+            type: 'unordered-list',
+            children: [
+              {
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: faker.internet.url(),
+                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                  },
+                ],
+              },
+              {
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: faker.internet.url(),
+                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                  },
+                ],
+              },
+              {
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: faker.internet.url(),
+                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                  },
+                ],
+              },
+            ],
+          },
+          ...(getText(1, 2) as Descendant[]),
+        ] as Descendant[],
+      } as RichTextBlockInput,
+    } as BlockContentInput,
+
+    // a quote block without author
+    {
+      quote: {
+        quote: capitalize(
+          'How can you make sure that this money is being considered as legal or legalized? Because I’m not sure whether it’s really legal. Can you help  him with it?'
+        ),
+        imageID: undefined,
+        author: undefined,
+      } as QuoteBlockInput,
+    } as BlockContentInput,
+
+    // a quote block with author
+    {
+      quote: {
+        quote: capitalize(
+          'Yeah, but to answer this  question, we would need to have more information. And then it’s the way  we will present it to the banks, you know.'
+        ),
+        imageID: undefined,
+        author: capitalize(faker.person.fullName()),
+      } as QuoteBlockInput,
+    } as BlockContentInput,
+
+    // an image block
+    {
+      image: {
+        imageID: imageIds[(i + 1) % imageIds.length],
+        caption: faker.lorem.sentence(),
+      } as ImageBlockInput,
+    } as BlockContentInput,
+
+    // a table of contents rich text block
+    {
+      richText: {
+        blockStyle: getBlockStyle(blockStyles, 'TableOfContents'),
+        richText: [
+          {
+            type: 'heading-one',
+            children: [
+              {
+                text: 'Kapitel',
+              },
+            ],
+          },
+          {
+            type: 'unordered-list',
+            children: [
+              {
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: faker.internet.url(),
+                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                    id: faker.lorem.words({ min: 2, max: 4 }),
+                  },
+                ],
+              },
+              {
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: faker.internet.url(),
+                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                    id: faker.lorem.words({ min: 2, max: 4 }),
+                  },
+                ],
+              },
+              {
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: faker.internet.url(),
+                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                    id: faker.lorem.words({ min: 2, max: 4 }),
+                  },
+                ],
+              },
+            ],
+          },
+        ] as Descendant[],
+      } as RichTextBlockInput,
+    } as BlockContentInput,
+
+    // a rich text block
+    {
+      richText: {
+        richText: [
+          addRichTextHeading(
+            capitalize(faker.lorem.words({ min: 3, max: 9 })),
+            'three',
+            headings,
+            headingTwo
+          ),
+          ...(getText(3, 7) as Descendant[]),
+        ] as Descendant[],
+      } as RichTextBlockInput,
+    } as BlockContentInput,
+
+    // some alternating image and rich text blocks
+    ...Array.from({ length: faker.number.int({ min: 5, max: 9 }) }, () => {
+      const imageBlock = pickRandom<BlockContentInput>(
+        {
+          image: {
+            imageID:
+              imageIds[faker.number.int({ min: 0, max: imageIds.length - 1 })],
+            caption: faker.lorem.sentence(),
+          } as ImageBlockInput,
+        },
+        0.1
+      );
+      if (imageBlock.length) {
+        return imageBlock[0];
+      } else {
+        return {
+          richText: {
+            richText: [
+              addRichTextHeading(
+                capitalize(faker.lorem.words({ min: 3, max: 9 })),
+                'two',
+                headings,
+                headingTwo
+              ),
+              ...(getText(3, 5) as Descendant[]),
+              addRichTextHeading(
+                capitalize(faker.lorem.words({ min: 3, max: 9 })),
+                'three',
+                headings,
+                headingTwo
+              ),
+              ...(getText(3, 5) as Descendant[]),
+            ] as Descendant[],
+          } as RichTextBlockInput,
+        } as BlockContentInput;
+      }
+    }),
+
+    // a break block
+    {
+      linkPageBreak: {
+        blockStyle: getBlockStyle(blockStyles, 'ImageWithTextAltColor'),
+        hideButton: false,
+        imageID: imageIds[imageIds.length - 30],
+        text: 'Lust auf mehr investigative Recherchen?',
+        linkTarget: null,
+        linkText: 'Jetzt unterstützen',
+        linkURL: '/mitmachen',
+        richText: [
+          {
+            type: 'paragraph',
+            children: [
+              {
+                text: 'Dieser Beitrag wurde durch unsere Mitglieder ermöglicht. Unterstütze auch du mutigen Journalismus!',
+              },
+            ],
+          },
+        ] as Descendant[],
+      } as BreakBlockInput,
+    } as BlockContentInput,
+
+    // more rich text blocks
+    ...Array.from({ length: faker.number.int({ min: 1, max: 4 }) }, () => {
+      return {
+        richText: {
+          richText: [
+            addRichTextHeading(
+              capitalize(faker.lorem.words({ min: 3, max: 9 })),
+              pickRandom('two', 0.5)[0] ? 'two' : 'three',
+              headings,
+              headingTwo
+            ),
+            ...(getText(3, 5) as Descendant[]),
+          ] as Descendant[],
+        } as RichTextBlockInput,
+      } as BlockContentInput;
+    }),
+
+    // a fullsize image block
+    {
+      image: {
+        blockStyle: getBlockStyle(blockStyles, 'ImageFullsize'),
+        imageID:
+          imageIds[faker.number.int({ min: 0, max: imageIds.length - 5 })],
+        caption: faker.lorem.sentence(),
+      } as ImageBlockInput,
+    } as BlockContentInput,
+
+    // a collapsible downloads list block
+    {
+      richText: {
+        blockStyle: getBlockStyle(blockStyles, 'CollapsibleDownloads'),
+        richText: [
+          {
+            type: 'heading-one',
+            children: [
+              {
+                text: 'Downloads',
+              },
+            ],
+          },
+          {
+            type: 'unordered-list',
+            children: [
+              {
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: faker.internet.url(),
+                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                  },
+                ],
+              },
+              {
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: faker.internet.url(),
+                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                  },
+                ],
+              },
+              {
+                type: 'list-item',
+                children: [
+                  {
+                    type: 'link',
+                    url: faker.internet.url(),
+                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
+                    children: [{ text: capitalize(faker.lorem.sentence()) }],
+                  },
+                ],
+              },
+            ],
+          },
+        ] as Descendant[],
+      } as RichTextBlockInput,
+    } as BlockContentInput,
+
+    // a credits teaser block
+    {
+      teaserSlots: {
+        title: 'Credits',
+        blockStyle: getBlockStyle(blockStyles, 'TeaserCredits'),
+        autofillConfig: {
+          enabled: false,
+          filter: {},
+          teaserType: TeaserType.Article,
+          sort: TeaserListBlockSort.PublishedAt,
+        } as TeaserSlotsAutofillConfig,
+        slots: [
+          ...Array.from(
+            { length: faker.number.int({ min: 5, max: 9 }) },
+            () => {
+              return {
+                type: 'Manual',
+                teaser: {
+                  custom: {
+                    preTitle: null,
+                    title: faker.person.fullName(),
+                    lead: faker.person.jobTitle(),
+                    contentUrl: null,
+                    openInNewTab: false,
+                    properties: [],
+                    imageID: null,
+                  },
+                },
+              };
+            }
+          ),
+        ],
+      } as TeaserSlotsBlockInput,
+    } as BlockContentInput,
+  ] as BlockContentInput[];
+
+  return blocks;
+};
+
+const createArticleInput = (
+  tagIds: string[],
+  authorIds: string[],
+  imageIds: string[],
+  i: number,
+  blockStyles: BlockStyle[]
+) => {
+  const headings: string[] = [];
+  const headingTwo: string[] = [];
+  const title = capitalize(faker.lorem.words({ min: 3, max: 8 }));
+  return {
+    variables: {
+      shared: true,
+      slug: faker.helpers.slugify(title.toLowerCase()),
+      publishedAt: new Date().toISOString(),
+      preTitle: capitalize(faker.lorem.words({ min: 3, max: 8 })),
+      title,
+      lead: faker.lorem.paragraph(),
+      seoTitle: `SEO - ${title}`,
+      authorIds: [shuffle(authorIds).at(0)],
+      imageID: (() => {
+        let imageId = imageIds[i % imageIds.length];
+        const predefinedImageIds = [
+          '10b0625c-6a01-4b89-acb8-1522cf7c1102',
+          '99ec3c29-3371-44af-804f-1c17fa2fab6b',
+          'f24cf6f5-dfdb-4777-82c0-599a88f71b73',
+        ];
+
+        if (i < 10) {
+          imageId =
+            (
+              imageIds.find(
+                imageId =>
+                  imageId === predefinedImageIds[i % predefinedImageIds.length]
+              )
+            ) ?
+              predefinedImageIds[i % predefinedImageIds.length]
+            : imageId;
+        }
+        return imageId;
+      })(),
+      breaking: pickRandom(true, 0.1).length ? true : false,
+      paywallId: null,
+      hidden: false,
+      disableComments: false,
+      tagIds: (() => {
+        if (tagIds.length) {
+          if (i < 10) {
+            return [tagIds[0]];
+          }
+          return [tagIds[1]];
+        }
+        return [];
+      })(),
+      canonicalUrl: faker.internet.url(),
+      properties:
+        i % 3 === 2 ?
+          ([
+            { key: 'leadColor', value: 'black', public: true },
+          ] as PropertyInput[])
+        : ([] as PropertyInput[]),
+      blocks: [
+        ...updateToc(
+          createArticleBlocksInput(
+            tagIds,
+            authorIds,
+            imageIds,
+            i,
+            blockStyles,
+            title,
+            headings,
+            headingTwo
+          ),
+          headings,
+          blockStyles
+        ),
+      ] as BlockContentInput[],
+
+      hideAuthor: false,
+      socialMediaTitle: `Social Media - ${title}`,
+      socialMediaDescription: faker.lorem.paragraph(),
+      socialMediaAuthorIds: [],
+      socialMediaImageID: undefined,
+      likes: 0,
+    } as CreateArticleMutationVariables,
+  };
+};
+
+const nrOfArticlesPerTag = 10;
+async function seedArticlesByTag(
+  createArticle: any,
+  updateArticle: any,
+  tagIds: string[] = [],
+  authorIds: string[] = [],
+  imageIds: string[] = [],
+  blockStyles: BlockStyle[]
+) {
+  const articles = await Promise.all(
+    Array.from({ length: nrOfArticlesPerTag * tagIds.length }, (_, index) => {
+      const articleData = createArticleInput(
+        tagIds,
+        authorIds,
+        imageIds,
+        index,
+        blockStyles
+      );
+      return createArticle(articleData).then((_a: any) => {
+        return updateArticle({
+          variables: {
+            id: _a?.data?.createArticle.id,
+            ...articleData.variables,
+          },
+        }).then((_v: any) => {
+          return _v.data.updateArticle;
+        });
+      });
+    })
+  );
+
+  return articles;
+}
+
+/*
+async function seedArticles(
+  createArticle: any,
+  updateArticle: any,
+  tagIds: string[] = [],
+  authorIds: string[] = [],
+  imageIds: string[] = [],
+  blockStyles: BlockStyle[]
+) {
+  const articles = await Promise.all(
+    Array.from({ length: 1 }, (_, index) => {
+      const articleData = createArticleInput(
+        tagIds,
+        authorIds,
+        imageIds,
+        index,
+        blockStyles
+      );
+      return createArticle(articleData).then((_a: any) => {
+        return updateArticle({
+          variables: {
+            id: _a?.data?.createArticle.id,
+            ...articleData.variables,
+          },
+        }).then((_v: any) => {
+          return _v.data.updateArticle;
+        });
+      });
+    })
+  );
+
+  return articles;
+}
+*/
+
+async function seedNavigations(createNavigation: any, tags: string[] = []) {
+  /*
+    Links can be of type:
+      Article
+      External
+      Page
+  */
+
+  const [main, meta] = await Promise.all([
+    createNavigation({
+      variables: {
+        key: 'main',
+        name: 'Main Navigation',
+        links: [
+          {
+            type: NavigationLinkType.External,
+            label: 'Recherchen',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'News',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Über uns',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Workshop',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Unterstützen',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Mitglied werden',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Mitgliedschaft verschenken',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Recherchefonds',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Kontakt',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Hinweise',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Umfrage',
+            url: faker.internet.url(),
+          },
+        ],
+      },
+    }),
+    /*
+    createNavigation({
+      variables: {
+        key: 'categories',
+        name: 'Rubriken',
+        links: tags.map(tag => ({
+          type: NavigationLinkType.External,
+          label: capitalize(tag),
+          url: `/a/tag/${tag}`,
+        })),
+      },
+    }),
+    */
+    createNavigation({
+      variables: {
+        key: 'meta',
+        name: 'Meta Navigation',
+        links: [
+          {
+            type: NavigationLinkType.External,
+            label: 'Mitglieder Login',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Mitglieder Login',
+            url: `/login`,
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Datenschutzerklärung',
+            url: faker.internet.url(),
+          },
+        ],
+      },
+    }),
+    /*
+    createNavigation({
+      variables: {
+        key: 'footer',
+        name: 'Footer',
+        links: [
+          {
+            type: NavigationLinkType.External,
+            label: 'AGBs',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Datenschutzerklärung',
+            url: faker.internet.url(),
+          },
+          {
+            type: NavigationLinkType.External,
+            label: 'Kontakt',
+            url: faker.internet.url(),
+          },
+        ],
+      },
+    }),
+        */
+  ]);
+
+  return [main, meta];
+}
+
+async function seedEvents(createEvent: any, imageIds: string[] = []) {
+  const future = faker.date.future({ refDate: new Date() });
+
+  return Promise.all(
+    Array.from({ length: faker.number.int({ min: 4, max: 10 }) }, () =>
+      createEvent({
+        variables: {
+          name: capitalize(faker.lorem.words({ min: 3, max: 8 })),
+          description: getText(4, 12) as any,
+          startsAt: future,
+          endsAt: faker.date.future({ refDate: future }),
+          imageId: shuffle(imageIds).at(0),
+        },
+      })
+    )
+  );
+}
+
+async function seedPages(
+  createPage: any,
+  imageIds: string[] = [],
+  tags: Tag[] = [],
+  articleIds: string[] = [],
+  blockStyles: any,
+  memberPlandIds: string[] = []
+) {
+  const pages = await Promise.all([
+    createPage({
+      variables: {
+        publishedAt: new Date().toISOString(),
+        slug: '',
+        tagIds: [],
+        imageID: null,
+        canonicalUrl: null,
+        properties: [],
+        blocks: [
+          // hero block
+          {
+            flexBlock: {
+              blockStyle: getBlockStyle(blockStyles, 'FlexBlockHero'),
+              blocks: [
+                // desktop image
+                {
+                  alignment: {
+                    i: '0',
+                    x: 0,
+                    y: 0,
+                    w: 6,
+                    h: 7,
+                    static: false,
+                  },
+                  block: {
+                    image: {
+                      imageID: imageIds[12],
+                      caption: faker.lorem.sentence(),
+                    } as ImageBlockInput,
+                  } as BlockContentInput,
+                },
+
+                // mobile image
+                {
+                  alignment: {
+                    i: '1',
+                    x: 6,
+                    y: 0,
+                    w: 6,
+                    h: 7,
+                    static: false,
+                  },
+                  block: {
+                    image: {
+                      imageID: imageIds[13],
+                      caption: faker.lorem.sentence(),
+                    } as ImageBlockInput,
+                  } as BlockContentInput,
+                },
+
+                // overlay text
+                {
+                  alignment: {
+                    i: '2',
+                    x: 0,
+                    y: 7,
+                    w: 12,
+                    h: 3,
+                    static: false,
+                  },
+                  block: {
+                    richText: {
+                      richText: [
+                        {
+                          type: 'heading-one',
+                          children: [
+                            {
+                              text: capitalize(
+                                faker.lorem.words({ min: 3, max: 8 })
+                              ),
+                            },
+                          ],
+                        },
+                        ...(getText(1, 2) as Descendant[]),
+                      ] as Descendant[],
+                    } as RichTextBlockInput,
+                  } as BlockContentInput,
+                },
+              ] as BlockWithAlignment[],
+            } as FlexBlockInput,
+          } as BlockContentInput,
+
+          // recherchen teasers
+          {
+            teaserSlots: {
+              title: 'Recherchen',
+              blockStyle: getBlockStyle(blockStyles, 'TeaserRecherchen'),
+              autofillConfig: {
+                enabled: true,
+                filter: {
+                  tags: tags
+                    .filter(tag => tag.tag === 'recherchen')
+                    .map(tag => tag.id) as string[],
+                },
+                teaserType: TeaserType.Article,
+                sort: TeaserListBlockSort.PublishedAt,
+              } as TeaserSlotsAutofillConfig,
+              slots: [
+                {
+                  type: 'Autofill',
+                  teaser: null,
+                },
+                {
+                  type: 'Autofill',
+                  teaser: null,
+                },
+                {
+                  type: 'Autofill',
+                  teaser: null,
+                },
+                {
+                  type: 'Manual',
+                  teaser: {
+                    custom: {
+                      preTitle: 'Alle Recherchen',
+                      title: '',
+                      lead: null,
+                      contentUrl: '/a/tag/recherchen',
+                      openInNewTab: false,
+                      properties: [],
+                      imageID: null,
+                    },
+                  },
+                },
+              ],
+            } as TeaserSlotsBlockInput,
+          } as BlockContentInput,
+
+          // news teasers
+          {
+            teaserSlots: {
+              title: 'News',
+              blockStyle: getBlockStyle(blockStyles, 'TeaserNews'),
+              autofillConfig: {
+                enabled: true,
+                filter: {
+                  tags: tags
+                    .filter(tag => tag.tag === 'news')
+                    .map(tag => tag.id) as string[],
+                },
+                teaserType: TeaserType.Article,
+                sort: TeaserListBlockSort.PublishedAt,
+              } as TeaserSlotsAutofillConfig,
+              slots: [
+                {
+                  type: 'Autofill',
+                  teaser: null,
+                },
+                {
+                  type: 'Autofill',
+                  teaser: null,
+                },
+                {
+                  type: 'Autofill',
+                  teaser: null,
+                },
+                {
+                  type: 'Manual',
+                  teaser: {
+                    custom: {
+                      preTitle: 'Alle News',
+                      title: '',
+                      lead: null,
+                      contentUrl: '/a/tag/news',
+                      openInNewTab: false,
+                      properties: [],
+                      imageID: null,
+                    },
+                  },
+                },
+              ],
+            } as TeaserSlotsBlockInput,
+          } as BlockContentInput,
+
+          // a break block
+          {
+            linkPageBreak: {
+              blockStyle: getBlockStyle(blockStyles, 'ImageWithText'),
+              hideButton: false,
+              imageID: imageIds[imageIds.length - 40],
+              text: 'Verpasse keine Story unseres preisgekrönten Recherche-Teams:',
+              linkTarget: null,
+              linkText: 'Ich bin dabei',
+              linkURL: '/mitmachen',
+              richText: [] as Descendant[],
+            } as BreakBlockInput,
+          } as BlockContentInput,
+
+          // team break block
+          {
+            linkPageBreak: {
+              blockStyle: getBlockStyle(blockStyles, 'Team'),
+              hideButton: false,
+              imageID: imageIds[imageIds.length - 50],
+              text: 'Wir gehen hin wo andere wegschauen',
+              linkTarget: null,
+              linkText: 'Mehr über uns',
+              linkURL: '/authors',
+              richText: [
+                {
+                  type: 'unordered-list',
+                  children: [
+                    {
+                      type: 'list-item',
+                      children: [
+                        {
+                          text: 'REFLEKT recherchiert gegen Missstände und Machtmissbrauch',
+                        },
+                      ],
+                    },
+                    {
+                      type: 'list-item',
+                      children: [
+                        {
+                          text: 'Unabhängig, preisgekrönt, effektiv',
+                        },
+                      ],
+                    },
+                    {
+                      type: 'list-item',
+                      children: [
+                        {
+                          text: 'Finanziert durch unsere 750+ Mitglieder',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'Wir recherchieren mutig minutiös und oft monatelang zu Themen die für die Schweiz relevant sind. ',
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'Dabei stets im Fokus: der Kampf gegen Missstände und Machtmissbrauch. Unter anderem haben wir Strukturen organisierter Kriminalität aufgedeckt eritreische Folteropfer aufgespürt oder die Rolle der Credit Suisse im grössten Finanzskandal Moçambiques beleuchtet.',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as BreakBlockInput,
+          } as BlockContentInput,
+
+          // a break block
+          {
+            linkPageBreak: {
+              blockStyle: getBlockStyle(blockStyles, 'ImageWithText'),
+              hideButton: false,
+              imageID: imageIds[imageIds.length - 42],
+              text: 'Lust auf mehr investigative Recherchen?',
+              linkTarget: null,
+              linkText: 'Jetzt unterstützen',
+              linkURL: '/mitmachen',
+              richText: [
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'Dieser Beitrag wurde durch unsere Mitglieder ermöglicht. Unterstütze auch du mutigen Journalismus!',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as BreakBlockInput,
+          } as BlockContentInput,
+        ] as BlockContentInput[],
+      },
+    }),
+    createPage({
+      variables: {
+        publishedAt: new Date().toISOString(),
+        slug: 'mitmachen',
+        tagIds: [],
+        imageID: null,
+        canonicalUrl: null,
+        properties: [],
+        blocks: [
+          // a break block
+          {
+            linkPageBreak: {
+              blockStyle: getBlockStyle(blockStyles, 'TextWithImageAltColor'),
+              hideButton: true,
+              imageID: imageIds[imageIds.length - 31],
+              text: '923 Mitglieder unterstützen REFLEKT: \nDeine Unterstützung macht den Unterschied!',
+              linkTarget: null,
+              linkText: undefined,
+              linkURL: undefined,
+              richText: [
+                {
+                  type: 'unordered-list',
+                  children: [
+                    {
+                      type: 'list-item',
+                      children: [
+                        {
+                          text: 'REFLEKT recherchiert gegen Missstände und Machtmissbrauch',
+                        },
+                      ],
+                    },
+                    {
+                      type: 'list-item',
+                      children: [
+                        {
+                          text: 'Unabhängig, preisgekrönt, effektiv',
+                        },
+                      ],
+                    },
+                    {
+                      type: 'list-item',
+                      children: [
+                        {
+                          text: 'Finanziert durch unsere 750+ Mitglieder',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as BreakBlockInput,
+          } as BlockContentInput,
+
+          // the subscribe block
+          {
+            subscribe: {
+              blockStyle: null,
+              fields: [],
+              memberPlanIds: [...memberPlandIds],
+            } as SubscribeBlockInput,
+          } as BlockContentInput,
+
+          // heading - rich text block
+          {
+            richText: {
+              blockStyle: undefined,
+              richText: [
+                {
+                  type: 'heading-one',
+                  children: [
+                    {
+                      text: 'Wir gehen hin, wo andere wegschauen',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput,
+
+          // reflekt ist gemeinnützig - collapsible rich text block
+          {
+            richText: {
+              blockStyle: getBlockStyle(blockStyles, 'CollapsibleRichText'),
+              richText: [
+                {
+                  type: 'heading-one',
+                  children: [
+                    {
+                      text: 'REFLEKT ist gemeinnützig',
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'Spenden und Mitgliederbeiträge kannst du von den Steuern absetzen.',
+                    },
+                    {
+                      text: 'Einmal jährlich erhältst du eine Spendenbescheinigung für deine Steuererklärung. Hinter REFLEKT steht ein Verein, der von der Steuerverwaltung des Kantons Bern offiziell als gemeinnützig und damit steuerbefreit anerkannt ist. Den Begriff «Mitglied» benutzen wir nicht im vereinsrechtlichen Sinn, sondern als Bezeichnung für Unterstützer:innen unserer Arbeit.',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput,
+
+          // reflekt ist preisgekrönt - collapsible rich text block
+          {
+            richText: {
+              blockStyle: getBlockStyle(blockStyles, 'CollapsibleRichText'),
+              richText: [
+                {
+                  type: 'heading-one',
+                  children: [
+                    {
+                      text: 'REFLEKT ist preisgekrönt',
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'In vier Jahren wurden wir sechsmal ausgezeichnet.',
+                    },
+                    {
+                      text: 'Seit der Gründung 2019 wurde REFLEKT mit drei der renommiertesten Journalismus-Preisen der Schweiz ausgezeichnet: je einem Swiss Press Award 2020 und 2021 sowie einem Zürcher Journalismuspreis 2020. Zudem gewann unsere Recherche-Kooperation “Cities for Rent” einen European Press Prize 2022 (Innovation Award) und zwei Recherchen schafften es aufs Podest (Swiss Press Award 2022, Medienpreis für digitale Aufklärung 2022).',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput,
+
+          // reflekt hat reichweite - collapsible rich text block
+          {
+            richText: {
+              blockStyle: getBlockStyle(blockStyles, 'CollapsibleRichText'),
+              richText: [
+                {
+                  type: 'heading-one',
+                  children: [
+                    {
+                      text: 'REFLEKT hat Reichweite',
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'Wir publizieren lokal, national und international.',
+                    },
+                    {
+                      text: 'Wir verkaufen Teile unserer Recherchen an reichweitenstarke Medien, publizieren Originalquellen sowie Hintergrundinformationen auf unserer Webseite und produzieren attraktive Inhalte für Social Media. So gelingt es uns, Entscheidungsträger:innen und ein breites Publikum gleichermassen anzusprechen.Auf internationaler Ebene erschienen unsere Publikationen in sieben Sprachen – unter anderem in Bangladesch, Moçambique und den Niederlanden. Auf lokaler Ebene arbeiteten wir mit Medien wie Tsüri, Bajour oder dem Frutigländer zusammen, um grosse Recherchen auch im Kleinen zu ermöglichen.',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput,
+
+          // reflekt hat impact - collapsible rich text block
+          {
+            richText: {
+              blockStyle: getBlockStyle(blockStyles, 'CollapsibleRichText'),
+              richText: [
+                {
+                  type: 'heading-one',
+                  children: [
+                    {
+                      text: 'REFLEKT hat Impact',
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'Wir erarbeiten Wissen mit Wirkung.',
+                    },
+                    {
+                      text: 'REFLEKT-Recherchen werden regelmässig von renommierten Medien im In- und Ausland aufgenommen und erreichten in den vergangenen Jahren hunderttausende Menschen auf drei Kontinenten. Basierend auf unserer Arbeit wurden parlamentarische Interpellationen eingereicht, Entscheide gefällt oder Verfahren von Kontroll- und Strafverfolgungsbehörden ausgelöst. Den Impact einzelner Recherchen kannst du in unseren Jahresberichten nachlesen. REFLEKT stärkt den Qualitätsjournalismus, fördert die politische Bildung und leistet so einen Beitrag zur informierten Demokratie.',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput,
+
+          // reflekt funktioniert - dank dir - collapsible rich text block
+          {
+            richText: {
+              blockStyle: getBlockStyle(blockStyles, 'CollapsibleRichText'),
+              richText: [
+                {
+                  type: 'heading-one',
+                  children: [
+                    {
+                      text: 'REFLEKT funktioniert - dank dir',
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'Wir sind auf die Unterstützung von Einzelpersonen angewiesen.',
+                    },
+                    {
+                      text: 'Um  unabhängig zu bleiben, verzichten wir auf Werbung und finanzieren unsere Arbeit ausschliesslich durch den Verkauf von Recherche-Ergebnissen  sowie Spenden von Einzelpersonen und Institutionen. Da die  Anschubfinanzierung durch Stiftungen stetig abnimmt, sind wir auf  Mitglieder angewiesen, die unsere Arbeit unterstützen. Werde auch du  Teil der Community und hilf uns, unabhängig und mutig zu recherchieren.',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput,
+
+          // reflekt ist unabhängig - collapsible rich text block
+          {
+            richText: {
+              blockStyle: getBlockStyle(blockStyles, 'CollapsibleRichText'),
+              richText: [
+                {
+                  type: 'heading-one',
+                  children: [
+                    {
+                      text: 'REFLEKT ist unabhängig',
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'Wir recherchieren ohne Einfluss von Politik, Lobbying oder Wirtschaft.',
+                    },
+                    {
+                      text: 'REFLEKT setzt auf ein Finanzierungsmodell, das die Einflussnahme von Dritten minimiert. Dafür verzichten wir auf Werbung und finanzieren unsere Arbeit ausschliesslich über Spenden von Einzelpersonen und Institutionen sowie den Verkauf von Recherche-Ergebnissen. Rund 80 Prozent unseres Budgets fliessen direkt in die Realisierung und Publikation investigativer Recherchen. Kein Geldgeber und keine Geldgeberin kann redaktionelle Entscheide beeinflussen.',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput,
+
+          // reflekt ist investigativ - collapsible rich text block
+          {
+            richText: {
+              blockStyle: getBlockStyle(blockStyles, 'CollapsibleRichText'),
+              richText: [
+                {
+                  type: 'heading-one',
+                  children: [
+                    {
+                      text: 'REFLEKT ist investigativ',
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: 'Wir decken Missstände auf und schaffen Transparenz.',
+                    },
+                    {
+                      text: '«Seit drei Jahren gehört REFLEKT zu den ersten Adressen für die ganz grossen Recherchen in der Schweiz» (Branchenportal Medienwoche, 6.9.2022). Wir recherchieren mutig, minutiös und oft monatelang zu Themen, die für die Schweiz relevant sind. Dabei stets im Fokus: der Kampf gegen Missstände und Machtmissbrauch. Unter anderem haben wir Strukturen organisierter Kriminalität aufgedeckt, eritreische Folteropfer aufgespürt oder die Rolle der Credit Suisse im grössten Finanzskandal Moçambiques beleuchtet.',
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput,
+        ] as BlockContentInput[],
+      },
+    }),
+  ]);
+
+  return pages;
+}
+
+async function seedComments(
+  createComment: any,
+  updateComment: any,
+  approveComment: any,
+  articleIds: string[],
+  imageIds: string[] = []
+) {
+  const createAndApproveComment = async (variables: {
+    text: Descendant[];
+    tagIds: string[];
+    itemID: string;
+    parentID: string | null;
+    itemType: CommentItemType;
+    source: string;
+    guestUsername: string;
+    guestUserImageID: string | undefined;
+  }) => {
+    const comment = await createComment({
+      variables: {
+        text: variables.text,
+        tagIds: variables.tagIds,
+        itemID: variables.itemID,
+        parentID: variables.parentID,
+        itemType: variables.itemType,
+      },
+    });
+    const id = comment.data.createComment.id;
+    await updateComment({
+      variables: {
+        id,
+        guestUsername: variables.guestUsername,
+        guestUserImageID: variables.guestUserImageID,
+        source: variables.source,
+      },
+    });
+    await approveComment({ variables: { id } });
+    return comment;
+  };
+
+  const comments = await Promise.all(
+    articleIds.map(async articleId => {
+      const firstBatchOfComments = await Promise.all(
+        Array.from(
+          { length: faker.number.int({ min: 0, max: 8 }) },
+          async () => {
+            const comment = await createAndApproveComment({
+              text: getText(2, 4) as Descendant[],
+              tagIds: [],
+              itemID: articleId,
+              parentID: null,
+              itemType: CommentItemType.Article,
+              source: capitalize(faker.lorem.words({ min: 3, max: 8 })),
+              guestUsername: faker.person.fullName(),
+              guestUserImageID: shuffle(imageIds).at(0),
+            });
+            return comment;
+          }
+        )
+      );
+
+      let repliesToFirstBatchOfComments: any[] = [];
+      if (firstBatchOfComments.length) {
+        repliesToFirstBatchOfComments = await Promise.all(
+          firstBatchOfComments.map(
+            async parentComment =>
+              await Promise.all(
+                Array.from(
+                  { length: faker.number.int({ min: 0, max: 4 }) },
+                  async () => {
+                    const reply = await createAndApproveComment({
+                      text: getText(1, 3) as Descendant[],
+                      tagIds: [],
+                      itemID: articleId,
+                      parentID: parentComment.data.createComment.id,
+                      itemType: CommentItemType.Article,
+                      source: capitalize(faker.lorem.words({ min: 3, max: 8 })),
+                      guestUsername: faker.person.fullName(),
+                      guestUserImageID: shuffle(imageIds).at(0),
+                    });
+                    return reply;
+                  }
+                )
+              )
+          )
+        );
+      }
+
+      return [...firstBatchOfComments, ...repliesToFirstBatchOfComments];
+    })
+  );
+  return comments;
+}
+
+async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
+  const blockStylesData = [
+    {
+      name: 'Banner',
+      blocks: ['LinkPageBreak'],
+    },
+    {
+      name: 'ContextBox',
+      blocks: ['LinkPageBreak'],
+    },
+    {
+      name: 'Alternating',
+      blocks: ['TeaserList', 'TeaserSlots', 'TeaserGrid6'],
+    },
+    {
+      name: 'Focus',
+      blocks: ['TeaserList', 'TeaserSlots'],
+    },
+    {
+      name: 'Slider',
+      blocks: ['TeaserList', 'TeaserGrid6', 'TeaserSlots', 'ImageGallery'],
+    },
+
+    {
+      name: 'FlexBlockHero',
+      blocks: ['FlexBlock'],
+    },
+
+    {
+      name: 'TeaserRecherchen',
+      blocks: ['TeaserSlots'],
+    },
+
+    {
+      name: 'TeaserNews',
+      blocks: ['TeaserSlots'],
+    },
+
+    {
+      name: 'TeaserCredits',
+      blocks: ['TeaserSlots'],
+    },
+
+    {
+      name: 'CollapsibleRichText',
+      blocks: ['RichText'],
+    },
+
+    {
+      name: 'CollapsibleDownloads',
+      blocks: ['RichText'],
+    },
+
+    {
+      name: 'TableOfContents',
+      blocks: ['RichText'],
+    },
+
+    {
+      name: 'ImageFullsize',
+      blocks: ['Image'],
+    },
+
+    {
+      name: 'ImageWithText',
+      blocks: ['LinkPageBreak'],
+    },
+
+    {
+      name: 'ImageWithTextAltColor',
+      blocks: ['LinkPageBreak'],
+    },
+
+    {
+      name: 'TextWithImage',
+      blocks: ['LinkPageBreak'],
+    },
+
+    {
+      name: 'TextWithImageAltColor',
+      blocks: ['LinkPageBreak'],
+    },
+
+    {
+      name: 'Team',
+      blocks: ['LinkPageBreak'],
+    },
+  ];
+
+  const blockStyles = [];
+
+  for (const style of blockStylesData) {
+    const blockStyle = await createBlockStyle({
+      variables: { ...style },
+    });
+    blockStyles.push(blockStyle.data.createBlockStyle);
+  }
+  return blockStyles;
+}
+
+async function seedMemberPlans(createMemberPlan: any, paymentMethods: any) {
+  const memberPlans = await Promise.all([
+    createMemberPlan({
+      variables: {
+        name: 'Test-Abo CHF',
+        slug: 'test-abo-chf',
+        active: true,
+        description: [],
+        imageID: null,
+        amountPerMonthMin: 1000,
+        productType: ProductType.Subscription,
+        extendable: true,
+        currency: 'CHF',
+        tags: ['selling'],
+        availablePaymentMethods: [
+          {
+            forceAutoRenewal: false,
+            paymentMethodIDs: [paymentMethods[0].data.createPaymentMethod.id],
+            paymentPeriodicities: ['yearly', 'monthly'],
+          },
+        ],
+      },
+    }),
+    createMemberPlan({
+      variables: {
+        name: 'Test-Abo EUR',
+        slug: 'test-abo-eur',
+        active: true,
+        description: [],
+        imageID: null,
+        amountPerMonthMin: 1000,
+        productType: ProductType.Subscription,
+        extendable: true,
+        currency: 'EUR',
+        tags: ['selling'],
+        availablePaymentMethods: [
+          {
+            forceAutoRenewal: false,
+            paymentMethodIDs: [paymentMethods[1].data.createPaymentMethod.id],
+            paymentPeriodicities: ['yearly', 'monthly'],
+          },
+        ],
+      },
+    }),
+  ]);
+  return memberPlans;
+}
+
+async function seedPaymentMethods(createPaymentMethod: any) {
+  const paymentMethods = await Promise.all([
+    createPaymentMethod({
+      variables: {
+        name: 'Payrexx',
+        slug: 'payrexx',
+        description: '',
+        paymentProviderID: 'payrexx',
+        gracePeriod: 7,
+        imageId: null,
+        active: true,
+      },
+    }),
+    createPaymentMethod({
+      variables: {
+        name: 'Stripe',
+        slug: 'stripe',
+        description: '',
+        paymentProviderID: 'stripe',
+        gracePeriod: 7,
+        imageId: null,
+        active: true,
+      },
+    }),
+  ]);
+  return paymentMethods;
+}
+
+async function hashSHA256(message: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
+function SeedSession({ children }: { children: React.ReactNode }) {
+  const [session, setSession] = useState(() => {
+    const storedSession = localStorage.getItem('seed_session');
+    return storedSession ? storedSession : 'expired';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('seed_session', session || 'expired');
+  }, [session]);
+
+  const isSessionValid = () =>
+    session.startsWith('valid-') &&
+    new Date().getTime() - new Date(session.split('valid-')[1]).getTime() <
+      3600000;
+
+  return (
+    <div style={{ padding: '20px' }}>
+      {!isSessionValid() ?
+        <>
+          <p>
+            {'Please enter the seed password to proceed with database seeding:'}
+          </p>
+          <input
+            type="password"
+            onKeyDown={async e => {
+              if (e.key === 'Enter') {
+                if (
+                  (await hashSHA256(e.currentTarget.value)) ===
+                  '512bb61e029c56fedb857d55a4dad19d87c7636c627e7f585bc3a243cf2d8add'
+                ) {
+                  setSession(`valid-${new Date().toISOString()}`);
+                } else {
+                  setSession('expired');
+                }
+              }
+            }}
+          />
+        </>
+      : children}
+    </div>
+  );
+}
+
+// fetch all functions
+
+const PAGE_SIZE = 100;
+async function fetchAllTags(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: TagListDocument,
+      variables: {
+        filter: {
+          type: TagType.Article,
+        },
+        take: PAGE_SIZE,
+        skip,
+      } as TagListQueryVariables,
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.tags?.nodes ?? []) as Array<{ id: string }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.tags?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllAuthors(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: AuthorListDocument,
+      variables: {
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.authors?.nodes ?? []) as Array<{ id: string }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.authors?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllArticles(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: ArticleListDocument,
+      variables: {
+        take: PAGE_SIZE,
+        skip,
+      } as ArticleListQueryVariables,
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.articles?.nodes ?? []) as Array<{ id: string }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.articles?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllNavigations(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: NavigationListDocument,
+      variables: {
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.navigations ?? []) as Array<{ id: string }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.navigations.length > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllImages(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: ImageListDocument,
+      variables: {
+        filter: undefined,
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.images?.nodes ?? []) as Array<{ id: string }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.images?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllEvents(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: EventListDocument,
+      variables: {
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.events?.nodes ?? []) as Array<{ id: string }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.events?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllBlockStyles(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: BlockStylesDocument,
+      variables: {
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.blockStyles ?? []) as Array<{
+      id: string;
+    }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.blockStyles?.length > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllPages(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: PageListDocument,
+      variables: {
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.pages?.nodes ?? []) as Array<{ id: string }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.pages?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllComments(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: CommentListDocument,
+      variables: {
+        filter: {},
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.comments?.nodes ?? []) as Array<{ id: string }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.comments?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllSubscriptions(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: SubscriptionListDocument,
+      variables: {
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.subscriptions?.nodes ?? []) as Array<{
+      id: string;
+    }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.subscriptions?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllMemberPlans(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: MemberPlanListDocument,
+      variables: {
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.memberPlans?.nodes ?? []) as Array<{
+      id: string;
+    }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.memberPlans?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllPaymentMethods(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: PaymentMethodListDocument,
+      variables: {
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.paymentMethods ?? []) as Array<{
+      id: string;
+    }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.paymentMethods?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+
+async function fetchAllSubscriptionFlows(client: any) {
+  let skip = 0;
+  const all: Array<{ id: string }> = [];
+
+  let hasMore = true;
+  while (hasMore) {
+    const { data } = await client.query({
+      query: SubscriptionFlowsDocument,
+      variables: {
+        defaultFlowOnly: false,
+        memberPlanID: null,
+        take: PAGE_SIZE,
+        skip,
+      },
+      fetchPolicy: 'network-only',
+    });
+
+    const nodes = (data?.subscriptionFlows ?? []) as Array<{
+      id: string;
+    }>;
+    all.push(...nodes.map(n => ({ id: n.id })));
+
+    hasMore = data?.subscriptionFlows?.totalCount > all.length;
+    skip += PAGE_SIZE;
+  }
+
+  return all;
+}
+// end fetch all functions
+
+async function handleDelete(
+  deleteTag: ReturnType<typeof useDeleteTagMutation>[0],
+  deleteAuthor: ReturnType<typeof useDeleteAuthorMutation>[0],
+  deleteArticle: ReturnType<typeof useDeleteArticleMutation>[0],
+  deleteNavigation: ReturnType<typeof useDeleteNavigationMutation>[0],
+  deletePage: ReturnType<typeof useDeletePageMutation>[0],
+  deleteImage: ReturnType<typeof useDeleteImageMutation>[0],
+  deleteEvent: ReturnType<typeof useDeleteEventMutation>[0],
+  deleteBlockStyle: ReturnType<typeof useDeleteBlockStyleMutation>[0],
+  deleteComment: ReturnType<typeof useDeleteCommentMutation>[0],
+  deletePaymentMethod: ReturnType<typeof useDeletePaymentMethodMutation>[0],
+  deleteMemberPlan: ReturnType<typeof useDeleteMemberPlanMutation>[0],
+  deleteSubscriptionFlow: ReturnType<
+    typeof useDeleteSubscriptionFlowMutation
+  >[0],
+  deleteSubscription: ReturnType<typeof useDeleteSubscriptionMutation>[0],
+  client: any,
+  params?: URLSearchParams
+) {
+  const [
+    allTags,
+    allAuthors,
+    allArticles,
+    allNavigations,
+    allImages,
+    allPages,
+    allEvents,
+    allBlockStyles,
+    allComments,
+    allMemberPlans,
+    allPaymentMethods,
+    allSubscriptionFlows,
+    allSubscriptions,
+  ] = await Promise.all([
+    fetchAllTags(client),
+    fetchAllAuthors(client),
+    fetchAllArticles(client),
+    fetchAllNavigations(client),
+    !(params?.get('type') === 'exclude-images') ?
+      fetchAllImages(client)
+    : Promise.resolve([]),
+    fetchAllPages(client),
+    fetchAllEvents(client),
+    fetchAllBlockStyles(client),
+    fetchAllComments(client),
+    fetchAllMemberPlans(client),
+    fetchAllPaymentMethods(client),
+    fetchAllSubscriptionFlows(client),
+    fetchAllSubscriptions(client),
+  ]);
+
+  await Promise.all(
+    allTags.map(tag =>
+      deleteTag({
+        variables: { id: tag.id },
+      })
+    )
+  );
+  await Promise.all(
+    allAuthors.map(author =>
+      deleteAuthor({
+        variables: { id: author.id },
+      })
+    )
+  );
+  await Promise.all(
+    allArticles.map(article =>
+      deleteArticle({
+        variables: { id: article.id },
+      })
+    )
+  );
+  await Promise.all(
+    allNavigations.map(nav =>
+      deleteNavigation({
+        variables: { id: nav.id },
+      })
+    )
+  );
+  if (!(params?.get('type') === 'exclude-images')) {
+    console.log('Deleting images...');
+    await Promise.all(
+      allImages.map((image: any) =>
+        deleteImage({
+          variables: { id: image.id },
+        })
+      )
+    );
+  }
+  await Promise.all(
+    allPages.map(page => {
+      if ((page as unknown as { slug: string }).slug === '404') {
+        return Promise.resolve();
+      }
+      return deletePage({
+        variables: { id: page.id },
+      });
+    })
+  );
+  await Promise.all(
+    allEvents.map(event => {
+      return deleteEvent({
+        variables: { id: event.id },
+      });
+    })
+  );
+  await Promise.all(
+    allBlockStyles.map(style =>
+      deleteBlockStyle({
+        variables: { id: style.id },
+      })
+    )
+  );
+  await Promise.all(
+    allComments.map(comment =>
+      deleteComment({
+        variables: { deleteCommentId: comment.id },
+      })
+    )
+  );
+  await Promise.all(
+    allSubscriptions.map(subscription =>
+      deleteSubscription({
+        variables: { id: subscription.id },
+      })
+    )
+  );
+  await Promise.all(
+    allMemberPlans.map(memberPlan =>
+      deleteMemberPlan({
+        variables: { id: memberPlan.id },
+      })
+    )
+  );
+  await Promise.all(
+    allPaymentMethods.map(paymentMethod =>
+      deletePaymentMethod({
+        variables: { id: paymentMethod.id },
+      }).catch(err => {
+        console.log(
+          `Could not delete payment method with id ${paymentMethod.id}: ${err}`
+        );
+      })
+    )
+  );
+  await Promise.all(
+    allSubscriptionFlows.map(async subscriptionFlow => {
+      deleteSubscriptionFlow({
+        variables: { id: subscriptionFlow.id },
+      }).catch(err => {
+        console.log(
+          `Could not delete subscription flow with id ${subscriptionFlow.id}: ${err}`
+        );
+        return Promise.resolve();
+      });
+    })
+  );
+}
+
+async function handleSeed(
+  uploadImage: ReturnType<typeof useUploadImageMutation>[0],
+  createAuthor: ReturnType<typeof useCreateAuthorMutation>[0],
+  createTag: ReturnType<typeof useCreateTagMutation>[0],
+  createBlockStyle: ReturnType<typeof useCreateBlockStyleMutation>[0],
+  createArticle: ReturnType<typeof useCreateArticleMutation>[0],
+  publishArticle: ReturnType<typeof usePublishArticleMutation>[0],
+  updateArticle: ReturnType<typeof useUpdateArticleMutation>[0],
+  createNavigation: ReturnType<typeof useCreateNavigationMutation>[0],
+  createEvent: ReturnType<typeof useCreateEventMutation>[0],
+  createPage: ReturnType<typeof useCreatePageMutation>[0],
+  createComment: ReturnType<typeof useCreateCommentMutation>[0],
+  updateComment: ReturnType<typeof useUpdateCommentMutation>[0],
+  approveComment: ReturnType<typeof useApproveCommentMutation>[0],
+  publishPage: ReturnType<typeof usePublishPageMutation>[0],
+  fetchAllImages: (client: any) => Promise<Array<{ id: string }>>,
+  createMemberPlan: ReturnType<typeof useCreateMemberPlanMutation>[0],
+  createPaymentMethod: ReturnType<typeof useCreatePaymentMethodMutation>[0],
+  client: any,
+  params?: URLSearchParams
+) {
+  const images =
+    !(params?.get('type') === 'exclude-images') ?
+      await seedImages(uploadImage)
+    : (await fetchAllImages(client)).map(img => img.id);
+
+  const authors = await seedAuthors(createAuthor, images);
+  const tags = await seedArticleTags(createTag);
+  const blockStyles = await seedBlockStyles(createBlockStyle);
+
+  const articles = await seedArticlesByTag(
+    createArticle,
+    updateArticle,
+    tags
+      .sort((a, b) => {
+        return (a.data?.createTag.tag || '').localeCompare(
+          b.data?.createTag.tag || ''
+        );
+      })
+      .reverse()
+      .map(tag => tag.data?.createTag.id),
+    authors.map(author => author.data?.createAuthor.id),
+    images,
+    blockStyles
+  );
+
+  const publishedArticles = [];
+
+  for (const article of [...articles]) {
+    const { data: publishData } = await publishArticle({
+      variables: {
+        id: article.id,
+        publishedAt: new Date().toISOString(),
+      },
+    });
+    publishedArticles.push(publishData?.publishArticle);
+  }
+
+  const navigations = await seedNavigations(
+    createNavigation,
+    tags.map(tag => tag.data?.createTag.tag).filter(tag => !!tag) as string[]
+  );
+
+  const events = await seedEvents(createEvent, images);
+
+  const paymentMethods = await seedPaymentMethods(createPaymentMethod);
+
+  const memberPlans = await seedMemberPlans(createMemberPlan, paymentMethods);
+
+  const pages = await seedPages(
+    createPage,
+    images,
+    tags.map(tag => tag.data?.createTag),
+    publishedArticles
+      .map(article => article?.latest?.id)
+      .filter(id => !!id) as string[],
+    blockStyles,
+    memberPlans
+      .map(plan => plan.data?.createMemberPlan.id)
+      .filter(id => !!id) as string[]
+  );
+
+  for (const page of pages) {
+    await publishPage({
+      variables: {
+        id: page?.data?.createPage.id,
+        publishedAt: new Date().toISOString(),
+      },
+    });
+  }
+
+  const comments = await seedComments(
+    createComment,
+    updateComment,
+    approveComment,
+    publishedArticles
+      .map(article => article?.id)
+      .filter(id => !!id) as string[],
+    images
+  );
+}
+
+type SeedProps = { type?: string };
+
+export const Seed = ({ type }: SeedProps) => {
+  const client = getApiClientV2();
+
+  // delete hooks
+  const [deleteTag] = useDeleteTagMutation({ client });
+  const [deleteAuthor] = useDeleteAuthorMutation({ client });
+  const [deleteArticle] = useDeleteArticleMutation({ client });
+  const [deleteNavigation] = useDeleteNavigationMutation({ client });
+  const [deletePage] = useDeletePageMutation({ client });
+  const [deleteImage] = useDeleteImageMutation({ client });
+  const [deleteEvent] = useDeleteEventMutation({ client });
+  const [deleteBlockStyle] = useDeleteBlockStyleMutation({ client });
+  const [deleteComment] = useDeleteCommentMutation();
+  const [deleteMemberPlan] = useDeleteMemberPlanMutation({ client });
+  const [deletePaymentMethod] = useDeletePaymentMethodMutation({ client });
+  const [deleteSubscriptionFlow] = useDeleteSubscriptionFlowMutation({
+    client,
+  });
+  const [deleteSubscription] = useDeleteSubscriptionMutation();
+  // end delete hooks
+
+  // create hooks
+  const [createTag] = useCreateTagMutation({ client });
+  const [createAuthor] = useCreateAuthorMutation({ client });
+  const [createArticle] = useCreateArticleMutation({ client });
+  const [createPage] = useCreatePageMutation({ client });
+  const [createNavigation] = useCreateNavigationMutation({ client });
+  const [createEvent] = useCreateEventMutation({ client });
+  const [uploadImage] = useUploadImageMutation({
+    client,
+    refetchQueries: [getOperationNameFromDocument(ImageListDocument)],
+  });
+  const [createBlockStyle] = useCreateBlockStyleMutation({
+    variables: {
+      blocks: [],
+      name: '',
+    },
+    client,
+  });
+  const [createComment] = useCreateCommentMutation();
+  const [updateComment] = useUpdateCommentMutation();
+  const [approveComment] = useApproveCommentMutation();
+  const [publishArticle] = usePublishArticleMutation({ client });
+  const [publishPage] = usePublishPageMutation({ client });
+  const [updateArticle] = useUpdateArticleMutation({ client });
+  const [createMemberPlan] = useCreateMemberPlanMutation({ client });
+  const [createPaymentMethod] = useCreatePaymentMethodMutation({ client });
+  //const { data: blockStylesData } = useBlockStylesQuery({ client });
+  // end create hooks
+
+  const [params] = useQueryState<URLSearchParams>(
+    new URLSearchParams(window.location.search)
+  );
+
+  function handleSeedParamsChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.currentTarget.checked) {
+      window.history.replaceState(
+        { 'exclude-images': true },
+        '',
+        `${window.location.pathname}?type=exclude-images`
+      );
+    } else {
+      window.history.replaceState(
+        {
+          'exclude-images': false,
+        },
+        '',
+        `${window.location.pathname}`
+      );
+    }
+    window.dispatchEvent(new Event('popstate'));
+  }
+
+  return (
+    <SeedSession>
+      <div style={{ padding: '20px' }}>
+        <label
+          htmlFor="exclude-images"
+          style={{
+            whiteSpace: 'pre-line',
+            display: 'flex',
+            lineHeight: '.7rem',
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignContent: 'flex-start',
+            cursor: 'pointer',
+          }}
+        >
+          <input
+            style={{ marginRight: '1rem', alignSelf: 'flex-start' }}
+            type="checkbox"
+            id="exclude-images"
+            defaultChecked={params?.get('type') === 'exclude-images'}
+            onChange={handleSeedParamsChange}
+          />
+          {`Exclude images from delete & create actions. \n
+            Default is to include them. \n
+            Once images are seeded, check to speed up the process & save bandwidth.`}
+        </label>
+        <br />
+        <br />
+        <button
+          onClick={async e => {
+            const self = e.currentTarget;
+            self.disabled = true;
+            const t = self.innerText;
+            self.innerText = 'Seeding...';
+
+            console.log('Starting seeding process...');
+            try {
+              await handleSeed(
+                uploadImage,
+                createAuthor,
+                createTag,
+                createBlockStyle,
+                createArticle,
+                publishArticle,
+                updateArticle,
+                createNavigation,
+                createEvent,
+                createPage,
+                createComment,
+                updateComment,
+                approveComment,
+                publishPage,
+                fetchAllImages,
+                createMemberPlan,
+                createPaymentMethod,
+                client,
+                params
+              );
+            } catch (error) {
+              console.error('Error during seeding process:', error);
+            }
+            console.log('Seeding process completed.');
+
+            self.innerText = t;
+            self.disabled = false;
+          }}
+        >
+          {'Create Content'}
+        </button>
+        <br />
+        <br />
+        <button
+          onClick={async e => {
+            const self = e.currentTarget;
+            self.disabled = true;
+            const t = self.innerText;
+            self.innerText = 'Deleting...';
+
+            console.log('Starting deletion process...');
+            try {
+              await handleDelete(
+                deleteTag,
+                deleteAuthor,
+                deleteArticle,
+                deleteNavigation,
+                deletePage,
+                deleteImage,
+                deleteEvent,
+                deleteBlockStyle,
+                deleteComment,
+                deletePaymentMethod,
+                deleteMemberPlan,
+                deleteSubscriptionFlow,
+                deleteSubscription,
+                client,
+                params
+              );
+            } catch (error) {
+              console.error('Error during deletion process:', error);
+            }
+            console.log('Deletion process completed.');
+
+            self.innerText = t;
+            self.disabled = false;
+          }}
+        >
+          {'Delete Content'}
+        </button>
+      </div>
+    </SeedSession>
+  );
+};

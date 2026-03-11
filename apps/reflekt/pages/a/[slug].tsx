@@ -1,22 +1,11 @@
-import {
-  ArticleContainer,
-  ArticleListContainer,
-  ArticleWrapper,
-} from '@wepublish/article/website';
-import { CommentListContainer } from '@wepublish/comments/website';
+import { ArticleContainer } from '@wepublish/article/website';
 import {
   addClientCacheToV1Props,
   ArticleDocument,
-  ArticleListDocument,
-  CommentItemType,
-  CommentListDocument,
   getV1ApiClient,
   NavigationListDocument,
   PeerProfileDocument,
-  Tag,
-  useArticleQuery,
 } from '@wepublish/website/api';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -26,56 +15,13 @@ export default function ArticleBySlugOrId() {
   const {
     query: { slug, id },
   } = useRouter();
-  const {
-    elements: { H3 },
-  } = useWebsiteBuilder();
-
-  const { data } = useArticleQuery({
-    fetchPolicy: 'cache-only',
-    variables: {
-      slug: slug as string,
-      id: id as string,
-    },
-  });
 
   const containerProps = {
     slug,
     id,
   } as ComponentProps<typeof ArticleContainer>;
 
-  return (
-    <>
-      <ArticleContainer {...containerProps} />
-
-      {data?.article && (
-        <ArticleWrapper>
-          <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
-
-          <ArticleListContainer
-            variables={{
-              filter: { tags: data.article.tags.map(tag => tag.id) },
-              take: 4,
-            }}
-            filter={articles =>
-              articles
-                .filter(article => article.id !== data.article?.id)
-                .splice(0, 3)
-            }
-          />
-        </ArticleWrapper>
-      )}
-
-      {data?.article && !data?.article?.disableComments && (
-        <ArticleWrapper>
-          <H3 component={'h2'}>Kommentare</H3>
-          <CommentListContainer
-            id={data!.article!.id}
-            type={CommentItemType.Article}
-          />
-        </ArticleWrapper>
-      )}
-    </>
-  );
+  return <ArticleContainer {...containerProps} />;
 }
 
 export const getStaticPaths = () => ({
@@ -114,26 +60,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       notFound: true,
       revalidate: 1,
     };
-  }
-
-  if (article.data?.article) {
-    await Promise.all([
-      client.query({
-        query: ArticleListDocument,
-        variables: {
-          filter: {
-            tags: article.data.article.tags.map((tag: Tag) => tag.id),
-          },
-          take: 4,
-        },
-      }),
-      client.query({
-        query: CommentListDocument,
-        variables: {
-          itemId: article.data.article.id,
-        },
-      }),
-    ]);
   }
 
   const props = addClientCacheToV1Props(client, {});

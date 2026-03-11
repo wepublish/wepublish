@@ -183,7 +183,8 @@ export function LinkMenu() {
                 editor,
                 selection,
                 prefix !== prefixType.other ? prefix + url : url,
-                title || undefined
+                title || undefined,
+                id || undefined
               );
               closeMenu();
             }}
@@ -246,7 +247,8 @@ function insertLink(
   editor: Editor,
   selection: Range | null,
   url: string,
-  title?: string
+  title?: string,
+  id?: string
 ) {
   if (selection) {
     if (Range.isCollapsed(selection)) {
@@ -281,7 +283,7 @@ function insertLink(
   });
   Transforms.wrapNodes(
     editor,
-    { type: InlineFormat.Link, url, title, children: [] },
+    { type: InlineFormat.Link, url, title, id, children: [] },
     { split: true }
   );
   Transforms.collapse(editor, { edge: 'end' });

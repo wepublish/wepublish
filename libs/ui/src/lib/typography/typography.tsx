@@ -115,10 +115,11 @@ export type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
   underline?: LinkTypeMap['props']['underline'];
   color?: LinkTypeMap['props']['color'];
   variant?: LinkTypeMap['props']['variant'];
+  sx?: LinkTypeMap['props']['sx'];
 };
 
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
-  ({ children, underline, color, variant, ...props }, ref) => {
+  ({ children, underline, color, variant, sx, ...props }, ref) => {
     return (
       <MuiLink
         {...props}
@@ -126,6 +127,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
         color={color}
         underline={underline}
         variant={variant}
+        sx={sx}
       >
         {children}
       </MuiLink>

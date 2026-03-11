@@ -1,0 +1,125 @@
+import { CSSProperties } from 'react';
+
+declare module '@mui/material/styles' {
+  interface TypographyVariants {
+    // Article
+    articleAuthors: CSSProperties;
+    // Teaser
+    teaserTitle: CSSProperties;
+    teaserTitleLink: CSSProperties;
+    teaserPretitleLink: CSSProperties;
+    teaserPretitle: CSSProperties;
+    teaserLead: CSSProperties;
+    teaserMeta: CSSProperties;
+
+    // Teaser Slots
+
+    teaserSlotsTitle: CSSProperties;
+
+    // Footer / Header
+    categoryLinkTitle: CSSProperties;
+    categoryLinkList: CSSProperties;
+    categoryLinkItem: CSSProperties;
+
+    categoryAddress: CSSProperties;
+    categoryAddressText: CSSProperties;
+
+    // Button Links
+    buttonLinkMain: CSSProperties;
+    buttonLinkSecondary: CSSProperties;
+
+    // Banner
+    bannerTitle: CSSProperties;
+    bannerText: CSSProperties;
+    bannerCta: CSSProperties;
+    // Link -- MuiLink.variant is based on Typography variants
+    categoryLink: CSSProperties;
+    navbarTab: CSSProperties;
+
+    // Table of Contents - RichText
+    tocHeading: CSSProperties;
+    tocDetails: CSSProperties;
+    ulToc: CSSProperties;
+    liToc: CSSProperties;
+    linkToc: CSSProperties;
+    ulDownloads: CSSProperties;
+    liDownloads: CSSProperties;
+    linkDownloads: CSSProperties;
+  }
+
+  // Optional
+  interface TypographyVariantsOptions {
+    articleAuthors?: CSSProperties;
+    teaserTitle?: CSSProperties;
+    teaserTitleLink?: CSSProperties;
+    teaserPretitleLink?: CSSProperties;
+    teaserPretitle?: CSSProperties;
+    teaserLead?: CSSProperties;
+    teaserMeta?: CSSProperties;
+    teaserSlotsTitle?: CSSProperties;
+    categoryLinkTitle?: CSSProperties;
+    categoryLinkList?: CSSProperties;
+    categoryLinkItem?: CSSProperties;
+    categoryAddress?: CSSProperties;
+    categoryAddressText?: CSSProperties;
+    buttonLinkMain?: CSSProperties;
+    buttonLinkSecondary?: CSSProperties;
+    bannerTitle?: CSSProperties;
+    bannerText?: CSSProperties;
+    bannerCta?: CSSProperties;
+    categoryLink?: CSSProperties;
+    tocHeading?: CSSProperties;
+    tocDetails?: CSSProperties;
+    ulToc?: CSSProperties;
+    liToc?: CSSProperties;
+    linkToc?: CSSProperties;
+    ulDownloads?: CSSProperties;
+    liDownloads?: CSSProperties;
+    linkDownloads?: CSSProperties;
+  }
+}
+
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    articleAuthors: true;
+    teaserTitle: true;
+    teaserTitleLink: true;
+    teaserPretitle: true;
+    teaserPretitleLink: true;
+    teaserLead: true;
+    teaserMeta: true;
+    teaserSlotsTitle: true;
+    categoryLinkTitle: true;
+    categoryLinkList: true;
+    categoryLinkItem: true;
+    categoryAddress: true;
+    categoryAddressText: true;
+    buttonLinkMain: true;
+    buttonLinkSecondary: true;
+    bannerTitle: true;
+    bannerText: true;
+    bannerCta: true;
+    categoryLink: true;
+    navbarTab: true;
+    tocHeading: true;
+    tocDetails: true;
+    ulToc: true;
+    liToc: true;
+    linkToc: true;
+    ulDownloads: true;
+    liDownloads: true;
+    linkDownloads: true;
+  }
+}
+
+declare module '@mui/material/Link' {
+  interface LinkPropsVariantOverrides {
+    categoryLink: true;
+    teaserTitleLink: true;
+    teaserPretitleLink: true;
+    buttonLinkMain: true;
+    buttonLinkSecondary: true;
+    linkToc: true;
+    linkDownloads: true;
+  }
+}
