@@ -199,6 +199,7 @@ COPY --chown=1001:0 --from=build-media /app/node_modules ./node_modules
 RUN chmod -R g=u /wepublish
 
 FROM ${RUNTIME_IMAGE} AS media
+ARG MEDIA_FALLBACK_URL
 ENV NODE_ENV=production
 ENV MEDIA_FALLBACK_URL=${MEDIA_FALLBACK_URL}
 LABEL org.opencontainers.image.authors="WePublish Foundation"
