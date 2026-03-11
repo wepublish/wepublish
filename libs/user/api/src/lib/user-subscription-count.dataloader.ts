@@ -18,7 +18,7 @@ export class UserSubscriptionCountDataloader extends DataLoaderService<number> {
           in: userIds,
         },
       },
-      by: 'userID',
+      by: ['userID'],
       _count: true,
     });
 

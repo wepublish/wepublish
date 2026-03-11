@@ -710,7 +710,6 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                           <Control
                             block
                             name="memberPlan"
-                            virtualized
                             disabled={isDisabled || isDeactivated}
                             data={memberPlans.map(mp => ({
                               value: mp.id,
