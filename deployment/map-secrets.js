@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const { execFileSync } = require('child_process');
 
 const mode = process.argv[2];
 const execArgs = process.argv.slice(3);
