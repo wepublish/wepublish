@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 MODE=$1
 
 # Mode to clean secrets from build
