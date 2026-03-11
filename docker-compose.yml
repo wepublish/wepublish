@@ -74,6 +74,7 @@ services:
       S3_SECRET_KEY: ${S3_SECRET_KEY}
       S3_ENDPOINT: 'storage'
       S3_PORT: '9000'
+      MEDIA_FALLBACK_URL: ${MEDIA_FALLBACK_URL}
     depends_on:
       - storage
     networks:
