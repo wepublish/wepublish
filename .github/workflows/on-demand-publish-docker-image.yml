@@ -18,6 +18,9 @@ on:
       media_tags:
         required: false
         type: string
+      media_fallback_url:
+        required: false
+        type: string
 
 jobs:
   calculate-base-image-tag:
@@ -152,6 +155,8 @@ jobs:
           push: true
           tags: |
             ${{ inputs.media_tags }}
+          build-args: |
+            MEDIA_FALLBACK_URL=${{ inputs.media_fallback_url }}
   build-and-push-storybook:
     name: Build and push storybook
     runs-on: ubuntu-latest
