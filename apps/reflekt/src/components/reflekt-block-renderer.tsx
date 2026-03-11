@@ -64,19 +64,26 @@ const CollapsibleDownloads =
   ReflektCollapsibleDownloads as CollapsibleDownloadsWithSiblings;
 const TocRichText = ReflektTocRichText as TocRichTextWithSiblings;
 
+const isBreakBlockTextWithImage = isTextWithImageBreakBlock as (
+  b: BlockContent
+) => boolean;
+const isBreakBlockTextWithImageAltColor = isTextWithImageAltColorBreakBlock as (
+  b: BlockContent
+) => boolean;
+
 export const ReflektBlockRenderer = (
   props: BuilderBlockRendererProps & { siblings: BlockSiblings }
 ) => {
   const theme = useTheme();
 
-  const extraBlockMap = useMemo(
+  const extraBlockMap: (block: BlockContent) => JSX.Element | null = useMemo(
     () =>
       cond([
         [
           isCollapsibleRichText,
           block => (
             <CollapsibleRichText
-              {...block}
+              {...(block as any)}
               siblings={props.siblings}
             />
           ),
@@ -85,25 +92,25 @@ export const ReflektBlockRenderer = (
           isCollapsibleDownloads,
           block => (
             <CollapsibleDownloads
-              {...block}
+              {...(block as any)}
               siblings={props.siblings}
             />
           ),
         ],
         [
-          isTextWithImageBreakBlock,
+          isBreakBlockTextWithImage,
           block => (
             <TextWithImageBreakBlock
-              {...block}
+              {...(block as any)}
               siblings={props.siblings}
             />
           ),
         ],
         [
-          isTextWithImageAltColorBreakBlock,
+          isBreakBlockTextWithImageAltColor,
           block => (
             <TextWithImageAltColorBreakBlock
-              {...block}
+              {...(block as any)}
               siblings={props.siblings}
             />
           ),
@@ -112,14 +119,14 @@ export const ReflektBlockRenderer = (
           isTocRichText,
           block => (
             <TocRichText
-              {...block}
+              {...(block as any)}
               siblings={props.siblings}
             />
           ),
         ],
         [
           isReflektImageBlockFullsize,
-          block => <ReflektImageBlockFullsize {...block} />,
+          block => <ReflektImageBlockFullsize {...(block as any)} />,
         ],
       ]),
     [props.siblings]
