@@ -3,7 +3,6 @@ import { ImageContext } from '@wepublish/image/website';
 import {
   BuilderBlockRendererProps,
   BuilderBlocksProps,
-  BuilderBreakBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { cond } from 'ramda';
@@ -15,8 +14,11 @@ import {
   isTsriSidebarContent,
   TsriSidebarContent,
 } from './break-blocks/tsri-sidebar-content';
+import {
+  isTsriSidebarContentAltColor,
+  TsriSidebarContentAltColor,
+} from './break-blocks/tsri-sidebar-content-alt-color';
 import { isTabbedContentBlockStyle } from './tabbed-content/tabbed-content';
-
 export type BlockSiblings = Array<{
   typeName: string;
   blockStyle?: string;
@@ -29,6 +31,17 @@ export const TsriBlockRenderer = (
     () =>
       cond([
         [isTabbedContentBlockStyle, block => <TsriTabbedContent {...block} />],
+        [
+          isTsriSidebarContentAltColor,
+          block => (
+            <TsriSidebarContentAltColor
+              {...block}
+              count={props.count}
+              index={props.index}
+              siblings={props.siblings}
+            />
+          ),
+        ],
         [
           isTsriSidebarContent,
           block => (
@@ -44,9 +57,7 @@ export const TsriBlockRenderer = (
     [props.count, props.index, props.siblings]
   );
 
-  const block = extraBlockMap(props.block as BuilderBreakBlockProps) ?? (
-    <BlockRenderer {...props} />
-  );
+  const block = extraBlockMap(props.block) ?? <BlockRenderer {...props} />;
 
   if (props.type === 'Page') {
     return block;

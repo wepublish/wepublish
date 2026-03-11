@@ -3032,6 +3032,7 @@ type SensitiveDataUser implements BaseUser {
   properties: [Property!]!
   roleIDs: [String!]!
   roles: [UserRole!]!
+  subscriptionCount: Int!
   userImageID: String
 }
 

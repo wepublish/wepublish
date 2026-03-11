@@ -4498,6 +4498,7 @@ export type SensitiveDataUser = BaseUser & {
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
   roles: Array<UserRole>;
+  subscriptionCount: Scalars['Int'];
   userImageID?: Maybe<Scalars['String']>;
 };
 

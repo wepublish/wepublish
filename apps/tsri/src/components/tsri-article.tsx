@@ -64,7 +64,7 @@ export const TsriArticle = styled(ArticleDefault)`
     font-weight: 700;
   }
 
-  & ${SidebarContentWrapper} + * {
+  & :is(${SidebarContentWrapper}) + * {
     margin-top: ${({ theme }) => theme.spacing(-3)};
   }
 

@@ -1,5 +1,6 @@
-ARG BUILD_IMAGE=node:22.20.0-bookworm-slim
-ARG PLAIN_BUILD_IMAGE=node:22.20.0-bookworm-slim
+ARG BUILD_IMAGE=dhi.io/node:22-debian13-dev
+ARG PLAIN_BUILD_IMAGE=dhi.io/node:22-debian13-dev
+ARG RUNTIME_IMAGE=dhi.io/node:22-debian13
 
 #######
 ## Base Image
@@ -22,13 +23,11 @@ FROM ${PLAIN_BUILD_IMAGE} AS base-image
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 WORKDIR /wepublish
-RUN groupadd -r wepublish && \
-    useradd -r -g wepublish -d /wepublish wepublish && \
-    chown -R wepublish:wepublish /wepublish
-COPY --chown=wepublish:wepublish --from=base-image-build /wepublish/node_modules/ node_modules/
+COPY --chown=1001:0 --from=base-image-build /wepublish/node_modules/ node_modules/
+RUN chmod -R g=u /wepublish
 
 #######
-## Website
+## Website (needs bash at runtime for entrypoint)
 #######
 
 FROM ${BUILD_IMAGE} AS  build-website
@@ -37,9 +36,9 @@ FROM ${BUILD_IMAGE} AS  build-website
 COPY . .
 RUN npx prisma generate && \
     npx nx build ${NEXT_PROJECT} ${NX_NEXT_PROJECT_BUILD_OPTIONS} && \
-    bash /wepublish/deployment/map-secrets.sh clean
+    node /wepublish/deployment/map-secrets.js clean
 
-FROM ${PLAIN_BUILD_IMAGE} AS website
+FROM ${PLAIN_BUILD_IMAGE} AS website-setup
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -49,55 +48,65 @@ ENV PORT=4000
 ### FRONT_ARG_REPLACER ###
 
 WORKDIR /wepublish
-RUN groupadd -r wepublish && \
-    useradd -r -g wepublish -d /wepublish wepublish && \
-    chown -R wepublish:wepublish /wepublish && \
-    echo "#!/bin/bash\n bash /wepublish/map-secrets.sh restore && node /wepublish/apps/${NEXT_PROJECT}/server.js" > /entrypoint.sh && \
-    chown -R wepublish:wepublish /entrypoint.sh && \
-    chmod +x /entrypoint.sh
-COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/standalone /wepublish
-COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/public /wepublish/apps/${NEXT_PROJECT}/public
-COPY --chown=wepublish:wepublish --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/static /wepublish/apps/${NEXT_PROJECT}/public/_next/static
-COPY --chown=wepublish:wepublish version /wepublish/apps/${NEXT_PROJECT}/public/deployed_version
-COPY --chown=wepublish:wepublish --from=build-website /wepublish/secrets_name.list /wepublish/secrets_name.list
-COPY --chown=wepublish:wepublish --from=build-website /wepublish/deployment/map-secrets.sh /wepublish/map-secrets.sh
-RUN chgrp -R 0 /wepublish /entrypoint.sh && chmod -R g=u /wepublish /entrypoint.sh
+COPY --chown=1001:0 --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/standalone /wepublish
+COPY --chown=1001:0 --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/public /wepublish/apps/${NEXT_PROJECT}/public
+COPY --chown=1001:0 --from=build-website /wepublish/dist/apps/${NEXT_PROJECT}/.next/static /wepublish/apps/${NEXT_PROJECT}/public/_next/static
+COPY --chown=1001:0 version /wepublish/apps/${NEXT_PROJECT}/public/deployed_version
+COPY --chown=1001:0 --from=build-website /wepublish/secrets_name.list /wepublish/secrets_name.list
+COPY --chown=1001:0 --from=build-website /wepublish/deployment/map-secrets.js /wepublish/map-secrets.js
+RUN printf '{"serverPath":"/wepublish/apps/%s/server.js"}' "${NEXT_PROJECT}" > /wepublish/startup-config.json && \
+    chmod -R g=u /wepublish
+
+FROM ${RUNTIME_IMAGE} AS website
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV HOSTNAME=0.0.0.0
+ENV ADDRESS=0.0.0.0
+ENV PORT=4000
+WORKDIR /wepublish
+COPY --from=website-setup /wepublish /wepublish
 EXPOSE 4001
-USER wepublish
-ENTRYPOINT ["/entrypoint.sh"]
+USER 1001
+CMD ["node", "/wepublish/map-secrets.js", "restore", "--start"]
 
 #######
 ## API
 #######
 FROM ${BUILD_IMAGE} AS build-api
 COPY . .
-RUN npm install -g @yao-pkg/pkg && \
-    npx prisma generate && \
+RUN npx prisma generate && \
     npx nx build api-example --ignore-nx-cache && \
     cp docker/api_build_package.json package.json && \
-    pkg package.json
+    npx @yao-pkg/pkg package.json
 
-FROM ${PLAIN_BUILD_IMAGE}  AS api
+FROM ${PLAIN_BUILD_IMAGE} AS api-setup
+WORKDIR /wepublish
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends openssl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+COPY --chown=1001:0 apps/api-example/src/default.yaml /wepublish/config/default.yaml
+COPY --chown=1001:0 libs/api/prisma/ca.crt /wepublish/ca.crt
+COPY --chown=1001:0 .version /wepublish/.version
+COPY --chown=1001:0 --from=build-api /wepublish/api /wepublish/
+RUN mkdir -p /wepublish/.cache/pkg && \
+    chmod -R g=u /wepublish
+
+FROM ${RUNTIME_IMAGE} AS api
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 ENV ADDRESS=0.0.0.0
 ENV PORT=4000
+ENV HOME=/wepublish
 WORKDIR /wepublish
-RUN groupadd -r wepublish && \
-    useradd -r -g wepublish -d /wepublish wepublish && \
-    chown -R wepublish:wepublish /wepublish && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends openssl && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-COPY --chown=wepublish:wepublish apps/api-example/src/default.yaml /wepublish/config/default.yaml
-COPY --chown=wepublish:wepublish libs/api/prisma/ca.crt /wepublish/ca.crt
-COPY --chown=wepublish:wepublish .version /wepublish/.version
-COPY --chown=wepublish:wepublish --from=build-api /wepublish/api /wepublish
-RUN chmod -R g=u /wepublish
+COPY --from=api-setup /usr/lib/x86_64-linux-gnu/libssl.so* /usr/lib/x86_64-linux-gnu/
+COPY --from=api-setup /usr/lib/x86_64-linux-gnu/libcrypto.so* /usr/lib/x86_64-linux-gnu/
+COPY --from=api-setup /usr/lib/x86_64-linux-gnu/libz.so* /usr/lib/x86_64-linux-gnu/
+COPY --from=api-setup /usr/lib/x86_64-linux-gnu/libzstd.so* /usr/lib/x86_64-linux-gnu/
+COPY --from=api-setup /wepublish /wepublish
 EXPOSE 4000
-USER wepublish
-CMD /wepublish/api
+USER 1001
+CMD ["/wepublish/api"]
 
 #######
 ## Editor
@@ -105,30 +114,30 @@ CMD /wepublish/api
 
 FROM ${BUILD_IMAGE} AS build-editor
 COPY . .
-RUN npm install -g @yao-pkg/pkg && \
-    npx prisma generate && \
+RUN npx prisma generate && \
     npx nx build editor --ignore-nx-cache && \
     cp docker/editor_build_package.json package.json && \
-    pkg package.json
+    npx @yao-pkg/pkg package.json
 
-FROM debian:bookworm-slim AS editor
+FROM ${PLAIN_BUILD_IMAGE} AS editor-setup
+WORKDIR /wepublish
+COPY --chown=1001:0 --from=build-editor /wepublish/editor /wepublish/
+COPY --chown=1001:0 --from=build-editor /wepublish/dist/apps/editor/browser dist/apps/editor/browser
+RUN chmod -R g=u /wepublish
+
+FROM ${RUNTIME_IMAGE} AS editor
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 ENV NODE_ENV=production
 ENV ADDRESS=0.0.0.0
 ENV PORT=3000
 WORKDIR /wepublish
-RUN groupadd -r wepublish && \
-    useradd -r -g wepublish -d /wepublish wepublish && \
-    chown -R wepublish:wepublish /wepublish
-COPY --chown=wepublish:wepublish --from=build-editor /wepublish/editor /wepublish
-COPY --chown=wepublish:wepublish --from=build-editor /wepublish/dist/apps/editor/browser dist/apps/editor/browser
-RUN chmod -R g=u /wepublish
+COPY --from=editor-setup /wepublish /wepublish
 EXPOSE 3000
-USER wepublish
-CMD /wepublish/editor
+USER 1001
+CMD ["/wepublish/editor"]
 
 #######
-## Migrations
+## Migrations (needs bash + npm at runtime)
 #######
 FROM ${PLAIN_BUILD_IMAGE} AS build-migration
 ENV NODE_ENV=production
@@ -141,61 +150,64 @@ COPY docker/tsconfig.yaml_seed tsconfig.yaml
 RUN npm install prisma@5.0.0 @prisma/client@5.0.0 @types/node @node-rs/argon2 typescript && \
     npx tsc -p tsconfig.yaml
 
-FROM ${PLAIN_BUILD_IMAGE} AS migration
+FROM ${PLAIN_BUILD_IMAGE} AS migration-setup
 ENV NODE_ENV=production
-LABEL org.opencontainers.image.authors="WePublish Foundation"
 WORKDIR /wepublish
 COPY --from=build-migration /wepublish/dist ./dist
 COPY libs/api/prisma/migrations prisma/migrations
 COPY libs/api/prisma/schema.prisma prisma/schema.prisma
-COPY docker/migrate_start.sh start.sh
-RUN groupadd -r wepublish && \
-    useradd -r -g wepublish -d /wepublish wepublish && \
-    apt-get update && \
+COPY docker/migrate_start.js start.js
+RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     npm install prisma@5.0.0 @node-rs/argon2 && \
     npx prisma generate && \
     chmod -R g=u /wepublish
-USER wepublish
-CMD ["bash", "./start.sh"]
+
+FROM ${RUNTIME_IMAGE} AS migration
+ENV NODE_ENV=production
+LABEL org.opencontainers.image.authors="WePublish Foundation"
+WORKDIR /wepublish
+COPY --from=migration-setup /usr/lib/x86_64-linux-gnu/libssl.so* /usr/lib/x86_64-linux-gnu/
+COPY --from=migration-setup /usr/lib/x86_64-linux-gnu/libcrypto.so* /usr/lib/x86_64-linux-gnu/
+COPY --from=migration-setup /usr/lib/x86_64-linux-gnu/libz.so* /usr/lib/x86_64-linux-gnu/
+COPY --from=migration-setup /usr/lib/x86_64-linux-gnu/libzstd.so* /usr/lib/x86_64-linux-gnu/
+COPY --from=migration-setup /wepublish /wepublish
+USER 1001
+CMD ["node", "start.js"]
 
 
 #######
 ## Media Server
 #######
 
-FROM ${PLAIN_BUILD_IMAGE} AS base-media
-FROM base-media AS build-media
+FROM ${PLAIN_BUILD_IMAGE} AS build-media
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 WORKDIR /app
-RUN apt-get update
-RUN apt-get install -y libjemalloc-dev
+RUN apt-get update && apt-get install -y libjemalloc-dev
 COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
 RUN npm ci
 RUN npx nx build media --ignore-nx-cache
 
-FROM base-media AS media
-ARG MEDIA_FALLBACK_URL
+FROM ${PLAIN_BUILD_IMAGE} AS media-setup
+WORKDIR /wepublish
+COPY --chown=1001:0 --from=build-media /app/dist/apps/media/ .
+COPY --chown=1001:0 --from=build-media /app/node_modules ./node_modules
+RUN chmod -R g=u /wepublish
+
+FROM ${RUNTIME_IMAGE} AS media
 ENV NODE_ENV=production
 ENV MEDIA_FALLBACK_URL=${MEDIA_FALLBACK_URL}
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 WORKDIR /wepublish
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
-RUN groupadd -r wepublish && \
-    useradd -r -g wepublish -d /wepublish wepublish && \
-    apt-get update && \
-    apt-get install -y libjemalloc-dev && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-COPY --from=build-media /app/dist/apps/media/ .
-COPY --from=build-media --chown=wepublish:wepublish /app/node_modules ./node_modules
-RUN chmod -R g=u /wepublish
-USER wepublish
+COPY --from=build-media /usr/lib/x86_64-linux-gnu/libjemalloc* /usr/lib/x86_64-linux-gnu/
+COPY --from=media-setup /wepublish /wepublish
 EXPOSE 4100
+USER 1001
 CMD ["node", "main.js"]
 
 ######
