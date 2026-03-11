@@ -64,6 +64,6 @@ export class SensitiveDataUserResolver {
 
   @ResolveField(() => Int)
   public async subscriptionCount(@Parent() { id }: SensitiveDataUser) {
-    return this.subscriptionCountDataloader.load(id);
+    return await this.subscriptionCountDataloader.load(id);
   }
 }
