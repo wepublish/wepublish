@@ -102,7 +102,7 @@ const ArticleTags = styled(ArticleTagsDefault)`
   & > .MuiChip-root {
     padding: 0.4rem 0.1rem;
     font-size: 0.75rem;
-    font-weight: 500;
+    font-weight: 700;
     border-color: ${({ theme }) => theme.palette.common.black};
     color: ${({ theme }) => theme.palette.common.black};
     height: 1.3rem;
@@ -120,8 +120,9 @@ const ArticleTags = styled(ArticleTagsDefault)`
 
     ${({ theme }) => theme.breakpoints.up('md')} {
       padding: 0.9rem 0.25rem;
-      font-size: 1.1rem;
-      height: 2rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      height: 1.5rem;
     }
   }
 `;

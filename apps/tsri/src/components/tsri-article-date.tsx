@@ -15,7 +15,8 @@ const TsriArticleDateWrapper = styled(ArticleDateWrapper)`
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-column: 2 / 3;
     grid-row: 2 / 4;
-    font-size: 0.875em;
+    font-size: 0.625rem;
+    font-weight: 700;
   }
 `;
 
