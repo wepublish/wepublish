@@ -3,7 +3,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, css, TextField, Theme, Typography } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Widget } from '@typeform/embed-react';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { BaseSyntheticEvent, FormEvent, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -45,6 +44,7 @@ export type MailchimpSubscribeFormProps = {
   mc_u: string;
   mc_id: string;
   mc_f_id: string;
+  mc_group?: string;
   tf_id: string;
   source?: string;
   popButtonText?: string;
@@ -60,6 +60,7 @@ export default function MailchimpSubscribeForm(
     mc_u,
     mc_id,
     mc_f_id,
+    mc_group,
     tf_id,
     source,
     popButtonText,
@@ -71,10 +72,6 @@ export default function MailchimpSubscribeForm(
   const [showTypeForm, setShowTypeForm] = useState(false);
   const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
   type FormInput = z.infer<typeof RegisterMCNewsletterFormSchema>;
-
-  const {
-    blocks: { IFrame },
-  } = useWebsiteBuilder();
 
   const mc_formActionBaseURL =
     'https://tsüri.us9.list-manage.com/subscribe/post';
@@ -172,6 +169,14 @@ export default function MailchimpSubscribeForm(
                 />
               )}
             />
+
+            {mc_group && (
+              <input
+                type="hidden"
+                name={mc_group}
+                value="1"
+              />
+            )}
 
             <Box
               display={'flex'}

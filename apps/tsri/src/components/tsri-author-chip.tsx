@@ -35,13 +35,12 @@ export const TsriAuthorChip = styled(AuthorChip)`
       grid-column: 2 / 4;
       grid-row: 1 / 2;
       display: block;
-      font-size: 0.7rem;
+      font-size: 0.625rem;
       font-weight: 700;
 
       ${({ theme }) => theme.breakpoints.up('md')} {
         grid-column: 2 / 3;
         padding: 1.25rem 0 0 0;
-        font-size: 1rem;
         gap: 0.5rem;
       }
 
