@@ -82,6 +82,7 @@ type QueryParams = {
   mc_u: string;
   mc_id: string;
   mc_f_id: string;
+  mc_group?: string;
   tf_id: string;
   source?: string;
   popTitle?: string;
