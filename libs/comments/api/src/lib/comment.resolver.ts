@@ -126,8 +126,11 @@ export class CommentResolver {
   @Mutation(() => Comment, {
     description: `Creates a comment for any user`,
   })
-  async createComment(@Args() input: CreateCommentInput) {
-    return this.commentService.createAdminComment(input);
+  async createComment(
+    @Args() input: CreateCommentInput,
+    @CurrentUser() session: UserSession
+  ) {
+    return this.commentService.createAdminComment(input, session);
   }
 
   @Permissions(CanUpdateComments)

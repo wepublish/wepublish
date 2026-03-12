@@ -13,26 +13,24 @@ export default {
       alignItems={'start'}
     >
       <RatingCmp />
-      <RatingCmp defaultValue={4} />
+      <RatingCmp averageRating={4} />
       <RatingCmp
-        defaultValue={4}
+        averageRating={4}
         readOnly
       />
       <RatingCmp
-        defaultValue={3}
+        averageRating={3}
         highlightSelectedOnly
       />
       <RatingCmp
-        defaultValue={2}
-        emptyColor={'#000'}
-        hoverColor={'#F00'}
-        filledColor={'#00F'}
+        averageRating={2}
+        averageEmptyColor={'#000'}
+        averageFilledColor={'#00F'}
       />
       <RatingCmp
-        defaultValue={1}
-        emptyColor={'#A77'}
-        hoverColor={'#f50'}
-        filledColor={'#f50'}
+        averageRating={1}
+        averageEmptyColor={'#A77'}
+        averageFilledColor={'#f50'}
         icon={<MdFavorite />}
         emptyIcon={<MdHeartBroken />}
       />
