@@ -7,21 +7,24 @@
     "production": {
       "deployment": true,
       "env": {
-        "DEPLOY_ENV": "production"
+        "DEPLOY_ENV": "production",
+        "GA_ID": "G-0RQL04JWXX"
       },
       "secret_env": []
     },
     "staging": {
       "deployment": true,
       "env": {
-        "DEPLOY_ENV": "staging"
+        "DEPLOY_ENV": "staging",
+        "GA_ID": ""
       },
       "secret_env": []
     },
     "review": {
       "deployment": true,
       "env": {
-        "DEPLOY_ENV": "review"
+        "DEPLOY_ENV": "review",
+        "GA_ID": ""
       },
       "secret_env": []
     }
