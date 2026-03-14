@@ -79,4 +79,6 @@ jobs:
       website_tags: |
         ghcr.io/wepublish/website-${{ needs.get-tag.outputs.project }}:production-${{ needs.get-tag.outputs.version }}
       environment: production
+      prerender: true
+      has_staging: true
     secrets: inherit
