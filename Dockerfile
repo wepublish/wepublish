@@ -206,11 +206,12 @@ ENV MEDIA_FALLBACK_URL=${MEDIA_FALLBACK_URL}
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 WORKDIR /wepublish
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
+ENV NODE_OPTIONS="--max-old-space-size=512"
 COPY --from=build-media /usr/lib/x86_64-linux-gnu/libjemalloc* /usr/lib/x86_64-linux-gnu/
 COPY --from=media-setup /wepublish /wepublish
 EXPOSE 4100
 USER 1001
-CMD ["node", "--max-old-space-size=512", "main.js"]
+CMD ["node", "main.js"]
 
 ######
 ## Storybook
