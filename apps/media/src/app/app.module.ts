@@ -20,10 +20,14 @@ import { CacheModule } from '@nestjs/cache-manager';
     }),
     CacheModule.register({
       ttl: 259200,
-      max: 1000000,
+      max: 200000,
       isGlobal: true,
     }),
-    MulterModule.register({}),
+    MulterModule.register({
+      limits: {
+        fileSize: 20 * 1024 * 1024, // 20 MB
+      },
+    }),
     MediaServiceModule.forRootAsync({
       imports: [
         SentryModule.forRoot(),

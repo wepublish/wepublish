@@ -209,7 +209,7 @@ COPY --from=build-media /usr/lib/x86_64-linux-gnu/libjemalloc* /usr/lib/x86_64-l
 COPY --from=media-setup /wepublish /wepublish
 EXPOSE 4100
 USER 1001
-CMD ["node", "main.js"]
+CMD ["node", "--max-old-space-size=512", "main.js"]
 
 ######
 ## Storybook
