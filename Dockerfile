@@ -98,6 +98,7 @@ ENV NODE_ENV=production
 ENV ADDRESS=0.0.0.0
 ENV PORT=4000
 ENV HOME=/wepublish
+ENV NODE_OPTIONS="--max-old-space-size=1024"
 WORKDIR /wepublish
 COPY --from=api-setup /usr/lib/x86_64-linux-gnu/libssl.so* /usr/lib/x86_64-linux-gnu/
 COPY --from=api-setup /usr/lib/x86_64-linux-gnu/libcrypto.so* /usr/lib/x86_64-linux-gnu/
