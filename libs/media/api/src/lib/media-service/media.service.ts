@@ -165,7 +165,6 @@ export class MediaService {
     const sharpInstance = imageStream.pipe(
       sharp({
         animated: true,
-        pages: 100,
         failOn: 'error',
       })
     );
