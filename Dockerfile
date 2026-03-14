@@ -98,6 +98,7 @@ ENV NODE_ENV=production
 ENV ADDRESS=0.0.0.0
 ENV PORT=4000
 ENV HOME=/wepublish
+ENV NODE_OPTIONS="--max-old-space-size=1024"
 WORKDIR /wepublish
 COPY --from=api-setup /usr/lib/x86_64-linux-gnu/libssl.so* /usr/lib/x86_64-linux-gnu/
 COPY --from=api-setup /usr/lib/x86_64-linux-gnu/libcrypto.so* /usr/lib/x86_64-linux-gnu/
@@ -199,11 +200,13 @@ COPY --chown=1001:0 --from=build-media /app/node_modules ./node_modules
 RUN chmod -R g=u /wepublish
 
 FROM ${RUNTIME_IMAGE} AS media
+ARG MEDIA_FALLBACK_URL
 ENV NODE_ENV=production
 ENV MEDIA_FALLBACK_URL=${MEDIA_FALLBACK_URL}
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 WORKDIR /wepublish
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
+ENV NODE_OPTIONS="--max-old-space-size=512"
 COPY --from=build-media /usr/lib/x86_64-linux-gnu/libjemalloc* /usr/lib/x86_64-linux-gnu/
 COPY --from=media-setup /wepublish /wepublish
 EXPOSE 4100

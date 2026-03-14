@@ -70,15 +70,6 @@ export class MediaService {
     return `"${hash.digest('hex')}"`;
   }
 
-  public bufferStream(stream: Readable): Promise<Buffer> {
-    return new Promise<Buffer>((resolve, reject) => {
-      const chunks: Buffer[] = [];
-      stream.on('data', chunk => chunks.push(chunk));
-      stream.on('end', () => resolve(Buffer.concat(chunks)));
-      stream.on('error', reject);
-    });
-  }
-
   public async getImageUri(
     imageId: string,
     transformations: TransformationsDto
@@ -177,84 +168,89 @@ export class MediaService {
         failOn: 'error',
       })
     );
-    let metadata = await sharpInstance.metadata();
 
-    const effort = transformGuard.checkDimensions(metadata, transformations);
-    transformGuard.checkQuality(transformations);
+    try {
+      const metadata = await sharpInstance.metadata();
 
-    if (transformations.extend) {
-      sharpInstance.extend(transformations.extend);
-    }
+      const effort = transformGuard.checkDimensions(metadata, transformations);
+      transformGuard.checkQuality(transformations);
 
-    if (transformations.resize) {
-      // Prevent animated image from enlarging (DOS prevention)
-      if (transformGuard.isAnimatedImage(metadata)) {
-        transformations.resize.withoutEnlargement = true;
+      if (transformations.extend) {
+        sharpInstance.extend(transformations.extend);
       }
-      sharpInstance.resize(transformations.resize);
-    }
 
-    if (transformations.blur) {
-      sharpInstance.blur(transformations.blur);
-    }
+      if (transformations.resize) {
+        // Prevent animated image from enlarging (DOS prevention)
+        if (transformGuard.isAnimatedImage(metadata)) {
+          transformations.resize.withoutEnlargement = true;
+        }
+        sharpInstance.resize(transformations.resize);
+      }
 
-    if (transformations.sharpen) {
-      sharpInstance.sharpen();
-    }
+      if (transformations.blur) {
+        sharpInstance.blur(transformations.blur);
+      }
 
-    if (transformations.flip) {
-      sharpInstance.flip(transformations.flip);
-    }
+      if (transformations.sharpen) {
+        sharpInstance.sharpen();
+      }
 
-    if (transformations.flop) {
-      sharpInstance.flop(transformations.flop);
-    }
+      if (transformations.flip) {
+        sharpInstance.flip(transformations.flip);
+      }
 
-    if (transformations.rotate) {
-      sharpInstance.rotate(transformations.rotate);
-    }
+      if (transformations.flop) {
+        sharpInstance.flop(transformations.flop);
+      }
 
-    if (transformations.negate) {
-      sharpInstance.negate(transformations.negate);
-    }
+      if (transformations.rotate) {
+        sharpInstance.rotate(transformations.rotate);
+      }
 
-    if (transformations.grayscale) {
-      sharpInstance.grayscale(transformations.grayscale);
-    }
+      if (transformations.negate) {
+        sharpInstance.negate(transformations.negate);
+      }
 
-    const transformedImage = sharpInstance.webp({
-      quality: transformations.quality,
-      effort,
-    });
+      if (transformations.grayscale) {
+        sharpInstance.grayscale(transformations.grayscale);
+      }
 
-    metadata = await sharp(
-      await transformedImage.clone().toBuffer()
-    ).metadata();
-    transformGuard.checkImageSize(metadata);
+      const transformedImage = sharpInstance.webp({
+        quality: transformations.quality,
+        effort,
+      });
 
-    let uri;
-    let exists = true;
-    if (imageExists) {
-      uri = `images/${imageId}/${transformationsKey}`;
-      await this.storage.saveFile(
-        this.config.transformationBucket,
-        uri,
-        transformedImage.clone(),
-        metadata.size,
-        { ContentType: `image/${metadata.format}` }
+      const { data: transformedBuffer, info } = await transformedImage.toBuffer(
+        { resolveWithObject: true }
       );
-    } else {
-      exists = false;
-      uri = `images/fallback/${transformationsKey}`;
-      await this.storage.saveFile(
-        this.config.transformationBucket,
-        uri,
-        transformedImage.clone(),
-        metadata.size,
-        { ContentType: `image/${metadata.format}` }
-      );
+      transformGuard.checkImageSize({ size: info.size } as sharp.Metadata);
+
+      let uri;
+      let exists = true;
+      if (imageExists) {
+        uri = `images/${imageId}/${transformationsKey}`;
+        await this.storage.saveFile(
+          this.config.transformationBucket,
+          uri,
+          transformedBuffer,
+          info.size,
+          { ContentType: `image/webp` }
+        );
+      } else {
+        exists = false;
+        uri = `images/fallback/${transformationsKey}`;
+        await this.storage.saveFile(
+          this.config.transformationBucket,
+          uri,
+          transformedBuffer,
+          info.size,
+          { ContentType: `image/webp` }
+        );
+      }
+      return { uri, exists };
+    } finally {
+      imageStream.destroy();
     }
-    return { uri, exists };
   }
 
   public async saveImage(imageId: string, image: Buffer) {
@@ -283,7 +279,7 @@ export class MediaService {
       `images/${imageId}`,
       true
     );
-    this.storage.deleteFiles(
+    await this.storage.deleteFiles(
       this.config.transformationBucket,
       objects.map(file => file.name || '')
     );
