@@ -170,7 +170,7 @@ export class MediaService {
     );
 
     try {
-      let metadata = await sharpInstance.metadata();
+      const metadata = await sharpInstance.metadata();
 
       const effort = transformGuard.checkDimensions(metadata, transformations);
       transformGuard.checkQuality(transformations);
