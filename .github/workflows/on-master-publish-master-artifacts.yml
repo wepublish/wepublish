@@ -93,6 +93,7 @@ jobs:
       website_project: ${{ matrix.target }}
       api_url: https://api-${{ matrix.target }}.${{ matrix.tdl }}
       environment: ${{ github.ref_name == 'master' && 'staging' || github.ref_name == 'development' && 'development' || 'staging' }}
+      prerender: ${{ matrix.has_staging }}
       has_staging: ${{ matrix.has_staging }}
       website_tags: |
         ghcr.io/wepublish/website-${{ matrix.target }}:${{ github.ref_name }}-${{ needs.date_sha_tag.outputs.tag }}
