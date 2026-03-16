@@ -170,7 +170,7 @@ const theme = createTheme(WePTheme, {
       fontWeight: 700,
       [breakpoints.up('md')]: {
         fontSize: 'min(1.25cqw, 1.4rem)',
-        lineHeight: 'min(1.66cqw, 1.86rem)',
+        lineHeight: 'min(1.8cqw, 1.5rem)',
       },
     },
     categoryLinkList: {
@@ -315,7 +315,7 @@ const theme = createTheme(WePTheme, {
             },
             [breakpoints.up('md')]: {
               fontSize: 'min(1.25cqw, 1.4rem)',
-              lineHeight: 'min(2cqw, 1.65rem)',
+              lineHeight: 'min(1.8cqw, 1.5rem)',
             },
             [breakpoints.up('xl')]: {
               fontSize: '1.4rem',
