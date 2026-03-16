@@ -246,6 +246,9 @@ const theme = createTheme(WePTheme, {
           footerSupportHeading: 'h6',
           footerSupportText: 'p',
           footerSupportImprint: 'p',
+          // author-list-item
+          authorListItemName: 'h6',
+          authorListItemJobTitle: 'p',
         },
       },
     },
@@ -756,6 +759,34 @@ export const teaserTwoRow = createTheme(theme, {
     },
     teaserMeta: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
+  },
+});
+
+export const authorListItemTheme = createTheme(theme, {
+  typography: {
+    authorListItemName: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      display: 'inline-block',
+      padding: '0.1rem 0.5rem',
+      fontSize: '12px',
+      lineHeight: '14px',
+      fontWeight: 700,
+      textDecoration: 'underline',
+      [theme.breakpoints.up('md')]: {
+        fontSize: '14px',
+        lineHeight: '16px',
+      },
+    },
+    authorListItemJobTitle: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontSize: '12px',
+      lineHeight: '14px',
+      fontWeight: 700,
+      [theme.breakpoints.up('md')]: {
+        fontSize: '14px',
+        lineHeight: '16px',
+      },
     },
   },
 });
