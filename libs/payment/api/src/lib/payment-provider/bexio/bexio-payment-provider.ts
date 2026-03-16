@@ -12,6 +12,7 @@ import Bexio, { ContactsStatic, InvoicesStatic } from 'bexio';
 import { MappedReplacer } from 'mapped-replacer';
 import {
   BasePaymentProvider,
+  CancelRemoteSubscriptionProps,
   CheckIntentProps,
   CreatePaymentIntentProps,
   CreateRemoteInvoiceProps,
@@ -85,6 +86,77 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    */
   override async createRemoteInvoice(props: CreateRemoteInvoiceProps) {
     await this.bexioCreate(props.invoice.id, true);
+  }
+
+  /**
+   * Cancels the invoices on Bexio side when a subscription is being cancelled
+   *
+   * @param {CancelRemoteSubscriptionProps} props
+   * @returns {Promise<void>}
+   */
+  override async cancelRemoteSubscription(
+    props: CancelRemoteSubscriptionProps
+  ): Promise<void> {
+    const invoice = await this.prisma.invoice.findFirst({
+      where: {
+        subscriptionID: props.subscription.id,
+        paidAt: null,
+        canceledAt: null,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    if (!invoice) {
+      logger('bexioPaymentProvider').error(
+        "Subscription invoice doesn't exist or is already paid/cancelled: %s",
+        props.subscription.id
+      );
+      return;
+    }
+
+    const payments = await this.prisma.payment.findMany({
+      where: {
+        invoiceID: invoice.id,
+        intentID: {
+          not: null,
+        },
+        state: {
+          in: [
+            PaymentState.created,
+            PaymentState.submitted,
+            PaymentState.processing,
+          ],
+        },
+      },
+    });
+
+    const bexio = await this.getBexioGateway();
+
+    await Promise.all(
+      payments.map(async payment => {
+        if (isNaN(+payment.intentID)) {
+          logger('bexioPaymentProvider').error(
+            'Payment (id: %s) intentID is not a number: %s',
+            payment.id,
+            payment.intentID
+          );
+
+          return;
+        }
+
+        await bexio.invoices.delete(+payment.intentID);
+        await this.prisma.payment.update({
+          where: {
+            id: payment.id,
+          },
+          data: {
+            state: PaymentState.canceled,
+          },
+        });
+      })
+    );
   }
 
   /**
