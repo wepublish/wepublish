@@ -12,7 +12,7 @@ export const teaserBlockStyleByIndex = (index: number): TsriTeaserType => {
     case 5:
       return TsriTeaserType.MoreAbout;
     default:
-      return TsriTeaserType.TwoCol;
+      return TsriTeaserType.TwoColNoMeta;
   }
 };
 

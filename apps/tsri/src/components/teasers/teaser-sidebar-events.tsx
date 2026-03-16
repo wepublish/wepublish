@@ -10,7 +10,9 @@ import {
   TeaserContentWrapper,
   TeaserImageWrapper,
   TeaserMetadata,
+  TeaserPreTitleNoContent,
   TeaserPreTitleWrapper,
+  TeaserTitle,
   TsriTeaser,
 } from './tsri-teaser';
 
@@ -25,6 +27,16 @@ export const TeaserEventsBase = styled(TsriTeaser)`
   border-radius: 0 !important;
   container: unset;
 
+  ${TeaserTitle} {
+    & > .MuiTypography-root {
+      padding: 1.5cqw;
+
+      ${({ theme }) => theme.breakpoints.up('md')} {
+        padding: 0.5cqw;
+      }
+    }
+  }
+
   ${TeaserContentWrapper} {
     display: block;
     background-color: ${({ theme }) => theme.palette.common.white};
@@ -35,6 +47,10 @@ export const TeaserEventsBase = styled(TsriTeaser)`
   }
 
   ${TeaserPreTitleWrapper} {
+    display: none;
+  }
+
+  ${TeaserPreTitleNoContent} {
     display: none;
   }
 

@@ -65,8 +65,12 @@ const theme = createTheme(WePTheme, {
     },
     body1: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-      fontSize: '20px',
-      lineHeight: '28px',
+      fontSize: '18px',
+      lineHeight: '24px',
+      [breakpoints.up('md')]: {
+        fontSize: '20px',
+        lineHeight: '28px',
+      },
     },
     body2: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
@@ -82,9 +86,13 @@ const theme = createTheme(WePTheme, {
     },
     subtitle1: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-      fontSize: '20px',
-      lineHeight: '28px',
+      fontSize: '18px',
+      lineHeight: '26px',
       fontWeight: 700,
+      [breakpoints.up('md')]: {
+        fontSize: '20px',
+        lineHeight: '28px',
+      },
     },
     subtitle2: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),

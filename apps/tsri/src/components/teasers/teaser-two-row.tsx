@@ -33,8 +33,10 @@ export const StyledTeaserTwoRow = styled(TsriTeaser)`
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 
-    & > * {
-      grid-column: -1 / 1;
+    ${({ theme }) => theme.breakpoints.up('xs')} {
+      & > *[class] {
+        grid-column: -1 / 1;
+      }
     }
 
     ${({ theme }) => theme.breakpoints.up('md')} {

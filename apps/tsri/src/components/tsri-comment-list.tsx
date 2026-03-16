@@ -3,6 +3,7 @@ import {
   CommentList,
   CommentListActions,
   CommentListItemActions,
+  CommentName,
 } from '@wepublish/comments/website';
 
 export const TsriCommentList = styled(CommentList)`
@@ -12,6 +13,15 @@ export const TsriCommentList = styled(CommentList)`
     padding-top: 2rem;
     padding-bottom: 2rem;
     border-radius: 1rem;
+  }
+
+  & .MuiTypography-body1 {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  & ${CommentName} {
+    grid-auto-columns: auto;
   }
 
   & ${CommentListActions} {

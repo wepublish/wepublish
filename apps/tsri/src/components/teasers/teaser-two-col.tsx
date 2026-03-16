@@ -6,7 +6,6 @@ import { TsriTeaserType } from './tsri-base-teaser';
 import {
   TeaserContentWrapper,
   TeaserImageWrapper,
-  TeaserMetadata,
   TeaserPreTitle,
   TeaserPreTitleWrapper,
   TsriTeaser,
@@ -23,7 +22,7 @@ export const TeaserTwoCol = styled(TsriTeaser)`
 
   ${TeaserContentWrapper} {
     grid-template-columns: 50% 50%;
-    grid-template-rows: auto 7.8% fit-content(1px) 14.25%;
+    grid-template-rows: auto 7.8% fit-content(1px) fit-content(1px) 14.25%;
     background-color: ${({ theme }) => theme.palette.primary.dark};
   }
 
@@ -65,9 +64,5 @@ export const TeaserTwoCol = styled(TsriTeaser)`
 
   ${TeaserPreTitle} {
     padding: 0.65cqw 1.5cqw;
-  }
-
-  ${TeaserMetadata} {
-    display: none;
   }
 `;

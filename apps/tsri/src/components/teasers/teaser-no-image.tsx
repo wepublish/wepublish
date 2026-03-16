@@ -49,7 +49,7 @@ export const TeaserNoImage = styled(TsriTeaser)`
   }
 
   ${TeaserMetadata} {
-    padding: 0 1.5cqw;
+    padding: 0 1.5cqw 1.5cqw 1.5cqw;
     color: transparent;
   }
 
