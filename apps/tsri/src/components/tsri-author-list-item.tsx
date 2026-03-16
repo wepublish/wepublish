@@ -4,7 +4,6 @@ import {
   AuthorListItemContent as AuthorListItemContentDefault,
   AuthorListItemImageWrapper,
   AuthorListItemLink as AuthorListItemLinkDefault,
-  imageStyles,
 } from '@wepublish/author/website';
 import { createWithTheme } from '@wepublish/ui';
 import { Author } from '@wepublish/website/api';
@@ -23,6 +22,10 @@ export const AuthorListItemLink = styled(AuthorListItemLinkDefault)`
 
 export const AuthorListItemContent = styled(AuthorListItemContentDefault)`
   line-height: 1rem;
+`;
+
+const imageStyles = css`
+  border-radius: 50%;
 `;
 
 export function AuthorListItem({

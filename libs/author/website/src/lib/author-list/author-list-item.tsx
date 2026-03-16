@@ -19,7 +19,7 @@ export const AuthorListItemLink = styled(Link)`
   color: inherit;
 `;
 
-export const imageStyles = css`
+const imageStyles = css`
   border-radius: 50%;
 `;
 
