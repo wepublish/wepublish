@@ -45,9 +45,6 @@ export const TsriArticleDate = ({
     !!article.latest.publishedAt &&
     article.latest.publishedAt !== article.publishedAt;
 
-  console.log('article.publishedAt', article.publishedAt);
-  console.log('article.latest.publishedAt', article.latest.publishedAt);
-
   return (
     <TsriArticleDateWrapper
       as={'div'}
