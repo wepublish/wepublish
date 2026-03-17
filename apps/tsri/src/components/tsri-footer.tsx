@@ -343,10 +343,10 @@ export const FooterPaperWrapper = styled('div')`
 export const FooterCategory = styled(FooterCategoryDefault)`
   grid-column: 1 / 2;
   grid-row: 2 / 3;
-  row-gap: 0.8cqw;
+  row-gap: 0;
   padding-left: 2cqw;
   max-width: 44vw;
-  overflow-x: hidden;
+  overflow: hidden;
 
   &:nth-of-type(n + 2) {
     grid-column: 1 / 2;

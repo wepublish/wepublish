@@ -617,7 +617,7 @@ export const NavPaperCategory = styled('div')`
   row-gap: 0.8cqw;
   padding-left: 2cqw;
   max-width: 44vw;
-  overflow-x: hidden;
+  overflow: hidden;
 
   &:nth-of-type(n + 2) {
     grid-column: 1 / 2;
@@ -1019,7 +1019,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                     onMenuToggle?.(false);
                   }}
                 >
-                  <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
+                  <Box sx={{ display: { xs: 'none', md: 'contents' } }}>
                     Offene
                   </Box>
                   &nbsp;Rechnung

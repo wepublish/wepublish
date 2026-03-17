@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { hasBlockStyle } from '@wepublish/block-content/website';
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
@@ -14,9 +15,8 @@ import {
 } from './tsri-teaser';
 
 export const isTeaserTsriLove = allPass([
-  ({ blockStyle }: BuilderTeaserProps) => {
-    return blockStyle === TsriTeaserType.TsriLove;
-  },
+  ({ blockStyle }: BuilderTeaserProps) =>
+    hasBlockStyle(TsriTeaserType.TsriLove)({ blockStyle }),
 ]);
 
 export const TeaserTsriLove = styled(TsriTeaser)`

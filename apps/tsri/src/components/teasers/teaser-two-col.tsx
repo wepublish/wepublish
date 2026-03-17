@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { hasBlockStyle } from '@wepublish/block-content/website';
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
@@ -6,16 +7,14 @@ import { TsriTeaserType } from './tsri-base-teaser';
 import {
   TeaserContentWrapper,
   TeaserImageWrapper,
-  TeaserMetadata,
   TeaserPreTitle,
   TeaserPreTitleWrapper,
   TsriTeaser,
 } from './tsri-teaser';
 
 export const isTeaserTwoCol = allPass([
-  ({ blockStyle }: BuilderTeaserProps) => {
-    return blockStyle === TsriTeaserType.TwoCol;
-  },
+  ({ blockStyle }: BuilderTeaserProps) =>
+    hasBlockStyle(TsriTeaserType.TwoCol)({ blockStyle }),
 ]);
 
 export const TeaserTwoCol = styled(TsriTeaser)`
@@ -23,7 +22,7 @@ export const TeaserTwoCol = styled(TsriTeaser)`
 
   ${TeaserContentWrapper} {
     grid-template-columns: 50% 50%;
-    grid-template-rows: auto 7.8% fit-content(1px) 14.25%;
+    grid-template-rows: auto 7.8% fit-content(1px) fit-content(1px) 14.25%;
     background-color: ${({ theme }) => theme.palette.primary.dark};
   }
 
@@ -65,9 +64,5 @@ export const TeaserTwoCol = styled(TsriTeaser)`
 
   ${TeaserPreTitle} {
     padding: 0.65cqw 1.5cqw;
-  }
-
-  ${TeaserMetadata} {
-    display: none;
   }
 `;
