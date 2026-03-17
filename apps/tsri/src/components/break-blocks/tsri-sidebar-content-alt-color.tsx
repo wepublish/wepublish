@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { hasBlockStyle, isBreakBlock } from '@wepublish/block-content/website';
+import { BlockContent, BreakBlock } from '@wepublish/website/api';
 import { allPass } from 'ramda';
 
 import { TsriBreakBlockType } from './tsri-base-break-block';
