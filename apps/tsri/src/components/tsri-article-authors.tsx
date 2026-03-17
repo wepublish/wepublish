@@ -46,7 +46,7 @@ export const TsriArticleAuthors = ({
       hasMultipleAuthors={hasMultipleAuthors}
       className={className}
     >
-      {authors.length === 1 && <AuthorChip author={authors[0]} />}
+      {!hasMultipleAuthors && <AuthorChip author={authors[0]} />}
 
       {authors.length > 1 && (
         <AuthorChipNameJobWrapper>
