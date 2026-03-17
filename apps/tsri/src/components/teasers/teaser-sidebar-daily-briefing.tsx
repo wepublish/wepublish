@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
+import { hasBlockStyle } from '@wepublish/block-content/website';
 import { createWithTheme } from '@wepublish/ui';
 import {
   BuilderTeaserProps,
@@ -14,9 +15,8 @@ import { TsriTeaserType } from './tsri-base-teaser';
 import { TeaserWrapper as TeaserWrapperDefault } from './tsri-teaser';
 
 export const isDailyBriefingTeaser = allPass([
-  ({ blockStyle }: BuilderTeaserProps) => {
-    return blockStyle === TsriTeaserType.DailyBriefing;
-  },
+  ({ blockStyle }: BuilderTeaserProps) =>
+    hasBlockStyle(TsriTeaserType.DailyBriefing)({ blockStyle }),
 ]);
 
 export const TeaserWrapper = styled(TeaserWrapperDefault)`

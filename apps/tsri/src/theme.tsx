@@ -1,7 +1,10 @@
 import { createTheme } from '@mui/material';
 import { ThemeOptions } from '@mui/material/styles';
-import { theme as WePTheme } from '@wepublish/ui';
+import { responsiveProperty, theme as WePTheme } from '@wepublish/ui';
 import { Hanken_Grotesk } from 'next/font/google';
+import { mergeDeepRight, reduce } from 'ramda';
+
+const mergeDeepAll = reduce(mergeDeepRight, {});
 
 const hankenGrotesk = Hanken_Grotesk({
   weight: ['100', '300', '400', '500', '600', '700'],
@@ -65,12 +68,26 @@ const theme = createTheme(WePTheme, {
     },
     body1: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-      fontSize: '18px',
-      lineHeight: '24px',
-      [breakpoints.up('md')]: {
-        fontSize: '20px',
-        lineHeight: '28px',
-      },
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'px',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 18,
+            md: 20,
+          },
+        }),
+        responsiveProperty({
+          cssProperty: 'lineHeight',
+          unit: 'px',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 24,
+            md: 28,
+          },
+        }),
+      ]),
     },
     body2: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
@@ -86,13 +103,27 @@ const theme = createTheme(WePTheme, {
     },
     subtitle1: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-      fontSize: '18px',
-      lineHeight: '26px',
       fontWeight: 700,
-      [breakpoints.up('md')]: {
-        fontSize: '20px',
-        lineHeight: '28px',
-      },
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'px',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 18,
+            md: 20,
+          },
+        }),
+        responsiveProperty({
+          cssProperty: 'lineHeight',
+          unit: 'px',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 26,
+            md: 28,
+          },
+        }),
+      ]),
     },
     subtitle2: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
@@ -165,9 +196,9 @@ const theme = createTheme(WePTheme, {
       whiteSpace: 'nowrap',
       margin: 0,
       padding: '0 0.3cqw',
+      fontWeight: 700,
       fontSize: '4.5cqw',
       lineHeight: '6cqw',
-      fontWeight: 700,
       [breakpoints.up('md')]: {
         fontSize: 'min(1.25cqw, 1.4rem)',
         lineHeight: 'min(1.8cqw, 1.5rem)',
@@ -231,7 +262,7 @@ const theme = createTheme(WePTheme, {
           fontSize: '1.1em',
         }),
         '&:hover': {
-          backgroundColor: '#f5ff64',
+          backgroundColor: colors.primary.light,
         },
       },
     },

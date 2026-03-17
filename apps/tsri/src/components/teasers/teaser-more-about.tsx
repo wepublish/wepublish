@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { hasBlockStyle } from '@wepublish/block-content/website';
 import { createWithTheme } from '@wepublish/ui';
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
@@ -9,9 +10,8 @@ import { TsriTeaserType } from './tsri-base-teaser';
 import { TeaserContentWrapper, TeaserLead, TeaserTitle } from './tsri-teaser';
 
 export const isTeaserMoreAbout = allPass([
-  ({ blockStyle }: BuilderTeaserProps) => {
-    return blockStyle === TsriTeaserType.MoreAbout;
-  },
+  ({ blockStyle }: BuilderTeaserProps) =>
+    hasBlockStyle(TsriTeaserType.NoImageAltColor)({ blockStyle }),
 ]);
 
 export const StyledTeaserMoreAbout = styled(StyledTeaserTopicMeta)`

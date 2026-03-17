@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import { css, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import {
   AuthorListItemContent as AuthorListItemContentDefault,
-  AuthorListItemImageWrapper,
+  AuthorListItemImageWrapper as AuthorListItemImageWrapperDefault,
   AuthorListItemLink as AuthorListItemLinkDefault,
 } from '@wepublish/author/website';
 import { createWithTheme } from '@wepublish/ui';
@@ -20,12 +20,17 @@ export const AuthorListItemLink = styled(AuthorListItemLinkDefault)`
   }
 `;
 
-export const AuthorListItemContent = styled(AuthorListItemContentDefault)`
-  line-height: 1rem;
+export const AuthorListItemImageWrapper = styled(
+  AuthorListItemImageWrapperDefault
+)`
+  img {
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+  }
 `;
 
-const imageStyles = css`
-  border-radius: 50%;
+export const AuthorListItemContent = styled(AuthorListItemContentDefault)`
+  line-height: 1rem;
 `;
 
 export function AuthorListItem({
@@ -36,7 +41,7 @@ export function AuthorListItem({
   jobTitle,
 }: Author & { className?: string }) {
   const {
-    elements: { Image, Paragraph, H6 },
+    elements: { Image },
   } = useWebsiteBuilder();
 
   return (
@@ -47,12 +52,7 @@ export function AuthorListItem({
       <AuthorListItemImageWrapper>
         {image && (
           // eslint-disable-next-line jsx-a11y/alt-text
-          <Image
-            image={image}
-            square
-            css={imageStyles}
-            maxWidth={500}
-          />
+          <Image image={image} />
         )}
       </AuthorListItemImageWrapper>
 
