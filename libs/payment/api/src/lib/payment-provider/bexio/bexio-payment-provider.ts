@@ -146,15 +146,14 @@ export class BexioPaymentProvider extends BasePaymentProvider {
           return;
         }
 
-        await bexio.invoices.delete(+payment.intentID);
-        await this.prisma.payment.update({
-          where: {
-            id: payment.id,
-          },
-          data: {
-            state: PaymentState.canceled,
-          },
-        });
+        try {
+          await bexio.invoices.delete(+payment.intentID);
+        } catch (error) {
+          logger('bexioPaymentProvider').error(
+            'Error to cancel invoice for payment (id: %s): %s',
+            error instanceof Error ? error.message : `${error}`
+          );
+        }
       })
     );
   }
