@@ -1019,7 +1019,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                     onMenuToggle?.(false);
                   }}
                 >
-                  <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
+                  <Box sx={{ display: { xs: 'none', md: 'contents' } }}>
                     Offene
                   </Box>
                   &nbsp;Rechnung

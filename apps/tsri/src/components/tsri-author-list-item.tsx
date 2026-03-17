@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Typography } from '@mui/material';
+import { css, Typography } from '@mui/material';
 import {
   AuthorListItemContent as AuthorListItemContentDefault,
   AuthorListItemImageWrapper,
