@@ -5773,6 +5773,7 @@ export type AddCommentMutationVariables = Exact<{
   guestUsername?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
   text: Scalars['RichText'];
+  challenge?: InputMaybe<ChallengeInput>;
 }>;
 
 
@@ -7809,7 +7810,7 @@ export type CommentListQueryHookResult = ReturnType<typeof useCommentListQuery>;
 export type CommentListLazyQueryHookResult = ReturnType<typeof useCommentListLazyQuery>;
 export type CommentListQueryResult = Apollo.QueryResult<CommentListQuery, CommentListQueryVariables>;
 export const AddCommentDocument = gql`
-    mutation AddComment($itemID: String!, $parentID: String, $guestUsername: String, $title: String, $text: RichText!) {
+    mutation AddComment($itemID: String!, $parentID: String, $guestUsername: String, $title: String, $text: RichText!, $challenge: ChallengeInput) {
   addUserComment(
     itemID: $itemID
     itemType: article
@@ -7817,6 +7818,7 @@ export const AddCommentDocument = gql`
     guestUsername: $guestUsername
     title: $title
     text: $text
+    challenge: $challenge
   ) {
     ...FullComment
   }
@@ -7842,6 +7844,7 @@ export type AddCommentMutationFn = Apollo.MutationFunction<AddCommentMutation, A
  *      guestUsername: // value for 'guestUsername'
  *      title: // value for 'title'
  *      text: // value for 'text'
+ *      challenge: // value for 'challenge'
  *   },
  * });
  */
