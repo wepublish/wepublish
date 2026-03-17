@@ -26,6 +26,7 @@ export const AuthorListItemImageWrapper = styled(
   img {
     border-radius: 50%;
     aspect-ratio: 1 / 1;
+    object-fit: cover;
   }
 `;
 
