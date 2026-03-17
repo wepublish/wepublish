@@ -11,7 +11,7 @@ import { TeaserContentWrapper, TeaserLead, TeaserTitle } from './tsri-teaser';
 
 export const isTeaserMoreAbout = allPass([
   ({ blockStyle }: BuilderTeaserProps) =>
-    hasBlockStyle(TsriTeaserType.NoImageAltColor)({ blockStyle }),
+    hasBlockStyle(TsriTeaserType.MoreAbout)({ blockStyle }),
 ]);
 
 export const StyledTeaserMoreAbout = styled(StyledTeaserTopicMeta)`

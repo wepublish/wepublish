@@ -800,24 +800,52 @@ export const authorListItemTheme = createTheme(theme, {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
       display: 'inline-block',
       padding: '0.1rem 0.5rem',
-      fontSize: '12px',
-      lineHeight: '14px',
       fontWeight: 700,
       textDecoration: 'underline',
-      [theme.breakpoints.up('md')]: {
-        fontSize: '14px',
-        lineHeight: '16px',
-      },
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'px',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 12,
+            md: 14,
+          },
+        }),
+        responsiveProperty({
+          cssProperty: 'lineHeight',
+          unit: 'px',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 14,
+            md: 16,
+          },
+        }),
+      ]),
     },
     authorListItemJobTitle: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-      fontSize: '12px',
-      lineHeight: '14px',
       fontWeight: 700,
-      [theme.breakpoints.up('md')]: {
-        fontSize: '14px',
-        lineHeight: '16px',
-      },
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'px',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 12,
+            md: 14,
+          },
+        }),
+        responsiveProperty({
+          cssProperty: 'lineHeight',
+          unit: 'px',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 14,
+            md: 16,
+          },
+        }),
+      ]),
     },
   },
 });
