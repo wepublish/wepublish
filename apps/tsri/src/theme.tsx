@@ -389,7 +389,7 @@ const theme = createTheme(WePTheme, {
             position: 'static',
             boxSizing: 'border-box',
             display: 'grid',
-            gridTemplateColumns: '1fr min-content min-content',
+            gridTemplateColumns: '1fr auto min-content',
             gridTemplateRows: 'repeat(2, auto)',
             transition:
               'background-color 100ms ease-out 200ms, aspect-ratio 300ms ease-out',
