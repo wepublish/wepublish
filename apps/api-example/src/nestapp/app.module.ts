@@ -52,6 +52,7 @@ import {
   PrismaModule,
   URLAdapter,
   URLAdapterModule,
+  WepublishSiteURLAdapter,
 } from '@wepublish/nest-modules';
 import { PageModule } from '@wepublish/page/api';
 import {
@@ -516,10 +517,16 @@ import {
           config.getOrThrow('CONFIG_FILE_PATH')
         );
 
-        const urlAdapter =
-          configFile.general.urlAdapter === 'hauptstadt' ?
-            new HauptstadtURLAdapter(config.getOrThrow('WEBSITE_URL'))
-          : new URLAdapter(config.getOrThrow('WEBSITE_URL'));
+        let urlAdapter: URLAdapter;
+        if (configFile.general.urlAdapter === 'hauptstadt') {
+          urlAdapter = new HauptstadtURLAdapter(
+            config.getOrThrow('WEBSITE_URL')
+          );
+        } else if (configFile.general.urlAdapter === 'wepublish-site') {
+          urlAdapter = new WepublishSiteURLAdapter();
+        } else {
+          urlAdapter = new URLAdapter(config.getOrThrow('WEBSITE_URL'));
+        }
 
         return urlAdapter;
       },

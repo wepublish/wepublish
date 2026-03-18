@@ -22,13 +22,12 @@ import {
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import deTranlations from '@wepublish/website/translations/de.json';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
-import resourcesToBackend from 'i18next-resources-to-backend';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
@@ -39,20 +38,7 @@ setDefaultOptions({
   locale: de,
 });
 
-initWePublishTranslator()
-  .use(resourcesToBackend(() => deTranlations))
-  .init({
-    partialBundledLanguages: true,
-    lng: 'de',
-    fallbackLng: 'de',
-    supportedLngs: ['de'],
-    interpolation: {
-      escapeValue: false,
-    },
-    resources: {
-      de: { zod: deTranlations.zod },
-    },
-  });
+initWePublishTranslator();
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
@@ -90,6 +76,7 @@ type CustomAppProps = AppProps<{
 
 function CustomApp({ Component, pageProps }: CustomAppProps) {
   const siteTitle = 'We.Publish';
+  const { locale } = useRouter();
 
   return (
     <WebsiteProvider>
@@ -174,10 +161,13 @@ function CustomApp({ Component, pageProps }: CustomAppProps) {
 
           <Spacer>
             <NavBar
-              categorySlugs={[['categories', 'about-us']]}
-              slug="main"
-              headerSlug="header"
-              iconSlug="icons"
+              categorySlugs={[[`categories-${locale}`, `about-us-${locale}`]]}
+              slug={`main-${locale}`}
+              headerSlug={`header-${locale}`}
+              iconSlug={`icons-${locale}`}
+              profileBtn={null}
+              subscribeBtn={null}
+              loginBtn={null}
             />
 
             <main>
@@ -187,9 +177,9 @@ function CustomApp({ Component, pageProps }: CustomAppProps) {
             </main>
 
             <FooterContainer
-              slug="footer"
-              categorySlugs={[['categories', 'about-us']]}
-              iconSlug="icons"
+              slug={`footer-${locale}`}
+              categorySlugs={[[`categories-${locale}`, `about-us-${locale}`]]}
+              iconSlug={`icons-${locale}`}
             />
           </Spacer>
 
@@ -205,6 +195,7 @@ const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
   authLink,
   previewLink,
 ]);
+
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(

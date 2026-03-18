@@ -8,7 +8,7 @@ type General = {
   apolloPlayground: boolean;
   apolloIntrospection: boolean;
   bcryptHashCostFactor: number;
-  urlAdapter: 'default' | 'hauptstadt';
+  urlAdapter: 'default' | 'hauptstadt' | 'wepublish-site';
   sessionTTLDays: number;
 };
 
