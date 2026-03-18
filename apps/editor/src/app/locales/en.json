@@ -1879,6 +1879,34 @@
         "articlePrefix": "We.Publish article url prefix (usually /a/)",
         "property": "Google Analytics Property-ID",
         "credentials": "Credential file"
+      },
+      "mailchimpSync": "Mailchimp Sync",
+      "mailchimpSyncSettings": {
+        "enabled": "Enabled",
+        "apiKey": "Mailchimp API Key",
+        "listId": "Mailchimp List/Audience ID",
+        "mergeFieldMappings": "Merge Field Mappings",
+        "mergeFieldHelp": "Map Mailchimp merge field tags to expressions. Use | for OR. Expressions: user.firstName, user.name, slug:contains:value, slug:contains_any:val1,val2, slug:equals:value, active_abo, active_abo_with_payment:method_slug:days, retarget:days, static:value",
+        "mergeFieldTag": "Merge Field Tag (e.g. FNAME)",
+        "mergeFieldExpression": "Expression (e.g. user.firstName)",
+        "addMergeField": "Add Merge Field",
+        "interestGroupMappings": "Interest Group Mappings",
+        "interestGroupHelp": "Map Mailchimp interest group IDs to expressions. Expressions: always, slug:equals:value, slug:contains:value",
+        "interestGroupId": "Interest Group ID",
+        "interestGroupExpression": "Expression (e.g. always)",
+        "addInterestGroup": "Add Interest Group",
+        "lastSync": "Last sync",
+        "scheduledInfo": "Runs daily at 4:00 AM",
+        "triggerSync": "Sync Now",
+        "syncTriggered": "Mailchimp sync triggered successfully",
+        "syncFailed": "Failed to trigger Mailchimp sync",
+        "dryRun": "Dry Run",
+        "dryRunSummary": "Dry run complete: {{updated}} would be updated, {{skipped}} unchanged",
+        "dryRunStatus": "Status",
+        "dryRunMergeFields": "Merge Fields",
+        "dryRunInterests": "Interests",
+        "dryRunNew": "New",
+        "dryRunUpdate": "Update"
       }
     }
   }

@@ -1705,6 +1705,34 @@
         "articlePrefix": "Préfixe d’URL des articles We.Publish (généralement /a/)",
         "property": "ID de la propriété Google Analytics",
         "credentials": "Fichier d’identifiants"
+      },
+      "mailchimpSync": "Mailchimp Sync",
+      "mailchimpSyncSettings": {
+        "enabled": "Activé",
+        "apiKey": "Clé API Mailchimp",
+        "listId": "ID de liste/audience Mailchimp",
+        "mergeFieldMappings": "Correspondances des champs de fusion",
+        "mergeFieldHelp": "Associer les tags de champs de fusion Mailchimp à des expressions. Utiliser | pour OU. Expressions : user.firstName, user.name, slug:contains:valeur, slug:contains_any:val1,val2, slug:equals:valeur, active_abo, active_abo_with_payment:methode_slug:jours, retarget:jours, static:valeur",
+        "mergeFieldTag": "Tag du champ de fusion (ex. FNAME)",
+        "mergeFieldExpression": "Expression (ex. user.firstName)",
+        "addMergeField": "Ajouter un champ de fusion",
+        "interestGroupMappings": "Correspondances des groupes d’intérêt",
+        "interestGroupHelp": "Associer les IDs de groupes d’intérêt Mailchimp à des expressions. Expressions : always, slug:equals:valeur, slug:contains:valeur",
+        "interestGroupId": "ID du groupe d’intérêt",
+        "interestGroupExpression": "Expression (ex. always)",
+        "addInterestGroup": "Ajouter un groupe d’intérêt",
+        "lastSync": "Dernière synchronisation",
+        "scheduledInfo": "Exécuté quotidiennement à 4h00",
+        "triggerSync": "Synchroniser maintenant",
+        "syncTriggered": "Synchronisation Mailchimp déclenchée avec succès",
+        "syncFailed": "Échec du déclenchement de la synchronisation Mailchimp",
+        "dryRun": "Essai à blanc",
+        "dryRunSummary": "Essai terminé : {{updated}} seraient mis à jour, {{skipped}} inchangés",
+        "dryRunStatus": "Statut",
+        "dryRunMergeFields": "Champs de fusion",
+        "dryRunInterests": "Intérêts",
+        "dryRunNew": "Nouveau",
+        "dryRunUpdate": "Mise à jour"
       }
     }
   }

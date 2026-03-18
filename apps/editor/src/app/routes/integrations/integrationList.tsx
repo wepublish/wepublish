@@ -11,6 +11,7 @@ import {
   CanGetAnalyticsProviderSettings,
   CanGetChallengeProviderSettings,
   CanGetMailProviderSettings,
+  CanGetMailchimpSyncSettings,
   CanGetPaymentProviderSettings,
   CanGetTrackingPixelSettings,
 } from '@wepublish/permissions';
@@ -22,6 +23,7 @@ import {
   MdEmail,
   MdSecurity,
   MdSmartToy,
+  MdSync,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
@@ -114,6 +116,13 @@ export function IntegrationList() {
       path: '/integrations/analytics',
       icon: MdAnalytics,
       logos: [googleLogo],
+    },
+    {
+      title: t('integrations.mailchimpSync'),
+      permission: CanGetMailchimpSyncSettings.id,
+      path: '/integrations/mailchimp-sync',
+      icon: MdSync,
+      logos: [mailChimpLogo],
     },
   ];
 

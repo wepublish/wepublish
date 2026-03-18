@@ -1,0 +1,57 @@
+query SyncProviderSettings {
+  syncProviderSettings {
+    id
+    createdAt
+    modifiedAt
+    lastLoadedAt
+    type
+    name
+    enabled
+    mailchimp_listId
+    mailchimp_mergeFieldMappings
+    mailchimp_interestGroupMappings
+    mailchimp_defaultInterestGroupIds
+    lastSyncAt
+    lastSyncError
+  }
+}
+
+mutation UpdateSyncProviderSetting(
+  $id: String!
+  $name: String
+  $enabled: Boolean
+  $mailchimp_apiKey: String
+  $mailchimp_listId: String
+  $mailchimp_mergeFieldMappings: [JSONObject!]
+  $mailchimp_interestGroupMappings: [JSONObject!]
+  $mailchimp_defaultInterestGroupIds: [String!]
+) {
+  updateSyncProviderSetting(
+    id: $id
+    name: $name
+    enabled: $enabled
+    mailchimp_apiKey: $mailchimp_apiKey
+    mailchimp_listId: $mailchimp_listId
+    mailchimp_mergeFieldMappings: $mailchimp_mergeFieldMappings
+    mailchimp_interestGroupMappings: $mailchimp_interestGroupMappings
+    mailchimp_defaultInterestGroupIds: $mailchimp_defaultInterestGroupIds
+  ) {
+    id
+    createdAt
+    modifiedAt
+    lastLoadedAt
+    type
+    name
+    enabled
+    mailchimp_listId
+    mailchimp_mergeFieldMappings
+    mailchimp_interestGroupMappings
+    mailchimp_defaultInterestGroupIds
+    lastSyncAt
+    lastSyncError
+  }
+}
+
+mutation TriggerMailchimpSync($id: String!) {
+  triggerMailchimpSync(id: $id)
+}

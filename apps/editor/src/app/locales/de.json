@@ -1818,6 +1818,34 @@
         "articlePrefix": "We.Publish Artikel-URL-Präfix (normalerweise /a/)",
         "property": "Google-Analytics Property-ID",
         "credentials": "Anmeldedatei"
+      },
+      "mailchimpSync": "Mailchimp Sync",
+      "mailchimpSyncSettings": {
+        "enabled": "Aktiviert",
+        "apiKey": "Mailchimp API Key",
+        "listId": "Mailchimp Listen-/Zielgruppen-ID",
+        "mergeFieldMappings": "Merge-Feld-Zuordnungen",
+        "mergeFieldHelp": "Mailchimp Merge-Feld-Tags zu Ausdrücken zuordnen. | für ODER verwenden. Ausdrücke: user.firstName, user.name, slug:contains:wert, slug:contains_any:wert1,wert2, slug:equals:wert, active_abo, active_abo_with_payment:methode_slug:tage, retarget:tage, static:wert",
+        "mergeFieldTag": "Merge-Feld-Tag (z.B. FNAME)",
+        "mergeFieldExpression": "Ausdruck (z.B. user.firstName)",
+        "addMergeField": "Merge-Feld hinzufügen",
+        "interestGroupMappings": "Interessengruppen-Zuordnungen",
+        "interestGroupHelp": "Mailchimp Interessengruppen-IDs zu Ausdrücken zuordnen. Ausdrücke: always, slug:equals:wert, slug:contains:wert",
+        "interestGroupId": "Interessengruppen-ID",
+        "interestGroupExpression": "Ausdruck (z.B. always)",
+        "addInterestGroup": "Interessengruppe hinzufügen",
+        "lastSync": "Letzte Synchronisation",
+        "scheduledInfo": "Wird täglich um 4:00 Uhr ausgeführt",
+        "triggerSync": "Jetzt synchronisieren",
+        "syncTriggered": "Mailchimp-Synchronisation erfolgreich ausgelöst",
+        "syncFailed": "Mailchimp-Synchronisation konnte nicht ausgelöst werden",
+        "dryRun": "Testlauf",
+        "dryRunSummary": "Testlauf abgeschlossen: {{updated}} würden aktualisiert, {{skipped}} unverändert",
+        "dryRunStatus": "Status",
+        "dryRunMergeFields": "Merge-Felder",
+        "dryRunInterests": "Interessen",
+        "dryRunNew": "Neu",
+        "dryRunUpdate": "Aktualisierung"
       }
     }
   }

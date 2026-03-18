@@ -1786,3 +1786,31 @@ model SettingAnalyticsProvider {
 
   @@map("settings.analyticsProvider")
 }
+
+enum SyncProviderType {
+  MAILCHIMP @map("mailchimp")
+}
+
+model SettingSyncProvider {
+  id           String   @id
+  createdAt    DateTime @default(now())
+  modifiedAt   DateTime @updatedAt
+  lastLoadedAt DateTime @default(now())
+
+  type    SyncProviderType
+  name    String?
+  enabled Boolean          @default(false)
+
+  // Mailchimp-specific configuration
+  mailchimp_apiKey String?
+  mailchimp_listId String?
+  mailchimp_mergeFieldMappings     Json @default("[]")
+  mailchimp_interestGroupMappings  Json @default("[]")
+  mailchimp_defaultInterestGroupIds Json @default("[]")
+
+  // Last sync execution info
+  lastSyncAt    DateTime?
+  lastSyncError String?
+
+  @@map("settings.syncprovider")
+}
