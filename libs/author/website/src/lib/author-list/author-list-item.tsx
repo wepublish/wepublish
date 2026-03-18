@@ -10,7 +10,7 @@ export const AuthorListItemImageWrapper = styled('div')`
 
 export const AuthorListItemContent = styled('div')``;
 
-const AuthorListItemLink = styled(Link)`
+export const AuthorListItemLink = styled(Link)`
   display: grid;
   grid-template-rows: max-content 1fr;
   gap: ${({ theme }) => theme.spacing(3)};

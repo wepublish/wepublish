@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
+import { hasBlockStyle } from '@wepublish/block-content/website';
 import {
   selectTeaserLead,
   selectTeaserPreTitle,
@@ -25,9 +26,8 @@ import {
 } from './tsri-teaser';
 
 export const isTeaserTopicMeta = allPass([
-  ({ blockStyle }: BuilderTeaserProps) => {
-    return blockStyle === TsriTeaserType.TopicMeta;
-  },
+  ({ blockStyle }: BuilderTeaserProps) =>
+    hasBlockStyle(TsriTeaserType.TopicMeta)({ blockStyle }),
 ]);
 
 const TeaserTopicMetaBase = ({

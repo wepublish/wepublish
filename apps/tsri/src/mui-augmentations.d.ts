@@ -32,6 +32,10 @@ declare module '@mui/material/styles' {
     // Link -- MuiLink.variant is based on Typography variants
     categoryLink: CSSProperties;
     navbarTab: CSSProperties;
+
+    // author-list-item
+    authorListItemName: CSSProperties;
+    authorListItemJobTitle: CSSProperties;
   }
 
   // Optional
@@ -57,6 +61,8 @@ declare module '@mui/material/styles' {
     bannerCta?: CSSProperties;
     categoryLink?: CSSProperties;
     navbarTab?: CSSProperties;
+    authorListItemName?: CSSProperties;
+    authorListItemJobTitle?: CSSProperties;
   }
 }
 
@@ -83,6 +89,8 @@ declare module '@mui/material/Typography' {
     bannerCta: true;
     categoryLink: true;
     navbarTab: true;
+    authorListItemName: true;
+    authorListItemJobTitle: true;
   }
 }
 

@@ -6,11 +6,12 @@ import {
 } from '@wepublish/website/builder';
 
 const TsriArticleDateWrapper = styled(ArticleDateWrapper)`
-  font-size: 0.7rem;
+  font-size: 0.666rem;
   display: grid;
   grid-column: 2 / 4;
   grid-row: 2 / 3;
   margin: 0;
+  grid-auto-rows: min-content;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-column: 2 / 3;
