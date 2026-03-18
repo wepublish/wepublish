@@ -186,7 +186,7 @@ export const TabbedContent = ({
   ) => string;
 }) => {
   const [value, setValue] = React.useState(0);
-  const thisId = `TC-${React.useId()}`;
+  const thisId = `TC-${React.useId().replace(/:/g, '-')}`;
 
   const {
     blocks: { Renderer },
