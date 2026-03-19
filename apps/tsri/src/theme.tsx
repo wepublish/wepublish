@@ -389,7 +389,7 @@ const theme = createTheme(WePTheme, {
             position: 'static',
             boxSizing: 'border-box',
             display: 'grid',
-            gridTemplateColumns: '1fr min-content min-content',
+            gridTemplateColumns: '1fr auto min-content',
             gridTemplateRows: 'repeat(2, auto)',
             transition:
               'background-color 100ms ease-out 200ms, aspect-ratio 300ms ease-out',
@@ -726,19 +726,32 @@ export const noImageAltColor = createTheme(theme, {
   },
 });
 
-export const sidebarTsriLove = createTheme(theme, {
+export const sidebarTsriLoveTheme = createTheme(theme, {
   typography: {
     teaserTitle: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      [breakpoints.up('xs')]: {
+        color: colors.common.black,
+        fontSize: 'calc(var(--sizing-factor) * 1.3cqw)',
+        lineHeight: 'calc(var(--sizing-factor) * 1.49cqw)',
+        fontWeight: 700,
+        padding: 0,
+        margin: 0,
+      },
     },
-    teaserPretitle: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-    },
-    teaserLead: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-    },
-    teaserMeta: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    teaserTitleLink: {
+      [breakpoints.up('xs')]: {
+        fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+        color: 'inherit',
+        textDecoration: 'none',
+        padding: 'calc(var(--sizing-factor) * 0.5cqw)',
+        display: 'block',
+        backgroundColor: 'transparent',
+        ['&:hover']: {
+          backgroundColor: colors.primary.light,
+          color: colors.common.black,
+        },
+      },
     },
   },
 });

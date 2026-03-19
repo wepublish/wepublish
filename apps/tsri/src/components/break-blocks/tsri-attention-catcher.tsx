@@ -39,7 +39,7 @@ export const BreakBlockWrapper = styled('div')`
     --sizing-factor: 1;
     grid-template-rows: min-content auto;
     grid-template-columns: 57% calc(100% - 57%);
-    width: 69.4%;
+    width: 83%;
     border-radius: 1cqw;
 
     &:has(${BreakBlockSegment}:empty) {

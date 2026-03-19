@@ -99,7 +99,7 @@ export default function MailchimpSubscribeForm(
 
   const processSubmit = (
     data: FormInput,
-    event: React.FormEvent<HTMLFormElement>
+    event: FormEvent<HTMLFormElement>
   ) => {
     const body = new URLSearchParams({
       EMAIL: data.email,
