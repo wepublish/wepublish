@@ -19,29 +19,29 @@ import { useNavigate } from 'react-router-dom';
 import { ICON_REGISTRY } from '../externalApps/iconRegistry';
 
 const AppGrid = styled(Grid)`
-  padding: 16px;
+  padding: ${({ theme }) => theme.spacing(4)};
 `;
 
 const AppBox = styled(Box)`
   min-height: 120px;
-  display: flex !important;
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 12px;
+  gap: ${({ theme }) => theme.spacing(2)};
 `;
 
 const AppIconBox = styled(Box)`
-  font-size: 48px;
+  font-size: ${({ theme }) => theme.typography.h3.fontSize};
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${({ theme }) => theme.palette?.primary?.main || '#2196f3'};
+  color: ${({ theme }) => theme.palette?.primary?.main};
 `;
 
 const EmptyText = styled(Typography)`
-  padding: 24px;
+  padding: ${({ theme }) => theme.spacing(3)};
   text-align: center;
 `;
 
@@ -118,7 +118,6 @@ export function ExternalAppsDashboard() {
             sx={{ height: '100%' }}
           >
             <CardActionArea
-              component="div"
               onClick={() => {
                 if (app.target === ExternalAppsTarget.Blank) {
                   window.open(app.url, '_blank', 'noopener,noreferrer');

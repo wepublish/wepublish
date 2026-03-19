@@ -533,7 +533,8 @@
       "user": "Utilisateur",
       "yearlySubscribers": "Nouveaux abonné:es au cours de l'année écoulée",
       "audience": "Audience",
-      "goToAudienceDashboard": "Audience Dashboard"
+      "goToAudienceDashboard": "Audience Dashboard",
+      "externalApps": "We.Publish Apps"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",

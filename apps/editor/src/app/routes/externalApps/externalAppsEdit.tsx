@@ -6,7 +6,7 @@ import { ExternalAppForm } from './externalAppForm';
 const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  gap: ${({ theme }) => theme.spacing(4)};
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-columns: repeat(2, 1fr);
