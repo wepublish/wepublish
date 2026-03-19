@@ -3,8 +3,7 @@ import { css, IconButton, Modal as MUIModal } from '@mui/material';
 import { Link as BuilderLink } from '@wepublish/ui';
 import { BuilderLinkProps } from '@wepublish/website/builder';
 import NextLink from 'next/link';
-import { forwardRef, useState } from 'react';
-import { FormEvent, MouseEvent } from 'react';
+import { FormEvent, forwardRef, MouseEvent, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 
 import MailchimpForm from './newsletter/mailchimp-form';
