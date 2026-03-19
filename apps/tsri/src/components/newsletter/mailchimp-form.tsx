@@ -4,6 +4,7 @@ import { Box, Button, css, TextField, Theme, Typography } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Widget } from '@typeform/embed-react';
 import { BaseSyntheticEvent, FormEvent, useState } from 'react';
+import { FormEvent } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -99,7 +100,7 @@ export default function MailchimpSubscribeForm(
 
   const processSubmit = (
     data: FormInput,
-    event: React.FormEvent<HTMLFormElement>
+    event: FormEvent<HTMLFormElement>
   ) => {
     const body = new URLSearchParams({
       EMAIL: data.email,

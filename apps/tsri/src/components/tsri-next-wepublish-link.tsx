@@ -4,6 +4,7 @@ import { Link as BuilderLink } from '@wepublish/ui';
 import { BuilderLinkProps } from '@wepublish/website/builder';
 import NextLink from 'next/link';
 import { forwardRef, useState } from 'react';
+import { FormEvent, MouseEvent } from 'react';
 import { MdClose } from 'react-icons/md';
 
 import MailchimpForm from './newsletter/mailchimp-form';
@@ -116,7 +117,7 @@ export const TsriNextWepublishLink = forwardRef<
   const queryParams = parseQueryParams(href ?? '');
 
   const handleLinkClick = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+    event: MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
     if (props.onClick) {
       props.onClick(event);
@@ -138,7 +139,7 @@ export const TsriNextWepublishLink = forwardRef<
     setIsMCSubmit(false);
   };
 
-  const handleMCSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleMCSubmit = (e: FormEvent<HTMLFormElement>) => {
     setIsMCSubmit(true);
   };
 

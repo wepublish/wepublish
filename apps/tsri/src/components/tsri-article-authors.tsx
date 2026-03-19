@@ -5,7 +5,7 @@ import {
   BuilderArticleAuthorsProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import React from 'react';
+import { ComponentType, Fragment } from 'react';
 
 import { AuthorChipNameJobWrapper } from './tsri-author-chip';
 
@@ -25,8 +25,8 @@ export const TsriArticleAuthors = ({
   className,
 }: BuilderArticleAuthorsProps) => {
   const { AuthorChip: AuthorChipBase, ArticleDate } = useWebsiteBuilder();
-  const AuthorChip = AuthorChipBase as React.ComponentType<
-    React.ComponentProps<typeof AuthorChipBase> & {
+  const AuthorChip = AuthorChipBase as ComponentType<
+    ComponentProps<typeof AuthorChipBase> & {
       isOneOfMultipleAuthors?: boolean;
     }
   >;
@@ -52,13 +52,13 @@ export const TsriArticleAuthors = ({
         <AuthorChipNameJobWrapper>
           {'Von '}
           {authors.map((author, index) => (
-            <React.Fragment key={author.id}>
+            <Fragment key={author.id}>
               <AuthorChip
                 author={{ ...author, image: undefined, links: [] }}
                 isOneOfMultipleAuthors
               />
               {index < authors.length - 1 && ', '}
-            </React.Fragment>
+            </Fragment>
           ))}
         </AuthorChipNameJobWrapper>
       )}
