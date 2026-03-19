@@ -5,7 +5,7 @@ import {
   BuilderArticleAuthorsProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { ComponentType, Fragment } from 'react';
+import { ComponentProps, ComponentType, Fragment } from 'react';
 
 import { AuthorChipNameJobWrapper } from './tsri-author-chip';
 
