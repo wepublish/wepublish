@@ -14,6 +14,8 @@ export const TsriBildwurfAdBlock = styled(BildwurfAdBlockDefault)`
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     padding: 1.5rem;
+    margin: 0 auto;
+    width: 83%;
 
     & #bildwurf-ad-in-content {
       border-radius: 0.75rem;
