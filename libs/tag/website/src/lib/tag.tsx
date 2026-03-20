@@ -78,6 +78,7 @@ export function Tag({
         {...articles}
         variables={variables}
         onVariablesChange={onVariablesChange}
+        tag={tag.tag}
       />
 
       {pageCount > 1 && (

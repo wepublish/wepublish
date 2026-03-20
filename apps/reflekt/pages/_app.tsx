@@ -1,6 +1,6 @@
 import { EmotionCache } from '@emotion/cache';
 import styled from '@emotion/styled';
-import { Container, css, CssBaseline, ThemeProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import {
   AppCacheProvider,
   createEmotionCache,
@@ -25,16 +25,46 @@ import {
   createWithV1ApiClient,
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
-import { WebsiteBuilderProvider } from '@wepublish/website/builder';
+import {
+  BuilderBlockRendererProps,
+  BuilderTeaserSlotsBlockProps,
+  WebsiteBuilderProvider,
+} from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
+import { ComponentType } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import { ReflektFlexBlock } from '../src/components/block-layouts/reflekt-base-flex-block';
+import { ReflektBaseBreakBlock } from '../src/components/break-blocks/reflekt-base-break-block';
+import { MainSpacer } from '../src/components/main-spacer';
+import { ReflektArticle } from '../src/components/reflekt-article';
+import {
+  ReflektBlockRenderer,
+  ReflektBlocks,
+} from '../src/components/reflekt-block-renderer';
+import { RefFooter } from '../src/components/reflekt-footer';
+import { ReflektGlobalStyles } from '../src/components/reflekt-global-styles';
+import {
+  ReflektListItem,
+  ReflektUnorderedList,
+} from '../src/components/reflekt-lists';
+import { ReflektNavbar } from '../src/components/reflekt-navbar';
+import { ReflektPage } from '../src/components/reflekt-page';
+import { ReflektQuoteBlock } from '../src/components/reflekt-quote-block';
+import { ReflektRenderElement } from '../src/components/reflekt-render-element';
+import { ReflektRenderRichtext } from '../src/components/reflekt-render-richtext';
+import { ReflektRichTextBlock } from '../src/components/reflekt-richtext-block';
+import { ReflektTag } from '../src/components/reflekt-tag';
+import { ReflektTitleBlock } from '../src/components/reflekt-title-block';
+import { ReflektArticleList } from '../src/components/teaser-layouts/reflekt-article-list';
+import { ReflektBaseTeaserSlots } from '../src/components/teaser-layouts/reflekt-base-teaser-slots';
+import { ReflektBaseTeaser } from '../src/components/teasers/reflekt-base-teaser';
 import theme from '../src/theme';
 
 setDefaultOptions({
@@ -47,20 +77,10 @@ z.setErrorMap(zodI18nMap);
 const Spacer = styled('div')`
   display: grid;
   align-items: flex-start;
-  grid-template-rows: min-content 1fr min-content;
+  grid-template-rows: min-content 1fr;
   gap: ${({ theme }) => theme.spacing(3)};
   min-height: 100vh;
-`;
-
-const MainSpacer = styled(Container)`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing(5)};
-
-  ${({ theme }) => css`
-    ${theme.breakpoints.up('md')} {
-      gap: ${theme.spacing(10)};
-    }
-  `}
+  overflow-x: hidden;
 `;
 
 const NavBar = styled(NavbarContainer)`
@@ -91,12 +111,40 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
-          elements={{ Link: NextWepublishLink }}
+          Page={ReflektPage}
+          Footer={RefFooter}
+          Navbar={ReflektNavbar}
+          ArticleList={ReflektArticleList}
+          Article={ReflektArticle}
+          Tag={ReflektTag}
+          elements={{
+            Link: NextWepublishLink,
+            UnorderedList: ReflektUnorderedList,
+            ListItem: ReflektListItem,
+          }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
+          richtext={{
+            RenderElement: ReflektRenderElement,
+            RenderRichtext: ReflektRenderRichtext,
+          }}
+          blocks={{
+            TeaserSlots:
+              ReflektBaseTeaserSlots as ComponentType<BuilderTeaserSlotsBlockProps>,
+            BaseTeaser: ReflektBaseTeaser,
+            Break: ReflektBaseBreakBlock,
+            FlexBlock: ReflektFlexBlock,
+            Quote: ReflektQuoteBlock,
+            Title: ReflektTitleBlock,
+            RichText: ReflektRichTextBlock,
+            Renderer:
+              ReflektBlockRenderer as ComponentType<BuilderBlockRendererProps>,
+            Blocks: ReflektBlocks,
+          }}
         >
           <ThemeProvider theme={theme}>
             <CssBaseline />
+            <ReflektGlobalStyles />
 
             <Head>
               <title key="title">{siteTitle}</title>
@@ -169,7 +217,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 
             <Spacer>
               <NavBar
-                categorySlugs={[['categories', 'about-us']]}
+                categorySlugs={[['main']]}
                 slug="main"
                 headerSlug="header"
                 iconSlug="icons"
@@ -183,7 +231,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 
               <FooterContainer
                 slug="footer"
-                categorySlugs={[['categories', 'about-us']]}
+                categorySlugs={[['main']]}
                 iconSlug="icons"
               />
             </Spacer>

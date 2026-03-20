@@ -4,7 +4,7 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import styled from '@emotion/styled';
 import { useKeenSlider } from 'keen-slider/react';
 import { allPass, anyPass } from 'ramda';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   BlockContent,
@@ -183,6 +183,13 @@ export const TeaserSlider = ({
   const [ref, sliderRef] = useKeenSlider({
     mode: 'free-snap',
     loop: true,
+    drag: props.dragDisabled ? false : true,
+    detailsChanged: s => {
+      s.slides.forEach(slide => {
+        slide.style.opacity = '1';
+        slide.style.visibility = 'visible';
+      });
+    },
     slides: {
       origin: 'center',
       perView: slidesPerView,
@@ -195,6 +202,11 @@ export const TeaserSlider = ({
       setLoaded(true);
     },
   });
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => sliderRef.current?.update());
+    return () => cancelAnimationFrame(frame);
+  }, [sliderRef]);
 
   return (
     !!filledTeasers.length && (

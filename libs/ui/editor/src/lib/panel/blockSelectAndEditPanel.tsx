@@ -12,6 +12,8 @@ export type AlllowedBlockTypes = {
 
 export const allowedBlockTypes: AlllowedBlockTypes = {
   [EditorBlockType.TeaserSlots]: true,
+  [EditorBlockType.Image]: true,
+  [EditorBlockType.RichText]: true,
 };
 
 export function BlockSelectAndEditPanel({

@@ -53,6 +53,7 @@ import {
   FlexBlockValue,
   FlexBlockWithAlignment,
 } from './types';
+import { toPlaintext } from '@wepublish/richtext';
 
 const IconButton = styled(RIconButton)`
   margin: 10px;
@@ -231,20 +232,51 @@ export function FlexItem({
 
 const ContentForFlexBlockWrapper = styled('div')`
   width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
   align-self: end;
   padding: 0.25rem;
   background-color: rgba(0, 0, 0, 0.4);
   min-height: 2.5rem;
   color: white;
+
+  white-space: pre-line;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  word-wrap: break-word;
 `;
 
-export const ContentForFlexBlock = ({ block }: { block: BlockValue }) => {
-  const { value } = block;
+const getContentHintForFlexBlockNestedBlock = (block: BlockListValue) => {
+  if (!block) return '';
+
+  if (block.type === 'TeaserSlots') {
+    return block.value?.title || 'Teaser Slots';
+  }
+  if (block.type === 'Image') {
+    return block.value?.image?.filename || 'Image';
+  }
+  if (block.type === 'RichText') {
+    //return block.value?.richText[0].children[0]?.text || 'Rich Text';
+    const text = toPlaintext(block.value?.richText);
+    if (!text) {
+      return 'Rich Text';
+    }
+    if (text.length > 25) {
+      return text.slice(0, 25) + '...';
+    }
+    return text;
+  }
+
+  return 'unknown block value';
+};
+
+export const ContentForFlexBlock = ({ block }: { block: BlockListValue }) => {
   return (
     <ContentForFlexBlockWrapper>
-      {(value && (value as { title: string }).title) ?? ''}
+      {getContentHintForFlexBlockNestedBlock(block)}
     </ContentForFlexBlockWrapper>
   );
 };

@@ -5,14 +5,15 @@ import { forwardRef } from 'react';
 
 export const NextWepublishLink = forwardRef<
   HTMLAnchorElement,
-  BuilderLinkProps
->(function NextWepublishLink({ children, href, ...props }, ref) {
+  BuilderLinkProps & { variant?: string }
+>(function NextWepublishLink({ children, href, variant, ...props }, ref) {
   return (
     <BuilderLink
       {...props}
       ref={ref}
       component={NextLink}
       href={href ?? ''}
+      variant={variant}
     >
       {children}
     </BuilderLink>

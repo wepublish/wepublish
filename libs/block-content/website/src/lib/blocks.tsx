@@ -441,7 +441,12 @@ export const BlockRenderer = memo(
         ],
         [
           isFlexBlock,
-          block => <blocks.FlexBlock {...(block as BuilderFlexBlockProps)} />,
+          block => (
+            <blocks.FlexBlock
+              {...(block as BuilderFlexBlockProps)}
+              className={className}
+            />
+          ),
         ],
       ])(block)
     );
