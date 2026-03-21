@@ -120,7 +120,7 @@ export const PanelColumn = styled('div')`
 
 export const FilterBar = styled('div')`
   display: grid;
-  grid-template-columns: 1fr 160px 160px 160px;
+  grid-template-columns: 1fr 200px 190px 190px;
   gap: ${({ theme }) => theme.spacing(1.5)};
   padding: ${({ theme }) => theme.spacing(1.5)} 0;
   position: sticky;
