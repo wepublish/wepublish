@@ -13,8 +13,8 @@ import { Link } from 'react-router-dom';
 import { Button, Col, Grid, Panel as RPanel, Row } from 'rsuite';
 
 import { AudienceDashboard } from '../audience/audience-dashboard';
-import { ExternalAppsDashboard } from './externalAppsDashboard';
 import NetworkContentDashboard from '../networkContent/networkContentDashboard';
+import { ExternalAppsDashboard } from './externalAppsDashboard';
 
 const StyledGrid = styled(Grid)`
   width: 100%;

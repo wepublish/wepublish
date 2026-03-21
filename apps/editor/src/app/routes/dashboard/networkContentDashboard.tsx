@@ -4,11 +4,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import type {
-  ArticleToImport,
-  WepOneClient,
-  ImportOptions,
-} from '../networkContent/networkContent.types';
 import {
   usePeerArticles,
   usePeerMatching,
@@ -18,6 +13,11 @@ import {
   FeedList,
   ScrollContainer,
 } from '../networkContent/networkContent.styles';
+import type {
+  ArticleToImport,
+  ImportOptions,
+  WepOneClient,
+} from '../networkContent/networkContent.types';
 import { NetworkContentArticleItem } from '../networkContent/networkContentArticleItem';
 import { NetworkContentImportDialog } from '../networkContent/networkContentImportDialog';
 import { NetworkContentPeerInfoDialog } from '../networkContent/networkContentPeerInfoDialog';

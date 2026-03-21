@@ -2,8 +2,6 @@ import { IconButton, Tooltip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { MdDownload, MdLink } from 'react-icons/md';
 
-import type { PeerArticle, PeerMatch } from './networkContent.types';
-import { formatDate } from './networkContent.utils';
 import {
   ActionColumn,
   ArticleImage,
@@ -16,6 +14,8 @@ import {
   MetaLine,
   PublisherName,
 } from './networkContent.styles';
+import type { PeerArticle, PeerMatch } from './networkContent.types';
+import { formatDate } from './networkContent.utils';
 
 interface NetworkContentArticleItemProps {
   article: PeerArticle;

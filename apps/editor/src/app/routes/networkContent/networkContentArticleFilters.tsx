@@ -7,15 +7,15 @@ import {
   Select,
   TextField,
 } from '@mui/material';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { MdClear } from 'react-icons/md';
 
-import type { ArticleFilterParams, WepOneClient } from './networkContent.types';
 import { FilterBar } from './networkContent.styles';
+import type { ArticleFilterParams, WepOneClient } from './networkContent.types';
 
 interface NetworkContentArticleFiltersProps {
   filters: ArticleFilterParams;

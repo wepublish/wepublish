@@ -1,17 +1,11 @@
 import { CircularProgress, IconButton, Typography } from '@mui/material';
 import { useImportPeerArticleMutation } from '@wepublish/editor/api';
+import { ListViewContainer, ListViewHeader } from '@wepublish/ui/editor';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import { ListViewContainer, ListViewHeader } from '@wepublish/ui/editor';
 
-import type {
-  ArticleFilterParams,
-  ArticleToImport,
-  WepOneClient,
-  ImportOptions,
-} from './networkContent.types';
 import {
   ARTICLES_PER_PAGE,
   useAllNetworkClients,
@@ -27,11 +21,17 @@ import {
   PanelColumn,
   SectionTitle,
 } from './networkContent.styles';
+import type {
+  ArticleFilterParams,
+  ArticleToImport,
+  ImportOptions,
+  WepOneClient,
+} from './networkContent.types';
 import { NetworkContentArticleFilters } from './networkContentArticleFilters';
 import { NetworkContentArticleItem } from './networkContentArticleItem';
 import { NetworkContentImportDialog } from './networkContentImportDialog';
-import { NetworkContentPeerInfoDialog } from './networkContentPeerInfoDialog';
 import { NetworkMediaList } from './networkContentMediaList';
+import { NetworkContentPeerInfoDialog } from './networkContentPeerInfoDialog';
 
 const DEFAULT_IMPORT_OPTIONS: ImportOptions = {
   importAuthors: true,

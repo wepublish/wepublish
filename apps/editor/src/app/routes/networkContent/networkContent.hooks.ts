@@ -3,10 +3,10 @@ import { useEffect, useMemo, useState } from 'react';
 
 import type {
   ArticleFilterParams,
-  WepOneClient,
-  WepOneResponse,
   PeerArticle,
   PeerMatch,
+  WepOneClient,
+  WepOneResponse,
 } from './networkContent.types';
 import { normalizeUrl } from './networkContent.utils';
 

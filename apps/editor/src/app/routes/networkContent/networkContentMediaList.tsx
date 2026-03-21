@@ -2,11 +2,7 @@ import { Chip, CircularProgress, IconButton, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { MdChevronLeft, MdChevronRight, MdLink } from 'react-icons/md';
 
-import type {
-  WepOneClient,
-  WepOneUser,
-  PeerMatch,
-} from './networkContent.types';
+import { CLIENTS_PER_PAGE } from './networkContent.hooks';
 import {
   CenteredContainer,
   ClientCard,
@@ -15,7 +11,11 @@ import {
   PaginationBar,
   SectionTitle,
 } from './networkContent.styles';
-import { CLIENTS_PER_PAGE } from './networkContent.hooks';
+import type {
+  PeerMatch,
+  WepOneClient,
+  WepOneUser,
+} from './networkContent.types';
 
 function isInternalUser(user: WepOneUser): boolean {
   return !!user?.email && user?.email.endsWith('@wepublish.ch');
