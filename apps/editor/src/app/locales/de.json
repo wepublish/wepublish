@@ -587,7 +587,8 @@
       "yearlySubscribers": "Neue Abonnent:innen im letzten Jahr",
       "audience": "Audience",
       "goToAudienceDashboard": "Zum Audience Dashboard",
-      "externalApps": "We.Publish Apps"
+      "externalApps": "We.Publish Apps",
+      "networkContent": "We.Publish Netzwerk"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -1841,6 +1842,11 @@
       "deleteConfirmationTitle": "Externe App löschen",
       "deleteConfirmationText": "Möchten Sie diese externe App wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
       "icon": "Icon URL"
+    },
+    "networkContentDashboard": {
+      "errorLoading": "Netzwerkartikel konnten nicht geladen werden.",
+      "noArticles": "Keine Artikel verfügbar.",
+      "readMore": "Artikel lesen"
     }
   }
 }

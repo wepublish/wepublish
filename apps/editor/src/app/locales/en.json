@@ -587,7 +587,8 @@
       "yearlySubscribers": "New subscribers over past year",
       "audience": "Audience",
       "goToAudienceDashboard": "Go to Audience Dashboard",
-      "externalApps": "We.Publish Apps"
+      "externalApps": "We.Publish Apps",
+      "networkContent": "We.Publish Network"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -1902,6 +1903,11 @@
       "deleteConfirmationTitle": "Delete External App",
       "deleteConfirmationText": "Are you sure you want to delete this external app? This action cannot be undone.",
       "icon": "Icon URL"
+    },
+    "networkContentDashboard": {
+      "errorLoading": "Failed to load network articles.",
+      "noArticles": "No articles available.",
+      "readMore": "Read article"
     }
   }
 }

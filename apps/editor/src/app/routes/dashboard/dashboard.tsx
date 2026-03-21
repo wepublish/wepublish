@@ -14,6 +14,7 @@ import { Button, Col, Grid, Panel as RPanel, Row } from 'rsuite';
 
 import { AudienceDashboard } from '../audience/audience-dashboard';
 import { ExternalAppsDashboard } from './externalAppsDashboard';
+import NetworkContentDashboard from './networkContentDashboard';
 
 const StyledGrid = styled(Grid)`
   width: 100%;
@@ -37,20 +38,6 @@ export function Dashboard() {
               </RPanel>
             </Col>
 
-            <Col xs={24}>
-              <RPanel
-                header={<h2>{t('dashboard.activity')}</h2>}
-                bordered
-              >
-                <ActivityFeed />
-              </RPanel>
-            </Col>
-          </Row>
-        </Col>
-
-        {/* right column stack */}
-        <Col xs={12}>
-          <Row gutter={12}>
             <Col xs={24}>
               <RPanel
                 header={
@@ -77,6 +64,29 @@ export function Dashboard() {
                   hideFilter
                   initialDateRange="lastWeek"
                 />
+              </RPanel>
+            </Col>
+
+            <Col xs={24}>
+              <RPanel
+                header={<h2>{t('dashboard.activity')}</h2>}
+                bordered
+              >
+                <ActivityFeed />
+              </RPanel>
+            </Col>
+          </Row>
+        </Col>
+
+        {/* right column stack */}
+        <Col xs={12}>
+          <Row gutter={12}>
+            <Col xs={24}>
+              <RPanel
+                header={<h2>{t('dashboard.networkContent')}</h2>}
+                bordered
+              >
+                <NetworkContentDashboard />
               </RPanel>
             </Col>
 

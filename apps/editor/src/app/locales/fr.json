@@ -534,7 +534,8 @@
       "yearlySubscribers": "Nouveaux abonné:es au cours de l'année écoulée",
       "audience": "Audience",
       "goToAudienceDashboard": "Audience Dashboard",
-      "externalApps": "We.Publish Apps"
+      "externalApps": "We.Publish Apps",
+      "networkContent": "Réseau We.Publish"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -1728,6 +1729,11 @@
       "deleteConfirmationTitle": "Supprimer l'application externe",
       "deleteConfirmationText": "Êtes-vous sûr de vouloir supprimer cette application externe ? Cette action est irréversible.",
       "icon": "URL de l'icône"
+    },
+    "networkContentDashboard": {
+      "errorLoading": "Impossible de charger les articles du réseau.",
+      "noArticles": "Aucun article disponible.",
+      "readMore": "Lire l'article"
     }
   }
 }
