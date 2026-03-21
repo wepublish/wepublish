@@ -9,7 +9,11 @@ import type {
   DirectusClient,
   ImportOptions,
 } from './networkContent.types';
-import { usePeerArticles, usePeerMatching } from './networkContent.hooks';
+import {
+  useNetworkClients,
+  usePeerArticles,
+  usePeerMatching,
+} from './networkContent.hooks';
 import {
   CenteredContainer,
   FeedList,
@@ -31,6 +35,7 @@ export default function NetworkContentDashboard() {
 
   const { articles, loading: articlesLoading, error } = usePeerArticles();
   const { findPeerMatch, loading: peersLoading } = usePeerMatching();
+  const { clients } = useNetworkClients();
 
   const [articleToImport, setArticleToImport] = useState<ArticleToImport>();
   const [importOptions, setImportOptions] = useState<ImportOptions>(
@@ -58,6 +63,24 @@ export default function NetworkContentDashboard() {
         options: importOptions,
       },
     });
+  };
+
+  const handleShowPeerInfo = (clientApiUrl: string | null) => {
+    const match = clients.find(
+      c =>
+        c.apiUrl &&
+        clientApiUrl &&
+        c.apiUrl.trim().toLowerCase() === clientApiUrl.trim().toLowerCase()
+    );
+    if (match) {
+      setPeerInfoClient(match);
+    } else {
+      setPeerInfoClient({
+        name: '',
+        apiUrl: clientApiUrl,
+        allowedUsers: [],
+      });
+    }
   };
 
   const loading = articlesLoading || peersLoading;
@@ -109,11 +132,7 @@ export default function NetworkContentDashboard() {
                 setArticleToImport({ peerId, articleId })
               }
               onShowPeerInfo={() =>
-                setPeerInfoClient({
-                  name: article.client?.name || '',
-                  apiUrl: article.client?.apiUrl ?? null,
-                  allowedUsers: [],
-                })
+                handleShowPeerInfo(article.client?.apiUrl ?? null)
               }
             />
           ))}

@@ -107,7 +107,7 @@ export function NetworkContentArticleFilters({
         onChange={d => updateFilter({ dateFrom: toIso(d) })}
         onClean={() => updateFilter({ dateFrom: '' })}
         cleanable
-        size="sm"
+        size="md"
         style={{ width: '100%' }}
       />
 
