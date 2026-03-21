@@ -1733,7 +1733,18 @@
     "networkContentDashboard": {
       "errorLoading": "Impossible de charger les articles du réseau.",
       "noArticles": "Aucun article disponible.",
-      "readMore": "Lire l'article"
+      "readMore": "Lire l'article",
+      "importFrom": "Importer l'article depuis {{peer}}",
+      "noPeer": "Pas de peering actif – contactez l'éditeur pour établir un peering.",
+      "importTitle": "Importer l'article",
+      "importAuthors": "Importer les auteurs",
+      "importTags": "Importer les tags",
+      "importImages": "Importer les images",
+      "importConfirm": "Importer",
+      "cancel": "Annuler",
+      "close": "Fermer",
+      "peerInfoTitle": "Peering non disponible",
+      "peerInfoText": "Cet éditeur n'est pas encore connecté en tant que peer. Pour importer des articles, une connexion de peering active est nécessaire. Veuillez contacter l'éditeur pour établir une relation de peering, ou configurez-la sous Paramètres > Peering."
     }
   }
 }

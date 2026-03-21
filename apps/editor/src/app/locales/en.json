@@ -1907,7 +1907,18 @@
     "networkContentDashboard": {
       "errorLoading": "Failed to load network articles.",
       "noArticles": "No articles available.",
-      "readMore": "Read article"
+      "readMore": "Read article",
+      "importFrom": "Import article from {{peer}}",
+      "noPeer": "No active peering – contact the publisher to set up peering.",
+      "importTitle": "Import article",
+      "importAuthors": "Import authors",
+      "importTags": "Import tags",
+      "importImages": "Import content images",
+      "importConfirm": "Import",
+      "cancel": "Cancel",
+      "close": "Close",
+      "peerInfoTitle": "Peering not available",
+      "peerInfoText": "This publisher is not yet connected as a peer. To import articles, an active peering connection is required. Please contact the publisher to establish a peering relationship, or set it up under Settings > Peering."
     }
   }
 }

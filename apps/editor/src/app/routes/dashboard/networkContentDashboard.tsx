@@ -1,31 +1,75 @@
 import styled from '@emotion/styled';
-import { Box, Card, Chip, CircularProgress, Typography } from '@mui/material';
+import {
+  Button,
+  Checkbox,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  FormGroup,
+  IconButton,
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import {
+  useImportPeerArticleMutation,
+  usePeerListQuery,
+} from '@wepublish/editor/api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { format, parseISO } from 'date-fns';
-import { MdCalendarToday, MdLanguage, MdOpenInNew } from 'react-icons/md';
+import { MdDownload, MdInfoOutline } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 
 // ---- Types ----
 
 interface PeerArticle {
   id: string;
   status: string;
+  source_id: string;
   source_publishedAt: string;
   source_url: string;
   source_title: string;
   source_slug: string;
   source_imageUrl: string | null;
   source_lead: string;
-  client: string;
+  client: {
+    apiUrl: string | null;
+  };
 }
 
 interface DirectusResponse {
   data: PeerArticle[];
 }
 
+interface PeerMatch {
+  peerId: string;
+  peerName: string;
+}
+
 // ---- Custom Hook ----
 
 const DIRECTUS_URL = 'http://0.0.0.0:8055';
+
+const PEER_ARTICLES_PARAMS = new URLSearchParams({
+  'filter[status][_eq]': 'published',
+  sort: '-source_publishedAt',
+  limit: '20',
+  'fields[]': [
+    'id',
+    'status',
+    'source_id',
+    'source_publishedAt',
+    'source_url',
+    'source_title',
+    'source_slug',
+    'source_imageUrl',
+    'source_lead',
+    'client.apiUrl',
+  ].join(','),
+});
 
 function usePeerArticles() {
   const [articles, setArticles] = useState<PeerArticle[]>([]);
@@ -37,13 +81,8 @@ function usePeerArticles() {
 
     const fetchData = async () => {
       try {
-        const params = new URLSearchParams({
-          'filter[status][_eq]': 'published',
-          sort: '-source_publishedAt',
-          limit: '20',
-        });
         const response = await fetch(
-          `${DIRECTUS_URL}/items/PeerArticles?${params}`
+          `${DIRECTUS_URL}/items/PeerArticles?${PEER_ARTICLES_PARAMS}`
         );
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);
@@ -75,6 +114,10 @@ function usePeerArticles() {
 
 // ---- Helpers ----
 
+function normalizeUrl(url: string): string {
+  return url.trim().replace(/\/+$/, '').toLowerCase();
+}
+
 function getPublisherName(url: string): string {
   try {
     return new URL(url).hostname.replace('www.', '');
@@ -93,198 +136,185 @@ function formatDate(dateStr: string): string {
 
 // ---- Styled Components ----
 
-const FeedContainer = styled(Box)`
+const ScrollContainer = styled('div')`
+  max-height: 600px;
+  overflow-y: auto;
+`;
+
+const FeedList = styled('div')`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing(2)};
+`;
+
+const ArticleRow = styled('div')`
+  display: grid;
+  grid-template-columns: 140px 1fr 120px;
+  gap: ${({ theme }) => theme.spacing(1.5)};
+  padding: ${({ theme }) => theme.spacing(1.5)} 0;
+  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
 `;
 
 const ArticleLink = styled('a')`
   text-decoration: none;
+  color: inherit;
+  display: contents;
+
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: none;
+  }
+`;
+
+const ArticleImage = styled('img')`
+  width: 140px;
+  height: 90px;
+  object-fit: cover;
   display: block;
-
-  &:hover .article-card {
-    box-shadow: ${({ theme }) => theme.shadows[8]};
-    transform: translateY(-2px);
-  }
+  border-radius: 2px;
 `;
 
-const ArticleCard = styled(Card, {
-  shouldForwardProp: prop => prop !== 'reversed',
-})<{ reversed?: boolean }>`
-  display: flex;
-  flex-direction: ${({ reversed }) => (reversed ? 'row-reverse' : 'row')};
-  overflow: hidden;
-  transition:
-    box-shadow 0.25s ease,
-    transform 0.25s ease;
-  min-height: 220px;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
+const ImagePlaceholder = styled('div')`
+  width: 140px;
+  height: 90px;
+  background: ${({ theme }) => theme.palette.action.disabledBackground};
+  border-radius: 2px;
 `;
 
-const ImagePane = styled(Box)<{ imageurl: string }>`
-  flex: 0 0 42%;
-  background-image: url('${({ imageurl }) => imageurl}');
-  background-size: cover;
-  background-position: center;
-  position: relative;
-
-  @media (max-width: 768px) {
-    flex: 0 0 auto;
-    min-height: 180px;
-  }
-`;
-
-const ImagePlaceholder = styled(Box)`
-  flex: 0 0 42%;
-  background: ${({ theme }) => theme.palette.action.hover};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 220px;
-
-  @media (max-width: 768px) {
-    flex: 0 0 auto;
-    min-height: 140px;
-  }
-`;
-
-const ContentPane = styled(Box)`
+const ContentArea = styled('div')`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  flex: 1;
-  padding: ${({ theme }) => theme.spacing(3)};
+  justify-content: center;
   min-width: 0;
 `;
 
 const ArticleTitle = styled(Typography)`
-  font-weight: 700;
-  line-height: 1.35;
-  margin-bottom: ${({ theme }) => theme.spacing(1)};
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1.3;
   color: ${({ theme }) => theme.palette.text.primary};
-` as typeof Typography;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+`;
 
 const ArticleLead = styled(Typography)`
   color: ${({ theme }) => theme.palette.text.secondary};
+  font-size: 0.78rem;
+  line-height: 1.4;
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  line-height: 1.6;
-` as typeof Typography;
-
-const ReadMoreRow = styled(Box)`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing(0.5)};
-  margin-top: ${({ theme }) => theme.spacing(1.5)};
-  color: ${({ theme }) => theme.palette.primary.main};
-  font-size: 0.82rem;
-  font-weight: 600;
+  margin-top: ${({ theme }) => theme.spacing(0.25)};
 `;
 
-const MetaRow = styled(Box)`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing(1)};
-  margin-top: ${({ theme }) => theme.spacing(2)};
-  flex-wrap: wrap;
-`;
-
-const PublisherChip = styled(Chip)`
+const MetaLine = styled(Typography)`
   font-size: 0.7rem;
-  height: 22px;
-  background: ${({ theme }) => theme.palette.primary.main};
-  color: ${({ theme }) => theme.palette.primary.contrastText};
-  font-weight: 600;
+  color: ${({ theme }) => theme.palette.text.disabled};
+  margin-top: ${({ theme }) => theme.spacing(0.5)};
 `;
 
-const DateLabel = styled(Typography)`
-  font-size: 0.75rem;
-  color: ${({ theme }) => theme.palette.text.disabled};
+const ActionColumn = styled('div')`
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing(0.4)};
-` as typeof Typography;
+  justify-content: center;
+  gap: ${({ theme }) => theme.spacing(0.5)};
+`;
 
-const CenteredBox = styled(Box)`
+const PublisherName = styled(Typography)`
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.palette.text.secondary};
+  text-align: center;
+  line-height: 1.2;
+`;
+
+const CenteredContainer = styled('div')`
   display: flex;
   justify-content: center;
-  padding: ${({ theme }) => theme.spacing(6)};
+  padding: ${({ theme }) => theme.spacing(4)};
 `;
 
-const ErrorBox = styled(Box)`
-  padding: ${({ theme }) => theme.spacing(3)};
-  color: ${({ theme }) => theme.palette.error.main};
-  text-align: center;
-`;
-
-// ---- Article Card Component ----
+// ---- Article Item ----
 
 interface ArticleItemProps {
   article: PeerArticle;
-  reversed: boolean;
+  peerMatch: PeerMatch | null;
+  onImport: (peerId: string, articleId: string) => void;
+  onShowPeerInfo: () => void;
 }
 
-function ArticleItem({ article, reversed }: ArticleItemProps) {
+function ArticleItem({
+  article,
+  peerMatch,
+  onImport,
+  onShowPeerInfo,
+}: ArticleItemProps) {
   const { t } = useTranslation();
   const publisher = getPublisherName(article.source_url);
   const date = formatDate(article.source_publishedAt);
 
   return (
-    <ArticleLink
-      href={article.source_url}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <ArticleCard
-        className="article-card"
-        elevation={2}
-        reversed={reversed}
+    <ArticleRow>
+      <ArticleLink
+        href={article.source_url}
+        target="_blank"
+        rel="noopener noreferrer"
       >
         {article.source_imageUrl ?
-          <ImagePane imageurl={article.source_imageUrl} />
-        : <ImagePlaceholder>
-            <MdLanguage
-              size={48}
-              style={{ opacity: 0.25 }}
-            />
-          </ImagePlaceholder>
-        }
+          <ArticleImage
+            src={article.source_imageUrl}
+            alt=""
+            loading="lazy"
+          />
+        : <ImagePlaceholder />}
+      </ArticleLink>
 
-        <ContentPane>
-          <Box>
-            <ArticleTitle variant="h6">{article.source_title}</ArticleTitle>
+      <ArticleLink
+        href={article.source_url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <ContentArea>
+          <ArticleTitle>{article.source_title}</ArticleTitle>
+          {article.source_lead && (
+            <ArticleLead>{article.source_lead}</ArticleLead>
+          )}
+          <MetaLine>{date}</MetaLine>
+        </ContentArea>
+      </ArticleLink>
 
-            {article.source_lead && (
-              <ArticleLead variant="body2">{article.source_lead}</ArticleLead>
-            )}
-
-            <ReadMoreRow>
-              {t('networkContentDashboard.readMore')}
-              <MdOpenInNew size={13} />
-            </ReadMoreRow>
-          </Box>
-
-          <MetaRow>
-            <PublisherChip
-              label={publisher}
+      <ActionColumn>
+        <PublisherName>{publisher}</PublisherName>
+        {peerMatch ?
+          <Tooltip
+            title={t('networkContentDashboard.importFrom', {
+              peer: peerMatch.peerName,
+            })}
+          >
+            <IconButton
               size="small"
-            />
-            {date && (
-              <DateLabel component="span">
-                <MdCalendarToday size={12} />
-                {date}
-              </DateLabel>
-            )}
-          </MetaRow>
-        </ContentPane>
-      </ArticleCard>
-    </ArticleLink>
+              color="primary"
+              onClick={() => onImport(peerMatch.peerId, article.source_id)}
+            >
+              <MdDownload />
+            </IconButton>
+          </Tooltip>
+        : <Tooltip title={t('networkContentDashboard.noPeer')}>
+            <IconButton
+              size="small"
+              color="default"
+              onClick={onShowPeerInfo}
+            >
+              <MdInfoOutline />
+            </IconButton>
+          </Tooltip>
+        }
+      </ActionColumn>
+    </ArticleRow>
   );
 }
 
@@ -292,46 +322,194 @@ function ArticleItem({ article, reversed }: ArticleItemProps) {
 
 export default function NetworkContentDashboard() {
   const { t } = useTranslation();
-  const { articles, loading, error } = usePeerArticles();
+  const navigate = useNavigate();
+  const { articles, loading: articlesLoading, error } = usePeerArticles();
+  const { data: peerData, loading: peersLoading } = usePeerListQuery({
+    errorPolicy: 'ignore',
+  });
+
+  const [articleToImport, setArticleToImport] = useState<{
+    peerId: string;
+    articleId: string;
+  }>();
+  const [importOptions, setImportOptions] = useState({
+    importAuthors: true,
+    importTags: true,
+    importContentImages: true,
+  });
+  const [peerInfoOpen, setPeerInfoOpen] = useState(false);
+
+  const [importPeerArticle, { loading: importing }] =
+    useImportPeerArticleMutation({
+      onCompleted(data) {
+        setArticleToImport(undefined);
+        navigate(`/articles/edit/${data.importPeerArticle.id}`);
+      },
+    });
+
+  const peers = peerData?.peers ?? [];
+
+  const peerByApiUrl = new Map<string, PeerMatch>();
+  for (const peer of peers) {
+    if (!peer.isDisabled && peer.hostURL) {
+      peerByApiUrl.set(normalizeUrl(peer.hostURL), {
+        peerId: peer.id,
+        peerName: peer.name,
+      });
+    }
+  }
+
+  function findPeerMatch(clientApiUrl: string | null): PeerMatch | null {
+    if (!clientApiUrl) return null;
+    return peerByApiUrl.get(normalizeUrl(clientApiUrl)) ?? null;
+  }
+
+  const loading = articlesLoading || peersLoading;
 
   if (loading) {
     return (
-      <CenteredBox>
-        <CircularProgress />
-      </CenteredBox>
+      <CenteredContainer>
+        <CircularProgress size={24} />
+      </CenteredContainer>
     );
   }
 
   if (error) {
     return (
-      <ErrorBox>
-        <Typography>{t('networkContentDashboard.errorLoading')}</Typography>
-      </ErrorBox>
+      <CenteredContainer>
+        <Typography
+          color="error"
+          variant="body2"
+        >
+          {t('networkContentDashboard.errorLoading')}
+        </Typography>
+      </CenteredContainer>
     );
   }
 
   if (articles.length === 0) {
     return (
-      <Box
-        p={3}
-        textAlign="center"
-      >
-        <Typography color="textSecondary">
+      <CenteredContainer>
+        <Typography
+          color="textSecondary"
+          variant="body2"
+        >
           {t('networkContentDashboard.noArticles')}
         </Typography>
-      </Box>
+      </CenteredContainer>
     );
   }
 
   return (
-    <FeedContainer>
-      {articles.map((article, index) => (
-        <ArticleItem
-          key={article.id}
-          article={article}
-          reversed={index % 2 === 1}
-        />
-      ))}
-    </FeedContainer>
+    <>
+      <ScrollContainer>
+        <FeedList>
+          {articles.map(article => (
+            <ArticleItem
+              key={article.id}
+              article={article}
+              peerMatch={findPeerMatch(article.client?.apiUrl)}
+              onImport={(peerId, articleId) =>
+                setArticleToImport({ peerId, articleId })
+              }
+              onShowPeerInfo={() => setPeerInfoOpen(true)}
+            />
+          ))}
+        </FeedList>
+      </ScrollContainer>
+
+      {/* Import Dialog */}
+      <Dialog
+        open={!!articleToImport}
+        onClose={() => setArticleToImport(undefined)}
+      >
+        <DialogTitle>{t('networkContentDashboard.importTitle')}</DialogTitle>
+        <DialogContent>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={importOptions.importAuthors}
+                  onChange={(_, checked) =>
+                    setImportOptions(prev => ({
+                      ...prev,
+                      importAuthors: checked,
+                    }))
+                  }
+                />
+              }
+              label={t('networkContentDashboard.importAuthors')}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={importOptions.importTags}
+                  onChange={(_, checked) =>
+                    setImportOptions(prev => ({ ...prev, importTags: checked }))
+                  }
+                />
+              }
+              label={t('networkContentDashboard.importTags')}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={importOptions.importContentImages}
+                  onChange={(_, checked) =>
+                    setImportOptions(prev => ({
+                      ...prev,
+                      importContentImages: checked,
+                    }))
+                  }
+                />
+              }
+              label={t('networkContentDashboard.importImages')}
+            />
+          </FormGroup>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setArticleToImport(undefined)}
+            disabled={importing}
+          >
+            {t('networkContentDashboard.cancel')}
+          </Button>
+          <Button
+            variant="contained"
+            disabled={importing}
+            onClick={() => {
+              if (!articleToImport) return;
+              importPeerArticle({
+                variables: {
+                  peerId: articleToImport.peerId,
+                  articleId: articleToImport.articleId,
+                  options: importOptions,
+                },
+              });
+            }}
+          >
+            {t('networkContentDashboard.importConfirm')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Peer Info Dialog */}
+      <Dialog
+        open={peerInfoOpen}
+        onClose={() => setPeerInfoOpen(false)}
+      >
+        <DialogTitle>{t('networkContentDashboard.peerInfoTitle')}</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2">
+            {t('networkContentDashboard.peerInfoText')}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setPeerInfoOpen(false)}>
+            {t('networkContentDashboard.close')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
