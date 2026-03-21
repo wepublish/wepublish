@@ -7,10 +7,12 @@ import {
   Select,
   TextField,
 } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { MdClear } from 'react-icons/md';
-import { DatePicker } from 'rsuite';
 
 import type {
   ArticleFilterParams,
@@ -42,85 +44,93 @@ export function NetworkContentArticleFilters({
   };
 
   const toIso = (d: Date | null): string => {
-    if (!d) return '';
+    if (!d || isNaN(d.getTime())) return '';
     return format(d, 'yyyy-MM-dd');
   };
 
   return (
-    <FilterBar>
-      <TextField
-        size="small"
-        label={t('networkContentPage.searchLabel')}
-        value={filters.search}
-        onChange={e => updateFilter({ search: e.target.value })}
-        InputProps={{
-          endAdornment:
-            filters.search ?
-              <InputAdornment position="end">
-                <IconButton
-                  size="small"
-                  onClick={() => updateFilter({ search: '' })}
-                >
-                  <MdClear />
-                </IconButton>
-              </InputAdornment>
-            : undefined,
-        }}
-      />
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <FilterBar>
+        <TextField
+          size="small"
+          label={t('networkContentPage.searchLabel')}
+          value={filters.search}
+          onChange={e => updateFilter({ search: e.target.value })}
+          InputProps={{
+            endAdornment:
+              filters.search ?
+                <InputAdornment position="end">
+                  <IconButton
+                    size="small"
+                    onClick={() => updateFilter({ search: '' })}
+                  >
+                    <MdClear />
+                  </IconButton>
+                </InputAdornment>
+              : undefined,
+          }}
+        />
 
-      <FormControl size="small">
-        <InputLabel>{t('networkContentPage.mediaFilter')}</InputLabel>
-        <Select
-          value={filters.clientName}
-          label={t('networkContentPage.mediaFilter')}
-          onChange={e => updateFilter({ clientName: e.target.value })}
-          endAdornment={
-            filters.clientName ?
-              <InputAdornment position="end">
-                <IconButton
-                  size="small"
-                  sx={{ mr: 1 }}
-                  onClick={() => updateFilter({ clientName: '' })}
-                >
-                  <MdClear />
-                </IconButton>
-              </InputAdornment>
-            : undefined
-          }
-        >
-          <MenuItem value="">{t('networkContentPage.allMedia')}</MenuItem>
-          {clients.map(client => (
-            <MenuItem
-              key={client.name}
-              value={client.name}
-            >
-              {client.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+        <FormControl size="small">
+          <InputLabel>{t('networkContentPage.mediaFilter')}</InputLabel>
+          <Select
+            value={filters.clientName}
+            label={t('networkContentPage.mediaFilter')}
+            onChange={e => updateFilter({ clientName: e.target.value })}
+            endAdornment={
+              filters.clientName ?
+                <InputAdornment position="end">
+                  <IconButton
+                    size="small"
+                    sx={{ mr: 1 }}
+                    onClick={() => updateFilter({ clientName: '' })}
+                  >
+                    <MdClear />
+                  </IconButton>
+                </InputAdornment>
+              : undefined
+            }
+          >
+            <MenuItem value="">{t('networkContentPage.allMedia')}</MenuItem>
+            {clients.map(client => (
+              <MenuItem
+                key={client.name}
+                value={client.name}
+              >
+                {client.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
-      <DatePicker
-        format="dd.MM.yyyy"
-        placeholder={t('networkContentPage.dateFrom')}
-        value={toDate(filters.dateFrom)}
-        onChange={d => updateFilter({ dateFrom: toIso(d) })}
-        onClean={() => updateFilter({ dateFrom: '' })}
-        cleanable
-        size="md"
-        style={{ width: '100%' }}
-      />
+        <DatePicker
+          format="dd.MM.yyyy"
+          label={t('networkContentPage.dateFrom')}
+          value={toDate(filters.dateFrom)}
+          onChange={d => updateFilter({ dateFrom: toIso(d) })}
+          slotProps={{
+            textField: { size: 'small' },
+            field: {
+              clearable: true,
+              onClear: () => updateFilter({ dateFrom: '' }),
+            },
+          }}
+        />
 
-      <DatePicker
-        format="dd.MM.yyyy"
-        placeholder={t('networkContentPage.dateTo')}
-        value={toDate(filters.dateTo)}
-        onChange={d => updateFilter({ dateTo: toIso(d) })}
-        onClean={() => updateFilter({ dateTo: '' })}
-        cleanable
-        size="sm"
-        style={{ width: '100%' }}
-      />
-    </FilterBar>
+        <DatePicker
+          format="dd.MM.yyyy"
+          label={t('networkContentPage.dateTo')}
+          value={toDate(filters.dateTo)}
+          onChange={d => updateFilter({ dateTo: toIso(d) })}
+          slotProps={{
+            textField: { size: 'small' },
+            field: {
+              clearable: true,
+              onClear: () => updateFilter({ dateTo: '' }),
+            },
+          }}
+        />
+      </FilterBar>
+    </LocalizationProvider>
   );
 }

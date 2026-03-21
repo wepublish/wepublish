@@ -51,11 +51,17 @@ function buildArticleParams(
   }
 
   if (filters?.dateFrom) {
-    params.set('filter[source_publishedAt][_gte]', filters.dateFrom);
+    params.set(
+      'filter[source_publishedAt][_gte]',
+      `${filters.dateFrom}T00:00:00`
+    );
   }
 
   if (filters?.dateTo) {
-    params.set('filter[source_publishedAt][_lte]', filters.dateTo);
+    params.set(
+      'filter[source_publishedAt][_lte]',
+      `${filters.dateTo}T23:59:59`
+    );
   }
 
   return params;
