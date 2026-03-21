@@ -199,8 +199,8 @@ export class MailchimpSyncService {
 
       if (
         existingContact &&
-        this.shallowEqual(existingContact.merge_fields, mergeFields) &&
-        this.shallowEqual(existingContact.interests, interests)
+        this.hasDesiredValues(existingContact.merge_fields, mergeFields) &&
+        this.hasDesiredValues(existingContact.interests, interests)
       ) {
         skippedCount++;
         continue;
@@ -527,13 +527,15 @@ export class MailchimpSyncService {
     }
   }
 
-  private shallowEqual(a: any, b: any): boolean {
-    if (!a || !b) return false;
-    for (const key of Object.keys(a)) {
-      if (a[key] !== b[key]) return false;
-    }
-    for (const key of Object.keys(b)) {
-      if (b[key] !== a[key]) return false;
+  /**
+   * Check if the existing Mailchimp contact already has the desired values.
+   * Only compares keys present in `desired` (our mapped fields),
+   * ignoring extra fields returned by Mailchimp.
+   */
+  private hasDesiredValues(existing: any, desired: any): boolean {
+    if (!existing || !desired) return false;
+    for (const key of Object.keys(desired)) {
+      if (existing[key] !== desired[key]) return false;
     }
     return true;
   }

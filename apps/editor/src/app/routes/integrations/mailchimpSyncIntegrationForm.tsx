@@ -1,5 +1,13 @@
-import { gql, useMutation, useQuery } from '@apollo/client';
 import styled from '@emotion/styled';
+import {
+  DryRunMailchimpSyncMutation,
+  SyncProviderSettingsDocument,
+  SyncProviderSettingsQuery,
+  useDryRunMailchimpSyncMutation,
+  useSyncProviderSettingsQuery,
+  useTriggerMailchimpSyncMutation,
+  useUpdateSyncProviderSettingMutation,
+} from '@wepublish/editor/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Alert,
@@ -20,87 +28,6 @@ import { Checkbox, Form, Input, Loader, Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
 import mailChimpLogo from './assets/mailchimp.webp';
-
-const SyncProviderSettingsDocument = gql`
-  query SyncProviderSettings {
-    syncProviderSettings {
-      id
-      createdAt
-      modifiedAt
-      lastLoadedAt
-      type
-      name
-      enabled
-      mailchimp_listId
-      mailchimp_mergeFieldMappings
-      mailchimp_interestGroupMappings
-      mailchimp_defaultInterestGroupIds
-      lastSyncAt
-      lastSyncError
-    }
-  }
-`;
-
-const UpdateSyncProviderSettingDocument = gql`
-  mutation UpdateSyncProviderSetting(
-    $id: String!
-    $name: String
-    $enabled: Boolean
-    $mailchimp_apiKey: String
-    $mailchimp_listId: String
-    $mailchimp_mergeFieldMappings: [JSONObject!]
-    $mailchimp_interestGroupMappings: [JSONObject!]
-    $mailchimp_defaultInterestGroupIds: [String!]
-  ) {
-    updateSyncProviderSetting(
-      id: $id
-      name: $name
-      enabled: $enabled
-      mailchimp_apiKey: $mailchimp_apiKey
-      mailchimp_listId: $mailchimp_listId
-      mailchimp_mergeFieldMappings: $mailchimp_mergeFieldMappings
-      mailchimp_interestGroupMappings: $mailchimp_interestGroupMappings
-      mailchimp_defaultInterestGroupIds: $mailchimp_defaultInterestGroupIds
-    ) {
-      id
-      createdAt
-      modifiedAt
-      lastLoadedAt
-      type
-      name
-      enabled
-      mailchimp_listId
-      mailchimp_mergeFieldMappings
-      mailchimp_interestGroupMappings
-      mailchimp_defaultInterestGroupIds
-      lastSyncAt
-      lastSyncError
-    }
-  }
-`;
-
-const TriggerMailchimpSyncDocument = gql`
-  mutation TriggerMailchimpSync($id: String!) {
-    triggerMailchimpSync(id: $id)
-  }
-`;
-
-const DryRunMailchimpSyncDocument = gql`
-  mutation DryRunMailchimpSync($id: String!) {
-    dryRunMailchimpSync(id: $id) {
-      updatedCount
-      skippedCount
-      changes {
-        email
-        isNew
-        mergeFields
-        interests
-        previousMergeFields
-        previousInterests
-      }
-    }
-  }
-`;
 
 const mergeFieldMappingSchema = z.object({
   tag: z.string().min(1),
@@ -163,9 +90,12 @@ const SyncStatusWrapper = styled.div`
   margin-top: 12px;
 `;
 
+type SyncProviderSetting =
+  SyncProviderSettingsQuery['syncProviderSettings'][number];
+
 export function MailchimpSyncIntegrationForm() {
   const { t } = useTranslation();
-  const { data, loading, error } = useQuery(SyncProviderSettingsDocument);
+  const { data, loading, error } = useSyncProviderSettingsQuery();
 
   if (loading) return <Loader center />;
   if (error) return <Message type="error">{error.message}</Message>;
@@ -179,7 +109,7 @@ export function MailchimpSyncIntegrationForm() {
 
   return (
     <>
-      {settings.map((setting: any) => (
+      {settings.map(setting => (
         <SyncProviderSettingCard
           key={setting.id}
           setting={setting}
@@ -189,20 +119,7 @@ export function MailchimpSyncIntegrationForm() {
   );
 }
 
-interface DryRunChange {
-  email: string;
-  isNew: boolean;
-  mergeFields: Record<string, string>;
-  interests: Record<string, boolean>;
-  previousMergeFields: Record<string, string> | null;
-  previousInterests: Record<string, boolean> | null;
-}
-
-interface DryRunResultData {
-  updatedCount: number;
-  skippedCount: number;
-  changes: DryRunChange[];
-}
+type DryRunResultData = DryRunMailchimpSyncMutation['dryRunMailchimpSync'];
 
 const DryRunTable = styled.table`
   width: 100%;
@@ -232,7 +149,11 @@ const DryRunWrapper = styled.div`
   overflow: auto;
 `;
 
-function SyncProviderSettingCard({ setting }: { setting: any }) {
+function SyncProviderSettingCard({
+  setting,
+}: {
+  setting: SyncProviderSetting;
+}) {
   const { t } = useTranslation();
   const [syncing, setSyncing] = useState(false);
   const [dryRunning, setDryRunning] = useState(false);
@@ -240,13 +161,13 @@ function SyncProviderSettingCard({ setting }: { setting: any }) {
     null
   );
 
-  const [updateSettings, { loading: updating }] = useMutation(
-    UpdateSyncProviderSettingDocument,
-    { refetchQueries: [{ query: SyncProviderSettingsDocument }] }
-  );
+  const [updateSettings, { loading: updating }] =
+    useUpdateSyncProviderSettingMutation({
+      refetchQueries: [{ query: SyncProviderSettingsDocument }],
+    });
 
-  const [triggerSync] = useMutation(TriggerMailchimpSyncDocument);
-  const [dryRunSync] = useMutation(DryRunMailchimpSyncDocument);
+  const [triggerSync] = useTriggerMailchimpSyncMutation();
+  const [dryRunSync] = useDryRunMailchimpSyncMutation();
 
   const { control, handleSubmit } = useForm<SyncProviderFormValues>({
     resolver: zodResolver(syncProviderSchema),
@@ -451,6 +372,7 @@ function SyncProviderSettingCard({ setting }: { setting: any }) {
             variant="body2"
             color="textSecondary"
             gutterBottom
+            sx={{ whiteSpace: 'pre-line' }}
           >
             {t('integrations.mailchimpSyncSettings.mergeFieldHelp')}
           </Typography>
@@ -509,6 +431,7 @@ function SyncProviderSettingCard({ setting }: { setting: any }) {
             variant="body2"
             color="textSecondary"
             gutterBottom
+            sx={{ whiteSpace: 'pre-line' }}
           >
             {t('integrations.mailchimpSyncSettings.interestGroupHelp')}
           </Typography>

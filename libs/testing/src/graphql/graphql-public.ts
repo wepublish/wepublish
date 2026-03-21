@@ -26,6 +26,8 @@ export type Scalars = {
   DateTime: string;
   /** Setting Value */
   GraphQLSettingValueType: any;
+  /** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSONObject: any;
   RichText: Descendant[];
   Slug: string;
   /** The `Upload` scalar type represents a file upload. */
@@ -1596,6 +1598,23 @@ export type MailTemplateWithUrlAndStatusModel = {
   url: Scalars['String'];
 };
 
+export type MailchimpSyncDryRunChange = {
+  __typename?: 'MailchimpSyncDryRunChange';
+  email: Scalars['String'];
+  interests: Scalars['JSONObject'];
+  isNew: Scalars['Boolean'];
+  mergeFields: Scalars['JSONObject'];
+  previousInterests?: Maybe<Scalars['JSONObject']>;
+  previousMergeFields?: Maybe<Scalars['JSONObject']>;
+};
+
+export type MailchimpSyncDryRunResult = {
+  __typename?: 'MailchimpSyncDryRunResult';
+  changes: Array<MailchimpSyncDryRunChange>;
+  skippedCount: Scalars['Int'];
+  updatedCount: Scalars['Int'];
+};
+
 export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
   active: Scalars['Boolean'];
@@ -1791,6 +1810,8 @@ export type Mutation = {
   deleteUserRole: UserRole;
   /** Dislikes an article. */
   dislikeArticle: Article;
+  /** Simulates a mailchimp sync without making changes. Returns what would be updated. */
+  dryRunMailchimpSync: MailchimpSyncDryRunResult;
   /** Duplicates an article. */
   duplicateArticle: Article;
   /** Duplicates an page. */
@@ -1837,6 +1858,8 @@ export type Mutation = {
   syncTemplates?: Maybe<Scalars['Boolean']>;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
+  /** Triggers a mailchimp sync for a given setting. */
+  triggerMailchimpSync: Scalars['Boolean'];
   /** Unpublishes all revisions of an article. */
   unpublishArticle: Article;
   /** Unpublishes all revisions of an page. */
@@ -1904,6 +1927,8 @@ export type Mutation = {
   updateSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Update an existing subscription interval */
   updateSubscriptionInterval: Array<SubscriptionFlowModel>;
+  /** Updates an existing sync provider setting. */
+  updateSyncProviderSetting: SettingSyncProvider;
   /** Updates an existing mail flow */
   updateSystemMail: Array<SystemMailModel>;
   /** Updates an existing tag. */
@@ -2383,6 +2408,10 @@ export type MutationDislikeArticleArgs = {
   id: Scalars['String'];
 };
 
+export type MutationDryRunMailchimpSyncArgs = {
+  id: Scalars['String'];
+};
+
 export type MutationDuplicateArticleArgs = {
   id: Scalars['String'];
 };
@@ -2486,6 +2515,10 @@ export type MutationSendWebsiteLoginArgs = {
 
 export type MutationTestSystemMailArgs = {
   event: UserEvent;
+};
+
+export type MutationTriggerMailchimpSyncArgs = {
+  id: Scalars['String'];
 };
 
 export type MutationUnpublishArticleArgs = {
@@ -2827,6 +2860,17 @@ export type MutationUpdateSubscriptionIntervalArgs = {
   daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   mailTemplateId?: InputMaybe<Scalars['String']>;
+};
+
+export type MutationUpdateSyncProviderSettingArgs = {
+  enabled?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['String'];
+  mailchimp_apiKey?: InputMaybe<Scalars['String']>;
+  mailchimp_defaultInterestGroupIds?: InputMaybe<Array<Scalars['String']>>;
+  mailchimp_interestGroupMappings?: InputMaybe<Array<Scalars['JSONObject']>>;
+  mailchimp_listId?: InputMaybe<Scalars['String']>;
+  mailchimp_mergeFieldMappings?: InputMaybe<Array<Scalars['JSONObject']>>;
+  name?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationUpdateSystemMailArgs = {
@@ -3945,6 +3989,10 @@ export type Query = {
   subscriptions: PublicSubscriptionConnection;
   /** Returns a paginated list of subscriptions based on the filters given. */
   subscriptionsAsCsv: Scalars['String'];
+  /** Returns a single sync provider setting by id. */
+  syncProviderSetting: SettingSyncProvider;
+  /** Returns all sync provider settings. */
+  syncProviderSettings: Array<SettingSyncProvider>;
   /** Returns all mail flows */
   systemMails: Array<SystemMailModel>;
   /** Returns an tag by id or tag. */
@@ -4347,6 +4395,14 @@ export type QuerySubscriptionsAsCsvArgs = {
   userIDs?: InputMaybe<Array<Scalars['String']>>;
 };
 
+export type QuerySyncProviderSettingArgs = {
+  id: Scalars['String'];
+};
+
+export type QuerySyncProviderSettingsArgs = {
+  filter?: InputMaybe<SettingSyncProviderFilter>;
+};
+
 export type QueryTagArgs = {
   id?: InputMaybe<Scalars['String']>;
   tag?: InputMaybe<Scalars['String']>;
@@ -4686,6 +4742,30 @@ export type SettingRestriction = {
   minValue?: Maybe<Scalars['Int']>;
 };
 
+export type SettingSyncProvider = SettingProvider & {
+  __typename?: 'SettingSyncProvider';
+  createdAt: Scalars['DateTime'];
+  enabled?: Maybe<Scalars['Boolean']>;
+  id: Scalars['String'];
+  lastLoadedAt: Scalars['DateTime'];
+  lastSyncAt?: Maybe<Scalars['DateTime']>;
+  lastSyncError?: Maybe<Scalars['String']>;
+  mailchimp_defaultInterestGroupIds?: Maybe<Array<Scalars['String']>>;
+  mailchimp_interestGroupMappings?: Maybe<Array<Scalars['JSONObject']>>;
+  mailchimp_listId?: Maybe<Scalars['String']>;
+  mailchimp_mergeFieldMappings?: Maybe<Array<Scalars['JSONObject']>>;
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
+  type: SyncProviderType;
+};
+
+export type SettingSyncProviderFilter = {
+  enabled?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<SyncProviderType>;
+};
+
 export type SettingTrackingPixelFilter = {
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
@@ -4893,6 +4973,10 @@ export type SubscriptionPeriod = {
 export enum SubscriptionSort {
   CreatedAt = 'CreatedAt',
   ModifiedAt = 'ModifiedAt',
+}
+
+export enum SyncProviderType {
+  Mailchimp = 'MAILCHIMP',
 }
 
 export type SystemMailModel = {

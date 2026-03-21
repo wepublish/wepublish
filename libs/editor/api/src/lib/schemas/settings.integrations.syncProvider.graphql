@@ -55,3 +55,18 @@ mutation UpdateSyncProviderSetting(
 mutation TriggerMailchimpSync($id: String!) {
   triggerMailchimpSync(id: $id)
 }
+
+mutation DryRunMailchimpSync($id: String!) {
+  dryRunMailchimpSync(id: $id) {
+    updatedCount
+    skippedCount
+    changes {
+      email
+      isNew
+      mergeFields
+      interests
+      previousMergeFields
+      previousInterests
+    }
+  }
+}

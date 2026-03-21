@@ -74,7 +74,10 @@ import { PermissionModule } from '@wepublish/permissions/api';
 import { PhraseModule } from '@wepublish/phrase/api';
 import { PollModule } from '@wepublish/poll/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
-import { SettingModule } from '@wepublish/settings/api';
+import {
+  SettingModule,
+  SyncProviderSettingsService,
+} from '@wepublish/settings/api';
 import { StatsModule } from '@wepublish/stats/api';
 import { SystemInfoModule } from '@wepublish/system-info';
 import { TagModule } from '@wepublish/tag/api';
@@ -558,7 +561,10 @@ import {
     // System info key provider
     {
       provide: 'SYNC_PROVIDER_INIT',
-      useFactory: async (config: ConfigService, prisma: PrismaClient) => {
+      useFactory: async (
+        config: ConfigService,
+        syncProviderSettingsService: SyncProviderSettingsService
+      ) => {
         const configFile = await readConfig(
           config.getOrThrow('CONFIG_FILE_PATH')
         );
@@ -576,14 +582,13 @@ import {
             throw new Error(`Unknown sync provider type: ${syncProvider.type}`);
           }
 
-          await prisma.settingSyncProvider.upsert({
-            where: { id: syncProvider.id },
-            create: { id: syncProvider.id, type },
-            update: {},
-          });
+          await syncProviderSettingsService.initDatabaseConfiguration(
+            syncProvider.id,
+            type
+          );
         }
       },
-      inject: [ConfigService, PrismaClient],
+      inject: [ConfigService, SyncProviderSettingsService],
     },
   ],
 })
