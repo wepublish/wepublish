@@ -1873,7 +1873,12 @@
         "errorMessage": "Fehlermeldung",
         "errorDate": "Datum",
         "previous": "Zurück",
-        "next": "Weiter"
+        "next": "Weiter",
+        "syncStarting": "Sync wird gestartet...",
+        "syncCompleted": "Sync abgeschlossen: {{updated}} aktualisiert, {{skipped}} übersprungen, {{errors}} Fehler",
+        "progressUpdated": "aktualisiert",
+        "progressSkipped": "übersprungen",
+        "progressErrors": "Fehler"
       }
     }
   }

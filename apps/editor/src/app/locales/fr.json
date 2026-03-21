@@ -1760,7 +1760,12 @@
         "errorMessage": "Erreur",
         "errorDate": "Date",
         "previous": "Précédent",
-        "next": "Suivant"
+        "next": "Suivant",
+        "syncStarting": "Démarrage du sync...",
+        "syncCompleted": "Sync terminé : {{updated}} mis à jour, {{skipped}} ignorés, {{errors}} erreurs",
+        "progressUpdated": "mis à jour",
+        "progressSkipped": "ignorés",
+        "progressErrors": "erreurs"
       }
     }
   }

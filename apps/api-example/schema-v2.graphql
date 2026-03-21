@@ -1507,6 +1507,18 @@ type MailchimpSyncErrorType {
   userId: String!
 }
 
+type MailchimpSyncProgressType {
+  errorMessage: String
+  errors: Int!
+  finishedAt: DateTime
+  processed: Int!
+  skipped: Int!
+  startedAt: DateTime!
+  status: String!
+  total: Int!
+  updated: Int!
+}
+
 type MemberPlan implements HasImage {
   active: Boolean!
   amountPerMonthMax: Int
@@ -1832,7 +1844,7 @@ type Mutation {
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
 
-  """Triggers a mailchimp sync for a given setting."""
+  """Triggers a mailchimp sync in the background."""
   triggerMailchimpSync(id: String!): Boolean!
 
   """Unpublishes all revisions of an article."""
@@ -2835,6 +2847,9 @@ type Query {
 
   """Returns sync errors for a given config."""
   mailchimpSyncErrors(configId: String!, skip: Int, take: Int): MailchimpSyncErrorList!
+
+  """Returns the current sync progress for a config."""
+  mailchimpSyncProgress(configId: String!): MailchimpSyncProgressType
 
   """This query returns the user."""
   me: SensitiveDataUser

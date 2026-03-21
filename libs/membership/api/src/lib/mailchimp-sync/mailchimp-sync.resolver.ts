@@ -114,6 +114,36 @@ export class MailchimpSyncErrorList {
   totalCount!: number;
 }
 
+@ObjectType()
+export class MailchimpSyncProgressType {
+  @Field()
+  status!: string;
+
+  @Field(() => Int)
+  processed!: number;
+
+  @Field(() => Int)
+  total!: number;
+
+  @Field(() => Int)
+  updated!: number;
+
+  @Field(() => Int)
+  skipped!: number;
+
+  @Field(() => Int)
+  errors!: number;
+
+  @Field()
+  startedAt!: Date;
+
+  @Field(() => Date, { nullable: true })
+  finishedAt?: Date | null;
+
+  @Field(() => String, { nullable: true })
+  errorMessage?: string | null;
+}
+
 @Resolver()
 export class MailchimpSyncResolver {
   constructor(private mailchimpSyncService: MailchimpSyncService) {}
@@ -158,12 +188,24 @@ export class MailchimpSyncResolver {
   }
 
   @Permissions(CanRunMailchimpSync)
+  @Query(returns => MailchimpSyncProgressType, {
+    name: 'mailchimpSyncProgress',
+    nullable: true,
+    description: 'Returns the current sync progress for a config.',
+  })
+  mailchimpSyncProgress(
+    @Args('configId') configId: string
+  ): MailchimpSyncProgressType | null {
+    return this.mailchimpSyncService.getSyncProgress(configId);
+  }
+
+  @Permissions(CanRunMailchimpSync)
   @Mutation(returns => Boolean, {
     name: 'triggerMailchimpSync',
-    description: 'Triggers a mailchimp sync for a given setting.',
+    description: 'Triggers a mailchimp sync in the background.',
   })
-  async triggerMailchimpSync(@Args('id') id: string): Promise<boolean> {
-    await this.mailchimpSyncService.executeSyncById(id);
+  triggerMailchimpSync(@Args('id') id: string): boolean {
+    this.mailchimpSyncService.startSyncInBackground(id);
     return true;
   }
 

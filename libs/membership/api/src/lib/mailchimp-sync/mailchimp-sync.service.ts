@@ -70,9 +70,22 @@ export interface DryRunResult {
   changes: DryRunChange[];
 }
 
+export interface SyncProgress {
+  status: 'running' | 'completed' | 'failed';
+  processed: number;
+  total: number;
+  updated: number;
+  skipped: number;
+  errors: number;
+  startedAt: Date;
+  finishedAt: Date | null;
+  errorMessage: string | null;
+}
+
 @Injectable()
 export class MailchimpSyncService {
   private logger = new Logger('MailchimpSyncService');
+  private static syncProgress = new Map<string, SyncProgress>();
 
   constructor(
     private prisma: PrismaClient,
@@ -128,6 +141,50 @@ export class MailchimpSyncService {
     return result;
   }
 
+  /**
+   * Start sync in background (fire-and-forget). Returns immediately.
+   */
+  startSyncInBackground(id: string): void {
+    const existing = MailchimpSyncService.syncProgress.get(id);
+    if (existing?.status === 'running') {
+      throw new Error('Sync is already running for this configuration');
+    }
+
+    MailchimpSyncService.syncProgress.set(id, {
+      status: 'running',
+      processed: 0,
+      total: 0,
+      updated: 0,
+      skipped: 0,
+      errors: 0,
+      startedAt: new Date(),
+      finishedAt: null,
+      errorMessage: null,
+    });
+
+    this.executeSyncById(id)
+      .then(() => {
+        const progress = MailchimpSyncService.syncProgress.get(id);
+        if (progress) {
+          progress.status = 'completed';
+          progress.finishedAt = new Date();
+        }
+      })
+      .catch(error => {
+        const progress = MailchimpSyncService.syncProgress.get(id);
+        if (progress) {
+          progress.status = 'failed';
+          progress.finishedAt = new Date();
+          progress.errorMessage =
+            error instanceof Error ? error.message : String(error);
+        }
+      });
+  }
+
+  getSyncProgress(configId: string): SyncProgress | null {
+    return MailchimpSyncService.syncProgress.get(configId) ?? null;
+  }
+
   private async executeSyncForConfig(
     config: SettingSyncProvider & { decryptedApiKey: string | null },
     dryRun = false,
@@ -166,6 +223,24 @@ export class MailchimpSyncService {
     let processedCount = 0;
     const changes: DryRunChange[] = [];
 
+    // Update progress total if tracking
+    const progress = MailchimpSyncService.syncProgress.get(config.id);
+    if (progress) {
+      progress.total = usersWithSubscriptions.length;
+    }
+
+    // Phase 1: Prepare all updates (CPU-only, no API calls)
+    interface PendingUpdate {
+      userId: string;
+      email: string;
+      mergeFields: Record<string, string>;
+      interests: Record<string, boolean>;
+      isNew: boolean;
+      existingContact: any;
+    }
+
+    const pendingUpdates: PendingUpdate[] = [];
+
     for (const userWithSub of usersWithSubscriptions) {
       if (!userWithSub.user.email) continue;
       if (limit && processedCount >= limit) break;
@@ -177,6 +252,10 @@ export class MailchimpSyncService {
 
       processedCount++;
 
+      const existingContact = mailchimpContactMap.get(
+        userWithSub.user.email.toLowerCase()
+      );
+
       const mergeFields: Record<string, string> = {};
       for (const mapping of mergeFieldMappings) {
         mergeFields[mapping.tag] = this.evaluateMergeFieldExpression(
@@ -186,17 +265,30 @@ export class MailchimpSyncService {
       }
 
       const interests: Record<string, boolean> = {};
-      for (const mapping of interestGroupMappings) {
-        const isDefault = defaultInterestGroupIds.includes(mapping.groupId);
-        interests[mapping.groupId] =
-          isDefault ||
-          this.evaluateInterestGroupExpression(mapping.expression, userWithSub);
+
+      // Reset all existing interests to false first (ensures removal)
+      if (existingContact?.interests) {
+        for (const groupId of Object.keys(existingContact.interests)) {
+          interests[groupId] = false;
+        }
       }
 
-      // Check if update is needed
-      const existingContact = mailchimpContactMap.get(
-        userWithSub.user.email.toLowerCase()
-      );
+      // Initialize all mapped groups to false
+      for (const mapping of interestGroupMappings) {
+        interests[mapping.groupId] = false;
+      }
+
+      // Set default interest groups
+      for (const groupId of defaultInterestGroupIds) {
+        interests[groupId] = true;
+      }
+
+      // Evaluate mapped interest groups
+      for (const mapping of interestGroupMappings) {
+        interests[mapping.groupId] =
+          interests[mapping.groupId] ||
+          this.evaluateInterestGroupExpression(mapping.expression, userWithSub);
+      }
 
       if (
         existingContact &&
@@ -216,33 +308,150 @@ export class MailchimpSyncService {
           previousMergeFields: existingContact?.merge_fields ?? null,
           previousInterests: existingContact?.interests ?? null,
         });
+        updatedCount++;
       } else {
+        pendingUpdates.push({
+          userId: userWithSub.user.id,
+          email: userWithSub.user.email,
+          mergeFields,
+          interests,
+          isNew: !existingContact,
+          existingContact,
+        });
+      }
+    }
+
+    this.updateProgress(config.id, {
+      processed: processedCount,
+      updated: updatedCount,
+      skipped: skippedCount,
+      errors: errorCount,
+    });
+
+    // Phase 2: Send updates via Mailchimp Batch API
+    if (pendingUpdates.length > 0) {
+      const BATCH_SIZE = 500; // Mailchimp recommends max 500 operations per batch
+
+      for (let i = 0; i < pendingUpdates.length; i += BATCH_SIZE) {
+        const batch = pendingUpdates.slice(i, i + BATCH_SIZE);
+
+        const operations = batch.map(update => {
+          const email = update.email.trim().toLowerCase();
+          const subscriberHash = createHash('md5').update(email).digest('hex');
+
+          return {
+            method: 'PUT' as const,
+            path: `/lists/${config.mailchimp_listId}/members/${subscriberHash}`,
+            body: JSON.stringify({
+              email_address: update.email.trim(),
+              status_if_new: 'subscribed',
+              merge_fields: update.mergeFields,
+              interests: update.interests,
+            }),
+          };
+        });
+
         try {
-          await this.upsertMailchimpContact(config.mailchimp_listId!, {
-            email: userWithSub.user.email,
-            mergeFields,
-            interests,
-          });
+          const batchResponse = (await (mailchimp as any).batches.start({
+            operations,
+          })) as any;
+
+          // Poll for batch completion
+          const batchId = batchResponse.id;
+          let batchStatus = batchResponse.status;
+
+          while (batchStatus !== 'finished') {
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            const statusResponse = (await (mailchimp as any).batches.status(
+              batchId
+            )) as any;
+            batchStatus = statusResponse.status;
+
+            // Update progress based on batch stats
+            const completed =
+              (statusResponse.finished_operations ?? 0) +
+              (statusResponse.errored_operations ?? 0);
+            this.updateProgress(config.id, {
+              processed: processedCount,
+              updated:
+                updatedCount +
+                (statusResponse.finished_operations ?? 0) -
+                (statusResponse.errored_operations ?? 0),
+              skipped: skippedCount,
+              errors: errorCount + (statusResponse.errored_operations ?? 0),
+            });
+
+            if (batchStatus === 'errored' || batchStatus === 'canceled') {
+              break;
+            }
+          }
+
+          // Final counts from this batch
+          const finalStatus = (await (mailchimp as any).batches.status(
+            batchId
+          )) as any;
+          const batchErrors = finalStatus.errored_operations ?? 0;
+          const batchSuccess = batch.length - batchErrors;
+
+          if (batchErrors === 0) {
+            updatedCount += batchSuccess;
+          } else {
+            // Re-try individually to identify which contacts failed
+            this.logger.warn(
+              `Batch ${batchId}: ${batchErrors} errors, retrying individually to identify failures`
+            );
+            for (const update of batch) {
+              try {
+                await this.upsertMailchimpContact(config.mailchimp_listId!, {
+                  email: update.email,
+                  mergeFields: update.mergeFields,
+                  interests: update.interests,
+                });
+                updatedCount++;
+              } catch (error: any) {
+                const errorMessage =
+                  error instanceof Error ? error.message : String(error);
+                const statusCode =
+                  error?.response?.body?.status ?? error?.status ?? null;
+                this.logger.warn(
+                  `Failed to update contact '${update.email}': ${errorMessage}`
+                );
+                await this.recordSyncError(
+                  config.id,
+                  update.userId,
+                  update.email,
+                  errorMessage,
+                  statusCode
+                );
+                errorCount++;
+              }
+            }
+          }
         } catch (error: any) {
+          // Batch API itself failed — fall back to recording errors for all contacts in batch
           const errorMessage =
             error instanceof Error ? error.message : String(error);
-          const statusCode =
-            error?.response?.body?.status ?? error?.status ?? null;
-          this.logger.warn(
-            `Failed to update contact '${userWithSub.user.email}': ${errorMessage}`
-          );
-          await this.recordSyncError(
-            config.id,
-            userWithSub.user.id,
-            userWithSub.user.email,
-            errorMessage,
-            statusCode
-          );
-          errorCount++;
-          continue;
+          this.logger.error(`Batch API failed: ${errorMessage}`);
+
+          for (const update of batch) {
+            await this.recordSyncError(
+              config.id,
+              update.userId,
+              update.email,
+              `Batch failed: ${errorMessage}`,
+              null
+            );
+          }
+          errorCount += batch.length;
         }
+
+        this.updateProgress(config.id, {
+          processed: processedCount,
+          updated: updatedCount,
+          skipped: skippedCount,
+          errors: errorCount,
+        });
       }
-      updatedCount++;
     }
 
     this.logger.log(
@@ -332,6 +541,13 @@ export class MailchimpSyncService {
         response = await mailchimp.lists.getListMembersInfo(listId, {
           offset,
           count: batchSize,
+          fields: [
+            'members.email_address',
+            'members.merge_fields',
+            'members.interests',
+            'members.status',
+            'total_items',
+          ],
         });
       } catch (error: any) {
         const detail =
@@ -743,5 +959,15 @@ export class MailchimpSyncService {
     await this.prisma.mailchimpSyncError.deleteMany({
       where: { syncProviderId },
     });
+  }
+
+  private updateProgress(
+    configId: string,
+    counts: Pick<SyncProgress, 'processed' | 'updated' | 'skipped' | 'errors'>
+  ): void {
+    const progress = MailchimpSyncService.syncProgress.get(configId);
+    if (progress) {
+      Object.assign(progress, counts);
+    }
   }
 }

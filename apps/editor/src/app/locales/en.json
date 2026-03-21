@@ -1934,7 +1934,12 @@
         "errorMessage": "Error",
         "errorDate": "Date",
         "previous": "Previous",
-        "next": "Next"
+        "next": "Next",
+        "syncStarting": "Starting sync...",
+        "syncCompleted": "Sync complete: {{updated}} updated, {{skipped}} skipped, {{errors}} errors",
+        "progressUpdated": "updated",
+        "progressSkipped": "skipped",
+        "progressErrors": "errors"
       }
     }
   }

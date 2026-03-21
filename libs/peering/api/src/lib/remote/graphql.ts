@@ -1595,6 +1595,19 @@ export type MailchimpSyncErrorType = {
   userId: Scalars['String'];
 };
 
+export type MailchimpSyncProgressType = {
+  __typename?: 'MailchimpSyncProgressType';
+  errorMessage?: Maybe<Scalars['String']>;
+  errors: Scalars['Int'];
+  finishedAt?: Maybe<Scalars['DateTime']>;
+  processed: Scalars['Int'];
+  skipped: Scalars['Int'];
+  startedAt: Scalars['DateTime'];
+  status: Scalars['String'];
+  total: Scalars['Int'];
+  updated: Scalars['Int'];
+};
+
 export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
   active: Scalars['Boolean'];
@@ -1842,7 +1855,7 @@ export type Mutation = {
   syncTemplates?: Maybe<Scalars['Boolean']>;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
-  /** Triggers a mailchimp sync for a given setting. */
+  /** Triggers a mailchimp sync in the background. */
   triggerMailchimpSync: Scalars['Boolean'];
   /** Unpublishes all revisions of an article. */
   unpublishArticle: Article;
@@ -4011,6 +4024,8 @@ export type Query = {
   mailchimpMergeFields: Array<MailchimpMergeField>;
   /** Returns sync errors for a given config. */
   mailchimpSyncErrors: MailchimpSyncErrorList;
+  /** Returns the current sync progress for a config. */
+  mailchimpSyncProgress?: Maybe<MailchimpSyncProgressType>;
   /** This query returns the user. */
   me?: Maybe<SensitiveDataUser>;
   /** Returns a memberplan by id or slug. */
@@ -4394,6 +4409,11 @@ export type QueryMailchimpSyncErrorsArgs = {
   configId: Scalars['String'];
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryMailchimpSyncProgressArgs = {
+  configId: Scalars['String'];
 };
 
 

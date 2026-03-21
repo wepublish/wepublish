@@ -116,3 +116,17 @@ mutation DeleteMailchimpSyncError($id: String!) {
 mutation DeleteAllMailchimpSyncErrors($configId: String!) {
   deleteAllMailchimpSyncErrors(configId: $configId)
 }
+
+query MailchimpSyncProgress($configId: String!) {
+  mailchimpSyncProgress(configId: $configId) {
+    status
+    processed
+    total
+    updated
+    skipped
+    errors
+    startedAt
+    finishedAt
+    errorMessage
+  }
+}

@@ -9,6 +9,7 @@ import {
   useDryRunMailchimpSyncMutation,
   useMailchimpInterestGroupsLazyQuery,
   useMailchimpSyncErrorsQuery,
+  useMailchimpSyncProgressQuery,
   useMailchimpListsLazyQuery,
   useMailchimpMergeFieldsLazyQuery,
   useMemberPlanListQuery,
@@ -28,6 +29,7 @@ import {
   Chip,
   CircularProgress,
   IconButton,
+  LinearProgress,
   MenuItem,
   Select,
   TextField,
@@ -529,11 +531,22 @@ function SyncProviderSettingCard({
 }) {
   const { t } = useTranslation();
   const [syncing, setSyncing] = useState(false);
+  const [syncSeq, setSyncSeq] = useState(0);
   const [dryRunning, setDryRunning] = useState(false);
   const [syncLimit, setSyncLimit] = useState<number | undefined>(100);
   const [dryRunResult, setDryRunResult] = useState<DryRunResultData | null>(
     null
   );
+
+  const { data: progressData } = useMailchimpSyncProgressQuery({
+    variables: { configId: setting.id },
+    pollInterval: syncing ? 2000 : 0,
+    fetchPolicy: 'no-cache',
+    // Force refetch when a new sync is triggered
+    context: { seq: syncSeq },
+  });
+  const syncProgress =
+    syncing ? (progressData?.mailchimpSyncProgress ?? null) : null;
 
   const [updateSettings, { loading: updating }] =
     useUpdateSyncProviderSettingMutation({
@@ -728,16 +741,54 @@ function SyncProviderSettingCard({
     });
   }, [isDirty, handleSubmit, saveSettings, t]);
 
+  // Stop polling and show result when sync finishes
+  useEffect(() => {
+    if (!syncing) return;
+
+    // If progress is null after syncing started, the sync likely completed
+    // before polling started (small dataset) — treat as done after a brief wait
+    if (!syncProgress) {
+      const timeout = setTimeout(() => {
+        setSyncing(false);
+        refetchErrors();
+      }, 6000);
+      return () => clearTimeout(timeout);
+    }
+
+    if (syncProgress.status === 'running') return;
+
+    setSyncing(false);
+    refetchErrors();
+    if (syncProgress.status === 'failed') {
+      toaster.push(
+        <Message
+          type="error"
+          closable
+          duration={0}
+        >
+          {t('integrations.mailchimpSyncSettings.syncFailed')}:{' '}
+          {syncProgress.errorMessage}
+        </Message>
+      );
+    } else if (syncProgress.status === 'completed') {
+      toaster.push(
+        <Message type="success">
+          {t('integrations.mailchimpSyncSettings.syncCompleted', {
+            updated: syncProgress.updated,
+            skipped: syncProgress.skipped,
+            errors: syncProgress.errors,
+          })}
+        </Message>
+      );
+    }
+  }, [syncing, syncProgress?.status]);
+
   const handleTriggerSync = useCallback(async () => {
-    setSyncing(true);
     try {
       if (!(await saveIfDirty())) return;
       await triggerSync({ variables: { id: setting.id } });
-      toaster.push(
-        <Message type="success">
-          {t('integrations.mailchimpSyncSettings.syncTriggered')}
-        </Message>
-      );
+      setSyncSeq(s => s + 1);
+      setSyncing(true);
     } catch (e: any) {
       const detail = e?.graphQLErrors?.[0]?.message ?? e?.message ?? String(e);
       toaster.push(
@@ -749,11 +800,8 @@ function SyncProviderSettingCard({
           {t('integrations.mailchimpSyncSettings.syncFailed')}: {detail}
         </Message>
       );
-    } finally {
-      setSyncing(false);
-      refetchErrors();
     }
-  }, [triggerSync, setting.id, t, saveIfDirty, refetchErrors]);
+  }, [triggerSync, setting.id, t, saveIfDirty]);
 
   const handleDryRun = useCallback(async () => {
     setDryRunning(true);
@@ -1236,6 +1284,45 @@ function SyncProviderSettingCard({
             {t('integrations.mailchimpSyncSettings.dryRun')}
           </Button>
         </CardActions>
+
+        {syncing && (
+          <CardContent>
+            <LinearProgress
+              variant={
+                syncProgress && syncProgress.total > 0 ?
+                  'determinate'
+                : 'indeterminate'
+              }
+              value={
+                syncProgress && syncProgress.total > 0 ?
+                  (syncProgress.processed / syncProgress.total) * 100
+                : 0
+              }
+              sx={{ mb: 1 }}
+            />
+            {syncProgress ?
+              <Typography
+                variant="body2"
+                color="textSecondary"
+              >
+                {syncProgress.processed} / {syncProgress.total} (
+                {syncProgress.updated}{' '}
+                {t('integrations.mailchimpSyncSettings.progressUpdated')},{' '}
+                {syncProgress.skipped}{' '}
+                {t('integrations.mailchimpSyncSettings.progressSkipped')}
+                {syncProgress.errors > 0 &&
+                  `, ${syncProgress.errors} ${t('integrations.mailchimpSyncSettings.progressErrors')}`}
+                )
+              </Typography>
+            : <Typography
+                variant="body2"
+                color="textSecondary"
+              >
+                {t('integrations.mailchimpSyncSettings.syncStarting')}
+              </Typography>
+            }
+          </CardContent>
+        )}
 
         {dryRunResult && (
           <CardContent>
