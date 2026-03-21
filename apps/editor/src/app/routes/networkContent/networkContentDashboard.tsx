@@ -4,22 +4,16 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import type {
-  ArticleToImport,
-  ImportOptions,
-} from '../networkContent/networkContent.types';
-import {
-  usePeerArticles,
-  usePeerMatching,
-} from '../networkContent/networkContent.hooks';
+import type { ArticleToImport, ImportOptions } from './networkContent.types';
+import { usePeerArticles, usePeerMatching } from './networkContent.hooks';
 import {
   CenteredContainer,
   FeedList,
   ScrollContainer,
-} from '../networkContent/networkContent.styles';
-import { NetworkContentArticleItem } from '../networkContent/networkContentArticleItem';
-import { NetworkContentImportDialog } from '../networkContent/networkContentImportDialog';
-import { NetworkContentPeerInfoDialog } from '../networkContent/networkContentPeerInfoDialog';
+} from './networkContent.styles';
+import { NetworkContentArticleItem } from './networkContentArticleItem';
+import { NetworkContentImportDialog } from './networkContentImportDialog';
+import { NetworkContentPeerInfoDialog } from './networkContentPeerInfoDialog';
 
 const DEFAULT_IMPORT_OPTIONS: ImportOptions = {
   importAuthors: true,
