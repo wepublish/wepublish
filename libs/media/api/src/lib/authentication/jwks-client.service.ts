@@ -17,6 +17,10 @@ export class JwksClientService {
 
   constructor(@Inject(JWKS_CLIENT_OPTIONS) private config: JwksClientConfig) {}
 
+  getApiUrl(): string {
+    return this.config.apiUrl;
+  }
+
   async getPublicKey(): Promise<KeyLike> {
     if (this.publicKey && Date.now() - this.fetchedAt < this.cacheTtlMs) {
       return this.publicKey;
@@ -57,6 +61,17 @@ export class JwksClientService {
       return this.publicKey;
     } catch (error) {
       this.fetchPromise = null;
+
+      // Fall back to stale key if available, so a temporary API outage
+      // doesn't take down the media server
+      if (this.publicKey) {
+        this.logger.warn(
+          'JWKS refresh failed, continuing with stale key',
+          (error as Error).message
+        );
+        return this.publicKey;
+      }
+
       throw error;
     }
   }

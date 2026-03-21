@@ -36,6 +36,7 @@ export class JwtAuthGuard implements CanActivate {
       await jwtVerify(token, publicKey, {
         algorithms: ['EdDSA'],
         audience: 'wepublish-media-server',
+        issuer: this.jwksClient.getApiUrl(),
       });
       return true;
     } catch (error) {
