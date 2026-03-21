@@ -1918,7 +1918,9 @@
       "cancel": "Cancel",
       "close": "Close",
       "peerInfoTitle": "Peering not available",
-      "peerInfoText": "This publisher is not yet connected as a peer. To import articles, an active peering connection is required. Please contact the publisher to establish a peering relationship, or set it up under Settings > Peering."
+      "peerInfoText": "This publisher is not yet connected as a peer. To import articles, an active peering connection is required. Please contact the publisher to establish a peering relationship, or set it up under Settings > Peering.",
+      "importBtn": "Import",
+      "connectBtn": "Set up peer"
     }
   }
 }

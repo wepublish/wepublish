@@ -1857,7 +1857,9 @@
       "cancel": "Abbrechen",
       "close": "Schliessen",
       "peerInfoTitle": "Peering nicht verfügbar",
-      "peerInfoText": "Dieser Verlag ist noch nicht als Peer verbunden. Um Artikel zu importieren, wird eine aktive Peering-Verbindung benötigt. Bitte kontaktiere den Verlag, um eine Peering-Beziehung aufzubauen, oder richte sie unter Einstellungen > Peering ein."
+      "peerInfoText": "Dieser Verlag ist noch nicht als Peer verbunden. Um Artikel zu importieren, wird eine aktive Peering-Verbindung benötigt. Bitte kontaktiere den Verlag, um eine Peering-Beziehung aufzubauen, oder richte sie unter Einstellungen > Peering ein.",
+      "importBtn": "Importieren",
+      "connectBtn": "Peer einrichten"
     }
   }
 }

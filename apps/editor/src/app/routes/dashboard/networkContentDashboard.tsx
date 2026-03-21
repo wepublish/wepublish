@@ -20,7 +20,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { format, parseISO } from 'date-fns';
-import { MdDownload, MdInfoOutline } from 'react-icons/md';
+import { MdDownload, MdLink } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
 // ---- Types ----
@@ -128,7 +128,7 @@ function getPublisherName(url: string): string {
 
 function formatDate(dateStr: string): string {
   try {
-    return format(parseISO(dateStr), 'dd.MM.yyyy');
+    return format(parseISO(dateStr), 'dd.MM.yyyy | hh:mm');
   } catch {
     return '';
   }
@@ -225,9 +225,9 @@ const ActionColumn = styled('div')`
 `;
 
 const PublisherName = styled(Typography)`
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: ${({ theme }) => theme.palette.text.secondary};
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: ${({ theme }) => theme.palette.text.primary};
   text-align: center;
   line-height: 1.2;
 `;
@@ -309,7 +309,7 @@ function ArticleItem({
               color="default"
               onClick={onShowPeerInfo}
             >
-              <MdInfoOutline />
+              <MdLink />
             </IconButton>
           </Tooltip>
         }

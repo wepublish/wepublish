@@ -1744,7 +1744,9 @@
       "cancel": "Annuler",
       "close": "Fermer",
       "peerInfoTitle": "Peering non disponible",
-      "peerInfoText": "Cet éditeur n'est pas encore connecté en tant que peer. Pour importer des articles, une connexion de peering active est nécessaire. Veuillez contacter l'éditeur pour établir une relation de peering, ou configurez-la sous Paramètres > Peering."
+      "peerInfoText": "Cet éditeur n'est pas encore connecté en tant que peer. Pour importer des articles, une connexion de peering active est nécessaire. Veuillez contacter l'éditeur pour établir une relation de peering, ou configurez-la sous Paramètres > Peering.",
+      "importBtn": "Importer",
+      "connectBtn": "Configurer le peer"
     }
   }
 }
