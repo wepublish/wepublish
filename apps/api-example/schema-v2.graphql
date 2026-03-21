@@ -1492,6 +1492,21 @@ type MailchimpSyncDryRunResult {
   updatedCount: Int!
 }
 
+type MailchimpSyncErrorList {
+  nodes: [MailchimpSyncErrorType!]!
+  totalCount: Int!
+}
+
+type MailchimpSyncErrorType {
+  createdAt: DateTime!
+  email: String!
+  errorMessage: String!
+  id: String!
+  statusCode: Int
+  syncProviderId: String!
+  userId: String!
+}
+
 type MemberPlan implements HasImage {
   active: Boolean!
   amountPerMonthMax: Int
@@ -1651,6 +1666,9 @@ type Mutation {
   """
   createUserSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
+  """Deletes all sync errors for a config so all contacts will be retried."""
+  deleteAllMailchimpSyncErrors(configId: String!): Boolean!
+
   """Deletes an article."""
   deleteArticle(id: String!): String!
 
@@ -1676,6 +1694,9 @@ type Mutation {
 
   """Deletes an existing invoice."""
   deleteInvoice(id: String!): Invoice!
+
+  """Deletes a single sync error so the contact will be retried."""
+  deleteMailchimpSyncError(id: String!): Boolean!
 
   """Deletes an existing memberplan."""
   deleteMemberPlan(id: String!): MemberPlan!
@@ -2811,6 +2832,9 @@ type Query {
 
   """Fetches available merge fields for a Mailchimp list."""
   mailchimpMergeFields(configId: String!, listId: String!): [MailchimpMergeField!]!
+
+  """Returns sync errors for a given config."""
+  mailchimpSyncErrors(configId: String!, skip: Int, take: Int): MailchimpSyncErrorList!
 
   """This query returns the user."""
   me: SensitiveDataUser

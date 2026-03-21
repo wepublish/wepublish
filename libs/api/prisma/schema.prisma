@@ -1000,8 +1000,9 @@ model User {
   pollVotes        PollVote[]
   mailSent         MailLog[]
   consents         UserConsent[]
-  articleRevisions ArticleRevision[]
-  pageRevisions    PageRevision[]
+  articleRevisions    ArticleRevision[]
+  pageRevisions       PageRevision[]
+  mailchimpSyncErrors MailchimpSyncError[]
 
   @@map("users")
 }
@@ -1812,5 +1813,25 @@ model SettingSyncProvider {
   lastSyncAt    DateTime?
   lastSyncError String?
 
+  mailchimpSyncErrors MailchimpSyncError[]
+
   @@map("settings.syncprovider")
+}
+
+model MailchimpSyncError {
+  id             String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt      DateTime @default(now())
+  modifiedAt     DateTime @updatedAt
+
+  userId         String
+  syncProviderId String
+  email          String
+  errorMessage   String
+  statusCode     Int?
+
+  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  syncProvider   SettingSyncProvider  @relation(fields: [syncProviderId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, syncProviderId])
+  @@map("mailchimp_sync_errors")
 }

@@ -157,6 +157,9 @@ export class MailchimpSyncService {
     // Fetch all users with subscriptions via Prisma
     const usersWithSubscriptions = await this.getUsersWithSubscriptions();
 
+    // Pre-load users with sync errors to skip them
+    const recentErrorUserIds = await this.getRecentSyncErrorUserIds(config.id);
+
     let updatedCount = 0;
     let skippedCount = 0;
     let errorCount = 0;
@@ -166,6 +169,12 @@ export class MailchimpSyncService {
     for (const userWithSub of usersWithSubscriptions) {
       if (!userWithSub.user.email) continue;
       if (limit && processedCount >= limit) break;
+
+      if (recentErrorUserIds.has(userWithSub.user.id)) {
+        skippedCount++;
+        continue;
+      }
+
       processedCount++;
 
       const mergeFields: Record<string, string> = {};
@@ -214,9 +223,20 @@ export class MailchimpSyncService {
             mergeFields,
             interests,
           });
-        } catch (error) {
+        } catch (error: any) {
+          const errorMessage =
+            error instanceof Error ? error.message : String(error);
+          const statusCode =
+            error?.response?.body?.status ?? error?.status ?? null;
           this.logger.warn(
-            `Failed to update contact '${userWithSub.user.email}': ${error instanceof Error ? error.message : String(error)}`
+            `Failed to update contact '${userWithSub.user.email}': ${errorMessage}`
+          );
+          await this.recordSyncError(
+            config.id,
+            userWithSub.user.id,
+            userWithSub.user.email,
+            errorMessage,
+            statusCode
           );
           errorCount++;
           continue;
@@ -669,5 +689,59 @@ export class MailchimpSyncService {
     }
 
     return config;
+  }
+
+  // --- Sync Error Management ---
+
+  private async getRecentSyncErrorUserIds(
+    syncProviderId: string
+  ): Promise<Set<string>> {
+    const errors = await this.prisma.mailchimpSyncError.findMany({
+      where: { syncProviderId },
+      select: { userId: true },
+    });
+    return new Set(errors.map(e => e.userId));
+  }
+
+  private async recordSyncError(
+    syncProviderId: string,
+    userId: string,
+    email: string,
+    errorMessage: string,
+    statusCode: number | null
+  ): Promise<void> {
+    await this.prisma.mailchimpSyncError.upsert({
+      where: {
+        userId_syncProviderId: { userId, syncProviderId },
+      },
+      create: { userId, syncProviderId, email, errorMessage, statusCode },
+      update: { email, errorMessage, statusCode },
+    });
+  }
+
+  async getSyncErrors(syncProviderId: string, take = 20, skip = 0) {
+    const [nodes, totalCount] = await Promise.all([
+      this.prisma.mailchimpSyncError.findMany({
+        where: { syncProviderId },
+        orderBy: { createdAt: 'desc' },
+        take,
+        skip,
+      }),
+      this.prisma.mailchimpSyncError.count({
+        where: { syncProviderId },
+      }),
+    ]);
+
+    return { nodes, totalCount };
+  }
+
+  async deleteSyncError(id: string): Promise<void> {
+    await this.prisma.mailchimpSyncError.delete({ where: { id } });
+  }
+
+  async deleteAllSyncErrors(syncProviderId: string): Promise<void> {
+    await this.prisma.mailchimpSyncError.deleteMany({
+      where: { syncProviderId },
+    });
   }
 }

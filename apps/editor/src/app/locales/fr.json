@@ -1753,7 +1753,14 @@
         "dryRunMergeFields": "Champs de fusion",
         "dryRunInterests": "Intérêts",
         "dryRunNew": "Nouveau",
-        "dryRunUpdate": "Mise à jour"
+        "dryRunUpdate": "Mise à jour",
+        "syncErrors": "Erreurs de sync",
+        "noSyncErrors": "Aucune erreur de sync — tous les contacts ont été synchronisés avec succès.",
+        "clearAllErrors": "Supprimer toutes les erreurs",
+        "errorMessage": "Erreur",
+        "errorDate": "Date",
+        "previous": "Précédent",
+        "next": "Suivant"
       }
     }
   }

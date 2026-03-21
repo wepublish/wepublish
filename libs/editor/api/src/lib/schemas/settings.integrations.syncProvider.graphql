@@ -94,3 +94,25 @@ query MailchimpInterestGroups($configId: String!, $listId: String!) {
     name
   }
 }
+
+query MailchimpSyncErrors($configId: String!, $take: Int, $skip: Int) {
+  mailchimpSyncErrors(configId: $configId, take: $take, skip: $skip) {
+    nodes {
+      id
+      createdAt
+      userId
+      email
+      errorMessage
+      statusCode
+    }
+    totalCount
+  }
+}
+
+mutation DeleteMailchimpSyncError($id: String!) {
+  deleteMailchimpSyncError(id: $id)
+}
+
+mutation DeleteAllMailchimpSyncErrors($configId: String!) {
+  deleteAllMailchimpSyncErrors(configId: $configId)
+}

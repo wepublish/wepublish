@@ -1866,7 +1866,14 @@
         "dryRunMergeFields": "Merge-Felder",
         "dryRunInterests": "Interessen",
         "dryRunNew": "Neu",
-        "dryRunUpdate": "Aktualisierung"
+        "dryRunUpdate": "Aktualisierung",
+        "syncErrors": "Sync-Fehler",
+        "noSyncErrors": "Keine Sync-Fehler — alle Kontakte wurden erfolgreich synchronisiert.",
+        "clearAllErrors": "Alle Fehler löschen",
+        "errorMessage": "Fehlermeldung",
+        "errorDate": "Datum",
+        "previous": "Zurück",
+        "next": "Weiter"
       }
     }
   }

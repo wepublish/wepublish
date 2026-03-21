@@ -81,6 +81,39 @@ export class MailchimpInterestGroup {
   name!: string;
 }
 
+@ObjectType()
+export class MailchimpSyncErrorType {
+  @Field()
+  id!: string;
+
+  @Field()
+  createdAt!: Date;
+
+  @Field()
+  userId!: string;
+
+  @Field()
+  syncProviderId!: string;
+
+  @Field()
+  email!: string;
+
+  @Field()
+  errorMessage!: string;
+
+  @Field(() => Int, { nullable: true })
+  statusCode?: number | null;
+}
+
+@ObjectType()
+export class MailchimpSyncErrorList {
+  @Field(() => [MailchimpSyncErrorType])
+  nodes!: MailchimpSyncErrorType[];
+
+  @Field(() => Int)
+  totalCount!: number;
+}
+
 @Resolver()
 export class MailchimpSyncResolver {
   constructor(private mailchimpSyncService: MailchimpSyncService) {}
@@ -157,5 +190,45 @@ export class MailchimpSyncResolver {
         changes: [],
       }
     );
+  }
+
+  @Permissions(CanRunMailchimpSync)
+  @Query(returns => MailchimpSyncErrorList, {
+    name: 'mailchimpSyncErrors',
+    description: 'Returns sync errors for a given config.',
+  })
+  async mailchimpSyncErrors(
+    @Args('configId') configId: string,
+    @Args('take', { nullable: true, type: () => Int }) take?: number,
+    @Args('skip', { nullable: true, type: () => Int }) skip?: number
+  ): Promise<MailchimpSyncErrorList> {
+    return this.mailchimpSyncService.getSyncErrors(
+      configId,
+      take ?? 20,
+      skip ?? 0
+    );
+  }
+
+  @Permissions(CanRunMailchimpSync)
+  @Mutation(returns => Boolean, {
+    name: 'deleteMailchimpSyncError',
+    description: 'Deletes a single sync error so the contact will be retried.',
+  })
+  async deleteMailchimpSyncError(@Args('id') id: string): Promise<boolean> {
+    await this.mailchimpSyncService.deleteSyncError(id);
+    return true;
+  }
+
+  @Permissions(CanRunMailchimpSync)
+  @Mutation(returns => Boolean, {
+    name: 'deleteAllMailchimpSyncErrors',
+    description:
+      'Deletes all sync errors for a config so all contacts will be retried.',
+  })
+  async deleteAllMailchimpSyncErrors(
+    @Args('configId') configId: string
+  ): Promise<boolean> {
+    await this.mailchimpSyncService.deleteAllSyncErrors(configId);
+    return true;
   }
 }

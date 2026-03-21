@@ -1636,6 +1636,23 @@ export type MailchimpSyncDryRunResult = {
   updatedCount: Scalars['Int'];
 };
 
+export type MailchimpSyncErrorList = {
+  __typename?: 'MailchimpSyncErrorList';
+  nodes: Array<MailchimpSyncErrorType>;
+  totalCount: Scalars['Int'];
+};
+
+export type MailchimpSyncErrorType = {
+  __typename?: 'MailchimpSyncErrorType';
+  createdAt: Scalars['DateTime'];
+  email: Scalars['String'];
+  errorMessage: Scalars['String'];
+  id: Scalars['String'];
+  statusCode?: Maybe<Scalars['Int']>;
+  syncProviderId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
 export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
   active: Scalars['Boolean'];
@@ -1764,6 +1781,8 @@ export type Mutation = {
   createUserSubscription: Payment;
   /** Allows guests and authenticated users to create additional subscriptions */
   createUserSubscriptionWithConfirmation: Scalars['Boolean'];
+  /** Deletes all sync errors for a config so all contacts will be retried. */
+  deleteAllMailchimpSyncErrors: Scalars['Boolean'];
   /** Deletes an article. */
   deleteArticle: Scalars['String'];
   /** Deletes an existing author. */
@@ -1786,6 +1805,8 @@ export type Mutation = {
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
+  /** Deletes a single sync error so the contact will be retried. */
+  deleteMailchimpSyncError: Scalars['Boolean'];
   /** Deletes an existing memberplan. */
   deleteMemberPlan: MemberPlan;
   /** Deletes an existing navigation. */
@@ -2309,6 +2330,10 @@ export type MutationCreateUserSubscriptionWithConfirmationArgs = {
   userId?: InputMaybe<Scalars['String']>;
 };
 
+export type MutationDeleteAllMailchimpSyncErrorsArgs = {
+  configId: Scalars['String'];
+};
+
 export type MutationDeleteArticleArgs = {
   id: Scalars['String'];
 };
@@ -2346,6 +2371,10 @@ export type MutationDeleteImageArgs = {
 };
 
 export type MutationDeleteInvoiceArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationDeleteMailchimpSyncErrorArgs = {
   id: Scalars['String'];
 };
 
@@ -3910,6 +3939,8 @@ export type Query = {
   mailchimpLists: Array<MailchimpList>;
   /** Fetches available merge fields for a Mailchimp list. */
   mailchimpMergeFields: Array<MailchimpMergeField>;
+  /** Returns sync errors for a given config. */
+  mailchimpSyncErrors: MailchimpSyncErrorList;
   /** This query returns the user. */
   me?: Maybe<SensitiveDataUser>;
   /** Returns a memberplan by id or slug. */
@@ -4250,6 +4281,12 @@ export type QueryMailchimpListsArgs = {
 export type QueryMailchimpMergeFieldsArgs = {
   configId: Scalars['String'];
   listId: Scalars['String'];
+};
+
+export type QueryMailchimpSyncErrorsArgs = {
+  configId: Scalars['String'];
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 export type QueryMemberPlanArgs = {

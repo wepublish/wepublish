@@ -1,10 +1,14 @@
 import styled from '@emotion/styled';
 import {
   DryRunMailchimpSyncMutation,
+  MailchimpSyncErrorsDocument,
   SyncProviderSettingsDocument,
   SyncProviderSettingsQuery,
+  useDeleteAllMailchimpSyncErrorsMutation,
+  useDeleteMailchimpSyncErrorMutation,
   useDryRunMailchimpSyncMutation,
   useMailchimpInterestGroupsLazyQuery,
+  useMailchimpSyncErrorsQuery,
   useMailchimpListsLazyQuery,
   useMailchimpMergeFieldsLazyQuery,
   useMemberPlanListQuery,
@@ -539,6 +543,17 @@ function SyncProviderSettingCard({
   const [triggerSync] = useTriggerMailchimpSyncMutation();
   const [dryRunSync] = useDryRunMailchimpSyncMutation();
 
+  const [syncErrorsSkip, setSyncErrorsSkip] = useState(0);
+  const { data: syncErrorsData, refetch: refetchErrors } =
+    useMailchimpSyncErrorsQuery({
+      variables: { configId: setting.id, take: 10, skip: syncErrorsSkip },
+      skip: !setting.enabled,
+    });
+  const [deleteError] = useDeleteMailchimpSyncErrorMutation();
+  const [deleteAllErrors] = useDeleteAllMailchimpSyncErrorsMutation();
+
+  const syncErrors = syncErrorsData?.mailchimpSyncErrors;
+
   const { data: memberPlanData } = useMemberPlanListQuery({
     variables: { take: 200 },
   });
@@ -736,8 +751,9 @@ function SyncProviderSettingCard({
       );
     } finally {
       setSyncing(false);
+      refetchErrors();
     }
-  }, [triggerSync, setting.id, t, saveIfDirty]);
+  }, [triggerSync, setting.id, t, saveIfDirty, refetchErrors]);
 
   const handleDryRun = useCallback(async () => {
     setDryRunning(true);
@@ -1293,6 +1309,103 @@ function SyncProviderSettingCard({
           </CardContent>
         )}
       </Form>
+
+      {syncErrors && (
+        <CardContent>
+          <SectionTitle variant="h6">
+            {t('integrations.mailchimpSyncSettings.syncErrors')} (
+            {syncErrors.totalCount})
+          </SectionTitle>
+
+          {syncErrors.totalCount === 0 ?
+            <Alert severity="success">
+              {t('integrations.mailchimpSyncSettings.noSyncErrors')}
+            </Alert>
+          : <>
+              <Button
+                size="small"
+                color="warning"
+                variant="outlined"
+                onClick={async () => {
+                  await deleteAllErrors({
+                    variables: { configId: setting.id },
+                  });
+                  refetchErrors();
+                }}
+                sx={{ mb: 1 }}
+              >
+                {t('integrations.mailchimpSyncSettings.clearAllErrors')}
+              </Button>
+
+              <DryRunWrapper>
+                <DryRunTable>
+                  <thead>
+                    <tr>
+                      <th>Email</th>
+                      <th>
+                        {t('integrations.mailchimpSyncSettings.errorMessage')}
+                      </th>
+                      <th>Status</th>
+                      <th>
+                        {t('integrations.mailchimpSyncSettings.errorDate')}
+                      </th>
+                      <th />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {syncErrors.nodes.map(err => (
+                      <tr key={err.id}>
+                        <td>{err.email}</td>
+                        <td>{err.errorMessage}</td>
+                        <td>{err.statusCode ?? '-'}</td>
+                        <td>
+                          {new Intl.DateTimeFormat('de-CH', {
+                            dateStyle: 'short',
+                            timeStyle: 'short',
+                          }).format(new Date(err.createdAt))}
+                        </td>
+                        <td>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={async () => {
+                              await deleteError({ variables: { id: err.id } });
+                              refetchErrors();
+                            }}
+                          >
+                            <MdDelete />
+                          </IconButton>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </DryRunTable>
+              </DryRunWrapper>
+
+              {syncErrors.totalCount > 10 && (
+                <div style={{ marginTop: 8, display: 'flex', gap: 8 }}>
+                  <Button
+                    size="small"
+                    disabled={syncErrorsSkip === 0}
+                    onClick={() =>
+                      setSyncErrorsSkip(Math.max(0, syncErrorsSkip - 10))
+                    }
+                  >
+                    {t('integrations.mailchimpSyncSettings.previous')}
+                  </Button>
+                  <Button
+                    size="small"
+                    disabled={syncErrorsSkip + 10 >= syncErrors.totalCount}
+                    onClick={() => setSyncErrorsSkip(syncErrorsSkip + 10)}
+                  >
+                    {t('integrations.mailchimpSyncSettings.next')}
+                  </Button>
+                </div>
+              )}
+            </>
+          }
+        </CardContent>
+      )}
     </SyncCard>
   );
 }
