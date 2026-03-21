@@ -29,7 +29,6 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import 'multer';
-import { v4 as uuidv4 } from 'uuid';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { assertRemoteFileIsAccessible } from './assertRemoteFileIsAccessible';
@@ -86,9 +85,6 @@ export class AppController {
     )
     uploadedFile: Express.Multer.File
   ) {
-    if (!imageId) {
-      imageId = uuidv4();
-    }
     const metadata = await this.media.saveImage(imageId, uploadedFile.buffer);
 
     res.status(201).send({

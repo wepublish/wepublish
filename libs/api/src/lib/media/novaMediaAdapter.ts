@@ -16,6 +16,7 @@ import {
 } from '@wepublish/media-transform-guard';
 import { validateImageDimension } from '@wepublish/media-transform-guard';
 import { SignJWT, importPKCS8, type KeyLike } from 'jose';
+import { v4 as uuidv4 } from 'uuid';
 
 export class MediaServerError extends Error {
   constructor(message: string) {
@@ -39,11 +40,15 @@ export class NovaMediaAdapter implements MediaAdapter {
     ) as Promise<KeyLike>;
   }
 
-  private async generateAuthToken(): Promise<string> {
+  private async generateAuthToken(
+    imageId: string,
+    action: 'upload' | 'delete'
+  ): Promise<string> {
     const key = await this.privateKeyPromise;
 
-    return new SignJWT({})
+    return new SignJWT({ action })
       .setProtectedHeader({ alg: 'EdDSA' })
+      .setSubject(imageId)
       .setIssuer(this.hostUrl)
       .setAudience('wepublish-media-server')
       .setExpirationTime('5m')
@@ -57,9 +62,12 @@ export class NovaMediaAdapter implements MediaAdapter {
     // Related issue: https://github.com/form-data/form-data/issues/394
     form.hasKnownLength = () => false;
 
-    const token = await this.generateAuthToken();
+    const imageId = uuidv4();
+    const token = await this.generateAuthToken(imageId, 'upload');
+    const uploadUrl = new URL(this.internalURL.toString());
+    uploadUrl.searchParams.set('imageId', imageId);
 
-    const response = await fetch(this.internalURL, {
+    const response = await fetch(uploadUrl, {
       method: 'POST',
       headers: { authorization: `Bearer ${token}` },
       body: form,
@@ -130,7 +138,7 @@ export class NovaMediaAdapter implements MediaAdapter {
   }
 
   async deleteImage(id: string): Promise<boolean> {
-    const token = await this.generateAuthToken();
+    const token = await this.generateAuthToken(id, 'delete');
 
     const response = await fetch(`${this.internalURL}/${id}`, {
       method: 'DELETE',
