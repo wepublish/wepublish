@@ -1542,6 +1542,26 @@ export type MailTemplateWithUrlAndStatusModel = {
   url: Scalars['String'];
 };
 
+export type MailchimpInterestGroup = {
+  __typename?: 'MailchimpInterestGroup';
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type MailchimpList = {
+  __typename?: 'MailchimpList';
+  id: Scalars['String'];
+  memberCount: Scalars['Int'];
+  name: Scalars['String'];
+};
+
+export type MailchimpMergeField = {
+  __typename?: 'MailchimpMergeField';
+  name: Scalars['String'];
+  tag: Scalars['String'];
+  type: Scalars['String'];
+};
+
 export type MailchimpSyncDryRunChange = {
   __typename?: 'MailchimpSyncDryRunChange';
   email: Scalars['String'];
@@ -3952,6 +3972,12 @@ export type Query = {
   mailProviderSettings: Array<SettingMailProvider>;
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
+  /** Fetches available interest groups for a Mailchimp list. */
+  mailchimpInterestGroups: Array<MailchimpInterestGroup>;
+  /** Fetches available Mailchimp lists/audiences for a sync config. */
+  mailchimpLists: Array<MailchimpList>;
+  /** Fetches available merge fields for a Mailchimp list. */
+  mailchimpMergeFields: Array<MailchimpMergeField>;
   /** This query returns the user. */
   me?: Maybe<SensitiveDataUser>;
   /** Returns a memberplan by id or slug. */
@@ -4311,6 +4337,23 @@ export type QueryMailProviderSettingArgs = {
 
 export type QueryMailProviderSettingsArgs = {
   filter?: InputMaybe<SettingMailProviderFilter>;
+};
+
+
+export type QueryMailchimpInterestGroupsArgs = {
+  configId: Scalars['String'];
+  listId: Scalars['String'];
+};
+
+
+export type QueryMailchimpListsArgs = {
+  configId: Scalars['String'];
+};
+
+
+export type QueryMailchimpMergeFieldsArgs = {
+  configId: Scalars['String'];
+  listId: Scalars['String'];
 };
 
 

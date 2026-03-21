@@ -93,7 +93,9 @@ export class SyncProviderSettingsService {
     }
 
     const filteredUpdateData = Object.fromEntries(
-      Object.entries(updateData).filter(([_, value]) => value !== undefined)
+      Object.entries(updateData).filter(
+        ([_, value]) => value !== undefined && value !== null
+      )
     );
 
     const returnValue = await this.prisma.settingSyncProvider.update({

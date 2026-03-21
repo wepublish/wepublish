@@ -4,6 +4,9 @@ import {
   SyncProviderSettingsDocument,
   SyncProviderSettingsQuery,
   useDryRunMailchimpSyncMutation,
+  useMailchimpInterestGroupsLazyQuery,
+  useMailchimpListsLazyQuery,
+  useMailchimpMergeFieldsLazyQuery,
   useSyncProviderSettingsQuery,
   useTriggerMailchimpSyncMutation,
   useUpdateSyncProviderSettingMutation,
@@ -11,6 +14,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Alert,
+  Autocomplete,
   Button,
   Card,
   CardActions,
@@ -18,9 +22,10 @@ import {
   Chip,
   CircularProgress,
   IconButton,
+  TextField,
   Typography,
 } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdAdd, MdDelete, MdSync } from 'react-icons/md';
@@ -169,7 +174,45 @@ function SyncProviderSettingCard({
   const [triggerSync] = useTriggerMailchimpSyncMutation();
   const [dryRunSync] = useDryRunMailchimpSyncMutation();
 
-  const { control, handleSubmit } = useForm<SyncProviderFormValues>({
+  const [fetchLists, { data: listsData, loading: listsLoading }] =
+    useMailchimpListsLazyQuery();
+  const [fetchMergeFields, { data: mergeFieldsData }] =
+    useMailchimpMergeFieldsLazyQuery();
+  const [fetchInterestGroups, { data: interestGroupsData }] =
+    useMailchimpInterestGroupsLazyQuery();
+
+  const availableLists = listsData?.mailchimpLists ?? [];
+  const availableMergeFields = mergeFieldsData?.mailchimpMergeFields ?? [];
+  const availableInterestGroups =
+    interestGroupsData?.mailchimpInterestGroups ?? [];
+
+  useEffect(() => {
+    if (setting.enabled) {
+      fetchLists({ variables: { configId: setting.id } });
+      if (setting.mailchimp_listId) {
+        fetchMergeFields({
+          variables: { configId: setting.id, listId: setting.mailchimp_listId },
+        });
+        fetchInterestGroups({
+          variables: { configId: setting.id, listId: setting.mailchimp_listId },
+        });
+      }
+    }
+  }, [
+    setting.id,
+    setting.enabled,
+    setting.mailchimp_listId,
+    fetchLists,
+    fetchMergeFields,
+    fetchInterestGroups,
+  ]);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { isDirty },
+    watch,
+  } = useForm<SyncProviderFormValues>({
     resolver: zodResolver(syncProviderSchema),
     defaultValues: {
       name: setting.name ?? '',
@@ -183,6 +226,25 @@ function SyncProviderSettingCard({
         setting.mailchimp_defaultInterestGroupIds ?? [],
     },
   });
+
+  const watchedListId = watch('mailchimp_listId');
+
+  useEffect(() => {
+    if (setting.enabled && watchedListId) {
+      fetchMergeFields({
+        variables: { configId: setting.id, listId: watchedListId },
+      });
+      fetchInterestGroups({
+        variables: { configId: setting.id, listId: watchedListId },
+      });
+    }
+  }, [
+    watchedListId,
+    setting.id,
+    setting.enabled,
+    fetchMergeFields,
+    fetchInterestGroups,
+  ]);
 
   const {
     fields: mergeFields,
@@ -202,8 +264,8 @@ function SyncProviderSettingCard({
     name: 'mailchimp_interestGroupMappings',
   });
 
-  const onSubmit = handleSubmit(async formData => {
-    try {
+  const saveSettings = useCallback(
+    async (formData: SyncProviderFormValues) => {
       const variables: any = {
         id: setting.id,
         name: formData.name,
@@ -221,57 +283,108 @@ function SyncProviderSettingCard({
       }
 
       await updateSettings({ variables });
+    },
+    [updateSettings, setting.id]
+  );
+
+  const onSubmit = handleSubmit(async formData => {
+    try {
+      await saveSettings(formData);
       toaster.push(
         <Message type="success">{t('integrations.updateSuccess')}</Message>
       );
-    } catch (e) {
+    } catch (e: any) {
+      const detail = e?.graphQLErrors?.[0]?.message ?? e?.message ?? String(e);
       toaster.push(
-        <Message type="error">{t('integrations.updateError')}</Message>
+        <Message
+          type="error"
+          closable
+          duration={0}
+        >
+          {t('integrations.updateError')}: {detail}
+        </Message>
       );
-      console.error(e);
     }
   });
+
+  const saveIfDirty = useCallback(async (): Promise<boolean> => {
+    if (!isDirty) return true;
+    return new Promise<boolean>(resolve => {
+      handleSubmit(
+        async formData => {
+          try {
+            await saveSettings(formData);
+            resolve(true);
+          } catch (e: any) {
+            const detail =
+              e?.graphQLErrors?.[0]?.message ?? e?.message ?? String(e);
+            toaster.push(
+              <Message
+                type="error"
+                closable
+                duration={0}
+              >
+                {t('integrations.updateError')}: {detail}
+              </Message>
+            );
+            resolve(false);
+          }
+        },
+        () => resolve(false)
+      )();
+    });
+  }, [isDirty, handleSubmit, saveSettings, t]);
 
   const handleTriggerSync = useCallback(async () => {
     setSyncing(true);
     try {
+      if (!(await saveIfDirty())) return;
       await triggerSync({ variables: { id: setting.id } });
       toaster.push(
         <Message type="success">
           {t('integrations.mailchimpSyncSettings.syncTriggered')}
         </Message>
       );
-    } catch (e) {
+    } catch (e: any) {
+      const detail = e?.graphQLErrors?.[0]?.message ?? e?.message ?? String(e);
       toaster.push(
-        <Message type="error">
-          {t('integrations.mailchimpSyncSettings.syncFailed')}
+        <Message
+          type="error"
+          closable
+          duration={0}
+        >
+          {t('integrations.mailchimpSyncSettings.syncFailed')}: {detail}
         </Message>
       );
-      console.error(e);
     } finally {
       setSyncing(false);
     }
-  }, [triggerSync, setting.id, t]);
+  }, [triggerSync, setting.id, t, saveIfDirty]);
 
   const handleDryRun = useCallback(async () => {
     setDryRunning(true);
     setDryRunResult(null);
     try {
+      if (!(await saveIfDirty())) return;
       const { data } = await dryRunSync({
         variables: { id: setting.id },
       });
       setDryRunResult(data?.dryRunMailchimpSync ?? null);
-    } catch (e) {
+    } catch (e: any) {
+      const detail = e?.graphQLErrors?.[0]?.message ?? e?.message ?? String(e);
       toaster.push(
-        <Message type="error">
-          {t('integrations.mailchimpSyncSettings.syncFailed')}
+        <Message
+          type="error"
+          closable
+          duration={0}
+        >
+          {t('integrations.mailchimpSyncSettings.syncFailed')}: {detail}
         </Message>
       );
-      console.error(e);
     } finally {
       setDryRunning(false);
     }
-  }, [dryRunSync, setting.id, t]);
+  }, [dryRunSync, setting.id, t, saveIfDirty]);
 
   return (
     <SyncCard variant="outlined">
@@ -354,11 +467,44 @@ function SyncProviderSettingCard({
             <Controller
               name="mailchimp_listId"
               control={control}
-              render={({ field: { value, onChange, ...rest } }) => (
-                <Form.Control
+              render={({ field: { value, onChange } }) => (
+                <Autocomplete
+                  freeSolo
+                  options={availableLists.map(l => l.id)}
+                  getOptionLabel={id => {
+                    const list = availableLists.find(l => l.id === id);
+                    return list ?
+                        `${list.name} (${list.memberCount} members)`
+                      : id;
+                  }}
+                  filterOptions={(options, { inputValue }) =>
+                    inputValue ?
+                      options.filter(id => {
+                        const list = availableLists.find(l => l.id === id);
+                        const label = list ? `${list.name} ${list.id}` : id;
+                        return label
+                          .toLowerCase()
+                          .includes(inputValue.toLowerCase());
+                      })
+                    : options
+                  }
                   value={value ?? ''}
-                  onChange={onChange}
-                  {...rest}
+                  onChange={(_, newValue) => {
+                    onChange(newValue ?? '');
+                  }}
+                  onInputChange={(_, inputValue, reason) => {
+                    if (reason === 'input') onChange(inputValue);
+                  }}
+                  loading={listsLoading}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      size="small"
+                      placeholder={t(
+                        'integrations.mailchimpSyncSettings.listId'
+                      )}
+                    />
+                  )}
                 />
               )}
             />
@@ -383,11 +529,42 @@ function SyncProviderSettingCard({
                 name={`mailchimp_mergeFieldMappings.${index}.tag`}
                 control={control}
                 render={({ field: { value, onChange } }) => (
-                  <MappingInput
-                    value={value}
-                    onChange={onChange}
-                    placeholder={t(
-                      'integrations.mailchimpSyncSettings.mergeFieldTag'
+                  <Autocomplete
+                    freeSolo
+                    options={availableMergeFields.map(f => f.tag)}
+                    getOptionLabel={tag => {
+                      const mf = availableMergeFields.find(f => f.tag === tag);
+                      return mf ? `${mf.tag} (${mf.name})` : tag;
+                    }}
+                    filterOptions={(options, { inputValue }) =>
+                      inputValue ?
+                        options.filter(tag => {
+                          const mf = availableMergeFields.find(
+                            f => f.tag === tag
+                          );
+                          const label = mf ? `${mf.tag} ${mf.name}` : tag;
+                          return label
+                            .toLowerCase()
+                            .includes(inputValue.toLowerCase());
+                        })
+                      : options
+                    }
+                    value={value ?? ''}
+                    onChange={(_, newValue) => {
+                      onChange(newValue ?? '');
+                    }}
+                    onInputChange={(_, inputValue, reason) => {
+                      if (reason === 'input') onChange(inputValue);
+                    }}
+                    sx={{ flex: 1 }}
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        size="small"
+                        placeholder={t(
+                          'integrations.mailchimpSyncSettings.mergeFieldTag'
+                        )}
+                      />
                     )}
                   />
                 )}
@@ -442,11 +619,45 @@ function SyncProviderSettingCard({
                 name={`mailchimp_interestGroupMappings.${index}.groupId`}
                 control={control}
                 render={({ field: { value, onChange } }) => (
-                  <MappingInput
-                    value={value}
-                    onChange={onChange}
-                    placeholder={t(
-                      'integrations.mailchimpSyncSettings.interestGroupId'
+                  <Autocomplete
+                    freeSolo
+                    options={availableInterestGroups.map(g => g.id)}
+                    getOptionLabel={id => {
+                      const group = availableInterestGroups.find(
+                        g => g.id === id
+                      );
+                      return group ? `${group.name} (${group.id})` : id;
+                    }}
+                    filterOptions={(options, { inputValue }) =>
+                      inputValue ?
+                        options.filter(id => {
+                          const group = availableInterestGroups.find(
+                            g => g.id === id
+                          );
+                          const label =
+                            group ? `${group.name} ${group.id}` : id;
+                          return label
+                            .toLowerCase()
+                            .includes(inputValue.toLowerCase());
+                        })
+                      : options
+                    }
+                    value={value ?? ''}
+                    onChange={(_, newValue) => {
+                      onChange(newValue ?? '');
+                    }}
+                    onInputChange={(_, inputValue, reason) => {
+                      if (reason === 'input') onChange(inputValue);
+                    }}
+                    sx={{ flex: 1 }}
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        size="small"
+                        placeholder={t(
+                          'integrations.mailchimpSyncSettings.interestGroupId'
+                        )}
+                      />
                     )}
                   />
                 )}
@@ -481,6 +692,55 @@ function SyncProviderSettingCard({
           >
             {t('integrations.mailchimpSyncSettings.addInterestGroup')}
           </Button>
+
+          {/* Default Interest Groups */}
+          <SectionTitle variant="h6">
+            {t('integrations.mailchimpSyncSettings.defaultInterestGroups')}
+          </SectionTitle>
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            gutterBottom
+          >
+            {t('integrations.mailchimpSyncSettings.defaultInterestGroupsHelp')}
+          </Typography>
+          <Controller
+            name="mailchimp_defaultInterestGroupIds"
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <Autocomplete
+                multiple
+                options={availableInterestGroups}
+                getOptionLabel={option =>
+                  typeof option === 'string' ? option : (
+                    `${option.name} (${option.id})`
+                  )
+                }
+                value={(value ?? []).map(
+                  id =>
+                    availableInterestGroups.find(g => g.id === id) ?? {
+                      id,
+                      name: id,
+                    }
+                )}
+                onChange={(_, newValue) => {
+                  onChange(
+                    newValue.map(v => (typeof v === 'string' ? v : v.id))
+                  );
+                }}
+                isOptionEqualToValue={(option, val) => option.id === val.id}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    size="small"
+                    placeholder={t(
+                      'integrations.mailchimpSyncSettings.defaultInterestGroups'
+                    )}
+                  />
+                )}
+              />
+            )}
+          />
 
           {/* Sync Status */}
           <SyncStatusWrapper>

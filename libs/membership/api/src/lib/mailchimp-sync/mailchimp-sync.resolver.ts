@@ -4,6 +4,7 @@ import {
   Int,
   Mutation,
   ObjectType,
+  Query,
   Resolver,
 } from '@nestjs/graphql';
 import { CanRunMailchimpSync } from '@wepublish/permissions';
@@ -44,9 +45,81 @@ export class MailchimpSyncDryRunResult {
   changes!: MailchimpSyncDryRunChange[];
 }
 
+@ObjectType()
+export class MailchimpList {
+  @Field()
+  id!: string;
+
+  @Field()
+  name!: string;
+
+  @Field(() => Int)
+  memberCount!: number;
+}
+
+@ObjectType()
+export class MailchimpMergeField {
+  @Field()
+  tag!: string;
+
+  @Field()
+  name!: string;
+
+  @Field()
+  type!: string;
+}
+
+@ObjectType()
+export class MailchimpInterestGroup {
+  @Field()
+  id!: string;
+
+  @Field()
+  name!: string;
+}
+
 @Resolver()
 export class MailchimpSyncResolver {
   constructor(private mailchimpSyncService: MailchimpSyncService) {}
+
+  @Permissions(CanRunMailchimpSync)
+  @Query(returns => [MailchimpList], {
+    name: 'mailchimpLists',
+    description:
+      'Fetches available Mailchimp lists/audiences for a sync config.',
+  })
+  async mailchimpLists(
+    @Args('configId') configId: string
+  ): Promise<MailchimpList[]> {
+    return this.mailchimpSyncService.getMailchimpLists(configId);
+  }
+
+  @Permissions(CanRunMailchimpSync)
+  @Query(returns => [MailchimpMergeField], {
+    name: 'mailchimpMergeFields',
+    description: 'Fetches available merge fields for a Mailchimp list.',
+  })
+  async mailchimpMergeFields(
+    @Args('configId') configId: string,
+    @Args('listId') listId: string
+  ): Promise<MailchimpMergeField[]> {
+    return this.mailchimpSyncService.getMailchimpMergeFields(configId, listId);
+  }
+
+  @Permissions(CanRunMailchimpSync)
+  @Query(returns => [MailchimpInterestGroup], {
+    name: 'mailchimpInterestGroups',
+    description: 'Fetches available interest groups for a Mailchimp list.',
+  })
+  async mailchimpInterestGroups(
+    @Args('configId') configId: string,
+    @Args('listId') listId: string
+  ): Promise<MailchimpInterestGroup[]> {
+    return this.mailchimpSyncService.getMailchimpInterestCategories(
+      configId,
+      listId
+    );
+  }
 
   @Permissions(CanRunMailchimpSync)
   @Mutation(returns => Boolean, {

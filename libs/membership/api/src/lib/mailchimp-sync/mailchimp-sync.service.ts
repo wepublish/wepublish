@@ -116,14 +116,7 @@ export class MailchimpSyncService {
     id: string,
     dryRun = false
   ): Promise<DryRunResult | null> {
-    const configs =
-      await this.syncProviderSettingsService.getEnabledSyncConfigs();
-    const config = configs.find(c => c.id === id);
-
-    if (!config) {
-      throw new Error(`Mailchimp sync config "${id}" not found or not enabled`);
-    }
-
+    const config = await this.getConfigById(id);
     const result = await this.executeSyncForConfig(config, dryRun);
 
     if (!dryRun) {
@@ -137,19 +130,11 @@ export class MailchimpSyncService {
     config: SettingSyncProvider & { decryptedApiKey: string | null },
     dryRun = false
   ): Promise<DryRunResult | null> {
-    if (!config.decryptedApiKey || !config.mailchimp_listId) {
-      throw new Error('Missing Mailchimp API key or list ID');
+    if (!config.mailchimp_listId) {
+      throw new Error('Missing Mailchimp list ID');
     }
 
-    const server = config.decryptedApiKey.split('-')[1];
-    if (!server) {
-      throw new Error('Invalid Mailchimp API key format (expected key-server)');
-    }
-
-    mailchimp.setConfig({
-      apiKey: config.decryptedApiKey,
-      server,
-    });
+    this.configureMailchimpClient(config);
 
     const mergeFieldMappings = (config.mailchimp_mergeFieldMappings ??
       []) as unknown as MergeFieldMapping[];
@@ -302,10 +287,19 @@ export class MailchimpSyncService {
     const batchSize = 500;
 
     while (true) {
-      const response = (await mailchimp.lists.getListMembersInfo(listId, {
-        offset,
-        count: batchSize,
-      })) as any;
+      let response: any;
+      try {
+        response = await mailchimp.lists.getListMembersInfo(listId, {
+          offset,
+          count: batchSize,
+        });
+      } catch (error: any) {
+        const detail =
+          error?.response?.body?.detail ?? error?.message ?? String(error);
+        const title = error?.response?.body?.title ?? 'Mailchimp API error';
+        const status = error?.response?.body?.status ?? error?.status;
+        throw new Error(`${title} (${status}): ${detail}`);
+      }
 
       if (response.status && response.detail) {
         throw new Error(
@@ -335,20 +329,19 @@ export class MailchimpSyncService {
     const email = data.email.trim().toLowerCase();
     const subscriberHash = createHash('md5').update(email).digest('hex');
 
-    const response = (await mailchimp.lists.setListMember(
-      listId,
-      subscriberHash,
-      {
+    try {
+      await mailchimp.lists.setListMember(listId, subscriberHash, {
         email_address: data.email.trim(),
         status_if_new: 'subscribed',
         merge_fields: data.mergeFields,
         interests: data.interests,
-      }
-    )) as any;
-
-    if (response.status && response.detail) {
+      });
+    } catch (error: any) {
+      const detail =
+        error?.response?.body?.detail ?? error?.message ?? String(error);
+      const title = error?.response?.body?.title ?? 'Mailchimp API error';
       throw new Error(
-        `Error updating contact '${data.email}': ${response.title} - ${response.detail}`
+        `Error updating contact '${data.email}': ${title} - ${detail}`
       );
     }
   }
@@ -538,5 +531,124 @@ export class MailchimpSyncService {
       if (existing[key] !== desired[key]) return false;
     }
     return true;
+  }
+
+  private configureMailchimpClient(
+    config: SettingSyncProvider & { decryptedApiKey: string | null }
+  ): void {
+    if (!config.decryptedApiKey) {
+      throw new Error('Missing Mailchimp API key');
+    }
+
+    const server = config.decryptedApiKey.split('-')[1];
+    if (!server) {
+      throw new Error('Invalid Mailchimp API key format (expected key-server)');
+    }
+
+    mailchimp.setConfig({
+      apiKey: config.decryptedApiKey,
+      server,
+    });
+  }
+
+  async getMailchimpLists(
+    configId: string
+  ): Promise<{ id: string; name: string; memberCount: number }[]> {
+    const config = await this.getConfigById(configId);
+    this.configureMailchimpClient(config);
+
+    try {
+      const response = (await mailchimp.lists.getAllLists({
+        count: 100,
+      })) as any;
+
+      return (response.lists ?? []).map((list: any) => ({
+        id: list.id,
+        name: list.name,
+        memberCount: list.stats?.member_count ?? 0,
+      }));
+    } catch (error: any) {
+      const detail =
+        error?.response?.body?.detail ?? error?.message ?? String(error);
+      const title = error?.response?.body?.title ?? 'Mailchimp API error';
+      throw new Error(`${title}: ${detail}`);
+    }
+  }
+
+  async getMailchimpMergeFields(
+    configId: string,
+    listId: string
+  ): Promise<{ tag: string; name: string; type: string }[]> {
+    const config = await this.getConfigById(configId);
+    this.configureMailchimpClient(config);
+
+    try {
+      const response = (await mailchimp.lists.getListMergeFields(listId, {
+        count: 100,
+      })) as any;
+
+      return (response.merge_fields ?? []).map((field: any) => ({
+        tag: field.tag,
+        name: field.name,
+        type: field.type,
+      }));
+    } catch (error: any) {
+      const detail =
+        error?.response?.body?.detail ?? error?.message ?? String(error);
+      const title = error?.response?.body?.title ?? 'Mailchimp API error';
+      throw new Error(`${title}: ${detail}`);
+    }
+  }
+
+  async getMailchimpInterestCategories(
+    configId: string,
+    listId: string
+  ): Promise<{ id: string; name: string }[]> {
+    const config = await this.getConfigById(configId);
+    this.configureMailchimpClient(config);
+
+    try {
+      const response = (await (
+        mailchimp.lists as any
+      ).getListInterestCategories(listId, { count: 100 })) as any;
+
+      const categories: { id: string; name: string }[] = [];
+
+      for (const category of response.categories ?? []) {
+        const interestsResponse = (await (
+          mailchimp.lists as any
+        ).listInterestCategoryInterests(listId, category.id, {
+          count: 100,
+        })) as any;
+
+        for (const interest of interestsResponse.interests ?? []) {
+          categories.push({
+            id: interest.id,
+            name: `${category.title}: ${interest.name}`,
+          });
+        }
+      }
+
+      return categories;
+    } catch (error: any) {
+      const detail =
+        error?.response?.body?.detail ?? error?.message ?? String(error);
+      const title = error?.response?.body?.title ?? 'Mailchimp API error';
+      throw new Error(`${title}: ${detail}`);
+    }
+  }
+
+  private async getConfigById(
+    id: string
+  ): Promise<SettingSyncProvider & { decryptedApiKey: string | null }> {
+    const configs =
+      await this.syncProviderSettingsService.getEnabledSyncConfigs();
+    const config = configs.find(c => c.id === id);
+
+    if (!config) {
+      throw new Error(`Mailchimp sync config "${id}" not found or not enabled`);
+    }
+
+    return config;
   }
 }

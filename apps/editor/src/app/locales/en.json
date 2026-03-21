@@ -1895,6 +1895,8 @@
         "interestGroupId": "Interest Group ID",
         "interestGroupExpression": "Expression (e.g. always)",
         "addInterestGroup": "Add Interest Group",
+        "defaultInterestGroups": "Default Interest Groups",
+        "defaultInterestGroupsHelp": "Interest groups that are always enabled for every contact — regardless of subscription.",
         "lastSync": "Last sync",
         "scheduledInfo": "Runs automatically every day at 3:00 AM (UTC)",
         "triggerSync": "Sync Now",

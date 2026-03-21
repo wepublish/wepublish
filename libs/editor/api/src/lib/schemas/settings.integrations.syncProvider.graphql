@@ -70,3 +70,26 @@ mutation DryRunMailchimpSync($id: String!) {
     }
   }
 }
+
+query MailchimpLists($configId: String!) {
+  mailchimpLists(configId: $configId) {
+    id
+    name
+    memberCount
+  }
+}
+
+query MailchimpMergeFields($configId: String!, $listId: String!) {
+  mailchimpMergeFields(configId: $configId, listId: $listId) {
+    tag
+    name
+    type
+  }
+}
+
+query MailchimpInterestGroups($configId: String!, $listId: String!) {
+  mailchimpInterestGroups(configId: $configId, listId: $listId) {
+    id
+    name
+  }
+}

@@ -1721,6 +1721,8 @@
         "interestGroupId": "ID du groupe d’intérêt",
         "interestGroupExpression": "Expression (ex. always)",
         "addInterestGroup": "Ajouter un groupe d’intérêt",
+        "defaultInterestGroups": "Groupes d’intérêt par défaut",
+        "defaultInterestGroupsHelp": "Groupes d’intérêt toujours activés pour chaque contact — indépendamment de l’abonnement.",
         "lastSync": "Dernière synchronisation",
         "scheduledInfo": "Exécuté automatiquement chaque jour à 3h00 (UTC)",
         "triggerSync": "Synchroniser maintenant",

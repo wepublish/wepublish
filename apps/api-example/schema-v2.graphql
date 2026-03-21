@@ -1459,6 +1459,23 @@ type MailTemplateWithUrlAndStatusModel {
   url: String!
 }
 
+type MailchimpInterestGroup {
+  id: String!
+  name: String!
+}
+
+type MailchimpList {
+  id: String!
+  memberCount: Int!
+  name: String!
+}
+
+type MailchimpMergeField {
+  name: String!
+  tag: String!
+  type: String!
+}
+
 type MailchimpSyncDryRunChange {
   email: String!
   interests: JSONObject!
@@ -2784,6 +2801,15 @@ type Query {
 
   """Return all mail templates"""
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
+
+  """Fetches available interest groups for a Mailchimp list."""
+  mailchimpInterestGroups(configId: String!, listId: String!): [MailchimpInterestGroup!]!
+
+  """Fetches available Mailchimp lists/audiences for a sync config."""
+  mailchimpLists(configId: String!): [MailchimpList!]!
+
+  """Fetches available merge fields for a Mailchimp list."""
+  mailchimpMergeFields(configId: String!, listId: String!): [MailchimpMergeField!]!
 
   """This query returns the user."""
   me: SensitiveDataUser
