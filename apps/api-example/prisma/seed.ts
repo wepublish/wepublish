@@ -82,9 +82,15 @@ function getText(min = 1, max = 10) {
 async function seedImages(prisma: PrismaClient) {
   const internalUrl = process.env.MEDIA_SERVER_INTERNAL_URL;
 
+  const jwtPrivateKey = (process.env.JWT_PRIVATE_KEY ?? '').replace(
+    /\\n/g,
+    '\n'
+  );
+
   const mediaAdapter = new NovaMediaAdapter(
     new URL(process.env.MEDIA_SERVER_URL),
-    process.env.MEDIA_SERVER_TOKEN,
+    jwtPrivateKey,
+    process.env.HOST_URL ?? 'http://localhost:4000',
     { quality: 1 },
     internalUrl ? new URL(internalUrl) : undefined
   );

@@ -19,7 +19,7 @@ import {
   ImageURIObject,
   MediaService,
   SupportedImagesValidator,
-  TokenAuthGuard,
+  JwtAuthGuard,
 } from '@wepublish/media/api';
 import {
   getTransformationKey,
@@ -62,7 +62,7 @@ export class AppController {
     throw new NotFoundException();
   }
 
-  @UseGuards(TokenAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(
@@ -71,7 +71,7 @@ export class AppController {
     @UploadedFile(
       new ParseFilePipe({
         fileIsRequired: true,
-        validators: [new SupportedImagesValidator()],
+        validators: [],
       })
     )
     uploadedFile: Express.Multer.File
@@ -167,7 +167,7 @@ export class AppController {
     res.redirect(HTTP_CODE_FOUND, url);
   }
 
-  @UseGuards(TokenAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete(':imageId')
   async deleteImage(@Res() res: Response, @Param('imageId') imageId: string) {
     await this.media.deleteImage(imageId);

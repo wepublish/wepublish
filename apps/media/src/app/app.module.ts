@@ -4,11 +4,10 @@ import { AppController } from './app.controller';
 import {
   MediaServiceModule,
   StorageClientModule,
-  TokenModule,
+  JwtAuthModule,
 } from '@wepublish/media/api';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MulterModule } from '@nestjs/platform-express';
-import { PassportModule } from '@nestjs/passport';
 import { SentryModule, SentryGlobalFilter } from '@sentry/nestjs/setup';
 import { APP_FILTER } from '@nestjs/core';
 import { CacheModule } from '@nestjs/cache-manager';
@@ -51,15 +50,10 @@ import { CacheModule } from '@nestjs/cache-manager';
       }),
       inject: [ConfigService],
     }),
-    TokenModule.registerAsync({
-      imports: [
-        ConfigModule,
-        PassportModule.register({
-          session: false, // would use a cookie if set to true
-        }),
-      ],
+    JwtAuthModule.registerAsync({
+      imports: [ConfigModule],
       useFactory: (config: ConfigService) => ({
-        token: config.getOrThrow('TOKEN'),
+        apiUrl: config.getOrThrow('API_URL'),
       }),
       inject: [ConfigService],
     }),

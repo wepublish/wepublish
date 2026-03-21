@@ -10,11 +10,12 @@ import {
   UploadImage,
 } from '@wepublish/image/api';
 import {
-  getSignatureForImage,
+  signImageTransformations,
   TransformationsDto,
   TransformationsSchema,
 } from '@wepublish/media-transform-guard';
 import { validateImageDimension } from '@wepublish/media-transform-guard';
+import { SignJWT, importPKCS8, type KeyLike } from 'jose';
 
 export class MediaServerError extends Error {
   constructor(message: string) {
@@ -23,12 +24,32 @@ export class MediaServerError extends Error {
 }
 
 export class NovaMediaAdapter implements MediaAdapter {
+  private privateKeyPromise: Promise<KeyLike>;
+
   constructor(
     private url: URL,
-    private token: string,
+    private jwtPrivateKey: string,
+    private hostUrl: string,
     private config: { quality: number },
     private internalURL: URL = url
-  ) {}
+  ) {
+    this.privateKeyPromise = importPKCS8(
+      this.jwtPrivateKey,
+      'EdDSA'
+    ) as Promise<KeyLike>;
+  }
+
+  private async generateAuthToken(): Promise<string> {
+    const key = await this.privateKeyPromise;
+
+    return new SignJWT({})
+      .setProtectedHeader({ alg: 'EdDSA' })
+      .setIssuer(this.hostUrl)
+      .setAudience('wepublish-media-server')
+      .setExpirationTime('5m')
+      .setIssuedAt()
+      .sign(key);
+  }
 
   async _uploadImage(form: FormData): Promise<UploadImage> {
     // The form-data module reports a known length for the stream returned by createReadStream,
@@ -36,9 +57,11 @@ export class NovaMediaAdapter implements MediaAdapter {
     // Related issue: https://github.com/form-data/form-data/issues/394
     form.hasKnownLength = () => false;
 
+    const token = await this.generateAuthToken();
+
     const response = await fetch(this.internalURL, {
       method: 'POST',
-      headers: { authorization: `Bearer ${this.token}` },
+      headers: { authorization: `Bearer ${token}` },
       body: form,
       // will work with newer node version, @ts-expect-error doesn't work here unfortunately
       signal: AbortSignal.timeout(50000) as any,
@@ -107,9 +130,11 @@ export class NovaMediaAdapter implements MediaAdapter {
   }
 
   async deleteImage(id: string): Promise<boolean> {
+    const token = await this.generateAuthToken();
+
     const response = await fetch(`${this.internalURL}/${id}`, {
       method: 'DELETE',
-      headers: { authorization: `Bearer ${this.token}` },
+      headers: { authorization: `Bearer ${token}` },
     });
 
     if (response.status >= 400) {
@@ -191,7 +216,12 @@ export class NovaMediaAdapter implements MediaAdapter {
 
     const transformationsDto = this.parseTransformations(queryParameters);
 
-    const signature = getSignatureForImage(image.id, transformationsDto);
+    const privateKey = await this.privateKeyPromise;
+    const signature = await signImageTransformations(
+      privateKey,
+      image.id,
+      transformationsDto
+    );
     queryParameters.push(`sig=${signature}`);
 
     return encodeURI(`${this.url}/${image.id}?${queryParameters.join('&')}`);

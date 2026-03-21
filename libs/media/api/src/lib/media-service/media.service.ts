@@ -11,6 +11,7 @@ import {
   getTransformationKey,
   TransformationsDto,
 } from '@wepublish/media-transform-guard';
+import { JwksClientService } from '../authentication/jwks-client.service';
 
 export const MEDIA_SERVICE_MODULE_OPTIONS = Symbol(
   'MEDIA_SERVICE_MODULE_OPTIONS'
@@ -61,7 +62,8 @@ export type ImageURIObject = {
 export class MediaService {
   constructor(
     @Inject(MEDIA_SERVICE_MODULE_OPTIONS) private config: MediaServiceConfig,
-    private storage: StorageClient
+    private storage: StorageClient,
+    private jwksClient: JwksClientService
   ) {}
 
   public generateETag(buffer: Buffer): string {
@@ -169,7 +171,12 @@ export class MediaService {
     }
 
     const transformGuard = new TransformGuard();
-    transformGuard.validateSignature(imageId, originalTransformations);
+    const publicKey = await this.jwksClient.getPublicKey();
+    await transformGuard.validateSignature(
+      publicKey,
+      imageId,
+      originalTransformations
+    );
 
     const sharpInstance = imageStream.pipe(
       sharp({
