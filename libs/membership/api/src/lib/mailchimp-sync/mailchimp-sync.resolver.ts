@@ -41,6 +41,9 @@ export class MailchimpSyncDryRunResult {
   @Field(() => Int)
   skippedCount!: number;
 
+  @Field(() => Int)
+  totalUserCount!: number;
+
   @Field(() => [MailchimpSyncDryRunChange])
   changes!: MailchimpSyncDryRunChange[];
 }
@@ -138,9 +141,21 @@ export class MailchimpSyncResolver {
       'Simulates a mailchimp sync without making changes. Returns what would be updated.',
   })
   async dryRunMailchimpSync(
-    @Args('id') id: string
+    @Args('id') id: string,
+    @Args('limit', { nullable: true, type: () => Int }) limit?: number
   ): Promise<MailchimpSyncDryRunResult> {
-    const result = await this.mailchimpSyncService.executeSyncById(id, true);
-    return result ?? { updatedCount: 0, skippedCount: 0, changes: [] };
+    const result = await this.mailchimpSyncService.executeSyncById(
+      id,
+      true,
+      limit
+    );
+    return (
+      result ?? {
+        updatedCount: 0,
+        skippedCount: 0,
+        totalUserCount: 0,
+        changes: [],
+      }
+    );
   }
 }

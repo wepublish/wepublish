@@ -1632,6 +1632,7 @@ export type MailchimpSyncDryRunResult = {
   __typename?: 'MailchimpSyncDryRunResult';
   changes: Array<MailchimpSyncDryRunChange>;
   skippedCount: Scalars['Int'];
+  totalUserCount: Scalars['Int'];
   updatedCount: Scalars['Int'];
 };
 
@@ -2430,6 +2431,7 @@ export type MutationDislikeArticleArgs = {
 
 export type MutationDryRunMailchimpSyncArgs = {
   id: Scalars['String'];
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 export type MutationDuplicateArticleArgs = {

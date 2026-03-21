@@ -1488,6 +1488,7 @@ type MailchimpSyncDryRunChange {
 type MailchimpSyncDryRunResult {
   changes: [MailchimpSyncDryRunChange!]!
   skippedCount: Int!
+  totalUserCount: Int!
   updatedCount: Int!
 }
 
@@ -1739,7 +1740,7 @@ type Mutation {
   """
   Simulates a mailchimp sync without making changes. Returns what would be updated.
   """
-  dryRunMailchimpSync(id: String!): MailchimpSyncDryRunResult!
+  dryRunMailchimpSync(id: String!, limit: Int): MailchimpSyncDryRunResult!
 
   """Duplicates an article."""
   duplicateArticle(id: String!): Article!

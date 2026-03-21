@@ -66,6 +66,7 @@ export interface DryRunChange {
 export interface DryRunResult {
   updatedCount: number;
   skippedCount: number;
+  totalUserCount: number;
   changes: DryRunChange[];
 }
 
@@ -114,10 +115,11 @@ export class MailchimpSyncService {
    */
   async executeSyncById(
     id: string,
-    dryRun = false
+    dryRun = false,
+    limit?: number
   ): Promise<DryRunResult | null> {
     const config = await this.getConfigById(id);
-    const result = await this.executeSyncForConfig(config, dryRun);
+    const result = await this.executeSyncForConfig(config, dryRun, limit);
 
     if (!dryRun) {
       await this.syncProviderSettingsService.updateSyncResult(config.id);
@@ -128,7 +130,8 @@ export class MailchimpSyncService {
 
   private async executeSyncForConfig(
     config: SettingSyncProvider & { decryptedApiKey: string | null },
-    dryRun = false
+    dryRun = false,
+    limit?: number
   ): Promise<DryRunResult | null> {
     if (!config.mailchimp_listId) {
       throw new Error('Missing Mailchimp list ID');
@@ -156,10 +159,13 @@ export class MailchimpSyncService {
 
     let updatedCount = 0;
     let skippedCount = 0;
+    let processedCount = 0;
     const changes: DryRunChange[] = [];
 
     for (const userWithSub of usersWithSubscriptions) {
       if (!userWithSub.user.email) continue;
+      if (limit && processedCount >= limit) break;
+      processedCount++;
 
       const mergeFields: Record<string, string> = {};
       for (const mapping of mergeFieldMappings) {
@@ -215,7 +221,12 @@ export class MailchimpSyncService {
     );
 
     if (dryRun) {
-      return { updatedCount, skippedCount, changes };
+      return {
+        updatedCount,
+        skippedCount,
+        totalUserCount: usersWithSubscriptions.length,
+        changes,
+      };
     }
 
     return null;
@@ -467,7 +478,6 @@ export class MailchimpSyncService {
   /**
    * Evaluate an interest group expression.
    * Supported formats:
-   * - "always" - always true
    * - "slug:equals:value" - true if last subscription plan slug matches
    * - "slug:contains:value" - true if last subscription plan slug contains value
    * - "slug:contains_any:val1,val2" - true if last slug contains any value

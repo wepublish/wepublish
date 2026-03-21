@@ -7,6 +7,8 @@ import {
   useMailchimpInterestGroupsLazyQuery,
   useMailchimpListsLazyQuery,
   useMailchimpMergeFieldsLazyQuery,
+  useMemberPlanListQuery,
+  usePaymentMethodListQuery,
   useSyncProviderSettingsQuery,
   useTriggerMailchimpSyncMutation,
   useUpdateSyncProviderSettingMutation,
@@ -22,6 +24,8 @@ import {
   Chip,
   CircularProgress,
   IconButton,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from '@mui/material';
@@ -98,6 +102,366 @@ const SyncStatusWrapper = styled.div`
 type SyncProviderSetting =
   SyncProviderSettingsQuery['syncProviderSettings'][number];
 
+const ExpressionRow = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex: 1;
+`;
+
+type SlugOp = 'contains' | 'contains_any' | 'equals';
+
+const INTEREST_OPS: SlugOp[] = ['contains', 'equals', 'contains_any'];
+
+function parseSlugExpression(expr: string): {
+  op: SlugOp;
+  value: string;
+} | null {
+  const match = /^slug:(contains_any|contains|equals):(.*)$/.exec(expr);
+  if (!match) return null;
+  return { op: match[1] as SlugOp, value: match[2] };
+}
+
+function buildSlugExpression(op: SlugOp, value: string): string {
+  return `slug:${op}:${value}`;
+}
+
+function InterestExpressionEditor({
+  value,
+  onChange,
+  memberPlanSlugs,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  memberPlanSlugs: { slug: string; name: string }[];
+}) {
+  const { t } = useTranslation();
+  const parsed = parseSlugExpression(value);
+  const op = parsed?.op ?? 'contains';
+  const exprValue = parsed?.value ?? (parsed ? '' : value);
+
+  return (
+    <ExpressionRow>
+      <Select
+        size="small"
+        value={op}
+        onChange={e => {
+          onChange(buildSlugExpression(e.target.value as SlugOp, exprValue));
+        }}
+        sx={{ minWidth: 140 }}
+      >
+        {INTEREST_OPS.map(o => (
+          <MenuItem
+            key={o}
+            value={o}
+          >
+            {t(`integrations.mailchimpSyncSettings.op_${o}`)}
+          </MenuItem>
+        ))}
+      </Select>
+
+      {op === 'equals' ?
+        <Autocomplete
+          freeSolo
+          options={memberPlanSlugs.map(p => p.slug)}
+          getOptionLabel={slug => {
+            const plan = memberPlanSlugs.find(p => p.slug === slug);
+            return plan ? `${plan.name} (${plan.slug})` : slug;
+          }}
+          filterOptions={(options, { inputValue }) =>
+            inputValue ?
+              options.filter(slug => {
+                const plan = memberPlanSlugs.find(p => p.slug === slug);
+                const label = plan ? `${plan.name} ${plan.slug}` : slug;
+                return label.toLowerCase().includes(inputValue.toLowerCase());
+              })
+            : options
+          }
+          value={exprValue}
+          onChange={(_, newValue) => {
+            onChange(buildSlugExpression(op, newValue ?? ''));
+          }}
+          onInputChange={(_, inputValue, reason) => {
+            if (reason === 'input')
+              onChange(buildSlugExpression(op, inputValue));
+          }}
+          sx={{ flex: 1 }}
+          renderInput={params => (
+            <TextField
+              {...params}
+              size="small"
+              placeholder="Slug"
+            />
+          )}
+        />
+      : <TextField
+          size="small"
+          value={exprValue}
+          onChange={e => onChange(buildSlugExpression(op, e.target.value))}
+          placeholder={
+            op === 'contains_any' ?
+              t('integrations.mailchimpSyncSettings.containsAnyPlaceholder')
+            : 'Slug'
+          }
+          sx={{ flex: 1 }}
+        />
+      }
+    </ExpressionRow>
+  );
+}
+
+type MergeFieldType =
+  | 'user.firstName'
+  | 'user.name'
+  | 'slug:contains'
+  | 'slug:contains_any'
+  | 'slug:equals'
+  | 'active_abo'
+  | 'active_abo_with_payment'
+  | 'retarget'
+  | 'static'
+  | 'custom';
+
+const MERGE_FIELD_TYPES: MergeFieldType[] = [
+  'user.firstName',
+  'user.name',
+  'slug:contains',
+  'slug:contains_any',
+  'slug:equals',
+  'active_abo',
+  'active_abo_with_payment',
+  'retarget',
+  'static',
+  'custom',
+];
+
+function parseMergeFieldExpression(expr: string): {
+  type: MergeFieldType;
+  args: string[];
+} {
+  if (expr === 'user.firstName') return { type: 'user.firstName', args: [] };
+  if (expr === 'user.name') return { type: 'user.name', args: [] };
+  if (expr === 'active_abo') return { type: 'active_abo', args: [] };
+
+  const slugMatch = /^slug:(contains_any|contains|equals):(.*)$/.exec(expr);
+  if (slugMatch)
+    return {
+      type: `slug:${slugMatch[1]}` as MergeFieldType,
+      args: [slugMatch[2]],
+    };
+
+  const aboPayMatch = /^active_abo_with_payment:([^:]*):(.*)$/.exec(expr);
+  if (aboPayMatch)
+    return {
+      type: 'active_abo_with_payment',
+      args: [aboPayMatch[1], aboPayMatch[2]],
+    };
+
+  const retargetMatch = /^retarget:(.*)$/.exec(expr);
+  if (retargetMatch) return { type: 'retarget', args: [retargetMatch[1]] };
+
+  const staticMatch = /^static:(.*)$/.exec(expr);
+  if (staticMatch) return { type: 'static', args: [staticMatch[1]] };
+
+  return { type: 'custom', args: [expr] };
+}
+
+function buildMergeFieldExpression(
+  type: MergeFieldType,
+  args: string[]
+): string {
+  switch (type) {
+    case 'user.firstName':
+    case 'user.name':
+    case 'active_abo':
+      return type;
+    case 'slug:contains':
+    case 'slug:contains_any':
+    case 'slug:equals':
+      return `${type}:${args[0] ?? ''}`;
+    case 'active_abo_with_payment':
+      return `active_abo_with_payment:${args[0] ?? ''}:${args[1] ?? '30'}`;
+    case 'retarget':
+      return `retarget:${args[0] ?? '45'}`;
+    case 'static':
+      return `static:${args[0] ?? ''}`;
+    case 'custom':
+      return args[0] ?? '';
+  }
+}
+
+function MergeFieldExpressionEditor({
+  value,
+  onChange,
+  memberPlanSlugs,
+  paymentMethodSlugs,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  memberPlanSlugs: { slug: string; name: string }[];
+  paymentMethodSlugs: { slug: string; name: string }[];
+}) {
+  const { t } = useTranslation();
+  const parsed = parseMergeFieldExpression(value);
+
+  const handleTypeChange = (newType: MergeFieldType) => {
+    if (newType === parsed.type) return;
+    onChange(buildMergeFieldExpression(newType, parsed.args));
+  };
+
+  const handleArgChange = (index: number, newValue: string) => {
+    const newArgs = [...parsed.args];
+    newArgs[index] = newValue;
+    onChange(buildMergeFieldExpression(parsed.type, newArgs));
+  };
+
+  return (
+    <ExpressionRow>
+      <Select
+        size="small"
+        value={parsed.type}
+        onChange={e => handleTypeChange(e.target.value as MergeFieldType)}
+        sx={{ minWidth: 180 }}
+      >
+        {MERGE_FIELD_TYPES.map(type => (
+          <MenuItem
+            key={type}
+            value={type}
+          >
+            {t(`integrations.mailchimpSyncSettings.mf_${type}`)}
+          </MenuItem>
+        ))}
+      </Select>
+
+      {parsed.type === 'slug:equals' && (
+        <Autocomplete
+          freeSolo
+          options={memberPlanSlugs.map(p => p.slug)}
+          getOptionLabel={slug => {
+            const plan = memberPlanSlugs.find(p => p.slug === slug);
+            return plan ? `${plan.name} (${plan.slug})` : slug;
+          }}
+          filterOptions={(options, { inputValue }) =>
+            inputValue ?
+              options.filter(slug => {
+                const plan = memberPlanSlugs.find(p => p.slug === slug);
+                const label = plan ? `${plan.name} ${plan.slug}` : slug;
+                return label.toLowerCase().includes(inputValue.toLowerCase());
+              })
+            : options
+          }
+          value={parsed.args[0] ?? ''}
+          onChange={(_, newValue) => handleArgChange(0, newValue ?? '')}
+          onInputChange={(_, inputValue, reason) => {
+            if (reason === 'input') handleArgChange(0, inputValue);
+          }}
+          sx={{ flex: 1 }}
+          renderInput={params => (
+            <TextField
+              {...params}
+              size="small"
+              placeholder="Slug"
+            />
+          )}
+        />
+      )}
+
+      {(parsed.type === 'slug:contains' ||
+        parsed.type === 'slug:contains_any') && (
+        <TextField
+          size="small"
+          value={parsed.args[0] ?? ''}
+          onChange={e => handleArgChange(0, e.target.value)}
+          placeholder={
+            parsed.type === 'slug:contains_any' ?
+              t('integrations.mailchimpSyncSettings.containsAnyPlaceholder')
+            : 'Slug'
+          }
+          sx={{ flex: 1 }}
+        />
+      )}
+
+      {parsed.type === 'active_abo_with_payment' && (
+        <>
+          <Autocomplete
+            freeSolo
+            options={paymentMethodSlugs.map(p => p.slug)}
+            getOptionLabel={slug => {
+              const pm = paymentMethodSlugs.find(p => p.slug === slug);
+              return pm ? `${pm.name} (${pm.slug})` : slug;
+            }}
+            filterOptions={(options, { inputValue }) =>
+              inputValue ?
+                options.filter(slug => {
+                  const pm = paymentMethodSlugs.find(p => p.slug === slug);
+                  const label = pm ? `${pm.name} ${pm.slug}` : slug;
+                  return label.toLowerCase().includes(inputValue.toLowerCase());
+                })
+              : options
+            }
+            value={parsed.args[0] ?? ''}
+            onChange={(_, newValue) => handleArgChange(0, newValue ?? '')}
+            onInputChange={(_, inputValue, reason) => {
+              if (reason === 'input') handleArgChange(0, inputValue);
+            }}
+            sx={{ flex: 1 }}
+            renderInput={params => (
+              <TextField
+                {...params}
+                size="small"
+                placeholder={t(
+                  'integrations.mailchimpSyncSettings.paymentMethodSlug'
+                )}
+              />
+            )}
+          />
+          <TextField
+            size="small"
+            type="number"
+            value={parsed.args[1] ?? '30'}
+            onChange={e => handleArgChange(1, e.target.value)}
+            placeholder={t('integrations.mailchimpSyncSettings.days')}
+            sx={{ width: 80 }}
+          />
+        </>
+      )}
+
+      {parsed.type === 'retarget' && (
+        <TextField
+          size="small"
+          type="number"
+          value={parsed.args[0] ?? '45'}
+          onChange={e => handleArgChange(0, e.target.value)}
+          placeholder={t('integrations.mailchimpSyncSettings.days')}
+          sx={{ width: 100 }}
+        />
+      )}
+
+      {parsed.type === 'static' && (
+        <TextField
+          size="small"
+          value={parsed.args[0] ?? ''}
+          onChange={e => handleArgChange(0, e.target.value)}
+          placeholder={t('integrations.mailchimpSyncSettings.staticValue')}
+          sx={{ flex: 1 }}
+        />
+      )}
+
+      {parsed.type === 'custom' && (
+        <TextField
+          size="small"
+          value={parsed.args[0] ?? ''}
+          onChange={e => handleArgChange(0, e.target.value)}
+          placeholder={t(
+            'integrations.mailchimpSyncSettings.mergeFieldExpression'
+          )}
+          sx={{ flex: 1 }}
+        />
+      )}
+    </ExpressionRow>
+  );
+}
+
 export function MailchimpSyncIntegrationForm() {
   const { t } = useTranslation();
   const { data, loading, error } = useSyncProviderSettingsQuery();
@@ -162,6 +526,7 @@ function SyncProviderSettingCard({
   const { t } = useTranslation();
   const [syncing, setSyncing] = useState(false);
   const [dryRunning, setDryRunning] = useState(false);
+  const [syncLimit, setSyncLimit] = useState<number | undefined>(100);
   const [dryRunResult, setDryRunResult] = useState<DryRunResultData | null>(
     null
   );
@@ -173,6 +538,19 @@ function SyncProviderSettingCard({
 
   const [triggerSync] = useTriggerMailchimpSyncMutation();
   const [dryRunSync] = useDryRunMailchimpSyncMutation();
+
+  const { data: memberPlanData } = useMemberPlanListQuery({
+    variables: { take: 200 },
+  });
+  const memberPlanSlugs = (memberPlanData?.memberPlans?.nodes ?? []).map(p => ({
+    slug: p.slug,
+    name: p.name,
+  }));
+
+  const { data: paymentMethodData } = usePaymentMethodListQuery();
+  const paymentMethodSlugs = (paymentMethodData?.paymentMethods ?? []).map(
+    p => ({ slug: p.slug, name: p.name })
+  );
 
   const [fetchLists, { data: listsData, loading: listsLoading }] =
     useMailchimpListsLazyQuery();
@@ -367,7 +745,7 @@ function SyncProviderSettingCard({
     try {
       if (!(await saveIfDirty())) return;
       const { data } = await dryRunSync({
-        variables: { id: setting.id },
+        variables: { id: setting.id, limit: syncLimit },
       });
       setDryRunResult(data?.dryRunMailchimpSync ?? null);
     } catch (e: any) {
@@ -384,7 +762,7 @@ function SyncProviderSettingCard({
     } finally {
       setDryRunning(false);
     }
-  }, [dryRunSync, setting.id, t, saveIfDirty]);
+  }, [dryRunSync, setting.id, t, saveIfDirty, syncLimit]);
 
   return (
     <SyncCard variant="outlined">
@@ -573,12 +951,11 @@ function SyncProviderSettingCard({
                 name={`mailchimp_mergeFieldMappings.${index}.expression`}
                 control={control}
                 render={({ field: { value, onChange } }) => (
-                  <MappingInput
+                  <MergeFieldExpressionEditor
                     value={value}
                     onChange={onChange}
-                    placeholder={t(
-                      'integrations.mailchimpSyncSettings.mergeFieldExpression'
-                    )}
+                    memberPlanSlugs={memberPlanSlugs}
+                    paymentMethodSlugs={paymentMethodSlugs}
                   />
                 )}
               />
@@ -666,12 +1043,10 @@ function SyncProviderSettingCard({
                 name={`mailchimp_interestGroupMappings.${index}.expression`}
                 control={control}
                 render={({ field: { value, onChange } }) => (
-                  <MappingInput
+                  <InterestExpressionEditor
                     value={value}
                     onChange={onChange}
-                    placeholder={t(
-                      'integrations.mailchimpSyncSettings.interestGroupExpression'
-                    )}
+                    memberPlanSlugs={memberPlanSlugs}
                   />
                 )}
               />
@@ -688,7 +1063,12 @@ function SyncProviderSettingCard({
           <Button
             size="small"
             startIcon={<MdAdd />}
-            onClick={() => appendInterestGroup({ groupId: '', expression: '' })}
+            onClick={() =>
+              appendInterestGroup({
+                groupId: '',
+                expression: 'slug:contains:',
+              })
+            }
           >
             {t('integrations.mailchimpSyncSettings.addInterestGroup')}
           </Button>
@@ -777,7 +1157,7 @@ function SyncProviderSettingCard({
           </SyncStatusWrapper>
         </CardContent>
 
-        <CardActions>
+        <CardActions sx={{ flexWrap: 'wrap', gap: 1 }}>
           <Button
             variant="contained"
             type="submit"
@@ -809,6 +1189,20 @@ function SyncProviderSettingCard({
             {t('integrations.mailchimpSyncSettings.triggerSync')}
           </Button>
 
+          <TextField
+            size="small"
+            type="number"
+            value={syncLimit ?? ''}
+            onChange={e => {
+              const val = e.target.value;
+              setSyncLimit(val === '' ? undefined : parseInt(val, 10));
+            }}
+            placeholder={t('integrations.mailchimpSyncSettings.allUsers')}
+            label={t('integrations.mailchimpSyncSettings.dryRunLimit')}
+            sx={{ width: 130 }}
+            InputProps={{ inputProps: { min: 1 } }}
+          />
+
           <Button
             variant="outlined"
             color="info"
@@ -836,6 +1230,7 @@ function SyncProviderSettingCard({
               {t('integrations.mailchimpSyncSettings.dryRunSummary', {
                 updated: dryRunResult.updatedCount,
                 skipped: dryRunResult.skippedCount,
+                total: dryRunResult.totalUserCount,
               })}
             </Alert>
 

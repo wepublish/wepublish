@@ -56,10 +56,11 @@ mutation TriggerMailchimpSync($id: String!) {
   triggerMailchimpSync(id: $id)
 }
 
-mutation DryRunMailchimpSync($id: String!) {
-  dryRunMailchimpSync(id: $id) {
+mutation DryRunMailchimpSync($id: String!, $limit: Int) {
+  dryRunMailchimpSync(id: $id, limit: $limit) {
     updatedCount
     skippedCount
+    totalUserCount
     changes {
       email
       isNew
