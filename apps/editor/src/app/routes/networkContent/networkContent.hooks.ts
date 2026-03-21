@@ -1,4 +1,4 @@
-import { usePeerListQuery } from '@wepublish/editor/api';
+import { getSettings, usePeerListQuery } from '@wepublish/editor/api';
 import { useEffect, useMemo, useState } from 'react';
 
 import type {
@@ -10,8 +10,7 @@ import type {
 } from './networkContent.types';
 import { normalizeUrl } from './networkContent.utils';
 
-const WEP_ONE_URL =
-  process.env.WEP_ONE_URL || 'https://one-admin.wepublish.cloud';
+const WEP_ONE_URL = process.env.WEP_ONE_URL || getSettings().wepOneURL;
 
 export const ARTICLES_PER_PAGE = 20;
 export const CLIENTS_PER_PAGE = 20;
