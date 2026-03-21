@@ -9,6 +9,7 @@ import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
   initWePublishTranslator,
+  initWebsiteToken,
   NextWepublishLink,
   RoutedAdminBar,
   withBuilderRouter,
@@ -34,6 +35,15 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import theme from '../src/theme';
+
+// Request a scoped JWT from the API at server startup
+if (typeof window === 'undefined') {
+  const apiUrl =
+    getConfig()?.publicRuntimeConfig?.env?.API_URL ||
+    process.env.API_URL ||
+    'http://localhost:4000';
+  initWebsiteToken(apiUrl);
+}
 
 setDefaultOptions({
   locale: de,

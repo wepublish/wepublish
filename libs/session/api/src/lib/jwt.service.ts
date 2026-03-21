@@ -73,4 +73,40 @@ export class JwtService {
       throw new Error('Invalid JWT token');
     }
   }
+
+  async generateScopedJWT({
+    scope,
+    expiresInMinutes = 5,
+  }: {
+    scope: string;
+    expiresInMinutes?: number;
+  }): Promise<string> {
+    const key = await this.privateKey;
+
+    return new SignJWT({ scope })
+      .setProtectedHeader({ alg: 'EdDSA', kid: this.kid })
+      .setSubject('website-service')
+      .setIssuer(this.hostURL)
+      .setAudience(this.websiteURL)
+      .setExpirationTime(`${expiresInMinutes}m`)
+      .sign(key);
+  }
+
+  async verifyScopedJWT(
+    token: string,
+    expectedScope: string
+  ): Promise<boolean> {
+    try {
+      const key = await this.publicKey;
+      const { payload } = await jwtVerify(token, key, {
+        algorithms: ['EdDSA'],
+        issuer: this.hostURL,
+        audience: this.websiteURL,
+      });
+
+      return payload['scope'] === expectedScope;
+    } catch {
+      return false;
+    }
+  }
 }

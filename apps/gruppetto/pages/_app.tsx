@@ -25,6 +25,7 @@ import { theme } from '@wepublish/ui';
 import {
   authLink,
   initWePublishTranslator,
+  initWebsiteToken,
   NextWepublishLink,
   RoutedAdminBar,
   withBuilderRouter,
@@ -50,6 +51,15 @@ import deOverriden from '../locales/deOverriden.json';
 import background from '../src/background.svg';
 import { GruppettoBreakBlock } from '../src/break-block';
 import { Footer } from '../src/footer';
+
+// Request a scoped JWT from the API at server startup
+if (typeof window === 'undefined') {
+  const apiUrl =
+    getConfig()?.publicRuntimeConfig?.env?.API_URL ||
+    process.env.API_URL ||
+    'http://localhost:4000';
+  initWebsiteToken(apiUrl);
+}
 
 setDefaultOptions({
   locale: de,
