@@ -83,7 +83,23 @@ export function Dashboard() {
           <Row gutter={12}>
             <Col xs={24}>
               <RPanel
-                header={<h2>{t('dashboard.networkContent')}</h2>}
+                header={
+                  <ListViewContainer>
+                    <ListViewHeader>
+                      <h2>{t('dashboard.networkContent')}</h2>
+                    </ListViewHeader>
+                    <ListViewActions>
+                      <Link to="/network">
+                        <Button
+                          appearance="primary"
+                          endIcon={<MdChevronRight />}
+                        >
+                          {t('dashboard.goToNetwork')}
+                        </Button>
+                      </Link>
+                    </ListViewActions>
+                  </ListViewContainer>
+                }
                 bordered
               >
                 <NetworkContentDashboard />

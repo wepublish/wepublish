@@ -588,7 +588,8 @@
       "audience": "Audience",
       "goToAudienceDashboard": "Go to Audience Dashboard",
       "externalApps": "We.Publish Apps",
-      "networkContent": "We.Publish Network"
+      "networkContent": "We.Publish Network",
+      "goToNetwork": "Go to Network"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -1921,6 +1922,19 @@
       "peerInfoText": "This publisher is not yet connected as a peer. To import articles, an active peering connection is required. Please contact the publisher to establish a peering relationship, or set it up under Settings > Peering.",
       "importBtn": "Import",
       "connectBtn": "Set up peer"
+    },
+    "networkContentPage": {
+      "title": "Network",
+      "articlesTitle": "Articles",
+      "mediaTitle": "Media",
+      "searchLabel": "Search articles",
+      "mediaFilter": "Media",
+      "allMedia": "All media",
+      "dateFrom": "From",
+      "dateTo": "To",
+      "filterByMedia": "Filter",
+      "errorLoadingClients": "Failed to load media.",
+      "noClients": "No media available."
     }
   }
 }

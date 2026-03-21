@@ -10,11 +10,12 @@ export interface PeerArticle {
   source_lead: string;
   client: {
     apiUrl: string | null;
+    name: string | null;
   };
 }
 
-export interface DirectusResponse {
-  data: PeerArticle[];
+export interface DirectusResponse<T> {
+  data: T[];
 }
 
 export interface PeerMatch {
@@ -31,4 +32,20 @@ export interface ImportOptions {
 export interface ArticleToImport {
   peerId: string;
   articleId: string;
+}
+
+export interface DirectusClient {
+  apiUrl: string | null;
+  name: string;
+  allowedUsers: Array<{
+    Clients_id: string;
+    directus_users_id: string;
+  }>;
+}
+
+export interface ArticleFilterParams {
+  search: string;
+  clientName: string;
+  dateFrom: string;
+  dateTo: string;
 }

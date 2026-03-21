@@ -102,3 +102,55 @@ export const CenteredContainer = styled('div')`
   justify-content: center;
   padding: ${({ theme }) => theme.spacing(4)};
 `;
+
+export const PageGrid = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: ${({ theme }) => theme.spacing(3)};
+  padding: ${({ theme }) => theme.spacing(2)};
+  height: calc(100vh - 160px);
+`;
+
+export const PanelColumn = styled('div')`
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+`;
+
+export const FilterBar = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr 180px 140px 140px;
+  gap: ${({ theme }) => theme.spacing(1.5)};
+  padding: ${({ theme }) => theme.spacing(1.5)} 0;
+`;
+
+export const ClientCard = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: ${({ theme }) => theme.spacing(1.5)};
+  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
+`;
+
+export const ClientName = styled(Typography)`
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.palette.text.primary};
+`;
+
+export const ClientUrl = styled(Typography)`
+  font-size: 0.72rem;
+  color: ${({ theme }) => theme.palette.text.secondary};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+export const SectionTitle = styled(Typography)`
+  font-weight: 700;
+  font-size: 1rem;
+  padding-bottom: ${({ theme }) => theme.spacing(1)};
+  border-bottom: 2px solid ${({ theme }) => theme.palette.divider};
+  margin-bottom: ${({ theme }) => theme.spacing(0.5)};
+`;

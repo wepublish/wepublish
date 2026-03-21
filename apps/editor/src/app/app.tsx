@@ -88,6 +88,7 @@ import { TokenList } from './routes/tokens/tokenList';
 import { UserRoleList } from './routes/userRoles/userRoleList';
 import { UserEditView } from './routes/users/userEditView';
 import { UserList } from './routes/users/userList';
+import { NetworkContentPage } from './routes/networkContent/networkContentPage';
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -927,6 +928,14 @@ export function App() {
               }
             />
             {/* Peering Routes */}
+            <Route
+              path="network"
+              element={
+                <Base>
+                  <NetworkContentPage />
+                </Base>
+              }
+            />
             <Route
               path="peering"
               element={
