@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { MdChevronLeft, MdChevronRight, MdLink } from 'react-icons/md';
 
 import type {
-  DirectusClient,
-  DirectusUser,
+  WepOneClient,
+  WepOneUser,
   PeerMatch,
 } from './networkContent.types';
 import {
@@ -17,18 +17,18 @@ import {
 } from './networkContent.styles';
 import { CLIENTS_PER_PAGE } from './networkContent.hooks';
 
-function isInternalUser(user: DirectusUser): boolean {
-  return !!user.email && user.email.endsWith('@wepublish.ch');
+function isInternalUser(user: WepOneUser): boolean {
+  return !!user?.email && user?.email.endsWith('@wepublish.ch');
 }
 
-function getExternalUsers(client: DirectusClient): DirectusUser[] {
+function getExternalUsers(client: WepOneClient): WepOneUser[] {
   return (client.allowedUsers ?? [])
-    .map(entry => entry.directus_users_id)
+    .map(entry => entry.wep_one_users_id)
     .filter(user => !isInternalUser(user));
 }
 
 interface NetworkMediaListProps {
-  clients: DirectusClient[];
+  clients: WepOneClient[];
   totalCount: number;
   loading: boolean;
   error: Error | null;
@@ -36,7 +36,7 @@ interface NetworkMediaListProps {
   onPageChange: (page: number) => void;
   findPeerMatch: (apiUrl: string | null) => PeerMatch | null;
   onSelectClient?: (clientName: string) => void;
-  onConnectClient?: (client: DirectusClient) => void;
+  onConnectClient?: (client: WepOneClient) => void;
 }
 
 export function NetworkMediaList({
@@ -92,7 +92,7 @@ export function NetworkMediaList({
     <div>
       <SectionTitle>{t('networkContentPage.mediaTitle')}</SectionTitle>
 
-      {clients.map((client: DirectusClient) => {
+      {clients.map((client: WepOneClient) => {
         const peerMatch = findPeerMatch(client.apiUrl);
         const externalUsers = getExternalUsers(client);
 
@@ -102,15 +102,15 @@ export function NetworkMediaList({
               <ClientName>{client.name}</ClientName>
               {externalUsers.length > 0 &&
                 externalUsers.map((user, idx) => {
-                  const name = [user.first_name, user.last_name]
+                  const name = [user?.first_name, user?.last_name]
                     .filter(Boolean)
                     .join(' ');
 
                   return (
                     <ClientUserInfo key={idx}>
                       {name}
-                      {name && user.email ? ' · ' : ''}
-                      {user.email}
+                      {name && user?.email ? ' · ' : ''}
+                      {user?.email}
                     </ClientUserInfo>
                   );
                 })}

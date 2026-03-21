@@ -3,17 +3,18 @@ import { useEffect, useMemo, useState } from 'react';
 
 import type {
   ArticleFilterParams,
-  DirectusClient,
-  DirectusResponse,
+  WepOneClient,
+  WepOneResponse,
   PeerArticle,
   PeerMatch,
 } from './networkContent.types';
 import { normalizeUrl } from './networkContent.utils';
 
-const DIRECTUS_URL = process.env.DIRECTUS_URL || 'http://0.0.0.0:8055';
+const WEP_ONE_URL =
+  process.env.WEP_ONE_URL || 'https://one-admin.wepublish.cloud';
 
 export const ARTICLES_PER_PAGE = 20;
-export const CLIENTS_PER_PAGE = 10;
+export const CLIENTS_PER_PAGE = 20;
 
 const PEER_ARTICLE_FIELDS = [
   'id',
@@ -83,14 +84,14 @@ export function usePeerArticles(filters?: ArticleFilterParams, page = 0) {
       try {
         const params = buildArticleParams(filters, page);
         const response = await fetch(
-          `${DIRECTUS_URL}/items/PeerArticles?${params}`
+          `${WEP_ONE_URL}/items/PeerArticles?${params}`
         );
 
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);
         }
 
-        const json: DirectusResponse<PeerArticle> = await response.json();
+        const json: WepOneResponse<PeerArticle> = await response.json();
 
         if (!cancelled) {
           setArticles(json.data);
@@ -118,7 +119,7 @@ export function usePeerArticles(filters?: ArticleFilterParams, page = 0) {
 }
 
 export function useNetworkClients(page = 0) {
-  const [clients, setClients] = useState<DirectusClient[]>([]);
+  const [clients, setClients] = useState<WepOneClient[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -136,13 +137,13 @@ export function useNetworkClients(page = 0) {
           meta: 'filter_count',
         });
 
-        const response = await fetch(`${DIRECTUS_URL}/items/Clients?${params}`);
+        const response = await fetch(`${WEP_ONE_URL}/items/Clients?${params}`);
 
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);
         }
 
-        const json: DirectusResponse<DirectusClient> = await response.json();
+        const json: WepOneResponse<WepOneClient> = await response.json();
 
         if (!cancelled) {
           setClients(json.data);
@@ -170,7 +171,7 @@ export function useNetworkClients(page = 0) {
 }
 
 export function useAllNetworkClients() {
-  const [clients, setClients] = useState<DirectusClient[]>([]);
+  const [clients, setClients] = useState<WepOneClient[]>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -181,9 +182,9 @@ export function useAllNetworkClients() {
           'fields[]': 'name',
           limit: '200',
         });
-        const response = await fetch(`${DIRECTUS_URL}/items/Clients?${params}`);
+        const response = await fetch(`${WEP_ONE_URL}/items/Clients?${params}`);
         if (!response.ok) return;
-        const json: DirectusResponse<DirectusClient> = await response.json();
+        const json: WepOneResponse<WepOneClient> = await response.json();
         if (!cancelled) setClients(json.data);
       } catch {
         // silently ignore – dropdown falls back to empty

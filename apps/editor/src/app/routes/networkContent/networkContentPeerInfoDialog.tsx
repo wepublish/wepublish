@@ -8,20 +8,20 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-import type { DirectusClient, DirectusUser } from './networkContent.types';
+import type { WepOneClient, WepOneUser } from './networkContent.types';
 
-function isInternalUser(user: DirectusUser): boolean {
+function isInternalUser(user: WepOneUser): boolean {
   return !!user.email && user.email.endsWith('@wepublish.ch');
 }
 
-function getExternalUsers(client: DirectusClient): DirectusUser[] {
+function getExternalUsers(client: WepOneClient): WepOneUser[] {
   return (client.allowedUsers ?? [])
-    .map(entry => entry.directus_users_id)
+    .map(entry => entry.wep_one_users_id)
     .filter(user => !isInternalUser(user));
 }
 
 interface NetworkContentPeerInfoDialogProps {
-  client: DirectusClient | null;
+  client: WepOneClient | null;
   onClose: () => void;
 }
 

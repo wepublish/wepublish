@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import type {
   ArticleToImport,
-  DirectusClient,
+  WepOneClient,
   ImportOptions,
 } from './networkContent.types';
 import {
@@ -41,7 +41,7 @@ export default function NetworkContentDashboard() {
   const [importOptions, setImportOptions] = useState<ImportOptions>(
     DEFAULT_IMPORT_OPTIONS
   );
-  const [peerInfoClient, setPeerInfoClient] = useState<DirectusClient | null>(
+  const [peerInfoClient, setPeerInfoClient] = useState<WepOneClient | null>(
     null
   );
 

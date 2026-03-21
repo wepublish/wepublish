@@ -9,7 +9,7 @@ import { ListViewContainer, ListViewHeader } from '@wepublish/ui/editor';
 import type {
   ArticleFilterParams,
   ArticleToImport,
-  DirectusClient,
+  WepOneClient,
   ImportOptions,
 } from './networkContent.types';
 import {
@@ -75,7 +75,7 @@ export function NetworkContentPage() {
   const [importOptions, setImportOptions] = useState<ImportOptions>(
     DEFAULT_IMPORT_OPTIONS
   );
-  const [peerInfoClient, setPeerInfoClient] = useState<DirectusClient | null>(
+  const [peerInfoClient, setPeerInfoClient] = useState<WepOneClient | null>(
     null
   );
 

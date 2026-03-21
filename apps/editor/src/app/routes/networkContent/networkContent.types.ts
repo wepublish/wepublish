@@ -14,7 +14,7 @@ export interface PeerArticle {
   };
 }
 
-export interface DirectusResponse<T> {
+export interface WepOneResponse<T> {
   data: T[];
   meta?: {
     filter_count?: number;
@@ -38,17 +38,17 @@ export interface ArticleToImport {
   articleId: string;
 }
 
-export interface DirectusUser {
+export interface WepOneUser {
   first_name: string | null;
   last_name: string | null;
   email: string | null;
 }
 
-export interface DirectusClient {
+export interface WepOneClient {
   apiUrl: string | null;
   name: string;
   allowedUsers: Array<{
-    directus_users_id: DirectusUser;
+    wep_one_users_id: WepOneUser;
   }>;
 }
 

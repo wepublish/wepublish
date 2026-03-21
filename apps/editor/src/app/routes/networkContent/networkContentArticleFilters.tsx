@@ -14,15 +14,12 @@ import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { MdClear } from 'react-icons/md';
 
-import type {
-  ArticleFilterParams,
-  DirectusClient,
-} from './networkContent.types';
+import type { ArticleFilterParams, WepOneClient } from './networkContent.types';
 import { FilterBar } from './networkContent.styles';
 
 interface NetworkContentArticleFiltersProps {
   filters: ArticleFilterParams;
-  clients: DirectusClient[];
+  clients: WepOneClient[];
   onFiltersChange: (filters: ArticleFilterParams) => void;
 }
 
