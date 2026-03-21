@@ -880,6 +880,7 @@
       "pages": "Pages",
       "paymentMethods": "Payment Methods",
       "peerArticles": "Peerable articles",
+      "networkContent": "We.Publish Network",
       "peering": "Peering",
       "peers": "Peers",
       "settings": "Settings",
@@ -1934,7 +1935,14 @@
       "dateTo": "To",
       "filterByMedia": "Filter",
       "errorLoadingClients": "Failed to load media.",
-      "noClients": "No media available."
+      "noClients": "No media available.",
+      "connected": "Connected",
+      "notConnected": "Not connected",
+      "contactTitle": "Contact {{name}}",
+      "contactText": "This publisher is not yet connected as a peer. Contact them to exchange peering keys and set up the connection.",
+      "noContacts": "No contact persons available for this media.",
+      "unknownUser": "Unknown user",
+      "connectBtn": "Connect"
     }
   }
 }

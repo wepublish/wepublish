@@ -1,23 +1,58 @@
-import { Chip, CircularProgress, Typography } from '@mui/material';
+import { Chip, CircularProgress, IconButton, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { MdChevronLeft, MdChevronRight, MdLink } from 'react-icons/md';
 
-import type { DirectusClient } from './networkContent.types';
-import { useNetworkClients } from './networkContent.hooks';
+import type {
+  DirectusClient,
+  DirectusUser,
+  PeerMatch,
+} from './networkContent.types';
 import {
   CenteredContainer,
   ClientCard,
   ClientName,
-  ClientUrl,
+  ClientUserInfo,
+  PaginationBar,
   SectionTitle,
 } from './networkContent.styles';
+import { CLIENTS_PER_PAGE } from './networkContent.hooks';
 
-interface NetworkMediaListProps {
-  onSelectClient?: (clientName: string) => void;
+function isInternalUser(user: DirectusUser): boolean {
+  return !!user.email && user.email.endsWith('@wepublish.ch');
 }
 
-export function NetworkMediaList({ onSelectClient }: NetworkMediaListProps) {
+function getExternalUsers(client: DirectusClient): DirectusUser[] {
+  return (client.allowedUsers ?? [])
+    .map(entry => entry.directus_users_id)
+    .filter(user => !isInternalUser(user));
+}
+
+interface NetworkMediaListProps {
+  clients: DirectusClient[];
+  totalCount: number;
+  loading: boolean;
+  error: Error | null;
+  page: number;
+  onPageChange: (page: number) => void;
+  findPeerMatch: (apiUrl: string | null) => PeerMatch | null;
+  onSelectClient?: (clientName: string) => void;
+  onConnectClient?: (client: DirectusClient) => void;
+}
+
+export function NetworkMediaList({
+  clients,
+  totalCount,
+  loading,
+  error,
+  page,
+  onPageChange,
+  findPeerMatch,
+  onSelectClient,
+  onConnectClient,
+}: NetworkMediaListProps) {
   const { t } = useTranslation();
-  const { clients, loading, error } = useNetworkClients();
+
+  const totalPages = Math.max(1, Math.ceil(totalCount / CLIENTS_PER_PAGE));
 
   if (loading) {
     return (
@@ -57,24 +92,84 @@ export function NetworkMediaList({ onSelectClient }: NetworkMediaListProps) {
     <div>
       <SectionTitle>{t('networkContentPage.mediaTitle')}</SectionTitle>
 
-      {clients.map((client: DirectusClient) => (
-        <ClientCard key={client.name}>
-          <div>
-            <ClientName>{client.name}</ClientName>
-            {client.apiUrl && <ClientUrl>{client.apiUrl.trim()}</ClientUrl>}
-          </div>
+      {clients.map((client: DirectusClient) => {
+        const peerMatch = findPeerMatch(client.apiUrl);
+        const externalUsers = getExternalUsers(client);
 
-          {onSelectClient && (
-            <Chip
-              label={t('networkContentPage.filterByMedia')}
-              size="small"
-              variant="outlined"
-              onClick={() => onSelectClient(client.name)}
-              clickable
-            />
-          )}
-        </ClientCard>
-      ))}
+        return (
+          <ClientCard key={client.name}>
+            <div>
+              <ClientName>{client.name}</ClientName>
+              {externalUsers.length > 0 &&
+                externalUsers.map((user, idx) => {
+                  const name = [user.first_name, user.last_name]
+                    .filter(Boolean)
+                    .join(' ');
+
+                  return (
+                    <ClientUserInfo key={idx}>
+                      {name}
+                      {name && user.email ? ' · ' : ''}
+                      {user.email}
+                    </ClientUserInfo>
+                  );
+                })}
+            </div>
+
+            <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+              {peerMatch ?
+                <Chip
+                  icon={<MdLink />}
+                  label={t('networkContentPage.connected')}
+                  size="small"
+                  color="success"
+                  variant="outlined"
+                />
+              : <Chip
+                  label={t('networkContentPage.connectBtn')}
+                  size="small"
+                  color="warning"
+                  variant="outlined"
+                  onClick={() => onConnectClient?.(client)}
+                  clickable
+                />
+              }
+
+              {onSelectClient && (
+                <Chip
+                  label={t('networkContentPage.filterByMedia')}
+                  size="small"
+                  variant="outlined"
+                  onClick={() => onSelectClient(client.name)}
+                  clickable
+                />
+              )}
+            </div>
+          </ClientCard>
+        );
+      })}
+
+      {totalPages > 1 && (
+        <PaginationBar>
+          <IconButton
+            size="small"
+            disabled={page === 0}
+            onClick={() => onPageChange(page - 1)}
+          >
+            <MdChevronLeft />
+          </IconButton>
+          <Typography variant="body2">
+            {page + 1} / {totalPages}
+          </Typography>
+          <IconButton
+            size="small"
+            disabled={page >= totalPages - 1}
+            onClick={() => onPageChange(page + 1)}
+          >
+            <MdChevronRight />
+          </IconButton>
+        </PaginationBar>
+      )}
     </div>
   );
 }

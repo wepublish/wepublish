@@ -27,6 +27,7 @@ import {
   MdFileCopy,
   MdGroup,
   MdGroups,
+  MdHub,
   MdLocationPin,
   MdLogout,
   MdMail,
@@ -282,6 +283,15 @@ export function Base({ children }: BaseProps) {
                         {t('navbar.peerArticles')}
                       </Nav.Item>
                     </PermissionControl>
+
+                    <Nav.Item
+                      as={NavLink}
+                      href="/network"
+                      icon={<MdHub />}
+                      active={path === 'network'}
+                    >
+                      {t('navbar.networkContent')}
+                    </Nav.Item>
 
                     <PermissionControl
                       qualifyingPermissions={[

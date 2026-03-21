@@ -16,6 +16,10 @@ export interface PeerArticle {
 
 export interface DirectusResponse<T> {
   data: T[];
+  meta?: {
+    filter_count?: number;
+    total_count?: number;
+  };
 }
 
 export interface PeerMatch {
@@ -34,12 +38,17 @@ export interface ArticleToImport {
   articleId: string;
 }
 
+export interface DirectusUser {
+  first_name: string | null;
+  last_name: string | null;
+  email: string | null;
+}
+
 export interface DirectusClient {
   apiUrl: string | null;
   name: string;
   allowedUsers: Array<{
-    Clients_id: string;
-    directus_users_id: string;
+    directus_users_id: DirectusUser;
   }>;
 }
 

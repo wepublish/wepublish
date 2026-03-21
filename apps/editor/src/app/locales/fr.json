@@ -804,6 +804,7 @@
       "pages": "Pages",
       "paymentMethods": "Méthodes de paiement",
       "peerArticles": "Articles pairables",
+      "networkContent": "Réseau We.Publish",
       "peering": "Peering",
       "peers": "Peers",
       "settings": "Paramètres",
@@ -1760,7 +1761,14 @@
       "dateTo": "Au",
       "filterByMedia": "Filtrer",
       "errorLoadingClients": "Impossible de charger les médias.",
-      "noClients": "Aucun média disponible."
+      "noClients": "Aucun média disponible.",
+      "connected": "Connecté",
+      "notConnected": "Non connecté",
+      "contactTitle": "Contacter {{name}}",
+      "contactText": "Cet éditeur n'est pas encore connecté en tant que peer. Contactez-les pour échanger les clés de peering et établir la connexion.",
+      "noContacts": "Aucune personne de contact disponible pour ce média.",
+      "unknownUser": "Utilisateur inconnu",
+      "connectBtn": "Connecter"
     }
   }
 }

@@ -105,7 +105,7 @@ export const CenteredContainer = styled('div')`
 
 export const PageGrid = styled('div')`
   display: grid;
-  grid-template-columns: 1fr 320px;
+  grid-template-columns: 1fr 400px;
   gap: ${({ theme }) => theme.spacing(3)};
   padding: ${({ theme }) => theme.spacing(2)};
   height: calc(100vh - 160px);
@@ -120,9 +120,13 @@ export const PanelColumn = styled('div')`
 
 export const FilterBar = styled('div')`
   display: grid;
-  grid-template-columns: 1fr 180px 140px 140px;
+  grid-template-columns: 1fr 160px 160px 160px;
   gap: ${({ theme }) => theme.spacing(1.5)};
   padding: ${({ theme }) => theme.spacing(1.5)} 0;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: ${({ theme }) => theme.palette.background.paper};
 `;
 
 export const ClientCard = styled('div')`
@@ -153,4 +157,18 @@ export const SectionTitle = styled(Typography)`
   padding-bottom: ${({ theme }) => theme.spacing(1)};
   border-bottom: 2px solid ${({ theme }) => theme.palette.divider};
   margin-bottom: ${({ theme }) => theme.spacing(0.5)};
+`;
+
+export const ClientUserInfo = styled(Typography)`
+  font-size: 0.7rem;
+  color: ${({ theme }) => theme.palette.text.disabled};
+  line-height: 1.4;
+`;
+
+export const PaginationBar = styled('div')`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${({ theme }) => theme.spacing(1)};
+  padding: ${({ theme }) => theme.spacing(1.5)} 0;
 `;

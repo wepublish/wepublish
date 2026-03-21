@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { MdDownload, MdLink } from 'react-icons/md';
 
 import type { PeerArticle, PeerMatch } from './networkContent.types';
-import { formatDate, getPublisherName } from './networkContent.utils';
+import { formatDate } from './networkContent.utils';
 import {
   ActionColumn,
   ArticleImage,
@@ -31,7 +31,7 @@ export function NetworkContentArticleItem({
   onShowPeerInfo,
 }: NetworkContentArticleItemProps) {
   const { t } = useTranslation();
-  const publisher = getPublisherName(article.source_url);
+  const publisher = article.client?.name || '';
   const date = formatDate(article.source_publishedAt);
 
   return (

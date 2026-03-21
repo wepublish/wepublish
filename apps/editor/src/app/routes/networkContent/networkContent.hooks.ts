@@ -12,6 +12,9 @@ import { normalizeUrl } from './networkContent.utils';
 
 const DIRECTUS_URL = process.env.DIRECTUS_URL || 'http://0.0.0.0:8055';
 
+export const ARTICLES_PER_PAGE = 20;
+export const CLIENTS_PER_PAGE = 10;
+
 const PEER_ARTICLE_FIELDS = [
   'id',
   'status',
@@ -26,12 +29,17 @@ const PEER_ARTICLE_FIELDS = [
   'client.name',
 ].join(',');
 
-function buildArticleParams(filters?: ArticleFilterParams): URLSearchParams {
+function buildArticleParams(
+  filters?: ArticleFilterParams,
+  page = 0
+): URLSearchParams {
   const params = new URLSearchParams({
     'filter[status][_eq]': 'published',
     sort: '-source_publishedAt',
-    limit: '50',
+    limit: String(ARTICLES_PER_PAGE),
+    offset: String(page * ARTICLES_PER_PAGE),
     'fields[]': PEER_ARTICLE_FIELDS,
+    meta: 'filter_count',
   });
 
   if (filters?.search) {
@@ -53,8 +61,9 @@ function buildArticleParams(filters?: ArticleFilterParams): URLSearchParams {
   return params;
 }
 
-export function usePeerArticles(filters?: ArticleFilterParams) {
+export function usePeerArticles(filters?: ArticleFilterParams, page = 0) {
   const [articles, setArticles] = useState<PeerArticle[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -66,7 +75,7 @@ export function usePeerArticles(filters?: ArticleFilterParams) {
 
     const fetchData = async () => {
       try {
-        const params = buildArticleParams(filters);
+        const params = buildArticleParams(filters, page);
         const response = await fetch(
           `${DIRECTUS_URL}/items/PeerArticles?${params}`
         );
@@ -79,6 +88,7 @@ export function usePeerArticles(filters?: ArticleFilterParams) {
 
         if (!cancelled) {
           setArticles(json.data);
+          setTotalCount(json.meta?.filter_count ?? json.data.length);
         }
       } catch (err) {
         if (!cancelled) {
@@ -96,13 +106,14 @@ export function usePeerArticles(filters?: ArticleFilterParams) {
     return () => {
       cancelled = true;
     };
-  }, [serializedFilters]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [serializedFilters, page]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return { articles, loading, error };
+  return { articles, totalCount, loading, error };
 }
 
-export function useNetworkClients() {
+export function useNetworkClients(page = 0) {
   const [clients, setClients] = useState<DirectusClient[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -112,8 +123,11 @@ export function useNetworkClients() {
     const fetchData = async () => {
       try {
         const params = new URLSearchParams({
-          'fields[]': '*,allowedUsers.*',
-          limit: '100',
+          'fields[]':
+            '*,allowedUsers.directus_users_id.first_name,allowedUsers.directus_users_id.last_name,allowedUsers.directus_users_id.email',
+          limit: String(CLIENTS_PER_PAGE),
+          offset: String(page * CLIENTS_PER_PAGE),
+          meta: 'filter_count',
         });
 
         const response = await fetch(`${DIRECTUS_URL}/items/Clients?${params}`);
@@ -126,6 +140,7 @@ export function useNetworkClients() {
 
         if (!cancelled) {
           setClients(json.data);
+          setTotalCount(json.meta?.filter_count ?? json.data.length);
         }
       } catch (err) {
         if (!cancelled) {
@@ -143,9 +158,39 @@ export function useNetworkClients() {
     return () => {
       cancelled = true;
     };
+  }, [page]);
+
+  return { clients, totalCount, loading, error };
+}
+
+export function useAllNetworkClients() {
+  const [clients, setClients] = useState<DirectusClient[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchData = async () => {
+      try {
+        const params = new URLSearchParams({
+          'fields[]': 'name',
+          limit: '200',
+        });
+        const response = await fetch(`${DIRECTUS_URL}/items/Clients?${params}`);
+        if (!response.ok) return;
+        const json: DirectusResponse<DirectusClient> = await response.json();
+        if (!cancelled) setClients(json.data);
+      } catch {
+        // silently ignore – dropdown falls back to empty
+      }
+    };
+
+    fetchData();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  return { clients, loading, error };
+  return clients;
 }
 
 export function usePeerMatching() {

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import type {
   ArticleToImport,
+  DirectusClient,
   ImportOptions,
 } from '../networkContent/networkContent.types';
 import {
@@ -38,7 +39,9 @@ export default function NetworkContentDashboard() {
   const [importOptions, setImportOptions] = useState<ImportOptions>(
     DEFAULT_IMPORT_OPTIONS
   );
-  const [peerInfoOpen, setPeerInfoOpen] = useState(false);
+  const [peerInfoClient, setPeerInfoClient] = useState<DirectusClient | null>(
+    null
+  );
 
   const [importPeerArticle, { loading: importing }] =
     useImportPeerArticleMutation({
@@ -108,7 +111,13 @@ export default function NetworkContentDashboard() {
               onImport={(peerId, articleId) =>
                 setArticleToImport({ peerId, articleId })
               }
-              onShowPeerInfo={() => setPeerInfoOpen(true)}
+              onShowPeerInfo={() =>
+                setPeerInfoClient({
+                  name: article.client?.name || '',
+                  apiUrl: article.client?.apiUrl || '',
+                  allowedUsers: [],
+                })
+              }
             />
           ))}
         </FeedList>
@@ -124,8 +133,8 @@ export default function NetworkContentDashboard() {
       />
 
       <NetworkContentPeerInfoDialog
-        open={peerInfoOpen}
-        onClose={() => setPeerInfoOpen(false)}
+        client={peerInfoClient}
+        onClose={() => setPeerInfoClient(null)}
       />
     </>
   );
