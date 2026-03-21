@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import type { WepOneClient, WepOneUser } from './networkContent.types';
 
 function isInternalUser(user: WepOneUser): boolean {
-  return !!user.email && user.email.endsWith('@wepublish.ch');
+  return !!user?.email && user?.email.endsWith('@wepublish.ch');
 }
 
 function getExternalUsers(client: WepOneClient): WepOneUser[] {
@@ -54,7 +54,7 @@ export function NetworkContentPeerInfoDialog({
 
             {externalUsers.length > 0 ?
               externalUsers.map((user, idx) => {
-                const name = [user.first_name, user.last_name]
+                const name = [user?.first_name, user?.last_name]
                   .filter(Boolean)
                   .join(' ');
 
@@ -67,11 +67,11 @@ export function NetworkContentPeerInfoDialog({
                     <strong>
                       {name || t('networkContentPage.unknownUser')}
                     </strong>
-                    {user.email && (
+                    {user?.email && (
                       <>
                         {' — '}
-                        <a href={`mailto:${encodeURIComponent(user.email)}`}>
-                          {user.email}
+                        <a href={`mailto:${encodeURIComponent(user?.email)}`}>
+                          {user?.email}
                         </a>
                       </>
                     )}
