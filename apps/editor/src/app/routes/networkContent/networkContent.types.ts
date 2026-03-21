@@ -48,7 +48,7 @@ export interface WepOneClient {
   apiUrl: string | null;
   name: string;
   allowedUsers: Array<{
-    wep_one_users_id: WepOneUser;
+    directus_users_id: WepOneUser;
   }>;
 }
 

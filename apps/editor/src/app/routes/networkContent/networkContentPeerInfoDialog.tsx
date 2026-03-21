@@ -16,7 +16,7 @@ function isInternalUser(user: WepOneUser): boolean {
 
 function getExternalUsers(client: WepOneClient): WepOneUser[] {
   return (client.allowedUsers ?? [])
-    .map(entry => entry.wep_one_users_id)
+    .map(entry => entry.directus_users_id)
     .filter(user => !isInternalUser(user));
 }
 
