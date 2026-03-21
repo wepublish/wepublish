@@ -159,6 +159,7 @@ export class MailchimpSyncService {
 
     let updatedCount = 0;
     let skippedCount = 0;
+    let errorCount = 0;
     let processedCount = 0;
     const changes: DryRunChange[] = [];
 
@@ -207,17 +208,25 @@ export class MailchimpSyncService {
           previousInterests: existingContact?.interests ?? null,
         });
       } else {
-        await this.upsertMailchimpContact(config.mailchimp_listId!, {
-          email: userWithSub.user.email,
-          mergeFields,
-          interests,
-        });
+        try {
+          await this.upsertMailchimpContact(config.mailchimp_listId!, {
+            email: userWithSub.user.email,
+            mergeFields,
+            interests,
+          });
+        } catch (error) {
+          this.logger.warn(
+            `Failed to update contact '${userWithSub.user.email}': ${error instanceof Error ? error.message : String(error)}`
+          );
+          errorCount++;
+          continue;
+        }
       }
       updatedCount++;
     }
 
     this.logger.log(
-      `Sync ${dryRun ? '(DRY RUN) ' : ''}complete: ${updatedCount} ${dryRun ? 'would be ' : ''}updated, ${skippedCount} skipped`
+      `Sync ${dryRun ? '(DRY RUN) ' : ''}complete: ${updatedCount} ${dryRun ? 'would be ' : ''}updated, ${skippedCount} skipped${errorCount > 0 ? `, ${errorCount} errors` : ''}`
     );
 
     if (dryRun) {
