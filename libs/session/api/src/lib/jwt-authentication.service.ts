@@ -10,7 +10,7 @@ export class JwtAuthenticationService {
   ) {}
 
   async authenticateUserWithJWT(jwt: string) {
-    const userId = this.jwtService.verifyJWT(jwt);
+    const userId = await this.jwtService.verifyJWT(jwt);
     return this.userDataloaderService.load(userId);
   }
 }

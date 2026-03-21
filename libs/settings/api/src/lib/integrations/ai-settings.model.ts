@@ -23,11 +23,11 @@ export class SettingAIProvider extends SettingProvider {
   type!: AIProviderType;
 
   /** hide sensitive fields
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   apiKey?: string;
    **/
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   systemPrompt?: string;
 }
 
@@ -43,16 +43,16 @@ export class CreateSettingAIProviderInput extends OmitType(
   ['id', 'type', 'createdAt', 'lastLoadedAt', 'modifiedAt'] as const,
   ArgsType
 ) {
-  @Field(type => String)
+  @Field()
   id!: string;
 
   @Field(type => AIProviderType)
   type!: AIProviderType;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   webhookEndpointSecret?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   apiKey?: string;
 }
 

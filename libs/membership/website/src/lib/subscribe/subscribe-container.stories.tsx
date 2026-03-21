@@ -12,7 +12,6 @@ import {
 import { SubscribeContainer } from './subscribe-container';
 import * as registrationFormStories from './subscribe.stories';
 import { ApolloError } from '@apollo/client';
-import { waitFor, within } from '@storybook/test';
 import { useUser } from '@wepublish/authentication/website';
 import {
   mockAvailablePaymentMethod,
@@ -232,9 +231,6 @@ export const Filled: StoryObj<typeof SubscribeContainer> = {
     );
   },
   play: async ctx => {
-    const canvas = within(ctx.canvasElement);
-    await waitFor(() => canvas.getByLabelText('Captcha'));
-
     // false positive due to the `as any`
     // eslint-disable-next-line storybook/context-in-play-function
     await registrationFormStories.Filled.play?.(ctx as any);

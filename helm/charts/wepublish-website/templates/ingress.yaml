@@ -1,3 +1,4 @@
+{{- if and (eq .Values.routing.type "ingress") .Values.routing.ingress.enabled -}}
 {{- $fullName := include "helm.fullname" . -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -11,7 +12,18 @@ metadata:
     {{- with .Values.labels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
+  {{- with .Values.routing.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
+  {{- if .Values.routing.ingress.className }}
+  ingressClassName: {{ .Values.routing.ingress.className }}
+  {{- end }}
+  {{- if .Values.routing.ingress.tls }}
+  tls:
+    {{- toYaml .Values.routing.ingress.tls | nindent 4 }}
+  {{- end }}
   rules:
     {{- $websiteUrl := urlParse .Values.deployment.env.WEBSITE_URL }}
     - host: {{ $websiteUrl.host }}
@@ -24,3 +36,4 @@ spec:
                 name: {{ $fullName }}-website
                 port:
                   name: http
+{{- end }}

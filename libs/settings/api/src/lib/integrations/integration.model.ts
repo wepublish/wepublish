@@ -4,7 +4,7 @@ import { Field, InterfaceType } from '@nestjs/graphql';
   isAbstract: true,
 })
 export class SettingProvider {
-  @Field(type => String)
+  @Field()
   id!: string;
 
   @Field(type => Date)
@@ -16,6 +16,6 @@ export class SettingProvider {
   @Field(type => Date)
   lastLoadedAt!: Date;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   name?: string;
 }

@@ -285,6 +285,14 @@ const subtitle1 = {
 };
 
 const theme = createTheme(variablesTheme, {
+  containerMaxWidth: {
+    xs: 492,
+    sm: 760,
+    md: 868,
+    lg: 1080,
+    xl: 1425,
+    xxl: 2100,
+  },
   components: {
     MuiButton: {
       defaultProps: {

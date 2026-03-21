@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import {
   CanGetAISettings,
+  CanGetAnalyticsProviderSettings,
   CanGetChallengeProviderSettings,
   CanGetMailProviderSettings,
   CanGetPaymentProviderSettings,
@@ -24,16 +25,18 @@ import {
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
-import bexioLogo from '../../../assets/integrations/bexio.png';
-import cloudflareLogo from '../../../assets/integrations/cloudflare.svg';
-import mailChimpLogo from '../../../assets/integrations/mailchimp.avif';
-import mailgunLogo from '../../../assets/integrations/mailgun.svg';
-import mollieLogo from '../../../assets/integrations/mollie.png';
-import payrexxLogo from '../../../assets/integrations/payrexx.png';
-import proLitterisLogo from '../../../assets/integrations/proLitteris.svg';
-import slackLogo from '../../../assets/integrations/slack.png';
-import stripeLogo from '../../../assets/integrations/stripe.svg';
-import vercelLogo from '../../../assets/integrations/vercel.svg';
+import bexioLogo from './assets/bexio.webp';
+import cloudflareLogo from './assets/cloudflare.svg';
+import hcaptchaLogo from './assets/hcaptcha.webp';
+import googleLogo from './assets/google.svg';
+import mailChimpLogo from './assets/mailchimp.webp';
+import mailgunLogo from './assets/mailgun.svg';
+import mollieLogo from './assets/mollie.webp';
+import payrexxLogo from './assets/payrexx.webp';
+import proLitterisLogo from './assets/proLitteris.svg';
+import slackLogo from './assets/slack.webp';
+import stripeLogo from './assets/stripe.svg';
+import vercelLogo from './assets/vercel.svg';
 
 const Wrapper = styled.div`
   display: grid;
@@ -82,7 +85,7 @@ export function IntegrationList() {
       permission: CanGetChallengeProviderSettings.id,
       path: '/integrations/challenge',
       icon: MdSecurity,
-      logos: [cloudflareLogo],
+      logos: [cloudflareLogo, hcaptchaLogo],
     },
     {
       title: t('integrations.paymentProvider'),
@@ -104,6 +107,13 @@ export function IntegrationList() {
       path: '/integrations/mail',
       icon: MdEmail,
       logos: [mailgunLogo, mailChimpLogo, slackLogo],
+    },
+    {
+      title: t('integrations.analytics'),
+      permission: CanGetAnalyticsProviderSettings.id,
+      path: '/integrations/analytics',
+      icon: MdAnalytics,
+      logos: [googleLogo],
     },
   ];
 

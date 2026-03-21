@@ -58,7 +58,9 @@ describe('GoogleAnalyticsService', () => {
         { provide: PrismaClient, useValue: prismaMock },
         {
           provide: GA_CLIENT_OPTIONS,
-          useValue: config,
+          useValue: {
+            getGoogleAnalytics: () => Promise.resolve(config),
+          },
         },
       ],
     }).compile();

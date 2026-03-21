@@ -8,6 +8,7 @@ import {
 
 export enum TsriBreakBlockType {
   SidebarContent = 'SB_SidebarContent', // handled by TsriBlockRenderer
+  SidebarContentAltColor = 'SB_SidebarContentAltColor', // handled by TsriBlockRenderer
   ContextBox = 'ContextBox', // handled "globally" by BlockRenderer
   AttentionCatcher = 'AttentionCatcher',
 }

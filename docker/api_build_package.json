@@ -6,7 +6,12 @@
       "node_modules/axios/dist/node/axios.cjs",
       "node_modules/es-get-iterator/node.js",
       "node_modules/i18n-iso-countries/langs",
-      "node_modules/bcrypt/lib/binding/**/bcrypt_lib.node"
+      "node_modules/@node-rs/bcrypt-linux-x64-gnu/**/*",
+      "node_modules/@node-rs/argon2-linux-x64-gnu/**/*"
+    ],
+    "publicPackages": [
+      "@node-rs/argon2-linux-x64-gnu",
+      "@node-rs/bcrypt-linux-x64-gnu"
     ],
     "targets": ["node22-linux"]
   },

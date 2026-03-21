@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import {
-  ArticleContainer,
+  ArticleContainer as AricleContainerDefault,
   ArticleListContainer,
   ArticleWrapper as DefaultArticleWrapper,
 } from '@wepublish/article/website';
@@ -25,6 +25,7 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
 
+import { TsriAttentionCatcher } from '../../src/components/break-blocks/tsri-attention-catcher';
 import TsriAdHeader from '../../src/components/tsri-ad-header';
 
 const AfterArticleWrapper = styled(DefaultArticleWrapper)`
@@ -57,6 +58,14 @@ export const AfterArticleAuthorWrapper = styled(ContentWrapper)`
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-columns: min-content 1fr min-content;
+  }
+`;
+
+const ArticleContainer = styled(AricleContainerDefault)`
+  ${TsriAttentionCatcher} {
+    .MuiButton-root {
+      padding-right: 2cqw;
+    }
   }
 `;
 

@@ -22,18 +22,18 @@ export class SettingTrackingPixelProvider extends SettingProvider {
   @Field(type => TrackingPixelProviderType)
   type!: TrackingPixelProviderType;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   prolitteris_memberNr?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   prolitteris_username?: string;
 
   /** hide sensitive fields
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   prolitteris_password?: string;
  **/
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   prolitteris_publisherInternalKeyDomain?: string;
 
   @Field(type => Boolean, { nullable: true })
@@ -59,13 +59,13 @@ export class CreateSettingTrackingPixelProviderInput extends OmitType(
   ['id', 'type', 'createdAt', 'lastLoadedAt', 'modifiedAt'] as const,
   ArgsType
 ) {
-  @Field(type => String)
+  @Field()
   id!: string;
 
   @Field(type => TrackingPixelProviderType)
   type!: TrackingPixelProviderType;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   prolitteris_password?: string;
 }
 

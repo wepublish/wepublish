@@ -1,0 +1,192 @@
+{{- if and (eq .Values.routing.type "route") .Values.routing.route.enabled -}}
+{{- $fullName := include "helm.fullname" . -}}
+---
+# API Route
+{{- $apiUrl := urlParse .Values.deployment.env.API_URL }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ $fullName }}-api
+  labels:
+    app.kubernetes.io/name: {{ include "helm.name" . }}
+    helm.sh/chart: {{ include "helm.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: api
+    {{- with .Values.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.routing.route.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  host: {{ $apiUrl.host }}
+  {{- if $apiUrl.path }}
+  path: {{ $apiUrl.path }}
+  {{- end }}
+  to:
+    kind: Service
+    name: {{ $fullName }}-api
+    weight: 100
+  port:
+    targetPort: http
+  {{- if .Values.routing.route.tls.enabled }}
+  tls:
+    termination: {{ .Values.routing.route.tls.termination }}
+    insecureEdgeTerminationPolicy: {{ .Values.routing.route.tls.insecureEdgeTerminationPolicy }}
+  {{- end }}
+  wildcardPolicy: None
+---
+# Editor Route
+{{- $editorUrl := urlParse .Values.deployment.env.EDITOR_URL }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ $fullName }}-editor
+  labels:
+    app.kubernetes.io/name: {{ include "helm.name" . }}
+    helm.sh/chart: {{ include "helm.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: editor
+    {{- with .Values.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.routing.route.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  host: {{ $editorUrl.host }}
+  {{- if $editorUrl.path }}
+  path: {{ $editorUrl.path }}
+  {{- end }}
+  to:
+    kind: Service
+    name: {{ $fullName }}-editor
+    weight: 100
+  port:
+    targetPort: http
+  {{- if .Values.routing.route.tls.enabled }}
+  tls:
+    termination: {{ .Values.routing.route.tls.termination }}
+    insecureEdgeTerminationPolicy: {{ .Values.routing.route.tls.insecureEdgeTerminationPolicy }}
+  {{- end }}
+  wildcardPolicy: None
+---
+# Media Route
+{{- $mediaUrl := urlParse .Values.deployment.env.MEDIA_SERVER_URL }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ $fullName }}-media
+  labels:
+    app.kubernetes.io/name: {{ include "helm.name" . }}
+    helm.sh/chart: {{ include "helm.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: media
+    {{- with .Values.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.routing.route.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  host: {{ $mediaUrl.host }}
+  {{- if $mediaUrl.path }}
+  path: {{ $mediaUrl.path }}
+  {{- end }}
+  to:
+    kind: Service
+    name: {{ $fullName }}-media
+    weight: 100
+  port:
+    targetPort: http
+  {{- if .Values.routing.route.tls.enabled }}
+  tls:
+    termination: {{ .Values.routing.route.tls.termination }}
+    insecureEdgeTerminationPolicy: {{ .Values.routing.route.tls.insecureEdgeTerminationPolicy }}
+  {{- end }}
+  wildcardPolicy: None
+{{- if .Values.website.enabled }}
+---
+# Website Route
+{{- $websiteUrl := urlParse .Values.deployment.env.WEBSITE_URL }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ $fullName }}-website
+  labels:
+    app.kubernetes.io/name: {{ include "helm.name" . }}
+    helm.sh/chart: {{ include "helm.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: website
+    {{- with .Values.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.routing.route.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  host: {{ $websiteUrl.host }}
+  {{- if $websiteUrl.path }}
+  path: {{ $websiteUrl.path }}
+  {{- end }}
+  to:
+    kind: Service
+    name: {{ $fullName }}-website
+    weight: 100
+  port:
+    targetPort: http
+  {{- if .Values.routing.route.tls.enabled }}
+  tls:
+    termination: {{ .Values.routing.route.tls.termination }}
+    insecureEdgeTerminationPolicy: {{ .Values.routing.route.tls.insecureEdgeTerminationPolicy }}
+  {{- end }}
+  wildcardPolicy: None
+{{- end }}
+{{- if .Values.storybook.enabled }}
+---
+# Storybook Route
+{{- $storybookUrl := urlParse .Values.storybook.url }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ $fullName }}-storybook
+  labels:
+    app.kubernetes.io/name: {{ include "helm.name" . }}
+    helm.sh/chart: {{ include "helm.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: storybook
+    {{- with .Values.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.routing.route.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  host: {{ $storybookUrl.host }}
+  {{- if $storybookUrl.path }}
+  path: {{ $storybookUrl.path }}
+  {{- end }}
+  to:
+    kind: Service
+    name: {{ $fullName }}-storybook
+    weight: 100
+  port:
+    targetPort: http
+  {{- if .Values.routing.route.tls.enabled }}
+  tls:
+    termination: {{ .Values.routing.route.tls.termination }}
+    insecureEdgeTerminationPolicy: {{ .Values.routing.route.tls.insecureEdgeTerminationPolicy }}
+  {{- end }}
+  wildcardPolicy: None
+{{- end }}
+{{- end }}

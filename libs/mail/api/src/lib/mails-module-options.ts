@@ -5,6 +5,7 @@ export const MAILS_MODULE_OPTIONS = 'MAILS_MODULE_OPTIONS';
 
 export interface MailsModuleOptions {
   mailProvider: BaseMailProvider;
+  jwtGenerator: (userId: string) => Promise<string>;
 }
 
 export type MailsModuleAsyncOptions = ModuleAsyncOptions<MailsModuleOptions>;

@@ -624,7 +624,8 @@
       "noTokenErrorMessage": "Please enter a token",
       "noUrlErrorMessage": "Please enter a url",
       "noUserErrorMessage": "Please select a user",
-      "passwordTooShortErrorMessage": "Password must be at least 8 characters long",
+      "passwordTooShortErrorMessage": "Password must be at least 12 characters long",
+      "passwordCompromisedErrorMessage": "This password has appeared in a data breach. Please choose a different password.",
       "required": "This field is required",
       "invalidCountry": "Please select a valid country"
     },
@@ -1699,8 +1700,8 @@
           "low": "First time renewals",
           "high": "Subsequent renewals",
           "total": "Sum of upcoming renewals",
-          "perDayHighProbability": "First time renewals",
-          "perDayLowProbability": "Subsequent renewals"
+          "perDayHighProbability": "Subsequent renewals",
+          "perDayLowProbability": "First time renewals"
         },
         "predictedSubscriptionRenewalCountPerDay": {
           "lowProbability": "First time renewals",
@@ -1803,6 +1804,7 @@
       "challengeProvider": "Challenge Provider",
       "paymentProvider": "Payment Provider",
       "trackingPixel": "Tracking Pixel",
+      "analytics": "Analytics Provider",
       "mailProvider": "Mail Provider",
       "back": "Back to Integrations",
       "unknown": "Unknown Integration",
@@ -1867,6 +1869,16 @@
         "prolitterisPublisherInternalKeyDomain": "Publisher Internal Key Domain",
         "prolitterisUsePublisherInternalKey": "Use Publisher Internal Key",
         "prolitterisUsername": "Username"
+      },
+      "analyticsSettings": {
+        "analytics": "Analytics",
+        "invalidFile": "Google Analytics credentials file is invalid",
+        "credentialsReadyToBeSaved": "Credentials are ready to be saved!",
+        "dropCredentialsFile": "Drop the credential file here!",
+        "dragCredentialsFileHere": "Drag and drop the Google Analytics credential file here",
+        "articlePrefix": "We.Publish article url prefix (usually /a/)",
+        "property": "Google Analytics Property-ID",
+        "credentials": "Credential file"
       }
     },
     "websiteSettings": {

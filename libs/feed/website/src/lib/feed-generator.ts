@@ -5,6 +5,10 @@ import { Descendant } from 'slate';
 import { isRichTextBlock } from '@wepublish/block-content/website';
 import { toHtml } from '@wepublish/richtext';
 
+const escapeXml = (str: string): string => {
+  return str.replace(/&/g, '&amp;');
+};
+
 export const generateFeed =
   ({
     categories = [],
@@ -31,7 +35,8 @@ export const generateFeed =
 
       return {
         title: seo.schema.headline ?? '',
-        image: seo.schema.image?.url ?? undefined,
+        image:
+          seo.schema.image?.url ? escapeXml(seo.schema.image.url) : undefined,
         description: seo.schema.description,
         content: content ? content : (article.latest.lead ?? undefined),
         author: article.latest.authors.map(author => ({

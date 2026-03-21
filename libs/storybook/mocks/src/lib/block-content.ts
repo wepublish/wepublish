@@ -540,6 +540,7 @@ export const mockTeaserSlotsBlock = ({
         },
       ],
     },
+    teaserType: TeaserType.Article,
   },
   autofillTeasers = [
     mockArticleTeaser(),

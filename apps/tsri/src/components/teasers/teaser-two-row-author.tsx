@@ -30,7 +30,7 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
 
   ${TeaserContentWrapper} {
     align-self: flex-start;
-    grid-template-rows: 58.42cqw 6.977cqw 7.5cqw auto min-content;
+    grid-template-rows: 46.75cqw 6.977cqw 7.5cqw auto min-content;
     grid-template-columns: 15.4cqw auto;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
@@ -50,7 +50,7 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
 
   ${TeaserImageWrapper} {
     display: grid;
-    aspect-ratio: 1;
+    aspect-ratio: 3 / 2;
     border-top-left-radius: 1.3cqw;
     border-top-right-radius: 1.3cqw;
     grid-column: -1 / 1;
@@ -59,7 +59,7 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
 
     & img {
       width: auto;
-      height: 65.4cqw;
+      height: 53.727cqw;
       object-fit: cover;
       max-height: unset;
     }
@@ -117,9 +117,9 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
     font-weight: 700 !important;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
-      padding: 2cqw 1cqw 3cqw 1cqw;
+      padding: 2cqw 1cqw 4.5cqw 1cqw;
       font-size: 1.67cqw !important;
-      line-height: 1.6cqw !important;
+      line-height: 2.25cqw !important;
     }
   }
 

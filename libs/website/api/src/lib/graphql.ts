@@ -54,6 +54,10 @@ export type AllowedSettingVals = {
   stringChoice?: Maybe<Array<Scalars['String']>>;
 };
 
+export enum AnalyticsProviderType {
+  Google = 'GOOGLE'
+}
+
 export type Article = HasOptionalPaywall & HasOptionalPeerLc & {
   __typename?: 'Article';
   createdAt: Scalars['DateTime'];
@@ -467,8 +471,8 @@ export type CalculatedRating = {
 };
 
 export enum CaptchaType {
-  Algebraic = 'Algebraic',
-  CfTurnstile = 'CfTurnstile'
+  CfTurnstile = 'CfTurnstile',
+  HCaptcha = 'HCaptcha'
 }
 
 export type Challenge = {
@@ -485,6 +489,7 @@ export type ChallengeInput = {
 };
 
 export enum ChallengeProviderType {
+  Hcaptcha = 'HCAPTCHA',
   Turnstile = 'TURNSTILE'
 }
 
@@ -1782,6 +1787,8 @@ export type Mutation = {
   unpublishPage: Page;
   /** Updates an existing AI provider setting. */
   updateAISetting: SettingAiProvider;
+  /** Updates an existing analytics provider setting. */
+  updateAnalyticsProviderSetting: SettingAnalyticsProvider;
   /** Updates an article. */
   updateArticle: Article;
   /** Updates an existing author. */
@@ -1846,7 +1853,7 @@ export type Mutation = {
   /** Updates an existing tag. */
   updateTag: Tag;
   /** Updates an existing tracking pixel setting. */
-  updateTrackingPixelSetting: SettingTrackingPixel;
+  updateTrackingPixelSetting: SettingTrackingPixelProvider;
   /** Updates an existing user. */
   updateUser: SensitiveDataUser;
   /** Updates a comment you made. */
@@ -2529,6 +2536,15 @@ export type MutationUpdateAiSettingArgs = {
   name?: InputMaybe<Scalars['String']>;
   systemPrompt?: InputMaybe<Scalars['String']>;
   webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateAnalyticsProviderSettingArgs = {
+  articlePrefix?: InputMaybe<Scalars['String']>;
+  credentials?: InputMaybe<SettingAnalyticsCredentialsInput>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  property?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -3781,6 +3797,10 @@ export type Query = {
   aiSetting: SettingAiProvider;
   /** Returns all AI provider settings. */
   aiSettings: Array<SettingAiProvider>;
+  /** Returns a single analytics provider setting by id. */
+  analyticsProviderSetting: SettingAnalyticsProvider;
+  /** Returns all analytics provider settings. */
+  analyticsProviderSettings: Array<SettingAnalyticsProvider>;
   /** Returns an article by id or slug. */
   article: Article;
   /** Returns a paginated list of articles based on the filters given. */
@@ -3846,6 +3866,8 @@ export type Query = {
    *
    */
   expectedRevenue: Array<DashboardInvoice>;
+  /** Returns images by tag. */
+  getImagesByTag: Array<Image>;
   /**
    *
    *       Returns the most viewed articles in descending order.
@@ -4000,9 +4022,9 @@ export type Query = {
   /** Returns a list of all tokens. */
   tokens: Array<Token>;
   /** Returns a single tracking pixel setting by id. */
-  trackingPixelSetting: SettingTrackingPixel;
+  trackingPixelSetting: SettingTrackingPixelProvider;
   /** Returns all tracking pixel settings. */
-  trackingPixelSettings: Array<SettingTrackingPixel>;
+  trackingPixelSettings: Array<SettingTrackingPixelProvider>;
   upgradeUserSubscriptionInfo: UpgradeSubscription;
   /** Returns a user by id. */
   user: SensitiveDataUser;
@@ -4040,6 +4062,16 @@ export type QueryAiSettingArgs = {
 
 export type QueryAiSettingsArgs = {
   filter?: InputMaybe<SettingAiProviderFilter>;
+};
+
+
+export type QueryAnalyticsProviderSettingArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryAnalyticsProviderSettingsArgs = {
+  filter?: InputMaybe<SettingAnalyticsProviderFilter>;
 };
 
 
@@ -4164,6 +4196,11 @@ export type QueryEventsArgs = {
 export type QueryExpectedRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
+};
+
+
+export type QueryGetImagesByTagArgs = {
+  tag: Scalars['String'];
 };
 
 
@@ -4603,6 +4640,7 @@ export type SensitiveDataUser = BaseUser & {
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
   roles: Array<UserRole>;
+  subscriptionCount: Scalars['Int'];
   userImageID?: Maybe<Scalars['String']>;
 };
 
@@ -4644,6 +4682,33 @@ export type SettingAiProviderFilter = {
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<AiProviderType>;
+};
+
+export type SettingAnalyticsCredentialsInput = {
+  client_email: Scalars['String'];
+  client_id: Scalars['String'];
+  private_key: Scalars['String'];
+  private_key_id: Scalars['String'];
+  project_id: Scalars['String'];
+  type: Scalars['String'];
+};
+
+export type SettingAnalyticsProvider = SettingProvider & {
+  __typename?: 'SettingAnalyticsProvider';
+  articlePrefix?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  lastLoadedAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
+  property?: Maybe<Scalars['String']>;
+  type: AnalyticsProviderType;
+};
+
+export type SettingAnalyticsProviderFilter = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<AnalyticsProviderType>;
 };
 
 export type SettingChallengeProvider = SettingProvider & {
@@ -4763,8 +4828,14 @@ export type SettingRestriction = {
   minValue?: Maybe<Scalars['Int']>;
 };
 
-export type SettingTrackingPixel = SettingProvider & {
-  __typename?: 'SettingTrackingPixel';
+export type SettingTrackingPixelFilter = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<TrackingPixelProviderType>;
+};
+
+export type SettingTrackingPixelProvider = SettingProvider & {
+  __typename?: 'SettingTrackingPixelProvider';
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
   lastLoadedAt: Scalars['DateTime'];
@@ -4776,12 +4847,6 @@ export type SettingTrackingPixel = SettingProvider & {
   prolitteris_usePublisherInternalKey?: Maybe<Scalars['Boolean']>;
   prolitteris_username?: Maybe<Scalars['String']>;
   type: TrackingPixelProviderType;
-};
-
-export type SettingTrackingPixelFilter = {
-  id?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<TrackingPixelProviderType>;
 };
 
 export type SingleEventFilter = {
@@ -5759,6 +5824,13 @@ export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', 
 export type ImageUrLsFragment = { __typename?: 'Image', url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null };
 
 export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null };
+
+export type GetImagesByTagQueryVariables = Exact<{
+  tag: Scalars['String'];
+}>;
+
+
+export type GetImagesByTagQuery = { __typename?: 'Query', getImagesByTag: Array<{ __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null }> };
 
 export type FullPeerImageFragment = { __typename?: 'PeerImage', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null };
 
@@ -7943,6 +8015,41 @@ export function useEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Even
 export type EventQueryHookResult = ReturnType<typeof useEventQuery>;
 export type EventLazyQueryHookResult = ReturnType<typeof useEventLazyQuery>;
 export type EventQueryResult = Apollo.QueryResult<EventQuery, EventQueryVariables>;
+export const GetImagesByTagDocument = gql`
+    query GetImagesByTag($tag: String!) {
+  getImagesByTag(tag: $tag) {
+    ...FullImage
+  }
+}
+    ${FullImageFragmentDoc}`;
+
+/**
+ * __useGetImagesByTagQuery__
+ *
+ * To run a query within a React component, call `useGetImagesByTagQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetImagesByTagQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetImagesByTagQuery({
+ *   variables: {
+ *      tag: // value for 'tag'
+ *   },
+ * });
+ */
+export function useGetImagesByTagQuery(baseOptions: Apollo.QueryHookOptions<GetImagesByTagQuery, GetImagesByTagQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetImagesByTagQuery, GetImagesByTagQueryVariables>(GetImagesByTagDocument, options);
+      }
+export function useGetImagesByTagLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetImagesByTagQuery, GetImagesByTagQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetImagesByTagQuery, GetImagesByTagQueryVariables>(GetImagesByTagDocument, options);
+        }
+export type GetImagesByTagQueryHookResult = ReturnType<typeof useGetImagesByTagQuery>;
+export type GetImagesByTagLazyQueryHookResult = ReturnType<typeof useGetImagesByTagLazyQuery>;
+export type GetImagesByTagQueryResult = Apollo.QueryResult<GetImagesByTagQuery, GetImagesByTagQueryVariables>;
 export const UploadImageDocument = gql`
     mutation UploadImage($title: String, $description: String, $focalPoint: FocalPointInput, $license: String, $link: String, $source: String, $file: Upload!, $filename: String) {
   uploadUserProfileImage(
@@ -9600,10 +9707,11 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
     ],
     "SettingProvider": [
       "SettingAIProvider",
+      "SettingAnalyticsProvider",
       "SettingChallengeProvider",
       "SettingMailProvider",
       "SettingPaymentProvider",
-      "SettingTrackingPixel"
+      "SettingTrackingPixelProvider"
     ],
     "Teaser": [
       "ArticleTeaser",

@@ -44,7 +44,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   async getBexioGateway() {
     const config = await this.getConfig();
     if (!config.apiKey) {
-      throw new Error('Stripe missing api key');
+      throw new Error('Bexio missing api key');
     }
     return new Bexio(config.apiKey);
   }
@@ -103,7 +103,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   }: CheckIntentProps): Promise<IntentState> {
     const config = await this.getConfig();
     if (!config.apiKey) {
-      throw new Error('Stripe missing api key');
+      throw new Error('Bexio missing api key');
     }
     // currently the bexio library we use doesn't return the status (kb_item_status_id)
     // when querying for invoice, so we need to do it "manually" using fetch api

@@ -89,13 +89,10 @@ export const TeaserBreakingNewsBadge = styled('div')`
   top: 6cqw;
   left: 5cqw;
   width: 15cqw;
-  display: block;
   border-radius: 7.5cqw;
   text-align: center;
-  line-height: 14cqw;
   aspect-ratio: 1;
   z-index: 2;
-  font-size: calc((9 * 100cqw / 16) * 0.035);
   font-weight: 700;
   padding: 0;
   margin: 0;
@@ -104,6 +101,19 @@ export const TeaserBreakingNewsBadge = styled('div')`
   background-color: ${({ theme }) => theme.palette.primary.light};
   mask-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI1IiBoZWlnaHQ9IjEyNSIgdmlld0JveD0iMCAwIDEyNSAxMjUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8cGF0aCBkPSJNNjkuMSAtMy41TDYyLjYgMTUuM0w1NiAtMy41TDUzLjUgMTYuMkw0My4zIC0wLjhMNDQuOSAxOUwzMS4zIDQuNkwzNyAyMy42TDIwLjggMTIuM0wzMC4yIDI5LjdMMTIgMjIuMUwyNC45IDM3LjFMNS41IDMzLjRMMjEuMiA0NS41TDEuNCA0NS45TDE5LjMgNTQuNEwwIDU5TDE5LjMgNjMuNkwxLjQgNzIuMUwyMS4yIDcyLjVMNS41IDg0LjZMMjQuOSA4MC45TDEyIDk1LjlMMzAuMiA4OC4zTDIwLjggMTA1LjdMMzcgOTQuNEwzMS4zIDExMy40TDQ0LjkgOTlMNDMuMyAxMTguOEw1My41IDEwMS44TDU2IDEyMS41TDYyLjYgMTAyLjhMNjkuMSAxMjEuNUw3MS42IDEwMS44TDgxLjkgMTE4LjhMODAuMyA5OUw5My44IDExMy40TDg4LjIgOTQuNEwxMDQuNCAxMDUuN0w5NC45IDg4LjNMMTEzLjEgOTUuOUwxMDAuMyA4MC45TDExOS43IDg0LjZMMTA0IDcyLjVMMTIzLjcgNzIuMUwxMDUuOSA2My42TDEyNS4xIDU5TDEwNS45IDU0LjRMMTIzLjcgNDUuOUwxMDQgNDUuNUwxMTkuNyAzMy40TDEwMC4zIDM3LjFMMTEzLjEgMjIuMUw5NC45IDI5LjdMMTA0LjQgMTIuM0w4OC4yIDIzLjZMOTMuOCA0LjZMODAuMyAxOUw4MS45IC0wLjhMNzEuNiAxNi4yTDY5LjEgLTMuNVoiLz4KPC9zdmc+');
   mask-size: contain;
+
+  line-height: calc((9 * 100cqw / 16) * 0.048);
+  font-size: calc((9 * 100cqw / 16) * 0.052);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-indent: 0cqw;
+
+  & > span {
+    letter-spacing: 0.1cqw;
+    display: contents;
+  }
 `;
 
 export const TeaserImageInnerWrapper = styled('picture')``;
@@ -283,7 +293,13 @@ export const TsriTeaser = ({
           <TeaserImageWrapper>
             <TeaserImageInnerWrapper>
               {image && breaking && (
-                <TeaserBreakingNewsBadge>Breaking</TeaserBreakingNewsBadge>
+                <TeaserBreakingNewsBadge>
+                  <span>
+                    TOP
+                    <br />
+                  </span>
+                  STORY
+                </TeaserBreakingNewsBadge>
               )}
               {image && <TeaserImage image={image as FullImageFragment} />}
               {peerLogo && (

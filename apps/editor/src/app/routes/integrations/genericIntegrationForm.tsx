@@ -12,7 +12,7 @@ import {
 import { SettingProvider } from '@wepublish/editor/api';
 import { Textarea } from '@wepublish/ui/editor';
 import { DocumentNode } from 'graphql';
-import { useMemo } from 'react';
+import { ComponentType, useMemo } from 'react';
 import { Controller, FieldValues, Path, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
@@ -38,21 +38,69 @@ const HeaderLogo = styled.img`
   max-width: 150px;
 `;
 
-export type FieldDefinition<TFormValues> = {
+type TextField = {
+  type: 'text';
+};
+
+type EmailField = {
+  type: 'email';
+};
+
+type PasswordField = {
+  type: 'password';
+};
+
+type NumberField = {
+  type: 'number';
+};
+
+type TextAreaField = {
+  type: 'textarea';
+  rows?: number;
+};
+
+type CheckboxField = {
+  type: 'checkbox';
+};
+
+type SelectField = {
+  type: 'select';
+  options?: { label: string; value: string | number }[];
+  searchable?: boolean;
+};
+
+type CheckPickerField = {
+  type: 'checkPicker';
+  options?: { label: string; value: string | number }[];
+  searchable?: boolean;
+};
+
+export type CustomField<T = any> = {
+  type: 'custom';
+  render: ComponentType<{
+    disabled?: boolean;
+    name?: string;
+    value: T | null | undefined;
+    onChange: (val: T | null | undefined) => void;
+  }>;
+};
+
+type Fields =
+  | TextField
+  | EmailField
+  | PasswordField
+  | NumberField
+  | TextAreaField
+  | SelectField
+  | CheckboxField
+  | CheckPickerField
+  | CustomField;
+
+export type FieldDefinition<TFormValues> = Fields & {
   name: Path<TFormValues>;
   label: string;
-  type?:
-    | 'text'
-    | 'number'
-    | 'password'
-    | 'textarea'
-    | 'select'
-    | 'checkPicker'
-    | 'checkbox';
   placeholder?: string;
   disabled?: boolean;
-  options?: { label: string; value: string | number }[];
-  textareaRows?: number;
   autoComplete?: string;
 };
 
@@ -63,11 +111,6 @@ export interface GenericIntegrationFormProps<
   setting: TSetting;
   schema: z.ZodType<TFormValues>;
   mutation: DocumentNode;
-  mapSettingToInitialValues: (setting: TSetting) => TFormValues;
-  mapFormValuesToVariables: (
-    formData: TFormValues,
-    setting: TSetting
-  ) => Record<string, any>;
   fields:
     | FieldDefinition<TFormValues>[]
     | ((setting: TSetting) => FieldDefinition<TFormValues>[]);
@@ -81,8 +124,6 @@ export function SingleGenericIntegrationForm<
   setting,
   schema,
   mutation,
-  mapSettingToInitialValues,
-  mapFormValuesToVariables,
   fields,
   getLogo,
 }: GenericIntegrationFormProps<TSetting, TFormValues>) {
@@ -99,27 +140,22 @@ export function SingleGenericIntegrationForm<
     }).format(dateObj);
   };
 
-  const initialValues = useMemo(
-    () => mapSettingToInitialValues(setting),
-    [setting, mapSettingToInitialValues]
-  );
-
   const resolvedFields = useMemo(
     () => (typeof fields === 'function' ? fields(setting) : fields),
     [fields, setting]
   );
 
-  const { control, handleSubmit } = useForm<TFormValues>({
+  const { control, handleSubmit } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     mode: 'onTouched',
     reValidateMode: 'onChange',
   });
 
-  const onSubmit = handleSubmit(async (formData: TFormValues) => {
+  const onSubmit = handleSubmit(async formData => {
     try {
       await updateSettings({
         variables: {
-          ...mapFormValuesToVariables(formData, setting),
+          ...formData,
           id: setting.id,
         },
       });
@@ -175,7 +211,11 @@ export function SingleGenericIntegrationForm<
               <Controller
                 name={field.name}
                 control={control}
-                defaultValue={initialValues[field.name]}
+                defaultValue={
+                  (setting as Record<typeof field.name, unknown>)[
+                    field.name
+                  ] as any
+                }
                 render={({
                   field: { value, onChange, ...restField },
                   fieldState,
@@ -188,7 +228,7 @@ export function SingleGenericIntegrationForm<
                         onChange={onChange}
                         disabled={field.disabled}
                         cleanable={false}
-                        searchable={false}
+                        searchable={field.searchable ?? false}
                         {...restField}
                       />
                     );
@@ -202,7 +242,7 @@ export function SingleGenericIntegrationForm<
                         onChange={val => onChange(val)}
                         disabled={field.disabled}
                         cleanable={false}
-                        searchable={false}
+                        searchable={field.searchable ?? false}
                         {...restField}
                       />
                     );
@@ -221,24 +261,26 @@ export function SingleGenericIntegrationForm<
                     );
                   }
 
+                  if (field.type === 'custom') {
+                    return (
+                      <field.render
+                        value={value}
+                        onChange={val => onChange(val)}
+                        disabled={field.disabled}
+                        {...restField}
+                      />
+                    );
+                  }
+
                   return (
                     <Form.Control
                       value={value}
                       onChange={onChange}
                       errorMessage={fieldState.error?.message}
-                      type={
-                        field.type === 'password' ? 'password'
-                        : field.type === 'number' ?
-                          'number'
-                        : 'text'
-                      }
                       accepter={
                         field.type === 'textarea' ? Textarea : undefined
                       }
-                      rows={field.textareaRows}
-                      placeholder={field.placeholder}
-                      autoComplete={field.autoComplete}
-                      disabled={field.disabled}
+                      {...field}
                       {...restField}
                     />
                   );

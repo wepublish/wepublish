@@ -13,23 +13,24 @@ import { FaCommentSlash } from 'react-icons/fa6';
 import { FiMessageCircle as FiMessageCircleDefault } from 'react-icons/fi';
 
 export const ArticleMetaWrapper = styled('div')`
-  grid-column: 1 / 3;
   display: flex;
   flex-direction: row-reverse;
   justify-content: flex-start;
   position: relative;
   gap: 4px;
-  padding-top: 5cqw;
+  padding: 0.5rem 0 0.75rem 0;
+
+  grid-column: 1 / 4;
+  grid-row: 4 / 5;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
-    top: -100%;
-    grid-column: 2 / 3;
     gap: 8px;
-    padding-top: 0;
+    grid-column: 2 / 4;
+    padding: 0 0 0.75rem 0;
   }
 
   ${ArticleTagsWrapper} {
-    gap: 4px;
+    display: contents;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
       gap: 8px;
@@ -37,7 +38,9 @@ export const ArticleMetaWrapper = styled('div')`
   }
 `;
 
-export const ArticleMetaComments = styled('div')``;
+export const ArticleMetaComments = styled('div')`
+  display: contents;
+`;
 
 const ArticleMetaBadge = styled(Badge)`
   & .MuiBadge-badge {
@@ -50,12 +53,38 @@ const ArticleMetaBadge = styled(Badge)`
     aspect-ratio: 1;
     color: ${({ theme }) => theme.palette.common.white};
     scale: 0.8;
+    display: inline-block;
+    text-align: center;
+    padding: 0;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
       border-width: 2px;
       top: 27px;
       left: -24px;
       scale: 1;
+    }
+  }
+
+  @supports (-webkit-text-size-adjust: none) and (font: -apple-system-body) {
+    & .MuiBadge-badge {
+      border: none;
+      height: 16px;
+      min-width: 16px;
+      left: -19px;
+      outline: 2px solid ${({ theme }) => theme.palette.common.white};
+    }
+  }
+
+  @supports (not (-webkit-text-size-adjust: none)) and
+    (font: -apple-system-body) {
+    & .MuiBadge-badge {
+      ${({ theme }) => theme.breakpoints.up('md')} {
+        border: none;
+        height: 16px;
+        min-width: 16px;
+        left: -19px;
+        outline: 2px solid ${({ theme }) => theme.palette.common.white};
+      }
     }
   }
 `;

@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material';
+import { ThemeOptions } from '@mui/material/styles';
 import { theme as WePTheme } from '@wepublish/ui';
 import { Hanken_Grotesk } from 'next/font/google';
 
@@ -175,18 +176,18 @@ const theme = createTheme(WePTheme, {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
       color: colors.primary.main,
       fontWeight: 700,
-      fontSize: '1.1rem',
-      lineHeight: '1.1rem',
-      margin: '0 auto 0.5rem auto',
-      padding: '0.8rem 0 0 0',
+      fontSize: '1rem',
+      lineHeight: '1rem',
+      margin: '0 auto',
+      padding: '0',
     },
     footerSupportText: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
-      margin: '0 auto 1.5rem auto',
+      margin: '0 auto 0.5rem auto',
       fontWeight: 400,
-      lineHeight: '1.2rem',
+      lineHeight: '1rem',
       color: colors.common.white,
-      fontSize: '0.9rem',
+      fontSize: '0.8rem',
     },
     footerSupportImprint: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
@@ -311,6 +312,21 @@ const theme = createTheme(WePTheme, {
         },
       ],
     },
+    MuiContainer: {
+      styleOverrides: {
+        root: ({ theme }: { theme: any }) => ({
+          [theme.breakpoints.up('lg')]: {
+            maxWidth: '1123px',
+          },
+          [theme.breakpoints.up('xl')]: {
+            maxWidth: '1123px',
+          },
+          [theme.breakpoints.up('xxl')]: {
+            maxWidth: '1123px',
+          },
+        }),
+      },
+    },
     MuiToolbar: {
       variants: [
         {
@@ -336,9 +352,27 @@ const theme = createTheme(WePTheme, {
           },
         },
       ],
+      // set the navbar to be the same width as MuiContainer
+      styleOverrides: {
+        root: ({ theme }: { theme: any }) => ({
+          ['&&']: {
+            // since Appbar sets max width for Toolbar with specifity of 2...
+            // ...we have to increase the specifity to override
+            [theme.breakpoints.up('lg')]: {
+              maxWidth: '1123px',
+            },
+            [theme.breakpoints.up('xl')]: {
+              maxWidth: '1123px',
+            },
+            [theme.breakpoints.up('xxl')]: {
+              maxWidth: '1123px',
+            },
+          },
+        }),
+      },
     },
   },
-});
+} as unknown as ThemeOptions);
 
 export const teaserTopicMetaTheme = createTheme(theme, {
   typography: {
@@ -380,6 +414,9 @@ export const teaserTopicMetaTheme = createTheme(theme, {
         padding: 0,
         backgroundColor: 'transparent',
         color: colors.common.black,
+      },
+      [breakpoints.up('md')]: {
+        margin: 0,
       },
     },
   },

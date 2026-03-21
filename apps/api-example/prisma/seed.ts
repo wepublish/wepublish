@@ -17,11 +17,9 @@ import {
 } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 import { createReadStream } from 'fs';
-import { Descendant, Node } from 'slate';
 import { seed as rootSeed } from '../../../libs/api/prisma/seed';
 import { NovaMediaAdapter } from '../../../libs/api/src/lib/media/novaMediaAdapter';
 import { capitalize } from '@mui/material';
-import { bootstrap } from '../../media/src/bootstrap';
 import { NavigationLinkType } from 'libs/navigation/api/src/lib/navigation.model';
 import {
   TeaserGridFlexBlock,
@@ -37,12 +35,10 @@ import {
   EventBlock,
 } from '@wepublish/block-content/api';
 import { TrackingPixel } from '@wepublish/tracking-pixel/api';
-import bcrypt from 'bcrypt';
+import { hash as argon2Hash } from '@node-rs/argon2';
 
 async function hashPassword(password: string) {
-  const hashCostFactor = 12;
-
-  return await bcrypt.hash(password, hashCostFactor);
+  return await argon2Hash(password);
 }
 
 const shuffle = <T>(list: T[]): T[] => {
@@ -71,19 +67,16 @@ const pickRandom = <T>(value: T, chance = 0.5): T[] | never[] => {
 };
 
 function getText(min = 1, max = 10) {
-  const text: Descendant[] = Array.from(
-    { length: faker.number.int({ min, max }) },
-    () => ({
-      type: 'paragraph',
-      children: [
-        {
-          text: faker.lorem.paragraph(),
-        },
-      ],
-    })
-  );
+  const text = Array.from({ length: faker.number.int({ min, max }) }, () => ({
+    type: 'paragraph',
+    children: [
+      {
+        text: faker.lorem.paragraph(),
+      },
+    ],
+  }));
 
-  return text as Prisma.InputJsonValue;
+  return text as unknown as Prisma.InputJsonValue;
 }
 
 async function seedImages(prisma: PrismaClient) {
@@ -907,18 +900,24 @@ async function seedMemberPlans(prisma: PrismaClient) {
 }
 
 async function seedSettings(prisma: PrismaClient) {
-  const mailprovider = prisma.settingMailProvider.create({
-    data: {
+  const upsert = <T extends { id: string }>(data: T) => ({
+    where: { id: data.id },
+    create: data,
+    update: {},
+  });
+
+  const mailprovider = prisma.settingMailProvider.upsert(
+    upsert({
       id: 'slackmail',
       name: 'Slackmail',
       type: MailProviderType.SLACK,
       fromAddress: 'dev@wepublish.ch',
       slack_webhookURL: 'https://slackmail.com',
-    },
-  });
+    })
+  );
 
-  const payrexx = prisma.settingPaymentProvider.create({
-    data: {
+  const payrexx = prisma.settingPaymentProvider.upsert(
+    upsert({
       id: 'payrexx',
       type: PaymentProviderType.PAYREXX,
       name: 'Payrexx',
@@ -931,11 +930,11 @@ async function seedSettings(prisma: PrismaClient) {
       payrexx_vatrate: 8.1,
       payrexx_pm: [PayrexxPM.MASTERCARD, PayrexxPM.VISA],
       payrexx_psp: [PayrexxPSP.PAYREXX_PAY_PLUS, PayrexxPSP.PAYREXX_PAY],
-    },
-  });
+    })
+  );
 
-  const payrexxSubscription = prisma.settingPaymentProvider.create({
-    data: {
+  const payrexxSubscription = prisma.settingPaymentProvider.upsert(
+    upsert({
       id: 'payrexx-subscription',
       type: PaymentProviderType.PAYREXX_SUBSCRIPTION,
       name: 'Payrexx Subscription',
@@ -945,10 +944,11 @@ async function seedSettings(prisma: PrismaClient) {
       webhookEndpointSecret:
         'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
       payrexx_instancename: 'payrexx',
-    },
-  });
-  const stripe = prisma.settingPaymentProvider.create({
-    data: {
+    })
+  );
+
+  const stripe = prisma.settingPaymentProvider.upsert(
+    upsert({
       id: 'stripe',
       type: PaymentProviderType.STRIPE,
       name: 'Stripe',
@@ -958,11 +958,11 @@ async function seedSettings(prisma: PrismaClient) {
       webhookEndpointSecret:
         'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
       stripe_methods: [StripePaymentMethod.CARD],
-    },
-  });
+    })
+  );
 
-  const stripeCheckout = prisma.settingPaymentProvider.create({
-    data: {
+  const stripeCheckout = prisma.settingPaymentProvider.upsert(
+    upsert({
       id: 'stripe-checkout',
       type: PaymentProviderType.STRIPE_CHECKOUT,
       name: 'Stripe Checkout',
@@ -972,11 +972,11 @@ async function seedSettings(prisma: PrismaClient) {
       webhookEndpointSecret:
         'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
       stripe_methods: [StripePaymentMethod.CARD],
-    },
-  });
+    })
+  );
 
-  const mollie = prisma.settingPaymentProvider.create({
-    data: {
+  const mollie = prisma.settingPaymentProvider.upsert(
+    upsert({
       id: 'mollie',
       type: PaymentProviderType.MOLLIE,
       name: 'Mollie',
@@ -987,11 +987,11 @@ async function seedSettings(prisma: PrismaClient) {
         'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
       mollie_methods: [MolliePaymentMethod.CREDITCARD],
       mollie_apiBaseUrl: 'https://api.wepublish.dev',
-    },
-  });
+    })
+  );
 
-  const bexio = prisma.settingPaymentProvider.create({
-    data: {
+  const bexio = prisma.settingPaymentProvider.upsert(
+    upsert({
       id: 'bexio',
       type: PaymentProviderType.BEXIO,
       name: 'Bexio',
@@ -1015,49 +1015,48 @@ async function seedSettings(prisma: PrismaClient) {
       bexio_invoiceMailBodyRenewalMembership:
         'Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team',
       bexio_markInvoiceAsOpen: false,
-    },
-  });
+    })
+  );
 
-  const noCharge = prisma.settingPaymentProvider.create({
-    data: {
+  const noCharge = prisma.settingPaymentProvider.upsert(
+    upsert({
       id: 'no-charge',
       type: PaymentProviderType.NO_CHARGE,
       name: 'No Charge',
       offSessionPayments: true,
-    },
-  });
+    })
+  );
 
-  const turnstile = prisma.settingChallengeProvider.create({
-    data: {
+  const turnstile = prisma.settingChallengeProvider.upsert(
+    upsert({
       id: 'turnstile',
       name: 'Turnstile',
       type: ChallengeProviderType.TURNSTILE,
       secret:
         'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
       siteKey: '1x00000000000000000000AA',
-    },
-  });
+    })
+  );
 
-  const prolitteris = prisma.settingTrackingPixel.create({
-    data: {
-      id: 'turnstile',
+  const prolitteris = prisma.settingTrackingPixel.upsert(
+    upsert({
+      id: 'prolitteris',
       type: TrackingPixelProviderType.prolitteris,
       name: 'Pro Litteris',
       prolitteris_memberNr: '892761',
       prolitteris_onlyPaidContentAccess: false,
       prolitteris_publisherInternalKeyDomain: 'pl02.owen.prolitteris.ch',
       prolitteris_usePublisherInternalKey: true,
-    },
-  });
+    })
+  );
 
-  const v0 = prisma.settingAIProvider.create({
-    data: {
-      id: 'v0',
-      type: AIProviderType.V0,
-      name: 'V0',
-      apiKey:
-        'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
-      systemPrompt: `DO's:
+  const v0Data = {
+    id: 'v0',
+    type: AIProviderType.V0,
+    name: 'V0',
+    apiKey:
+      'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
+    systemPrompt: `DO's:
   1. Use plain HTML and CSS
   2. Use <style> tags
   3. Center horizontally
@@ -1076,7 +1075,13 @@ async function seedSettings(prisma: PrismaClient) {
   5. Do not set a min-height of 100vh or similar on the container
   6. Do not generate or reference any external images, inline if possible
   7. Do not return anything but HTML, does not matter what is given in the prompt`,
+  };
+  const v0 = prisma.settingAIProvider.upsert({
+    where: {
+      id: 'v0',
     },
+    update: v0Data,
+    create: v0Data,
   });
 
   await Promise.all([
@@ -1094,121 +1099,105 @@ async function seedSettings(prisma: PrismaClient) {
   ]);
 }
 
-async function seed() {
-  const { app } = await bootstrap(['error']);
-  const prisma = new PrismaClient();
-  await prisma.$connect();
+export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
+  const [adminUserRole, editorUserRole] = await rootSeed(prisma);
+
+  if (!adminUserRole || !editorUserRole) {
+    throw new Error('@wepublish/api seeding has not been done');
+  }
+
+  const hasSeeded = await prisma.user.findUnique({
+    where: { email: 'dev@wepublish.ch' },
+  });
+
+  if (hasSeeded) {
+    console.warn('Website Example seeding has already been done. Skipping');
+    return;
+  }
 
   try {
-    const [adminUserRole, editorUserRole] = await rootSeed(prisma);
-
-    if (!adminUserRole || !editorUserRole) {
-      throw new Error('@wepublish/api seeding has not been done');
-    }
-
-    try {
-      // Overwrite admin passwords from db dump.
-      await Promise.all([
-        prisma.user.update({
-          where: {
-            email: 'dev@wepublish.ch',
-          },
-          data: {
-            password: await hashPassword('123'),
-          },
-        }),
-        prisma.user.update({
-          where: {
-            email: 'editor@wepublish.ch',
-          },
-          data: {
-            password: await hashPassword('123'),
-          },
-        }),
-      ]);
-    } catch {}
-
-    const hasUsers = await prisma.user.count();
-
-    if (hasUsers) {
-      throw 'Website Example seeding has already been done. Skipping';
-    }
-    console.log('Seeding users');
+    // Overwrite admin passwords from db dump.
     await Promise.all([
-      prisma.user.create({
-        data: {
+      prisma.user.update({
+        where: {
           email: 'dev@wepublish.ch',
-          emailVerifiedAt: new Date(),
-          name: 'Dev User',
-          active: true,
-          roleIDs: [adminUserRole.id],
+        },
+        data: {
           password: await hashPassword('123'),
         },
       }),
-      prisma.user.create({
-        data: {
+      prisma.user.update({
+        where: {
           email: 'editor@wepublish.ch',
-          emailVerifiedAt: new Date(),
-          name: 'Editor User',
-          active: true,
-          roleIDs: [editorUserRole.id],
+        },
+        data: {
           password: await hashPassword('123'),
         },
       }),
     ]);
+  } catch {}
+  console.log('Seeding users');
+  await Promise.all([
+    prisma.user.create({
+      data: {
+        email: 'dev@wepublish.ch',
+        emailVerifiedAt: new Date(),
+        name: 'Dev User',
+        active: true,
+        roleIDs: [adminUserRole.id],
+        password: await hashPassword('123'),
+      },
+    }),
+    prisma.user.create({
+      data: {
+        email: 'editor@wepublish.ch',
+        emailVerifiedAt: new Date(),
+        name: 'Editor User',
+        active: true,
+        roleIDs: [editorUserRole.id],
+        password: await hashPassword('123'),
+      },
+    }),
+  ]);
 
-    console.log('Seeding Settings');
-    await seedSettings(prisma);
+  console.log('Seeding Settings');
+  await seedSettings(prisma);
 
-    const tags = Array.from({ length: 5 }, () =>
-      faker.word.noun().toLowerCase()
-    );
-    console.log('Seeding polls');
-    const polls = await seedPoll(prisma);
-    console.log('Seeding navigations');
-    const navigations = await seedNavigations(prisma, tags);
-    console.log('Seeding images');
-    // const [womanProfilePhoto, manProfilePhoto, ...teaserImages] = await seedImages(prisma)
-    console.log('Seeding authors');
-    const authors = await seedAuthors(prisma, []);
-    console.log('Seeding events');
-    const events = await seedEvents(prisma, []);
-    console.log('Seeding articles');
-    const articles = await seedArticles(
-      prisma,
-      [],
-      authors.map(({ id }) => id),
-      polls.map(({ id }) => id),
-      events.map(({ id }) => id)
-    );
-    console.log('Seeding comments');
-    const comments = await seedComments(
-      prisma,
-      articles.map(({ id }) => id),
-      []
-    );
-    console.log('Seeding pages');
-    const pages = await seedPages(
-      prisma,
-      [],
-      articles.map(({ id }) => id)
-    );
+  const tags = Array.from({ length: 5 }, () => faker.word.noun().toLowerCase());
+  console.log('Seeding polls');
+  const polls = await seedPoll(prisma);
+  console.log('Seeding navigations');
+  const navigations = await seedNavigations(prisma, tags);
+  console.log('Seeding images');
+  // const [womanProfilePhoto, manProfilePhoto, ...teaserImages] = await seedImages(prisma)
+  console.log('Seeding authors');
+  const authors = await seedAuthors(prisma, []);
+  console.log('Seeding events');
+  const events = await seedEvents(prisma, []);
+  console.log('Seeding articles');
+  const articles = await seedArticles(
+    prisma,
+    [],
+    authors.map(({ id }) => id),
+    polls.map(({ id }) => id),
+    events.map(({ id }) => id)
+  );
+  console.log('Seeding comments');
+  const comments = await seedComments(
+    prisma,
+    articles.map(({ id }) => id),
+    []
+  );
+  console.log('Seeding pages');
+  const pages = await seedPages(
+    prisma,
+    [],
+    articles.map(({ id }) => id)
+  );
 
-    console.log('Seeding Payment Methods');
-    await seedPaymentMethods(prisma);
+  console.log('Seeding Payment Methods');
+  await seedPaymentMethods(prisma);
 
-    console.log('Seeding Member Plans');
-    await seedMemberPlans(prisma);
-  } catch (e) {
-    if (typeof e === 'string') {
-      console.warn(e);
-    } else {
-      throw e;
-    }
-  } finally {
-    await app.close();
-    await prisma.$disconnect();
-  }
+  console.log('Seeding Member Plans');
+  await seedMemberPlans(prisma);
 }
-
-seed();

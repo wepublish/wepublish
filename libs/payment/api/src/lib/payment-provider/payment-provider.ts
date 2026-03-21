@@ -407,7 +407,7 @@ class PaymentProviderConfig {
       } catch (e) {
         console.error(e);
         throw new Error(
-          `Failed to decrypt apikey for Mail provider setting ${this.id}`
+          `Failed to decrypt apiKey for Payment provider setting ${this.id}`
         );
       }
     }
@@ -420,7 +420,7 @@ class PaymentProviderConfig {
       } catch (e) {
         console.error(e);
         throw new Error(
-          `Failed to decrypt webhookEndpointSecret for Mail provider setting ${this.id}`
+          `Failed to decrypt webhookEndpointSecret for Payment provider setting ${this.id}`
         );
       }
     }

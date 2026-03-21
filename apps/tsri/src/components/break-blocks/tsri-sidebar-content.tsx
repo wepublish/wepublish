@@ -10,6 +10,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
+import { useMemo } from 'react';
 
 import { BlockSiblings } from '../tsri-block-renderer';
 import { TsriBreakBlockType } from './tsri-base-break-block';
@@ -26,15 +27,22 @@ export const SidebarContentWrapper = styled('div')`
   }
 `;
 
-//   top: calc(var(--navbar-height, 0px) + 10px);
 export const SidebarContentBox = styled('div')`
   display: block;
-  background-color: cyan;
   border-radius: 1cqw;
   width: 100%;
   position: sticky;
   top: var(--navbar-height, 0px);
   padding: 0 0 calc(var(--sizing-factor) * 1.5cqw) 0;
+  background: linear-gradient(
+    to bottom,
+    ${({ theme }) => theme.palette.primary.light},
+    color-mix(
+      in srgb,
+      ${({ theme }) => theme.palette.common.white} 60%,
+      ${({ theme }) => theme.palette.primary.light}
+    )
+  );
 `;
 
 export const SidebarContentBody = styled('div')`
@@ -104,6 +112,28 @@ export const SidebarContentButton = styled(Button)`
   justify-self: end;
   padding-right: calc(var(--sizing-factor) * 8cqw);
   margin-top: calc(var(--sizing-factor) * 1cqw);
+
+  &:hover {
+    background-color: ${({ theme }) => theme.palette.primary.main};
+    color: ${({ theme }) => theme.palette.common.white};
+  }
+`;
+
+const sidebarContentWrapperStyles = (
+  theme: Theme,
+  index: number,
+  nextOfTypeIndex: number | undefined,
+  count: number,
+  text: string | null | undefined
+) => css`
+  ${siblingSidebarContentWrapperStyles};
+
+  ${theme.breakpoints.up('md')} {
+    grid-row-start: ${index};
+    grid-row-end: ${nextOfTypeIndex ?? count + 4};
+    background-color: ${theme.palette.common.white};
+    margin-bottom: ${nextOfTypeIndex ? theme.spacing(-4) : 0};
+  }
 `;
 
 export const isTsriSidebarContent = (
@@ -138,71 +168,59 @@ export const TsriSidebarContent = ({
 
   const theme = useTheme();
 
-  const nextOfTypeIndex = (() => {
+  const nextOfTypeIndex = useMemo(() => {
     for (let i = index + 1; i < count; i++) {
       if (
-        siblings[i].typeName === 'BreakBlock' &&
-        siblings[i].blockStyle === TsriBreakBlockType.SidebarContent
+        (siblings[i].typeName === 'BreakBlock' &&
+          siblings[i].blockStyle === TsriBreakBlockType.SidebarContent) ||
+        (siblings[i].typeName === 'BreakBlock' &&
+          siblings[i].blockStyle === TsriBreakBlockType.SidebarContentAltColor)
       ) {
         return i;
       }
     }
 
     return undefined;
-  })();
-
-  const sidebarContentWrapperStyles = (theme: Theme) => css`
-    ${siblingSidebarContentWrapperStyles};
-
-    ${theme.breakpoints.up('md')} {
-      grid-row-start: ${index};
-      grid-row-end: ${nextOfTypeIndex ?? count + 4};
-      background-color: ${theme.palette.common.white};
-      margin-bottom: ${nextOfTypeIndex ? theme.spacing(-4) : 0};
-    }
-
-    & ${SidebarContentBox} {
-      background: ${text && text === 'Shop' ?
-        `linear-gradient(to bottom, ${theme.palette.primary.light}, color-mix(in srgb, ${theme.palette.common.white} 60%, ${theme.palette.primary.light}))`
-      : `linear-gradient(to bottom, ${theme.palette.primary.main}, color-mix(in srgb, ${theme.palette.common.white} 60%, ${theme.palette.primary.main}))`};
-    }
-  `;
-
-  const sidebarContentButtonStyles = (theme: Theme) => css`
-    &:hover {
-      background-color: ${text && text === 'Shop' ?
-        theme.palette.primary.main
-      : theme.palette.primary.light};
-      color: ${text && text === 'Shop' ?
-        theme.palette.common.white
-      : theme.palette.common.black};
-    }
-  `;
+  }, [index, count, siblings]);
 
   return (
-    <SidebarContentWrapper css={sidebarContentWrapperStyles}>
+    <SidebarContentWrapper
+      css={sidebarContentWrapperStyles(
+        theme,
+        index,
+        nextOfTypeIndex,
+        count,
+        text
+      )}
+      className={className}
+    >
       <SidebarContentBox>
         {text && (
           <Typography component={SidebarContentHeading}>{text}</Typography>
         )}
         <SidebarContentBody>
-          {text && text === 'Newsletter' && richText && (
+          {richText && richText[0] && richText[0].type === 'heading-two' && (
             <RichText
               richText={[richText[0]]}
               css={[richTextStyles(theme), subTitleStyles]}
             />
           )}
           {image && <SidebarContentImage image={image} />}
-          {richText && richText.length > 1 && (
+          {richText && richText[0] && richText[0].type === 'heading-two' ?
             <RichText
               richText={[...richText].splice(1, richText.length - 1)}
               css={richTextStyles(theme)}
             />
-          )}
+          : richText && (
+              <RichText
+                richText={richText}
+                css={richTextStyles(theme)}
+              />
+            )
+          }
 
           {!hideButton && linkURL && linkText && (
             <SidebarContentButton
-              css={sidebarContentButtonStyles}
               variant="contained"
               size="medium"
               LinkComponent={Link}
