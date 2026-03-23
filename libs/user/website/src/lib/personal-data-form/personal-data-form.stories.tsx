@@ -116,7 +116,7 @@ const requestEmailChange: StoryObj['play'] = async ({
   });
 
   await step('Enter new email and submit', async () => {
-    const newEmailInput = canvas.getByLabelText('Neue E-Mail-Adresse', {
+    const newEmailInput = await canvas.findByLabelText('Neue E-Mail-Adresse', {
       selector: 'input',
     });
     await userEvent.click(newEmailInput);
