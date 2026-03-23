@@ -18,6 +18,7 @@ export type BuilderSlidesPerView = Partial<{
 export type BuilderSliderConfig = {
   slidesPerViewConfig?: BuilderSlidesPerView;
   dragDisabled?: boolean;
+  detailsChanged?: (slider: any) => void;
 };
 
 export type BuilderBlockStyleProps = {

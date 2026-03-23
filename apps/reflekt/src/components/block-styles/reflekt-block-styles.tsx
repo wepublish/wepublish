@@ -1,5 +1,6 @@
 export enum ReflektBlockType {
   FlexBlockHero = 'FlexBlockHero',
+  FlexBlockFullsizeImage = 'FlexBlockFullsizeImage',
   TeaserRecherchen = 'TeaserRecherchen',
   TeaserMoreAbout = 'TeaserMoreAbout',
   TeaserCredits = 'TeaserCredits',
@@ -7,7 +8,6 @@ export enum ReflektBlockType {
   CollapsibleContent = 'CollapsibleContent',
   CollapsibleDownloads = 'CollapsibleDownloads',
   TableOfContents = 'TableOfContents',
-  ImageFullsize = 'ImageFullsize',
   TextWithImage = 'TextWithImage',
   TextWithImageAltColor = 'TextWithImageAltColor',
   ImageWithText = 'ImageWithText',

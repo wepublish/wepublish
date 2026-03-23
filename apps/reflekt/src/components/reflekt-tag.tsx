@@ -4,7 +4,8 @@ import { TeaserGridBlockWrapper } from '@wepublish/block-content/website';
 import { Tag, TagTitleWrapper } from '@wepublish/tag/website';
 
 export const ReflektTag = styled(Tag)`
-  padding-top: calc(var(--navbar-height) + ${({ theme }) => theme.spacing(3)});
+  //padding-top: calc(var(--navbar-height) + ${({ theme }) =>
+    theme.spacing(3)});
   row-gap: ${({ theme }) => theme.spacing(3)};
 
   & > ${TagTitleWrapper} {

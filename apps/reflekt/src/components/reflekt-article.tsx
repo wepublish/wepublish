@@ -29,11 +29,11 @@ import {
 import { Paywall } from '@wepublish/website/builder';
 
 import { robotoMono } from '../theme';
+import { FlexBlockFullsizeImageWrapper } from './block-layouts/flex-block-fullsize-image';
 import {
   FlexBlockHeroWrapper,
   isFlexBlockHero,
 } from './block-layouts/flex-block-hero';
-import { ReflektImageBlockFullsize } from './block-styles/reflekt-image-block-fullsize';
 import { ReflektCollapsibleContentWrapper } from './break-blocks/reflekt-collapsible-content';
 import { ReflektCollapsibleDownloadsWrapper } from './break-blocks/reflekt-collapsible-downloads';
 import { ReflektTocWrapper } from './break-blocks/reflekt-toc';
@@ -87,8 +87,12 @@ export const ArticleWrapper = styled(ContentWrapper)<{
   fadeout?: boolean;
   fadeoutStyles?: SerializedStyles;
 }>`
-  //padding-top: var(--navbar-height);
   padding-bottom: ${({ theme }) => theme.spacing(14)};
+
+  & > :is(${FlexBlockHeroWrapper}, ${FlexBlockFullsizeImageWrapper}) {
+    margin-left: -${({ theme }) => theme.spacing(2)};
+    margin-right: -${({ theme }) => theme.spacing(2)};
+  }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-columns:
@@ -134,7 +138,7 @@ export const ArticleWrapper = styled(ContentWrapper)<{
       margin-right: 0;
     }
 
-    & > :is(${FlexBlockHeroWrapper}, ${ReflektImageBlockFullsize}) {
+    & > :is(${FlexBlockHeroWrapper}, ${FlexBlockFullsizeImageWrapper}) {
       grid-column: -1/1;
       margin-left: 0;
       margin-right: 0;

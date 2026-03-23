@@ -14,11 +14,11 @@ import { allPass, cond } from 'ramda';
 import type { ComponentProps, ComponentType } from 'react';
 import { memo, useMemo } from 'react';
 
-import { isFlexBlockHero } from './block-layouts/flex-block-hero';
 import {
-  isReflektImageBlockFullsize,
-  ReflektImageBlockFullsize,
-} from './block-styles/reflekt-image-block-fullsize';
+  FlexBlockFullsizeImage,
+  isFlexBlockFullsizeImage,
+} from './block-layouts/flex-block-fullsize-image';
+import { isFlexBlockHero } from './block-layouts/flex-block-hero';
 import {
   isCollapsibleContent,
   ReflektCollapsibleContent,
@@ -128,8 +128,8 @@ export const ReflektBlockRenderer = (
           ),
         ],
         [
-          isReflektImageBlockFullsize,
-          block => <ReflektImageBlockFullsize {...(block as any)} />,
+          isFlexBlockFullsizeImage,
+          block => <FlexBlockFullsizeImage {...(block as any)} />,
         ],
       ]),
     [props.siblings]

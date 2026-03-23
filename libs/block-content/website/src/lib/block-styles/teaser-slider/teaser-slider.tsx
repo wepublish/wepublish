@@ -184,12 +184,7 @@ export const TeaserSlider = ({
     mode: 'free-snap',
     loop: true,
     drag: props.dragDisabled ? false : true,
-    detailsChanged: s => {
-      s.slides.forEach(slide => {
-        slide.style.opacity = '1';
-        slide.style.visibility = 'visible';
-      });
-    },
+    detailsChanged: props.detailsChanged ? props.detailsChanged : void 0,
     slides: {
       origin: 'center',
       perView: slidesPerView,

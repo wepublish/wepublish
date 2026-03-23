@@ -681,14 +681,68 @@ const createArticleBlocksInput = (
       } as BlockContentInput;
     }),
 
-    // a fullsize image block
+    // a flex-block fullsize image block
     {
-      image: {
-        blockStyle: getBlockStyle(blockStyles, 'ImageFullsize'),
-        imageID:
-          imageIds[faker.number.int({ min: 0, max: imageIds.length - 5 })],
-        caption: faker.lorem.sentence(),
-      } as ImageBlockInput,
+      flexBlock: {
+        blockStyle: getBlockStyle(blockStyles, 'FlexBlockFullsizeImage'),
+        blocks: [
+          //  image
+          {
+            alignment: {
+              i: '0',
+              x: 0,
+              y: 0,
+              w: 12,
+              h: 7,
+              static: false,
+            },
+            block: {
+              image: {
+                imageID: imageIds[18],
+                caption: null,
+              } as ImageBlockInput,
+            } as BlockContentInput,
+          },
+
+          // overlay text
+          {
+            alignment: {
+              i: '2',
+              x: 0,
+              y: 7,
+              w: 12,
+              h: 3,
+              static: false,
+            },
+            block: {
+              richText: {
+                richText: [
+                  {
+                    type: 'heading-two',
+                    children: [
+                      {
+                        text: capitalize(
+                          faker.lorem.words({ min: 5, max: 20 })
+                        ),
+                      },
+                    ],
+                  },
+                  {
+                    type: 'heading-two',
+                    children: [
+                      {
+                        text: capitalize(
+                          faker.lorem.words({ min: 10, max: 15 })
+                        ),
+                      },
+                    ],
+                  },
+                ] as Descendant[],
+              } as RichTextBlockInput,
+            } as BlockContentInput,
+          },
+        ] as BlockWithAlignment[],
+      } as FlexBlockInput,
     } as BlockContentInput,
 
     // a collapsible downloads list block
@@ -1798,8 +1852,8 @@ async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
     },
 
     {
-      name: 'ImageFullsize',
-      blocks: ['Image'],
+      name: 'FlexBlockFullsizeImage',
+      blocks: ['FlexBlock'],
     },
 
     {

@@ -94,6 +94,12 @@ export const TeaserSlotsTopic = ({
             xl: 3,
           }}
           dragDisabled={isDesktop}
+          detailsChanged={slider => {
+            slider.slides.forEach((slide: any) => {
+              slide.style.opacity = '1';
+              slide.style.visibility = 'visible';
+            });
+          }}
         />
         <Teaser
           key={filledTeasers.length - 1}
