@@ -94,9 +94,11 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
   const confirmAttempted = useRef(false);
 
   useEffect(() => {
-    if (router.query.confirmEmailChange && !confirmAttempted.current) {
+    const newEmail = router.query.confirmEmailChange as string | undefined;
+
+    if (newEmail && !confirmAttempted.current) {
       confirmAttempted.current = true;
-      confirmEmailChange()
+      confirmEmailChange({ variables: { newEmail } })
         .then(async () => {
           setEmailChangeConfirmed(true);
           const { confirmEmailChange: _, jwt: __, ...query } = router.query;

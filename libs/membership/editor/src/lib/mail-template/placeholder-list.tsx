@@ -198,7 +198,7 @@ export function PlaceholderList() {
                 'placeholderList.description.optional_newEmail_example',
                 {
                   newEmailPlaceholder: newEmailExample,
-                  confirmLink: `<a href="https://www.example.com/profile?confirmEmailChange=1&jwt=${jwtExample}">`,
+                  confirmLink: `<a href="https://www.example.com/profile?confirmEmailChange=${newEmailExample}&jwt=${jwtExample}">`,
                 }
               ),
             });

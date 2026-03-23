@@ -83,7 +83,10 @@ export class ProfileResolver {
   @Mutation(() => SensitiveDataUser, {
     description: 'Confirms a pending email change for the logged-in user.',
   })
-  async confirmEmailChange(@CurrentUser() { user }: UserSession) {
-    return this.userService.confirmEmailChange(user.id);
+  async confirmEmailChange(
+    @Args('newEmail') newEmail: string,
+    @CurrentUser() { user }: UserSession
+  ) {
+    return this.userService.confirmEmailChange(user.id, newEmail);
   }
 }

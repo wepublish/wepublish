@@ -277,6 +277,7 @@ export class UserService {
     await this.mailContext.sendMail({
       externalMailTemplateId,
       recipient: user,
+      recipientOverrideAddress: newEmail,
       optionalData: { newEmail },
       mailType: mailLogType.UserFlow,
     });
@@ -285,7 +286,7 @@ export class UserService {
   }
 
   @PrimeDataLoader(UserDataloaderService)
-  async confirmEmailChange(userId: string) {
+  async confirmEmailChange(userId: string, newEmail: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: unselectPassword,
@@ -297,6 +298,12 @@ export class UserService {
 
     if (!user.pendingEmail || !user.pendingEmailAt) {
       throw new BadRequestException('No pending email change.');
+    }
+
+    if (user.pendingEmail.toLowerCase() !== newEmail.toLowerCase()) {
+      throw new BadRequestException(
+        'Email address does not match the pending email change.'
+      );
     }
 
     const minutesElapsed =

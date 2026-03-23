@@ -143,8 +143,8 @@ mutation RequestEmailChange($newEmail: String!) {
   requestEmailChange(newEmail: $newEmail)
 }
 
-mutation ConfirmEmailChange {
-  confirmEmailChange {
+mutation ConfirmEmailChange($newEmail: String!) {
+  confirmEmailChange(newEmail: $newEmail) {
     ...FullSensitiveDataUser
   }
 }

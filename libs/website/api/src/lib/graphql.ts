@@ -9467,7 +9467,9 @@ export type RequestEmailChangeMutationVariables = Exact<{
 
 export type RequestEmailChangeMutation = { __typename?: 'Mutation', requestEmailChange: boolean };
 
-export type ConfirmEmailChangeMutationVariables = Exact<{ [key: string]: never; }>;
+export type ConfirmEmailChangeMutationVariables = Exact<{
+  newEmail: Scalars['String'];
+}>;
 
 
 export type ConfirmEmailChangeMutation = { __typename?: 'Mutation', confirmEmailChange: { __typename?: 'SensitiveDataUser', permissions: Array<string>, birthday?: string | null, email: string, pendingEmail?: string | null, id: string, name: string, firstName?: string | null, flair?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers?: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> } };
@@ -9486,8 +9488,8 @@ export type RequestEmailChangeMutationHookResult = ReturnType<typeof useRequestE
 export type RequestEmailChangeMutationResult = Apollo.MutationResult<RequestEmailChangeMutation>;
 export type RequestEmailChangeMutationOptions = Apollo.BaseMutationOptions<RequestEmailChangeMutation, RequestEmailChangeMutationVariables>;
 export const ConfirmEmailChangeDocument = gql`
-    mutation ConfirmEmailChange {
-  confirmEmailChange {
+    mutation ConfirmEmailChange($newEmail: String!) {
+  confirmEmailChange(newEmail: $newEmail) {
     ...FullSensitiveDataUser
   }
 }

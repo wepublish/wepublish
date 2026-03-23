@@ -1511,7 +1511,7 @@ type Mutation {
   cancelUserSubscription(id: String!): PublicSubscription
 
   """Confirms a pending email change for the logged-in user."""
-  confirmEmailChange: SensitiveDataUser!
+  confirmEmailChange(newEmail: String!): SensitiveDataUser!
 
   """Creates an article."""
   createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
