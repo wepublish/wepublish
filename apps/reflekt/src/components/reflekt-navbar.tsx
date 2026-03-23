@@ -143,13 +143,13 @@ export const navbarButtonStyles = (theme: Theme) => css`
   padding: 0;
   background-color: ${theme.palette.common.black};
   border-radius: 50%;
-  width: 14cqw;
-  height: 14cqw;
+  width: 2rem;
+  height: 2rem;
 
   > svg {
     stroke-width: 1.25px;
     stroke: ${theme.palette.common.white};
-    font-size: 8.5cqw;
+    font-size: 1.25rem;
   }
 
   &:hover {
@@ -160,11 +160,11 @@ export const navbarButtonStyles = (theme: Theme) => css`
   }
 
   ${theme.breakpoints.up('md')} {
-    width: 3.917442cqw;
-    height: 3.917442cqw;
+    width: 2.5rem;
+    height: 2.5rem;
 
     & > svg {
-      font-size: 2.5cqw;
+      font-size: 2.5rem;
     }
   }
 `;
@@ -186,12 +186,16 @@ export const NavbarHamburgerButton = styled(IconButton, {
     propName !== 'isMenuOpen' && propName !== 'isTransitioning',
 })<{ isMenuOpen: boolean; isTransitioning: boolean }>`
   background-color: ${theme.palette.primary.dark};
-  width: 5rem;
-  height: 5rem;
+  width: 4rem;
+  height: 3.5rem;
   border-radius: 0;
   transition: transform 100ms ease-out;
   position: relative;
   transform-origin: top left;
+
+  ${theme.breakpoints.up('md')} {
+    height: 4rem;
+  }
 
   &:hover {
     ${({ isTransitioning }) => {
@@ -215,14 +219,19 @@ export const NavbarHamburgerButton = styled(IconButton, {
 
   & > span {
     position: absolute;
-    left: 25%;
+    left: 50%;
+    margin-left: -25%;
     top: 50%;
-    width: 32px;
+    width: 60%;
     height: 3px;
     background-color: ${theme.palette.common.white};
     transition: all 300ms cubic-bezier(0.84, 0.06, 0.52, 1.8);
     transition: all 300ms ease-out;
     opacity: 1;
+
+    ${theme.breakpoints.up('md')} {
+      margin-left: -30%;
+    }
   }
 
   & > span:nth-of-type(1) {
@@ -263,9 +272,9 @@ export const NavbarMain = styled('div', {
   grid-column: -1 / 1;
   grid-row: 1 / 2;
   margin: 0 0 0 ${({ theme }) => theme.spacing(-3)};
-  column-gap: 2.5cqw;
+  column-gap: ${({ theme }) => theme.spacing(2)};
   display: grid;
-  grid-template-columns: repeat(3, min-content);
+  grid-template-columns: repeat(3, auto);
   align-items: center;
   justify-self: end;
   align-self: flex-start;
@@ -273,7 +282,7 @@ export const NavbarMain = styled('div', {
   z-index: 30;
 
   ${theme.breakpoints.up('md')} {
-    column-gap: 0.9cqw;
+    column-gap: ${theme.spacing(1)};
   }
 
   ${({ isMenuOpen }) =>
@@ -295,15 +304,15 @@ export const NavbarActions = styled('div', {
   display: none;
   flex-flow: row wrap;
   align-items: center;
-  gap: 1cqw;
+  gap: ${theme.spacing(1)};
   grid-column: 2 / 3;
   grid-row: 1 / 2;
   align-self: flex-start;
   justify-self: end;
-  margin-top: 1.9cqw;
+  margin-top: ${theme.spacing(2.5)};
   z-index: 20;
   pointer-events: all;
-  padding-right: 1.5cqw;
+  padding-right: ${theme.spacing(1.5)};
 
   ${theme.breakpoints.up('md')} {
     display: flex;
@@ -350,7 +359,7 @@ export const ReflektLogo = styled('img', {
   width: 15.5rem;
   height: auto;
   top: 1.25rem;
-  left: calc(50vw - 15.5rem);
+  left: calc(50vw - 15.5rem + 2rem);
 
   mix-blend-mode: difference;
 
@@ -367,25 +376,24 @@ const OpenInvoicesAlert = styled('div')`
   grid-template-columns: max-content max-content;
   align-items: center;
   color: ${theme.palette.error.main};
-  font-size: 1cqw;
+  font-size: ${theme.typography.body1.fontSize};
   font-weight: 600;
   top: 66%;
   right: 111%;
 `;
 
 const MdWarningOIA = styled(MdWarning)`
-  font-size: 6cqw;
+  font-size: 2rem;
 
   ${theme.breakpoints.up('md')} {
-    font-size: 2cqw;
+    font-size: 2rem;
   }
 `;
 
 export const NavPaperCategory = styled('div')`
   grid-column: 1 / 2;
   grid-row: 1 / 2;
-  row-gap: 0.8cqw;
-  padding-left: 2cqw;
+  row-gap: ${theme.spacing(1)};
 
   &:nth-of-type(n + 2) {
     grid-column: 1 / 2;
@@ -396,7 +404,7 @@ export const NavPaperCategory = styled('div')`
     grid-column: 2 / 3;
     grid-row: 2 / 3;
     padding-left: 0;
-    padding-right: 2cqw;
+    padding-right: ${theme.spacing(2)};
   }
 
   ${theme.breakpoints.up('md')} {
@@ -410,13 +418,13 @@ export const NavPaperCategory = styled('div')`
 
 export const NavPaperLinksGroup = styled('div')`
   display: grid;
-  column-gap: 2cqw;
+  column-gap: ${theme.spacing(2)};
   grid-row: 1 / 2;
   grid-column: 2 / 3;
   grid-template-columns: repeat(2, auto);
   grid-template-rows: repeat(2, auto);
-  row-gap: 12cqw;
-  margin: 0 0 0 3cqw;
+  row-gap: ${theme.spacing(4)};
+  margin: 0;
 
   ${theme.breakpoints.up('md')} {
     row-gap: unset;
@@ -431,13 +439,13 @@ export const NavPaperWrapper = styled('div', {
   shouldForwardProp: propName =>
     propName !== 'isMenuOpen' && propName !== 'isTransitioning',
 })<{ isMenuOpen: boolean; isTransitioning: boolean }>`
-  padding: 8cqw ${theme.spacing(2)} 0 ${theme.spacing(2)};
+  padding: ${theme.spacing(4)} ${theme.spacing(2)} 0 ${theme.spacing(2)};
   background-color: ${theme.palette.primary.dark};
   color: ${theme.palette.common.white};
   top: 0;
   left: 0;
   right: 0;
-  transform: scale(${({ isMenuOpen }) => (isMenuOpen ? '100%' : '3%')});
+  transform: scale(${({ isMenuOpen }) => (isMenuOpen ? '100%' : '1%')});
   transform-origin: top left;
   transition: transform 300ms cubic-bezier(0.62, 0.04, 0.3, 1.56);
   transition: transform 300ms ease-out;
@@ -447,14 +455,14 @@ export const NavPaperWrapper = styled('div', {
   height: 100vh;
   width: 100%;
   display: grid;
-  grid-template-rows: min-content 6cqw;
-  row-gap: 12cqw;
+  grid-template-rows: min-content ${theme.spacing(6)};
+  row-gap: ${theme.spacing(4)};
   grid-template-columns: 1fr minmax(max-content, 1285px) 1fr;
   position: absolute;
+  padding-top: calc(${theme.spacing(5)} + var(--navbar-height));
 
   ${theme.breakpoints.up('md')} {
     row-gap: unset;
-    padding-top: 0.5cqw;
   }
 
   ${NavPaperLinksGroup} {

@@ -21,6 +21,10 @@ export const ReflektCollapsibleContentWrapper = styled(Accordion)`
   &::before {
     display: none;
   }
+
+  ul {
+    padding-left: ${({ theme }) => theme.spacing(2)};
+  }
 `;
 
 export const ExpandIcon = styled(MdArrowDownward)`

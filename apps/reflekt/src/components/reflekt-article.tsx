@@ -1,6 +1,7 @@
 import { css, SerializedStyles, Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { GlobalStyles } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   ArticleListWrapper,
   ArticleTrackingPixels,
@@ -86,7 +87,7 @@ export const ArticleWrapper = styled(ContentWrapper)<{
   fadeout?: boolean;
   fadeoutStyles?: SerializedStyles;
 }>`
-  padding-top: var(--navbar-height);
+  //padding-top: var(--navbar-height);
   padding-bottom: ${({ theme }) => theme.spacing(14)};
 
   ${({ theme }) => theme.breakpoints.up('md')} {
@@ -188,6 +189,8 @@ export function ReflektArticle({
     blocks: { Blocks },
   } = useWebsiteBuilder();
 
+  const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
+
   const article = data?.article as ArticleType | undefined;
 
   return (
@@ -197,7 +200,7 @@ export function ReflektArticle({
       hideContentAfter={article?.paywall?.hideContentAfter}
       fadeout={article?.paywall?.fadeout}
     >
-      {articleGlobalStyles}
+      {isDesktop && articleGlobalStyles}
 
       {article && <ArticleSEO article={article} />}
 

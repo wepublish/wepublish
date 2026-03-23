@@ -33,7 +33,7 @@ export const isFlexBlockHero = (
 };
 
 export const FlexBlockHeroWrapper = styled('div')`
-  margin-top: calc(-1 * var(--navbar-height));
+  //margin-top: calc(-1 * var(--navbar-height));
   display: grid;
   gap: 0;
   grid-column: -1 / 1;

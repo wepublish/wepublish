@@ -482,7 +482,7 @@ const theme = createTheme(WePTheme, {
             padding: '0',
             textDecoration: 'none',
             fontSize: '1.5rem',
-            lineHeight: '3rem',
+            lineHeight: 1.75,
             '&:hover': {
               backgroundColor: 'transparent',
               textDecoration: 'underline',
@@ -608,7 +608,10 @@ const theme = createTheme(WePTheme, {
             fontSize: '1.5rem',
             '.MuiAccordionSummary-content': {
               gridColumn: '3 / 11',
-              margin: '0 2rem',
+              margin: '0',
+              [breakpoints.up('md')]: {
+                margin: '0 2rem',
+              },
             },
             '.MuiTypography-root': {
               textWrap: 'wrap',
@@ -621,14 +624,19 @@ const theme = createTheme(WePTheme, {
             padding: '0',
             gridColumn: '3 / 11',
             gridRow: '2 / 3',
-            marginLeft: '2rem',
-            marginRight: '2rem',
+            [breakpoints.up('md')]: {
+              marginLeft: '2rem',
+              marginRight: '2rem',
+            },
             '.MuiCollapse-wrapper': {
               marginTop: '0.75rem',
             },
           },
           '.MuiAccordionDetails-root': {
-            padding: '0 0 0 1rem',
+            padding: '0',
+            [breakpoints.up('md')]: {
+              padding: '0 0 0 1rem',
+            },
           },
           '.MuiAccordionSummary-expandIconWrapper': {
             fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(

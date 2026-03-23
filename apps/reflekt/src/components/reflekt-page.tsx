@@ -7,13 +7,12 @@ import { BuilderPageProps } from '@wepublish/website/builder';
 const fullWidthMainSpacer = (theme: Theme) => css`
   main > .MuiContainer-root {
     max-width: initial;
-    padding: 0;
+    padding-left: 0;
+    padding-right: 0;
   }
 `;
 
 const StyledReflektPage = styled(Page)`
-  padding-top: var(--navbar-height);
-
   & > .MuiContainer-root {
     max-width: initial;
     grid-template-columns: minmax(

@@ -6,11 +6,11 @@ export interface BlockSelectAndEditPanelProps {
   onClose: () => void;
   onSelect: (block: any) => void;
 }
-export type AlllowedBlockTypes = {
+export type AllowedBlockTypes = {
   [K in EditorBlockType]?: boolean;
 };
 
-export const allowedBlockTypes: AlllowedBlockTypes = {
+export const allowedBlockTypes: AllowedBlockTypes = {
   [EditorBlockType.TeaserSlots]: true,
   [EditorBlockType.Image]: true,
   [EditorBlockType.RichText]: true,
