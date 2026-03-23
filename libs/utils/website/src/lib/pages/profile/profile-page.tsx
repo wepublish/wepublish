@@ -97,12 +97,14 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
     if (router.query.confirmEmailChange && !confirmAttempted.current) {
       confirmAttempted.current = true;
       confirmEmailChange()
-        .then(() => {
+        .then(async () => {
           setEmailChangeConfirmed(true);
           const { confirmEmailChange: _, jwt: __, ...query } = router.query;
-          router.replace({ pathname: '/profile', query }, undefined, {
+          await router.replace({ pathname: '/profile', query }, undefined, {
             shallow: true,
           });
+          // todo: update user context instead.
+          window.location.reload();
         })
         .catch(err => {
           setEmailChangeError(err.message);
