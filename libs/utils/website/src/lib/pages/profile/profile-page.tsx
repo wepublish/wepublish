@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { css } from '@mui/material';
+import { Alert, css } from '@mui/material';
 import { AuthTokenStorageKey } from '@wepublish/authentication/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import {
@@ -21,13 +21,15 @@ import {
   SubscriptionsDocument,
   ProductType,
   SessionWithTokenWithoutUser,
+  useConfirmEmailChangeMutation,
   useSubscriptionsQuery,
 } from '@wepublish/website/api';
 import { Button, Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { setCookie } from 'cookies-next';
 import { NextPage, NextPageContext } from 'next';
 import getConfig from 'next/config';
-import { ComponentProps } from 'react';
+import { useRouter } from 'next/router';
+import { ComponentProps, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { withAuthGuard } from '../../auth-guard';
 import { ssrAuthLink } from '../../auth-link';
@@ -85,6 +87,28 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
     elements: { H4 },
   } = useWebsiteBuilder();
   const { t } = useTranslation();
+  const router = useRouter();
+  const [confirmEmailChange] = useConfirmEmailChangeMutation();
+  const [emailChangeConfirmed, setEmailChangeConfirmed] = useState(false);
+  const [emailChangeError, setEmailChangeError] = useState<string>();
+  const confirmAttempted = useRef(false);
+
+  useEffect(() => {
+    if (router.query.confirmEmailChange && !confirmAttempted.current) {
+      confirmAttempted.current = true;
+      confirmEmailChange()
+        .then(() => {
+          setEmailChangeConfirmed(true);
+          const { confirmEmailChange: _, jwt: __, ...query } = router.query;
+          router.replace({ pathname: '/profile', query }, undefined, {
+            shallow: true,
+          });
+        })
+        .catch(err => {
+          setEmailChangeError(err.message);
+        });
+    }
+  }, [router.query.confirmEmailChange, confirmEmailChange, router]);
 
   const { data: subscriptonData } = useSubscriptionsQuery({
     fetchPolicy: 'cache-only',
@@ -108,6 +132,24 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
 
   return (
     <>
+      {emailChangeConfirmed && (
+        <Alert
+          severity="success"
+          sx={{ mb: 2 }}
+        >
+          {t('user.emailChangeConfirmed')}
+        </Alert>
+      )}
+
+      {emailChangeError && (
+        <Alert
+          severity="error"
+          sx={{ mb: 2 }}
+        >
+          {emailChangeError}
+        </Alert>
+      )}
+
       <SubscriptionsWrapper className={className}>
         {hasUnpaidInvoices && (
           <SubscriptionListWrapper>

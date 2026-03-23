@@ -81,8 +81,6 @@ const buttonStyles = css`
   justify-self: flex-end;
 `;
 
-const RequestEmail = styled('div')``;
-
 const requiredSchema = requiredRegisterSchema.omit({
   challengeAnswer: true,
   email: true,
@@ -112,6 +110,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
   onUpdate,
   onImageUpload,
   mediaEmail,
+  onRequestEmailChange,
 }: BuilderPersonalDataFormProps<T>) {
   const {
     elements: {
@@ -135,6 +134,11 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
     state => !state,
     false
   );
+  const [showEmailChange, setShowEmailChange] = useState(false);
+  const [newEmail, setNewEmail] = useState('');
+  const [emailChangeLoading, setEmailChangeLoading] = useState(false);
+  const [emailChangeSuccess, setEmailChangeSuccess] = useState(false);
+  const [emailChangeError, setEmailChangeError] = useState<Error>();
 
   const fieldsToDisplay = useMemo(
     () =>
@@ -303,21 +307,68 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
                 type={'email'}
                 fullWidth
                 disabled
-                label={'Email (nicht bearbeitbar)'}
+                label={t('user.email')}
                 error={!!error}
                 helperText={error?.message}
               />
             )}
           />
 
-          {mediaEmail && (
-            <RequestEmail>
-              <Link
-                href={`mailto:${mediaEmail}?subject=Email Änderung&body=Guten Tag, %0D%0A. Ich würde gerne meine Email von ${user.email} zu  >>Neue Email hier einfügen<< %0D%0A Liebe Grüsse`}
+          {user.pendingEmail && !emailChangeSuccess && (
+            <Alert severity="info">
+              {t('user.pendingEmailChange', { email: user.pendingEmail })}
+            </Alert>
+          )}
+
+          {emailChangeSuccess && (
+            <Alert severity="success">{t('user.emailChangeRequested')}</Alert>
+          )}
+
+          {emailChangeError && (
+            <Alert severity="error">{emailChangeError.message}</Alert>
+          )}
+
+          {!showEmailChange && !emailChangeSuccess && onRequestEmailChange && (
+            <Button
+              type="button"
+              onClick={() => setShowEmailChange(true)}
+            >
+              {t('user.changeEmail')}
+            </Button>
+          )}
+
+          {showEmailChange && (
+            <>
+              <TextField
+                type="email"
+                fullWidth
+                label={t('user.newEmail')}
+                value={newEmail}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setNewEmail(e.target.value)
+                }
+              />
+              <Button
+                type="button"
+                disabled={!newEmail || emailChangeLoading}
+                onClick={async () => {
+                  setEmailChangeError(undefined);
+                  setEmailChangeLoading(true);
+                  try {
+                    await onRequestEmailChange!(newEmail);
+                    setEmailChangeSuccess(true);
+                    setShowEmailChange(false);
+                    setNewEmail('');
+                  } catch (e) {
+                    setEmailChangeError(e as Error);
+                  } finally {
+                    setEmailChangeLoading(false);
+                  }
+                }}
               >
-                {t('user.changeEmailRequest')}
-              </Link>
-            </RequestEmail>
+                {t('user.requestEmailChange')}
+              </Button>
+            </>
           )}
         </PersonalDataEmailWrapper>
       </PersonalDataInputForm>

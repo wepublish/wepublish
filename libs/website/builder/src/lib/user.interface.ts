@@ -61,4 +61,5 @@ export type BuilderPersonalDataFormProps<
   ) => Promise<void>;
   onImageUpload: (image: ChangeEvent<HTMLInputElement> | null) => Promise<void>;
   mediaEmail?: string;
+  onRequestEmailChange?: (newEmail: string) => Promise<void>;
 };

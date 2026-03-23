@@ -1118,7 +1118,9 @@
         "user_email": "E-Mail des Users.",
         "user_firstName": "Vorname des Users",
         "user_id": "Eindeutige ID des Users.",
-        "user_name": "Nachname des Users."
+        "user_name": "Nachname des Users.",
+        "optional_newEmail": "The new email address the user wants to change to.",
+        "optional_newEmail_example": "You have requested to change your email to <strong>{{newEmailPlaceholder}}</strong>. Please confirm this change by clicking the following link: {{confirmLink}}Confirm email change</a>"
       },
       "descriptionTitle": "Beschreibung",
       "example": "Beispiel im Template",
@@ -1329,7 +1331,8 @@
         "account_creation": "Registration",
         "login_link": "Login Link",
         "password_reset": "Password reset",
-        "test_mail": "Test mail"
+        "test_mail": "Test mail",
+        "email_change": "Email change"
       },
       "explanation": "You can view the available templates in the 'Mail templates' settings entry.",
       "template": "Mail template",

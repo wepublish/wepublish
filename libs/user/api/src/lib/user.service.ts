@@ -242,6 +242,98 @@ export class UserService {
 
     return user;
   }
+
+  private static readonly EMAIL_CHANGE_EXPIRY_MINUTES = 60;
+
+  @PrimeDataLoader(UserDataloaderService)
+  async requestEmailChange(userId: string, newEmail: string) {
+    newEmail = newEmail.toLowerCase();
+    await Validator.login.parse({ email: newEmail });
+
+    const existing = await this.prisma.user.findFirst({
+      where: {
+        email: { equals: newEmail, mode: 'insensitive' },
+      },
+    });
+
+    if (existing) {
+      throw new BadRequestException('Email is already in use.');
+    }
+
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        pendingEmail: newEmail,
+        pendingEmailAt: new Date(),
+      },
+      select: unselectPassword,
+    });
+
+    const externalMailTemplateId = await this.mailContext.getUserTemplateName(
+      UserEvent.EMAIL_CHANGE,
+      false
+    );
+
+    await this.mailContext.sendMail({
+      externalMailTemplateId,
+      recipient: user,
+      optionalData: { newEmail },
+      mailType: mailLogType.UserFlow,
+    });
+
+    return user;
+  }
+
+  @PrimeDataLoader(UserDataloaderService)
+  async confirmEmailChange(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: unselectPassword,
+    });
+
+    if (!user) {
+      throw new BadRequestException('User not found.');
+    }
+
+    if (!user.pendingEmail || !user.pendingEmailAt) {
+      throw new BadRequestException('No pending email change.');
+    }
+
+    const minutesElapsed =
+      (Date.now() - user.pendingEmailAt.getTime()) / 1000 / 60;
+
+    if (minutesElapsed > UserService.EMAIL_CHANGE_EXPIRY_MINUTES) {
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: { pendingEmail: null, pendingEmailAt: null },
+      });
+
+      throw new BadRequestException(
+        'Email change request has expired. Please request a new change.'
+      );
+    }
+
+    const existing = await this.prisma.user.findFirst({
+      where: {
+        email: { equals: user.pendingEmail, mode: 'insensitive' },
+      },
+    });
+
+    if (existing) {
+      throw new BadRequestException('Email is already in use.');
+    }
+
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        email: user.pendingEmail,
+        emailVerifiedAt: new Date(),
+        pendingEmail: null,
+        pendingEmailAt: null,
+      },
+      select: unselectPassword,
+    });
+  }
 }
 
 export const createUserOrder = (

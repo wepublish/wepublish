@@ -2,6 +2,7 @@ import { useUser } from '@wepublish/authentication/website';
 import {
   UpdatePasswordMutationVariables,
   UpdateUserMutationVariables,
+  useRequestEmailChangeMutation,
   useUpdatePasswordMutation,
   useUpdateUserMutation,
   useUploadImageMutation,
@@ -35,6 +36,7 @@ export function PersonalDataFormContainer<
   const [uploadImage] = useUploadImageMutation();
   const [updatePassword] = useUpdatePasswordMutation();
   const [updateUser] = useUpdateUserMutation();
+  const [requestEmailChange] = useRequestEmailChangeMutation();
 
   const handleOnImageUpload = useCallback(
     async (input: ChangeEvent<HTMLInputElement> | null) => {
@@ -75,6 +77,13 @@ export function PersonalDataFormContainer<
     [updatePassword, updateUser]
   );
 
+  const handleRequestEmailChange = useCallback(
+    async (newEmail: string) => {
+      await requestEmailChange({ variables: { newEmail } });
+    },
+    [requestEmailChange]
+  );
+
   if (!user) {
     return null;
   }
@@ -85,6 +94,7 @@ export function PersonalDataFormContainer<
       user={user}
       onImageUpload={handleOnImageUpload}
       onUpdate={handleOnUpdate}
+      onRequestEmailChange={handleRequestEmailChange}
       mediaEmail={mediaEmail}
       fields={fields}
       schema={schema}

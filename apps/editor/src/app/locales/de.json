@@ -1112,7 +1112,9 @@
         "user_email": "E-Mail des Users.",
         "user_firstName": "Vorname des Users",
         "user_id": "Eindeutige ID des Users.",
-        "user_name": "Nachname des Users."
+        "user_name": "Nachname des Users.",
+        "optional_newEmail": "Die neue E-Mail-Adresse, auf die der Benutzer wechseln möchte.",
+        "optional_newEmail_example": "Du hast eine Änderung deiner E-Mail-Adresse auf <strong>{{newEmailPlaceholder}}</strong> beantragt. Bitte bestätige diese Änderung über folgenden Link: {{confirmLink}}E-Mail-Änderung bestätigen</a>"
       },
       "descriptionTitle": "Beschreibung",
       "example": "Beispiel im Template",

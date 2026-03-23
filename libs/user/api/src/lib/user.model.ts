@@ -104,6 +104,9 @@ export class SensitiveDataUser extends BaseUser {
   @Field(() => Date, { nullable: true })
   emailVerifiedAt?: Date;
 
+  @Field(() => String, { nullable: true })
+  pendingEmail?: string | null;
+
   @Field(() => Date, { nullable: true })
   lastLogin?: Date;
 
