@@ -19,6 +19,7 @@
     "target": "es2015",
     "module": "commonjs",
     "lib": ["es2017", "dom"],
+    "types": ["node"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
