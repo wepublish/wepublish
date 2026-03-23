@@ -18,12 +18,6 @@ import { ComponentProps } from 'react';
 
 import { ReflektLogo } from '../src/components/reflekt-navbar';
 
-export const HAS_FORM_FIELDS = [
-  'firstName',
-  'address',
-  'emailRepeated',
-] satisfies ComponentProps<typeof SubscribePage>['fields'];
-
 const MitmachenPage = styled(PageContainer)`
   background-color: ${({ theme }) => theme.palette.secondary.main};
   padding-bottom: ${({ theme }) => theme.spacing(10)};

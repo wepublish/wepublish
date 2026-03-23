@@ -5,13 +5,13 @@ import { BlockRenderer } from '@wepublish/block-content/website';
 import { ImageContext } from '@wepublish/image/website';
 import { BlockContent } from '@wepublish/website/api';
 import {
+  BlockSibling,
   BuilderBlockRendererProps,
   BuilderBlocksProps,
   BuilderTeaserSlotsBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { allPass, cond } from 'ramda';
-import type { ComponentProps, ComponentType } from 'react';
 import { memo, useMemo } from 'react';
 
 import {
@@ -20,14 +20,14 @@ import {
 } from './block-layouts/flex-block-fullsize-image';
 import { isFlexBlockHero } from './block-layouts/flex-block-hero';
 import {
+  CollapsibleContent,
   isCollapsibleContent,
-  ReflektCollapsibleContent,
 } from './break-blocks/reflekt-collapsible-content';
 import {
+  CollapsibleDownloads,
   isCollapsibleDownloads,
-  ReflektCollapsibleDownloads,
 } from './break-blocks/reflekt-collapsible-downloads';
-import { isToc, ReflektToc } from './break-blocks/reflekt-toc';
+import { isToc, Toc } from './break-blocks/reflekt-toc';
 import {
   isTextWithImageBreakBlock,
   TextWithImageBreakBlock,
@@ -39,31 +39,6 @@ import {
 import { MainSpacer } from './main-spacer';
 import { isTeaserSlotsTopic } from './teaser-layouts/teaser-slots-topic';
 
-export type BlockSiblings = Array<{
-  typeName: string;
-  blockStyle?: string;
-}>;
-
-type CollapsibleContentWithSiblings = ComponentType<
-  ComponentProps<typeof ReflektCollapsibleContent> & {
-    siblings?: BlockSiblings;
-  }
->;
-type CollapsibleDownloadsWithSiblings = ComponentType<
-  ComponentProps<typeof ReflektCollapsibleDownloads> & {
-    siblings?: BlockSiblings;
-  }
->;
-type TocWithSiblings = ComponentType<
-  ComponentProps<typeof ReflektToc> & { siblings?: BlockSiblings }
->;
-
-const CollapsibleContent =
-  ReflektCollapsibleContent as CollapsibleContentWithSiblings;
-const CollapsibleDownloads =
-  ReflektCollapsibleDownloads as CollapsibleDownloadsWithSiblings;
-const Toc = ReflektToc as TocWithSiblings;
-
 const isBreakBlockTextWithImage = isTextWithImageBreakBlock as (
   b: BlockContent
 ) => boolean;
@@ -71,9 +46,7 @@ const isBreakBlockTextWithImageAltColor = isTextWithImageAltColorBreakBlock as (
   b: BlockContent
 ) => boolean;
 
-export const ReflektBlockRenderer = (
-  props: BuilderBlockRendererProps & { siblings: BlockSiblings }
-) => {
+export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('md')
@@ -84,52 +57,57 @@ export const ReflektBlockRenderer = (
       cond([
         [
           isCollapsibleContent,
-          block => (
+          (block: any) => (
             <CollapsibleContent
-              {...(block as any)}
+              {...block}
               siblings={props.siblings}
             />
           ),
         ],
         [
           isCollapsibleDownloads,
-          block => (
+          (block: any) => (
             <CollapsibleDownloads
-              {...(block as any)}
+              {...block}
               siblings={props.siblings}
             />
           ),
         ],
         [
           isBreakBlockTextWithImage,
-          block => (
+          (block: any) => (
             <TextWithImageBreakBlock
-              {...(block as any)}
+              {...block}
               siblings={props.siblings}
             />
           ),
         ],
         [
           isBreakBlockTextWithImageAltColor,
-          block => (
+          (block: any) => (
             <TextWithImageAltColorBreakBlock
-              {...(block as any)}
+              {...block}
               siblings={props.siblings}
             />
           ),
         ],
         [
           isToc,
-          block => (
+          (block: any) => (
             <Toc
-              {...(block as any)}
+              {...block}
               siblings={props.siblings}
             />
           ),
         ],
         [
           isFlexBlockFullsizeImage,
-          block => <FlexBlockFullsizeImage {...(block as any)} />,
+          (block: any) => (
+            <FlexBlockFullsizeImage
+              {...block}
+              siblings={props.siblings}
+            />
+          ),
         ],
       ]),
     [props.siblings]
@@ -190,18 +168,12 @@ export const ReflektBlockRenderer = (
 export const ReflektBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
   const {
     blocks: { Renderer },
-  } = useWebsiteBuilder() as {
-    blocks: {
-      Renderer: ComponentType<
-        BuilderBlockRendererProps & { siblings: BlockSiblings }
-      >;
-    };
-  };
+  } = useWebsiteBuilder();
 
   const siblings = blocks.map(b => ({
     typeName: b.__typename,
     blockStyle: b.blockStyle,
-  })) as BlockSiblings;
+  })) as BlockSibling[];
 
   return (
     <>
@@ -219,11 +191,7 @@ export const ReflektBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
           }
         >
           <Renderer
-            block={
-              { ...block, siblings } as BlockContent & {
-                siblings: BlockSiblings;
-              }
-            }
+            block={block}
             index={index}
             count={blocks.length}
             siblings={siblings}

@@ -1,12 +1,12 @@
 import { BlockRenderer } from '@wepublish/block-content/website';
 import { ImageContext } from '@wepublish/image/website';
 import {
+  BlockSibling,
   BuilderBlockRendererProps,
   BuilderBlocksProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { cond } from 'ramda';
-import type { ComponentType } from 'react';
 import { memo, useMemo } from 'react';
 
 import { TsriTabbedContent } from './block-layouts/tsri-base-tabbed-content';
@@ -19,14 +19,8 @@ import {
   TsriSidebarContentAltColor,
 } from './break-blocks/tsri-sidebar-content-alt-color';
 import { isTabbedContentBlockStyle } from './tabbed-content/tabbed-content';
-export type BlockSiblings = Array<{
-  typeName: string;
-  blockStyle?: string;
-}>;
 
-export const TsriBlockRenderer = (
-  props: BuilderBlockRendererProps & { siblings: BlockSiblings }
-) => {
+export const TsriBlockRenderer = (props: BuilderBlockRendererProps) => {
   const extraBlockMap = useMemo(
     () =>
       cond([
@@ -66,18 +60,12 @@ export const TsriBlockRenderer = (
 export const TsriBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
   const {
     blocks: { Renderer },
-  } = useWebsiteBuilder() as {
-    blocks: {
-      Renderer: ComponentType<
-        BuilderBlockRendererProps & { siblings: BlockSiblings }
-      >;
-    };
-  };
+  } = useWebsiteBuilder();
 
   const siblings = blocks.map(b => ({
     typeName: b.__typename,
     blockStyle: b.blockStyle,
-  })) as BlockSiblings;
+  })) as BlockSibling[];
 
   return (
     <>

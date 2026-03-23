@@ -30,22 +30,18 @@ type TitleBlockComponents = {
 
 export const ReflektTitleBlock = ({
   title,
-  preTitle,
   lead,
   className,
   siblings,
-}: BuilderTitleBlockProps &
-  TitleBlockComponents & {
-    siblings?: Array<{ typeName: string; blockStyle?: string }>;
-  }) => {
+}: BuilderTitleBlockProps & TitleBlockComponents) => {
   const {
     elements: { H2 },
   } = useWebsiteBuilder();
 
   const hasHeroSibling =
-    (siblings &&
-      siblings[0]?.typeName === 'FlexBlock' &&
-      siblings[0]?.blockStyle === ReflektBlockType.FlexBlockHero) ??
+    (siblings?.length &&
+      siblings[0].typeName === 'FlexBlock' &&
+      siblings[0].blockStyle === ReflektBlockType.FlexBlockHero) ??
     false;
 
   return (

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Theme } from '@mui/material';
 import { hasBlockStyle, isFlexBlock } from '@wepublish/block-content/website';
-import { BlockContent, BlockType, FlexBlock } from '@wepublish/website/api';
+import { BlockContent, FlexBlock } from '@wepublish/website/api';
 import { BuilderFlexBlockProps } from '@wepublish/website/builder';
 import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
@@ -234,7 +234,6 @@ export const HeroTeaserWithTabbedContent = ({
           theme: Theme,
           blockStyleOverride?: string | undefined | null
         ) => cssByBlockStyle(index + 1, theme, blockStyleOverride)}
-        type={BlockType.FlexBlock}
       />
     </FrontTopRow>
   );

@@ -17,7 +17,7 @@ type ReflektRichTextBlockType = ComponentType<
 
 import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 
-export const ReflektTocWrapper = styled('div')`
+export const TocWrapper = styled('div')`
   margin: 0;
   background-color: ${({ theme }) => theme.palette.secondary.dark};
   color: ${({ theme }) => theme.palette.common.white};
@@ -53,11 +53,7 @@ export const isToc = (
     block
   );
 
-export const ReflektToc = ({
-  className,
-  text,
-  richText,
-}: BuilderBreakBlockProps) => {
+export const Toc = ({ className, text, richText }: BuilderBreakBlockProps) => {
   const {
     blocks: { RichText },
   } = useWebsiteBuilder();
@@ -65,7 +61,7 @@ export const ReflektToc = ({
   const ReflektRichText = RichText as ReflektRichTextBlockType;
 
   return (
-    <ReflektTocWrapper className={className}>
+    <TocWrapper className={className}>
       <TocTitle variant="tocHeading">{text}</TocTitle>
       <TocDetails variant="tocDetails">
         {richText && (
@@ -75,6 +71,6 @@ export const ReflektToc = ({
           />
         )}
       </TocDetails>
-    </ReflektTocWrapper>
+    </TocWrapper>
   );
 };

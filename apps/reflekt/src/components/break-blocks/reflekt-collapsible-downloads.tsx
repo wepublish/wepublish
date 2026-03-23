@@ -20,13 +20,11 @@ type ReflektRichTextBlockType = ComponentType<
 
 import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 import {
+  CollapsibleContentWrapper,
   ExpandIcon,
-  ReflektCollapsibleContentWrapper,
 } from './reflekt-collapsible-content';
 
-export const ReflektCollapsibleDownloadsWrapper = styled(
-  ReflektCollapsibleContentWrapper
-)``;
+export const CollapsibleDownloadsWrapper = styled(CollapsibleContentWrapper)``;
 
 export const isCollapsibleDownloads = (
   block: Pick<BlockContent, '__typename'>
@@ -35,7 +33,7 @@ export const isCollapsibleDownloads = (
     block
   );
 
-export const ReflektCollapsibleDownloads = ({
+export const CollapsibleDownloads = ({
   className,
   text,
   richText,
@@ -48,7 +46,7 @@ export const ReflektCollapsibleDownloads = ({
   const thisId = `AC-${React.useId()}`;
 
   return (
-    <ReflektCollapsibleDownloadsWrapper className={className}>
+    <CollapsibleDownloadsWrapper className={className}>
       <AccordionSummary
         expandIcon={<ExpandIcon />}
         aria-controls={`${thisId}-panel-content`}
@@ -65,6 +63,6 @@ export const ReflektCollapsibleDownloads = ({
           />
         )}
       </AccordionDetails>
-    </ReflektCollapsibleDownloadsWrapper>
+    </CollapsibleDownloadsWrapper>
   );
 };

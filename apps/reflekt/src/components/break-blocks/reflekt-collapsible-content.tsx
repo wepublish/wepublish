@@ -14,7 +14,7 @@ import { MdArrowDownward } from 'react-icons/md';
 
 import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 
-export const ReflektCollapsibleContentWrapper = styled(Accordion)`
+export const CollapsibleContentWrapper = styled(Accordion)`
   overflow-anchor: auto;
   margin: 0;
 
@@ -45,7 +45,7 @@ export const isCollapsibleContent = (
     block
   );
 
-export const ReflektCollapsibleContent = ({
+export const CollapsibleContent = ({
   className,
   text,
   richText,
@@ -56,7 +56,7 @@ export const ReflektCollapsibleContent = ({
   const thisId = `AC-${React.useId().replace(/:/g, '')}`;
 
   return (
-    <ReflektCollapsibleContentWrapper className={className}>
+    <CollapsibleContentWrapper className={className}>
       <AccordionSummary
         expandIcon={<ExpandIcon />}
         aria-controls={`${thisId}-panel-content`}
@@ -68,6 +68,6 @@ export const ReflektCollapsibleContent = ({
       <AccordionDetails id={`${thisId}-panel-content`}>
         <RichText richText={richText} />
       </AccordionDetails>
-    </ReflektCollapsibleContentWrapper>
+    </CollapsibleContentWrapper>
   );
 };
