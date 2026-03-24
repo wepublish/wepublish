@@ -147,9 +147,12 @@ WORKDIR /wepublish
 COPY libs/settings/api/src/lib/setting.ts settings/api/src/lib/setting.ts
 COPY libs/api/prisma/run-seed.ts api/prisma/run-seed.ts
 COPY libs/api/prisma/seed.ts api/prisma/seed.ts
+COPY libs/api/prisma/schema.prisma api/prisma/schema.prisma
+COPY prisma.config.ts prisma.config.ts
 COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY docker/tsconfig.yaml_seed tsconfig.yaml
 RUN npm install prisma@7.0.0 @prisma/client@7.0.0 @prisma/adapter-pg pg @types/node @node-rs/argon2 typescript@~5.7.3 && \
+    npx prisma generate && \
     npx tsc -p tsconfig.yaml
 
 FROM ${PLAIN_BUILD_IMAGE} AS migration-setup
