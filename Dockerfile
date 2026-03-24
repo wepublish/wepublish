@@ -149,7 +149,7 @@ COPY libs/api/prisma/run-seed.ts api/prisma/run-seed.ts
 COPY libs/api/prisma/seed.ts api/prisma/seed.ts
 COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY docker/tsconfig.yaml_seed tsconfig.yaml
-RUN npm install prisma@7.0.0 @prisma/client@7.0.0 @types/node @node-rs/argon2 typescript@~5.7.3 && \
+RUN npm install prisma@7.0.0 @prisma/client@7.0.0 @prisma/adapter-pg pg @types/node @node-rs/argon2 typescript@~5.7.3 && \
     npx tsc -p tsconfig.yaml
 
 FROM ${PLAIN_BUILD_IMAGE} AS migration-setup
@@ -164,7 +164,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    npm install prisma@7.0.0 @node-rs/argon2 && \
+    npm install prisma@7.0.0 @prisma/client@7.0.0 @prisma/adapter-pg pg @node-rs/argon2 && \
     npx prisma generate && \
     chmod -R g=u /wepublish
 
