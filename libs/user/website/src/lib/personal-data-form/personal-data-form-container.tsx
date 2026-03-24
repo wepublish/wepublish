@@ -17,7 +17,7 @@ import { ChangeEvent, useCallback } from 'react';
 
 export type PersonalDataFormContainerProps<
   T extends BuilderPersonalDataFormFields = BuilderPersonalDataFormFields,
-> = {} & BuilderContainerProps &
+> = BuilderContainerProps &
   Pick<BuilderPersonalDataFormProps<T>, 'fields' | 'schema'>;
 
 export function PersonalDataFormContainer<
