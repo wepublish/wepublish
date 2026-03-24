@@ -268,10 +268,19 @@ export class CommentService {
   }
 
   public async getComment(commentId: string) {
+    const target = await this.prisma.comment.findUnique({
+      where: { id: commentId },
+      select: { parentID: true },
+    });
+
     const [comments, ratingSystemAnswers] = await Promise.all([
       this.prisma.comment.findMany({
         where: {
-          OR: [{ id: commentId }, { parentID: commentId }],
+          OR: [
+            { id: commentId },
+            { parentID: commentId },
+            ...(target?.parentID ? [{ id: target.parentID }] : []),
+          ],
         },
         include: {
           revisions: {
@@ -290,10 +299,15 @@ export class CommentService {
       this.prisma.commentRatingSystemAnswer.findMany(),
     ]);
 
-    return decorateComments(comments, ratingSystemAnswers, {
+    const decorated = decorateComments(comments, ratingSystemAnswers, {
       sort: CommentSort.Rating,
       order: SortOrder.Ascending,
-    }).at(-1);
+    });
+
+    return (
+      decorated.find(c => c.id === commentId) ??
+      decorated.flatMap(c => c.children).find(c => c.id === commentId)
+    );
   }
 
   public async createAdminComment({
