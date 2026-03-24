@@ -1,16 +1,20 @@
 import styled from '@emotion/styled';
-import { BreakBlockSegment } from '@wepublish/block-content/website';
+import {
+  BreakBlockSegment,
+  hasBlockStyle,
+  isBreakBlock,
+} from '@wepublish/block-content/website';
+import { BlockContent } from '@wepublish/website/api';
 import { BuilderBreakBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
 import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 import { ImageWithTextBreakBlock } from './image-with-text';
 
-export const isTextWithImageBreakBlock = allPass([
-  ({ blockStyle }: BuilderBreakBlockProps) => {
-    return blockStyle === ReflektBlockType.TextWithImage;
-  },
-]);
+export const isTextWithImageBreakBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is BuilderBreakBlockProps =>
+  allPass([isBreakBlock, hasBlockStyle(ReflektBlockType.TextWithImage)])(block);
 
 export const TextWithImageBreakBlock = styled(
   ImageWithTextBreakBlock

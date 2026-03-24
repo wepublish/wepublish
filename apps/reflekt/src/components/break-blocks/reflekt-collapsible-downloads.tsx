@@ -2,10 +2,7 @@ import styled from '@emotion/styled';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import { hasBlockStyle, isBreakBlock } from '@wepublish/block-content/website';
-import {
-  BlockContent,
-  BreakBlock as BreakBlockType,
-} from '@wepublish/website/api';
+import { BlockContent } from '@wepublish/website/api';
 import {
   BuilderBreakBlockProps,
   BuilderRichTextBlockProps,
@@ -28,7 +25,7 @@ export const CollapsibleDownloadsWrapper = styled(CollapsibleContentWrapper)``;
 
 export const isCollapsibleDownloads = (
   block: Pick<BlockContent, '__typename'>
-): block is BreakBlockType =>
+): block is BuilderBreakBlockProps =>
   allPass([hasBlockStyle(ReflektBlockType.CollapsibleDownloads), isBreakBlock])(
     block
   );

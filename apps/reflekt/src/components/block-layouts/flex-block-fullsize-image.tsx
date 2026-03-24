@@ -9,11 +9,7 @@ import {
   isFlexBlock,
   RichTextBlockWrapper,
 } from '@wepublish/block-content/website';
-import {
-  type FlexBlock as FlexBlockType,
-  BlockContent,
-  FlexAlignment,
-} from '@wepublish/website/api';
+import { BlockContent, FlexAlignment } from '@wepublish/website/api';
 import {
   BuilderBlockRendererProps,
   BuilderFlexBlockProps,
@@ -27,7 +23,7 @@ import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 
 export const isFlexBlockFullsizeImage = (
   block: Pick<BlockContent, '__typename'>
-): block is FlexBlockType => {
+): block is BuilderFlexBlockProps => {
   return allPass([
     hasBlockStyle(ReflektBlockType.FlexBlockFullsizeImage),
     isFlexBlock,

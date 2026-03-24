@@ -1,7 +1,9 @@
-import { BlockRenderer } from '@wepublish/block-content/website';
+import {
+  BlockRenderer,
+  collectSiblings,
+} from '@wepublish/block-content/website';
 import { ImageContext } from '@wepublish/image/website';
 import {
-  BlockSibling,
   BuilderBlockRendererProps,
   BuilderBlocksProps,
   useWebsiteBuilder,
@@ -62,10 +64,7 @@ export const TsriBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
     blocks: { Renderer },
   } = useWebsiteBuilder();
 
-  const siblings = blocks.map(b => ({
-    typeName: b.__typename,
-    blockStyle: b.blockStyle,
-  })) as BlockSibling[];
+  const siblings = collectSiblings(blocks);
 
   return (
     <>

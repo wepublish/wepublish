@@ -2,7 +2,9 @@ import styled from '@emotion/styled';
 import { Theme, Typography, useMediaQuery } from '@mui/material';
 import {
   alignmentForTeaserBlock,
+  hasBlockStyle,
   isFilledTeaser,
+  isTeaserSlotsBlock,
   TeaserSlider,
   TeaserSlotsBlockWrapper as TeaserSlotsBlockWrapperDefault,
 } from '@wepublish/block-content/website';
@@ -10,25 +12,29 @@ import {
   SliderBallContainer,
   SliderWrapper,
 } from '@wepublish/block-content/website';
+import { BlockContent } from '@wepublish/website/api';
 import {
   BuilderTeaserListBlockProps,
   BuilderTeaserSlotsBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { Maybe } from 'graphql/jsutils/Maybe';
-import { allPass } from 'ramda';
+import { allPass, anyPass } from 'ramda';
 
 import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 import { TeaserWrapper } from '../teasers/reflekt-teaser';
 
-export const isTeaserSlotsTopic = allPass([
-  ({ blockStyle }: BuilderTeaserSlotsBlockProps) => {
-    return (
-      blockStyle === ReflektBlockType.TeaserRecherchen ||
-      blockStyle === ReflektBlockType.TeaserNews
-    );
-  },
-]);
+export const isTeaserSlotsTopic = (
+  block: Pick<BlockContent, '__typename'>
+): block is BuilderTeaserSlotsBlockProps =>
+  allPass([
+    isTeaserSlotsBlock,
+    anyPass([
+      hasBlockStyle(ReflektBlockType.TeaserRecherchen),
+      hasBlockStyle(ReflektBlockType.TeaserNews),
+    ]),
+  ])(block);
+
 export const TeaserSlotsTopicWrapper = styled(TeaserSlotsBlockWrapperDefault)`
   ${SliderWrapper} ${TeaserWrapper} {
     ${({ theme }) => theme.breakpoints.down('md')} {

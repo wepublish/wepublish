@@ -4,18 +4,20 @@ import {
   BreakBlockButton,
   BreakBlockImage,
   BreakBlockSegment,
+  hasBlockStyle,
+  isBreakBlock,
   RichTextBlockWrapper,
 } from '@wepublish/block-content/website';
+import { BlockContent } from '@wepublish/website/api';
 import { BuilderBreakBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
 import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 
-export const isTeamBreakBlock = allPass([
-  ({ blockStyle }: BuilderBreakBlockProps) => {
-    return blockStyle === ReflektBlockType.Team;
-  },
-]);
+export const isTeamBreakBlock = (
+  block: Pick<BlockContent, '__typename'>
+): block is BuilderBreakBlockProps =>
+  allPass([isBreakBlock, hasBlockStyle(ReflektBlockType.Team)])(block);
 
 export const TeamBreakBlock = styled(BreakBlock)`
   background-color: transparent;

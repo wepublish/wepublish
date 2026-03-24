@@ -3,11 +3,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import { hasBlockStyle, isBreakBlock } from '@wepublish/block-content/website';
-import { BlockContent } from '@wepublish/website/api';
-import {
-  BuilderBreakBlockProps,
-  useWebsiteBuilder,
-} from '@wepublish/website/builder';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 import React from 'react';
 import { MdArrowDownward } from 'react-icons/md';

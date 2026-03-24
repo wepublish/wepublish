@@ -1,13 +1,16 @@
 import { css, Theme } from '@emotion/react';
-import { useTheme } from '@emotion/react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { BlockRenderer } from '@wepublish/block-content/website';
+import {
+  BlockRenderer,
+  collectSiblings,
+} from '@wepublish/block-content/website';
 import { ImageContext } from '@wepublish/image/website';
 import { BlockContent } from '@wepublish/website/api';
 import {
-  BlockSibling,
   BuilderBlockRendererProps,
   BuilderBlocksProps,
+  BuilderBreakBlockProps,
+  BuilderFlexBlockProps,
   BuilderTeaserSlotsBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
@@ -39,25 +42,17 @@ import {
 import { MainSpacer } from './main-spacer';
 import { isTeaserSlotsTopic } from './teaser-layouts/teaser-slots-topic';
 
-const isBreakBlockTextWithImage = isTextWithImageBreakBlock as (
-  b: BlockContent
-) => boolean;
-const isBreakBlockTextWithImageAltColor = isTextWithImageAltColorBreakBlock as (
-  b: BlockContent
-) => boolean;
-
 export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
-  const theme = useTheme();
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('md')
   );
 
-  const extraBlockMap: (block: BlockContent) => JSX.Element | null = useMemo(
+  const extraBlockMap = useMemo(
     () =>
       cond([
         [
           isCollapsibleContent,
-          (block: any) => (
+          (block: BuilderBreakBlockProps) => (
             <CollapsibleContent
               {...block}
               siblings={props.siblings}
@@ -66,7 +61,7 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
         ],
         [
           isCollapsibleDownloads,
-          (block: any) => (
+          (block: BuilderBreakBlockProps) => (
             <CollapsibleDownloads
               {...block}
               siblings={props.siblings}
@@ -74,8 +69,8 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
           ),
         ],
         [
-          isBreakBlockTextWithImage,
-          (block: any) => (
+          isTextWithImageBreakBlock,
+          (block: BuilderBreakBlockProps) => (
             <TextWithImageBreakBlock
               {...block}
               siblings={props.siblings}
@@ -83,8 +78,8 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
           ),
         ],
         [
-          isBreakBlockTextWithImageAltColor,
-          (block: any) => (
+          isTextWithImageAltColorBreakBlock,
+          (block: BuilderBreakBlockProps) => (
             <TextWithImageAltColorBreakBlock
               {...block}
               siblings={props.siblings}
@@ -93,7 +88,7 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
         ],
         [
           isToc,
-          (block: any) => (
+          (block: BuilderBreakBlockProps) => (
             <Toc
               {...block}
               siblings={props.siblings}
@@ -102,14 +97,14 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
         ],
         [
           isFlexBlockFullsizeImage,
-          (block: any) => (
+          (block: BuilderFlexBlockProps) => (
             <FlexBlockFullsizeImage
               {...block}
               siblings={props.siblings}
             />
           ),
         ],
-      ]),
+      ]) as (block: BlockContent) => JSX.Element | undefined,
     [props.siblings]
   );
 
@@ -135,7 +130,7 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
           `,
         ],
       ]),
-    [theme, isMobile]
+    [isMobile]
   );
 
   if (props.type === 'Page') {
@@ -170,10 +165,7 @@ export const ReflektBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
     blocks: { Renderer },
   } = useWebsiteBuilder();
 
-  const siblings = blocks.map(b => ({
-    typeName: b.__typename,
-    blockStyle: b.blockStyle,
-  })) as BlockSibling[];
+  const siblings = collectSiblings(blocks);
 
   return (
     <>

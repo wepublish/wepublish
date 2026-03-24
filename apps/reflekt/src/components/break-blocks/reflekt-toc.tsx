@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { hasBlockStyle, isBreakBlock } from '@wepublish/block-content/website';
 import { BlockContent } from '@wepublish/website/api';
-import { BreakBlock as BreakBlockType } from '@wepublish/website/api';
 import {
   BuilderBreakBlockProps,
   BuilderRichTextBlockProps,
@@ -48,7 +47,7 @@ export const TocDetails = styled(Typography)`
 
 export const isToc = (
   block: Pick<BlockContent, '__typename'>
-): block is BreakBlockType =>
+): block is BuilderBreakBlockProps =>
   allPass([hasBlockStyle(ReflektBlockType.TableOfContents), isBreakBlock])(
     block
   );

@@ -1,11 +1,13 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import {
+  hasBlockStyle,
   isFilledTeaser,
+  isTeaserSlotsBlock,
   TeaserSlotsBlockTeasers as TeaserSlotsBlockTeasersDefault,
   TeaserSlotsBlockWrapper as TeaserSlotsBlockWrapperDefault,
 } from '@wepublish/block-content/website';
-import { FlexAlignment } from '@wepublish/website/api';
+import { BlockContent, FlexAlignment } from '@wepublish/website/api';
 import {
   BuilderTeaserSlotsBlockProps,
   useWebsiteBuilder,
@@ -14,11 +16,12 @@ import { allPass } from 'ramda';
 
 import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 
-export const isTeaserSlotsCredits = allPass([
-  ({ blockStyle }: BuilderTeaserSlotsBlockProps) => {
-    return blockStyle === ReflektBlockType.TeaserCredits;
-  },
-]);
+export const isTeaserSlotsCredits = (
+  block: Pick<BlockContent, '__typename'>
+): block is BuilderTeaserSlotsBlockProps =>
+  allPass([isTeaserSlotsBlock, hasBlockStyle(ReflektBlockType.TeaserCredits)])(
+    block
+  );
 
 export const alignmentForTeaserBlock = (
   index: number,

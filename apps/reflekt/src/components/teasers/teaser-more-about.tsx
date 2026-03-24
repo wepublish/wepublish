@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
+import { hasBlockStyle } from '@wepublish/block-content/website';
 import {
   selectTeaserLead,
   selectTeaserPreTitle,
@@ -12,7 +13,6 @@ import {
   BuilderTeaserProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { allPass } from 'ramda';
 
 import { teaserMoreAboutTheme } from '../../theme';
 import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
@@ -24,11 +24,9 @@ import {
   TeaserWrapper,
 } from './reflekt-teaser';
 
-export const isTeaserMoreAbout = allPass([
-  ({ blockStyle }: BuilderTeaserProps) => {
-    return blockStyle === ReflektBlockType.TeaserMoreAbout;
-  },
-]);
+export const isTeaserMoreAbout = hasBlockStyle(
+  ReflektBlockType.TeaserMoreAbout
+);
 
 const TeaserMoreAboutBase = ({
   teaser,

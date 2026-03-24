@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
-import { BuilderTeaserProps } from '@wepublish/website/builder';
-import { allPass } from 'ramda';
+import { hasBlockStyle } from '@wepublish/block-content/website';
 
 import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 import {
@@ -14,11 +13,9 @@ import {
   TeaserTitle,
 } from './reflekt-teaser';
 
-export const isTeaserRecherchen = allPass([
-  ({ blockStyle }: BuilderTeaserProps) => {
-    return blockStyle === ReflektBlockType.TeaserRecherchen;
-  },
-]);
+export const isTeaserRecherchen = hasBlockStyle(
+  ReflektBlockType.TeaserRecherchen
+);
 
 export const TeaserRecherchen = styled(ReflektTeaser)`
   aspect-ratio: 365/528;

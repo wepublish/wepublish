@@ -60,6 +60,7 @@ import {
 } from './block-styles/alternating/is-alternating';
 import { isTeaserSlotsBlock } from './teaser/teaser-slots-block';
 import { css } from '@emotion/react';
+import { BlockContent } from '@wepublish/website/api';
 
 export const BlockRenderer = memo(
   ({ block, className, siblings }: BuilderBlockRendererProps) => {
@@ -492,15 +493,20 @@ export const BlockRenderer = memo(
   }
 );
 
+export const collectSiblings = (blocks: BlockContent[]) => {
+  const siblings = blocks.map(b => ({
+    typeName: b.__typename,
+    blockStyle: b.blockStyle,
+  })) as BlockSibling[];
+  return siblings;
+};
+
 export const Blocks = memo(({ blocks, type }: BuilderBlocksProps) => {
   const {
     blocks: { Renderer },
   } = useWebsiteBuilder();
 
-  const siblings = blocks.map(b => ({
-    typeName: b.__typename,
-    blockStyle: b.blockStyle,
-  })) as BlockSibling[];
+  const siblings = collectSiblings(blocks);
 
   return (
     <>
