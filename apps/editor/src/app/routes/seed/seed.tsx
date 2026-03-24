@@ -976,17 +976,17 @@ async function seedNavigations(createNavigation: any, tags: string[] = []) {
           {
             type: NavigationLinkType.External,
             label: 'Recherchen',
-            url: faker.internet.url(),
+            url: '/a/tag/recherchen',
           },
           {
             type: NavigationLinkType.External,
             label: 'News',
-            url: faker.internet.url(),
+            url: '/a/tag/news',
           },
           {
             type: NavigationLinkType.External,
             label: 'Über uns',
-            url: faker.internet.url(),
+            url: '/ueber-uns',
           },
           {
             type: NavigationLinkType.External,
@@ -1001,7 +1001,7 @@ async function seedNavigations(createNavigation: any, tags: string[] = []) {
           {
             type: NavigationLinkType.External,
             label: 'Mitglied werden',
-            url: faker.internet.url(),
+            url: '/mitmachen',
           },
           {
             type: NavigationLinkType.External,
