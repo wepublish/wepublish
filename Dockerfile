@@ -147,7 +147,7 @@ WORKDIR /wepublish
 COPY libs/settings/api/src/lib/setting.ts settings/api/src/lib/setting.ts
 COPY libs/api/prisma/run-seed.ts api/prisma/run-seed.ts
 COPY libs/api/prisma/seed.ts api/prisma/seed.ts
-COPY libs/api/prisma/schema.prisma api/prisma/schema.prisma
+COPY libs/api/prisma/schema.prisma prisma/schema.prisma
 COPY prisma.config.ts prisma.config.ts
 COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY docker/tsconfig.yaml_seed tsconfig.yaml
