@@ -25,18 +25,13 @@ import {
   createWithV1ApiClient,
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
-import {
-  BuilderBlockRendererProps,
-  BuilderTeaserSlotsBlockProps,
-  WebsiteBuilderProvider,
-} from '@wepublish/website/builder';
+import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
-import { ComponentType } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
@@ -129,16 +124,14 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             RenderRichtext: ReflektRenderRichtext,
           }}
           blocks={{
-            TeaserSlots:
-              ReflektBaseTeaserSlots as ComponentType<BuilderTeaserSlotsBlockProps>,
+            TeaserSlots: ReflektBaseTeaserSlots,
             BaseTeaser: ReflektBaseTeaser,
             Break: ReflektBaseBreakBlock,
             FlexBlock: ReflektFlexBlock,
             Quote: ReflektQuoteBlock,
             Title: ReflektTitleBlock,
             RichText: ReflektRichTextBlock,
-            Renderer:
-              ReflektBlockRenderer as ComponentType<BuilderBlockRendererProps>,
+            Renderer: ReflektBlockRenderer,
             Blocks: ReflektBlocks,
           }}
         >

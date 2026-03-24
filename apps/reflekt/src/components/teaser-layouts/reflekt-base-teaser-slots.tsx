@@ -9,9 +9,15 @@ import {
 import { isTeaserSlotsTopic, TeaserSlotsTopic } from './teaser-slots-topic';
 
 export const ReflektBaseTeaserSlots = cond([
-  [isTeaserSlotsTopic, props => <TeaserSlotsTopic {...props} />],
-  [isTeaserSlotsCredits, props => <TeaserSlotsCredits {...props} />],
-  [T, props => <TeaserSlotsBlock {...props} />], // default teaser-slots-block
+  [
+    isTeaserSlotsTopic,
+    (props: BuilderTeaserSlotsBlockProps) => <TeaserSlotsTopic {...props} />,
+  ],
+  [
+    isTeaserSlotsCredits,
+    (props: BuilderTeaserSlotsBlockProps) => <TeaserSlotsCredits {...props} />,
+  ],
+  [T, (props: BuilderTeaserSlotsBlockProps) => <TeaserSlotsBlock {...props} />], // default teaser-slots-block
   [
     T,
     (props: BuilderTeaserSlotsBlockProps) => (
@@ -21,4 +27,4 @@ export const ReflektBaseTeaserSlots = cond([
       </div>
     ),
   ],
-]);
+]) as (props: BuilderTeaserSlotsBlockProps) => JSX.Element;

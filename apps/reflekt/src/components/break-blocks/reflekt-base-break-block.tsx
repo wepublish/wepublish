@@ -21,18 +21,31 @@ import {
 } from './text-with-image-alt-color';
 
 export const ReflektBaseBreakBlock = cond([
-  [isTextWithImageBreakBlock, props => <TextWithImageBreakBlock {...props} />],
+  [
+    isTextWithImageBreakBlock,
+    (props: BuilderBreakBlockProps) => <TextWithImageBreakBlock {...props} />,
+  ],
   [
     isTextWithImageAltColorBreakBlock,
-    props => <TextWithImageAltColorBreakBlock {...props} />,
+    (props: BuilderBreakBlockProps) => (
+      <TextWithImageAltColorBreakBlock {...props} />
+    ),
   ],
-  [isImageWithTextBreakBlock, props => <ImageWithTextBreakBlock {...props} />],
+  [
+    isImageWithTextBreakBlock,
+    (props: BuilderBreakBlockProps) => <ImageWithTextBreakBlock {...props} />,
+  ],
   [
     isImageWithTextAltColorBreakBlock,
-    props => <ImageWithTextAltColorBreakBlock {...props} />,
+    (props: BuilderBreakBlockProps) => (
+      <ImageWithTextAltColorBreakBlock {...props} />
+    ),
   ],
-  [isTeamBreakBlock, props => <TeamBreakBlock {...props} />],
-  [T, props => <BreakBlock {...props} />], // default break-block
+  [
+    isTeamBreakBlock,
+    (props: BuilderBreakBlockProps) => <TeamBreakBlock {...props} />,
+  ],
+  [T, (props: BuilderBreakBlockProps) => <BreakBlock {...props} />], // default break-block
   [
     T,
     (props: BuilderBreakBlockProps) => (
@@ -42,4 +55,4 @@ export const ReflektBaseBreakBlock = cond([
       </div>
     ),
   ],
-]);
+]) as (props: BuilderBreakBlockProps) => JSX.Element;

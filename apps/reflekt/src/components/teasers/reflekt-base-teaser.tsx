@@ -7,11 +7,20 @@ import { isTeaserNews, TeaserNews } from './teaser-news';
 import { isTeaserRecherchen, TeaserRecherchen } from './teaser-recherchen';
 
 export const ReflektBaseTeaser = cond([
-  [isTeaserNews, props => <TeaserNews {...props} />],
-  [isTeaserRecherchen, props => <TeaserRecherchen {...props} />],
-  [isTeaserMoreAbout, props => <TeaserMoreAbout {...props} />],
-  [isTeaserCredits, props => <TeaserCredits {...props} />],
-  [T, props => <TeaserNews {...props} />], // default teaser
+  [isTeaserNews, (props: BuilderTeaserProps) => <TeaserNews {...props} />],
+  [
+    isTeaserRecherchen,
+    (props: BuilderTeaserProps) => <TeaserRecherchen {...props} />,
+  ],
+  [
+    isTeaserMoreAbout,
+    (props: BuilderTeaserProps) => <TeaserMoreAbout {...props} />,
+  ],
+  [
+    isTeaserCredits,
+    (props: BuilderTeaserProps) => <TeaserCredits {...props} />,
+  ],
+  [T, (props: BuilderTeaserProps) => <TeaserNews {...props} />], // default teaser
   [
     T,
     (props: BuilderTeaserProps) => (
@@ -21,4 +30,4 @@ export const ReflektBaseTeaser = cond([
       </div>
     ),
   ],
-]);
+]) as (props: BuilderTeaserProps) => JSX.Element;
