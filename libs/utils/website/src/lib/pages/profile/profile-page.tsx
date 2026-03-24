@@ -103,8 +103,7 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
           await router.replace({ pathname: '/profile', query }, undefined, {
             shallow: true,
           });
-          // todo: update user context instead.
-          window.location.reload();
+          await client.refetchQueries({ include: ['Me'] });
         })
         .catch(async () => {
           await router.replace({ pathname: '/profile', query }, undefined, {

@@ -15,7 +15,7 @@ import {
   useAsyncAction,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useMemo, useReducer, useState } from 'react';
+import { useEffect, useMemo, useReducer, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { z } from 'zod';
@@ -161,8 +161,8 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
     [fieldsToDisplay, schema]
   );
 
-  const { handleSubmit, control, setValue } = useForm<
-    PersonalDataFormFields & { newEmail?: string }
+  const { handleSubmit, control, setValue, reset } = useForm<
+    PersonalDataFormFields & { newEmail?: string; email?: string }
   >({
     resolver: zodResolver(validationSchema),
     defaultValues: {
@@ -182,6 +182,10 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
     mode: 'onTouched',
     reValidateMode: 'onChange',
   });
+
+  useEffect(() => {
+    setValue('email', user.email);
+  }, [user.email, setValue]);
 
   const onSubmit = handleSubmit(data => onUpdate && callAction(onUpdate)(data));
   const newEmail = useWatch({ control, name: 'newEmail' });
