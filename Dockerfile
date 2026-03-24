@@ -167,7 +167,7 @@ COPY libs/api/prisma/schema.prisma prisma/schema.prisma
 COPY prisma.config.ts prisma.config.ts
 COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY docker/tsconfig.yaml_seed tsconfig.yaml
-RUN npm install prisma@^7.5.0 @prisma/client@^7.5.0 @prisma/adapter-pg pg @types/node @node-rs/argon2 typescript@~5.7.3 && \
+RUN npm install prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @types/node @node-rs/argon2 typescript@~5.7.3 && \
     npx prisma generate && \
     npx tsc -p tsconfig.yaml
 
@@ -177,13 +177,14 @@ WORKDIR /wepublish
 COPY --from=build-migration /wepublish/dist ./dist
 COPY libs/api/prisma/migrations prisma/migrations
 COPY libs/api/prisma/schema.prisma prisma/schema.prisma
+COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY prisma.config.ts prisma.config.ts
 COPY docker/migrate_start.js start.js
 RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    npm install prisma@^7.5.0 @prisma/client@^7.5.0 @prisma/adapter-pg pg @node-rs/argon2 && \
+    npm install prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @node-rs/argon2 && \
     npx prisma generate && \
     chmod -R g=u /wepublish
 
