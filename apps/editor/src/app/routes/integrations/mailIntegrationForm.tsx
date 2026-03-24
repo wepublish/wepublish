@@ -15,7 +15,7 @@ import { GenericIntegrationList } from './genericIntegrationList';
 
 const mailSettingsSchema = z.object({
   name: z.string().nullish().or(z.literal('')),
-  type: z.nativeEnum(MailProviderType).optional(),
+  type: z.nativeEnum(MailProviderType).nullish(),
 
   fromAddress: z.string().nullish().or(z.literal('')),
   replyToAddress: z.string().nullish().or(z.literal('')),

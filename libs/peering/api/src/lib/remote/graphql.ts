@@ -182,7 +182,7 @@ export type Author = HasImage & HasOptionalPeerLc & {
   image?: Maybe<Image>;
   imageID?: Maybe<Scalars['String']>;
   jobTitle?: Maybe<Scalars['String']>;
-  links?: Maybe<Array<AuthorLink>>;
+  links: Array<AuthorLink>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   peer?: Maybe<Peer>;
