@@ -189,6 +189,7 @@ mutation CreateComment(
   $parentID: String
   $text: RichText
   $tagIds: [String!]
+  $state: CommentState
 ) {
   createComment(
     itemID: $itemID
@@ -196,6 +197,7 @@ mutation CreateComment(
     parentID: $parentID
     text: $text
     tagIds: $tagIds
+    state: $state
   ) {
     id
   }

@@ -1,6 +1,7 @@
 import { ApolloError } from '@apollo/client';
 import {
   CommentItemType,
+  CommentState,
   useCreateCommentMutation,
 } from '@wepublish/editor/api';
 import React from 'react';
@@ -64,6 +65,7 @@ export function CreateCommentBtn({
         itemID,
         itemType,
         parentID,
+        state: CommentState.PendingApproval,
       },
       onCompleted: data => {
         navigate(`/comments/edit/${data?.createComment.id}`);

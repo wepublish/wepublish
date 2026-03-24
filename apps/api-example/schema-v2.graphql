@@ -1521,7 +1521,7 @@ type Mutation {
   createBlockStyle(blocks: [EditorBlockType!]!, name: String!): BlockStyle!
 
   """Creates a comment for any user"""
-  createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, tagIds: [String!], text: RichText): Comment!
+  createComment(itemID: String!, itemType: CommentItemType!, lead: String, parentID: String, state: CommentState, tagIds: [String!], text: RichText): Comment!
 
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
