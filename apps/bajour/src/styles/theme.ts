@@ -66,19 +66,19 @@ const theme = createTheme({}, WepTheme, {
     },
   }),
   palette: {
-    primary: augmentColor({ color: { main: '#FF0D62' } }),
+    primary: augmentColor({ color: { main: '#FF0D63' } }),
     secondary: augmentColor({
       color: { main: '#FDDDD2', dark: '#ffbaba', light: 'rgb(255, 239, 233)' },
     }),
     accent: augmentColor({ color: { main: '#770A6A' } }),
-    error: augmentColor({ color: { main: '#FF0D62' } }),
+    error: augmentColor({ color: { main: '#FF0D63' } }),
   },
   components: {
     MuiButton: {
       styleOverrides: {
         outlinedPrimary: {
           borderWidth: '3px',
-          borderColor: '#FF0D62',
+          borderColor: '#FF0D63',
           fontWeight: 'bold',
           ':hover': {
             backgroundColor: 'transparent',

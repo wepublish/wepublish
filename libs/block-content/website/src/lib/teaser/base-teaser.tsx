@@ -149,6 +149,22 @@ export const selectTeaserDate = (teaser: TeaserType) => {
   }
 };
 
+export const selectTeaserLastPublishDate = (teaser: TeaserType) => {
+  switch (teaser.__typename) {
+    case 'PageTeaser': {
+      return teaser.page?.latest.publishedAt;
+    }
+
+    case 'ArticleTeaser': {
+      return teaser.article?.latest.publishedAt;
+    }
+
+    default: {
+      return selectTeaserDate(teaser);
+    }
+  }
+};
+
 export const selectTeaserAuthors = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
@@ -351,6 +367,10 @@ export const TeaserTime = styled('time')`
   font-weight: 400;
 `;
 
+export const TeaserUpdateTime = styled('time')`
+  display: none;
+`;
+
 export const TeaserTags = styled('div')`
   display: none;
   flex-flow: row wrap;
@@ -438,9 +458,12 @@ export const BaseTeaser = ({
   const image = teaser && selectTeaserImage(teaser);
   const peerLogo = teaser && selectTeaserPeerImage(teaser);
   const publishDate = teaser && selectTeaserDate(teaser);
+  const updatedPublishDate = teaser && selectTeaserLastPublishDate(teaser);
   const authors = teaser && selectTeaserAuthors(teaser);
   const tags =
     teaser && selectTeaserTags(teaser).filter(tag => tag.tag !== preTitle);
+
+  const updated = !!updatedPublishDate && updatedPublishDate !== publishDate;
 
   const { t } = useTranslation();
   const { date } = useWebsiteBuilder();
@@ -504,6 +527,17 @@ export const BaseTeaser = ({
               dateTime={publishDate}
             >
               {date.format(new Date(publishDate), false)}
+
+              {updated && (
+                <TeaserUpdateTime
+                  suppressHydrationWarning
+                  dateTime={updatedPublishDate}
+                >
+                  {' '}
+                  (Aktualisiert am{' '}
+                  {date.format(new Date(updatedPublishDate!), false)})
+                </TeaserUpdateTime>
+              )}
             </TeaserTime>
           )}
         </Typography>

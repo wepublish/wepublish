@@ -8,11 +8,6 @@
     "build": {
       "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
-      "inputs": [
-        "default",
-        "{workspaceRoot}/libs/block-content/api/**/*",
-        "{workspaceRoot}/libs/image/api/**/*"
-      ],
       "options": {
         "target": "node",
         "compiler": "tsc",
@@ -65,7 +60,7 @@
         "target": "node",
         "compiler": "tsc",
         "outputPath": "dist/apps/api-example-seed",
-        "main": "apps/api-example/prisma/seed.ts",
+        "main": "apps/api-example/prisma/seed-runner.ts",
         "tsConfig": "apps/api-example/tsconfig.app.json",
         "assets": ["apps/api-example/src/seed"],
         "webpackConfig": "apps/api-example/webpack.config.js"

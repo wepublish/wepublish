@@ -1,11 +1,11 @@
 import { ApolloError } from '@apollo/client';
 import {
-  FullUserFragment,
+  TinyUserFragment,
   useDeleteUserMutation,
   UserFilter,
   UserRole,
   UserSort,
-  useUserListQuery,
+  useTinyUserListQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -63,20 +63,20 @@ function UserList() {
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false);
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState<FullUserFragment>();
+  const [currentUser, setCurrentUser] = useState<TinyUserFragment>();
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [sortField, setSortField] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [users, setUsers] = useState<FullUserFragment[]>([]);
+  const [users, setUsers] = useState<TinyUserFragment[]>([]);
 
   const {
     data,
     refetch,
     loading: isLoading,
     error: userListQueryError,
-  } = useUserListQuery({
+  } = useTinyUserListQuery({
     variables: {
       filter: filter || undefined,
       take: limit,
@@ -121,25 +121,22 @@ function UserList() {
   /**
    * UI helpers
    */
-  function getSubscriptionCellView(user: FullUserFragment) {
-    // @ts-expect-error Wrong type for now
-    const subscriptions = user.subscriptions ?? [];
-    const totalSubscriptions = subscriptions?.length;
-    // one subscription
-    if (subscriptions?.length === 1) {
+  function getSubscriptionCellView(user: TinyUserFragment) {
+    if (user.subscriptionCount === 1) {
       return <>{t('userList.overview.oneSubscription')}</>;
     }
 
     // multiple subscriptions
-    if (subscriptions?.length) {
+    if (user.subscriptionCount) {
       return (
         <>
           {t('userList.overview.amountOfSubscriptions', {
-            amount: totalSubscriptions,
+            amount: user.subscriptionCount,
           })}
         </>
       );
     }
+
     // no subscription
     return <>{t('userList.overview.noSubscriptions')}</>;
   }
@@ -240,7 +237,7 @@ function UserList() {
           >
             <HeaderCell>{t('userList.overview.createdAt')}</HeaderCell>
             <RCell dataKey="createdAt">
-              {({ createdAt }: RowDataType<FullUserFragment>) =>
+              {({ createdAt }: RowDataType<TinyUserFragment>) =>
                 t('userList.overview.createdAtDate', {
                   createdAtDate: new Date(createdAt),
                 })
@@ -255,7 +252,7 @@ function UserList() {
           >
             <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
             <RCell dataKey="modifiedAt">
-              {({ modifiedAt }: RowDataType<FullUserFragment>) =>
+              {({ modifiedAt }: RowDataType<TinyUserFragment>) =>
                 t('userList.overview.modifiedAtDate', {
                   modifiedAtDate: new Date(modifiedAt),
                 })
@@ -270,7 +267,7 @@ function UserList() {
           >
             <HeaderCell>{t('userList.overview.firstName')}</HeaderCell>
             <RCell dataKey={'firstName'}>
-              {(rowData: RowDataType<FullUserFragment>) => (
+              {(rowData: RowDataType<TinyUserFragment>) => (
                 <Link to={`/users/edit/${rowData.id}`}>
                   {rowData.firstName || ''}
                 </Link>
@@ -285,7 +282,7 @@ function UserList() {
           >
             <HeaderCell>{t('userList.overview.name')}</HeaderCell>
             <RCell dataKey={'name'}>
-              {(rowData: RowDataType<FullUserFragment>) => (
+              {(rowData: RowDataType<TinyUserFragment>) => (
                 <Link to={`/users/edit/${rowData.id}`}>
                   {rowData.name || t('userList.overview.unknown')}
                 </Link>
@@ -307,7 +304,7 @@ function UserList() {
           >
             <HeaderCell>{t('userCreateOrEditView.userRoles')}</HeaderCell>
             <RCell dataKey="roles">
-              {(rowData: RowDataType<FullUserFragment>) =>
+              {(rowData: RowDataType<TinyUserFragment>) =>
                 rowData.roles?.map((r: UserRole) => r.name).join(', ')
               }
             </RCell>
@@ -320,9 +317,9 @@ function UserList() {
           >
             <HeaderCell>{t('userList.overview.subscriptions')}</HeaderCell>
             <RCell>
-              {(rowData: RowDataType<FullUserFragment>) => (
+              {(rowData: RowDataType<TinyUserFragment>) => (
                 <div>
-                  {getSubscriptionCellView(rowData as FullUserFragment)}
+                  {getSubscriptionCellView(rowData as TinyUserFragment)}
                 </div>
               )}
             </RCell>
@@ -334,7 +331,7 @@ function UserList() {
           >
             <HeaderCell>{t('userList.overview.action')}</HeaderCell>
             <PaddedCell>
-              {(rowData: RowDataType<FullUserFragment>) => (
+              {(rowData: RowDataType<TinyUserFragment>) => (
                 <>
                   <PermissionControl
                     qualifyingPermissions={['CAN_RESET_USER_PASSWORD']}
@@ -347,7 +344,7 @@ function UserList() {
                         size="sm"
                         icon={<MdPassword />}
                         onClick={e => {
-                          setCurrentUser(rowData as FullUserFragment);
+                          setCurrentUser(rowData as TinyUserFragment);
                           setIsResetUserPasswordOpen(true);
                         }}
                       />
@@ -365,7 +362,7 @@ function UserList() {
                         icon={<MdDelete />}
                         onClick={() => {
                           setConfirmationDialogOpen(true);
-                          setCurrentUser(rowData as FullUserFragment);
+                          setCurrentUser(rowData as TinyUserFragment);
                         }}
                       />
                     </IconButtonTooltip>

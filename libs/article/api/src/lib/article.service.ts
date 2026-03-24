@@ -518,8 +518,6 @@ export class ArticleService {
 
   async performFullTextSearch(searchQuery: string): Promise<string[]> {
     try {
-      const formattedQuery = searchQuery.replace(/\s+/g, '&');
-
       const foundArticleIds = await this.prisma.$queryRaw<
         Array<{ id: string }>
       >`
@@ -536,7 +534,7 @@ export class ArticleService {
                 'german',
                 jsonb_path_query_array(ar.blocks, 'strict $.**.richText'),
                 '["string"]'
-              ) @@ to_tsquery('german', ${formattedQuery});
+              ) @@ websearch_to_tsquery('german', ${searchQuery});
       `;
 
       return foundArticleIds.map(item => item.id);

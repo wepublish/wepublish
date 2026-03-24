@@ -389,7 +389,7 @@ export function responsiveProperty({
   breakpoints: { [key in Breakpoint]: number };
   values: { [key in keyof typeof breakpoints]?: number };
   transform?: (number: number) => number;
-}): TypographyStyleOptions {
+}) {
   const output: TypographyStyleOptions = {};
 
   Object.entries(breakpoints).forEach(([key, breakpoint]) => {

@@ -337,14 +337,19 @@ const TsriClaim = styled('img', {
     top 300ms ease-out;
   transform: translate3d(0, 0, 0);
   position: absolute;
-  clip-path: inset(10px 0 10px 0);
-  width: 26cqw;
-  height: auto;
+  //clip-path: inset(10px 0 10px 0);
+
   top: 13.5cqw;
   top: 12.8cqw;
   top: 10.5cqw;
+
+  width: 26cqw;
+  height: auto;
+  top: 11.5cqw;
   left: 2cqw;
   display: none;
+
+  aspect-ratio: 2000 / 94;
 
   ${({ isScrolled }) =>
     isScrolled &&
@@ -352,7 +357,10 @@ const TsriClaim = styled('img', {
       width: 16.77cqw;
       top: 9.7cqw;
       top: 8.7cqw;
-      clip-path: inset(10px 0 4px 0);
+      //clip-path: inset(10px 0 4px 0);
+
+      width: 20.22cqw;
+      top: 9.5cqw;
     `}
 
   ${({ isHomePage }) =>

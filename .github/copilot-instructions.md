@@ -1,0 +1,1 @@
+../.ai/tech-stack.md

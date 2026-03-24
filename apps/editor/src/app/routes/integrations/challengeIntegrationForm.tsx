@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 import cloudflareLogo from './assets/cloudflare.svg';
+import hcaptchaLogo from './assets/hcaptcha.webp';
 import { GenericIntegrationList } from './genericIntegrationList';
 
 const challengeSettingsSchema = z.object({
@@ -28,7 +29,11 @@ export function ChallengeIntegrationForm() {
       mutation={UpdateSettingsIntegrationsChallengeDocument}
       dataKey="challengeProviderSettings"
       schema={challengeSettingsSchema}
-      getLogo={() => cloudflareLogo}
+      getLogo={setting =>
+        setting.type === ChallengeProviderType.Hcaptcha ?
+          hcaptchaLogo
+        : cloudflareLogo
+      }
       fields={[
         {
           name: 'type',
