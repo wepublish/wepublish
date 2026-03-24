@@ -14,11 +14,12 @@ import { ComponentProps } from 'react';
 
 export default function PageBySlugOrId() {
   const {
+    locale,
     query: { slug, id },
   } = useRouter();
 
   const containerProps = {
-    slug,
+    slug: `${slug}-${locale}`,
     id,
   } as ComponentProps<typeof PageContainer>;
 
@@ -29,7 +30,7 @@ export const getStaticPaths = () => ({
   paths: [],
   fallback: 'blocking',
 });
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
   const { slug, id } = params || {};
   const { publicRuntimeConfig } = getConfig();
 
@@ -38,7 +39,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     client.query<PageQuery>({
       query: PageDocument,
       variables: {
-        slug,
+        slug: `${slug}-${locale}`,
         id,
       },
     }),
