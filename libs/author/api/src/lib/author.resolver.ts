@@ -7,7 +7,12 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { Public } from '@wepublish/authentication/api';
-import { Author, CreateAuthorInput, UpdateAuthorInput } from './author.model';
+import {
+  Author,
+  AuthorLink,
+  CreateAuthorInput,
+  UpdateAuthorInput,
+} from './author.model';
 import { AuthorService } from './author.service';
 import { AuthorDataloaderService } from './author-dataloader.service';
 import { AuthorArgs, AuthorListArgs, PaginatedAuthors } from './author.model';
@@ -17,6 +22,7 @@ import { Permissions } from '@wepublish/permissions/api';
 import { CanCreateAuthor, CanDeleteAuthor } from '@wepublish/permissions';
 import { AuthorTagDataloader, Tag } from '@wepublish/tag/api';
 import { Author as PAuthor } from '@prisma/client';
+import { AuthorLinkDataloader } from './author-links.dataloader';
 
 @Resolver(() => Author)
 export class AuthorResolver {
@@ -24,7 +30,8 @@ export class AuthorResolver {
     private authorService: AuthorService,
     private authorDataloader: AuthorDataloaderService,
     private tagDataLoader: AuthorTagDataloader,
-    private urlAdapter: URLAdapter
+    private urlAdapter: URLAdapter,
+    private linksDataloader: AuthorLinkDataloader
   ) {}
 
   @Public()
@@ -85,12 +92,17 @@ export class AuthorResolver {
     return this.authorService.deleteAuthor(id);
   }
 
+  @ResolveField(() => [AuthorLink])
+  async links(@Parent() parent: PAuthor) {
+    return this.linksDataloader.load(parent.id);
+  }
+
   @ResolveField(() => [Tag])
   async tags(@Parent() parent: PAuthor) {
     return this.tagDataLoader.load(parent.id);
   }
 
-  @ResolveField(() => String, { nullable: true })
+  @ResolveField(() => String)
   async url(@Parent() parent: PAuthor) {
     return this.urlAdapter.getAuthorURL(parent);
   }

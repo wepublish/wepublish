@@ -13,16 +13,16 @@ import { GenericIntegrationList } from './genericIntegrationList';
 
 const trackingPixelSettingsSchema = z.object({
   name: z.string().nullish().or(z.literal('')),
-  type: z.nativeEnum(TrackingPixelProviderType).optional(),
+  type: z.nativeEnum(TrackingPixelProviderType).nullish(),
 
   prolitteris_memberNr: z.string().nullish().or(z.literal('')),
-  prolitteris_onlyPaidContentAccess: z.boolean().optional(),
+  prolitteris_onlyPaidContentAccess: z.boolean().nullish(),
   prolitteris_password: z.string().nullish().or(z.literal('')),
   prolitteris_publisherInternalKeyDomain: z
     .string()
-    .optional()
+    .nullish()
     .or(z.literal('')),
-  prolitteris_usePublisherInternalKey: z.boolean().optional(),
+  prolitteris_usePublisherInternalKey: z.boolean().nullish(),
   prolitteris_username: z.string().nullish().or(z.literal('')),
 });
 

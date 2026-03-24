@@ -13,7 +13,7 @@ import { GenericIntegrationList } from './genericIntegrationList';
 
 const challengeSettingsSchema = z.object({
   name: z.string().nullish().or(z.literal('')),
-  type: z.nativeEnum(ChallengeProviderType).optional(),
+  type: z.nativeEnum(ChallengeProviderType).nullish(),
   secret: z.string().nullish().or(z.literal('')),
   siteKey: z.string().nullish().or(z.literal('')),
 });
