@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { differenceInMinutes } from 'date-fns';
 import { Prisma, PrismaClient, UserEvent } from '@prisma/client';
 import { hash as argon2Hash } from '@node-rs/argon2';
 import { Validator } from '@wepublish/user';
@@ -293,7 +298,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new BadRequestException('User not found.');
+      throw new NotFoundException('User not found.');
     }
 
     if (!user.pendingEmail || !user.pendingEmailAt) {
@@ -306,8 +311,7 @@ export class UserService {
       );
     }
 
-    const minutesElapsed =
-      (Date.now() - user.pendingEmailAt.getTime()) / 1000 / 60;
+    const minutesElapsed = differenceInMinutes(new Date(), user.pendingEmailAt);
 
     if (minutesElapsed > UserService.EMAIL_CHANGE_EXPIRY_MINUTES) {
       await this.prisma.user.update({
@@ -318,16 +322,6 @@ export class UserService {
       throw new BadRequestException(
         'Email change request has expired. Please request a new change.'
       );
-    }
-
-    const existing = await this.prisma.user.findFirst({
-      where: {
-        email: { equals: user.pendingEmail, mode: 'insensitive' },
-      },
-    });
-
-    if (existing) {
-      throw new BadRequestException('Email is already in use.');
     }
 
     return this.prisma.user.update({

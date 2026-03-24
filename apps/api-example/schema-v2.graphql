@@ -1811,7 +1811,7 @@ type Mutation {
   updateCrowdfunding(input: UpdateCrowdfundingInput!): Crowdfunding!
 
   """Updates the current logged in user."""
-  updateCurrentUser(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput, email: String, firstName: String, flair: String, name: String, password: String): SensitiveDataUser!
+  updateCurrentUser(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput, firstName: String, flair: String, name: String, password: String): SensitiveDataUser!
 
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!

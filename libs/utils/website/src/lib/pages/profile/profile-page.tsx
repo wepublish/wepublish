@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
-import { Alert, css } from '@mui/material';
+import { css } from '@mui/material';
+import { useApolloClient } from '@apollo/client';
 import { AuthTokenStorageKey } from '@wepublish/authentication/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import {
@@ -29,7 +30,7 @@ import { setCookie } from 'cookies-next';
 import { NextPage, NextPageContext } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
-import { ComponentProps, useEffect, useRef, useState } from 'react';
+import { ComponentProps, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { withAuthGuard } from '../../auth-guard';
 import { ssrAuthLink } from '../../auth-link';
@@ -84,32 +85,31 @@ type ProfilePageProps = Omit<
 
 function ProfilePage({ className, ...props }: ProfilePageProps) {
   const {
-    elements: { H4 },
+    elements: { H4, Alert },
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const router = useRouter();
-  const [confirmEmailChange] = useConfirmEmailChangeMutation();
-  const [emailChangeConfirmed, setEmailChangeConfirmed] = useState(false);
-  const [emailChangeError, setEmailChangeError] = useState<string>();
-  const confirmAttempted = useRef(false);
+  const client = useApolloClient();
+  const [confirmEmailChange, { data: confirmData, error: confirmError }] =
+    useConfirmEmailChangeMutation();
 
   useEffect(() => {
     const newEmail = router.query.confirmEmailChange as string | undefined;
 
-    if (newEmail && !confirmAttempted.current) {
-      confirmAttempted.current = true;
+    if (newEmail) {
+      const { confirmEmailChange: _, jwt: __, ...query } = router.query;
       confirmEmailChange({ variables: { newEmail } })
         .then(async () => {
-          setEmailChangeConfirmed(true);
-          const { confirmEmailChange: _, jwt: __, ...query } = router.query;
           await router.replace({ pathname: '/profile', query }, undefined, {
             shallow: true,
           });
           // todo: update user context instead.
           window.location.reload();
         })
-        .catch(err => {
-          setEmailChangeError(err.message);
+        .catch(async () => {
+          await router.replace({ pathname: '/profile', query }, undefined, {
+            shallow: true,
+          });
         });
     }
   }, [router.query.confirmEmailChange, confirmEmailChange, router]);
@@ -136,23 +136,11 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
 
   return (
     <>
-      {emailChangeConfirmed && (
-        <Alert
-          severity="success"
-          sx={{ mb: 2 }}
-        >
-          {t('user.emailChangeConfirmed')}
-        </Alert>
+      {confirmData && (
+        <Alert severity="success">{t('user.emailChangeConfirmed')}</Alert>
       )}
 
-      {emailChangeError && (
-        <Alert
-          severity="error"
-          sx={{ mb: 2 }}
-        >
-          {emailChangeError}
-        </Alert>
-      )}
+      {confirmError && <Alert severity="error">{confirmError.message}</Alert>}
 
       <SubscriptionsWrapper className={className}>
         {hasUnpaidInvoices && (

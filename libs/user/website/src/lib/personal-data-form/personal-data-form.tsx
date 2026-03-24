@@ -16,7 +16,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useMemo, useReducer, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
@@ -113,15 +113,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
   onRequestEmailChange,
 }: BuilderPersonalDataFormProps<T>) {
   const {
-    elements: {
-      TextField,
-      Alert,
-      Button,
-      Paragraph,
-      ImageUpload,
-      Link,
-      IconButton,
-    },
+    elements: { TextField, Alert, Button, Paragraph, ImageUpload, IconButton },
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const theme = useTheme();
@@ -135,10 +127,14 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
     false
   );
   const [showEmailChange, setShowEmailChange] = useState(false);
-  const [newEmail, setNewEmail] = useState('');
   const [emailChangeLoading, setEmailChangeLoading] = useState(false);
   const [emailChangeSuccess, setEmailChangeSuccess] = useState(false);
   const [emailChangeError, setEmailChangeError] = useState<Error>();
+  const callEmailChangeAction = useAsyncAction(
+    setEmailChangeLoading,
+    setEmailChangeError,
+    setEmailChangeSuccess
+  );
 
   const fieldsToDisplay = useMemo(
     () =>
@@ -165,7 +161,9 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
     [fieldsToDisplay, schema]
   );
 
-  const { handleSubmit, control } = useForm<PersonalDataFormFields>({
+  const { handleSubmit, control, setValue } = useForm<
+    PersonalDataFormFields & { newEmail?: string }
+  >({
     resolver: zodResolver(validationSchema),
     defaultValues: {
       address: {
@@ -186,6 +184,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
   });
 
   const onSubmit = handleSubmit(data => onUpdate && callAction(onUpdate)(data));
+  const newEmail = useWatch({ control, name: 'newEmail' });
 
   const userformFields = fields.filter(field => {
     const blacklist = [
@@ -339,32 +338,26 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
 
           {showEmailChange && (
             <>
-              <TextField
-                type="email"
-                fullWidth
-                label={t('user.newEmail')}
-                value={newEmail}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setNewEmail(e.target.value)
-                }
+              <Controller
+                name="newEmail"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    type="email"
+                    fullWidth
+                    label={t('user.newEmail')}
+                  />
+                )}
               />
               <Button
                 type="button"
                 disabled={!newEmail || emailChangeLoading}
-                onClick={async () => {
-                  setEmailChangeError(undefined);
-                  setEmailChangeLoading(true);
-                  try {
-                    await onRequestEmailChange!(newEmail);
-                    setEmailChangeSuccess(true);
-                    setShowEmailChange(false);
-                    setNewEmail('');
-                  } catch (e) {
-                    setEmailChangeError(e as Error);
-                  } finally {
-                    setEmailChangeLoading(false);
-                  }
-                }}
+                onClick={callEmailChangeAction(async () => {
+                  await onRequestEmailChange!(newEmail!);
+                  setShowEmailChange(false);
+                  setValue('newEmail', '');
+                })}
               >
                 {t('user.requestEmailChange')}
               </Button>

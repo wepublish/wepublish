@@ -247,6 +247,6 @@ export class RegisterUserInput extends OmitType(
 
 @ArgsType()
 export class UpdateCurrentUserInput extends PartialType(
-  RegisterUserInput,
+  OmitType(RegisterUserInput, ['email'] as const, ArgsType),
   ArgsType
 ) {}

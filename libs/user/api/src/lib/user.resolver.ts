@@ -98,11 +98,8 @@ export class UserResolver {
     @Args() input: UpdateCurrentUserInput,
     @CurrentUser() { user }: UserSession
   ) {
-    const { email, ...safeInput } = input as UpdateCurrentUserInput & {
-      email?: string;
-    };
     return this.service.updateUser({
-      ...safeInput,
+      ...input,
       id: user.id,
     });
   }
