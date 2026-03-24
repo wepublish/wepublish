@@ -80,6 +80,18 @@ RUN npx prisma generate && \
     cp docker/api_build_package.json package.json && \
     npx @yao-pkg/pkg package.json
 
+# Collect only Prisma + pg runtime deps for the API binary
+FROM ${PLAIN_BUILD_IMAGE} AS api-prisma-deps
+WORKDIR /deps
+RUN --mount=from=build-api,source=/wepublish/node_modules,target=/src \
+    mkdir -p node_modules && \
+    cp -a /src/.prisma /src/@prisma node_modules/ && \
+    cd /src && cp -a \
+    pg pg-pool pg-protocol pg-types pg-connection-string \
+    pgpass pg-int8 postgres-array postgres-bytea postgres-date \
+    postgres-interval split2 \
+    /deps/node_modules/
+
 FROM ${PLAIN_BUILD_IMAGE} AS api-setup
 WORKDIR /wepublish
 RUN apt-get update && \
@@ -90,6 +102,7 @@ COPY --chown=1001:0 apps/api-example/src/default.yaml /wepublish/config/default.
 COPY --chown=1001:0 libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY --chown=1001:0 .version /wepublish/.version
 COPY --chown=1001:0 --from=build-api /wepublish/api /wepublish/
+COPY --chown=1001:0 --from=api-prisma-deps /deps/node_modules ./node_modules
 RUN mkdir -p /wepublish/.cache/pkg && \
     chmod -R g=u /wepublish
 

@@ -2,7 +2,6 @@
   "name": "api",
   "pkg": {
     "assets": [
-      "node_modules/.prisma",
       "node_modules/axios/dist/node/axios.cjs",
       "node_modules/es-get-iterator/node.js",
       "node_modules/i18n-iso-countries/langs",
@@ -12,6 +11,16 @@
     "publicPackages": [
       "@node-rs/argon2-linux-x64-gnu",
       "@node-rs/bcrypt-linux-x64-gnu"
+    ],
+    "ignore": [
+      "@prisma/client",
+      "@prisma/adapter-pg",
+      ".prisma",
+      "pg",
+      "pg-pool",
+      "pg-protocol",
+      "pg-types",
+      "pg-connection-string"
     ],
     "targets": ["node22-linux"]
   },
