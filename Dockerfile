@@ -76,6 +76,7 @@ CMD ["node", "/wepublish/map-secrets.js", "restore", "--start"]
 FROM ${BUILD_IMAGE} AS build-api
 COPY . .
 RUN npx prisma generate && \
+    sed -i "s|require('#main-entry-point')|require('./index.js')|" node_modules/.prisma/client/default.js && \
     npx nx build api-example --ignore-nx-cache && \
     cp docker/api_build_package.json package.json && \
     npx @yao-pkg/pkg package.json
