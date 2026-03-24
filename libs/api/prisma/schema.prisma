@@ -29,6 +29,10 @@ model MetadataProperty {
   User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
 
+  @@index([articleRevisionId])
+  @@index([pageRevisionId])
+  @@index([subscriptionId])
+  @@index([userId])
   @@map("properties")
 }
 
@@ -153,6 +157,8 @@ model Article {
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([publishedAt])
+  @@index([slug])
+  @@index([hidden, publishedAt(sort: Desc)])
   @@map("articles")
 }
 
@@ -173,6 +179,7 @@ model ArticleTrackingPixels {
   pixelUid String? @unique
   error    String?
 
+  @@index([articleId])
   @@map("articles.tracking-pixels")
 }
 
@@ -197,6 +204,7 @@ model TaggedArticles {
   modifiedAt DateTime @updatedAt
 
   @@id([articleId, tagId])
+  @@index([tagId])
   @@map("articles.tagged-articles")
 }
 
@@ -502,6 +510,7 @@ model Invoice {
   subscriptionPeriods SubscriptionPeriod[]
 
   @@index([mail])
+  @@index([subscriptionID])
   @@map("invoices")
 }
 
@@ -936,6 +945,7 @@ model Subscription {
 
   invoices Invoice[]
 
+  @@index([userID])
   @@map("subscriptions")
 }
 
@@ -1094,6 +1104,7 @@ model PollAnswer {
   votes         PollVote[]
   externalVotes PollExternalVote[]
 
+  @@index([pollId])
   @@map("polls.answers")
 }
 
@@ -1117,6 +1128,7 @@ model PollVote {
   disabled    Boolean @default(false)
 
   @@unique([pollId, userId])
+  @@index([answerId])
   @@map("polls.votes")
 }
 
