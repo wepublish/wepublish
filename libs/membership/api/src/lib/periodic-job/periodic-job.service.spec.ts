@@ -3,12 +3,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import {
   Currency,
   PaymentPeriodicity,
-  PrismaClient,
   SubscriptionEvent,
   User,
 } from '@prisma/client';
 import { PrismaModule } from '@wepublish/nest-modules';
-import { clearDatabase, clearFullDatabase } from '@wepublish/testing';
+import {
+  clearDatabase,
+  clearFullDatabase,
+  createPrismaClient,
+} from '@wepublish/testing/prisma';
 import { add, startOfDay, sub } from 'date-fns';
 import { matches } from 'lodash';
 import nock from 'nock';
@@ -26,7 +29,7 @@ import { createKvMock, KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 const kvMock = createKvMock();
 describe('PeriodicJobService', () => {
   let service: PeriodicJobService;
-  const prismaClient = new PrismaClient();
+  const prismaClient = createPrismaClient();
 
   beforeAll(async () => {
     await clearFullDatabase(prismaClient);
