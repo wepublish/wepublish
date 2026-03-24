@@ -76,6 +76,8 @@ CMD ["node", "/wepublish/map-secrets.js", "restore", "--start"]
 FROM ${BUILD_IMAGE} AS build-api
 COPY . .
 RUN npx prisma generate && \
+    grep -q "require('#main-entry-point')" node_modules/.prisma/client/default.js || \
+      (echo "ERROR: Prisma client no longer uses #main-entry-point — update the pkg workaround" && exit 1) && \
     sed -i "s|require('#main-entry-point')|require('./index.js')|" node_modules/.prisma/client/default.js && \
     npx nx build api-example --ignore-nx-cache && \
     cp docker/api_build_package.json package.json && \
