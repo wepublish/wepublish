@@ -3,6 +3,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   BlockRenderer,
   collectSiblings,
+  isImageBlock,
+  isRichTextBlock,
 } from '@wepublish/block-content/website';
 import { ImageContext } from '@wepublish/image/website';
 import { BlockContent } from '@wepublish/website/api';
@@ -14,7 +16,7 @@ import {
   BuilderTeaserSlotsBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { allPass, cond } from 'ramda';
+import { allPass, anyPass, cond } from 'ramda';
 import { memo, useMemo } from 'react';
 
 import {
@@ -127,6 +129,23 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
           () => css`
             grid-template-columns: auto !important;
             padding: 0 !important;
+          `,
+        ],
+        [
+          anyPass([isImageBlock, isRichTextBlock]),
+          () => css`
+            grid-template-columns:
+              max(calc(100vw - var(--breakpoint-width)) / 2, 0px)
+              repeat(12, 1fr) max(
+                calc(100vw - var(--breakpoint-width)) / 2,
+                0px
+              ) !important;
+            //grid-template-columns: subgrid !important;
+            & > * {
+              grid-column: 3/14;
+              margin-left: 0;
+              margin-right: 0;
+            }
           `,
         ],
       ]),

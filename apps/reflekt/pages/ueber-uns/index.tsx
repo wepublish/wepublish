@@ -1,10 +1,14 @@
+//import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { AuthorListContainer } from '@wepublish/author/website';
+import { PageContainer } from '@wepublish/page/website';
 import { AuthorSort, SortOrder } from '@wepublish/website/api';
 import {
   addClientCacheToV1Props,
   AuthorListDocument,
   getV1ApiClient,
   NavigationListDocument,
+  PageDocument,
   PeerProfileDocument,
   useAuthorListQuery,
 } from '@wepublish/website/api';
@@ -15,11 +19,15 @@ import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
 
+import { MainSpacer } from '../../src/components/main-spacer';
+
 const take = 25;
 
 const pageSchema = z.object({
   page: z.coerce.number().gte(1).optional(),
 });
+
+const TeamPageContent = styled(PageContainer)``;
 
 export default function AuthorList() {
   const {
@@ -54,7 +62,11 @@ export default function AuthorList() {
 
   return (
     <>
-      <AuthorListContainer variables={variables} />
+      <TeamPageContent slug="team">
+        <MainSpacer maxWidth="lg">
+          <AuthorListContainer variables={variables} />
+        </MainSpacer>
+      </TeamPageContent>
 
       {pageCount > 1 && (
         <Pagination
@@ -98,6 +110,12 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
     client.query({
       query: PeerProfileDocument,
+    }),
+    client.query({
+      query: PageDocument,
+      variables: {
+        slug: 'team',
+      },
     }),
   ]);
 

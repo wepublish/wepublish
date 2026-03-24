@@ -959,41 +959,6 @@ async function seedArticlesByTag(
   return articles;
 }
 
-/*
-async function seedArticles(
-  createArticle: any,
-  updateArticle: any,
-  tagIds: string[] = [],
-  authorIds: string[] = [],
-  imageIds: string[] = [],
-  blockStyles: BlockStyle[]
-) {
-  const articles = await Promise.all(
-    Array.from({ length: 1 }, (_, index) => {
-      const articleData = createArticleInput(
-        tagIds,
-        authorIds,
-        imageIds,
-        index,
-        blockStyles
-      );
-      return createArticle(articleData).then((_a: any) => {
-        return updateArticle({
-          variables: {
-            id: _a?.data?.createArticle.id,
-            ...articleData.variables,
-          },
-        }).then((_v: any) => {
-          return _v.data.updateArticle;
-        });
-      });
-    })
-  );
-
-  return articles;
-}
-*/
-
 async function seedNavigations(createNavigation: any, tags: string[] = []) {
   /*
     Links can be of type:
@@ -1167,6 +1132,7 @@ async function seedPages(
         imageID: null,
         canonicalUrl: null,
         properties: [],
+        title: 'Home',
         blocks: [
           // hero block
           {
@@ -1440,6 +1406,7 @@ async function seedPages(
         imageID: null,
         canonicalUrl: null,
         properties: [],
+        title: 'Mitmachen',
         blocks: [
           // a break block
           {
@@ -1691,6 +1658,118 @@ async function seedPages(
                 },
               ] as Descendant[],
             } as BreakBlockInput,
+          } as BlockContentInput,
+        ] as BlockContentInput[],
+      },
+    }),
+    createPage({
+      variables: {
+        publishedAt: new Date().toISOString(),
+        slug: 'team',
+        tagIds: [],
+        imageID: null,
+        canonicalUrl: null,
+        properties: [],
+        title: 'Team',
+        blocks: [
+          // hero block
+          {
+            flexBlock: {
+              blockStyle: getBlockStyle(blockStyles, 'FlexBlockHero'),
+              blocks: [
+                // desktop image
+                {
+                  alignment: {
+                    i: '0',
+                    x: 0,
+                    y: 0,
+                    w: 6,
+                    h: 7,
+                    static: false,
+                  },
+                  block: {
+                    image: {
+                      imageID: imageIds[48],
+                      caption: faker.lorem.sentence(),
+                    } as ImageBlockInput,
+                  } as BlockContentInput,
+                },
+
+                // mobile image
+                {
+                  alignment: {
+                    i: '1',
+                    x: 6,
+                    y: 0,
+                    w: 6,
+                    h: 7,
+                    static: false,
+                  },
+                  block: {
+                    image: {
+                      imageID: imageIds[50],
+                      caption: faker.lorem.sentence(),
+                    } as ImageBlockInput,
+                  } as BlockContentInput,
+                },
+              ] as BlockWithAlignment[],
+            } as FlexBlockInput,
+          } as BlockContentInput,
+
+          // rich text block - die idee
+          {
+            richText: {
+              richText: [
+                {
+                  type: 'heading-two',
+                  children: [
+                    {
+                      text: 'Die Idee',
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: `Während der Einfluss von Politik und Wirtschaft auf die Medien zunimmt, während sich Falschnachrichten immer einfacher verbreiten, wird in den Redaktionen der grossen Schweizer Verlage gespart. Das gefährdet die Kontrollfunktion der Medien und damit eine Grundlage der demokratischen Gesellschaft. Expertinnen und Experten sind sich einig: Damit kritischer, unabhängiger und hintergründiger Journalismus eine Zukunft hat, braucht es neue Ideen und Finanzierungsmodelle. Hier setzt REFLEKT an.  2019 haben wir das erste unabhängige und gemeinnützige Recherche-Team der Schweiz gegründet. Seither realisiert ein kleines, schlagkräftiges Team grosse Recherchen mit grosser Wirkung. Um Missstände aufzudecken und Transparenz zu fördern, konzentrieren wir uns auf mehrmonatige, investigative Recherche-Projekte, die klassische Redaktionen immer seltener stemmen können. Indem wir unsere Arbeit attraktiv aufbereiten und über verschiedene Kanäle publizieren, machen wir sie einem grösstmöglichen Publikum zugänglich. So fördern wir Qualität im Journalismus, erhöhen die Informiertheit der Bevölkerung und tragen zur Medienvielfalt sowie zu einer funktionierenden Demokratie bei.\n Mit unserem aktuellen Budget können wir jährlich drei bis vier aufwändige Recherche-Projekte realisieren. Dabei verzichten wir auf Werbung und finanzieren unsere Arbeit ausschliesslich durch den Verkauf von Recherche-Ergebnissen sowie Spenden von Einzelpersonen und Institutionen. Verpflichtet fühlen wir uns den Fakten, der Transparenz und unserem obersten Ziel: der positiven Veränderung der Gesellschaft durch investigativen Journalismus.`,
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as RichTextBlockInput,
+          } as BlockContentInput,
+
+          // image block - das team
+          {
+            image: {
+              imageID: imageIds[67],
+              caption: undefined,
+            } as ImageBlockInput,
+          } as BlockContentInput,
+
+          // rich text block - das team
+          {
+            richText: {
+              richText: [
+                {
+                  type: 'heading-two',
+                  children: [
+                    {
+                      text: 'Das Team',
+                    },
+                  ],
+                },
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      text: `Wir glauben daran, dass ein kleines, schlagkräftiges Team, das am gleichen Strick zieht, mehr bewirken kann als eine grosse Anzahl Einzelkämpfer/innen. Bei REFLEKT arbeitet daher ein eingespieltes Kernteam projektbezogen mit externen Spezialistinnen und Spezialisten zusammen. Anders als traditionelle Redaktionen sind wir weder an einen bestimmten Publikationsrhythmus noch an eine festgelegte Publikationsform gebunden und können daher ergebnisoffen recherchieren und unsere Erzählform der Thematik anpassen.`,
+                    },
+                  ],
+                },
+              ] as Descendant[],
+            } as RichTextBlockInput,
           } as BlockContentInput,
         ] as BlockContentInput[],
       },

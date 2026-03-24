@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { capitalize, Link, useTheme } from '@mui/material';
+import { capitalize, Link, Typography, useTheme } from '@mui/material';
 import { BlockFormat, InlineFormat } from '@wepublish/richtext';
 import { RenderElement } from '@wepublish/richtext/website';
 import { ListItemProps, UnorderedListProps } from '@wepublish/ui';
@@ -137,6 +137,19 @@ export function ReflektRenderElement({
           />
         </Link>
       );
+
+    case BlockFormat.Paragraph:
+      if (variant) {
+        return (
+          <Typography variant={variant as any}>
+            <ReflektRenderRichtext
+              elements={element.children}
+              variant={variant}
+            />
+          </Typography>
+        );
+      }
+      return <RenderElement element={element} />;
 
     default: {
       return <RenderElement element={element} />;

@@ -259,7 +259,6 @@ const getContentHintForFlexBlockNestedBlock = (block: BlockListValue) => {
     return block.value?.image?.filename || 'Image';
   }
   if (block.type === 'RichText') {
-    //return block.value?.richText[0].children[0]?.text || 'Rich Text';
     const text = toPlaintext(block.value?.richText);
     if (!text) {
       return 'Rich Text';

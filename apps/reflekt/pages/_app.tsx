@@ -39,6 +39,8 @@ import { ReflektFlexBlock } from '../src/components/block-layouts/reflekt-base-f
 import { ReflektBaseBreakBlock } from '../src/components/break-blocks/reflekt-base-break-block';
 import { MainSpacer } from '../src/components/main-spacer';
 import { ReflektArticle } from '../src/components/reflekt-article';
+import { ReflektAuthorList } from '../src/components/reflekt-author-list';
+import { ReflektAuthorListItem } from '../src/components/reflekt-author-list-item';
 import {
   ReflektBlockRenderer,
   ReflektBlocks,
@@ -112,6 +114,8 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           ArticleList={ReflektArticleList}
           Article={ReflektArticle}
           Tag={ReflektTag}
+          AuthorList={ReflektAuthorList}
+          AuthorListItem={ReflektAuthorListItem}
           elements={{
             Link: NextWepublishLink,
             UnorderedList: ReflektUnorderedList,

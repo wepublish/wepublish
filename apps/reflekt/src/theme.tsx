@@ -1,9 +1,12 @@
 import { createTheme, Theme, ThemeOptions } from '@mui/material';
 import { createBreakpoints } from '@mui/system';
-import { theme as WePTheme } from '@wepublish/ui';
+import { responsiveProperty, theme as WePTheme } from '@wepublish/ui';
 import { Roboto_Mono } from 'next/font/google';
 import localFont from 'next/font/local';
+import { mergeDeepRight, reduce } from 'ramda';
 import { PartialDeep } from 'type-fest';
+
+const mergeDeepAll = reduce(mergeDeepRight, {});
 
 export const recife = localFont({
   src: [
@@ -65,9 +68,9 @@ export const robotoMono = Roboto_Mono({
 
 const colors = {
   primary: {
-    main: '#0800ff',
+    main: '#0800ff', // pre-primary color
     light: '#f5ff64',
-    dark: '#1F1F1F',
+    dark: '#1F1F1F', // dark gray, used for navbar bg and footer bg
     contrastText: '#ffffff',
   },
   secondary: {
@@ -428,6 +431,9 @@ const theme = createTheme(WePTheme, {
           ulDownloads: 'ul',
           liDownloads: 'li',
           teaserSlotsTitle: 'h2',
+          // author-list-item
+          authorListItemName: 'h6',
+          authorListItemBio: 'p',
         },
       },
     },
@@ -783,3 +789,86 @@ export const teaserMoreAboutTheme = createTheme(theme, {
 });
 
 export { theme as default };
+
+export const authorListItemTheme = createTheme(theme, {
+  typography: {
+    authorListItemName: {
+      fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+      display: 'inline-block',
+      padding: `0 0 ${theme.spacing(2)} 0`,
+      fontWeight: 400,
+      textDecoration: 'none',
+      textTransform: 'uppercase',
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'px',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 12,
+            md: 24,
+          },
+        }),
+        responsiveProperty({
+          cssProperty: 'lineHeight',
+          unit: 'px',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 14,
+            md: 1.2 * 24,
+          },
+        }),
+      ]),
+    },
+    authorListItemBio: {
+      fontFamily: [recife.style.fontFamily, 'sans-serif'].join(','),
+      fontWeight: 400,
+      textDecoration: 'none',
+      ['&:hover']: {
+        textDecoration: 'none',
+      },
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'px',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 12,
+            md: 18,
+          },
+        }),
+        responsiveProperty({
+          cssProperty: 'lineHeight',
+          unit: 'px',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 14,
+            md: 1.2 * 18,
+          },
+        }),
+      ]),
+    },
+  },
+  components: {
+    MuiLink: {
+      variants: [
+        // keep base variants
+        ...(theme.components?.MuiLink?.variants ?? []),
+        // add author-list-item-specific variants
+        {
+          props: { variant: 'authorListItemLink' },
+          style: {
+            ['&&']: {
+              textDecoration: 'none',
+              backgroundColor: colors.secondary.main,
+              ['&:hover']: {
+                textDecoration: 'none',
+                textDecorationThickness: 0,
+              },
+            },
+          },
+        },
+      ],
+    },
+  },
+});

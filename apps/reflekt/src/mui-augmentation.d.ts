@@ -45,6 +45,11 @@ declare module '@mui/material/styles' {
     ulDownloads: CSSProperties;
     liDownloads: CSSProperties;
     linkDownloads: CSSProperties;
+
+    // Author List Item
+    authorListItemName: CSSProperties;
+    authorListItemBio: CSSProperties;
+    authorListItemLink: CSSProperties;
   }
 
   // Optional
@@ -76,6 +81,9 @@ declare module '@mui/material/styles' {
     ulDownloads?: CSSProperties;
     liDownloads?: CSSProperties;
     linkDownloads?: CSSProperties;
+    authorListItemName?: CSSProperties;
+    authorListItemBio?: CSSProperties;
+    authorListItemLink?: CSSProperties;
   }
 }
 
@@ -109,6 +117,9 @@ declare module '@mui/material/Typography' {
     ulDownloads: true;
     liDownloads: true;
     linkDownloads: true;
+    authorListItemName: true;
+    authorListItemBio: true;
+    authorListItemLink: true;
   }
 }
 
@@ -121,5 +132,6 @@ declare module '@mui/material/Link' {
     buttonLinkSecondary: true;
     linkToc: true;
     linkDownloads: true;
+    authorListItemLink: true;
   }
 }

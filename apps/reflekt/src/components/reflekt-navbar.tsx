@@ -194,7 +194,8 @@ export const NavbarHamburgerButton = styled(IconButton, {
   transform-origin: top left;
 
   ${theme.breakpoints.up('md')} {
-    height: 4rem;
+    width: 4.75rem;
+    height: 4.75rem;
   }
 
   &:hover {
