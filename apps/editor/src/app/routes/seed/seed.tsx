@@ -345,6 +345,55 @@ const createArticleBlocksInput = (
   headings: string[],
   headingTwo: string[]
 ): BlockContentInput[] => {
+  const customBlocks: BlockContentInput[] = [];
+  if (i === 0) {
+    customBlocks.push({
+      html: {
+        html: `<style type="text/css">
+                :has(> div > .rote-box) {
+                  grid-column: -1/1;
+                  background-color: yellow;
+                  grid-template-columns: subgrid;
+                  display: grid;
+                  margin-left: 0 !important;
+                  margin-right: 0 !important;
+
+                  & > div {
+                    grid-column: 2/14;
+
+                    & .rote-box {
+                      background-color: red;
+                      color: white;
+                      font-family: inherit;
+                      font-size: 4rem;
+                      text-align: center;
+                    }
+                  }
+                }
+
+                .rs-drawer :has(> div > .rote-box) {
+                  grid-column: revert;
+                  background-color: revert;
+                  grid-template-columns: revert;
+                  display: revert;
+                  margin-left: revert !important;
+                  margin-right: revert !important;
+                }
+                </style>
+                <div class="rote-box">
+                  custom element
+                </div>`,
+      },
+    } as BlockContentInput);
+    customBlocks.push({
+      embed: {
+        url: 'https://h5p.org/h5p/embed/1205714',
+        width: 1090,
+        height: 880,
+      },
+    } as BlockContentInput);
+  }
+
   const blocks: BlockContentInput[] = [
     // hero block
     ...pickRandom(
@@ -501,6 +550,9 @@ const createArticleBlocksInput = (
         ] as Descendant[],
       } as RichTextBlockInput,
     } as BlockContentInput,
+
+    // showcase custom blocks in the first article
+    ...customBlocks,
 
     // a quote block without author
     {
