@@ -221,7 +221,8 @@
           "LOGGED_IN": "nur eingeloggt",
           "LOGGED_OUT": "nur ausgeloggt",
           "SUBSCRIBED": "nur abonniert",
-          "UNSUBSCRIBED": "nicht abonniert"
+          "UNSUBSCRIBED": "nicht abonniert",
+          "PAYWALL_BYPASS": "paywall überbrückung"
         },
         "actions": "Aktionen",
         "image": "Bild",
