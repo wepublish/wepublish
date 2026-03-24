@@ -54,6 +54,9 @@ export const PollWrapper = styled('div')`
   ${({ theme }) => css`
     ${theme.breakpoints.up('md')} {
       grid-column: 1/5;
+      position: sticky;
+      top: ${theme.spacing(14)};
+      align-self: start;
     }
   `}
 `;
@@ -93,9 +96,6 @@ const StyledInfoBox = styled(InfoBox)`
 `;
 
 const PollBlockStyled = styled(PollBlock)`
-  position: sticky;
-  top: ${({ theme }) => theme.spacing(14)};
-
   button {
     text-transform: uppercase;
     border-width: 1px;
