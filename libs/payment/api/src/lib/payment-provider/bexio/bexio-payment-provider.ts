@@ -136,7 +136,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
     await Promise.all(
       payments.map(async payment => {
-        if (isNaN(+payment.intentID)) {
+        if (!payment.intentID || isNaN(+payment.intentID)) {
           logger('bexioPaymentProvider').error(
             'Payment (id: %s) intentID is not a number: %s',
             payment.id,
