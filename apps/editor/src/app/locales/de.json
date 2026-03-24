@@ -222,7 +222,7 @@
           "LOGGED_OUT": "nur ausgeloggt",
           "SUBSCRIBED": "nur abonniert",
           "UNSUBSCRIBED": "nicht abonniert",
-          "PAYWALL_BYPASS": "paywall überbrückung"
+          "PAYWALL_BYPASSED": "paywall überbrückung"
         },
         "actions": "Aktionen",
         "image": "Bild",

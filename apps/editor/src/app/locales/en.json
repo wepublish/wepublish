@@ -220,7 +220,7 @@
           "LOGGED_OUT": "logged out visitors",
           "SUBSCRIBED": "subscribed visitors",
           "UNSUBSCRIBED": "unsubscribed visitors",
-          "PAYWALL_BYPASS": "visitors bypassing the paywall"
+          "PAYWALL_BYPASSED": "visitors bypassing the paywall"
         },
         "actions": "Actions",
         "image": "Image",
