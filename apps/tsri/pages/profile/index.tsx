@@ -12,7 +12,6 @@ const TsriProfilePage = styled(ProfilePage)`
 export default function Profile() {
   return (
     <TsriProfilePage
-      mediaEmail="info@tsri.ch"
       fields={['firstName', 'address', 'password', 'image']}
       className="tsri-profile-page"
     />

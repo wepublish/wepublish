@@ -264,15 +264,6 @@ export const Default: StoryObj = {
   },
 };
 
-export const WithMediaEmail: StoryObj = {
-  args: {
-    onUpdate: action('onUpdate'),
-    onRequestEmailChange: action('onRequestEmailChange'),
-    update: {},
-    mediaEmail: 'some@email.com',
-  },
-};
-
 export const WithPendingEmail: StoryObj = {
   args: {
     onUpdate: action('onUpdate'),

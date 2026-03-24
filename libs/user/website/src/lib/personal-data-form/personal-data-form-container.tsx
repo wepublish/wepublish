@@ -17,19 +17,12 @@ import { ChangeEvent, useCallback } from 'react';
 
 export type PersonalDataFormContainerProps<
   T extends BuilderPersonalDataFormFields = BuilderPersonalDataFormFields,
-> = {
-  mediaEmail?: string;
-} & BuilderContainerProps &
+> = {} & BuilderContainerProps &
   Pick<BuilderPersonalDataFormProps<T>, 'fields' | 'schema'>;
 
 export function PersonalDataFormContainer<
   T extends BuilderPersonalDataFormFields,
->({
-  className,
-  mediaEmail,
-  schema,
-  fields,
-}: PersonalDataFormContainerProps<T>) {
+>({ className, schema, fields }: PersonalDataFormContainerProps<T>) {
   const { PersonalDataForm } = useWebsiteBuilder();
   const { user } = useUser();
 
@@ -95,7 +88,6 @@ export function PersonalDataFormContainer<
       onImageUpload={handleOnImageUpload}
       onUpdate={handleOnUpdate}
       onRequestEmailChange={handleRequestEmailChange}
-      mediaEmail={mediaEmail}
       fields={fields}
       schema={schema}
     />
