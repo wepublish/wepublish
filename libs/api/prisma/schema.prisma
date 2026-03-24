@@ -30,6 +30,8 @@ model MetadataProperty {
   userId String?
 
   @@index([articleRevisionId])
+  @@index([pageRevisionId])
+  @@index([subscriptionId])
   @@index([userId])
   @@map("properties")
 }
@@ -508,6 +510,7 @@ model Invoice {
   subscriptionPeriods SubscriptionPeriod[]
 
   @@index([mail])
+  @@index([subscriptionID])
   @@map("invoices")
 }
 
@@ -942,6 +945,7 @@ model Subscription {
 
   invoices Invoice[]
 
+  @@index([userID])
   @@map("subscriptions")
 }
 
@@ -1100,6 +1104,7 @@ model PollAnswer {
   votes         PollVote[]
   externalVotes PollExternalVote[]
 
+  @@index([pollId])
   @@map("polls.answers")
 }
 
@@ -1123,6 +1128,7 @@ model PollVote {
   disabled    Boolean @default(false)
 
   @@unique([pollId, userId])
+  @@index([answerId])
   @@map("polls.votes")
 }
 
