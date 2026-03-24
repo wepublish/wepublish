@@ -10,7 +10,7 @@ export class WepublishSiteURLAdapter extends URLAdapter {
     super('');
   }
 
-  async getArticleUrl(article: Article) {
+  override async getArticleUrl(article: Article) {
     for (const locale in locales) {
       if (article.slug?.endsWith(`-${locale}`)) {
         const regex = new RegExp(`-${locale}$`);
@@ -22,7 +22,7 @@ export class WepublishSiteURLAdapter extends URLAdapter {
     return article.slug ? `/a/${article.slug}` : `/a/id/${article.id}`;
   }
 
-  async getPageUrl(page: Page) {
+  override async getPageUrl(page: Page) {
     for (const locale in locales) {
       if (page.slug?.endsWith(`-${locale}`)) {
         const regex = new RegExp(`-${locale}$`);
