@@ -45,9 +45,9 @@ ENV APP_RELEASE_ID=${APP_RELEASE_ID}
 ### FRONT_ARG_REPLACER ###
 
 COPY . .
-RUN npm install -g @sentry/cli && \
-    npx prisma generate && \
+RUN npx prisma generate && \
     npx nx build ${NEXT_PROJECT} ${NX_NEXT_PROJECT_BUILD_OPTIONS} && \
+    npm install -g @sentry/cli && \
     sentry-cli sourcemaps inject ./dist/apps/${NEXT_PROJECT}/.next && \
     sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/${NEXT_PROJECT}/.next && \
     node /wepublish/deployment/map-secrets.js clean
@@ -95,12 +95,12 @@ ARG SENTRY_PROJECT
 ARG SENTRY_RELEASE
 ARG APP_RELEASE_ID
 COPY . .
-RUN npm install -g @sentry/cli && \
+RUN npx prisma generate && \
     grep -q "require('#main-entry-point')" node_modules/.prisma/client/default.js || \
-      (echo "ERROR: Prisma client no longer uses #main-entry-point — update the pkg workaround" && exit 1) && \
+    (echo "ERROR: Prisma client no longer uses #main-entry-point — update the pkg workaround" && exit 1) && \
     sed -i "s|require('#main-entry-point')|require('./index.js')|" node_modules/.prisma/client/default.js && \
-    npx prisma generate && \
     npx nx build api-example --ignore-nx-cache && \
+    npm install -g @sentry/cli && \
     sentry-cli sourcemaps inject ./dist/apps/api-example && \
     sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/api-example && \
     cp docker/api_build_package.json package.json && \
@@ -162,9 +162,9 @@ ARG SENTRY_PROJECT
 ARG SENTRY_RELEASE
 ARG APP_RELEASE_ID
 COPY . .
-RUN npm install -g @sentry/cli && \
-    npx prisma generate && \
+RUN npx prisma generate && \
     npx nx build editor --ignore-nx-cache && \
+    npm install -g @sentry/cli && \
     sentry-cli sourcemaps inject ./dist/apps/editor && \
     sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/editor && \
     cp docker/editor_build_package.json package.json && \
@@ -262,8 +262,8 @@ COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
 RUN npm ci
-RUN npm install -g @sentry/cli && \
-    npx nx build media --ignore-nx-cache && \
+RUN npx nx build media --ignore-nx-cache && \
+    npm install -g @sentry/cli && \
     sentry-cli sourcemaps inject ./dist/apps/media && \
     sentry-cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media
 
