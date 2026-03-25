@@ -14,7 +14,6 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  styled,
   TextField,
 } from '@mui/material';
 import {
@@ -33,6 +32,7 @@ import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
 import { IconPickerSelect } from './iconPicker';
+import styled from '@emotion/styled';
 
 const Form = styled('form')`
   display: flex;

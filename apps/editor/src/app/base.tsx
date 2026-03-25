@@ -39,7 +39,6 @@ import {
   MdPhoto,
   MdPieChartOutline,
   MdPower,
-  MdPowerInput,
   MdQueryStats,
   MdSell,
   MdSettings,
