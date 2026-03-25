@@ -15,7 +15,8 @@ export async function register() {
   Sentry.init({
     ...getBaseConfig(),
     integrations: [nodeProfilingIntegration()],
-    profilesSampleRate: 1.0,
+    profilesSampleRate:
+      process.env.APP_ENVIRONMENT === 'production' ? 0.1 : 1.0,
   });
 
   setCommonTags(Sentry, 'nextjs-server');
