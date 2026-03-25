@@ -1,4 +1,4 @@
-import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { Int, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import {
   PaymentProviderCustomer,
   SensitiveDataUser,
@@ -9,17 +9,19 @@ import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { UserRoleDataloader } from './user-role.dataloader';
 import { UserRole } from './user-role.model';
 import { User as PUser } from '@prisma/client';
+import { UserSubscriptionCountDataloader } from './user-subscription-count.dataloader';
 
 @Resolver(() => SensitiveDataUser)
 export class SensitiveDataUserResolver {
   constructor(
     private prisma: PrismaClient,
-    private userRoleDataloader: UserRoleDataloader
+    private userRoleDataloader: UserRoleDataloader,
+    private subscriptionCountDataloader: UserSubscriptionCountDataloader
   ) {}
 
   @ResolveField(() => UserAddress, { nullable: true })
   public async address(@Parent() { id, address }: SensitiveDataUser) {
-    if (address !== undefined) {
+    if (address) {
       return address;
     }
 
@@ -54,7 +56,14 @@ export class SensitiveDataUserResolver {
   }
 
   @ResolveField(() => [UserRole])
-  public roles(@Parent() user: PUser) {
-    return this.userRoleDataloader.loadMany(user.roleIDs);
+  async roles(@Parent() user: PUser) {
+    return (await this.userRoleDataloader.loadMany(user.roleIDs)).filter(
+      Boolean
+    );
+  }
+
+  @ResolveField(() => Int)
+  public async subscriptionCount(@Parent() { id }: SensitiveDataUser) {
+    return await this.subscriptionCountDataloader.load(id);
   }
 }

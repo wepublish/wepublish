@@ -37,12 +37,14 @@ query PrimaryBanner(
   $documentId: String!
   $loggedIn: Boolean!
   $hasSubscription: Boolean!
+  $hasPaywallBypass: Boolean!
 ) {
   primaryBanner(
     documentType: $documentType
     documentId: $documentId
     loggedIn: $loggedIn
     hasSubscription: $hasSubscription
+    hasPaywallBypass: $hasPaywallBypass
   ) {
     ...FullBanner
   }

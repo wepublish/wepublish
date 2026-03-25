@@ -23,6 +23,11 @@ module.exports = composePlugins(
         ),
       })
     );
+    // Add webp support
+    config.module.rules.push({
+      test: /\.webp$/,
+      type: 'asset/resource',
+    });
 
     return config;
   }

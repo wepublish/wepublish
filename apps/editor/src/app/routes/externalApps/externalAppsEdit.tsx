@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { useExternalAppsQuery } from '@wepublish/editor/api';
 import { useTranslation } from 'react-i18next';
-
 import { ExternalAppForm } from './externalAppForm';
 
 const Wrapper = styled.div`

@@ -469,8 +469,8 @@ export type CalculatedRating = {
 };
 
 export enum CaptchaType {
-  Algebraic = 'Algebraic',
-  CfTurnstile = 'CfTurnstile'
+  CfTurnstile = 'CfTurnstile',
+  HCaptcha = 'HCaptcha'
 }
 
 export type Challenge = {
@@ -487,6 +487,7 @@ export type ChallengeInput = {
 };
 
 export enum ChallengeProviderType {
+  Hcaptcha = 'HCAPTCHA',
   Turnstile = 'TURNSTILE'
 }
 
@@ -1543,6 +1544,7 @@ export enum LoginStatus {
   All = 'ALL',
   LoggedIn = 'LOGGED_IN',
   LoggedOut = 'LOGGED_OUT',
+  PaywallBypassed = 'PAYWALL_BYPASSED',
   Subscribed = 'SUBSCRIBED',
   Unsubscribed = 'UNSUBSCRIBED'
 }
@@ -4473,6 +4475,7 @@ export type QueryPollsArgs = {
 export type QueryPrimaryBannerArgs = {
   documentId: Scalars['String'];
   documentType: BannerDocumentType;
+  hasPaywallBypass: Scalars['Boolean'];
   hasSubscription: Scalars['Boolean'];
   loggedIn: Scalars['Boolean'];
 };
@@ -4721,6 +4724,7 @@ export type SensitiveDataUser = BaseUser & {
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
   roles: Array<UserRole>;
+  subscriptionCount: Scalars['Int'];
   userImageID?: Maybe<Scalars['String']>;
 };
 

@@ -425,8 +425,8 @@ type CalculatedRating {
 }
 
 enum CaptchaType {
-  Algebraic
   CfTurnstile
+  HCaptcha
 }
 
 type Challenge {
@@ -442,6 +442,7 @@ input ChallengeInput {
 }
 
 enum ChallengeProviderType {
+  HCAPTCHA
   TURNSTILE
 }
 
@@ -1460,6 +1461,7 @@ enum LoginStatus {
   ALL
   LOGGED_IN
   LOGGED_OUT
+  PAYWALL_BYPASSED
   SUBSCRIBED
   UNSUBSCRIBED
 }
@@ -2886,7 +2888,7 @@ type Query {
 
   """Returns a paginated list of polls based on the filters given."""
   polls(cursorId: String, filter: PollFilter, order: SortOrder = Descending, skip: Int = 0, sort: PollSort = OpensAt, take: Int = 10): PaginatedPolls!
-  primaryBanner(documentId: String!, documentType: BannerDocumentType!, hasSubscription: Boolean!, loggedIn: Boolean!): Banner
+  primaryBanner(documentId: String!, documentType: BannerDocumentType!, hasPaywallBypass: Boolean!, hasSubscription: Boolean!, loggedIn: Boolean!): Banner
   promptHTML(chatId: String, query: String!): Chat!
   provider: MailProviderModel!
 
@@ -3087,6 +3089,7 @@ type SensitiveDataUser implements BaseUser {
   properties: [Property!]!
   roleIDs: [String!]!
   roles: [UserRole!]!
+  subscriptionCount: Int!
   userImageID: String
 }
 

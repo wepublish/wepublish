@@ -45,6 +45,7 @@ export function registerMailsModule(): DynamicModule {
           prisma,
           kv,
         }),
+        jwtGenerator: async () => 'test-jwt-token',
       };
     },
   });

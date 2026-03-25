@@ -1,6 +1,5 @@
 import { Autocomplete, Box, TextField } from '@mui/material';
 import React, { useMemo } from 'react';
-
 import { ICON_REGISTRY } from './iconRegistry';
 
 interface IconPickerProps {

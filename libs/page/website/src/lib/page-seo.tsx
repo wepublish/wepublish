@@ -69,6 +69,7 @@ export const getPageSEO = (page: Page) => {
       identifier: page.slug,
       url,
     },
+    noIndex: !!page.hidden,
   };
 };
 
@@ -199,6 +200,14 @@ export const PageSEO = ({ page }: BuilderPageSEOProps) => {
             content="1000"
           />
         </>
+      )}
+
+      {seo.noIndex && (
+        <meta
+          key={`robots`}
+          name="robots"
+          content="noindex"
+        />
       )}
 
       <meta

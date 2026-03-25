@@ -25,15 +25,16 @@ import {
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
-import bexioLogo from './assets/bexio.png';
+import bexioLogo from './assets/bexio.webp';
 import cloudflareLogo from './assets/cloudflare.svg';
+import hcaptchaLogo from './assets/hcaptcha.webp';
 import googleLogo from './assets/google.svg';
-import mailChimpLogo from './assets/mailchimp.avif';
+import mailChimpLogo from './assets/mailchimp.webp';
 import mailgunLogo from './assets/mailgun.svg';
-import mollieLogo from './assets/mollie.png';
-import payrexxLogo from './assets/payrexx.png';
+import mollieLogo from './assets/mollie.webp';
+import payrexxLogo from './assets/payrexx.webp';
 import proLitterisLogo from './assets/proLitteris.svg';
-import slackLogo from './assets/slack.png';
+import slackLogo from './assets/slack.webp';
 import stripeLogo from './assets/stripe.svg';
 import vercelLogo from './assets/vercel.svg';
 
@@ -84,7 +85,7 @@ export function IntegrationList() {
       permission: CanGetChallengeProviderSettings.id,
       path: '/integrations/challenge',
       icon: MdSecurity,
-      logos: [cloudflareLogo],
+      logos: [cloudflareLogo, hcaptchaLogo],
     },
     {
       title: t('integrations.paymentProvider'),
