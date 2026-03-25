@@ -162,7 +162,7 @@ ARG SENTRY_PROJECT
 ARG SENTRY_RELEASE
 ARG APP_RELEASE_ID
 COPY . .
-RUN npm install -g @yao-pkg/pkg @sentry/cli && \
+RUN npm install -g @sentry/cli && \
     npx prisma generate && \
     npx nx build editor --ignore-nx-cache && \
     sentry-cli sourcemaps inject ./dist/apps/editor && \
@@ -250,7 +250,6 @@ CMD ["node", "start.js"]
 #######
 
 FROM ${PLAIN_BUILD_IMAGE} AS build-media
-FROM base-media AS build-media
 ARG SENTRY_AUTH_TOKEN
 ARG SENTRY_ORG
 ARG SENTRY_PROJECT
