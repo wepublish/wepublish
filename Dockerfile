@@ -12,6 +12,7 @@ COPY ./package-lock.json .
 COPY ./.npmrc .
 COPY ./build ./build
 COPY ./libs/api/prisma/schema.prisma ./libs/api/prisma/schema.prisma
+COPY ./prisma.config.ts ./prisma.config.ts
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl && \
@@ -75,9 +76,24 @@ CMD ["node", "/wepublish/map-secrets.js", "restore", "--start"]
 FROM ${BUILD_IMAGE} AS build-api
 COPY . .
 RUN npx prisma generate && \
+    grep -q "require('#main-entry-point')" node_modules/.prisma/client/default.js || \
+      (echo "ERROR: Prisma client no longer uses #main-entry-point — update the pkg workaround" && exit 1) && \
+    sed -i "s|require('#main-entry-point')|require('./index.js')|" node_modules/.prisma/client/default.js && \
     npx nx build api-example --ignore-nx-cache && \
     cp docker/api_build_package.json package.json && \
     npx @yao-pkg/pkg package.json
+
+# Collect only Prisma + pg runtime deps for the API binary
+FROM ${PLAIN_BUILD_IMAGE} AS api-prisma-deps
+WORKDIR /deps
+RUN --mount=from=build-api,source=/wepublish/node_modules,target=/src \
+    mkdir -p node_modules && \
+    cp -a /src/.prisma /src/@prisma node_modules/ && \
+    cd /src && cp -a \
+    pg pg-pool pg-protocol pg-types pg-connection-string \
+    pgpass pg-int8 postgres-array postgres-bytea postgres-date \
+    postgres-interval split2 \
+    /deps/node_modules/
 
 FROM ${PLAIN_BUILD_IMAGE} AS api-setup
 WORKDIR /wepublish
@@ -89,6 +105,7 @@ COPY --chown=1001:0 apps/api-example/src/default.yaml /wepublish/config/default.
 COPY --chown=1001:0 libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY --chown=1001:0 .version /wepublish/.version
 COPY --chown=1001:0 --from=build-api /wepublish/api /wepublish/
+COPY --chown=1001:0 --from=api-prisma-deps /deps/node_modules ./node_modules
 RUN mkdir -p /wepublish/.cache/pkg && \
     chmod -R g=u /wepublish
 
@@ -146,9 +163,12 @@ WORKDIR /wepublish
 COPY libs/settings/api/src/lib/setting.ts settings/api/src/lib/setting.ts
 COPY libs/api/prisma/run-seed.ts api/prisma/run-seed.ts
 COPY libs/api/prisma/seed.ts api/prisma/seed.ts
+COPY libs/api/prisma/schema.prisma prisma/schema.prisma
+COPY prisma.config.ts prisma.config.ts
 COPY libs/api/prisma/ca.crt /wepublish/ca.crt
 COPY docker/tsconfig.yaml_seed tsconfig.yaml
-RUN npm install prisma@5.0.0 @prisma/client@5.0.0 @types/node @node-rs/argon2 typescript@~5.7.3 && \
+RUN npm install prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @types/node @node-rs/argon2 typescript@~5.7.3 && \
+    npx prisma generate && \
     npx tsc -p tsconfig.yaml
 
 FROM ${PLAIN_BUILD_IMAGE} AS migration-setup
@@ -157,12 +177,14 @@ WORKDIR /wepublish
 COPY --from=build-migration /wepublish/dist ./dist
 COPY libs/api/prisma/migrations prisma/migrations
 COPY libs/api/prisma/schema.prisma prisma/schema.prisma
+COPY libs/api/prisma/ca.crt /wepublish/ca.crt
+COPY prisma.config.ts prisma.config.ts
 COPY docker/migrate_start.js start.js
 RUN apt-get update && \
     apt-get install -y --no-install-recommends openssl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    npm install prisma@5.0.0 @node-rs/argon2 && \
+    npm install prisma@7.5.0 @prisma/client@7.5.0 @prisma/adapter-pg pg @node-rs/argon2 && \
     npx prisma generate && \
     chmod -R g=u /wepublish
 

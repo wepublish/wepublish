@@ -8,6 +8,7 @@ import {
 } from '@prisma/client';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 import { CreatePaymentIntentProps } from '../payment-provider';
+import { createPrismaClient } from '@wepublish/testing/prisma';
 
 jest.mock('axios');
 
@@ -116,7 +117,7 @@ describe('BexioPaymentProvider', () => {
     );
     mockProps = {
       id: 'bexio',
-      prisma: new PrismaClient(),
+      prisma: createPrismaClient(),
       kv: kvMock,
     };
 
