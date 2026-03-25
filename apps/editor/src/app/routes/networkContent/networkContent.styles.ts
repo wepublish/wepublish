@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Typography } from '@mui/material';
+import { Button, Chip, Typography } from '@mui/material';
 
 export const ScrollContainer = styled('div')`
   max-height: 600px;
@@ -13,7 +13,7 @@ export const FeedList = styled('div')`
 
 export const ArticleRow = styled('div')`
   display: grid;
-  grid-template-columns: 140px 1fr 120px;
+  grid-template-columns: 140px 1fr 140px;
   gap: ${({ theme }) => theme.spacing(1.5)};
   padding: ${({ theme }) => theme.spacing(1.5)} 0;
   border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
@@ -87,6 +87,14 @@ export const ActionColumn = styled('div')`
   align-items: center;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing(0.5)};
+`;
+
+export const ButtonTopMargin = styled(Button)`
+  margin-top: ${({ theme }) => theme.spacing(1)};
+`;
+
+export const ChipTopMargin = styled(Chip)`
+  margin-top: ${({ theme }) => theme.spacing(1)};
 `;
 
 export const PublisherName = styled(Typography)`

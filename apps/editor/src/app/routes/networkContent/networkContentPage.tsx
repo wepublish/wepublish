@@ -99,11 +99,6 @@ export function NetworkContentPage() {
     });
   };
 
-  const handleSelectClientFromMedia = (clientName: string) => {
-    setFilters(prev => ({ ...prev, clientName }));
-    setArticlePage(0);
-  };
-
   const handleFiltersChange = (newFilters: ArticleFilterParams) => {
     setFilters(newFilters);
     setArticlePage(0);
@@ -232,7 +227,6 @@ export function NetworkContentPage() {
             page={clientPage}
             onPageChange={setClientPage}
             findPeerMatch={findPeerMatch}
-            onSelectClient={handleSelectClientFromMedia}
             onConnectClient={setPeerInfoClient}
           />
         </PanelColumn>

@@ -535,7 +535,7 @@
       "audience": "Audience",
       "goToAudienceDashboard": "Audience Dashboard",
       "externalApps": "We.Publish Apps",
-      "networkContent": "Réseau We.Publish",
+      "networkContent": "Du réseau We.Publish",
       "goToNetwork": "Aller au réseau"
     },
     "dateTimePicker": {
@@ -1752,7 +1752,7 @@
       "connectBtn": "Configurer le peer"
     },
     "networkContentPage": {
-      "title": "Réseau We.Publish",
+      "title": "Contenus provenant du réseau we.publish",
       "articlesTitle": "Articles",
       "mediaTitle": "Médias",
       "searchLabel": "Rechercher des articles",

@@ -9,6 +9,8 @@ import {
   ArticleLink,
   ArticleRow,
   ArticleTitle,
+  ButtonTopMargin,
+  ChipTopMargin,
   ContentArea,
   ImagePlaceholder,
   MetaLine,
@@ -72,22 +74,25 @@ export function NetworkContentArticleItem({
               peer: peerMatch.peerName,
             })}
           >
-            <IconButton
+            <ButtonTopMargin
               size="small"
-              color="primary"
+              variant="contained"
+              startIcon={<MdDownload />}
               onClick={() => onImport(peerMatch.peerId, article.source_id)}
             >
-              <MdDownload />
-            </IconButton>
+              {t('peerArticles.import.import')}
+            </ButtonTopMargin>
           </Tooltip>
         : <Tooltip title={t('networkContentDashboard.noPeer')}>
-            <IconButton
+            <ChipTopMargin
+              icon={<MdLink />}
+              label={t('networkContentPage.connectBtn')}
               size="small"
-              color="default"
+              color="primary"
+              variant="outlined"
               onClick={onShowPeerInfo}
-            >
-              <MdLink />
-            </IconButton>
+              clickable
+            />
           </Tooltip>
         }
       </ActionColumn>

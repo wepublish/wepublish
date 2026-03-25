@@ -589,7 +589,7 @@
       "audience": "Audience",
       "goToAudienceDashboard": "Go to Audience Dashboard",
       "externalApps": "We.Publish Apps",
-      "networkContent": "We.Publish Network",
+      "networkContent": "From the We.Publish Network",
       "goToNetwork": "Go to Network"
     },
     "dateTimePicker": {
@@ -1927,7 +1927,7 @@
       "connectBtn": "Set up peer"
     },
     "networkContentPage": {
-      "title": "We.Publish Network",
+      "title": "Content from the We.Publish Network",
       "articlesTitle": "Articles",
       "mediaTitle": "Media",
       "searchLabel": "Search articles",

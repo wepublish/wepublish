@@ -1,6 +1,6 @@
 import { Chip, CircularProgress, IconButton, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { MdChevronLeft, MdChevronRight, MdLink } from 'react-icons/md';
+import { MdCheck, MdChevronLeft, MdChevronRight, MdLink } from 'react-icons/md';
 
 import { CLIENTS_PER_PAGE } from './networkContent.hooks';
 import {
@@ -35,7 +35,6 @@ interface NetworkMediaListProps {
   page: number;
   onPageChange: (page: number) => void;
   findPeerMatch: (apiUrl: string | null) => PeerMatch | null;
-  onSelectClient?: (clientName: string) => void;
   onConnectClient?: (client: WepOneClient) => void;
 }
 
@@ -47,7 +46,6 @@ export function NetworkMediaList({
   page,
   onPageChange,
   findPeerMatch,
-  onSelectClient,
   onConnectClient,
 }: NetworkMediaListProps) {
   const { t } = useTranslation();
@@ -119,31 +117,22 @@ export function NetworkMediaList({
             <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
               {peerMatch ?
                 <Chip
-                  icon={<MdLink />}
+                  icon={<MdCheck />}
                   label={t('networkContentPage.connected')}
                   size="small"
                   color="success"
-                  variant="outlined"
+                  variant="filled"
                 />
               : <Chip
+                  icon={<MdLink />}
                   label={t('networkContentPage.connectBtn')}
                   size="small"
-                  color="warning"
+                  color="primary"
                   variant="outlined"
                   onClick={() => onConnectClient?.(client)}
                   clickable
                 />
               }
-
-              {onSelectClient && (
-                <Chip
-                  label={t('networkContentPage.filterByMedia')}
-                  size="small"
-                  variant="outlined"
-                  onClick={() => onSelectClient(client.name)}
-                  clickable
-                />
-              )}
             </div>
           </ClientCard>
         );
