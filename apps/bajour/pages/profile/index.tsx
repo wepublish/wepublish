@@ -5,7 +5,7 @@ import { Container } from '../../src/components/layout/container';
 export default function Profile() {
   return (
     <Container>
-      <ProfilePage mediaEmail="info@bajour.ch" />
+      <ProfilePage />
     </Container>
   );
 }

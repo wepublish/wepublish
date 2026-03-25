@@ -4722,6 +4722,7 @@ export type SensitiveDataUser = BaseUser & {
   name: Scalars['String'];
   note?: Maybe<Scalars['String']>;
   paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
+  pendingEmail?: Maybe<Scalars['String']>;
   permissions: Array<Scalars['String']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
@@ -6220,7 +6221,7 @@ export type FullBaseUserFragment = FullBaseUser_SensitiveDataUser_Fragment | Ful
 
 export type FullUserFragment = { __typename?: 'User', id: string, name: string, firstName?: string | null, flair?: string | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> };
 
-export type FullSensitiveDataUserFragment = { __typename?: 'SensitiveDataUser', permissions: Array<string>, birthday?: string | null, email: string, id: string, name: string, firstName?: string | null, flair?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers?: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> };
+export type FullSensitiveDataUserFragment = { __typename?: 'SensitiveDataUser', permissions: Array<string>, birthday?: string | null, email: string, pendingEmail?: string | null, id: string, name: string, firstName?: string | null, flair?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers?: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> };
 
 export type FullAddressFragment = { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null };
 
@@ -6273,7 +6274,6 @@ export type UpdateUserMutationVariables = Exact<{
   firstName?: InputMaybe<Scalars['String']>;
   flair?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
-  email?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
   address?: InputMaybe<UserAddressInput>;
   birthday?: InputMaybe<Scalars['DateTime']>;
@@ -7409,6 +7409,7 @@ export const FullSensitiveDataUserFragmentDoc = gql`
   permissions
   birthday
   email
+  pendingEmail
   address {
     ...FullAddress
   }
@@ -9470,12 +9471,11 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const UpdateUserDocument = gql`
-    mutation UpdateUser($firstName: String, $flair: String, $name: String, $email: String, $password: String, $address: UserAddressInput, $birthday: DateTime) {
+    mutation UpdateUser($firstName: String, $flair: String, $name: String, $password: String, $address: UserAddressInput, $birthday: DateTime) {
   updateCurrentUser(
     name: $name
     firstName: $firstName
     flair: $flair
-    email: $email
     password: $password
     address: $address
     birthday: $birthday
@@ -9550,6 +9550,48 @@ export function useUpdatePasswordMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdatePasswordMutationHookResult = ReturnType<typeof useUpdatePasswordMutation>;
 export type UpdatePasswordMutationResult = Apollo.MutationResult<UpdatePasswordMutation>;
 export type UpdatePasswordMutationOptions = Apollo.BaseMutationOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
+export type RequestEmailChangeMutationVariables = Exact<{
+  newEmail: Scalars['String'];
+}>;
+
+
+export type RequestEmailChangeMutation = { __typename?: 'Mutation', requestEmailChange: boolean };
+
+export type ConfirmEmailChangeMutationVariables = Exact<{
+  newEmail: Scalars['String'];
+}>;
+
+
+export type ConfirmEmailChangeMutation = { __typename?: 'Mutation', confirmEmailChange: { __typename?: 'SensitiveDataUser', permissions: Array<string>, birthday?: string | null, email: string, pendingEmail?: string | null, id: string, name: string, firstName?: string | null, flair?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddressNumber?: string | null, streetAddress2?: string | null, streetAddress2Number?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers?: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }> | null, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null, focalPoint?: { __typename?: 'FocalPoint', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'Property', key: string, value: string }> } };
+
+export const RequestEmailChangeDocument = gql`
+    mutation RequestEmailChange($newEmail: String!) {
+  requestEmailChange(newEmail: $newEmail)
+}
+    `;
+export type RequestEmailChangeMutationFn = Apollo.MutationFunction<RequestEmailChangeMutation, RequestEmailChangeMutationVariables>;
+export function useRequestEmailChangeMutation(baseOptions?: Apollo.MutationHookOptions<RequestEmailChangeMutation, RequestEmailChangeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RequestEmailChangeMutation, RequestEmailChangeMutationVariables>(RequestEmailChangeDocument, options);
+      }
+export type RequestEmailChangeMutationHookResult = ReturnType<typeof useRequestEmailChangeMutation>;
+export type RequestEmailChangeMutationResult = Apollo.MutationResult<RequestEmailChangeMutation>;
+export type RequestEmailChangeMutationOptions = Apollo.BaseMutationOptions<RequestEmailChangeMutation, RequestEmailChangeMutationVariables>;
+export const ConfirmEmailChangeDocument = gql`
+    mutation ConfirmEmailChange($newEmail: String!) {
+  confirmEmailChange(newEmail: $newEmail) {
+    ...FullSensitiveDataUser
+  }
+}
+    ${FullSensitiveDataUserFragmentDoc}`;
+export type ConfirmEmailChangeMutationFn = Apollo.MutationFunction<ConfirmEmailChangeMutation, ConfirmEmailChangeMutationVariables>;
+export function useConfirmEmailChangeMutation(baseOptions?: Apollo.MutationHookOptions<ConfirmEmailChangeMutation, ConfirmEmailChangeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ConfirmEmailChangeMutation, ConfirmEmailChangeMutationVariables>(ConfirmEmailChangeDocument, options);
+      }
+export type ConfirmEmailChangeMutationHookResult = ReturnType<typeof useConfirmEmailChangeMutation>;
+export type ConfirmEmailChangeMutationResult = Apollo.MutationResult<ConfirmEmailChangeMutation>;
+export type ConfirmEmailChangeMutationOptions = Apollo.BaseMutationOptions<ConfirmEmailChangeMutation, ConfirmEmailChangeMutationVariables>;
 export const VersionInformationDocument = gql`
     query VersionInformation {
   versionInformation {

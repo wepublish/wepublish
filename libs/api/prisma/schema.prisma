@@ -978,6 +978,8 @@ model User {
   birthday        DateTime? @db.Date
   email           String    @unique
   emailVerifiedAt DateTime?
+  pendingEmail    String?
+  pendingEmailAt  DateTime?
   name            String
   firstName       String?
   flair           String?
@@ -1229,6 +1231,7 @@ enum UserEvent {
   PASSWORD_RESET
   LOGIN_LINK
   TEST_MAIL
+  EMAIL_CHANGE
 }
 
 model UserFlowMail {
