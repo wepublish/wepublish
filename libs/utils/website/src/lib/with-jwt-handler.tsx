@@ -27,8 +27,33 @@ export const withJwtHandler = <
       };
 
       if (window.opener) {
+        // Optionally restrict accepted origin via environment variable (if provided)
+        const allowedOrigin =
+          (typeof process !== 'undefined' &&
+            typeof process.env !== 'undefined' &&
+            process.env['NX_EDITOR_ORIGIN']) ||
+          null;
+
+        const isTrustedMessage = (event: MessageEvent): boolean => {
+          // Ensure the message comes from the window that opened this one
+          if (event.source !== window.opener) {
+            return false;
+          }
+
+          // If an explicit allowed origin is configured, enforce it
+          if (allowedOrigin && event.origin !== allowedOrigin) {
+            return false;
+          }
+
+          return true;
+        };
+
         // Receive JWT via postMessage from the editor — JWT never appears in the URL
         const handleMessage = (event: MessageEvent) => {
+          if (!isTrustedMessage(event)) {
+            return;
+          }
+
           const jwt = event.data?.previewJwt;
           if (jwt) {
             window.removeEventListener('message', handleMessage);
