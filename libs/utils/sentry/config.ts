@@ -4,6 +4,7 @@
 
 export const getBaseConfig = () => ({
   dsn: process.env.SENTRY_DSN,
+  environment: process.env.APP_ENVIRONMENT,
   sendDefaultPii: true,
   tracesSampleRate: process.env.APP_ENVIRONMENT === 'production' ? 0.1 : 1.0,
   release: process.env.APP_RELEASE_ID,

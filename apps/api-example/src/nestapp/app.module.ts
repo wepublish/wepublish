@@ -1,5 +1,6 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Global, Module } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -10,7 +11,7 @@ import {
   MailProviderType,
   PaymentProviderType,
 } from '@prisma/client';
-import { SentryModule } from '@sentry/nestjs/setup';
+import { SentryModule, SentryGlobalFilter } from '@sentry/nestjs/setup';
 import { ActionModule } from '@wepublish/action/api';
 import { NovaMediaAdapter } from '@wepublish/api';
 import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
@@ -558,6 +559,10 @@ import {
   ],
   exports: ['SYSTEM_INFO_KEY'],
   providers: [
+    {
+      provide: APP_FILTER,
+      useClass: SentryGlobalFilter,
+    },
     {
       provide: 'SYSTEM_INFO_KEY',
       useFactory: (config: ConfigService) => {
