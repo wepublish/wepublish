@@ -647,16 +647,34 @@ function ArticleEditor() {
                     disabled={hasChanged || !id || !canPreview}
                     size="lg"
                     icon={<MdRemoveRedEye />}
-                    // open via button not link as it contains a JWT
                     onClick={async () => {
-                      const { data: jwt } = await createJWT();
-
-                      window.open(
-                        `${articleData!.article.previewUrl}&jwt=${
-                          jwt?.createJWTForWebsiteLogin?.token
-                        }`,
+                      const previewWindow = window.open(
+                        articleData!.article.previewUrl,
                         '_blank'
                       );
+                      if (!previewWindow) return;
+
+                      const { data: jwtData } = await createJWT();
+                      const token = jwtData?.createJWTForWebsiteLogin?.token;
+                      if (!token) return;
+
+                      const targetOrigin = new URL(
+                        articleData!.article.previewUrl
+                      ).origin;
+
+                      const handleMessage = (event: MessageEvent) => {
+                        if (
+                          event.source === previewWindow &&
+                          event.data === 'preview-jwt-ready'
+                        ) {
+                          previewWindow.postMessage(
+                            { previewJwt: token },
+                            targetOrigin
+                          );
+                          window.removeEventListener('message', handleMessage);
+                        }
+                      };
+                      window.addEventListener('message', handleMessage);
                     }}
                   >
                     {t('articleEditor.overview.preview')}
