@@ -1,3 +1,4 @@
+import path from 'node:path';
 import execa from 'execa';
 import config from './jest.config';
 
@@ -7,6 +8,6 @@ export default async () => {
   process.env.TZ = 'UTC';
 
   await execa(`npx`, ['prisma', 'migrate', 'reset', '--force'], {
-    cwd: __dirname,
+    cwd: path.resolve(__dirname, '..', '..', '..'),
   });
 };
