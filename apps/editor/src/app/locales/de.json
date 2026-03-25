@@ -587,7 +587,8 @@
       "user": "Benutzer",
       "yearlySubscribers": "Neue Abonnent:innen im letzten Jahr",
       "audience": "Audience",
-      "goToAudienceDashboard": "Zum Audience Dashboard"
+      "goToAudienceDashboard": "Zum Audience Dashboard",
+      "externalApps": "We.Publish Apps"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -884,7 +885,8 @@
       "audience": "Audience",
       "authorTags": "Tags",
       "audienceDashboard": "Dashboard",
-      "integrations": "Integrationen"
+      "integrations": "Integrationen",
+      "apps": "Apps"
     },
     "navigation": {
       "overview": {
@@ -1820,6 +1822,27 @@
         "property": "Google-Analytics Property-ID",
         "credentials": "Anmeldedatei"
       }
+    },
+    "externalApps": {
+      "apps": "Apps"
+    },
+    "externalAppForm": {
+      "create": "Erstellen",
+      "update": "Aktualisieren",
+      "delete": "Löschen",
+      "name": "Name",
+      "description": "Beschreibung",
+      "url": "URL",
+      "target": "Ziel",
+      "successUpdate": "Externe App erfolgreich aktualisiert",
+      "errorUpdate": "Fehler beim Aktualisieren der externen App",
+      "successCreate": "Externe App erfolgreich erstellt",
+      "errorCreate": "Fehler beim Erstellen der externen App",
+      "successDelete": "Externe App erfolgreich gelöscht",
+      "errorDelete": "Fehler beim Löschen der externen App",
+      "deleteConfirmationTitle": "Externe App löschen",
+      "deleteConfirmationText": "Möchten Sie diese externe App wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "icon": "Icon URL"
     }
   }
 }

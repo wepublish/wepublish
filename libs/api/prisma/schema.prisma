@@ -1769,6 +1769,25 @@ model SettingAIProvider {
   @@map("settings.aiprovider")
 }
 
+enum ExternalAppsTarget {
+  BLANK  @map("blank")
+  IFRAME @map("iframe")
+}
+
+model ExternalApps {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name        String
+  description String?
+  url         String
+  target      ExternalAppsTarget
+  icon        String?
+
+  @@map("apps.external")
+}
+
 enum AnalyticsProviderType {
   GOOGLE @map("google")
 }
