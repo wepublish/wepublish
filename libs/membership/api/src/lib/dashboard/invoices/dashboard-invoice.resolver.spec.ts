@@ -3,76 +3,41 @@ import { INestApplication, Module } from '@nestjs/common';
 import request from 'supertest';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
-import { Currency, Invoice, PrismaClient } from '@prisma/client';
-import { PrismaModule } from '@wepublish/nest-modules';
 import { DashboardInvoiceResolver } from './dashboard-invoice.resolver';
 import { DashboardInvoiceService } from './dashboard-invoice.service';
 
-@Module({
-  imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: true,
-      path: '/',
-      cache: 'bounded',
-    }),
-    PrismaModule,
-  ],
-  providers: [DashboardInvoiceResolver, DashboardInvoiceService],
-})
-export class AppModule {}
-
-const revenueQuery = `
-  query Dashboard($end:DateTime!, $start:DateTime!) {
-    revenue(start:$start, end:$end) {
-      amount
-      dueAt
-      memberPlan
-      paidAt
-    }
-  }
-`;
-
-const expectedRevenueQuery = `
-  query Dashboard($end:DateTime!, $start:DateTime!) {
-    expectedRevenue(start:$start, end:$end) {
-      amount
-      dueAt
-      memberPlan
-      paidAt
-    }
-  }
-`;
-
 describe('DashboardInvoiceResolver', () => {
-  let invoicesToDelete: Invoice[] = [];
   let app: INestApplication;
-  let prisma: PrismaClient;
+  let dashboardInvoiceService: jest.Mocked<
+    Pick<DashboardInvoiceService, 'revenue' | 'expectedRevenue'>
+  >;
 
   beforeEach(async () => {
+    dashboardInvoiceService = {
+      revenue: jest.fn(),
+      expectedRevenue: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [
+        GraphQLModule.forRoot<ApolloDriverConfig>({
+          driver: ApolloDriver,
+          autoSchemaFile: true,
+          path: '/',
+          cache: 'bounded',
+        }),
+      ],
+      providers: [
+        DashboardInvoiceResolver,
+        {
+          provide: DashboardInvoiceService,
+          useValue: dashboardInvoiceService,
+        },
+      ],
     }).compile();
 
-    prisma = module.get<PrismaClient>(PrismaClient);
     app = module.createNestApplication();
     await app.init();
-  });
-
-  beforeEach(async () => {
-    invoicesToDelete = [];
-  });
-
-  afterEach(async () => {
-    const ids = invoicesToDelete.map(invoice => invoice.id);
-
-    await prisma.invoice.deleteMany({
-      where: {
-        id: {
-          in: ids,
-        },
-      },
-    });
   });
 
   afterAll(async () => {
@@ -80,112 +45,36 @@ describe('DashboardInvoiceResolver', () => {
   });
 
   test('revenue', async () => {
-    const mockData = [
+    const mockRevenue = [
       {
-        currency: Currency.CHF,
-        dueAt: new Date('2023-01-01 12:00:00'),
-        paidAt: new Date('2023-01-01 12:00:00'),
-        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
-        mail: 'foo@wepublish.ch',
-        items: {
-          createMany: {
-            data: [
-              {
-                amount: 50,
-                name: '',
-                quantity: 1,
-              },
-              {
-                amount: 500,
-                name: '',
-                quantity: 2,
-              },
-            ],
-          },
-        },
+        amount: 1050,
+        dueAt: new Date('2023-01-01T12:00:00.000Z'),
+        paidAt: new Date('2023-01-01T12:00:00.000Z'),
+        memberPlan: 'Foo',
       },
       {
-        currency: Currency.CHF,
-        dueAt: new Date('2023-01-01 12:00:00'),
-        paidAt: new Date('2023-01-02 12:00:00'),
-        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
-        mail: 'foo@wepublish.ch',
-        items: {
-          createMany: {
-            data: [
-              {
-                amount: 50,
-                name: '',
-                quantity: 1,
-              },
-            ],
-          },
-        },
-      },
-      {
-        currency: Currency.CHF,
-        dueAt: new Date('2023-01-01 12:00:00'),
-        paidAt: new Date('2023-02-01 12:00:00'),
-        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
-        mail: 'foo@wepublish.ch',
-        items: {
-          createMany: {
-            data: [
-              {
-                amount: 50,
-                name: '',
-                quantity: 1,
-              },
-            ],
-          },
-        },
-      },
-      {
-        currency: Currency.CHF,
-        dueAt: new Date('2023-01-01 12:00:00'),
-        paidAt: new Date('2023-01-01 12:00:00'),
-        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
-        mail: 'foo@wepublish.ch',
-        manuallySetAsPaidByUserId: '123',
-        items: {
-          createMany: {
-            data: [
-              {
-                amount: 50,
-                name: '',
-                quantity: 1,
-              },
-            ],
-          },
-        },
-      },
-      {
-        currency: Currency.CHF,
-        dueAt: new Date('2023-01-01 12:00:00'),
-        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
-        mail: 'foo@wepublish.ch',
-        items: {
-          createMany: {
-            data: [
-              {
-                amount: 50,
-                name: '',
-                quantity: 1,
-              },
-            ],
-          },
-        },
+        amount: 50,
+        dueAt: new Date('2023-01-01T12:00:00.000Z'),
+        paidAt: new Date('2023-01-02T12:00:00.000Z'),
+        memberPlan: 'Bar',
       },
     ];
 
-    for (const data of mockData) {
-      invoicesToDelete.push(await prisma.invoice.create({ data }));
-    }
+    dashboardInvoiceService.revenue.mockResolvedValue(mockRevenue);
 
     await request(app.getHttpServer())
       .post('')
       .send({
-        query: revenueQuery,
+        query: `
+          query Dashboard($end:DateTime!, $start:DateTime!) {
+            revenue(start:$start, end:$end) {
+              amount
+              dueAt
+              memberPlan
+              paidAt
+            }
+          }
+        `,
         variables: {
           start: new Date('2023-01-01').toISOString(),
           end: new Date('2023-02-01').toISOString(),
@@ -194,114 +83,43 @@ describe('DashboardInvoiceResolver', () => {
       .expect(200)
       .expect(res => {
         expect(res.body.data.revenue).toMatchSnapshot();
+        expect(dashboardInvoiceService.revenue).toHaveBeenCalled();
       });
   });
 
   test('expectedRevenue', async () => {
-    const mockData = [
+    const mockExpectedRevenue = [
       {
-        currency: Currency.CHF,
-        dueAt: new Date('2023-01-01 12:00:00'),
-        paidAt: new Date('2023-01-01 12:00:00'),
-        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
-        mail: 'foo@wepublish.ch',
-        items: {
-          createMany: {
-            data: [
-              {
-                amount: 50,
-                name: '',
-                quantity: 1,
-              },
-              {
-                amount: 500,
-                name: '',
-                quantity: 2,
-              },
-            ],
-          },
-        },
+        amount: 1050,
+        dueAt: new Date('2023-01-01T12:00:00.000Z'),
+        paidAt: new Date('2023-01-01T12:00:00.000Z'),
+        memberPlan: 'Foo',
       },
       {
-        currency: Currency.CHF,
-        dueAt: new Date('2023-01-02 12:00:00'),
-        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
-        mail: 'foo@wepublish.ch',
-        items: {
-          createMany: {
-            data: [
-              {
-                amount: 50,
-                name: '',
-                quantity: 1,
-              },
-            ],
-          },
-        },
-      },
-      {
-        currency: Currency.CHF,
-        dueAt: new Date('2023-02-01 12:00:00'),
-        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
-        mail: 'foo@wepublish.ch',
-        items: {
-          createMany: {
-            data: [
-              {
-                amount: 50,
-                name: '',
-                quantity: 1,
-              },
-            ],
-          },
-        },
-      },
-      {
-        currency: Currency.CHF,
-        dueAt: new Date('2023-01-01 12:00:00'),
-        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
-        mail: 'foo@wepublish.ch',
-        manuallySetAsPaidByUserId: '123',
-        items: {
-          createMany: {
-            data: [
-              {
-                amount: 50,
-                name: '',
-                quantity: 1,
-              },
-            ],
-          },
-        },
-      },
-      {
-        currency: Currency.CHF,
-        dueAt: new Date('2023-01-01 12:00:00'),
-        mail: 'foo@wepublish.ch',
-        canceledAt: new Date('2023-01-01 11:00:00'),
-        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
-        items: {
-          createMany: {
-            data: [
-              {
-                amount: 50,
-                name: '',
-                quantity: 1,
-              },
-            ],
-          },
-        },
+        amount: 50,
+        dueAt: new Date('2023-01-02T12:00:00.000Z'),
+        paidAt: undefined,
+        memberPlan: 'Bar',
       },
     ];
 
-    for (const data of mockData) {
-      invoicesToDelete.push(await prisma.invoice.create({ data }));
-    }
+    dashboardInvoiceService.expectedRevenue.mockResolvedValue(
+      mockExpectedRevenue
+    );
 
     await request(app.getHttpServer())
       .post('')
       .send({
-        query: expectedRevenueQuery,
+        query: `
+          query Dashboard($end:DateTime!, $start:DateTime!) {
+            expectedRevenue(start:$start, end:$end) {
+              amount
+              dueAt
+              memberPlan
+              paidAt
+            }
+          }
+        `,
         variables: {
           start: new Date('2023-01-01').toISOString(),
           end: new Date('2023-02-01').toISOString(),
@@ -310,6 +128,7 @@ describe('DashboardInvoiceResolver', () => {
       .expect(200)
       .expect(res => {
         expect(res.body.data.expectedRevenue).toMatchSnapshot();
+        expect(dashboardInvoiceService.expectedRevenue).toHaveBeenCalled();
       });
   });
 });

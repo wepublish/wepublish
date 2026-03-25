@@ -1,30 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, Module } from '@nestjs/common';
 import request from 'supertest';
-import * as crypto from 'crypto';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
-import { PrismaClient, Prisma, Consent } from '@prisma/client';
-import { PrismaModule } from '@wepublish/nest-modules';
 import { ConsentResolver } from './consent.resolver';
 import { ConsentService } from './consent.service';
-
-export const generateRandomString = () =>
-  crypto.randomBytes(20).toString('hex');
-
-@Module({
-  imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: true,
-      path: '/',
-      cache: 'bounded',
-    }),
-    PrismaModule,
-  ],
-  providers: [ConsentResolver, ConsentService],
-})
-export class AppModule {}
+import { createMock, PartialMocked } from '@wepublish/testing';
 
 const consentQuery = `
   query consent($id: String!) {
@@ -73,31 +54,42 @@ const deleteConsentMutation = `
   }
 `;
 
-export const mockConsents: Prisma.ConsentCreateInput[] = [
-  {
-    name: 'some-name1',
-    slug: generateRandomString(),
-    defaultValue: true,
-  },
-];
+const mockConsent = {
+  id: 'consent-1',
+  name: 'some-name1',
+  slug: 'some-slug1',
+  defaultValue: true,
+  createdAt: new Date('2023-01-01'),
+  modifiedAt: new Date('2023-01-01'),
+};
 
 describe('ConsentResolver', () => {
   let app: INestApplication;
-  let prisma: PrismaClient;
-  let consents: Consent[] = [];
+  let consentService: PartialMocked<ConsentService>;
 
   beforeAll(async () => {
+    consentService = createMock(ConsentService);
+
     const module: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [
+        GraphQLModule.forRoot<ApolloDriverConfig>({
+          driver: ApolloDriver,
+          autoSchemaFile: true,
+          path: '/',
+          cache: 'bounded',
+        }),
+      ],
+      providers: [
+        ConsentResolver,
+        {
+          provide: ConsentService,
+          useValue: consentService,
+        },
+      ],
     }).compile();
 
-    prisma = module.get<PrismaClient>(PrismaClient);
     app = module.createNestApplication();
     await app.init();
-
-    consents = await Promise.all(
-      mockConsents.map(data => prisma.consent.create({ data }))
-    );
   });
 
   afterAll(async () => {
@@ -105,98 +97,102 @@ describe('ConsentResolver', () => {
   });
 
   test('consent query', async () => {
-    const idToGet = consents[0].id;
+    consentService.consent?.mockResolvedValue(mockConsent);
 
     await request(app.getHttpServer())
       .post('')
       .send({
         query: consentQuery,
         variables: {
-          id: idToGet,
+          id: 'consent-1',
         },
       })
       .expect(200)
       .expect(res => {
         expect(res.body.data.consent).toMatchObject({
-          id: expect.any(String),
+          id: 'consent-1',
           name: 'some-name1',
-          slug: consents[0].slug,
+          slug: 'some-slug1',
           defaultValue: true,
         });
       });
   });
 
   test('create consent mutation', async () => {
-    const toCreate = {
-      name: 'some-name',
-      slug: generateRandomString(),
-      defaultValue: true,
-    };
+    consentService.createConsent?.mockResolvedValue(mockConsent);
 
     await request(app.getHttpServer())
       .post('/')
       .send({
         query: createConsentMutation,
-        variables: toCreate,
+        variables: {
+          name: 'some-name',
+          slug: 'some-slug',
+          defaultValue: true,
+        },
       })
       .set('Accept', 'application/json')
       .expect(200)
       .expect(res => {
         expect(res.body.data.createConsent).toMatchObject({
           id: expect.any(String),
-          name: 'some-name',
-          slug: toCreate.slug,
+          name: 'some-name1',
+          slug: 'some-slug1',
           defaultValue: true,
         });
+        expect(consentService.createConsent?.mock.calls).toMatchSnapshot();
       });
   });
 
   test('update consent mutation', async () => {
-    const idToUpdate = consents[0].id;
-
-    const toUpdate = {
+    const updatedConsent = {
+      ...mockConsent,
       name: 'changed name',
-      slug: generateRandomString(),
-      defaultValue: true,
+      slug: 'changed-slug',
     };
+    consentService.updateConsent?.mockResolvedValue(updatedConsent);
 
     await request(app.getHttpServer())
       .post('/')
       .send({
         query: updateConsentMutation,
         variables: {
-          id: idToUpdate,
-          ...toUpdate,
+          id: 'consent-1',
+          name: 'changed name',
+          slug: 'changed-slug',
+          defaultValue: true,
         },
       })
       .set('Accept', 'application/json')
       .expect(200)
       .expect(res => {
         expect(res.body.data.updateConsent).toMatchObject({
-          id: idToUpdate,
+          id: 'consent-1',
           name: 'changed name',
-          slug: toUpdate.slug,
+          slug: 'changed-slug',
           defaultValue: true,
         });
+        expect(consentService.updateConsent?.mock.calls).toMatchSnapshot();
       });
   });
 
   test('delete consent mutation', async () => {
-    const idToDelete = consents[0].id;
+    consentService.deleteConsent?.mockResolvedValue(mockConsent);
 
     await request(app.getHttpServer())
       .post('/')
       .send({
         query: deleteConsentMutation,
         variables: {
-          id: idToDelete,
+          id: 'consent-1',
         },
       })
       .expect(200)
       .expect(res => {
         expect(res.body.data.deleteConsent).toMatchObject({
-          id: idToDelete,
+          id: 'consent-1',
         });
+        expect(consentService.deleteConsent?.mock.calls).toMatchSnapshot();
       });
   });
 });

@@ -3,24 +3,12 @@ import { INestApplication, Module } from '@nestjs/common';
 import request from 'supertest';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
-import { PrismaClient, Prisma, Subscription, Currency } from '@prisma/client';
-import { PrismaModule } from '@wepublish/nest-modules';
+import {
+  PaymentPeriodicity,
+  SubscriptionDeactivationReason,
+} from '@prisma/client';
 import { DashboardSubscriptionResolver } from './dashboard-subscription.resolver';
 import { DashboardSubscriptionService } from './dashboard-subscription.service';
-
-@Module({
-  imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: true,
-      path: '/',
-      cache: 'bounded',
-    }),
-    PrismaModule,
-  ],
-  providers: [DashboardSubscriptionResolver, DashboardSubscriptionService],
-})
-export class AppModule {}
 
 const newSubscribersQuery = `
   query Dashboard($end:DateTime!, $start:DateTime!) {
@@ -77,34 +65,45 @@ const newDeactivationsQuery = `
 `;
 
 describe('DashboardSubscriptionResolver', () => {
-  let subscriptionsToDelete: Subscription[] = [];
   let app: INestApplication;
-  let prisma: PrismaClient;
+  let dashboardSubscriptionService: jest.Mocked<
+    Pick<
+      DashboardSubscriptionService,
+      | 'newSubscribers'
+      | 'activeSubscribers'
+      | 'renewingSubscribers'
+      | 'newDeactivations'
+    >
+  >;
 
   beforeEach(async () => {
+    dashboardSubscriptionService = {
+      newSubscribers: jest.fn(),
+      activeSubscribers: jest.fn(),
+      renewingSubscribers: jest.fn(),
+      newDeactivations: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [
+        GraphQLModule.forRoot<ApolloDriverConfig>({
+          driver: ApolloDriver,
+          autoSchemaFile: true,
+          path: '/',
+          cache: 'bounded',
+        }),
+      ],
+      providers: [
+        DashboardSubscriptionResolver,
+        {
+          provide: DashboardSubscriptionService,
+          useValue: dashboardSubscriptionService,
+        },
+      ],
     }).compile();
 
-    prisma = module.get<PrismaClient>(PrismaClient);
     app = module.createNestApplication();
     await app.init();
-  });
-
-  beforeEach(async () => {
-    subscriptionsToDelete = [];
-  });
-
-  afterEach(async () => {
-    const ids = subscriptionsToDelete.map(sub => sub.id);
-
-    await prisma.subscription.deleteMany({
-      where: {
-        id: {
-          in: ids,
-        },
-      },
-    });
   });
 
   afterAll(async () => {
@@ -112,114 +111,28 @@ describe('DashboardSubscriptionResolver', () => {
   });
 
   test('newSubscribers', async () => {
-    const paymentMethod = {
-      active: true,
-      description: '',
-      name: '',
-      paymentProviderID: '',
-      slug: '',
-    };
-
-    const mockData: Prisma.SubscriptionCreateInput[] = [
+    const mockData = [
       {
-        currency: Currency.CHF,
-        autoRenew: true,
-        monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
         startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-02-01'),
-        paymentMethod: {
-          create: paymentMethod,
-        },
-        memberPlan: {
-          connectOrCreate: {
-            where: {
-              slug: 'foo',
-            },
-            create: {
-              active: true,
-              amountPerMonthMin: 10,
-              name: 'Foo',
-              slug: 'foo',
-              description: [],
-              currency: Currency.CHF,
-            },
-          },
-        },
-        user: {
-          connectOrCreate: {
-            where: { email: 'foo@wepublish.ch' },
-            create: {
-              active: true,
-              email: 'foo@wepublish.ch',
-              name: 'Foo',
-              password: '',
-            },
-          },
-        },
-      },
-      {
-        currency: Currency.CHF,
-        autoRenew: false,
+        endsAt: undefined,
+        renewsAt: new Date('2023-02-01'),
         monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-01-02'),
-        paidUntil: new Date('2023-02-01'),
-        deactivation: {
-          create: {
-            date: new Date('2023-02-02'),
-            reason: 'invoiceNotPaid',
-          },
-        },
-        paymentMethod: {
-          create: paymentMethod,
-        },
-        memberPlan: {
-          connectOrCreate: {
-            where: {
-              slug: 'bar',
-            },
-            create: {
-              active: true,
-              amountPerMonthMin: 10,
-              name: 'Bar',
-              slug: 'bar',
-              description: [],
-              currency: Currency.CHF,
-            },
-          },
-        },
-        user: {
-          connect: {
-            email: 'foo@wepublish.ch',
-          },
-        },
+        paymentPeriodicity: PaymentPeriodicity.monthly,
+        reasonForDeactivation: undefined,
+        memberPlan: 'Foo',
       },
       {
-        currency: Currency.CHF,
-        autoRenew: false,
-        monthlyAmount: 500,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-02-01'),
-        paymentMethod: {
-          create: paymentMethod,
-        },
-        memberPlan: {
-          connect: {
-            slug: 'foo',
-          },
-        },
-        user: {
-          connect: {
-            email: 'foo@wepublish.ch',
-          },
-        },
+        startsAt: new Date('2023-01-02'),
+        endsAt: new Date('2023-02-02'),
+        renewsAt: undefined,
+        monthlyAmount: 50,
+        paymentPeriodicity: PaymentPeriodicity.monthly,
+        reasonForDeactivation: SubscriptionDeactivationReason.invoiceNotPaid,
+        memberPlan: 'Bar',
       },
     ];
 
-    for (const data of mockData) {
-      subscriptionsToDelete.push(await prisma.subscription.create({ data }));
-    }
+    dashboardSubscriptionService.newSubscribers.mockResolvedValue(mockData);
 
     await request(app.getHttpServer())
       .post('')
@@ -233,140 +146,33 @@ describe('DashboardSubscriptionResolver', () => {
       .expect(200)
       .expect(res => {
         expect(res.body.data.newSubscribers).toMatchSnapshot();
+        expect(dashboardSubscriptionService.newSubscribers).toHaveBeenCalled();
       });
   });
 
   test('activeSubscribers', async () => {
-    const paymentMethod = {
-      active: true,
-      description: '',
-      name: '',
-      paymentProviderID: '',
-      slug: '',
-    };
-
-    const mockData: Prisma.SubscriptionCreateInput[] = [
+    const mockData = [
       {
-        currency: Currency.CHF,
-        autoRenew: true,
-        monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
         startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2043-02-01'),
-        paymentMethod: {
-          create: paymentMethod,
-        },
-        memberPlan: {
-          connectOrCreate: {
-            where: {
-              slug: 'foo',
-            },
-            create: {
-              active: true,
-              amountPerMonthMin: 10,
-              name: 'Foo',
-              slug: 'foo',
-              description: [],
-              currency: Currency.CHF,
-            },
-          },
-        },
-        user: {
-          connectOrCreate: {
-            where: { email: 'foo@wepublish.ch' },
-            create: {
-              active: true,
-              email: 'foo@wepublish.ch',
-              name: 'Foo',
-              password: '',
-            },
-          },
-        },
+        endsAt: undefined,
+        renewsAt: new Date('2043-02-01'),
+        monthlyAmount: 50,
+        paymentPeriodicity: PaymentPeriodicity.monthly,
+        reasonForDeactivation: undefined,
+        memberPlan: 'Foo',
       },
       {
-        currency: Currency.CHF,
-        autoRenew: true,
-        monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-02-01'),
-        paymentMethod: {
-          create: paymentMethod,
-        },
-        memberPlan: {
-          connect: {
-            slug: 'foo',
-          },
-        },
-        user: {
-          connect: {
-            email: 'foo@wepublish.ch',
-          },
-        },
-      },
-      {
-        currency: Currency.CHF,
-        autoRenew: false,
-        monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-02-02'),
-        deactivation: {
-          create: {
-            date: new Date('2023-02-03'),
-            reason: 'invoiceNotPaid',
-          },
-        },
-        paymentMethod: {
-          create: paymentMethod,
-        },
-        memberPlan: {
-          connectOrCreate: {
-            where: {
-              slug: 'bar',
-            },
-            create: {
-              active: true,
-              amountPerMonthMin: 10,
-              name: 'Bar',
-              slug: 'bar',
-              description: [],
-              currency: Currency.CHF,
-            },
-          },
-        },
-        user: {
-          connect: {
-            email: 'foo@wepublish.ch',
-          },
-        },
-      },
-      {
-        currency: Currency.CHF,
-        autoRenew: false,
-        monthlyAmount: 500,
-        paymentPeriodicity: 'monthly',
         startsAt: new Date('2023-02-03'),
-        paidUntil: new Date('2043-02-01'),
-        paymentMethod: {
-          create: paymentMethod,
-        },
-        memberPlan: {
-          connect: {
-            slug: 'foo',
-          },
-        },
-        user: {
-          connect: {
-            email: 'foo@wepublish.ch',
-          },
-        },
+        endsAt: undefined,
+        renewsAt: undefined,
+        monthlyAmount: 500,
+        paymentPeriodicity: PaymentPeriodicity.monthly,
+        reasonForDeactivation: undefined,
+        memberPlan: 'Foo',
       },
     ];
 
-    for (const data of mockData) {
-      subscriptionsToDelete.push(await prisma.subscription.create({ data }));
-    }
+    dashboardSubscriptionService.activeSubscribers.mockResolvedValue(mockData);
 
     await request(app.getHttpServer())
       .post('')
@@ -376,140 +182,33 @@ describe('DashboardSubscriptionResolver', () => {
       .expect(200)
       .expect(res => {
         expect(res.body.data.activeSubscribers).toMatchSnapshot();
+        expect(
+          dashboardSubscriptionService.activeSubscribers
+        ).toHaveBeenCalled();
       });
   });
 
   test('renewingSubscribers', async () => {
-    const paymentMethod = {
-      active: true,
-      description: '',
-      name: '',
-      paymentProviderID: '',
-      slug: '',
-    };
-
-    const mockData: Prisma.SubscriptionCreateInput[] = [
+    const mockData = [
       {
-        currency: Currency.CHF,
-        autoRenew: true,
-        monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
         startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-01-29'),
-        paymentMethod: {
-          create: paymentMethod,
-        },
-        memberPlan: {
-          connectOrCreate: {
-            where: {
-              slug: 'foo',
-            },
-            create: {
-              active: true,
-              amountPerMonthMin: 10,
-              name: 'Foo',
-              slug: 'foo',
-              description: [],
-              currency: Currency.CHF,
-            },
-          },
-        },
-        user: {
-          connectOrCreate: {
-            where: { email: 'foo@wepublish.ch' },
-            create: {
-              active: true,
-              email: 'foo@wepublish.ch',
-              name: 'Foo',
-              password: '',
-            },
-          },
-        },
+        renewsAt: new Date('2023-01-29'),
+        monthlyAmount: 50,
+        paymentPeriodicity: PaymentPeriodicity.monthly,
+        memberPlan: 'Foo',
       },
       {
-        currency: Currency.CHF,
-        autoRenew: true,
+        startsAt: new Date('2023-01-01'),
+        renewsAt: new Date('2023-02-01'),
         monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-02-01'),
-        paymentMethod: {
-          create: paymentMethod,
-        },
-        memberPlan: {
-          connect: {
-            slug: 'foo',
-          },
-        },
-        user: {
-          connect: {
-            email: 'foo@wepublish.ch',
-          },
-        },
-      },
-      {
-        currency: Currency.CHF,
-        autoRenew: true,
-        monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-01-02'),
-        deactivation: {
-          create: {
-            date: new Date('2023-02-03'),
-            reason: 'invoiceNotPaid',
-          },
-        },
-        paymentMethod: {
-          create: paymentMethod,
-        },
-        memberPlan: {
-          connectOrCreate: {
-            where: {
-              slug: 'bar',
-            },
-            create: {
-              active: true,
-              amountPerMonthMin: 10,
-              name: 'Bar',
-              slug: 'bar',
-              description: [],
-              currency: Currency.CHF,
-            },
-          },
-        },
-        user: {
-          connect: {
-            email: 'foo@wepublish.ch',
-          },
-        },
-      },
-      {
-        currency: Currency.CHF,
-        autoRenew: false,
-        monthlyAmount: 500,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-01-28'),
-        paymentMethod: {
-          create: paymentMethod,
-        },
-        memberPlan: {
-          connect: {
-            slug: 'foo',
-          },
-        },
-        user: {
-          connect: {
-            email: 'foo@wepublish.ch',
-          },
-        },
+        paymentPeriodicity: PaymentPeriodicity.monthly,
+        memberPlan: 'Foo',
       },
     ];
 
-    for (const data of mockData) {
-      subscriptionsToDelete.push(await prisma.subscription.create({ data }));
-    }
+    dashboardSubscriptionService.renewingSubscribers.mockResolvedValue(
+      mockData
+    );
 
     await request(app.getHttpServer())
       .post('')
@@ -523,96 +222,25 @@ describe('DashboardSubscriptionResolver', () => {
       .expect(200)
       .expect(res => {
         expect(res.body.data.renewingSubscribers).toMatchSnapshot();
+        expect(
+          dashboardSubscriptionService.renewingSubscribers
+        ).toHaveBeenCalled();
       });
   });
 
   test('newDeactivations', async () => {
-    const paymentMethod = {
-      active: true,
-      description: '',
-      name: '',
-      paymentProviderID: '',
-      slug: '',
-    };
-
-    const mockData: Prisma.SubscriptionCreateInput[] = [
+    const mockData = [
       {
-        currency: Currency.CHF,
-        autoRenew: true,
-        monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
         startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-02-01'),
-        deactivation: {
-          create: {
-            createdAt: new Date('2023-01-01'),
-            date: new Date('2023-02-03'),
-            reason: 'invoiceNotPaid',
-          },
-        },
-        paymentMethod: {
-          create: paymentMethod,
-        },
-        memberPlan: {
-          connectOrCreate: {
-            where: {
-              slug: 'foo',
-            },
-            create: {
-              active: true,
-              amountPerMonthMin: 10,
-              name: 'Foo',
-              slug: 'foo',
-              description: [],
-              currency: Currency.CHF,
-            },
-          },
-        },
-        user: {
-          connectOrCreate: {
-            where: { email: 'foo@wepublish.ch' },
-            create: {
-              active: true,
-              email: 'foo@wepublish.ch',
-              name: 'Foo',
-              password: '',
-            },
-          },
-        },
-      },
-      {
-        currency: Currency.CHF,
-        autoRenew: true,
+        endsAt: new Date('2023-02-03'),
         monthlyAmount: 50,
-        paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-02-01'),
-        deactivation: {
-          create: {
-            createdAt: new Date('2023-02-01'),
-            date: new Date('2023-02-03'),
-            reason: 'invoiceNotPaid',
-          },
-        },
-        paymentMethod: {
-          create: paymentMethod,
-        },
-        memberPlan: {
-          connect: {
-            slug: 'foo',
-          },
-        },
-        user: {
-          connect: {
-            email: 'foo@wepublish.ch',
-          },
-        },
+        paymentPeriodicity: PaymentPeriodicity.monthly,
+        reasonForDeactivation: SubscriptionDeactivationReason.invoiceNotPaid,
+        memberPlan: 'Foo',
       },
     ];
 
-    for (const data of mockData) {
-      subscriptionsToDelete.push(await prisma.subscription.create({ data }));
-    }
+    dashboardSubscriptionService.newDeactivations.mockResolvedValue(mockData);
 
     await request(app.getHttpServer())
       .post('')
@@ -626,6 +254,9 @@ describe('DashboardSubscriptionResolver', () => {
       .expect(200)
       .expect(res => {
         expect(res.body.data.newDeactivations).toMatchSnapshot();
+        expect(
+          dashboardSubscriptionService.newDeactivations
+        ).toHaveBeenCalled();
       });
   });
 });
