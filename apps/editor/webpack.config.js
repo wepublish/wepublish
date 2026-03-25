@@ -1,5 +1,6 @@
 const { composePlugins, withNx } = require('@nx/webpack');
 const { withReact } = require('@nx/react');
+const webpack = require('webpack');
 
 // Nx plugins for webpack.
 module.exports = composePlugins(
@@ -15,6 +16,13 @@ module.exports = composePlugins(
       config.devServer.client.overlay.runtimeErrors = false;
     }
 
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'process.env.WEP_ONE_URL': JSON.stringify(
+          process.env.WEP_ONE_URL || ''
+        ),
+      })
+    );
     // Add webp support
     config.module.rules.push({
       test: /\.webp$/,

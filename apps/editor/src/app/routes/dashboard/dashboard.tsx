@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 import { Button, Col, Grid, Panel as RPanel, Row } from 'rsuite';
 
 import { AudienceDashboard } from '../audience/audience-dashboard';
+import NetworkContentDashboard from '../networkContent/networkContentDashboard';
 import { ExternalAppsDashboard } from './externalAppsDashboard';
 
 const StyledGrid = styled(Grid)`
@@ -39,20 +40,6 @@ export function Dashboard() {
 
             <Col xs={24}>
               <RPanel
-                header={<h2>{t('dashboard.activity')}</h2>}
-                bordered
-              >
-                <ActivityFeed />
-              </RPanel>
-            </Col>
-          </Row>
-        </Col>
-
-        {/* right column stack */}
-        <Col xs={12}>
-          <Row gutter={12}>
-            <Col xs={24}>
-              <RPanel
                 header={
                   <ListViewContainer>
                     <ListViewHeader>
@@ -77,6 +64,45 @@ export function Dashboard() {
                   hideFilter
                   initialDateRange="lastWeek"
                 />
+              </RPanel>
+            </Col>
+
+            <Col xs={24}>
+              <RPanel
+                header={<h2>{t('dashboard.activity')}</h2>}
+                bordered
+              >
+                <ActivityFeed />
+              </RPanel>
+            </Col>
+          </Row>
+        </Col>
+
+        {/* right column stack */}
+        <Col xs={12}>
+          <Row gutter={12}>
+            <Col xs={24}>
+              <RPanel
+                header={
+                  <ListViewContainer>
+                    <ListViewHeader>
+                      <h2>{t('dashboard.networkContent')}</h2>
+                    </ListViewHeader>
+                    <ListViewActions>
+                      <Link to="/network">
+                        <Button
+                          appearance="primary"
+                          endIcon={<MdChevronRight />}
+                        >
+                          {t('dashboard.goToNetwork')}
+                        </Button>
+                      </Link>
+                    </ListViewActions>
+                  </ListViewContainer>
+                }
+                bordered
+              >
+                <NetworkContentDashboard />
               </RPanel>
             </Col>
 
