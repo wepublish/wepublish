@@ -1,4 +1,4 @@
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { MdDownload, MdLink } from 'react-icons/md';
 
