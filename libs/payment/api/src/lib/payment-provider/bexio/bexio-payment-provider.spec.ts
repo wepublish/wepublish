@@ -4,11 +4,9 @@ import {
   InvoiceItem,
   PaymentPeriodicity,
   PaymentState,
-  PrismaClient,
 } from '@prisma/client';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 import { CreatePaymentIntentProps } from '../payment-provider';
-import { createPrismaClient } from '@wepublish/testing/prisma';
 
 jest.mock('axios');
 
@@ -117,7 +115,14 @@ describe('BexioPaymentProvider', () => {
     );
     mockProps = {
       id: 'bexio',
-      prisma: createPrismaClient(),
+      prisma: {
+        payment: {
+          findFirst: mockFindFirst,
+        },
+        invoice: {
+          findUnique: mockFindUnique,
+        },
+      } as any,
       kv: kvMock,
     };
 
