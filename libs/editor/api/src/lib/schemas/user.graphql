@@ -34,6 +34,52 @@ fragment FullUser on SensitiveDataUser {
   }
 }
 
+fragment TinyUser on SensitiveDataUser {
+  id
+  createdAt
+  modifiedAt
+  name
+  firstName
+  active
+  lastLogin
+  email
+  roles {
+    ...FullUserRole
+  }
+  subscriptionCount
+}
+
+query TinyUserList(
+  $filter: UserFilter
+  $cursorId: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: UserSort
+) {
+  users(
+    filter: $filter
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...TinyUser
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
 query UserList(
   $filter: UserFilter
   $cursorId: String

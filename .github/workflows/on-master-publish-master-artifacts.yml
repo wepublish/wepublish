@@ -40,8 +40,9 @@ jobs:
           FIRST=true
           for TARGET in $(echo "$MATRIX" | jq -r '.target[]'); do
             TDL=$(jq -r '.tdl.staging // "wepublish.works"' "apps/${TARGET}/deployment.config.json")
+            CHECKS_ENABLED=$(jq -r '.has_staging // false' "apps/${TARGET}/deployment.config.json")
             if [ "$FIRST" = true ]; then FIRST=false; else INCLUDE="${INCLUDE},"; fi
-            INCLUDE="${INCLUDE}{\"target\":\"${TARGET}\",\"tdl\":\"${TDL}\"}"
+            INCLUDE="${INCLUDE}{\"target\":\"${TARGET}\",\"tdl\":\"${TDL}\",\"has_staging\":${CHECKS_ENABLED}}"
           done
           INCLUDE="${INCLUDE}]"
           echo "matrix={\"include\":${INCLUDE}}" >> $GITHUB_OUTPUT
@@ -92,6 +93,7 @@ jobs:
       website_project: ${{ matrix.target }}
       api_url: https://api-${{ matrix.target }}.${{ matrix.tdl }}
       environment: ${{ github.ref_name == 'master' && 'staging' || github.ref_name == 'development' && 'development' || 'staging' }}
+      has_staging: ${{ matrix.has_staging }}
       website_tags: |
         ghcr.io/wepublish/website-${{ matrix.target }}:${{ github.ref_name }}-${{ needs.date_sha_tag.outputs.tag }}
     secrets: inherit

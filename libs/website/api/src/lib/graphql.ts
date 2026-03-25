@@ -471,8 +471,8 @@ export type CalculatedRating = {
 };
 
 export enum CaptchaType {
-  Algebraic = 'Algebraic',
-  CfTurnstile = 'CfTurnstile'
+  CfTurnstile = 'CfTurnstile',
+  HCaptcha = 'HCaptcha'
 }
 
 export type Challenge = {
@@ -489,6 +489,7 @@ export type ChallengeInput = {
 };
 
 export enum ChallengeProviderType {
+  Hcaptcha = 'HCAPTCHA',
   Turnstile = 'TURNSTILE'
 }
 
@@ -1545,6 +1546,7 @@ export enum LoginStatus {
   All = 'ALL',
   LoggedIn = 'LOGGED_IN',
   LoggedOut = 'LOGGED_OUT',
+  PaywallBypassed = 'PAYWALL_BYPASSED',
   Subscribed = 'SUBSCRIBED',
   Unsubscribed = 'UNSUBSCRIBED'
 }
@@ -4475,6 +4477,7 @@ export type QueryPollsArgs = {
 export type QueryPrimaryBannerArgs = {
   documentId: Scalars['String'];
   documentType: BannerDocumentType;
+  hasPaywallBypass: Scalars['Boolean'];
   hasSubscription: Scalars['Boolean'];
   loggedIn: Scalars['Boolean'];
 };
@@ -4723,6 +4726,7 @@ export type SensitiveDataUser = BaseUser & {
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
   roles: Array<UserRole>;
+  subscriptionCount: Scalars['Int'];
   userImageID?: Maybe<Scalars['String']>;
 };
 
@@ -5663,6 +5667,7 @@ export type PrimaryBannerQueryVariables = Exact<{
   documentId: Scalars['String'];
   loggedIn: Scalars['Boolean'];
   hasSubscription: Scalars['Boolean'];
+  hasPaywallBypass: Scalars['Boolean'];
 }>;
 
 
@@ -7771,12 +7776,13 @@ export type AuthorListQueryHookResult = ReturnType<typeof useAuthorListQuery>;
 export type AuthorListLazyQueryHookResult = ReturnType<typeof useAuthorListLazyQuery>;
 export type AuthorListQueryResult = Apollo.QueryResult<AuthorListQuery, AuthorListQueryVariables>;
 export const PrimaryBannerDocument = gql`
-    query PrimaryBanner($documentType: BannerDocumentType!, $documentId: String!, $loggedIn: Boolean!, $hasSubscription: Boolean!) {
+    query PrimaryBanner($documentType: BannerDocumentType!, $documentId: String!, $loggedIn: Boolean!, $hasSubscription: Boolean!, $hasPaywallBypass: Boolean!) {
   primaryBanner(
     documentType: $documentType
     documentId: $documentId
     loggedIn: $loggedIn
     hasSubscription: $hasSubscription
+    hasPaywallBypass: $hasPaywallBypass
   ) {
     ...FullBanner
   }
@@ -7799,6 +7805,7 @@ export const PrimaryBannerDocument = gql`
  *      documentId: // value for 'documentId'
  *      loggedIn: // value for 'loggedIn'
  *      hasSubscription: // value for 'hasSubscription'
+ *      hasPaywallBypass: // value for 'hasPaywallBypass'
  *   },
  * });
  */

@@ -38,6 +38,7 @@ import {
   MailgunMailProvider,
   MailsModule,
 } from '@wepublish/mail/api';
+import { generateJWT } from '@wepublish/utils/api';
 import {
   DashboardModule,
   MembershipModule,
@@ -190,8 +191,23 @@ import {
           throw new Error('A MailProvider must be configured.');
         }
 
+        const jwtPrivateKey = (config.get('JWT_PRIVATE_KEY') || '').replace(
+          /\\n/g,
+          '\n'
+        );
+        const hostURL = config.get('HOST_URL') || 'http://localhost:4000';
+        const websiteURL = config.get('WEBSITE_URL') || 'http://localhost:3000';
+
         return {
           mailProvider,
+          jwtGenerator: (userId: string) =>
+            generateJWT({
+              id: userId,
+              privateKey: jwtPrivateKey,
+              issuer: hostURL,
+              audience: websiteURL,
+              expiresInMinutes: 6 * 60,
+            }),
         };
       },
       inject: [ConfigService, PrismaClient, KvTtlCacheService],
@@ -450,19 +466,8 @@ import {
         );
         return {
           challenge: configFile.challenge || {
-            type: 'algebraic',
-            secret: 'default-challenge-secret',
-            validTime: 600,
-            width: 300,
-            height: 100,
-            background: '#ffffff',
-            noise: 1,
-            minValue: 1,
-            maxValue: 10,
-            operandAmount: 2,
-            operandTypes: ['+'],
-            mode: 'formula',
-            targetSymbol: '?',
+            type: 'turnstile',
+            id: 'default-turnstile',
           },
         };
       },

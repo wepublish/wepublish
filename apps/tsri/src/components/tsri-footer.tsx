@@ -106,6 +106,7 @@ export const PlaceholderButton = styled(IconButton)`
 export const FooterSupportWrapper = styled('div')`
   display: grid;
   grid-template-columns: unset;
+  background-color: ${({ theme }) => theme.palette.common.black};
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-columns: 1fr minmax(max-content, 1075px) 1fr;
@@ -124,11 +125,23 @@ export const FooterSupport = styled('div')`
   background-size: 20px auto;
   padding: 4rem 2rem 1.5rem 2rem;
 
-  & > * {
+  & > .MuiTypography-root {
     max-width: 780px;
     text-align: center;
     hyphens: none;
     padding: 0;
+    display: block;
+    text-decoration: none;
+    margin: 0 auto;
+
+    &:hover {
+      text-decoration: none;
+
+      & > *:first-child {
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+      }
+    }
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {
@@ -172,43 +185,51 @@ export function Footer({
     >
       <FooterSupportWrapper>
         <FooterSupport>
-          <Typography variant="footerSupportHeading">Hallo Welt!</Typography>
-          <Typography variant="footerSupportText">
-            Tsüri ist ein unabhängiges Medium für unsere Stadt. Wir stehen für
-            vertrauenswürdigen und kritischen Journalismus.
-            <br />
-            Unabhängigkeit, Fairness, Transparenz und Glaubwürdigkeit sind unser
-            Fundament.
-          </Typography>
-          <Typography variant="footerSupportHeading">
-            Werde Teil von Tsüri
-          </Typography>
-          <Typography variant="footerSupportText">
-            Im Gegensatz zu vielen anderen Medienhäusern gehören wir keinem
-            Grosskonzern – und wir werden auch nicht von Superreichen
-            finanziert. Unser Journalismus lebt von der Community. Über 2000
-            Tsüri-Member unterstützen uns bereits.
-            <br />
-            Werde auch du Teil davon!
-          </Typography>
-          <Typography variant="footerSupportHeading">
-            Du willst Menschen in Zürich erreichen?
-          </Typography>
-          <Typography variant="footerSupportText">
-            Dann bist du bei uns richtig. Emilio zeigt dir gerne, wie du mit
-            deinem Unternehmen Teil unserer Community wirst und welche
-            Möglichkeiten es gibt.
-          </Typography>
-          <Typography variant="footerSupportHeading">
-            Civic Media heisst gemeinsam etwas bewegen
-          </Typography>
-          <Typography variant="footerSupportText">
-            Wir wollen etwas bewegen – gemeinsam mit dir. Nicht für Klicks,
-            sondern für Austausch, Beteiligung und Erlebnisse.
-            <br />
-            Analog und digital. Das nennen wir Civic Media. Hier gehts zu
-            unserem Engagement.
-          </Typography>
+          <Link href="/ueber-tsri">
+            <Typography variant="footerSupportHeading">Hallo Welt!</Typography>
+            <Typography variant="footerSupportText">
+              Tsüri ist ein unabhängiges Medium für unsere Stadt. Wir stehen für
+              vertrauenswürdigen und kritischen Journalismus.
+              <br />
+              Unabhängigkeit, Fairness, Transparenz und Glaubwürdigkeit sind
+              unser Fundament.
+            </Typography>
+          </Link>
+          <Link href="/mitmachen">
+            <Typography variant="footerSupportHeading">
+              Werde Teil von Tsüri
+            </Typography>
+            <Typography variant="footerSupportText">
+              Im Gegensatz zu vielen anderen Medienhäusern gehören wir keinem
+              Grosskonzern – und wir werden auch nicht von Superreichen
+              finanziert. Unser Journalismus lebt von der Community. Über 2000
+              Tsüri-Member unterstützen uns bereits.
+              <br />
+              Werde auch du Teil davon!
+            </Typography>
+          </Link>
+          <Link href="/werben">
+            <Typography variant="footerSupportHeading">
+              Du willst Menschen in Zürich erreichen?
+            </Typography>
+            <Typography variant="footerSupportText">
+              Dann bist du bei uns richtig. Emilio zeigt dir gerne, wie du mit
+              deinem Unternehmen Teil unserer Community wirst und welche
+              Möglichkeiten es gibt.
+            </Typography>
+          </Link>
+          <Link href="/civic-media">
+            <Typography variant="footerSupportHeading">
+              Civic Media heisst gemeinsam etwas bewegen
+            </Typography>
+            <Typography variant="footerSupportText">
+              Wir wollen etwas bewegen – gemeinsam mit dir. Nicht für Klicks,
+              sondern für Austausch, Beteiligung und Erlebnisse.
+              <br />
+              Analog und digital. Das nennen wir Civic Media. Hier gehts zu
+              unserem Engagement.
+            </Typography>
+          </Link>
           <Typography variant="footerSupportImprint">
             Copyright © 2025 Tsüri AG
             <br />

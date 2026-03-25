@@ -52,6 +52,13 @@ export class BannerService {
       ];
     }
 
+    if (args.hasPaywallBypass) {
+      showForLoginStatus = [
+        { showForLoginStatus: LoginStatus.PAYWALL_BYPASSED },
+        ...showForLoginStatus,
+      ];
+    }
+
     showForLoginStatus = [
       ...showForLoginStatus,
       { showForLoginStatus: LoginStatus.ALL },

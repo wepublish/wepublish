@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient, UserEvent } from '@prisma/client';
 import { hash as argon2Hash } from '@node-rs/argon2';
 import { Validator } from '@wepublish/user';
@@ -19,12 +19,14 @@ import {
 } from './user.model';
 import { MailContext, mailLogType } from '@wepublish/mail/api';
 import * as crypto from 'crypto';
+import { HibpService } from './hibp.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private prisma: PrismaClient,
-    private mailContext: MailContext
+    private mailContext: MailContext,
+    private hibpService: HibpService
   ) {}
 
   @PrimeDataLoader(UserDataloaderService)
@@ -104,6 +106,16 @@ export class UserService {
     return await argon2Hash(password);
   }
 
+  async validatePassword(password: string) {
+    await Validator.password.parseAsync(password);
+
+    if (await this.hibpService.isPasswordPwned(password)) {
+      throw new BadRequestException(
+        'This password has appeared in a data breach and cannot be used. Please choose a different password.'
+      );
+    }
+  }
+
   @PrimeDataLoader(UserDataloaderService)
   async createUser({
     password,
@@ -112,7 +124,7 @@ export class UserService {
     ...input
   }: CreateUserInput) {
     if (password) {
-      await Validator.password.parseAsync(password);
+      await this.validatePassword(password);
     }
     const hashedPassword = await this.hashPassword(
       password ?? crypto.randomBytes(48).toString('base64')
@@ -202,7 +214,7 @@ export class UserService {
   @PrimeDataLoader(UserDataloaderService)
   async resetPassword(id: string, password?: string, sendMail?: boolean) {
     if (password) {
-      await Validator.password.parseAsync(password);
+      await this.validatePassword(password);
     }
 
     const user = await this.prisma.user.update({

@@ -37,7 +37,7 @@ export interface SessionModuleAsyncOptions
 
 @Module({
   imports: [PrismaModule, UserModule, ChallengeModule, SettingModule],
-  exports: [SessionService],
+  exports: [SessionService, JwtService],
 })
 export class SessionModule {
   static registerAsync(options: SessionModuleAsyncOptions): DynamicModule {

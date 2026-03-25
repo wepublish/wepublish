@@ -3,13 +3,13 @@ name: Setup production database for review build
 on:
   workflow_dispatch:
     inputs:
-      pull_request_number:
-        description: 'The pull request number you find it in the pullrequest view behind a # eg #1234=>1234'
+      project:
+        description: 'Name of the project you want to get database from eg. bajour, tsri'
         required: true
         type: string
-      project:
-        description: 'Name of the project you want to get database from eg. bajour'
-        required: true
+      instance_name:
+        description: 'Only needed for review instances (eg. review01, review02). Leave empty for staging where instance name equals the project name.'
+        required: false
         type: string
       akk:
         description: 'Are you sure you want to overwrite the existing review database? [Yes]'
@@ -25,82 +25,74 @@ jobs:
       id-token: 'write'
 
     steps:
+      - name: Resolve instance name
+        id: resolve
+        env:
+          INSTANCE_NAME: ${{ inputs.instance_name }}
+          PROJECT: ${{ inputs.project }}
+        run: |
+          if [ -z "$INSTANCE_NAME" ]; then
+            echo "instance_name=${PROJECT}" >> "$GITHUB_OUTPUT"
+          else
+            echo "instance_name=${INSTANCE_NAME}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Confirm destructive action
         shell: bash
+        env:
+          AKK: ${{ inputs.akk }}
         run: |
-          VAL="$(printf '%s' "${{ inputs.akk }}" | tr -d '[:space:]')"
+          VAL="$(printf '%s' "$AKK" | tr -d '[:space:]')"
           if ! printf '%s\n' "$VAL" | grep -qiE '^yes$'; then
-            echo "::error::Confirmation failed. You must type exactly 'yes' to proceed. You entered: '${{ inputs.akk }}'"
+            echo "::error::Confirmation failed. You must type exactly 'Yes' to proceed."
             exit 1
-          fi  
+          fi
 
-      - uses: actions/checkout@v3
-
-      - name: Set up Helm
-        uses: azure/setup-helm@v1
-        with:
-          version: '3.12.3'
-
-      - name: Authenticate kubectl
-        uses: 'google-github-actions/auth@v1'
-        with:
-          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
-          workload_identity_provider: ${{ secrets.GCLOUD_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
-
-      - name: Prepare kubectl
-        uses: 'google-github-actions/get-gke-credentials@v1'
-        with:
-          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
-          cluster_name: development
-          location: europe-west6
-
-      - name: Port forward PostgreSQL
-        run: |
-          kubectl port-forward -n reviews svc/review-${{ inputs.pull_request_number }}-database-postgres 5432:5432 &
+      - uses: actions/checkout@v4
 
       - name: Install PostgreSQL Client
         run: |
-          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          sudo sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
           sudo apt-get update
-          sudo apt-get install -y postgresql-client-17
+          sudo apt-get install -y postgresql-client-18
 
       - name: Get and unpack project production database
+        env:
+          DUMP_USER: ${{ secrets.HTTP_PROD_DUMP_SHARE_USER }}
+          DUMP_PASSWORD: ${{ secrets.HTTP_PROD_DUMP_SHARE_PASSWORD }}
+          DUMP_HOST: ${{ secrets.HTTP_PROD_DUMP_SHARE_URL }}
+          PROJECT: ${{ inputs.project }}
         run: |
-          curl --output database.dump.gz https://${{ secrets.HTTP_PROD_DUMP_SHARE_USER }}:${{ secrets.HTTP_PROD_DUMP_SHARE_PASSWORD }}@${{ secrets.HTTP_PROD_DUMP_SHARE_URL }}/${{ inputs.project }}.sql.gz
+          curl --fail --silent --show-error --user "${DUMP_USER}:${DUMP_PASSWORD}" --output database.dump.gz "https://${DUMP_HOST}/${PROJECT}.sql.gz"
           gzip -d database.dump.gz
+
+      - name: Clean existing database
+        env:
+          PGPASSWORD: ${{ secrets.MAIN_DATABASE_PASSWORD }}
+          PGHOST: ${{ secrets.MAIN_DATABASE_HOSTNAME }}
+          PGUSER: ${{ secrets.MAIN_DATABASE_USERNAME }}
+          PGSSLMODE: verify-full
+          PGSSLROOTCERT: libs/api/prisma/ca.crt
+          INSTANCE_NAME: ${{ steps.resolve.outputs.instance_name }}
+        run: |
+          psql -h "$PGHOST" -U "$PGUSER" -d "wepublish-${INSTANCE_NAME}-staging" --set ON_ERROR_STOP=1 <<'SQL'
+          DROP SCHEMA public CASCADE;
+          CREATE SCHEMA public;
+          SQL
 
       - name: Restore Dump to Review Database
         env:
-          PGPASSWORD: foo
+          PGPASSWORD: ${{ secrets.MAIN_DATABASE_PASSWORD }}
+          PGHOST: ${{ secrets.MAIN_DATABASE_HOSTNAME }}
+          PGUSER: ${{ secrets.MAIN_DATABASE_USERNAME }}
+          PGSSLMODE: verify-full
+          PGSSLROOTCERT: libs/api/prisma/ca.crt
+          INSTANCE_NAME: ${{ steps.resolve.outputs.instance_name }}
         run: |
-          psql -h 127.0.0.1 -U postgres -d wepublish -f database.dump
-
-      - name: Rerun database migration
-        run: |
-          JOB_NAME=$(kubectl -n reviews get jobs --sort-by='{.metadata.creationTimestamp}' |grep "review-${{ inputs.pull_request_number }}-app-wepublish-migration"  |tail -n 1 | awk '{print $1}')
-          kubectl -n reviews get job "$JOB_NAME" -o json | jq --arg name "${JOB_NAME}r" '
-            .metadata.name = $name
-            | del(
-            .metadata.uid,
-            .metadata.resourceVersion,
-            .metadata.creationTimestamp,
-            .metadata.managedFields,
-            .status
-            )
-            | del(.spec.selector, .spec.manualSelector)
-            | (.spec.template.metadata.labels // {}) as $l
-            | .spec.template.metadata.labels = ($l
-            | del(
-            .["job-name"],
-            .["batch.kubernetes.io/job-name"],
-            .["controller-uid"],
-            .["batch.kubernetes.io/controller-uid"],
-            .["pod-template-hash"]
-            )
-            )
-            ' | kubectl -n reviews apply -f -          
+          psql -h "$PGHOST" -U "$PGUSER" -d "wepublish-${INSTANCE_NAME}-staging" --set ON_ERROR_STOP=1 -f database.dump
 
       - name: Cleanup
-        run: rm database.dump
+        if: always()
+        run: rm -f database.dump

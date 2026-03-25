@@ -112,6 +112,9 @@ export class ImageService {
       include: {
         focalPoint: true,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
   }
 }

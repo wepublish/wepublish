@@ -1,12 +1,12 @@
 {
   "tdl": {
-    "production": "wepublish.media",
-    "staging": "wepublish.dev"
+    "production": "wepublish.cloud",
+    "staging": "wepublish.works"
   },
   "website": {
     "production": {
       "deployment": true,
-      "custom_domain": "https://reflekt.wepublish.media",
+      "custom_domain": "https://reflekt.wepublish.cloud",
       "env": {
         "DEPLOY_ENV": "production"
       },
