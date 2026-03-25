@@ -146,12 +146,21 @@ export class SessionService {
       UserEvent.LOGIN_LINK
     );
 
-    await this.mailContext.sendMail({
-      externalMailTemplateId: remoteTemplate,
-      recipient: user,
-      optionalData: {},
-      mailType: mailLogType.UserFlow,
-    });
+    const MAIL_TIMEOUT_MS = 10000;
+    await Promise.race([
+      this.mailContext.sendMail({
+        externalMailTemplateId: remoteTemplate,
+        recipient: user,
+        optionalData: {},
+        mailType: mailLogType.UserFlow,
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error('Login link email timed out')),
+          MAIL_TIMEOUT_MS
+        )
+      ),
+    ]);
 
     await this.userAuthenticationService.updateUserLastLoginLinkSend(user.id);
   }

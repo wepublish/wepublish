@@ -154,7 +154,13 @@ export function LoginForm({
           </Alert>
         )}
 
-        {error && <Alert severity="error">{error.message}</Alert>}
+        {error && (
+          <Alert severity="error">
+            {error.message === 'Login link email timed out' ?
+              t('login.errorLoginLinkTimeout')
+            : error.message}
+          </Alert>
+        )}
 
         {loginLinkSent && (
           <Alert severity="success">
