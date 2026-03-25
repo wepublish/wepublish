@@ -13,7 +13,6 @@ export type MailControllerConfig = {
   daysAwayFromEnding?: number | null;
   externalMailTemplateId: string;
   recipient: User;
-  recipientOverrideAddress?: string;
   isRetry?: boolean;
   periodicJobRunDate?: Date | null;
   optionalData: Record<string, any>;
@@ -93,8 +92,7 @@ export class MailController {
     await this.mailContext.sendRemoteTemplateDirect({
       mailLogID: mailLogId,
       remoteTemplate: this.config.externalMailTemplateId,
-      recipient:
-        this.config.recipientOverrideAddress || this.config.recipient.email,
+      recipient: this.config.recipient.email,
       data: await this.buildData(),
     });
 

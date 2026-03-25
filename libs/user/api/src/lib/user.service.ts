@@ -282,7 +282,6 @@ export class UserService {
     await this.mailContext.sendMail({
       externalMailTemplateId,
       recipient: user,
-      recipientOverrideAddress: newEmail,
       optionalData: { newEmail },
       mailType: mailLogType.UserFlow,
     });

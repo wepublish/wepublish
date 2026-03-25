@@ -62,7 +62,7 @@
     "changeEmail": "E-Mail-Adresse ändern",
     "newEmail": "Neue E-Mail-Adresse",
     "requestEmailChange": "Änderung beantragen",
-    "emailChangeRequested": "Eine Bestätigungs-E-Mail wurde an deine neue E-Mail-Adresse gesendet. Bitte klicke auf den Link in der E-Mail, um die Änderung zu bestätigen.",
+    "emailChangeRequested": "Eine Bestätigungs-E-Mail wurde an deine aktuelle E-Mail-Adresse gesendet. Bitte klicke auf den Link in der E-Mail, um die Änderung zu bestätigen.",
     "pendingEmailChange": "Eine Änderung zu {email} wartet auf Bestätigung. Bitte prüfe deinen Posteingang.",
     "emailChangeConfirmed": "Deine E-Mail-Adresse wurde erfolgreich geändert.",
     "emailChangeExpired": "Die Bestätigung ist abgelaufen. Bitte beantrage die Änderung erneut.",
