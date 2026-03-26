@@ -494,8 +494,6 @@ function ArticleEditor() {
           },
         });
 
-        console.log('rendering article editor', publishData);
-
         if (publishData?.publishArticle?.latest?.publishedAt) {
           setPublishedAt(
             new Date(publishData?.publishArticle?.latest.publishedAt)
