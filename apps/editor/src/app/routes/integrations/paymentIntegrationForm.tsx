@@ -18,7 +18,7 @@ import stripeLogo from './assets/stripe.svg';
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
 
-const paymentSettingsSchema = z.object({
+export const paymentSettingsSchema = z.object({
   name: z.string().nullish().or(z.literal('')),
   type: z.nativeEnum(PaymentProviderType).nullish(),
   offSessionPayments: z.boolean().nullish(),
