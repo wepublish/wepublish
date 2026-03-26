@@ -24,17 +24,6 @@ export const HauptstadtArticleDate = ({
       className={className}
     >
       {date.format(new Date(article.publishedAt), false)}
-
-      {updated && (
-        <time
-          suppressHydrationWarning
-          dateTime={article.latest.publishedAt!}
-        >
-          {' '}
-          (Aktualisiert am{' '}
-          {date.format(new Date(article.latest.publishedAt!), false)})
-        </time>
-      )}
     </ArticleDateWrapper>
   );
 };
