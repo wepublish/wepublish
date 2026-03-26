@@ -22,10 +22,11 @@ export interface PublishArticlePanelProps {
 
 function PublishArticlePanel({
   publishedAtDate,
+  firstPublishedAtDate,
   metadata,
   onClose,
   onConfirm,
-}: PublishArticlePanelProps) {
+}: PublishArticlePanelProps & { firstPublishedAtDate?: Date }) {
   const now = new Date();
   const [publishedAt, setPublishedAt] = useState<Date | undefined>(
     publishedAtDate ?? now
@@ -53,6 +54,22 @@ function PublishArticlePanel({
             label={t('articleEditor.panels.publishDate')}
             changeDate={date => setPublishedAt(date)}
           />
+        </div>
+
+        <div
+          style={{
+            maxWidth: '300px',
+            marginTop: '0.25rem',
+            marginBottom: '2rem',
+            fontSize: '0.75rem',
+            color: '#555',
+          }}
+        >
+          {firstPublishedAtDate ?
+            t('articleEditor.panels.firstPublishedAtDate', {
+              firstPublishedAtDate,
+            })
+          : t('articleEditor.panels.notPublishedYet')}
         </div>
 
         <DescriptionList>

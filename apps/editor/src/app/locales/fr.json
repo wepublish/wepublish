@@ -26,6 +26,8 @@
         "warningLabel": "Attention"
       },
       "panels": {
+        "firstPublishedAtDate": "Première publication le {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
+        "notPublishedYet": "L'article n'est pas encore publié",
         "addSlug": "Veuillez ajouter un slug",
         "addTag": "Appuyez Enter pour ajouter un tag",
         "allowPeerPublishing": "Permettre aux peers de publier cet article.",

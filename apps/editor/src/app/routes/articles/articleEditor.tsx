@@ -494,6 +494,8 @@ function ArticleEditor() {
           },
         });
 
+        console.log('rendering article editor', publishData);
+
         if (publishData?.publishArticle?.latest?.publishedAt) {
           setPublishedAt(
             new Date(publishData?.publishArticle?.latest.publishedAt)
@@ -703,6 +705,11 @@ function ArticleEditor() {
       >
         <PublishArticlePanel
           publishedAtDate={publishedAt}
+          firstPublishedAtDate={
+            articleData?.article?.publishedAt ?
+              new Date(articleData.article.publishedAt)
+            : undefined
+          }
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
           onConfirm={publishedAt => {
