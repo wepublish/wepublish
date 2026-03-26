@@ -14,6 +14,7 @@ import { ArticleMetadata } from './articleMetadataPanel';
 
 export interface PublishArticlePanelProps {
   publishedAtDate?: Date;
+  firstPublishedAtDate?: Date;
   metadata: ArticleMetadata;
 
   onClose(): void;
@@ -26,7 +27,7 @@ function PublishArticlePanel({
   metadata,
   onClose,
   onConfirm,
-}: PublishArticlePanelProps & { firstPublishedAtDate?: Date }) {
+}: PublishArticlePanelProps) {
   const now = new Date();
   const [publishedAt, setPublishedAt] = useState<Date | undefined>(
     publishedAtDate ?? now
