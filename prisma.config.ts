@@ -3,10 +3,9 @@ import fs from 'node:fs';
 import { defineConfig } from 'prisma/config';
 import { config } from 'dotenv';
 
-config({
-  path: ['.env'],
-  quiet: true,
-});
+// Load .env then .env.local (local overrides base)
+config({ path: '.env', quiet: true });
+config({ path: '.env.local', override: true, quiet: true });
 
 // Schema path: repo uses libs/api/prisma/, Docker containers use prisma/
 const repoSchemaPath = path.join(__dirname, 'libs/api/prisma/schema.prisma');
