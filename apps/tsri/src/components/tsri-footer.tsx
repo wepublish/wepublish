@@ -202,7 +202,7 @@ export function Footer({
             <Typography variant="footerSupportText">
               Im Gegensatz zu vielen anderen Medienhäusern gehören wir keinem
               Grosskonzern – und wir werden auch nicht von Superreichen
-              finanziert. Unser Journalismus lebt von der Community. Über 2000
+              finanziert. Unser Journalismus lebt von der Community. Über 3000
               Tsüri-Member unterstützen uns bereits.
               <br />
               Werde auch du Teil davon!
