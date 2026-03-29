@@ -163,7 +163,7 @@ export const FooterPaper = ({
               </Typography>
             </Typography>
           </FooterCategory>
-          {[main, ...categoryArray].map(nav => (
+          {[...main, ...categoryArray].map(nav => (
             <FooterCategory key={nav.id ? nav.id : 'main'}>
               <Typography variant="categoryLinkList">
                 {nav.links?.map((link, index) => (
