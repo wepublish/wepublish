@@ -1,0 +1,21 @@
+import styled from '@emotion/styled';
+import { Container } from '@mui/material';
+
+export const MainSpacer = styled(Container)`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(5)};
+
+  main > & {
+    padding-top: calc(
+      var(--navbar-height) + ${({ theme }) => theme.spacing(3)}
+    );
+  }
+
+  main > &:has(main) {
+    padding-top: 0;
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    gap: ${({ theme }) => theme.spacing(10)};
+  }
+`;
