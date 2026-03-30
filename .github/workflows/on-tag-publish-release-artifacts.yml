@@ -13,7 +13,7 @@ jobs:
       version: ${{ steps.version.outputs.version }}
     steps:
       - id: version
-        run: echo "::set-output name=version::${GITHUB_REF#refs/*/}"
+        run: echo "version=${GITHUB_REF#refs/*/}" >> "$GITHUB_OUTPUT"
 
   alpha_release_docker:
     if: |

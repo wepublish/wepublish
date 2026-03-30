@@ -8,22 +8,11 @@ concurrency:
   group: review-${{ github.head_ref }}
   cancel-in-progress: true
 
-env:
-  API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-  EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-  WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-  MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-  STORYBOOK_URL: https://storybook-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-  S3_PUBLIC_URL: https://storage-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-  PROJECT_URL_SUFFIX: -${{ github.event.pull_request.number }}.reviews.wepublish.dev
-
 jobs:
 
   check-review-deploy-label:
     runs-on: ubuntu-latest
     outputs:
-      project_name: ${{ steps.extract_project_name.outputs.project_name }}
-      review_version: ${{ steps.extract_project_name.outputs.review_version }}
       has_label: ${{ steps.extract_project_name.outputs.has_label }}
     steps:
       - name: Check for Deploy_ Label and Extract Project Name
@@ -99,7 +88,7 @@ jobs:
       matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
     with:
       website_project: ${{ matrix.target }}
-      api_url: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+      api_url: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.works
       environment: review
       website_tags: |
         ghcr.io/wepublish/website-${{ matrix.target }}:${{ github.sha }}
@@ -129,7 +118,7 @@ jobs:
           OUTPUT=$(node ./notify-github.js)
           OUTPUT="${OUTPUT//$'\n'/'%0A'}"
           OUTPUT="${OUTPUT//$'\r'/'%0D'}"
-          echo "::set-OUTPUT name=result::$OUTPUT"
+          echo "result=$OUTPUT" >> "$GITHUB_OUTPUT"
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
