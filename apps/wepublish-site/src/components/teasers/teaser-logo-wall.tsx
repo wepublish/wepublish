@@ -27,7 +27,7 @@ export const TeaserLogoWall = styled(WepTeaser)`
   grid-template-rows: minmax(auto, 200px);
   grid-template-columns: 1fr;
 
-  background-color: ${({ theme }) => theme.palette.primary.light};
+  background-color: transparent;
   padding: 0;
   row-gap: 0;
 

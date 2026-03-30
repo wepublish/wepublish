@@ -33,13 +33,16 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import deOverriden from '../locales/deOverriden.json';
+import { WepBreakBlock } from '../src/components/break-blocks/wep-break-block';
 import { WepBaseTeaserSlots } from '../src/components/teaser-layouts/wep-base-teaser-slots';
 import { WepBaseTeaser } from '../src/components/teasers/wep-base-teaser';
+import { WepArticle } from '../src/components/wep-article';
 import { WepBlockRenderer } from '../src/components/wep-block-renderer';
 import { WepContentWrapper } from '../src/components/wep-content-wrapper';
 import { WepFooter } from '../src/components/wep-footer';
 import { WepGlobalStyles } from '../src/components/wep-global-styles';
 import { WepNavbar } from '../src/components/wep-navbar';
+import { WepPage } from '../src/components/wep-page';
 import { WepQuoteBlock } from '../src/components/wep-quote-block';
 import theme from '../src/theme';
 
@@ -96,11 +99,14 @@ function CustomApp({ Component, pageProps }: CustomAppProps) {
         Footer={WepFooter}
         Navbar={WepNavbar}
         ContentWrapper={WepContentWrapper}
+        Article={WepArticle}
+        Page={WepPage}
         blocks={{
           Renderer: WepBlockRenderer,
           BaseTeaser: WepBaseTeaser,
           TeaserSlots: WepBaseTeaserSlots,
           Quote: WepQuoteBlock,
+          Break: WepBreakBlock,
         }}
         elements={{ Link: NextWepublishLink }}
         date={{ format: dateFormatter }}

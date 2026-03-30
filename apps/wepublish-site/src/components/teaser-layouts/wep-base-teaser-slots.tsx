@@ -11,6 +11,10 @@ import {
   TeaserSlotsLogoWall,
 } from './teaser-slots-logo-wall';
 import { isTeaserSlotsNews, TeaserSlotsNews } from './teaser-slots-news';
+import {
+  isTeaserSlotsServices,
+  TeaserSlotsServices,
+} from './teaser-slots-services';
 
 export const WepBaseTeaserSlots = cond([
   [
@@ -18,6 +22,10 @@ export const WepBaseTeaserSlots = cond([
     (props: BuilderTeaserSlotsBlockProps) => (
       <TeaserSlotsExpertise {...props} />
     ),
+  ],
+  [
+    isTeaserSlotsServices,
+    (props: BuilderTeaserSlotsBlockProps) => <TeaserSlotsServices {...props} />,
   ],
   [
     isTeaserSlotsNews,
