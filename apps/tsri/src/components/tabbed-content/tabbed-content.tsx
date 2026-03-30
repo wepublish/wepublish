@@ -13,7 +13,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
-import * as React from 'react';
+import { ReactNode, SyntheticEvent, useId, useState } from 'react';
 
 export const TabbedContentWrapper = styled('div')`
   width: 100%;
@@ -22,7 +22,7 @@ export const TabbedContentWrapper = styled('div')`
 `;
 
 interface TabPanelBaseProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
   index: number;
   value: number;
   id: string;
@@ -185,8 +185,8 @@ export const TabbedContent = ({
     blockStyleOverride?: string | undefined | null
   ) => string;
 }) => {
-  const [value, setValue] = React.useState(0);
-  const thisId = `TC-${React.useId()}`;
+  const [value, setValue] = useState(0);
+  const thisId = `TC-${useId()}`;
 
   const {
     blocks: { Renderer },
@@ -198,7 +198,7 @@ export const TabbedContent = ({
     (a, b) => a.alignment.y - b.alignment.y || a.alignment.x - b.alignment.x
   );
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 

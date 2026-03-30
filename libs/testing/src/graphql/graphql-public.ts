@@ -201,7 +201,7 @@ export type Author = HasImage &
     image?: Maybe<Image>;
     imageID?: Maybe<Scalars['String']>;
     jobTitle?: Maybe<Scalars['String']>;
-    links?: Maybe<Array<AuthorLink>>;
+    links: Array<AuthorLink>;
     modifiedAt: Scalars['DateTime'];
     name: Scalars['String'];
     peer?: Maybe<Peer>;
@@ -5459,11 +5459,7 @@ export type FullAuthorFragment = {
   hideOnArticle: boolean;
   id: string;
   name: string;
-  links?: Array<{
-    __typename?: 'AuthorLink';
-    title: string;
-    url: string;
-  }> | null;
+  links: Array<{ __typename?: 'AuthorLink'; title: string; url: string }>;
   image?: {
     __typename?: 'Image';
     id: string;
@@ -5506,11 +5502,7 @@ export type AuthorListQuery = {
       hideOnArticle: boolean;
       id: string;
       name: string;
-      links?: Array<{
-        __typename?: 'AuthorLink';
-        title: string;
-        url: string;
-      }> | null;
+      links: Array<{ __typename?: 'AuthorLink'; title: string; url: string }>;
       image?: {
         __typename?: 'Image';
         id: string;
@@ -5556,11 +5548,7 @@ export type AuthorQuery = {
     hideOnArticle: boolean;
     id: string;
     name: string;
-    links?: Array<{
-      __typename?: 'AuthorLink';
-      title: string;
-      url: string;
-    }> | null;
+    links: Array<{ __typename?: 'AuthorLink'; title: string; url: string }>;
     image?: {
       __typename?: 'Image';
       id: string;

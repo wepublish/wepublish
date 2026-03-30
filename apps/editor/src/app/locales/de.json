@@ -588,7 +588,9 @@
       "yearlySubscribers": "Neue Abonnent:innen im letzten Jahr",
       "audience": "Audience",
       "goToAudienceDashboard": "Zum Audience Dashboard",
-      "externalApps": "We.Publish Apps"
+      "externalApps": "We.Publish Apps",
+      "networkContent": "Aus dem We.Publish-Netzwerk",
+      "goToNetwork": "Zum Netzwerk"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -872,6 +874,7 @@
       "pages": "Seiten",
       "paymentMethods": "Zahlungsmethoden",
       "peerArticles": "Peerbare Artikel",
+      "networkContent": "We.Publish-Netzwerk",
       "peering": "Peering",
       "peers": "Peers",
       "settings": "Einstellungen",
@@ -1845,6 +1848,44 @@
       "deleteConfirmationTitle": "Externe App löschen",
       "deleteConfirmationText": "Möchten Sie diese externe App wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
       "icon": "Icon URL"
+    },
+    "networkContentDashboard": {
+      "errorLoading": "Netzwerkartikel konnten nicht geladen werden.",
+      "noArticles": "Keine Artikel verfügbar.",
+      "readMore": "Artikel lesen",
+      "importFrom": "Artikel von {{peer}} importieren",
+      "noPeer": "Kein aktives Peering – kontaktiere den Verlag, um ein Peering einzurichten.",
+      "importTitle": "Artikel importieren",
+      "importAuthors": "Autoren importieren",
+      "importTags": "Tags importieren",
+      "importImages": "Inhaltsbilder importieren",
+      "importConfirm": "Importieren",
+      "cancel": "Abbrechen",
+      "close": "Schliessen",
+      "peerInfoTitle": "Peering nicht verfügbar",
+      "peerInfoText": "Dieser Verlag ist noch nicht als Peer verbunden. Um Artikel zu importieren, wird eine aktive Peering-Verbindung benötigt. Bitte kontaktiere den Verlag, um eine Peering-Beziehung aufzubauen, oder richte sie unter Einstellungen > Peering ein.",
+      "importBtn": "Importieren",
+      "connectBtn": "Peer einrichten"
+    },
+    "networkContentPage": {
+      "title": "Inhalte aus dem We.Publish-Netzwerk",
+      "articlesTitle": "Artikel",
+      "mediaTitle": "Medien",
+      "searchLabel": "Artikel suchen",
+      "mediaFilter": "Medium",
+      "allMedia": "Alle Medien",
+      "dateFrom": "Von",
+      "dateTo": "Bis",
+      "filterByMedia": "Filtern",
+      "errorLoadingClients": "Medien konnten nicht geladen werden.",
+      "noClients": "Keine Medien verfügbar.",
+      "connected": "Verbunden",
+      "notConnected": "Nicht verbunden",
+      "contactTitle": "{{name}} kontaktieren",
+      "contactText": "Dieser Verlag ist noch nicht als Peer verbunden. Kontaktiere die zuständigen Personen, um die Peering-Schlüssel auszutauschen und die Verbindung einzurichten.",
+      "noContacts": "Keine Kontaktpersonen für dieses Medium verfügbar.",
+      "unknownUser": "Unbekannter Benutzer",
+      "connectBtn": "Verbinden"
     }
   }
 }

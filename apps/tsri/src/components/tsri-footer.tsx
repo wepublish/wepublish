@@ -202,7 +202,7 @@ export function Footer({
             <Typography variant="footerSupportText">
               Im Gegensatz zu vielen anderen Medienhäusern gehören wir keinem
               Grosskonzern – und wir werden auch nicht von Superreichen
-              finanziert. Unser Journalismus lebt von der Community. Über 2000
+              finanziert. Unser Journalismus lebt von der Community. Über 3000
               Tsüri-Member unterstützen uns bereits.
               <br />
               Werde auch du Teil davon!
@@ -343,10 +343,10 @@ export const FooterPaperWrapper = styled('div')`
 export const FooterCategory = styled(FooterCategoryDefault)`
   grid-column: 1 / 2;
   grid-row: 2 / 3;
-  row-gap: 0.8cqw;
+  row-gap: 0;
   padding-left: 2cqw;
   max-width: 44vw;
-  overflow-x: hidden;
+  overflow: hidden;
 
   &:nth-of-type(n + 2) {
     grid-column: 1 / 2;

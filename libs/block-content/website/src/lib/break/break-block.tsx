@@ -58,7 +58,8 @@ export const BreakBlockButton = styled(Button)`
 const richTextStyles = (theme: Theme) => css`
   max-width: ${theme.spacing(55)};
 
-  p {
+  p,
+  li {
     ${theme.typography.blockBreakBody}
   }
 `;

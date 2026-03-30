@@ -24,7 +24,8 @@ const ONE_HOUR_IN_SEC = ONE_MIN_IN_SEC * 60;
 const dailyStatsCache = new NodeCache({
   checkperiod: ONE_MIN_IN_SEC,
   deleteOnExpire: true,
-  useClones: true,
+  useClones: false,
+  maxKeys: 1000,
 });
 
 @Injectable()

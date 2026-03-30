@@ -148,7 +148,7 @@ type Author implements HasImage & HasOptionalPeerLc {
   image: Image
   imageID: String
   jobTitle: String
-  links: [AuthorLink!]
+  links: [AuthorLink!]!
   modifiedAt: DateTime!
   name: String!
   peer: Peer
