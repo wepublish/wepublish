@@ -82,22 +82,22 @@ About public demo deployments.
 This is controlled via flux and our infrastructure repository. There are image automation rules which picks up new docker images and deploy those to k8s cluster.
 
 ### demo (latest stable version)
-- [demo.wepublish.media](https://demo.wepublish.media)
-- [editor.demo.wepublish.media](https://editor.demo.wepublish.media)
-- [api.demo.wepublish.media](https://api.demo.wepublish.media)
-- [media.demo.wepublish.media](https://media.demo.wepublish.media)
+- [demo.wepublish.cloud](https://demo.wepublish.cloud)
+- [editor.demo.wepublish.cloud](https://editor.demo.wepublish.cloud)
+- [api.demo.wepublish.cloud](https://api.demo.wepublish.cloud)
+- [media.demo.wepublish.cloud](https://media.demo.wepublish.cloud)
 
 ### next (latest alpha version)
-- [next.wepublish.media](https://next.wepublish.media)
-- [editor.next.wepublish.media](https://editor.next.wepublish.media)
-- [api.next.wepublish.media](https://api.next.wepublish.media)
-- [media.next.wepublish.media](https://media.next.wepublish.media)
- 
+- [next.wepublish.cloud](https://next.wepublish.cloud)
+- [editor.next.wepublish.cloud](https://editor.next.wepublish.cloud)
+- [api.next.wepublish.cloud](https://api.next.wepublish.cloud)
+- [media.next.wepublish.cloud](https://media.next.wepublish.cloud)
+
 ### dev (latest master)
-- [dev.wepublish.media](https://dev.wepublish.media)
-- [editor.dev.wepublish.media](https://editor.dev.wepublish.media)
-- [api.dev.wepublish.media](https://api.dev.wepublish.media)
-- [media.dev.wepublish.media](https://media.dev.wepublish.media)
+- [dev.wepublish.cloud](https://dev.wepublish.cloud)
+- [editor.dev.wepublish.cloud](https://editor.dev.wepublish.cloud)
+- [api.dev.wepublish.cloud](https://api.dev.wepublish.cloud)
+- [media.dev.wepublish.cloud](https://media.dev.wepublish.cloud)
 
 
 ## Ephemeral instances

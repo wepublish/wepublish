@@ -31,18 +31,16 @@ jobs:
         id: set-matrix
         run: deployment/read_deployment_config.sh '.website.staging.deployment' true
 
-      # Can be removed after migration from media -> cloud domain
-      - name: Add TDL to matrix
+      - name: Enrich matrix with has_staging
         id: set-matrix-with-tdl
         run: |
           MATRIX='${{ steps.set-matrix.outputs.matrix }}'
           INCLUDE="["
           FIRST=true
           for TARGET in $(echo "$MATRIX" | jq -r '.target[]'); do
-            TDL=$(jq -r '.tdl.staging // "wepublish.works"' "apps/${TARGET}/deployment.config.json")
             CHECKS_ENABLED=$(jq -r '.has_staging // false' "apps/${TARGET}/deployment.config.json")
             if [ "$FIRST" = true ]; then FIRST=false; else INCLUDE="${INCLUDE},"; fi
-            INCLUDE="${INCLUDE}{\"target\":\"${TARGET}\",\"tdl\":\"${TDL}\",\"has_staging\":${CHECKS_ENABLED}}"
+            INCLUDE="${INCLUDE}{\"target\":\"${TARGET}\",\"has_staging\":${CHECKS_ENABLED}}"
           done
           INCLUDE="${INCLUDE}]"
           echo "matrix={\"include\":${INCLUDE}}" >> $GITHUB_OUTPUT
@@ -91,7 +89,7 @@ jobs:
       matrix: ${{fromJson(needs.setup-website-matrix.outputs.matrix)}}
     with:
       website_project: ${{ matrix.target }}
-      api_url: https://api-${{ matrix.target }}.${{ matrix.tdl }}
+      api_url: https://api-${{ matrix.target }}.wepublish.works
       environment: ${{ github.ref_name == 'master' && 'staging' || github.ref_name == 'development' && 'development' || 'staging' }}
       prerender: ${{ matrix.has_staging }}
       has_staging: ${{ matrix.has_staging }}

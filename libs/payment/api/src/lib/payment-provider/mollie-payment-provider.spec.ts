@@ -98,7 +98,7 @@ describe('MolliePaymentProvider', () => {
         name: 'Mollie',
         offSessionPayments: true,
         webhookEndpointSecret: 'secret',
-        mollie_apiBaseUrl: 'https://api.wepublish.dev',
+        mollie_apiBaseUrl: 'https://api.wepublish.cloud',
         apiKey: 'secret',
         mollie_methods: ['PAYPAL'],
       }),
@@ -109,7 +109,7 @@ describe('MolliePaymentProvider', () => {
         name: 'Mollie',
         offSessionPayments: false,
         webhookEndpointSecret: 'secret',
-        mollie_apiBaseUrl: 'https://api.wepublish.dev',
+        mollie_apiBaseUrl: 'https://api.wepublish.cloud',
         apiKey: 'secret',
         mollie_methods: ['PAYPAL'],
       }),
@@ -281,7 +281,7 @@ describe('MolliePaymentProvider', () => {
   describe('generateWebhookUrl', () => {
     it('should generate correct webhook url', async () => {
       expect(await mollieOffSession.generateWebhookUrl()).toEqual(
-        'https://api.wepublish.dev/payment-webhooks/mollie?key=secret'
+        'https://api.wepublish.cloud/payment-webhooks/mollie?key=secret'
       );
     });
   });

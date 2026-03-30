@@ -56,7 +56,6 @@ jobs:
       - id: read-deployment-config
         run: ./deployment/read_deployment_config.sh '.website.production.deployment' true ${{ needs.get-tag.outputs.project }}
 
-  # Can be removed after migration from media -> cloud domain
   get-tdl:
     runs-on: ubuntu-latest
     outputs:
