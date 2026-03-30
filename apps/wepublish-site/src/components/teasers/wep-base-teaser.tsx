@@ -4,11 +4,16 @@ import { cond, T } from 'ramda';
 import { isTeaserExpertise, TeaserExpertise } from './teaser-expertise';
 import { isTeaserLogoWall, TeaserLogoWall } from './teaser-logo-wall';
 import { isTeaserNews, TeaserNews } from './teaser-news';
+import { isTeaserServices, TeaserServices } from './teaser-services';
 
 export const WepBaseTeaser = cond([
   [
     isTeaserExpertise,
     (props: BuilderTeaserProps) => <TeaserExpertise {...props} />,
+  ],
+  [
+    isTeaserServices,
+    (props: BuilderTeaserProps) => <TeaserServices {...props} />,
   ],
   [
     isTeaserLogoWall,

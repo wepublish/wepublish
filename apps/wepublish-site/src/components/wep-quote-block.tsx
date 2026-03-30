@@ -7,6 +7,7 @@ export const WepQuoteBlock = styled(QuoteBlock)`
   ${({ theme }) => theme.breakpoints.up('xs')} {
     grid-template-columns: 155px auto;
     grid-template-rows: repeat(3, auto);
+    padding: 0;
   }
 
   ${QuoteContent} {
@@ -16,6 +17,16 @@ export const WepQuoteBlock = styled(QuoteBlock)`
   p {
     grid-column: 1 / -1;
     grid-row: 1 / 2;
+
+    quotes: '\201E' '\201C';
+
+    &::before {
+      content: open-quote;
+    }
+
+    &::after {
+      content: close-quote;
+    }
   }
 
   img {

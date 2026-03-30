@@ -5,6 +5,7 @@ import {
   collectSiblings,
   isImageBlock,
   isRichTextBlock,
+  isTitleBlock,
 } from '@wepublish/block-content/website';
 import { ImageContext } from '@wepublish/image/website';
 import { BlockContent } from '@wepublish/website/api';
@@ -48,8 +49,9 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
     () =>
       cond([
         [
-          anyPass([isImageBlock, isRichTextBlock]),
+          anyPass([isImageBlock]),
           () => css`
+            background-color: red;
             grid-template-columns:
               max(calc(100vw - var(--breakpoint-width)) / 2, 0px)
               repeat(12, 1fr) max(

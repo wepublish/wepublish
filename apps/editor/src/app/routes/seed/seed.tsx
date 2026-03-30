@@ -7,13 +7,11 @@ import {
   BlockContentInput,
   BlockStyle,
   BlockStylesDocument,
-  BlockWithAlignment,
   BreakBlockInput,
   CommentItemType,
   CommentListDocument,
   CreateArticleMutationVariables,
   EventListDocument,
-  FlexBlockInput,
   getApiClientV2,
   ImageBlockInput,
   ImageListDocument,
@@ -25,7 +23,6 @@ import {
   ProductType,
   PropertyInput,
   QuoteBlockInput,
-  RichTextBlockInput,
   SubscriptionFlowsDocument,
   SubscriptionListDocument,
   Tag,
@@ -38,6 +35,7 @@ import {
   TeaserSlotsBlockInput,
   TeaserType,
   TitleBlockInput,
+  YouTubeVideoBlockInput,
   useApproveCommentMutation,
   useCreateArticleMutation,
   useCreateAuthorMutation,
@@ -344,132 +342,7 @@ const createArticleBlocksInput = (
   headings: string[],
   headingTwo: string[]
 ): BlockContentInput[] => {
-  const customBlocks: BlockContentInput[] = [];
-  if (i === 0) {
-    customBlocks.push({
-      html: {
-        html: `<style type="text/css">
-                :has(> div > .rote-box) {
-                  grid-column: -1/1;
-                  background-color: yellow;
-                  grid-template-columns: subgrid;
-                  display: grid;
-                  margin-left: 0 !important;
-                  margin-right: 0 !important;
-
-                  & > div {
-                    grid-column: 2/14;
-
-                    & .rote-box {
-                      background-color: red;
-                      color: white;
-                      font-family: inherit;
-                      font-size: 4rem;
-                      text-align: center;
-                    }
-                  }
-                }
-
-                .rs-drawer :has(> div > .rote-box) {
-                  grid-column: revert;
-                  background-color: revert;
-                  grid-template-columns: revert;
-                  display: revert;
-                  margin-left: revert !important;
-                  margin-right: revert !important;
-                }
-                </style>
-                <div class="rote-box">
-                  custom element
-                </div>`,
-      },
-    } as BlockContentInput);
-    customBlocks.push({
-      embed: {
-        url: 'https://h5p.org/h5p/embed/1205714',
-        width: 1090,
-        height: 880,
-      },
-    } as BlockContentInput);
-  }
-
   const blocks: BlockContentInput[] = [
-    // hero block
-    ...pickRandom(
-      {
-        flexBlock: {
-          blockStyle: getBlockStyle(blockStyles, 'FlexBlockHero'),
-          blocks: [
-            // desktop image
-            {
-              alignment: {
-                i: '0',
-                x: 0,
-                y: 0,
-                w: 6,
-                h: 7,
-                static: false,
-              },
-              block: {
-                image: {
-                  imageID: imageIds[12],
-                  caption: faker.lorem.sentence(),
-                } as ImageBlockInput,
-              } as BlockContentInput,
-            },
-
-            // mobile image
-            {
-              alignment: {
-                i: '1',
-                x: 6,
-                y: 0,
-                w: 6,
-                h: 7,
-                static: false,
-              },
-              block: {
-                image: {
-                  imageID: imageIds[13],
-                  caption: faker.lorem.sentence(),
-                } as ImageBlockInput,
-              } as BlockContentInput,
-            },
-
-            // overlay text
-            {
-              alignment: {
-                i: '2',
-                x: 0,
-                y: 7,
-                w: 12,
-                h: 3,
-                static: false,
-              },
-              block: {
-                richText: {
-                  richText: [
-                    {
-                      type: 'heading-one',
-                      children: [
-                        {
-                          text: capitalize(
-                            faker.lorem.words({ min: 3, max: 8 })
-                          ),
-                        },
-                      ],
-                    },
-                    ...(getText(1, 2) as Descendant[]),
-                  ] as Descendant[],
-                } as RichTextBlockInput,
-              } as BlockContentInput,
-            },
-          ] as BlockWithAlignment[],
-        } as FlexBlockInput,
-      } as BlockContentInput,
-      0.3
-    ),
-
     // a title block
     {
       title: {
@@ -479,409 +352,12 @@ const createArticleBlocksInput = (
       } as TitleBlockInput,
     } as BlockContentInput,
 
-    // a collapsible content block
-    {
-      linkPageBreak: {
-        hideButton: false,
-        imageID: null,
-        linkTarget: null,
-        linkText: null,
-        linkURL: null,
-        blockStyle: getBlockStyle(blockStyles, 'CollapsibleContent'),
-        text: 'Das Wichtigste in Kürze',
-        richText: [
-          {
-            type: 'unordered-list',
-            children: [
-              {
-                type: 'list-item',
-                children: [{ text: capitalize(faker.lorem.sentence()) }],
-              },
-              {
-                type: 'list-item',
-                children: [{ text: capitalize(faker.lorem.sentence()) }],
-              },
-              {
-                type: 'list-item',
-                children: [{ text: capitalize(faker.lorem.sentence()) }],
-              },
-            ],
-          },
-          {
-            type: 'unordered-list',
-            children: [
-              {
-                type: 'list-item',
-                children: [
-                  {
-                    type: 'link',
-                    url: faker.internet.url(),
-                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
-                    children: [{ text: capitalize(faker.lorem.sentence()) }],
-                  },
-                ],
-              },
-              {
-                type: 'list-item',
-                children: [
-                  {
-                    type: 'link',
-                    url: faker.internet.url(),
-                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
-                    children: [{ text: capitalize(faker.lorem.sentence()) }],
-                  },
-                ],
-              },
-              {
-                type: 'list-item',
-                children: [
-                  {
-                    type: 'link',
-                    url: faker.internet.url(),
-                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
-                    children: [{ text: capitalize(faker.lorem.sentence()) }],
-                  },
-                ],
-              },
-            ],
-          },
-          ...(getText(1, 2) as Descendant[]),
-        ] as Descendant[],
-      } as RichTextBlockInput,
-    } as BlockContentInput,
-
-    // showcase custom blocks in the first article
-    ...customBlocks,
-
-    // a quote block without author
-    {
-      quote: {
-        quote: capitalize(
-          'How can you make sure that this money is being considered as legal or legalized? Because I’m not sure whether it’s really legal. Can you help  him with it?'
-        ),
-        imageID: undefined,
-        author: undefined,
-      } as QuoteBlockInput,
-    } as BlockContentInput,
-
-    // a quote block with author
-    {
-      quote: {
-        quote: capitalize(
-          'Yeah, but to answer this  question, we would need to have more information. And then it’s the way  we will present it to the banks, you know.'
-        ),
-        imageID: undefined,
-        author: capitalize(faker.person.fullName()),
-      } as QuoteBlockInput,
-    } as BlockContentInput,
-
     // an image block
     {
       image: {
         imageID: imageIds[(i + 1) % imageIds.length],
         caption: faker.lorem.sentence(),
       } as ImageBlockInput,
-    } as BlockContentInput,
-
-    // a table of contents toc block
-    {
-      linkPageBreak: {
-        hideButton: false,
-        imageID: null,
-        linkTarget: null,
-        linkText: null,
-        linkURL: null,
-        blockStyle: getBlockStyle(blockStyles, 'TableOfContents'),
-        text: 'Kapitel',
-        richText: [
-          {
-            type: 'unordered-list',
-            children: [
-              {
-                type: 'list-item',
-                children: [
-                  {
-                    type: 'link',
-                    url: faker.internet.url(),
-                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
-                    children: [{ text: capitalize(faker.lorem.sentence()) }],
-                    id: faker.lorem.words({ min: 2, max: 4 }),
-                  },
-                ],
-              },
-              {
-                type: 'list-item',
-                children: [
-                  {
-                    type: 'link',
-                    url: faker.internet.url(),
-                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
-                    children: [{ text: capitalize(faker.lorem.sentence()) }],
-                    id: faker.lorem.words({ min: 2, max: 4 }),
-                  },
-                ],
-              },
-              {
-                type: 'list-item',
-                children: [
-                  {
-                    type: 'link',
-                    url: faker.internet.url(),
-                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
-                    children: [{ text: capitalize(faker.lorem.sentence()) }],
-                    id: faker.lorem.words({ min: 2, max: 4 }),
-                  },
-                ],
-              },
-            ],
-          },
-        ] as Descendant[],
-      } as BreakBlockInput,
-    } as BlockContentInput,
-
-    // a rich text block
-    {
-      richText: {
-        richText: [
-          addRichTextHeading(
-            capitalize(faker.lorem.words({ min: 3, max: 9 })),
-            'three',
-            headings,
-            headingTwo
-          ),
-          ...(getText(3, 7) as Descendant[]),
-        ] as Descendant[],
-      } as RichTextBlockInput,
-    } as BlockContentInput,
-
-    // some alternating image and rich text blocks
-    ...Array.from({ length: faker.number.int({ min: 5, max: 9 }) }, () => {
-      const imageBlock = pickRandom<BlockContentInput>(
-        {
-          image: {
-            imageID:
-              imageIds[faker.number.int({ min: 0, max: imageIds.length - 1 })],
-            caption: faker.lorem.sentence(),
-          } as ImageBlockInput,
-        },
-        0.1
-      );
-      if (imageBlock.length) {
-        return imageBlock[0];
-      } else {
-        return {
-          richText: {
-            richText: [
-              addRichTextHeading(
-                capitalize(faker.lorem.words({ min: 3, max: 9 })),
-                'two',
-                headings,
-                headingTwo
-              ),
-              ...(getText(3, 5) as Descendant[]),
-              addRichTextHeading(
-                capitalize(faker.lorem.words({ min: 3, max: 9 })),
-                'three',
-                headings,
-                headingTwo
-              ),
-              ...(getText(3, 5) as Descendant[]),
-            ] as Descendant[],
-          } as RichTextBlockInput,
-        } as BlockContentInput;
-      }
-    }),
-
-    // a break block
-    {
-      linkPageBreak: {
-        blockStyle: getBlockStyle(blockStyles, 'ImageWithTextAltColor'),
-        hideButton: false,
-        imageID: imageIds[imageIds.length - 30],
-        text: 'Lust auf mehr investigative Recherchen?',
-        linkTarget: null,
-        linkText: 'Jetzt unterstützen',
-        linkURL: '/mitmachen',
-        richText: [
-          {
-            type: 'paragraph',
-            children: [
-              {
-                text: 'Dieser Beitrag wurde durch unsere Mitglieder ermöglicht. Unterstütze auch du mutigen Journalismus!',
-              },
-            ],
-          },
-        ] as Descendant[],
-      } as BreakBlockInput,
-    } as BlockContentInput,
-
-    // more rich text blocks
-    ...Array.from({ length: faker.number.int({ min: 1, max: 4 }) }, () => {
-      return {
-        richText: {
-          richText: [
-            addRichTextHeading(
-              capitalize(faker.lorem.words({ min: 3, max: 9 })),
-              pickRandom('two', 0.5)[0] ? 'two' : 'three',
-              headings,
-              headingTwo
-            ),
-            ...(getText(3, 5) as Descendant[]),
-          ] as Descendant[],
-        } as RichTextBlockInput,
-      } as BlockContentInput;
-    }),
-
-    // a flex-block fullsize image block
-    {
-      flexBlock: {
-        blockStyle: getBlockStyle(blockStyles, 'FlexBlockFullsizeImage'),
-        blocks: [
-          //  image
-          {
-            alignment: {
-              i: '0',
-              x: 0,
-              y: 0,
-              w: 12,
-              h: 7,
-              static: false,
-            },
-            block: {
-              image: {
-                imageID: imageIds[18],
-                caption: null,
-              } as ImageBlockInput,
-            } as BlockContentInput,
-          },
-
-          // overlay text
-          {
-            alignment: {
-              i: '2',
-              x: 0,
-              y: 7,
-              w: 12,
-              h: 3,
-              static: false,
-            },
-            block: {
-              richText: {
-                richText: [
-                  {
-                    type: 'heading-two',
-                    children: [
-                      {
-                        text: capitalize(
-                          faker.lorem.words({ min: 5, max: 20 })
-                        ),
-                      },
-                    ],
-                  },
-                  {
-                    type: 'heading-two',
-                    children: [
-                      {
-                        text: capitalize(
-                          faker.lorem.words({ min: 10, max: 15 })
-                        ),
-                      },
-                    ],
-                  },
-                ] as Descendant[],
-              } as RichTextBlockInput,
-            } as BlockContentInput,
-          },
-        ] as BlockWithAlignment[],
-      } as FlexBlockInput,
-    } as BlockContentInput,
-
-    // a collapsible downloads list block
-    {
-      linkPageBreak: {
-        hideButton: false,
-        imageID: null,
-        linkTarget: null,
-        linkText: null,
-        linkURL: null,
-        blockStyle: getBlockStyle(blockStyles, 'CollapsibleDownloads'),
-        text: 'Downloads',
-        richText: [
-          {
-            type: 'unordered-list',
-            children: [
-              {
-                type: 'list-item',
-                children: [
-                  {
-                    type: 'link',
-                    url: faker.internet.url(),
-                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
-                    children: [{ text: capitalize(faker.lorem.sentence()) }],
-                  },
-                ],
-              },
-              {
-                type: 'list-item',
-                children: [
-                  {
-                    type: 'link',
-                    url: faker.internet.url(),
-                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
-                    children: [{ text: capitalize(faker.lorem.sentence()) }],
-                  },
-                ],
-              },
-              {
-                type: 'list-item',
-                children: [
-                  {
-                    type: 'link',
-                    url: faker.internet.url(),
-                    title: capitalize(faker.lorem.words({ min: 2, max: 4 })),
-                    children: [{ text: capitalize(faker.lorem.sentence()) }],
-                  },
-                ],
-              },
-            ],
-          },
-        ] as Descendant[],
-      } as BreakBlockInput,
-    } as BlockContentInput,
-
-    // a credits teaser block
-    {
-      teaserSlots: {
-        title: 'Credits',
-        blockStyle: getBlockStyle(blockStyles, 'TeaserCredits'),
-        autofillConfig: {
-          enabled: false,
-          filter: {},
-          teaserType: TeaserType.Article,
-          sort: TeaserListBlockSort.PublishedAt,
-        } as TeaserSlotsAutofillConfig,
-        slots: [
-          ...Array.from(
-            { length: faker.number.int({ min: 5, max: 9 }) },
-            () => {
-              return {
-                type: 'Manual',
-                teaser: {
-                  custom: {
-                    preTitle: null,
-                    title: faker.person.fullName(),
-                    lead: faker.person.jobTitle(),
-                    contentUrl: null,
-                    openInNewTab: false,
-                    properties: [],
-                    imageID: null,
-                  },
-                },
-              };
-            }
-          ),
-        ],
-      } as TeaserSlotsBlockInput,
     } as BlockContentInput,
   ] as BlockContentInput[];
 
@@ -901,7 +377,7 @@ const createArticleInput = (
   return {
     variables: {
       shared: true,
-      slug: faker.helpers.slugify(title.toLowerCase()),
+      slug: `${faker.helpers.slugify(title.toLowerCase())}-${faker.helpers.arrayElement(['de', 'fr'])}`,
       publishedAt: new Date().toISOString(),
       preTitle: capitalize(faker.lorem.words({ min: 3, max: 8 })),
       title,
@@ -1047,7 +523,7 @@ async function seedNavigations(createNavigation: any, tags: string[] = []) {
           {
             type: NavigationLinkType.External,
             label: 'Demo buchen',
-            url: '/de/demo-buchen',
+            url: 'mailto:info@wepublish.ch',
           },
         ],
       },
@@ -1206,12 +682,12 @@ async function seedNavigations(createNavigation: any, tags: string[] = []) {
           {
             type: NavigationLinkType.External,
             label: 'Deutsch',
-            url: '/de/',
+            url: 'http://localhost:4200/de', // https://www.wepublish.ch/de
           },
           {
             type: NavigationLinkType.External,
             label: 'Français',
-            url: '/fr/',
+            url: 'http://localhost:4200/fr', // https://www.wepublish.ch/fr
           },
         ],
       },
@@ -1482,13 +958,70 @@ async function seedPages(
         } as BlockContentInput,
 
         {
+          teaserSlots: {
+            title: 'Aktuelle Angebote',
+            blockStyle: getBlockStyle(blockStyles, 'TeaserServices'),
+            autofillConfig: {
+              enabled: false,
+              filter: {},
+              teaserType: TeaserType.Page,
+              sort: null,
+            } as TeaserSlotsAutofillConfig,
+            slots: [
+              {
+                type: 'Manual',
+                teaser: {
+                  custom: {
+                    title: 'KI-Exoskelett',
+                    lead: 'KI-gestützte Werkzeuge für Recherche, Textarbeit und redaktionelle Prozesse. Ohne die journalistische Kontrolle abzugeben.',
+                    contentUrl: 'mailto:info@wepublish.ch',
+                    preTitle: 'Mehr erfahren',
+                    openInNewTab: false,
+                    properties: [],
+                    imageID: null,
+                  },
+                },
+              },
+              {
+                type: 'Manual',
+                teaser: {
+                  custom: {
+                    title: 'Fundraising',
+                    lead: 'Wir übernehmen den grössten Teil des Fundraising-Prozesses. Strukturiert, datenbasiert, massgeschneidert. Wir rechnen nur ab, wenn ihr gewinnt.',
+                    contentUrl: 'mailto:info@wepublish.ch',
+                    preTitle: 'Mehr erfahren',
+                    openInNewTab: false,
+                    properties: [],
+                    imageID: null,
+                  },
+                },
+              },
+              {
+                type: 'Manual',
+                teaser: {
+                  custom: {
+                    title: 'OSINT',
+                    lead: 'Ihr habt eine Recherchefrage, wir liefern die Antworten. Mit den Methoden und Quellen der Open Source Intelligence graben wir tief und finden Antworten.',
+                    contentUrl: 'mailto:info@wepublish.ch',
+                    preTitle: 'Mehr erfahren',
+                    openInNewTab: false,
+                    properties: [],
+                    imageID: null,
+                  },
+                },
+              },
+            ] as TeaserSlotInput[],
+          } as TeaserSlotsBlockInput,
+        } as BlockContentInput,
+
+        {
           linkPageBreak: {
             blockStyle: getBlockStyle(blockStyles, 'AttentionCatcher'),
             hideButton: false,
             imageID: null,
             linkTarget: null,
             linkText: 'Demo anfragen',
-            linkURL: '/de/demo',
+            linkURL: 'mailto:info@wepublish.ch',
             text: 'Interessiert? In einer Demo beantworten wir alle Fragen und du kannst unser CMS mit allen Features ausprobieren.',
             richText: [] as Descendant[],
           } as BreakBlockInput,
@@ -1523,6 +1056,72 @@ async function seedPages(
               },
             ] as TeaserSlotInput[],
           } as TeaserSlotsBlockInput,
+        } as BlockContentInput,
+
+        {
+          quote: {
+            quote:
+              'Mit We.Publish kriegen wir nicht nur ein top modernes und leistungsfähiges CMS. Das wirklich Fortschrittliche sind die Kooperations- und Inhalts-Tausch-Möglichkeiten unter den angeschlossenen Medien.',
+            imageID:
+              imageIds.length ?
+                imageIds[faker.number.int({ min: 0, max: imageIds.length - 1 })]
+              : null,
+            author: 'Simon Jacoby, Verleger & Chefredaktor Tsüri.ch',
+          } as QuoteBlockInput,
+        } as BlockContentInput,
+
+        {
+          richText: {
+            blockStyle: null,
+            richText: [
+              {
+                type: 'heading-two',
+                children: [
+                  {
+                    text: 'So funktioniert We.Publish',
+                  },
+                ],
+              },
+            ],
+          },
+        } as BlockContentInput,
+
+        {
+          youTubeVideo: {
+            videoID: faker.helpers.arrayElement([
+              'dQw4w9WgXcQ',
+              'jNQXAC9IVRw',
+              'kJQP7kiw5Fk',
+              'OPf0YbXqDm0',
+              'hT_nvWreIhg',
+              '9bZkp7q19f0',
+            ]),
+          } as YouTubeVideoBlockInput,
+        } as BlockContentInput,
+
+        {
+          linkPageBreak: {
+            hideButton: false,
+            imageID:
+              imageIds.length ?
+                imageIds[faker.number.int({ min: 0, max: imageIds.length - 1 })]
+              : null,
+            linkTarget: null,
+            linkText: 'Mehr erfahren',
+            linkURL: 'mailto:info@wepublish.ch',
+            blockStyle: null,
+            text: 'Über uns',
+            richText: [
+              {
+                type: 'paragraph',
+                children: [
+                  {
+                    text: 'We.Publish ist eine Stiftung mit dem Ziel, die Medienvielfalt in der Schweiz zu stärken. Wir unterstützen Projekte, die demokratierelevante Inhalte einem breiten Publikum zugänglich machen – mit besonderem Fokus auf die Förderung und Weiterentwicklung offener, frei zugänglicher technischer Infrastrukturen (Open Source).',
+                  },
+                ],
+              },
+            ] as Descendant[],
+          } as BreakBlockInput,
         } as BlockContentInput,
       ] as BlockContentInput[],
     },
@@ -1697,6 +1296,11 @@ async function seedBlockStyles(createBlockStyle: any): Promise<BlockStyle[]> {
 
     {
       name: 'TeaserNews',
+      blocks: ['TeaserSlots'],
+    },
+
+    {
+      name: 'TeaserServices',
       blocks: ['TeaserSlots'],
     },
 

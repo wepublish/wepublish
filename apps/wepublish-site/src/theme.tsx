@@ -242,7 +242,7 @@ const theme = createTheme(WePTheme, {
               breakpoints: WePTheme.breakpoints.values,
               values: {
                 xs: 14,
-                md: 14,
+                md: 16,
               },
             }),
           ]),
@@ -661,37 +661,6 @@ const theme = createTheme(WePTheme, {
       },
     },
     MuiToolbar: {
-      variants: [
-        {
-          props: { variant: 'navbarInnerWrapper' },
-          style: ({ theme }: { theme: Theme }) => ({
-            minHeight: 'unset',
-            aspectRatio: 'var(--changing-aspect-ratio)',
-            margin: '0 auto',
-            width: '100%',
-            backgroundColor: 'transparent',
-            maxWidth: 1333,
-            container: 'toolbar/inline-size',
-            position: 'static',
-            boxSizing: 'border-box',
-            display: 'grid',
-            gridTemplateColumns: '1fr auto min-content',
-            gridTemplateRows: 'repeat(2, auto)',
-            transition:
-              'background-color 100ms ease-out 200ms, aspect-ratio 300ms ease-out',
-            [theme.breakpoints.up('md')]: {
-              gridTemplateRows: 'unset',
-              maxWidth: `${breakPointValues.md + 48}px`,
-            },
-            [theme.breakpoints.up('lg')]: {
-              maxWidth: `${breakPointValues.lg + 48}px`,
-            },
-            [theme.breakpoints.up('xl')]: {
-              maxWidth: `${breakPointValues.xl + 48}px`,
-            },
-          }),
-        },
-      ],
       // set the navbar to be the same width as MuiContainer
       styleOverrides: {
         root: ({ theme }: { theme: any }) => ({
@@ -699,13 +668,13 @@ const theme = createTheme(WePTheme, {
             // since Appbar sets max width for Toolbar with specifity of 2...
             // ...we have to increase the specifity to override
             [theme.breakpoints.up('md')]: {
-              maxWidth: `${breakPointValues.md}px`,
+              maxWidth: `${breakPointValues.md + 48}px`,
             },
             [theme.breakpoints.up('lg')]: {
-              maxWidth: `${breakPointValues.lg}px`,
+              maxWidth: `${breakPointValues.lg + 48}px`,
             },
             [theme.breakpoints.up('xl')]: {
-              maxWidth: `${breakPointValues.xl}px`,
+              maxWidth: `${breakPointValues.xl + 48}px`,
             },
           },
         }),
@@ -774,6 +743,40 @@ export const navbarTheme = createTheme(theme, {
     },
   },
   components: {
+    MuiToolbar: {
+      variants: [
+        {
+          props: { variant: 'navbarInnerWrapper' },
+          style: ({ theme }: { theme: Theme }) => ({
+            minHeight: 'unset',
+            aspectRatio: 'var(--changing-aspect-ratio)',
+            margin: '0 auto',
+            width: '100%',
+            backgroundColor: 'transparent',
+            container: 'toolbar/inline-size',
+            position: 'static',
+            boxSizing: 'border-box',
+            display: 'grid',
+            gridTemplateColumns: '1fr auto min-content',
+            gridTemplateRows: 'repeat(2, auto)',
+            transition:
+              'background-color 100ms ease-out 200ms, aspect-ratio 300ms ease-out',
+            ['&&']: {
+              [theme.breakpoints.up('md')]: {
+                gridTemplateRows: 'unset',
+                maxWidth: `${breakPointValues.md + 48}px`,
+              },
+              [theme.breakpoints.up('lg')]: {
+                maxWidth: `${breakPointValues.lg + 48}px`,
+              },
+              [theme.breakpoints.up('xl')]: {
+                maxWidth: `${breakPointValues.xl + 48}px`,
+              },
+            },
+          }),
+        },
+      ],
+    },
     MuiLink: {
       variants: [
         // keep base variants
@@ -876,6 +879,95 @@ export const teaserNews = createTheme(theme, {
             '&:hover': {
               backgroundColor: colors.primary.light,
               color: colors.common.black,
+              textDecoration: 'none',
+            },
+          },
+        },
+      ],
+    },
+  },
+});
+
+export const teaserServices = createTheme(theme, {
+  typography: {
+    ...{
+      teaserTitle: {
+        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        backgroundColor: 'transparent',
+        margin: 0,
+        padding: 0,
+        marginBottom: 0,
+        textAlign: 'left',
+        textTransform: 'none',
+        fontWeight: 500,
+        lineHeight: 1.3,
+        ...mergeDeepAll([
+          responsiveProperty({
+            cssProperty: 'fontSize',
+            unit: 'px',
+            breakpoints: WePTheme.breakpoints.values,
+            values: {
+              xs: 12,
+              md: 24,
+            },
+          }),
+        ]),
+      },
+      teaserPretitle: {
+        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        backgroundColor: 'transparent',
+        lineHeight: 1.2,
+        fontWeight: 400,
+        padding: 0,
+        borderRadius: 0,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+      },
+      teaserLead: {
+        fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+        lineHeight: 1.5,
+        fontWeight: 300,
+        padding: 0,
+        margin: 0,
+        marginBottom: 0,
+        backgroundColor: 'transparent',
+        color: colors.common.black,
+        ...mergeDeepAll([
+          responsiveProperty({
+            cssProperty: 'fontSize',
+            unit: 'px',
+            breakpoints: WePTheme.breakpoints.values,
+            values: {
+              xs: 12,
+              md: 18,
+            },
+          }),
+        ]),
+      },
+    },
+  },
+  components: {
+    MuiLink: {
+      variants: [
+        // keep base variants
+        ...(theme.components?.MuiLink?.variants ?? []),
+        // add teaser-specific variants
+        {
+          props: { variant: 'teaserPretitleLink' },
+          style: {
+            fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
+            display: 'inline-block',
+            textDecoration: 'none',
+            flexGrow: 0,
+            borderRadius: '3px',
+            marginTop: '1rem',
+            padding: '0.5rem 1.25rem',
+            border: `1px solid ${colors.common.black}`,
+            color: colors.common.black,
+            '&:hover': {
+              fontWeight: 500,
+              boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.4)',
               textDecoration: 'none',
             },
           },
