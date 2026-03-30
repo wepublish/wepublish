@@ -105,7 +105,11 @@ jobs:
           SHA_HASH=${{ github.sha }}
           ENVIRONMENT=${{ inputs.environment }}
           PROJECT_NAME=${{ inputs.website_project }}
-          TDL=$(jq -r ".tdl.${ENVIRONMENT}" "apps/${PROJECT_NAME}/deployment.config.json")
+          if [[ "$ENVIRONMENT" == "production" ]]; then
+            TDL="wepublish.cloud"
+          else
+            TDL="wepublish.works"
+          fi
           FRONTEND_BASE_URL=$(./deployment/read_deployment_config.sh ".website.${ENVIRONMENT}.custom_domain" true ${PROJECT_NAME} getValue https://${PROJECT_NAME}.${TDL} | awk -F "::" '{print $3}')
           echo "Looking for frontent version at ${FRONTEND_BASE_URL}/deployed_version"
           for ((i=1; i<=MAX_RETRIES; i++)); do
