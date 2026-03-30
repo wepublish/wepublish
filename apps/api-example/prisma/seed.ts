@@ -986,7 +986,7 @@ async function seedSettings(prisma: PrismaClient) {
       webhookEndpointSecret:
         'v1.Y8W3JLH3z5h7U9Lg.ecgpjFza7TLGjgU5TzApvw==.BavphN7gRyEfUls1l3ttNk1+bwo7Uqd+Lvb7mwF+iaSKPXw=',
       mollie_methods: [MolliePaymentMethod.CREDITCARD],
-      mollie_apiBaseUrl: 'https://api.wepublish.dev',
+      mollie_apiBaseUrl: 'https://api.wepublish.works',
     })
   );
 

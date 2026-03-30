@@ -50,7 +50,7 @@ jobs:
       tag: ${{ steps.image_tag.outputs.tag }}
     steps:
       - id: image_tag
-        run: echo "::set-output name=tag::$(date +%s)-${{ github.sha }}"
+        run: echo "tag=$(date +%s)-${{ github.sha }}" >> "$GITHUB_OUTPUT"
               
   check-if-website-deployment:
     runs-on: ubuntu-latest
@@ -85,7 +85,7 @@ jobs:
           PROJECT="${{ needs.check-review-deploy-label.outputs.project_name }}"
           CONFIG="apps/${PROJECT}/deployment.config.json"
           if [[ -f "$CONFIG" ]]; then
-            TDL=$(jq -r '.tdl.production // "wepublish.cloud"' "$CONFIG")
+            TDL=$(jq -r '.tdl.production' "$CONFIG")
           else
             TDL="wepublish.cloud"
           fi
@@ -156,7 +156,7 @@ jobs:
           OUTPUT=$(node ./notify-github.js)
           OUTPUT="${OUTPUT//$'\n'/'%0A'}"
           OUTPUT="${OUTPUT//$'\r'/'%0D'}"
-          echo "::set-OUTPUT name=result::$OUTPUT"
+          echo "result=$OUTPUT" >> "$GITHUB_OUTPUT"
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
