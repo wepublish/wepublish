@@ -7,8 +7,16 @@ const globalCSS = (theme: Theme, isHomePage: boolean) => css`
       background: linear-gradient(
         to bottom,
         ${theme.palette.primary.main} 30vh,
-        ${theme.palette.common.white} 110vh
+        ${theme.palette.common.white} 55vh
       );
+
+      ${theme.breakpoints.up('md')} {
+        background: linear-gradient(
+          to bottom,
+          ${theme.palette.primary.main} 30vh,
+          ${theme.palette.common.white} 110vh
+        );
+      }
     }
   `}
   :root {

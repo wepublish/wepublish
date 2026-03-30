@@ -96,8 +96,7 @@ export const FooterPaperWrapper = styled('div')`
   display: grid;
   grid-template-rows: repeat(3, auto);
   grid-template-columns: repeat(2, auto);
-  padding: 0 ${({ theme }) => theme.spacing(2)} 10rem
-    ${({ theme }) => theme.spacing(2)};
+  padding: ${({ theme }) => theme.spacing(5, 2, 10, 2)};
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-rows: min-content;
@@ -121,6 +120,7 @@ export const FooterLinksGroup = styled('div')`
   grid-row: 1 / 4;
   grid-template-columns: subgrid;
   grid-template-rows: subgrid;
+  row-gap: ${({ theme }) => theme.spacing(3)};
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-columns: repeat(6, auto);
@@ -130,7 +130,10 @@ export const FooterLinksGroup = styled('div')`
 `;
 
 const WepLogo = styled('img')`
-  width: 220px;
+  width: 150px;
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    width: 220px;
+  }
   margin-bottom: ${({ theme }) => theme.spacing(2)};
 `;
 
