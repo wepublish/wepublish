@@ -7,7 +7,7 @@
   "website": {
     "production": {
       "deployment": true,
-      "custom_domain": "https://wepublish-site.wepublish.media",
+      "custom_domain": "https://wepublish-site.wepublish.cloud",
       "env": {
         "DEPLOY_ENV": "production"
       },
