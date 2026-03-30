@@ -24,7 +24,7 @@ export const isTeaserLogoWall = allPass([
 
 export const TeaserLogoWall = styled(WepTeaser)`
   aspect-ratio: unset;
-  grid-template-rows: minmax(auto, 200px);
+  grid-template-rows: minmax(auto, 80px);
   grid-template-columns: 1fr;
 
   background-color: transparent;

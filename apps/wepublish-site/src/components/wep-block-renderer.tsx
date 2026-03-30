@@ -1,11 +1,7 @@
-import { css, Theme } from '@emotion/react';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { css, useTheme } from '@emotion/react';
 import {
   BlockRenderer,
   collectSiblings,
-  isImageBlock,
-  isRichTextBlock,
-  isTitleBlock,
 } from '@wepublish/block-content/website';
 import { ImageContext } from '@wepublish/image/website';
 import { BlockContent } from '@wepublish/website/api';
@@ -15,6 +11,7 @@ import {
   BuilderBreakBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { useRouter } from 'next/router';
 import { anyPass, cond } from 'ramda';
 import { memo, useMemo } from 'react';
 
@@ -25,9 +22,9 @@ import {
 import { MainSpacer } from './wep-main-spacer';
 
 export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
-  const isMobile = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.down('md')
-  );
+  const { asPath } = useRouter();
+  const isHomePage = asPath === '/' || asPath === '/de' || asPath === '/fr';
+  const theme = useTheme();
 
   const extraBlockMap = useMemo(
     () =>
@@ -49,27 +46,23 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
     () =>
       cond([
         [
-          anyPass([isImageBlock]),
-          () => css`
-            background-color: red;
-            grid-template-columns:
-              max(calc(100vw - var(--breakpoint-width)) / 2, 0px)
-              repeat(12, 1fr) max(
-                calc(100vw - var(--breakpoint-width)) / 2,
-                0px
-              ) !important;
-            //grid-template-columns: subgrid !important;
-            & > * {
-              /*
-              grid-column: 3/14;
-              margin-left: 0;
-              margin-right: 0;
-              */
-            }
-          `,
+          anyPass([block => true]),
+          () =>
+            isHomePage && props.index < 2 ?
+              css``
+            : css`
+                ${theme.breakpoints.up('md')} {
+                  grid-template-columns: minmax(
+                    auto,
+                    calc(
+                      ${theme.breakpoints.values['lg']}px - ${theme.spacing(16)}
+                    )
+                  ) !important;
+                }
+              `,
         ],
       ]),
-    [isMobile]
+    [isHomePage, props.index, theme]
   );
 
   if (props.type === 'Page') {

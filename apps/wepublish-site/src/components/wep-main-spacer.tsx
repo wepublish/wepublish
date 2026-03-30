@@ -17,7 +17,11 @@ export const MainSpacer = styled(Container)`
   }
 
   &:has(${YouTubeVideoBlockWrapper}) {
-    margin-top: -${({ theme }) => theme.spacing(11)};
+    margin-top: -${({ theme }) => theme.spacing(3)};
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      margin-top: -${({ theme }) => theme.spacing(11)};
+    }
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {

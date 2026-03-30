@@ -317,7 +317,7 @@ const theme = createTheme(WePTheme, {
           unit: 'rem',
           breakpoints: WePTheme.breakpoints.values,
           values: {
-            xs: 12,
+            xs: 24,
             md: 28,
           },
         }),
@@ -341,7 +341,7 @@ const theme = createTheme(WePTheme, {
             unit: 'px',
             breakpoints: WePTheme.breakpoints.values,
             values: {
-              xs: 12,
+              xs: 24,
               md: 38,
             },
           }),
@@ -373,7 +373,7 @@ const theme = createTheme(WePTheme, {
             unit: 'px',
             breakpoints: WePTheme.breakpoints.values,
             values: {
-              xs: 12,
+              xs: 16,
               md: 18,
             },
           }),
@@ -717,8 +717,12 @@ export const navbarTheme = createTheme(theme, {
         padding: 0,
         display: 'flex',
         flexDirection: 'row',
-        columnGap: theme.spacing(6),
-        gridColumn: '3 / 4',
+        columnGap: theme.spacing(1.5),
+        gridColumn: '1 / 2',
+        [breakpoints.up('md')]: {
+          columnGap: theme.spacing(6),
+          gridColumn: '3 / 4',
+        },
         lineHeight: 1.2,
         pointerEvents: 'all',
       },
@@ -729,6 +733,10 @@ export const navbarTheme = createTheme(theme, {
         lineHeight: 0,
         borderRadius: '3px',
         ['&:last-of-type']: {
+          display: 'none',
+          [breakpoints.up('md')]: {
+            display: 'block',
+          },
           padding: '0 1rem',
           backgroundColor: colors.primary.light,
           ['&:hover']: {
@@ -834,7 +842,7 @@ export const teaserNews = createTheme(theme, {
             unit: 'px',
             breakpoints: WePTheme.breakpoints.values,
             values: {
-              xs: 12,
+              xs: 16,
               md: 24,
             },
           }),

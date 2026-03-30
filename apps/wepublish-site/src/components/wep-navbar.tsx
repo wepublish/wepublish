@@ -355,15 +355,14 @@ export const WepLogo = styled('img', {
   transition: width 300ms ease-out;
   transform: translate3d(0, 0, 0);
   position: absolute;
-  display: none;
+  width: 12rem;
 
-  width: 15.5rem;
   height: auto;
   top: 1.25rem;
   left: 0;
 
   ${theme.breakpoints.up('md')} {
-    display: block;
+    width: 15.5rem;
   }
 `;
 
@@ -442,7 +441,7 @@ export const NavPaperWrapper = styled('div', {
   padding: ${theme.spacing(2)} ${theme.spacing(2)} 0 ${theme.spacing(2)};
   background-color: transparent;
   color: ${theme.palette.common.white};
-  top: 0;
+  top: 50px;
   left: 0;
   right: 0;
   transform: scale(${({ isMenuOpen }) => (isMenuOpen ? '100%' : '1%')});
@@ -465,6 +464,7 @@ export const NavPaperWrapper = styled('div', {
 
   ${theme.breakpoints.up('md')} {
     row-gap: unset;
+    top: 0;
   }
 
   ${NavPaperLinksGroup} {
