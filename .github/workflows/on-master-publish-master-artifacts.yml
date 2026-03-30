@@ -17,7 +17,7 @@ jobs:
       tag: ${{ steps.image_tag.outputs.tag }}
     steps:
       - id: image_tag
-        run: echo "::set-output name=tag::$(date +%s)-${{ github.sha }}"
+        run: echo "tag=$(date +%s)-${{ github.sha }}" >> "$GITHUB_OUTPUT"
 
   setup-website-matrix:
     runs-on: ubuntu-latest
@@ -46,7 +46,7 @@ jobs:
           echo "matrix={\"include\":${INCLUDE}}" >> $GITHUB_OUTPUT
 
   publish-docker-base-image:
-    name: ${{ needs.get-tag.outputs.project }} base image
+    name: Docker base image
     if: ${{ needs.date_sha_tag.result == 'success' }}
     needs: date_sha_tag
     uses: ./.github/workflows/on-demand-publish-base-docker-image.yml

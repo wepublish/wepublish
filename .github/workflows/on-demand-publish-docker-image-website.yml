@@ -26,7 +26,7 @@ on:
 
 jobs:
   build-and-push:
-    name: ${{inputs.website_target}}
+    name: ${{inputs.website_project}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

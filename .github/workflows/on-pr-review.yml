@@ -13,8 +13,6 @@ jobs:
   check-review-deploy-label:
     runs-on: ubuntu-latest
     outputs:
-      project_name: ${{ steps.extract_project_name.outputs.project_name }}
-      review_version: ${{ steps.extract_project_name.outputs.review_version }}
       has_label: ${{ steps.extract_project_name.outputs.has_label }}
     steps:
       - name: Check for Deploy_ Label and Extract Project Name
@@ -120,7 +118,7 @@ jobs:
           OUTPUT=$(node ./notify-github.js)
           OUTPUT="${OUTPUT//$'\n'/'%0A'}"
           OUTPUT="${OUTPUT//$'\r'/'%0D'}"
-          echo "::set-OUTPUT name=result::$OUTPUT"
+          echo "result=$OUTPUT" >> "$GITHUB_OUTPUT"
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:

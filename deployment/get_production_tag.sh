@@ -20,5 +20,5 @@ if [[ ! $VERSION =~ ^[0-9]{12}$ ]]; then
   exit 2
 fi
 
-echo "::set-output name=project::${PROJECT}"
-echo "::set-output name=version::${VERSION}"
+echo "project=${PROJECT}" >> "$GITHUB_OUTPUT"
+echo "version=${VERSION}" >> "$GITHUB_OUTPUT"

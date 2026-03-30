@@ -15,7 +15,7 @@ jobs:
         image: postgres:17
         env:
           POSTGRES_PASSWORD: test
-          POSTGRES_DB: wepublish
+          POSTGRES_DB: wepublish_test
         ports:
           - 5432:5432
     steps:
