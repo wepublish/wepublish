@@ -32,6 +32,10 @@ import {
   isTeaserTwoColAuthor,
   TeaserTwoColAuthor,
 } from './teaser-two-col-author';
+import {
+  isTeaserTwoColNoMeta,
+  TeaserTwoColNoMeta,
+} from './teaser-two-col-no-meta';
 import { isTeaserTwoRow, TeaserTwoRow } from './teaser-two-row';
 import {
   isTeaserTwoRowAuthor,
@@ -47,6 +51,7 @@ export enum TsriTeaserType {
   NoImageAltColor = 'T_NoImageAltColor',
   TwoColAuthor = 'T_TwoColAuthor',
   TwoCol = 'T_TwoCol',
+  TwoColNoMeta = 'T_TwoColNoMeta',
   TwoColAltColor = 'T_TwoColAltColor',
   TwoRowAuthor = 'T_TwoRowAuthor',
   TwoRow = 'T_TwoRow',
@@ -69,6 +74,7 @@ export const TsriBaseTeaser = cond([
   [isTeaserMoreAbout, props => <TeaserMoreAbout {...props} />],
   [isTeaserTwoRow, props => <TeaserTwoRow {...props} />],
   [isTeaserTwoCol, props => <TeaserTwoCol {...props} />],
+  [isTeaserTwoColNoMeta, props => <TeaserTwoColNoMeta {...props} />],
   [isTeaserTwoColAuthor, props => <TeaserTwoColAuthor {...props} />],
   [isTeaserTwoColAltColor, props => <TeaserTwoColAltColor {...props} />],
   [isTeaserTwoRowAuthor, props => <TeaserTwoRowAuthor {...props} />],

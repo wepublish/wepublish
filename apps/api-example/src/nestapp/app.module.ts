@@ -38,6 +38,7 @@ import {
   MailgunMailProvider,
   MailsModule,
 } from '@wepublish/mail/api';
+import { generateJWT } from '@wepublish/utils/api';
 import {
   DashboardModule,
   MembershipModule,
@@ -51,6 +52,7 @@ import {
   PrismaModule,
   URLAdapter,
   URLAdapterModule,
+  WepublishSiteURLAdapter,
 } from '@wepublish/nest-modules';
 import { PageModule } from '@wepublish/page/api';
 import {
@@ -120,7 +122,9 @@ import {
           path: 'v1',
           cache: 'bounded',
           persistedQueries: false,
-          introspection: configFile.general.apolloIntrospection,
+          introspection:
+            process.env.NODE_ENV !== 'production' &&
+            configFile.general.apolloIntrospection,
           playground: configFile.general.apolloPlayground,
           allowBatchedHttpRequests: true,
           inheritResolversFromInterfaces: true,
@@ -187,8 +191,23 @@ import {
           throw new Error('A MailProvider must be configured.');
         }
 
+        const jwtPrivateKey = (config.get('JWT_PRIVATE_KEY') || '').replace(
+          /\\n/g,
+          '\n'
+        );
+        const hostURL = config.get('HOST_URL') || 'http://localhost:4000';
+        const websiteURL = config.get('WEBSITE_URL') || 'http://localhost:3000';
+
         return {
           mailProvider,
+          jwtGenerator: (userId: string) =>
+            generateJWT({
+              id: userId,
+              privateKey: jwtPrivateKey,
+              issuer: hostURL,
+              audience: websiteURL,
+              expiresInMinutes: 6 * 60,
+            }),
         };
       },
       inject: [ConfigService, PrismaClient, KvTtlCacheService],
@@ -384,23 +403,30 @@ import {
             configFile.general.sessionTTLDays
           : 7;
         const sessionTTL = MS_PER_DAY * sessionTTLDays;
-        const jwtSecretKey =
-          config.get('JWT_SECRET_KEY') || 'development-secret-key';
+        const jwtPrivateKey = (config.get('JWT_PRIVATE_KEY') || '').replace(
+          /\\n/g,
+          '\n'
+        );
+        const jwtPublicKey = (config.get('JWT_PUBLIC_KEY') || '').replace(
+          /\\n/g,
+          '\n'
+        );
         const hostURL = config.get('HOST_URL') || 'http://localhost:4000';
         const websiteURL = config.get('WEBSITE_URL') || 'http://localhost:3000';
 
         if (
           process.env.NODE_ENV === 'production' &&
-          jwtSecretKey === 'development-secret-key'
+          (!jwtPrivateKey || !jwtPublicKey)
         ) {
           console.warn(
-            'WARNING: Using default JWT secret key in production environment!'
+            'WARNING: JWT_PRIVATE_KEY or JWT_PUBLIC_KEY not set in production environment!'
           );
         }
 
         return {
           sessionTTL,
-          jwtSecretKey,
+          jwtPrivateKey,
+          jwtPublicKey,
           hostURL,
           websiteURL,
         };
@@ -439,19 +465,8 @@ import {
         );
         return {
           challenge: configFile.challenge || {
-            type: 'algebraic',
-            secret: 'default-challenge-secret',
-            validTime: 600,
-            width: 300,
-            height: 100,
-            background: '#ffffff',
-            noise: 1,
-            minValue: 1,
-            maxValue: 10,
-            operandAmount: 2,
-            operandTypes: ['+'],
-            mode: 'formula',
-            targetSymbol: '?',
+            type: 'turnstile',
+            id: 'default-turnstile',
           },
         };
       },
@@ -502,10 +517,16 @@ import {
           config.getOrThrow('CONFIG_FILE_PATH')
         );
 
-        const urlAdapter =
-          configFile.general.urlAdapter === 'hauptstadt' ?
-            new HauptstadtURLAdapter(config.getOrThrow('WEBSITE_URL'))
-          : new URLAdapter(config.getOrThrow('WEBSITE_URL'));
+        let urlAdapter: URLAdapter;
+        if (configFile.general.urlAdapter === 'hauptstadt') {
+          urlAdapter = new HauptstadtURLAdapter(
+            config.getOrThrow('WEBSITE_URL')
+          );
+        } else if (configFile.general.urlAdapter === 'wepublish-site') {
+          urlAdapter = new WepublishSiteURLAdapter();
+        } else {
+          urlAdapter = new URLAdapter(config.getOrThrow('WEBSITE_URL'));
+        }
 
         return urlAdapter;
       },

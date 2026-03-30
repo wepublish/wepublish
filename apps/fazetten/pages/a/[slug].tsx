@@ -1,9 +1,13 @@
 import {
   ArticleContainer,
   ArticleListContainer,
+  ArticleListWrapper,
   ArticleWrapper,
 } from '@wepublish/article/website';
-import { CommentListContainer } from '@wepublish/comments/website';
+import {
+  CommentListContainer,
+  CommentListWrapper,
+} from '@wepublish/comments/website';
 import {
   addClientCacheToV1Props,
   ArticleDocument,
@@ -49,7 +53,9 @@ export default function ArticleBySlugOrId() {
 
       {data?.article && (
         <ArticleWrapper>
-          <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
+          <ArticleListWrapper>
+            <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
+          </ArticleListWrapper>
 
           <ArticleListContainer
             variables={{
@@ -67,7 +73,10 @@ export default function ArticleBySlugOrId() {
 
       {data?.article && !data?.article?.disableComments && (
         <ArticleWrapper>
-          <H3 component={'h2'}>Kommentare</H3>
+          <CommentListWrapper>
+            <H3 component={'h2'}>Kommentare</H3>
+          </CommentListWrapper>
+
           <CommentListContainer
             id={data!.article!.id}
             type={CommentItemType.Article}

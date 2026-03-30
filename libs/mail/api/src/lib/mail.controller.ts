@@ -1,10 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { MailLogState, PrismaClient, User } from '@prisma/client';
-import { generateJWT } from '@wepublish/utils/api';
 import { randomUUID } from 'crypto';
 import { MailContext } from './mail-context';
-
-const ONE_WEEK_IN_MINUTES = 7 * 24 * 60 * 60;
 
 export enum mailLogType {
   SubscriptionFlow,
@@ -62,25 +59,16 @@ export class MailController {
    * Build the data for passing it to the mail templates
    * @returns a HashMap of configuration data
    */
-  private buildData() {
+  private async buildData() {
     // avoid unwanted data mutation by reference
     const recipient = JSON.parse(JSON.stringify(this.config.recipient));
     recipient.password = 'hidden';
     recipient.roleIDs = ['hidden'];
 
-    if (!process.env['JWT_SECRET_KEY'])
-      throw new Error('No JWT_SECRET_KEY defined in environment.');
-
     return {
       user: recipient,
       optional: this.config.optionalData,
-      jwt: generateJWT({
-        issuer: 'mailer',
-        audience: 'audience',
-        id: recipient.id,
-        expiresInMinutes: ONE_WEEK_IN_MINUTES,
-        secret: process.env['JWT_SECRET_KEY'],
-      }),
+      jwt: await this.mailContext.jwtGenerator(recipient.id),
     };
   }
 
@@ -105,7 +93,7 @@ export class MailController {
       mailLogID: mailLogId,
       remoteTemplate: this.config.externalMailTemplateId,
       recipient: this.config.recipient.email,
-      data: this.buildData(),
+      data: await this.buildData(),
     });
 
     await this.prismaService.mailLog.create({

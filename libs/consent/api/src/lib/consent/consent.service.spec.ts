@@ -1,26 +1,36 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConsentService } from './consent.service';
-import { PrismaModule } from '@wepublish/nest-modules';
-import { Consent, PrismaClient } from '@prisma/client';
-import { mockConsents } from './consent.resolver.spec';
+import { PrismaClient } from '@prisma/client';
+
+const mockPrisma = {
+  consent: {
+    findMany: jest.fn(),
+    findUnique: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+  },
+};
 
 describe('ConsentService', () => {
   let service: ConsentService;
-  let prisma: PrismaClient;
-  let consents: Consent[];
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [PrismaModule],
-      providers: [ConsentService],
+      providers: [
+        ConsentService,
+        {
+          provide: PrismaClient,
+          useValue: mockPrisma,
+        },
+      ],
     }).compile();
 
-    prisma = module.get<PrismaClient>(PrismaClient);
     service = module.get<ConsentService>(ConsentService);
+  });
 
-    consents = await Promise.all(
-      mockConsents.map(data => prisma.consent.create({ data }))
-    );
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
   test('should be defined', () => {
@@ -28,7 +38,7 @@ describe('ConsentService', () => {
   });
 
   test('should get consents', async () => {
-    const mockValue = Promise.resolve([
+    const mockValue = [
       {
         id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
         name: 'some-name',
@@ -41,50 +51,40 @@ describe('ConsentService', () => {
         slug: 'some-other-slug',
         defaultValue: false,
       },
-    ]);
+    ];
 
-    const mockFunction = jest
-      .spyOn(prisma.consent, 'findMany')
-      .mockReturnValue(mockValue as any);
+    mockPrisma.consent.findMany.mockResolvedValue(mockValue);
 
     const result = await service.consentList();
     expect(result).toMatchSnapshot();
-    expect(mockFunction.mock.calls[0][0]).toMatchSnapshot();
+    expect(mockPrisma.consent.findMany.mock.calls[0][0]).toMatchSnapshot();
   });
 
   test('should get a single consent by id', async () => {
-    const mockValue = Promise.resolve([
-      {
-        id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
-        name: 'some-name',
-        slug: 'some-slug',
-        defaultValue: true,
-      },
-    ]);
+    const mockValue = {
+      id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
+      name: 'some-name',
+      slug: 'some-slug',
+      defaultValue: true,
+    };
 
-    const mockFunction = jest
-      .spyOn(prisma.consent, 'findUnique')
-      .mockReturnValue(mockValue as any);
+    mockPrisma.consent.findUnique.mockResolvedValue(mockValue);
 
     const id = '1572bbfc-a03e-4586-b6a5-e9dab21d54d3';
     const result = await service.consent(id);
     expect(result).toMatchSnapshot();
-    expect(mockFunction.mock.calls[0][0]).toMatchSnapshot();
+    expect(mockPrisma.consent.findUnique.mock.calls[0][0]).toMatchSnapshot();
   });
 
   test('should create a consent', async () => {
-    const mockValue = Promise.resolve([
-      {
-        id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
-        name: 'some-name',
-        slug: 'some-slug',
-        defaultValue: true,
-      },
-    ]);
+    const mockValue = {
+      id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
+      name: 'some-name',
+      slug: 'some-slug',
+      defaultValue: true,
+    };
 
-    const mockFunction = jest
-      .spyOn(prisma.consent, 'create')
-      .mockReturnValue(mockValue as any);
+    mockPrisma.consent.create.mockResolvedValue(mockValue);
 
     const consent = {
       name: 'some-name',
@@ -94,41 +94,33 @@ describe('ConsentService', () => {
 
     const result = await service.createConsent(consent);
     expect(result).toMatchSnapshot();
-    expect(mockFunction.mock.calls[0][0]).toMatchSnapshot();
+    expect(mockPrisma.consent.create.mock.calls[0][0]).toMatchSnapshot();
   });
 
   test('should update a consent', async () => {
-    const idToUpdate = consents[0].id;
+    const idToUpdate = 'consent-1';
 
-    const mockValue = Promise.resolve([
-      {
-        id: idToUpdate,
-        consent: {
-          defaultValue: false,
-        },
-      },
-    ]);
+    const mockValue = {
+      id: idToUpdate,
+      name: 'some-name',
+      slug: 'some-slug',
+      defaultValue: false,
+    };
 
-    const mockFunction = jest
-      .spyOn(prisma.consent, 'update')
-      .mockReturnValue(mockValue as any);
+    mockPrisma.consent.update.mockResolvedValue(mockValue);
 
     const consent = {
-      name: consents[0].name,
-      slug: consents[0].slug,
+      name: 'some-name',
+      slug: 'some-slug',
       defaultValue: false,
     };
 
     const result = await service.updateConsent({ id: idToUpdate, ...consent });
-    expect(result).toMatchObject([
-      {
-        id: idToUpdate,
-        consent: {
-          defaultValue: false,
-        },
-      },
-    ]);
-    expect(mockFunction.mock.calls[0][0]).toMatchObject({
+    expect(result).toMatchObject({
+      id: idToUpdate,
+      defaultValue: false,
+    });
+    expect(mockPrisma.consent.update.mock.calls[0][0]).toMatchObject({
       where: {
         id: idToUpdate,
       },
@@ -136,25 +128,19 @@ describe('ConsentService', () => {
   });
 
   test('should delete a consent', async () => {
-    const idToDelete = consents[0].id;
+    const idToDelete = 'consent-1';
 
-    const mockValue = Promise.resolve([
-      {
-        id: idToDelete,
-      },
-    ]);
+    const mockValue = {
+      id: idToDelete,
+    };
 
-    const mockFunction = jest
-      .spyOn(prisma.consent, 'delete')
-      .mockReturnValue(mockValue as any);
+    mockPrisma.consent.delete.mockResolvedValue(mockValue);
 
     const result = await service.deleteConsent(idToDelete);
-    expect(result).toMatchObject([
-      {
-        id: idToDelete,
-      },
-    ]);
-    expect(mockFunction.mock.calls[0][0]).toMatchObject({
+    expect(result).toMatchObject({
+      id: idToDelete,
+    });
+    expect(mockPrisma.consent.delete.mock.calls[0][0]).toMatchObject({
       where: {
         id: idToDelete,
       },

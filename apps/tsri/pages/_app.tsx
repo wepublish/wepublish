@@ -55,6 +55,7 @@ import { TsriAuthor } from '../src/components/tsri-author';
 import { TsriAuthorChip } from '../src/components/tsri-author-chip';
 import { TsriAuthorLinks } from '../src/components/tsri-author-links';
 import { TsriAuthorList } from '../src/components/tsri-author-list';
+import { TsriAuthorListItem } from '../src/components/tsri-author-list-item';
 import { TsriBanner } from '../src/components/tsri-banner';
 import { TsriBildwurfAdBlock } from '../src/components/tsri-bildwurf-ad-block';
 import { TsriBlockRenderer } from '../src/components/tsri-block-renderer';
@@ -135,6 +136,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Author={TsriAuthor}
           AuthorLinks={TsriAuthorLinks}
           AuthorList={TsriAuthorList}
+          AuthorListItem={TsriAuthorListItem}
           TextToIcon={TsriTextToIcon}
           Tag={TsriTag}
           CommentList={TsriCommentList}

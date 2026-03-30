@@ -301,7 +301,7 @@ const TsriLogo = styled('img', {
     width: 24.2cqw;
     height: auto;
     top: 0.5cqw;
-    left: 2cqw;
+    left: 1cqw;
 
     // scrolled --> blue logo, smaller
     ${({ isScrolled }) =>
@@ -337,22 +337,19 @@ const TsriClaim = styled('img', {
     top 300ms ease-out;
   transform: translate3d(0, 0, 0);
   position: absolute;
-  clip-path: inset(10px 0 10px 0);
-  width: 26cqw;
+  width: 32cqw;
   height: auto;
-  top: 13.5cqw;
-  top: 12.8cqw;
-  top: 10.5cqw;
-  left: 2cqw;
+  top: 11.75cqw;
+  left: 1.9cqw;
   display: none;
+
+  aspect-ratio: 2000 / 94;
 
   ${({ isScrolled }) =>
     isScrolled &&
     css`
-      width: 16.77cqw;
-      top: 9.7cqw;
-      top: 8.7cqw;
-      clip-path: inset(10px 0 4px 0);
+      width: 25cqw;
+      top: 9.5cqw;
     `}
 
   ${({ isHomePage }) =>
@@ -609,7 +606,7 @@ export const NavPaperCategory = styled('div')`
   row-gap: 0.8cqw;
   padding-left: 2cqw;
   max-width: 44vw;
-  overflow-x: hidden;
+  overflow: hidden;
 
   &:nth-of-type(n + 2) {
     grid-column: 1 / 2;
@@ -1011,7 +1008,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
                     onMenuToggle?.(false);
                   }}
                 >
-                  <Box sx={{ display: { xs: 'none', md: 'unset' } }}>
+                  <Box sx={{ display: { xs: 'none', md: 'contents' } }}>
                     Offene
                   </Box>
                   &nbsp;Rechnung
@@ -1119,7 +1116,7 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
 
               <RegisterNewsLetterTab
                 variant="navbarTab"
-                href="/newsletter?mc_u=56ee24de7341c744008a13c9e&mc_id=32c65d081a&mc_f_id=00e5c2e1f0&source=tsri&tf_id=jExhxiVv&popTitle=DAS%20WICHTIGSTE%20AUS%20ZÜRI&popButtonText=Jetzt%20kostenlos%20abonnieren!&popText=Jeden%20Morgen%20findest%20du%20im%20Z%C3%BCri%20Briefing%20kuratierte%20News,%20Geschichten%20und%20Tipps%20f%C3%BCr%20den%20Tag.%20Bereits%2029'000%20Menschen%20lesen%20mit%20%E2%80%93%20und%20du?"
+                href="/newsletter?mc_u=56ee24de7341c744008a13c9e&mc_id=32c65d081a&mc_f_id=00e5c2e1f0&source=tsri&mc_group=group[54][2]&tf_id=jExhxiVv&popTitle=DAS%20WICHTIGSTE%20AUS%20ZÜRI&popButtonText=Jetzt%20kostenlos%20abonnieren!&popText=Jeden%20Morgen%20findest%20du%20im%20Z%C3%BCri%20Briefing%20kuratierte%20News,%20Geschichten%20und%20Tipps%20f%C3%BCr%20den%20Tag.%20Bereits%2029'000%20Menschen%20lesen%20mit%20%E2%80%93%20und%20du?"
               >
                 Newsletter kostenlos abonnieren
               </RegisterNewsLetterTab>

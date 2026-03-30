@@ -17,7 +17,7 @@ export const TsriArticle = styled(ArticleDefault)`
   grid-template-columns: var(--two-column-grid) !important;
   justify-content: space-between;
 
-  & > * {
+  & > *:not(${SidebarContentWrapper}) {
     grid-column: 1 / 2 !important;
   }
 
@@ -64,7 +64,7 @@ export const TsriArticle = styled(ArticleDefault)`
     font-weight: 700;
   }
 
-  & ${SidebarContentWrapper} + * {
+  & :is(${SidebarContentWrapper}) + * {
     margin-top: ${({ theme }) => theme.spacing(-3)};
   }
 

@@ -7,15 +7,15 @@ import {
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import mailChimpLogo from './assets/mailchimp.avif';
+import mailChimpLogo from './assets/mailchimp.webp';
 import mailgunLogo from './assets/mailgun.svg';
-import slackLogo from './assets/slack.png';
+import slackLogo from './assets/slack.webp';
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
 
 const mailSettingsSchema = z.object({
   name: z.string().nullish().or(z.literal('')),
-  type: z.nativeEnum(MailProviderType).optional(),
+  type: z.nativeEnum(MailProviderType).nullish(),
 
   fromAddress: z.string().nullish().or(z.literal('')),
   replyToAddress: z.string().nullish().or(z.literal('')),

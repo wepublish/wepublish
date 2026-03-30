@@ -11,54 +11,51 @@ import {
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import bexioLogo from './assets/bexio.png';
-import mollieLogo from './assets/mollie.png';
-import payrexxLogo from './assets/payrexx.png';
+import bexioLogo from './assets/bexio.webp';
+import mollieLogo from './assets/mollie.webp';
+import payrexxLogo from './assets/payrexx.webp';
 import stripeLogo from './assets/stripe.svg';
 import { FieldDefinition } from './genericIntegrationForm';
 import { GenericIntegrationList } from './genericIntegrationList';
 
 const paymentSettingsSchema = z.object({
   name: z.string().nullish().or(z.literal('')),
-  type: z.nativeEnum(PaymentProviderType).optional(),
-  offSessionPayments: z.boolean().optional(),
+  type: z.nativeEnum(PaymentProviderType).nullish(),
+  offSessionPayments: z.boolean().nullish(),
   apiKey: z.string().nullish().or(z.literal('')),
   webhookEndpointSecret: z.string().nullish().or(z.literal('')),
 
-  stripe_methods: z.array(z.nativeEnum(StripePaymentMethod)).optional(),
+  stripe_methods: z.array(z.nativeEnum(StripePaymentMethod)).nullish(),
 
   mollie_apiBaseUrl: z.string().nullish().or(z.literal('')),
-  mollie_methods: z.array(z.nativeEnum(PaymentMethodMollie)).optional(),
+  mollie_methods: z.array(z.nativeEnum(PaymentMethodMollie)).nullish(),
 
   payrexx_instancename: z.string().nullish().or(z.literal('')),
   payrexx_vatrate: z.string().nullish().or(z.literal('')),
-  payrexx_psp: z.array(z.nativeEnum(PayrexxPsp)).optional(),
-  payrexx_pm: z.array(z.nativeEnum(PayrexxPm)).optional(),
+  payrexx_psp: z.array(z.nativeEnum(PayrexxPsp)).nullish(),
+  payrexx_pm: z.array(z.nativeEnum(PayrexxPm)).nullish(),
 
-  bexio_userId: z.coerce.number().optional(),
-  bexio_countryId: z.coerce.number().optional(),
-  bexio_unitId: z.coerce.number().optional(),
-  bexio_taxId: z.coerce.number().optional(),
-  bexio_accountId: z.coerce.number().optional(),
+  bexio_userId: z.coerce.number().nullish(),
+  bexio_countryId: z.coerce.number().nullish(),
+  bexio_unitId: z.coerce.number().nullish(),
+  bexio_taxId: z.coerce.number().nullish(),
+  bexio_accountId: z.coerce.number().nullish(),
   bexio_invoiceTemplateNewMembership: z.string().nullish().or(z.literal('')),
   bexio_invoiceTemplateRenewalMembership: z
     .string()
-    .optional()
+    .nullish()
     .or(z.literal('')),
-  bexio_invoiceMailSubjectNewMembership: z
-    .string()
-    .optional()
-    .or(z.literal('')),
+  bexio_invoiceMailSubjectNewMembership: z.string().nullish().or(z.literal('')),
   bexio_invoiceMailSubjectRenewalMembership: z
     .string()
-    .optional()
+    .nullish()
     .or(z.literal('')),
   bexio_invoiceMailBodyNewMembership: z.string().nullish().or(z.literal('')),
   bexio_invoiceMailBodyRenewalMembership: z
     .string()
-    .optional()
+    .nullish()
     .or(z.literal('')),
-  bexio_markInvoiceAsOpen: z.boolean().optional(),
+  bexio_markInvoiceAsOpen: z.boolean().nullish(),
   bexio_invoiceTitleNewMembership: z.string().nullish().or(z.literal('')),
   bexio_invoiceTitleRenewalMembership: z.string().nullish().or(z.literal('')),
 });

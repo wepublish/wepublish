@@ -1,11 +1,10 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "views"]
+  previewFeatures = ["views"]
 }
 
 datasource db {
-  provider = "postgres"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
 }
 
 model MetadataProperty {
@@ -28,6 +27,10 @@ model MetadataProperty {
   User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
 
+  @@index([articleRevisionId])
+  @@index([pageRevisionId])
+  @@index([subscriptionId])
+  @@index([userId])
   @@map("properties")
 }
 
@@ -61,7 +64,7 @@ model ArticleRevision {
   article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
 
   userId                   String?
-  user                     User?                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                     User?                      @relation(fields: [userId], references: [id], onDelete: SetNull)
   ArticleRevisionPublished ArticleRevisionPublished[]
   ArticleRevisionPending   ArticleRevisionPending[]
   ArticleRevisionDraft     ArticleRevisionDraft[]
@@ -134,7 +137,7 @@ model Article {
   disableComments Boolean @default(false)
   likes           Int     @default(0)
 
-  peer          Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
+  peer          Peer?   @relation(fields: [peerId], references: [id], onDelete: Restrict)
   peerId        String?
   peerArticleId String?
 
@@ -152,6 +155,8 @@ model Article {
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([publishedAt])
+  @@index([slug])
+  @@index([hidden, publishedAt(sort: Desc)])
   @@map("articles")
 }
 
@@ -172,6 +177,7 @@ model ArticleTrackingPixels {
   pixelUid String? @unique
   error    String?
 
+  @@index([articleId])
   @@map("articles.tracking-pixels")
 }
 
@@ -196,6 +202,7 @@ model TaggedArticles {
   modifiedAt DateTime @updatedAt
 
   @@id([articleId, tagId])
+  @@index([tagId])
   @@map("articles.tagged-articles")
 }
 
@@ -228,7 +235,7 @@ model Author {
   articlesAsAuthor            ArticleRevisionAuthor[]
   articlesAsSocialMediaAuthor ArticleRevisionSocialMediaAuthor[]
 
-  peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
+  peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Restrict)
   peerId String?
 
   tags TaggedAuthors[]
@@ -295,7 +302,7 @@ model Image {
   pageRevisionSocialMediaImages PageRevision[] @relation("pageRevisionSocialMediaImage")
   pageRevisionImages            PageRevision[] @relation("pageRevisionImage")
 
-  peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
+  peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Restrict)
   peerId String?
 
   users          User[]
@@ -432,7 +439,7 @@ model CommentRating {
   modifiedAt DateTime @updatedAt
 
   userId String?
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   answerId String
   answer   CommentRatingSystemAnswer @relation(fields: [answerId], references: [id], onDelete: Cascade)
@@ -501,6 +508,7 @@ model Invoice {
   subscriptionPeriods SubscriptionPeriod[]
 
   @@index([mail])
+  @@index([subscriptionID])
   @@map("invoices")
 }
 
@@ -671,7 +679,7 @@ model PageRevision {
   page   Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
 
   userId                 String?
-  user                   User?                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                   User?                    @relation(fields: [userId], references: [id], onDelete: SetNull)
   PagesRevisionPublished PagesRevisionPublished[]
   PagesRevisionPending   PagesRevisionPending[]
   PagesRevisionDraft     PagesRevisionDraft[]
@@ -935,6 +943,7 @@ model Subscription {
 
   invoices Invoice[]
 
+  @@index([userID])
   @@map("subscriptions")
 }
 
@@ -1049,7 +1058,7 @@ model Tag {
   main        Boolean @default(false)
   color       String?
 
-  peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
+  peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Restrict)
   peerId String?
 
   comments TaggedComments[]
@@ -1093,6 +1102,7 @@ model PollAnswer {
   votes         PollVote[]
   externalVotes PollExternalVote[]
 
+  @@index([pollId])
   @@map("polls.answers")
 }
 
@@ -1102,7 +1112,7 @@ model PollVote {
   modifiedAt DateTime @updatedAt
 
   userId String?
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   answerId String
   answer   PollAnswer @relation(fields: [answerId], references: [id], onDelete: Cascade)
@@ -1116,6 +1126,7 @@ model PollVote {
   disabled    Boolean @default(false)
 
   @@unique([pollId, userId])
+  @@index([answerId])
   @@map("polls.votes")
 }
 
@@ -1733,6 +1744,7 @@ model SettingPaymentProvider {
 
 enum ChallengeProviderType {
   TURNSTILE @map("turnstile")
+  HCAPTCHA  @map("hcaptcha")
 }
 
 model SettingChallengeProvider {

@@ -201,7 +201,7 @@ export type Author = HasImage &
     image?: Maybe<Image>;
     imageID?: Maybe<Scalars['String']>;
     jobTitle?: Maybe<Scalars['String']>;
-    links?: Maybe<Array<AuthorLink>>;
+    links: Array<AuthorLink>;
     modifiedAt: Scalars['DateTime'];
     name: Scalars['String'];
     peer?: Maybe<Peer>;
@@ -521,8 +521,8 @@ export type CalculatedRating = {
 };
 
 export enum CaptchaType {
-  Algebraic = 'Algebraic',
   CfTurnstile = 'CfTurnstile',
+  HCaptcha = 'HCaptcha',
 }
 
 export type Challenge = {
@@ -539,6 +539,7 @@ export type ChallengeInput = {
 };
 
 export enum ChallengeProviderType {
+  Hcaptcha = 'HCAPTCHA',
   Turnstile = 'TURNSTILE',
 }
 
@@ -2500,7 +2501,6 @@ export type MutationUpdateAiSettingArgs = {
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   systemPrompt?: InputMaybe<Scalars['String']>;
-  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationUpdateAnalyticsProviderSettingArgs = {
@@ -3798,6 +3798,8 @@ export type Query = {
    *
    */
   expectedRevenue: Array<DashboardInvoice>;
+  /** Returns images by tag. */
+  getImagesByTag: Array<Image>;
   /**
    *
    *       Returns the most viewed articles in descending order.
@@ -4103,6 +4105,10 @@ export type QueryEventsArgs = {
 export type QueryExpectedRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
+};
+
+export type QueryGetImagesByTagArgs = {
+  tag: Scalars['String'];
 };
 
 export type QueryHotAndTrendingArgs = {
@@ -4492,6 +4498,7 @@ export type SensitiveDataUser = BaseUser & {
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
   roles: Array<UserRole>;
+  subscriptionCount: Scalars['Int'];
   userImageID?: Maybe<Scalars['String']>;
 };
 
@@ -5371,11 +5378,7 @@ export type FullAuthorFragment = {
   hideOnArticle: boolean;
   id: string;
   name: string;
-  links?: Array<{
-    __typename?: 'AuthorLink';
-    title: string;
-    url: string;
-  }> | null;
+  links: Array<{ __typename?: 'AuthorLink'; title: string; url: string }>;
   image?: {
     __typename?: 'Image';
     id: string;
@@ -5418,11 +5421,7 @@ export type AuthorListQuery = {
       hideOnArticle: boolean;
       id: string;
       name: string;
-      links?: Array<{
-        __typename?: 'AuthorLink';
-        title: string;
-        url: string;
-      }> | null;
+      links: Array<{ __typename?: 'AuthorLink'; title: string; url: string }>;
       image?: {
         __typename?: 'Image';
         id: string;
@@ -5468,11 +5467,7 @@ export type AuthorQuery = {
     hideOnArticle: boolean;
     id: string;
     name: string;
-    links?: Array<{
-      __typename?: 'AuthorLink';
-      title: string;
-      url: string;
-    }> | null;
+    links: Array<{ __typename?: 'AuthorLink'; title: string; url: string }>;
     image?: {
       __typename?: 'Image';
       id: string;

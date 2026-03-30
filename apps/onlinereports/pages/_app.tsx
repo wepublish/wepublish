@@ -34,15 +34,12 @@ import {
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
-import deTranlations from '@wepublish/website/translations/de.json';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
-import resourcesToBackend from 'i18next-resources-to-backend';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
-import { mergeDeepRight } from 'ramda';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
@@ -75,20 +72,7 @@ setDefaultOptions({
   locale: de,
 });
 
-initWePublishTranslator()
-  .use(resourcesToBackend(() => mergeDeepRight(deTranlations, deOverridden)))
-  .init({
-    partialBundledLanguages: true,
-    lng: 'de',
-    fallbackLng: 'de',
-    supportedLngs: ['de'],
-    interpolation: {
-      escapeValue: false,
-    },
-    resources: {
-      de: { zod: deTranlations.zod },
-    },
-  });
+initWePublishTranslator(deOverridden);
 z.setErrorMap(zodI18nMap);
 
 // 0-height of last row is needed to make sticky ads work correctly
