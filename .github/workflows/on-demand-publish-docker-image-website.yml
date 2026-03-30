@@ -96,13 +96,10 @@ jobs:
           push: true
           tags: |
             ${{ inputs.website_tags }}
-      - name: Wait for frontend to be deployed
-        id: wait-for-frontend-deployment
+      - name: Get frontend URL
+        id: get-frontend-url
         if: ${{ inputs.has_staging && inputs.environment != 'review' && inputs.environment != 'development' && inputs.environment != 'review_deployed' }}
         run: |
-          MAX_RETRIES=120
-          RETRY_DELAY=10
-          SHA_HASH=${{ github.sha }}
           ENVIRONMENT=${{ inputs.environment }}
           PROJECT_NAME=${{ inputs.website_project }}
           if [[ "$ENVIRONMENT" == "production" ]]; then
@@ -110,7 +107,15 @@ jobs:
           else
             TDL="wepublish.works"
           fi
-          FRONTEND_BASE_URL=$(./deployment/read_deployment_config.sh ".website.${ENVIRONMENT}.custom_domain" true ${PROJECT_NAME} getValue https://${PROJECT_NAME}.${TDL} | awk -F "::" '{print $3}')
+          ./deployment/read_deployment_config.sh ".website.${ENVIRONMENT}.custom_domain" true ${PROJECT_NAME} getValue "https://${PROJECT_NAME}.${TDL}"
+      - name: Wait for frontend to be deployed
+        id: wait-for-frontend-deployment
+        if: ${{ inputs.has_staging && inputs.environment != 'review' && inputs.environment != 'development' && inputs.environment != 'review_deployed' }}
+        run: |
+          MAX_RETRIES=120
+          RETRY_DELAY=10
+          SHA_HASH=${{ github.sha }}
+          FRONTEND_BASE_URL=${{ steps.get-frontend-url.outputs.value }}
           echo "Looking for frontent version at ${FRONTEND_BASE_URL}/deployed_version"
           for ((i=1; i<=MAX_RETRIES; i++)); do
             HTTP_CODE=$(curl -s -o response_body.txt -w "%{http_code}"  ${FRONTEND_BASE_URL}/deployed_version)
