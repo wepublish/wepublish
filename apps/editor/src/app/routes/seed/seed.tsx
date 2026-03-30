@@ -682,12 +682,12 @@ async function seedNavigations(createNavigation: any, tags: string[] = []) {
           {
             type: NavigationLinkType.External,
             label: 'Deutsch',
-            url: 'http://localhost:4200/de', // https://www.wepublish.ch/de
+            url: 'https://www.wepublish.ch/de',
           },
           {
             type: NavigationLinkType.External,
             label: 'Français',
-            url: 'http://localhost:4200/fr', // https://www.wepublish.ch/fr
+            url: 'https://www.wepublish.ch/fr',
           },
         ],
       },
