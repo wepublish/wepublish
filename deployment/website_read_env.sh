@@ -85,16 +85,9 @@ if [[ $DEPLOYMENT == "helm" ]]; then
   envvars=$(echo "$envvars" | sed 's/=/: /g')
 fi
 
-# Clean special chars to make multiline usable by github action
-envvars="${envvars//'%'/'%25'}"
-envvars="${envvars//$'\n'/'%0A'}"
-envvars="${envvars//'\n'/'%0A'}"
-envvars="${envvars//$'\r'/'%0D'}"
-
-# Clean spaces only if normal env not on yaml
-if [[ $MODE == "docker" ]]; then
-  envvars="${envvars/ /'\n'/'%0A'}"
-fi
-
-# Return variables
-echo "envvars=${envvars}" >> "$GITHUB_OUTPUT"
+# Return variables using heredoc delimiter for multiline support
+{
+  echo "envvars<<EOF"
+  echo -e "${envvars}"
+  echo "EOF"
+} >> "$GITHUB_OUTPUT"
