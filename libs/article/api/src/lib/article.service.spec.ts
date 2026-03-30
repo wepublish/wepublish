@@ -21,6 +21,9 @@ describe('ArticleService', () => {
     articleRevision: {
       [method in keyof PrismaClient['articleRevision']]?: jest.Mock;
     };
+    taggedArticles: {
+      [method in keyof PrismaClient['taggedArticles']]?: jest.Mock;
+    };
   };
   let trackingPixelMock: { [method in keyof TrackingPixelService]?: jest.Mock };
 
@@ -51,6 +54,9 @@ describe('ArticleService', () => {
       },
       articleTrackingPixels: {
         createMany: jest.fn(),
+        findMany: jest.fn(),
+      },
+      taggedArticles: {
         findMany: jest.fn(),
       },
     };
@@ -87,6 +93,9 @@ describe('ArticleService', () => {
   it('should query articles based on filter', async () => {
     prismaMock.article.findMany?.mockResolvedValue([]);
     prismaMock.$queryRaw.mockResolvedValue([{ id: '1234' }, { id: '1235' }]);
+    prismaMock.taggedArticles.findMany?.mockResolvedValue([
+      { articleId: '1234' },
+    ]);
 
     await service.getArticles({
       filter: {
@@ -126,6 +135,9 @@ describe('ArticleService', () => {
   it('should query articles based on full text search', async () => {
     prismaMock.article.findMany?.mockResolvedValue([]);
     prismaMock.$queryRaw.mockResolvedValue([{ id: '1234' }, { id: '1235' }]);
+    prismaMock.taggedArticles.findMany?.mockResolvedValue([
+      { articleId: '1234' },
+    ]);
 
     await service.getArticles({
       filter: {
@@ -165,6 +177,9 @@ describe('ArticleService', () => {
   it('should query articles on all revisions', async () => {
     prismaMock.article.findMany?.mockResolvedValue([]);
     prismaMock.$queryRaw.mockResolvedValue([]);
+    prismaMock.taggedArticles.findMany?.mockResolvedValue([
+      { articleId: '1234' },
+    ]);
 
     await service.getArticles({
       filter: {

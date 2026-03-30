@@ -12,11 +12,13 @@ export const TsriAuthorLinks = styled(AuthorLinksDefault)`
   padding: 0.25rem 0 0;
   grid-column: 2 / 4;
   grid-row: 3 / 4;
+  align-self: end;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     padding: 1.25rem 0 0 0;
     grid-column: 3 / 4;
     grid-row: 1 / 3;
+    align-self: start;
   }
 
   ${AuthorLink} {

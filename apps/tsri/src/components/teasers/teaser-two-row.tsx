@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { hasBlockStyle } from '@wepublish/block-content/website';
 import { createWithTheme } from '@wepublish/ui';
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
@@ -17,9 +18,8 @@ import {
 } from './tsri-teaser';
 
 export const isTeaserTwoRow = allPass([
-  ({ blockStyle }: BuilderTeaserProps) => {
-    return blockStyle === TsriTeaserType.TwoRow;
-  },
+  ({ blockStyle }: BuilderTeaserProps) =>
+    hasBlockStyle(TsriTeaserType.TwoRow)({ blockStyle }),
 ]);
 
 export const StyledTeaserTwoRow = styled(TsriTeaser)`
@@ -33,8 +33,10 @@ export const StyledTeaserTwoRow = styled(TsriTeaser)`
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 
-    & > * {
-      grid-column: -1 / 1;
+    ${({ theme }) => theme.breakpoints.up('xs')} {
+      & > *[class] {
+        grid-column: -1 / 1;
+      }
     }
 
     ${({ theme }) => theme.breakpoints.up('md')} {

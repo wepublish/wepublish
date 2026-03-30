@@ -105,6 +105,7 @@
       "@wepublish/tag/api": ["libs/tag/api/src/index.ts"],
       "@wepublish/tag/website": ["libs/tag/website/src/index.ts"],
       "@wepublish/testing": ["libs/testing/src/index.ts"],
+      "@wepublish/testing/prisma": ["libs/testing/src/lib/prisma-utils.ts"],
       "@wepublish/tracking-pixel/api": ["libs/tracking-pixel/api/src/index.ts"],
       "@wepublish/ui": ["libs/ui/src/index.ts"],
       "@wepublish/ui/editor": ["libs/ui/editor/src/index.ts"],

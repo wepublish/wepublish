@@ -5,32 +5,36 @@ import {
   BreakBlockImage,
   RichTextBlockWrapper,
 } from '@wepublish/block-content/website';
+import { createWithTheme } from '@wepublish/ui';
 
-export const HauptstadtBreakBlock = styled(BreakBlock)`
-  padding: ${({ theme }) => theme.spacing(2)}
-    ${({ theme }) => theme.spacing(2.5)};
-  background-color: ${({ theme }) => theme.palette.grey['100']};
-  gap: ${({ theme }) => theme.spacing(1)};
-  justify-content: unset;
+import { breakBlockTheme } from '../theme';
 
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    grid-template-columns: 1fr;
-    padding: ${({ theme }) => theme.spacing(2)}
-      ${({ theme }) => theme.spacing(3)};
-    gap: ${({ theme }) => theme.spacing(2)};
-  }
+export const HauptstadtBreakBlock = createWithTheme(
+  styled(BreakBlock)`
+    padding: ${({ theme }) => theme.spacing(2, 2.5)};
+    background-color: ${({ theme }) => theme.palette.grey['100']};
+    gap: ${({ theme }) => theme.spacing(1)};
+    justify-content: unset;
 
-  ${RichTextBlockWrapper} {
-    max-width: unset;
-  }
-
-  ${BreakBlockButton} {
-    justify-self: center;
-  }
-
-  ${BreakBlockImage} {
     ${({ theme }) => theme.breakpoints.up('md')} {
-      width: 100%;
+      grid-template-columns: 1fr;
+      padding: ${({ theme }) => theme.spacing(2, 3)};
+      gap: ${({ theme }) => theme.spacing(2)};
     }
-  }
-`;
+
+    ${RichTextBlockWrapper} {
+      max-width: unset;
+    }
+
+    ${BreakBlockButton} {
+      justify-self: center;
+    }
+
+    ${BreakBlockImage} {
+      ${({ theme }) => theme.breakpoints.up('md')} {
+        width: 100%;
+      }
+    }
+  `,
+  breakBlockTheme
+);

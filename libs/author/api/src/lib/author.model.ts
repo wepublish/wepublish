@@ -14,7 +14,6 @@ import { HasImage, Image } from '@wepublish/image/api';
 import { HasOptionalPeerLc, Peer } from '@wepublish/peering/api';
 import { Descendant } from 'slate';
 import { GraphQLSlug, PaginatedType, SortOrder } from '@wepublish/utils/api';
-import { Tag } from '@wepublish/tag/api';
 
 @ObjectType()
 export class AuthorLink {
@@ -54,20 +53,8 @@ export class Author implements HasImage, HasOptionalPeerLc {
   @Field({ nullable: true })
   jobTitle?: string;
 
-  @Field(() => [AuthorLink], { nullable: true })
-  links?: AuthorLink[];
-
   @Field(() => GraphQLRichText, { nullable: true })
   bio?: Descendant[];
-
-  @Field(() => [Tag])
-  tags!: Tag[];
-
-  imageID?: string;
-  image?: Image;
-
-  peerId?: string;
-  peer?: Peer;
 
   @Field()
   hideOnArticle!: boolean;
@@ -78,8 +65,10 @@ export class Author implements HasImage, HasOptionalPeerLc {
   @Field()
   hideOnTeam!: boolean;
 
-  @Field()
-  url!: string;
+  imageID?: string;
+  image?: Image;
+  peerId?: string;
+  peer?: Peer;
 }
 
 @InputType()

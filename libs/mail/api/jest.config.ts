@@ -14,5 +14,4 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../../coverage/libs/mail/api',
-  globalSetup: '<rootDir>/setup-database.js',
 };

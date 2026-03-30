@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger, Scope } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Client, ClientOptions, BucketItem } from 'minio';
 
 export const STORAGE_CLIENT_MODULE_OPTIONS = Symbol(
@@ -7,9 +7,7 @@ export const STORAGE_CLIENT_MODULE_OPTIONS = Symbol(
 
 export type StorageClientConfig = ClientOptions;
 
-@Injectable({
-  scope: Scope.REQUEST,
-})
+@Injectable()
 export class StorageClient {
   private logger = new Logger('StorageClient');
 

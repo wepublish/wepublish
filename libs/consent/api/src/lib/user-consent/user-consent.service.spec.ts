@@ -1,51 +1,38 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserConsentService } from './user-consent.service';
-import { PrismaModule } from '@wepublish/nest-modules';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { UserSession } from '@wepublish/authentication/api';
-import { generateRandomString } from '../consent/consent.resolver.spec';
 
-const mockSlug1 = generateRandomString();
-
-export const mockUserConsents: Prisma.UserConsentCreateInput[] = [
-  {
-    consent: {
-      connectOrCreate: {
-        where: { id: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd' },
-        create: {
-          name: 'some-name',
-          slug: mockSlug1,
-          defaultValue: true,
-        },
-      },
-    },
-    value: true,
-    user: {
-      connectOrCreate: {
-        where: { id: 'some-id' },
-        create: {
-          name: 'some-name',
-          email: `${generateRandomString()}@wepublish.ch`,
-          password: 'some-password',
-          active: true,
-        },
-      },
-    },
+const mockPrisma = {
+  userConsent: {
+    findMany: jest.fn(),
+    findUnique: jest.fn(),
+    findFirst: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
   },
-];
+};
 
 describe('UserConsentService', () => {
   let service: UserConsentService;
-  let prisma: PrismaClient;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [PrismaModule],
-      providers: [UserConsentService],
+      providers: [
+        UserConsentService,
+        {
+          provide: PrismaClient,
+          useValue: mockPrisma,
+        },
+      ],
     }).compile();
 
-    prisma = module.get<PrismaClient>(PrismaClient);
     service = module.get<UserConsentService>(UserConsentService);
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
   test('should be defined', () => {
@@ -53,7 +40,7 @@ describe('UserConsentService', () => {
   });
 
   test('should get user consents', async () => {
-    const mockValue = Promise.resolve([
+    const mockValue = [
       {
         id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
         value: true,
@@ -84,19 +71,17 @@ describe('UserConsentService', () => {
           id: 'clesor2a50105kgrxh0kyxmxy',
         },
       },
-    ]);
+    ];
 
-    const mockFunction = jest
-      .spyOn(prisma.userConsent, 'findMany')
-      .mockReturnValue(mockValue as any);
+    mockPrisma.userConsent.findMany.mockResolvedValue(mockValue);
 
     const result = await service.userConsentList();
     expect(result).toMatchSnapshot();
-    expect(mockFunction.mock.calls[0][0]).toMatchSnapshot();
+    expect(mockPrisma.userConsent.findMany.mock.calls[0][0]).toMatchSnapshot();
   });
 
   test('should filter user consents', async () => {
-    const mockValue = Promise.resolve([
+    const mockValue = [
       {
         id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
         value: true,
@@ -127,61 +112,53 @@ describe('UserConsentService', () => {
           id: 'clesor2a50105kgrxh0kyxmxy',
         },
       },
-    ]);
+    ];
 
-    const mockFunction = jest
-      .spyOn(prisma.userConsent, 'findMany')
-      .mockReturnValue(mockValue as any);
+    mockPrisma.userConsent.findMany.mockResolvedValue(mockValue);
 
     const filter = {
       slug: 'new slug 2',
     };
     const result = await service.userConsentList(filter);
     expect(result).toMatchSnapshot();
-    expect(mockFunction.mock.calls[0][0]).toMatchSnapshot();
+    expect(mockPrisma.userConsent.findMany.mock.calls[0][0]).toMatchSnapshot();
   });
 
   test('should get a single user consent by id', async () => {
-    const mockValue = Promise.resolve([
-      {
-        id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
-        value: true,
-        createdAt: '2023-03-17T12:08:17.277Z',
-        modifiedAt: '2023-03-17T12:08:17.278Z',
-        consent: {
-          slug: 'newsletter-aaa',
-          id: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd',
-          name: 'Newsletter',
-        },
-        user: {
-          __typename: 'User',
-          id: 'clfb7nce50264cvrxlliyxung',
-        },
+    const mockValue = {
+      id: '1572bbfc-a03e-4586-b6a5-e9dab21d54d3',
+      value: true,
+      createdAt: '2023-03-17T12:08:17.277Z',
+      modifiedAt: '2023-03-17T12:08:17.278Z',
+      consent: {
+        slug: 'newsletter-aaa',
+        id: '448c86d8-9df1-4836-9ae9-aa2668ef9dcd',
+        name: 'Newsletter',
       },
-    ]);
+      user: {
+        __typename: 'User',
+        id: 'clfb7nce50264cvrxlliyxung',
+      },
+    };
 
-    const mockFunction = jest
-      .spyOn(prisma.userConsent, 'findUnique')
-      .mockReturnValue(mockValue as any);
+    mockPrisma.userConsent.findUnique.mockResolvedValue(mockValue);
 
     const id = '1572bbfc-a03e-4586-b6a5-e9dab21d54d3';
     const result = await service.userConsent(id);
     expect(result).toMatchSnapshot();
-    expect(mockFunction.mock.calls[0][0]).toMatchSnapshot();
+    expect(
+      mockPrisma.userConsent.findUnique.mock.calls[0][0]
+    ).toMatchSnapshot();
   });
 
   test('should create a user consent', async () => {
-    const mockValue = Promise.resolve([
-      {
-        id: '0c6e7727-711b-40ee-b8b8-22170a085c51',
-        userId: 'clf870cla0719q1rx6vg0y2rj',
-        value: true,
-      },
-    ]);
+    const mockValue = {
+      id: '0c6e7727-711b-40ee-b8b8-22170a085c51',
+      userId: 'clf870cla0719q1rx6vg0y2rj',
+      value: true,
+    };
 
-    const mockFunction = jest
-      .spyOn(prisma.userConsent, 'create')
-      .mockReturnValue(mockValue as any);
+    mockPrisma.userConsent.create.mockResolvedValue(mockValue);
 
     const userConsent = {
       consentId: '2152b9c8-438b-4f4a-a066-ebe85f98f607',
@@ -191,28 +168,23 @@ describe('UserConsentService', () => {
 
     const result = await service.createUserConsent(userConsent);
     expect(result).toMatchSnapshot();
-    expect(mockFunction.mock.calls[0][0]).toMatchSnapshot();
+    expect(mockPrisma.userConsent.create.mock.calls[0][0]).toMatchSnapshot();
   });
 
   test('should update a user consent', async () => {
-    const userConsents = await Promise.all(
-      mockUserConsents.map(data => prisma.userConsent.create({ data }))
-    );
+    const idToUpdate = 'user-consent-1';
 
-    const idToUpdate = userConsents[0].id;
+    mockPrisma.userConsent.findFirst.mockResolvedValue({
+      id: idToUpdate,
+      user: { id: 'some-user-id', roleIDs: [] },
+    });
 
-    const mockValue = Promise.resolve([
-      {
-        id: idToUpdate,
-        userConsent: {
-          value: false,
-        },
-      },
-    ]);
+    const mockValue = {
+      id: idToUpdate,
+      value: false,
+    };
 
-    const mockFunction = jest
-      .spyOn(prisma.userConsent, 'update')
-      .mockReturnValue(mockValue as any);
+    mockPrisma.userConsent.update.mockResolvedValue(mockValue);
     const userConsent = false;
 
     const user = { user: { roleIDs: ['admin'] } } as UserSession;
@@ -222,15 +194,11 @@ describe('UserConsentService', () => {
       userConsent,
       user
     );
-    expect(result).toMatchObject([
-      {
-        id: idToUpdate,
-        userConsent: {
-          value: false,
-        },
-      },
-    ]);
-    expect(mockFunction.mock.calls[0][0]).toMatchObject({
+    expect(result).toMatchObject({
+      id: idToUpdate,
+      value: false,
+    });
+    expect(mockPrisma.userConsent.update.mock.calls[0][0]).toMatchObject({
       where: {
         id: idToUpdate,
       },
@@ -238,31 +206,26 @@ describe('UserConsentService', () => {
   });
 
   test('should delete a user consent', async () => {
-    const userConsents = await Promise.all(
-      mockUserConsents.map(data => prisma.userConsent.create({ data }))
-    );
+    const idToDelete = 'user-consent-1';
 
-    const idToDelete = userConsents[0].id;
+    mockPrisma.userConsent.findFirst.mockResolvedValue({
+      id: idToDelete,
+      user: { id: 'some-user-id', roleIDs: [] },
+    });
 
-    const mockValue = Promise.resolve([
-      {
-        id: idToDelete,
-      },
-    ]);
+    const mockValue = {
+      id: idToDelete,
+    };
 
-    const mockFunction = jest
-      .spyOn(prisma.userConsent, 'delete')
-      .mockReturnValue(mockValue as any);
+    mockPrisma.userConsent.delete.mockResolvedValue(mockValue);
 
     const user = { user: { roleIDs: ['admin'] } } as UserSession;
 
     const result = await service.deleteUserConsent(idToDelete, user);
-    expect(result).toMatchObject([
-      {
-        id: idToDelete,
-      },
-    ]);
-    expect(mockFunction.mock.calls[0][0]).toMatchObject({
+    expect(result).toMatchObject({
+      id: idToDelete,
+    });
+    expect(mockPrisma.userConsent.delete.mock.calls[0][0]).toMatchObject({
       where: {
         id: idToDelete,
       },

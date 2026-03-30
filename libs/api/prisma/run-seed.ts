@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { seed as rootSeed } from './seed';
 import { hash as argon2Hash } from '@node-rs/argon2';
 import { randomBytes } from 'crypto';
@@ -21,7 +22,8 @@ const generateSecureRandomPassword = (length: number) => {
 };
 
 export async function runSeed() {
-  const prisma = new PrismaClient();
+  const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
+  const prisma = new PrismaClient({ adapter });
   await prisma.$connect();
   const [adminUserRole, editorUserRole] = await rootSeed(prisma);
 

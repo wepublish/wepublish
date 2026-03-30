@@ -11,6 +11,7 @@ import {
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 import { useMemo } from 'react';
+import { Element } from 'slate';
 
 import { BlockSiblings } from '../tsri-block-renderer';
 import { TsriBreakBlockType } from './tsri-base-break-block';
@@ -199,14 +200,15 @@ export const TsriSidebarContent = ({
           <Typography component={SidebarContentHeading}>{text}</Typography>
         )}
         <SidebarContentBody>
-          {richText && richText[0] && richText[0].type === 'heading-two' && (
+          {(richText?.[0] as Element)?.type === 'heading-two' && (
             <RichText
               richText={[richText[0]]}
               css={[richTextStyles(theme), subTitleStyles]}
             />
           )}
           {image && <SidebarContentImage image={image} />}
-          {richText && richText[0] && richText[0].type === 'heading-two' ?
+
+          {(richText?.[0] as Element)?.type === 'heading-two' ?
             <RichText
               richText={[...richText].splice(1, richText.length - 1)}
               css={richTextStyles(theme)}

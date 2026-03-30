@@ -30,9 +30,6 @@ export class AuthorService {
       where: {
         id,
       },
-      include: {
-        links: true,
-      },
     });
   }
 
@@ -41,9 +38,6 @@ export class AuthorService {
     return this.prisma.author.findFirst({
       where: {
         slug,
-      },
-      include: {
-        links: true,
       },
     });
   }
@@ -71,9 +65,6 @@ export class AuthorService {
         skip,
         cursor: cursorId ? { id: cursorId } : undefined,
         orderBy,
-        include: {
-          links: true,
-        },
       }),
     ]);
 

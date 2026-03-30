@@ -44,7 +44,7 @@ export const alignmentForTeaserBlock = (index: number) => {
 export const TeaserSlotsTsriLoveSidebar = styled(TeaserSlots)`
   margin: 0;
   padding: 0;
-  row-gap: 0.2cqw;
+  row-gap: calc(var(--sizing-factor) * 0.2cqw);
   height: 100%;
   align-items: flex-start;
   display: flex;

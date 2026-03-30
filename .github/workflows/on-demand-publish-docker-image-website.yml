@@ -15,6 +15,10 @@ on:
       environment:
         required: true
         type: string
+      prerender:
+        required: false
+        type: boolean
+        default: false
       has_staging:
         required: false
         type: boolean
@@ -51,7 +55,7 @@ jobs:
       - name: Get environment variables
         id: get-env
         run: |
-          ./deployment/website_read_env.sh ${{ inputs.environment == 'review_deployed' && 'review' || inputs.environment }} ${{ inputs.website_project }} docker NEXT_PROJECT=${{ inputs.website_project }} API_URL=${{ inputs.api_url }} NX_NEXT_PROJECT_BUILD_OPTIONS="\"${{ (inputs.environment == 'development' || inputs.environment == 'review' || !inputs.has_staging) && '--skip-nx-cache --experimental-build-mode compile' || '--skip-nx-cache' }}\""
+          ./deployment/website_read_env.sh ${{ inputs.environment == 'review_deployed' && 'review' || inputs.environment }} ${{ inputs.website_project }} docker NEXT_PROJECT=${{ inputs.website_project }} API_URL=${{ inputs.api_url }} NX_NEXT_PROJECT_BUILD_OPTIONS="\"${{ !inputs.prerender && '--skip-nx-cache --experimental-build-mode compile' || '--skip-nx-cache' }}\""
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
       - name: Wait for api version to be deployed
