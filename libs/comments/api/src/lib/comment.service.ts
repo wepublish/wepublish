@@ -122,22 +122,6 @@ const sortComments = (
   return comments;
 };
 
-const findCommentById = (
-  comments: DecoratedComment[],
-  id: string
-): DecoratedComment | undefined => {
-  for (const comment of comments) {
-    if (comment.id === id) {
-      return comment;
-    }
-    const found = findCommentById(comment.children, id);
-    if (found) {
-      return found;
-    }
-  }
-  return undefined;
-};
-
 const decorateComments = (
   comments: CommentWithRequiredRelations[],
   ratingSystemAnswers: CommentRatingSystemAnswer[],
@@ -284,20 +268,10 @@ export class CommentService {
   }
 
   public async getComment(commentId: string) {
-    const target = await this.prisma.comment.findUnique({
-      where: { id: commentId },
-      select: { itemID: true, itemType: true },
-    });
-
-    if (!target) {
-      return undefined;
-    }
-
     const [comments, ratingSystemAnswers] = await Promise.all([
       this.prisma.comment.findMany({
         where: {
-          itemID: target.itemID,
-          itemType: target.itemType,
+          OR: [{ id: commentId }, { parentID: commentId }],
         },
         include: {
           revisions: {
@@ -316,12 +290,25 @@ export class CommentService {
       this.prisma.commentRatingSystemAnswer.findMany(),
     ]);
 
-    const decorated = decorateComments(comments, ratingSystemAnswers, {
-      sort: CommentSort.Rating,
-      order: SortOrder.Ascending,
+    const groupedComments = groupBy(
+      comment => comment.parentID ?? 'null',
+      comments
+    );
+
+    const decorate = (
+      comment: CommentWithRequiredRelations
+    ): DecoratedComment => ({
+      ...comment,
+      calculatedRatings: calculateRating(ratingSystemAnswers, comment.ratings),
+      children: sortComments(
+        (groupedComments[comment.id] ?? []).map(decorate),
+        CommentSort.Rating,
+        SortOrder.Ascending
+      ),
     });
 
-    return findCommentById(decorated, commentId);
+    const target = comments.find(c => c.id === commentId);
+    return target ? decorate(target) : undefined;
   }
 
   public async createAdminComment({
