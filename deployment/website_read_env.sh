@@ -97,4 +97,4 @@ if [[ $MODE == "docker" ]]; then
 fi
 
 # Return variables
-echo "::set-output name=envvars::${envvars}"
+echo "envvars=${envvars}" >> "$GITHUB_OUTPUT"
