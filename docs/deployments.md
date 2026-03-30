@@ -78,28 +78,6 @@ The configuration file contains three main sections: `production`, `staging`, an
 # Public deployments
 About public demo deployments.
 
-## Always-there-instances
-This is controlled via flux and our infrastructure repository. There are image automation rules which picks up new docker images and deploy those to k8s cluster.
-
-### demo (latest stable version)
-- [demo.wepublish.cloud](https://demo.wepublish.cloud)
-- [editor.demo.wepublish.cloud](https://editor.demo.wepublish.cloud)
-- [api.demo.wepublish.cloud](https://api.demo.wepublish.cloud)
-- [media.demo.wepublish.cloud](https://media.demo.wepublish.cloud)
-
-### next (latest alpha version)
-- [next.wepublish.cloud](https://next.wepublish.cloud)
-- [editor.next.wepublish.cloud](https://editor.next.wepublish.cloud)
-- [api.next.wepublish.cloud](https://api.next.wepublish.cloud)
-- [media.next.wepublish.cloud](https://media.next.wepublish.cloud)
-
-### dev (latest master)
-- [dev.wepublish.cloud](https://dev.wepublish.cloud)
-- [editor.dev.wepublish.cloud](https://editor.dev.wepublish.cloud)
-- [api.dev.wepublish.cloud](https://api.dev.wepublish.cloud)
-- [media.dev.wepublish.cloud](https://media.dev.wepublish.cloud)
-
-
 ## Ephemeral instances
 Deployments managed via github workflows.
  
