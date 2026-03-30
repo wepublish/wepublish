@@ -76,10 +76,10 @@ export const TeaserImageWrapper = styled('figure')`
 
 export const TeaserImage = styled(Image)`
   max-height: 100%;
-  max-width: 100%;
+  max-width:;
   height: 100%;
   width: 100%;
-  object-fit: cover;
+  object-fit: contain;
 `;
 
 export const TeaserImageInnerWrapper = styled('picture')`
@@ -180,11 +180,17 @@ export const WepTeaser = ({
   const lead = teaser && selectTeaserLead(teaser);
   const href = (() => {
     const raw = (teaser && selectTeaserUrl(teaser)) ?? '';
-    const match = raw.match(/^(.*)-([a-z]{2})$/);
-    if (match) {
-      return `/${match[2]}${match[1]}`;
+    const transformPath = (path: string) => {
+      const match = path.match(/^(\/.*)-(de|fr)$/);
+      return match ? `/${match[2]}${match[1]}` : path;
+    };
+    try {
+      const url = new URL(raw);
+      url.pathname = transformPath(url.pathname);
+      return url.toString();
+    } catch {
+      return transformPath(raw);
     }
-    return raw;
   })();
   const target = (teaser && selectTeaserTarget(teaser)) ?? undefined;
   const image = teaser && selectTeaserImage(teaser);
