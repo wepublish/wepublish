@@ -12,8 +12,8 @@ export const isTeaserSlotsLogoWall = allPass([
 ]);
 
 export const TeaserSlotsLogoWall = styled(WepTeaserSlots)`
-  column-gap: ${({ theme }) => theme.spacing(2)};
-  row-gap: ${({ theme }) => theme.spacing(2)};
+  column-gap: ${({ theme }) => theme.spacing(6)};
+  row-gap: ${({ theme }) => theme.spacing(3)};
   grid-template-rows: repeat(2, auto);
 
   ${TeaserSlotsTeasers} {
@@ -21,7 +21,7 @@ export const TeaserSlotsLogoWall = styled(WepTeaserSlots)`
     grid-template-columns: repeat(2, 1fr);
 
     ${({ theme }) => theme.breakpoints.up('md')} {
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     }
   }
 `;
