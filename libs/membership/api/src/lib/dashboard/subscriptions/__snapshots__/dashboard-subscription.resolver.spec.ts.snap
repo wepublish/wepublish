@@ -5,20 +5,20 @@ exports[`DashboardSubscriptionResolver activeSubscribers 1`] = `
   {
     "endsAt": null,
     "memberPlan": "Foo",
-    "monthlyAmount": 500,
-    "paymentPeriodicity": "monthly",
-    "reasonForDeactivation": null,
-    "renewsAt": null,
-    "startsAt": "2023-02-03T00:00:00.000Z",
-  },
-  {
-    "endsAt": "2043-02-01T00:00:00.000Z",
-    "memberPlan": "Foo",
     "monthlyAmount": 50,
     "paymentPeriodicity": "monthly",
     "reasonForDeactivation": null,
     "renewsAt": "2043-02-01T00:00:00.000Z",
     "startsAt": "2023-01-01T00:00:00.000Z",
+  },
+  {
+    "endsAt": null,
+    "memberPlan": "Foo",
+    "monthlyAmount": 500,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": null,
+    "renewsAt": null,
+    "startsAt": "2023-02-03T00:00:00.000Z",
   },
 ]
 `;
@@ -33,19 +33,20 @@ exports[`DashboardSubscriptionResolver newDeactivations 1`] = `
     "reasonForDeactivation": "invoiceNotPaid",
     "startsAt": "2023-01-01T00:00:00.000Z",
   },
-  {
-    "endsAt": "2023-02-03T00:00:00.000Z",
-    "memberPlan": "Foo",
-    "monthlyAmount": 50,
-    "paymentPeriodicity": "monthly",
-    "reasonForDeactivation": "invoiceNotPaid",
-    "startsAt": "2023-01-01T00:00:00.000Z",
-  },
 ]
 `;
 
 exports[`DashboardSubscriptionResolver newSubscribers 1`] = `
 [
+  {
+    "endsAt": null,
+    "memberPlan": "Foo",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": null,
+    "renewsAt": "2023-02-01T00:00:00.000Z",
+    "startsAt": "2023-01-01T00:00:00.000Z",
+  },
   {
     "endsAt": "2023-02-02T00:00:00.000Z",
     "memberPlan": "Bar",
@@ -54,15 +55,6 @@ exports[`DashboardSubscriptionResolver newSubscribers 1`] = `
     "reasonForDeactivation": "invoiceNotPaid",
     "renewsAt": null,
     "startsAt": "2023-01-02T00:00:00.000Z",
-  },
-  {
-    "endsAt": "2023-02-01T00:00:00.000Z",
-    "memberPlan": "Foo",
-    "monthlyAmount": 50,
-    "paymentPeriodicity": "monthly",
-    "reasonForDeactivation": null,
-    "renewsAt": "2023-02-01T00:00:00.000Z",
-    "startsAt": "2023-01-01T00:00:00.000Z",
   },
 ]
 `;
@@ -74,7 +66,7 @@ exports[`DashboardSubscriptionResolver renewingSubscribers 1`] = `
     "monthlyAmount": 50,
     "paymentPeriodicity": "monthly",
     "reasonForDeactivation": null,
-    "renewsAt": "2023-02-01T00:00:00.000Z",
+    "renewsAt": "2023-01-29T00:00:00.000Z",
     "startsAt": "2023-01-01T00:00:00.000Z",
   },
   {
@@ -82,7 +74,7 @@ exports[`DashboardSubscriptionResolver renewingSubscribers 1`] = `
     "monthlyAmount": 50,
     "paymentPeriodicity": "monthly",
     "reasonForDeactivation": null,
-    "renewsAt": "2023-01-29T00:00:00.000Z",
+    "renewsAt": "2023-02-01T00:00:00.000Z",
     "startsAt": "2023-01-01T00:00:00.000Z",
   },
 ]

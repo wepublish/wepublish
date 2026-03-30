@@ -1,14 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ConsentService should create a consent 1`] = `
-[
-  {
-    "defaultValue": true,
-    "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
-    "name": "some-name",
-    "slug": "some-slug",
-  },
-]
+{
+  "defaultValue": true,
+  "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
+  "name": "some-name",
+  "slug": "some-slug",
+}
 `;
 
 exports[`ConsentService should create a consent 2`] = `
@@ -22,14 +20,12 @@ exports[`ConsentService should create a consent 2`] = `
 `;
 
 exports[`ConsentService should get a single consent by id 1`] = `
-[
-  {
-    "defaultValue": true,
-    "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
-    "name": "some-name",
-    "slug": "some-slug",
-  },
-]
+{
+  "defaultValue": true,
+  "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
+  "name": "some-name",
+  "slug": "some-slug",
+}
 `;
 
 exports[`ConsentService should get a single consent by id 2`] = `

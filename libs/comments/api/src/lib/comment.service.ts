@@ -122,6 +122,22 @@ const sortComments = (
   return comments;
 };
 
+const findCommentById = (
+  comments: DecoratedComment[],
+  id: string
+): DecoratedComment | undefined => {
+  for (const comment of comments) {
+    if (comment.id === id) {
+      return comment;
+    }
+    const found = findCommentById(comment.children, id);
+    if (found) {
+      return found;
+    }
+  }
+  return undefined;
+};
+
 const decorateComments = (
   comments: CommentWithRequiredRelations[],
   ratingSystemAnswers: CommentRatingSystemAnswer[],
@@ -268,10 +284,20 @@ export class CommentService {
   }
 
   public async getComment(commentId: string) {
+    const target = await this.prisma.comment.findUnique({
+      where: { id: commentId },
+      select: { itemID: true, itemType: true },
+    });
+
+    if (!target) {
+      return undefined;
+    }
+
     const [comments, ratingSystemAnswers] = await Promise.all([
       this.prisma.comment.findMany({
         where: {
-          OR: [{ id: commentId }, { parentID: commentId }],
+          itemID: target.itemID,
+          itemType: target.itemType,
         },
         include: {
           revisions: {
@@ -290,10 +316,12 @@ export class CommentService {
       this.prisma.commentRatingSystemAnswer.findMany(),
     ]);
 
-    return decorateComments(comments, ratingSystemAnswers, {
+    const decorated = decorateComments(comments, ratingSystemAnswers, {
       sort: CommentSort.Rating,
       order: SortOrder.Ascending,
-    }).at(-1);
+    });
+
+    return findCommentById(decorated, commentId);
   }
 
   public async createAdminComment({
