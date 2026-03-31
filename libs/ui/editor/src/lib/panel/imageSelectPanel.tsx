@@ -110,7 +110,7 @@ function ImageSelectPanel({ onClose, onSelect }: ImageSelectPanelProps) {
       variables: {
         take: ImagesPerPage,
         skip: 1,
-        cursor: data?.images.pageInfo.endCursor,
+        cursorId: data?.images.pageInfo.endCursor,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
