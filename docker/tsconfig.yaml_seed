@@ -23,6 +23,5 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "ignoreDeprecations": "6.0"
     }
 }
