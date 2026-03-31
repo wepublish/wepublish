@@ -27,19 +27,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { Paywall } from '@wepublish/website/builder';
-/*
-import { robotoMono } from '../theme';
-import { FlexBlockFullsizeImageWrapper } from './block-layouts/flex-block-fullsize-image';
-import {
-  FlexBlockHeroWrapper,
-  isFlexBlockHero,
-} from './block-layouts/flex-block-hero';
-import { CollapsibleContentWrapper } from './break-blocks/reflekt-collapsible-content';
-import { CollapsibleDownloadsWrapper } from './break-blocks/reflekt-collapsible-downloads';
-import { TocWrapper } from './break-blocks/reflekt-toc';
-import { ReflektQuoteBlock } from './reflekt-quote-block';
-import { TeaserSlotsCreditsWrapper } from './teaser-layouts/teaser-slots-credits';
-*/
+
 const fullWidthMainSpacer = (theme: Theme) => css`
   main > .MuiContainer-root {
     max-width: initial;
