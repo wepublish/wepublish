@@ -15,7 +15,7 @@ COPY ./libs/api/prisma/schema.prisma ./libs/api/prisma/schema.prisma
 COPY ./prisma.config.ts ./prisma.config.ts
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends openssl && \
+    apt-get install -y --no-install-recommends openssl python3 build-essential && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     npm ci
