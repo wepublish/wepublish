@@ -374,7 +374,7 @@ function SettingList() {
     !loading && (
       <>
         <Form
-          data-testId="form"
+          data-testid="form"
           disabled={isDisabled}
           model={validationModel}
           formValue={formValue}
