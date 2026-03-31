@@ -23,6 +23,7 @@ export const SessionProvider = memo<
   const [user, setUser] = useState<SensitiveDataUser | null>(null);
 
   const [getMe] = useMeLazyQuery({
+    fetchPolicy: 'network-only',
     onCompleted(data) {
       setUser((data.me as SensitiveDataUser) ?? null);
     },

@@ -57,6 +57,21 @@ export class ArticleService {
       }
     }
 
+    if (filter?.tags?.length) {
+      const taggedArticles = await this.prisma.taggedArticles.findMany({
+        where: { tagId: { in: filter.tags } },
+        select: { articleId: true },
+        distinct: ['articleId'],
+      });
+
+      const tagArticleIds = taggedArticles.map(ta => ta.articleId);
+      filter.ids =
+        filter.ids?.length ?
+          filter.ids.filter(id => tagArticleIds.includes(id))
+        : tagArticleIds;
+      filter.tags = undefined;
+    }
+
     const orderBy = createArticleOrder(sort, order);
     const where = createArticleFilter(filter ?? {});
 

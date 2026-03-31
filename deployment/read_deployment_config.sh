@@ -17,7 +17,7 @@ if [[ $MODE == "getValue" ]]; then
   if [[ ! -z $ARGUMENT ]] && [[ $value == "null" ]]; then
     value=$ARGUMENT
   fi
-  echo ::set-output name=value::${value}
+  echo "value=${value}" >> "$GITHUB_OUTPUT"
   exit 0
 fi
 
@@ -26,10 +26,10 @@ fi
 if [[ ! -z $PROJECT ]]; then
   if [[ -z $(echo "@$targets@" |sed "s/ /@/g" |grep "@${PROJECT}@") ]]; then
     echo "Project <$PROJECT> has no website, skipping..."
-    echo ::set-output name=has-website::false
+    echo "has-website=false" >> "$GITHUB_OUTPUT"
   else
     echo "Project <$PROJECT> has website."
-    echo ::set-output name=has-website::true
+    echo "has-website=true" >> "$GITHUB_OUTPUT"
   fi
   exit 0
 fi
@@ -39,4 +39,4 @@ for target in $targets; do
 	matrix="${matrix}\"${target}\","
 done
 matrix="${matrix%,}]}"
-echo "::set-output name=matrix::${matrix}"
+echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"

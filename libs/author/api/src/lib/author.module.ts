@@ -10,6 +10,7 @@ import { AuthorResolver } from './author.resolver';
 import { TagModule } from '@wepublish/tag/api';
 import { ArticleSocialMediaAuthorDataloader } from './article-social-media-author.dataloader';
 import { ArticleAuthorDataloader } from './article-author.dataloader';
+import { AuthorLinkDataloader } from './author-links.dataloader';
 
 @Module({
   imports: [PrismaModule, TagModule],
@@ -21,6 +22,7 @@ import { ArticleAuthorDataloader } from './article-author.dataloader';
     HasOptionalAuthorResolver,
     ArticleSocialMediaAuthorDataloader,
     ArticleAuthorDataloader,
+    AuthorLinkDataloader,
   ],
   exports: [
     AuthorDataloaderService,

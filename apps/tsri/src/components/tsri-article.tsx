@@ -17,7 +17,7 @@ export const TsriArticle = styled(ArticleDefault)`
   grid-template-columns: var(--two-column-grid) !important;
   justify-content: space-between;
 
-  & > * {
+  & > *:not(${SidebarContentWrapper}) {
     grid-column: 1 / 2 !important;
   }
 
