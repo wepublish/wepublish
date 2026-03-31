@@ -19,7 +19,7 @@
       "secret_env": ["MAILCHIMP_API_KEY"]
     },
     "review": {
-      "deployment": true,
+      "deployment": false,
       "env": {
         "MAILCHIMP_SERVER_PREFIX": "us12",
         "DEPLOY_ENV": "review"
