@@ -43,7 +43,6 @@ const WepTeaserStyled = styled(WepTeaser)`
 
   ${TeaserTitle} {
     grid-row: 2 / 3;
-    font-size:;
   }
 
   ${TeaserLead} {
