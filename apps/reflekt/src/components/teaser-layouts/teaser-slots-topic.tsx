@@ -52,6 +52,10 @@ export const TeaserSlotsTopicWrapper = styled(TeaserSlotsBlockWrapperDefault)`
 
   ${SliderBallContainer} {
     display: none;
+
+    ${({ theme }) => theme.breakpoints.down('md')} {
+      display: flex;
+    }
   }
 `;
 

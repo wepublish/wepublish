@@ -1,4 +1,3 @@
-import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 import {
   hasBlockStyle,
@@ -16,8 +15,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
-import { useEffect, useState } from 'react';
-import { useIntersectionObserver } from 'usehooks-ts';
+import { useEffect, useRef } from 'react';
 
 import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 
@@ -30,38 +28,28 @@ export const isFlexBlockFullsizeImage = (
   ])(block);
 };
 
-const textRoll = keyframes`
-  from { transform: translateY(100%); }
-  to { transform: translateY(-75vw); }
-`;
+const PARALLAX_HOLD_DISTANCE = 800;
+const PARALLAX_TEXT_DELAY = 200;
+const PARALLAX_TEXT_START_OFFSET = 0.9;
+const MD_BREAKPOINT = 900;
 
 export const FlexBlockFullsizeImageWrapper = styled('div')`
   display: grid;
   gap: 0;
   grid-column: -1 / 1;
+  position: relative;
+  background-color: ${({ theme }) => theme.palette.common.black};
 
   ${RichTextBlockWrapper} {
-    transform: translateY(100%);
-  }
-
-  &[data-text-visible='true'] ${RichTextBlockWrapper} {
-    transform: none;
-    animation: ${textRoll} 10s linear infinite;
-  }
-
-  ${({ theme }) => theme.breakpoints.up('md')} {
-    &[data-text-visible='true'] ${RichTextBlockWrapper} {
-      animation: none;
-      transform: translateY(25vh);
-      transition: transform 2s ease-out;
-    }
+    overflow: hidden;
+    transform: translate(-50%, calc(-50% + var(--text-parallax-y, 90vh)));
+    background-color: transparent;
   }
 `;
 
 export const BlockWithAlignment = styled('div')<FlexAlignment>`
   grid-column: -1 / 1;
   grid-row: 1 / 2;
-  position: relative;
   overflow: hidden;
 
   ${ImageBlockWrapper} {
@@ -98,13 +86,10 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
     text-align: center;
 
     position: absolute;
-    bottom: 0;
+    top: 50%;
     left: 50%;
-    margin-left: calc(-50% + ${({ theme }) => theme.spacing(2)});
 
     ${({ theme }) => theme.breakpoints.up('md')} {
-      margin: 0 auto;
-      position: static;
       width: 50%;
     }
 
@@ -142,16 +127,176 @@ export const FlexBlockFullsizeImage = ({
     blocks: { Renderer },
   } = useWebsiteBuilder();
 
-  const { isIntersecting: partiallyVisible, ref } = useIntersectionObserver({
-    initialIsIntersecting: false,
-    threshold: 0.5,
-  });
-
-  const [textVisible, setTextVisible] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  // Actual rendered image height, updated by ResizeObserver
+  const imageHeightRef = useRef<number>(0);
 
   useEffect(() => {
-    if (partiallyVisible) setTextVisible(true);
-  }, [partiallyVisible]);
+    const el = wrapperRef.current;
+    if (!el) return;
+
+    const getImageBlock = () =>
+      el.querySelector('[data-image-block="true"]') as HTMLElement | null;
+    const getTextBlock = () =>
+      el.querySelector('[data-text-block="true"]') as HTMLElement | null;
+
+    const applyLayout = () => {
+      const imageHeight = imageHeightRef.current;
+      if (!imageHeight) return;
+      const vh = window.innerHeight;
+      // wrapper = vh + HOLD_DISTANCE regardless of image height,
+      // stickyTop centers the image in the viewport during the hold
+      el.style.display = 'block';
+      el.style.position = 'relative';
+      el.style.height = `${vh + PARALLAX_HOLD_DISTANCE}px`;
+    };
+
+    const resetLayout = () => {
+      el.style.display = '';
+      el.style.position = '';
+      el.style.height = '';
+      getImageBlock()?.removeAttribute('style');
+      getTextBlock()?.removeAttribute('style');
+    };
+
+    const setFixed = (
+      block: HTMLElement,
+      imageHeight: number,
+      stickyTop: number,
+      zIndex: string
+    ) => {
+      if (block.style.position === 'fixed') return;
+      // Use the computed target position, not the captured actual position.
+      // Capturing the actual position breaks at high scroll speeds because the
+      // element has already overshot past center by the time the event fires.
+      block.style.position = 'fixed';
+      block.style.top = `${stickyTop}px`;
+      block.style.bottom = 'auto';
+      block.style.left = '0';
+      block.style.width = '100%';
+      block.style.height = `${imageHeight}px`;
+      block.style.zIndex = zIndex;
+    };
+
+    const setAbsolute = (
+      block: HTMLElement,
+      top: number,
+      imageHeight: number,
+      zIndex: string
+    ) => {
+      block.style.position = 'absolute';
+      block.style.top = `${top}px`;
+      block.style.bottom = 'auto';
+      block.style.left = '0';
+      block.style.width = '100%';
+      block.style.height = `${imageHeight}px`;
+      block.style.zIndex = zIndex;
+    };
+
+    const handleScroll = () => {
+      const imageHeight = imageHeightRef.current;
+      if (!imageHeight) return;
+
+      const imageBlock = getImageBlock();
+      const textBlock = getTextBlock();
+      const vh = window.innerHeight;
+      const rect = el.getBoundingClientRect();
+      const wrapperTop = rect.top + window.scrollY;
+      const scrollY = window.scrollY;
+
+      const navbarHeight =
+        parseInt(
+          getComputedStyle(document.documentElement).getPropertyValue(
+            '--navbar-height'
+          )
+        ) || 0;
+      // Center in available space; on desktop imageHeight ≈ vh-navbar so (vh-imageHeight)/2 = navbar/2
+      // which would hide the image behind the navbar — floor at full navbarHeight
+      const stickyTop = Math.max(navbarHeight, (vh - imageHeight) / 2);
+
+      // Hold starts when image has scrolled to its centered position (scrollY = wrapperTop)
+      const holdStart = wrapperTop;
+
+      const progress = Math.max(
+        0,
+        Math.min(
+          1,
+          (scrollY - holdStart - PARALLAX_TEXT_DELAY) /
+            (PARALLAX_HOLD_DISTANCE - PARALLAX_TEXT_DELAY)
+        )
+      );
+
+      const isDesktop = window.innerWidth >= MD_BREAKPOINT;
+      const startY = vh * PARALLAX_TEXT_START_OFFSET;
+      const endY = isDesktop ? 0 : -startY;
+      el.style.setProperty(
+        '--text-parallax-y',
+        `${startY + (endY - startY) * progress}px`
+      );
+
+      if (
+        scrollY >= holdStart &&
+        scrollY < holdStart + PARALLAX_HOLD_DISTANCE
+      ) {
+        if (imageBlock) setFixed(imageBlock, imageHeight, stickyTop, '1');
+        if (textBlock) setFixed(textBlock, imageHeight, stickyTop, '2');
+      } else if (scrollY >= holdStart + PARALLAX_HOLD_DISTANCE) {
+        if (imageBlock)
+          setAbsolute(
+            imageBlock,
+            PARALLAX_HOLD_DISTANCE + stickyTop,
+            imageHeight,
+            '1'
+          );
+        if (textBlock)
+          setAbsolute(
+            textBlock,
+            PARALLAX_HOLD_DISTANCE + stickyTop,
+            imageHeight,
+            '2'
+          );
+      } else {
+        if (imageBlock) setAbsolute(imageBlock, stickyTop, imageHeight, '1');
+        if (textBlock) setAbsolute(textBlock, stickyTop, imageHeight, '2');
+      }
+    };
+
+    const handleResize = () => {
+      resetLayout();
+      applyLayout();
+      handleScroll();
+    };
+
+    // ResizeObserver gives us the actual rendered image height (works for mobile auto-height)
+    // On desktop, pull the next sibling up to hide the hold-distance white space
+    const nextSibling = el.nextElementSibling as HTMLElement | null;
+    if (nextSibling && window.innerWidth >= MD_BREAKPOINT) {
+      //nextSibling.style.marginTop = `-${PARALLAX_HOLD_DISTANCE}px`;
+    }
+
+    const observer = new ResizeObserver(entries => {
+      const h = entries[0]?.contentRect.height;
+      if (h && h !== imageHeightRef.current) {
+        imageHeightRef.current = h;
+        applyLayout();
+        handleScroll();
+      }
+    });
+
+    const imageBlock = getImageBlock();
+    if (imageBlock) observer.observe(imageBlock);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleResize);
+    handleScroll();
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+      if (nextSibling) nextSibling.style.marginTop = '';
+    };
+  }, []);
 
   const sortedBlocks = [...(blocks ?? [])].sort(
     (a, b) => a.alignment.y - b.alignment.y || a.alignment.x - b.alignment.x
@@ -160,13 +305,15 @@ export const FlexBlockFullsizeImage = ({
   return (
     <FlexBlockFullsizeImageWrapper
       className={className}
-      ref={ref}
-      data-text-visible={textVisible}
+      ref={wrapperRef}
     >
       {sortedBlocks.map((nestedBlock, index) => {
+        const isTextBlock = nestedBlock.block?.__typename === 'RichTextBlock';
         return (
           <BlockWithAlignment
             key={index}
+            data-text-block={isTextBlock ? 'true' : undefined}
+            data-image-block={!isTextBlock ? 'true' : undefined}
             {...(nestedBlock.alignment as FlexAlignment)}
           >
             <Renderer
