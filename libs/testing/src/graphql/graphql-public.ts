@@ -1687,6 +1687,8 @@ export type Mutation = {
   cancelSubscription: PublicSubscription;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   cancelUserSubscription?: Maybe<PublicSubscription>;
+  /** Confirms a pending email change for the logged-in user. */
+  confirmEmailChange: SensitiveDataUser;
   /** Creates an article. */
   createArticle: Article;
   /** Creates a new author. */
@@ -1871,6 +1873,8 @@ export type Mutation = {
   renewSubscription: PublicSubscription;
   /** Requests the user to change the comment's content */
   requestChangesOnComment: Comment;
+  /** Requests an email change. A confirmation link is sent to the current email address. */
+  requestEmailChange: Scalars['Boolean'];
   /** Resets the password of a user. */
   resetPassword: SensitiveDataUser;
   /** This mutation revokes and deletes the active session. */
@@ -2002,6 +2006,10 @@ export type MutationCancelSubscriptionArgs = {
 
 export type MutationCancelUserSubscriptionArgs = {
   id: Scalars['String'];
+};
+
+export type MutationConfirmEmailChangeArgs = {
+  newEmail: Scalars['String'];
 };
 
 export type MutationCreateArticleArgs = {
@@ -2529,6 +2537,10 @@ export type MutationRequestChangesOnCommentArgs = {
   rejectionReason: CommentRejectionReason;
 };
 
+export type MutationRequestEmailChangeArgs = {
+  newEmail: Scalars['String'];
+};
+
 export type MutationResetPasswordArgs = {
   id: Scalars['String'];
   password?: InputMaybe<Scalars['String']>;
@@ -2654,7 +2666,6 @@ export type MutationUpdateCurrentUserArgs = {
   address?: InputMaybe<UserAddressInput>;
   birthday?: InputMaybe<Scalars['DateTime']>;
   challengeAnswer?: InputMaybe<ChallengeInput>;
-  email?: InputMaybe<Scalars['String']>;
   firstName?: InputMaybe<Scalars['String']>;
   flair?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
@@ -4575,6 +4586,7 @@ export type SensitiveDataUser = BaseUser & {
   name: Scalars['String'];
   note?: Maybe<Scalars['String']>;
   paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
+  pendingEmail?: Maybe<Scalars['String']>;
   permissions: Array<Scalars['String']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
@@ -5353,6 +5365,7 @@ export type UserCreatedAction = BaseAction &
 
 export enum UserEvent {
   AccountCreation = 'ACCOUNT_CREATION',
+  EmailChange = 'EMAIL_CHANGE',
   LoginLink = 'LOGIN_LINK',
   PasswordReset = 'PASSWORD_RESET',
   TestMail = 'TEST_MAIL',
