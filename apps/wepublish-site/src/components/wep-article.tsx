@@ -157,8 +157,6 @@ export function WepArticle({
 
   const article = data?.article as ArticleType | undefined;
 
-  console.log('article', article);
-
   return (
     <ArticleWrapper
       className={className}
