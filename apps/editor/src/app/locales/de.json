@@ -221,7 +221,8 @@
           "LOGGED_IN": "nur eingeloggt",
           "LOGGED_OUT": "nur ausgeloggt",
           "SUBSCRIBED": "nur abonniert",
-          "UNSUBSCRIBED": "nicht abonniert"
+          "UNSUBSCRIBED": "nicht abonniert",
+          "PAYWALL_BYPASSED": "paywall überbrückung"
         },
         "actions": "Aktionen",
         "image": "Bild",
@@ -586,7 +587,10 @@
       "user": "Benutzer",
       "yearlySubscribers": "Neue Abonnent:innen im letzten Jahr",
       "audience": "Audience",
-      "goToAudienceDashboard": "Zum Audience Dashboard"
+      "goToAudienceDashboard": "Zum Audience Dashboard",
+      "externalApps": "We.Publish Apps",
+      "networkContent": "Aus dem We.Publish-Netzwerk",
+      "goToNetwork": "Zum Netzwerk"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -870,6 +874,7 @@
       "pages": "Seiten",
       "paymentMethods": "Zahlungsmethoden",
       "peerArticles": "Peerbare Artikel",
+      "networkContent": "We.Publish-Netzwerk",
       "peering": "Peering",
       "peers": "Peers",
       "settings": "Einstellungen",
@@ -883,7 +888,8 @@
       "audience": "Audience",
       "authorTags": "Tags",
       "audienceDashboard": "Dashboard",
-      "integrations": "Integrationen"
+      "integrations": "Integrationen",
+      "apps": "Apps"
     },
     "navigation": {
       "overview": {
@@ -1112,7 +1118,9 @@
         "user_email": "E-Mail des Users.",
         "user_firstName": "Vorname des Users",
         "user_id": "Eindeutige ID des Users.",
-        "user_name": "Nachname des Users."
+        "user_name": "Nachname des Users.",
+        "optional_newEmail": "Die neue E-Mail-Adresse, auf die der Benutzer wechseln möchte.",
+        "optional_newEmail_example": "Du hast eine Änderung deiner E-Mail-Adresse auf <strong>{{newEmailPlaceholder}}</strong> beantragt. Bitte bestätige diese Änderung über folgenden Link: {{confirmLink}}E-Mail-Änderung bestätigen</a>"
       },
       "descriptionTitle": "Beschreibung",
       "example": "Beispiel im Template",
@@ -1819,6 +1827,65 @@
         "property": "Google-Analytics Property-ID",
         "credentials": "Anmeldedatei"
       }
+    },
+    "externalApps": {
+      "apps": "Apps"
+    },
+    "externalAppForm": {
+      "create": "Erstellen",
+      "update": "Aktualisieren",
+      "delete": "Löschen",
+      "name": "Name",
+      "description": "Beschreibung",
+      "url": "URL",
+      "target": "Ziel",
+      "successUpdate": "Externe App erfolgreich aktualisiert",
+      "errorUpdate": "Fehler beim Aktualisieren der externen App",
+      "successCreate": "Externe App erfolgreich erstellt",
+      "errorCreate": "Fehler beim Erstellen der externen App",
+      "successDelete": "Externe App erfolgreich gelöscht",
+      "errorDelete": "Fehler beim Löschen der externen App",
+      "deleteConfirmationTitle": "Externe App löschen",
+      "deleteConfirmationText": "Möchten Sie diese externe App wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "icon": "Icon URL"
+    },
+    "networkContentDashboard": {
+      "errorLoading": "Netzwerkartikel konnten nicht geladen werden.",
+      "noArticles": "Keine Artikel verfügbar.",
+      "readMore": "Artikel lesen",
+      "importFrom": "Artikel von {{peer}} importieren",
+      "noPeer": "Kein aktives Peering – kontaktiere den Verlag, um ein Peering einzurichten.",
+      "importTitle": "Artikel importieren",
+      "importAuthors": "Autoren importieren",
+      "importTags": "Tags importieren",
+      "importImages": "Inhaltsbilder importieren",
+      "importConfirm": "Importieren",
+      "cancel": "Abbrechen",
+      "close": "Schliessen",
+      "peerInfoTitle": "Peering nicht verfügbar",
+      "peerInfoText": "Dieser Verlag ist noch nicht als Peer verbunden. Um Artikel zu importieren, wird eine aktive Peering-Verbindung benötigt. Bitte kontaktiere den Verlag, um eine Peering-Beziehung aufzubauen, oder richte sie unter Einstellungen > Peering ein.",
+      "importBtn": "Importieren",
+      "connectBtn": "Peer einrichten"
+    },
+    "networkContentPage": {
+      "title": "Inhalte aus dem We.Publish-Netzwerk",
+      "articlesTitle": "Artikel",
+      "mediaTitle": "Medien",
+      "searchLabel": "Artikel suchen",
+      "mediaFilter": "Medium",
+      "allMedia": "Alle Medien",
+      "dateFrom": "Von",
+      "dateTo": "Bis",
+      "filterByMedia": "Filtern",
+      "errorLoadingClients": "Medien konnten nicht geladen werden.",
+      "noClients": "Keine Medien verfügbar.",
+      "connected": "Verbunden",
+      "notConnected": "Nicht verbunden",
+      "contactTitle": "{{name}} kontaktieren",
+      "contactText": "Dieser Verlag ist noch nicht als Peer verbunden. Kontaktiere die zuständigen Personen, um die Peering-Schlüssel auszutauschen und die Verbindung einzurichten.",
+      "noContacts": "Keine Kontaktpersonen für dieses Medium verfügbar.",
+      "unknownUser": "Unbekannter Benutzer",
+      "connectBtn": "Verbinden"
     }
   }
 }

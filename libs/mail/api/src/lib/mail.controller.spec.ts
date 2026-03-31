@@ -58,6 +58,8 @@ describe('MailController', () => {
     flair: null,
     userImageID: null,
     note: null,
+    pendingEmail: null,
+    pendingEmailAt: null,
   };
 
   beforeEach(async () => {

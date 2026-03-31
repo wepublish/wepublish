@@ -98,6 +98,7 @@ describe('BannerResolver', () => {
         documentId: '1',
         loggedIn: true,
         hasSubscription: false,
+        hasPaywallBypass: false,
       });
 
       expect(result).toEqual(mockBanner);
@@ -110,6 +111,7 @@ describe('BannerResolver', () => {
         documentId: '1',
         loggedIn: true,
         hasSubscription: false,
+        hasPaywallBypass: false,
       });
 
       expect(result).toEqual(null);

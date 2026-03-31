@@ -8,6 +8,7 @@ import {
 } from '@wepublish/website/builder';
 import { useUser } from '@wepublish/authentication/website';
 import { useHasActiveSubscription } from '@wepublish/membership/website';
+import { hasPaywallBypass } from '@wepublish/paywall/website';
 
 export type BannerContainerProps = {
   documentType: BannerDocumentType;
@@ -30,6 +31,7 @@ export function BannerContainer({
       documentType,
       loggedIn: hasUser,
       hasSubscription,
+      hasPaywallBypass: hasPaywallBypass(),
     },
   });
 

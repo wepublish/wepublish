@@ -27,6 +27,7 @@ fragment FullSensitiveDataUser on SensitiveDataUser {
   permissions
   birthday
   email
+  pendingEmail
 
   address {
     ...FullAddress
@@ -116,7 +117,6 @@ mutation UpdateUser(
   $firstName: String
   $flair: String
   $name: String
-  $email: String
   $password: String
   $address: UserAddressInput
   $birthday: DateTime
@@ -125,7 +125,6 @@ mutation UpdateUser(
     name: $name
     firstName: $firstName
     flair: $flair
-    email: $email
     password: $password
     address: $address
     birthday: $birthday
@@ -136,6 +135,16 @@ mutation UpdateUser(
 
 mutation UpdatePassword($password: String!, $passwordRepeated: String!) {
   updatePassword(password: $password, passwordRepeated: $passwordRepeated) {
+    ...FullSensitiveDataUser
+  }
+}
+
+mutation RequestEmailChange($newEmail: String!) {
+  requestEmailChange(newEmail: $newEmail)
+}
+
+mutation ConfirmEmailChange($newEmail: String!) {
+  confirmEmailChange(newEmail: $newEmail) {
     ...FullSensitiveDataUser
   }
 }

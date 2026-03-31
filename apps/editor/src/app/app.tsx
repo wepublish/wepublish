@@ -61,11 +61,14 @@ import { Dashboard } from './routes/dashboard/dashboard';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
 import { EventListView } from './routes/events/eventListView';
+import { ExternalAppIframeView } from './routes/externalApps/externalAppIframeView';
+import { ExternalApps } from './routes/externalApps/externalAppsEdit';
 import { ImageList } from './routes/images/imageList';
 import { IntegrationEditView } from './routes/integrations/integrationEditView';
 import { IntegrationList } from './routes/integrations/integrationList';
 import { MemberPlanList } from './routes/memberPlans/memberPlanList';
 import { NavigationList } from './routes/navigations/navigationList';
+import { NetworkContentPage } from './routes/networkContent/networkContentPage';
 import { PageEditor } from './routes/pages/pageEditor';
 import { PageList } from './routes/pages/pageList';
 import { PaymentMethodList } from './routes/paymentMethods/paymentMethodList';
@@ -270,6 +273,23 @@ export function App() {
               element={
                 <Base>
                   <Dashboard />
+                </Base>
+              }
+            />
+            {/* External Apps Routes */}
+            <Route
+              path="dashboard/apps"
+              element={
+                <Base>
+                  <ExternalApps />
+                </Base>
+              }
+            />
+            <Route
+              path="external-app/:id"
+              element={
+                <Base>
+                  <ExternalAppIframeView />
                 </Base>
               }
             />
@@ -908,6 +928,14 @@ export function App() {
               }
             />
             {/* Peering Routes */}
+            <Route
+              path="network"
+              element={
+                <Base>
+                  <NetworkContentPage />
+                </Base>
+              }
+            />
             <Route
               path="peering"
               element={
