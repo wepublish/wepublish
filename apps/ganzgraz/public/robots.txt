@@ -1,0 +1,9 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow GPT-4 from crawling the pages
+User-agent: GPTBot
+Disallow: /
+
+Sitemap: https://wepublish.ch/api/sitemap
