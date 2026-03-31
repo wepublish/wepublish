@@ -38,12 +38,10 @@ export const FlexBlockFullsizeImageWrapper = styled('div')`
   gap: 0;
   grid-column: -1 / 1;
   position: relative;
-  background-color: ${({ theme }) => theme.palette.common.black};
 
   ${RichTextBlockWrapper} {
     overflow: hidden;
     transform: translate(-50%, calc(-50% + var(--text-parallax-y, 90vh)));
-    background-color: transparent;
   }
 `;
 
@@ -51,9 +49,29 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
   grid-column: -1 / 1;
   grid-row: 1 / 2;
   overflow: hidden;
+  display: none;
+
+  /* Block 1: mobile image — shown only on mobile */
+  &:nth-of-type(1)[data-image-block='true'] {
+    ${({ theme }) => theme.breakpoints.down('md')} {
+      display: block;
+    }
+  }
+
+  /* Block 2: desktop image — shown only on desktop */
+  &:nth-of-type(2)[data-image-block='true'] {
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      display: block;
+    }
+  }
+
+  /* Block 3: text — always shown */
+  &[data-text-block='true'] {
+    display: block;
+  }
 
   ${ImageBlockWrapper} {
-    height: auto;
+    height: 100vh;
     width: 100vw;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
@@ -62,18 +80,18 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
   }
 
   ${ImageBlockInnerWrapper} {
-    ${({ theme }) => theme.breakpoints.up('md')} {
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      overflow: hidden;
-    }
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
   }
 
   ${RichTextBlockWrapper} {
     background-color: transparent;
+    border-top: none;
+    border-bottom: none;
     color: white;
     margin: 0;
     width: calc(100vw - ${({ theme }) => theme.spacing(4)});
@@ -128,15 +146,23 @@ export const FlexBlockFullsizeImage = ({
   } = useWebsiteBuilder();
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  // Actual rendered image height, updated by ResizeObserver
   const imageHeightRef = useRef<number>(0);
 
   useEffect(() => {
     const el = wrapperRef.current;
     if (!el) return;
 
-    const getImageBlock = () =>
-      el.querySelector('[data-image-block="true"]') as HTMLElement | null;
+    // Returns the currently visible image block (CSS controls which is shown)
+    const getActiveImageBlock = (): HTMLElement | null => {
+      const candidates = el.querySelectorAll<HTMLElement>(
+        '[data-image-block="true"]'
+      );
+      for (const c of Array.from(candidates)) {
+        if (getComputedStyle(c).display !== 'none') return c;
+      }
+      return null;
+    };
+
     const getTextBlock = () =>
       el.querySelector('[data-text-block="true"]') as HTMLElement | null;
 
@@ -144,8 +170,6 @@ export const FlexBlockFullsizeImage = ({
       const imageHeight = imageHeightRef.current;
       if (!imageHeight) return;
       const vh = window.innerHeight;
-      // wrapper = vh + HOLD_DISTANCE regardless of image height,
-      // stickyTop centers the image in the viewport during the hold
       el.style.display = 'block';
       el.style.position = 'relative';
       el.style.height = `${vh + PARALLAX_HOLD_DISTANCE}px`;
@@ -155,7 +179,9 @@ export const FlexBlockFullsizeImage = ({
       el.style.display = '';
       el.style.position = '';
       el.style.height = '';
-      getImageBlock()?.removeAttribute('style');
+      el.querySelectorAll<HTMLElement>('[data-image-block="true"]').forEach(b =>
+        b.removeAttribute('style')
+      );
       getTextBlock()?.removeAttribute('style');
     };
 
@@ -166,9 +192,6 @@ export const FlexBlockFullsizeImage = ({
       zIndex: string
     ) => {
       if (block.style.position === 'fixed') return;
-      // Use the computed target position, not the captured actual position.
-      // Capturing the actual position breaks at high scroll speeds because the
-      // element has already overshot past center by the time the event fires.
       block.style.position = 'fixed';
       block.style.top = `${stickyTop}px`;
       block.style.bottom = 'auto';
@@ -197,7 +220,7 @@ export const FlexBlockFullsizeImage = ({
       const imageHeight = imageHeightRef.current;
       if (!imageHeight) return;
 
-      const imageBlock = getImageBlock();
+      const imageBlock = getActiveImageBlock();
       const textBlock = getTextBlock();
       const vh = window.innerHeight;
       const rect = el.getBoundingClientRect();
@@ -210,11 +233,10 @@ export const FlexBlockFullsizeImage = ({
             '--navbar-height'
           )
         ) || 0;
-      // Center in available space; on desktop imageHeight ≈ vh-navbar so (vh-imageHeight)/2 = navbar/2
-      // which would hide the image behind the navbar — floor at full navbarHeight
-      const stickyTop = Math.max(navbarHeight, (vh - imageHeight) / 2);
-
-      // Hold starts when image has scrolled to its centered position (scrollY = wrapperTop)
+      const isDesktop = window.innerWidth >= MD_BREAKPOINT;
+      // Desktop: center image in viewport. Mobile: stick at viewport top edge (top: 0).
+      const stickyTop =
+        isDesktop ? Math.max(navbarHeight, (vh - imageHeight) / 2) : 0;
       const holdStart = wrapperTop;
 
       const progress = Math.max(
@@ -225,8 +247,6 @@ export const FlexBlockFullsizeImage = ({
             (PARALLAX_HOLD_DISTANCE - PARALLAX_TEXT_DELAY)
         )
       );
-
-      const isDesktop = window.innerWidth >= MD_BREAKPOINT;
       const startY = vh * PARALLAX_TEXT_START_OFFSET;
       const endY = isDesktop ? 0 : -startY;
       el.style.setProperty(
@@ -263,19 +283,19 @@ export const FlexBlockFullsizeImage = ({
 
     const handleResize = () => {
       resetLayout();
+      // Re-read active image height after resize (breakpoint may have changed)
+      const activeImage = getActiveImageBlock();
+      if (activeImage) {
+        imageHeightRef.current = activeImage.offsetHeight;
+      }
       applyLayout();
       handleScroll();
     };
 
-    // ResizeObserver gives us the actual rendered image height (works for mobile auto-height)
-    // On desktop, pull the next sibling up to hide the hold-distance white space
-    const nextSibling = el.nextElementSibling as HTMLElement | null;
-    if (nextSibling && window.innerWidth >= MD_BREAKPOINT) {
-      //nextSibling.style.marginTop = `-${PARALLAX_HOLD_DISTANCE}px`;
-    }
-
-    const observer = new ResizeObserver(entries => {
-      const h = entries[0]?.contentRect.height;
+    // Observe all image blocks; use the visible one's height
+    const observer = new ResizeObserver(() => {
+      const activeImage = getActiveImageBlock();
+      const h = activeImage?.offsetHeight ?? 0;
       if (h && h !== imageHeightRef.current) {
         imageHeightRef.current = h;
         applyLayout();
@@ -283,8 +303,9 @@ export const FlexBlockFullsizeImage = ({
       }
     });
 
-    const imageBlock = getImageBlock();
-    if (imageBlock) observer.observe(imageBlock);
+    el.querySelectorAll<HTMLElement>('[data-image-block="true"]').forEach(b =>
+      observer.observe(b)
+    );
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleResize);
@@ -294,7 +315,6 @@ export const FlexBlockFullsizeImage = ({
       observer.disconnect();
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
-      if (nextSibling) nextSibling.style.marginTop = '';
     };
   }, []);
 

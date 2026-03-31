@@ -744,7 +744,25 @@ const createArticleBlocksInput = (
               i: '0',
               x: 0,
               y: 0,
-              w: 12,
+              w: 6,
+              h: 7,
+              static: false,
+            },
+            block: {
+              image: {
+                imageID: imageIds[18],
+                caption: null,
+              } as ImageBlockInput,
+            } as BlockContentInput,
+          },
+
+          //  image
+          {
+            alignment: {
+              i: '1',
+              x: 6,
+              y: 0,
+              w: 6,
               h: 7,
               static: false,
             },
