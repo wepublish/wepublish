@@ -222,7 +222,7 @@ function ArticleEditor() {
   );
 
   useEffect(() => {
-    if (articleData?.article) {
+    if (articleData?.article && !hasChanged) {
       const {
         latest,
         shared,
