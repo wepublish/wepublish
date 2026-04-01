@@ -665,8 +665,10 @@
         "dropDocument": "Déposez un fichier ici ou cliquez pour sélectionner",
         "editDocument": "Modifier le document",
         "fileSize": "Taille du fichier",
+        "fileTooLarge": "Le fichier est trop volumineux. Taille maximale : {{maxSize}} Mo.",
         "filename": "Nom du fichier",
         "information": "Informations",
+        "maxFileSize": "Taille maximale du fichier : {{maxSize}} Mo",
         "invalidDocument": "Type de fichier non pris en charge. Formats acceptés : PDF, Word, Excel, PowerPoint, OpenDocument, CSV, TXT, ZIP",
         "linkCopied": "Lien copié dans le presse-papiers",
         "notFound": "Document introuvable !",
@@ -676,7 +678,8 @@
         "updated": "Mis à jour",
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Télécharger",
-        "uploadDocument": "Télécharger un document"
+        "uploadDocument": "Télécharger un document",
+        "uploadFailed": "Le téléchargement a échoué. Veuillez réessayer."
       }
     },
     "images": {

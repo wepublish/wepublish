@@ -723,8 +723,10 @@
         "dropDocument": "Drop file here or click to select",
         "editDocument": "Edit Document",
         "fileSize": "File size",
+        "fileTooLarge": "File is too large. Maximum size is {{maxSize}} MB.",
         "filename": "Filename",
         "information": "Information",
+        "maxFileSize": "Maximum file size: {{maxSize}} MB",
         "invalidDocument": "Unsupported file type. Supported: PDF, Word, Excel, PowerPoint, OpenDocument, CSV, TXT, ZIP",
         "linkCopied": "Link copied to clipboard",
         "notFound": "Document not found!",
@@ -734,7 +736,8 @@
         "updated": "Updated",
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Upload",
-        "uploadDocument": "Upload Document"
+        "uploadDocument": "Upload Document",
+        "uploadFailed": "Upload failed. Please try again."
       }
     },
     "images": {

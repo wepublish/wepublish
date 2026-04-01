@@ -719,8 +719,10 @@
         "dropDocument": "Datei hier ablegen oder klicken zum Auswählen",
         "editDocument": "Dokument bearbeiten",
         "fileSize": "Dateigrösse",
+        "fileTooLarge": "Datei ist zu gross. Maximale Grösse ist {{maxSize}} MB.",
         "filename": "Dateiname",
         "information": "Informationen",
+        "maxFileSize": "Maximale Dateigrösse: {{maxSize}} MB",
         "invalidDocument": "Nicht unterstützter Dateityp. Unterstützt: PDF, Word, Excel, PowerPoint, OpenDocument, CSV, TXT, ZIP",
         "linkCopied": "Link in Zwischenablage kopiert",
         "notFound": "Dokument nicht gefunden!",
@@ -730,7 +732,8 @@
         "updated": "Aktualisiert",
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Hochladen",
-        "uploadDocument": "Dokument hochladen"
+        "uploadDocument": "Dokument hochladen",
+        "uploadFailed": "Upload fehlgeschlagen. Bitte versuchen Sie es erneut."
       }
     },
     "images": {
