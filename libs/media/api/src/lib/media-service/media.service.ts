@@ -423,6 +423,10 @@ export class MediaService {
     documentId: string
   ): Promise<ImageURIObject> {
     const thumbnailUri = `documents/${documentId}/thumbnail`;
+    // Use a hashed ID for temp filenames to prevent path traversal
+    const safeId = createHash('sha256')
+      .update(documentId, 'utf8')
+      .digest('hex');
 
     // Return cached thumbnail if it exists
     if (
@@ -464,72 +468,74 @@ export class MediaService {
     }
     const pdfBuffer = Buffer.concat(chunks);
 
+    // Create a secure temp directory for this operation
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'media-thumb-'));
+    const tmpPdf = path.join(tmpDir, 'input.pdf');
+    const tmpOutPrefix = path.join(tmpDir, 'thumb');
+
+    const cleanup = () => {
+      try {
+        const thumbPath = path.join(tmpDir, 'thumb-1.png');
+        const altPath = path.join(tmpDir, 'thumb-01.png');
+        if (fs.existsSync(tmpPdf)) fs.unlinkSync(tmpPdf);
+        if (fs.existsSync(thumbPath)) fs.unlinkSync(thumbPath);
+        if (fs.existsSync(altPath)) fs.unlinkSync(altPath);
+        fs.rmdirSync(tmpDir);
+      } catch {
+        // ignore cleanup errors
+      }
+    };
+
     try {
-      // Write PDF to temp file for poppler
-      const tmpDir = os.tmpdir();
-      const tmpPdf = path.join(tmpDir, `${documentId}.pdf`);
-      const tmpOutPrefix = path.join(tmpDir, `${documentId}-thumb`);
       fs.writeFileSync(tmpPdf, pdfBuffer);
 
-      try {
-        // Generate thumbnail of first page using pdftoppm
-        await execFileAsync('pdftoppm', [
-          '-png',
-          '-f',
-          '1',
-          '-l',
-          '1',
-          '-scale-to',
-          '600',
-          tmpPdf,
-          tmpOutPrefix,
-        ]);
+      // Generate thumbnail of first page using pdftoppm
+      await execFileAsync('pdftoppm', [
+        '-png',
+        '-f',
+        '1',
+        '-l',
+        '1',
+        '-scale-to',
+        '600',
+        tmpPdf,
+        tmpOutPrefix,
+      ]);
 
-        // pdftoppm outputs: {prefix}-{pagenum}.png
-        const thumbPath = `${tmpOutPrefix}-1.png`;
-        if (!fs.existsSync(thumbPath)) {
-          // Some versions use different naming
-          const altPath = `${tmpOutPrefix}-01.png`;
-          if (!fs.existsSync(altPath)) {
-            this.thumbnailLogger.warn(
-              `Thumbnail generation produced no output for document ${documentId}`
-            );
-            return { uri: thumbnailUri, exists: false };
-          }
-          fs.renameSync(altPath, thumbPath);
+      // pdftoppm outputs: {prefix}-{pagenum}.png
+      const thumbPath = `${tmpOutPrefix}-1.png`;
+      if (!fs.existsSync(thumbPath)) {
+        const altPath = `${tmpOutPrefix}-01.png`;
+        if (!fs.existsSync(altPath)) {
+          this.thumbnailLogger.warn(
+            `Thumbnail generation produced no output for document ${documentId}`
+          );
+          cleanup();
+          return { uri: thumbnailUri, exists: false };
         }
-
-        // Convert to WebP using sharp for smaller size
-        const thumbnailBuffer = await sharp(thumbPath)
-          .webp({ quality: 80 })
-          .toBuffer();
-
-        // Store thumbnail in transformation bucket
-        await this.storage.saveFile(
-          this.config.transformationBucket,
-          thumbnailUri,
-          thumbnailBuffer,
-          thumbnailBuffer.length,
-          { ContentType: 'image/webp' }
-        );
-
-        // Cleanup temp files
-        fs.unlinkSync(tmpPdf);
-        fs.unlinkSync(thumbPath);
-
-        return { uri: thumbnailUri, exists: true };
-      } catch (err) {
-        // Cleanup temp file on error
-        if (fs.existsSync(tmpPdf)) fs.unlinkSync(tmpPdf);
-        this.thumbnailLogger.warn(
-          `pdftoppm failed for document ${documentId}: ${(err as Error).message}`
-        );
-        return { uri: thumbnailUri, exists: false };
+        fs.renameSync(altPath, thumbPath);
       }
+
+      // Convert to WebP using sharp for smaller size
+      const thumbnailBuffer = await sharp(thumbPath)
+        .webp({ quality: 80 })
+        .toBuffer();
+
+      // Store thumbnail in transformation bucket
+      await this.storage.saveFile(
+        this.config.transformationBucket,
+        thumbnailUri,
+        thumbnailBuffer,
+        thumbnailBuffer.length,
+        { ContentType: 'image/webp' }
+      );
+
+      cleanup();
+      return { uri: thumbnailUri, exists: true };
     } catch (err) {
-      this.thumbnailLogger.error(
-        `Thumbnail generation failed for document ${documentId}`,
-        err
+      cleanup();
+      this.thumbnailLogger.warn(
+        `Thumbnail generation failed for document ${documentId}: ${(err as Error).message}`
       );
       return { uri: thumbnailUri, exists: false };
     }

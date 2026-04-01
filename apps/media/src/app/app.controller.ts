@@ -38,6 +38,9 @@ const HTTP_CODE_FOUND = 301;
 const HTTP_CODE_NOT_FOUND = 307;
 let S3_HOST_CHECKED = false;
 
+/** Sanitize user-provided IDs to prevent path traversal */
+const sanitizeId = (id: string): string => id.replace(/[^a-zA-Z0-9_-]/g, '');
+
 @Controller({
   version: '1',
 })
@@ -190,15 +193,16 @@ export class AppController {
     )
     uploadedFile: Express.Multer.File
   ) {
+    const safeDocumentId = sanitizeId(documentId);
     const { size } = await this.media.saveDocument(
-      documentId,
+      safeDocumentId,
       uploadedFile.buffer,
       uploadedFile.mimetype,
       uploadedFile.originalname
     );
 
     res.status(201).send({
-      id: documentId,
+      id: safeDocumentId,
       filename: uploadedFile.originalname,
       fileSize: size,
       mimeType: uploadedFile.mimetype,
@@ -211,7 +215,9 @@ export class AppController {
     @Res() res: Response,
     @Param('documentId') documentId: string
   ) {
-    const { uri, exists } = await this.media.getDocumentUri(documentId);
+    const { uri, exists } = await this.media.getDocumentUri(
+      sanitizeId(documentId)
+    );
 
     const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
 
@@ -230,8 +236,9 @@ export class AppController {
     @Res() res: Response,
     @Param('documentId') documentId: string
   ) {
-    const { uri, exists } =
-      await this.media.getDocumentThumbnailUri(documentId);
+    const { uri, exists } = await this.media.getDocumentThumbnailUri(
+      sanitizeId(documentId)
+    );
 
     const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
 
@@ -251,7 +258,7 @@ export class AppController {
     @Res() res: Response,
     @Param('documentId') documentId: string
   ) {
-    await this.media.deleteDocument(documentId);
+    await this.media.deleteDocument(sanitizeId(documentId));
 
     return res.sendStatus(204);
   }
