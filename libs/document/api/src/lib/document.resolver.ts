@@ -14,7 +14,7 @@ import {
   UploadDocumentInput,
 } from './document.model';
 import { MediaAdapter } from '@wepublish/image/api';
-import { NotFoundException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Permissions } from '@wepublish/permissions/api';
 import {
   CanCreateDocument,
@@ -56,6 +56,9 @@ export class DocumentResolver {
   @Permissions(CanCreateDocument)
   @Mutation(returns => Document, { description: `Uploads a new document.` })
   public uploadDocument(@Args() document: UploadDocumentInput) {
+    if (process.env['DISABLE_DOCUMENT_UPLOAD'] === 'true') {
+      throw new ForbiddenException('Document upload has been disabled.');
+    }
     return this.service.createDocument(document);
   }
 
