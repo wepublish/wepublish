@@ -214,6 +214,10 @@ COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
 RUN npm ci
 RUN npx nx build media --ignore-nx-cache
+# Collect pdftoppm and all its shared library dependencies into /poppler-dist
+RUN mkdir -p /poppler-dist/bin /poppler-dist/lib && \
+    cp /usr/bin/pdftoppm /poppler-dist/bin/ && \
+    ldd /usr/bin/pdftoppm | awk '/=>/ {print $3}' | xargs -I{} cp -L {} /poppler-dist/lib/ 2>/dev/null || true
 
 FROM ${PLAIN_BUILD_IMAGE} AS media-setup
 WORKDIR /wepublish
@@ -227,10 +231,11 @@ ENV NODE_ENV=production
 ENV MEDIA_FALLBACK_URL=${MEDIA_FALLBACK_URL}
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 WORKDIR /wepublish
-RUN apt-get update && apt-get install -y --no-install-recommends poppler-utils && rm -rf /var/lib/apt/lists/*
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 ENV NODE_OPTIONS="--max-old-space-size=512"
 COPY --from=build-media /usr/lib/x86_64-linux-gnu/libjemalloc* /usr/lib/x86_64-linux-gnu/
+COPY --from=build-media /poppler-dist/bin/pdftoppm /usr/bin/pdftoppm
+COPY --from=build-media /poppler-dist/lib/ /usr/lib/x86_64-linux-gnu/
 COPY --from=media-setup /wepublish /wepublish
 EXPOSE 4100
 USER 1001
