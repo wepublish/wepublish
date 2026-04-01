@@ -639,6 +639,48 @@
         "includeHiddenPages": "Inclure cachés"
       }
     },
+    "documents": {
+      "overview": {
+        "actions": "Actions",
+        "description": "Description",
+        "documentLibrary": "Bibliothèque de documents",
+        "copyLink": "Copier le lien",
+        "edit": "Modifier",
+        "fileSize": "Taille du fichier",
+        "filename": "Nom du fichier",
+        "noDescription": "Pas de description",
+        "openLink": "Ouvrir",
+        "preview": "Aperçu",
+        "title": "Titre",
+        "untitled": "Sans titre",
+        "uploadDocument": "Télécharger un document"
+      },
+      "panels": {
+        "cancel": "Annuler",
+        "close": "Fermer",
+        "confirm": "Confirmer",
+        "created": "Créé",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "deleteDocument": "Supprimer le document ?",
+        "description": "Description",
+        "documentUpdated": "Document mis à jour",
+        "dropDocument": "Déposez un fichier PDF ici ou cliquez pour sélectionner",
+        "editDocument": "Modifier le document",
+        "fileSize": "Taille du fichier",
+        "filename": "Nom du fichier",
+        "information": "Informations",
+        "invalidDocument": "Seuls les fichiers PDF sont pris en charge",
+        "linkCopied": "Lien copié dans le presse-papiers",
+        "notFound": "Document introuvable !",
+        "publicLink": "Lien public",
+        "title": "Titre",
+        "untitled": "Sans titre",
+        "updated": "Mis à jour",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "upload": "Télécharger",
+        "uploadDocument": "Télécharger un document"
+      }
+    },
     "images": {
       "overview": {
         "actions": "Actions",
@@ -798,8 +840,10 @@
       "dashboard": "Dashboard",
       "events": "Events",
       "eventTags": "Tags",
-      "imageLibrary": "Bibliothèque d'images",
+      "documentLibrary": "Documents",
+      "imageLibrary": "Images",
       "importableEvents": "Importable Events",
+      "media": "Fichiers",
       "logout": "Déconnection",
       "mailTemplates": "Modèles de courriels",
       "memberPlans": "Plans d'abonnement",

@@ -19,6 +19,7 @@ import { BlockContentModule } from '@wepublish/block-content/api';
 import { CommentModule } from '@wepublish/comments/api';
 import { ConsentModule } from '@wepublish/consent/api';
 import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
+import { DocumentModule } from '@wepublish/document/api';
 import { EventModule } from '@wepublish/event/api';
 import {
   AgendaBaselService,
@@ -435,6 +436,7 @@ import {
     }),
     PermissionModule,
     ConsentModule,
+    DocumentModule,
     StatsModule,
     SettingModule,
     ExternalAppsModule,
@@ -541,11 +543,14 @@ import {
           config.getOrThrow('CONFIG_FILE_PATH')
         );
         const internalUrl = config.get('MEDIA_SERVER_INTERNAL_URL');
-        const token = config.getOrThrow('MEDIA_SERVER_TOKEN');
+        const jwtPrivateKey = config
+          .getOrThrow<string>('JWT_PRIVATE_KEY')
+          .replace(/\\n/g, '\n');
 
         return new NovaMediaAdapter(
           config.getOrThrow('MEDIA_SERVER_URL'),
-          token,
+          jwtPrivateKey,
+          config.getOrThrow('HOST_URL'),
           { quality: configFile.mediaServer.quality ?? 0.8 },
           internalUrl ? internalUrl : undefined
         );
