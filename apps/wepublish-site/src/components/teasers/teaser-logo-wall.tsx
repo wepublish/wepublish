@@ -11,6 +11,7 @@ import {
   TeaserLead,
   TeaserMetadata,
   TeaserPreTitle,
+  TeaserPreTitleNoContent,
   TeaserPreTitleWrapper,
   TeaserTime,
   TeaserTitle,
@@ -49,7 +50,7 @@ export const TeaserLogoWall = styled(WepTeaser)`
   }
 
   ${TeaserTitle} {
-    display: none;
+    grid-row: 1 / 2;
   }
 
   ${TeaserLead} {
@@ -73,6 +74,10 @@ export const TeaserLogoWall = styled(WepTeaser)`
   }
 
   ${TeaserTime} {
+    display: none;
+  }
+
+  ${TeaserPreTitleNoContent} {
     display: none;
   }
 `;
