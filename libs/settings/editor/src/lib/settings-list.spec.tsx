@@ -48,32 +48,26 @@ const toggleSettingMockData = {
   toggleSetting: true,
 };
 
-const mocks = [
-  {
-    request: {
-      query: SettingsListDocument,
-      variables: {},
-    },
-    result: () => {
-      return {
-        data: settingsMockData,
-      };
+const settingsListMock = {
+  request: {
+    query: SettingsListDocument,
+  },
+  result: () => ({
+    data: settingsMockData,
+  }),
+};
+
+const updateSettingMock = {
+  request: {
+    query: UpdateSettingDocument,
+    variables: {
+      id: '1',
     },
   },
-  {
-    request: {
-      query: UpdateSettingDocument,
-      variables: {
-        id: '1',
-      },
-    },
-    result: () => {
-      return {
-        data: toggleSettingMockData,
-      };
-    },
-  },
-];
+  result: () => ({
+    data: toggleSettingMockData,
+  }),
+};
 
 describe('SettingList', () => {
   beforeAll(() => {
@@ -84,7 +78,7 @@ describe('SettingList', () => {
     const { baseElement, asFragment } = render(
       <AuthContext.Provider value={sessionWithPermissions}>
         <MockedProvider
-          mocks={mocks}
+          mocks={[settingsListMock, updateSettingMock]}
           addTypename={false}
         >
           <BrowserRouter>
@@ -104,7 +98,7 @@ describe('SettingList', () => {
     render(
       <AuthContext.Provider value={sessionWithPermissions}>
         <MockedProvider
-          mocks={mocks}
+          mocks={[settingsListMock, updateSettingMock]}
           addTypename={false}
         >
           <BrowserRouter>

@@ -29,6 +29,8 @@ export const unselectPassword: Record<
   modifiedAt: true,
   email: true,
   emailVerifiedAt: true,
+  pendingEmail: true,
+  pendingEmailAt: true,
   name: true,
   firstName: true,
   flair: true,

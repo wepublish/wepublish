@@ -320,6 +320,23 @@ model Image {
   @@map("images")
 }
 
+model Document {
+  id          String   @id
+  createdAt   DateTime @default(now())
+  modifiedAt  DateTime @updatedAt
+  filename    String?
+  title       String?
+  description String?
+  mimeType    String
+  fileSize    Int
+  extension   String
+
+  @@index([createdAt])
+  @@index([modifiedAt])
+  @@index([title])
+  @@map("documents")
+}
+
 enum CommentItemType {
   article @map("article")
   page    @map("page")
@@ -987,6 +1004,8 @@ model User {
   birthday        DateTime? @db.Date
   email           String    @unique
   emailVerifiedAt DateTime?
+  pendingEmail    String?
+  pendingEmailAt  DateTime?
   name            String
   firstName       String?
   flair           String?
@@ -1240,6 +1259,7 @@ enum UserEvent {
   PASSWORD_RESET
   LOGIN_LINK
   TEST_MAIL
+  EMAIL_CHANGE
 }
 
 model UserFlowMail {
@@ -1395,11 +1415,12 @@ model Banner {
 }
 
 enum LoginStatus {
-  UNSUBSCRIBED @map("unsubscribed")
-  SUBSCRIBED   @map("subscribed")
-  LOGGED_IN    @map("logged_in")
-  LOGGED_OUT   @map("logged_out")
-  ALL          @map("all")
+  PAYWALL_BYPASSED @map("paywall_bypassed")
+  UNSUBSCRIBED     @map("unsubscribed")
+  SUBSCRIBED       @map("subscribed")
+  LOGGED_IN        @map("logged_in")
+  LOGGED_OUT       @map("logged_out")
+  ALL              @map("all")
 }
 
 model BannerAction {
@@ -1777,6 +1798,25 @@ model SettingAIProvider {
   systemPrompt String?
 
   @@map("settings.aiprovider")
+}
+
+enum ExternalAppsTarget {
+  BLANK  @map("blank")
+  IFRAME @map("iframe")
+}
+
+model ExternalApps {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name        String
+  description String?
+  url         String
+  target      ExternalAppsTarget
+  icon        String?
+
+  @@map("apps.external")
 }
 
 enum AnalyticsProviderType {

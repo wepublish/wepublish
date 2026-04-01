@@ -649,6 +649,14 @@ input CreateCrowdfundingMemberPlan {
   id: String!
 }
 
+input CreateExternalAppInput {
+  description: String
+  icon: String
+  name: String!
+  target: ExternalAppsTarget!
+  url: String!
+}
+
 type Crowdfunding {
   activeGoal: CrowdfundingGoalWithProgress
   additionalRevenue: Float
@@ -811,6 +819,29 @@ type DeletePollVotesResult {
   count: Int!
 }
 
+type Document {
+  createdAt: DateTime!
+  description: String
+  extension: String!
+  fileSize: Int!
+  filename: String
+  id: String!
+  mimeType: String!
+  modifiedAt: DateTime!
+  thumbnailURL: String
+  title: String
+  url: String!
+}
+
+input DocumentFilter {
+  title: String
+}
+
+enum DocumentSort {
+  CreatedAt
+  ModifiedAt
+}
+
 enum EditorBlockType {
   Comment
   Crowdfunding
@@ -940,6 +971,34 @@ input EventTeaserInput {
   lead: String
   preTitle: String
   title: String
+}
+
+type ExternalApp {
+  createdAt: DateTime!
+  description: String
+  icon: String
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+  target: ExternalAppsTarget!
+  url: String!
+}
+
+input ExternalAppFilter {
+  description: String
+  id: String
+  name: String
+  target: ExternalAppsTarget
+}
+
+type ExternalAppToken {
+  expiresAt: DateTime!
+  token: String!
+}
+
+enum ExternalAppsTarget {
+  BLANK
+  IFRAME
 }
 
 type ExternalNavigationLink implements BaseNavigationLink {
@@ -1425,6 +1484,7 @@ enum LoginStatus {
   ALL
   LOGGED_IN
   LOGGED_OUT
+  PAYWALL_BYPASSED
   SUBSCRIBED
   UNSUBSCRIBED
 }
@@ -1510,6 +1570,9 @@ type Mutation {
   """
   cancelUserSubscription(id: String!): PublicSubscription
 
+  """Confirms a pending email change for the logged-in user."""
+  confirmEmailChange(newEmail: String!): SensitiveDataUser!
+
   """Creates an article."""
   createArticle(authorIds: [String!]!, blocks: [BlockContentInput!]!, breaking: Boolean!, canonicalUrl: String, disableComments: Boolean!, hidden: Boolean!, hideAuthor: Boolean!, imageID: String, lead: String, likes: Int, paywallId: String, preTitle: String, properties: [PropertyInput!]!, seoTitle: String, shared: Boolean!, slug: String, socialMediaAuthorIds: [String!]!, socialMediaDescription: String, socialMediaImageID: String, socialMediaTitle: String, tagIds: [String!]!, title: String): Article!
 
@@ -1531,6 +1594,14 @@ type Mutation {
 
   """Creates a new event."""
   createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, status: EventStatus! = Scheduled, tagIds: [String!]): Event!
+
+  """Creates a new external app."""
+  createExternalApp(input: CreateExternalAppInput!): ExternalApp!
+
+  """
+  Generates a short-lived JWT token for authenticating with an external app.
+  """
+  createExternalAppToken(externalAppId: String!): ExternalAppToken!
 
   """Creates a new invoice."""
   createInvoice(currency: Currency!, description: String, dueAt: DateTime!, items: [InvoiceItemInput!]!, mail: String!, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime!, subscriptionID: String): Invoice!
@@ -1630,8 +1701,14 @@ type Mutation {
   deleteConsent(id: String!): Consent!
   deleteCrowdfunding(id: String!): Boolean
 
+  """Deletes an existing document."""
+  deleteDocument(id: String!): String!
+
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
+
+  """Deletes an external app."""
+  deleteExternalApp(id: String!): ExternalApp!
 
   """Deletes an existing image."""
   deleteImage(id: String!): String!
@@ -1748,6 +1825,11 @@ type Mutation {
   """Requests the user to change the comment's content"""
   requestChangesOnComment(id: String!, rejectionReason: CommentRejectionReason!): Comment!
 
+  """
+  Requests an email change. A confirmation link is sent to the current email address.
+  """
+  requestEmailChange(newEmail: String!): Boolean!
+
   """Resets the password of a user."""
   resetPassword(id: String!, password: String, sendMail: Boolean): SensitiveDataUser!
 
@@ -1803,10 +1885,16 @@ type Mutation {
   updateCrowdfunding(input: UpdateCrowdfundingInput!): Crowdfunding!
 
   """Updates the current logged in user."""
-  updateCurrentUser(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput, email: String, firstName: String, flair: String, name: String, password: String): SensitiveDataUser!
+  updateCurrentUser(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput, firstName: String, flair: String, name: String, password: String): SensitiveDataUser!
+
+  """Updates an existing document."""
+  updateDocument(description: String, id: String!, title: String): Document!
 
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
+
+  """Updates an existing external app."""
+  updateExternalApp(description: String, icon: String, id: String!, name: String, target: ExternalAppsTarget, url: String): ExternalApp!
 
   """Updates an existing image."""
   updateImage(description: String, filename: String, focalPoint: FocalPointInput, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
@@ -1892,6 +1980,9 @@ type Mutation {
 
   """"""
   upgradeUserSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
+
+  """Uploads a new document."""
+  uploadDocument(description: String, file: Upload!, filename: String, title: String): Document!
 
   """Uploads a new image."""
   uploadImage(description: String, file: Upload!, filename: String, focalPoint: FocalPointInput, license: String, link: String, source: String, tags: [String!]!, title: String): Image!
@@ -2059,6 +2150,12 @@ type PaginatedAuthors {
 
 type PaginatedComments {
   nodes: [Comment!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedDocuments {
+  nodes: [Document!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -2706,6 +2803,12 @@ type Query {
   "\n      Returns daily stats in a given timeframe.\n    "
   dailySubscriptionStats(end: DateTime, memberPlanIds: [String!], start: DateTime!): [DailySubscriptionStats!]!
 
+  """Returns a document by id."""
+  document(id: String!): Document!
+
+  """Returns a paginated list of documents based on the filters given."""
+  documents(cursorId: String, filter: DocumentFilter, order: SortOrder = Descending, skip: Int = 0, sort: DocumentSort = ModifiedAt, take: Int = 10): PaginatedDocuments!
+
   """Returns an event by id."""
   event(id: String!): Event!
 
@@ -2717,6 +2820,12 @@ type Query {
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+
+  """Returns a single external app by id. Requires authentication."""
+  externalApp(id: String!): ExternalApp!
+
+  """Returns all external apps. Requires authentication."""
+  externalApps(filter: ExternalAppFilter): [ExternalApp!]!
 
   """Returns images by tag."""
   getImagesByTag(tag: String!): [Image!]!
@@ -2831,7 +2940,7 @@ type Query {
 
   """Returns a paginated list of polls based on the filters given."""
   polls(cursorId: String, filter: PollFilter, order: SortOrder = Descending, skip: Int = 0, sort: PollSort = OpensAt, take: Int = 10): PaginatedPolls!
-  primaryBanner(documentId: String!, documentType: BannerDocumentType!, hasSubscription: Boolean!, loggedIn: Boolean!): Banner
+  primaryBanner(documentId: String!, documentType: BannerDocumentType!, hasPaywallBypass: Boolean!, hasSubscription: Boolean!, loggedIn: Boolean!): Banner
   promptHTML(chatId: String, query: String!): Chat!
   provider: MailProviderModel!
 
@@ -3028,6 +3137,7 @@ type SensitiveDataUser implements BaseUser {
   name: String!
   note: String
   paymentProviderCustomers: [PaymentProviderCustomer!]
+  pendingEmail: String
   permissions: [String!]!
   properties: [Property!]!
   roleIDs: [String!]!
@@ -3768,6 +3878,7 @@ type UserCreatedAction implements BaseAction & HasUserLc {
 
 enum UserEvent {
   ACCOUNT_CREATION
+  EMAIL_CHANGE
   LOGIN_LINK
   PASSWORD_RESET
   TEST_MAIL

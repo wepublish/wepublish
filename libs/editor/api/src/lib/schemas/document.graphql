@@ -1,0 +1,84 @@
+fragment FullDocument on Document {
+  id
+
+  createdAt
+  modifiedAt
+
+  title
+  filename
+  extension
+  fileSize
+  mimeType
+
+  description
+
+  url
+  thumbnailURL
+}
+
+query DocumentList(
+  $filter: String
+  $cursorId: String
+  $take: Int
+  $skip: Int
+) {
+  documents(
+    filter: { title: $filter }
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+  ) {
+    nodes {
+      ...FullDocument
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query Document($id: String!) {
+  document(id: $id) {
+    ...FullDocument
+  }
+}
+
+mutation UploadDocument(
+  $title: String
+  $description: String
+  $file: Upload!
+  $filename: String
+) {
+  uploadDocument(
+    title: $title
+    description: $description
+    file: $file
+    filename: $filename
+  ) {
+    ...FullDocument
+  }
+}
+
+mutation UpdateDocument(
+  $id: String!
+  $title: String
+  $description: String
+) {
+  updateDocument(
+    id: $id
+    title: $title
+    description: $description
+  ) {
+    ...FullDocument
+  }
+}
+
+mutation DeleteDocument($id: String!) {
+  deleteDocument(id: $id)
+}

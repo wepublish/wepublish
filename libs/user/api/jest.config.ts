@@ -9,9 +9,11 @@ export default {
       'ts-jest',
       {
         tsconfig: '<rootDir>/tsconfig.spec.json',
+        diagnostics: false,
       },
     ],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../../coverage/libs/user/api',
+  coverageProvider: 'v8',
 };

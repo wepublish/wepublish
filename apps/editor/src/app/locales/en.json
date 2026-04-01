@@ -26,6 +26,8 @@
         "warningLabel": "Warning"
       },
       "panels": {
+        "firstPublishedAtDate": "First published on {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
+        "notPublishedYet": "Article not yet published",
         "addSlug": "Please add a slug",
         "allowPeerPublishing": "Allow peers to publish this article.",
         "articlePending": "There is already a pending publication scheduled at {{pendingPublishDate, ccc PP p}}. Publishing again will override that publication.",
@@ -219,7 +221,8 @@
           "LOGGED_IN": "logged in visitors",
           "LOGGED_OUT": "logged out visitors",
           "SUBSCRIBED": "subscribed visitors",
-          "UNSUBSCRIBED": "unsubscribed visitors"
+          "UNSUBSCRIBED": "unsubscribed visitors",
+          "PAYWALL_BYPASSED": "visitors bypassing the paywall"
         },
         "actions": "Actions",
         "image": "Image",
@@ -586,7 +589,10 @@
       "user": "User",
       "yearlySubscribers": "New subscribers over past year",
       "audience": "Audience",
-      "goToAudienceDashboard": "Go to Audience Dashboard"
+      "goToAudienceDashboard": "Go to Audience Dashboard",
+      "externalApps": "We.Publish Apps",
+      "networkContent": "From the We.Publish Network",
+      "goToNetwork": "Go to Network"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -689,6 +695,48 @@
         "title": "Filter by title",
         "includeHiddenArticles": "Include hidden",
         "includeHiddenPages": "Include hidden"
+      }
+    },
+    "documents": {
+      "overview": {
+        "actions": "Actions",
+        "description": "Description",
+        "documentLibrary": "Document Library",
+        "copyLink": "Copy Link",
+        "edit": "Edit",
+        "fileSize": "File Size",
+        "filename": "Filename",
+        "noDescription": "No Description",
+        "openLink": "Open",
+        "preview": "Preview",
+        "title": "Title",
+        "untitled": "Untitled",
+        "uploadDocument": "Upload Document"
+      },
+      "panels": {
+        "cancel": "Cancel",
+        "close": "Close",
+        "confirm": "Confirm",
+        "created": "Created",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "deleteDocument": "Delete document?",
+        "description": "Description",
+        "documentUpdated": "Document Updated",
+        "dropDocument": "Drop PDF file here or click to select",
+        "editDocument": "Edit Document",
+        "fileSize": "File size",
+        "filename": "Filename",
+        "information": "Information",
+        "invalidDocument": "Only PDF files are supported",
+        "linkCopied": "Link copied to clipboard",
+        "notFound": "Document not found!",
+        "publicLink": "Public Link",
+        "title": "Title",
+        "untitled": "Untitled",
+        "updated": "Updated",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "upload": "Upload",
+        "uploadDocument": "Upload Document"
       }
     },
     "images": {
@@ -869,8 +917,10 @@
       "dashboard": "Dashboard",
       "events": "Events",
       "eventTags": "Tags",
-      "imageLibrary": "Image Library",
+      "documentLibrary": "Documents",
+      "imageLibrary": "Images",
       "importableEvents": "Importable Events",
+      "media": "Files",
       "logout": "Logout",
       "mailTemplates": "E-Mail Templates",
       "memberPlans": "Subscription Plans",
@@ -878,6 +928,7 @@
       "pages": "Pages",
       "paymentMethods": "Payment Methods",
       "peerArticles": "Peerable articles",
+      "networkContent": "We.Publish Network",
       "peering": "Peering",
       "peers": "Peers",
       "settings": "Settings",
@@ -892,7 +943,8 @@
       "audience": "Audience",
       "authorTags": "Tags",
       "audienceDashboard": "Dashboard",
-      "integrations": "Integrations"
+      "integrations": "Integrations",
+      "apps": "Apps"
     },
     "navigation": {
       "overview": {
@@ -1118,7 +1170,9 @@
         "user_email": "E-Mail des Users.",
         "user_firstName": "Vorname des Users",
         "user_id": "Eindeutige ID des Users.",
-        "user_name": "Nachname des Users."
+        "user_name": "Nachname des Users.",
+        "optional_newEmail": "The new email address the user wants to change to.",
+        "optional_newEmail_example": "You have requested to change your email to <strong>{{newEmailPlaceholder}}</strong>. Please confirm this change by clicking the following link: {{confirmLink}}Confirm email change</a>"
       },
       "descriptionTitle": "Beschreibung",
       "example": "Beispiel im Template",
@@ -1329,7 +1383,8 @@
         "account_creation": "Registration",
         "login_link": "Login Link",
         "password_reset": "Password reset",
-        "test_mail": "Test mail"
+        "test_mail": "Test mail",
+        "email_change": "Email change"
       },
       "explanation": "You can view the available templates in the 'Mail templates' settings entry.",
       "template": "Mail template",
@@ -1880,6 +1935,65 @@
         "property": "Google Analytics Property-ID",
         "credentials": "Credential file"
       }
+    },
+    "externalApps": {
+      "apps": "Apps"
+    },
+    "externalAppForm": {
+      "create": "Create",
+      "update": "Update",
+      "delete": "Delete",
+      "name": "Name",
+      "description": "Description",
+      "url": "URL",
+      "target": "Target",
+      "successUpdate": "External app updated successfully",
+      "errorUpdate": "Failed to update external app",
+      "successCreate": "External app created successfully",
+      "errorCreate": "Failed to create external app",
+      "successDelete": "External app deleted successfully",
+      "errorDelete": "Failed to delete external app",
+      "deleteConfirmationTitle": "Delete External App",
+      "deleteConfirmationText": "Are you sure you want to delete this external app? This action cannot be undone.",
+      "icon": "Icon URL"
+    },
+    "networkContentDashboard": {
+      "errorLoading": "Failed to load network articles.",
+      "noArticles": "No articles available.",
+      "readMore": "Read article",
+      "importFrom": "Import article from {{peer}}",
+      "noPeer": "No active peering – contact the publisher to set up peering.",
+      "importTitle": "Import article",
+      "importAuthors": "Import authors",
+      "importTags": "Import tags",
+      "importImages": "Import content images",
+      "importConfirm": "Import",
+      "cancel": "Cancel",
+      "close": "Close",
+      "peerInfoTitle": "Peering not available",
+      "peerInfoText": "This publisher is not yet connected as a peer. To import articles, an active peering connection is required. Please contact the publisher to establish a peering relationship, or set it up under Settings > Peering.",
+      "importBtn": "Import",
+      "connectBtn": "Set up peer"
+    },
+    "networkContentPage": {
+      "title": "Content from the We.Publish Network",
+      "articlesTitle": "Articles",
+      "mediaTitle": "Media",
+      "searchLabel": "Search articles",
+      "mediaFilter": "Media",
+      "allMedia": "All media",
+      "dateFrom": "From",
+      "dateTo": "To",
+      "filterByMedia": "Filter",
+      "errorLoadingClients": "Failed to load media.",
+      "noClients": "No media available.",
+      "connected": "Connected",
+      "notConnected": "Not connected",
+      "contactTitle": "Contact {{name}}",
+      "contactText": "This publisher is not yet connected as a peer. Contact them to exchange peering keys and set up the connection.",
+      "noContacts": "No contact persons available for this media.",
+      "unknownUser": "Unknown user",
+      "connectBtn": "Connect"
     }
   }
 }

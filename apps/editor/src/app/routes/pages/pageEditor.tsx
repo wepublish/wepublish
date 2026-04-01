@@ -153,7 +153,7 @@ function PageEditor() {
   );
 
   useEffect(() => {
-    if (pageData?.page) {
+    if (pageData?.page && !hasChanged) {
       const { latest, tags, hidden, slug, url } = pageData.page;
       const {
         title,
