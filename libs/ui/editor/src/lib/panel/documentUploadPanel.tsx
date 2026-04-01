@@ -60,6 +60,7 @@ export function DocumentUploadPanel({
           <FileDropInput
             icon={<MdUploadFile />}
             text={t('documents.panels.dropDocument')}
+            accept="application/pdf,.pdf"
             onDrop={handleDrop}
           />
         </InputWrapper>
