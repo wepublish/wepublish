@@ -25,7 +25,23 @@ export function DocumentUploadPanel({
 
     const file = files[0];
 
-    if (file.type !== 'application/pdf') {
+    const supportedTypes = [
+      'application/pdf',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      'application/vnd.ms-powerpoint',
+      'application/vnd.oasis.opendocument.text',
+      'application/vnd.oasis.opendocument.spreadsheet',
+      'application/vnd.oasis.opendocument.presentation',
+      'text/csv',
+      'text/plain',
+      'application/zip',
+    ];
+
+    if (!supportedTypes.includes(file.type)) {
       toaster.push(
         <Notification
           type="error"
@@ -60,7 +76,7 @@ export function DocumentUploadPanel({
           <FileDropInput
             icon={<MdUploadFile />}
             text={t('documents.panels.dropDocument')}
-            accept="application/pdf,.pdf"
+            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.odt,.ods,.odp,.csv,.txt,.zip"
             onDrop={handleDrop}
           />
         </InputWrapper>

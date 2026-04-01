@@ -20,6 +20,7 @@ import {
   MediaService,
   SupportedImagesValidator,
   SupportedDocumentsValidator,
+  getExtensionForMimeType,
   JwtAuthGuard,
 } from '@wepublish/media/api';
 import {
@@ -206,7 +207,7 @@ export class AppController {
       filename: uploadedFile.originalname,
       fileSize: size,
       mimeType: uploadedFile.mimetype,
-      extension: '.pdf',
+      extension: getExtensionForMimeType(uploadedFile.mimetype),
     });
   }
 
