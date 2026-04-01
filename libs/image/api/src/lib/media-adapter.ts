@@ -39,7 +39,11 @@ export abstract class MediaAdapter {
 
   abstract deleteDocument(id: string): Promise<boolean>;
 
-  abstract getDocumentURL(document: { id: string }): Promise<string>;
+  abstract getDocumentURL(document: {
+    id: string;
+    filename?: string | null;
+    extension?: string;
+  }): Promise<string>;
 
   abstract getDocumentThumbnailURL(document: { id: string }): Promise<string>;
 }
