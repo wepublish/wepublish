@@ -208,7 +208,7 @@ CMD ["node", "start.js"]
 FROM ${PLAIN_BUILD_IMAGE} AS build-media
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 WORKDIR /app
-RUN apt-get update && apt-get install -y libjemalloc-dev
+RUN apt-get update && apt-get install -y libjemalloc-dev poppler-utils
 COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
@@ -227,6 +227,7 @@ ENV NODE_ENV=production
 ENV MEDIA_FALLBACK_URL=${MEDIA_FALLBACK_URL}
 LABEL org.opencontainers.image.authors="WePublish Foundation"
 WORKDIR /wepublish
+RUN apt-get update && apt-get install -y --no-install-recommends poppler-utils && rm -rf /var/lib/apt/lists/*
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 ENV NODE_OPTIONS="--max-old-space-size=512"
 COPY --from=build-media /usr/lib/x86_64-linux-gnu/libjemalloc* /usr/lib/x86_64-linux-gnu/

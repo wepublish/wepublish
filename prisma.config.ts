@@ -2,6 +2,17 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { defineConfig } from 'prisma/config';
 
+// Load .env file for local development (prisma migrate dev, prisma db seed, etc.)
+const envPath = path.join(__dirname, '.env');
+if (fs.existsSync(envPath)) {
+  for (const line of fs.readFileSync(envPath, 'utf8').split('\n')) {
+    const match = line.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/);
+    if (match && !process.env[match[1]]) {
+      process.env[match[1]] = match[2]?.replace(/^['"]|['"]$/g, '') ?? '';
+    }
+  }
+}
+
 // Schema path: repo uses libs/api/prisma/, Docker containers use prisma/
 const repoSchemaPath = path.join(__dirname, 'libs/api/prisma/schema.prisma');
 const dockerSchemaPath = path.join(__dirname, 'prisma/schema.prisma');
@@ -17,6 +28,9 @@ const migrateUrl =
 
 export default defineConfig({
   schema: schemaPath,
+  migrations: {
+    seed: 'nx seed api-example --prod',
+  },
   datasource: {
     url: migrateUrl,
   },

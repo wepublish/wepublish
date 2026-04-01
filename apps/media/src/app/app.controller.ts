@@ -19,6 +19,7 @@ import {
   ImageURIObject,
   MediaService,
   SupportedImagesValidator,
+  SupportedDocumentsValidator,
   JwtAuthGuard,
 } from '@wepublish/media/api';
 import {
@@ -171,6 +172,86 @@ export class AppController {
   @Delete(':imageId')
   async deleteImage(@Res() res: Response, @Param('imageId') imageId: string) {
     await this.media.deleteImage(imageId);
+
+    return res.sendStatus(204);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('document')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadDocument(
+    @Res() res: Response,
+    @Query('documentId') documentId: string,
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: true,
+        validators: [new SupportedDocumentsValidator()],
+      })
+    )
+    uploadedFile: Express.Multer.File
+  ) {
+    const { size } = await this.media.saveDocument(
+      documentId,
+      uploadedFile.buffer,
+      uploadedFile.mimetype,
+      uploadedFile.originalname
+    );
+
+    res.status(201).send({
+      id: documentId,
+      filename: uploadedFile.originalname,
+      fileSize: size,
+      mimeType: uploadedFile.mimetype,
+      extension: '.pdf',
+    });
+  }
+
+  @Get('document/:documentId')
+  async getDocument(
+    @Res() res: Response,
+    @Param('documentId') documentId: string
+  ) {
+    const { uri, exists } = await this.media.getDocumentUri(documentId);
+
+    const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
+
+    if (!exists) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_NOT_FOUND, url);
+      return;
+    }
+
+    this.setProductionCacheHeaders(res);
+    res.redirect(HTTP_CODE_FOUND, url);
+  }
+
+  @Get('document/:documentId/thumbnail')
+  async getDocumentThumbnail(
+    @Res() res: Response,
+    @Param('documentId') documentId: string
+  ) {
+    const { uri, exists } =
+      await this.media.getDocumentThumbnailUri(documentId);
+
+    const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
+
+    if (!exists) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_NOT_FOUND, url);
+      return;
+    }
+
+    this.setProductionCacheHeaders(res);
+    res.redirect(HTTP_CODE_FOUND, url);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('document/:documentId')
+  async deleteDocument(
+    @Res() res: Response,
+    @Param('documentId') documentId: string
+  ) {
+    await this.media.deleteDocument(documentId);
 
     return res.sendStatus(204);
   }

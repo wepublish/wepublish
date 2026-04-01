@@ -7,6 +7,7 @@ import {
   ImageTransformation,
   ImageWithFocalPoint,
   MediaAdapter,
+  UploadDocument,
   UploadImage,
 } from '@wepublish/image/api';
 import {
@@ -233,6 +234,73 @@ export class NovaMediaAdapter implements MediaAdapter {
     queryParameters.push(`sig=${signature}`);
 
     return encodeURI(`${this.url}/${image.id}?${queryParameters.join('&')}`);
+  }
+
+  async uploadDocument(
+    fileUpload: Promise<FileUpload>
+  ): Promise<UploadDocument> {
+    const form = new FormData();
+
+    const {
+      filename: inputFilename,
+      mimetype,
+      createReadStream,
+    }: FileUpload = await fileUpload;
+    form.append('file', createReadStream(), {
+      filename: inputFilename,
+      contentType: mimetype,
+    });
+
+    return this._uploadDocument(form);
+  }
+
+  async _uploadDocument(form: FormData): Promise<UploadDocument> {
+    form.hasKnownLength = () => false;
+
+    const documentId = uuidv4();
+    const token = await this.generateAuthToken(documentId, 'upload');
+    const uploadUrl = new URL(`${this.internalURL}/document`);
+    uploadUrl.searchParams.set('documentId', documentId);
+
+    const response = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${token}` },
+      body: form,
+      signal: AbortSignal.timeout(50000) as any,
+    });
+
+    const json = await response.json();
+
+    if (response.status >= 400) {
+      throw new MediaServerError(response.statusText);
+    }
+
+    const { id, filename, fileSize, mimeType, extension } = json;
+
+    return { id, filename, fileSize, mimeType, extension };
+  }
+
+  async deleteDocument(id: string): Promise<boolean> {
+    const token = await this.generateAuthToken(id, 'delete');
+
+    const response = await fetch(`${this.internalURL}/document/${id}`, {
+      method: 'DELETE',
+      headers: { authorization: `Bearer ${token}` },
+    });
+
+    if (response.status >= 400) {
+      throw new MediaServerError(response.statusText);
+    }
+
+    return true;
+  }
+
+  async getDocumentURL(document: { id: string }): Promise<string> {
+    return `${this.url}/document/${document.id}`;
+  }
+
+  async getDocumentThumbnailURL(document: { id: string }): Promise<string> {
+    return `${this.url}/document/${document.id}/thumbnail`;
   }
 
   /**
