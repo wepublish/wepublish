@@ -35,5 +35,4 @@ const plugins = [
 
 module.exports = withSentryConfig(composePlugins(...plugins)(nextConfig), {
   silent: true,
-  hideSourceMaps: true,
 });
