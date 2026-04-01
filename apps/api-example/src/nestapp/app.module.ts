@@ -541,11 +541,14 @@ import {
           config.getOrThrow('CONFIG_FILE_PATH')
         );
         const internalUrl = config.get('MEDIA_SERVER_INTERNAL_URL');
-        const token = config.getOrThrow('MEDIA_SERVER_TOKEN');
+        const jwtPrivateKey = config
+          .getOrThrow<string>('JWT_PRIVATE_KEY')
+          .replace(/\\n/g, '\n');
 
         return new NovaMediaAdapter(
           config.getOrThrow('MEDIA_SERVER_URL'),
-          token,
+          jwtPrivateKey,
+          config.getOrThrow('HOST_URL'),
           { quality: configFile.mediaServer.quality ?? 0.8 },
           internalUrl ? internalUrl : undefined
         );

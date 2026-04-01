@@ -19,7 +19,7 @@ import {
   ImageURIObject,
   MediaService,
   SupportedImagesValidator,
-  TokenAuthGuard,
+  JwtAuthGuard,
 } from '@wepublish/media/api';
 import {
   getTransformationKey,
@@ -29,7 +29,6 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import 'multer';
-import { v4 as uuidv4 } from 'uuid';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { assertRemoteFileIsAccessible } from './assertRemoteFileIsAccessible';
@@ -52,6 +51,16 @@ export class AppController {
     this.fallbackUrl = config.get<string>('MEDIA_FALLBACK_URL');
   }
 
+  private setProductionCacheHeaders(res: Response) {
+    if (process.env['NODE_ENV'] === 'production') {
+      // max-age = 12hours, immutable, stale-if-error = 7days, stale-while-revalidate = 1day
+      res.setHeader(
+        'Cache-Control',
+        `public, max-age=43200, immutable, stale-if-error=604800, stale-while-revalidate=86400`
+      );
+    }
+  }
+
   @Get('/health')
   async healthCheck(@Res() res: Response) {
     res.status(200).send({ status: 'ok' });
@@ -62,7 +71,7 @@ export class AppController {
     throw new NotFoundException();
   }
 
-  @UseGuards(TokenAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(
@@ -76,9 +85,6 @@ export class AppController {
     )
     uploadedFile: Express.Multer.File
   ) {
-    if (!imageId) {
-      imageId = uuidv4();
-    }
     const metadata = await this.media.saveImage(imageId, uploadedFile.buffer);
 
     res.status(201).send({
@@ -107,14 +113,6 @@ export class AppController {
     // Check if image is cached
     const uriFromCache = await this.linkCache.get<ImageURIObject>(cacheKey);
 
-    if (process.env['NODE_ENV'] === 'production') {
-      // max-age = 12hours, immutable, stale-if-error = 7days, stale-while-revalidate = 1day
-      res.setHeader(
-        'Cache-Control',
-        `public, max-age=43200, immutable, stale-if-error=604800, stale-while-revalidate=86400`
-      );
-    }
-
     if (uriFromCache) {
       if (!uriFromCache.exists && this.fallbackUrl) {
         res.setHeader('Cache-Control', `public, max-age=600`);
@@ -126,6 +124,7 @@ export class AppController {
         res.setHeader('Cache-Control', `public, max-age=600`);
         httpCode = HTTP_CODE_NOT_FOUND;
       } else {
+        this.setProductionCacheHeaders(res);
         // On access refresh cache ttl
         await this.linkCache.set(cacheKey, uriFromCache);
       }
@@ -164,10 +163,11 @@ export class AppController {
       await this.linkCache.set(cacheKey, { uri, exists: true });
     }
 
+    this.setProductionCacheHeaders(res);
     res.redirect(HTTP_CODE_FOUND, url);
   }
 
-  @UseGuards(TokenAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete(':imageId')
   async deleteImage(@Res() res: Response, @Param('imageId') imageId: string) {
     await this.media.deleteImage(imageId);
