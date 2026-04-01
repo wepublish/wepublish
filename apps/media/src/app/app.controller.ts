@@ -213,20 +213,58 @@ export class AppController {
   @Get('document/:documentId')
   async getDocument(
     @Res() res: Response,
+    @Req() req: Request,
     @Param('documentId') documentId: string
   ) {
-    const { uri, exists } = await this.media.getDocumentUri(
-      sanitizeId(documentId)
-    );
+    const safeId = sanitizeId(documentId);
+    const cacheKey = `doc-${safeId}`;
 
+    const uriFromCache = await this.linkCache.get<ImageURIObject>(cacheKey);
+
+    if (uriFromCache) {
+      if (!uriFromCache.exists && this.fallbackUrl) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+        return;
+      }
+      let httpCode = HTTP_CODE_FOUND;
+      if (!uriFromCache.exists) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        httpCode = HTTP_CODE_NOT_FOUND;
+      } else {
+        this.setProductionCacheHeaders(res);
+        await this.linkCache.set(cacheKey, uriFromCache);
+      }
+      res.redirect(
+        httpCode,
+        `${process.env['S3_PUBLIC_HOST']}/${uriFromCache.uri}`
+      );
+      return;
+    }
+
+    if (this.fallbackUrl && !(await this.media.hasDocument(safeId))) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+      return;
+    }
+
+    const { uri, exists } = await this.media.getDocumentUri(safeId);
     const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
+
+    if (!S3_HOST_CHECKED) {
+      S3_HOST_CHECKED = await assertRemoteFileIsAccessible(url);
+    }
 
     if (!exists) {
       res.setHeader('Cache-Control', `public, max-age=600`);
       res.redirect(HTTP_CODE_NOT_FOUND, url);
+      if (!this.fallbackUrl) {
+        await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
+      }
       return;
     }
 
+    await this.linkCache.set(cacheKey, { uri, exists: true });
     this.setProductionCacheHeaders(res);
     res.redirect(HTTP_CODE_FOUND, url);
   }
@@ -234,20 +272,58 @@ export class AppController {
   @Get('document/:documentId/thumbnail')
   async getDocumentThumbnail(
     @Res() res: Response,
+    @Req() req: Request,
     @Param('documentId') documentId: string
   ) {
-    const { uri, exists } = await this.media.getDocumentThumbnailUri(
-      sanitizeId(documentId)
-    );
+    const safeId = sanitizeId(documentId);
+    const cacheKey = `doc-thumb-${safeId}`;
 
+    const uriFromCache = await this.linkCache.get<ImageURIObject>(cacheKey);
+
+    if (uriFromCache) {
+      if (!uriFromCache.exists && this.fallbackUrl) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+        return;
+      }
+      let httpCode = HTTP_CODE_FOUND;
+      if (!uriFromCache.exists) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        httpCode = HTTP_CODE_NOT_FOUND;
+      } else {
+        this.setProductionCacheHeaders(res);
+        await this.linkCache.set(cacheKey, uriFromCache);
+      }
+      res.redirect(
+        httpCode,
+        `${process.env['S3_PUBLIC_HOST']}/${uriFromCache.uri}`
+      );
+      return;
+    }
+
+    if (this.fallbackUrl && !(await this.media.hasDocument(safeId))) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+      return;
+    }
+
+    const { uri, exists } = await this.media.getDocumentThumbnailUri(safeId);
     const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
+
+    if (!S3_HOST_CHECKED) {
+      S3_HOST_CHECKED = await assertRemoteFileIsAccessible(url);
+    }
 
     if (!exists) {
       res.setHeader('Cache-Control', `public, max-age=600`);
       res.redirect(HTTP_CODE_NOT_FOUND, url);
+      if (!this.fallbackUrl) {
+        await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
+      }
       return;
     }
 
+    await this.linkCache.set(cacheKey, { uri, exists: true });
     this.setProductionCacheHeaders(res);
     res.redirect(HTTP_CODE_FOUND, url);
   }
