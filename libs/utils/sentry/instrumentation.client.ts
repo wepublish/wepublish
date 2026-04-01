@@ -12,7 +12,14 @@ import { getBaseConfig, setCommonTags } from './config';
 
 Sentry.init({
   ...getBaseConfig(),
-  integrations: [Sentry.replayIntegration()],
+  integrations: [
+    Sentry.replayIntegration(),
+    Sentry.browserProfilingIntegration(),
+    Sentry.graphqlClientIntegration({
+      endpoints: [/.*/],
+    }),
+  ],
+  profilesSampleRate: process.env.APP_ENVIRONMENT === 'production' ? 0.1 : 1.0,
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
 });

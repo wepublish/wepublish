@@ -7,19 +7,22 @@
  * export { onRequestError, register } from '@wepublish/utils/sentry/nextjs';
  */
 import * as Sentry from '@sentry/nextjs';
-import { nodeProfilingIntegration } from '@sentry/profiling-node';
 
 import { getBaseConfig, setCommonTags } from './config';
 
 export async function register() {
-  Sentry.init({
-    ...getBaseConfig(),
-    integrations: [nodeProfilingIntegration()],
-    profilesSampleRate:
-      process.env.APP_ENVIRONMENT === 'production' ? 0.1 : 1.0,
-  });
+  if (process.env.NEXT_RUNTIME === 'nodejs') {
+    const { nodeProfilingIntegration } = await import('@sentry/profiling-node');
 
-  setCommonTags(Sentry, 'nextjs-server');
+    Sentry.init({
+      ...getBaseConfig(),
+      integrations: [nodeProfilingIntegration()],
+      profilesSampleRate:
+        process.env.APP_ENVIRONMENT === 'production' ? 0.1 : 1.0,
+    });
+
+    setCommonTags(Sentry, 'nextjs-server');
+  }
 }
 
 export const onRequestError = Sentry.captureRequestError;
