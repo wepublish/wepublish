@@ -14,6 +14,8 @@ describe('UserDataloaderService', () => {
   };
 
   beforeEach(async () => {
+    jest.clearAllMocks();
+
     prismaMock = {
       user: {
         findMany: jest.fn(),
@@ -36,9 +38,10 @@ describe('UserDataloaderService', () => {
   });
 
   it('should prime', () => {
-    // @ts-expect-error Mock so typings incorrectly
-    const dataloaderMock = DataLoader.mock.instances[0] as jest.fn;
+    const dataloaderMock = (DataLoader as jest.MockedClass<typeof DataLoader>)
+      .mock.instances[0];
     service.prime('123', {} as any);
+    // @ts-expect-error mock
     expect(dataloaderMock.prime.mock.calls[0]).toMatchSnapshot();
   });
 

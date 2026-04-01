@@ -254,14 +254,17 @@ ARG SENTRY_RELEASE
 ARG APP_RELEASE_ID
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 WORKDIR /app
-RUN apt-get update && apt-get install -y libjemalloc-dev
+RUN apt-get update && apt-get install -y libjemalloc-dev poppler-utils
 COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
 RUN npm ci
 RUN npx nx build media --ignore-nx-cache && \
     npx @sentry/cli sourcemaps inject ./dist/apps/media && \
-    npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media
+    npx @sentry/cli sourcemaps upload --auth-token=${SENTRY_AUTH_TOKEN} --org=${SENTRY_ORG} --project=${SENTRY_PROJECT} --release=${SENTRY_RELEASE} ./dist/apps/media && \
+    mkdir -p /poppler-dist/bin /poppler-dist/lib && \
+    cp /usr/bin/pdftoppm /poppler-dist/bin/ && \
+    ldd /usr/bin/pdftoppm | awk '/=>/ {print $3}' | xargs -I{} cp -L {} /poppler-dist/lib/ 2>/dev/null || true
 
 FROM ${PLAIN_BUILD_IMAGE} AS media-setup
 WORKDIR /wepublish
@@ -280,6 +283,8 @@ WORKDIR /wepublish
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 ENV NODE_OPTIONS="--max-old-space-size=512"
 COPY --from=build-media /usr/lib/x86_64-linux-gnu/libjemalloc* /usr/lib/x86_64-linux-gnu/
+COPY --from=build-media /poppler-dist/bin/pdftoppm /usr/bin/pdftoppm
+COPY --from=build-media /poppler-dist/lib/ /usr/lib/x86_64-linux-gnu/
 COPY --from=media-setup /wepublish /wepublish
 EXPOSE 4100
 USER 1001

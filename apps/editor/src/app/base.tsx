@@ -591,16 +591,53 @@ export function Base({ children }: BaseProps) {
                     'CAN_GET_IMAGE',
                     'CAN_CREATE_IMAGE',
                     'CAN_DELETE_IMAGE',
+                    'CAN_GET_DOCUMENTS',
+                    'CAN_GET_DOCUMENT',
+                    'CAN_CREATE_DOCUMENT',
+                    'CAN_DELETE_DOCUMENT',
                   ]}
                 >
-                  <Nav.Item
-                    as={NavLink}
-                    href="/images"
+                  <Nav.Menu
+                    eventKey={'media'}
+                    title={t('navbar.media')}
                     icon={<MdPhoto />}
-                    active={path === 'images'}
                   >
-                    {t('navbar.imageLibrary')}
-                  </Nav.Item>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_IMAGES',
+                        'CAN_GET_IMAGE',
+                        'CAN_CREATE_IMAGE',
+                        'CAN_DELETE_IMAGE',
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/images"
+                        icon={<MdPhoto />}
+                        active={path === 'images'}
+                      >
+                        {t('navbar.imageLibrary')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_DOCUMENTS',
+                        'CAN_GET_DOCUMENT',
+                        'CAN_CREATE_DOCUMENT',
+                        'CAN_DELETE_DOCUMENT',
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/documents"
+                        icon={<MdDescription />}
+                        active={path === 'documents'}
+                      >
+                        {t('navbar.documentLibrary')}
+                      </Nav.Item>
+                    </PermissionControl>
+                  </Nav.Menu>
                 </PermissionControl>
 
                 <PermissionControl

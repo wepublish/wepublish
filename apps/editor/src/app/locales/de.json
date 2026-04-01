@@ -26,6 +26,8 @@
         "warningLabel": "Warnung"
       },
       "panels": {
+        "firstPublishedAtDate": "Erstpublikation am {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
+        "notPublishedYet": "Artikel wurde noch nicht publiziert",
         "addSlug": "Bitte Slug erfassen",
         "allowPeerPublishing": "Peers erlauben, diesen Artikel zu publizieren.",
         "articlePending": "Eine Publikation ist bereits am {{pendingPublishDate, ccc PP p}} geplant. Eine erneute Publikation überschreibt diese.",
@@ -691,6 +693,48 @@
         "includeHiddenPages": "Ausgeblendete Seiten"
       }
     },
+    "documents": {
+      "overview": {
+        "actions": "Aktionen",
+        "description": "Beschreibung",
+        "documentLibrary": "Dokumentenbibliothek",
+        "copyLink": "Link kopieren",
+        "edit": "Bearbeiten",
+        "fileSize": "Dateigrösse",
+        "filename": "Dateiname",
+        "noDescription": "Keine Beschreibung",
+        "openLink": "Öffnen",
+        "preview": "Vorschau",
+        "title": "Titel",
+        "untitled": "Ohne Titel",
+        "uploadDocument": "Dokument hochladen"
+      },
+      "panels": {
+        "cancel": "Abbrechen",
+        "close": "Schliessen",
+        "confirm": "Bestätigen",
+        "created": "Erstellt",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "deleteDocument": "Dokument löschen?",
+        "description": "Beschreibung",
+        "documentUpdated": "Dokument aktualisiert",
+        "dropDocument": "PDF-Datei hier ablegen oder klicken zum Auswählen",
+        "editDocument": "Dokument bearbeiten",
+        "fileSize": "Dateigrösse",
+        "filename": "Dateiname",
+        "information": "Informationen",
+        "invalidDocument": "Nur PDF-Dateien werden unterstützt",
+        "linkCopied": "Link in Zwischenablage kopiert",
+        "notFound": "Dokument nicht gefunden!",
+        "publicLink": "Öffentlicher Link",
+        "title": "Titel",
+        "untitled": "Ohne Titel",
+        "updated": "Aktualisiert",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "upload": "Hochladen",
+        "uploadDocument": "Dokument hochladen"
+      }
+    },
     "images": {
       "overview": {
         "actions": "Aktionen",
@@ -865,8 +909,10 @@
       "dashboard": "Dashboard",
       "events": "Events",
       "eventTags": "Tags",
+      "documentLibrary": "Dokumente",
       "imageLibrary": "Bilder",
       "importableEvents": "Importable Events",
+      "media": "Dateien",
       "logout": "Logout",
       "mailTemplates": "E-Mail-Vorlagen",
       "memberPlans": "Abo Pläne",

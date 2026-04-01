@@ -136,6 +136,30 @@ export const CanDeleteImage: Permission = {
   deprecated: false,
 };
 
+export const CanCreateDocument: Permission = {
+  id: 'CAN_CREATE_DOCUMENT',
+  description: 'Allows to create documents',
+  deprecated: false,
+};
+
+export const CanGetDocument: Permission = {
+  id: 'CAN_GET_DOCUMENT',
+  description: 'Allows to get document',
+  deprecated: false,
+};
+
+export const CanGetDocuments: Permission = {
+  id: 'CAN_GET_DOCUMENTS',
+  description: 'Allows to get all documents',
+  deprecated: false,
+};
+
+export const CanDeleteDocument: Permission = {
+  id: 'CAN_DELETE_DOCUMENT',
+  description: 'Allows to delete documents',
+  deprecated: false,
+};
+
 export const CanCreateArticle: Permission = {
   id: 'CAN_CREATE_ARTICLE',
   description: 'Allows to create articles',
@@ -1024,6 +1048,10 @@ export const AllPermissions: Permission[] = [
   CanGetImage,
   CanGetImages,
   CanDeleteImage,
+  CanCreateDocument,
+  CanGetDocument,
+  CanGetDocuments,
+  CanDeleteDocument,
   CanCreateArticle,
   CanGetArticle,
   CanGetArticles,
@@ -1174,6 +1202,10 @@ export const EditorPermissions: Permission[] = [
   CanCreateImage,
   CanGetImage,
   CanGetImages,
+  CanCreateDocument,
+  CanGetDocument,
+  CanGetDocuments,
+  CanDeleteDocument,
   CanCreateArticle,
   CanGetArticle,
   CanGetArticles,

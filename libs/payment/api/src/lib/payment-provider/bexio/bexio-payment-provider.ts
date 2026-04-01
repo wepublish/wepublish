@@ -147,7 +147,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         }
 
         try {
-          await bexio.invoices.delete(+payment.intentID);
+          await bexio.invoices.cancel(+payment.intentID);
         } catch (error) {
           logger('bexioPaymentProvider').error(
             'Error to cancel invoice for payment (id: %s): %s',
