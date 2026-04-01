@@ -103,14 +103,14 @@ const theme = createTheme(WePTheme, {
       },
       h3: {
         fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
-        textTransform: 'uppercase',
+        textTransform: 'none',
         fontWeight: 500,
         fontSize: '3rem',
         lineHeight: 1.2,
       },
       h4: {
         fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
-        textTransform: 'uppercase',
+        textTransform: 'none',
         fontWeight: 500,
         fontSize: '1.5rem',
       },
