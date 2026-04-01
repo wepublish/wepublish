@@ -4,12 +4,12 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useIntersectionObserver } from 'usehooks-ts';
-import { forceHideBanner } from '@wepublish/banner/website';
 import {
   useSetIntendedRoute,
   useUser,
 } from '@wepublish/authentication/website';
 import { useTranslation } from 'react-i18next';
+import { css, GlobalStyles } from '@mui/material';
 
 export const PaywallWrapper = styled.div`
   display: grid !important; // exception as it should always be shown
@@ -29,6 +29,17 @@ const PaywallActions = styled.div`
     grid-template-columns: max-content max-content;
   }
 `;
+
+// Duplicated to avoid circular dependency
+const forceHideBanner = (
+  <GlobalStyles
+    styles={css`
+      [data-banner] {
+        display: none !important;
+      }
+    `}
+  />
+);
 
 export const Paywall = ({
   className,

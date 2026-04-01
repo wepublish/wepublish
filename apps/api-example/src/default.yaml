@@ -4,8 +4,8 @@ general:
   bcryptHashCostFactor: 12
   urlAdapter: default
 mailProvider:
-  id: mailchimp # allowed is mailchimp/mailgun
-  type: mailchimp
+  id: slackmail # allowed is mailchimp/mailgun/slackmail
+  type: slackmail # allowed mailchimp/slackmail
 paymentProviders:
   - type: payrexx # Allowed are stripe-checkout / stripe / payrexx / bexio
     id: payrexx # Required for stripe-checkout / stripe / payrexx /bexio

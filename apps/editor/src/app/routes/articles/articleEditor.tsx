@@ -222,7 +222,7 @@ function ArticleEditor() {
   );
 
   useEffect(() => {
-    if (articleData?.article) {
+    if (articleData?.article && !hasChanged) {
       const {
         latest,
         shared,
@@ -721,6 +721,11 @@ function ArticleEditor() {
       >
         <PublishArticlePanel
           publishedAtDate={publishedAt}
+          firstPublishedAtDate={
+            articleData?.article?.publishedAt ?
+              new Date(articleData.article.publishedAt)
+            : undefined
+          }
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
           onConfirm={publishedAt => {

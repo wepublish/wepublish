@@ -14,6 +14,7 @@ import { ArticleMetadata } from './articleMetadataPanel';
 
 export interface PublishArticlePanelProps {
   publishedAtDate?: Date;
+  firstPublishedAtDate?: Date;
   metadata: ArticleMetadata;
 
   onClose(): void;
@@ -22,6 +23,7 @@ export interface PublishArticlePanelProps {
 
 function PublishArticlePanel({
   publishedAtDate,
+  firstPublishedAtDate,
   metadata,
   onClose,
   onConfirm,
@@ -53,6 +55,22 @@ function PublishArticlePanel({
             label={t('articleEditor.panels.publishDate')}
             changeDate={date => setPublishedAt(date)}
           />
+        </div>
+
+        <div
+          style={{
+            maxWidth: '300px',
+            marginTop: '0.25rem',
+            marginBottom: '2rem',
+            fontSize: '0.75rem',
+            color: '#555',
+          }}
+        >
+          {firstPublishedAtDate ?
+            t('articleEditor.panels.firstPublishedAtDate', {
+              firstPublishedAtDate,
+            })
+          : t('articleEditor.panels.notPublishedYet')}
         </div>
 
         <DescriptionList>
