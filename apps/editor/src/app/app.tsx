@@ -63,6 +63,7 @@ import { EventEditView } from './routes/events/eventEditView';
 import { EventListView } from './routes/events/eventListView';
 import { ExternalAppIframeView } from './routes/externalApps/externalAppIframeView';
 import { ExternalApps } from './routes/externalApps/externalAppsEdit';
+import { DocumentList } from './routes/documents/documentList';
 import { ImageList } from './routes/images/imageList';
 import { IntegrationEditView } from './routes/integrations/integrationEditView';
 import { IntegrationList } from './routes/integrations/integrationList';
@@ -606,6 +607,31 @@ export function App() {
               element={
                 <Base>
                   <ImageList />
+                </Base>
+              }
+            />
+            {/* Documents Routes */}
+            <Route
+              path="documents"
+              element={
+                <Base>
+                  <DocumentList />
+                </Base>
+              }
+            />
+            <Route
+              path="/documents/upload"
+              element={
+                <Base>
+                  <DocumentList />
+                </Base>
+              }
+            />
+            <Route
+              path="/documents/edit/:id"
+              element={
+                <Base>
+                  <DocumentList />
                 </Base>
               }
             />

@@ -695,6 +695,48 @@
         "includeHiddenPages": "Include hidden"
       }
     },
+    "documents": {
+      "overview": {
+        "actions": "Actions",
+        "description": "Description",
+        "documentLibrary": "Document Library",
+        "copyLink": "Copy Link",
+        "edit": "Edit",
+        "fileSize": "File Size",
+        "filename": "Filename",
+        "noDescription": "No Description",
+        "openLink": "Open",
+        "preview": "Preview",
+        "title": "Title",
+        "untitled": "Untitled",
+        "uploadDocument": "Upload Document"
+      },
+      "panels": {
+        "cancel": "Cancel",
+        "close": "Close",
+        "confirm": "Confirm",
+        "created": "Created",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "deleteDocument": "Delete document?",
+        "description": "Description",
+        "documentUpdated": "Document Updated",
+        "dropDocument": "Drop PDF file here or click to select",
+        "editDocument": "Edit Document",
+        "fileSize": "File size",
+        "filename": "Filename",
+        "information": "Information",
+        "invalidDocument": "Only PDF files are supported",
+        "linkCopied": "Link copied to clipboard",
+        "notFound": "Document not found!",
+        "publicLink": "Public Link",
+        "title": "Title",
+        "untitled": "Untitled",
+        "updated": "Updated",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "upload": "Upload",
+        "uploadDocument": "Upload Document"
+      }
+    },
     "images": {
       "overview": {
         "actions": "Actions",
@@ -873,8 +915,10 @@
       "dashboard": "Dashboard",
       "events": "Events",
       "eventTags": "Tags",
-      "imageLibrary": "Image Library",
+      "documentLibrary": "Documents",
+      "imageLibrary": "Images",
       "importableEvents": "Importable Events",
+      "media": "Files",
       "logout": "Logout",
       "mailTemplates": "E-Mail Templates",
       "memberPlans": "Subscription Plans",

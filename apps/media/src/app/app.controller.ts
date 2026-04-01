@@ -19,6 +19,7 @@ import {
   ImageURIObject,
   MediaService,
   SupportedImagesValidator,
+  SupportedDocumentsValidator,
   JwtAuthGuard,
 } from '@wepublish/media/api';
 import {
@@ -36,6 +37,9 @@ import { assertRemoteFileIsAccessible } from './assertRemoteFileIsAccessible';
 const HTTP_CODE_FOUND = 301;
 const HTTP_CODE_NOT_FOUND = 307;
 let S3_HOST_CHECKED = false;
+
+/** Sanitize user-provided IDs to prevent path traversal */
+const sanitizeId = (id: string): string => id.replace(/[^a-zA-Z0-9_-]/g, '');
 
 @Controller({
   version: '1',
@@ -171,6 +175,166 @@ export class AppController {
   @Delete(':imageId')
   async deleteImage(@Res() res: Response, @Param('imageId') imageId: string) {
     await this.media.deleteImage(imageId);
+
+    return res.sendStatus(204);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('document')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadDocument(
+    @Res() res: Response,
+    @Query('documentId') documentId: string,
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: true,
+        validators: [new SupportedDocumentsValidator()],
+      })
+    )
+    uploadedFile: Express.Multer.File
+  ) {
+    const safeDocumentId = sanitizeId(documentId);
+    const { size } = await this.media.saveDocument(
+      safeDocumentId,
+      uploadedFile.buffer,
+      uploadedFile.mimetype,
+      uploadedFile.originalname
+    );
+
+    res.status(201).send({
+      id: safeDocumentId,
+      filename: uploadedFile.originalname,
+      fileSize: size,
+      mimeType: uploadedFile.mimetype,
+      extension: '.pdf',
+    });
+  }
+
+  @Get('document/:documentId')
+  async getDocument(
+    @Res() res: Response,
+    @Req() req: Request,
+    @Param('documentId') documentId: string
+  ) {
+    const safeId = sanitizeId(documentId);
+    const cacheKey = `doc-${safeId}`;
+
+    const uriFromCache = await this.linkCache.get<ImageURIObject>(cacheKey);
+
+    if (uriFromCache) {
+      if (!uriFromCache.exists && this.fallbackUrl) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+        return;
+      }
+      let httpCode = HTTP_CODE_FOUND;
+      if (!uriFromCache.exists) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        httpCode = HTTP_CODE_NOT_FOUND;
+      } else {
+        this.setProductionCacheHeaders(res);
+        await this.linkCache.set(cacheKey, uriFromCache);
+      }
+      res.redirect(
+        httpCode,
+        `${process.env['S3_PUBLIC_HOST']}/${uriFromCache.uri}`
+      );
+      return;
+    }
+
+    if (this.fallbackUrl && !(await this.media.hasDocument(safeId))) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+      return;
+    }
+
+    const { uri, exists } = await this.media.getDocumentUri(safeId);
+    const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
+
+    if (!S3_HOST_CHECKED) {
+      S3_HOST_CHECKED = await assertRemoteFileIsAccessible(url);
+    }
+
+    if (!exists) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_NOT_FOUND, url);
+      if (!this.fallbackUrl) {
+        await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
+      }
+      return;
+    }
+
+    await this.linkCache.set(cacheKey, { uri, exists: true });
+    this.setProductionCacheHeaders(res);
+    res.redirect(HTTP_CODE_FOUND, url);
+  }
+
+  @Get('document/:documentId/thumbnail')
+  async getDocumentThumbnail(
+    @Res() res: Response,
+    @Req() req: Request,
+    @Param('documentId') documentId: string
+  ) {
+    const safeId = sanitizeId(documentId);
+    const cacheKey = `doc-thumb-${safeId}`;
+
+    const uriFromCache = await this.linkCache.get<ImageURIObject>(cacheKey);
+
+    if (uriFromCache) {
+      if (!uriFromCache.exists && this.fallbackUrl) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+        return;
+      }
+      let httpCode = HTTP_CODE_FOUND;
+      if (!uriFromCache.exists) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        httpCode = HTTP_CODE_NOT_FOUND;
+      } else {
+        this.setProductionCacheHeaders(res);
+        await this.linkCache.set(cacheKey, uriFromCache);
+      }
+      res.redirect(
+        httpCode,
+        `${process.env['S3_PUBLIC_HOST']}/${uriFromCache.uri}`
+      );
+      return;
+    }
+
+    if (this.fallbackUrl && !(await this.media.hasDocument(safeId))) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+      return;
+    }
+
+    const { uri, exists } = await this.media.getDocumentThumbnailUri(safeId);
+    const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
+
+    if (!S3_HOST_CHECKED) {
+      S3_HOST_CHECKED = await assertRemoteFileIsAccessible(url);
+    }
+
+    if (!exists) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_NOT_FOUND, url);
+      if (!this.fallbackUrl) {
+        await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
+      }
+      return;
+    }
+
+    await this.linkCache.set(cacheKey, { uri, exists: true });
+    this.setProductionCacheHeaders(res);
+    res.redirect(HTTP_CODE_FOUND, url);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('document/:documentId')
+  async deleteDocument(
+    @Res() res: Response,
+    @Param('documentId') documentId: string
+  ) {
+    await this.media.deleteDocument(sanitizeId(documentId));
 
     return res.sendStatus(204);
   }

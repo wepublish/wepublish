@@ -819,6 +819,29 @@ type DeletePollVotesResult {
   count: Int!
 }
 
+type Document {
+  createdAt: DateTime!
+  description: String
+  extension: String!
+  fileSize: Int!
+  filename: String
+  id: String!
+  mimeType: String!
+  modifiedAt: DateTime!
+  thumbnailURL: String
+  title: String
+  url: String!
+}
+
+input DocumentFilter {
+  title: String
+}
+
+enum DocumentSort {
+  CreatedAt
+  ModifiedAt
+}
+
 enum EditorBlockType {
   Comment
   Crowdfunding
@@ -1678,6 +1701,9 @@ type Mutation {
   deleteConsent(id: String!): Consent!
   deleteCrowdfunding(id: String!): Boolean
 
+  """Deletes an existing document."""
+  deleteDocument(id: String!): String!
+
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
 
@@ -1861,6 +1887,9 @@ type Mutation {
   """Updates the current logged in user."""
   updateCurrentUser(address: UserAddressInput, birthday: DateTime, challengeAnswer: ChallengeInput, firstName: String, flair: String, name: String, password: String): SensitiveDataUser!
 
+  """Updates an existing document."""
+  updateDocument(description: String, id: String!, title: String): Document!
+
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, status: EventStatus = Scheduled, tagIds: [String!]): Event!
 
@@ -1951,6 +1980,9 @@ type Mutation {
 
   """"""
   upgradeUserSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
+
+  """Uploads a new document."""
+  uploadDocument(description: String, file: Upload!, filename: String, title: String): Document!
 
   """Uploads a new image."""
   uploadImage(description: String, file: Upload!, filename: String, focalPoint: FocalPointInput, license: String, link: String, source: String, tags: [String!]!, title: String): Image!
@@ -2118,6 +2150,12 @@ type PaginatedAuthors {
 
 type PaginatedComments {
   nodes: [Comment!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedDocuments {
+  nodes: [Document!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -2764,6 +2802,12 @@ type Query {
 
   "\n      Returns daily stats in a given timeframe.\n    "
   dailySubscriptionStats(end: DateTime, memberPlanIds: [String!], start: DateTime!): [DailySubscriptionStats!]!
+
+  """Returns a document by id."""
+  document(id: String!): Document!
+
+  """Returns a paginated list of documents based on the filters given."""
+  documents(cursorId: String, filter: DocumentFilter, order: SortOrder = Descending, skip: Int = 0, sort: DocumentSort = ModifiedAt, take: Int = 10): PaginatedDocuments!
 
   """Returns an event by id."""
   event(id: String!): Event!

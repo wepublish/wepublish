@@ -19,6 +19,7 @@ import { BlockContentModule } from '@wepublish/block-content/api';
 import { CommentModule } from '@wepublish/comments/api';
 import { ConsentModule } from '@wepublish/consent/api';
 import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
+import { DocumentModule } from '@wepublish/document/api';
 import { EventModule } from '@wepublish/event/api';
 import {
   AgendaBaselService,
@@ -435,6 +436,7 @@ import {
     }),
     PermissionModule,
     ConsentModule,
+    DocumentModule,
     StatsModule,
     SettingModule,
     ExternalAppsModule,

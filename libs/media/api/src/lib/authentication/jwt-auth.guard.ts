@@ -76,6 +76,15 @@ export class JwtAuthGuard implements CanActivate {
   private extractImageId(request: any): string | null {
     // DELETE /v1/:imageId → params.imageId
     // POST /v1/?imageId=... → query.imageId
-    return request.params?.imageId || request.query?.imageId || null;
+    // Document endpoints use documentId
+    // DELETE /v1/document/:documentId → params.documentId
+    // POST /v1/document?documentId=... → query.documentId
+    return (
+      request.params?.imageId ||
+      request.query?.imageId ||
+      request.params?.documentId ||
+      request.query?.documentId ||
+      null
+    );
   }
 }
