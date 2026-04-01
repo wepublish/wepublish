@@ -649,7 +649,11 @@
         "noDescription": "Pas de description",
         "openLink": "Ouvrir",
         "preview": "Aperçu",
+        "storageFull": "Limite de stockage atteinte",
+        "storageUsage": "{{used}} / {{limit}} utilisés ({{count}} fichiers)",
+        "storageWarning": "Stockage presque plein",
         "title": "Titre",
+        "unlimited": "Illimité",
         "untitled": "Sans titre",
         "uploadDocument": "Télécharger un document"
       },

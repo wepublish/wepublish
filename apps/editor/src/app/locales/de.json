@@ -703,7 +703,11 @@
         "noDescription": "Keine Beschreibung",
         "openLink": "Öffnen",
         "preview": "Vorschau",
+        "storageFull": "Speicherlimit erreicht",
+        "storageUsage": "{{used}} / {{limit}} verwendet ({{count}} Dateien)",
+        "storageWarning": "Speicher fast voll",
         "title": "Titel",
+        "unlimited": "Unbegrenzt",
         "untitled": "Ohne Titel",
         "uploadDocument": "Dokument hochladen"
       },

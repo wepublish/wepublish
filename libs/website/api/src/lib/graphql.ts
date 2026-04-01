@@ -874,6 +874,37 @@ export type DeletePollVotesResult = {
   count: Scalars['Int'];
 };
 
+export type Document = {
+  __typename?: 'Document';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  extension: Scalars['String'];
+  fileSize: Scalars['Int'];
+  filename?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  mimeType: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  thumbnailURL?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
+};
+
+export type DocumentFilter = {
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export enum DocumentSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt'
+}
+
+export type DocumentStorageUsage = {
+  __typename?: 'DocumentStorageUsage';
+  documentCount: Scalars['Int'];
+  limitBytes: Scalars['Int'];
+  usedBytes: Scalars['Int'];
+};
+
 export enum EditorBlockType {
   Comment = 'Comment',
   Crowdfunding = 'Crowdfunding',
@@ -1729,6 +1760,8 @@ export type Mutation = {
    */
   deleteConsent: Consent;
   deleteCrowdfunding?: Maybe<Scalars['Boolean']>;
+  /** Deletes an existing document. */
+  deleteDocument: Scalars['String'];
   /** Deletes an existing event. */
   deleteEvent: Event;
   /** Deletes an external app. */
@@ -1859,6 +1892,8 @@ export type Mutation = {
   updateCrowdfunding: Crowdfunding;
   /** Updates the current logged in user. */
   updateCurrentUser: SensitiveDataUser;
+  /** Updates an existing document. */
+  updateDocument: Document;
   /** Updates an existing event. */
   updateEvent: Event;
   /** Updates an existing external app. */
@@ -1921,6 +1956,8 @@ export type Mutation = {
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
   upgradeUserSubscription: Payment;
+  /** Uploads a new document. */
+  uploadDocument: Document;
   /** Uploads a new image. */
   uploadImage: Image;
   /** This mutation allows to upload and update the user's profile image. */
@@ -2347,6 +2384,11 @@ export type MutationDeleteCrowdfundingArgs = {
 };
 
 
+export type MutationDeleteDocumentArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteEventArgs = {
   id: Scalars['String'];
 };
@@ -2722,6 +2764,13 @@ export type MutationUpdateCurrentUserArgs = {
 };
 
 
+export type MutationUpdateDocumentArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  title?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationUpdateEventArgs = {
   description?: InputMaybe<Scalars['RichText']>;
   endsAt?: InputMaybe<Scalars['DateTime']>;
@@ -3061,6 +3110,14 @@ export type MutationUpgradeUserSubscriptionArgs = {
 };
 
 
+export type MutationUploadDocumentArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  file: Scalars['Upload'];
+  filename?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationUploadImageArgs = {
   description?: InputMaybe<Scalars['String']>;
   file: Scalars['Upload'];
@@ -3258,6 +3315,13 @@ export type PaginatedAuthors = {
 export type PaginatedComments = {
   __typename?: 'PaginatedComments';
   nodes: Array<Comment>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedDocuments = {
+  __typename?: 'PaginatedDocuments';
+  nodes: Array<Document>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -3933,6 +3997,12 @@ export type Query = {
    *
    */
   dailySubscriptionStats: Array<DailySubscriptionStats>;
+  /** Returns a document by id. */
+  document: Document;
+  /** Returns the current document storage usage and limit. */
+  documentStorageUsage: DocumentStorageUsage;
+  /** Returns a paginated list of documents based on the filters given. */
+  documents: PaginatedDocuments;
   /** Returns an event by id. */
   event: Event;
   /**
@@ -4263,6 +4333,21 @@ export type QueryDailySubscriptionStatsArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
   start: Scalars['DateTime'];
+};
+
+
+export type QueryDocumentArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryDocumentsArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<DocumentFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<DocumentSort>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 

@@ -707,7 +707,11 @@
         "noDescription": "No Description",
         "openLink": "Open",
         "preview": "Preview",
+        "storageFull": "Storage limit reached",
+        "storageUsage": "{{used}} / {{limit}} used ({{count}} files)",
+        "storageWarning": "Storage almost full",
         "title": "Title",
+        "unlimited": "Unlimited",
         "untitled": "Untitled",
         "uploadDocument": "Upload Document"
       },

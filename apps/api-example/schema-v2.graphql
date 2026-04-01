@@ -842,6 +842,12 @@ enum DocumentSort {
   ModifiedAt
 }
 
+type DocumentStorageUsage {
+  documentCount: Int!
+  limitBytes: Float!
+  usedBytes: Float!
+}
+
 enum EditorBlockType {
   Comment
   Crowdfunding
@@ -2805,6 +2811,9 @@ type Query {
 
   """Returns a document by id."""
   document(id: String!): Document!
+
+  """Returns the current document storage usage and limit."""
+  documentStorageUsage: DocumentStorageUsage!
 
   """Returns a paginated list of documents based on the filters given."""
   documents(cursorId: String, filter: DocumentFilter, order: SortOrder = Descending, skip: Int = 0, sort: DocumentSort = ModifiedAt, take: Int = 10): PaginatedDocuments!

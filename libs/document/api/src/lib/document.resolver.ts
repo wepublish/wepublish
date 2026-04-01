@@ -9,6 +9,7 @@ import {
 import {
   Document,
   DocumentListArgs,
+  DocumentStorageUsage,
   PaginatedDocuments,
   UpdateDocumentInput,
   UploadDocumentInput,
@@ -23,12 +24,14 @@ import {
   CanGetDocuments,
 } from '@wepublish/permissions';
 import { DocumentService } from './document.service';
+import { DocumentUploadService } from './document-upload.service';
 import { PrismaClient } from '@prisma/client';
 
 @Resolver(() => Document)
 export class DocumentResolver {
   constructor(
     private service: DocumentService,
+    private uploadService: DocumentUploadService,
     private mediaAdapter: MediaAdapter,
     private prisma: PrismaClient
   ) {}
@@ -51,6 +54,14 @@ export class DocumentResolver {
     }
 
     return document;
+  }
+
+  @Permissions(CanGetDocuments)
+  @Query(() => DocumentStorageUsage, {
+    description: `Returns the current document storage usage and limit.`,
+  })
+  public documentStorageUsage() {
+    return this.uploadService.getStorageUsage();
   }
 
   @Permissions(CanCreateDocument)
