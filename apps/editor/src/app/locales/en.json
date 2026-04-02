@@ -707,7 +707,11 @@
         "noDescription": "No Description",
         "openLink": "Open",
         "preview": "Preview",
+        "storageFull": "Storage limit reached",
+        "storageUsage": "{{used}} / {{limit}} used ({{count}} files)",
+        "storageWarning": "Storage almost full",
         "title": "Title",
+        "unlimited": "Unlimited",
         "untitled": "Untitled",
         "uploadDocument": "Upload Document"
       },
@@ -720,12 +724,14 @@
         "deleteDocument": "Delete document?",
         "description": "Description",
         "documentUpdated": "Document Updated",
-        "dropDocument": "Drop PDF file here or click to select",
+        "dropDocument": "Drop file here or click to select",
         "editDocument": "Edit Document",
         "fileSize": "File size",
+        "fileTooLarge": "File is too large. Maximum size is {{maxSize}} MB.",
         "filename": "Filename",
         "information": "Information",
-        "invalidDocument": "Only PDF files are supported",
+        "maxFileSize": "Maximum file size: {{maxSize}} MB",
+        "invalidDocument": "Unsupported file type. Supported: PDF, Word, Excel, PowerPoint, OpenDocument, CSV, TXT, ZIP",
         "linkCopied": "Link copied to clipboard",
         "notFound": "Document not found!",
         "publicLink": "Public Link",
@@ -734,7 +740,8 @@
         "updated": "Updated",
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Upload",
-        "uploadDocument": "Upload Document"
+        "uploadDocument": "Upload Document",
+        "uploadFailed": "Upload failed. Please try again."
       }
     },
     "images": {

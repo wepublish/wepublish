@@ -649,7 +649,11 @@
         "noDescription": "Pas de description",
         "openLink": "Ouvrir",
         "preview": "Aperçu",
+        "storageFull": "Limite de stockage atteinte",
+        "storageUsage": "{{used}} / {{limit}} utilisés ({{count}} fichiers)",
+        "storageWarning": "Stockage presque plein",
         "title": "Titre",
+        "unlimited": "Illimité",
         "untitled": "Sans titre",
         "uploadDocument": "Télécharger un document"
       },
@@ -662,12 +666,14 @@
         "deleteDocument": "Supprimer le document ?",
         "description": "Description",
         "documentUpdated": "Document mis à jour",
-        "dropDocument": "Déposez un fichier PDF ici ou cliquez pour sélectionner",
+        "dropDocument": "Déposez un fichier ici ou cliquez pour sélectionner",
         "editDocument": "Modifier le document",
         "fileSize": "Taille du fichier",
+        "fileTooLarge": "Le fichier est trop volumineux. Taille maximale : {{maxSize}} Mo.",
         "filename": "Nom du fichier",
         "information": "Informations",
-        "invalidDocument": "Seuls les fichiers PDF sont pris en charge",
+        "maxFileSize": "Taille maximale du fichier : {{maxSize}} Mo",
+        "invalidDocument": "Type de fichier non pris en charge. Formats acceptés : PDF, Word, Excel, PowerPoint, OpenDocument, CSV, TXT, ZIP",
         "linkCopied": "Lien copié dans le presse-papiers",
         "notFound": "Document introuvable !",
         "publicLink": "Lien public",
@@ -676,7 +682,8 @@
         "updated": "Mis à jour",
         "updatedAt": "{{updatedAt, ccc PP p}}",
         "upload": "Télécharger",
-        "uploadDocument": "Télécharger un document"
+        "uploadDocument": "Télécharger un document",
+        "uploadFailed": "Le téléchargement a échoué. Veuillez réessayer."
       }
     },
     "images": {

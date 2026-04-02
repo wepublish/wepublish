@@ -9,12 +9,13 @@ import {
 import {
   Document,
   DocumentListArgs,
+  DocumentStorageUsage,
   PaginatedDocuments,
   UpdateDocumentInput,
   UploadDocumentInput,
 } from './document.model';
 import { MediaAdapter } from '@wepublish/image/api';
-import { NotFoundException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Permissions } from '@wepublish/permissions/api';
 import {
   CanCreateDocument,
@@ -23,12 +24,14 @@ import {
   CanGetDocuments,
 } from '@wepublish/permissions';
 import { DocumentService } from './document.service';
+import { DocumentUploadService } from './document-upload.service';
 import { PrismaClient } from '@prisma/client';
 
 @Resolver(() => Document)
 export class DocumentResolver {
   constructor(
     private service: DocumentService,
+    private uploadService: DocumentUploadService,
     private mediaAdapter: MediaAdapter,
     private prisma: PrismaClient
   ) {}
@@ -53,9 +56,20 @@ export class DocumentResolver {
     return document;
   }
 
+  @Permissions(CanGetDocuments)
+  @Query(() => DocumentStorageUsage, {
+    description: `Returns the current document storage usage and limit.`,
+  })
+  public documentStorageUsage() {
+    return this.uploadService.getStorageUsage();
+  }
+
   @Permissions(CanCreateDocument)
   @Mutation(returns => Document, { description: `Uploads a new document.` })
   public uploadDocument(@Args() document: UploadDocumentInput) {
+    if (process.env['DISABLE_DOCUMENT_UPLOAD'] === 'true') {
+      throw new ForbiddenException('Document upload has been disabled.');
+    }
     return this.service.createDocument(document);
   }
 

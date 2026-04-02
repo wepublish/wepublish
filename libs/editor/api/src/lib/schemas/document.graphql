@@ -16,6 +16,14 @@ fragment FullDocument on Document {
   thumbnailURL
 }
 
+query DocumentStorageUsage {
+  documentStorageUsage {
+    usedBytes
+    limitBytes
+    documentCount
+  }
+}
+
 query DocumentList(
   $filter: String
   $cursorId: String
