@@ -4,6 +4,7 @@
       "deployment": true,
       "env": {
         "DEPLOY_ENV": "production",
+        "custom_domain": "https://fazetten.ch",
         "GA_ID": "G-0RQL04JWXX"
       },
       "secret_env": []
