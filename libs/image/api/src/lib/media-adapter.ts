@@ -10,6 +10,14 @@ export interface ArrayBufferUpload {
   arrayBuffer: ArrayBuffer;
 }
 
+export type UploadDocument = {
+  id: string;
+  filename: string;
+  fileSize: number;
+  mimeType: string;
+  extension: string;
+};
+
 @Injectable()
 export abstract class MediaAdapter {
   abstract uploadImage(fileUpload: Promise<FileUpload>): Promise<UploadImage>;
@@ -24,4 +32,14 @@ export abstract class MediaAdapter {
     image: ImageWithFocalPoint,
     transformation?: ImageTransformation | undefined
   ): Promise<string>;
+
+  abstract uploadDocument(
+    fileUpload: Promise<FileUpload>
+  ): Promise<UploadDocument>;
+
+  abstract deleteDocument(id: string): Promise<boolean>;
+
+  abstract getDocumentURL(document: { id: string }): Promise<string>;
+
+  abstract getDocumentThumbnailURL(document: { id: string }): Promise<string>;
 }

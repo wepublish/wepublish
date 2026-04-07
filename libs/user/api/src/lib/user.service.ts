@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { differenceInMinutes } from 'date-fns';
 import { Prisma, PrismaClient, UserEvent } from '@prisma/client';
 import { hash as argon2Hash } from '@node-rs/argon2';
 import { Validator } from '@wepublish/user';
@@ -241,6 +246,93 @@ export class UserService {
     }
 
     return user;
+  }
+
+  private static readonly EMAIL_CHANGE_EXPIRY_MINUTES = 60;
+
+  @PrimeDataLoader(UserDataloaderService)
+  async requestEmailChange(userId: string, newEmail: string) {
+    newEmail = newEmail.toLowerCase();
+    await Validator.login.parse({ email: newEmail });
+
+    const existing = await this.prisma.user.findFirst({
+      where: {
+        email: { equals: newEmail, mode: 'insensitive' },
+      },
+    });
+
+    if (existing) {
+      throw new BadRequestException('Email is already in use.');
+    }
+
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        pendingEmail: newEmail,
+        pendingEmailAt: new Date(),
+      },
+      select: unselectPassword,
+    });
+
+    const externalMailTemplateId = await this.mailContext.getUserTemplateName(
+      UserEvent.EMAIL_CHANGE,
+      false
+    );
+
+    await this.mailContext.sendMail({
+      externalMailTemplateId,
+      recipient: user,
+      optionalData: { newEmail },
+      mailType: mailLogType.UserFlow,
+    });
+
+    return user;
+  }
+
+  @PrimeDataLoader(UserDataloaderService)
+  async confirmEmailChange(userId: string, newEmail: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: unselectPassword,
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found.');
+    }
+
+    if (!user.pendingEmail || !user.pendingEmailAt) {
+      throw new BadRequestException('No pending email change.');
+    }
+
+    if (user.pendingEmail.toLowerCase() !== newEmail.toLowerCase()) {
+      throw new BadRequestException(
+        'Email address does not match the pending email change.'
+      );
+    }
+
+    const minutesElapsed = differenceInMinutes(new Date(), user.pendingEmailAt);
+
+    if (minutesElapsed > UserService.EMAIL_CHANGE_EXPIRY_MINUTES) {
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: { pendingEmail: null, pendingEmailAt: null },
+      });
+
+      throw new BadRequestException(
+        'Email change request has expired. Please request a new change.'
+      );
+    }
+
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        email: user.pendingEmail,
+        emailVerifiedAt: new Date(),
+        pendingEmail: null,
+        pendingEmailAt: null,
+      },
+      select: unselectPassword,
+    });
   }
 }
 

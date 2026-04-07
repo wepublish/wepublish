@@ -16,7 +16,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useMemo, useReducer, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
@@ -81,8 +81,6 @@ const buttonStyles = css`
   justify-self: flex-end;
 `;
 
-const RequestEmail = styled('div')``;
-
 const requiredSchema = requiredRegisterSchema.omit({
   challengeAnswer: true,
   email: true,
@@ -111,18 +109,10 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
   schema = defaultSchema,
   onUpdate,
   onImageUpload,
-  mediaEmail,
+  onRequestEmailChange,
 }: BuilderPersonalDataFormProps<T>) {
   const {
-    elements: {
-      TextField,
-      Alert,
-      Button,
-      Paragraph,
-      ImageUpload,
-      Link,
-      IconButton,
-    },
+    elements: { TextField, Alert, Button, Paragraph, ImageUpload, IconButton },
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const theme = useTheme();
@@ -134,6 +124,15 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
   const [showRepeatPassword, toggleRepeatPassword] = useReducer(
     state => !state,
     false
+  );
+  const [showEmailChange, setShowEmailChange] = useState(false);
+  const [emailChangeLoading, setEmailChangeLoading] = useState(false);
+  const [emailChangeSuccess, setEmailChangeSuccess] = useState(false);
+  const [emailChangeError, setEmailChangeError] = useState<Error>();
+  const callEmailChangeAction = useAsyncAction(
+    setEmailChangeLoading,
+    setEmailChangeError,
+    setEmailChangeSuccess
   );
 
   const fieldsToDisplay = useMemo(
@@ -161,7 +160,9 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
     [fieldsToDisplay, schema]
   );
 
-  const { handleSubmit, control } = useForm<PersonalDataFormFields>({
+  const { handleSubmit, control, setValue } = useForm<
+    PersonalDataFormFields & { newEmail?: string }
+  >({
     resolver: zodResolver(validationSchema),
     defaultValues: {
       address: {
@@ -171,7 +172,6 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
         streetAddressNumber: user.address?.streetAddressNumber || '',
         zipCode: user.address?.zipCode || '',
       },
-      email: user.email,
       firstName: user.firstName || '',
       name: user.name,
       flair: user.flair || '',
@@ -182,6 +182,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
   });
 
   const onSubmit = handleSubmit(data => onUpdate && callAction(onUpdate)(data));
+  const newEmail = useWatch({ control, name: 'newEmail' });
 
   const userformFields = fields.filter(field => {
     const blacklist = [
@@ -294,30 +295,63 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
         )}
 
         <PersonalDataEmailWrapper>
-          <Controller
-            name={'email'}
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                type={'email'}
-                fullWidth
-                disabled
-                label={'Email (nicht bearbeitbar)'}
-                error={!!error}
-                helperText={error?.message}
-              />
-            )}
+          <TextField
+            value={user.email}
+            type={'email'}
+            fullWidth
+            disabled
+            label={t('user.email')}
           />
 
-          {mediaEmail && (
-            <RequestEmail>
-              <Link
-                href={`mailto:${mediaEmail}?subject=Email Änderung&body=Guten Tag, %0D%0A. Ich würde gerne meine Email von ${user.email} zu  >>Neue Email hier einfügen<< %0D%0A Liebe Grüsse`}
+          {user.pendingEmail && !emailChangeSuccess && (
+            <Alert severity="info">
+              {t('user.pendingEmailChange', { email: user.pendingEmail })}
+            </Alert>
+          )}
+
+          {emailChangeSuccess && (
+            <Alert severity="success">{t('user.emailChangeRequested')}</Alert>
+          )}
+
+          {emailChangeError && (
+            <Alert severity="error">{emailChangeError.message}</Alert>
+          )}
+
+          {!showEmailChange && !emailChangeSuccess && onRequestEmailChange && (
+            <Button
+              type="button"
+              onClick={() => setShowEmailChange(true)}
+            >
+              {t('user.changeEmail')}
+            </Button>
+          )}
+
+          {showEmailChange && (
+            <>
+              <Controller
+                name="newEmail"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    type="email"
+                    fullWidth
+                    label={t('user.newEmail')}
+                  />
+                )}
+              />
+              <Button
+                type="button"
+                disabled={!newEmail || emailChangeLoading}
+                onClick={callEmailChangeAction(async () => {
+                  await onRequestEmailChange!(newEmail!);
+                  setShowEmailChange(false);
+                  setValue('newEmail', '');
+                })}
               >
-                {t('user.changeEmailRequest')}
-              </Link>
-            </RequestEmail>
+                {t('user.requestEmailChange')}
+              </Button>
+            </>
           )}
         </PersonalDataEmailWrapper>
       </PersonalDataInputForm>

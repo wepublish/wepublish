@@ -1,16 +1,22 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import sharp from 'sharp';
 import { StorageClient } from '../storage-client/storage-client.service';
 import { TransformGuard } from './transform.guard';
 import { createHash } from 'crypto';
+import { execFile } from 'child_process';
+import { promisify } from 'util';
 import { Readable } from 'stream';
 import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
+
+const execFileAsync = promisify(execFile);
 import {
   removeSignatureFromTransformations,
   getTransformationKey,
   TransformationsDto,
 } from '@wepublish/media-transform-guard';
+import { JwksClientService } from '../authentication/jwks-client.service';
 
 export const MEDIA_SERVICE_MODULE_OPTIONS = Symbol(
   'MEDIA_SERVICE_MODULE_OPTIONS'
@@ -61,7 +67,8 @@ export type ImageURIObject = {
 export class MediaService {
   constructor(
     @Inject(MEDIA_SERVICE_MODULE_OPTIONS) private config: MediaServiceConfig,
-    private storage: StorageClient
+    private storage: StorageClient,
+    private jwksClient: JwksClientService
   ) {}
 
   public generateETag(buffer: Buffer): string {
@@ -121,6 +128,11 @@ export class MediaService {
     return fs.createReadStream(defaultImagePath);
   }
 
+  private hasTransformations(t: TransformationsDto): boolean {
+    const { sig, ...rest } = t;
+    return Object.keys(rest).length > 0;
+  }
+
   private async transformImage(
     imageId: string,
     transformations: TransformationsDto
@@ -160,7 +172,17 @@ export class MediaService {
     }
 
     const transformGuard = new TransformGuard();
-    transformGuard.validateSignature(imageId, originalTransformations);
+
+    // Validate signature when transformations are requested.
+    // Raw image requests without any parameters skip signature validation.
+    if (this.hasTransformations(originalTransformations)) {
+      const publicKey = await this.jwksClient.getPublicKey();
+      await transformGuard.validateSignature(
+        publicKey,
+        imageId,
+        originalTransformations
+      );
+    }
 
     const sharpInstance = imageStream.pipe(
       sharp({
@@ -289,5 +311,233 @@ export class MediaService {
       this.config.uploadBucket,
       `images/${imageId}`
     );
+  }
+
+  public async saveDocument(
+    documentId: string,
+    document: Buffer,
+    mimeType: string,
+    originalFilename: string
+  ) {
+    const objectKey = `documents/${documentId}/${originalFilename}`;
+    await this.storage.saveFile(
+      this.config.uploadBucket,
+      objectKey,
+      document,
+      document.length,
+      { ContentType: mimeType }
+    );
+    return { size: document.length };
+  }
+
+  public async getDocumentUri(documentId: string): Promise<ImageURIObject> {
+    // List files under documents/{documentId}/ to find the stored file with its original name
+    const files = await this.storage.listFiles(
+      this.config.uploadBucket,
+      `documents/${documentId}/`,
+      false
+    );
+    const uploadedFile = files[0];
+    if (!uploadedFile?.name) {
+      return { uri: `documents/${documentId}`, exists: false };
+    }
+
+    const objectUri = uploadedFile.name;
+
+    // Check if already copied to transformation bucket
+    if (
+      await this.storage.hasFile(this.config.transformationBucket, objectUri)
+    ) {
+      return { uri: objectUri, exists: true };
+    }
+
+    // Copy from upload bucket to transformation bucket on first request
+    try {
+      const stream = await this.storage.getFile(
+        this.config.uploadBucket,
+        objectUri
+      );
+
+      const chunks: Buffer[] = [];
+      for await (const chunk of stream) {
+        chunks.push(Buffer.from(chunk));
+      }
+      const buffer = Buffer.concat(chunks);
+
+      await this.storage.saveFile(
+        this.config.transformationBucket,
+        objectUri,
+        buffer,
+        buffer.length,
+        { ContentType: 'application/pdf' }
+      );
+
+      return { uri: objectUri, exists: true };
+    } catch (e: any) {
+      if (e.code === 'NoSuchKey') {
+        return { uri: objectUri, exists: false };
+      }
+      throw e;
+    }
+  }
+
+  public async hasDocument(documentId: string): Promise<boolean> {
+    const files = await this.storage.listFiles(
+      this.config.uploadBucket,
+      `documents/${documentId}/`,
+      false
+    );
+    return files.length > 0;
+  }
+
+  public async deleteDocument(documentId: string) {
+    // Delete all files under documents/{documentId}/ from both buckets
+    const transformFiles = await this.storage.listFiles(
+      this.config.transformationBucket,
+      `documents/${documentId}/`,
+      true
+    );
+    if (transformFiles.length) {
+      await this.storage.deleteFiles(
+        this.config.transformationBucket,
+        transformFiles.map(f => f.name || '')
+      );
+    }
+
+    const uploadFiles = await this.storage.listFiles(
+      this.config.uploadBucket,
+      `documents/${documentId}/`,
+      true
+    );
+    if (uploadFiles.length) {
+      await this.storage.deleteFiles(
+        this.config.uploadBucket,
+        uploadFiles.map(f => f.name || '')
+      );
+    }
+  }
+
+  private readonly thumbnailLogger = new Logger('DocumentThumbnail');
+
+  public async getDocumentThumbnailUri(
+    documentId: string
+  ): Promise<ImageURIObject> {
+    const thumbnailUri = `documents/${documentId}/thumbnail`;
+    // Use a hashed ID for temp filenames to prevent path traversal
+    const safeId = createHash('sha256')
+      .update(documentId, 'utf8')
+      .digest('hex');
+
+    // Return cached thumbnail if it exists
+    if (
+      await this.storage.hasFile(this.config.transformationBucket, thumbnailUri)
+    ) {
+      return { uri: thumbnailUri, exists: true };
+    }
+
+    // Find the original PDF from upload bucket
+    const files = await this.storage.listFiles(
+      this.config.uploadBucket,
+      `documents/${documentId}/`,
+      false
+    );
+    const uploadedFile = files.find(
+      f => f.name && !f.name.endsWith('/thumbnail')
+    );
+    if (!uploadedFile?.name) {
+      return { uri: thumbnailUri, exists: false };
+    }
+
+    let pdfStream: Readable;
+    try {
+      pdfStream = await this.storage.getFile(
+        this.config.uploadBucket,
+        uploadedFile.name
+      );
+    } catch (e: any) {
+      if (e.code === 'NoSuchKey') {
+        return { uri: thumbnailUri, exists: false };
+      }
+      throw e;
+    }
+
+    // Buffer the PDF
+    const chunks: Buffer[] = [];
+    for await (const chunk of pdfStream) {
+      chunks.push(Buffer.from(chunk));
+    }
+    const pdfBuffer = Buffer.concat(chunks);
+
+    // Create a secure temp directory for this operation
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'media-thumb-'));
+    const tmpPdf = path.join(tmpDir, 'input.pdf');
+    const tmpOutPrefix = path.join(tmpDir, 'thumb');
+
+    const cleanup = () => {
+      try {
+        const thumbPath = path.join(tmpDir, 'thumb-1.png');
+        const altPath = path.join(tmpDir, 'thumb-01.png');
+        if (fs.existsSync(tmpPdf)) fs.unlinkSync(tmpPdf);
+        if (fs.existsSync(thumbPath)) fs.unlinkSync(thumbPath);
+        if (fs.existsSync(altPath)) fs.unlinkSync(altPath);
+        fs.rmdirSync(tmpDir);
+      } catch {
+        // ignore cleanup errors
+      }
+    };
+
+    try {
+      fs.writeFileSync(tmpPdf, pdfBuffer);
+
+      // Generate thumbnail of first page using pdftoppm
+      await execFileAsync('pdftoppm', [
+        '-png',
+        '-f',
+        '1',
+        '-l',
+        '1',
+        '-scale-to',
+        '600',
+        tmpPdf,
+        tmpOutPrefix,
+      ]);
+
+      // pdftoppm outputs: {prefix}-{pagenum}.png
+      const thumbPath = `${tmpOutPrefix}-1.png`;
+      if (!fs.existsSync(thumbPath)) {
+        const altPath = `${tmpOutPrefix}-01.png`;
+        if (!fs.existsSync(altPath)) {
+          this.thumbnailLogger.warn(
+            `Thumbnail generation produced no output for document ${documentId}`
+          );
+          cleanup();
+          return { uri: thumbnailUri, exists: false };
+        }
+        fs.renameSync(altPath, thumbPath);
+      }
+
+      // Convert to WebP using sharp for smaller size
+      const thumbnailBuffer = await sharp(thumbPath)
+        .webp({ quality: 80 })
+        .toBuffer();
+
+      // Store thumbnail in transformation bucket
+      await this.storage.saveFile(
+        this.config.transformationBucket,
+        thumbnailUri,
+        thumbnailBuffer,
+        thumbnailBuffer.length,
+        { ContentType: 'image/webp' }
+      );
+
+      cleanup();
+      return { uri: thumbnailUri, exists: true };
+    } catch (err) {
+      cleanup();
+      this.thumbnailLogger.warn(
+        `Thumbnail generation failed for document ${documentId}: ${(err as Error).message}`
+      );
+      return { uri: thumbnailUri, exists: false };
+    }
   }
 }

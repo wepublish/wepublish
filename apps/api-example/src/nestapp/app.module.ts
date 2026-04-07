@@ -1,5 +1,6 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Global, Module } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -10,6 +11,7 @@ import {
   MailProviderType,
   PaymentProviderType,
 } from '@prisma/client';
+import { SentryModule, SentryGlobalFilter } from '@sentry/nestjs/setup';
 import { ActionModule } from '@wepublish/action/api';
 import { NovaMediaAdapter } from '@wepublish/api';
 import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
@@ -19,6 +21,7 @@ import { BlockContentModule } from '@wepublish/block-content/api';
 import { CommentModule } from '@wepublish/comments/api';
 import { ConsentModule } from '@wepublish/consent/api';
 import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
+import { DocumentModule } from '@wepublish/document/api';
 import { EventModule } from '@wepublish/event/api';
 import {
   AgendaBaselService,
@@ -76,6 +79,7 @@ import { PollModule } from '@wepublish/poll/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { SettingModule } from '@wepublish/settings/api';
 import { StatsModule } from '@wepublish/stats/api';
+import { ExternalAppsModule } from '@wepublish/external-apps/api';
 import { SystemInfoModule } from '@wepublish/system-info';
 import { TagModule } from '@wepublish/tag/api';
 import {
@@ -103,6 +107,7 @@ import {
 @Global()
 @Module({
   imports: [
+    SentryModule.forRoot(),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
       imports: [ConfigModule],
@@ -434,8 +439,10 @@ import {
     }),
     PermissionModule,
     ConsentModule,
+    DocumentModule,
     StatsModule,
     SettingModule,
+    ExternalAppsModule,
     EventModule,
     PageModule,
     PeerModule.registerAsync({
@@ -539,11 +546,14 @@ import {
           config.getOrThrow('CONFIG_FILE_PATH')
         );
         const internalUrl = config.get('MEDIA_SERVER_INTERNAL_URL');
-        const token = config.getOrThrow('MEDIA_SERVER_TOKEN');
+        const jwtPrivateKey = config
+          .getOrThrow<string>('JWT_PRIVATE_KEY')
+          .replace(/\\n/g, '\n');
 
         return new NovaMediaAdapter(
           config.getOrThrow('MEDIA_SERVER_URL'),
-          token,
+          jwtPrivateKey,
+          config.getOrThrow('HOST_URL'),
           { quality: configFile.mediaServer.quality ?? 0.8 },
           internalUrl ? internalUrl : undefined
         );
@@ -554,6 +564,10 @@ import {
   ],
   exports: ['SYSTEM_INFO_KEY'],
   providers: [
+    {
+      provide: APP_FILTER,
+      useClass: SentryGlobalFilter,
+    },
     {
       provide: 'SYSTEM_INFO_KEY',
       useFactory: (config: ConfigService) => {
