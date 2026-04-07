@@ -2,9 +2,9 @@
   "website": {
     "production": {
       "deployment": true,
+      "custom_domain": "https://fazetten.ch",
       "env": {
         "DEPLOY_ENV": "production",
-        "custom_domain": "https://fazetten.ch",
         "GA_ID": "G-0RQL04JWXX"
       },
       "secret_env": []
