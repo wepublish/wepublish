@@ -25,7 +25,7 @@ const dailyStatsCache = new NodeCache({
   checkperiod: ONE_MIN_IN_SEC,
   deleteOnExpire: true,
   useClones: false,
-  maxKeys: 1000,
+  maxKeys: 3000,
 });
 
 @Injectable()
