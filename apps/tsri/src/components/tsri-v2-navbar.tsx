@@ -879,7 +879,9 @@ export const TsriV2Navbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
           case PageType.EventList:
             return 'Unsere Events';
           case PageType.Profile:
-            return 'Verwalte dein Konto, deine Abos und Rechnungen';
+            return pageTypeBasedProps.expiredJwt ? 'Link abgelaufen' : (
+                'Verwalte dein Konto, deine Abos und Rechnungen'
+              );
           case PageType.Login:
             return 'Melde dich in deinem Konto an';
         }

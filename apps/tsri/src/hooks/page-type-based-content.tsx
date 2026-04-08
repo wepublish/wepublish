@@ -24,6 +24,7 @@ export type PageTypeBasedProps = {
     totalCount: number;
   };
   pageType: PageType;
+  expiredJwt?: boolean;
 };
 
 export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
@@ -128,7 +129,7 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
       };
     }
 
-    switch (router.asPath.split('/')[1]) {
+    switch (router.asPath.split('?')[0].split('/')[1]) {
       case 'login':
         return {
           pageType: PageType.Login,
@@ -136,6 +137,7 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
       case 'profile':
         return {
           pageType: PageType.Profile,
+          expiredJwt: !!router.query.jwt,
         };
       case 'author':
         return {
@@ -174,6 +176,7 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
     phraseQuery,
     searchData,
     searchLoading,
+    router.query.jwt,
   ]);
 
   return pageTypeBasedProps;

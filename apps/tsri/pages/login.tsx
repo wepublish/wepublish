@@ -80,27 +80,33 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
 
   if (ctx.query.jwt) {
-    const data = await client.mutate({
-      mutation: LoginWithJwtDocument,
-      variables: {
-        jwt: ctx.query.jwt,
-      },
-    });
+    try {
+      const data = await client.mutate({
+        mutation: LoginWithJwtDocument,
+        variables: {
+          jwt: ctx.query.jwt,
+        },
+      });
 
-    setCookie(
-      AuthTokenStorageKey,
-      JSON.stringify(
-        data.data.createSessionWithJWT as SessionWithTokenWithoutUser
-      ),
-      {
-        req: ctx.req,
-        res: ctx.res,
-        expires: new Date(data.data.createSessionWithJWT.expiresAt),
-        sameSite: 'strict',
+      if (data.data?.createSessionWithJWT) {
+        setCookie(
+          AuthTokenStorageKey,
+          JSON.stringify(
+            data.data.createSessionWithJWT as SessionWithTokenWithoutUser
+          ),
+          {
+            req: ctx.req,
+            res: ctx.res,
+            expires: new Date(data.data.createSessionWithJWT.expiresAt),
+            sameSite: 'strict',
+          }
+        );
+
+        return await getSessionTokenProps(ctx);
       }
-    );
-
-    return await getSessionTokenProps(ctx);
+    } catch {
+      // JWT expired or invalid — fall through to show login form
+    }
   }
 
   return {};

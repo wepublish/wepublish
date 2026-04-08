@@ -17,13 +17,19 @@ export const withJwtHandler = <
 
     useEffect(() => {
       const handleJwt = (jwt: string) => {
-        loginWithJwt({ variables: { jwt } }).then(result => {
-          if (result?.data?.createSessionWithJWT) {
-            setToken(
-              result.data.createSessionWithJWT as SessionWithTokenWithoutUser
-            );
-          }
-        });
+        loginWithJwt({ variables: { jwt } })
+          .then(result => {
+            if (result?.data?.createSessionWithJWT) {
+              setToken(
+                result.data.createSessionWithJWT as SessionWithTokenWithoutUser
+              );
+            }
+          })
+          .catch(() => {
+            // Prevent unhandled promise rejection when the JWT is expired or
+            // invalid (e.g. on profile pages where getInitialProps already
+            // handles the JWT server-side and returns expiredJwt: true).
+          });
       };
 
       if (window.opener) {

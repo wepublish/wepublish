@@ -239,33 +239,51 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
   }
 
   const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+
+  // Without API_URL (e.g. local dev without a running API), skip network calls.
+  // If a jwt param is present, treat it as expired so the resend-link UI shows.
+  if (!publicRuntimeConfig.env.API_URL) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (ctx.query.jwt ? { expiredJwt: true } : {}) as any;
+  }
+
+  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
   ]);
 
   if (ctx.query.jwt) {
-    const data = await client.mutate({
-      mutation: LoginWithJwtDocument,
-      variables: {
-        jwt: ctx.query.jwt,
-      },
-    });
+    try {
+      const data = await client.mutate({
+        mutation: LoginWithJwtDocument,
+        variables: {
+          jwt: ctx.query.jwt,
+        },
+      });
 
-    setCookie(
-      AuthTokenStorageKey,
-      JSON.stringify(
-        data.data.createSessionWithJWT as SessionWithTokenWithoutUser
-      ),
-      {
-        req: ctx.req,
-        res: ctx.res,
-        expires: new Date(data.data.createSessionWithJWT.expiresAt),
-        sameSite: 'strict',
-        httpOnly: !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE,
+      if (!data.data?.createSessionWithJWT) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return { expiredJwt: true } as any;
       }
-    );
+
+      setCookie(
+        AuthTokenStorageKey,
+        JSON.stringify(
+          data.data.createSessionWithJWT as SessionWithTokenWithoutUser
+        ),
+        {
+          req: ctx.req,
+          res: ctx.res,
+          expires: new Date(data.data.createSessionWithJWT.expiresAt),
+          sameSite: 'strict',
+          httpOnly: !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE,
+        }
+      );
+    } catch {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return { expiredJwt: true } as any;
+    }
   }
 
   const sessionProps = await getSessionTokenProps(ctx);
