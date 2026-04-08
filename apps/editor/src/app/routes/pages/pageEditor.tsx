@@ -435,8 +435,12 @@ function PageEditor() {
                     size="lg"
                     icon={<MdRemoveRedEye />}
                     onClick={async () => {
-                      const previewWindow = window.open(
+                      const absolutePreviewUrl = new URL(
                         pageData!.page.previewUrl,
+                        'https://fazetten.ch'
+                      ).href;
+                      const previewWindow = window.open(
+                        absolutePreviewUrl,
                         '_blank'
                       );
                       if (!previewWindow) return;
@@ -445,10 +449,7 @@ function PageEditor() {
                       const token = jwtData?.createJWTForWebsiteLogin?.token;
                       if (!token) return;
 
-                      const targetOrigin = new URL(
-                        pageData!.page.previewUrl,
-                        window.location.origin
-                      ).origin;
+                      const targetOrigin = 'https://fazetten.ch';
 
                       const handleMessage = (event: MessageEvent) => {
                         if (
