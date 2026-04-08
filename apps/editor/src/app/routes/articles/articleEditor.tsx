@@ -658,7 +658,8 @@ function ArticleEditor() {
                       if (!token) return;
 
                       const targetOrigin = new URL(
-                        articleData!.article.previewUrl
+                        articleData!.article.previewUrl,
+                        window.location.origin
                       ).origin;
 
                       const handleMessage = (event: MessageEvent) => {

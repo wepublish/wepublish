@@ -445,8 +445,10 @@ function PageEditor() {
                       const token = jwtData?.createJWTForWebsiteLogin?.token;
                       if (!token) return;
 
-                      const targetOrigin = new URL(pageData!.page.previewUrl)
-                        .origin;
+                      const targetOrigin = new URL(
+                        pageData!.page.previewUrl,
+                        window.location.origin
+                      ).origin;
 
                       const handleMessage = (event: MessageEvent) => {
                         if (
