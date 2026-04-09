@@ -1,5 +1,4 @@
-import { EditorBlockType } from '@wepublish/editor/api';
-import { TeaserSlotType } from '@wepublish/editor/api';
+import { EditorBlockType, TeaserSlotType } from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 
 import {
@@ -81,8 +80,13 @@ const BLOCK_TYPE_KEY: Partial<Record<EditorBlockType, string>> = {
   [EditorBlockType.FlexBlock]: 'teaserOverview.blockTypes.flexBlock',
 };
 
-function blockLabel(type: EditorBlockType, blockIndex: number, t: TFunction): string {
-  const typeLabel = BLOCK_TYPE_KEY[type] ? t(BLOCK_TYPE_KEY[type]!) : String(type);
+function blockLabel(
+  type: EditorBlockType,
+  blockIndex: number,
+  t: TFunction
+): string {
+  const typeLabel =
+    BLOCK_TYPE_KEY[type] ? t(BLOCK_TYPE_KEY[type]!) : String(type);
   return `${typeLabel} · Block ${blockIndex + 1}`;
 }
 
@@ -92,7 +96,10 @@ function blockLabel(type: EditorBlockType, blockIndex: number, t: TFunction): st
  * Recursively walks all blocks and returns every non-null manual teaser with
  * its precise address, label, and grouping metadata.
  */
-export function extractTeasers(blocks: BlockValue[], t: TFunction): ExtractedTeaser[] {
+export function extractTeasers(
+  blocks: BlockValue[],
+  t: TFunction
+): ExtractedTeaser[] {
   const results: ExtractedTeaser[] = [];
   let groupIndex = 0;
 
@@ -200,23 +207,26 @@ export function extractTeasers(blocks: BlockValue[], t: TFunction): ExtractedTea
           // this teaser lives: "Flex Block 3 › Block 2 (Teaser Slots, "My Title")"
           const nestedBlockType = nestedBlock.type as EditorBlockType;
           const nestedTypeLabel =
-            BLOCK_TYPE_KEY[nestedBlockType] ? t(BLOCK_TYPE_KEY[nestedBlockType]!) : String(nestedBlockType);
+            BLOCK_TYPE_KEY[nestedBlockType] ?
+              t(BLOCK_TYPE_KEY[nestedBlockType]!)
+            : String(nestedBlockType);
           const nestedTitle =
             nestedBlockType === EditorBlockType.TeaserSlots ?
               ((nestedBlock.value as TeaserSlotsBlockValue).title ?? '')
             : '';
-          const nestedLabel = nestedTitle ?
-            t('teaserOverview.nestedLabelWithTitle', {
-              blockIndex: blockIndex + 1,
-              nestedIndex: nestedBlockIndex + 1,
-              type: nestedTypeLabel,
-              title: nestedTitle,
-            })
-          : t('teaserOverview.nestedLabel', {
-              blockIndex: blockIndex + 1,
-              nestedIndex: nestedBlockIndex + 1,
-              type: nestedTypeLabel,
-            });
+          const nestedLabel =
+            nestedTitle ?
+              t('teaserOverview.nestedLabelWithTitle', {
+                blockIndex: blockIndex + 1,
+                nestedIndex: nestedBlockIndex + 1,
+                type: nestedTypeLabel,
+                title: nestedTitle,
+              })
+            : t('teaserOverview.nestedLabel', {
+                blockIndex: blockIndex + 1,
+                nestedIndex: nestedBlockIndex + 1,
+                type: nestedTypeLabel,
+              });
 
           // Temporarily wrap the nested block in a single-item array so we can
           // reuse extractTeasers recursively, then remap the addresses.

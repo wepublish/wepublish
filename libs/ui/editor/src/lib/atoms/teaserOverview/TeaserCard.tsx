@@ -7,8 +7,8 @@ import {
   useTheme,
 } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
-import { MdImage } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
+import { MdImage } from 'react-icons/md';
 
 import { ExtractedTeaser } from './extractTeasers';
 
