@@ -1,8 +1,7 @@
 import { ApolloProvider } from '@apollo/client';
-import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import * as Sentry from '@sentry/react';
 import { getApiClientV2 } from '@wepublish/editor/api';
-import { theme as WePTheme } from '@wepublish/ui';
 import {
   AuthProvider,
   FacebookProvider,
@@ -14,6 +13,7 @@ import { IconContext } from 'react-icons';
 
 import { App } from './app/app';
 import { initI18N } from './app/i18n';
+import { theme } from './app/theme';
 import { ElementID } from './shared/elementID';
 
 Sentry.init({
@@ -27,16 +27,6 @@ Sentry.init({
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
 });
-
-// Just so we have the typings
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const NOOP = () => {
-  // The WeP theme right now does not fit the editor as it's red
-  // while the rest of the editor is blue
-  console.log(WePTheme);
-};
-
-const theme = createTheme();
 
 const onDOMContentLoaded = async () => {
   const client = getApiClientV2();

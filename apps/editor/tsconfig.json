@@ -7,7 +7,7 @@
     "strict": true,
     "jsxImportSource": "@emotion/react"
   },
-  "files": [],
+  "files": ["src/emotion.d.ts"],
   "include": [],
   "references": [
     {

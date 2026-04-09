@@ -22,6 +22,7 @@ import {
   PermissionControl,
   PublishPagePanel,
   StateColor,
+  TeaserOverviewPanel,
   useAuthorisation,
   useUnsavedChangesDialog,
 } from '@wepublish/ui/editor';
@@ -45,6 +46,22 @@ import {
   Tag as RTag,
   toaster,
 } from 'rsuite';
+
+const EditorContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+/**
+ * Aligns TeaserOverviewPanel with the PanelWrapper inside BlockList items.
+ * Left offset: RSuite icon button (36px) + LeftButtonsWrapper margin-right (10px) = 46px
+ * Right offset: BlockStyleIconWrapper margin-left (10px) + icon + label text ≈ 80px
+ */
+const TeaserOverviewWrapper = styled.div`
+  padding-left: 46px;
+  padding-right: 160px;
+`;
 
 const IconButtonMargins = styled(RIconButton)`
   margin-top: 4px;
@@ -470,12 +487,21 @@ function PageEditor() {
             />
           }
         >
-          <BlockList
-            value={blocks}
-            onChange={handleChange}
-            disabled={isDisabled || !isAuthorized}
-            blockMap={BlockMap}
-          />
+          <EditorContent>
+            <TeaserOverviewWrapper>
+              <TeaserOverviewPanel
+                blocks={blocks}
+                onChange={handleChange}
+              />
+            </TeaserOverviewWrapper>
+
+            <BlockList
+              value={blocks}
+              onChange={handleChange}
+              disabled={isDisabled || !isAuthorized}
+              blockMap={BlockMap}
+            />
+          </EditorContent>
         </EditorTemplate>
       </FieldSet>
 
