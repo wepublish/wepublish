@@ -203,18 +203,18 @@ export function TeaserOverviewPanel({
     [replaceAddress, blocks, onChange]
   );
 
-  const summary =
-    allTeasers.length === 0 ?
-      t('teaserOverview.summaryNone')
-    : t(
-        groups.length === 1 ?
-          'teaserOverview.summaryOne'
-        : 'teaserOverview.summaryMany',
-        {
-          count: allTeasers.length,
-          blocks: groups.length,
-        }
-      );
+  // Hide entirely when there are no curated teasers
+  if (allTeasers.length === 0) return null;
+
+  const summary = t(
+    groups.length === 1 ?
+      'teaserOverview.summaryOne'
+    : 'teaserOverview.summaryMany',
+    {
+      count: allTeasers.length,
+      blocks: groups.length,
+    }
+  );
 
   return (
     <>
