@@ -7,7 +7,6 @@ import {
   MdExpandLess,
   MdExpandMore,
   MdGridView,
-  MdSwapHoriz,
 } from 'react-icons/md';
 import { Drawer, IconButton } from 'rsuite';
 
@@ -104,6 +103,9 @@ const SelectionHint = styled('div', {
 
 const HintText = styled('span')`
   flex: 1;
+  ${({ theme }) => css`
+    color: ${theme.palette.primary.dark};
+  `}
 `;
 
 const HintActions = styled('div')`
@@ -245,13 +247,6 @@ export function TeaserOverviewPanel({
             <SelectionHint visible={!!selectedAddress}>
               <HintText>{t('teaserOverview.hintText')}</HintText>
               <HintActions>
-                <IconButton
-                  size="xs"
-                  appearance="subtle"
-                  icon={<MdSwapHoriz />}
-                  title={t('teaserOverview.swapButtonTitle')}
-                  disabled
-                />
                 <IconButton
                   size="xs"
                   appearance="primary"

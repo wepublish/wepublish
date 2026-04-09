@@ -15,15 +15,16 @@ import { ExtractedTeaser } from './extractTeasers';
 // ─── Colours ──────────────────────────────────────────────────────────────────
 
 export function groupColor(groupIndex: number, theme: Theme): string {
+  // Avoid primary (blue) shades — they clash with the selected-teaser highlight.
   const colors = [
-    theme.palette.primary.main,
     theme.palette.secondary.main,
     theme.palette.success.main,
     theme.palette.warning.main,
-    theme.palette.primary.dark,
+    theme.palette.info.dark,
     theme.palette.secondary.dark,
     theme.palette.success.dark,
     theme.palette.warning.dark,
+    theme.palette.error.main,
   ];
   return colors[groupIndex % colors.length];
 }
