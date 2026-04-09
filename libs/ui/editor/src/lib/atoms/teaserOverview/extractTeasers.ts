@@ -7,7 +7,6 @@ import {
   Teaser,
   TeaserGridBlockValue,
   TeaserGridFlexBlockValue,
-  TeaserListBlockValue,
   TeaserSlotsBlockValue,
 } from '../../blocks/types';
 
@@ -29,12 +28,6 @@ export type TeaserFlexAddress = {
   flexIndex: number;
 };
 
-export type TeaserListAddress = {
-  blockKind: 'teaserList';
-  blockIndex: number;
-  teaserIndex: number;
-};
-
 export type TeaserSlotsAddress = {
   blockKind: 'teaserSlots';
   blockIndex: number;
@@ -51,7 +44,6 @@ export type TeaserFlexNestedAddress = {
 export type TeaserAddress =
   | TeaserGridAddress
   | TeaserFlexAddress
-  | TeaserListAddress
   | TeaserSlotsAddress
   | TeaserFlexNestedAddress;
 
@@ -148,26 +140,7 @@ export function extractTeasers(
         break;
       }
 
-      case EditorBlockType.TeaserList: {
-        const value = block.value as TeaserListBlockValue;
-        const label = blockLabel(block.type, blockIndex, t);
-
-        // Only manual teasers — the query-driven auto-fill results are read-only
-        for (let i = 0; i < value.teasers.length; i++) {
-          const [, teaser] = value.teasers[i];
-          if (!teaser) continue;
-
-          results.push({
-            address: { blockKind: 'teaserList', blockIndex, teaserIndex: i },
-            teaser,
-            blockLabel: label,
-            groupIndex,
-            nestDepth: 0,
-          });
-        }
-        groupIndex++;
-        break;
-      }
+      // TeaserList blocks use automatic sorting only — skip them.
 
       case EditorBlockType.TeaserSlots: {
         const value = block.value as TeaserSlotsBlockValue;

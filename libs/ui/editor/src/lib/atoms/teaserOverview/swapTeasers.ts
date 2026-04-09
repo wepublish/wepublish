@@ -8,7 +8,6 @@ import {
   Teaser,
   TeaserGridBlockValue,
   TeaserGridFlexBlockValue,
-  TeaserListBlockValue,
   TeaserSlotsBlockValue,
 } from '../../blocks/types';
 import { TeaserAddress } from './extractTeasers';
@@ -42,14 +41,6 @@ export function getTeaserAt(
       return (block.value as TeaserGridFlexBlockValue).flexTeasers[
         address.flexIndex
       ].teaser;
-    }
-
-    case 'teaserList': {
-      const block = blocks[address.blockIndex];
-      if (block.type !== EditorBlockType.TeaserList) return null;
-      return (block.value as TeaserListBlockValue).teasers[
-        address.teaserIndex
-      ][1];
     }
 
     case 'teaserSlots': {
@@ -105,18 +96,6 @@ export function setTeaserAt(
             i === address.flexIndex ? { ...ft, teaser } : ft
         );
         return { ...block, value: { ...value, flexTeasers } } as BlockValue;
-      });
-    }
-
-    case 'teaserList': {
-      return replaceBlock(blocks, address.blockIndex, block => {
-        const value = block.value as TeaserListBlockValue;
-        const teasers = value.teasers.map((entry, i) =>
-          i === address.teaserIndex ?
-            ([entry[0], teaser] as [string, Teaser])
-          : entry
-        );
-        return { ...block, value: { ...value, teasers } } as BlockValue;
       });
     }
 

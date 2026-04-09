@@ -307,8 +307,6 @@ function addressesEqual(a: TeaserAddress, b: TeaserAddress | null): boolean {
       return b.blockKind === 'teaserGrid' && a.teaserIndex === b.teaserIndex;
     case 'teaserFlex':
       return b.blockKind === 'teaserFlex' && a.flexIndex === b.flexIndex;
-    case 'teaserList':
-      return b.blockKind === 'teaserList' && a.teaserIndex === b.teaserIndex;
     case 'teaserSlots':
       return b.blockKind === 'teaserSlots' && a.slotIndex === b.slotIndex;
     case 'flexNested':
