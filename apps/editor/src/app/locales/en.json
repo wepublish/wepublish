@@ -2018,7 +2018,8 @@
         "flexBlock": "Flex Block"
       },
       "nestedLabelWithTitle": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}}, \"{{title}}\")",
-      "nestedLabel": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}})"
+      "nestedLabel": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}})",
+      "duplicateBadge": "Duplicate: this teaser appears multiple times on the page"
     }
   }
 }

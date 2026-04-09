@@ -82,6 +82,16 @@ function blockLabel(
   return `${typeLabel} · Block ${blockIndex + 1}`;
 }
 
+// ─── Content key ─────────────────────────────────────────────────────────────
+
+/** Returns a stable key that identifies the underlying content of a teaser. */
+export function teaserContentKey(teaser: Teaser): string {
+  if ('article' in teaser) return `article:${teaser.article?.id}`;
+  if ('page' in teaser) return `page:${teaser.page?.id}`;
+  if ('event' in teaser) return `event:${teaser.event?.id}`;
+  return `custom:${teaser.contentUrl ?? ''}`;
+}
+
 // ─── Extraction ───────────────────────────────────────────────────────────────
 
 /**

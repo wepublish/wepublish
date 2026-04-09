@@ -16,6 +16,7 @@ import {
   ExtractedTeaser,
   extractTeasers,
   TeaserAddress,
+  teaserContentKey,
 } from './extractTeasers';
 import { setTeaserAt, swapTeasers } from './swapTeasers';
 import { TeaserBlockGroup } from './TeaserBlockGroup';
@@ -203,6 +204,20 @@ export function TeaserOverviewPanel({
     [replaceAddress, blocks, onChange]
   );
 
+  // Keys that appear more than once on the page
+  const duplicateKeys = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const { teaser } of allTeasers) {
+      const key = teaserContentKey(teaser);
+      counts.set(key, (counts.get(key) ?? 0) + 1);
+    }
+    const dupes = new Set<string>();
+    for (const [key, count] of counts) {
+      if (count > 1) dupes.add(key);
+    }
+    return dupes;
+  }, [allTeasers]);
+
   // Hide entirely when there are no curated teasers
   if (allTeasers.length === 0) return null;
 
@@ -271,6 +286,7 @@ export function TeaserOverviewPanel({
                 label={group.label}
                 groupIndex={group.groupIndex}
                 teasers={group.teasers}
+                duplicateKeys={duplicateKeys}
                 selectedAddress={selectedAddress}
                 onCardClick={handleCardClick}
               />

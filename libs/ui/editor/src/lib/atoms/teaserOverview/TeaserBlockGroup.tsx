@@ -1,7 +1,11 @@
 import styled from '@emotion/styled';
 import { css, Typography, useTheme } from '@mui/material';
 
-import { ExtractedTeaser, TeaserAddress } from './extractTeasers';
+import {
+  ExtractedTeaser,
+  TeaserAddress,
+  teaserContentKey,
+} from './extractTeasers';
 import { groupColor, TeaserCard } from './TeaserCard';
 
 // ─── Styled components ────────────────────────────────────────────────────────
@@ -53,6 +57,7 @@ type TeaserBlockGroupProps = {
   label: string;
   groupIndex: number;
   teasers: ExtractedTeaser[];
+  duplicateKeys: Set<string>;
   selectedAddress: TeaserAddress | null;
   onCardClick: (extracted: ExtractedTeaser) => void;
 };
@@ -63,6 +68,7 @@ export function TeaserBlockGroup({
   label,
   groupIndex,
   teasers,
+  duplicateKeys,
   selectedAddress,
   onCardClick,
 }: TeaserBlockGroupProps) {
@@ -88,6 +94,9 @@ export function TeaserBlockGroup({
               extracted={extracted}
               isSelected={isSelected}
               isTarget={isTarget}
+              isDuplicate={duplicateKeys.has(
+                teaserContentKey(extracted.teaser)
+              )}
               onClick={() => onCardClick(extracted)}
             />
           );

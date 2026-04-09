@@ -1840,7 +1840,8 @@
         "flexBlock": "Bloc flexible"
       },
       "nestedLabelWithTitle": "Flex Block {{blockIndex}} › Bloc {{nestedIndex}} ({{type}}, \"{{title}}\")",
-      "nestedLabel": "Flex Block {{blockIndex}} › Bloc {{nestedIndex}} ({{type}})"
+      "nestedLabel": "Flex Block {{blockIndex}} › Bloc {{nestedIndex}} ({{type}})",
+      "duplicateBadge": "Doublon : ce teaser apparaît plusieurs fois sur la page"
     }
   }
 }

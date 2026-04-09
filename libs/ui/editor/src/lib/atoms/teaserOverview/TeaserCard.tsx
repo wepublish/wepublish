@@ -7,8 +7,9 @@ import {
   useTheme,
 } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdImage } from 'react-icons/md';
+import { MdContentCopy, MdImage } from 'react-icons/md';
 
 import { ExtractedTeaser } from './extractTeasers';
 
@@ -123,6 +124,28 @@ const Title = styled('div')`
   `}
 `;
 
+const DuplicateBadge = styled('div', {
+  shouldForwardProp: p => p !== 'badgeColor',
+})<{ badgeColor: string }>`
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: ${({ badgeColor }) => badgeColor};
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+`;
+
+const CardWrapper = styled('div')`
+  position: relative;
+`;
+
 const SelectionTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip
     {...props}
@@ -140,6 +163,7 @@ type TeaserCardProps = {
   extracted: ExtractedTeaser;
   isSelected: boolean;
   isTarget: boolean;
+  isDuplicate: boolean;
   onClick: () => void;
 };
 
@@ -149,6 +173,7 @@ export function TeaserCard({
   extracted,
   isSelected,
   isTarget,
+  isDuplicate,
   onClick,
 }: TeaserCardProps) {
   const { t } = useTranslation();
@@ -171,47 +196,67 @@ export function TeaserCard({
     ('article' in teaser ? teaser.article?.latest?.preTitle : null) ??
     '';
 
-  const tooltipText =
+  const cardTooltip =
     isSelected ? t('teaserOverview.tooltipSelected')
     : isTarget ? t('teaserOverview.tooltipTarget')
     : t('teaserOverview.tooltipDefault');
 
+  const [badgeHover, setBadgeHover] = useState(false);
+
   return (
     <SelectionTooltip
-      title={tooltipText}
+      title={badgeHover ? '' : cardTooltip}
       placement="top"
       enterDelay={600}
     >
-      <Card
-        isSelected={isSelected}
-        isTarget={isTarget}
-        groupColor={color}
-        onClick={onClick}
-        role="button"
-        aria-pressed={isSelected}
-      >
-        <ColorBar
-          barColor={color}
-          nestDepth={nestDepth}
-        />
+      <CardWrapper>
+        {isDuplicate && (
+          <SelectionTooltip
+            title={t('teaserOverview.duplicateBadge')}
+            placement="top"
+            enterDelay={300}
+          >
+            <DuplicateBadge
+              badgeColor={color}
+              onMouseEnter={() => setBadgeHover(true)}
+              onMouseLeave={() => setBadgeHover(false)}
+            >
+              <MdContentCopy />
+            </DuplicateBadge>
+          </SelectionTooltip>
+        )}
 
-        <Thumbnail>
-          {imageUrl ?
-            <img
-              src={imageUrl}
-              alt=""
-            />
-          : <ThumbnailPlaceholder>
-              <MdImage />
-            </ThumbnailPlaceholder>
-          }
-        </Thumbnail>
+        <Card
+          isSelected={isSelected}
+          isTarget={isTarget}
+          groupColor={color}
+          onClick={onClick}
+          role="button"
+          aria-pressed={isSelected}
+        >
+          <ColorBar
+            barColor={color}
+            nestDepth={nestDepth}
+          />
 
-        <TextArea>
-          {displayPreTitle && <PreTitle>{displayPreTitle}</PreTitle>}
-          <Title>{displayTitle}</Title>
-        </TextArea>
-      </Card>
+          <Thumbnail>
+            {imageUrl ?
+              <img
+                src={imageUrl}
+                alt=""
+              />
+            : <ThumbnailPlaceholder>
+                <MdImage />
+              </ThumbnailPlaceholder>
+            }
+          </Thumbnail>
+
+          <TextArea>
+            {displayPreTitle && <PreTitle>{displayPreTitle}</PreTitle>}
+            <Title>{displayTitle}</Title>
+          </TextArea>
+        </Card>
+      </CardWrapper>
     </SelectionTooltip>
   );
 }
