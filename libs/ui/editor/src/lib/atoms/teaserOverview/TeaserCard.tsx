@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
 import { MdImage } from 'react-icons/md';
+import { useTranslation } from 'react-i18next';
 
 import { ExtractedTeaser } from './extractTeasers';
 
@@ -149,6 +150,7 @@ export function TeaserCard({
   isTarget,
   onClick,
 }: TeaserCardProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const { teaser, groupIndex, nestDepth } = extracted;
   const color = groupColor(groupIndex, theme);
@@ -161,7 +163,7 @@ export function TeaserCard({
     : 'page' in teaser ? teaser.page?.latest?.title
     : 'event' in teaser ? teaser.event?.name
     : null) ??
-    '(no title)';
+    t('teaserOverview.noTitle');
 
   const displayPreTitle =
     teaser.preTitle ??
@@ -169,10 +171,9 @@ export function TeaserCard({
     '';
 
   const tooltipText =
-    isSelected ?
-      'Zweiten Teaser anklicken, um die Plätze zu tauschen\n(oder erneut klicken, um die Auswahl aufzuheben)'
-    : isTarget ? 'Mit diesem Teaser Plätze tauschen'
-    : 'Klicken um diesen Teaser zu tauschen';
+    isSelected ? t('teaserOverview.tooltipSelected')
+    : isTarget ? t('teaserOverview.tooltipTarget')
+    : t('teaserOverview.tooltipDefault');
 
   return (
     <SelectionTooltip

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { Collapse, css, Typography } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   MdEditNote,
   MdExpandLess,
@@ -133,6 +134,7 @@ export function TeaserOverviewPanel({
   blocks,
   onChange,
 }: TeaserOverviewPanelProps) {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState<TeaserAddress | null>(
     null
@@ -141,7 +143,7 @@ export function TeaserOverviewPanel({
     null
   );
 
-  const allTeasers = useMemo(() => extractTeasers(blocks), [blocks]);
+  const allTeasers = useMemo(() => extractTeasers(blocks, t), [blocks, t]);
 
   // Group by blockLabel, preserving order of first appearance
   const groups = useMemo(() => {
@@ -201,8 +203,16 @@ export function TeaserOverviewPanel({
 
   const summary =
     allTeasers.length === 0 ?
-      'Keine kuratierten Teaser auf dieser Seite gefunden'
-    : `${allTeasers.length} kuratierte Teaser in ${groups.length} ${groups.length === 1 ? 'Block' : 'Blöcken'} gefunden`;
+      t('teaserOverview.summaryNone')
+    : t(
+        groups.length === 1 ?
+          'teaserOverview.summaryOne'
+        : 'teaserOverview.summaryMany',
+        {
+          count: allTeasers.length,
+          blocks: groups.length,
+        }
+      );
 
   return (
     <>
@@ -219,9 +229,7 @@ export function TeaserOverviewPanel({
             <MdGridView />
           </HeaderIcon>
 
-          <HeaderTitle variant="body2">
-            {'Übersicht: Kuratierte Teaser'}
-          </HeaderTitle>
+          <HeaderTitle variant="body2">{t('teaserOverview.title')}</HeaderTitle>
 
           <HeaderMeta variant="caption">{summary}</HeaderMeta>
 
@@ -235,17 +243,13 @@ export function TeaserOverviewPanel({
         <Collapse in={isOpen}>
           <Content>
             <SelectionHint visible={!!selectedAddress}>
-              <HintText>
-                {
-                  'Der Teaser ist selektiert — auf einen weiteren Teaser klicken, um mit diesem die Plätze zu tauschen'
-                }
-              </HintText>
+              <HintText>{t('teaserOverview.hintText')}</HintText>
               <HintActions>
                 <IconButton
                   size="xs"
                   appearance="subtle"
                   icon={<MdSwapHoriz />}
-                  title="Tauschen: Klicken Sie auf einen weiteren Teaser, um mit diesem die Plätze zu tauschen"
+                  title={t('teaserOverview.swapButtonTitle')}
                   disabled
                 />
                 <IconButton
@@ -253,16 +257,16 @@ export function TeaserOverviewPanel({
                   appearance="primary"
                   icon={<MdEditNote />}
                   onClick={handleReplaceClick}
-                  title="Ersetzen: Diesen Teaser durch einen beliebigen Teaser ersetzen"
+                  title={t('teaserOverview.replaceButtonTitle')}
                 >
-                  {'Teaser ersetzen'}
+                  {t('teaserOverview.replaceButton')}
                 </IconButton>
               </HintActions>
             </SelectionHint>
 
             {groups.length === 0 && (
               <EmptyState variant="body2">
-                {'Keine manuellen Teaser auf dieser Seite gefunden.'}
+                {t('teaserOverview.emptyState')}
               </EmptyState>
             )}
 

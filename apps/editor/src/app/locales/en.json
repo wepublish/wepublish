@@ -1994,6 +1994,31 @@
       "noContacts": "No contact persons available for this media.",
       "unknownUser": "Unknown user",
       "connectBtn": "Connect"
+    },
+    "teaserOverview": {
+      "title": "Overview: Curated Teasers",
+      "summaryNone": "No curated teasers found on this page",
+      "summaryOne": "{{count}} curated teaser found in {{blocks}} block",
+      "summaryMany": "{{count}} curated teasers found in {{blocks}} blocks",
+      "hintText": "Teaser selected — click another teaser to swap positions",
+      "swapButtonTitle": "Swap: click another teaser to swap positions",
+      "replaceButtonTitle": "Replace: replace this teaser with any other teaser",
+      "replaceButton": "Replace teaser",
+      "emptyState": "No curated teasers found on this page.",
+      "tooltipSelected": "Click a second teaser to swap positions\n(or click again to deselect)",
+      "tooltipTarget": "Swap with the selected teaser",
+      "tooltipDefault": "Click to swap this teaser",
+      "noTitle": "(no title)",
+      "blockTypes": {
+        "teaserGrid1": "Teaser Grid 1",
+        "teaserGrid6": "Teaser Grid 6",
+        "flexGrid": "Flex Grid",
+        "teaserList": "Teaser List",
+        "teaserSlots": "Teaser Slots",
+        "flexBlock": "Flex Block"
+      },
+      "nestedLabelWithTitle": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}}, \"{{title}}\")",
+      "nestedLabel": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}})"
     }
   }
 }

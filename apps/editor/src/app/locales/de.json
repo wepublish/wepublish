@@ -1932,6 +1932,31 @@
       "noContacts": "Keine Kontaktpersonen für dieses Medium verfügbar.",
       "unknownUser": "Unbekannter Benutzer",
       "connectBtn": "Verbinden"
+    },
+    "teaserOverview": {
+      "title": "Übersicht: Kuratierte Teaser",
+      "summaryNone": "Keine kuratierten Teaser auf dieser Seite gefunden",
+      "summaryOne": "{{count}} kuratierter Teaser in {{blocks}} Block gefunden",
+      "summaryMany": "{{count}} kuratierte Teaser in {{blocks}} Blöcken gefunden",
+      "hintText": "Der Teaser ist selektiert — auf einen weiteren Teaser klicken, um mit diesem die Plätze zu tauschen",
+      "swapButtonTitle": "Tauschen: Klicken Sie auf einen weiteren Teaser, um mit diesem die Plätze zu tauschen",
+      "replaceButtonTitle": "Ersetzen: Diesen Teaser durch einen beliebigen Teaser ersetzen",
+      "replaceButton": "Teaser ersetzen",
+      "emptyState": "Keine kuratierten Teaser auf dieser Seite gefunden.",
+      "tooltipSelected": "Zweiten Teaser anklicken, um die Plätze zu tauschen\n(oder erneut klicken, um die Auswahl aufzuheben)",
+      "tooltipTarget": "Mit diesem Teaser Plätze tauschen",
+      "tooltipDefault": "Klicken um diesen Teaser zu tauschen",
+      "noTitle": "(kein Titel)",
+      "blockTypes": {
+        "teaserGrid1": "Teaser Grid 1",
+        "teaserGrid6": "Teaser Grid 6",
+        "flexGrid": "Flex Grid",
+        "teaserList": "Teaser Liste",
+        "teaserSlots": "Teaser Slots",
+        "flexBlock": "Flex Block"
+      },
+      "nestedLabelWithTitle": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}}, \"{{title}}\")",
+      "nestedLabel": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}})"
     }
   }
 }

@@ -1,5 +1,6 @@
 import { EditorBlockType } from '@wepublish/editor/api';
 import { TeaserSlotType } from '@wepublish/editor/api';
+import { TFunction } from 'i18next';
 
 import {
   BlockValue,
@@ -71,17 +72,18 @@ export type ExtractedTeaser = {
 
 // ─── Label helpers ────────────────────────────────────────────────────────────
 
-const BLOCK_LABELS: Partial<Record<EditorBlockType, string>> = {
-  [EditorBlockType.TeaserGrid1]: 'Teaser Grid 1',
-  [EditorBlockType.TeaserGrid6]: 'Teaser Grid 6',
-  [EditorBlockType.TeaserGridFlex]: 'Flex Grid',
-  [EditorBlockType.TeaserList]: 'Teaser List',
-  [EditorBlockType.TeaserSlots]: 'Teaser Slots',
-  [EditorBlockType.FlexBlock]: 'Flex Block',
+const BLOCK_TYPE_KEY: Partial<Record<EditorBlockType, string>> = {
+  [EditorBlockType.TeaserGrid1]: 'teaserOverview.blockTypes.teaserGrid1',
+  [EditorBlockType.TeaserGrid6]: 'teaserOverview.blockTypes.teaserGrid6',
+  [EditorBlockType.TeaserGridFlex]: 'teaserOverview.blockTypes.flexGrid',
+  [EditorBlockType.TeaserList]: 'teaserOverview.blockTypes.teaserList',
+  [EditorBlockType.TeaserSlots]: 'teaserOverview.blockTypes.teaserSlots',
+  [EditorBlockType.FlexBlock]: 'teaserOverview.blockTypes.flexBlock',
 };
 
-function blockLabel(type: EditorBlockType, blockIndex: number): string {
-  return `${BLOCK_LABELS[type] ?? type} · Block ${blockIndex + 1}`;
+function blockLabel(type: EditorBlockType, blockIndex: number, t: TFunction): string {
+  const typeLabel = BLOCK_TYPE_KEY[type] ? t(BLOCK_TYPE_KEY[type]!) : String(type);
+  return `${typeLabel} · Block ${blockIndex + 1}`;
 }
 
 // ─── Extraction ───────────────────────────────────────────────────────────────
@@ -90,7 +92,7 @@ function blockLabel(type: EditorBlockType, blockIndex: number): string {
  * Recursively walks all blocks and returns every non-null manual teaser with
  * its precise address, label, and grouping metadata.
  */
-export function extractTeasers(blocks: BlockValue[]): ExtractedTeaser[] {
+export function extractTeasers(blocks: BlockValue[], t: TFunction): ExtractedTeaser[] {
   const results: ExtractedTeaser[] = [];
   let groupIndex = 0;
 
@@ -101,7 +103,7 @@ export function extractTeasers(blocks: BlockValue[]): ExtractedTeaser[] {
       case EditorBlockType.TeaserGrid1:
       case EditorBlockType.TeaserGrid6: {
         const value = block.value as TeaserGridBlockValue;
-        const label = blockLabel(block.type, blockIndex);
+        const label = blockLabel(block.type, blockIndex, t);
 
         for (let i = 0; i < value.teasers.length; i++) {
           const [, teaser] = value.teasers[i];
@@ -121,7 +123,7 @@ export function extractTeasers(blocks: BlockValue[]): ExtractedTeaser[] {
 
       case EditorBlockType.TeaserGridFlex: {
         const value = block.value as TeaserGridFlexBlockValue;
-        const label = blockLabel(block.type, blockIndex);
+        const label = blockLabel(block.type, blockIndex, t);
 
         for (let i = 0; i < value.flexTeasers.length; i++) {
           const { teaser } = value.flexTeasers[i];
@@ -141,7 +143,7 @@ export function extractTeasers(blocks: BlockValue[]): ExtractedTeaser[] {
 
       case EditorBlockType.TeaserList: {
         const value = block.value as TeaserListBlockValue;
-        const label = blockLabel(block.type, blockIndex);
+        const label = blockLabel(block.type, blockIndex, t);
 
         // Only manual teasers — the query-driven auto-fill results are read-only
         for (let i = 0; i < value.teasers.length; i++) {
@@ -162,7 +164,7 @@ export function extractTeasers(blocks: BlockValue[]): ExtractedTeaser[] {
 
       case EditorBlockType.TeaserSlots: {
         const value = block.value as TeaserSlotsBlockValue;
-        const label = blockLabel(block.type, blockIndex);
+        const label = blockLabel(block.type, blockIndex, t);
 
         for (let i = 0; i < value.slots.length; i++) {
           const slot = value.slots[i];
@@ -198,17 +200,27 @@ export function extractTeasers(blocks: BlockValue[]): ExtractedTeaser[] {
           // this teaser lives: "Flex Block 3 › Block 2 (Teaser Slots, "My Title")"
           const nestedBlockType = nestedBlock.type as EditorBlockType;
           const nestedTypeLabel =
-            BLOCK_LABELS[nestedBlockType] ?? String(nestedBlockType);
+            BLOCK_TYPE_KEY[nestedBlockType] ? t(BLOCK_TYPE_KEY[nestedBlockType]!) : String(nestedBlockType);
           const nestedTitle =
             nestedBlockType === EditorBlockType.TeaserSlots ?
               ((nestedBlock.value as TeaserSlotsBlockValue).title ?? '')
             : '';
-          const nestedTitleSuffix = nestedTitle ? `, "${nestedTitle}"` : '';
-          const nestedLabel = `Flex Block ${blockIndex + 1} › Block ${nestedBlockIndex + 1} (${nestedTypeLabel}${nestedTitleSuffix})`;
+          const nestedLabel = nestedTitle ?
+            t('teaserOverview.nestedLabelWithTitle', {
+              blockIndex: blockIndex + 1,
+              nestedIndex: nestedBlockIndex + 1,
+              type: nestedTypeLabel,
+              title: nestedTitle,
+            })
+          : t('teaserOverview.nestedLabel', {
+              blockIndex: blockIndex + 1,
+              nestedIndex: nestedBlockIndex + 1,
+              type: nestedTypeLabel,
+            });
 
           // Temporarily wrap the nested block in a single-item array so we can
           // reuse extractTeasers recursively, then remap the addresses.
-          const nested = extractTeasers([nestedBlock as BlockValue]);
+          const nested = extractTeasers([nestedBlock as BlockValue], t);
           for (const extracted of nested) {
             results.push({
               ...extracted,

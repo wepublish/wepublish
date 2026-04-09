@@ -1816,6 +1816,31 @@
       "noContacts": "Aucune personne de contact disponible pour ce média.",
       "unknownUser": "Utilisateur inconnu",
       "connectBtn": "Connecter"
+    },
+    "teaserOverview": {
+      "title": "Vue d'ensemble : Teasers curatés",
+      "summaryNone": "Aucun teaser curé trouvé sur cette page",
+      "summaryOne": "{{count}} teaser curé trouvé dans {{blocks}} bloc",
+      "summaryMany": "{{count}} teasers curés trouvés dans {{blocks}} blocs",
+      "hintText": "Teaser sélectionné — cliquer sur un autre teaser pour échanger les positions",
+      "swapButtonTitle": "Échanger : cliquer sur un autre teaser pour échanger les positions",
+      "replaceButtonTitle": "Remplacer : remplacer ce teaser par un autre",
+      "replaceButton": "Remplacer le teaser",
+      "emptyState": "Aucun teaser curaté trouvé sur cette page.",
+      "tooltipSelected": "Cliquer sur un second teaser pour échanger les positions\n(ou cliquer à nouveau pour désélectionner)",
+      "tooltipTarget": "Échanger avec le teaser sélectionné",
+      "tooltipDefault": "Cliquer pour échanger ce teaser",
+      "noTitle": "(sans titre)",
+      "blockTypes": {
+        "teaserGrid1": "Teaser Grid 1",
+        "teaserGrid6": "Teaser Grid 6",
+        "flexGrid": "Flex Grid",
+        "teaserList": "Liste de teasers",
+        "teaserSlots": "Emplacements de teasers",
+        "flexBlock": "Bloc flexible"
+      },
+      "nestedLabelWithTitle": "Flex Block {{blockIndex}} › Bloc {{nestedIndex}} ({{type}}, \"{{title}}\")",
+      "nestedLabel": "Flex Block {{blockIndex}} › Bloc {{nestedIndex}} ({{type}})"
     }
   }
 }
