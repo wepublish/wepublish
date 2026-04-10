@@ -169,6 +169,7 @@ export const TeaserSlider = ({
   slidesPerViewConfig = {},
   dragDisabled = false,
   detailsChanged,
+  slideGap,
   ...props
 }: BuilderBlockStyleProps['TeaserSlider']) => {
   const {
@@ -181,7 +182,10 @@ export const TeaserSlider = ({
   const filledTeasers = teasers.filter(isFilledTeaser);
 
   const slidesPerView = useSlidesPerView(slidesPerViewConfig);
-  const slidePadding = useSlidesPadding();
+  let slidePadding = useSlidesPadding();
+  if (slideGap != null) {
+    slidePadding = slideGap;
+  }
   const [ref, sliderRef] = useKeenSlider({
     mode: 'free-snap',
     loop: true,

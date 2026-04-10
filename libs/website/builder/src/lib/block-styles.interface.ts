@@ -19,6 +19,7 @@ export type BuilderSliderConfig = {
   slidesPerViewConfig?: BuilderSlidesPerView;
   dragDisabled?: boolean;
   detailsChanged?: (slider: any) => void;
+  slideGap?: number;
 };
 
 export type BuilderBlockStyleProps = {

@@ -27,6 +27,7 @@ export const ImageSlider = ({
   slidesPerViewConfig = {},
   dragDisabled = false,
   detailsChanged,
+  slideGap,
   ...props
 }: BuilderBlockStyleProps['ImageSlider']) => {
   const {
@@ -36,7 +37,10 @@ export const ImageSlider = ({
   const [loaded, setLoaded] = useState(false);
 
   const slidesPerView = useSlidesPerView(slidesPerViewConfig);
-  const slidePadding = useSlidesPadding();
+  let slidePadding = useSlidesPadding();
+  if (slideGap != null) {
+    slidePadding = slideGap;
+  }
   const [ref, sliderRef] = useKeenSlider({
     mode: 'free-snap',
     loop: true,
