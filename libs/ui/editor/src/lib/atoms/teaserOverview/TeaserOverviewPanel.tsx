@@ -28,7 +28,9 @@ const PanelWrapper = styled('div')`
   border-radius: 8px;
 `;
 
-const Header = styled('button')`
+const Header = styled('button', {
+  shouldForwardProp: p => p !== 'isOpen',
+})<{ isOpen: boolean }>`
   width: 100%;
   display: flex;
   align-items: center;
@@ -36,6 +38,8 @@ const Header = styled('button')`
   padding: 10px 16px;
   background: #f7f9fa;
   border: none;
+  border-radius: ${({ isOpen }) => (isOpen ? '7px 7px 0 0' : '7px')};
+  transition: border-radius 0ms ${({ isOpen }) => (isOpen ? '0ms' : '250ms')};
   cursor: pointer;
   text-align: left;
 
@@ -242,6 +246,7 @@ export function TeaserOverviewPanel({
     <>
       <PanelWrapper>
         <Header
+          isOpen={isOpen}
           onClick={() => {
             setIsOpen(v => !v);
             // Deselect on collapse
