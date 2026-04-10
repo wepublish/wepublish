@@ -25,7 +25,8 @@ import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
 export const ImageSlider = ({
   images,
   slidesPerViewConfig = {},
-}: BuilderBlockStyleProps['ImageSlider']) => {
+  className,
+}: BuilderBlockStyleProps['ImageSlider'] & { className?: string }) => {
   const {
     blocks: { Image },
   } = useWebsiteBuilder();
@@ -52,7 +53,7 @@ export const ImageSlider = ({
 
   return (
     !!images.length && (
-      <SliderWrapper>
+      <SliderWrapper className={className}>
         <SliderInnerContainer>
           <SlidesContainer
             ref={ref}
