@@ -9,14 +9,6 @@
     "types": []
   },
   "files": ["src/emotion.d.ts"],
-  "include": [],
-  "references": [
-    {
-      "path": "./tsconfig.lib.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
-    }
-  ],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts"],
   "extends": "../../../tsconfig.base.json"
 }

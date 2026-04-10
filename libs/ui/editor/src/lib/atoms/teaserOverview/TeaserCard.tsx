@@ -7,10 +7,12 @@ import {
   useTheme,
 } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
+import { TeaserType } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdContentCopy, MdImage } from 'react-icons/md';
 
+import { ArticleTeaser, EventTeaser, PageTeaser } from '../../blocks/types';
 import { ExtractedTeaser } from './extractTeasers';
 
 // ─── Colours ──────────────────────────────────────────────────────────────────
@@ -181,20 +183,37 @@ export function TeaserCard({
   const { teaser, groupIndex, nestDepth } = extracted;
   const color = groupColor(groupIndex, theme);
 
-  const imageUrl = teaser.image?.thumbURL ?? teaser.image?.url ?? null;
+  let entityImage = null;
+  let entityTitle = null as string | null | undefined;
+  let entityPreTitle = null as string | null | undefined;
 
+  switch (teaser.type) {
+    case TeaserType.Article: {
+      const a = teaser as ArticleTeaser;
+      entityImage = a.article?.latest?.image ?? null;
+      entityTitle = a.article?.latest?.title;
+      entityPreTitle = a.article?.latest?.preTitle;
+      break;
+    }
+    case TeaserType.Page: {
+      const p = teaser as PageTeaser;
+      entityImage = p.page?.latest?.image ?? null;
+      entityTitle = p.page?.latest?.title;
+      break;
+    }
+    case TeaserType.Event: {
+      const e = teaser as EventTeaser;
+      entityImage = e.event?.image ?? null;
+      entityTitle = e.event?.name;
+      break;
+    }
+  }
+
+  const teaserImage = teaser.image ?? entityImage;
+  const imageUrl = teaserImage?.mediumURL ?? teaserImage?.url ?? null;
   const displayTitle =
-    teaser.title ??
-    ('article' in teaser ? teaser.article?.latest?.title
-    : 'page' in teaser ? teaser.page?.latest?.title
-    : 'event' in teaser ? teaser.event?.name
-    : null) ??
-    t('teaserOverview.noTitle');
-
-  const displayPreTitle =
-    teaser.preTitle ??
-    ('article' in teaser ? teaser.article?.latest?.preTitle : null) ??
-    '';
+    teaser.title ?? entityTitle ?? t('teaserOverview.noTitle');
+  const displayPreTitle = teaser.preTitle ?? entityPreTitle ?? '';
 
   const cardTooltip =
     isSelected ? t('teaserOverview.tooltipSelected')

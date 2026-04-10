@@ -26,7 +26,6 @@ const PanelWrapper = styled('div')`
   margin-bottom: 16px;
   border: 1px solid ${({ theme }) => theme.palette.divider};
   border-radius: 8px;
-  overflow: hidden;
 `;
 
 const Header = styled('button')`
@@ -89,11 +88,14 @@ const SelectionHint = styled('div', {
   ${({ theme }) => css`
     font-size: ${theme.typography.caption.fontSize};
     color: ${theme.palette.primary.main}99;
-    background: ${theme.palette.primary.light}11;
+    background: #eef4fb;
     border: 1px solid ${theme.palette.primary.light}55;
     border-radius: 4px;
     padding: 4px 8px 4px 12px;
   `}
+  position: sticky;
+  top: 50px;
+  z-index: 10;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -192,7 +194,6 @@ export function TeaserOverviewPanel({
 
   const handleReplaceClick = useCallback(() => {
     setReplaceAddress(selectedAddress);
-    setSelectedAddress(null);
   }, [selectedAddress]);
 
   const handleReplaceConfirm = useCallback(
@@ -200,9 +201,15 @@ export function TeaserOverviewPanel({
       if (!replaceAddress) return;
       onChange(setTeaserAt(blocks, replaceAddress, teaser));
       setReplaceAddress(null);
+      setSelectedAddress(null);
     },
     [replaceAddress, blocks, onChange]
   );
+
+  const handleReplaceClose = useCallback(() => {
+    setReplaceAddress(null);
+    setSelectedAddress(null);
+  }, []);
 
   // Keys that appear more than once on the page
   const duplicateKeys = useMemo(() => {
@@ -298,10 +305,10 @@ export function TeaserOverviewPanel({
       <Drawer
         open={replaceAddress !== null}
         size="sm"
-        onClose={() => setReplaceAddress(null)}
+        onClose={handleReplaceClose}
       >
         <TeaserSelectAndEditPanel
-          onClose={() => setReplaceAddress(null)}
+          onClose={handleReplaceClose}
           onSelect={teaser => {
             handleReplaceConfirm(teaser);
           }}

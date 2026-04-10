@@ -1,4 +1,8 @@
-import { EditorBlockType, TeaserSlotType } from '@wepublish/editor/api';
+import {
+  EditorBlockType,
+  TeaserSlotType,
+  TeaserType,
+} from '@wepublish/editor/api';
 import { TFunction } from 'i18next';
 
 import {
@@ -86,10 +90,16 @@ function blockLabel(
 
 /** Returns a stable key that identifies the underlying content of a teaser. */
 export function teaserContentKey(teaser: Teaser): string {
-  if ('article' in teaser) return `article:${teaser.article?.id}`;
-  if ('page' in teaser) return `page:${teaser.page?.id}`;
-  if ('event' in teaser) return `event:${teaser.event?.id}`;
-  return `custom:${teaser.contentUrl ?? ''}`;
+  switch (teaser.type) {
+    case TeaserType.Article:
+      return `article:${teaser.article?.id}`;
+    case TeaserType.Page:
+      return `page:${teaser.page?.id}`;
+    case TeaserType.Event:
+      return `event:${teaser.event?.id}`;
+    case TeaserType.Custom:
+      return `custom:${teaser.contentUrl ?? ''}`;
+  }
 }
 
 // ─── Extraction ───────────────────────────────────────────────────────────────
