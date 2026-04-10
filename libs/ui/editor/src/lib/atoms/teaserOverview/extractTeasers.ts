@@ -178,11 +178,16 @@ export function extractTeasers(
         const parentGroupIndex = groupIndex;
         groupIndex++; // reserve one index for the flex container itself
 
-        for (
-          let nestedBlockIndex = 0;
-          nestedBlockIndex < nestedBlocks.length;
-          nestedBlockIndex++
-        ) {
+        // Sort nested blocks the same way the frontend renders them (y then x)
+        const sortedIndices = nestedBlocks
+          .map((b, i) => i)
+          .sort((a, b) => {
+            const aa = nestedBlocks[a].alignment;
+            const bb = nestedBlocks[b].alignment;
+            return aa.y - bb.y || aa.x - bb.x;
+          });
+
+        for (const nestedBlockIndex of sortedIndices) {
           const { block: nestedBlock } = nestedBlocks[nestedBlockIndex];
           if (!nestedBlock) continue;
 
