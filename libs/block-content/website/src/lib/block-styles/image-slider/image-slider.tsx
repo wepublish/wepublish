@@ -1,6 +1,6 @@
 import { useKeenSlider } from 'keen-slider/react';
 import { allPass } from 'ramda';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { hasBlockStyle } from '../../has-blockstyle';
 import { isImageGalleryBlock } from '../../image-gallery/image-gallery-block';
@@ -25,6 +25,9 @@ import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
 export const ImageSlider = ({
   images,
   slidesPerViewConfig = {},
+  dragDisabled = false,
+  detailsChanged,
+  ...props
 }: BuilderBlockStyleProps['ImageSlider']) => {
   const {
     blocks: { Image },
@@ -37,6 +40,8 @@ export const ImageSlider = ({
   const [ref, sliderRef] = useKeenSlider({
     mode: 'free-snap',
     loop: true,
+    drag: dragDisabled ? false : true,
+    detailsChanged: detailsChanged ? detailsChanged : void 0,
     slides: {
       origin: 'center',
       perView: slidesPerView,
@@ -49,6 +54,11 @@ export const ImageSlider = ({
       setLoaded(true);
     },
   });
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => sliderRef.current?.update());
+    return () => cancelAnimationFrame(frame);
+  }, [sliderRef]);
 
   return (
     !!images.length && (

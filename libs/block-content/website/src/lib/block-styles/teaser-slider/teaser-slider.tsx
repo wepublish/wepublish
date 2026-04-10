@@ -4,7 +4,7 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import styled from '@emotion/styled';
 import { useKeenSlider } from 'keen-slider/react';
 import { allPass, anyPass } from 'ramda';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   BlockContent,
@@ -167,6 +167,8 @@ export const TeaserSlider = ({
   className,
   teasers,
   slidesPerViewConfig = {},
+  dragDisabled = false,
+  detailsChanged,
   ...props
 }: BuilderBlockStyleProps['TeaserSlider']) => {
   const {
@@ -183,6 +185,8 @@ export const TeaserSlider = ({
   const [ref, sliderRef] = useKeenSlider({
     mode: 'free-snap',
     loop: true,
+    drag: dragDisabled ? false : true,
+    detailsChanged: detailsChanged ? detailsChanged : void 0,
     slides: {
       origin: 'center',
       perView: slidesPerView,
@@ -195,6 +199,11 @@ export const TeaserSlider = ({
       setLoaded(true);
     },
   });
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => sliderRef.current?.update());
+    return () => cancelAnimationFrame(frame);
+  }, [sliderRef]);
 
   return (
     !!filledTeasers.length && (
