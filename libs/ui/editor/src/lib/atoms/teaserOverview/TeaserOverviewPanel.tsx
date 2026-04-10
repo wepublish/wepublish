@@ -83,6 +83,7 @@ const Content = styled('div')`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  border-radius: 0 0 7px 7px;
   background: ${({ theme }) => theme.palette.background.default};
 `;
 
