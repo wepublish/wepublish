@@ -4,6 +4,7 @@ export async function assertRemoteFileIsAccessible(
   try {
     const res = await fetch(url, {
       method: 'HEAD',
+      signal: AbortSignal.timeout(10_000),
     });
     if (!res.ok) {
       console.error(

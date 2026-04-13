@@ -14,6 +14,8 @@ import {
 } from 'date-fns';
 import NodeCache from 'node-cache';
 import { createHash } from 'crypto';
+import { deflate, inflate } from 'zlib';
+import { promisify } from 'util';
 import { gt } from 'ramda';
 
 /**
@@ -25,8 +27,36 @@ const dailyStatsCache = new NodeCache({
   checkperiod: ONE_MIN_IN_SEC,
   deleteOnExpire: true,
   useClones: false,
-  maxKeys: 1000,
+  maxKeys: -1,
 });
+
+const MAX_CACHE_KEYS = 2000;
+
+const deflateAsync = promisify(deflate);
+const inflateAsync = promisify(inflate);
+
+async function cacheSet(
+  key: string,
+  stats: DailySubscriptionStats,
+  ttl: number
+) {
+  const compressed = await deflateAsync(JSON.stringify(stats));
+
+  while (dailyStatsCache.keys().length >= MAX_CACHE_KEYS) {
+    const oldestKey = dailyStatsCache.keys()[0];
+    dailyStatsCache.del(oldestKey);
+  }
+
+  dailyStatsCache.set(key, compressed, ttl);
+}
+
+async function cacheGet(
+  key: string
+): Promise<DailySubscriptionStats | undefined> {
+  const compressed = dailyStatsCache.get<Buffer>(key);
+  if (!compressed) return undefined;
+  return JSON.parse((await inflateAsync(compressed)).toString());
+}
 
 @Injectable()
 export class DashboardSubscriptionService {
@@ -787,12 +817,13 @@ export class DashboardSubscriptionService {
           .update(`${date.toISOString()}-${JSON.stringify(sortedPlanIds)}`)
           .digest('hex');
 
-        if (dailyStatsCache.has(cacheKey)) {
-          return dailyStatsCache.get(cacheKey) as DailySubscriptionStats;
+        const cached = await cacheGet(cacheKey);
+        if (cached) {
+          return cached;
         }
 
         const stats = await this.generateDailyData(date, sortedPlanIds, start);
-        dailyStatsCache.set(cacheKey, stats, this.getCacheTTLByDate(date));
+        await cacheSet(cacheKey, stats, this.getCacheTTLByDate(date));
         return stats;
       })
     );
