@@ -15,7 +15,7 @@ import { getBaseConfig, setCommonTags } from './config';
 Sentry.init({
   ...getBaseConfig(),
   integrations: [nodeProfilingIntegration(), Sentry.prismaIntegration()],
-  profilesSampleRate: process.env.APP_ENVIRONMENT === 'production' ? 0.01 : 1.0,
+  profilesSampleRate: process.env.APP_ENVIRONMENT === 'production' ? 0.05 : 1.0,
 });
 
 setCommonTags(Sentry, 'nestjs');
