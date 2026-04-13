@@ -28,6 +28,8 @@ export const ImageSlider = ({
   dragDisabled = false,
   detailsChanged,
   slideGap,
+  className,
+  blockStyle,
   ...props
 }: BuilderBlockStyleProps['ImageSlider']) => {
   const {
@@ -66,7 +68,7 @@ export const ImageSlider = ({
 
   return (
     !!images.length && (
-      <SliderWrapper>
+      <SliderWrapper className={className}>
         <SliderInnerContainer>
           <SlidesContainer
             ref={ref}
