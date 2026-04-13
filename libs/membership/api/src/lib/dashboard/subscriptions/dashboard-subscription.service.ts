@@ -42,9 +42,14 @@ async function cacheSet(
 ) {
   const compressed = await deflateAsync(JSON.stringify(stats));
 
-  while (dailyStatsCache.keys().length >= MAX_CACHE_KEYS) {
-    const oldestKey = dailyStatsCache.keys()[0];
-    dailyStatsCache.del(oldestKey);
+  if (dailyStatsCache.keys().length >= MAX_CACHE_KEYS) {
+    const evictCount = Math.ceil(MAX_CACHE_KEYS * 0.1);
+    const keysWithTtl = dailyStatsCache
+      .keys()
+      .map(k => ({ key: k, ttl: dailyStatsCache.getTtl(k) ?? Infinity }))
+      .sort((a, b) => a.ttl - b.ttl);
+
+    dailyStatsCache.del(keysWithTtl.slice(0, evictCount).map(e => e.key));
   }
 
   dailyStatsCache.set(key, compressed, ttl);
