@@ -120,6 +120,7 @@ export class CFTurnstileProvider extends ChallengeProvider {
     const result = await fetch(url, {
       body: formData as any,
       method: 'POST',
+      signal: AbortSignal.timeout(5_000),
     });
 
     const outcome = await result.json();

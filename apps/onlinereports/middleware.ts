@@ -49,7 +49,9 @@ export async function middleware(request: NextRequest) {
   const externalHostname = 'https://archiv2.onlinereports.ch';
   const externalUrl = `${externalHostname}${pathname}`;
   try {
-    const response = await fetch(externalUrl);
+    const response = await fetch(externalUrl, {
+      signal: AbortSignal.timeout(10_000),
+    });
 
     if (response.status === 404) {
       return NextResponse.next();
