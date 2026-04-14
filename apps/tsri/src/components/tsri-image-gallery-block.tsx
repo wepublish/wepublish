@@ -46,7 +46,7 @@ export const BaseImageGalleryBlock = ({
               component={ImageBlockCaption}
             >
               <Trans
-                i18nKey="image.captionNoParentheses"
+                i18nKey="image.caption"
                 values={{
                   caption: image.caption ?? image.image?.title,
                   source: image.image?.source || 'EMPTY',
@@ -80,8 +80,8 @@ export const TsriImageGalleryBlock = styled(BaseImageGalleryBlock)`
     .MuiImageListItem-root {
       display: grid;
       grid-template-columns: 1fr;
-      grid-template-rows: 89fr 11fr;
-      gap: 4px;
+      grid-template-rows: 300px auto;
+      gap: ${({ theme }) => theme.spacing(1)};
       overflow: hidden;
 
       img {

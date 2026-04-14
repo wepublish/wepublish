@@ -1,7 +1,139 @@
 import styled from '@emotion/styled';
-import { ImageSlider } from '@wepublish/block-content/website';
+import {
+  ImageSlider,
+  SliderArrow,
+  SliderBall,
+  SliderBallContainer,
+  SliderBallFill,
+  SliderInnerContainer,
+  SlidesContainer,
+} from '@wepublish/block-content/website';
+import {
+  ImageBlockInnerWrapper,
+  ImageBlockWrapper,
+} from '@wepublish/block-content/website';
+import { BuilderBlockStyleProps } from '@wepublish/website/builder';
 
-export const TsriImageSlider = styled(ImageSlider)`
-  background-color: cyan;
-  border: 1px solid red;
+export const ImageSliderBase = ({
+  images,
+  slidesPerViewConfig = {},
+  className,
+}: BuilderBlockStyleProps['ImageSlider']) => {
+  return (
+    <ImageSlider
+      images={images}
+      slidesPerViewConfig={{
+        xs: 'auto',
+        sm: 'auto',
+        md: 'auto',
+        lg: 'auto',
+        xl: 'auto',
+      }}
+      className={className}
+      slideGap={0}
+    />
+  );
+};
+
+export const TsriImageSlider = styled(ImageSliderBase)`
+  margin: 0 -0.625cqw;
+
+  ${SliderInnerContainer} {
+    row-gap: ${({ theme }) => theme.spacing(2)};
+
+    ${SlidesContainer} {
+      container: slidescontainer / inline-size;
+      flex-shrink: 0;
+      grid-column: -1 / 1;
+      grid-row: 1 / 2;
+    }
+
+    ${SliderBallContainer} {
+      margin-left: -${({ theme }) => theme.spacing(6)};
+      margin-right: -${({ theme }) => theme.spacing(6)};
+      grid-column: -1 / 1;
+      grid-row: 1 / 2;
+      padding: ${({ theme }) => theme.spacing(0)};
+      align-content: end;
+
+      ${SliderArrow} {
+        display: block;
+        pointer-events: all;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' fill='none'%3E%3Ccircle cx='24' cy='24' r='24' fill='%23000'/%3E%3Cpath stroke='%23fff' stroke-linecap='round' stroke-width='1.5' d='m26 34-9.276-9.276L26 15.45'/%3E%3C/svg%3E");
+
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        width: 35px;
+        height: 35px;
+
+        top: calc(50% - 17.5px);
+
+        &:hover {
+          ${({ theme }) =>
+            `background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' fill='none'%3E%3Ccircle cx='24' cy='24' r='24' fill='${encodeURIComponent(theme.palette.primary.light)}'/%3E%3Cpath stroke='%23000' stroke-linecap='round' stroke-width='1.5' d='m26 34-9.276-9.276L26 15.45'/%3E%3C/svg%3E");`}
+        }
+
+        & + ${SliderArrow} {
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' fill='none'%3E%3Ccircle cx='24' cy='24' r='24' fill='%23000'/%3E%3Cpath stroke='%23fff' stroke-linecap='round' stroke-width='1.5' d='m22 34 9.276-9.276L22 15.45'/%3E%3C/svg%3E");
+
+          &:hover {
+            ${({ theme }) =>
+              `background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' fill='none'%3E%3Ccircle cx='24' cy='24' r='24' fill='${encodeURIComponent(theme.palette.primary.light)}'/%3E%3Cpath stroke='%23000' stroke-linecap='round' stroke-width='1.5' d='m22 34 9.276-9.276L22 15.45'/%3E%3C/svg%3E");`}
+          }
+        }
+      }
+
+      svg {
+        visibility: hidden;
+      }
+    }
+
+    ${SliderBallFill} {
+      background-color: ${({ theme }) => theme.palette.common.black};
+    }
+
+    ${SliderBall} {
+      margin: ${({ theme }) => theme.spacing(0)};
+
+      &:hover {
+        background-color: ${({ theme }) => theme.palette.primary.light};
+      }
+    }
+  }
+
+  .keen-slider__slide {
+    width: 33.33cqw !important;
+    flex-shrink: 0;
+    padding: 0 0.625cqw ${({ theme }) => theme.spacing(5)} 0.625cqw;
+
+    ${ImageBlockWrapper} {
+      height: 100%;
+
+      ${ImageBlockInnerWrapper} {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 300px auto;
+        row-gap: ${({ theme }) => theme.spacing(1)};
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          grid-row: 1 / 2;
+          grid-column: -1 / 1;
+          border-radius: 0.6cqw;
+        }
+
+        figcaption {
+          grid-row: 2 / 3;
+          grid-column: -1 / 1;
+          font-size: 0.75rem;
+          line-height: 1rem;
+          font-weight: 700;
+          color: ${({ theme }) => theme.palette.common.black};
+        }
+      }
+    }
+  }
 `;
