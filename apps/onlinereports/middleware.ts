@@ -32,9 +32,15 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Reject full URLs encoded as paths (e.g. /http%3A%2F%2F...)
+  const decodedPathname = decodeURIComponent(pathname);
+  if (/^\/https?:\/\//.test(decodedPathname)) {
+    return NextResponse.next();
+  }
+
   // Validate pathname to prevent SSRF attacks
-  const pathValidation = /^\/[a-zA-Z0-9\-_/.+]+\.html$/;
-  if (!pathValidation.test(pathname)) {
+  const pathValidation = /^\/[a-zA-Z0-9\-_/.+ :]+\.html$/;
+  if (!pathValidation.test(decodedPathname)) {
     console.warn(`Invalid pathname pattern: ${pathname}`);
     return NextResponse.next();
   }
