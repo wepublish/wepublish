@@ -13,8 +13,14 @@ import {
 import { Trans } from 'react-i18next';
 
 export const ImageWrapper = styled('div')`
+  --sizing-factor: 2.9;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    --sizing-factor: 1;
+  }
+
   width: 100%;
-  border-radius: 0.6cqw;
+  border-radius: calc(var(--sizing-factor) * 0.6cqw);
   overflow: hidden;
 `;
 
@@ -70,19 +76,24 @@ export const TsriImageGalleryBlock = styled(BaseImageGalleryBlock)`
     margin: 0;
     grid-template-columns: repeat(1, 1fr);
     column-gap: 1.25cqw !important;
-    row-gap: 1.25cqw !important;
+    row-gap: 3.5cqw !important;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
       grid-template-columns: repeat(3, 1fr);
-      row-gap: 1.25cqw;
+      column-gap: 1.25cqw !important;
+      row-gap: 1.25cqw !important;
     }
 
     .MuiImageListItem-root {
       display: grid;
       grid-template-columns: 1fr;
       grid-template-rows: 300px auto;
-      gap: ${({ theme }) => theme.spacing(1)};
       overflow: hidden;
+      gap: ${({ theme }) => theme.spacing(0.5)};
+
+      ${({ theme }) => theme.breakpoints.up('md')} {
+        gap: ${({ theme }) => theme.spacing(1)};
+      }
 
       img {
         width: 100%;

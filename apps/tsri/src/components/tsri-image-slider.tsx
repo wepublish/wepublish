@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useMediaQuery, useTheme } from '@mui/material';
 import {
   ImageSlider,
   SliderArrow,
@@ -19,24 +20,33 @@ export const ImageSliderBase = ({
   slidesPerViewConfig = {},
   className,
 }: BuilderBlockStyleProps['ImageSlider']) => {
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
+
   return (
     <ImageSlider
       images={images}
       slidesPerViewConfig={{
-        xs: 'auto',
-        sm: 'auto',
+        xs: 1,
+        sm: 1,
         md: 'auto',
         lg: 'auto',
         xl: 'auto',
       }}
       className={className}
-      slideGap={0}
+      slideGap={isDesktop ? 0 : 10}
     />
   );
 };
 
 export const TsriImageSlider = styled(ImageSliderBase)`
-  margin: 0 -0.625cqw;
+  margin: 0;
+  --sizing-factor: 2.9;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    margin: 0 -0.625cqw;
+    --sizing-factor: 1;
+  }
 
   ${SliderInnerContainer} {
     row-gap: ${({ theme }) => theme.spacing(2)};
@@ -46,21 +56,28 @@ export const TsriImageSlider = styled(ImageSliderBase)`
       flex-shrink: 0;
       grid-column: -1 / 1;
       grid-row: 1 / 2;
+      z-index: 2;
     }
 
     ${SliderBallContainer} {
-      margin-left: -${({ theme }) => theme.spacing(6)};
-      margin-right: -${({ theme }) => theme.spacing(6)};
       grid-column: -1 / 1;
       grid-row: 1 / 2;
       padding: ${({ theme }) => theme.spacing(0)};
       align-content: end;
 
-      ${SliderArrow} {
-        display: block;
-        pointer-events: all;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' fill='none'%3E%3Ccircle cx='24' cy='24' r='24' fill='%23000'/%3E%3Cpath stroke='%23fff' stroke-linecap='round' stroke-width='1.5' d='m26 34-9.276-9.276L26 15.45'/%3E%3C/svg%3E");
+      ${({ theme }) => theme.breakpoints.up('md')} {
+        margin-left: -${({ theme }) => theme.spacing(6)};
+        margin-right: -${({ theme }) => theme.spacing(6)};
+      }
 
+      ${SliderArrow} {
+        display: none;
+
+        ${({ theme }) => theme.breakpoints.up('md')} {
+          display: block;
+        }
+
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' fill='none'%3E%3Ccircle cx='24' cy='24' r='24' fill='%23000'/%3E%3Cpath stroke='%23fff' stroke-linecap='round' stroke-width='1.5' d='m26 34-9.276-9.276L26 15.45'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
         background-position: center;
         background-size: contain;
@@ -103,9 +120,14 @@ export const TsriImageSlider = styled(ImageSliderBase)`
   }
 
   .keen-slider__slide {
-    width: 33.33cqw !important;
-    flex-shrink: 0;
-    padding: 0 0.625cqw ${({ theme }) => theme.spacing(5)} 0.625cqw;
+    padding: 0 0 ${({ theme }) => theme.spacing(3)} 0;
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      width: 33.33cqw !important;
+      flex-shrink: 0;
+      padding: 0 calc(var(--sizing-factor) * 0.625cqw)
+        ${({ theme }) => theme.spacing(5)} calc(var(--sizing-factor) * 0.625cqw);
+    }
 
     ${ImageBlockWrapper} {
       height: 100%;
@@ -122,7 +144,7 @@ export const TsriImageSlider = styled(ImageSliderBase)`
           object-fit: cover;
           grid-row: 1 / 2;
           grid-column: -1 / 1;
-          border-radius: 0.6cqw;
+          border-radius: calc(var(--sizing-factor) * 0.6cqw);
         }
 
         figcaption {
