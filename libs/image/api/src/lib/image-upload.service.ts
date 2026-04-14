@@ -43,7 +43,7 @@ export class ImageUploadService {
         ...image,
         filename: input.filename ?? image.filename,
         focalPoint: {
-          create: focalPoint,
+          create: focalPoint ?? { x: 0.5, y: 0.5 },
         },
       },
       include: {
@@ -84,7 +84,7 @@ export class ImageUploadService {
         link,
         license,
         focalPoint: {
-          create: focalPoint,
+          create: focalPoint ?? { x: 0.5, y: 0.5 },
         },
       },
       include: {

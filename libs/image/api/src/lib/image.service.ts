@@ -81,8 +81,8 @@ export class ImageService {
         ...input,
         focalPoint: {
           upsert: {
-            create: focalPoint ?? {},
-            update: focalPoint ?? {},
+            create: focalPoint ?? { x: 0.5, y: 0.5 },
+            update: focalPoint ?? { x: 0.5, y: 0.5 },
           },
         },
       },
