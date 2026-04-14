@@ -44,7 +44,10 @@ export class PayrexxClient {
     const method = 'GET',
       queryStrSigned = this.buildSignedQueryString(queryParams),
       baseUrl = `${this.buildBaseUrl(path)}&${queryStrSigned}`;
-    const response = await fetch(baseUrl, { method });
+    const response = await fetch(baseUrl, {
+      method,
+      signal: AbortSignal.timeout(10_000),
+    });
 
     return await this.validateResponse(response);
   }
@@ -56,7 +59,11 @@ export class PayrexxClient {
     const method = 'POST',
       body = this.buildSignedQueryString(queryParams),
       baseUrl = this.buildBaseUrl(path);
-    const response = await fetch(baseUrl, { method, body });
+    const response = await fetch(baseUrl, {
+      method,
+      body,
+      signal: AbortSignal.timeout(10_000),
+    });
 
     return await this.validateResponse(response);
   }

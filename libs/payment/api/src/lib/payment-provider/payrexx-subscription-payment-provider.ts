@@ -289,6 +289,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       {
         method: 'PUT',
         body: qs.stringify({ ...data, ApiSignature: signature }),
+        signal: AbortSignal.timeout(10_000),
       }
     );
 
@@ -327,6 +328,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       {
         method: 'DELETE',
         body: qs.stringify({ ApiSignature: signature }),
+        signal: AbortSignal.timeout(10_000),
       }
     );
 

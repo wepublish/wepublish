@@ -56,7 +56,7 @@ export async function middleware(request: NextRequest) {
   const externalUrl = `${externalHostname}${pathname}`;
   try {
     const response = await fetch(externalUrl, {
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(10_000),
     });
 
     if (response.status === 404) {
