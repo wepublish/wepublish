@@ -73,6 +73,11 @@ export class ImageService {
 
   @PrimeDataLoader(ImageDataloaderService)
   async updateImage({ id, focalPoint, ...input }: UpdateImageInput) {
+    const safeFocalPoint = {
+      x: focalPoint?.x ?? 0.5,
+      y: focalPoint?.y ?? 0.5,
+    };
+
     return this.prisma.image.update({
       where: {
         id,
@@ -81,8 +86,8 @@ export class ImageService {
         ...input,
         focalPoint: {
           upsert: {
-            create: focalPoint ?? {},
-            update: focalPoint ?? {},
+            create: safeFocalPoint,
+            update: safeFocalPoint,
           },
         },
       },
