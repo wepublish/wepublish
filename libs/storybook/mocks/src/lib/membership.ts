@@ -89,6 +89,13 @@ export const mockMemberPlan = ({
   successPageId = faker.string.nanoid(),
   failPageId = faker.string.nanoid(),
   confirmationPageId = faker.string.nanoid(),
+  successPage = {
+    url: 'https://example.com/success',
+  } as MemberPlan['successPage'],
+  failPage = { url: 'https://example.com/fail' } as MemberPlan['failPage'],
+  confirmationPage = {
+    url: 'https://example.com/confirmation',
+  } as MemberPlan['confirmationPage'],
   amountPerMonthMax = 1000,
   externalReward = 'https://example.com/mock-external-reward-url',
 }: Partial<MemberPlan> = {}): MemberPlan & { active: boolean } => ({
@@ -109,6 +116,9 @@ export const mockMemberPlan = ({
   successPageId,
   failPageId,
   confirmationPageId,
+  successPage,
+  failPage,
+  confirmationPage,
   amountPerMonthMax,
   externalReward,
   active: true,
