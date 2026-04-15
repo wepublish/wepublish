@@ -4,6 +4,7 @@ import {
   BuilderArticleDateProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { differenceInDays } from 'date-fns';
 
 const TsriArticleDateWrapper = styled(ArticleDateWrapper)`
   font-size: 0.666rem;
@@ -43,7 +44,10 @@ export const TsriArticleDate = ({
 
   const updated =
     !!article.latest.publishedAt &&
-    article.latest.publishedAt !== article.publishedAt;
+    !!differenceInDays(
+      new Date(article.latest.publishedAt),
+      new Date(article.publishedAt)
+    );
 
   return (
     <TsriArticleDateWrapper
