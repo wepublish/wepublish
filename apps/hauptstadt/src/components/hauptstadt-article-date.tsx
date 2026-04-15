@@ -3,6 +3,7 @@ import {
   BuilderArticleDateProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { differenceInDays } from 'date-fns';
 
 export const HauptstadtArticleDate = ({
   article,
@@ -16,7 +17,10 @@ export const HauptstadtArticleDate = ({
 
   const updated =
     !!article.latest.publishedAt &&
-    article.latest.publishedAt !== article.publishedAt;
+    !!differenceInDays(
+      new Date(article.latest.publishedAt),
+      new Date(article.publishedAt)
+    );
 
   return (
     <ArticleDateWrapper
@@ -24,6 +28,17 @@ export const HauptstadtArticleDate = ({
       className={className}
     >
       {date.format(new Date(article.publishedAt), false)}
+
+      {updated && (
+        <time
+          suppressHydrationWarning
+          dateTime={article.latest.publishedAt!}
+        >
+          {' '}
+          (Aktualisiert am{' '}
+          {date.format(new Date(article.latest.publishedAt!), false)})
+        </time>
+      )}
     </ArticleDateWrapper>
   );
 };
