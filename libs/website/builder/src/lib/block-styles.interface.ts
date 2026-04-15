@@ -8,15 +8,18 @@ import {
 import { BuilderTeaserProps } from './teaser.interface';
 
 export type BuilderSlidesPerView = Partial<{
-  xs: number;
-  sm: number;
-  md: number;
-  lg: number;
-  xl: number;
+  xs: number | 'auto';
+  sm: number | 'auto';
+  md: number | 'auto';
+  lg: number | 'auto';
+  xl: number | 'auto';
 }>;
 
 export type BuilderSliderConfig = {
   slidesPerViewConfig?: BuilderSlidesPerView;
+  dragDisabled?: boolean;
+  detailsChanged?: (slider: any) => void;
+  slideGap?: number;
 };
 
 export type BuilderBlockStyleProps = {
