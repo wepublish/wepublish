@@ -77,7 +77,7 @@ import { PermissionModule } from '@wepublish/permissions/api';
 import { PhraseModule } from '@wepublish/phrase/api';
 import { PollModule } from '@wepublish/poll/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
-import { SettingModule } from '@wepublish/settings/api';
+import { SettingModule, SettingName } from '@wepublish/settings/api';
 import { StatsModule } from '@wepublish/stats/api';
 import { ExternalAppsModule } from '@wepublish/external-apps/api';
 import { SystemInfoModule } from '@wepublish/system-info';
@@ -203,6 +203,13 @@ import {
         const hostURL = config.get('HOST_URL') || 'http://localhost:4000';
         const websiteURL = config.get('WEBSITE_URL') || 'http://localhost:3000';
 
+        const jwtExpiresSetting = await prisma.setting.findUnique({
+          where: { name: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN },
+        });
+        const jwtExpires =
+          (jwtExpiresSetting?.value as number) ??
+          parseInt(config.get('SEND_LOGIN_JWT_EXPIRES_MIN') ?? `${6 * 60}`);
+
         return {
           mailProvider,
           jwtGenerator: (userId: string) =>
@@ -211,7 +218,7 @@ import {
               privateKey: jwtPrivateKey,
               issuer: hostURL,
               audience: websiteURL,
-              expiresInMinutes: 6 * 60,
+              expiresInMinutes: jwtExpires,
             }),
         };
       },
