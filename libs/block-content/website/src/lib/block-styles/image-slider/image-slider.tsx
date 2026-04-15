@@ -43,6 +43,7 @@ export const ImageSlider = ({
   if (slideGap != null) {
     slidePadding = slideGap;
   }
+  
   const [ref, sliderRef] = useKeenSlider({
     mode: 'free-snap',
     loop: true,
