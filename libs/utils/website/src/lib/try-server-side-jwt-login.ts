@@ -54,4 +54,3 @@ export function redirectToLoginWithError(ctx: NextPageContext) {
   }
 }
 
-export { EXPIRED_JWT_MESSAGE };
