@@ -43,7 +43,7 @@ export async function tryServerSideJwtLogin(
   return false;
 }
 
-const EXPIRED_JWT_MESSAGE =
+export const EXPIRED_JWT_MESSAGE =
   'Dieser Link ist nicht mehr gültig. Bitte hier einen neuen Link anfordern oder mit Benutzernamen und Passwort anmelden.';
 
 export function redirectToLoginWithError(ctx: NextPageContext) {
