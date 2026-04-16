@@ -6,6 +6,7 @@ import {
 import { TFunction } from 'i18next';
 
 import {
+  BaseBlockValue,
   BlockValue,
   FlexBlockWithAlignment,
   Teaser,
@@ -79,11 +80,16 @@ const BLOCK_TYPE_KEY: Partial<Record<EditorBlockType, string>> = {
 function blockLabel(
   type: EditorBlockType,
   blockIndex: number,
-  t: TFunction
+  t: TFunction,
+  blockStyleId?: string | null,
+  blockStyleNames?: Map<string, string>
 ): string {
   const typeLabel =
     BLOCK_TYPE_KEY[type] ? t(BLOCK_TYPE_KEY[type]!) : String(type);
-  return `${typeLabel} · Block ${blockIndex + 1}`;
+  const base = `${typeLabel} · Block ${blockIndex + 1}`;
+  const styleName =
+    blockStyleId ? (blockStyleNames?.get(blockStyleId) ?? blockStyleId) : '';
+  return styleName ? `${base} · ${styleName}` : base;
 }
 
 // ─── Content key ─────────────────────────────────────────────────────────────
@@ -110,7 +116,8 @@ export function teaserContentKey(teaser: Teaser): string {
  */
 export function extractTeasers(
   blocks: BlockValue[],
-  t: TFunction
+  t: TFunction,
+  blockStyleNames?: Map<string, string>
 ): ExtractedTeaser[] {
   const results: ExtractedTeaser[] = [];
   let groupIndex = 0;
@@ -122,7 +129,13 @@ export function extractTeasers(
       case EditorBlockType.TeaserGrid1:
       case EditorBlockType.TeaserGrid6: {
         const value = block.value as TeaserGridBlockValue;
-        const label = blockLabel(block.type, blockIndex, t);
+        const label = blockLabel(
+          block.type,
+          blockIndex,
+          t,
+          value.blockStyle,
+          blockStyleNames
+        );
 
         for (let i = 0; i < value.teasers.length; i++) {
           const [, teaser] = value.teasers[i];
@@ -142,7 +155,13 @@ export function extractTeasers(
 
       case EditorBlockType.TeaserGridFlex: {
         const value = block.value as TeaserGridFlexBlockValue;
-        const label = blockLabel(block.type, blockIndex, t);
+        const label = blockLabel(
+          block.type,
+          blockIndex,
+          t,
+          value.blockStyle,
+          blockStyleNames
+        );
 
         for (let i = 0; i < value.flexTeasers.length; i++) {
           const { teaser } = value.flexTeasers[i];
@@ -164,7 +183,13 @@ export function extractTeasers(
 
       case EditorBlockType.TeaserSlots: {
         const value = block.value as TeaserSlotsBlockValue;
-        const label = blockLabel(block.type, blockIndex, t);
+        const label = blockLabel(
+          block.type,
+          blockIndex,
+          t,
+          value.blockStyle,
+          blockStyleNames
+        );
 
         for (let i = 0; i < value.slots.length; i++) {
           const slot = value.slots[i];
@@ -213,13 +238,20 @@ export function extractTeasers(
             nestedBlockType === EditorBlockType.TeaserSlots ?
               ((nestedBlock.value as TeaserSlotsBlockValue).title ?? '')
             : '';
+          const nestedBlockStyleId =
+            (nestedBlock.value as BaseBlockValue).blockStyle ?? '';
+          const nestedBlockStyleName =
+            nestedBlockStyleId ?
+              (blockStyleNames?.get(nestedBlockStyleId) ?? nestedBlockStyleId)
+            : '';
+          const nestedDetail = nestedTitle || nestedBlockStyleName;
           const nestedLabel =
-            nestedTitle ?
+            nestedDetail ?
               t('teaserOverview.nestedLabelWithTitle', {
                 blockIndex: blockIndex + 1,
                 nestedIndex: sortedPos + 1,
                 type: nestedTypeLabel,
-                title: nestedTitle,
+                title: nestedDetail,
               })
             : t('teaserOverview.nestedLabel', {
                 blockIndex: blockIndex + 1,
@@ -229,7 +261,11 @@ export function extractTeasers(
 
           // Temporarily wrap the nested block in a single-item array so we can
           // reuse extractTeasers recursively, then remap the addresses.
-          const nested = extractTeasers([nestedBlock as BlockValue], t);
+          const nested = extractTeasers(
+            [nestedBlock as BlockValue],
+            t,
+            blockStyleNames
+          );
           for (const extracted of nested) {
             results.push({
               ...extracted,

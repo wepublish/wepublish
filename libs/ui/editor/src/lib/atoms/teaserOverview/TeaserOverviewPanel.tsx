@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Chip, Collapse, css, Typography } from '@mui/material';
-import { TeaserType } from '@wepublish/editor/api';
+import { TeaserType, useBlockStylesQuery } from '@wepublish/editor/api';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -202,7 +202,19 @@ export function TeaserOverviewPanel({
     () => new Set([TeaserType.Article])
   );
 
-  const allTeasers = useMemo(() => extractTeasers(blocks, t), [blocks, t]);
+  const { data: blockStylesData } = useBlockStylesQuery();
+  const blockStyleNames = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const style of blockStylesData?.blockStyles ?? []) {
+      map.set(style.id, style.name);
+    }
+    return map;
+  }, [blockStylesData]);
+
+  const allTeasers = useMemo(
+    () => extractTeasers(blocks, t, blockStyleNames),
+    [blocks, t, blockStyleNames]
+  );
 
   const isFiltering = activeFilters.size !== ALL_TEASER_TYPES.length;
 
