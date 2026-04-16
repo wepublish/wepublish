@@ -1,16 +1,19 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import {
-  AuthTokenStorageKey,
   IntendedRouteStorageKey,
   LoginFormContainer,
   useUser,
 } from '@wepublish/authentication/website';
-import { getSessionTokenProps } from '@wepublish/utils/website';
+import {
+  getSessionTokenProps,
+  tryServerSideJwtLogin,
+  redirectToLoginWithError,
+} from '@wepublish/utils/website';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
-import { getV1ApiClient, LoginWithJwtDocument } from '@wepublish/website/api';
+import { getV1ApiClient } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
-import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import { deleteCookie, getCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -80,27 +83,14 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
 
   if (ctx.query.jwt) {
-    const data = await client.mutate({
-      mutation: LoginWithJwtDocument,
-      variables: {
-        jwt: ctx.query.jwt,
-      },
-    });
+    const success = await tryServerSideJwtLogin(ctx, client);
 
-    setCookie(
-      AuthTokenStorageKey,
-      JSON.stringify(
-        data.data.createSessionWithJWT as SessionWithTokenWithoutUser
-      ),
-      {
-        req: ctx.req,
-        res: ctx.res,
-        expires: new Date(data.data.createSessionWithJWT.expiresAt),
-        sameSite: 'strict',
-      }
-    );
+    if (success) {
+      return await getSessionTokenProps(ctx);
+    }
 
-    return await getSessionTokenProps(ctx);
+    redirectToLoginWithError(ctx);
+    return {};
   }
 
   return {};

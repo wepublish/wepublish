@@ -1,6 +1,6 @@
 import { useKeenSlider } from 'keen-slider/react';
 import { allPass } from 'ramda';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { hasBlockStyle } from '../../has-blockstyle';
 import { isImageGalleryBlock } from '../../image-gallery/image-gallery-block';
@@ -25,8 +25,13 @@ import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
 export const ImageSlider = ({
   images,
   slidesPerViewConfig = {},
+  dragDisabled = false,
+  detailsChanged,
+  slideGap,
   className,
-}: BuilderBlockStyleProps['ImageSlider'] & { className?: string }) => {
+  blockStyle,
+  ...props
+}: BuilderBlockStyleProps['ImageSlider']) => {
   const {
     blocks: { Image },
   } = useWebsiteBuilder();
@@ -34,10 +39,16 @@ export const ImageSlider = ({
   const [loaded, setLoaded] = useState(false);
 
   const slidesPerView = useSlidesPerView(slidesPerViewConfig);
-  const slidePadding = useSlidesPadding();
+  let slidePadding = useSlidesPadding();
+  if (slideGap != null) {
+    slidePadding = slideGap;
+  }
+
   const [ref, sliderRef] = useKeenSlider({
     mode: 'free-snap',
     loop: true,
+    drag: dragDisabled ? false : true,
+    detailsChanged: detailsChanged ? detailsChanged : void 0,
     slides: {
       origin: 'center',
       perView: slidesPerView,
@@ -50,6 +61,10 @@ export const ImageSlider = ({
       setLoaded(true);
     },
   });
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => sliderRef.current?.update());
+    return () => cancelAnimationFrame(frame);
+  }, [sliderRef]);
 
   return (
     !!images.length && (

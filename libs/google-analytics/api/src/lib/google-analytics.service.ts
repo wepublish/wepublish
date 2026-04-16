@@ -17,11 +17,29 @@ export type GoogleAnalyticsConfig = {
 
 @Injectable()
 export class GoogleAnalyticsService implements HotAndTrendingDataSource {
+  private cachedClient: BetaAnalyticsDataClient | null = null;
+  private cachedClientEmail: string | null = null;
+
   constructor(
     private prisma: PrismaClient,
     @Inject(GA_CLIENT_OPTIONS)
     private configProvider: GoogleAnalyticsDbConfig
   ) {}
+
+  private getClient(credentials: JWTInput): BetaAnalyticsDataClient {
+    if (
+      this.cachedClient &&
+      this.cachedClientEmail === credentials.client_email
+    ) {
+      return this.cachedClient;
+    }
+
+    this.cachedClient?.close();
+    this.cachedClient = new BetaAnalyticsDataClient({ credentials });
+    this.cachedClientEmail = credentials.client_email ?? null;
+
+    return this.cachedClient;
+  }
 
   async getMostViewedArticles({
     start,
@@ -38,33 +56,36 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
       return [];
     }
 
-    const analyticsDataClient = new BetaAnalyticsDataClient({
-      credentials: config.credentials,
-    });
+    const analyticsDataClient = this.getClient(config.credentials);
 
     const thirtyDaysAgo = new Date(
       new Date().getTime() - 60 * 60 * 24 * 31 * 1000
     );
 
-    const [{ rows }] = await analyticsDataClient.runReport({
-      property: `properties/${config.property}`,
-      dateRanges: [
-        {
-          startDate: format(start ?? thirtyDaysAgo, 'yyyy-MM-dd'),
-          endDate: 'today',
-        },
-      ],
-      dimensions: [
-        {
-          name: 'pagePath',
-        },
-      ],
-      metrics: [
-        {
-          name: 'activeUsers',
-        },
-      ],
-    });
+    const [{ rows }] = await analyticsDataClient.runReport(
+      {
+        property: `properties/${config.property}`,
+        dateRanges: [
+          {
+            startDate: format(start ?? thirtyDaysAgo, 'yyyy-MM-dd'),
+            endDate: 'today',
+          },
+        ],
+        dimensions: [
+          {
+            name: 'pagePath',
+          },
+        ],
+        metrics: [
+          {
+            name: 'activeUsers',
+          },
+        ],
+      },
+      {
+        timeout: 10_000,
+      }
+    );
 
     const articleViewMap = (rows ?? []).reduce(
       (object, { dimensionValues, metricValues }) => {

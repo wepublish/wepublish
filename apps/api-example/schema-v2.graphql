@@ -1082,13 +1082,13 @@ input FlexTeaserInput {
 }
 
 type FocalPoint {
-  x: Float!
-  y: Float!
+  x: Float
+  y: Float
 }
 
 input FocalPointInput {
-  x: Float!
-  y: Float!
+  x: Float
+  y: Float
 }
 
 type FullPoll {

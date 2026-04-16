@@ -1209,13 +1209,13 @@ export type FlexTeaserInput = {
 
 export type FocalPoint = {
   __typename?: 'FocalPoint';
-  x: Scalars['Float'];
-  y: Scalars['Float'];
+  x?: Maybe<Scalars['Float']>;
+  y?: Maybe<Scalars['Float']>;
 };
 
 export type FocalPointInput = {
-  x: Scalars['Float'];
-  y: Scalars['Float'];
+  x?: InputMaybe<Scalars['Float']>;
+  y?: InputMaybe<Scalars['Float']>;
 };
 
 export type FullPoll = {
@@ -5723,7 +5723,11 @@ export type FullImageFragment = {
   previewURL?: string | null;
   column1URL?: string | null;
   column6URL?: string | null;
-  focalPoint?: { __typename?: 'FocalPoint'; x: number; y: number } | null;
+  focalPoint?: {
+    __typename?: 'FocalPoint';
+    x?: number | null;
+    y?: number | null;
+  } | null;
 };
 
 export type FullPeerProfileFragment = {
@@ -5760,7 +5764,11 @@ export type FullPeerProfileFragment = {
     previewURL?: string | null;
     column1URL?: string | null;
     column6URL?: string | null;
-    focalPoint?: { __typename?: 'FocalPoint'; x: number; y: number } | null;
+    focalPoint?: {
+      __typename?: 'FocalPoint';
+      x?: number | null;
+      y?: number | null;
+    } | null;
   } | null;
   squareLogo?: {
     __typename?: 'Image';
@@ -5786,7 +5794,11 @@ export type FullPeerProfileFragment = {
     previewURL?: string | null;
     column1URL?: string | null;
     column6URL?: string | null;
-    focalPoint?: { __typename?: 'FocalPoint'; x: number; y: number } | null;
+    focalPoint?: {
+      __typename?: 'FocalPoint';
+      x?: number | null;
+      y?: number | null;
+    } | null;
   } | null;
   callToActionImage?: {
     __typename?: 'Image';
@@ -5812,7 +5824,11 @@ export type FullPeerProfileFragment = {
     previewURL?: string | null;
     column1URL?: string | null;
     column6URL?: string | null;
-    focalPoint?: { __typename?: 'FocalPoint'; x: number; y: number } | null;
+    focalPoint?: {
+      __typename?: 'FocalPoint';
+      x?: number | null;
+      y?: number | null;
+    } | null;
   } | null;
 };
 
@@ -5899,7 +5915,11 @@ export type PeerProfileQuery = {
       previewURL?: string | null;
       column1URL?: string | null;
       column6URL?: string | null;
-      focalPoint?: { __typename?: 'FocalPoint'; x: number; y: number } | null;
+      focalPoint?: {
+        __typename?: 'FocalPoint';
+        x?: number | null;
+        y?: number | null;
+      } | null;
     } | null;
     squareLogo?: {
       __typename?: 'Image';
@@ -5925,7 +5945,11 @@ export type PeerProfileQuery = {
       previewURL?: string | null;
       column1URL?: string | null;
       column6URL?: string | null;
-      focalPoint?: { __typename?: 'FocalPoint'; x: number; y: number } | null;
+      focalPoint?: {
+        __typename?: 'FocalPoint';
+        x?: number | null;
+        y?: number | null;
+      } | null;
     } | null;
     callToActionImage?: {
       __typename?: 'Image';
@@ -5951,7 +5975,11 @@ export type PeerProfileQuery = {
       previewURL?: string | null;
       column1URL?: string | null;
       column6URL?: string | null;
-      focalPoint?: { __typename?: 'FocalPoint'; x: number; y: number } | null;
+      focalPoint?: {
+        __typename?: 'FocalPoint';
+        x?: number | null;
+        y?: number | null;
+      } | null;
     } | null;
   };
 };

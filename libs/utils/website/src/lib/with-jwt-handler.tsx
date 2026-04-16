@@ -4,6 +4,7 @@ import {
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import { ComponentType, memo, useEffect } from 'react';
+import { EXPIRED_JWT_MESSAGE } from './try-server-side-jwt-login';
 
 export const withJwtHandler = <
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -17,7 +18,7 @@ export const withJwtHandler = <
 
     useEffect(() => {
       const handleJwt = (jwt: string) => {
-        loginWithJwt({ variables: { jwt } }).then(result => {
+        return loginWithJwt({ variables: { jwt } }).then(result => {
           if (result?.data?.createSessionWithJWT) {
             setToken(
               result.data.createSessionWithJWT as SessionWithTokenWithoutUser
@@ -39,7 +40,9 @@ export const withJwtHandler = <
           const jwt = event.data?.previewJwt;
           if (jwt) {
             window.removeEventListener('message', handleMessage);
-            handleJwt(jwt);
+            handleJwt(jwt).catch(() => {
+              // Preview JWT failed — not actionable for the user
+            });
           }
         };
         window.addEventListener('message', handleMessage);
@@ -64,7 +67,9 @@ export const withJwtHandler = <
       if (jwt) {
         url.searchParams.delete('jwt');
         window.history.replaceState(null, '', url.toString());
-        handleJwt(jwt);
+        handleJwt(jwt).catch(() => {
+          window.location.href = `/login?error=${encodeURIComponent(EXPIRED_JWT_MESSAGE)}`;
+        });
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
