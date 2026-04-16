@@ -142,6 +142,26 @@ const FilterLabel = styled(Typography)`
   `}
 `;
 
+const ChipCount = styled('span', {
+  shouldForwardProp: p => p !== 'active',
+})<{ active: boolean }>`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  margin-left: 4px;
+  background: ${({ active, theme }) =>
+    active ? 'rgba(255,255,255,0.25)' : theme.palette.action.hover};
+  color: ${({ active, theme }) =>
+    active ? '#fff' : theme.palette.text.secondary};
+`;
+
 const EmptyState = styled(Typography)`
   ${({ theme }) => css`
     color: ${theme.palette.text.disabled};
@@ -185,6 +205,14 @@ export function TeaserOverviewPanel({
   const allTeasers = useMemo(() => extractTeasers(blocks, t), [blocks, t]);
 
   const isFiltering = activeFilters.size !== ALL_TEASER_TYPES.length;
+
+  const teaserCountsByType = useMemo(() => {
+    const counts = new Map<TeaserType, number>();
+    for (const { teaser } of allTeasers) {
+      counts.set(teaser.type, (counts.get(teaser.type) ?? 0) + 1);
+    }
+    return counts;
+  }, [allTeasers]);
 
   // Group by blockLabel, preserving order of first appearance
   const groups = useMemo(() => {
@@ -346,7 +374,14 @@ export function TeaserOverviewPanel({
             {ALL_TEASER_TYPES.map(type => (
               <Chip
                 key={type}
-                label={t(`teaserOverview.teaserTypes.${type}`)}
+                label={
+                  <>
+                    {t(`teaserOverview.teaserTypes.${type}`)}
+                    <ChipCount active={activeFilters.has(type)}>
+                      {teaserCountsByType.get(type) ?? 0}
+                    </ChipCount>
+                  </>
+                }
                 size="small"
                 variant={activeFilters.has(type) ? 'filled' : 'outlined'}
                 color={activeFilters.has(type) ? 'primary' : 'default'}
