@@ -169,17 +169,6 @@ export class SessionService {
       return email;
     }
 
-    const jwtExpiresSetting = await this.prisma.setting.findUnique({
-      where: { name: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN },
-    });
-    const jwtExpires =
-      (jwtExpiresSetting?.value as number) ??
-      parseInt(process.env['SEND_LOGIN_JWT_EXPIRES_MIN'] ?? '');
-
-    if (!jwtExpires) {
-      throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN');
-    }
-
     const remoteTemplate = await this.mailContext.getUserTemplateName(
       UserEvent.LOGIN_LINK
     );
