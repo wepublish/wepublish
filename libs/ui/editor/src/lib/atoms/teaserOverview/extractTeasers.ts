@@ -197,7 +197,8 @@ export function extractTeasers(
             return aa.y - bb.y || aa.x - bb.x;
           });
 
-        for (const nestedBlockIndex of sortedIndices) {
+        for (let sortedPos = 0; sortedPos < sortedIndices.length; sortedPos++) {
+          const nestedBlockIndex = sortedIndices[sortedPos];
           const { block: nestedBlock } = nestedBlocks[nestedBlockIndex];
           if (!nestedBlock) continue;
 
@@ -216,13 +217,13 @@ export function extractTeasers(
             nestedTitle ?
               t('teaserOverview.nestedLabelWithTitle', {
                 blockIndex: blockIndex + 1,
-                nestedIndex: nestedBlockIndex + 1,
+                nestedIndex: sortedPos + 1,
                 type: nestedTypeLabel,
                 title: nestedTitle,
               })
             : t('teaserOverview.nestedLabel', {
                 blockIndex: blockIndex + 1,
-                nestedIndex: nestedBlockIndex + 1,
+                nestedIndex: sortedPos + 1,
                 type: nestedTypeLabel,
               });
 
