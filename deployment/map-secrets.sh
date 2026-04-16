@@ -18,13 +18,13 @@ if [[ $MODE == "restore" ]]; then
   if [[ -f secrets_name.list ]]; then
     for n in $(cat secrets_name.list); do
 
-      # Exit if en env is missing!
       if [[ -z ${!n} ]]; then
-        echo "Secret env ${n} not set!"
-        exit 99
+        echo "WARNING: Secret env ${n} not set! Substituting empty string."
+        sed -i "s/\"@@@${n}@@@\"/\"\"/g" $(grep -rl "\"@@@${n}@@@\"" /wepublish)
+      else
+        echo "Inserted secret variable ${n}"
+        sed -i "s/\"@@@${n}@@@\"/\"${!n}\"/g" $(grep -rl "\"@@@${n}@@@\"" /wepublish)
       fi
-      echo "Inserted secret variable ${n}"
-      sed -i "s/\"@@@${n}@@@\"/\"${!n}\"/g" $(grep -rl "\"@@@${n}@@@\"" /wepublish)
     done
   fi
   exit 0
