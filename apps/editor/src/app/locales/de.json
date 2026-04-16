@@ -1957,7 +1957,15 @@
       },
       "nestedLabelWithTitle": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}}, \"{{title}}\")",
       "nestedLabel": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}})",
-      "duplicateBadge": "Duplikat: Dieser Teaser erscheint mehrfach auf der Seite"
+      "duplicateBadge": "Duplikat: Dieser Teaser erscheint mehrfach auf der Seite",
+      "filterLabel": "Filter:",
+      "filterSuffix": "Filter: {{count}} sichtbare Teaser",
+      "teaserTypes": {
+        "Article": "Artikel",
+        "Page": "Seite",
+        "Event": "Event",
+        "Custom": "Custom"
+      }
     }
   }
 }

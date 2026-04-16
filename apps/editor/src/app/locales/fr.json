@@ -1841,7 +1841,15 @@
       },
       "nestedLabelWithTitle": "Flex Block {{blockIndex}} › Bloc {{nestedIndex}} ({{type}}, \"{{title}}\")",
       "nestedLabel": "Flex Block {{blockIndex}} › Bloc {{nestedIndex}} ({{type}})",
-      "duplicateBadge": "Doublon : ce teaser apparaît plusieurs fois sur la page"
+      "duplicateBadge": "Doublon : ce teaser apparaît plusieurs fois sur la page",
+      "filterLabel": "Filtre :",
+      "filterSuffix": "Filtre : {{count}} teasers visibles",
+      "teaserTypes": {
+        "Article": "Article",
+        "Page": "Page",
+        "Event": "Événement",
+        "Custom": "Personnalisé"
+      }
     }
   }
 }

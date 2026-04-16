@@ -2019,7 +2019,15 @@
       },
       "nestedLabelWithTitle": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}}, \"{{title}}\")",
       "nestedLabel": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}})",
-      "duplicateBadge": "Duplicate: this teaser appears multiple times on the page"
+      "duplicateBadge": "Duplicate: this teaser appears multiple times on the page",
+      "filterLabel": "Filter:",
+      "filterSuffix": "Filter: {{count}} visible Teasers",
+      "teaserTypes": {
+        "Article": "Article",
+        "Page": "Page",
+        "Event": "Event",
+        "Custom": "Custom"
+      }
     }
   }
 }

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
-import { Collapse, css, Typography } from '@mui/material';
+import { Chip, Collapse, css, Typography } from '@mui/material';
+import { TeaserType } from '@wepublish/editor/api';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -123,6 +124,24 @@ const HintActions = styled('div')`
   flex-shrink: 0;
 `;
 
+const FilterBar = styled('div')`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 8px 16px;
+  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
+  background: #f7f9fa;
+`;
+
+const FilterLabel = styled(Typography)`
+  ${({ theme }) => css`
+    font-size: ${theme.typography.caption.fontSize};
+    color: ${theme.palette.text.secondary};
+    margin-right: 4px;
+  `}
+`;
+
 const EmptyState = styled(Typography)`
   ${({ theme }) => css`
     color: ${theme.palette.text.disabled};
@@ -130,6 +149,13 @@ const EmptyState = styled(Typography)`
     padding: 16px;
   `}
 `;
+
+const ALL_TEASER_TYPES = [
+  TeaserType.Article,
+  TeaserType.Page,
+  TeaserType.Event,
+  TeaserType.Custom,
+] as const;
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -152,8 +178,13 @@ export function TeaserOverviewPanel({
   const [replaceAddress, setReplaceAddress] = useState<TeaserAddress | null>(
     null
   );
+  const [activeFilters, setActiveFilters] = useState<Set<TeaserType>>(
+    () => new Set([TeaserType.Article])
+  );
 
   const allTeasers = useMemo(() => extractTeasers(blocks, t), [blocks, t]);
+
+  const isFiltering = activeFilters.size !== ALL_TEASER_TYPES.length;
 
   // Group by blockLabel, preserving order of first appearance
   const groups = useMemo(() => {
@@ -176,6 +207,35 @@ export function TeaserOverviewPanel({
 
     return [...seen.values()];
   }, [allTeasers]);
+
+  // Filtered groups: only show groups that have at least one matching teaser
+  const filteredGroups = useMemo(() => {
+    if (!isFiltering) return groups;
+
+    return groups
+      .map(group => ({
+        ...group,
+        teasers: group.teasers.filter(t => activeFilters.has(t.teaser.type)),
+      }))
+      .filter(group => group.teasers.length > 0);
+  }, [groups, activeFilters, isFiltering]);
+
+  const visibleTeaserCount = useMemo(
+    () => filteredGroups.reduce((sum, g) => sum + g.teasers.length, 0),
+    [filteredGroups]
+  );
+
+  const toggleFilter = useCallback((type: TeaserType) => {
+    setActiveFilters(prev => {
+      const next = new Set(prev);
+      if (next.has(type)) {
+        next.delete(type);
+      } else {
+        next.add(type);
+      }
+      return next;
+    });
+  }, []);
 
   const handleCardClick = useCallback(
     (extracted: ExtractedTeaser) => {
@@ -243,6 +303,11 @@ export function TeaserOverviewPanel({
     }
   );
 
+  const filterSuffix =
+    isFiltering ?
+      ` (${t('teaserOverview.filterSuffix', { count: visibleTeaserCount })})`
+    : '';
+
   return (
     <>
       <PanelWrapper>
@@ -261,7 +326,10 @@ export function TeaserOverviewPanel({
 
           <HeaderTitle variant="body2">{t('teaserOverview.title')}</HeaderTitle>
 
-          <HeaderMeta variant="caption">{summary}</HeaderMeta>
+          <HeaderMeta variant="caption">
+            {summary}
+            {filterSuffix}
+          </HeaderMeta>
 
           <ChevronIcon>
             {isOpen ?
@@ -271,6 +339,26 @@ export function TeaserOverviewPanel({
         </Header>
 
         <Collapse in={isOpen}>
+          <FilterBar>
+            <FilterLabel variant="caption">
+              {t('teaserOverview.filterLabel')}
+            </FilterLabel>
+            {ALL_TEASER_TYPES.map(type => (
+              <Chip
+                key={type}
+                label={t(`teaserOverview.teaserTypes.${type}`)}
+                size="small"
+                variant={activeFilters.has(type) ? 'filled' : 'outlined'}
+                color={activeFilters.has(type) ? 'primary' : 'default'}
+                disabled={!!selectedAddress}
+                onClick={e => {
+                  e.stopPropagation();
+                  toggleFilter(type);
+                }}
+              />
+            ))}
+          </FilterBar>
+
           <Content>
             <SelectionHint visible={!!selectedAddress}>
               <HintText>{t('teaserOverview.hintText')}</HintText>
@@ -287,13 +375,13 @@ export function TeaserOverviewPanel({
               </HintActions>
             </SelectionHint>
 
-            {groups.length === 0 && (
+            {filteredGroups.length === 0 && (
               <EmptyState variant="body2">
                 {t('teaserOverview.emptyState')}
               </EmptyState>
             )}
 
-            {groups.map((group, i) => (
+            {filteredGroups.map((group, i) => (
               <TeaserBlockGroup
                 key={i}
                 label={group.label}
