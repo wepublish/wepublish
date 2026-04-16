@@ -100,8 +100,8 @@ const SelectionHint = styled('div', {
     padding: 4px 8px 4px 12px;
   `}
   position: sticky;
-  top: 50px;
-  z-index: 10;
+  top: 66px;
+  z-index: 9;
   display: flex;
   align-items: center;
   gap: 8px;
