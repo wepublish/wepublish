@@ -43,7 +43,6 @@ import deOverriden from '../locales/deOverriden.json';
 import { TsriFlexBlock } from '../src/components/block-layouts/tsri-base-flex-block';
 import { TsriBreakBlock } from '../src/components/break-blocks/tsri-base-break-block';
 import { TsriContextBox } from '../src/components/break-blocks/tsri-context-box';
-import { TsriImageSlider } from '../src/components/tsri-image-slider';
 import { TsriBaseTeaserSlots } from '../src/components/teaser-layouts/tsri-base-teaser-slots';
 import { TsriBaseTeaser } from '../src/components/teasers/tsri-base-teaser';
 import { TsriArticle } from '../src/components/tsri-article';
@@ -64,7 +63,7 @@ import { TsriBlocks } from '../src/components/tsri-block-renderer';
 import { TsriCommentList } from '../src/components/tsri-comment-list';
 import { TsriFooter } from '../src/components/tsri-footer';
 import { TsriGlobalStyles } from '../src/components/tsri-global-styles';
-import { TsriImageGalleryBlock } from '../src/components/tsri-image-gallery-block';
+import { TsriImageSlider } from '../src/components/tsri-image-slider';
 import { TsriNextWepublishLink } from '../src/components/tsri-next-wepublish-link';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
@@ -147,7 +146,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             BaseTeaser: TsriBaseTeaser,
             TeaserSlots: TsriBaseTeaserSlots,
             Break: TsriBreakBlock,
-            ImageGallery: TsriImageGalleryBlock,
             Quote: TsriQuoteBlock,
             RichText: TsriRichText,
             Title: TsriTitleBlock,
