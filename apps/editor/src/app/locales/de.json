@@ -1959,7 +1959,7 @@
       "nestedLabel": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}})",
       "duplicateBadge": "Duplikat: Dieser Teaser erscheint mehrfach auf der Seite",
       "filterLabel": "Filter:",
-      "filterSuffix": "Filter: {{count}} sichtbare Teaser",
+      "filterSuffix": "Filter: {{count}} Teaser",
       "teaserTypes": {
         "Article": "Artikel",
         "Page": "Seite",

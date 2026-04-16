@@ -2021,7 +2021,7 @@
       "nestedLabel": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}})",
       "duplicateBadge": "Duplicate: this teaser appears multiple times on the page",
       "filterLabel": "Filter:",
-      "filterSuffix": "Filter: {{count}} visible Teasers",
+      "filterSuffix": "Filter: {{count}} Teasers",
       "teaserTypes": {
         "Article": "Article",
         "Page": "Page",

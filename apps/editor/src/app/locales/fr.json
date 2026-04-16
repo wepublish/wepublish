@@ -1843,7 +1843,7 @@
       "nestedLabel": "Flex Block {{blockIndex}} › Bloc {{nestedIndex}} ({{type}})",
       "duplicateBadge": "Doublon : ce teaser apparaît plusieurs fois sur la page",
       "filterLabel": "Filtre :",
-      "filterSuffix": "Filtre : {{count}} teasers visibles",
+      "filterSuffix": "Filtre : {{count}} teasers",
       "teaserTypes": {
         "Article": "Article",
         "Page": "Page",
