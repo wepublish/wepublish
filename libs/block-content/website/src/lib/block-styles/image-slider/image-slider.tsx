@@ -61,6 +61,7 @@ export const ImageSlider = ({
       setLoaded(true);
     },
   });
+
   useEffect(() => {
     const frame = requestAnimationFrame(() => sliderRef.current?.update());
     return () => cancelAnimationFrame(frame);

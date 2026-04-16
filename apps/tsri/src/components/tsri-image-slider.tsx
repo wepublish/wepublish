@@ -132,7 +132,6 @@ const ClipPath = styled(ClipPathBase)<{ clipRatio: number }>`
 
 const ImageSliderBase = ({
   images,
-  slidesPerViewConfig = {},
   className,
 }: BuilderBlockStyleProps['ImageSlider']) => {
   const theme = useTheme();
