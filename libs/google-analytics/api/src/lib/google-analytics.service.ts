@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { HotAndTrendingDataSource } from '@wepublish/article/api';
 import { getMaxTake } from '@wepublish/utils/api';
 import { GoogleAnalyticsDbConfig } from './google-analytics-db-config';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 export const GA_CLIENT_OPTIONS = Symbol('GA_CLIENT_OPTIONS');
 
@@ -18,6 +19,7 @@ export type GoogleAnalyticsConfig = {
 const GA_TIMEOUT_MS = 5_000;
 const CIRCUIT_BREAKER_THRESHOLD = 3;
 const CIRCUIT_BREAKER_COOLDOWN_MS = 5 * 60 * 1000;
+const RESULT_CACHE_TTL_S = 5 * 60;
 
 @Injectable()
 export class GoogleAnalyticsService implements HotAndTrendingDataSource {
@@ -31,7 +33,8 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
   constructor(
     private prisma: PrismaClient,
     @Inject(GA_CLIENT_OPTIONS)
-    private configProvider: GoogleAnalyticsDbConfig
+    private configProvider: GoogleAnalyticsDbConfig,
+    private kv: KvTtlCacheService
   ) {}
 
   private isCircuitOpen(): boolean {
@@ -78,25 +81,16 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
     return this.cachedClient;
   }
 
-  async getMostViewedArticles({
-    start,
-    take,
-    skip,
-  }: Parameters<HotAndTrendingDataSource['getMostViewedArticles']>[0]) {
-    const config = await this.configProvider.getGoogleAnalytics();
-
-    if (!config.credentials || !config.property) {
-      this.logger.warn(
-        'No Google Analytics credentials set, returning empty array'
-      );
-
-      return [];
-    }
-
+  private async loadArticleViewMap(
+    config: GoogleAnalyticsConfig & {
+      credentials: JWTInput;
+      property: string;
+    },
+    start?: Date | null
+  ): Promise<Record<string, number>> {
     if (this.isCircuitOpen()) {
       this.logger.warn('Circuit breaker is open, skipping GA4 call');
-
-      return [];
+      throw new Error('Circuit breaker is open');
     }
 
     const analyticsDataClient = this.getClient(config.credentials);
@@ -107,7 +101,7 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
 
     let rows;
     try {
-      [{ rows }] = await analyticsDataClient.runReport(
+      const [result] = await analyticsDataClient.runReport(
         {
           property: `properties/${config.property}`,
           dateRanges: [
@@ -132,16 +126,16 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
         }
       );
       this.recordSuccess();
+      rows = result.rows ?? [];
     } catch (error) {
       this.recordFailure();
       this.logger.error(
         `GA4 runReport failed: ${error instanceof Error ? error.message : error}`
       );
-
-      return [];
+      throw error;
     }
 
-    const articleViewMap = (rows ?? []).reduce(
+    const articleViewMap: Record<string, number> = (rows ?? []).reduce(
       (object, { dimensionValues, metricValues }) => {
         if (!dimensionValues?.at(0) || !metricValues?.at(0)) {
           return object;
@@ -167,6 +161,47 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
       },
       {} as Record<string, number>
     );
+
+    return articleViewMap;
+  }
+
+  async getMostViewedArticles({
+    start,
+    take,
+    skip,
+  }: Parameters<HotAndTrendingDataSource['getMostViewedArticles']>[0]) {
+    const config = await this.configProvider.getGoogleAnalytics();
+
+    if (!config.credentials || !config.property) {
+      this.logger.warn(
+        'No Google Analytics credentials set, returning empty array'
+      );
+
+      return [];
+    }
+
+    let articleViewMap: Record<string, number>;
+    try {
+      articleViewMap = await this.kv.getOrLoadNs<Record<string, number>>(
+        'ga4',
+        'article-view-map',
+        () =>
+          this.loadArticleViewMap(
+            config as GoogleAnalyticsConfig & {
+              credentials: JWTInput;
+              property: string;
+            },
+            start
+          ),
+        RESULT_CACHE_TTL_S
+      );
+    } catch (error) {
+      return [];
+    }
+
+    if (!Object.keys(articleViewMap).length) {
+      return [];
+    }
 
     // Adding a number (even as string) to an object key ignores sorting
     // So we have to re-sort the array
