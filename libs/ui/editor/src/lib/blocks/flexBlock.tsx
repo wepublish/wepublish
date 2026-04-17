@@ -3,6 +3,7 @@ import 'react-resizable/css/styles.css';
 
 import styled from '@emotion/styled';
 import { BlockType } from '@wepublish/editor/api';
+import { toPlaintext } from '@wepublish/richtext';
 import i18next from 'i18next';
 import nanoid from 'nanoid';
 import React, {
@@ -49,11 +50,12 @@ import { BlockMap } from './blockMap';
 import { IconWrapper } from './teaserGridBlock';
 import {
   BlockValue,
+  EmbedBlockValue,
+  EmbedType,
   FlexAlignment,
   FlexBlockValue,
   FlexBlockWithAlignment,
 } from './types';
-import { toPlaintext } from '@wepublish/richtext';
 
 const IconButton = styled(RIconButton)`
   margin: 10px;
@@ -258,6 +260,33 @@ const getContentHintForFlexBlockNestedBlock = (block: BlockListValue) => {
   if (block.type === 'Image') {
     return block.value?.image?.filename || 'Image';
   }
+  if (block.type === 'Embed') {
+    const embed = block.value as EmbedBlockValue | undefined;
+    if (!embed) return 'Embed';
+
+    switch (embed.type) {
+      case EmbedType.YouTubeVideo:
+        return `YouTube: ${embed.videoID || 'no ID'}`;
+      case EmbedType.VimeoVideo:
+        return `Vimeo: ${embed.videoID || 'no ID'}`;
+      case EmbedType.TikTokVideo:
+        return `TikTok: ${embed.videoID || 'no ID'}`;
+      case EmbedType.SoundCloudTrack:
+        return `SoundCloud: ${embed.trackID || 'no ID'}`;
+      case EmbedType.InstagramPost:
+        return `Instagram: ${embed.postID || 'no ID'}`;
+      case EmbedType.TwitterTweet:
+        return `Twitter: ${embed.tweetID || 'no ID'}`;
+      case EmbedType.FacebookPost:
+        return `Facebook Post: ${embed.postID || 'no ID'}`;
+      case EmbedType.FacebookVideo:
+        return `Facebook Video: ${embed.videoID || 'no ID'}`;
+      case EmbedType.Other:
+        return embed.title || embed.url || 'Embed';
+      default:
+        return 'Embed';
+    }
+  }
   if (block.type === 'RichText') {
     const text = toPlaintext(block.value?.richText);
     if (!text) {
@@ -272,12 +301,63 @@ const getContentHintForFlexBlockNestedBlock = (block: BlockListValue) => {
   return 'unknown block value';
 };
 
+const oEmbedUrlForEmbed = (embed: EmbedBlockValue): string | null => {
+  switch (embed.type) {
+    case EmbedType.YouTubeVideo:
+      return embed.videoID ?
+          `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${embed.videoID}&format=json`
+        : null;
+    case EmbedType.VimeoVideo:
+      return embed.videoID ?
+          `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${embed.videoID}`
+        : null;
+    default:
+      return null;
+  }
+};
+
+const embedTitleCache = new Map<string, string>();
+
+const useEmbedTitle = (embed: EmbedBlockValue | undefined): string | null => {
+  const [title, setTitle] = useState<string | null>(null);
+  const oEmbedUrl = embed ? oEmbedUrlForEmbed(embed) : null;
+
+  useEffect(() => {
+    if (!oEmbedUrl) return;
+
+    const cached = embedTitleCache.get(oEmbedUrl);
+    if (cached) {
+      setTitle(cached);
+      return;
+    }
+
+    fetch(oEmbedUrl)
+      .then(res => res.json())
+      .then(data => {
+        if (data.title) {
+          embedTitleCache.set(oEmbedUrl, data.title);
+          setTitle(data.title);
+        }
+      })
+      .catch(() => undefined);
+  }, [oEmbedUrl]);
+
+  return title;
+};
+
 export const ContentForFlexBlock = ({ block }: { block: BlockListValue }) => {
-  return (
-    <ContentForFlexBlockWrapper>
-      {getContentHintForFlexBlockNestedBlock(block)}
-    </ContentForFlexBlockWrapper>
-  );
+  const embed =
+    block?.type === 'Embed' ?
+      (block.value as EmbedBlockValue | undefined)
+    : undefined;
+  const embedTitle = useEmbedTitle(embed);
+
+  const hint =
+    embedTitle ?
+      `${getContentHintForFlexBlockNestedBlock(block).split(':')[0]}: ${embedTitle}`
+    : getContentHintForFlexBlockNestedBlock(block);
+
+  return <ContentForFlexBlockWrapper>{hint}</ContentForFlexBlockWrapper>;
 };
 
 export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {

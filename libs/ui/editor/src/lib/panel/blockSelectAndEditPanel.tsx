@@ -13,6 +13,7 @@ export type AllowedBlockTypes = {
 export const allowedBlockTypes: AllowedBlockTypes = {
   [EditorBlockType.TeaserSlots]: true,
   [EditorBlockType.Image]: true,
+  [EditorBlockType.Embed]: true,
   [EditorBlockType.RichText]: true,
 };
 

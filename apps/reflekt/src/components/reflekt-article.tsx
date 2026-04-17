@@ -29,6 +29,7 @@ import {
 import { Paywall } from '@wepublish/website/builder';
 
 import { robotoMono } from '../theme';
+import { ArticlePropertiesContext } from './article-properties-context';
 import { FlexBlockFullsizeImageWrapper } from './block-layouts/flex-block-fullsize-image';
 import {
   FlexBlockHeroWrapper,
@@ -209,11 +210,15 @@ export function ReflektArticle({
       {article && <ArticleSEO article={article} />}
 
       {article && (
-        <Blocks
-          key={article.id}
-          blocks={(article.latest.blocks as BlockContent[]) ?? []}
-          type="Article"
-        />
+        <ArticlePropertiesContext.Provider
+          value={article.latest.properties ?? []}
+        >
+          <Blocks
+            key={article.id}
+            blocks={(article.latest.blocks as BlockContent[]) ?? []}
+            type="Article"
+          />
+        </ArticlePropertiesContext.Provider>
       )}
 
       <ArticleInfoWrapper>

@@ -17,7 +17,13 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { allPass, anyPass, cond } from 'ramda';
-import { memo, useMemo } from 'react';
+import {
+  type PropsWithChildren,
+  memo,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 import {
   FlexBlockFullsizeImage,
@@ -43,6 +49,12 @@ import {
 } from './break-blocks/text-with-image-alt-color';
 import { MainSpacer } from './main-spacer';
 import { isTeaserSlotsTopic } from './teaser-layouts/teaser-slots-topic';
+
+const ClientOnly = ({ children }: PropsWithChildren) => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted ? <>{children}</> : null;
+};
 
 export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
   const isMobile = useMediaQuery((theme: Theme) =>
@@ -152,30 +164,35 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
     [isMobile]
   );
 
+  const isEmbed =
+    props.block.__typename === 'YouTubeVideoBlock' ||
+    props.block.__typename === 'VimeoVideoBlock' ||
+    props.block.__typename === 'SoundCloudTrackBlock' ||
+    props.block.__typename === 'IFrameBlock';
+
+  const fallbackRenderer = (
+    <BlockRenderer
+      {...props}
+      siblings={props.siblings}
+    />
+  );
+
+  const defaultBlock =
+    extraBlockMap(props.block) ??
+    (isEmbed ? <ClientOnly>{fallbackRenderer}</ClientOnly> : fallbackRenderer);
+
   if (props.type === 'Page') {
     return (
       <MainSpacer
         maxWidth="lg"
         css={styles(props.block)}
       >
-        {extraBlockMap(props.block) ?? (
-          <BlockRenderer
-            {...props}
-            siblings={props.siblings}
-          />
-        )}
+        {defaultBlock}
       </MainSpacer>
     );
   }
 
-  return (
-    extraBlockMap(props.block) ?? (
-      <BlockRenderer
-        {...props}
-        siblings={props.siblings}
-      />
-    )
-  );
+  return defaultBlock;
 };
 
 // eslint-disable-next-line react/display-name
