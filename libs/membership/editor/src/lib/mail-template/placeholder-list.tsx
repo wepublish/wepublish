@@ -188,7 +188,7 @@ export function PlaceholderList() {
             );
             const newEmailExample = getPlaceholderExample(
               mailTemplate?.provider.name.toLowerCase() ?? '',
-              'optional.newEmail'
+              'optional_newEmail'
             );
 
             placeholders.push({

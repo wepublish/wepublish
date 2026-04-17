@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 import { JWTInput } from 'google-auth-library';
@@ -15,13 +15,68 @@ export type GoogleAnalyticsConfig = {
   articlePrefix: string;
 };
 
+const GA_TIMEOUT_MS = 5_000;
+const CIRCUIT_BREAKER_THRESHOLD = 3;
+const CIRCUIT_BREAKER_COOLDOWN_MS = 5 * 60 * 1000;
+
 @Injectable()
 export class GoogleAnalyticsService implements HotAndTrendingDataSource {
+  private readonly logger = new Logger(GoogleAnalyticsService.name);
+  private cachedClient: BetaAnalyticsDataClient | null = null;
+  private cachedClientEmail: string | null = null;
+
+  private consecutiveFailures = 0;
+  private circuitOpenUntil = 0;
+
   constructor(
     private prisma: PrismaClient,
     @Inject(GA_CLIENT_OPTIONS)
     private configProvider: GoogleAnalyticsDbConfig
   ) {}
+
+  private isCircuitOpen(): boolean {
+    if (this.consecutiveFailures < CIRCUIT_BREAKER_THRESHOLD) {
+      return false;
+    }
+
+    if (Date.now() >= this.circuitOpenUntil) {
+      this.consecutiveFailures = 0;
+      return false;
+    }
+
+    return true;
+  }
+
+  private recordFailure(): void {
+    this.consecutiveFailures++;
+
+    if (this.consecutiveFailures >= CIRCUIT_BREAKER_THRESHOLD) {
+      this.circuitOpenUntil = Date.now() + CIRCUIT_BREAKER_COOLDOWN_MS;
+      this.logger.warn(
+        `Circuit breaker open after ${this.consecutiveFailures} consecutive GA4 failures. ` +
+          `Skipping GA4 calls for ${CIRCUIT_BREAKER_COOLDOWN_MS / 1000}s.`
+      );
+    }
+  }
+
+  private recordSuccess(): void {
+    this.consecutiveFailures = 0;
+  }
+
+  private getClient(credentials: JWTInput): BetaAnalyticsDataClient {
+    if (
+      this.cachedClient &&
+      this.cachedClientEmail === credentials.client_email
+    ) {
+      return this.cachedClient;
+    }
+
+    this.cachedClient?.close();
+    this.cachedClient = new BetaAnalyticsDataClient({ credentials });
+    this.cachedClientEmail = credentials.client_email ?? null;
+
+    return this.cachedClient;
+  }
 
   async getMostViewedArticles({
     start,
@@ -31,40 +86,60 @@ export class GoogleAnalyticsService implements HotAndTrendingDataSource {
     const config = await this.configProvider.getGoogleAnalytics();
 
     if (!config.credentials || !config.property) {
-      console.warn(
-        'GoogleAnalyticsService.getMostViewedArticles: No Google Analytics credentials set, returning empty array'
+      this.logger.warn(
+        'No Google Analytics credentials set, returning empty array'
       );
 
       return [];
     }
 
-    const analyticsDataClient = new BetaAnalyticsDataClient({
-      credentials: config.credentials,
-    });
+    if (this.isCircuitOpen()) {
+      this.logger.warn('Circuit breaker is open, skipping GA4 call');
+
+      return [];
+    }
+
+    const analyticsDataClient = this.getClient(config.credentials);
 
     const thirtyDaysAgo = new Date(
       new Date().getTime() - 60 * 60 * 24 * 31 * 1000
     );
 
-    const [{ rows }] = await analyticsDataClient.runReport({
-      property: `properties/${config.property}`,
-      dateRanges: [
+    let rows;
+    try {
+      [{ rows }] = await analyticsDataClient.runReport(
         {
-          startDate: format(start ?? thirtyDaysAgo, 'yyyy-MM-dd'),
-          endDate: 'today',
+          property: `properties/${config.property}`,
+          dateRanges: [
+            {
+              startDate: format(start ?? thirtyDaysAgo, 'yyyy-MM-dd'),
+              endDate: 'today',
+            },
+          ],
+          dimensions: [
+            {
+              name: 'pagePath',
+            },
+          ],
+          metrics: [
+            {
+              name: 'activeUsers',
+            },
+          ],
         },
-      ],
-      dimensions: [
         {
-          name: 'pagePath',
-        },
-      ],
-      metrics: [
-        {
-          name: 'activeUsers',
-        },
-      ],
-    });
+          timeout: GA_TIMEOUT_MS,
+        }
+      );
+      this.recordSuccess();
+    } catch (error) {
+      this.recordFailure();
+      this.logger.error(
+        `GA4 runReport failed: ${error instanceof Error ? error.message : error}`
+      );
+
+      return [];
+    }
 
     const articleViewMap = (rows ?? []).reduce(
       (object, { dimensionValues, metricValues }) => {

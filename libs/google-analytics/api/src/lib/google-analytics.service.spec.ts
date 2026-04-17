@@ -11,6 +11,7 @@ const runReportSpy = jest.fn();
 jest.mock('@google-analytics/data', () => ({
   BetaAnalyticsDataClient: jest.fn().mockImplementation(() => ({
     runReport: runReportSpy,
+    close: jest.fn(),
   })),
 }));
 
@@ -82,6 +83,65 @@ describe('GoogleAnalyticsService', () => {
 
     expect(result).toHaveLength(0);
     expect(runReportSpy).not.toHaveBeenCalled();
+  });
+
+  it('should return an empty array when runReport throws', async () => {
+    runReportSpy.mockRejectedValue(new Error('gRPC timeout'));
+
+    const result = await service.getMostViewedArticles({});
+
+    expect(result).toHaveLength(0);
+  });
+
+  it('should open the circuit breaker after 3 consecutive failures', async () => {
+    runReportSpy.mockRejectedValue(new Error('gRPC timeout'));
+
+    await service.getMostViewedArticles({});
+    await service.getMostViewedArticles({});
+    await service.getMostViewedArticles({});
+
+    expect(runReportSpy).toHaveBeenCalledTimes(3);
+
+    // Circuit is now open — should not call runReport
+    await service.getMostViewedArticles({});
+    expect(runReportSpy).toHaveBeenCalledTimes(3);
+  });
+
+  it('should reset the circuit breaker after cooldown', async () => {
+    runReportSpy.mockRejectedValue(new Error('gRPC timeout'));
+
+    await service.getMostViewedArticles({});
+    await service.getMostViewedArticles({});
+    await service.getMostViewedArticles({});
+
+    // Advance past the 5-minute cooldown
+    jest.setSystemTime(new Date('2023-01-01T00:06:00'));
+
+    runReportSpy.mockReturnValue(Promise.resolve([{ rows: [] }]));
+    prismaMock.article.findMany?.mockReturnValue([]);
+
+    const result = await service.getMostViewedArticles({});
+    expect(runReportSpy).toHaveBeenCalledTimes(4);
+    expect(result).toHaveLength(0);
+
+    // Reset time for other tests
+    jest.setSystemTime(new Date('2023-01-01'));
+  });
+
+  it('should reset consecutive failures on success', async () => {
+    runReportSpy.mockRejectedValueOnce(new Error('gRPC timeout'));
+    runReportSpy.mockRejectedValueOnce(new Error('gRPC timeout'));
+    runReportSpy.mockReturnValueOnce(Promise.resolve([{ rows: [] }]));
+    prismaMock.article.findMany?.mockReturnValue([]);
+
+    await service.getMostViewedArticles({});
+    await service.getMostViewedArticles({});
+    await service.getMostViewedArticles({}); // success — resets counter
+
+    // Next failure should not open circuit (only 1 consecutive)
+    runReportSpy.mockRejectedValueOnce(new Error('gRPC timeout'));
+    await service.getMostViewedArticles({});
+    expect(runReportSpy).toHaveBeenCalledTimes(4);
   });
 
   it('should get articles by popularity', async () => {

@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
 import { useApolloClient } from '@apollo/client';
-import { AuthTokenStorageKey } from '@wepublish/authentication/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import {
   InvoiceListContainer,
@@ -15,18 +14,15 @@ import { PersonalDataFormContainer } from '@wepublish/user/website';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
-  LoginWithJwtDocument,
   MeDocument,
   NavigationListDocument,
   InvoicesDocument,
   SubscriptionsDocument,
   ProductType,
-  SessionWithTokenWithoutUser,
   useConfirmEmailChangeMutation,
   useSubscriptionsQuery,
 } from '@wepublish/website/api';
 import { Button, Link, useWebsiteBuilder } from '@wepublish/website/builder';
-import { setCookie } from 'cookies-next';
 import { NextPage, NextPageContext } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -35,6 +31,10 @@ import { useTranslation } from 'react-i18next';
 import { withAuthGuard } from '../../auth-guard';
 import { ssrAuthLink } from '../../auth-link';
 import { getSessionTokenProps } from '../../get-session-token-props';
+import {
+  tryServerSideJwtLogin,
+  redirectToLoginWithError,
+} from '../../try-server-side-jwt-login';
 
 const SubscriptionsWrapper = styled('div')`
   display: flex;
@@ -246,26 +246,15 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
   ]);
 
   if (ctx.query.jwt) {
-    const data = await client.mutate({
-      mutation: LoginWithJwtDocument,
-      variables: {
-        jwt: ctx.query.jwt,
-      },
+    const success = await tryServerSideJwtLogin(ctx, client, {
+      httpOnly: !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE,
     });
 
-    setCookie(
-      AuthTokenStorageKey,
-      JSON.stringify(
-        data.data.createSessionWithJWT as SessionWithTokenWithoutUser
-      ),
-      {
-        req: ctx.req,
-        res: ctx.res,
-        expires: new Date(data.data.createSessionWithJWT.expiresAt),
-        sameSite: 'strict',
-        httpOnly: !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE,
-      }
-    );
+    if (!success) {
+      redirectToLoginWithError(ctx);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return {} as any;
+    }
   }
 
   const sessionProps = await getSessionTokenProps(ctx);

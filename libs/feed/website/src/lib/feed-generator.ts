@@ -39,7 +39,7 @@ export const generateFeed =
           seo.schema.image?.url ? escapeXml(seo.schema.image.url) : undefined,
         description: seo.schema.description,
         content: content ? content : (article.latest.lead ?? undefined),
-        author: article.latest.authors.map(author => ({
+        author: article.latest.authors.filter(Boolean).map(author => ({
           name: author.name,
           link: author.url,
         })),
