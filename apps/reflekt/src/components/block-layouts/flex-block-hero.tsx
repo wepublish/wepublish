@@ -33,6 +33,22 @@ import { useArticleProperty } from '../article-properties-context';
 import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 import { heroOffScreen } from '../reflekt-navbar';
 
+const isTrustedYouTubeUrl = (value?: string | null): boolean => {
+  if (!value) return false;
+
+  try {
+    const hostname = new URL(value).hostname.toLowerCase();
+    return (
+      hostname === 'youtube.com' ||
+      hostname === 'www.youtube.com' ||
+      hostname === 'm.youtube.com' ||
+      hostname === 'youtu.be'
+    );
+  } catch {
+    return false;
+  }
+};
+
 export const isFlexBlockHero = (
   block: Pick<BlockContent, '__typename'>
 ): block is FlexBlockType => {
@@ -204,7 +220,7 @@ export const FlexBlockHero = ({
         const isYouTube = nestedBlock.block.__typename === 'YouTubeVideoBlock';
         const isYouTubeIframe =
           nestedBlock.block.__typename === 'IFrameBlock' &&
-          (nestedBlock.block as IFrameBlockType).url?.includes('youtube.com');
+          isTrustedYouTubeUrl((nestedBlock.block as IFrameBlockType).url);
         const isHeroVideo = isYouTube || isYouTubeIframe;
         const videoUrl =
           isYouTube ?
