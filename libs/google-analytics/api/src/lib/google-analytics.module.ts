@@ -12,6 +12,7 @@ import {
 import { GoogleAnalyticsDbConfig } from './google-analytics-db-config';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { ArticleModule } from '@wepublish/article/api';
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 
 export type GoogleAnalyticsOptionsFactory = {
   createGoogleAnalyticsOptions():
@@ -30,7 +31,7 @@ export interface GoogleAnalyticsAsyncOptions
 }
 
 @Module({
-  imports: [PrismaModule, ArticleModule],
+  imports: [PrismaModule, ArticleModule, KvTtlCacheModule],
   providers: [GoogleAnalyticsService],
   exports: [GoogleAnalyticsService],
 })

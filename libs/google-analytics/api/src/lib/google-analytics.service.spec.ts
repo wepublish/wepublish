@@ -5,6 +5,8 @@ import {
   GoogleAnalyticsConfig,
   GoogleAnalyticsService,
 } from './google-analytics.service';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 
 const runReportSpy = jest.fn();
 
@@ -63,6 +65,7 @@ describe('GoogleAnalyticsService', () => {
             getGoogleAnalytics: () => Promise.resolve(config),
           },
         },
+        { provide: KvTtlCacheService, useValue: createKvMock() },
       ],
     }).compile();
 
@@ -136,12 +139,35 @@ describe('GoogleAnalyticsService', () => {
 
     await service.getMostViewedArticles({});
     await service.getMostViewedArticles({});
-    await service.getMostViewedArticles({}); // success — resets counter
+    await service.getMostViewedArticles({}); // success — resets counter and caches
 
-    // Next failure should not open circuit (only 1 consecutive)
-    runReportSpy.mockRejectedValueOnce(new Error('gRPC timeout'));
+    expect(runReportSpy).toHaveBeenCalledTimes(3);
+
+    // 4th call uses cache — no new runReport call
     await service.getMostViewedArticles({});
-    expect(runReportSpy).toHaveBeenCalledTimes(4);
+    expect(runReportSpy).toHaveBeenCalledTimes(3);
+  });
+
+  it('should cache the GA4 result and not call runReport again', async () => {
+    runReportSpy.mockReturnValue(
+      Promise.resolve([
+        {
+          rows: [
+            {
+              dimensionValues: [{ value: '/a/foobar' }],
+              metricValues: [{ value: '100' }],
+            },
+          ],
+        },
+      ])
+    );
+    prismaMock.article.findMany?.mockReturnValue([]);
+
+    await service.getMostViewedArticles({});
+    await service.getMostViewedArticles({});
+    await service.getMostViewedArticles({});
+
+    expect(runReportSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should get articles by popularity', async () => {
