@@ -241,7 +241,7 @@ export const FlexBlockHero = ({
                   url={videoUrl}
                   playing={isActiveBlock}
                   loop={!noLoop}
-                  muted={muted}
+                  muted={muted || !isActiveBlock}
                   playsinline
                   controls={false}
                   width="100%"
