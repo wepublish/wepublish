@@ -217,9 +217,9 @@ export const FlexBlockHero = ({
       ref={ref}
     >
       {sortedBlocks.map((nestedBlock, index) => {
-        const isYouTube = nestedBlock.block.__typename === 'YouTubeVideoBlock';
+        const isYouTube = nestedBlock.block?.__typename === 'YouTubeVideoBlock';
         const isYouTubeIframe =
-          nestedBlock.block.__typename === 'IFrameBlock' &&
+          nestedBlock.block?.__typename === 'IFrameBlock' &&
           isTrustedYouTubeUrl((nestedBlock.block as IFrameBlockType).url);
         const isHeroVideo = isYouTube || isYouTubeIframe;
         const videoUrl =
