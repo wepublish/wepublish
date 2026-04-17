@@ -2,8 +2,12 @@ import styled from '@emotion/styled';
 import { hasBlockStyle } from '@wepublish/block-content/website';
 
 import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
-import { ReflektTeaser } from './reflekt-teaser';
+import { ReflektTeaser, TeaserPreTitleNoContent } from './reflekt-teaser';
 
 export const isTeaserNews = hasBlockStyle(ReflektBlockType.TeaserNews);
 
-export const TeaserNews = styled(ReflektTeaser)``;
+export const TeaserNews = styled(ReflektTeaser)`
+  ${TeaserPreTitleNoContent} {
+    display: none;
+  }
+`;

@@ -10,6 +10,9 @@ import {
   TeaserImageWrapper,
   TeaserLead,
   TeaserMetadata,
+  TeaserPreTitle,
+  TeaserPreTitleNoContent,
+  TeaserPreTitleWrapper,
   TeaserTitle,
 } from './reflekt-teaser';
 
@@ -71,6 +74,18 @@ export const TeaserRecherchen = styled(ReflektTeaser)`
   }
 
   ${TeaserMetadata} {
+    display: none;
+  }
+
+  ${TeaserPreTitleWrapper} {
+    display: none;
+  }
+
+  ${TeaserPreTitleNoContent} {
+    display: none;
+  }
+
+  ${TeaserPreTitle} {
     display: none;
   }
 `;
