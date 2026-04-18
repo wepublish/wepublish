@@ -15,6 +15,7 @@ import {
   USER_PROPERTY_LAST_LOGIN_LINK_SEND,
 } from '@wepublish/utils/api';
 import { JwtService } from './jwt.service';
+import { TotpService } from './totp.service';
 
 const IDAlphabet =
   '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -31,10 +32,34 @@ export class SessionService {
     private jwtAuthenticationService: JwtAuthenticationService,
     private jwtService: JwtService,
     private settingsService: SettingsService,
-    private mailContext: MailContext
+    private mailContext: MailContext,
+    private totpService: TotpService
   ) {}
 
-  async createSessionWithEmailAndPassword(email: string, password: string) {
+  /**
+   * Checks if a given email requires TOTP during login.
+   * Returns true if the user has TOTP enabled or if the user doesn't exist
+   * (to prevent user enumeration - unknown emails look the same as TOTP users).
+   * Returns false only for existing users without TOTP configured.
+   */
+  async checkLoginOtp(email: string): Promise<boolean> {
+    const user = await this.prisma.user.findFirst({
+      where: { email: { equals: email.toLowerCase(), mode: 'insensitive' } },
+      select: { totpEnabled: true },
+    });
+
+    if (!user) {
+      return true;
+    }
+
+    return user.totpEnabled;
+  }
+
+  async createSessionWithEmailAndPassword(
+    email: string,
+    password: string,
+    totpToken?: string
+  ) {
     const user =
       await this.userAuthenticationService.authenticateUserWithEmailAndPassword(
         email,
@@ -47,6 +72,16 @@ export class SessionService {
 
     if (!user.active) {
       throw new NotActiveError();
+    }
+
+    if (user.totpEnabled) {
+      // User has TOTP configured - require valid code to get a session.
+      // No exceptions: password login without TOTP = no session.
+      if (!totpToken) {
+        throw new InvalidCredentialsError();
+      }
+
+      await this.totpService.verifyUserTotp(user.id, totpToken);
     }
 
     return this.createUserSession(user);
@@ -62,6 +97,14 @@ export class SessionService {
 
     if (!user.active) {
       throw new NotActiveError();
+    }
+
+    if (user.totpEnabled) {
+      // Users with 2FA must use password + TOTP to log in.
+      // Email link login is disabled for them to prevent 2FA bypass.
+      throw new BadRequestException(
+        'Login links are not available for accounts with two-factor authentication. Please use your password and authenticator code.'
+      );
     }
 
     return this.createUserSession(user);
@@ -101,6 +144,7 @@ export class SessionService {
       token,
       createdAt,
       expiresAt,
+      totpEnabled: user.totpEnabled,
     };
   }
 
@@ -110,6 +154,13 @@ export class SessionService {
     const user = await this.userService.getUserByEmailWithPassword(email);
 
     if (!user) {
+      return;
+    }
+
+    // Silently skip sending login link for users with 2FA enabled.
+    // They must use password + TOTP. We don't reveal that 2FA is
+    // the reason to prevent enumeration of 2FA-enabled accounts.
+    if (user.totpEnabled) {
       return;
     }
 

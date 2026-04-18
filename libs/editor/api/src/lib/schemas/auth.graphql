@@ -1,12 +1,19 @@
-mutation CreateSession($email: String!, $password: String!) {
-  createSession(email: $email, password: $password) {
+query CheckLoginOtp($email: String!) {
+  checkLoginOtp(email: $email)
+}
+
+mutation CreateSession($email: String!, $password: String!, $totpToken: String) {
+  createSession(email: $email, password: $password, totpToken: $totpToken) {
     user {
       email
+      totpEnabled
+      totpExempt
       roles {
         ...FullUserRole
       }
     }
     token
+    totpEnabled
   }
 }
 
@@ -14,11 +21,14 @@ mutation CreateSessionWithJWT($jwt: String!) {
   createSessionWithJWT(jwt: $jwt) {
     user {
       email
+      totpEnabled
+      totpExempt
       roles {
         ...FullUserRole
       }
     }
     token
+    totpEnabled
   }
 }
 
@@ -27,4 +37,20 @@ mutation CreateJWTForWebsiteLogin {
     token
     expiresAt
   }
+}
+
+mutation GenerateTotpSetup {
+  generateTotpSetup {
+    secret
+    uri
+    qrCode
+  }
+}
+
+mutation EnableTotp($totpToken: String!) {
+  enableTotp(totpToken: $totpToken)
+}
+
+mutation ResetUserTotp($userId: String!) {
+  resetUserTotp(userId: $userId)
 }

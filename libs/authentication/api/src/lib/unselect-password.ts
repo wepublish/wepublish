@@ -39,4 +39,7 @@ export const unselectPassword: Record<
   active: true,
   lastLogin: true,
   roleIDs: true,
+  totpSecret: false,
+  totpEnabled: true,
+  totpExempt: true,
 } as const;

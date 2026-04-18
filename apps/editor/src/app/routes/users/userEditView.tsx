@@ -4,6 +4,7 @@ import {
   FullUserFragment,
   FullUserRoleFragment,
   useCreateUserMutation,
+  useResetUserTotpMutation,
   UserAddress,
   useUpdateUserMutation,
   useUserQuery,
@@ -27,8 +28,10 @@ import {
 import { userCountryNames } from '@wepublish/user';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { MdLockReset } from 'react-icons/md';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
+  Button as RButton,
   CheckPicker,
   Col,
   DatePicker,
@@ -210,6 +213,10 @@ function UserEditView() {
     isUpdating ||
     loadError !== undefined;
   const canResetPassword = useAuthorisation('CAN_RESET_USER_PASSWORD');
+  const canResetTotp = useAuthorisation('CAN_RESET_USER_TOTP');
+
+  const [resetUserTotp, { loading: isResettingTotp }] =
+    useResetUserTotpMutation();
 
   /**
    * Function to update address object
@@ -865,6 +872,118 @@ function UserEditView() {
                     </Col>
                   </Row>
                 </Panel>
+                {/* two-factor authentication */}
+                {user && canResetTotp && (
+                  <Panel
+                    bordered
+                    header={t('userCreateOrEditView.totpHeader')}
+                  >
+                    <Row gutter={10}>
+                      <Col xs={24}>
+                        <p style={{ marginBottom: 12 }}>
+                          {user.totpEnabled ?
+                            t('userCreateOrEditView.totpEnabled')
+                          : user.totpExempt ?
+                            t('userCreateOrEditView.totpExemptInfo')
+                          : t('userCreateOrEditView.totpDisabled')}
+                        </p>
+                        <RButton
+                          appearance="primary"
+                          color="orange"
+                          startIcon={<MdLockReset />}
+                          disabled={!user.totpEnabled || isResettingTotp}
+                          style={{ marginBottom: 16 }}
+                          onClick={async () => {
+                            try {
+                              await resetUserTotp({
+                                variables: { userId: user.id },
+                              });
+                              toaster.push(
+                                <Message
+                                  type="success"
+                                  showIcon
+                                  closable
+                                  duration={2000}
+                                >
+                                  {t('userList.overview.totpResetSuccess')}
+                                </Message>
+                              );
+                            } catch (e) {
+                              toaster.push(
+                                <Message
+                                  type="error"
+                                  showIcon
+                                  closable
+                                  duration={2000}
+                                >
+                                  {t('userList.overview.totpResetError')}
+                                </Message>
+                              );
+                            }
+                          }}
+                        >
+                          {t('userList.overview.resetTotp')}
+                        </RButton>
+                      </Col>
+                      <Col xs={24}>
+                        <Form.Group controlId="totpExempt">
+                          <Form.ControlLabel>
+                            {t('userCreateOrEditView.totpExemptLabel')}
+                          </Form.ControlLabel>
+                          <RToggle
+                            checked={user.totpExempt}
+                            onChange={async value => {
+                              if (
+                                value &&
+                                !window.confirm(
+                                  t('userCreateOrEditView.totpExemptWarning')
+                                )
+                              ) {
+                                return;
+                              }
+                              try {
+                                await updateUser({
+                                  variables: {
+                                    id: user.id,
+                                    name: user.name,
+                                    email: user.email,
+                                    totpExempt: value,
+                                  },
+                                });
+                                setUser({ ...user, totpExempt: value });
+                                toaster.push(
+                                  <Message
+                                    type="success"
+                                    showIcon
+                                    closable
+                                    duration={2000}
+                                  >
+                                    {t(
+                                      'userCreateOrEditView.successfullyUpdatedUser'
+                                    )}
+                                  </Message>
+                                );
+                              } catch (e) {
+                                toaster.push(
+                                  <Message
+                                    type="error"
+                                    showIcon
+                                    closable
+                                    duration={2000}
+                                  >
+                                    {t('userCreateOrEditView.errorOnUpdate', {
+                                      error: e,
+                                    })}
+                                  </Message>
+                                );
+                              }
+                            }}
+                          />
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                  </Panel>
+                )}
               </RGrid>
             </Col>
             {/* subscriptions */}

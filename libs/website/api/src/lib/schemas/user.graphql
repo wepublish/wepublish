@@ -28,6 +28,7 @@ fragment FullSensitiveDataUser on SensitiveDataUser {
   birthday
   email
   pendingEmail
+  totpEnabled
 
   address {
     ...FullAddress
@@ -67,8 +68,12 @@ query Me {
   }
 }
 
-mutation LoginWithCredentials($email: String!, $password: String!) {
-  createSession(email: $email, password: $password) {
+query CheckLoginOtp($email: String!) {
+  checkLoginOtp(email: $email)
+}
+
+mutation LoginWithCredentials($email: String!, $password: String!, $totpToken: String) {
+  createSession(email: $email, password: $password, totpToken: $totpToken) {
     ...FullSessionWithToken
   }
 }
@@ -141,6 +146,18 @@ mutation UpdatePassword($password: String!, $passwordRepeated: String!) {
 
 mutation RequestEmailChange($newEmail: String!) {
   requestEmailChange(newEmail: $newEmail)
+}
+
+mutation GenerateTotpSetup {
+  generateTotpSetup(website: true) {
+    secret
+    uri
+    qrCode
+  }
+}
+
+mutation EnableTotp($totpToken: String!) {
+  enableTotp(totpToken: $totpToken)
 }
 
 mutation ConfirmEmailChange($newEmail: String!) {

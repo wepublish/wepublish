@@ -770,8 +770,19 @@
     "login": {
       "email": "Email",
       "login": "Login",
+      "next": "Suivant",
       "password": "Mot de passe",
-      "unauthorized": "L'utilisateur·trices n'est pas autorisé·e à se connecter"
+      "unauthorized": "L'utilisateur·trices n'est pas autorisé·e à se connecter",
+      "totp": {
+        "back": "Retour",
+        "setupDescription": "Pour sécuriser votre compte, veuillez configurer l'authentification à deux facteurs. Scannez le code QR avec votre application d'authentification (ex. Google Authenticator, Authy).",
+        "manualEntry": "Ou entrez ce code manuellement dans votre application d'authentification :",
+        "code": "Code de vérification",
+        "activate": "Activer 2FA",
+        "invalidCode": "Code de vérification invalide. Veuillez réessayer.",
+        "setupError": "Échec de la configuration 2FA. Veuillez réessayer.",
+        "setupSuccess": "L'authentification à deux facteurs a été activée avec succès."
+      }
     },
     "mailTemplates": {
       "availableTemplates": "Modèles de courriels disponibles",
@@ -1310,6 +1321,12 @@
       "password": "Mot de passe",
       "passwordChangeSuccess": "Le mot de passe a été changé avec succès !",
       "passwordHeader": "Mots de passe & accès",
+      "totpHeader": "Authentification à deux facteurs",
+      "totpEnabled": "L'authentification à deux facteurs est activée pour cet utilisateur.",
+      "totpDisabled": "L'authentification à deux facteurs n'est pas encore configurée. L'utilisateur sera invité à la configurer lors de sa prochaine connexion à l'éditeur.",
+      "totpExemptInfo": "Cet utilisateur est exempté de l'exigence d'authentification à deux facteurs.",
+      "totpExemptLabel": "Exempter de l'exigence 2FA",
+      "totpExemptWarning": "\u26a0\ufe0f AVERTISSEMENT DE SÉCURITÉ \u26a0\ufe0f\n\nVous êtes sur le point de DÉSACTIVER l'exigence d'authentification à deux facteurs pour cet utilisateur !\n\nCela réduit considérablement la sécurité de ce compte. L'utilisateur pourra se connecter à l'éditeur avec un simple mot de passe, sans second facteur.\n\nCela ne devrait être utilisé que dans des circonstances exceptionnelles.\n\nÊtes-vous sûr de vouloir continuer ?",
       "resetPassword": "Réinitialiser le mot de passe",
       "resetPasswordFor": "Réinitialiser le mot de passe de {{userName}}",
       "selectUserImage": "Choisir une photo de profil",
@@ -1344,6 +1361,11 @@
         "noSubscriptions": "Aucun abonnement",
         "oneSubscription": "1 abonnement",
         "resetPassword": "Réinitialiser le mot de passe",
+        "resetTotp": "Réinitialiser 2FA",
+        "resetTotpTitle": "Réinitialiser l'authentification à deux facteurs",
+        "resetTotpConfirmation": "Êtes-vous sûr de vouloir réinitialiser l'authentification à deux facteurs pour {{name}} ? L'utilisateur devra configurer 2FA à nouveau lors de sa prochaine connexion.",
+        "totpResetSuccess": "L'authentification à deux facteurs a été réinitialisée avec succès.",
+        "totpResetError": "Échec de la réinitialisation de l'authentification à deux facteurs.",
         "subscriptions": "Abonnements",
         "unknown": "Inconnu",
         "users": "Utilisateurs·trices"

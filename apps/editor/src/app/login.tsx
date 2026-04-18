@@ -2,8 +2,11 @@ import styled from '@emotion/styled';
 import {
   FullUserRoleFragment,
   LocalStorageKey,
+  useCheckLoginOtpLazyQuery,
   useCreateSessionMutation,
   useCreateSessionWithJwtMutation,
+  useEnableTotpMutation,
+  useGenerateTotpSetupMutation,
 } from '@wepublish/editor/api';
 import {
   AuthDispatchActionType,
@@ -48,10 +51,47 @@ const IconButton = styled(RIconButton)`
   margin-bottom: 10px;
 `;
 
+const QrCodeImage = styled.img`
+  display: block;
+  margin: 16px auto;
+  max-width: 200px;
+`;
+
+const SecretCode = styled.code`
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  padding: 8px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  word-break: break-all;
+`;
+
+const TotpDescription = styled.p`
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #555;
+`;
+
+function isValidEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+type LoginStep = 'login' | 'totp-setup';
+
 export function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [totpToken, setTotpToken] = useState('');
+  const [loginStep, setLoginStep] = useState<LoginStep>('login');
+  const [otpRequired, setOtpRequired] = useState(false);
+  const [qrCode, setQrCode] = useState('');
+  const [totpSecret, setTotpSecret] = useState('');
+
   const emailInputRef = useRef<HTMLInputElement>(null);
+  const totpInputRef = useRef<HTMLInputElement>(null);
 
   const location = useLocation();
   const params = useParams();
@@ -61,15 +101,17 @@ export function Login() {
   const authDispatch = useContext(AuthDispatchContext);
   const navigate = useNavigate();
 
-  const [authenticate, { loading, error: errorLogin }] =
-    useCreateSessionMutation();
-
+  const [checkLoginOtp] = useCheckLoginOtpLazyQuery();
+  const [authenticate, { loading }] = useCreateSessionMutation();
   const [authenticateWithJWT, { loading: loadingJWT, error: errorJWT }] =
     useCreateSessionWithJwtMutation();
+  const [generateTotpSetup, { loading: loadingSetup }] =
+    useGenerateTotpSetupMutation();
+  const [enableTotp, { loading: loadingEnable }] = useEnableTotpMutation();
 
   const { t } = useTranslation();
 
-  const authenticateUser = useCallback(
+  const finalizeLogin = useCallback(
     (
       sessionToken: string,
       responseEmail: string,
@@ -117,6 +159,22 @@ export function Login() {
     [authDispatch, navigate, next, t]
   );
 
+  // Dynamically check OTP requirement when email changes
+  useEffect(() => {
+    if (!isValidEmail(email)) {
+      setOtpRequired(false);
+      return;
+    }
+
+    const timeout = setTimeout(async () => {
+      const result = await checkLoginOtp({ variables: { email } });
+      setOtpRequired(result.data?.checkLoginOtp ?? false);
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [email, checkLoginOtp]);
+
+  // JWT login flow
   useEffect(() => {
     if (
       location &&
@@ -125,29 +183,27 @@ export function Login() {
       params.jwt
     ) {
       const { jwt } = params;
-      authenticateWithJWT({
-        variables: {
-          jwt,
-        },
-      })
+      authenticateWithJWT({ variables: { jwt } })
         .then((response: any) => {
-          const {
-            token: sessionToken,
-            user: { email: responseEmail, roles },
-          } = response.data.createSessionWithJWT;
+          const { token, totpEnabled, user } =
+            response.data.createSessionWithJWT;
 
-          authenticateUser(sessionToken, responseEmail, roles);
+          if (!totpEnabled && !user.totpExempt) {
+            setEmail(user.email);
+            forceTotpSetup(token);
+          } else {
+            navigate('/login', { replace: true });
+          }
         })
         .catch(error => {
           console.warn('auth error', error);
           navigate('/login', { replace: true });
         });
     }
-  }, [authenticateUser, authenticateWithJWT, location, navigate, params]);
+  }, [authenticateWithJWT, location, navigate, params]);
 
   useEffect(() => {
-    const error = errorLogin?.message ?? errorJWT?.message;
-    if (error)
+    if (errorJWT?.message)
       toaster.push(
         <Message
           type="error"
@@ -155,32 +211,175 @@ export function Login() {
           closable
           duration={0}
         >
-          {error}
+          {errorJWT.message}
         </Message>
       );
-  }, [errorLogin, errorJWT]);
+  }, [errorJWT]);
 
   useEffect(() => {
-    if (emailInputRef.current) {
+    if (loginStep === 'login' && emailInputRef.current) {
       emailInputRef.current.focus();
     }
-  }, []);
+    if (loginStep === 'totp-setup' && totpInputRef.current) {
+      totpInputRef.current.focus();
+    }
+  }, [loginStep]);
 
-  async function login(e: FormEvent) {
+  async function handleLogin(e: FormEvent) {
     e.preventDefault();
 
-    const response = await authenticate({ variables: { email, password } });
+    try {
+      const response = await authenticate({
+        variables: {
+          email,
+          password,
+          totpToken: otpRequired ? totpToken : undefined,
+        },
+      });
 
-    if (!response.data?.createSession) return;
+      if (!response.data?.createSession) return;
 
-    const {
-      token: sessionToken,
-      user: { email: responseEmail, roles },
-    } = response.data.createSession;
+      const { token, totpEnabled, user } = response.data.createSession;
 
-    authenticateUser(sessionToken, responseEmail, roles);
+      if (totpEnabled || user.totpExempt) {
+        finalizeLogin(token, user.email, user.roles);
+      } else {
+        forceTotpSetup(token);
+      }
+    } catch (error: any) {
+      toaster.push(
+        <Message
+          type="error"
+          showIcon
+          closable
+          duration={5000}
+        >
+          {error?.message || t('login.unauthorized')}
+        </Message>
+      );
+      setTotpToken('');
+    }
   }
 
+  async function forceTotpSetup(sessionToken: string) {
+    localStorage.setItem(LocalStorageKey.SessionToken, sessionToken);
+    setLoginStep('totp-setup');
+
+    try {
+      const setupResponse = await generateTotpSetup();
+      if (setupResponse.data?.generateTotpSetup) {
+        setQrCode(setupResponse.data.generateTotpSetup.qrCode);
+        setTotpSecret(setupResponse.data.generateTotpSetup.secret);
+      }
+    } catch (error) {
+      toaster.push(
+        <Message
+          type="error"
+          showIcon
+          closable
+          duration={5000}
+        >
+          {t('login.totp.setupError')}
+        </Message>
+      );
+    }
+  }
+
+  async function handleTotpSetup(e: FormEvent) {
+    e.preventDefault();
+
+    try {
+      const response = await enableTotp({
+        variables: { totpToken },
+      });
+
+      if (response.data?.enableTotp) {
+        toaster.push(
+          <Message
+            type="success"
+            showIcon
+            closable
+            duration={3000}
+          >
+            {t('login.totp.setupSuccess')}
+          </Message>
+        );
+
+        authDispatch({
+          type: AuthDispatchActionType.Login,
+          payload: {
+            email,
+            sessionToken: localStorage.getItem(LocalStorageKey.SessionToken)!,
+          },
+        });
+
+        if (next) {
+          navigate(next, { replace: true });
+          return;
+        }
+
+        navigate('/', { replace: true });
+      }
+    } catch (error: any) {
+      toaster.push(
+        <Message
+          type="error"
+          showIcon
+          closable
+          duration={5000}
+        >
+          {error?.message || t('login.totp.invalidCode')}
+        </Message>
+      );
+      setTotpToken('');
+    }
+  }
+
+  // --- TOTP Setup Screen ---
+  if (loginStep === 'totp-setup') {
+    return (
+      <LoginTemplate backgroundChildren={<Background />}>
+        <Form fluid>
+          <TotpDescription>{t('login.totp.setupDescription')}</TotpDescription>
+
+          {qrCode && (
+            <QrCodeImage
+              src={qrCode}
+              alt="TOTP QR Code"
+            />
+          )}
+
+          {totpSecret && (
+            <>
+              <TotpDescription>{t('login.totp.manualEntry')}</TotpDescription>
+              <SecretCode>{totpSecret}</SecretCode>
+            </>
+          )}
+
+          <Group controlId="totpCode">
+            <ControlLabel>{t('login.totp.code')}</ControlLabel>
+            <Control
+              inputRef={totpInputRef}
+              name="totpCode"
+              value={totpToken}
+              autoComplete="one-time-code"
+              onChange={(value: string) => setTotpToken(value)}
+            />
+          </Group>
+          <Button
+            appearance="primary"
+            type="submit"
+            disabled={loadingEnable || loadingSetup || !totpToken}
+            onClick={handleTotpSetup}
+          >
+            {t('login.totp.activate')}
+          </Button>
+        </Form>
+      </LoginTemplate>
+    );
+  }
+
+  // --- Login Screen ---
   return (
     <LoginTemplate backgroundChildren={<Background />}>
       <Form fluid>
@@ -191,7 +390,7 @@ export function Login() {
             name="username"
             className="username"
             value={email}
-            autoComplete={'username'}
+            autoComplete="username"
             onChange={(email: string) => setEmail(email)}
           />
         </Group>
@@ -202,15 +401,26 @@ export function Login() {
             className="password"
             type="password"
             value={password}
-            autoComplete={'currentPassword'}
+            autoComplete="current-password"
             onChange={(password: string) => setPassword(password)}
           />
         </Group>
+        {otpRequired && (
+          <Group controlId="loginTotp">
+            <ControlLabel>{t('login.totp.code')}</ControlLabel>
+            <Control
+              name="totpCode"
+              value={totpToken}
+              autoComplete="one-time-code"
+              onChange={(value: string) => setTotpToken(value)}
+            />
+          </Group>
+        )}
         <Button
           appearance="primary"
           type="submit"
           disabled={loading}
-          onClick={login}
+          onClick={handleLogin}
         >
           {t('login.login')}
         </Button>

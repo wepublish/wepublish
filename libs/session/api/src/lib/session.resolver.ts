@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { SessionService } from './session.service';
 import { SessionWithToken } from './session.model';
 import {
@@ -18,14 +18,25 @@ export class SessionResolver {
   constructor(private sessionService: SessionService) {}
 
   @Public()
+  @Query(() => Boolean, {
+    description:
+      'Checks whether a given email requires a TOTP code for login. Always returns true to prevent user enumeration.',
+  })
+  async checkLoginOtp(@Args('email') email: string) {
+    return this.sessionService.checkLoginOtp(email);
+  }
+
+  @Public()
   @Mutation(() => SessionWithToken)
   async createSession(
     @Args('email') email: string,
-    @Args('password') password: string
+    @Args('password') password: string,
+    @Args('totpToken', { nullable: true }) totpToken?: string
   ) {
     return this.sessionService.createSessionWithEmailAndPassword(
       email,
-      password
+      password,
+      totpToken
     );
   }
 

@@ -828,8 +828,19 @@
     "login": {
       "email": "Email",
       "login": "Login",
+      "next": "Next",
       "password": "Password",
-      "unauthorized": "User is not authorized for login"
+      "unauthorized": "User is not authorized for login",
+      "totp": {
+        "back": "Back",
+        "setupDescription": "To secure your account, please set up two-factor authentication. Scan the QR code below with your authenticator app (e.g. Google Authenticator, Authy).",
+        "manualEntry": "Or enter this code manually in your authenticator app:",
+        "code": "Verification Code",
+        "activate": "Activate 2FA",
+        "invalidCode": "Invalid verification code. Please try again.",
+        "setupError": "Failed to generate 2FA setup. Please try again.",
+        "setupSuccess": "Two-factor authentication has been enabled successfully."
+      }
     },
     "name": "Name",
     "mailTemplates": {
@@ -1466,6 +1477,12 @@
       "password": "Password",
       "passwordChangeSuccess": "Password successfuly changed!",
       "passwordHeader": "Passwords & Access",
+      "totpHeader": "Two-Factor Authentication",
+      "totpEnabled": "Two-factor authentication is enabled for this user.",
+      "totpDisabled": "Two-factor authentication is not yet configured. The user will be prompted to set it up on their next editor login.",
+      "totpExemptInfo": "This user is exempt from the two-factor authentication requirement.",
+      "totpExemptLabel": "Exempt from 2FA requirement",
+      "totpExemptWarning": "\u26a0\ufe0f SECURITY WARNING \u26a0\ufe0f\n\nYou are about to DISABLE the two-factor authentication requirement for this user!\n\nThis significantly reduces the security of this account. The user will be able to log into the editor with only a password, without any second factor.\n\nThis should only be used in exceptional circumstances.\n\nAre you sure you want to proceed?",
       "properties": "Properties",
       "resetPassword": "Reset Password",
       "resetPasswordFor": "Reset the password for {{userName}}",
@@ -1501,6 +1518,11 @@
         "noSubscriptions": "No subscriptions",
         "oneSubscription": "1 subscription",
         "resetPassword": "Reset Password",
+        "resetTotp": "Reset 2FA",
+        "resetTotpTitle": "Reset Two-Factor Authentication",
+        "resetTotpConfirmation": "Are you sure you want to reset the two-factor authentication for {{name}}? They will need to set up 2FA again on their next login.",
+        "totpResetSuccess": "Two-factor authentication has been reset successfully.",
+        "totpResetError": "Failed to reset two-factor authentication.",
         "subscriptions": "Subscriptions",
         "unknown": "Unknown",
         "users": "Users"

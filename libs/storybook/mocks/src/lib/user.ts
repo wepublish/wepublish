@@ -64,6 +64,7 @@ export const mockSensitiveDataUser = ({
   paymentProviderCustomers = [],
   active = true,
   roleIDs = [],
+  totpEnabled = false,
 }: Partial<SensitiveDataUser> &
   UserExtensionProperties = {}): SensitiveDataUser &
   UserExtensionProperties => ({
@@ -81,6 +82,7 @@ export const mockSensitiveDataUser = ({
   paymentProviderCustomers,
   active,
   roleIDs,
+  totpEnabled,
 });
 
 export const mockUserAdress = ({

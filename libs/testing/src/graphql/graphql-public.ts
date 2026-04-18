@@ -954,8 +954,8 @@ export enum DocumentSort {
 export type DocumentStorageUsage = {
   __typename?: 'DocumentStorageUsage';
   documentCount: Scalars['Int'];
-  limitBytes: Scalars['Int'];
-  usedBytes: Scalars['Int'];
+  limitBytes: Scalars['Float'];
+  usedBytes: Scalars['Float'];
 };
 
 export enum EditorBlockType {
@@ -1875,8 +1875,12 @@ export type Mutation = {
   duplicateArticle: Article;
   /** Duplicates an page. */
   duplicatePage: Page;
+  /** Enables two-factor authentication for the current user after verifying the TOTP token. */
+  enableTotp: Scalars['Boolean'];
   /** Allows authenticated users to extend existing subscriptions */
   extendUserSubscription: Payment;
+  /** Generates a TOTP setup for the current user. Returns a QR code and secret for authenticator app configuration. */
+  generateTotpSetup: TotpSetup;
   /**
    *
    *       Creates and event based on data from importable events list and an id and provider.
@@ -1910,6 +1914,8 @@ export type Mutation = {
   requestEmailChange: Scalars['Boolean'];
   /** Resets the password of a user. */
   resetPassword: SensitiveDataUser;
+  /** Resets the two-factor authentication configuration for a user. The user will need to set up 2FA again on next login. */
+  resetUserTotp: Scalars['Boolean'];
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
@@ -2264,6 +2270,7 @@ export type MutationCreateRatingSystemAnswerArgs = {
 export type MutationCreateSessionArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
+  totpToken?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationCreateSessionWithJwtArgs = {
@@ -2322,6 +2329,7 @@ export type MutationCreateUserArgs = {
   password?: InputMaybe<Scalars['String']>;
   properties: Array<PropertyInput>;
   roleIDs: Array<Scalars['String']>;
+  totpExempt?: InputMaybe<Scalars['Boolean']>;
   userImageID?: InputMaybe<Scalars['String']>;
 };
 
@@ -2499,10 +2507,18 @@ export type MutationDuplicatePageArgs = {
   id: Scalars['String'];
 };
 
+export type MutationEnableTotpArgs = {
+  totpToken: Scalars['String'];
+};
+
 export type MutationExtendUserSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>;
   subscriptionId: Scalars['String'];
   successURL?: InputMaybe<Scalars['String']>;
+};
+
+export type MutationGenerateTotpSetupArgs = {
+  website?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type MutationImportEventArgs = {
@@ -2586,6 +2602,10 @@ export type MutationResetPasswordArgs = {
   id: Scalars['String'];
   password?: InputMaybe<Scalars['String']>;
   sendMail?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type MutationResetUserTotpArgs = {
+  userId: Scalars['String'];
 };
 
 export type MutationSendJwtLoginArgs = {
@@ -2993,6 +3013,7 @@ export type MutationUpdateUserArgs = {
   note?: InputMaybe<Scalars['String']>;
   properties?: InputMaybe<Array<PropertyInput>>;
   roleIDs?: InputMaybe<Array<Scalars['String']>>;
+  totpExempt?: InputMaybe<Scalars['Boolean']>;
   userImageID?: InputMaybe<Scalars['String']>;
 };
 
@@ -3893,6 +3914,8 @@ export type Query = {
   challengeProviderSettings: Array<SettingChallengeProvider>;
   /** Check the status of an invoice and update with information from the payment provider */
   checkInvoiceStatus: Invoice;
+  /** Checks whether a given email requires a TOTP code for login. Always returns true to prevent user enumeration. */
+  checkLoginOtp: Scalars['Boolean'];
   /** Returns a comment by id. */
   comment: Comment;
   /** Returns a paginated list of comments based on the filters given. */
@@ -4199,6 +4222,10 @@ export type QueryChallengeProviderSettingsArgs = {
 
 export type QueryCheckInvoiceStatusArgs = {
   id: Scalars['String'];
+};
+
+export type QueryCheckLoginOtpArgs = {
+  email: Scalars['String'];
 };
 
 export type QueryCommentArgs = {
@@ -4672,6 +4699,10 @@ export type SensitiveDataUser = BaseUser & {
   roleIDs: Array<Scalars['String']>;
   roles: Array<UserRole>;
   subscriptionCount: Scalars['Int'];
+  /** Whether two-factor authentication is enabled for this user. */
+  totpEnabled: Scalars['Boolean'];
+  /** Whether this user is exempt from the two-factor authentication requirement. */
+  totpExempt: Scalars['Boolean'];
   userImageID?: Maybe<Scalars['String']>;
 };
 
@@ -4680,6 +4711,8 @@ export type SessionWithToken = {
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
   token: Scalars['String'];
+  /** Whether the user has two-factor authentication enabled. If true and the user is an admin, the client must verify TOTP before proceeding. */
+  totpEnabled: Scalars['Boolean'];
   user: SensitiveDataUser;
 };
 
@@ -5296,6 +5329,16 @@ export type TokenWithSecret = BaseToken & {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   token: Scalars['String'];
+};
+
+export type TotpSetup = {
+  __typename?: 'TotpSetup';
+  /** QR code as data URL (base64 PNG) */
+  qrCode: Scalars['String'];
+  /** Base32 encoded TOTP secret */
+  secret: Scalars['String'];
+  /** OTPAuth URI for authenticator apps */
+  uri: Scalars['String'];
 };
 
 export type TrackingPixel = {

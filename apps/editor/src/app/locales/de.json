@@ -824,8 +824,19 @@
     "login": {
       "email": "Email",
       "login": "Login",
+      "next": "Weiter",
       "password": "Passwort",
-      "unauthorized": "User hat keine Berechtigung fürs Login"
+      "unauthorized": "User hat keine Berechtigung fürs Login",
+      "totp": {
+        "back": "Zurück",
+        "setupDescription": "Bitte richten Sie die Zwei-Faktor-Authentifizierung ein, um Ihr Konto zu schützen. Scannen Sie den QR-Code mit Ihrer Authenticator-App (z.B. Google Authenticator, Authy).",
+        "manualEntry": "Oder geben Sie diesen Code manuell in Ihre Authenticator-App ein:",
+        "code": "Bestätigungscode",
+        "activate": "2FA aktivieren",
+        "invalidCode": "Ungültiger Bestätigungscode. Bitte versuchen Sie es erneut.",
+        "setupError": "Fehler beim Erstellen der 2FA-Einrichtung. Bitte versuchen Sie es erneut.",
+        "setupSuccess": "Zwei-Faktor-Authentifizierung wurde erfolgreich aktiviert."
+      }
     },
     "mailTemplates": {
       "availableTemplates": "Verfügbare E-Mail-Templates",
@@ -1417,6 +1428,12 @@
       "password": "Passwort",
       "passwordChangeSuccess": "Passwort erfolgreich geändert!",
       "passwordHeader": "Passwörter & Zugänge",
+      "totpHeader": "Zwei-Faktor-Authentifizierung",
+      "totpEnabled": "Zwei-Faktor-Authentifizierung ist für diesen Benutzer aktiviert.",
+      "totpDisabled": "Zwei-Faktor-Authentifizierung ist noch nicht eingerichtet. Der Benutzer wird beim nächsten Editor-Login aufgefordert, diese einzurichten.",
+      "totpExemptInfo": "Dieser Benutzer ist von der Zwei-Faktor-Authentifizierungspflicht befreit.",
+      "totpExemptLabel": "Von 2FA-Pflicht befreien",
+      "totpExemptWarning": "\u26a0\ufe0f SICHERHEITSWARNUNG \u26a0\ufe0f\n\nSie sind dabei, die Zwei-Faktor-Authentifizierungspflicht für diesen Benutzer zu DEAKTIVIEREN!\n\nDies reduziert die Sicherheit dieses Kontos erheblich. Der Benutzer kann sich nur mit einem Passwort im Editor anmelden, ohne einen zweiten Faktor.\n\nDies sollte nur in Ausnahmefällen verwendet werden.\n\nSind Sie sicher, dass Sie fortfahren möchten?",
       "properties": "Eigenschaften",
       "resetPassword": "Passwort zurücksetzen",
       "resetPasswordFor": "Passwort für {{userName}} zurücksetzen",
@@ -1452,6 +1469,11 @@
         "noSubscriptions": "Keine Abos",
         "oneSubscription": "1 Abo",
         "resetPassword": "Passwort zurücksetzen",
+        "resetTotp": "2FA zurücksetzen",
+        "resetTotpTitle": "Zwei-Faktor-Authentifizierung zurücksetzen",
+        "resetTotpConfirmation": "Möchten Sie die Zwei-Faktor-Authentifizierung für {{name}} wirklich zurücksetzen? Der Benutzer muss 2FA beim nächsten Login erneut einrichten.",
+        "totpResetSuccess": "Zwei-Faktor-Authentifizierung wurde erfolgreich zurückgesetzt.",
+        "totpResetError": "Fehler beim Zurücksetzen der Zwei-Faktor-Authentifizierung.",
         "subscriptions": "Abos",
         "unknown": "Unbekannt",
         "users": "User"

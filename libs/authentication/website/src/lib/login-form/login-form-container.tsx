@@ -1,4 +1,5 @@
 import {
+  useCheckLoginOtpLazyQuery,
   useLoginWithCredentialsMutation,
   useLoginWithEmailMutation,
 } from '@wepublish/website/api';
@@ -7,7 +8,12 @@ import {
   BuilderLoginFormProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { useCallback, useState } from 'react';
 import { useUser } from '../session.context';
+
+function isValidEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
 export type LoginFormContainerProps = BuilderContainerProps & {
   afterLoginCallback?: () => void;
@@ -23,6 +29,9 @@ export function LoginFormContainer({
 }: LoginFormContainerProps) {
   const { LoginForm } = useWebsiteBuilder();
   const { setToken } = useUser();
+  const [otpRequired, setOtpRequired] = useState(false);
+  const [totpRedirectToPassword, setTotpRedirectToPassword] = useState(false);
+  const [checkLoginOtp] = useCheckLoginOtpLazyQuery();
   const [loginWithEmail, withEmail] = useLoginWithEmailMutation();
   const [loginWithCredentials, withCredentials] =
     useLoginWithCredentialsMutation({
@@ -35,12 +44,51 @@ export function LoginFormContainer({
       },
     });
 
+  const handleEmailChange = useCallback(
+    (email: string) => {
+      setTotpRedirectToPassword(false);
+
+      if (!isValidEmail(email)) {
+        setOtpRequired(false);
+        return;
+      }
+
+      const timeout = setTimeout(async () => {
+        const result = await checkLoginOtp({ variables: { email } });
+        setOtpRequired(result.data?.checkLoginOtp ?? false);
+      }, 300);
+
+      return () => clearTimeout(timeout);
+    },
+    [checkLoginOtp]
+  );
+
+  const handleSubmitLoginWithEmail = useCallback(
+    async (email: string) => {
+      // Check if user has 2FA before sending login link
+      const result = await checkLoginOtp({ variables: { email } });
+      const needsOtp = result.data?.checkLoginOtp ?? false;
+
+      if (needsOtp) {
+        // User has 2FA (or doesn't exist) - redirect to password mode
+        setOtpRequired(true);
+        setTotpRedirectToPassword(true);
+        return;
+      }
+
+      // No 2FA - send login link normally
+      loginWithEmail({ variables: { email } });
+    },
+    [checkLoginOtp, loginWithEmail]
+  );
+
   return (
     <LoginForm
       className={className}
-      onSubmitLoginWithCredentials={async (email, password) => {
+      onSubmitLoginWithCredentials={async (email, password, totpToken) => {
+        setTotpRedirectToPassword(false);
         const loginResult = await loginWithCredentials({
-          variables: { email, password },
+          variables: { email, password, totpToken },
         });
 
         if (loginResult.data?.createSession && afterLoginCallback) {
@@ -48,14 +96,13 @@ export function LoginFormContainer({
         }
       }}
       loginWithCredentials={withCredentials}
-      onSubmitLoginWithEmail={email => {
-        loginWithEmail({
-          variables: { email },
-        });
-      }}
+      onSubmitLoginWithEmail={handleSubmitLoginWithEmail}
       loginWithEmail={withEmail}
       defaults={defaults}
       disablePasswordLogin={disablePasswordLogin}
+      otpRequired={otpRequired}
+      onEmailChange={handleEmailChange}
+      totpRedirectToPassword={totpRedirectToPassword}
     />
   );
 }

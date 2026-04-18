@@ -1024,6 +1024,15 @@ export const CanDeleteAnalyticsProviderSettings: Permission = {
   deprecated: false,
 };
 
+/**
+ * Two-Factor Authentication
+ */
+export const CanResetUserTotp: Permission = {
+  id: 'CAN_RESET_USER_TOTP',
+  description: 'Allows to reset the two-factor authentication of a user',
+  deprecated: false,
+};
+
 export const AllPermissions: Permission[] = [
   CanGetCrowdfunding,
   CanGetCrowdfundings,
@@ -1180,6 +1189,7 @@ export const AllPermissions: Permission[] = [
   CanCreateAnalyticsProviderSettings,
   CanUpdateAnalyticsProviderSettings,
   CanDeleteAnalyticsProviderSettings,
+  CanResetUserTotp,
 ];
 
 export const EditorPermissions: Permission[] = [

@@ -1655,7 +1655,7 @@ type Mutation {
 
   """Creates a rating system answer."""
   createRatingSystemAnswer(answer: String, ratingSystemId: String!, type: RatingSystemType!): CommentRatingSystemAnswer!
-  createSession(email: String!, password: String!): SessionWithToken!
+  createSession(email: String!, password: String!, totpToken: String): SessionWithToken!
   createSessionWithJWT(jwt: String!): SessionWithToken!
 
   """Creates a new subscription."""
@@ -1674,7 +1674,7 @@ type Mutation {
   createToken(name: String!): TokenWithSecret!
 
   """Creates a new user."""
-  createUser(active: Boolean!, address: UserAddressInput, birthday: DateTime, email: String!, emailVerifiedAt: DateTime, firstName: String, flair: String, name: String!, note: String, password: String, properties: [PropertyInput!]!, roleIDs: [String!]!, userImageID: String): SensitiveDataUser!
+  createUser(active: Boolean!, address: UserAddressInput, birthday: DateTime, email: String!, emailVerifiedAt: DateTime, firstName: String, flair: String, name: String!, note: String, password: String, properties: [PropertyInput!]!, roleIDs: [String!]!, totpExempt: Boolean, userImageID: String): SensitiveDataUser!
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
@@ -1788,8 +1788,23 @@ type Mutation {
   """Duplicates an page."""
   duplicatePage(id: String!): Page!
 
+  """
+  Enables two-factor authentication for the current user after verifying the TOTP token.
+  """
+  enableTotp(totpToken: String!): Boolean!
+
   """Allows authenticated users to extend existing subscriptions"""
   extendUserSubscription(failureURL: String, subscriptionId: String!, successURL: String): Payment!
+
+  """
+  Generates a TOTP setup for the current user. Returns a QR code and secret for authenticator app configuration.
+  """
+  generateTotpSetup(
+    """
+    Set to true when called from a website to use the site name instead of "We.Publish CMS" in the authenticator app.
+    """
+    website: Boolean
+  ): TotpSetup!
 
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!
@@ -1838,6 +1853,11 @@ type Mutation {
 
   """Resets the password of a user."""
   resetPassword(id: String!, password: String, sendMail: Boolean): SensitiveDataUser!
+
+  """
+  Resets the two-factor authentication configuration for a user. The user will need to set up 2FA again on next login.
+  """
+  resetUserTotp(userId: String!): Boolean!
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
@@ -1968,7 +1988,7 @@ type Mutation {
   updateTrackingPixelSetting(id: String, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String): SettingTrackingPixelProvider!
 
   """Updates an existing user."""
-  updateUser(active: Boolean, address: UserAddressInput, birthday: DateTime, email: String, emailVerifiedAt: DateTime, firstName: String, flair: String, id: String, name: String, note: String, properties: [PropertyInput!], roleIDs: [String!], userImageID: String): SensitiveDataUser!
+  updateUser(active: Boolean, address: UserAddressInput, birthday: DateTime, email: String, emailVerifiedAt: DateTime, firstName: String, flair: String, id: String, name: String, note: String, properties: [PropertyInput!], roleIDs: [String!], totpExempt: Boolean, userImageID: String): SensitiveDataUser!
 
   """Updates a comment you made."""
   updateUserComment(id: String!, lead: String, text: RichText, title: String): Comment!
@@ -2785,6 +2805,11 @@ type Query {
   """
   checkInvoiceStatus(id: String!): Invoice!
 
+  """
+  Checks whether a given email requires a TOTP code for login. Always returns true to prevent user enumeration.
+  """
+  checkLoginOtp(email: String!): Boolean!
+
   """Returns a comment by id."""
   comment(id: String!): Comment!
 
@@ -3152,6 +3177,14 @@ type SensitiveDataUser implements BaseUser {
   roleIDs: [String!]!
   roles: [UserRole!]!
   subscriptionCount: Int!
+
+  """Whether two-factor authentication is enabled for this user."""
+  totpEnabled: Boolean!
+
+  """
+  Whether this user is exempt from the two-factor authentication requirement.
+  """
+  totpExempt: Boolean!
   userImageID: String
 }
 
@@ -3159,6 +3192,11 @@ type SessionWithToken {
   createdAt: DateTime!
   expiresAt: DateTime!
   token: String!
+
+  """
+  Whether the user has two-factor authentication enabled. If true and the user is an admin, the client must verify TOTP before proceeding.
+  """
+  totpEnabled: Boolean!
   user: SensitiveDataUser!
 }
 
@@ -3745,6 +3783,17 @@ type TokenWithSecret implements BaseToken {
   modifiedAt: DateTime!
   name: String!
   token: String!
+}
+
+type TotpSetup {
+  """QR code as data URL (base64 PNG)"""
+  qrCode: String!
+
+  """Base32 encoded TOTP secret"""
+  secret: String!
+
+  """OTPAuth URI for authenticator apps"""
+  uri: String!
 }
 
 type TrackingPixel {

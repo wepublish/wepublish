@@ -11,7 +11,10 @@ import {
   SubscriptionListItemWrapper,
   useHasUnpaidInvoices,
 } from '@wepublish/membership/website';
-import { PersonalDataFormContainer } from '@wepublish/user/website';
+import {
+  PersonalDataFormContainer,
+  TotpSetupContainer,
+} from '@wepublish/user/website';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -225,6 +228,8 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
         <H4 component={'h1'}>Profil</H4>
 
         <PersonalDataFormContainer {...props} />
+
+        <TotpSetupContainer />
       </ProfileWrapper>
     </>
   );
