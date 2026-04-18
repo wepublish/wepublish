@@ -75,6 +75,21 @@ const TotpDescription = styled.p`
   color: #555;
 `;
 
+const AppLinks = styled.p`
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #555;
+
+  a {
+    color: #1675e0;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -341,6 +356,25 @@ export function Login() {
       <LoginTemplate backgroundChildren={<Background />}>
         <Form fluid>
           <TotpDescription>{t('login.totp.setupDescription')}</TotpDescription>
+
+          <AppLinks>
+            {t('login.totp.downloadApp')}{' '}
+            <a
+              href="https://play.google.com/store/apps/details?id=org.fedorahosted.freeotp"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Android
+            </a>
+            {' | '}
+            <a
+              href="https://apps.apple.com/app/freeotp-authenticator/id872559395"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              iOS
+            </a>
+          </AppLinks>
 
           {qrCode && (
             <QrCodeImage

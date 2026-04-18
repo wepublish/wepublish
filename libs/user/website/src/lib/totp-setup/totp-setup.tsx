@@ -25,6 +25,18 @@ const SecretCode = styled('code')`
   word-break: break-all;
 `;
 
+const AppLinksText = styled('p')`
+  font-size: 13px;
+  color: ${({ theme }) => theme.palette.text.secondary};
+  a {
+    color: ${({ theme }) => theme.palette.primary.main};
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
 export type TotpSetupProps = {
   className?: string;
   totpEnabled: boolean;
@@ -99,6 +111,25 @@ export function TotpSetup({
       <Wrapper className={className}>
         <H5>{t('user.totp.title')}</H5>
         <Alert severity="info">{t('user.totp.setupDescription')}</Alert>
+
+        <AppLinksText>
+          {t('user.totp.downloadApp')}{' '}
+          <a
+            href="https://play.google.com/store/apps/details?id=org.fedorahosted.freeotp"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Android
+          </a>
+          {' | '}
+          <a
+            href="https://apps.apple.com/app/freeotp-authenticator/id872559395"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            iOS
+          </a>
+        </AppLinksText>
 
         {qrCode && (
           <QrCodeImage

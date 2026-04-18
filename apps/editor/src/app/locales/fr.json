@@ -775,7 +775,8 @@
       "unauthorized": "L'utilisateur·trices n'est pas autorisé·e à se connecter",
       "totp": {
         "back": "Retour",
-        "setupDescription": "Pour sécuriser votre compte, veuillez configurer l'authentification à deux facteurs. Scannez le code QR avec votre application d'authentification (ex. Google Authenticator, Authy).",
+        "setupDescription": "Pour sécuriser votre compte, veuillez configurer l'authentification à deux facteurs. Scannez le code QR avec votre application d'authentification.",
+        "downloadApp": "Télécharger FreeOTP :",
         "manualEntry": "Ou entrez ce code manuellement dans votre application d'authentification :",
         "code": "Code de vérification",
         "activate": "Activer 2FA",

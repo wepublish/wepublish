@@ -77,7 +77,8 @@
     "totp": {
       "title": "Zwei-Faktor-Authentifizierung",
       "enabled": "Zwei-Faktor-Authentifizierung ist aktiviert.",
-      "optionalDescription": "Schütze dein Konto mit einem zusätzlichen Sicherheitscode aus einer Authenticator-App (z.B. Google Authenticator, Authy).",
+      "optionalDescription": "Schütze dein Konto mit einem zusätzlichen Sicherheitscode aus einer Authenticator-App.",
+      "downloadApp": "FreeOTP herunterladen:",
       "setup": "2FA einrichten",
       "setupDescription": "Scanne den QR-Code mit deiner Authenticator-App und gib den 6-stelligen Code ein.",
       "manualEntry": "Oder gib diesen Code manuell in deine Authenticator-App ein:",

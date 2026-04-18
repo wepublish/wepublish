@@ -833,7 +833,8 @@
       "unauthorized": "User is not authorized for login",
       "totp": {
         "back": "Back",
-        "setupDescription": "To secure your account, please set up two-factor authentication. Scan the QR code below with your authenticator app (e.g. Google Authenticator, Authy).",
+        "setupDescription": "To secure your account, please set up two-factor authentication. Scan the QR code below with your authenticator app.",
+        "downloadApp": "Download FreeOTP:",
         "manualEntry": "Or enter this code manually in your authenticator app:",
         "code": "Verification Code",
         "activate": "Activate 2FA",
