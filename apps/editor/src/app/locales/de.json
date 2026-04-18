@@ -827,6 +827,7 @@
       "next": "Weiter",
       "password": "Passwort",
       "unauthorized": "User hat keine Berechtigung fürs Login",
+      "forgotPassword": "Passwort vergessen?",
       "totp": {
         "back": "Zurück",
         "setupDescription": "Bitte richten Sie die Zwei-Faktor-Authentifizierung ein, um Ihr Konto zu schützen. Scannen Sie den QR-Code mit Ihrer Authenticator-App.",
@@ -838,6 +839,12 @@
         "setupError": "Fehler beim Erstellen der 2FA-Einrichtung. Bitte versuchen Sie es erneut.",
         "setupSuccess": "Zwei-Faktor-Authentifizierung wurde erfolgreich aktiviert."
       }
+    },
+    "resetPassword": {
+      "description": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Login-Link zum Zurücksetzen Ihres Passworts.",
+      "submit": "Login-Link senden",
+      "sent": "Falls ein Konto mit dieser E-Mail-Adresse existiert, wurde ein Login-Link versendet. Bitte prüfen Sie Ihren Posteingang.",
+      "backToLogin": "Zurück zum Login"
     },
     "mailTemplates": {
       "availableTemplates": "Verfügbare E-Mail-Templates",

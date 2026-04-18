@@ -39,6 +39,10 @@ mutation CreateJWTForWebsiteLogin {
   }
 }
 
+mutation SendWebsiteLogin($email: String!) {
+  sendWebsiteLogin(email: $email)
+}
+
 mutation GenerateTotpSetup {
   generateTotpSetup {
     secret

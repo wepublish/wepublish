@@ -49,6 +49,7 @@ import { Base } from './base';
 import de from './locales/rsuiteDe';
 import fr from './locales/rsuiteFr';
 import { Login } from './login';
+import { ResetPassword } from './resetPassword';
 import { ArticleEditor } from './routes/articles/articleEditor';
 import { ArticleList } from './routes/articles/articleList';
 import { AudienceDashboard } from './routes/audience/audience-dashboard';
@@ -136,7 +137,7 @@ export function App() {
   const { session } = useContext(AuthContext);
 
   useEffect(() => {
-    if (session === null && window.location.pathname !== '/login') {
+    if (session === null && !window.location.pathname.startsWith('/login')) {
       window.location.href = `/login?next=${window.location.pathname}`;
     }
   }, [session]);
@@ -259,6 +260,10 @@ export function App() {
             <Route
               path="login"
               element={<Login />}
+            />
+            <Route
+              path="login/reset-password"
+              element={<ResetPassword />}
             />
             {/* Dashboard Routes */}
             <Route

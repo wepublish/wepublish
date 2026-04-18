@@ -90,6 +90,19 @@ const AppLinks = styled.p`
   }
 `;
 
+const ForgotPasswordLink = styled.a`
+  display: block;
+  color: #1675e0;
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 8px;
+  text-align: center;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -458,6 +471,11 @@ export function Login() {
         >
           {t('login.login')}
         </Button>
+        <ForgotPasswordLink
+          href={`/login/reset-password${email ? `?email=${encodeURIComponent(email)}` : ''}`}
+        >
+          {t('login.forgotPassword')}
+        </ForgotPasswordLink>
       </Form>
 
       {loadingJWT && (

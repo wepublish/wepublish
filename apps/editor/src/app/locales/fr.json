@@ -773,6 +773,7 @@
       "next": "Suivant",
       "password": "Mot de passe",
       "unauthorized": "L'utilisateur·trices n'est pas autorisé·e à se connecter",
+      "forgotPassword": "Mot de passe oublié ?",
       "totp": {
         "back": "Retour",
         "setupDescription": "Pour sécuriser votre compte, veuillez configurer l'authentification à deux facteurs. Scannez le code QR avec votre application d'authentification.",
@@ -784,6 +785,12 @@
         "setupError": "Échec de la configuration 2FA. Veuillez réessayer.",
         "setupSuccess": "L'authentification à deux facteurs a été activée avec succès."
       }
+    },
+    "resetPassword": {
+      "description": "Entrez votre adresse e-mail et nous vous enverrons un lien de connexion pour réinitialiser votre mot de passe.",
+      "submit": "Envoyer le lien",
+      "sent": "Si un compte existe avec cette adresse e-mail, un lien de connexion a été envoyé. Veuillez vérifier votre boîte de réception.",
+      "backToLogin": "Retour à la connexion"
     },
     "mailTemplates": {
       "availableTemplates": "Modèles de courriels disponibles",

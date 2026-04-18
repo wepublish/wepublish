@@ -831,6 +831,7 @@
       "next": "Next",
       "password": "Password",
       "unauthorized": "User is not authorized for login",
+      "forgotPassword": "Forgot password?",
       "totp": {
         "back": "Back",
         "setupDescription": "To secure your account, please set up two-factor authentication. Scan the QR code below with your authenticator app.",
@@ -842,6 +843,12 @@
         "setupError": "Failed to generate 2FA setup. Please try again.",
         "setupSuccess": "Two-factor authentication has been enabled successfully."
       }
+    },
+    "resetPassword": {
+      "description": "Enter your email address and we will send you a login link to reset your password.",
+      "submit": "Send login link",
+      "sent": "If an account exists with this email, a login link has been sent. Please check your inbox.",
+      "backToLogin": "Back to login"
     },
     "name": "Name",
     "mailTemplates": {
