@@ -841,10 +841,22 @@
       }
     },
     "resetPassword": {
-      "description": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Login-Link zum Zurücksetzen Ihres Passworts.",
-      "submit": "Login-Link senden",
-      "sent": "Falls ein Konto mit dieser E-Mail-Adresse existiert, wurde ein Login-Link versendet. Bitte prüfen Sie Ihren Posteingang.",
+      "description": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
+      "submit": "Reset-Link senden",
+      "sent": "Falls ein Konto mit dieser E-Mail-Adresse existiert, wurde ein Link zum Zurücksetzen des Passworts versendet. Bitte prüfen Sie Ihren Posteingang.",
+      "notConfigured": "Passwort-Reset ist nicht konfiguriert. Bitte kontaktieren Sie Ihren Administrator.",
       "backToLogin": "Zurück zum Login"
+    },
+    "setNewPassword": {
+      "description": "Geben Sie Ihr neues Passwort ein.",
+      "password": "Neues Passwort",
+      "passwordRepeat": "Neues Passwort wiederholen",
+      "submit": "Neues Passwort setzen",
+      "mismatch": "Passwörter stimmen nicht überein.",
+      "invalidLink": "Ungültiger oder abgelaufener Passwort-Reset-Link.",
+      "error": "Passwort konnte nicht zurückgesetzt werden. Der Link ist möglicherweise abgelaufen.",
+      "success": "Ihr Passwort wurde erfolgreich zurückgesetzt. Sie können sich jetzt mit Ihrem neuen Passwort anmelden.",
+      "goToLogin": "Zum Login"
     },
     "mailTemplates": {
       "availableTemplates": "Verfügbare E-Mail-Templates",

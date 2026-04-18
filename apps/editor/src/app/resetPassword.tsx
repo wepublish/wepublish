@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useSendWebsiteLoginMutation } from '@wepublish/editor/api';
+import { useSendPasswordResetEmailMutation } from '@wepublish/editor/api';
 import { LoginTemplate } from '@wepublish/ui/editor';
 import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -42,7 +42,7 @@ export function ResetPassword() {
   const emailInputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
 
-  const [sendLoginLink, { loading }] = useSendWebsiteLoginMutation();
+  const [sendPasswordReset, { loading }] = useSendPasswordResetEmailMutation();
 
   useEffect(() => {
     emailInputRef.current?.focus();
@@ -54,9 +54,23 @@ export function ResetPassword() {
     if (!email) return;
 
     try {
-      await sendLoginLink({ variables: { email } });
-    } catch {
-      // Swallow error - always show success to prevent enumeration
+      await sendPasswordReset({ variables: { email } });
+    } catch (error: any) {
+      // If template not configured, show the actual error
+      if (error?.message?.includes('not configured')) {
+        toaster.push(
+          <Message
+            type="error"
+            showIcon
+            closable
+            duration={0}
+          >
+            {t('resetPassword.notConfigured')}
+          </Message>
+        );
+        return;
+      }
+      // For any other error, still show success (anti-enumeration)
     }
 
     setSent(true);

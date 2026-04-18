@@ -50,6 +50,7 @@ import de from './locales/rsuiteDe';
 import fr from './locales/rsuiteFr';
 import { Login } from './login';
 import { ResetPassword } from './resetPassword';
+import { SetNewPassword } from './setNewPassword';
 import { ArticleEditor } from './routes/articles/articleEditor';
 import { ArticleList } from './routes/articles/articleList';
 import { AudienceDashboard } from './routes/audience/audience-dashboard';
@@ -264,6 +265,10 @@ export function App() {
             <Route
               path="login/reset-password"
               element={<ResetPassword />}
+            />
+            <Route
+              path="login/set-password"
+              element={<SetNewPassword />}
             />
             {/* Dashboard Routes */}
             <Route

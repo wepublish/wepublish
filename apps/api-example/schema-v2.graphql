@@ -1852,7 +1852,12 @@ type Mutation {
   requestEmailChange(newEmail: String!): Boolean!
 
   """Resets the password of a user."""
-  resetPassword(id: String!, password: String, sendMail: Boolean): SensitiveDataUser!
+  resetPassword(id: String!, password: String): SensitiveDataUser!
+
+  """
+  Resets the password using a token from the password reset email. Does not create a session.
+  """
+  resetPasswordWithToken(password: String!, token: String!): Boolean!
 
   """
   Resets the two-factor authentication configuration for a user. The user will need to set up 2FA again on next login.
@@ -1866,6 +1871,11 @@ type Mutation {
   This mutation sends a login link to the email if the user exists. Method will always return email address
   """
   sendJWTLogin(email: String!): String!
+
+  """
+  Sends a password reset email with a scoped JWT token. Always returns the email to prevent enumeration.
+  """
+  sendPasswordResetEmail(email: String!): String!
 
   """
   This mutation sends a login link to the email if the user exists. Method will always return email address

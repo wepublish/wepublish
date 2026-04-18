@@ -43,6 +43,14 @@ mutation SendWebsiteLogin($email: String!) {
   sendWebsiteLogin(email: $email)
 }
 
+mutation SendPasswordResetEmail($email: String!) {
+  sendPasswordResetEmail(email: $email)
+}
+
+mutation ResetPasswordWithToken($token: String!, $password: String!) {
+  resetPasswordWithToken(token: $token, password: $password)
+}
+
 mutation GenerateTotpSetup {
   generateTotpSetup {
     secret

@@ -67,6 +67,27 @@ export class SessionResolver {
     return email;
   }
 
+  @Public()
+  @Mutation(() => String, {
+    description:
+      'Sends a password reset email with a scoped JWT token. Always returns the email to prevent enumeration.',
+  })
+  async sendPasswordResetEmail(@Args('email') email: string) {
+    return this.sessionService.sendPasswordResetEmail(email);
+  }
+
+  @Public()
+  @Mutation(() => Boolean, {
+    description:
+      'Resets the password using a token from the password reset email. Does not create a session.',
+  })
+  async resetPasswordWithToken(
+    @Args('token') token: string,
+    @Args('password') password: string
+  ) {
+    return this.sessionService.resetPasswordWithToken(token, password);
+  }
+
   @Permissions(CanSendJWTLogin)
   @Mutation(() => String, {
     description:

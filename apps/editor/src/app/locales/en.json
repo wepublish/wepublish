@@ -845,10 +845,22 @@
       }
     },
     "resetPassword": {
-      "description": "Enter your email address and we will send you a login link to reset your password.",
-      "submit": "Send login link",
-      "sent": "If an account exists with this email, a login link has been sent. Please check your inbox.",
+      "description": "Enter your email address and we will send you a link to reset your password.",
+      "submit": "Send reset link",
+      "sent": "If an account exists with this email, a password reset link has been sent. Please check your inbox.",
+      "notConfigured": "Password reset is not configured. Please contact your administrator.",
       "backToLogin": "Back to login"
+    },
+    "setNewPassword": {
+      "description": "Enter your new password.",
+      "password": "New password",
+      "passwordRepeat": "Repeat new password",
+      "submit": "Set new password",
+      "mismatch": "Passwords do not match.",
+      "invalidLink": "Invalid or expired password reset link.",
+      "error": "Failed to reset password. The link may have expired.",
+      "success": "Your password has been reset successfully. You can now log in with your new password.",
+      "goToLogin": "Go to login"
     },
     "name": "Name",
     "mailTemplates": {

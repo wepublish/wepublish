@@ -1914,12 +1914,16 @@ export type Mutation = {
   requestEmailChange: Scalars['Boolean'];
   /** Resets the password of a user. */
   resetPassword: SensitiveDataUser;
+  /** Resets the password using a token from the password reset email. Does not create a session. */
+  resetPasswordWithToken: Scalars['Boolean'];
   /** Resets the two-factor authentication configuration for a user. The user will need to set up 2FA again on next login. */
   resetUserTotp: Scalars['Boolean'];
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendJWTLogin: Scalars['String'];
+  /** Sends a password reset email with a scoped JWT token. Always returns the email to prevent enumeration. */
+  sendPasswordResetEmail: Scalars['String'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String'];
   syncTemplates?: Maybe<Scalars['Boolean']>;
@@ -2601,7 +2605,11 @@ export type MutationRequestEmailChangeArgs = {
 export type MutationResetPasswordArgs = {
   id: Scalars['String'];
   password?: InputMaybe<Scalars['String']>;
-  sendMail?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type MutationResetPasswordWithTokenArgs = {
+  password: Scalars['String'];
+  token: Scalars['String'];
 };
 
 export type MutationResetUserTotpArgs = {
@@ -2609,6 +2617,10 @@ export type MutationResetUserTotpArgs = {
 };
 
 export type MutationSendJwtLoginArgs = {
+  email: Scalars['String'];
+};
+
+export type MutationSendPasswordResetEmailArgs = {
   email: Scalars['String'];
 };
 

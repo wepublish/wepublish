@@ -62,8 +62,13 @@ export class MailController {
   private async buildData() {
     // avoid unwanted data mutation by reference
     const recipient = JSON.parse(JSON.stringify(this.config.recipient));
-    recipient.password = 'hidden';
-    recipient.roleIDs = ['hidden'];
+
+    // Remove sensitive fields from mail template data
+    delete recipient.password;
+    delete recipient.roleIDs;
+    delete recipient.totpSecret;
+    delete recipient.totpEnabled;
+    delete recipient.totpExempt;
 
     return {
       user: recipient,

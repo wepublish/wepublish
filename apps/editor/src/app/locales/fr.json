@@ -787,10 +787,22 @@
       }
     },
     "resetPassword": {
-      "description": "Entrez votre adresse e-mail et nous vous enverrons un lien de connexion pour réinitialiser votre mot de passe.",
+      "description": "Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
       "submit": "Envoyer le lien",
-      "sent": "Si un compte existe avec cette adresse e-mail, un lien de connexion a été envoyé. Veuillez vérifier votre boîte de réception.",
+      "sent": "Si un compte existe avec cette adresse e-mail, un lien de réinitialisation a été envoyé. Veuillez vérifier votre boîte de réception.",
+      "notConfigured": "La réinitialisation du mot de passe n'est pas configurée. Veuillez contacter votre administrateur.",
       "backToLogin": "Retour à la connexion"
+    },
+    "setNewPassword": {
+      "description": "Entrez votre nouveau mot de passe.",
+      "password": "Nouveau mot de passe",
+      "passwordRepeat": "Répéter le nouveau mot de passe",
+      "submit": "Définir le nouveau mot de passe",
+      "mismatch": "Les mots de passe ne correspondent pas.",
+      "invalidLink": "Lien de réinitialisation invalide ou expiré.",
+      "error": "Impossible de réinitialiser le mot de passe. Le lien a peut-être expiré.",
+      "success": "Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
+      "goToLogin": "Aller à la connexion"
     },
     "mailTemplates": {
       "availableTemplates": "Modèles de courriels disponibles",

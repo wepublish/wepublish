@@ -207,6 +207,72 @@ export class SessionService {
     await this.userAuthenticationService.updateUserLastLoginLinkSend(user.id);
   }
 
+  async sendPasswordResetEmail(email: string) {
+    const validation = Validator.login.safeParse({ email });
+    if (!validation.success) {
+      throw new BadRequestException('Invalid email address.');
+    }
+
+    // Check if the PASSWORD_RESET template is configured
+    const remoteTemplate = await this.mailContext.getUserTemplateName(
+      UserEvent.PASSWORD_RESET,
+      false
+    );
+
+    if (!remoteTemplate) {
+      throw new BadRequestException(
+        'Password reset is not configured. Please contact your administrator.'
+      );
+    }
+
+    const user = await this.userService.getUserByEmailWithPassword(email);
+
+    // Silently succeed if user doesn't exist (anti-enumeration)
+    if (!user) {
+      return email;
+    }
+
+    await this.mailContext.sendMail({
+      externalMailTemplateId: remoteTemplate,
+      recipient: user,
+      optionalData: {
+        resetToken: await this.jwtService.generateJWT({
+          id: user.id,
+          expiresInMinutes: 60, // 1 hour
+          audience: 'password-reset',
+        }),
+      },
+      mailType: mailLogType.UserFlow,
+    });
+
+    return email;
+  }
+
+  async resetPasswordWithToken(token: string, password: string) {
+    let userId: string;
+    try {
+      userId = await this.jwtService.verifyJWT(token, 'password-reset');
+    } catch {
+      throw new BadRequestException('Invalid or expired password reset link.');
+    }
+
+    if (!userId) {
+      throw new BadRequestException('Invalid or expired password reset link.');
+    }
+
+    try {
+      await this.userService.validatePassword(password);
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Password does not meet the requirements.'
+      );
+    }
+
+    await this.userService.updateUserPassword(userId, password);
+
+    return true;
+  }
+
   async sendJWTLogin(email: string) {
     email = email.toLowerCase();
     await Validator.login.parse({ email });
