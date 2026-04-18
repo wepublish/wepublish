@@ -60,6 +60,9 @@ describe('MailController', () => {
     note: null,
     pendingEmail: null,
     pendingEmailAt: null,
+    totpSecret: null,
+    totpEnabled: false,
+    totpExempt: false,
   };
 
   beforeEach(async () => {

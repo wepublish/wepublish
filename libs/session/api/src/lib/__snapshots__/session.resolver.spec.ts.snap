@@ -13,6 +13,7 @@ exports[`SessionResolver can be created via mail and password 1`] = `
   [
     "dev@wepublish.ch",
     "123",
+    undefined,
   ],
 ]
 `;
