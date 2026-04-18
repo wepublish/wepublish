@@ -1,0 +1,30 @@
+{
+  "tdl": {
+    "production": "wepublish.cloud",
+    "staging": "wepublish.works"
+  },
+  "website": {
+    "production": {
+      "deployment": true,
+      "env": {
+        "DEPLOY_ENV": "production"
+      },
+      "secret_env": [],
+      "custom_domain": "https://www.diekuppel.ch"
+    },
+    "staging": {
+      "deployment": true,
+      "env": {
+        "DEPLOY_ENV": "staging"
+      },
+      "secret_env": []
+    },
+    "review": {
+      "deployment": true,
+      "env": {
+        "DEPLOY_ENV": "review"
+      },
+      "secret_env": []
+    }
+  }
+}
