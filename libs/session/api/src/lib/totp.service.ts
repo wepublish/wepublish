@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import * as OTPAuth from 'otpauth';
 import * as QRCode from 'qrcode';
@@ -8,7 +8,6 @@ import {
   createHash,
   randomBytes,
 } from 'crypto';
-import { JWT_PRIVATE_KEY_TOKEN } from './jwt.service';
 
 const appName = process.env.APP_NAME || 'local';
 const capitalizedAppName = appName.charAt(0).toUpperCase() + appName.slice(1);
@@ -35,12 +34,17 @@ export class TotpService {
   // Replay protection: track used TOTP codes per user
   private usedCodes = new Map<string, { code: string; usedAt: number }[]>();
 
-  constructor(
-    private prisma: PrismaClient,
-    @Inject(JWT_PRIVATE_KEY_TOKEN) jwtPrivateKey: string
-  ) {
-    // Derive a 32-byte AES-256 key from the JWT private key
-    this.encryptionKey = createHash('sha256').update(jwtPrivateKey).digest();
+  constructor(private prisma: PrismaClient) {
+    const appSecretKey = process.env.APP_SECRET_KEY;
+
+    if (!appSecretKey) {
+      throw new Error(
+        'APP_SECRET_KEY is not set. It is required for TOTP secret encryption.'
+      );
+    }
+
+    // Derive a 32-byte AES-256 key from APP_SECRET_KEY
+    this.encryptionKey = createHash('sha256').update(appSecretKey).digest();
   }
 
   private encrypt(plainText: string): string {
