@@ -127,17 +127,23 @@ export class SessionService {
 
     const expiresAt = new Date(Date.now() + this.sessionTTL);
 
-    const { createdAt } = await this.prisma.session.create({
-      data: {
-        token,
-        expiresAt,
-        user: {
-          connect: {
-            id: user.id,
+    const [{ createdAt }] = await Promise.all([
+      this.prisma.session.create({
+        data: {
+          token,
+          expiresAt,
+          user: {
+            connect: {
+              id: user.id,
+            },
           },
         },
-      },
-    });
+      }),
+      this.prisma.user.update({
+        where: { id: user.id },
+        data: { lastLogin: new Date() },
+      }),
+    ]);
 
     return {
       user,
