@@ -17,8 +17,8 @@ mutation CreateSession($email: String!, $password: String!, $totpToken: String) 
   }
 }
 
-mutation CreateSessionWithJWT($jwt: String!) {
-  createSessionWithJWT(jwt: $jwt) {
+mutation CreateSessionWithJWT($jwt: String!, $totpToken: String) {
+  createSessionWithJWT(jwt: $jwt, totpToken: $totpToken) {
     user {
       email
       totpEnabled

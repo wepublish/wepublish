@@ -8,7 +8,7 @@ import {
   BuilderLoginFormProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useUser } from '../session.context';
 
 function isValidEmail(email: string) {
@@ -31,6 +31,17 @@ export function LoginFormContainer({
   const { setToken } = useUser();
   const [otpRequired, setOtpRequired] = useState(false);
   const [totpRedirectToPassword, setTotpRedirectToPassword] = useState(false);
+
+  // Check if redirected from a failed JWT login (2FA user)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('totpRequired') === '1') {
+        setTotpRedirectToPassword(true);
+        setOtpRequired(true);
+      }
+    }
+  }, []);
   const [checkLoginOtp] = useCheckLoginOtpLazyQuery();
   const [loginWithEmail, withEmail] = useLoginWithEmailMutation();
   const [loginWithCredentials, withCredentials] =

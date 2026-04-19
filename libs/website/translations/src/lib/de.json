@@ -40,7 +40,11 @@
     "alertLoginLinkSent": "Falls ein Account unter der Email \"{email}\" besteht, sollte bald ein Login-Link in deinem Email Postfach sein. Dies kann einen Moment dauern. Bitte prüfe auch deinen Spam-Ordner.",
     "totp": {
       "code": "Bestätigungscode (2FA)",
-      "emailLoginDisabled": "Login per E-Mail-Link ist für dieses Konto nicht verfügbar. Falls ein Konto mit dieser Adresse existiert, melde dich bitte mit Passwort und Bestätigungscode an."
+      "emailLoginDisabled": "Login per E-Mail-Link ist für dieses Konto nicht verfügbar. Falls ein Konto mit dieser Adresse existiert, melde dich bitte mit Passwort und Bestätigungscode an.",
+      "verifyTitle": "Zwei-Faktor-Authentifizierung",
+      "verifyDescription": "Bitte gib den 6-stelligen Code aus deiner Authenticator-App ein.",
+      "verify": "Bestätigen",
+      "invalidCode": "Ungültiger Code. Bitte versuche es erneut."
     }
   },
   "crowdfunding": {

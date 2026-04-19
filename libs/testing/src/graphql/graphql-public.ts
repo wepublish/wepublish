@@ -2279,6 +2279,7 @@ export type MutationCreateSessionArgs = {
 
 export type MutationCreateSessionWithJwtArgs = {
   jwt: Scalars['String'];
+  totpToken?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationCreateSubscriptionArgs = {

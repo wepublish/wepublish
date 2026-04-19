@@ -2254,6 +2254,7 @@ export type MutationCreateSessionArgs = {
 
 export type MutationCreateSessionWithJwtArgs = {
   jwt: Scalars['String'];
+  totpToken?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -6420,6 +6421,7 @@ export type LoginWithEmailMutation = { __typename?: 'Mutation', sendWebsiteLogin
 
 export type LoginWithJwtMutationVariables = Exact<{
   jwt: Scalars['String'];
+  totpToken?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -9615,8 +9617,8 @@ export type LoginWithEmailMutationHookResult = ReturnType<typeof useLoginWithEma
 export type LoginWithEmailMutationResult = Apollo.MutationResult<LoginWithEmailMutation>;
 export type LoginWithEmailMutationOptions = Apollo.BaseMutationOptions<LoginWithEmailMutation, LoginWithEmailMutationVariables>;
 export const LoginWithJwtDocument = gql`
-    mutation LoginWithJWT($jwt: String!) {
-  createSessionWithJWT(jwt: $jwt) {
+    mutation LoginWithJWT($jwt: String!, $totpToken: String) {
+  createSessionWithJWT(jwt: $jwt, totpToken: $totpToken) {
     ...FullSessionWithToken
   }
 }
@@ -9637,6 +9639,7 @@ export type LoginWithJwtMutationFn = Apollo.MutationFunction<LoginWithJwtMutatio
  * const [loginWithJwtMutation, { data, loading, error }] = useLoginWithJwtMutation({
  *   variables: {
  *      jwt: // value for 'jwt'
+ *      totpToken: // value for 'totpToken'
  *   },
  * });
  */

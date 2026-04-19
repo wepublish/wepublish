@@ -17,6 +17,8 @@ export type MailControllerConfig = {
   periodicJobRunDate?: Date | null;
   optionalData: Record<string, any>;
   mailType: mailLogType;
+  /** Override the auto-generated login JWT with a custom token (e.g. password reset). */
+  jwtOverride?: string;
 };
 
 export class MailController {
@@ -73,7 +75,9 @@ export class MailController {
     return {
       user: recipient,
       optional: this.config.optionalData,
-      jwt: await this.mailContext.jwtGenerator(recipient.id),
+      jwt:
+        this.config.jwtOverride ??
+        (await this.mailContext.jwtGenerator(recipient.id)),
     };
   }
 

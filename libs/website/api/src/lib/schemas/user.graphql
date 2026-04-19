@@ -82,8 +82,8 @@ mutation LoginWithEmail($email: String!) {
   sendWebsiteLogin(email: $email)
 }
 
-mutation LoginWithJWT($jwt: String!) {
-  createSessionWithJWT(jwt: $jwt) {
+mutation LoginWithJWT($jwt: String!, $totpToken: String) {
+  createSessionWithJWT(jwt: $jwt, totpToken: $totpToken) {
     ...FullSessionWithToken
   }
 }

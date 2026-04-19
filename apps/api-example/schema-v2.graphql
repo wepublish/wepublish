@@ -1656,7 +1656,7 @@ type Mutation {
   """Creates a rating system answer."""
   createRatingSystemAnswer(answer: String, ratingSystemId: String!, type: RatingSystemType!): CommentRatingSystemAnswer!
   createSession(email: String!, password: String!, totpToken: String): SessionWithToken!
-  createSessionWithJWT(jwt: String!): SessionWithToken!
+  createSessionWithJWT(jwt: String!, totpToken: String): SessionWithToken!
 
   """Creates a new subscription."""
   createSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Int!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!

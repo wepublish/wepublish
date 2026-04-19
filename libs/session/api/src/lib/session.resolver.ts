@@ -42,8 +42,11 @@ export class SessionResolver {
 
   @Public()
   @Mutation(() => SessionWithToken)
-  async createSessionWithJWT(@Args('jwt') jwt: string) {
-    return this.sessionService.createSessionWithJWT(jwt);
+  async createSessionWithJWT(
+    @Args('jwt') jwt: string,
+    @Args('totpToken', { nullable: true }) totpToken?: string
+  ) {
+    return this.sessionService.createSessionWithJWT(jwt, totpToken);
   }
 
   @Public()

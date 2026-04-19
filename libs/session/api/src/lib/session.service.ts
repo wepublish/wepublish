@@ -87,9 +87,24 @@ export class SessionService {
     return this.createUserSession(user);
   }
 
-  async createSessionWithJWT(jwt: string) {
-    const user =
-      await this.jwtAuthenticationService.authenticateUserWithJWT(jwt);
+  async createSessionWithJWT(jwt: string, totpToken?: string) {
+    // Try preview audience first (1-min JWT from editor, skips TOTP)
+    let isPreview = false;
+    let user = null;
+
+    try {
+      const userId = await this.jwtService.verifyJWT(jwt, 'preview');
+      if (userId) {
+        user = await this.prisma.user.findUnique({ where: { id: userId } });
+        isPreview = true;
+      }
+    } catch {
+      // Not a preview JWT - try normal website audience
+    }
+
+    if (!user) {
+      user = await this.jwtAuthenticationService.authenticateUserWithJWT(jwt);
+    }
 
     if (!user) {
       throw new InvalidCredentialsError();
@@ -99,12 +114,13 @@ export class SessionService {
       throw new NotActiveError();
     }
 
-    if (user.totpEnabled) {
-      // Users with 2FA must use password + TOTP to log in.
-      // Email link login is disabled for them to prevent 2FA bypass.
-      throw new BadRequestException(
-        'Login links are not available for accounts with two-factor authentication. Please use your password and authenticator code.'
-      );
+    // Preview JWTs skip TOTP - the editor user already passed 2FA
+    if (!isPreview && user.totpEnabled) {
+      if (!totpToken) {
+        throw new BadRequestException('TOTP_REQUIRED');
+      }
+
+      await this.totpService.verifyUserTotp(user.id, totpToken);
     }
 
     return this.createUserSession(user);
@@ -241,14 +257,13 @@ export class SessionService {
     await this.mailContext.sendMail({
       externalMailTemplateId: remoteTemplate,
       recipient: user,
-      optionalData: {
-        resetToken: await this.jwtService.generateJWT({
-          id: user.id,
-          expiresInMinutes: 60, // 1 hour
-          audience: 'password-reset',
-        }),
-      },
+      optionalData: {},
       mailType: mailLogType.UserFlow,
+      jwtOverride: await this.jwtService.generateJWT({
+        id: user.id,
+        expiresInMinutes: 60, // 1 hour
+        audience: 'password-reset',
+      }),
     });
 
     return email;
@@ -351,6 +366,7 @@ export class SessionService {
     const token = await this.jwtService.generateJWT({
       id: userId,
       expiresInMinutes,
+      audience: 'preview',
     });
 
     return {
