@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { hasBlockStyle } from '@wepublish/block-content/website';
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
@@ -9,6 +10,8 @@ import {
   TeaserAuthorTextWrapper,
   TeaserAuthorWrapper,
   TeaserContentWrapper,
+  TeaserImage,
+  TeaserImageInnerWrapper,
   TeaserImageWrapper,
   TeaserLead,
   TeaserMetadata,
@@ -19,9 +22,8 @@ import {
 } from './tsri-teaser';
 
 export const isTeaserTwoRowAuthor = allPass([
-  ({ blockStyle }: BuilderTeaserProps) => {
-    return blockStyle === TsriTeaserType.TwoRowAuthor;
-  },
+  ({ blockStyle }: BuilderTeaserProps) =>
+    hasBlockStyle(TsriTeaserType.TwoRowAuthor)({ blockStyle }),
 ]);
 
 export const TeaserTwoRowAuthor = styled(TsriTeaser)`
@@ -30,7 +32,9 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
 
   ${TeaserContentWrapper} {
     align-self: flex-start;
-    grid-template-rows: 58.42cqw 6.977cqw 7.5cqw auto min-content;
+    grid-template-rows:
+      calc(58.42cqw / 3 * 2 + 6.977cqw)
+      6.977cqw 7.5cqw auto min-content;
     grid-template-columns: 15.4cqw auto;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
@@ -50,18 +54,28 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
 
   ${TeaserImageWrapper} {
     display: grid;
-    aspect-ratio: 1;
     border-top-left-radius: 1.3cqw;
     border-top-right-radius: 1.3cqw;
     grid-column: -1 / 1;
     grid-row: 1 / 3;
-    overflow: visible;
+    position: relative;
 
-    & img {
-      width: auto;
-      height: 65.4cqw;
+    ${TeaserImageInnerWrapper} {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      overflow: hidden;
+    }
+
+    ${TeaserImage} {
       object-fit: cover;
-      max-height: unset;
+      width: 100%;
+      height: 100%;
+      max-height: 100%;
+      max-width: 100%;
+      object-position: top left;
     }
   }
 
@@ -117,9 +131,9 @@ export const TeaserTwoRowAuthor = styled(TsriTeaser)`
     font-weight: 700 !important;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
-      padding: 2cqw 1cqw 3cqw 1cqw;
+      padding: 2cqw 1cqw 4.5cqw 1cqw;
       font-size: 1.67cqw !important;
-      line-height: 1.6cqw !important;
+      line-height: 2.25cqw !important;
     }
   }
 

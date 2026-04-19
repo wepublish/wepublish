@@ -23,10 +23,10 @@ export class SettingChallengeProvider extends SettingProvider {
   @Field(type => ChallengeProviderType)
   type!: ChallengeProviderType;
   /** hide sensitive fields
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   secret?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   siteKey?: string;
     **/
 }
@@ -47,16 +47,16 @@ export class CreateSettingChallengeProviderInput extends OmitType(
   ['id', 'type', 'createdAt', 'lastLoadedAt', 'modifiedAt'] as const,
   ArgsType
 ) {
-  @Field(type => String)
+  @Field()
   id!: string;
 
   @Field(type => ChallengeProviderType)
   type!: ChallengeProviderType;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   secret?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   siteKey?: string;
 }
 

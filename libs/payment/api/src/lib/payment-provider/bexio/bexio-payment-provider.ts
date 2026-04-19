@@ -12,6 +12,7 @@ import Bexio, { ContactsStatic, InvoicesStatic } from 'bexio';
 import { MappedReplacer } from 'mapped-replacer';
 import {
   BasePaymentProvider,
+  CancelRemoteSubscriptionProps,
   CheckIntentProps,
   CreatePaymentIntentProps,
   CreateRemoteInvoiceProps,
@@ -44,7 +45,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   async getBexioGateway() {
     const config = await this.getConfig();
     if (!config.apiKey) {
-      throw new Error('Stripe missing api key');
+      throw new Error('Bexio missing api key');
     }
     return new Bexio(config.apiKey);
   }
@@ -88,6 +89,76 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   }
 
   /**
+   * Cancels the invoices on Bexio side when a subscription is being cancelled
+   *
+   * @param {CancelRemoteSubscriptionProps} props
+   * @returns {Promise<void>}
+   */
+  override async cancelRemoteSubscription(
+    props: CancelRemoteSubscriptionProps
+  ): Promise<void> {
+    const invoice = await this.prisma.invoice.findFirst({
+      where: {
+        subscriptionID: props.subscription.id,
+        paidAt: null,
+        canceledAt: null,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    if (!invoice) {
+      logger('bexioPaymentProvider').error(
+        "Subscription invoice doesn't exist or is already paid/cancelled: %s",
+        props.subscription.id
+      );
+      return;
+    }
+
+    const payments = await this.prisma.payment.findMany({
+      where: {
+        invoiceID: invoice.id,
+        intentID: {
+          not: null,
+        },
+        state: {
+          in: [
+            PaymentState.created,
+            PaymentState.submitted,
+            PaymentState.processing,
+          ],
+        },
+      },
+    });
+
+    const bexio = await this.getBexioGateway();
+
+    await Promise.all(
+      payments.map(async payment => {
+        if (!payment.intentID || isNaN(+payment.intentID)) {
+          logger('bexioPaymentProvider').error(
+            'Payment (id: %s) intentID is not a number: %s',
+            payment.id,
+            payment.intentID
+          );
+
+          return;
+        }
+
+        try {
+          await bexio.invoices.cancel(+payment.intentID);
+        } catch (error) {
+          logger('bexioPaymentProvider').error(
+            'Error to cancel invoice for payment (id: %s): %s',
+            error instanceof Error ? error.message : `${error}`
+          );
+        }
+      })
+    );
+  }
+
+  /**
    * Checks the status of a payment intent in Bexio.
    * It makes a direct fetch request to the Bexio API because the Bexio library
    * does not return the status when querying for an invoice.
@@ -103,7 +174,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   }: CheckIntentProps): Promise<IntentState> {
     const config = await this.getConfig();
     if (!config.apiKey) {
-      throw new Error('Stripe missing api key');
+      throw new Error('Bexio missing api key');
     }
     // currently the bexio library we use doesn't return the status (kb_item_status_id)
     // when querying for invoice, so we need to do it "manually" using fetch api

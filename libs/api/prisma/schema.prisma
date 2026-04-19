@@ -1,11 +1,10 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "views"]
+  previewFeatures = ["views"]
 }
 
 datasource db {
-  provider = "postgres"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
 }
 
 model MetadataProperty {
@@ -28,6 +27,10 @@ model MetadataProperty {
   User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
 
+  @@index([articleRevisionId])
+  @@index([pageRevisionId])
+  @@index([subscriptionId])
+  @@index([userId])
   @@map("properties")
 }
 
@@ -61,7 +64,7 @@ model ArticleRevision {
   article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
 
   userId                   String?
-  user                     User?                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                     User?                      @relation(fields: [userId], references: [id], onDelete: SetNull)
   ArticleRevisionPublished ArticleRevisionPublished[]
   ArticleRevisionPending   ArticleRevisionPending[]
   ArticleRevisionDraft     ArticleRevisionDraft[]
@@ -134,7 +137,7 @@ model Article {
   disableComments Boolean @default(false)
   likes           Int     @default(0)
 
-  peer          Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
+  peer          Peer?   @relation(fields: [peerId], references: [id], onDelete: Restrict)
   peerId        String?
   peerArticleId String?
 
@@ -152,6 +155,8 @@ model Article {
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([publishedAt])
+  @@index([slug])
+  @@index([hidden, publishedAt(sort: Desc)])
   @@map("articles")
 }
 
@@ -172,6 +177,7 @@ model ArticleTrackingPixels {
   pixelUid String? @unique
   error    String?
 
+  @@index([articleId])
   @@map("articles.tracking-pixels")
 }
 
@@ -196,6 +202,7 @@ model TaggedArticles {
   modifiedAt DateTime @updatedAt
 
   @@id([articleId, tagId])
+  @@index([tagId])
   @@map("articles.tagged-articles")
 }
 
@@ -228,7 +235,7 @@ model Author {
   articlesAsAuthor            ArticleRevisionAuthor[]
   articlesAsSocialMediaAuthor ArticleRevisionSocialMediaAuthor[]
 
-  peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
+  peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Restrict)
   peerId String?
 
   tags TaggedAuthors[]
@@ -295,7 +302,7 @@ model Image {
   pageRevisionSocialMediaImages PageRevision[] @relation("pageRevisionSocialMediaImage")
   pageRevisionImages            PageRevision[] @relation("pageRevisionImage")
 
-  peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
+  peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Restrict)
   peerId String?
 
   users          User[]
@@ -311,6 +318,23 @@ model Image {
   @@index([title])
   @@index([tags])
   @@map("images")
+}
+
+model Document {
+  id          String   @id
+  createdAt   DateTime @default(now())
+  modifiedAt  DateTime @updatedAt
+  filename    String?
+  title       String?
+  description String?
+  mimeType    String
+  fileSize    Int
+  extension   String
+
+  @@index([createdAt])
+  @@index([modifiedAt])
+  @@index([title])
+  @@map("documents")
 }
 
 enum CommentItemType {
@@ -432,7 +456,7 @@ model CommentRating {
   modifiedAt DateTime @updatedAt
 
   userId String?
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   answerId String
   answer   CommentRatingSystemAnswer @relation(fields: [answerId], references: [id], onDelete: Cascade)
@@ -501,6 +525,7 @@ model Invoice {
   subscriptionPeriods SubscriptionPeriod[]
 
   @@index([mail])
+  @@index([subscriptionID])
   @@map("invoices")
 }
 
@@ -671,7 +696,7 @@ model PageRevision {
   page   Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
 
   userId                 String?
-  user                   User?                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                   User?                    @relation(fields: [userId], references: [id], onDelete: SetNull)
   PagesRevisionPublished PagesRevisionPublished[]
   PagesRevisionPending   PagesRevisionPending[]
   PagesRevisionDraft     PagesRevisionDraft[]
@@ -935,6 +960,7 @@ model Subscription {
 
   invoices Invoice[]
 
+  @@index([userID])
   @@map("subscriptions")
 }
 
@@ -978,6 +1004,8 @@ model User {
   birthday        DateTime? @db.Date
   email           String    @unique
   emailVerifiedAt DateTime?
+  pendingEmail    String?
+  pendingEmailAt  DateTime?
   name            String
   firstName       String?
   flair           String?
@@ -1049,7 +1077,7 @@ model Tag {
   main        Boolean @default(false)
   color       String?
 
-  peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Cascade)
+  peer   Peer?   @relation(fields: [peerId], references: [id], onDelete: Restrict)
   peerId String?
 
   comments TaggedComments[]
@@ -1093,6 +1121,7 @@ model PollAnswer {
   votes         PollVote[]
   externalVotes PollExternalVote[]
 
+  @@index([pollId])
   @@map("polls.answers")
 }
 
@@ -1102,7 +1131,7 @@ model PollVote {
   modifiedAt DateTime @updatedAt
 
   userId String?
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   answerId String
   answer   PollAnswer @relation(fields: [answerId], references: [id], onDelete: Cascade)
@@ -1116,6 +1145,7 @@ model PollVote {
   disabled    Boolean @default(false)
 
   @@unique([pollId, userId])
+  @@index([answerId])
   @@map("polls.votes")
 }
 
@@ -1229,6 +1259,7 @@ enum UserEvent {
   PASSWORD_RESET
   LOGIN_LINK
   TEST_MAIL
+  EMAIL_CHANGE
 }
 
 model UserFlowMail {
@@ -1384,11 +1415,12 @@ model Banner {
 }
 
 enum LoginStatus {
-  UNSUBSCRIBED @map("unsubscribed")
-  SUBSCRIBED   @map("subscribed")
-  LOGGED_IN    @map("logged_in")
-  LOGGED_OUT   @map("logged_out")
-  ALL          @map("all")
+  PAYWALL_BYPASSED @map("paywall_bypassed")
+  UNSUBSCRIBED     @map("unsubscribed")
+  SUBSCRIBED       @map("subscribed")
+  LOGGED_IN        @map("logged_in")
+  LOGGED_OUT       @map("logged_out")
+  ALL              @map("all")
 }
 
 model BannerAction {
@@ -1733,6 +1765,7 @@ model SettingPaymentProvider {
 
 enum ChallengeProviderType {
   TURNSTILE @map("turnstile")
+  HCAPTCHA  @map("hcaptcha")
 }
 
 model SettingChallengeProvider {
@@ -1765,6 +1798,25 @@ model SettingAIProvider {
   systemPrompt String?
 
   @@map("settings.aiprovider")
+}
+
+enum ExternalAppsTarget {
+  BLANK  @map("blank")
+  IFRAME @map("iframe")
+}
+
+model ExternalApps {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name        String
+  description String?
+  url         String
+  target      ExternalAppsTarget
+  icon        String?
+
+  @@map("apps.external")
 }
 
 enum AnalyticsProviderType {

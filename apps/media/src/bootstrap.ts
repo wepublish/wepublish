@@ -1,9 +1,13 @@
 import { NestFactory } from '@nestjs/core';
+import sharp from 'sharp';
 
 import { AppModule } from './app/app.module';
 import { ZodValidationPipe } from 'nestjs-zod';
 import helmet from 'helmet';
-import { NestApplicationOptions } from '@nestjs/common';
+import { Logger, NestApplicationOptions } from '@nestjs/common';
+
+sharp.cache({ memory: 50, items: 20 });
+sharp.concurrency(2);
 
 export async function bootstrap(logger?: NestApplicationOptions['logger']) {
   const app = await NestFactory.create(AppModule, {
@@ -23,6 +27,13 @@ export async function bootstrap(logger?: NestApplicationOptions['logger']) {
 
   const port = process.env.PORT || 4100;
   await app.listen(port);
+
+  if (process.env['MEDIA_FALLBACK_URL']) {
+    Logger.log(
+      `Media fallback URL: ${process.env['MEDIA_FALLBACK_URL']}`,
+      'Bootstrap'
+    );
+  }
 
   return { app, port };
 }

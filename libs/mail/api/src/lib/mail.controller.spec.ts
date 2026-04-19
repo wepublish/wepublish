@@ -58,6 +58,8 @@ describe('MailController', () => {
     flair: null,
     userImageID: null,
     note: null,
+    pendingEmail: null,
+    pendingEmailAt: null,
   };
 
   beforeEach(async () => {
@@ -117,6 +119,7 @@ describe('MailController', () => {
               }),
               kv,
               prisma,
+              jwtGenerator: async () => 'test-jwt-token',
             });
           },
           inject: [PrismaClient, KvTtlCacheService],

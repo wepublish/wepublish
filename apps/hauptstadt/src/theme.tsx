@@ -285,6 +285,14 @@ const subtitle1 = {
 };
 
 const theme = createTheme(variablesTheme, {
+  containerMaxWidth: {
+    xs: 492,
+    sm: 760,
+    md: 868,
+    lg: 1080,
+    xl: 1425,
+    xxl: 2100,
+  },
   components: {
     MuiButton: {
       defaultProps: {
@@ -791,6 +799,72 @@ export const alternatingTeaserTheme = createTheme(contentTheme, {
           xxl: 27,
         },
       }),
+    },
+  },
+});
+
+export const breakBlockTheme = createTheme(theme, {
+  typography: {
+    fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+    allVariants: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+    },
+    h1: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+    },
+    h2: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+    },
+    h3: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        unit: 'rem',
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 22,
+        },
+      }),
+    },
+    h4: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        unit: 'rem',
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 20,
+        },
+      }),
+    },
+    h5: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+      ...responsiveProperty({
+        cssProperty: 'fontSize',
+        unit: 'rem',
+        breakpoints: variablesTheme.breakpoints.values,
+        values: {
+          xs: 18,
+        },
+      }),
+    },
+    h6: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+    },
+    body1: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+    },
+    body2: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+    },
+    subtitle1: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+    },
+    subtitle2: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
+    },
+    blockQuote: {
+      fontFamily: [ABCWhyte.style.fontFamily, 'sans-serif'].join(','),
     },
   },
 });

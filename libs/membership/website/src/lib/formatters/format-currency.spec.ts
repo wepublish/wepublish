@@ -1,35 +1,38 @@
-/* eslint-disable no-irregular-whitespace */
 import { Currency } from '@wepublish/website/api';
 import { formatCurrency, roundUpTo5Cents } from './format-currency';
 
+// Intl.NumberFormat uses different thousands separators depending on the ICU data version.
+const normalize = (s: string) =>
+  s.replace(/[\u2019\u0027]/g, "'").replace(/\u00a0/g, ' ');
+
 describe('formatCurrency', () => {
   it('should format CHF without decimals in the swiss german locale', () => {
-    expect(formatCurrency(50000, Currency.Chf, 'de-CH')).toMatchInlineSnapshot(
-      `"CHF 50’000.-"`
+    expect(normalize(formatCurrency(50000, Currency.Chf, 'de-CH'))).toBe(
+      "CHF 50'000.-"
     );
   });
 
   it('should format CHF with decimals in the swiss german locale', () => {
-    expect(
-      formatCurrency(50000.25, Currency.Chf, 'de-CH')
-    ).toMatchInlineSnapshot(`"CHF 50’000.25"`);
+    expect(normalize(formatCurrency(50000.25, Currency.Chf, 'de-CH'))).toBe(
+      "CHF 50'000.25"
+    );
   });
 
   it('should format CHF in another locale', () => {
-    expect(formatCurrency(50000, Currency.Chf, 'de-DE')).toMatchInlineSnapshot(
-      `"50.000,00 CHF"`
+    expect(normalize(formatCurrency(50000, Currency.Chf, 'de-DE'))).toBe(
+      '50.000,00 CHF'
     );
   });
 
   it('should format a number without decimals in the swiss german locale but as euros', () => {
-    expect(formatCurrency(50000, Currency.Eur, 'de-CH')).toMatchInlineSnapshot(
-      `"EUR 50’000.00"`
+    expect(normalize(formatCurrency(50000, Currency.Eur, 'de-CH'))).toBe(
+      "EUR 50'000.00"
     );
   });
 
   it('should format a number without decimals in the german locale as euros', () => {
-    expect(formatCurrency(50000, Currency.Eur, 'de-DE')).toMatchInlineSnapshot(
-      `"50.000,00 €"`
+    expect(normalize(formatCurrency(50000, Currency.Eur, 'de-DE'))).toBe(
+      '50.000,00 \u20AC'
     );
   });
 });

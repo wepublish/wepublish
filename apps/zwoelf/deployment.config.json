@@ -1,8 +1,4 @@
 {
-  "tdl": {
-    "production": "wepublish.media",
-    "staging": "wepublish.dev"
-  },
   "website": {
     "production": {
       "custom_domain": "https://www.zwoelf.ch",

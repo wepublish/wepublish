@@ -1,0 +1,41 @@
+query SettingsIntegrationsAnalytics {
+  analyticsProviderSettings {
+    id
+    createdAt
+    modifiedAt
+    lastLoadedAt
+
+    type
+    name
+
+    articlePrefix
+    property
+  }
+}
+
+mutation UpdateAnalyticsProviderSetting(
+  $id: String!
+  $name: String
+  $property: String
+  $articlePrefix: String
+  $credentials: SettingAnalyticsCredentialsInput
+) {
+  updateAnalyticsProviderSetting(
+    id: $id
+    name: $name
+    property: $property
+    articlePrefix: $articlePrefix
+    credentials: $credentials
+  ) {
+    id
+    createdAt
+    modifiedAt
+    lastLoadedAt
+
+    type
+    name
+
+    articlePrefix
+    property
+  }
+}

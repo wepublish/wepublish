@@ -35,10 +35,10 @@ export class SettingPaymentProvider extends SettingProvider {
   offSessionPayments?: boolean;
 
   /** hide sensitive fields
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   webhookEndpointSecret?: string;
 
- @Field(type => String, { nullable: true })
+ @Field({ nullable: true })
   apiKey?: string;
  **/
 
@@ -54,10 +54,10 @@ export class SettingPaymentProvider extends SettingProvider {
   @Field(() => [MolliePaymentMethod], { nullable: true })
   mollie_methods?: MolliePaymentMethod[];
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   payrexx_instancename?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   payrexx_vatrate?: string;
 
   @Field(type => Number, { nullable: true })
@@ -66,10 +66,10 @@ export class SettingPaymentProvider extends SettingProvider {
   @Field(type => Number, { nullable: true })
   bexio_countryId?: number;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   bexio_invoiceTemplateNewMembership?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   bexio_invoiceTemplateRenewalMembership?: string;
 
   @Field(type => Number, { nullable: true })
@@ -81,28 +81,28 @@ export class SettingPaymentProvider extends SettingProvider {
   @Field(type => Number, { nullable: true })
   bexio_accountId?: number;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   bexio_invoiceTitleNewMembership?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   bexio_invoiceTitleRenewalMembership?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   bexio_invoiceMailSubjectNewMembership?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   bexio_invoiceMailBodyNewMembership?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   bexio_invoiceMailSubjectRenewalMembership?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   bexio_invoiceMailBodyRenewalMembership?: string;
 
   @Field(type => Boolean, { nullable: true })
   bexio_markInvoiceAsOpen?: boolean;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   mollie_apiBaseUrl?: string;
 }
 
@@ -118,16 +118,16 @@ export class CreateSettingPaymentProviderInput extends OmitType(
   ['id', 'type', 'createdAt', 'lastLoadedAt', 'modifiedAt'] as const,
   ArgsType
 ) {
-  @Field(type => String)
+  @Field()
   id!: string;
 
   @Field(type => PaymentProviderType)
   type!: PaymentProviderType;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   webhookEndpointSecret?: string;
 
-  @Field(type => String, { nullable: true })
+  @Field({ nullable: true })
   apiKey?: string;
 }
 

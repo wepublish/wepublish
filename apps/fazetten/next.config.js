@@ -16,6 +16,7 @@ const nextConfig = {
   publicRuntimeConfig: {
     env: {
       API_URL: process.env.API_URL || '',
+      GA_ID: process.env.GA_ID || '',
     },
   },
 };

@@ -1,12 +1,11 @@
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, css, TextField, Theme, Typography } from '@mui/material';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { Widget } from '@typeform/embed-react';
 import { BaseSyntheticEvent, FormEvent, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
-
-import theme from '../../theme';
 
 const formStyles = css`
   display: block;
@@ -23,7 +22,7 @@ const PopTextComponent = styled('p')`
 
 const RegisterMCNewsletterFormSchema = z.object({
   email: z.string().email().min(1),
-  SOURCE: z.string().optional(),
+  SOURCE: z.string().optional().or(z.literal('')),
 });
 
 const autofocus = (node: HTMLElement | null) => {
@@ -31,10 +30,21 @@ const autofocus = (node: HTMLElement | null) => {
   inputNode?.focus();
 };
 
+const typeFormStyles = (theme: Theme) => css`
+  width: 100%;
+  height: 100vh;
+
+  ${theme.breakpoints.up('md')} {
+    width: 1200px;
+    height: 1000px;
+  }
+`;
+
 export type MailchimpSubscribeFormProps = {
   mc_u: string;
   mc_id: string;
   mc_f_id: string;
+  mc_group?: string;
   tf_id: string;
   source?: string;
   popButtonText?: string;
@@ -50,6 +60,7 @@ export default function MailchimpSubscribeForm(
     mc_u,
     mc_id,
     mc_f_id,
+    mc_group,
     tf_id,
     source,
     popButtonText,
@@ -59,16 +70,11 @@ export default function MailchimpSubscribeForm(
   } = props;
   const [email, setEmail] = useState('');
   const [showTypeForm, setShowTypeForm] = useState(false);
+  const isDesktop = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
   type FormInput = z.infer<typeof RegisterMCNewsletterFormSchema>;
 
-  const {
-    blocks: { IFrame },
-  } = useWebsiteBuilder();
-
   const mc_formActionBaseURL =
-    'https://tsüri.us9.list-manage.com/subscribe/post';
-  const mc_fetchBaseURL =
-    'https://tsüri.us9.list-manage.com/subscribe/post-json';
+    'https://xn--tsri-1ra.us9.list-manage.com/subscribe/post';
   const tf_baseURL = 'https://tsueri.typeform.com/to';
 
   const { handleSubmit, control } = useForm<FormInput>({
@@ -87,22 +93,31 @@ export default function MailchimpSubscribeForm(
       if (data?.email) {
         setEmail(data.email);
       }
-      return processSubmit(event as FormEvent<HTMLFormElement>);
+      return processSubmit(data, event as FormEvent<HTMLFormElement>);
     }
   );
 
-  const processSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    const formData = new FormData(event.target as HTMLFormElement);
-    fetch(`${mc_fetchBaseURL}?u=${mc_u}&id=${mc_id}&f_id=${mc_f_id}&c=?`, {
+  const processSubmit = (
+    data: FormInput,
+    event: FormEvent<HTMLFormElement>
+  ) => {
+    const body = new URLSearchParams({
+      EMAIL: data.email,
+      SOURCE: source ?? '',
+    });
+    if (mc_group) {
+      body.append(mc_group, '1');
+    }
+    fetch(`${mc_formActionBaseURL}?u=${mc_u}&id=${mc_id}&f_id=${mc_f_id}`, {
       method: 'POST',
-      body: formData,
+      body,
       mode: 'no-cors',
     })
       .then(() => {
         onMCSubmit?.(event);
         setShowTypeForm(true);
       })
-      .catch(error => {
+      .catch(() => {
         setShowTypeForm(false);
       });
   };
@@ -194,14 +209,14 @@ export default function MailchimpSubscribeForm(
         </form>
       )}
       {showTypeForm && (
-        <IFrame
-          css={{
-            marginTop: theme.spacing(5) as string,
-            border: 'none',
-          }}
-          url={`${tf_baseURL}/${tf_id}#email=${encodeURIComponent(email)}`}
-          width={1200}
-          height={1000}
+        <Widget
+          id={tf_id}
+          css={typeFormStyles}
+          autoFocus={false}
+          iframeProps={{ id: 'typeform' }}
+          inlineOnMobile={true}
+          autoResize={!isDesktop}
+          hidden={{ email }}
         />
       )}
     </>

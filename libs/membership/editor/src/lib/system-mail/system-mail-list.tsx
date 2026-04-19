@@ -17,7 +17,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { Button, SelectPicker, Stack, Tag } from 'rsuite';
 import { TypeAttributes } from 'rsuite/esm/@types/common';
-import { MdLink, MdLogin, MdPassword } from 'react-icons/md';
+import { MdEmail, MdLink, MdLogin, MdPassword } from 'react-icons/md';
 import { RiTestTubeLine } from 'react-icons/ri';
 import { DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS } from '../common';
 import {
@@ -35,6 +35,7 @@ const userEventColors: UserEventColorMap = {
   [UserEvent.PasswordReset]: 'blue',
   [UserEvent.LoginLink]: 'yellow',
   [UserEvent.TestMail]: 'violet',
+  [UserEvent.EmailChange]: 'orange',
 };
 
 type UserEventIconMap = Record<
@@ -46,6 +47,7 @@ const userEventIcons: UserEventIconMap = {
   [UserEvent.PasswordReset]: <MdPassword size={16} />,
   [UserEvent.LoginLink]: <MdLink size={16} />,
   [UserEvent.TestMail]: <RiTestTubeLine size={16} />,
+  [UserEvent.EmailChange]: <MdEmail size={16} />,
 };
 
 function SystemMailList() {

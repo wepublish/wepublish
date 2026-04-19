@@ -4,7 +4,6 @@ import {
   InvoiceItem,
   PaymentPeriodicity,
   PaymentState,
-  PrismaClient,
 } from '@prisma/client';
 import { createKvMock } from '@wepublish/kv-ttl-cache/api';
 import { CreatePaymentIntentProps } from '../payment-provider';
@@ -116,7 +115,14 @@ describe('BexioPaymentProvider', () => {
     );
     mockProps = {
       id: 'bexio',
-      prisma: new PrismaClient(),
+      prisma: {
+        payment: {
+          findFirst: mockFindFirst,
+        },
+        invoice: {
+          findUnique: mockFindUnique,
+        },
+      } as any,
       kv: kvMock,
     };
 

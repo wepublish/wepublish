@@ -46,6 +46,8 @@ const mockUser: User = {
   birthday: new Date(),
   email: 'test@example.com',
   emailVerifiedAt: new Date('2023-01-01T02:00:00.000Z'),
+  pendingEmail: null,
+  pendingEmailAt: null,
   name: 'Test User',
   firstName: 'Test',
   flair: null,

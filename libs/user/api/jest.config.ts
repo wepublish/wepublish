@@ -14,4 +14,5 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../../coverage/libs/user/api',
+  coverageProvider: 'v8',
 };

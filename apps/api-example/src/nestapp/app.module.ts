@@ -19,6 +19,7 @@ import { BlockContentModule } from '@wepublish/block-content/api';
 import { CommentModule } from '@wepublish/comments/api';
 import { ConsentModule } from '@wepublish/consent/api';
 import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
+import { DocumentModule } from '@wepublish/document/api';
 import { EventModule } from '@wepublish/event/api';
 import {
   AgendaBaselService,
@@ -38,6 +39,7 @@ import {
   MailgunMailProvider,
   MailsModule,
 } from '@wepublish/mail/api';
+import { generateJWT } from '@wepublish/utils/api';
 import {
   DashboardModule,
   MembershipModule,
@@ -51,6 +53,7 @@ import {
   PrismaModule,
   URLAdapter,
   URLAdapterModule,
+  WepublishSiteURLAdapter,
 } from '@wepublish/nest-modules';
 import { PageModule } from '@wepublish/page/api';
 import {
@@ -74,6 +77,7 @@ import { PollModule } from '@wepublish/poll/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
 import { SettingModule } from '@wepublish/settings/api';
 import { StatsModule } from '@wepublish/stats/api';
+import { ExternalAppsModule } from '@wepublish/external-apps/api';
 import { SystemInfoModule } from '@wepublish/system-info';
 import { TagModule } from '@wepublish/tag/api';
 import {
@@ -120,7 +124,9 @@ import {
           path: 'v1',
           cache: 'bounded',
           persistedQueries: false,
-          introspection: configFile.general.apolloIntrospection,
+          introspection:
+            process.env.NODE_ENV !== 'production' &&
+            configFile.general.apolloIntrospection,
           playground: configFile.general.apolloPlayground,
           allowBatchedHttpRequests: true,
           inheritResolversFromInterfaces: true,
@@ -187,8 +193,23 @@ import {
           throw new Error('A MailProvider must be configured.');
         }
 
+        const jwtPrivateKey = (config.get('JWT_PRIVATE_KEY') || '').replace(
+          /\\n/g,
+          '\n'
+        );
+        const hostURL = config.get('HOST_URL') || 'http://localhost:4000';
+        const websiteURL = config.get('WEBSITE_URL') || 'http://localhost:3000';
+
         return {
           mailProvider,
+          jwtGenerator: (userId: string) =>
+            generateJWT({
+              id: userId,
+              privateKey: jwtPrivateKey,
+              issuer: hostURL,
+              audience: websiteURL,
+              expiresInMinutes: 6 * 60,
+            }),
         };
       },
       inject: [ConfigService, PrismaClient, KvTtlCacheService],
@@ -384,23 +405,30 @@ import {
             configFile.general.sessionTTLDays
           : 7;
         const sessionTTL = MS_PER_DAY * sessionTTLDays;
-        const jwtSecretKey =
-          config.get('JWT_SECRET_KEY') || 'development-secret-key';
+        const jwtPrivateKey = (config.get('JWT_PRIVATE_KEY') || '').replace(
+          /\\n/g,
+          '\n'
+        );
+        const jwtPublicKey = (config.get('JWT_PUBLIC_KEY') || '').replace(
+          /\\n/g,
+          '\n'
+        );
         const hostURL = config.get('HOST_URL') || 'http://localhost:4000';
         const websiteURL = config.get('WEBSITE_URL') || 'http://localhost:3000';
 
         if (
           process.env.NODE_ENV === 'production' &&
-          jwtSecretKey === 'development-secret-key'
+          (!jwtPrivateKey || !jwtPublicKey)
         ) {
           console.warn(
-            'WARNING: Using default JWT secret key in production environment!'
+            'WARNING: JWT_PRIVATE_KEY or JWT_PUBLIC_KEY not set in production environment!'
           );
         }
 
         return {
           sessionTTL,
-          jwtSecretKey,
+          jwtPrivateKey,
+          jwtPublicKey,
           hostURL,
           websiteURL,
         };
@@ -408,8 +436,10 @@ import {
     }),
     PermissionModule,
     ConsentModule,
+    DocumentModule,
     StatsModule,
     SettingModule,
+    ExternalAppsModule,
     EventModule,
     PageModule,
     PeerModule.registerAsync({
@@ -439,19 +469,8 @@ import {
         );
         return {
           challenge: configFile.challenge || {
-            type: 'algebraic',
-            secret: 'default-challenge-secret',
-            validTime: 600,
-            width: 300,
-            height: 100,
-            background: '#ffffff',
-            noise: 1,
-            minValue: 1,
-            maxValue: 10,
-            operandAmount: 2,
-            operandTypes: ['+'],
-            mode: 'formula',
-            targetSymbol: '?',
+            type: 'turnstile',
+            id: 'default-turnstile',
           },
         };
       },
@@ -484,7 +503,7 @@ import {
               'google-analytics'
             );
             await dbConfig.initDatabaseConfiguration();
-            return dbConfig.getConfig();
+            return dbConfig;
           },
         }),
       ],
@@ -502,10 +521,16 @@ import {
           config.getOrThrow('CONFIG_FILE_PATH')
         );
 
-        const urlAdapter =
-          configFile.general.urlAdapter === 'hauptstadt' ?
-            new HauptstadtURLAdapter(config.getOrThrow('WEBSITE_URL'))
-          : new URLAdapter(config.getOrThrow('WEBSITE_URL'));
+        let urlAdapter: URLAdapter;
+        if (configFile.general.urlAdapter === 'hauptstadt') {
+          urlAdapter = new HauptstadtURLAdapter(
+            config.getOrThrow('WEBSITE_URL')
+          );
+        } else if (configFile.general.urlAdapter === 'wepublish-site') {
+          urlAdapter = new WepublishSiteURLAdapter();
+        } else {
+          urlAdapter = new URLAdapter(config.getOrThrow('WEBSITE_URL'));
+        }
 
         return urlAdapter;
       },
@@ -518,11 +543,14 @@ import {
           config.getOrThrow('CONFIG_FILE_PATH')
         );
         const internalUrl = config.get('MEDIA_SERVER_INTERNAL_URL');
-        const token = config.getOrThrow('MEDIA_SERVER_TOKEN');
+        const jwtPrivateKey = config
+          .getOrThrow<string>('JWT_PRIVATE_KEY')
+          .replace(/\\n/g, '\n');
 
         return new NovaMediaAdapter(
           config.getOrThrow('MEDIA_SERVER_URL'),
-          token,
+          jwtPrivateKey,
+          config.getOrThrow('HOST_URL'),
           { quality: configFile.mediaServer.quality ?? 0.8 },
           internalUrl ? internalUrl : undefined
         );

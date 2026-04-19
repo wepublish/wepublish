@@ -16,9 +16,9 @@ export const getFeed = async (req: NextApiRequest) => {
   const generate = await generateFeed({
     id: `${siteUrl + req.url}`,
     link: siteUrl,
-    title: 'We.Publish',
+    title: 'Fazetten',
     ttl: 10, // in minutes
-    copyright: 'We.Publish',
+    copyright: 'Fazetten',
     categories: ['OSS', 'CMS', 'Journalism'],
     updated: new Date(),
     feedLinks: {

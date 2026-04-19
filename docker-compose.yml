@@ -27,9 +27,9 @@ services:
       HOST_URL: http://localhost:4000
       MEDIA_SERVER_URL: http://localhost:4100
       MEDIA_SERVER_INTERNAL_URL: http://media:4100
-      MEDIA_SERVER_TOKEN: secret
       WEBSITE_URL: http://localhost:4200
-      JWT_SECRET_KEY: ThisIsSuperSecret
+      JWT_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIJWbdZ23hpurtFiEpnulSfJ1U4TwbkiDWmbGZSDVx3nR\n-----END PRIVATE KEY-----"
+      JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA93mjXbSful1W9nAVHuYHdRfgKEF+pvkwm4/5P27J4RA=\n-----END PUBLIC KEY-----"
     env_file: .env
     volumes:
       - ./apps/api-example/src/default.yaml:/config.yaml
@@ -68,11 +68,12 @@ services:
     ports:
       - '127.0.0.1:4100:4100'
     environment:
-      TOKEN: secret
+      API_URL: http://api:4000
       S3_ACCESS_KEY: ${S3_ACCESS_KEY}
       S3_SECRET_KEY: ${S3_SECRET_KEY}
       S3_ENDPOINT: 'storage'
       S3_PORT: '9000'
+      MEDIA_FALLBACK_URL: ${MEDIA_FALLBACK_URL}
     depends_on:
       - storage
     networks:

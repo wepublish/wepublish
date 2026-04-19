@@ -9,16 +9,19 @@ import {
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
+import { useRouter } from 'next/router';
 
 export default function Index() {
+  const { locale } = useRouter();
+
   return (
     <ContentWidthProvider fullWidth>
-      <PageContainer slug={''} />
+      <PageContainer slug={`-${locale}`} />
     </ContentWidthProvider>
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const { publicRuntimeConfig } = getConfig();
 
   if (!publicRuntimeConfig.env.API_URL) {
@@ -30,7 +33,7 @@ export const getStaticProps: GetStaticProps = async () => {
     client.query({
       query: PageDocument,
       variables: {
-        slug: '',
+        slug: `-${locale}`,
       },
     }),
     client.query({

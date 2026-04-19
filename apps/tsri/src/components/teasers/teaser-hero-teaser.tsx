@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { hasBlockStyle } from '@wepublish/block-content/website';
 import { createWithTheme } from '@wepublish/ui';
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
@@ -15,9 +16,8 @@ import {
 } from './tsri-teaser';
 
 export const isTeaserHeroTeaser = allPass([
-  ({ blockStyle }: BuilderTeaserProps) => {
-    return blockStyle === TsriTeaserType.HeroTeaser;
-  },
+  ({ blockStyle }: BuilderTeaserProps) =>
+    hasBlockStyle(TsriTeaserType.HeroTeaser)({ blockStyle }),
 ]);
 
 export const StyledTeaserHeroTeaser = styled(TsriTeaser)`
@@ -44,13 +44,13 @@ export const StyledTeaserHeroTeaser = styled(TsriTeaser)`
     }
 
     ${TeaserImageWrapper} {
-      aspect-ratio: 1 / 1;
+      aspect-ratio: 3 / 2;
       grid-row: 1 / 3;
       padding: 2cqw 2cqw 0 2cqw;
       z-index: 1;
 
       & img {
-        aspect-ratio: 1 / 1;
+        aspect-ratio: 3 / 2;
         object-fit: cover;
         width: 100%;
         height: 100%;

@@ -14,7 +14,7 @@ import {
   Drawer,
   Form as RForm,
   Message as RMessage,
-  Panel,
+  Panel as RPanel,
   Schema,
   toaster,
 } from 'rsuite';
@@ -54,6 +54,10 @@ const BoxWrapper = styled.div`
   border-radius: 8px;
   padding: 12px;
   margin-top: 4px;
+`;
+
+const Panel = styled(RPanel)`
+  overflow: initial;
 `;
 
 const Message = styled(RMessage)`

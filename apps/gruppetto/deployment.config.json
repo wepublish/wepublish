@@ -1,14 +1,11 @@
 {
-  "tdl": {
-    "production": "wepublish.media",
-    "staging": "wepublish.dev"
-  },
   "website": {
     "production": {
       "deployment": true,
       "custom_domain": "https://gruppetto-magazin.ch",
       "env": {
         "GA_ID": "G-FL5CRKBXV4",
+        "GTM_ID": "GTM-T2KXKVMC",
         "DEPLOY_ENV": "production"
       },
       "secret_env": []

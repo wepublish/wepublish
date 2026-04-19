@@ -8,19 +8,47 @@ import { addPredefinedPermissions } from '@wepublish/permissions/api';
 export class AuthenticationService {
   constructor(private prisma: PrismaClient) {}
 
-  public async getSessionByToken(token: string): Promise<AuthSession | null> {
-    const [tokenMatch, session] = await Promise.all([
-      this.prisma.token.findFirst({
-        where: {
-          token,
+  public async getUserSession(token: string): Promise<AuthSession | null> {
+    const session = await this.prisma.session.findFirst({
+      where: {
+        token,
+      },
+      include: {
+        user: {
+          select: unselectPassword,
         },
-      }),
-      this.prisma.session.findFirst({
-        where: {
-          token,
-        },
-      }),
-    ]);
+      },
+    });
+
+    if (session && session.user) {
+      return {
+        type: AuthSessionType.User,
+        id: session.id,
+        token: session.token,
+        createdAt: session.createdAt,
+        expiresAt: session.expiresAt,
+        user: session.user,
+        roles: (
+          await this.prisma.userRole.findMany({
+            where: {
+              id: {
+                in: session.user.roleIDs,
+              },
+            },
+          })
+        ).map(addPredefinedPermissions),
+      };
+    }
+
+    return null;
+  }
+
+  public async getPeerSession(token: string): Promise<AuthSession | null> {
+    const tokenMatch = await this.prisma.token.findFirst({
+      where: {
+        token,
+      },
+    });
 
     if (tokenMatch) {
       return {
@@ -33,37 +61,6 @@ export class AuthenticationService {
             where: {
               id: {
                 in: tokenMatch.roleIDs,
-              },
-            },
-          })
-        ).map(addPredefinedPermissions),
-      };
-    }
-
-    if (session) {
-      const user = await this.prisma.user.findUnique({
-        where: {
-          id: session.userID,
-        },
-        select: unselectPassword,
-      });
-
-      if (!user) {
-        return null;
-      }
-
-      return {
-        type: AuthSessionType.User,
-        id: session.id,
-        token: session.token,
-        createdAt: session.createdAt,
-        expiresAt: session.expiresAt,
-        user,
-        roles: (
-          await this.prisma.userRole.findMany({
-            where: {
-              id: {
-                in: user.roleIDs,
               },
             },
           })

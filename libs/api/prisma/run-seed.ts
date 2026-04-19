@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { seed as rootSeed } from './seed';
-import bcrypt from 'bcrypt';
+import { hash as argon2Hash } from '@node-rs/argon2';
 import { randomBytes } from 'crypto';
 
 const generateSecureRandomPassword = (length: number) => {
@@ -21,7 +22,8 @@ const generateSecureRandomPassword = (length: number) => {
 };
 
 export async function runSeed() {
-  const prisma = new PrismaClient();
+  const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
+  const prisma = new PrismaClient({ adapter });
   await prisma.$connect();
   const [adminUserRole, editorUserRole] = await rootSeed(prisma);
 
@@ -35,7 +37,7 @@ export async function runSeed() {
       email: 'admin@wepublish.ch',
       name: 'WePublish Admin',
       active: true,
-      password: await bcrypt.hash(password, 11),
+      password: await argon2Hash(password),
       roleIDs: [adminUserRole.id],
     };
     console.log('\x1b[31m\x1b[1m%s\x1b[0m', `Ensuring admin user`);

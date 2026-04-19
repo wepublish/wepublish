@@ -3,7 +3,6 @@ import {
   CreatePageMutationVariables,
   useCreateJwtForWebsiteLoginMutation,
   useCreatePageMutation,
-  useMeQuery,
   usePageQuery,
   usePublishPageMutation,
   useUpdatePageMutation,
@@ -127,9 +126,6 @@ function PageEditor() {
     errorPolicy: 'all',
     variables: { id: pageID! },
     skip: !pageID,
-  });
-  const { data: user } = useMeQuery({
-    fetchPolicy: 'cache-only',
   });
   const [createJWT] = useCreateJwtForWebsiteLoginMutation({
     errorPolicy: 'none',
@@ -438,15 +434,33 @@ function PageEditor() {
                     disabled={hasChanged || !id || !canPreview}
                     size="lg"
                     icon={<MdRemoveRedEye />}
-                    // open via button not link as it contains a JWT
-                    // open via button not link as it contains a JWT
                     onClick={async () => {
-                      const { data: jwt } = await createJWT();
-
-                      window.open(
-                        `${pageData!.page.previewUrl}&jwt=${jwt?.createJWTForWebsiteLogin?.token}`,
+                      const previewWindow = window.open(
+                        pageData!.page.previewUrl,
                         '_blank'
                       );
+                      if (!previewWindow) return;
+
+                      const { data: jwtData } = await createJWT();
+                      const token = jwtData?.createJWTForWebsiteLogin?.token;
+                      if (!token) return;
+
+                      const targetOrigin = new URL(pageData!.page.previewUrl)
+                        .origin;
+
+                      const handleMessage = (event: MessageEvent) => {
+                        if (
+                          event.source === previewWindow &&
+                          event.data === 'preview-jwt-ready'
+                        ) {
+                          previewWindow.postMessage(
+                            { previewJwt: token },
+                            targetOrigin
+                          );
+                          window.removeEventListener('message', handleMessage);
+                        }
+                      };
+                      window.addEventListener('message', handleMessage);
                     }}
                   >
                     {t('pageEditor.overview.preview')}

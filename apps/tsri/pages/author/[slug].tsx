@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { AuthorPage } from '@wepublish/utils/website';
 
+import { TsriAuthorLinks } from '../../src/components/tsri-author-links';
 import theme from '../../src/theme';
 
 const TsriAuthorPage = styled(AuthorPage)`
@@ -14,6 +15,12 @@ const TsriAuthorPage = styled(AuthorPage)`
     line-height: 1.5rem !important;
     grid-column: -1 / 1;
     margin-bottom: ${theme.spacing(-5)};
+  }
+
+  ${TsriAuthorLinks} {
+    grid-column: 1 / 2;
+    grid-row: unset;
+    justify-self: start;
   }
 `;
 

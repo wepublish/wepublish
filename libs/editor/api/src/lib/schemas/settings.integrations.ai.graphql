@@ -10,8 +10,18 @@ query SettingsIntegrationsAI {
   }
 }
 
-mutation UpdateSettingsIntegrationsAI($apiKey: String, $updateAiSettingId: String!, $name: String, $systemPrompt: String) {
-  updateAISetting(apiKey: $apiKey, id: $updateAiSettingId, name: $name, systemPrompt: $systemPrompt) {
+mutation UpdateSettingsIntegrationsAI(
+  $apiKey: String
+  $id: String!
+  $name: String
+  $systemPrompt: String
+) {
+  updateAISetting(
+    apiKey: $apiKey
+    id: $id
+    name: $name
+    systemPrompt: $systemPrompt
+  ) {
     createdAt
     id
     lastLoadedAt

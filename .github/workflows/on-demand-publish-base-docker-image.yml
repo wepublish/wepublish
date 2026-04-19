@@ -37,10 +37,10 @@ jobs:
         run: |
           if docker manifest inspect ${{ env.HASHED_TAG }} > /dev/null 2>&1; then
             echo "Image with hash ${{ env.HASH }} already exists."
-            echo "::set-output name=image-exists::true"
+            echo "image-exists=true" >> "$GITHUB_OUTPUT"
           else
             echo "Image with hash ${{ env.HASH }} does not exist."
-            echo "::set-output name=image-exists::false"
+            echo "image-exists=false" >> "$GITHUB_OUTPUT"
           fi
 
       - uses: docker/setup-qemu-action@v1

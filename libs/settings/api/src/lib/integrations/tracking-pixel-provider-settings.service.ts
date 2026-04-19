@@ -8,7 +8,7 @@ import {
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { TrackingPixelSettingsProviderDataloaderService } from './tracking-pixel-settings-provider-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-import { SecretCrypto } from './secrets-cryto';
+import { SecretCrypto } from './secrets-crypto';
 
 @Injectable()
 export class TrackingPixelProviderSettingsService {
@@ -66,7 +66,7 @@ export class TrackingPixelProviderSettingsService {
     input: CreateSettingTrackingPixelProviderInput
   ): Promise<SettingTrackingPixel> {
     const output = this.encryptSecretsIfPresent(input);
-    const returnValue = this.prisma.settingTrackingPixel.create({
+    const returnValue = await this.prisma.settingTrackingPixel.create({
       data: output,
     });
     await this.kv.resetNamespace('settings:tracking-pixel');
@@ -94,7 +94,7 @@ export class TrackingPixelProviderSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
-    const returnValue = this.prisma.settingTrackingPixel.update({
+    const returnValue = await this.prisma.settingTrackingPixel.update({
       where: { id },
       data: filteredUpdateData,
     });
@@ -114,7 +114,7 @@ export class TrackingPixelProviderSettingsService {
       );
     }
 
-    const returnValue = this.prisma.settingTrackingPixel.delete({
+    const returnValue = await this.prisma.settingTrackingPixel.delete({
       where: { id },
     });
     await this.kv.resetNamespace('settings:tracking-pixel');

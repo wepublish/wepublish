@@ -19,8 +19,10 @@ export const isSubscriptionUpgradeable = (
   subscription: FullSubscriptionFragment
 ) =>
   subscription.extendable &&
-  subscription.autoRenew &&
   subscription.isActive &&
+  // isActive includes grace period which we want to ignore here
+  (!subscription.deactivation ||
+    new Date(subscription.deactivation.date) > new Date()) &&
   isMemberplanUpgradeable(subscription.memberPlan);
 
 export const useInformUserAboutUpgrade = () => {

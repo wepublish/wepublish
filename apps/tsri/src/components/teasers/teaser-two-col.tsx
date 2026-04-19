@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { hasBlockStyle } from '@wepublish/block-content/website';
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
@@ -6,16 +7,14 @@ import { TsriTeaserType } from './tsri-base-teaser';
 import {
   TeaserContentWrapper,
   TeaserImageWrapper,
-  TeaserMetadata,
   TeaserPreTitle,
   TeaserPreTitleWrapper,
   TsriTeaser,
 } from './tsri-teaser';
 
 export const isTeaserTwoCol = allPass([
-  ({ blockStyle }: BuilderTeaserProps) => {
-    return blockStyle === TsriTeaserType.TwoCol;
-  },
+  ({ blockStyle }: BuilderTeaserProps) =>
+    hasBlockStyle(TsriTeaserType.TwoCol)({ blockStyle }),
 ]);
 
 export const TeaserTwoCol = styled(TsriTeaser)`
@@ -23,7 +22,7 @@ export const TeaserTwoCol = styled(TsriTeaser)`
 
   ${TeaserContentWrapper} {
     grid-template-columns: 50% 50%;
-    grid-template-rows: auto 7.8% fit-content(1px) 14.25%;
+    grid-template-rows: auto 7.8% fit-content(1px) fit-content(1px) 14.25%;
     background-color: ${({ theme }) => theme.palette.primary.dark};
   }
 
@@ -38,11 +37,22 @@ export const TeaserTwoCol = styled(TsriTeaser)`
     width: 41.74cqw;
     margin: auto;
 
+    & picture {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      overflow: hidden;
+    }
+
     & img {
-      width: auto;
-      height: 41.74cqw;
+      max-width: 100%;
+      max-height: 100%;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      max-height: unset;
+      aspect-ratio: unset;
     }
   }
 
@@ -54,9 +64,5 @@ export const TeaserTwoCol = styled(TsriTeaser)`
 
   ${TeaserPreTitle} {
     padding: 0.65cqw 1.5cqw;
-  }
-
-  ${TeaserMetadata} {
-    display: none;
   }
 `;

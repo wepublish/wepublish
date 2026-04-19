@@ -60,8 +60,8 @@ export const defaultRegisterSchema = z.object({
     city: z.string().min(1),
     country: z.enum(userCountryNames),
   }),
-  password: z.string().min(8),
-  passwordRepeated: z.string().min(8),
+  password: z.string().min(12),
+  passwordRepeated: z.string().min(12),
   emailRepeated: z.string().email().min(1),
   birthday: z.coerce.date().max(new Date()),
 });
@@ -92,14 +92,25 @@ export function RegistrationForm<
    * [Fixed with Zod 4](https://github.com/colinhacks/zod/issues/2474)
    */
   const validationSchema = useMemo(() => {
-    const result = requiredRegisterSchema.merge(schema.pick(fieldsToDisplay));
+    let result: z.ZodEffects<any> | z.ZodObject<any> =
+      requiredRegisterSchema.merge(schema.pick(fieldsToDisplay));
 
     if (fieldsToDisplay.passwordRepeated) {
-      return zodAlwaysRefine(result).refine(
+      result = zodAlwaysRefine(result).refine(
         data => data.password === data.passwordRepeated,
         {
           message: 'Passwörter stimmen nicht überein.',
           path: ['passwordRepeated'],
+        }
+      );
+    }
+
+    if (fieldsToDisplay.emailRepeated) {
+      result = zodAlwaysRefine(result).refine(
+        data => data.email === data.emailRepeated,
+        {
+          message: 'E-Mailadressen stimmen nicht überein.',
+          path: ['emailRepeated'],
         }
       );
     }

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 import { ImageModule } from '@wepublish/image/api';
 import { PrismaModule } from '@wepublish/nest-modules';
 import { UserDataloaderService } from './user-dataloader.service';
@@ -24,10 +25,13 @@ import {
   HasOptionalSensitiveDataUserLcResolver,
 } from './has-sensitive-data-user/has-sensitive-data-user.resolver';
 import { UserResolver } from './user.resolver';
+import { HibpService } from './hibp.service';
+import { UserSubscriptionCountDataloader } from './user-subscription-count.dataloader';
 
 @Module({
-  imports: [PrismaModule, ImageModule, PropertyModule],
+  imports: [PrismaModule, ImageModule, PropertyModule, HttpModule],
   providers: [
+    HibpService,
     UserDataloaderService,
     HasUserResolver,
     HasUserLcResolver,
@@ -37,6 +41,7 @@ import { UserResolver } from './user.resolver';
     HasSensitiveDataUserLcResolver,
     HasOptionalSensitiveDataUserResolver,
     HasOptionalSensitiveDataUserLcResolver,
+    UserSubscriptionCountDataloader,
     UserService,
     SensitiveDataUserResolver,
     BaseUserResolver,

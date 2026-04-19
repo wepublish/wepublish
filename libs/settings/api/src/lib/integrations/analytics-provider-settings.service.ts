@@ -4,11 +4,12 @@ import {
   CreateSettingAnalyticsProviderInput,
   UpdateSettingAnalyticsProviderInput,
   SettingAnalyticsProviderFilter,
+  SettingAnalyticsCredentialsInput,
 } from './analytics-provider-settings.model';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 import { AnalyticsProviderSettingsDataloaderService } from './analytics-provider-settings-dataloader.service';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
-import { SecretCrypto } from './secrets-cryto';
+import { SecretCrypto } from './secrets-crypto';
 
 @Injectable()
 export class AnalyticsProviderSettingsService {
@@ -18,21 +19,13 @@ export class AnalyticsProviderSettingsService {
     private kv: KvTtlCacheService
   ) {}
 
-  private encryptSecretsIfPresent<T extends { credentials?: string | null }>(
-    data: T
-  ): T {
-    let encryptedCredentials;
-    if (typeof data.credentials === 'string' && data.credentials.length > 0) {
-      // Validate that credentials is valid JSON
-      try {
-        JSON.parse(data.credentials);
-      } catch (e) {
-        throw new Error(
-          'Invalid credentials format: must be a valid JSON string'
-        );
-      }
-      encryptedCredentials = this.crypto.encrypt(data.credentials);
-    }
+  private encryptSecretsIfPresent<
+    T extends { credentials?: SettingAnalyticsCredentialsInput | null },
+  >(data: T): T & { credentials?: string | null } {
+    const encryptedCredentials = this.crypto.encrypt(
+      JSON.stringify(data.credentials)
+    );
+
     return {
       ...data,
       credentials: encryptedCredentials,
@@ -43,13 +36,12 @@ export class AnalyticsProviderSettingsService {
   async analyticsProviderSettingsList(
     filter?: SettingAnalyticsProviderFilter
   ): Promise<SettingAnalyticsProvider[]> {
-    const data = await this.prisma.settingAnalyticsProvider.findMany({
+    return this.prisma.settingAnalyticsProvider.findMany({
       where: filter,
       orderBy: {
         createdAt: 'desc',
       },
     });
-    return data;
   }
 
   @PrimeDataLoader(AnalyticsProviderSettingsDataloaderService, 'id')
@@ -74,7 +66,7 @@ export class AnalyticsProviderSettingsService {
     input: CreateSettingAnalyticsProviderInput
   ): Promise<SettingAnalyticsProvider> {
     const output = this.encryptSecretsIfPresent(input);
-    const returnValue = this.prisma.settingAnalyticsProvider.create({
+    const returnValue = await this.prisma.settingAnalyticsProvider.create({
       data: output,
     });
 
@@ -105,7 +97,7 @@ export class AnalyticsProviderSettingsService {
       Object.entries(updateData).filter(([_, value]) => value !== undefined)
     );
 
-    const returnValue = this.prisma.settingAnalyticsProvider.update({
+    const returnValue = await this.prisma.settingAnalyticsProvider.update({
       where: { id },
       data: filteredUpdateData,
     });
@@ -128,7 +120,7 @@ export class AnalyticsProviderSettingsService {
       );
     }
 
-    const returnValue = this.prisma.settingAnalyticsProvider.delete({
+    const returnValue = await this.prisma.settingAnalyticsProvider.delete({
       where: { id },
     });
     await this.kv.resetNamespace('settings:analyticsprovider');

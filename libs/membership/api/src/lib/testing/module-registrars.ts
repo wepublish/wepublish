@@ -33,7 +33,7 @@ export function registerMailsModule(): DynamicModule {
         id: 'slack',
         type: 'slack',
         name: 'Fake Mail',
-        fromAddress: 'fakeMail@wepublish.media',
+        fromAddress: 'fakeMail@wepublish.ch',
         replyTpAddress: 'dev@wepublish.ch',
         webhookEndpointSecret: 'secret',
         apiKey: 'key',
@@ -45,6 +45,7 @@ export function registerMailsModule(): DynamicModule {
           prisma,
           kv,
         }),
+        jwtGenerator: async () => 'test-jwt-token',
       };
     },
   });

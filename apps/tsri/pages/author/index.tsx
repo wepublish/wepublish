@@ -1,5 +1,4 @@
-import styled from '@emotion/styled';
-import { AuthorListContainer as AuthorListContainerDefault } from '@wepublish/author/website';
+import { AuthorListContainer } from '@wepublish/author/website';
 import { AuthorSort, SortOrder } from '@wepublish/website/api';
 import {
   addClientCacheToV1Props,
@@ -23,22 +22,6 @@ const take = 25;
 const pageSchema = z.object({
   page: z.coerce.number().gte(1).optional(),
 });
-
-const AuthorListContainer = styled(AuthorListContainerDefault)`
-  padding-top: calc(var(--navbar-height) / 2);
-
-  & > a.MuiTypography-root {
-    h6 {
-      display: inline-block;
-      padding: 0.1rem 0.5rem;
-    }
-    &:hover {
-      & h6 {
-        background-color: ${({ theme }) => theme.palette.primary.light};
-      }
-    }
-  }
-`;
 
 export default function AuthorList() {
   const {

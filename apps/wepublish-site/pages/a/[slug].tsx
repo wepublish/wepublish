@@ -3,12 +3,10 @@ import {
   ArticleListContainer,
   ArticleWrapper,
 } from '@wepublish/article/website';
-import { CommentListContainer } from '@wepublish/comments/website';
 import {
   addClientCacheToV1Props,
   ArticleDocument,
   ArticleListDocument,
-  CommentItemType,
   CommentListDocument,
   getV1ApiClient,
   NavigationListDocument,
@@ -24,6 +22,7 @@ import { ComponentProps } from 'react';
 
 export default function ArticleBySlugOrId() {
   const {
+    locale,
     query: { slug, id },
   } = useRouter();
   const {
@@ -33,13 +32,13 @@ export default function ArticleBySlugOrId() {
   const { data } = useArticleQuery({
     fetchPolicy: 'cache-only',
     variables: {
-      slug: slug as string,
+      slug: `${slug}-${locale}`,
       id: id as string,
     },
   });
 
   const containerProps = {
-    slug,
+    slug: `${slug}-${locale}`,
     id,
   } as ComponentProps<typeof ArticleContainer>;
 
@@ -64,14 +63,6 @@ export default function ArticleBySlugOrId() {
               }
             />
           </ArticleWrapper>
-
-          <ArticleWrapper>
-            <H3 component={'h2'}>Kommentare</H3>
-            <CommentListContainer
-              id={data.article.id}
-              type={CommentItemType.Article}
-            />
-          </ArticleWrapper>
         </>
       )}
     </>
@@ -83,7 +74,7 @@ export const getStaticPaths = () => ({
   fallback: 'blocking',
 });
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
   const { id, slug } = params || {};
   const { publicRuntimeConfig } = getConfig();
 
@@ -94,7 +85,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       query: ArticleDocument,
       variables: {
         id,
-        slug,
+        slug: `${slug}-${locale}`,
       },
     }),
     client.query({
@@ -104,6 +95,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       query: PeerProfileDocument,
     }),
   ]);
+
   const is404 = article.errors?.find(
     ({ extensions }) => extensions?.status === 404
   );

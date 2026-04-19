@@ -14,8 +14,26 @@ query TrackingPixelSettings {
   }
 }
 
-mutation UpdateTrackingPixelSetting($updateTrackingPixelSettingId: String!, $name: String, $prolitterisMemberNr: String, $prolitterisOnlyPaidContentAccess: Boolean, $prolitterisPassword: String, $prolitterisPublisherInternalKeyDomain: String, $prolitterisUsePublisherInternalKey: Boolean, $prolitterisUsername: String) {
-  updateTrackingPixelSetting(id: $updateTrackingPixelSettingId, name: $name, prolitteris_memberNr: $prolitterisMemberNr, prolitteris_onlyPaidContentAccess: $prolitterisOnlyPaidContentAccess, prolitteris_password: $prolitterisPassword, prolitteris_publisherInternalKeyDomain: $prolitterisPublisherInternalKeyDomain, prolitteris_usePublisherInternalKey: $prolitterisUsePublisherInternalKey, prolitteris_username: $prolitterisUsername) {
+mutation UpdateTrackingPixelSetting(
+  $id: String!
+  $name: String
+  $prolitteris_memberNr: String
+  $prolitteris_onlyPaidContentAccess: Boolean
+  $prolitteris_password: String
+  $prolitteris_publisherInternalKeyDomain: String
+  $prolitteris_usePublisherInternalKey: Boolean
+  $prolitteris_username: String
+) {
+  updateTrackingPixelSetting(
+    id: $id
+    name: $name
+    prolitteris_memberNr: $prolitteris_memberNr
+    prolitteris_onlyPaidContentAccess: $prolitteris_onlyPaidContentAccess
+    prolitteris_password: $prolitteris_password
+    prolitteris_publisherInternalKeyDomain: $prolitteris_publisherInternalKeyDomain
+    prolitteris_usePublisherInternalKey: $prolitteris_usePublisherInternalKey
+    prolitteris_username: $prolitteris_username
+  ) {
     createdAt
     id
     lastLoadedAt

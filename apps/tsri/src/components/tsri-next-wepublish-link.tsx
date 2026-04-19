@@ -3,7 +3,12 @@ import { css, IconButton, Modal as MUIModal } from '@mui/material';
 import { Link as BuilderLink } from '@wepublish/ui';
 import { BuilderLinkProps } from '@wepublish/website/builder';
 import NextLink from 'next/link';
-import { forwardRef, useState } from 'react';
+import {
+  FormEvent,
+  forwardRef,
+  MouseEvent as ReactMouseEvent,
+  useState,
+} from 'react';
 import { MdClose } from 'react-icons/md';
 
 import MailchimpForm from './newsletter/mailchimp-form';
@@ -82,6 +87,7 @@ type QueryParams = {
   mc_u: string;
   mc_id: string;
   mc_f_id: string;
+  mc_group?: string;
   tf_id: string;
   source?: string;
   popTitle?: string;
@@ -115,12 +121,17 @@ export const TsriNextWepublishLink = forwardRef<
   const queryParams = parseQueryParams(href ?? '');
 
   const handleLinkClick = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+    event: ReactMouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
     if (props.onClick) {
       props.onClick(event);
     }
-    if (href?.startsWith('/newsletter')) {
+    if (
+      href?.startsWith('/newsletter') &&
+      queryParams.mc_u &&
+      queryParams.mc_id &&
+      queryParams.mc_f_id
+    ) {
       event.preventDefault();
       setModalOpen(true);
       return;
@@ -132,7 +143,7 @@ export const TsriNextWepublishLink = forwardRef<
     setIsMCSubmit(false);
   };
 
-  const handleMCSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleMCSubmit = (e: FormEvent<HTMLFormElement>) => {
     setIsMCSubmit(true);
   };
 

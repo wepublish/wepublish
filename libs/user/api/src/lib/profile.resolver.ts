@@ -46,6 +46,8 @@ export class ProfileResolver {
       );
     }
 
+    await this.userService.validatePassword(password);
+
     return this.userService.updateUserPassword(user.id, password);
   }
 
@@ -62,5 +64,29 @@ export class ProfileResolver {
       session.user,
       uploadImageInput
     );
+  }
+
+  @Authenticated()
+  @Mutation(() => Boolean, {
+    description:
+      'Requests an email change. A confirmation link is sent to the current email address.',
+  })
+  async requestEmailChange(
+    @Args('newEmail') newEmail: string,
+    @CurrentUser() { user }: UserSession
+  ): Promise<boolean> {
+    await this.userService.requestEmailChange(user.id, newEmail);
+    return true;
+  }
+
+  @Authenticated()
+  @Mutation(() => SensitiveDataUser, {
+    description: 'Confirms a pending email change for the logged-in user.',
+  })
+  async confirmEmailChange(
+    @Args('newEmail') newEmail: string,
+    @CurrentUser() { user }: UserSession
+  ) {
+    return this.userService.confirmEmailChange(user.id, newEmail);
   }
 }

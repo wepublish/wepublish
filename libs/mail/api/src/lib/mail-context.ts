@@ -99,6 +99,7 @@ export interface MailContextProps {
   readonly mailProvider: BaseMailProvider;
   readonly prisma: PrismaClient;
   readonly kv: KvTtlCacheService;
+  readonly jwtGenerator: (userId: string) => Promise<string>;
 }
 
 @Injectable()
@@ -106,11 +107,13 @@ export class MailContext implements MailContextInterface {
   mailProvider: BaseMailProvider;
   prisma: PrismaClient;
   kv: KvTtlCacheService;
+  jwtGenerator: (userId: string) => Promise<string>;
 
   constructor(props: MailContextProps) {
     this.mailProvider = props.mailProvider;
     this.prisma = props.prisma;
     this.kv = props.kv;
+    this.jwtGenerator = props.jwtGenerator;
   }
 
   async sendMail(

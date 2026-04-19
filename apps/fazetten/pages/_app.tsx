@@ -5,6 +5,7 @@ import {
   AppCacheProvider,
   createEmotionCache,
 } from '@mui/material-nextjs/v15-pagesRouter';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import { withErrorSnackbar } from '@wepublish/errors/website';
 import {
   FooterContainer,
@@ -26,17 +27,24 @@ import {
   createWithV1ApiClient,
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
-import { WebsiteBuilderProvider } from '@wepublish/website/builder';
+import {
+  WebsiteBuilderProps,
+  WebsiteBuilderProvider,
+} from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
+import { PartialDeep } from 'type-fest';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
-import theme from '../src/theme';
+import { FazettenArticle } from '../src/components/fazetten-article';
+import { FazettenAlternatingTeaser } from '../src/components/fazetten-teaser';
+import { FazettenTitleBlock } from '../src/components/fazetten-title-block';
+import theme, { globalStyles } from '../src/theme';
 
 setDefaultOptions({
   locale: de,
@@ -78,9 +86,19 @@ type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
 }> & { emotionCache?: EmotionCache };
 
-function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
-  const siteTitle = 'We.Publish';
+const siteTitle = 'Fazetten';
+const providerProps: PartialDeep<WebsiteBuilderProps> = {
+  Head,
+  Script,
+  elements: { Link: NextWepublishLink },
+  blocks: { Title: FazettenTitleBlock },
+  blockStyles: { AlternatingTeaser: FazettenAlternatingTeaser },
+  date: { format: dateFormatter },
+  Article: FazettenArticle,
+  meta: { siteTitle },
+};
 
+function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
   const cache = emotionCache ?? createEmotionCache();
@@ -89,15 +107,10 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   return (
     <AppCacheProvider emotionCache={cache}>
       <WebsiteProvider>
-        <WebsiteBuilderProvider
-          Head={Head}
-          Script={Script}
-          elements={{ Link: NextWepublishLink }}
-          date={{ format: dateFormatter }}
-          meta={{ siteTitle }}
-        >
+        <WebsiteBuilderProvider {...providerProps}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
+            {globalStyles}
 
             <Head>
               <title key="title">{siteTitle}</title>
@@ -133,38 +146,32 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 
               {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
               <link
+                rel="icon"
+                type="image/png"
+                href="/favicon-96x96.png"
+                sizes="96x96"
+              />
+              <link
+                rel="icon"
+                type="image/svg+xml"
+                href="/favicon.svg"
+              />
+              <link
+                rel="shortcut icon"
+                href="/favicon.ico"
+              />
+              <link
                 rel="apple-touch-icon"
                 sizes="180x180"
                 href="/apple-touch-icon.png"
               />
-              <link
-                rel="icon"
-                type="image/png"
-                sizes="32x32"
-                href="/favicon-32x32.png"
-              />
-              <link
-                rel="icon"
-                type="image/png"
-                sizes="16x16"
-                href="/favicon-16x16.png"
+              <meta
+                name="apple-mobile-web-app-title"
+                content="Fazetten"
               />
               <link
                 rel="manifest"
                 href="/site.webmanifest"
-              />
-              <link
-                rel="mask-icon"
-                href="/safari-pinned-tab.svg"
-                color="#000000"
-              />
-              <meta
-                name="msapplication-TileColor"
-                content="#ffffff"
-              />
-              <meta
-                name="theme-color"
-                content="#ffffff"
               />
             </Head>
 
@@ -190,6 +197,10 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             </Spacer>
 
             <RoutedAdminBar />
+
+            {publicRuntimeConfig.env.GA_ID && (
+              <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+            )}
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>
