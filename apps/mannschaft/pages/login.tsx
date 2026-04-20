@@ -5,7 +5,7 @@ import {
   LoginFormContainer,
   useUser,
 } from '@wepublish/authentication/website';
-import { getSessionTokenProps, handleJwtLogin } from '@wepublish/utils/website';
+import { handleJwtLogin } from '@wepublish/utils/website';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
 import { getV1ApiClient } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';

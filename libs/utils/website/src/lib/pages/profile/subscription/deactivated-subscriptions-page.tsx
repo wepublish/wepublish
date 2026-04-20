@@ -14,7 +14,6 @@ import {
   MeDocument,
   NavigationListDocument,
   SubscriptionsDocument,
-  SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import { useTranslation } from 'react-i18next';
 import { Link } from '@wepublish/website/builder';

@@ -4,7 +4,7 @@ import {
   useUser,
 } from '@wepublish/authentication/website';
 import { PageContainer } from '@wepublish/page/website';
-import { getSessionTokenProps, handleJwtLogin } from '@wepublish/utils/website';
+import { handleJwtLogin } from '@wepublish/utils/website';
 import {
   addClientCacheToV1Props,
   PageDocument,

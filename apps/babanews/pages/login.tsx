@@ -6,7 +6,7 @@ import {
   useUser,
 } from '@wepublish/authentication/website';
 import { ContentWrapper } from '@wepublish/content/website';
-import { getSessionTokenProps, handleJwtLogin } from '@wepublish/utils/website';
+import { handleJwtLogin } from '@wepublish/utils/website';
 import {
   getV1ApiClient,
   SessionWithTokenWithoutUser,

@@ -1,9 +1,8 @@
-import { AuthTokenStorageKey } from '@wepublish/authentication/website';
 import { PageContainer } from '@wepublish/page/website';
 import {
   getSessionTokenProps,
-  ssrAuthLink,
   handleJwtLogin,
+  ssrAuthLink,
 } from '@wepublish/utils/website';
 import {
   addClientCacheToV1Props,
@@ -14,9 +13,7 @@ import {
   NavigationListDocument,
   PageDocument,
   PeerProfileDocument,
-  SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
-import { setCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
 import getConfig from 'next/config';
 

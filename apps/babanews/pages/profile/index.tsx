@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { AuthTokenStorageKey } from '@wepublish/authentication/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import { PersonalDataFormContainer } from '@wepublish/user/website';
 import {
@@ -13,10 +12,8 @@ import {
   getV1ApiClient,
   MeDocument,
   NavigationListDocument,
-  SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
-import { setCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
 import getConfig from 'next/config';
 

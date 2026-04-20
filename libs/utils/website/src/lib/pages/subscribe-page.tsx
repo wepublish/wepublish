@@ -4,10 +4,7 @@ import { useRouter } from 'next/router';
 import { ssrAuthLink } from '../auth-link';
 import { getSessionTokenProps } from '../get-session-token-props';
 import { handleJwtLogin } from '../handle-jwt-login';
-import {
-  SessionWithTokenWithoutUser,
-  useSubscriptionsQuery,
-} from '@wepublish/website/api';
+import { useSubscriptionsQuery } from '@wepublish/website/api';
 import { MemberPlanListQueryVariables } from '@wepublish/website/api';
 import { useUser } from '@wepublish/authentication/website';
 import {

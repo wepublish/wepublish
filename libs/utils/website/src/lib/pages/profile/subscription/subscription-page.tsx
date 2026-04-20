@@ -9,7 +9,6 @@ import { getSessionTokenProps } from '../../../get-session-token-props';
 import { handleJwtLogin } from '../../../handle-jwt-login';
 import { ComponentProps } from 'react';
 import {
-  SessionWithTokenWithoutUser,
   SubscriptionsQuery,
   useSubscriptionsQuery,
 } from '@wepublish/website/api';

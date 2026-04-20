@@ -4,11 +4,10 @@ import { SubscribeWrapper } from '@wepublish/membership/website';
 import { PageContainer } from '@wepublish/page/website';
 import {
   getSessionTokenProps,
-  ssrAuthLink,
   handleJwtLogin,
+  ssrAuthLink,
 } from '@wepublish/utils/website';
 import { SubscribePage } from '@wepublish/utils/website';
-import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -19,7 +18,6 @@ import {
   PageDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
-import { setCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
 import getConfig from 'next/config';
 
