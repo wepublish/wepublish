@@ -1859,6 +1859,7 @@ model SettingSyncProvider {
   mailchimp_mergeFieldMappings     Json @default("[]")
   mailchimp_interestGroupMappings  Json @default("[]")
   mailchimp_defaultInterestGroupIds Json @default("[]")
+  mailchimp_extensions             Json @default("{}")
 
   // Last sync execution info
   lastSyncAt    DateTime?

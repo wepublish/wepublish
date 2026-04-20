@@ -3057,6 +3057,7 @@ export type MutationUpdateSyncProviderSettingArgs = {
   id: Scalars['String'];
   mailchimp_apiKey?: InputMaybe<Scalars['String']>;
   mailchimp_defaultInterestGroupIds?: InputMaybe<Array<Scalars['String']>>;
+  mailchimp_extensions?: InputMaybe<Scalars['JSONObject']>;
   mailchimp_interestGroupMappings?: InputMaybe<Array<Scalars['JSONObject']>>;
   mailchimp_listId?: InputMaybe<Scalars['String']>;
   mailchimp_mergeFieldMappings?: InputMaybe<Array<Scalars['JSONObject']>>;
@@ -5022,6 +5023,7 @@ export type SettingSyncProvider = SettingProvider & {
   lastSyncAt?: Maybe<Scalars['DateTime']>;
   lastSyncError?: Maybe<Scalars['String']>;
   mailchimp_defaultInterestGroupIds?: Maybe<Array<Scalars['String']>>;
+  mailchimp_extensions?: Maybe<Scalars['JSONObject']>;
   mailchimp_interestGroupMappings?: Maybe<Array<Scalars['JSONObject']>>;
   mailchimp_listId?: Maybe<Scalars['String']>;
   mailchimp_mergeFieldMappings?: Maybe<Array<Scalars['JSONObject']>>;

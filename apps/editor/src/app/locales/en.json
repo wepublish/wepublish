@@ -1999,7 +1999,23 @@
         "syncCompleted": "Sync complete: {{updated}} updated, {{skipped}} skipped, {{errors}} errors",
         "progressUpdated": "updated",
         "progressSkipped": "skipped",
-        "progressErrors": "errors"
+        "progressErrors": "errors",
+        "extensions": "Advanced extensions",
+        "clickTracking": {
+          "title": "Campaign click tracking",
+          "help": "When enabled, after each sync we scan recent campaign reports for URLs matching the pattern below. For each matching URL, the ID found at the given path segment is written into the configured merge field on every subscriber who clicked the link.",
+          "enabled": "Enable click tracking",
+          "urlPattern": "URL pattern (regex)",
+          "urlPatternHelp": "Only URLs matching this regex will be processed. Example: https://bajour\\.ch/pool/",
+          "pathSegmentIndex": "Path segment index",
+          "pathSegmentIndexHelp": "Position of the ID in the URL path (split by \"/\"). For /pool/123 use 2.",
+          "mergeFieldTag": "Target merge field",
+          "mergeFieldTagHelp": "The Mailchimp merge field tag that will receive the extracted ID.",
+          "requireQueryParam": "Required query parameter",
+          "requireQueryParamHelp": "URL must contain this query parameter to be processed. Leave empty to disable.",
+          "lookbackHours": "Lookback (hours)",
+          "lookbackHoursHelp": "How far back to scan campaigns (default: 30)."
+        }
       }
     },
     "externalApps": {

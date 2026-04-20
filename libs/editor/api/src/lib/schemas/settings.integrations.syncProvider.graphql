@@ -11,6 +11,7 @@ query SyncProviderSettings {
     mailchimp_mergeFieldMappings
     mailchimp_interestGroupMappings
     mailchimp_defaultInterestGroupIds
+    mailchimp_extensions
     lastSyncAt
     lastSyncError
   }
@@ -25,6 +26,7 @@ mutation UpdateSyncProviderSetting(
   $mailchimp_mergeFieldMappings: [JSONObject!]
   $mailchimp_interestGroupMappings: [JSONObject!]
   $mailchimp_defaultInterestGroupIds: [String!]
+  $mailchimp_extensions: JSONObject
 ) {
   updateSyncProviderSetting(
     id: $id
@@ -35,6 +37,7 @@ mutation UpdateSyncProviderSetting(
     mailchimp_mergeFieldMappings: $mailchimp_mergeFieldMappings
     mailchimp_interestGroupMappings: $mailchimp_interestGroupMappings
     mailchimp_defaultInterestGroupIds: $mailchimp_defaultInterestGroupIds
+    mailchimp_extensions: $mailchimp_extensions
   ) {
     id
     createdAt
@@ -47,6 +50,7 @@ mutation UpdateSyncProviderSetting(
     mailchimp_mergeFieldMappings
     mailchimp_interestGroupMappings
     mailchimp_defaultInterestGroupIds
+    mailchimp_extensions
     lastSyncAt
     lastSyncError
   }

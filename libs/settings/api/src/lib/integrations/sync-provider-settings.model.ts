@@ -39,6 +39,9 @@ export class SettingSyncProvider extends SettingProvider {
   @Field(() => [String], { nullable: true })
   mailchimp_defaultInterestGroupIds?: string[];
 
+  @Field(() => GraphQLJSONObject, { nullable: true })
+  mailchimp_extensions?: Record<string, any>;
+
   @Field({ nullable: true })
   lastSyncAt?: Date;
 

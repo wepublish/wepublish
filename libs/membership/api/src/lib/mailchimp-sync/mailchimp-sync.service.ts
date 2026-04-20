@@ -4,6 +4,11 @@ import mailchimp from '@mailchimp/mailchimp_marketing';
 import { createHash } from 'crypto';
 import { isWithinInterval, subDays } from 'date-fns';
 import { SyncProviderSettingsService } from '@wepublish/settings/api';
+import {
+  CLICK_TRACKING_EXTENSION_TYPE,
+  ClickTrackingExtension,
+  ClickTrackingExtensionConfig,
+} from './extensions/click-tracking.extension';
 
 interface UserAndSubscriptions {
   user: {
@@ -89,7 +94,8 @@ export class MailchimpSyncService {
 
   constructor(
     private prisma: PrismaClient,
-    private syncProviderSettingsService: SyncProviderSettingsService
+    private syncProviderSettingsService: SyncProviderSettingsService,
+    private clickTrackingExtension: ClickTrackingExtension
   ) {}
 
   /**
@@ -467,7 +473,34 @@ export class MailchimpSyncService {
       };
     }
 
+    await this.runExtensions(config);
+
     return null;
+  }
+
+  private async runExtensions(
+    config: SettingSyncProvider & { decryptedApiKey: string | null }
+  ): Promise<void> {
+    const extensions = (config.mailchimp_extensions ?? {}) as Record<
+      string,
+      { enabled?: boolean; config?: Record<string, any> } | undefined
+    >;
+
+    const clickTracking = extensions[CLICK_TRACKING_EXTENSION_TYPE];
+    if (clickTracking?.enabled && config.mailchimp_listId) {
+      try {
+        await this.clickTrackingExtension.execute(
+          config.mailchimp_listId,
+          (clickTracking.config ?? {}) as ClickTrackingExtensionConfig
+        );
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        this.logger.error(
+          `Click tracking extension failed for "${config.name || config.id}": ${errorMessage}`
+        );
+      }
+    }
   }
 
   private async getUsersWithSubscriptions(): Promise<UserAndSubscriptions[]> {

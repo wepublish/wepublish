@@ -2038,7 +2038,7 @@ type Mutation {
   updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String): [SubscriptionFlowModel!]!
 
   """Updates an existing sync provider setting."""
-  updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String): SettingSyncProvider!
+  updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String): SettingSyncProvider!
 
   """Updates an existing mail flow"""
   updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
@@ -3441,6 +3441,7 @@ type SettingSyncProvider implements SettingProvider {
   lastSyncAt: DateTime
   lastSyncError: String
   mailchimp_defaultInterestGroupIds: [String!]
+  mailchimp_extensions: JSONObject
   mailchimp_interestGroupMappings: [JSONObject!]
   mailchimp_listId: String
   mailchimp_mergeFieldMappings: [JSONObject!]

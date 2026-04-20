@@ -1937,7 +1937,23 @@
         "syncCompleted": "Sync abgeschlossen: {{updated}} aktualisiert, {{skipped}} übersprungen, {{errors}} Fehler",
         "progressUpdated": "aktualisiert",
         "progressSkipped": "übersprungen",
-        "progressErrors": "Fehler"
+        "progressErrors": "Fehler",
+        "extensions": "Erweiterte Zusatzmodule",
+        "clickTracking": {
+          "title": "Kampagnen-Klick-Tracking",
+          "help": "Wenn aktiviert, durchsucht wepublish nach jedem Sync die letzten Kampagnenberichte nach URLs, die dem unten stehenden Muster entsprechen. Für jede passende URL wird die ID aus dem angegebenen Pfadsegment in das konfigurierte Merge Field aller Kontakte geschrieben, die den Link angeklickt haben.",
+          "enabled": "Klick-Tracking aktivieren",
+          "urlPattern": "URL-Muster (Regex)",
+          "urlPatternHelp": "Nur URLs, die diesem Regex entsprechen, werden verarbeitet. Beispiel: https://bajour\\.ch/pool/",
+          "pathSegmentIndex": "Pfadsegment-Index",
+          "pathSegmentIndexHelp": "Position der ID im URL-Pfad (getrennt durch \"/\"). Für /pool/123 verwende 2.",
+          "mergeFieldTag": "Ziel-Merge-Field",
+          "mergeFieldTagHelp": "Mailchimp-Merge-Field-Tag, in das die extrahierte ID geschrieben wird.",
+          "requireQueryParam": "Erforderlicher Query-Parameter",
+          "requireQueryParamHelp": "Die URL muss diesen Query-Parameter enthalten, um verarbeitet zu werden. Leer lassen, um zu deaktivieren.",
+          "lookbackHours": "Zeitraum (Stunden)",
+          "lookbackHoursHelp": "Wie weit zurück Kampagnen durchsucht werden (Standard: 30)."
+        }
       }
     },
     "externalApps": {

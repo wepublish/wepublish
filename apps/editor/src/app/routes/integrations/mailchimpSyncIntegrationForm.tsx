@@ -20,6 +20,9 @@ import {
 } from '@wepublish/editor/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Alert,
   Autocomplete,
   Button,
@@ -28,17 +31,19 @@ import {
   CardContent,
   Chip,
   CircularProgress,
+  FormControlLabel,
   IconButton,
   LinearProgress,
   MenuItem,
   Select,
+  Switch,
   TextField,
   Typography,
 } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdDelete, MdSync } from 'react-icons/md';
+import { MdAdd, MdDelete, MdExpandMore, MdSync } from 'react-icons/md';
 import { Checkbox, Form, Input, Loader, Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
@@ -54,6 +59,35 @@ const interestGroupMappingSchema = z.object({
   expression: z.string().min(1),
 });
 
+const clickTrackingExtensionSchema = z.object({
+  enabled: z.boolean().optional(),
+  config: z
+    .object({
+      urlPattern: z
+        .string()
+        .refine(
+          value => {
+            if (!value) return true;
+            try {
+              new RegExp(value);
+              return true;
+            } catch {
+              return false;
+            }
+          },
+          { message: 'Invalid regular expression' }
+        )
+        .optional()
+        .default(''),
+      pathSegmentIndex: z.number().int().min(0).max(10).optional().default(2),
+      mergeFieldTag: z.string().optional().default(''),
+      lookbackHours: z.number().int().min(1).max(720).optional().default(30),
+      requireQueryParam: z.string().optional().default('answerId'),
+    })
+    .optional()
+    .default({}),
+});
+
 const syncProviderSchema = z.object({
   name: z.string().nullish().or(z.literal('')),
   enabled: z.boolean().optional(),
@@ -64,6 +98,12 @@ const syncProviderSchema = z.object({
     .array(interestGroupMappingSchema)
     .optional(),
   mailchimp_defaultInterestGroupIds: z.array(z.string()).optional(),
+  mailchimp_extensions: z
+    .object({
+      'click-tracking': clickTrackingExtensionSchema.optional(),
+    })
+    .optional()
+    .default({}),
 });
 
 type SyncProviderFormValues = z.infer<typeof syncProviderSchema>;
@@ -630,6 +670,30 @@ function SyncProviderSettingCard({
         setting.mailchimp_interestGroupMappings ?? [],
       mailchimp_defaultInterestGroupIds:
         setting.mailchimp_defaultInterestGroupIds ?? [],
+      mailchimp_extensions: {
+        'click-tracking': {
+          enabled:
+            (setting.mailchimp_extensions as any)?.['click-tracking']
+              ?.enabled ?? false,
+          config: {
+            urlPattern:
+              (setting.mailchimp_extensions as any)?.['click-tracking']?.config
+                ?.urlPattern ?? '',
+            pathSegmentIndex:
+              (setting.mailchimp_extensions as any)?.['click-tracking']?.config
+                ?.pathSegmentIndex ?? 2,
+            mergeFieldTag:
+              (setting.mailchimp_extensions as any)?.['click-tracking']?.config
+                ?.mergeFieldTag ?? '',
+            lookbackHours:
+              (setting.mailchimp_extensions as any)?.['click-tracking']?.config
+                ?.lookbackHours ?? 30,
+            requireQueryParam:
+              (setting.mailchimp_extensions as any)?.['click-tracking']?.config
+                ?.requireQueryParam ?? 'answerId',
+          },
+        },
+      },
     },
   });
 
@@ -682,6 +746,7 @@ function SyncProviderSettingCard({
           formData.mailchimp_interestGroupMappings,
         mailchimp_defaultInterestGroupIds:
           formData.mailchimp_defaultInterestGroupIds,
+        mailchimp_extensions: formData.mailchimp_extensions ?? {},
       };
 
       if (formData.mailchimp_apiKey && formData.mailchimp_apiKey.length > 0) {
@@ -1185,6 +1250,179 @@ function SyncProviderSettingCard({
               />
             )}
           />
+
+          {/* Advanced Extensions */}
+          <Accordion
+            sx={{ mt: 3 }}
+            variant="outlined"
+          >
+            <AccordionSummary expandIcon={<MdExpandMore />}>
+              <Typography variant="subtitle1">
+                {t('integrations.mailchimpSyncSettings.extensions')}
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography
+                variant="subtitle2"
+                gutterBottom
+              >
+                {t('integrations.mailchimpSyncSettings.clickTracking.title')}
+              </Typography>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                gutterBottom
+              >
+                {t('integrations.mailchimpSyncSettings.clickTracking.help')}
+              </Typography>
+
+              <Controller
+                name="mailchimp_extensions.click-tracking.enabled"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={!!value}
+                        onChange={(_, c) => onChange(c)}
+                      />
+                    }
+                    label={t(
+                      'integrations.mailchimpSyncSettings.clickTracking.enabled'
+                    )}
+                  />
+                )}
+              />
+
+              <Controller
+                name="mailchimp_extensions.click-tracking.config.urlPattern"
+                control={control}
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    size="small"
+                    fullWidth
+                    sx={{ mt: 2 }}
+                    label={t(
+                      'integrations.mailchimpSyncSettings.clickTracking.urlPattern'
+                    )}
+                    placeholder="https://bajour\\.ch/pool/"
+                    value={value ?? ''}
+                    onChange={e => onChange(e.target.value)}
+                    error={!!error}
+                    helperText={
+                      error?.message ??
+                      t(
+                        'integrations.mailchimpSyncSettings.clickTracking.urlPatternHelp'
+                      )
+                    }
+                  />
+                )}
+              />
+
+              <Controller
+                name="mailchimp_extensions.click-tracking.config.pathSegmentIndex"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    size="small"
+                    type="number"
+                    sx={{ mt: 2, width: 200 }}
+                    label={t(
+                      'integrations.mailchimpSyncSettings.clickTracking.pathSegmentIndex'
+                    )}
+                    InputProps={{ inputProps: { min: 0, max: 10 } }}
+                    value={value ?? 2}
+                    onChange={e =>
+                      onChange(parseInt(e.target.value || '0', 10))
+                    }
+                    helperText={t(
+                      'integrations.mailchimpSyncSettings.clickTracking.pathSegmentIndexHelp'
+                    )}
+                  />
+                )}
+              />
+
+              <Controller
+                name="mailchimp_extensions.click-tracking.config.mergeFieldTag"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <Autocomplete
+                    freeSolo
+                    options={availableMergeFields.map(f => f.tag)}
+                    getOptionLabel={tag => {
+                      const field = availableMergeFields.find(
+                        f => f.tag === tag
+                      );
+                      return field ? `${field.name} (${field.tag})` : tag;
+                    }}
+                    value={value ?? ''}
+                    onChange={(_, newValue) => onChange(newValue ?? '')}
+                    onInputChange={(_, inputValue, reason) => {
+                      if (reason === 'input') onChange(inputValue);
+                    }}
+                    sx={{ mt: 2 }}
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        size="small"
+                        label={t(
+                          'integrations.mailchimpSyncSettings.clickTracking.mergeFieldTag'
+                        )}
+                        helperText={t(
+                          'integrations.mailchimpSyncSettings.clickTracking.mergeFieldTagHelp'
+                        )}
+                      />
+                    )}
+                  />
+                )}
+              />
+
+              <Controller
+                name="mailchimp_extensions.click-tracking.config.requireQueryParam"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    size="small"
+                    sx={{ mt: 2, width: 280 }}
+                    label={t(
+                      'integrations.mailchimpSyncSettings.clickTracking.requireQueryParam'
+                    )}
+                    value={value ?? ''}
+                    onChange={e => onChange(e.target.value)}
+                    helperText={t(
+                      'integrations.mailchimpSyncSettings.clickTracking.requireQueryParamHelp'
+                    )}
+                  />
+                )}
+              />
+
+              <Controller
+                name="mailchimp_extensions.click-tracking.config.lookbackHours"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    size="small"
+                    type="number"
+                    sx={{ mt: 2, ml: 2, width: 200 }}
+                    label={t(
+                      'integrations.mailchimpSyncSettings.clickTracking.lookbackHours'
+                    )}
+                    InputProps={{ inputProps: { min: 1, max: 720 } }}
+                    value={value ?? 30}
+                    onChange={e =>
+                      onChange(parseInt(e.target.value || '0', 10))
+                    }
+                    helperText={t(
+                      'integrations.mailchimpSyncSettings.clickTracking.lookbackHoursHelp'
+                    )}
+                  />
+                )}
+              />
+            </AccordionDetails>
+          </Accordion>
 
           {/* Sync Status */}
           <SyncStatusWrapper>
