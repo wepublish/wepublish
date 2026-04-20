@@ -275,13 +275,12 @@ const theme = createTheme(WePTheme, {
       },
       liDownloads: {
         listStyle: 'none',
-        padding: 0,
         lineHeight: 0,
-        marginBottom: 0,
         display: 'flex',
         alignItems: 'center',
         gap: '1rem',
         margin: '0.5rem 0',
+        padding: 0,
         '&:before': {
           content: "''",
           width: '1.5rem',
@@ -658,7 +657,7 @@ const theme = createTheme(WePTheme, {
           '.MuiAccordionDetails-root': {
             padding: '0',
             [breakpoints.up('md')]: {
-              padding: '0 0 0 1rem',
+              padding: '0',
             },
           },
           '.MuiAccordionSummary-expandIconWrapper': {

@@ -21,7 +21,11 @@ import {
   ExpandIcon,
 } from './reflekt-collapsible-content';
 
-export const CollapsibleDownloadsWrapper = styled(CollapsibleContentWrapper)``;
+export const CollapsibleDownloadsWrapper = styled(CollapsibleContentWrapper)`
+  ul {
+    padding-left: 0;
+  }
+`;
 
 export const isCollapsibleDownloads = (
   block: Pick<BlockContent, '__typename'>

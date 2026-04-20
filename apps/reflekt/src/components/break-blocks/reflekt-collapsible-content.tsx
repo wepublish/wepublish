@@ -23,7 +23,7 @@ export const CollapsibleContentWrapper = styled(Accordion)`
   }
 
   ul {
-    padding-left: ${({ theme }) => theme.spacing(2)};
+    padding-left: ${({ theme }) => theme.spacing(3)};
   }
 `;
 
