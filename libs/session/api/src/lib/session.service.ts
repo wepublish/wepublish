@@ -179,13 +179,6 @@ export class SessionService {
       return;
     }
 
-    // Silently skip sending login link for users with 2FA enabled.
-    // They must use password + TOTP. We don't reveal that 2FA is
-    // the reason to prevent enumeration of 2FA-enabled accounts.
-    if (user.totpEnabled) {
-      return;
-    }
-
     const lastSendTimeStamp = user.properties.find(
       property => property?.key === USER_PROPERTY_LAST_LOGIN_LINK_SEND
     );

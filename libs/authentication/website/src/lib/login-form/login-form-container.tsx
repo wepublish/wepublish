@@ -75,22 +75,12 @@ export function LoginFormContainer({
   );
 
   const handleSubmitLoginWithEmail = useCallback(
-    async (email: string) => {
-      // Check if user has 2FA before sending login link
-      const result = await checkLoginOtp({ variables: { email } });
-      const needsOtp = result.data?.checkLoginOtp ?? false;
-
-      if (needsOtp) {
-        // User has 2FA (or doesn't exist) - redirect to password mode
-        setOtpRequired(true);
-        setTotpRedirectToPassword(true);
-        return;
-      }
-
-      // No 2FA - send login link normally
+    (email: string) => {
+      // TOTP users can still request a login link — the JWT flow
+      // will prompt for the TOTP code when they follow it.
       loginWithEmail({ variables: { email } });
     },
-    [checkLoginOtp, loginWithEmail]
+    [loginWithEmail]
   );
 
   return (

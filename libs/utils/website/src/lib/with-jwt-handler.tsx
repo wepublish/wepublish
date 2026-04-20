@@ -10,6 +10,9 @@ import {
 import styled from '@emotion/styled';
 import { ComponentType, memo, useCallback, useEffect, useState } from 'react';
 
+export const EXPIRED_JWT_MESSAGE =
+  'Dieser Link ist nicht mehr gültig. Bitte hier einen neuen Link anfordern oder mit Benutzernamen und Passwort anmelden.';
+
 const TotpOverlay = styled('div')`
   position: fixed;
   inset: 0;
@@ -83,7 +86,7 @@ export const withJwtHandler = <
     const [error, setError] = useState<string>();
 
     const handleJwt = useCallback(
-      (jwt: string) => {
+      (jwt: string, options?: { fromPreview?: boolean }) => {
         // Skip if already signed in (check cookie synchronously)
         if (getCookie(AuthTokenStorageKey)) return;
 
@@ -99,7 +102,15 @@ export const withJwtHandler = <
             if (err?.message?.includes('TOTP_REQUIRED')) {
               setPendingJwt(jwt);
               setShowTotpPrompt(true);
+              return;
             }
+
+            // Preview JWTs fail silently — the user can't act on them
+            if (options?.fromPreview) return;
+
+            window.location.href = `/login?error=${encodeURIComponent(
+              EXPIRED_JWT_MESSAGE
+            )}`;
           });
       },
       [loginWithJwt, setToken]
@@ -155,7 +166,7 @@ export const withJwtHandler = <
           const jwt = event.data?.previewJwt;
           if (jwt) {
             window.removeEventListener('message', handleMessage);
-            handleJwt(jwt);
+            handleJwt(jwt, { fromPreview: true });
           }
         };
         window.addEventListener('message', handleMessage);
