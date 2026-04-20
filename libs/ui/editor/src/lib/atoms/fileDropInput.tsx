@@ -38,6 +38,7 @@ const FileDropInputWrapper = styled.div<{
 
 export interface FileDropInputProps {
   disabled?: boolean;
+  accept?: string;
 
   icon?: React.ReactElement;
   text?: string;
@@ -47,6 +48,7 @@ export interface FileDropInputProps {
 
 export function FileDropInput({
   disabled = false,
+  accept,
   onDrop,
   icon,
   text,
@@ -101,6 +103,7 @@ export function FileDropInput({
         ref={inputRef}
         type="file"
         value={''}
+        accept={accept}
         onChange={handleInputChange}
         disabled={disabled}
       />

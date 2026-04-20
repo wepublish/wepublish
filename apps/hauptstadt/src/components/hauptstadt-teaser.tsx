@@ -193,7 +193,7 @@ export const HauptstadtTeaser = styled(TeaserWithPaywall)`
   }
 
   ${TeaserUpdateTime} {
-    display: initial;
+    display: none;
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {

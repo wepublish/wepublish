@@ -174,7 +174,7 @@ export class PeriodicJobService {
       })
     );
 
-    this.prismaService.$transaction(promises);
+    await this.prismaService.$transaction(promises);
   }
 
   private async deactivateSubscriptionsWithUnpaidInvoices(

@@ -533,7 +533,10 @@
       "user": "Utilisateur",
       "yearlySubscribers": "Nouveaux abonné:es au cours de l'année écoulée",
       "audience": "Audience",
-      "goToAudienceDashboard": "Audience Dashboard"
+      "goToAudienceDashboard": "Audience Dashboard",
+      "externalApps": "We.Publish Apps",
+      "networkContent": "Du réseau We.Publish",
+      "goToNetwork": "Aller au réseau"
     },
     "dateTimePicker": {
       "hour": "{{hour}}:00",
@@ -632,6 +635,55 @@
         "title": "Filtrer par titre",
         "includeHiddenArticles": "Inclure cachés",
         "includeHiddenPages": "Inclure cachés"
+      }
+    },
+    "documents": {
+      "overview": {
+        "actions": "Actions",
+        "description": "Description",
+        "documentLibrary": "Bibliothèque de documents",
+        "copyLink": "Copier le lien",
+        "edit": "Modifier",
+        "fileSize": "Taille du fichier",
+        "filename": "Nom du fichier",
+        "noDescription": "Pas de description",
+        "openLink": "Ouvrir",
+        "preview": "Aperçu",
+        "storageFull": "Limite de stockage atteinte",
+        "storageUsage": "{{used}} / {{limit}} utilisés ({{count}} fichiers)",
+        "storageWarning": "Stockage presque plein",
+        "title": "Titre",
+        "unlimited": "Illimité",
+        "untitled": "Sans titre",
+        "uploadDocument": "Télécharger un document"
+      },
+      "panels": {
+        "cancel": "Annuler",
+        "close": "Fermer",
+        "confirm": "Confirmer",
+        "created": "Créé",
+        "createdAt": "{{createdAt, ccc PP p}}",
+        "deleteDocument": "Supprimer le document ?",
+        "description": "Description",
+        "documentUpdated": "Document mis à jour",
+        "dropDocument": "Déposez un fichier ici ou cliquez pour sélectionner",
+        "editDocument": "Modifier le document",
+        "fileSize": "Taille du fichier",
+        "fileTooLarge": "Le fichier est trop volumineux. Taille maximale : {{maxSize}} Mo.",
+        "filename": "Nom du fichier",
+        "information": "Informations",
+        "maxFileSize": "Taille maximale du fichier : {{maxSize}} Mo",
+        "invalidDocument": "Type de fichier non pris en charge. Formats acceptés : PDF, Word, Excel, PowerPoint, OpenDocument, CSV, TXT, ZIP",
+        "linkCopied": "Lien copié dans le presse-papiers",
+        "notFound": "Document introuvable !",
+        "publicLink": "Lien public",
+        "title": "Titre",
+        "untitled": "Sans titre",
+        "updated": "Mis à jour",
+        "updatedAt": "{{updatedAt, ccc PP p}}",
+        "upload": "Télécharger",
+        "uploadDocument": "Télécharger un document",
+        "uploadFailed": "Le téléchargement a échoué. Veuillez réessayer."
       }
     },
     "images": {
@@ -793,8 +845,10 @@
       "dashboard": "Dashboard",
       "events": "Events",
       "eventTags": "Tags",
-      "imageLibrary": "Bibliothèque d'images",
+      "documentLibrary": "Documents",
+      "imageLibrary": "Images",
       "importableEvents": "Importable Events",
+      "media": "Fichiers",
       "logout": "Déconnection",
       "mailTemplates": "Modèles de courriels",
       "memberPlans": "Plans d'abonnement",
@@ -802,6 +856,7 @@
       "pages": "Pages",
       "paymentMethods": "Méthodes de paiement",
       "peerArticles": "Articles pairables",
+      "networkContent": "Réseau We.Publish",
       "peering": "Peering",
       "peers": "Peers",
       "settings": "Paramètres",
@@ -815,7 +870,8 @@
       "audience": "Audience",
       "authorTags": "Tags",
       "audienceDashboard": "Dashboard",
-      "integrations": "Intégrations"
+      "integrations": "Intégrations",
+      "apps": "Apps"
     },
     "navigation": {
       "overview": {
@@ -1767,6 +1823,65 @@
         "progressSkipped": "ignorés",
         "progressErrors": "erreurs"
       }
+    },
+    "externalApps": {
+      "apps": "Apps"
+    },
+    "externalAppForm": {
+      "create": "Créer",
+      "update": "Mettre à jour",
+      "delete": "Supprimer",
+      "name": "Nom",
+      "description": "Description",
+      "url": "URL",
+      "target": "Cible",
+      "successUpdate": "Application externe mise à jour avec succès",
+      "errorUpdate": "Échec de la mise à jour de l'application externe",
+      "successCreate": "Application externe créée avec succès",
+      "errorCreate": "Échec de la création de l'application externe",
+      "successDelete": "Application externe supprimée avec succès",
+      "errorDelete": "Échec de la suppression de l'application externe",
+      "deleteConfirmationTitle": "Supprimer l'application externe",
+      "deleteConfirmationText": "Êtes-vous sûr de vouloir supprimer cette application externe ? Cette action est irréversible.",
+      "icon": "URL de l'icône"
+    },
+    "networkContentDashboard": {
+      "errorLoading": "Impossible de charger les articles du réseau.",
+      "noArticles": "Aucun article disponible.",
+      "readMore": "Lire l'article",
+      "importFrom": "Importer l'article depuis {{peer}}",
+      "noPeer": "Pas de peering actif – contactez l'éditeur pour établir un peering.",
+      "importTitle": "Importer l'article",
+      "importAuthors": "Importer les auteurs",
+      "importTags": "Importer les tags",
+      "importImages": "Importer les images",
+      "importConfirm": "Importer",
+      "cancel": "Annuler",
+      "close": "Fermer",
+      "peerInfoTitle": "Peering non disponible",
+      "peerInfoText": "Cet éditeur n'est pas encore connecté en tant que peer. Pour importer des articles, une connexion de peering active est nécessaire. Veuillez contacter l'éditeur pour établir une relation de peering, ou configurez-la sous Paramètres > Peering.",
+      "importBtn": "Importer",
+      "connectBtn": "Configurer le peer"
+    },
+    "networkContentPage": {
+      "title": "Contenus provenant du réseau we.publish",
+      "articlesTitle": "Articles",
+      "mediaTitle": "Médias",
+      "searchLabel": "Rechercher des articles",
+      "mediaFilter": "Média",
+      "allMedia": "Tous les médias",
+      "dateFrom": "Du",
+      "dateTo": "Au",
+      "filterByMedia": "Filtrer",
+      "errorLoadingClients": "Impossible de charger les médias.",
+      "noClients": "Aucun média disponible.",
+      "connected": "Connecté",
+      "notConnected": "Non connecté",
+      "contactTitle": "Contacter {{name}}",
+      "contactText": "Cet éditeur n'est pas encore connecté en tant que peer. Contactez-les pour échanger les clés de peering et établir la connexion.",
+      "noContacts": "Aucune personne de contact disponible pour ce média.",
+      "unknownUser": "Utilisateur inconnu",
+      "connectBtn": "Connecter"
     }
   }
 }

@@ -203,7 +203,7 @@ export type Author = HasImage &
     image?: Maybe<Image>;
     imageID?: Maybe<Scalars['String']>;
     jobTitle?: Maybe<Scalars['String']>;
-    links?: Maybe<Array<AuthorLink>>;
+    links: Array<AuthorLink>;
     modifiedAt: Scalars['DateTime'];
     name: Scalars['String'];
     peer?: Maybe<Peer>;
@@ -756,6 +756,14 @@ export type CreateCrowdfundingMemberPlan = {
   id: Scalars['String'];
 };
 
+export type CreateExternalAppInput = {
+  description?: InputMaybe<Scalars['String']>;
+  icon?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  target: ExternalAppsTarget;
+  url: Scalars['String'];
+};
+
 export type Crowdfunding = {
   __typename?: 'Crowdfunding';
   activeGoal?: Maybe<CrowdfundingGoalWithProgress>;
@@ -921,6 +929,37 @@ export type DeletePollVotesResult = {
   count: Scalars['Int'];
 };
 
+export type Document = {
+  __typename?: 'Document';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  extension: Scalars['String'];
+  fileSize: Scalars['Int'];
+  filename?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  mimeType: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  thumbnailURL?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
+};
+
+export type DocumentFilter = {
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export enum DocumentSort {
+  CreatedAt = 'CreatedAt',
+  ModifiedAt = 'ModifiedAt',
+}
+
+export type DocumentStorageUsage = {
+  __typename?: 'DocumentStorageUsage';
+  documentCount: Scalars['Int'];
+  limitBytes: Scalars['Int'];
+  usedBytes: Scalars['Int'];
+};
+
 export enum EditorBlockType {
   Comment = 'Comment',
   Crowdfunding = 'Crowdfunding',
@@ -1060,6 +1099,36 @@ export type EventTeaserInput = {
   preTitle?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
 };
+
+export type ExternalApp = {
+  __typename?: 'ExternalApp';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  target: ExternalAppsTarget;
+  url: Scalars['String'];
+};
+
+export type ExternalAppFilter = {
+  description?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  target?: InputMaybe<ExternalAppsTarget>;
+};
+
+export type ExternalAppToken = {
+  __typename?: 'ExternalAppToken';
+  expiresAt: Scalars['DateTime'];
+  token: Scalars['String'];
+};
+
+export enum ExternalAppsTarget {
+  Blank = 'BLANK',
+  Iframe = 'IFRAME',
+}
 
 export type ExternalNavigationLink = BaseNavigationLink & {
   __typename?: 'ExternalNavigationLink';
@@ -1566,6 +1635,7 @@ export enum LoginStatus {
   All = 'ALL',
   LoggedIn = 'LOGGED_IN',
   LoggedOut = 'LOGGED_OUT',
+  PaywallBypassed = 'PAYWALL_BYPASSED',
   Subscribed = 'SUBSCRIBED',
   Unsubscribed = 'UNSUBSCRIBED',
 }
@@ -1718,6 +1788,8 @@ export type Mutation = {
   cancelSubscription: PublicSubscription;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   cancelUserSubscription?: Maybe<PublicSubscription>;
+  /** Confirms a pending email change for the logged-in user. */
+  confirmEmailChange: SensitiveDataUser;
   /** Creates an article. */
   createArticle: Article;
   /** Creates a new author. */
@@ -1737,6 +1809,10 @@ export type Mutation = {
   createCrowdfunding: Crowdfunding;
   /** Creates a new event. */
   createEvent: Event;
+  /** Creates a new external app. */
+  createExternalApp: ExternalApp;
+  /** Generates a short-lived JWT token for authenticating with an external app. */
+  createExternalAppToken: ExternalAppToken;
   /** Creates a new invoice. */
   createInvoice: Invoice;
   /** Returns a JWT that can be used to login as another user. */
@@ -1812,8 +1888,12 @@ export type Mutation = {
    */
   deleteConsent: Consent;
   deleteCrowdfunding?: Maybe<Scalars['Boolean']>;
+  /** Deletes an existing document. */
+  deleteDocument: Scalars['String'];
   /** Deletes an existing event. */
   deleteEvent: Event;
+  /** Deletes an external app. */
+  deleteExternalApp: ExternalApp;
   /** Deletes an existing image. */
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
@@ -1902,6 +1982,8 @@ export type Mutation = {
   renewSubscription: PublicSubscription;
   /** Requests the user to change the comment's content */
   requestChangesOnComment: Comment;
+  /** Requests an email change. A confirmation link is sent to the current email address. */
+  requestEmailChange: Scalars['Boolean'];
   /** Resets the password of a user. */
   resetPassword: SensitiveDataUser;
   /** This mutation revokes and deletes the active session. */
@@ -1944,8 +2026,12 @@ export type Mutation = {
   updateCrowdfunding: Crowdfunding;
   /** Updates the current logged in user. */
   updateCurrentUser: SensitiveDataUser;
+  /** Updates an existing document. */
+  updateDocument: Document;
   /** Updates an existing event. */
   updateEvent: Event;
+  /** Updates an existing external app. */
+  updateExternalApp: ExternalApp;
   /** Updates an existing image. */
   updateImage: Image;
   /** Updates an existing invoice. */
@@ -2006,6 +2092,8 @@ export type Mutation = {
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
   upgradeUserSubscription: Payment;
+  /** Uploads a new document. */
+  uploadDocument: Document;
   /** Uploads a new image. */
   uploadImage: Image;
   /** This mutation allows to upload and update the user's profile image. */
@@ -2035,6 +2123,10 @@ export type MutationCancelSubscriptionArgs = {
 
 export type MutationCancelUserSubscriptionArgs = {
   id: Scalars['String'];
+};
+
+export type MutationConfirmEmailChangeArgs = {
+  newEmail: Scalars['String'];
 };
 
 export type MutationCreateArticleArgs = {
@@ -2113,6 +2205,14 @@ export type MutationCreateEventArgs = {
   startsAt: Scalars['DateTime'];
   status?: EventStatus;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
+export type MutationCreateExternalAppArgs = {
+  input: CreateExternalAppInput;
+};
+
+export type MutationCreateExternalAppTokenArgs = {
+  externalAppId: Scalars['String'];
 };
 
 export type MutationCreateInvoiceArgs = {
@@ -2375,7 +2475,15 @@ export type MutationDeleteCrowdfundingArgs = {
   id: Scalars['String'];
 };
 
+export type MutationDeleteDocumentArgs = {
+  id: Scalars['String'];
+};
+
 export type MutationDeleteEventArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationDeleteExternalAppArgs = {
   id: Scalars['String'];
 };
 
@@ -2563,6 +2671,10 @@ export type MutationRequestChangesOnCommentArgs = {
   rejectionReason: CommentRejectionReason;
 };
 
+export type MutationRequestEmailChangeArgs = {
+  newEmail: Scalars['String'];
+};
+
 export type MutationResetPasswordArgs = {
   id: Scalars['String'];
   password?: InputMaybe<Scalars['String']>;
@@ -2692,11 +2804,16 @@ export type MutationUpdateCurrentUserArgs = {
   address?: InputMaybe<UserAddressInput>;
   birthday?: InputMaybe<Scalars['DateTime']>;
   challengeAnswer?: InputMaybe<ChallengeInput>;
-  email?: InputMaybe<Scalars['String']>;
   firstName?: InputMaybe<Scalars['String']>;
   flair?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
+};
+
+export type MutationUpdateDocumentArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationUpdateEventArgs = {
@@ -2710,6 +2827,15 @@ export type MutationUpdateEventArgs = {
   startsAt?: InputMaybe<Scalars['DateTime']>;
   status?: InputMaybe<EventStatus>;
   tagIds?: InputMaybe<Array<Scalars['String']>>;
+};
+
+export type MutationUpdateExternalAppArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  icon?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  target?: InputMaybe<ExternalAppsTarget>;
+  url?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationUpdateImageArgs = {
@@ -3011,6 +3137,13 @@ export type MutationUpgradeUserSubscriptionArgs = {
   successURL?: InputMaybe<Scalars['String']>;
 };
 
+export type MutationUploadDocumentArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  file: Scalars['Upload'];
+  filename?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
 export type MutationUploadImageArgs = {
   description?: InputMaybe<Scalars['String']>;
   file: Scalars['Upload'];
@@ -3210,6 +3343,13 @@ export type PaginatedAuthors = {
 export type PaginatedComments = {
   __typename?: 'PaginatedComments';
   nodes: Array<Comment>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedDocuments = {
+  __typename?: 'PaginatedDocuments';
+  nodes: Array<Document>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -3889,6 +4029,12 @@ export type Query = {
    *
    */
   dailySubscriptionStats: Array<DailySubscriptionStats>;
+  /** Returns a document by id. */
+  document: Document;
+  /** Returns the current document storage usage and limit. */
+  documentStorageUsage: DocumentStorageUsage;
+  /** Returns a paginated list of documents based on the filters given. */
+  documents: PaginatedDocuments;
   /** Returns an event by id. */
   event: Event;
   /**
@@ -3906,6 +4052,10 @@ export type Query = {
    *
    */
   expectedRevenue: Array<DashboardInvoice>;
+  /** Returns a single external app by id. Requires authentication. */
+  externalApp: ExternalApp;
+  /** Returns all external apps. Requires authentication. */
+  externalApps: Array<ExternalApp>;
   /** Returns images by tag. */
   getImagesByTag: Array<Image>;
   /**
@@ -4211,6 +4361,19 @@ export type QueryDailySubscriptionStatsArgs = {
   start: Scalars['DateTime'];
 };
 
+export type QueryDocumentArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryDocumentsArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<DocumentFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<DocumentSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
 export type QueryEventArgs = {
   id: Scalars['String'];
 };
@@ -4227,6 +4390,14 @@ export type QueryEventsArgs = {
 export type QueryExpectedRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
+};
+
+export type QueryExternalAppArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryExternalAppsArgs = {
+  filter?: InputMaybe<ExternalAppFilter>;
 };
 
 export type QueryGetImagesByTagArgs = {
@@ -4418,6 +4589,7 @@ export type QueryPollsArgs = {
 export type QueryPrimaryBannerArgs = {
   documentId: Scalars['String'];
   documentType: BannerDocumentType;
+  hasPaywallBypass: Scalars['Boolean'];
   hasSubscription: Scalars['Boolean'];
   loggedIn: Scalars['Boolean'];
 };
@@ -4648,6 +4820,7 @@ export type SensitiveDataUser = BaseUser & {
   name: Scalars['String'];
   note?: Maybe<Scalars['String']>;
   paymentProviderCustomers?: Maybe<Array<PaymentProviderCustomer>>;
+  pendingEmail?: Maybe<Scalars['String']>;
   permissions: Array<Scalars['String']>;
   properties: Array<Property>;
   roleIDs: Array<Scalars['String']>;
@@ -5454,6 +5627,7 @@ export type UserCreatedAction = BaseAction &
 
 export enum UserEvent {
   AccountCreation = 'ACCOUNT_CREATION',
+  EmailChange = 'EMAIL_CHANGE',
   LoginLink = 'LOGIN_LINK',
   PasswordReset = 'PASSWORD_RESET',
   TestMail = 'TEST_MAIL',
@@ -5560,11 +5734,7 @@ export type FullAuthorFragment = {
   hideOnArticle: boolean;
   id: string;
   name: string;
-  links?: Array<{
-    __typename?: 'AuthorLink';
-    title: string;
-    url: string;
-  }> | null;
+  links: Array<{ __typename?: 'AuthorLink'; title: string; url: string }>;
   image?: {
     __typename?: 'Image';
     id: string;
@@ -5607,11 +5777,7 @@ export type AuthorListQuery = {
       hideOnArticle: boolean;
       id: string;
       name: string;
-      links?: Array<{
-        __typename?: 'AuthorLink';
-        title: string;
-        url: string;
-      }> | null;
+      links: Array<{ __typename?: 'AuthorLink'; title: string; url: string }>;
       image?: {
         __typename?: 'Image';
         id: string;
@@ -5657,11 +5823,7 @@ export type AuthorQuery = {
     hideOnArticle: boolean;
     id: string;
     name: string;
-    links?: Array<{
-      __typename?: 'AuthorLink';
-      title: string;
-      url: string;
-    }> | null;
+    links: Array<{ __typename?: 'AuthorLink'; title: string; url: string }>;
     image?: {
       __typename?: 'Image';
       id: string;

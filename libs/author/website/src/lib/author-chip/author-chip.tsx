@@ -33,7 +33,7 @@ export const AuthorChipName = styled('div')`
 
 export const AuthorChipJob = styled('div')``;
 
-const imageStyles = css`
+export const imageStyles = css`
   border-radius: 50%;
 `;
 

@@ -140,6 +140,7 @@ mutation AddComment(
   $guestUsername: String
   $title: String
   $text: RichText!
+  $challenge: ChallengeInput
 ) {
   addUserComment(
     itemID: $itemID
@@ -148,6 +149,7 @@ mutation AddComment(
     guestUsername: $guestUsername
     title: $title
     text: $text
+    challenge: $challenge
   ) {
     ...FullComment
   }

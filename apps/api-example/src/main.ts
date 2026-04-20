@@ -2,6 +2,7 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './nestapp/app.module';
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { runExampleSeed } from '../prisma/seed';
 
 import { MAIL_WEBHOOK_PATH_PREFIX } from '@wepublish/mail/api';
@@ -54,7 +55,10 @@ async function bootstrap() {
 
   if (process.env.RUN_SEED === 'true') {
     Logger.log('RUN_SEED=true detected, running example seed...');
-    const prisma = new PrismaClient();
+    const adapter = new PrismaPg({
+      connectionString: process.env['DATABASE_URL']!,
+    });
+    const prisma = new PrismaClient({ adapter });
     await prisma.$connect();
     try {
       await runExampleSeed(prisma);

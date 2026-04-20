@@ -82,32 +82,38 @@ describe('BannerService', () => {
         documentType: BannerDocumentType.ARTICLE,
         loggedIn: false,
         hasSubscription: false,
+        hasPaywallBypass: false,
       },
       {
         documentType: BannerDocumentType.ARTICLE,
         loggedIn: true,
         hasSubscription: false,
+        hasPaywallBypass: false,
       },
       {
         documentType: BannerDocumentType.ARTICLE,
         loggedIn: true,
         hasSubscription: true,
+        hasPaywallBypass: true,
       },
       // Page
       {
         documentType: BannerDocumentType.PAGE,
         loggedIn: false,
         hasSubscription: false,
+        hasPaywallBypass: false,
       },
       {
         documentType: BannerDocumentType.PAGE,
         loggedIn: true,
         hasSubscription: false,
+        hasPaywallBypass: false,
       },
       {
         documentType: BannerDocumentType.PAGE,
         loggedIn: true,
         hasSubscription: true,
+        hasPaywallBypass: true,
       },
     ])('should return the first active banner for %o', async values => {
       jest.spyOn(prisma.banner, 'findMany').mockResolvedValue([
@@ -127,6 +133,10 @@ describe('BannerService', () => {
         {
           ...banner,
           showForLoginStatus: LoginStatus.UNSUBSCRIBED,
+        },
+        {
+          ...banner,
+          showForLoginStatus: LoginStatus.PAYWALL_BYPASSED,
         },
       ]);
 
@@ -149,6 +159,7 @@ describe('BannerService', () => {
           documentId: '1',
           loggedIn: true,
           hasSubscription: false,
+          hasPaywallBypass: false,
         })
       ).toBeFalsy();
 
@@ -164,6 +175,7 @@ describe('BannerService', () => {
           documentId: '1',
           loggedIn: true,
           hasSubscription: false,
+          hasPaywallBypass: false,
         })
       ).toBeFalsy();
 

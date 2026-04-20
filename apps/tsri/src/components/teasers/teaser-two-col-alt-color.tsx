@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { hasBlockStyle } from '@wepublish/block-content/website';
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
@@ -7,9 +8,8 @@ import { TsriTeaserType } from './tsri-base-teaser';
 import { TeaserContentWrapper } from './tsri-teaser';
 
 export const isTeaserTwoColAltColor = allPass([
-  ({ blockStyle }: BuilderTeaserProps) => {
-    return blockStyle === TsriTeaserType.TwoColAltColor;
-  },
+  ({ blockStyle }: BuilderTeaserProps) =>
+    hasBlockStyle(TsriTeaserType.TwoColAltColor)({ blockStyle }),
 ]);
 
 export const TeaserTwoColAltColor = styled(TeaserTwoCol)`

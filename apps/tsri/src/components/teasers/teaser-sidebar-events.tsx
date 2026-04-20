@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { hasBlockStyle } from '@wepublish/block-content/website';
 import { createWithTheme } from '@wepublish/ui';
 import { BuilderTeaserProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
@@ -10,20 +11,31 @@ import {
   TeaserContentWrapper,
   TeaserImageWrapper,
   TeaserMetadata,
+  TeaserPreTitleNoContent,
   TeaserPreTitleWrapper,
+  TeaserTitle,
   TsriTeaser,
 } from './tsri-teaser';
 
 export const isTeaserEvents = allPass([
-  ({ blockStyle }: BuilderTeaserProps) => {
-    return blockStyle === TsriTeaserType.Events;
-  },
+  ({ blockStyle }: BuilderTeaserProps) =>
+    hasBlockStyle(TsriTeaserType.Events)({ blockStyle }),
 ]);
 
 export const TeaserEventsBase = styled(TsriTeaser)`
   aspect-ratio: unset !important;
   border-radius: 0 !important;
   container: unset;
+
+  ${TeaserTitle} {
+    & > .MuiTypography-root {
+      padding: 1.5cqw;
+
+      ${({ theme }) => theme.breakpoints.up('md')} {
+        padding: 0.5cqw;
+      }
+    }
+  }
 
   ${TeaserContentWrapper} {
     display: block;
@@ -35,6 +47,10 @@ export const TeaserEventsBase = styled(TsriTeaser)`
   }
 
   ${TeaserPreTitleWrapper} {
+    display: none;
+  }
+
+  ${TeaserPreTitleNoContent} {
     display: none;
   }
 

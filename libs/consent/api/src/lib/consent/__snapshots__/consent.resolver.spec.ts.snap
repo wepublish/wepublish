@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConsentResolver create consent mutation 1`] = `
+[
+  [
+    {
+      "defaultValue": true,
+      "name": "some-name",
+      "slug": "some-slug",
+    },
+  ],
+]
+`;
+
+exports[`ConsentResolver delete consent mutation 1`] = `
+[
+  [
+    "consent-1",
+  ],
+]
+`;
+
+exports[`ConsentResolver update consent mutation 1`] = `
+[
+  [
+    {
+      "defaultValue": true,
+      "id": "consent-1",
+      "name": "changed name",
+      "slug": "changed-slug",
+    },
+  ],
+]
+`;

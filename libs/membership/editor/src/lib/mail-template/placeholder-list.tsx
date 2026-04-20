@@ -181,6 +181,29 @@ export function PlaceholderList() {
         ...systemMails.systemMails.map(event => {
           const placeholders: Placeholder[] = [];
 
+          if (event.event === UserEvent.EmailChange) {
+            const jwtExample = getPlaceholderExample(
+              mailTemplate?.provider.name.toLowerCase() ?? '',
+              'jwt'
+            );
+            const newEmailExample = getPlaceholderExample(
+              mailTemplate?.provider.name.toLowerCase() ?? '',
+              'optional_newEmail'
+            );
+
+            placeholders.push({
+              key: 'optional_newEmail',
+              description: t('placeholderList.description.optional_newEmail'),
+              exampleOverride: t(
+                'placeholderList.description.optional_newEmail_example',
+                {
+                  newEmailPlaceholder: newEmailExample,
+                  confirmLink: `<a href="https://www.example.com/profile?confirmEmailChange=${newEmailExample}&jwt=${jwtExample}">`,
+                }
+              ),
+            });
+          }
+
           return {
             event: event.event,
             title: t(`systemMails.events.${event.event.toLowerCase()}`),

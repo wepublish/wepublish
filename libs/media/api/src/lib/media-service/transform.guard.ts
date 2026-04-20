@@ -1,10 +1,10 @@
 import sharp from 'sharp';
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import {
-  timeConstantCompare,
-  getSignatureForImage,
+  verifyImageSignature,
   TransformationsDto,
 } from '@wepublish/media-transform-guard';
+import type { KeyLike } from 'jose';
 
 const M_PIXEL_LIMIT = 20;
 // WebP Max
@@ -50,16 +50,24 @@ export class TransformGuard {
     return metadata.pages && metadata.pages > 1;
   }
 
-  public validateSignature(imageId: string, t: TransformationsDto) {
+  public async validateSignature(
+    publicKey: KeyLike,
+    imageId: string,
+    t: TransformationsDto
+  ) {
     const { sig, ...dataWithoutSignature } = t;
-    const validationSignature = getSignatureForImage(
-      imageId,
-      dataWithoutSignature
-    );
 
-    if (!timeConstantCompare(sig ?? '', validationSignature)) {
+    try {
+      await verifyImageSignature(
+        publicKey,
+        sig ?? '',
+        imageId,
+        dataWithoutSignature
+      );
+    } catch {
       throw new ForbiddenException('Invalid signature!');
     }
+
     return true;
   }
 

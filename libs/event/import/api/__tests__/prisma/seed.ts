@@ -1,13 +1,13 @@
-import { PrismaClient } from '@prisma/client';
 import { seed as rootSeed } from '../../../../../api/prisma/seed';
 import { hash as argon2Hash } from '@node-rs/argon2';
+import { createPrismaClient } from '@wepublish/testing/prisma';
 
 async function hashPassword(password: string) {
   return await argon2Hash(password);
 }
 
 async function seed() {
-  const prisma = new PrismaClient();
+  const prisma = createPrismaClient();
   await prisma.$connect();
 
   const [adminUserRole, editorUserRole] = await rootSeed(prisma);

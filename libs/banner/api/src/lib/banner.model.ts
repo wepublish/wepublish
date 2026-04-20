@@ -121,4 +121,7 @@ export class PrimaryBannerArgs {
 
   @Field()
   hasSubscription!: boolean;
+
+  @Field()
+  hasPaywallBypass!: boolean;
 }

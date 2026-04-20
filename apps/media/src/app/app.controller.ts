@@ -19,7 +19,9 @@ import {
   ImageURIObject,
   MediaService,
   SupportedImagesValidator,
-  TokenAuthGuard,
+  SupportedDocumentsValidator,
+  getExtensionForMimeType,
+  JwtAuthGuard,
 } from '@wepublish/media/api';
 import {
   getTransformationKey,
@@ -29,7 +31,6 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import 'multer';
-import { v4 as uuidv4 } from 'uuid';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { assertRemoteFileIsAccessible } from './assertRemoteFileIsAccessible';
@@ -37,6 +38,9 @@ import { assertRemoteFileIsAccessible } from './assertRemoteFileIsAccessible';
 const HTTP_CODE_FOUND = 301;
 const HTTP_CODE_NOT_FOUND = 307;
 let S3_HOST_CHECKED = false;
+
+/** Sanitize user-provided IDs to prevent path traversal */
+const sanitizeId = (id: string): string => id.replace(/[^a-zA-Z0-9_-]/g, '');
 
 @Controller({
   version: '1',
@@ -52,6 +56,16 @@ export class AppController {
     this.fallbackUrl = config.get<string>('MEDIA_FALLBACK_URL');
   }
 
+  private setProductionCacheHeaders(res: Response) {
+    if (process.env['NODE_ENV'] === 'production') {
+      // max-age = 12hours, immutable, stale-if-error = 7days, stale-while-revalidate = 1day
+      res.setHeader(
+        'Cache-Control',
+        `public, max-age=43200, immutable, stale-if-error=604800, stale-while-revalidate=86400`
+      );
+    }
+  }
+
   @Get('/health')
   async healthCheck(@Res() res: Response) {
     res.status(200).send({ status: 'ok' });
@@ -62,7 +76,7 @@ export class AppController {
     throw new NotFoundException();
   }
 
-  @UseGuards(TokenAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(
@@ -76,9 +90,6 @@ export class AppController {
     )
     uploadedFile: Express.Multer.File
   ) {
-    if (!imageId) {
-      imageId = uuidv4();
-    }
     const metadata = await this.media.saveImage(imageId, uploadedFile.buffer);
 
     res.status(201).send({
@@ -107,14 +118,6 @@ export class AppController {
     // Check if image is cached
     const uriFromCache = await this.linkCache.get<ImageURIObject>(cacheKey);
 
-    if (process.env['NODE_ENV'] === 'production') {
-      // max-age = 12hours, immutable, stale-if-error = 7days, stale-while-revalidate = 1day
-      res.setHeader(
-        'Cache-Control',
-        `public, max-age=43200, immutable, stale-if-error=604800, stale-while-revalidate=86400`
-      );
-    }
-
     if (uriFromCache) {
       if (!uriFromCache.exists && this.fallbackUrl) {
         res.setHeader('Cache-Control', `public, max-age=600`);
@@ -126,6 +129,7 @@ export class AppController {
         res.setHeader('Cache-Control', `public, max-age=600`);
         httpCode = HTTP_CODE_NOT_FOUND;
       } else {
+        this.setProductionCacheHeaders(res);
         // On access refresh cache ttl
         await this.linkCache.set(cacheKey, uriFromCache);
       }
@@ -164,13 +168,183 @@ export class AppController {
       await this.linkCache.set(cacheKey, { uri, exists: true });
     }
 
+    this.setProductionCacheHeaders(res);
     res.redirect(HTTP_CODE_FOUND, url);
   }
 
-  @UseGuards(TokenAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete(':imageId')
   async deleteImage(@Res() res: Response, @Param('imageId') imageId: string) {
     await this.media.deleteImage(imageId);
+
+    return res.sendStatus(204);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('document')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadDocument(
+    @Res() res: Response,
+    @Query('documentId') documentId: string,
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: true,
+        validators: [new SupportedDocumentsValidator()],
+      })
+    )
+    uploadedFile: Express.Multer.File
+  ) {
+    const safeDocumentId = sanitizeId(documentId);
+    const { size } = await this.media.saveDocument(
+      safeDocumentId,
+      uploadedFile.buffer,
+      uploadedFile.mimetype,
+      uploadedFile.originalname
+    );
+
+    res.status(201).send({
+      id: safeDocumentId,
+      filename: uploadedFile.originalname,
+      fileSize: size,
+      mimeType: uploadedFile.mimetype,
+      extension: getExtensionForMimeType(uploadedFile.mimetype),
+    });
+  }
+
+  @Get('document/:documentId/thumbnail')
+  async getDocumentThumbnail(
+    @Res() res: Response,
+    @Req() req: Request,
+    @Param('documentId') documentId: string
+  ) {
+    const safeId = sanitizeId(documentId);
+    const cacheKey = `doc-thumb-${safeId}`;
+
+    const uriFromCache = await this.linkCache.get<ImageURIObject>(cacheKey);
+
+    if (uriFromCache) {
+      if (!uriFromCache.exists && this.fallbackUrl) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+        return;
+      }
+      let httpCode = HTTP_CODE_FOUND;
+      if (!uriFromCache.exists) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        httpCode = HTTP_CODE_NOT_FOUND;
+      } else {
+        this.setProductionCacheHeaders(res);
+        await this.linkCache.set(cacheKey, uriFromCache);
+      }
+      res.redirect(
+        httpCode,
+        `${process.env['S3_PUBLIC_HOST']}/${uriFromCache.uri}`
+      );
+      return;
+    }
+
+    if (this.fallbackUrl && !(await this.media.hasDocument(safeId))) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+      return;
+    }
+
+    const { uri, exists } = await this.media.getDocumentThumbnailUri(safeId);
+    const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
+
+    if (!S3_HOST_CHECKED) {
+      S3_HOST_CHECKED = await assertRemoteFileIsAccessible(url);
+    }
+
+    if (!exists) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_NOT_FOUND, url);
+      if (!this.fallbackUrl) {
+        await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
+      }
+      return;
+    }
+
+    await this.linkCache.set(cacheKey, { uri, exists: true });
+    this.setProductionCacheHeaders(res);
+    res.redirect(HTTP_CODE_FOUND, url);
+  }
+
+  @Get('document/:documentId/:filename')
+  async getDocumentWithFilename(
+    @Res() res: Response,
+    @Req() req: Request,
+    @Param('documentId') documentId: string
+  ) {
+    return this.getDocument(res, req, documentId);
+  }
+
+  @Get('document/:documentId')
+  async getDocument(
+    @Res() res: Response,
+    @Req() req: Request,
+    @Param('documentId') documentId: string
+  ) {
+    const safeId = sanitizeId(documentId);
+    const cacheKey = `doc-${safeId}`;
+
+    const uriFromCache = await this.linkCache.get<ImageURIObject>(cacheKey);
+
+    if (uriFromCache) {
+      if (!uriFromCache.exists && this.fallbackUrl) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+        return;
+      }
+      let httpCode = HTTP_CODE_FOUND;
+      if (!uriFromCache.exists) {
+        res.setHeader('Cache-Control', `public, max-age=600`);
+        httpCode = HTTP_CODE_NOT_FOUND;
+      } else {
+        this.setProductionCacheHeaders(res);
+        await this.linkCache.set(cacheKey, uriFromCache);
+      }
+      res.redirect(
+        httpCode,
+        `${process.env['S3_PUBLIC_HOST']}/${uriFromCache.uri}`
+      );
+      return;
+    }
+
+    if (this.fallbackUrl && !(await this.media.hasDocument(safeId))) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_FOUND, `${this.fallbackUrl}${(req as any).url}`);
+      return;
+    }
+
+    const { uri, exists } = await this.media.getDocumentUri(safeId);
+    const url = `${process.env['S3_PUBLIC_HOST']}/${uri}`;
+
+    if (!S3_HOST_CHECKED) {
+      S3_HOST_CHECKED = await assertRemoteFileIsAccessible(url);
+    }
+
+    if (!exists) {
+      res.setHeader('Cache-Control', `public, max-age=600`);
+      res.redirect(HTTP_CODE_NOT_FOUND, url);
+      if (!this.fallbackUrl) {
+        await this.linkCache.set(cacheKey, { uri, exists: false }, 14400);
+      }
+      return;
+    }
+
+    await this.linkCache.set(cacheKey, { uri, exists: true });
+    this.setProductionCacheHeaders(res);
+    res.redirect(HTTP_CODE_FOUND, url);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('document/:documentId')
+  async deleteDocument(
+    @Res() res: Response,
+    @Param('documentId') documentId: string
+  ) {
+    await this.media.deleteDocument(sanitizeId(documentId));
 
     return res.sendStatus(204);
   }

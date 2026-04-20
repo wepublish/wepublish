@@ -136,6 +136,30 @@ export const CanDeleteImage: Permission = {
   deprecated: false,
 };
 
+export const CanCreateDocument: Permission = {
+  id: 'CAN_CREATE_DOCUMENT',
+  description: 'Allows to create documents',
+  deprecated: false,
+};
+
+export const CanGetDocument: Permission = {
+  id: 'CAN_GET_DOCUMENT',
+  description: 'Allows to get document',
+  deprecated: false,
+};
+
+export const CanGetDocuments: Permission = {
+  id: 'CAN_GET_DOCUMENTS',
+  description: 'Allows to get all documents',
+  deprecated: false,
+};
+
+export const CanDeleteDocument: Permission = {
+  id: 'CAN_DELETE_DOCUMENT',
+  description: 'Allows to delete documents',
+  deprecated: false,
+};
+
 export const CanCreateArticle: Permission = {
   id: 'CAN_CREATE_ARTICLE',
   description: 'Allows to create articles',
@@ -845,6 +869,27 @@ export const CanDeleteAISettings: Permission = {
 };
 
 /**
+ * External Apps
+ */
+export const CanCreateExternalApp: Permission = {
+  id: 'CAN_CREATE_EXTERNAL_APP',
+  description: 'Allows to create external app',
+  deprecated: false,
+};
+
+export const CanUpdateExternalApp: Permission = {
+  id: 'CAN_UPDATE_EXTERNAL_APP',
+  description: 'Allows to update external app',
+  deprecated: false,
+};
+
+export const CanDeleteExternalApp: Permission = {
+  id: 'CAN_DELETE_EXTERNAL_APP',
+  description: 'Allows to delete external app',
+  deprecated: false,
+};
+
+/**
  * Challenge Provider Settings
  */
 export const CanGetChallengeProviderSettings: Permission = {
@@ -1036,6 +1081,10 @@ export const AllPermissions: Permission[] = [
   CanGetImage,
   CanGetImages,
   CanDeleteImage,
+  CanCreateDocument,
+  CanGetDocument,
+  CanGetDocuments,
+  CanDeleteDocument,
   CanCreateArticle,
   CanGetArticle,
   CanGetArticles,
@@ -1157,6 +1206,9 @@ export const AllPermissions: Permission[] = [
   CanCreateMailProviderSettings,
   CanUpdateMailProviderSettings,
   CanDeleteMailProviderSettings,
+  CanCreateExternalApp,
+  CanUpdateExternalApp,
+  CanDeleteExternalApp,
   CanGetAnalyticsProviderSettings,
   CanCreateAnalyticsProviderSettings,
   CanUpdateAnalyticsProviderSettings,
@@ -1188,6 +1240,10 @@ export const EditorPermissions: Permission[] = [
   CanCreateImage,
   CanGetImage,
   CanGetImages,
+  CanCreateDocument,
+  CanGetDocument,
+  CanGetDocuments,
+  CanDeleteDocument,
   CanCreateArticle,
   CanGetArticle,
   CanGetArticles,

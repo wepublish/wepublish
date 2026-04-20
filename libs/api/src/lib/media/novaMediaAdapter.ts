@@ -7,14 +7,17 @@ import {
   ImageTransformation,
   ImageWithFocalPoint,
   MediaAdapter,
+  UploadDocument,
   UploadImage,
 } from '@wepublish/image/api';
 import {
-  getSignatureForImage,
+  signImageTransformations,
   TransformationsDto,
   TransformationsSchema,
 } from '@wepublish/media-transform-guard';
 import { validateImageDimension } from '@wepublish/media-transform-guard';
+import { SignJWT, importPKCS8, type KeyLike } from 'jose';
+import { v4 as uuidv4 } from 'uuid';
 
 export class MediaServerError extends Error {
   constructor(message: string) {
@@ -23,12 +26,36 @@ export class MediaServerError extends Error {
 }
 
 export class NovaMediaAdapter implements MediaAdapter {
+  private privateKeyPromise: Promise<KeyLike>;
+
   constructor(
     private url: URL,
-    private token: string,
+    private jwtPrivateKey: string,
+    private hostUrl: string,
     private config: { quality: number },
     private internalURL: URL = url
-  ) {}
+  ) {
+    this.privateKeyPromise = importPKCS8(
+      this.jwtPrivateKey,
+      'EdDSA'
+    ) as Promise<KeyLike>;
+  }
+
+  private async generateAuthToken(
+    imageId: string,
+    action: 'upload' | 'delete'
+  ): Promise<string> {
+    const key = await this.privateKeyPromise;
+
+    return new SignJWT({ action })
+      .setProtectedHeader({ alg: 'EdDSA' })
+      .setSubject(imageId)
+      .setIssuer(this.hostUrl)
+      .setAudience('wepublish-media-server')
+      .setExpirationTime('5m')
+      .setIssuedAt()
+      .sign(key);
+  }
 
   async _uploadImage(form: FormData): Promise<UploadImage> {
     // The form-data module reports a known length for the stream returned by createReadStream,
@@ -36,9 +63,14 @@ export class NovaMediaAdapter implements MediaAdapter {
     // Related issue: https://github.com/form-data/form-data/issues/394
     form.hasKnownLength = () => false;
 
-    const response = await fetch(this.internalURL, {
+    const imageId = uuidv4();
+    const token = await this.generateAuthToken(imageId, 'upload');
+    const uploadUrl = new URL(this.internalURL.toString());
+    uploadUrl.searchParams.set('imageId', imageId);
+
+    const response = await fetch(uploadUrl, {
       method: 'POST',
-      headers: { authorization: `Bearer ${this.token}` },
+      headers: { authorization: `Bearer ${token}` },
       body: form,
       // will work with newer node version, @ts-expect-error doesn't work here unfortunately
       signal: AbortSignal.timeout(50000) as any,
@@ -107,9 +139,11 @@ export class NovaMediaAdapter implements MediaAdapter {
   }
 
   async deleteImage(id: string): Promise<boolean> {
+    const token = await this.generateAuthToken(id, 'delete');
+
     const response = await fetch(`${this.internalURL}/${id}`, {
       method: 'DELETE',
-      headers: { authorization: `Bearer ${this.token}` },
+      headers: { authorization: `Bearer ${token}` },
     });
 
     if (response.status >= 400) {
@@ -191,10 +225,92 @@ export class NovaMediaAdapter implements MediaAdapter {
 
     const transformationsDto = this.parseTransformations(queryParameters);
 
-    const signature = getSignatureForImage(image.id, transformationsDto);
+    const privateKey = await this.privateKeyPromise;
+    const signature = await signImageTransformations(
+      privateKey,
+      image.id,
+      transformationsDto
+    );
     queryParameters.push(`sig=${signature}`);
 
     return encodeURI(`${this.url}/${image.id}?${queryParameters.join('&')}`);
+  }
+
+  async uploadDocument(
+    fileUpload: Promise<FileUpload>
+  ): Promise<UploadDocument> {
+    const form = new FormData();
+
+    const {
+      filename: inputFilename,
+      mimetype,
+      createReadStream,
+    }: FileUpload = await fileUpload;
+    form.append('file', createReadStream(), {
+      filename: inputFilename,
+      contentType: mimetype,
+    });
+
+    return this._uploadDocument(form);
+  }
+
+  async _uploadDocument(form: FormData): Promise<UploadDocument> {
+    form.hasKnownLength = () => false;
+
+    const documentId = uuidv4();
+    const token = await this.generateAuthToken(documentId, 'upload');
+    const uploadUrl = new URL(`${this.internalURL}/document`);
+    uploadUrl.searchParams.set('documentId', documentId);
+
+    const response = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${token}` },
+      body: form,
+      signal: AbortSignal.timeout(50000) as any,
+    });
+
+    const json = await response.json();
+
+    if (response.status >= 400) {
+      throw new MediaServerError(response.statusText);
+    }
+
+    const { id, filename, fileSize, mimeType, extension } = json;
+
+    return { id, filename, fileSize, mimeType, extension };
+  }
+
+  async deleteDocument(id: string): Promise<boolean> {
+    const token = await this.generateAuthToken(id, 'delete');
+
+    const response = await fetch(`${this.internalURL}/document/${id}`, {
+      method: 'DELETE',
+      headers: { authorization: `Bearer ${token}` },
+    });
+
+    if (response.status >= 400) {
+      throw new MediaServerError(response.statusText);
+    }
+
+    return true;
+  }
+
+  async getDocumentURL(document: {
+    id: string;
+    filename?: string | null;
+    extension?: string;
+  }): Promise<string> {
+    const name =
+      document.filename ?
+        `${encodeURIComponent(document.filename)}${document.extension ?? ''}`
+      : '';
+    return name ?
+        `${this.url}/document/${document.id}/${name}`
+      : `${this.url}/document/${document.id}`;
+  }
+
+  async getDocumentThumbnailURL(document: { id: string }): Promise<string> {
+    return `${this.url}/document/${document.id}/thumbnail`;
   }
 
   /**

@@ -1,5 +1,6 @@
 import { CSSObject } from '@emotion/react';
 import { createTheme, Theme, ThemeOptions } from '@mui/material';
+import { css, GlobalStyles } from '@mui/material';
 import { responsiveProperty, theme as WePTheme } from '@wepublish/ui';
 import localFont from 'next/font/local';
 import { mergeDeepRight, reduce } from 'ramda';
@@ -160,7 +161,7 @@ const theme = createTheme(WePTheme, {
     h1: titleBlock,
     h2: titleBlock,
     h3: {
-      fontFamily: [gtSuperText.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
     },
     h4: {
       fontFamily: [gtSuperText.style.fontFamily, 'sans-serif'].join(','),
@@ -183,7 +184,25 @@ const theme = createTheme(WePTheme, {
       letterSpacing: 0.8,
     },
     caption: {
-      fontFamily: [gtSuperText.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'rem',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 16,
+          },
+        }),
+        responsiveProperty({
+          cssProperty: 'lineHeight',
+          unit: 'rem',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 22,
+          },
+        }),
+      ]),
     },
     overline: {
       fontFamily: [gtSuperText.style.fontFamily, 'sans-serif'].join(','),
@@ -196,7 +215,112 @@ const theme = createTheme(WePTheme, {
       ...fontSmall,
       fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
     },
-    fontFamily: [gtSuperText.style.fontFamily, 'sans-serif'].join(','),
+    blockTitlePreTitle: {
+      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'rem',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 16,
+          },
+        }),
+        responsiveProperty({
+          cssProperty: 'lineHeight',
+          unit: 'rem',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 22,
+          },
+        }),
+      ]),
+    },
+    teaserPretitle: {
+      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'rem',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 16,
+          },
+        }),
+        responsiveProperty({
+          cssProperty: 'lineHeight',
+          unit: 'rem',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 22,
+          },
+        }),
+      ]),
+    },
+    teaserTitle: {
+      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'rem',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 32,
+          },
+        }),
+        responsiveProperty({
+          cssProperty: 'lineHeight',
+          unit: 'rem',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 36,
+          },
+        }),
+      ]),
+    },
+    teaserLead: {
+      fontFamily: [gtSuperText.style.fontFamily, 'sans-serif'].join(','),
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'rem',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 19,
+          },
+        }),
+        responsiveProperty({
+          cssProperty: 'lineHeight',
+          unit: 'rem',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 24,
+          },
+        }),
+      ]),
+    },
+    teaserMeta: {
+      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'rem',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 12,
+          },
+        }),
+        responsiveProperty({
+          cssProperty: 'lineHeight',
+          unit: 'rem',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 16,
+          },
+        }),
+      ]),
+    },
+    fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
   },
   palette: {
     primary: augmentColor({
@@ -222,6 +346,34 @@ const theme = createTheme(WePTheme, {
     }),
   },
   components: {
+    MuiAlert: {
+      styleOverrides: {
+        root: {
+          alignItems: 'center',
+        },
+        message: {
+          fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+          ...mergeDeepAll([
+            responsiveProperty({
+              cssProperty: 'fontSize',
+              unit: 'rem',
+              breakpoints: WePTheme.breakpoints.values,
+              values: {
+                xs: 12,
+              },
+            }),
+            responsiveProperty({
+              cssProperty: 'lineHeight',
+              unit: 'rem',
+              breakpoints: WePTheme.breakpoints.values,
+              values: {
+                xs: 16,
+              },
+            }),
+          ]),
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: ({ ownerState, theme }) => {
@@ -251,4 +403,56 @@ const theme = createTheme(WePTheme, {
   } as ThemeOptions['components'],
 } as PartialDeep<Theme> | ThemeOptions);
 
+export const ContentTheme = createTheme(theme, {
+  typography: {
+    body: {
+      fontFamily: [gtSuperText.style.fontFamily, 'sans-serif'].join(','),
+    },
+    h3: {
+      fontFamily: [gtSuperText.style.fontFamily, 'sans-serif'].join(','),
+    },
+  },
+} as PartialDeep<Theme> | ThemeOptions);
+
+export const AlternatingTeaserTheme = createTheme(theme, {
+  typography: {
+    teaserTitle: {
+      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'rem',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 48,
+          },
+        }),
+        responsiveProperty({
+          cssProperty: 'lineHeight',
+          unit: 'rem',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 54,
+          },
+        }),
+      ]),
+    },
+  },
+} as PartialDeep<Theme> | ThemeOptions);
+
 export { theme as default };
+
+export const globalStyles = (
+  <GlobalStyles
+    styles={theme => css`
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        text-wrap: pretty;
+      }
+    `}
+  />
+);

@@ -44,7 +44,6 @@ api:
   env:
     GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
     DATABASE_URL: postgres://
-    MEDIA_SERVER_TOKEN: ''
     JWT_PRIVATE_KEY: ''
     JWT_PUBLIC_KEY: ''
     SENTRY_DSN: ''
@@ -62,7 +61,7 @@ api:
       urlAdapter: default
     mailProvider:
       id: slackMail
-      fromAddress: dev@wepublish.dev
+      fromAddress: dev@wepublish.ch
       webhookURL: 'SLACK_DEV_MAIL_WEBHOOK_URL'
     paymentProviders: []
 #      - type: payrexx

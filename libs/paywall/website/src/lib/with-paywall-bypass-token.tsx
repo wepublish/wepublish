@@ -1,6 +1,5 @@
 import { ComponentType, memo } from 'react';
-import { storeBypassToken } from './paywall-bypass';
-import { collapseBanner } from '@wepublish/banner/website';
+import { storePaywallBypassToken } from './paywall-bypass';
 
 export const withPaywallBypassToken = <
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -16,8 +15,7 @@ export const withPaywallBypassToken = <
       if (paywallToken) {
         url.searchParams.delete('key');
         window.history.replaceState(null, '', url.toString());
-        storeBypassToken(paywallToken);
-        collapseBanner();
+        storePaywallBypassToken(paywallToken);
       }
     }
 

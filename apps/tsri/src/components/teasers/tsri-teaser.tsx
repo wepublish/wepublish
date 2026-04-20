@@ -149,7 +149,7 @@ export const TeaserPreTitleWrapper = styled('div')`
 export const TeaserContentWrapper = styled('article')`
   overflow: hidden;
   display: grid;
-  grid-template-rows: auto 6.25% auto 7.5% 6.75%;
+  grid-template-rows: auto 6.25% auto fit-content(1px) 6.75%;
   grid-template-columns: 50% 50%;
   gap: 0;
   border-radius: calc((9 * 100cqw / 16) * 0.03);
@@ -187,8 +187,14 @@ export const TeaserAuthorTextWrapper = styled('span')``;
 export const TeaserAuthorWrapper = styled('span')``;
 
 export const TeaserMetadata = styled('div')`
-  grid-row: 4;
-  grid-column: 2 / 3;
+  ${({ theme }) => theme.breakpoints.up('xs')} {
+    && {
+      grid-row: 4;
+      grid-column: 2 / 3;
+      line-height: 1.2;
+      padding-bottom: 1cqw;
+    }
+  }
 `;
 
 export const TeaserTime = styled('time')``;

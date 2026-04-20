@@ -1,13 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`UserConsentService should create a user consent 1`] = `
-[
-  {
-    "id": "0c6e7727-711b-40ee-b8b8-22170a085c51",
-    "userId": "clf870cla0719q1rx6vg0y2rj",
-    "value": true,
-  },
-]
+{
+  "id": "0c6e7727-711b-40ee-b8b8-22170a085c51",
+  "userId": "clf870cla0719q1rx6vg0y2rj",
+  "value": true,
+}
 `;
 
 exports[`UserConsentService should create a user consent 2`] = `
@@ -71,7 +69,7 @@ exports[`UserConsentService should filter user consents 2`] = `
   "where": {
     "consent": {
       "name": undefined,
-      "slug": undefined,
+      "slug": "new slug 2",
     },
     "value": undefined,
   },
@@ -79,23 +77,21 @@ exports[`UserConsentService should filter user consents 2`] = `
 `;
 
 exports[`UserConsentService should get a single user consent by id 1`] = `
-[
-  {
-    "consent": {
-      "id": "448c86d8-9df1-4836-9ae9-aa2668ef9dcd",
-      "name": "Newsletter",
-      "slug": "newsletter-aaa",
-    },
-    "createdAt": "2023-03-17T12:08:17.277Z",
-    "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
-    "modifiedAt": "2023-03-17T12:08:17.278Z",
-    "user": {
-      "__typename": "User",
-      "id": "clfb7nce50264cvrxlliyxung",
-    },
-    "value": true,
+{
+  "consent": {
+    "id": "448c86d8-9df1-4836-9ae9-aa2668ef9dcd",
+    "name": "Newsletter",
+    "slug": "newsletter-aaa",
   },
-]
+  "createdAt": "2023-03-17T12:08:17.277Z",
+  "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
+  "modifiedAt": "2023-03-17T12:08:17.278Z",
+  "user": {
+    "__typename": "User",
+    "id": "clfb7nce50264cvrxlliyxung",
+  },
+  "value": true,
+}
 `;
 
 exports[`UserConsentService should get a single user consent by id 2`] = `

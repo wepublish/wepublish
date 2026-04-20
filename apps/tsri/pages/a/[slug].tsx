@@ -54,10 +54,11 @@ const AfterArticleTitle = styled(H2)`
 
 export const AfterArticleAuthorWrapper = styled(ContentWrapper)`
   display: grid;
-  grid-template-columns: unset;
+  grid-template-columns: min-content auto;
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-columns: min-content 1fr min-content;
+    max-width: unset;
   }
 `;
 

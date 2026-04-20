@@ -1,4 +1,13 @@
 import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+
+export const createPrismaClient = () => {
+  const adapter = new PrismaPg({
+    connectionString: process.env.DATABASE_URL || 'postgresql://',
+  });
+
+  return new PrismaClient({ adapter });
+};
 
 export const clearDatabase = async (
   prismaService: PrismaClient,
