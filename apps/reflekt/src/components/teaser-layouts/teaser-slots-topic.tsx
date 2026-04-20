@@ -8,6 +8,7 @@ import {
   SliderArrow,
   SliderBall,
   SliderBallContainer,
+  SliderInnerContainer,
   SliderWrapper,
   TeaserSlider,
   TeaserSlotsBlockTeasers,
@@ -46,6 +47,11 @@ export const TeaserSlotsTopicWrapper = styled(TeaserSlotsBlockWrapperDefault)<{
       width: 100%;
     }
   }
+
+  ${SliderInnerContainer} {
+    gap: 0;
+  }
+
 
   .keen-slider__slide {
     ${({ theme }) => theme.breakpoints.down('md')} {

@@ -186,17 +186,12 @@ export const NavbarHamburgerButton = styled(IconButton, {
     propName !== 'isMenuOpen' && propName !== 'isTransitioning',
 })<{ isMenuOpen: boolean; isTransitioning: boolean }>`
   background-color: ${theme.palette.primary.dark};
-  width: 4rem;
-  height: 3.5rem;
+  width: 75px;
+  height: 75px;
   border-radius: 0;
   transition: transform 100ms ease-out;
   position: relative;
   transform-origin: top left;
-
-  ${theme.breakpoints.up('md')} {
-    width: 4.75rem;
-    height: 4.75rem;
-  }
 
   &:hover {
     ${({ isTransitioning }) => {
@@ -221,27 +216,23 @@ export const NavbarHamburgerButton = styled(IconButton, {
   & > span {
     position: absolute;
     left: 50%;
-    margin-left: -25%;
+    transform: translateX(-15px);
     top: 50%;
-    width: 60%;
-    height: 3px;
+    width: 30px;
+    height: 2px;
     background-color: ${theme.palette.common.white};
     transition: all 300ms cubic-bezier(0.84, 0.06, 0.52, 1.8);
     transition: all 300ms ease-out;
     opacity: 1;
-
-    ${theme.breakpoints.up('md')} {
-      margin-left: -30%;
-    }
   }
 
   & > span:nth-of-type(1) {
-    transform: translateY(-8px);
+    transform: translate(-15px, -9px);
     animation-delay: 100ms;
   }
 
   & > span:nth-of-type(3) {
-    transform: translateY(8px);
+    transform: translate(-15px, 9px);
     animation-delay: 250ms;
   }
   ${({ isMenuOpen }) =>
@@ -249,12 +240,13 @@ export const NavbarHamburgerButton = styled(IconButton, {
       css`
         transform: scale(1.05);
         & > span:nth-of-type(1) {
-          transform: rotate(40deg);
+          transform: translateX(-15px) rotate(40deg);
         }
         & > span:nth-of-type(2) {
-          transform: rotate(-40deg);
+          transform: translateX(-15px) rotate(-40deg);
         }
         & > span:nth-of-type(3) {
+          transform: translate(-15px, 9px);
           opacity: 0;
         }
       `
@@ -272,10 +264,10 @@ export const NavbarMain = styled('div', {
 })<{ isMenuOpen?: boolean }>`
   grid-column: -1 / 1;
   grid-row: 1 / 2;
-  margin: 0 0 0 ${({ theme }) => theme.spacing(-3)};
+  margin: 0 0 0 ${({ theme }) => theme.spacing(-2)};
   column-gap: ${({ theme }) => theme.spacing(2)};
   display: grid;
-  grid-template-columns: repeat(3, auto);
+  grid-template-columns: unset;
   align-items: center;
   justify-self: end;
   align-self: flex-start;
@@ -283,7 +275,7 @@ export const NavbarMain = styled('div', {
   z-index: 30;
 
   ${theme.breakpoints.up('md')} {
-    column-gap: ${theme.spacing(1)};
+    margin: 0 0 0 ${({ theme }) => theme.spacing(-3)};
   }
 
   ${({ isMenuOpen }) =>
@@ -302,7 +294,7 @@ export const NavbarMain = styled('div', {
 export const NavbarActions = styled('div', {
   shouldForwardProp: propName => propName !== 'isMenuOpen',
 })<{ isMenuOpen?: boolean }>`
-  display: none;
+  display: flex;
   flex-flow: row wrap;
   align-items: center;
   gap: ${theme.spacing(1)};
@@ -314,10 +306,7 @@ export const NavbarActions = styled('div', {
   z-index: 20;
   pointer-events: all;
   padding-right: ${theme.spacing(1.5)};
-
-  ${theme.breakpoints.up('md')} {
-    display: flex;
-  }
+  width: 100%;
 `;
 
 export const NavbarHomeLink = styled(Link)`
@@ -326,7 +315,7 @@ export const NavbarHomeLink = styled(Link)`
   grid-column: 1 / 2;
   grid-row: -1 / 1;
   align-self: flex-start;
-  display: grid;
+  display: none;
   align-items: center;
   justify-items: center;
   justify-self: left;
@@ -345,6 +334,7 @@ export const NavbarHomeLink = styled(Link)`
 
   ${theme.breakpoints.up('md')} {
     width: 15.5rem;
+    display: grid;
   }
 `;
 
@@ -355,7 +345,6 @@ export const ReflektLogo = styled('img', {
   transition: width 300ms ease-out;
   transform: translate3d(0, 0, 0);
   position: absolute;
-  display: none;
 
   width: 15.5rem;
   height: auto;
@@ -363,10 +352,6 @@ export const ReflektLogo = styled('img', {
   left: calc(50vw - 15.5rem + 2rem);
 
   mix-blend-mode: difference;
-
-  ${theme.breakpoints.up('md')} {
-    display: block;
-  }
 `;
 
 const OpenInvoicesAlert = styled('div')`
@@ -421,7 +406,7 @@ export const NavPaperLinksGroup = styled('div')`
   display: grid;
   column-gap: ${theme.spacing(2)};
   grid-row: 1 / 2;
-  grid-column: 2 / 3;
+  grid-column: -1 / 1;
   grid-template-columns: repeat(2, auto);
   grid-template-rows: repeat(2, auto);
   row-gap: ${theme.spacing(4)};
@@ -431,6 +416,7 @@ export const NavPaperLinksGroup = styled('div')`
     row-gap: unset;
     grid-template-rows: unset;
     grid-template-columns: repeat(3, min-content);
+    grid-template-columns: unset;
     opacity: 1;
     transition: opacity 250ms ease-in-out;
   }
@@ -440,7 +426,8 @@ export const NavPaperWrapper = styled('div', {
   shouldForwardProp: propName =>
     propName !== 'isMenuOpen' && propName !== 'isTransitioning',
 })<{ isMenuOpen: boolean; isTransitioning: boolean }>`
-  padding: ${theme.spacing(4)} ${theme.spacing(2)} 0 ${theme.spacing(2)};
+  padding: calc(${theme.spacing(5)} + var(--navbar-height)) ${theme.spacing(2)}
+    0 22.5px;
   background-color: ${theme.palette.primary.dark};
   color: ${theme.palette.common.white};
   top: 0;
@@ -459,11 +446,13 @@ export const NavPaperWrapper = styled('div', {
   grid-template-rows: min-content ${theme.spacing(6)};
   row-gap: ${theme.spacing(4)};
   grid-template-columns: 1fr minmax(max-content, 1285px) 1fr;
+  grid-template-columns: unset;
   position: absolute;
-  padding-top: calc(${theme.spacing(5)} + var(--navbar-height));
 
   ${theme.breakpoints.up('md')} {
     row-gap: unset;
+    padding: calc(${theme.spacing(5)} + var(--navbar-height))
+      ${theme.spacing(2)} 0 75px;
   }
 
   ${NavPaperLinksGroup} {
@@ -566,6 +555,10 @@ const buttonStyles: SxProps<Theme> = theme => ({
     },
   },
 });
+
+const SubscribeBtn = styled(Link)`
+  margin-left: auto;
+`;
 
 export interface ExtendedNavbarProps extends BuilderNavbarProps {
   isMenuOpen?: boolean;
@@ -776,6 +769,18 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
             </NavbarHomeLink>
 
             <NavbarActions isMenuOpen={isMenuOpen}>
+              <SubscribeBtn
+                {...(subscribeBtn as Omit<typeof subscribeBtn, 'variant'>)}
+                variant="buttonLinkMain"
+                onClick={() => {
+                  if (controlledIsMenuOpen === undefined) {
+                    setInternalMenuOpen(false);
+                  }
+                  onMenuToggle?.(false);
+                }}
+              >
+                Unterstützen
+              </SubscribeBtn>
               {hasUnpaidInvoices && profileBtn && (
                 <Button
                   LinkComponent={Link}
