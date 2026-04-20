@@ -835,7 +835,8 @@
       "totp": {
         "back": "Back",
         "setupDescription": "To secure your account, please set up two-factor authentication. Scan the QR code below with your authenticator app.",
-        "downloadApp": "Download FreeOTP:",
+        "downloadApp": "Download Proton Authenticator:",
+        "backupHint": "Enable backup or sync in the app so you won't be locked out if you lose your device.",
         "android": "Android",
         "ios": "iOS",
         "manualEntry": "Or enter this code manually in your authenticator app:",

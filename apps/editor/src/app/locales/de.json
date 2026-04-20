@@ -831,7 +831,8 @@
       "totp": {
         "back": "Zurück",
         "setupDescription": "Bitte richten Sie die Zwei-Faktor-Authentifizierung ein, um Ihr Konto zu schützen. Scannen Sie den QR-Code mit Ihrer Authenticator-App.",
-        "downloadApp": "FreeOTP herunterladen:",
+        "downloadApp": "Proton Authenticator herunterladen:",
+        "backupHint": "Aktivieren Sie Backup oder Sync in der App, damit Sie bei Geräteverlust nicht ausgesperrt werden.",
         "android": "Android",
         "ios": "iOS",
         "manualEntry": "Oder geben Sie diesen Code manuell in Ihre Authenticator-App ein:",

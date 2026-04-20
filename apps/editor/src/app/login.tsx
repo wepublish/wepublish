@@ -326,7 +326,7 @@ export function Login() {
           <AppLinks>
             {t('login.totp.downloadApp')}{' '}
             <a
-              href="https://play.google.com/store/apps/details?id=org.fedorahosted.freeotp"
+              href="https://play.google.com/store/apps/details?id=proton.android.authenticator"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -334,13 +334,15 @@ export function Login() {
             </a>
             {' | '}
             <a
-              href="https://apps.apple.com/app/freeotp-authenticator/id872559395"
+              href="https://apps.apple.com/app/proton-authenticator/id6741758667"
               target="_blank"
               rel="noopener noreferrer"
             >
               {t('login.totp.ios')}
             </a>
           </AppLinks>
+
+          <TotpDescription>{t('login.totp.backupHint')}</TotpDescription>
 
           {qrCode && (
             <QrCodeImage
