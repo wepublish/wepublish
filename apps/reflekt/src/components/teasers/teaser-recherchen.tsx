@@ -16,9 +16,9 @@ import {
   TeaserTitle,
 } from './reflekt-teaser';
 
-export const isTeaserRecherchen = hasBlockStyle(
-  ReflektBlockType.TeaserRecherchen
-);
+export const isTeaserRecherchen =
+  hasBlockStyle(ReflektBlockType.TeaserRecherchen) ||
+  hasBlockStyle(ReflektBlockType.TeaserRecherchenGrid);
 
 export const TeaserRecherchen = styled(ReflektTeaser)`
   aspect-ratio: 365/528;

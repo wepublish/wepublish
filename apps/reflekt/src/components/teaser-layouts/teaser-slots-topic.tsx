@@ -12,7 +12,7 @@ import {
   TeaserSlider,
   TeaserSlotsBlockWrapper as TeaserSlotsBlockWrapperDefault,
 } from '@wepublish/block-content/website';
-import { BlockContent } from '@wepublish/website/api';
+import { BlockContent, FlexAlignment } from '@wepublish/website/api';
 import {
   BuilderTeaserListBlockProps,
   BuilderTeaserSlotsBlockProps,
@@ -32,6 +32,8 @@ export const isTeaserSlotsTopic = (
     anyPass([
       hasBlockStyle(ReflektBlockType.TeaserRecherchen),
       hasBlockStyle(ReflektBlockType.TeaserNews),
+      hasBlockStyle(ReflektBlockType.TeaserRecherchenGrid),
+      hasBlockStyle(ReflektBlockType.TeaserNewsGrid),
     ]),
   ])(block);
 
@@ -49,6 +51,12 @@ export const TeaserSlotsTopicWrapper = styled(TeaserSlotsBlockWrapperDefault)<{
       width: calc(100vw - 64px) !important;
       min-width: calc(100vw - 64px) !important;
       max-width: calc(100vw - 64px) !important;
+    }
+  }
+
+  ${TeaserWrapper} {
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      width: 100%;
     }
   }
 
@@ -108,15 +116,23 @@ export const blockStyleByIndex = (
     : ReflektBlockType.TeaserMoreAbout;
 };
 
+function endsWithAny(suffixes: string[], string: string) {
+  for (const suffix of suffixes) {
+    if (string.endsWith(suffix)) return true;
+  }
+  return false;
+}
+
 export const TeaserSlotsTopic = ({
   blockStyle,
   className,
   teasers,
   title,
+  alignment,
 }: Pick<
   BuilderTeaserListBlockProps,
   'title' | 'teasers' | 'blockStyle' | 'className'
->) => {
+> & { alignment?: FlexAlignment }) => {
   const {
     blocks: { Teaser },
   } = useWebsiteBuilder();
@@ -132,42 +148,60 @@ export const TeaserSlotsTopic = ({
         blockStyle={blockStyle ?? undefined}
       >
         <Typography variant={'teaserSlotsTitle'}>{title}</Typography>
-        <TeaserSlider
-          teasers={filledTeasers.filter(
-            teaser =>
-              teaser?.__typename === 'ArticleTeaser' ||
-              teaser?.__typename === 'CustomTeaser'
-          )}
-          blockStyle={blockStyle}
-          numColumns={numColumns}
-          slidesPerViewConfig={{
-            xs: 'auto',
-            sm: 'auto',
-            md: 3,
-            lg: 3,
-            xl: 3,
-          }}
-          dragDisabled={
-            blockStyle === ReflektBlockType.TeaserNews ? isDesktop : false
-          }
-          detailsChanged={slider => {
-            slider.slides.forEach((slide: any) => {
-              slide.style.opacity = '1';
-              slide.style.visibility = 'visible';
-            });
-          }}
-        />
-        <Teaser
-          key={filledTeasers.length - 1}
-          index={filledTeasers.length - 1}
-          teaser={filledTeasers[filledTeasers.length - 1]}
-          alignment={alignmentForTeaserBlock(filledTeasers.length - 1, 3)}
-          blockStyle={blockStyleByIndex(
-            filledTeasers.length - 1,
-            filledTeasers.length,
-            blockStyle
-          )}
-        />
+        {blockStyle && endsWithAny(['Recherchen', 'News'], blockStyle) && (
+          <>
+            <TeaserSlider
+              teasers={filledTeasers.filter(
+                teaser =>
+                  teaser?.__typename === 'ArticleTeaser' ||
+                  (teaser?.__typename === 'CustomTeaser' &&
+                    teaser?.image !== null)
+              )}
+              blockStyle={blockStyle}
+              numColumns={numColumns}
+              slidesPerViewConfig={{
+                xs: 'auto',
+                sm: 'auto',
+                md: 3,
+                lg: 3,
+                xl: 3,
+              }}
+              dragDisabled={
+                blockStyle === ReflektBlockType.TeaserNews ? isDesktop : false
+              }
+              detailsChanged={slider => {
+                slider.slides.forEach((slide: any) => {
+                  slide.style.opacity = '1';
+                  slide.style.visibility = 'visible';
+                });
+              }}
+            />
+            <Teaser
+              key={filledTeasers.length - 1}
+              index={filledTeasers.length - 1}
+              teaser={filledTeasers[filledTeasers.length - 1]}
+              alignment={alignmentForTeaserBlock(filledTeasers.length - 1, 3)}
+              blockStyle={blockStyleByIndex(
+                filledTeasers.length - 1,
+                filledTeasers.length,
+                blockStyle
+              )}
+            />
+          </>
+        )}
+        {blockStyle && endsWithAny(['Grid'], blockStyle) && (
+          <>
+            {filledTeasers.map((teaser, index) => (
+              <Teaser
+                key={index}
+                index={index}
+                teaser={teaser}
+                alignment={alignmentForTeaserBlock(index, 3)}
+                blockStyle={blockStyle}
+              />
+            ))}
+          </>
+        )}
       </TeaserSlotsTopicWrapper>
     )
   );
