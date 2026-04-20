@@ -836,6 +836,8 @@
         "back": "Back",
         "setupDescription": "To secure your account, please set up two-factor authentication. Scan the QR code below with your authenticator app.",
         "downloadApp": "Download FreeOTP:",
+        "android": "Android",
+        "ios": "iOS",
         "manualEntry": "Or enter this code manually in your authenticator app:",
         "code": "Verification Code",
         "activate": "Activate 2FA",

@@ -5,6 +5,7 @@ import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { Button, Form as RForm, Message, toaster } from 'rsuite';
+
 import { Background } from './ui/loginBackground';
 
 const { Group, ControlLabel, Control } = RForm;

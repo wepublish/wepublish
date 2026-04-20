@@ -51,7 +51,6 @@ import fr from './locales/rsuiteFr';
 import { Login } from './login';
 import { LoginJwt } from './loginJwt';
 import { ResetPassword } from './resetPassword';
-import { SetNewPassword } from './setNewPassword';
 import { ArticleEditor } from './routes/articles/articleEditor';
 import { ArticleList } from './routes/articles/articleList';
 import { AudienceDashboard } from './routes/audience/audience-dashboard';
@@ -61,12 +60,12 @@ import { CommentRatingEditView } from './routes/commentRatings/commentRatingEdit
 import { CommentEditView } from './routes/comments/commentEditView';
 import { CommentList } from './routes/comments/commentList';
 import { Dashboard } from './routes/dashboard/dashboard';
+import { DocumentList } from './routes/documents/documentList';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
 import { EventListView } from './routes/events/eventListView';
 import { ExternalAppIframeView } from './routes/externalApps/externalAppIframeView';
 import { ExternalApps } from './routes/externalApps/externalAppsEdit';
-import { DocumentList } from './routes/documents/documentList';
 import { ImageList } from './routes/images/imageList';
 import { IntegrationEditView } from './routes/integrations/integrationEditView';
 import { IntegrationList } from './routes/integrations/integrationList';
@@ -93,6 +92,7 @@ import { TokenList } from './routes/tokens/tokenList';
 import { UserRoleList } from './routes/userRoles/userRoleList';
 import { UserEditView } from './routes/users/userEditView';
 import { UserList } from './routes/users/userList';
+import { SetNewPassword } from './setNewPassword';
 
 const LogoutMutation = gql`
   mutation Logout {

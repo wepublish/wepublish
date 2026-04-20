@@ -778,6 +778,8 @@
         "back": "Retour",
         "setupDescription": "Pour sécuriser votre compte, veuillez configurer l'authentification à deux facteurs. Scannez le code QR avec votre application d'authentification.",
         "downloadApp": "Télécharger FreeOTP :",
+        "android": "Android",
+        "ios": "iOS",
         "manualEntry": "Ou entrez ce code manuellement dans votre application d'authentification :",
         "code": "Code de vérification",
         "activate": "Activer 2FA",

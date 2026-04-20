@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import {
-  FullUserRoleFragment,
   LocalStorageKey,
   useCreateSessionWithJwtMutation,
   useEnableTotpMutation,
@@ -22,6 +21,7 @@ import React, {
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Form as RForm, Message, toaster } from 'rsuite';
+
 import { Background } from './ui/loginBackground';
 
 const { Group, ControlLabel, Control } = RForm;
@@ -93,46 +93,6 @@ export function LoginJwt() {
   const [totpSecret, setTotpSecret] = useState('');
   const [totpToken, setTotpToken] = useState('');
   const totpInputRef = useRef<HTMLInputElement>(null);
-
-  const finalizeLogin = useCallback(
-    (
-      sessionToken: string,
-      responseEmail: string,
-      userRoles: FullUserRoleFragment[]
-    ) => {
-      const permissions = userRoles.reduce((acc, role) => {
-        return [...acc, ...role.permissions.map(p => p.id)];
-      }, [] as string[]);
-
-      if (!permissions.includes('CAN_LOGIN_EDITOR')) {
-        toaster.push(
-          <Message
-            type="error"
-            showIcon
-            closable
-            duration={0}
-          >
-            {t('login.unauthorized')}
-          </Message>
-        );
-        return;
-      }
-
-      localStorage.setItem(LocalStorageKey.SessionToken, sessionToken);
-
-      authDispatch({
-        type: AuthDispatchActionType.Login,
-        payload: {
-          email: responseEmail,
-          sessionToken,
-          sessionRoles: userRoles,
-        },
-      });
-
-      navigate('/', { replace: true });
-    },
-    [authDispatch, navigate, t]
-  );
 
   const forceTotpSetup = useCallback(
     async (sessionToken: string) => {
@@ -213,11 +173,17 @@ export function LoginJwt() {
           </Message>
         );
 
+        const sessionToken = localStorage.getItem(LocalStorageKey.SessionToken);
+        if (!sessionToken) {
+          navigate('/login', { replace: true });
+          return;
+        }
+
         authDispatch({
           type: AuthDispatchActionType.Login,
           payload: {
             email,
-            sessionToken: localStorage.getItem(LocalStorageKey.SessionToken)!,
+            sessionToken,
           },
         });
 
@@ -260,7 +226,7 @@ export function LoginJwt() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Android
+            {t('login.totp.android')}
           </a>
           {' | '}
           <a
@@ -268,7 +234,7 @@ export function LoginJwt() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            iOS
+            {t('login.totp.ios')}
           </a>
         </AppLinks>
 

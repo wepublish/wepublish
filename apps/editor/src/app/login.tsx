@@ -330,7 +330,7 @@ export function Login() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Android
+              {t('login.totp.android')}
             </a>
             {' | '}
             <a
@@ -338,7 +338,7 @@ export function Login() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              iOS
+              {t('login.totp.ios')}
             </a>
           </AppLinks>
 

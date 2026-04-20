@@ -29,7 +29,7 @@ import {
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdDelete, MdPassword, MdLockReset } from 'react-icons/md';
+import { MdAdd, MdDelete, MdLockReset, MdPassword } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import {
   Button,

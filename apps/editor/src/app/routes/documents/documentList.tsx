@@ -24,6 +24,7 @@ import {
   Table,
   TableWrapper,
 } from '@wepublish/ui/editor';
+import prettyBytes from 'pretty-bytes';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -48,7 +49,6 @@ import {
   toaster,
 } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
-import prettyBytes from 'pretty-bytes';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
