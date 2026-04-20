@@ -97,8 +97,8 @@ export const WebsiteSettingsList = () => {
                 </Typography>
               ))}
 
-              {category.enabledIntegrations.length &&
-                category.disabledIntegrations.length && <Box pt={1} />}
+              {!!category.enabledIntegrations.length &&
+                !!category.disabledIntegrations.length && <Box pt={1} />}
 
               {category.disabledIntegrations.map(integration => (
                 <Typography
