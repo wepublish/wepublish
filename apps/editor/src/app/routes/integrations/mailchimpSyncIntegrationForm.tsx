@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import {
   DryRunMailchimpSyncMutation,
-  MailchimpSyncErrorsDocument,
   SyncProviderSettingsDocument,
   SyncProviderSettingsQuery,
   useDeleteAllMailchimpSyncErrorsMutation,
@@ -1580,7 +1579,9 @@ function SyncProviderSettingCard({
                 <DryRunTable>
                   <thead>
                     <tr>
-                      <th>Email</th>
+                      <th>
+                        {t('integrations.mailchimpSyncSettings.emailLabel')}
+                      </th>
                       <th>
                         {t('integrations.mailchimpSyncSettings.dryRunStatus')}
                       </th>
@@ -1666,11 +1667,15 @@ function SyncProviderSettingCard({
                 <DryRunTable>
                   <thead>
                     <tr>
-                      <th>Email</th>
+                      <th>
+                        {t('integrations.mailchimpSyncSettings.emailLabel')}
+                      </th>
                       <th>
                         {t('integrations.mailchimpSyncSettings.errorMessage')}
                       </th>
-                      <th>Status</th>
+                      <th>
+                        {t('integrations.mailchimpSyncSettings.statusLabel')}
+                      </th>
                       <th>
                         {t('integrations.mailchimpSyncSettings.errorDate')}
                       </th>

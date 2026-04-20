@@ -2000,6 +2000,8 @@
         "progressUpdated": "updated",
         "progressSkipped": "skipped",
         "progressErrors": "errors",
+        "emailLabel": "Email",
+        "statusLabel": "Status",
         "extensions": "Advanced extensions",
         "clickTracking": {
           "title": "Campaign click tracking",

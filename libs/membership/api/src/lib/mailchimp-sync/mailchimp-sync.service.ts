@@ -374,9 +374,6 @@ export class MailchimpSyncService {
             batchStatus = statusResponse.status;
 
             // Update progress based on batch stats
-            const completed =
-              (statusResponse.finished_operations ?? 0) +
-              (statusResponse.errored_operations ?? 0);
             this.updateProgress(config.id, {
               processed: processedCount,
               updated:
@@ -567,8 +564,9 @@ export class MailchimpSyncService {
     const allMembers: any[] = [];
     let offset = 0;
     const batchSize = 500;
+    let hasMore = true;
 
-    while (true) {
+    while (hasMore) {
       let response: any;
       try {
         response = await mailchimp.lists.getListMembersInfo(listId, {
@@ -599,9 +597,10 @@ export class MailchimpSyncService {
       allMembers.push(...(response.members ?? []));
 
       if (offset + batchSize >= (response.total_items ?? 0)) {
-        break;
+        hasMore = false;
+      } else {
+        offset += batchSize;
       }
-      offset += batchSize;
     }
 
     return allMembers;

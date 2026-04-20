@@ -1938,6 +1938,8 @@
         "progressUpdated": "aktualisiert",
         "progressSkipped": "übersprungen",
         "progressErrors": "Fehler",
+        "emailLabel": "E-Mail",
+        "statusLabel": "Status",
         "extensions": "Erweiterte Zusatzmodule",
         "clickTracking": {
           "title": "Kampagnen-Klick-Tracking",

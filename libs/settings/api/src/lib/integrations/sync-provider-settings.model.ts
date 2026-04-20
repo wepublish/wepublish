@@ -89,5 +89,5 @@ export class UpdateSettingSyncProviderInput extends PartialType(
   ArgsType
 ) {
   @Field()
-  id!: string;
+  override id!: string;
 }
