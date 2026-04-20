@@ -19,6 +19,8 @@ export class Validator {
       .optional(),
   });
 
+  static updateUser = Validator.createUser.partial();
+
   static createAddress = z
     .object({
       streetAddress: z.string(),
