@@ -157,12 +157,24 @@ const theme = createTheme(WePTheme, {
         textTransform: 'uppercase',
         fontWeight: 500,
         fontSize: '1.5rem',
+        textWrap: 'balanced',
+        [breakpoints.up('md')]: {
+          wordBreak: 'keep-all',
+          hyphens: 'none',
+          textWrap: 'unset',
+        },
       },
       // zwischentitel
       h5: {
         fontFamily: [recife.style.fontFamily, 'sans-serif'].join(','),
         fontWeight: 700,
         fontSize: '1.125rem',
+        textWrap: 'balanced',
+        [breakpoints.up('md')]: {
+          wordBreak: 'keep-all',
+          hyphens: 'none',
+          textWrap: 'unset',
+        },
       },
       h6: {
         fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
@@ -185,10 +197,12 @@ const theme = createTheme(WePTheme, {
       body1: {
         fontFamily: [recife.style.fontFamily, 'serif'].join(','),
         fontSize: '1.125rem',
+        lineHeight: 1.2,
       },
       body2: {
         fontFamily: [recife.style.fontFamily, 'serif'].join(','),
         fontSize: '1.125rem',
+        lineHeight: 1.2,
       },
     },
     button: {
@@ -301,7 +315,7 @@ const theme = createTheme(WePTheme, {
           fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
           fontStyle: 'normal',
           textTransform: 'uppercase',
-          fontSize: '1.125rem',
+          fontSize: '0.75rem',
           lineHeight: 1,
           fontWeight: 400,
         },
@@ -716,7 +730,7 @@ const theme = createTheme(WePTheme, {
       },
     },
   },
-} as PartialDeep<Theme> | ThemeOptions);
+} as unknown as PartialDeep<Theme> | ThemeOptions);
 
 export const teaserMoreAboutTheme = createTheme(theme, {
   typography: {

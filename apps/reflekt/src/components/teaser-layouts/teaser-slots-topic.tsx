@@ -10,6 +10,7 @@ import {
   SliderBallContainer,
   SliderWrapper,
   TeaserSlider,
+  TeaserSlotsBlockTeasers,
   TeaserSlotsBlockWrapper as TeaserSlotsBlockWrapperDefault,
 } from '@wepublish/block-content/website';
 import { BlockContent, FlexAlignment } from '@wepublish/website/api';
@@ -190,7 +191,7 @@ export const TeaserSlotsTopic = ({
           </>
         )}
         {blockStyle && endsWithAny(['Grid'], blockStyle) && (
-          <>
+          <TeaserSlotsBlockTeasers>
             {filledTeasers.map((teaser, index) => (
               <Teaser
                 key={index}
@@ -200,7 +201,7 @@ export const TeaserSlotsTopic = ({
                 blockStyle={blockStyle}
               />
             ))}
-          </>
+          </TeaserSlotsBlockTeasers>
         )}
       </TeaserSlotsTopicWrapper>
     )
