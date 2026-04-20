@@ -283,9 +283,10 @@ export class SessionService {
 
     try {
       await this.userService.validatePassword(password);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
       throw new BadRequestException(
-        error?.message || 'Password does not meet the requirements.'
+        message || 'Password does not meet the requirements.'
       );
     }
 

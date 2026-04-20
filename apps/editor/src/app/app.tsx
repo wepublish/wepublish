@@ -49,6 +49,7 @@ import { Base } from './base';
 import de from './locales/rsuiteDe';
 import fr from './locales/rsuiteFr';
 import { Login } from './login';
+import { LoginJwt } from './loginJwt';
 import { ResetPassword } from './resetPassword';
 import { SetNewPassword } from './setNewPassword';
 import { ArticleEditor } from './routes/articles/articleEditor';
@@ -261,6 +262,10 @@ export function App() {
             <Route
               path="login"
               element={<Login />}
+            />
+            <Route
+              path="login/jwt/:jwt"
+              element={<LoginJwt />}
             />
             <Route
               path="login/reset-password"

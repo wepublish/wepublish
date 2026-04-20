@@ -4,7 +4,6 @@ import {
   LocalStorageKey,
   useCheckLoginOtpLazyQuery,
   useCreateSessionMutation,
-  useCreateSessionWithJwtMutation,
   useEnableTotpMutation,
   useGenerateTotpSetupMutation,
 } from '@wepublish/editor/api';
@@ -23,7 +22,7 @@ import React, {
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Button,
   Form as RForm,
@@ -121,8 +120,6 @@ export function Login() {
   const emailInputRef = useRef<HTMLInputElement>(null);
   const totpInputRef = useRef<HTMLInputElement>(null);
 
-  const location = useLocation();
-  const params = useParams();
   const query = useQuery();
   const next = query.get('next');
 
@@ -131,8 +128,6 @@ export function Login() {
 
   const [checkLoginOtp] = useCheckLoginOtpLazyQuery();
   const [authenticate, { loading }] = useCreateSessionMutation();
-  const [authenticateWithJWT, { loading: loadingJWT, error: errorJWT }] =
-    useCreateSessionWithJwtMutation();
   const [generateTotpSetup, { loading: loadingSetup }] =
     useGenerateTotpSetupMutation();
   const [enableTotp, { loading: loadingEnable }] = useEnableTotpMutation();
@@ -201,48 +196,6 @@ export function Login() {
 
     return () => clearTimeout(timeout);
   }, [email, checkLoginOtp]);
-
-  // JWT login flow
-  useEffect(() => {
-    if (
-      location &&
-      location.pathname === '/login/jwt' &&
-      params &&
-      params.jwt
-    ) {
-      const { jwt } = params;
-      authenticateWithJWT({ variables: { jwt } })
-        .then((response: any) => {
-          const { token, totpEnabled, user } =
-            response.data.createSessionWithJWT;
-
-          if (!totpEnabled && !user.totpExempt) {
-            setEmail(user.email);
-            forceTotpSetup(token);
-          } else {
-            navigate('/login', { replace: true });
-          }
-        })
-        .catch(error => {
-          console.warn('auth error', error);
-          navigate('/login', { replace: true });
-        });
-    }
-  }, [authenticateWithJWT, location, navigate, params]);
-
-  useEffect(() => {
-    if (errorJWT?.message)
-      toaster.push(
-        <Message
-          type="error"
-          showIcon
-          closable
-          duration={0}
-        >
-          {errorJWT.message}
-        </Message>
-      );
-  }, [errorJWT]);
 
   useEffect(() => {
     if (loginStep === 'login' && emailInputRef.current) {
@@ -477,12 +430,6 @@ export function Login() {
           {t('login.forgotPassword')}
         </ForgotPasswordLink>
       </Form>
-
-      {loadingJWT && (
-        <div>
-          <p>{t('login.jwt')}</p>
-        </div>
-      )}
     </LoginTemplate>
   );
 }
