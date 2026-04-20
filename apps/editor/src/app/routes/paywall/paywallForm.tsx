@@ -11,7 +11,7 @@ import {
   RichTextBlockValue,
   SelectMemberPlans,
 } from '@wepublish/ui/editor';
-import QRCode from 'qrcode';
+import QRCodeStyling from 'qr-code-styling';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdDownload, MdQrCode } from 'react-icons/md';
@@ -65,10 +65,11 @@ const QRCodeContainer = styled.div`
   max-width: 100%;
   height: auto;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 12px;
   padding: 16px;
+  background: #ffffff;
 
-  canvas {
+  & > div {
     max-width: 100%;
     height: auto;
   }
@@ -94,8 +95,8 @@ export const PaywallForm = ({
   const [showQRModal, setShowQRModal] = useState(false);
   const [qrBaseUrl, setQrBaseUrl] = useState<string>('https://example.com');
   const [selectedToken, setSelectedToken] = useState('');
-  const qrCanvasRef = useRef<HTMLCanvasElement>(null);
-  const [qrSvgString, setQrSvgString] = useState('');
+  const qrContainerRef = useRef<HTMLDivElement>(null);
+  const qrCodeRef = useRef<QRCodeStyling | null>(null);
 
   const addBypass = () => {
     if (newBypassToken?.trim()) {
@@ -136,17 +137,10 @@ export const PaywallForm = ({
   };
 
   const downloadQRCode = () => {
-    if (qrSvgString) {
-      const blob = new Blob([qrSvgString], { type: 'image/svg+xml' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.download = `bypass-token-${selectedToken}.svg`;
-      link.href = url;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    }
+    qrCodeRef.current?.download({
+      name: `bypass-token-${selectedToken}`,
+      extension: 'svg',
+    });
   };
 
   const fullBypassUrl = useMemo<string>(
@@ -155,24 +149,26 @@ export const PaywallForm = ({
   );
 
   useEffect(() => {
-    if (showQRModal && fullBypassUrl && qrCanvasRef.current) {
-      QRCode.toCanvas(qrCanvasRef.current, fullBypassUrl, {
-        width: 300,
-        margin: 2,
-      });
-
-      QRCode.toString(
-        fullBypassUrl,
-        { type: 'svg', margin: 2 },
-        (error, svg) => {
-          if (!error) {
-            setQrSvgString(svg);
-          }
-        }
-      );
-
-      return () => setQrSvgString('');
+    if (!showQRModal || !fullBypassUrl || !qrContainerRef.current) {
+      return;
     }
+
+    const qr = new QRCodeStyling({
+      width: 300,
+      height: 300,
+      type: 'svg',
+      data: fullBypassUrl,
+      margin: 10,
+      qrOptions: { errorCorrectionLevel: 'M' },
+      dotsOptions: { type: 'classy-rounded', color: '#1a1a1a' },
+      cornersSquareOptions: { type: 'extra-rounded', color: '#1a1a1a' },
+      cornersDotOptions: { type: 'dot', color: '#1a1a1a' },
+      backgroundOptions: { color: '#ffffff' },
+    });
+
+    qrContainerRef.current.innerHTML = '';
+    qr.append(qrContainerRef.current);
+    qrCodeRef.current = qr;
   }, [showQRModal, fullBypassUrl]);
 
   return (
@@ -441,7 +437,7 @@ export const PaywallForm = ({
             placeholder={t('paywall.form.baseUrl')}
           />
           <QRCodeContainer>
-            <canvas ref={qrCanvasRef} />
+            <div ref={qrContainerRef} />
           </QRCodeContainer>
           <TokenUrl>{fullBypassUrl}</TokenUrl>
         </Modal.Body>

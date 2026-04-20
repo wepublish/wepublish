@@ -5505,8 +5505,6 @@ export type TokenWithSecret = BaseToken & {
 
 export type TotpSetup = {
   __typename?: 'TotpSetup';
-  /** QR code as data URL (base64 PNG) */
-  qrCode: Scalars['String'];
   /** Base32 encoded TOTP secret */
   secret: Scalars['String'];
   /** OTPAuth URI for authenticator apps */
@@ -6471,7 +6469,7 @@ export type RequestEmailChangeMutation = { __typename?: 'Mutation', requestEmail
 export type GenerateTotpSetupMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GenerateTotpSetupMutation = { __typename?: 'Mutation', generateTotpSetup: { __typename?: 'TotpSetup', secret: string, uri: string, qrCode: string } };
+export type GenerateTotpSetupMutation = { __typename?: 'Mutation', generateTotpSetup: { __typename?: 'TotpSetup', secret: string, uri: string } };
 
 export type EnableTotpMutationVariables = Exact<{
   totpToken: Scalars['String'];
@@ -9820,7 +9818,6 @@ export const GenerateTotpSetupDocument = gql`
   generateTotpSetup(website: true) {
     secret
     uri
-    qrCode
   }
 }
     `;

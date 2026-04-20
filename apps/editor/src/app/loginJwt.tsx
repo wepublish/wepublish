@@ -23,6 +23,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Form as RForm, Message, toaster } from 'rsuite';
 
 import { Background } from './ui/loginBackground';
+import { TotpQrCode } from './ui/totpQrCode';
 
 const { Group, ControlLabel, Control } = RForm;
 
@@ -30,12 +31,6 @@ const Form = styled(RForm)`
   display: flex;
   flex-direction: column;
   margin: 0;
-`;
-
-const QrCodeImage = styled.img`
-  display: block;
-  margin: 16px auto;
-  max-width: 200px;
 `;
 
 const SecretCode = styled.code`
@@ -89,7 +84,7 @@ export function LoginJwt() {
 
   const [step, setStep] = useState<'loading' | 'totp-setup'>('loading');
   const [email, setEmail] = useState('');
-  const [qrCode, setQrCode] = useState('');
+  const [totpUri, setTotpUri] = useState('');
   const [totpSecret, setTotpSecret] = useState('');
   const [totpToken, setTotpToken] = useState('');
   const totpInputRef = useRef<HTMLInputElement>(null);
@@ -102,7 +97,7 @@ export function LoginJwt() {
       try {
         const setupResponse = await generateTotpSetup();
         if (setupResponse.data?.generateTotpSetup) {
-          setQrCode(setupResponse.data.generateTotpSetup.qrCode);
+          setTotpUri(setupResponse.data.generateTotpSetup.uri);
           setTotpSecret(setupResponse.data.generateTotpSetup.secret);
         }
       } catch {
@@ -240,12 +235,7 @@ export function LoginJwt() {
 
         <TotpDescription>{t('login.totp.backupHint')}</TotpDescription>
 
-        {qrCode && (
-          <QrCodeImage
-            src={qrCode}
-            alt="TOTP QR Code"
-          />
-        )}
+        {totpUri && <TotpQrCode uri={totpUri} />}
 
         {totpSecret && (
           <>

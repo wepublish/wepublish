@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import * as OTPAuth from 'otpauth';
-import * as QRCode from 'qrcode';
 import {
   createCipheriv,
   createDecipheriv,
@@ -146,10 +145,6 @@ export class TotpService {
     return delta !== null;
   }
 
-  async generateQrCode(uri: string): Promise<string> {
-    return QRCode.toDataURL(uri);
-  }
-
   async setupTotp(userId: string, email: string, website?: boolean) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
@@ -163,15 +158,13 @@ export class TotpService {
     }
 
     const { secret, uri } = this.generateSecret(email, website);
-    const qrCode = await this.generateQrCode(uri);
 
-    // Store the secret encrypted (not yet enabled)
     await this.prisma.user.update({
       where: { id: userId },
       data: { totpSecret: this.encrypt(secret) },
     });
 
-    return { secret, uri, qrCode };
+    return { secret, uri };
   }
 
   async enableTotp(userId: string, token: string) {

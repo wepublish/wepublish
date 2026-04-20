@@ -5503,8 +5503,6 @@ export type TokenWithSecret = BaseToken & {
 
 export type TotpSetup = {
   __typename?: 'TotpSetup';
-  /** QR code as data URL (base64 PNG) */
-  qrCode: Scalars['String'];
   /** Base32 encoded TOTP secret */
   secret: Scalars['String'];
   /** OTPAuth URI for authenticator apps */

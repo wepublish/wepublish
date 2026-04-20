@@ -7,7 +7,4 @@ export class TotpSetup {
 
   @Field({ description: 'OTPAuth URI for authenticator apps' })
   uri!: string;
-
-  @Field({ description: 'QR code as data URL (base64 PNG)' })
-  qrCode!: string;
 }

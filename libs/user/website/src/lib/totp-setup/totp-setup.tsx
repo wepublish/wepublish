@@ -2,17 +2,12 @@ import styled from '@emotion/styled';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { TotpQrCode } from './totp-qr-code';
 
 const Wrapper = styled('div')`
   display: grid;
   gap: ${({ theme }) => theme.spacing(2)};
   max-width: 600px;
-`;
-
-const QrCodeImage = styled('img')`
-  display: block;
-  margin: 0 auto;
-  max-width: 200px;
 `;
 
 const SecretCode = styled('code')`
@@ -40,7 +35,7 @@ const AppLinksText = styled('p')`
 export type TotpSetupProps = {
   className?: string;
   totpEnabled: boolean;
-  onSetup: () => Promise<{ qrCode: string; secret: string } | null>;
+  onSetup: () => Promise<{ uri: string; secret: string } | null>;
   onEnable: (totpToken: string) => Promise<boolean>;
 };
 
@@ -56,7 +51,7 @@ export function TotpSetup({
   const { t } = useTranslation();
 
   const [showSetup, setShowSetup] = useState(false);
-  const [qrCode, setQrCode] = useState('');
+  const [uri, setUri] = useState('');
   const [secret, setSecret] = useState('');
   const [totpToken, setTotpToken] = useState('');
   const [loading, setLoading] = useState(false);
@@ -69,7 +64,7 @@ export function TotpSetup({
     try {
       const result = await onSetup();
       if (result) {
-        setQrCode(result.qrCode);
+        setUri(result.uri);
         setSecret(result.secret);
         setShowSetup(true);
       }
@@ -133,12 +128,7 @@ export function TotpSetup({
 
         <Alert severity="warning">{t('user.totp.backupHint')}</Alert>
 
-        {qrCode && (
-          <QrCodeImage
-            src={qrCode}
-            alt="TOTP QR Code"
-          />
-        )}
+        {uri && <TotpQrCode uri={uri} />}
 
         {secret && (
           <>

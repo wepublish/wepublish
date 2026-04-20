@@ -32,6 +32,7 @@ import {
 } from 'rsuite';
 
 import { Background } from './ui/loginBackground';
+import { TotpQrCode } from './ui/totpQrCode';
 
 function useQuery() {
   const { search } = useLocation();
@@ -48,12 +49,6 @@ const Form = styled(RForm)`
 
 const IconButton = styled(RIconButton)`
   margin-bottom: 10px;
-`;
-
-const QrCodeImage = styled.img`
-  display: block;
-  margin: 16px auto;
-  max-width: 200px;
 `;
 
 const SecretCode = styled.code`
@@ -114,7 +109,7 @@ export function Login() {
   const [totpToken, setTotpToken] = useState('');
   const [loginStep, setLoginStep] = useState<LoginStep>('login');
   const [otpRequired, setOtpRequired] = useState(false);
-  const [qrCode, setQrCode] = useState('');
+  const [totpUri, setTotpUri] = useState('');
   const [totpSecret, setTotpSecret] = useState('');
 
   const emailInputRef = useRef<HTMLInputElement>(null);
@@ -249,7 +244,7 @@ export function Login() {
     try {
       const setupResponse = await generateTotpSetup();
       if (setupResponse.data?.generateTotpSetup) {
-        setQrCode(setupResponse.data.generateTotpSetup.qrCode);
+        setTotpUri(setupResponse.data.generateTotpSetup.uri);
         setTotpSecret(setupResponse.data.generateTotpSetup.secret);
       }
     } catch (error) {
@@ -344,12 +339,7 @@ export function Login() {
 
           <TotpDescription>{t('login.totp.backupHint')}</TotpDescription>
 
-          {qrCode && (
-            <QrCodeImage
-              src={qrCode}
-              alt="TOTP QR Code"
-            />
-          )}
+          {totpUri && <TotpQrCode uri={totpUri} />}
 
           {totpSecret && (
             <>

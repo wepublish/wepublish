@@ -3796,9 +3796,6 @@ type TokenWithSecret implements BaseToken {
 }
 
 type TotpSetup {
-  """QR code as data URL (base64 PNG)"""
-  qrCode: String!
-
   """Base32 encoded TOTP secret"""
   secret: String!
 

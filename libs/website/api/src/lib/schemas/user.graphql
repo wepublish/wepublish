@@ -152,7 +152,6 @@ mutation GenerateTotpSetup {
   generateTotpSetup(website: true) {
     secret
     uri
-    qrCode
   }
 }
 

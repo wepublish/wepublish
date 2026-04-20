@@ -21,7 +21,7 @@ export function TotpSetupContainer({ className }: TotpSetupContainerProps) {
     const result = await generateTotpSetup();
     if (result.data?.generateTotpSetup) {
       return {
-        qrCode: result.data.generateTotpSetup.qrCode,
+        uri: result.data.generateTotpSetup.uri,
         secret: result.data.generateTotpSetup.secret,
       };
     }
