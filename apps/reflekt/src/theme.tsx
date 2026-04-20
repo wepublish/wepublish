@@ -362,6 +362,9 @@ const theme = createTheme(WePTheme, {
       textAlign: 'center',
       fontSize: '3rem',
       paddingBottom: '2rem',
+      ['&:empty']: {
+        display: 'none',
+      },
     },
     // Teaser
     ...{

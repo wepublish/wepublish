@@ -134,7 +134,9 @@ export const TeaserSlotsTopic = ({
         <Typography variant={'teaserSlotsTitle'}>{title}</Typography>
         <TeaserSlider
           teasers={filledTeasers.filter(
-            teaser => teaser?.__typename === 'ArticleTeaser'
+            teaser =>
+              teaser?.__typename === 'ArticleTeaser' ||
+              teaser?.__typename === 'CustomTeaser'
           )}
           blockStyle={blockStyle}
           numColumns={numColumns}

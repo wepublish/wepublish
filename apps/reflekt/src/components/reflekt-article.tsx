@@ -40,6 +40,7 @@ import { CollapsibleDownloadsWrapper } from './break-blocks/reflekt-collapsible-
 import { TocWrapper } from './break-blocks/reflekt-toc';
 import { ReflektQuoteBlock } from './reflekt-quote-block';
 import { TeaserSlotsCreditsWrapper } from './teaser-layouts/teaser-slots-credits';
+import { TeaserSlotsTopicWrapper } from './teaser-layouts/teaser-slots-topic';
 
 const fullWidthMainSpacer = (theme: Theme) => css`
   main > .MuiContainer-root {
@@ -97,9 +98,9 @@ export const ArticleWrapper = styled(ContentWrapper)<{
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-columns:
-      max(calc(100vw - var(--breakpoint-width)) / 2, 0px)
+      max(calc(100vw - var(--breakpoint-width) - 16px) / 2, 0px)
       repeat(12, 1fr)
-      max(calc(100vw - var(--breakpoint-width)) / 2, 0px) !important;
+      max(calc(100vw - var(--breakpoint-width) - 16px) / 2, 0px) !important;
     justify-content: center;
 
     & > *,
@@ -118,7 +119,8 @@ export const ArticleWrapper = styled(ContentWrapper)<{
           ${CollapsibleDownloadsWrapper},
           ${TocWrapper},
           ${ReflektQuoteBlock},
-          ${TeaserSlotsCreditsWrapper}
+          ${TeaserSlotsCreditsWrapper},
+          ${TeaserSlotsTopicWrapper}
       ) {
       grid-column: 2/14;
       margin-left: 0;
