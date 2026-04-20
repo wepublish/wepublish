@@ -1,18 +1,18 @@
 import styled from '@emotion/styled';
-import {
-  AuthTokenStorageKey,
-  UserFormWrapper,
-} from '@wepublish/authentication/website';
+import { UserFormWrapper } from '@wepublish/authentication/website';
 import { SubscribeWrapper } from '@wepublish/membership/website';
 import { PageContainer } from '@wepublish/page/website';
-import { getSessionTokenProps, ssrAuthLink } from '@wepublish/utils/website';
+import {
+  getSessionTokenProps,
+  ssrAuthLink,
+  handleJwtLogin,
+} from '@wepublish/utils/website';
 import { SubscribePage } from '@wepublish/utils/website';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
   InvoicesDocument,
-  LoginWithJwtDocument,
   MeDocument,
   MemberPlanListDocument,
   NavigationListDocument,
@@ -65,27 +65,7 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
     ),
   ]);
 
-  if (ctx.query.jwt) {
-    const data = await client.mutate({
-      mutation: LoginWithJwtDocument,
-      variables: {
-        jwt: ctx.query.jwt,
-      },
-    });
-
-    setCookie(
-      AuthTokenStorageKey,
-      JSON.stringify(
-        data.data.createSessionWithJWT as SessionWithTokenWithoutUser
-      ),
-      {
-        req: ctx.req,
-        res: ctx.res,
-        expires: new Date(data.data.createSessionWithJWT.expiresAt),
-        sameSite: 'strict',
-      }
-    );
-  }
+  await handleJwtLogin(ctx, client, undefined);
 
   const sessionProps = await getSessionTokenProps(ctx);
 

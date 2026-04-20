@@ -7,7 +7,10 @@ import {
 } from '@wepublish/authentication/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import { getSessionTokenProps, handleJwtLogin } from '@wepublish/utils/website';
-import { getV1ApiClient } from '@wepublish/website/api';
+import {
+  getV1ApiClient,
+  SessionWithTokenWithoutUser,
+} from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { NextPageContext } from 'next';

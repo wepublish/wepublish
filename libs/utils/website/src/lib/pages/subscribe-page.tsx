@@ -1,25 +1,21 @@
-import { setCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ssrAuthLink } from '../auth-link';
 import { getSessionTokenProps } from '../get-session-token-props';
+import { handleJwtLogin } from '../handle-jwt-login';
 import {
   SessionWithTokenWithoutUser,
   useSubscriptionsQuery,
 } from '@wepublish/website/api';
 import { MemberPlanListQueryVariables } from '@wepublish/website/api';
-import {
-  AuthTokenStorageKey,
-  useUser,
-} from '@wepublish/authentication/website';
+import { useUser } from '@wepublish/authentication/website';
 import {
   SubscribeContainer,
   UpgradeContainer,
 } from '@wepublish/membership/website';
 import {
   getV1ApiClient,
-  LoginWithJwtDocument,
   MemberPlanListDocument,
   NavigationListDocument,
   PeerProfileDocument,
@@ -139,28 +135,7 @@ SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
     ),
   ]);
 
-  if (ctx.query.jwt) {
-    const data = await client.mutate({
-      mutation: LoginWithJwtDocument,
-      variables: {
-        jwt: ctx.query.jwt,
-      },
-    });
-
-    setCookie(
-      AuthTokenStorageKey,
-      JSON.stringify(
-        data.data.createSessionWithJWT as SessionWithTokenWithoutUser
-      ),
-      {
-        req: ctx.req,
-        res: ctx.res,
-        expires: new Date(data.data.createSessionWithJWT.expiresAt),
-        sameSite: 'strict',
-        httpOnly: !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE,
-      }
-    );
-  }
+  await handleJwtLogin(ctx, client, !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE);
 
   const sessionProps = await getSessionTokenProps(ctx);
 

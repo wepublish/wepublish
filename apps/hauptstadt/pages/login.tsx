@@ -1,18 +1,17 @@
 import {
-  AuthTokenStorageKey,
   IntendedRouteStorageKey,
   LoginFormContainer,
   useUser,
 } from '@wepublish/authentication/website';
 import { PageContainer } from '@wepublish/page/website';
-import { getSessionTokenProps } from '@wepublish/utils/website';
+import { getSessionTokenProps, handleJwtLogin } from '@wepublish/utils/website';
 import {
   addClientCacheToV1Props,
   PageDocument,
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
-import { getV1ApiClient, LoginWithJwtDocument } from '@wepublish/website/api';
-import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import { getV1ApiClient } from '@wepublish/website/api';
+import { deleteCookie, getCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -66,30 +65,7 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
   const { publicRuntimeConfig } = getConfig();
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
 
-  if (ctx.query.jwt) {
-    const data = await client.mutate({
-      mutation: LoginWithJwtDocument,
-      variables: {
-        jwt: ctx.query.jwt,
-      },
-    });
-
-    setCookie(
-      AuthTokenStorageKey,
-      JSON.stringify(
-        data.data.createSessionWithJWT as SessionWithTokenWithoutUser
-      ),
-      {
-        req: ctx.req,
-        res: ctx.res,
-        expires: new Date(data.data.createSessionWithJWT.expiresAt),
-        sameSite: 'strict',
-        httpOnly: true,
-      }
-    );
-
-    return await getSessionTokenProps(ctx);
-  }
+  await handleJwtLogin(ctx, client, true);
 
   await Promise.all([
     client.query({
