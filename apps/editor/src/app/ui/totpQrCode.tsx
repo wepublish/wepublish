@@ -20,8 +20,8 @@ export function TotpQrCode({ uri }: { uri: string }) {
   const qr = useMemo(
     () =>
       new QRCodeStyling({
-        width: 220,
-        height: 220,
+        width: 280,
+        height: 280,
         type: 'svg',
         data: uri,
         margin: 8,
