@@ -36,6 +36,7 @@ import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import { GGNavbar } from '../src/components/gg-navbar';
 import theme from '../src/theme';
 
 setDefaultOptions({
@@ -92,6 +93,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
+          Navbar={GGNavbar}
           elements={{ Link: NextWepublishLink }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}

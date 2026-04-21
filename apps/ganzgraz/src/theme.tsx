@@ -1,58 +1,123 @@
 import { createTheme, Theme, ThemeOptions } from '@mui/material';
-import { theme as WePTheme } from '@wepublish/ui';
-import { Hanken_Grotesk } from 'next/font/google';
+import { responsiveProperty, theme as WePTheme } from '@wepublish/ui';
+import { League_Spartan } from 'next/font/google';
+import { Montserrat } from 'next/font/google';
+import { mergeDeepRight, reduce } from 'ramda';
 import { PartialDeep } from 'type-fest';
 
-const hankenGrotesk = Hanken_Grotesk({
+const mergeDeepAll = reduce(mergeDeepRight, {});
+
+const leagueSpartan = League_Spartan({
   weight: ['100', '300', '400', '500', '600', '700'],
-  style: ['italic', 'normal'],
+  style: ['normal'],
   subsets: ['latin'],
   display: 'swap',
   preload: true,
 });
 
+const montserrat = Montserrat({
+  weight: ['100', '300', '400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true,
+});
+
+const colors = {
+  primary: {
+    main: '#4E2996', // Dunkellila
+  },
+  secondary: {
+    main: '#CDB9EE', // Flieder
+  },
+  accent: {
+    main: '#FF8900', // Orange
+  },
+  common: {
+    black: '#000000',
+    white: '#ffffff',
+  },
+};
+
+const {
+  palette: { augmentColor },
+} = WePTheme;
+
 const theme = createTheme(WePTheme, {
+  palette: {
+    common: {
+      black: colors.common.black,
+      white: colors.common.white,
+    },
+    primary: augmentColor({
+      color: {
+        main: colors.primary.main,
+      },
+    }),
+    secondary: augmentColor({
+      color: {
+        main: colors.secondary.main,
+      },
+    }),
+    accent: augmentColor({
+      color: {
+        main: colors.accent.main,
+      },
+    }),
+  },
   typography: {
     h1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [leagueSpartan.style.fontFamily, 'sans-serif'].join(','),
     },
     h2: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [leagueSpartan.style.fontFamily, 'sans-serif'].join(','),
     },
     h3: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [leagueSpartan.style.fontFamily, 'sans-serif'].join(','),
     },
     h4: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [leagueSpartan.style.fontFamily, 'sans-serif'].join(','),
     },
     h5: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [leagueSpartan.style.fontFamily, 'sans-serif'].join(','),
     },
     h6: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [leagueSpartan.style.fontFamily, 'sans-serif'].join(','),
     },
     body1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [montserrat.style.fontFamily, 'sans-serif'].join(','),
     },
     body2: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [montserrat.style.fontFamily, 'sans-serif'].join(','),
     },
     button: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [montserrat.style.fontFamily, 'sans-serif'].join(','),
     },
     caption: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [montserrat.style.fontFamily, 'sans-serif'].join(','),
     },
     overline: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [montserrat.style.fontFamily, 'sans-serif'].join(','),
     },
     subtitle1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [leagueSpartan.style.fontFamily, 'sans-serif'].join(','),
     },
     subtitle2: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontFamily: [leagueSpartan.style.fontFamily, 'sans-serif'].join(','),
     },
-    fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    blockQuote: {
+      fontFamily: [montserrat.style.fontFamily, 'sans-serif'].join(','),
+      fontStyle: 'italic',
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          breakpoints: WePTheme.breakpoints.values,
+          unit: 'rem',
+          values: {},
+        }),
+      ]),
+    },
+    fontFamily: [montserrat.style.fontFamily, 'sans-serif'].join(','),
   },
 } as PartialDeep<Theme> | ThemeOptions);
 

@@ -536,7 +536,7 @@ export class ArticleService {
       const foundArticleIds = await this.prisma.$queryRaw<
         Array<{ id: string }>
       >`
-        SELECT a.id
+        SELECT DISTINCT a.id
         FROM articles a
           JOIN public."articles.revisions" ar
             ON a."id" = ar."articleId"

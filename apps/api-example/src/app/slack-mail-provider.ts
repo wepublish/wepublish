@@ -36,6 +36,7 @@ export class SlackMailProvider extends BaseMailProvider {
         'Conetent-type': 'application/json',
       },
       body: JSON.stringify(message),
+      signal: AbortSignal.timeout(5_000),
     });
   }
 

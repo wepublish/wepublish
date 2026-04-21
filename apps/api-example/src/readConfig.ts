@@ -146,6 +146,11 @@ type V0 = {
   systemPrompt: string;
 };
 
+type SyncProvider = {
+  type: 'mailchimp';
+  id: string;
+};
+
 type Config = {
   general: General;
   mailProvider: MailProvider;
@@ -153,6 +158,7 @@ type Config = {
   mediaServer: novaMediaServer;
   challenge: Turnstile | HCaptcha;
   trackingPixelProviders: TrackingPixels[];
+  syncProviders?: SyncProvider[];
   v0?: V0;
 };
 

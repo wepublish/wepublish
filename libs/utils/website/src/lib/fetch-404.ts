@@ -21,7 +21,7 @@ export const fetch404 = async (ctx: NextPageContext): Promise<void> => {
         NextInternalRequestMeta.initProtocol
       : 'https';
     const url = `${proto}://${ctx.req?.headers?.host}/${fourOhFourSlug}`;
-    const fetchRes = await fetch(url);
+    const fetchRes = await fetch(url, { signal: AbortSignal.timeout(5_000) });
     const notFoundPage = await fetchRes.text();
     res.write(notFoundPage);
     res.end();

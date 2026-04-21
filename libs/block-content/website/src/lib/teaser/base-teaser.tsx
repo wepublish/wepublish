@@ -11,6 +11,7 @@ import { ComponentType, PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isImageBlock } from '../image/image-block';
 import { isTitleBlock } from '../title/title-block';
+import { differenceInDays } from 'date-fns';
 
 export const selectTeaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
@@ -463,7 +464,10 @@ export const BaseTeaser = ({
   const tags =
     teaser && selectTeaserTags(teaser).filter(tag => tag.tag !== preTitle);
 
-  const updated = !!updatedPublishDate && updatedPublishDate !== publishDate;
+  const updated =
+    !!updatedPublishDate &&
+    !!publishDate &&
+    !!differenceInDays(new Date(updatedPublishDate), new Date(publishDate));
 
   const { t } = useTranslation();
   const { date } = useWebsiteBuilder();

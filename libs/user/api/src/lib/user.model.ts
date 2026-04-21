@@ -122,6 +122,17 @@ export class SensitiveDataUser extends BaseUser {
   @Field(() => [PaymentProviderCustomer], { nullable: true })
   paymentProviderCustomers?: PaymentProviderCustomer[];
 
+  @Field(() => Boolean, {
+    description: 'Whether two-factor authentication is enabled for this user.',
+  })
+  totpEnabled!: boolean;
+
+  @Field(() => Boolean, {
+    description:
+      'Whether this user is exempt from the two-factor authentication requirement.',
+  })
+  totpExempt!: boolean;
+
   @Field(() => [UserRole])
   roles!: UserRole[];
 }
@@ -217,6 +228,9 @@ export class CreateUserInput extends PickType(
 
   @Field(type => [PropertyInput])
   properties!: PropertyInput[];
+
+  @Field(() => Boolean, { nullable: true })
+  totpExempt?: boolean;
 }
 
 @ArgsType()
@@ -238,6 +252,7 @@ export class RegisterUserInput extends OmitType(
     'userImageID',
     'roleIDs',
     'properties',
+    'totpExempt',
   ] as const,
   ArgsType
 ) {

@@ -389,7 +389,7 @@ export class PageService {
   async performPageFullTextSearch(searchQuery: string): Promise<string[]> {
     try {
       const foundPageIds = await this.prisma.$queryRaw<Array<{ id: string }>>`
-        SELECT p.id
+        SELECT DISTINCT p.id
         FROM pages p
           JOIN public."pages.revisions" pr
             ON p."id" = pr."pageId"

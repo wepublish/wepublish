@@ -4,6 +4,7 @@ exports[`SessionResolver can be create via JWT 1`] = `
 [
   [
     "this-is-special-token",
+    undefined,
   ],
 ]
 `;
@@ -13,6 +14,7 @@ exports[`SessionResolver can be created via mail and password 1`] = `
   [
     "dev@wepublish.ch",
     "123",
+    undefined,
   ],
 ]
 `;

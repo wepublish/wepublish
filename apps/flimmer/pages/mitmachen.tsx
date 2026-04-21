@@ -1,19 +1,19 @@
-import { AuthTokenStorageKey } from '@wepublish/authentication/website';
 import { PageContainer } from '@wepublish/page/website';
-import { getSessionTokenProps, ssrAuthLink } from '@wepublish/utils/website';
+import {
+  getSessionTokenProps,
+  handleJwtLogin,
+  ssrAuthLink,
+} from '@wepublish/utils/website';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
   InvoicesDocument,
-  LoginWithJwtDocument,
   MeDocument,
   MemberPlanListDocument,
   NavigationListDocument,
   PageDocument,
   PeerProfileDocument,
-  SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
-import { setCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
 import getConfig from 'next/config';
 
@@ -29,27 +29,7 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
     ),
   ]);
 
-  if (ctx.query.jwt) {
-    const data = await client.mutate({
-      mutation: LoginWithJwtDocument,
-      variables: {
-        jwt: ctx.query.jwt,
-      },
-    });
-
-    setCookie(
-      AuthTokenStorageKey,
-      JSON.stringify(
-        data.data.createSessionWithJWT as SessionWithTokenWithoutUser
-      ),
-      {
-        req: ctx.req,
-        res: ctx.res,
-        expires: new Date(data.data.createSessionWithJWT.expiresAt),
-        sameSite: 'strict',
-      }
-    );
-  }
+  await handleJwtLogin(ctx, client, undefined);
 
   const sessionProps = await getSessionTokenProps(ctx);
 

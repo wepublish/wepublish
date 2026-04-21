@@ -1152,6 +1152,7 @@ export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
         active: true,
         roleIDs: [adminUserRole.id],
         password: await hashPassword('123'),
+        totpExempt: true,
       },
     }),
     prisma.user.create({
@@ -1162,6 +1163,7 @@ export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
         active: true,
         roleIDs: [editorUserRole.id],
         password: await hashPassword('123'),
+        totpExempt: true,
       },
     }),
   ]);
