@@ -1460,6 +1460,11 @@ enum InvoiceSort {
   PaidAt
 }
 
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
 type ListicleBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -1518,6 +1523,66 @@ type MailTemplateWithUrlAndStatusModel {
   remoteMissing: Boolean!
   status: String!
   url: String!
+}
+
+type MailchimpInterestGroup {
+  id: String!
+  name: String!
+}
+
+type MailchimpList {
+  id: String!
+  memberCount: Int!
+  name: String!
+}
+
+type MailchimpMergeField {
+  name: String!
+  tag: String!
+  type: String!
+}
+
+type MailchimpSyncDryRunChange {
+  email: String!
+  interests: JSONObject!
+  isNew: Boolean!
+  mergeFields: JSONObject!
+  previousInterests: JSONObject
+  previousMergeFields: JSONObject
+}
+
+type MailchimpSyncDryRunResult {
+  changes: [MailchimpSyncDryRunChange!]!
+  skippedCount: Int!
+  totalUserCount: Int!
+  updatedCount: Int!
+}
+
+type MailchimpSyncErrorList {
+  nodes: [MailchimpSyncErrorType!]!
+  totalCount: Int!
+}
+
+type MailchimpSyncErrorType {
+  createdAt: DateTime!
+  email: String!
+  errorMessage: String!
+  id: String!
+  statusCode: Int
+  syncProviderId: String!
+  userId: String!
+}
+
+type MailchimpSyncProgressType {
+  errorMessage: String
+  errors: Int!
+  finishedAt: DateTime
+  processed: Int!
+  skipped: Int!
+  startedAt: DateTime!
+  status: String!
+  total: Int!
+  updated: Int!
 }
 
 type MemberPlan implements HasImage {
@@ -1690,6 +1755,9 @@ type Mutation {
   """
   createUserSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
 
+  """Deletes all sync errors for a config so all contacts will be retried."""
+  deleteAllMailchimpSyncErrors(configId: String!): Boolean!
+
   """Deletes an article."""
   deleteArticle(id: String!): String!
 
@@ -1721,6 +1789,9 @@ type Mutation {
 
   """Deletes an existing invoice."""
   deleteInvoice(id: String!): Invoice!
+
+  """Deletes a single sync error so the contact will be retried."""
+  deleteMailchimpSyncError(id: String!): Boolean!
 
   """Deletes an existing memberplan."""
   deleteMemberPlan(id: String!): MemberPlan!
@@ -1781,6 +1852,11 @@ type Mutation {
 
   """Dislikes an article."""
   dislikeArticle(id: String!): Article!
+
+  """
+  Simulates a mailchimp sync without making changes. Returns what would be updated.
+  """
+  dryRunMailchimpSync(id: String!, limit: Int): MailchimpSyncDryRunResult!
 
   """Duplicates an article."""
   duplicateArticle(id: String!): Article!
@@ -1886,6 +1962,9 @@ type Mutation {
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
 
+  """Triggers a mailchimp sync in the background."""
+  triggerMailchimpSync(id: String!): Boolean!
+
   """Unpublishes all revisions of an article."""
   unpublishArticle(id: String!): Article!
 
@@ -1987,6 +2066,9 @@ type Mutation {
 
   """Update an existing subscription interval"""
   updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String): [SubscriptionFlowModel!]!
+
+  """Updates an existing sync provider setting."""
+  updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String): SettingSyncProvider!
 
   """Updates an existing mail flow"""
   updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
@@ -2907,6 +2989,21 @@ type Query {
   """Return all mail templates"""
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
 
+  """Fetches available interest groups for a Mailchimp list."""
+  mailchimpInterestGroups(configId: String!, listId: String!): [MailchimpInterestGroup!]!
+
+  """Fetches available Mailchimp lists/audiences for a sync config."""
+  mailchimpLists(configId: String!): [MailchimpList!]!
+
+  """Fetches available merge fields for a Mailchimp list."""
+  mailchimpMergeFields(configId: String!, listId: String!): [MailchimpMergeField!]!
+
+  """Returns sync errors for a given config."""
+  mailchimpSyncErrors(configId: String!, skip: Int, take: Int): MailchimpSyncErrorList!
+
+  """Returns the current sync progress for a config."""
+  mailchimpSyncProgress(configId: String!): MailchimpSyncProgressType
+
   """This query returns the user."""
   me: SensitiveDataUser
 
@@ -3021,6 +3118,12 @@ type Query {
 
   """Returns a paginated list of subscriptions based on the filters given."""
   subscriptionsAsCsv(autoRenew: Boolean, cancellationDateFrom: DateFilter, cancellationDateTo: DateFilter, deactivationDateFrom: DateFilter, deactivationDateTo: DateFilter, deactivationReason: String, extendable: Boolean, memberPlanID: String, paidUntilFrom: DateFilter, paidUntilTo: DateFilter, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, startsAtFrom: DateFilter, startsAtTo: DateFilter, subscriptionIDs: [String!], userHasAddress: Boolean, userID: String, userIDs: [String!]): String!
+
+  """Returns a single sync provider setting by id."""
+  syncProviderSetting(id: String!): SettingSyncProvider!
+
+  """Returns all sync provider settings."""
+  syncProviderSettings(filter: SettingSyncProviderFilter): [SettingSyncProvider!]!
 
   """Returns all mail flows"""
   systemMails: [SystemMailModel!]!
@@ -3378,6 +3481,30 @@ type SettingRestriction {
   minValue: Int
 }
 
+type SettingSyncProvider implements SettingProvider {
+  createdAt: DateTime!
+  enabled: Boolean
+  id: String!
+  lastLoadedAt: DateTime!
+  lastSyncAt: DateTime
+  lastSyncError: String
+  mailchimp_defaultInterestGroupIds: [String!]
+  mailchimp_extensions: JSONObject
+  mailchimp_interestGroupMappings: [JSONObject!]
+  mailchimp_listId: String
+  mailchimp_mergeFieldMappings: [JSONObject!]
+  modifiedAt: DateTime!
+  name: String
+  type: SyncProviderType!
+}
+
+input SettingSyncProviderFilter {
+  enabled: Boolean
+  id: String
+  name: String
+  type: SyncProviderType
+}
+
 input SettingTrackingPixelFilter {
   id: String
   name: String
@@ -3576,6 +3703,10 @@ type SubscriptionPeriod {
 enum SubscriptionSort {
   CreatedAt
   ModifiedAt
+}
+
+enum SyncProviderType {
+  MAILCHIMP
 }
 
 type SystemMailModel {

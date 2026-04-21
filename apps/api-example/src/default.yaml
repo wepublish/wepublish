@@ -30,6 +30,9 @@ trackingPixelProviders:
 mediaServer:
   type: 'nova'
   quality: 1
+syncProviders:
+  - type: mailchimp
+    id: mailchimp-sync
 v0:
   type: VO
   id: v0

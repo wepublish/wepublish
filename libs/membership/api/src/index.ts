@@ -23,3 +23,6 @@ export * from './lib/legacy/member-context.module';
 export * from './lib/invoice/invoice.model';
 export * from './lib/invoice/invoice.module';
 export * from './lib/invoice/has-invoice/has-invoice.model';
+
+export * from './lib/mailchimp-sync/mailchimp-sync.module';
+export * from './lib/mailchimp-sync/mailchimp-sync.service';
