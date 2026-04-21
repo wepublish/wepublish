@@ -41,6 +41,7 @@ import { MainSpacer } from '../src/components/main-spacer';
 import { ReflektArticle } from '../src/components/reflekt-article';
 import { ReflektAuthorList } from '../src/components/reflekt-author-list';
 import { ReflektAuthorListItem } from '../src/components/reflekt-author-list-item';
+import { ReflektBanner } from '../src/components/reflekt-banner';
 import {
   ReflektBlockRenderer,
   ReflektBlocks,
@@ -116,6 +117,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Tag={ReflektTag}
           AuthorList={ReflektAuthorList}
           AuthorListItem={ReflektAuthorListItem}
+          Banner={ReflektBanner}
           elements={{
             Link: NextWepublishLink,
             UnorderedList: ReflektUnorderedList,
