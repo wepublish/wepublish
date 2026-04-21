@@ -1507,7 +1507,7 @@ function SyncProviderSettingCard({
               : <MdSync />
             }
             onClick={handleDryRun}
-            disabled={dryRunning || !setting.enabled}
+            disabled={dryRunning}
           >
             {t('integrations.mailchimpSyncSettings.dryRun')}
           </Button>
