@@ -40,6 +40,10 @@ const SubmitBtn = styled(Link)`
   padding-top: 12px;
   padding-bottom: 12px;
   margin-left: 20px;
+
+  &:hover {
+    transform: unset;
+  }
 ` as typeof Link;
 
 export const BannerBase = ({

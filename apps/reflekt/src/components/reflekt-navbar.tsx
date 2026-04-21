@@ -320,21 +320,21 @@ export const NavbarHomeLink = styled(Link)`
   justify-items: center;
   justify-self: left;
 
-  & > svg {
-  transition: width 300ms ease-out;
-  transform: translate3d(0, 0, 0);
-  position: absolute;
-
-  width: 15.5rem;
-  height: auto;
-  top: 1.25rem;
-  left: calc(50vw - 15.5rem);
-
-  mix-blend-mode: difference;
-
   ${theme.breakpoints.up('md')} {
-    width: 15.5rem;
     display: grid;
+  }
+
+  & > svg {
+    transition: width 300ms ease-out;
+    transform: translate3d(0, 0, 0);
+    position: absolute;
+
+    width: 15.5rem;
+    height: auto;
+    top: 1.25rem;
+    left: calc(50vw - 15.5rem);
+
+    mix-blend-mode: difference;
   }
 `;
 
@@ -352,6 +352,7 @@ export const ReflektLogo = styled('img', {
   left: calc(50vw - 15.5rem + 2rem);
 
   mix-blend-mode: difference;
+  z-index: 32;
 `;
 
 const OpenInvoicesAlert = styled('div')`

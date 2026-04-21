@@ -569,12 +569,15 @@ const theme = createTheme(WePTheme, {
             fontWeight: 400,
             lineHeight: 1,
             boxShadow: `0 0 0 0 ${colors.common.black}`,
-            transition: 'box-shadow 120ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+            transform: 'translateY(0)',
+            transition:
+              'box-shadow 200ms cubic-bezier(0.34, 1.56, 0.64, 1), transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1)',
             '&:hover': {
               backgroundColor: colors.secondary.light,
               color: colors.common.black,
               textDecoration: 'none',
               boxShadow: `0 -12px 0 0 ${colors.common.black}`,
+              transform: 'translateY(12px)',
             },
           },
         },
@@ -595,12 +598,15 @@ const theme = createTheme(WePTheme, {
             fontWeight: 400,
             lineHeight: 1,
             boxShadow: `0 0 0 0 ${colors.secondary.light}`,
-            transition: 'box-shadow 120ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+            transform: 'translateY(0)',
+            transition:
+              'box-shadow 200ms cubic-bezier(0.34, 1.56, 0.64, 1), transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1)',
             '&:hover': {
               backgroundColor: colors.common.black,
               color: colors.common.white,
               textDecoration: 'none',
               boxShadow: `0 -12px 0 0 ${colors.secondary.light}`,
+              transform: 'translateY(12px)',
             },
           },
         },
@@ -766,7 +772,7 @@ export const teaserMoreAboutTheme = createTheme(theme, {
         color: colors.common.black,
         justifySelf: 'end',
         paddingRight: 0,
-        '&:has(.MuiTypography-buttonLinkMain, .MuiTypography-buttonLinkSecondary)':
+        '&:has(.MuiTypography-buttonLinkMain_______, .MuiTypography-buttonLinkSecondary_______)':
           {
             paddingTop: '12px',
           },
