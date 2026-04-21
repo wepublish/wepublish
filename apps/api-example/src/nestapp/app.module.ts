@@ -1,5 +1,6 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Global, Module } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -11,6 +12,7 @@ import {
   PaymentProviderType,
   SyncProviderType,
 } from '@prisma/client';
+import { SentryModule, SentryGlobalFilter } from '@sentry/nestjs/setup';
 import { ActionModule } from '@wepublish/action/api';
 import { NovaMediaAdapter } from '@wepublish/api';
 import { ArticleModule, HotAndTrendingModule } from '@wepublish/article/api';
@@ -76,7 +78,7 @@ import { PermissionModule } from '@wepublish/permissions/api';
 import { PhraseModule } from '@wepublish/phrase/api';
 import { PollModule } from '@wepublish/poll/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
-import { SettingModule } from '@wepublish/settings/api';
+import { SettingModule, SettingName } from '@wepublish/settings/api';
 import { StatsModule } from '@wepublish/stats/api';
 import { ExternalAppsModule } from '@wepublish/external-apps/api';
 import { SystemInfoModule } from '@wepublish/system-info';
@@ -106,6 +108,7 @@ import {
 @Global()
 @Module({
   imports: [
+    SentryModule.forRoot(),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
       imports: [ConfigModule],
@@ -201,6 +204,13 @@ import {
         const hostURL = config.get('HOST_URL') || 'http://localhost:4000';
         const websiteURL = config.get('WEBSITE_URL') || 'http://localhost:3000';
 
+        const jwtExpiresSetting = await prisma.setting.findUnique({
+          where: { name: SettingName.SEND_LOGIN_JWT_EXPIRES_MIN },
+        });
+        const jwtExpires =
+          (jwtExpiresSetting?.value as number) ??
+          parseInt(config.get('SEND_LOGIN_JWT_EXPIRES_MIN') ?? `${6 * 60}`);
+
         return {
           mailProvider,
           jwtGenerator: (userId: string) =>
@@ -209,7 +219,7 @@ import {
               privateKey: jwtPrivateKey,
               issuer: hostURL,
               audience: websiteURL,
-              expiresInMinutes: 6 * 60,
+              expiresInMinutes: jwtExpires,
             }),
         };
       },
@@ -562,6 +572,10 @@ import {
   ],
   exports: ['SYSTEM_INFO_KEY'],
   providers: [
+    {
+      provide: APP_FILTER,
+      useClass: SentryGlobalFilter,
+    },
     {
       provide: 'SYSTEM_INFO_KEY',
       useFactory: (config: ConfigService) => {

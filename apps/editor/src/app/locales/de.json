@@ -26,6 +26,8 @@
         "warningLabel": "Warnung"
       },
       "panels": {
+        "firstPublishedAtDate": "Erstpublikation am {{firstPublishedAtDate, dd.MM.yyyy HH:mm}}",
+        "notPublishedYet": "Artikel wurde noch nicht publiziert",
         "addSlug": "Bitte Slug erfassen",
         "allowPeerPublishing": "Peers erlauben, diesen Artikel zu publizieren.",
         "articlePending": "Eine Publikation ist bereits am {{pendingPublishDate, ccc PP p}} geplant. Eine erneute Publikation überschreibt diese.",

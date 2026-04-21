@@ -173,9 +173,11 @@ export class UserService {
 
   @PrimeDataLoader(UserDataloaderService)
   async updateUser({ id, address, properties, ...input }: UpdateUserInput) {
-    input.email =
-      input.email ? (input.email as string).toLowerCase() : input.email;
-    await Validator.createUser.parse(input);
+    if (input.email) {
+      input.email = (input.email as string).toLowerCase();
+    }
+
+    await Validator.updateUser.parse(input);
     await Validator.createAddress.parse(address);
 
     return this.prisma.user.update({

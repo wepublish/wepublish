@@ -288,7 +288,7 @@ export function TeaserSelectPanel({
     fetchMoreEvents({
       variables: {
         ...eventVariables,
-        cursor: eventListData?.events?.pageInfo.endCursor,
+        cursorId: eventListData?.events?.pageInfo.endCursor,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) {

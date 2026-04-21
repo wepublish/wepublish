@@ -128,7 +128,7 @@ export const useGetPageTypeBasedContent = (): PageTypeBasedProps => {
       };
     }
 
-    switch (router.asPath.split('/')[1]) {
+    switch (router.asPath.split('?')[0].split('/')[1]) {
       case 'login':
         return {
           pageType: PageType.Login,

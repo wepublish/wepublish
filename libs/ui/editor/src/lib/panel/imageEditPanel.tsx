@@ -178,7 +178,11 @@ function ImageEditPanel({
         setImageURL(image.mediumURL ?? '');
         setImageWidth(image.width);
         setImageHeight(image.height);
-        setFocalPoint(image.focalPoint ?? undefined);
+        setFocalPoint(
+          image.focalPoint ?
+            { x: image.focalPoint.x ?? 0.5, y: image.focalPoint.y ?? 0.5 }
+          : undefined
+        );
         setLoading(false);
       } else {
         toaster.push(
