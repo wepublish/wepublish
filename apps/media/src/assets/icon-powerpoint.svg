@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 260" width="200" height="260">
+  <rect x="20" y="10" width="160" height="240" rx="8" fill="#E65100" opacity="0.1" stroke="#E65100" stroke-width="3"/>
+  <text x="100" y="150" text-anchor="middle" font-family="Liberation Sans,Arial,sans-serif" font-size="42" font-weight="bold" fill="#E65100">PPT</text>
+</svg>

@@ -5,11 +5,7 @@ import {
   LoginFormContainer,
   useUser,
 } from '@wepublish/authentication/website';
-import {
-  getSessionTokenProps,
-  tryServerSideJwtLogin,
-  redirectToLoginWithError,
-} from '@wepublish/utils/website';
+import { getSessionTokenProps, handleJwtLogin } from '@wepublish/utils/website';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
 import { getV1ApiClient } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
@@ -81,16 +77,13 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
   const { publicRuntimeConfig } = getConfig();
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
 
-  if (ctx.query.jwt) {
-    const success = await tryServerSideJwtLogin(ctx, client);
+  const jwtSuccess = await handleJwtLogin(ctx, client);
 
-    if (success) {
-      return await getSessionTokenProps(ctx);
-    }
-
-    redirectToLoginWithError(ctx);
-    return {};
+  if (jwtSuccess) {
+    return await getSessionTokenProps(ctx);
   }
 
+  // If JWT login failed (e.g. 2FA required), the client-side
+  // withJwtHandler will retry with a TOTP prompt.
   return {};
 };

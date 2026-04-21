@@ -53,7 +53,7 @@ export class JwtService {
   }): Promise<string> {
     const key = await this.privateKey;
 
-    const aud = audience ? new URL(audience).origin : this.websiteURL;
+    const aud = audience ?? this.websiteURL;
 
     return new SignJWT({})
       .setProtectedHeader({ alg: 'EdDSA', kid: this.kid })

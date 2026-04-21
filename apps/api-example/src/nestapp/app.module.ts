@@ -10,6 +10,7 @@ import {
   PrismaClient,
   MailProviderType,
   PaymentProviderType,
+  SyncProviderType,
 } from '@prisma/client';
 import { SentryModule, SentryGlobalFilter } from '@sentry/nestjs/setup';
 import { ActionModule } from '@wepublish/action/api';
@@ -583,6 +584,35 @@ import {
       inject: [ConfigService],
     },
     // System info key provider
+    {
+      provide: 'SYNC_PROVIDER_INIT',
+      useFactory: async (config: ConfigService, prisma: PrismaClient) => {
+        const configFile = await readConfig(
+          config.getOrThrow('CONFIG_FILE_PATH')
+        );
+
+        const syncProviders = configFile.syncProviders;
+        if (!syncProviders) return;
+
+        for (const syncProvider of syncProviders) {
+          const typeMap: Record<string, SyncProviderType> = {
+            mailchimp: SyncProviderType.MAILCHIMP,
+          };
+
+          const type = typeMap[syncProvider.type];
+          if (!type) {
+            throw new Error(`Unknown sync provider type: ${syncProvider.type}`);
+          }
+
+          await prisma.settingSyncProvider.upsert({
+            where: { id: syncProvider.id },
+            create: { id: syncProvider.id, type },
+            update: {},
+          });
+        }
+      },
+      inject: [ConfigService, PrismaClient],
+    },
   ],
 })
 export class AppModule {}

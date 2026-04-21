@@ -5,6 +5,7 @@ import {
   FullDocumentFragment,
   useDeleteDocumentMutation,
   useDocumentListQuery,
+  useDocumentStorageUsageQuery,
 } from '@wepublish/editor/api';
 import {
   createCheckedPermissionComponent,
@@ -23,6 +24,7 @@ import {
   Table,
   TableWrapper,
 } from '@wepublish/ui/editor';
+import prettyBytes from 'pretty-bytes';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -47,7 +49,6 @@ import {
   toaster,
 } from 'rsuite';
 import { RowDataType } from 'rsuite-table';
-import prettyBytes from 'pretty-bytes';
 
 const { Column, HeaderCell, Cell: RCell } = RTable;
 
@@ -103,6 +104,25 @@ function DocumentList() {
     {}
   );
 
+  const {
+    data: storageData,
+    error: storageError,
+    refetch: refetchStorage,
+  } = useDocumentStorageUsageQuery();
+  if (storageError) {
+    console.error('DocumentStorageUsage query error:', storageError);
+  }
+
+  const storage = storageData?.documentStorageUsage;
+  const hasLimit = storage && storage.limitBytes > 0;
+  const usageRatio = hasLimit ? storage.usedBytes / storage.limitBytes : 0;
+  const isOverLimit = hasLimit && usageRatio >= 1;
+  const isNearLimit = hasLimit && usageRatio >= 0.95 && !isOverLimit;
+  const storageColor =
+    isOverLimit ? '#d32f2f'
+    : isNearLimit ? '#f9a825'
+    : '#888';
+
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -134,18 +154,27 @@ function DocumentList() {
         </ListViewHeader>
         <PermissionControl qualifyingPermissions={['CAN_CREATE_DOCUMENT']}>
           <ListViewActions>
-            <Link
-              to="/documents/upload"
-              state={{ modalLocation: location }}
-            >
+            {isOverLimit ?
               <RIconButton
                 appearance="primary"
-                disabled={isLoading}
+                disabled
                 icon={<MdOutlineUploadFile />}
               >
-                {t('documents.overview.uploadDocument')}
+                {t('documents.overview.storageFull')}
               </RIconButton>
-            </Link>
+            : <Link
+                to="/documents/upload"
+                state={{ modalLocation: location }}
+              >
+                <RIconButton
+                  appearance="primary"
+                  disabled={isLoading}
+                  icon={<MdOutlineUploadFile />}
+                >
+                  {t('documents.overview.uploadDocument')}
+                </RIconButton>
+              </Link>
+            }
           </ListViewActions>
         </PermissionControl>
 
@@ -161,6 +190,28 @@ function DocumentList() {
           </InputGroup>
         </ListViewFilterArea>
       </ListViewContainer>
+
+      {storage && (
+        <p
+          style={{
+            margin: '10px 0',
+            color: storageColor,
+            fontSize: 14,
+            fontWeight: isOverLimit || isNearLimit ? 'bold' : 'normal',
+          }}
+        >
+          {t('documents.overview.storageUsage', {
+            used: prettyBytes(storage.usedBytes),
+            limit:
+              hasLimit ?
+                prettyBytes(storage.limitBytes)
+              : t('documents.overview.unlimited'),
+            count: storage.documentCount,
+          })}
+          {isOverLimit && ` — ${t('documents.overview.storageFull')}`}
+          {isNearLimit && ` — ${t('documents.overview.storageWarning')}`}
+        </p>
+      )}
 
       <TableWrapper>
         <Table
@@ -354,6 +405,7 @@ function DocumentList() {
           }}
           onUpload={() => {
             setUploadModalOpen(false);
+            refetchStorage();
             navigate('/documents');
           }}
         />
@@ -422,6 +474,7 @@ function DocumentList() {
                 },
               });
               setConfirmationDialogOpen(false);
+              refetchStorage();
             }}
             color="red"
           >
