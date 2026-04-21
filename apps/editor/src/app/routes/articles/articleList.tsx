@@ -164,7 +164,10 @@ function ArticleList({ initialFilter = {} }: ArticleListProps) {
           ]}
           filter={filter}
           isLoading={isLoading}
-          onSetFilter={filter => setFilter(filter)}
+          onSetFilter={filter => {
+            setFilter(filter);
+            setPage(1);
+          }}
           tagType={TagType.Article}
         />
       </ListViewContainer>

@@ -29,7 +29,17 @@ export type BuilderLoginFormProps = {
     MutationResult<LoginWithCredentialsMutation>,
     'data' | 'loading' | 'error'
   >;
-  onSubmitLoginWithCredentials: (email: string, password: string) => void;
+  onSubmitLoginWithCredentials: (
+    email: string,
+    password: string,
+    totpToken?: string
+  ) => void;
+
+  otpRequired?: boolean;
+  onEmailChange?: (email: string) => void;
+
+  /** When true, email login was blocked because the user has 2FA. The form auto-switches to password mode. */
+  totpRedirectToPassword?: boolean;
 };
 
 export type AddressShape = z.ZodObject<{

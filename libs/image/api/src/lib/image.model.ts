@@ -29,11 +29,11 @@ registerEnumType(ImageSort, {
 
 @ObjectType()
 export class FocalPoint {
-  @Field(type => Float)
-  x!: number;
+  @Field(type => Float, { nullable: true })
+  x?: number;
 
-  @Field(type => Float)
-  y!: number;
+  @Field(type => Float, { nullable: true })
+  y?: number;
 }
 
 @InputType()

@@ -17,6 +17,10 @@ import {
   TransformationsDto,
 } from '@wepublish/media-transform-guard';
 import { JwksClientService } from '../authentication/jwks-client.service';
+import {
+  getDocumentCategory,
+  DocumentCategory,
+} from './supported-documents-validator';
 
 export const MEDIA_SERVICE_MODULE_OPTIONS = Symbol(
   'MEDIA_SERVICE_MODULE_OPTIONS'
@@ -423,10 +427,6 @@ export class MediaService {
     documentId: string
   ): Promise<ImageURIObject> {
     const thumbnailUri = `documents/${documentId}/thumbnail`;
-    // Use a hashed ID for temp filenames to prevent path traversal
-    const safeId = createHash('sha256')
-      .update(documentId, 'utf8')
-      .digest('hex');
 
     // Return cached thumbnail if it exists
     if (
@@ -435,7 +435,7 @@ export class MediaService {
       return { uri: thumbnailUri, exists: true };
     }
 
-    // Find the original PDF from upload bucket
+    // Find the original file from upload bucket
     const files = await this.storage.listFiles(
       this.config.uploadBucket,
       `documents/${documentId}/`,
@@ -448,11 +448,87 @@ export class MediaService {
       return { uri: thumbnailUri, exists: false };
     }
 
+    // Determine file category from extension in the stored filename
+    const ext = path.extname(uploadedFile.name).toLowerCase();
+    const extToMime: Record<string, string> = {
+      '.pdf': 'application/pdf',
+      '.docx':
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      '.doc': 'application/msword',
+      '.xlsx':
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      '.xls': 'application/vnd.ms-excel',
+      '.pptx':
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      '.ppt': 'application/vnd.ms-powerpoint',
+      '.odt': 'application/vnd.oasis.opendocument.text',
+      '.ods': 'application/vnd.oasis.opendocument.spreadsheet',
+      '.odp': 'application/vnd.oasis.opendocument.presentation',
+      '.csv': 'text/csv',
+      '.txt': 'text/plain',
+      '.zip': 'application/zip',
+    };
+    const contentType = extToMime[ext] ?? 'application/octet-stream';
+    const category = getDocumentCategory(contentType);
+
+    // For PDFs, generate a preview of the first page
+    if (category === 'pdf') {
+      return this.generatePdfThumbnail(
+        documentId,
+        uploadedFile.name,
+        thumbnailUri
+      );
+    }
+
+    // For all other types, use a static icon based on file category
+    return this.generateStaticThumbnail(category, thumbnailUri);
+  }
+
+  private async generateStaticThumbnail(
+    category: DocumentCategory,
+    thumbnailUri: string
+  ): Promise<ImageURIObject> {
+    try {
+      const iconPath = path.join(__dirname, 'assets', `icon-${category}.svg`);
+
+      // Fall back to generic if specific icon doesn't exist
+      const resolvedPath =
+        fs.existsSync(iconPath) ? iconPath : (
+          path.join(__dirname, 'assets', 'icon-generic.svg')
+        );
+
+      const thumbnailBuffer = await sharp(resolvedPath)
+        .resize(200, 260)
+        .webp({ quality: 80 })
+        .toBuffer();
+
+      await this.storage.saveFile(
+        this.config.transformationBucket,
+        thumbnailUri,
+        thumbnailBuffer,
+        thumbnailBuffer.length,
+        { ContentType: 'image/webp' }
+      );
+
+      return { uri: thumbnailUri, exists: true };
+    } catch (err) {
+      this.thumbnailLogger.warn(
+        `Static thumbnail generation failed: ${(err as Error).message}`
+      );
+      return { uri: thumbnailUri, exists: false };
+    }
+  }
+
+  private async generatePdfThumbnail(
+    documentId: string,
+    objectKey: string,
+    thumbnailUri: string
+  ): Promise<ImageURIObject> {
     let pdfStream: Readable;
     try {
       pdfStream = await this.storage.getFile(
         this.config.uploadBucket,
-        uploadedFile.name
+        objectKey
       );
     } catch (e: any) {
       if (e.code === 'NoSuchKey') {
@@ -461,7 +537,6 @@ export class MediaService {
       throw e;
     }
 
-    // Buffer the PDF
     const chunks: Buffer[] = [];
     for await (const chunk of pdfStream) {
       chunks.push(Buffer.from(chunk));
@@ -489,7 +564,6 @@ export class MediaService {
     try {
       fs.writeFileSync(tmpPdf, pdfBuffer);
 
-      // Generate thumbnail of first page using pdftoppm
       await execFileAsync('pdftoppm', [
         '-png',
         '-f',
@@ -502,7 +576,6 @@ export class MediaService {
         tmpOutPrefix,
       ]);
 
-      // pdftoppm outputs: {prefix}-{pagenum}.png
       const thumbPath = `${tmpOutPrefix}-1.png`;
       if (!fs.existsSync(thumbPath)) {
         const altPath = `${tmpOutPrefix}-01.png`;
@@ -511,17 +584,16 @@ export class MediaService {
             `Thumbnail generation produced no output for document ${documentId}`
           );
           cleanup();
-          return { uri: thumbnailUri, exists: false };
+          // Fall back to static PDF icon
+          return this.generateStaticThumbnail('pdf', thumbnailUri);
         }
         fs.renameSync(altPath, thumbPath);
       }
 
-      // Convert to WebP using sharp for smaller size
       const thumbnailBuffer = await sharp(thumbPath)
         .webp({ quality: 80 })
         .toBuffer();
 
-      // Store thumbnail in transformation bucket
       await this.storage.saveFile(
         this.config.transformationBucket,
         thumbnailUri,
@@ -535,9 +607,10 @@ export class MediaService {
     } catch (err) {
       cleanup();
       this.thumbnailLogger.warn(
-        `Thumbnail generation failed for document ${documentId}: ${(err as Error).message}`
+        `PDF thumbnail generation failed for document ${documentId}: ${(err as Error).message}`
       );
-      return { uri: thumbnailUri, exists: false };
+      // Fall back to static PDF icon
+      return this.generateStaticThumbnail('pdf', thumbnailUri);
     }
   }
 }
