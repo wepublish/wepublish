@@ -1,7 +1,16 @@
 import styled from '@emotion/styled';
-import { Container, css, IconButton, Modal as MUIModal } from '@mui/material';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Banner,
+  Container,
+  css,
+  DialogProps,
+  Link,
+  Modal as MUIModal,
+  TextField,
+  Typography,
+} from '@mui/material';
+import {
+  BANNER_STORAGE_KEY,
   BannerActions,
   BannerCloseButton,
   BannerContent,
@@ -11,14 +20,195 @@ import {
   BannerImage,
   BannerText,
   BannerTitle,
+  BannerWrapper,
+  collapseBanner,
 } from '@wepublish/banner/website';
 import { BuilderBannerProps } from '@wepublish/website/builder';
-import { useCallback, useEffect, useState } from 'react';
-import { MdClose } from 'react-icons/md';
+import { differenceInHours } from 'date-fns';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import { recife } from '../theme';
 
-const StyledBanner = styled(Banner, {
+const MailchimpFormSchema = z.object({
+  EMAIL: z.string().email('Bitte gib eine gültige E-Mail-Adresse ein').min(1),
+});
+type MailchimpFormInput = z.infer<typeof MailchimpFormSchema>;
+
+const SubmitBtn = styled(Link)`
+  padding-top: 12px;
+  padding-bottom: 12px;
+  margin-left: 20px;
+` as typeof Link;
+
+export const BannerBase = ({
+  data,
+  loading,
+  error,
+  className,
+  onRegister,
+}: BuilderBannerProps & { onRegister?: () => void }) => {
+  const [showBanner, setShowBanner] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
+
+  const { handleSubmit, control } = useForm<MailchimpFormInput>({
+    resolver: zodResolver(MailchimpFormSchema),
+    defaultValues: { EMAIL: '' },
+    mode: 'onSubmit',
+    reValidateMode: 'onSubmit',
+  });
+
+  useEffect(() => {
+    if (!data?.primaryBanner) {
+      return;
+    }
+
+    const timer = setTimeout(
+      () => setShowBanner(true),
+      (data?.primaryBanner?.delay ?? 0) * 1000
+    );
+
+    return () => clearTimeout(timer);
+  }, [data?.primaryBanner]);
+
+  useEffect(() => {
+    const lastClosedTime =
+      Number(localStorage.getItem(BANNER_STORAGE_KEY)) ?? 0;
+    const currentTime = new Date().getTime();
+
+    const isClosedRecently =
+      differenceInHours(currentTime, lastClosedTime) < 24;
+
+    setCollapsed(isClosedRecently);
+  }, [data]);
+
+  const handleClose = () => {
+    setCollapsed(true);
+    collapseBanner();
+  };
+
+  if (!data?.primaryBanner || loading || error) {
+    return <></>;
+  }
+
+  if (!showBanner) {
+    return <></>;
+  }
+
+  const htmlContent = data?.primaryBanner?.html;
+
+  return (
+    <BannerWrapper
+      hasImage={!!data?.primaryBanner.image}
+      className={className}
+      data-collapsed={collapsed}
+      data-banner
+    >
+      <BannerCloseButton onClick={handleClose}>&#x2715;</BannerCloseButton>
+
+      {data?.primaryBanner.image && (
+        <BannerImage
+          style={{ backgroundImage: `url(${data?.primaryBanner.image.url})` }}
+        ></BannerImage>
+      )}
+
+      {htmlContent && (
+        <BannerContentWrapper
+          dangerouslySetInnerHTML={{ __html: htmlContent }}
+        />
+      )}
+
+      {!htmlContent && (
+        <BannerContentWrapper>
+          <BannerContent>
+            <Typography
+              variant="bannerTitle"
+              component={BannerTitle}
+            >
+              {data?.primaryBanner.title}
+            </Typography>
+
+            <Typography
+              variant="bannerText"
+              component={BannerText}
+            >
+              {data?.primaryBanner.text}
+            </Typography>
+          </BannerContent>
+
+          <BannerCta>
+            <BannerActions>
+              {data?.primaryBanner.actions?.[0] && (
+                <form
+                  action={data.primaryBanner.actions[0].url}
+                  method="post"
+                  target="_blank"
+                  noValidate
+                  onSubmit={handleSubmit((_values, event) => {
+                    // validation passed — allow native submission then close
+                    (event?.target as HTMLFormElement | undefined)?.submit();
+                    handleClose();
+                    onRegister?.();
+                  })}
+                >
+                  <Controller
+                    name="EMAIL"
+                    control={control}
+                    render={({ field, fieldState: { error } }) => (
+                      <TextField
+                        {...field}
+                        autoComplete="email"
+                        type="email"
+                        placeholder="E-Mail Adresse"
+                        error={!!error}
+                        helperText={error?.message}
+                        size="small"
+                        sx={{
+                          width: '300px',
+                          '& .MuiOutlinedInput-root': {
+                            backgroundColor: 'white',
+                          },
+                          '& input::placeholder': {
+                            fontStyle: 'italic',
+                          },
+                          '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                            {
+                              borderColor: 'black',
+                            },
+                          '& .MuiFormHelperText-root': {
+                            backgroundColor: 'transparent',
+                          },
+                        }}
+                      />
+                    )}
+                  />
+                  <SubmitBtn
+                    component="button"
+                    type="submit"
+                    variant="buttonLinkSecondary"
+                  >
+                    {data.primaryBanner.actions[0].label}
+                  </SubmitBtn>
+                </form>
+              )}
+            </BannerActions>
+            {data?.primaryBanner.cta && (
+              <Typography
+                variant="bannerCta"
+                component={BannerCtaText}
+              >
+                {data?.primaryBanner.cta.replace(/\\n/g, '\n')}
+              </Typography>
+            )}
+          </BannerCta>
+        </BannerContentWrapper>
+      )}
+    </BannerWrapper>
+  );
+};
+
+const StyledBanner = styled(BannerBase, {
   shouldForwardProp: propName => propName !== 'hasPaywallBypass',
 })<{ hasPaywallBypass: boolean }>`
   position: unset;
@@ -29,8 +219,8 @@ const StyledBanner = styled(Banner, {
 
   [data-role='PRIMARY'] {
     background-color: transparent;
-    border: 1px solid ${({ theme }) => theme.palette.secondary.main};
-    color: ${({ theme }) => theme.palette.secondary.main};
+    border: none;
+    color: ${({ theme }) => theme.palette.common.black};
   }
 
   ${BannerCloseButton} {
@@ -68,7 +258,7 @@ const StyledBanner = styled(Banner, {
       padding: 0;
     }
 
-    ${BannerText} {
+    ${BannerText}, ${BannerCtaText} {
       text-align: center;
       font-family: ${recife.style.fontFamily};
       max-width: 400px;
@@ -78,18 +268,18 @@ const StyledBanner = styled(Banner, {
       lineheight: 1.2;
     }
 
+    ${BannerCtaText} {
+      padding-bottom: ${({ theme }) => theme.spacing(4)};
+      max-width: 600px;
+      white-space: pre-line;
+    }
+
     ${BannerActions} {
-      justify-content: unset;
+      justify-content: center;
+      padding: ${({ theme }) => theme.spacing(3, 0)};
     }
 
     ${BannerCta} {
-      ${({ theme }) => theme.breakpoints.up('md')} {
-        padding-left: ${({ theme }) => theme.spacing(6)};
-      }
-    }
-
-    ${BannerCtaText} {
-      text-align: unset;
     }
   }
 
@@ -116,29 +306,17 @@ export const ReflekttBannerContainer = styled(Container, {
   shouldForwardProp: propName => propName !== 'isScrolled',
 })<{ isScrolled: boolean }>`
   padding: 0 !important;
-  position: fixed;
-  top: var(--changing-navbar-height);
-  z-index: 1;
-  left: 50%;
-  transition:
-    clip-path 10000ms ease-out,
-    transform 300ms ease-out;
-  transform: translate3d(
-    -50%,
-    ${({ isScrolled }) =>
-      isScrolled ? `calc(var(--changing-navbar-height) / -3)` : '0'},
-    0
-  );
+  position: static;
+  top: unset;
+  z-index: unset;
+  left: unset;
+  transition: unset;
+  transform: unset;
 
   ${({ isScrolled }) =>
     isScrolled &&
     css`
-      clip-path: polygon(
-        0 calc(var(--changing-navbar-height) / 3),
-        100% calc(var(--changing-navbar-height) / -6),
-        100% 100%,
-        0px 100%
-      );
+      clip-path: unset;
     `}
 
   &:empty {
@@ -146,41 +324,19 @@ export const ReflekttBannerContainer = styled(Container, {
   }
 
   ::before {
-    position: absolute;
-    top: 1px;
-    left: 0;
-    right: 0;
-    transform: translateY(-100%);
-    background: ${({ theme }) => theme.palette.primary.main};
-    height: 50px;
-
-    ${({ isScrolled }) =>
-      isScrolled &&
-      css`
-        content: '';
-      `}
+    display: none;
   }
 
   :has([data-collapsed='true']) {
     clip-path: unset;
 
     ${({ theme }) => theme.breakpoints.down('sm')} {
-      transform: translate3d(
-        -50%,
-        ${({ isScrolled }) =>
-          isScrolled ? `calc(var(--changing-navbar-height) / -2)` : 0},
-        0
-      );
+      transform: unset;
 
       ${({ isScrolled }) =>
         isScrolled &&
         css`
-          clip-path: polygon(
-            0 calc(var(--changing-navbar-height) / 2),
-            100% -1px,
-            100% 100%,
-            0px 100%
-          );
+          clip-path: unset;
         `}
 
       ${BannerContentWrapper} {
@@ -226,39 +382,8 @@ export const ReflekttBannerContainer = styled(Container, {
 
 export const Modal = styled(MUIModal)``;
 
-export const ModalTitle = styled('div')`
-  padding: 0
-  position: relative;
-  background-color: ${({ theme }) => theme.palette.primary.main};
-  padding: ${({ theme }) => theme.spacing(0.75, 2)};
-  border-top-left-radius: 0.75rem;
-  border-top-right-radius: 0.75rem;
-`;
-
-export const ModalTitleText = styled('h2')`
-  margin: 0;
-  font-size: ${({ theme }) => theme.typography.h6.fontSize};
-  font-weight: 700;
-  padding: 0;
-  color: ${({ theme }) => theme.palette.common.white};
-`;
-
-export const ModalClose = styled(IconButton)`
-  position: absolute;
-  top: ${({ theme }) => `${theme.spacing(0.75)}`};
-  right: ${({ theme }) => `${theme.spacing(1)}`};
-  z-index: 1;
-  color: ${({ theme }) => theme.palette.common.white};
-  padding: ${({ theme }) => `${theme.spacing(0.5)}`};
-
-  &:hover {
-    color: ${({ theme }) => theme.palette.primary.main};
-    background-color: ${({ theme }) => theme.palette.common.white};
-  }
-`;
-
 export const ModalContent = styled('div')`
-  padding: ${({ theme }) => theme.spacing(2)};
+  padding: 0;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -274,13 +399,17 @@ export const ModalPaper = styled('div', {
   transform: translate(-50%, -50%);
   display: grid;
   grid-template-rows: auto 1fr;
-  background-color: ${({ theme }) => theme.palette.background.paper};
+  background-color: transparent;
   box-shadow: ${({ theme }) => theme.shadows[24]};
   padding: 0;
   border-radius: 0.75rem;
   width: 800px;
   max-width: 90lvw;
   max-height: 92lvh;
+
+  &:focus-visible {
+    outline: none;
+  }
 
   ${({ isMCSubmit }) =>
     isMCSubmit &&
@@ -294,17 +423,20 @@ export const ModalPaper = styled('div', {
     `}
 `;
 
+const BANNER_SUBMITTED_KEY = 'reflekt-banner-submitted';
+
 export const ReflektBanner = (props: BuilderBannerProps) => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const handleScroll = useCallback(() => setIsScrolled(window.scrollY > 1), []);
-  const [modalOpen, setModalOpen] = useState(true);
+  // Start closed; open on mount unless user has already submitted
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
+    if (!localStorage.getItem(BANNER_SUBMITTED_KEY)) {
+      setModalOpen(true);
+    }
+  }, []);
 
-  const handleClose = () => {
+  const handleClose: DialogProps['onClose'] = (event, reason) => {
+    if (reason && reason === 'backdropClick') return;
     setModalOpen(false);
   };
 
@@ -312,15 +444,17 @@ export const ReflektBanner = (props: BuilderBannerProps) => {
     <Modal
       open={modalOpen}
       onClose={handleClose}
-      slotProps={{ backdrop: { sx: { backgroundColor: 'rgba(0,0,0,0.6)' } } }}
+      slotProps={{
+        backdrop: {
+          sx: {
+            backgroundColor: 'rgba(255, 255, 255, 0.3)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+          },
+        },
+      }}
     >
       <ModalPaper>
-        <ModalTitle>
-          <ModalTitleText>{'Newsletter abonnieren'}</ModalTitleText>
-          <ModalClose onClick={handleClose}>
-            <MdClose />
-          </ModalClose>
-        </ModalTitle>
         <ModalContent>
           <ReflekttBannerContainer
             maxWidth="lg"
@@ -330,6 +464,10 @@ export const ReflektBanner = (props: BuilderBannerProps) => {
             <StyledBanner
               {...props}
               hasPaywallBypass={false}
+              onRegister={() => {
+                localStorage.setItem(BANNER_SUBMITTED_KEY, 'true');
+                setModalOpen(false);
+              }}
             />
           </ReflekttBannerContainer>
         </ModalContent>
