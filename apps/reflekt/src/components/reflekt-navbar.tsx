@@ -319,6 +319,7 @@ export const NavbarHomeLink = styled(Link)`
   align-items: center;
   justify-items: center;
   justify-self: left;
+  transition: visibility 0s 240ms;
 
   ${theme.breakpoints.up('md')} {
     display: grid;
@@ -542,6 +543,7 @@ export const NavbarInnerWrapper = styled(Toolbar, {
 
       ${NavbarHomeLink} {
         visibility: hidden;
+        transition: visibility 0s 0s;
       }
     `}
 `;
