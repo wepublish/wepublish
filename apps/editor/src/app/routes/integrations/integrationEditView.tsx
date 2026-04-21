@@ -4,6 +4,7 @@ import {
   CanGetAnalyticsProviderSettings,
   CanGetChallengeProviderSettings,
   CanGetMailProviderSettings,
+  CanGetMailchimpSyncSettings,
   CanGetPaymentProviderSettings,
   CanGetTrackingPixelSettings,
   Permission,
@@ -19,6 +20,7 @@ import { ChallengeIntegrationForm } from './challengeIntegrationForm';
 import { MailIntegrationForm } from './mailIntegrationForm';
 import { PaymentIntegrationForm } from './paymentIntegrationForm';
 import { TrackingPixelIntegrationForm } from './trackingPixelIntegrationForm';
+import { MailchimpSyncIntegrationForm } from './mailchimpSyncIntegrationForm';
 
 const useIntegrationTitle = (type: string | undefined) => {
   const { t } = useTranslation();
@@ -36,6 +38,8 @@ const useIntegrationTitle = (type: string | undefined) => {
       return t('integrations.analytics');
     case 'mail':
       return t('integrations.mailProvider');
+    case 'mailchimp-sync':
+      return t('integrations.mailchimpSync');
     default:
       return t('integrations.unknown');
   }
@@ -55,6 +59,8 @@ const getPermission = (type: string | undefined): Permission | undefined => {
       return CanGetAnalyticsProviderSettings;
     case 'mail':
       return CanGetMailProviderSettings;
+    case 'mailchimp-sync':
+      return CanGetMailchimpSyncSettings;
     default:
       return;
   }
@@ -81,6 +87,8 @@ export function IntegrationEditView() {
         return <TrackingPixelIntegrationForm />;
       case 'analytics':
         return <AnalyticsIntegrationForm />;
+      case 'mailchimp-sync':
+        return <MailchimpSyncIntegrationForm />;
       default:
         return <p>{t('integrations.configure', { integration: title })}</p>;
     }

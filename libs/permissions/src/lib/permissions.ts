@@ -1024,6 +1024,42 @@ export const CanDeleteAnalyticsProviderSettings: Permission = {
   deprecated: false,
 };
 
+/**
+ * Two-Factor Authentication
+ */
+export const CanResetUserTotp: Permission = {
+  id: 'CAN_RESET_USER_TOTP',
+  description: 'Allows to reset the two-factor authentication of a user',
+  deprecated: false,
+};
+
+/**
+ * Mailchimp Sync Settings Permissions
+ */
+export const CanGetMailchimpSyncSettings: Permission = {
+  id: 'CAN_GET_MAILCHIMP_SYNC_SETTINGS',
+  description: 'Allows to get mailchimp sync settings',
+  deprecated: false,
+};
+
+export const CanUpdateMailchimpSyncSettings: Permission = {
+  id: 'CAN_UPDATE_MAILCHIMP_SYNC_SETTINGS',
+  description: 'Allows to update mailchimp sync settings',
+  deprecated: false,
+};
+
+export const CanDeleteMailchimpSyncSettings: Permission = {
+  id: 'CAN_DELETE_MAILCHIMP_SYNC_SETTINGS',
+  description: 'Allows to delete mailchimp sync settings',
+  deprecated: false,
+};
+
+export const CanRunMailchimpSync: Permission = {
+  id: 'CAN_RUN_MAILCHIMP_SYNC',
+  description: 'Allows to manually trigger a mailchimp sync',
+  deprecated: false,
+};
+
 export const AllPermissions: Permission[] = [
   CanGetCrowdfunding,
   CanGetCrowdfundings,
@@ -1180,6 +1216,11 @@ export const AllPermissions: Permission[] = [
   CanCreateAnalyticsProviderSettings,
   CanUpdateAnalyticsProviderSettings,
   CanDeleteAnalyticsProviderSettings,
+  CanResetUserTotp,
+  CanGetMailchimpSyncSettings,
+  CanUpdateMailchimpSyncSettings,
+  CanDeleteMailchimpSyncSettings,
+  CanRunMailchimpSync,
 ];
 
 export const EditorPermissions: Permission[] = [

@@ -10,7 +10,10 @@ import {
   SubscriptionListItemWrapper,
   useHasUnpaidInvoices,
 } from '@wepublish/membership/website';
-import { PersonalDataFormContainer } from '@wepublish/user/website';
+import {
+  PersonalDataFormContainer,
+  TotpSetupContainer,
+} from '@wepublish/user/website';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -28,13 +31,10 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ComponentProps, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { handleJwtLogin } from '../../handle-jwt-login';
 import { withAuthGuard } from '../../auth-guard';
 import { ssrAuthLink } from '../../auth-link';
 import { getSessionTokenProps } from '../../get-session-token-props';
-import {
-  tryServerSideJwtLogin,
-  redirectToLoginWithError,
-} from '../../try-server-side-jwt-login';
 
 const SubscriptionsWrapper = styled('div')`
   display: flex;
@@ -225,6 +225,8 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
         <H4 component={'h1'}>Profil</H4>
 
         <PersonalDataFormContainer {...props} />
+
+        <TotpSetupContainer />
       </ProfileWrapper>
     </>
   );
@@ -245,17 +247,7 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
     ),
   ]);
 
-  if (ctx.query.jwt) {
-    const success = await tryServerSideJwtLogin(ctx, client, {
-      httpOnly: !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE,
-    });
-
-    if (!success) {
-      redirectToLoginWithError(ctx);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return {} as any;
-    }
-  }
+  await handleJwtLogin(ctx, client, !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE);
 
   const sessionProps = await getSessionTokenProps(ctx);
 

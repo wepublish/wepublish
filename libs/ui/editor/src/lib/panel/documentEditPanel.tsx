@@ -140,42 +140,55 @@ function DocumentEditPanel({
   }, [loadingError, savingError, uploadError]);
 
   async function handleSave() {
-    if (isUpload) {
-      const { data } = await uploadDocument({
-        variables: {
-          file: file!,
-          filename: filename || undefined,
-          title: title || undefined,
-          description: description || undefined,
-        },
-      });
+    try {
+      if (isUpload) {
+        const { data } = await uploadDocument({
+          variables: {
+            file: file!,
+            filename: filename || undefined,
+            title: title || undefined,
+            description: description || undefined,
+          },
+        });
 
-      if (data?.uploadDocument) {
-        onSave?.(data.uploadDocument);
+        if (data?.uploadDocument) {
+          onSave?.(data.uploadDocument);
+        }
+      } else {
+        const { data } = await updateDocument({
+          variables: {
+            id: id!,
+            title: title || undefined,
+            description: description || undefined,
+          },
+        });
+
+        toaster.push(
+          <Message
+            type="success"
+            showIcon
+            closable
+            duration={2000}
+          >
+            {t('documents.panels.documentUpdated')}
+          </Message>
+        );
+
+        if (data?.updateDocument) {
+          onSave?.(data.updateDocument);
+        }
       }
-    } else {
-      const { data } = await updateDocument({
-        variables: {
-          id: id!,
-          title: title || undefined,
-          description: description || undefined,
-        },
-      });
-
+    } catch (err) {
       toaster.push(
         <Message
-          type="success"
+          type="error"
           showIcon
           closable
-          duration={2000}
+          duration={0}
         >
-          {t('documents.panels.documentUpdated')}
+          {t('documents.panels.uploadFailed')}
         </Message>
       );
-
-      if (data?.updateDocument) {
-        onSave?.(data.updateDocument);
-      }
     }
   }
 

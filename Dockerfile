@@ -254,7 +254,7 @@ ARG SENTRY_RELEASE
 ARG APP_RELEASE_ID
 ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 WORKDIR /app
-RUN apt-get update && apt-get install -y libjemalloc-dev poppler-utils
+RUN apt-get update && apt-get install -y libjemalloc-dev poppler-utils fonts-liberation
 COPY . .
 COPY ./apps/media/package.json ./package.json
 COPY ./apps/media/package-lock.json ./package-lock.json
@@ -284,6 +284,8 @@ ENV LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libjemalloc.so"
 ENV NODE_OPTIONS="--max-old-space-size=512"
 COPY --from=build-media /usr/lib/x86_64-linux-gnu/libjemalloc* /usr/lib/x86_64-linux-gnu/
 COPY --from=build-media /poppler-dist/bin/pdftoppm /usr/bin/pdftoppm
+COPY --from=build-media /usr/share/fonts/ /usr/share/fonts/
+COPY --from=build-media /etc/fonts/ /etc/fonts/
 COPY --from=build-media /poppler-dist/lib/ /usr/lib/x86_64-linux-gnu/
 COPY --from=media-setup /wepublish /wepublish
 EXPOSE 4100
