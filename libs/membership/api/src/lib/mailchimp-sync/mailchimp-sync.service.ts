@@ -751,10 +751,10 @@ export class MailchimpSyncService {
 
     switch (type) {
       case 'user.firstName':
-        return data.user.firstName || 'Unbekannt';
+        return (data.user.firstName || 'Unbekannt').trim();
 
       case 'user.name':
-        return data.user.name || 'Unbekannt';
+        return (data.user.name || 'Unbekannt').trim();
 
       case 'slug': {
         const op = parts[1];
@@ -911,7 +911,7 @@ export class MailchimpSyncService {
       return JSON.stringify(a) === JSON.stringify(b);
     }
 
-    return String(a) === String(b);
+    return String(a).trim() === String(b).trim();
   }
 
   private configureMailchimpClient(
