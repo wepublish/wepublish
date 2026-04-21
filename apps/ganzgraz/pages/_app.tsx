@@ -80,7 +80,7 @@ type CustomAppProps = AppProps<{
 }> & { emotionCache?: EmotionCache };
 
 function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
-  const siteTitle = 'We.Publish';
+  const siteTitle = 'GanzGraz';
 
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
@@ -176,6 +176,9 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                 slug="main"
                 headerSlug="header"
                 iconSlug="icons"
+                loginBtn={null}
+                profileBtn={null}
+                subscribeBtn={null}
               />
 
               <main>
