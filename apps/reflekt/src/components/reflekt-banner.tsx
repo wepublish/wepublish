@@ -430,10 +430,14 @@ export const ReflektBanner = (props: BuilderBannerProps) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    if (!localStorage.getItem(BANNER_SUBMITTED_KEY)) {
-      setModalOpen(true);
-    }
-  }, []);
+    // Only open the modal if there's actually an active banner to show
+    if (!props.data?.primaryBanner) return;
+    if (localStorage.getItem(BANNER_SUBMITTED_KEY)) return;
+
+    const delay = (props.data.primaryBanner.delay ?? 0) * 1000;
+    const timer = setTimeout(() => setModalOpen(true), delay);
+    return () => clearTimeout(timer);
+  }, [props.data?.primaryBanner]);
 
   const handleClose: DialogProps['onClose'] = (event, reason) => {
     if (reason && reason === 'backdropClick') return;
