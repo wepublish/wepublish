@@ -209,13 +209,35 @@ export class MailchimpSyncService {
     const defaultInterestGroupIds = (config.mailchimp_defaultInterestGroupIds ??
       []) as unknown as string[];
 
-    // Fetch existing Mailchimp contacts
-    const mailchimpContacts = await this.getMailchimpContacts(
-      config.mailchimp_listId
-    );
-    const mailchimpContactMap = new Map(
-      mailchimpContacts.map(m => [m.email_address?.toLowerCase(), m])
-    );
+    // For limited dry runs, skip the full audience fetch (can be tens of
+    // thousands of contacts) and resolve contacts on demand per user.
+    // Otherwise pre-load the full audience for fast lookups.
+    const useLazyContactFetch = dryRun && !!limit && limit > 0;
+
+    let mailchimpContactMap: Map<string, any> | null = null;
+    if (!useLazyContactFetch) {
+      const mailchimpContacts = await this.getMailchimpContacts(
+        config.mailchimp_listId
+      );
+      mailchimpContactMap = new Map(
+        mailchimpContacts.map(m => [m.email_address?.toLowerCase(), m])
+      );
+    }
+
+    const resolveExistingContact = async (
+      email: string
+    ): Promise<any | undefined> => {
+      const normalized = email.toLowerCase();
+      if (mailchimpContactMap) {
+        return mailchimpContactMap.get(normalized);
+      }
+      return (
+        (await this.getMailchimpContactByEmail(
+          config.mailchimp_listId!,
+          normalized
+        )) ?? undefined
+      );
+    };
 
     // Fetch all users with subscriptions via Prisma
     const usersWithSubscriptions = await this.getUsersWithSubscriptions();
@@ -258,8 +280,8 @@ export class MailchimpSyncService {
 
       processedCount++;
 
-      const existingContact = mailchimpContactMap.get(
-        userWithSub.user.email.toLowerCase()
+      const existingContact = await resolveExistingContact(
+        userWithSub.user.email
       );
 
       const mergeFields: Record<string, string> = {};
@@ -604,6 +626,25 @@ export class MailchimpSyncService {
     }
 
     return allMembers;
+  }
+
+  private async getMailchimpContactByEmail(
+    listId: string,
+    email: string
+  ): Promise<any | null> {
+    const normalized = email.trim().toLowerCase();
+    const subscriberHash = createHash('md5').update(normalized).digest('hex');
+
+    try {
+      return await mailchimp.lists.getListMember(listId, subscriberHash);
+    } catch (error: any) {
+      const status = error?.response?.body?.status ?? error?.status;
+      if (status === 404) return null;
+      const detail =
+        error?.response?.body?.detail ?? error?.message ?? String(error);
+      const title = error?.response?.body?.title ?? 'Mailchimp API error';
+      throw new Error(`${title} (${status}): ${detail}`);
+    }
   }
 
   private async upsertMailchimpContact(
