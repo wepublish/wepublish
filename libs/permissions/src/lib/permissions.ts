@@ -1033,12 +1033,6 @@ export const CanGetMailchimpSyncSettings: Permission = {
   deprecated: false,
 };
 
-export const CanCreateMailchimpSyncSettings: Permission = {
-  id: 'CAN_CREATE_MAILCHIMP_SYNC_SETTINGS',
-  description: 'Allows to create mailchimp sync settings',
-  deprecated: false,
-};
-
 export const CanUpdateMailchimpSyncSettings: Permission = {
   id: 'CAN_UPDATE_MAILCHIMP_SYNC_SETTINGS',
   description: 'Allows to update mailchimp sync settings',
@@ -1214,7 +1208,6 @@ export const AllPermissions: Permission[] = [
   CanUpdateAnalyticsProviderSettings,
   CanDeleteAnalyticsProviderSettings,
   CanGetMailchimpSyncSettings,
-  CanCreateMailchimpSyncSettings,
   CanUpdateMailchimpSyncSettings,
   CanDeleteMailchimpSyncSettings,
   CanRunMailchimpSync,
