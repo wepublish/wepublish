@@ -209,13 +209,43 @@ export class MailchimpSyncService {
     const defaultInterestGroupIds = (config.mailchimp_defaultInterestGroupIds ??
       []) as unknown as string[];
 
-    // For limited dry runs, skip the full audience fetch (can be tens of
-    // thousands of contacts) and resolve contacts on demand per user.
-    // Otherwise pre-load the full audience for fast lookups.
-    const useLazyContactFetch = dryRun && !!limit && limit > 0;
+    // Fetch all users with subscriptions via Prisma
+    const usersWithSubscriptions = await this.getUsersWithSubscriptions();
 
-    let mailchimpContactMap: Map<string, any> | null = null;
-    if (!useLazyContactFetch) {
+    // Pre-load users with sync errors to skip them
+    const recentErrorUserIds = await this.getRecentSyncErrorUserIds(config.id);
+
+    // For limited dry runs, skip the full audience fetch (can be tens of
+    // thousands of contacts) and look up only the candidate users' contacts
+    // in parallel batches. Otherwise pre-load the full audience.
+    const useTargetedContactFetch = dryRun && !!limit && limit > 0;
+
+    // For a limited dry run, randomise the user order so the sample is
+    // distributed across the pool instead of always picking the first N.
+    if (useTargetedContactFetch) {
+      for (let i = usersWithSubscriptions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [usersWithSubscriptions[i], usersWithSubscriptions[j]] = [
+          usersWithSubscriptions[j],
+          usersWithSubscriptions[i],
+        ];
+      }
+    }
+
+    let mailchimpContactMap: Map<string, any>;
+    if (useTargetedContactFetch) {
+      const candidateEmails: string[] = [];
+      for (const userWithSub of usersWithSubscriptions) {
+        if (!userWithSub.user.email) continue;
+        if (recentErrorUserIds.has(userWithSub.user.id)) continue;
+        candidateEmails.push(userWithSub.user.email.toLowerCase());
+        if (candidateEmails.length >= limit) break;
+      }
+      mailchimpContactMap = await this.fetchMailchimpContactsByEmail(
+        config.mailchimp_listId,
+        candidateEmails
+      );
+    } else {
       const mailchimpContacts = await this.getMailchimpContacts(
         config.mailchimp_listId
       );
@@ -223,27 +253,6 @@ export class MailchimpSyncService {
         mailchimpContacts.map(m => [m.email_address?.toLowerCase(), m])
       );
     }
-
-    const resolveExistingContact = async (
-      email: string
-    ): Promise<any | undefined> => {
-      const normalized = email.toLowerCase();
-      if (mailchimpContactMap) {
-        return mailchimpContactMap.get(normalized);
-      }
-      return (
-        (await this.getMailchimpContactByEmail(
-          config.mailchimp_listId!,
-          normalized
-        )) ?? undefined
-      );
-    };
-
-    // Fetch all users with subscriptions via Prisma
-    const usersWithSubscriptions = await this.getUsersWithSubscriptions();
-
-    // Pre-load users with sync errors to skip them
-    const recentErrorUserIds = await this.getRecentSyncErrorUserIds(config.id);
 
     let updatedCount = 0;
     let skippedCount = 0;
@@ -280,8 +289,8 @@ export class MailchimpSyncService {
 
       processedCount++;
 
-      const existingContact = await resolveExistingContact(
-        userWithSub.user.email
+      const existingContact = mailchimpContactMap.get(
+        userWithSub.user.email.toLowerCase()
       );
 
       const mergeFields: Record<string, string> = {};
@@ -628,23 +637,48 @@ export class MailchimpSyncService {
     return allMembers;
   }
 
-  private async getMailchimpContactByEmail(
+  private async fetchMailchimpContactsByEmail(
     listId: string,
-    email: string
-  ): Promise<any | null> {
-    const normalized = email.trim().toLowerCase();
-    const subscriberHash = createHash('md5').update(normalized).digest('hex');
+    emails: string[]
+  ): Promise<Map<string, any>> {
+    // Mailchimp allows ~10 concurrent connections per account.
+    const CONCURRENCY = 10;
+    const map = new Map<string, any>();
 
-    try {
-      return await mailchimp.lists.getListMember(listId, subscriberHash);
-    } catch (error: any) {
-      const status = error?.response?.body?.status ?? error?.status;
-      if (status === 404) return null;
-      const detail =
-        error?.response?.body?.detail ?? error?.message ?? String(error);
-      const title = error?.response?.body?.title ?? 'Mailchimp API error';
-      throw new Error(`${title} (${status}): ${detail}`);
+    for (let i = 0; i < emails.length; i += CONCURRENCY) {
+      const chunk = emails.slice(i, i + CONCURRENCY);
+      const results = await Promise.all(
+        chunk.map(async email => {
+          const normalized = email.trim().toLowerCase();
+          const subscriberHash = createHash('md5')
+            .update(normalized)
+            .digest('hex');
+
+          try {
+            const member = await mailchimp.lists.getListMember(
+              listId,
+              subscriberHash
+            );
+            return { email: normalized, member };
+          } catch (error: any) {
+            const status = error?.response?.body?.status ?? error?.status;
+            if (status === 404) {
+              return { email: normalized, member: null };
+            }
+            const detail =
+              error?.response?.body?.detail ?? error?.message ?? String(error);
+            const title = error?.response?.body?.title ?? 'Mailchimp API error';
+            throw new Error(`${title} (${status}): ${detail}`);
+          }
+        })
+      );
+
+      for (const { email, member } of results) {
+        if (member) map.set(email, member);
+      }
     }
+
+    return map;
   }
 
   private async upsertMailchimpContact(
