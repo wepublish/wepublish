@@ -1013,6 +1013,9 @@ model User {
   active          Boolean
   lastLogin       DateTime?
   roleIDs         String[]
+  totpSecret      String?
+  totpEnabled     Boolean   @default(false)
+  totpExempt      Boolean   @default(false)
   userImageID     String?
   userImage       Image?    @relation(fields: [userImageID], references: [id])
   note            String?

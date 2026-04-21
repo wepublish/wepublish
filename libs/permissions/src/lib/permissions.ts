@@ -1025,6 +1025,15 @@ export const CanDeleteAnalyticsProviderSettings: Permission = {
 };
 
 /**
+ * Two-Factor Authentication
+ */
+export const CanResetUserTotp: Permission = {
+  id: 'CAN_RESET_USER_TOTP',
+  description: 'Allows to reset the two-factor authentication of a user',
+  deprecated: false,
+};
+
+/**
  * Mailchimp Sync Settings Permissions
  */
 export const CanGetMailchimpSyncSettings: Permission = {
@@ -1207,6 +1216,7 @@ export const AllPermissions: Permission[] = [
   CanCreateAnalyticsProviderSettings,
   CanUpdateAnalyticsProviderSettings,
   CanDeleteAnalyticsProviderSettings,
+  CanResetUserTotp,
   CanGetMailchimpSyncSettings,
   CanUpdateMailchimpSyncSettings,
   CanDeleteMailchimpSyncSettings,

@@ -29,8 +29,8 @@ import { Link } from 'react-router-dom';
 
 import bexioLogo from './assets/bexio.webp';
 import cloudflareLogo from './assets/cloudflare.svg';
-import hcaptchaLogo from './assets/hcaptcha.webp';
 import googleLogo from './assets/google.svg';
+import hcaptchaLogo from './assets/hcaptcha.webp';
 import mailChimpLogo from './assets/mailchimp.webp';
 import mailgunLogo from './assets/mailgun.svg';
 import mollieLogo from './assets/mollie.webp';

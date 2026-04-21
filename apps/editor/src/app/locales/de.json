@@ -824,8 +824,42 @@
     "login": {
       "email": "Email",
       "login": "Login",
+      "next": "Weiter",
       "password": "Passwort",
-      "unauthorized": "User hat keine Berechtigung fürs Login"
+      "unauthorized": "User hat keine Berechtigung fürs Login",
+      "forgotPassword": "Passwort vergessen?",
+      "totp": {
+        "back": "Zurück",
+        "setupDescription": "Bitte richten Sie die Zwei-Faktor-Authentifizierung ein, um Ihr Konto zu schützen. Scannen Sie den QR-Code mit Ihrer Authenticator-App.",
+        "downloadApp": "Proton Authenticator herunterladen:",
+        "backupHint": "Aktivieren Sie Backup oder Sync in der App, damit Sie bei Geräteverlust nicht ausgesperrt werden.",
+        "android": "Android",
+        "ios": "iOS",
+        "manualEntry": "Oder geben Sie diesen Code manuell in Ihre Authenticator-App ein:",
+        "code": "Bestätigungscode",
+        "activate": "2FA aktivieren",
+        "invalidCode": "Ungültiger Bestätigungscode. Bitte versuchen Sie es erneut.",
+        "setupError": "Fehler beim Erstellen der 2FA-Einrichtung. Bitte versuchen Sie es erneut.",
+        "setupSuccess": "Zwei-Faktor-Authentifizierung wurde erfolgreich aktiviert."
+      }
+    },
+    "resetPassword": {
+      "description": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
+      "submit": "Reset-Link senden",
+      "sent": "Falls ein Konto mit dieser E-Mail-Adresse existiert, wurde ein Link zum Zurücksetzen des Passworts versendet. Bitte prüfen Sie Ihren Posteingang.",
+      "notConfigured": "Passwort-Reset ist nicht konfiguriert. Bitte kontaktieren Sie Ihren Administrator.",
+      "backToLogin": "Zurück zum Login"
+    },
+    "setNewPassword": {
+      "description": "Geben Sie Ihr neues Passwort ein.",
+      "password": "Neues Passwort",
+      "passwordRepeat": "Neues Passwort wiederholen",
+      "submit": "Neues Passwort setzen",
+      "mismatch": "Passwörter stimmen nicht überein.",
+      "invalidLink": "Ungültiger oder abgelaufener Passwort-Reset-Link.",
+      "error": "Passwort konnte nicht zurückgesetzt werden. Der Link ist möglicherweise abgelaufen.",
+      "success": "Ihr Passwort wurde erfolgreich zurückgesetzt. Sie können sich jetzt mit Ihrem neuen Passwort anmelden.",
+      "goToLogin": "Zum Login"
     },
     "mailTemplates": {
       "availableTemplates": "Verfügbare E-Mail-Templates",
@@ -1417,6 +1451,12 @@
       "password": "Passwort",
       "passwordChangeSuccess": "Passwort erfolgreich geändert!",
       "passwordHeader": "Passwörter & Zugänge",
+      "totpHeader": "Zwei-Faktor-Authentifizierung",
+      "totpEnabled": "Zwei-Faktor-Authentifizierung ist für diesen Benutzer aktiviert.",
+      "totpDisabled": "Zwei-Faktor-Authentifizierung ist noch nicht eingerichtet. Der Benutzer wird beim nächsten Editor-Login aufgefordert, diese einzurichten.",
+      "totpExemptInfo": "Dieser Benutzer ist von der Zwei-Faktor-Authentifizierungspflicht befreit.",
+      "totpExemptLabel": "Von 2FA-Pflicht befreien",
+      "totpExemptWarning": "\u26a0\ufe0f SICHERHEITSWARNUNG \u26a0\ufe0f\n\nSie sind dabei, die Zwei-Faktor-Authentifizierungspflicht für diesen Benutzer zu DEAKTIVIEREN!\n\nDies reduziert die Sicherheit dieses Kontos erheblich. Der Benutzer kann sich nur mit einem Passwort im Editor anmelden, ohne einen zweiten Faktor.\n\nDies sollte nur in Ausnahmefällen verwendet werden.\n\nSind Sie sicher, dass Sie fortfahren möchten?",
       "properties": "Eigenschaften",
       "resetPassword": "Passwort zurücksetzen",
       "resetPasswordFor": "Passwort für {{userName}} zurücksetzen",
@@ -1452,6 +1492,11 @@
         "noSubscriptions": "Keine Abos",
         "oneSubscription": "1 Abo",
         "resetPassword": "Passwort zurücksetzen",
+        "resetTotp": "2FA zurücksetzen",
+        "resetTotpTitle": "Zwei-Faktor-Authentifizierung zurücksetzen",
+        "resetTotpConfirmation": "Möchten Sie die Zwei-Faktor-Authentifizierung für {{name}} wirklich zurücksetzen? Der Benutzer muss 2FA beim nächsten Login erneut einrichten.",
+        "totpResetSuccess": "Zwei-Faktor-Authentifizierung wurde erfolgreich zurückgesetzt.",
+        "totpResetError": "Fehler beim Zurücksetzen der Zwei-Faktor-Authentifizierung.",
         "subscriptions": "Abos",
         "unknown": "Unbekannt",
         "users": "User"

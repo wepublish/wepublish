@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { SessionService } from './session.service';
 import { SessionWithToken } from './session.model';
 import {
@@ -18,21 +18,35 @@ export class SessionResolver {
   constructor(private sessionService: SessionService) {}
 
   @Public()
+  @Query(() => Boolean, {
+    description:
+      'Checks whether a given email requires a TOTP code for login. Always returns true to prevent user enumeration.',
+  })
+  async checkLoginOtp(@Args('email') email: string) {
+    return this.sessionService.checkLoginOtp(email);
+  }
+
+  @Public()
   @Mutation(() => SessionWithToken)
   async createSession(
     @Args('email') email: string,
-    @Args('password') password: string
+    @Args('password') password: string,
+    @Args('totpToken', { nullable: true }) totpToken?: string
   ) {
     return this.sessionService.createSessionWithEmailAndPassword(
       email,
-      password
+      password,
+      totpToken
     );
   }
 
   @Public()
   @Mutation(() => SessionWithToken)
-  async createSessionWithJWT(@Args('jwt') jwt: string) {
-    return this.sessionService.createSessionWithJWT(jwt);
+  async createSessionWithJWT(
+    @Args('jwt') jwt: string,
+    @Args('totpToken', { nullable: true }) totpToken?: string
+  ) {
+    return this.sessionService.createSessionWithJWT(jwt, totpToken);
   }
 
   @Public()
@@ -54,6 +68,27 @@ export class SessionResolver {
     await this.sessionService.sendWebsiteLogin(email);
 
     return email;
+  }
+
+  @Public()
+  @Mutation(() => String, {
+    description:
+      'Sends a password reset email with a scoped JWT token. Always returns the email to prevent enumeration.',
+  })
+  async sendPasswordResetEmail(@Args('email') email: string) {
+    return this.sessionService.sendPasswordResetEmail(email);
+  }
+
+  @Public()
+  @Mutation(() => Boolean, {
+    description:
+      'Resets the password using a token from the password reset email. Does not create a session.',
+  })
+  async resetPasswordWithToken(
+    @Args('token') token: string,
+    @Args('password') password: string
+  ) {
+    return this.sessionService.resetPasswordWithToken(token, password);
   }
 
   @Permissions(CanSendJWTLogin)
