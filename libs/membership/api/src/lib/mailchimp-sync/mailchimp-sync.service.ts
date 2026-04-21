@@ -356,6 +356,15 @@ export class MailchimpSyncService {
           existingContact,
         });
       }
+
+      if (processedCount % 100 === 0) {
+        this.updateProgress(config.id, {
+          processed: processedCount,
+          updated: updatedCount,
+          skipped: skippedCount,
+          errors: errorCount,
+        });
+      }
     }
 
     this.updateProgress(config.id, {
