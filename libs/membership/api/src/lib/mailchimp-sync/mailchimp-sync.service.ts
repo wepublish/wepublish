@@ -356,6 +356,15 @@ export class MailchimpSyncService {
           existingContact,
         });
       }
+
+      if (processedCount % 100 === 0) {
+        this.updateProgress(config.id, {
+          processed: processedCount,
+          updated: updatedCount,
+          skipped: skippedCount,
+          errors: errorCount,
+        });
+      }
     }
 
     this.updateProgress(config.id, {
@@ -751,10 +760,10 @@ export class MailchimpSyncService {
 
     switch (type) {
       case 'user.firstName':
-        return data.user.firstName || 'Unbekannt';
+        return (data.user.firstName || 'Unbekannt').trim();
 
       case 'user.name':
-        return data.user.name || 'Unbekannt';
+        return (data.user.name || 'Unbekannt').trim();
 
       case 'slug': {
         const op = parts[1];
@@ -886,13 +895,32 @@ export class MailchimpSyncService {
    * Check if the existing Mailchimp contact already has the desired values.
    * Only compares keys present in `desired` (our mapped fields),
    * ignoring extra fields returned by Mailchimp.
+   *
+   * Mailchimp coerces values based on the merge field Type: writing "0" to a
+   * NUMBER-typed field is echoed back as 0, so compare via string coercion
+   * and treat null/undefined/"" as equivalent.
    */
   private hasDesiredValues(existing: any, desired: any): boolean {
     if (!existing || !desired) return false;
     for (const key of Object.keys(desired)) {
-      if (existing[key] !== desired[key]) return false;
+      if (!this.valuesEquivalent(existing[key], desired[key])) return false;
     }
     return true;
+  }
+
+  private valuesEquivalent(a: any, b: any): boolean {
+    if (a === b) return true;
+
+    const aEmpty = a == null || a === '';
+    const bEmpty = b == null || b === '';
+    if (aEmpty && bEmpty) return true;
+    if (aEmpty !== bEmpty) return false;
+
+    if (typeof a === 'object' || typeof b === 'object') {
+      return JSON.stringify(a) === JSON.stringify(b);
+    }
+
+    return String(a).trim() === String(b).trim();
   }
 
   private configureMailchimpClient(

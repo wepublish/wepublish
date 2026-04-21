@@ -850,6 +850,7 @@ function SyncProviderSettingCard({
   const handleTriggerSync = useCallback(async () => {
     try {
       if (!(await saveIfDirty())) return;
+      setDryRunResult(null);
       await triggerSync({ variables: { id: setting.id } });
       setSyncSeq(s => s + 1);
       setSyncing(true);
