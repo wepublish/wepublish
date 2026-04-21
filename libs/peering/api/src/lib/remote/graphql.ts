@@ -21,6 +21,8 @@ export type Scalars = {
   DateTime: string;
   /** Setting Value */
   GraphQLSettingValueType: any;
+  /** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSONObject: any;
   RichText: Descendant[];
   Slug: string;
   /** The `Upload` scalar type represents a file upload. */
@@ -1608,6 +1610,74 @@ export type MailTemplateWithUrlAndStatusModel = {
   url: Scalars['String'];
 };
 
+export type MailchimpInterestGroup = {
+  __typename?: 'MailchimpInterestGroup';
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type MailchimpList = {
+  __typename?: 'MailchimpList';
+  id: Scalars['String'];
+  memberCount: Scalars['Int'];
+  name: Scalars['String'];
+};
+
+export type MailchimpMergeField = {
+  __typename?: 'MailchimpMergeField';
+  name: Scalars['String'];
+  tag: Scalars['String'];
+  type: Scalars['String'];
+};
+
+export type MailchimpSyncDryRunChange = {
+  __typename?: 'MailchimpSyncDryRunChange';
+  email: Scalars['String'];
+  interests: Scalars['JSONObject'];
+  isNew: Scalars['Boolean'];
+  mergeFields: Scalars['JSONObject'];
+  previousInterests?: Maybe<Scalars['JSONObject']>;
+  previousMergeFields?: Maybe<Scalars['JSONObject']>;
+};
+
+export type MailchimpSyncDryRunResult = {
+  __typename?: 'MailchimpSyncDryRunResult';
+  changes: Array<MailchimpSyncDryRunChange>;
+  skippedCount: Scalars['Int'];
+  totalUserCount: Scalars['Int'];
+  updatedCount: Scalars['Int'];
+};
+
+export type MailchimpSyncErrorList = {
+  __typename?: 'MailchimpSyncErrorList';
+  nodes: Array<MailchimpSyncErrorType>;
+  totalCount: Scalars['Int'];
+};
+
+export type MailchimpSyncErrorType = {
+  __typename?: 'MailchimpSyncErrorType';
+  createdAt: Scalars['DateTime'];
+  email: Scalars['String'];
+  errorMessage: Scalars['String'];
+  id: Scalars['String'];
+  statusCode?: Maybe<Scalars['Int']>;
+  syncProviderId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+export type MailchimpSyncProgressType = {
+  __typename?: 'MailchimpSyncProgressType';
+  errorMessage?: Maybe<Scalars['String']>;
+  errors: Scalars['Int'];
+  finishedAt?: Maybe<Scalars['DateTime']>;
+  processed: Scalars['Int'];
+  skipped: Scalars['Int'];
+  startedAt: Scalars['DateTime'];
+  status: Scalars['String'];
+  total: Scalars['Int'];
+  updated: Scalars['Int'];
+};
+
 export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
   active: Scalars['Boolean'];
@@ -1742,6 +1812,8 @@ export type Mutation = {
   createUserSubscription: Payment;
   /** Allows guests and authenticated users to create additional subscriptions */
   createUserSubscriptionWithConfirmation: Scalars['Boolean'];
+  /** Deletes all sync errors for a config so all contacts will be retried. */
+  deleteAllMailchimpSyncErrors: Scalars['Boolean'];
   /** Deletes an article. */
   deleteArticle: Scalars['String'];
   /** Deletes an existing author. */
@@ -1768,6 +1840,8 @@ export type Mutation = {
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
+  /** Deletes a single sync error so the contact will be retried. */
+  deleteMailchimpSyncError: Scalars['Boolean'];
   /** Deletes an existing memberplan. */
   deleteMemberPlan: MemberPlan;
   /** Deletes an existing navigation. */
@@ -1813,6 +1887,8 @@ export type Mutation = {
   deleteUserRole: UserRole;
   /** Dislikes an article. */
   dislikeArticle: Article;
+  /** Simulates a mailchimp sync without making changes. Returns what would be updated. */
+  dryRunMailchimpSync: MailchimpSyncDryRunResult;
   /** Duplicates an article. */
   duplicateArticle: Article;
   /** Duplicates an page. */
@@ -1861,6 +1937,8 @@ export type Mutation = {
   syncTemplates?: Maybe<Scalars['Boolean']>;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
+  /** Triggers a mailchimp sync in the background. */
+  triggerMailchimpSync: Scalars['Boolean'];
   /** Unpublishes all revisions of an article. */
   unpublishArticle: Article;
   /** Unpublishes all revisions of an page. */
@@ -1932,6 +2010,8 @@ export type Mutation = {
   updateSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Update an existing subscription interval */
   updateSubscriptionInterval: Array<SubscriptionFlowModel>;
+  /** Updates an existing sync provider setting. */
+  updateSyncProviderSetting: SettingSyncProvider;
   /** Updates an existing mail flow */
   updateSystemMail: Array<SystemMailModel>;
   /** Updates an existing tag. */
@@ -2347,6 +2427,11 @@ export type MutationCreateUserSubscriptionWithConfirmationArgs = {
 };
 
 
+export type MutationDeleteAllMailchimpSyncErrorsArgs = {
+  configId: Scalars['String'];
+};
+
+
 export type MutationDeleteArticleArgs = {
   id: Scalars['String'];
 };
@@ -2403,6 +2488,11 @@ export type MutationDeleteImageArgs = {
 
 
 export type MutationDeleteInvoiceArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteMailchimpSyncErrorArgs = {
   id: Scalars['String'];
 };
 
@@ -2504,6 +2594,12 @@ export type MutationDeleteUserRoleArgs = {
 
 export type MutationDislikeArticleArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationDryRunMailchimpSyncArgs = {
+  id: Scalars['String'];
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -2633,6 +2729,11 @@ export type MutationSendWebsiteLoginArgs = {
 
 export type MutationTestSystemMailArgs = {
   event: UserEvent;
+};
+
+
+export type MutationTriggerMailchimpSyncArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -3022,6 +3123,19 @@ export type MutationUpdateSubscriptionIntervalArgs = {
   daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
   mailTemplateId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateSyncProviderSettingArgs = {
+  enabled?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['String'];
+  mailchimp_apiKey?: InputMaybe<Scalars['String']>;
+  mailchimp_defaultInterestGroupIds?: InputMaybe<Array<Scalars['String']>>;
+  mailchimp_extensions?: InputMaybe<Scalars['JSONObject']>;
+  mailchimp_interestGroupMappings?: InputMaybe<Array<Scalars['JSONObject']>>;
+  mailchimp_listId?: InputMaybe<Scalars['String']>;
+  mailchimp_mergeFieldMappings?: InputMaybe<Array<Scalars['JSONObject']>>;
+  name?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -4062,6 +4176,16 @@ export type Query = {
   mailProviderSettings: Array<SettingMailProvider>;
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
+  /** Fetches available interest groups for a Mailchimp list. */
+  mailchimpInterestGroups: Array<MailchimpInterestGroup>;
+  /** Fetches available Mailchimp lists/audiences for a sync config. */
+  mailchimpLists: Array<MailchimpList>;
+  /** Fetches available merge fields for a Mailchimp list. */
+  mailchimpMergeFields: Array<MailchimpMergeField>;
+  /** Returns sync errors for a given config. */
+  mailchimpSyncErrors: MailchimpSyncErrorList;
+  /** Returns the current sync progress for a config. */
+  mailchimpSyncProgress?: Maybe<MailchimpSyncProgressType>;
   /** This query returns the user. */
   me?: Maybe<SensitiveDataUser>;
   /** Returns a memberplan by id or slug. */
@@ -4169,6 +4293,10 @@ export type Query = {
   subscriptions: PublicSubscriptionConnection;
   /** Returns a paginated list of subscriptions based on the filters given. */
   subscriptionsAsCsv: Scalars['String'];
+  /** Returns a single sync provider setting by id. */
+  syncProviderSetting: SettingSyncProvider;
+  /** Returns all sync provider settings. */
+  syncProviderSettings: Array<SettingSyncProvider>;
   /** Returns all mail flows */
   systemMails: Array<SystemMailModel>;
   /** Returns an tag by id or tag. */
@@ -4445,6 +4573,35 @@ export type QueryMailProviderSettingsArgs = {
 };
 
 
+export type QueryMailchimpInterestGroupsArgs = {
+  configId: Scalars['String'];
+  listId: Scalars['String'];
+};
+
+
+export type QueryMailchimpListsArgs = {
+  configId: Scalars['String'];
+};
+
+
+export type QueryMailchimpMergeFieldsArgs = {
+  configId: Scalars['String'];
+  listId: Scalars['String'];
+};
+
+
+export type QueryMailchimpSyncErrorsArgs = {
+  configId: Scalars['String'];
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryMailchimpSyncProgressArgs = {
+  configId: Scalars['String'];
+};
+
+
 export type QueryMemberPlanArgs = {
   id?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['Slug']>;
@@ -4658,6 +4815,16 @@ export type QuerySubscriptionsAsCsvArgs = {
   userHasAddress?: InputMaybe<Scalars['Boolean']>;
   userID?: InputMaybe<Scalars['String']>;
   userIDs?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type QuerySyncProviderSettingArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QuerySyncProviderSettingsArgs = {
+  filter?: InputMaybe<SettingSyncProviderFilter>;
 };
 
 
@@ -5011,6 +5178,31 @@ export type SettingRestriction = {
   minValue?: Maybe<Scalars['Int']>;
 };
 
+export type SettingSyncProvider = SettingProvider & {
+  __typename?: 'SettingSyncProvider';
+  createdAt: Scalars['DateTime'];
+  enabled?: Maybe<Scalars['Boolean']>;
+  id: Scalars['String'];
+  lastLoadedAt: Scalars['DateTime'];
+  lastSyncAt?: Maybe<Scalars['DateTime']>;
+  lastSyncError?: Maybe<Scalars['String']>;
+  mailchimp_defaultInterestGroupIds?: Maybe<Array<Scalars['String']>>;
+  mailchimp_extensions?: Maybe<Scalars['JSONObject']>;
+  mailchimp_interestGroupMappings?: Maybe<Array<Scalars['JSONObject']>>;
+  mailchimp_listId?: Maybe<Scalars['String']>;
+  mailchimp_mergeFieldMappings?: Maybe<Array<Scalars['JSONObject']>>;
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
+  type: SyncProviderType;
+};
+
+export type SettingSyncProviderFilter = {
+  enabled?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<SyncProviderType>;
+};
+
 export type SettingTrackingPixelFilter = {
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
@@ -5217,6 +5409,10 @@ export type SubscriptionPeriod = {
 export enum SubscriptionSort {
   CreatedAt = 'CreatedAt',
   ModifiedAt = 'ModifiedAt'
+}
+
+export enum SyncProviderType {
+  Mailchimp = 'MAILCHIMP'
 }
 
 export type SystemMailModel = {
@@ -6254,6 +6450,7 @@ export const PeerProfile = gql`
       "SettingChallengeProvider",
       "SettingMailProvider",
       "SettingPaymentProvider",
+      "SettingSyncProvider",
       "SettingTrackingPixelProvider"
     ],
     "Teaser": [

@@ -1028,8 +1028,9 @@ model User {
   pollVotes        PollVote[]
   mailSent         MailLog[]
   consents         UserConsent[]
-  articleRevisions ArticleRevision[]
-  pageRevisions    PageRevision[]
+  articleRevisions    ArticleRevision[]
+  pageRevisions       PageRevision[]
+  mailchimpSyncErrors MailchimpSyncError[]
 
   @@map("users")
 }
@@ -1836,4 +1837,53 @@ model SettingAnalyticsProvider {
   articlePrefix String?
 
   @@map("settings.analyticsProvider")
+}
+
+enum SyncProviderType {
+  MAILCHIMP @map("mailchimp")
+}
+
+model SettingSyncProvider {
+  id           String   @id
+  createdAt    DateTime @default(now())
+  modifiedAt   DateTime @updatedAt
+  lastLoadedAt DateTime @default(now())
+
+  type    SyncProviderType
+  name    String?
+  enabled Boolean          @default(false)
+
+  // Mailchimp-specific configuration
+  mailchimp_apiKey String?
+  mailchimp_listId String?
+  mailchimp_mergeFieldMappings     Json @default("[]")
+  mailchimp_interestGroupMappings  Json @default("[]")
+  mailchimp_defaultInterestGroupIds Json @default("[]")
+  mailchimp_extensions             Json @default("{}")
+
+  // Last sync execution info
+  lastSyncAt    DateTime?
+  lastSyncError String?
+
+  mailchimpSyncErrors MailchimpSyncError[]
+
+  @@map("settings.syncprovider")
+}
+
+model MailchimpSyncError {
+  id             String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt      DateTime @default(now())
+  modifiedAt     DateTime @updatedAt
+
+  userId         String
+  syncProviderId String
+  email          String
+  errorMessage   String
+  statusCode     Int?
+
+  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  syncProvider   SettingSyncProvider  @relation(fields: [syncProviderId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, syncProviderId])
+  @@map("mailchimp_sync_errors")
 }
