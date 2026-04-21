@@ -2,6 +2,7 @@ import { ApolloError } from '@apollo/client';
 import {
   TinyUserFragment,
   useDeleteUserMutation,
+  useResetUserTotpMutation,
   UserFilter,
   UserRole,
   UserSort,
@@ -28,7 +29,7 @@ import {
 } from '@wepublish/ui/editor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdDelete, MdPassword } from 'react-icons/md';
+import { MdAdd, MdDelete, MdLockReset, MdPassword } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import {
   Button,
@@ -63,6 +64,7 @@ function UserList() {
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false);
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [isResetTotpDialogOpen, setIsResetTotpDialogOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<TinyUserFragment>();
 
   const [page, setPage] = useState(1);
@@ -102,6 +104,8 @@ function UserList() {
   }, [filter, page, limit, sortOrder, sortField, refetch]);
 
   const [deleteUser, { loading: isDeleting }] = useDeleteUserMutation({});
+  const [resetUserTotp, { loading: isResettingTotp }] =
+    useResetUserTotpMutation();
 
   const { t } = useTranslation();
 
@@ -187,6 +191,39 @@ function UserList() {
           );
         }
       }
+    }
+  };
+
+  const handleResetTotp = async () => {
+    if (!currentUser) return;
+
+    try {
+      await resetUserTotp({
+        variables: { userId: currentUser.id },
+      });
+      toaster.push(
+        <Message
+          type="success"
+          showIcon
+          closable
+          duration={2000}
+        >
+          {t('userList.overview.totpResetSuccess')}
+        </Message>
+      );
+      setIsResetTotpDialogOpen(false);
+      refetch();
+    } catch (e) {
+      toaster.push(
+        <Message
+          type="error"
+          showIcon
+          closable
+          duration={2000}
+        >
+          {t('userList.overview.totpResetError')}
+        </Message>
+      );
     }
   };
 
@@ -325,7 +362,7 @@ function UserList() {
             </RCell>
           </Column>
           <Column
-            width={100}
+            width={140}
             align="center"
             fixed="right"
           >
@@ -346,6 +383,24 @@ function UserList() {
                         onClick={e => {
                           setCurrentUser(rowData as TinyUserFragment);
                           setIsResetUserPasswordOpen(true);
+                        }}
+                      />
+                    </IconButtonTooltip>
+                  </PermissionControl>
+                  <PermissionControl
+                    qualifyingPermissions={['CAN_RESET_USER_TOTP']}
+                  >
+                    <IconButtonTooltip
+                      caption={t('userList.overview.resetTotp')}
+                    >
+                      <IconButton
+                        circle
+                        size="sm"
+                        icon={<MdLockReset />}
+                        disabled={!(rowData as TinyUserFragment).totpEnabled}
+                        onClick={() => {
+                          setCurrentUser(rowData as TinyUserFragment);
+                          setIsResetTotpDialogOpen(true);
                         }}
                       />
                     </IconButtonTooltip>
@@ -447,6 +502,41 @@ function UserList() {
           </Button>
           <Button
             onClick={() => setConfirmationDialogOpen(false)}
+            appearance="subtle"
+          >
+            {t('userCreateOrEditView.cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* reset totp modal */}
+      <Modal
+        open={isResetTotpDialogOpen}
+        onClose={() => setIsResetTotpDialogOpen(false)}
+      >
+        <Modal.Header>
+          <Modal.Title>{t('userList.overview.resetTotpTitle')}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <p>
+            {t('userList.overview.resetTotpConfirmation', {
+              name: currentUser?.name || '',
+            })}
+          </p>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            appearance="primary"
+            color="orange"
+            disabled={isResettingTotp}
+            onClick={handleResetTotp}
+          >
+            {t('userCreateOrEditView.confirm')}
+          </Button>
+          <Button
+            onClick={() => setIsResetTotpDialogOpen(false)}
             appearance="subtle"
           >
             {t('userCreateOrEditView.cancel')}

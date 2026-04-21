@@ -29,6 +29,8 @@ fragment FullUser on SensitiveDataUser {
   email
   emailVerifiedAt
   note
+  totpEnabled
+  totpExempt
   roles {
     ...FullUserRole
   }
@@ -43,6 +45,7 @@ fragment TinyUser on SensitiveDataUser {
   active
   lastLogin
   email
+  totpEnabled
   roles {
     ...FullUserRole
   }
@@ -171,6 +174,7 @@ mutation UpdateUser(
   $note: String
   $roleIDs: [String!]
   $properties: [PropertyInput!]
+  $totpExempt: Boolean
 ) {
   updateUser(
     id: $id
@@ -186,6 +190,7 @@ mutation UpdateUser(
     flair: $flair
     note: $note
     roleIDs: $roleIDs
+    totpExempt: $totpExempt
   ) {
     ...FullUser
   }
@@ -194,9 +199,8 @@ mutation UpdateUser(
 mutation ResetUserPassword(
   $id: String!
   $password: String!
-  $sendMail: Boolean
 ) {
-  resetPassword(id: $id, password: $password, sendMail: $sendMail) {
+  resetPassword(id: $id, password: $password) {
     ...FullUser
   }
 }

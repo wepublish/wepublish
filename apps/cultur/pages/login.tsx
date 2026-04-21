@@ -4,11 +4,7 @@ import {
   LoginFormContainer,
   useUser,
 } from '@wepublish/authentication/website';
-import {
-  getSessionTokenProps,
-  tryServerSideJwtLogin,
-  redirectToLoginWithError,
-} from '@wepublish/utils/website';
+import { handleJwtLogin } from '@wepublish/utils/website';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
 import { getV1ApiClient } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
@@ -68,16 +64,7 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
   const { publicRuntimeConfig } = getConfig();
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
 
-  if (ctx.query.jwt) {
-    const success = await tryServerSideJwtLogin(ctx, client);
-
-    if (success) {
-      return await getSessionTokenProps(ctx);
-    }
-
-    redirectToLoginWithError(ctx);
-    return {};
-  }
+  await handleJwtLogin(ctx, client, undefined);
 
   return {};
 };

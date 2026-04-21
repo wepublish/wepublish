@@ -842,6 +842,12 @@ enum DocumentSort {
   ModifiedAt
 }
 
+type DocumentStorageUsage {
+  documentCount: Int!
+  limitBytes: Float!
+  usedBytes: Float!
+}
+
 enum EditorBlockType {
   Comment
   Crowdfunding
@@ -1454,6 +1460,11 @@ enum InvoiceSort {
   PaidAt
 }
 
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
 type ListicleBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -1512,6 +1523,66 @@ type MailTemplateWithUrlAndStatusModel {
   remoteMissing: Boolean!
   status: String!
   url: String!
+}
+
+type MailchimpInterestGroup {
+  id: String!
+  name: String!
+}
+
+type MailchimpList {
+  id: String!
+  memberCount: Int!
+  name: String!
+}
+
+type MailchimpMergeField {
+  name: String!
+  tag: String!
+  type: String!
+}
+
+type MailchimpSyncDryRunChange {
+  email: String!
+  interests: JSONObject!
+  isNew: Boolean!
+  mergeFields: JSONObject!
+  previousInterests: JSONObject
+  previousMergeFields: JSONObject
+}
+
+type MailchimpSyncDryRunResult {
+  changes: [MailchimpSyncDryRunChange!]!
+  skippedCount: Int!
+  totalUserCount: Int!
+  updatedCount: Int!
+}
+
+type MailchimpSyncErrorList {
+  nodes: [MailchimpSyncErrorType!]!
+  totalCount: Int!
+}
+
+type MailchimpSyncErrorType {
+  createdAt: DateTime!
+  email: String!
+  errorMessage: String!
+  id: String!
+  statusCode: Int
+  syncProviderId: String!
+  userId: String!
+}
+
+type MailchimpSyncProgressType {
+  errorMessage: String
+  errors: Int!
+  finishedAt: DateTime
+  processed: Int!
+  skipped: Int!
+  startedAt: DateTime!
+  status: String!
+  total: Int!
+  updated: Int!
 }
 
 type MemberPlan implements HasImage {
@@ -1649,8 +1720,8 @@ type Mutation {
 
   """Creates a rating system answer."""
   createRatingSystemAnswer(answer: String, ratingSystemId: String!, type: RatingSystemType!): CommentRatingSystemAnswer!
-  createSession(email: String!, password: String!): SessionWithToken!
-  createSessionWithJWT(jwt: String!): SessionWithToken!
+  createSession(email: String!, password: String!, totpToken: String): SessionWithToken!
+  createSessionWithJWT(jwt: String!, totpToken: String): SessionWithToken!
 
   """Creates a new subscription."""
   createSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Int!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!
@@ -1668,7 +1739,7 @@ type Mutation {
   createToken(name: String!): TokenWithSecret!
 
   """Creates a new user."""
-  createUser(active: Boolean!, address: UserAddressInput, birthday: DateTime, email: String!, emailVerifiedAt: DateTime, firstName: String, flair: String, name: String!, note: String, password: String, properties: [PropertyInput!]!, roleIDs: [String!]!, userImageID: String): SensitiveDataUser!
+  createUser(active: Boolean!, address: UserAddressInput, birthday: DateTime, email: String!, emailVerifiedAt: DateTime, firstName: String, flair: String, name: String!, note: String, password: String, properties: [PropertyInput!]!, roleIDs: [String!]!, totpExempt: Boolean, userImageID: String): SensitiveDataUser!
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
@@ -1683,6 +1754,9 @@ type Mutation {
   Allows guests and authenticated users to create additional subscriptions
   """
   createUserSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
+
+  """Deletes all sync errors for a config so all contacts will be retried."""
+  deleteAllMailchimpSyncErrors(configId: String!): Boolean!
 
   """Deletes an article."""
   deleteArticle(id: String!): String!
@@ -1715,6 +1789,9 @@ type Mutation {
 
   """Deletes an existing invoice."""
   deleteInvoice(id: String!): Invoice!
+
+  """Deletes a single sync error so the contact will be retried."""
+  deleteMailchimpSyncError(id: String!): Boolean!
 
   """Deletes an existing memberplan."""
   deleteMemberPlan(id: String!): MemberPlan!
@@ -1776,14 +1853,34 @@ type Mutation {
   """Dislikes an article."""
   dislikeArticle(id: String!): Article!
 
+  """
+  Simulates a mailchimp sync without making changes. Returns what would be updated.
+  """
+  dryRunMailchimpSync(id: String!, limit: Int): MailchimpSyncDryRunResult!
+
   """Duplicates an article."""
   duplicateArticle(id: String!): Article!
 
   """Duplicates an page."""
   duplicatePage(id: String!): Page!
 
+  """
+  Enables two-factor authentication for the current user after verifying the TOTP token.
+  """
+  enableTotp(totpToken: String!): Boolean!
+
   """Allows authenticated users to extend existing subscriptions"""
   extendUserSubscription(failureURL: String, subscriptionId: String!, successURL: String): Payment!
+
+  """
+  Generates a TOTP setup for the current user. Returns a QR code and secret for authenticator app configuration.
+  """
+  generateTotpSetup(
+    """
+    Set to true when called from a website to use the site name instead of "We.Publish CMS" in the authenticator app.
+    """
+    website: Boolean
+  ): TotpSetup!
 
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!
@@ -1831,7 +1928,17 @@ type Mutation {
   requestEmailChange(newEmail: String!): Boolean!
 
   """Resets the password of a user."""
-  resetPassword(id: String!, password: String, sendMail: Boolean): SensitiveDataUser!
+  resetPassword(id: String!, password: String): SensitiveDataUser!
+
+  """
+  Resets the password using a token from the password reset email. Does not create a session.
+  """
+  resetPasswordWithToken(password: String!, token: String!): Boolean!
+
+  """
+  Resets the two-factor authentication configuration for a user. The user will need to set up 2FA again on next login.
+  """
+  resetUserTotp(userId: String!): Boolean!
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
@@ -1842,6 +1949,11 @@ type Mutation {
   sendJWTLogin(email: String!): String!
 
   """
+  Sends a password reset email with a scoped JWT token. Always returns the email to prevent enumeration.
+  """
+  sendPasswordResetEmail(email: String!): String!
+
+  """
   This mutation sends a login link to the email if the user exists. Method will always return email address
   """
   sendWebsiteLogin(email: String!): String!
@@ -1849,6 +1961,9 @@ type Mutation {
 
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
+
+  """Triggers a mailchimp sync in the background."""
+  triggerMailchimpSync(id: String!): Boolean!
 
   """Unpublishes all revisions of an article."""
   unpublishArticle(id: String!): Article!
@@ -1952,6 +2067,9 @@ type Mutation {
   """Update an existing subscription interval"""
   updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String): [SubscriptionFlowModel!]!
 
+  """Updates an existing sync provider setting."""
+  updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String): SettingSyncProvider!
+
   """Updates an existing mail flow"""
   updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
 
@@ -1962,7 +2080,7 @@ type Mutation {
   updateTrackingPixelSetting(id: String, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String): SettingTrackingPixelProvider!
 
   """Updates an existing user."""
-  updateUser(active: Boolean, address: UserAddressInput, birthday: DateTime, email: String, emailVerifiedAt: DateTime, firstName: String, flair: String, id: String, name: String, note: String, properties: [PropertyInput!], roleIDs: [String!], userImageID: String): SensitiveDataUser!
+  updateUser(active: Boolean, address: UserAddressInput, birthday: DateTime, email: String, emailVerifiedAt: DateTime, firstName: String, flair: String, id: String, name: String, note: String, properties: [PropertyInput!], roleIDs: [String!], totpExempt: Boolean, userImageID: String): SensitiveDataUser!
 
   """Updates a comment you made."""
   updateUserComment(id: String!, lead: String, text: RichText, title: String): Comment!
@@ -2779,6 +2897,11 @@ type Query {
   """
   checkInvoiceStatus(id: String!): Invoice!
 
+  """
+  Checks whether a given email requires a TOTP code for login. Always returns true to prevent user enumeration.
+  """
+  checkLoginOtp(email: String!): Boolean!
+
   """Returns a comment by id."""
   comment(id: String!): Comment!
 
@@ -2805,6 +2928,9 @@ type Query {
 
   """Returns a document by id."""
   document(id: String!): Document!
+
+  """Returns the current document storage usage and limit."""
+  documentStorageUsage: DocumentStorageUsage!
 
   """Returns a paginated list of documents based on the filters given."""
   documents(cursorId: String, filter: DocumentFilter, order: SortOrder = Descending, skip: Int = 0, sort: DocumentSort = ModifiedAt, take: Int = 10): PaginatedDocuments!
@@ -2862,6 +2988,21 @@ type Query {
 
   """Return all mail templates"""
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
+
+  """Fetches available interest groups for a Mailchimp list."""
+  mailchimpInterestGroups(configId: String!, listId: String!): [MailchimpInterestGroup!]!
+
+  """Fetches available Mailchimp lists/audiences for a sync config."""
+  mailchimpLists(configId: String!): [MailchimpList!]!
+
+  """Fetches available merge fields for a Mailchimp list."""
+  mailchimpMergeFields(configId: String!, listId: String!): [MailchimpMergeField!]!
+
+  """Returns sync errors for a given config."""
+  mailchimpSyncErrors(configId: String!, skip: Int, take: Int): MailchimpSyncErrorList!
+
+  """Returns the current sync progress for a config."""
+  mailchimpSyncProgress(configId: String!): MailchimpSyncProgressType
 
   """This query returns the user."""
   me: SensitiveDataUser
@@ -2977,6 +3118,12 @@ type Query {
 
   """Returns a paginated list of subscriptions based on the filters given."""
   subscriptionsAsCsv(autoRenew: Boolean, cancellationDateFrom: DateFilter, cancellationDateTo: DateFilter, deactivationDateFrom: DateFilter, deactivationDateTo: DateFilter, deactivationReason: String, extendable: Boolean, memberPlanID: String, paidUntilFrom: DateFilter, paidUntilTo: DateFilter, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, startsAtFrom: DateFilter, startsAtTo: DateFilter, subscriptionIDs: [String!], userHasAddress: Boolean, userID: String, userIDs: [String!]): String!
+
+  """Returns a single sync provider setting by id."""
+  syncProviderSetting(id: String!): SettingSyncProvider!
+
+  """Returns all sync provider settings."""
+  syncProviderSettings(filter: SettingSyncProviderFilter): [SettingSyncProvider!]!
 
   """Returns all mail flows"""
   systemMails: [SystemMailModel!]!
@@ -3143,6 +3290,14 @@ type SensitiveDataUser implements BaseUser {
   roleIDs: [String!]!
   roles: [UserRole!]!
   subscriptionCount: Int!
+
+  """Whether two-factor authentication is enabled for this user."""
+  totpEnabled: Boolean!
+
+  """
+  Whether this user is exempt from the two-factor authentication requirement.
+  """
+  totpExempt: Boolean!
   userImageID: String
 }
 
@@ -3150,6 +3305,11 @@ type SessionWithToken {
   createdAt: DateTime!
   expiresAt: DateTime!
   token: String!
+
+  """
+  Whether the user has two-factor authentication enabled. If true and the user is an admin, the client must verify TOTP before proceeding.
+  """
+  totpEnabled: Boolean!
   user: SensitiveDataUser!
 }
 
@@ -3319,6 +3479,30 @@ type SettingRestriction {
   inputLength: Int
   maxValue: Int
   minValue: Int
+}
+
+type SettingSyncProvider implements SettingProvider {
+  createdAt: DateTime!
+  enabled: Boolean
+  id: String!
+  lastLoadedAt: DateTime!
+  lastSyncAt: DateTime
+  lastSyncError: String
+  mailchimp_defaultInterestGroupIds: [String!]
+  mailchimp_extensions: JSONObject
+  mailchimp_interestGroupMappings: [JSONObject!]
+  mailchimp_listId: String
+  mailchimp_mergeFieldMappings: [JSONObject!]
+  modifiedAt: DateTime!
+  name: String
+  type: SyncProviderType!
+}
+
+input SettingSyncProviderFilter {
+  enabled: Boolean
+  id: String
+  name: String
+  type: SyncProviderType
 }
 
 input SettingTrackingPixelFilter {
@@ -3519,6 +3703,10 @@ type SubscriptionPeriod {
 enum SubscriptionSort {
   CreatedAt
   ModifiedAt
+}
+
+enum SyncProviderType {
+  MAILCHIMP
 }
 
 type SystemMailModel {
@@ -3736,6 +3924,14 @@ type TokenWithSecret implements BaseToken {
   modifiedAt: DateTime!
   name: String!
   token: String!
+}
+
+type TotpSetup {
+  """Base32 encoded TOTP secret"""
+  secret: String!
+
+  """OTPAuth URI for authenticator apps"""
+  uri: String!
 }
 
 type TrackingPixel {

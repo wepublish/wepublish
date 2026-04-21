@@ -3,9 +3,8 @@ import { ContentWrapper } from '@wepublish/content/website';
 import { PersonalDataFormContainer } from '@wepublish/user/website';
 import {
   getSessionTokenProps,
+  handleJwtLogin,
   ssrAuthLink,
-  tryServerSideJwtLogin,
-  redirectToLoginWithError,
   withAuthGuard,
 } from '@wepublish/utils/website';
 import {
@@ -51,14 +50,7 @@ export { GuardedProfile as default };
     ),
   ]);
 
-  if (ctx.query.jwt) {
-    const success = await tryServerSideJwtLogin(ctx, client);
-
-    if (!success) {
-      redirectToLoginWithError(ctx);
-      return {};
-    }
-  }
+  await handleJwtLogin(ctx, client, undefined);
 
   const sessionProps = await getSessionTokenProps(ctx);
 

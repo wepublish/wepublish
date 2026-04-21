@@ -60,6 +60,9 @@ describe('MailController', () => {
     note: null,
     pendingEmail: null,
     pendingEmailAt: null,
+    totpSecret: null,
+    totpEnabled: false,
+    totpExempt: false,
   };
 
   beforeEach(async () => {
@@ -185,9 +188,7 @@ describe('MailController', () => {
                   { name: 'user_email', content: 'test-user@wepublish.com' },
                   { name: 'user_name', content: 'User' },
                   { name: 'user_firstName', content: 'Test' },
-                  { name: 'user_password', content: 'hidden' },
                   { name: 'user_active', content: true },
-                  { name: 'user_roleIDs_0', content: 'hidden' },
                   { name: 'optional_root1_n1_n2_n3_depth', content: 3 },
                   { name: 'optional_root1_n1_n2_depth', content: 2 },
                   { name: 'optional_root1_n1_depth', content: 1 },
