@@ -36,6 +36,9 @@ export default function AuthorList() {
       order: SortOrder.Ascending,
       take,
       skip: ((page ?? 1) - 1) * take,
+      filter: {
+        hideOnTeam: false,
+      },
     }),
     [page]
   );
