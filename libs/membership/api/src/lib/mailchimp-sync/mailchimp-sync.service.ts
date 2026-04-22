@@ -237,6 +237,13 @@ export class MailchimpSyncService {
       }
     }
 
+    // Build a mapping from numeric Mailchimp keys (e.g. MMERGE6) to the
+    // configured friendly tag names (e.g. VERBILLIGTABO) so that contacts
+    // fetched from Mailchimp can be normalised before comparison.
+    const mergeFieldAliasMap = await this.buildMergeFieldAliasMap(
+      config.mailchimp_listId
+    );
+
     let mailchimpContactMap: Map<string, any>;
     if (useTargetedContactFetch) {
       const candidateEmails: string[] = [];
@@ -257,6 +264,20 @@ export class MailchimpSyncService {
       mailchimpContactMap = new Map(
         mailchimpContacts.map(m => [m.email_address?.toLowerCase(), m])
       );
+    }
+
+    // Normalise merge field keys in all fetched contacts so that numeric
+    // aliases (MMERGE6) are remapped to their friendly tag (VERBILLIGTABO)
+    // before any comparison takes place.
+    if (mergeFieldAliasMap.size > 0) {
+      for (const contact of mailchimpContactMap.values()) {
+        if (contact.merge_fields) {
+          contact.merge_fields = this.normalizeMergeFields(
+            contact.merge_fields,
+            mergeFieldAliasMap
+          );
+        }
+      }
     }
 
     let updatedCount = 0;
@@ -997,6 +1018,39 @@ export class MailchimpSyncService {
       if (!this.valuesEquivalent(existing[key], desired[key])) return false;
     }
     return true;
+  }
+
+  private async buildMergeFieldAliasMap(
+    listId: string
+  ): Promise<Map<string, string>> {
+    // Maps the Mailchimp API tag (e.g. "MMERGE6") to the field's display name
+    // (e.g. "VERBILLIGTABO") for fields where the tag is the default numeric
+    // form but the sync config uses the human-readable label instead.
+    const aliasMap = new Map<string, string>();
+    try {
+      const response = (await mailchimp.lists.getListMergeFields(listId, {
+        count: 100,
+      })) as any;
+      for (const field of response.merge_fields ?? []) {
+        if (field.tag && field.name && field.tag !== field.name) {
+          aliasMap.set(field.tag, field.name);
+        }
+      }
+    } catch {
+      // Proceed without normalisation if the API call fails
+    }
+    return aliasMap;
+  }
+
+  private normalizeMergeFields(
+    mergeFields: Record<string, any>,
+    aliasMap: Map<string, string>
+  ): Record<string, any> {
+    const normalized: Record<string, any> = {};
+    for (const [key, value] of Object.entries(mergeFields)) {
+      normalized[aliasMap.get(key) ?? key] = value;
+    }
+    return normalized;
   }
 
   private valuesEquivalent(a: any, b: any): boolean {
