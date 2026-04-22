@@ -1648,11 +1648,27 @@ function SyncProviderSettingCard({
                         return ig ? ig.name : groupId;
                       };
 
+                      const valuesEquivalent = (a: any, b: any): boolean => {
+                        if (a === b) return true;
+                        const aEmpty = a == null || a === '';
+                        const bEmpty = b == null || b === '';
+                        if (aEmpty && bEmpty) return true;
+                        if (aEmpty !== bEmpty) return false;
+                        if ((a === '0' || a === 0) && (b === '' || b == null))
+                          return true;
+                        if ((b === '0' || b === 0) && (a === '' || a == null))
+                          return true;
+                        return String(a).trim() === String(b).trim();
+                      };
+
                       const formatChange = (value: any, prevValue: any) => {
                         if (change.isNew && prevValue === undefined) {
                           return `→ ${JSON.stringify(value)}`;
                         }
-                        if (prevValue !== undefined && prevValue !== value) {
+                        if (
+                          prevValue !== undefined &&
+                          !valuesEquivalent(prevValue, value)
+                        ) {
                           return `${JSON.stringify(prevValue)} → ${JSON.stringify(value)}`;
                         }
                         return JSON.stringify(value);
