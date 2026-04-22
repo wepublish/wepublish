@@ -39,6 +39,7 @@ import { MediaAdapterModule } from '@wepublish/image/api';
 import {
   BaseMailProvider,
   MailchimpMailProvider,
+  MailersendMailProvider,
   MailgunMailProvider,
   MailsModule,
 } from '@wepublish/mail/api';
@@ -178,6 +179,24 @@ import {
 
           await mailProvider.initDatabaseConfiguration(
             MailProviderType.MAILCHIMP
+          );
+        } else if (mailProviderRaw?.type === 'mailersend') {
+          mailProvider = new MailersendMailProvider({
+            id: mailProviderRaw.id,
+            // MailerSend signs the raw JSON body; preserve it on the request
+            // so verifyWebhookSignature can hash the exact bytes that were
+            // signed, not a re-stringified copy.
+            incomingRequestHandler: bodyParser.json({
+              verify: (req, _res, buf) => {
+                (req as any).rawBody = buf.toString('utf8');
+              },
+            }),
+            kv,
+            prisma,
+          });
+
+          await mailProvider.initDatabaseConfiguration(
+            MailProviderType.MAILERSEND
           );
         } else if (mailProviderRaw?.type === 'slackmail') {
           mailProvider = new SlackMailProvider({

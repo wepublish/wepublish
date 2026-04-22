@@ -1539,9 +1539,10 @@ model PaywallBypass {
 }
 
 enum MailProviderType {
-  MAILGUN   @map("mailgun")
-  MAILCHIMP @map("mailchimp")
-  SLACK     @map("slack")
+  MAILGUN    @map("mailgun")
+  MAILCHIMP  @map("mailchimp")
+  MAILERSEND @map("mailersend")
+  SLACK      @map("slack")
 }
 
 model SettingMailProvider {
