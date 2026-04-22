@@ -22,6 +22,7 @@ interface SubscriptionLite {
     slug: string;
   };
   deactivation: { id: string } | null;
+  replacesSubscriptionID: string | null;
 }
 
 interface UserAndSubscriptions {
@@ -40,6 +41,18 @@ interface UserAndSubscriptions {
 // the purpose of flipping a Mailchimp interest group to true. Outside this
 // window the sync preserves whatever value Mailchimp already has.
 const NEW_SUBSCRIPTION_WINDOW_MS = 3 * 24 * 60 * 60 * 1000;
+
+// Maximum gap between an expired auto-renew predecessor's paidUntil and a
+// new subscription's startsAt that still counts as a "renewal" rather than
+// an independent re-subscription. If the gap exceeds this, the new sub is
+// treated as genuinely new even though an old expired auto-renew sub exists.
+const RENEWAL_PROXIMITY_MS = 30 * 24 * 60 * 60 * 1000;
+
+// Maximum time a subscription whose paidUntil has elapsed is still
+// considered to be in a grace / renewal-in-progress period. Once
+// this window expires the subscription is treated as definitively
+// ended even if autoRenew is still true and no deactivation exists.
+const GRACE_PERIOD_MS = 45 * 24 * 60 * 60 * 1000;
 
 interface MergeFieldMapping {
   tag: string;
@@ -315,6 +328,7 @@ export class MailchimpSyncService {
       // matching subs are definitively ended. Otherwise preserve the
       // existing value (from Mailchimp or false for new contacts).
       for (const mapping of interestGroupMappings) {
+        if (defaultInterestGroupIds.includes(mapping.groupId)) continue;
         const currentValue = interests[mapping.groupId] ?? false;
         interests[mapping.groupId] = this.determineInterestValue(
           mapping,
@@ -548,6 +562,9 @@ export class MailchimpSyncService {
     });
 
     const subscriptions = await this.prisma.subscription.findMany({
+      where: {
+        confirmed: true,
+      },
       select: {
         id: true,
         userID: true,
@@ -563,6 +580,7 @@ export class MailchimpSyncService {
         deactivation: {
           select: { id: true },
         },
+        replacesSubscriptionID: true,
       },
     });
 
@@ -864,70 +882,88 @@ export class MailchimpSyncService {
     return false;
   }
 
-  /**
-   * Decide the desired Mailchimp value for an interest group, given:
-   * - the matching subscriptions for this mapping
-   * - the interest group's current value in Mailchimp
-   *
-   * Rules (ported from external reference sync):
-   * - flip to `true` only when a genuinely new matching subscription started
-   *   within NEW_SUBSCRIPTION_WINDOW_MS and the current value is false
-   * - flip to `false` only when there is no active matching sub AND at least
-   *   one matching sub is definitively ended (deactivated or autoRenew=false)
-   *   AND the current value is true
-   * - otherwise preserve the current value so manual Mailchimp edits and
-   *   in-flight renewals aren't clobbered on every sync
-   *
-   * A matching sub whose paid period has elapsed but is still auto-renewing
-   * and not deactivated is treated as a renewal in progress: it does NOT
-   * count as definitively ended, and it suppresses the "genuinely new" flag
-   * so renewals of the same plan don't re-flip the interest on.
-   */
   private determineInterestValue(
     mapping: InterestGroupMapping,
     subscriptions: SubscriptionLite[],
     currentValue: boolean
   ): boolean {
     const now = new Date();
-    let hasActive = false;
-    let hasGenuinelyNew = false;
-    let isDefinitivelyEnded = false;
-    let hasExpiredAutoRenewPredecessor = false;
+    const matchingSubs = subscriptions.filter(sub =>
+      this.subscriptionMatchesInterestExpression(mapping.expression, sub)
+    );
 
-    for (const sub of subscriptions) {
+    if (matchingSubs.length === 0) return currentValue;
+
+    const activeSubs = matchingSubs.filter(sub =>
+      this.isSubscriptionActive(sub, now)
+    );
+    const hasActive = activeSubs.length > 0;
+
+    if (hasActive) {
+      const newestActive = activeSubs[0];
       if (
-        !this.subscriptionMatchesInterestExpression(mapping.expression, sub)
+        !currentValue &&
+        now.getTime() - newestActive.startsAt.getTime() <=
+          NEW_SUBSCRIPTION_WINDOW_MS &&
+        !this.isRenewal(newestActive, matchingSubs, now)
       ) {
-        continue;
+        return true;
       }
-
-      const isRunning =
-        !sub.deactivation && !!sub.paidUntil && sub.paidUntil > now;
-
-      if (isRunning) {
-        hasActive = true;
-        if (
-          now.getTime() - sub.startsAt.getTime() <=
-          NEW_SUBSCRIPTION_WINDOW_MS
-        ) {
-          hasGenuinelyNew = true;
-        }
-      } else if (sub.deactivation || !sub.autoRenew) {
-        isDefinitivelyEnded = true;
-      } else {
-        hasExpiredAutoRenewPredecessor = true;
-      }
+      return currentValue;
     }
 
-    // A new sub that has an expired auto-renewing predecessor for the same
-    // plan is really a renewal, not a genuinely new start.
-    if (hasExpiredAutoRenewPredecessor) {
-      hasGenuinelyNew = false;
+    if (currentValue && this.isDefinitivelyEnded(matchingSubs, now)) {
+      return false;
     }
 
-    if (hasGenuinelyNew && !currentValue) return true;
-    if (!hasActive && isDefinitivelyEnded && currentValue) return false;
     return currentValue;
+  }
+
+  private isSubscriptionActive(sub: SubscriptionLite, now: Date): boolean {
+    if (sub.deactivation) return false;
+    if (!sub.paidUntil) return true;
+    if (sub.paidUntil > now) return true;
+    return now.getTime() - sub.paidUntil.getTime() <= GRACE_PERIOD_MS;
+  }
+
+  private isRenewal(
+    sub: SubscriptionLite,
+    matchingSubs: SubscriptionLite[],
+    now: Date
+  ): boolean {
+    if (sub.replacesSubscriptionID) {
+      return matchingSubs.some(s => s.id === sub.replacesSubscriptionID);
+    }
+
+    const predecessor = matchingSubs.find(
+      s =>
+        s.id !== sub.id &&
+        !s.deactivation &&
+        s.autoRenew &&
+        !!s.paidUntil &&
+        s.paidUntil <= now &&
+        sub.startsAt.getTime() >= s.paidUntil.getTime() &&
+        sub.startsAt.getTime() - s.paidUntil.getTime() <= RENEWAL_PROXIMITY_MS
+    );
+
+    return !!predecessor;
+  }
+
+  private isDefinitivelyEnded(
+    subscriptions: SubscriptionLite[],
+    now: Date
+  ): boolean {
+    return subscriptions.some(sub => {
+      const paidUntilElapsed = !sub.paidUntil || sub.paidUntil <= now;
+      const withinGracePeriod =
+        !!sub.paidUntil &&
+        now.getTime() - sub.paidUntil.getTime() <= GRACE_PERIOD_MS;
+      return (
+        sub.deactivation ||
+        !sub.autoRenew ||
+        (paidUntilElapsed && !withinGracePeriod)
+      );
+    });
   }
 
   private isWithinLastXDays(date: Date, days: number): boolean {
