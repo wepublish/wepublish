@@ -1,6 +1,5 @@
 import { Cron } from '@nestjs/schedule';
 import { Injectable, Logger } from '@nestjs/common';
-import { ModuleRef } from '@nestjs/core';
 import { PeriodicJobService } from './periodic-job.service';
 import { MailchimpSyncService } from '../mailchimp-sync/mailchimp-sync.service';
 
@@ -13,7 +12,7 @@ export class PeriodicJobExecutor {
 
   constructor(
     private periodicJobController: PeriodicJobService,
-    private moduleRef: ModuleRef
+    private mailchimpSyncService: MailchimpSyncService
   ) {}
 
   @Cron(
@@ -24,13 +23,14 @@ export class PeriodicJobExecutor {
     }
   )
   async handleCron() {
-    await this.periodicJobController.concurrentExecute();
+    try {
+      await this.periodicJobController.concurrentExecute();
+    } catch (error) {
+      this.logger.error('Periodic jobs failed:', error);
+    }
 
     try {
-      const mailchimpSyncService = this.moduleRef.get(MailchimpSyncService, {
-        strict: false,
-      });
-      await mailchimpSyncService.executeAllSync();
+      await this.mailchimpSyncService.executeAllSync();
     } catch (error) {
       this.logger.error('Mailchimp sync failed during periodic job:', error);
     }
