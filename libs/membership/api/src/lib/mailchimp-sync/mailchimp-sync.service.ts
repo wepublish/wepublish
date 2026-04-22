@@ -771,9 +771,9 @@ export class MailchimpSyncService {
    *
    * Single expression formats:
    * - "user.firstName" / "user.name" / "user.id" - direct user field access
-   * - "slug:contains:value" - "1" if current subscription plan slug contains value, else "0"
-   * - "slug:contains_any:val1,val2" - "1" if current slug contains any of the values
-   * - "slug:equals:value" - "1" if current subscription plan slug equals value
+   * - "slug:contains:value" / "slug:contains_any:v1,v2" / "slug:equals:value"
+   *     "1" if current subscription plan slug matches, "-1" if only past
+   *     subscriptions match, "" if no matching sub ever.
    * - "active_abo" - "1" if active, "-1" if past subscriptions, "" if none
    * - "active_abo_with_payment:method_slug:days" - like active_abo but also returns "1"
    *     if last subscription has given payment method and paidUntil within N days
@@ -816,23 +816,20 @@ export class MailchimpSyncService {
       case 'slug': {
         const op = parts[1];
         const value = parts.slice(2).join(':');
-        if (op === 'contains') {
-          return data.currentSubscription?.memberPlan.slug.includes(value) ?
-              '1'
-            : '';
-        }
-        if (op === 'contains_any') {
-          const values = value.split(',');
-          return (
-              values.some(v =>
-                data.currentSubscription?.memberPlan.slug.includes(v.trim())
-              )
-            ) ?
-              '1'
-            : '';
-        }
-        if (op === 'equals') {
-          return data.currentSubscription?.memberPlan.slug === value ? '1' : '';
+
+        const matches = (slug: string | undefined): boolean => {
+          if (!slug) return false;
+          if (op === 'equals') return slug === value;
+          if (op === 'contains') return slug.includes(value);
+          if (op === 'contains_any') {
+            return value.split(',').some(v => slug.includes(v.trim()));
+          }
+          return false;
+        };
+
+        if (matches(data.currentSubscription?.memberPlan.slug)) return '1';
+        if (data.subscriptions.some(s => matches(s.memberPlan.slug))) {
+          return '-1';
         }
         return '';
       }
