@@ -2,13 +2,12 @@ import styled from '@emotion/styled';
 import { css, Typography, useTheme } from '@mui/material';
 
 import {
+  BlockType,
   ExtractedTeaser,
   TeaserAddress,
   teaserContentKey,
 } from './extractTeasers';
 import { groupColor, TeaserCard } from './TeaserCard';
-
-// ─── Styled components ────────────────────────────────────────────────────────
 
 const GroupWrapper = styled('div', {
   shouldForwardProp: p => p !== 'borderColor',
@@ -16,7 +15,7 @@ const GroupWrapper = styled('div', {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  border-left: 0; //4px solid ${({ borderColor }) => borderColor};
+  border-left: 0;
   padding-left: 10px;
 `;
 
@@ -51,8 +50,6 @@ const CardGrid = styled('div')`
   gap: 8px;
 `;
 
-// ─── Props ────────────────────────────────────────────────────────────────────
-
 type TeaserBlockGroupProps = {
   label: string;
   groupIndex: number;
@@ -61,8 +58,6 @@ type TeaserBlockGroupProps = {
   selectedAddress: TeaserAddress | null;
   onCardClick: (extracted: ExtractedTeaser) => void;
 };
-
-// ─── Component ────────────────────────────────────────────────────────────────
 
 export function TeaserBlockGroup({
   label,
@@ -85,7 +80,6 @@ export function TeaserBlockGroup({
       <CardGrid>
         {teasers.map((extracted, i) => {
           const isSelected = addressesEqual(extracted.address, selectedAddress);
-          // A card is a "target" when something else is selected (highlight swap targets)
           const isTarget = selectedAddress !== null && !isSelected;
 
           return (
@@ -106,23 +100,27 @@ export function TeaserBlockGroup({
   );
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
 function addressesEqual(a: TeaserAddress, b: TeaserAddress | null): boolean {
   if (!b) return false;
-  if (a.blockKind !== b.blockKind) return false;
+  if (a.blockType !== b.blockType) return false;
   if (a.blockIndex !== b.blockIndex) return false;
 
-  switch (a.blockKind) {
-    case 'teaserGrid':
-      return b.blockKind === 'teaserGrid' && a.teaserIndex === b.teaserIndex;
-    case 'teaserFlex':
-      return b.blockKind === 'teaserFlex' && a.flexIndex === b.flexIndex;
-    case 'teaserSlots':
-      return b.blockKind === 'teaserSlots' && a.slotIndex === b.slotIndex;
-    case 'flexNested':
+  switch (a.blockType) {
+    case BlockType.TeaserGrid:
       return (
-        b.blockKind === 'flexNested' &&
+        b.blockType === BlockType.TeaserGrid && a.teaserIndex === b.teaserIndex
+      );
+    case BlockType.TeaserFlex:
+      return (
+        b.blockType === BlockType.TeaserFlex && a.flexIndex === b.flexIndex
+      );
+    case BlockType.TeaserSlots:
+      return (
+        b.blockType === BlockType.TeaserSlots && a.slotIndex === b.slotIndex
+      );
+    case BlockType.FlexBlock:
+      return (
+        b.blockType === BlockType.FlexBlock &&
         a.nestedBlockIndex === b.nestedBlockIndex &&
         addressesEqual(a.nested, b.nested)
       );

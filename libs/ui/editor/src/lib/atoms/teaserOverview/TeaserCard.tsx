@@ -15,10 +15,7 @@ import { MdContentCopy, MdImage } from 'react-icons/md';
 import { ArticleTeaser, EventTeaser, PageTeaser } from '../../blocks/types';
 import { ExtractedTeaser } from './extractTeasers';
 
-// ─── Colours ──────────────────────────────────────────────────────────────────
-
 export function groupColor(groupIndex: number, theme: Theme): string {
-  // Avoid primary (blue) shades — they clash with the selected-teaser highlight.
   const colors = [
     theme.palette.secondary.main,
     theme.palette.success.main,
@@ -31,8 +28,6 @@ export function groupColor(groupIndex: number, theme: Theme): string {
   ];
   return colors[groupIndex % colors.length];
 }
-
-// ─── Styled components ────────────────────────────────────────────────────────
 
 const Card = styled('div', {
   shouldForwardProp: p =>
@@ -159,8 +154,6 @@ const SelectionTooltip = styled(({ className, ...props }: TooltipProps) => (
   }
 `;
 
-// ─── Props ────────────────────────────────────────────────────────────────────
-
 type TeaserCardProps = {
   extracted: ExtractedTeaser;
   isSelected: boolean;
@@ -168,8 +161,6 @@ type TeaserCardProps = {
   isDuplicate: boolean;
   onClick: () => void;
 };
-
-// ─── Component ────────────────────────────────────────────────────────────────
 
 export function TeaserCard({
   extracted,

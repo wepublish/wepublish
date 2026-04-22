@@ -10,20 +10,14 @@ import {
   TeaserGridFlexBlockValue,
   TeaserSlotsBlockValue,
 } from '../../blocks/types';
-import { TeaserAddress } from './extractTeasers';
+import { BlockType, TeaserAddress } from './extractTeasers';
 
-// ─── Read ─────────────────────────────────────────────────────────────────────
-
-/**
- * Returns the Teaser at the given address without modifying any state.
- * Returns null if the address points to an empty slot.
- */
 export function getTeaserAt(
   blocks: BlockValue[],
   address: TeaserAddress
 ): Teaser | null {
-  switch (address.blockKind) {
-    case 'teaserGrid': {
+  switch (address.blockType) {
+    case BlockType.TeaserGrid: {
       const block = blocks[address.blockIndex];
       if (
         block.type !== EditorBlockType.TeaserGrid1 &&
@@ -35,7 +29,7 @@ export function getTeaserAt(
       ][1];
     }
 
-    case 'teaserFlex': {
+    case BlockType.TeaserFlex: {
       const block = blocks[address.blockIndex];
       if (block.type !== EditorBlockType.TeaserGridFlex) return null;
       return (block.value as TeaserGridFlexBlockValue).flexTeasers[
@@ -43,7 +37,7 @@ export function getTeaserAt(
       ].teaser;
     }
 
-    case 'teaserSlots': {
+    case BlockType.TeaserSlots: {
       const block = blocks[address.blockIndex];
       if (block.type !== EditorBlockType.TeaserSlots) return null;
       return (
@@ -52,7 +46,7 @@ export function getTeaserAt(
       );
     }
 
-    case 'flexNested': {
+    case BlockType.FlexBlock: {
       const block = blocks[address.blockIndex];
       if (block.type !== EditorBlockType.FlexBlock) return null;
       const nestedBlock = (block.value as FlexBlockValue).blocks[
@@ -64,19 +58,13 @@ export function getTeaserAt(
   }
 }
 
-// ─── Write ────────────────────────────────────────────────────────────────────
-
-/**
- * Returns a new blocks array with the teaser at `address` replaced by `teaser`.
- * All operations are immutable — no mutation of the input array.
- */
 export function setTeaserAt(
   blocks: BlockValue[],
   address: TeaserAddress,
   teaser: Teaser | null
 ): BlockValue[] {
-  switch (address.blockKind) {
-    case 'teaserGrid': {
+  switch (address.blockType) {
+    case BlockType.TeaserGrid: {
       return replaceBlock(blocks, address.blockIndex, block => {
         const value = block.value as TeaserGridBlockValue;
         const teasers = value.teasers.map((entry, i) =>
@@ -88,7 +76,7 @@ export function setTeaserAt(
       });
     }
 
-    case 'teaserFlex': {
+    case BlockType.TeaserFlex: {
       return replaceBlock(blocks, address.blockIndex, block => {
         const value = block.value as TeaserGridFlexBlockValue;
         const flexTeasers = value.flexTeasers.map(
@@ -99,7 +87,7 @@ export function setTeaserAt(
       });
     }
 
-    case 'teaserSlots': {
+    case BlockType.TeaserSlots: {
       return replaceBlock(blocks, address.blockIndex, block => {
         const value = block.value as TeaserSlotsBlockValue;
         const slots = value.slots.map((slot, i) =>
@@ -111,7 +99,7 @@ export function setTeaserAt(
       });
     }
 
-    case 'flexNested': {
+    case BlockType.FlexBlock: {
       return replaceBlock(blocks, address.blockIndex, block => {
         const value = block.value as FlexBlockValue;
         const nestedBlocks = value.blocks.map(
@@ -134,12 +122,6 @@ export function setTeaserAt(
   }
 }
 
-// ─── Swap ─────────────────────────────────────────────────────────────────────
-
-/**
- * Returns a new blocks array with the teasers at addresses `a` and `b`
- * exchanged. Works across different block types and across FlexBlock nesting.
- */
 export function swapTeasers(
   blocks: BlockValue[],
   a: TeaserAddress,
@@ -149,8 +131,6 @@ export function swapTeasers(
   const teaserB = getTeaserAt(blocks, b);
   return setTeaserAt(setTeaserAt(blocks, a, teaserB), b, teaserA);
 }
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function replaceBlock(
   blocks: BlockValue[],

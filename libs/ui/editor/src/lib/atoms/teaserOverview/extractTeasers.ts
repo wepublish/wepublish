@@ -15,32 +15,33 @@ import {
   TeaserSlotsBlockValue,
 } from '../../blocks/types';
 
-// ─── Address Types ────────────────────────────────────────────────────────────
+export enum BlockType {
+  TeaserGrid = 'teaserGrid',
+  TeaserFlex = 'teaserFlex',
+  TeaserSlots = 'teaserSlots',
+  FlexBlock = 'flexNested',
+}
 
-/**
- * A TeaserAddress precisely identifies a single teaser slot within the blocks
- * array so it can be read or written without mutating state.
- */
 export type TeaserGridAddress = {
-  blockKind: 'teaserGrid';
+  blockType: BlockType.TeaserGrid;
   blockIndex: number;
   teaserIndex: number;
 };
 
 export type TeaserFlexAddress = {
-  blockKind: 'teaserFlex';
+  blockType: BlockType.TeaserFlex;
   blockIndex: number;
   flexIndex: number;
 };
 
 export type TeaserSlotsAddress = {
-  blockKind: 'teaserSlots';
+  blockType: BlockType.TeaserSlots;
   blockIndex: number;
   slotIndex: number;
 };
 
-export type TeaserFlexNestedAddress = {
-  blockKind: 'flexNested';
+export type TeaserFlexBlockAddress = {
+  blockType: BlockType.FlexBlock;
   blockIndex: number;
   nestedBlockIndex: number;
   nested: TeaserAddress;
@@ -50,23 +51,15 @@ export type TeaserAddress =
   | TeaserGridAddress
   | TeaserFlexAddress
   | TeaserSlotsAddress
-  | TeaserFlexNestedAddress;
-
-// ─── Extracted Teaser ─────────────────────────────────────────────────────────
+  | TeaserFlexBlockAddress;
 
 export type ExtractedTeaser = {
-  /** Pointer back into the blocks array — used for swapping */
   address: TeaserAddress;
   teaser: Teaser;
-  /** Human-readable label for the containing block, e.g. "Flex Grid · Block 3" */
   blockLabel: string;
-  /** Colour index (cycle through GROUP_COLORS in the UI) */
   groupIndex: number;
-  /** 0 = top-level block, 1 = inside a FlexBlock */
   nestDepth: number;
 };
-
-// ─── Label helpers ────────────────────────────────────────────────────────────
 
 const BLOCK_TYPE_KEY: Partial<Record<EditorBlockType, string>> = {
   [EditorBlockType.TeaserGrid1]: 'teaserOverview.blockTypes.teaserGrid1',
@@ -92,9 +85,6 @@ function blockLabel(
   return styleName ? `${base} · ${styleName}` : base;
 }
 
-// ─── Content key ─────────────────────────────────────────────────────────────
-
-/** Returns a stable key that identifies the underlying content of a teaser. */
 export function teaserContentKey(teaser: Teaser): string {
   switch (teaser.type) {
     case TeaserType.Article:
@@ -108,12 +98,6 @@ export function teaserContentKey(teaser: Teaser): string {
   }
 }
 
-// ─── Extraction ───────────────────────────────────────────────────────────────
-
-/**
- * Recursively walks all blocks and returns every non-null manual teaser with
- * its precise address, label, and grouping metadata.
- */
 export function extractTeasers(
   blocks: BlockValue[],
   t: TFunction,
@@ -142,7 +126,11 @@ export function extractTeasers(
           if (!teaser) continue;
 
           results.push({
-            address: { blockKind: 'teaserGrid', blockIndex, teaserIndex: i },
+            address: {
+              blockType: BlockType.TeaserGrid,
+              blockIndex,
+              teaserIndex: i,
+            },
             teaser,
             blockLabel: label,
             groupIndex,
@@ -168,7 +156,11 @@ export function extractTeasers(
           if (!teaser) continue;
 
           results.push({
-            address: { blockKind: 'teaserFlex', blockIndex, flexIndex: i },
+            address: {
+              blockType: BlockType.TeaserFlex,
+              blockIndex,
+              flexIndex: i,
+            },
             teaser,
             blockLabel: label,
             groupIndex,
@@ -178,8 +170,6 @@ export function extractTeasers(
         groupIndex++;
         break;
       }
-
-      // TeaserList blocks use automatic sorting only — skip them.
 
       case EditorBlockType.TeaserSlots: {
         const value = block.value as TeaserSlotsBlockValue;
@@ -193,11 +183,14 @@ export function extractTeasers(
 
         for (let i = 0; i < value.slots.length; i++) {
           const slot = value.slots[i];
-          // Only manual slots with an assigned teaser
           if (slot.type !== TeaserSlotType.Manual || !slot.teaser) continue;
 
           results.push({
-            address: { blockKind: 'teaserSlots', blockIndex, slotIndex: i },
+            address: {
+              blockType: BlockType.TeaserSlots,
+              blockIndex,
+              slotIndex: i,
+            },
             teaser: slot.teaser,
             blockLabel: label,
             groupIndex,
@@ -211,9 +204,8 @@ export function extractTeasers(
       case EditorBlockType.FlexBlock: {
         const nestedBlocks = block.value.blocks as FlexBlockWithAlignment[];
         const parentGroupIndex = groupIndex;
-        groupIndex++; // reserve one index for the flex container itself
+        groupIndex++;
 
-        // Sort nested blocks the same way the frontend renders them (y then x)
         const sortedIndices = nestedBlocks
           .map((b, i) => i)
           .sort((a, b) => {
@@ -227,8 +219,6 @@ export function extractTeasers(
           const { block: nestedBlock } = nestedBlocks[nestedBlockIndex];
           if (!nestedBlock) continue;
 
-          // Build a label that tells users exactly where in the flex block
-          // this teaser lives: "Flex Block 3 › Block 2 (Teaser Slots, "My Title")"
           const nestedBlockType = nestedBlock.type as EditorBlockType;
           const nestedTypeLabel =
             BLOCK_TYPE_KEY[nestedBlockType] ?
@@ -259,8 +249,6 @@ export function extractTeasers(
                 type: nestedTypeLabel,
               });
 
-          // Temporarily wrap the nested block in a single-item array so we can
-          // reuse extractTeasers recursively, then remap the addresses.
           const nested = extractTeasers(
             [nestedBlock as BlockValue],
             t,
@@ -270,7 +258,7 @@ export function extractTeasers(
             results.push({
               ...extracted,
               address: {
-                blockKind: 'flexNested',
+                blockType: BlockType.FlexBlock,
                 blockIndex,
                 nestedBlockIndex,
                 nested: extracted.address,

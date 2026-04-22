@@ -14,6 +14,7 @@ import { Drawer, IconButton } from 'rsuite';
 import { BlockValue, Teaser } from '../../blocks/types';
 import { TeaserSelectAndEditPanel } from '../../panel/teaserSelectAndEditPanel';
 import {
+  BlockType,
   ExtractedTeaser,
   extractTeasers,
   TeaserAddress,
@@ -177,14 +178,10 @@ const ALL_TEASER_TYPES = [
   TeaserType.Custom,
 ] as const;
 
-// ─── Props ────────────────────────────────────────────────────────────────────
-
 type TeaserOverviewPanelProps = {
   blocks: BlockValue[];
   onChange: (blocks: BlockValue[]) => void;
 };
-
-// ─── Component ────────────────────────────────────────────────────────────────
 
 export function TeaserOverviewPanel({
   blocks,
@@ -226,7 +223,6 @@ export function TeaserOverviewPanel({
     return counts;
   }, [allTeasers]);
 
-  // Group by blockLabel, preserving order of first appearance
   const groups = useMemo(() => {
     const seen = new Map<
       string,
@@ -248,7 +244,6 @@ export function TeaserOverviewPanel({
     return [...seen.values()];
   }, [allTeasers]);
 
-  // Filtered groups: only show groups that have at least one matching teaser
   const filteredGroups = useMemo(() => {
     if (!isFiltering) return groups;
 
@@ -290,7 +285,6 @@ export function TeaserOverviewPanel({
         return;
       }
 
-      // Swap the two teasers
       onChange(swapTeasers(blocks, selectedAddress, extracted.address));
       setSelectedAddress(null);
     },
@@ -316,7 +310,6 @@ export function TeaserOverviewPanel({
     setSelectedAddress(null);
   }, []);
 
-  // Keys that appear more than once on the page
   const duplicateKeys = useMemo(() => {
     const counts = new Map<string, number>();
     for (const { teaser } of allTeasers) {
@@ -330,7 +323,6 @@ export function TeaserOverviewPanel({
     return dupes;
   }, [allTeasers]);
 
-  // Hide entirely when there are no curated teasers
   if (allTeasers.length === 0) return null;
 
   const summary = t(
@@ -355,7 +347,6 @@ export function TeaserOverviewPanel({
           isOpen={isOpen}
           onClick={() => {
             setIsOpen(v => !v);
-            // Deselect on collapse
             if (isOpen) setSelectedAddress(null);
           }}
           aria-expanded={isOpen}
@@ -459,23 +450,27 @@ export function TeaserOverviewPanel({
   );
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
 function addressesEqual(a: TeaserAddress, b: TeaserAddress | null): boolean {
   if (!b) return false;
-  if (a.blockKind !== b.blockKind) return false;
+  if (a.blockType !== b.blockType) return false;
   if (a.blockIndex !== b.blockIndex) return false;
 
-  switch (a.blockKind) {
-    case 'teaserGrid':
-      return b.blockKind === 'teaserGrid' && a.teaserIndex === b.teaserIndex;
-    case 'teaserFlex':
-      return b.blockKind === 'teaserFlex' && a.flexIndex === b.flexIndex;
-    case 'teaserSlots':
-      return b.blockKind === 'teaserSlots' && a.slotIndex === b.slotIndex;
-    case 'flexNested':
+  switch (a.blockType) {
+    case BlockType.TeaserGrid:
       return (
-        b.blockKind === 'flexNested' &&
+        b.blockType === BlockType.TeaserGrid && a.teaserIndex === b.teaserIndex
+      );
+    case BlockType.TeaserFlex:
+      return (
+        b.blockType === BlockType.TeaserFlex && a.flexIndex === b.flexIndex
+      );
+    case BlockType.TeaserSlots:
+      return (
+        b.blockType === BlockType.TeaserSlots && a.slotIndex === b.slotIndex
+      );
+    case BlockType.FlexBlock:
+      return (
+        b.blockType === BlockType.FlexBlock &&
         a.nestedBlockIndex === b.nestedBlockIndex &&
         addressesEqual(a.nested, b.nested)
       );
