@@ -320,12 +320,21 @@ export class MailchimpSyncService {
         userWithSub.user.email.toLowerCase()
       );
 
+      // Skip users whose Mailchimp contact is not subscribed
+      if (existingContact?.status !== 'subscribed') {
+        skippedCount++;
+        continue;
+      }
+
       const mergeFields: Record<string, string> = {};
       for (const mapping of mergeFieldMappings) {
-        mergeFields[mapping.tag] = this.evaluateMergeFieldExpression(
+        const value = this.evaluateMergeFieldExpression(
           mapping.expression,
           userWithSub
         );
+        if (value !== '') {
+          mergeFields[mapping.tag] = value;
+        }
       }
 
       const interests: Record<string, boolean> = {};
@@ -624,7 +633,9 @@ export class MailchimpSyncService {
       // paidUntil in the past is fine (grace period / pending renewal) — the
       // subscription is considered active until it's formally deactivated.
       const currentSubscription = userSubs
-        .filter(s => !s.deactivation)
+        .filter(
+          s => !s.deactivation || (s.paidUntil && s.paidUntil > new Date())
+        )
         .sort(
           (a, b) =>
             (b.paidUntil?.getTime() ?? 0) - (a.paidUntil?.getTime() ?? 0)
@@ -944,7 +955,8 @@ export class MailchimpSyncService {
   }
 
   private isSubscriptionActive(sub: SubscriptionLite, now: Date): boolean {
-    if (sub.deactivation) return false;
+    if (sub.deactivation && (!sub.paidUntil || sub.paidUntil <= now))
+      return false;
     if (!sub.paidUntil) return true;
     if (sub.paidUntil > now) return true;
     return now.getTime() - sub.paidUntil.getTime() <= GRACE_PERIOD_MS;
@@ -1059,6 +1071,10 @@ export class MailchimpSyncService {
     const bEmpty = b == null || b === '';
     if (aEmpty && bEmpty) return true;
     if (aEmpty !== bEmpty) return false;
+
+    // For number fields, "0" and "" are equivalent (both represent empty)
+    if ((a === '0' || a === 0) && b === '') return true;
+    if ((b === '0' || b === 0) && a === '') return true;
 
     if (typeof a === 'object' || typeof b === 'object') {
       return JSON.stringify(a) === JSON.stringify(b);
