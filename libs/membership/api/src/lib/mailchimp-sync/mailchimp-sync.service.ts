@@ -237,9 +237,10 @@ export class MailchimpSyncService {
       }
     }
 
-    // Build a mapping from numeric Mailchimp keys (e.g. MMERGE6) to the
-    // configured friendly tag names (e.g. VERBILLIGTABO) so that contacts
-    // fetched from Mailchimp can be normalised before comparison.
+    // Build a mapping from merge field display names (e.g. "Vorname") to
+    // the Mailchimp tag (e.g. "MMERGE1") so that contacts fetched from
+    // Mailchimp whose merge_fields are keyed by name get normalised to the
+    // tag-keyed form expected by the sync config before comparison.
     const mergeFieldAliasMap = await this.buildMergeFieldAliasMap(
       config.mailchimp_listId
     );
@@ -266,9 +267,9 @@ export class MailchimpSyncService {
       );
     }
 
-    // Normalise merge field keys in all fetched contacts so that numeric
-    // aliases (MMERGE6) are remapped to their friendly tag (VERBILLIGTABO)
-    // before any comparison takes place.
+    // Normalise merge field keys in all fetched contacts: any key that
+    // matches a known display name is remapped to its tag so the
+    // comparison against the config's tag-keyed mergeFields works.
     if (mergeFieldAliasMap.size > 0) {
       for (const contact of mailchimpContactMap.values()) {
         if (contact.merge_fields) {
@@ -1020,9 +1021,10 @@ export class MailchimpSyncService {
   private async buildMergeFieldAliasMap(
     listId: string
   ): Promise<Map<string, string>> {
-    // Maps the Mailchimp API tag (e.g. "MMERGE6") to the field's display name
-    // (e.g. "VERBILLIGTABO") for fields where the tag is the default numeric
-    // form but the sync config uses the human-readable label instead.
+    // Maps the field's display name (e.g. "Vorname") to the Mailchimp API
+    // tag (e.g. "MMERGE1"). Used to normalise contact merge_fields whose
+    // keys arrive as names instead of tags so they line up with the
+    // tag-keyed config mappings before comparison.
     const aliasMap = new Map<string, string>();
     try {
       const response = (await mailchimp.lists.getListMergeFields(listId, {
@@ -1030,7 +1032,7 @@ export class MailchimpSyncService {
       })) as any;
       for (const field of response.merge_fields ?? []) {
         if (field.tag && field.name && field.tag !== field.name) {
-          aliasMap.set(field.tag, field.name);
+          aliasMap.set(field.name, field.tag);
         }
       }
     } catch {
