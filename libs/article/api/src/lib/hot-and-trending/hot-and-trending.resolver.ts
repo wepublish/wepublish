@@ -1,5 +1,5 @@
 import { Args, Int, Query, Resolver } from '@nestjs/graphql';
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { Article as ArticleModel } from '../article.model';
 import { Article } from '@prisma/client';
 import { Public } from '@wepublish/authentication/api';
@@ -18,6 +18,8 @@ export interface HotAndTrendingDataSource {
 
 @Resolver()
 export class HotAndTrendingResolver {
+  private readonly logger = new Logger(HotAndTrendingResolver.name);
+
   constructor(
     @Inject(HOT_AND_TRENDING_DATA_SOURCE)
     private datasource: HotAndTrendingDataSource
@@ -39,11 +41,17 @@ export class HotAndTrendingResolver {
     @Args('take', { nullable: true, type: () => Int, defaultValue: 10 })
     take: number
   ): Promise<Article[]> {
-    const result = await this.datasource.getMostViewedArticles({
-      start,
-      take,
-    });
+    try {
+      return await this.datasource.getMostViewedArticles({
+        start,
+        take,
+      });
+    } catch (error) {
+      this.logger.error(
+        `hotAndTrending query failed: ${error instanceof Error ? error.message : error}`
+      );
 
-    return result;
+      return [];
+    }
   }
 }

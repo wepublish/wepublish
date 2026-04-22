@@ -21,6 +21,8 @@ export type Scalars = {
   DateTime: string;
   /** Setting Value */
   GraphQLSettingValueType: any;
+  /** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSONObject: any;
   RichText: Descendant[];
   Slug: string;
   /** The `Upload` scalar type represents a file upload. */
@@ -896,6 +898,13 @@ export enum DocumentSort {
   ModifiedAt = 'ModifiedAt'
 }
 
+export type DocumentStorageUsage = {
+  __typename?: 'DocumentStorageUsage';
+  documentCount: Scalars['Int'];
+  limitBytes: Scalars['Float'];
+  usedBytes: Scalars['Float'];
+};
+
 export enum EditorBlockType {
   Comment = 'Comment',
   Crowdfunding = 'Crowdfunding',
@@ -1601,6 +1610,74 @@ export type MailTemplateWithUrlAndStatusModel = {
   url: Scalars['String'];
 };
 
+export type MailchimpInterestGroup = {
+  __typename?: 'MailchimpInterestGroup';
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type MailchimpList = {
+  __typename?: 'MailchimpList';
+  id: Scalars['String'];
+  memberCount: Scalars['Int'];
+  name: Scalars['String'];
+};
+
+export type MailchimpMergeField = {
+  __typename?: 'MailchimpMergeField';
+  name: Scalars['String'];
+  tag: Scalars['String'];
+  type: Scalars['String'];
+};
+
+export type MailchimpSyncDryRunChange = {
+  __typename?: 'MailchimpSyncDryRunChange';
+  email: Scalars['String'];
+  interests: Scalars['JSONObject'];
+  isNew: Scalars['Boolean'];
+  mergeFields: Scalars['JSONObject'];
+  previousInterests?: Maybe<Scalars['JSONObject']>;
+  previousMergeFields?: Maybe<Scalars['JSONObject']>;
+};
+
+export type MailchimpSyncDryRunResult = {
+  __typename?: 'MailchimpSyncDryRunResult';
+  changes: Array<MailchimpSyncDryRunChange>;
+  skippedCount: Scalars['Int'];
+  totalUserCount: Scalars['Int'];
+  updatedCount: Scalars['Int'];
+};
+
+export type MailchimpSyncErrorList = {
+  __typename?: 'MailchimpSyncErrorList';
+  nodes: Array<MailchimpSyncErrorType>;
+  totalCount: Scalars['Int'];
+};
+
+export type MailchimpSyncErrorType = {
+  __typename?: 'MailchimpSyncErrorType';
+  createdAt: Scalars['DateTime'];
+  email: Scalars['String'];
+  errorMessage: Scalars['String'];
+  id: Scalars['String'];
+  statusCode?: Maybe<Scalars['Int']>;
+  syncProviderId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+export type MailchimpSyncProgressType = {
+  __typename?: 'MailchimpSyncProgressType';
+  errorMessage?: Maybe<Scalars['String']>;
+  errors: Scalars['Int'];
+  finishedAt?: Maybe<Scalars['DateTime']>;
+  processed: Scalars['Int'];
+  skipped: Scalars['Int'];
+  startedAt: Scalars['DateTime'];
+  status: Scalars['String'];
+  total: Scalars['Int'];
+  updated: Scalars['Int'];
+};
+
 export type MemberPlan = HasImage & {
   __typename?: 'MemberPlan';
   active: Scalars['Boolean'];
@@ -1735,6 +1812,8 @@ export type Mutation = {
   createUserSubscription: Payment;
   /** Allows guests and authenticated users to create additional subscriptions */
   createUserSubscriptionWithConfirmation: Scalars['Boolean'];
+  /** Deletes all sync errors for a config so all contacts will be retried. */
+  deleteAllMailchimpSyncErrors: Scalars['Boolean'];
   /** Deletes an article. */
   deleteArticle: Scalars['String'];
   /** Deletes an existing author. */
@@ -1761,6 +1840,8 @@ export type Mutation = {
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
+  /** Deletes a single sync error so the contact will be retried. */
+  deleteMailchimpSyncError: Scalars['Boolean'];
   /** Deletes an existing memberplan. */
   deleteMemberPlan: MemberPlan;
   /** Deletes an existing navigation. */
@@ -1806,12 +1887,18 @@ export type Mutation = {
   deleteUserRole: UserRole;
   /** Dislikes an article. */
   dislikeArticle: Article;
+  /** Simulates a mailchimp sync without making changes. Returns what would be updated. */
+  dryRunMailchimpSync: MailchimpSyncDryRunResult;
   /** Duplicates an article. */
   duplicateArticle: Article;
   /** Duplicates an page. */
   duplicatePage: Page;
+  /** Enables two-factor authentication for the current user after verifying the TOTP token. */
+  enableTotp: Scalars['Boolean'];
   /** Allows authenticated users to extend existing subscriptions */
   extendUserSubscription: Payment;
+  /** Generates a TOTP setup for the current user. Returns a QR code and secret for authenticator app configuration. */
+  generateTotpSetup: TotpSetup;
   /**
    *
    *       Creates and event based on data from importable events list and an id and provider.
@@ -1845,15 +1932,23 @@ export type Mutation = {
   requestEmailChange: Scalars['Boolean'];
   /** Resets the password of a user. */
   resetPassword: SensitiveDataUser;
+  /** Resets the password using a token from the password reset email. Does not create a session. */
+  resetPasswordWithToken: Scalars['Boolean'];
+  /** Resets the two-factor authentication configuration for a user. The user will need to set up 2FA again on next login. */
+  resetUserTotp: Scalars['Boolean'];
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendJWTLogin: Scalars['String'];
+  /** Sends a password reset email with a scoped JWT token. Always returns the email to prevent enumeration. */
+  sendPasswordResetEmail: Scalars['String'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
   sendWebsiteLogin: Scalars['String'];
   syncTemplates?: Maybe<Scalars['Boolean']>;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
+  /** Triggers a mailchimp sync in the background. */
+  triggerMailchimpSync: Scalars['Boolean'];
   /** Unpublishes all revisions of an article. */
   unpublishArticle: Article;
   /** Unpublishes all revisions of an page. */
@@ -1925,6 +2020,8 @@ export type Mutation = {
   updateSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Update an existing subscription interval */
   updateSubscriptionInterval: Array<SubscriptionFlowModel>;
+  /** Updates an existing sync provider setting. */
+  updateSyncProviderSetting: SettingSyncProvider;
   /** Updates an existing mail flow */
   updateSystemMail: Array<SystemMailModel>;
   /** Updates an existing tag. */
@@ -2229,11 +2326,13 @@ export type MutationCreateRatingSystemAnswerArgs = {
 export type MutationCreateSessionArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
+  totpToken?: InputMaybe<Scalars['String']>;
 };
 
 
 export type MutationCreateSessionWithJwtArgs = {
   jwt: Scalars['String'];
+  totpToken?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2294,6 +2393,7 @@ export type MutationCreateUserArgs = {
   password?: InputMaybe<Scalars['String']>;
   properties: Array<PropertyInput>;
   roleIDs: Array<Scalars['String']>;
+  totpExempt?: InputMaybe<Scalars['Boolean']>;
   userImageID?: InputMaybe<Scalars['String']>;
 };
 
@@ -2337,6 +2437,11 @@ export type MutationCreateUserSubscriptionWithConfirmationArgs = {
   paymentPeriodicity: PaymentPeriodicity;
   subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
   userId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationDeleteAllMailchimpSyncErrorsArgs = {
+  configId: Scalars['String'];
 };
 
 
@@ -2396,6 +2501,11 @@ export type MutationDeleteImageArgs = {
 
 
 export type MutationDeleteInvoiceArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteMailchimpSyncErrorArgs = {
   id: Scalars['String'];
 };
 
@@ -2500,6 +2610,12 @@ export type MutationDislikeArticleArgs = {
 };
 
 
+export type MutationDryRunMailchimpSyncArgs = {
+  id: Scalars['String'];
+  limit?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type MutationDuplicateArticleArgs = {
   id: Scalars['String'];
 };
@@ -2510,10 +2626,20 @@ export type MutationDuplicatePageArgs = {
 };
 
 
+export type MutationEnableTotpArgs = {
+  totpToken: Scalars['String'];
+};
+
+
 export type MutationExtendUserSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>;
   subscriptionId: Scalars['String'];
   successURL?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationGenerateTotpSetupArgs = {
+  website?: InputMaybe<Scalars['Boolean']>;
 };
 
 
@@ -2610,11 +2736,26 @@ export type MutationRequestEmailChangeArgs = {
 export type MutationResetPasswordArgs = {
   id: Scalars['String'];
   password?: InputMaybe<Scalars['String']>;
-  sendMail?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationResetPasswordWithTokenArgs = {
+  password: Scalars['String'];
+  token: Scalars['String'];
+};
+
+
+export type MutationResetUserTotpArgs = {
+  userId: Scalars['String'];
 };
 
 
 export type MutationSendJwtLoginArgs = {
+  email: Scalars['String'];
+};
+
+
+export type MutationSendPasswordResetEmailArgs = {
   email: Scalars['String'];
 };
 
@@ -2626,6 +2767,11 @@ export type MutationSendWebsiteLoginArgs = {
 
 export type MutationTestSystemMailArgs = {
   event: UserEvent;
+};
+
+
+export type MutationTriggerMailchimpSyncArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -3018,6 +3164,19 @@ export type MutationUpdateSubscriptionIntervalArgs = {
 };
 
 
+export type MutationUpdateSyncProviderSettingArgs = {
+  enabled?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['String'];
+  mailchimp_apiKey?: InputMaybe<Scalars['String']>;
+  mailchimp_defaultInterestGroupIds?: InputMaybe<Array<Scalars['String']>>;
+  mailchimp_extensions?: InputMaybe<Scalars['JSONObject']>;
+  mailchimp_interestGroupMappings?: InputMaybe<Array<Scalars['JSONObject']>>;
+  mailchimp_listId?: InputMaybe<Scalars['String']>;
+  mailchimp_mergeFieldMappings?: InputMaybe<Array<Scalars['JSONObject']>>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationUpdateSystemMailArgs = {
   event: UserEvent;
   mailTemplateId: Scalars['String'];
@@ -3059,6 +3218,7 @@ export type MutationUpdateUserArgs = {
   note?: InputMaybe<Scalars['String']>;
   properties?: InputMaybe<Array<PropertyInput>>;
   roleIDs?: InputMaybe<Array<Scalars['String']>>;
+  totpExempt?: InputMaybe<Scalars['Boolean']>;
   userImageID?: InputMaybe<Scalars['String']>;
 };
 
@@ -3960,6 +4120,8 @@ export type Query = {
   challengeProviderSettings: Array<SettingChallengeProvider>;
   /** Check the status of an invoice and update with information from the payment provider */
   checkInvoiceStatus: Invoice;
+  /** Checks whether a given email requires a TOTP code for login. Always returns true to prevent user enumeration. */
+  checkLoginOtp: Scalars['Boolean'];
   /** Returns a comment by id. */
   comment: Comment;
   /** Returns a paginated list of comments based on the filters given. */
@@ -3990,6 +4152,8 @@ export type Query = {
   dailySubscriptionStats: Array<DailySubscriptionStats>;
   /** Returns a document by id. */
   document: Document;
+  /** Returns the current document storage usage and limit. */
+  documentStorageUsage: DocumentStorageUsage;
   /** Returns a paginated list of documents based on the filters given. */
   documents: PaginatedDocuments;
   /** Returns an event by id. */
@@ -4053,6 +4217,16 @@ export type Query = {
   mailProviderSettings: Array<SettingMailProvider>;
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
+  /** Fetches available interest groups for a Mailchimp list. */
+  mailchimpInterestGroups: Array<MailchimpInterestGroup>;
+  /** Fetches available Mailchimp lists/audiences for a sync config. */
+  mailchimpLists: Array<MailchimpList>;
+  /** Fetches available merge fields for a Mailchimp list. */
+  mailchimpMergeFields: Array<MailchimpMergeField>;
+  /** Returns sync errors for a given config. */
+  mailchimpSyncErrors: MailchimpSyncErrorList;
+  /** Returns the current sync progress for a config. */
+  mailchimpSyncProgress?: Maybe<MailchimpSyncProgressType>;
   /** This query returns the user. */
   me?: Maybe<SensitiveDataUser>;
   /** Returns a memberplan by id or slug. */
@@ -4160,6 +4334,10 @@ export type Query = {
   subscriptions: PublicSubscriptionConnection;
   /** Returns a paginated list of subscriptions based on the filters given. */
   subscriptionsAsCsv: Scalars['String'];
+  /** Returns a single sync provider setting by id. */
+  syncProviderSetting: SettingSyncProvider;
+  /** Returns all sync provider settings. */
+  syncProviderSettings: Array<SettingSyncProvider>;
   /** Returns all mail flows */
   systemMails: Array<SystemMailModel>;
   /** Returns an tag by id or tag. */
@@ -4277,6 +4455,11 @@ export type QueryChallengeProviderSettingsArgs = {
 
 export type QueryCheckInvoiceStatusArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryCheckLoginOtpArgs = {
+  email: Scalars['String'];
 };
 
 
@@ -4433,6 +4616,35 @@ export type QueryMailProviderSettingArgs = {
 
 export type QueryMailProviderSettingsArgs = {
   filter?: InputMaybe<SettingMailProviderFilter>;
+};
+
+
+export type QueryMailchimpInterestGroupsArgs = {
+  configId: Scalars['String'];
+  listId: Scalars['String'];
+};
+
+
+export type QueryMailchimpListsArgs = {
+  configId: Scalars['String'];
+};
+
+
+export type QueryMailchimpMergeFieldsArgs = {
+  configId: Scalars['String'];
+  listId: Scalars['String'];
+};
+
+
+export type QueryMailchimpSyncErrorsArgs = {
+  configId: Scalars['String'];
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryMailchimpSyncProgressArgs = {
+  configId: Scalars['String'];
 };
 
 
@@ -4652,6 +4864,16 @@ export type QuerySubscriptionsAsCsvArgs = {
 };
 
 
+export type QuerySyncProviderSettingArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QuerySyncProviderSettingsArgs = {
+  filter?: InputMaybe<SettingSyncProviderFilter>;
+};
+
+
 export type QueryTagArgs = {
   id?: InputMaybe<Scalars['String']>;
   tag?: InputMaybe<Scalars['String']>;
@@ -4815,6 +5037,10 @@ export type SensitiveDataUser = BaseUser & {
   roleIDs: Array<Scalars['String']>;
   roles: Array<UserRole>;
   subscriptionCount: Scalars['Int'];
+  /** Whether two-factor authentication is enabled for this user. */
+  totpEnabled: Scalars['Boolean'];
+  /** Whether this user is exempt from the two-factor authentication requirement. */
+  totpExempt: Scalars['Boolean'];
   userImageID?: Maybe<Scalars['String']>;
 };
 
@@ -4823,6 +5049,8 @@ export type SessionWithToken = {
   createdAt: Scalars['DateTime'];
   expiresAt: Scalars['DateTime'];
   token: Scalars['String'];
+  /** Whether the user has two-factor authentication enabled. If true and the user is an admin, the client must verify TOTP before proceeding. */
+  totpEnabled: Scalars['Boolean'];
   user: SensitiveDataUser;
 };
 
@@ -5000,6 +5228,31 @@ export type SettingRestriction = {
   inputLength?: Maybe<Scalars['Int']>;
   maxValue?: Maybe<Scalars['Int']>;
   minValue?: Maybe<Scalars['Int']>;
+};
+
+export type SettingSyncProvider = SettingProvider & {
+  __typename?: 'SettingSyncProvider';
+  createdAt: Scalars['DateTime'];
+  enabled?: Maybe<Scalars['Boolean']>;
+  id: Scalars['String'];
+  lastLoadedAt: Scalars['DateTime'];
+  lastSyncAt?: Maybe<Scalars['DateTime']>;
+  lastSyncError?: Maybe<Scalars['String']>;
+  mailchimp_defaultInterestGroupIds?: Maybe<Array<Scalars['String']>>;
+  mailchimp_extensions?: Maybe<Scalars['JSONObject']>;
+  mailchimp_interestGroupMappings?: Maybe<Array<Scalars['JSONObject']>>;
+  mailchimp_listId?: Maybe<Scalars['String']>;
+  mailchimp_mergeFieldMappings?: Maybe<Array<Scalars['JSONObject']>>;
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
+  type: SyncProviderType;
+};
+
+export type SettingSyncProviderFilter = {
+  enabled?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<SyncProviderType>;
 };
 
 export type SettingTrackingPixelFilter = {
@@ -5208,6 +5461,10 @@ export type SubscriptionPeriod = {
 export enum SubscriptionSort {
   CreatedAt = 'CreatedAt',
   ModifiedAt = 'ModifiedAt'
+}
+
+export enum SyncProviderType {
+  Mailchimp = 'MAILCHIMP'
 }
 
 export type SystemMailModel = {
@@ -5438,6 +5695,14 @@ export type TokenWithSecret = BaseToken & {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   token: Scalars['String'];
+};
+
+export type TotpSetup = {
+  __typename?: 'TotpSetup';
+  /** Base32 encoded TOTP secret */
+  secret: Scalars['String'];
+  /** OTPAuth URI for authenticator apps */
+  uri: Scalars['String'];
 };
 
 export type TrackingPixel = {
@@ -6245,6 +6510,7 @@ export const PeerProfile = gql`
       "SettingChallengeProvider",
       "SettingMailProvider",
       "SettingPaymentProvider",
+      "SettingSyncProvider",
       "SettingTrackingPixelProvider"
     ],
     "Teaser": [

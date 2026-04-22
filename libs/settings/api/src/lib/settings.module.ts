@@ -24,6 +24,9 @@ import { MailProviderSettingsDataloaderService } from './integrations/mail-provi
 import { AnalyticsProviderSettingsResolver } from './integrations/analytics-provider-settings.resolver';
 import { AnalyticsProviderSettingsService } from './integrations/analytics-provider-settings.service';
 import { AnalyticsProviderSettingsDataloaderService } from './integrations/analytics-provider-settings-dataloader.service';
+import { SyncProviderSettingsResolver } from './integrations/sync-provider-settings.resolver';
+import { SyncProviderSettingsService } from './integrations/sync-provider-settings.service';
+import { SyncProviderSettingsDataloaderService } from './integrations/sync-provider-settings-dataloader.service';
 import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 
 @Module({
@@ -52,6 +55,9 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
     AnalyticsProviderSettingsResolver,
     AnalyticsProviderSettingsService,
     AnalyticsProviderSettingsDataloaderService,
+    SyncProviderSettingsResolver,
+    SyncProviderSettingsService,
+    SyncProviderSettingsDataloaderService,
   ],
   exports: [
     SettingsGuard,
@@ -69,6 +75,8 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
     MailProviderSettingsDataloaderService,
     AnalyticsProviderSettingsService,
     AnalyticsProviderSettingsDataloaderService,
+    SyncProviderSettingsService,
+    SyncProviderSettingsDataloaderService,
   ],
 })
 export class SettingModule {}

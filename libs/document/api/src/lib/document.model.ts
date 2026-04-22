@@ -1,6 +1,7 @@
 import {
   ArgsType,
   Field,
+  Float,
   InputType,
   Int,
   ObjectType,
@@ -58,6 +59,18 @@ export class Document {
 
 @ObjectType()
 export class PaginatedDocuments extends PaginatedType(Document) {}
+
+@ObjectType()
+export class DocumentStorageUsage {
+  @Field(type => Float)
+  usedBytes!: number;
+
+  @Field(type => Float)
+  limitBytes!: number;
+
+  @Field(type => Int)
+  documentCount!: number;
+}
 
 @InputType()
 export class DocumentFilter {
