@@ -63,6 +63,7 @@ import { TsriBlocks } from '../src/components/tsri-block-renderer';
 import { TsriCommentList } from '../src/components/tsri-comment-list';
 import { TsriFooter } from '../src/components/tsri-footer';
 import { TsriGlobalStyles } from '../src/components/tsri-global-styles';
+import { TsriImageSlider } from '../src/components/tsri-image-slider';
 import { TsriNextWepublishLink } from '../src/components/tsri-next-wepublish-link';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
@@ -156,6 +157,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           }}
           blockStyles={{
             ContextBox: TsriContextBox,
+            ImageSlider: TsriImageSlider,
           }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
