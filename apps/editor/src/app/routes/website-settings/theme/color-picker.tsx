@@ -1,10 +1,6 @@
 import { Box, TextField } from '@mui/material';
-import {
-  ChangeEventHandler,
-  FocusEventHandler,
-  forwardRef,
-  useRef,
-} from 'react';
+import { Sketch } from '@uiw/react-color';
+import { ChangeEventHandler, FocusEventHandler, forwardRef } from 'react';
 import { FieldError } from 'react-hook-form';
 
 type ColorPickerProps = {
@@ -18,8 +14,6 @@ type ColorPickerProps = {
 
 export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
   (props, ref) => {
-    const colorRef = useRef<HTMLInputElement>(null);
-
     return (
       <Box
         sx={{
@@ -30,23 +24,14 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
           alignItems: 'center',
         }}
       >
-        <input
-          type="color"
-          value={props.value}
-          onBlur={props.onBlur}
-          onChange={props.onChange}
-          css={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            visibility: 'hidden',
-            pointerEvents: 'none',
+        <Sketch
+          color={props.value}
+          onChange={color => {
+            // props.onChange()
           }}
-          ref={colorRef}
         />
 
         <Box
-          onClick={() => colorRef.current?.click()}
           sx={theme => ({
             width: 25,
             height: 25,

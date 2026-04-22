@@ -1,4 +1,4 @@
-import { List, ListSubheader, SimplePaletteColorOptions } from '@mui/material';
+import { List, SimplePaletteColorOptions } from '@mui/material';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
@@ -21,17 +21,7 @@ export const PaletteList = ({ name, defaultValue }: PaletteListProps) => {
     setOpenPalette(oldType => (oldType === type ? undefined : type));
 
   return (
-    <List
-      aria-labelledby="palette-subheader"
-      subheader={
-        <ListSubheader
-          component="div"
-          id="palette-subheader"
-        >
-          {t('websiteSettings.theme.palette')}
-        </ListSubheader>
-      }
-    >
+    <List>
       <PaletteListItem
         name={`${name}.primary`}
         defaultValue={defaultValue.primary as SimplePaletteColorOptions}

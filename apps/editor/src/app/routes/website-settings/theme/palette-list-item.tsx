@@ -16,7 +16,7 @@ import { ColorPicker } from './color-picker';
 const ThemeColorReel = styled.div`
   display: flex;
   flex-flow: row wrap;
-  padding: 1px;
+  gap: 2px;
   margin-right: 12px;
 `;
 
@@ -24,10 +24,9 @@ const ThemeColorItem = styled.div<{ colorstr?: string | null }>(
   ({ theme, colorstr }) => `
   width: 25px;
   height: 25px;
-  margin-right: -1px;
-  margin-left: -1px;
-  border: 1px solid #000;
   background-color: ${colorstr ?? '#000'};
+  border: 1px solid ${theme.palette.divider};
+  border-radius: 4px;
 `
 );
 

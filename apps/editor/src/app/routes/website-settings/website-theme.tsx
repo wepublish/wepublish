@@ -9,13 +9,13 @@ import {
   Tabs,
 } from '@mui/material';
 import { theme } from '@wepublish/ui';
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 import { PaletteList } from './theme/palette-list';
-import { themeSchema } from './theme/schema';
+import { normalizeTheme, themeSchema } from './theme/schema';
 import { TypographyList } from './theme/typography-list';
 
 const WebsiteThemeWrapper = styled.form`
@@ -54,7 +54,12 @@ function a11yProps(index: number) {
 
 export const WebsiteTheme = () => {
   const { t } = useTranslation();
+
   const [activeTab, setActiveTab] = useState<number>(0);
+  const handleChange = (
+    event: React.SyntheticEvent,
+    newValue: typeof activeTab
+  ) => setActiveTab(newValue);
 
   const form = useForm<z.infer<typeof themeSchema>>({
     resolver: zodResolver(themeSchema),
@@ -70,13 +75,11 @@ export const WebsiteTheme = () => {
     typography: defaultTheme.typography,
   };
 
-  const handleChange = (
-    event: React.SyntheticEvent,
-    newValue: typeof activeTab
-  ) => {
-    console.log(event, newValue);
-    setActiveTab(newValue);
-  };
+  const normalized = useMemo(() => {
+    return normalizeTheme(data);
+  }, [data]);
+
+  console.log(normalized);
 
   return (
     <WebsiteThemeWrapper onSubmit={onSubmit}>
@@ -102,7 +105,7 @@ export const WebsiteTheme = () => {
         >
           <PaletteList
             name={'palette'}
-            defaultValue={data.palette}
+            defaultValue={normalized.palette}
           />
         </CustomTabPanel>
 
@@ -112,7 +115,7 @@ export const WebsiteTheme = () => {
         >
           <TypographyList
             name={'typography'}
-            defaultValue={data.typography}
+            defaultValue={normalized.typography}
           />
         </CustomTabPanel>
 

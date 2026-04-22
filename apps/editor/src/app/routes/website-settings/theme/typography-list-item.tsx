@@ -37,16 +37,19 @@ export const TypographyListItem = ({
       <ListItemButton onClick={onOpen}>
         <ListItemText
           primary={
-            isOpen ?
-              <span
-                css={{
-                  fontSize: watch(`${name}.fontSize`),
-                  lineHeight: watch(`${name}.lineHeight`),
-                }}
-              >
-                {t(`websiteSettings.theme.${name}`)}
-              </span>
-            : t(`websiteSettings.theme.${name}`)
+            <span
+              css={{
+                transition: 'all ease-in-out 250ms',
+                ...(isOpen ?
+                  {
+                    fontSize: watch(`${name}.fontSize`),
+                    lineHeight: watch(`${name}.lineHeight`),
+                  }
+                : {}),
+              }}
+            >
+              {t(`websiteSettings.theme.${name}`)}
+            </span>
           }
         />
 
