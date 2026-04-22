@@ -763,9 +763,9 @@ export class MailchimpSyncService {
     if (expression.includes('|')) {
       for (const subExpr of expression.split('|')) {
         const result = this.evaluateSingleMergeField(subExpr.trim(), data);
-        if (result !== '' && result !== '0') return result;
+        if (result !== '') return result;
       }
-      return '0';
+      return '';
     }
 
     return this.evaluateSingleMergeField(expression, data);
@@ -791,7 +791,7 @@ export class MailchimpSyncService {
         if (op === 'contains') {
           return data.currentSubscription?.memberPlan.slug.includes(value) ?
               '1'
-            : '0';
+            : '';
         }
         if (op === 'contains_any') {
           const values = value.split(',');
@@ -801,14 +801,12 @@ export class MailchimpSyncService {
               )
             ) ?
               '1'
-            : '0';
+            : '';
         }
         if (op === 'equals') {
-          return data.currentSubscription?.memberPlan.slug === value ?
-              '1'
-            : '0';
+          return data.currentSubscription?.memberPlan.slug === value ? '1' : '';
         }
-        return '0';
+        return '';
       }
 
       case 'active_abo': {
