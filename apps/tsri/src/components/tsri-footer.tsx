@@ -149,6 +149,16 @@ export const FooterSupport = styled('div')`
   }
 `;
 
+const WePublishLogo = styled('img')`
+  margin: 0.3rem 0 1rem 0;
+  width: 100px;
+  height: auto;
+
+  &:hover {
+    background: linear-gradient(to right, white 50%, transparent 50%);
+  }
+`;
+
 export function Footer({
   className,
   categorySlugs,
@@ -234,6 +244,28 @@ export function Footer({
             Copyright © 2025 Tsüri AG
             <br />
             All rights reserved. Tsüri AG, Flüelastrasse 12, 8048 Zürich
+          </Typography>
+          <Typography variant="footerSupportImprint">
+            <br />
+            Powered by
+            <br />
+            <Link
+              href="https://wepublish.ch"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <WePublishLogo
+                src={'/wepublish-logo-alt.svg'}
+                alt="WePublish Logo"
+                title="We.Publish - Das Ökosystem unabhängiger Medien"
+                onMouseEnter={e =>
+                  (e.currentTarget.src = '/wepublish-logo.svg')
+                }
+                onMouseLeave={e =>
+                  (e.currentTarget.src = '/wepublish-logo-alt.svg')
+                }
+              />
+            </Link>
           </Typography>
         </FooterSupport>
       </FooterSupportWrapper>
