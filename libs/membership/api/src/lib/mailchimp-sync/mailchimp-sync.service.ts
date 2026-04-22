@@ -318,9 +318,13 @@ export class MailchimpSyncService {
         }
       }
 
-      // Default interest groups are always enabled for every contact.
-      for (const groupId of defaultInterestGroupIds) {
-        interests[groupId] = true;
+      // Default interest groups are only applied when first creating the
+      // contact. For existing contacts we preserve whatever Mailchimp has so
+      // manual unsubscribes aren't clobbered on every sync.
+      if (!existingContact) {
+        for (const groupId of defaultInterestGroupIds) {
+          interests[groupId] = true;
+        }
       }
 
       // For each mapped interest group: only flip to true when a genuinely
