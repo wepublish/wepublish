@@ -185,7 +185,10 @@ export class MailchimpMailProvider extends BaseMailProvider {
       });
 
       if (this.responseIsError(response)) {
-        throw new MailProviderError((response.response?.data as Error).message);
+        throw new MailProviderError(
+          (response.response?.data as Error | undefined)?.message ??
+            'Unknown Mailchimp error'
+        );
       }
 
       return;

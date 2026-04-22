@@ -173,9 +173,11 @@ export class UserService {
 
   @PrimeDataLoader(UserDataloaderService)
   async updateUser({ id, address, properties, ...input }: UpdateUserInput) {
-    input.email =
-      input.email ? (input.email as string).toLowerCase() : input.email;
-    await Validator.createUser.parse(input);
+    if (input.email) {
+      input.email = (input.email as string).toLowerCase();
+    }
+
+    await Validator.updateUser.parse(input);
     await Validator.createAddress.parse(address);
 
     return this.prisma.user.update({
@@ -217,12 +219,12 @@ export class UserService {
   }
 
   @PrimeDataLoader(UserDataloaderService)
-  async resetPassword(id: string, password?: string, sendMail?: boolean) {
+  async resetPassword(id: string, password?: string) {
     if (password) {
       await this.validatePassword(password);
     }
 
-    const user = await this.prisma.user.update({
+    return this.prisma.user.update({
       where: { id },
       data: {
         password: await this.hashPassword(
@@ -231,21 +233,6 @@ export class UserService {
       },
       select: unselectPassword,
     });
-
-    if (sendMail && user) {
-      const remoteTemplate = await this.mailContext.getUserTemplateName(
-        UserEvent.PASSWORD_RESET
-      );
-
-      await this.mailContext.sendMail({
-        externalMailTemplateId: remoteTemplate,
-        recipient: user,
-        optionalData: {},
-        mailType: mailLogType.UserFlow,
-      });
-    }
-
-    return user;
   }
 
   private static readonly EMAIL_CHANGE_EXPIRY_MINUTES = 60;

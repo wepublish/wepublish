@@ -295,8 +295,18 @@ export class NovaMediaAdapter implements MediaAdapter {
     return true;
   }
 
-  async getDocumentURL(document: { id: string }): Promise<string> {
-    return `${this.url}/document/${document.id}`;
+  async getDocumentURL(document: {
+    id: string;
+    filename?: string | null;
+    extension?: string;
+  }): Promise<string> {
+    const name =
+      document.filename ?
+        `${encodeURIComponent(document.filename)}${document.extension ?? ''}`
+      : '';
+    return name ?
+        `${this.url}/document/${document.id}/${name}`
+      : `${this.url}/document/${document.id}`;
   }
 
   async getDocumentThumbnailURL(document: { id: string }): Promise<string> {

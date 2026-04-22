@@ -1,0 +1,136 @@
+query SyncProviderSettings {
+  syncProviderSettings {
+    id
+    createdAt
+    modifiedAt
+    lastLoadedAt
+    type
+    name
+    enabled
+    mailchimp_listId
+    mailchimp_mergeFieldMappings
+    mailchimp_interestGroupMappings
+    mailchimp_defaultInterestGroupIds
+    mailchimp_extensions
+    lastSyncAt
+    lastSyncError
+  }
+}
+
+mutation UpdateSyncProviderSetting(
+  $id: String!
+  $name: String
+  $enabled: Boolean
+  $mailchimp_apiKey: String
+  $mailchimp_listId: String
+  $mailchimp_mergeFieldMappings: [JSONObject!]
+  $mailchimp_interestGroupMappings: [JSONObject!]
+  $mailchimp_defaultInterestGroupIds: [String!]
+  $mailchimp_extensions: JSONObject
+) {
+  updateSyncProviderSetting(
+    id: $id
+    name: $name
+    enabled: $enabled
+    mailchimp_apiKey: $mailchimp_apiKey
+    mailchimp_listId: $mailchimp_listId
+    mailchimp_mergeFieldMappings: $mailchimp_mergeFieldMappings
+    mailchimp_interestGroupMappings: $mailchimp_interestGroupMappings
+    mailchimp_defaultInterestGroupIds: $mailchimp_defaultInterestGroupIds
+    mailchimp_extensions: $mailchimp_extensions
+  ) {
+    id
+    createdAt
+    modifiedAt
+    lastLoadedAt
+    type
+    name
+    enabled
+    mailchimp_listId
+    mailchimp_mergeFieldMappings
+    mailchimp_interestGroupMappings
+    mailchimp_defaultInterestGroupIds
+    mailchimp_extensions
+    lastSyncAt
+    lastSyncError
+  }
+}
+
+mutation TriggerMailchimpSync($id: String!) {
+  triggerMailchimpSync(id: $id)
+}
+
+mutation DryRunMailchimpSync($id: String!, $limit: Int) {
+  dryRunMailchimpSync(id: $id, limit: $limit) {
+    updatedCount
+    skippedCount
+    totalUserCount
+    changes {
+      email
+      isNew
+      mergeFields
+      interests
+      previousMergeFields
+      previousInterests
+    }
+  }
+}
+
+query MailchimpLists($configId: String!) {
+  mailchimpLists(configId: $configId) {
+    id
+    name
+    memberCount
+  }
+}
+
+query MailchimpMergeFields($configId: String!, $listId: String!) {
+  mailchimpMergeFields(configId: $configId, listId: $listId) {
+    tag
+    name
+    type
+  }
+}
+
+query MailchimpInterestGroups($configId: String!, $listId: String!) {
+  mailchimpInterestGroups(configId: $configId, listId: $listId) {
+    id
+    name
+  }
+}
+
+query MailchimpSyncErrors($configId: String!, $take: Int, $skip: Int) {
+  mailchimpSyncErrors(configId: $configId, take: $take, skip: $skip) {
+    nodes {
+      id
+      createdAt
+      userId
+      email
+      errorMessage
+      statusCode
+    }
+    totalCount
+  }
+}
+
+mutation DeleteMailchimpSyncError($id: String!) {
+  deleteMailchimpSyncError(id: $id)
+}
+
+mutation DeleteAllMailchimpSyncErrors($configId: String!) {
+  deleteAllMailchimpSyncErrors(configId: $configId)
+}
+
+query MailchimpSyncProgress($configId: String!) {
+  mailchimpSyncProgress(configId: $configId) {
+    status
+    processed
+    total
+    updated
+    skipped
+    errors
+    startedAt
+    finishedAt
+    errorMessage
+  }
+}

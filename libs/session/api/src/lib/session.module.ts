@@ -18,6 +18,8 @@ import { RegisterService } from './register.service';
 import { ChallengeModule } from '@wepublish/challenge/api';
 import { SettingModule } from '@wepublish/settings/api';
 import { JwksController } from './jwks.controller';
+import { TotpService } from './totp.service';
+import { TotpResolver } from './totp.resolver';
 
 export interface SessionModuleOptions {
   sessionTTL: number;
@@ -62,6 +64,8 @@ export class SessionModule {
       JwtAuthenticationService,
       RegisterService,
       RegisterResolver,
+      TotpService,
+      TotpResolver,
       {
         provide: SESSION_TTL_TOKEN,
         useFactory: async (...args: any[]) => {

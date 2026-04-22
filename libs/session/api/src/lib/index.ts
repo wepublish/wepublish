@@ -4,3 +4,6 @@ export * from './session.resolver';
 export * from './session.service';
 export * from './session.module';
 export * from './jwt.service';
+export * from './totp.model';
+export * from './totp.service';
+export * from './totp.resolver';

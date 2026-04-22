@@ -106,7 +106,7 @@ spec:
               port: 4100
             initialDelaySeconds: 30
             periodSeconds: 10
-            timeoutSeconds: 5
+            timeoutSeconds: 10
             failureThreshold: 9
             successThreshold: 1
           readinessProbe:
@@ -115,8 +115,8 @@ spec:
               port: 4100
             initialDelaySeconds: 5
             periodSeconds: 10
-            timeoutSeconds: 3
-            failureThreshold: 3
+            timeoutSeconds: 10
+            failureThreshold: 6
             successThreshold: 1
           startupProbe:
             httpGet:
@@ -124,7 +124,7 @@ spec:
               port: 4100
             initialDelaySeconds: 10
             periodSeconds: 5
-            timeoutSeconds: 3
+            timeoutSeconds: 5
             failureThreshold: 30
 
 

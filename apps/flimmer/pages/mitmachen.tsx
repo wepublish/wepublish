@@ -1,9 +1,8 @@
 import { PageContainer } from '@wepublish/page/website';
 import {
   getSessionTokenProps,
+  handleJwtLogin,
   ssrAuthLink,
-  tryServerSideJwtLogin,
-  redirectToLoginWithError,
 } from '@wepublish/utils/website';
 import {
   addClientCacheToV1Props,
@@ -30,14 +29,7 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
     ),
   ]);
 
-  if (ctx.query.jwt) {
-    const success = await tryServerSideJwtLogin(ctx, client);
-
-    if (!success) {
-      redirectToLoginWithError(ctx);
-      return {};
-    }
-  }
+  await handleJwtLogin(ctx, client, undefined);
 
   const sessionProps = await getSessionTokenProps(ctx);
 
