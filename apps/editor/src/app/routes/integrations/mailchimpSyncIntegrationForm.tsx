@@ -258,6 +258,7 @@ function InterestExpressionEditor({
 type MergeFieldType =
   | 'user.firstName'
   | 'user.name'
+  | 'user.id'
   | 'slug:contains'
   | 'slug:contains_any'
   | 'slug:equals'
@@ -270,6 +271,7 @@ type MergeFieldType =
 const MERGE_FIELD_TYPES: MergeFieldType[] = [
   'user.firstName',
   'user.name',
+  'user.id',
   'slug:contains',
   'slug:contains_any',
   'slug:equals',
@@ -286,6 +288,7 @@ function parseMergeFieldExpression(expr: string): {
 } {
   if (expr === 'user.firstName') return { type: 'user.firstName', args: [] };
   if (expr === 'user.name') return { type: 'user.name', args: [] };
+  if (expr === 'user.id') return { type: 'user.id', args: [] };
   if (expr === 'active_abo') return { type: 'active_abo', args: [] };
 
   const slugMatch = /^slug:(contains_any|contains|equals):(.*)$/.exec(expr);
@@ -318,6 +321,7 @@ function buildMergeFieldExpression(
   switch (type) {
     case 'user.firstName':
     case 'user.name':
+    case 'user.id':
     case 'active_abo':
       return type;
     case 'slug:contains':

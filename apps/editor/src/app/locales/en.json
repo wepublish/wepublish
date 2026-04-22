@@ -2009,6 +2009,7 @@
         "containsAnyPlaceholder": "value1, value2, ...",
         "mf_user.firstName": "First name",
         "mf_user.name": "Last name",
+        "mf_user.id": "User ID",
         "mf_slug:contains": "Slug contains",
         "mf_slug:contains_any": "Slug contains any of",
         "mf_slug:equals": "Slug equals",

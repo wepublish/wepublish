@@ -745,7 +745,7 @@ export class MailchimpSyncService {
    * E.g. "slug:contains:firmen-abo|slug:contains:gonner"
    *
    * Single expression formats:
-   * - "user.firstName" / "user.name" - direct user field access
+   * - "user.firstName" / "user.name" / "user.id" - direct user field access
    * - "slug:contains:value" - "1" if current subscription plan slug contains value, else "0"
    * - "slug:contains_any:val1,val2" - "1" if current slug contains any of the values
    * - "slug:equals:value" - "1" if current subscription plan slug equals value
@@ -784,6 +784,9 @@ export class MailchimpSyncService {
 
       case 'user.name':
         return (data.user.name || 'Unbekannt').trim();
+
+      case 'user.id':
+        return data.user.id;
 
       case 'slug': {
         const op = parts[1];
