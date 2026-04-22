@@ -551,8 +551,6 @@ export class MailchimpSyncService {
       },
     });
 
-    const now = new Date();
-
     const subscriptions = await this.prisma.subscription.findMany({
       select: {
         id: true,
@@ -580,11 +578,11 @@ export class MailchimpSyncService {
     return users.map(user => {
       const userSubs = subsByUser.get(user.id) ?? [];
 
-      // currentSubscription = actively running (paid period not elapsed AND
-      // not deactivated). Cancelled/deactivated subs never count as current,
-      // even if paidUntil is still in the future.
+      // currentSubscription = any subscription without a deactivation record.
+      // paidUntil in the past is fine (grace period / pending renewal) — the
+      // subscription is considered active until it's formally deactivated.
       const currentSubscription = userSubs
-        .filter(s => s.paidUntil && s.paidUntil > now && !s.deactivation)
+        .filter(s => !s.deactivation)
         .sort(
           (a, b) =>
             (b.paidUntil?.getTime() ?? 0) - (a.paidUntil?.getTime() ?? 0)
