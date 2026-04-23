@@ -1,3 +1,4 @@
+import { useDraggable, useDroppable } from '@dnd-kit/core';
 import styled from '@emotion/styled';
 import {
   css,
@@ -10,10 +11,15 @@ import type { Theme } from '@mui/material/styles';
 import { TeaserType } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdContentCopy, MdImage } from 'react-icons/md';
+import { MdAdd, MdContentCopy, MdDragIndicator, MdImage } from 'react-icons/md';
 
-import { ArticleTeaser, EventTeaser, PageTeaser } from '../../blocks/types';
-import { ExtractedTeaser } from './extractTeasers';
+import {
+  ArticleTeaser,
+  EventTeaser,
+  PageTeaser,
+  Teaser,
+} from '../../blocks/types';
+import { SlotType } from './useWorkingBlocks';
 
 export function groupColor(groupIndex: number, theme: Theme): string {
   const colors = [
@@ -31,26 +37,58 @@ export function groupColor(groupIndex: number, theme: Theme): string {
 
 const Card = styled('div', {
   shouldForwardProp: p =>
-    p !== 'isSelected' && p !== 'isTarget' && p !== 'groupColor',
-})<{ isSelected: boolean; isTarget: boolean; groupColor: string }>`
+    ![
+      'isSelected',
+      'isTarget',
+      'groupColor',
+      'isOver',
+      'isScratch',
+      'isEmptyReal',
+      'selectionActive',
+    ].includes(p as string),
+})<{
+  isSelected: boolean;
+  isTarget: boolean;
+  groupColor: string;
+  isOver: boolean;
+  isScratch: boolean;
+  isEmptyReal: boolean;
+  selectionActive: boolean;
+}>`
   display: flex;
   align-items: stretch;
   height: 72px;
   border-radius: 6px;
-  border: 2px solid
-    ${({ isSelected, isTarget, groupColor, theme }) =>
+  border: 2px
+    ${({ isScratch, isEmptyReal }) =>
+      isScratch || isEmptyReal ? 'dashed' : 'solid'}
+    ${({ isSelected, isTarget, isOver, isEmptyReal, groupColor, theme }) =>
       isSelected ? theme.palette.primary.main
+      : isOver ? theme.palette.primary.light
+      : isEmptyReal ? theme.palette.error.main
       : isTarget ? '#eeeeee'
       : groupColor};
-  background: ${({ theme }) => theme.palette.background.paper};
-  cursor: pointer;
+  background: ${({ isOver, isScratch, isEmptyReal, theme }) =>
+    isOver ? theme.palette.action.hover
+    : isEmptyReal ? `${theme.palette.error.main}11`
+    : isScratch ? theme.palette.action.disabledBackground
+    : theme.palette.background.paper};
+  cursor: ${({ selectionActive }) => (selectionActive ? 'pointer' : 'grab')};
   overflow: hidden;
   user-select: none;
+
+  &:active {
+    cursor: ${({ selectionActive }) =>
+      selectionActive ? 'pointer' : 'grabbing'};
+  }
   transition:
     border-color 0.15s,
-    box-shadow 0.15s;
-  box-shadow: ${({ isSelected, theme }) =>
-    isSelected ? `0 0 0 3px ${theme.palette.primary.main}55` : 'none'};
+    box-shadow 0.15s,
+    background 0.15s;
+  box-shadow: ${({ isSelected, isOver, theme }) =>
+    isSelected ? `0 0 0 3px ${theme.palette.primary.main}55`
+    : isOver ? `0 0 0 3px ${theme.palette.primary.light}55`
+    : 'none'};
 
   &:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -66,7 +104,9 @@ const ColorBar = styled('div', {
   opacity: ${({ nestDepth }) => (nestDepth > 0 ? 0.6 : 1)};
 `;
 
-const Thumbnail = styled('div')`
+const Thumbnail = styled('div', {
+  shouldForwardProp: p => p !== 'isScratch',
+})<{ isScratch: boolean }>`
   width: 88px;
   flex-shrink: 0;
   background: ${({ theme }) => theme.palette.action.hover};
@@ -76,6 +116,8 @@ const Thumbnail = styled('div')`
     width: 100%;
     height: 100%;
     object-fit: cover;
+    opacity: ${({ isScratch }) => (isScratch ? 0.45 : 1)};
+    transition: opacity 0.15s;
   }
 `;
 
@@ -121,6 +163,18 @@ const Title = styled('div')`
   `}
 `;
 
+const EmptyScratchContent = styled('div')`
+  ${({ theme }) => css`
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: ${theme.palette.text.disabled};
+    font-size: ${theme.typography.caption.fontSize};
+  `}
+`;
+
 const DuplicateBadge = styled('div', {
   shouldForwardProp: p => p !== 'badgeColor',
 })<{ badgeColor: string }>`
@@ -139,8 +193,25 @@ const DuplicateBadge = styled('div', {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 `;
 
-const CardWrapper = styled('div')`
+const DragHandle = styled('div')`
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  pointer-events: none;
+  font-size: 22px;
+  color: ${({ theme }) => theme.palette.text.secondary};
+  background: ${({ theme }) => theme.palette.action.hover};
+  flex-shrink: 0;
+`;
+
+const CardWrapper = styled('div', {
+  shouldForwardProp: p => p !== 'isDragging',
+})<{ isDragging: boolean }>`
   position: relative;
+  opacity: ${({ isDragging }) => (isDragging ? 0.4 : 1)};
+  transition: opacity 0.15s;
 `;
 
 const SelectionTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -154,60 +225,92 @@ const SelectionTooltip = styled(({ className, ...props }: TooltipProps) => (
   }
 `;
 
-type TeaserCardProps = {
-  extracted: ExtractedTeaser;
+export type TeaserCardProps = {
+  dragId: string;
+  teaser: Teaser | null;
+  slotType: SlotType;
+  groupIndex: number;
+  nestDepth: number;
   isSelected: boolean;
   isTarget: boolean;
   isDuplicate: boolean;
+  selectionActive: boolean;
   onClick: () => void;
 };
 
 export function TeaserCard({
-  extracted,
+  dragId,
+  teaser,
+  slotType,
+  groupIndex,
+  nestDepth,
   isSelected,
   isTarget,
   isDuplicate,
+  selectionActive,
   onClick,
 }: TeaserCardProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const { teaser, groupIndex, nestDepth } = extracted;
   const color = groupColor(groupIndex, theme);
+
+  const isScratch = slotType === 'scratch';
+  const isEmpty = teaser === null;
+  const isEmptyReal = slotType === 'empty';
+  const canDrag = !isEmpty && !selectionActive;
+  const canDrop = (isEmptyReal || isScratch) && !selectionActive;
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setDragRef,
+    isDragging,
+  } = useDraggable({ id: dragId, disabled: !canDrag });
+
+  const { setNodeRef: setDropRef, isOver } = useDroppable({
+    id: dragId,
+    disabled: !canDrop,
+  });
 
   let entityImage = null;
   let entityTitle = null as string | null | undefined;
   let entityPreTitle = null as string | null | undefined;
 
-  switch (teaser.type) {
-    case TeaserType.Article: {
-      const a = teaser as ArticleTeaser;
-      entityImage = a.article?.latest?.image ?? null;
-      entityTitle = a.article?.latest?.title;
-      entityPreTitle = a.article?.latest?.preTitle;
-      break;
-    }
-    case TeaserType.Page: {
-      const p = teaser as PageTeaser;
-      entityImage = p.page?.latest?.image ?? null;
-      entityTitle = p.page?.latest?.title;
-      break;
-    }
-    case TeaserType.Event: {
-      const e = teaser as EventTeaser;
-      entityImage = e.event?.image ?? null;
-      entityTitle = e.event?.name;
-      break;
+  if (teaser) {
+    switch (teaser.type) {
+      case TeaserType.Article: {
+        const a = teaser as ArticleTeaser;
+        entityImage = a.article?.latest?.image ?? null;
+        entityTitle = a.article?.latest?.title;
+        entityPreTitle = a.article?.latest?.preTitle;
+        break;
+      }
+      case TeaserType.Page: {
+        const p = teaser as PageTeaser;
+        entityImage = p.page?.latest?.image ?? null;
+        entityTitle = p.page?.latest?.title;
+        break;
+      }
+      case TeaserType.Event: {
+        const e = teaser as EventTeaser;
+        entityImage = e.event?.image ?? null;
+        entityTitle = e.event?.name;
+        break;
+      }
     }
   }
 
-  const teaserImage = teaser.image ?? entityImage;
+  const teaserImage = teaser?.image ?? entityImage;
   const imageUrl = teaserImage?.mediumURL ?? teaserImage?.url ?? null;
   const displayTitle =
-    teaser.title ?? entityTitle ?? t('teaserOverview.noTitle');
-  const displayPreTitle = teaser.preTitle ?? entityPreTitle ?? '';
+    teaser?.title ?? entityTitle ?? t('teaserOverview.noTitle');
+  const displayPreTitle = teaser?.preTitle ?? entityPreTitle ?? '';
 
   const cardTooltip =
-    isSelected ? t('teaserOverview.tooltipSelected')
+    isEmptyReal ? t('teaserOverview.tooltipEmptySlot')
+    : isEmpty && isScratch ? t('teaserOverview.tooltipEmptyScratch')
+    : isScratch ? t('teaserOverview.tooltipScratch')
+    : isSelected ? t('teaserOverview.tooltipSelected')
     : isTarget ? t('teaserOverview.tooltipTarget')
     : t('teaserOverview.tooltipDefault');
 
@@ -219,8 +322,11 @@ export function TeaserCard({
       placement="top"
       enterDelay={600}
     >
-      <CardWrapper>
-        {isDuplicate && (
+      <CardWrapper
+        ref={setDropRef}
+        isDragging={isDragging}
+      >
+        {isDuplicate && !isEmpty && (
           <SelectionTooltip
             title={t('teaserOverview.duplicateBadge')}
             placement="top"
@@ -237,34 +343,57 @@ export function TeaserCard({
         )}
 
         <Card
+          ref={canDrag ? setDragRef : undefined}
+          {...(canDrag ? listeners : {})}
+          {...(canDrag ? attributes : {})}
           isSelected={isSelected}
           isTarget={isTarget}
+          isOver={isOver && !isDragging}
+          isScratch={isScratch}
+          isEmptyReal={isEmptyReal}
+          selectionActive={selectionActive}
           groupColor={color}
           onClick={onClick}
           role="button"
           aria-pressed={isSelected}
         >
-          <ColorBar
-            barColor={color}
-            nestDepth={nestDepth}
-          />
+          {!isEmpty && (
+            <ColorBar
+              barColor={color}
+              nestDepth={nestDepth}
+            />
+          )}
 
-          <Thumbnail>
-            {imageUrl ?
-              <img
-                src={imageUrl}
-                alt=""
-              />
-            : <ThumbnailPlaceholder>
-                <MdImage />
-              </ThumbnailPlaceholder>
-            }
-          </Thumbnail>
+          {isEmpty ?
+            <EmptyScratchContent>
+              <MdAdd />
+              {isEmptyReal ?
+                t('teaserOverview.emptySlot')
+              : t('teaserOverview.emptyScratch')}
+            </EmptyScratchContent>
+          : <>
+              <Thumbnail isScratch={isScratch}>
+                {imageUrl ?
+                  <img
+                    src={imageUrl}
+                    alt=""
+                  />
+                : <ThumbnailPlaceholder>
+                    <MdImage />
+                  </ThumbnailPlaceholder>
+                }
+              </Thumbnail>
 
-          <TextArea>
-            {displayPreTitle && <PreTitle>{displayPreTitle}</PreTitle>}
-            <Title>{displayTitle}</Title>
-          </TextArea>
+              <TextArea>
+                {displayPreTitle && <PreTitle>{displayPreTitle}</PreTitle>}
+                <Title>{displayTitle}</Title>
+              </TextArea>
+
+              <DragHandle aria-hidden="true">
+                <MdDragIndicator />
+              </DragHandle>
+            </>
+          }
         </Card>
       </CardWrapper>
     </SelectionTooltip>

@@ -15,6 +15,7 @@ import {
   BlockValue,
   createCheckedPermissionComponent,
   EditorTemplate,
+  EditorValidationProvider,
   mapBlockValueToBlockInput,
   NavigationBar,
   PageMetadata,
@@ -26,7 +27,8 @@ import {
   useAuthorisation,
   useUnsavedChangesDialog,
 } from '@wepublish/ui/editor';
-import React, { useCallback, useEffect, useState } from 'react';
+import type { AggregatedValidation } from '@wepublish/ui/editor';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MdCloudUpload,
@@ -263,7 +265,33 @@ function PageEditor() {
     };
   }
 
+  const validateAll = useRef<() => AggregatedValidation>(() => ({
+    ok: true,
+    failures: [],
+  }));
+
+  function runEditorValidation(): boolean {
+    const result = validateAll.current();
+    if (result.ok) return true;
+    const summaries = result.failures
+      .map(f => f.summary)
+      .filter(Boolean)
+      .join(' · ');
+    toaster.push(
+      <Notification
+        type="error"
+        header={t('pageEditor.validationFailedHeader')}
+        duration={4000}
+      >
+        {summaries || t('pageEditor.validationFailedGeneric')}
+      </Notification>,
+      { placement: 'topEnd' }
+    );
+    return false;
+  }
+
   async function handleSave() {
+    if (!runEditorValidation()) return;
     const input = createInput();
 
     if (pageID) {
@@ -298,6 +326,7 @@ function PageEditor() {
   }
 
   async function handlePublish(publishedAt: Date) {
+    if (!runEditorValidation()) return;
     if (pageID) {
       const { data } = await updatePage({
         variables: { id: pageID, ...createInput() },
@@ -488,19 +517,21 @@ function PageEditor() {
           }
         >
           <EditorContent>
-            <TeaserOverviewWrapper>
-              <TeaserOverviewPanel
-                blocks={blocks}
-                onChange={handleChange}
-              />
-            </TeaserOverviewWrapper>
+            <EditorValidationProvider runAllRef={validateAll}>
+              <TeaserOverviewWrapper>
+                <TeaserOverviewPanel
+                  blocks={blocks}
+                  onChange={handleChange}
+                />
+              </TeaserOverviewWrapper>
 
-            <BlockList
-              value={blocks}
-              onChange={handleChange}
-              disabled={isDisabled || !isAuthorized}
-              blockMap={BlockMap}
-            />
+              <BlockList
+                value={blocks}
+                onChange={handleChange}
+                disabled={isDisabled || !isAuthorized}
+                blockMap={BlockMap}
+              />
+            </EditorValidationProvider>
           </EditorContent>
         </EditorTemplate>
       </FieldSet>

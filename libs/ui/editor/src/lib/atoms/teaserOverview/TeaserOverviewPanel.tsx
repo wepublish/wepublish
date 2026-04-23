@@ -1,9 +1,21 @@
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  PointerSensor,
+  pointerWithin,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
 import styled from '@emotion/styled';
 import { Chip, Collapse, css, Typography } from '@mui/material';
 import { TeaserType, useBlockStylesQuery } from '@wepublish/editor/api';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  MdCheck,
+  MdClose,
   MdEditNote,
   MdExpandLess,
   MdExpandMore,
@@ -12,16 +24,12 @@ import {
 import { Drawer, IconButton } from 'rsuite';
 
 import { BlockValue, Teaser } from '../../blocks/types';
+import { useRegisterValidator } from '../../hooks/useEditorValidation';
 import { TeaserSelectAndEditPanel } from '../../panel/teaserSelectAndEditPanel';
-import {
-  BlockType,
-  ExtractedTeaser,
-  extractTeasers,
-  TeaserAddress,
-  teaserContentKey,
-} from './extractTeasers';
-import { setTeaserAt, swapTeasers } from './swapTeasers';
+import { teaserContentKey } from './extractTeasers';
 import { TeaserBlockGroup } from './TeaserBlockGroup';
+import { TeaserCard } from './TeaserCard';
+import { useWorkingBlocks } from './useWorkingBlocks';
 
 const PanelWrapper = styled('div')`
   width: 100%;
@@ -171,6 +179,23 @@ const EmptyState = styled(Typography)`
   `}
 `;
 
+const ActionsBar = styled('div')`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed ${({ theme }) => theme.palette.divider};
+`;
+
+const ValidationSummary = styled('div')`
+  ${({ theme }) => css`
+    font-size: ${theme.typography.caption.fontSize};
+    color: ${theme.palette.error.main};
+    margin-right: auto;
+  `}
+`;
+
 const ALL_TEASER_TYPES = [
   TeaserType.Article,
   TeaserType.Page,
@@ -178,10 +203,30 @@ const ALL_TEASER_TYPES = [
   TeaserType.Custom,
 ] as const;
 
+type SelectedSlot = { groupKey: string; idx: number };
+
 type TeaserOverviewPanelProps = {
   blocks: BlockValue[];
   onChange: (blocks: BlockValue[]) => void;
 };
+
+type ParsedId =
+  | { kind: 'slot'; groupKey: string; idx: number }
+  | { kind: 'gap'; groupKey: string; gapIdx: number };
+
+function parseDragId(id: string): ParsedId | null {
+  const firstSep = id.indexOf('::');
+  if (firstSep < 0) return null;
+  const kind = id.slice(0, firstSep);
+  const rest = id.slice(firstSep + 2);
+  const lastSep = rest.lastIndexOf('::');
+  if (lastSep < 0) return null;
+  const groupKey = rest.slice(0, lastSep);
+  const num = Number(rest.slice(lastSep + 2));
+  if (kind === 'slot') return { kind: 'slot', groupKey, idx: num };
+  if (kind === 'gap') return { kind: 'gap', groupKey, gapIdx: num };
+  return null;
+}
 
 export function TeaserOverviewPanel({
   blocks,
@@ -189,15 +234,13 @@ export function TeaserOverviewPanel({
 }: TeaserOverviewPanelProps) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState<TeaserAddress | null>(
-    null
-  );
-  const [replaceAddress, setReplaceAddress] = useState<TeaserAddress | null>(
-    null
-  );
+  const [selected, setSelected] = useState<SelectedSlot | null>(null);
+  const [replaceSlot, setReplaceSlot] = useState<SelectedSlot | null>(null);
   const [activeFilters, setActiveFilters] = useState<Set<TeaserType>>(
     () => new Set([TeaserType.Article])
   );
+  const [saveAttempted, setSaveAttempted] = useState(false);
+  const [activeDrag, setActiveDrag] = useState<SelectedSlot | null>(null);
 
   const { data: blockStylesData } = useBlockStylesQuery();
   const blockStyleNames = useMemo(() => {
@@ -208,130 +251,215 @@ export function TeaserOverviewPanel({
     return map;
   }, [blockStylesData]);
 
-  const allTeasers = useMemo(
-    () => extractTeasers(blocks, t, blockStyleNames),
-    [blocks, t, blockStyleNames]
+  const { workingBlocks, dispatchDrag, loadTeaser, validate } =
+    useWorkingBlocks(blocks, t, blockStyleNames, onChange);
+
+  const totalRealTeasers = useMemo(
+    () =>
+      workingBlocks.reduce(
+        (sum, b) =>
+          sum + b.teasers.filter(w => w.type === 'real' && w.teaser).length,
+        0
+      ),
+    [workingBlocks]
   );
 
   const isFiltering = activeFilters.size !== ALL_TEASER_TYPES.length;
 
   const teaserCountsByType = useMemo(() => {
     const counts = new Map<TeaserType, number>();
-    for (const { teaser } of allTeasers) {
-      counts.set(teaser.type, (counts.get(teaser.type) ?? 0) + 1);
+    for (const b of workingBlocks) {
+      for (const w of b.teasers) {
+        if (w.type !== 'real' || !w.teaser) continue;
+        counts.set(w.teaser.type, (counts.get(w.teaser.type) ?? 0) + 1);
+      }
     }
     return counts;
-  }, [allTeasers]);
+  }, [workingBlocks]);
 
-  const groups = useMemo(() => {
-    const seen = new Map<
-      string,
-      { label: string; groupIndex: number; teasers: ExtractedTeaser[] }
-    >();
+  const validationErrors = useMemo(() => validate(), [validate]);
+  const showErrors = saveAttempted && validationErrors.length > 0;
 
-    for (const extracted of allTeasers) {
-      const key = `${extracted.address.blockIndex}-${extracted.blockLabel}`;
-      if (!seen.has(key)) {
-        seen.set(key, {
-          label: extracted.blockLabel,
-          groupIndex: extracted.groupIndex,
-          teasers: [],
-        });
-      }
-      seen.get(key)!.teasers.push(extracted);
-    }
+  useRegisterValidator('teaser-overview', () => {
+    const errors = validate();
+    if (errors.length === 0) return { ok: true };
+    setSaveAttempted(true);
+    setIsOpen(true);
+    return {
+      ok: false,
+      summary: t('teaserOverview.validationSummary', {
+        count: errors.length,
+      }),
+    };
+  });
+  const errorsByGroup = useMemo(() => {
+    if (!showErrors) return new Map<string, number>();
+    const m = new Map<string, number>();
+    for (const e of validationErrors) m.set(e.groupKey, e.emptyCount);
+    return m;
+  }, [validationErrors, showErrors]);
 
-    return [...seen.values()];
-  }, [allTeasers]);
-
-  const filteredGroups = useMemo(() => {
-    if (!isFiltering) return groups;
-
-    return groups
-      .map(group => ({
-        ...group,
-        teasers: group.teasers.filter(t => activeFilters.has(t.teaser.type)),
-      }))
-      .filter(group => group.teasers.length > 0);
-  }, [groups, activeFilters, isFiltering]);
+  const visibleBlocks = useMemo(() => {
+    if (!isFiltering) return workingBlocks;
+    return workingBlocks.filter(b => {
+      const hasEmpty = b.teasers.some(w => w.type === 'empty');
+      const hasFilledScratch = b.teasers.some(
+        w => w.type === 'scratch' && w.teaser !== null
+      );
+      const hasMatchingReal = b.teasers.some(
+        w =>
+          w.type === 'real' &&
+          w.teaser !== null &&
+          activeFilters.has(w.teaser.type)
+      );
+      return hasEmpty || hasFilledScratch || hasMatchingReal;
+    });
+  }, [workingBlocks, activeFilters, isFiltering]);
 
   const visibleTeaserCount = useMemo(
-    () => filteredGroups.reduce((sum, g) => sum + g.teasers.length, 0),
-    [filteredGroups]
+    () =>
+      visibleBlocks.reduce(
+        (sum, b) =>
+          sum +
+          b.teasers.filter(
+            w =>
+              w.type === 'real' &&
+              w.teaser !== null &&
+              activeFilters.has(w.teaser.type)
+          ).length,
+        0
+      ),
+    [visibleBlocks, activeFilters]
   );
-
-  const toggleFilter = useCallback((type: TeaserType) => {
-    setActiveFilters(prev => {
-      const next = new Set(prev);
-      if (next.has(type)) {
-        next.delete(type);
-      } else {
-        next.add(type);
-      }
-      return next;
-    });
-  }, []);
-
-  const handleCardClick = useCallback(
-    (extracted: ExtractedTeaser) => {
-      if (!selectedAddress) {
-        setSelectedAddress(extracted.address);
-        return;
-      }
-
-      const clickingSame = addressesEqual(extracted.address, selectedAddress);
-      if (clickingSame) {
-        setSelectedAddress(null);
-        return;
-      }
-
-      onChange(swapTeasers(blocks, selectedAddress, extracted.address));
-      setSelectedAddress(null);
-    },
-    [selectedAddress, blocks, onChange]
-  );
-
-  const handleReplaceClick = useCallback(() => {
-    setReplaceAddress(selectedAddress);
-  }, [selectedAddress]);
-
-  const handleReplaceConfirm = useCallback(
-    (teaser: Teaser) => {
-      if (!replaceAddress) return;
-      onChange(setTeaserAt(blocks, replaceAddress, teaser));
-      setReplaceAddress(null);
-      setSelectedAddress(null);
-    },
-    [replaceAddress, blocks, onChange]
-  );
-
-  const handleReplaceClose = useCallback(() => {
-    setReplaceAddress(null);
-    setSelectedAddress(null);
-  }, []);
 
   const duplicateKeys = useMemo(() => {
     const counts = new Map<string, number>();
-    for (const { teaser } of allTeasers) {
-      const key = teaserContentKey(teaser);
-      counts.set(key, (counts.get(key) ?? 0) + 1);
+    for (const b of workingBlocks) {
+      for (const w of b.teasers) {
+        if (w.type !== 'real' || !w.teaser) continue;
+        const key = teaserContentKey(w.teaser);
+        counts.set(key, (counts.get(key) ?? 0) + 1);
+      }
     }
     const dupes = new Set<string>();
     for (const [key, count] of counts) {
       if (count > 1) dupes.add(key);
     }
     return dupes;
-  }, [allTeasers]);
+  }, [workingBlocks]);
 
-  if (allTeasers.length === 0) return null;
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+  );
+
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    const parsed = parseDragId(event.active.id as string);
+    if (parsed && parsed.kind === 'slot') {
+      setActiveDrag({ groupKey: parsed.groupKey, idx: parsed.idx });
+    }
+  }, []);
+
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      setActiveDrag(null);
+      const { active, over } = event;
+      if (!over) return;
+      const source = parseDragId(active.id as string);
+      const target = parseDragId(over.id as string);
+      if (!source || source.kind !== 'slot' || !target) return;
+      const sourceBlock = workingBlocks.find(
+        b => b.groupKey === source.groupKey
+      );
+      if (!sourceBlock) return;
+      const sourceSlot = sourceBlock.teasers[source.idx];
+      if (!sourceSlot) return;
+
+      const isSlotVisible = (slot: { teaser: Teaser | null; type: string }) =>
+        slot.type !== 'real' ||
+        slot.teaser === null ||
+        activeFilters.has(slot.teaser.type);
+
+      if (target.kind === 'slot') {
+        dispatchDrag(
+          {
+            groupKey: source.groupKey,
+            idx: source.idx,
+            type: sourceSlot.type,
+          },
+          { kind: 'slot', groupKey: target.groupKey, idx: target.idx },
+          isSlotVisible
+        );
+      } else {
+        dispatchDrag(
+          {
+            groupKey: source.groupKey,
+            idx: source.idx,
+            type: sourceSlot.type,
+          },
+          { kind: 'gap', groupKey: target.groupKey, gapIdx: target.gapIdx },
+          isSlotVisible
+        );
+      }
+    },
+    [workingBlocks, dispatchDrag, activeFilters]
+  );
+
+  const toggleFilter = useCallback((type: TeaserType) => {
+    setActiveFilters(prev => {
+      const next = new Set(prev);
+      if (next.has(type)) next.delete(type);
+      else next.add(type);
+      return next;
+    });
+  }, []);
+
+  const handleSlotClick = useCallback(
+    (groupKey: string, idx: number) => {
+      if (selected && selected.groupKey === groupKey && selected.idx === idx) {
+        setSelected(null);
+        return;
+      }
+      setSelected({ groupKey, idx });
+    },
+    [selected]
+  );
+
+  const handleCancelSelection = useCallback(() => {
+    setSelected(null);
+  }, []);
+
+  const handleReplaceClick = useCallback(() => {
+    setReplaceSlot(selected);
+  }, [selected]);
+
+  const handleReplaceConfirm = useCallback(
+    (teaser: Teaser) => {
+      if (!replaceSlot) return;
+      loadTeaser(replaceSlot.groupKey, replaceSlot.idx, teaser);
+      setReplaceSlot(null);
+      setSelected(null);
+    },
+    [replaceSlot, loadTeaser]
+  );
+
+  const handleReplaceClose = useCallback(() => {
+    setReplaceSlot(null);
+  }, []);
+
+  const handleConfirm = useCallback(() => {
+    setSaveAttempted(validationErrors.length > 0);
+    setSelected(null);
+  }, [validationErrors]);
+
+  if (workingBlocks.length === 0) return null;
 
   const summary = t(
-    groups.length === 1 ?
+    workingBlocks.length === 1 ?
       'teaserOverview.summaryOne'
     : 'teaserOverview.summaryMany',
     {
-      count: allTeasers.length,
-      blocks: groups.length,
+      count: totalRealTeasers,
+      blocks: workingBlocks.length,
     }
   );
 
@@ -340,6 +468,12 @@ export function TeaserOverviewPanel({
       ` (${t('teaserOverview.filterSuffix', { count: visibleTeaserCount })})`
     : '';
 
+  const selectedWorking =
+    selected &&
+    workingBlocks.find(b => b.groupKey === selected.groupKey)?.teasers[
+      selected.idx
+    ];
+
   return (
     <>
       <PanelWrapper>
@@ -347,7 +481,7 @@ export function TeaserOverviewPanel({
           isOpen={isOpen}
           onClick={() => {
             setIsOpen(v => !v);
-            if (isOpen) setSelectedAddress(null);
+            if (isOpen) setSelected(null);
           }}
           aria-expanded={isOpen}
         >
@@ -388,7 +522,7 @@ export function TeaserOverviewPanel({
                 size="small"
                 variant={activeFilters.has(type) ? 'filled' : 'outlined'}
                 color={activeFilters.has(type) ? 'primary' : 'default'}
-                disabled={!!selectedAddress}
+                disabled={!!selected}
                 onClick={e => {
                   e.stopPropagation();
                   toggleFilter(type);
@@ -398,9 +532,22 @@ export function TeaserOverviewPanel({
           </FilterBar>
 
           <Content>
-            <SelectionHint visible={!!selectedAddress}>
-              <HintText>{t('teaserOverview.hintText')}</HintText>
+            <SelectionHint visible={!!selected}>
+              <HintText>
+                {selectedWorking?.teaser ?
+                  t('teaserOverview.hintTextReplace')
+                : t('teaserOverview.hintTextLoad')}
+              </HintText>
               <HintActions>
+                <IconButton
+                  size="xs"
+                  appearance="ghost"
+                  icon={<MdClose />}
+                  onClick={handleCancelSelection}
+                  title={t('teaserOverview.cancelReplaceTitle')}
+                >
+                  {t('teaserOverview.cancelReplace')}
+                </IconButton>
                 <IconButton
                   size="xs"
                   appearance="primary"
@@ -408,34 +555,97 @@ export function TeaserOverviewPanel({
                   onClick={handleReplaceClick}
                   title={t('teaserOverview.replaceButtonTitle')}
                 >
-                  {t('teaserOverview.replaceButton')}
+                  {selectedWorking?.teaser ?
+                    t('teaserOverview.replaceButton')
+                  : t('teaserOverview.loadButton')}
                 </IconButton>
               </HintActions>
             </SelectionHint>
 
-            {filteredGroups.length === 0 && (
+            {visibleBlocks.length === 0 && (
               <EmptyState variant="body2">
                 {t('teaserOverview.emptyState')}
               </EmptyState>
             )}
 
-            {filteredGroups.map((group, i) => (
-              <TeaserBlockGroup
-                key={i}
-                label={group.label}
-                groupIndex={group.groupIndex}
-                teasers={group.teasers}
-                duplicateKeys={duplicateKeys}
-                selectedAddress={selectedAddress}
-                onCardClick={handleCardClick}
-              />
-            ))}
+            <DndContext
+              sensors={sensors}
+              collisionDetection={pointerWithin}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              onDragCancel={() => setActiveDrag(null)}
+            >
+              {visibleBlocks.map(block => (
+                <TeaserBlockGroup
+                  key={block.groupKey}
+                  block={block}
+                  duplicateKeys={duplicateKeys}
+                  selected={selected}
+                  errorEmptyCount={errorsByGroup.get(block.groupKey)}
+                  errorLabel={
+                    errorsByGroup.has(block.groupKey) ?
+                      t('teaserOverview.blockEmptyError', {
+                        count: errorsByGroup.get(block.groupKey),
+                      })
+                    : undefined
+                  }
+                  activeFilters={activeFilters}
+                  selectionActive={!!selected}
+                  onSlotClick={handleSlotClick}
+                />
+              ))}
+              <DragOverlay dropAnimation={null}>
+                {(() => {
+                  if (!activeDrag) return null;
+                  const block = workingBlocks.find(
+                    b => b.groupKey === activeDrag.groupKey
+                  );
+                  const slot = block?.teasers[activeDrag.idx];
+                  if (!block || !slot || !slot.teaser) return null;
+                  return (
+                    <div style={{ width: 220 }}>
+                      <TeaserCard
+                        dragId="drag-overlay"
+                        teaser={slot.teaser}
+                        slotType={slot.type}
+                        groupIndex={block.groupIndex}
+                        nestDepth={block.nestDepth}
+                        isSelected={false}
+                        isTarget={false}
+                        isDuplicate={false}
+                        selectionActive={false}
+                        onClick={() => undefined}
+                      />
+                    </div>
+                  );
+                })()}
+              </DragOverlay>
+            </DndContext>
+
+            <ActionsBar>
+              {showErrors && (
+                <ValidationSummary>
+                  {t('teaserOverview.validationSummary', {
+                    count: validationErrors.length,
+                  })}
+                </ValidationSummary>
+              )}
+              <IconButton
+                size="xs"
+                appearance="primary"
+                icon={<MdCheck />}
+                onClick={handleConfirm}
+                title={t('teaserOverview.confirmTitle')}
+              >
+                {t('teaserOverview.confirm')}
+              </IconButton>
+            </ActionsBar>
           </Content>
         </Collapse>
       </PanelWrapper>
 
       <Drawer
-        open={replaceAddress !== null}
+        open={replaceSlot !== null}
         size="sm"
         onClose={handleReplaceClose}
       >
@@ -448,31 +658,4 @@ export function TeaserOverviewPanel({
       </Drawer>
     </>
   );
-}
-
-function addressesEqual(a: TeaserAddress, b: TeaserAddress | null): boolean {
-  if (!b) return false;
-  if (a.blockType !== b.blockType) return false;
-  if (a.blockIndex !== b.blockIndex) return false;
-
-  switch (a.blockType) {
-    case BlockType.TeaserGrid:
-      return (
-        b.blockType === BlockType.TeaserGrid && a.teaserIndex === b.teaserIndex
-      );
-    case BlockType.TeaserFlex:
-      return (
-        b.blockType === BlockType.TeaserFlex && a.flexIndex === b.flexIndex
-      );
-    case BlockType.TeaserSlots:
-      return (
-        b.blockType === BlockType.TeaserSlots && a.slotIndex === b.slotIndex
-      );
-    case BlockType.FlexBlock:
-      return (
-        b.blockType === BlockType.FlexBlock &&
-        a.nestedBlockIndex === b.nestedBlockIndex &&
-        addressesEqual(a.nested, b.nested)
-      );
-  }
 }
