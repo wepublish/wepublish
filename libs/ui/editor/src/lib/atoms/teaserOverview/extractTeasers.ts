@@ -301,48 +301,25 @@ export function getTeaserAt(
   address: TeaserPath
 ): Teaser | null {
   switch (address.blockType) {
-    case TeaserContainerType.TeaserGrid: {
-      const block = blocks[address.blockIndex];
-      if (
-        block.type !== EditorBlockType.TeaserGrid1 &&
-        block.type !== EditorBlockType.TeaserGrid6
-      ) {
-        return null;
-      }
-      return (block.value as TeaserGridBlockValue).teasers[
+    case TeaserContainerType.TeaserGrid:
+      return (blocks[address.blockIndex].value as TeaserGridBlockValue).teasers[
         address.teaserIndex
       ][1];
-    }
 
-    case TeaserContainerType.TeaserFlex: {
-      const block = blocks[address.blockIndex];
-      if (block.type !== EditorBlockType.TeaserGridFlex) {
-        return null;
-      }
-      return (block.value as TeaserGridFlexBlockValue).flexTeasers[
-        address.flexIndex
-      ].teaser;
-    }
+    case TeaserContainerType.TeaserFlex:
+      return (blocks[address.blockIndex].value as TeaserGridFlexBlockValue)
+        .flexTeasers[address.flexIndex].teaser;
 
-    case TeaserContainerType.TeaserSlots: {
-      const block = blocks[address.blockIndex];
-      if (block.type !== EditorBlockType.TeaserSlots) {
-        return null;
-      }
+    case TeaserContainerType.TeaserSlots:
       return (
-        (block.value as TeaserSlotsBlockValue).slots[address.slotIndex]
-          .teaser ?? null
+        (blocks[address.blockIndex].value as TeaserSlotsBlockValue).slots[
+          address.slotIndex
+        ].teaser ?? null
       );
-    }
 
     case TeaserContainerType.FlexBlock: {
-      const block = blocks[address.blockIndex];
-      if (block.type !== EditorBlockType.FlexBlock) {
-        return null;
-      }
-      const nestedBlock = (block.value as FlexBlockValue).blocks[
-        address.nestedBlockIndex
-      ]?.block;
+      const nestedBlock = (blocks[address.blockIndex].value as FlexBlockValue)
+        .blocks[address.nestedBlockIndex]?.block;
       if (!nestedBlock) {
         return null;
       }
