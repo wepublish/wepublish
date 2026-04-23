@@ -212,16 +212,21 @@ export function extractTeasers(
         const parentGroupIndex = groupIndex;
         groupIndex++;
 
-        const sortedIndices = nestedBlocks
-          .map((b, i) => i)
-          .sort((a, b) => {
-            const aa = nestedBlocks[a].alignment;
-            const bb = nestedBlocks[b].alignment;
-            return aa.y - bb.y || aa.x - bb.x;
+        const nestedBlockIndicesSortedByPosition = nestedBlocks
+          .map((_block, index) => index)
+          .sort((indexA, indexB) => {
+            const alignmentA = nestedBlocks[indexA].alignment;
+            const alignmentB = nestedBlocks[indexB].alignment;
+            return alignmentA.y - alignmentB.y || alignmentA.x - alignmentB.x;
           });
 
-        for (let sortedPos = 0; sortedPos < sortedIndices.length; sortedPos++) {
-          const nestedBlockIndex = sortedIndices[sortedPos];
+        for (
+          let sortedPos = 0;
+          sortedPos < nestedBlockIndicesSortedByPosition.length;
+          sortedPos++
+        ) {
+          const nestedBlockIndex =
+            nestedBlockIndicesSortedByPosition[sortedPos];
           const { block: nestedBlock } = nestedBlocks[nestedBlockIndex];
           if (!nestedBlock) {
             continue;
@@ -230,6 +235,7 @@ export function extractTeasers(
           const nestedBlockType = nestedBlock.type as EditorBlockType;
           const nestedTypeLabel =
             BLOCK_TYPE_KEY[nestedBlockType] ?
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               t(BLOCK_TYPE_KEY[nestedBlockType]!)
             : String(nestedBlockType);
           const nestedTitle =

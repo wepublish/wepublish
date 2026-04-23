@@ -267,7 +267,9 @@ function PageEditor() {
 
   function runEditorValidation(reason: 'save' | 'publish' = 'save'): boolean {
     const result = validateAll.current();
-    if (result.ok) return true;
+    if (result.ok) {
+      return true;
+    }
     const summaries = result.failures
       .map(f => f.summary)
       .filter(Boolean)
