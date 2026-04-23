@@ -32,9 +32,7 @@ export type DragSource = {
   type: SlotType;
 };
 
-export type DropTarget =
-  | { kind: 'slot'; groupKey: string; idx: number }
-  | { kind: 'gap'; groupKey: string; gapIdx: number };
+export type DropTarget = { groupKey: string; idx: number };
 
 export type SlotVisibilityPredicate = (slot: WorkingTeaser) => boolean;
 
@@ -275,63 +273,39 @@ export function useWorkingBlocks(
       if (!sourceSlot || !isFilled(sourceSlot) || !sourceSlot.teaser) return;
       const movedTeaser = sourceSlot.teaser;
 
-      let nextWorking: WorkingBlock[];
+      const tgt = workingBlocks.find(b => b.groupKey === target.groupKey);
+      if (!tgt) return;
+      const tgtSlot = tgt.teasers[target.idx];
+      if (!tgtSlot) return;
 
-      if (target.kind === 'slot') {
-        const tgt = workingBlocks.find(b => b.groupKey === target.groupKey);
-        if (!tgt) return;
-        const tgtSlot = tgt.teasers[target.idx];
-        if (!tgtSlot) return;
-        const canFillReal = tgtSlot.type === 'empty';
-        const canFillScratch = tgtSlot.type === 'scratch';
-        if (!canFillReal && !canFillScratch) return;
-        if (source.groupKey === target.groupKey && source.idx === target.idx) {
-          return;
-        }
+      if (source.groupKey === target.groupKey && source.idx === target.idx) {
+        return;
+      }
 
-        nextWorking = workingBlocks.map(b => {
-          if (
-            b.groupKey === source.groupKey &&
-            b.groupKey === target.groupKey
-          ) {
+      const isFillTarget =
+        tgtSlot.type === 'empty' || tgtSlot.type === 'scratch';
+
+      const nextWorking = workingBlocks.map(b => {
+        const isSource = b.groupKey === source.groupKey;
+        const isTarget = b.groupKey === target.groupKey;
+        if (isSource && isTarget) {
+          if (isFillTarget) {
             return fillSlot(clearSlot(b, source.idx), target.idx, movedTeaser);
           }
-          if (b.groupKey === source.groupKey) return clearSlot(b, source.idx);
-          if (b.groupKey === target.groupKey) {
-            return fillSlot(b, target.idx, movedTeaser);
-          }
-          return b;
-        });
-      } else {
-        const tgt = workingBlocks.find(b => b.groupKey === target.groupKey);
-        if (!tgt) return;
-        if (target.gapIdx < 0 || target.gapIdx > tgt.originalCount) return;
-        if (
-          source.groupKey === target.groupKey &&
-          (target.gapIdx === source.idx || target.gapIdx === source.idx + 1)
-        ) {
-          return;
+          return insertAtGap(
+            clearSlot(b, source.idx),
+            target.idx,
+            movedTeaser,
+            isSlotVisible
+          );
         }
-
-        nextWorking = workingBlocks.map(b => {
-          if (
-            b.groupKey === source.groupKey &&
-            b.groupKey === target.groupKey
-          ) {
-            return insertAtGap(
-              clearSlot(b, source.idx),
-              target.gapIdx,
-              movedTeaser,
-              isSlotVisible
-            );
-          }
-          if (b.groupKey === source.groupKey) return clearSlot(b, source.idx);
-          if (b.groupKey === target.groupKey) {
-            return insertAtGap(b, target.gapIdx, movedTeaser, isSlotVisible);
-          }
-          return b;
-        });
-      }
+        if (isSource) return clearSlot(b, source.idx);
+        if (isTarget) {
+          if (isFillTarget) return fillSlot(b, target.idx, movedTeaser);
+          return insertAtGap(b, target.idx, movedTeaser, isSlotVisible);
+        }
+        return b;
+      });
 
       commit(nextWorking);
     },

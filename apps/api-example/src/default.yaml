@@ -29,7 +29,7 @@ trackingPixelProviders:
     id: prolitteris
 mediaServer:
   type: 'nova'
-  quality: 1
+  quality: 0.8
 syncProviders:
   - type: mailchimp
     id: mailchimp-sync

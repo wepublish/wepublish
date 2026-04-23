@@ -1,12 +1,12 @@
-import { useDndContext, useDroppable } from '@dnd-kit/core';
+import { useDndContext } from '@dnd-kit/core';
 import styled from '@emotion/styled';
 import { css, Typography, useTheme } from '@mui/material';
 import { TeaserType } from '@wepublish/editor/api';
-import { Fragment } from 'react';
+import { useMemo } from 'react';
 
 import { teaserContentKey } from './extractTeasers';
 import { groupColor, TeaserCard } from './TeaserCard';
-import { WorkingBlock } from './useWorkingBlocks';
+import { WorkingBlock, WorkingTeaser } from './useWorkingBlocks';
 
 const GroupWrapper = styled('div', {
   shouldForwardProp: p => p !== 'borderColor' && p !== 'hasError',
@@ -61,39 +61,15 @@ const Row = styled('div')`
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
-  row-gap: 8px;
+  gap: 8px;
 `;
 
 const SlotWrapper = styled('div')`
   flex-grow: 0;
   flex-shrink: 0;
-  flex-basis: calc(25% - 33px);
+  flex-basis: calc(25% - 6px);
   min-width: 0;
   box-sizing: border-box;
-`;
-
-const GapDrop = styled('div', {
-  shouldForwardProp: p => p !== 'isOver' && p !== 'isForbidden',
-})<{ isOver: boolean; isForbidden: boolean }>`
-  flex-grow: 0;
-  flex-shrink: 0;
-  flex-basis: 25px;
-  align-self: stretch;
-  margin: 2px 4px;
-  border-radius: 8px;
-  background: ${({ isOver, isForbidden, theme }) =>
-    isForbidden && isOver ? `${theme.palette.error.main}55`
-    : isForbidden ? `${theme.palette.error.main}22`
-    : isOver ? theme.palette.primary.main
-    : theme.palette.action.selected};
-  box-shadow: ${({ isOver, isForbidden, theme }) =>
-    isForbidden && isOver ? `0 0 0 2px ${theme.palette.error.light}88`
-    : isOver ? `0 0 0 2px ${theme.palette.primary.light}88`
-    : 'none'};
-  cursor: ${({ isForbidden }) => (isForbidden ? 'not-allowed' : 'auto')};
-  transition:
-    background 0.15s,
-    box-shadow 0.15s;
 `;
 
 type SelectedSlot = { groupKey: string; idx: number };
@@ -109,40 +85,69 @@ type TeaserBlockGroupProps = {
   onSlotClick: (groupKey: string, idx: number) => void;
 };
 
-function Gap({
-  dropId,
-  groupKey,
-  gapIdx,
-}: {
-  dropId: string;
-  groupKey: string;
-  gapIdx: number;
-}) {
-  const { setNodeRef, isOver } = useDroppable({ id: dropId });
-  const { active } = useDndContext();
+function parseSlotId(id: string): { groupKey: string; idx: number } | null {
+  if (typeof id !== 'string' || !id.startsWith('slot::')) return null;
+  const rest = id.slice('slot::'.length);
+  const sep = rest.lastIndexOf('::');
+  if (sep < 0) return null;
+  return { groupKey: rest.slice(0, sep), idx: Number(rest.slice(sep + 2)) };
+}
 
-  let isForbidden = false;
-  if (active && typeof active.id === 'string') {
-    const parts = active.id.split('::');
-    if (parts.length === 3 && parts[0] === 'slot') {
-      const sourceKey = parts[1];
-      const sourceIdx = Number(parts[2]);
-      if (
-        sourceKey === groupKey &&
-        (gapIdx === sourceIdx || gapIdx === sourceIdx + 1)
-      ) {
-        isForbidden = true;
-      }
+function computePreview(
+  block: WorkingBlock,
+  activeId: string | null,
+  overId: string | null,
+  activeFilters: Set<TeaserType>
+): Map<number, 'drop-target' | 'will-shift-right'> {
+  const preview = new Map<number, 'drop-target' | 'will-shift-right'>();
+  if (!activeId || !overId) return preview;
+
+  const source = parseSlotId(activeId);
+  const target = parseSlotId(overId);
+  if (!source || !target) return preview;
+  if (target.groupKey !== block.groupKey) return preview;
+
+  const targetSlot = block.teasers[target.idx];
+  if (!targetSlot) return preview;
+
+  if (source.groupKey === target.groupKey && source.idx === target.idx) {
+    return preview;
+  }
+
+  const isFilledRealTarget =
+    targetSlot.type === 'real' && targetSlot.teaser !== null;
+  if (!isFilledRealTarget) {
+    return preview;
+  }
+
+  const N = block.originalCount;
+  const isSlotVisible = (slot: WorkingTeaser) =>
+    slot.type !== 'real' ||
+    slot.teaser === null ||
+    activeFilters.has(slot.teaser.type);
+
+  let pushedOutIdx = -1;
+  for (let i = N - 1; i >= 0; i--) {
+    if (isSlotVisible(block.teasers[i])) {
+      pushedOutIdx = i;
+      break;
     }
   }
 
-  return (
-    <GapDrop
-      ref={setNodeRef}
-      isOver={isOver}
-      isForbidden={isForbidden}
-    />
-  );
+  preview.set(target.idx, 'drop-target');
+
+  if (pushedOutIdx < 0 || target.idx > pushedOutIdx) {
+    return preview;
+  }
+
+  for (let i = target.idx + 1; i <= pushedOutIdx; i++) {
+    if (isSlotVisible(block.teasers[i])) {
+      preview.set(i, 'will-shift-right');
+    }
+  }
+  preview.set(N, 'will-shift-right');
+
+  return preview;
 }
 
 export function TeaserBlockGroup({
@@ -158,6 +163,15 @@ export function TeaserBlockGroup({
   const theme = useTheme();
   const color = groupColor(block.groupIndex, theme);
   const hasError = errorEmptyCount !== undefined && errorEmptyCount > 0;
+
+  const { active, over } = useDndContext();
+  const activeId = active && typeof active.id === 'string' ? active.id : null;
+  const overId = over && typeof over.id === 'string' ? over.id : null;
+
+  const preview = useMemo(
+    () => computePreview(block, activeId, overId, activeFilters),
+    [block, activeId, overId, activeFilters]
+  );
 
   return (
     <GroupWrapper
@@ -185,30 +199,23 @@ export function TeaserBlockGroup({
           if (isHiddenByFilter) return null;
 
           return (
-            <Fragment key={i}>
-              <Gap
-                dropId={`gap::${block.groupKey}::${i}`}
-                groupKey={block.groupKey}
-                gapIdx={i}
+            <SlotWrapper key={i}>
+              <TeaserCard
+                dragId={slotDragId}
+                teaser={working.teaser}
+                slotType={working.type}
+                groupIndex={block.groupIndex}
+                nestDepth={block.nestDepth}
+                isSelected={isSelected}
+                isDuplicate={
+                  working.teaser !== null &&
+                  duplicateKeys.has(teaserContentKey(working.teaser))
+                }
+                selectionActive={selectionActive}
+                previewState={preview.get(i) ?? 'none'}
+                onClick={() => onSlotClick(block.groupKey, i)}
               />
-              <SlotWrapper>
-                <TeaserCard
-                  dragId={slotDragId}
-                  teaser={working.teaser}
-                  slotType={working.type}
-                  groupIndex={block.groupIndex}
-                  nestDepth={block.nestDepth}
-                  isSelected={isSelected}
-                  isTarget={false}
-                  isDuplicate={
-                    working.teaser !== null &&
-                    duplicateKeys.has(teaserContentKey(working.teaser))
-                  }
-                  selectionActive={selectionActive}
-                  onClick={() => onSlotClick(block.groupKey, i)}
-                />
-              </SlotWrapper>
-            </Fragment>
+            </SlotWrapper>
           );
         })}
       </Row>

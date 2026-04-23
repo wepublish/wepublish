@@ -11,10 +11,9 @@ import {
 import styled from '@emotion/styled';
 import { Chip, Collapse, css, Typography } from '@mui/material';
 import { TeaserType, useBlockStylesQuery } from '@wepublish/editor/api';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  MdCheck,
   MdClose,
   MdEditNote,
   MdExpandLess,
@@ -31,30 +30,39 @@ import { TeaserBlockGroup } from './TeaserBlockGroup';
 import { TeaserCard } from './TeaserCard';
 import { useWorkingBlocks } from './useWorkingBlocks';
 
-const PanelWrapper = styled('div')`
+const PanelWrapper = styled('div', {
+  shouldForwardProp: p => p !== 'hasError',
+})<{ hasError: boolean }>`
   width: 100%;
   margin-bottom: 16px;
-  border: 1px solid ${({ theme }) => theme.palette.divider};
+  border: 1px solid
+    ${({ hasError, theme }) =>
+      hasError ? theme.palette.error.main : theme.palette.divider};
   border-radius: 8px;
+  transition: border-color 0.15s;
 `;
 
 const Header = styled('button', {
-  shouldForwardProp: p => p !== 'isOpen',
-})<{ isOpen: boolean }>`
+  shouldForwardProp: p => p !== 'isOpen' && p !== 'hasError',
+})<{ isOpen: boolean; hasError: boolean }>`
   width: 100%;
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
-  background: #f7f9fa;
+  background: ${({ hasError, theme }) =>
+    hasError ? `${theme.palette.error.main}22` : '#f7f9fa'};
   border: none;
   border-radius: ${({ isOpen }) => (isOpen ? '7px 7px 0 0' : '7px')};
-  transition: border-radius 0ms ${({ isOpen }) => (isOpen ? '0ms' : '250ms')};
+  transition:
+    border-radius 0ms ${({ isOpen }) => (isOpen ? '0ms' : '250ms')},
+    background 0.15s;
   cursor: pointer;
   text-align: left;
 
   &:hover {
-    background: #eef1f3;
+    background: ${({ hasError, theme }) =>
+      hasError ? `${theme.palette.error.main}33` : '#eef1f3'};
   }
 `;
 
@@ -179,23 +187,6 @@ const EmptyState = styled(Typography)`
   `}
 `;
 
-const ActionsBar = styled('div')`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  padding-top: 8px;
-  border-top: 1px dashed ${({ theme }) => theme.palette.divider};
-`;
-
-const ValidationSummary = styled('div')`
-  ${({ theme }) => css`
-    font-size: ${theme.typography.caption.fontSize};
-    color: ${theme.palette.error.main};
-    margin-right: auto;
-  `}
-`;
-
 const ALL_TEASER_TYPES = [
   TeaserType.Article,
   TeaserType.Page,
@@ -210,22 +201,19 @@ type TeaserOverviewPanelProps = {
   onChange: (blocks: BlockValue[]) => void;
 };
 
-type ParsedId =
-  | { kind: 'slot'; groupKey: string; idx: number }
-  | { kind: 'gap'; groupKey: string; gapIdx: number };
+type ParsedId = { groupKey: string; idx: number };
 
 function parseDragId(id: string): ParsedId | null {
   const firstSep = id.indexOf('::');
   if (firstSep < 0) return null;
   const kind = id.slice(0, firstSep);
+  if (kind !== 'slot') return null;
   const rest = id.slice(firstSep + 2);
   const lastSep = rest.lastIndexOf('::');
   if (lastSep < 0) return null;
   const groupKey = rest.slice(0, lastSep);
   const num = Number(rest.slice(lastSep + 2));
-  if (kind === 'slot') return { kind: 'slot', groupKey, idx: num };
-  if (kind === 'gap') return { kind: 'gap', groupKey, gapIdx: num };
-  return null;
+  return { groupKey, idx: num };
 }
 
 export function TeaserOverviewPanel({
@@ -287,11 +275,21 @@ export function TeaserOverviewPanel({
     setIsOpen(true);
     return {
       ok: false,
-      summary: t('teaserOverview.validationSummary', {
-        count: errors.length,
-      }),
+      summary: t(
+        errors.length === 1 ?
+          'teaserOverview.validationSummaryOne'
+        : 'teaserOverview.validationSummaryMany',
+        { count: errors.length }
+      ),
     };
   });
+
+  useEffect(() => {
+    if (saveAttempted && validationErrors.length === 0) {
+      setSaveAttempted(false);
+    }
+  }, [saveAttempted, validationErrors.length]);
+
   const errorsByGroup = useMemo(() => {
     if (!showErrors) return new Map<string, number>();
     const m = new Map<string, number>();
@@ -354,7 +352,7 @@ export function TeaserOverviewPanel({
 
   const handleDragStart = useCallback((event: DragStartEvent) => {
     const parsed = parseDragId(event.active.id as string);
-    if (parsed && parsed.kind === 'slot') {
+    if (parsed) {
       setActiveDrag({ groupKey: parsed.groupKey, idx: parsed.idx });
     }
   }, []);
@@ -366,7 +364,7 @@ export function TeaserOverviewPanel({
       if (!over) return;
       const source = parseDragId(active.id as string);
       const target = parseDragId(over.id as string);
-      if (!source || source.kind !== 'slot' || !target) return;
+      if (!source || !target) return;
       const sourceBlock = workingBlocks.find(
         b => b.groupKey === source.groupKey
       );
@@ -379,27 +377,15 @@ export function TeaserOverviewPanel({
         slot.teaser === null ||
         activeFilters.has(slot.teaser.type);
 
-      if (target.kind === 'slot') {
-        dispatchDrag(
-          {
-            groupKey: source.groupKey,
-            idx: source.idx,
-            type: sourceSlot.type,
-          },
-          { kind: 'slot', groupKey: target.groupKey, idx: target.idx },
-          isSlotVisible
-        );
-      } else {
-        dispatchDrag(
-          {
-            groupKey: source.groupKey,
-            idx: source.idx,
-            type: sourceSlot.type,
-          },
-          { kind: 'gap', groupKey: target.groupKey, gapIdx: target.gapIdx },
-          isSlotVisible
-        );
-      }
+      dispatchDrag(
+        {
+          groupKey: source.groupKey,
+          idx: source.idx,
+          type: sourceSlot.type,
+        },
+        { groupKey: target.groupKey, idx: target.idx },
+        isSlotVisible
+      );
     },
     [workingBlocks, dispatchDrag, activeFilters]
   );
@@ -446,11 +432,6 @@ export function TeaserOverviewPanel({
     setReplaceSlot(null);
   }, []);
 
-  const handleConfirm = useCallback(() => {
-    setSaveAttempted(validationErrors.length > 0);
-    setSelected(null);
-  }, [validationErrors]);
-
   if (workingBlocks.length === 0) return null;
 
   const summary = t(
@@ -476,9 +457,10 @@ export function TeaserOverviewPanel({
 
   return (
     <>
-      <PanelWrapper>
+      <PanelWrapper hasError={showErrors}>
         <Header
           isOpen={isOpen}
+          hasError={showErrors}
           onClick={() => {
             setIsOpen(v => !v);
             if (isOpen) setSelected(null);
@@ -544,16 +526,26 @@ export function TeaserOverviewPanel({
                   appearance="ghost"
                   icon={<MdClose />}
                   onClick={handleCancelSelection}
-                  title={t('teaserOverview.cancelReplaceTitle')}
+                  title={
+                    selectedWorking?.teaser ?
+                      t('teaserOverview.cancelReplaceTitle')
+                    : t('teaserOverview.cancelLoadTitle')
+                  }
                 >
-                  {t('teaserOverview.cancelReplace')}
+                  {selectedWorking?.teaser ?
+                    t('teaserOverview.cancelReplace')
+                  : t('teaserOverview.cancelLoad')}
                 </IconButton>
                 <IconButton
                   size="xs"
                   appearance="primary"
                   icon={<MdEditNote />}
                   onClick={handleReplaceClick}
-                  title={t('teaserOverview.replaceButtonTitle')}
+                  title={
+                    selectedWorking?.teaser ?
+                      t('teaserOverview.replaceButtonTitle')
+                    : t('teaserOverview.loadButtonTitle')
+                  }
                 >
                   {selectedWorking?.teaser ?
                     t('teaserOverview.replaceButton')
@@ -584,9 +576,12 @@ export function TeaserOverviewPanel({
                   errorEmptyCount={errorsByGroup.get(block.groupKey)}
                   errorLabel={
                     errorsByGroup.has(block.groupKey) ?
-                      t('teaserOverview.blockEmptyError', {
-                        count: errorsByGroup.get(block.groupKey),
-                      })
+                      t(
+                        errorsByGroup.get(block.groupKey) === 1 ?
+                          'teaserOverview.blockEmptyErrorOne'
+                        : 'teaserOverview.blockEmptyErrorMany',
+                        { count: errorsByGroup.get(block.groupKey) }
+                      )
                     : undefined
                   }
                   activeFilters={activeFilters}
@@ -611,9 +606,10 @@ export function TeaserOverviewPanel({
                         groupIndex={block.groupIndex}
                         nestDepth={block.nestDepth}
                         isSelected={false}
-                        isTarget={false}
                         isDuplicate={false}
                         selectionActive={false}
+                        previewState="none"
+                        disableTooltip
                         onClick={() => undefined}
                       />
                     </div>
@@ -621,25 +617,6 @@ export function TeaserOverviewPanel({
                 })()}
               </DragOverlay>
             </DndContext>
-
-            <ActionsBar>
-              {showErrors && (
-                <ValidationSummary>
-                  {t('teaserOverview.validationSummary', {
-                    count: validationErrors.length,
-                  })}
-                </ValidationSummary>
-              )}
-              <IconButton
-                size="xs"
-                appearance="primary"
-                icon={<MdCheck />}
-                onClick={handleConfirm}
-                title={t('teaserOverview.confirmTitle')}
-              >
-                {t('teaserOverview.confirm')}
-              </IconButton>
-            </ActionsBar>
           </Content>
         </Collapse>
       </PanelWrapper>

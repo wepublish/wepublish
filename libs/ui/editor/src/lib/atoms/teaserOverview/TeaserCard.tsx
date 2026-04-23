@@ -11,7 +11,12 @@ import type { Theme } from '@mui/material/styles';
 import { TeaserType } from '@wepublish/editor/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAdd, MdContentCopy, MdDragIndicator, MdImage } from 'react-icons/md';
+import {
+  MdArrowForward,
+  MdContentCopy,
+  MdDragIndicator,
+  MdImage,
+} from 'react-icons/md';
 
 import {
   ArticleTeaser,
@@ -39,60 +44,123 @@ const Card = styled('div', {
   shouldForwardProp: p =>
     ![
       'isSelected',
-      'isTarget',
       'groupColor',
       'isOver',
       'isScratch',
       'isEmptyReal',
       'selectionActive',
+      'isDropTarget',
+      'isShifting',
+      'isEmpty',
     ].includes(p as string),
 })<{
   isSelected: boolean;
-  isTarget: boolean;
   groupColor: string;
   isOver: boolean;
   isScratch: boolean;
   isEmptyReal: boolean;
   selectionActive: boolean;
+  isDropTarget: boolean;
+  isShifting: boolean;
+  isEmpty: boolean;
 }>`
   display: flex;
   align-items: stretch;
   height: 72px;
   border-radius: 6px;
-  border: 2px
+  border: ${({ isDropTarget, isOver }) =>
+      isDropTarget || isOver ? '3px' : '2px'}
     ${({ isScratch, isEmptyReal }) =>
       isScratch || isEmptyReal ? 'dashed' : 'solid'}
-    ${({ isSelected, isTarget, isOver, isEmptyReal, groupColor, theme }) =>
-      isSelected ? theme.palette.primary.main
-      : isOver ? theme.palette.primary.light
+    ${({
+      isSelected,
+      isDropTarget,
+      isOver,
+      isShifting,
+      isEmptyReal,
+      groupColor,
+      theme,
+    }) =>
+      isDropTarget ? theme.palette.primary.main
+      : isOver ? theme.palette.primary.main
+      : isShifting ? theme.palette.primary.light
+      : isSelected ? theme.palette.primary.main
       : isEmptyReal ? theme.palette.error.main
-      : isTarget ? '#eeeeee'
       : groupColor};
-  background: ${({ isOver, isScratch, isEmptyReal, theme }) =>
-    isOver ? theme.palette.action.hover
+  background: ${({
+    isDropTarget,
+    isOver,
+    isShifting,
+    isScratch,
+    isEmptyReal,
+    theme,
+  }) =>
+    isDropTarget ? `${theme.palette.primary.main}22`
+    : isOver ? `${theme.palette.primary.main}22`
+    : isShifting ? `${theme.palette.primary.light}15`
     : isEmptyReal ? `${theme.palette.error.main}11`
     : isScratch ? theme.palette.action.disabledBackground
     : theme.palette.background.paper};
-  cursor: ${({ selectionActive }) => (selectionActive ? 'pointer' : 'grab')};
+  cursor: ${({ selectionActive, isEmpty }) =>
+    isEmpty ? 'default'
+    : selectionActive ? 'pointer'
+    : 'grab'};
   overflow: hidden;
   user-select: none;
+  position: relative;
 
   &:active {
-    cursor: ${({ selectionActive }) =>
-      selectionActive ? 'pointer' : 'grabbing'};
+    cursor: ${({ selectionActive, isEmpty }) =>
+      isEmpty ? 'default'
+      : selectionActive ? 'pointer'
+      : 'grabbing'};
   }
   transition:
     border-color 0.15s,
     box-shadow 0.15s,
     background 0.15s;
-  box-shadow: ${({ isSelected, isOver, theme }) =>
-    isSelected ? `0 0 0 3px ${theme.palette.primary.main}55`
-    : isOver ? `0 0 0 3px ${theme.palette.primary.light}55`
+  box-shadow: ${({ isSelected, isDropTarget, isOver, isShifting, theme }) =>
+    isDropTarget ? `0 0 0 4px ${theme.palette.primary.main}55`
+    : isOver ? `0 0 0 3px ${theme.palette.primary.main}55`
+    : isShifting ? `0 0 0 2px ${theme.palette.primary.light}33`
+    : isSelected ? `0 0 0 3px ${theme.palette.primary.main}55`
     : 'none'};
 
   &:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: ${({
+      isEmpty,
+      isSelected,
+      isDropTarget,
+      isOver,
+      isShifting,
+      theme,
+    }) => {
+      const base =
+        isDropTarget ? `0 0 0 4px ${theme.palette.primary.main}55`
+        : isOver ? `0 0 0 3px ${theme.palette.primary.main}55`
+        : isShifting ? `0 0 0 2px ${theme.palette.primary.light}33`
+        : isSelected ? `0 0 0 3px ${theme.palette.primary.main}55`
+        : null;
+      if (base) return base;
+      if (isEmpty) return 'none';
+      return '0 2px 8px rgba(0, 0, 0, 0.15)';
+    }};
   }
+`;
+
+const ShiftArrowOverlay = styled('div', {
+  shouldForwardProp: p => p !== 'strong',
+})<{ strong: boolean }>`
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  font-size: ${({ strong }) => (strong ? '32px' : '28px')};
+  color: ${({ strong, theme }) =>
+    strong ? theme.palette.primary.main : theme.palette.primary.light};
+  pointer-events: none;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+  z-index: 2;
 `;
 
 const ColorBar = styled('div', {
@@ -167,9 +235,19 @@ const EmptyScratchContent = styled('div')`
   ${({ theme }) => css`
     flex: 1;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    text-align: center;
+    gap: 2px;
+    color: ${theme.palette.text.secondary};
+    font-size: ${theme.typography.body2.fontSize};
+    padding: 4px 8px;
+  `}
+`;
+
+const EmptyHint = styled('div')`
+  ${({ theme }) => css`
     color: ${theme.palette.text.disabled};
     font-size: ${theme.typography.caption.fontSize};
   `}
@@ -191,6 +269,7 @@ const DuplicateBadge = styled('div', {
   justify-content: center;
   font-size: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  z-index: 10;
 `;
 
 const DragHandle = styled('div')`
@@ -222,8 +301,11 @@ const SelectionTooltip = styled(({ className, ...props }: TooltipProps) => (
 ))`
   & .${tooltipClasses.tooltip} {
     font-size: 11px;
+    white-space: pre-line;
   }
 `;
+
+export type PreviewState = 'drop-target' | 'will-shift-right' | 'none';
 
 export type TeaserCardProps = {
   dragId: string;
@@ -232,9 +314,10 @@ export type TeaserCardProps = {
   groupIndex: number;
   nestDepth: number;
   isSelected: boolean;
-  isTarget: boolean;
   isDuplicate: boolean;
   selectionActive: boolean;
+  previewState: PreviewState;
+  disableTooltip?: boolean;
   onClick: () => void;
 };
 
@@ -245,9 +328,10 @@ export function TeaserCard({
   groupIndex,
   nestDepth,
   isSelected,
-  isTarget,
   isDuplicate,
   selectionActive,
+  previewState,
+  disableTooltip,
   onClick,
 }: TeaserCardProps) {
   const { t } = useTranslation();
@@ -258,7 +342,9 @@ export function TeaserCard({
   const isEmpty = teaser === null;
   const isEmptyReal = slotType === 'empty';
   const canDrag = !isEmpty && !selectionActive;
-  const canDrop = (isEmptyReal || isScratch) && !selectionActive;
+  const canDrop = !selectionActive;
+  const isDropTarget = previewState === 'drop-target';
+  const isShifting = previewState === 'will-shift-right';
 
   const {
     attributes,
@@ -307,20 +393,23 @@ export function TeaserCard({
   const displayPreTitle = teaser?.preTitle ?? entityPreTitle ?? '';
 
   const cardTooltip =
-    isEmptyReal ? t('teaserOverview.tooltipEmptySlot')
+    isOver ? t('teaserOverview.dropHere')
+    : isEmptyReal ? t('teaserOverview.tooltipEmptySlot')
     : isEmpty && isScratch ? t('teaserOverview.tooltipEmptyScratch')
     : isScratch ? t('teaserOverview.tooltipScratch')
     : isSelected ? t('teaserOverview.tooltipSelected')
-    : isTarget ? t('teaserOverview.tooltipTarget')
     : t('teaserOverview.tooltipDefault');
 
   const [badgeHover, setBadgeHover] = useState(false);
 
   return (
     <SelectionTooltip
-      title={badgeHover ? '' : cardTooltip}
+      key={isOver ? 'drag-over' : 'default'}
+      title={badgeHover || disableTooltip ? '' : cardTooltip}
       placement="top"
-      enterDelay={600}
+      enterDelay={isOver ? 0 : 600}
+      {...(isOver && !disableTooltip ? { open: true } : {})}
+      {...(disableTooltip ? { open: false } : {})}
     >
       <CardWrapper
         ref={setDropRef}
@@ -347,16 +436,23 @@ export function TeaserCard({
           {...(canDrag ? listeners : {})}
           {...(canDrag ? attributes : {})}
           isSelected={isSelected}
-          isTarget={isTarget}
           isOver={isOver && !isDragging}
           isScratch={isScratch}
           isEmptyReal={isEmptyReal}
+          isEmpty={isEmpty}
           selectionActive={selectionActive}
+          isDropTarget={isDropTarget}
+          isShifting={isShifting}
           groupColor={color}
           onClick={onClick}
           role="button"
           aria-pressed={isSelected}
         >
+          {(isDropTarget || isShifting) && (
+            <ShiftArrowOverlay strong={isDropTarget}>
+              <MdArrowForward />
+            </ShiftArrowOverlay>
+          )}
           {!isEmpty && (
             <ColorBar
               barColor={color}
@@ -366,10 +462,16 @@ export function TeaserCard({
 
           {isEmpty ?
             <EmptyScratchContent>
-              <MdAdd />
-              {isEmptyReal ?
-                t('teaserOverview.emptySlot')
-              : t('teaserOverview.emptyScratch')}
+              <div>
+                {isEmptyReal ?
+                  t('teaserOverview.emptySlot')
+                : t('teaserOverview.emptyScratch')}
+              </div>
+              <EmptyHint>
+                {isEmptyReal ?
+                  t('teaserOverview.emptySlotHint')
+                : t('teaserOverview.scratchHint')}
+              </EmptyHint>
             </EmptyScratchContent>
           : <>
               <Thumbnail isScratch={isScratch}>

@@ -55,11 +55,6 @@ const EditorContent = styled.div`
   width: 100%;
 `;
 
-/**
- * Aligns TeaserOverviewPanel with the PanelWrapper inside BlockList items.
- * Left offset: RSuite icon button (36px) + LeftButtonsWrapper margin-right (10px) = 46px
- * Right offset: BlockStyleIconWrapper margin-left (10px) + icon + label text ≈ 80px
- */
 const TeaserOverviewWrapper = styled.div`
   padding-left: 46px;
   padding-right: 160px;
@@ -270,28 +265,34 @@ function PageEditor() {
     failures: [],
   }));
 
-  function runEditorValidation(): boolean {
+  function runEditorValidation(reason: 'save' | 'publish' = 'save'): boolean {
     const result = validateAll.current();
     if (result.ok) return true;
     const summaries = result.failures
       .map(f => f.summary)
       .filter(Boolean)
       .join(' · ');
+    const header =
+      reason === 'publish' ?
+        t('pageEditor.publishValidationFailed')
+      : t('pageEditor.saveValidationFailed');
     toaster.push(
-      <Notification
+      <Message
         type="error"
-        header={t('pageEditor.validationFailedHeader')}
-        duration={4000}
+        showIcon={false}
+        closable
+        duration={5000}
       >
-        {summaries || t('pageEditor.validationFailedGeneric')}
-      </Notification>,
+        <strong>{header}</strong>
+        <div>{summaries || t('pageEditor.validationFailedGeneric')}</div>
+      </Message>,
       { placement: 'topEnd' }
     );
     return false;
   }
 
   async function handleSave() {
-    if (!runEditorValidation()) return;
+    if (!runEditorValidation('save')) return;
     const input = createInput();
 
     if (pageID) {
@@ -326,7 +327,7 @@ function PageEditor() {
   }
 
   async function handlePublish(publishedAt: Date) {
-    if (!runEditorValidation()) return;
+    if (!runEditorValidation('publish')) return;
     if (pageID) {
       const { data } = await updatePage({
         variables: { id: pageID, ...createInput() },
@@ -462,6 +463,7 @@ function PageEditor() {
                             icon={<MdCloudUpload />}
                             disabled={isDisabled}
                             onClick={() => {
+                              if (!runEditorValidation('publish')) return;
                               setPublishDialogOpen(true);
                             }}
                           >
