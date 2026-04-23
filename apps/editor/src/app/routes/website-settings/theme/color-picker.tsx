@@ -1,6 +1,18 @@
-import { Box, TextField } from '@mui/material';
+import {
+  Box,
+  ClickAwayListener,
+  Popper,
+  styled,
+  TextField,
+} from '@mui/material';
 import { Sketch } from '@uiw/react-color';
-import { ChangeEventHandler, FocusEventHandler, forwardRef } from 'react';
+import {
+  ChangeEventHandler,
+  FocusEventHandler,
+  forwardRef,
+  useRef,
+  useState,
+} from 'react';
 import { FieldError } from 'react-hook-form';
 
 type ColorPickerProps = {
@@ -12,10 +24,18 @@ type ColorPickerProps = {
   error?: FieldError;
 };
 
+const ElevatedPopper = styled(Popper)`
+  z-index: 100;
+`;
+
 export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
   (props, ref) => {
+    const boxRef = useRef<HTMLElement>(null);
+    const [open, setOpen] = useState(false);
+
     return (
       <Box
+        ref={boxRef}
         sx={{
           position: 'relative',
           display: 'flex',
@@ -24,13 +44,6 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
           alignItems: 'center',
         }}
       >
-        <Sketch
-          color={props.value}
-          onChange={color => {
-            // props.onChange()
-          }}
-        />
-
         <Box
           sx={theme => ({
             width: 25,
@@ -40,6 +53,7 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
             bgcolor: props.value ?? '#000',
             border: `1px solid ${theme.palette.divider}`,
           })}
+          onClick={() => setOpen(true)}
         />
 
         <TextField
@@ -57,6 +71,25 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
           //   )
           // }
         />
+
+        <ElevatedPopper
+          open={open}
+          anchorEl={boxRef.current}
+          onKeyDown={e => {
+            if (e.key === 'Escape') {
+              setOpen(false);
+            }
+          }}
+        >
+          <ClickAwayListener onClickAway={() => setOpen(false)}>
+            <Sketch
+              color={props.value}
+              onChange={color => {
+                props.onChange({ target: color.hex });
+              }}
+            />
+          </ClickAwayListener>
+        </ElevatedPopper>
       </Box>
     );
   }
