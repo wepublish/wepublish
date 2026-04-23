@@ -17,46 +17,46 @@ import {
   TeaserSlotsBlockValue,
 } from '../../blocks/types';
 
-export enum BlockType {
+export enum TeaserContainerType {
   TeaserGrid = 'teaserGrid',
   TeaserFlex = 'teaserFlex',
   TeaserSlots = 'teaserSlots',
   FlexBlock = 'flexNested',
 }
 
-export type TeaserGridAddress = {
-  blockType: BlockType.TeaserGrid;
+export type TeaserGridPath = {
+  blockType: TeaserContainerType.TeaserGrid;
   blockIndex: number;
   teaserIndex: number;
 };
 
-export type TeaserFlexAddress = {
-  blockType: BlockType.TeaserFlex;
+export type TeaserFlexPath = {
+  blockType: TeaserContainerType.TeaserFlex;
   blockIndex: number;
   flexIndex: number;
 };
 
-export type TeaserSlotsAddress = {
-  blockType: BlockType.TeaserSlots;
+export type TeaserSlotsPath = {
+  blockType: TeaserContainerType.TeaserSlots;
   blockIndex: number;
   slotIndex: number;
 };
 
-export type TeaserFlexBlockAddress = {
-  blockType: BlockType.FlexBlock;
+export type TeaserFlexBlockPath = {
+  blockType: TeaserContainerType.FlexBlock;
   blockIndex: number;
   nestedBlockIndex: number;
-  nested: TeaserAddress;
+  nested: TeaserPath;
 };
 
-export type TeaserAddress =
-  | TeaserGridAddress
-  | TeaserFlexAddress
-  | TeaserSlotsAddress
-  | TeaserFlexBlockAddress;
+export type TeaserPath =
+  | TeaserGridPath
+  | TeaserFlexPath
+  | TeaserSlotsPath
+  | TeaserFlexBlockPath;
 
 export type ExtractedTeaser = {
-  address: TeaserAddress;
+  address: TeaserPath;
   teaser: Teaser;
   blockLabel: string;
   groupIndex: number;
@@ -131,7 +131,7 @@ export function extractTeasers(
 
           results.push({
             address: {
-              blockType: BlockType.TeaserGrid,
+              blockType: TeaserContainerType.TeaserGrid,
               blockIndex,
               teaserIndex: i,
             },
@@ -163,7 +163,7 @@ export function extractTeasers(
 
           results.push({
             address: {
-              blockType: BlockType.TeaserFlex,
+              blockType: TeaserContainerType.TeaserFlex,
               blockIndex,
               flexIndex: i,
             },
@@ -195,7 +195,7 @@ export function extractTeasers(
 
           results.push({
             address: {
-              blockType: BlockType.TeaserSlots,
+              blockType: TeaserContainerType.TeaserSlots,
               blockIndex,
               slotIndex: i,
             },
@@ -234,14 +234,14 @@ export function extractTeasers(
             continue;
           }
 
-          const nestedBlockType = nestedBlock.type as EditorBlockType;
+          const nestedTeaserContainerType = nestedBlock.type as EditorBlockType;
           const nestedTypeLabel =
-            BLOCK_TYPE_KEY[nestedBlockType] ?
+            BLOCK_TYPE_KEY[nestedTeaserContainerType] ?
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              t(BLOCK_TYPE_KEY[nestedBlockType]!)
-            : String(nestedBlockType);
+              t(BLOCK_TYPE_KEY[nestedTeaserContainerType]!)
+            : String(nestedTeaserContainerType);
           const nestedTitle =
-            nestedBlockType === EditorBlockType.TeaserSlots ?
+            nestedTeaserContainerType === EditorBlockType.TeaserSlots ?
               ((nestedBlock.value as TeaserSlotsBlockValue).title ?? '')
             : '';
           const nestedBlockStyleId =
@@ -274,7 +274,7 @@ export function extractTeasers(
             results.push({
               ...extracted,
               address: {
-                blockType: BlockType.FlexBlock,
+                blockType: TeaserContainerType.FlexBlock,
                 blockIndex,
                 nestedBlockIndex,
                 nested: extracted.address,
@@ -298,10 +298,10 @@ export function extractTeasers(
 
 export function getTeaserAt(
   blocks: BlockValue[],
-  address: TeaserAddress
+  address: TeaserPath
 ): Teaser | null {
   switch (address.blockType) {
-    case BlockType.TeaserGrid: {
+    case TeaserContainerType.TeaserGrid: {
       const block = blocks[address.blockIndex];
       if (
         block.type !== EditorBlockType.TeaserGrid1 &&
@@ -314,7 +314,7 @@ export function getTeaserAt(
       ][1];
     }
 
-    case BlockType.TeaserFlex: {
+    case TeaserContainerType.TeaserFlex: {
       const block = blocks[address.blockIndex];
       if (block.type !== EditorBlockType.TeaserGridFlex) {
         return null;
@@ -324,7 +324,7 @@ export function getTeaserAt(
       ].teaser;
     }
 
-    case BlockType.TeaserSlots: {
+    case TeaserContainerType.TeaserSlots: {
       const block = blocks[address.blockIndex];
       if (block.type !== EditorBlockType.TeaserSlots) {
         return null;
@@ -335,7 +335,7 @@ export function getTeaserAt(
       );
     }
 
-    case BlockType.FlexBlock: {
+    case TeaserContainerType.FlexBlock: {
       const block = blocks[address.blockIndex];
       if (block.type !== EditorBlockType.FlexBlock) {
         return null;
@@ -353,11 +353,11 @@ export function getTeaserAt(
 
 export function setTeaserAt(
   blocks: BlockValue[],
-  address: TeaserAddress,
+  address: TeaserPath,
   teaser: Teaser | null
 ): BlockValue[] {
   switch (address.blockType) {
-    case BlockType.TeaserGrid: {
+    case TeaserContainerType.TeaserGrid: {
       return replaceBlock(blocks, address.blockIndex, block => {
         const value = block.value as TeaserGridBlockValue;
         const teasers = value.teasers.map((entry, i) =>
@@ -369,7 +369,7 @@ export function setTeaserAt(
       });
     }
 
-    case BlockType.TeaserFlex: {
+    case TeaserContainerType.TeaserFlex: {
       return replaceBlock(blocks, address.blockIndex, block => {
         const value = block.value as TeaserGridFlexBlockValue;
         const flexTeasers = value.flexTeasers.map(
@@ -380,7 +380,7 @@ export function setTeaserAt(
       });
     }
 
-    case BlockType.TeaserSlots: {
+    case TeaserContainerType.TeaserSlots: {
       return replaceBlock(blocks, address.blockIndex, block => {
         const value = block.value as TeaserSlotsBlockValue;
         const slots = value.slots.map((slot, i) =>
@@ -392,7 +392,7 @@ export function setTeaserAt(
       });
     }
 
-    case BlockType.FlexBlock: {
+    case TeaserContainerType.FlexBlock: {
       return replaceBlock(blocks, address.blockIndex, block => {
         const value = block.value as FlexBlockValue;
         const nestedBlocks = value.blocks.map(

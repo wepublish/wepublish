@@ -77,7 +77,6 @@ const HeaderIcon = styled('div')`
 
 const HeaderTitle = styled(Typography)`
   ${({ theme }) => css`
-    font-size: ${theme.typography.body2.fontSize};
     font-weight: ${theme.typography.fontWeightMedium};
     color: ${theme.palette.text.primary};
     flex: 1;
@@ -85,10 +84,7 @@ const HeaderTitle = styled(Typography)`
 `;
 
 const HeaderMeta = styled(Typography)`
-  ${({ theme }) => css`
-    font-size: ${theme.typography.caption.fontSize};
-    color: ${theme.palette.text.secondary};
-  `}
+  color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
 const ChevronIcon = styled('div')`
@@ -177,7 +173,6 @@ const FilterDivider = styled('div')`
 
 const FilterLabel = styled(Typography)`
   ${({ theme }) => css`
-    font-size: ${theme.typography.caption.fontSize};
     color: ${theme.palette.text.secondary};
     margin-right: 4px;
   `}

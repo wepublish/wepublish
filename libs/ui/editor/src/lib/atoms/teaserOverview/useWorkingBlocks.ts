@@ -6,7 +6,7 @@ import {
   ExtractedTeaser,
   extractTeasers,
   setTeaserAt,
-  TeaserAddress,
+  TeaserPath,
 } from './extractTeasers';
 
 export type SlotType = 'real' | 'empty' | 'scratch';
@@ -22,7 +22,7 @@ export type WorkingBlock = {
   groupIndex: number;
   originalCount: number;
   teasers: WorkingTeaser[];
-  addressTemplates: TeaserAddress[];
+  addressTemplates: TeaserPath[];
   nestDepth: number;
 };
 
