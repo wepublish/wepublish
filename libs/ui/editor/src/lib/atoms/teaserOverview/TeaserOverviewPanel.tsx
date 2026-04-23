@@ -401,7 +401,7 @@ export function TeaserOverviewPanel({
     const counts = new Map<string, number>();
     for (const b of workingBlocks) {
       for (const w of b.teasers) {
-        if (w.type !== 'real' || !w.teaser) {
+        if (!w.teaser) {
           continue;
         }
         const key = teaserContentKey(w.teaser);

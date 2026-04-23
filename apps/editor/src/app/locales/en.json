@@ -2152,7 +2152,7 @@
       },
       "nestedLabelWithTitle": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}}, \"{{title}}\")",
       "nestedLabel": "Flex Block {{blockIndex}} › Block {{nestedIndex}} ({{type}})",
-      "duplicateBadge": "Duplicate: this teaser appears multiple times on the page",
+      "duplicateBadge": "Duplicate: this teaser has already been placed on the page",
       "filterLabel": "Filter:",
       "filterSuffix": "Filter: {{count}} Teasers",
       "cancelReplace": "Cancel replace",

@@ -43,18 +43,20 @@ const GroupDot = styled('div', {
 
 const GroupLabel = styled(Typography)`
   ${({ theme }) => css`
-    font-size: ${theme.typography.caption.fontSize};
-    font-weight: ${theme.typography.fontWeightMedium};
     color: ${theme.palette.text.secondary};
     letter-spacing: 0.02em;
   `}
 `;
 
-const ErrorLabel = styled(Typography)`
+const GroupLabelHighlight = styled('span')`
   ${({ theme }) => css`
-    font-size: ${theme.typography.caption.fontSize};
-    color: ${theme.palette.error.main};
+    font-weight: ${theme.typography.fontWeightBold};
+    color: ${theme.palette.text.primary};
   `}
+`;
+
+const ErrorLabel = styled(Typography)`
+  color: ${({ theme }) => theme.palette.error.main};
 `;
 
 const Row = styled('div')`
@@ -84,6 +86,16 @@ type TeaserBlockGroupProps = {
   selectionActive: boolean;
   onSlotClick: (groupKey: string, idx: number) => void;
 };
+
+function splitLabel(label: string): [prefix: string, last: string] {
+  const dotIdx = label.lastIndexOf(' · ');
+  const arrowIdx = label.lastIndexOf(' › ');
+  const sepIdx = Math.max(dotIdx, arrowIdx);
+  if (sepIdx < 0) {
+    return ['', label];
+  }
+  return [label.slice(0, sepIdx + 3), label.slice(sepIdx + 3)];
+}
 
 function parseSlotId(id: string): { groupKey: string; idx: number } | null {
   if (typeof id !== 'string' || !id.startsWith('slot::')) {
@@ -192,7 +204,17 @@ export function TeaserBlockGroup({
     >
       <GroupHeader>
         <GroupDot dotColor={color} />
-        <GroupLabel variant="caption">{block.label}</GroupLabel>
+        <GroupLabel variant="caption">
+          {(() => {
+            const [prefix, last] = splitLabel(block.label);
+            return (
+              <>
+                {prefix}
+                <GroupLabelHighlight>{last}</GroupLabelHighlight>
+              </>
+            );
+          })()}
+        </GroupLabel>
         {hasError && errorLabel && (
           <ErrorLabel variant="caption">{errorLabel}</ErrorLabel>
         )}
