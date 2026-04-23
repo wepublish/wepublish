@@ -874,6 +874,7 @@ export class MailchimpSyncService {
 
       case 'retarget': {
         const days = parseInt(parts[1] ?? '45', 10);
+        if (data.currentSubscription) return '';
         if (
           data.lastSubscription?.paidUntil &&
           this.isWithinLastXDays(data.lastSubscription.paidUntil, days)
