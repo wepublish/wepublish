@@ -789,7 +789,7 @@ export class MailchimpSyncService {
    * - "active_abo" - "1" if active, "-1" if past subscriptions, "" if none
    * - "active_abo_with_payment:method_slug:days" - like active_abo but also returns "1"
    *     if last subscription has given payment method and paidUntil within N days
-   * - "retarget:days" - "1" if last subscription paidUntil within N days, "-1" if currently subscribed, else ""
+   * - "retarget:days" - "1" if last subscription paidUntil within N days, "-1" if currently subscribed but was previously retargetable, else ""
    * - "static:value" - always returns the given value
    */
   private evaluateMergeFieldExpression(
@@ -874,7 +874,14 @@ export class MailchimpSyncService {
 
       case 'retarget': {
         const days = parseInt(parts[1] ?? '45', 10);
-        if (data.currentSubscription) return '-1';
+        if (data.currentSubscription) {
+          const wasRetargeted = data.subscriptions
+            .filter(s => s !== data.currentSubscription)
+            .some(
+              s => s.paidUntil && this.isWithinLastXDays(s.paidUntil, days)
+            );
+          return wasRetargeted ? '-1' : '';
+        }
         if (
           data.lastSubscription?.paidUntil &&
           this.isWithinLastXDays(data.lastSubscription.paidUntil, days)
