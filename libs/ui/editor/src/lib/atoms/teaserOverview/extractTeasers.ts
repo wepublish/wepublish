@@ -123,7 +123,9 @@ export function extractTeasers(
 
         for (let i = 0; i < value.teasers.length; i++) {
           const [, teaser] = value.teasers[i];
-          if (!teaser) continue;
+          if (!teaser) {
+            continue;
+          }
 
           results.push({
             address: {
@@ -153,7 +155,9 @@ export function extractTeasers(
 
         for (let i = 0; i < value.flexTeasers.length; i++) {
           const { teaser } = value.flexTeasers[i];
-          if (!teaser) continue;
+          if (!teaser) {
+            continue;
+          }
 
           results.push({
             address: {
@@ -183,7 +187,9 @@ export function extractTeasers(
 
         for (let i = 0; i < value.slots.length; i++) {
           const slot = value.slots[i];
-          if (slot.type !== TeaserSlotType.Manual || !slot.teaser) continue;
+          if (slot.type !== TeaserSlotType.Manual || !slot.teaser) {
+            continue;
+          }
 
           results.push({
             address: {
@@ -217,7 +223,9 @@ export function extractTeasers(
         for (let sortedPos = 0; sortedPos < sortedIndices.length; sortedPos++) {
           const nestedBlockIndex = sortedIndices[sortedPos];
           const { block: nestedBlock } = nestedBlocks[nestedBlockIndex];
-          if (!nestedBlock) continue;
+          if (!nestedBlock) {
+            continue;
+          }
 
           const nestedBlockType = nestedBlock.type as EditorBlockType;
           const nestedTypeLabel =

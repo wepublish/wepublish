@@ -205,12 +205,18 @@ type ParsedId = { groupKey: string; idx: number };
 
 function parseDragId(id: string): ParsedId | null {
   const firstSep = id.indexOf('::');
-  if (firstSep < 0) return null;
+  if (firstSep < 0) {
+    return null;
+  }
   const kind = id.slice(0, firstSep);
-  if (kind !== 'slot') return null;
+  if (kind !== 'slot') {
+    return null;
+  }
   const rest = id.slice(firstSep + 2);
   const lastSep = rest.lastIndexOf('::');
-  if (lastSep < 0) return null;
+  if (lastSep < 0) {
+    return null;
+  }
   const groupKey = rest.slice(0, lastSep);
   const num = Number(rest.slice(lastSep + 2));
   return { groupKey, idx: num };
@@ -258,7 +264,9 @@ export function TeaserOverviewPanel({
     const counts = new Map<TeaserType, number>();
     for (const b of workingBlocks) {
       for (const w of b.teasers) {
-        if (w.type !== 'real' || !w.teaser) continue;
+        if (w.type !== 'real' || !w.teaser) {
+          continue;
+        }
         counts.set(w.teaser.type, (counts.get(w.teaser.type) ?? 0) + 1);
       }
     }
@@ -270,7 +278,9 @@ export function TeaserOverviewPanel({
 
   useRegisterValidator('teaser-overview', () => {
     const errors = validate();
-    if (errors.length === 0) return { ok: true };
+    if (errors.length === 0) {
+      return { ok: true };
+    }
     setSaveAttempted(true);
     setIsOpen(true);
     return {
@@ -291,14 +301,18 @@ export function TeaserOverviewPanel({
   }, [saveAttempted, validationErrors.length]);
 
   const errorsByGroup = useMemo(() => {
-    if (!showErrors) return new Map<string, number>();
+    if (!showErrors) {
+      return new Map<string, number>();
+    }
     const m = new Map<string, number>();
     for (const e of validationErrors) m.set(e.groupKey, e.emptyCount);
     return m;
   }, [validationErrors, showErrors]);
 
   const visibleBlocks = useMemo(() => {
-    if (!isFiltering) return workingBlocks;
+    if (!isFiltering) {
+      return workingBlocks;
+    }
     return workingBlocks.filter(b => {
       const hasEmpty = b.teasers.some(w => w.type === 'empty');
       const hasFilledScratch = b.teasers.some(
@@ -334,14 +348,18 @@ export function TeaserOverviewPanel({
     const counts = new Map<string, number>();
     for (const b of workingBlocks) {
       for (const w of b.teasers) {
-        if (w.type !== 'real' || !w.teaser) continue;
+        if (w.type !== 'real' || !w.teaser) {
+          continue;
+        }
         const key = teaserContentKey(w.teaser);
         counts.set(key, (counts.get(key) ?? 0) + 1);
       }
     }
     const dupes = new Set<string>();
     for (const [key, count] of counts) {
-      if (count > 1) dupes.add(key);
+      if (count > 1) {
+        dupes.add(key);
+      }
     }
     return dupes;
   }, [workingBlocks]);
@@ -361,16 +379,24 @@ export function TeaserOverviewPanel({
     (event: DragEndEvent) => {
       setActiveDrag(null);
       const { active, over } = event;
-      if (!over) return;
+      if (!over) {
+        return;
+      }
       const source = parseDragId(active.id as string);
       const target = parseDragId(over.id as string);
-      if (!source || !target) return;
+      if (!source || !target) {
+        return;
+      }
       const sourceBlock = workingBlocks.find(
         b => b.groupKey === source.groupKey
       );
-      if (!sourceBlock) return;
+      if (!sourceBlock) {
+        return;
+      }
       const sourceSlot = sourceBlock.teasers[source.idx];
-      if (!sourceSlot) return;
+      if (!sourceSlot) {
+        return;
+      }
 
       const isSlotVisible = (slot: { teaser: Teaser | null; type: string }) =>
         slot.type !== 'real' ||
@@ -393,8 +419,11 @@ export function TeaserOverviewPanel({
   const toggleFilter = useCallback((type: TeaserType) => {
     setActiveFilters(prev => {
       const next = new Set(prev);
-      if (next.has(type)) next.delete(type);
-      else next.add(type);
+      if (next.has(type)) {
+        next.delete(type);
+      } else {
+        next.add(type);
+      }
       return next;
     });
   }, []);
@@ -420,7 +449,9 @@ export function TeaserOverviewPanel({
 
   const handleReplaceConfirm = useCallback(
     (teaser: Teaser) => {
-      if (!replaceSlot) return;
+      if (!replaceSlot) {
+        return;
+      }
       loadTeaser(replaceSlot.groupKey, replaceSlot.idx, teaser);
       setReplaceSlot(null);
       setSelected(null);
@@ -432,7 +463,9 @@ export function TeaserOverviewPanel({
     setReplaceSlot(null);
   }, []);
 
-  if (workingBlocks.length === 0) return null;
+  if (workingBlocks.length === 0) {
+    return null;
+  }
 
   const summary = t(
     workingBlocks.length === 1 ?
@@ -463,7 +496,9 @@ export function TeaserOverviewPanel({
           hasError={showErrors}
           onClick={() => {
             setIsOpen(v => !v);
-            if (isOpen) setSelected(null);
+            if (isOpen) {
+              setSelected(null);
+            }
           }}
           aria-expanded={isOpen}
         >
@@ -591,12 +626,16 @@ export function TeaserOverviewPanel({
               ))}
               <DragOverlay dropAnimation={null}>
                 {(() => {
-                  if (!activeDrag) return null;
+                  if (!activeDrag) {
+                    return null;
+                  }
                   const block = workingBlocks.find(
                     b => b.groupKey === activeDrag.groupKey
                   );
                   const slot = block?.teasers[activeDrag.idx];
-                  if (!block || !slot || !slot.teaser) return null;
+                  if (!block || !slot || !slot.teaser) {
+                    return null;
+                  }
                   return (
                     <div style={{ width: 220 }}>
                       <TeaserCard

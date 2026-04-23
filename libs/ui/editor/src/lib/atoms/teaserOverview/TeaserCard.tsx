@@ -141,8 +141,12 @@ const Card = styled('div', {
         : isShifting ? `0 0 0 2px ${theme.palette.primary.light}33`
         : isSelected ? `0 0 0 3px ${theme.palette.primary.main}55`
         : null;
-      if (base) return base;
-      if (isEmpty) return 'none';
+      if (base) {
+        return base;
+      }
+      if (isEmpty) {
+        return 'none';
+      }
       return '0 2px 8px rgba(0, 0, 0, 0.15)';
     }};
   }

@@ -22,8 +22,9 @@ export function getTeaserAt(
       if (
         block.type !== EditorBlockType.TeaserGrid1 &&
         block.type !== EditorBlockType.TeaserGrid6
-      )
+      ) {
         return null;
+      }
       return (block.value as TeaserGridBlockValue).teasers[
         address.teaserIndex
       ][1];
@@ -31,7 +32,9 @@ export function getTeaserAt(
 
     case BlockType.TeaserFlex: {
       const block = blocks[address.blockIndex];
-      if (block.type !== EditorBlockType.TeaserGridFlex) return null;
+      if (block.type !== EditorBlockType.TeaserGridFlex) {
+        return null;
+      }
       return (block.value as TeaserGridFlexBlockValue).flexTeasers[
         address.flexIndex
       ].teaser;
@@ -39,7 +42,9 @@ export function getTeaserAt(
 
     case BlockType.TeaserSlots: {
       const block = blocks[address.blockIndex];
-      if (block.type !== EditorBlockType.TeaserSlots) return null;
+      if (block.type !== EditorBlockType.TeaserSlots) {
+        return null;
+      }
       return (
         (block.value as TeaserSlotsBlockValue).slots[address.slotIndex]
           .teaser ?? null
@@ -48,11 +53,15 @@ export function getTeaserAt(
 
     case BlockType.FlexBlock: {
       const block = blocks[address.blockIndex];
-      if (block.type !== EditorBlockType.FlexBlock) return null;
+      if (block.type !== EditorBlockType.FlexBlock) {
+        return null;
+      }
       const nestedBlock = (block.value as FlexBlockValue).blocks[
         address.nestedBlockIndex
       ]?.block;
-      if (!nestedBlock) return null;
+      if (!nestedBlock) {
+        return null;
+      }
       return getTeaserAt([nestedBlock as BlockValue], address.nested);
     }
   }
@@ -104,7 +113,9 @@ export function setTeaserAt(
         const value = block.value as FlexBlockValue;
         const nestedBlocks = value.blocks.map(
           (nb: FlexBlockWithAlignment, i: number) => {
-            if (i !== address.nestedBlockIndex || !nb.block) return nb;
+            if (i !== address.nestedBlockIndex || !nb.block) {
+              return nb;
+            }
             const updatedNested = setTeaserAt(
               [nb.block as BlockValue],
               address.nested,

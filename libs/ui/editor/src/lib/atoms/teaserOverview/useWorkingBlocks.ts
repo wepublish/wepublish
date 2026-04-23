@@ -77,7 +77,9 @@ function initWorkingBlocks(
 
 function clearSlot(block: WorkingBlock, idx: number): WorkingBlock {
   const slot = block.teasers[idx];
-  if (!slot) return block;
+  if (!slot) {
+    return block;
+  }
   const teasers = [...block.teasers];
   teasers[idx] =
     slot.type === 'scratch' ?
@@ -92,10 +94,14 @@ function fillSlot(
   teaser: Teaser
 ): WorkingBlock {
   const slot = block.teasers[idx];
-  if (!slot) return block;
+  if (!slot) {
+    return block;
+  }
   const isScratch = slot.type === 'scratch';
   const isEmptyReal = slot.type === 'empty';
-  if (!isScratch && !isEmptyReal) return block;
+  if (!isScratch && !isEmptyReal) {
+    return block;
+  }
   const teasers = [...block.teasers];
   teasers[idx] = {
     teaser,
@@ -111,7 +117,9 @@ function insertAtGap(
   isSlotVisible: SlotVisibilityPredicate
 ): WorkingBlock {
   const N = block.originalCount;
-  if (gapIdx < 0 || gapIdx > N || N === 0) return block;
+  if (gapIdx < 0 || gapIdx > N || N === 0) {
+    return block;
+  }
 
   const teasers = [...block.teasers];
 
@@ -203,7 +211,9 @@ export function useWorkingBlocks(
   );
 
   useEffect(() => {
-    if (blocks === lastSyncedBlocksRef.current) return;
+    if (blocks === lastSyncedBlocksRef.current) {
+      return;
+    }
     lastSyncedBlocksRef.current = blocks;
     setWorkingBlocks(prev => {
       const fresh = initWorkingBlocks(blocks, t, blockStyleNames);
@@ -218,14 +228,18 @@ export function useWorkingBlocks(
 
       const merged = fresh.map(b => {
         const prevScratch = prevScratchByKey.get(b.groupKey);
-        if (!prevScratch) return b;
+        if (!prevScratch) {
+          return b;
+        }
         const teasers = [...b.teasers];
         teasers[teasers.length - 1] = prevScratch;
         return { ...b, teasers };
       });
 
       for (const prevBlock of prev) {
-        if (freshKeys.has(prevBlock.groupKey)) continue;
+        if (freshKeys.has(prevBlock.groupKey)) {
+          continue;
+        }
         const emptyTeasers: WorkingTeaser[] = prevBlock.addressTemplates.map(
           () => ({ teaser: null, type: 'empty' })
         );
@@ -265,18 +279,28 @@ export function useWorkingBlocks(
       target: DropTarget,
       isSlotVisible: SlotVisibilityPredicate = () => true
     ) => {
-      if (source.type === 'empty') return;
+      if (source.type === 'empty') {
+        return;
+      }
 
       const src = workingBlocks.find(b => b.groupKey === source.groupKey);
-      if (!src) return;
+      if (!src) {
+        return;
+      }
       const sourceSlot = src.teasers[source.idx];
-      if (!sourceSlot || !isFilled(sourceSlot) || !sourceSlot.teaser) return;
+      if (!sourceSlot || !isFilled(sourceSlot) || !sourceSlot.teaser) {
+        return;
+      }
       const movedTeaser = sourceSlot.teaser;
 
       const tgt = workingBlocks.find(b => b.groupKey === target.groupKey);
-      if (!tgt) return;
+      if (!tgt) {
+        return;
+      }
       const tgtSlot = tgt.teasers[target.idx];
-      if (!tgtSlot) return;
+      if (!tgtSlot) {
+        return;
+      }
 
       if (source.groupKey === target.groupKey && source.idx === target.idx) {
         return;
@@ -299,9 +323,13 @@ export function useWorkingBlocks(
             isSlotVisible
           );
         }
-        if (isSource) return clearSlot(b, source.idx);
+        if (isSource) {
+          return clearSlot(b, source.idx);
+        }
         if (isTarget) {
-          if (isFillTarget) return fillSlot(b, target.idx, movedTeaser);
+          if (isFillTarget) {
+            return fillSlot(b, target.idx, movedTeaser);
+          }
           return insertAtGap(b, target.idx, movedTeaser, isSlotVisible);
         }
         return b;
@@ -316,12 +344,18 @@ export function useWorkingBlocks(
     (groupKey: string, idx: number, teaser: Teaser) => {
       const block = workingBlocks.find(b => b.groupKey === groupKey);
       const slot = block?.teasers[idx];
-      if (!slot) return;
+      if (!slot) {
+        return;
+      }
 
       const nextWorking = workingBlocks.map(b => {
-        if (b.groupKey !== groupKey) return b;
+        if (b.groupKey !== groupKey) {
+          return b;
+        }
         const teasers = b.teasers.map((w, i) => {
-          if (i !== idx) return w;
+          if (i !== idx) {
+            return w;
+          }
           const newType: SlotType =
             slot.type === 'scratch' ? 'scratch' : 'real';
           return { teaser, type: newType };

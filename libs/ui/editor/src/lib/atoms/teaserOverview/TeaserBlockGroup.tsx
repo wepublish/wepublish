@@ -86,10 +86,14 @@ type TeaserBlockGroupProps = {
 };
 
 function parseSlotId(id: string): { groupKey: string; idx: number } | null {
-  if (typeof id !== 'string' || !id.startsWith('slot::')) return null;
+  if (typeof id !== 'string' || !id.startsWith('slot::')) {
+    return null;
+  }
   const rest = id.slice('slot::'.length);
   const sep = rest.lastIndexOf('::');
-  if (sep < 0) return null;
+  if (sep < 0) {
+    return null;
+  }
   return { groupKey: rest.slice(0, sep), idx: Number(rest.slice(sep + 2)) };
 }
 
@@ -100,15 +104,23 @@ function computePreview(
   activeFilters: Set<TeaserType>
 ): Map<number, 'drop-target' | 'will-shift-right'> {
   const preview = new Map<number, 'drop-target' | 'will-shift-right'>();
-  if (!activeId || !overId) return preview;
+  if (!activeId || !overId) {
+    return preview;
+  }
 
   const source = parseSlotId(activeId);
   const target = parseSlotId(overId);
-  if (!source || !target) return preview;
-  if (target.groupKey !== block.groupKey) return preview;
+  if (!source || !target) {
+    return preview;
+  }
+  if (target.groupKey !== block.groupKey) {
+    return preview;
+  }
 
   const targetSlot = block.teasers[target.idx];
-  if (!targetSlot) return preview;
+  if (!targetSlot) {
+    return preview;
+  }
 
   if (source.groupKey === target.groupKey && source.idx === target.idx) {
     return preview;
@@ -196,7 +208,9 @@ export function TeaserBlockGroup({
             working.type === 'real' &&
             working.teaser !== null &&
             !activeFilters.has(working.teaser.type);
-          if (isHiddenByFilter) return null;
+          if (isHiddenByFilter) {
+            return null;
+          }
 
           return (
             <SlotWrapper key={i}>
