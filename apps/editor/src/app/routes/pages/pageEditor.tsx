@@ -8,6 +8,7 @@ import {
   useUpdatePageMutation,
 } from '@wepublish/editor/api';
 import { CanPreview } from '@wepublish/permissions';
+import type { AggregatedValidation } from '@wepublish/ui/editor';
 import {
   blockForQueryBlock,
   BlockList,
@@ -27,7 +28,6 @@ import {
   useAuthorisation,
   useUnsavedChangesDialog,
 } from '@wepublish/ui/editor';
-import type { AggregatedValidation } from '@wepublish/ui/editor';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -292,7 +292,9 @@ function PageEditor() {
   }
 
   async function handleSave() {
-    if (!runEditorValidation('save')) return;
+    if (!runEditorValidation('save')) {
+      return;
+    }
     const input = createInput();
 
     if (pageID) {
@@ -327,7 +329,9 @@ function PageEditor() {
   }
 
   async function handlePublish(publishedAt: Date) {
-    if (!runEditorValidation('publish')) return;
+    if (!runEditorValidation('publish')) {
+      return;
+    }
     if (pageID) {
       const { data } = await updatePage({
         variables: { id: pageID, ...createInput() },
@@ -463,7 +467,9 @@ function PageEditor() {
                             icon={<MdCloudUpload />}
                             disabled={isDisabled}
                             onClick={() => {
-                              if (!runEditorValidation('publish')) return;
+                              if (!runEditorValidation('publish')) {
+                                return;
+                              }
                               setPublishDialogOpen(true);
                             }}
                           >
