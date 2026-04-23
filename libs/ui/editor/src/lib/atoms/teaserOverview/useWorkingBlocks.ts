@@ -5,9 +5,9 @@ import { BlockValue, Teaser } from '../../blocks/types';
 import {
   ExtractedTeaser,
   extractTeasers,
+  setTeaserAt,
   TeaserAddress,
 } from './extractTeasers';
-import { setTeaserAt } from './swapTeasers';
 
 export type SlotType = 'real' | 'empty' | 'scratch';
 
@@ -194,7 +194,13 @@ export type WorkingOps = {
   ) => void;
   loadTeaser: (groupKey: string, idx: number, teaser: Teaser) => void;
   validate: () => { groupKey: string; label: string; emptyCount: number }[];
+  undo: () => void;
+  redo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
 };
+
+const MAX_HISTORY = 50;
 
 export function useWorkingBlocks(
   blocks: BlockValue[],
@@ -206,9 +212,16 @@ export function useWorkingBlocks(
   const lastSyncedBlocksRef = useRef(blocks);
   currentBlocksRef.current = blocks;
 
-  const [workingBlocks, setWorkingBlocks] = useState<WorkingBlock[]>(() =>
-    initWorkingBlocks(blocks, t, blockStyleNames)
-  );
+  const historyRef = useRef<WorkingBlock[][]>([]);
+  const historyIndexRef = useRef(-1);
+  const [historyPos, setHistoryPos] = useState({ index: 0, total: 1 });
+
+  const [workingBlocks, setWorkingBlocks] = useState<WorkingBlock[]>(() => {
+    const initial = initWorkingBlocks(blocks, t, blockStyleNames);
+    historyRef.current = [initial];
+    historyIndexRef.current = 0;
+    return initial;
+  });
 
   useEffect(() => {
     if (blocks === lastSyncedBlocksRef.current) {
@@ -253,17 +266,16 @@ export function useWorkingBlocks(
         });
       }
 
+      historyRef.current = [merged];
+      historyIndexRef.current = 0;
       return merged;
     });
+    setHistoryPos({ index: 0, total: 1 });
   }, [blocks, t, blockStyleNames]);
 
-  const commit = useCallback(
-    (newWorkingBlocks: WorkingBlock[]) => {
-      setWorkingBlocks(newWorkingBlocks);
-      const newBlocks = applyWorkingToBlocks(
-        newWorkingBlocks,
-        currentBlocksRef.current
-      );
+  const applyAndNotify = useCallback(
+    (wb: WorkingBlock[]) => {
+      const newBlocks = applyWorkingToBlocks(wb, currentBlocksRef.current);
       if (newBlocks !== currentBlocksRef.current) {
         lastSyncedBlocksRef.current = newBlocks;
         currentBlocksRef.current = newBlocks;
@@ -272,6 +284,56 @@ export function useWorkingBlocks(
     },
     [onChange]
   );
+
+  const commit = useCallback(
+    (newWorkingBlocks: WorkingBlock[]) => {
+      const newHistory = historyRef.current.slice(
+        0,
+        historyIndexRef.current + 1
+      );
+      newHistory.push(newWorkingBlocks);
+      if (newHistory.length > MAX_HISTORY) {
+        newHistory.shift();
+      }
+      historyRef.current = newHistory;
+      historyIndexRef.current = newHistory.length - 1;
+      setHistoryPos({
+        index: historyIndexRef.current,
+        total: newHistory.length,
+      });
+      setWorkingBlocks(newWorkingBlocks);
+      applyAndNotify(newWorkingBlocks);
+    },
+    [applyAndNotify]
+  );
+
+  const undo = useCallback(() => {
+    if (historyIndexRef.current <= 0) {
+      return;
+    }
+    historyIndexRef.current--;
+    const prev = historyRef.current[historyIndexRef.current];
+    setHistoryPos({
+      index: historyIndexRef.current,
+      total: historyRef.current.length,
+    });
+    setWorkingBlocks(prev);
+    applyAndNotify(prev);
+  }, [applyAndNotify]);
+
+  const redo = useCallback(() => {
+    if (historyIndexRef.current >= historyRef.current.length - 1) {
+      return;
+    }
+    historyIndexRef.current++;
+    const next = historyRef.current[historyIndexRef.current];
+    setHistoryPos({
+      index: historyIndexRef.current,
+      total: historyRef.current.length,
+    });
+    setWorkingBlocks(next);
+    applyAndNotify(next);
+  }, [applyAndNotify]);
 
   const dispatchDrag = useCallback(
     (
@@ -393,5 +455,9 @@ export function useWorkingBlocks(
     dispatchDrag,
     loadTeaser,
     validate,
+    undo,
+    redo,
+    canUndo: historyPos.index > 0,
+    canRedo: historyPos.index < historyPos.total - 1,
   };
 }

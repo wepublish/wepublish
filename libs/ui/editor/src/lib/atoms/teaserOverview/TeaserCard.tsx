@@ -397,7 +397,8 @@ export function TeaserCard({
   const displayPreTitle = teaser?.preTitle ?? entityPreTitle ?? '';
 
   const cardTooltip =
-    isOver ? t('teaserOverview.dropHere')
+    isOver && !isEmpty && !isScratch ? t('teaserOverview.dropHereShift')
+    : isOver ? t('teaserOverview.dropHere')
     : isEmptyReal ? t('teaserOverview.tooltipEmptySlot')
     : isEmpty && isScratch ? t('teaserOverview.tooltipEmptyScratch')
     : isScratch ? t('teaserOverview.tooltipScratch')

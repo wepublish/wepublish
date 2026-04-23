@@ -1962,6 +1962,7 @@
       "tooltipSelected": "Cliquer sur un second teaser pour échanger les positions\n(ou cliquer à nouveau pour désélectionner)",
       "tooltipDefault": "• Glisser pour réarranger\n• Cliquer pour remplacer",
       "dropHere": "Glisser ici",
+      "dropHereShift": "Glisser ici\n• Ce teaser et les suivants seront décalés d'une position vers la droite",
       "noTitle": "(sans titre)",
       "blockTypes": {
         "teaserGrid1": "Teaser Grid 1",
@@ -1995,6 +1996,10 @@
       "blockEmptyErrorMany": "{{count}} positions vides",
       "validationSummaryOne": "1 bloc a des positions vides",
       "validationSummaryMany": "{{count}} blocs ont des positions vides",
+      "undo": "Annuler",
+      "undoEmpty": "Aucune action à annuler",
+      "redo": "Rétablir",
+      "redoEmpty": "Aucune action à rétablir",
       "teaserTypes": {
         "Article": "Article",
         "Page": "Page",

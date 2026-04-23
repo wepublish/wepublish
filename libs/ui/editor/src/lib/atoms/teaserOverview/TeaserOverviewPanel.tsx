@@ -19,6 +19,8 @@ import {
   MdExpandLess,
   MdExpandMore,
   MdGridView,
+  MdRedo,
+  MdUndo,
 } from 'react-icons/md';
 import { Drawer, IconButton } from 'rsuite';
 
@@ -151,6 +153,28 @@ const FilterBar = styled('div')`
   background: #f7f9fa;
 `;
 
+const HistoryBtnWrap = styled('span')`
+  display: inline-flex;
+  border: 1px solid ${({ theme }) => theme.palette.divider};
+  border-radius: 4px;
+  color: ${({ theme }) => theme.palette.text.primary};
+
+  .rs-btn {
+    color: inherit;
+  }
+
+  .rs-btn:disabled {
+    color: ${({ theme }) => theme.palette.text.disabled};
+  }
+`;
+
+const FilterDivider = styled('div')`
+  width: 1px;
+  align-self: stretch;
+  background: ${({ theme }) => theme.palette.divider};
+  margin: 0 10px;
+`;
+
 const FilterLabel = styled(Typography)`
   ${({ theme }) => css`
     font-size: ${theme.typography.caption.fontSize};
@@ -245,8 +269,42 @@ export function TeaserOverviewPanel({
     return map;
   }, [blockStylesData]);
 
-  const { workingBlocks, dispatchDrag, loadTeaser, validate } =
-    useWorkingBlocks(blocks, t, blockStyleNames, onChange);
+  const {
+    workingBlocks,
+    dispatchDrag,
+    loadTeaser,
+    validate,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useWorkingBlocks(blocks, t, blockStyleNames, onChange);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable
+      ) {
+        return;
+      }
+      const mod = e.metaKey || e.ctrlKey;
+      if (mod && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        undo();
+      } else if (mod && ((e.key === 'z' && e.shiftKey) || e.key === 'y')) {
+        e.preventDefault();
+        redo();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, undo, redo]);
 
   const totalRealTeasers = useMemo(
     () =>
@@ -546,6 +604,31 @@ export function TeaserOverviewPanel({
                 }}
               />
             ))}
+            <FilterDivider />
+            <HistoryBtnWrap>
+              <IconButton
+                size="xs"
+                appearance="subtle"
+                icon={<MdUndo />}
+                disabled={!canUndo}
+                onClick={undo}
+                title={t(
+                  canUndo ? 'teaserOverview.undo' : 'teaserOverview.undoEmpty'
+                )}
+              />
+            </HistoryBtnWrap>
+            <HistoryBtnWrap>
+              <IconButton
+                size="xs"
+                appearance="subtle"
+                icon={<MdRedo />}
+                disabled={!canRedo}
+                onClick={redo}
+                title={t(
+                  canRedo ? 'teaserOverview.redo' : 'teaserOverview.redoEmpty'
+                )}
+              />
+            </HistoryBtnWrap>
           </FilterBar>
 
           <Content>

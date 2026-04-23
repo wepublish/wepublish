@@ -2078,6 +2078,7 @@
       "tooltipSelected": "Zweiten Teaser anklicken, um die Plätze zu tauschen\n(oder erneut klicken, um die Auswahl aufzuheben)",
       "tooltipDefault": "• Ziehen um neu Anzuordnen\n• Klick zum Ersetzen",
       "dropHere": "Hierher ziehen",
+      "dropHereShift": "Hierher ziehen\n• Dieser und nachfolgende Teaser werden um eine Position weiter nach rechts verschoben",
       "noTitle": "(kein Titel)",
       "blockTypes": {
         "teaserGrid1": "Teaser Grid 1",
@@ -2111,6 +2112,10 @@
       "blockEmptyErrorMany": "{{count}} leere Teaserplätze",
       "validationSummaryOne": "1 Block hat leere Teaserplätze",
       "validationSummaryMany": "{{count}} Blöcke haben leere Teaserplätze",
+      "undo": "Rückgängig",
+      "undoEmpty": "Keine Rückgängig-Schritte",
+      "redo": "Wiederholen",
+      "redoEmpty": "Keine Wiederholen-Schritte",
       "teaserTypes": {
         "Article": "Artikel",
         "Page": "Seite",
