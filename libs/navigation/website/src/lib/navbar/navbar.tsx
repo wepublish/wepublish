@@ -190,7 +190,7 @@ export const NavbarLoginLink = styled(Link, {
     `}
 `;
 
-const buttonStyles: SxProps<Theme> = theme => ({
+export const navbarButtonStyles: SxProps<Theme> = theme => ({
   [theme.breakpoints.up('sm')]: {
     fontSize: `calc(${theme.typography.button.fontSize} * 1.1)`,
     padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`,
@@ -242,6 +242,7 @@ export function Navbar({
   isMenuOpen: controlledIsMenuOpen,
   onMenuToggle,
   navPaperClassName,
+  actions,
 }: ExtendedNavbarProps) {
   const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
 
@@ -347,7 +348,7 @@ export function Navbar({
                 LinkComponent={Link}
                 color="warning"
                 startIcon={<MdWarning />}
-                sx={buttonStyles}
+                sx={navbarButtonStyles}
                 size="medium"
                 {...profileBtn}
               >
@@ -359,7 +360,7 @@ export function Navbar({
             {!hasRunningSubscription && !hasUnpaidInvoices && subscribeBtn && (
               <Button
                 LinkComponent={Link}
-                sx={buttonStyles}
+                sx={navbarButtonStyles}
                 size="medium"
                 {...subscribeBtn}
               >
@@ -370,13 +371,15 @@ export function Navbar({
             {hasRunningSubscription && !hasUnpaidInvoices && profileBtn && (
               <Button
                 LinkComponent={Link}
-                sx={buttonStyles}
+                sx={navbarButtonStyles}
                 size="medium"
                 {...profileBtn}
               >
                 Mein Konto
               </Button>
             )}
+
+            {actions}
           </NavbarActions>
         </NavbarInnerWrapper>
       </AppBar>

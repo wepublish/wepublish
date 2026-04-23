@@ -8,6 +8,7 @@ import {
 import { withErrorSnackbar } from '@wepublish/errors/website';
 import {
   FooterContainer,
+  navbarButtonStyles,
   NavbarContainer,
 } from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
@@ -26,7 +27,11 @@ import {
   createWithV1ApiClient,
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
-import { WebsiteBuilderProvider } from '@wepublish/website/builder';
+import {
+  Button,
+  Link,
+  WebsiteBuilderProvider,
+} from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
@@ -79,8 +84,20 @@ type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
 }> & { emotionCache?: EmotionCache };
 
+const NavbarActions = () => (
+  <>
+    <Button
+      LinkComponent={Link}
+      sx={navbarButtonStyles}
+      size="medium"
+    >
+      Zum Newsletter
+    </Button>
+  </>
+);
+
 function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
-  const siteTitle = 'GanzGraz';
+  const siteTitle = 'Der Graz-Newsletter';
 
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
@@ -179,6 +196,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                 loginBtn={null}
                 profileBtn={null}
                 subscribeBtn={null}
+                actions={<NavbarActions />}
               />
 
               <main>

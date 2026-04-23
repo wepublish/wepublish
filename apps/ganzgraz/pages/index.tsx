@@ -1,4 +1,3 @@
-import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
 import {
   addClientCacheToV1Props,
@@ -11,11 +10,7 @@ import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 
 export default function Index() {
-  return (
-    <ContentWidthProvider fullWidth>
-      <PageContainer slug={''} />
-    </ContentWidthProvider>
-  );
+  return <PageContainer slug={''} />;
 }
 
 export const getStaticProps: GetStaticProps = async () => {
