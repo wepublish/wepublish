@@ -51,7 +51,7 @@ export function AuthorListItem({
             image={image}
             square
             css={imageStyles}
-            maxWidth={500}
+            maxWidth={800}
           />
         )}
       </AuthorListItemImageWrapper>
