@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Box } from '@mui/material';
 import { ImageWrapper } from '@wepublish/image/website';
 import {
   NavbarContainer,
@@ -53,7 +54,8 @@ export const GanzGrazNavbarActions = () => (
     variant="contained"
     href="https://news.ganzgraz.at"
   >
-    Graz-Newsletter
+    <Box sx={{ display: { xs: 'none', sm: 'unset' } }}>Zum</Box>
+    &nbsp;Graz-Newsletter
   </Button>
 );
 
@@ -71,6 +73,14 @@ export const GanzGrazPaperActions = () => (
       <GanzGrazLogo />
     </GanzGrazPaperLogoWrapper>
 
-    <GanzGrazNavbarActions />
+    <Button
+      LinkComponent={Link}
+      size="medium"
+      color="accent"
+      variant="contained"
+      href="https://news.ganzgraz.at"
+    >
+      Zum Graz-Newsletter
+    </Button>
   </>
 );
