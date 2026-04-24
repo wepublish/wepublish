@@ -234,11 +234,16 @@ export function TeaserBlockGroup({
             return null;
           }
 
+          const isScratchMasked =
+            working.type === 'scratch' &&
+            working.teaser !== null &&
+            !activeFilters.has(working.teaser.type);
+
           return (
             <SlotWrapper key={i}>
               <TeaserCard
                 dragId={slotDragId}
-                teaser={working.teaser}
+                teaser={isScratchMasked ? null : working.teaser}
                 slotType={working.type}
                 groupIndex={block.groupIndex}
                 nestDepth={block.nestDepth}

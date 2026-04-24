@@ -144,7 +144,9 @@ function insertAtGap(
   } else {
     const visiblePositions: number[] = [];
     for (let i = gapIdx; i <= pushedOutIdx; i++) {
-      if (isSlotVisible(teasers[i])) visiblePositions.push(i);
+      if (isSlotVisible(teasers[i])) {
+        visiblePositions.push(i);
+      }
     }
     if (visiblePositions.length === 0) {
       teasers[Math.min(gapIdx, pushedOutIdx)] = { teaser, type: 'real' };

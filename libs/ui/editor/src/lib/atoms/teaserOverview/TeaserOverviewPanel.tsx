@@ -358,7 +358,9 @@ export function TeaserOverviewPanel({
       return new Map<string, number>();
     }
     const m = new Map<string, number>();
-    for (const e of validationErrors) m.set(e.groupKey, e.emptyCount);
+    for (const e of validationErrors) {
+      m.set(e.groupKey, e.emptyCount);
+    }
     return m;
   }, [validationErrors, showErrors]);
 
@@ -368,16 +370,13 @@ export function TeaserOverviewPanel({
     }
     return workingBlocks.filter(b => {
       const hasEmpty = b.teasers.some(w => w.type === 'empty');
-      const hasFilledScratch = b.teasers.some(
-        w => w.type === 'scratch' && w.teaser !== null
-      );
       const hasMatchingReal = b.teasers.some(
         w =>
           w.type === 'real' &&
           w.teaser !== null &&
           activeFilters.has(w.teaser.type)
       );
-      return hasEmpty || hasFilledScratch || hasMatchingReal;
+      return hasEmpty || hasMatchingReal;
     });
   }, [workingBlocks, activeFilters, isFiltering]);
 
