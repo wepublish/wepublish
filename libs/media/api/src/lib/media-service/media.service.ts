@@ -244,6 +244,7 @@ export class MediaService {
       const transformedImage = sharpInstance.webp({
         quality: transformations.quality,
         effort,
+        animated: transformGuard.isAnimatedImage(metadata),
       });
 
       const { data: transformedBuffer, info } = await transformedImage.toBuffer(

@@ -108,7 +108,7 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
     left: 50%;
 
     ${({ theme }) => theme.breakpoints.up('md')} {
-      width: 50%;
+      width: min(calc(var(--breakpoint-width) + 16px), 100vw);
     }
 
     .MuiTypography-root {

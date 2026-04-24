@@ -58,6 +58,10 @@ import { ReflektQuoteBlock } from '../src/components/reflekt-quote-block';
 import { ReflektRenderElement } from '../src/components/reflekt-render-element';
 import { ReflektRenderRichtext } from '../src/components/reflekt-render-richtext';
 import { ReflektRichTextBlock } from '../src/components/reflekt-richtext-block';
+import {
+  ReflektSubscribe,
+  ReflektSubscribeForm,
+} from '../src/components/reflekt-subscribe';
 import { ReflektTag } from '../src/components/reflekt-tag';
 import { ReflektTitleBlock } from '../src/components/reflekt-title-block';
 import { ReflektArticleList } from '../src/components/teaser-layouts/reflekt-article-list';
@@ -118,6 +122,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           AuthorList={ReflektAuthorList}
           AuthorListItem={ReflektAuthorListItem}
           Banner={ReflektBanner}
+          Subscribe={ReflektSubscribeForm}
           elements={{
             Link: NextWepublishLink,
             UnorderedList: ReflektUnorderedList,
@@ -139,6 +144,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             RichText: ReflektRichTextBlock,
             Renderer: ReflektBlockRenderer,
             Blocks: ReflektBlocks,
+            Subscribe: ReflektSubscribe,
           }}
         >
           <ThemeProvider theme={theme}>

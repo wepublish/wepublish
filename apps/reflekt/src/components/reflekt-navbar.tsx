@@ -302,7 +302,7 @@ export const NavbarActions = styled('div', {
   grid-row: 1 / 2;
   align-self: flex-start;
   justify-self: end;
-  margin-top: ${theme.spacing(2.5)};
+  margin-top: ${theme.spacing(1.25)};
   z-index: 20;
   pointer-events: all;
   padding-right: ${theme.spacing(1.5)};
