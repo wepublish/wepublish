@@ -103,7 +103,7 @@ const Content = styled('div')`
   background: ${({ theme }) => theme.palette.background.default};
 `;
 
-const SelectionHint = styled('div', {
+const StickyActionBar = styled('div', {
   shouldForwardProp: p => p !== 'visible',
 })<{ visible: boolean }>`
   ${({ theme }) => css`
@@ -248,6 +248,7 @@ export function TeaserOverviewPanel({
   );
   const [saveAttempted, setSaveAttempted] = useState(false);
   const [activeDrag, setActiveDrag] = useState<SelectedSlot | null>(null);
+  const [isCollapsing, setIsCollapsing] = useState(false);
 
   const { data: blockStylesData } = useBlockStylesQuery();
   const blockStyleNames = useMemo(() => {
@@ -568,7 +569,13 @@ export function TeaserOverviewPanel({
           </ChevronIcon>
         </Header>
 
-        <Collapse in={isOpen}>
+        <Collapse
+          in={isOpen}
+          onEnter={() => setIsCollapsing(true)}
+          onEntered={() => setIsCollapsing(false)}
+          onExit={() => setIsCollapsing(true)}
+          onExited={() => setIsCollapsing(false)}
+        >
           <FilterBar>
             <FilterLabel variant="caption">
               {t('teaserOverview.filterLabel')}
@@ -597,7 +604,9 @@ export function TeaserOverviewPanel({
           </FilterBar>
 
           <Content>
-            <SelectionHint visible={!!selected || canUndo || canRedo}>
+            <StickyActionBar
+              visible={!isCollapsing && (!!selected || canUndo || canRedo)}
+            >
               {selected ?
                 <>
                   <HintText>
@@ -669,7 +678,7 @@ export function TeaserOverviewPanel({
                   </StickyHistoryBtnWrap>
                 </>
               }
-            </SelectionHint>
+            </StickyActionBar>
 
             {visibleBlocks.length === 0 && (
               <EmptyState variant="body2">
