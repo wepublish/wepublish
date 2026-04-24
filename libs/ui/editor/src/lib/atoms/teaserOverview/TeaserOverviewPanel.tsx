@@ -119,6 +119,7 @@ const SelectionHint = styled('div', {
   z-index: 9;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
   opacity: ${({ visible }) => (visible ? 1 : 0)};
@@ -149,26 +150,19 @@ const FilterBar = styled('div')`
   background: #f7f9fa;
 `;
 
-const HistoryBtnWrap = styled('span')`
+const StickyHistoryBtnWrap = styled('span')`
   display: inline-flex;
-  border: 1px solid ${({ theme }) => theme.palette.divider};
+  border: 1px solid ${({ theme }) => `${theme.palette.primary.light}88`};
   border-radius: 4px;
-  color: ${({ theme }) => theme.palette.text.primary};
+  color: ${({ theme }) => theme.palette.primary.dark};
 
   .rs-btn {
     color: inherit;
   }
 
   .rs-btn:disabled {
-    color: ${({ theme }) => theme.palette.text.disabled};
+    color: ${({ theme }) => theme.palette.primary.light};
   }
-`;
-
-const FilterDivider = styled('div')`
-  width: 1px;
-  align-self: stretch;
-  background: ${({ theme }) => theme.palette.divider};
-  margin: 0 10px;
 `;
 
 const FilterLabel = styled(Typography)`
@@ -273,6 +267,7 @@ export function TeaserOverviewPanel({
     redo,
     canUndo,
     canRedo,
+    clearHistory,
   } = useWorkingBlocks(blocks, t, blockStyleNames, onChange);
 
   useEffect(() => {
@@ -332,6 +327,7 @@ export function TeaserOverviewPanel({
   useRegisterValidator('teaser-overview', () => {
     const errors = validate();
     if (errors.length === 0) {
+      clearHistory();
       return { ok: true };
     }
     setSaveAttempted(true);
@@ -598,72 +594,81 @@ export function TeaserOverviewPanel({
                 }}
               />
             ))}
-            <FilterDivider />
-            <HistoryBtnWrap>
-              <IconButton
-                size="xs"
-                appearance="subtle"
-                icon={<MdUndo />}
-                disabled={!canUndo}
-                onClick={undo}
-                title={t(
-                  canUndo ? 'teaserOverview.undo' : 'teaserOverview.undoEmpty'
-                )}
-              />
-            </HistoryBtnWrap>
-            <HistoryBtnWrap>
-              <IconButton
-                size="xs"
-                appearance="subtle"
-                icon={<MdRedo />}
-                disabled={!canRedo}
-                onClick={redo}
-                title={t(
-                  canRedo ? 'teaserOverview.redo' : 'teaserOverview.redoEmpty'
-                )}
-              />
-            </HistoryBtnWrap>
           </FilterBar>
 
           <Content>
-            <SelectionHint visible={!!selected}>
-              <HintText>
-                {selectedWorking?.teaser ?
-                  t('teaserOverview.hintTextReplace')
-                : t('teaserOverview.hintTextLoad')}
-              </HintText>
-              <HintActions>
-                <IconButton
-                  size="xs"
-                  appearance="ghost"
-                  icon={<MdClose />}
-                  onClick={handleCancelSelection}
-                  title={
-                    selectedWorking?.teaser ?
-                      t('teaserOverview.cancelReplaceTitle')
-                    : t('teaserOverview.cancelLoadTitle')
-                  }
-                >
-                  {selectedWorking?.teaser ?
-                    t('teaserOverview.cancelReplace')
-                  : t('teaserOverview.cancelLoad')}
-                </IconButton>
-                <IconButton
-                  size="xs"
-                  appearance="primary"
-                  icon={<MdEditNote />}
-                  onClick={handleReplaceClick}
-                  title={
-                    selectedWorking?.teaser ?
-                      t('teaserOverview.replaceButtonTitle')
-                    : t('teaserOverview.loadButtonTitle')
-                  }
-                >
-                  {selectedWorking?.teaser ?
-                    t('teaserOverview.replaceButton')
-                  : t('teaserOverview.loadButton')}
-                </IconButton>
-              </HintActions>
+            <SelectionHint visible={!!selected || canUndo || canRedo}>
+              {selected ?
+                <>
+                  <HintText>
+                    {selectedWorking?.teaser ?
+                      t('teaserOverview.hintTextReplace')
+                    : t('teaserOverview.hintTextLoad')}
+                  </HintText>
+                  <HintActions>
+                    <IconButton
+                      size="xs"
+                      appearance="ghost"
+                      icon={<MdClose />}
+                      onClick={handleCancelSelection}
+                      title={
+                        selectedWorking?.teaser ?
+                          t('teaserOverview.cancelReplaceTitle')
+                        : t('teaserOverview.cancelLoadTitle')
+                      }
+                    >
+                      {selectedWorking?.teaser ?
+                        t('teaserOverview.cancelReplace')
+                      : t('teaserOverview.cancelLoad')}
+                    </IconButton>
+                    <IconButton
+                      size="xs"
+                      appearance="primary"
+                      icon={<MdEditNote />}
+                      onClick={handleReplaceClick}
+                      title={
+                        selectedWorking?.teaser ?
+                          t('teaserOverview.replaceButtonTitle')
+                        : t('teaserOverview.loadButtonTitle')
+                      }
+                    >
+                      {selectedWorking?.teaser ?
+                        t('teaserOverview.replaceButton')
+                      : t('teaserOverview.loadButton')}
+                    </IconButton>
+                  </HintActions>
+                </>
+              : <>
+                  <StickyHistoryBtnWrap>
+                    <IconButton
+                      size="xs"
+                      appearance="subtle"
+                      icon={<MdUndo />}
+                      disabled={!canUndo}
+                      onClick={undo}
+                      title={t(
+                        canUndo ?
+                          'teaserOverview.undo'
+                        : 'teaserOverview.undoEmpty'
+                      )}
+                    />
+                  </StickyHistoryBtnWrap>
+                  <StickyHistoryBtnWrap>
+                    <IconButton
+                      size="xs"
+                      appearance="subtle"
+                      icon={<MdRedo />}
+                      disabled={!canRedo}
+                      onClick={redo}
+                      title={t(
+                        canRedo ?
+                          'teaserOverview.redo'
+                        : 'teaserOverview.redoEmpty'
+                      )}
+                    />
+                  </StickyHistoryBtnWrap>
+                </>
+              }
             </SelectionHint>
 
             {visibleBlocks.length === 0 && (

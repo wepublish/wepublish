@@ -200,6 +200,7 @@ export type WorkingOps = {
   redo: () => void;
   canUndo: boolean;
   canRedo: boolean;
+  clearHistory: () => void;
 };
 
 const MAX_HISTORY = 50;
@@ -436,6 +437,12 @@ export function useWorkingBlocks(
     [workingBlocks, commit]
   );
 
+  const clearHistory = useCallback(() => {
+    historyRef.current = [workingBlocks];
+    historyIndexRef.current = 0;
+    setHistoryPos({ index: 0, total: 1 });
+  }, [workingBlocks]);
+
   const validate = useCallback(() => {
     const errors: { groupKey: string; label: string; emptyCount: number }[] =
       [];
@@ -461,5 +468,6 @@ export function useWorkingBlocks(
     redo,
     canUndo: historyPos.index > 0,
     canRedo: historyPos.index < historyPos.total - 1,
+    clearHistory,
   };
 }
