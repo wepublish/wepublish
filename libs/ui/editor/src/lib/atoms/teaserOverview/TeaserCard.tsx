@@ -273,7 +273,7 @@ const DuplicateBadge = styled('div', {
   justify-content: center;
   font-size: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  z-index: 10;
+  z-index: 1;
 `;
 
 const DragHandle = styled('div')`
