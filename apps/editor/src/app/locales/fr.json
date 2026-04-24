@@ -1987,7 +1987,7 @@
       "loadButtonTitle": "Charger n'importe quel teaser",
       "emptySlot": "Position vide",
       "emptySlotHint": "Placement requis !",
-      "scratchHint": "Le contenu n'est jamais enregistré",
+      "scratchHint": "Le contenu n'est jamais enregistré / publié",
       "emptyScratch": "Presse-papiers",
       "tooltipScratch": "Presse-papiers:\n• Glisser ce teaser sur une position (vide)\n• Glisser un teaser ici\n• Charger un nouveau teaser (clic)",
       "tooltipEmptySlot": "Position vide — doit être remplie avant la sauvegarde",

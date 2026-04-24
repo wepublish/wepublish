@@ -2103,7 +2103,7 @@
       "loadButtonTitle": "Einen beliebigen Teaser laden",
       "emptySlot": "Leerer Teaserplatz",
       "emptySlotHint": "Platzierung erforderlich!",
-      "scratchHint": "Inhalt wird nie gespeichert",
+      "scratchHint": "Inhalt wird nie gespeichert / publiziert",
       "emptyScratch": "Zwischenablage",
       "tooltipScratch": "Zwischenablage:\n• Teaser auf einen (leeren) Teaserplatz ziehen\n• Einen Teaser hierher ziehen\n• Einen neuen Teaser laden (Klick)\n• Teaser in der Zwischenablage wird nicht gespeichert",
       "tooltipEmptySlot": "Leerer Teaserplatz — muss vor dem Speichern gefüllt werden",

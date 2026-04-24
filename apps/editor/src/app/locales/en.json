@@ -2165,7 +2165,7 @@
       "loadButtonTitle": "Load any teaser",
       "emptySlot": "Empty teaser position",
       "emptySlotHint": "Placement required!",
-      "scratchHint": "Content is never saved",
+      "scratchHint": "Content is never saved / published",
       "emptyScratch": "Clipboard",
       "tooltipScratch": "Clipboard:\n• Drag this teaser onto an (empty) position\n• Drag a teaser here\n• Load a new teaser (click)",
       "tooltipEmptySlot": "Empty position — must be filled before saving",
