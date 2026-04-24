@@ -16,6 +16,7 @@ export type BuilderNavbarProps = PropsWithChildren<
     subscribeBtn?: ButtonProps | null;
     hasUnpaidInvoices: boolean;
     hasRunningSubscription: boolean;
-    actions?: ReactNode;
+    navbarActions?: ReactNode;
+    paperActions?: ReactNode;
   }
 >;

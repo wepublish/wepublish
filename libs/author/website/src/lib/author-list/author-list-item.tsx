@@ -6,6 +6,12 @@ import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
 export const AuthorListItemImageWrapper = styled('div')`
   display: grid;
   width: 100%;
+  max-width: ${({ theme }) => theme.spacing(15)};
+  justify-self: center;
+
+  ${({ theme }) => theme.breakpoints.up('sm')} {
+    max-width: initial;
+  }
 `;
 
 export const AuthorListItemContent = styled('div')``;

@@ -6,11 +6,7 @@ import {
   createEmotionCache,
 } from '@mui/material-nextjs/v15-pagesRouter';
 import { withErrorSnackbar } from '@wepublish/errors/website';
-import {
-  FooterContainer,
-  navbarButtonStyles,
-  NavbarContainer,
-} from '@wepublish/navigation/website';
+import { FooterContainer } from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
@@ -27,11 +23,7 @@ import {
   createWithV1ApiClient,
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
-import {
-  Button,
-  Link,
-  WebsiteBuilderProvider,
-} from '@wepublish/website/builder';
+import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
@@ -41,7 +33,12 @@ import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
-import { GGNavbar } from '../src/components/gg-navbar';
+import { GanzGrazAuthor } from '../src/components/ganzgraz-author';
+import {
+  GanzGrazNavbar,
+  GanzGrazNavbarActions,
+  GanzGrazPaperActions,
+} from '../src/components/ganzgraz-navbar';
 import theme from '../src/theme';
 
 setDefaultOptions({
@@ -70,11 +67,6 @@ const MainSpacer = styled(Container)`
   `}
 `;
 
-const NavBar = styled(NavbarContainer)`
-  grid-column: -1/1;
-  z-index: 11;
-`;
-
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime ?
     `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
@@ -83,18 +75,6 @@ const dateFormatter = (date: Date, includeTime = true) =>
 type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
 }> & { emotionCache?: EmotionCache };
-
-const NavbarActions = () => (
-  <>
-    <Button
-      LinkComponent={Link}
-      sx={navbarButtonStyles}
-      size="medium"
-    >
-      Zum Newsletter
-    </Button>
-  </>
-);
 
 function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   const siteTitle = 'Der Graz-Newsletter';
@@ -110,7 +90,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
-          Navbar={GGNavbar}
+          Author={GanzGrazAuthor}
           elements={{ Link: NextWepublishLink }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
@@ -152,43 +132,37 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 
               {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
               <link
+                rel="icon"
+                type="image/png"
+                href="/favicon-96x96.png"
+                sizes="96x96"
+              />
+              <link
+                rel="icon"
+                type="image/svg+xml"
+                href="/favicon.svg"
+              />
+              <link
+                rel="shortcut icon"
+                href="/favicon.ico"
+              />
+              <link
                 rel="apple-touch-icon"
                 sizes="180x180"
                 href="/apple-touch-icon.png"
               />
-              <link
-                rel="icon"
-                type="image/png"
-                sizes="32x32"
-                href="/favicon-32x32.png"
-              />
-              <link
-                rel="icon"
-                type="image/png"
-                sizes="16x16"
-                href="/favicon-16x16.png"
+              <meta
+                name="apple-mobile-web-app-title"
+                content="Ganzgraz"
               />
               <link
                 rel="manifest"
                 href="/site.webmanifest"
               />
-              <link
-                rel="mask-icon"
-                href="/safari-pinned-tab.svg"
-                color="#000000"
-              />
-              <meta
-                name="msapplication-TileColor"
-                content="#ffffff"
-              />
-              <meta
-                name="theme-color"
-                content="#ffffff"
-              />
             </Head>
 
             <Spacer>
-              <NavBar
+              <GanzGrazNavbar
                 categorySlugs={[['categories', 'about-us']]}
                 slug="main"
                 headerSlug="header"
@@ -196,7 +170,8 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                 loginBtn={null}
                 profileBtn={null}
                 subscribeBtn={null}
-                actions={<NavbarActions />}
+                navbarActions={<GanzGrazNavbarActions />}
+                paperActions={<GanzGrazPaperActions />}
               />
 
               <main>

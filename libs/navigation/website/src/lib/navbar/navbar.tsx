@@ -16,7 +16,13 @@ import {
   Link,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { PropsWithChildren, useCallback, useMemo, useState } from 'react';
+import {
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import { MdClose, MdMenu, MdWarning } from 'react-icons/md';
 import { navigationLinkToUrl } from '../link-to-url';
 import { useTranslation } from 'react-i18next';
@@ -190,7 +196,7 @@ export const NavbarLoginLink = styled(Link, {
     `}
 `;
 
-export const navbarButtonStyles: SxProps<Theme> = theme => ({
+const navbarButtonStyles: SxProps<Theme> = theme => ({
   [theme.breakpoints.up('sm')]: {
     fontSize: `calc(${theme.typography.button.fontSize} * 1.1)`,
     padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`,
@@ -242,7 +248,8 @@ export function Navbar({
   isMenuOpen: controlledIsMenuOpen,
   onMenuToggle,
   navPaperClassName,
-  actions,
+  navbarActions,
+  paperActions,
 }: ExtendedNavbarProps) {
   const [internalIsMenuOpen, setInternalMenuOpen] = useState(false);
 
@@ -343,6 +350,8 @@ export function Navbar({
           </NavbarLoginLink>
 
           <NavbarActions isMenuOpen={isMenuOpen}>
+            {navbarActions}
+
             {hasUnpaidInvoices && profileBtn && (
               <Button
                 LinkComponent={Link}
@@ -378,8 +387,6 @@ export function Navbar({
                 Mein Konto
               </Button>
             )}
-
-            {actions}
           </NavbarActions>
         </NavbarInnerWrapper>
       </AppBar>
@@ -391,6 +398,7 @@ export function Navbar({
           subscribeBtn={subscribeBtn}
           profileBtn={profileBtn}
           loginBtn={loginBtn}
+          paperActions={paperActions}
           main={mainItems}
           categories={categories}
           closeMenu={toggleMenu}
@@ -541,6 +549,7 @@ const NavPaper = ({
   isMenuOpen,
   className,
   children,
+  paperActions,
 }: PropsWithChildren<{
   loginBtn?: ButtonProps | null;
   profileBtn?: ButtonProps | null;
@@ -552,6 +561,7 @@ const NavPaper = ({
   hasUnpaidInvoices: boolean;
   isMenuOpen: boolean;
   className?: string;
+  paperActions?: ReactNode;
 }>) => {
   const {
     elements: { Link, Button, H4, H6 },
@@ -597,6 +607,8 @@ const NavPaper = ({
         })}
 
         <NavPaperActions>
+          {paperActions}
+
           {hasUnpaidInvoices && profileBtn && (
             <Button
               LinkComponent={Link}

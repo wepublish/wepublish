@@ -23,7 +23,8 @@ export type NavbarContainerProps = PropsWithChildren<
     | 'loginBtn'
     | 'profileBtn'
     | 'subscribeBtn'
-    | 'actions'
+    | 'navbarActions'
+    | 'paperActions'
   > &
     BuilderContainerProps
 >;
@@ -37,7 +38,8 @@ export function NavbarContainer({
   loginBtn,
   profileBtn,
   subscribeBtn,
-  actions,
+  navbarActions,
+  paperActions,
   children,
 }: NavbarContainerProps) {
   const { Navbar } = useWebsiteBuilder();
@@ -64,7 +66,8 @@ export function NavbarContainer({
       logo={logo}
       hasUnpaidInvoices={!!hasUnpaidInvoices}
       hasRunningSubscription={!!hasRunningSubscription}
-      actions={actions}
+      navbarActions={navbarActions}
+      paperActions={paperActions}
     >
       {children}
     </Navbar>
