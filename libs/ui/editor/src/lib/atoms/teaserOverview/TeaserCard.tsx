@@ -102,8 +102,8 @@ const Card = styled('div', {
     : isScratch ? theme.palette.action.disabledBackground
     : theme.palette.background.paper};
   cursor: ${({ selectionActive, isEmpty }) =>
-    isEmpty ? 'default'
-    : selectionActive ? 'pointer'
+    selectionActive ? 'pointer'
+    : isEmpty ? 'default'
     : 'grab'};
   overflow: hidden;
   user-select: none;
@@ -111,8 +111,8 @@ const Card = styled('div', {
 
   &:active {
     cursor: ${({ selectionActive, isEmpty }) =>
-      isEmpty ? 'default'
-      : selectionActive ? 'pointer'
+      selectionActive ? 'pointer'
+      : isEmpty ? 'default'
       : 'grabbing'};
   }
   transition:
@@ -399,18 +399,36 @@ export function TeaserCard({
   const cardTooltip =
     isOver && !isEmpty && !isScratch ? t('teaserOverview.dropHereShift')
     : isOver ? t('teaserOverview.dropHere')
-    : isEmptyReal ? t('teaserOverview.tooltipEmptySlot')
-    : isEmpty && isScratch ? t('teaserOverview.tooltipEmptyScratch')
-    : isScratch ? t('teaserOverview.tooltipScratch')
-    : isSelected ? t('teaserOverview.tooltipSelected')
-    : t('teaserOverview.tooltipDefault');
+    : isEmptyReal ?
+      t(
+        selectionActive ?
+          'teaserOverview.tooltipEmptyScratchSelected'
+        : 'teaserOverview.tooltipEmptySlot'
+      )
+    : isEmpty && isScratch ?
+      t(
+        selectionActive ?
+          'teaserOverview.tooltipEmptyScratchSelected'
+        : 'teaserOverview.tooltipEmptyScratch'
+      )
+    : isScratch ?
+      t(
+        selectionActive ?
+          'teaserOverview.tooltipScratchSelected'
+        : 'teaserOverview.tooltipScratch'
+      )
+    : t(
+        selectionActive ?
+          'teaserOverview.tooltipDefaultSelected'
+        : 'teaserOverview.tooltipDefault'
+      );
 
   const [badgeHover, setBadgeHover] = useState(false);
 
   return (
     <SelectionTooltip
       key={isOver ? 'drag-over' : 'default'}
-      title={badgeHover || disableTooltip ? '' : cardTooltip}
+      title={badgeHover || disableTooltip || isSelected ? '' : cardTooltip}
       placement="top"
       enterDelay={isOver ? 0 : 600}
       {...(isOver && !disableTooltip ? { open: true } : {})}
