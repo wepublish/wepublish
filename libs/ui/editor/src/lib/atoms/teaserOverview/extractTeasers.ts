@@ -77,14 +77,16 @@ function blockLabel(
   blockIndex: number,
   t: TFunction,
   blockStyleId?: string | null,
-  blockStyleNames?: Map<string, string>
+  blockStyleNames?: Map<string, string>,
+  title?: string | null
 ): string {
   const typeLabel =
     BLOCK_TYPE_KEY[type] ? t(BLOCK_TYPE_KEY[type]!) : String(type);
   const base = `${typeLabel} · Block ${blockIndex + 1}`;
   const styleName =
     blockStyleId ? (blockStyleNames?.get(blockStyleId) ?? blockStyleId) : '';
-  return styleName ? `${base} · ${styleName}` : base;
+  const detail = title || styleName;
+  return detail ? `${base} · ${detail}` : base;
 }
 
 export function teaserContentKey(teaser: Teaser): string {
@@ -184,7 +186,8 @@ export function extractTeasers(
           blockIndex,
           t,
           value.blockStyle,
-          blockStyleNames
+          blockStyleNames,
+          value.title
         );
 
         for (let i = 0; i < value.slots.length; i++) {
