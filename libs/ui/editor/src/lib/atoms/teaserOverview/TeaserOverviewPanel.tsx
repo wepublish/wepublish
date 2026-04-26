@@ -243,9 +243,36 @@ export function TeaserOverviewPanel({
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<SelectedSlot | null>(null);
   const [replaceSlot, setReplaceSlot] = useState<SelectedSlot | null>(null);
-  const [activeFilters, setActiveFilters] = useState<Set<TeaserType>>(
-    () => new Set([TeaserType.Article])
+  const filterStorageKey = useMemo(
+    () =>
+      `teaserOverview.activeFilters.${
+        typeof window !== 'undefined' ? window.location.pathname : ''
+      }`,
+    []
   );
+  const [activeFilters, setActiveFilters] = useState<Set<TeaserType>>(() => {
+    if (typeof window === 'undefined') {
+      return new Set([TeaserType.Article]);
+    }
+    try {
+      const raw = window.localStorage.getItem(filterStorageKey);
+      if (!raw) {
+        return new Set([TeaserType.Article]);
+      }
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) {
+        return new Set([TeaserType.Article]);
+      }
+      const valid: TeaserType[] = parsed.filter(
+        (v): v is TeaserType =>
+          typeof v === 'string' &&
+          (Object.values(TeaserType) as string[]).includes(v)
+      );
+      return new Set(valid);
+    } catch {
+      return new Set([TeaserType.Article]);
+    }
+  });
   const [saveAttempted, setSaveAttempted] = useState(false);
   const [activeDrag, setActiveDrag] = useState<SelectedSlot | null>(null);
   const [isCollapsing, setIsCollapsing] = useState(false);
@@ -274,9 +301,6 @@ export function TeaserOverviewPanel({
 
   const persistHidden = useCallback(
     (next: Set<string>) => {
-      if (typeof window === 'undefined') {
-        return;
-      }
       try {
         window.localStorage.setItem(
           hiddenStorageKey,
@@ -344,6 +368,17 @@ export function TeaserOverviewPanel({
   useEffect(() => {
     persistHidden(hiddenBlocks);
   }, [hiddenBlocks, persistHidden]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(
+        filterStorageKey,
+        JSON.stringify([...activeFilters])
+      );
+    } catch {
+      // ignore quota / private mode
+    }
+  }, [activeFilters, filterStorageKey]);
 
   useEffect(() => {
     if (!isOpen) {
