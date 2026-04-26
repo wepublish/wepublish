@@ -294,6 +294,7 @@ export interface TeaserListBlockValue extends BaseBlockValue {
 }
 
 export interface TeaserGridBlockValue extends BaseBlockValue {
+  title?: string | null;
   teasers: Array<[string, Teaser | null]>;
   numColumns: number;
 }
@@ -313,6 +314,7 @@ export interface FlexTeaser {
 }
 
 export interface TeaserGridFlexBlockValue extends BaseBlockValue {
+  title?: string | null;
   flexTeasers: FlexTeaser[];
 }
 
@@ -736,6 +738,7 @@ export function mapBlockValueToBlockInput(
     case EditorBlockType.TeaserGridFlex:
       return {
         teaserGridFlex: {
+          title: block.value.title,
           flexTeasers: block.value.flexTeasers.map(flexTeaser => ({
             teaser: mapTeaserToTeaserInput(flexTeaser.teaser),
             alignment: {
@@ -755,6 +758,7 @@ export function mapBlockValueToBlockInput(
     case EditorBlockType.TeaserGrid6:
       return {
         teaserGrid: {
+          title: block.value.title,
           teasers: block.value.teasers.map(([, teaser]) =>
             mapTeaserToTeaserInput(teaser)
           ),
@@ -1108,6 +1112,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.TeaserGridFlex,
         value: {
+          title: block.title,
           blockStyle: block.blockStyle,
           flexTeasers: block?.flexTeasers.map(flexTeaser => ({
             teaser: mapTeaserToQueryTeaser(flexTeaser.teaser),
@@ -1131,6 +1136,7 @@ export function blockForQueryBlock(
             EditorBlockType.TeaserGrid1
           : EditorBlockType.TeaserGrid6,
         value: {
+          title: block.title,
           blockStyle: block.blockStyle,
           numColumns: block.numColumns,
           teasers: block.teasers.map(teaser => [

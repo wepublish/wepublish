@@ -3752,6 +3752,7 @@ type TeaserGridBlock implements BaseBlock {
   blockStyleName: String
   numColumns: Int!
   teasers: [Teaser]!
+  title: String
   type: BlockType!
 }
 
@@ -3760,12 +3761,14 @@ input TeaserGridBlockInput {
   blockStyleName: String
   numColumns: Int!
   teasers: [TeaserInput]!
+  title: String
 }
 
 type TeaserGridFlexBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   flexTeasers: [FlexTeaser!]!
+  title: String
   type: BlockType!
 }
 
@@ -3773,6 +3776,7 @@ input TeaserGridFlexBlockInput {
   blockStyle: String
   blockStyleName: String
   flexTeasers: [FlexTeaserInput!]!
+  title: String
 }
 
 input TeaserInput {

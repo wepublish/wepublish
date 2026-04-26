@@ -33,6 +33,9 @@ export class FlexTeaserInput extends OmitType(
   implements: () => [BaseBlock],
 })
 export class TeaserGridFlexBlock extends BaseBlock<BlockType.TeaserGridFlex> {
+  @Field({ nullable: true })
+  title?: string;
+
   @Field(() => [FlexTeaser])
   flexTeasers!: FlexTeaser[];
 }
