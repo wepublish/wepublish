@@ -3,6 +3,9 @@ import styled from '@emotion/styled';
 import { css, Typography, useTheme } from '@mui/material';
 import { TeaserType } from '@wepublish/editor/api';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
+import { IconButton } from 'rsuite';
 
 import { teaserContentKey } from './extractTeasers';
 import { groupColor, TeaserCard } from './TeaserCard';
@@ -39,6 +42,22 @@ const GroupDot = styled('div', {
   border-radius: 50%;
   background: ${({ dotColor }) => dotColor};
   flex-shrink: 0;
+`;
+
+const HideToggle = styled(IconButton)`
+  &.rs-btn {
+    padding: 2px;
+    min-height: 0;
+    line-height: 1;
+    color: ${({ theme }) => theme.palette.text.secondary};
+  }
+  &.rs-btn:disabled {
+    color: ${({ theme }) => theme.palette.text.disabled};
+  }
+  &.rs-btn svg {
+    width: 16px;
+    height: 16px;
+  }
 `;
 
 const GroupLabel = styled(Typography)`
@@ -84,6 +103,9 @@ type TeaserBlockGroupProps = {
   errorLabel?: string;
   activeFilters: Set<TeaserType>;
   selectionActive: boolean;
+  isHidden: boolean;
+  canHide: boolean;
+  onToggleHidden: (groupKey: string) => void;
   onSlotClick: (groupKey: string, idx: number) => void;
 };
 
@@ -182,8 +204,12 @@ export function TeaserBlockGroup({
   errorLabel,
   activeFilters,
   selectionActive,
+  isHidden,
+  canHide,
+  onToggleHidden,
   onSlotClick,
 }: TeaserBlockGroupProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const color = groupColor(block.groupIndex, theme);
   const hasError = errorEmptyCount !== undefined && errorEmptyCount > 0;
@@ -204,6 +230,18 @@ export function TeaserBlockGroup({
     >
       <GroupHeader>
         <GroupDot dotColor={color} />
+        <HideToggle
+          size="xs"
+          appearance="subtle"
+          icon={isHidden ? <MdVisibilityOff /> : <MdVisibility />}
+          disabled={!canHide && !isHidden}
+          onClick={() => onToggleHidden(block.groupKey)}
+          title={t(
+            !canHide && !isHidden ? 'teaserOverview.hideBlockDisabled'
+            : isHidden ? 'teaserOverview.showBlock'
+            : 'teaserOverview.hideBlock'
+          )}
+        />
         <GroupLabel variant="caption">
           {(() => {
             const [prefix, last] = splitLabel(block.label);
@@ -220,46 +258,48 @@ export function TeaserBlockGroup({
         )}
       </GroupHeader>
 
-      <Row>
-        {block.teasers.map((working, i) => {
-          const isSelected =
-            selected?.groupKey === block.groupKey && selected?.idx === i;
-          const slotDragId = `slot::${block.groupKey}::${i}`;
+      {!isHidden && (
+        <Row>
+          {block.teasers.map((working, i) => {
+            const isSelected =
+              selected?.groupKey === block.groupKey && selected?.idx === i;
+            const slotDragId = `slot::${block.groupKey}::${i}`;
 
-          const isHiddenByFilter =
-            working.type === 'real' &&
-            working.teaser !== null &&
-            !activeFilters.has(working.teaser.type);
-          if (isHiddenByFilter) {
-            return null;
-          }
+            const isHiddenByFilter =
+              working.type === 'real' &&
+              working.teaser !== null &&
+              !activeFilters.has(working.teaser.type);
+            if (isHiddenByFilter) {
+              return null;
+            }
 
-          const isScratchMasked =
-            working.type === 'scratch' &&
-            working.teaser !== null &&
-            !activeFilters.has(working.teaser.type);
+            const isScratchMasked =
+              working.type === 'scratch' &&
+              working.teaser !== null &&
+              !activeFilters.has(working.teaser.type);
 
-          return (
-            <SlotWrapper key={i}>
-              <TeaserCard
-                dragId={slotDragId}
-                teaser={isScratchMasked ? null : working.teaser}
-                slotType={working.type}
-                groupIndex={block.groupIndex}
-                nestDepth={block.nestDepth}
-                isSelected={isSelected}
-                isDuplicate={
-                  working.teaser !== null &&
-                  duplicateKeys.has(teaserContentKey(working.teaser))
-                }
-                selectionActive={selectionActive}
-                previewState={preview.get(i) ?? 'none'}
-                onClick={() => onSlotClick(block.groupKey, i)}
-              />
-            </SlotWrapper>
-          );
-        })}
-      </Row>
+            return (
+              <SlotWrapper key={i}>
+                <TeaserCard
+                  dragId={slotDragId}
+                  teaser={isScratchMasked ? null : working.teaser}
+                  slotType={working.type}
+                  groupIndex={block.groupIndex}
+                  nestDepth={block.nestDepth}
+                  isSelected={isSelected}
+                  isDuplicate={
+                    working.teaser !== null &&
+                    duplicateKeys.has(teaserContentKey(working.teaser))
+                  }
+                  selectionActive={selectionActive}
+                  previewState={preview.get(i) ?? 'none'}
+                  onClick={() => onSlotClick(block.groupKey, i)}
+                />
+              </SlotWrapper>
+            );
+          })}
+        </Row>
+      )}
     </GroupWrapper>
   );
 }

@@ -249,6 +249,57 @@ export function TeaserOverviewPanel({
   const [saveAttempted, setSaveAttempted] = useState(false);
   const [activeDrag, setActiveDrag] = useState<SelectedSlot | null>(null);
   const [isCollapsing, setIsCollapsing] = useState(false);
+  const hiddenStorageKey = useMemo(
+    () =>
+      `teaserOverview.hiddenBlocks.${
+        typeof window !== 'undefined' ? window.location.pathname : ''
+      }`,
+    []
+  );
+  const [hiddenBlocks, setHiddenBlocks] = useState<Set<string>>(() => {
+    if (typeof window === 'undefined') {
+      return new Set();
+    }
+    try {
+      const raw = window.localStorage.getItem(hiddenStorageKey);
+      if (!raw) {
+        return new Set();
+      }
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? new Set<string>(parsed) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
+
+  const persistHidden = useCallback(
+    (next: Set<string>) => {
+      if (typeof window === 'undefined') {
+        return;
+      }
+      try {
+        window.localStorage.setItem(
+          hiddenStorageKey,
+          JSON.stringify([...next])
+        );
+      } catch {
+        // ignore quota / private mode
+      }
+    },
+    [hiddenStorageKey]
+  );
+
+  const toggleHidden = useCallback((groupKey: string) => {
+    setHiddenBlocks(prev => {
+      const next = new Set(prev);
+      if (next.has(groupKey)) {
+        next.delete(groupKey);
+      } else {
+        next.add(groupKey);
+      }
+      return next;
+    });
+  }, []);
 
   const { data: blockStylesData } = useBlockStylesQuery();
   const blockStyleNames = useMemo(() => {
@@ -270,6 +321,29 @@ export function TeaserOverviewPanel({
     canRedo,
     clearHistory,
   } = useWorkingBlocks(blocks, t, blockStyleNames, onChange);
+
+  useEffect(() => {
+    setHiddenBlocks(prev => {
+      let changed = false;
+      const next = new Set(prev);
+      for (const b of workingBlocks) {
+        const hasEmpty = b.teasers.some(w => w.type === 'empty');
+        if (hasEmpty && next.has(b.groupKey)) {
+          next.delete(b.groupKey);
+          changed = true;
+        }
+      }
+      if (!changed) {
+        return prev;
+      }
+      persistHidden(next);
+      return next;
+    });
+  }, [workingBlocks, persistHidden]);
+
+  useEffect(() => {
+    persistHidden(hiddenBlocks);
+  }, [hiddenBlocks, persistHidden]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -712,6 +786,9 @@ export function TeaserOverviewPanel({
                   }
                   activeFilters={activeFilters}
                   selectionActive={!!selected}
+                  isHidden={hiddenBlocks.has(block.groupKey)}
+                  canHide={!block.teasers.some(w => w.type === 'empty')}
+                  onToggleHidden={toggleHidden}
                   onSlotClick={handleSlotClick}
                 />
               ))}
