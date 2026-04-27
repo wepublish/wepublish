@@ -1962,6 +1962,8 @@
       "hideBlock": "Masquer le bloc",
       "showBlock": "Afficher le bloc",
       "hideBlockDisabled": "Le bloc ne peut pas être masqué — emplacement de teaser vide",
+      "hideAllBlocks": "Masquer tous les blocs",
+      "unhideAllBlocks": "Afficher tous les blocs",
       "tooltipDefault": "• Glisser pour réarranger\n• Cliquer pour remplacer",
       "tooltipDefaultSelected": "• Cliquer pour remplacer",
       "dropHere": "Glisser ici",

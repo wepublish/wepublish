@@ -21,6 +21,8 @@ import {
   MdGridView,
   MdRedo,
   MdUndo,
+  MdVisibility,
+  MdVisibilityOff,
 } from 'react-icons/md';
 import { Drawer, IconButton } from 'rsuite';
 
@@ -119,11 +121,25 @@ const StickyActionBar = styled('div', {
   z-index: 9;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 8px;
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
   opacity: ${({ visible }) => (visible ? 1 : 0)};
   transition: opacity 0.15s;
+`;
+
+const StickyActionBarLeft = styled('div')`
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+`;
+
+const StickyActionBarRight = styled('div')`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  justify-content: flex-end;
 `;
 
 const HintText = styled('span')`
@@ -162,6 +178,13 @@ const StickyHistoryBtnWrap = styled('span')`
 
   .rs-btn:disabled {
     color: ${({ theme }) => theme.palette.primary.light};
+  }
+`;
+
+const StickyHideAllBtnWrap = styled(StickyHistoryBtnWrap)`
+  .rs-btn svg {
+    width: 16px;
+    height: 16px;
   }
 `;
 
@@ -345,6 +368,31 @@ export function TeaserOverviewPanel({
     canRedo,
     clearHistory,
   } = useWorkingBlocks(blocks, t, blockStyleNames, onChange);
+
+  const hideableGroupKeys = useMemo(
+    () =>
+      workingBlocks
+        .filter(b => !b.teasers.some(w => w.type === 'empty'))
+        .map(b => b.groupKey),
+    [workingBlocks]
+  );
+
+  const canHideAll = hideableGroupKeys.some(k => !hiddenBlocks.has(k));
+  const canUnhideAll = hiddenBlocks.size > 0;
+
+  const hideAll = useCallback(() => {
+    setHiddenBlocks(prev => {
+      const next = new Set(prev);
+      for (const k of hideableGroupKeys) {
+        next.add(k);
+      }
+      return next;
+    });
+  }, [hideableGroupKeys]);
+
+  const unhideAll = useCallback(() => {
+    setHiddenBlocks(new Set());
+  }, []);
 
   useEffect(() => {
     setHiddenBlocks(prev => {
@@ -716,80 +764,96 @@ export function TeaserOverviewPanel({
           </FilterBar>
 
           <Content>
-            <StickyActionBar
-              visible={!isCollapsing && (!!selected || canUndo || canRedo)}
-            >
-              {selected ?
-                <>
-                  <HintText>
-                    {selectedWorking?.teaser ?
-                      t('teaserOverview.hintTextReplace')
-                    : t('teaserOverview.hintTextLoad')}
-                  </HintText>
-                  <HintActions>
-                    <IconButton
-                      size="xs"
-                      appearance="ghost"
-                      icon={<MdClose />}
-                      onClick={handleCancelSelection}
-                      title={
-                        selectedWorking?.teaser ?
-                          t('teaserOverview.cancelReplaceTitle')
-                        : t('teaserOverview.cancelLoadTitle')
-                      }
-                    >
+            <StickyActionBar visible={!isCollapsing}>
+              <StickyActionBarLeft>
+                <StickyHideAllBtnWrap>
+                  <IconButton
+                    size="xs"
+                    appearance="subtle"
+                    icon={canHideAll ? <MdVisibilityOff /> : <MdVisibility />}
+                    disabled={!canHideAll && !canUnhideAll}
+                    onClick={canHideAll ? hideAll : unhideAll}
+                    title={t(
+                      canHideAll ?
+                        'teaserOverview.hideAllBlocks'
+                      : 'teaserOverview.unhideAllBlocks'
+                    )}
+                  />
+                </StickyHideAllBtnWrap>
+              </StickyActionBarLeft>
+              <StickyActionBarRight>
+                {selected ?
+                  <>
+                    <HintText>
                       {selectedWorking?.teaser ?
-                        t('teaserOverview.cancelReplace')
-                      : t('teaserOverview.cancelLoad')}
-                    </IconButton>
-                    <IconButton
-                      size="xs"
-                      appearance="primary"
-                      icon={<MdEditNote />}
-                      onClick={handleReplaceClick}
-                      title={
-                        selectedWorking?.teaser ?
-                          t('teaserOverview.replaceButtonTitle')
-                        : t('teaserOverview.loadButtonTitle')
-                      }
-                    >
-                      {selectedWorking?.teaser ?
-                        t('teaserOverview.replaceButton')
-                      : t('teaserOverview.loadButton')}
-                    </IconButton>
-                  </HintActions>
-                </>
-              : <>
-                  <StickyHistoryBtnWrap>
-                    <IconButton
-                      size="xs"
-                      appearance="subtle"
-                      icon={<MdUndo />}
-                      disabled={!canUndo}
-                      onClick={undo}
-                      title={t(
-                        canUndo ?
-                          'teaserOverview.undo'
-                        : 'teaserOverview.undoEmpty'
-                      )}
-                    />
-                  </StickyHistoryBtnWrap>
-                  <StickyHistoryBtnWrap>
-                    <IconButton
-                      size="xs"
-                      appearance="subtle"
-                      icon={<MdRedo />}
-                      disabled={!canRedo}
-                      onClick={redo}
-                      title={t(
-                        canRedo ?
-                          'teaserOverview.redo'
-                        : 'teaserOverview.redoEmpty'
-                      )}
-                    />
-                  </StickyHistoryBtnWrap>
-                </>
-              }
+                        t('teaserOverview.hintTextReplace')
+                      : t('teaserOverview.hintTextLoad')}
+                    </HintText>
+                    <HintActions>
+                      <IconButton
+                        size="xs"
+                        appearance="ghost"
+                        icon={<MdClose />}
+                        onClick={handleCancelSelection}
+                        title={
+                          selectedWorking?.teaser ?
+                            t('teaserOverview.cancelReplaceTitle')
+                          : t('teaserOverview.cancelLoadTitle')
+                        }
+                      >
+                        {selectedWorking?.teaser ?
+                          t('teaserOverview.cancelReplace')
+                        : t('teaserOverview.cancelLoad')}
+                      </IconButton>
+                      <IconButton
+                        size="xs"
+                        appearance="primary"
+                        icon={<MdEditNote />}
+                        onClick={handleReplaceClick}
+                        title={
+                          selectedWorking?.teaser ?
+                            t('teaserOverview.replaceButtonTitle')
+                          : t('teaserOverview.loadButtonTitle')
+                        }
+                      >
+                        {selectedWorking?.teaser ?
+                          t('teaserOverview.replaceButton')
+                        : t('teaserOverview.loadButton')}
+                      </IconButton>
+                    </HintActions>
+                  </>
+                : <>
+                    <StickyHistoryBtnWrap>
+                      <IconButton
+                        size="xs"
+                        appearance="subtle"
+                        icon={<MdUndo />}
+                        disabled={!canUndo}
+                        onClick={undo}
+                        title={t(
+                          canUndo ?
+                            'teaserOverview.undo'
+                          : 'teaserOverview.undoEmpty'
+                        )}
+                      />
+                    </StickyHistoryBtnWrap>
+                    <StickyHistoryBtnWrap>
+                      <IconButton
+                        size="xs"
+                        appearance="subtle"
+                        icon={<MdRedo />}
+                        disabled={!canRedo}
+                        onClick={redo}
+                        title={t(
+                          canRedo ?
+                            'teaserOverview.redo'
+                          : 'teaserOverview.redoEmpty'
+                        )}
+                      />
+                    </StickyHistoryBtnWrap>
+                  </>
+                }
+              </StickyActionBarRight>
             </StickyActionBar>
 
             {visibleBlocks.length === 0 && (

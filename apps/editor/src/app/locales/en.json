@@ -2140,6 +2140,8 @@
       "hideBlock": "Hide block",
       "showBlock": "Show block",
       "hideBlockDisabled": "Block cannot be hidden — empty teaser slot present",
+      "hideAllBlocks": "Hide all blocks",
+      "unhideAllBlocks": "Show all blocks",
       "tooltipDefault": "• Drag to rearrange\n• Click to replace",
       "tooltipDefaultSelected": "• Click to replace",
       "dropHere": "Drag here",

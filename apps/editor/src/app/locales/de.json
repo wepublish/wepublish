@@ -2078,6 +2078,8 @@
       "hideBlock": "Block ausblenden",
       "showBlock": "Block einblenden",
       "hideBlockDisabled": "Block kann nicht ausgeblendet werden — leerer Teaserplatz vorhanden",
+      "hideAllBlocks": "Alle Blöcke ausblenden",
+      "unhideAllBlocks": "Alle Blöcke einblenden",
       "tooltipDefault": "• Ziehen um neu Anzuordnen\n• Klick zum Ersetzen",
       "tooltipDefaultSelected": "• Klick zum Ersetzen",
       "dropHere": "Hierher ziehen",
