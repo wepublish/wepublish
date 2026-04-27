@@ -766,20 +766,22 @@ export function TeaserOverviewPanel({
           <Content>
             <StickyActionBar visible={!isCollapsing}>
               <StickyActionBarLeft>
-                <StickyHideAllBtnWrap>
-                  <IconButton
-                    size="xs"
-                    appearance="subtle"
-                    icon={canHideAll ? <MdVisibilityOff /> : <MdVisibility />}
-                    disabled={!canHideAll && !canUnhideAll}
-                    onClick={canHideAll ? hideAll : unhideAll}
-                    title={t(
-                      canHideAll ?
-                        'teaserOverview.hideAllBlocks'
-                      : 'teaserOverview.unhideAllBlocks'
-                    )}
-                  />
-                </StickyHideAllBtnWrap>
+                {!selected && (
+                  <StickyHideAllBtnWrap>
+                    <IconButton
+                      size="xs"
+                      appearance="subtle"
+                      icon={canHideAll ? <MdVisibilityOff /> : <MdVisibility />}
+                      disabled={!canHideAll && !canUnhideAll}
+                      onClick={canHideAll ? hideAll : unhideAll}
+                      title={t(
+                        canHideAll ?
+                          'teaserOverview.hideAllBlocks'
+                        : 'teaserOverview.unhideAllBlocks'
+                      )}
+                    />
+                  </StickyHideAllBtnWrap>
+                )}
               </StickyActionBarLeft>
               <StickyActionBarRight>
                 {selected ?
