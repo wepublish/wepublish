@@ -1946,6 +1946,7 @@
         "containsAnyPlaceholder": "wert1, wert2, ...",
         "mf_user.firstName": "Vorname",
         "mf_user.name": "Nachname",
+        "mf_user.id": "Benutzer-ID",
         "mf_slug:contains": "Slug enthält",
         "mf_slug:contains_any": "Slug enthält eines von",
         "mf_slug:equals": "Slug ist gleich",

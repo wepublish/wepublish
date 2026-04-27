@@ -237,6 +237,14 @@ export class MailchimpSyncService {
       }
     }
 
+    // Build a mapping from merge field display names (e.g. "Vorname") to
+    // the Mailchimp tag (e.g. "MMERGE1") so that contacts fetched from
+    // Mailchimp whose merge_fields are keyed by name get normalised to the
+    // tag-keyed form expected by the sync config before comparison.
+    const mergeFieldAliasMap = await this.buildMergeFieldAliasMap(
+      config.mailchimp_listId
+    );
+
     let mailchimpContactMap: Map<string, any>;
     if (useTargetedContactFetch) {
       const candidateEmails: string[] = [];
@@ -257,6 +265,20 @@ export class MailchimpSyncService {
       mailchimpContactMap = new Map(
         mailchimpContacts.map(m => [m.email_address?.toLowerCase(), m])
       );
+    }
+
+    // Normalise merge field keys in all fetched contacts: any key that
+    // matches a known display name is remapped to its tag so the
+    // comparison against the config's tag-keyed mergeFields works.
+    if (mergeFieldAliasMap.size > 0) {
+      for (const contact of mailchimpContactMap.values()) {
+        if (contact.merge_fields) {
+          contact.merge_fields = this.normalizeMergeFields(
+            contact.merge_fields,
+            mergeFieldAliasMap
+          );
+        }
+      }
     }
 
     let updatedCount = 0;
@@ -298,12 +320,21 @@ export class MailchimpSyncService {
         userWithSub.user.email.toLowerCase()
       );
 
+      // Skip users whose Mailchimp contact is not subscribed
+      if (existingContact?.status !== 'subscribed') {
+        skippedCount++;
+        continue;
+      }
+
       const mergeFields: Record<string, string> = {};
       for (const mapping of mergeFieldMappings) {
-        mergeFields[mapping.tag] = this.evaluateMergeFieldExpression(
+        const value = this.evaluateMergeFieldExpression(
           mapping.expression,
           userWithSub
         );
+        if (value !== '') {
+          mergeFields[mapping.tag] = value;
+        }
       }
 
       const interests: Record<string, boolean> = {};
@@ -318,9 +349,13 @@ export class MailchimpSyncService {
         }
       }
 
-      // Default interest groups are always enabled for every contact.
-      for (const groupId of defaultInterestGroupIds) {
-        interests[groupId] = true;
+      // Default interest groups are only applied when first creating the
+      // contact. For existing contacts we preserve whatever Mailchimp has so
+      // manual unsubscribes aren't clobbered on every sync.
+      if (!existingContact) {
+        for (const groupId of defaultInterestGroupIds) {
+          interests[groupId] = true;
+        }
       }
 
       // For each mapped interest group: only flip to true when a genuinely
@@ -598,7 +633,9 @@ export class MailchimpSyncService {
       // paidUntil in the past is fine (grace period / pending renewal) — the
       // subscription is considered active until it's formally deactivated.
       const currentSubscription = userSubs
-        .filter(s => !s.deactivation)
+        .filter(
+          s => !s.deactivation || (s.paidUntil && s.paidUntil > new Date())
+        )
         .sort(
           (a, b) =>
             (b.paidUntil?.getTime() ?? 0) - (a.paidUntil?.getTime() ?? 0)
@@ -745,14 +782,14 @@ export class MailchimpSyncService {
    * E.g. "slug:contains:firmen-abo|slug:contains:gonner"
    *
    * Single expression formats:
-   * - "user.firstName" / "user.name" - direct user field access
-   * - "slug:contains:value" - "1" if current subscription plan slug contains value, else "0"
-   * - "slug:contains_any:val1,val2" - "1" if current slug contains any of the values
-   * - "slug:equals:value" - "1" if current subscription plan slug equals value
+   * - "user.firstName" / "user.name" / "user.id" - direct user field access
+   * - "slug:contains:value" / "slug:contains_any:v1,v2" / "slug:equals:value"
+   *     "1" if current subscription plan slug matches, "-1" if only past
+   *     subscriptions match, "" if no matching sub ever.
    * - "active_abo" - "1" if active, "-1" if past subscriptions, "" if none
    * - "active_abo_with_payment:method_slug:days" - like active_abo but also returns "1"
    *     if last subscription has given payment method and paidUntil within N days
-   * - "retarget:days" - "1" if last subscription paidUntil within N days, else ""
+   * - "retarget:days" - "1" if last subscription paidUntil within N days, "-1" if currently subscribed but was previously retargetable, else ""
    * - "static:value" - always returns the given value
    */
   private evaluateMergeFieldExpression(
@@ -763,9 +800,9 @@ export class MailchimpSyncService {
     if (expression.includes('|')) {
       for (const subExpr of expression.split('|')) {
         const result = this.evaluateSingleMergeField(subExpr.trim(), data);
-        if (result !== '' && result !== '0') return result;
+        if (result !== '') return result;
       }
-      return '0';
+      return '';
     }
 
     return this.evaluateSingleMergeField(expression, data);
@@ -785,30 +822,28 @@ export class MailchimpSyncService {
       case 'user.name':
         return (data.user.name || 'Unbekannt').trim();
 
+      case 'user.id':
+        return data.user.id;
+
       case 'slug': {
         const op = parts[1];
         const value = parts.slice(2).join(':');
-        if (op === 'contains') {
-          return data.currentSubscription?.memberPlan.slug.includes(value) ?
-              '1'
-            : '0';
+
+        const matches = (slug: string | undefined): boolean => {
+          if (!slug) return false;
+          if (op === 'equals') return slug === value;
+          if (op === 'contains') return slug.includes(value);
+          if (op === 'contains_any') {
+            return value.split(',').some(v => slug.includes(v.trim()));
+          }
+          return false;
+        };
+
+        if (matches(data.currentSubscription?.memberPlan.slug)) return '1';
+        if (data.subscriptions.some(s => matches(s.memberPlan.slug))) {
+          return '-1';
         }
-        if (op === 'contains_any') {
-          const values = value.split(',');
-          return (
-              values.some(v =>
-                data.currentSubscription?.memberPlan.slug.includes(v.trim())
-              )
-            ) ?
-              '1'
-            : '0';
-        }
-        if (op === 'equals') {
-          return data.currentSubscription?.memberPlan.slug === value ?
-              '1'
-            : '0';
-        }
-        return '0';
+        return '';
       }
 
       case 'active_abo': {
@@ -839,6 +874,12 @@ export class MailchimpSyncService {
 
       case 'retarget': {
         const days = parseInt(parts[1] ?? '45', 10);
+        if (data.currentSubscription) {
+          const hasPastSubscriptions = data.subscriptions.some(
+            s => s !== data.currentSubscription
+          );
+          return hasPastSubscriptions ? '-1' : '';
+        }
         if (
           data.lastSubscription?.paidUntil &&
           this.isWithinLastXDays(data.lastSubscription.paidUntil, days)
@@ -920,7 +961,8 @@ export class MailchimpSyncService {
   }
 
   private isSubscriptionActive(sub: SubscriptionLite, now: Date): boolean {
-    if (sub.deactivation) return false;
+    if (sub.deactivation && (!sub.paidUntil || sub.paidUntil <= now))
+      return false;
     if (!sub.paidUntil) return true;
     if (sub.paidUntil > now) return true;
     return now.getTime() - sub.paidUntil.getTime() <= GRACE_PERIOD_MS;
@@ -994,6 +1036,40 @@ export class MailchimpSyncService {
     return true;
   }
 
+  private async buildMergeFieldAliasMap(
+    listId: string
+  ): Promise<Map<string, string>> {
+    // Maps the field's display name (e.g. "Vorname") to the Mailchimp API
+    // tag (e.g. "MMERGE1"). Used to normalise contact merge_fields whose
+    // keys arrive as names instead of tags so they line up with the
+    // tag-keyed config mappings before comparison.
+    const aliasMap = new Map<string, string>();
+    try {
+      const response = (await mailchimp.lists.getListMergeFields(listId, {
+        count: 100,
+      })) as any;
+      for (const field of response.merge_fields ?? []) {
+        if (field.tag && field.name && field.tag !== field.name) {
+          aliasMap.set(field.name, field.tag);
+        }
+      }
+    } catch {
+      // Proceed without normalisation if the API call fails
+    }
+    return aliasMap;
+  }
+
+  private normalizeMergeFields(
+    mergeFields: Record<string, any>,
+    aliasMap: Map<string, string>
+  ): Record<string, any> {
+    const normalized: Record<string, any> = {};
+    for (const [key, value] of Object.entries(mergeFields)) {
+      normalized[aliasMap.get(key) ?? key] = value;
+    }
+    return normalized;
+  }
+
   private valuesEquivalent(a: any, b: any): boolean {
     if (a === b) return true;
 
@@ -1001,6 +1077,10 @@ export class MailchimpSyncService {
     const bEmpty = b == null || b === '';
     if (aEmpty && bEmpty) return true;
     if (aEmpty !== bEmpty) return false;
+
+    // For number fields, "0" and "" are equivalent (both represent empty)
+    if ((a === '0' || a === 0) && b === '') return true;
+    if ((b === '0' || b === 0) && a === '') return true;
 
     if (typeof a === 'object' || typeof b === 'object') {
       return JSON.stringify(a) === JSON.stringify(b);

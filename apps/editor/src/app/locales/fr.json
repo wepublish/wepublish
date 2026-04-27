@@ -1831,6 +1831,7 @@
         "containsAnyPlaceholder": "valeur1, valeur2, ...",
         "mf_user.firstName": "Prénom",
         "mf_user.name": "Nom",
+        "mf_user.id": "ID utilisateur",
         "mf_slug:contains": "Slug contient",
         "mf_slug:contains_any": "Slug contient l'un de",
         "mf_slug:equals": "Slug est égal à",
