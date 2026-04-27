@@ -287,10 +287,13 @@ export function TeaserBlockGroup({
                   groupIndex={block.groupIndex}
                   nestDepth={block.nestDepth}
                   isSelected={isSelected}
-                  isDuplicate={
-                    working.teaser !== null &&
-                    duplicateKeys.has(teaserContentKey(working.teaser))
-                  }
+                  isDuplicate={(() => {
+                    if (working.teaser === null) {
+                      return false;
+                    }
+                    const key = teaserContentKey(working.teaser);
+                    return key !== null && duplicateKeys.has(key);
+                  })()}
                   selectionActive={selectionActive}
                   previewState={preview.get(i) ?? 'none'}
                   onClick={() => onSlotClick(block.groupKey, i)}

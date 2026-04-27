@@ -89,7 +89,7 @@ function blockLabel(
   return detail ? `${base} · ${detail}` : base;
 }
 
-export function teaserContentKey(teaser: Teaser): string {
+export function teaserContentKey(teaser: Teaser): string | null {
   switch (teaser.type) {
     case TeaserType.Article:
       return `article:${teaser.article?.id}`;
@@ -98,7 +98,7 @@ export function teaserContentKey(teaser: Teaser): string {
     case TeaserType.Event:
       return `event:${teaser.event?.id}`;
     case TeaserType.Custom:
-      return `custom:${teaser.contentUrl ?? ''}`;
+      return null;
   }
 }
 
@@ -122,7 +122,8 @@ export function extractTeasers(
           blockIndex,
           t,
           value.blockStyle,
-          blockStyleNames
+          blockStyleNames,
+          value.title
         );
 
         for (let i = 0; i < value.teasers.length; i++) {
@@ -154,7 +155,8 @@ export function extractTeasers(
           blockIndex,
           t,
           value.blockStyle,
-          blockStyleNames
+          blockStyleNames,
+          value.title
         );
 
         for (let i = 0; i < value.flexTeasers.length; i++) {
@@ -246,6 +248,13 @@ export function extractTeasers(
           const nestedTitle =
             nestedTeaserContainerType === EditorBlockType.TeaserSlots ?
               ((nestedBlock.value as TeaserSlotsBlockValue).title ?? '')
+            : (
+              nestedTeaserContainerType === EditorBlockType.TeaserGrid1 ||
+              nestedTeaserContainerType === EditorBlockType.TeaserGrid6
+            ) ?
+              ((nestedBlock.value as TeaserGridBlockValue).title ?? '')
+            : nestedTeaserContainerType === EditorBlockType.TeaserGridFlex ?
+              ((nestedBlock.value as TeaserGridFlexBlockValue).title ?? '')
             : '';
           const nestedBlockStyleId =
             (nestedBlock.value as BaseBlockValue).blockStyle ?? '';

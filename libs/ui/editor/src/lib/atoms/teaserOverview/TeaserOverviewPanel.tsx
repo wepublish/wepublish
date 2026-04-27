@@ -510,6 +510,9 @@ export function TeaserOverviewPanel({
           continue;
         }
         const key = teaserContentKey(w.teaser);
+        if (!key) {
+          continue;
+        }
         counts.set(key, (counts.get(key) ?? 0) + 1);
       }
     }
