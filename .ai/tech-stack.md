@@ -72,3 +72,8 @@ Align all code suggestions, architecture recommendations, and technical solution
 - Payment providers: **Stripe**, **Mollie**, **Payrexx**, **Bexio**
 - Email: **Mailgun**, **Mailchimp**, custom providers
 - Media: S3-compatible storage with image transformation server
+
+## Source Code Formatting and linting should follow the existing conventions in the codebase
+
+- all if/else/switch/while/for blocks should use curly braces, even for single statements
+- don't add comments unless they are needed for linter or TypeScript directives

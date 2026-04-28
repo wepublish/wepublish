@@ -6,9 +6,15 @@ import { PeriodicJobResolver } from './periodic-job.resolver';
 import { PeriodicJobService } from './periodic-job.service';
 import { PaymentsModule } from '@wepublish/payment/api';
 import { SubscriptionService } from './subscription.service';
+import { MailchimpSyncModule } from '../mailchimp-sync/mailchimp-sync.module';
 
 @Module({
-  imports: [PrismaModule, SubscriptionFlowModule, PaymentsModule],
+  imports: [
+    PrismaModule,
+    SubscriptionFlowModule,
+    PaymentsModule,
+    MailchimpSyncModule,
+  ],
   providers: [
     PeriodicJobExecutor,
     PeriodicJobService,
