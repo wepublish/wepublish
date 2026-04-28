@@ -45,6 +45,19 @@ jobs:
             exit 1
           fi
 
+      - uses: actions/checkout@v4
+
+      - name: Verify project exists
+        env:
+          PROJECT: ${{ inputs.project }}
+        run: |
+          if [ ! -f "apps/${PROJECT}/deployment.config.json" ]; then
+            echo "::error::Project '${PROJECT}' not found. Expected file 'apps/${PROJECT}/deployment.config.json'."
+            echo "Available projects:"
+            find apps -maxdepth 2 -name deployment.config.json -printf '  - %h\n' | sed 's|  - apps/|  - |' | sort
+            exit 1
+          fi
+
       - name: Trigger database sync webhook
         env:
           DATABASE_SYNC_WEBHOOK_URL: ${{ secrets.DATABASE_SYNC_WEBHOOK_URL }}
@@ -52,7 +65,9 @@ jobs:
           PROJECT: ${{ inputs.project }}
           INSTANCE_NAME: ${{ steps.resolve.outputs.instance_name }}
         run: |
-          curl -fsS -X POST "$DATABASE_SYNC_WEBHOOK_URL" \
-            -H "Authorization: Bearer $DATABASE_SYNC_WEBHOOK_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d "{\"project\":\"${PROJECT}\",\"instance_name\":\"${INSTANCE_NAME}\"}"
+          jq -nc --arg project "$PROJECT" --arg instance_name "$INSTANCE_NAME" \
+            '{project:$project, instance_name:$instance_name}' \
+            | curl -fsS -X POST "$DATABASE_SYNC_WEBHOOK_URL" \
+                -H "Authorization: Bearer $DATABASE_SYNC_WEBHOOK_TOKEN" \
+                -H "Content-Type: application/json" \
+                --data-binary @-
