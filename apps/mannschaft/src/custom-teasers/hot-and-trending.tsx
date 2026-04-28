@@ -59,19 +59,19 @@ export const HotAndTrendingTeaser = ({
     return now.toISOString();
   }, []);
 
-  const { data } = useHotAndTrendingQuery({
-    variables: {
-      take: 5,
-      start: yesterday,
-    },
-  });
+  // const { data } = useHotAndTrendingQuery({
+  //   variables: {
+  //     take: 5,
+  //     start: yesterday,
+  //   },
+  // });
 
   return (
     <TeaserWrapper {...alignment}>
       <HotAndTrendingTeaserWrapper>
         <H4 component={HotAndTrendingTitle}>{teaser?.title || 'Trending'}</H4>
 
-        <HotAndTrendingLinkList>
+        {/* <HotAndTrendingLinkList>
           {data?.hotAndTrending.map(article => (
             <HotAndTrendingLink key={article.id}>
               <Link
@@ -83,7 +83,7 @@ export const HotAndTrendingTeaser = ({
               </Link>
             </HotAndTrendingLink>
           ))}
-        </HotAndTrendingLinkList>
+        </HotAndTrendingLinkList> */}
       </HotAndTrendingTeaserWrapper>
     </TeaserWrapper>
   );

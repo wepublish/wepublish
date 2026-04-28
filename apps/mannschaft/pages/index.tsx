@@ -38,13 +38,13 @@ export const getStaticProps: GetStaticProps = async () => {
     client.query({
       query: PeerProfileDocument,
     }),
-    client.query({
-      query: HotAndTrendingDocument,
-      variables: {
-        take: 5,
-        start: now.toISOString(),
-      },
-    }),
+    // client.query({
+    //   query: HotAndTrendingDocument,
+    //   variables: {
+    //     take: 5,
+    //     start: now.toISOString(),
+    //   },
+    // }),
   ]);
 
   const props = addClientCacheToV1Props(client, {});
