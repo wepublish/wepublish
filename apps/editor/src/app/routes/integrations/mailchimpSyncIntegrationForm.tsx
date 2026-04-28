@@ -258,6 +258,7 @@ function InterestExpressionEditor({
 type MergeFieldType =
   | 'user.firstName'
   | 'user.name'
+  | 'user.id'
   | 'slug:contains'
   | 'slug:contains_any'
   | 'slug:equals'
@@ -270,6 +271,7 @@ type MergeFieldType =
 const MERGE_FIELD_TYPES: MergeFieldType[] = [
   'user.firstName',
   'user.name',
+  'user.id',
   'slug:contains',
   'slug:contains_any',
   'slug:equals',
@@ -286,6 +288,7 @@ function parseMergeFieldExpression(expr: string): {
 } {
   if (expr === 'user.firstName') return { type: 'user.firstName', args: [] };
   if (expr === 'user.name') return { type: 'user.name', args: [] };
+  if (expr === 'user.id') return { type: 'user.id', args: [] };
   if (expr === 'active_abo') return { type: 'active_abo', args: [] };
 
   const slugMatch = /^slug:(contains_any|contains|equals):(.*)$/.exec(expr);
@@ -318,6 +321,7 @@ function buildMergeFieldExpression(
   switch (type) {
     case 'user.firstName':
     case 'user.name':
+    case 'user.id':
     case 'active_abo':
       return type;
     case 'slug:contains':
@@ -557,6 +561,20 @@ const DryRunTable = styled.table`
   }
 `;
 
+const MergeFieldsTwoColumn = styled.div`
+  display: flex;
+  gap: 8px;
+  max-height: 100px;
+  overflow: auto;
+`;
+
+const MergeFieldColumn = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`;
+
 const DryRunWrapper = styled.div`
   margin-top: 16px;
   max-height: 400px;
@@ -694,6 +712,10 @@ function SyncProviderSettingCard({
   });
 
   const watchedListId = watch('mailchimp_listId');
+  const watchedInterestGroupMappings = watch('mailchimp_interestGroupMappings');
+  const watchedDefaultInterestGroupIds = watch(
+    'mailchimp_defaultInterestGroupIds'
+  );
 
   useEffect(() => {
     if (watchedListId) {
@@ -841,6 +863,7 @@ function SyncProviderSettingCard({
   const handleTriggerSync = useCallback(async () => {
     try {
       if (!(await saveIfDirty())) return;
+      setDryRunResult(null);
       await triggerSync({ variables: { id: setting.id } });
       setSyncSeq(s => s + 1);
       setSyncing(true);
@@ -1589,36 +1612,172 @@ function SyncProviderSettingCard({
                     </tr>
                   </thead>
                   <tbody>
-                    {dryRunResult.changes.map(change => (
-                      <tr key={change.email}>
-                        <td>{change.email}</td>
-                        <td>
-                          <Chip
-                            label={
-                              change.isNew ?
-                                t(
-                                  'integrations.mailchimpSyncSettings.dryRunNew'
-                                )
-                              : t(
-                                  'integrations.mailchimpSyncSettings.dryRunUpdate'
-                                )
+                    {dryRunResult.changes.map(change => {
+                      const mappedInterestIds = new Set<string>([
+                        ...(watchedInterestGroupMappings ?? [])
+                          .map((m: { groupId: string }) => m.groupId)
+                          .filter(Boolean),
+                        ...(watchedDefaultInterestGroupIds ?? []).filter(
+                          Boolean
+                        ),
+                      ]);
+                      const filteredInterestEntries = Object.entries(
+                        change.interests || {}
+                      ).filter(([key]) => mappedInterestIds.has(key));
+
+                      const mergeFieldLabel = (tag: string) => {
+                        const mf = availableMergeFields.find(
+                          f => f.tag === tag
+                        );
+                        return mf ? `${tag} (${mf.name})` : tag;
+                      };
+
+                      const interestLabel = (groupId: string) => {
+                        const ig = availableInterestGroups.find(
+                          g => g.id === groupId
+                        );
+                        return ig ? ig.name : groupId;
+                      };
+
+                      const valuesEquivalent = (a: any, b: any): boolean => {
+                        if (a === b) return true;
+                        const aEmpty = a == null || a === '';
+                        const bEmpty = b == null || b === '';
+                        if (aEmpty && bEmpty) return true;
+                        if (aEmpty !== bEmpty) return false;
+                        if ((a === '0' || a === 0) && (b === '' || b == null))
+                          return true;
+                        if ((b === '0' || b === 0) && (a === '' || a == null))
+                          return true;
+                        return String(a).trim() === String(b).trim();
+                      };
+
+                      const formatChange = (value: any, prevValue: any) => {
+                        if (change.isNew && prevValue === undefined) {
+                          return `→ ${JSON.stringify(value)}`;
+                        }
+                        if (
+                          prevValue !== undefined &&
+                          !valuesEquivalent(prevValue, value)
+                        ) {
+                          return `${JSON.stringify(prevValue)} → ${JSON.stringify(value)}`;
+                        }
+                        return JSON.stringify(value);
+                      };
+
+                      return (
+                        <tr key={change.email}>
+                          <td>{change.email}</td>
+                          <td>
+                            <Chip
+                              label={
+                                change.isNew ?
+                                  t(
+                                    'integrations.mailchimpSyncSettings.dryRunNew'
+                                  )
+                                : t(
+                                    'integrations.mailchimpSyncSettings.dryRunUpdate'
+                                  )
+                              }
+                              color={change.isNew ? 'success' : 'warning'}
+                              size="small"
+                            />
+                          </td>
+                          <td>
+                            <MergeFieldsTwoColumn>
+                              <MergeFieldColumn>
+                                {Object.entries(change.mergeFields || {}).map(
+                                  ([key, value], idx) => {
+                                    if (idx % 2 !== 0) return null;
+                                    return (
+                                      <div
+                                        key={key}
+                                        style={{ whiteSpace: 'nowrap' }}
+                                      >
+                                        <strong>{mergeFieldLabel(key)}:</strong>{' '}
+                                        {formatChange(
+                                          value,
+                                          change.previousMergeFields?.[key]
+                                        )}
+                                      </div>
+                                    );
+                                  }
+                                )}
+                              </MergeFieldColumn>
+                              <MergeFieldColumn>
+                                {Object.entries(change.mergeFields || {}).map(
+                                  ([key, value], idx) => {
+                                    if (idx % 2 === 0) return null;
+                                    return (
+                                      <div
+                                        key={key}
+                                        style={{ whiteSpace: 'nowrap' }}
+                                      >
+                                        <strong>{mergeFieldLabel(key)}:</strong>{' '}
+                                        {formatChange(
+                                          value,
+                                          change.previousMergeFields?.[key]
+                                        )}
+                                      </div>
+                                    );
+                                  }
+                                )}
+                              </MergeFieldColumn>
+                            </MergeFieldsTwoColumn>
+                          </td>
+                          <td>
+                            {filteredInterestEntries.length > 0 ?
+                              <MergeFieldsTwoColumn>
+                                <MergeFieldColumn>
+                                  {filteredInterestEntries.map(
+                                    ([key, value], idx) => {
+                                      if (idx % 2 !== 0) return null;
+                                      return (
+                                        <div
+                                          key={key}
+                                          style={{ whiteSpace: 'nowrap' }}
+                                        >
+                                          <strong>{interestLabel(key)}:</strong>{' '}
+                                          {formatChange(
+                                            value,
+                                            change.previousInterests?.[key]
+                                          )}
+                                        </div>
+                                      );
+                                    }
+                                  )}
+                                </MergeFieldColumn>
+                                <MergeFieldColumn>
+                                  {filteredInterestEntries.map(
+                                    ([key, value], idx) => {
+                                      if (idx % 2 === 0) return null;
+                                      return (
+                                        <div
+                                          key={key}
+                                          style={{ whiteSpace: 'nowrap' }}
+                                        >
+                                          <strong>{interestLabel(key)}:</strong>{' '}
+                                          {formatChange(
+                                            value,
+                                            change.previousInterests?.[key]
+                                          )}
+                                        </div>
+                                      );
+                                    }
+                                  )}
+                                </MergeFieldColumn>
+                              </MergeFieldsTwoColumn>
+                            : <Typography
+                                variant="body2"
+                                color="textSecondary"
+                              >
+                                —
+                              </Typography>
                             }
-                            color={change.isNew ? 'success' : 'warning'}
-                            size="small"
-                          />
-                        </td>
-                        <td>
-                          <pre style={{ margin: 0, fontSize: 11 }}>
-                            {JSON.stringify(change.mergeFields, null, 1)}
-                          </pre>
-                        </td>
-                        <td>
-                          <pre style={{ margin: 0, fontSize: 11 }}>
-                            {JSON.stringify(change.interests, null, 1)}
-                          </pre>
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </DryRunTable>
               </DryRunWrapper>
