@@ -18,11 +18,8 @@ on:
 
 jobs:
   sync-db:
-    name: Copy Database
+    name: Trigger Database Sync Webhook
     runs-on: ubuntu-latest
-    permissions:
-      contents: 'read'
-      id-token: 'write'
 
     steps:
       - name: Resolve instance name
@@ -48,51 +45,14 @@ jobs:
             exit 1
           fi
 
-      - uses: actions/checkout@v4
-
-      - name: Install PostgreSQL Client
-        run: |
-          sudo install -d /usr/share/postgresql-common/pgdg
-          sudo curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc
-          sudo sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client-18
-
-      - name: Get and unpack project production database
+      - name: Trigger database sync webhook
         env:
-          DUMP_USER: ${{ secrets.HTTP_PROD_DUMP_SHARE_USER }}
-          DUMP_PASSWORD: ${{ secrets.HTTP_PROD_DUMP_SHARE_PASSWORD }}
-          DUMP_HOST: ${{ secrets.HTTP_PROD_DUMP_SHARE_URL }}
+          DATABASE_SYNC_WEBHOOK_URL: ${{ secrets.DATABASE_SYNC_WEBHOOK_URL }}
+          DATABASE_SYNC_WEBHOOK_TOKEN: ${{ secrets.DATABASE_SYNC_WEBHOOK_TOKEN }}
           PROJECT: ${{ inputs.project }}
-        run: |
-          curl --fail --silent --show-error --user "${DUMP_USER}:${DUMP_PASSWORD}" --output database.dump.gz "https://${DUMP_HOST}/${PROJECT}.sql.gz"
-          gzip -d database.dump.gz
-
-      - name: Clean existing database
-        env:
-          PGPASSWORD: ${{ secrets.MAIN_DATABASE_PASSWORD }}
-          PGHOST: ${{ secrets.MAIN_DATABASE_HOSTNAME }}
-          PGUSER: ${{ secrets.MAIN_DATABASE_USERNAME }}
-          PGSSLMODE: verify-full
-          PGSSLROOTCERT: libs/api/prisma/ca.crt
           INSTANCE_NAME: ${{ steps.resolve.outputs.instance_name }}
         run: |
-          psql -h "$PGHOST" -U "$PGUSER" -d "wepublish-${INSTANCE_NAME}-staging" --set ON_ERROR_STOP=1 <<'SQL'
-          DROP SCHEMA public CASCADE;
-          CREATE SCHEMA public;
-          SQL
-
-      - name: Restore Dump to Review Database
-        env:
-          PGPASSWORD: ${{ secrets.MAIN_DATABASE_PASSWORD }}
-          PGHOST: ${{ secrets.MAIN_DATABASE_HOSTNAME }}
-          PGUSER: ${{ secrets.MAIN_DATABASE_USERNAME }}
-          PGSSLMODE: verify-full
-          PGSSLROOTCERT: libs/api/prisma/ca.crt
-          INSTANCE_NAME: ${{ steps.resolve.outputs.instance_name }}
-        run: |
-          psql -h "$PGHOST" -U "$PGUSER" -d "wepublish-${INSTANCE_NAME}-staging" --set ON_ERROR_STOP=1 -f database.dump
-
-      - name: Cleanup
-        if: always()
-        run: rm -f database.dump
+          curl -fsS -X POST "$DATABASE_SYNC_WEBHOOK_URL" \
+            -H "Authorization: Bearer $DATABASE_SYNC_WEBHOOK_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"project\":\"${PROJECT}\",\"instance_name\":\"${INSTANCE_NAME}\"}"
