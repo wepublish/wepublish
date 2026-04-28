@@ -1,5 +1,6 @@
 // directories
 export * from './comment';
+export { TeaserOverviewPanel } from './teaserOverview/TeaserOverviewPanel';
 export * from './dashboard';
 export * from './memberPlan/selectMemberPlan';
 export * from './paywall/selectPaywall';

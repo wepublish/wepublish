@@ -294,6 +294,7 @@ export interface TeaserListBlockValue extends BaseBlockValue {
 }
 
 export interface TeaserGridBlockValue extends BaseBlockValue {
+  title?: string | null;
   teasers: Array<[string, Teaser | null]>;
   numColumns: number;
 }
@@ -313,6 +314,7 @@ export interface FlexTeaser {
 }
 
 export interface TeaserGridFlexBlockValue extends BaseBlockValue {
+  title?: string | null;
   flexTeasers: FlexTeaser[];
 }
 
