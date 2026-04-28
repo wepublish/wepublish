@@ -42,6 +42,7 @@
       "@wepublish/challenge/api": ["libs/challenge/api/src/index.ts"],
       "@wepublish/comments/api": ["libs/comments/api/src/index.ts"],
       "@wepublish/comments/website": ["libs/comments/website/src/index.ts"],
+      "@wepublish/configurator/api": ["libs/configurator/api/src/index.ts"],
       "@wepublish/consent/api": ["libs/consent/api/src/index.ts"],
       "@wepublish/consent/editor": ["libs/consent/editor/src/index.ts"],
       "@wepublish/content/website": ["libs/content/website/src/index.ts"],

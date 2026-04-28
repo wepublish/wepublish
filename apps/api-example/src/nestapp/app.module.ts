@@ -20,6 +20,10 @@ import { AuthenticationModule } from '@wepublish/authentication/api';
 import { BannerApiModule } from '@wepublish/banner/api';
 import { BlockContentModule } from '@wepublish/block-content/api';
 import { CommentModule } from '@wepublish/comments/api';
+import {
+  ConfiguratorModule,
+  ConfiguratorService,
+} from '@wepublish/configurator/api';
 import { ConsentModule } from '@wepublish/consent/api';
 import { CrowdfundingModule } from '@wepublish/crowdfunding/api';
 import { DocumentModule } from '@wepublish/document/api';
@@ -569,6 +573,7 @@ import {
       inject: [ConfigService],
     }),
     PaywallModule,
+    ConfiguratorModule,
   ],
   exports: ['SYSTEM_INFO_KEY'],
   providers: [
@@ -582,6 +587,14 @@ import {
         return config.get('SYSTEM_INFO_KEY');
       },
       inject: [ConfigService],
+    },
+    {
+      provide: 'CONFIGURATOR_BOOTSTRAP',
+      useFactory: (service: ConfiguratorService) => {
+        service.triggerBootSignal();
+        return true;
+      },
+      inject: [ConfiguratorService],
     },
     // System info key provider
     {

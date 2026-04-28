@@ -1506,6 +1506,7 @@ type MailProviderModel {
 
 enum MailProviderType {
   MAILCHIMP
+  MAILERSEND
   MAILGUN
   SLACK
 }
