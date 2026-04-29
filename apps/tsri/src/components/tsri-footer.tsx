@@ -153,10 +153,6 @@ const WePublishLogo = styled('img')`
   margin: 0.3rem 0 1rem 0;
   width: 100px;
   height: auto;
-
-  &:hover {
-    background: linear-gradient(to right, white 50%, transparent 50%);
-  }
 `;
 
 export function Footer({
