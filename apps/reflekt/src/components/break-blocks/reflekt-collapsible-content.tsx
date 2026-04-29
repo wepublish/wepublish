@@ -25,6 +25,10 @@ export const CollapsibleContentWrapper = styled(Accordion)`
   ul {
     padding-left: ${({ theme }) => theme.spacing(3)};
   }
+
+  .MuiAccordionSummary-content {
+    padding-right: 4rem;
+  }
 `;
 
 export const ExpandIcon = styled(MdArrowDownward)`
