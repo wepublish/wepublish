@@ -49,7 +49,7 @@ async function initDownload({
   filename?: string;
   prefixByDate?: boolean;
 }) {
-  const csv = (await getCsv({ variables: { filter } }))?.data
+  const csv = (await getCsv({ variables: filter ?? {} }))?.data
     ?.subscriptionsAsCsv;
   if (csv) {
     downloadBlob({
