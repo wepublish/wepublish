@@ -220,6 +220,9 @@ const ViewToggle = styled('div')`
   border: 1px solid ${eenewsColors.ruleStrong};
   border-radius: 999px;
   padding: 2px;
+  @media (max-width: 720px) {
+    display: none;
+  }
 `;
 
 const ViewButton = styled('button', {
