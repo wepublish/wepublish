@@ -3,6 +3,7 @@ import { Box } from '@mui/material';
 import { ImageWrapper } from '@wepublish/image/website';
 import {
   NavbarContainer,
+  NavbarInnerWrapper,
   NavPaperActions,
 } from '@wepublish/navigation/website';
 import { Button, Link } from '@wepublish/website/builder';
@@ -13,6 +14,10 @@ export const GanzGrazNavbar = styled(NavbarContainer)`
 
   ${NavPaperActions} {
     margin-top: ${({ theme }) => theme.spacing(1)};
+  }
+
+  ${NavbarInnerWrapper} {
+    grid-template-columns: 1fr max-content 1fr;
   }
 
   ${({ theme }) => theme.breakpoints.only('xs')} {
