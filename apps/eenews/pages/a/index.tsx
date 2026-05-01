@@ -1,104 +1,66 @@
-import { Container } from '@mui/material';
-import { ArticleListContainer } from '@wepublish/article/website';
 import {
   addClientCacheToV1Props,
   ArticleListDocument,
+  ArticleSort,
   getV1ApiClient,
   NavigationListDocument,
   PeerProfileDocument,
-  useArticleListQuery,
+  SortOrder,
 } from '@wepublish/website/api';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
 import { z } from 'zod';
 
-import { EenewsPageIntro } from '../../src/components/eenews-page-intro';
+import { EenewsArchivePage } from '../../src/components/eenews-archive-page';
 
-const take = 25;
+const take = 24;
 
-const pageSchema = z.object({
-  page: z.coerce.number().gte(1).optional(),
-});
+const orderSchema = z.enum(['asc', 'desc']).optional().default('desc');
+const pageSchema = z.coerce.number().gte(1).optional().default(1);
+const takeSchema = z.coerce.number().gte(1).lte(120).optional().default(take);
 
-export default function ArticleList() {
-  const {
-    elements: { Pagination },
-  } = useWebsiteBuilder();
-
+export default function ArchiveRoute() {
   const { query, replace } = useRouter();
-  const { page } = pageSchema.parse(query);
+  const page = pageSchema.parse(query.page);
+  const order = orderSchema.parse(query.order);
+  const currentTake = takeSchema.parse(query.take);
 
-  const variables = useMemo(
-    () => ({
-      take,
-      skip: ((page ?? 1) - 1) * take,
-    }),
-    [page]
-  );
-
-  const { data } = useArticleListQuery({
-    fetchPolicy: 'cache-only',
-    variables,
-  });
-
-  const pageCount = useMemo(() => {
-    if (data?.articles.totalCount && data?.articles.totalCount > take) {
-      return Math.ceil(data.articles.totalCount / take);
-    }
-
-    return 1;
-  }, [data?.articles.totalCount]);
-
-  const canonicalUrl = '/a';
-  const totalCount = data?.articles?.totalCount ?? 0;
+  const articleSort = ArticleSort.PublishedAt;
+  const articleOrder =
+    order === 'asc' ? SortOrder.Ascending : SortOrder.Descending;
 
   return (
-    <>
-      <EenewsPageIntro
-        eyebrow="EE News"
-        headline="Archiv"
-        lede="Alle veröffentlichten Beiträge von ee·news, sortiert und gefiltert nach allem, was die we.publish-API hergibt: Tags, Autor·innen, Veröffentlichungsdatum."
-        stats={
-          totalCount ?
-            [{ label: 'Beiträge', value: totalCount.toLocaleString('de-CH') }]
-          : []
-        }
-      />
+    <EenewsArchivePage
+      variables={{
+        take: currentTake,
+        skip: (page - 1) * currentTake,
+        sort: articleSort,
+        order: articleOrder,
+      }}
+      onVariablesChange={variables => {
+        const nextOrder =
+          variables?.order === SortOrder.Ascending ? 'asc'
+          : variables?.order === SortOrder.Descending ? 'desc'
+          : order;
+        const nextTake = variables?.take ?? currentTake;
+        const nextSkip = variables?.skip ?? (page - 1) * currentTake;
+        const nextPage = nextTake > 0 ? Math.floor(nextSkip / nextTake) + 1 : 1;
 
-      <Container sx={{ paddingTop: 6, paddingBottom: 10 }}>
-        <ArticleListContainer variables={variables} />
-
-        {pageCount > 1 && (
-          <>
-            <Head>
-              <link
-                rel="canonical"
-                key="canonical"
-                href={canonicalUrl}
-              />
-            </Head>
-
-            <Pagination
-              page={page ?? 1}
-              count={pageCount}
-              onChange={(_, value) =>
-                replace(
-                  {
-                    query: { ...query, page: value },
-                  },
-                  undefined,
-                  { shallow: true, scroll: true }
-                )
-              }
-            />
-          </>
-        )}
-      </Container>
-    </>
+        replace(
+          {
+            query: {
+              ...query,
+              page: nextPage,
+              order: nextOrder,
+              take: nextTake,
+            },
+          },
+          undefined,
+          { shallow: true, scroll: false }
+        );
+      }}
+    />
   );
 }
 
@@ -110,26 +72,44 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 
   const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, []);
+
+  // Pre-warm both sort orders so the first sort-toggle is a cache hit
+  // (no scroll-jump on first switch — same trick as the topic page).
   await Promise.all([
     client.query({
-      query: NavigationListDocument,
-    }),
-    client.query({
-      query: PeerProfileDocument,
+      query: ArticleListDocument,
+      variables: {
+        take,
+        skip: 0,
+        sort: ArticleSort.PublishedAt,
+        order: SortOrder.Descending,
+      },
     }),
     client.query({
       query: ArticleListDocument,
       variables: {
         take,
         skip: 0,
+        sort: ArticleSort.PublishedAt,
+        order: SortOrder.Ascending,
       },
     }),
+    // The earliest-article sidecar query the archive page reads for the
+    // "Erster Beitrag" stat — small (take: 1) but warming it removes a
+    // round trip on first paint.
+    client.query({
+      query: ArticleListDocument,
+      variables: {
+        sort: ArticleSort.PublishedAt,
+        order: SortOrder.Ascending,
+        take: 1,
+      },
+    }),
+    client.query({ query: NavigationListDocument }),
+    client.query({ query: PeerProfileDocument }),
   ]);
 
   const props = addClientCacheToV1Props(client, {});
 
-  return {
-    props,
-    revalidate: 60, // every 60 seconds
-  };
+  return { props, revalidate: 60 };
 };

@@ -1077,6 +1077,23 @@ async function seedComments(
   articleIds: string[],
   imageIds: string[]
 ) {
+  // Volume knobs — sized to fit comfortably under the staging API's
+  // rate-limiter / connection pool. The earlier all-articles + Promise.all
+  // fan-out produced ~9.6k in-flight mutations and tripped 503/520 (which
+  // browsers surface as CORS errors). Demo intent: a few articles have
+  // comment threads, the rest don't — that's enough to show the article
+  // detail's comment block in the v2 design without seeding 80 forums.
+  const COMMENTED_ARTICLES = Math.min(articleIds.length, 8);
+  const TOP_MIN = 1;
+  const TOP_MAX = 4;
+  const REPLY_MIN = 0;
+  const REPLY_MAX = 2;
+  // Pause between mutations — generous enough that no burst lands in the
+  // upstream rate limiter's window. Each comment is 3 mutations
+  // (create + update + approve), so 30ms × 3 = ~90ms minimum per comment.
+  // For ~8 articles × ~10 mutations max each ≈ 80 mutations ≈ 7s total.
+  const STAGGER_MS = 30;
+
   const create = async (vars: {
     text: Descendant[];
     itemID: string;
@@ -1094,6 +1111,7 @@ async function seedComments(
         itemType: CommentItemType.Article,
       },
     });
+    await waitForMs(STAGGER_MS);
     const id = c.data.createComment.id;
     await updateComment({
       variables: {
@@ -1103,21 +1121,19 @@ async function seedComments(
         source: vars.source,
       },
     });
+    await waitForMs(STAGGER_MS);
     await approveComment({ variables: { id } });
+    await waitForMs(STAGGER_MS);
     return c;
   };
 
-  // Sequential — staging APIs (and even local with a hot DB) start returning
-  // 503 when the seed fans out comments via nested Promise.all. 80 articles
-  // * up to ~24 top-level mutations each + replies = thousands of requests
-  // in flight, which trips the upstream rate-limiter / connection pool. The
-  // 503 responses skip CORS headers so the browser surfaces it as a CORS
-  // failure — misleading symptom for what is really request flooding.
-  // Seed runs are infrequent and not perf-sensitive; serial is fine.
   const out: Awaited<ReturnType<typeof create>>[][] = [];
-  for (const articleId of articleIds) {
+  // Sample N articles instead of touching all of them — enough to populate
+  // the comment-thread view in the v2 article detail without flooding.
+  const targets = articleIds.slice(0, COMMENTED_ARTICLES);
+  for (const articleId of targets) {
     const top: Awaited<ReturnType<typeof create>>[] = [];
-    const topCount = faker.number.int({ min: 0, max: 8 });
+    const topCount = faker.number.int({ min: TOP_MIN, max: TOP_MAX });
     for (let i = 0; i < topCount; i++) {
       top.push(
         await create({
@@ -1132,7 +1148,10 @@ async function seedComments(
     }
     const replies: Awaited<ReturnType<typeof create>>[] = [];
     for (const parent of top) {
-      const replyCount = faker.number.int({ min: 0, max: 4 });
+      const replyCount = faker.number.int({
+        min: REPLY_MIN,
+        max: REPLY_MAX,
+      });
       for (let i = 0; i < replyCount; i++) {
         replies.push(
           await create({
@@ -1925,19 +1944,16 @@ async function handleSeed(
     });
   }
 
-  // Skipped on staging — seedComments is currently disabled because the
-  // staging API rate-limits / drops connections under load (503 / 520
-  // surfaced as CORS errors). Re-enable when the comment seed is small
-  // enough or when staging tolerates more throughput. The function itself
-  // is sequential now, but volume can still be high (~80 articles × ~24
-  // mutations each).
-  // await seedComments(
-  //   hooks.createComment,
-  //   hooks.updateComment,
-  //   hooks.approveComment,
-  //   published.map(a => a?.id).filter(Boolean) as string[],
-  //   images
-  // );
+  // Comments seed: scoped to the first 8 articles, sequential mutations,
+  // 30ms stagger between each. Sized to sit comfortably under staging's
+  // rate-limiter (~80 mutations total ≈ 7s wall time).
+  await seedComments(
+    hooks.createComment,
+    hooks.updateComment,
+    hooks.approveComment,
+    published.map(a => a?.id).filter(Boolean) as string[],
+    images
+  );
 }
 
 // ────────────────────────────────────────────────────────────────────────────

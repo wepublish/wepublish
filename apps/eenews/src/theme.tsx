@@ -152,29 +152,14 @@ const theme = createTheme(WePTheme, {
           backgroundColor: colors.paper,
           color: colors.ink,
         },
-        // The wepublish default TeaserSlotsBlock / TeaserListBlock renders its
-        // grid as `repeat(12, 1fr)` and assigns grid-column-start/end on each
-        // BaseTeaser via the FlexAlignment x/w. For EE News we collapse this
-        // 12-col alignment grid into a simple N-up grid driven by the count of
-        // filled teasers — so we override (a) the parent grid template, and
-        // (b) the alignment-derived grid-column-start/end on each teaser.
-        // Per the user's pitfall callout: alignment IS rendered by wepublish
-        // and needs frontend overrides; this is the global one.
-        '[class*="TeaserSlotsBlockTeasers"], [class*="TeaserListBlockTeasers"]':
-          {
-            gridTemplateColumns: 'repeat(3, 1fr) !important',
-            gap: '40px !important',
-            rowGap: '56px !important',
-            '@media (max-width: 720px)': {
-              gridTemplateColumns: '1fr !important',
-            },
-            '& > *': {
-              gridColumnStart: 'auto !important',
-              gridColumnEnd: 'auto !important',
-              gridRowStart: 'auto !important',
-              gridRowEnd: 'auto !important',
-            },
-          },
+        // NOTE: there is no global `[class*="TeaserSlotsBlockTeasers"]` rule
+        // here. That selector relies on Emotion's display-name being kept in
+        // the generated class — which dev does (autoLabel: 'dev-only')
+        // but production strips. The grid override now lives inside the
+        // component wrappers (`EenewsTeaserSlots`, `EenewsBlockRenderer` for
+        // TeaserList) using Emotion's `${StyledComponent}` selector, which
+        // resolves to the runtime class regardless of label stripping.
+        // See anti-pattern #21k in wepublish-redesign-patterns.md.
       },
     },
     MuiButton: {

@@ -1,4 +1,8 @@
-import { BlockRenderer } from '@wepublish/block-content/website';
+import styled from '@emotion/styled';
+import {
+  BlockRenderer,
+  TeaserListBlockTeasers,
+} from '@wepublish/block-content/website';
 import {
   BuilderBlockRendererProps,
   useWebsiteBuilder,
@@ -21,6 +25,23 @@ import { EenewsNewsletterInline } from '../blocks/eenews-newsletter-inline';
 import { EenewsTeaser } from '../blocks/eenews-teaser';
 import { EenewsTeaserSlots } from '../blocks/eenews-teaser-slots';
 import { EenewsTopicStrip } from '../blocks/eenews-topic-strip';
+
+// Same fix as in eenews-teaser-slots.tsx: target the wepublish styled grid
+// via Emotion component selector so the override survives prod label
+// stripping. Used by the TeaserCompactList branch below.
+const TeaserListGridFrame = styled('div')`
+  ${TeaserListBlockTeasers} {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+
+    & > * {
+      grid-column-start: auto !important;
+      grid-column-end: auto !important;
+      grid-row-start: auto !important;
+      grid-row-end: auto !important;
+    }
+  }
+`;
 
 /**
  * EE News block renderer — Ramda `cond` dispatch on enum-typed predicates (MP-3).
@@ -63,7 +84,9 @@ export const EenewsBlockRenderer = (props: BuilderBlockRendererProps) => {
           isTeaserCompactList as any,
           block => (
             <WebsiteBuilderProvider blocks={{ Teaser: EenewsTeaser }}>
-              <TeaserList {...(block as any)} />
+              <TeaserListGridFrame>
+                <TeaserList {...(block as any)} />
+              </TeaserListGridFrame>
             </WebsiteBuilderProvider>
           ),
         ],

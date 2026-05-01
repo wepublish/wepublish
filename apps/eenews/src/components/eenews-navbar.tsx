@@ -5,7 +5,7 @@ import { useHasUnpaidInvoices } from '@wepublish/membership/website';
 import { BuilderNavbarProps } from '@wepublish/website/builder';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { eenewsColors } from '../theme';
 import { EenewsMenuOverlay } from './eenews-menu-overlay';
@@ -89,16 +89,64 @@ const TopbarShell = styled('header')<{
     border-color 0.25s ease;
 `;
 
+// UtilityRow stays visible AND interactive in both navbar states (collapsed
+// + menu open). Date label, Offene-Rechnung pill, Newsletter, Mein Konto,
+// Logout, and the bottom border line are all things the user might want to
+// reach while the menu is open. The TopbarShell sets `pointer-events: none`
+// when menuOpen so clicks fall through to the drawer's backdrop; we opt
+// this row back in so its links keep working.
+//
+// Asymmetric fade on BOTH open and close: when menuOpen flips (either
+// direction), the utility row briefly hides (~180ms) and fades back in
+// over 500ms. The brief hide lets the drawer's slide-up / -down feel
+// uncontested before the row resettles on top.
+//
+// Two keyframe names (-on-open / -on-close) are functionally identical —
+// using two names is the trick that makes the browser restart the
+// animation when `menuOpen` flips. Same name on both states would skip
+// the second run.
+//
+// `animationsEnabled` (from React state) gates the animation so it only
+// fires AFTER the user has interacted at least once — without it, the
+// initial page paint would briefly hide the row for 180ms which looks
+// like a load-flash glitch.
 const UtilityRow = styled('div', {
-  shouldForwardProp: prop => prop !== 'menuOpen',
-})<{ menuOpen?: boolean }>`
+  shouldForwardProp: prop =>
+    prop !== 'menuOpen' && prop !== 'animationsEnabled',
+})<{ menuOpen?: boolean; animationsEnabled?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 0;
   border-bottom: 1px solid ${eenewsColors.rule};
   color: ${eenewsColors.inkSoft};
-  visibility: ${({ menuOpen }) => (menuOpen ? 'hidden' : 'visible')};
+  pointer-events: auto;
+
+  @keyframes utility-row-fade-on-open {
+    0%,
+    26% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes utility-row-fade-on-close {
+    0%,
+    26% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  ${({ menuOpen, animationsEnabled }) =>
+    animationsEnabled ?
+      menuOpen ? 'animation: utility-row-fade-on-open 680ms ease;'
+      : 'animation: utility-row-fade-on-close 680ms ease;'
+    : ''}
+
   @media (max-width: 800px) {
     display: none;
   }
@@ -466,6 +514,24 @@ export const EenewsNavbar = (props: BuilderNavbarProps) => {
   const hasUnpaidInvoices = useHasUnpaidInvoices();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  // Skip the menu-toggle keyframe animations on first mount (no user
+  // interaction yet — running them would cause an initial load-flash on the
+  // utility row). The ref starts at true, the useEffect sees it on the
+  // first run (post-mount with menuOpen=false), flips it to false, and from
+  // there on every menuOpen change enables the animations.
+  const isFirstMenuRender = useRef(true);
+  const [menuToggleAnimationsEnabled, setMenuToggleAnimationsEnabled] =
+    useState(false);
+  useEffect(() => {
+    if (isFirstMenuRender.current) {
+      isFirstMenuRender.current = false;
+      return;
+    }
+    if (!menuToggleAnimationsEnabled) {
+      setMenuToggleAnimationsEnabled(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [menuOpen]);
 
   const handleLogout = async (event: React.MouseEvent) => {
     event.preventDefault();
@@ -502,7 +568,10 @@ export const EenewsNavbar = (props: BuilderNavbarProps) => {
         className={props.className}
       >
         <Container>
-          <UtilityRow menuOpen={menuOpen}>
+          <UtilityRow
+            menuOpen={menuOpen}
+            animationsEnabled={menuToggleAnimationsEnabled}
+          >
             <Typography
               variant="metaEyebrowSmall"
               component="div"
@@ -511,18 +580,20 @@ export const EenewsNavbar = (props: BuilderNavbarProps) => {
             </Typography>
             <UtilityRight>
               {/* Always rendered to keep the utility row's intrinsic height
-                  stable across routes. On non-home pages we hide it via
-                  visibility (still occupies its box) instead of unmounting,
-                  which would shrink the row and shift all sticky/scroll
-                  positions on navigation. `aria-hidden` removes it from
-                  assistive tech when not interactive. */}
+                  stable across routes. Two reasons to hide:
+                    - off-home pages (showRegionToggle === false) — toggle is
+                      irrelevant outside `/` and `/welt`
+                    - menu drawer open — UtilityRow stays visible during the
+                      open state (date / invoice pill / newsletter / mein
+                      konto / logout) but the CH/Welt pills should not. */}
               <RegionToggle
                 role="group"
                 aria-label="Region"
                 style={{
-                  visibility: showRegionToggle ? 'visible' : 'hidden',
+                  visibility:
+                    showRegionToggle && !menuOpen ? 'visible' : 'hidden',
                 }}
-                aria-hidden={!showRegionToggle}
+                aria-hidden={!showRegionToggle || menuOpen}
               >
                 <RegionPill
                   href="/"

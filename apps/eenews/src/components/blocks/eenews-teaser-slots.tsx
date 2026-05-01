@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Container, Typography } from '@mui/material';
+import { TeaserSlotsBlockTeasers } from '@wepublish/block-content/website';
 import {
   BuilderTeaserSlotsBlockProps,
   useWebsiteBuilder,
@@ -11,26 +12,34 @@ import { eenewsColors } from '../../theme';
 import { EeNewsBlockType } from '../block-styles/eenews-block-styles';
 import { EenewsTeaser } from './eenews-teaser';
 
+// We target wepublish's internal `TeaserSlotsBlockTeasers` styled component
+// directly via Emotion's component-selector pattern (`${TeaserSlotsBlockTeasers}`).
+// The previous `[class*='TeaserSlotsBlockTeasers']` regex selector worked in
+// dev but silently broke in production: Next.js + Emotion strip the display
+// name at build time (autoLabel: 'dev-only' default), so the class becomes
+// `css-abc123` and the substring match fails. Component selectors resolve
+// to the generated class via `.toString()` at runtime — works in every build.
 const SectionFrame = styled('section')<{ band?: boolean; columns?: number }>`
   ${({ band }) => (band ? `background: ${eenewsColors.section};` : '')}
   padding: ${({ band }) => (band ? '72px 0' : '24px 0 56px')};
 
-  /* Per-section override of the parent grid template. The base override
-     (3-col) is applied globally in theme.tsx; here we only override when the
-     section needs a different column count (e.g. StandardLarge → 2-col). */
-  ${({ columns }) =>
-    columns && columns !== 3 ?
-      `
-    [class*='TeaserSlotsBlockTeasers'] {
-      grid-template-columns: repeat(${columns}, 1fr) !important;
-    }
+  ${TeaserSlotsBlockTeasers} {
+    grid-template-columns: ${({ columns }) =>
+      `repeat(${columns ?? 3}, 1fr)`} !important;
+    gap: 40px !important;
+    row-gap: 56px !important;
+
     @media (max-width: 720px) {
-      [class*='TeaserSlotsBlockTeasers'] {
-        grid-template-columns: 1fr !important;
-      }
+      grid-template-columns: 1fr !important;
     }
-  `
-    : ''}
+
+    & > * {
+      grid-column-start: auto !important;
+      grid-column-end: auto !important;
+      grid-row-start: auto !important;
+      grid-row-end: auto !important;
+    }
+  }
 `;
 
 const SectionHead = styled('div')`
