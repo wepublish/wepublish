@@ -1,5 +1,12 @@
 import styled from '@emotion/styled';
-import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
+import {
+  Checkbox,
+  Container,
+  FormControlLabel,
+  FormGroup,
+} from '@mui/material';
+
+import { EenewsPageIntro } from '../../src/components/eenews-page-intro';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { EventListContainer } from '@wepublish/event/website';
 import { EventSort, SortOrder } from '@wepublish/website/api';
@@ -81,86 +88,106 @@ export default function EventList() {
   }, [data?.events?.totalCount]);
 
   const canonicalUrl = '/event';
+  const totalCount = data?.events?.totalCount ?? 0;
 
   return (
     <>
-      <Filter>
-        <DateTimePicker
-          label="Von"
-          value={from ?? null}
-          onChange={value => {
-            replace(
-              {
-                query: { ...query, from: value?.toISOString() },
-              },
-              undefined,
-              { shallow: true, scroll: true }
-            );
-          }}
-        />
+      <EenewsPageIntro
+        eyebrow="Veranstaltungen"
+        headline={
+          <>
+            Was
+            <br />
+            ansteht.
+          </>
+        }
+        lede="Veranstaltungen aus dem ee·news-Umfeld: Konferenzen, Tagungen, Werkstattgespräche und Salongespräche der Redaktion. Kuratiert, nicht aggregiert."
+        stats={
+          totalCount ?
+            [{ label: 'Termine', value: totalCount.toLocaleString('de-CH') }]
+          : []
+        }
+      />
 
-        <DateTimePicker
-          label="Bis"
-          value={to ?? null}
-          onChange={value => {
-            replace(
-              {
-                query: { ...query, to: value?.toISOString() },
-              },
-              undefined,
-              { shallow: true, scroll: true }
-            );
-          }}
-        />
-
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={upcomingOnly ?? false}
-                onChange={(_, checked) => {
-                  replace(
-                    {
-                      query: { ...query, upcomingOnly: checked },
-                    },
-                    undefined,
-                    { shallow: true, scroll: true }
-                  );
-                }}
-              />
-            }
-            label="Nur bevorstehende"
-          />
-        </FormGroup>
-      </Filter>
-
-      <EventListContainer variables={variables} />
-
-      {pageCount > 1 && (
-        <>
-          <Head>
-            <link
-              rel="canonical"
-              key="canonical"
-              href={canonicalUrl}
-            />
-          </Head>
-
-          <Pagination
-            page={page ?? 1}
-            count={pageCount}
-            onChange={(_, value) =>
+      <Container sx={{ paddingTop: 5, paddingBottom: 10 }}>
+        <Filter>
+          <DateTimePicker
+            label="Von"
+            value={from ?? null}
+            onChange={value => {
               replace(
                 {
-                  query: { ...query, page: value },
+                  query: { ...query, from: value?.toISOString() },
                 },
                 undefined,
                 { shallow: true, scroll: true }
-              )
-            }
+              );
+            }}
           />
-        </>
-      )}
+
+          <DateTimePicker
+            label="Bis"
+            value={to ?? null}
+            onChange={value => {
+              replace(
+                {
+                  query: { ...query, to: value?.toISOString() },
+                },
+                undefined,
+                { shallow: true, scroll: true }
+              );
+            }}
+          />
+
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={upcomingOnly ?? false}
+                  onChange={(_, checked) => {
+                    replace(
+                      {
+                        query: { ...query, upcomingOnly: checked },
+                      },
+                      undefined,
+                      { shallow: true, scroll: true }
+                    );
+                  }}
+                />
+              }
+              label="Nur bevorstehende"
+            />
+          </FormGroup>
+        </Filter>
+
+        <EventListContainer variables={variables} />
+
+        {pageCount > 1 && (
+          <>
+            <Head>
+              <link
+                rel="canonical"
+                key="canonical"
+                href={canonicalUrl}
+              />
+            </Head>
+
+            <Pagination
+              page={page ?? 1}
+              count={pageCount}
+              onChange={(_, value) =>
+                replace(
+                  {
+                    query: { ...query, page: value },
+                  },
+                  undefined,
+                  { shallow: true, scroll: true }
+                )
+              }
+            />
+          </>
+        )}
+      </Container>
     </>
   );
 }

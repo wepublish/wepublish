@@ -14,10 +14,10 @@ import {
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 
-export default function Index() {
+export default function Welt() {
   return (
     <ContentWidthProvider fullWidth>
-      <PageContainer slug={''} />
+      <PageContainer slug="welt" />
     </ContentWidthProvider>
   );
 }
@@ -33,23 +33,14 @@ export const getStaticProps: GetStaticProps = async () => {
   await Promise.all([
     client.query({
       query: PageDocument,
-      variables: {
-        slug: '',
-      },
+      variables: { slug: 'welt' },
     }),
-    client.query({
-      query: NavigationListDocument,
-    }),
-    client.query({
-      query: PeerProfileDocument,
-    }),
+    client.query({ query: NavigationListDocument }),
+    client.query({ query: PeerProfileDocument }),
   ]);
 
-  // Pre-fetch topic-strip data: tag list (filtered to main:true at render) +
-  // per-tag totalCount via the runtime probe pattern (no Tag.articlesCount
-  // resolver exists — see eenews-system-design.md Section 10.5). This warms
-  // the Apollo cache so the topic-strip's `cache-first` queries resolve
-  // synchronously at SSR / first paint.
+  // Pre-fetch topic-strip tags + per-tag counts (see eenews-system-design.md
+  // Section 10.5).
   const tagListResult = await client.query({
     query: TagListDocument,
     variables: {
@@ -81,6 +72,6 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props,
-    revalidate: 60, // every 60 seconds
+    revalidate: 60,
   };
 };

@@ -1,5 +1,8 @@
 import { AuthorListContainer } from '@wepublish/author/website';
+import { Container } from '@mui/material';
 import { AuthorSort, SortOrder } from '@wepublish/website/api';
+
+import { EenewsPageIntro } from '../../src/components/eenews-page-intro';
 import {
   addClientCacheToV1Props,
   AuthorListDocument,
@@ -54,36 +57,61 @@ export default function AuthorList() {
   }, [data?.authors.totalCount]);
 
   const canonicalUrl = '/author';
+  const totalCount = data?.authors?.totalCount ?? 0;
 
   return (
     <>
-      <AuthorListContainer variables={variables} />
+      <EenewsPageIntro
+        eyebrow="Autor·innen"
+        headline={
+          <>
+            Wer
+            <br />
+            schreibt.
+          </>
+        }
+        lede="ee·news ist Redaktion und Beitragende: ein kleines, festes Team plus Kolleg·innen aus dem Peer-Netzwerk. Unten alle, die regelmässig publizieren."
+        stats={
+          totalCount ?
+            [
+              {
+                label: 'Autor·innen',
+                value: totalCount.toLocaleString('de-CH'),
+              },
+            ]
+          : []
+        }
+      />
 
-      {pageCount > 1 && (
-        <>
-          <Head>
-            <link
-              rel="canonical"
-              key="canonical"
-              href={canonicalUrl}
+      <Container sx={{ paddingTop: 5, paddingBottom: 10 }}>
+        <AuthorListContainer variables={variables} />
+
+        {pageCount > 1 && (
+          <>
+            <Head>
+              <link
+                rel="canonical"
+                key="canonical"
+                href={canonicalUrl}
+              />
+            </Head>
+
+            <Pagination
+              page={page ?? 1}
+              count={pageCount}
+              onChange={(_, value) =>
+                replace(
+                  {
+                    query: { ...query, page: value },
+                  },
+                  undefined,
+                  { shallow: true, scroll: true }
+                )
+              }
             />
-          </Head>
-
-          <Pagination
-            page={page ?? 1}
-            count={pageCount}
-            onChange={(_, value) =>
-              replace(
-                {
-                  query: { ...query, page: value },
-                },
-                undefined,
-                { shallow: true, scroll: true }
-              )
-            }
-          />
-        </>
-      )}
+          </>
+        )}
+      </Container>
     </>
   );
 }

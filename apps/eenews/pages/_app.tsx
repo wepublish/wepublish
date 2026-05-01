@@ -1,6 +1,6 @@
 import { EmotionCache } from '@emotion/cache';
 import styled from '@emotion/styled';
-import { Container, css, CssBaseline, ThemeProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import {
   AppCacheProvider,
   createEmotionCache,
@@ -36,53 +36,50 @@ import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
-import theme from '../src/theme';
+import { EenewsArticle } from '../src/components/eenews-article';
+import { EenewsBlockRenderer } from '../src/components/block-renderer/eenews-block-renderer';
+import { EenewsFooter } from '../src/components/eenews-footer';
+import { EenewsNavbar } from '../src/components/eenews-navbar';
+import { EenewsMemberPlanItem } from '../src/components/eenews-member-plan-item';
+import { EenewsMemberPlanPicker } from '../src/components/eenews-member-plan-picker';
+import {
+  EenewsInvoiceList,
+  EenewsInvoiceListItem,
+} from '../src/components/eenews-invoice-list-item';
+import {
+  EenewsSubscriptionList,
+  EenewsSubscriptionListItem,
+} from '../src/components/eenews-subscription-list-item';
+import { EenewsTagPage } from '../src/components/eenews-tag-page';
+import theme, { eenewsColors } from '../src/theme';
 
-setDefaultOptions({
-  locale: de,
-});
-
+setDefaultOptions({ locale: de });
 initWePublishTranslator();
 z.setErrorMap(zodI18nMap);
 
+// Page shell — full-width topbar + main + full-width footer. The main content
+// is rendered by individual pages, each of which uses its own Container (capped
+// at 1360px in the theme override). No MainSpacer / Container constraint here.
 const Spacer = styled('div')`
   display: grid;
-  align-items: flex-start;
   grid-template-rows: min-content 1fr min-content;
-  gap: ${({ theme }) => theme.spacing(3)};
   min-height: 100vh;
-`;
-
-const MainSpacer = styled(Container)`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing(5)};
-
-  ${({ theme }) => css`
-    ${theme.breakpoints.up('md')} {
-      gap: ${theme.spacing(10)};
-    }
-  `}
-`;
-
-const NavBar = styled(NavbarContainer)`
-  grid-column: -1/1;
-  z-index: 11;
+  background: ${eenewsColors.paper};
 `;
 
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime ?
-    `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
-  : format(date, 'dd. MMMM yyyy');
+    `${format(date, 'd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
+  : format(date, 'd. MMMM yyyy');
 
 type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
 }> & { emotionCache?: EmotionCache };
 
 function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
-  const siteTitle = 'ee-news.ch';
+  const siteTitle = 'ee·news';
 
-  // Emotion cache from _document is not supplied when client side rendering
-  // Compat removes certain warnings that are irrelevant to us
+  // Emotion cache from _document is not supplied when client-side rendering.
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
 
@@ -92,6 +89,17 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
+          Navbar={EenewsNavbar}
+          Footer={EenewsFooter}
+          Article={EenewsArticle}
+          Tag={EenewsTagPage}
+          MemberPlanItem={EenewsMemberPlanItem}
+          MemberPlanPicker={EenewsMemberPlanPicker}
+          SubscriptionList={EenewsSubscriptionList}
+          SubscriptionListItem={EenewsSubscriptionListItem}
+          InvoiceList={EenewsInvoiceList}
+          InvoiceListItem={EenewsInvoiceListItem}
+          blocks={{ Renderer: EenewsBlockRenderer }}
           elements={{ Link: NextWepublishLink }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
@@ -131,7 +139,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                 href="/api/sitemap"
               />
 
-              {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+              {/* Favicons (placeholders — replace with brand assets when available) */}
               <link
                 rel="apple-touch-icon"
                 sizes="180x180"
@@ -153,39 +161,28 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                 rel="manifest"
                 href="/site.webmanifest"
               />
-              <link
-                rel="mask-icon"
-                href="/safari-pinned-tab.svg"
-                color="#000000"
-              />
-              <meta
-                name="msapplication-TileColor"
-                content="#ffffff"
-              />
               <meta
                 name="theme-color"
-                content="#ffffff"
+                content={eenewsColors.paper}
               />
             </Head>
 
             <Spacer>
-              <NavBar
-                categorySlugs={[['categories', 'about-us']]}
+              <NavbarContainer
                 slug="main"
                 headerSlug="header"
                 iconSlug="icons"
+                categorySlugs={[]}
               />
 
               <main>
-                <MainSpacer maxWidth="lg">
-                  <Component {...pageProps} />
-                </MainSpacer>
+                <Component {...pageProps} />
               </main>
 
               <FooterContainer
                 slug="footer"
-                categorySlugs={[['categories', 'about-us']]}
                 iconSlug="icons"
+                categorySlugs={[]}
               />
             </Spacer>
 
