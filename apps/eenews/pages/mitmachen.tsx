@@ -8,6 +8,7 @@ import {
 import { getV1ApiClient, PageDocument } from '@wepublish/website/api';
 import { NextPageContext } from 'next';
 import getConfig from 'next/config';
+import Link from 'next/link';
 import { ComponentProps } from 'react';
 
 import {
@@ -156,12 +157,12 @@ export default function Mitmachen(props: ComponentProps<typeof SubscribePage>) {
       <Hero>
         <HeroInner>
           <Crumbs>
-            <a
+            <Link
               href="/"
               style={{ color: 'inherit', textDecoration: 'none' }}
             >
               Home
-            </a>
+            </Link>
             &nbsp;/&nbsp;<span>Mitmachen</span>
           </Crumbs>
           <HeroH1Wrap>

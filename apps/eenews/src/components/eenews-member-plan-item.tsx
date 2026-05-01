@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
-import { BuilderMemberPlanItemProps } from '@wepublish/website/builder';
 import { toPlaintext } from '@wepublish/richtext';
+import { BuilderMemberPlanItemProps } from '@wepublish/website/builder';
 import { forwardRef } from 'react';
 
 import { eenewsColors } from '../theme';

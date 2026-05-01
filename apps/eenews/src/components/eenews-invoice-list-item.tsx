@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
+import { Currency } from '@wepublish/website/api';
 import {
   BuilderInvoiceListItemProps,
   BuilderInvoiceListProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { Currency } from '@wepublish/website/api';
 import { useState } from 'react';
 
 import { eenewsColors } from '../theme';

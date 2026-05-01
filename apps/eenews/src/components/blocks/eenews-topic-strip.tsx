@@ -1,6 +1,6 @@
+import { useApolloClient } from '@apollo/client';
 import styled from '@emotion/styled';
 import { Container, Typography } from '@mui/material';
-import { useApolloClient } from '@apollo/client';
 import {
   ArticleListDocument,
   TagListDocument,
@@ -225,4 +225,4 @@ export const EenewsTopicStrip = () => {
  * cache is warm at render. Exported so the home/welt pages can call them
  * sequentially (one tag query + N article-count queries).
  */
-export { TagListDocument, ArticleListDocument };
+export { ArticleListDocument, TagListDocument };

@@ -1,3 +1,4 @@
+/* eslint-disable i18next/no-literal-string */
 /**
  * EE News — CMS seed (Step 3b per implementation plan; MP-8 per patterns skill).
  *
@@ -588,7 +589,7 @@ async function seedNavigations(createNavigation: any) {
         // Trailing column without a heading — the overlay treats keys with
         // a non-trim'd `name` as headings; here we pass a single space so the
         // column renders with the spacer placeholder (matches v2's
-        // `' '` group titles in MENU_GROUPS).
+        // `' '` group titles in MENU_GROUPS).
         key: 'menu-4-secondary',
         name: ' ',
         links: [
@@ -1809,7 +1810,7 @@ async function handleSeed(
   },
   client: any,
   params?: URLSearchParams,
-  adminEmail: string = ''
+  adminEmail = ''
 ) {
   const excludeImages = params?.get('type') === 'exclude-images';
   const images =

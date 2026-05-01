@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Box, Button, Container, Typography } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 import { useUser } from '@wepublish/authentication/website';
 import { useHasUnpaidInvoices } from '@wepublish/membership/website';
 import { BuilderNavbarProps } from '@wepublish/website/builder';

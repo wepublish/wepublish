@@ -36,16 +36,16 @@ import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
-import { EenewsArticle } from '../src/components/eenews-article';
 import { EenewsBlockRenderer } from '../src/components/block-renderer/eenews-block-renderer';
+import { EenewsArticle } from '../src/components/eenews-article';
 import { EenewsFooter } from '../src/components/eenews-footer';
-import { EenewsNavbar } from '../src/components/eenews-navbar';
-import { EenewsMemberPlanItem } from '../src/components/eenews-member-plan-item';
-import { EenewsMemberPlanPicker } from '../src/components/eenews-member-plan-picker';
 import {
   EenewsInvoiceList,
   EenewsInvoiceListItem,
 } from '../src/components/eenews-invoice-list-item';
+import { EenewsMemberPlanItem } from '../src/components/eenews-member-plan-item';
+import { EenewsMemberPlanPicker } from '../src/components/eenews-member-plan-picker';
+import { EenewsNavbar } from '../src/components/eenews-navbar';
 import {
   EenewsSubscriptionList,
   EenewsSubscriptionListItem,

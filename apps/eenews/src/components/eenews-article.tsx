@@ -6,8 +6,8 @@ import { BuilderArticleProps, Image } from '@wepublish/website/builder';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { ArticlePropertiesContext } from './article-properties-context';
 import { eenewsColors } from '../theme';
+import { ArticlePropertiesContext } from './article-properties-context';
 
 const HeroBorder = styled('div')`
   border-bottom: 1px solid ${eenewsColors.rule};

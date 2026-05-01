@@ -9,7 +9,7 @@ import {
 } from '@wepublish/website/api';
 import { BuilderTagProps, useWebsiteBuilder } from '@wepublish/website/builder';
 import Link from 'next/link';
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import { eenewsColors } from '../theme';
 

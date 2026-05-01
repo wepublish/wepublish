@@ -1,5 +1,12 @@
 import styled from '@emotion/styled';
 import { Box, Container, Typography } from '@mui/material';
+import { useUser } from '@wepublish/authentication/website';
+import { usePayInvoice } from '@wepublish/payment/website';
+import {
+  getSessionTokenProps,
+  ssrAuthLink,
+  withAuthGuard,
+} from '@wepublish/utils/website';
 import {
   addClientCacheToV1Props,
   AvailablePaymentMethod,
@@ -12,15 +19,7 @@ import {
   useInvoicesQuery,
   useMemberPlanListQuery,
 } from '@wepublish/website/api';
-import { useUser } from '@wepublish/authentication/website';
-import {
-  authLink,
-  getSessionTokenProps,
-  ssrAuthLink,
-  withAuthGuard,
-} from '@wepublish/utils/website';
-import { usePayInvoice } from '@wepublish/payment/website';
-import { GetServerSideProps, NextPageContext } from 'next';
+import { NextPageContext } from 'next';
 import getConfig from 'next/config';
 import Link from 'next/link';
 import { useRouter } from 'next/router';

@@ -43,8 +43,8 @@ const colors = {
 const display = (
   fontSize: string,
   lineHeight: number,
-  weight: number = 400,
-  letterSpacing: string = '-0.02em'
+  weight = 400,
+  letterSpacing = '-0.02em'
 ) => ({
   fontFamily,
   fontSize,
@@ -53,29 +53,21 @@ const display = (
   letterSpacing,
 });
 
-const body = (fontSize: string, lineHeight: number, weight: number = 400) => ({
+const body = (fontSize: string, lineHeight: number, weight = 400) => ({
   fontFamily,
   fontSize,
   fontWeight: weight,
   lineHeight,
 });
 
-const ui = (
-  fontSize: string,
-  weight: number = 500,
-  lineHeight: number = 1
-) => ({
+const ui = (fontSize: string, weight = 500, lineHeight = 1) => ({
   fontFamily,
   fontSize,
   fontWeight: weight,
   lineHeight,
 });
 
-const meta = (
-  fontSize: string,
-  letterSpacing: string,
-  weight: number = 400
-) => ({
+const meta = (fontSize: string, letterSpacing: string, weight = 400) => ({
   fontFamily,
   fontSize,
   fontWeight: weight,

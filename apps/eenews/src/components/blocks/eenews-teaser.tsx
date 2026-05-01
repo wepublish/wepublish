@@ -3,8 +3,8 @@ import { Box, Typography } from '@mui/material';
 import { BuilderTeaserProps, Image } from '@wepublish/website/builder';
 import Link from 'next/link';
 
-import { EeNewsBlockType } from '../block-styles/eenews-block-styles';
 import { eenewsColors } from '../../theme';
+import { EeNewsBlockType } from '../block-styles/eenews-block-styles';
 import {
   selectTeaserBodyLead,
   selectTeaserDateLabel,

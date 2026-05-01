@@ -177,8 +177,8 @@ export const EenewsMenuOverlay = ({ open, onClose, navbarProps }: Props) => {
       chunkItems(cmsFlatLinks, 4).map((items, i) => ({
         // Only the first chunk carries the heading; subsequent chunks render
         // as untitled spillover columns (matches v2 where MENU_GROUPS uses
-        // ` ` for non-first headings to keep alignment).
-        title: i === 0 ? 'Themen' : ' ',
+        // ` ` for non-first headings to keep alignment).
+        title: i === 0 ? 'Themen' : ' ',
         items,
       }))
     : [
@@ -213,7 +213,7 @@ export const EenewsMenuOverlay = ({ open, onClose, navbarProps }: Props) => {
           ],
         },
         {
-          title: ' ',
+          title: ' ',
           items: [
             {
               label: 'Newsletter bestellen',

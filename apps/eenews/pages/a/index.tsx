@@ -1,3 +1,4 @@
+import { Container } from '@mui/material';
 import { ArticleListContainer } from '@wepublish/article/website';
 import {
   addClientCacheToV1Props,
@@ -8,7 +9,6 @@ import {
   useArticleListQuery,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
-import { Container } from '@mui/material';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 import Head from 'next/head';

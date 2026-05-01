@@ -1,8 +1,6 @@
-import { AuthorListContainer } from '@wepublish/author/website';
 import { Container } from '@mui/material';
+import { AuthorListContainer } from '@wepublish/author/website';
 import { AuthorSort, SortOrder } from '@wepublish/website/api';
-
-import { EenewsPageIntro } from '../../src/components/eenews-page-intro';
 import {
   addClientCacheToV1Props,
   AuthorListDocument,
@@ -18,6 +16,8 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
+
+import { EenewsPageIntro } from '../../src/components/eenews-page-intro';
 
 const take = 25;
 

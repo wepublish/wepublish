@@ -5,8 +5,6 @@ import {
   FormControlLabel,
   FormGroup,
 } from '@mui/material';
-
-import { EenewsPageIntro } from '../../src/components/eenews-page-intro';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { EventListContainer } from '@wepublish/event/website';
 import { EventSort, SortOrder } from '@wepublish/website/api';
@@ -26,6 +24,8 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
+
+import { EenewsPageIntro } from '../../src/components/eenews-page-intro';
 
 const Filter = styled('div')`
   display: grid;

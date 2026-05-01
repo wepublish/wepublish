@@ -7,8 +7,8 @@ import {
 } from '@wepublish/website/builder';
 import Link from 'next/link';
 
-import { EeNewsBlockType } from '../block-styles/eenews-block-styles';
 import { eenewsColors } from '../../theme';
+import { EeNewsBlockType } from '../block-styles/eenews-block-styles';
 import { EenewsTeaser } from './eenews-teaser';
 
 const SectionFrame = styled('section')<{ band?: boolean; columns?: number }>`
