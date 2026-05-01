@@ -1107,39 +1107,48 @@ async function seedComments(
     return c;
   };
 
-  return Promise.all(
-    articleIds.map(async articleId => {
-      const top = await Promise.all(
-        Array.from({ length: faker.number.int({ min: 0, max: 8 }) }, () =>
-          create({
-            text: getText(2, 4) as Descendant[],
+  // Sequential — staging APIs (and even local with a hot DB) start returning
+  // 503 when the seed fans out comments via nested Promise.all. 80 articles
+  // * up to ~24 top-level mutations each + replies = thousands of requests
+  // in flight, which trips the upstream rate-limiter / connection pool. The
+  // 503 responses skip CORS headers so the browser surfaces it as a CORS
+  // failure — misleading symptom for what is really request flooding.
+  // Seed runs are infrequent and not perf-sensitive; serial is fine.
+  const out: Awaited<ReturnType<typeof create>>[][] = [];
+  for (const articleId of articleIds) {
+    const top: Awaited<ReturnType<typeof create>>[] = [];
+    const topCount = faker.number.int({ min: 0, max: 8 });
+    for (let i = 0; i < topCount; i++) {
+      top.push(
+        await create({
+          text: getText(2, 4) as Descendant[],
+          itemID: articleId,
+          parentID: null,
+          guestUsername: faker.person.fullName(),
+          guestUserImageID: shuffle(imageIds).at(0),
+          source: capitalize(faker.lorem.words({ min: 3, max: 6 })),
+        })
+      );
+    }
+    const replies: Awaited<ReturnType<typeof create>>[] = [];
+    for (const parent of top) {
+      const replyCount = faker.number.int({ min: 0, max: 4 });
+      for (let i = 0; i < replyCount; i++) {
+        replies.push(
+          await create({
+            text: getText(1, 3) as Descendant[],
             itemID: articleId,
-            parentID: null,
+            parentID: parent.data.createComment.id,
             guestUsername: faker.person.fullName(),
             guestUserImageID: shuffle(imageIds).at(0),
             source: capitalize(faker.lorem.words({ min: 3, max: 6 })),
           })
-        )
-      );
-      const replies = await Promise.all(
-        top.map(parent =>
-          Promise.all(
-            Array.from({ length: faker.number.int({ min: 0, max: 4 }) }, () =>
-              create({
-                text: getText(1, 3) as Descendant[],
-                itemID: articleId,
-                parentID: parent.data.createComment.id,
-                guestUsername: faker.person.fullName(),
-                guestUserImageID: shuffle(imageIds).at(0),
-                source: capitalize(faker.lorem.words({ min: 3, max: 6 })),
-              })
-            )
-          )
-        )
-      );
-      return [...top, ...replies];
-    })
-  );
+        );
+      }
+    }
+    out.push([...top, ...replies]);
+  }
+  return out;
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -1916,13 +1925,19 @@ async function handleSeed(
     });
   }
 
-  await seedComments(
-    hooks.createComment,
-    hooks.updateComment,
-    hooks.approveComment,
-    published.map(a => a?.id).filter(Boolean) as string[],
-    images
-  );
+  // Skipped on staging — seedComments is currently disabled because the
+  // staging API rate-limits / drops connections under load (503 / 520
+  // surfaced as CORS errors). Re-enable when the comment seed is small
+  // enough or when staging tolerates more throughput. The function itself
+  // is sequential now, but volume can still be high (~80 articles × ~24
+  // mutations each).
+  // await seedComments(
+  //   hooks.createComment,
+  //   hooks.updateComment,
+  //   hooks.approveComment,
+  //   published.map(a => a?.id).filter(Boolean) as string[],
+  //   images
+  // );
 }
 
 // ────────────────────────────────────────────────────────────────────────────
