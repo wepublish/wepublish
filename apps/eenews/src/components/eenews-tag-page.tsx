@@ -19,6 +19,9 @@ const TopicHero = styled('section')<{ tint?: string | null }>`
   border-bottom: 1px solid ${eenewsColors.rule};
   background: ${eenewsColors.paperWarm};
   overflow: hidden;
+  @media (max-width: 720px) {
+    padding: 32px 0 28px;
+  }
 
   &::before {
     content: '';
@@ -130,6 +133,9 @@ const TopicFeature = styled('article')`
   @media (max-width: 1100px) {
     grid-template-columns: 1fr;
     gap: 24px;
+  }
+  @media (max-width: 720px) {
+    margin: 32px 0 24px;
   }
 `;
 

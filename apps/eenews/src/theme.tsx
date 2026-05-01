@@ -40,17 +40,35 @@ const colors = {
 
 // Reusable typography variant builders — keep size/weight/letterSpacing
 // concerns explicit to make the variant table easy to scan and amend.
+//
+// `display()` accepts an optional `mobile` override (lineHeight/letterSpacing)
+// applied via `@media (max-width: 720px)`. Reflekt-inspired breakpoint pattern
+// (see /Users/jpp/Git/wepublish/reflekt/apps/reflekt/src/theme.tsx). The font
+// size itself uses clamp() and scales fluidly; only lineHeight/letterSpacing —
+// which look poster-tight at the big-min and cramped at the small-min — get
+// per-breakpoint values.
 const display = (
   fontSize: string,
   lineHeight: number,
   weight = 400,
-  letterSpacing = '-0.02em'
+  letterSpacing = '-0.02em',
+  mobile?: { lineHeight?: number; letterSpacing?: string }
 ) => ({
   fontFamily,
   fontSize,
   fontWeight: weight,
   lineHeight,
   letterSpacing,
+  ...(mobile ?
+    {
+      '@media (max-width: 720px)': {
+        ...(mobile.lineHeight != null ? { lineHeight: mobile.lineHeight } : {}),
+        ...(mobile.letterSpacing ?
+          { letterSpacing: mobile.letterSpacing }
+        : {}),
+      },
+    }
+  : {}),
 });
 
 const body = (fontSize: string, lineHeight: number, weight = 400) => ({
@@ -87,29 +105,43 @@ const theme = createTheme(WePTheme, {
   typography: {
     fontFamily,
     // ----- 18 display variants (headlines + brand wordmark) -----
-    displayPageH1: display('clamp(48px, 6vw, 96px)', 0.95, 400, '-0.03em'),
+    displayPageH1: display('clamp(36px, 8vw, 96px)', 0.95, 400, '-0.03em', {
+      lineHeight: 1.02,
+      letterSpacing: '-0.02em',
+    }),
     displayMitmachenH1: display(
-      'clamp(64px, 9vw, 144px)',
+      'clamp(44px, 11vw, 144px)',
       0.92,
       350,
-      '-0.025em'
+      '-0.025em',
+      { lineHeight: 1, letterSpacing: '-0.015em' }
     ),
-    displayTopicH1: display('clamp(56px, 9vw, 132px)', 0.92, 350, '-0.02em'),
-    displayArticleH1: display('clamp(40px, 5.2vw, 76px)', 0.96, 400, '-0.02em'),
-    displaySearchH1: display('clamp(48px, 7vw, 96px)', 0.95, 350, '-0.03em'),
+    displayProfileH1: display('clamp(36px, 6vw, 76px)', 0.96, 400, '-0.025em', {
+      lineHeight: 1.02,
+      letterSpacing: '-0.015em',
+    }),
+    displayTopicH1: display('clamp(40px, 11vw, 132px)', 0.92, 350, '-0.02em', {
+      lineHeight: 1,
+      letterSpacing: '-0.01em',
+    }),
+    displayArticleH1: display('clamp(30px, 7vw, 76px)', 0.98, 400, '-0.02em', {
+      lineHeight: 1.05,
+      letterSpacing: '-0.01em',
+    }),
+    displaySearchH1: display('clamp(36px, 9vw, 96px)', 0.95, 350, '-0.03em'),
     displayFeaturedTeaser: display(
-      'clamp(36px, 4.4vw, 64px)',
-      1,
+      'clamp(28px, 6vw, 64px)',
+      1.02,
       400,
       '-0.02em'
     ),
-    displayFeatureH2: display('clamp(36px, 4.2vw, 56px)', 1.02, 400, '-0.01em'),
-    displaySection: display('clamp(32px, 3.4vw, 44px)', 1, 400, '-0.02em'),
-    displayMenuOverlay: display('clamp(36px, 4vw, 56px)', 0.98, 400, '-0.02em'),
-    displayNewsletter: display('clamp(28px, 3vw, 40px)', 1.05, 400, '-0.02em'),
+    displayFeatureH2: display('clamp(26px, 5.5vw, 56px)', 1.05, 400, '-0.01em'),
+    displaySection: display('clamp(24px, 4.4vw, 44px)', 1.02, 400, '-0.02em'),
+    displayMenuOverlay: display('clamp(28px, 5.5vw, 56px)', 1, 400, '-0.02em'),
+    displayNewsletter: display('clamp(22px, 4vw, 40px)', 1.1, 400, '-0.02em'),
     displayLogo: display('34px', 1, 500, '-0.04em'),
     displayLogoCompact: display('28px', 1, 500, '-0.04em'),
-    displayTopicCard: display('36px', 1, 400, '-0.02em'),
+    displayTopicCard: display('clamp(24px, 7vw, 36px)', 1.05, 400, '-0.02em'),
     displayTeaserMd: display('24px', 1.05, 400, '-0.02em'),
     displayTeaserLg: display('32px', 1.05, 400, '-0.02em'),
     displayTeaserCompact: display('20px', 1.15, 400, '-0.02em'),

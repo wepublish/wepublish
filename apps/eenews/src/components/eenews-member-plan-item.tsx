@@ -34,6 +34,10 @@ const Card = styled('article')<{ featured?: boolean; checked?: boolean }>`
     checked ? `3px solid ${eenewsColors.accentDeep}` : 'none'};
   outline-offset: -3px;
   transition: outline-color 0.15s ease;
+  @media (max-width: 720px) {
+    padding: 28px 22px;
+    gap: 14px;
+  }
 `;
 
 // styled(Typography) drops MUI's OverridableComponent generic — use styled('div')
@@ -182,7 +186,7 @@ export const EenewsMemberPlanItem = forwardRef<
           component="span"
           sx={{
             margin: 0,
-            fontSize: 72,
+            fontSize: { xs: 56, sm: 72 },
             lineHeight: 0.9,
             letterSpacing: '-0.025em',
             fontWeight: 350,

@@ -14,6 +14,9 @@ const Frame = styled('section')`
   background: ${eenewsColors.section};
   padding: 64px 0 56px;
   border-bottom: 2px solid ${eenewsColors.ink};
+  @media (max-width: 720px) {
+    padding: 36px 0 32px;
+  }
 `;
 
 const Grid = styled('div')`

@@ -13,6 +13,9 @@ const FooterShell = styled('footer')`
 
 const FooterInner = styled('div')`
   padding: 72px 0 32px;
+  @media (max-width: 800px) {
+    padding: 48px 0 24px;
+  }
 `;
 
 const FooterGrid = styled('div')`

@@ -30,6 +30,9 @@ import { eenewsColors } from '../theme';
 
 const PageWrap = styled('div')`
   padding: 48px 0 96px;
+  @media (max-width: 720px) {
+    padding: 24px 0 64px;
+  }
 `;
 
 const Crumb = styled(Link)`
@@ -96,6 +99,7 @@ const DetailGrid = styled('div')`
 
   @media (max-width: 900px) {
     grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
   }
 `;
 
@@ -121,10 +125,16 @@ const CardHead = styled('div')<{ alert?: boolean }>`
   padding: 22px 28px;
   border-bottom: 1px solid
     ${({ alert }) => (alert ? eenewsColors.alert : eenewsColors.rule)};
+  @media (max-width: 720px) {
+    padding: 18px 20px;
+  }
 `;
 
 const CardBody = styled('div')<{ tight?: boolean }>`
   padding: ${({ tight }) => (tight ? '0' : '22px 28px')};
+  @media (max-width: 720px) {
+    padding: ${({ tight }) => (tight ? '0' : '20px')};
+  }
 `;
 
 const MetaBlock = styled('div')`
@@ -497,7 +507,7 @@ export function EenewsSubscriptionDetail() {
         </EyebrowRow>
 
         <Typography
-          variant="displayMitmachenH1"
+          variant="displayProfileH1"
           component="h1"
           sx={{ margin: '0 0 12px', color: eenewsColors.ink }}
         >

@@ -8,6 +8,9 @@ import { eenewsColors } from '../theme';
 
 const PageWrap = styled('div')`
   padding: 48px 0 96px;
+  @media (max-width: 720px) {
+    padding: 24px 0 64px;
+  }
 `;
 
 const Crumb = styled(Link)`
@@ -44,6 +47,9 @@ const CardHead = styled('div')`
   flex-wrap: wrap;
   padding: 22px 28px;
   border-bottom: 1px solid ${eenewsColors.rule};
+  @media (max-width: 720px) {
+    padding: 18px 20px;
+  }
 `;
 
 const CardBody = styled('div')`
@@ -63,6 +69,11 @@ const CtaBanner = styled('section')`
   @media (max-width: 800px) {
     grid-template-columns: 1fr;
     padding: 32px 28px;
+  }
+  @media (max-width: 720px) {
+    margin-top: 32px;
+    padding: 28px 22px;
+    gap: 20px;
   }
 `;
 
@@ -142,7 +153,7 @@ export function EenewsDeactivatedSubscriptions() {
         <Crumb href="/profile">← Mein Konto</Crumb>
 
         <Typography
-          variant="displayMitmachenH1"
+          variant="displayProfileH1"
           component="h1"
           sx={{ margin: '0 0 12px', color: eenewsColors.ink }}
         >

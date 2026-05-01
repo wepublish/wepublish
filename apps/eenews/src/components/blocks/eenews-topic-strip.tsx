@@ -16,6 +16,9 @@ import { selectTopicCardColor } from '../teasers/eenews-teaser-selectors';
 
 const Section = styled('section')`
   padding: 72px 0;
+  @media (max-width: 720px) {
+    padding: 40px 0;
+  }
 `;
 
 const SectionHead = styled('div')`
@@ -60,6 +63,9 @@ const Card = styled(Link, {
   transition: transform 0.25s ease;
   &:hover {
     transform: translateY(-3px);
+  }
+  @media (max-width: 720px) {
+    padding: 20px 18px;
   }
 `;
 

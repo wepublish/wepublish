@@ -41,6 +41,10 @@ const Hero = styled('section')`
   color: ${eenewsColors.paper};
   padding: 56px 0 48px;
   margin-bottom: 48px;
+  @media (max-width: 720px) {
+    padding: 32px 0 28px;
+    margin-bottom: 28px;
+  }
 `;
 
 const HeroInner = styled(Container)`
@@ -89,6 +93,10 @@ const Layout = styled(Container)`
   padding-bottom: 80px;
   @media (max-width: 1100px) {
     grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  @media (max-width: 720px) {
+    padding-bottom: 56px;
   }
 `;
 
@@ -102,13 +110,20 @@ const CardHead = styled('div')`
   display: flex;
   justify-content: space-between;
   gap: 16px;
+  flex-wrap: wrap;
   padding: 18px 28px;
   border-bottom: 1px solid ${eenewsColors.rule};
   align-items: baseline;
+  @media (max-width: 720px) {
+    padding: 16px 20px;
+  }
 `;
 
 const CardBody = styled('div')`
   padding: 24px 28px;
+  @media (max-width: 720px) {
+    padding: 20px;
+  }
 `;
 
 const PaymentRow = styled('button')<{ selected: boolean }>`
@@ -118,6 +133,10 @@ const PaymentRow = styled('button')<{ selected: boolean }>`
   width: 100%;
   padding: 18px 22px;
   margin: 0 0 12px;
+  @media (max-width: 720px) {
+    padding: 14px 16px;
+    gap: 14px;
+  }
   border: ${({ selected }) =>
     selected ?
       `2px solid ${eenewsColors.ink}`

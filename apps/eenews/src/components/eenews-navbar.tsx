@@ -323,11 +323,39 @@ const BottomNavRow = styled('nav', {
   border-top: 1px solid ${eenewsColors.rule};
   visibility: ${({ menuOpen }) => (menuOpen ? 'hidden' : 'visible')};
 
-  /* Hide scrollbar — keep horizontal scroll only on tight viewports. */
   scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
   }
+
+  @media (max-width: 800px) {
+    display: none;
+  }
+`;
+
+const MobileInvoiceAlert = styled(Link)`
+  display: none;
+  @media (max-width: 800px) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: ${eenewsColors.alert};
+    color: ${eenewsColors.paper};
+    border-radius: 999px;
+    text-decoration: none;
+    margin-right: 4px;
+    pointer-events: auto;
+  }
+`;
+
+const MobileInvoicePulse = styled('span')`
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: ${eenewsColors.paper};
+  animation: invoice-alert-pulse 1.6s infinite;
 `;
 
 const BottomNavLink = styled(Link, {
@@ -677,8 +705,7 @@ export const EenewsNavbar = (props: BuilderNavbarProps) => {
               sx={{
                 display: 'flex',
                 gap: 1,
-                // Themen pill needs to stay interactive even when the wrapper
-                // has pointer-events: none (menu open).
+                alignItems: 'center',
                 pointerEvents: 'auto',
               }}
             >
@@ -693,6 +720,15 @@ export const EenewsNavbar = (props: BuilderNavbarProps) => {
                   {menuOpen ? 'Schliessen' : 'Menü'}
                 </span>
               </PillButton>
+              {isAuthenticated && hasUnpaidInvoices && !menuOpen ?
+                <MobileInvoiceAlert
+                  href="/profile#offene-rechnungen"
+                  aria-label="Offene Rechnung"
+                  title="Du hast offene Rechnungen"
+                >
+                  <MobileInvoicePulse aria-hidden="true" />
+                </MobileInvoiceAlert>
+              : null}
               {/* Search pill is hidden when the menu is open — fewer focus
                   targets, matches tsri's NavbarHomeLink/Tabs hide-when-open. */}
               <Box

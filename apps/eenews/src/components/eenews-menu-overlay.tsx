@@ -22,6 +22,9 @@ const Drawer = styled('div')<{ open: boolean }>`
   right: 0;
   top: 0;
   z-index: 71;
+  max-height: 100vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   background: ${eenewsColors.paper};
   box-shadow: 0 24px 60px rgba(14, 42, 59, 0.18);
   transform: ${({ open }) => (open ? 'translateY(0)' : 'translateY(-100%)')};

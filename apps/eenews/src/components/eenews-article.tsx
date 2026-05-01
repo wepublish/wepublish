@@ -16,6 +16,10 @@ const HeroBorder = styled('div')`
 const HeroInner = styled(Container)`
   padding-top: 40px;
   padding-bottom: 40px;
+  @media (max-width: 720px) {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
 `;
 
 const BackButton = styled('button')`
@@ -64,6 +68,12 @@ const ByLineRow = styled('div')`
   margin-top: 28px;
   padding-top: 20px;
   border-top: 1px solid ${eenewsColors.rule};
+  flex-wrap: wrap;
+  @media (max-width: 720px) {
+    gap: 16px;
+    margin-top: 20px;
+    padding-top: 16px;
+  }
 `;
 
 const ByLineAvatar = styled('div')`
@@ -82,6 +92,10 @@ const ByLineAvatar = styled('div')`
 const ByLineMeta = styled('div')`
   border-left: 1px solid ${eenewsColors.rule};
   padding-left: 24px;
+  @media (max-width: 720px) {
+    border-left: 0;
+    padding-left: 0;
+  }
 `;
 
 const HeroImageWrap = styled('div')`
@@ -94,6 +108,9 @@ const HeroImageWrap = styled('div')`
     object-fit: cover;
     display: block;
   }
+  @media (max-width: 720px) {
+    aspect-ratio: 4 / 3;
+  }
 `;
 
 const BodyGrid = styled('div')`
@@ -105,6 +122,10 @@ const BodyGrid = styled('div')`
   @media (max-width: 1100px) {
     grid-template-columns: 1fr;
     gap: 32px;
+  }
+  @media (max-width: 720px) {
+    gap: 24px;
+    padding-bottom: 56px;
   }
 `;
 
@@ -119,6 +140,7 @@ const ShareRail = styled('aside')`
     position: static;
     flex-direction: row;
     flex-wrap: wrap;
+    gap: 16px;
   }
 `;
 

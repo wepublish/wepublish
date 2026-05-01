@@ -23,14 +23,27 @@ const SectionFrame = styled('section')<{ band?: boolean; columns?: number }>`
   ${({ band }) => (band ? `background: ${eenewsColors.section};` : '')}
   padding: ${({ band }) => (band ? '72px 0' : '24px 0 56px')};
 
+  @media (max-width: 720px) {
+    padding: ${({ band }) => (band ? '40px 0' : '20px 0 32px')};
+  }
+
   ${TeaserSlotsBlockTeasers} {
     grid-template-columns: ${({ columns }) =>
       `repeat(${columns ?? 3}, 1fr)`} !important;
     gap: 40px !important;
     row-gap: 56px !important;
 
+    @media (max-width: 1100px) {
+      grid-template-columns: ${({ columns }) =>
+        columns === 2 ? '1fr' : 'repeat(2, 1fr)'} !important;
+      gap: 32px !important;
+      row-gap: 40px !important;
+    }
+
     @media (max-width: 720px) {
       grid-template-columns: 1fr !important;
+      gap: 0 !important;
+      row-gap: 32px !important;
     }
 
     & > * {
@@ -65,6 +78,9 @@ const ActionLink = styled(Link)`
 
 const FeaturedFrame = styled('section')`
   padding: 48px 0 56px;
+  @media (max-width: 720px) {
+    padding: 28px 0 32px;
+  }
 `;
 
 const FeaturedEyebrow = styled('div')`

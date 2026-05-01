@@ -9,6 +9,7 @@ declare module '@mui/material/styles' {
     // Display headlines
     displayPageH1: CSSProperties;
     displayMitmachenH1: CSSProperties;
+    displayProfileH1: CSSProperties;
     displayTopicH1: CSSProperties;
     displayArticleH1: CSSProperties;
     displaySearchH1: CSSProperties;
@@ -59,6 +60,7 @@ declare module '@mui/material/styles' {
   interface TypographyVariantsOptions {
     displayPageH1?: CSSProperties;
     displayMitmachenH1?: CSSProperties;
+    displayProfileH1?: CSSProperties;
     displayTopicH1?: CSSProperties;
     displayArticleH1?: CSSProperties;
     displaySearchH1?: CSSProperties;
@@ -108,6 +110,7 @@ declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides {
     displayPageH1: true;
     displayMitmachenH1: true;
+    displayProfileH1: true;
     displayTopicH1: true;
     displayArticleH1: true;
     displaySearchH1: true;

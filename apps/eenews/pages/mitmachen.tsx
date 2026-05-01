@@ -27,6 +27,9 @@ const Hero = styled('section')`
       transparent 55%
     ),
     ${eenewsColors.paper};
+  @media (max-width: 720px) {
+    padding: 32px 0 36px;
+  }
 `;
 
 const HeroInner = styled(Container)``;
@@ -60,6 +63,9 @@ const HeroLead = styled('div')`
     grid-template-columns: 1fr;
     gap: 24px;
   }
+  @media (max-width: 720px) {
+    padding-top: 20px;
+  }
 `;
 
 const StatRow = styled('div')`
@@ -78,6 +84,9 @@ const Crowdfund = styled('section')`
   padding: 32px 0;
   border-bottom: 1px solid ${eenewsColors.rule};
   background: ${eenewsColors.paperWarm};
+  @media (max-width: 720px) {
+    padding: 24px 0;
+  }
 `;
 
 const CrowdfundGrid = styled(Container)`
@@ -107,6 +116,9 @@ const Fill = styled('div')<{ percent: number }>`
 
 const PlanWrapper = styled('div')`
   padding: 56px 0;
+  @media (max-width: 720px) {
+    padding: 32px 0;
+  }
 `;
 
 // CMS amounts are stored in minor units (cents) — convert to major (CHF) for display.
