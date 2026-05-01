@@ -305,6 +305,7 @@ export type BaseAction = {
 export type BaseBlock = {
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   type: BlockType;
 };
 
@@ -357,6 +358,7 @@ export type BildwurfAdBlock = BaseBlock & {
   __typename?: 'BildwurfAdBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   type: BlockType;
   zoneID?: Maybe<Scalars['String']>;
 };
@@ -364,6 +366,7 @@ export type BildwurfAdBlock = BaseBlock & {
 export type BildwurfAdBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   zoneID?: InputMaybe<Scalars['String']>;
 };
 
@@ -491,6 +494,7 @@ export type BreakBlock = BaseBlock &
     __typename?: 'BreakBlock';
     blockStyle?: Maybe<Scalars['String']>;
     blockStyleName?: Maybe<Scalars['String']>;
+    disabled?: Maybe<Scalars['Boolean']>;
     hideButton?: Maybe<Scalars['Boolean']>;
     image?: Maybe<Image>;
     imageID?: Maybe<Scalars['String']>;
@@ -505,6 +509,7 @@ export type BreakBlock = BaseBlock &
 export type BreakBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   hideButton?: InputMaybe<Scalars['Boolean']>;
   imageID?: InputMaybe<Scalars['String']>;
   linkTarget?: InputMaybe<Scalars['String']>;
@@ -594,6 +599,7 @@ export type CommentBlock = BaseBlock & {
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
   comments: Array<Comment>;
+  disabled?: Maybe<Scalars['Boolean']>;
   filter: CommentBlockFilter;
   type: BlockType;
 };
@@ -614,6 +620,7 @@ export type CommentBlockFilterInput = {
 export type CommentBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   filter: CommentBlockFilterInput;
 };
 
@@ -788,6 +795,7 @@ export type CrowdfundingBlock = BaseBlock &
     blockStyleName?: Maybe<Scalars['String']>;
     crowdfunding?: Maybe<Crowdfunding>;
     crowdfundingId?: Maybe<Scalars['String']>;
+    disabled?: Maybe<Scalars['Boolean']>;
     type: BlockType;
   };
 
@@ -795,6 +803,7 @@ export type CrowdfundingBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
   crowdfundingId?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type CrowdfundingGoal = BaseCrowdfundingGoal & {
@@ -1007,6 +1016,7 @@ export type EventBlock = BaseBlock & {
   __typename?: 'EventBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   events: Array<Event>;
   filter: EventBlockFilter;
   type: BlockType;
@@ -1026,6 +1036,7 @@ export type EventBlockFilterInput = {
 export type EventBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   filter: EventBlockFilterInput;
 };
 
@@ -1144,6 +1155,7 @@ export type FacebookPostBlock = BaseBlock & {
   __typename?: 'FacebookPostBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   postID?: Maybe<Scalars['String']>;
   type: BlockType;
   userID?: Maybe<Scalars['String']>;
@@ -1152,6 +1164,7 @@ export type FacebookPostBlock = BaseBlock & {
 export type FacebookPostBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   postID?: InputMaybe<Scalars['String']>;
   userID?: InputMaybe<Scalars['String']>;
 };
@@ -1160,6 +1173,7 @@ export type FacebookVideoBlock = BaseBlock & {
   __typename?: 'FacebookVideoBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   type: BlockType;
   userID?: Maybe<Scalars['String']>;
   videoID?: Maybe<Scalars['String']>;
@@ -1168,6 +1182,7 @@ export type FacebookVideoBlock = BaseBlock & {
 export type FacebookVideoBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   userID?: InputMaybe<Scalars['String']>;
   videoID?: InputMaybe<Scalars['String']>;
 };
@@ -1196,6 +1211,7 @@ export type FlexBlock = BaseBlock & {
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
   blocks: Array<BlockWithAlignment>;
+  disabled?: Maybe<Scalars['Boolean']>;
   type: BlockType;
 };
 
@@ -1203,6 +1219,7 @@ export type FlexBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
   blocks: Array<BlockWithAlignmentInput>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type FlexTeaser = {
@@ -1242,6 +1259,7 @@ export type HtmlBlock = BaseBlock & {
   __typename?: 'HTMLBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   html?: Maybe<Scalars['String']>;
   type: BlockType;
 };
@@ -1249,6 +1267,7 @@ export type HtmlBlock = BaseBlock & {
 export type HtmlBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   html?: InputMaybe<Scalars['String']>;
 };
 
@@ -1385,6 +1404,7 @@ export type IFrameBlock = BaseBlock & {
   __typename?: 'IFrameBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   height?: Maybe<Scalars['Int']>;
   sandbox?: Maybe<Scalars['String']>;
   styleCustom?: Maybe<Scalars['String']>;
@@ -1397,6 +1417,7 @@ export type IFrameBlock = BaseBlock & {
 export type IFrameBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   height?: InputMaybe<Scalars['Int']>;
   sandbox?: InputMaybe<Scalars['String']>;
   styleCustom?: InputMaybe<Scalars['String']>;
@@ -1440,6 +1461,7 @@ export type ImageBlock = BaseBlock &
     blockStyle?: Maybe<Scalars['String']>;
     blockStyleName?: Maybe<Scalars['String']>;
     caption?: Maybe<Scalars['String']>;
+    disabled?: Maybe<Scalars['Boolean']>;
     image?: Maybe<Image>;
     imageID?: Maybe<Scalars['String']>;
     linkUrl?: Maybe<Scalars['String']>;
@@ -1450,6 +1472,7 @@ export type ImageBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
   caption?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   imageID?: InputMaybe<Scalars['String']>;
   linkUrl?: InputMaybe<Scalars['String']>;
 };
@@ -1463,6 +1486,7 @@ export type ImageGalleryBlock = BaseBlock & {
   __typename?: 'ImageGalleryBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   images: Array<ImageGalleryImage>;
   type: BlockType;
 };
@@ -1470,6 +1494,7 @@ export type ImageGalleryBlock = BaseBlock & {
 export type ImageGalleryBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   images: Array<ImageGalleryImageInput>;
 };
 
@@ -1533,6 +1558,7 @@ export type InstagramPostBlock = BaseBlock & {
   __typename?: 'InstagramPostBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   postID?: Maybe<Scalars['String']>;
   type: BlockType;
 };
@@ -1540,6 +1566,7 @@ export type InstagramPostBlock = BaseBlock & {
 export type InstagramPostBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   postID?: InputMaybe<Scalars['String']>;
 };
 
@@ -1607,6 +1634,7 @@ export type ListicleBlock = BaseBlock & {
   __typename?: 'ListicleBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   items: Array<ListicleItem>;
   type: BlockType;
 };
@@ -1614,6 +1642,7 @@ export type ListicleBlock = BaseBlock & {
 export type ListicleBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   items: Array<ListicleItemInput>;
 };
 
@@ -3817,6 +3846,7 @@ export type PolisConversationBlock = BaseBlock & {
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
   conversationID?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   type: BlockType;
 };
 
@@ -3824,6 +3854,7 @@ export type PolisConversationBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
   conversationID?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type Poll = {
@@ -3859,6 +3890,7 @@ export type PollBlock = BaseBlock &
     __typename?: 'PollBlock';
     blockStyle?: Maybe<Scalars['String']>;
     blockStyleName?: Maybe<Scalars['String']>;
+    disabled?: Maybe<Scalars['Boolean']>;
     poll?: Maybe<FullPoll>;
     pollId?: Maybe<Scalars['String']>;
     type: BlockType;
@@ -3867,6 +3899,7 @@ export type PollBlock = BaseBlock &
 export type PollBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   pollId?: InputMaybe<Scalars['String']>;
 };
 
@@ -4788,6 +4821,7 @@ export type QuoteBlock = BaseBlock &
     author?: Maybe<Scalars['String']>;
     blockStyle?: Maybe<Scalars['String']>;
     blockStyleName?: Maybe<Scalars['String']>;
+    disabled?: Maybe<Scalars['Boolean']>;
     image?: Maybe<Image>;
     imageID?: Maybe<Scalars['String']>;
     quote?: Maybe<Scalars['String']>;
@@ -4798,6 +4832,7 @@ export type QuoteBlockInput = {
   author?: InputMaybe<Scalars['String']>;
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   imageID?: InputMaybe<Scalars['String']>;
   quote?: InputMaybe<Scalars['String']>;
 };
@@ -4834,6 +4869,7 @@ export type RichTextBlock = BaseBlock & {
   __typename?: 'RichTextBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   richText: Scalars['RichText'];
   type: BlockType;
 };
@@ -4841,6 +4877,7 @@ export type RichTextBlock = BaseBlock & {
 export type RichTextBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   richText: Scalars['RichText'];
 };
 
@@ -5120,6 +5157,7 @@ export type SoundCloudTrackBlock = BaseBlock & {
   __typename?: 'SoundCloudTrackBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   trackID?: Maybe<Scalars['String']>;
   type: BlockType;
 };
@@ -5127,6 +5165,7 @@ export type SoundCloudTrackBlock = BaseBlock & {
 export type SoundCloudTrackBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   trackID?: InputMaybe<Scalars['String']>;
 };
 
@@ -5141,6 +5180,7 @@ export type StreamableVideoBlock = BaseBlock & {
   __typename?: 'StreamableVideoBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   type: BlockType;
   videoID?: Maybe<Scalars['String']>;
 };
@@ -5148,6 +5188,7 @@ export type StreamableVideoBlock = BaseBlock & {
 export type StreamableVideoBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   videoID?: InputMaybe<Scalars['String']>;
 };
 
@@ -5180,6 +5221,7 @@ export type SubscribeBlock = BaseBlock & {
   __typename?: 'SubscribeBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   fields: Array<SubscribeBlockField>;
   memberPlanIds?: Maybe<Array<Scalars['String']>>;
   memberPlans: Array<MemberPlan>;
@@ -5198,6 +5240,7 @@ export enum SubscribeBlockField {
 export type SubscribeBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   fields?: Array<SubscribeBlockField>;
   memberPlanIds?: InputMaybe<Array<Scalars['String']>>;
 };
@@ -5342,6 +5385,7 @@ export type TeaserGridBlock = BaseBlock & {
   __typename?: 'TeaserGridBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   numColumns: Scalars['Int'];
   teasers: Array<Maybe<Teaser>>;
   type: BlockType;
@@ -5350,6 +5394,7 @@ export type TeaserGridBlock = BaseBlock & {
 export type TeaserGridBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   numColumns: Scalars['Int'];
   teasers: Array<InputMaybe<TeaserInput>>;
 };
@@ -5358,6 +5403,7 @@ export type TeaserGridFlexBlock = BaseBlock & {
   __typename?: 'TeaserGridFlexBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   flexTeasers: Array<FlexTeaser>;
   type: BlockType;
 };
@@ -5365,6 +5411,7 @@ export type TeaserGridFlexBlock = BaseBlock & {
 export type TeaserGridFlexBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   flexTeasers: Array<FlexTeaserInput>;
 };
 
@@ -5379,6 +5426,7 @@ export type TeaserListBlock = BaseBlock & {
   __typename?: 'TeaserListBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   filter: TeaserListBlockFilter;
   skip?: Maybe<Scalars['Int']>;
   sort?: Maybe<TeaserListBlockSort>;
@@ -5402,6 +5450,7 @@ export type TeaserListBlockFilterInput = {
 export type TeaserListBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   filter: TeaserListBlockFilterInput;
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<TeaserListBlockSort>;
@@ -5436,6 +5485,7 @@ export type TeaserSlotsAutofillConfig = BaseBlock & {
   __typename?: 'TeaserSlotsAutofillConfig';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   enabled: Scalars['Boolean'];
   filter?: Maybe<TeaserListBlockFilter>;
   sort?: Maybe<TeaserListBlockSort>;
@@ -5456,6 +5506,7 @@ export type TeaserSlotsBlock = BaseBlock & {
   autofillTeasers: Array<Teaser>;
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   slots: Array<TeaserSlot>;
   teasers: Array<Maybe<Teaser>>;
   title?: Maybe<Scalars['String']>;
@@ -5466,6 +5517,7 @@ export type TeaserSlotsBlockInput = {
   autofillConfig: TeaserSlotsAutofillConfigInput;
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   slots: Array<TeaserSlotInput>;
   title?: InputMaybe<Scalars['String']>;
 };
@@ -5481,6 +5533,7 @@ export type TikTokVideoBlock = BaseBlock & {
   __typename?: 'TikTokVideoBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   type: BlockType;
   userID?: Maybe<Scalars['String']>;
   videoID?: Maybe<Scalars['String']>;
@@ -5489,6 +5542,7 @@ export type TikTokVideoBlock = BaseBlock & {
 export type TikTokVideoBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   userID?: InputMaybe<Scalars['String']>;
   videoID?: InputMaybe<Scalars['String']>;
 };
@@ -5497,6 +5551,7 @@ export type TitleBlock = BaseBlock & {
   __typename?: 'TitleBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   lead?: Maybe<Scalars['String']>;
   preTitle?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
@@ -5506,6 +5561,7 @@ export type TitleBlock = BaseBlock & {
 export type TitleBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   lead?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
@@ -5560,6 +5616,7 @@ export type TwitterTweetBlock = BaseBlock & {
   __typename?: 'TwitterTweetBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   tweetID?: Maybe<Scalars['String']>;
   type: BlockType;
   userID?: Maybe<Scalars['String']>;
@@ -5568,6 +5625,7 @@ export type TwitterTweetBlock = BaseBlock & {
 export type TwitterTweetBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   tweetID?: InputMaybe<Scalars['String']>;
   userID?: InputMaybe<Scalars['String']>;
 };
@@ -5576,6 +5634,7 @@ export type UnknownBlock = {
   __typename?: 'UnknownBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   type: BlockType;
 };
 
@@ -5732,6 +5791,7 @@ export type VimeoVideoBlock = BaseBlock & {
   __typename?: 'VimeoVideoBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   type: BlockType;
   videoID?: Maybe<Scalars['String']>;
 };
@@ -5739,6 +5799,7 @@ export type VimeoVideoBlock = BaseBlock & {
 export type VimeoVideoBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   videoID?: InputMaybe<Scalars['String']>;
 };
 
@@ -5746,6 +5807,7 @@ export type YouTubeVideoBlock = BaseBlock & {
   __typename?: 'YouTubeVideoBlock';
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['Boolean']>;
   type: BlockType;
   videoID?: Maybe<Scalars['String']>;
 };
@@ -5753,6 +5815,7 @@ export type YouTubeVideoBlock = BaseBlock & {
 export type YouTubeVideoBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
+  disabled?: InputMaybe<Scalars['Boolean']>;
   videoID?: InputMaybe<Scalars['String']>;
 };
 

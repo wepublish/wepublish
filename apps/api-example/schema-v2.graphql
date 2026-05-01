@@ -244,6 +244,7 @@ interface BaseAction {
 interface BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   type: BlockType!
 }
 
@@ -295,6 +296,7 @@ interface BaseUser {
 type BildwurfAdBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   type: BlockType!
   zoneID: String
 }
@@ -302,6 +304,7 @@ type BildwurfAdBlock implements BaseBlock {
 input BildwurfAdBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   zoneID: String
 }
 
@@ -394,6 +397,7 @@ input BlockWithAlignmentInput {
 type BreakBlock implements BaseBlock & HasImage {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   hideButton: Boolean
   image: Image
   imageID: String
@@ -408,6 +412,7 @@ type BreakBlock implements BaseBlock & HasImage {
 input BreakBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   hideButton: Boolean
   imageID: String
   linkTarget: String
@@ -495,6 +500,7 @@ type CommentBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   comments: [Comment!]!
+  disabled: Boolean
   filter: CommentBlockFilter!
   type: BlockType!
 }
@@ -514,6 +520,7 @@ input CommentBlockFilterInput {
 input CommentBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   filter: CommentBlockFilterInput!
 }
 
@@ -678,6 +685,7 @@ type CrowdfundingBlock implements BaseBlock & HasOptionalCrowdfunding {
   blockStyleName: String
   crowdfunding: Crowdfunding
   crowdfundingId: String
+  disabled: Boolean
   type: BlockType!
 }
 
@@ -685,6 +693,7 @@ input CrowdfundingBlockInput {
   blockStyle: String
   blockStyleName: String
   crowdfundingId: String
+  disabled: Boolean
 }
 
 type CrowdfundingGoal implements BaseCrowdfundingGoal {
@@ -893,6 +902,7 @@ type Event {
 type EventBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   events: [Event!]!
   filter: EventBlockFilter!
   type: BlockType!
@@ -911,6 +921,7 @@ input EventBlockFilterInput {
 input EventBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   filter: EventBlockFilterInput!
 }
 
@@ -1019,6 +1030,7 @@ type ExternalNavigationLink implements BaseNavigationLink {
 type FacebookPostBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   postID: String
   type: BlockType!
   userID: String
@@ -1027,6 +1039,7 @@ type FacebookPostBlock implements BaseBlock {
 input FacebookPostBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   postID: String
   userID: String
 }
@@ -1034,6 +1047,7 @@ input FacebookPostBlockInput {
 type FacebookVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   type: BlockType!
   userID: String
   videoID: String
@@ -1042,6 +1056,7 @@ type FacebookVideoBlock implements BaseBlock {
 input FacebookVideoBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   userID: String
   videoID: String
 }
@@ -1068,6 +1083,7 @@ type FlexBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   blocks: [BlockWithAlignment!]!
+  disabled: Boolean
   type: BlockType!
 }
 
@@ -1075,6 +1091,7 @@ input FlexBlockInput {
   blockStyle: String
   blockStyleName: String
   blocks: [BlockWithAlignmentInput!]!
+  disabled: Boolean
 }
 
 type FlexTeaser {
@@ -1113,6 +1130,7 @@ scalar GraphQLSettingValueType
 type HTMLBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   html: String
   type: BlockType!
 }
@@ -1120,6 +1138,7 @@ type HTMLBlock implements BaseBlock {
 input HTMLBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   html: String
 }
 
@@ -1255,6 +1274,7 @@ interface HasUserLc {
 type IFrameBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   height: Int
   sandbox: String
   styleCustom: String
@@ -1267,6 +1287,7 @@ type IFrameBlock implements BaseBlock {
 input IFrameBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   height: Int
   sandbox: String
   styleCustom: String
@@ -1303,6 +1324,7 @@ type ImageBlock implements BaseBlock & HasImage {
   blockStyle: String
   blockStyleName: String
   caption: String
+  disabled: Boolean
   image: Image
   imageID: String
   linkUrl: String
@@ -1313,6 +1335,7 @@ input ImageBlockInput {
   blockStyle: String
   blockStyleName: String
   caption: String
+  disabled: Boolean
   imageID: String
   linkUrl: String
 }
@@ -1325,6 +1348,7 @@ input ImageFilter {
 type ImageGalleryBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   images: [ImageGalleryImage!]!
   type: BlockType!
 }
@@ -1332,6 +1356,7 @@ type ImageGalleryBlock implements BaseBlock {
 input ImageGalleryBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   images: [ImageGalleryImageInput!]!
 }
 
@@ -1393,6 +1418,7 @@ enum ImportedEventSort {
 type InstagramPostBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   postID: String
   type: BlockType!
 }
@@ -1400,6 +1426,7 @@ type InstagramPostBlock implements BaseBlock {
 input InstagramPostBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   postID: String
 }
 
@@ -1468,6 +1495,7 @@ scalar JSONObject
 type ListicleBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   items: [ListicleItem!]!
   type: BlockType!
 }
@@ -1475,6 +1503,7 @@ type ListicleBlock implements BaseBlock {
 input ListicleBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   items: [ListicleItemInput!]!
 }
 
@@ -2680,6 +2709,7 @@ type PolisConversationBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   conversationID: String
+  disabled: Boolean
   type: BlockType!
 }
 
@@ -2687,6 +2717,7 @@ input PolisConversationBlockInput {
   blockStyle: String
   blockStyleName: String
   conversationID: String
+  disabled: Boolean
 }
 
 type Poll {
@@ -2717,6 +2748,7 @@ input PollAnswerInput {
 type PollBlock implements BaseBlock & HasOptionalPoll {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   poll: FullPoll
   pollId: String
   type: BlockType!
@@ -2725,6 +2757,7 @@ type PollBlock implements BaseBlock & HasOptionalPoll {
 input PollBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   pollId: String
 }
 
@@ -3213,6 +3246,7 @@ type QuoteBlock implements BaseBlock & HasImage {
   author: String
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   image: Image
   imageID: String
   quote: String
@@ -3223,6 +3257,7 @@ input QuoteBlockInput {
   author: String
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   imageID: String
   quote: String
 }
@@ -3258,6 +3293,7 @@ scalar RichText
 type RichTextBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   richText: RichText!
   type: BlockType!
 }
@@ -3265,6 +3301,7 @@ type RichTextBlock implements BaseBlock {
 input RichTextBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   richText: RichText!
 }
 
@@ -3540,6 +3577,7 @@ enum SortOrder {
 type SoundCloudTrackBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   trackID: String
   type: BlockType!
 }
@@ -3547,6 +3585,7 @@ type SoundCloudTrackBlock implements BaseBlock {
 input SoundCloudTrackBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   trackID: String
 }
 
@@ -3559,6 +3598,7 @@ type Stats {
 type StreamableVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   type: BlockType!
   videoID: String
 }
@@ -3566,6 +3606,7 @@ type StreamableVideoBlock implements BaseBlock {
 input StreamableVideoBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   videoID: String
 }
 
@@ -3597,6 +3638,7 @@ enum StripePaymentMethod {
 type SubscribeBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   fields: [SubscribeBlockField!]!
   memberPlanIds: [String!]
   memberPlans: [MemberPlan!]!
@@ -3615,6 +3657,7 @@ enum SubscribeBlockField {
 input SubscribeBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
   memberPlanIds: [String!]
 }
@@ -3750,6 +3793,7 @@ union Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser
 type TeaserGridBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   numColumns: Int!
   teasers: [Teaser]!
   type: BlockType!
@@ -3758,6 +3802,7 @@ type TeaserGridBlock implements BaseBlock {
 input TeaserGridBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   numColumns: Int!
   teasers: [TeaserInput]!
 }
@@ -3765,6 +3810,7 @@ input TeaserGridBlockInput {
 type TeaserGridFlexBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   flexTeasers: [FlexTeaser!]!
   type: BlockType!
 }
@@ -3772,6 +3818,7 @@ type TeaserGridFlexBlock implements BaseBlock {
 input TeaserGridFlexBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   flexTeasers: [FlexTeaserInput!]!
 }
 
@@ -3785,6 +3832,7 @@ input TeaserInput {
 type TeaserListBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   filter: TeaserListBlockFilter!
   skip: Int
   sort: TeaserListBlockSort
@@ -3807,6 +3855,7 @@ input TeaserListBlockFilterInput {
 input TeaserListBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   filter: TeaserListBlockFilterInput!
   skip: Int
   sort: TeaserListBlockSort
@@ -3839,6 +3888,7 @@ enum TeaserSlotType {
 type TeaserSlotsAutofillConfig implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   enabled: Boolean!
   filter: TeaserListBlockFilter
   sort: TeaserListBlockSort
@@ -3858,6 +3908,7 @@ type TeaserSlotsBlock implements BaseBlock {
   autofillTeasers: [Teaser!]!
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   slots: [TeaserSlot!]!
   teasers: [Teaser]!
   title: String
@@ -3868,6 +3919,7 @@ input TeaserSlotsBlockInput {
   autofillConfig: TeaserSlotsAutofillConfigInput!
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   slots: [TeaserSlotInput!]!
   title: String
 }
@@ -3882,6 +3934,7 @@ enum TeaserType {
 type TikTokVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   type: BlockType!
   userID: String
   videoID: String
@@ -3890,6 +3943,7 @@ type TikTokVideoBlock implements BaseBlock {
 input TikTokVideoBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   userID: String
   videoID: String
 }
@@ -3897,6 +3951,7 @@ input TikTokVideoBlockInput {
 type TitleBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   lead: String
   preTitle: String
   title: String
@@ -3906,6 +3961,7 @@ type TitleBlock implements BaseBlock {
 input TitleBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   lead: String
   preTitle: String
   title: String
@@ -3955,6 +4011,7 @@ enum TrackingPixelProviderType {
 type TwitterTweetBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   tweetID: String
   type: BlockType!
   userID: String
@@ -3963,6 +4020,7 @@ type TwitterTweetBlock implements BaseBlock {
 input TwitterTweetBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   tweetID: String
   userID: String
 }
@@ -3970,6 +4028,7 @@ input TwitterTweetBlockInput {
 type UnknownBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   type: BlockType!
 }
 
@@ -4120,6 +4179,7 @@ type VersionInformation {
 type VimeoVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   type: BlockType!
   videoID: String
 }
@@ -4127,6 +4187,7 @@ type VimeoVideoBlock implements BaseBlock {
 input VimeoVideoBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   videoID: String
 }
 
@@ -4136,6 +4197,7 @@ scalar VoteValue
 type YouTubeVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   type: BlockType!
   videoID: String
 }
@@ -4143,5 +4205,6 @@ type YouTubeVideoBlock implements BaseBlock {
 input YouTubeVideoBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   videoID: String
 }

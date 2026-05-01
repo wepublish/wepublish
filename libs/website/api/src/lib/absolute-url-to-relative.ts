@@ -11,7 +11,10 @@ const absoluteToRelative = (url: string) => {
   }
 };
 
-export const absoluteUrlToRelative: InMemoryCacheConfig['typePolicies'] = {
+export const absoluteUrlToRelative: Exclude<
+  InMemoryCacheConfig['typePolicies'],
+  undefined
+> = {
   Page: {
     fields: {
       url: {
