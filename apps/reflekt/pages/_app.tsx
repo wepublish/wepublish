@@ -47,6 +47,7 @@ import {
   ReflektBlocks,
 } from '../src/components/reflekt-block-renderer';
 import { RefFooter } from '../src/components/reflekt-footer';
+import { ReflektGlobalScripts } from '../src/components/reflekt-global-scripts';
 import { ReflektGlobalStyles } from '../src/components/reflekt-global-styles';
 import {
   ReflektListItem,
@@ -150,6 +151,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <ReflektGlobalStyles />
+            <ReflektGlobalScripts />
 
             <Head>
               <title key="title">{siteTitle}</title>
