@@ -562,7 +562,7 @@ import {
           config.getOrThrow('MEDIA_SERVER_URL'),
           jwtPrivateKey,
           config.getOrThrow('HOST_URL'),
-          { quality: configFile.mediaServer.quality ?? 0.8 },
+          { quality: configFile.mediaServer.quality ?? 1 },
           internalUrl ? internalUrl : undefined
         );
       },
