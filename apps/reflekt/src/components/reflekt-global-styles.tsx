@@ -16,6 +16,13 @@ const globalCSS = (theme: Theme) => css`
       --breakpoint-width: ${theme.breakpoints.values.xl}px;
     }
   }
+
+  .MuiTypography-root:has(
+    .MuiTypography-buttonLinkSecondary,
+    .MuiTypography-buttonLinkMain
+  ) {
+    text-align: center;
+  }
 `;
 
 export const ReflektGlobalStyles = () => <GlobalStyles styles={globalCSS} />;

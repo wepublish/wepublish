@@ -113,23 +113,32 @@ export function ReflektRenderElement({
         </ReflektListItem>
       );
 
-    case InlineFormat.Link:
+    case InlineFormat.Link: {
+      const id = typeof element.id === 'string' ? element.id : '';
+      const isButtonLink = id.startsWith('button-link-');
+      const buttonLinkVariant =
+        isButtonLink ?
+          id.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase())
+        : undefined;
+      const linkVariant: string | undefined =
+        buttonLinkVariant ? buttonLinkVariant
+        : variant ? `link${capitalize(variant)}`
+        : undefined;
+      const url = element.url as string;
+      const href =
+        !isButtonLink && element.id ?
+          `${url}${url.endsWith('#') ? '' : '#'}${createIdFromText([{ text: element.id as string }])}`
+        : url;
+
       return (
         <Link
-          target={
-            (
-              (element.url as string).startsWith('#') ||
-              (element.url as string).startsWith('/')
-            ) ?
-              ''
-            : '_blank'
-          }
+          target={url.startsWith('#') || url.startsWith('/') ? '' : '_blank'}
           rel="noreferrer"
           id={undefined}
-          href={`${element.url as string}${element.id ? `${(element.url as string).endsWith('#') ? '' : '#'}${createIdFromText([{ text: element.id as string }])}` : ''}`}
+          href={href}
           title={element.title as string}
           data-test="link"
-          variant={(variant ? `link${capitalize(variant)}` : undefined) as any}
+          variant={linkVariant as any}
         >
           <ReflektRenderRichtext
             elements={element.children}
@@ -137,6 +146,7 @@ export function ReflektRenderElement({
           />
         </Link>
       );
+    }
 
     case BlockFormat.Paragraph:
       if (variant) {
