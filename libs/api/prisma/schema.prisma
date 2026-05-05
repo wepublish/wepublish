@@ -1024,13 +1024,13 @@ model User {
   properties               MetadataProperty[]
   paymentProviderCustomers PaymentProviderCustomer[]
 
-  comments         Comment[]
-  sessions         Session[]
-  subscriptions    Subscription[]
-  commentRatings   CommentRating[]
-  pollVotes        PollVote[]
-  mailSent         MailLog[]
-  consents         UserConsent[]
+  comments            Comment[]
+  sessions            Session[]
+  subscriptions       Subscription[]
+  commentRatings      CommentRating[]
+  pollVotes           PollVote[]
+  mailSent            MailLog[]
+  consents            UserConsent[]
   articleRevisions    ArticleRevision[]
   pageRevisions       PageRevision[]
   mailchimpSyncErrors MailchimpSyncError[]
@@ -1405,7 +1405,9 @@ model Banner {
   imageId String?
   image   Image?  @relation(fields: [imageId], references: [id])
 
-  active Boolean @default(true)
+  active         Boolean @default(true)
+  collapsible    Boolean @default(true)
+  hideForMinutes Int     @default(1440)
 
   delay Int @default(0)
 
@@ -1857,12 +1859,12 @@ model SettingSyncProvider {
   enabled Boolean          @default(false)
 
   // Mailchimp-specific configuration
-  mailchimp_apiKey String?
-  mailchimp_listId String?
-  mailchimp_mergeFieldMappings     Json @default("[]")
-  mailchimp_interestGroupMappings  Json @default("[]")
-  mailchimp_defaultInterestGroupIds Json @default("[]")
-  mailchimp_extensions             Json @default("{}")
+  mailchimp_apiKey                  String?
+  mailchimp_listId                  String?
+  mailchimp_mergeFieldMappings      Json    @default("[]")
+  mailchimp_interestGroupMappings   Json    @default("[]")
+  mailchimp_defaultInterestGroupIds Json    @default("[]")
+  mailchimp_extensions              Json    @default("{}")
 
   // Last sync execution info
   lastSyncAt    DateTime?
@@ -1874,9 +1876,9 @@ model SettingSyncProvider {
 }
 
 model MailchimpSyncError {
-  id             String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt      DateTime @default(now())
-  modifiedAt     DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
 
   userId         String
   syncProviderId String
@@ -1884,8 +1886,8 @@ model MailchimpSyncError {
   errorMessage   String
   statusCode     Int?
 
-  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  syncProvider   SettingSyncProvider  @relation(fields: [syncProviderId], references: [id], onDelete: Cascade)
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  syncProvider SettingSyncProvider @relation(fields: [syncProviderId], references: [id], onDelete: Cascade)
 
   @@unique([userId, syncProviderId])
   @@map("mailchimp_sync_errors")

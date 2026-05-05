@@ -264,8 +264,10 @@ export type Banner = {
   __typename?: 'Banner';
   actions?: Maybe<Array<BannerAction>>;
   active: Scalars['Boolean'];
+  collapsible: Scalars['Boolean'];
   cta?: Maybe<Scalars['String']>;
   delay: Scalars['Int'];
+  hideForMinutes: Scalars['Int'];
   html?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
@@ -732,8 +734,10 @@ export type CreateBannerActionInput = {
 export type CreateBannerInput = {
   actions?: InputMaybe<Array<CreateBannerActionInput>>;
   active: Scalars['Boolean'];
+  collapsible: Scalars['Boolean'];
   cta?: InputMaybe<Scalars['String']>;
   delay: Scalars['Int'];
+  hideForMinutes: Scalars['Int'];
   html?: InputMaybe<Scalars['String']>;
   imageId?: InputMaybe<Scalars['String']>;
   showForLoginStatus: LoginStatus;
@@ -5641,8 +5645,10 @@ export type UnknownBlock = {
 export type UpdateBannerInput = {
   actions?: InputMaybe<Array<CreateBannerActionInput>>;
   active: Scalars['Boolean'];
+  collapsible: Scalars['Boolean'];
   cta?: InputMaybe<Scalars['String']>;
   delay: Scalars['Int'];
+  hideForMinutes: Scalars['Int'];
   html?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
   imageId?: InputMaybe<Scalars['String']>;

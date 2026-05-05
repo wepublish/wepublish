@@ -12,13 +12,10 @@ import {
   BannerText,
   BannerTitle,
 } from '@wepublish/banner/website';
-import { hasPaywallBypass } from '@wepublish/paywall/website';
 import { BuilderBannerProps } from '@wepublish/website/builder';
 import { useCallback, useEffect, useState } from 'react';
 
-const StyledBanner = styled(Banner, {
-  shouldForwardProp: propName => propName !== 'hasPaywallBypass',
-})<{ hasPaywallBypass: boolean }>`
+const StyledBanner = styled(Banner)`
   position: unset;
   top: unset;
   background-color: ${({ theme }) => theme.palette.primary.main};
@@ -82,12 +79,6 @@ const StyledBanner = styled(Banner, {
     ${BannerContentWrapper} {
       padding: ${({ theme }) => theme.spacing(2)};
     }
-
-    ${({ hasPaywallBypass }) =>
-      hasPaywallBypass &&
-      css`
-        display: none;
-      `}
   }
 `;
 
@@ -218,10 +209,7 @@ export const HauptstadtBanner = (props: BuilderBannerProps) => {
       isScrolled={isScrolled}
       data-banner
     >
-      <StyledBanner
-        {...props}
-        hasPaywallBypass={hasPaywallBypass()}
-      />
+      <StyledBanner {...props} />
     </HauptstadtBannerContainer>
   );
 };

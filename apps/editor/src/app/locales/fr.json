@@ -199,6 +199,66 @@
         "tags": "Tags"
       }
     },
+    "banner": {
+      "edit": {
+        "title": "Modifier la bannière"
+      },
+      "create": {
+        "title": "Créer une bannière"
+      },
+      "delete": {
+        "title": "Supprimer la bannière",
+        "body": "Voulez-vous vraiment supprimer la bannière ?",
+        "delete": "Supprimer la bannière"
+      },
+      "form": {
+        "displayOptions": "Options d'affichage",
+        "title": "Titre",
+        "text": "Texte",
+        "cta": "Appel à l'action",
+        "delay": "Délai en secondes",
+        "hideForMinutes": "Durée de masquage après la fermeture de la bannière (en minutes)",
+        "collapsible": "Réduire la bannière au lieu de la masquer après fermeture",
+        "active": "Actif",
+        "showOnArticles": "Afficher sur les articles",
+        "showOnPages": "Afficher sur ces pages",
+        "showForLoginStatus": "Afficher pour",
+        "html": "Code HTML",
+        "loginStatus": {
+          "ALL": "tous les visiteurs",
+          "LOGGED_IN": "visiteurs connectés",
+          "LOGGED_OUT": "visiteurs non connectés",
+          "SUBSCRIBED": "visiteurs abonnés",
+          "UNSUBSCRIBED": "visiteurs non abonnés",
+          "PAYWALL_BYPASSED": "visiteurs contournant le paywall"
+        },
+        "actions": "Actions",
+        "image": "Image",
+        "action": {
+          "add": "Ajouter une nouvelle action",
+          "label": "Libellé",
+          "url": "URL",
+          "style": "Style",
+          "role": "Rôle"
+        }
+      },
+      "list": {
+        "title": "Bannières",
+        "text": "Texte",
+        "createNew": "Créer une nouvelle",
+        "active": "Actif",
+        "edit": "Modifier",
+        "delete": "Supprimer"
+      },
+      "actions": {
+        "add": "Ajouter une action",
+        "role": {
+          "PRIMARY": "Principal",
+          "CANCEL": "Annuler",
+          "OTHER": "Autre"
+        }
+      }
+    },
     "blocks": {
       "crowdfunding": {
         "edit": "Modifier",

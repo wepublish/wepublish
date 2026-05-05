@@ -211,6 +211,8 @@
         "text": "Text",
         "cta": "Call to action",
         "delay": "Delay in seconds",
+        "hideForMinutes": "Hiding/Collapse duration after dismissing the banner in minutes",
+        "collapsible": "Collapse banner instead of hiding it after dismissing",
         "active": "Active",
         "showOnArticles": "Display on articles",
         "showOnPages": "Display on those pages",
