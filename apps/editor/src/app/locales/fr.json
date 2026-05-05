@@ -227,11 +227,11 @@
         "html": "Code HTML",
         "loginStatus": {
           "ALL": "tous les visiteurs",
-          "LOGGED_IN": "connectés",
-          "LOGGED_OUT": "non connectés",
-          "SUBSCRIBED": "abonnés",
-          "UNSUBSCRIBED": "non abonnés",
-          "PAYWALL_BYPASSED": "paywall contourné"
+          "LOGGED_IN": "visiteurs connectés",
+          "LOGGED_OUT": "visiteurs non connectés",
+          "SUBSCRIBED": "visiteurs abonnés",
+          "UNSUBSCRIBED": "visiteurs non abonnés",
+          "PAYWALL_BYPASSED": "visiteurs contournant le paywall"
         },
         "actions": "Actions",
         "image": "Image",
