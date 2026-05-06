@@ -178,11 +178,7 @@ function ImageEditPanel({
         setImageURL(image.mediumURL ?? '');
         setImageWidth(image.width);
         setImageHeight(image.height);
-        setFocalPoint(
-          image.focalPoint ?
-            { x: image.focalPoint.x ?? 0.5, y: image.focalPoint.y ?? 0.5 }
-          : undefined
-        );
+        setFocalPoint({ x: image.focalPointX, y: image.focalPointY });
         setLoading(false);
       } else {
         toaster.push(
@@ -230,7 +226,8 @@ function ImageEditPanel({
       link: link || undefined,
       license: license || undefined,
 
-      focalPoint,
+      focalPointX: focalPoint?.x ?? 0.5,
+      focalPointY: focalPoint?.y ?? 0.5,
     };
 
     if (isUpload) {

@@ -103,11 +103,7 @@ export class PageService {
             ...revision,
             userId,
             blocks: blocks.map(mapBlockUnionMap) as any[],
-            properties: {
-              createMany: {
-                data: properties,
-              },
-            },
+            properties: properties as any,
           },
         },
       },
@@ -157,15 +153,7 @@ export class PageService {
             ...revision,
             userId,
             blocks: blocks.map(mapBlockUnionMap) as any[],
-            properties: {
-              createMany: {
-                data: properties.map(property => ({
-                  key: property.key,
-                  value: property.value,
-                  public: property.public,
-                })),
-              },
-            },
+            properties: properties as any,
           },
         },
         tags: {
@@ -333,9 +321,6 @@ export class PageService {
           orderBy: {
             createdAt: 'desc',
           },
-          include: {
-            properties: true,
-          },
         },
       },
     });
@@ -371,15 +356,7 @@ export class PageService {
             ...revision,
             userId,
             blocks: revision.blocks ?? [],
-            properties: {
-              createMany: {
-                data: properties.map(property => ({
-                  key: property.key,
-                  value: property.value,
-                  public: property.public,
-                })),
-              },
-            },
+            properties: properties as any,
           },
         },
       },

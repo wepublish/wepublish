@@ -16,7 +16,6 @@ import {
 import { BlockContentModule } from '@wepublish/block-content/api';
 import { SettingModule } from '@wepublish/settings/api';
 import { TagModule } from '@wepublish/tag/api';
-import { PropertyModule } from '@wepublish/property/api';
 
 @Module({
   imports: [
@@ -25,7 +24,6 @@ import { PropertyModule } from '@wepublish/property/api';
     AuthorModule,
     SettingModule,
     TagModule,
-    PropertyModule,
     forwardRef(() => BlockContentModule),
   ],
   providers: [
