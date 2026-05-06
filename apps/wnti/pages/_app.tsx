@@ -8,7 +8,6 @@ import {
 import { GoogleTagManager } from '@next/third-parties/google';
 import { TitleBlock, TitleBlockTitle } from '@wepublish/block-content/website';
 import { withErrorSnackbar } from '@wepublish/errors/website';
-import { PaymentAmountPicker } from '@wepublish/membership/website';
 import {
   FooterContainer,
   NavbarContainer,
@@ -47,6 +46,7 @@ import { TsriNavbar } from '../src/components/tsri-navbar';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
 import { TsriTeaser } from '../src/components/tsri-teaser';
+import { WntiPaymentAmountPicker } from '../src/components/wnti-payment-amount-picker';
 import theme from '../src/theme';
 import { MitmachenInner } from './mitmachen';
 
@@ -110,7 +110,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Script={Script}
           Navbar={TsriNavbar}
           ArticleMeta={TsriArticleMeta}
-          PaymentAmount={PaymentAmountPicker}
+          PaymentAmount={WntiPaymentAmountPicker}
           elements={{ Link: NextWepublishLink }}
           blocks={{
             BaseTeaser: TsriTeaser,

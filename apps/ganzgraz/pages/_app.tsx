@@ -39,6 +39,7 @@ import {
   GanzGrazNavbarActions,
   GanzGrazPaperActions,
 } from '../src/components/ganzgraz-navbar';
+import { GanzGrazPaymentAmountPicker } from '../src/components/ganzgraz-payment-amount-picker';
 import theme from '../src/theme';
 
 setDefaultOptions({
@@ -95,6 +96,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Head={Head}
           Script={Script}
           Author={GanzGrazAuthor}
+          PaymentAmount={GanzGrazPaymentAmountPicker}
           elements={{ Link: NextWepublishLink }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}

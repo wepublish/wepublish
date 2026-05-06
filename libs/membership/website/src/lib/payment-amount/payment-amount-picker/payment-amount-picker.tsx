@@ -4,7 +4,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { Currency } from '@wepublish/website/api';
-import { forwardRef, PropsWithChildren, useMemo } from 'react';
+import { forwardRef, PropsWithChildren } from 'react';
 import { formatCurrency } from '../../formatters/format-currency';
 import styled from '@emotion/styled';
 
@@ -96,15 +96,15 @@ export const PaymentAmountPickerItem = forwardRef<
 
 export const PaymentAmountPicker = forwardRef<
   HTMLInputElement,
-  BuilderPaymentAmountProps
+  BuilderPaymentAmountProps & { pickerItems: number[] }
 >(
   (
     {
       className,
-      slug,
       currency,
       amountPerMonthMin,
       amountPerMonthTarget,
+      pickerItems,
       name,
       error,
       value,
@@ -114,19 +114,8 @@ export const PaymentAmountPicker = forwardRef<
   ) => {
     const {
       elements: { TextField },
-      meta: { locale, siteTitle },
+      meta: { locale },
     } = useWebsiteBuilder();
-
-    const pickerItems = useMemo(() => {
-      switch (siteTitle) {
-        case 'WNTI':
-          return slug?.includes('donate') ?
-              [10000, 15000, 20000]
-            : [1000, 1500, 2000];
-        default:
-          return [1000, 1500, 2000];
-      }
-    }, [siteTitle, slug]);
 
     return (
       <PaymentAmountPickerWrapper
