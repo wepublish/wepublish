@@ -37,7 +37,16 @@ export const SubscribeBlock = ({
   } = useSubscribeBlock();
   const { userSubscriptions } = subscribeProps;
   const {
-    query: { upgradeSubscriptionId, deactivateSubscriptionId, userId },
+    query: {
+      memberPlanBySlug,
+      additionalMemberPlans,
+      firstName,
+      mail,
+      lastName,
+      upgradeSubscriptionId,
+      deactivateSubscriptionId,
+      userId,
+    },
   } = useContext(BuilderRouterContext);
 
   const subscriptionToUpgrade = useMemo(() => {
@@ -89,6 +98,12 @@ export const SubscribeBlock = ({
       {!subscriptionToUpgrade && (
         <Subscribe
           {...subscribeProps}
+          defaults={{
+            email: mail as string | undefined,
+            firstName: firstName as string | undefined,
+            name: lastName as string | undefined,
+            memberPlanSlug: memberPlanBySlug as string | undefined,
+          }}
           className={className}
           memberPlans={memberPlansObj}
           fields={fields.map(lowercase) as BuilderSubscribeProps['fields']}
@@ -151,6 +166,9 @@ export const SubscribeBlock = ({
       {subscriptionToUpgrade && (
         <Upgrade
           {...subscribeProps}
+          defaults={{
+            memberPlanSlug: memberPlanBySlug as string | undefined,
+          }}
           className={className}
           memberPlans={memberPlansObj}
           subscriptionToUpgrade={subscriptionToUpgrade}
