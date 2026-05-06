@@ -9,7 +9,7 @@ export const GanzGrazPaymentAmountPicker = forwardRef<
   <PaymentAmountPicker
     {...props}
     ref={ref}
-    pickerItems={[1000, 1500, 2000]}
+    pickerItems={[550, 1000, 1500]}
   />
 ));
 
