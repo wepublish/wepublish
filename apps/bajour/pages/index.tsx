@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { SliderWrapper } from '@wepublish/block-content/website';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToV1Props,
   CommentListDocument,
@@ -72,7 +73,7 @@ export const getStaticProps: GetStaticProps = async () => {
     return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, []);
+  const client = getV1ApiClient(getApiUrl(), []);
 
   const [page] = await Promise.all([
     client.query<PageQuery>({

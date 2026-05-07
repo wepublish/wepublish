@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -30,7 +31,7 @@ export const getStaticProps: GetStaticProps = async () => {
     return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, []);
+  const client = getV1ApiClient(getApiUrl(), []);
   await Promise.all([
     client.query({
       query: PageDocument,

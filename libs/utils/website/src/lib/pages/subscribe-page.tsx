@@ -22,6 +22,8 @@ import {
 } from '@wepublish/website/api';
 import { ComponentProps, useMemo } from 'react';
 
+import { getApiUrl } from '../api-url';
+
 type SubscribePageProps = Omit<ComponentProps<typeof SubscribeContainer>, ''>;
 
 export function SubscribePage(props: SubscribePageProps) {
@@ -126,7 +128,7 @@ export function SubscribePage(props: SubscribePageProps) {
 
 SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
   const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  const client = getV1ApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
