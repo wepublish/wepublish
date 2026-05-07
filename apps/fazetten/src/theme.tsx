@@ -450,7 +450,7 @@ export const TeaserSlotsTheme = createTheme(theme, {
           unit: 'rem',
           breakpoints: WePTheme.breakpoints.values,
           values: {
-            xs: 48,
+            xs: 32,
             md: 60,
           },
         }),
