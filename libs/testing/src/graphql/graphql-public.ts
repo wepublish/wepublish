@@ -5344,6 +5344,7 @@ export type TeaserGridBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']>;
   numColumns: Scalars['Int'];
   teasers: Array<Maybe<Teaser>>;
+  title?: Maybe<Scalars['String']>;
   type: BlockType;
 };
 
@@ -5352,6 +5353,7 @@ export type TeaserGridBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']>;
   numColumns: Scalars['Int'];
   teasers: Array<InputMaybe<TeaserInput>>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type TeaserGridFlexBlock = BaseBlock & {
@@ -5359,6 +5361,7 @@ export type TeaserGridFlexBlock = BaseBlock & {
   blockStyle?: Maybe<Scalars['String']>;
   blockStyleName?: Maybe<Scalars['String']>;
   flexTeasers: Array<FlexTeaser>;
+  title?: Maybe<Scalars['String']>;
   type: BlockType;
 };
 
@@ -5366,6 +5369,7 @@ export type TeaserGridFlexBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   blockStyleName?: InputMaybe<Scalars['String']>;
   flexTeasers: Array<FlexTeaserInput>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type TeaserInput = {
