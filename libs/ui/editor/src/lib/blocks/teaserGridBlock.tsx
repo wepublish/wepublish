@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { FullImageFragment, TeaserType } from '@wepublish/editor/api';
 import arrayMove from 'array-move';
 import nanoid from 'nanoid';
-import { ReactNode, useState } from 'react';
+import { ChangeEvent, ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdArticle, MdDelete, MdEdit } from 'react-icons/md';
 import {
@@ -17,6 +17,7 @@ import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { Overlay } from '../atoms/overlay';
 import { PlaceholderImage } from '../atoms/placeholderImage';
 import { PlaceholderInput } from '../atoms/placeholderInput';
+import { TypographicTextArea } from '../atoms/typographicTextArea';
 import { Typography } from '../atoms/typography';
 import { TeaserEditPanel } from '../panel/teaserEditPanel';
 import { TeaserSelectAndEditPanel } from '../panel/teaserSelectAndEditPanel';
@@ -122,6 +123,7 @@ export function TeaserGridBlock({
   value,
   onChange,
 }: BlockProps<TeaserGridBlockValue>) {
+  const { t } = useTranslation();
   const [editIndex, setEditIndex] = useState(0);
 
   const [isEditModalOpen, setEditModalOpen] = useState(false);
@@ -134,6 +136,7 @@ export function TeaserGridBlock({
     teaserLink: TeaserTypeMixed | null
   ) {
     onChange({
+      ...value,
       numColumns,
       teasers: Object.assign([], teasers, {
         [index]: [nanoid(), teaserLink || null],
@@ -151,13 +154,28 @@ export function TeaserGridBlock({
     document.body.style.pointerEvents = '';
 
     onChange({
+      ...value,
       numColumns,
       teasers: arrayMove(teasers, oldIndex, newIndex),
     });
   }
 
+  function handleTitleChange(e: ChangeEvent<HTMLTextAreaElement>) {
+    onChange({
+      ...value,
+      title: e.target.value,
+    });
+  }
+
   return (
     <>
+      <TypographicTextArea
+        variant="title"
+        align="center"
+        placeholder={t('blocks.title.title')}
+        value={value.title ?? ''}
+        onChange={handleTitleChange}
+      />
       <Grid
         numColumns={numColumns}
         axis="xy"

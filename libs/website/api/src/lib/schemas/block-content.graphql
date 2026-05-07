@@ -260,6 +260,7 @@ fragment FullTeaser on Teaser {
 }
 
 fragment FullTeaserGridFlexBlock on TeaserGridFlexBlock {
+  title
   type
   blockStyle: blockStyleName
   flexTeasers {
@@ -277,6 +278,7 @@ fragment FullTeaserGridFlexBlock on TeaserGridFlexBlock {
 }
 
 fragment FullTeaserGridBlock on TeaserGridBlock {
+  title
   type
   blockStyle: blockStyleName
   teasers {
