@@ -36,6 +36,8 @@ import { withAuthGuard } from '../../auth-guard';
 import { ssrAuthLink } from '../../auth-link';
 import { getSessionTokenProps } from '../../get-session-token-props';
 
+import { getApiUrl } from '../../api-url';
+
 const SubscriptionsWrapper = styled('div')`
   display: flex;
   flex-wrap: wrap;
@@ -241,7 +243,7 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
   }
 
   const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  const client = getV1ApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
