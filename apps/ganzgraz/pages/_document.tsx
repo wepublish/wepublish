@@ -14,7 +14,6 @@ export default function MuiDocument(props: DocumentHeadTagsProps) {
 
         <Script
           type="text/javascript"
-          data-cmp-ab="1"
           src="https://cdn.consentmanager.net/delivery/autoblocking/ee45badb726a6.js"
           data-cmp-host="b.delivery.consentmanager.net"
           data-cmp-cdn="cdn.consentmanager.net"
