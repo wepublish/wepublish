@@ -1,6 +1,7 @@
 import mailchimp, { campaigns } from '@mailchimp/mailchimp_marketing';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -39,7 +40,7 @@ export const getStaticProps: GetStaticProps = async () => {
     server: serverRuntimeConfig.env.MAILCHIMP_SERVER_PREFIX,
   });
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, []);
+  const client = getV1ApiClient(getApiUrl(), []);
   const [mailchimpResponse] = await Promise.all([
     mailchimp.campaigns.list({
       count: 4,

@@ -5,7 +5,7 @@ import {
   LoginFormContainer,
   useUser,
 } from '@wepublish/authentication/website';
-import { handleJwtLogin } from '@wepublish/utils/website';
+import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
 import {
   getV1ApiClient,
   SessionWithTokenWithoutUser,
@@ -13,7 +13,6 @@ import {
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
 
@@ -75,9 +74,7 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {};
   }
-
-  const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
+  const client = getV1ApiClient(getApiUrl(), []);
 
   await handleJwtLogin(ctx, client, undefined);
 

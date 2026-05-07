@@ -8,7 +8,7 @@ import {
   PeerProfileDocument,
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
+import { getApiUrl } from '../api-url';
 
 const fourOhFourSlug = '404';
 
@@ -17,9 +17,7 @@ export function FourOhFourPage() {
 }
 
 export const getFourOhFourStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
-
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
+  const client = getV1ApiClient(getApiUrl(), []);
   const [page] = await Promise.all([
     client.query<PageQuery>({
       query: PageDocument,
