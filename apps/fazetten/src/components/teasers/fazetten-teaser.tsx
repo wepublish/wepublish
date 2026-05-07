@@ -262,14 +262,32 @@ export const WepTeaser = ({
           {/* image start */}
           <TeaserImageWrapper>
             <TeaserImageInnerWrapper>
-              {image && <TeaserImage image={image as FullImageFragment} />}
-              {peerLogo && (
-                <TeaserPeerLogo
-                  image={peerLogo}
-                  maxWidth={200}
-                  square
-                />
-              )}
+              {(() => {
+                const imageContent = (
+                  <>
+                    {image && (
+                      <TeaserImage image={image as FullImageFragment} />
+                    )}
+                    {peerLogo && (
+                      <TeaserPeerLogo
+                        image={peerLogo}
+                        maxWidth={200}
+                        square
+                      />
+                    )}
+                  </>
+                );
+                return href ?
+                    <Link
+                      href={href}
+                      target={target}
+                      color="inherit"
+                      underline="none"
+                    >
+                      {imageContent}
+                    </Link>
+                  : imageContent;
+              })()}
             </TeaserImageInnerWrapper>
             <TeaserImageCaption>
               {teaser?.image?.description}
