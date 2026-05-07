@@ -440,6 +440,45 @@ export const AlternatingTeaserTheme = createTheme(theme, {
   },
 } as PartialDeep<Theme> | ThemeOptions);
 
+export const TeaserSlotsTheme = createTheme(theme, {
+  typography: {
+    teaserSlotsTitle: {
+      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'rem',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 48,
+            md: 60,
+          },
+        }),
+      ]),
+      fontWeight: 500,
+      color: theme.palette.common.black,
+      paddingBottom: theme.spacing(1),
+      lineHeight: 1.2,
+    },
+  },
+  components: {
+    MuiTypography: {
+      defaultProps: {
+        variantMapping: {
+          teaserSlotsTitle: 'h2',
+        },
+      },
+      styleOverrides: {
+        root: {
+          '&:empty': {
+            display: 'none',
+          },
+        },
+      },
+    },
+  } as ThemeOptions['components'],
+} as PartialDeep<Theme> | ThemeOptions);
+
 export { theme as default };
 
 export const globalStyles = (
