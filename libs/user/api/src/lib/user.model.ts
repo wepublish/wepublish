@@ -231,11 +231,18 @@ export class CreateUserInput extends PickType(
 
   @Field(() => Boolean, { nullable: true })
   totpExempt?: boolean;
+
+  @Field(() => Boolean, {
+    nullable: true,
+    description:
+      'When true, suppress the ACCOUNT_CREATION welcome email. Useful for bulk imports and scripted user creation.',
+  })
+  skipMail?: boolean;
 }
 
 @ArgsType()
 export class UpdateUserInput extends PartialType(
-  OmitType(CreateUserInput, ['password'] as const, ArgsType),
+  OmitType(CreateUserInput, ['password', 'skipMail'] as const, ArgsType),
   ArgsType
 ) {
   @Field({ nullable: true })
@@ -253,6 +260,7 @@ export class RegisterUserInput extends OmitType(
     'roleIDs',
     'properties',
     'totpExempt',
+    'skipMail',
   ] as const,
   ArgsType
 ) {
