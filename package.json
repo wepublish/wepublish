@@ -175,7 +175,7 @@
     "passport": "^0.7.0",
     "prettier": "^3.5.3",
     "pretty-quick": "^4.1.1",
-    "prisma": "7.5.0",
+    "prisma": "7.8.0",
     "querystring-es3": "^0.2.1",
     "react-refresh": "^0.10.0",
     "snapshot-diff": "^0.9.0",
