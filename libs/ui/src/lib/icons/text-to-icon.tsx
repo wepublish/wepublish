@@ -3,6 +3,7 @@ import {
   FaAppStoreIos,
   FaBluesky,
   FaDiscord,
+  FaGithub,
   FaGooglePlay,
   FaInstagram,
   FaLinkedin,
@@ -31,7 +32,7 @@ export const TextToIcon = ({
 }) => {
   if (['github'].includes(title.toLowerCase())) {
     return (
-      <FaReddit
+      <FaGithub
         size={size}
         aria-label={title}
       />
