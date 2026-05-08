@@ -4,6 +4,9 @@ export function getApiUrl(): string {
   const { publicRuntimeConfig, serverRuntimeConfig } = getConfig() ?? {};
 
   if (typeof window === 'undefined') {
+    if (process.env.NEXT_PHASE === 'phase-production-build') {
+      return publicRuntimeConfig?.env?.API_URL || '';
+    }
     return (
       serverRuntimeConfig?.env?.API_URL_INTERNAL ||
       publicRuntimeConfig?.env?.API_URL ||

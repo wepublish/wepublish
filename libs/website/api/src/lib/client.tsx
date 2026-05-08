@@ -28,7 +28,13 @@ const isFile = (value: unknown): boolean =>
       (value && typeof value === 'object' && Object.values(value).some(isFile))
   );
 
-const SSR_FETCH_TIMEOUT_MS = Number(process.env.SSR_FETCH_TIMEOUT_MS) || 10_000;
+const SSR_FETCH_TIMEOUT_MS = (() => {
+  const explicit = Number(process.env.SSR_FETCH_TIMEOUT_MS);
+  if (explicit > 0) {
+    return explicit;
+  }
+  return process.env.NEXT_PHASE === 'phase-production-build' ? 60_000 : 10_000;
+})();
 
 const createSsrTimeoutFetch =
   (timeoutMs: number): typeof fetch =>
