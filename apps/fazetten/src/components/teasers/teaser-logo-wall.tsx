@@ -51,6 +51,19 @@ export const TeaserLogoWall = styled(WepTeaser)`
 
   ${TeaserTitle} {
     grid-row: 1 / 2;
+    grid-column: -1 / 1;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    z-index: 1;
+
+    & > a {
+      display: block;
+      width: 100%;
+      height: 100%;
+      text-indent: -9999px;
+      overflow: hidden;
+    }
   }
 
   ${TeaserLead} {
