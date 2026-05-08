@@ -41,14 +41,17 @@ export class ArticleService {
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
-  async getArticles({
-    filter,
-    cursorId,
-    sort = ArticleSort.PublishedAt,
-    order = SortOrder.Descending,
-    take = 10,
-    skip,
-  }: ArticleListArgs) {
+  async getArticles(
+    {
+      filter,
+      cursorId,
+      sort = ArticleSort.PublishedAt,
+      order = SortOrder.Descending,
+      take = 10,
+      skip,
+    }: ArticleListArgs,
+    options: { skipTotalCount?: boolean } = {}
+  ) {
     if (filter?.body) {
       const articleIds = await this.performFullTextSearch(filter.body);
 
@@ -76,10 +79,12 @@ export class ArticleService {
     const where = createArticleFilter(filter ?? {});
 
     const [totalCount, articles] = await Promise.all([
-      this.prisma.article.count({
-        where,
-        orderBy,
-      }),
+      options.skipTotalCount ?
+        Promise.resolve(0)
+      : this.prisma.article.count({
+          where,
+          orderBy,
+        }),
       this.prisma.article.findMany({
         where,
         skip,
