@@ -1044,6 +1044,17 @@ export type EventTeaserInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+/** Postgres EXPLAIN ANALYZE plans for the tag-page article-list count and offset findMany queries. Diagnostic only. */
+export type ExplainTagPagePlan = {
+  __typename?: 'ExplainTagPagePlan';
+  /** EXPLAIN (ANALYZE, BUFFERS) for the count(*) query. */
+  countPlan: Scalars['String'];
+  /** EXPLAIN (ANALYZE, BUFFERS) for the offset-paginated findMany query. */
+  findManyPlan: Scalars['String'];
+  tagId: Scalars['String'];
+  tagLabel: Scalars['String'];
+};
+
 export type ExternalApp = {
   __typename?: 'ExternalApp';
   createdAt: Scalars['DateTime'];
@@ -4175,6 +4186,8 @@ export type Query = {
    *
    */
   expectedRevenue: Array<DashboardInvoice>;
+  /** Diagnostic: returns Postgres EXPLAIN ANALYZE plans for the tag-page article-list count and offset findMany queries. Admin only. */
+  explainTagPageQuery: ExplainTagPagePlan;
   /** Returns a single external app by id. Requires authentication. */
   externalApp: ExternalApp;
   /** Returns all external apps. Requires authentication. */
@@ -4543,6 +4556,13 @@ export type QueryEventsArgs = {
 export type QueryExpectedRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
+};
+
+
+export type QueryExplainTagPageQueryArgs = {
+  page?: InputMaybe<Scalars['Int']>;
+  tagLabel: Scalars['String'];
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 

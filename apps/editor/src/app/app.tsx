@@ -59,6 +59,7 @@ import { BlockStyleList } from './routes/blockStyles/blockStyleList';
 import { CommentRatingEditView } from './routes/commentRatings/commentRatingEditView';
 import { CommentEditView } from './routes/comments/commentEditView';
 import { CommentList } from './routes/comments/commentList';
+import { DiagnosticsTagPage } from './routes/diagnostics/diagnostics-tag-page';
 import { Dashboard } from './routes/dashboard/dashboard';
 import { DocumentList } from './routes/documents/documentList';
 import { EventCreateView } from './routes/events/eventCreateView';
@@ -1056,6 +1057,15 @@ export function App() {
             <Route
               path="logout"
               element={<Logout />}
+            />
+            {/* Diagnostics Routes */}
+            <Route
+              path="diagnostics/tag-page"
+              element={
+                <Base>
+                  <DiagnosticsTagPage />
+                </Base>
+              }
             />
           </Routes>
         </BrowserRouter>
