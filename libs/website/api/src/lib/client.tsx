@@ -28,19 +28,44 @@ const isFile = (value: unknown): boolean =>
       (value && typeof value === 'object' && Object.values(value).some(isFile))
   );
 
+const SSR_FETCH_TIMEOUT_MS = Number(process.env.SSR_FETCH_TIMEOUT_MS) || 10_000;
+
+const createSsrTimeoutFetch =
+  (timeoutMs: number): typeof fetch =>
+  (input, init) => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+      controller.abort(new Error(`SSR fetch timeout after ${timeoutMs}ms`));
+    }, timeoutMs);
+    return fetch(input, { ...init, signal: controller.signal }).finally(() =>
+      clearTimeout(timeoutId)
+    );
+  };
+
 const createV1ApiClient = (
   apiUrl: string,
   links: ApolloLink[],
   cacheConfig?: InMemoryCacheConfig,
   cache?: NormalizedCacheObject
 ) => {
+  const ssrFetchOptions =
+    typeof window === 'undefined' ?
+      { fetch: createSsrTimeoutFetch(SSR_FETCH_TIMEOUT_MS) }
+    : {};
+
   // If operation is uploading a file, use the upload link, else use the batch http
   const httpLink = split(
     ({ variables }) => isFile(variables),
     createUploadLink({
       uri: `${apiUrl}/v1`,
+      ...ssrFetchOptions,
     }),
-    new BatchHttpLink({ uri: `${apiUrl}/v1`, batchMax: 5, batchInterval: 20 })
+    new BatchHttpLink({
+      uri: `${apiUrl}/v1`,
+      batchMax: 5,
+      batchInterval: 20,
+      ...ssrFetchOptions,
+    })
   );
 
   const link = from([...links, httpLink]);
