@@ -138,6 +138,33 @@ query ArticleList(
   }
 }
 
+query RelatedArticleList(
+  $filter: ArticleFilter
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: ArticleSort
+) {
+  articles(
+    filter: $filter
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...ArticleWithoutBlocks
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}
+
 query FullArticleList(
   $filter: ArticleFilter
   $cursorId: String

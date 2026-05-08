@@ -1,6 +1,7 @@
 import {
   ArticleWithoutBlocksFragment,
   useArticleListQuery,
+  useRelatedArticleListQuery,
 } from '@wepublish/website/api';
 import {
   BuilderArticleListProps,
@@ -15,6 +16,7 @@ export type ArticleListContainerProps = BuilderContainerProps &
     filter?: (
       articles: ArticleWithoutBlocksFragment[]
     ) => ArticleWithoutBlocksFragment[];
+    withTotalCount?: boolean;
   };
 
 export function ArticleListContainer({
@@ -22,11 +24,19 @@ export function ArticleListContainer({
   variables,
   onVariablesChange,
   filter,
+  withTotalCount = true,
 }: ArticleListContainerProps) {
   const { ArticleList } = useWebsiteBuilder();
-  const { data, loading, error } = useArticleListQuery({
+  const articleListResult = useArticleListQuery({
     variables,
+    skip: !withTotalCount,
   });
+  const relatedListResult = useRelatedArticleListQuery({
+    variables,
+    skip: withTotalCount,
+  });
+  const { data, loading, error } =
+    withTotalCount ? articleListResult : relatedListResult;
 
   const filteredArticles = useMemo(
     () =>
