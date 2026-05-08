@@ -8,7 +8,7 @@ import { getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToV1Props,
   ArticleDocument,
-  ArticleListDocument,
+  RelatedArticleListDocument,
   ArticleSort,
   CommentItemType,
   CommentListDocument,
@@ -91,6 +91,7 @@ export default function ArticleBySlugOrId() {
                 .filter(article => article.id !== data.article.id)
                 .splice(0, nrOfRecentArticles)
             }
+            withTotalCount={false}
           />
           <div id={'comments'} />
         </ArticleWrapper>
@@ -158,7 +159,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
     await Promise.all([
       client.query({
-        query: ArticleListDocument,
+        query: RelatedArticleListDocument,
         variables: {
           sort: ArticleSort.PublishedAt,
           order: SortOrder.Descending,

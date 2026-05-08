@@ -16,7 +16,7 @@ import {
   addClientCacheToV1Props,
   Article as ArticleType,
   ArticleDocument,
-  ArticleListDocument,
+  RelatedArticleListDocument,
   BannerDocumentType,
   CommentItemType,
   CommentListDocument,
@@ -138,6 +138,7 @@ export default function ArticleBySlugOrId() {
                         .filter(article => article.id !== data.article?.id)
                         .splice(0, 3)
                     }
+                    withTotalCount={false}
                   />
                 </ArticleWrapper>
 
@@ -227,7 +228,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   if (article.data?.article) {
     await Promise.all([
       client.query({
-        query: ArticleListDocument,
+        query: RelatedArticleListDocument,
         variables: {
           filter: {
             tags: article.data.article.tags.map((tag: Tag) => tag.id),

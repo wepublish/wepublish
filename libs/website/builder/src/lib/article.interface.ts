@@ -5,6 +5,7 @@ import {
   ArticleListQuery,
   ArticleListQueryVariables,
   ArticleQuery,
+  RelatedArticleListQuery,
 } from '@wepublish/website/api';
 import { PropsWithChildren } from 'react';
 
@@ -26,7 +27,7 @@ export type BuilderArticleMetaProps = {
 };
 
 export type BuilderArticleListProps = Pick<
-  QueryResult<ArticleListQuery>,
+  QueryResult<ArticleListQuery | RelatedArticleListQuery>,
   'data' | 'loading' | 'error'
 > & {
   className?: string;
