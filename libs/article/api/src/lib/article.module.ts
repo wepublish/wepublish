@@ -17,6 +17,7 @@ import { BlockContentModule } from '@wepublish/block-content/api';
 import { SettingModule } from '@wepublish/settings/api';
 import { TagModule } from '@wepublish/tag/api';
 import { PropertyModule } from '@wepublish/property/api';
+import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { PropertyModule } from '@wepublish/property/api';
     SettingModule,
     TagModule,
     PropertyModule,
+    KvTtlCacheModule,
     forwardRef(() => BlockContentModule),
   ],
   providers: [

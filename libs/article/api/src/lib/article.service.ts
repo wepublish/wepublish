@@ -17,12 +17,16 @@ import {
 } from '@wepublish/utils/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+
+const ARTICLE_COUNT_CACHE_TTL_SECONDS = 60;
 
 @Injectable()
 export class ArticleService {
   constructor(
     private prisma: PrismaClient,
-    private trackingPixelService: TrackingPixelService
+    private trackingPixelService: TrackingPixelService,
+    private kv: KvTtlCacheService
   ) {}
 
   @PrimeDataLoader(ArticleDataloaderService)
@@ -78,13 +82,17 @@ export class ArticleService {
     const orderBy = createArticleOrder(sort, order);
     const where = createArticleFilter(filter ?? {});
 
+    const countCacheKey = `count:${JSON.stringify(filter ?? {})}`;
+
     const [totalCount, articles] = await Promise.all([
       options.skipTotalCount ?
         Promise.resolve(0)
-      : this.prisma.article.count({
-          where,
-          orderBy,
-        }),
+      : this.kv.getOrLoadNs(
+          'articles',
+          countCacheKey,
+          () => this.prisma.article.count({ where, orderBy }),
+          ARTICLE_COUNT_CACHE_TTL_SECONDS
+        ),
       this.prisma.article.findMany({
         where,
         skip,
