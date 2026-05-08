@@ -941,10 +941,13 @@ const createExcludeIdsFilter = (
   return {};
 };
 
+const isEmptyWhere = (where: Prisma.ArticleWhereInput) =>
+  Object.keys(where).length === 0;
+
 export const createArticleFilter = (
   filter: Partial<ArticleFilter>
-): Prisma.ArticleWhereInput => ({
-  AND: [
+): Prisma.ArticleWhereInput => {
+  const andClauses = [
     createIdsFilter(filter),
     createTitleFilter(filter),
     createPreTitleFilter(filter),
@@ -958,12 +961,17 @@ export const createArticleFilter = (
     createHiddenFilter(filter),
     createPeerIdFilter(filter),
     createExcludeIdsFilter(filter),
-    {
-      OR: [
-        createPublishedFilter(filter),
-        createDraftFilter(filter),
-        createPendingFilter(filter),
-      ],
-    },
-  ],
-});
+  ].filter(c => !isEmptyWhere(c));
+
+  const orClauses = [
+    createPublishedFilter(filter),
+    createDraftFilter(filter),
+    createPendingFilter(filter),
+  ].filter(c => !isEmptyWhere(c));
+
+  if (orClauses.length > 0) {
+    andClauses.push({ OR: orClauses });
+  }
+
+  return andClauses.length > 0 ? { AND: andClauses } : {};
+};
