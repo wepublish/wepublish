@@ -15,7 +15,7 @@ import {
   BuilderCommentProps,
   BuilderTeaserListBlockProps,
 } from '@wepublish/website/builder';
-import Link from 'next/link';
+import { NextWepublishLink } from '@wepublish/utils/website';
 import { useMemo } from 'react';
 import { MdForum } from 'react-icons/md';
 
@@ -142,7 +142,7 @@ export const FdtArticleImage = styled(Image)`
   border-radius: ${({ theme }) => theme.spacing(2.5)};
 `;
 
-export const ReadMoreLink = styled(Link)`
+export const ReadMoreLink = styled(NextWepublishLink)`
   grid-column: -1/1;
   justify-self: self-end;
 `;
