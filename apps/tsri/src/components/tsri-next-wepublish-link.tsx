@@ -2,11 +2,12 @@ import styled from '@emotion/styled';
 import { css, IconButton, Modal as MUIModal } from '@mui/material';
 import { Link as BuilderLink } from '@wepublish/ui';
 import { BuilderLinkProps } from '@wepublish/website/builder';
-import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import {
   FormEvent,
   forwardRef,
   MouseEvent as ReactMouseEvent,
+  useEffect,
   useState,
 } from 'react';
 import { MdClose } from 'react-icons/md';
@@ -114,11 +115,22 @@ const parseQueryParams: (url: string) => QueryParams = (
 
 export const TsriNextWepublishLink = forwardRef<
   HTMLAnchorElement,
-  BuilderLinkProps & { variant?: string }
->(function NextWepublishLink({ children, href, variant, ...props }, ref) {
+  BuilderLinkProps & { variant?: string; prefetch?: boolean }
+>(function NextWepublishLink(
+  { children, href, variant, prefetch = false, ...props },
+  ref
+) {
   const [modalOpen, setModalOpen] = useState(false);
   const [isMCSubmit, setIsMCSubmit] = useState(false);
   const queryParams = parseQueryParams(href ?? '');
+  const router = useRouter();
+  const target = (props as { target?: string }).target;
+
+  useEffect(() => {
+    if (prefetch && href && isInternalHref(href)) {
+      router.prefetch(href);
+    }
+  }, [prefetch, href, router]);
 
   const handleLinkClick = (
     event: ReactMouseEvent<HTMLAnchorElement, MouseEvent>
@@ -136,6 +148,30 @@ export const TsriNextWepublishLink = forwardRef<
       setModalOpen(true);
       return;
     }
+    if (event.defaultPrevented) {
+      return;
+    }
+    if (!href) {
+      return;
+    }
+    if (
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey ||
+      event.button !== 0
+    ) {
+      return;
+    }
+    if (target && target !== '_self') {
+      return;
+    }
+    if (!isInternalHref(href)) {
+      return;
+    }
+
+    event.preventDefault();
+    router.push(href);
   };
 
   const handleClose = () => {
@@ -152,7 +188,6 @@ export const TsriNextWepublishLink = forwardRef<
       <BuilderLink
         {...props}
         ref={ref}
-        component={NextLink}
         href={href ?? ''}
         onClick={handleLinkClick}
         variant={variant}
@@ -184,3 +219,7 @@ export const TsriNextWepublishLink = forwardRef<
     </>
   );
 });
+
+function isInternalHref(href: string): boolean {
+  return href.startsWith('/') || href.startsWith('#');
+}
