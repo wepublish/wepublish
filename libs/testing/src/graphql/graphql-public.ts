@@ -2129,6 +2129,7 @@ export type MutationApproveCommentArgs = {
 export type MutationCancelSubscriptionArgs = {
   id: Scalars['String'];
   reason: SubscriptionDeactivationReason;
+  skipMail?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type MutationCancelUserSubscriptionArgs = {
@@ -2414,6 +2415,7 @@ export type MutationCreateUserArgs = {
   password?: InputMaybe<Scalars['String']>;
   properties: Array<PropertyInput>;
   roleIDs: Array<Scalars['String']>;
+  skipMail?: InputMaybe<Scalars['Boolean']>;
   totpExempt?: InputMaybe<Scalars['Boolean']>;
   userImageID?: InputMaybe<Scalars['String']>;
 };
@@ -2639,6 +2641,7 @@ export type MutationImportSubscriptionArgs = {
   paymentMethodID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
   properties: Array<PropertyInput>;
+  skipMail?: InputMaybe<Scalars['Boolean']>;
   startsAt: Scalars['DateTime'];
   userID: Scalars['String'];
 };
