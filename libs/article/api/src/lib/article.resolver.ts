@@ -120,7 +120,10 @@ export class ArticleResolver {
     );
     const skipTotalCount = !hasTotalCountField && !hasFragment;
 
-    return this.articleService.getArticles(args, { skipTotalCount });
+    return this.articleService.getArticles(args, {
+      skipTotalCount,
+      skipCache: isPreview,
+    });
   }
 
   @Permissions(CanCreateArticle)

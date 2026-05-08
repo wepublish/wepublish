@@ -19,7 +19,7 @@ import { mapBlockUnionMap } from '@wepublish/block-content/api';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
-const ARTICLE_COUNT_CACHE_TTL_SECONDS = 60;
+const ARTICLE_CACHE_TTL_SECONDS = 60;
 
 @Injectable()
 export class ArticleService {
@@ -54,7 +54,7 @@ export class ArticleService {
       take = 10,
       skip,
     }: ArticleListArgs,
-    options: { skipTotalCount?: boolean } = {}
+    options: { skipTotalCount?: boolean; skipCache?: boolean } = {}
   ) {
     if (filter?.body) {
       const articleIds = await this.performFullTextSearch(filter.body);
@@ -83,6 +83,24 @@ export class ArticleService {
     const where = createArticleFilter(filter ?? {});
 
     const countCacheKey = `count:${JSON.stringify(filter ?? {})}`;
+    const findManyCacheKey = `findMany:${JSON.stringify({
+      filter: filter ?? {},
+      sort,
+      order,
+      take,
+      skip,
+      cursorId,
+    })}`;
+
+    const findManyArgs = {
+      where,
+      skip,
+      take: getMaxTake(take) + 1,
+      orderBy,
+      cursor: cursorId ? { id: cursorId } : undefined,
+    };
+
+    const fetchArticles = () => this.prisma.article.findMany(findManyArgs);
 
     const [totalCount, articles] = await Promise.all([
       options.skipTotalCount ?
@@ -91,15 +109,16 @@ export class ArticleService {
           'articles',
           countCacheKey,
           () => this.prisma.article.count({ where, orderBy }),
-          ARTICLE_COUNT_CACHE_TTL_SECONDS
+          ARTICLE_CACHE_TTL_SECONDS
         ),
-      this.prisma.article.findMany({
-        where,
-        skip,
-        take: getMaxTake(take) + 1,
-        orderBy,
-        cursor: cursorId ? { id: cursorId } : undefined,
-      }),
+      options.skipCache ? fetchArticles() : (
+        this.kv.getOrLoadNs(
+          'articles',
+          findManyCacheKey,
+          fetchArticles,
+          ARTICLE_CACHE_TTL_SECONDS
+        )
+      ),
     ]);
 
     const nodes = articles.slice(0, getMaxTake(take));
