@@ -7,6 +7,7 @@ import { ArticleSort } from './article.model';
 import { NotFoundException } from '@nestjs/common';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
+import { createKvMock, KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 
 jest.mock('@wepublish/block-content/api');
 
@@ -71,6 +72,7 @@ describe('ArticleService', () => {
         ArticleService,
         { provide: PrismaClient, useValue: prismaMock },
         { provide: TrackingPixelService, useValue: trackingPixelMock },
+        { provide: KvTtlCacheService, useValue: createKvMock() },
         {
           provide: ArticleDataloaderService,
           useValue: {
@@ -238,6 +240,71 @@ describe('ArticleService', () => {
     });
 
     expect(result).toMatchSnapshot();
+  });
+
+  it('should cache article count for repeat calls with the same filter', async () => {
+    prismaMock.taggedArticles.findMany?.mockResolvedValue([]);
+    prismaMock.article.findMany?.mockResolvedValue([]);
+    prismaMock.article.count?.mockResolvedValue(42);
+
+    const filter = { tags: ['1234'] };
+
+    await service.getArticles({ filter });
+    await service.getArticles({ filter });
+
+    expect(prismaMock.article.count).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not call count when skipTotalCount is set', async () => {
+    prismaMock.taggedArticles.findMany?.mockResolvedValue([]);
+    prismaMock.article.findMany?.mockResolvedValue([]);
+    prismaMock.article.count?.mockResolvedValue(42);
+
+    await service.getArticles(
+      { filter: { tags: ['1234'] } },
+      { skipTotalCount: true }
+    );
+
+    expect(prismaMock.article.count).not.toHaveBeenCalled();
+  });
+
+  it('should cache article list for repeat calls with the same args', async () => {
+    prismaMock.taggedArticles.findMany?.mockResolvedValue([]);
+    prismaMock.article.findMany?.mockResolvedValue([]);
+    prismaMock.article.count?.mockResolvedValue(42);
+
+    const args = { filter: { tags: ['1234'] }, take: 25, skip: 50 };
+
+    await service.getArticles(args);
+    await service.getArticles(args);
+
+    expect(prismaMock.article.findMany).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not cache article list when skipCache is set', async () => {
+    prismaMock.taggedArticles.findMany?.mockResolvedValue([]);
+    prismaMock.article.findMany?.mockResolvedValue([]);
+    prismaMock.article.count?.mockResolvedValue(42);
+
+    const args = { filter: { tags: ['1234'] }, take: 25, skip: 50 };
+
+    await service.getArticles(args, { skipCache: true });
+    await service.getArticles(args, { skipCache: true });
+
+    expect(prismaMock.article.findMany).toHaveBeenCalledTimes(2);
+  });
+
+  it('should use a different cache entry when skip differs', async () => {
+    prismaMock.taggedArticles.findMany?.mockResolvedValue([]);
+    prismaMock.article.findMany?.mockResolvedValue([]);
+    prismaMock.article.count?.mockResolvedValue(42);
+
+    const filter = { tags: ['1234'] };
+
+    await service.getArticles({ filter, take: 25, skip: 0 });
+    await service.getArticles({ filter, take: 25, skip: 25 });
+
+    expect(prismaMock.article.findMany).toHaveBeenCalledTimes(2);
   });
 
   it('should create an article', async () => {

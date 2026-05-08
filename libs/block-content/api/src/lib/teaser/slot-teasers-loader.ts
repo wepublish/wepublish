@@ -169,16 +169,19 @@ export class SlotTeasersLoader {
     ).length;
 
     if (teaserType === TeaserType.Article) {
-      const articles = await this.articleService.getArticles({
-        filter: {
-          tags: filter?.tags,
-          published: true,
-          excludeIds: this.getLoadedTeasers(TeaserType.Article),
+      const articles = await this.articleService.getArticles(
+        {
+          filter: {
+            tags: filter?.tags,
+            published: true,
+            excludeIds: this.getLoadedTeasers(TeaserType.Article),
+          },
+          sort: ArticleSort.PublishedAt,
+          order: SortOrder.Descending,
+          take,
         },
-        sort: ArticleSort.PublishedAt,
-        order: SortOrder.Descending,
-        take,
-      });
+        { skipTotalCount: true }
+      );
 
       const teasers = articles.nodes.map(
         article =>

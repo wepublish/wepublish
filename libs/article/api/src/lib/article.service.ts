@@ -17,12 +17,16 @@ import {
 } from '@wepublish/utils/api';
 import { mapBlockUnionMap } from '@wepublish/block-content/api';
 import { TrackingPixelService } from '@wepublish/tracking-pixel/api';
+import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
+
+const ARTICLE_CACHE_TTL_SECONDS = 60;
 
 @Injectable()
 export class ArticleService {
   constructor(
     private prisma: PrismaClient,
-    private trackingPixelService: TrackingPixelService
+    private trackingPixelService: TrackingPixelService,
+    private kv: KvTtlCacheService
   ) {}
 
   @PrimeDataLoader(ArticleDataloaderService)
@@ -41,14 +45,17 @@ export class ArticleService {
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
-  async getArticles({
-    filter,
-    cursorId,
-    sort = ArticleSort.PublishedAt,
-    order = SortOrder.Descending,
-    take = 10,
-    skip,
-  }: ArticleListArgs) {
+  async getArticles(
+    {
+      filter,
+      cursorId,
+      sort = ArticleSort.PublishedAt,
+      order = SortOrder.Descending,
+      take = 10,
+      skip,
+    }: ArticleListArgs,
+    options: { skipTotalCount?: boolean; skipCache?: boolean } = {}
+  ) {
     if (filter?.body) {
       const articleIds = await this.performFullTextSearch(filter.body);
 
@@ -60,18 +67,43 @@ export class ArticleService {
     const orderBy = createArticleOrder(sort, order);
     const where = createArticleFilter(filter ?? {});
 
+    const countCacheKey = `count:${JSON.stringify(filter ?? {})}`;
+    const findManyCacheKey = `findMany:${JSON.stringify({
+      filter: filter ?? {},
+      sort,
+      order,
+      take,
+      skip,
+      cursorId,
+    })}`;
+
+    const findManyArgs = {
+      where,
+      skip,
+      take: getMaxTake(take) + 1,
+      orderBy,
+      cursor: cursorId ? { id: cursorId } : undefined,
+    };
+
+    const fetchArticles = () => this.prisma.article.findMany(findManyArgs);
+
     const [totalCount, articles] = await Promise.all([
-      this.prisma.article.count({
-        where,
-        orderBy,
-      }),
-      this.prisma.article.findMany({
-        where,
-        skip,
-        take: getMaxTake(take) + 1,
-        orderBy,
-        cursor: cursorId ? { id: cursorId } : undefined,
-      }),
+      options.skipTotalCount ?
+        Promise.resolve(0)
+      : this.kv.getOrLoadNs(
+          'articles',
+          countCacheKey,
+          () => this.prisma.article.count({ where, orderBy }),
+          ARTICLE_CACHE_TTL_SECONDS
+        ),
+      options.skipCache ? fetchArticles() : (
+        this.kv.getOrLoadNs(
+          'articles',
+          findManyCacheKey,
+          fetchArticles,
+          ARTICLE_CACHE_TTL_SECONDS
+        )
+      ),
     ]);
 
     const nodes = articles.slice(0, getMaxTake(take));

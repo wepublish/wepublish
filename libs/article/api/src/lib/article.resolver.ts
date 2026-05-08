@@ -1,11 +1,13 @@
 import {
   Args,
+  Info,
   Mutation,
   Parent,
   Query,
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { GraphQLResolveInfo } from 'graphql';
 import { ArticleDataloaderService } from './article-dataloader.service';
 import {
   Article,
@@ -97,7 +99,8 @@ export class ArticleResolver {
   })
   public articles(
     @Args() args: ArticleListArgs,
-    @PreviewMode() isPreview: boolean
+    @PreviewMode() isPreview: boolean,
+    @Info() info: GraphQLResolveInfo
   ) {
     if (!isPreview) {
       args.filter = {
@@ -108,7 +111,19 @@ export class ArticleResolver {
       };
     }
 
-    return this.articleService.getArticles(args);
+    const selections = info.fieldNodes[0].selectionSet?.selections ?? [];
+    const hasTotalCountField = selections.some(
+      sel => sel.kind === 'Field' && sel.name.value === 'totalCount'
+    );
+    const hasFragment = selections.some(
+      sel => sel.kind === 'FragmentSpread' || sel.kind === 'InlineFragment'
+    );
+    const skipTotalCount = !hasTotalCountField && !hasFragment;
+
+    return this.articleService.getArticles(args, {
+      skipTotalCount,
+      skipCache: isPreview,
+    });
   }
 
   @Permissions(CanCreateArticle)
