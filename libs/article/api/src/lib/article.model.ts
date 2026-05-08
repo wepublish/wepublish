@@ -157,6 +157,27 @@ export class Article implements HasOptionalPeerLc, HasOptionalPaywall {
 @ObjectType()
 export class PaginatedArticles extends PaginatedType(Article) {}
 
+@ObjectType({
+  description:
+    'Postgres EXPLAIN ANALYZE plans for the tag-page article-list count and offset findMany queries. Diagnostic only.',
+})
+export class ExplainTagPagePlan {
+  @Field()
+  tagId!: string;
+
+  @Field()
+  tagLabel!: string;
+
+  @Field({ description: 'EXPLAIN (ANALYZE, BUFFERS) for the count(*) query.' })
+  countPlan!: string;
+
+  @Field({
+    description:
+      'EXPLAIN (ANALYZE, BUFFERS) for the offset-paginated findMany query.',
+  })
+  findManyPlan!: string;
+}
+
 @ArgsType()
 export class CreateArticleInput extends OmitType(
   ArticleRevision,

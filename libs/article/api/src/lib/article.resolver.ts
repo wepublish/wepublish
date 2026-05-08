@@ -1,6 +1,7 @@
 import {
   Args,
   Info,
+  Int,
   Mutation,
   Parent,
   Query,
@@ -14,6 +15,7 @@ import {
   ArticleListArgs,
   ArticleRevision,
   CreateArticleInput,
+  ExplainTagPagePlan,
   PaginatedArticles,
   UpdateArticleInput,
 } from './article.model';
@@ -124,6 +126,20 @@ export class ArticleResolver {
       skipTotalCount,
       skipCache: isPreview,
     });
+  }
+
+  @Permissions(CanCreateArticle)
+  @Query(() => ExplainTagPagePlan, {
+    description: `Diagnostic: returns Postgres EXPLAIN ANALYZE plans for the tag-page article-list count and offset findMany queries. Admin only.`,
+  })
+  public explainTagPageQuery(
+    @Args('tagLabel') tagLabel: string,
+    @Args('page', { nullable: true, type: () => Int, defaultValue: 90 })
+    page: number,
+    @Args('take', { nullable: true, type: () => Int, defaultValue: 25 })
+    take: number
+  ) {
+    return this.articleService.explainTagPageQuery({ tagLabel, page, take });
   }
 
   @Permissions(CanCreateArticle)

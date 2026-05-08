@@ -575,6 +575,70 @@ export class ArticleService {
       return [];
     }
   }
+
+  async explainTagPageQuery({
+    tagLabel,
+    page,
+    take,
+  }: {
+    tagLabel: string;
+    page: number;
+    take: number;
+  }) {
+    const tag = await this.prisma.tag.findFirst({
+      where: {
+        type: 'Article',
+        tag: { equals: tagLabel, mode: 'insensitive' },
+      },
+      select: { id: true, tag: true },
+    });
+
+    if (!tag) {
+      throw new NotFoundException(
+        `Article tag matching '${tagLabel}' was not found.`
+      );
+    }
+
+    const skip = (page - 1) * take;
+
+    const collectPlan = (rows: Array<{ ['QUERY PLAN']: string }>) =>
+      rows.map(r => r['QUERY PLAN']).join('\n');
+
+    const countRows = await this.prisma.$queryRaw<
+      Array<{ ['QUERY PLAN']: string }>
+    >`
+      EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
+      SELECT count(*)
+      FROM "articles" a
+      WHERE EXISTS (
+        SELECT 1 FROM "articles.tagged-articles" ta
+        WHERE ta."articleId" = a.id AND ta."tagId" = ${tag.id}
+      )
+      AND a."publishedAt" <= NOW()
+    `;
+
+    const findManyRows = await this.prisma.$queryRaw<
+      Array<{ ['QUERY PLAN']: string }>
+    >`
+      EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
+      SELECT a.*
+      FROM "articles" a
+      WHERE EXISTS (
+        SELECT 1 FROM "articles.tagged-articles" ta
+        WHERE ta."articleId" = a.id AND ta."tagId" = ${tag.id}
+      )
+      AND a."publishedAt" <= NOW()
+      ORDER BY a."publishedAt" DESC
+      OFFSET ${skip} LIMIT ${take + 1}
+    `;
+
+    return {
+      tagId: tag.id,
+      tagLabel: tag.tag ?? tagLabel,
+      countPlan: collectPlan(countRows),
+      findManyPlan: collectPlan(findManyRows),
+    };
+  }
 }
 
 export const createArticleOrder = (

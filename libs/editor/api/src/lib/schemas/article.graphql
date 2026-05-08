@@ -274,3 +274,12 @@ query Article($id: String!) {
     ...FullArticle
   }
 }
+
+query ExplainTagPageQuery($tagLabel: String!, $page: Int, $take: Int) {
+  explainTagPageQuery(tagLabel: $tagLabel, page: $page, take: $take) {
+    tagId
+    tagLabel
+    countPlan
+    findManyPlan
+  }
+}
