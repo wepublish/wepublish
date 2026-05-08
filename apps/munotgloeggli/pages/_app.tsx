@@ -33,6 +33,7 @@ import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
+import PlausibleProvider from 'next-plausible';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
@@ -87,107 +88,112 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   cache.compat = true;
 
   return (
-    <AppCacheProvider emotionCache={cache}>
-      <WebsiteProvider>
-        <WebsiteBuilderProvider
-          Head={Head}
-          Script={Script}
-          elements={{ Link: NextWepublishLink }}
-          date={{ format: dateFormatter }}
-          meta={{ siteTitle }}
-        >
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
+    <PlausibleProvider
+      enabled={!!publicRuntimeConfig.env.PA_ID}
+      src={`https://plausible.io/js/${publicRuntimeConfig.env.PA_ID}.js`}
+    >
+      <AppCacheProvider emotionCache={cache}>
+        <WebsiteProvider>
+          <WebsiteBuilderProvider
+            Head={Head}
+            Script={Script}
+            elements={{ Link: NextWepublishLink }}
+            date={{ format: dateFormatter }}
+            meta={{ siteTitle }}
+          >
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
 
-            <Head>
-              <title key="title">{siteTitle}</title>
-              <meta
-                name="viewport"
-                content="width=device-width, initial-scale=1.0"
-              />
+              <Head>
+                <title key="title">{siteTitle}</title>
+                <meta
+                  name="viewport"
+                  content="width=device-width, initial-scale=1.0"
+                />
 
-              {/* Feeds */}
-              <link
-                rel="alternate"
-                type="application/rss+xml"
-                href="/api/rss-feed"
-              />
-              <link
-                rel="alternate"
-                type="application/atom+xml"
-                href="/api/atom-feed"
-              />
-              <link
-                rel="alternate"
-                type="application/feed+json"
-                href="/api/json-feed"
-              />
+                {/* Feeds */}
+                <link
+                  rel="alternate"
+                  type="application/rss+xml"
+                  href="/api/rss-feed"
+                />
+                <link
+                  rel="alternate"
+                  type="application/atom+xml"
+                  href="/api/atom-feed"
+                />
+                <link
+                  rel="alternate"
+                  type="application/feed+json"
+                  href="/api/json-feed"
+                />
 
-              {/* Sitemap */}
-              <link
-                rel="sitemap"
-                type="application/xml"
-                title="Sitemap"
-                href="/api/sitemap"
-              />
+                {/* Sitemap */}
+                <link
+                  rel="sitemap"
+                  type="application/xml"
+                  title="Sitemap"
+                  href="/api/sitemap"
+                />
 
-              {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-              <link
-                rel="icon"
-                type="image/png"
-                href="/favicon-96x96.png"
-                sizes="96x96"
-              />
-              <link
-                rel="icon"
-                type="image/svg+xml"
-                href="/favicon.svg"
-              />
-              <link
-                rel="shortcut icon"
-                href="/favicon.ico"
-              />
-              <link
-                rel="apple-touch-icon"
-                sizes="180x180"
-                href="/apple-touch-icon.png"
-              />
-              <meta
-                name="apple-mobile-web-app-title"
-                content="Munotglöggli"
-              />
-              <link
-                rel="manifest"
-                href="/site.webmanifest"
-              />
-            </Head>
+                {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+                <link
+                  rel="icon"
+                  type="image/png"
+                  href="/favicon-96x96.png"
+                  sizes="96x96"
+                />
+                <link
+                  rel="icon"
+                  type="image/svg+xml"
+                  href="/favicon.svg"
+                />
+                <link
+                  rel="shortcut icon"
+                  href="/favicon.ico"
+                />
+                <link
+                  rel="apple-touch-icon"
+                  sizes="180x180"
+                  href="/apple-touch-icon.png"
+                />
+                <meta
+                  name="apple-mobile-web-app-title"
+                  content="Munotglöggli"
+                />
+                <link
+                  rel="manifest"
+                  href="/site.webmanifest"
+                />
+              </Head>
 
-            <Spacer>
-              <NavBar
-                categorySlugs={[['categories', 'about-us']]}
-                slug="main"
-                headerSlug="header"
-                iconSlug="icons"
-              />
+              <Spacer>
+                <NavBar
+                  categorySlugs={[['categories', 'about-us']]}
+                  slug="main"
+                  headerSlug="header"
+                  iconSlug="icons"
+                />
 
-              <main>
-                <MainSpacer maxWidth="lg">
-                  <Component {...pageProps} />
-                </MainSpacer>
-              </main>
+                <main>
+                  <MainSpacer maxWidth="lg">
+                    <Component {...pageProps} />
+                  </MainSpacer>
+                </main>
 
-              <FooterContainer
-                slug="footer"
-                categorySlugs={[['categories', 'about-us']]}
-                iconSlug="icons"
-              />
-            </Spacer>
+                <FooterContainer
+                  slug="footer"
+                  categorySlugs={[['categories', 'about-us']]}
+                  iconSlug="icons"
+                />
+              </Spacer>
 
-            <RoutedAdminBar />
-          </ThemeProvider>
-        </WebsiteBuilderProvider>
-      </WebsiteProvider>
-    </AppCacheProvider>
+              <RoutedAdminBar />
+            </ThemeProvider>
+          </WebsiteBuilderProvider>
+        </WebsiteProvider>
+      </AppCacheProvider>
+    </PlausibleProvider>
   );
 }
 
