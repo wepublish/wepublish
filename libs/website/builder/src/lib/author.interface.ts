@@ -4,7 +4,6 @@ import {
   AuthorListQuery,
   FullAuthorFragment,
   AuthorListQueryVariables,
-  Author,
 } from '@wepublish/website/api';
 
 export type BuilderAuthorProps = Pick<
@@ -14,14 +13,14 @@ export type BuilderAuthorProps = Pick<
   className?: string;
 };
 
-export type BuilderAuthor = Author;
+export type BuilderAuthor = FullAuthorFragment;
 
 export type BuilderAuthorChipProps = {
   author: FullAuthorFragment;
   className?: string;
 };
 
-export type BuilderAuthorListItemProps = Author & {
+export type BuilderAuthorListItemProps = FullAuthorFragment & {
   className?: string;
 };
 

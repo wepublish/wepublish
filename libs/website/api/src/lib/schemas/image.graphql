@@ -21,20 +21,11 @@ fragment ImageURLs on Image {
 fragment FullImage on Image {
   id
 
-  createdAt
-  modifiedAt
-
-  filename
-  format
-  mimeType
-  extension
   width
   height
-  fileSize
 
   title
   description
-  tags
 
   source
   link
@@ -58,31 +49,16 @@ query GetImagesByTag($tag: String!) {
 fragment FullPeerImage on PeerImage {
   id
 
-  createdAt
-  modifiedAt
-
-  filename
-  format
-  mimeType
-  extension
   width
   height
-  fileSize
 
-  title
   description
-  tags
-
-  source
-  link
-  license
+  title
 
   focalPoint {
     x
     y
   }
-
-  url
 
   xxl
   xl
