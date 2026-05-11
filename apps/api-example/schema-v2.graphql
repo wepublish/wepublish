@@ -204,8 +204,10 @@ input AvailablePaymentMethodInput {
 type Banner {
   actions: [BannerAction!]
   active: Boolean!
+  collapsible: Boolean!
   cta: String
   delay: Int!
+  hideForMinutes: Int!
   html: String
   id: String!
   image: Image
@@ -625,8 +627,10 @@ input CreateBannerActionInput {
 input CreateBannerInput {
   actions: [CreateBannerActionInput!]
   active: Boolean!
+  collapsible: Boolean!
   cta: String
   delay: Int!
+  hideForMinutes: Int!
   html: String
   imageId: String
   showForLoginStatus: LoginStatus!
@@ -4020,8 +4024,10 @@ type UnknownBlock {
 input UpdateBannerInput {
   actions: [CreateBannerActionInput!]
   active: Boolean!
+  collapsible: Boolean!
   cta: String
   delay: Int!
+  hideForMinutes: Int!
   html: String
   id: String!
   imageId: String

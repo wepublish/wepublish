@@ -1371,7 +1371,9 @@ model Banner {
   imageId String?
   image   Image?  @relation(fields: [imageId], references: [id])
 
-  active Boolean @default(true)
+  active         Boolean @default(true)
+  collapsible    Boolean @default(true)
+  hideForMinutes Int     @default(1440)
 
   delay Int @default(0)
 
