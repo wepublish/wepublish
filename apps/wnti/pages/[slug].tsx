@@ -1,5 +1,6 @@
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -9,7 +10,6 @@ import {
   PeerProfileDocument,
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
 
@@ -36,9 +36,7 @@ export const getStaticPaths = () => ({
 });
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { slug, id } = params || {};
-  const { publicRuntimeConfig } = getConfig();
-
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
+  const client = getV1ApiClient(getApiUrl(), []);
   const [page] = await Promise.all([
     client.query<PageQuery>({
       query: PageDocument,

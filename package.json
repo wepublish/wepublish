@@ -301,6 +301,7 @@
     "nanoid": "^2.1.7",
     "nestjs-zod": "^3.0.0",
     "next": "~15.4.7",
+    "next-plausible": "^4.0.0",
     "node-cache": "^5.1.2",
     "node-fetch": "2.6.7",
     "otpauth": "^9.5.0",
