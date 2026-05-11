@@ -3,6 +3,7 @@ import { SliderWrapper } from '@wepublish/block-content/website';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
+import { LinkContext } from '@wepublish/website/builder';
 import {
   addClientCacheToV1Props,
   CommentListDocument,
@@ -60,9 +61,11 @@ const Homepage = styled(PageContainer)`
 
 export default function Index() {
   return (
-    <ContentWidthProvider fullWidth>
-      <Homepage slug={'home'} />
-    </ContentWidthProvider>
+    <LinkContext.Provider value={{ prefetch: true }}>
+      <ContentWidthProvider fullWidth>
+        <Homepage slug={'home'} />
+      </ContentWidthProvider>
+    </LinkContext.Provider>
   );
 }
 
