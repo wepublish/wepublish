@@ -736,7 +736,7 @@ type CustomTeaser implements BaseTeaser & HasImage {
   lead: String
   openInNewTab: Boolean
   preTitle: String
-  properties: [NonDbProperty!]
+  properties: [Property!]
   title: String
   type: String!
 }
@@ -1108,16 +1108,6 @@ input FlexTeaserInput {
   teaser: TeaserInput
 }
 
-type FocalPoint {
-  x: Float
-  y: Float
-}
-
-input FocalPointInput {
-  x: Float
-  y: Float
-}
-
 type FullPoll {
   answers: [PollAnswer!]!
   closedAt: DateTime
@@ -1306,7 +1296,8 @@ type Image implements HasOptionalPeerLc {
   extension: String!
   fileSize: Int!
   filename: String
-  focalPoint: FocalPoint
+  focalPointX: Float!
+  focalPointY: Float!
   format: String!
   height: Int!
   id: String!
@@ -2045,7 +2036,7 @@ type Mutation {
   updateExternalApp(description: String, icon: String, id: String!, name: String, target: ExternalAppsTarget, url: String): ExternalApp!
 
   """Updates an existing image."""
-  updateImage(description: String, filename: String, focalPoint: FocalPointInput, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
+  updateImage(description: String, filename: String, focalPointX: Float, focalPointY: Float, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
 
   """Updates an existing invoice."""
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
@@ -2136,10 +2127,10 @@ type Mutation {
   uploadDocument(description: String, file: Upload!, filename: String, title: String): Document!
 
   """Uploads a new image."""
-  uploadImage(description: String, file: Upload!, filename: String, focalPoint: FocalPointInput, license: String, link: String, source: String, tags: [String!]!, title: String): Image!
+  uploadImage(description: String, file: Upload!, filename: String, focalPointX: Float!, focalPointY: Float!, license: String, link: String, source: String, tags: [String!]!, title: String): Image!
 
   """This mutation allows to upload and update the user's profile image."""
-  uploadUserProfileImage(description: String, file: Upload!, filename: String, focalPoint: FocalPointInput, license: String, link: String, source: String, tags: [String!]!, title: String): SensitiveDataUser
+  uploadUserProfileImage(description: String, file: Upload!, filename: String, focalPointX: Float!, focalPointY: Float!, license: String, link: String, source: String, tags: [String!]!, title: String): SensitiveDataUser
 
   """
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
@@ -2168,12 +2159,6 @@ enum NavigationLinkType {
   Article
   External
   Page
-}
-
-type NonDbProperty {
-  key: String!
-  public: Boolean!
-  value: String!
 }
 
 type OverriddenRating {
@@ -2638,7 +2623,8 @@ type PeerImage {
   extension: String!
   fileSize: Int!
   filename: String
-  focalPoint: FocalPoint
+  focalPointX: Float!
+  focalPointY: Float!
   format: String!
   height: Int!
   id: String!
@@ -2835,7 +2821,6 @@ enum ProductType {
 }
 
 type Property {
-  id: String!
   key: String!
   public: Boolean!
   value: String!

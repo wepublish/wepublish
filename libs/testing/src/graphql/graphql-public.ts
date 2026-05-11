@@ -850,7 +850,7 @@ export type CustomTeaser = BaseTeaser &
     lead?: Maybe<Scalars['String']>;
     openInNewTab?: Maybe<Scalars['Boolean']>;
     preTitle?: Maybe<Scalars['String']>;
-    properties?: Maybe<Array<NonDbProperty>>;
+    properties?: Maybe<Array<Property>>;
     title?: Maybe<Scalars['String']>;
     type: Scalars['String'];
   };
@@ -1237,17 +1237,6 @@ export type FlexTeaserInput = {
   teaser?: InputMaybe<TeaserInput>;
 };
 
-export type FocalPoint = {
-  __typename?: 'FocalPoint';
-  x?: Maybe<Scalars['Float']>;
-  y?: Maybe<Scalars['Float']>;
-};
-
-export type FocalPointInput = {
-  x?: InputMaybe<Scalars['Float']>;
-  y?: InputMaybe<Scalars['Float']>;
-};
-
 export type FullPoll = {
   __typename?: 'FullPoll';
   answers: Array<PollAnswer>;
@@ -1437,7 +1426,8 @@ export type Image = HasOptionalPeerLc & {
   extension: Scalars['String'];
   fileSize: Scalars['Int'];
   filename?: Maybe<Scalars['String']>;
-  focalPoint?: Maybe<FocalPoint>;
+  focalPointX: Scalars['Float'];
+  focalPointY: Scalars['Float'];
   format: Scalars['String'];
   height: Scalars['Int'];
   id: Scalars['String'];
@@ -2907,7 +2897,8 @@ export type MutationUpdateExternalAppArgs = {
 export type MutationUpdateImageArgs = {
   description?: InputMaybe<Scalars['String']>;
   filename?: InputMaybe<Scalars['String']>;
-  focalPoint?: InputMaybe<FocalPointInput>;
+  focalPointX?: InputMaybe<Scalars['Float']>;
+  focalPointY?: InputMaybe<Scalars['Float']>;
   id: Scalars['String'];
   license?: InputMaybe<Scalars['String']>;
   link?: InputMaybe<Scalars['String']>;
@@ -3216,7 +3207,8 @@ export type MutationUploadImageArgs = {
   description?: InputMaybe<Scalars['String']>;
   file: Scalars['Upload'];
   filename?: InputMaybe<Scalars['String']>;
-  focalPoint?: InputMaybe<FocalPointInput>;
+  focalPointX: Scalars['Float'];
+  focalPointY: Scalars['Float'];
   license?: InputMaybe<Scalars['String']>;
   link?: InputMaybe<Scalars['String']>;
   source?: InputMaybe<Scalars['String']>;
@@ -3228,7 +3220,8 @@ export type MutationUploadUserProfileImageArgs = {
   description?: InputMaybe<Scalars['String']>;
   file: Scalars['Upload'];
   filename?: InputMaybe<Scalars['String']>;
-  focalPoint?: InputMaybe<FocalPointInput>;
+  focalPointX: Scalars['Float'];
+  focalPointY: Scalars['Float'];
   license?: InputMaybe<Scalars['String']>;
   link?: InputMaybe<Scalars['String']>;
   source?: InputMaybe<Scalars['String']>;
@@ -3263,13 +3256,6 @@ export enum NavigationLinkType {
   External = 'External',
   Page = 'Page',
 }
-
-export type NonDbProperty = {
-  __typename?: 'NonDbProperty';
-  key: Scalars['String'];
-  public: Scalars['Boolean'];
-  value: Scalars['String'];
-};
 
 export type OverriddenRating = {
   __typename?: 'OverriddenRating';
@@ -3770,7 +3756,8 @@ export type PeerImage = {
   extension: Scalars['String'];
   fileSize: Scalars['Int'];
   filename?: Maybe<Scalars['String']>;
-  focalPoint?: Maybe<FocalPoint>;
+  focalPointX: Scalars['Float'];
+  focalPointY: Scalars['Float'];
   format: Scalars['String'];
   height: Scalars['Int'];
   id: Scalars['String'];
@@ -3983,7 +3970,6 @@ export enum ProductType {
 
 export type Property = {
   __typename?: 'Property';
-  id: Scalars['String'];
   key: Scalars['String'];
   public: Scalars['Boolean'];
   value: Scalars['String'];
@@ -6030,6 +6016,8 @@ export type FullImageFragment = {
   source?: string | null;
   link?: string | null;
   license?: string | null;
+  focalPointX: number;
+  focalPointY: number;
   title?: string | null;
   url: string;
   largeURL?: string | null;
@@ -6039,11 +6027,6 @@ export type FullImageFragment = {
   previewURL?: string | null;
   column1URL?: string | null;
   column6URL?: string | null;
-  focalPoint?: {
-    __typename?: 'FocalPoint';
-    x?: number | null;
-    y?: number | null;
-  } | null;
 };
 
 export type FullPeerProfileFragment = {
@@ -6071,6 +6054,8 @@ export type FullPeerProfileFragment = {
     source?: string | null;
     link?: string | null;
     license?: string | null;
+    focalPointX: number;
+    focalPointY: number;
     title?: string | null;
     url: string;
     largeURL?: string | null;
@@ -6080,11 +6065,6 @@ export type FullPeerProfileFragment = {
     previewURL?: string | null;
     column1URL?: string | null;
     column6URL?: string | null;
-    focalPoint?: {
-      __typename?: 'FocalPoint';
-      x?: number | null;
-      y?: number | null;
-    } | null;
   } | null;
   squareLogo?: {
     __typename?: 'Image';
@@ -6101,6 +6081,8 @@ export type FullPeerProfileFragment = {
     source?: string | null;
     link?: string | null;
     license?: string | null;
+    focalPointX: number;
+    focalPointY: number;
     title?: string | null;
     url: string;
     largeURL?: string | null;
@@ -6110,11 +6092,6 @@ export type FullPeerProfileFragment = {
     previewURL?: string | null;
     column1URL?: string | null;
     column6URL?: string | null;
-    focalPoint?: {
-      __typename?: 'FocalPoint';
-      x?: number | null;
-      y?: number | null;
-    } | null;
   } | null;
   callToActionImage?: {
     __typename?: 'Image';
@@ -6131,6 +6108,8 @@ export type FullPeerProfileFragment = {
     source?: string | null;
     link?: string | null;
     license?: string | null;
+    focalPointX: number;
+    focalPointY: number;
     title?: string | null;
     url: string;
     largeURL?: string | null;
@@ -6140,11 +6119,6 @@ export type FullPeerProfileFragment = {
     previewURL?: string | null;
     column1URL?: string | null;
     column6URL?: string | null;
-    focalPoint?: {
-      __typename?: 'FocalPoint';
-      x?: number | null;
-      y?: number | null;
-    } | null;
   } | null;
 };
 
@@ -6222,6 +6196,8 @@ export type PeerProfileQuery = {
       source?: string | null;
       link?: string | null;
       license?: string | null;
+      focalPointX: number;
+      focalPointY: number;
       title?: string | null;
       url: string;
       largeURL?: string | null;
@@ -6231,11 +6207,6 @@ export type PeerProfileQuery = {
       previewURL?: string | null;
       column1URL?: string | null;
       column6URL?: string | null;
-      focalPoint?: {
-        __typename?: 'FocalPoint';
-        x?: number | null;
-        y?: number | null;
-      } | null;
     } | null;
     squareLogo?: {
       __typename?: 'Image';
@@ -6252,6 +6223,8 @@ export type PeerProfileQuery = {
       source?: string | null;
       link?: string | null;
       license?: string | null;
+      focalPointX: number;
+      focalPointY: number;
       title?: string | null;
       url: string;
       largeURL?: string | null;
@@ -6261,11 +6234,6 @@ export type PeerProfileQuery = {
       previewURL?: string | null;
       column1URL?: string | null;
       column6URL?: string | null;
-      focalPoint?: {
-        __typename?: 'FocalPoint';
-        x?: number | null;
-        y?: number | null;
-      } | null;
     } | null;
     callToActionImage?: {
       __typename?: 'Image';
@@ -6282,6 +6250,8 @@ export type PeerProfileQuery = {
       source?: string | null;
       link?: string | null;
       license?: string | null;
+      focalPointX: number;
+      focalPointY: number;
       title?: string | null;
       url: string;
       largeURL?: string | null;
@@ -6291,11 +6261,6 @@ export type PeerProfileQuery = {
       previewURL?: string | null;
       column1URL?: string | null;
       column6URL?: string | null;
-      focalPoint?: {
-        __typename?: 'FocalPoint';
-        x?: number | null;
-        y?: number | null;
-      } | null;
     } | null;
   };
 };
@@ -6435,10 +6400,8 @@ export const FullImage = `
   source
   link
   license
-  focalPoint {
-    x
-    y
-  }
+  focalPointX
+  focalPointY
   ...ImageRef
 }
     ${ImageRef}`;

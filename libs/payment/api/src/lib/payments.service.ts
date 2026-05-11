@@ -130,7 +130,6 @@ export class PaymentsService {
       include: {
         deactivation: true,
         periods: true,
-        properties: true,
         memberPlan: true,
       },
     });

@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 import {
   Button,
   Drawer,
-  Form,
+  Form as RForm,
   InputNumber,
   Message,
   Panel,
@@ -40,7 +40,11 @@ export interface PaymentMethodEditPanelProps {
   onSave?(paymentMethod: FullPaymentMethodFragment): void;
 }
 
-const FormGroupWithPadding = styled(Form.Group)`
+const Form = styled(RForm)`
+  height: 100%;
+`;
+
+const FormGroupWithPadding = styled(RForm.Group)`
   padding-top: 16px;
 `;
 
@@ -222,7 +226,7 @@ function PaymentMethodEditPanel({
 
         <Drawer.Body>
           <Panel>
-            <Form.Group controlId="imageId">
+            <RForm.Group controlId="imageId">
               <ChooseEditImage
                 image={image}
                 disabled={false}
@@ -231,14 +235,14 @@ function PaymentMethodEditPanel({
                 header={t('paymentMethodList.selectImage')}
                 maxHeight={200}
               />
-            </Form.Group>
+            </RForm.Group>
 
-            <Form.Group controlId="paymentMethodName">
-              <Form.ControlLabel>
+            <RForm.Group controlId="paymentMethodName">
+              <RForm.ControlLabel>
                 {toggleRequiredLabel(t('paymentMethodList.name'))}
-              </Form.ControlLabel>
+              </RForm.ControlLabel>
 
-              <Form.Control
+              <RForm.Control
                 name="name"
                 value={name}
                 disabled={isDisabled}
@@ -247,24 +251,24 @@ function PaymentMethodEditPanel({
                   setSlug(slugify(value));
                 }}
               />
-            </Form.Group>
+            </RForm.Group>
 
-            <Form.Group controlId="paymentMethodSlug">
-              <Form.ControlLabel>
+            <RForm.Group controlId="paymentMethodSlug">
+              <RForm.ControlLabel>
                 {t('paymentMethodList.slug')}
-              </Form.ControlLabel>
+              </RForm.ControlLabel>
 
-              <Form.Control
+              <RForm.Control
                 name={t('paymentMethodList.slug')}
                 value={slug}
                 plaintext
               />
-            </Form.Group>
+            </RForm.Group>
 
-            <Form.Group controlId="paymentMethodIsActive">
-              <Form.ControlLabel>
+            <RForm.Group controlId="paymentMethodIsActive">
+              <RForm.ControlLabel>
                 {t('paymentMethodList.active')}
-              </Form.ControlLabel>
+              </RForm.ControlLabel>
 
               <Toggle
                 checked={active}
@@ -272,17 +276,17 @@ function PaymentMethodEditPanel({
                 onChange={value => setActive(value)}
               />
 
-              <Form.HelpText>
+              <RForm.HelpText>
                 {t('paymentMethodList.activeDescription')}
-              </Form.HelpText>
-            </Form.Group>
+              </RForm.HelpText>
+            </RForm.Group>
 
-            <Form.Group controlId="paymentMethodAdapter">
-              <Form.ControlLabel>
+            <RForm.Group controlId="paymentMethodAdapter">
+              <RForm.ControlLabel>
                 {toggleRequiredLabel(t('paymentMethodList.adapter'))}
-              </Form.ControlLabel>
+              </RForm.ControlLabel>
 
-              <Form.Control
+              <RForm.Control
                 name="paymentProvider"
                 virtualized
                 disabled={isDisabled}
@@ -300,14 +304,14 @@ function PaymentMethodEditPanel({
                   )
                 }
               />
-            </Form.Group>
+            </RForm.Group>
 
-            <Form.Group controlId="paymentMethodDescription">
-              <Form.ControlLabel>
+            <RForm.Group controlId="paymentMethodDescription">
+              <RForm.ControlLabel>
                 {t('paymentMethodList.description')}
-              </Form.ControlLabel>
+              </RForm.ControlLabel>
 
-              <Form.Control
+              <RForm.Control
                 name="description"
                 value={description}
                 disabled={isDisabled}
@@ -317,9 +321,9 @@ function PaymentMethodEditPanel({
               />
 
               <FormGroupWithPadding controlId="paymentMethodGracePeriod">
-                <Form.ControlLabel>
+                <RForm.ControlLabel>
                   {t('paymentMethodEditPanel.gracePeriod')}
-                </Form.ControlLabel>
+                </RForm.ControlLabel>
 
                 <InputNumber
                   name="gracePeriod"
@@ -333,11 +337,11 @@ function PaymentMethodEditPanel({
                   }}
                 />
 
-                <Form.HelpText>
+                <RForm.HelpText>
                   {t('paymentMethodEditPanel.gracePeriodHelpText')}
-                </Form.HelpText>
+                </RForm.HelpText>
               </FormGroupWithPadding>
-            </Form.Group>
+            </RForm.Group>
           </Panel>
         </Drawer.Body>
       </Form>
