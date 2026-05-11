@@ -13,10 +13,7 @@ import {
   UpdateImageInput,
   UploadImageInput,
 } from './image.model';
-import {
-  ImageDataloaderService,
-  ImageWithFocalPoint,
-} from './image-dataloader.service';
+import { ImageDataloaderService } from './image-dataloader.service';
 import { MediaAdapter } from './media-adapter';
 import { ImageTransformation } from './image-transformation.model';
 import { NotFoundException } from '@nestjs/common';
@@ -29,6 +26,7 @@ import {
   CanGetImages,
 } from '@wepublish/permissions';
 import { ImageService } from './image.service';
+import { Image as PImage } from '@prisma/client';
 
 @Resolver(() => Image)
 export class ImageResolver {
@@ -84,14 +82,14 @@ export class ImageResolver {
   }
 
   @ResolveField(() => String)
-  public async url(@Parent() image: ImageWithFocalPoint) {
+  public async url(@Parent() image: PImage) {
     return this.mediaAdapter.getImageURL(image);
   }
 
   @ResolveField(() => String, { nullable: true })
   public async transformURL(
     @Args('input', { nullable: true }) transformation: ImageTransformation,
-    @Parent() image: ImageWithFocalPoint
+    @Parent() image: PImage
   ) {
     return this.mediaAdapter.getImageURL(image, transformation);
   }

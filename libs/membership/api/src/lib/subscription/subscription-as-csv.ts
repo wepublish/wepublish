@@ -1,6 +1,5 @@
 import {
   MemberPlan,
-  MetadataProperty,
   PaymentMethod,
   PaymentProviderCustomer,
   User,
@@ -13,7 +12,6 @@ import { SubscriptionWithRelations } from '../legacy/member-context';
 
 type UserWithRelations = User & {
   address: UserAddress | null;
-  properties: MetadataProperty[];
   paymentProviderCustomers: PaymentProviderCustomer[];
 };
 

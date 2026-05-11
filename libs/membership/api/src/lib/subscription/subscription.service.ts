@@ -97,7 +97,6 @@ export class SubscriptionService {
         id,
       },
       include: {
-        properties: true,
         deactivation: true,
         paymentMethod: true,
       },
@@ -155,22 +154,11 @@ export class SubscriptionService {
       data: {
         ...input,
         currency: memberPlan.currency,
-        properties:
-          properties ?
-            {
-              deleteMany: {
-                subscriptionId: id,
-              },
-              createMany: {
-                data: properties,
-              },
-            }
-          : undefined,
+        properties: properties as any,
       },
       include: {
         deactivation: true,
         periods: true,
-        properties: true,
       },
     });
 
@@ -188,7 +176,6 @@ export class SubscriptionService {
       include: {
         deactivation: true,
         periods: true,
-        properties: true,
         memberPlan: true,
         user: {
           select: unselectPassword,
@@ -221,7 +208,6 @@ export class SubscriptionService {
       include: {
         deactivation: true,
         periods: true,
-        properties: true,
       },
     });
 
@@ -258,7 +244,6 @@ export class SubscriptionService {
       include: {
         deactivation: true,
         periods: true,
-        properties: true,
       },
     });
 
