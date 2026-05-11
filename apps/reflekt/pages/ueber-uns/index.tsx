@@ -1,4 +1,3 @@
-//import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { AuthorListContainer } from '@wepublish/author/website';
 import { PageContainer } from '@wepublish/page/website';
@@ -66,24 +65,24 @@ export default function AuthorList() {
       <TeamPageContent slug="team">
         <MainSpacer maxWidth="lg">
           <AuthorListContainer variables={variables} />
+
+          {pageCount > 1 && (
+            <Pagination
+              page={page ?? 1}
+              count={pageCount}
+              onChange={(_, value) =>
+                replace(
+                  {
+                    query: { ...query, page: value },
+                  },
+                  undefined,
+                  { shallow: true, scroll: true }
+                )
+              }
+            />
+          )}
         </MainSpacer>
       </TeamPageContent>
-
-      {pageCount > 1 && (
-        <Pagination
-          page={page ?? 1}
-          count={pageCount}
-          onChange={(_, value) =>
-            replace(
-              {
-                query: { ...query, page: value },
-              },
-              undefined,
-              { shallow: true, scroll: true }
-            )
-          }
-        />
-      )}
     </>
   );
 }
