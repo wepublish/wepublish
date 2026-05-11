@@ -172,6 +172,7 @@
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
       }
     },
+
     "authors": {
       "overview": {
         "action": "Action",
@@ -215,9 +216,9 @@
         "displayOptions": "Options d'affichage",
         "title": "Titre",
         "text": "Texte",
-        "cta": "Appel à l'action",
+        "cta": "Call to action",
         "delay": "Délai en secondes",
-        "hideForMinutes": "Durée de masquage après la fermeture de la bannière (en minutes)",
+        "hideForMinutes": "Durée de masquage après fermeture (en minutes)",
         "collapsible": "Réduire la bannière au lieu de la masquer après fermeture",
         "active": "Actif",
         "showOnArticles": "Afficher sur les articles",
@@ -235,7 +236,7 @@
         "actions": "Actions",
         "image": "Image",
         "action": {
-          "add": "Ajouter une nouvelle action",
+          "add": "Ajouter une action",
           "label": "Libellé",
           "url": "URL",
           "style": "Style",
@@ -245,7 +246,7 @@
       "list": {
         "title": "Bannières",
         "text": "Texte",
-        "createNew": "Créer une nouvelle",
+        "createNew": "Créer une nouvelle bannière",
         "active": "Actif",
         "edit": "Modifier",
         "delete": "Supprimer"
