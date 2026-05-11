@@ -1634,7 +1634,15 @@ type Mutation {
   approveComment(id: String!): Comment!
 
   """Cancels a subscription."""
-  cancelSubscription(id: String!, reason: SubscriptionDeactivationReason!): PublicSubscription!
+  cancelSubscription(
+    id: String!
+    reason: SubscriptionDeactivationReason!
+
+    """
+    When true, suppress the subscription-deactivation mail. Useful for bulk migrations of already-cancelled subscriptions.
+    """
+    skipMail: Boolean
+  ): PublicSubscription!
 
   """
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
@@ -1889,7 +1897,23 @@ type Mutation {
   importPeerArticle(articleId: String!, options: ImportArticleOptions! = {importAuthors: true, importContentImages: true, importTags: true}, peerId: String!): Article!
 
   """Imports a subscription."""
-  importSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Int!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!
+  importSubscription(
+    autoRenew: Boolean!
+    extendable: Boolean!
+    memberPlanID: String!
+    monthlyAmount: Int!
+    paidUntil: DateTime
+    paymentMethodID: String!
+    paymentPeriodicity: PaymentPeriodicity!
+    properties: [PropertyInput!]!
+
+    """
+    When true, suppress any subscription / invoice mail dispatched as part of this import. Useful for bulk migrations.
+    """
+    skipMail: Boolean
+    startsAt: DateTime!
+    userID: String!
+  ): PublicSubscription!
 
   """Likes an article."""
   likeArticle(id: String!): Article!
