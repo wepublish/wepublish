@@ -2,6 +2,7 @@ import mailchimp, { campaigns } from '@mailchimp/mailchimp_marketing';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
+import { LinkContext } from '@wepublish/website/builder';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -20,11 +21,13 @@ type IndexProps = {
 
 export default function Index({ campaigns }: IndexProps) {
   return (
-    <DailyBriefingContext.Provider value={campaigns}>
-      <ContentWidthProvider fullWidth={false}>
-        <PageContainer slug={''} />
-      </ContentWidthProvider>
-    </DailyBriefingContext.Provider>
+    <LinkContext.Provider value={{ prefetch: true }}>
+      <DailyBriefingContext.Provider value={campaigns}>
+        <ContentWidthProvider fullWidth={false}>
+          <PageContainer slug={''} />
+        </ContentWidthProvider>
+      </DailyBriefingContext.Provider>
+    </LinkContext.Provider>
   );
 }
 

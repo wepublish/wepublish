@@ -7,7 +7,6 @@
     "production": {
       "deployment": true,
       "env": {
-        "DEPLOY_ENV": "production",
         "PA_ID": "pa-4AWpxQJhhfUdDPHxdWWMP"
       },
       "secret_env": [],
@@ -15,16 +14,12 @@
     },
     "staging": {
       "deployment": true,
-      "env": {
-        "DEPLOY_ENV": "staging"
-      },
+      "env": {},
       "secret_env": []
     },
     "review": {
       "deployment": true,
-      "env": {
-        "DEPLOY_ENV": "review"
-      },
+      "env": {},
       "secret_env": []
     }
   }

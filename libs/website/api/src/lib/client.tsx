@@ -100,7 +100,7 @@ const createV1ApiClient = (
       typePolicies:
         (
           process.env.NODE_ENV !== 'production' ||
-          process.env.DEPLOY_ENV === 'review'
+          process.env.APP_ENVIRONMENT === 'review'
         ) ?
           absoluteUrlToRelative
         : undefined,

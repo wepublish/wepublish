@@ -6,24 +6,18 @@
   "website": {
     "production": {
       "deployment": true,
-      "env": {
-        "DEPLOY_ENV": "production"
-      },
+      "env": {},
       "secret_env": [],
       "custom_domain": "https://ganzgraz.at"
     },
     "staging": {
       "deployment": true,
-      "env": {
-        "DEPLOY_ENV": "staging"
-      },
+      "env": {},
       "secret_env": []
     },
     "review": {
       "deployment": true,
-      "env": {
-        "DEPLOY_ENV": "review"
-      },
+      "env": {},
       "secret_env": []
     }
   }

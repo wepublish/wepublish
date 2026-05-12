@@ -1,5 +1,6 @@
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
+import { LinkContext } from '@wepublish/website/builder';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -12,7 +13,11 @@ import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 
 export default function Index() {
-  return <PageContainer slug={''} />;
+  return (
+    <LinkContext.Provider value={{ prefetch: true }}>
+      <PageContainer slug={''} />
+    </LinkContext.Provider>
+  );
 }
 
 export const getStaticProps: GetStaticProps = async () => {
