@@ -16,7 +16,7 @@ const nextConfig = {
     emotion: true,
   },
   env: {
-    DEPLOY_ENV: process.env.DEPLOY_ENV,
+    APP_ENVIRONMENT: process.env.APP_ENVIRONMENT,
   },
   webpack(config, { webpack }) {
     /**

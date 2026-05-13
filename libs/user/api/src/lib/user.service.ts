@@ -125,6 +125,7 @@ export class UserService {
     password,
     address,
     properties,
+    skipMail,
     ...input
   }: CreateUserInput) {
     if (password) {
@@ -150,18 +151,19 @@ export class UserService {
       select: unselectPassword,
     });
 
-    // send register mail
-    const externalMailTemplateId = await this.mailContext.getUserTemplateName(
-      UserEvent.ACCOUNT_CREATION,
-      false
-    );
+    if (!skipMail) {
+      const externalMailTemplateId = await this.mailContext.getUserTemplateName(
+        UserEvent.ACCOUNT_CREATION,
+        false
+      );
 
-    await this.mailContext.sendMail({
-      externalMailTemplateId,
-      recipient,
-      optionalData: {},
-      mailType: mailLogType.SystemMail,
-    });
+      await this.mailContext.sendMail({
+        externalMailTemplateId,
+        recipient,
+        optionalData: {},
+        mailType: mailLogType.SystemMail,
+      });
+    }
 
     return recipient;
   }

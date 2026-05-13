@@ -314,6 +314,7 @@ fragment FullFlexBlock on FlexBlock {
 }
 
 fragment FullTeaserGridFlexBlock on TeaserGridFlexBlock {
+  title
   type
   disabled
   blockStyle: blockStyleName
@@ -332,6 +333,7 @@ fragment FullTeaserGridFlexBlock on TeaserGridFlexBlock {
 }
 
 fragment FullTeaserGridBlock on TeaserGridBlock {
+  title
   type
   disabled
   blockStyle: blockStyleName

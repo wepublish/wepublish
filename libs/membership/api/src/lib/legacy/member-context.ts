@@ -62,6 +62,11 @@ export interface ChargeInvoiceProps {
 export interface DeactivateSubscriptionForUserProps {
   subscription: Subscription;
   deactivationReason: SubscriptionDeactivationReason;
+  /**
+   * When true, suppress the SubscriptionDeactivation mail. Used by bulk
+   * importers migrating already-cancelled subscriptions.
+   */
+  skipMail?: boolean;
 }
 
 export interface MemberContextInterface {
@@ -546,6 +551,7 @@ export class MemberContext implements MemberContextInterface {
   async deactivateSubscription({
     subscription,
     deactivationReason,
+    skipMail,
   }: DeactivateSubscriptionForUserProps): Promise<Subscription> {
     // deactivate remote subscriptions
     await this.cancelRemoteSubscription({
@@ -592,11 +598,13 @@ export class MemberContext implements MemberContextInterface {
         },
       });
 
-    // Send deactivation Mail
-    await this.sendSubscriptionDeactivationMail(
-      subscription,
-      deactivationReason
-    );
+    // Send deactivation Mail (skipped during bulk import of pre-cancelled subs)
+    if (!skipMail) {
+      await this.sendSubscriptionDeactivationMail(
+        subscription,
+        deactivationReason
+      );
+    }
     return updatedSubscription;
   }
 
@@ -894,6 +902,7 @@ export class MemberContext implements MemberContextInterface {
     extendable,
     startsAt = new Date(),
     paidUntil,
+    skipMail,
   }: {
     userID: string;
     paymentMethodID: string;
@@ -905,6 +914,13 @@ export class MemberContext implements MemberContextInterface {
     extendable: boolean;
     startsAt?: Date | string;
     paidUntil?: Date | string;
+    /**
+     * When true, suppress the SUBSCRIBE mail dispatched in the
+     * "future-start, no paidUntil" branch. The IF branch (used by bulk
+     * migrations) doesn't send mail directly, but this flag exists for
+     * symmetry and to defend against future hooks.
+     */
+    skipMail?: boolean;
   }): Promise<{
     subscription: SubscriptionWithRelations;
     invoice: InvoiceWithItems;
@@ -1038,11 +1054,13 @@ export class MemberContext implements MemberContextInterface {
         throw new InternalServerErrorException();
       }
 
-      await this.sendMailForSubscriptionEvent(
-        SubscriptionEvent.SUBSCRIBE,
-        subscription,
-        {}
-      );
+      if (!skipMail) {
+        await this.sendMailForSubscriptionEvent(
+          SubscriptionEvent.SUBSCRIBE,
+          subscription,
+          {}
+        );
+      }
 
       return {
         subscription,

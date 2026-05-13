@@ -766,6 +766,7 @@ export function mapBlockValueToBlockInput(
     case EditorBlockType.TeaserGridFlex:
       return {
         teaserGridFlex: {
+          title: block.value.title,
           flexTeasers: block.value.flexTeasers.map(flexTeaser => ({
             teaser: mapTeaserToTeaserInput(flexTeaser.teaser),
             alignment: {
@@ -786,6 +787,7 @@ export function mapBlockValueToBlockInput(
     case EditorBlockType.TeaserGrid6:
       return {
         teaserGrid: {
+          title: block.value.title,
           teasers: block.value.teasers.map(([, teaser]) =>
             mapTeaserToTeaserInput(teaser)
           ),
@@ -1162,6 +1164,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.TeaserGridFlex,
         value: {
+          title: block.title,
           disabled: block.disabled,
           blockStyle: block.blockStyle,
           flexTeasers: block?.flexTeasers.map(flexTeaser => ({
@@ -1186,6 +1189,7 @@ export function blockForQueryBlock(
             EditorBlockType.TeaserGrid1
           : EditorBlockType.TeaserGrid6,
         value: {
+          title: block.title,
           disabled: block.disabled,
           blockStyle: block.blockStyle,
           numColumns: block.numColumns,

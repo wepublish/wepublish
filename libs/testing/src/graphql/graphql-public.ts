@@ -2152,6 +2152,7 @@ export type MutationApproveCommentArgs = {
 export type MutationCancelSubscriptionArgs = {
   id: Scalars['String'];
   reason: SubscriptionDeactivationReason;
+  skipMail?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type MutationCancelUserSubscriptionArgs = {
@@ -2437,6 +2438,7 @@ export type MutationCreateUserArgs = {
   password?: InputMaybe<Scalars['String']>;
   properties: Array<PropertyInput>;
   roleIDs: Array<Scalars['String']>;
+  skipMail?: InputMaybe<Scalars['Boolean']>;
   totpExempt?: InputMaybe<Scalars['Boolean']>;
   userImageID?: InputMaybe<Scalars['String']>;
 };
@@ -2662,6 +2664,7 @@ export type MutationImportSubscriptionArgs = {
   paymentMethodID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
   properties: Array<PropertyInput>;
+  skipMail?: InputMaybe<Scalars['Boolean']>;
   startsAt: Scalars['DateTime'];
   userID: Scalars['String'];
 };
@@ -5378,6 +5381,7 @@ export type TeaserGridBlock = BaseBlock & {
   disabled?: Maybe<Scalars['Boolean']>;
   numColumns: Scalars['Int'];
   teasers: Array<Maybe<Teaser>>;
+  title?: Maybe<Scalars['String']>;
   type: BlockType;
 };
 
@@ -5387,6 +5391,7 @@ export type TeaserGridBlockInput = {
   disabled?: InputMaybe<Scalars['Boolean']>;
   numColumns: Scalars['Int'];
   teasers: Array<InputMaybe<TeaserInput>>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type TeaserGridFlexBlock = BaseBlock & {
@@ -5395,6 +5400,7 @@ export type TeaserGridFlexBlock = BaseBlock & {
   blockStyleName?: Maybe<Scalars['String']>;
   disabled?: Maybe<Scalars['Boolean']>;
   flexTeasers: Array<FlexTeaser>;
+  title?: Maybe<Scalars['String']>;
   type: BlockType;
 };
 
@@ -5403,6 +5409,7 @@ export type TeaserGridFlexBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']>;
   disabled?: InputMaybe<Scalars['Boolean']>;
   flexTeasers: Array<FlexTeaserInput>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type TeaserInput = {

@@ -354,6 +354,7 @@ fragment FullBlock on BlockContent {
   ...BlockWithoutTeaser
 
   ... on TeaserGridFlexBlock {
+    title
     disabled
     blockStyle
     blockStyleName
@@ -375,6 +376,7 @@ fragment FullBlock on BlockContent {
   }
 
   ... on TeaserGridBlock {
+    title
     disabled
     blockStyle
     blockStyleName

@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { ContentWrapper } from '@wepublish/content/website';
 import { PersonalDataFormContainer } from '@wepublish/user/website';
 import {
+  getApiUrl,
   getSessionTokenProps,
   handleJwtLogin,
   ssrAuthLink,
@@ -15,8 +16,6 @@ import {
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { NextPageContext } from 'next';
-import getConfig from 'next/config';
-
 const ProfileWrapper = styled(ContentWrapper)`
   gap: ${({ theme }) => theme.spacing(2)};
 `;
@@ -42,9 +41,7 @@ export { GuardedProfile as default };
   if (typeof window !== 'undefined') {
     return {};
   }
-
-  const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  const client = getV1ApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),

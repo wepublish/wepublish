@@ -1,12 +1,12 @@
 import { PageContainer } from '@wepublish/page/website';
 import {
+  getApiUrl,
   getSessionTokenProps,
   ssrAuthLink,
   SubscribePage,
 } from '@wepublish/utils/website';
 import { getV1ApiClient, PageDocument } from '@wepublish/website/api';
 import { NextPageContext } from 'next';
-import getConfig from 'next/config';
 import { ComponentProps } from 'react';
 
 export default function Mitmachen(props: ComponentProps<typeof SubscribePage>) {
@@ -14,8 +14,7 @@ export default function Mitmachen(props: ComponentProps<typeof SubscribePage>) {
 }
 
 Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
-  const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  const client = getV1ApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),

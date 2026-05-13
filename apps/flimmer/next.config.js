@@ -24,6 +24,7 @@ const nextConfig = {
   },
   serverRuntimeConfig: {
     env: {
+      API_URL_INTERNAL: process.env.API_URL_INTERNAL || '',
       MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY || '',
       MAILCHIMP_SERVER_PREFIX: process.env.MAILCHIMP_SERVER_PREFIX || '',
     },

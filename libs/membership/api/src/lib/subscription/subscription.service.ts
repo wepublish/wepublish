@@ -202,7 +202,11 @@ export class SubscriptionService {
   }
 
   @PrimeDataLoader(SubscriptionDataloader)
-  async cancelSubscription({ id, reason }: CancelPublicSubscriptionInput) {
+  async cancelSubscription({
+    id,
+    reason,
+    skipMail,
+  }: CancelPublicSubscriptionInput) {
     const subscription = await this.prisma.subscription.findUnique({
       where: { id },
       include: {
@@ -227,6 +231,7 @@ export class SubscriptionService {
     return await this.memberContext.deactivateSubscription({
       subscription,
       deactivationReason: reason,
+      skipMail,
     });
   }
 
