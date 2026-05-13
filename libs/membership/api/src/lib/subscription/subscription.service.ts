@@ -97,7 +97,6 @@ export class SubscriptionService {
         id,
       },
       include: {
-        properties: true,
         deactivation: true,
         paymentMethod: true,
       },
@@ -155,22 +154,11 @@ export class SubscriptionService {
       data: {
         ...input,
         currency: memberPlan.currency,
-        properties:
-          properties ?
-            {
-              deleteMany: {
-                subscriptionId: id,
-              },
-              createMany: {
-                data: properties,
-              },
-            }
-          : undefined,
+        properties: properties as any,
       },
       include: {
         deactivation: true,
         periods: true,
-        properties: true,
       },
     });
 
@@ -188,7 +176,6 @@ export class SubscriptionService {
       include: {
         deactivation: true,
         periods: true,
-        properties: true,
         memberPlan: true,
         user: {
           select: unselectPassword,
@@ -215,13 +202,16 @@ export class SubscriptionService {
   }
 
   @PrimeDataLoader(SubscriptionDataloader)
-  async cancelSubscription({ id, reason }: CancelPublicSubscriptionInput) {
+  async cancelSubscription({
+    id,
+    reason,
+    skipMail,
+  }: CancelPublicSubscriptionInput) {
     const subscription = await this.prisma.subscription.findUnique({
       where: { id },
       include: {
         deactivation: true,
         periods: true,
-        properties: true,
       },
     });
 
@@ -241,6 +231,7 @@ export class SubscriptionService {
     return await this.memberContext.deactivateSubscription({
       subscription,
       deactivationReason: reason,
+      skipMail,
     });
   }
 
@@ -258,7 +249,6 @@ export class SubscriptionService {
       include: {
         deactivation: true,
         periods: true,
-        properties: true,
       },
     });
 

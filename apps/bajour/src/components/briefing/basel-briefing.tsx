@@ -38,6 +38,8 @@ const baselBg = {
   s: BaselBg.src,
   xs: BaselBg.src,
   xxs: BaselBg.src,
+  focalPointX: 0.5,
+  focalPointY: 0.5,
 } satisfies FullImageFragment;
 
 const fcbBg = {
@@ -58,6 +60,8 @@ const fcbBg = {
   s: FcbBg.src,
   xs: FcbBg.src,
   xxs: FcbBg.src,
+  focalPointX: 0.5,
+  focalPointY: 0.5,
 } satisfies FullImageFragment;
 
 const fasnachtBg = {
@@ -78,6 +82,8 @@ const fasnachtBg = {
   s: FasnachtBg.src,
   xs: FasnachtBg.src,
   xxs: FasnachtBg.src,
+  focalPointX: 0.5,
+  focalPointY: 0.5,
 } satisfies FullImageFragment;
 
 const escBg = {
@@ -98,6 +104,8 @@ const escBg = {
   s: EscBg.src,
   xs: EscBg.src,
   xxs: EscBg.src,
+  focalPointX: 0.5,
+  focalPointY: 0.5,
 } satisfies FullImageFragment;
 
 const getValuesBasedOnBriefing = (briefing: BriefingType) => {

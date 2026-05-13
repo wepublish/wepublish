@@ -14,8 +14,8 @@ import {
 import {
   BuilderCommentProps,
   BuilderTeaserListBlockProps,
+  Link,
 } from '@wepublish/website/builder';
-import Link from 'next/link';
 import { useMemo } from 'react';
 import { MdForum } from 'react-icons/md';
 

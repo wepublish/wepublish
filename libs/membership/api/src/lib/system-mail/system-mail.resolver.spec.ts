@@ -57,6 +57,7 @@ const FAKE_USER: User = {
   totpSecret: null,
   totpEnabled: false,
   totpExempt: false,
+  properties: [],
 };
 
 describe('SystemMailResolver', () => {

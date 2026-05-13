@@ -14,14 +14,12 @@ import {
 } from './has-page/has-page.resolver';
 import { BlockContentModule } from '@wepublish/block-content/api';
 import { TagModule } from '@wepublish/tag/api';
-import { PropertyModule } from '@wepublish/property/api';
 
 @Module({
   imports: [
     PrismaModule,
     ImageModule,
     TagModule,
-    PropertyModule,
     forwardRef(() => BlockContentModule),
   ],
   providers: [

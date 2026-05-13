@@ -3,21 +3,20 @@
     "production": {
       "deployment": true,
       "env": {
-        "DEPLOY_ENV": "production"
       },
       "secret_env": []
     },
     "staging": {
       "deployment": true,
       "env": {
-        "DEPLOY_ENV": "staging"
+
       },
       "secret_env": []
     },
     "review": {
       "deployment": true,
       "env": {
-        "DEPLOY_ENV": "review"
+
       },
       "secret_env": []
     }

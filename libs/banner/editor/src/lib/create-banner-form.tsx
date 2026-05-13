@@ -21,15 +21,19 @@ export const CreateBannerForm = () => {
 
   const [banner, setBanner] = useState({
     active: false,
+    collapsible: true,
     showOnArticles: false,
     showForLoginStatus: LoginStatus.All,
     delay: 0,
+    hideForMinutes: 24 * 60,
   } as CreateBannerInput & { image?: FullImageFragment | null });
 
-  const { StringType } = Schema.Types;
+  const { StringType, NumberType } = Schema.Types;
   const validationModel = Schema.Model({
     title: StringType().isRequired(),
     text: StringType().isRequired(),
+    delay: NumberType().min(0),
+    hideForMinutes: NumberType().min(0).isRequired(),
   });
 
   const [shouldClose, setShouldClose] = useState(false);
@@ -38,20 +42,24 @@ export const CreateBannerForm = () => {
     onError: error => {
       console.log(error);
     },
-    onCompleted: banner => {
+    onCompleted: data => {
       if (shouldClose) {
         navigate(closePath);
+      } else {
+        navigate(`/banners/edit/${data.createBanner.id}`);
       }
     },
   });
 
   const onSubmit = () => {
     const { image, ...bannerWithoutImage } = banner;
+
     const processedBanner = {
       ...bannerWithoutImage,
       actions: banner.actions?.map(removeIdAndTypename),
       showOnPages: banner.showOnPages?.map(removeTypename),
     };
+
     createBanner({ variables: { input: processedBanner } });
   };
 

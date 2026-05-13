@@ -16,6 +16,7 @@ import {
 } from '@wepublish/utils/api';
 import { JwtService } from './jwt.service';
 import { TotpService } from './totp.service';
+import { Property } from '@wepublish/property/api';
 
 const IDAlphabet =
   '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -179,7 +180,7 @@ export class SessionService {
       return;
     }
 
-    const lastSendTimeStamp = user.properties.find(
+    const lastSendTimeStamp = (user.properties as unknown as Property[]).find(
       property => property?.key === USER_PROPERTY_LAST_LOGIN_LINK_SEND
     );
 

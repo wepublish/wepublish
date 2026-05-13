@@ -18,6 +18,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { Link } from '@wepublish/website/builder';
 
+import { getApiUrl } from '../../../api-url';
+
 const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
   gap: ${({ theme }) => theme.spacing(2)};
@@ -54,7 +56,7 @@ GuardedDeactivatedSubscriptions.getInitialProps = async (
   }
 
   const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  const client = getV1ApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),

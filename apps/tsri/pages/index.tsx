@@ -1,6 +1,8 @@
 import mailchimp, { campaigns } from '@mailchimp/mailchimp_marketing';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
+import { getApiUrl } from '@wepublish/utils/website';
+import { LinkContext } from '@wepublish/website/builder';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -19,11 +21,13 @@ type IndexProps = {
 
 export default function Index({ campaigns }: IndexProps) {
   return (
-    <DailyBriefingContext.Provider value={campaigns}>
-      <ContentWidthProvider fullWidth={true}>
-        <PageContainer slug={''} />
-      </ContentWidthProvider>
-    </DailyBriefingContext.Provider>
+    <LinkContext.Provider value={{ prefetch: true }}>
+      <DailyBriefingContext.Provider value={campaigns}>
+        <ContentWidthProvider fullWidth={true}>
+          <PageContainer slug={''} />
+        </ContentWidthProvider>
+      </DailyBriefingContext.Provider>
+    </LinkContext.Provider>
   );
 }
 
@@ -39,7 +43,7 @@ export const getStaticProps: GetStaticProps = async () => {
     server: serverRuntimeConfig.env.MAILCHIMP_SERVER_PREFIX,
   });
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, []);
+  const client = getV1ApiClient(getApiUrl(), []);
   const [mailchimpResponse] = await Promise.all([
     mailchimp.campaigns.list({
       count: 4,

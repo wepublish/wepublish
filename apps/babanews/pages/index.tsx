@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -8,6 +9,7 @@ import {
   PageDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
+import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 
@@ -17,9 +19,11 @@ const Frontpage = styled(PageContainer)`
 
 export default function Index() {
   return (
-    <ContentWidthProvider fullWidth>
-      <Frontpage slug={''} />
-    </ContentWidthProvider>
+    <LinkContext.Provider value={{ prefetch: true }}>
+      <ContentWidthProvider fullWidth>
+        <Frontpage slug={''} />
+      </ContentWidthProvider>
+    </LinkContext.Provider>
   );
 }
 
@@ -30,7 +34,7 @@ export const getStaticProps: GetStaticProps = async () => {
     return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, []);
+  const client = getV1ApiClient(getApiUrl(), []);
   await Promise.all([
     client.query({
       query: PageDocument,
