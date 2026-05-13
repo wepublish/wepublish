@@ -10,13 +10,14 @@ export class PrismaService
   constructor() {
     const connectionString = process.env['DATABASE_URL'];
 
-    if (connectionString) {
-      const adapter = new PrismaPg({ connectionString });
-      super({ adapter });
-    } else {
-      // Allow instantiation without a DB connection (e.g. unit tests)
-      super({ adapter: new PrismaPg({ connectionString: 'postgresql://' }) });
-    }
+    const adapter = new PrismaPg({
+      connectionString: connectionString ?? 'postgresql://',
+      max: parseInt(process.env['DATABASE_POOL_SIZE'] ?? '2'),
+      connectionTimeoutMillis: 5_000,
+      idleTimeoutMillis: 10_000,
+    });
+
+    super({ adapter });
   }
 
   public async onModuleInit() {

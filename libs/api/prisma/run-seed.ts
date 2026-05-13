@@ -22,7 +22,12 @@ const generateSecureRandomPassword = (length: number) => {
 };
 
 export async function runSeed() {
-  const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
+  const adapter = new PrismaPg({
+    connectionString: process.env.DATABASE_URL || 'postgresql://',
+    max: parseInt(process.env['DATABASE_POOL_SIZE'] ?? '2'),
+    connectionTimeoutMillis: 5_000,
+    idleTimeoutMillis: 10_000,
+  });
   const prisma = new PrismaClient({ adapter });
   await prisma.$connect();
   const [adminUserRole, editorUserRole] = await rootSeed(prisma);
