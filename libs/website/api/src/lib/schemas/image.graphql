@@ -40,10 +40,8 @@ fragment FullImage on Image {
   link
   license
 
-  focalPoint {
-    x
-    y
-  }
+  focalPointX
+  focalPointY
 
   ...ImageURLs
 }
@@ -77,10 +75,8 @@ fragment FullPeerImage on PeerImage {
   link
   license
 
-  focalPoint {
-    x
-    y
-  }
+  focalPointX
+  focalPointY
 
   url
 
@@ -104,7 +100,8 @@ fragment FullPeerImage on PeerImage {
 mutation UploadImage(
   $title: String
   $description: String
-  $focalPoint: FocalPointInput
+  $focalPointX: Float!
+  $focalPointY: Float!
   $license: String
   $link: String
   $source: String
@@ -114,7 +111,8 @@ mutation UploadImage(
   uploadUserProfileImage(
     title: $title
     description: $description
-    focalPoint: $focalPoint
+    focalPointX: $focalPointX
+    focalPointY: $focalPointY
     license: $license
     link: $link
     source: $source

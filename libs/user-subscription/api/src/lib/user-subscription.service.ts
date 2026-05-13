@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import {
   MemberPlan,
-  MetadataProperty,
   PaymentPeriodicity,
   Prisma,
   PrismaClient,
@@ -31,7 +30,6 @@ import { MemberContextService } from '@wepublish/membership/api';
 
 export type SubscriptionWithRelations = Subscription & {
   periods: SubscriptionPeriod[];
-  properties: MetadataProperty[];
   deactivation: SubscriptionDeactivation | null;
 };
 
@@ -81,7 +79,6 @@ export class UserSubscriptionService {
         include: {
           deactivation: true,
           periods: true,
-          properties: true,
         },
       });
       if (!subscriptionToDeactivate)
@@ -343,7 +340,6 @@ export class UserSubscriptionService {
     const subscription = await this.prisma.subscription.findUnique({
       where: { id },
       include: {
-        properties: true,
         deactivation: true,
       },
     });
@@ -431,7 +427,6 @@ export class UserSubscriptionService {
       include: {
         deactivation: true,
         periods: true,
-        properties: true,
       },
     });
 
@@ -451,7 +446,6 @@ export class UserSubscriptionService {
       include: {
         deactivation: true,
         periods: true,
-        properties: true,
       },
     });
 
@@ -477,7 +471,6 @@ export class UserSubscriptionService {
       include: {
         deactivation: true,
         periods: true,
-        properties: true,
       },
     });
 

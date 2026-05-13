@@ -2,7 +2,6 @@ import {
   AvailablePaymentMethod,
   Invoice,
   MemberPlan,
-  MetadataProperty,
   Payment,
   PaymentPeriodicity,
   PaymentProviderCustomer,
@@ -33,6 +32,7 @@ import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { Property } from '@wepublish/property/api';
 
 export type MemberPlanWithPaymentMethods = MemberPlan & {
   availablePaymentMethods: AvailablePaymentMethod[];
@@ -40,7 +40,6 @@ export type MemberPlanWithPaymentMethods = MemberPlan & {
 
 export type SubscriptionWithRelations = Subscription & {
   periods: SubscriptionPeriod[];
-  properties: MetadataProperty[];
   deactivation: SubscriptionDeactivation | null;
 };
 
@@ -202,7 +201,6 @@ export class MemberContext implements MemberContextInterface {
           include: {
             deactivation: true,
             periods: true,
-            properties: true,
           },
         });
 
@@ -597,7 +595,6 @@ export class MemberContext implements MemberContextInterface {
         },
         include: {
           deactivation: true,
-          properties: true,
         },
       });
 
@@ -618,7 +615,7 @@ export class MemberContext implements MemberContextInterface {
   }: {
     paymentProvider: PaymentProvider;
     input: Subscription;
-    originalSubscription: Subscription & { properties: MetadataProperty[] };
+    originalSubscription: Subscription;
   }) {
     // not updatable subscription properties for externally managed subscriptions
     if (
@@ -654,9 +651,6 @@ export class MemberContext implements MemberContextInterface {
   }) {
     const subscription = await this.prisma.subscription.findUnique({
       where: { id: subscriptionId },
-      include: {
-        properties: true,
-      },
     });
 
     if (!subscription) {
@@ -736,8 +730,8 @@ export class MemberContext implements MemberContextInterface {
   }
 
   async processSubscriptionProperties(
-    subscriptionProperties: Pick<MetadataProperty, 'key' | 'value'>[]
-  ): Promise<Pick<MetadataProperty, 'public' | 'key' | 'value'>[]> {
+    subscriptionProperties: Pick<Property, 'key' | 'value'>[]
+  ): Promise<Pick<Property, 'public' | 'key' | 'value'>[]> {
     return Array.isArray(subscriptionProperties) ?
         subscriptionProperties.map(property => {
           return {
@@ -768,7 +762,7 @@ export class MemberContext implements MemberContextInterface {
     paymentPeriodicity: PaymentPeriodicity;
     monthlyAmount: number;
     memberPlanID: string;
-    properties: Pick<MetadataProperty, 'key' | 'value' | 'public'>[];
+    properties: Pick<Property, 'key' | 'value' | 'public'>[];
     autoRenew: boolean;
     extendable: boolean;
     replacedSubscriptionId?: string | null;
@@ -820,11 +814,7 @@ export class MemberContext implements MemberContextInterface {
         paidUntil: null,
         monthlyAmount,
         memberPlanID,
-        properties: {
-          createMany: {
-            data: properties,
-          },
-        },
+        properties,
         replacesSubscriptionID: replacedSubscriptionId,
         autoRenew,
         extendable,
@@ -834,7 +824,6 @@ export class MemberContext implements MemberContextInterface {
       include: {
         deactivation: true,
         periods: true,
-        properties: true,
       },
     });
 
@@ -920,7 +909,7 @@ export class MemberContext implements MemberContextInterface {
     paymentPeriodicity: PaymentPeriodicity;
     monthlyAmount: number;
     memberPlanID: string;
-    properties: Pick<MetadataProperty, 'key' | 'value' | 'public'>[];
+    properties: Pick<Property, 'key' | 'value' | 'public'>[];
     autoRenew: boolean;
     extendable: boolean;
     startsAt?: Date | string;
@@ -983,11 +972,7 @@ export class MemberContext implements MemberContextInterface {
         paidUntil,
         monthlyAmount,
         memberPlanID,
-        properties: {
-          createMany: {
-            data: properties,
-          },
-        },
+        properties,
         autoRenew,
         extendable,
         currency: memberPlan.currency,
@@ -995,7 +980,6 @@ export class MemberContext implements MemberContextInterface {
       include: {
         deactivation: true,
         periods: true,
-        properties: true,
       },
     });
 

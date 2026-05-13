@@ -7,6 +7,7 @@ import {
   logger,
   USER_PROPERTY_LAST_LOGIN_LINK_SEND,
 } from '@wepublish/utils/api';
+import { Property } from '@wepublish/property/api';
 
 @Injectable()
 export class UserAuthenticationService {
@@ -51,19 +52,23 @@ export class UserAuthenticationService {
 
   async updateUserLastLoginLinkSend(userId: string) {
     try {
+      const { properties } = await this.prisma.user.findUniqueOrThrow({
+        where: { id: userId },
+      });
+
       await this.prisma.user.update({
         where: { id: userId },
         data: {
-          properties: {
-            deleteMany: {
+          properties: [
+            ...(properties as unknown as Property[]).filter(
+              ({ key }) => key !== USER_PROPERTY_LAST_LOGIN_LINK_SEND
+            ),
+            {
               key: USER_PROPERTY_LAST_LOGIN_LINK_SEND,
-            },
-            create: {
-              key: USER_PROPERTY_LAST_LOGIN_LINK_SEND,
-              public: false,
               value: `${Date.now()}`,
+              public: false,
             },
-          },
+          ] as any,
         },
       });
     } catch (error) {

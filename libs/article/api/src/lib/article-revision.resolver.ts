@@ -11,7 +11,7 @@ import { CanGetArticle } from '@wepublish/permissions';
 import { hasPermission } from '@wepublish/permissions/api';
 import { SlotTeasersLoader, BlockContent } from '@wepublish/block-content/api';
 import { forwardRef, Inject } from '@nestjs/common';
-import { ArticlePropertyDataloader, Property } from '@wepublish/property/api';
+import { Property } from '@wepublish/property/api';
 
 @Resolver(() => ArticleRevision)
 export class ArticleRevisionResolver {
@@ -20,8 +20,7 @@ export class ArticleRevisionResolver {
     private slotTeasersLoader: SlotTeasersLoader,
     private authorDataLoader: ArticleAuthorDataloader,
     private socialMediaAuthorDataLoader: ArticleSocialMediaAuthorDataloader,
-    private imageDataloaderService: ImageDataloaderService,
-    private propertyDataLoader: ArticlePropertyDataloader
+    private imageDataloaderService: ImageDataloaderService
   ) {}
 
   @ResolveField(() => [BlockContent])
@@ -36,7 +35,7 @@ export class ArticleRevisionResolver {
     @Parent() revision: ArticleRevision,
     @CurrentUser() user: UserSession | undefined
   ) {
-    const properties = await this.propertyDataLoader.load(revision.id);
+    const properties = revision.properties;
 
     return properties?.filter(
       prop => prop.public || hasPermission(CanGetArticle, user?.roles ?? [])

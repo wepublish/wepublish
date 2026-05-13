@@ -1130,6 +1130,7 @@ export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
         },
         data: {
           password: await hashPassword('123'),
+          totpExempt: true,
         },
       }),
       prisma.user.update({
@@ -1138,6 +1139,7 @@ export async function runExampleSeed(prisma: PrismaClient): Promise<void> {
         },
         data: {
           password: await hashPassword('123'),
+          totpExempt: true,
         },
       }),
     ]);

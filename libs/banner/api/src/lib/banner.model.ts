@@ -51,8 +51,14 @@ export class Banner {
   @Field()
   active!: boolean;
 
+  @Field()
+  collapsible!: boolean;
+
   @Field(() => Int)
   delay!: number;
+
+  @Field(() => Int)
+  hideForMinutes!: number;
 
   @Field()
   showOnArticles!: boolean;
