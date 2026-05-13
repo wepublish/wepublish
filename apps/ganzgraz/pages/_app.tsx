@@ -97,7 +97,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           PaymentAmount={GanzGrazPaymentAmountPicker}
           elements={{ Link: NextWepublishLink }}
           date={{ format: dateFormatter }}
-          meta={{ siteTitle }}
+          meta={{ siteTitle, locale: 'de-AT' }}
         >
           <ThemeProvider theme={theme}>
             <CssBaseline />
