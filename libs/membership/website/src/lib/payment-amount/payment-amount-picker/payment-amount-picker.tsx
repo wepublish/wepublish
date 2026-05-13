@@ -10,6 +10,7 @@ import { formatNumber } from '../../formatters/format-number';
 import {
   CurrencyNumberSpinner,
   CurrencyNumberSpinnerSnap,
+  HelperText,
 } from './currency-number-spinner';
 import styled from '@emotion/styled';
 
@@ -56,6 +57,10 @@ export const PaymentAmountPickerItemWrapper = styled('div')<
     css`
       color: ${theme.palette.primary.contrastText};
       background: ${theme.palette.primary.light};
+
+      ${HelperText} {
+        color: ${theme.palette.primary.contrastText};
+      }
     `}
 `;
 
@@ -137,6 +142,10 @@ export const PaymentAmountPicker = forwardRef<
 
     const [hasInteracted, setHasInteracted] = useState(false);
     const showSelection = !noInitialSelection || hasInteracted;
+    const isCustomValue =
+      snap ?
+        !snap.values.some(v => v * 100 === value)
+      : !pickerItems.some(p => p === value);
 
     return (
       <PaymentAmountPickerWrapper
@@ -175,10 +184,11 @@ export const PaymentAmountPicker = forwardRef<
           control={
             <PaymentAmountPickerItem
               currency={currency}
-              checked={false}
+              checked={showSelection && isCustomValue}
             >
               {spinner ?
                 <StyledCurrencyNumberSpinner
+                  value={value / 100}
                   min={amountPerMonthMin / 100}
                   snap={snap}
                   helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}

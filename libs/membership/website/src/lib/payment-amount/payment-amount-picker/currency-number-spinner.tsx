@@ -185,7 +185,7 @@ const SpinnerWrapper = styled('div')`
   margin-top: 30px;
 `;
 
-const HelperText = styled('p')`
+export const HelperText = styled('p')`
   margin: 4px 14px 0;
   font-size: 0.75rem;
   line-height: 1.66;
