@@ -4,8 +4,13 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { Currency } from '@wepublish/website/api';
-import { forwardRef, PropsWithChildren } from 'react';
+import { forwardRef, PropsWithChildren, useState } from 'react';
 import { formatCurrency } from '../../formatters/format-currency';
+import { formatNumber } from '../../formatters/format-number';
+import {
+  CurrencyNumberSpinner,
+  CurrencyNumberSpinnerSnap,
+} from './currency-number-spinner';
 import styled from '@emotion/styled';
 
 export const PaymentAmountPickerWrapper = styled(RadioGroup)`
@@ -74,6 +79,8 @@ export const PaymentAmountPickerItemAmount = styled('div')`
   font-weight: 600;
 `;
 
+export const StyledCurrencyNumberSpinner = styled(CurrencyNumberSpinner)``;
+
 export const PaymentAmountPickerItem = forwardRef<
   HTMLButtonElement,
   PaymentAmountPickerItemProps
@@ -96,7 +103,14 @@ export const PaymentAmountPickerItem = forwardRef<
 
 export const PaymentAmountPicker = forwardRef<
   HTMLInputElement,
-  BuilderPaymentAmountProps & { pickerItems: number[] }
+  BuilderPaymentAmountProps & {
+    pickerItems: number[];
+    format?: string;
+    spinner?: boolean;
+    step?: number;
+    snap?: CurrencyNumberSpinnerSnap;
+    noInitialSelection?: boolean;
+  }
 >(
   (
     {
@@ -105,6 +119,10 @@ export const PaymentAmountPicker = forwardRef<
       amountPerMonthMin,
       amountPerMonthTarget,
       pickerItems,
+      format,
+      spinner,
+      snap,
+      noInitialSelection,
       name,
       error,
       value,
@@ -117,12 +135,16 @@ export const PaymentAmountPicker = forwardRef<
       meta: { locale },
     } = useWebsiteBuilder();
 
+    const [hasInteracted, setHasInteracted] = useState(false);
+    const showSelection = !noInitialSelection || hasInteracted;
+
     return (
       <PaymentAmountPickerWrapper
         className={className}
         name={name}
         onChange={event => {
           if (+event.target.value) {
+            setHasInteracted(true);
             onChange(+event.target.value);
           }
         }}
@@ -135,10 +157,12 @@ export const PaymentAmountPicker = forwardRef<
             control={
               <PaymentAmountPickerItem
                 currency={currency}
-                checked={itemAmount === value}
+                checked={showSelection && itemAmount === value}
               >
                 <PaymentAmountPickerItemAmount>
-                  {formatCurrency(itemAmount / 100, currency, locale, false)}
+                  {format ?
+                    formatNumber(itemAmount / 100, format, locale)
+                  : formatCurrency(itemAmount / 100, currency, locale, false)}
                 </PaymentAmountPickerItemAmount>
               </PaymentAmountPickerItem>
             }
@@ -153,20 +177,38 @@ export const PaymentAmountPicker = forwardRef<
               currency={currency}
               checked={false}
             >
-              <TextField
-                ref={ref}
-                name={name}
-                value={value / 100}
-                onChange={event => onChange(+event.target.value * 100)}
-                type={'number'}
-                fullWidth
-                error={!!error}
-                helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
-                inputProps={{
-                  step: 'any',
-                  min: amountPerMonthMin / 100,
-                }}
-              />
+              {spinner ?
+                <StyledCurrencyNumberSpinner
+                  min={amountPerMonthMin / 100}
+                  snap={snap}
+                  helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
+                  onValueChange={v => {
+                    setHasInteracted(true);
+                    if (typeof v === 'number' && v >= 0) {
+                      onChange(v ? v * 100 : 0);
+                    } else {
+                      onChange(0);
+                    }
+                  }}
+                />
+              : <TextField
+                  ref={ref}
+                  name={name}
+                  value={value / 100}
+                  onChange={event => {
+                    setHasInteracted(true);
+                    onChange(+event.target.value * 100);
+                  }}
+                  type={'number'}
+                  fullWidth
+                  error={!!error}
+                  helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
+                  inputProps={{
+                    step: 'any',
+                    min: amountPerMonthMin / 100,
+                  }}
+                />
+              }
             </PaymentAmountPickerItem>
           }
           label={'Manuell'}

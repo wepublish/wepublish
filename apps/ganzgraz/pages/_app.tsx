@@ -33,6 +33,7 @@ import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import deOverriden from '../locales/deOverriden.json';
 import { GanzGrazAuthor } from '../src/components/ganzgraz-author';
 import {
   GanzGrazNavbar,
@@ -46,11 +47,8 @@ setDefaultOptions({
   locale: de,
 });
 
-initWePublishTranslator({
-  navbar: {
-    subscribe: 'Unterstützen',
-  },
-});
+initWePublishTranslator(deOverriden);
+
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
