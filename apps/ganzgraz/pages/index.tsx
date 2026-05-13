@@ -1,6 +1,5 @@
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
-import { LinkContext } from '@wepublish/website/builder';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -8,15 +7,14 @@ import {
   PageDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
+import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 
 export default function Index() {
   return (
     <LinkContext.Provider value={{ prefetch: true }}>
-      <ContentWidthProvider fullWidth>
-        <PageContainer slug={''} />
-      </ContentWidthProvider>
+      <PageContainer slug={''} />
     </LinkContext.Provider>
   );
 }
