@@ -26,7 +26,6 @@ export const GanzGrazPaymentAmountPicker = forwardRef<
     ref={ref}
     pickerItems={[550, 1200, 2500]}
     format={'0.00'}
-    noInitialSelection
     snap={{
       values: [5.5, 12, 25],
       threshold: 0.6,

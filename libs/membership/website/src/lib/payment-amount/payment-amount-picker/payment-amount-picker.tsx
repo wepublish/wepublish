@@ -185,8 +185,9 @@ export const PaymentAmountPicker = forwardRef<
               checked={showSelection && isCustomValue}
             >
               <StyledCurrencyNumberSpinner
-                value={hasInteracted ? value / 100 : undefined}
-                min={amountPerMonthMin / 100}
+                value={showSelection ? value / 100 : undefined}
+                //min={amountPerMonthMin / 100}
+                min={0}
                 snap={snap}
                 helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
                 onValueChange={v => {

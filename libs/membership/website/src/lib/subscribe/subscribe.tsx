@@ -28,7 +28,7 @@ import {
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { useEffect, useMemo, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
 import {
@@ -203,7 +203,8 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
   transactionFeeText,
   returningUserId,
-}: BuilderSubscribeProps<T>) => {
+  noInitialAmount,
+}: BuilderSubscribeProps<T> & { noInitialAmount?: boolean }) => {
   const {
     meta: { locale, siteTitle },
     elements: { Alert, H5, Paragraph },
@@ -320,11 +321,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     watch<'paymentPeriodicity'>('paymentPeriodicity');
   const selectedMemberPlanId = watch<'memberPlanId'>('memberPlanId');
   const payTransactionFee = watch<'payTransactionFee'>('payTransactionFee');
+  const watchedMonthlyAmount = useWatch({ control, name: 'monthlyAmount' });
   const monthlyAmount =
-    watch<'monthlyAmount'>('monthlyAmount') +
-    (payTransactionFee ?
-      transactionFee(watch<'monthlyAmount'>('monthlyAmount'))
-    : 0);
+    watchedMonthlyAmount +
+    (payTransactionFee ? transactionFee(watchedMonthlyAmount) : 0);
   const autoRenew = watch<'autoRenew'>('autoRenew');
 
   const selectedMemberPlan = useMemo(
@@ -378,7 +378,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     extendable: selectedMemberPlan?.extendable ?? true,
     productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
     paymentPeriodicity: PaymentPeriodicity.Monthly,
-    monthlyAmount: watch<'monthlyAmount'>('monthlyAmount'),
+    monthlyAmount: watchedMonthlyAmount,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     siteTitle,
     locale,
@@ -433,14 +433,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   }, console.warn);
 
   useEffect(() => {
-    if (selectedMemberPlan) {
+    if (selectedMemberPlan && !noInitialAmount) {
       setValue<'monthlyAmount'>(
         'monthlyAmount',
         selectedMemberPlan.amountPerMonthTarget ||
           selectedMemberPlan.amountPerMonthMin
       );
     }
-  }, [selectedMemberPlan, setValue]);
+  }, [selectedMemberPlan, setValue, noInitialAmount]);
 
   useEffect(() => {
     if (challenge.data?.challenge.challengeID) {
