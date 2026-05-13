@@ -17,6 +17,7 @@ const nextConfig = {
   },
   env: {
     APP_ENVIRONMENT: process.env.APP_ENVIRONMENT,
+    SSR_FETCH_TIMEOUT_MS: process.env.SSR_FETCH_TIMEOUT_MS,
   },
   webpack(config, { webpack }) {
     /**
