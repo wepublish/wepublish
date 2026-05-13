@@ -111,7 +111,6 @@ export const PaymentAmountPicker = forwardRef<
   BuilderPaymentAmountProps & {
     pickerItems: number[];
     format?: string;
-    spinner?: boolean;
     step?: number;
     snap?: CurrencyNumberSpinnerSnap;
     noInitialSelection?: boolean;
@@ -125,7 +124,6 @@ export const PaymentAmountPicker = forwardRef<
       amountPerMonthTarget,
       pickerItems,
       format,
-      spinner,
       snap,
       noInitialSelection,
       name,
@@ -186,39 +184,20 @@ export const PaymentAmountPicker = forwardRef<
               currency={currency}
               checked={showSelection && isCustomValue}
             >
-              {spinner ?
-                <StyledCurrencyNumberSpinner
-                  value={hasInteracted ? value / 100 : undefined}
-                  min={amountPerMonthMin / 100}
-                  snap={snap}
-                  helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
-                  onValueChange={v => {
-                    setHasInteracted(true);
-                    if (typeof v === 'number' && v >= 0) {
-                      onChange(v ? v * 100 : 0);
-                    } else {
-                      onChange(0);
-                    }
-                  }}
-                />
-              : <TextField
-                  ref={ref}
-                  name={name}
-                  value={value / 100}
-                  onChange={event => {
-                    setHasInteracted(true);
-                    onChange(+event.target.value * 100);
-                  }}
-                  type={'number'}
-                  fullWidth
-                  error={!!error}
-                  helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
-                  inputProps={{
-                    step: 'any',
-                    min: amountPerMonthMin / 100,
-                  }}
-                />
-              }
+              <StyledCurrencyNumberSpinner
+                value={hasInteracted ? value / 100 : undefined}
+                min={amountPerMonthMin / 100}
+                snap={snap}
+                helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
+                onValueChange={v => {
+                  setHasInteracted(true);
+                  if (typeof v === 'number' && v >= 0) {
+                    onChange(v ? v * 100 : 0);
+                  } else {
+                    onChange(0);
+                  }
+                }}
+              />
             </PaymentAmountPickerItem>
           }
           label={'Manuell'}
