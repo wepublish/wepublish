@@ -20,6 +20,7 @@ export const mockImage = () =>
       y: 0.5,
     },
     title: null,
+    url: 'https://unsplash.it/500/281',
     xxl: 'https://unsplash.it/1500/500',
     xl: 'https://unsplash.it/1200/400',
     l: 'https://unsplash.it/1000/400',
