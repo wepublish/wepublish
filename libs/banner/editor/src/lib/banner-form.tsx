@@ -71,6 +71,7 @@ export const BannerForm = (props: BannerFormProps) => {
 
         <Form.Group controlId="active">
           <Form.ControlLabel>{t('banner.form.active')}</Form.ControlLabel>
+
           <Form.Control
             name="active"
             value={props.banner.active}
@@ -81,14 +82,41 @@ export const BannerForm = (props: BannerFormProps) => {
           />
         </Form.Group>
 
+        <Form.Group controlId="collapsible">
+          <Form.ControlLabel>{t('banner.form.collapsible')}</Form.ControlLabel>
+
+          <Form.Control
+            name="collapsible"
+            value={props.banner.collapsible}
+            onChange={value =>
+              props.onChange({ ...props.banner, collapsible: value })
+            }
+            accepter={Toggle}
+          />
+        </Form.Group>
+
         <Form.Group controlId="delay">
           <Form.ControlLabel>{t('banner.form.delay')}</Form.ControlLabel>
+
           <Form.Control
             name="delay"
             accepter={InputNumber}
             value={props.banner.delay}
+            onChange={v => props.onChange({ ...props.banner, delay: +v })}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="hideForMinutes">
+          <Form.ControlLabel>
+            {t('banner.form.hideForMinutes')}
+          </Form.ControlLabel>
+
+          <Form.Control
+            name="hideForMinutes"
+            accepter={InputNumber}
+            value={props.banner.hideForMinutes}
             onChange={v =>
-              props.onChange({ ...props.banner, delay: parseInt(v, 10) })
+              props.onChange({ ...props.banner, hideForMinutes: +v })
             }
           />
         </Form.Group>
@@ -97,6 +125,7 @@ export const BannerForm = (props: BannerFormProps) => {
           <Form.ControlLabel>
             {t('banner.form.showForLoginStatus')}
           </Form.ControlLabel>
+
           <RadioGroup
             name="showForLoginStatus"
             value={props.banner.showForLoginStatus}
@@ -117,10 +146,12 @@ export const BannerForm = (props: BannerFormProps) => {
             ))}
           </RadioGroup>
         </Form.Group>
+
         <Form.Group controlId="showOnArticles">
           <Form.ControlLabel>
             {t('banner.form.showOnArticles')}
           </Form.ControlLabel>
+
           <Form.Control
             name="showOnArticles"
             value={props.banner.showOnArticles}
@@ -133,6 +164,7 @@ export const BannerForm = (props: BannerFormProps) => {
 
         <Form.Group controlId="showOnPages">
           <Form.ControlLabel>{t('banner.form.showOnPages')}</Form.ControlLabel>
+
           <CheckPicker
             block
             virtualized
@@ -163,6 +195,7 @@ export const BannerForm = (props: BannerFormProps) => {
 
         <Form.Group controlId="title">
           <Form.ControlLabel>{t('banner.form.title')}</Form.ControlLabel>
+
           <Form.Control
             name="title"
             value={props.banner.title}
@@ -174,6 +207,7 @@ export const BannerForm = (props: BannerFormProps) => {
 
         <Form.Group controlId="text">
           <Form.ControlLabel>{t('banner.form.text')}</Form.ControlLabel>
+
           <Form.Control
             name="text"
             componentClass="textarea"
@@ -185,6 +219,7 @@ export const BannerForm = (props: BannerFormProps) => {
 
         <Form.Group controlId="cta">
           <Form.ControlLabel>{t('banner.form.cta')}</Form.ControlLabel>
+
           <Form.Control
             name="cta"
             value={props.banner.cta}
@@ -194,6 +229,7 @@ export const BannerForm = (props: BannerFormProps) => {
 
         <Form.Group controlId="images">
           <Form.ControlLabel>{t('banner.form.image')}</Form.ControlLabel>
+
           <Form.Control
             name="image"
             header={''}
@@ -215,6 +251,7 @@ export const BannerForm = (props: BannerFormProps) => {
 
         <Form.Group controlId="html">
           <Form.ControlLabel>{t('banner.form.html')}</Form.ControlLabel>
+
           <Input
             name="html"
             as="textarea"

@@ -30,9 +30,11 @@ exports[`BannerService findMany should return the first active banner for {
 } 1`] = `
 {
   "active": true,
+  "collapsible": true,
   "createdAt": 2023-01-01T00:00:00.000Z,
   "cta": null,
   "delay": 0,
+  "hideForMinutes": 1440,
   "html": null,
   "id": "1",
   "imageId": null,
@@ -93,9 +95,11 @@ exports[`BannerService findMany should return the first active banner for {
 } 1`] = `
 {
   "active": true,
+  "collapsible": true,
   "createdAt": 2023-01-01T00:00:00.000Z,
   "cta": null,
   "delay": 0,
+  "hideForMinutes": 1440,
   "html": null,
   "id": "1",
   "imageId": null,
@@ -156,9 +160,11 @@ exports[`BannerService findMany should return the first active banner for {
 } 1`] = `
 {
   "active": true,
+  "collapsible": true,
   "createdAt": 2023-01-01T00:00:00.000Z,
   "cta": null,
   "delay": 0,
+  "hideForMinutes": 1440,
   "html": null,
   "id": "1",
   "imageId": null,
@@ -222,9 +228,11 @@ exports[`BannerService findMany should return the first active banner for {
 } 1`] = `
 {
   "active": true,
+  "collapsible": true,
   "createdAt": 2023-01-01T00:00:00.000Z,
   "cta": null,
   "delay": 0,
+  "hideForMinutes": 1440,
   "html": null,
   "id": "1",
   "imageId": null,
@@ -281,9 +289,11 @@ exports[`BannerService findMany should return the first active banner for {
 } 1`] = `
 {
   "active": true,
+  "collapsible": true,
   "createdAt": 2023-01-01T00:00:00.000Z,
   "cta": null,
   "delay": 0,
+  "hideForMinutes": 1440,
   "html": null,
   "id": "1",
   "imageId": null,
@@ -340,9 +350,11 @@ exports[`BannerService findMany should return the first active banner for {
 } 1`] = `
 {
   "active": true,
+  "collapsible": true,
   "createdAt": 2023-01-01T00:00:00.000Z,
   "cta": null,
   "delay": 0,
+  "hideForMinutes": 1440,
   "html": null,
   "id": "1",
   "imageId": null,

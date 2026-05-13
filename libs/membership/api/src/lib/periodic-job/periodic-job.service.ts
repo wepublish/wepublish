@@ -368,10 +368,8 @@ export class PeriodicJobService {
         where: {
           id: subscriptionToCreateInvoice.id,
         },
-        include: {
-          properties: true,
-        },
       });
+
       if (subscription) {
         await paymentProvider.createRemoteInvoice({
           subscription,
@@ -509,10 +507,8 @@ export class PeriodicJobService {
         where: {
           id: unpaidInvoice.subscription.id,
         },
-        include: {
-          properties: true,
-        },
       });
+
       if (subscription) {
         await paymentProvider.cancelRemoteSubscription({
           subscription,
