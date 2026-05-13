@@ -1,4 +1,4 @@
-import { Injectable, Scope } from '@nestjs/common';
+import { Injectable, Logger, Scope } from '@nestjs/common';
 import { ArticleRevision, PrismaClient } from '@prisma/client';
 import { Primeable } from '@wepublish/utils/api';
 import DataLoader from 'dataloader';
@@ -15,8 +15,12 @@ type RevisionMap = Partial<{
 export class ArticleRevisionDataloaderService
   implements Primeable<RevisionMap>
 {
+  private logger = new Logger('ArticleRevisionDataloaderService');
+
   private dataloader = new DataLoader<string, RevisionMap>(
     async (articleIds: readonly string[]) => {
+      const start = new Date();
+
       const articles = await this.prisma.article.findMany({
         where: {
           id: {
@@ -42,7 +46,11 @@ export class ArticleRevisionDataloaderService
         },
       });
 
-      return articleIds.map((articleId): RevisionMap => {
+      const afterFetch = new Date();
+
+      this.logger.debug(`Loading took ${+afterFetch - +start}ms`, articleIds);
+
+      const data = articleIds.map((articleId): RevisionMap => {
         const rev = articles.find(rev => rev.id === articleId);
         const published = rev?.ArticleRevisionPublished?.articleRevision;
         const draft = rev?.ArticleRevisionDraft?.articleRevision;
@@ -50,6 +58,15 @@ export class ArticleRevisionDataloaderService
 
         return { draft, pending, published };
       });
+
+      const afterMap = new Date();
+
+      this.logger.debug(
+        `Loading took ${+afterFetch - +afterMap}ms`,
+        articleIds
+      );
+
+      return data;
     },
     { name: 'ArticleRevisionDataloader' }
   );
