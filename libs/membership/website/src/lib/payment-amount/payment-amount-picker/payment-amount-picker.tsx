@@ -188,7 +188,7 @@ export const PaymentAmountPicker = forwardRef<
             >
               {spinner ?
                 <StyledCurrencyNumberSpinner
-                  value={value / 100}
+                  value={hasInteracted ? value / 100 : undefined}
                   min={amountPerMonthMin / 100}
                   snap={snap}
                   helperText={`Min ${formatCurrency(amountPerMonthMin / 100, currency, locale)}`}
