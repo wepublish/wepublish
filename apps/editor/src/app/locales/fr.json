@@ -1574,7 +1574,15 @@
       "productTypeHelpText": "Choisissez si le plan doit être proposé comme abonnement ou don. ",
       "productTypeSubscription": "Abonnement",
       "productTypeDonation": "Don",
-      "amountPerMonthMaxHelpText": "Le montant maximum par mois qu'un utilisateur peut payer pour ce plan d'abonnement."
+      "amountPerMonthMaxHelpText": "Le montant maximum par mois qu'un utilisateur peut payer pour ce plan d'abonnement.",
+      "amountSelection": "Sélection du montant",
+      "amountSelectionLayout": "Disposition de la sélection du montant",
+      "amountSelectionLayoutHelpText": "Choisissez comment les utilisateurs sélectionnent le montant dans le formulaire.",
+      "amountSelectionLayoutSlider": "Curseur",
+      "amountSelectionLayoutPicker": "Boutons prédéfinis",
+      "presetAmounts": "Montants prédéfinis",
+      "presetAmountsHelpText": "Définissez les montants affichés comme boutons prédéfinis.",
+      "addPresetAmount": "Ajouter un montant"
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Paramètres avancés",

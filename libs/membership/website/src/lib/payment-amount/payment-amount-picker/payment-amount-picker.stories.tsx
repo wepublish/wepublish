@@ -23,12 +23,31 @@ export default {
   },
 } as Meta<typeof PaymentAmountPickerCmp>;
 
+const baseArgs = {
+  amountPerMonthMin: 1000,
+  amountPerMonthTarget: 1500,
+  currency: Currency.Eur,
+  value: 1500,
+  onChange: action('onChange'),
+};
+
 export const PaymentAmountPicker: StoryObj<typeof PaymentAmountPickerCmp> = {
+  args: baseArgs,
+};
+
+export const WithPresetAmounts: StoryObj<typeof PaymentAmountPickerCmp> = {
   args: {
-    amountPerMonthMin: 1000,
-    amountPerMonthTarget: 1500,
-    currency: Currency.Eur,
-    value: 1500,
-    onChange: action('onChange'),
+    ...baseArgs,
+    presetAmounts: [500, 2500, 5000],
+    value: 2500,
+  },
+};
+
+export const EmptyPresetAmountsFallback: StoryObj<
+  typeof PaymentAmountPickerCmp
+> = {
+  args: {
+    ...baseArgs,
+    presetAmounts: [],
   },
 };

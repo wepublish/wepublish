@@ -1684,7 +1684,15 @@
       "productType": "Product type",
       "productTypeHelpText": "Choose whether the plan should be offered as a subscription or donation.",
       "productTypeSubscription": "Subscription",
-      "productTypeDonation": "Donation"
+      "productTypeDonation": "Donation",
+      "amountSelection": "Amount selection",
+      "amountSelectionLayout": "Amount selection layout",
+      "amountSelectionLayoutHelpText": "Choose how users can pick the amount in the checkout form.",
+      "amountSelectionLayoutSlider": "Slider",
+      "amountSelectionLayoutPicker": "Preset buttons",
+      "presetAmounts": "Preset amounts",
+      "presetAmountsHelpText": "Define the amounts shown as preset buttons.",
+      "addPresetAmount": "Add amount"
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Advanced settings",

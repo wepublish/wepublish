@@ -6,6 +6,7 @@ import {
   PaymentMethod,
   Currency,
   ProductType,
+  AmountSelectionLayout,
   FullAvailablePaymentMethodFragment,
 } from '@wepublish/editor/api';
 import {
@@ -39,7 +40,7 @@ import {
   RichTextBlockValue,
   SelectPage,
 } from '@wepublish/ui/editor';
-import { MdAutoFixHigh, MdCheck } from 'react-icons/md';
+import { MdAdd, MdAutoFixHigh, MdCheck, MdDelete } from 'react-icons/md';
 import { Alert } from '@mui/material';
 import styled from '@emotion/styled';
 
@@ -762,6 +763,133 @@ export function MemberPlanForm({
               <HelpText>{t('memberplanForm.migratePMHelptext')}</HelpText>
             </Col>
           </RowPaddingTop>
+        </Panel>
+      </Col>
+
+      {/* amount selection layout */}
+      <Col xs={12}>
+        <Panel
+          header={t('memberplanForm.amountSelection')}
+          bordered
+        >
+          <Row>
+            <Col xs={24}>
+              <Form.ControlLabel>
+                {t('memberplanForm.amountSelectionLayout')}
+              </Form.ControlLabel>
+              <SelectPicker
+                cleanable={false}
+                searchable={false}
+                block
+                value={
+                  memberPlan?.amountSelectionLayout ??
+                  AmountSelectionLayout.Slider
+                }
+                data={[
+                  {
+                    value: AmountSelectionLayout.Slider,
+                    label: t('memberplanForm.amountSelectionLayoutSlider'),
+                  },
+                  {
+                    value: AmountSelectionLayout.Picker,
+                    label: t('memberplanForm.amountSelectionLayoutPicker'),
+                  },
+                ]}
+                disabled={loading}
+                onChange={(
+                  amountSelectionLayout: AmountSelectionLayout | null
+                ) => {
+                  if (!memberPlan) {
+                    return;
+                  }
+                  setMemberPlan({
+                    ...memberPlan,
+                    amountSelectionLayout:
+                      amountSelectionLayout ?? AmountSelectionLayout.Slider,
+                  });
+                }}
+              />
+              <HelpText>
+                {t('memberplanForm.amountSelectionLayoutHelpText')}
+              </HelpText>
+            </Col>
+          </Row>
+
+          {memberPlan?.amountSelectionLayout ===
+            AmountSelectionLayout.Picker && (
+            <RowPaddingTop>
+              <Col xs={24}>
+                <Form.ControlLabel>
+                  {t('memberplanForm.presetAmounts')}
+                </Form.ControlLabel>
+                <HelpText>{t('memberplanForm.presetAmountsHelpText')}</HelpText>
+
+                {(memberPlan?.presetAmounts ?? []).map(
+                  (presetAmount, index) => (
+                    <RowPaddingTop key={index}>
+                      <Col xs={20}>
+                        <CurrencyInput
+                          name={`presetAmount-${index}`}
+                          currency={memberPlan?.currency ?? 'CHF'}
+                          centAmount={presetAmount}
+                          disabled={loading}
+                          onChange={centAmount => {
+                            if (!memberPlan) {
+                              return;
+                            }
+                            const presetAmounts = [
+                              ...(memberPlan.presetAmounts ?? []),
+                            ];
+                            presetAmounts[index] = centAmount || 0;
+                            setMemberPlan({ ...memberPlan, presetAmounts });
+                          }}
+                        />
+                      </Col>
+                      <Col xs={4}>
+                        <Button
+                          startIcon={<MdDelete />}
+                          onClick={() => {
+                            if (!memberPlan) {
+                              return;
+                            }
+                            const presetAmounts = (
+                              memberPlan.presetAmounts ?? []
+                            ).filter((_, i) => i !== index);
+                            setMemberPlan({ ...memberPlan, presetAmounts });
+                          }}
+                          disabled={loading}
+                          color="red"
+                        />
+                      </Col>
+                    </RowPaddingTop>
+                  )
+                )}
+
+                <RowPaddingTop>
+                  <Col xs={24}>
+                    <Button
+                      startIcon={<MdAdd />}
+                      onClick={() => {
+                        if (!memberPlan) {
+                          return;
+                        }
+                        setMemberPlan({
+                          ...memberPlan,
+                          presetAmounts: [
+                            ...(memberPlan.presetAmounts ?? []),
+                            memberPlan.amountPerMonthMin || 0,
+                          ],
+                        });
+                      }}
+                      disabled={loading}
+                    >
+                      {t('memberplanForm.addPresetAmount')}
+                    </Button>
+                  </Col>
+                </RowPaddingTop>
+              </Col>
+            </RowPaddingTop>
+          )}
         </Panel>
       </Col>
 

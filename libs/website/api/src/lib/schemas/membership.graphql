@@ -33,6 +33,8 @@ fragment FullMemberPlan on MemberPlan {
   amountPerMonthMin
   amountPerMonthMax
   amountPerMonthTarget
+  amountSelectionLayout
+  presetAmounts
   currency
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
