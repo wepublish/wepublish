@@ -54,6 +54,11 @@ export type AllowedSettingVals = {
   stringChoice?: Maybe<Array<Scalars['String']>>;
 };
 
+export enum AmountSelectionLayout {
+  Picker = 'Picker',
+  Slider = 'Slider'
+}
+
 export enum AnalyticsProviderType {
   Google = 'GOOGLE'
 }
@@ -1707,6 +1712,7 @@ export type MemberPlan = HasImage & {
   amountPerMonthMax?: Maybe<Scalars['Int']>;
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: Maybe<Scalars['Int']>;
+  amountSelectionLayout: AmountSelectionLayout;
   availablePaymentMethods: Array<AvailablePaymentMethod>;
   confirmationPage?: Maybe<Page>;
   confirmationPageId?: Maybe<Scalars['String']>;
@@ -1723,6 +1729,7 @@ export type MemberPlan = HasImage & {
   migrateToTargetPaymentMethod?: Maybe<PaymentMethod>;
   migrateToTargetPaymentMethodID?: Maybe<Scalars['String']>;
   name: Scalars['String'];
+  presetAmounts: Array<Scalars['Int']>;
   productType: ProductType;
   shortDescription?: Maybe<Scalars['RichText']>;
   slug: Scalars['String'];
@@ -2230,6 +2237,7 @@ export type MutationCreateMemberPlanArgs = {
   amountPerMonthMax?: InputMaybe<Scalars['Int']>;
   amountPerMonthMin: Scalars['Int'];
   amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
+  amountSelectionLayout: AmountSelectionLayout;
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
   confirmationPageId?: InputMaybe<Scalars['String']>;
   currency: Currency;
@@ -2241,6 +2249,7 @@ export type MutationCreateMemberPlanArgs = {
   maxCount?: InputMaybe<Scalars['Int']>;
   migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
+  presetAmounts: Array<Scalars['Int']>;
   productType: ProductType;
   shortDescription?: InputMaybe<Scalars['RichText']>;
   slug: Scalars['String'];
@@ -3004,6 +3013,7 @@ export type MutationUpdateMemberPlanArgs = {
   amountPerMonthMax?: InputMaybe<Scalars['Int']>;
   amountPerMonthMin?: InputMaybe<Scalars['Int']>;
   amountPerMonthTarget?: InputMaybe<Scalars['Int']>;
+  amountSelectionLayout?: InputMaybe<AmountSelectionLayout>;
   availablePaymentMethods?: InputMaybe<Array<AvailablePaymentMethodInput>>;
   confirmationPageId?: InputMaybe<Scalars['String']>;
   currency?: InputMaybe<Currency>;
@@ -3016,6 +3026,7 @@ export type MutationUpdateMemberPlanArgs = {
   maxCount?: InputMaybe<Scalars['Int']>;
   migrateToTargetPaymentMethodID?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  presetAmounts?: InputMaybe<Array<Scalars['Int']>>;
   productType?: InputMaybe<ProductType>;
   shortDescription?: InputMaybe<Scalars['RichText']>;
   slug?: InputMaybe<Scalars['String']>;

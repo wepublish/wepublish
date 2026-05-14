@@ -601,6 +601,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
                   amountPerMonthTarget={
                     selectedMemberPlan?.amountPerMonthTarget ?? undefined
                   }
+                  presetAmounts={selectedMemberPlan?.presetAmounts ?? undefined}
+                  amountSelectionLayout={
+                    selectedMemberPlan?.amountSelectionLayout
+                  }
                   currency={selectedMemberPlan?.currency ?? Currency.Chf}
                 />
               </SubscribeAmount>

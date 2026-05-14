@@ -558,6 +558,11 @@ enum ProductType {
   Donation     @map("Donation")
 }
 
+enum AmountSelectionLayout {
+  Slider @map("Slider")
+  Picker @map("Picker")
+}
+
 model MemberPlan {
   id         String   @id @default(cuid())
   createdAt  DateTime @default(now())
@@ -573,6 +578,8 @@ model MemberPlan {
   amountPerMonthMin              Float
   amountPerMonthMax              Float?
   amountPerMonthTarget           Float?
+  amountSelectionLayout          AmountSelectionLayout    @default(Slider)
+  presetAmounts                  Int[]                    @default([])
   availablePaymentMethods        AvailablePaymentMethod[]
   migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
   migrateToTargetPaymentMethodID String?

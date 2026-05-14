@@ -1626,7 +1626,15 @@
       "productType": "Produkttyp",
       "productTypeHelpText": "Wähle, ob der Plan als Abonnement oder Spende angeboten wird.",
       "productTypeSubscription": "Abonnement",
-      "productTypeDonation": "Spende"
+      "productTypeDonation": "Spende",
+      "amountSelection": "Betragsauswahl",
+      "amountSelectionLayout": "Layout der Betragsauswahl",
+      "amountSelectionLayoutHelpText": "Wähle, wie die Benutzer:innen den Betrag im Abschluss-Formular auswählen können.",
+      "amountSelectionLayoutSlider": "Schieberegler",
+      "amountSelectionLayoutPicker": "Auswahl-Buttons",
+      "presetAmounts": "Vorgeschlagene Beträge",
+      "presetAmountsHelpText": "Definiere die Beträge, die als Auswahl-Buttons angezeigt werden.",
+      "addPresetAmount": "Betrag hinzufügen"
     },
     "subscriptionEditView": {
       "additionalSettingsTitle": "Erweiterte Einstellungen",

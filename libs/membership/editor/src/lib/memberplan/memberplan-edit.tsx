@@ -1,5 +1,6 @@
 import { ApolloError } from '@apollo/client';
 import {
+  AmountSelectionLayout,
   CreateMemberPlanMutationVariables,
   Currency,
   FullAvailablePaymentMethodFragment,
@@ -96,6 +97,8 @@ function MemberPlanEdit() {
       amountPerMonthMin: 0,
       amountPerMonthMax: null,
       amountPerMonthTarget: null,
+      amountSelectionLayout: AmountSelectionLayout.Slider,
+      presetAmounts: [],
       image: undefined,
       active: true,
       tags: [],
@@ -196,6 +199,9 @@ function MemberPlanEdit() {
       amountPerMonthMin: memberPlan.amountPerMonthMin,
       amountPerMonthMax: memberPlan.amountPerMonthMax,
       amountPerMonthTarget: memberPlan.amountPerMonthTarget,
+      amountSelectionLayout:
+        memberPlan.amountSelectionLayout ?? AmountSelectionLayout.Slider,
+      presetAmounts: memberPlan.presetAmounts ?? [],
       extendable: memberPlan.extendable,
       externalReward: memberPlan.externalReward,
       maxCount: memberPlan.maxCount,

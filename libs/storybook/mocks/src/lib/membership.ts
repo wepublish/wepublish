@@ -1,4 +1,5 @@
 import {
+  AmountSelectionLayout,
   AvailablePaymentMethod,
   CaptchaType,
   Challenge,
@@ -97,6 +98,8 @@ export const mockMemberPlan = ({
     url: 'https://example.com/confirmation',
   } as MemberPlan['confirmationPage'],
   amountPerMonthMax = 1000,
+  amountSelectionLayout = AmountSelectionLayout.Slider,
+  presetAmounts = [],
   externalReward = 'https://example.com/mock-external-reward-url',
 }: Partial<MemberPlan> = {}): MemberPlan & { active: boolean } => ({
   __typename: 'MemberPlan',
@@ -120,6 +123,8 @@ export const mockMemberPlan = ({
   failPage,
   confirmationPage,
   amountPerMonthMax,
+  amountSelectionLayout,
+  presetAmounts,
   externalReward,
   active: true,
 });

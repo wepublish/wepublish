@@ -25,6 +25,8 @@ fragment FullMemberPlan on MemberPlan {
   amountPerMonthMin
   amountPerMonthMax
   amountPerMonthTarget
+  amountSelectionLayout
+  presetAmounts
 
   successPageId
   failPageId
@@ -86,6 +88,8 @@ mutation CreateMemberPlan(
   $amountPerMonthMax: Int
   $amountPerMonthMin: Int!
   $amountPerMonthTarget: Int
+  $amountSelectionLayout: AmountSelectionLayout!
+  $presetAmounts: [Int!]!
   $confirmationPageId: String
   $failPageId: String
   $successPageId: String
@@ -110,6 +114,8 @@ mutation CreateMemberPlan(
     amountPerMonthMax: $amountPerMonthMax
     amountPerMonthMin: $amountPerMonthMin
     amountPerMonthTarget: $amountPerMonthTarget
+    amountSelectionLayout: $amountSelectionLayout
+    presetAmounts: $presetAmounts
 
     confirmationPageId: $confirmationPageId
     failPageId: $failPageId
@@ -140,6 +146,8 @@ mutation UpdateMemberPlan(
   $amountPerMonthMax: Int
   $amountPerMonthMin: Int
   $amountPerMonthTarget: Int
+  $amountSelectionLayout: AmountSelectionLayout
+  $presetAmounts: [Int!]
   $confirmationPageId: String
   $failPageId: String
   $successPageId: String
@@ -165,6 +173,8 @@ mutation UpdateMemberPlan(
     amountPerMonthMax: $amountPerMonthMax
     amountPerMonthMin: $amountPerMonthMin
     amountPerMonthTarget: $amountPerMonthTarget
+    amountSelectionLayout: $amountSelectionLayout
+    presetAmounts: $presetAmounts
 
     confirmationPageId: $confirmationPageId
     failPageId: $failPageId

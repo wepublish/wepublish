@@ -1,6 +1,7 @@
 import { QueryResult } from '@apollo/client';
 import { RadioProps } from '@mui/material';
 import {
+  AmountSelectionLayout,
   ChallengeQuery,
   FullInvoiceFragment,
   FullMemberPlanFragment,
@@ -102,6 +103,8 @@ export type BuilderPaymentAmountProps = {
   amountPerMonthMin: number;
   amountPerMonthMax?: number;
   amountPerMonthTarget: number | undefined;
+  amountSelectionLayout?: AmountSelectionLayout;
+  presetAmounts?: number[];
   currency: Currency;
   donate: boolean;
   onChange: (amount: number) => void;
