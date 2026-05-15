@@ -42,6 +42,7 @@ const DailyBriefingLink = styled('li')`
 
   &:last-child {
     border-bottom: 0;
+    zoom: 1;
   }
 `;
 
