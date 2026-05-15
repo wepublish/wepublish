@@ -42,7 +42,7 @@ export const DailyBriefingTeaserBase = ({
     <TeaserWrapper {...alignment}>
       <DailyBriefingTeaserWrapper>
         <Typography variant="dailyBriefingLinkList">
-          {campaigns.map(campaign => (
+          {campaigns?.map(campaign => (
             <Typography
               variant="dailyBriefingLinkItem"
               key={campaign.id}
