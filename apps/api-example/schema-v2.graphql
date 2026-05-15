@@ -1747,7 +1747,27 @@ type Mutation {
   createToken(name: String!): TokenWithSecret!
 
   """Creates a new user."""
-  createUser(active: Boolean!, address: UserAddressInput, birthday: DateTime, email: String!, emailVerifiedAt: DateTime, firstName: String, flair: String, name: String!, note: String, password: String, properties: [PropertyInput!]!, roleIDs: [String!]!, totpExempt: Boolean, userImageID: String): SensitiveDataUser!
+  createUser(
+    active: Boolean!
+    address: UserAddressInput
+    birthday: DateTime
+    email: String!
+    emailVerifiedAt: DateTime
+    firstName: String
+    flair: String
+    name: String!
+    note: String
+    password: String
+    properties: [PropertyInput!]!
+    roleIDs: [String!]!
+
+    """
+    When true, suppress the ACCOUNT_CREATION welcome email. Useful for bulk imports and scripted user creation.
+    """
+    skipMail: Boolean
+    totpExempt: Boolean
+    userImageID: String
+  ): SensitiveDataUser!
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
@@ -3776,6 +3796,7 @@ type TeaserGridBlock implements BaseBlock {
   blockStyleName: String
   numColumns: Int!
   teasers: [Teaser]!
+  title: String
   type: BlockType!
 }
 
@@ -3784,6 +3805,7 @@ input TeaserGridBlockInput {
   blockStyleName: String
   numColumns: Int!
   teasers: [TeaserInput]!
+  title: String
 }
 
 type TeaserGridFlexBlock implements BaseBlock {
