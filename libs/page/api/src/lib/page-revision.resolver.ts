@@ -1,7 +1,7 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { PageRevision } from './page.model';
 import { Image, ImageDataloaderService } from '@wepublish/image/api';
-import { PagePropertyDataloader, Property } from '@wepublish/property/api';
+import { Property } from '@wepublish/property/api';
 import { CurrentUser, UserSession } from '@wepublish/authentication/api';
 import { hasPermission } from '@wepublish/permissions/api';
 import { BlockContent, SlotTeasersLoader } from '@wepublish/block-content/api';
@@ -13,8 +13,7 @@ export class PageRevisionResolver {
   constructor(
     @Inject(forwardRef(() => SlotTeasersLoader))
     private slotTeasersLoader: SlotTeasersLoader,
-    private imageDataloaderService: ImageDataloaderService,
-    private propertyDataLoader: PagePropertyDataloader
+    private imageDataloaderService: ImageDataloaderService
   ) {}
 
   @ResolveField(() => [Property])
@@ -22,7 +21,7 @@ export class PageRevisionResolver {
     @Parent() revision: PageRevision,
     @CurrentUser() user: UserSession | undefined
   ) {
-    const properties = await this.propertyDataLoader.load(revision.id);
+    const properties = revision.properties;
 
     return properties?.filter(
       prop => prop.public || hasPermission(CanGetPage, user?.roles ?? [])

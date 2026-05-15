@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { LoginStatus, PrismaClient } from '@prisma/client';
+import { Banner, LoginStatus, PrismaClient } from '@prisma/client';
 import { BannerService } from './banner.service';
 import { BannerDocumentType } from './banner.model';
 
@@ -26,7 +26,9 @@ describe('BannerService', () => {
     showOnArticles: true,
     showOnPages: pages,
     showForLoginStatus: LoginStatus.ALL,
-  };
+    collapsible: true,
+    hideForMinutes: 24 * 60,
+  } as Banner;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -207,6 +209,8 @@ describe('BannerService', () => {
         actions: [],
         showOnPages: [],
         showForLoginStatus: LoginStatus.ALL,
+        collapsible: true,
+        hideForMinutes: 24 * 60,
       };
       jest.spyOn(prisma.banner, 'create').mockResolvedValue(banner);
       expect(await service.create(createBannerInput)).toEqual(banner);
@@ -227,6 +231,8 @@ describe('BannerService', () => {
         actions: [],
         showOnPages: [],
         showForLoginStatus: LoginStatus.ALL,
+        collapsible: true,
+        hideForMinutes: 24 * 60,
       };
       jest.spyOn(prisma.banner, 'update').mockResolvedValue(updatedBanner);
       expect(await service.update(updateBannerInput)).toEqual(updatedBanner);

@@ -121,8 +121,7 @@ export class BannerService {
     return banner.showOnPages;
   }
 
-  async create(args: CreateBannerInput) {
-    const { actions, showOnPages, ...bannerInputs } = args;
+  async create({ actions, showOnPages, ...bannerInputs }: CreateBannerInput) {
     return this.prisma.banner.create({
       data: {
         ...bannerInputs,

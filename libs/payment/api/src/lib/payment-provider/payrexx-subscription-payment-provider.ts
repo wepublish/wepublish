@@ -1,10 +1,4 @@
-import {
-  Currency,
-  Invoice,
-  MetadataProperty,
-  PaymentState,
-  Subscription,
-} from '@prisma/client';
+import { Currency, Invoice, PaymentState, Subscription } from '@prisma/client';
 import { logger, mapPaymentPeriodToMonths } from '@wepublish/utils/api';
 import * as crypto from 'crypto';
 import add from 'date-fns/add';
@@ -26,6 +20,7 @@ import {
   WebhookForPaymentIntentProps,
   WebhookResponse,
 } from './payment-provider';
+import { Property } from '@wepublish/property/api';
 
 function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
   switch (event) {
@@ -54,7 +49,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     props: UpdateRemoteSubscriptionAmountProps
   ) {
     // Find external id property and fail if subscription has been deactivated
-    const properties: MetadataProperty[] = props.subscription.properties;
+    const properties = props.subscription.properties as unknown as Property[];
     const isPayrexxExt = properties.find(
       sub => sub.key === 'payrexx_external_id'
     );
@@ -88,7 +83,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     props: CancelRemoteSubscriptionProps
   ): Promise<void> {
     // Find external id property and fail if subscription has been deactivated
-    const properties: MetadataProperty[] = props.subscription.properties;
+    const properties = props.subscription.properties as unknown as Property[];
     const isPayrexxExt = properties.find(
       sub => sub.key === 'payrexx_external_id'
     );
@@ -459,14 +454,15 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     return this.prisma.subscription.findFirst({
       where: {
         properties: {
-          some: {
-            key: 'payrexx_external_id',
-            value: `${externalId}`,
-          },
+          array_contains: [
+            {
+              key: 'payrexx_external_id',
+              value: `${externalId}`,
+            },
+          ],
         },
       },
       include: {
-        properties: true,
         deactivation: true,
         memberPlan: true,
         periods: {
