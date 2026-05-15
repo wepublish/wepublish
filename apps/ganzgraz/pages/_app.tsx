@@ -42,6 +42,7 @@ import {
   GanzGrazPaperActions,
 } from '../src/components/ganzgraz-navbar';
 import { GanzGrazPaymentAmountPicker } from '../src/components/ganzgraz-payment-amount-picker';
+import { GanzGrazTransactionFee } from '../src/components/ganzgraz-transaction-fee';
 import theme from '../src/theme';
 
 setDefaultOptions({
@@ -81,7 +82,7 @@ type CustomAppProps = AppProps<{
 }> & { emotionCache?: EmotionCache };
 
 function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
-  const siteTitle = 'Der Graz-Newsletter';
+  const siteTitle = 'Der Graz-Newsletter von ganzgraz';
 
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
@@ -96,6 +97,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Script={Script}
           Author={GanzGrazAuthor}
           PaymentAmount={GanzGrazPaymentAmountPicker}
+          TransactionFee={GanzGrazTransactionFee}
           elements={{ Link: NextWepublishLink }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle, locale: 'de-AT' }}

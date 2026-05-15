@@ -1,10 +1,11 @@
 {
   "subscribe": {
     "support": {
-      "subscribeForPeriod": "Ich unterstütze den \"Graz-Newsletter\" {monthlyAmount, select, 0 {gratis} other {{renewalPeriodL} mit {formattedAmount}}}",
-      "payForPeriod": "Ich unterstütze den \"Graz-Newsletter\" {monthlyAmount, select, 0 {gratis} other {{paymentPeriodL} mit {formattedAmount}}}",
-      "pay": "Ich unterstütze den \"Graz-Newsletter\" {monthlyAmount, select, 0 {gratis} other {mit {formattedAmount}}}"
-    }
+      "subscribeForPeriod": "Ich unterstütze ganzgraz {monthlyAmount, select, 0 {gratis} other {{renewalPeriodL} mit {formattedAmount}}}",
+      "payForPeriod": "Ich unterstütze ganzgraz {monthlyAmount, select, 0 {gratis} other {{paymentPeriodL} mit {formattedAmount}}}",
+      "pay": "Ich unterstütze ganzgraz {monthlyAmount, select, 0 {gratis} other {mit {formattedAmount}}}"
+    },
+    "transactionFees": "Ja, ich will die Bearbeitungsgebühren von 2% übernehmen und damit ganzgraz unterstützen."
   },
   "navbar": {
     "subscribe": "Unterstützen"

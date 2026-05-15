@@ -90,6 +90,10 @@ export const SubscribeAmount = styled('div')`
 
 export const SubscribeAmountText = styled('p')`
   text-align: center;
+
+  ${({ theme }) => theme.breakpoints.up('xs')} {
+    margin: ${({ theme }) => theme.spacing(0, 0, 2, 0)};
+  }
 `;
 
 export const SubscribePayment = styled('div')`
