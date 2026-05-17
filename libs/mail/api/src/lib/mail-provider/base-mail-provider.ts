@@ -1,7 +1,12 @@
 import {
   MailLogStatus,
   MailProvider,
+  MailProviderCapabilities,
   MailProviderTemplate,
+  MailProviderTemplateContent,
+  MailProviderTemplateCreateInput,
+  MailProviderTemplateUpdateInput,
+  PlaceholderSyntax,
   SendMailProps,
   WebhookForSendMailProps,
   WithExternalId,
@@ -47,8 +52,21 @@ export abstract class BaseMailProvider implements MailProvider {
   ): Promise<MailLogStatus[]>;
   abstract sendMail(props: SendMailProps): Promise<void>;
   abstract getTemplates(): Promise<MailProviderTemplate[]>;
+  abstract getTemplate(
+    uniqueIdentifier: string
+  ): Promise<MailProviderTemplateContent>;
+  abstract createTemplate(
+    input: MailProviderTemplateCreateInput
+  ): Promise<MailProviderTemplate>;
+  abstract updateTemplate(
+    uniqueIdentifier: string,
+    input: MailProviderTemplateUpdateInput
+  ): Promise<MailProviderTemplate>;
+  abstract deleteTemplate(uniqueIdentifier: string): Promise<void>;
   abstract getTemplateUrl(template: WithExternalId): Promise<string>;
   abstract getName(): Promise<string>;
+  abstract getCapabilities(): MailProviderCapabilities;
+  abstract getPlaceholderSyntax(): PlaceholderSyntax;
   async getConfig(): Promise<SettingMailProvider | null> {
     return await new MailProviderConfig(
       this.prisma,

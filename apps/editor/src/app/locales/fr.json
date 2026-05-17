@@ -871,14 +871,52 @@
       "goToLogin": "Aller à la connexion"
     },
     "mailTemplates": {
+      "actions": "Actions",
       "availableTemplates": "Modèles de courriels disponibles",
+      "cancel": "Annuler",
       "content": "Contenu",
+      "createNew": "Nouveau modèle",
+      "delete": "Supprimer",
+      "deleteModalBody": "Voulez-vous vraiment supprimer le modèle \"{{name}}\" ? Il sera aussi retiré de {{provider}}.",
+      "deleteModalTitle": "Supprimer le modèle ?",
       "description": "Description",
+      "edit": "Modifier",
       "explanation": "Tu peux utiliser ces modèles de {{provider}} pour envoyer des notifications..",
       "name": "Nom",
       "status": "Statut",
       "synchronize": "Synchroniser les modèles",
       "view": "Voir sur {{provider}}"
+    },
+    "mailTemplateEdit": {
+      "bodyLabel": "Corps HTML",
+      "bodyPlaceholder": "<html>…</html>",
+      "cancel": "Annuler",
+      "cannotCreate": "Le fournisseur {{provider}} ne permet pas la création de modèles.",
+      "create": "Créer",
+      "createTitle": "Nouveau modèle de courriel",
+      "descriptionHelper": "Description interne, non envoyée aux destinataires.",
+      "editTitle": "Modifier le modèle : {{name}}",
+      "fieldDescription": "Description",
+      "fieldName": "Nom",
+      "fieldSubject": "Objet",
+      "loading": "Chargement du modèle depuis le fournisseur…",
+      "nameImmutable": "Le nom ne peut plus être modifié après création sur {{provider}}.",
+      "placeholderPicker": {
+        "help": "Cliquez sur un placeholder pour l'insérer à l'emplacement du curseur.",
+        "searchPlaceholder": "Rechercher un placeholder…",
+        "title": "Placeholders disponibles"
+      },
+      "save": "Enregistrer",
+      "severity": {
+        "error": "Erreur",
+        "warning": "Avertissement"
+      },
+      "subjectHelper": "Objet par défaut. Peut être remplacé à l'envoi.",
+      "subjectUnsupported": "{{provider}} ne stocke pas d'objet dans le modèle — il est défini à l'envoi.",
+      "subtitle": "Fournisseur de courriels actif : {{provider}}",
+      "viewPreview": "Aperçu",
+      "viewSource": "Source",
+      "warningsTitle": "Compatibilité avec les clients de messagerie"
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "pas d'envoi mail"

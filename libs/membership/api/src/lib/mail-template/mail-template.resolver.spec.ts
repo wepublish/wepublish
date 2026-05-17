@@ -4,6 +4,7 @@ import {
   MailContext,
   MailProvider,
   MailTemplateStatus,
+  PlaceholderService,
 } from '@wepublish/mail/api';
 import { MailTemplateSyncService } from './mail-template-sync.service';
 import { MailTemplatesResolver } from './mail-template.resolver';
@@ -69,6 +70,14 @@ const prismaServiceMock = {
 const mailProviderServiceMock = {
   getName: jest.fn(async () => 'MockProvider'),
   getTemplateUrl: jest.fn((): string => 'https://example.com/template.html'),
+  getCapabilities: jest.fn(() => ({
+    canCreateTemplates: true,
+    canUpdateTemplates: true,
+    canDeleteTemplates: true,
+    supportsTemplateSubject: true,
+    templateNameIsImmutable: true,
+  })),
+  getPlaceholderSyntax: jest.fn(() => ({ open: '{{', close: '}}' })),
 };
 
 const mailContextMock = {
@@ -78,6 +87,11 @@ const mailContextMock = {
 
 const syncServiceMock = {
   synchronizeTemplates: jest.fn((): void => undefined),
+};
+
+const placeholderServiceMock = {
+  getAlwaysAvailablePlaceholders: jest.fn(() => []),
+  getAllEventPlaceholders: jest.fn(() => []),
 };
 
 @Module({
@@ -122,6 +136,7 @@ describe('MailTemplatesResolver', () => {
         { provide: PrismaClient, useValue: prismaServiceMock },
         { provide: MailTemplateSyncService, useValue: syncServiceMock },
         { provide: MailContext, useValue: mailContextMock },
+        { provide: PlaceholderService, useValue: placeholderServiceMock },
       ],
     }).compile();
 

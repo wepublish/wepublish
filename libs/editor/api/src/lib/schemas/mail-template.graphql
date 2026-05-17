@@ -7,8 +7,51 @@ query MailTemplate {
   }
 }
 
+query MailTemplateContent($id: String!) {
+  mailTemplate(id: $id) {
+    ...FullMailTemplateContent
+  }
+}
+
+query MailTemplatePlaceholderGroups {
+  mailTemplatePlaceholderGroups {
+    scope
+    event
+    placeholders {
+      key
+      description
+      scope
+      event
+    }
+  }
+}
+
+query AlwaysAvailablePlaceholders {
+  alwaysAvailablePlaceholders {
+    key
+    description
+    scope
+  }
+}
+
 mutation SynchronizeMailTemplates {
   syncTemplates
+}
+
+mutation CreateMailTemplate($input: CreateMailTemplateInput!) {
+  createMailTemplate(input: $input) {
+    ...FullMailTemplate
+  }
+}
+
+mutation UpdateMailTemplate($id: String!, $input: UpdateMailTemplateInput!) {
+  updateMailTemplate(id: $id, input: $input) {
+    ...FullMailTemplate
+  }
+}
+
+mutation DeleteMailTemplate($id: String!) {
+  deleteMailTemplate(id: $id)
 }
 
 fragment FullMailTemplate on MailTemplateWithUrlAndStatusModel {
@@ -21,6 +64,26 @@ fragment FullMailTemplate on MailTemplateWithUrlAndStatusModel {
   status
 }
 
+fragment FullMailTemplateContent on MailTemplateContentModel {
+  id
+  name
+  externalMailTemplateId
+  description
+  subject
+  html
+}
+
 fragment FullMailProvider on MailProviderModel {
   name
+  capabilities {
+    canCreateTemplates
+    canUpdateTemplates
+    canDeleteTemplates
+    supportsTemplateSubject
+    templateNameIsImmutable
+  }
+  placeholderSyntax {
+    open
+    close
+  }
 }

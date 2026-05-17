@@ -15,12 +15,13 @@ import { PrismaClient } from '@prisma/client';
 import { createAsyncOptionsProvider } from '@wepublish/utils/api';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { MailWebhookController, MailWebhookMiddleware } from './mail.webhook';
+import { PlaceholderService } from './placeholders/placeholder.service';
 
 @Module({
   imports: [PrismaModule],
   controllers: [MailWebhookController],
-  providers: [MailWebhookMiddleware],
-  exports: [MailContext],
+  providers: [MailWebhookMiddleware, PlaceholderService],
+  exports: [MailContext, PlaceholderService],
 })
 export class MailsModule {
   configure(consumer: MiddlewareConsumer) {
@@ -41,6 +42,7 @@ export class MailsModule {
   ): Provider[] {
     return [
       MailWebhookMiddleware,
+      PlaceholderService,
       createAsyncOptionsProvider<MailsModuleOptions>(
         MAILS_MODULE_OPTIONS,
         options

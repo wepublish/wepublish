@@ -8,8 +8,13 @@ import { AxiosError } from 'axios';
 import { MailLogState } from '@prisma/client';
 import {
   MailLogStatus,
+  MailProviderCapabilities,
   MailProviderError,
   MailProviderTemplate,
+  MailProviderTemplateContent,
+  MailProviderTemplateCreateInput,
+  MailProviderTemplateUpdateInput,
+  PlaceholderSyntax,
   SendMailProps,
   WebhookForSendMailProps,
   WithExternalId,
@@ -234,6 +239,99 @@ export class MailchimpMailProvider extends BaseMailProvider {
     return templates;
   }
 
+  async getTemplate(
+    uniqueIdentifier: string
+  ): Promise<MailProviderTemplateContent> {
+    const mailchimpClient = await this.getMailchimpClient();
+    const response = await mailchimpClient.templates.info({
+      name: uniqueIdentifier,
+    });
+    if (this.responseIsError(response)) {
+      throw new MailProviderError(
+        (response.response?.data as Error | undefined)?.message ??
+          'Unknown Mailchimp error'
+      );
+    }
+    const template = response as TemplateResponse;
+    return {
+      name: template.name,
+      uniqueIdentifier: template.slug,
+      createdAt: new Date(template.created_at),
+      updatedAt: new Date(template.updated_at),
+      html: template.publish_code ?? template.code ?? '',
+      subject: template.publish_subject ?? template.subject ?? null,
+    };
+  }
+
+  async createTemplate(
+    input: MailProviderTemplateCreateInput
+  ): Promise<MailProviderTemplate> {
+    const mailchimpClient = await this.getMailchimpClient();
+    const response = await mailchimpClient.templates.add({
+      name: input.name,
+      code: input.html,
+      subject: input.subject ?? undefined,
+      publish: true,
+    });
+    if (this.responseIsError(response)) {
+      throw new MailProviderError(
+        (response.response?.data as Error | undefined)?.message ??
+          'Unknown Mailchimp error'
+      );
+    }
+    const template = response as TemplateResponse;
+    return {
+      name: template.name,
+      uniqueIdentifier: template.slug,
+      createdAt: new Date(template.created_at),
+      updatedAt: new Date(template.updated_at),
+    };
+  }
+
+  async updateTemplate(
+    uniqueIdentifier: string,
+    input: MailProviderTemplateUpdateInput
+  ): Promise<MailProviderTemplate> {
+    if (input.name && input.name !== uniqueIdentifier) {
+      throw new MailProviderError(
+        'Mandrill does not support renaming a template after creation.'
+      );
+    }
+    const mailchimpClient = await this.getMailchimpClient();
+    const response = await mailchimpClient.templates.update({
+      name: uniqueIdentifier,
+      code: input.html,
+      subject: input.subject ?? undefined,
+      publish: true,
+    });
+    if (this.responseIsError(response)) {
+      throw new MailProviderError(
+        (response.response?.data as Error | undefined)?.message ??
+          'Unknown Mailchimp error'
+      );
+    }
+    const template = response as TemplateResponse;
+    return {
+      name: template.name,
+      uniqueIdentifier: template.slug,
+      createdAt: new Date(template.created_at),
+      updatedAt: new Date(template.updated_at),
+    };
+  }
+
+  async deleteTemplate(uniqueIdentifier: string): Promise<void> {
+    const mailchimpClient = await this.getMailchimpClient();
+    const response = await mailchimpClient.templates.delete({
+      name: uniqueIdentifier,
+    });
+    if (this.responseIsError(response)) {
+      throw new MailProviderError(
+        (response.response?.data as Error | undefined)?.message ??
+          'Unknown Mailchimp error'
+      );
+    }
+  }
+
   async getTemplateUrl(template: WithExternalId): Promise<string> {
     return `https://mandrillapp.com/templates/code?id=${template.externalMailTemplateId}`;
   }
@@ -244,5 +342,19 @@ export class MailchimpMailProvider extends BaseMailProvider {
 
   async getName(): Promise<string> {
     return (await this.getConfig())?.name ?? 'unknown';
+  }
+
+  getCapabilities(): MailProviderCapabilities {
+    return {
+      canCreateTemplates: true,
+      canUpdateTemplates: true,
+      canDeleteTemplates: true,
+      supportsTemplateSubject: true,
+      templateNameIsImmutable: true,
+    };
+  }
+
+  getPlaceholderSyntax(): PlaceholderSyntax {
+    return { open: '*|', close: '|*' };
   }
 }

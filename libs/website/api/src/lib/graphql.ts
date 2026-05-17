@@ -724,6 +724,13 @@ export type CreateExternalAppInput = {
   url: Scalars['String'];
 };
 
+export type CreateMailTemplateInput = {
+  description?: InputMaybe<Scalars['String']>;
+  html: Scalars['String'];
+  name: Scalars['String'];
+  subject?: InputMaybe<Scalars['String']>;
+};
+
 export type Crowdfunding = {
   __typename?: 'Crowdfunding';
   activeGoal?: Maybe<CrowdfundingGoalWithProgress>;
@@ -1607,9 +1614,41 @@ export enum LoginStatus {
   Unsubscribed = 'UNSUBSCRIBED'
 }
 
+export type MailPlaceholderGroupModel = {
+  __typename?: 'MailPlaceholderGroupModel';
+  event: Scalars['String'];
+  placeholders: Array<MailPlaceholderModel>;
+  scope: PlaceholderScope;
+};
+
+export type MailPlaceholderModel = {
+  __typename?: 'MailPlaceholderModel';
+  description: Scalars['String'];
+  event?: Maybe<Scalars['String']>;
+  key: Scalars['String'];
+  scope: PlaceholderScope;
+};
+
+export type MailPlaceholderSyntaxModel = {
+  __typename?: 'MailPlaceholderSyntaxModel';
+  close: Scalars['String'];
+  open: Scalars['String'];
+};
+
+export type MailProviderCapabilitiesModel = {
+  __typename?: 'MailProviderCapabilitiesModel';
+  canCreateTemplates: Scalars['Boolean'];
+  canDeleteTemplates: Scalars['Boolean'];
+  canUpdateTemplates: Scalars['Boolean'];
+  supportsTemplateSubject: Scalars['Boolean'];
+  templateNameIsImmutable: Scalars['Boolean'];
+};
+
 export type MailProviderModel = {
   __typename?: 'MailProviderModel';
+  capabilities: MailProviderCapabilitiesModel;
   name: Scalars['String'];
+  placeholderSyntax: MailPlaceholderSyntaxModel;
 };
 
 export enum MailProviderType {
@@ -1617,6 +1656,16 @@ export enum MailProviderType {
   Mailgun = 'MAILGUN',
   Slack = 'SLACK'
 }
+
+export type MailTemplateContentModel = {
+  __typename?: 'MailTemplateContentModel';
+  description?: Maybe<Scalars['String']>;
+  externalMailTemplateId: Scalars['String'];
+  html: Scalars['String'];
+  id: Scalars['String'];
+  name: Scalars['String'];
+  subject?: Maybe<Scalars['String']>;
+};
 
 export type MailTemplateRef = {
   __typename?: 'MailTemplateRef';
@@ -1786,6 +1835,7 @@ export type Mutation = {
   createJWTForUser: SessionWithToken;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
+  createMailTemplate: MailTemplateWithUrlAndStatusModel;
   /** Creates a new memberplan. */
   createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
@@ -1865,6 +1915,7 @@ export type Mutation = {
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
+  deleteMailTemplate?: Maybe<Scalars['Boolean']>;
   /** Deletes a single sync error so the contact will be retried. */
   deleteMailchimpSyncError: Scalars['Boolean'];
   /** Deletes an existing memberplan. */
@@ -2015,6 +2066,7 @@ export type Mutation = {
   updateInvoice: Invoice;
   /** Updates an existing mail provider setting. */
   updateMailProviderSetting: SettingMailProvider;
+  updateMailTemplate: MailTemplateWithUrlAndStatusModel;
   /** Updates an existing memberplan. */
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
@@ -2224,6 +2276,11 @@ export type MutationCreateInvoiceArgs = {
 export type MutationCreateJwtForUserArgs = {
   expiresInMinutes: Scalars['Float'];
   userId: Scalars['String'];
+};
+
+
+export type MutationCreateMailTemplateArgs = {
+  input: CreateMailTemplateInput;
 };
 
 
@@ -2528,6 +2585,11 @@ export type MutationDeleteImageArgs = {
 
 
 export type MutationDeleteInvoiceArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteMailTemplateArgs = {
   id: Scalars['String'];
 };
 
@@ -2998,6 +3060,12 @@ export type MutationUpdateMailProviderSettingArgs = {
   replyToAddress?: InputMaybe<Scalars['String']>;
   slack_webhookURL?: InputMaybe<Scalars['String']>;
   webhookEndpointSecret?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateMailTemplateArgs = {
+  id: Scalars['String'];
+  input: UpdateMailTemplateInput;
 };
 
 
@@ -3925,6 +3993,12 @@ export type Phrase = {
   pages: PaginatedPages;
 };
 
+export enum PlaceholderScope {
+  Always = 'Always',
+  SubscriptionEvent = 'SubscriptionEvent',
+  UserEvent = 'UserEvent'
+}
+
 export type PolisConversationBlock = BaseBlock & {
   __typename?: 'PolisConversationBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -4124,6 +4198,8 @@ export type Query = {
   aiSetting: SettingAiProvider;
   /** Returns all AI provider settings. */
   aiSettings: Array<SettingAiProvider>;
+  /** The placeholders available in every template (user_* + jwt). */
+  alwaysAvailablePlaceholders: Array<MailPlaceholderModel>;
   /** Returns a single analytics provider setting by id. */
   analyticsProviderSetting: SettingAnalyticsProvider;
   /** Returns all analytics provider settings. */
@@ -4243,6 +4319,10 @@ export type Query = {
   mailProviderSetting: SettingMailProvider;
   /** Returns all mail provider settings. */
   mailProviderSettings: Array<SettingMailProvider>;
+  /** Return a mail template including the HTML body from the provider */
+  mailTemplate: MailTemplateContentModel;
+  /** All placeholders grouped by mail event. Programmatically derived from the Prisma data model so no field is forgotten. */
+  mailTemplatePlaceholderGroups: Array<MailPlaceholderGroupModel>;
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /** Fetches available interest groups for a Mailchimp list. */
@@ -4644,6 +4724,11 @@ export type QueryMailProviderSettingArgs = {
 
 export type QueryMailProviderSettingsArgs = {
   filter?: InputMaybe<SettingMailProviderFilter>;
+};
+
+
+export type QueryMailTemplateArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -5838,6 +5923,13 @@ export type UpdateCrowdfundingInput = {
   id: Scalars['String'];
   memberPlans?: InputMaybe<Array<CreateCrowdfundingMemberPlan>>;
   name?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateMailTemplateInput = {
+  description?: InputMaybe<Scalars['String']>;
+  html?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  subject?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateUserSubscriptionInput = {

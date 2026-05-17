@@ -8,3 +8,4 @@ export * from './lib/mail.webhook';
 export * from './lib/mail.controller';
 export * from './lib/mail-context';
 export * from './lib/mails.module';
+export * from './lib/placeholders/placeholder.service';

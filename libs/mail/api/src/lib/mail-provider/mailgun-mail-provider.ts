@@ -4,8 +4,13 @@ import FormData from 'form-data';
 import Client from 'mailgun.js/client';
 import {
   MailLogStatus,
+  MailProviderCapabilities,
   MailProviderError,
   MailProviderTemplate,
+  MailProviderTemplateContent,
+  MailProviderTemplateCreateInput,
+  MailProviderTemplateUpdateInput,
+  PlaceholderSyntax,
   SendMailProps,
   WebhookForSendMailProps,
   WithExternalId,
@@ -194,6 +199,121 @@ export class MailgunMailProvider extends BaseMailProvider {
     return (error as MailgunApiError).type === 'MailgunAPIError';
   }
 
+  async getTemplate(
+    uniqueIdentifier: string
+  ): Promise<MailProviderTemplateContent> {
+    const config = await this.getConfig();
+    const mailgunClient = await this.getMailgunClient();
+    try {
+      const template = await mailgunClient.domains.domainTemplates.get(
+        config?.mailgun_mailDomain ?? '',
+        uniqueIdentifier,
+        { active: 'yes' as never }
+      );
+      return {
+        name: template.name,
+        uniqueIdentifier: template.name,
+        createdAt: new Date(template.createdAt as string),
+        updatedAt: new Date(template.createdAt as string),
+        html: template.version?.template ?? '',
+        subject: null,
+      };
+    } catch (e: unknown) {
+      throw this.toProviderError(e);
+    }
+  }
+
+  async createTemplate(
+    input: MailProviderTemplateCreateInput
+  ): Promise<MailProviderTemplate> {
+    const config = await this.getConfig();
+    const mailgunClient = await this.getMailgunClient();
+    try {
+      const template = await mailgunClient.domains.domainTemplates.create(
+        config?.mailgun_mailDomain ?? '',
+        {
+          name: input.name,
+          description: '',
+          template: input.html,
+          engine: 'handlebars',
+          tag: this.generateVersionTag(),
+        }
+      );
+      return {
+        name: template.name,
+        uniqueIdentifier: template.name,
+        createdAt: new Date(template.createdAt as string),
+        updatedAt: new Date(template.createdAt as string),
+      };
+    } catch (e: unknown) {
+      throw this.toProviderError(e);
+    }
+  }
+
+  async updateTemplate(
+    uniqueIdentifier: string,
+    input: MailProviderTemplateUpdateInput
+  ): Promise<MailProviderTemplate> {
+    if (input.name && input.name !== uniqueIdentifier) {
+      throw new MailProviderError(
+        'Mailgun does not support renaming a template after creation.'
+      );
+    }
+    const config = await this.getConfig();
+    const mailgunClient = await this.getMailgunClient();
+    try {
+      if (typeof input.html === 'string') {
+        await mailgunClient.domains.domainTemplates.createVersion(
+          config?.mailgun_mailDomain ?? '',
+          uniqueIdentifier,
+          {
+            template: input.html,
+            tag: this.generateVersionTag(),
+            engine: 'handlebars',
+            active: 'yes' as never,
+          }
+        );
+      }
+
+      const refreshed = await mailgunClient.domains.domainTemplates.get(
+        config?.mailgun_mailDomain ?? '',
+        uniqueIdentifier
+      );
+      return {
+        name: refreshed.name,
+        uniqueIdentifier: refreshed.name,
+        createdAt: new Date(refreshed.createdAt as string),
+        updatedAt: new Date(refreshed.createdAt as string),
+      };
+    } catch (e: unknown) {
+      throw this.toProviderError(e);
+    }
+  }
+
+  async deleteTemplate(uniqueIdentifier: string): Promise<void> {
+    const config = await this.getConfig();
+    const mailgunClient = await this.getMailgunClient();
+    try {
+      await mailgunClient.domains.domainTemplates.destroy(
+        config?.mailgun_mailDomain ?? '',
+        uniqueIdentifier
+      );
+    } catch (e: unknown) {
+      throw this.toProviderError(e);
+    }
+  }
+
+  private generateVersionTag(): string {
+    return `v${Date.now()}`;
+  }
+
+  private toProviderError(e: unknown): MailProviderError {
+    if (this.isMailgunApiError(e)) {
+      return new MailProviderError(e.details);
+    }
+    return new MailProviderError(String(e));
+  }
+
   async getTemplateUrl(template: WithExternalId): Promise<string> {
     const config = await this.getConfig();
     return `https://app.mailgun.com/app/sending/domains/${config?.mailgun_mailDomain}/templates/details/${template.externalMailTemplateId}`;
@@ -201,5 +321,19 @@ export class MailgunMailProvider extends BaseMailProvider {
 
   async getName(): Promise<string> {
     return (await this.getConfig())?.name ?? 'unknown';
+  }
+
+  getCapabilities(): MailProviderCapabilities {
+    return {
+      canCreateTemplates: true,
+      canUpdateTemplates: true,
+      canDeleteTemplates: true,
+      supportsTemplateSubject: false,
+      templateNameIsImmutable: true,
+    };
+  }
+
+  getPlaceholderSyntax(): PlaceholderSyntax {
+    return { open: '{{', close: '}}' };
   }
 }

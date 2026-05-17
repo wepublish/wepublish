@@ -866,9 +866,16 @@
       "goToLogin": "Zum Login"
     },
     "mailTemplates": {
+      "actions": "Aktionen",
       "availableTemplates": "Verfügbare E-Mail-Templates",
+      "cancel": "Abbrechen",
       "content": "Inhalt",
+      "createNew": "Neues Template",
+      "delete": "Löschen",
+      "deleteModalBody": "Willst du das Template \"{{name}}\" wirklich löschen? Es wird auch bei {{provider}} entfernt.",
+      "deleteModalTitle": "Template löschen?",
       "description": "Beschreibung",
+      "edit": "Bearbeiten",
       "explanation": "Diese Templates von {{provider}} kannst du für den Versand von Benachrichtigungen verwenden.",
       "goToPlaceholders": "Verfügbare Placeholders",
       "name": "Name",
@@ -876,6 +883,37 @@
       "status": "Status",
       "synchronize": "Templates synchronisieren",
       "view": "Auf {{provider}} ansehen"
+    },
+    "mailTemplateEdit": {
+      "bodyLabel": "HTML-Inhalt",
+      "bodyPlaceholder": "<html>…</html>",
+      "cancel": "Abbrechen",
+      "cannotCreate": "Der aktuelle Mail-Provider {{provider}} unterstützt das Erstellen von Templates nicht.",
+      "create": "Erstellen",
+      "createTitle": "Neues E-Mail-Template",
+      "descriptionHelper": "Interne Beschreibung, wird nicht versendet.",
+      "editTitle": "Template bearbeiten: {{name}}",
+      "fieldDescription": "Beschreibung",
+      "fieldName": "Name",
+      "fieldSubject": "Betreff",
+      "loading": "Template wird vom Provider geladen…",
+      "nameImmutable": "Der Name kann bei {{provider}} nach dem Erstellen nicht mehr geändert werden.",
+      "placeholderPicker": {
+        "help": "Klicke auf einen Platzhalter, um ihn an der Cursor-Position einzufügen.",
+        "searchPlaceholder": "Platzhalter suchen…",
+        "title": "Verfügbare Platzhalter"
+      },
+      "save": "Speichern",
+      "severity": {
+        "error": "Fehler",
+        "warning": "Warnung"
+      },
+      "subjectHelper": "Standardbetreff. Kann beim Versand überschrieben werden.",
+      "subjectUnsupported": "{{provider}} speichert keinen Betreff im Template. Der Betreff wird beim Versand gesetzt.",
+      "subtitle": "Aktiver Mail-Provider: {{provider}}",
+      "viewPreview": "Vorschau",
+      "viewSource": "Quelltext",
+      "warningsTitle": "Hinweise zur E-Mail-Kompatibilität"
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "Kein Mailversand"
@@ -1215,11 +1253,68 @@
         "optional_newEmail": "Die neue E-Mail-Adresse, auf die der Benutzer wechseln möchte.",
         "optional_newEmail_example": "Du hast eine Änderung deiner E-Mail-Adresse auf <strong>{{newEmailPlaceholder}}</strong> beantragt. Bitte bestätige diese Änderung über folgenden Link: {{confirmLink}}E-Mail-Änderung bestätigen</a>"
       },
+      "field": {
+        "jwt": "JSON Web Token. Hänge ?jwt=TOKEN an einen Login-Link an, damit der User automatisch eingeloggt wird.",
+        "user": {
+          "id": "Eindeutige ID des Users",
+          "email": "Aktive E-Mail-Adresse",
+          "name": "Nachname",
+          "firstName": "Vorname",
+          "flair": "Anzeige-Zusatz (z.B. Titel)",
+          "birthday": "Geburtsdatum",
+          "active": "Ob das User-Konto aktiv ist (true/false)",
+          "lastLogin": "Zeitpunkt des letzten Logins",
+          "emailVerifiedAt": "Zeitpunkt der E-Mail-Verifizierung",
+          "pendingEmail": "Noch nicht bestätigte neue E-Mail-Adresse",
+          "pendingEmailAt": "Zeitpunkt, an dem die neue E-Mail beantragt wurde",
+          "userImageID": "ID des Profilbilds",
+          "note": "Interne Notiz zum User",
+          "createdAt": "Zeitpunkt der Konto-Erstellung",
+          "modifiedAt": "Zeitpunkt der letzten Änderung am Konto",
+          "properties": "Custom Properties (JSON)"
+        },
+        "optional": {
+          "newEmail": "Neue E-Mail-Adresse, auf die der Wechsel beantragt wurde",
+          "errorCode": "Fehler-Code des Payment-Providers (z.B. bei fehlgeschlagener Verlängerung)",
+          "subscription": {
+            "id": "Eindeutige ID des Abonnements",
+            "createdAt": "Erstellungs-Zeitpunkt des Abos",
+            "modifiedAt": "Letzte Änderung am Abo",
+            "paymentPeriodicity": "Periodizität (yearly, monthly, …)",
+            "monthlyAmount": "Monatlicher Betrag in Rappen",
+            "autoRenew": "Automatische Verlängerung (true/false)",
+            "startsAt": "Start-Datum des Abos",
+            "paidUntil": "Bezahlt bis (Datum)",
+            "paymentMethodID": "ID der gewählten Zahlungsmethode",
+            "memberPlanID": "ID des gewählten Memberplans",
+            "userID": "ID des Abo-Inhabers",
+            "currency": "Währung (CHF, EUR, …)",
+            "extendable": "Kann das Abo verlängert werden? (true/false)",
+            "deactivationDate": "Datum der Deaktivierung",
+            "deactivationReason": "Grund der Deaktivierung",
+            "confirmed": "Bestätigt durch den User (true/false)"
+          },
+          "invoice": {
+            "id": "Eindeutige ID der Rechnung",
+            "createdAt": "Erstellungs-Zeitpunkt der Rechnung",
+            "modifiedAt": "Letzte Änderung an der Rechnung",
+            "mail": "E-Mail-Adresse auf der Rechnung",
+            "description": "Beschreibung / Verwendungszweck",
+            "paidAt": "Zeitpunkt der Bezahlung",
+            "canceledAt": "Zeitpunkt der Stornierung",
+            "subscriptionID": "Zugehörige Abo-ID",
+            "dueAt": "Fälligkeits-Datum",
+            "currency": "Währung der Rechnung",
+            "scheduledDeactivationAt": "Geplantes Deaktivierungs-Datum bei Nichtbezahlung",
+            "manuallySetAsPaidByUserId": "User-ID, falls manuell als bezahlt markiert"
+          }
+        }
+      },
       "descriptionTitle": "Beschreibung",
       "example": "Beispiel im Template",
       "header": "Liste der verfügbaren Placeholder",
       "placeholder": "Placeholder",
-      "subtitle": "Bitte beachte, dass die Placeholder je nach Mail unterschiedlich sind. Wenn etwa ein Login-Link verschickt wird, hat dieses Mail nicht die gleichen Placeholder, wie bei einer Erneuerung des Abos."
+      "subtitle": "Diese Liste wird programmatisch aus dem Datenmodell generiert und ist immer vollständig. Pro Event stehen unterschiedliche optional_*-Felder zur Verfügung — die unter \"Allgemein\" gelisteten Felder sind in jeder E-Mail verfügbar."
     },
     "pollAnswer": {
       "answerMissing": "Deine Antwort ist leer. Bitte gib einen Text ein.",
