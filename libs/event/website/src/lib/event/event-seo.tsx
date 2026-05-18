@@ -1,5 +1,5 @@
 import { firstParagraphToPlaintext } from '@wepublish/richtext';
-import { Event, FullImageFragment } from '@wepublish/website/api';
+import { FullEventFragment, FullImageFragment } from '@wepublish/website/api';
 import {
   BuilderEventSEOProps,
   useWebsiteBuilder,
@@ -7,7 +7,7 @@ import {
 import { formatISO, formatISODuration, intervalToDuration } from 'date-fns';
 import { useMemo } from 'react';
 
-export const getEventSEO = (event: Event) => {
+export const getEventSEO = (event: FullEventFragment) => {
   const description =
     event.lead ?? firstParagraphToPlaintext(event.description);
   const image = event.image as FullImageFragment | undefined;
