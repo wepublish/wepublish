@@ -47,7 +47,7 @@ export const getEventSEO = (event: FullEventFragment) => {
             contentUrl: image.url,
             thumbnailUrl: image.m,
             url: image.url,
-            encodingFormat: image.mimeType,
+            encodingFormat: 'image/webp',
           }
         : undefined,
       name: event.name,
