@@ -48,8 +48,11 @@ export function FrontendTrackingIntegrationForm() {
         const base: FieldDefinition<IntegrationFormValues>[] = [
           {
             name: 'name',
-            label: t('name'),
+            label: t('integrations.frontendTrackingSettings.name'),
             type: 'text',
+            placeholder: t(
+              'integrations.frontendTrackingSettings.namePlaceholder'
+            ),
           },
           {
             name: 'active',
@@ -125,6 +128,7 @@ export function FrontendTrackingIntegrationForm() {
                   'integrations.frontendTrackingSettings.piwik.containerId'
                 ),
                 type: 'text',
+                placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx (UUID)',
                 autoComplete: 'one-time-code',
               },
             ];

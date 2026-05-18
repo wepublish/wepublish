@@ -44,8 +44,9 @@ export function SparkloopIntegrationForm() {
       fields={[
         {
           name: 'name',
-          label: t('name'),
+          label: t('integrations.sparkloopSettings.name'),
           type: 'text',
+          placeholder: t('integrations.sparkloopSettings.namePlaceholder'),
         },
         {
           name: 'active',
@@ -56,6 +57,7 @@ export function SparkloopIntegrationForm() {
           name: 'teamId',
           label: t('integrations.sparkloopSettings.teamId'),
           type: 'text',
+          placeholder: t('integrations.sparkloopSettings.teamIdPlaceholder'),
           autoComplete: 'one-time-code',
         },
       ]}

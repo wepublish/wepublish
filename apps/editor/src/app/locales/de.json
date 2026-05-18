@@ -1857,6 +1857,7 @@
       "paymentProvider": "Zahlungsanbieter",
       "trackingPixel": "Tracking Pixel",
       "mailProvider": "E-Mail Provider",
+      "analytics": "Hot & Trending Datenquelle",
       "back": "Zurück zu Integrationen",
       "unknown": "Unbekannte Integration",
       "notFound": "Integration nicht gefunden",
@@ -1935,6 +1936,8 @@
       "frontendTracking": "Frontend-Tracking",
       "frontendTrackingSettings": {
         "active": "Aktiv",
+        "name": "Anzeigename (optional)",
+        "namePlaceholder": "Frei wählbare Bezeichnung – z. B. \"Hauptproperty\"",
         "ga4": {
           "measurementId": "Mess-ID"
         },
@@ -1953,7 +1956,10 @@
       "sparkloop": "Sparkloop",
       "sparkloopSettings": {
         "active": "Aktiv",
-        "teamId": "Team-ID"
+        "name": "Anzeigename (optional)",
+        "namePlaceholder": "Frei wählbare Bezeichnung – z. B. \"Hauptproperty\"",
+        "teamId": "Team-ID",
+        "teamIdPlaceholder": "Sparkloop Team-ID (aus der URL deines Sparkloop-Dashboards)"
       },
       "mailchimpSyncSettings": {
         "enabled": "Aktiviert",

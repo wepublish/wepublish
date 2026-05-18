@@ -1917,7 +1917,7 @@
       "challengeProvider": "Challenge Provider",
       "paymentProvider": "Payment Provider",
       "trackingPixel": "Tracking Pixel",
-      "analytics": "Analytics Provider",
+      "analytics": "Hot & Trending Data Source",
       "mailProvider": "Mail Provider",
       "back": "Back to Integrations",
       "unknown": "Unknown Integration",
@@ -1997,6 +1997,8 @@
       "frontendTracking": "Frontend Tracking",
       "frontendTrackingSettings": {
         "active": "Active",
+        "name": "Display name (optional)",
+        "namePlaceholder": "Free-form label shown in this card header — e.g. \"Main property\"",
         "ga4": {
           "measurementId": "Measurement ID"
         },
@@ -2015,7 +2017,10 @@
       "sparkloop": "Sparkloop",
       "sparkloopSettings": {
         "active": "Active",
-        "teamId": "Team ID"
+        "name": "Display name (optional)",
+        "namePlaceholder": "Free-form label shown in the card header",
+        "teamId": "Team ID",
+        "teamIdPlaceholder": "Sparkloop team ID (from the URL of your Sparkloop dashboard)"
       },
       "mailchimpSyncSettings": {
         "enabled": "Enabled",
