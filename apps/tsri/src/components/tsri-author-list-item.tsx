@@ -6,8 +6,10 @@ import {
   AuthorListItemLink as AuthorListItemLinkDefault,
 } from '@wepublish/author/website';
 import { createWithTheme } from '@wepublish/ui';
-import { Author } from '@wepublish/website/api';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
+import {
+  BuilderAuthorListItemProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
 
 import { authorListItemTheme } from '../theme';
 
@@ -40,7 +42,7 @@ export function AuthorListItem({
   image,
   name,
   jobTitle,
-}: Author & { className?: string }) {
+}: BuilderAuthorListItemProps) {
   const {
     elements: { Image },
   } = useWebsiteBuilder();
