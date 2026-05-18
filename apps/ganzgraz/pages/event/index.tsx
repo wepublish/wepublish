@@ -18,6 +18,7 @@ import getConfig from 'next/config';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MdClose } from 'react-icons/md';
 import { z } from 'zod';
 
@@ -37,88 +38,127 @@ const FilterGroup = styled(ToggleButtonGroup)`
 `;
 
 const EmptyMessage = styled('p')`
-  text-align: center;
-  margin: ${({ theme }) => theme.spacing(4)} 0;
+  text-align: left;
+  margin: ${({ theme }) => theme.spacing(4, 0, 4, 2)};
   color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
-const VISIBLE_RANGES = [
-  'today',
-  'tomorrow',
-  'next7',
-  'next30',
-  'upcoming',
-] as const;
-const RANGES = [...VISIBLE_RANGES, 'all'] as const;
-type Range = (typeof RANGES)[number];
+const DATE_RANGES = ['today', 'tomorrow', 'next7', 'next30'] as const;
+type DateRange = (typeof DATE_RANGES)[number];
+type ActiveButton = DateRange | 'upcoming' | 'all' | null;
 
-const RANGE_LABELS: Record<(typeof VISIBLE_RANGES)[number], string> = {
-  today: 'Heute',
-  tomorrow: 'Morgen',
-  next7: 'Nächste 7 Tage',
-  next30: 'Nächste 30 Tage',
-  upcoming: 'Alle bevorstehenden',
-};
+function useDateRangeLabels(): Record<DateRange, string> {
+  const { t } = useTranslation();
+  return useMemo(
+    () => ({
+      today: t('event.filter.today'),
+      tomorrow: t('event.filter.tomorrow'),
+      next7: t('event.filter.next7'),
+      next30: t('event.filter.next30'),
+    }),
+    [t]
+  );
+}
 
-const EMPTY_MESSAGES: Record<Range, string> = {
-  today: 'Heute gibt es keine Veranstaltungen zum Anzeigen.',
-  tomorrow: 'Morgen gibt es keine Veranstaltungen zum Anzeigen.',
-  next7: 'In den nächsten 7 Tagen gibt es keine Veranstaltungen zum Anzeigen.',
-  next30:
-    'In den nächsten 30 Tagen gibt es keine Veranstaltungen zum Anzeigen.',
-  upcoming: 'Es gibt keine bevorstehenden Veranstaltungen zum Anzeigen.',
-  all: 'Es gibt keine Veranstaltungen zum Anzeigen.',
+function useEmptyMessages(): Record<
+  Exclude<ActiveButton, null> | 'custom',
+  string
+> {
+  const { t } = useTranslation();
+  return useMemo(
+    () => ({
+      today: t('event.empty.today'),
+      tomorrow: t('event.empty.tomorrow'),
+      next7: t('event.empty.next7'),
+      next30: t('event.empty.next30'),
+      upcoming: t('event.empty.upcoming'),
+      all: t('event.empty.all'),
+      custom: t('event.empty.custom'),
+    }),
+    [t]
+  );
+}
+
+const DAY_OFFSETS: Record<DateRange, { from: number; to: number }> = {
+  today: { from: 0, to: 0 },
+  tomorrow: { from: 1, to: 1 },
+  next7: { from: 0, to: 6 },
+  next30: { from: 0, to: 29 },
 };
 
 const pageSchema = z.object({
-  page: z.preprocess(
-    v => (v === '' || v == null ? undefined : v),
-    z.coerce.number().gte(1).optional()
-  ),
-  range: z.enum(RANGES).optional().default('upcoming'),
+  page: z.coerce.number().gte(1).optional(),
+  upcomingOnly: z
+    .string()
+    .toLowerCase()
+    .transform(string => JSON.parse(string))
+    .pipe(z.boolean())
+    .optional()
+    .default('true'),
+  from: z.coerce.date().optional(),
+  to: z.coerce.date().optional(),
 });
 
 const take = 25;
 
-function getFilter(range: Range): {
-  from?: string;
-  to?: string;
-  upcomingOnly?: boolean;
-} {
-  if (range === 'all') {
-    return {};
-  }
-
-  if (range === 'upcoming') {
-    return { upcomingOnly: true };
-  }
-
-  const dayOffsets: Record<
-    Exclude<Range, 'upcoming' | 'all'>,
-    { from: number; to: number }
-  > = {
-    today: { from: 0, to: 0 },
-    tomorrow: { from: 1, to: 1 },
-    next7: { from: 0, to: 6 },
-    next30: { from: 0, to: 29 },
-  };
-
-  const { from, to } = dayOffsets[range];
-
+function getDateBounds(range: DateRange): { from: string; to: string } {
+  const { from, to } = DAY_OFFSETS[range];
   const fromDate = new Date();
   fromDate.setHours(0, 0, 0, 0);
   fromDate.setDate(fromDate.getDate() + from);
-
   const toDate = new Date();
   toDate.setHours(23, 59, 59, 999);
   toDate.setDate(toDate.getDate() + to);
-
   return { from: fromDate.toISOString(), to: toDate.toISOString() };
+}
+
+function detectActive(params: {
+  from?: Date;
+  to?: Date;
+  upcomingOnly?: boolean;
+}): ActiveButton {
+  if (params.from && params.to) {
+    const fromIso = params.from.toISOString();
+    const toIso = params.to.toISOString();
+    for (const range of DATE_RANGES) {
+      const bounds = getDateBounds(range);
+      if (bounds.from === fromIso && bounds.to === toIso) {
+        return range;
+      }
+    }
+    return null;
+  }
+  if (params.upcomingOnly === false) {
+    return 'all';
+  }
+  return 'upcoming';
+}
+
+function getFilter(params: {
+  from?: Date;
+  to?: Date;
+  upcomingOnly?: boolean;
+}): { from?: string; to?: string; upcomingOnly?: boolean } {
+  if (params.from && params.to) {
+    return { from: params.from.toISOString(), to: params.to.toISOString() };
+  }
+  if (params.upcomingOnly === false) {
+    return {};
+  }
+  return { upcomingOnly: true };
 }
 
 export default function EventList() {
   const { query, replace } = useRouter();
-  const { page, range } = pageSchema.parse(query);
+  const { t } = useTranslation();
+  const dateRangeLabels = useDateRangeLabels();
+  const emptyMessages = useEmptyMessages();
+  const { page, from, to, upcomingOnly } = pageSchema.parse(query);
+
+  const active = useMemo(
+    () => detectActive({ from, to, upcomingOnly }),
+    [from, to, upcomingOnly]
+  );
 
   const {
     elements: { Pagination },
@@ -129,11 +169,11 @@ export default function EventList() {
       ({
         take,
         skip: ((page ?? 1) - 1) * take,
-        filter: getFilter(range),
+        filter: getFilter({ from, to, upcomingOnly }),
         sort: EventSort.StartsAt,
         order: SortOrder.Ascending,
       }) satisfies Partial<EventListQueryVariables>,
-    [page, range]
+    [page, from, to, upcomingOnly]
   );
 
   const { data } = useEventListQuery({
@@ -155,35 +195,57 @@ export default function EventList() {
     <>
       <Filter>
         <FilterGroup
-          value={range}
+          value={active}
           exclusive
-          onChange={(_, value: Range | null) => {
+          onChange={(_, value: ActiveButton) => {
             if (value === null) {
               return;
             }
-            const { page: _page, ...rest } = query;
+            const {
+              page: _page,
+              from: _from,
+              to: _to,
+              upcomingOnly: _upcomingOnly,
+              ...rest
+            } = query;
             void _page;
+            void _from;
+            void _to;
+            void _upcomingOnly;
+            const nextQuery: Record<string, string | string[] | undefined> = {
+              ...rest,
+            };
+            if (value === 'all') {
+              nextQuery.upcomingOnly = 'false';
+            } else if (value !== 'upcoming') {
+              const bounds = getDateBounds(value);
+              nextQuery.from = bounds.from;
+              nextQuery.to = bounds.to;
+            }
             replace(
               {
-                query: { ...rest, range: value },
+                query: nextQuery,
               },
               undefined,
               { shallow: true, scroll: true }
             );
           }}
         >
-          {VISIBLE_RANGES.map(r => (
+          {DATE_RANGES.map(r => (
             <ToggleButton
               key={r}
               value={r}
             >
-              {RANGE_LABELS[r]}
+              {dateRangeLabels[r]}
             </ToggleButton>
           ))}
+          <ToggleButton value="upcoming">
+            {t('event.filter.upcoming')}
+          </ToggleButton>
           <ToggleButton
             value="all"
-            aria-label="Filter zurücksetzen"
-            disabled={range === 'all'}
+            aria-label={t('event.filter.reset')}
+            disabled={active === 'all'}
           >
             <MdClose />
           </ToggleButton>
@@ -191,7 +253,7 @@ export default function EventList() {
       </Filter>
 
       {data?.events && data.events.totalCount === 0 ?
-        <EmptyMessage>{EMPTY_MESSAGES[range]}</EmptyMessage>
+        <EmptyMessage>{emptyMessages[active ?? 'custom']}</EmptyMessage>
       : <EventListContainer variables={variables} />}
 
       {pageCount > 1 && (
