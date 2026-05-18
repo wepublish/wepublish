@@ -21,7 +21,7 @@ export type BuilderAuthorChipProps = {
   className?: string;
 };
 
-export type BuilderAuthorListItemProps = Author & {
+export type BuilderAuthorListItemProps = FullAuthorFragment & {
   className?: string;
 };
 

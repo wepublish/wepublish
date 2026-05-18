@@ -47,10 +47,9 @@ export class ArticleRevisionDataloaderService
       });
 
       const afterFetch = new Date();
-
       this.logger.debug(`Loading took ${+afterFetch - +start}ms`, articleIds);
 
-      const data = articleIds.map((articleId): RevisionMap => {
+      return articleIds.map((articleId): RevisionMap => {
         const rev = articles.find(rev => rev.id === articleId);
         const published = rev?.ArticleRevisionPublished?.articleRevision;
         const draft = rev?.ArticleRevisionDraft?.articleRevision;
@@ -58,15 +57,6 @@ export class ArticleRevisionDataloaderService
 
         return { draft, pending, published };
       });
-
-      const afterMap = new Date();
-
-      this.logger.debug(
-        `Loading took ${+afterFetch - +afterMap}ms`,
-        articleIds
-      );
-
-      return data;
     },
     { name: 'ArticleRevisionDataloader' }
   );
