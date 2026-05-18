@@ -16,6 +16,7 @@ import {
   authLink,
   getApiUrl,
   initWePublishTranslator,
+  initWebsiteToken,
   NextWepublishLink,
   RoutedAdminBar,
   withBuilderRouter,
@@ -48,6 +49,15 @@ import { FazettenBaseTeaserSlots } from '../src/components/teaser-layouts/fazett
 import { FazettenAlternatingTeaser } from '../src/components/teasers/fazetten-alternating-teaser';
 import { FazettenBaseTeaser } from '../src/components/teasers/fazetten-base-teaser';
 import theme, { globalStyles } from '../src/theme';
+
+// Request a scoped JWT from the API at server startup
+if (typeof window === 'undefined') {
+  const apiUrl =
+    getConfig()?.publicRuntimeConfig?.env?.API_URL ||
+    process.env.API_URL ||
+    'http://localhost:4000';
+  initWebsiteToken(apiUrl);
+}
 
 setDefaultOptions({
   locale: de,

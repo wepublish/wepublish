@@ -16,6 +16,7 @@ import {
   authLink,
   getApiUrl,
   initWePublishTranslator,
+  initWebsiteToken,
   NextWepublishLink,
   RoutedAdminBar,
   withBuilderRouter,
@@ -42,6 +43,15 @@ import { BabanewsBlockRenderer } from '../src/components/website-builder-overwri
 import { BabanewsBanner } from '../src/components/website-builder-overwrites/blocks/banner';
 import { BabanewsTeaserGrid } from '../src/components/website-builder-styled/blocks/teaser-grid-styled';
 import theme from '../src/styles/theme';
+
+// Request a scoped JWT from the API at server startup
+if (typeof window === 'undefined') {
+  const apiUrl =
+    getConfig()?.publicRuntimeConfig?.env?.API_URL ||
+    process.env.API_URL ||
+    'http://localhost:4000';
+  initWebsiteToken(apiUrl);
+}
 
 setDefaultOptions({
   locale: de,

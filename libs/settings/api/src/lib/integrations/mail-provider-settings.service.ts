@@ -26,7 +26,6 @@ export class MailProviderSettingsService {
     if (typeof data.apiKey === 'string' && data.apiKey.length > 0) {
       result = { ...result, apiKey: this.crypto.encrypt(data.apiKey) };
     }
-    let encryptedWebhookEndpointSecret;
     if (
       typeof data.webhookEndpointSecret === 'string' &&
       data.webhookEndpointSecret.length > 0

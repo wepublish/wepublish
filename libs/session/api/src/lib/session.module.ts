@@ -20,6 +20,11 @@ import { SettingModule } from '@wepublish/settings/api';
 import { JwksController } from './jwks.controller';
 import { TotpService } from './totp.service';
 import { TotpResolver } from './totp.resolver';
+import { WebsiteTokenController } from './website-token.controller';
+import {
+  SCOPED_JWT_VERIFIER,
+  ScopedJwtGuard,
+} from '@wepublish/authentication/api';
 
 export interface SessionModuleOptions {
   sessionTTL: number;
@@ -39,7 +44,7 @@ export interface SessionModuleAsyncOptions
 
 @Module({
   imports: [PrismaModule, UserModule, ChallengeModule, SettingModule],
-  exports: [SessionService, JwtService],
+  exports: [SessionService, JwtService, SCOPED_JWT_VERIFIER, ScopedJwtGuard],
 })
 export class SessionModule {
   static registerAsync(options: SessionModuleAsyncOptions): DynamicModule {
@@ -47,9 +52,16 @@ export class SessionModule {
       global: true,
       module: SessionModule,
       imports: options.imports || [],
-      controllers: [JwksController],
-      providers: [...this.createAsyncProviders(options)],
       exports: [SessionService, JwtService],
+      controllers: [JwksController, WebsiteTokenController],
+      providers: [
+        ...this.createAsyncProviders(options),
+        {
+          provide: SCOPED_JWT_VERIFIER,
+          useExisting: JwtService,
+        },
+        ScopedJwtGuard,
+      ],
     };
   }
 

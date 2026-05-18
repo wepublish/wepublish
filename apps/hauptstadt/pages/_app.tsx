@@ -17,6 +17,7 @@ import {
   authLink,
   getApiUrl,
   initWePublishTranslator,
+  initWebsiteToken,
   NextWepublishLink,
   RoutedAdminBar,
   withBuilderRouter,
@@ -85,6 +86,15 @@ import { PrintLogo } from '../src/components/print-logo';
 import { withTrackFirstRoute } from '../src/hooks/use-is-first-route';
 import { printStyles } from '../src/print-styles';
 import theme from '../src/theme';
+
+// Request a scoped JWT from the API at server startup
+if (typeof window === 'undefined') {
+  const apiUrl =
+    getConfig()?.publicRuntimeConfig?.env?.API_URL ||
+    process.env.API_URL ||
+    'http://localhost:4000';
+  initWebsiteToken(apiUrl);
+}
 
 setDefaultOptions({
   locale: de,

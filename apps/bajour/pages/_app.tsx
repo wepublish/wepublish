@@ -17,6 +17,7 @@ import {
   authLink,
   getApiUrl,
   initWePublishTranslator,
+  initWebsiteToken,
   NextWepublishLink,
   RoutedAdminBar,
   withBuilderRouter,
@@ -55,6 +56,15 @@ import {
   BajourTeaserList,
 } from '../src/components/website-builder-styled/blocks/teaser-grid-styled';
 import theme, { navbarTheme } from '../src/styles/theme';
+
+// Request a scoped JWT from the API at server startup
+if (typeof window === 'undefined') {
+  const apiUrl =
+    getConfig()?.publicRuntimeConfig?.env?.API_URL ||
+    process.env.API_URL ||
+    'http://localhost:4000';
+  initWebsiteToken(apiUrl);
+}
 
 setDefaultOptions({
   locale: de,
