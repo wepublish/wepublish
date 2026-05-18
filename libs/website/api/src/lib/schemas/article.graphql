@@ -58,6 +58,10 @@ fragment FullArticleRevision on ArticleRevision {
   blocks {
     ...FullBlock
   }
+
+  authors {
+    ...FullAuthor
+  }
 }
 
 fragment ArticleWithoutBlocks on Article {
