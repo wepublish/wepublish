@@ -212,6 +212,8 @@
         "title": "Titel",
         "text": "Text",
         "cta": "Call to action",
+        "hideForMinutes": "Dauer des Ausblendens/einklappen nach dem Schließen des Banners in Minuten",
+        "collapsible": "Banner einklappen nach dem Schließen statt ausblenden",
         "delay": "Verzögerung in Sekunden",
         "active": "Aktiv",
         "showOnArticles": "Auf Artikeln anzeigen",

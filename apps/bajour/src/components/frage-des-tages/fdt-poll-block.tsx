@@ -170,6 +170,7 @@ export const FdtPollBlock = ({ poll }: BuilderPollBlockProps) => {
                   <StyledAuthorBox author={author} />
                 : null}
               </div>
+
               <div>
                 <StyledInfoBox richText={poll?.infoText || []} />
               </div>

@@ -8,6 +8,7 @@ import {
   InMemoryCacheConfig,
   NormalizedCacheObject,
   split,
+  TypePolicies,
 } from '@apollo/client';
 import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { mergeDeepRight } from 'ramda';
@@ -16,6 +17,7 @@ import possibleTypes from './graphql';
 import { ComponentType, memo, useMemo } from 'react';
 import { createUploadLink } from 'apollo-upload-client';
 import { absoluteUrlToRelative } from './absolute-url-to-relative';
+import { omitDisabledBlocks } from './omit-disabled-blocks';
 
 export const V1_CLIENT_STATE_PROP_NAME = '__APOLLO_STATE_V1__';
 
@@ -97,14 +99,19 @@ const createV1ApiClient = (
     link,
     cache: new InMemoryCache({
       possibleTypes: possibleTypes.possibleTypes,
-      typePolicies:
+      ...cacheConfig,
+      typePolicies: mergeDeepRight(
         (
           process.env.NODE_ENV !== 'production' ||
-          process.env.DEPLOY_ENV === 'review'
+            process.env.APP_ENVIRONMENT === 'review'
         ) ?
           absoluteUrlToRelative
-        : undefined,
-      ...cacheConfig,
+        : ({} as TypePolicies),
+        mergeDeepRight(
+          omitDisabledBlocks,
+          cacheConfig?.typePolicies ?? ({} as TypePolicies)
+        )
+      ) as TypePolicies,
     }).restore(cache ?? {}),
     ssrMode: typeof window === 'undefined',
     assumeImmutableResults: true,

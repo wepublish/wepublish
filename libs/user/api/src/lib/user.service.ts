@@ -46,7 +46,6 @@ export class UserService {
       include: {
         address: true,
         paymentProviderCustomers: true,
-        properties: true,
       },
     });
   }
@@ -144,11 +143,7 @@ export class UserService {
         ...input,
         active: true,
         password: hashedPassword,
-        properties: {
-          createMany: {
-            data: properties ?? [],
-          },
-        },
+        properties: properties as any,
         address: {
           create: address ?? {},
         },
@@ -195,17 +190,7 @@ export class UserService {
               },
             }
           : undefined,
-        properties:
-          properties ?
-            {
-              deleteMany: {
-                userId: id,
-              },
-              createMany: {
-                data: properties,
-              },
-            }
-          : undefined,
+        properties: properties as any,
       },
       select: unselectPassword,
     });

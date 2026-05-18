@@ -9,6 +9,7 @@ import {
   PageDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
+import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 
@@ -18,9 +19,11 @@ const Frontpage = styled(PageContainer)`
 
 export default function Index() {
   return (
-    <ContentWidthProvider fullWidth>
-      <Frontpage slug={''} />
-    </ContentWidthProvider>
+    <LinkContext.Provider value={{ prefetch: true }}>
+      <ContentWidthProvider fullWidth>
+        <Frontpage slug={''} />
+      </ContentWidthProvider>
+    </LinkContext.Provider>
   );
 }
 

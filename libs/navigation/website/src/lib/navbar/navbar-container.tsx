@@ -9,6 +9,7 @@ import {
 import {
   BuilderContainerProps,
   BuilderNavbarProps,
+  LinkContext,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { PropsWithChildren } from 'react';
@@ -47,23 +48,25 @@ export function NavbarContainer({
   const logo = peerInfoData?.peerProfile.logo;
 
   return (
-    <Navbar
-      iconSlug={iconSlug}
-      headerSlug={headerSlug}
-      categorySlugs={categorySlugs}
-      slug={slug}
-      loginBtn={loginBtn}
-      profileBtn={profileBtn}
-      subscribeBtn={subscribeBtn}
-      data={data}
-      loading={loading}
-      error={error}
-      className={className}
-      logo={logo}
-      hasUnpaidInvoices={!!hasUnpaidInvoices}
-      hasRunningSubscription={!!hasRunningSubscription}
-    >
-      {children}
-    </Navbar>
+    <LinkContext.Provider value={{ prefetch: true }}>
+      <Navbar
+        iconSlug={iconSlug}
+        headerSlug={headerSlug}
+        categorySlugs={categorySlugs}
+        slug={slug}
+        loginBtn={loginBtn}
+        profileBtn={profileBtn}
+        subscribeBtn={subscribeBtn}
+        data={data}
+        loading={loading}
+        error={error}
+        className={className}
+        logo={logo}
+        hasUnpaidInvoices={!!hasUnpaidInvoices}
+        hasRunningSubscription={!!hasRunningSubscription}
+      >
+        {children}
+      </Navbar>
+    </LinkContext.Provider>
   );
 }

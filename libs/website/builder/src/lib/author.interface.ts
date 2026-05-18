@@ -13,8 +13,6 @@ export type BuilderAuthorProps = Pick<
   className?: string;
 };
 
-export type BuilderAuthor = FullAuthorFragment;
-
 export type BuilderAuthorChipProps = {
   author: FullAuthorFragment;
   className?: string;

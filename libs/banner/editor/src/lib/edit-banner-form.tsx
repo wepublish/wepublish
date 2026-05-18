@@ -29,6 +29,8 @@ export const EditBannerForm = () => {
     title: '',
     text: '',
     active: false,
+    collapsible: true,
+    hideForMinutes: 24 * 60,
     delay: 0,
     showOnArticles: false,
     showForLoginStatus: LoginStatus.All,

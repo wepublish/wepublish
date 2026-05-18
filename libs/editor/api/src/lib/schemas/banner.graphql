@@ -30,7 +30,9 @@ input CreateBannerInput {
   title: String!
   text: String!
   active: Boolean!
+  collapsible: Boolean!
   delay: Int!
+  hideForMinutes: Int!
   showOnArticles: Boolean!
   showForLoginStatus: LoginStatus!
   actions: [CreateBannerActionInput]!
@@ -66,8 +68,10 @@ fragment FullBanner on Banner {
   cta
 
   active
+  collapsible
 
   delay
+  hideForMinutes
   html
 
   showOnArticles

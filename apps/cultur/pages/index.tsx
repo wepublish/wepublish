@@ -1,7 +1,12 @@
-import mailchimp, { campaigns } from '@mailchimp/mailchimp_marketing';
+import mailchimp, {
+  campaigns,
+  ErrorResponse,
+} from '@mailchimp/mailchimp_marketing';
+import { captureException } from '@sentry/react';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
+import { LinkContext } from '@wepublish/website/builder';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -11,6 +16,7 @@ import {
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
+import { ResponseError } from 'superagent';
 
 import { DailyBriefingContext } from '../src/components/daily-briefing/daily-briefing-teaser';
 
@@ -20,11 +26,13 @@ type IndexProps = {
 
 export default function Index({ campaigns }: IndexProps) {
   return (
-    <DailyBriefingContext.Provider value={campaigns}>
-      <ContentWidthProvider fullWidth={false}>
-        <PageContainer slug={''} />
-      </ContentWidthProvider>
-    </DailyBriefingContext.Provider>
+    <LinkContext.Provider value={{ prefetch: true }}>
+      <DailyBriefingContext.Provider value={campaigns}>
+        <ContentWidthProvider fullWidth={false}>
+          <PageContainer slug={''} />
+        </ContentWidthProvider>
+      </DailyBriefingContext.Provider>
+    </LinkContext.Provider>
   );
 }
 
@@ -41,8 +49,13 @@ export const getStaticProps: GetStaticProps = async () => {
   });
 
   const client = getV1ApiClient(getApiUrl(), []);
-  const [mailchimpResponse] = await Promise.all([
-    mailchimp.campaigns.list({
+
+  let mailchimpResponse:
+    | mailchimp.campaigns.CampaignsSuccessResponse
+    | ErrorResponse
+    | null = null;
+  try {
+    mailchimpResponse = await mailchimp.campaigns.list({
       count: 4,
       sortField: 'send_time',
       status: 'sent',
@@ -53,7 +66,16 @@ export const getStaticProps: GetStaticProps = async () => {
         'campaigns.long_archive_url',
         'campaigns.settings.subject_line',
       ],
-    }),
+    });
+  } catch (e) {
+    if (e && typeof e === 'object' && 'response' in e) {
+      console.error((e as ResponseError).response?.body);
+    }
+
+    captureException(e);
+  }
+
+  await Promise.all([
     client.query({
       query: PageDocument,
       variables: {
@@ -68,7 +90,8 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
   ]);
 
-  const { campaigns } = mailchimpResponse as campaigns.CampaignsSuccessResponse;
+  const { campaigns = [] } =
+    (mailchimpResponse as campaigns.CampaignsSuccessResponse) ?? {};
 
   const props = addClientCacheToV1Props(client, { campaigns });
 

@@ -2,7 +2,8 @@ import styled from '@emotion/styled';
 import { ArticleWrapper } from '@wepublish/article/website';
 import { Image } from '@wepublish/image/website';
 import { Link } from '@wepublish/ui';
-import { BuilderAuthor, useWebsiteBuilder } from '@wepublish/website/builder';
+import { FullAuthorFragment } from '@wepublish/website/api';
+import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { useMemo } from 'react';
 
 const TsriAdvertiserContainer = styled(Link)`
@@ -34,15 +35,15 @@ const TsriAdvertiserContent = styled('div')``;
 const SPONSOR_TAG = 'sponsor';
 const PROMO_TAG = 'promo';
 
-function isPromo(author: BuilderAuthor): boolean {
+function isPromo(author: FullAuthorFragment): boolean {
   return !!author.tags?.find(tag => tag.tag === PROMO_TAG);
 }
 
-function isSponsor(author: BuilderAuthor): boolean {
+function isSponsor(author: FullAuthorFragment): boolean {
   return !!author.tags?.find(tag => tag.tag === SPONSOR_TAG);
 }
 
-function getFirstLink(author: BuilderAuthor): string {
+function getFirstLink(author: FullAuthorFragment): string {
   const links = author.links;
   return links?.length ? links[0].url : '';
 }
@@ -50,7 +51,7 @@ function getFirstLink(author: BuilderAuthor): string {
 export default function TsriAdHeader({
   authors,
 }: {
-  authors?: BuilderAuthor[];
+  authors?: FullAuthorFragment[];
 }) {
   const {
     blocks: { RichText },

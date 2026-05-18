@@ -2,10 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { MediaAdapter } from './media-adapter';
 import { PrismaClient } from '@prisma/client';
 import { UploadImageInput } from './image.model';
-import {
-  ImageDataloaderService,
-  ImageWithFocalPoint,
-} from './image-dataloader.service';
+import { ImageDataloaderService } from './image-dataloader.service';
 import { Image } from '@prisma/client';
 import { PrimeDataLoader } from '@wepublish/utils/api';
 
@@ -29,11 +26,7 @@ export class ImageUploadService {
   ) {}
 
   @PrimeDataLoader(ImageDataloaderService)
-  async uploadImage({
-    focalPoint,
-    file,
-    ...input
-  }: UploadImageInput): Promise<ImageWithFocalPoint> {
+  async uploadImage({ file, ...input }: UploadImageInput): Promise<Image> {
     const { id, ...image } = await this.mediaAdapter.uploadImage(file);
 
     return this.prisma.image.create({
@@ -42,12 +35,6 @@ export class ImageUploadService {
         ...input,
         ...image,
         filename: input.filename ?? image.filename,
-        focalPoint: {
-          create: { x: focalPoint?.x ?? 0.5, y: focalPoint?.y ?? 0.5 },
-        },
-      },
-      include: {
-        focalPoint: true,
       },
     });
   }
@@ -55,7 +42,7 @@ export class ImageUploadService {
   async replaceImage(
     imageId: string,
     uploadImageInput: UploadImageInput
-  ): Promise<ImageWithFocalPoint> {
+  ): Promise<Image> {
     const {
       file,
       filename,
@@ -65,7 +52,8 @@ export class ImageUploadService {
       source,
       link,
       license,
-      focalPoint,
+      focalPointX,
+      focalPointY,
     } = uploadImageInput;
     const { id, ...image } = await this.mediaAdapter.uploadImage(file);
 
@@ -83,12 +71,8 @@ export class ImageUploadService {
         source,
         link,
         license,
-        focalPoint: {
-          create: { x: focalPoint?.x ?? 0.5, y: focalPoint?.y ?? 0.5 },
-        },
-      },
-      include: {
-        focalPoint: true,
+        focalPointX,
+        focalPointY,
       },
     });
   }

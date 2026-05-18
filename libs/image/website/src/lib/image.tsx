@@ -78,9 +78,9 @@ export const Image = forwardRef<HTMLImageElement, BuilderImageProps>(
     const objectPosition = useMemo(
       () =>
         square ? 'center center' : (
-          `${(image.focalPoint?.x ?? 0.5) * 100}% ${(image.focalPoint?.y ?? 0.5) * 100}%`
+          `${image.focalPointX * 100}% ${image.focalPointY * 100}%`
         ),
-      [image.focalPoint?.x, image.focalPoint?.y, square]
+      [image.focalPointX, image.focalPointY, square]
     );
 
     const imageArray = useMemo(
