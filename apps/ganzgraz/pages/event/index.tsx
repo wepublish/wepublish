@@ -22,11 +22,18 @@ import { MdClose } from 'react-icons/md';
 import { z } from 'zod';
 
 const Filter = styled('div')`
-  display: flex;
-  align-items: center;
+  margin-bottom: ${({ theme }) => theme.spacing(3)};
+`;
+
+const FilterGroup = styled(ToggleButtonGroup)`
   flex-wrap: wrap;
   gap: ${({ theme }) => theme.spacing(1)};
-  margin-bottom: ${({ theme }) => theme.spacing(3)};
+
+  && .MuiToggleButtonGroup-grouped {
+    margin: 0;
+    border-radius: 999px;
+    border: 1px solid ${({ theme }) => theme.palette.divider};
+  }
 `;
 
 const EmptyMessage = styled('p')`
@@ -147,7 +154,7 @@ export default function EventList() {
   return (
     <>
       <Filter>
-        <ToggleButtonGroup
+        <FilterGroup
           value={range}
           exclusive
           onChange={(_, value: Range | null) => {
@@ -180,7 +187,7 @@ export default function EventList() {
           >
             <MdClose />
           </ToggleButton>
-        </ToggleButtonGroup>
+        </FilterGroup>
       </Filter>
 
       {data?.events && data.events.totalCount === 0 ?
