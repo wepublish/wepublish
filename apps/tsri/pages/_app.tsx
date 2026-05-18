@@ -5,8 +5,11 @@ import {
   AppCacheProvider,
   createEmotionCache,
 } from '@mui/material-nextjs/v15-pagesRouter';
-import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { withErrorSnackbar } from '@wepublish/errors/website';
+import {
+  FrontendTrackingProviderConfig,
+  TrackingProvider,
+} from '@wepublish/frontend-tracking';
 import { PaymentAmountPicker } from '@wepublish/membership/website';
 import {
   FooterContainer,
@@ -24,8 +27,11 @@ import {
 } from '@wepublish/utils/website';
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
-import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
-import { createWithV1ApiClient } from '@wepublish/website/api';
+import {
+  createWithV1ApiClient,
+  SessionWithTokenWithoutUser,
+  useActiveFrontendTrackingProvidersQuery,
+} from '@wepublish/website/api';
 import {
   BuilderBlockRendererProps,
   WebsiteBuilderProvider,
@@ -118,6 +124,11 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   // Compat removes certain warnings that are irrelevant to us
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
+
+  const { data: trackingData } = useActiveFrontendTrackingProvidersQuery();
+  const trackingProviders: FrontendTrackingProviderConfig[] =
+    trackingData?.activeFrontendTrackingProviders ?? [];
+  const sparkloop = trackingData?.activeSparkloopSettings ?? null;
 
   return (
     <AppCacheProvider emotionCache={cache}>
@@ -263,21 +274,13 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 
             <RoutedAdminBar />
 
-            {publicRuntimeConfig.env.GA_ID && (
-              <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
-            )}
-
-            {publicRuntimeConfig.env.GTM_ID && (
-              <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
-            )}
-
-            {publicRuntimeConfig.env.SPARKLOOP_ID && (
-              <Script
-                src={`https://script.sparkloop.app/team_${publicRuntimeConfig.env.SPARKLOOP_ID}.js`}
-                strategy="lazyOnload"
-                data-sparkloop
-              />
-            )}
+            <TrackingProvider
+              providers={trackingProviders}
+              sparkloop={sparkloop}
+              consentMode="auto"
+            >
+              <></>
+            </TrackingProvider>
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>

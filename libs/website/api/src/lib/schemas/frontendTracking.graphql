@@ -1,0 +1,17 @@
+query ActiveFrontendTrackingProviders {
+  activeFrontendTrackingProviders {
+    id
+    type
+    ga4_measurementId
+    gtm_containerId
+    plausible_siteId
+    plausible_scriptUrl
+    piwik_containerId
+    piwik_subdomain
+  }
+  activeSparkloopSettings {
+    id
+    active
+    teamId
+  }
+}

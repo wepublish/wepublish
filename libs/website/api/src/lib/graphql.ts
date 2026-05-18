@@ -6415,6 +6415,11 @@ export type EventQueryVariables = Exact<{
 
 export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', id: string, name: string, lead?: string | null, description?: Descendant[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, createdAt: string, modifiedAt: string, url: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null, description?: Descendant[] | null, type: TagType, main: boolean, url: string, color?: string | null }> | null } };
 
+export type ActiveFrontendTrackingProvidersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ActiveFrontendTrackingProvidersQuery = { __typename?: 'Query', activeFrontendTrackingProviders: Array<{ __typename?: 'SettingFrontendTracking', id: string, type: FrontendTrackingProviderType, ga4_measurementId?: string | null, gtm_containerId?: string | null, plausible_siteId?: string | null, plausible_scriptUrl?: string | null, piwik_containerId?: string | null, piwik_subdomain?: string | null }>, activeSparkloopSettings?: { __typename?: 'SettingSparkloop', id: string, active: boolean, teamId?: string | null } | null };
+
 export type ImageUrLsFragment = { __typename?: 'Image', url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null };
 
 export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null };
@@ -8688,6 +8693,52 @@ export function useEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Even
 export type EventQueryHookResult = ReturnType<typeof useEventQuery>;
 export type EventLazyQueryHookResult = ReturnType<typeof useEventLazyQuery>;
 export type EventQueryResult = Apollo.QueryResult<EventQuery, EventQueryVariables>;
+export const ActiveFrontendTrackingProvidersDocument = gql`
+    query ActiveFrontendTrackingProviders {
+  activeFrontendTrackingProviders {
+    id
+    type
+    ga4_measurementId
+    gtm_containerId
+    plausible_siteId
+    plausible_scriptUrl
+    piwik_containerId
+    piwik_subdomain
+  }
+  activeSparkloopSettings {
+    id
+    active
+    teamId
+  }
+}
+    `;
+
+/**
+ * __useActiveFrontendTrackingProvidersQuery__
+ *
+ * To run a query within a React component, call `useActiveFrontendTrackingProvidersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useActiveFrontendTrackingProvidersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useActiveFrontendTrackingProvidersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useActiveFrontendTrackingProvidersQuery(baseOptions?: Apollo.QueryHookOptions<ActiveFrontendTrackingProvidersQuery, ActiveFrontendTrackingProvidersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ActiveFrontendTrackingProvidersQuery, ActiveFrontendTrackingProvidersQueryVariables>(ActiveFrontendTrackingProvidersDocument, options);
+      }
+export function useActiveFrontendTrackingProvidersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ActiveFrontendTrackingProvidersQuery, ActiveFrontendTrackingProvidersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ActiveFrontendTrackingProvidersQuery, ActiveFrontendTrackingProvidersQueryVariables>(ActiveFrontendTrackingProvidersDocument, options);
+        }
+export type ActiveFrontendTrackingProvidersQueryHookResult = ReturnType<typeof useActiveFrontendTrackingProvidersQuery>;
+export type ActiveFrontendTrackingProvidersLazyQueryHookResult = ReturnType<typeof useActiveFrontendTrackingProvidersLazyQuery>;
+export type ActiveFrontendTrackingProvidersQueryResult = Apollo.QueryResult<ActiveFrontendTrackingProvidersQuery, ActiveFrontendTrackingProvidersQueryVariables>;
 export const GetImagesByTagDocument = gql`
     query GetImagesByTag($tag: String!) {
   getImagesByTag(tag: $tag) {

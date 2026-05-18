@@ -9,9 +9,8 @@ export function SparkloopLoader({ teamId }: SparkloopLoaderProps) {
     <Script
       id={`sparkloop-${teamId}`}
       src={`https://script.sparkloop.app/team_${teamId}.js`}
-      strategy="afterInteractive"
-      async
-      data-sparkloop-team-id={teamId}
+      strategy="lazyOnload"
+      data-sparkloop
     />
   );
 }
