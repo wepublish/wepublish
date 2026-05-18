@@ -1,4 +1,5 @@
 import { generateSitemap } from '@wepublish/feed/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
   ArticleListDocument,
   ArticleListQueryVariables,
@@ -10,7 +11,6 @@ import {
   SortOrder,
 } from '@wepublish/website/api';
 import { NextApiRequest } from 'next';
-import getConfig from 'next/config';
 import process from 'node:process';
 
 export const getSitemap = async (req: NextApiRequest): Promise<string> => {
@@ -20,9 +20,7 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
     siteUrl,
     title: 'Mannschaft',
   });
-
-  const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [], {
+  const client = getV1ApiClient(getApiUrl(), [], {
     typePolicies: {},
   });
 

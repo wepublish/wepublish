@@ -57,6 +57,10 @@ const mockUser: User = {
   roleIDs: ['role1', 'role2'],
   userImageID: 'image-1',
   note: null,
+  totpSecret: null,
+  totpEnabled: false,
+  totpExempt: false,
+  properties: [],
 };
 
 describe('bexio-utils', () => {

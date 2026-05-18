@@ -10,18 +10,14 @@ exports[`PageService should create an page 1`] = `
           "blocks": [
             undefined,
           ],
-          "properties": {
-            "createMany": {
-              "data": [
-                {
-                  "id": "123",
-                  "key": "key",
-                  "public": true,
-                  "value": "value",
-                },
-              ],
+          "properties": [
+            {
+              "id": "123",
+              "key": "key",
+              "public": true,
+              "value": "value",
             },
-          },
+          ],
           "userId": "1234",
         },
       },
@@ -749,17 +745,14 @@ exports[`PageService should update an page 2`] = `
           "blocks": [
             undefined,
           ],
-          "properties": {
-            "createMany": {
-              "data": [
-                {
-                  "key": "key",
-                  "public": true,
-                  "value": "value",
-                },
-              ],
+          "properties": [
+            {
+              "id": "123",
+              "key": "key",
+              "public": true,
+              "value": "value",
             },
-          },
+          ],
           "userId": "1234",
         },
         "updateMany": {

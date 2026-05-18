@@ -16,13 +16,13 @@ export const unselectPassword: Record<
     | 'mailSent'
     | 'articleRevisions'
     | 'pageRevisions'
+    | 'mailchimpSyncErrors'
   >,
   boolean
 > = {
   address: true,
   birthday: true,
   note: true,
-  properties: true,
   paymentProviderCustomers: true,
   id: true,
   createdAt: true,
@@ -39,4 +39,8 @@ export const unselectPassword: Record<
   active: true,
   lastLogin: true,
   roleIDs: true,
+  totpSecret: false,
+  totpEnabled: true,
+  totpExempt: true,
+  properties: true,
 } as const;

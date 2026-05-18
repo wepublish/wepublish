@@ -9,6 +9,7 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 
 export const LoginFormWrapper = styled('div')`
   display: grid;
@@ -31,12 +32,14 @@ const withEmailFormSchema = z.object({
   email: z.string().email().min(1),
   requirePassword: z.literal(false),
   password: z.string().optional(),
+  totpToken: z.string().optional(),
 });
 
 const withCredentialsFormSchema = z.object({
   email: z.string().email().min(1),
   requirePassword: z.literal(true),
   password: z.string().min(1),
+  totpToken: z.string().optional(),
 });
 
 const loginFormSchema = z.union([
@@ -56,6 +59,9 @@ export function LoginForm({
   onSubmitLoginWithEmail,
   defaults,
   disablePasswordLogin,
+  otpRequired,
+  onEmailChange,
+  totpRedirectToPassword,
   className,
 }: BuilderLoginFormProps) {
   const {
@@ -69,19 +75,40 @@ export function LoginForm({
     defaultValues: {
       email: defaults?.email || '',
       password: '',
+      totpToken: '',
       requirePassword: defaults?.requirePassword || false,
     },
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
   });
 
-  const onSubmit = handleSubmit(({ email, requirePassword, password }) => {
-    if (requirePassword) {
-      return onSubmitLoginWithCredentials(email, password);
-    }
+  const emailValue = watch('email');
 
-    return onSubmitLoginWithEmail(email);
-  });
+  // Notify parent when email changes so it can check OTP requirement
+  useEffect(() => {
+    onEmailChange?.(emailValue);
+  }, [emailValue, onEmailChange]);
+
+  // Auto-switch to password mode when 2FA redirect is triggered
+  useEffect(() => {
+    if (totpRedirectToPassword) {
+      setValue('requirePassword', true);
+    }
+  }, [totpRedirectToPassword, setValue]);
+
+  const onSubmit = handleSubmit(
+    ({ email, requirePassword, password, totpToken }) => {
+      if (requirePassword) {
+        return onSubmitLoginWithCredentials(
+          email,
+          password,
+          totpToken || undefined
+        );
+      }
+
+      return onSubmitLoginWithEmail(email);
+    }
+  );
 
   const loginWithPassword = watch('requirePassword');
   const loginLinkSent =
@@ -145,6 +172,28 @@ export function LoginForm({
               />
             )}
           />
+        )}
+
+        {watch('requirePassword') && otpRequired && (
+          <Controller
+            name={'totpToken'}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                autoComplete="one-time-code"
+                type={'text'}
+                fullWidth
+                label={t('login.totp.code')}
+                error={!!error}
+                helperText={error?.message}
+              />
+            )}
+          />
+        )}
+
+        {totpRedirectToPassword && (
+          <Alert severity="info">{t('login.totp.emailLoginDisabled')}</Alert>
         )}
 
         {awaitingLoginConfirmed && (

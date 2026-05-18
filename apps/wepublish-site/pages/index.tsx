@@ -1,5 +1,7 @@
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
+import { getApiUrl } from '@wepublish/utils/website';
+import { LinkContext } from '@wepublish/website/builder';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -15,9 +17,11 @@ export default function Index() {
   const { locale } = useRouter();
 
   return (
-    <ContentWidthProvider fullWidth>
-      <PageContainer slug={`-${locale}`} />
-    </ContentWidthProvider>
+    <LinkContext.Provider value={{ prefetch: true }}>
+      <ContentWidthProvider fullWidth>
+        <PageContainer slug={`-${locale}`} />
+      </ContentWidthProvider>
+    </LinkContext.Provider>
   );
 }
 
@@ -28,7 +32,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, []);
+  const client = getV1ApiClient(getApiUrl(), []);
   await Promise.all([
     client.query({
       query: PageDocument,

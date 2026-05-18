@@ -149,11 +149,7 @@ export class ArticleService {
             ...revision,
             userId,
             blocks: mappedBlocks as any[],
-            properties: {
-              createMany: {
-                data: properties,
-              },
-            },
+            properties: properties as any,
             authors: {
               createMany: {
                 data: authorIds.map(authorId => ({ authorId })),
@@ -236,15 +232,7 @@ export class ArticleService {
             ...revision,
             blocks: mappedBlocks as any[],
             userId,
-            properties: {
-              createMany: {
-                data: properties.map(property => ({
-                  key: property.key,
-                  value: property.value,
-                  public: property.public,
-                })),
-              },
-            },
+            properties: properties as any,
             authors: {
               createMany: {
                 data: authorIds.map(authorId => ({ authorId })),
@@ -423,7 +411,6 @@ export class ArticleService {
             createdAt: 'desc',
           },
           include: {
-            properties: true,
             authors: true,
             socialMediaAuthors: true,
           },
@@ -468,15 +455,7 @@ export class ArticleService {
             ...revision,
             userId,
             blocks: revision.blocks || [],
-            properties: {
-              createMany: {
-                data: properties.map(property => ({
-                  key: property.key,
-                  value: property.value,
-                  public: property.public,
-                })),
-              },
-            },
+            properties: properties as any,
             authors: {
               createMany: {
                 data: authors.map(({ authorId }) => ({ authorId })),
@@ -536,7 +515,7 @@ export class ArticleService {
       const foundArticleIds = await this.prisma.$queryRaw<
         Array<{ id: string }>
       >`
-        SELECT a.id
+        SELECT DISTINCT a.id
         FROM articles a
           JOIN public."articles.revisions" ar
             ON a."id" = ar."articleId"

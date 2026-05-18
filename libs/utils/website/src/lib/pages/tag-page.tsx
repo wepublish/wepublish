@@ -9,9 +9,10 @@ import {
   TagDocument,
 } from '@wepublish/website/api';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
+
+import { getApiUrl } from '../api-url';
 
 const take = 25;
 
@@ -57,9 +58,7 @@ export const TagPageGetStaticPaths = () => ({
 
 export const TagPageGetStaticProps = (async ({ params }) => {
   const { tag } = params || {};
-
-  const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
+  const client = getV1ApiClient(getApiUrl(), []);
 
   const tagResult = await client.query({
     query: TagDocument,
@@ -69,7 +68,7 @@ export const TagPageGetStaticProps = (async ({ params }) => {
     },
   });
 
-  if (!tagResult.error && !tagResult.data.tag) {
+  if (tagResult.error || !tagResult.data.tag) {
     return {
       notFound: true,
       revalidate: 1,

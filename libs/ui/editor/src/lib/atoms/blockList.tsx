@@ -11,12 +11,17 @@ import React, {
   ReactElement,
   ReactNode,
   useCallback,
-  useEffect,
   useMemo,
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdArrowDownward, MdArrowUpward, MdDelete } from 'react-icons/md';
+import {
+  MdArrowDownward,
+  MdArrowUpward,
+  MdDelete,
+  MdVisibility,
+  MdVisibilityOff,
+} from 'react-icons/md';
 import { IconButton, Panel as RPanel, SelectPicker } from 'rsuite';
 
 import {
@@ -53,9 +58,11 @@ const Panel = styled(RPanel)`
   width: 100%;
 `;
 
-export const PanelWrapper = styled.div`
+export const PanelWrapper = styled.div<{ disabled: boolean }>`
   display: flex;
   width: 100%;
+
+  ${({ disabled }) => disabled && `& > * > * {opacity: 0.3;}`}
 `;
 
 export const DownwardButtonWrapper = styled.div`
@@ -178,10 +185,11 @@ export const BlockListItem = memo(function BlockListItem({
       icon={icon}
       disabled={disabled}
       onDelete={() => onDelete(index)}
+      onDisable={disabled => handleValueChange({ ...value.value, disabled })}
       onMoveUp={onMoveUp ? () => onMoveUp(index) : undefined}
       onMoveDown={onMoveDown ? () => onMoveDown(index) : undefined}
-      onStyleChange={blockStyle =>
-        handleValueChange({ ...value.value, blockStyle })
+      onStyleChange={(blockStyleName, blockStyle) =>
+        handleValueChange({ ...value.value, blockStyleName, blockStyle })
       }
     >
       {children({
@@ -339,9 +347,13 @@ interface ListItemWrapperProps {
   disabled?: boolean;
 
   onDelete?: () => void;
+  onDisable?: (disable: boolean) => void;
   onMoveUp?: () => void;
   onMoveDown?: () => void;
-  onStyleChange?: (blockStyle?: BlockStyle['id']) => void;
+  onStyleChange?: (
+    blockStyleName?: BlockStyle['name'],
+    blockStyle?: BlockStyle['id']
+  ) => void;
 }
 
 function ListItemWrapper({
@@ -349,6 +361,7 @@ function ListItemWrapper({
   children,
   icon,
   disabled,
+  onDisable,
   onDelete,
   onMoveUp,
   onMoveDown,
@@ -365,25 +378,22 @@ function ListItemWrapper({
     [data?.blockStyles, value.type]
   );
 
-  const blockStyleValue = useMemo(
-    // input is id & output is name
-    () =>
-      data?.blockStyles.find(style =>
-        [style.id, style.name].includes(value.value.blockStyle)
-      ),
-    [data?.blockStyles, value.value.blockStyle]
-  );
-
-  useEffect(() => {
-    if (blockStyleValue && blockStyleValue.id !== value.value.blockStyle) {
-      onStyleChange?.(blockStyleValue?.id);
-    }
-  }, [blockStyleValue, onStyleChange, value.value.blockStyle]);
+  const blockStyleId = value.value.blockStyle;
 
   return (
     <ListItem>
       <LeftButtonsWrapper>
         <IconButton
+          appearance={'subtle'}
+          icon={value.value.disabled ? <MdVisibilityOff /> : <MdVisibility />}
+          onClick={() => onDisable?.(!value.value.disabled)}
+        />
+
+        <FlexGrow />
+
+        <IconButton
+          appearance={'ghost'}
+          color={'red'}
           icon={<MdDelete />}
           onClick={onDelete}
           disabled={onDelete == null || disabled}
@@ -407,10 +417,11 @@ function ListItemWrapper({
             disabled={onMoveDown == null || disabled}
           />
         </DownwardButtonWrapper>
+
         <FlexGrow />
       </LeftButtonsWrapper>
 
-      <PanelWrapper>
+      <PanelWrapper disabled={value.value.disabled}>
         <Panel bordered>
           <ChildrenWrapper>{children}</ChildrenWrapper>
         </Panel>
@@ -421,32 +432,20 @@ function ListItemWrapper({
           {icon} {t('blockStyles.style')}
         </Icon>
 
-        {!!blockStyleValue && (
-          <BlockStyleSelect
-            cleanable
-            value={blockStyleValue?.id}
-            data={stylesForBlock.map(style => ({
-              value: style.id,
-              label: style.name,
-            }))}
-            onChange={blockStyle => {
-              onStyleChange?.(blockStyle as string | undefined);
-            }}
-          />
-        )}
-        {!blockStyleValue && (
-          <BlockStyleSelect
-            cleanable
-            value={undefined}
-            data={stylesForBlock.map(style => ({
-              value: style.id,
-              label: style.name,
-            }))}
-            onChange={blockStyle => {
-              onStyleChange?.(blockStyle as string | undefined);
-            }}
-          />
-        )}
+        <BlockStyleSelect
+          cleanable
+          value={blockStyleId}
+          data={stylesForBlock.map(style => ({
+            value: style.id,
+            label: style.name,
+          }))}
+          onChange={blockStyle => {
+            onStyleChange?.(
+              stylesForBlock.find(b => b.id === blockStyle)?.name,
+              blockStyle as string | undefined
+            );
+          }}
+        />
       </BlockStyleIconWrapper>
     </ListItem>
   );

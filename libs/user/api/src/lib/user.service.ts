@@ -46,7 +46,6 @@ export class UserService {
       include: {
         address: true,
         paymentProviderCustomers: true,
-        properties: true,
       },
     });
   }
@@ -126,6 +125,7 @@ export class UserService {
     password,
     address,
     properties,
+    skipMail,
     ...input
   }: CreateUserInput) {
     if (password) {
@@ -143,11 +143,7 @@ export class UserService {
         ...input,
         active: true,
         password: hashedPassword,
-        properties: {
-          createMany: {
-            data: properties ?? [],
-          },
-        },
+        properties: properties as any,
         address: {
           create: address ?? {},
         },
@@ -155,27 +151,30 @@ export class UserService {
       select: unselectPassword,
     });
 
-    // send register mail
-    const externalMailTemplateId = await this.mailContext.getUserTemplateName(
-      UserEvent.ACCOUNT_CREATION,
-      false
-    );
+    if (!skipMail) {
+      const externalMailTemplateId = await this.mailContext.getUserTemplateName(
+        UserEvent.ACCOUNT_CREATION,
+        false
+      );
 
-    await this.mailContext.sendMail({
-      externalMailTemplateId,
-      recipient,
-      optionalData: {},
-      mailType: mailLogType.SystemMail,
-    });
+      await this.mailContext.sendMail({
+        externalMailTemplateId,
+        recipient,
+        optionalData: {},
+        mailType: mailLogType.SystemMail,
+      });
+    }
 
     return recipient;
   }
 
   @PrimeDataLoader(UserDataloaderService)
   async updateUser({ id, address, properties, ...input }: UpdateUserInput) {
-    input.email =
-      input.email ? (input.email as string).toLowerCase() : input.email;
-    await Validator.createUser.parse(input);
+    if (input.email) {
+      input.email = (input.email as string).toLowerCase();
+    }
+
+    await Validator.updateUser.parse(input);
     await Validator.createAddress.parse(address);
 
     return this.prisma.user.update({
@@ -191,17 +190,7 @@ export class UserService {
               },
             }
           : undefined,
-        properties:
-          properties ?
-            {
-              deleteMany: {
-                userId: id,
-              },
-              createMany: {
-                data: properties,
-              },
-            }
-          : undefined,
+        properties: properties as any,
       },
       select: unselectPassword,
     });
@@ -217,12 +206,12 @@ export class UserService {
   }
 
   @PrimeDataLoader(UserDataloaderService)
-  async resetPassword(id: string, password?: string, sendMail?: boolean) {
+  async resetPassword(id: string, password?: string) {
     if (password) {
       await this.validatePassword(password);
     }
 
-    const user = await this.prisma.user.update({
+    return this.prisma.user.update({
       where: { id },
       data: {
         password: await this.hashPassword(
@@ -231,21 +220,6 @@ export class UserService {
       },
       select: unselectPassword,
     });
-
-    if (sendMail && user) {
-      const remoteTemplate = await this.mailContext.getUserTemplateName(
-        UserEvent.PASSWORD_RESET
-      );
-
-      await this.mailContext.sendMail({
-        externalMailTemplateId: remoteTemplate,
-        recipient: user,
-        optionalData: {},
-        mailType: mailLogType.UserFlow,
-      });
-    }
-
-    return user;
   }
 
   private static readonly EMAIL_CHANGE_EXPIRY_MINUTES = 60;

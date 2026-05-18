@@ -1,3 +1,4 @@
+export * from './lib/api-url';
 export * from './lib/auth-guard';
 export * from './lib/auth-link';
 export * from './lib/get-session-token-props';
@@ -15,6 +16,7 @@ export * from './lib/pages/search-page';
 export * from './lib/pages/tag-page';
 export * from './lib/routed-admin-bar';
 export * from './lib/with-jwt-handler';
+export * from './lib/handle-jwt-login';
 export * from './lib/with-session-provider';
 export * from './lib/with-builder-router';
 export * from './lib/i18n-formatter';

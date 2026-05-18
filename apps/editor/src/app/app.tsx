@@ -49,6 +49,8 @@ import { Base } from './base';
 import de from './locales/rsuiteDe';
 import fr from './locales/rsuiteFr';
 import { Login } from './login';
+import { LoginJwt } from './loginJwt';
+import { ResetPassword } from './resetPassword';
 import { ArticleEditor } from './routes/articles/articleEditor';
 import { ArticleList } from './routes/articles/articleList';
 import { AudienceDashboard } from './routes/audience/audience-dashboard';
@@ -58,12 +60,12 @@ import { CommentRatingEditView } from './routes/commentRatings/commentRatingEdit
 import { CommentEditView } from './routes/comments/commentEditView';
 import { CommentList } from './routes/comments/commentList';
 import { Dashboard } from './routes/dashboard/dashboard';
+import { DocumentList } from './routes/documents/documentList';
 import { EventCreateView } from './routes/events/eventCreateView';
 import { EventEditView } from './routes/events/eventEditView';
 import { EventListView } from './routes/events/eventListView';
 import { ExternalAppIframeView } from './routes/externalApps/externalAppIframeView';
 import { ExternalApps } from './routes/externalApps/externalAppsEdit';
-import { DocumentList } from './routes/documents/documentList';
 import { ImageList } from './routes/images/imageList';
 import { IntegrationEditView } from './routes/integrations/integrationEditView';
 import { IntegrationList } from './routes/integrations/integrationList';
@@ -92,6 +94,7 @@ import { UserEditView } from './routes/users/userEditView';
 import { UserList } from './routes/users/userList';
 import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
 import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
+import { SetNewPassword } from './setNewPassword';
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -138,7 +141,7 @@ export function App() {
   const { session } = useContext(AuthContext);
 
   useEffect(() => {
-    if (session === null && window.location.pathname !== '/login') {
+    if (session === null && !window.location.pathname.startsWith('/login')) {
       window.location.href = `/login?next=${window.location.pathname}`;
     }
   }, [session]);
@@ -261,6 +264,18 @@ export function App() {
             <Route
               path="login"
               element={<Login />}
+            />
+            <Route
+              path="login/jwt/:jwt"
+              element={<LoginJwt />}
+            />
+            <Route
+              path="login/reset-password"
+              element={<ResetPassword />}
+            />
+            <Route
+              path="login/set-password"
+              element={<SetNewPassword />}
             />
             {/* Dashboard Routes */}
             <Route

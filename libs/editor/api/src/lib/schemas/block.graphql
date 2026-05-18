@@ -2,7 +2,9 @@ fragment BlockWithoutTeaser on BlockContent {
   __typename
 
   ... on TitleBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     preTitle
     title
@@ -10,7 +12,9 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on ImageBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     caption
     linkUrl
@@ -20,7 +24,9 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on ImageGalleryBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     images {
       caption
@@ -31,7 +37,9 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on QuoteBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     quote
     author
@@ -41,19 +49,25 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on RichTextBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     richText
   }
 
   ... on HTMLBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     html
   }
 
   ... on EventBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
 
     filter {
@@ -67,7 +81,9 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on CommentBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
 
     filter {
@@ -81,7 +97,9 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on PollBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     poll {
       ...FullPoll
@@ -89,7 +107,9 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on CrowdfundingBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     crowdfunding {
       id
@@ -105,7 +125,9 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on ListicleBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     items {
       title
@@ -117,7 +139,9 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on BreakBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     text
     richText
@@ -131,77 +155,101 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on FacebookPostBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     userID
     postID
   }
 
   ... on FacebookVideoBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     userID
     videoID
   }
 
   ... on InstagramPostBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     postID
   }
 
   ... on TwitterTweetBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     userID
     tweetID
   }
 
   ... on VimeoVideoBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     videoID
   }
 
   ... on StreamableVideoBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     videoID
   }
 
   ... on YouTubeVideoBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     videoID
   }
 
   ... on SoundCloudTrackBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     trackID
   }
 
   ... on PolisConversationBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     conversationID
   }
 
   ... on TikTokVideoBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     userID
     videoID
   }
 
   ... on BildwurfAdBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     zoneID
   }
 
   ... on IFrameBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     url
     title
@@ -212,7 +260,9 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on SubscribeBlock {
+    disabled
     blockStyle
+    blockStyleName
     memberPlanIds
     fields
     type
@@ -238,7 +288,9 @@ fragment FullTeaser on Teaser {
           __typename
 
           ... on PollBlock {
+            disabled
             blockStyle
+            blockStyleName
             type
             poll {
               ...FullPoll
@@ -302,7 +354,10 @@ fragment FullBlock on BlockContent {
   ...BlockWithoutTeaser
 
   ... on TeaserGridFlexBlock {
+    title
+    disabled
     blockStyle
+    blockStyleName
     type
     flexTeasers {
       alignment {
@@ -321,7 +376,10 @@ fragment FullBlock on BlockContent {
   }
 
   ... on TeaserGridBlock {
+    title
+    disabled
     blockStyle
+    blockStyleName
     type
     teasers {
       ...FullTeaser
@@ -331,7 +389,9 @@ fragment FullBlock on BlockContent {
 
   ... on TeaserListBlock {
     title
+    disabled
     blockStyle
+    blockStyleName
     type
     skip
     take
@@ -351,7 +411,9 @@ fragment FullBlock on BlockContent {
 
   ... on TeaserSlotsBlock {
     title
+    disabled
     blockStyle
+    blockStyleName
     type
     autofillConfig {
       enabled
@@ -376,9 +438,11 @@ fragment FullBlock on BlockContent {
       ...FullTeaser
     }
   }
-  
+
   ... on FlexBlock {
+    disabled
     blockStyle
+    blockStyleName
     type
     blocks {
       alignment {
@@ -391,10 +455,12 @@ fragment FullBlock on BlockContent {
       }
       block {
         __typename
-        
+
         ... on TeaserSlotsBlock {
           title
+          disabled
           blockStyle
+          blockStyleName
           type
           autofillConfig {
             enabled
@@ -419,10 +485,12 @@ fragment FullBlock on BlockContent {
             ...FullTeaser
           }
         }
-        
+
         ... on TeaserListBlock {
           title
+          disabled
           blockStyle
+          blockStyleName
           type
           skip
           take
@@ -439,7 +507,7 @@ fragment FullBlock on BlockContent {
             ...FullTeaser
           }
         }
-        
+
         ...BlockWithoutTeaser
       }
     }

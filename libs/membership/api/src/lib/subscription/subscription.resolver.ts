@@ -35,10 +35,7 @@ import {
   CanGetUsers,
 } from '@wepublish/permissions';
 import { isActiveSubscription } from './is-subscription-active';
-import {
-  Property,
-  SubscriptionPropertyDataloader,
-} from '@wepublish/property/api';
+import { Property } from '@wepublish/property/api';
 import { SubscriptionService } from './subscription.service';
 import { SubscriptionDataloader } from './subscription.dataloader';
 import { NotFoundException } from '@nestjs/common';
@@ -54,8 +51,7 @@ export class PublicSubscriptionResolver {
     private paymentMethodDataloader: PaymentMethodDataloader,
     private deactivationDataloader: SubscriptionDeactivationDataloader,
     private periodDataloader: SubscriptionPeriodDataloader,
-    private memberPlanDataloader: MemberPlanDataloader,
-    private propertyDataLoader: SubscriptionPropertyDataloader
+    private memberPlanDataloader: MemberPlanDataloader
   ) {}
 
   @Permissions(CanGetSubscription)
@@ -158,12 +154,10 @@ export class PublicSubscriptionResolver {
 
   @ResolveField(() => [Property])
   async properties(
-    @Parent() subscription: Subscription,
+    @Parent() { properties }: Subscription,
     @CurrentUser() user: UserSession | undefined
   ) {
-    const properties = await this.propertyDataLoader.load(subscription.id);
-
-    return properties?.filter(
+    return (properties as unknown as Property[])?.filter(
       prop =>
         prop.public || hasPermission(CanGetSubscription, user?.roles ?? [])
     );

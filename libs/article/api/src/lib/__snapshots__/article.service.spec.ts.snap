@@ -27,18 +27,14 @@ exports[`ArticleService should create an article 1`] = `
           ],
           "breaking": false,
           "hideAuthor": false,
-          "properties": {
-            "createMany": {
-              "data": [
-                {
-                  "id": "123",
-                  "key": "key",
-                  "public": true,
-                  "value": "value",
-                },
-              ],
+          "properties": [
+            {
+              "id": "123",
+              "key": "key",
+              "public": true,
+              "value": "value",
             },
-          },
+          ],
           "socialMediaAuthors": {
             "createMany": {
               "data": [
@@ -655,7 +651,7 @@ exports[`ArticleService should query articles based on full text search 1`] = `
 [
   [
     "
-        SELECT a.id
+        SELECT DISTINCT a.id
         FROM articles a
           JOIN public."articles.revisions" ar
             ON a."id" = ar."articleId"
@@ -1079,7 +1075,7 @@ exports[`ArticleService should query articles on all revisions 1`] = `
 [
   [
     "
-        SELECT a.id
+        SELECT DISTINCT a.id
         FROM articles a
           JOIN public."articles.revisions" ar
             ON a."id" = ar."articleId"
@@ -1523,17 +1519,14 @@ exports[`ArticleService should update an article 2`] = `
           ],
           "breaking": false,
           "hideAuthor": false,
-          "properties": {
-            "createMany": {
-              "data": [
-                {
-                  "key": "key",
-                  "public": true,
-                  "value": "value",
-                },
-              ],
+          "properties": [
+            {
+              "id": "123",
+              "key": "key",
+              "public": true,
+              "value": "value",
             },
-          },
+          ],
           "socialMediaAuthors": {
             "createMany": {
               "data": [

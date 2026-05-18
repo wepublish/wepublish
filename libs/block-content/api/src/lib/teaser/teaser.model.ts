@@ -9,7 +9,7 @@ import {
 } from '@nestjs/graphql';
 import { Article, HasOptionalArticle } from '@wepublish/article/api';
 import { HasOptionalPage, Page } from '@wepublish/page/api';
-import { HasImage } from '@wepublish/image/api';
+import { HasImage } from '../../../../../image/api/src/lib/has-image/has-image.model';
 import { Event, HasOptionalEvent } from '@wepublish/event/api';
 import { Property, PropertyInput } from '@wepublish/property/api';
 
@@ -102,13 +102,6 @@ export class EventTeaserInput extends OmitType(
   override eventID?: string;
 }
 
-@ObjectType()
-export class NonDbProperty extends OmitType(
-  Property,
-  ['id'] as const,
-  ObjectType
-) {}
-
 @ObjectType({
   implements: () => [BaseTeaser],
 })
@@ -119,8 +112,8 @@ export class CustomTeaser extends BaseTeaser<TeaserType.Custom> {
   @Field({ nullable: true })
   openInNewTab?: boolean;
 
-  @Field(() => [NonDbProperty], { defaultValue: [], nullable: true })
-  properties!: NonDbProperty[];
+  @Field(() => [Property], { defaultValue: [], nullable: true })
+  properties!: Property[];
 }
 
 @InputType()

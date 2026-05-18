@@ -13,6 +13,7 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
+  getApiUrl,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
@@ -36,6 +37,7 @@ import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import { GGNavbar } from '../src/components/gg-navbar';
 import theme from '../src/theme';
 
 setDefaultOptions({
@@ -92,6 +94,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
+          Navbar={GGNavbar}
           elements={{ Link: NextWepublishLink }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
@@ -198,10 +201,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 }
 
 const { publicRuntimeConfig } = getConfig();
-const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-  authLink,
-  previewLink,
-]);
+const withApollo = createWithV1ApiClient(getApiUrl(), [authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(

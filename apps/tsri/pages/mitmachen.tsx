@@ -1,28 +1,25 @@
 import styled from '@emotion/styled';
-import {
-  AuthTokenStorageKey,
-  UserFormWrapper,
-} from '@wepublish/authentication/website';
+import { UserFormWrapper } from '@wepublish/authentication/website';
 import { SubscribeWrapper } from '@wepublish/membership/website';
 import { PageContainer } from '@wepublish/page/website';
-import { getSessionTokenProps, ssrAuthLink } from '@wepublish/utils/website';
+import {
+  getApiUrl,
+  getSessionTokenProps,
+  handleJwtLogin,
+  ssrAuthLink,
+} from '@wepublish/utils/website';
 import { SubscribePage } from '@wepublish/utils/website';
-import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
   InvoicesDocument,
-  LoginWithJwtDocument,
   MeDocument,
   MemberPlanListDocument,
   NavigationListDocument,
   PageDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
-import { setCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
-import getConfig from 'next/config';
-
 const MitmachenPage = styled(PageContainer)`
   ${SubscribeWrapper} {
     padding-top: ${({ theme }) => theme.spacing(1.5)};
@@ -58,34 +55,13 @@ export default function Mitmachen() {
 }
 
 Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
-  const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  const client = getV1ApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
   ]);
 
-  if (ctx.query.jwt) {
-    const data = await client.mutate({
-      mutation: LoginWithJwtDocument,
-      variables: {
-        jwt: ctx.query.jwt,
-      },
-    });
-
-    setCookie(
-      AuthTokenStorageKey,
-      JSON.stringify(
-        data.data.createSessionWithJWT as SessionWithTokenWithoutUser
-      ),
-      {
-        req: ctx.req,
-        res: ctx.res,
-        expires: new Date(data.data.createSessionWithJWT.expiresAt),
-        sameSite: 'strict',
-      }
-    );
-  }
+  await handleJwtLogin(ctx, client, undefined);
 
   const sessionProps = await getSessionTokenProps(ctx);
 

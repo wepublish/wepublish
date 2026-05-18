@@ -46,9 +46,6 @@ export class ImageService {
         take: getMaxTake(take) + 1,
         orderBy,
         cursor: cursorId ? { id: cursorId } : undefined,
-        include: {
-          focalPoint: true,
-        },
       }),
     ]);
 
@@ -72,22 +69,13 @@ export class ImageService {
   }
 
   @PrimeDataLoader(ImageDataloaderService)
-  async updateImage({ id, focalPoint, ...input }: UpdateImageInput) {
+  async updateImage({ id, ...input }: UpdateImageInput) {
     return this.prisma.image.update({
       where: {
         id,
       },
       data: {
         ...input,
-        focalPoint: {
-          upsert: {
-            create: focalPoint ?? {},
-            update: focalPoint ?? {},
-          },
-        },
-      },
-      include: {
-        focalPoint: true,
       },
     });
   }
@@ -108,9 +96,6 @@ export class ImageService {
         tags: {
           has: tag,
         },
-      },
-      include: {
-        focalPoint: true,
       },
       orderBy: {
         createdAt: 'desc',

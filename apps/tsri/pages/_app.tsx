@@ -15,6 +15,7 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
+  getApiUrl,
   initWePublishTranslator,
   RoutedAdminBar,
   withBuilderRouter,
@@ -63,6 +64,7 @@ import { TsriBlocks } from '../src/components/tsri-block-renderer';
 import { TsriCommentList } from '../src/components/tsri-comment-list';
 import { TsriFooter } from '../src/components/tsri-footer';
 import { TsriGlobalStyles } from '../src/components/tsri-global-styles';
+import { TsriImageSlider } from '../src/components/tsri-image-slider';
 import { TsriNextWepublishLink } from '../src/components/tsri-next-wepublish-link';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
@@ -156,6 +158,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           }}
           blockStyles={{
             ContextBox: TsriContextBox,
+            ImageSlider: TsriImageSlider,
           }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
@@ -283,10 +286,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 }
 
 const { publicRuntimeConfig } = getConfig();
-const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-  authLink,
-  previewLink,
-]);
+const withApollo = createWithV1ApiClient(getApiUrl(), [authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(

@@ -68,10 +68,9 @@ export class UserResolver {
   })
   public resetPassword(
     @Args('id') id: string,
-    @Args('password', { nullable: true }) password?: string,
-    @Args('sendMail', { nullable: true }) sendMail?: boolean
+    @Args('password', { nullable: true }) password?: string
   ) {
-    return this.service.resetPassword(id, password, sendMail);
+    return this.service.resetPassword(id, password);
   }
 
   @Permissions(CanCreateUser)

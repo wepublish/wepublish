@@ -7,33 +7,6 @@ datasource db {
   provider = "postgresql"
 }
 
-model MetadataProperty {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
-  key        String
-  value      String
-  public     Boolean
-
-  ArticleRevision   ArticleRevision? @relation(fields: [articleRevisionId], references: [id], onDelete: Cascade)
-  articleRevisionId String?
-
-  PageRevision   PageRevision? @relation(fields: [pageRevisionId], references: [id], onDelete: Cascade)
-  pageRevisionId String?
-
-  Subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
-  subscriptionId String?
-
-  User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String?
-
-  @@index([articleRevisionId])
-  @@index([pageRevisionId])
-  @@index([subscriptionId])
-  @@index([userId])
-  @@map("properties")
-}
-
 model ArticleRevision {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -43,7 +16,7 @@ model ArticleRevision {
   lead                   String?
   seoTitle               String?
   canonicalUrl           String?
-  properties             MetadataProperty[]
+  properties             Json                               @default("[]")
   authors                ArticleRevisionAuthor[]
   breaking               Boolean
   blocks                 Json
@@ -263,34 +236,27 @@ model TaggedAuthors {
   @@map("authors.tagged-authors")
 }
 
-model FocalPoint {
-  x Float?
-  y Float?
-
-  imageId String @unique
-  image   Image? @relation(fields: [imageId], references: [id], onDelete: Cascade)
-
-  @@map("images.focal-point")
-}
-
 model Image {
-  id          String      @id
-  createdAt   DateTime    @default(now())
+  id         String   @id
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
   description String?
   extension   String
   fileSize    Int
   filename    String?
-  focalPoint  FocalPoint?
   format      String
   license     String?
   link        String?
   mimeType    String
-  modifiedAt  DateTime    @updatedAt
   source      String?
   tags        String[]
   title       String?
   height      Int
   width       Int
+
+  focalPointX Float @default(0.5)
+  focalPointY Float @default(0.5)
 
   Author     Author[]
   MemberPlan MemberPlan[]
@@ -681,7 +647,7 @@ model PageRevision {
   archivedAt             DateTime?
   title                  String?
   description            String?
-  properties             MetadataProperty[]
+  properties             Json      @default("[]")
   socialMediaTitle       String?
   socialMediaDescription String?
   blocks                 Json
@@ -939,7 +905,7 @@ model Subscription {
   startsAt           DateTime
   paidUntil          DateTime?
   periods            SubscriptionPeriod[]
-  properties         MetadataProperty[]
+  properties         Json                      @default("[]")
   deactivation       SubscriptionDeactivation?
   extendable         Boolean                   @default(true)
   currency           Currency
@@ -1013,23 +979,27 @@ model User {
   active          Boolean
   lastLogin       DateTime?
   roleIDs         String[]
+  totpSecret      String?
+  totpEnabled     Boolean   @default(false)
+  totpExempt      Boolean   @default(false)
   userImageID     String?
   userImage       Image?    @relation(fields: [userImageID], references: [id])
   note            String?
 
   address                  UserAddress?
-  properties               MetadataProperty[]
+  properties               Json                      @default("[]")
   paymentProviderCustomers PaymentProviderCustomer[]
 
-  comments         Comment[]
-  sessions         Session[]
-  subscriptions    Subscription[]
-  commentRatings   CommentRating[]
-  pollVotes        PollVote[]
-  mailSent         MailLog[]
-  consents         UserConsent[]
-  articleRevisions ArticleRevision[]
-  pageRevisions    PageRevision[]
+  comments            Comment[]
+  sessions            Session[]
+  subscriptions       Subscription[]
+  commentRatings      CommentRating[]
+  pollVotes           PollVote[]
+  mailSent            MailLog[]
+  consents            UserConsent[]
+  articleRevisions    ArticleRevision[]
+  pageRevisions       PageRevision[]
+  mailchimpSyncErrors MailchimpSyncError[]
 
   @@map("users")
 }
@@ -1401,7 +1371,9 @@ model Banner {
   imageId String?
   image   Image?  @relation(fields: [imageId], references: [id])
 
-  active Boolean @default(true)
+  active         Boolean @default(true)
+  collapsible    Boolean @default(true)
+  hideForMinutes Int     @default(1440)
 
   delay Int @default(0)
 
@@ -1836,4 +1808,53 @@ model SettingAnalyticsProvider {
   articlePrefix String?
 
   @@map("settings.analyticsProvider")
+}
+
+enum SyncProviderType {
+  MAILCHIMP @map("mailchimp")
+}
+
+model SettingSyncProvider {
+  id           String   @id
+  createdAt    DateTime @default(now())
+  modifiedAt   DateTime @updatedAt
+  lastLoadedAt DateTime @default(now())
+
+  type    SyncProviderType
+  name    String?
+  enabled Boolean          @default(false)
+
+  // Mailchimp-specific configuration
+  mailchimp_apiKey                  String?
+  mailchimp_listId                  String?
+  mailchimp_mergeFieldMappings      Json    @default("[]")
+  mailchimp_interestGroupMappings   Json    @default("[]")
+  mailchimp_defaultInterestGroupIds Json    @default("[]")
+  mailchimp_extensions              Json    @default("{}")
+
+  // Last sync execution info
+  lastSyncAt    DateTime?
+  lastSyncError String?
+
+  mailchimpSyncErrors MailchimpSyncError[]
+
+  @@map("settings.syncprovider")
+}
+
+model MailchimpSyncError {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  userId         String
+  syncProviderId String
+  email          String
+  errorMessage   String
+  statusCode     Int?
+
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  syncProvider SettingSyncProvider @relation(fields: [syncProviderId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, syncProviderId])
+  @@map("mailchimp_sync_errors")
 }

@@ -12,7 +12,6 @@ import {
 import { UserService } from './user.service';
 import { ProfileService } from './profile.service';
 import { ProfileResolver } from './profile.resolver';
-import { PropertyModule } from '@wepublish/property/api';
 import { UserRoleResolver } from './user-role.resolver';
 import { UserRoleService } from './user-role.service';
 import { UserRoleDataloader } from './user-role.dataloader';
@@ -29,7 +28,7 @@ import { HibpService } from './hibp.service';
 import { UserSubscriptionCountDataloader } from './user-subscription-count.dataloader';
 
 @Module({
-  imports: [PrismaModule, ImageModule, PropertyModule, HttpModule],
+  imports: [PrismaModule, ImageModule, HttpModule],
   providers: [
     HibpService,
     UserDataloaderService,

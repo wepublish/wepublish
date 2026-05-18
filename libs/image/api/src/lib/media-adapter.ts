@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
 import { ImageTransformation } from './image-transformation.model';
-import { ImageWithFocalPoint } from './image-dataloader.service';
 import { UploadImage } from './image-upload.service';
+import { Image } from '@prisma/client';
 
 export interface ArrayBufferUpload {
   filename: string;
@@ -29,7 +29,7 @@ export abstract class MediaAdapter {
   abstract deleteImage(id: string): Promise<boolean>;
 
   abstract getImageURL(
-    image: ImageWithFocalPoint,
+    image: Image,
     transformation?: ImageTransformation | undefined
   ): Promise<string>;
 

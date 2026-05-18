@@ -1,4 +1,5 @@
 import { ArticleListContainer } from '@wepublish/article/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToV1Props,
   ArticleListDocument,
@@ -79,7 +80,7 @@ export const getStaticProps: GetStaticProps = async () => {
     return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, []);
+  const client = getV1ApiClient(getApiUrl(), []);
   await Promise.all([
     client.query({
       query: NavigationListDocument,

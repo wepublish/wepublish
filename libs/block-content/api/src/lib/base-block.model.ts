@@ -7,6 +7,9 @@ export abstract class BaseBlock<Type extends BlockType> {
   type!: Type;
 
   @Field({ nullable: true })
+  disabled?: boolean;
+
+  @Field({ nullable: true })
   blockStyle?: string;
 
   @Field({ nullable: true })

@@ -1,24 +1,34 @@
-mutation CreateSession($email: String!, $password: String!) {
-  createSession(email: $email, password: $password) {
+query CheckLoginOtp($email: String!) {
+  checkLoginOtp(email: $email)
+}
+
+mutation CreateSession($email: String!, $password: String!, $totpToken: String) {
+  createSession(email: $email, password: $password, totpToken: $totpToken) {
     user {
       email
+      totpEnabled
+      totpExempt
       roles {
         ...FullUserRole
       }
     }
     token
+    totpEnabled
   }
 }
 
-mutation CreateSessionWithJWT($jwt: String!) {
-  createSessionWithJWT(jwt: $jwt) {
+mutation CreateSessionWithJWT($jwt: String!, $totpToken: String) {
+  createSessionWithJWT(jwt: $jwt, totpToken: $totpToken) {
     user {
       email
+      totpEnabled
+      totpExempt
       roles {
         ...FullUserRole
       }
     }
     token
+    totpEnabled
   }
 }
 
@@ -27,4 +37,31 @@ mutation CreateJWTForWebsiteLogin {
     token
     expiresAt
   }
+}
+
+mutation SendWebsiteLogin($email: String!) {
+  sendWebsiteLogin(email: $email)
+}
+
+mutation SendPasswordResetEmail($email: String!) {
+  sendPasswordResetEmail(email: $email)
+}
+
+mutation ResetPasswordWithToken($token: String!, $password: String!) {
+  resetPasswordWithToken(token: $token, password: $password)
+}
+
+mutation GenerateTotpSetup {
+  generateTotpSetup {
+    secret
+    uri
+  }
+}
+
+mutation EnableTotp($totpToken: String!) {
+  enableTotp(totpToken: $totpToken)
+}
+
+mutation ResetUserTotp($userId: String!) {
+  resetUserTotp(userId: $userId)
 }

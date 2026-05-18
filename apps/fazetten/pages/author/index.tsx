@@ -1,4 +1,5 @@
 import { AuthorListContainer } from '@wepublish/author/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import { AuthorSort, SortOrder } from '@wepublish/website/api';
 import {
   addClientCacheToV1Props,
@@ -35,6 +36,9 @@ export default function AuthorList() {
       order: SortOrder.Ascending,
       take,
       skip: ((page ?? 1) - 1) * take,
+      filter: {
+        hideOnTeam: false,
+      },
     }),
     [page]
   );
@@ -82,7 +86,7 @@ export const getStaticProps: GetStaticProps = async () => {
     return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, []);
+  const client = getV1ApiClient(getApiUrl(), []);
   await Promise.all([
     client.query({
       query: AuthorListDocument,
@@ -91,6 +95,9 @@ export const getStaticProps: GetStaticProps = async () => {
         skip: 0,
         sort: AuthorSort.Name,
         order: SortOrder.Ascending,
+        filter: {
+          hideOnTeam: false,
+        },
       },
     }),
     client.query({

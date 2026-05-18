@@ -3,6 +3,9 @@ deployment:
   imagePullSecret:
   env:
     API_URL: https://api
+    # Optional cluster-internal API URL used for SSR/SSG only.
+    # When unset, server-side falls back to API_URL.
+    # API_URL_INTERNAL: http://wepublish-api:4000
     FRONTEND_URL: https://front
 
 # Routing configuration

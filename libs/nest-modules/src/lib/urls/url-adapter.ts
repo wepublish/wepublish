@@ -13,7 +13,9 @@ import {
 
 @Injectable()
 export class URLAdapter {
-  constructor(protected baseURL: string) {}
+  constructor(protected baseURL: string) {
+    this.baseURL = baseURL.trim();
+  }
 
   async getSubscriptionURL(subscription: Subscription) {
     return `${this.baseURL}/profile/subscription/${subscription.id}`;

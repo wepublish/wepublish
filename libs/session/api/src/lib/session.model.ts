@@ -15,11 +15,17 @@ export class SessionWithToken {
 
   @Field(() => SensitiveDataUser)
   user!: SensitiveDataUser;
+
+  @Field(() => Boolean, {
+    description:
+      'Whether the user has two-factor authentication enabled. If true and the user is an admin, the client must verify TOTP before proceeding.',
+  })
+  totpEnabled!: boolean;
 }
 
 @ObjectType()
 export class SessionWithTokenWithoutUser extends OmitType(
   SessionWithToken,
-  ['user'] as const,
+  ['user', 'totpEnabled'] as const,
   ObjectType
 ) {}

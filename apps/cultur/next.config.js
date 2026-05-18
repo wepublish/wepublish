@@ -1,6 +1,7 @@
 //@ts-check
 
 const { composePlugins, withNx } = require('@nx/next');
+const { withSentryConfig } = require('@sentry/nextjs');
 const wepNextConfig = require('../../libs/utils/website/src/lib/next.config');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.NODE_ENV === 'production',
@@ -20,6 +21,7 @@ const nextConfig = {
   },
   serverRuntimeConfig: {
     env: {
+      API_URL_INTERNAL: process.env.API_URL_INTERNAL || '',
       MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY || '',
       MAILCHIMP_SERVER_PREFIX: process.env.MAILCHIMP_SERVER_PREFIX || '',
     },
@@ -32,4 +34,6 @@ const plugins = [
   withBundleAnalyzer,
 ];
 
-module.exports = composePlugins(...plugins)(nextConfig);
+module.exports = withSentryConfig(composePlugins(...plugins)(nextConfig), {
+  silent: true,
+});

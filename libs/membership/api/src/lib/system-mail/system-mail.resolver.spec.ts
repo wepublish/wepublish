@@ -54,6 +54,10 @@ const FAKE_USER: User = {
   note: null,
   pendingEmail: null,
   pendingEmailAt: null,
+  totpSecret: null,
+  totpEnabled: false,
+  totpExempt: false,
+  properties: [],
 };
 
 describe('SystemMailResolver', () => {

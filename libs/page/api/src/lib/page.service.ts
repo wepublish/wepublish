@@ -103,11 +103,7 @@ export class PageService {
             ...revision,
             userId,
             blocks: blocks.map(mapBlockUnionMap) as any[],
-            properties: {
-              createMany: {
-                data: properties,
-              },
-            },
+            properties: properties as any,
           },
         },
       },
@@ -157,15 +153,7 @@ export class PageService {
             ...revision,
             userId,
             blocks: blocks.map(mapBlockUnionMap) as any[],
-            properties: {
-              createMany: {
-                data: properties.map(property => ({
-                  key: property.key,
-                  value: property.value,
-                  public: property.public,
-                })),
-              },
-            },
+            properties: properties as any,
           },
         },
         tags: {
@@ -333,9 +321,6 @@ export class PageService {
           orderBy: {
             createdAt: 'desc',
           },
-          include: {
-            properties: true,
-          },
         },
       },
     });
@@ -371,15 +356,7 @@ export class PageService {
             ...revision,
             userId,
             blocks: revision.blocks ?? [],
-            properties: {
-              createMany: {
-                data: properties.map(property => ({
-                  key: property.key,
-                  value: property.value,
-                  public: property.public,
-                })),
-              },
-            },
+            properties: properties as any,
           },
         },
       },
@@ -389,7 +366,7 @@ export class PageService {
   async performPageFullTextSearch(searchQuery: string): Promise<string[]> {
     try {
       const foundPageIds = await this.prisma.$queryRaw<Array<{ id: string }>>`
-        SELECT p.id
+        SELECT DISTINCT p.id
         FROM pages p
           JOIN public."pages.revisions" pr
             ON p."id" = pr."pageId"

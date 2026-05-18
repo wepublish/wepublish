@@ -204,8 +204,10 @@ input AvailablePaymentMethodInput {
 type Banner {
   actions: [BannerAction!]
   active: Boolean!
+  collapsible: Boolean!
   cta: String
   delay: Int!
+  hideForMinutes: Int!
   html: String
   id: String!
   image: Image
@@ -244,6 +246,7 @@ interface BaseAction {
 interface BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   type: BlockType!
 }
 
@@ -295,6 +298,7 @@ interface BaseUser {
 type BildwurfAdBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   type: BlockType!
   zoneID: String
 }
@@ -302,6 +306,7 @@ type BildwurfAdBlock implements BaseBlock {
 input BildwurfAdBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   zoneID: String
 }
 
@@ -394,6 +399,7 @@ input BlockWithAlignmentInput {
 type BreakBlock implements BaseBlock & HasImage {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   hideButton: Boolean
   image: Image
   imageID: String
@@ -408,6 +414,7 @@ type BreakBlock implements BaseBlock & HasImage {
 input BreakBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   hideButton: Boolean
   imageID: String
   linkTarget: String
@@ -495,6 +502,7 @@ type CommentBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   comments: [Comment!]!
+  disabled: Boolean
   filter: CommentBlockFilter!
   type: BlockType!
 }
@@ -514,6 +522,7 @@ input CommentBlockFilterInput {
 input CommentBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   filter: CommentBlockFilterInput!
 }
 
@@ -618,8 +627,10 @@ input CreateBannerActionInput {
 input CreateBannerInput {
   actions: [CreateBannerActionInput!]
   active: Boolean!
+  collapsible: Boolean!
   cta: String
   delay: Int!
+  hideForMinutes: Int!
   html: String
   imageId: String
   showForLoginStatus: LoginStatus!
@@ -678,6 +689,7 @@ type CrowdfundingBlock implements BaseBlock & HasOptionalCrowdfunding {
   blockStyleName: String
   crowdfunding: Crowdfunding
   crowdfundingId: String
+  disabled: Boolean
   type: BlockType!
 }
 
@@ -685,6 +697,7 @@ input CrowdfundingBlockInput {
   blockStyle: String
   blockStyleName: String
   crowdfundingId: String
+  disabled: Boolean
 }
 
 type CrowdfundingGoal implements BaseCrowdfundingGoal {
@@ -723,7 +736,7 @@ type CustomTeaser implements BaseTeaser & HasImage {
   lead: String
   openInNewTab: Boolean
   preTitle: String
-  properties: [NonDbProperty!]
+  properties: [Property!]
   title: String
   type: String!
 }
@@ -893,6 +906,7 @@ type Event {
 type EventBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   events: [Event!]!
   filter: EventBlockFilter!
   type: BlockType!
@@ -911,6 +925,7 @@ input EventBlockFilterInput {
 input EventBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   filter: EventBlockFilterInput!
 }
 
@@ -1019,6 +1034,7 @@ type ExternalNavigationLink implements BaseNavigationLink {
 type FacebookPostBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   postID: String
   type: BlockType!
   userID: String
@@ -1027,6 +1043,7 @@ type FacebookPostBlock implements BaseBlock {
 input FacebookPostBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   postID: String
   userID: String
 }
@@ -1034,6 +1051,7 @@ input FacebookPostBlockInput {
 type FacebookVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   type: BlockType!
   userID: String
   videoID: String
@@ -1042,6 +1060,7 @@ type FacebookVideoBlock implements BaseBlock {
 input FacebookVideoBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   userID: String
   videoID: String
 }
@@ -1068,6 +1087,7 @@ type FlexBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   blocks: [BlockWithAlignment!]!
+  disabled: Boolean
   type: BlockType!
 }
 
@@ -1075,6 +1095,7 @@ input FlexBlockInput {
   blockStyle: String
   blockStyleName: String
   blocks: [BlockWithAlignmentInput!]!
+  disabled: Boolean
 }
 
 type FlexTeaser {
@@ -1085,16 +1106,6 @@ type FlexTeaser {
 input FlexTeaserInput {
   alignment: FlexAlignmentInput!
   teaser: TeaserInput
-}
-
-type FocalPoint {
-  x: Float!
-  y: Float!
-}
-
-input FocalPointInput {
-  x: Float!
-  y: Float!
 }
 
 type FullPoll {
@@ -1113,6 +1124,7 @@ scalar GraphQLSettingValueType
 type HTMLBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   html: String
   type: BlockType!
 }
@@ -1120,6 +1132,7 @@ type HTMLBlock implements BaseBlock {
 input HTMLBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   html: String
 }
 
@@ -1255,6 +1268,7 @@ interface HasUserLc {
 type IFrameBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   height: Int
   sandbox: String
   styleCustom: String
@@ -1267,6 +1281,7 @@ type IFrameBlock implements BaseBlock {
 input IFrameBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   height: Int
   sandbox: String
   styleCustom: String
@@ -1281,7 +1296,8 @@ type Image implements HasOptionalPeerLc {
   extension: String!
   fileSize: Int!
   filename: String
-  focalPoint: FocalPoint
+  focalPointX: Float!
+  focalPointY: Float!
   format: String!
   height: Int!
   id: String!
@@ -1303,6 +1319,7 @@ type ImageBlock implements BaseBlock & HasImage {
   blockStyle: String
   blockStyleName: String
   caption: String
+  disabled: Boolean
   image: Image
   imageID: String
   linkUrl: String
@@ -1313,6 +1330,7 @@ input ImageBlockInput {
   blockStyle: String
   blockStyleName: String
   caption: String
+  disabled: Boolean
   imageID: String
   linkUrl: String
 }
@@ -1325,6 +1343,7 @@ input ImageFilter {
 type ImageGalleryBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   images: [ImageGalleryImage!]!
   type: BlockType!
 }
@@ -1332,6 +1351,7 @@ type ImageGalleryBlock implements BaseBlock {
 input ImageGalleryBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   images: [ImageGalleryImageInput!]!
 }
 
@@ -1393,6 +1413,7 @@ enum ImportedEventSort {
 type InstagramPostBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   postID: String
   type: BlockType!
 }
@@ -1400,6 +1421,7 @@ type InstagramPostBlock implements BaseBlock {
 input InstagramPostBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   postID: String
 }
 
@@ -1460,9 +1482,15 @@ enum InvoiceSort {
   PaidAt
 }
 
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
 type ListicleBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   items: [ListicleItem!]!
   type: BlockType!
 }
@@ -1470,6 +1498,7 @@ type ListicleBlock implements BaseBlock {
 input ListicleBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   items: [ListicleItemInput!]!
 }
 
@@ -1518,6 +1547,66 @@ type MailTemplateWithUrlAndStatusModel {
   remoteMissing: Boolean!
   status: String!
   url: String!
+}
+
+type MailchimpInterestGroup {
+  id: String!
+  name: String!
+}
+
+type MailchimpList {
+  id: String!
+  memberCount: Int!
+  name: String!
+}
+
+type MailchimpMergeField {
+  name: String!
+  tag: String!
+  type: String!
+}
+
+type MailchimpSyncDryRunChange {
+  email: String!
+  interests: JSONObject!
+  isNew: Boolean!
+  mergeFields: JSONObject!
+  previousInterests: JSONObject
+  previousMergeFields: JSONObject
+}
+
+type MailchimpSyncDryRunResult {
+  changes: [MailchimpSyncDryRunChange!]!
+  skippedCount: Int!
+  totalUserCount: Int!
+  updatedCount: Int!
+}
+
+type MailchimpSyncErrorList {
+  nodes: [MailchimpSyncErrorType!]!
+  totalCount: Int!
+}
+
+type MailchimpSyncErrorType {
+  createdAt: DateTime!
+  email: String!
+  errorMessage: String!
+  id: String!
+  statusCode: Int
+  syncProviderId: String!
+  userId: String!
+}
+
+type MailchimpSyncProgressType {
+  errorMessage: String
+  errors: Int!
+  finishedAt: DateTime
+  processed: Int!
+  skipped: Int!
+  startedAt: DateTime!
+  status: String!
+  total: Int!
+  updated: Int!
 }
 
 type MemberPlan implements HasImage {
@@ -1569,7 +1658,15 @@ type Mutation {
   approveComment(id: String!): Comment!
 
   """Cancels a subscription."""
-  cancelSubscription(id: String!, reason: SubscriptionDeactivationReason!): PublicSubscription!
+  cancelSubscription(
+    id: String!
+    reason: SubscriptionDeactivationReason!
+
+    """
+    When true, suppress the subscription-deactivation mail. Useful for bulk migrations of already-cancelled subscriptions.
+    """
+    skipMail: Boolean
+  ): PublicSubscription!
 
   """
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
@@ -1655,8 +1752,8 @@ type Mutation {
 
   """Creates a rating system answer."""
   createRatingSystemAnswer(answer: String, ratingSystemId: String!, type: RatingSystemType!): CommentRatingSystemAnswer!
-  createSession(email: String!, password: String!): SessionWithToken!
-  createSessionWithJWT(jwt: String!): SessionWithToken!
+  createSession(email: String!, password: String!, totpToken: String): SessionWithToken!
+  createSessionWithJWT(jwt: String!, totpToken: String): SessionWithToken!
 
   """Creates a new subscription."""
   createSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Int!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!
@@ -1674,7 +1771,27 @@ type Mutation {
   createToken(name: String!): TokenWithSecret!
 
   """Creates a new user."""
-  createUser(active: Boolean!, address: UserAddressInput, birthday: DateTime, email: String!, emailVerifiedAt: DateTime, firstName: String, flair: String, name: String!, note: String, password: String, properties: [PropertyInput!]!, roleIDs: [String!]!, userImageID: String): SensitiveDataUser!
+  createUser(
+    active: Boolean!
+    address: UserAddressInput
+    birthday: DateTime
+    email: String!
+    emailVerifiedAt: DateTime
+    firstName: String
+    flair: String
+    name: String!
+    note: String
+    password: String
+    properties: [PropertyInput!]!
+    roleIDs: [String!]!
+
+    """
+    When true, suppress the ACCOUNT_CREATION welcome email. Useful for bulk imports and scripted user creation.
+    """
+    skipMail: Boolean
+    totpExempt: Boolean
+    userImageID: String
+  ): SensitiveDataUser!
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
@@ -1689,6 +1806,9 @@ type Mutation {
   Allows guests and authenticated users to create additional subscriptions
   """
   createUserSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
+
+  """Deletes all sync errors for a config so all contacts will be retried."""
+  deleteAllMailchimpSyncErrors(configId: String!): Boolean!
 
   """Deletes an article."""
   deleteArticle(id: String!): String!
@@ -1721,6 +1841,9 @@ type Mutation {
 
   """Deletes an existing invoice."""
   deleteInvoice(id: String!): Invoice!
+
+  """Deletes a single sync error so the contact will be retried."""
+  deleteMailchimpSyncError(id: String!): Boolean!
 
   """Deletes an existing memberplan."""
   deleteMemberPlan(id: String!): MemberPlan!
@@ -1782,14 +1905,34 @@ type Mutation {
   """Dislikes an article."""
   dislikeArticle(id: String!): Article!
 
+  """
+  Simulates a mailchimp sync without making changes. Returns what would be updated.
+  """
+  dryRunMailchimpSync(id: String!, limit: Int): MailchimpSyncDryRunResult!
+
   """Duplicates an article."""
   duplicateArticle(id: String!): Article!
 
   """Duplicates an page."""
   duplicatePage(id: String!): Page!
 
+  """
+  Enables two-factor authentication for the current user after verifying the TOTP token.
+  """
+  enableTotp(totpToken: String!): Boolean!
+
   """Allows authenticated users to extend existing subscriptions"""
   extendUserSubscription(failureURL: String, subscriptionId: String!, successURL: String): Payment!
+
+  """
+  Generates a TOTP setup for the current user. Returns a QR code and secret for authenticator app configuration.
+  """
+  generateTotpSetup(
+    """
+    Set to true when called from a website to use the site name instead of "We.Publish CMS" in the authenticator app.
+    """
+    website: Boolean
+  ): TotpSetup!
 
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!
@@ -1798,7 +1941,23 @@ type Mutation {
   importPeerArticle(articleId: String!, options: ImportArticleOptions! = {importAuthors: true, importContentImages: true, importTags: true}, peerId: String!): Article!
 
   """Imports a subscription."""
-  importSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Int!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!
+  importSubscription(
+    autoRenew: Boolean!
+    extendable: Boolean!
+    memberPlanID: String!
+    monthlyAmount: Int!
+    paidUntil: DateTime
+    paymentMethodID: String!
+    paymentPeriodicity: PaymentPeriodicity!
+    properties: [PropertyInput!]!
+
+    """
+    When true, suppress any subscription / invoice mail dispatched as part of this import. Useful for bulk migrations.
+    """
+    skipMail: Boolean
+    startsAt: DateTime!
+    userID: String!
+  ): PublicSubscription!
 
   """Likes an article."""
   likeArticle(id: String!): Article!
@@ -1837,7 +1996,17 @@ type Mutation {
   requestEmailChange(newEmail: String!): Boolean!
 
   """Resets the password of a user."""
-  resetPassword(id: String!, password: String, sendMail: Boolean): SensitiveDataUser!
+  resetPassword(id: String!, password: String): SensitiveDataUser!
+
+  """
+  Resets the password using a token from the password reset email. Does not create a session.
+  """
+  resetPasswordWithToken(password: String!, token: String!): Boolean!
+
+  """
+  Resets the two-factor authentication configuration for a user. The user will need to set up 2FA again on next login.
+  """
+  resetUserTotp(userId: String!): Boolean!
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
@@ -1848,6 +2017,11 @@ type Mutation {
   sendJWTLogin(email: String!): String!
 
   """
+  Sends a password reset email with a scoped JWT token. Always returns the email to prevent enumeration.
+  """
+  sendPasswordResetEmail(email: String!): String!
+
+  """
   This mutation sends a login link to the email if the user exists. Method will always return email address
   """
   sendWebsiteLogin(email: String!): String!
@@ -1855,6 +2029,9 @@ type Mutation {
 
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
+
+  """Triggers a mailchimp sync in the background."""
+  triggerMailchimpSync(id: String!): Boolean!
 
   """Unpublishes all revisions of an article."""
   unpublishArticle(id: String!): Article!
@@ -1903,7 +2080,7 @@ type Mutation {
   updateExternalApp(description: String, icon: String, id: String!, name: String, target: ExternalAppsTarget, url: String): ExternalApp!
 
   """Updates an existing image."""
-  updateImage(description: String, filename: String, focalPoint: FocalPointInput, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
+  updateImage(description: String, filename: String, focalPointX: Float, focalPointY: Float, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
 
   """Updates an existing invoice."""
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
@@ -1958,6 +2135,9 @@ type Mutation {
   """Update an existing subscription interval"""
   updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String): [SubscriptionFlowModel!]!
 
+  """Updates an existing sync provider setting."""
+  updateSyncProviderSetting(enabled: Boolean, id: String!, mailchimp_apiKey: String, mailchimp_defaultInterestGroupIds: [String!], mailchimp_extensions: JSONObject, mailchimp_interestGroupMappings: [JSONObject!], mailchimp_listId: String, mailchimp_mergeFieldMappings: [JSONObject!], name: String): SettingSyncProvider!
+
   """Updates an existing mail flow"""
   updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
 
@@ -1968,7 +2148,7 @@ type Mutation {
   updateTrackingPixelSetting(id: String, name: String, prolitteris_memberNr: String, prolitteris_onlyPaidContentAccess: Boolean, prolitteris_password: String, prolitteris_publisherInternalKeyDomain: String, prolitteris_usePublisherInternalKey: Boolean, prolitteris_username: String): SettingTrackingPixelProvider!
 
   """Updates an existing user."""
-  updateUser(active: Boolean, address: UserAddressInput, birthday: DateTime, email: String, emailVerifiedAt: DateTime, firstName: String, flair: String, id: String, name: String, note: String, properties: [PropertyInput!], roleIDs: [String!], userImageID: String): SensitiveDataUser!
+  updateUser(active: Boolean, address: UserAddressInput, birthday: DateTime, email: String, emailVerifiedAt: DateTime, firstName: String, flair: String, id: String, name: String, note: String, properties: [PropertyInput!], roleIDs: [String!], totpExempt: Boolean, userImageID: String): SensitiveDataUser!
 
   """Updates a comment you made."""
   updateUserComment(id: String!, lead: String, text: RichText, title: String): Comment!
@@ -1991,10 +2171,10 @@ type Mutation {
   uploadDocument(description: String, file: Upload!, filename: String, title: String): Document!
 
   """Uploads a new image."""
-  uploadImage(description: String, file: Upload!, filename: String, focalPoint: FocalPointInput, license: String, link: String, source: String, tags: [String!]!, title: String): Image!
+  uploadImage(description: String, file: Upload!, filename: String, focalPointX: Float!, focalPointY: Float!, license: String, link: String, source: String, tags: [String!]!, title: String): Image!
 
   """This mutation allows to upload and update the user's profile image."""
-  uploadUserProfileImage(description: String, file: Upload!, filename: String, focalPoint: FocalPointInput, license: String, link: String, source: String, tags: [String!]!, title: String): SensitiveDataUser
+  uploadUserProfileImage(description: String, file: Upload!, filename: String, focalPointX: Float!, focalPointY: Float!, license: String, link: String, source: String, tags: [String!]!, title: String): SensitiveDataUser
 
   """
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
@@ -2023,12 +2203,6 @@ enum NavigationLinkType {
   Article
   External
   Page
-}
-
-type NonDbProperty {
-  key: String!
-  public: Boolean!
-  value: String!
 }
 
 type OverriddenRating {
@@ -2493,7 +2667,8 @@ type PeerImage {
   extension: String!
   fileSize: Int!
   filename: String
-  focalPoint: FocalPoint
+  focalPointX: Float!
+  focalPointY: Float!
   format: String!
   height: Int!
   id: String!
@@ -2568,6 +2743,7 @@ type PolisConversationBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
   conversationID: String
+  disabled: Boolean
   type: BlockType!
 }
 
@@ -2575,6 +2751,7 @@ input PolisConversationBlockInput {
   blockStyle: String
   blockStyleName: String
   conversationID: String
+  disabled: Boolean
 }
 
 type Poll {
@@ -2605,6 +2782,7 @@ input PollAnswerInput {
 type PollBlock implements BaseBlock & HasOptionalPoll {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   poll: FullPoll
   pollId: String
   type: BlockType!
@@ -2613,6 +2791,7 @@ type PollBlock implements BaseBlock & HasOptionalPoll {
 input PollBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   pollId: String
 }
 
@@ -2686,7 +2865,6 @@ enum ProductType {
 }
 
 type Property {
-  id: String!
   key: String!
   public: Boolean!
   value: String!
@@ -2785,6 +2963,11 @@ type Query {
   """
   checkInvoiceStatus(id: String!): Invoice!
 
+  """
+  Checks whether a given email requires a TOTP code for login. Always returns true to prevent user enumeration.
+  """
+  checkLoginOtp(email: String!): Boolean!
+
   """Returns a comment by id."""
   comment(id: String!): Comment!
 
@@ -2871,6 +3054,21 @@ type Query {
 
   """Return all mail templates"""
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
+
+  """Fetches available interest groups for a Mailchimp list."""
+  mailchimpInterestGroups(configId: String!, listId: String!): [MailchimpInterestGroup!]!
+
+  """Fetches available Mailchimp lists/audiences for a sync config."""
+  mailchimpLists(configId: String!): [MailchimpList!]!
+
+  """Fetches available merge fields for a Mailchimp list."""
+  mailchimpMergeFields(configId: String!, listId: String!): [MailchimpMergeField!]!
+
+  """Returns sync errors for a given config."""
+  mailchimpSyncErrors(configId: String!, skip: Int, take: Int): MailchimpSyncErrorList!
+
+  """Returns the current sync progress for a config."""
+  mailchimpSyncProgress(configId: String!): MailchimpSyncProgressType
 
   """This query returns the user."""
   me: SensitiveDataUser
@@ -2987,6 +3185,12 @@ type Query {
   """Returns a paginated list of subscriptions based on the filters given."""
   subscriptionsAsCsv(autoRenew: Boolean, cancellationDateFrom: DateFilter, cancellationDateTo: DateFilter, deactivationDateFrom: DateFilter, deactivationDateTo: DateFilter, deactivationReason: String, extendable: Boolean, memberPlanID: String, paidUntilFrom: DateFilter, paidUntilTo: DateFilter, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, startsAtFrom: DateFilter, startsAtTo: DateFilter, subscriptionIDs: [String!], userHasAddress: Boolean, userID: String, userIDs: [String!]): String!
 
+  """Returns a single sync provider setting by id."""
+  syncProviderSetting(id: String!): SettingSyncProvider!
+
+  """Returns all sync provider settings."""
+  syncProviderSettings(filter: SettingSyncProviderFilter): [SettingSyncProvider!]!
+
   """Returns all mail flows"""
   systemMails: [SystemMailModel!]!
 
@@ -3075,6 +3279,7 @@ type QuoteBlock implements BaseBlock & HasImage {
   author: String
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   image: Image
   imageID: String
   quote: String
@@ -3085,6 +3290,7 @@ input QuoteBlockInput {
   author: String
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   imageID: String
   quote: String
 }
@@ -3120,6 +3326,7 @@ scalar RichText
 type RichTextBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   richText: RichText!
   type: BlockType!
 }
@@ -3127,6 +3334,7 @@ type RichTextBlock implements BaseBlock {
 input RichTextBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   richText: RichText!
 }
 
@@ -3152,6 +3360,14 @@ type SensitiveDataUser implements BaseUser {
   roleIDs: [String!]!
   roles: [UserRole!]!
   subscriptionCount: Int!
+
+  """Whether two-factor authentication is enabled for this user."""
+  totpEnabled: Boolean!
+
+  """
+  Whether this user is exempt from the two-factor authentication requirement.
+  """
+  totpExempt: Boolean!
   userImageID: String
 }
 
@@ -3159,6 +3375,11 @@ type SessionWithToken {
   createdAt: DateTime!
   expiresAt: DateTime!
   token: String!
+
+  """
+  Whether the user has two-factor authentication enabled. If true and the user is an admin, the client must verify TOTP before proceeding.
+  """
+  totpEnabled: Boolean!
   user: SensitiveDataUser!
 }
 
@@ -3330,6 +3551,30 @@ type SettingRestriction {
   minValue: Int
 }
 
+type SettingSyncProvider implements SettingProvider {
+  createdAt: DateTime!
+  enabled: Boolean
+  id: String!
+  lastLoadedAt: DateTime!
+  lastSyncAt: DateTime
+  lastSyncError: String
+  mailchimp_defaultInterestGroupIds: [String!]
+  mailchimp_extensions: JSONObject
+  mailchimp_interestGroupMappings: [JSONObject!]
+  mailchimp_listId: String
+  mailchimp_mergeFieldMappings: [JSONObject!]
+  modifiedAt: DateTime!
+  name: String
+  type: SyncProviderType!
+}
+
+input SettingSyncProviderFilter {
+  enabled: Boolean
+  id: String
+  name: String
+  type: SyncProviderType
+}
+
 input SettingTrackingPixelFilter {
   id: String
   name: String
@@ -3365,6 +3610,7 @@ enum SortOrder {
 type SoundCloudTrackBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   trackID: String
   type: BlockType!
 }
@@ -3372,6 +3618,7 @@ type SoundCloudTrackBlock implements BaseBlock {
 input SoundCloudTrackBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   trackID: String
 }
 
@@ -3384,6 +3631,7 @@ type Stats {
 type StreamableVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   type: BlockType!
   videoID: String
 }
@@ -3391,6 +3639,7 @@ type StreamableVideoBlock implements BaseBlock {
 input StreamableVideoBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   videoID: String
 }
 
@@ -3422,6 +3671,7 @@ enum StripePaymentMethod {
 type SubscribeBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   fields: [SubscribeBlockField!]!
   memberPlanIds: [String!]
   memberPlans: [MemberPlan!]!
@@ -3440,6 +3690,7 @@ enum SubscribeBlockField {
 input SubscribeBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   fields: [SubscribeBlockField!]! = [FirstName, Password, PasswordRepeated, Address]
   memberPlanIds: [String!]
 }
@@ -3530,6 +3781,10 @@ enum SubscriptionSort {
   ModifiedAt
 }
 
+enum SyncProviderType {
+  MAILCHIMP
+}
+
 type SystemMailModel {
   event: UserEvent!
   mailTemplate: MailTemplateRef
@@ -3571,29 +3826,37 @@ union Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser
 type TeaserGridBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   numColumns: Int!
   teasers: [Teaser]!
+  title: String
   type: BlockType!
 }
 
 input TeaserGridBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   numColumns: Int!
   teasers: [TeaserInput]!
+  title: String
 }
 
 type TeaserGridFlexBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   flexTeasers: [FlexTeaser!]!
+  title: String
   type: BlockType!
 }
 
 input TeaserGridFlexBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   flexTeasers: [FlexTeaserInput!]!
+  title: String
 }
 
 input TeaserInput {
@@ -3606,6 +3869,7 @@ input TeaserInput {
 type TeaserListBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   filter: TeaserListBlockFilter!
   skip: Int
   sort: TeaserListBlockSort
@@ -3628,6 +3892,7 @@ input TeaserListBlockFilterInput {
 input TeaserListBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   filter: TeaserListBlockFilterInput!
   skip: Int
   sort: TeaserListBlockSort
@@ -3660,6 +3925,7 @@ enum TeaserSlotType {
 type TeaserSlotsAutofillConfig implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   enabled: Boolean!
   filter: TeaserListBlockFilter
   sort: TeaserListBlockSort
@@ -3679,6 +3945,7 @@ type TeaserSlotsBlock implements BaseBlock {
   autofillTeasers: [Teaser!]!
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   slots: [TeaserSlot!]!
   teasers: [Teaser]!
   title: String
@@ -3689,6 +3956,7 @@ input TeaserSlotsBlockInput {
   autofillConfig: TeaserSlotsAutofillConfigInput!
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   slots: [TeaserSlotInput!]!
   title: String
 }
@@ -3703,6 +3971,7 @@ enum TeaserType {
 type TikTokVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   type: BlockType!
   userID: String
   videoID: String
@@ -3711,6 +3980,7 @@ type TikTokVideoBlock implements BaseBlock {
 input TikTokVideoBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   userID: String
   videoID: String
 }
@@ -3718,6 +3988,7 @@ input TikTokVideoBlockInput {
 type TitleBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   lead: String
   preTitle: String
   title: String
@@ -3727,6 +3998,7 @@ type TitleBlock implements BaseBlock {
 input TitleBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   lead: String
   preTitle: String
   title: String
@@ -3745,6 +4017,14 @@ type TokenWithSecret implements BaseToken {
   modifiedAt: DateTime!
   name: String!
   token: String!
+}
+
+type TotpSetup {
+  """Base32 encoded TOTP secret"""
+  secret: String!
+
+  """OTPAuth URI for authenticator apps"""
+  uri: String!
 }
 
 type TrackingPixel {
@@ -3768,6 +4048,7 @@ enum TrackingPixelProviderType {
 type TwitterTweetBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   tweetID: String
   type: BlockType!
   userID: String
@@ -3776,6 +4057,7 @@ type TwitterTweetBlock implements BaseBlock {
 input TwitterTweetBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   tweetID: String
   userID: String
 }
@@ -3783,14 +4065,17 @@ input TwitterTweetBlockInput {
 type UnknownBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   type: BlockType!
 }
 
 input UpdateBannerInput {
   actions: [CreateBannerActionInput!]
   active: Boolean!
+  collapsible: Boolean!
   cta: String
   delay: Int!
+  hideForMinutes: Int!
   html: String
   id: String!
   imageId: String
@@ -3933,6 +4218,7 @@ type VersionInformation {
 type VimeoVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   type: BlockType!
   videoID: String
 }
@@ -3940,6 +4226,7 @@ type VimeoVideoBlock implements BaseBlock {
 input VimeoVideoBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   videoID: String
 }
 
@@ -3949,6 +4236,7 @@ scalar VoteValue
 type YouTubeVideoBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   type: BlockType!
   videoID: String
 }
@@ -3956,5 +4244,6 @@ type YouTubeVideoBlock implements BaseBlock {
 input YouTubeVideoBlockInput {
   blockStyle: String
   blockStyleName: String
+  disabled: Boolean
   videoID: String
 }

@@ -1,19 +1,17 @@
 import styled from '@emotion/styled';
 
-import { setCookie } from 'cookies-next';
 import { NextPage, NextPageContext } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { withAuthGuard } from '../../../auth-guard';
 import { ssrAuthLink } from '../../../auth-link';
 import { getSessionTokenProps } from '../../../get-session-token-props';
+import { handleJwtLogin } from '../../../handle-jwt-login';
 import { ComponentProps } from 'react';
 import {
-  SessionWithTokenWithoutUser,
   SubscriptionsQuery,
   useSubscriptionsQuery,
 } from '@wepublish/website/api';
-import { AuthTokenStorageKey } from '@wepublish/authentication/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import {
   SubscriptionListContainer,
@@ -21,7 +19,6 @@ import {
 } from '@wepublish/membership/website';
 import {
   getV1ApiClient,
-  LoginWithJwtDocument,
   MeDocument,
   SubscriptionsDocument,
   InvoicesDocument,
@@ -30,6 +27,8 @@ import {
 import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { fetch404 } from '../../../fetch-404';
 import { useTranslation } from 'react-i18next';
+
+import { getApiUrl } from '../../../api-url';
 
 const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
@@ -105,34 +104,13 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
   }
 
   const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  const client = getV1ApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
   ]);
 
-  if (ctx.query.jwt) {
-    const data = await client.mutate({
-      mutation: LoginWithJwtDocument,
-      variables: {
-        jwt: ctx.query.jwt,
-      },
-    });
-
-    setCookie(
-      AuthTokenStorageKey,
-      JSON.stringify(
-        data.data.createSessionWithJWT as SessionWithTokenWithoutUser
-      ),
-      {
-        req: ctx.req,
-        res: ctx.res,
-        expires: new Date(data.data.createSessionWithJWT.expiresAt),
-        sameSite: 'strict',
-        httpOnly: !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE,
-      }
-    );
-  }
+  await handleJwtLogin(ctx, client, !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE);
 
   const sessionProps = await getSessionTokenProps(ctx);
 

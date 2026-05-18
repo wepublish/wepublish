@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { css } from '@mui/material';
 import { useApolloClient } from '@apollo/client';
-import { AuthTokenStorageKey } from '@wepublish/authentication/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import {
   InvoiceListContainer,
@@ -11,30 +10,33 @@ import {
   SubscriptionListItemWrapper,
   useHasUnpaidInvoices,
 } from '@wepublish/membership/website';
-import { PersonalDataFormContainer } from '@wepublish/user/website';
+import {
+  PersonalDataFormContainer,
+  TotpSetupContainer,
+} from '@wepublish/user/website';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
-  LoginWithJwtDocument,
   MeDocument,
   NavigationListDocument,
   InvoicesDocument,
   SubscriptionsDocument,
   ProductType,
-  SessionWithTokenWithoutUser,
   useConfirmEmailChangeMutation,
   useSubscriptionsQuery,
 } from '@wepublish/website/api';
 import { Button, Link, useWebsiteBuilder } from '@wepublish/website/builder';
-import { setCookie } from 'cookies-next';
 import { NextPage, NextPageContext } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ComponentProps, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { handleJwtLogin } from '../../handle-jwt-login';
 import { withAuthGuard } from '../../auth-guard';
 import { ssrAuthLink } from '../../auth-link';
 import { getSessionTokenProps } from '../../get-session-token-props';
+
+import { getApiUrl } from '../../api-url';
 
 const SubscriptionsWrapper = styled('div')`
   display: flex;
@@ -225,6 +227,8 @@ function ProfilePage({ className, ...props }: ProfilePageProps) {
         <H4 component={'h1'}>Profil</H4>
 
         <PersonalDataFormContainer {...props} />
+
+        <TotpSetupContainer />
       </ProfileWrapper>
     </>
   );
@@ -239,34 +243,13 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
   }
 
   const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  const client = getV1ApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
   ]);
 
-  if (ctx.query.jwt) {
-    const data = await client.mutate({
-      mutation: LoginWithJwtDocument,
-      variables: {
-        jwt: ctx.query.jwt,
-      },
-    });
-
-    setCookie(
-      AuthTokenStorageKey,
-      JSON.stringify(
-        data.data.createSessionWithJWT as SessionWithTokenWithoutUser
-      ),
-      {
-        req: ctx.req,
-        res: ctx.res,
-        expires: new Date(data.data.createSessionWithJWT.expiresAt),
-        sameSite: 'strict',
-        httpOnly: !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE,
-      }
-    );
-  }
+  await handleJwtLogin(ctx, client, !!publicRuntimeConfig.env.HTTP_ONLY_COOKIE);
 
   const sessionProps = await getSessionTokenProps(ctx);
 
