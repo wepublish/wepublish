@@ -1875,6 +1875,29 @@
         "credentials": "Fichier d’identifiants"
       },
       "mailchimpSync": "Mailchimp Sync",
+      "frontendTracking": "Suivi Frontend",
+      "frontendTrackingSettings": {
+        "active": "Actif",
+        "ga4": {
+          "measurementId": "ID de mesure"
+        },
+        "gtm": {
+          "containerId": "ID de conteneur"
+        },
+        "plausible": {
+          "siteId": "ID du site",
+          "scriptUrl": "URL du script (optionnel)"
+        },
+        "piwik": {
+          "containerId": "ID de conteneur",
+          "subdomain": "Sous-domaine"
+        }
+      },
+      "sparkloop": "Sparkloop",
+      "sparkloopSettings": {
+        "active": "Actif",
+        "teamId": "ID d’équipe"
+      },
       "mailchimpSyncSettings": {
         "enabled": "Activé",
         "apiKey": "Clé API Mailchimp",

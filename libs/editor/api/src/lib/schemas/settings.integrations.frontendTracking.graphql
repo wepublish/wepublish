@@ -1,0 +1,59 @@
+query SettingsIntegrationsFrontendTracking {
+  frontendTrackingSettings {
+    id
+    createdAt
+    modifiedAt
+    lastLoadedAt
+
+    type
+    name
+    active
+
+    ga4_measurementId
+    gtm_containerId
+    plausible_siteId
+    plausible_scriptUrl
+    piwik_containerId
+    piwik_subdomain
+  }
+}
+
+mutation UpdateFrontendTrackingSetting(
+  $id: String!
+  $name: String
+  $active: Boolean
+  $ga4_measurementId: String
+  $gtm_containerId: String
+  $plausible_siteId: String
+  $plausible_scriptUrl: String
+  $piwik_containerId: String
+  $piwik_subdomain: String
+) {
+  updateFrontendTrackingSetting(
+    id: $id
+    name: $name
+    active: $active
+    ga4_measurementId: $ga4_measurementId
+    gtm_containerId: $gtm_containerId
+    plausible_siteId: $plausible_siteId
+    plausible_scriptUrl: $plausible_scriptUrl
+    piwik_containerId: $piwik_containerId
+    piwik_subdomain: $piwik_subdomain
+  ) {
+    id
+    createdAt
+    modifiedAt
+    lastLoadedAt
+
+    type
+    name
+    active
+
+    ga4_measurementId
+    gtm_containerId
+    plausible_siteId
+    plausible_scriptUrl
+    piwik_containerId
+    piwik_subdomain
+  }
+}

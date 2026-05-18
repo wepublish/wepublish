@@ -3,9 +3,11 @@ import {
   CanGetAISettings,
   CanGetAnalyticsProviderSettings,
   CanGetChallengeProviderSettings,
+  CanGetFrontendTrackingSettings,
   CanGetMailProviderSettings,
   CanGetMailchimpSyncSettings,
   CanGetPaymentProviderSettings,
+  CanGetSparkloopSettings,
   CanGetTrackingPixelSettings,
   Permission,
 } from '@wepublish/permissions';
@@ -17,8 +19,10 @@ import { Link, useParams } from 'react-router-dom';
 import { AIIntegrationForm } from './aiIntegrationForm';
 import { AnalyticsIntegrationForm } from './analyticsIntegrationForm';
 import { ChallengeIntegrationForm } from './challengeIntegrationForm';
+import { FrontendTrackingIntegrationForm } from './frontendTrackingIntegrationForm';
 import { MailIntegrationForm } from './mailIntegrationForm';
 import { PaymentIntegrationForm } from './paymentIntegrationForm';
+import { SparkloopIntegrationForm } from './sparkloopIntegrationForm';
 import { TrackingPixelIntegrationForm } from './trackingPixelIntegrationForm';
 import { MailchimpSyncIntegrationForm } from './mailchimpSyncIntegrationForm';
 
@@ -40,6 +44,10 @@ const useIntegrationTitle = (type: string | undefined) => {
       return t('integrations.mailProvider');
     case 'mailchimp-sync':
       return t('integrations.mailchimpSync');
+    case 'frontend-tracking':
+      return t('integrations.frontendTracking');
+    case 'sparkloop':
+      return t('integrations.sparkloop');
     default:
       return t('integrations.unknown');
   }
@@ -61,6 +69,10 @@ const getPermission = (type: string | undefined): Permission | undefined => {
       return CanGetMailProviderSettings;
     case 'mailchimp-sync':
       return CanGetMailchimpSyncSettings;
+    case 'frontend-tracking':
+      return CanGetFrontendTrackingSettings;
+    case 'sparkloop':
+      return CanGetSparkloopSettings;
     default:
       return;
   }
@@ -89,6 +101,10 @@ export function IntegrationEditView() {
         return <AnalyticsIntegrationForm />;
       case 'mailchimp-sync':
         return <MailchimpSyncIntegrationForm />;
+      case 'frontend-tracking':
+        return <FrontendTrackingIntegrationForm />;
+      case 'sparkloop':
+        return <SparkloopIntegrationForm />;
       default:
         return <p>{t('integrations.configure', { integration: title })}</p>;
     }

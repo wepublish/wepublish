@@ -1994,6 +1994,29 @@
         "credentials": "Credential file"
       },
       "mailchimpSync": "Mailchimp Sync",
+      "frontendTracking": "Frontend Tracking",
+      "frontendTrackingSettings": {
+        "active": "Active",
+        "ga4": {
+          "measurementId": "Measurement ID"
+        },
+        "gtm": {
+          "containerId": "Container ID"
+        },
+        "plausible": {
+          "siteId": "Site ID",
+          "scriptUrl": "Script URL (optional)"
+        },
+        "piwik": {
+          "containerId": "Container ID",
+          "subdomain": "Subdomain"
+        }
+      },
+      "sparkloop": "Sparkloop",
+      "sparkloopSettings": {
+        "active": "Active",
+        "teamId": "Team ID"
+      },
       "mailchimpSyncSettings": {
         "enabled": "Enabled",
         "apiKey": "Mailchimp API Key",

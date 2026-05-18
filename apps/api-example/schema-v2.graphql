@@ -1108,6 +1108,13 @@ input FlexTeaserInput {
   teaser: TeaserInput
 }
 
+enum FrontendTrackingProviderType {
+  GOOGLE_ANALYTICS_4
+  GOOGLE_TAG_MANAGER
+  PIWIK_PRO
+  PLAUSIBLE
+}
+
 type FullPoll {
   answers: [PollAnswer!]!
   closedAt: DateTime
@@ -2079,6 +2086,9 @@ type Mutation {
   """Updates an existing external app."""
   updateExternalApp(description: String, icon: String, id: String!, name: String, target: ExternalAppsTarget, url: String): ExternalApp!
 
+  """Updates an existing frontend tracking setting."""
+  updateFrontendTrackingSetting(active: Boolean, ga4_measurementId: String, gtm_containerId: String, id: String!, name: String, piwik_containerId: String, piwik_subdomain: String, plausible_scriptUrl: String, plausible_siteId: String): SettingFrontendTracking!
+
   """Updates an existing image."""
   updateImage(description: String, filename: String, focalPointX: Float, focalPointY: Float, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
 
@@ -2125,6 +2135,9 @@ type Mutation {
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType): Setting!
+
+  """Updates the Sparkloop settings."""
+  updateSparkloopSettings(active: Boolean, name: String, teamId: String): SettingSparkloop!
 
   """Updates an existing subscription."""
   updateSubscription(autoRenew: Boolean, extendable: Boolean, id: String!, memberPlanID: String, monthlyAmount: Int, paidUntil: DateTime, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, properties: [PropertyInput!], startsAt: DateTime, userID: String): PublicSubscription!
@@ -2915,6 +2928,16 @@ type Query {
   """Returns latest actions"""
   actions: [Action!]!
 
+  """
+  Returns all active frontend tracking providers. Public; non-sensitive fields only.
+  """
+  activeFrontendTrackingProviders: [SettingFrontendTracking!]!
+
+  """
+  Returns the Sparkloop settings if active. Public; non-sensitive fields only.
+  """
+  activeSparkloopSettings: SettingSparkloop
+
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
 
@@ -3018,6 +3041,12 @@ type Query {
 
   """Returns all external apps. Requires authentication."""
   externalApps(filter: ExternalAppFilter): [ExternalApp!]!
+
+  """Returns a single frontend tracking setting by id."""
+  frontendTrackingSetting(id: String!): SettingFrontendTracking!
+
+  """Returns all frontend tracking settings."""
+  frontendTrackingSettings(filter: SettingFrontendTrackingFilter): [SettingFrontendTracking!]!
 
   """Returns images by tag."""
   getImagesByTag(tag: String!): [Image!]!
@@ -3171,6 +3200,9 @@ type Query {
 
   "\n      Returns all settings.\n    "
   settings(filter: SettingFilter): [Setting!]!
+
+  """Returns the Sparkloop settings (admin)."""
+  sparkloopSettings: SettingSparkloop
   stats: Stats
 
   """Returns a subscription by id."""
@@ -3457,6 +3489,29 @@ input SettingFilter {
   name: String
 }
 
+type SettingFrontendTracking implements SettingProvider {
+  active: Boolean!
+  createdAt: DateTime!
+  ga4_measurementId: String
+  gtm_containerId: String
+  id: String!
+  lastLoadedAt: DateTime!
+  modifiedAt: DateTime!
+  name: String
+  piwik_containerId: String
+  piwik_subdomain: String
+  plausible_scriptUrl: String
+  plausible_siteId: String
+  type: FrontendTrackingProviderType!
+}
+
+input SettingFrontendTrackingFilter {
+  active: Boolean
+  id: String
+  name: String
+  type: FrontendTrackingProviderType
+}
+
 type SettingMailProvider implements SettingProvider {
   createdAt: DateTime!
   fromAddress: String
@@ -3549,6 +3604,16 @@ type SettingRestriction {
   inputLength: Int
   maxValue: Int
   minValue: Int
+}
+
+type SettingSparkloop implements SettingProvider {
+  active: Boolean!
+  createdAt: DateTime!
+  id: String!
+  lastLoadedAt: DateTime!
+  modifiedAt: DateTime!
+  name: String
+  teamId: String
 }
 
 type SettingSyncProvider implements SettingProvider {

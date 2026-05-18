@@ -1,0 +1,29 @@
+query SettingsIntegrationsSparkloop {
+  sparkloopSettings {
+    id
+    createdAt
+    modifiedAt
+    lastLoadedAt
+
+    name
+    active
+    teamId
+  }
+}
+
+mutation UpdateSparkloopSettings(
+  $name: String
+  $active: Boolean
+  $teamId: String
+) {
+  updateSparkloopSettings(name: $name, active: $active, teamId: $teamId) {
+    id
+    createdAt
+    modifiedAt
+    lastLoadedAt
+
+    name
+    active
+    teamId
+  }
+}

@@ -1810,6 +1810,50 @@ model SettingAnalyticsProvider {
   @@map("settings.analyticsProvider")
 }
 
+enum FrontendTrackingProviderType {
+  GOOGLE_ANALYTICS_4 @map("googleAnalytics4")
+  GOOGLE_TAG_MANAGER @map("googleTagManager")
+  PLAUSIBLE          @map("plausible")
+  PIWIK_PRO          @map("piwikPro")
+}
+
+model SettingFrontendTracking {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  modifiedAt   DateTime @updatedAt
+  lastLoadedAt DateTime @default(now())
+
+  type   FrontendTrackingProviderType
+  name   String?
+  active Boolean                      @default(false)
+
+  ga4_measurementId String?
+
+  gtm_containerId String?
+
+  plausible_siteId    String?
+  plausible_scriptUrl String?
+
+  piwik_containerId String?
+  piwik_subdomain   String?
+
+  @@unique([type])
+  @@map("settings.frontendTracking")
+}
+
+model SettingSparkloop {
+  id           String   @id @default("singleton")
+  createdAt    DateTime @default(now())
+  modifiedAt   DateTime @updatedAt
+  lastLoadedAt DateTime @default(now())
+
+  name   String?
+  teamId String?
+  active Boolean @default(false)
+
+  @@map("settings.sparkloop")
+}
+
 enum SyncProviderType {
   MAILCHIMP @map("mailchimp")
 }

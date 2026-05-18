@@ -1237,6 +1237,13 @@ export type FlexTeaserInput = {
   teaser?: InputMaybe<TeaserInput>;
 };
 
+export enum FrontendTrackingProviderType {
+  GoogleAnalytics_4 = 'GOOGLE_ANALYTICS_4',
+  GoogleTagManager = 'GOOGLE_TAG_MANAGER',
+  PiwikPro = 'PIWIK_PRO',
+  Plausible = 'PLAUSIBLE',
+}
+
 export type FullPoll = {
   __typename?: 'FullPoll';
   answers: Array<PollAnswer>;
@@ -2065,6 +2072,8 @@ export type Mutation = {
   updateEvent: Event;
   /** Updates an existing external app. */
   updateExternalApp: ExternalApp;
+  /** Updates an existing frontend tracking setting. */
+  updateFrontendTrackingSetting: SettingFrontendTracking;
   /** Updates an existing image. */
   updateImage: Image;
   /** Updates an existing invoice. */
@@ -2095,6 +2104,8 @@ export type Mutation = {
   updateRatingSystem: CommentRatingSystem;
   /** Updates an existing setting. */
   updateSetting: Setting;
+  /** Updates the Sparkloop settings. */
+  updateSparkloopSettings: SettingSparkloop;
   /** Updates an existing subscription. */
   updateSubscription: PublicSubscription;
   /** Update an existing subscription flow */
@@ -2897,6 +2908,18 @@ export type MutationUpdateExternalAppArgs = {
   url?: InputMaybe<Scalars['String']>;
 };
 
+export type MutationUpdateFrontendTrackingSettingArgs = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  ga4_measurementId?: InputMaybe<Scalars['String']>;
+  gtm_containerId?: InputMaybe<Scalars['String']>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  piwik_containerId?: InputMaybe<Scalars['String']>;
+  piwik_subdomain?: InputMaybe<Scalars['String']>;
+  plausible_scriptUrl?: InputMaybe<Scalars['String']>;
+  plausible_siteId?: InputMaybe<Scalars['String']>;
+};
+
 export type MutationUpdateImageArgs = {
   description?: InputMaybe<Scalars['String']>;
   filename?: InputMaybe<Scalars['String']>;
@@ -3083,6 +3106,12 @@ export type MutationUpdateRatingSystemArgs = {
 export type MutationUpdateSettingArgs = {
   name: SettingName;
   value?: InputMaybe<Scalars['GraphQLSettingValueType']>;
+};
+
+export type MutationUpdateSparkloopSettingsArgs = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  name?: InputMaybe<Scalars['String']>;
+  teamId?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationUpdateSubscriptionArgs = {
@@ -4027,6 +4056,10 @@ export type Query = {
   __typename?: 'Query';
   /** Returns latest actions */
   actions: Array<Action>;
+  /** Returns all active frontend tracking providers. Public; non-sensitive fields only. */
+  activeFrontendTrackingProviders: Array<SettingFrontendTracking>;
+  /** Returns the Sparkloop settings if active. Public; non-sensitive fields only. */
+  activeSparkloopSettings?: Maybe<SettingSparkloop>;
   /**
    *
    *       Returns all active subscribers.
@@ -4119,6 +4152,10 @@ export type Query = {
   externalApp: ExternalApp;
   /** Returns all external apps. Requires authentication. */
   externalApps: Array<ExternalApp>;
+  /** Returns a single frontend tracking setting by id. */
+  frontendTrackingSetting: SettingFrontendTracking;
+  /** Returns all frontend tracking settings. */
+  frontendTrackingSettings: Array<SettingFrontendTracking>;
   /** Returns images by tag. */
   getImagesByTag: Array<Image>;
   /**
@@ -4267,6 +4304,8 @@ export type Query = {
    *
    */
   settings: Array<Setting>;
+  /** Returns the Sparkloop settings (admin). */
+  sparkloopSettings?: Maybe<SettingSparkloop>;
   stats?: Maybe<Stats>;
   /** Returns a subscription by id. */
   subscription: PublicSubscription;
@@ -4465,6 +4504,14 @@ export type QueryExternalAppArgs = {
 
 export type QueryExternalAppsArgs = {
   filter?: InputMaybe<ExternalAppFilter>;
+};
+
+export type QueryFrontendTrackingSettingArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryFrontendTrackingSettingsArgs = {
+  filter?: InputMaybe<SettingFrontendTrackingFilter>;
 };
 
 export type QueryGetImagesByTagArgs = {
@@ -4993,6 +5040,30 @@ export type SettingFilter = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+export type SettingFrontendTracking = SettingProvider & {
+  __typename?: 'SettingFrontendTracking';
+  active: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
+  ga4_measurementId?: Maybe<Scalars['String']>;
+  gtm_containerId?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  lastLoadedAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
+  piwik_containerId?: Maybe<Scalars['String']>;
+  piwik_subdomain?: Maybe<Scalars['String']>;
+  plausible_scriptUrl?: Maybe<Scalars['String']>;
+  plausible_siteId?: Maybe<Scalars['String']>;
+  type: FrontendTrackingProviderType;
+};
+
+export type SettingFrontendTrackingFilter = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<FrontendTrackingProviderType>;
+};
+
 export type SettingMailProvider = SettingProvider & {
   __typename?: 'SettingMailProvider';
   createdAt: Scalars['DateTime'];
@@ -5088,6 +5159,17 @@ export type SettingRestriction = {
   inputLength?: Maybe<Scalars['Int']>;
   maxValue?: Maybe<Scalars['Int']>;
   minValue?: Maybe<Scalars['Int']>;
+};
+
+export type SettingSparkloop = SettingProvider & {
+  __typename?: 'SettingSparkloop';
+  active: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  lastLoadedAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name?: Maybe<Scalars['String']>;
+  teamId?: Maybe<Scalars['String']>;
 };
 
 export type SettingSyncProvider = SettingProvider & {

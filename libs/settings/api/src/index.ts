@@ -32,3 +32,11 @@ export * from './lib/integrations/sync-provider-settings.model';
 export * from './lib/integrations/sync-provider-settings.service';
 export * from './lib/integrations/sync-provider-settings.resolver';
 export * from './lib/integrations/sync-provider-settings-dataloader.service';
+
+export * from './lib/integrations/frontend-tracking-settings.model';
+export * from './lib/integrations/frontend-tracking-settings.service';
+export * from './lib/integrations/frontend-tracking-settings.resolver';
+
+export * from './lib/integrations/sparkloop-settings.model';
+export * from './lib/integrations/sparkloop-settings.service';
+export * from './lib/integrations/sparkloop-settings.resolver';

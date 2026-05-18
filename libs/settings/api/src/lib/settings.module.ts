@@ -27,6 +27,10 @@ import { AnalyticsProviderSettingsDataloaderService } from './integrations/analy
 import { SyncProviderSettingsResolver } from './integrations/sync-provider-settings.resolver';
 import { SyncProviderSettingsService } from './integrations/sync-provider-settings.service';
 import { SyncProviderSettingsDataloaderService } from './integrations/sync-provider-settings-dataloader.service';
+import { FrontendTrackingSettingsResolver } from './integrations/frontend-tracking-settings.resolver';
+import { FrontendTrackingSettingsService } from './integrations/frontend-tracking-settings.service';
+import { SparkloopSettingsResolver } from './integrations/sparkloop-settings.resolver';
+import { SparkloopSettingsService } from './integrations/sparkloop-settings.service';
 import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
 
 @Module({
@@ -58,6 +62,10 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
     SyncProviderSettingsResolver,
     SyncProviderSettingsService,
     SyncProviderSettingsDataloaderService,
+    FrontendTrackingSettingsResolver,
+    FrontendTrackingSettingsService,
+    SparkloopSettingsResolver,
+    SparkloopSettingsService,
   ],
   exports: [
     SettingsGuard,
@@ -77,6 +85,8 @@ import { KvTtlCacheModule } from '@wepublish/kv-ttl-cache/api';
     AnalyticsProviderSettingsDataloaderService,
     SyncProviderSettingsService,
     SyncProviderSettingsDataloaderService,
+    FrontendTrackingSettingsService,
+    SparkloopSettingsService,
   ],
 })
 export class SettingModule {}

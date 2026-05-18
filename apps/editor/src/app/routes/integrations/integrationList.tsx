@@ -10,9 +10,11 @@ import {
   CanGetAISettings,
   CanGetAnalyticsProviderSettings,
   CanGetChallengeProviderSettings,
+  CanGetFrontendTrackingSettings,
   CanGetMailProviderSettings,
   CanGetMailchimpSyncSettings,
   CanGetPaymentProviderSettings,
+  CanGetSparkloopSettings,
   CanGetTrackingPixelSettings,
 } from '@wepublish/permissions';
 import { PermissionControl } from '@wepublish/ui/editor';
@@ -24,19 +26,25 @@ import {
   MdSecurity,
   MdSmartToy,
   MdSync,
+  MdTrackChanges,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
 import bexioLogo from './assets/bexio.webp';
 import cloudflareLogo from './assets/cloudflare.svg';
+import ga4Logo from './assets/ga4.svg';
 import googleLogo from './assets/google.svg';
+import gtmLogo from './assets/gtm.svg';
 import hcaptchaLogo from './assets/hcaptcha.webp';
 import mailChimpLogo from './assets/mailchimp.webp';
 import mailgunLogo from './assets/mailgun.svg';
 import mollieLogo from './assets/mollie.webp';
 import payrexxLogo from './assets/payrexx.webp';
+import piwikProLogo from './assets/piwikPro.svg';
+import plausibleLogo from './assets/plausible.svg';
 import proLitterisLogo from './assets/proLitteris.svg';
 import slackLogo from './assets/slack.webp';
+import sparkloopLogo from './assets/sparkloop.svg';
 import stripeLogo from './assets/stripe.svg';
 import vercelLogo from './assets/vercel.svg';
 
@@ -123,6 +131,20 @@ export function IntegrationList() {
       path: '/integrations/mailchimp-sync',
       icon: MdSync,
       logos: [mailChimpLogo],
+    },
+    {
+      title: t('integrations.frontendTracking'),
+      permission: CanGetFrontendTrackingSettings.id,
+      path: '/integrations/frontend-tracking',
+      icon: MdTrackChanges,
+      logos: [ga4Logo, gtmLogo, plausibleLogo, piwikProLogo],
+    },
+    {
+      title: t('integrations.sparkloop'),
+      permission: CanGetSparkloopSettings.id,
+      path: '/integrations/sparkloop',
+      icon: MdEmail,
+      logos: [sparkloopLogo],
     },
   ];
 

@@ -1025,6 +1025,48 @@ export const CanDeleteAnalyticsProviderSettings: Permission = {
 };
 
 /**
+ * Frontend Tracking Settings Permissions
+ */
+export const CanGetFrontendTrackingSettings: Permission = {
+  id: 'CAN_GET_FRONTEND_TRACKING_SETTINGS',
+  description: 'Allows to get frontend tracking settings',
+  deprecated: false,
+};
+
+export const CanCreateFrontendTrackingSettings: Permission = {
+  id: 'CAN_CREATE_FRONTEND_TRACKING_SETTINGS',
+  description: 'Allows to create frontend tracking settings',
+  deprecated: false,
+};
+
+export const CanUpdateFrontendTrackingSettings: Permission = {
+  id: 'CAN_UPDATE_FRONTEND_TRACKING_SETTINGS',
+  description: 'Allows to update frontend tracking settings',
+  deprecated: false,
+};
+
+export const CanDeleteFrontendTrackingSettings: Permission = {
+  id: 'CAN_DELETE_FRONTEND_TRACKING_SETTINGS',
+  description: 'Allows to delete frontend tracking settings',
+  deprecated: false,
+};
+
+/**
+ * Sparkloop Settings Permissions
+ */
+export const CanGetSparkloopSettings: Permission = {
+  id: 'CAN_GET_SPARKLOOP_SETTINGS',
+  description: 'Allows to get Sparkloop settings',
+  deprecated: false,
+};
+
+export const CanUpdateSparkloopSettings: Permission = {
+  id: 'CAN_UPDATE_SPARKLOOP_SETTINGS',
+  description: 'Allows to update Sparkloop settings',
+  deprecated: false,
+};
+
+/**
  * Two-Factor Authentication
  */
 export const CanResetUserTotp: Permission = {
@@ -1216,6 +1258,12 @@ export const AllPermissions: Permission[] = [
   CanCreateAnalyticsProviderSettings,
   CanUpdateAnalyticsProviderSettings,
   CanDeleteAnalyticsProviderSettings,
+  CanGetFrontendTrackingSettings,
+  CanCreateFrontendTrackingSettings,
+  CanUpdateFrontendTrackingSettings,
+  CanDeleteFrontendTrackingSettings,
+  CanGetSparkloopSettings,
+  CanUpdateSparkloopSettings,
   CanResetUserTotp,
   CanGetMailchimpSyncSettings,
   CanUpdateMailchimpSyncSettings,
