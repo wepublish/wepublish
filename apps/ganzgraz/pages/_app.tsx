@@ -36,6 +36,8 @@ import { zodI18nMap } from 'zod-i18n-map';
 
 import deOverriden from '../locales/deOverriden.json';
 import { GanzGrazAuthor } from '../src/components/ganzgraz-author';
+import { GanzGrazEvent } from '../src/components/ganzgraz-event';
+import { GanzGrazEventListItem } from '../src/components/ganzgraz-event-list-item';
 import {
   GanzGrazNavbar,
   GanzGrazNavbarActions,
@@ -98,6 +100,8 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Author={GanzGrazAuthor}
           PaymentAmount={GanzGrazPaymentAmountPicker}
           TransactionFee={GanzGrazTransactionFee}
+          EventListItem={GanzGrazEventListItem}
+          Event={GanzGrazEvent}
           elements={{ Link: NextWepublishLink }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle, locale: 'de-AT' }}

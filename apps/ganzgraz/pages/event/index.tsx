@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
-import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
-import { DateTimePicker } from '@mui/x-date-pickers';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { EventListContainer } from '@wepublish/event/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import { EventSort, SortOrder } from '@wepublish/website/api';
@@ -19,34 +18,100 @@ import getConfig from 'next/config';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
+import { MdClose } from 'react-icons/md';
 import { z } from 'zod';
 
 const Filter = styled('div')`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 250px);
+  display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing(2)};
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing(1)};
   margin-bottom: ${({ theme }) => theme.spacing(3)};
 `;
 
+const EmptyMessage = styled('p')`
+  text-align: center;
+  margin: ${({ theme }) => theme.spacing(4)} 0;
+  color: ${({ theme }) => theme.palette.text.secondary};
+`;
+
+const VISIBLE_RANGES = [
+  'today',
+  'tomorrow',
+  'next7',
+  'next30',
+  'upcoming',
+] as const;
+const RANGES = [...VISIBLE_RANGES, 'all'] as const;
+type Range = (typeof RANGES)[number];
+
+const RANGE_LABELS: Record<(typeof VISIBLE_RANGES)[number], string> = {
+  today: 'Heute',
+  tomorrow: 'Morgen',
+  next7: 'Nächste 7 Tage',
+  next30: 'Nächste 30 Tage',
+  upcoming: 'Alle bevorstehenden',
+};
+
+const EMPTY_MESSAGES: Record<Range, string> = {
+  today: 'Heute gibt es keine Veranstaltungen zum Anzeigen.',
+  tomorrow: 'Morgen gibt es keine Veranstaltungen zum Anzeigen.',
+  next7: 'In den nächsten 7 Tagen gibt es keine Veranstaltungen zum Anzeigen.',
+  next30:
+    'In den nächsten 30 Tagen gibt es keine Veranstaltungen zum Anzeigen.',
+  upcoming: 'Es gibt keine bevorstehenden Veranstaltungen zum Anzeigen.',
+  all: 'Es gibt keine Veranstaltungen zum Anzeigen.',
+};
+
 const pageSchema = z.object({
-  page: z.coerce.number().gte(1).optional(),
-  upcomingOnly: z
-    .string()
-    .toLowerCase()
-    .transform(string => JSON.parse(string))
-    .pipe(z.boolean())
-    .optional()
-    .default('true'),
-  from: z.coerce.date().optional(),
-  to: z.coerce.date().optional(),
+  page: z.preprocess(
+    v => (v === '' || v == null ? undefined : v),
+    z.coerce.number().gte(1).optional()
+  ),
+  range: z.enum(RANGES).optional().default('upcoming'),
 });
 
 const take = 25;
 
+function getFilter(range: Range): {
+  from?: string;
+  to?: string;
+  upcomingOnly?: boolean;
+} {
+  if (range === 'all') {
+    return {};
+  }
+
+  if (range === 'upcoming') {
+    return { upcomingOnly: true };
+  }
+
+  const dayOffsets: Record<
+    Exclude<Range, 'upcoming' | 'all'>,
+    { from: number; to: number }
+  > = {
+    today: { from: 0, to: 0 },
+    tomorrow: { from: 1, to: 1 },
+    next7: { from: 0, to: 6 },
+    next30: { from: 0, to: 29 },
+  };
+
+  const { from, to } = dayOffsets[range];
+
+  const fromDate = new Date();
+  fromDate.setHours(0, 0, 0, 0);
+  fromDate.setDate(fromDate.getDate() + from);
+
+  const toDate = new Date();
+  toDate.setHours(23, 59, 59, 999);
+  toDate.setDate(toDate.getDate() + to);
+
+  return { from: fromDate.toISOString(), to: toDate.toISOString() };
+}
+
 export default function EventList() {
   const { query, replace } = useRouter();
-  const { page, upcomingOnly, from, to } = pageSchema.parse(query);
+  const { page, range } = pageSchema.parse(query);
 
   const {
     elements: { Pagination },
@@ -57,15 +122,11 @@ export default function EventList() {
       ({
         take,
         skip: ((page ?? 1) - 1) * take,
-        filter: {
-          from: from?.toISOString(),
-          to: to?.toISOString(),
-          upcomingOnly,
-        },
+        filter: getFilter(range),
         sort: EventSort.StartsAt,
         order: SortOrder.Ascending,
       }) satisfies Partial<EventListQueryVariables>,
-    [from, page, to, upcomingOnly]
+    [page, range]
   );
 
   const { data } = useEventListQuery({
@@ -86,56 +147,45 @@ export default function EventList() {
   return (
     <>
       <Filter>
-        <DateTimePicker
-          label="Von"
-          value={from ?? null}
-          onChange={value => {
-            replace(
-              {
-                query: { ...query, from: value?.toISOString() },
-              },
-              undefined,
-              { shallow: true, scroll: true }
-            );
-          }}
-        />
-
-        <DateTimePicker
-          label="Bis"
-          value={to ?? null}
-          onChange={value => {
-            replace(
-              {
-                query: { ...query, to: value?.toISOString() },
-              },
-              undefined,
-              { shallow: true, scroll: true }
-            );
-          }}
-        />
-
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={upcomingOnly ?? false}
-                onChange={(_, checked) => {
-                  replace(
-                    {
-                      query: { ...query, upcomingOnly: checked },
-                    },
-                    undefined,
-                    { shallow: true, scroll: true }
-                  );
-                }}
-              />
+        <ToggleButtonGroup
+          value={range}
+          exclusive
+          onChange={(_, value: Range | null) => {
+            if (value === null) {
+              return;
             }
-            label="Nur bevorstehende"
-          />
-        </FormGroup>
+            const { page: _page, ...rest } = query;
+            void _page;
+            replace(
+              {
+                query: { ...rest, range: value },
+              },
+              undefined,
+              { shallow: true, scroll: true }
+            );
+          }}
+        >
+          {VISIBLE_RANGES.map(r => (
+            <ToggleButton
+              key={r}
+              value={r}
+            >
+              {RANGE_LABELS[r]}
+            </ToggleButton>
+          ))}
+          <ToggleButton
+            value="all"
+            aria-label="Filter zurücksetzen"
+            disabled={range === 'all'}
+          >
+            <MdClose />
+          </ToggleButton>
+        </ToggleButtonGroup>
       </Filter>
 
-      <EventListContainer variables={variables} />
+      {data?.events && data.events.totalCount === 0 ?
+        <EmptyMessage>{EMPTY_MESSAGES[range]}</EmptyMessage>
+      : <EventListContainer variables={variables} />}
 
       {pageCount > 1 && (
         <>
@@ -180,6 +230,7 @@ export const getStaticProps: GetStaticProps = async () => {
       variables: {
         take,
         skip: 0,
+        filter: { upcomingOnly: true },
         sort: EventSort.StartsAt,
         order: SortOrder.Ascending,
       },

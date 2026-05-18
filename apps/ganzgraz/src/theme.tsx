@@ -68,9 +68,31 @@ const theme = createTheme(WePTheme, {
   typography: {
     h1: {
       fontFamily: [leagueSpartan.style.fontFamily, 'sans-serif'].join(','),
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'rem',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 24,
+            md: 36,
+          },
+        }),
+      ]),
     },
     h2: {
       fontFamily: [leagueSpartan.style.fontFamily, 'sans-serif'].join(','),
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'rem',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 24,
+            md: 36,
+          },
+        }),
+      ]),
     },
     h3: {
       fontFamily: [leagueSpartan.style.fontFamily, 'sans-serif'].join(','),
