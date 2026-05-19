@@ -3,10 +3,10 @@ import { SignJWT, jwtVerify, importPKCS8, importSPKI } from 'jose';
 import { createPublicKey } from 'crypto';
 import { computeKid } from './jwk-utils';
 
-export const JWT_PRIVATE_KEY_TOKEN = 'JWT_PRIVATE_KEY_TOKEN';
-export const JWT_PUBLIC_KEY_TOKEN = 'JWT_PUBLIC_KEY_TOKEN';
-export const HOST_URL_TOKEN = 'HOST_URL_TOKEN';
-export const WEBSITE_URL_TOKEN = 'WEBSITE_URL_TOKEN';
+export const JWT_PRIVATE_KEY_TOKEN = Symbol('JWT_PRIVATE_KEY_TOKEN');
+export const JWT_PUBLIC_KEY_TOKEN = Symbol('JWT_PUBLIC_KEY_TOKEN');
+export const HOST_URL_TOKEN = Symbol('HOST_URL_TOKEN');
+export const WEBSITE_URL_TOKEN = Symbol('WEBSITE_URL_TOKEN');
 
 @Injectable()
 export class JwtService {

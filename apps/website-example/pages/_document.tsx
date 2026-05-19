@@ -3,8 +3,9 @@ import {
   DocumentHeadTags,
   DocumentHeadTagsProps,
 } from '@mui/material-nextjs/v15-pagesRouter';
-import { getApiUrl } from '@wepublish/utils/website';
-import { DocumentContext, Head, Html, Main, NextScript } from 'next/document';
+import { captureException } from '@sentry/react';
+import { getApiUrl, withDocumentToken } from '@wepublish/utils/website';
+import { Head, Html, Main, NextScript } from 'next/document';
 
 type MuiDocumentProps = DocumentHeadTagsProps & {
   themeValues: Record<string, unknown> | null;
@@ -36,21 +37,30 @@ export default function MuiDocument({
   );
 }
 
-MuiDocument.getInitialProps = async (ctx: DocumentContext) => {
-  const finalProps = await documentGetInitialProps(ctx);
+const apiUrl = getApiUrl();
 
-  const apiUrl = getApiUrl();
+MuiDocument.getInitialProps = withDocumentToken(async (ctx, token) => {
+  const finalProps = await documentGetInitialProps(ctx);
   let themeValues: Record<string, unknown> | null = null;
 
-  try {
-    const response = await fetch(`${apiUrl}/v1/theme`);
+  const headers: HeadersInit =
+    token ? { Authorization: `Bearer ${token}` } : {};
 
-    if (response.ok) {
-      themeValues = await response.json();
+  const dataResponses = await Promise.allSettled([
+    fetch(`${apiUrl}/v1/theme`, { headers }),
+  ]);
+
+  const [themeRes] = dataResponses;
+
+  if (themeRes.status === 'fulfilled' && themeRes.value.ok) {
+    themeValues = await themeRes.value.json();
+  }
+
+  for (const response of dataResponses) {
+    if (response.status === 'rejected') {
+      captureException(response.reason);
     }
-  } catch {
-    // theme values are optional, continue without them
   }
 
   return { ...finalProps, themeValues };
-};
+});

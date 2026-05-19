@@ -17,7 +17,6 @@ import {
   authLink,
   getApiUrl,
   initWePublishTranslator,
-  initWebsiteToken,
   RoutedAdminBar,
   withBuilderRouter,
   withJwtHandler,
@@ -25,8 +24,10 @@ import {
 } from '@wepublish/utils/website';
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
-import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
-import { createWithV1ApiClient } from '@wepublish/website/api';
+import {
+  createWithV1ApiClient,
+  SessionWithTokenWithoutUser,
+} from '@wepublish/website/api';
 import {
   BuilderBlockRendererProps,
   WebsiteBuilderProvider,
@@ -60,8 +61,10 @@ import { TsriAuthorList } from '../src/components/tsri-author-list';
 import { TsriAuthorListItem } from '../src/components/tsri-author-list-item';
 import { TsriBanner } from '../src/components/tsri-banner';
 import { TsriBildwurfAdBlock } from '../src/components/tsri-bildwurf-ad-block';
-import { TsriBlockRenderer } from '../src/components/tsri-block-renderer';
-import { TsriBlocks } from '../src/components/tsri-block-renderer';
+import {
+  TsriBlockRenderer,
+  TsriBlocks,
+} from '../src/components/tsri-block-renderer';
 import { TsriCommentList } from '../src/components/tsri-comment-list';
 import { TsriFooter } from '../src/components/tsri-footer';
 import { TsriGlobalStyles } from '../src/components/tsri-global-styles';
@@ -74,15 +77,6 @@ import { TsriTextToIcon } from '../src/components/tsri-text-to-icon';
 import { TsriTitleBlock } from '../src/components/tsri-title-block';
 import { TsriV2Navbar } from '../src/components/tsri-v2-navbar';
 import theme from '../src/theme';
-
-// Request a scoped JWT from the API at server startup
-if (typeof window === 'undefined') {
-  const apiUrl =
-    getConfig()?.publicRuntimeConfig?.env?.API_URL ||
-    process.env.API_URL ||
-    'http://localhost:4000';
-  initWebsiteToken(apiUrl);
-}
 
 setDefaultOptions({
   locale: de,
