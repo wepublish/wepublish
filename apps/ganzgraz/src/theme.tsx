@@ -143,4 +143,43 @@ const theme = createTheme(WePTheme, {
   },
 } as PartialDeep<Theme> | ThemeOptions);
 
+export const TeaserSlotsTheme = createTheme(theme, {
+  typography: {
+    teaserSlotsTitle: {
+      fontFamily: [leagueSpartan.style.fontFamily, 'sans-serif'].join(','),
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'rem',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 32,
+            md: 60,
+          },
+        }),
+      ]),
+      fontWeight: 500,
+      color: theme.palette.common.black,
+      paddingBottom: theme.spacing(1),
+      lineHeight: 1.2,
+    },
+  },
+  components: {
+    MuiTypography: {
+      defaultProps: {
+        variantMapping: {
+          teaserSlotsTitle: 'h2',
+        },
+      },
+      styleOverrides: {
+        root: {
+          '&:empty': {
+            display: 'none',
+          },
+        },
+      },
+    },
+  } as ThemeOptions['components'],
+} as PartialDeep<Theme> | ThemeOptions);
+
 export { theme as default };
