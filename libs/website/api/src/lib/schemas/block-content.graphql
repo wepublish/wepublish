@@ -57,6 +57,16 @@ fragment FullEventTeaser on EventTeaser {
   }
 }
 
+fragment FullImageBlockFragment on ImageBlock {
+  disabled
+  blockStyle: blockStyleName
+  caption
+  linkUrl
+  image {
+    ...FullImage
+  }
+}
+
 fragment BlockWithoutTeaser on BlockContent {
   __typename
 
@@ -69,13 +79,7 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on ImageBlock {
-    disabled
-    blockStyle: blockStyleName
-    caption
-    linkUrl
-    image {
-      ...FullImage
-    }
+    ...FullImageBlockFragment
   }
 
   ... on ImageGalleryBlock {

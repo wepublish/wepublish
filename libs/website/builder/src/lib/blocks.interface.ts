@@ -9,7 +9,6 @@ import {
   FacebookVideoBlock,
   HtmlBlock,
   IFrameBlock,
-  ImageBlock,
   ImageGalleryBlock,
   InstagramPostBlock,
   ListicleBlock,
@@ -30,6 +29,7 @@ import {
   StreamableVideoBlock,
   YouTubeVideoBlock,
   FlexBlock,
+  FullImageBlockFragmentFragment,
 } from '@wepublish/website/api';
 
 export type BuilderBlockRendererProps = {
@@ -55,7 +55,10 @@ export type BuilderTitleBlockProps = Omit<TitleBlock, 'type'> & {
 export type BuilderBreakBlockProps = Omit<BreakBlock, 'type'> & {
   className?: string;
 };
-export type BuilderImageBlockProps = Omit<ImageBlock, 'type'> & {
+export type BuilderImageBlockProps = Omit<
+  FullImageBlockFragmentFragment,
+  'type'
+> & {
   className?: string;
 };
 export type BuilderImageGalleryBlockProps = Omit<ImageGalleryBlock, 'type'> & {

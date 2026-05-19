@@ -80,7 +80,7 @@ export const getArticleSEO = (article: Article) => {
             contentUrl: image.url,
             thumbnailUrl: image.m,
             url: image.url,
-            encodingFormat: image.mimeType,
+            encodingFormat: 'image/webp',
           }
         : undefined,
       description,

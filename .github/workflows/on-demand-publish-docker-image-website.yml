@@ -69,7 +69,7 @@ jobs:
           for ((i=1; i<=MAX_RETRIES; i++)); do
             HTTP_CODE=$(curl -s -o response_body.txt -w "%{http_code}"  ${API_BASE_URL}/health/version)
             CONTENT=$(head -n 1 response_body.txt)
-            
+
             if [[ "$HTTP_CODE" != "200" ]]; then
               echo "Attempt $i: Received HTTP $HTTP_CODE"
             elif [[ "$CONTENT" == "$SHA_HASH" ]]; then
@@ -98,6 +98,7 @@ jobs:
             SENTRY_PROJECT=wepublish-cms
             SENTRY_RELEASE=${{ github.sha }}
             APP_RELEASE_ID=${{ github.sha }}
+            SSR_FETCH_TIMEOUT_MS=${{ secrets.SSR_FETCH_TIMEOUT_MS }}
           push: true
           tags: |
             ${{ inputs.website_tags }}
@@ -125,7 +126,7 @@ jobs:
           for ((i=1; i<=MAX_RETRIES; i++)); do
             HTTP_CODE=$(curl -s -o response_body.txt -w "%{http_code}"  ${FRONTEND_BASE_URL}/deployed_version)
             CONTENT=$(head -n 1 response_body.txt)
-          
+
               if [[ "$HTTP_CODE" != "200" ]]; then
                 echo "Attempt $i: Received HTTP $HTTP_CODE"
               elif [[ "$CONTENT" == "$SHA_HASH" ]]; then
@@ -134,7 +135,7 @@ jobs:
               else
                 echo "Attempt $i: Received response '${CONTENT:0:70}' but expected ${SHA_HASH} with HTTP status $HTTP_CODE"
               fi
-          
+
             echo "Waiting for $RETRY_DELAY seconds before retrying..."
             sleep $RETRY_DELAY
           done
