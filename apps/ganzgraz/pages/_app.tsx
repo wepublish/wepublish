@@ -184,9 +184,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
                 slug="main"
                 headerSlug="header"
                 iconSlug="icons"
-                subscribeBtn={null}
-                loginBtn={null}
-                profileBtn={null}
                 paperActions={<GanzGrazPaperActions />}
                 navbarActions={<GanzGrazNavbarActions />}
               />
