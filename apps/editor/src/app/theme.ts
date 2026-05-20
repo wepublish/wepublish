@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material';
+import { theme as WePTheme } from '@wepublish/ui';
 
 /**
  * Corporate design colours used throughout the editor.
@@ -13,34 +14,42 @@ import { createTheme } from '@mui/material';
  *  cream  #f8efde  – draft state background     → warning palette
  */
 
-export const theme = createTheme({
+const {
+  palette: { augmentColor },
+} = createTheme();
+
+export const theme = createTheme(WePTheme, {
   palette: {
-    primary: {
-      light: '#76bcff',
-      main: '#3498ff',
-      dark: '#1a7ee0',
-      contrastText: '#fff',
-    },
-    secondary: {
-      // pink family — derived from #f8def2 (HSL ≈ 315° 79% 92%)
-      light: '#f8def2',
-      main: '#d06ab8',
-      dark: '#9c4d8a',
-      contrastText: '#fff',
-    },
-    success: {
-      // green family — derived from #e1f8de (HSL ≈ 115° 67% 92%)
-      light: '#e1f8de',
-      main: '#52ad4a',
-      dark: '#3d8237',
-      contrastText: '#fff',
-    },
-    warning: {
-      // cream/amber family — derived from #f8efde (HSL ≈ 38° 80% 92%)
-      light: '#f8efde',
-      main: '#e8a030',
-      dark: '#b87820',
-      contrastText: '#fff',
-    },
+    primary: augmentColor({
+      color: {
+        light: '#76bcff',
+        main: '#3498ff',
+        dark: '#1a7ee0',
+      },
+    }),
+    secondary: augmentColor({
+      color: {
+        // pink family — derived from #f8def2 (HSL ≈ 315° 79% 92%)
+        light: '#f8def2',
+        main: '#d06ab8',
+        dark: '#9c4d8a',
+      },
+    }),
+    success: augmentColor({
+      color: {
+        // green family — derived from #e1f8de (HSL ≈ 115° 67% 92%)
+        light: '#e1f8de',
+        main: '#52ad4a',
+        dark: '#3d8237',
+      },
+    }),
+    warning: augmentColor({
+      color: {
+        // cream/amber family — derived from #f8efde (HSL ≈ 38° 80% 92%)
+        light: '#f8efde',
+        main: '#e8a030',
+        dark: '#b87820',
+      },
+    }),
   },
 });

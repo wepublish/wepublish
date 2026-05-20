@@ -8,10 +8,22 @@ import {
   CardContent,
   Typography,
 } from '@mui/material';
+import {
+  useWebsiteSettingsQuery,
+  WebsiteSettings,
+} from '@wepublish/editor/api';
 import { CanGetAISettings } from '@wepublish/permissions';
 import { PermissionControl } from '@wepublish/ui/editor';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdAnalytics, MdCheck, MdClose } from 'react-icons/md';
+import {
+  MdAdsClick,
+  MdAnalytics,
+  MdCheck,
+  MdClose,
+  MdMail,
+  MdWarning,
+} from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
 const WebsiteSettingsListWrapper = styled.div`
@@ -52,19 +64,92 @@ export const WebsiteSettingsList = () => {
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const settings = [
-    {
-      title: t('websiteSettings.analytics.title'),
-      permission: CanGetAISettings.id,
-      path: '/settings/website/analytics',
-      icon: <MdAnalytics size={24} />,
-      enabledIntegrations: [
-        { id: 'GA', text: 'Google Analytics' },
-        { id: 'GTM', text: 'Google Tag Manager' },
-      ],
-      disabledIntegrations: [{ id: 'pa', text: 'Plausible Analytics' }],
-    },
-  ];
+  const { data, loading } = useWebsiteSettingsQuery();
+
+  const settings = useMemo(() => {
+    if (loading || !data) {
+      return [];
+    }
+
+    const analyticsIntegrations = [
+      { id: 'googleAnalytics', text: 'Google Analytics' },
+      { id: 'googleTagManager', text: 'Google Tag Manager' },
+      { id: 'plausible', text: 'Plausible Analytics' },
+    ] as Array<{
+      id: Exclude<keyof WebsiteSettings['analytics'], '__typename'>;
+      text: string;
+    }>;
+
+    const mailIntegrations = [{ id: 'mailchimp', text: 'Mailchimp' }] as Array<{
+      id: Exclude<keyof WebsiteSettings['mail'], '__typename'>;
+      text: string;
+    }>;
+
+    const adsIntegrations = [{ id: 'sparkLoop', text: 'SparkLoop' }] as Array<{
+      id: Exclude<keyof WebsiteSettings['ads'], '__typename'>;
+      text: string;
+    }>;
+
+    return [
+      {
+        title: t('websiteSettings.analytics.title'),
+        permission: CanGetAISettings.id,
+        path: '/settings/website/analytics',
+        icon: <MdAnalytics size={24} />,
+        enabledIntegrations: analyticsIntegrations.filter(
+          integration =>
+            data.websiteSettings.analytics[integration.id].enabled &&
+            data.websiteSettings.analytics[integration.id].key
+        ),
+        faulyIntegrations: analyticsIntegrations.filter(
+          integration =>
+            data.websiteSettings.analytics[integration.id].enabled &&
+            !data.websiteSettings.analytics[integration.id].key
+        ),
+        disabledIntegrations: analyticsIntegrations.filter(
+          integration => !data.websiteSettings.analytics[integration.id].enabled
+        ),
+      },
+      {
+        title: t('websiteSettings.mail.title'),
+        permission: CanGetAISettings.id,
+        path: '/settings/website/mail',
+        icon: <MdMail size={24} />,
+        enabledIntegrations: mailIntegrations.filter(
+          integration =>
+            data.websiteSettings.mail[integration.id].enabled &&
+            data.websiteSettings.mail[integration.id].key
+        ),
+        faulyIntegrations: mailIntegrations.filter(
+          integration =>
+            data.websiteSettings.mail[integration.id].enabled &&
+            !data.websiteSettings.mail[integration.id].key
+        ),
+        disabledIntegrations: mailIntegrations.filter(
+          integration => !data.websiteSettings.mail[integration.id].enabled
+        ),
+      },
+      {
+        title: t('websiteSettings.ads.title'),
+        permission: CanGetAISettings.id,
+        path: '/settings/website/ads',
+        icon: <MdAdsClick size={24} />,
+        enabledIntegrations: adsIntegrations.filter(
+          integration =>
+            data.websiteSettings.ads[integration.id].enabled &&
+            data.websiteSettings.ads[integration.id].key
+        ),
+        faulyIntegrations: adsIntegrations.filter(
+          integration =>
+            data.websiteSettings.ads[integration.id].enabled &&
+            !data.websiteSettings.ads[integration.id].key
+        ),
+        disabledIntegrations: adsIntegrations.filter(
+          integration => !data.websiteSettings.ads[integration.id].enabled
+        ),
+      },
+    ];
+  }, [data, loading, t]);
 
   return (
     <WebsiteSettingsListWrapper>
@@ -75,8 +160,11 @@ export const WebsiteSettingsList = () => {
           key={category.title}
           qualifyingPermissions={[category.permission]}
         >
-          <Card variant="outlined">
-            <CardContent>
+          <Card
+            variant="outlined"
+            sx={{ display: 'flex', flexFlow: 'column' }}
+          >
+            <CardContent sx={{ flex: 1 }}>
               <Typography
                 variant="h6"
                 component={CardTitle}
@@ -86,11 +174,25 @@ export const WebsiteSettingsList = () => {
                 {category.title}
               </Typography>
 
-              {category.enabledIntegrations.map(integration => (
+              {category.faulyIntegrations.map((integration, index) => (
                 <Typography
                   variant="body2"
                   component={CardIntegration}
-                  key={integration.id}
+                  key={index}
+                >
+                  <MdWarning color={theme.palette.error.main} />
+                  {integration.text}
+                </Typography>
+              ))}
+
+              {!!category.faulyIntegrations.length &&
+                !!category.enabledIntegrations.length && <Box pt={1} />}
+
+              {category.enabledIntegrations.map((integration, index) => (
+                <Typography
+                  variant="body2"
+                  component={CardIntegration}
+                  key={index}
                 >
                   <MdCheck color={theme.palette.success.main} />
                   {integration.text}
@@ -100,18 +202,17 @@ export const WebsiteSettingsList = () => {
               {!!category.enabledIntegrations.length &&
                 !!category.disabledIntegrations.length && <Box pt={1} />}
 
-              {category.disabledIntegrations.map(integration => (
+              {category.disabledIntegrations.map((integration, index) => (
                 <Typography
                   variant="body2"
                   component={CardIntegration}
-                  key={integration.id}
+                  key={index}
                 >
-                  <MdClose color={theme.palette.error.main} />
+                  <MdClose color={theme.palette.info.main} />
                   {integration.text}
                 </Typography>
               ))}
             </CardContent>
-
             <CardActions>
               <Link to={category.path}>
                 <Button size="small">{t('edit')}</Button>

@@ -1624,6 +1624,17 @@ export enum InvoiceSort {
   PaidAt = 'PaidAt',
 }
 
+export type KeyEnabled = {
+  __typename?: 'KeyEnabled';
+  enabled: Scalars['Boolean'];
+  key?: Maybe<Scalars['String']>;
+};
+
+export type KeyEnabledInput = {
+  enabled: Scalars['Boolean'];
+  key?: InputMaybe<Scalars['String']>;
+};
+
 export type ListicleBlock = BaseBlock & {
   __typename?: 'ListicleBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -2124,6 +2135,8 @@ export type Mutation = {
   updateUserRole: UserRole;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
+  /** Updates the website settings. */
+  updateWebsiteSettings: WebsiteSettings;
   upgradeUserSubscription: Payment;
   /** Uploads a new document. */
   uploadDocument: Document;
@@ -3189,6 +3202,12 @@ export type MutationUpdateUserRoleArgs = {
 export type MutationUpdateUserSubscriptionArgs = {
   id: Scalars['String'];
   input: UpdateUserSubscriptionInput;
+};
+
+export type MutationUpdateWebsiteSettingsArgs = {
+  ads?: InputMaybe<WebsiteAdsInput>;
+  analytics?: InputMaybe<WebsiteAnalyticsInput>;
+  mail?: InputMaybe<WebsiteMailInput>;
 };
 
 export type MutationUpgradeUserSubscriptionArgs = {
@@ -4320,6 +4339,8 @@ export type Query = {
   /** Returns a paginated list of users based on the filters given. */
   users: PaginatedSensitiveDataUsers;
   versionInformation: VersionInformation;
+  /** Returns the website settings, requires authentication to get sensitive settings. */
+  websiteSettings: WebsiteSettings;
 };
 
 export type QueryAiSettingArgs = {
@@ -5801,6 +5822,44 @@ export type VimeoVideoBlockInput = {
   blockStyleName?: InputMaybe<Scalars['String']>;
   disabled?: InputMaybe<Scalars['Boolean']>;
   videoID?: InputMaybe<Scalars['String']>;
+};
+
+export type WebsiteAds = {
+  __typename?: 'WebsiteAds';
+  sparkLoop: KeyEnabled;
+};
+
+export type WebsiteAdsInput = {
+  sparkLoop: KeyEnabledInput;
+};
+
+export type WebsiteAnalytics = {
+  __typename?: 'WebsiteAnalytics';
+  googleAnalytics: KeyEnabled;
+  googleTagManager: KeyEnabled;
+  plausible: KeyEnabled;
+};
+
+export type WebsiteAnalyticsInput = {
+  googleAnalytics: KeyEnabledInput;
+  googleTagManager: KeyEnabledInput;
+  plausible: KeyEnabledInput;
+};
+
+export type WebsiteMail = {
+  __typename?: 'WebsiteMail';
+  mailchimp: KeyEnabled;
+};
+
+export type WebsiteMailInput = {
+  mailchimp: KeyEnabledInput;
+};
+
+export type WebsiteSettings = {
+  __typename?: 'WebsiteSettings';
+  ads: WebsiteAds;
+  analytics: WebsiteAnalytics;
+  mail: WebsiteMail;
 };
 
 export type YouTubeVideoBlock = BaseBlock & {

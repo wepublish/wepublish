@@ -4,7 +4,6 @@ import {
   CanUpdateAnalyticsProviderSettings,
 } from '@wepublish/permissions';
 import { Permissions } from '@wepublish/permissions/api';
-import { ScopedJwt } from '@wepublish/authentication/api';
 import {
   SettingAnalyticsProvider,
   UpdateSettingAnalyticsProviderInput,
@@ -21,7 +20,6 @@ export class AnalyticsProviderSettingsResolver {
   ) {}
 
   @Permissions(CanGetAnalyticsProviderSettings)
-  @ScopedJwt('read:website-settings')
   @Query(returns => [SettingAnalyticsProvider], {
     name: 'analyticsProviderSettings',
     description: 'Returns all analytics provider settings.',
@@ -35,7 +33,6 @@ export class AnalyticsProviderSettingsResolver {
   }
 
   @Permissions(CanGetAnalyticsProviderSettings)
-  @ScopedJwt('read:website-settings')
   @Query(returns => SettingAnalyticsProvider, {
     name: 'analyticsProviderSetting',
     description: 'Returns a single analytics provider setting by id.',

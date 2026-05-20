@@ -1858,3 +1858,32 @@ model MailchimpSyncError {
   @@unique([userId, syncProviderId])
   @@map("mailchimp_sync_errors")
 }
+
+model WebsiteSettings {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  // Analytics
+  analyticsGAEnabled Boolean @default(false)
+  analyticsGAId      String?
+
+  analyticsGTMEnabled Boolean @default(false)
+  analyticsGTMId      String?
+
+  analyticsPAEnabled Boolean @default(false)
+  analyticsPAId      String?
+
+  // Ads
+  adsSparkLoopEnabled Boolean @default(false)
+  adsSparkLoopId      String?
+
+  // Ads
+  mailMailchimpEnabled Boolean @default(false)
+  mailMailchimpKey     String?
+
+  // Theme
+  theme Json @default("{}")
+
+  @@map("settings.website")
+}

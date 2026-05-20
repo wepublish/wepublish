@@ -163,7 +163,7 @@ export const normalizeValues = (value: string | number) => {
   return value;
 };
 
-export const normalizeTheme = <T extends object>(theme: T) => {
+export const normalizeTheme = <T extends object>(theme: T): T => {
   return Object.fromEntries(
     Object.entries(theme).map(([k, v]) => {
       if (v && typeof v === 'object') {
@@ -172,5 +172,5 @@ export const normalizeTheme = <T extends object>(theme: T) => {
 
       return [k, normalizeValues(v)];
     })
-  );
+  ) as T;
 };

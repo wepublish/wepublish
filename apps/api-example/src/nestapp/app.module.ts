@@ -78,7 +78,11 @@ import { PermissionModule } from '@wepublish/permissions/api';
 import { PhraseModule } from '@wepublish/phrase/api';
 import { PollModule } from '@wepublish/poll/api';
 import { GraphQLRichText } from '@wepublish/richtext/api';
-import { SettingModule, SettingName } from '@wepublish/settings/api';
+import {
+  SettingModule,
+  SettingName,
+  WebsiteSettingsModule,
+} from '@wepublish/settings/api';
 import { StatsModule } from '@wepublish/stats/api';
 import { ExternalAppsModule } from '@wepublish/external-apps/api';
 import { SystemInfoModule } from '@wepublish/system-info';
@@ -569,6 +573,7 @@ import {
       inject: [ConfigService],
     }),
     PaywallModule,
+    WebsiteSettingsModule,
   ],
   exports: ['SYSTEM_INFO_KEY'],
   providers: [

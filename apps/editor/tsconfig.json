@@ -8,7 +8,15 @@
     "jsxImportSource": "@emotion/react",
     "types": ["node"]
   },
-  "files": ["src/emotion.d.ts"],
+  "files": [],
   "include": [],
-  "extends": "../../tsconfig.base.json"
+  "extends": "../../tsconfig.base.json",
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
 }

@@ -1,10 +1,5 @@
-import {
-  Box,
-  ClickAwayListener,
-  Popper,
-  styled,
-  TextField,
-} from '@mui/material';
+import styled from '@emotion/styled';
+import { Box, ClickAwayListener, Popper, TextField } from '@mui/material';
 import { Sketch } from '@uiw/react-color';
 import {
   ChangeEventHandler,
@@ -85,7 +80,7 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
             <Sketch
               color={props.value}
               onChange={color => {
-                props.onChange({ target: color.hex });
+                // props.onChange({ target: color.hex });
               }}
             />
           </ClickAwayListener>

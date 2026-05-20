@@ -1,0 +1,48 @@
+fragment FullWebsiteSettings on WebsiteSettings {
+  analytics {
+    googleAnalytics {
+      enabled
+      key
+    }
+
+    googleTagManager {
+      enabled
+      key
+    }
+
+    plausible {
+      enabled
+      key
+    }
+  }
+
+  mail {
+    mailchimp {
+      enabled
+      key
+    }
+  }
+
+  ads {
+    sparkLoop {
+      enabled
+      key
+    }
+  }
+}
+
+query WebsiteSettings {
+  websiteSettings {
+    ...FullWebsiteSettings
+  }
+}
+
+mutation UpdateWebsiteSettings(
+  $analytics: WebsiteAnalyticsInput
+  $mail: WebsiteMailInput
+  $ads: WebsiteAdsInput
+) {
+  updateWebsiteSettings(analytics: $analytics, mail: $mail, ads: $ads) {
+    ...FullWebsiteSettings
+  }
+}

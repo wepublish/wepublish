@@ -1487,6 +1487,16 @@ The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](
 """
 scalar JSONObject
 
+type KeyEnabled {
+  enabled: Boolean!
+  key: String
+}
+
+input KeyEnabledInput {
+  enabled: Boolean!
+  key: String
+}
+
 type ListicleBlock implements BaseBlock {
   blockStyle: String
   blockStyleName: String
@@ -2163,6 +2173,9 @@ type Mutation {
   This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null
   """
   updateUserSubscription(id: String!, input: UpdateUserSubscriptionInput!): PublicSubscription
+
+  """Updates the website settings."""
+  updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, mail: WebsiteMailInput): WebsiteSettings!
 
   """"""
   upgradeUserSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
@@ -3273,6 +3286,11 @@ type Query {
     take: Int! = 10
   ): PaginatedSensitiveDataUsers!
   versionInformation: VersionInformation!
+
+  """
+  Returns the website settings, requires authentication to get sensitive settings.
+  """
+  websiteSettings: WebsiteSettings!
 }
 
 type QuoteBlock implements BaseBlock & HasImage {
@@ -4232,6 +4250,40 @@ input VimeoVideoBlockInput {
 
 """A valid vote value"""
 scalar VoteValue
+
+type WebsiteAds {
+  sparkLoop: KeyEnabled!
+}
+
+input WebsiteAdsInput {
+  sparkLoop: KeyEnabledInput!
+}
+
+type WebsiteAnalytics {
+  googleAnalytics: KeyEnabled!
+  googleTagManager: KeyEnabled!
+  plausible: KeyEnabled!
+}
+
+input WebsiteAnalyticsInput {
+  googleAnalytics: KeyEnabledInput!
+  googleTagManager: KeyEnabledInput!
+  plausible: KeyEnabledInput!
+}
+
+type WebsiteMail {
+  mailchimp: KeyEnabled!
+}
+
+input WebsiteMailInput {
+  mailchimp: KeyEnabledInput!
+}
+
+type WebsiteSettings {
+  ads: WebsiteAds!
+  analytics: WebsiteAnalytics!
+  mail: WebsiteMail!
+}
 
 type YouTubeVideoBlock implements BaseBlock {
   blockStyle: String

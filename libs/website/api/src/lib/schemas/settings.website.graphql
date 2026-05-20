@@ -1,0 +1,34 @@
+query WebsiteSettings {
+  websiteSettings {
+    analytics {
+      googleAnalytics {
+        enabled
+        key
+      }
+
+      googleTagManager {
+        enabled
+        key
+      }
+
+      plausible {
+        enabled
+        key
+      }
+    }
+
+    mail {
+      mailchimp {
+        enabled
+        key
+      }
+    }
+
+    ads {
+      sparkLoop {
+        enabled
+        key
+      }
+    }
+  }
+}
