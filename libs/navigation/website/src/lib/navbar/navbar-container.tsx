@@ -68,6 +68,8 @@ export function NavbarContainer({
         logo={logo}
         hasUnpaidInvoices={!!hasUnpaidInvoices}
         hasRunningSubscription={!!hasRunningSubscription}
+        navbarActions={navbarActions}
+        paperActions={paperActions}
       >
         {children}
       </Navbar>

@@ -12,9 +12,11 @@ export const GanzGrazNavbar = styled(NavbarContainer)`
   grid-column: -1/1;
   z-index: 11;
 
-  ${NavbarActions} {
-    *:not(.js-always-show) {
-      display: none;
+  ${({ theme }) => theme.breakpoints.down('md')} {
+    ${NavbarActions} {
+      *:not(.js-always-show) {
+        display: none;
+      }
     }
   }
 
