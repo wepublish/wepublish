@@ -60,6 +60,7 @@ const mockUser: User = {
   totpSecret: null,
   totpEnabled: false,
   totpExempt: false,
+  properties: [],
 };
 
 describe('bexio-utils', () => {

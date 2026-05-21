@@ -21,29 +21,18 @@ fragment ImageURLs on Image {
 fragment FullImage on Image {
   id
 
-  createdAt
-  modifiedAt
-
-  filename
-  format
-  mimeType
-  extension
   width
   height
-  fileSize
 
   title
   description
-  tags
 
   source
   link
   license
 
-  focalPoint {
-    x
-    y
-  }
+  focalPointX
+  focalPointY
 
   ...ImageURLs
 }
@@ -58,31 +47,14 @@ query GetImagesByTag($tag: String!) {
 fragment FullPeerImage on PeerImage {
   id
 
-  createdAt
-  modifiedAt
-
-  filename
-  format
-  mimeType
-  extension
   width
   height
-  fileSize
 
-  title
   description
-  tags
+  title
 
-  source
-  link
-  license
-
-  focalPoint {
-    x
-    y
-  }
-
-  url
+  focalPointX
+  focalPointY
 
   xxl
   xl
@@ -104,7 +76,8 @@ fragment FullPeerImage on PeerImage {
 mutation UploadImage(
   $title: String
   $description: String
-  $focalPoint: FocalPointInput
+  $focalPointX: Float!
+  $focalPointY: Float!
   $license: String
   $link: String
   $source: String
@@ -114,7 +87,8 @@ mutation UploadImage(
   uploadUserProfileImage(
     title: $title
     description: $description
-    focalPoint: $focalPoint
+    focalPointX: $focalPointX
+    focalPointY: $focalPointY
     license: $license
     link: $link
     source: $source

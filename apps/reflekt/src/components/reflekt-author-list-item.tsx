@@ -5,8 +5,10 @@ import {
   AuthorListItemImageWrapper as AuthorListItemImageWrapperDefault,
 } from '@wepublish/author/website';
 import { createWithTheme } from '@wepublish/ui';
-import { Author } from '@wepublish/website/api';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
+import {
+  BuilderAuthorListItemProps,
+  useWebsiteBuilder,
+} from '@wepublish/website/builder';
 
 import { authorListItemTheme } from '../theme';
 import { ReflektRenderRichtext } from './reflekt-render-richtext';
@@ -38,11 +40,10 @@ export const AuthorListItemContent = styled(AuthorListItemContentDefault)`
 
 export function AuthorListItem({
   className,
-  url,
   image,
   name,
   bio,
-}: Author & { className?: string }) {
+}: BuilderAuthorListItemProps) {
   const {
     elements: { Image },
   } = useWebsiteBuilder();

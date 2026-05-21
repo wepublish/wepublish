@@ -25,7 +25,6 @@ fragment FullPaywall on Paywall {
 fragment ArticleRevisionWithoutBlocks on ArticleRevision {
   id
   publishedAt
-  createdAt
   preTitle
   title
   lead
@@ -35,7 +34,7 @@ fragment ArticleRevisionWithoutBlocks on ArticleRevision {
   breaking
 
   authors {
-    ...FullAuthor
+    ...SlimAuthor
   }
 
   image {
@@ -59,18 +58,19 @@ fragment FullArticleRevision on ArticleRevision {
   blocks {
     ...FullBlock
   }
+
+  authors {
+    ...FullAuthor
+  }
 }
 
 fragment ArticleWithoutBlocks on Article {
   id
   publishedAt
-  modifiedAt
   url
   slug
   likes
   disableComments
-  peerId
-  peerArticleId
 
   tags {
     ...FullTag

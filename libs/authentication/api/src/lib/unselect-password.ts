@@ -23,7 +23,6 @@ export const unselectPassword: Record<
   address: true,
   birthday: true,
   note: true,
-  properties: true,
   paymentProviderCustomers: true,
   id: true,
   createdAt: true,
@@ -43,4 +42,5 @@ export const unselectPassword: Record<
   totpSecret: false,
   totpEnabled: true,
   totpExempt: true,
+  properties: true,
 } as const;

@@ -36,7 +36,12 @@ export const generateFeed =
       return {
         title: seo.schema.headline ?? '',
         image:
-          seo.schema.image?.url ? escapeXml(seo.schema.image.url) : undefined,
+          seo.schema.image ?
+            {
+              url: escapeXml(seo.schema.image.url),
+              type: 'image/webp',
+            }
+          : undefined,
         description: seo.schema.description,
         content: content ? content : (article.latest.lead ?? undefined),
         author: article.latest.authors.filter(Boolean).map(author => ({

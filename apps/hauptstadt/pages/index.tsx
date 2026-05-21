@@ -1,6 +1,7 @@
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
+import { LinkContext } from '@wepublish/website/builder';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -14,16 +15,18 @@ import getConfig from 'next/config';
 
 export default function Index() {
   return (
-    <ContentWidthProvider fullWidth>
-      <PageContainer slug={''} />
+    <LinkContext.Provider value={{ prefetch: true }}>
+      <ContentWidthProvider fullWidth>
+        <PageContainer slug={''} />
 
-      <Link
-        href="/a?page=2"
-        css={{ justifySelf: 'center', fontWeight: 400 }}
-      >
-        Ältere Hauptstadt-Artikel
-      </Link>
-    </ContentWidthProvider>
+        <Link
+          href="/a?page=2"
+          css={{ justifySelf: 'center', fontWeight: 400 }}
+        >
+          Ältere Hauptstadt-Artikel
+        </Link>
+      </ContentWidthProvider>
+    </LinkContext.Provider>
   );
 }
 

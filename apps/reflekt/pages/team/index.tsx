@@ -43,6 +43,9 @@ export default function AuthorList() {
       order: SortOrder.Ascending,
       take,
       skip: ((page ?? 1) - 1) * take,
+      filter: {
+        hideOnTeam: false,
+      },
     }),
     [page]
   );
@@ -103,6 +106,9 @@ export const getStaticProps: GetStaticProps = async () => {
         skip: 0,
         sort: AuthorSort.Name,
         order: SortOrder.Ascending,
+        filter: {
+          hideOnTeam: false,
+        },
       },
     }),
     client.query({

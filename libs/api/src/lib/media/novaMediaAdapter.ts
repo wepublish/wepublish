@@ -5,7 +5,6 @@ import type { FileUpload } from 'graphql-upload';
 import {
   ArrayBufferUpload,
   ImageTransformation,
-  ImageWithFocalPoint,
   MediaAdapter,
   UploadDocument,
   UploadImage,
@@ -18,6 +17,7 @@ import {
 import { validateImageDimension } from '@wepublish/media-transform-guard';
 import { SignJWT, importPKCS8, type KeyLike } from 'jose';
 import { v4 as uuidv4 } from 'uuid';
+import { Image } from '@prisma/client';
 
 export class MediaServerError extends Error {
   constructor(message: string) {
@@ -154,7 +154,7 @@ export class NovaMediaAdapter implements MediaAdapter {
   }
 
   async getImageURL(
-    image: ImageWithFocalPoint,
+    image: Image,
     transformations?: ImageTransformation
   ): Promise<string> {
     const queryParameters = [] as string[];
@@ -163,19 +163,15 @@ export class NovaMediaAdapter implements MediaAdapter {
       let xFocalPoint = '';
       let yFocalPoint = '';
 
-      if (image?.focalPoint?.x) {
-        xFocalPoint =
-          image.focalPoint.x > 0.6 ? 'right'
-          : image.focalPoint.x < 0.4 ? 'left'
-          : '';
-      }
+      xFocalPoint =
+        image.focalPointX > 0.6 ? 'right'
+        : image.focalPointX < 0.4 ? 'left'
+        : '';
 
-      if (image?.focalPoint?.y) {
-        yFocalPoint =
-          image.focalPoint.y > 0.6 ? 'bottom'
-          : image.focalPoint.y < 0.4 ? 'top'
-          : '';
-      }
+      yFocalPoint =
+        image.focalPointY > 0.6 ? 'bottom'
+        : image.focalPointY < 0.4 ? 'top'
+        : '';
 
       const position = `${xFocalPoint} ${yFocalPoint}`.trim() || undefined;
 

@@ -137,7 +137,8 @@ async function seedImages(
     link: faker.internet.url(),
     license: faker.lorem.word(),
 
-    focalPoint: { x: 0, y: 0 },
+    focalPointX: 0,
+    focalPointY: 0,
   });
   const imageIds: string[] = [];
 

@@ -4,24 +4,20 @@
       "deployment": true,
       "custom_domain": "https://mannschaft.com",
       "env": {
-        "GTM_ID": "GTM-WPT97GP",
-        "DEPLOY_ENV": "production"
+        "GTM_ID": "GTM-WPT97GP"
       },
       "secret_env": []
     },
     "staging": {
       "deployment": true,
       "env": {
-        "GTM_ID": "GTM-WPT97GP",
-        "DEPLOY_ENV": "staging"
+        "GTM_ID": "GTM-WPT97GP"
       },
       "secret_env": []
     },
     "review": {
       "deployment": true,
-      "env": {
-        "DEPLOY_ENV": "review"
-      },
+      "env": {},
       "secret_env": []
     }
   }

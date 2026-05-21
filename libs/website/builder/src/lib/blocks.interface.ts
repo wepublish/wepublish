@@ -9,7 +9,6 @@ import {
   FacebookVideoBlock,
   HtmlBlock,
   IFrameBlock,
-  ImageBlock,
   ImageGalleryBlock,
   InstagramPostBlock,
   ListicleBlock,
@@ -30,6 +29,7 @@ import {
   StreamableVideoBlock,
   YouTubeVideoBlock,
   FlexBlock,
+  FullImageBlockFragmentFragment,
 } from '@wepublish/website/api';
 
 export type BlockSibling = {
@@ -56,13 +56,13 @@ export type BlockProps = {
   siblings?: Array<BlockSibling>;
 };
 
-type WithBlockProps<T extends { type?: unknown }> = Omit<T, 'type'> &
-  BlockProps;
+type WithBlockProps<T> = Omit<T, 'type'> & BlockProps;
 
 export type BuilderFlexBlockProps = WithBlockProps<FlexBlock>;
 export type BuilderTitleBlockProps = WithBlockProps<TitleBlock>;
 export type BuilderBreakBlockProps = WithBlockProps<BreakBlock>;
-export type BuilderImageBlockProps = WithBlockProps<ImageBlock>;
+export type BuilderImageBlockProps =
+  WithBlockProps<FullImageBlockFragmentFragment>;
 export type BuilderImageGalleryBlockProps = WithBlockProps<ImageGalleryBlock>;
 export type BuilderQuoteBlockProps = WithBlockProps<QuoteBlock>;
 export type BuilderEventBlockProps = WithBlockProps<EventBlock>;

@@ -31,6 +31,7 @@ fragment FullArticleTeaser on ArticleTeaser {
         __typename
 
         ... on PollBlock {
+          disabled
           blockStyle: blockStyleName
           poll {
             ...FullPoll
@@ -56,10 +57,21 @@ fragment FullEventTeaser on EventTeaser {
   }
 }
 
+fragment FullImageBlockFragment on ImageBlock {
+  disabled
+  blockStyle: blockStyleName
+  caption
+  linkUrl
+  image {
+    ...FullImage
+  }
+}
+
 fragment BlockWithoutTeaser on BlockContent {
   __typename
 
   ... on TitleBlock {
+    disabled
     blockStyle: blockStyleName
     preTitle
     title
@@ -67,15 +79,11 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on ImageBlock {
-    blockStyle: blockStyleName
-    caption
-    linkUrl
-    image {
-      ...FullImage
-    }
+    ...FullImageBlockFragment
   }
 
   ... on ImageGalleryBlock {
+    disabled
     blockStyle: blockStyleName
     images {
       caption
@@ -86,6 +94,7 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on QuoteBlock {
+    disabled
     blockStyle: blockStyleName
     quote
     author
@@ -95,16 +104,19 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on RichTextBlock {
+    disabled
     blockStyle: blockStyleName
     richText
   }
 
   ... on HTMLBlock {
+    disabled
     blockStyle: blockStyleName
     html
   }
 
   ... on SubscribeBlock {
+    disabled
     blockStyle: blockStyleName
     memberPlanIds
     memberPlans {
@@ -114,6 +126,7 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on EventBlock {
+    disabled
     blockStyle: blockStyleName
     events {
       ...FullEvent
@@ -121,6 +134,7 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on PollBlock {
+    disabled
     blockStyle: blockStyleName
     poll {
       ...FullPoll
@@ -128,6 +142,7 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on CrowdfundingBlock {
+    disabled
     blockStyle: blockStyleName
     crowdfunding {
       ...FullCrowdfunding
@@ -135,6 +150,7 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on ListicleBlock {
+    disabled
     blockStyle: blockStyleName
     items {
       title
@@ -146,6 +162,7 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on BreakBlock {
+    disabled
     blockStyle: blockStyleName
     text
     richText
@@ -159,65 +176,77 @@ fragment BlockWithoutTeaser on BlockContent {
   }
 
   ... on FacebookPostBlock {
+    disabled
     blockStyle: blockStyleName
     userID
     postID
   }
 
   ... on FacebookVideoBlock {
+    disabled
     blockStyle: blockStyleName
     userID
     videoID
   }
 
   ... on InstagramPostBlock {
+    disabled
     blockStyle: blockStyleName
     postID
   }
 
   ... on TwitterTweetBlock {
+    disabled
     blockStyle: blockStyleName
     userID
     tweetID
   }
 
   ... on VimeoVideoBlock {
+    disabled
     blockStyle: blockStyleName
     videoID
   }
 
   ... on YouTubeVideoBlock {
+    disabled
     blockStyle: blockStyleName
     videoID
   }
 
   ... on StreamableVideoBlock {
+    disabled
     blockStyle: blockStyleName
     videoID
   }
 
   ... on SoundCloudTrackBlock {
+    disabled
     blockStyle: blockStyleName
     trackID
   }
 
   ... on PolisConversationBlock {
+    disabled
     blockStyle: blockStyleName
     conversationID
   }
 
   ... on TikTokVideoBlock {
+    disabled
     blockStyle: blockStyleName
     userID
     videoID
   }
 
   ... on BildwurfAdBlock {
+    disabled
     blockStyle: blockStyleName
     zoneID
   }
 
   ... on IFrameBlock {
+    disabled
     blockStyle: blockStyleName
     url
     title
@@ -259,9 +288,39 @@ fragment FullTeaser on Teaser {
   }
 }
 
+fragment FullFlexBlock on FlexBlock {
+  disabled
+  blockStyle: blockStyleName
+  type
+  blocks {
+    alignment {
+      i
+      x
+      y
+      w
+      h
+      static
+    }
+
+    block {
+      __typename
+      ...BlockWithoutTeaser
+
+      ... on TeaserSlotsBlock {
+        ...FullTeaserSlotsBlock
+      }
+
+      ... on TeaserListBlock {
+        ...FullTeaserListBlock
+      }
+    }
+  }
+}
+
 fragment FullTeaserGridFlexBlock on TeaserGridFlexBlock {
   title
   type
+  disabled
   blockStyle: blockStyleName
   flexTeasers {
     alignment {
@@ -280,6 +339,7 @@ fragment FullTeaserGridFlexBlock on TeaserGridFlexBlock {
 fragment FullTeaserGridBlock on TeaserGridBlock {
   title
   type
+  disabled
   blockStyle: blockStyleName
   teasers {
     ...FullTeaser
@@ -290,6 +350,7 @@ fragment FullTeaserGridBlock on TeaserGridBlock {
 fragment FullTeaserListBlock on TeaserListBlock {
   title
   type
+  disabled
   blockStyle: blockStyleName
   filter {
     tags
@@ -302,6 +363,7 @@ fragment FullTeaserListBlock on TeaserListBlock {
 fragment FullTeaserSlotsBlock on TeaserSlotsBlock {
   title
   type
+  disabled
   blockStyle: blockStyleName
   teasers {
     ...FullTeaser
@@ -328,30 +390,6 @@ fragment FullBlock on BlockContent {
   }
 
   ... on FlexBlock {
-    blockStyle: blockStyleName
-    type
-    blocks {
-      alignment {
-        i
-        x
-        y
-        w
-        h
-        static
-      }
-
-      block {
-        __typename
-        ...BlockWithoutTeaser
-
-        ... on TeaserSlotsBlock {
-          ...FullTeaserSlotsBlock
-        }
-
-        ... on TeaserListBlock {
-          ...FullTeaserListBlock
-        }
-      }
-    }
+    ...FullFlexBlock
   }
 }

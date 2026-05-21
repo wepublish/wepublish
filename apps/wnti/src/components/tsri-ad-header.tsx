@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { ArticleWrapper } from '@wepublish/article/website';
 import { Image } from '@wepublish/image/website';
 import { Link } from '@wepublish/ui';
-import { BuilderAuthor } from '@wepublish/website/builder';
+import { FullAuthorFragment } from '@wepublish/website/api';
 import { useMemo } from 'react';
 
 import { TsriRichText } from './tsri-richtext';
@@ -36,21 +36,21 @@ const TsriAdvertiserContent = styled('div')``;
 const SPONSOR_TAG = 'sponsor';
 const PROMO_TAG = 'promo';
 
-function isPromo(author: BuilderAuthor): boolean {
+function isPromo(author: FullAuthorFragment): boolean {
   return !!author.tags?.find(tag => tag.tag === PROMO_TAG);
 }
 
-function isSponsor(author: BuilderAuthor): boolean {
+function isSponsor(author: FullAuthorFragment): boolean {
   return !!author.tags?.find(tag => tag.tag === SPONSOR_TAG);
 }
 
-function getFirstLink(author: BuilderAuthor): string {
+function getFirstLink(author: FullAuthorFragment): string {
   const links = author.links;
   return links?.length ? links[0].url : '';
 }
 
-export function TsriAdHeader({ authors }: { authors?: BuilderAuthor[] }) {
-  const advertisers: BuilderAuthor[] | undefined = useMemo(() => {
+export function TsriAdHeader({ authors }: { authors?: FullAuthorFragment[] }) {
+  const advertisers = useMemo(() => {
     return authors?.filter(author => isSponsor(author) || isPromo(author));
   }, [authors]);
 

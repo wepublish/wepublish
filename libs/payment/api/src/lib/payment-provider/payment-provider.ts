@@ -3,7 +3,6 @@ import {
   Invoice,
   InvoiceItem,
   PaymentProviderType,
-  MetadataProperty,
   Payment,
   PaymentState,
   PrismaClient,
@@ -55,15 +54,15 @@ export interface CheckIntentProps {
 
 export interface UpdateRemoteSubscriptionAmountProps {
   newAmount: number;
-  subscription: Subscription & { properties: MetadataProperty[] };
+  subscription: Subscription;
 }
 
 export interface CancelRemoteSubscriptionProps {
-  subscription: Subscription & { properties: MetadataProperty[] };
+  subscription: Subscription;
 }
 
 export interface CreateRemoteInvoiceProps {
-  subscription: Subscription & { properties: MetadataProperty[] };
+  subscription: Subscription;
   invoice: Invoice & { items: InvoiceItem[] };
 }
 
