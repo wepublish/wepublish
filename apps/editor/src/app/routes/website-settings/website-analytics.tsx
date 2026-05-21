@@ -7,7 +7,7 @@ import {
   CircularProgress,
   FormControlLabel,
   InputAdornment,
-  Link,
+  Link as MuiLink,
   TextField,
   Typography,
 } from '@mui/material';
@@ -17,6 +17,8 @@ import {
 } from '@wepublish/editor/api';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
+import { MdArrowBack } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 import { z } from 'zod';
 
 const analyticsSchema = z.object({
@@ -94,6 +96,16 @@ export const WebsiteAnalytics = () => {
 
   return (
     <WebsiteAnalyticsWrapper onSubmit={onSubmit}>
+      <Link to={'/settings/website'}>
+        <Button
+          size="small"
+          variant="text"
+          startIcon={<MdArrowBack />}
+        >
+          {t('websiteSettings.backToOverview')}
+        </Button>
+      </Link>
+
       <h3>{t('websiteSettings.analytics.google.title')}</h3>
 
       <Controller
@@ -103,8 +115,13 @@ export const WebsiteAnalytics = () => {
         render={({ field }) => (
           <div>
             <FormControlLabel
-              control={<Checkbox {...field} />}
-              label={t('websiteSettings.analytics.google.gaEnabled')}
+              control={
+                <Checkbox
+                  {...field}
+                  checked={!!field.value}
+                />
+              }
+              label={t('websiteSettings.analytics.google.gaEnable')}
             />
 
             <Typography
@@ -116,7 +133,7 @@ export const WebsiteAnalytics = () => {
                 i18nKey="websiteSettings.analytics.google.ga"
                 components={{
                   url: (
-                    <Link
+                    <MuiLink
                       href="https://developers.google.com/analytics"
                       target="_blank"
                       rel="noreferrer"
@@ -146,7 +163,7 @@ export const WebsiteAnalytics = () => {
                     i18nKey="websiteSettings.analytics.google.gaLocator"
                     components={{
                       url: (
-                        <Link
+                        <MuiLink
                           href="https://support.google.com/analytics/answer/9539598"
                           target="_blank"
                           rel="noreferrer"
@@ -185,8 +202,13 @@ export const WebsiteAnalytics = () => {
         render={({ field }) => (
           <div>
             <FormControlLabel
-              control={<Checkbox {...field} />}
-              label={t('websiteSettings.analytics.google.gtmEnabled')}
+              control={
+                <Checkbox
+                  {...field}
+                  checked={!!field.value}
+                />
+              }
+              label={t('websiteSettings.analytics.google.gtmEnable')}
             />
 
             <Typography
@@ -197,7 +219,7 @@ export const WebsiteAnalytics = () => {
                 i18nKey="websiteSettings.analytics.google.gtm"
                 components={{
                   url: (
-                    <Link
+                    <MuiLink
                       href="https://marketingplatform.google.com/about/tag-manager/"
                       target="_blank"
                       rel="noreferrer"
@@ -227,7 +249,7 @@ export const WebsiteAnalytics = () => {
                     i18nKey="websiteSettings.analytics.google.gtmLocator"
                     components={{
                       url: (
-                        <Link
+                        <MuiLink
                           href="https://support.google.com/tagmanager/answer/15107467"
                           target="_blank"
                           rel="noreferrer"
@@ -268,8 +290,13 @@ export const WebsiteAnalytics = () => {
         render={({ field }) => (
           <div>
             <FormControlLabel
-              control={<Checkbox {...field} />}
-              label={t('websiteSettings.analytics.plausible.enabled')}
+              control={
+                <Checkbox
+                  {...field}
+                  checked={!!field.value}
+                />
+              }
+              label={t('websiteSettings.analytics.plausible.enable')}
             />
 
             <Typography
@@ -280,7 +307,7 @@ export const WebsiteAnalytics = () => {
                 i18nKey="websiteSettings.analytics.plausible.pa"
                 components={{
                   url: (
-                    <Link
+                    <MuiLink
                       href="https://plausible.io"
                       target="_blank"
                       rel="noreferrer"
@@ -310,7 +337,7 @@ export const WebsiteAnalytics = () => {
                     i18nKey="websiteSettings.analytics.plausible.paLocator"
                     components={{
                       url: (
-                        <Link
+                        <MuiLink
                           href="https://plausible.io/docs/website-settings"
                           target="_blank"
                           rel="noreferrer"

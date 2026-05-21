@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
 import {
   CanCreatePaywall,
+  CanGetWebsiteSettings,
   CanPreview,
   CanUpdatePaywall,
+  CanUpdateWebsiteSettings,
 } from '@wepublish/permissions';
 import { PermissionControl, Version } from '@wepublish/ui/editor';
 import { de, enUS, fr } from 'date-fns/locale';
@@ -1032,7 +1034,10 @@ export function Base({ children }: BaseProps) {
                     </PermissionControl>
 
                     <PermissionControl
-                      qualifyingPermissions={['CAN_GET_AI_SETTINGS']}
+                      qualifyingPermissions={[
+                        CanGetWebsiteSettings.id,
+                        CanUpdateWebsiteSettings.id,
+                      ]}
                     >
                       <Nav.Item
                         as={NavLink}

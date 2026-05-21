@@ -16,6 +16,8 @@ import {
   WebsiteMail,
   WebsiteAds,
 } from './website-settings.model';
+import { Permissions } from '@wepublish/permissions/api';
+import { CanUpdateWebsiteSettings } from '@wepublish/permissions';
 
 @Resolver(() => WebsiteSettings)
 export class WebsiteSettingsResolver {
@@ -29,7 +31,7 @@ export class WebsiteSettingsResolver {
     return this.websiteSettingsService.getSettings();
   }
 
-  // @Permissions(CanUpdateWebsiteSettings)
+  @Permissions(CanUpdateWebsiteSettings)
   @Mutation(returns => WebsiteSettings, {
     description: `Updates the website settings.`,
   })

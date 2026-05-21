@@ -6,8 +6,8 @@ import {
   ssrAuthLink,
 } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   InvoicesDocument,
   MeDocument,
   MemberPlanListDocument,
@@ -21,7 +21,7 @@ export default function Mitmachen() {
 }
 
 Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
-  const client = getV1ApiClient(getApiUrl(), [
+  const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
@@ -69,7 +69,7 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
   }
 
   await Promise.all(dataPromises);
-  const props = addClientCacheToV1Props(client, sessionProps);
+  const props = addClientCacheToProps(client, sessionProps);
 
   return props;
 };

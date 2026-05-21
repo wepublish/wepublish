@@ -1,4 +1,3 @@
-import type { DocumentContext } from 'next/document';
 import { getApiUrl } from './api-url';
 
 interface TokenState {
@@ -20,16 +19,6 @@ const state: WebsiteTokenState = (globalThis as any).__websiteToken ?? {
 };
 
 const TOKEN_WAIT_TIMEOUT_MS = 10000;
-
-export function withDocumentToken<T extends Record<string, unknown>>(
-  getInitialProps: (ctx: DocumentContext, token: string | null) => Promise<T>
-): (ctx: DocumentContext) => Promise<T> {
-  return async (ctx: DocumentContext) => {
-    const token = await getWebsiteToken();
-
-    return getInitialProps(ctx, token.token);
-  };
-}
 
 export async function getWebsiteToken() {
   if (state.tokenState && state.tokenState.expiresAt > Date.now()) {

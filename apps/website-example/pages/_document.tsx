@@ -3,30 +3,29 @@ import {
   DocumentHeadTags,
   DocumentHeadTagsProps,
 } from '@mui/material-nextjs/v15-pagesRouter';
-import { captureException } from '@sentry/react';
-import { getApiUrl, withDocumentToken } from '@wepublish/utils/website';
-import { Head, Html, Main, NextScript } from 'next/document';
+import { getApiUrl } from '@wepublish/utils/website';
+import {
+  getApiClient,
+  WebsiteSettings,
+  WebsiteSettingsDocument,
+} from '@wepublish/website/api';
+import { DocumentContext, Head, Html, Main, NextScript } from 'next/document';
 
-type MuiDocumentProps = DocumentHeadTagsProps & {
-  themeValues: Record<string, unknown> | null;
+type DocumentProps = DocumentHeadTagsProps & {
+  websiteSettings: WebsiteSettings;
 };
 
-export default function MuiDocument({
-  themeValues,
-  ...props
-}: MuiDocumentProps) {
+export default function MuiDocument(props: DocumentProps) {
   return (
     <Html lang="de">
       <Head>
         <DocumentHeadTags {...props} />
 
-        {themeValues && (
-          <script
-            id="theme-values"
-            type="application/json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(themeValues) }}
-          />
-        )}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.WEBSITE_SETTINGS = ${JSON.stringify(props.websiteSettings)}`,
+          }}
+        />
       </Head>
 
       <body>
@@ -37,30 +36,41 @@ export default function MuiDocument({
   );
 }
 
-const apiUrl = getApiUrl();
+MuiDocument.getInitialProps = async (ctx: DocumentContext) => {
+  const client = getApiClient(getApiUrl(), []);
+  await client.query({
+    query: WebsiteSettingsDocument,
+  });
+  const websiteSettings = client.cache.extract()['ROOT_QUERY']?.[
+    'websiteSettings'
+  ] as WebsiteSettings;
 
-MuiDocument.getInitialProps = withDocumentToken(async (ctx, token) => {
+  const originalRenderPage = ctx.renderPage;
+  ctx.renderPage = options => {
+    const opts =
+      typeof options === 'function' ? { enhanceApp: options } : (options ?? {});
+
+    return originalRenderPage({
+      ...opts,
+      enhanceApp: App => {
+        const Enhanced = opts.enhanceApp ? opts.enhanceApp(App as any) : App;
+
+        return function AppWithSettings(props) {
+          return (
+            <Enhanced
+              {...(props as any)}
+              websiteSettings={websiteSettings}
+            />
+          );
+        } as typeof App;
+      },
+    });
+  };
+
   const finalProps = await documentGetInitialProps(ctx);
-  let themeValues: Record<string, unknown> | null = null;
 
-  const headers: HeadersInit =
-    token ? { Authorization: `Bearer ${token}` } : {};
-
-  const dataResponses = await Promise.allSettled([
-    fetch(`${apiUrl}/v1/theme`, { headers }),
-  ]);
-
-  const [themeRes] = dataResponses;
-
-  if (themeRes.status === 'fulfilled' && themeRes.value.ok) {
-    themeValues = await themeRes.value.json();
-  }
-
-  for (const response of dataResponses) {
-    if (response.status === 'rejected') {
-      captureException(response.reason);
-    }
-  }
-
-  return { ...finalProps, themeValues };
-});
+  return {
+    ...finalProps,
+    websiteSettings,
+  };
+};

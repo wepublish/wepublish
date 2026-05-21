@@ -18,6 +18,7 @@ import { ComponentType, memo, useMemo } from 'react';
 import { createUploadLink } from 'apollo-upload-client';
 import { absoluteUrlToRelative } from './absolute-url-to-relative';
 import { omitDisabledBlocks } from './omit-disabled-blocks';
+import { omitSensitiveData } from './omit-sensitive-data';
 
 export const V1_CLIENT_STATE_PROP_NAME = '__APOLLO_STATE_V1__';
 
@@ -108,7 +109,7 @@ const createV1ApiClient = (
           absoluteUrlToRelative
         : ({} as TypePolicies),
         mergeDeepRight(
-          omitDisabledBlocks,
+          mergeDeepRight(omitDisabledBlocks, omitSensitiveData),
           cacheConfig?.typePolicies ?? ({} as TypePolicies)
         )
       ) as TypePolicies,
@@ -120,7 +121,7 @@ const createV1ApiClient = (
   });
 };
 
-export const getV1ApiClient = (
+export const getApiClient = (
   apiUrl: string,
   links: ApolloLink[],
   cacheConfig?: InMemoryCacheConfig,
@@ -141,21 +142,21 @@ export const getV1ApiClient = (
   return client;
 };
 
-export const useV1ApiClient = (
+export const useApiClient = (
   apiUrl: string,
   links: ApolloLink[] = [],
   cacheConfig?: InMemoryCacheConfig,
   cache?: NormalizedCacheObject
 ) => {
   const client = useMemo(
-    () => getV1ApiClient(apiUrl, links, cacheConfig, cache),
+    () => getApiClient(apiUrl, links, cacheConfig, cache),
     [apiUrl, links, cache, cacheConfig]
   );
 
   return client;
 };
 
-export const createWithV1ApiClient =
+export const createWithApiClient =
   (
     apiUrl: string,
     links: ApolloLink[] = [],
@@ -171,7 +172,7 @@ export const createWithV1ApiClient =
     ControlledComponent: ComponentType<P>
   ) =>
     memo<P | NextPage>(props => {
-      const client = useV1ApiClient(
+      const client = useApiClient(
         apiUrl,
         links,
         cacheConfig,
@@ -185,7 +186,7 @@ export const createWithV1ApiClient =
       );
     });
 
-export function addClientCacheToV1Props<P extends object>(
+export function addClientCacheToProps<P extends object>(
   client: ApolloClient<NormalizedCacheObject>,
   pageProps: P
 ) {

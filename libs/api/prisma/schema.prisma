@@ -1878,7 +1878,7 @@ model WebsiteSettings {
   adsSparkLoopEnabled Boolean @default(false)
   adsSparkLoopId      String?
 
-  // Ads
+  // Mails
   mailMailchimpEnabled Boolean @default(false)
   mailMailchimpKey     String?
 
