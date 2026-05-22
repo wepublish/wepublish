@@ -68,10 +68,11 @@ const HeroVimeoPlayer = styled('iframe')`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  min-width: 100%;
+  min-height: 100%;
+  width: max(100%, calc(100vh * 21 / 9)) !important;
+  height: max(100%, calc(100vw * 21 / 9)) !important;
   border: 0;
-  /* Cover both landscape (16:9) and portrait (9:16) videos */
-  width: max(100%, calc(100vh * 16 / 9)) !important;
-  height: max(100%, calc(100vw * 16 / 9)) !important;
   pointer-events: none;
 `;
 
