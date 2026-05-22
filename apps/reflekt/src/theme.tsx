@@ -89,6 +89,42 @@ const colors = {
   },
 };
 
+export const buttonLinkSecondaryStyles = {
+  fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+  textTransform: 'uppercase' as const,
+  borderRadius: '9999px',
+  color: colors.common.white,
+  backgroundColor: colors.common.black,
+  padding: '20px 36px',
+  display: 'inline-block',
+  position: 'relative' as const,
+  textDecoration: 'none',
+  fontSize: '1rem',
+  fontWeight: 400,
+  lineHeight: 1,
+  boxShadow: `0 0 0 0 ${colors.secondary.light}`,
+  transform: 'translateY(0)',
+  transition:
+    'box-shadow 200ms cubic-bezier(0.34, 1.56, 0.64, 1), transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+  '@media (hover: hover)': {
+    '&::before': {
+      content: '""',
+      position: 'absolute' as const,
+      top: '-18px',
+      left: '-18px',
+      right: '-18px',
+      bottom: 0,
+    },
+    '&:hover': {
+      backgroundColor: colors.common.black,
+      color: colors.common.white,
+      textDecoration: 'none',
+      boxShadow: `0 -12px 0 0 ${colors.secondary.light}`,
+      transform: 'translateY(12px)',
+    },
+  },
+};
+
 const breakPointValues = {
   xs: 0,
   sm: 600,
@@ -564,6 +600,7 @@ const theme = createTheme(WePTheme, {
             backgroundColor: colors.secondary.light,
             padding: '20px 36px',
             display: 'inline-block',
+            position: 'relative',
             textDecoration: 'none',
             fontSize: '1rem',
             fontWeight: 400,
@@ -572,43 +609,28 @@ const theme = createTheme(WePTheme, {
             transform: 'translateY(0)',
             transition:
               'box-shadow 200ms cubic-bezier(0.34, 1.56, 0.64, 1), transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1)',
-            '&:hover': {
-              backgroundColor: colors.secondary.light,
-              color: colors.common.black,
-              textDecoration: 'none',
-              boxShadow: `0 -12px 0 0 ${colors.common.black}`,
-              transform: 'translateY(12px)',
+            '@media (hover: hover)': {
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: '-18px',
+                left: '-18px',
+                right: '-18px',
+                bottom: 0,
+              },
+              '&:hover': {
+                backgroundColor: colors.secondary.light,
+                color: colors.common.black,
+                textDecoration: 'none',
+                boxShadow: `0 -12px 0 0 ${colors.common.black}`,
+                transform: 'translateY(12px)',
+              },
             },
           },
         },
         {
           props: { variant: 'buttonLinkSecondary' },
-          style: {
-            fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
-              ','
-            ),
-            textTransform: 'uppercase',
-            borderRadius: '9999px',
-            color: colors.common.white,
-            backgroundColor: colors.common.black,
-            padding: '20px 36px',
-            display: 'inline-block',
-            textDecoration: 'none',
-            fontSize: '1rem',
-            fontWeight: 400,
-            lineHeight: 1,
-            boxShadow: `0 0 0 0 ${colors.secondary.light}`,
-            transform: 'translateY(0)',
-            transition:
-              'box-shadow 200ms cubic-bezier(0.34, 1.56, 0.64, 1), transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1)',
-            '&:hover': {
-              backgroundColor: colors.common.black,
-              color: colors.common.white,
-              textDecoration: 'none',
-              boxShadow: `0 -12px 0 0 ${colors.secondary.light}`,
-              transform: 'translateY(12px)',
-            },
-          },
+          style: buttonLinkSecondaryStyles,
         },
       ],
     },

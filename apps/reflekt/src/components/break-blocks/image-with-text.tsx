@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import {
   BreakBlock,
@@ -9,6 +10,7 @@ import { BlockContent } from '@wepublish/website/api';
 import { BuilderBreakBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
+import { buttonLinkSecondaryStyles } from '../../theme';
 import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 
 export const isImageWithTextBreakBlock = (
@@ -20,17 +22,8 @@ export const ImageWithTextBreakBlock = styled(BreakBlock)`
   background-color: ${({ theme }) => theme.palette.secondary.light};
   color: ${({ theme }) => theme.palette.common.black};
 
-  ${({ theme }) => theme.breakpoints.up('xs')} {
-    ${BreakBlockButton} {
-      background-color: ${({ theme }) => theme.palette.common.black};
-      color: ${({ theme }) => theme.palette.common.white};
-      text-transform: uppercase;
-
-      &:hover {
-        background-color: ${({ theme }) => theme.palette.common.black};
-        color: ${({ theme }) => theme.palette.common.white};
-      }
-    }
+  ${BreakBlockButton} {
+    ${css(buttonLinkSecondaryStyles)}
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {

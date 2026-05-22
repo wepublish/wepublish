@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import {
   BreakBlock,
@@ -12,6 +13,7 @@ import { BlockContent } from '@wepublish/website/api';
 import { BuilderBreakBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
+import { buttonLinkSecondaryStyles } from '../../theme';
 import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 
 export const isTeamBreakBlock = (
@@ -48,14 +50,7 @@ export const TeamBreakBlock = styled(BreakBlock)`
     row-gap: 2rem;
 
     ${BreakBlockButton} {
-      background-color: ${({ theme }) => theme.palette.common.black};
-      color: ${({ theme }) => theme.palette.common.white};
-      text-transform: uppercase;
-
-      &:hover {
-        background-color: ${({ theme }) => theme.palette.common.black};
-        color: ${({ theme }) => theme.palette.common.white};
-      }
+      ${css(buttonLinkSecondaryStyles)}
     }
 
 `;
