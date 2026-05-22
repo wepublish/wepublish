@@ -204,7 +204,7 @@ export const TeaserSlotsTopic = ({
                 index={index}
                 teaser={teaser}
                 alignment={alignmentForTeaserBlock(index, 3)}
-                blockStyle={blockStyle}
+                blockStyle={blockStyle.replace('Grid', '') as ReflektBlockType}
               />
             ))}
           </TeaserSlotsBlockTeasers>
