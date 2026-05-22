@@ -18,6 +18,7 @@ import {
   BlockContent,
   FlexAlignment,
   IFrameBlock as IFrameBlockType,
+  VimeoVideoBlock as VimeoVideoBlockType,
   YouTubeVideoBlock as YouTubeVideoBlockType,
 } from '@wepublish/website/api';
 import {
@@ -35,7 +36,6 @@ import { heroOffScreen } from '../reflekt-navbar';
 
 const isTrustedYouTubeUrl = (value?: string | null): boolean => {
   if (!value) return false;
-
   try {
     const hostname = new URL(value).hostname.toLowerCase();
     return (
@@ -47,6 +47,125 @@ const isTrustedYouTubeUrl = (value?: string | null): boolean => {
   } catch {
     return false;
   }
+};
+
+const getYouTubeVideoId = (value?: string | null): string | null => {
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    if (url.hostname === 'youtu.be') return url.pathname.slice(1) || null;
+    const v = url.searchParams.get('v');
+    if (v) return v;
+    const embedMatch = url.pathname.match(/^\/embed\/([^/?]+)/);
+    return embedMatch ? embedMatch[1] : null;
+  } catch {
+    return null;
+  }
+};
+
+const HeroVimeoPlayer = styled('iframe')`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 0;
+  /* Cover both landscape (16:9) and portrait (9:16) videos */
+  width: max(100%, calc(100vh * 16 / 9)) !important;
+  height: max(100%, calc(100vw * 16 / 9)) !important;
+  pointer-events: none;
+`;
+
+const HeroYouTubePlayer = styled(ReactPlayer)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100%;
+  min-height: 100%;
+  width: max(100%, calc(100vh * 16 / 9)) !important;
+  height: max(100%, calc(100vw * 16 / 9)) !important;
+  pointer-events: none;
+
+  * {
+    pointer-events: none;
+  }
+`;
+
+const EndMask = styled('div')`
+  position: absolute;
+  inset: 0;
+  background: black;
+  z-index: 1;
+  pointer-events: none;
+`;
+
+type HeroVimeoVideoProps = {
+  videoId: string;
+};
+
+const HeroVimeoVideo = ({ videoId }: HeroVimeoVideoProps) => (
+  <HeroVimeoPlayer
+    src={`https://player.vimeo.com/video/${videoId}?background=1&autoplay=1&muted=1&loop=1&controls=0&title=0&byline=0&portrait=0`}
+    allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+    title="hero video"
+  />
+);
+
+type HeroYouTubeVideoProps = {
+  videoUrl: string;
+  isActiveBlock: boolean;
+  muted: boolean;
+  noLoop: boolean;
+};
+
+const HeroYouTubeVideo = ({
+  videoUrl,
+  isActiveBlock,
+  muted,
+  noLoop,
+}: HeroYouTubeVideoProps) => {
+  const [ended, setEnded] = useState(false);
+  const playerRef = useRef<ReactPlayer>(null);
+  return (
+    <>
+      <HeroYouTubePlayer
+        ref={playerRef}
+        url={videoUrl}
+        playing={isActiveBlock}
+        loop={!noLoop}
+        muted={muted || !isActiveBlock}
+        playsinline
+        controls={false}
+        width="100%"
+        height="100%"
+        onEnded={() => setEnded(true)}
+        onPlay={() => setEnded(false)}
+        onReady={() => {
+          const internalPlayer = playerRef.current?.getInternalPlayer();
+          internalPlayer?.playVideo?.();
+        }}
+        config={{
+          youtube: {
+            playerVars: {
+              origin: window.location.origin,
+              widget_referrer: window.location.origin,
+              autoplay: 0,
+              controls: 0,
+              modestbranding: 1,
+              playsinline: 1,
+              rel: 0,
+              showinfo: 0,
+              disablekb: 1,
+              fs: 0,
+              iv_load_policy: 3,
+              cc_load_policy: 0,
+            },
+          },
+        }}
+      />
+      {ended && <EndMask />}
+    </>
+  );
 };
 
 export const isFlexBlockHero = (
@@ -83,20 +202,6 @@ const MuteButton = styled('button')`
     width: 20px;
     height: 20px;
   }
-`;
-
-const HeroYouTubePlayer = styled(ReactPlayer)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  /* Scale up to guarantee cover: at least 100% wide and 100% tall */
-  min-width: 100%;
-  min-height: 100%;
-  /* Use 16/9 on both axes so both landscape (16:9) and portrait (9:16) videos cover */
-  width: max(100%, calc(100vh * 16 / 9)) !important;
-  height: max(100%, calc(100vw * 16 / 9)) !important;
-  pointer-events: none;
 `;
 
 export const FlexBlockHeroWrapper = styled('div')`
@@ -217,16 +322,24 @@ export const FlexBlockHero = ({
       ref={ref}
     >
       {sortedBlocks.map((nestedBlock, index) => {
+        const isVimeoBlock =
+          nestedBlock.block?.__typename === 'VimeoVideoBlock';
+        const vimeoId =
+          isVimeoBlock ?
+            (nestedBlock.block as VimeoVideoBlockType).videoID
+          : null;
         const isYouTube = nestedBlock.block?.__typename === 'YouTubeVideoBlock';
         const isYouTubeIframe =
           nestedBlock.block?.__typename === 'IFrameBlock' &&
           isTrustedYouTubeUrl((nestedBlock.block as IFrameBlockType).url);
-        const isHeroVideo = isYouTube || isYouTubeIframe;
+        const isHeroYouTubeVideo = isVimeoBlock || isYouTube || isYouTubeIframe;
+        const youtubeId =
+          isYouTube ? (nestedBlock.block as YouTubeVideoBlockType).videoID
+          : isYouTubeIframe ?
+            getYouTubeVideoId((nestedBlock.block as IFrameBlockType).url)
+          : null;
         const videoUrl =
-          isYouTube ?
-            `https://www.youtube.com/watch?v=${(nestedBlock.block as YouTubeVideoBlockType).videoID}`
-          : isYouTubeIframe ? ((nestedBlock.block as IFrameBlockType).url ?? '')
-          : '';
+          youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : '';
         // index 0 = mobile (visible < md), index 1 = desktop (visible >= md)
         const isActiveBlock = index === 0 ? !isDesktop : isDesktop;
 
@@ -235,73 +348,60 @@ export const FlexBlockHero = ({
             key={index}
             {...(nestedBlock.alignment as FlexAlignment)}
           >
-            {isHeroVideo && mounted ?
+            {isHeroYouTubeVideo && mounted ?
               <YouTubeVideoBlockWrapper>
-                <HeroYouTubePlayer
-                  url={videoUrl}
-                  playing={isActiveBlock}
-                  loop={!noLoop}
-                  muted={muted || !isActiveBlock}
-                  playsinline
-                  controls={false}
-                  width="100%"
-                  height="100%"
-                  config={{
-                    youtube: {
-                      playerVars: {
-                        autoplay: 1,
-                        modestbranding: 1,
-                        playsinline: 1,
-                        rel: 0,
-                        showinfo: 0,
-                        disablekb: 1,
-                        fs: 0,
-                        iv_load_policy: 3,
-                      },
-                    },
-                  }}
-                />
-                <MuteButton
-                  onClick={() => setMuted(m => !m)}
-                  aria-label={muted ? 'Unmute' : 'Mute'}
-                >
-                  {muted ?
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                      <line
-                        x1="23"
-                        y1="9"
-                        x2="17"
-                        y2="15"
-                      />
-                      <line
-                        x1="17"
-                        y1="9"
-                        x2="23"
-                        y2="15"
-                      />
-                    </svg>
-                  : <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                    </svg>
-                  }
-                </MuteButton>
+                {isVimeoBlock && vimeoId ?
+                  <HeroVimeoVideo videoId={vimeoId} />
+                : <HeroYouTubeVideo
+                    videoUrl={videoUrl}
+                    isActiveBlock={isActiveBlock}
+                    muted={muted}
+                    noLoop={!!noLoop}
+                  />
+                }
+                {false && (
+                  <MuteButton
+                    onClick={() => setMuted(m => !m)}
+                    aria-label={muted ? 'Unmute' : 'Mute'}
+                  >
+                    {muted ?
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                        <line
+                          x1="23"
+                          y1="9"
+                          x2="17"
+                          y2="15"
+                        />
+                        <line
+                          x1="17"
+                          y1="9"
+                          x2="23"
+                          y2="15"
+                        />
+                      </svg>
+                    : <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                      </svg>
+                    }
+                  </MuteButton>
+                )}
               </YouTubeVideoBlockWrapper>
             : <Renderer
                 block={nestedBlock.block as BlockContent}

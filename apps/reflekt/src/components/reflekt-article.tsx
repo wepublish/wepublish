@@ -9,6 +9,7 @@ import {
 import {
   BreakBlockWrapper,
   EventBlockWrapper,
+  HtmlBlockWrapper,
   ImageBlockWrapper,
   ImageGalleryBlockWrapper,
   SliderWrapper,
@@ -94,6 +95,11 @@ export const ArticleWrapper = styled(ContentWrapper)<{
   & > :is(${FlexBlockHeroWrapper}, ${FlexBlockFullsizeImageWrapper}) {
     margin-left: -${({ theme }) => theme.spacing(2)};
     margin-right: -${({ theme }) => theme.spacing(2)};
+  }
+
+  ${HtmlBlockWrapper} {
+    overflow: hidden;
+    max-width: calc(100vw - ${({ theme }) => theme.spacing(6)});
   }
 
   ${({ theme }) => theme.breakpoints.up('md')} {

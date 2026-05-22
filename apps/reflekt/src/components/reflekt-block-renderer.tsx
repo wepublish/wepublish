@@ -154,7 +154,7 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
               ) !important;
             //grid-template-columns: subgrid !important;
             & > * {
-              grid-column: 3/14;
+              grid-column: 2/13;
               margin-left: 0;
               margin-right: 0;
             }
