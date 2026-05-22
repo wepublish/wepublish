@@ -196,12 +196,13 @@ export const NavbarLoginLink = styled(Link, {
     `}
 `;
 
-const navbarButtonStyles: SxProps<Theme> = theme => ({
-  [theme.breakpoints.up('sm')]: {
-    fontSize: `calc(${theme.typography.button.fontSize} * 1.1)`,
-    padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`,
-  },
-});
+export const navbarButtonStyles = (theme: Theme) =>
+  ({
+    [theme.breakpoints.up('sm')]: {
+      fontSize: `calc(${theme.typography.button.fontSize} * 1.1)`,
+      padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`,
+    },
+  }) satisfies SxProps<Theme>;
 
 export const NavbarLogoWrapper = styled('div')`
   fill: currentColor;

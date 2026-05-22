@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { Box } from '@mui/material';
 import { ImageWrapper } from '@wepublish/image/website';
 import {
-  NavbarActions,
+  navbarButtonStyles,
   NavbarContainer,
   NavPaperActions,
 } from '@wepublish/navigation/website';
@@ -11,14 +11,6 @@ import { Button, Link } from '@wepublish/website/builder';
 export const GanzGrazNavbar = styled(NavbarContainer)`
   grid-column: -1/1;
   z-index: 11;
-
-  ${({ theme }) => theme.breakpoints.down('md')} {
-    ${NavbarActions} {
-      *:not(.js-always-show) {
-        display: none;
-      }
-    }
-  }
 
   ${NavPaperActions} {
     margin-top: ${({ theme }) => theme.spacing(1)};
@@ -66,9 +58,12 @@ export const GanzGrazNavbarActions = () => (
     color="accent"
     variant="contained"
     href="https://news.ganzgraz.at"
-    className="js-always-show"
+    sx={theme => ({
+      ...navbarButtonStyles(theme),
+      display: { xs: 'none', md: 'unset' },
+    })}
   >
-    <Box sx={{ display: { xs: 'none', sm: 'unset' } }}>Zum</Box>
+    <Box sx={{ display: { xs: 'none', lg: 'unset' } }}>Zum</Box>
     &nbsp;Graz-Newsletter
   </Button>
 );
