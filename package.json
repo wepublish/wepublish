@@ -330,7 +330,7 @@
     "react-router-dom": "^6.3.0",
     "react-sortable-hoc": "^1.11.0",
     "react-turnstile": "^1.1.4",
-    "react-tweet": "^3.2.1",
+    "react-tweet": "^3.3.0",
     "recharts": "^2.5.0",
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "0.13.7",

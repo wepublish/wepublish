@@ -4,7 +4,23 @@ import {
   TwitterTweetBlock as TwitterTweetBlockType,
 } from '@wepublish/website/api';
 import { BuilderTwitterTweetBlockProps } from '@wepublish/website/builder';
+import { Component, PropsWithChildren } from 'react';
 import { Tweet } from 'react-tweet';
+
+class TweetErrorBoundary extends Component<
+  PropsWithChildren,
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    return this.state.hasError ? null : this.props.children;
+  }
+}
 
 export const isTwitterTweetBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -26,7 +42,9 @@ export function TwitterTweetBlock({
       className={className}
       data-theme="dark"
     >
-      <Tweet id={tweetID} />
+      <TweetErrorBoundary>
+        <Tweet id={tweetID} />
+      </TweetErrorBoundary>
     </TwitterTweetBlockWrapper>
   );
 }
