@@ -9,7 +9,7 @@ import {
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
 import { useKeenSlider } from 'keen-slider/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 
 import { eenewsColors } from '../../theme';
@@ -119,17 +119,11 @@ export const EenewsTopNewsCarousel = ({
   blockStyle,
   className,
 }: BuilderTeaserSlotsBlockProps) => {
+  // Hooks — all called unconditionally, at the top, in a fixed order.
   const {
     blocks: { Teaser },
   } = useWebsiteBuilder();
-  const filled = (teasers ?? []).filter(isFilledTeaser);
   const [currentSlide, setCurrentSlide] = useState(0);
-
-  const pages: (typeof filled)[] = [];
-  for (let i = 0; i < filled.length; i += PER_PAGE) {
-    pages.push(filled.slice(i, i + PER_PAGE));
-  }
-
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     loop: true,
     slides: { perView: 1 },
@@ -138,10 +132,19 @@ export const EenewsTopNewsCarousel = ({
     },
   });
 
+  const pages = useMemo(() => {
+    const filled = (teasers ?? []).filter(isFilledTeaser);
+    const out: (typeof filled)[] = [];
+    for (let i = 0; i < filled.length; i += PER_PAGE) {
+      out.push(filled.slice(i, i + PER_PAGE));
+    }
+    return out;
+  }, [teasers]);
+
   useEffect(() => {
     const frame = requestAnimationFrame(() => instanceRef.current?.update());
     return () => cancelAnimationFrame(frame);
-  }, [instanceRef, filled.length]);
+  }, [instanceRef, pages.length]);
 
   if (!pages.length) {
     return null;
