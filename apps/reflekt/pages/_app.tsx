@@ -50,6 +50,7 @@ import {
 import { RefFooter } from '../src/components/reflekt-footer';
 import { ReflektGlobalScripts } from '../src/components/reflekt-global-scripts';
 import { ReflektGlobalStyles } from '../src/components/reflekt-global-styles';
+import { ReflektImageBlock } from '../src/components/reflekt-image-block';
 import {
   ReflektListItem,
   ReflektUnorderedList,
@@ -147,6 +148,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             Renderer: ReflektBlockRenderer,
             Blocks: ReflektBlocks,
             Subscribe: ReflektSubscribe,
+            Image: ReflektImageBlock,
           }}
         >
           <ThemeProvider theme={theme}>

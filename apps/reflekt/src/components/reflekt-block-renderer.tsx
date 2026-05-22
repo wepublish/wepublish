@@ -144,7 +144,11 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
           `,
         ],
         [
-          anyPass([isImageBlock, isRichTextBlock]),
+          allPass([
+            (block: BlockContent) =>
+              anyPass([isImageBlock, isRichTextBlock])(block),
+            () => !isMobile,
+          ]),
           () => css`
             grid-template-columns:
               max(calc(100vw - var(--breakpoint-width)) / 2, 0px)
@@ -152,7 +156,6 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
                 calc(100vw - var(--breakpoint-width)) / 2,
                 0px
               ) !important;
-            //grid-template-columns: subgrid !important;
             & > * {
               grid-column: 2/13;
               margin-left: 0;

@@ -172,6 +172,7 @@ export const BannerBase = ({
                           width: '300px',
                           '& .MuiOutlinedInput-root': {
                             backgroundColor: 'white',
+                            borderRadius: '0',
                           },
                           '& input::placeholder': {
                             fontStyle: 'italic',
@@ -269,7 +270,7 @@ const StyledBanner = styled(BannerBase, {
       margin-left: auto;
       margin-right: auto;
       font-size: 1.125rem;
-      lineheight: 1.2;
+      line-height: 1.2;
     }
 
     ${BannerCtaText} {
@@ -444,7 +445,7 @@ export const ReflektBanner = (props: BuilderBannerProps) => {
   }, [props.data?.primaryBanner]);
 
   const handleClose: DialogProps['onClose'] = (event, reason) => {
-    if (reason && reason === 'backdropClick') return;
+    if (reason === 'backdropClick' || reason === 'escapeKeyDown') return;
     setModalOpen(false);
   };
 
@@ -452,6 +453,7 @@ export const ReflektBanner = (props: BuilderBannerProps) => {
     <Modal
       open={modalOpen}
       onClose={handleClose}
+      disableEscapeKeyDown
       slotProps={{
         backdrop: {
           sx: {

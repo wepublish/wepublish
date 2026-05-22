@@ -4,6 +4,7 @@ import { hasBlockStyle } from '@wepublish/block-content/website';
 import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
 import {
   ReflektTeaser,
+  TeaserAuthors,
   TeaserContentWrapper,
   TeaserImage,
   TeaserImageInnerWrapper,
@@ -13,6 +14,7 @@ import {
   TeaserPreTitle,
   TeaserPreTitleNoContent,
   TeaserPreTitleWrapper,
+  TeaserTime,
   TeaserTitle,
 } from './reflekt-teaser';
 
@@ -24,7 +26,7 @@ export const TeaserRecherchen = styled(ReflektTeaser)`
   aspect-ratio: 365/528;
 
   ${TeaserContentWrapper} {
-    grid-template-rows: 10% auto min-content;
+    grid-template-rows: 10% auto min-content min-content;
     row-gap: 0;
     background-color: transparent;
 
@@ -71,10 +73,23 @@ export const TeaserRecherchen = styled(ReflektTeaser)`
 
   ${TeaserLead} {
     grid-row: 3 / 4;
+    visibility: hidden;
   }
 
   ${TeaserMetadata} {
-    display: none;
+    grid-row: 3 / 4;
+    display: block;
+    visibility: hidden;
+    position: absolute;
+
+    ${TeaserAuthors} {
+      display: block;
+      visibility: hidden;
+    }
+
+    ${TeaserTime} {
+      visibility: hidden;
+    }
   }
 
   ${TeaserPreTitleWrapper} {
