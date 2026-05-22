@@ -92,6 +92,7 @@ import { TokenList } from './routes/tokens/tokenList';
 import { UserRoleList } from './routes/userRoles/userRoleList';
 import { UserEditView } from './routes/users/userEditView';
 import { UserList } from './routes/users/userList';
+import { Seed } from './routes/seed/seed';
 import { SetNewPassword } from './setNewPassword';
 
 const LogoutMutation = gql`
@@ -1051,6 +1052,12 @@ export function App() {
                   <SettingList />
                 </Base>
               }
+            />
+            {/* Seed (dev-only — fills the CMS with ee-news v3 content per
+                ee-news-redesign-v3-system-design.md §11 + MP-8) */}
+            <Route
+              path="seed"
+              element={<Seed />}
             />
             {/* Logout */}
             <Route

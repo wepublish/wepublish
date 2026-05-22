@@ -9,13 +9,15 @@ import {
   PeerProfileDocument,
   useAuthorListQuery,
 } from '@wepublish/website/api';
-import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
+
+import { EenewsPageShell } from '../../src/components/eenews-page-shell';
+import { EenewsPagination } from '../../src/components/eenews-pagination';
 
 const take = 25;
 
@@ -24,10 +26,6 @@ const pageSchema = z.object({
 });
 
 export default function AuthorList() {
-  const {
-    elements: { Pagination },
-  } = useWebsiteBuilder();
-
   const { query, replace } = useRouter();
   const { page } = pageSchema.parse(query);
 
@@ -57,7 +55,7 @@ export default function AuthorList() {
   const canonicalUrl = '/author';
 
   return (
-    <>
+    <EenewsPageShell>
       <AuthorListContainer variables={variables} />
 
       {pageCount > 1 && (
@@ -70,22 +68,19 @@ export default function AuthorList() {
             />
           </Head>
 
-          <Pagination
+          <EenewsPagination
             page={page ?? 1}
-            count={pageCount}
-            onChange={(_, value) =>
-              replace(
-                {
-                  query: { ...query, page: value },
-                },
-                undefined,
-                { shallow: true, scroll: true }
-              )
+            totalPages={pageCount}
+            onChange={value =>
+              replace({ query: { ...query, page: value } }, undefined, {
+                shallow: true,
+                scroll: true,
+              })
             }
           />
         </>
       )}
-    </>
+    </EenewsPageShell>
   );
 }
 

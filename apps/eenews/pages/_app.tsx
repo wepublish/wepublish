@@ -1,6 +1,6 @@
 import { EmotionCache } from '@emotion/cache';
 import styled from '@emotion/styled';
-import { Container, css, CssBaseline, ThemeProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import {
   AppCacheProvider,
   createEmotionCache,
@@ -37,6 +37,20 @@ import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import { EenewsBlockRenderer } from '../src/components/block-renderer/eenews-block-renderer';
+import { EenewsTeaser } from '../src/components/blocks/eenews-teaser';
+import { EenewsArticle } from '../src/components/eenews-article';
+import { EenewsAuthor } from '../src/components/eenews-author';
+import { EenewsAuthorListItem } from '../src/components/eenews-author-list-item';
+import { EenewsFooter } from '../src/components/eenews-footer';
+import { EenewsInvoiceListItem } from '../src/components/eenews-invoice-list-item';
+import { EenewsMemberPlanItem } from '../src/components/eenews-member-plan-item';
+import { EenewsMemberPlanPicker } from '../src/components/eenews-member-plan-picker';
+import { EenewsNavbar } from '../src/components/eenews-navbar';
+import { EenewsPaymentMethodPicker } from '../src/components/eenews-payment-method-picker';
+import { EenewsPeriodicityPicker } from '../src/components/eenews-periodicity-picker';
+import { EenewsSubscriptionListItem } from '../src/components/eenews-subscription-list-item';
+import { EenewsTagPage } from '../src/components/eenews-tag-page';
 import theme from '../src/theme';
 
 setDefaultOptions({
@@ -46,23 +60,13 @@ setDefaultOptions({
 initWePublishTranslator();
 z.setErrorMap(zodI18nMap);
 
+// Full-width page shell — topbar + main + footer. The main area is NOT
+// wrapped in a Container here; each page brings its own layout (full-bleed
+// hero sections / max-width-1340 inner grids) per system design §6.
 const Spacer = styled('div')`
   display: grid;
-  align-items: flex-start;
   grid-template-rows: min-content 1fr min-content;
-  gap: ${({ theme }) => theme.spacing(3)};
   min-height: 100vh;
-`;
-
-const MainSpacer = styled(Container)`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing(5)};
-
-  ${({ theme }) => css`
-    ${theme.breakpoints.up('md')} {
-      gap: ${theme.spacing(10)};
-    }
-  `}
 `;
 
 const NavBar = styled(NavbarContainer)`
@@ -93,6 +97,19 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
+          Navbar={EenewsNavbar}
+          Footer={EenewsFooter}
+          Article={EenewsArticle}
+          Tag={EenewsTagPage}
+          Author={EenewsAuthor}
+          AuthorListItem={EenewsAuthorListItem}
+          MemberPlanItem={EenewsMemberPlanItem}
+          MemberPlanPicker={EenewsMemberPlanPicker}
+          PeriodicityPicker={EenewsPeriodicityPicker}
+          PaymentMethodPicker={EenewsPaymentMethodPicker}
+          SubscriptionListItem={EenewsSubscriptionListItem}
+          InvoiceListItem={EenewsInvoiceListItem}
+          blocks={{ Renderer: EenewsBlockRenderer, Teaser: EenewsTeaser }}
           elements={{ Link: NextWepublishLink }}
           date={{ format: dateFormatter }}
           meta={{ siteTitle }}
@@ -171,22 +188,26 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 
             <Spacer>
               <NavBar
-                categorySlugs={[['categories', 'about-us']]}
                 slug="main"
                 headerSlug="header"
-                iconSlug="icons"
+                categorySlugs={[
+                  [
+                    'mega-themen',
+                    'mega-dossiers',
+                    'mega-region',
+                    'mega-about',
+                    'mega-about-secondary',
+                  ],
+                ]}
               />
 
               <main>
-                <MainSpacer maxWidth="lg">
-                  <Component {...pageProps} />
-                </MainSpacer>
+                <Component {...pageProps} />
               </main>
 
               <FooterContainer
-                slug="footer"
-                categorySlugs={[['categories', 'about-us']]}
-                iconSlug="icons"
+                slug="footer-konto"
+                categorySlugs={[['footer-themen', 'footer-magazin']]}
               />
             </Spacer>
 
