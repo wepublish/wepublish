@@ -1,34 +1,46 @@
+fragment WebsiteSettings on WebsiteSettings {
+  analytics {
+    googleAnalytics {
+      enabled
+      key
+    }
+
+    googleTagManager {
+      enabled
+      key
+    }
+
+    plausible {
+      enabled
+      key
+    }
+  }
+
+  ads {
+    sparkLoop {
+      enabled
+      key
+    }
+  }
+}
+
+fragment SensitiveWebsiteSettings on WebsiteSettings {
+  mail {
+    mailchimp {
+      enabled
+      key
+    }
+  }
+}
+
 query WebsiteSettings {
   websiteSettings {
-    analytics {
-      googleAnalytics {
-        enabled
-        key
-      }
+    ...WebsiteSettings
+  }
+}
 
-      googleTagManager {
-        enabled
-        key
-      }
-
-      plausible {
-        enabled
-        key
-      }
-    }
-
-    mail {
-      mailchimp {
-        enabled
-        key
-      }
-    }
-
-    ads {
-      sparkLoop {
-        enabled
-        key
-      }
-    }
+query SensitiveWebsiteSettings {
+  websiteSettings {
+    ...SensitiveWebsiteSettings
   }
 }

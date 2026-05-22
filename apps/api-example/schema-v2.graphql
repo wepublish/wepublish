@@ -4272,7 +4272,7 @@ input WebsiteAnalyticsInput {
 }
 
 type WebsiteMail {
-  mailchimp: KeyEnabled!
+  mailchimp: KeyEnabled
 }
 
 input WebsiteMailInput {

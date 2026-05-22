@@ -43,8 +43,8 @@ export class WebsiteAnalyticsInput {
 
 @ObjectType()
 export class WebsiteMail {
-  @Field(() => KeyEnabled)
-  mailchimp!: KeyEnabled;
+  @Field(() => KeyEnabled, { nullable: true })
+  mailchimp?: KeyEnabled;
 }
 
 @InputType()

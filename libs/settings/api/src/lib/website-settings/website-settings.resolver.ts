@@ -6,7 +6,14 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { Public, ScopedJwt } from '@wepublish/authentication/api';
+import {
+  AuthToken,
+  CurrentUser,
+  Public,
+  SCOPED_JWT_METADATA_KEY,
+  ScopedJwtVerifier,
+  UserSession,
+} from '@wepublish/authentication/api';
 import { WebsiteSettingsService } from './website-settings.service';
 import { WebsiteSettings as PWebsiteSettings } from '@prisma/client';
 import {
@@ -16,8 +23,12 @@ import {
   WebsiteMail,
   WebsiteAds,
 } from './website-settings.model';
-import { Permissions } from '@wepublish/permissions/api';
-import { CanUpdateWebsiteSettings } from '@wepublish/permissions';
+import { hasPermission, Permissions } from '@wepublish/permissions/api';
+import {
+  CanGetWebsiteSettings,
+  CanUpdateWebsiteSettings,
+} from '@wepublish/permissions';
+import { Inject } from '@nestjs/common';
 
 @Resolver(() => WebsiteSettings)
 export class WebsiteSettingsResolver {
@@ -59,8 +70,6 @@ export class WebsiteSettingsResolver {
     };
   }
 
-  @ScopedJwt('read:website-settings')
-  // @Permissions(CanGetWebsiteSettings)
   @ResolveField(() => WebsiteAnalytics)
   mail(@Parent() parent: PWebsiteSettings): WebsiteMail {
     return {
@@ -79,5 +88,30 @@ export class WebsiteSettingsResolver {
         key: parent.adsSparkLoopId ?? undefined,
       },
     };
+  }
+}
+
+@Resolver(() => WebsiteMail)
+export class WebsiteMailResolver {
+  constructor(
+    @Inject(SCOPED_JWT_METADATA_KEY)
+    private jwt: ScopedJwtVerifier
+  ) {}
+
+  @ResolveField(() => WebsiteAnalytics, { nullable: true })
+  mailchimp(
+    @Parent() parent: WebsiteMail,
+    @CurrentUser() session: UserSession | null,
+    @AuthToken() authToken: string | null
+  ) {
+    const hasPerms =
+      hasPermission(CanGetWebsiteSettings, session?.roles ?? []) ||
+      this.jwt.verifyScopedJWT(authToken ?? '', 'read:website-settings');
+
+    if (!hasPerms) {
+      return null;
+    }
+
+    return parent.mailchimp;
   }
 }

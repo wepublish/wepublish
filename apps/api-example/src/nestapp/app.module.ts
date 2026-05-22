@@ -2,7 +2,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Global, Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { GraphQLModule } from '@nestjs/graphql';
+import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
 import { ScheduleModule } from '@nestjs/schedule';
 
 import { HttpModule, HttpService } from '@nestjs/axios';
@@ -139,7 +139,7 @@ import {
           allowBatchedHttpRequests: true,
           inheritResolversFromInterfaces: true,
           csrfPrevention: false,
-        } as ApolloDriverConfig;
+        } as ApolloDriverConfig & GqlModuleOptions;
       },
     }),
     KvTtlCacheModule,
@@ -413,7 +413,6 @@ import {
         const configFile = await readConfig(
           config.getOrThrow('CONFIG_FILE_PATH')
         );
-        configFile.general.sessionTTLDays;
         const MS_PER_DAY = 24 * 60 * 60 * 1000;
         const sessionTTLDays =
           configFile.general.sessionTTLDays ?
@@ -428,14 +427,14 @@ import {
           /\\n/g,
           '\n'
         );
-        const hostURL = config.get('HOST_URL') || 'http://localhost:4000';
-        const websiteURL = config.get('WEBSITE_URL') || 'http://localhost:3000';
+        const hostURL = config.getOrThrow('HOST_URL');
+        const websiteURL = config.getOrThrow('WEBSITE_URL');
 
         if (
           process.env.NODE_ENV === 'production' &&
           (!jwtPrivateKey || !jwtPublicKey)
         ) {
-          console.warn(
+          console.error(
             'WARNING: JWT_PRIVATE_KEY or JWT_PUBLIC_KEY not set in production environment!'
           );
         }

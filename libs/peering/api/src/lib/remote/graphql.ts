@@ -6017,7 +6017,7 @@ export type WebsiteAnalyticsInput = {
 
 export type WebsiteMail = {
   __typename?: 'WebsiteMail';
-  mailchimp: KeyEnabled;
+  mailchimp?: Maybe<KeyEnabled>;
 };
 
 export type WebsiteMailInput = {

@@ -27,7 +27,7 @@ import { previewLink } from '@wepublish/website/admin';
 import {
   createWithApiClient,
   SessionWithTokenWithoutUser,
-  WebsiteSettings,
+  WebsiteSettingsFragment,
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
@@ -79,7 +79,7 @@ const dateFormatter = (date: Date, includeTime = true) =>
 
 export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettings };
+}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
 
 function CustomApp({
   Component,
@@ -94,15 +94,21 @@ function CustomApp({
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
 
-  const settings = websiteSettings ?? window.WEBSITE_SETTINGS;
+  const settings =
+    websiteSettings ??
+    (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
+
+  const settings =
+    websiteSettings ??
+    (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
   return (
     <PlausibleProvider
       enabled={
-        settings.analytics.plausible.enabled &&
-        !!settings.analytics.plausible.key
+        settings?.analytics.plausible.enabled &&
+        !!settings?.analytics.plausible.key
       }
-      src={`https://plausible.io/js/${settings.analytics.plausible.key}.js`}
+      src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
     >
       <AppCacheProvider emotionCache={cache}>
         <WebsiteProvider>

@@ -1,3 +1,4 @@
+import { EmotionCache } from '@emotion/cache';
 import styled from '@emotion/styled';
 import { Container, css, CssBaseline, ThemeProvider } from '@mui/material';
 import { withErrorSnackbar } from '@wepublish/errors/website';
@@ -10,7 +11,6 @@ import {
   authLink,
   getApiUrl,
   initWePublishTranslator,
-  initWebsiteToken,
   NextWepublishLink,
   RoutedAdminBar,
   withBuilderRouter,
@@ -22,12 +22,12 @@ import { previewLink } from '@wepublish/website/admin';
 import {
   createWithApiClient,
   SessionWithTokenWithoutUser,
+  WebsiteSettingsFragment,
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
-import getConfig from 'next/config';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
@@ -72,9 +72,9 @@ const dateFormatter = (date: Date, includeTime = true) =>
     `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
   : format(date, 'dd. MMMM yyyy');
 
-type CustomAppProps = AppProps<{
+export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}>;
+}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
 
 function CustomApp({ Component, pageProps }: CustomAppProps) {
   const siteTitle = 'We.Publish';
@@ -192,7 +192,6 @@ function CustomApp({ Component, pageProps }: CustomAppProps) {
   );
 }
 
-const { publicRuntimeConfig } = getConfig();
 const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
 
 const ConnectedApp = withApollo(

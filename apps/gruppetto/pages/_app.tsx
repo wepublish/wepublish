@@ -108,17 +108,26 @@ const NavBar = styled(NavbarContainer)`
 
 const { publicRuntimeConfig } = getConfig();
 
-type CustomAppProps = AppProps<{
+export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache };
+}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
 
-function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
+function CustomApp({
+  Component,
+  pageProps,
+  emotionCache,
+  websiteSettings,
+}: CustomAppProps) {
   const siteTitle = 'Gruppetto - Das neue Schweizer Radsportmagazin';
 
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
+
+  const settings =
+    websiteSettings ??
+    (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
   return (
     <AppCacheProvider emotionCache={cache}>

@@ -6,8 +6,9 @@ export const omitSensitiveData: Exclude<
   undefined
 > = {
   WebsiteMail: {
+    keyFields: false,
     fields: {
-      mailChimp: {
+      mailchimp: {
         merge: (_, key: KeyEnabled) => {
           return {
             ...key,

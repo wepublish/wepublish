@@ -1,11 +1,11 @@
 import {
   documentGetInitialProps,
   DocumentHeadTags,
-  DocumentHeadTagsProps,
-} from '@mui/material-nextjs/v15-pagesRouter';
+  DocumentProps,
+} from '@wepublish/utils/website';
 import { DocumentContext, Head, Html, Main, NextScript } from 'next/document';
 
-export default function MuiDocument(props: DocumentHeadTagsProps) {
+export default function Document(props: DocumentProps) {
   return (
     <Html lang="de">
       <Head>
@@ -20,8 +20,8 @@ export default function MuiDocument(props: DocumentHeadTagsProps) {
   );
 }
 
-MuiDocument.getInitialProps = async (ctx: DocumentContext) => {
-  const finalProps = await documentGetInitialProps(ctx);
+Document.getInitialProps = async (ctx: DocumentContext) => {
+  const { props } = await documentGetInitialProps(ctx);
 
-  return finalProps;
+  return props;
 };

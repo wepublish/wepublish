@@ -13,7 +13,7 @@ export interface ScopedJwtVerifier {
   verifyScopedJWT(token: string, expectedScope: string): Promise<boolean>;
 }
 
-export const SCOPED_JWT_VERIFIER = 'SCOPED_JWT_VERIFIER';
+export const SCOPED_JWT_VERIFIER = Symbol('SCOPED_JWT_VERIFIER');
 
 @Injectable()
 export class ScopedJwtGuard implements CanActivate {

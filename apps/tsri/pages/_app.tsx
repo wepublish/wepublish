@@ -27,6 +27,7 @@ import { previewLink } from '@wepublish/website/admin';
 import {
   createWithApiClient,
   SessionWithTokenWithoutUser,
+  WebsiteSettingsFragment,
 } from '@wepublish/website/api';
 import {
   BuilderBlockRendererProps,
@@ -111,17 +112,26 @@ const dateFormatter = (date: Date, includeTime = true) =>
     `${format(date, 'dd. MMMM yyyy')} | ${format(date, 'HH:mm')}`
   : format(date, 'dd. MMMM yyyy');
 
-type CustomAppProps = AppProps<{
+export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache };
+}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
 
-function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
+function CustomApp({
+  Component,
+  pageProps,
+  emotionCache,
+  websiteSettings,
+}: CustomAppProps) {
   const siteTitle = 'Tsri';
 
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
+
+  const settings =
+    websiteSettings ??
+    (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
   return (
     <AppCacheProvider emotionCache={cache}>
@@ -289,7 +299,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   );
 }
 
-const { publicRuntimeConfig } = getConfig();
 const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(

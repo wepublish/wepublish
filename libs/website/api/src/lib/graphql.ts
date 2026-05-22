@@ -6019,7 +6019,7 @@ export type WebsiteAnalyticsInput = {
 
 export type WebsiteMail = {
   __typename?: 'WebsiteMail';
-  mailchimp: KeyEnabled;
+  mailchimp?: Maybe<KeyEnabled>;
 };
 
 export type WebsiteMailInput = {
@@ -6662,10 +6662,19 @@ export type SettingQueryVariables = Exact<{
 
 export type SettingQuery = { __typename?: 'Query', setting: { __typename?: 'Setting', id: string, name: SettingName, value?: any | null } };
 
+export type WebsiteSettingsFragment = { __typename?: 'WebsiteSettings', analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } } };
+
+export type SensitiveWebsiteSettingsFragment = { __typename?: 'WebsiteSettings', mail: { __typename?: 'WebsiteMail', mailchimp?: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } | null } };
+
 export type WebsiteSettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type WebsiteSettingsQuery = { __typename?: 'Query', websiteSettings: { __typename?: 'WebsiteSettings', analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, mail: { __typename?: 'WebsiteMail', mailchimp: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } } } };
+export type WebsiteSettingsQuery = { __typename?: 'Query', websiteSettings: { __typename?: 'WebsiteSettings', analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } } } };
+
+export type SensitiveWebsiteSettingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SensitiveWebsiteSettingsQuery = { __typename?: 'Query', websiteSettings: { __typename?: 'WebsiteSettings', mail: { __typename?: 'WebsiteMail', mailchimp?: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } | null } } };
 
 export type StatsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -7938,6 +7947,40 @@ export const FullSettingFragmentDoc = gql`
   id
   name
   value
+}
+    `;
+export const WebsiteSettingsFragmentDoc = gql`
+    fragment WebsiteSettings on WebsiteSettings {
+  analytics {
+    googleAnalytics {
+      enabled
+      key
+    }
+    googleTagManager {
+      enabled
+      key
+    }
+    plausible {
+      enabled
+      key
+    }
+  }
+  ads {
+    sparkLoop {
+      enabled
+      key
+    }
+  }
+}
+    `;
+export const SensitiveWebsiteSettingsFragmentDoc = gql`
+    fragment SensitiveWebsiteSettings on WebsiteSettings {
+  mail {
+    mailchimp {
+      enabled
+      key
+    }
+  }
 }
     `;
 export const FullTrackingPixelMethodFragmentDoc = gql`
@@ -9723,35 +9766,10 @@ export type SettingQueryResult = Apollo.QueryResult<SettingQuery, SettingQueryVa
 export const WebsiteSettingsDocument = gql`
     query WebsiteSettings {
   websiteSettings {
-    analytics {
-      googleAnalytics {
-        enabled
-        key
-      }
-      googleTagManager {
-        enabled
-        key
-      }
-      plausible {
-        enabled
-        key
-      }
-    }
-    mail {
-      mailchimp {
-        enabled
-        key
-      }
-    }
-    ads {
-      sparkLoop {
-        enabled
-        key
-      }
-    }
+    ...WebsiteSettings
   }
 }
-    `;
+    ${WebsiteSettingsFragmentDoc}`;
 
 /**
  * __useWebsiteSettingsQuery__
@@ -9779,6 +9797,40 @@ export function useWebsiteSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type WebsiteSettingsQueryHookResult = ReturnType<typeof useWebsiteSettingsQuery>;
 export type WebsiteSettingsLazyQueryHookResult = ReturnType<typeof useWebsiteSettingsLazyQuery>;
 export type WebsiteSettingsQueryResult = Apollo.QueryResult<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>;
+export const SensitiveWebsiteSettingsDocument = gql`
+    query SensitiveWebsiteSettings {
+  websiteSettings {
+    ...SensitiveWebsiteSettings
+  }
+}
+    ${SensitiveWebsiteSettingsFragmentDoc}`;
+
+/**
+ * __useSensitiveWebsiteSettingsQuery__
+ *
+ * To run a query within a React component, call `useSensitiveWebsiteSettingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSensitiveWebsiteSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSensitiveWebsiteSettingsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSensitiveWebsiteSettingsQuery(baseOptions?: Apollo.QueryHookOptions<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>(SensitiveWebsiteSettingsDocument, options);
+      }
+export function useSensitiveWebsiteSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>(SensitiveWebsiteSettingsDocument, options);
+        }
+export type SensitiveWebsiteSettingsQueryHookResult = ReturnType<typeof useSensitiveWebsiteSettingsQuery>;
+export type SensitiveWebsiteSettingsLazyQueryHookResult = ReturnType<typeof useSensitiveWebsiteSettingsLazyQuery>;
+export type SensitiveWebsiteSettingsQueryResult = Apollo.QueryResult<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>;
 export const StatsDocument = gql`
     query Stats {
   stats {

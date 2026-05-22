@@ -52,7 +52,7 @@ export class SessionModule {
       global: true,
       module: SessionModule,
       imports: options.imports || [],
-      exports: [SessionService, JwtService],
+      exports: [SessionService, JwtService, ScopedJwtGuard],
       controllers: [JwksController, WebsiteTokenController],
       providers: [
         ...this.createAsyncProviders(options),
