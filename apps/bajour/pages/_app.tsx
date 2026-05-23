@@ -5,7 +5,7 @@ import {
   AppCacheProvider,
   createEmotionCache,
 } from '@mui/material-nextjs/v15-pagesRouter';
-import { GoogleAnalytics } from '@next/third-parties/google';
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { withErrorSnackbar } from '@wepublish/errors/website';
 import {
   FooterContainer,
@@ -17,7 +17,6 @@ import {
   authLink,
   getApiUrl,
   initWePublishTranslator,
-  initWebsiteToken,
   NextWepublishLink,
   RoutedAdminBar,
   withBuilderRouter,
@@ -112,72 +111,6 @@ function CustomApp({
     <AppCacheProvider emotionCache={cache}>
       <Head>
         <title key="title">{siteTitle}</title>
-
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0"
-        />
-
-        {/* Feeds */}
-        <link
-          rel="alternate"
-          type="application/rss+xml"
-          href="/api/rss-feed"
-        />
-        <link
-          rel="alternate"
-          type="application/atom+xml"
-          href="/api/atom-feed"
-        />
-        <link
-          rel="alternate"
-          type="application/feed+json"
-          href="/api/json-feed"
-        />
-
-        {/* Sitemap */}
-        <link
-          rel="sitemap"
-          type="application/xml"
-          title="Sitemap"
-          href="/api/sitemap"
-        />
-
-        {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/apple-touch-icon.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon-16x16.png"
-        />
-        <link
-          rel="manifest"
-          href="/site.webmanifest"
-        />
-        <link
-          rel="mask-icon"
-          href="/safari-pinned-tab.svg"
-          color="#000000"
-        />
-        <meta
-          name="msapplication-TileColor"
-          content="#ffffff"
-        />
-        <meta
-          name="theme-color"
-          content="#ffffff"
-        />
       </Head>
 
       <WebsiteProvider>
@@ -229,8 +162,26 @@ function CustomApp({
 
             <RoutedAdminBar />
 
-            {publicRuntimeConfig.env.GA_ID && (
-              <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+            {settings?.analytics.googleAnalytics.enabled &&
+              settings?.analytics.googleAnalytics.key && (
+                <GoogleAnalytics
+                  gaId={settings.analytics.googleAnalytics.key}
+                />
+              )}
+
+            {settings?.analytics.googleTagManager.enabled &&
+              settings?.analytics.googleTagManager.key && (
+                <GoogleTagManager
+                  gtmId={settings.analytics.googleTagManager.key}
+                />
+              )}
+
+            {settings?.ads.sparkLoop.enabled && settings?.ads.sparkLoop.key && (
+              <Script
+                src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
+                strategy="lazyOnload"
+                data-sparkloop
+              />
             )}
 
             {popup && (

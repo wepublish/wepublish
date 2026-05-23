@@ -2175,7 +2175,7 @@ type Mutation {
   updateUserSubscription(id: String!, input: UpdateUserSubscriptionInput!): PublicSubscription
 
   """Updates the website settings."""
-  updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, mail: WebsiteMailInput): WebsiteSettings!
+  updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
 
   """"""
   upgradeUserSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
@@ -4283,6 +4283,7 @@ type WebsiteSettings {
   ads: WebsiteAds!
   analytics: WebsiteAnalytics!
   mail: WebsiteMail!
+  theme: JSONObject!
 }
 
 type YouTubeVideoBlock implements BaseBlock {

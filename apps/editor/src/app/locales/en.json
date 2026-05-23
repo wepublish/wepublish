@@ -1917,7 +1917,7 @@
       "challengeProvider": "Challenge Provider",
       "paymentProvider": "Payment Provider",
       "trackingPixel": "Tracking Pixel",
-      "analytics": "Analytics Provider",
+      "analytics": "Hot & Trending Provider",
       "mailProvider": "Mail Provider",
       "back": "Back to Integrations",
       "unknown": "Unknown Integration",
@@ -2097,7 +2097,69 @@
           "pa": "<url>Plausible Analytics</url> is a privacy-focused alternative to Google Analytics.",
           "paLocator": "You can find it in the <url>website settings</url> of your admin dashboard"
         }
-      }
+      },
+      "mail": {
+        "title": "Mail",
+        "mailchimp": {
+          "title": "Mailchimp",
+          "enable": "Enable Mailchimp",
+          "mailchimp": "<url>Mailchimp</url> is an email marketing platform that lets you manage newsletters and subscriber lists. This allows the website access to your Newsletters and being able to display them.",
+          "apiKeyLocator": "You can find it in the <url>API keys section</url> of your Mailchimp account. Make sure that it is a Mailchimp and not Mandrill key."
+        }
+      },
+      "ads": {
+        "title": "Ads",
+        "sparkLoop": {
+          "title": "SparkLoop",
+          "enable": "Enable SparkLoop",
+          "sparkLoop": "<url>SparkLoop</url> is a newsletter referral and recommendation platform that helps you grow your audience.",
+          "idLocator": "You can find your ID in the <url>script section</url> of your SparkLoop dashboard."
+        }
+      },
+      "theme": {
+        "palette": {
+          "primary": "Primary",
+          "primaryMain": "",
+          "secondary": "Secondary",
+          "secondaryMain": "",
+          "accent": "Accent",
+          "accentMain": "",
+          "info": "Info",
+          "success": "Success",
+          "error": "Error",
+          "warning": "Warning",
+          "divider": "Divider",
+          "main": "Main",
+          "light": "Light",
+          "dark": "Dark",
+          "contrastText": "Text color"
+        },
+        "typography": {
+          "h1": "Heading 1",
+          "h2": "Heading 2",
+          "h3": "Heading 3",
+          "h4": "Heading 4",
+          "h5": "Heading 5",
+          "h6": "Heading 6",
+          "body1": "Body 1",
+          "body2": "Body 2",
+          "caption": "Caption",
+          "teaserPretitle": "Teaser Pre-title",
+          "teaserTitle": "Teaser Title",
+          "teaserLead": "Teaser Lead",
+          "teaserMeta": "Teaser Meta",
+          "articleAuthors": "Article Authors",
+          "peerInformation": "Peer Information",
+          "bannerTitle": "Banner Title",
+          "bannerText": "Banner Text",
+          "bannerCta": "Banner CTA",
+          "blockBreakTitle": "Block Break Title",
+          "blockBreakBody": "Block Break Body",
+          "blockTitlePreTitle": "Block Title Pre-title",
+          "blockQuote": "Block Quote"
+        }
+      },
+      "saveSuccess": "Successfully saved the website settings"
     },
     "externalApps": {
       "apps": "Apps"

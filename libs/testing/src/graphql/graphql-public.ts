@@ -3208,6 +3208,7 @@ export type MutationUpdateWebsiteSettingsArgs = {
   ads?: InputMaybe<WebsiteAdsInput>;
   analytics?: InputMaybe<WebsiteAnalyticsInput>;
   mail?: InputMaybe<WebsiteMailInput>;
+  theme?: InputMaybe<Scalars['JSONObject']>;
 };
 
 export type MutationUpgradeUserSubscriptionArgs = {
@@ -5860,6 +5861,7 @@ export type WebsiteSettings = {
   ads: WebsiteAds;
   analytics: WebsiteAnalytics;
   mail: WebsiteMail;
+  theme: Scalars['JSONObject'];
 };
 
 export type YouTubeVideoBlock = BaseBlock & {

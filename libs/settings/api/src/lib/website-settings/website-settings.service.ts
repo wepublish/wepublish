@@ -42,6 +42,9 @@ export class WebsiteSettingsService {
         adsSparkLoopEnabled:
           input.ads?.sparkLoop.enabled ?? settings.adsSparkLoopEnabled,
         adsSparkLoopId: input.ads?.sparkLoop.key,
+
+        // Theme
+        theme: input.theme as any,
       },
     });
   }

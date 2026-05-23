@@ -5,6 +5,8 @@ import {
   OmitType,
   InputType,
 } from '@nestjs/graphql';
+import { GraphQLJSONObject } from 'graphql-type-json';
+import { type Theme } from '@mui/material';
 
 @ObjectType()
 export class KeyEnabled {
@@ -75,6 +77,9 @@ export class WebsiteSettings {
 
   @Field(() => WebsiteAds)
   ads!: WebsiteAds;
+
+  @Field(() => GraphQLJSONObject)
+  theme!: Theme;
 }
 
 @ArgsType()
@@ -85,4 +90,6 @@ export class UpdateWebsiteSettingsInput {
   mail?: WebsiteMailInput;
   @Field(() => WebsiteAdsInput, { nullable: true })
   ads?: WebsiteAdsInput;
+  @Field(() => GraphQLJSONObject, { nullable: true })
+  theme?: Theme;
 }

@@ -1,4 +1,4 @@
-import { List, SimplePaletteColorOptions } from '@mui/material';
+import { List } from '@mui/material';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
@@ -8,10 +8,9 @@ import { paletteSchema } from './schema';
 
 type PaletteListProps = {
   name: string;
-  defaultValue: z.infer<typeof paletteSchema>;
 };
 
-export const PaletteList = ({ name, defaultValue }: PaletteListProps) => {
+export const PaletteList = ({ name }: PaletteListProps) => {
   const { t } = useTranslation();
 
   const [openPalette, setOpenPalette] =
@@ -24,7 +23,6 @@ export const PaletteList = ({ name, defaultValue }: PaletteListProps) => {
     <List>
       <PaletteListItem
         name={`${name}.primary`}
-        defaultValue={defaultValue.primary as SimplePaletteColorOptions}
         keys={['main', 'dark', 'light', 'contrastText']}
         onOpen={handleOpenPalette('primary')}
         isOpen={openPalette === 'primary'}
@@ -32,7 +30,6 @@ export const PaletteList = ({ name, defaultValue }: PaletteListProps) => {
 
       <PaletteListItem
         name={`${name}.secondary`}
-        defaultValue={defaultValue.secondary as SimplePaletteColorOptions}
         keys={['main', 'dark', 'light', 'contrastText']}
         onOpen={handleOpenPalette('secondary')}
         isOpen={openPalette === 'secondary'}
@@ -40,7 +37,6 @@ export const PaletteList = ({ name, defaultValue }: PaletteListProps) => {
 
       <PaletteListItem
         name={`${name}.accent`}
-        defaultValue={defaultValue.accent as SimplePaletteColorOptions}
         keys={['main', 'dark', 'light', 'contrastText']}
         onOpen={handleOpenPalette('accent')}
         isOpen={openPalette === 'accent'}
@@ -48,7 +44,6 @@ export const PaletteList = ({ name, defaultValue }: PaletteListProps) => {
 
       <PaletteListItem
         name={`${name}.info`}
-        defaultValue={defaultValue.info as SimplePaletteColorOptions}
         keys={['main', 'dark', 'light', 'contrastText']}
         onOpen={handleOpenPalette('info')}
         isOpen={openPalette === 'info'}
@@ -56,7 +51,6 @@ export const PaletteList = ({ name, defaultValue }: PaletteListProps) => {
 
       <PaletteListItem
         name={`${name}.success`}
-        defaultValue={defaultValue.success as SimplePaletteColorOptions}
         keys={['main', 'dark', 'light', 'contrastText']}
         onOpen={handleOpenPalette('success')}
         isOpen={openPalette === 'success'}
@@ -64,7 +58,6 @@ export const PaletteList = ({ name, defaultValue }: PaletteListProps) => {
 
       <PaletteListItem
         name={`${name}.error`}
-        defaultValue={defaultValue.error as SimplePaletteColorOptions}
         keys={['main', 'dark', 'light', 'contrastText']}
         onOpen={handleOpenPalette('error')}
         isOpen={openPalette === 'error'}
@@ -72,7 +65,6 @@ export const PaletteList = ({ name, defaultValue }: PaletteListProps) => {
 
       <PaletteListItem
         name={`${name}.warning`}
-        defaultValue={defaultValue.warning as SimplePaletteColorOptions}
         keys={['main', 'dark', 'light', 'contrastText']}
         onOpen={handleOpenPalette('warning')}
         isOpen={openPalette === 'warning'}
@@ -80,7 +72,6 @@ export const PaletteList = ({ name, defaultValue }: PaletteListProps) => {
 
       <PaletteListItem
         name={`${name}.divider`}
-        defaultValue={defaultValue.divider}
         onOpen={handleOpenPalette('divider')}
         isOpen={openPalette === 'divider'}
       />

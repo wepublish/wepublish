@@ -2035,7 +2035,17 @@
           "pa": "<url>Plausible Analytics</url> ist eine datenschutzfreundliche Alternative zu Google Analytics.",
           "paLocator": "Du findest es in den <url>Website-Einstellungen</url> im Admin-Dashboard"
         }
-      }
+      },
+      "mail": {
+        "title": "E-Mail",
+        "mailchimp": {
+          "title": "Mailchimp",
+          "enable": "Mailchimp aktivieren",
+          "mailchimp": "<url>Mailchimp</url> ist eine E-Mail-Marketing-Plattform, mit der du Newsletter und Abonnentenlisten verwalten kannst. Dies ermöglicht der Website den Zugriff auf deine Newsletter und deren Anzeige.",
+          "apiKeyLocator": "Du findest ihn im <url>API-Schlüssel-Bereich</url> deines Mailchimp-Kontos. Achte darauf, dass es ein Mailchimp- und kein Mandrill-Schlüssel ist."
+        }
+      },
+      "saveSuccess": "Die Website-Einstellungen wurden erfolgreich gespeichert"
     },
     "externalApps": {
       "apps": "Apps"

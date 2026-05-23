@@ -9,15 +9,12 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdExpandLess, MdExpandMore, MdFormatSize } from 'react-icons/md';
-import * as z from 'zod';
-
-import { typographyItem } from './schema';
 
 type TypographyListItemProps = {
-  defaultValue: z.infer<typeof typographyItem>;
   isOpen: boolean;
   name: string;
   onOpen: () => void;
@@ -25,12 +22,27 @@ type TypographyListItemProps = {
 
 export const TypographyListItem = ({
   name,
-  defaultValue,
   isOpen,
   onOpen,
 }: TypographyListItemProps) => {
   const { t } = useTranslation();
   const { control, watch } = useFormContext();
+
+  const [playAnimation, setPlayAnimation] = useState(true);
+
+  useEffect(() => {
+    if (isOpen) {
+      const timeout = setTimeout(() => {
+        setPlayAnimation(false);
+      }, 250);
+
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+
+    setPlayAnimation(true);
+  }, [isOpen]);
 
   return (
     <>
@@ -39,7 +51,9 @@ export const TypographyListItem = ({
           primary={
             <span
               css={{
-                transition: 'all ease-in-out 250ms',
+                ...(playAnimation ?
+                  { transition: 'all ease-in-out 250ms' }
+                : {}),
                 ...(isOpen ?
                   {
                     fontSize: watch(`${name}.fontSize`),
@@ -67,7 +81,6 @@ export const TypographyListItem = ({
             <Controller
               name={`${name}.fontSize`}
               control={control}
-              defaultValue={defaultValue.fontSize}
               render={({ field, fieldState: { error } }) => (
                 <Box sx={{ width: '100%' }}>
                   <Stack
@@ -116,7 +129,6 @@ export const TypographyListItem = ({
             <Controller
               name={`${name}.lineHeight`}
               control={control}
-              defaultValue={defaultValue.lineHeight}
               render={({ field, fieldState: { error } }) => (
                 <Stack
                   spacing={3}

@@ -1,4 +1,4 @@
-import { parseToRgb, rgbToColorString } from 'polished';
+import { parseToRgb } from 'polished';
 import { RgbaColor } from 'polished/lib/types/color';
 import { z } from 'zod';
 
@@ -56,29 +56,7 @@ export const paletteSchema = z.object({
   }),
 });
 
-const fontSizeInput = z.preprocess(val => {
-  if (val == null) {
-    return val;
-  }
-
-  if (typeof val === 'number') {
-    return val;
-  }
-
-  if (typeof val === 'string') {
-    if (val.endsWith('rem')) {
-      return parseFloat(val) * 16;
-    }
-
-    if (val.endsWith('px')) {
-      return parseFloat(val);
-    }
-
-    return parseFloat(val);
-  }
-
-  return val;
-}, z.number().min(8).max(100).nullish());
+const fontSizeInput = z.number().min(8).max(100).nullish();
 
 export const typographyItem = z.object({
   fontSize: fontSizeInput,
@@ -138,19 +116,15 @@ export const normalizeValues = (value: string | number) => {
       return parseFloat(value);
     }
 
-    if (value.startsWith('rgba')) {
-      const val = parseToRgb(value) as RgbaColor;
-
-      return `#${decimalToHex(val.red)}${decimalToHex(val.green)}${decimalToHex(val.blue)}${decimalToHex(val.alpha * 100)}`;
-    }
-
     if (
       value.startsWith('rgb') ||
       value.startsWith('hsl') ||
-      value.startsWith('hsv')
+      value.startsWith('hsv') ||
+      value.startsWith('rgba')
     ) {
-      console.log(value, parseToRgb(value));
-      return rgbToColorString(parseToRgb(value));
+      const val = parseToRgb(value) as RgbaColor;
+
+      return `#${decimalToHex(val.red)}${decimalToHex(val.green)}${decimalToHex(val.blue)}${decimalToHex((val.alpha ?? 1) * 100)}`;
     }
 
     if (value.startsWith('#')) {
@@ -163,7 +137,9 @@ export const normalizeValues = (value: string | number) => {
   return value;
 };
 
-export const normalizeTheme = <T extends object>(theme: T): T => {
+export const normalizeTheme = <T extends object>(
+  theme: T
+): z.infer<typeof themeSchema> => {
   return Object.fromEntries(
     Object.entries(theme).map(([k, v]) => {
       if (v && typeof v === 'object') {
@@ -172,5 +148,5 @@ export const normalizeTheme = <T extends object>(theme: T): T => {
 
       return [k, normalizeValues(v)];
     })
-  ) as T;
+  ) as z.infer<typeof themeSchema>;
 };

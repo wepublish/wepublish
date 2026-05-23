@@ -10,7 +10,7 @@ import {
   AuthToken,
   CurrentUser,
   Public,
-  SCOPED_JWT_METADATA_KEY,
+  SCOPED_JWT_VERIFIER,
   ScopedJwtVerifier,
   UserSession,
 } from '@wepublish/authentication/api';
@@ -94,7 +94,7 @@ export class WebsiteSettingsResolver {
 @Resolver(() => WebsiteMail)
 export class WebsiteMailResolver {
   constructor(
-    @Inject(SCOPED_JWT_METADATA_KEY)
+    @Inject(SCOPED_JWT_VERIFIER)
     private jwt: ScopedJwtVerifier
   ) {}
 

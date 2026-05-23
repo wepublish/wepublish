@@ -13,12 +13,13 @@ import {
 } from '@mui/material';
 import {
   useUpdateWebsiteSettingsMutation,
-  useWebsiteSettingsQuery,
+  useWebsiteSettingsLazyQuery,
 } from '@wepublish/editor/api';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { MdArrowBack } from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
 const analyticsSchema = z.object({
@@ -31,7 +32,7 @@ const analyticsSchema = z.object({
         'Must be a valid GA ID (e.g., G-XXXXXXXXXX or UA-XXXXXXXX-X)'
       )
       .or(z.literal(''))
-      .nullable(),
+      .nullish(),
   }),
   googleTagManager: z.object({
     enabled: z.boolean(),
@@ -39,7 +40,7 @@ const analyticsSchema = z.object({
       .string()
       .regex(/^GTM-[A-Za-z0-9]+$/, 'Must be a valid GTM ID (e.g., GTM-XXXXXXX)')
       .or(z.literal(''))
-      .nullable(),
+      .nullish(),
   }),
   plausible: z.object({
     enabled: z.boolean(),
@@ -50,30 +51,66 @@ const analyticsSchema = z.object({
         'Must be a valid PA ID (e.g., pa-XXXXXXXXXXXXXXXXXXXXX)'
       )
       .or(z.literal(''))
-      .nullable(),
+      .nullish(),
   }),
 });
 
-const WebsiteAnalyticsWrapper = styled.form`
+export const WebsiteAnalyticsWrapper = styled.form`
   display: grid;
   gap: 24px;
   grid-auto-columns: auto;
 `;
 
-const Explainer = styled.p`
+export const Explainer = styled.p`
   max-width: 75ch;
 `;
 
 export const WebsiteAnalytics = () => {
   const { t } = useTranslation();
-  const { data, loading } = useWebsiteSettingsQuery();
+  const [loadSettings] = useWebsiteSettingsLazyQuery();
   const [updateWebsiteSettings, { loading: saving }] =
-    useUpdateWebsiteSettingsMutation();
-  const { control, handleSubmit, watch } = useForm<
-    z.infer<typeof analyticsSchema>
-  >({
+    useUpdateWebsiteSettingsMutation({
+      onCompleted: () => {
+        toaster.push(
+          <Message
+            type="success"
+            showIcon
+            closable
+            duration={3000}
+          >
+            {t('websiteSettings.saveSuccess')}
+          </Message>
+        );
+      },
+      onError: error => {
+        toaster.push(
+          <Message
+            type="error"
+            showIcon
+            closable
+            duration={3000}
+          >
+            {error.message}
+          </Message>
+        );
+      },
+    });
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { isLoading },
+  } = useForm<z.infer<typeof analyticsSchema>>({
     resolver: zodResolver(analyticsSchema),
     mode: 'onTouched',
+    defaultValues: async payload => {
+      const data = await loadSettings();
+
+      return (
+        data.data?.websiteSettings.analytics ??
+        (payload as z.infer<typeof analyticsSchema>)
+      );
+    },
   });
 
   const onSubmit = handleSubmit(data => {
@@ -84,7 +121,7 @@ export const WebsiteAnalytics = () => {
     });
   }, console.warn);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <CircularProgress
         size={14}
@@ -111,7 +148,6 @@ export const WebsiteAnalytics = () => {
       <Controller
         name="googleAnalytics.enabled"
         control={control}
-        defaultValue={data?.websiteSettings.analytics.googleAnalytics.enabled}
         render={({ field }) => (
           <div>
             <FormControlLabel
@@ -149,7 +185,6 @@ export const WebsiteAnalytics = () => {
       <Controller
         name="googleAnalytics.key"
         control={control}
-        defaultValue={data?.websiteSettings.analytics.googleAnalytics.key}
         render={({ field, fieldState: { error } }) =>
           watch('googleAnalytics.enabled') ?
             <TextField
@@ -198,7 +233,6 @@ export const WebsiteAnalytics = () => {
       <Controller
         name="googleTagManager.enabled"
         control={control}
-        defaultValue={data?.websiteSettings.analytics.googleTagManager.enabled}
         render={({ field }) => (
           <div>
             <FormControlLabel
@@ -235,7 +269,6 @@ export const WebsiteAnalytics = () => {
       <Controller
         name="googleTagManager.key"
         control={control}
-        defaultValue={data?.websiteSettings.analytics.googleTagManager.key}
         render={({ field, fieldState: { error } }) =>
           watch('googleTagManager.enabled') ?
             <TextField
@@ -286,7 +319,6 @@ export const WebsiteAnalytics = () => {
       <Controller
         name="plausible.enabled"
         control={control}
-        defaultValue={data?.websiteSettings.analytics.plausible.enabled}
         render={({ field }) => (
           <div>
             <FormControlLabel
@@ -323,7 +355,6 @@ export const WebsiteAnalytics = () => {
       <Controller
         name="plausible.key"
         control={control}
-        defaultValue={data?.websiteSettings.analytics.plausible.key}
         render={({ field, fieldState: { error } }) =>
           watch('plausible.enabled') ?
             <TextField

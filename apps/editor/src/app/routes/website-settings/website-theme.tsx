@@ -8,10 +8,17 @@ import {
   Tab,
   Tabs,
 } from '@mui/material';
+import {
+  useUpdateWebsiteSettingsMutation,
+  useWebsiteSettingsLazyQuery,
+} from '@wepublish/editor/api';
 import { theme } from '@wepublish/ui';
-import { PropsWithChildren, useMemo, useState } from 'react';
+import { PropsWithChildren, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { MdArrowBack } from 'react-icons/md';
+import { Link } from 'react-router-dom';
+import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
 import { PaletteList } from './theme/palette-list';
@@ -55,6 +62,35 @@ function a11yProps(index: number) {
 export const WebsiteTheme = () => {
   const { t } = useTranslation();
 
+  const [loadSettings, { loading }] = useWebsiteSettingsLazyQuery();
+  const [updateWebsiteSettings, { loading: saving }] =
+    useUpdateWebsiteSettingsMutation({
+      onCompleted: () => {
+        toaster.push(
+          <Message
+            type="success"
+            showIcon
+            closable
+            duration={3000}
+          >
+            {t('websiteSettings.saveSuccess')}
+          </Message>
+        );
+      },
+      onError: error => {
+        toaster.push(
+          <Message
+            type="error"
+            showIcon
+            closable
+            duration={3000}
+          >
+            {error.message}
+          </Message>
+        );
+      },
+    });
+
   const [activeTab, setActiveTab] = useState<number>(0);
   const handleChange = (
     event: React.SyntheticEvent,
@@ -64,25 +100,46 @@ export const WebsiteTheme = () => {
   const form = useForm<z.infer<typeof themeSchema>>({
     resolver: zodResolver(themeSchema),
     mode: 'onTouched',
+    defaultValues: async payload => {
+      const data = await loadSettings();
+
+      return normalizeTheme(
+        createTheme(theme, data.data?.websiteSettings.theme ?? {})
+      );
+    },
   });
   const { handleSubmit } = form;
-  const onSubmit = handleSubmit(console.log, console.warn);
 
-  const loading = Math.random() > 0.5;
-  const defaultTheme = createTheme(theme, {});
-  const data = {
-    palette: defaultTheme.palette,
-    typography: defaultTheme.typography,
-  };
+  const onSubmit = handleSubmit(data => {
+    updateWebsiteSettings({
+      variables: {
+        theme: data,
+      },
+    });
+  }, console.warn);
 
-  const normalized = useMemo(() => {
-    return normalizeTheme(data);
-  }, [data]);
-
-  console.log(normalized);
+  if (loading) {
+    return (
+      <CircularProgress
+        size={14}
+        color="inherit"
+        sx={{ mr: 1 }}
+      />
+    );
+  }
 
   return (
     <WebsiteThemeWrapper onSubmit={onSubmit}>
+      <Link to={'/settings/website'}>
+        <Button
+          size="small"
+          variant="text"
+          startIcon={<MdArrowBack />}
+        >
+          {t('websiteSettings.backToOverview')}
+        </Button>
+      </Link>
+
       <FormProvider {...form}>
         <Tabs
           value={activeTab}
@@ -103,20 +160,14 @@ export const WebsiteTheme = () => {
           value={activeTab}
           activeValue={0}
         >
-          <PaletteList
-            name={'palette'}
-            defaultValue={normalized.palette}
-          />
+          <PaletteList name={'palette'} />
         </CustomTabPanel>
 
         <CustomTabPanel
           value={activeTab}
           activeValue={1}
         >
-          <TypographyList
-            name={'typography'}
-            defaultValue={normalized.typography}
-          />
+          <TypographyList name={'typography'} />
         </CustomTabPanel>
 
         <Box>
@@ -124,9 +175,9 @@ export const WebsiteTheme = () => {
             type="submit"
             variant="contained"
             color="primary"
-            disabled={loading}
+            disabled={saving}
           >
-            {loading && (
+            {saving && (
               <CircularProgress
                 size={14}
                 color="inherit"

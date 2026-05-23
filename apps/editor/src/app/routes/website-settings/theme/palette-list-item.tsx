@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import {
+  capitalize,
   Collapse,
   List,
   ListItem,
@@ -8,7 +9,7 @@ import {
   SimplePaletteColorOptions,
 } from '@mui/material';
 import { Controller, useFormContext } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
 
 import { ColorPicker } from './color-picker';
@@ -33,9 +34,6 @@ const ThemeColorItem = styled.div<{ colorstr?: string | null }>(
 type PaletteListItemProps<
   Keys extends Array<keyof SimplePaletteColorOptions> | undefined,
 > = {
-  defaultValue: Keys extends Array<keyof SimplePaletteColorOptions> ?
-    SimplePaletteColorOptions
-  : string | null | undefined;
   keys?: Keys;
   isOpen: boolean;
   name: string;
@@ -47,7 +45,6 @@ export const PaletteListItem = <
 >({
   name,
   keys,
-  defaultValue,
   isOpen,
   onOpen,
 }: PaletteListItemProps<Keys>) => {
@@ -80,19 +77,29 @@ export const PaletteListItem = <
         in={isOpen}
       >
         <List
-          component="div"
+          component="ul"
           disablePadding
         >
           {keys?.map(key => (
-            <ListItem key={key}>
+            <ListItem
+              key={key}
+              sx={{ paddingY: 1.5 }}
+            >
               <Controller
                 name={`${name}.${key}`}
                 control={control}
-                defaultValue={(defaultValue as SimplePaletteColorOptions)[key]}
                 render={({ field, fieldState: { error } }) => (
                   <ColorPicker
                     {...field}
                     label={t(`websiteSettings.theme.palette.${key}`)}
+                    helperText={
+                      <Trans
+                        i18nKey={t(
+                          `websiteSettings.theme.${name}${capitalize(key)}`
+                        )}
+                        defaults={''}
+                      />
+                    }
                     error={error}
                   />
                 )}
@@ -105,7 +112,6 @@ export const PaletteListItem = <
               <Controller
                 name={name}
                 control={control}
-                defaultValue={defaultValue}
                 render={({ field, fieldState: { error } }) => (
                   <ColorPicker
                     {...field}

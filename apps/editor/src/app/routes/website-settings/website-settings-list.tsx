@@ -98,16 +98,17 @@ export const WebsiteSettingsList = () => {
         icon: <MdAnalytics size={24} />,
         enabledIntegrations: analyticsIntegrations.filter(
           integration =>
-            data.websiteSettings.analytics[integration.id].enabled &&
-            data.websiteSettings.analytics[integration.id].key
+            data.websiteSettings.analytics[integration.id]?.enabled &&
+            data.websiteSettings.analytics[integration.id]?.key
         ),
         faulyIntegrations: analyticsIntegrations.filter(
           integration =>
-            data.websiteSettings.analytics[integration.id].enabled &&
-            !data.websiteSettings.analytics[integration.id].key
+            data.websiteSettings.analytics[integration.id]?.enabled &&
+            !data.websiteSettings.analytics[integration.id]?.key
         ),
         disabledIntegrations: analyticsIntegrations.filter(
-          integration => !data.websiteSettings.analytics[integration.id].enabled
+          integration =>
+            !data.websiteSettings.analytics[integration.id]?.enabled
         ),
       },
       {
@@ -117,16 +118,16 @@ export const WebsiteSettingsList = () => {
         icon: <MdMail size={24} />,
         enabledIntegrations: mailIntegrations.filter(
           integration =>
-            data.websiteSettings.mail[integration.id].enabled &&
-            data.websiteSettings.mail[integration.id].key
+            data.websiteSettings.mail[integration.id]?.enabled &&
+            data.websiteSettings.mail[integration.id]?.key
         ),
         faulyIntegrations: mailIntegrations.filter(
           integration =>
-            data.websiteSettings.mail[integration.id].enabled &&
-            !data.websiteSettings.mail[integration.id].key
+            data.websiteSettings.mail[integration.id]?.enabled &&
+            !data.websiteSettings.mail[integration.id]?.key
         ),
         disabledIntegrations: mailIntegrations.filter(
-          integration => !data.websiteSettings.mail[integration.id].enabled
+          integration => !data.websiteSettings.mail[integration.id]?.enabled
         ),
       },
       {
@@ -136,16 +137,16 @@ export const WebsiteSettingsList = () => {
         icon: <MdAdsClick size={24} />,
         enabledIntegrations: adsIntegrations.filter(
           integration =>
-            data.websiteSettings.ads[integration.id].enabled &&
-            data.websiteSettings.ads[integration.id].key
+            data.websiteSettings.ads[integration.id]?.enabled &&
+            data.websiteSettings.ads[integration.id]?.key
         ),
         faulyIntegrations: adsIntegrations.filter(
           integration =>
-            data.websiteSettings.ads[integration.id].enabled &&
-            !data.websiteSettings.ads[integration.id].key
+            data.websiteSettings.ads[integration.id]?.enabled &&
+            !data.websiteSettings.ads[integration.id]?.key
         ),
         disabledIntegrations: adsIntegrations.filter(
-          integration => !data.websiteSettings.ads[integration.id].enabled
+          integration => !data.websiteSettings.ads[integration.id]?.enabled
         ),
       },
     ];

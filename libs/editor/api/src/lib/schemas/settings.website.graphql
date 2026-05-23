@@ -29,6 +29,8 @@ fragment FullWebsiteSettings on WebsiteSettings {
       key
     }
   }
+
+  theme
 }
 
 query WebsiteSettings {
@@ -41,8 +43,14 @@ mutation UpdateWebsiteSettings(
   $analytics: WebsiteAnalyticsInput
   $mail: WebsiteMailInput
   $ads: WebsiteAdsInput
+  $theme: JSONObject
 ) {
-  updateWebsiteSettings(analytics: $analytics, mail: $mail, ads: $ads) {
+  updateWebsiteSettings(
+    analytics: $analytics
+    mail: $mail
+    ads: $ads
+    theme: $theme
+  ) {
     ...FullWebsiteSettings
   }
 }

@@ -1,10 +1,17 @@
 import styled from '@emotion/styled';
-import { Box, ClickAwayListener, Popper, TextField } from '@mui/material';
+import {
+  Box,
+  ClickAwayListener,
+  FormHelperText,
+  Popper,
+  TextField,
+} from '@mui/material';
 import { Sketch } from '@uiw/react-color';
 import {
   ChangeEventHandler,
   FocusEventHandler,
   forwardRef,
+  ReactNode,
   useRef,
   useState,
 } from 'react';
@@ -13,6 +20,7 @@ import { FieldError } from 'react-hook-form';
 type ColorPickerProps = {
   name: string;
   label: string;
+  helperText?: ReactNode;
   value: string;
   onBlur: FocusEventHandler<HTMLInputElement>;
   onChange: ChangeEventHandler<HTMLInputElement>;
@@ -35,7 +43,7 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
           position: 'relative',
           display: 'flex',
           flexFlow: 'row wrap',
-          gap: 1,
+          columnGap: 1,
           alignItems: 'center',
         }}
       >
@@ -60,12 +68,14 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
           type="text"
           error={!!props.error}
           label={props.label}
-          // helperText={
-          //   error?.message || (
-          //     <Trans i18nKey="websiteSettings.analytics.google.gaLocator" />
-          //   )
-          // }
         />
+
+        <FormHelperText
+          sx={{ width: '100%' }}
+          error={!!props.error}
+        >
+          {props.error?.message ?? props.helperText}
+        </FormHelperText>
 
         <ElevatedPopper
           open={open}
@@ -80,7 +90,10 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
             <Sketch
               color={props.value}
               onChange={color => {
-                // props.onChange({ target: color.hex });
+                console.log(color);
+                props.onChange({
+                  target: { value: color.hexa },
+                } as React.ChangeEvent<HTMLInputElement>);
               }}
             />
           </ClickAwayListener>

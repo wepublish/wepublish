@@ -1,5 +1,4 @@
 import { createTheme } from '@mui/material';
-import { theme as WePTheme } from '@wepublish/ui';
 
 /**
  * Corporate design colours used throughout the editor.
@@ -18,13 +17,14 @@ const {
   palette: { augmentColor },
 } = createTheme();
 
-export const theme = createTheme(WePTheme, {
+export const theme = createTheme({
   palette: {
     primary: augmentColor({
       color: {
         light: '#76bcff',
         main: '#3498ff',
         dark: '#1a7ee0',
+        contrastText: '#ffffff',
       },
     }),
     secondary: augmentColor({
@@ -49,6 +49,12 @@ export const theme = createTheme(WePTheme, {
         light: '#f8efde',
         main: '#e8a030',
         dark: '#b87820',
+      },
+    }),
+    accent: augmentColor({
+      color: {
+        main: '#F5FF64',
+        light: '#A4EFEF',
       },
     }),
   },
