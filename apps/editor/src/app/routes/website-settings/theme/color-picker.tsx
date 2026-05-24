@@ -90,7 +90,6 @@ export const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
             <Sketch
               color={props.value}
               onChange={color => {
-                console.log(color);
                 props.onChange({
                   target: { value: color.hexa },
                 } as React.ChangeEvent<HTMLInputElement>);

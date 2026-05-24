@@ -13,7 +13,7 @@ import {
   useWebsiteSettingsLazyQuery,
 } from '@wepublish/editor/api';
 import { theme } from '@wepublish/ui';
-import { PropsWithChildren, useState } from 'react';
+import { memo, PropsWithChildren, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdArrowBack } from 'react-icons/md';
@@ -59,7 +59,7 @@ function a11yProps(index: number) {
   };
 }
 
-export const WebsiteTheme = () => {
+export const WebsiteTheme = memo(() => {
   const { t } = useTranslation();
 
   const [loadSettings, { loading }] = useWebsiteSettingsLazyQuery();
@@ -191,4 +191,4 @@ export const WebsiteTheme = () => {
       </FormProvider>
     </WebsiteThemeWrapper>
   );
-};
+});

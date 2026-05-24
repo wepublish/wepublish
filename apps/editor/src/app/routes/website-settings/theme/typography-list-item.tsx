@@ -1,18 +1,48 @@
 import {
-  Box,
   Collapse,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
-  Slider,
-  Stack,
-  Typography,
+  MenuItem,
+  Select,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { memo, useEffect, useState } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { MdExpandLess, MdExpandMore, MdFormatSize } from 'react-icons/md';
+import { MdExpandLess, MdExpandMore } from 'react-icons/md';
+
+import { LengthSlider, UnitConfig } from './length-slider';
+
+const fontSizeCongi: UnitConfig = {
+  em: { min: 0.5, max: 6.5, step: 0.05 },
+  rem: { min: 0.5, max: 6.5, step: 0.05 },
+  px: { min: 8, max: 100, step: 1 },
+};
+
+const lineHeightConfig: UnitConfig = {
+  em: { min: 1, max: 3, step: 0.1 },
+  rem: { min: 1, max: 3, step: 0.1 },
+  px: { min: 12, max: 60, step: 1 },
+};
+
+const letterSpacingConfig: UnitConfig = {
+  em: { min: -0.1, max: 0.2, step: 0.005 },
+  rem: { min: -0.1, max: 1.5, step: 0.005 },
+  px: { min: -2, max: 5, step: 0.2 },
+};
+
+const FONT_WEIGHTS = [
+  { value: 100, label: 'Thin' },
+  { value: 200, label: 'Extra Light' },
+  { value: 300, label: 'Light' },
+  { value: 400, label: 'Normal' },
+  { value: 500, label: 'Medium' },
+  { value: 600, label: 'Semi Bold' },
+  { value: 700, label: 'Bold' },
+  { value: 800, label: 'Extra Bold' },
+  { value: 900, label: 'Black' },
+];
 
 type TypographyListItemProps = {
   isOpen: boolean;
@@ -20,18 +50,37 @@ type TypographyListItemProps = {
   onOpen: () => void;
 };
 
-export const TypographyListItem = ({
-  name,
-  isOpen,
-  onOpen,
-}: TypographyListItemProps) => {
-  const { t } = useTranslation();
-  const { control, watch } = useFormContext();
+export const TypographyListItem = memo<TypographyListItemProps>(
+  ({ name, isOpen, onOpen }) => {
+    const { t } = useTranslation();
+    const { control } = useFormContext();
+    const [playAnimation, setPlayAnimation] = useState(true);
 
-  const [playAnimation, setPlayAnimation] = useState(true);
+    const fontSize = useWatch({
+      control,
+      name: `${name}.fontSize`,
+      disabled: !isOpen,
+    });
 
-  useEffect(() => {
-    if (isOpen) {
+    const lineHeight = useWatch({
+      control,
+      name: `${name}.lineHeight`,
+      disabled: !isOpen,
+    });
+
+    const letterSpacing = useWatch({
+      control,
+      name: `${name}.letterSpacing`,
+      disabled: !isOpen,
+    });
+
+    const fontWeight = useWatch({
+      control,
+      name: `${name}.fontWeight`,
+      disabled: !isOpen,
+    });
+
+    useEffect(() => {
       const timeout = setTimeout(() => {
         setPlayAnimation(false);
       }, 250);
@@ -39,121 +88,109 @@ export const TypographyListItem = ({
       return () => {
         clearTimeout(timeout);
       };
-    }
+    }, [isOpen]);
 
-    setPlayAnimation(true);
-  }, [isOpen]);
+    const onClick = () => {
+      setPlayAnimation(true);
+      onOpen();
+    };
 
-  return (
-    <>
-      <ListItemButton onClick={onOpen}>
-        <ListItemText
-          primary={
-            <span
-              css={{
-                ...(playAnimation ?
-                  { transition: 'all ease-in-out 250ms' }
-                : {}),
-                ...(isOpen ?
-                  {
-                    fontSize: watch(`${name}.fontSize`),
-                    lineHeight: watch(`${name}.lineHeight`),
-                  }
-                : {}),
-              }}
-            >
-              {t(`websiteSettings.theme.${name}`)}
-            </span>
-          }
-        />
+    const styles = {
+      ...(playAnimation ? { transition: 'all ease-in-out 250ms' } : {}),
+      ...(isOpen ? { fontSize, lineHeight, letterSpacing, fontWeight } : {}),
+    };
 
-        {isOpen ?
-          <MdExpandLess />
-        : <MdExpandMore />}
-      </ListItemButton>
+    return (
+      <>
+        <ListItemButton onClick={onClick}>
+          <ListItemText
+            primary={
+              <span css={styles}>{t(`websiteSettings.theme.${name}`)}</span>
+            }
+          />
 
-      <Collapse
-        timeout="auto"
-        in={isOpen}
-      >
-        <List component="div">
-          <ListItem>
-            <Controller
-              name={`${name}.fontSize`}
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <Box sx={{ width: '100%' }}>
-                  <Stack
-                    spacing={3}
-                    direction="row"
-                    sx={{ alignItems: 'center', mb: 1 }}
-                  >
-                    <MdFormatSize
-                      size={22}
-                      css={{ width: '48px' }}
-                    />
+          {isOpen ?
+            <MdExpandLess />
+          : <MdExpandMore />}
+        </ListItemButton>
 
-                    <Slider
-                      {...field}
-                      min={8}
-                      max={100}
-                      step={1}
-                      color="primary"
-                      size={'small'}
-                      valueLabelDisplay="on"
-                    />
-
-                    <MdFormatSize
-                      size={48}
-                      css={{ width: '48px' }}
-                    />
-                  </Stack>
-
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      padding: '0 calc(48px + 12px)',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Typography variant="body2">8px</Typography>
-                    <Typography variant="body2">{field.value}px</Typography>
-                    <Typography variant="body2">100px</Typography>
-                  </Box>
-                </Box>
-              )}
-            />
-          </ListItem>
-
-          <ListItem>
-            <Controller
-              name={`${name}.lineHeight`}
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <Stack
-                  spacing={3}
-                  direction="row"
-                  sx={{ alignItems: 'center', mb: 1, width: '100%' }}
-                >
-                  <Slider
+        <Collapse
+          timeout="auto"
+          in={isOpen}
+        >
+          <List component="div">
+            <ListItem>
+              <Controller
+                name={`${name}.fontSize`}
+                control={control}
+                render={({ field }) => (
+                  <LengthSlider
                     {...field}
-                    min={1}
-                    max={3}
-                    step={0.1}
-                    color="primary"
-                    size={'small'}
-                    valueLabelDisplay="on"
-                    marks={[
-                      { value: 1, label: '1em' },
-                      { value: 3, label: '3em' },
-                    ]}
+                    defaultUnit="rem"
+                    unitConfig={fontSizeCongi}
                   />
-                </Stack>
-              )}
-            />
-          </ListItem>
-        </List>
-      </Collapse>
-    </>
-  );
-};
+                )}
+              />
+            </ListItem>
+
+            <ListItem>
+              <Controller
+                name={`${name}.lineHeight`}
+                control={control}
+                render={({ field }) => (
+                  <LengthSlider
+                    {...field}
+                    defaultUnit="em"
+                    unitConfig={lineHeightConfig}
+                  />
+                )}
+              />
+            </ListItem>
+
+            <ListItem>
+              <Controller
+                name={`${name}.letterSpacing`}
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <LengthSlider
+                    {...field}
+                    error={error}
+                    defaultUnit="em"
+                    unitConfig={letterSpacingConfig}
+                  />
+                )}
+              />
+            </ListItem>
+
+            <ListItem>
+              <Controller
+                name={`${name}.fontWeight`}
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value ?? ''}
+                    size="small"
+                    displayEmpty
+                    onChange={e => field.onChange(Number(e.target.value))}
+                    onBlur={field.onBlur}
+                    sx={{ width: '100%' }}
+                  >
+                    {FONT_WEIGHTS.map(({ value, label }) => (
+                      <MenuItem
+                        key={value}
+                        value={value}
+                        sx={{ fontWeight: value }}
+                      >
+                        {value} — {label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
+              />
+            </ListItem>
+          </List>
+        </Collapse>
+      </>
+    );
+  }
+);

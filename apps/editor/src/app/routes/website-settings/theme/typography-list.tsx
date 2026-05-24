@@ -1,5 +1,5 @@
 import { List } from '@mui/material';
-import { useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
@@ -10,14 +10,17 @@ type TypographyListProps = {
   name: string;
 };
 
-export const TypographyList = ({ name }: TypographyListProps) => {
+export const TypographyList = memo(({ name }: TypographyListProps) => {
   const { t } = useTranslation();
 
   const [openTypography, setOpenTypography] =
     useState<keyof z.infer<typeof typographySchema>>();
 
-  const handleOpenTypography = (type: typeof openTypography) => () =>
-    setOpenTypography(oldType => (oldType === type ? undefined : type));
+  const handleOpenTypography = useCallback(
+    (type: typeof openTypography) => () =>
+      setOpenTypography(oldType => (oldType === type ? undefined : type)),
+    []
+  );
 
   return (
     <List>
@@ -154,4 +157,4 @@ export const TypographyList = ({ name }: TypographyListProps) => {
       />
     </List>
   );
-};
+});

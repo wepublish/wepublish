@@ -1,5 +1,6 @@
 import { parseToRgb } from 'polished';
 import { RgbaColor } from 'polished/lib/types/color';
+import { CSSProperties } from 'react';
 import { z } from 'zod';
 
 const hexColor = z
@@ -56,13 +57,57 @@ export const paletteSchema = z.object({
   }),
 });
 
-const fontSizeInput = z.number().min(8).max(100).nullish();
+type CssUnit = 'em' | 'rem' | 'px';
+type UnitRanges = Record<CssUnit, { min: number; max: number }>;
+
+function cssLengthValue(ranges: UnitRanges) {
+  return z
+    .string()
+    .regex(/^-?(\d+\.?\d*|\.\d+)(em|rem|px)$/, {
+      message: 'Must be a value with unit (e.g., "1em", "16px", "1rem").',
+    })
+    .refine(
+      val => {
+        const match = val.match(/^(-?[\d.]+)(em|rem|px)$/);
+
+        if (!match) {
+          return false;
+        }
+
+        const num = parseFloat(match[1]);
+        const unit = match[2] as CssUnit;
+
+        return num >= ranges[unit].min && num <= ranges[unit].max;
+      },
+      val => {
+        const match = val.match(/^(-?[\d.]+)(em|rem|px)$/);
+        const unit = (match?.[2] ?? 'em') as CssUnit;
+
+        return {
+          message: `Value must be between ${ranges[unit].min}${unit} and ${ranges[unit].max}${unit}.`,
+        };
+      }
+    )
+    .nullish();
+}
 
 export const typographyItem = z.object({
-  fontSize: fontSizeInput,
-  lineHeight: z.number().min(1).max(3).nullish(),
+  fontSize: cssLengthValue({
+    em: { min: 0.5, max: 6.5 },
+    rem: { min: 0.5, max: 6.5 },
+    px: { min: 8, max: 100 },
+  }),
+  lineHeight: cssLengthValue({
+    em: { min: 1, max: 3 },
+    rem: { min: 1, max: 3 },
+    px: { min: 12, max: 60 },
+  }),
   fontWeight: z.number().min(100).max(1000).nullish(),
-  letterSpacing: z.number().min(-0.1).max(1.5).nullish(),
+  letterSpacing: cssLengthValue({
+    em: { min: -0.1, max: 0.2 },
+    rem: { min: -0.1, max: 1.5 },
+    px: { min: -2, max: 5 },
+  }),
 });
 
 export const typographySchema = z.object({
@@ -106,14 +151,36 @@ function decimalToHex(dec: number) {
   return (dec + 0x10000).toString(16).substr(-2).toUpperCase();
 }
 
-export const normalizeValues = (value: string | number) => {
-  if (typeof value === 'string') {
-    if (value.endsWith('rem')) {
-      return parseFloat(value) * 16;
-    }
+const fontWeightNames: Record<string, number> = {
+  thin: 100,
+  hairline: 100,
+  'extra-light': 200,
+  'ultra-light': 200,
+  extralight: 200,
+  light: 300,
+  normal: 400,
+  regular: 400,
+  medium: 500,
+  'semi-bold': 600,
+  semibold: 600,
+  'demi-bold': 600,
+  bold: 700,
+  'extra-bold': 800,
+  extrabold: 800,
+  'ultra-bold': 800,
+  black: 900,
+  heavy: 900,
+  bolder: 700,
+  lighter: 300,
+};
 
-    if (value.endsWith('px')) {
-      return parseFloat(value);
+export const normalizeValues = (
+  value: string | number,
+  key: keyof CSSProperties
+) => {
+  if (typeof value === 'string') {
+    if (key === 'fontWeight') {
+      return fontWeightNames[value.toLowerCase()] ?? value;
     }
 
     if (
@@ -134,6 +201,18 @@ export const normalizeValues = (value: string | number) => {
     return value;
   }
 
+  if (typeof value === 'number') {
+    if (key === 'lineHeight') {
+      return `${value}em`;
+    }
+
+    if (key === 'fontWeight') {
+      return value;
+    }
+
+    return `${value}px`;
+  }
+
   return value;
 };
 
@@ -146,7 +225,7 @@ export const normalizeTheme = <T extends object>(
         return [k, normalizeTheme(v)];
       }
 
-      return [k, normalizeValues(v)];
+      return [k, normalizeValues(v, k as keyof CSSProperties)];
     })
   ) as z.infer<typeof themeSchema>;
 };
