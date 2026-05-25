@@ -21,7 +21,9 @@ import {
   MdAnalytics,
   MdCheck,
   MdClose,
+  MdColorLens,
   MdMail,
+  MdOutlineFontDownload,
   MdWarning,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
@@ -90,6 +92,8 @@ export const WebsiteSettingsList = () => {
       text: string;
     }>;
 
+    const fonts = data.websiteSettings.fonts ?? [];
+
     return [
       {
         title: t('websiteSettings.analytics.title'),
@@ -148,6 +152,27 @@ export const WebsiteSettingsList = () => {
         disabledIntegrations: adsIntegrations.filter(
           integration => !data.websiteSettings.ads[integration.id]?.enabled
         ),
+      },
+      {
+        title: t('websiteSettings.fonts.title'),
+        permission: CanGetAISettings.id,
+        path: '/settings/website/fonts',
+        icon: <MdOutlineFontDownload size={24} />,
+        enabledIntegrations: fonts.map(font => ({
+          id: font.name,
+          text: font.name,
+        })),
+        faulyIntegrations: [],
+        disabledIntegrations: [],
+      },
+      {
+        title: t('websiteSettings.theme.title'),
+        permission: CanGetAISettings.id,
+        path: '/settings/website/theme',
+        icon: <MdColorLens size={24} />,
+        enabledIntegrations: [],
+        faulyIntegrations: [],
+        disabledIntegrations: [],
       },
     ];
   }, [data, loading, t]);

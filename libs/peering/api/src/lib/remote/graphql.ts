@@ -1179,6 +1179,24 @@ export type FlexTeaserInput = {
   teaser?: InputMaybe<TeaserInput>;
 };
 
+export enum FontStyle {
+  Italic = 'italic',
+  Normal = 'normal'
+}
+
+export enum FontWeight {
+  Black = 'Black',
+  Bold = 'Bold',
+  ExtraBold = 'ExtraBold',
+  ExtraLight = 'ExtraLight',
+  Light = 'Light',
+  Medium = 'Medium',
+  Regular = 'Regular',
+  SemiBold = 'SemiBold',
+  Thin = 'Thin',
+  Variable = 'Variable'
+}
+
 export type FullPoll = {
   __typename?: 'FullPoll';
   answers: Array<PollAnswer>;
@@ -3295,6 +3313,7 @@ export type MutationUpdateUserSubscriptionArgs = {
 export type MutationUpdateWebsiteSettingsArgs = {
   ads?: InputMaybe<WebsiteAdsInput>;
   analytics?: InputMaybe<WebsiteAnalyticsInput>;
+  fonts?: InputMaybe<Array<WebsiteRemoteFontInput>>;
   mail?: InputMaybe<WebsiteMailInput>;
   theme?: InputMaybe<Scalars['JSONObject']>;
 };
@@ -6025,10 +6044,24 @@ export type WebsiteMailInput = {
   mailchimp: KeyEnabledInput;
 };
 
+export type WebsiteRemoteFont = {
+  __typename?: 'WebsiteRemoteFont';
+  name: Scalars['String'];
+  style: Array<FontStyle>;
+  weight: Array<FontWeight>;
+};
+
+export type WebsiteRemoteFontInput = {
+  name: Scalars['String'];
+  style: Array<FontStyle>;
+  weight: Array<FontWeight>;
+};
+
 export type WebsiteSettings = {
   __typename?: 'WebsiteSettings';
   ads: WebsiteAds;
   analytics: WebsiteAnalytics;
+  fonts: Array<WebsiteRemoteFont>;
   mail: WebsiteMail;
   theme: Scalars['JSONObject'];
 };

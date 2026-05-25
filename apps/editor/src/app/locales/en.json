@@ -2159,6 +2159,10 @@
           "blockQuote": "Block Quote"
         }
       },
+      "fonts": {
+        "title": "Fonts",
+        "addFont": "Add Font"
+      },
       "saveSuccess": "Successfully saved the website settings"
     },
     "externalApps": {

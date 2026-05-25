@@ -1108,6 +1108,24 @@ input FlexTeaserInput {
   teaser: TeaserInput
 }
 
+enum FontStyle {
+  italic
+  normal
+}
+
+enum FontWeight {
+  Black
+  Bold
+  ExtraBold
+  ExtraLight
+  Light
+  Medium
+  Regular
+  SemiBold
+  Thin
+  Variable
+}
+
 type FullPoll {
   answers: [PollAnswer!]!
   closedAt: DateTime
@@ -2175,7 +2193,7 @@ type Mutation {
   updateUserSubscription(id: String!, input: UpdateUserSubscriptionInput!): PublicSubscription
 
   """Updates the website settings."""
-  updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
+  updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
 
   """"""
   upgradeUserSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
@@ -4279,9 +4297,22 @@ input WebsiteMailInput {
   mailchimp: KeyEnabledInput!
 }
 
+type WebsiteRemoteFont {
+  name: String!
+  style: [FontStyle!]!
+  weight: [FontWeight!]!
+}
+
+input WebsiteRemoteFontInput {
+  name: String!
+  style: [FontStyle!]!
+  weight: [FontWeight!]!
+}
+
 type WebsiteSettings {
   ads: WebsiteAds!
   analytics: WebsiteAnalytics!
+  fonts: [WebsiteRemoteFont!]!
   mail: WebsiteMail!
   theme: JSONObject!
 }

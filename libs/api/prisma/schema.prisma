@@ -1884,6 +1884,7 @@ model WebsiteSettings {
 
   // Theme
   theme Json @default("{}")
+  fonts Json @default("[]")
 
   @@map("settings.website")
 }

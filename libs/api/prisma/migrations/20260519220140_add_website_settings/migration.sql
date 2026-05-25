@@ -14,6 +14,7 @@ CREATE TABLE "settings.website" (
     "mailMailchimpEnabled" BOOLEAN NOT NULL DEFAULT false,
     "mailMailchimpKey" TEXT,
     "theme" JSONB NOT NULL DEFAULT '{}',
+    "fonts" JSONB NOT NULL DEFAULT '[]',
 
     CONSTRAINT "settings.website_pkey" PRIMARY KEY ("id")
 );

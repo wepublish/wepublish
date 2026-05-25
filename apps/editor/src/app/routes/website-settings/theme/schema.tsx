@@ -92,6 +92,7 @@ function cssLengthValue(ranges: UnitRanges) {
 }
 
 export const typographyItem = z.object({
+  fontFamily: z.string().nullish(),
   fontSize: cssLengthValue({
     em: { min: 0.5, max: 6.5 },
     rem: { min: 0.5, max: 6.5 },
@@ -111,6 +112,8 @@ export const typographyItem = z.object({
 });
 
 export const typographySchema = z.object({
+  allVariants: typographyItem,
+
   h1: typographyItem,
   h2: typographyItem,
   h3: typographyItem,
@@ -148,7 +151,7 @@ export const themeSchema = z.object({
 });
 
 function decimalToHex(dec: number) {
-  return (dec + 0x10000).toString(16).substr(-2).toUpperCase();
+  return (dec + 0x10000).toString(16).slice(-2).toUpperCase();
 }
 
 const fontWeightNames: Record<string, number> = {

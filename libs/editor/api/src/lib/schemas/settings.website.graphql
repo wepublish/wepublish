@@ -31,6 +31,11 @@ fragment FullWebsiteSettings on WebsiteSettings {
   }
 
   theme
+  fonts {
+    weight
+    style
+    name
+  }
 }
 
 query WebsiteSettings {
@@ -44,12 +49,14 @@ mutation UpdateWebsiteSettings(
   $mail: WebsiteMailInput
   $ads: WebsiteAdsInput
   $theme: JSONObject
+  $fonts: [WebsiteRemoteFontInput!]
 ) {
   updateWebsiteSettings(
     analytics: $analytics
     mail: $mail
     ads: $ads
     theme: $theme
+    fonts: $fonts
   ) {
     ...FullWebsiteSettings
   }

@@ -1,6 +1,5 @@
 import { List } from '@mui/material';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 import { PaletteListItem } from './palette-list-item';
@@ -11,8 +10,6 @@ type PaletteListProps = {
 };
 
 export const PaletteList = ({ name }: PaletteListProps) => {
-  const { t } = useTranslation();
-
   const [openPalette, setOpenPalette] =
     useState<keyof z.infer<typeof paletteSchema>>();
 

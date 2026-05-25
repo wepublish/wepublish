@@ -1,6 +1,12 @@
 import { EmotionCache } from '@emotion/cache';
 import styled from '@emotion/styled';
-import { Container, css, CssBaseline, ThemeProvider } from '@mui/material';
+import {
+  Container,
+  createTheme,
+  css,
+  CssBaseline,
+  ThemeProvider,
+} from '@mui/material';
 import {
   AppCacheProvider,
   createEmotionCache,
@@ -12,6 +18,7 @@ import {
   NavbarContainer,
 } from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
+import { theme as WePTheme } from '@wepublish/ui';
 import {
   authLink,
   getApiUrl,
@@ -36,10 +43,9 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
 import PlausibleProvider from 'next-plausible';
+import { useMemo } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
-
-import theme from '../src/theme';
 
 setDefaultOptions({
   locale: de,
@@ -97,6 +103,11 @@ function CustomApp({
   const settings =
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
+
+  const theme = useMemo(
+    () => createTheme(WePTheme, settings?.theme ?? {}),
+    [settings]
+  );
 
   return (
     <PlausibleProvider

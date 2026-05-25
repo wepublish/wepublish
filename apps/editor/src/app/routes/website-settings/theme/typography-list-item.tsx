@@ -7,14 +7,15 @@ import {
   MenuItem,
   Select,
 } from '@mui/material';
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
 
+import { AvailableFontsPicker } from '../fonts/available-fonts-picker';
 import { LengthSlider, UnitConfig } from './length-slider';
 
-const fontSizeCongi: UnitConfig = {
+const fontSizeConfig: UnitConfig = {
   em: { min: 0.5, max: 6.5, step: 0.05 },
   rem: { min: 0.5, max: 6.5, step: 0.05 },
   px: { min: 8, max: 100, step: 1 },
@@ -32,7 +33,7 @@ const letterSpacingConfig: UnitConfig = {
   px: { min: -2, max: 5, step: 0.2 },
 };
 
-const FONT_WEIGHTS = [
+const fontWeights = [
   { value: 100, label: 'Thin' },
   { value: 200, label: 'Extra Light' },
   { value: 300, label: 'Light' },
@@ -42,7 +43,7 @@ const FONT_WEIGHTS = [
   { value: 700, label: 'Bold' },
   { value: 800, label: 'Extra Bold' },
   { value: 900, label: 'Black' },
-];
+] as const;
 
 type TypographyListItemProps = {
   isOpen: boolean;
@@ -55,6 +56,12 @@ export const TypographyListItem = memo<TypographyListItemProps>(
     const { t } = useTranslation();
     const { control } = useFormContext();
     const [playAnimation, setPlayAnimation] = useState(true);
+
+    const fontFamily = useWatch({
+      control,
+      name: `${name}.fontFamily`,
+      disabled: !isOpen,
+    });
 
     const fontSize = useWatch({
       control,
@@ -95,10 +102,29 @@ export const TypographyListItem = memo<TypographyListItemProps>(
       onOpen();
     };
 
-    const styles = {
-      ...(playAnimation ? { transition: 'all ease-in-out 250ms' } : {}),
-      ...(isOpen ? { fontSize, lineHeight, letterSpacing, fontWeight } : {}),
-    };
+    const styles = useMemo(
+      () => ({
+        ...(playAnimation ? { transition: 'all ease-in-out 250ms' } : {}),
+        ...(isOpen ?
+          {
+            fontSize,
+            lineHeight,
+            letterSpacing,
+            fontWeight,
+            fontFamily: `"${fontFamily ?? 'sans-serif'}", sans-serif`,
+          }
+        : {}),
+      }),
+      [
+        fontFamily,
+        fontSize,
+        fontWeight,
+        isOpen,
+        letterSpacing,
+        lineHeight,
+        playAnimation,
+      ]
+    );
 
     return (
       <>
@@ -117,8 +143,42 @@ export const TypographyListItem = memo<TypographyListItemProps>(
         <Collapse
           timeout="auto"
           in={isOpen}
+          mountOnEnter
         >
           <List component="div">
+            <ListItem>
+              <Controller
+                name={`${name}.fontFamily`}
+                control={control}
+                render={({ field }) => <AvailableFontsPicker {...field} />}
+              />
+
+              <Controller
+                name={`${name}.fontWeight`}
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value ?? ''}
+                    size="small"
+                    displayEmpty
+                    onChange={e => field.onChange(Number(e.target.value))}
+                    onBlur={field.onBlur}
+                    sx={{ width: '100%' }}
+                  >
+                    {fontWeights.map(({ value, label }) => (
+                      <MenuItem
+                        key={value}
+                        value={value}
+                        sx={{ fontWeight: value }}
+                      >
+                        {label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
+              />
+            </ListItem>
+
             <ListItem>
               <Controller
                 name={`${name}.fontSize`}
@@ -127,7 +187,7 @@ export const TypographyListItem = memo<TypographyListItemProps>(
                   <LengthSlider
                     {...field}
                     defaultUnit="rem"
-                    unitConfig={fontSizeCongi}
+                    unitConfig={fontSizeConfig}
                   />
                 )}
               />
@@ -158,33 +218,6 @@ export const TypographyListItem = memo<TypographyListItemProps>(
                     defaultUnit="em"
                     unitConfig={letterSpacingConfig}
                   />
-                )}
-              />
-            </ListItem>
-
-            <ListItem>
-              <Controller
-                name={`${name}.fontWeight`}
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    value={field.value ?? ''}
-                    size="small"
-                    displayEmpty
-                    onChange={e => field.onChange(Number(e.target.value))}
-                    onBlur={field.onBlur}
-                    sx={{ width: '100%' }}
-                  >
-                    {FONT_WEIGHTS.map(({ value, label }) => (
-                      <MenuItem
-                        key={value}
-                        value={value}
-                        sx={{ fontWeight: value }}
-                      >
-                        {value} — {label}
-                      </MenuItem>
-                    ))}
-                  </Select>
                 )}
               />
             </ListItem>

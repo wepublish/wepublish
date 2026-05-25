@@ -75,6 +75,7 @@ export const PaletteListItem = <
       <Collapse
         timeout="auto"
         in={isOpen}
+        mountOnEnter
       >
         <List
           component="ul"

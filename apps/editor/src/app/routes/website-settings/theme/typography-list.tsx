@@ -1,6 +1,5 @@
 import { List } from '@mui/material';
 import { memo, useCallback, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 import { typographySchema } from './schema';
@@ -11,8 +10,6 @@ type TypographyListProps = {
 };
 
 export const TypographyList = memo(({ name }: TypographyListProps) => {
-  const { t } = useTranslation();
-
   const [openTypography, setOpenTypography] =
     useState<keyof z.infer<typeof typographySchema>>();
 
@@ -24,6 +21,12 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
 
   return (
     <List>
+      <TypographyListItem
+        name={`${name}.allVariants`}
+        onOpen={handleOpenTypography('allVariants')}
+        isOpen={openTypography === 'allVariants'}
+      />
+
       <TypographyListItem
         name={`${name}.h1`}
         onOpen={handleOpenTypography('h1')}

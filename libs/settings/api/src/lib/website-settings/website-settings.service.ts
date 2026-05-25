@@ -45,6 +45,7 @@ export class WebsiteSettingsService {
 
         // Theme
         theme: input.theme as any,
+        fonts: input.fonts as any,
       },
     });
   }
