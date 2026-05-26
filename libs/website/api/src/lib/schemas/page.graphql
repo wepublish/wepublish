@@ -3,8 +3,9 @@ fragment SlimPageRevision on PageRevision {
   publishedAt
   description
   title
+
   image {
-    ...FullImage
+    ...SlimImage
   }
 
   properties {
@@ -14,6 +15,10 @@ fragment SlimPageRevision on PageRevision {
 
 fragment FullPageRevision on PageRevision {
   ...SlimPageRevision
+
+  image {
+    ...FullImage
+  }
 
   socialMediaDescription
   socialMediaTitle

@@ -46,7 +46,7 @@ export class PayrexxClient {
       baseUrl = `${this.buildBaseUrl(path)}&${queryStrSigned}`;
     const response = await fetch(baseUrl, {
       method,
-      signal: AbortSignal.timeout(10_000),
+      signal: AbortSignal.timeout(30_000),
     });
 
     return await this.validateResponse(response);
@@ -62,7 +62,7 @@ export class PayrexxClient {
     const response = await fetch(baseUrl, {
       method,
       body,
-      signal: AbortSignal.timeout(10_000),
+      signal: AbortSignal.timeout(30_000),
     });
 
     return await this.validateResponse(response);

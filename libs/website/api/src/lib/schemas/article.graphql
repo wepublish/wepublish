@@ -35,7 +35,7 @@ fragment SlimArticleRevision on ArticleRevision {
   }
 
   image {
-    ...FullImage
+    ...SlimImage
   }
 
   properties {
@@ -47,6 +47,10 @@ fragment FullArticleRevision on ArticleRevision {
   ...SlimArticleRevision
 
   canonicalUrl
+
+  image {
+    ...FullImage
+  }
 
   socialMediaDescription
   socialMediaTitle
