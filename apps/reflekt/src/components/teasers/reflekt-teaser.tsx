@@ -50,7 +50,7 @@ export const selectTeaserLeadColor = (teaser: TeaserType) => {
   if (teaser.__typename === 'ArticleTeaser') {
     leadColor =
       (
-        teaser.article?.latest?.properties.find(
+        teaser.article?.latest?.properties?.find(
           property => property.key === 'leadColor'
         )?.value
       ) ?
