@@ -9,7 +9,7 @@ fragment FullPageTeaser on PageTeaser {
   lead
 
   page {
-    ...PageWithoutBlocks
+    ...SlimPage
   }
 }
 
@@ -24,7 +24,7 @@ fragment FullArticleTeaser on ArticleTeaser {
   lead
 
   article {
-    ...ArticleWithoutBlocks
+    ...SlimArticle
 
     latest {
       blocks {
