@@ -1,12 +1,15 @@
-fragment PageRevisionWithoutBlocks on PageRevision {
+fragment SlimPageRevision on PageRevision {
   id
-  createdAt
   publishedAt
   description
   title
   image {
     ...FullImage
   }
+}
+
+fragment FullPageRevision on PageRevision {
+  ...SlimPageRevision
 
   socialMediaDescription
   socialMediaTitle
@@ -17,17 +20,13 @@ fragment PageRevisionWithoutBlocks on PageRevision {
   properties {
     ...FullProperty
   }
-}
-
-fragment FullPageRevision on PageRevision {
-  ...PageRevisionWithoutBlocks
 
   blocks {
     ...FullBlock
   }
 }
 
-fragment PageWithoutBlocks on Page {
+fragment SlimPage on Page {
   id
   publishedAt
   modifiedAt
@@ -39,12 +38,12 @@ fragment PageWithoutBlocks on Page {
   }
 
   latest {
-    ...PageRevisionWithoutBlocks
+    ...SlimPageRevision
   }
 }
 
 fragment FullPage on Page {
-  ...PageWithoutBlocks
+  ...SlimPage
 
   latest {
     ...FullPageRevision
@@ -65,9 +64,16 @@ query PageList(
   $order: SortOrder
   $sort: PageSort
 ) {
-  pages(filter: $filter, cursorId: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+  pages(
+    filter: $filter
+    cursorId: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
-      ...FullPage
+      ...SlimPage
     }
 
     pageInfo {
