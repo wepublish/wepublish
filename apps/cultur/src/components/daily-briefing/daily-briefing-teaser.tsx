@@ -62,7 +62,7 @@ export const DailyBriefingTeaser = ({
         </H4>
 
         <DailyBriefingLinkList>
-          {campaigns.map(campaign => (
+          {campaigns?.map(campaign => (
             <DailyBriefingLink key={campaign.id}>
               <Link
                 href={campaign.long_archive_url}

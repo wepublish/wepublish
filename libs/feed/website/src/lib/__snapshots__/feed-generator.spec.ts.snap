@@ -23,7 +23,7 @@ exports[`should generate the RSS feed 1`] = `
             <content:encoded><![CDATA[This is an article lead]]></content:encoded>
             <category>boulevard</category>
             <category>abacus</category>
-            <enclosure url="https://unsplash.it/500/281" length="0" type="image//500/281"/>
+            <enclosure length="0" type="image/webp" url="https://unsplash.it/500/281"/>
         </item>
         <item>
             <title><![CDATA[Title Block]]></title>
@@ -34,7 +34,7 @@ exports[`should generate the RSS feed 1`] = `
             <content:encoded><![CDATA[This is an article lead]]></content:encoded>
             <category>comparison</category>
             <category>duster</category>
-            <enclosure url="https://unsplash.it/500/281" length="0" type="image//500/281"/>
+            <enclosure length="0" type="image/webp" url="https://unsplash.it/500/281"/>
         </item>
     </channel>
 </rss>"
@@ -107,7 +107,10 @@ exports[`should generate the json feed 1`] = `
             "url": "https://example.com",
             "title": "Title Block",
             "summary": "This is an article lead",
-            "image": "https://unsplash.it/500/281",
+            "image": {
+                "url": "https://unsplash.it/500/281",
+                "type": "image/webp"
+            },
             "date_modified": "2023-01-01T00:00:00.000Z",
             "author": {
                 "name": "Foobar",
@@ -123,7 +126,10 @@ exports[`should generate the json feed 1`] = `
             "url": "https://example.com",
             "title": "Title Block",
             "summary": "This is an article lead",
-            "image": "https://unsplash.it/500/281",
+            "image": {
+                "url": "https://unsplash.it/500/281",
+                "type": "image/webp"
+            },
             "date_modified": "2023-01-01T00:00:00.000Z",
             "author": {
                 "name": "Foobar",
@@ -177,7 +183,10 @@ Feed {
       "date": 2023-01-01T00:00:00.000Z,
       "description": "This is an article lead",
       "guid": "1",
-      "image": "https://unsplash.it/500/281",
+      "image": {
+        "type": "image/webp",
+        "url": "https://unsplash.it/500/281",
+      },
       "link": "https://example.com",
       "title": "Title Block",
     },
@@ -206,7 +215,10 @@ Feed {
       "date": 2023-01-01T00:00:00.000Z,
       "description": "This is an article lead",
       "guid": "2",
-      "image": "https://unsplash.it/500/281",
+      "image": {
+        "type": "image/webp",
+        "url": "https://unsplash.it/500/281",
+      },
       "link": "https://example.com",
       "title": "Title Block",
     },
