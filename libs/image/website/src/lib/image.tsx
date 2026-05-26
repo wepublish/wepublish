@@ -117,7 +117,7 @@ export const Image = forwardRef<HTMLImageElement, BuilderImageProps>(
       <ImageWrapper
         {...props}
         ref={ref}
-        alt={image.description ?? image.title ?? image.filename ?? ''}
+        alt={image.description ?? image.title ?? ''}
         title={image.title ?? ''}
         aspectRatio={image.width / image.height}
         objectPosition={objectPosition}

@@ -175,12 +175,10 @@ function applyWorkingToBlocks(
 ): BlockValue[] {
   let next = base;
   for (const b of working) {
-    const realTeasers = b.teasers.filter(
-      w => w.type === 'real' && w.teaser !== null
-    );
     for (let i = 0; i < b.originalCount; i++) {
       const address = b.addressTemplates[i];
-      const teaser = realTeasers[i]?.teaser ?? null;
+      const slot = b.teasers[i];
+      const teaser = slot?.type === 'real' ? slot.teaser : null;
       next = setTeaserAt(next, address, teaser);
     }
   }

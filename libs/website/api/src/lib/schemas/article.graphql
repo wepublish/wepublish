@@ -31,7 +31,7 @@ fragment SlimArticleRevision on ArticleRevision {
   breaking
 
   authors {
-    ...FullAuthor
+    ...SlimAuthor
   }
 
   image {
@@ -57,18 +57,19 @@ fragment FullArticleRevision on ArticleRevision {
   blocks {
     ...FullBlock
   }
+
+  authors {
+    ...FullAuthor
+  }
 }
 
 fragment SlimArticle on Article {
   id
   publishedAt
-  modifiedAt
   url
   slug
   likes
   disableComments
-  peerId
-  peerArticleId
 
   tags {
     ...FullTag
