@@ -98,19 +98,23 @@ function formatCssLength(num: number, unit: CssUnit): string {
 
 type CssLengthSliderProps = {
   name: string;
-  value?: string;
+  value?: string | null;
   defaultUnit: CssUnit;
   unitConfig: UnitConfig;
   helperText?: ReactNode;
   onBlur: FocusEventHandler<HTMLInputElement>;
   onChange: ChangeEventHandler<HTMLInputElement>;
   error?: FieldError;
+  disabled?: boolean;
 };
 
 const stackSx = { alignItems: 'center', width: '100%' };
 
 export const LengthSlider = forwardRef<HTMLInputElement, CssLengthSliderProps>(
-  ({ name, value, defaultUnit, unitConfig, onChange, onBlur, error }, ref) => {
+  (
+    { name, value, defaultUnit, unitConfig, onChange, onBlur, error, disabled },
+    ref
+  ) => {
     const { num, unit } = useMemo(
       () => parseCssLength(value, defaultUnit),
       [value, defaultUnit]
@@ -181,6 +185,7 @@ export const LengthSlider = forwardRef<HTMLInputElement, CssLengthSliderProps>(
           valueLabelFormat={valueLabelFormat}
           marks={marks}
           onBlur={onBlur}
+          disabled={disabled}
         />
 
         <StyledTextField
@@ -192,6 +197,7 @@ export const LengthSlider = forwardRef<HTMLInputElement, CssLengthSliderProps>(
           type="number"
           onChange={handleTextChange}
           onBlur={onBlur}
+          disabled={disabled}
         />
 
         <StyledSelect
@@ -200,6 +206,7 @@ export const LengthSlider = forwardRef<HTMLInputElement, CssLengthSliderProps>(
           size="small"
           onChange={handleUnitChange}
           onBlur={onBlur}
+          disabled={disabled}
         >
           <MenuItem value="em">em</MenuItem>
           <MenuItem value="rem">rem</MenuItem>

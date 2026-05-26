@@ -112,7 +112,19 @@ export const typographyItem = z.object({
 });
 
 export const typographySchema = z.object({
-  allVariants: typographyItem,
+  fontFamily: z.string().nullish(),
+  allVariants: z.object({
+    lineHeight: cssLengthValue({
+      em: { min: 0.5, max: 6.5 },
+      rem: { min: 0.5, max: 6.5 },
+      px: { min: 8, max: 100 },
+    }),
+    letterSpacing: cssLengthValue({
+      em: { min: -0.1, max: 0.2 },
+      rem: { min: -0.1, max: 1.5 },
+      px: { min: -2, max: 5 },
+    }),
+  }),
 
   h1: typographyItem,
   h2: typographyItem,

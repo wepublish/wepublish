@@ -125,35 +125,28 @@ export const theme = createTheme({
     allVariants: {
       lineHeight: 1.4,
     },
-    fontFamily: ['Merriweather', 'Roboto', 'sans-serif'].join(','),
     h1: {
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontWeight: 600,
       lineHeight: 1.15,
     },
     h2: {
       ...baseTheme.typography.h3,
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontWeight: 600,
       lineHeight: 1.15,
     },
     h3: {
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontWeight: 600,
       lineHeight: 1.15,
     },
     h4: {
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontWeight: 600,
       lineHeight: 1.15,
       fontSize: '1.625rem',
     },
     h5: {
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontWeight: 600,
     },
     h6: {
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontWeight: 300,
     },
     body1: {
@@ -171,7 +164,6 @@ export const theme = createTheme({
     },
     subtitle1: {
       ...baseTheme.typography.h6,
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontWeight: 300,
       lineHeight: 1.4,
     },
@@ -185,10 +177,8 @@ export const theme = createTheme({
     // Blocks
     blockTitlePreTitle: {
       ...baseTheme.typography.body1,
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
     },
     blockBreakTitle: {
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontSize: '40px',
       lineHeight: 1.15,
       fontWeight: 600,
@@ -200,18 +190,15 @@ export const theme = createTheme({
     },
     blockBreakBody: {
       ...baseTheme.typography.body1,
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
     },
     blockQuote: {
       ...baseTheme.typography.h4,
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontWeight: 600,
       lineHeight: 1.15,
       fontSize: '1.625rem',
     },
     // Teaser
     teaserTitle: {
-      fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontWeight: 600,
       lineHeight: 1.15,
       fontSize: '1.625rem',

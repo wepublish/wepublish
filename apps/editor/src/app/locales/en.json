@@ -2135,6 +2135,11 @@
           "contrastText": "Text color"
         },
         "typography": {
+          "fontFamily": "Font Family",
+          "fontWeight": "Font Weight",
+          "fontSize": "Font Size",
+          "lineHeight": "Custom Line Height",
+          "letterSpacing": "Custom Letter Spacing",
           "h1": "Heading 1",
           "h2": "Heading 2",
           "h3": "Heading 3",

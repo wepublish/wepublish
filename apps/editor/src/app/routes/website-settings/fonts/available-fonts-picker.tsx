@@ -52,7 +52,7 @@ export const AvailableFontsPicker = memo(
         if (!e.target.value) {
           onChange(null);
         } else {
-          onChange(`"${e.target.value}, Helvetica, Arial, sans-serif`);
+          onChange(`"${e.target.value}", Helvetica, Arial, sans-serif`);
         }
       };
 
