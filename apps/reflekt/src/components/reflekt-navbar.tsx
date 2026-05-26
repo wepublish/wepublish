@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import {
+  alpha,
   AppBar as MuiAppBar,
   Box,
   css,
@@ -11,7 +12,7 @@ import {
 } from '@mui/material';
 import { useHasActiveSubscription } from '@wepublish/membership/website';
 import { navigationLinkToUrl } from '@wepublish/navigation/website';
-import { ButtonProps } from '@wepublish/ui';
+import { ButtonProps, TextToIcon } from '@wepublish/ui';
 import { FullNavigationFragment } from '@wepublish/website/api';
 import {
   BuilderNavbarProps,
@@ -411,24 +412,72 @@ export const NavPaperLinksGroup = styled('div')`
   grid-column: -1 / 1;
   grid-template-columns: repeat(2, auto);
   grid-template-rows: repeat(2, auto);
-  row-gap: ${theme.spacing(4)};
+  row-gap: unset;
   margin: 0;
 
   ${theme.breakpoints.up('md')} {
-    row-gap: unset;
     grid-template-rows: unset;
     grid-template-columns: repeat(3, min-content);
     grid-template-columns: unset;
     opacity: 1;
     transition: opacity 250ms ease-in-out;
+    grid-column: 2 / 3;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    padding-left: ${theme.spacing(8)};
   }
 `;
+
+export const IconItemsWrapper = styled('div')`
+  position: relative;
+  padding: ${({ theme }) => theme.spacing(1.5, 1.5, 1.5, 0)};
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+  justify-items: center;
+  width: 100%;
+  grid-row: 3 / 4;
+  margin-left: ${({ theme }) => theme.spacing(-3)};
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(auto-fill, ${theme.spacing(1)});
+    justify-items: start;
+    align-items: start;
+    width: auto;
+    gap: ${theme.spacing(5)};
+    padding: ${theme.spacing(1.25, 0, 0, 0)};
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    color: ${alpha(theme.palette.common.white, 0.7)};
+    margin-left: 0;
+
+    & a {
+      &:hover {
+        color: ${theme.palette.common.white};
+      }
+    }
+  }
+`;
+
+const ButtonWrapper = styled('div')`
+  display: flex;
+  justify-content: flex-start;
+  grid-row: 2 / 3;
+
+  ${theme.breakpoints.up('md')} {
+    padding: ${theme.spacing(5, 0, 2, 8)};
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+  }
+`;
+
+const RegisterNewsletterButton = styled(Link)``;
 
 export const NavPaperWrapper = styled('div', {
   shouldForwardProp: propName =>
     propName !== 'isMenuOpen' && propName !== 'isTransitioning',
 })<{ isMenuOpen: boolean; isTransitioning: boolean }>`
-  padding: calc(${theme.spacing(5)} + var(--navbar-height)) ${theme.spacing(2)}
+  padding: calc(${theme.spacing(4)} + var(--navbar-height)) ${theme.spacing(2)}
     0 22.5px;
   background-color: ${theme.palette.primary.dark};
   color: ${theme.palette.common.white};
@@ -437,7 +486,6 @@ export const NavPaperWrapper = styled('div', {
   right: 0;
   transform: scale(${({ isMenuOpen }) => (isMenuOpen ? '100%' : '1%')});
   transform-origin: top left;
-  transition: transform 300ms cubic-bezier(0.62, 0.04, 0.3, 1.56);
   transition: transform 300ms ease-out;
   transition-delay: ${({ isMenuOpen }) => (isMenuOpen ? '0ms' : '100ms')};
   overflow-y: hidden;
@@ -445,19 +493,20 @@ export const NavPaperWrapper = styled('div', {
   height: 100vh;
   width: 100%;
   display: grid;
-  grid-template-rows: min-content ${theme.spacing(6)};
   row-gap: ${theme.spacing(4)};
-  grid-template-columns: 1fr minmax(max-content, 1285px) 1fr;
-  grid-template-columns: unset;
   position: absolute;
+  grid-template-rows: repeat(3, min-content);
+  grid-template-columns: unset;
 
   ${theme.breakpoints.up('md')} {
     row-gap: unset;
-    padding: calc(${theme.spacing(5)} + var(--navbar-height))
-      ${theme.spacing(2)} 0 75px;
+    padding: calc(${theme.spacing(8)} + var(--navbar-height))
+      ${theme.spacing(2)} 0 27px;
+    grid-template-columns: 60px 1fr;
+    grid-template-rows: min-content min-content;
   }
 
-  ${NavPaperLinksGroup} {
+  ${NavPaperLinksGroup}, ${IconItemsWrapper}, ${ButtonWrapper} {
     ${({ isTransitioning, isMenuOpen }) =>
       isTransitioning && !isMenuOpen ?
         css`
@@ -474,6 +523,9 @@ const NavPaper = ({
   isMenuOpen,
   isTransitioning,
   className,
+  children,
+  iconItems,
+  handleItemClick,
 }: PropsWithChildren<{
   loginBtn?: ButtonProps | null;
   main: FullNavigationFragment | null | undefined;
@@ -482,6 +534,8 @@ const NavPaper = ({
   isMenuOpen: boolean;
   isTransitioning: boolean;
   className?: string;
+  iconItems?: FullNavigationFragment | null;
+  handleItemClick: () => void;
 }>) => {
   const {
     elements: { Link },
@@ -493,6 +547,32 @@ const NavPaper = ({
       isTransitioning={isTransitioning}
       className={`${className || ''} ${isMenuOpen ? 'menu-open' : ''}`.trim()}
     >
+      <IconItemsWrapper>
+        {iconItems?.links.map((link, index) => (
+          <Link
+            key={index}
+            href={navigationLinkToUrl(link)}
+            onClick={() => handleItemClick()}
+            color="inherit"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <TextToIcon
+              title={link.label}
+              size={24}
+            />
+          </Link>
+        ))}
+      </IconItemsWrapper>
+      <ButtonWrapper>
+        <RegisterNewsletterButton
+          variant="buttonLinkMain"
+          href="/newsletter"
+          onClick={() => handleItemClick()}
+        >
+          Newsletter
+        </RegisterNewsletterButton>
+      </ButtonWrapper>
       {!!categories.length &&
         categories.map((categoryArray, arrayIndex) => (
           <NavPaperLinksGroup key={arrayIndex}>
@@ -650,6 +730,7 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
     const router = useRouter();
 
     const mainItems = data?.navigations?.find(({ key }) => key === slug);
+    const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
 
     const categories = useMemo(() => {
       return categorySlugs.map(categorySlugArray =>
@@ -817,9 +898,14 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
               isMenuOpen={isMenuOpen}
               isTransitioning={isTransitioning}
               className={navPaperClassName}
-            >
-              {children}
-            </NavPaper>
+              iconItems={iconItems}
+              handleItemClick={() => {
+                if (controlledIsMenuOpen === undefined) {
+                  setInternalMenuOpen(false);
+                }
+                onMenuToggle?.(false);
+              }}
+            />
           )}
         </AppBar>
       </NavbarWrapper>
