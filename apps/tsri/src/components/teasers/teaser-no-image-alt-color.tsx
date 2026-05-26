@@ -23,6 +23,7 @@ export const isTeaserNoImageAltColor = allPass([
 
 export const TeaserNoImageAltColor = styled(TsriTeaser)`
   aspect-ratio: 2.06 !important;
+  width: 100%;
 
   ${TeaserImageWrapper} {
     display: none;
