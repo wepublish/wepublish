@@ -5,6 +5,7 @@ import {
   collectSiblings,
   isImageBlock,
   isRichTextBlock,
+  isTitleBlock,
 } from '@wepublish/block-content/website';
 import { ImageContext } from '@wepublish/image/website';
 import { BlockContent } from '@wepublish/website/api';
@@ -146,7 +147,7 @@ export const ReflektBlockRenderer = (props: BuilderBlockRendererProps) => {
         [
           allPass([
             (block: BlockContent) =>
-              anyPass([isImageBlock, isRichTextBlock])(block),
+              anyPass([isImageBlock, isRichTextBlock, isTitleBlock])(block),
             () => !isMobile,
           ]),
           () => css`
