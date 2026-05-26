@@ -30,6 +30,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { recife } from '../theme';
+import { usePressAnimation } from './use-press-animation';
 
 const MailchimpFormSchema = z.object({
   EMAIL: z.string().email('Bitte gib eine gültige E-Mail-Adresse ein').min(1),
@@ -55,6 +56,8 @@ export const BannerBase = ({
 }: BuilderBannerProps & { onRegister?: () => void }) => {
   const [showBanner, setShowBanner] = useState(false);
   const [collapsed, setCollapsed] = useState(true);
+  const { isPressing: isSubmitPressing, onClick: onSubmitPress } =
+    usePressAnimation();
 
   const { handleSubmit, control } = useForm<MailchimpFormInput>({
     resolver: zodResolver(MailchimpFormSchema),
@@ -179,7 +182,7 @@ export const BannerBase = ({
                           },
                           '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
                             {
-                              borderColor: 'black',
+                              borderColor: '#333',
                             },
                           '& .MuiFormHelperText-root': {
                             backgroundColor: 'transparent',
@@ -192,6 +195,8 @@ export const BannerBase = ({
                     component="button"
                     type="submit"
                     variant="buttonLinkSecondary"
+                    className={isSubmitPressing ? 'is-pressing' : undefined}
+                    onClick={onSubmitPress}
                   >
                     {data.primaryBanner.actions[0].label}
                   </SubmitBtn>

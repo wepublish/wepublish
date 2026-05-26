@@ -16,7 +16,6 @@ import {
   authLink,
   getApiUrl,
   initWePublishTranslator,
-  NextWepublishLink,
   RoutedAdminBar,
   withJwtHandler,
   withSessionProvider,
@@ -56,6 +55,7 @@ import {
   ReflektListItem,
   ReflektUnorderedList,
 } from '../src/components/reflekt-lists';
+import { ReflektLink } from '../src/components/reflekt-link';
 import { ReflektNavbar } from '../src/components/reflekt-navbar';
 import { ReflektPage } from '../src/components/reflekt-page';
 import { ReflektQuoteBlock } from '../src/components/reflekt-quote-block';
@@ -128,7 +128,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           Banner={ReflektBanner}
           Subscribe={ReflektSubscribeForm}
           elements={{
-            Link: NextWepublishLink,
+            Link: ReflektLink,
             UnorderedList: ReflektUnorderedList,
             ListItem: ReflektListItem,
           }}

@@ -106,6 +106,13 @@ export const buttonLinkSecondaryStyles = {
   transform: 'translateY(0)',
   transition:
     'box-shadow 200ms cubic-bezier(0.34, 1.56, 0.64, 1), transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+  '&.is-pressing': {
+    backgroundColor: colors.common.black,
+    color: colors.common.white,
+    textDecoration: 'none',
+    boxShadow: `0 -12px 0 0 ${colors.secondary.light}`,
+    transform: 'translateY(12px)',
+  },
   '@media (hover: hover)': {
     '&::before': {
       content: '""',
@@ -609,6 +616,13 @@ const theme = createTheme(WePTheme, {
             transform: 'translateY(0)',
             transition:
               'box-shadow 200ms cubic-bezier(0.34, 1.56, 0.64, 1), transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+            '&.is-pressing': {
+              backgroundColor: colors.secondary.light,
+              color: colors.common.black,
+              textDecoration: 'none',
+              boxShadow: `0 -12px 0 0 ${colors.common.black}`,
+              transform: 'translateY(12px)',
+            },
             '@media (hover: hover)': {
               '&::before': {
                 content: '""',
