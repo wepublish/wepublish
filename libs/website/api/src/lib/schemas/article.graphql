@@ -35,7 +35,7 @@ fragment SlimArticleRevision on ArticleRevision {
   }
 
   image {
-    ...FullImage
+    ...SlimImage
   }
 }
 
@@ -43,6 +43,10 @@ fragment FullArticleRevision on ArticleRevision {
   ...SlimArticleRevision
 
   canonicalUrl
+
+  image {
+    ...FullImage
+  }
 
   socialMediaDescription
   socialMediaTitle
