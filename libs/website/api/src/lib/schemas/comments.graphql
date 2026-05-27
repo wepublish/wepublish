@@ -9,7 +9,6 @@ fragment FullCommentRating on CommentRating {
   id
   commentId
   userId
-  createdAt
   disabled
   value
 

@@ -16,7 +16,8 @@ const nextConfig = {
     emotion: true,
   },
   env: {
-    DEPLOY_ENV: process.env.DEPLOY_ENV,
+    APP_ENVIRONMENT: process.env.APP_ENVIRONMENT,
+    SSR_FETCH_TIMEOUT_MS: process.env.SSR_FETCH_TIMEOUT_MS,
   },
   webpack(config, { webpack }) {
     /**

@@ -40,10 +40,5 @@ fragment RemoteImage on Image {
   link
   license
 
-  focalPoint {
-    x
-    y
-  }
-
   ...ImageUrls
 }

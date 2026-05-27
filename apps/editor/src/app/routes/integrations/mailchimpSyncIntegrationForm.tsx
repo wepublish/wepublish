@@ -650,20 +650,17 @@ function SyncProviderSettingCard({
     interestGroupsData?.mailchimpInterestGroups ?? [];
 
   useEffect(() => {
-    if (setting.enabled) {
-      fetchLists({ variables: { configId: setting.id } });
-      if (setting.mailchimp_listId) {
-        fetchMergeFields({
-          variables: { configId: setting.id, listId: setting.mailchimp_listId },
-        });
-        fetchInterestGroups({
-          variables: { configId: setting.id, listId: setting.mailchimp_listId },
-        });
-      }
+    fetchLists({ variables: { configId: setting.id } });
+    if (setting.mailchimp_listId) {
+      fetchMergeFields({
+        variables: { configId: setting.id, listId: setting.mailchimp_listId },
+      });
+      fetchInterestGroups({
+        variables: { configId: setting.id, listId: setting.mailchimp_listId },
+      });
     }
   }, [
     setting.id,
-    setting.enabled,
     setting.mailchimp_listId,
     fetchLists,
     fetchMergeFields,
@@ -721,7 +718,7 @@ function SyncProviderSettingCard({
   );
 
   useEffect(() => {
-    if (setting.enabled && watchedListId) {
+    if (watchedListId) {
       fetchMergeFields({
         variables: { configId: setting.id, listId: watchedListId },
       });
@@ -729,13 +726,7 @@ function SyncProviderSettingCard({
         variables: { configId: setting.id, listId: watchedListId },
       });
     }
-  }, [
-    watchedListId,
-    setting.id,
-    setting.enabled,
-    fetchMergeFields,
-    fetchInterestGroups,
-  ]);
+  }, [watchedListId, setting.id, fetchMergeFields, fetchInterestGroups]);
 
   const {
     fields: mergeFields,
@@ -1539,7 +1530,7 @@ function SyncProviderSettingCard({
               : <MdSync />
             }
             onClick={handleDryRun}
-            disabled={dryRunning || !setting.enabled}
+            disabled={dryRunning}
           >
             {t('integrations.mailchimpSyncSettings.dryRun')}
           </Button>

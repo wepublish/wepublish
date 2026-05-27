@@ -18,6 +18,8 @@ describe('BannerResolver', () => {
     text: '',
     showOnArticles: false,
     showForLoginStatus: LoginStatus.ALL,
+    collapsible: true,
+    hideForMinutes: 24 * 60,
   };
 
   const mockBannerService = {
@@ -159,6 +161,8 @@ describe('BannerResolver', () => {
         text: 'New Banner Text',
         showOnArticles: false,
         showForLoginStatus: LoginStatus.ALL,
+        collapsible: true,
+        hideForMinutes: 24 * 60,
       };
       mockBannerService.create.mockResolvedValue(mockBanner);
       const result = await resolver.createBanner(createInput);
@@ -175,6 +179,8 @@ describe('BannerResolver', () => {
         showOnArticles: false,
         showForLoginStatus: LoginStatus.ALL,
         actions: [],
+        collapsible: true,
+        hideForMinutes: 24 * 60,
       };
       mockBannerService.update.mockResolvedValue(mockBanner);
       const result = await resolver.updateBanner(updateInput);

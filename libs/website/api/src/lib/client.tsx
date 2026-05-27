@@ -8,6 +8,7 @@ import {
   InMemoryCacheConfig,
   NormalizedCacheObject,
   split,
+  TypePolicies,
 } from '@apollo/client';
 import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { mergeDeepRight } from 'ramda';
@@ -16,6 +17,7 @@ import possibleTypes from './graphql';
 import { ComponentType, memo, useMemo } from 'react';
 import { createUploadLink } from 'apollo-upload-client';
 import { absoluteUrlToRelative } from './absolute-url-to-relative';
+import { omitDisabledBlocks } from './omit-disabled-blocks';
 
 export const V1_CLIENT_STATE_PROP_NAME = '__APOLLO_STATE_V1__';
 
@@ -28,19 +30,44 @@ const isFile = (value: unknown): boolean =>
       (value && typeof value === 'object' && Object.values(value).some(isFile))
   );
 
+const SSR_FETCH_TIMEOUT_MS = Number(process.env.SSR_FETCH_TIMEOUT_MS) || 10_000;
+
+const createSsrTimeoutFetch =
+  (timeoutMs: number): typeof fetch =>
+  (input, init) => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+      controller.abort(new Error(`SSR fetch timeout after ${timeoutMs}ms`));
+    }, timeoutMs);
+    return fetch(input, { ...init, signal: controller.signal }).finally(() =>
+      clearTimeout(timeoutId)
+    );
+  };
+
 const createV1ApiClient = (
   apiUrl: string,
   links: ApolloLink[],
   cacheConfig?: InMemoryCacheConfig,
   cache?: NormalizedCacheObject
 ) => {
+  const ssrFetchOptions =
+    typeof window === 'undefined' ?
+      { fetch: createSsrTimeoutFetch(SSR_FETCH_TIMEOUT_MS) }
+    : {};
+
   // If operation is uploading a file, use the upload link, else use the batch http
   const httpLink = split(
     ({ variables }) => isFile(variables),
     createUploadLink({
       uri: `${apiUrl}/v1`,
+      ...ssrFetchOptions,
     }),
-    new BatchHttpLink({ uri: `${apiUrl}/v1`, batchMax: 5, batchInterval: 20 })
+    new BatchHttpLink({
+      uri: `${apiUrl}/v1`,
+      batchMax: 5,
+      batchInterval: 20,
+      ...ssrFetchOptions,
+    })
   );
 
   const link = from([...links, httpLink]);
@@ -72,14 +99,19 @@ const createV1ApiClient = (
     link,
     cache: new InMemoryCache({
       possibleTypes: possibleTypes.possibleTypes,
-      typePolicies:
+      ...cacheConfig,
+      typePolicies: mergeDeepRight(
         (
           process.env.NODE_ENV !== 'production' ||
-          process.env.DEPLOY_ENV === 'review'
+            process.env.APP_ENVIRONMENT === 'review'
         ) ?
           absoluteUrlToRelative
-        : undefined,
-      ...cacheConfig,
+        : ({} as TypePolicies),
+        mergeDeepRight(
+          omitDisabledBlocks,
+          cacheConfig?.typePolicies ?? ({} as TypePolicies)
+        )
+      ) as TypePolicies,
     }).restore(cache ?? {}),
     ssrMode: typeof window === 'undefined',
     assumeImmutableResults: true,

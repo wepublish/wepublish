@@ -3,9 +3,6 @@ import { Field, InputType, ObjectType, OmitType } from '@nestjs/graphql';
 @ObjectType()
 export class Property {
   @Field()
-  id!: string;
-
-  @Field()
   key!: string;
 
   @Field()
@@ -16,11 +13,7 @@ export class Property {
 }
 
 @InputType()
-export class PropertyInput extends OmitType(
-  Property,
-  ['id'] as const,
-  InputType
-) {
+export class PropertyInput extends OmitType(Property, [] as const, InputType) {
   @Field({ nullable: true })
   id?: string;
 }

@@ -4,7 +4,13 @@ import 'react-resizable/css/styles.css';
 import styled from '@emotion/styled';
 import i18next from 'i18next';
 import nanoid from 'nanoid';
-import { ComponentType, PropsWithChildren, useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  ComponentType,
+  PropsWithChildren,
+  useEffect,
+  useState,
+} from 'react';
 import GridLayoutWithoutChildren, {
   ReactGridLayoutProps,
 } from 'react-grid-layout';
@@ -27,6 +33,7 @@ import {
 import { BlockProps } from '../atoms/blockList';
 import { IconButtonTooltip } from '../atoms/iconButtonTooltip';
 import { PlaceholderInput } from '../atoms/placeholderInput';
+import { TypographicTextArea } from '../atoms/typographicTextArea';
 import { TeaserEditPanel } from '../panel/teaserEditPanel';
 import { TeaserSelectAndEditPanel } from '../panel/teaserSelectAndEditPanel';
 import { ContentForTeaser, IconWrapper } from './teaserGridBlock';
@@ -224,8 +231,22 @@ export function TeaserGridFlexBlock({
     });
   }
 
+  function handleTitleChange(e: ChangeEvent<HTMLTextAreaElement>) {
+    onChange({
+      ...value,
+      title: e.target.value,
+    });
+  }
+
   return (
     <>
+      <TypographicTextArea
+        variant="title"
+        align="center"
+        placeholder={t('blocks.title.title')}
+        value={value.title ?? ''}
+        onChange={handleTitleChange}
+      />
       <IconButtonTooltip caption={t('blocks.flexTeaser.addBlock')}>
         <RIconButton
           icon={<MdAddBox />}

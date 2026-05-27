@@ -7,7 +7,7 @@ import {
   BuilderBannerProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { differenceInHours } from 'date-fns';
+import { differenceInMinutes } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { BANNER_STORAGE_KEY, collapseBanner } from './collapse-banner';
 
@@ -130,7 +130,8 @@ export const Banner = ({
     const currentTime = new Date().getTime();
 
     const isClosedRecently =
-      differenceInHours(currentTime, lastClosedTime) < 24;
+      differenceInMinutes(currentTime, lastClosedTime) <
+      (data?.primaryBanner?.hideForMinutes ?? 24 * 60);
 
     setCollapsed(isClosedRecently);
   }, [data]);
@@ -152,27 +153,27 @@ export const Banner = ({
   };
 
   if (!data?.primaryBanner || loading || error) {
-    return <></>;
+    return null;
   }
 
-  if (!showBanner) {
-    return <></>;
+  if (!showBanner || (collapsed && data.primaryBanner.collapsible === false)) {
+    return null;
   }
 
-  const htmlContent = data?.primaryBanner?.html;
+  const htmlContent = data.primaryBanner.html;
 
   return (
     <BannerWrapper
-      hasImage={!!data?.primaryBanner.image}
+      hasImage={!!data.primaryBanner.image}
       className={className}
       data-collapsed={collapsed}
       data-banner
     >
       <BannerCloseButton onClick={handleClose}>&#x2715;</BannerCloseButton>
 
-      {data?.primaryBanner.image && (
+      {data.primaryBanner.image && (
         <BannerImage
-          style={{ backgroundImage: `url(${data?.primaryBanner.image.url})` }}
+          style={{ backgroundImage: `url(${data.primaryBanner.image.url})` }}
         ></BannerImage>
       )}
 
@@ -189,29 +190,29 @@ export const Banner = ({
               variant="bannerTitle"
               component={BannerTitle}
             >
-              {data?.primaryBanner.title}
+              {data.primaryBanner.title}
             </Typography>
 
             <Typography
               variant="bannerText"
               component={BannerText}
             >
-              {data?.primaryBanner.text}
+              {data.primaryBanner.text}
             </Typography>
           </BannerContent>
 
           <BannerCta>
-            {data?.primaryBanner.cta && (
+            {data.primaryBanner.cta && (
               <Typography
                 variant="bannerCta"
                 component={BannerCtaText}
               >
-                {data?.primaryBanner.cta}
+                {data.primaryBanner.cta}
               </Typography>
             )}
 
             <BannerActions>
-              {data?.primaryBanner.actions?.map(a => (
+              {data.primaryBanner.actions?.map(a => (
                 <Button
                   color={
                     a.role === BannerActionRole.Primary ?

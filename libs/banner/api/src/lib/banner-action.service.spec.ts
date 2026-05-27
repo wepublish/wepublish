@@ -34,6 +34,8 @@ describe('BannerActionService', () => {
     delay: 0,
     showOnArticles: true,
     showForLoginStatus: LoginStatus.ALL,
+    collapsible: true,
+    hideForMinutes: 24 * 60,
   };
 
   beforeEach(async () => {

@@ -455,23 +455,29 @@ export class SubscriptionService {
     }
     const payments = await this.payments.findByInvoiceId(invoice.id);
     for (const payment of payments) {
-      if (!payment || !payment.intentID) continue;
+      if (!payment || !payment.intentID) {
+        continue;
+      }
+
       try {
         const intentState = await paymentProvider.checkIntentStatus({
           intentID: payment.intentID,
           paymentID: payment.id,
         });
+
         await paymentProvider.updatePaymentWithIntentState({
           intentState,
         });
       } catch (e) {
         logger('checkInvoiceState').error(
-          'Checking payment <%s> with intent %s on payment provider %s soft failed with error: %s',
+          'Checking payment <%s> with intent %s on payment provider %s hard failed with error: %s',
           payment.id,
           payment.intentID,
           paymentProvider.getName(),
           e
         );
+
+        throw e;
       }
     }
   }

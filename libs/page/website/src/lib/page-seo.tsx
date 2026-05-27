@@ -59,7 +59,7 @@ export const getPageSEO = (page: Page) => {
             contentUrl: image.url,
             thumbnailUrl: image.m,
             url: image.url,
-            encodingFormat: image.mimeType,
+            encodingFormat: 'image/webp',
           }
         : undefined,
       description,

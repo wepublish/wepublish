@@ -19,6 +19,7 @@ export const isTeaserTwoCol = allPass([
 
 export const TeaserTwoCol = styled(TsriTeaser)`
   aspect-ratio: 2.06 !important;
+  width: 100%;
 
   ${TeaserContentWrapper} {
     grid-template-columns: 50% 50%;

@@ -8,6 +8,7 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
+  getApiUrl,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
@@ -224,10 +225,7 @@ function CustomApp({ Component, pageProps }: CustomAppProps) {
 }
 
 const { publicRuntimeConfig } = getConfig();
-const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-  authLink,
-  previewLink,
-]);
+const withApollo = createWithV1ApiClient(getApiUrl(), [authLink, previewLink]);
 
 const ConnectedApp = withApollo(
   withBuilderRouter(

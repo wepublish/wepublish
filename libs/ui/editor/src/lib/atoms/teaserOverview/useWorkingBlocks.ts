@@ -175,12 +175,10 @@ function applyWorkingToBlocks(
 ): BlockValue[] {
   let next = base;
   for (const b of working) {
-    const realTeasers = b.teasers.filter(
-      w => w.type === 'real' && w.teaser !== null
-    );
     for (let i = 0; i < b.originalCount; i++) {
       const address = b.addressTemplates[i];
-      const teaser = realTeasers[i]?.teaser ?? null;
+      const slot = b.teasers[i];
+      const teaser = slot?.type === 'real' ? slot.teaser : null;
       next = setTeaserAt(next, address, teaser);
     }
   }
@@ -233,7 +231,6 @@ export function useWorkingBlocks(
     lastSyncedBlocksRef.current = blocks;
     setWorkingBlocks(prev => {
       const fresh = initWorkingBlocks(blocks, t, blockStyleNames);
-      const freshKeys = new Set(fresh.map(b => b.groupKey));
       const prevScratchByKey = new Map<string, WorkingTeaser>();
       for (const b of prev) {
         const scratch = b.teasers[b.teasers.length - 1];
@@ -251,23 +248,6 @@ export function useWorkingBlocks(
         teasers[teasers.length - 1] = prevScratch;
         return { ...b, teasers };
       });
-
-      for (const prevBlock of prev) {
-        if (freshKeys.has(prevBlock.groupKey)) {
-          continue;
-        }
-        const emptyTeasers: WorkingTeaser[] = prevBlock.addressTemplates.map(
-          () => ({ teaser: null, type: 'empty' })
-        );
-        const scratch = prevScratchByKey.get(prevBlock.groupKey) ?? {
-          teaser: null,
-          type: 'scratch',
-        };
-        merged.push({
-          ...prevBlock,
-          teasers: [...emptyTeasers, scratch],
-        });
-      }
 
       historyRef.current = [merged];
       historyIndexRef.current = 0;

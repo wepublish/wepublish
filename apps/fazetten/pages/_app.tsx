@@ -14,6 +14,7 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
+  getApiUrl,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
@@ -42,8 +43,10 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import { FazettenArticle } from '../src/components/fazetten-article';
-import { FazettenAlternatingTeaser } from '../src/components/fazetten-teaser';
 import { FazettenTitleBlock } from '../src/components/fazetten-title-block';
+import { FazettenBaseTeaserSlots } from '../src/components/teaser-layouts/fazetten-base-teaser-slots';
+import { FazettenAlternatingTeaser } from '../src/components/teasers/fazetten-alternating-teaser';
+import { FazettenBaseTeaser } from '../src/components/teasers/fazetten-base-teaser';
 import theme, { globalStyles } from '../src/theme';
 
 setDefaultOptions({
@@ -91,7 +94,11 @@ const providerProps: PartialDeep<WebsiteBuilderProps> = {
   Head,
   Script,
   elements: { Link: NextWepublishLink },
-  blocks: { Title: FazettenTitleBlock },
+  blocks: {
+    Title: FazettenTitleBlock,
+    TeaserSlots: FazettenBaseTeaserSlots,
+    BaseTeaser: FazettenBaseTeaser,
+  },
   blockStyles: { AlternatingTeaser: FazettenAlternatingTeaser },
   date: { format: dateFormatter },
   Article: FazettenArticle,
@@ -209,10 +216,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 }
 
 const { publicRuntimeConfig } = getConfig();
-const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-  authLink,
-  previewLink,
-]);
+const withApollo = createWithV1ApiClient(getApiUrl(), [authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(

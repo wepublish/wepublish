@@ -8,6 +8,10 @@ fragment ImageURLs on Image {
   s: transformURL(input: { width: 500 })
   xs: transformURL(input: { width: 300 })
   xxs: transformURL(input: { width: 200 })
+}
+
+fragment SquareImageURLs on Image {
+  url
 
   xxlSquare: transformURL(input: { width: 1500, height: 1500 })
   xlSquare: transformURL(input: { width: 1200, height: 1200 })
@@ -18,34 +22,44 @@ fragment ImageURLs on Image {
   xxsSquare: transformURL(input: { width: 200, height: 200 })
 }
 
-fragment FullImage on Image {
+fragment FullImageURLs on Image {
+  url
+
+  ...ImageURLs
+  ...SquareImageURLs
+}
+
+fragment SlimImage on Image {
   id
-
-  createdAt
-  modifiedAt
-
-  filename
-  format
-  mimeType
-  extension
   width
   height
-  fileSize
 
   title
   description
-  tags
+
+  focalPointX
+  focalPointY
+
+  ...ImageURLs
+}
+
+fragment FullImage on Image {
+  id
+
+  width
+  height
+
+  title
+  description
 
   source
   link
   license
 
-  focalPoint {
-    x
-    y
-  }
+  focalPointX
+  focalPointY
 
-  ...ImageURLs
+  ...FullImageURLs
 }
 
 # Add queries section
@@ -58,31 +72,14 @@ query GetImagesByTag($tag: String!) {
 fragment FullPeerImage on PeerImage {
   id
 
-  createdAt
-  modifiedAt
-
-  filename
-  format
-  mimeType
-  extension
   width
   height
-  fileSize
 
-  title
   description
-  tags
+  title
 
-  source
-  link
-  license
-
-  focalPoint {
-    x
-    y
-  }
-
-  url
+  focalPointX
+  focalPointY
 
   xxl
   xl
@@ -104,7 +101,8 @@ fragment FullPeerImage on PeerImage {
 mutation UploadImage(
   $title: String
   $description: String
-  $focalPoint: FocalPointInput
+  $focalPointX: Float!
+  $focalPointY: Float!
   $license: String
   $link: String
   $source: String
@@ -114,7 +112,8 @@ mutation UploadImage(
   uploadUserProfileImage(
     title: $title
     description: $description
-    focalPoint: $focalPoint
+    focalPointX: $focalPointX
+    focalPointY: $focalPointY
     license: $license
     link: $link
     source: $source
