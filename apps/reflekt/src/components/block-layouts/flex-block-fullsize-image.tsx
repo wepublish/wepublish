@@ -17,13 +17,13 @@ import {
 import { allPass } from 'ramda';
 import { useEffect, useRef } from 'react';
 
-import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
+import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 
 export const isFlexBlockFullsizeImage = (
   block: Pick<BlockContent, '__typename'>
 ): block is BuilderFlexBlockProps => {
   return allPass([
-    hasBlockStyle(ReflektBlockType.FlexBlockFullsizeImage),
+    hasBlockStyle(ReflektBlockStyles.FlexBlockFullsizeImage),
     isFlexBlock,
   ])(block);
 };

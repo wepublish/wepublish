@@ -14,7 +14,7 @@ type ReflektRichTextBlockType = ComponentType<
   BuilderRichTextBlockProps & { variant?: string }
 >;
 
-import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
+import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 
 export const TocWrapper = styled('div')`
   margin: 0;
@@ -48,7 +48,7 @@ export const TocDetails = styled(Typography)`
 export const isToc = (
   block: Pick<BlockContent, '__typename'>
 ): block is BuilderBreakBlockProps =>
-  allPass([hasBlockStyle(ReflektBlockType.TableOfContents), isBreakBlock])(
+  allPass([hasBlockStyle(ReflektBlockStyles.TableOfContents), isBreakBlock])(
     block
   );
 

@@ -500,7 +500,7 @@ export const NavPaperWrapper = styled('div', {
 
   ${theme.breakpoints.up('md')} {
     row-gap: unset;
-    padding: calc(${theme.spacing(8)} + var(--navbar-height))
+    padding: calc(${theme.spacing(5)} + var(--navbar-height))
       ${theme.spacing(2)} 0 27px;
     grid-template-columns: 60px 1fr;
     grid-template-rows: min-content min-content;

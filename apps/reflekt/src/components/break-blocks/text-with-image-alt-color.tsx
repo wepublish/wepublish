@@ -4,7 +4,7 @@ import { BlockContent } from '@wepublish/website/api';
 import { BuilderBreakBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
-import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
+import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import { TextWithImageBreakBlock } from './text-with-image';
 
 export const isTextWithImageAltColorBreakBlock = (
@@ -12,7 +12,7 @@ export const isTextWithImageAltColorBreakBlock = (
 ): block is BuilderBreakBlockProps =>
   allPass([
     isBreakBlock,
-    hasBlockStyle(ReflektBlockType.TextWithImageAltColor),
+    hasBlockStyle(ReflektBlockStyles.TextWithImageAltColor),
   ])(block);
 
 export const TextWithImageAltColorBreakBlock = styled(

@@ -31,7 +31,7 @@ import { startTransition, useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 
 import { useArticleProperty } from '../article-properties-context';
-import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
+import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import { heroOffScreen } from '../reflekt-navbar';
 
 const isTrustedYouTubeUrl = (value?: string | null): boolean => {
@@ -62,6 +62,42 @@ const getYouTubeVideoId = (value?: string | null): string | null => {
     return null;
   }
 };
+
+const getNativeVideoUrl = (value?: string | null): string | null => {
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    return /\.(mp4|webm)$/i.test(url.pathname) ? value : null;
+  } catch {
+    return null;
+  }
+};
+
+const HeroNativeVideoPlayer = styled('video')`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+`;
+
+type HeroNativeVideoProps = {
+  src: string;
+  noLoop: boolean;
+};
+
+const HeroNativeVideo = ({ src, noLoop }: HeroNativeVideoProps) => (
+  <HeroNativeVideoPlayer
+    src={src}
+    autoPlay
+    muted
+    loop={!noLoop}
+    playsInline
+    disablePictureInPicture
+    preload="auto"
+  />
+);
 
 const HeroVimeoPlayer = styled('iframe')`
   position: absolute;
@@ -172,9 +208,10 @@ const HeroYouTubeVideo = ({
 export const isFlexBlockHero = (
   block: Pick<BlockContent, '__typename'>
 ): block is FlexBlockType => {
-  return allPass([hasBlockStyle(ReflektBlockType.FlexBlockHero), isFlexBlock])(
-    block
-  );
+  return allPass([
+    hasBlockStyle(ReflektBlockStyles.FlexBlockHero),
+    isFlexBlock,
+  ])(block);
 };
 
 const MuteButton = styled('button')`
@@ -333,7 +370,13 @@ export const FlexBlockHero = ({
         const isYouTubeIframe =
           nestedBlock.block?.__typename === 'IFrameBlock' &&
           isTrustedYouTubeUrl((nestedBlock.block as IFrameBlockType).url);
-        const isHeroYouTubeVideo = isVimeoBlock || isYouTube || isYouTubeIframe;
+        const nativeVideoUrl =
+          nestedBlock.block?.__typename === 'IFrameBlock' ?
+            getNativeVideoUrl((nestedBlock.block as IFrameBlockType).url)
+          : null;
+        const isNativeVideo = !!nativeVideoUrl;
+        const isHeroVideo =
+          isVimeoBlock || isYouTube || isYouTubeIframe || isNativeVideo;
         const youtubeId =
           isYouTube ? (nestedBlock.block as YouTubeVideoBlockType).videoID
           : isYouTubeIframe ?
@@ -349,9 +392,14 @@ export const FlexBlockHero = ({
             key={index}
             {...(nestedBlock.alignment as FlexAlignment)}
           >
-            {isHeroYouTubeVideo && mounted ?
+            {isHeroVideo && mounted ?
               <YouTubeVideoBlockWrapper>
-                {isVimeoBlock && vimeoId ?
+                {isNativeVideo && nativeVideoUrl ?
+                  <HeroNativeVideo
+                    src={nativeVideoUrl}
+                    noLoop={!!noLoop}
+                  />
+                : isVimeoBlock && vimeoId ?
                   <HeroVimeoVideo videoId={vimeoId} />
                 : <HeroYouTubeVideo
                     videoUrl={videoUrl}

@@ -10,7 +10,7 @@ import {
 } from '@wepublish/website/builder';
 import { ComponentType } from 'react';
 
-import { ReflektBlockType } from './block-styles/reflekt-block-styles';
+import { ReflektBlockStyles } from './block-styles/reflekt-block-styles';
 
 export const isTitleBlock = (
   block: Pick<BlockContent, '__typename'>
@@ -46,7 +46,7 @@ export const ReflektTitleBlock = ({
   const hasHeroSibling = !!(
     siblings?.length &&
     siblings[0].typeName === 'FlexBlock' &&
-    siblings[0].blockStyle === ReflektBlockType.FlexBlockHero
+    siblings[0].blockStyle === ReflektBlockStyles.FlexBlockHero
   );
 
   return (

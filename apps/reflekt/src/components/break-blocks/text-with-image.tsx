@@ -8,13 +8,15 @@ import { BlockContent } from '@wepublish/website/api';
 import { BuilderBreakBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
-import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
+import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import { ImageWithTextBreakBlock } from './image-with-text';
 
 export const isTextWithImageBreakBlock = (
   block: Pick<BlockContent, '__typename'>
 ): block is BuilderBreakBlockProps =>
-  allPass([isBreakBlock, hasBlockStyle(ReflektBlockType.TextWithImage)])(block);
+  allPass([isBreakBlock, hasBlockStyle(ReflektBlockStyles.TextWithImage)])(
+    block
+  );
 
 export const TextWithImageBreakBlock = styled(
   ImageWithTextBreakBlock

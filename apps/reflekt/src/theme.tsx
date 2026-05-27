@@ -393,19 +393,32 @@ const theme = createTheme(WePTheme, {
       },
       categoryAddress: {
         display: 'block',
-        margin: 0,
+        margin: '3rem 0 0 0',
         padding: 0,
+        [breakpoints.up('md')]: {
+          margin: 0,
+        },
       },
       categoryAddressText: {
         fontFamily: ['Euclid', 'sans-serif'].join(','),
         color: colors.common.white,
         fontSize: '1.5rem',
-        lineHeight: '3rem',
+        lineHeight: '1.8rem',
         fontWeight: 500,
         fontStyle: 'normal',
+        marginBottom: '0.5rem',
+        '&:last-child': {
+          marginTop: '2.5rem',
+          fontSize: '1.25rem',
+        },
         [breakpoints.up('md')]: {
           fontSize: '1.5rem',
-          lineHeight: '3rem',
+          lineHeight: 1.5,
+          marginBottom: '1rem',
+          '&:last-child': {
+            paddingTop: '0.1rem',
+            fontSize: '1.5rem',
+          },
         },
       },
     },

@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { hasBlockStyle } from '@wepublish/block-content/website';
 
 import { recife } from '../../theme';
-import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
+import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import {
   ReflektTeaser,
   TeaserContentWrapper,
@@ -12,7 +12,7 @@ import {
   TeaserTitle,
 } from './reflekt-teaser';
 
-export const isTeaserCredits = hasBlockStyle(ReflektBlockType.TeaserCredits);
+export const isTeaserCredits = hasBlockStyle(ReflektBlockStyles.TeaserCredits);
 
 export const TeaserCredits = styled(ReflektTeaser)`
   aspect-ratio: unset;

@@ -9,7 +9,7 @@ import {
 } from '@wepublish/website/builder';
 import { useMemo } from 'react';
 
-import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
+import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 
 export const ReflektArticleList = ({
   data,
@@ -31,11 +31,11 @@ export const ReflektArticleList = ({
   const blockStyle = useMemo(() => {
     if (tag) {
       if (tag === 'recherchen') {
-        return ReflektBlockType.TeaserRecherchen;
+        return ReflektBlockStyles.TeaserRecherchen;
       }
 
       if (tag === 'news') {
-        return ReflektBlockType.TeaserNews;
+        return ReflektBlockStyles.TeaserNews;
       }
     }
 

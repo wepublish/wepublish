@@ -1,4 +1,4 @@
-export enum ReflektBlockType {
+export enum ReflektBlockStyles {
   FlexBlockHero = 'FlexBlockHero',
   FlexBlockFullsizeImage = 'FlexBlockFullsizeImage',
   TeaserRecherchen = 'TeaserRecherchen',
@@ -7,6 +7,7 @@ export enum ReflektBlockType {
   TeaserCredits = 'TeaserCredits',
   TeaserNews = 'TeaserNews',
   TeaserNewsGrid = 'TeaserNewsGrid',
+  TeaserLogoWall = 'TeaserLogoWall',
   CollapsibleContent = 'CollapsibleContent',
   CollapsibleDownloads = 'CollapsibleDownloads',
   TableOfContents = 'TableOfContents',

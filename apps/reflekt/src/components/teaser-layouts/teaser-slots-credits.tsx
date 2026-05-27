@@ -14,14 +14,15 @@ import {
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
-import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
+import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 
 export const isTeaserSlotsCredits = (
   block: Pick<BlockContent, '__typename'>
 ): block is BuilderTeaserSlotsBlockProps =>
-  allPass([isTeaserSlotsBlock, hasBlockStyle(ReflektBlockType.TeaserCredits)])(
-    block
-  );
+  allPass([
+    isTeaserSlotsBlock,
+    hasBlockStyle(ReflektBlockStyles.TeaserCredits),
+  ])(block);
 
 export const alignmentForTeaserBlock = (
   index: number,

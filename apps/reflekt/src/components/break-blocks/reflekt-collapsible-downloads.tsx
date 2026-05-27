@@ -15,7 +15,7 @@ type ReflektRichTextBlockType = ComponentType<
   BuilderRichTextBlockProps & { variant?: string }
 >;
 
-import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
+import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import {
   CollapsibleContentWrapper,
   ExpandIcon,
@@ -30,9 +30,10 @@ export const CollapsibleDownloadsWrapper = styled(CollapsibleContentWrapper)`
 export const isCollapsibleDownloads = (
   block: Pick<BlockContent, '__typename'>
 ): block is BuilderBreakBlockProps =>
-  allPass([hasBlockStyle(ReflektBlockType.CollapsibleDownloads), isBreakBlock])(
-    block
-  );
+  allPass([
+    hasBlockStyle(ReflektBlockStyles.CollapsibleDownloads),
+    isBreakBlock,
+  ])(block);
 
 export const CollapsibleDownloads = ({
   className,

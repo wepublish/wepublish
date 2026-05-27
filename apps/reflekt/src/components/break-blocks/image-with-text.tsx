@@ -11,12 +11,14 @@ import { BuilderBreakBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
 import { buttonLinkSecondaryStyles } from '../../theme';
-import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
+import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 
 export const isImageWithTextBreakBlock = (
   block: Pick<BlockContent, '__typename'>
 ): block is BuilderBreakBlockProps =>
-  allPass([isBreakBlock, hasBlockStyle(ReflektBlockType.ImageWithText)])(block);
+  allPass([isBreakBlock, hasBlockStyle(ReflektBlockStyles.ImageWithText)])(
+    block
+  );
 
 export const ImageWithTextBreakBlock = styled(BreakBlock)`
   background-color: ${({ theme }) => theme.palette.secondary.light};

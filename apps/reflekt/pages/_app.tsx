@@ -51,11 +51,11 @@ import { RefFooter } from '../src/components/reflekt-footer';
 import { ReflektGlobalScripts } from '../src/components/reflekt-global-scripts';
 import { ReflektGlobalStyles } from '../src/components/reflekt-global-styles';
 import { ReflektImageBlock } from '../src/components/reflekt-image-block';
+import { ReflektLink } from '../src/components/reflekt-link';
 import {
   ReflektListItem,
   ReflektUnorderedList,
 } from '../src/components/reflekt-lists';
-import { ReflektLink } from '../src/components/reflekt-link';
 import { ReflektNavbar } from '../src/components/reflekt-navbar';
 import { ReflektPage } from '../src/components/reflekt-page';
 import { ReflektQuoteBlock } from '../src/components/reflekt-quote-block';
@@ -69,6 +69,7 @@ import {
 import { ReflektTag } from '../src/components/reflekt-tag';
 import { ReflektTitleBlock } from '../src/components/reflekt-title-block';
 import { ReflektArticleList } from '../src/components/teaser-layouts/reflekt-article-list';
+import { ReflektBaseGridFlex } from '../src/components/teaser-layouts/reflekt-base-grid-flex';
 import { ReflektBaseTeaserSlots } from '../src/components/teaser-layouts/reflekt-base-teaser-slots';
 import { ReflektBaseTeaser } from '../src/components/teasers/reflekt-base-teaser';
 import theme from '../src/theme';
@@ -140,6 +141,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           }}
           blocks={{
             TeaserSlots: ReflektBaseTeaserSlots,
+            TeaserGridFlex: ReflektBaseGridFlex,
             BaseTeaser: ReflektBaseTeaser,
             Break: ReflektBaseBreakBlock,
             FlexBlock: ReflektFlexBlock,

@@ -12,7 +12,7 @@ import { allPass } from 'ramda';
 import React from 'react';
 import { MdArrowDownward } from 'react-icons/md';
 
-import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
+import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 
 export const CollapsibleContentWrapper = styled(Accordion)`
   overflow-anchor: auto;
@@ -45,7 +45,7 @@ export const ExpandIcon = styled(MdArrowDownward)`
 export const isCollapsibleContent = (
   block: Pick<BlockContent, '__typename'>
 ): block is BuilderBreakBlockProps =>
-  allPass([hasBlockStyle(ReflektBlockType.CollapsibleContent), isBreakBlock])(
+  allPass([hasBlockStyle(ReflektBlockStyles.CollapsibleContent), isBreakBlock])(
     block
   );
 

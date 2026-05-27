@@ -15,7 +15,7 @@ import {
 } from '@wepublish/website/builder';
 
 import { teaserMoreAboutTheme } from '../../theme';
-import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
+import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import {
   TeaserContentWrapper,
   TeaserLead,
@@ -25,7 +25,7 @@ import {
 } from './reflekt-teaser';
 
 export const isTeaserMoreAbout = hasBlockStyle(
-  ReflektBlockType.TeaserMoreAbout
+  ReflektBlockStyles.TeaserMoreAbout
 );
 
 const TeaserMoreAboutBase = ({

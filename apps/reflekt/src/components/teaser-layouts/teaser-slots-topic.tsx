@@ -23,7 +23,7 @@ import {
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { allPass, anyPass } from 'ramda';
 
-import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
+import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import { TeaserWrapper } from '../teasers/reflekt-teaser';
 
 export const isTeaserSlotsTopic = (
@@ -32,10 +32,10 @@ export const isTeaserSlotsTopic = (
   allPass([
     isTeaserSlotsBlock,
     anyPass([
-      hasBlockStyle(ReflektBlockType.TeaserRecherchen),
-      hasBlockStyle(ReflektBlockType.TeaserNews),
-      hasBlockStyle(ReflektBlockType.TeaserRecherchenGrid),
-      hasBlockStyle(ReflektBlockType.TeaserNewsGrid),
+      hasBlockStyle(ReflektBlockStyles.TeaserRecherchen),
+      hasBlockStyle(ReflektBlockStyles.TeaserNews),
+      hasBlockStyle(ReflektBlockStyles.TeaserRecherchenGrid),
+      hasBlockStyle(ReflektBlockStyles.TeaserNewsGrid),
     ]),
   ])(block);
 
@@ -75,7 +75,7 @@ export const TeaserSlotsTopicWrapper = styled(TeaserSlotsBlockWrapperDefault)<{
 
     ${({ theme }) => theme.breakpoints.up('md')} {
       display: ${({ blockStyle }) =>
-        blockStyle === ReflektBlockType.TeaserNews ? 'none' : 'block'};
+        blockStyle === ReflektBlockStyles.TeaserNews ? 'none' : 'block'};
     }
 
     ${SliderArrow} {
@@ -117,10 +117,10 @@ export const blockStyleByIndex = (
   index: number,
   count: number,
   blockStyle?: Maybe<string>
-): ReflektBlockType | undefined => {
+): ReflektBlockStyles | undefined => {
   return index < count - 1 ?
-      (blockStyle as ReflektBlockType)
-    : ReflektBlockType.TeaserMoreAbout;
+      (blockStyle as ReflektBlockStyles)
+    : ReflektBlockStyles.TeaserMoreAbout;
 };
 
 function endsWithAny(suffixes: string[], string: string) {
@@ -174,7 +174,7 @@ export const TeaserSlotsTopic = ({
                 xl: 3,
               }}
               dragDisabled={
-                blockStyle === ReflektBlockType.TeaserNews ? isDesktop : false
+                blockStyle === ReflektBlockStyles.TeaserNews ? isDesktop : false
               }
               detailsChanged={slider => {
                 slider.slides.forEach((slide: any) => {
@@ -204,7 +204,9 @@ export const TeaserSlotsTopic = ({
                 index={index}
                 teaser={teaser}
                 alignment={alignmentForTeaserBlock(index, 3)}
-                blockStyle={blockStyle.replace('Grid', '') as ReflektBlockType}
+                blockStyle={
+                  blockStyle.replace('Grid', '') as ReflektBlockStyles
+                }
               />
             ))}
           </TeaserSlotsBlockTeasers>

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { hasBlockStyle } from '@wepublish/block-content/website';
 
-import { ReflektBlockType } from '../block-styles/reflekt-block-styles';
+import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import {
   ReflektTeaser,
   TeaserAuthors,
@@ -19,8 +19,8 @@ import {
 } from './reflekt-teaser';
 
 export const isTeaserRecherchen =
-  hasBlockStyle(ReflektBlockType.TeaserRecherchen) ||
-  hasBlockStyle(ReflektBlockType.TeaserRecherchenGrid);
+  hasBlockStyle(ReflektBlockStyles.TeaserRecherchen) ||
+  hasBlockStyle(ReflektBlockStyles.TeaserRecherchenGrid);
 
 export const TeaserRecherchen = styled(ReflektTeaser)`
   aspect-ratio: 365/528;
