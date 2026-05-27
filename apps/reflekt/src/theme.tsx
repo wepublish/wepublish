@@ -421,6 +421,14 @@ const theme = createTheme(WePTheme, {
           },
         },
       },
+      footerLink: {
+        fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+        color: colors.common.white,
+        fontSize: '0.875rem',
+        lineHeight: 1.2,
+        fontWeight: 400,
+        fontStyle: 'normal',
+      },
     },
     // TeaserSlots
     teaserSlotsTitle: {

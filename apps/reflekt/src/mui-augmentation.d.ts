@@ -23,6 +23,7 @@ declare module '@mui/material/styles' {
 
     categoryAddress: CSSProperties;
     categoryAddressText: CSSProperties;
+    footerLink: CSSProperties;
 
     // Button Links
     buttonLinkMain: CSSProperties;
@@ -67,6 +68,7 @@ declare module '@mui/material/styles' {
     categoryLinkItem?: CSSProperties;
     categoryAddress?: CSSProperties;
     categoryAddressText?: CSSProperties;
+    footerLink?: CSSProperties;
     buttonLinkMain?: CSSProperties;
     buttonLinkSecondary?: CSSProperties;
     bannerTitle?: CSSProperties;
@@ -102,6 +104,7 @@ declare module '@mui/material/Typography' {
     categoryLinkItem: true;
     categoryAddress: true;
     categoryAddressText: true;
+    footerLink: true;
     buttonLinkMain: true;
     buttonLinkSecondary: true;
     bannerTitle: true;
