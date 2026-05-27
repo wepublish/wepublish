@@ -61,19 +61,13 @@ type TypographyListItemProps = {
 export const TypographyListItem = memo<TypographyListItemProps>(
   ({ name, parentName, isOpen, onOpen }) => {
     const { t } = useTranslation();
-    const { control, getValues } = useFormContext();
+    const { control, watch, getValues } = useFormContext();
     const [playAnimation, setPlayAnimation] = useState(true);
 
     const fontFamily = useWatch({
       control,
       name: `${name}.fontFamily`,
       disabled: !isOpen,
-    });
-
-    const parentFontFamily = useWatch({
-      control,
-      name: `${parentName}.fontFamily`,
-      disabled: !isOpen || !!fontFamily,
     });
 
     const fontSize = useWatch({
@@ -88,22 +82,10 @@ export const TypographyListItem = memo<TypographyListItemProps>(
       disabled: !isOpen,
     });
 
-    const parentLineHeight = useWatch({
-      control,
-      name: `${parentName}.allVariants.lineHeight`,
-      disabled: !isOpen || !!lineHeight,
-    });
-
     const letterSpacing = useWatch({
       control,
       name: `${name}.letterSpacing`,
       disabled: !isOpen,
-    });
-
-    const parentLetterSpacing = useWatch({
-      control,
-      name: `${parentName}.allVariants.letterSpacing`,
-      disabled: !isOpen || !!letterSpacing,
     });
 
     const fontWeight = useWatch({
@@ -111,6 +93,12 @@ export const TypographyListItem = memo<TypographyListItemProps>(
       name: `${name}.fontWeight`,
       disabled: !isOpen,
     });
+
+    const parentFontFamily = watch(`${parentName}.fontFamily`);
+    const parentLineHeight = watch(`${parentName}.allVariants.lineHeight`);
+    const parentLetterSpacing = watch(
+      `${parentName}.allVariants.letterSpacing`
+    );
 
     useEffect(() => {
       const timeout = setTimeout(() => {
@@ -137,9 +125,7 @@ export const TypographyListItem = memo<TypographyListItemProps>(
             letterSpacing: letterSpacing ?? parentLetterSpacing,
             fontWeight,
             fontFamily:
-              fontFamily ?
-                `"${fontFamily.split(',')[0].replace(/"/g, '').trim()}", sans-serif`
-              : (parentFontFamily ?? 'sans-serif'),
+              fontFamily ? fontFamily : (parentFontFamily ?? 'sans-serif'),
           }
         : {}),
       };

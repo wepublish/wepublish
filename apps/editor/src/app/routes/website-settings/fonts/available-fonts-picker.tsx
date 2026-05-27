@@ -30,7 +30,7 @@ type AvailableFontsPickerProps = {
   name: string;
   value: string;
   onBlur: () => void;
-  onChange: (value: string | null) => void;
+  onChange: (value: string | '') => void;
   error?: FieldError;
 };
 
@@ -50,7 +50,7 @@ export const AvailableFontsPicker = memo(
 
       const handleChange = (e: SelectChangeEvent<string>) => {
         if (!e.target.value) {
-          onChange(null);
+          onChange('');
         } else {
           onChange(`"${e.target.value}", Helvetica, Arial, sans-serif`);
         }
