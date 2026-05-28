@@ -1,6 +1,6 @@
 import { createTheme, Theme, ThemeOptions } from '@mui/material';
 import { createBreakpoints } from '@mui/system';
-import { responsiveProperty, theme as WePTheme } from '@wepublish/ui';
+import { theme as WePTheme } from '@wepublish/ui';
 import { Roboto_Mono } from 'next/font/google';
 import localFont from 'next/font/local';
 import { mergeDeepRight, reduce } from 'ramda';
@@ -907,75 +907,29 @@ export const authorListItemTheme = createTheme(theme, {
       textDecoration: 'none',
       textTransform: 'uppercase',
       gridRow: '2 / 3',
-      ...mergeDeepAll([
-        responsiveProperty({
-          cssProperty: 'fontSize',
-          unit: 'px',
-          breakpoints: WePTheme.breakpoints.values,
-          values: {
-            xs: 12,
-            md: 24,
-          },
-        }),
-        responsiveProperty({
-          cssProperty: 'lineHeight',
-          unit: 'px',
-          breakpoints: WePTheme.breakpoints.values,
-          values: {
-            xs: 14,
-            md: 1.2 * 24,
-          },
-        }),
-      ]),
+      fontSize: '24px',
+      lineHeight: 1.2,
     },
     authorListItemJobTitle: {
       fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
       lineHeight: 1.2,
       gridRow: '1 / 2',
       fontWeight: 400,
-      ...mergeDeepAll([
-        responsiveProperty({
-          cssProperty: 'fontSize',
-          unit: 'px',
-          breakpoints: WePTheme.breakpoints.values,
-          values: {
-            xs: 12,
-            md: 16,
-          },
-        }),
-      ]),
+      fontSize: '16px',
     },
     authorListItemBio: {
       fontFamily: [recife.style.fontFamily, 'sans-serif'].join(','),
       fontWeight: 400,
       textDecoration: 'none',
       gridRow: '3 / 4',
+      fontSize: '18px',
+      lineHeight: 1.2,
       ['&:hover']: {
         textDecoration: 'none',
       },
       ['&:has(a[href^="mailto:"])']: {
         gridRow: '4 / 5',
       },
-      ...mergeDeepAll([
-        responsiveProperty({
-          cssProperty: 'fontSize',
-          unit: 'px',
-          breakpoints: WePTheme.breakpoints.values,
-          values: {
-            xs: 12,
-            md: 18,
-          },
-        }),
-        responsiveProperty({
-          cssProperty: 'lineHeight',
-          unit: 'px',
-          breakpoints: WePTheme.breakpoints.values,
-          values: {
-            xs: 14,
-            md: 1.2 * 18,
-          },
-        }),
-      ]),
     },
   },
   components: {
