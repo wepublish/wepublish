@@ -1,0 +1,17 @@
+{
+  "subscribe": {
+    "cancellable": "Jederzeit kündbar\n * Versand innerhalb der Schweiz",
+    "button": {
+      "label": "Jetzt unterstützen"
+    },
+    "modal": {
+      "confirmLabel": "Jetzt unterstützen"
+    },
+    "transactionFee": {
+      "label": "Ja, ich übernehme die Bearbeitungsgebühren von 2%"
+    },
+    "memberplan": {
+      "price": "{yearlyAmount}"
+    }
+  }
+}

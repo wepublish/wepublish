@@ -1,18 +1,87 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { SubscribeBlock } from '@wepublish/block-content/website';
-import { Subscribe } from '@wepublish/membership/website';
+import {
+  PaymentRadioWrapper,
+  Subscribe,
+  SubscribeButton,
+  SubscribeCancelable,
+  SubscribeNarrowSection,
+  SubscribePayment,
+  SubscribeSection,
+  TransactionFeeIcon,
+  TransactionFeeWrapper,
+} from '@wepublish/membership/website';
 
-// Top-level form component — registered as `Subscribe` in the builder,
-// used internally by SubscribeBlock when rendering the actual form.
+import { buttonLinkSecondaryStyles } from '../theme';
+
 export const ReflektSubscribeForm = styled(Subscribe)`
   background-color: orange;
 `;
-
-// Block-level component — registered as `blocks.Subscribe` in the builder.
-// Receives only BuilderSubscribeBlockProps and fetches its own data via SubscribeBlockProvider.
 export const ReflektSubscribe = styled(SubscribeBlock)`
   background-color: transparent;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'memberPlans'
+    'userForm'
+    'transactionFee'
+    'submit'
+    'paymentPeriodicity'
+    'challenge';
+
+  ${SubscribeSection},
+  ${SubscribeNarrowSection} {
+    grid-area: var(--grid-area);
+
+    > h2 {
+      display: none;
+    }
+  }
+
+  ${SubscribeSection}[data-area='monthlyAmount'],
+  ${SubscribeSection}[data-area='returning'] {
+    display: none;
+  }
+
+  ${SubscribeSection}[data-area='paymentPeriodicity'] ${PaymentRadioWrapper} {
+    outline: none;
+    border: none;
+  }
+
+  ${SubscribeSection}[data-area='paymentPeriodicity'] ${SubscribePayment} {
+    justify-content: center;
+  }
+
+  ${SubscribeButton} {
+    ${css(buttonLinkSecondaryStyles)}
+  }
+
+  ${TransactionFeeWrapper} {
+    background-color: ${({ theme }) => theme.palette.common.black};
+    color: ${({ theme }) => theme.palette.common.white};
+    border-radius: 0;
+    padding: ${({ theme }) => theme.spacing(1, 2)};
+    border: none;
+    width: 100%;
+    justify-content: center;
+
+    ${TransactionFeeIcon} {
+      display: none;
+    }
+
+    .MuiCheckbox-root,
+    .MuiCheckbox-root.Mui-checked {
+      color: ${({ theme }) => theme.palette.common.white};
+    }
+  }
+
   ${ReflektSubscribeForm} {
     background-color: transparent;
+  }
+
+  ${SubscribeCancelable} {
+    margin-top: ${({ theme }) => theme.spacing(2)};
+    white-space: pre-line;
+    color: ${({ theme }) => theme.palette.common.black};
   }
 `;

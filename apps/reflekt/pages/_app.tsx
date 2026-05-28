@@ -36,6 +36,7 @@ import Script from 'next/script';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import deOverridden from '../locales/deOverridden.json';
 import { ReflektFlexBlock } from '../src/components/block-layouts/reflekt-base-flex-block';
 import { ReflektBaseBreakBlock } from '../src/components/break-blocks/reflekt-base-break-block';
 import { MainSpacer } from '../src/components/main-spacer';
@@ -56,6 +57,8 @@ import {
   ReflektListItem,
   ReflektUnorderedList,
 } from '../src/components/reflekt-lists';
+import { ReflektMemberPlanPicker } from '../src/components/reflekt-memberplan-picker';
+import { ReflektMemberPlanItem } from '../src/components/reflekt-memberplan-picker-item';
 import { ReflektNavbar } from '../src/components/reflekt-navbar';
 import { ReflektPage } from '../src/components/reflekt-page';
 import { ReflektQuoteBlock } from '../src/components/reflekt-quote-block';
@@ -68,6 +71,7 @@ import {
 } from '../src/components/reflekt-subscribe';
 import { ReflektTag } from '../src/components/reflekt-tag';
 import { ReflektTitleBlock } from '../src/components/reflekt-title-block';
+import { ReflektUserForm } from '../src/components/reflekt-user-form';
 import { ReflektArticleList } from '../src/components/teaser-layouts/reflekt-article-list';
 import { ReflektBaseGridFlex } from '../src/components/teaser-layouts/reflekt-base-grid-flex';
 import { ReflektBaseTeaserSlots } from '../src/components/teaser-layouts/reflekt-base-teaser-slots';
@@ -78,7 +82,7 @@ setDefaultOptions({
   locale: de,
 });
 
-initWePublishTranslator();
+initWePublishTranslator(deOverridden);
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
@@ -128,6 +132,9 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
           AuthorListItem={ReflektAuthorListItem}
           Banner={ReflektBanner}
           Subscribe={ReflektSubscribeForm}
+          MemberPlanPicker={ReflektMemberPlanPicker}
+          MemberPlanItem={ReflektMemberPlanItem}
+          UserForm={ReflektUserForm}
           elements={{
             Link: ReflektLink,
             UnorderedList: ReflektUnorderedList,

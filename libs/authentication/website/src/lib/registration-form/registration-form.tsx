@@ -5,11 +5,11 @@ import {
   BuilderRegistrationFormProps,
   BuilderUserFormFields,
   Button,
+  useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { PropsWithChildren, useEffect, useMemo } from 'react';
 import { Controller, DeepPartial, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { UserForm } from './user-form';
 import { ApiAlert } from '@wepublish/errors/website';
 import { userCountryNames } from '@wepublish/user';
 import { Challenge } from '../challenge/challenge';
@@ -82,6 +82,7 @@ export function RegistrationForm<
     onChange?: (values: DeepPartial<RegisterMutationVariables>) => void;
   }
 >) {
+  const { UserForm } = useWebsiteBuilder();
   const fieldsToDisplay = fields.reduce(
     (obj, field) => ({ ...obj, [field]: true }),
     {} as Record<Exclude<BuilderUserFormFields, 'flair'>, true>

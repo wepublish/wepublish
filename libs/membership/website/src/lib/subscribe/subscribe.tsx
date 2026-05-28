@@ -5,7 +5,6 @@ import {
   Challenge,
   defaultRegisterSchema,
   requiredRegisterSchema,
-  UserForm,
   useUser,
   zodAlwaysRefine,
 } from '@wepublish/authentication/website';
@@ -27,7 +26,7 @@ import {
   useAsyncAction,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
-import { useEffect, useMemo, useState } from 'react';
+import { ComponentProps, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
@@ -67,7 +66,19 @@ export type SubscribeSectionProps = {
   area?: string;
 };
 
-export const SubscribeSection = styled('div')<SubscribeSectionProps>`
+const SubscribeSectionBase = ({
+  area,
+  ...rest
+}: SubscribeSectionProps & ComponentProps<'div'>) => (
+  <div
+    data-area={area}
+    {...rest}
+  />
+);
+
+export const SubscribeSection = styled(
+  SubscribeSectionBase
+)<SubscribeSectionProps>`
   --grid-area: ${({ area = 'auto' }) => area};
   display: grid;
   gap: ${({ theme }) => theme.spacing(3)};
@@ -212,6 +223,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     PeriodicityPicker,
     PaymentAmount,
     TransactionFee,
+    UserForm,
   } = useWebsiteBuilder();
   const { t } = useTranslation();
   const { hasUser } = useUser();
@@ -744,7 +756,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             }
           }}
         >
-          {paymentText} {isDonation ? 'spenden' : 'abonnieren'}
+          {t('subscribe.button.label', {
+            paymentText,
+            type: isDonation ? 'donation' : 'subscription',
+          })}
         </SubscribeButton>
 
         {autoRenew && termsOfServiceUrl ?
@@ -771,7 +786,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
           setOpenConfirm(false);
         }}
         onCancel={() => setOpenConfirm(false)}
-        submitText={`${paymentText} ${isDonation ? 'Spenden' : 'Abonnieren'}`}
+        submitText={t('subscribe.modal.confirmLabel', {
+          paymentText,
+          type: isDonation ? 'donation' : 'subscription',
+        })}
       >
         <H5
           id="modal-modal-title"

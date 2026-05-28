@@ -124,6 +124,7 @@ import {
 import {
   BuilderImageUploadProps,
   BuilderPersonalDataFormProps,
+  BuilderUserFormProps,
 } from './user.interface';
 import { BuilderBlockStyleProps } from './block-styles.interface';
 import { BuilderContentWrapperProps } from './content-wrapper.interface';
@@ -173,6 +174,7 @@ export type WebsiteBuilderProps = {
   LoginForm: ComponentType<BuilderLoginFormProps>;
   RegistrationForm: ComponentType<BuilderRegistrationFormProps>;
   PersonalDataForm: ComponentType<BuilderPersonalDataFormProps>;
+  UserForm: ComponentType<BuilderUserFormProps>;
   SubscriptionList: ComponentType<BuilderSubscriptionListProps>;
   SubscriptionListItem: ComponentType<BuilderSubscriptionListItemProps>;
   InvoiceList: ComponentType<BuilderInvoiceListProps>;
@@ -324,6 +326,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   LoginForm: NoComponent,
   RegistrationForm: NoComponent,
   PersonalDataForm: NoComponent,
+  UserForm: NoComponent,
   ContentWrapper: NoComponent,
   Paywall: NoComponent,
   TextToIcon: NoComponent,
