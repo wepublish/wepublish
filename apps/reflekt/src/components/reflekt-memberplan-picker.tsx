@@ -4,8 +4,23 @@ import {
   MemberPlanPicker,
   MemberPlanPickerRadios,
 } from '@wepublish/membership/website';
+import { BuilderMemberPlanPickerProps } from '@wepublish/website/builder';
+import { forwardRef } from 'react';
 
-export const ReflektMemberPlanPicker = styled(MemberPlanPicker)`
+const SortedMemberPlanPicker = forwardRef<
+  HTMLButtonElement,
+  BuilderMemberPlanPickerProps
+>(function SortedMemberPlanPicker(props, ref) {
+  return (
+    <MemberPlanPicker
+      {...props}
+      ref={ref}
+      sortBy="priceAsc"
+    />
+  );
+});
+
+export const ReflektMemberPlanPicker = styled(SortedMemberPlanPicker)`
   display: grid;
 
   ${MemberPlanPickerRadios} {

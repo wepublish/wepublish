@@ -37,7 +37,7 @@ export const MemberPlanPicker = forwardRef<
   HTMLButtonElement,
   BuilderMemberPlanPickerProps & { alwaysShow?: boolean }
 >(function MemberPlanPicker(
-  { memberPlans, onChange, value, className, name, alwaysShow },
+  { memberPlans, onChange, value, className, name, alwaysShow, sortBy },
   ref
 ) {
   const {
@@ -46,18 +46,22 @@ export const MemberPlanPicker = forwardRef<
     blocks: { RichText },
   } = useWebsiteBuilder();
 
-  const showRadioButtons = memberPlans.length > 1 || alwaysShow;
-  const selectedMemberPlan = memberPlans.find(({ id }) => id === value);
+  const sortedMemberPlans =
+    sortBy === 'priceAsc' ?
+      [...memberPlans].sort((a, b) => a.amountPerMonthMin - b.amountPerMonthMin)
+    : memberPlans;
+  const showRadioButtons = sortedMemberPlans.length > 1 || alwaysShow;
+  const selectedMemberPlan = sortedMemberPlans.find(({ id }) => id === value);
   const showPicker =
     showRadioButtons ||
     toPlaintext(selectedMemberPlan?.description) ||
     selectedMemberPlan?.image;
 
   useEffect(() => {
-    if (memberPlans.length && !selectedMemberPlan) {
-      onChange(memberPlans[0].id);
+    if (sortedMemberPlans.length && !selectedMemberPlan) {
+      onChange(sortedMemberPlans[0].id);
     }
-  }, [memberPlans, onChange, selectedMemberPlan]);
+  }, [sortedMemberPlans, onChange, selectedMemberPlan]);
 
   return (
     showPicker && (
@@ -69,7 +73,7 @@ export const MemberPlanPicker = forwardRef<
             value={value ? value : ''}
             ref={ref}
           >
-            {memberPlans.map(memberPlan => (
+            {sortedMemberPlans.map(memberPlan => (
               <FormControlLabel
                 key={memberPlan.id}
                 value={memberPlan.id}
