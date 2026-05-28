@@ -513,6 +513,7 @@ const theme = createTheme(WePTheme, {
           teaserSlotsTitle: 'h2',
           // author-list-item
           authorListItemName: 'h6',
+          authorListItemJobTitle: 'p',
           authorListItemBio: 'p',
         },
       },
@@ -553,6 +554,7 @@ const theme = createTheme(WePTheme, {
             },
           },
         },
+
         {
           // Footer / Header
           props: { variant: 'categoryLink' },
@@ -576,6 +578,21 @@ const theme = createTheme(WePTheme, {
             [breakpoints.up('md')]: {
               fontSize: '1.5rem',
               lineHeight: '3rem',
+            },
+          },
+        },
+
+        {
+          // Author List Item - Bio --> email
+          props: { variant: 'linkAuthorListItemBio' },
+          style: {
+            display: 'inline-block',
+            paddingTop: '1.5rem',
+            textDecoration: 'none',
+            '&:hover': {
+              textDecoration: 'underline',
+              textDecorationColor: colors.common.black,
+              textDecorationThickness: '1px',
             },
           },
         },
@@ -889,6 +906,7 @@ export const authorListItemTheme = createTheme(theme, {
       fontWeight: 400,
       textDecoration: 'none',
       textTransform: 'uppercase',
+      gridRow: '2 / 3',
       ...mergeDeepAll([
         responsiveProperty({
           cssProperty: 'fontSize',
@@ -910,12 +928,33 @@ export const authorListItemTheme = createTheme(theme, {
         }),
       ]),
     },
+    authorListItemJobTitle: {
+      fontFamily: [robotoMono.style.fontFamily, 'sans-serif'].join(','),
+      lineHeight: 1.2,
+      gridRow: '1 / 2',
+      fontWeight: 400,
+      ...mergeDeepAll([
+        responsiveProperty({
+          cssProperty: 'fontSize',
+          unit: 'px',
+          breakpoints: WePTheme.breakpoints.values,
+          values: {
+            xs: 12,
+            md: 16,
+          },
+        }),
+      ]),
+    },
     authorListItemBio: {
       fontFamily: [recife.style.fontFamily, 'sans-serif'].join(','),
       fontWeight: 400,
       textDecoration: 'none',
+      gridRow: '3 / 4',
       ['&:hover']: {
         textDecoration: 'none',
+      },
+      ['&:has(a[href^="mailto:"])']: {
+        gridRow: '4 / 5',
       },
       ...mergeDeepAll([
         responsiveProperty({

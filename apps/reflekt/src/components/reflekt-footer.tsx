@@ -176,7 +176,7 @@ const PoweredBy = styled(Link)`
   color: ${({ theme }) => theme.palette.common.white};
   text-decoration: none;
   transition: color 140ms;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-family: ${({ theme }) => theme.typography.fontFamily};
 
   & > span {
@@ -285,6 +285,8 @@ export const FooterPaper = ({
 
           <PoweredBy
             href="https://wepublish.ch/"
+            target="_blank"
+            rel="noopener noreferrer"
             aria-label="Powered by We.Publish Foundation"
           >
             <Typography

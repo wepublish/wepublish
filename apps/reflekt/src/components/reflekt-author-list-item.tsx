@@ -15,8 +15,9 @@ import { ReflektRenderRichtext } from './reflekt-render-richtext';
 
 export const AuthorListItemWrapper = styled('div')`
   display: grid;
-  grid-template-rows: max-content 1fr;
-  gap: ${({ theme }) => theme.spacing(3)};
+  grid-row: span 5;
+  grid-template-rows: subgrid;
+  row-gap: 0;
   text-align: center;
   text-decoration: none;
   color: inherit;
@@ -33,9 +34,20 @@ export const AuthorListItemImageWrapper = styled(
   }
 `;
 
-export const AuthorListItemContent = styled(AuthorListItemContentDefault)`
+export const ReflektAuthorListItemContent = styled(
+  AuthorListItemContentDefault
+)`
+  display: grid;
+  grid-row: 2 / span 4;
+  grid-template-rows: subgrid;
+  row-gap: ${({ theme }) => theme.spacing(3)};
   line-height: 1rem;
-  padding: ${({ theme }) => theme.spacing(0, 2, 4, 2)};
+  padding: ${({ theme }) => theme.spacing(0.5, 2, 4, 2)};
+
+  p:has(> .MuiTypography-linkAuthorListItemBio) {
+    display: block;
+    align-self: end;
+  }
 `;
 
 export function AuthorListItem({
@@ -43,6 +55,7 @@ export function AuthorListItem({
   image,
   name,
   bio,
+  jobTitle,
 }: BuilderAuthorListItemProps) {
   const {
     elements: { Image },
@@ -57,8 +70,17 @@ export function AuthorListItem({
         )}
       </AuthorListItemImageWrapper>
 
-      <AuthorListItemContent>
+      <ReflektAuthorListItemContent>
         <Typography variant="authorListItemName">{name}</Typography>
+
+        {jobTitle && (
+          <Typography
+            gutterBottom={false}
+            variant="authorListItemJobTitle"
+          >
+            {jobTitle}
+          </Typography>
+        )}
 
         {bio && (
           <ReflektRenderRichtext
@@ -66,7 +88,7 @@ export function AuthorListItem({
             elements={bio}
           />
         )}
-      </AuthorListItemContent>
+      </ReflektAuthorListItemContent>
     </AuthorListItemWrapper>
   );
 }
