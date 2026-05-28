@@ -21,10 +21,16 @@ export async function middleware(request: NextRequest) {
   const redirect = redirects.get(normalizePath(request.nextUrl.pathname));
 
   if (redirect) {
+    const statusCode = redirect.permanent === false ? 307 : 301;
+    const isExternal = /^https?:\/\//i.test(redirect.destination);
+
+    if (isExternal) {
+      return NextResponse.redirect(redirect.destination, statusCode);
+    }
+
     const destination = request.nextUrl.clone();
     destination.pathname = redirect.destination;
     destination.search = request.nextUrl.search;
-    const statusCode = redirect.permanent === false ? 307 : 301;
     return NextResponse.redirect(destination, statusCode);
   }
 

@@ -1,5 +1,8 @@
 {
   "/recherchen": {
     "destination": "/a/tag/recherchen"
+  },
+  "/a/wikipolitik": {
+    "destination": "https://wiki.reflekt.ch/"
   }
 }
