@@ -12,7 +12,7 @@ import {
   useUpdateWebsiteSettingsMutation,
   useWebsiteSettingsLazyQuery,
 } from '@wepublish/editor/api';
-import { theme } from '@wepublish/ui';
+import { minimalTheme } from '@wepublish/ui';
 import { memo, PropsWithChildren, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -104,7 +104,7 @@ export const WebsiteTheme = memo(() => {
       const data = await loadSettings();
 
       return normalizeTheme(
-        createTheme(theme, data.data?.websiteSettings.theme ?? {})
+        createTheme(minimalTheme, data.data?.websiteSettings.theme ?? {})
       );
     },
   });

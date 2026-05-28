@@ -18,7 +18,7 @@ import {
   NavbarContainer,
 } from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
-import { theme as WePTheme } from '@wepublish/ui';
+import { minimalTheme } from '@wepublish/ui';
 import {
   authLink,
   getApiUrl,
@@ -105,7 +105,7 @@ function CustomApp({
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
   const theme = useMemo(
-    () => createTheme(WePTheme, settings?.theme ?? {}),
+    () => createTheme(minimalTheme, settings?.theme ?? {}),
     [settings]
   );
 
