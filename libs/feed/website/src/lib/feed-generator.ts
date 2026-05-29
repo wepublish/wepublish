@@ -20,7 +20,12 @@ export const generateFeed =
     'generator'
   >) =>
   async (articles: Article[]) => {
-    const items = articles.map(async (article): Promise<Item> => {
+    const items = articles.map(async (article): Promise<Item | null> => {
+      const date = article.publishedAt ? new Date(article.publishedAt) : null;
+      if (!date || Number.isNaN(date.getTime())) {
+        return null;
+      }
+
       const seo = getArticleSEO(article);
 
       const content = await toHtml(
@@ -33,6 +38,11 @@ export const generateFeed =
         }, [] as Descendant[]) ?? []
       );
 
+      const authors = article.latest.authors.filter(Boolean).map(author => ({
+        name: author.name,
+        link: author.url,
+      }));
+
       return {
         title: seo.schema.headline ?? '',
         image:
@@ -44,13 +54,10 @@ export const generateFeed =
           : undefined,
         description: seo.schema.description,
         content: content ? content : (article.latest.lead ?? undefined),
-        author: article.latest.authors.filter(Boolean).map(author => ({
-          name: author.name,
-          link: author.url,
-        })),
+        author: authors.length > 0 ? authors : undefined,
         guid: article.id,
         link: article.url,
-        date: new Date(article.publishedAt!),
+        date,
         category: article.tags.map(tag => ({
           name: tag.tag ?? undefined,
           term: tag.tag ?? undefined,
@@ -67,7 +74,10 @@ export const generateFeed =
     });
 
     for (const item of items) {
-      feed.addItem(await item);
+      const resolved = await item;
+      if (resolved) {
+        feed.addItem(resolved);
+      }
     }
 
     for (const category of categories) {
