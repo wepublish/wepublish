@@ -50,9 +50,9 @@ export class Image extends HasOptionalPeerLc {
   source?: string;
   @Field(() => String, { nullable: true })
   license?: string;
-  @Field(type => Float)
+  @Field(type => Float, { defaultValue: 0.5 })
   focalPointX!: number;
-  @Field(type => Float)
+  @Field(type => Float, { defaultValue: 0.5 })
   focalPointY!: number;
 
   @Field(type => Int)
