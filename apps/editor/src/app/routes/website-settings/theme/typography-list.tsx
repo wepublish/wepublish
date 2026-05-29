@@ -1,9 +1,11 @@
-import { Box, List, Stack } from '@mui/material';
+import { FormControl, FormLabel, List, Stack } from '@mui/material';
 import { memo, useCallback, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import { AvailableFontsPicker } from '../fonts/available-fonts-picker';
+import { AvailableFontsPicker } from './available-fonts-picker';
+import { FontWeightSelect } from './font-weight-select';
 import { LengthSlider } from './length-slider';
 import { typographySchema } from './schema';
 import {
@@ -17,6 +19,7 @@ type TypographyListProps = {
 };
 
 export const TypographyList = memo(({ name }: TypographyListProps) => {
+  const { t } = useTranslation();
   const { control } = useFormContext();
   const [openTypography, setOpenTypography] =
     useState<keyof z.infer<typeof typographySchema>>();
@@ -30,49 +33,90 @@ export const TypographyList = memo(({ name }: TypographyListProps) => {
   return (
     <List>
       <Stack
-        gap={1}
+        gap={5}
         sx={{
-          maxWidth: 500,
           borderRadius: '6px',
-          bgcolor: '#0000000F',
+          bgcolor: '#00000008',
           p: 3,
-          ml: 2,
           mb: 2,
         }}
       >
-        <Controller
-          name={`${name}.fontFamily`}
-          control={control}
-          render={({ field }) => (
-            <Box sx={{ maxWidth: 250 }}>
-              <AvailableFontsPicker {...field} />
-            </Box>
-          )}
-        />
+        <Stack
+          direction="row"
+          spacing={1}
+        >
+          <Controller
+            name={`${name}.allVariants.fontFamily`}
+            control={control}
+            render={({ field }) => (
+              <FormControl fullWidth>
+                <FormLabel>
+                  {t('websiteSettings.theme.typography.fontFamily')}
+                </FormLabel>
 
-        <Controller
-          name={`${name}.allVariants.lineHeight`}
-          control={control}
-          render={({ field }) => (
-            <LengthSlider
-              {...field}
-              defaultUnit="em"
-              unitConfig={lineHeightConfig}
-            />
-          )}
-        />
+                <AvailableFontsPicker {...field} />
+              </FormControl>
+            )}
+          />
 
-        <Controller
-          name={`${name}.allVariants.letterSpacing`}
-          control={control}
-          render={({ field }) => (
-            <LengthSlider
-              {...field}
-              defaultUnit="em"
-              unitConfig={letterSpacingConfig}
-            />
-          )}
-        />
+          <Controller
+            name={`${name}.allVariants.fontWeight`}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <FormControl fullWidth>
+                <FormLabel>
+                  {t('websiteSettings.theme.typography.fontWeight')}
+                </FormLabel>
+
+                <FontWeightSelect
+                  {...field}
+                  error={error}
+                />
+              </FormControl>
+            )}
+          />
+        </Stack>
+
+        <Stack
+          direction="column"
+          spacing={3}
+        >
+          <Controller
+            name={`${name}.allVariants.lineHeight`}
+            control={control}
+            render={({ field }) => (
+              <FormControl fullWidth>
+                <FormLabel>
+                  {t('websiteSettings.theme.typography.lineHeight')}
+                </FormLabel>
+
+                <LengthSlider
+                  {...field}
+                  defaultUnit="em"
+                  unitConfig={lineHeightConfig}
+                />
+              </FormControl>
+            )}
+          />
+
+          <Controller
+            name={`${name}.allVariants.letterSpacing`}
+            control={control}
+            render={({ field }) => (
+              <FormControl fullWidth>
+                <FormLabel>
+                  {t('websiteSettings.theme.typography.letterSpacing')}
+                </FormLabel>
+
+                <LengthSlider
+                  {...field}
+                  defaultUnit="em"
+                  unitConfig={letterSpacingConfig}
+                />
+              </FormControl>
+            )}
+          />
+        </Stack>
       </Stack>
 
       <TypographyListItem

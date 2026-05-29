@@ -60,7 +60,9 @@ const theme = createTheme(WePTheme, {
     subtitle2: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
     },
-    fontFamily: [merriweather.style.fontFamily, 'sans-serif'].join(','),
+    allVariants: {
+      fontFamily: [merriweather.style.fontFamily, 'sans-serif'].join(','),
+    },
   },
 } as PartialDeep<Theme> | ThemeOptions);
 

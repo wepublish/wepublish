@@ -117,7 +117,9 @@ const theme = createTheme(WePTheme, {
         }),
       ]),
     },
-    fontFamily: [montserrat.style.fontFamily, 'sans-serif'].join(','),
+    allVariants: {
+      fontFamily: [montserrat.style.fontFamily, 'sans-serif'].join(','),
+    },
   },
 } as PartialDeep<Theme> | ThemeOptions);
 

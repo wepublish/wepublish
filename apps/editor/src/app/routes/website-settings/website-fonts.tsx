@@ -5,42 +5,46 @@ import {
   CircularProgress,
   IconButton,
   Stack,
+  Typography,
 } from '@mui/material';
 import {
   FontStyle,
   FontWeight,
   useUpdateWebsiteSettingsMutation,
   useWebsiteSettingsLazyQuery,
+  WebsiteRemoteFontInput,
 } from '@wepublish/editor/api';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { MdAdd, MdArrowBack, MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { Message, toaster } from 'rsuite';
 import { z } from 'zod';
 
-import { FontPicker } from './fonts/font-picker';
+import { FontPicker } from './theme/font-picker';
 import { WebsiteAnalyticsWrapper } from './website-analytics';
 
 const fontsSchema = z.array(
-  z.object({
-    name: z.string(),
-    weight: z.array(
-      z.enum([
-        FontWeight.Thin,
-        FontWeight.ExtraLight,
-        FontWeight.Light,
-        FontWeight.Regular,
-        FontWeight.Medium,
-        FontWeight.SemiBold,
-        FontWeight.Bold,
-        FontWeight.ExtraBold,
-        FontWeight.Black,
-        FontWeight.Variable,
-      ])
-    ),
-    style: z.array(z.enum([FontStyle.Normal, FontStyle.Italic])),
-  })
+  z
+    .object({
+      name: z.string(),
+      weight: z.array(
+        z.enum([
+          FontWeight.Thin,
+          FontWeight.ExtraLight,
+          FontWeight.Light,
+          FontWeight.Regular,
+          FontWeight.Medium,
+          FontWeight.SemiBold,
+          FontWeight.Bold,
+          FontWeight.ExtraBold,
+          FontWeight.Black,
+          FontWeight.Variable,
+        ])
+      ),
+      style: z.array(z.enum([FontStyle.Normal, FontStyle.Italic])),
+    })
+    .nullish()
 );
 
 const formSchema = z.object({ fonts: fontsSchema });
@@ -94,7 +98,13 @@ export const WebsiteFonts = () => {
   const { fields, append, remove } = useFieldArray({ control, name: 'fonts' });
 
   const onSubmit = handleSubmit(data => {
-    updateWebsiteSettings({ variables: { fonts: data.fonts } });
+    updateWebsiteSettings({
+      variables: {
+        fonts: data.fonts.filter((font): font is WebsiteRemoteFontInput =>
+          Boolean(font)
+        ),
+      },
+    });
   }, console.warn);
 
   if (isLoading) {
@@ -121,6 +131,24 @@ export const WebsiteFonts = () => {
 
       <h3>{t('websiteSettings.fonts.title')}</h3>
 
+      <Typography
+        variant="body2"
+        color={'gray'}
+      >
+        <Trans
+          i18nKey="websiteSettings.fonts.description"
+          components={{
+            Link: (
+              <Link
+                to="https://fonts.google.com/"
+                target="_blank"
+                rel="noreferrer"
+              />
+            ),
+          }}
+        />
+      </Typography>
+
       <Stack spacing={2}>
         {fields.map((field, index) => (
           <Stack
@@ -129,14 +157,17 @@ export const WebsiteFonts = () => {
             spacing={1}
             alignItems="center"
           >
-            <Box flex={1}>
+            <Box
+              flex={1}
+              sx={{ maxWidth: 300 }}
+            >
               <Controller
                 name={`fonts.${index}`}
                 control={control}
                 render={({ field, fieldState: { error } }) => (
                   <FontPicker
                     {...field}
-                    value={field.value.name}
+                    value={field.value?.name}
                     error={error}
                   />
                 )}

@@ -307,7 +307,6 @@ export const TeaserTitle = styled('h1')`
 `;
 
 export const TeaserLead = styled('p')`
-  font-weight: 300;
   grid-area: lead;
 `;
 

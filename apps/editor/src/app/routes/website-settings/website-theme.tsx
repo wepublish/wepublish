@@ -45,6 +45,7 @@ function CustomTabPanel(props: TabPanelProps) {
       hidden={value !== activeValue}
       id={`simple-tabpanel-${activeValue}`}
       aria-labelledby={`simple-tab-${activeValue}`}
+      css={{ maxWidth: 500 }}
       {...other}
     >
       {value === activeValue && children}

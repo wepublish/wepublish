@@ -7,6 +7,8 @@ import {
   ListItemButton,
   ListItemText,
   SimplePaletteColorOptions,
+  TypeBackground,
+  TypeText,
 } from '@mui/material';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -21,7 +23,7 @@ const ThemeColorReel = styled.div`
   margin-right: 12px;
 `;
 
-const ThemeColorItem = styled.div<{ colorstr?: string | null }>(
+export const ThemeColorItem = styled.div<{ colorstr?: string | null }>(
   ({ theme, colorstr }) => `
   width: 25px;
   height: 25px;
@@ -32,7 +34,11 @@ const ThemeColorItem = styled.div<{ colorstr?: string | null }>(
 );
 
 type PaletteListItemProps<
-  Keys extends Array<keyof SimplePaletteColorOptions> | undefined,
+  Keys extends
+    | Array<keyof SimplePaletteColorOptions>
+    | Array<keyof TypeBackground>
+    | Array<keyof TypeText>
+    | undefined,
 > = {
   keys?: Keys;
   isOpen: boolean;
@@ -41,7 +47,11 @@ type PaletteListItemProps<
 };
 
 export const PaletteListItem = <
-  Keys extends Array<keyof SimplePaletteColorOptions> | undefined,
+  Keys extends
+    | Array<keyof SimplePaletteColorOptions>
+    | Array<keyof TypeBackground>
+    | Array<keyof TypeText>
+    | undefined,
 >({
   name,
   keys,
@@ -76,6 +86,7 @@ export const PaletteListItem = <
         timeout="auto"
         in={isOpen}
         mountOnEnter
+        unmountOnExit
       >
         <List
           component="ul"
@@ -84,7 +95,7 @@ export const PaletteListItem = <
           {keys?.map(key => (
             <ListItem
               key={key}
-              sx={{ paddingY: 1.5 }}
+              sx={{ py: 1.5 }}
             >
               <Controller
                 name={`${name}.${key}`}
@@ -98,7 +109,6 @@ export const PaletteListItem = <
                         i18nKey={t(
                           `websiteSettings.theme.${name}${capitalize(key)}`
                         )}
-                        defaults={''}
                       />
                     }
                     error={error}
@@ -118,6 +128,7 @@ export const PaletteListItem = <
                     {...field}
                     label={t(`websiteSettings.theme.${name}`)}
                     error={error}
+                    helperText={t(`websiteSettings.theme.${name}HelperText`)}
                   />
                 )}
               />

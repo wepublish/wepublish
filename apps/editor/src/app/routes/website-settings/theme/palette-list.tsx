@@ -40,6 +40,20 @@ export const PaletteList = ({ name }: PaletteListProps) => {
       />
 
       <PaletteListItem
+        name={`${name}.background`}
+        keys={['default', 'paper']}
+        onOpen={handleOpenPalette('background')}
+        isOpen={openPalette === 'background'}
+      />
+
+      <PaletteListItem
+        name={`${name}.text`}
+        keys={['primary']}
+        onOpen={handleOpenPalette('text')}
+        isOpen={openPalette === 'text'}
+      />
+
+      <PaletteListItem
         name={`${name}.info`}
         keys={['main', 'dark', 'light', 'contrastText']}
         onOpen={handleOpenPalette('info')}

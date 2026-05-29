@@ -7,8 +7,6 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  MenuItem,
-  Select,
   Stack,
   Switch,
   Typography,
@@ -18,8 +16,10 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
 
-import { AvailableFontsPicker } from '../fonts/available-fonts-picker';
+import { AvailableFontsPicker } from './available-fonts-picker';
+import { FontWeightSelect } from './font-weight-select';
 import { LengthSlider, UnitConfig } from './length-slider';
+import { TextTransformSelect } from './text-transform-select';
 
 export const fontSizeConfig: UnitConfig = {
   em: { min: 0.5, max: 6.5, step: 0.05 },
@@ -38,18 +38,6 @@ export const letterSpacingConfig: UnitConfig = {
   rem: { min: -0.1, max: 1.5, step: 0.005 },
   px: { min: -2, max: 5, step: 0.2 },
 };
-
-const fontWeights = [
-  { value: 100, label: 'Thin' },
-  { value: 200, label: 'Extra Light' },
-  { value: 300, label: 'Light' },
-  { value: 400, label: 'Normal' },
-  { value: 500, label: 'Medium' },
-  { value: 600, label: 'Semi Bold' },
-  { value: 700, label: 'Bold' },
-  { value: 800, label: 'Extra Bold' },
-  { value: 900, label: 'Black' },
-] as const;
 
 type TypographyListItemProps = {
   isOpen: boolean;
@@ -94,7 +82,19 @@ export const TypographyListItem = memo<TypographyListItemProps>(
       disabled: !isOpen,
     });
 
-    const parentFontFamily = watch(`${parentName}.fontFamily`);
+    const textTransform = useWatch({
+      control,
+      name: `${name}.textTransform`,
+      disabled: !isOpen,
+    });
+
+    const fontStyle = useWatch({
+      control,
+      name: `${name}.fontStyle`,
+      disabled: !isOpen,
+    });
+
+    const parentFontFamily = watch(`${parentName}.allVariants.fontFamily`);
     const parentLineHeight = watch(`${parentName}.allVariants.lineHeight`);
     const parentLetterSpacing = watch(
       `${parentName}.allVariants.letterSpacing`
@@ -126,6 +126,8 @@ export const TypographyListItem = memo<TypographyListItemProps>(
             fontWeight,
             fontFamily:
               fontFamily ? fontFamily : (parentFontFamily ?? 'sans-serif'),
+            textTransform: textTransform ?? undefined,
+            fontStyle: fontStyle ?? undefined,
           }
         : {}),
       };
@@ -140,6 +142,8 @@ export const TypographyListItem = memo<TypographyListItemProps>(
       fontWeight,
       fontFamily,
       parentFontFamily,
+      textTransform,
+      fontStyle,
     ]);
 
     return (
@@ -160,6 +164,7 @@ export const TypographyListItem = memo<TypographyListItemProps>(
           timeout="auto"
           in={isOpen}
           mountOnEnter
+          unmountOnExit
         >
           <List
             component="div"
@@ -191,25 +196,56 @@ export const TypographyListItem = memo<TypographyListItemProps>(
                   <Controller
                     name={`${name}.fontWeight`}
                     control={control}
+                    render={({ field, fieldState: { error } }) => (
+                      <FontWeightSelect
+                        {...field}
+                        error={error}
+                      />
+                    )}
+                  />
+                </FormControl>
+              </Stack>
+            </ListItem>
+
+            <ListItem>
+              <Stack
+                direction="row"
+                spacing={1}
+                sx={{ width: '100%' }}
+              >
+                <FormControl fullWidth>
+                  <FormLabel>
+                    {t('websiteSettings.theme.typography.textTransform')}
+                  </FormLabel>
+
+                  <Controller
+                    name={`${name}.textTransform`}
+                    control={control}
+                    render={({ field, fieldState: { error } }) => (
+                      <TextTransformSelect
+                        {...field}
+                        error={error}
+                      />
+                    )}
+                  />
+                </FormControl>
+
+                <FormControl fullWidth>
+                  <FormLabel>
+                    {t('websiteSettings.theme.typography.italic')}
+                  </FormLabel>
+
+                  <Controller
+                    name={`${name}.fontStyle`}
+                    control={control}
                     render={({ field }) => (
-                      <Select
-                        value={field.value ?? ''}
-                        size="small"
-                        displayEmpty
-                        onChange={e => field.onChange(Number(e.target.value))}
+                      <Switch
+                        checked={field.value === 'italic'}
+                        onChange={e =>
+                          field.onChange(e.target.checked ? 'italic' : null)
+                        }
                         onBlur={field.onBlur}
-                        sx={{ width: '100%' }}
-                      >
-                        {fontWeights.map(({ value, label }) => (
-                          <MenuItem
-                            key={value}
-                            value={value}
-                            sx={{ fontWeight: value }}
-                          >
-                            {label}
-                          </MenuItem>
-                        ))}
-                      </Select>
+                      />
                     )}
                   />
                 </FormControl>
@@ -300,7 +336,7 @@ export const TypographyListItem = memo<TypographyListItemProps>(
                               field.onChange(
                                 getValues(
                                   `${parentName}.allVariants.letterSpacing`
-                                )
+                                ) ?? '0em'
                               );
                             } else {
                               field.onChange(null);

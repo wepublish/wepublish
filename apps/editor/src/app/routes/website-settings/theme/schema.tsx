@@ -30,6 +30,13 @@ export const paletteSchema = z.object({
     dark: hexColor,
     contrastText: hexColor,
   }),
+  background: z.object({
+    default: hexColor,
+    paper: hexColor,
+  }),
+  text: z.object({
+    primary: hexColor,
+  }),
   divider: hexColor,
   info: z.object({
     main: hexColor,
@@ -109,11 +116,15 @@ export const typographyItem = z.object({
     rem: { min: -0.1, max: 1.5 },
     px: { min: -2, max: 5 },
   }),
+  textTransform: z
+    .enum(['none', 'capitalize', 'uppercase', 'lowercase'])
+    .nullish(),
+  fontStyle: z.enum(['normal', 'italic']).nullish(),
 });
 
 export const typographySchema = z.object({
-  fontFamily: z.string().nullish(),
   allVariants: z.object({
+    fontFamily: z.string().nullish(),
     lineHeight: cssLengthValue({
       em: { min: 0.5, max: 6.5 },
       rem: { min: 0.5, max: 6.5 },
@@ -124,6 +135,7 @@ export const typographySchema = z.object({
       rem: { min: -0.1, max: 1.5 },
       px: { min: -2, max: 5 },
     }),
+    fontWeight: z.number().min(100).max(1000).nullish(),
   }),
 
   h1: typographyItem,

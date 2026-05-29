@@ -130,6 +130,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { ContentWrapperStyled } from '@wepublish/content/website';
 import { Paywall } from '@wepublish/paywall/website';
 import { Tag, TagSEO } from '@wepublish/tag/website';
+import { FontStyleOptions } from '@mui/material/styles/createTypography';
 
 export type WebsiteProps = PropsWithChildren;
 
@@ -139,9 +140,13 @@ const dateFormatter = (date: Date, includeTime = true) =>
 const globalStyles = (
   <GlobalStyles
     styles={theme => css`
-      html {
+      html,
+      body {
         scroll-padding-top: ${theme.spacing(7)};
-        font-family: ${theme.typography.fontFamily};
+        font-family: ${(theme.typography as FontStyleOptions).allVariants
+          ?.fontFamily};
+        font-weight: ${(theme.typography as FontStyleOptions).allVariants
+          ?.fontWeight};
         hyphens: auto;
         word-break: break-word;
 

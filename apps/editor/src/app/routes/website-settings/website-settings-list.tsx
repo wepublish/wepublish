@@ -27,6 +27,10 @@ import {
   MdWarning,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import { z } from 'zod';
+
+import { ThemeColorItem } from './theme/palette-list-item';
+import { themeSchema } from './theme/schema';
 
 const WebsiteSettingsListWrapper = styled.div`
   display: grid;
@@ -62,6 +66,12 @@ const CardIntegration = styled.div`
   align-items: center;
 `;
 
+const CardColors = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  gap: 2px;
+`;
+
 export const WebsiteSettingsList = () => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -94,6 +104,8 @@ export const WebsiteSettingsList = () => {
 
     const fonts = data.websiteSettings.fonts ?? [];
 
+    const theme = data.websiteSettings.theme as z.infer<typeof themeSchema>;
+
     return [
       {
         title: t('websiteSettings.analytics.title'),
@@ -114,6 +126,7 @@ export const WebsiteSettingsList = () => {
           integration =>
             !data.websiteSettings.analytics[integration.id]?.enabled
         ),
+        colors: [],
       },
       {
         title: t('websiteSettings.mail.title'),
@@ -133,6 +146,7 @@ export const WebsiteSettingsList = () => {
         disabledIntegrations: mailIntegrations.filter(
           integration => !data.websiteSettings.mail[integration.id]?.enabled
         ),
+        colors: [],
       },
       {
         title: t('websiteSettings.ads.title'),
@@ -152,6 +166,7 @@ export const WebsiteSettingsList = () => {
         disabledIntegrations: adsIntegrations.filter(
           integration => !data.websiteSettings.ads[integration.id]?.enabled
         ),
+        colors: [],
       },
       {
         title: t('websiteSettings.fonts.title'),
@@ -164,15 +179,23 @@ export const WebsiteSettingsList = () => {
         })),
         faulyIntegrations: [],
         disabledIntegrations: [],
+        colors: [],
       },
       {
         title: t('websiteSettings.theme.title'),
         permission: CanGetAISettings.id,
         path: '/settings/website/theme',
         icon: <MdColorLens size={24} />,
-        enabledIntegrations: [],
         faulyIntegrations: [],
         disabledIntegrations: [],
+        enabledIntegrations: [],
+        colors: [
+          theme.palette?.primary.main,
+          theme.palette?.secondary.main,
+          theme.palette?.accent.main,
+          theme.palette?.background.default,
+          theme.palette?.text.primary,
+        ],
       },
     ];
   }, [data, loading, t]);
@@ -238,7 +261,21 @@ export const WebsiteSettingsList = () => {
                   {integration.text}
                 </Typography>
               ))}
+
+              {!!category.colors.length && (
+                <CardColors>
+                  {category.colors.flatMap(color =>
+                    color ?
+                      <ThemeColorItem
+                        key={color}
+                        colorstr={color}
+                      />
+                    : []
+                  )}
+                </CardColors>
+              )}
             </CardContent>
+
             <CardActions>
               <Link to={category.path}>
                 <Button size="small">{t('edit')}</Button>

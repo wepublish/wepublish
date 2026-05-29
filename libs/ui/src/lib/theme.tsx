@@ -124,8 +124,8 @@ export const minimalTheme = createTheme({
   typography: {
     allVariants: {
       lineHeight: 1.4,
+      fontFamily: undefined,
     },
-    fontFamily: undefined,
     h1: {
       fontFamily: undefined,
       letterSpacing: undefined,
@@ -175,6 +175,16 @@ export const minimalTheme = createTheme({
         marginBottom: baseTheme.spacing(1),
       },
     },
+    body2: {
+      fontFamily: undefined,
+      lineHeight: undefined,
+      letterSpacing: undefined,
+    },
+    button: {
+      fontFamily: undefined,
+      lineHeight: undefined,
+      letterSpacing: undefined,
+    },
     caption: {
       fontFamily: undefined,
       lineHeight: undefined,
@@ -186,6 +196,16 @@ export const minimalTheme = createTheme({
       fontSize: baseTheme.typography.h6.fontSize,
       fontWeight: 300,
       lineHeight: 1.4,
+    },
+    subtitle2: {
+      fontFamily: undefined,
+      lineHeight: undefined,
+      letterSpacing: undefined,
+    },
+    overline: {
+      fontFamily: undefined,
+      lineHeight: undefined,
+      letterSpacing: undefined,
     },
     // Article
     articleAuthors: {},
@@ -215,6 +235,7 @@ export const minimalTheme = createTheme({
       fontWeight: 300,
     },
     teaserLead: {
+      fontWeight: 300,
       lineHeight: 1.7,
       marginBottom: baseTheme.spacing(3),
       fontSize: '1rem',
