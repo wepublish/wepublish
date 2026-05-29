@@ -6,14 +6,9 @@ import {
   TransactionFeeWrapper,
 } from '@wepublish/membership/website';
 import { PageContainer } from '@wepublish/page/website';
-import {
-  getSessionTokenProps,
-  ssrAuthLink,
-  SubscribePage,
-} from '@wepublish/utils/website';
-import { getV1ApiClient, PageDocument } from '@wepublish/website/api';
+import { SubscribePage } from '@wepublish/utils/website';
+import { PageDocument } from '@wepublish/website/api';
 import { NextPageContext } from 'next';
-import getConfig from 'next/config';
 import { ComponentProps } from 'react';
 
 import { ReflektLogo } from '../src/components/reflekt-navbar';
@@ -60,21 +55,10 @@ export default function Mitmachen(props: ComponentProps<typeof SubscribePage>) {
 }
 
 Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
-  const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-    ssrAuthLink(
-      async () => (await getSessionTokenProps(ctx)).sessionToken?.token
-    ),
-  ]);
-
-  await Promise.all([
-    client.query({
+  return SubscribePage.getInitialProps(ctx, [
+    {
       query: PageDocument,
-      variables: {
-        slug: 'mitmachen',
-      },
-    }),
+      variables: { slug: 'mitmachen' },
+    },
   ]);
-
-  return SubscribePage.getInitialProps(ctx);
 };
