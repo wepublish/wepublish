@@ -32,6 +32,8 @@ const PARALLAX_HOLD_DISTANCE = 800;
 const PARALLAX_TEXT_DELAY = 200;
 const PARALLAX_TEXT_START_OFFSET = 0.9;
 const MD_BREAKPOINT = 900;
+const RICH_TEXT_SCALE_MOBILE = 1;
+const RICH_TEXT_SCALE_DESKTOP = 1.8;
 
 export const FlexBlockFullsizeImageWrapper = styled('div')`
   display: grid;
@@ -86,6 +88,7 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
     bottom: 0;
     right: 0;
     overflow: hidden;
+    background-color: green;
   }
 
   ${RichTextBlockWrapper} {
@@ -112,12 +115,120 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
     }
 
     .MuiTypography-root {
-      font-size: 2.333rem;
       line-height: 1.2;
       margin-bottom: ${({ theme }) => theme.spacing(4)};
+    }
 
-      ${({ theme }) => theme.breakpoints.up('md')} {
-        font-size: 3rem;
+    ul,
+    ol {
+      text-align: left;
+    }
+
+    h1,
+    .MuiTypography-h1 {
+      font-size: calc(
+        ${({ theme }) => theme.typography.h1.fontSize} *
+          ${RICH_TEXT_SCALE_MOBILE}
+      );
+    }
+    h2,
+    .MuiTypography-h2 {
+      font-size: calc(
+        ${({ theme }) => theme.typography.h2.fontSize} *
+          ${RICH_TEXT_SCALE_MOBILE}
+      );
+    }
+    h3,
+    .MuiTypography-h3 {
+      font-size: calc(
+        ${({ theme }) => theme.typography.h3.fontSize} *
+          ${RICH_TEXT_SCALE_MOBILE}
+      );
+    }
+    h4,
+    .MuiTypography-h4 {
+      font-size: calc(
+        ${({ theme }) => theme.typography.h4.fontSize} *
+          ${RICH_TEXT_SCALE_MOBILE}
+      );
+    }
+    h5,
+    .MuiTypography-h5 {
+      font-size: calc(
+        ${({ theme }) => theme.typography.h5.fontSize} *
+          ${RICH_TEXT_SCALE_MOBILE}
+      );
+    }
+    h6,
+    .MuiTypography-h6 {
+      font-size: calc(
+        ${({ theme }) => theme.typography.h6.fontSize} *
+          ${RICH_TEXT_SCALE_MOBILE}
+      );
+    }
+    p,
+    .MuiTypography-body1,
+    .MuiTypography-body2,
+    .MuiTypography-subtitle1,
+    .MuiTypography-subtitle2 {
+      font-size: calc(
+        ${({ theme }) => theme.typography.body1.fontSize} *
+          ${RICH_TEXT_SCALE_MOBILE}
+      );
+    }
+
+    ${({ theme }) => theme.breakpoints.up('md')} {
+      h1,
+      .MuiTypography-h1 {
+        font-size: calc(
+          ${({ theme }) => theme.typography.h1.fontSize} *
+            ${RICH_TEXT_SCALE_DESKTOP}
+        );
+      }
+      h2,
+      .MuiTypography-h2 {
+        font-size: calc(
+          ${({ theme }) => theme.typography.h2.fontSize} *
+            ${RICH_TEXT_SCALE_DESKTOP}
+        );
+      }
+      h3,
+      .MuiTypography-h3 {
+        font-size: calc(
+          ${({ theme }) => theme.typography.h3.fontSize} *
+            ${RICH_TEXT_SCALE_DESKTOP}
+        );
+      }
+      h4,
+      .MuiTypography-h4 {
+        font-size: calc(
+          ${({ theme }) => theme.typography.h4.fontSize} *
+            ${RICH_TEXT_SCALE_DESKTOP}
+        );
+      }
+      h5,
+      .MuiTypography-h5 {
+        font-size: calc(
+          ${({ theme }) => theme.typography.h5.fontSize} *
+            ${RICH_TEXT_SCALE_DESKTOP}
+        );
+      }
+      h6,
+      .MuiTypography-h6 {
+        font-size: calc(
+          ${({ theme }) => theme.typography.h6.fontSize} *
+            ${RICH_TEXT_SCALE_DESKTOP}
+        );
+      }
+      p,
+      .MuiTypography-body1,
+      .MuiTypography-body2,
+      .MuiTypography-subtitle1,
+      .MuiTypography-subtitle2 {
+        font-size: calc(
+          ${({ theme }) => theme.typography.body1.fontSize} *
+            ${RICH_TEXT_SCALE_DESKTOP}
+        );
       }
     }
   }
@@ -173,16 +284,6 @@ export const FlexBlockFullsizeImage = ({
       el.style.display = 'block';
       el.style.position = 'relative';
       el.style.height = `${vh + PARALLAX_HOLD_DISTANCE}px`;
-    };
-
-    const resetLayout = () => {
-      el.style.display = '';
-      el.style.position = '';
-      el.style.height = '';
-      el.querySelectorAll<HTMLElement>('[data-image-block="true"]').forEach(b =>
-        b.removeAttribute('style')
-      );
-      getTextBlock()?.removeAttribute('style');
     };
 
     const setFixed = (
@@ -282,8 +383,10 @@ export const FlexBlockFullsizeImage = ({
     };
 
     const handleResize = () => {
-      resetLayout();
-      // Re-read active image height after resize (breakpoint may have changed)
+      el.querySelectorAll<HTMLElement>('[data-image-block="true"]').forEach(b =>
+        b.removeAttribute('style')
+      );
+      getTextBlock()?.removeAttribute('style');
       const activeImage = getActiveImageBlock();
       if (activeImage) {
         imageHeightRef.current = activeImage.offsetHeight;

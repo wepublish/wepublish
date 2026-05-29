@@ -57,6 +57,7 @@ import {
   ReflektListItem,
   ReflektUnorderedList,
 } from '../src/components/reflekt-lists';
+import { ReflektLoginForm } from '../src/components/reflekt-login-form';
 import { ReflektMemberPlanPicker } from '../src/components/reflekt-memberplan-picker';
 import { ReflektMemberPlanItem } from '../src/components/reflekt-memberplan-picker-item';
 import { ReflektNavbar } from '../src/components/reflekt-navbar';
@@ -139,6 +140,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             MemberPlanPicker={ReflektMemberPlanPicker}
             MemberPlanItem={ReflektMemberPlanItem}
             UserForm={ReflektUserForm}
+            LoginForm={ReflektLoginForm}
             elements={{
               Link: ReflektLink,
               UnorderedList: ReflektUnorderedList,

@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
-import { Typography, useTheme } from '@mui/material';
+import { alpha, Link as MuiLink, Typography, useTheme } from '@mui/material';
 import { forceHideBanner } from '@wepublish/banner/website';
 import {
   FooterCategory as FooterCategoryDefault,
   navigationLinkToUrl,
 } from '@wepublish/navigation/website';
+import { TextToIcon } from '@wepublish/ui';
 import { FullNavigationFragment } from '@wepublish/website/api';
 import { Link } from '@wepublish/website/builder';
 import { BuilderFooterProps } from '@wepublish/website/builder';
@@ -12,6 +13,7 @@ import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { PropsWithChildren } from 'react';
 import { useIntersectionObserver } from 'usehooks-ts';
 
+import { useLoginLinkSwap } from './hooks/use-login-link-swap';
 import { useGetFooterContent } from './hooks/useGetFooterContent';
 
 export const FooterWrapper = styled('footer')`
@@ -69,6 +71,7 @@ export function Footer({
   className,
   categorySlugs,
   slug,
+  iconSlug,
   data,
   hideBannerOnIntersecting,
   children,
@@ -79,6 +82,7 @@ export function Footer({
   });
 
   const mainItems = data?.navigations?.find(({ key }) => key === slug);
+  const iconItems = data?.navigations?.find(({ key }) => key === iconSlug);
 
   const categories = categorySlugs.map(categorySlugArray => {
     return categorySlugArray.reduce((navigations, categorySlug) => {
@@ -102,6 +106,7 @@ export function Footer({
       <FooterPaper
         main={mainItems}
         categories={categories}
+        iconItems={iconItems}
         children={children} // eslint-disable-line react/no-children-prop
       />
 
@@ -212,19 +217,60 @@ const WePublishLogo = styled('svg')`
     width: auto;
   }
 `;
+export const FooterRightColumn = styled('div')`
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  height: 100%;
+  gap: ${({ theme }) => theme.spacing(4)};
+  grid-column: 1 / 2;
+  grid-row: 3 / 4;
+
+  ${({ theme }) => theme.breakpoints.down('md')} {
+    ${FooterCategory} {
+      grid-column: auto;
+      grid-row: 1 / 2;
+    }
+  }
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    grid-column: unset;
+    grid-row: unset;
+  }
+`;
+
+export const FooterIconItemsWrapper = styled('div')`
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing(3)};
+  color: ${({ theme }) => alpha(theme.palette.common.white, 1)};
+
+  & a {
+    color: inherit;
+    transition: color 140ms;
+  }
+
+  & a:hover {
+    color: ${({ theme }) => theme.palette.common.white};
+  }
+`;
+
 export const FooterPaper = ({
   main,
   categories,
+  iconItems,
   children,
 }: PropsWithChildren<{
   main: FullNavigationFragment | null | undefined;
   categories: FullNavigationFragment[][];
+  iconItems?: FullNavigationFragment | null;
 }>) => {
   const footerContent = useGetFooterContent();
   const theme = useTheme();
   const {
     blocks: { Blocks },
   } = useWebsiteBuilder();
+  const { hasUser, logout, mounted, matchesLoginUrl } = useLoginLinkSwap();
 
   return (
     <FooterPaperWrapper>
@@ -233,45 +279,91 @@ export const FooterPaper = ({
           {categoryArray.map(nav => (
             <FooterCategory key={nav.id}>
               <Typography variant="categoryLinkList">
-                {nav.links?.map((link, index) => (
-                  <Typography
-                    variant="categoryLinkItem"
-                    key={index}
-                  >
-                    <Link
-                      variant={'categoryLink'}
-                      href={navigationLinkToUrl(link)}
+                {nav.links?.map((link, index) => {
+                  const url = navigationLinkToUrl(link);
+                  const isLogin = matchesLoginUrl(url);
+
+                  if (isLogin && !mounted) {
+                    return null;
+                  }
+
+                  if (isLogin && hasUser) {
+                    return (
+                      <Typography
+                        variant="categoryLinkItem"
+                        key={index}
+                      >
+                        <MuiLink
+                          variant="categoryLink"
+                          component="button"
+                          onClick={() => logout()}
+                        >
+                          Logout
+                        </MuiLink>
+                      </Typography>
+                    );
+                  }
+
+                  return (
+                    <Typography
+                      variant="categoryLinkItem"
+                      key={index}
                     >
-                      {link.label}
-                    </Link>
-                  </Typography>
-                ))}
+                      <Link
+                        variant={'categoryLink'}
+                        href={url}
+                      >
+                        {link.label}
+                      </Link>
+                    </Typography>
+                  );
+                })}
               </Typography>
             </FooterCategory>
           ))}
-          <FooterCategory>
-            <Typography variant="categoryAddress">
-              <Typography variant="categoryAddressText">
-                Verein REFLEKT
-                <br />
-                Postfach
-                <br />
-                3000 Bern 22
+          <FooterRightColumn>
+            <FooterCategory>
+              <Typography variant="categoryAddress">
+                <Typography variant="categoryAddressText">
+                  Verein REFLEKT
+                  <br />
+                  Postfach
+                  <br />
+                  3000 Bern 22
+                </Typography>
+                <Typography variant="categoryAddressText">
+                  <Link
+                    variant="categoryLink"
+                    href="mailto:info@reflekt.ch"
+                    sx={{ textDecoration: 'underline' }}
+                  >
+                    info@reflekt.ch
+                  </Link>
+                </Typography>
+                <Typography variant="categoryAddressText">
+                  IBAN: CH 74 0900 0000 1530 5569 6
+                </Typography>
               </Typography>
-              <Typography variant="categoryAddressText">
-                <Link
-                  variant="categoryLink"
-                  href="mailto:info@reflekt.ch"
-                  sx={{ textDecoration: 'underline' }}
-                >
-                  info@reflekt.ch
-                </Link>
-              </Typography>
-              <Typography variant="categoryAddressText">
-                IBAN: CH 74 0900 0000 1530 5569 6
-              </Typography>
-            </Typography>
-          </FooterCategory>
+            </FooterCategory>
+
+            {!!iconItems?.links.length && (
+              <FooterIconItemsWrapper>
+                {iconItems.links.map((link, index) => (
+                  <Link
+                    key={index}
+                    href={navigationLinkToUrl(link)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <TextToIcon
+                      title={link.label}
+                      size={24}
+                    />
+                  </Link>
+                ))}
+              </FooterIconItemsWrapper>
+            )}
+          </FooterRightColumn>
         </FooterLinksGroup>
       ))}
       {children}

@@ -31,7 +31,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { recife } from '../theme';
-import { usePressAnimation } from './use-press-animation';
+import { usePressAnimation } from './hooks/use-press-animation';
 
 const MailchimpFormSchema = z.object({
   EMAIL: z.string().email('Bitte gib eine gültige E-Mail-Adresse ein').min(1),

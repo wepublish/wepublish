@@ -2,7 +2,10 @@ import { NextWepublishLink } from '@wepublish/utils/website';
 import { BuilderLinkProps } from '@wepublish/website/builder';
 import { forwardRef, MouseEvent } from 'react';
 
-import { PRESS_DURATION_MS, usePressAnimation } from './use-press-animation';
+import {
+  PRESS_DURATION_MS,
+  usePressAnimation,
+} from './hooks/use-press-animation';
 
 const pressVariants = new Set(['buttonLinkMain', 'buttonLinkSecondary']);
 

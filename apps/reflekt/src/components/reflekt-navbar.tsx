@@ -5,6 +5,7 @@ import {
   Box,
   css,
   GlobalStyles,
+  Link as MuiLink,
   SxProps,
   Theme,
   Toolbar,
@@ -35,6 +36,7 @@ import { FiMenu as FiMenuDefault } from 'react-icons/fi';
 import { MdWarning } from 'react-icons/md';
 
 import theme from '../theme';
+import { useLoginLinkSwap } from './hooks/use-login-link-swap';
 
 enum NavbarState {
   Low,
@@ -540,6 +542,7 @@ const NavPaper = ({
   const {
     elements: { Link },
   } = useWebsiteBuilder();
+  const { hasUser, logout, mounted, matchesLoginUrl } = useLoginLinkSwap();
 
   return (
     <NavPaperWrapper
@@ -580,6 +583,33 @@ const NavPaper = ({
               <NavPaperCategory key={nav.id}>
                 <Typography variant="categoryLinkList">
                   {nav.links?.map((link, index) => {
+                    const url = navigationLinkToUrl(link);
+                    const isLogin = matchesLoginUrl(url);
+
+                    if (isLogin && !mounted) {
+                      return null;
+                    }
+
+                    if (isLogin && hasUser) {
+                      return (
+                        <Typography
+                          variant="categoryLinkItem"
+                          key={index}
+                        >
+                          <MuiLink
+                            variant="headerCategoryLink"
+                            component="button"
+                            onClick={() => {
+                              logout();
+                              closeMenu();
+                            }}
+                          >
+                            Logout
+                          </MuiLink>
+                        </Typography>
+                      );
+                    }
+
                     return (
                       <Typography
                         variant="categoryLinkItem"
@@ -587,7 +617,7 @@ const NavPaper = ({
                       >
                         <Link
                           variant={'headerCategoryLink'}
-                          href={navigationLinkToUrl(link)}
+                          href={url}
                           onClick={closeMenu}
                         >
                           {link.label}

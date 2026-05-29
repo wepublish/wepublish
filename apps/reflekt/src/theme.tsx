@@ -68,7 +68,7 @@ export const robotoMono = Roboto_Mono({
 
 const colors = {
   primary: {
-    main: '#0800ff', // pre-primary color
+    main: '#000000', // black
     light: '#f5ff64',
     dark: '#1F1F1F', // dark gray, used for navbar bg and footer bg
     contrastText: '#ffffff',
