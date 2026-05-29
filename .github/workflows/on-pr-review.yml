@@ -9,6 +9,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+
   check-review-deploy-label:
     runs-on: ubuntu-latest
     outputs:
@@ -43,7 +44,7 @@ jobs:
   publish_docker_base_image:
     name: Docker base image
     if: needs.check-review-deploy-label.outputs.has_label == 'false'
-    needs: [check-review-deploy-label]
+    needs: [ check-review-deploy-label ]
     uses: ./.github/workflows/on-demand-publish-base-docker-image.yml
     secrets: inherit
 
@@ -64,10 +65,11 @@ jobs:
         ghcr.io/wepublish/media:${{ github.sha }}
     secrets: inherit
 
+
   setup-website-matrix:
     runs-on: ubuntu-latest
     if: needs.check-review-deploy-label.outputs.has_label == 'false'
-    needs: [check-review-deploy-label]
+    needs: [ check-review-deploy-label ]
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -93,12 +95,7 @@ jobs:
     secrets: inherit
   notify:
     name: Notify
-    needs:
-      [
-        publish_docker_website_image,
-        check-review-deploy-label,
-        publish_docker_image,
-      ]
+    needs: [publish_docker_website_image, check-review-deploy-label, publish_docker_image]
     if: ${{ needs.publish_docker_website_image.result == 'success' }}
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -107,7 +104,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: '22'
           cache: npm
       - name: Create Deployment Text
         id: deploymentComment
