@@ -23,6 +23,7 @@ const nextConfig = {
     env: {
       API_URL: process.env.API_URL || '',
       PA_ID: process.env.PA_ID || '',
+      GTM_ID: process.env.GTM_ID || '',
     },
   },
 };

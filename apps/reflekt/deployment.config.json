@@ -4,13 +4,16 @@
       "deployment": true,
       "custom_domain": "https://reflekt.wepublish.cloud",
       "env": {
-        "PA_ID": "pa-_BtFLOtU8U6XVPta25rUh"
+        "PA_ID": "pa-_BtFLOtU8U6XVPta25rUh",
+        "GTM_ID": "GTM-NLK6XXSD"
       },
       "secret_env": []
     },
     "staging": {
       "deployment": true,
-      "env": {},
+      "env": {
+        "GTM_ID": ""
+      },
       "secret_env": []
     },
     "review": {
