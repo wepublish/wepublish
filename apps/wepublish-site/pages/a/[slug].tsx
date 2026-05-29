@@ -1,13 +1,13 @@
 import { ArticleContainer } from '@wepublish/article/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   ArticleDocument,
-  getV1ApiClient,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
 
@@ -33,9 +33,7 @@ export const getStaticPaths = () => ({
 export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
   const { id, slug } = params || {};
   const localizedSlug = slug ? `${slug}-${locale}` : undefined;
-  const { publicRuntimeConfig } = getConfig();
-
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
+  const client = getApiClient(getApiUrl(), []);
 
   const [article] = await Promise.all([
     client.query({
@@ -64,7 +62,7 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
     };
   }
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,
