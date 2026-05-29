@@ -45,7 +45,7 @@ const createSsrTimeoutFetch =
     );
   };
 
-const createV1ApiClient = (
+const createApiClient = (
   apiUrl: string,
   links: ApolloLink[],
   cacheConfig?: InMemoryCacheConfig,
@@ -129,7 +129,7 @@ export const getApiClient = (
 ) => {
   const client =
     !CACHED_CLIENT || typeof window === 'undefined' ?
-      (CACHED_CLIENT = createV1ApiClient(apiUrl, links, cacheConfig, cache))
+      (CACHED_CLIENT = createApiClient(apiUrl, links, cacheConfig, cache))
     : CACHED_CLIENT;
 
   if (cache) {

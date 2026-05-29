@@ -22,15 +22,8 @@ export type BaselBriefingProps = Omit<
 
 const baselBg = {
   id: '1234',
-  createdAt: new Date('2023-01-01').toDateString(),
-  modifiedAt: new Date('2023-01-01').toDateString(),
-  extension: '.jpg',
-  fileSize: 1,
-  format: '',
   height: 500,
   width: 500,
-  mimeType: 'image/jpg',
-  tags: [],
   url: BaselBg.src,
   xl: BaselBg.src,
   l: BaselBg.src,
@@ -38,19 +31,14 @@ const baselBg = {
   s: BaselBg.src,
   xs: BaselBg.src,
   xxs: BaselBg.src,
+  focalPointX: 0.5,
+  focalPointY: 0.5,
 } satisfies FullImageFragment;
 
 const fcbBg = {
   id: '1234',
-  createdAt: new Date('2023-01-01').toDateString(),
-  modifiedAt: new Date('2023-01-01').toDateString(),
-  extension: '.jpg',
-  fileSize: 1,
-  format: '',
   height: 500,
   width: 500,
-  mimeType: 'image/jpg',
-  tags: [],
   url: FcbBg.src,
   xl: FcbBg.src,
   l: FcbBg.src,
@@ -58,19 +46,14 @@ const fcbBg = {
   s: FcbBg.src,
   xs: FcbBg.src,
   xxs: FcbBg.src,
+  focalPointX: 0.5,
+  focalPointY: 0.5,
 } satisfies FullImageFragment;
 
 const fasnachtBg = {
   id: '1234',
-  createdAt: new Date('2023-01-01').toDateString(),
-  modifiedAt: new Date('2023-01-01').toDateString(),
-  extension: '.jpg',
-  fileSize: 1,
-  format: '',
   height: 500,
   width: 500,
-  mimeType: 'image/jpg',
-  tags: [],
   url: FasnachtBg.src,
   xl: FasnachtBg.src,
   l: FasnachtBg.src,
@@ -78,19 +61,14 @@ const fasnachtBg = {
   s: FasnachtBg.src,
   xs: FasnachtBg.src,
   xxs: FasnachtBg.src,
+  focalPointX: 0.5,
+  focalPointY: 0.5,
 } satisfies FullImageFragment;
 
 const escBg = {
   id: '1234',
-  createdAt: new Date('2023-01-01').toDateString(),
-  modifiedAt: new Date('2023-01-01').toDateString(),
-  extension: '.jpg',
-  fileSize: 1,
-  format: '',
   height: 500,
   width: 500,
-  mimeType: 'image/jpg',
-  tags: [],
   url: EscBg.src,
   xl: EscBg.src,
   l: EscBg.src,
@@ -98,6 +76,8 @@ const escBg = {
   s: EscBg.src,
   xs: EscBg.src,
   xxs: EscBg.src,
+  focalPointX: 0.5,
+  focalPointY: 0.5,
 } satisfies FullImageFragment;
 
 const getValuesBasedOnBriefing = (briefing: BriefingType) => {

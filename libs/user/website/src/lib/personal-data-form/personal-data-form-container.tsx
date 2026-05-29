@@ -35,7 +35,11 @@ export function PersonalDataFormContainer<
     async (input: ChangeEvent<HTMLInputElement> | null) => {
       if (input) {
         await uploadImage({
-          variables: { file: input.target?.files![0] as File },
+          variables: {
+            file: input.target?.files![0] as File,
+            focalPointX: 0.5,
+            focalPointY: 0.5,
+          },
         });
       }
     },

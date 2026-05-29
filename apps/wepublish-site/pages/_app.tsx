@@ -128,7 +128,6 @@ function CustomApp({ Component, pageProps }: CustomAppProps) {
 }
 
 const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
-
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(

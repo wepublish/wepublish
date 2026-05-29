@@ -21,7 +21,6 @@ import {
   authLink,
   getApiUrl,
   initWePublishTranslator,
-  initWebsiteToken,
   NextWepublishLink,
   SubscribePage,
   withBuilderRouter,
@@ -190,6 +189,7 @@ function CustomApp({
   );
 }
 
+const { publicRuntimeConfig } = getConfig();
 const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(

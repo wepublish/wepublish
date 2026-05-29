@@ -1,3 +1,13 @@
+fragment SlimAuthor on Author {
+  id
+  name
+  jobTitle
+  url
+  hideOnArticle
+  hideOnTeaser
+  hideOnTeam
+}
+
 fragment FullAuthor on Author {
   id
   name
@@ -5,8 +15,6 @@ fragment FullAuthor on Author {
   slug
   bio
   url
-  createdAt
-  modifiedAt
 
   links {
     title
