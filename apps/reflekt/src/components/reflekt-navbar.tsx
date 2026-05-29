@@ -477,7 +477,7 @@ export const NavPaperWrapper = styled('div', {
   shouldForwardProp: propName =>
     propName !== 'isMenuOpen' && propName !== 'isTransitioning',
 })<{ isMenuOpen: boolean; isTransitioning: boolean }>`
-  padding: calc(${theme.spacing(4)} + var(--navbar-height)) ${theme.spacing(2)}
+  padding: calc(${theme.spacing(2)} + var(--navbar-height)) ${theme.spacing(2)}
     0 22.5px;
   background-color: ${theme.palette.primary.dark};
   color: ${theme.palette.common.white};
@@ -493,7 +493,7 @@ export const NavPaperWrapper = styled('div', {
   height: 100vh;
   width: 100%;
   display: grid;
-  row-gap: ${theme.spacing(4)};
+  row-gap: ${theme.spacing(2)};
   position: absolute;
   grid-template-rows: repeat(3, min-content);
   grid-template-columns: unset;
@@ -586,7 +586,7 @@ const NavPaper = ({
                         key={index}
                       >
                         <Link
-                          variant={'categoryLink'}
+                          variant={'headerCategoryLink'}
                           href={navigationLinkToUrl(link)}
                           onClick={closeMenu}
                         >

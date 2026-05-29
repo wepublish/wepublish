@@ -146,6 +146,27 @@ const {
   breakpoints,
 } = WePTheme;
 
+export const categoryLinkStyles = {
+  fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(','),
+  fontWeight: 500,
+  fontStyle: 'normal' as const,
+  color: colors.common.white,
+  display: 'inline-block' as const,
+  whiteSpace: 'nowrap' as const,
+  padding: '0',
+  textDecoration: 'none',
+  fontSize: '1.5rem',
+  lineHeight: 1.75,
+  '&:hover': {
+    backgroundColor: 'transparent',
+    textDecoration: 'underline',
+  },
+  [breakpoints.up('md')]: {
+    fontSize: '1.5rem',
+    lineHeight: '3rem',
+  },
+};
+
 const theme = createTheme(WePTheme, {
   breakpoints: createBreakpoints({
     values: breakPointValues,
@@ -409,7 +430,7 @@ const theme = createTheme(WePTheme, {
         marginBottom: '0.5rem',
         '&:last-child': {
           marginTop: '2.5rem',
-          fontSize: '1.25rem',
+          fontSize: '1.1rem',
         },
         [breakpoints.up('md')]: {
           fontSize: '1.5rem',
@@ -556,25 +577,17 @@ const theme = createTheme(WePTheme, {
         },
 
         {
-          // Footer / Header
+          // Footer / NavPaper (slide-out menu)
           props: { variant: 'categoryLink' },
+          style: categoryLinkStyles,
+        },
+        {
+          // NavBar
+          props: { variant: 'headerCategoryLink' },
           style: {
-            fontFamily: [euclidCircularB.style.fontFamily, 'sans-serif'].join(
-              ','
-            ),
-            fontWeight: 500,
-            fontStyle: 'normal',
-            color: colors.common.white,
-            display: 'inline-block',
-            whiteSpace: 'nowrap',
-            padding: '0',
-            textDecoration: 'none',
-            fontSize: '1.5rem',
-            lineHeight: 1.75,
-            '&:hover': {
-              backgroundColor: 'transparent',
-              textDecoration: 'underline',
-            },
+            ...categoryLinkStyles,
+            fontSize: '1.3rem',
+            lineHeight: 1.6,
             [breakpoints.up('md')]: {
               fontSize: '1.5rem',
               lineHeight: '3rem',

@@ -3,7 +3,9 @@
     "production": {
       "deployment": true,
       "custom_domain": "https://reflekt.wepublish.cloud",
-      "env": {},
+      "env": {
+        "PA_ID": "pa-_BtFLOtU8U6XVPta25rUh"
+      },
       "secret_env": []
     },
     "staging": {

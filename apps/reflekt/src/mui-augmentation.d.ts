@@ -35,6 +35,7 @@ declare module '@mui/material/styles' {
     bannerCta: CSSProperties;
     // Link -- MuiLink.variant is based on Typography variants
     categoryLink: CSSProperties;
+    headerCategoryLink: CSSProperties;
     navbarTab: CSSProperties;
 
     // Table of Contents - RichText
@@ -77,6 +78,7 @@ declare module '@mui/material/styles' {
     bannerText?: CSSProperties;
     bannerCta?: CSSProperties;
     categoryLink?: CSSProperties;
+    headerCategoryLink?: CSSProperties;
     tocHeading?: CSSProperties;
     tocDetails?: CSSProperties;
     ulToc?: CSSProperties;
@@ -115,6 +117,7 @@ declare module '@mui/material/Typography' {
     bannerText: true;
     bannerCta: true;
     categoryLink: true;
+    headerCategoryLink: true;
     navbarTab: true;
     tocHeading: true;
     tocDetails: true;
@@ -135,6 +138,7 @@ declare module '@mui/material/Typography' {
 declare module '@mui/material/Link' {
   interface LinkPropsVariantOverrides {
     categoryLink: true;
+    headerCategoryLink: true;
     teaserTitleLink: true;
     teaserPretitleLink: true;
     buttonLinkMain: true;

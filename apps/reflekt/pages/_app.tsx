@@ -33,6 +33,7 @@ import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
+import PlausibleProvider from 'next-plausible';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
@@ -49,7 +50,6 @@ import {
   ReflektBlocks,
 } from '../src/components/reflekt-block-renderer';
 import { RefFooter } from '../src/components/reflekt-footer';
-import { ReflektGlobalScripts } from '../src/components/reflekt-global-scripts';
 import { ReflektGlobalStyles } from '../src/components/reflekt-global-styles';
 import { ReflektImageBlock } from '../src/components/reflekt-image-block';
 import { ReflektLink } from '../src/components/reflekt-link';
@@ -117,154 +117,161 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   cache.compat = true;
 
   return (
-    <AppCacheProvider emotionCache={cache}>
-      <WebsiteProvider>
-        <WebsiteBuilderProvider
-          Head={Head}
-          Script={Script}
-          Page={ReflektPage}
-          Footer={RefFooter}
-          Navbar={ReflektNavbar}
-          ArticleList={ReflektArticleList}
-          Article={ReflektArticle}
-          Tag={ReflektTag}
-          AuthorList={ReflektAuthorList}
-          AuthorListItem={ReflektAuthorListItem}
-          Banner={ReflektBanner}
-          Subscribe={ReflektSubscribeForm}
-          MemberPlanPicker={ReflektMemberPlanPicker}
-          MemberPlanItem={ReflektMemberPlanItem}
-          UserForm={ReflektUserForm}
-          elements={{
-            Link: ReflektLink,
-            UnorderedList: ReflektUnorderedList,
-            ListItem: ReflektListItem,
-          }}
-          date={{ format: dateFormatter }}
-          meta={{ siteTitle }}
-          richtext={{
-            RenderElement: ReflektRenderElement,
-            RenderRichtext: ReflektRenderRichtext,
-          }}
-          blocks={{
-            TeaserSlots: ReflektBaseTeaserSlots,
-            TeaserGridFlex: ReflektBaseGridFlex,
-            BaseTeaser: ReflektBaseTeaser,
-            Break: ReflektBaseBreakBlock,
-            FlexBlock: ReflektFlexBlock,
-            Quote: ReflektQuoteBlock,
-            Title: ReflektTitleBlock,
-            RichText: ReflektRichTextBlock,
-            Renderer: ReflektBlockRenderer,
-            Blocks: ReflektBlocks,
-            Subscribe: ReflektSubscribe,
-            Image: ReflektImageBlock,
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <ReflektGlobalStyles />
-            <ReflektGlobalScripts />
+    <PlausibleProvider
+      enabled={!!publicRuntimeConfig.env.PA_ID}
+      src={`https://plausible.io/js/${publicRuntimeConfig.env.PA_ID}.js`}
+    >
+      <AppCacheProvider emotionCache={cache}>
+        <WebsiteProvider>
+          <WebsiteBuilderProvider
+            Head={Head}
+            Script={Script}
+            Page={ReflektPage}
+            Footer={RefFooter}
+            Navbar={ReflektNavbar}
+            ArticleList={ReflektArticleList}
+            Article={ReflektArticle}
+            Tag={ReflektTag}
+            AuthorList={ReflektAuthorList}
+            AuthorListItem={ReflektAuthorListItem}
+            Banner={ReflektBanner}
+            Subscribe={ReflektSubscribeForm}
+            MemberPlanPicker={ReflektMemberPlanPicker}
+            MemberPlanItem={ReflektMemberPlanItem}
+            UserForm={ReflektUserForm}
+            elements={{
+              Link: ReflektLink,
+              UnorderedList: ReflektUnorderedList,
+              ListItem: ReflektListItem,
+            }}
+            date={{ format: dateFormatter }}
+            meta={{ siteTitle }}
+            richtext={{
+              RenderElement: ReflektRenderElement,
+              RenderRichtext: ReflektRenderRichtext,
+            }}
+            blocks={{
+              TeaserSlots: ReflektBaseTeaserSlots,
+              TeaserGridFlex: ReflektBaseGridFlex,
+              BaseTeaser: ReflektBaseTeaser,
+              Break: ReflektBaseBreakBlock,
+              FlexBlock: ReflektFlexBlock,
+              Quote: ReflektQuoteBlock,
+              Title: ReflektTitleBlock,
+              RichText: ReflektRichTextBlock,
+              Renderer: ReflektBlockRenderer,
+              Blocks: ReflektBlocks,
+              Subscribe: ReflektSubscribe,
+              Image: ReflektImageBlock,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <ReflektGlobalStyles />
 
-            <Head>
-              <title key="title">{siteTitle}</title>
-              <meta
-                name="viewport"
-                content="width=device-width, initial-scale=1.0"
-              />
+              <Head>
+                <title key="title">{siteTitle}</title>
+                <meta
+                  name="viewport"
+                  content="width=device-width, initial-scale=1.0"
+                />
+                <meta
+                  name="format-detection"
+                  content="telephone=no"
+                />
+                {/* Feeds */}
+                <link
+                  rel="alternate"
+                  type="application/rss+xml"
+                  href="/api/rss-feed"
+                />
+                <link
+                  rel="alternate"
+                  type="application/atom+xml"
+                  href="/api/atom-feed"
+                />
+                <link
+                  rel="alternate"
+                  type="application/feed+json"
+                  href="/api/json-feed"
+                />
 
-              {/* Feeds */}
-              <link
-                rel="alternate"
-                type="application/rss+xml"
-                href="/api/rss-feed"
-              />
-              <link
-                rel="alternate"
-                type="application/atom+xml"
-                href="/api/atom-feed"
-              />
-              <link
-                rel="alternate"
-                type="application/feed+json"
-                href="/api/json-feed"
-              />
+                {/* Sitemap */}
+                <link
+                  rel="sitemap"
+                  type="application/xml"
+                  title="Sitemap"
+                  href="/api/sitemap"
+                />
 
-              {/* Sitemap */}
-              <link
-                rel="sitemap"
-                type="application/xml"
-                title="Sitemap"
-                href="/api/sitemap"
-              />
+                {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
+                <link
+                  rel="apple-touch-icon"
+                  sizes="180x180"
+                  href="/apple-touch-icon.png"
+                />
+                <link
+                  rel="icon"
+                  type="image/png"
+                  sizes="32x32"
+                  href="/favicon-32x32.png"
+                />
+                <link
+                  rel="icon"
+                  type="image/png"
+                  sizes="16x16"
+                  href="/favicon-16x16.png"
+                />
+                <link
+                  rel="manifest"
+                  href="/site.webmanifest"
+                />
+                <link
+                  rel="mask-icon"
+                  href="/safari-pinned-tab.svg"
+                  color="#000000"
+                />
+                <meta
+                  name="msapplication-TileColor"
+                  content="#ffffff"
+                />
+                <meta
+                  name="theme-color"
+                  content="#ffffff"
+                />
+              </Head>
 
-              {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-              <link
-                rel="apple-touch-icon"
-                sizes="180x180"
-                href="/apple-touch-icon.png"
-              />
-              <link
-                rel="icon"
-                type="image/png"
-                sizes="32x32"
-                href="/favicon-32x32.png"
-              />
-              <link
-                rel="icon"
-                type="image/png"
-                sizes="16x16"
-                href="/favicon-16x16.png"
-              />
-              <link
-                rel="manifest"
-                href="/site.webmanifest"
-              />
-              <link
-                rel="mask-icon"
-                href="/safari-pinned-tab.svg"
-                color="#000000"
-              />
-              <meta
-                name="msapplication-TileColor"
-                content="#ffffff"
-              />
-              <meta
-                name="theme-color"
-                content="#ffffff"
-              />
-            </Head>
+              <Spacer>
+                <NavBar
+                  categorySlugs={[['main']]}
+                  slug="main"
+                  headerSlug="header"
+                  iconSlug="icons"
+                />
 
-            <Spacer>
-              <NavBar
-                categorySlugs={[['main']]}
-                slug="main"
-                headerSlug="header"
-                iconSlug="icons"
-              />
+                <main>
+                  <MainSpacer maxWidth="lg">
+                    <Component {...pageProps} />
+                  </MainSpacer>
+                </main>
 
-              <main>
-                <MainSpacer maxWidth="lg">
-                  <Component {...pageProps} />
-                </MainSpacer>
-              </main>
+                <FooterContainer
+                  slug="footer"
+                  categorySlugs={[['main']]}
+                  iconSlug="icons"
+                />
+              </Spacer>
 
-              <FooterContainer
-                slug="footer"
-                categorySlugs={[['main']]}
-                iconSlug="icons"
-              />
-            </Spacer>
+              <RoutedAdminBar />
 
-            <RoutedAdminBar />
-
-            {publicRuntimeConfig.env.GTM_ID && (
-              <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
-            )}
-          </ThemeProvider>
-        </WebsiteBuilderProvider>
-      </WebsiteProvider>
-    </AppCacheProvider>
+              {publicRuntimeConfig.env.GTM_ID && (
+                <GoogleTagManager gtmId={publicRuntimeConfig.env.GTM_ID} />
+              )}
+            </ThemeProvider>
+          </WebsiteBuilderProvider>
+        </WebsiteProvider>
+      </AppCacheProvider>
+    </PlausibleProvider>
   );
 }
 
