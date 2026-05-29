@@ -206,34 +206,37 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 
                 {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
                 <link
+                  rel="icon"
+                  type="image/png"
+                  href="/favicon-96x96.png?v=20260529"
+                  sizes="96x96"
+                />
+                <link
+                  rel="icon"
+                  type="image/svg+xml"
+                  href="/favicon.svg?v=20260529"
+                />
+                <link
+                  rel="shortcut icon"
+                  href="/favicon.ico?v=20260529"
+                />
+                <link
                   rel="apple-touch-icon"
                   sizes="180x180"
-                  href="/apple-touch-icon.png"
+                  href="/apple-touch-icon.png?v=20260529"
                 />
-                <link
-                  rel="icon"
-                  type="image/png"
-                  sizes="32x32"
-                  href="/favicon-32x32.png"
-                />
-                <link
-                  rel="icon"
-                  type="image/png"
-                  sizes="16x16"
-                  href="/favicon-16x16.png"
+                <meta
+                  name="apple-mobile-web-app-title"
+                  content="REFLEKT"
                 />
                 <link
                   rel="manifest"
-                  href="/site.webmanifest"
+                  href="/site.webmanifest?v=20260529"
                 />
                 <link
                   rel="mask-icon"
-                  href="/safari-pinned-tab.svg"
+                  href="/safari-pinned-tab.svg?v=20260529"
                   color="#000000"
-                />
-                <meta
-                  name="msapplication-TileColor"
-                  content="#ffffff"
                 />
                 <meta
                   name="theme-color"
