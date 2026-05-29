@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
 import {
   CanCreatePaywall,
+  CanGetWebsiteSettings,
   CanPreview,
   CanUpdatePaywall,
+  CanUpdateWebsiteSettings,
 } from '@wepublish/permissions';
 import { PermissionControl, Version } from '@wepublish/ui/editor';
 import { de, enUS, fr } from 'date-fns/locale';
@@ -11,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import {
   MdAccountCircle,
   MdApproval,
+  MdAutoFixHigh,
   MdAutorenew,
   MdBadge,
   MdBookOnline,
@@ -1027,6 +1030,22 @@ export function Base({ children }: BaseProps) {
                         icon={<MdPower />}
                       >
                         {t('navbar.integrations')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        CanGetWebsiteSettings.id,
+                        CanUpdateWebsiteSettings.id,
+                      ]}
+                    >
+                      <Nav.Item
+                        as={NavLink}
+                        href="/settings/website"
+                        active={path.startsWith('settings/website')}
+                        icon={<MdAutoFixHigh />}
+                      >
+                        {t('websiteSettings.navbar')}
                       </Nav.Item>
                     </PermissionControl>
                   </Nav.Menu>

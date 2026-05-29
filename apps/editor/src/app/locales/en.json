@@ -1917,7 +1917,7 @@
       "challengeProvider": "Challenge Provider",
       "paymentProvider": "Payment Provider",
       "trackingPixel": "Tracking Pixel",
-      "analytics": "Analytics Provider",
+      "analytics": "Hot & Trending Provider",
       "mailProvider": "Mail Provider",
       "back": "Back to Integrations",
       "unknown": "Unknown Integration",
@@ -2073,6 +2073,142 @@
           "lookbackHoursHelp": "How far back to scan campaigns (default: 30)."
         }
       }
+    },
+    "websiteSettings": {
+      "backToOverview": "Back to overview",
+      "navbar": "Webseite Settings",
+      "list": {
+        "title": "Website Settings"
+      },
+      "analytics": {
+        "title": "Analytics",
+        "google": {
+          "title": "Google",
+          "gaEnable": "Enable Google Analytics",
+          "ga": "<url>Google Analytics</url> is a web analytics tool from Google that tracks how readers use your website.",
+          "gaLocator": "You can find it in the <url>admin dashboard</url> under data streams",
+          "gtmEnable": "Enable Google Tag Manager",
+          "gtm": "<url>Google Tag Manager</url> is a tool from Google that lets you manage tracking and marketing scripts on your website without changing the site’s code each time.",
+          "gtmLocator": "You can find it in the <url>admin dashboard</url> under Google tag"
+        },
+        "plausible": {
+          "title": "Plausible",
+          "enable": "Enable Plausible",
+          "pa": "<url>Plausible Analytics</url> is a privacy-focused alternative to Google Analytics.",
+          "paLocator": "You can find it in the <url>website settings</url> of your admin dashboard"
+        }
+      },
+      "mail": {
+        "title": "Mail",
+        "mailchimp": {
+          "title": "Mailchimp",
+          "enable": "Enable Mailchimp",
+          "mailchimp": "<url>Mailchimp</url> is an email marketing platform that lets you manage newsletters and subscriber lists. This allows the website access to your Newsletters and being able to display them.",
+          "apiKeyLocator": "You can find it in the <url>API keys section</url> of your Mailchimp account. Make sure that it is a Mailchimp and not Mandrill key."
+        }
+      },
+      "ads": {
+        "title": "Ads",
+        "sparkLoop": {
+          "title": "SparkLoop",
+          "enable": "Enable SparkLoop",
+          "sparkLoop": "<url>SparkLoop</url> is a newsletter referral and recommendation platform that helps you grow your audience.",
+          "idLocator": "You can find your ID in the <url>script section</url> of your SparkLoop dashboard."
+        }
+      },
+      "theme": {
+        "title": "Theme",
+        "palette": {
+          "primary": "Primary",
+          "primaryMain": "Main color present on the website. Used for links, navigation, buttons, etc.",
+          "primaryDark": "Used when the primary color is being displayed slightly darker",
+          "primaryLight": "Used when the primary color is being displayed slightly lighter",
+          "primaryContrastText": "Color that is easily being read when the primary color is used as a background color",
+          "secondary": "Secondary",
+          "secondaryMain": "Sparingly used color throughout the website. Often seen on banners, focus teasers, etc.",
+          "secondaryDark": "Used when the secondary color is being displayed slightly darker",
+          "secondaryLight": "Used when the secondary color is being displayed slightly lighter",
+          "secondaryContrastText": "Color that is easily being read when the secondary color is used as a background color",
+          "accent": "Accent",
+          "accentMain": "Color used to stand out from the rest of the page. Often seen on pre titles, break blocks, paywalls, buttons, etc.",
+          "accentDark": "Used when the accent color is being displayed slightly darker",
+          "accentLight": "Used when the accent color is being displayed slightly lighter",
+          "accentContrastText": "Color that is easily being read when the accent color is used as a background color",
+          "info": "Info",
+          "infoMain": "Color used to portray useful information to the user",
+          "infoDark": "Used when the info color is being displayed slightly darker",
+          "infoLight": "Used when the info color is being displayed slightly lighter",
+          "infoContrastText": "Color that is easily being read when the info color is used as a background color",
+          "success": "Success",
+          "successMain": "Color used to portray successful states to the user. Such as saving confirmation popups",
+          "successDark": "Used when the success color is being displayed slightly darker",
+          "successLight": "Used when the success color is being displayed slightly lighter",
+          "successContrastText": "Color that is easily being read when the success color is used as a background color",
+          "error": "Error",
+          "errorMain": "Color used to portray erroneous states to the user. Such as form validation errors",
+          "errorDark": "Used when the error color is being displayed slightly darker",
+          "errorLight": "Used when the error color is being displayed slightly lighter",
+          "errorContrastText": "Color that is easily being read when the error color is used as a background color",
+          "warning": "Warning",
+          "warningMain": "Color used to portray important information to the user",
+          "warningDark": "Used when the warning color is being displayed slightly darker",
+          "warningLight": "Used when the warning color is being displayed slightly lighter",
+          "warningContrastText": "Color that is easily being read when the warning color is used as a background color",
+          "divider": "Divider",
+          "dividerHelperText": "Used for thin lines that divide items on various different background colors. Ideally kept semi transparent for that reason.",
+          "main": "Main",
+          "light": "Light",
+          "dark": "Dark",
+          "contrastText": "Text color",
+          "background": "Background",
+          "backgroundDefault": "The background color of the website",
+          "backgroundPaper": "Background color of raised panels like dialogs and modals",
+          "text": "Text",
+          "textPrimary": "The text color of the website"
+        },
+        "typography": {
+          "fontFamily": "Font Family",
+          "fontWeight": "Font Weight",
+          "fontSize": "Font Size",
+          "lineHeight": "Line Height",
+          "letterSpacing": "Letter Spacing",
+          "textTransform": "Text Transform",
+          "textTransformDefault": "Default",
+          "textTransformCapitalize": "Capitalize",
+          "textTransformUppercase": "Uppercase",
+          "textTransformLowercase": "Lowercase",
+          "italic": "Italic",
+          "h1": "Heading 1",
+          "h2": "Heading 2",
+          "h3": "Heading 3",
+          "h4": "Heading 4",
+          "h5": "Heading 5",
+          "h6": "Heading 6",
+          "body1": "Body 1",
+          "body2": "Body 2",
+          "caption": "Caption",
+          "teaserPretitle": "Teaser Pre-title",
+          "teaserTitle": "Teaser Title",
+          "teaserLead": "Teaser Lead",
+          "teaserMeta": "Teaser Meta",
+          "articleAuthors": "Article Authors",
+          "peerInformation": "Peer Information",
+          "bannerTitle": "Banner Title",
+          "bannerText": "Banner Text",
+          "bannerCta": "Banner CTA",
+          "blockBreakTitle": "Block Break Title",
+          "blockBreakBody": "Block Break Body",
+          "blockTitlePreTitle": "Block Title Pre-title",
+          "blockQuote": "Block Quote"
+        }
+      },
+      "fonts": {
+        "title": "Fonts",
+        "addFont": "Add Font",
+        "default": "Default",
+        "description": "Uses <Link>Google Fonts</Link>. Looking for an ideal font is best done directly there."
+      },
+      "saveSuccess": "Successfully saved the website settings"
     },
     "externalApps": {
       "apps": "Apps"

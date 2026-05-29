@@ -1181,6 +1181,24 @@ export type FlexTeaserInput = {
   teaser?: InputMaybe<TeaserInput>;
 };
 
+export enum FontStyle {
+  Italic = 'italic',
+  Normal = 'normal'
+}
+
+export enum FontWeight {
+  Black = 'Black',
+  Bold = 'Bold',
+  ExtraBold = 'ExtraBold',
+  ExtraLight = 'ExtraLight',
+  Light = 'Light',
+  Medium = 'Medium',
+  Regular = 'Regular',
+  SemiBold = 'SemiBold',
+  Thin = 'Thin',
+  Variable = 'Variable'
+}
+
 export type FullPoll = {
   __typename?: 'FullPoll';
   answers: Array<PollAnswer>;
@@ -1567,6 +1585,17 @@ export enum InvoiceSort {
   ModifiedAt = 'ModifiedAt',
   PaidAt = 'PaidAt'
 }
+
+export type KeyEnabled = {
+  __typename?: 'KeyEnabled';
+  enabled: Scalars['Boolean'];
+  key?: Maybe<Scalars['String']>;
+};
+
+export type KeyEnabledInput = {
+  enabled: Scalars['Boolean'];
+  key?: InputMaybe<Scalars['String']>;
+};
 
 export type ListicleBlock = BaseBlock & {
   __typename?: 'ListicleBlock';
@@ -2068,6 +2097,8 @@ export type Mutation = {
   updateUserRole: UserRole;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
+  /** Updates the website settings. */
+  updateWebsiteSettings: WebsiteSettings;
   upgradeUserSubscription: Payment;
   /** Uploads a new document. */
   uploadDocument: Document;
@@ -2818,6 +2849,7 @@ export type MutationUpdateAiSettingArgs = {
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   systemPrompt?: InputMaybe<Scalars['String']>;
+  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -3277,6 +3309,15 @@ export type MutationUpdateUserRoleArgs = {
 export type MutationUpdateUserSubscriptionArgs = {
   id: Scalars['String'];
   input: UpdateUserSubscriptionInput;
+};
+
+
+export type MutationUpdateWebsiteSettingsArgs = {
+  ads?: InputMaybe<WebsiteAdsInput>;
+  analytics?: InputMaybe<WebsiteAnalyticsInput>;
+  fonts?: InputMaybe<Array<WebsiteRemoteFontInput>>;
+  mail?: InputMaybe<WebsiteMailInput>;
+  theme?: InputMaybe<Scalars['JSONObject']>;
 };
 
 
@@ -4405,6 +4446,8 @@ export type Query = {
   /** Returns a paginated list of users based on the filters given. */
   users: PaginatedSensitiveDataUsers;
   versionInformation: VersionInformation;
+  /** Returns the website settings, requires authentication to get sensitive settings. */
+  websiteSettings: WebsiteSettings;
 };
 
 
@@ -5972,6 +6015,59 @@ export type VimeoVideoBlockInput = {
   videoID?: InputMaybe<Scalars['String']>;
 };
 
+export type WebsiteAds = {
+  __typename?: 'WebsiteAds';
+  sparkLoop: KeyEnabled;
+};
+
+export type WebsiteAdsInput = {
+  sparkLoop: KeyEnabledInput;
+};
+
+export type WebsiteAnalytics = {
+  __typename?: 'WebsiteAnalytics';
+  googleAnalytics: KeyEnabled;
+  googleTagManager: KeyEnabled;
+  plausible: KeyEnabled;
+};
+
+export type WebsiteAnalyticsInput = {
+  googleAnalytics: KeyEnabledInput;
+  googleTagManager: KeyEnabledInput;
+  plausible: KeyEnabledInput;
+};
+
+export type WebsiteMail = {
+  __typename?: 'WebsiteMail';
+  mailchimp?: Maybe<KeyEnabled>;
+};
+
+export type WebsiteMailInput = {
+  mailchimp: KeyEnabledInput;
+};
+
+export type WebsiteRemoteFont = {
+  __typename?: 'WebsiteRemoteFont';
+  name: Scalars['String'];
+  style: Array<FontStyle>;
+  weight: Array<FontWeight>;
+};
+
+export type WebsiteRemoteFontInput = {
+  name: Scalars['String'];
+  style: Array<FontStyle>;
+  weight: Array<FontWeight>;
+};
+
+export type WebsiteSettings = {
+  __typename?: 'WebsiteSettings';
+  ads: WebsiteAds;
+  analytics: WebsiteAnalytics;
+  fonts: Array<WebsiteRemoteFont>;
+  mail: WebsiteMail;
+  theme: Scalars['JSONObject'];
+};
+
 export type YouTubeVideoBlock = BaseBlock & {
   __typename?: 'YouTubeVideoBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -6600,6 +6696,20 @@ export type SettingQueryVariables = Exact<{
 
 
 export type SettingQuery = { __typename?: 'Query', setting: { __typename?: 'Setting', id: string, name: SettingName, value?: any | null } };
+
+export type WebsiteSettingsFragment = { __typename?: 'WebsiteSettings', theme: any, analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, fonts: Array<{ __typename?: 'WebsiteRemoteFont', weight: Array<FontWeight>, style: Array<FontStyle>, name: string }> };
+
+export type SensitiveWebsiteSettingsFragment = { __typename?: 'WebsiteSettings', mail: { __typename?: 'WebsiteMail', mailchimp?: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } | null } };
+
+export type WebsiteSettingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type WebsiteSettingsQuery = { __typename?: 'Query', websiteSettings: { __typename?: 'WebsiteSettings', theme: any, analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, fonts: Array<{ __typename?: 'WebsiteRemoteFont', weight: Array<FontWeight>, style: Array<FontStyle>, name: string }> } };
+
+export type SensitiveWebsiteSettingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SensitiveWebsiteSettingsQuery = { __typename?: 'Query', websiteSettings: { __typename?: 'WebsiteSettings', mail: { __typename?: 'WebsiteMail', mailchimp?: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } | null } } };
 
 export type StatsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -7872,6 +7982,46 @@ export const FullSettingFragmentDoc = gql`
   id
   name
   value
+}
+    `;
+export const WebsiteSettingsFragmentDoc = gql`
+    fragment WebsiteSettings on WebsiteSettings {
+  analytics {
+    googleAnalytics {
+      enabled
+      key
+    }
+    googleTagManager {
+      enabled
+      key
+    }
+    plausible {
+      enabled
+      key
+    }
+  }
+  ads {
+    sparkLoop {
+      enabled
+      key
+    }
+  }
+  theme
+  fonts {
+    weight
+    style
+    name
+  }
+}
+    `;
+export const SensitiveWebsiteSettingsFragmentDoc = gql`
+    fragment SensitiveWebsiteSettings on WebsiteSettings {
+  mail {
+    mailchimp {
+      enabled
+      key
+    }
+  }
 }
     `;
 export const FullTrackingPixelMethodFragmentDoc = gql`
@@ -9654,6 +9804,74 @@ export function useSettingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Se
 export type SettingQueryHookResult = ReturnType<typeof useSettingQuery>;
 export type SettingLazyQueryHookResult = ReturnType<typeof useSettingLazyQuery>;
 export type SettingQueryResult = Apollo.QueryResult<SettingQuery, SettingQueryVariables>;
+export const WebsiteSettingsDocument = gql`
+    query WebsiteSettings {
+  websiteSettings {
+    ...WebsiteSettings
+  }
+}
+    ${WebsiteSettingsFragmentDoc}`;
+
+/**
+ * __useWebsiteSettingsQuery__
+ *
+ * To run a query within a React component, call `useWebsiteSettingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useWebsiteSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useWebsiteSettingsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useWebsiteSettingsQuery(baseOptions?: Apollo.QueryHookOptions<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>(WebsiteSettingsDocument, options);
+      }
+export function useWebsiteSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>(WebsiteSettingsDocument, options);
+        }
+export type WebsiteSettingsQueryHookResult = ReturnType<typeof useWebsiteSettingsQuery>;
+export type WebsiteSettingsLazyQueryHookResult = ReturnType<typeof useWebsiteSettingsLazyQuery>;
+export type WebsiteSettingsQueryResult = Apollo.QueryResult<WebsiteSettingsQuery, WebsiteSettingsQueryVariables>;
+export const SensitiveWebsiteSettingsDocument = gql`
+    query SensitiveWebsiteSettings {
+  websiteSettings {
+    ...SensitiveWebsiteSettings
+  }
+}
+    ${SensitiveWebsiteSettingsFragmentDoc}`;
+
+/**
+ * __useSensitiveWebsiteSettingsQuery__
+ *
+ * To run a query within a React component, call `useSensitiveWebsiteSettingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSensitiveWebsiteSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSensitiveWebsiteSettingsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSensitiveWebsiteSettingsQuery(baseOptions?: Apollo.QueryHookOptions<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>(SensitiveWebsiteSettingsDocument, options);
+      }
+export function useSensitiveWebsiteSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>(SensitiveWebsiteSettingsDocument, options);
+        }
+export type SensitiveWebsiteSettingsQueryHookResult = ReturnType<typeof useSensitiveWebsiteSettingsQuery>;
+export type SensitiveWebsiteSettingsLazyQueryHookResult = ReturnType<typeof useSensitiveWebsiteSettingsLazyQuery>;
+export type SensitiveWebsiteSettingsQueryResult = Apollo.QueryResult<SensitiveWebsiteSettingsQuery, SensitiveWebsiteSettingsQueryVariables>;
 export const StatsDocument = gql`
     query Stats {
   stats {

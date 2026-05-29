@@ -5,6 +5,7 @@ import {
   AppCacheProvider,
   createEmotionCache,
 } from '@mui/material-nextjs/v15-pagesRouter';
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { withErrorSnackbar } from '@wepublish/errors/website';
 import {
   FooterContainer,
@@ -23,14 +24,14 @@ import {
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
-  createWithV1ApiClient,
+  createWithApiClient,
   SessionWithTokenWithoutUser,
+  WebsiteSettingsFragment,
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
-import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
 import { z } from 'zod';
@@ -74,17 +75,26 @@ const dateFormatter = (date: Date, includeTime = true) =>
     `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
   : format(date, 'dd. MMMM yyyy');
 
-type CustomAppProps = AppProps<{
+export type CustomAppProps = AppProps<{
   sessionToken?: SessionWithTokenWithoutUser;
-}> & { emotionCache?: EmotionCache };
+}> & { emotionCache?: EmotionCache; websiteSettings?: WebsiteSettingsFragment };
 
-function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
+function CustomApp({
+  Component,
+  pageProps,
+  emotionCache,
+  websiteSettings,
+}: CustomAppProps) {
   const siteTitle = 'We.Publish';
 
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
   const cache = emotionCache ?? createEmotionCache();
   cache.compat = true;
+
+  const settings =
+    websiteSettings ??
+    (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
   return (
     <AppCacheProvider emotionCache={cache}>
@@ -101,71 +111,6 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 
             <Head>
               <title key="title">{siteTitle}</title>
-              <meta
-                name="viewport"
-                content="width=device-width, initial-scale=1.0"
-              />
-
-              {/* Feeds */}
-              <link
-                rel="alternate"
-                type="application/rss+xml"
-                href="/api/rss-feed"
-              />
-              <link
-                rel="alternate"
-                type="application/atom+xml"
-                href="/api/atom-feed"
-              />
-              <link
-                rel="alternate"
-                type="application/feed+json"
-                href="/api/json-feed"
-              />
-
-              {/* Sitemap */}
-              <link
-                rel="sitemap"
-                type="application/xml"
-                title="Sitemap"
-                href="/api/sitemap"
-              />
-
-              {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
-              <link
-                rel="apple-touch-icon"
-                sizes="180x180"
-                href="/apple-touch-icon.png"
-              />
-              <link
-                rel="icon"
-                type="image/png"
-                sizes="32x32"
-                href="/favicon-32x32.png"
-              />
-              <link
-                rel="icon"
-                type="image/png"
-                sizes="16x16"
-                href="/favicon-16x16.png"
-              />
-              <link
-                rel="manifest"
-                href="/site.webmanifest"
-              />
-              <link
-                rel="mask-icon"
-                href="/safari-pinned-tab.svg"
-                color="#000000"
-              />
-              <meta
-                name="msapplication-TileColor"
-                content="#ffffff"
-              />
-              <meta
-                name="theme-color"
-                content="#ffffff"
-              />
             </Head>
 
             <Spacer>
@@ -190,6 +135,28 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             </Spacer>
 
             <RoutedAdminBar />
+
+            {settings?.analytics.googleAnalytics.enabled &&
+              settings?.analytics.googleAnalytics.key && (
+                <GoogleAnalytics
+                  gaId={settings.analytics.googleAnalytics.key}
+                />
+              )}
+
+            {settings?.analytics.googleTagManager.enabled &&
+              settings?.analytics.googleTagManager.key && (
+                <GoogleTagManager
+                  gtmId={settings.analytics.googleTagManager.key}
+                />
+              )}
+
+            {settings?.ads.sparkLoop.enabled && settings?.ads.sparkLoop.key && (
+              <Script
+                src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
+                strategy="lazyOnload"
+                data-sparkloop
+              />
+            )}
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>
@@ -197,8 +164,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   );
 }
 
-const { publicRuntimeConfig } = getConfig();
-const withApollo = createWithV1ApiClient(getApiUrl(), [authLink, previewLink]);
+const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
 const ConnectedApp = withApollo(
   withErrorSnackbar(
     withPaywallBypassToken(withSessionProvider(withJwtHandler(CustomApp)))
