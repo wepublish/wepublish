@@ -2108,7 +2108,7 @@ type Mutation {
   updateExternalApp(description: String, icon: String, id: String!, name: String, target: ExternalAppsTarget, url: String): ExternalApp!
 
   """Updates an existing image."""
-  updateImage(description: String, filename: String, focalPointX: Float, focalPointY: Float, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
+  updateImage(description: String, filename: String, focalPointX: Float = 0.5, focalPointY: Float = 0.5, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
 
   """Updates an existing invoice."""
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
@@ -2202,10 +2202,10 @@ type Mutation {
   uploadDocument(description: String, file: Upload!, filename: String, title: String): Document!
 
   """Uploads a new image."""
-  uploadImage(description: String, file: Upload!, filename: String, focalPointX: Float!, focalPointY: Float!, license: String, link: String, source: String, tags: [String!]!, title: String): Image!
+  uploadImage(description: String, file: Upload!, filename: String, focalPointX: Float! = 0.5, focalPointY: Float! = 0.5, license: String, link: String, source: String, tags: [String!]!, title: String): Image!
 
   """This mutation allows to upload and update the user's profile image."""
-  uploadUserProfileImage(description: String, file: Upload!, filename: String, focalPointX: Float!, focalPointY: Float!, license: String, link: String, source: String, tags: [String!]!, title: String): SensitiveDataUser
+  uploadUserProfileImage(description: String, file: Upload!, filename: String, focalPointX: Float! = 0.5, focalPointY: Float! = 0.5, license: String, link: String, source: String, tags: [String!]!, title: String): SensitiveDataUser
 
   """
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
