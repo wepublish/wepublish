@@ -1,3 +1,4 @@
+import { Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -40,12 +41,27 @@ type MailchimpFormInput = z.infer<typeof MailchimpFormSchema>;
 const SubmitBtn = styled(Link)`
   padding-top: 12px;
   padding-bottom: 12px;
-  margin-left: 20px;
+  margin: ${({ theme }) => theme.spacing(2)} auto 0;
 
   &:hover {
     transform: unset;
   }
+
+  ${({ theme }) => theme.breakpoints.up('sm')} {
+    margin: ${({ theme }) => theme.spacing(0, 0, 0, 2.5)};
+  }
 ` as typeof Link;
+
+const formStyles = (theme: Theme) => css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  ${theme.breakpoints.up('md')} {
+    flex-direction: row;
+    align-items: stretch;
+  }
+`;
 
 export const BannerBase = ({
   data,
@@ -148,16 +164,26 @@ export const BannerBase = ({
             <BannerActions>
               {data?.primaryBanner.actions?.[0] && (
                 <form
-                  action={data.primaryBanner.actions[0].url}
-                  method="post"
-                  target="_blank"
                   noValidate
-                  onSubmit={handleSubmit((_values, event) => {
-                    // validation passed — allow native submission then close
-                    (event?.target as HTMLFormElement | undefined)?.submit();
+                  onSubmit={handleSubmit(async values => {
+                    const url = data?.primaryBanner?.actions?.[0]?.url;
+                    if (!url) return;
+                    const body = new URLSearchParams({
+                      EMAIL: values.EMAIL,
+                    });
+                    try {
+                      await fetch(url, {
+                        method: 'POST',
+                        body,
+                        mode: 'no-cors',
+                      });
+                    } catch {
+                      // Fire-and-forget — opaque response, ignore network errors
+                    }
                     handleClose();
                     onRegister?.();
                   })}
+                  css={formStyles}
                 >
                   <Controller
                     name="EMAIL"
@@ -242,9 +268,13 @@ const StyledBanner = styled(BannerBase, {
       display: grid;
       grid-template-columns: unset;
       grid-template-rows: auto auto;
-      row-gap: ${({ theme }) => theme.spacing(4)};
+      row-gap: ${({ theme }) => theme.spacing(1.5)};
       padding: ${({ theme }) => theme.spacing(6, 2, 2, 2)};
       align-items: center;
+
+      ${({ theme }) => theme.breakpoints.up('md')} {
+        row-gap: ${({ theme }) => theme.spacing(3)};
+      }
 
       ${({ theme }) => theme.breakpoints.up('lg')} {
         zoom: 1;
@@ -441,16 +471,26 @@ export const ReflektBanner = (props: BuilderBannerProps) => {
 
   useEffect(() => {
     // Only open the modal if there's actually an active banner to show
-    if (!props.data?.primaryBanner) return;
-    if (localStorage.getItem(BANNER_SUBMITTED_KEY)) return;
+    if (!props.data?.primaryBanner) {
+      return;
+    }
+
+    // Only open the modal if not already submitted
+    if (localStorage.getItem(BANNER_SUBMITTED_KEY)) {
+      return;
+    }
 
     const delay = (props.data.primaryBanner.delay ?? 0) * 1000;
     const timer = setTimeout(() => setModalOpen(true), delay);
+
     return () => clearTimeout(timer);
   }, [props.data?.primaryBanner]);
 
   const handleClose: DialogProps['onClose'] = (event, reason) => {
-    if (reason === 'backdropClick' || reason === 'escapeKeyDown') return;
+    if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+      return;
+    }
+
     setModalOpen(false);
   };
 
