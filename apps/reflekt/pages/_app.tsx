@@ -63,6 +63,7 @@ import { ReflektMemberPlanItem } from '../src/components/reflekt-memberplan-pick
 import { ReflektNavbar } from '../src/components/reflekt-navbar';
 import { ReflektPage } from '../src/components/reflekt-page';
 import { ReflektQuoteBlock } from '../src/components/reflekt-quote-block';
+import { ReflektRegistrationForm } from '../src/components/reflekt-registration-form';
 import { ReflektRenderElement } from '../src/components/reflekt-render-element';
 import { ReflektRenderRichtext } from '../src/components/reflekt-render-richtext';
 import { ReflektRichTextBlock } from '../src/components/reflekt-richtext-block';
@@ -141,6 +142,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             MemberPlanItem={ReflektMemberPlanItem}
             UserForm={ReflektUserForm}
             LoginForm={ReflektLoginForm}
+            RegistrationForm={ReflektRegistrationForm}
             elements={{
               Link: ReflektLink,
               UnorderedList: ReflektUnorderedList,
