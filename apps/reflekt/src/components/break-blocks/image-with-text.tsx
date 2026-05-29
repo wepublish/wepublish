@@ -28,6 +28,12 @@ export const ImageWithTextBreakBlock = styled(BreakBlock)`
     ${css(buttonLinkSecondaryStyles)}
   }
 
+  ${({ theme }) => theme.breakpoints.down('md')} {
+    ${BreakBlockButton} {
+      justify-self: center;
+    }
+  }
+
   ${({ theme }) => theme.breakpoints.up('md')} {
     grid-template-columns: 5fr 2fr;
     padding: 2rem 1rem;

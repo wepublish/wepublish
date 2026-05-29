@@ -275,6 +275,13 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
     justify-content: center;
     align-items: center;
     text-align: center;
+    width: 100vw;
+    height: 100vh;
+    padding-top: 150px;
+    padding-bottom: 50px;
+    box-sizing: border-box;
+    overflow: hidden;
+    container-type: size;
   }
 
   ${ImageBlockWrapper}, ${YouTubeVideoBlockWrapper}, ${IFrameBlockWrapper} {
@@ -300,8 +307,57 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
   ${RichTextBlockWrapper} {
     background-color: transparent;
     color: white;
-    width: 50%;
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
     margin: 0 auto;
+    padding: 0 ${({ theme }) => theme.spacing(4)};
+    box-sizing: border-box;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    word-break: break-word;
+
+    .MuiTypography-root {
+      line-height: 1.2;
+      margin-bottom: ${({ theme }) => theme.spacing(4)};
+    }
+
+    ul,
+    ol {
+      text-align: left;
+    }
+
+    h1,
+    .MuiTypography-h1 {
+      font-size: clamp(2rem, 7cqw, 7rem);
+    }
+    h2,
+    .MuiTypography-h2 {
+      font-size: clamp(2rem, 6cqw, 6rem);
+    }
+    h3,
+    .MuiTypography-h3 {
+      font-size: clamp(1.75rem, 5.5cqw, 5.5rem);
+    }
+    h4,
+    .MuiTypography-h4 {
+      font-size: clamp(1.25rem, 3cqw, 3rem);
+    }
+    h5,
+    .MuiTypography-h5 {
+      font-size: clamp(1.125rem, 2.5cqw, 2.5rem);
+    }
+    h6,
+    .MuiTypography-h6 {
+      font-size: clamp(1rem, 2cqw, 2rem);
+    }
+    p,
+    .MuiTypography-body1,
+    .MuiTypography-body2,
+    .MuiTypography-subtitle1,
+    .MuiTypography-subtitle2 {
+      font-size: clamp(1rem, 2.25cqw, 2.5rem);
+    }
   }
 
   ${ImageBlockImage} {

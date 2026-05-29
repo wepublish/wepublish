@@ -31,6 +31,8 @@ export const isFlexBlockFullsizeImage = (
 const PARALLAX_HOLD_DISTANCE = 800;
 const PARALLAX_TEXT_DELAY = 200;
 const PARALLAX_TEXT_START_OFFSET = 0.9;
+const PARALLAX_MOBILE_TEXT_SPEED = 0.5;
+const PARALLAX_DESKTOP_TEXT_SPEED = 1;
 const MD_BREAKPOINT = 900;
 const RICH_TEXT_SCALE_MOBILE = 1;
 const RICH_TEXT_SCALE_DESKTOP = 1.8;
@@ -88,7 +90,7 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
     bottom: 0;
     right: 0;
     overflow: hidden;
-    background-color: green;
+    background-color: ${({ theme }) => theme.palette.common.black};
   }
 
   ${RichTextBlockWrapper} {
@@ -258,6 +260,7 @@ export const FlexBlockFullsizeImage = ({
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const imageHeightRef = useRef<number>(0);
+  const textHeightRef = useRef<number>(0);
 
   useEffect(() => {
     const el = wrapperRef.current;
@@ -277,13 +280,39 @@ export const FlexBlockFullsizeImage = ({
     const getTextBlock = () =>
       el.querySelector('[data-text-block="true"]') as HTMLElement | null;
 
+    const measureTextHeight = () => {
+      const textBlock = getTextBlock();
+      const inner = textBlock?.firstElementChild as HTMLElement | null;
+      if (inner) {
+        textHeightRef.current =
+          inner.scrollHeight || inner.offsetHeight || textHeightRef.current;
+      }
+    };
+
+    const getHoldDistance = () => {
+      const isDesktopNow = window.innerWidth >= MD_BREAKPOINT;
+      const vhNow = window.innerHeight;
+      const textHeight = textHeightRef.current;
+      const imageHeight = imageHeightRef.current || vhNow;
+      if (!textHeight) return PARALLAX_HOLD_DISTANCE;
+      if (isDesktopNow) {
+        const startY = vhNow * PARALLAX_TEXT_START_OFFSET;
+        const endY = -(imageHeight + textHeight) / 2;
+        const travel = startY - endY;
+        return PARALLAX_TEXT_DELAY + travel / PARALLAX_DESKTOP_TEXT_SPEED;
+      }
+      const delay = vhNow * 0.5;
+      const travel = textHeight + imageHeight / 2;
+      return delay + travel / PARALLAX_MOBILE_TEXT_SPEED;
+    };
+
     const applyLayout = () => {
       const imageHeight = imageHeightRef.current;
       if (!imageHeight) return;
       const vh = window.innerHeight;
       el.style.display = 'block';
       el.style.position = 'relative';
-      el.style.height = `${vh + PARALLAX_HOLD_DISTANCE}px`;
+      el.style.height = `${vh + getHoldDistance()}px`;
     };
 
     const setFixed = (
@@ -340,42 +369,33 @@ export const FlexBlockFullsizeImage = ({
         isDesktop ? Math.max(navbarHeight, (vh - imageHeight) / 2) : 0;
       const holdStart = wrapperTop;
 
+      const textDelay = isDesktop ? PARALLAX_TEXT_DELAY : vh * 0.5;
+      const holdDistance = getHoldDistance();
+      const textHeight = textHeightRef.current;
       const progress = Math.max(
         0,
         Math.min(
           1,
-          (scrollY - holdStart - PARALLAX_TEXT_DELAY) /
-            (PARALLAX_HOLD_DISTANCE - PARALLAX_TEXT_DELAY)
+          (scrollY - holdStart - textDelay) /
+            Math.max(1, holdDistance - textDelay)
         )
       );
-      const startY = vh * PARALLAX_TEXT_START_OFFSET;
-      const endY = isDesktop ? 0 : -startY;
+      const startY =
+        isDesktop ? vh * PARALLAX_TEXT_START_OFFSET : textHeight / 2;
+      const endY = -(imageHeight + textHeight) / 2;
       el.style.setProperty(
         '--text-parallax-y',
         `${startY + (endY - startY) * progress}px`
       );
 
-      if (
-        scrollY >= holdStart &&
-        scrollY < holdStart + PARALLAX_HOLD_DISTANCE
-      ) {
+      if (scrollY >= holdStart && scrollY < holdStart + holdDistance) {
         if (imageBlock) setFixed(imageBlock, imageHeight, stickyTop, '1');
         if (textBlock) setFixed(textBlock, imageHeight, stickyTop, '2');
-      } else if (scrollY >= holdStart + PARALLAX_HOLD_DISTANCE) {
+      } else if (scrollY >= holdStart + holdDistance) {
         if (imageBlock)
-          setAbsolute(
-            imageBlock,
-            PARALLAX_HOLD_DISTANCE + stickyTop,
-            imageHeight,
-            '1'
-          );
+          setAbsolute(imageBlock, holdDistance + stickyTop, imageHeight, '1');
         if (textBlock)
-          setAbsolute(
-            textBlock,
-            PARALLAX_HOLD_DISTANCE + stickyTop,
-            imageHeight,
-            '2'
-          );
+          setAbsolute(textBlock, holdDistance + stickyTop, imageHeight, '2');
       } else {
         if (imageBlock) setAbsolute(imageBlock, stickyTop, imageHeight, '1');
         if (textBlock) setAbsolute(textBlock, stickyTop, imageHeight, '2');
@@ -391,16 +411,25 @@ export const FlexBlockFullsizeImage = ({
       if (activeImage) {
         imageHeightRef.current = activeImage.offsetHeight;
       }
+      measureTextHeight();
       applyLayout();
       handleScroll();
     };
 
-    // Observe all image blocks; use the visible one's height
     const observer = new ResizeObserver(() => {
       const activeImage = getActiveImageBlock();
       const h = activeImage?.offsetHeight ?? 0;
+      let changed = false;
       if (h && h !== imageHeightRef.current) {
         imageHeightRef.current = h;
+        changed = true;
+      }
+      const previousTextHeight = textHeightRef.current;
+      measureTextHeight();
+      if (textHeightRef.current !== previousTextHeight) {
+        changed = true;
+      }
+      if (changed) {
         applyLayout();
         handleScroll();
       }
@@ -409,6 +438,11 @@ export const FlexBlockFullsizeImage = ({
     el.querySelectorAll<HTMLElement>('[data-image-block="true"]').forEach(b =>
       observer.observe(b)
     );
+    const textBlockEl = getTextBlock();
+    if (textBlockEl?.firstElementChild) {
+      observer.observe(textBlockEl.firstElementChild);
+    }
+    measureTextHeight();
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleResize);
