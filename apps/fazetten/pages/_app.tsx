@@ -42,6 +42,7 @@ import { PartialDeep } from 'type-fest';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import deOverriden from '../locales/deOverriden.json';
 import { FazettenArticle } from '../src/components/fazetten-article';
 import { FazettenTitleBlock } from '../src/components/fazetten-title-block';
 import { FazettenBaseTeaserSlots } from '../src/components/teaser-layouts/fazetten-base-teaser-slots';
@@ -53,7 +54,7 @@ setDefaultOptions({
   locale: de,
 });
 
-initWePublishTranslator();
+initWePublishTranslator(deOverriden);
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
