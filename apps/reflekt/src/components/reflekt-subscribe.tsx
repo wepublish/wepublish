@@ -75,6 +75,13 @@ export const ReflektSubscribe = styled(SubscribeBlock)`
     }
   }
 
+  ${SubscribeSection}[data-area='challenge'] > div > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
   ${ReflektSubscribeForm} {
     background-color: transparent;
   }
