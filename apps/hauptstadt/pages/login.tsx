@@ -6,11 +6,11 @@ import {
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   PageDocument,
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
-import { getV1ApiClient } from '@wepublish/website/api';
+import { getApiClient } from '@wepublish/website/api';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
@@ -60,7 +60,7 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {};
   }
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
 
   await handleJwtLogin(ctx, client, true);
 
@@ -72,7 +72,7 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
       },
     }),
   ]);
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return props;
 };

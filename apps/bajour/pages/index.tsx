@@ -5,10 +5,10 @@ import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import { LinkContext } from '@wepublish/website/builder';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   CommentListDocument,
   CommentSort,
-  getV1ApiClient,
+  getApiClient,
   HotAndTrendingDocument,
   NavigationListDocument,
   PageDocument,
@@ -76,7 +76,7 @@ export const getStaticProps: GetStaticProps = async () => {
     return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
 
   const [page] = await Promise.all([
     client.query<PageQuery>({
@@ -132,7 +132,7 @@ export const getStaticProps: GetStaticProps = async () => {
     }
   }
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,
