@@ -68,14 +68,14 @@ export const robotoMono = Roboto_Mono({
 
 const colors = {
   primary: {
-    main: '#000000', // black
+    main: '#000000',
     light: '#f5ff64',
-    dark: '#1F1F1F', // dark gray, used for navbar bg and footer bg
+    dark: '#1F1F1F',
     contrastText: '#ffffff',
   },
   secondary: {
     main: '#F3FF89',
-    light: '#E7FF04', // link-button main background
+    light: '#E7FF04',
     dark: '#2B4E47',
     contrastText: '#ffffff',
   },

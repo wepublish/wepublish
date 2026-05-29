@@ -17,7 +17,7 @@ export const ReflektBaseTeaserSlots = cond([
     isTeaserSlotsCredits,
     (props: BuilderTeaserSlotsBlockProps) => <TeaserSlotsCredits {...props} />,
   ],
-  [T, (props: BuilderTeaserSlotsBlockProps) => <TeaserSlotsBlock {...props} />], // default teaser-slots-block
+  [T, (props: BuilderTeaserSlotsBlockProps) => <TeaserSlotsBlock {...props} />],
   [
     T,
     (props: BuilderTeaserSlotsBlockProps) => (

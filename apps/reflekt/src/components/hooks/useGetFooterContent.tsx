@@ -16,5 +16,5 @@ export const useGetFooterContent = (): FooterContent => {
     blocks: (pageData.page.latest.blocks as BlockContent[]) ?? [],
   };
 
-  return footerContent || null; //{ blocks: [] };
+  return footerContent || null;
 };

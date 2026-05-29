@@ -55,21 +55,18 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
   overflow: hidden;
   display: none;
 
-  /* Block 1: mobile image — shown only on mobile */
   &:nth-of-type(1)[data-image-block='true'] {
     ${({ theme }) => theme.breakpoints.down('md')} {
       display: block;
     }
   }
 
-  /* Block 2: desktop image — shown only on desktop */
   &:nth-of-type(2)[data-image-block='true'] {
     ${({ theme }) => theme.breakpoints.up('md')} {
       display: block;
     }
   }
 
-  /* Block 3: text — always shown */
   &[data-text-block='true'] {
     display: block;
   }
@@ -264,15 +261,18 @@ export const FlexBlockFullsizeImage = ({
 
   useEffect(() => {
     const el = wrapperRef.current;
-    if (!el) return;
+    if (!el) {
+      return;
+    }
 
-    // Returns the currently visible image block (CSS controls which is shown)
     const getActiveImageBlock = (): HTMLElement | null => {
       const candidates = el.querySelectorAll<HTMLElement>(
         '[data-image-block="true"]'
       );
       for (const c of Array.from(candidates)) {
-        if (getComputedStyle(c).display !== 'none') return c;
+        if (getComputedStyle(c).display !== 'none') {
+          return c;
+        }
       }
       return null;
     };
@@ -294,7 +294,9 @@ export const FlexBlockFullsizeImage = ({
       const vhNow = window.innerHeight;
       const textHeight = textHeightRef.current;
       const imageHeight = imageHeightRef.current || vhNow;
-      if (!textHeight) return PARALLAX_HOLD_DISTANCE;
+      if (!textHeight) {
+        return PARALLAX_HOLD_DISTANCE;
+      }
       if (isDesktopNow) {
         const startY = vhNow * PARALLAX_TEXT_START_OFFSET;
         const endY = -(imageHeight + textHeight) / 2;
@@ -308,7 +310,9 @@ export const FlexBlockFullsizeImage = ({
 
     const applyLayout = () => {
       const imageHeight = imageHeightRef.current;
-      if (!imageHeight) return;
+      if (!imageHeight) {
+        return;
+      }
       const vh = window.innerHeight;
       el.style.display = 'block';
       el.style.position = 'relative';
@@ -321,7 +325,9 @@ export const FlexBlockFullsizeImage = ({
       stickyTop: number,
       zIndex: string
     ) => {
-      if (block.style.position === 'fixed') return;
+      if (block.style.position === 'fixed') {
+        return;
+      }
       block.style.position = 'fixed';
       block.style.top = `${stickyTop}px`;
       block.style.bottom = 'auto';
@@ -348,7 +354,9 @@ export const FlexBlockFullsizeImage = ({
 
     const handleScroll = () => {
       const imageHeight = imageHeightRef.current;
-      if (!imageHeight) return;
+      if (!imageHeight) {
+        return;
+      }
 
       const imageBlock = getActiveImageBlock();
       const textBlock = getTextBlock();
@@ -364,7 +372,6 @@ export const FlexBlockFullsizeImage = ({
           )
         ) || 0;
       const isDesktop = window.innerWidth >= MD_BREAKPOINT;
-      // Desktop: center image in viewport. Mobile: stick at viewport top edge (top: 0).
       const stickyTop =
         isDesktop ? Math.max(navbarHeight, (vh - imageHeight) / 2) : 0;
       const holdStart = wrapperTop;
@@ -389,16 +396,26 @@ export const FlexBlockFullsizeImage = ({
       );
 
       if (scrollY >= holdStart && scrollY < holdStart + holdDistance) {
-        if (imageBlock) setFixed(imageBlock, imageHeight, stickyTop, '1');
-        if (textBlock) setFixed(textBlock, imageHeight, stickyTop, '2');
+        if (imageBlock) {
+          setFixed(imageBlock, imageHeight, stickyTop, '1');
+        }
+        if (textBlock) {
+          setFixed(textBlock, imageHeight, stickyTop, '2');
+        }
       } else if (scrollY >= holdStart + holdDistance) {
-        if (imageBlock)
+        if (imageBlock) {
           setAbsolute(imageBlock, holdDistance + stickyTop, imageHeight, '1');
-        if (textBlock)
+        }
+        if (textBlock) {
           setAbsolute(textBlock, holdDistance + stickyTop, imageHeight, '2');
+        }
       } else {
-        if (imageBlock) setAbsolute(imageBlock, stickyTop, imageHeight, '1');
-        if (textBlock) setAbsolute(textBlock, stickyTop, imageHeight, '2');
+        if (imageBlock) {
+          setAbsolute(imageBlock, stickyTop, imageHeight, '1');
+        }
+        if (textBlock) {
+          setAbsolute(textBlock, stickyTop, imageHeight, '2');
+        }
       }
     };
 

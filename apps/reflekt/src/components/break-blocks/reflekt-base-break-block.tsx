@@ -45,7 +45,7 @@ export const ReflektBaseBreakBlock = cond([
     isTeamBreakBlock,
     (props: BuilderBreakBlockProps) => <TeamBreakBlock {...props} />,
   ],
-  [T, (props: BuilderBreakBlockProps) => <BreakBlock {...props} />], // default break-block
+  [T, (props: BuilderBreakBlockProps) => <BreakBlock {...props} />],
   [
     T,
     (props: BuilderBreakBlockProps) => (

@@ -2,43 +2,28 @@ import { CSSProperties } from 'react';
 
 declare module '@mui/material/styles' {
   interface TypographyVariants {
-    // Article
     articleAuthors: CSSProperties;
-    // Teaser
     teaserTitle: CSSProperties;
     teaserTitleLink: CSSProperties;
     teaserPretitleLink: CSSProperties;
     teaserPretitle: CSSProperties;
     teaserLead: CSSProperties;
     teaserMeta: CSSProperties;
-
-    // Teaser Slots
-
     teaserSlotsTitle: CSSProperties;
-
-    // Footer / Header
     categoryLinkTitle: CSSProperties;
     categoryLinkList: CSSProperties;
     categoryLinkItem: CSSProperties;
-
     categoryAddress: CSSProperties;
     categoryAddressText: CSSProperties;
     footerLink: CSSProperties;
-
-    // Button Links
     buttonLinkMain: CSSProperties;
     buttonLinkSecondary: CSSProperties;
-
-    // Banner
     bannerTitle: CSSProperties;
     bannerText: CSSProperties;
     bannerCta: CSSProperties;
-    // Link -- MuiLink.variant is based on Typography variants
     categoryLink: CSSProperties;
     headerCategoryLink: CSSProperties;
     navbarTab: CSSProperties;
-
-    // Table of Contents - RichText
     tocHeading: CSSProperties;
     tocDetails: CSSProperties;
     ulToc: CSSProperties;
@@ -47,8 +32,6 @@ declare module '@mui/material/styles' {
     ulDownloads: CSSProperties;
     liDownloads: CSSProperties;
     linkDownloads: CSSProperties;
-
-    // Author List Item
     authorListItemName: CSSProperties;
     authorListItemJobTitle: CSSProperties;
     authorListItemBio: CSSProperties;
@@ -56,7 +39,6 @@ declare module '@mui/material/styles' {
     linkAuthorListItemBio: CSSProperties;
   }
 
-  // Optional
   interface TypographyVariantsOptions {
     articleAuthors?: CSSProperties;
     teaserTitle?: CSSProperties;

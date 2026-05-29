@@ -17,7 +17,7 @@ export const getFeed = async (req: NextApiRequest) => {
     id: `${siteUrl + req.url}`,
     link: siteUrl,
     title: 'Reflekt',
-    ttl: 10, // in minutes
+    ttl: 10,
     copyright: 'Reflekt',
     categories: ['OSS', 'CMS', 'Journalism'],
     updated: new Date(),

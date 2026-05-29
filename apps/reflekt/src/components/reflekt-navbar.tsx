@@ -842,7 +842,6 @@ export const ReflektNavbar = forwardRef<HTMLElement, ExtendedNavbarProps>(
           elevation={0}
         >
           <NavbarInnerWrapper
-            //variant="navbarInnerWrapper"
             navbarState={navbarState}
             isMenuOpen={isMenuOpen}
           >

@@ -25,7 +25,7 @@ export const ReflektBaseTeaser = cond([
     isTeaserCredits,
     (props: BuilderTeaserProps) => <TeaserCredits {...props} />,
   ],
-  [T, (props: BuilderTeaserProps) => <TeaserNews {...props} />], // default teaser
+  [T, (props: BuilderTeaserProps) => <TeaserNews {...props} />],
   [
     T,
     (props: BuilderTeaserProps) => (

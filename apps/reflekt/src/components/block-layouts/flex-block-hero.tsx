@@ -35,7 +35,9 @@ import { ReflektBlockStyles } from '../block-styles/reflekt-block-styles';
 import { heroOffScreen } from '../reflekt-navbar';
 
 const isTrustedYouTubeUrl = (value?: string | null): boolean => {
-  if (!value) return false;
+  if (!value) {
+    return false;
+  }
   try {
     const hostname = new URL(value).hostname.toLowerCase();
     return (
@@ -50,12 +52,18 @@ const isTrustedYouTubeUrl = (value?: string | null): boolean => {
 };
 
 const getYouTubeVideoId = (value?: string | null): string | null => {
-  if (!value) return null;
+  if (!value) {
+    return null;
+  }
   try {
     const url = new URL(value);
-    if (url.hostname === 'youtu.be') return url.pathname.slice(1) || null;
+    if (url.hostname === 'youtu.be') {
+      return url.pathname.slice(1) || null;
+    }
     const v = url.searchParams.get('v');
-    if (v) return v;
+    if (v) {
+      return v;
+    }
     const embedMatch = url.pathname.match(/^\/embed\/([^/?]+)/);
     return embedMatch ? embedMatch[1] : null;
   } catch {
@@ -64,7 +72,9 @@ const getYouTubeVideoId = (value?: string | null): string | null => {
 };
 
 const getNativeVideoUrl = (value?: string | null): string | null => {
-  if (!value) return null;
+  if (!value) {
+    return null;
+  }
   try {
     const url = new URL(value);
     return /\.(mp4|webm)$/i.test(url.pathname) ? value : null;
@@ -243,7 +253,6 @@ const MuteButton = styled('button')`
 `;
 
 export const FlexBlockHeroWrapper = styled('div')`
-  //margin-top: calc(-1 * var(--navbar-height));
   display: grid;
   gap: 0;
   grid-column: -1 / 1;
@@ -255,7 +264,6 @@ export const BlockWithAlignment = styled('div')<FlexAlignment>`
   display: none;
   position: relative;
 
-  /* 1st block = mobile media, 2nd block = desktop media */
   &:nth-of-type(1) {
     ${({ theme }) => theme.breakpoints.down('md')} {
       display: block;
@@ -393,7 +401,9 @@ export const FlexBlockHero = ({
     setMounted(true);
 
     const el = ref.current;
-    if (!el) return;
+    if (!el) {
+      return;
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -440,7 +450,6 @@ export const FlexBlockHero = ({
           : null;
         const videoUrl =
           youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : '';
-        // index 0 = mobile (visible < md), index 1 = desktop (visible >= md)
         const isActiveBlock = index === 0 ? !isDesktop : isDesktop;
 
         return (

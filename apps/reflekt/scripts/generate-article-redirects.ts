@@ -7,7 +7,7 @@ const GRAPHQL_ENDPOINT = `${API_URL.replace(/\/$/, '')}/v1`;
 const REDIRECTS_PATH = path.resolve(__dirname, '..', 'redirects.json');
 const PAGE_SIZE = 50;
 
-const ARTICLE_LIST_QUERY = /* GraphQL */ `
+const ARTICLE_LIST_QUERY = `
   query AllArticles($take: Int, $skip: Int) {
     articles(take: $take, skip: $skip) {
       nodes {
@@ -89,14 +89,15 @@ async function fetchAllArticles(): Promise<Article[]> {
   const all: Article[] = [];
   let skip = 0;
   let pageIndex = 0;
-  // Safety cap: 100 pages * 50 = 5000 articles, well above any realistic count.
   while (pageIndex < 100) {
     const { articles, hasNextPage, totalCount } = await fetchPage(skip);
     all.push(...articles);
     console.log(
       `  fetched ${all.length}/${totalCount} articles (page ${pageIndex + 1})`
     );
-    if (!hasNextPage) break;
+    if (!hasNextPage) {
+      break;
+    }
     skip += PAGE_SIZE;
     pageIndex += 1;
   }
