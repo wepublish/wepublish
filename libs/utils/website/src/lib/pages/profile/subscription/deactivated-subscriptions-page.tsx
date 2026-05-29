@@ -9,8 +9,8 @@ import { ComponentProps } from 'react';
 import { SubscriptionListContainer } from '@wepublish/membership/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   MeDocument,
   NavigationListDocument,
   SubscriptionsDocument,
@@ -56,7 +56,7 @@ GuardedDeactivatedSubscriptions.getInitialProps = async (
   }
 
   const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(getApiUrl(), [
+  const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
@@ -80,7 +80,7 @@ GuardedDeactivatedSubscriptions.getInitialProps = async (
     ]);
   }
 
-  const props = addClientCacheToV1Props(client, sessionProps);
+  const props = addClientCacheToProps(client, sessionProps);
 
   return props;
 };
