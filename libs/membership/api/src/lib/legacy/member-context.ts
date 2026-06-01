@@ -819,6 +819,11 @@ export class MemberContext implements MemberContextInterface {
       );
     }
 
+    const periodAmount =
+      paymentPeriodicity === PaymentPeriodicity.yearly ?
+        (memberPlan.yearlyAmount ?? null)
+      : null;
+
     const subscription = await this.prisma.subscription.create({
       data: {
         userID,
@@ -827,6 +832,7 @@ export class MemberContext implements MemberContextInterface {
         paymentPeriodicity,
         paidUntil: null,
         monthlyAmount,
+        periodAmount,
         memberPlanID,
         properties: {
           createMany: {
