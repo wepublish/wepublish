@@ -873,12 +873,46 @@
     "mailTemplates": {
       "availableTemplates": "Modèles de courriels disponibles",
       "content": "Contenu",
+      "create": "Créer un modèle",
       "description": "Description",
       "explanation": "Tu peux utiliser ces modèles de {{provider}} pour envoyer des notifications..",
       "name": "Nom",
       "status": "Statut",
       "synchronize": "Synchroniser les modèles",
-      "view": "Voir sur {{provider}}"
+      "view": "Voir sur {{provider}}",
+      "edit": {
+        "createHeader": "Créer un modèle de courriel",
+        "editHeader": "Modifier le modèle de courriel",
+        "edit": "Modifier",
+        "subject": "Objet",
+        "subjectHint": "Objet du courriel. Les variables sont autorisées (p. ex. *|user_firstName|*). Enregistré par le fournisseur de messagerie (Mailchimp/Mandrill).",
+        "loading": "Chargement …",
+        "save": "Enregistrer",
+        "saveAndClose": "Enregistrer & fermer",
+        "nameRequired": "Veuillez saisir un nom.",
+        "delete": "Supprimer",
+        "deleteTitle": "Supprimer le modèle",
+        "deleteConfirm": "Veux-tu vraiment supprimer le modèle « {{name}} » ? Cette action est irréversible.",
+        "cancel": "Annuler",
+        "close": "Fermer"
+      },
+      "editor": {
+        "bold": "Gras",
+        "italic": "Italique",
+        "underline": "Souligné",
+        "strikethrough": "Barré",
+        "bulletedList": "Liste à puces",
+        "numberedList": "Liste numérotée",
+        "link": "Insérer un lien",
+        "linkPrompt": "Saisir l'URL",
+        "placeholder": "Rédige ici le contenu du courriel …",
+        "placeholders": "Variables",
+        "searchPlaceholders": "Rechercher des variables",
+        "generalPlaceholders": "Général (toujours disponible)",
+        "preview": "Aperçu",
+        "visual": "Visuel",
+        "exampleValue": "Valeur d'exemple : {{example}}"
+      }
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "pas d'envoi mail"

@@ -868,6 +868,7 @@
     "mailTemplates": {
       "availableTemplates": "Verfügbare E-Mail-Templates",
       "content": "Inhalt",
+      "create": "Template erstellen",
       "description": "Beschreibung",
       "explanation": "Diese Templates von {{provider}} kannst du für den Versand von Benachrichtigungen verwenden.",
       "goToPlaceholders": "Verfügbare Placeholders",
@@ -875,7 +876,40 @@
       "showPlaceholders": "Placeholder Dokumentation",
       "status": "Status",
       "synchronize": "Templates synchronisieren",
-      "view": "Auf {{provider}} ansehen"
+      "view": "Auf {{provider}} ansehen",
+      "edit": {
+        "createHeader": "E-Mail-Template erstellen",
+        "editHeader": "E-Mail-Template bearbeiten",
+        "edit": "Bearbeiten",
+        "subject": "Betreff",
+        "subjectHint": "Betreff der E-Mail. Platzhalter sind möglich (z. B. *|user_firstName|*). Wird vom Mailprovider gespeichert (Mailchimp/Mandrill).",
+        "loading": "Lädt …",
+        "save": "Speichern",
+        "saveAndClose": "Speichern & schliessen",
+        "nameRequired": "Bitte gib einen Namen ein.",
+        "delete": "Löschen",
+        "deleteTitle": "Template löschen",
+        "deleteConfirm": "Möchtest du das Template «{{name}}» wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "cancel": "Abbrechen",
+        "close": "Schliessen"
+      },
+      "editor": {
+        "bold": "Fett",
+        "italic": "Kursiv",
+        "underline": "Unterstrichen",
+        "strikethrough": "Durchgestrichen",
+        "bulletedList": "Aufzählung",
+        "numberedList": "Nummerierte Liste",
+        "link": "Link einfügen",
+        "linkPrompt": "URL eingeben",
+        "placeholder": "Schreibe hier den Inhalt der E-Mail …",
+        "placeholders": "Platzhalter",
+        "searchPlaceholders": "Platzhalter suchen",
+        "generalPlaceholders": "Allgemein (immer verfügbar)",
+        "preview": "Vorschau",
+        "visual": "Visuell",
+        "exampleValue": "Beispielwert: {{example}}"
+      }
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "Kein Mailversand"

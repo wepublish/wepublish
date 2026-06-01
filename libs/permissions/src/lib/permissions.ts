@@ -763,6 +763,24 @@ export const CanSyncMailTemplates: Permission = {
   deprecated: false,
 };
 
+export const CanCreateMailTemplates: Permission = {
+  id: 'CAN_CREATE_MAIL-TEMPLATES',
+  description: 'Allows to create mail templates.',
+  deprecated: false,
+};
+
+export const CanUpdateMailTemplates: Permission = {
+  id: 'CAN_UPDATE_MAIL-TEMPLATES',
+  description: 'Allows to edit and save mail templates.',
+  deprecated: false,
+};
+
+export const CanDeleteMailTemplates: Permission = {
+  id: 'CAN_DELETE_MAIL-TEMPLATES',
+  description: 'Allows to delete mail templates.',
+  deprecated: false,
+};
+
 /**
  * System mails
  */
@@ -1178,6 +1196,9 @@ export const AllPermissions: Permission[] = [
   CanGetMailTemplates,
   CanGetPeriodicJobLog,
   CanSyncMailTemplates,
+  CanCreateMailTemplates,
+  CanUpdateMailTemplates,
+  CanDeleteMailTemplates,
   CanGetSystemMails,
   CanUpdateSystemMails,
   CanTestSystemMails,

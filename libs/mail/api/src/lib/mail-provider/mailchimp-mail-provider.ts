@@ -7,14 +7,18 @@ import { AxiosError } from 'axios';
 
 import { MailLogState } from '@prisma/client';
 import {
+  CreateMailProviderTemplateProps,
   MailLogStatus,
   MailProviderError,
   MailProviderTemplate,
+  MailProviderTemplateContent,
   SendMailProps,
+  UpdateMailProviderTemplateProps,
   WebhookForSendMailProps,
   WithExternalId,
 } from './mail-provider.interface';
 import { BaseMailProvider, MailProviderProps } from './base-mail-provider';
+import { flattenObjForMandrill } from '../flatten';
 
 interface VerifyWebhookSignatureProps {
   signature: string;
@@ -36,43 +40,6 @@ function mapMandrillEventToMailLogState(event: string): MailLogState | null {
     default:
       return null;
   }
-}
-
-/*
- * Mandrill template engine does not support nested objects
- */
-function flattenObjForMandrill<T>(ob: T): Record<string, string> {
-  const nestedObject: Record<string, string> = {};
-
-  for (const i in ob) {
-    const nestedObj = ob[i];
-
-    if (Array.isArray(nestedObj)) {
-      for (const j in nestedObj) {
-        if (nestedObj[j] && typeof nestedObj[j] === 'object') {
-          const returnedNestedObject = flattenObjForMandrill(nestedObj[j]);
-
-          for (const k in returnedNestedObject) {
-            nestedObject[`${i}_${j}_${k}`] = returnedNestedObject[k];
-          }
-        } else {
-          nestedObject[`${i}_${j}`] = nestedObj[j];
-        }
-      }
-    } else if (nestedObj && typeof nestedObj === 'object') {
-      const returnedNestedObject = flattenObjForMandrill(nestedObj);
-
-      for (const j in returnedNestedObject) {
-        nestedObject[`${i}_${j}`] = returnedNestedObject[j];
-      }
-    } else {
-      // eventho it should be string according to Mandrill typings
-      // it accepts booleans, numbers etc.
-      nestedObject[i] = nestedObj as any;
-    }
-  }
-
-  return nestedObject;
 }
 
 export class MailchimpMailProvider extends BaseMailProvider {
@@ -236,6 +203,87 @@ export class MailchimpMailProvider extends BaseMailProvider {
 
   async getTemplateUrl(template: WithExternalId): Promise<string> {
     return `https://mandrillapp.com/templates/code?id=${template.externalMailTemplateId}`;
+  }
+
+  async getTemplateContent(
+    template: WithExternalId
+  ): Promise<MailProviderTemplateContent> {
+    const mailchimpClient = await this.getMailchimpClient();
+    const response = await mailchimpClient.templates.info({
+      name: template.externalMailTemplateId,
+    });
+
+    if (this.responseIsError(response)) {
+      throw new MailProviderError(
+        (response.response?.data as Error | undefined)?.message ??
+          'Unknown Mailchimp error'
+      );
+    }
+
+    return {
+      html: response.publish_code ?? response.code ?? '',
+      subject: response.publish_subject ?? response.subject ?? undefined,
+    };
+  }
+
+  async createTemplate(
+    props: CreateMailProviderTemplateProps
+  ): Promise<MailProviderTemplate> {
+    const mailchimpClient = await this.getMailchimpClient();
+    const response = await mailchimpClient.templates.add({
+      name: props.name,
+      code: props.html,
+      subject: props.subject,
+      publish: true,
+    });
+
+    if (this.responseIsError(response)) {
+      throw new MailProviderError(
+        (response.response?.data as Error | undefined)?.message ??
+          'Unknown Mailchimp error'
+      );
+    }
+
+    return {
+      name: response.name,
+      uniqueIdentifier: response.slug,
+      createdAt: new Date(response.created_at),
+      updatedAt: new Date(response.updated_at),
+    };
+  }
+
+  async updateTemplate(
+    template: WithExternalId,
+    props: UpdateMailProviderTemplateProps
+  ): Promise<void> {
+    const mailchimpClient = await this.getMailchimpClient();
+    const response = await mailchimpClient.templates.update({
+      name: template.externalMailTemplateId,
+      code: props.html,
+      subject: props.subject,
+      publish: true,
+    });
+
+    if (this.responseIsError(response)) {
+      throw new MailProviderError(
+        (response.response?.data as Error | undefined)?.message ??
+          'Unknown Mailchimp error'
+      );
+    }
+  }
+
+  async deleteTemplate(template: WithExternalId): Promise<void> {
+    const mailchimpClient = await this.getMailchimpClient();
+    const response = await mailchimpClient.templates.delete({
+      name: template.externalMailTemplateId,
+    });
+
+    if (this.responseIsError(response)) {
+      throw new MailProviderError(
+        (response.response?.data as Error | undefined)?.message ??
+          'Unknown Mailchimp error'
+      );
+    }
   }
 
   private responseIsError<T>(response: T | AxiosError): response is AxiosError {
