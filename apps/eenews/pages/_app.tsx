@@ -1,6 +1,12 @@
 import { EmotionCache } from '@emotion/cache';
 import styled from '@emotion/styled';
-import { Container, css, CssBaseline, ThemeProvider } from '@mui/material';
+import {
+  Container,
+  createTheme,
+  css,
+  CssBaseline,
+  ThemeProvider,
+} from '@mui/material';
 import {
   AppCacheProvider,
   createEmotionCache,
@@ -12,6 +18,7 @@ import {
   NavbarContainer,
 } from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
+import { minimalTheme } from '@wepublish/ui';
 import {
   authLink,
   getApiUrl,
@@ -35,10 +42,10 @@ import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
+import PlausibleProvider from 'next-plausible';
+import { useMemo } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
-
-import theme from '../src/theme';
 
 setDefaultOptions({
   locale: de,
@@ -97,71 +104,85 @@ function CustomApp({
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
+  const theme = useMemo(
+    () => createTheme(minimalTheme, settings?.theme ?? {}),
+    [settings]
+  );
+
   return (
-    <AppCacheProvider emotionCache={cache}>
-      <WebsiteProvider>
-        <WebsiteBuilderProvider
-          Head={Head}
-          Script={Script}
-          elements={{ Link: NextWepublishLink }}
-          date={{ format: dateFormatter }}
-          meta={{ siteTitle }}
-        >
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
+    <PlausibleProvider
+      enabled={
+        settings?.analytics.plausible.enabled &&
+        !!settings?.analytics.plausible.key
+      }
+      src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
+    >
+      <AppCacheProvider emotionCache={cache}>
+        <ThemeProvider theme={theme}>
+          <WebsiteProvider>
+            <WebsiteBuilderProvider
+              Head={Head}
+              Script={Script}
+              elements={{ Link: NextWepublishLink }}
+              date={{ format: dateFormatter }}
+              meta={{ siteTitle }}
+            >
+              <CssBaseline />
 
-            <Head>
-              <title key="title">{siteTitle}</title>
-            </Head>
+              <Head>
+                <title key="title">{siteTitle}</title>
+              </Head>
 
-            <Spacer>
-              <NavBar
-                categorySlugs={[['categories', 'about-us']]}
-                slug="main"
-                headerSlug="header"
-                iconSlug="icons"
-              />
-
-              <main>
-                <MainSpacer maxWidth="lg">
-                  <Component {...pageProps} />
-                </MainSpacer>
-              </main>
-
-              <FooterContainer
-                slug="footer"
-                categorySlugs={[['categories', 'about-us']]}
-                iconSlug="icons"
-              />
-            </Spacer>
-
-            <RoutedAdminBar />
-
-            {settings?.analytics.googleAnalytics.enabled &&
-              settings?.analytics.googleAnalytics.key && (
-                <GoogleAnalytics
-                  gaId={settings.analytics.googleAnalytics.key}
+              <Spacer>
+                <NavBar
+                  categorySlugs={[['categories', 'about-us']]}
+                  slug="main"
+                  headerSlug="header"
+                  iconSlug="icons"
                 />
-              )}
 
-            {settings?.analytics.googleTagManager.enabled &&
-              settings?.analytics.googleTagManager.key && (
-                <GoogleTagManager
-                  gtmId={settings.analytics.googleTagManager.key}
+                <main>
+                  <MainSpacer maxWidth="lg">
+                    <Component {...pageProps} />
+                  </MainSpacer>
+                </main>
+
+                <FooterContainer
+                  slug="footer"
+                  categorySlugs={[['categories', 'about-us']]}
+                  iconSlug="icons"
                 />
-              )}
+              </Spacer>
 
-            {settings?.ads.sparkLoop.enabled && settings?.ads.sparkLoop.key && (
-              <Script
-                src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
-                strategy="lazyOnload"
-                data-sparkloop
-              />
-            )}
-          </ThemeProvider>
-        </WebsiteBuilderProvider>
-      </WebsiteProvider>
-    </AppCacheProvider>
+              <RoutedAdminBar />
+
+              {settings?.analytics.googleAnalytics.enabled &&
+                settings?.analytics.googleAnalytics.key && (
+                  <GoogleAnalytics
+                    gaId={settings.analytics.googleAnalytics.key}
+                  />
+                )}
+
+              {settings?.analytics.googleTagManager.enabled &&
+                settings?.analytics.googleTagManager.key && (
+                  <GoogleTagManager
+                    gtmId={settings.analytics.googleTagManager.key}
+                  />
+                )}
+
+              {settings?.ads.sparkLoop.enabled &&
+                settings?.ads.sparkLoop.key && (
+                  <Script
+                    src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
+                    strategy="lazyOnload"
+                    data-sparkloop
+                  />
+                )}
+            </WebsiteBuilderProvider>
+          </WebsiteProvider>
+        </ThemeProvider>
+      </AppCacheProvider>
+    </PlausibleProvider>
   );
 }
 
