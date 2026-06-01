@@ -130,6 +130,7 @@ export class CrowdfundingService {
       },
       select: {
         monthlyAmount: true,
+        periodAmount: true,
         paymentPeriodicity: true,
       },
     });
