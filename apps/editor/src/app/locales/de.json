@@ -1840,7 +1840,7 @@
       }
     },
     "voucher": {
-      "navbar": "Gutschein",
+      "navbar": "Gutscheine",
       "form": {
         "createTitle": "Gutschein erstellen",
         "editTitle": "Gutschein \"{{ voucher }}\" bearbeiten",
