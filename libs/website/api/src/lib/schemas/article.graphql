@@ -22,21 +22,27 @@ fragment FullPaywall on Paywall {
   hideContentAfter
 }
 
-fragment ArticleRevisionWithoutBlocks on ArticleRevision {
+fragment SlimArticleRevision on ArticleRevision {
   id
   publishedAt
-  createdAt
   preTitle
   title
   lead
-  lead
-  title
-  canonicalUrl
   breaking
 
   authors {
-    ...FullAuthor
+    ...SlimAuthor
   }
+
+  image {
+    ...SlimImage
+  }
+}
+
+fragment FullArticleRevision on ArticleRevision {
+  ...SlimArticleRevision
+
+  canonicalUrl
 
   image {
     ...FullImage
@@ -51,50 +57,47 @@ fragment ArticleRevisionWithoutBlocks on ArticleRevision {
   properties {
     ...FullProperty
   }
-}
-
-fragment FullArticleRevision on ArticleRevision {
-  ...ArticleRevisionWithoutBlocks
 
   blocks {
     ...FullBlock
   }
+
+  authors {
+    ...FullAuthor
+  }
 }
 
-fragment ArticleWithoutBlocks on Article {
+fragment SlimArticle on Article {
   id
   publishedAt
-  modifiedAt
   url
   slug
   likes
   disableComments
-  peerId
-  peerArticleId
 
   tags {
     ...FullTag
   }
 
-  trackingPixels {
-    ...FullTrackingPixel
-  }
-
   latest {
-    ...ArticleRevisionWithoutBlocks
+    ...SlimArticleRevision
   }
 
   peer {
     ...FullPeer
   }
+}
+
+fragment FullArticle on Article {
+  ...SlimArticle
+
+  trackingPixels {
+    ...FullTrackingPixel
+  }
 
   paywall {
     ...FullPaywall
   }
-}
-
-fragment FullArticle on Article {
-  ...ArticleWithoutBlocks
 
   latest {
     ...FullArticleRevision
@@ -124,7 +127,7 @@ query ArticleList(
     sort: $sort
   ) {
     nodes {
-      ...ArticleWithoutBlocks
+      ...SlimArticle
     }
 
     pageInfo {

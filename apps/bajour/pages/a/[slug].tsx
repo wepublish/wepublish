@@ -11,8 +11,9 @@ import { ArticleAuthor } from '@wepublish/author/website';
 import { PollBlock } from '@wepublish/block-content/website';
 import { Comment } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   Article as ArticleType,
   ArticleDocument,
   ArticleListDocument,
@@ -20,7 +21,7 @@ import {
   CommentItemType,
   CommentListDocument,
   CommentSort,
-  getV1ApiClient,
+  getApiClient,
   HotAndTrendingDocument,
   NavigationListDocument,
   PeerProfileDocument,
@@ -36,7 +37,6 @@ import {
   WebsiteBuilderProvider,
 } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
 
@@ -186,9 +186,7 @@ export const getStaticPaths = () => ({
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id, slug } = params || {};
-
-  const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
+  const client = getApiClient(getApiUrl(), []);
 
   const [article] = await Promise.all([
     client.query({
@@ -260,7 +258,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     ]);
   }
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

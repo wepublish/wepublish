@@ -1,13 +1,13 @@
+import { getApiUrl } from '@wepublish/utils/website';
 import {
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
-  getV1ApiClient,
+  getApiClient,
   SortOrder,
 } from '@wepublish/website/api';
 import { generateFeed } from '@wepublish/website/server';
 import { NextApiRequest } from 'next';
-import getConfig from 'next/config';
 import process from 'node:process';
 
 export const getFeed = async (req: NextApiRequest) => {
@@ -27,9 +27,7 @@ export const getFeed = async (req: NextApiRequest) => {
       rss: `${siteUrl + req.url}/api/rss-feed`,
     },
   });
-
-  const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [], {
+  const client = getApiClient(getApiUrl(), [], {
     typePolicies: {},
   });
 

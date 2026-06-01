@@ -1,16 +1,16 @@
 import { generateSitemap } from '@wepublish/feed/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
-  getV1ApiClient,
+  getApiClient,
   PageListDocument,
   PageListQueryVariables,
   PageSort,
   SortOrder,
 } from '@wepublish/website/api';
 import { NextApiRequest } from 'next';
-import getConfig from 'next/config';
 import process from 'node:process';
 
 export const getSitemap = async (req: NextApiRequest): Promise<string> => {
@@ -20,9 +20,7 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
     siteUrl,
     title: 'Fazetten',
   });
-
-  const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [], {
+  const client = getApiClient(getApiUrl(), [], {
     typePolicies: {},
   });
 

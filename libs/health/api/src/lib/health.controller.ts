@@ -37,13 +37,15 @@ export class HealthController {
     return this.health.check([
       async () => this.db.pingCheck('database', this.prisma, { timeout: 5000 }),
       async () =>
-        this.http.pingCheck('editor', `${process.env['EDITOR_URL']}`, {
+        this.http.pingCheck('editor', `${process.env['EDITOR_URL']}/health`, {
           timeout: 5000,
         }),
       async () =>
-        this.http.pingCheck('website', `${process.env['WEBSITE_URL']}`, {
-          timeout: 5000,
-        }),
+        this.http.pingCheck(
+          'website',
+          `${process.env['WEBSITE_URL']}/api/health`,
+          { timeout: 5000 }
+        ),
       async () =>
         this.http.pingCheck(
           'media-server',

@@ -9,14 +9,16 @@ import { ComponentProps } from 'react';
 import { SubscriptionListContainer } from '@wepublish/membership/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   MeDocument,
   NavigationListDocument,
   SubscriptionsDocument,
 } from '@wepublish/website/api';
 import { useTranslation } from 'react-i18next';
 import { Link } from '@wepublish/website/builder';
+
+import { getApiUrl } from '../../../api-url';
 
 const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
@@ -54,7 +56,7 @@ GuardedDeactivatedSubscriptions.getInitialProps = async (
   }
 
   const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
@@ -78,7 +80,7 @@ GuardedDeactivatedSubscriptions.getInitialProps = async (
     ]);
   }
 
-  const props = addClientCacheToV1Props(client, sessionProps);
+  const props = addClientCacheToProps(client, sessionProps);
 
   return props;
 };

@@ -24,6 +24,7 @@ import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import { theme } from '@wepublish/ui';
 import {
   authLink,
+  getApiUrl,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
@@ -34,7 +35,7 @@ import {
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
-import { createWithV1ApiClient } from '@wepublish/website/api';
+import { createWithApiClient } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -202,10 +203,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   );
 }
 
-const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-  authLink,
-  previewLink,
-]);
+const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(

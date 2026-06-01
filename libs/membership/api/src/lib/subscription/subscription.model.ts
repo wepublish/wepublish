@@ -187,7 +187,14 @@ export class ImportPublicSubscriptionInput extends OmitType(
   CreatePublicSubscriptionInput,
   [] as const,
   ArgsType
-) {}
+) {
+  @Field(() => Boolean, {
+    nullable: true,
+    description:
+      'When true, suppress any subscription / invoice mail dispatched as part of this import. Useful for bulk migrations.',
+  })
+  skipMail?: boolean;
+}
 
 @ArgsType()
 export class UpdatePublicSubscriptionInput extends PartialType(
@@ -206,6 +213,13 @@ export class CancelPublicSubscriptionInput extends PickType(
 ) {
   @Field()
   id!: string;
+
+  @Field(() => Boolean, {
+    nullable: true,
+    description:
+      'When true, suppress the subscription-deactivation mail. Useful for bulk migrations of already-cancelled subscriptions.',
+  })
+  skipMail?: boolean;
 }
 
 @InputType()

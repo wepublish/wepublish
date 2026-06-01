@@ -28,6 +28,7 @@ import { TeaserMetadataProperty } from '../panel/teaserEditPanel';
 
 export interface BaseBlockValue {
   blockStyle?: string | null;
+  disabled?: boolean | null;
 }
 
 export interface RichTextBlockValue extends BaseBlockValue {
@@ -294,6 +295,7 @@ export interface TeaserListBlockValue extends BaseBlockValue {
 }
 
 export interface TeaserGridBlockValue extends BaseBlockValue {
+  title?: string | null;
   teasers: Array<[string, Teaser | null]>;
   numColumns: number;
 }
@@ -313,6 +315,7 @@ export interface FlexTeaser {
 }
 
 export interface TeaserGridFlexBlockValue extends BaseBlockValue {
+  title?: string | null;
   flexTeasers: FlexTeaser[];
 }
 
@@ -448,6 +451,7 @@ export function mapBlockValueToBlockInput(
             comments: block.value?.filter.comments ?? [],
           },
           blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
         },
       };
 
@@ -456,6 +460,7 @@ export function mapBlockValueToBlockInput(
         poll: {
           pollId: block.value?.poll?.id,
           blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
         },
       };
 
@@ -464,6 +469,7 @@ export function mapBlockValueToBlockInput(
         crowdfunding: {
           crowdfundingId: block.value?.crowdfunding?.id,
           blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
         },
       };
 
@@ -475,6 +481,7 @@ export function mapBlockValueToBlockInput(
             tags: block.value?.filter.tags ?? [],
           },
           blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
         },
       };
 
@@ -483,6 +490,7 @@ export function mapBlockValueToBlockInput(
         html: {
           html: block.value?.html,
           blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
         },
       };
 
@@ -490,6 +498,7 @@ export function mapBlockValueToBlockInput(
       return {
         subscribe: {
           blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
           memberPlanIds: block.value.memberPlanIds ?? [],
           fields: block.value.fields,
         },
@@ -502,6 +511,7 @@ export function mapBlockValueToBlockInput(
           caption: block.value.caption || undefined,
           linkUrl: block.value.linkUrl,
           blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
         },
       };
 
@@ -513,6 +523,7 @@ export function mapBlockValueToBlockInput(
             imageID: item.image?.id,
           })),
           blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
         },
       };
 
@@ -527,6 +538,7 @@ export function mapBlockValueToBlockInput(
             })
           ),
           blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
         },
       };
 
@@ -537,6 +549,7 @@ export function mapBlockValueToBlockInput(
           title: block.value.title || undefined,
           lead: block.value.lead || undefined,
           blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
         },
       };
 
@@ -545,6 +558,7 @@ export function mapBlockValueToBlockInput(
         richText: {
           richText: block.value.richText,
           blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
         },
       };
 
@@ -555,6 +569,7 @@ export function mapBlockValueToBlockInput(
           author: block.value.author || undefined,
           imageID: block.value.image?.id || undefined,
           blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
         },
       };
 
@@ -569,6 +584,7 @@ export function mapBlockValueToBlockInput(
           hideButton: block.value.hideButton,
           imageID: block.value.image?.id || undefined,
           blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
         },
       };
 
@@ -582,6 +598,7 @@ export function mapBlockValueToBlockInput(
               userID: value.userID,
               postID: value.postID,
               blockStyle: block.value.blockStyle,
+              disabled: block.value.disabled,
             },
           };
 
@@ -591,6 +608,7 @@ export function mapBlockValueToBlockInput(
               userID: value.userID,
               videoID: value.videoID,
               blockStyle: block.value.blockStyle,
+              disabled: block.value.disabled,
             },
           };
 
@@ -599,6 +617,7 @@ export function mapBlockValueToBlockInput(
             streamableVideo: {
               videoID: value.videoID,
               blockStyle: block.value.blockStyle,
+              disabled: block.value.disabled,
             },
           };
 
@@ -607,6 +626,7 @@ export function mapBlockValueToBlockInput(
             instagramPost: {
               postID: value.postID,
               blockStyle: block.value.blockStyle,
+              disabled: block.value.disabled,
             },
           };
 
@@ -616,6 +636,7 @@ export function mapBlockValueToBlockInput(
               userID: value.userID,
               tweetID: value.tweetID,
               blockStyle: block.value.blockStyle,
+              disabled: block.value.disabled,
             },
           };
 
@@ -624,6 +645,7 @@ export function mapBlockValueToBlockInput(
             vimeoVideo: {
               videoID: value.videoID,
               blockStyle: block.value.blockStyle,
+              disabled: block.value.disabled,
             },
           };
 
@@ -632,6 +654,7 @@ export function mapBlockValueToBlockInput(
             youTubeVideo: {
               videoID: value.videoID,
               blockStyle: block.value.blockStyle,
+              disabled: block.value.disabled,
             },
           };
 
@@ -640,6 +663,7 @@ export function mapBlockValueToBlockInput(
             soundCloudTrack: {
               trackID: value.trackID,
               blockStyle: block.value.blockStyle,
+              disabled: block.value.disabled,
             },
           };
 
@@ -648,6 +672,7 @@ export function mapBlockValueToBlockInput(
             polisConversation: {
               conversationID: value.conversationID,
               blockStyle: block.value.blockStyle,
+              disabled: block.value.disabled,
             },
           };
 
@@ -657,6 +682,7 @@ export function mapBlockValueToBlockInput(
               videoID: value.videoID,
               userID: value.userID,
               blockStyle: block.value.blockStyle,
+              disabled: block.value.disabled,
             },
           };
 
@@ -665,6 +691,7 @@ export function mapBlockValueToBlockInput(
             bildwurfAd: {
               zoneID: value.zoneID,
               blockStyle: block.value.blockStyle,
+              disabled: block.value.disabled,
             },
           };
 
@@ -678,6 +705,7 @@ export function mapBlockValueToBlockInput(
               styleCustom: value.styleCustom,
               sandbox: value.sandbox,
               blockStyle: block.value.blockStyle,
+              disabled: block.value.disabled,
             },
           };
       }
@@ -694,6 +722,7 @@ export function mapBlockValueToBlockInput(
           take: block.value.take,
           skip: block.value.skip,
           blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
           teaserType: block.value.teaserType,
           sort: block.value.sort,
         },
@@ -730,12 +759,14 @@ export function mapBlockValueToBlockInput(
             { type: TeaserSlotType.Manual },
           ],
           blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
         },
       };
 
     case EditorBlockType.TeaserGridFlex:
       return {
         teaserGridFlex: {
+          title: block.value.title,
           flexTeasers: block.value.flexTeasers.map(flexTeaser => ({
             teaser: mapTeaserToTeaserInput(flexTeaser.teaser),
             alignment: {
@@ -748,6 +779,7 @@ export function mapBlockValueToBlockInput(
             },
           })),
           blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
         },
       };
 
@@ -755,11 +787,13 @@ export function mapBlockValueToBlockInput(
     case EditorBlockType.TeaserGrid6:
       return {
         teaserGrid: {
+          title: block.value.title,
           teasers: block.value.teasers.map(([, teaser]) =>
             mapTeaserToTeaserInput(teaser)
           ),
           numColumns: block.value.numColumns,
           blockStyle: block.value.blockStyle,
+          disabled: block.value.disabled,
         },
       };
 
@@ -771,6 +805,7 @@ export function mapBlockValueToBlockInput(
             nb.block ? mapBlockValueToBlockInput(nb.block as BlockValue) : null,
         })),
         blockStyle: block.value.blockStyle,
+        disabled: block.value.disabled,
       };
 
       return { flexBlock };
@@ -843,6 +878,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Image,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           caption: block.caption ?? '',
           linkUrl: block.linkUrl ?? '',
@@ -855,6 +891,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.ImageGallery,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           images: block.images.map(({ image, caption }) => ({
             image: image ?? null,
@@ -868,6 +905,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Listicle,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           items: block.items.map(({ title, richText, image }) => ({
             id: nanoid(),
@@ -885,6 +923,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Title,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           preTitle: block.preTitle ?? '',
           title: block.title ?? '',
@@ -898,6 +937,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.RichText,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           richText: block.richText,
         },
@@ -908,6 +948,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Quote,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           quote: block.quote ?? '',
           author: block.author ?? '',
@@ -920,6 +961,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Embed,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           type: EmbedType.FacebookPost,
           userID: block.userID,
@@ -932,6 +974,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Embed,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           type: EmbedType.FacebookVideo,
           userID: block.userID,
@@ -944,6 +987,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Embed,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           type: EmbedType.StreamableVideo,
           videoID: block.videoID,
@@ -955,6 +999,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Embed,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           type: EmbedType.InstagramPost,
           postID: block.postID,
@@ -966,6 +1011,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Embed,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           type: EmbedType.TwitterTweet,
           userID: block.userID,
@@ -978,6 +1024,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Embed,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           type: EmbedType.VimeoVideo,
           videoID: block.videoID,
@@ -989,6 +1036,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Embed,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           type: EmbedType.YouTubeVideo,
           videoID: block.videoID,
@@ -1000,6 +1048,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Embed,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           type: EmbedType.SoundCloudTrack,
           trackID: block.trackID,
@@ -1011,6 +1060,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Embed,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           type: EmbedType.PolisConversation,
           conversationID: block.conversationID,
@@ -1022,6 +1072,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Embed,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           type: EmbedType.TikTokVideo,
           videoID: block.videoID,
@@ -1034,6 +1085,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Embed,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           type: EmbedType.BildwurfAd,
           zoneID: block.zoneID,
@@ -1045,6 +1097,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Embed,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           type: EmbedType.Other,
           url: block.url ?? undefined,
@@ -1061,6 +1114,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Html,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           html: block.html ?? '',
         },
@@ -1071,6 +1125,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Subscribe,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           fields: block.fields ?? [],
           memberPlanIds: block.memberPlanIds ?? [],
@@ -1083,6 +1138,7 @@ export function blockForQueryBlock(
         type: EditorBlockType.TeaserList,
         value: {
           title: block.title,
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           filter: block.filter,
           skip: block.skip ?? 0,
@@ -1108,6 +1164,8 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.TeaserGridFlex,
         value: {
+          title: block.title,
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           flexTeasers: block?.flexTeasers.map(flexTeaser => ({
             teaser: mapTeaserToQueryTeaser(flexTeaser.teaser),
@@ -1131,6 +1189,8 @@ export function blockForQueryBlock(
             EditorBlockType.TeaserGrid1
           : EditorBlockType.TeaserGrid6,
         value: {
+          title: block.title,
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           numColumns: block.numColumns,
           teasers: block.teasers.map(teaser => [
@@ -1147,6 +1207,7 @@ export function blockForQueryBlock(
           type: EditorBlockType.TeaserSlots,
           value: {
             title: block.title,
+            disabled: block.disabled,
             blockStyle: block.blockStyle,
             slots: block.slots.map(({ teaser, type }) => ({
               type,
@@ -1175,6 +1236,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.LinkPageBreak,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           text: block.text ?? '',
           linkText: block.linkText ?? '',
@@ -1191,6 +1253,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.FlexBlock,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           blocks: block.blocks.map(({ alignment, block }) => ({
             alignment,
@@ -1207,6 +1270,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Poll,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           poll: block.poll,
         },
@@ -1217,6 +1281,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Crowdfunding,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           crowdfunding: block.crowdfunding,
         },
@@ -1227,6 +1292,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Event,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           filter: block.filter,
           events: block.events,
@@ -1238,6 +1304,7 @@ export function blockForQueryBlock(
         key,
         type: EditorBlockType.Comment,
         value: {
+          disabled: block.disabled,
           blockStyle: block.blockStyle,
           filter: block.filter,
           comments: block.comments,

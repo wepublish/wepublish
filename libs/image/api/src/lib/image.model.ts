@@ -27,22 +27,6 @@ registerEnumType(ImageSort, {
   name: 'ImageSort',
 });
 
-@ObjectType()
-export class FocalPoint {
-  @Field(type => Float, { nullable: true })
-  x?: number;
-
-  @Field(type => Float, { nullable: true })
-  y?: number;
-}
-
-@InputType()
-export class FocalPointInput extends OmitType(
-  FocalPoint,
-  [] as const,
-  InputType
-) {}
-
 @ObjectType({
   implements: () => [HasOptionalPeerLc],
 })
@@ -66,8 +50,10 @@ export class Image extends HasOptionalPeerLc {
   source?: string;
   @Field(() => String, { nullable: true })
   license?: string;
-  @Field(type => FocalPoint, { nullable: true })
-  focalPoint?: FocalPoint;
+  @Field(type => Float, { defaultValue: 0.5 })
+  focalPointX!: number;
+  @Field(type => Float, { defaultValue: 0.5 })
+  focalPointY!: number;
 
   @Field(type => Int)
   fileSize!: number;
@@ -178,14 +164,13 @@ export class UploadImageInput extends PickType(
     'link',
     'source',
     'license',
+    'focalPointX',
+    'focalPointY',
   ] as const,
   ArgsType
 ) {
   @Field(() => GraphQLUpload)
   file!: Promise<FileUpload>;
-
-  @Field(() => FocalPointInput, { nullable: true })
-  focalPoint?: FocalPointInput;
 }
 
 @ArgsType()

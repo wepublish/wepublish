@@ -1,13 +1,13 @@
 import { EventContainer } from '@wepublish/event/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   EventDocument,
-  getV1ApiClient,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 
 import { Container } from '../../src/components/layout/container';
@@ -31,9 +31,7 @@ export const getStaticPaths = () => ({
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id } = params || {};
-
-  const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
+  const client = getApiClient(getApiUrl(), []);
 
   const event = await Promise.all([
     client.query({
@@ -61,7 +59,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     };
   }
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

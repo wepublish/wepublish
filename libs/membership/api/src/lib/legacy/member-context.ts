@@ -2,7 +2,6 @@ import {
   AvailablePaymentMethod,
   Invoice,
   MemberPlan,
-  MetadataProperty,
   Payment,
   PaymentPeriodicity,
   PaymentProviderCustomer,
@@ -33,6 +32,7 @@ import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { Property } from '@wepublish/property/api';
 
 export type MemberPlanWithPaymentMethods = MemberPlan & {
   availablePaymentMethods: AvailablePaymentMethod[];
@@ -40,7 +40,6 @@ export type MemberPlanWithPaymentMethods = MemberPlan & {
 
 export type SubscriptionWithRelations = Subscription & {
   periods: SubscriptionPeriod[];
-  properties: MetadataProperty[];
   deactivation: SubscriptionDeactivation | null;
 };
 
@@ -63,6 +62,11 @@ export interface ChargeInvoiceProps {
 export interface DeactivateSubscriptionForUserProps {
   subscription: Subscription;
   deactivationReason: SubscriptionDeactivationReason;
+  /**
+   * When true, suppress the SubscriptionDeactivation mail. Used by bulk
+   * importers migrating already-cancelled subscriptions.
+   */
+  skipMail?: boolean;
 }
 
 export interface MemberContextInterface {
@@ -211,7 +215,6 @@ export class MemberContext implements MemberContextInterface {
           include: {
             deactivation: true,
             periods: true,
-            properties: true,
           },
         });
 
@@ -564,6 +567,7 @@ export class MemberContext implements MemberContextInterface {
   async deactivateSubscription({
     subscription,
     deactivationReason,
+    skipMail,
   }: DeactivateSubscriptionForUserProps): Promise<Subscription> {
     // deactivate remote subscriptions
     await this.cancelRemoteSubscription({
@@ -607,15 +611,16 @@ export class MemberContext implements MemberContextInterface {
         },
         include: {
           deactivation: true,
-          properties: true,
         },
       });
 
-    // Send deactivation Mail
-    await this.sendSubscriptionDeactivationMail(
-      subscription,
-      deactivationReason
-    );
+    // Send deactivation Mail (skipped during bulk import of pre-cancelled subs)
+    if (!skipMail) {
+      await this.sendSubscriptionDeactivationMail(
+        subscription,
+        deactivationReason
+      );
+    }
     return updatedSubscription;
   }
 
@@ -626,7 +631,7 @@ export class MemberContext implements MemberContextInterface {
   }: {
     paymentProvider: PaymentProvider;
     input: Subscription;
-    originalSubscription: Subscription & { properties: MetadataProperty[] };
+    originalSubscription: Subscription;
   }) {
     // not updatable subscription properties for externally managed subscriptions
     if (
@@ -662,9 +667,6 @@ export class MemberContext implements MemberContextInterface {
   }) {
     const subscription = await this.prisma.subscription.findUnique({
       where: { id: subscriptionId },
-      include: {
-        properties: true,
-      },
     });
 
     if (!subscription) {
@@ -744,8 +746,8 @@ export class MemberContext implements MemberContextInterface {
   }
 
   async processSubscriptionProperties(
-    subscriptionProperties: Pick<MetadataProperty, 'key' | 'value'>[]
-  ): Promise<Pick<MetadataProperty, 'public' | 'key' | 'value'>[]> {
+    subscriptionProperties: Pick<Property, 'key' | 'value'>[]
+  ): Promise<Pick<Property, 'public' | 'key' | 'value'>[]> {
     return Array.isArray(subscriptionProperties) ?
         subscriptionProperties.map(property => {
           return {
@@ -776,7 +778,7 @@ export class MemberContext implements MemberContextInterface {
     paymentPeriodicity: PaymentPeriodicity;
     monthlyAmount: number;
     memberPlanID: string;
-    properties: Pick<MetadataProperty, 'key' | 'value' | 'public'>[];
+    properties: Pick<Property, 'key' | 'value' | 'public'>[];
     autoRenew: boolean;
     extendable: boolean;
     replacedSubscriptionId?: string | null;
@@ -834,11 +836,7 @@ export class MemberContext implements MemberContextInterface {
         monthlyAmount,
         periodAmount,
         memberPlanID,
-        properties: {
-          createMany: {
-            data: properties,
-          },
-        },
+        properties,
         replacesSubscriptionID: replacedSubscriptionId,
         autoRenew,
         extendable,
@@ -848,7 +846,6 @@ export class MemberContext implements MemberContextInterface {
       include: {
         deactivation: true,
         periods: true,
-        properties: true,
       },
     });
 
@@ -928,6 +925,7 @@ export class MemberContext implements MemberContextInterface {
     extendable,
     startsAt = new Date(),
     paidUntil,
+    skipMail,
   }: {
     userID: string;
     paymentMethodID: string;
@@ -935,11 +933,18 @@ export class MemberContext implements MemberContextInterface {
     monthlyAmount: number;
     periodAmount?: number | null;
     memberPlanID: string;
-    properties: Pick<MetadataProperty, 'key' | 'value' | 'public'>[];
+    properties: Pick<Property, 'key' | 'value' | 'public'>[];
     autoRenew: boolean;
     extendable: boolean;
     startsAt?: Date | string;
     paidUntil?: Date | string;
+    /**
+     * When true, suppress the SUBSCRIBE mail dispatched in the
+     * "future-start, no paidUntil" branch. The IF branch (used by bulk
+     * migrations) doesn't send mail directly, but this flag exists for
+     * symmetry and to defend against future hooks.
+     */
+    skipMail?: boolean;
   }): Promise<{
     subscription: SubscriptionWithRelations;
     invoice: InvoiceWithItems;
@@ -992,11 +997,7 @@ export class MemberContext implements MemberContextInterface {
         monthlyAmount,
         periodAmount,
         memberPlanID,
-        properties: {
-          createMany: {
-            data: properties,
-          },
-        },
+        properties,
         autoRenew,
         extendable,
         currency: memberPlan.currency,
@@ -1004,7 +1005,6 @@ export class MemberContext implements MemberContextInterface {
       include: {
         deactivation: true,
         periods: true,
-        properties: true,
       },
     });
 
@@ -1085,11 +1085,13 @@ export class MemberContext implements MemberContextInterface {
         throw new InternalServerErrorException();
       }
 
-      await this.sendMailForSubscriptionEvent(
-        SubscriptionEvent.SUBSCRIBE,
-        subscription,
-        {}
-      );
+      if (!skipMail) {
+        await this.sendMailForSubscriptionEvent(
+          SubscriptionEvent.SUBSCRIBE,
+          subscription,
+          {}
+        );
+      }
 
       return {
         subscription,

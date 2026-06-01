@@ -172,6 +172,7 @@
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
       }
     },
+
     "authors": {
       "overview": {
         "action": "Action",
@@ -197,6 +198,66 @@
         "name": "Nom",
         "title": "Titre",
         "tags": "Tags"
+      }
+    },
+    "banner": {
+      "edit": {
+        "title": "Modifier la bannière"
+      },
+      "create": {
+        "title": "Créer une bannière"
+      },
+      "delete": {
+        "title": "Supprimer la bannière",
+        "body": "Voulez-vous vraiment supprimer la bannière ?",
+        "delete": "Supprimer la bannière"
+      },
+      "form": {
+        "displayOptions": "Options d'affichage",
+        "title": "Titre",
+        "text": "Texte",
+        "cta": "Call to action",
+        "delay": "Délai en secondes",
+        "hideForMinutes": "Durée de masquage après fermeture (en minutes)",
+        "collapsible": "Réduire la bannière au lieu de la masquer après fermeture",
+        "active": "Actif",
+        "showOnArticles": "Afficher sur les articles",
+        "showOnPages": "Afficher sur ces pages",
+        "showForLoginStatus": "Afficher pour",
+        "html": "Code HTML",
+        "loginStatus": {
+          "ALL": "tous les visiteurs",
+          "LOGGED_IN": "visiteurs connectés",
+          "LOGGED_OUT": "visiteurs non connectés",
+          "SUBSCRIBED": "visiteurs abonnés",
+          "UNSUBSCRIBED": "visiteurs non abonnés",
+          "PAYWALL_BYPASSED": "visiteurs contournant le paywall"
+        },
+        "actions": "Actions",
+        "image": "Image",
+        "action": {
+          "add": "Ajouter une action",
+          "label": "Libellé",
+          "url": "URL",
+          "style": "Style",
+          "role": "Rôle"
+        }
+      },
+      "list": {
+        "title": "Bannières",
+        "text": "Texte",
+        "createNew": "Créer une nouvelle bannière",
+        "active": "Actif",
+        "edit": "Modifier",
+        "delete": "Supprimer"
+      },
+      "actions": {
+        "add": "Ajouter une action",
+        "role": {
+          "PRIMARY": "Principal",
+          "CANCEL": "Annuler",
+          "OTHER": "Autre"
+        }
       }
     },
     "blocks": {
@@ -934,6 +995,10 @@
     },
     "no": "Non",
     "pageEditor": {
+      "validationFailedHeader": "Validation échouée",
+      "validationFailedGeneric": "Impossible de sauvegarder. Corrigez les erreurs signalées.",
+      "saveValidationFailed": "Échec de l'enregistrement",
+      "publishValidationFailed": "Échec de la publication",
       "overview": {
         "createComment": "Create Comment",
         "duplicate": "Dupliquer",
@@ -1831,6 +1896,7 @@
         "containsAnyPlaceholder": "valeur1, valeur2, ...",
         "mf_user.firstName": "Prénom",
         "mf_user.name": "Nom",
+        "mf_user.id": "ID utilisateur",
         "mf_slug:contains": "Slug contient",
         "mf_slug:contains_any": "Slug contient l'un de",
         "mf_slug:equals": "Slug est égal à",
@@ -1947,6 +2013,68 @@
       "noContacts": "Aucune personne de contact disponible pour ce média.",
       "unknownUser": "Utilisateur inconnu",
       "connectBtn": "Connecter"
+    },
+    "teaserOverview": {
+      "title": "Vue d'ensemble : Teasers curatés",
+      "summaryOne": "{{count}} teaser curé trouvé dans {{blocks}} bloc",
+      "summaryMany": "{{count}} teasers curés trouvés dans {{blocks}} blocs",
+      "replaceButtonTitle": "Remplacer ce teaser par un autre",
+      "replaceButton": "Remplacer le teaser",
+      "emptyState": "Aucun teaser curé à afficher avec ces paramètres de filtre.",
+      "hideBlock": "Masquer le bloc",
+      "showBlock": "Afficher le bloc",
+      "hideBlockDisabled": "Le bloc ne peut pas être masqué — emplacement de teaser vide",
+      "hideAllBlocks": "Masquer tous les blocs",
+      "unhideAllBlocks": "Afficher tous les blocs",
+      "tooltipDefault": "• Glisser pour réarranger\n• Cliquer pour remplacer",
+      "tooltipDefaultSelected": "• Cliquer pour remplacer",
+      "dropHere": "Glisser ici",
+      "dropHereShift": "Glisser ici\n• Ce teaser et les suivants seront décalés d'une position vers la droite",
+      "noTitle": "(sans titre)",
+      "blockTypes": {
+        "teaserGrid1": "Teaser Grid 1",
+        "teaserGrid6": "Teaser Grid 6",
+        "flexGrid": "Flex Grid",
+        "teaserList": "Liste de teasers",
+        "teaserSlots": "Emplacements de teasers",
+        "flexBlock": "Bloc flexible"
+      },
+      "nestedLabelWithTitle": "Flex Block {{blockIndex}} › Bloc {{nestedIndex}} ({{type}}, \"{{title}}\")",
+      "nestedLabel": "Flex Block {{blockIndex}} › Bloc {{nestedIndex}} ({{type}})",
+      "duplicateBadge": "Doublon : ce teaser a déjà été placé sur la page",
+      "filterLabel": "Filtre :",
+      "filterSuffix": "Filtre : {{count}} teasers",
+      "cancelReplace": "Annuler le remplacement",
+      "cancelReplaceTitle": "Effacer la sélection",
+      "cancelLoad": "Annuler le chargement",
+      "cancelLoadTitle": "Effacer la sélection",
+      "hintTextLoad": "Position sélectionnée — cliquer sur \"Charger\" pour placer un teaser",
+      "hintTextReplace": "Teaser sélectionné — cliquer sur \"Remplacer\" pour échanger son contenu",
+      "loadButton": "Charger le teaser",
+      "loadButtonTitle": "Charger n'importe quel teaser",
+      "emptySlot": "Position vide",
+      "emptySlotHint": "Placement requis !",
+      "scratchHint": "Le contenu n'est jamais enregistré / publié",
+      "emptyScratch": "Presse-papiers",
+      "tooltipScratch": "Presse-papiers:\n• Glisser ce teaser sur une position (vide)\n• Glisser un teaser ici\n• Charger un nouveau teaser (clic)",
+      "tooltipScratchSelected": "Presse-papiers:\n• Charger un nouveau teaser (clic)",
+      "tooltipEmptySlot": "Position vide — doit être remplie avant la sauvegarde",
+      "tooltipEmptyScratch": "• Glisser un teaser ici\n• Charger un nouveau teaser (clic)",
+      "tooltipEmptyScratchSelected": "• Charger un nouveau teaser (clic)",
+      "blockEmptyErrorOne": "1 position vide",
+      "blockEmptyErrorMany": "{{count}} positions vides",
+      "validationSummaryOne": "1 bloc a des positions vides",
+      "validationSummaryMany": "{{count}} blocs ont des positions vides",
+      "undo": "Annuler",
+      "undoEmpty": "Aucune action à annuler",
+      "redo": "Rétablir",
+      "redoEmpty": "Aucune action à rétablir",
+      "teaserTypes": {
+        "Article": "Article",
+        "Page": "Page",
+        "Event": "Événement",
+        "Custom": "Personnalisé"
+      }
     }
   }
 }

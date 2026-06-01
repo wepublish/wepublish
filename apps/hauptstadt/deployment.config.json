@@ -4,24 +4,19 @@
     "production": {
       "deployment": true,
       "env": {
-        "GTM_ID": "GTM-KBR8Z6M8",
-        "DEPLOY_ENV": "production"
+        "GTM_ID": "GTM-KBR8Z6M8"
       },
       "secret_env": [],
       "custom_domain": "https://www.hauptstadt.be"
     },
     "staging": {
       "deployment": true,
-      "env": {
-        "DEPLOY_ENV": "staging"
-      },
+      "env": {},
       "secret_env": []
     },
     "review": {
       "deployment": true,
-      "env": {
-        "DEPLOY_ENV": "review"
-      },
+      "env": {},
       "secret_env": []
     }
   }

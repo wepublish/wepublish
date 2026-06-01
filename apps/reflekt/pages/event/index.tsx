@@ -2,12 +2,13 @@ import styled from '@emotion/styled';
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { EventListContainer } from '@wepublish/event/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import { EventSort, SortOrder } from '@wepublish/website/api';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   EventListDocument,
   EventListQueryVariables,
-  getV1ApiClient,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   useEventListQuery,
@@ -159,7 +160,7 @@ export const getStaticProps: GetStaticProps = async () => {
     return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, []);
+  const client = getApiClient(getApiUrl(), []);
   await Promise.all([
     client.query({
       query: EventListDocument,
@@ -178,7 +179,7 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

@@ -15,8 +15,8 @@ import {
   TotpSetupContainer,
 } from '@wepublish/user/website';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   MeDocument,
   NavigationListDocument,
   InvoicesDocument,
@@ -35,6 +35,8 @@ import { handleJwtLogin } from '../../handle-jwt-login';
 import { withAuthGuard } from '../../auth-guard';
 import { ssrAuthLink } from '../../auth-link';
 import { getSessionTokenProps } from '../../get-session-token-props';
+
+import { getApiUrl } from '../../api-url';
 
 const SubscriptionsWrapper = styled('div')`
   display: flex;
@@ -241,7 +243,7 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
   }
 
   const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
@@ -268,7 +270,7 @@ GuardedProfile.getInitialProps = async (ctx: NextPageContext) => {
     ]);
   }
 
-  const props = addClientCacheToV1Props(client, sessionProps);
+  const props = addClientCacheToProps(client, sessionProps);
 
   return props;
 };

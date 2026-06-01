@@ -4,16 +4,15 @@ import {
   useUser,
 } from '@wepublish/authentication/website';
 import { PageContainer } from '@wepublish/page/website';
-import { handleJwtLogin } from '@wepublish/utils/website';
+import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   PageDocument,
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
-import { getV1ApiClient } from '@wepublish/website/api';
+import { getApiClient } from '@wepublish/website/api';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
 
@@ -61,9 +60,7 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {};
   }
-
-  const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
+  const client = getApiClient(getApiUrl(), []);
 
   await handleJwtLogin(ctx, client, true);
 
@@ -75,7 +72,7 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
       },
     }),
   ]);
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return props;
 };

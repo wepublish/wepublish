@@ -4,12 +4,12 @@ import {
 } from '@wepublish/article/website';
 import { AuthorContainer } from '@wepublish/author/website';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   ArticleListDocument,
   ArticleListQuery,
   AuthorDocument,
   AuthorQuery,
-  getV1ApiClient,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   useArticleListQuery,
@@ -17,11 +17,12 @@ import {
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
-import getConfig from 'next/config';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { z } from 'zod';
+
+import { getApiUrl } from '../api-url';
 
 const take = 10;
 
@@ -126,9 +127,7 @@ export const getAuthorStaticPaths = async () => ({
 
 export const getAuthorStaticProps: GetStaticProps = async ({ params }) => {
   const { slug } = params || {};
-
-  const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
+  const client = getApiClient(getApiUrl(), []);
 
   const [author] = await Promise.all([
     client.query<AuthorQuery>({
@@ -167,7 +166,7 @@ export const getAuthorStaticProps: GetStaticProps = async ({ params }) => {
     },
   });
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

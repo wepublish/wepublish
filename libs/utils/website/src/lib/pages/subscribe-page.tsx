@@ -12,15 +12,17 @@ import {
   UpgradeContainer,
 } from '@wepublish/membership/website';
 import {
-  getV1ApiClient,
+  getApiClient,
   MemberPlanListDocument,
   NavigationListDocument,
   PeerProfileDocument,
   MeDocument,
   InvoicesDocument,
-  addClientCacheToV1Props,
+  addClientCacheToProps,
 } from '@wepublish/website/api';
 import { ComponentProps, useMemo } from 'react';
+
+import { getApiUrl } from '../api-url';
 
 type SubscribePageProps = Omit<ComponentProps<typeof SubscribeContainer>, ''>;
 
@@ -126,7 +128,7 @@ export function SubscribePage(props: SubscribePageProps) {
 
 SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
   const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
@@ -171,7 +173,7 @@ SubscribePage.getInitialProps = async (ctx: NextPageContext) => {
   }
 
   await Promise.all(dataPromises);
-  const props = addClientCacheToV1Props(client, sessionProps);
+  const props = addClientCacheToProps(client, sessionProps);
 
   return props;
 };

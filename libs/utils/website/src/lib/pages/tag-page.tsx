@@ -1,17 +1,18 @@
 import { TagContainer } from '@wepublish/tag/website';
 import { TagType } from '@wepublish/website/api';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   ArticleListDocument,
-  getV1ApiClient,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   TagDocument,
 } from '@wepublish/website/api';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
+
+import { getApiUrl } from '../api-url';
 
 const take = 25;
 
@@ -57,9 +58,7 @@ export const TagPageGetStaticPaths = () => ({
 
 export const TagPageGetStaticProps = (async ({ params }) => {
   const { tag } = params || {};
-
-  const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
+  const client = getApiClient(getApiUrl(), []);
 
   const tagResult = await client.query({
     query: TagDocument,
@@ -97,7 +96,7 @@ export const TagPageGetStaticProps = (async ({ params }) => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {
+  const props = addClientCacheToProps(client, {
     tag: tag as string,
   });
 

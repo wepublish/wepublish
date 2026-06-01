@@ -4,9 +4,10 @@ import {
   useUser,
 } from '@wepublish/authentication/website';
 import { PageContainer } from '@wepublish/page/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   NavigationListDocument,
   PageDocument,
   PeerProfileDocument,
@@ -47,7 +48,7 @@ export const getStaticProps: GetStaticProps = async () => {
     return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, []);
+  const client = getApiClient(getApiUrl(), []);
   await Promise.all([
     client.query({
       query: PageDocument,
@@ -63,7 +64,7 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

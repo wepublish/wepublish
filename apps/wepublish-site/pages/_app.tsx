@@ -8,6 +8,7 @@ import {
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
 import {
   authLink,
+  getApiUrl,
   initWePublishTranslator,
   NextWepublishLink,
   RoutedAdminBar,
@@ -18,7 +19,7 @@ import {
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
-  createWithV1ApiClient,
+  createWithApiClient,
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
@@ -191,10 +192,7 @@ function CustomApp({ Component, pageProps }: CustomAppProps) {
 }
 
 const { publicRuntimeConfig } = getConfig();
-const withApollo = createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [
-  authLink,
-  previewLink,
-]);
+const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
 
 const ConnectedApp = withApollo(
   withBuilderRouter(

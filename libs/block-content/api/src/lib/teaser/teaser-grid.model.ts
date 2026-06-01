@@ -7,6 +7,9 @@ import { Teaser, TeaserInput } from './teaser.model';
   implements: () => [BaseBlock],
 })
 export class TeaserGridBlock extends BaseBlock<BlockType.TeaserGrid> {
+  @Field({ nullable: true })
+  title?: string;
+
   @Field(() => Int)
   numColumns!: number;
 

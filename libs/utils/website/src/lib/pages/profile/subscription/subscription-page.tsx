@@ -18,15 +18,17 @@ import {
   InvoiceListContainer,
 } from '@wepublish/membership/website';
 import {
-  getV1ApiClient,
+  getApiClient,
   MeDocument,
   SubscriptionsDocument,
   InvoicesDocument,
-  addClientCacheToV1Props,
+  addClientCacheToProps,
 } from '@wepublish/website/api';
 import { Link, useWebsiteBuilder } from '@wepublish/website/builder';
 import { fetch404 } from '../../../fetch-404';
 import { useTranslation } from 'react-i18next';
+
+import { getApiUrl } from '../../../api-url';
 
 const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
@@ -102,7 +104,7 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
   }
 
   const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
@@ -137,7 +139,7 @@ GuardedSubscription.getInitialProps = async (ctx: NextPageContext) => {
     }
   }
 
-  const props = addClientCacheToV1Props(client, sessionProps);
+  const props = addClientCacheToProps(client, sessionProps);
 
   return props;
 };

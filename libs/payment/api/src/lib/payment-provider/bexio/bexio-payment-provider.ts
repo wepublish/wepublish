@@ -187,7 +187,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
     const response = await fetch(`${bexioBaseUrl}/kb_invoice/${intentID}`, {
       headers,
-      signal: AbortSignal.timeout(10_000),
+      signal: AbortSignal.timeout(30_000),
     });
 
     if (response.status !== 200) {

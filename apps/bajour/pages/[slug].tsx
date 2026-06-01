@@ -1,14 +1,14 @@
 import { PageContainer } from '@wepublish/page/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   NavigationListDocument,
   PageDocument,
   PageQuery,
   PeerProfileDocument,
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
 
@@ -38,9 +38,7 @@ export const getStaticPaths = () => ({
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { slug, id } = params || {};
-
-  const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
+  const client = getApiClient(getApiUrl(), []);
   const [page] = await Promise.all([
     client.query<PageQuery>({
       query: PageDocument,
@@ -68,7 +66,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     };
   }
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

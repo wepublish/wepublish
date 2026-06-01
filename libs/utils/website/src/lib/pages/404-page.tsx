@@ -1,14 +1,14 @@
 import { PageContainer } from '@wepublish/page/website';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   NavigationListDocument,
   PageDocument,
   PageQuery,
   PeerProfileDocument,
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
+import { getApiUrl } from '../api-url';
 
 const fourOhFourSlug = '404';
 
@@ -17,9 +17,7 @@ export function FourOhFourPage() {
 }
 
 export const getFourOhFourStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
-
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
+  const client = getApiClient(getApiUrl(), []);
   const [page] = await Promise.all([
     client.query<PageQuery>({
       query: PageDocument,
@@ -35,7 +33,7 @@ export const getFourOhFourStaticProps: GetStaticProps = async () => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

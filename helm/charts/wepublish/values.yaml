@@ -173,6 +173,9 @@ website:
   image: ghcr.io/wepublish/website
   env:
     NODE_ENV: production
+    # Optional cluster-internal API URL used for SSR/SSG only.
+    # When unset, server-side falls back to API_URL.
+    # API_URL_INTERNAL: http://wepublish-api:4000
   envFromSecretRefName:
   dynamicEnv: {}
   properties: { }

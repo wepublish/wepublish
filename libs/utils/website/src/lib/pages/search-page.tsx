@@ -3,9 +3,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CircularProgress } from '@mui/material';
 import { articleToTeaser } from '@wepublish/article/website';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   Article,
-  getV1ApiClient,
+  getApiClient,
   NavigationListDocument,
   Page,
   PageTeaser,
@@ -17,13 +17,14 @@ import {
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { MdSearch } from 'react-icons/md';
 import { z } from 'zod';
 import { PageWrapper } from '@wepublish/page/website';
+
+import { getApiUrl } from '../api-url';
 
 const SearchForm = styled('form')`
   display: grid;
@@ -184,9 +185,7 @@ export const SearchPage = ({
 };
 
 export const SearchPageGetServerSideProps = (async ({ query }) => {
-  const { publicRuntimeConfig } = getConfig();
-
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, []);
+  const client = getApiClient(getApiUrl(), []);
   const { page, q: phraseQuery } = searchPageSchema.parse(query);
 
   await Promise.all([
@@ -208,7 +207,7 @@ export const SearchPageGetServerSideProps = (async ({ query }) => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {
+  const props = addClientCacheToProps(client, {
     query,
   });
 

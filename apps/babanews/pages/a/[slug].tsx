@@ -6,13 +6,14 @@ import {
   ArticleWrapper,
 } from '@wepublish/article/website';
 import { CommentListContainer } from '@wepublish/comments/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   ArticleDocument,
   ArticleListDocument,
   CommentItemType,
   CommentListDocument,
-  getV1ApiClient,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   Tag,
@@ -20,7 +21,6 @@ import {
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
 
@@ -106,9 +106,7 @@ export const getStaticPaths = () => ({
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id, slug } = params || {};
-  const { publicRuntimeConfig } = getConfig();
-
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, []);
+  const client = getApiClient(getApiUrl(), []);
 
   const [article] = await Promise.all([
     client.query({
@@ -157,7 +155,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     ]);
   }
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

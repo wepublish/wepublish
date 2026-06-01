@@ -46,7 +46,6 @@ export class UserService {
       include: {
         address: true,
         paymentProviderCustomers: true,
-        properties: true,
       },
     });
   }
@@ -126,6 +125,7 @@ export class UserService {
     password,
     address,
     properties,
+    skipMail,
     ...input
   }: CreateUserInput) {
     if (password) {
@@ -143,11 +143,7 @@ export class UserService {
         ...input,
         active: true,
         password: hashedPassword,
-        properties: {
-          createMany: {
-            data: properties ?? [],
-          },
-        },
+        properties: properties as any,
         address: {
           create: address ?? {},
         },
@@ -155,18 +151,19 @@ export class UserService {
       select: unselectPassword,
     });
 
-    // send register mail
-    const externalMailTemplateId = await this.mailContext.getUserTemplateName(
-      UserEvent.ACCOUNT_CREATION,
-      false
-    );
+    if (!skipMail) {
+      const externalMailTemplateId = await this.mailContext.getUserTemplateName(
+        UserEvent.ACCOUNT_CREATION,
+        false
+      );
 
-    await this.mailContext.sendMail({
-      externalMailTemplateId,
-      recipient,
-      optionalData: {},
-      mailType: mailLogType.SystemMail,
-    });
+      await this.mailContext.sendMail({
+        externalMailTemplateId,
+        recipient,
+        optionalData: {},
+        mailType: mailLogType.SystemMail,
+      });
+    }
 
     return recipient;
   }
@@ -193,17 +190,7 @@ export class UserService {
               },
             }
           : undefined,
-        properties:
-          properties ?
-            {
-              deleteMany: {
-                userId: id,
-              },
-              createMany: {
-                data: properties,
-              },
-            }
-          : undefined,
+        properties: properties as any,
       },
       select: unselectPassword,
     });

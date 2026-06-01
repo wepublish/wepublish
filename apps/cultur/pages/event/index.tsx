@@ -3,12 +3,13 @@ import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { EventListContainer } from '@wepublish/event/website';
+import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   EventListDocument,
   EventListQueryVariables,
   EventSort,
-  getV1ApiClient,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   SortOrder,
@@ -174,7 +175,7 @@ export const getStaticProps: GetStaticProps = async () => {
     return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL, []);
+  const client = getApiClient(getApiUrl(), []);
   await Promise.all([
     client.query({
       query: EventListDocument,
@@ -193,7 +194,7 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

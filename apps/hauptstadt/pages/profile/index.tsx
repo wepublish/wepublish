@@ -1,13 +1,13 @@
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
 import {
+  getApiUrl,
   getSessionTokenProps,
   ProfilePage,
   ssrAuthLink,
 } from '@wepublish/utils/website';
-import { getV1ApiClient, PageDocument } from '@wepublish/website/api';
+import { getApiClient, PageDocument } from '@wepublish/website/api';
 import { NextPageContext } from 'next';
-import getConfig from 'next/config';
 
 import { HauptstadtContentFullWidth } from '../../src/components/hauptstadt-content-wrapper';
 
@@ -24,8 +24,7 @@ export default function Profile() {
 }
 
 Profile.getInitialProps = async (ctx: NextPageContext) => {
-  const { publicRuntimeConfig } = getConfig();
-  const client = getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
+  const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
