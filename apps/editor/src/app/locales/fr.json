@@ -897,12 +897,15 @@
         "close": "Fermer"
       },
       "editor": {
+        "undo": "Annuler",
+        "redo": "Rétablir",
         "bold": "Gras",
         "italic": "Italique",
         "underline": "Souligné",
         "strikethrough": "Barré",
         "bulletedList": "Liste à puces",
         "numberedList": "Liste numérotée",
+        "horizontalRule": "Ligne horizontale",
         "link": "Insérer un lien",
         "linkPrompt": "Saisir l'URL",
         "placeholder": "Rédige ici le contenu du courriel …",
@@ -911,6 +914,9 @@
         "generalPlaceholders": "Général (toujours disponible)",
         "preview": "Aperçu",
         "visual": "Visuel",
+        "desktop": "Ordinateur",
+        "tablet": "Tablette",
+        "mobile": "Mobile",
         "exampleValue": "Valeur d'exemple : {{example}}"
       }
     },

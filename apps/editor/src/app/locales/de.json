@@ -894,12 +894,15 @@
         "close": "Schliessen"
       },
       "editor": {
+        "undo": "Rückgängig",
+        "redo": "Wiederholen",
         "bold": "Fett",
         "italic": "Kursiv",
         "underline": "Unterstrichen",
         "strikethrough": "Durchgestrichen",
         "bulletedList": "Aufzählung",
         "numberedList": "Nummerierte Liste",
+        "horizontalRule": "Horizontale Linie",
         "link": "Link einfügen",
         "linkPrompt": "URL eingeben",
         "placeholder": "Schreibe hier den Inhalt der E-Mail …",
@@ -908,6 +911,9 @@
         "generalPlaceholders": "Allgemein (immer verfügbar)",
         "preview": "Vorschau",
         "visual": "Visuell",
+        "desktop": "Desktop",
+        "tablet": "Tablet",
+        "mobile": "Mobil",
         "exampleValue": "Beispielwert: {{example}}"
       }
     },

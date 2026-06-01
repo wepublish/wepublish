@@ -1,6 +1,8 @@
 import {
+  forwardRef,
   memo,
   useCallback,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -115,7 +117,8 @@ const sharedTextStyles = `
 
 const Wrapper = styled(Box)`
   position: relative;
-  min-height: 520px;
+  height: 100%;
+  min-height: 400px;
   border: 1px solid ${({ theme }) => theme.palette.divider};
   border-radius: 6px;
   background-color: #fff;
@@ -166,9 +169,17 @@ export interface HtmlSourceEditorProps {
   onChange: (value: string) => void;
 }
 
-function HtmlSourceEditorComponent({ value, onChange }: HtmlSourceEditorProps) {
+export interface HtmlSourceEditorHandle {
+  insertText: (text: string) => void;
+}
+
+const HtmlSourceEditorComponent = forwardRef<
+  HtmlSourceEditorHandle,
+  HtmlSourceEditorProps
+>(function HtmlSourceEditor({ value, onChange }, ref) {
   const [code, setCode] = useState(value);
   const highlightRef = useRef<HTMLPreElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const highlighted = useMemo(() => highlightHtml(code), [code]);
 
@@ -178,6 +189,29 @@ function HtmlSourceEditorComponent({ value, onChange }: HtmlSourceEditorProps) {
       onChange(next);
     },
     [onChange]
+  );
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      insertText: (text: string) => {
+        const textarea = textareaRef.current;
+        if (!textarea) {
+          update(code + text);
+          return;
+        }
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const current = textarea.value;
+        const next = current.slice(0, start) + text + current.slice(end);
+        update(next);
+        requestAnimationFrame(() => {
+          textarea.focus();
+          textarea.selectionStart = textarea.selectionEnd = start + text.length;
+        });
+      },
+    }),
+    [update, code]
   );
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -214,6 +248,7 @@ function HtmlSourceEditorComponent({ value, onChange }: HtmlSourceEditorProps) {
         dangerouslySetInnerHTML={{ __html: highlighted }}
       />
       <SourceArea
+        ref={textareaRef}
         value={code}
         spellCheck={false}
         autoCapitalize="off"
@@ -224,6 +259,6 @@ function HtmlSourceEditorComponent({ value, onChange }: HtmlSourceEditorProps) {
       />
     </Wrapper>
   );
-}
+});
 
 export const HtmlSourceEditor = memo(HtmlSourceEditorComponent);

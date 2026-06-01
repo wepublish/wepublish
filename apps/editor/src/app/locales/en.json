@@ -896,12 +896,15 @@
         "close": "Close"
       },
       "editor": {
+        "undo": "Undo",
+        "redo": "Redo",
         "bold": "Bold",
         "italic": "Italic",
         "underline": "Underline",
         "strikethrough": "Strikethrough",
         "bulletedList": "Bulleted list",
         "numberedList": "Numbered list",
+        "horizontalRule": "Horizontal line",
         "link": "Insert link",
         "linkPrompt": "Enter URL",
         "placeholder": "Write the content of the email here …",
@@ -910,6 +913,9 @@
         "generalPlaceholders": "General (always available)",
         "preview": "Preview",
         "visual": "Visual",
+        "desktop": "Desktop",
+        "tablet": "Tablet",
+        "mobile": "Mobile",
         "exampleValue": "Example value: {{example}}"
       },
       "status": "Status",

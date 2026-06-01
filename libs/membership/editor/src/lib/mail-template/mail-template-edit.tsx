@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Descendant } from 'slate';
 import { Form, Message, toaster } from 'rsuite';
 import {
   Box,
@@ -18,13 +17,7 @@ import {
   ToggleButtonGroup,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import {
-  MdCode,
-  MdDelete,
-  MdEdit,
-  MdOpenInNew,
-  MdVisibility,
-} from 'react-icons/md';
+import { MdCode, MdDelete, MdEdit, MdOpenInNew } from 'react-icons/md';
 import {
   createCheckedPermissionComponent,
   SingleView,
@@ -39,36 +32,26 @@ import {
   useUpdateMailTemplateMutation,
 } from '@wepublish/editor/api';
 import { DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS } from '../common';
-import {
-  createMailEditor,
-  insertPlaceholder,
-  MailTemplateEditor,
-} from './mail-template-editor';
-import { HtmlSourceEditor } from './html-source-editor';
+import { HtmlSourceEditor, HtmlSourceEditorHandle } from './html-source-editor';
+import { HtmlVisualEditor, HtmlVisualEditorHandle } from './html-visual-editor';
 import { PlaceholderPicker } from './placeholder-picker';
-import { MailTemplatePreview } from './mail-template-preview';
-import {
-  createEmptyDocument,
-  parseEmailHtml,
-  serializeToEmailHtml,
-} from './mail-html';
-import { getPlaceholderSyntax } from './placeholder-syntax';
+import { createEmptyEmailHtml } from './mail-html';
+import { formatPlaceholder, getPlaceholderSyntax } from './placeholder-syntax';
 
 const closePath = '/mailtemplates';
-
-// Delay before the (relatively expensive) preview re-renders while typing.
-const PREVIEW_DEBOUNCE_MS = 300;
 
 type EditorMode = 'wysiwyg' | 'html';
 
 const Column = styled(Box)`
-  height: 640px;
+  height: 75vh;
+  min-height: 520px;
   display: flex;
   flex-direction: column;
 `;
 
-const EditorColumn = styled(Column)`
-  overflow-y: auto;
+const EditorArea = styled(Box)`
+  flex: 1;
+  min-height: 0;
 `;
 
 function MailTemplateEdit() {
@@ -81,29 +64,22 @@ function MailTemplateEdit() {
   const [description, setDescription] = useState('');
   const [subject, setSubject] = useState('');
   const [mode, setMode] = useState<EditorMode>('wysiwyg');
-  const [initialValue, setInitialValue] = useState<Descendant[] | undefined>(
-    isEdit ? undefined : createEmptyDocument()
+  const [htmlSource, setHtmlSource] = useState(() =>
+    isEdit ? '' : createEmptyEmailHtml()
   );
-  const [htmlSource, setHtmlSource] = useState('');
-  const [previewHtml, setPreviewHtml] = useState('');
   const [editorKey, setEditorKey] = useState(0);
-  const [htmlKey, setHtmlKey] = useState(0);
+  const [ready, setReady] = useState(!isEdit);
   const [close, setClose] = useState(false);
-  const [previewOpen, setPreviewOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [externalUrl, setExternalUrl] = useState<string | null>(null);
   const [remoteMissing, setRemoteMissing] = useState(false);
 
-  // The editors are uncontrolled; the canonical HTML and the latest Slate
-  // document live in refs so typing never triggers a parent re-render. The
-  // preview is updated debounced instead.
-  const htmlRef = useRef<string>('');
-  const valueRef = useRef<Descendant[]>(createEmptyDocument());
-  const previewTimeout = useRef<ReturnType<typeof setTimeout>>();
-
-  // Recreate the editor whenever we (re)load a document so initialValue applies.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const editor = useMemo(() => createMailEditor(), [editorKey]);
+  // Both editors edit the very same canonical HTML string; switching between
+  // them is lossless (no parsing/serializing). The latest HTML lives in a ref
+  // so typing never triggers a parent re-render.
+  const htmlRef = useRef<string>(isEdit ? '' : createEmptyEmailHtml());
+  const visualRef = useRef<HtmlVisualEditorHandle>(null);
+  const htmlEditorRef = useRef<HtmlSourceEditorHandle>(null);
 
   const { data: metaData } = useMailTemplateQuery(DEFAULT_QUERY_OPTIONS());
   const providerName = metaData?.provider.name;
@@ -113,37 +89,20 @@ function MailTemplateEdit() {
     [providerType]
   );
 
-  const schedulePreview = useCallback((html: string) => {
-    if (previewTimeout.current) {
-      clearTimeout(previewTimeout.current);
-    }
-    previewTimeout.current = setTimeout(
-      () => setPreviewHtml(html),
-      PREVIEW_DEBOUNCE_MS
-    );
+  const handleHtmlChange = useCallback((html: string) => {
+    htmlRef.current = html;
   }, []);
 
-  const handleEditorChange = useCallback(
-    (nodes: Descendant[]) => {
-      valueRef.current = nodes;
-      const html = serializeToEmailHtml(nodes, syntax);
-      htmlRef.current = html;
-      schedulePreview(html);
-    },
-    [syntax, schedulePreview]
-  );
-
-  const handleHtmlChange = useCallback(
-    (html: string) => {
-      htmlRef.current = html;
-      schedulePreview(html);
-    },
-    [schedulePreview]
-  );
-
   const handleInsertPlaceholder = useCallback(
-    (key: string) => insertPlaceholder(editor, key),
-    [editor]
+    (key: string) => {
+      const token = formatPlaceholder(key, syntax);
+      if (mode === 'html') {
+        htmlEditorRef.current?.insertText(token);
+      } else {
+        visualRef.current?.insertToken(token);
+      }
+    },
+    [mode, syntax]
   );
 
   const handleModeChange = useCallback(
@@ -151,22 +110,12 @@ function MailTemplateEdit() {
       if (!next || next === mode) {
         return;
       }
-      if (next === 'html') {
-        // Switching to raw HTML: show the current document as HTML.
-        setHtmlSource(htmlRef.current);
-        setHtmlKey(key => key + 1);
-        setMode('html');
-      } else {
-        // Switching to the visual editor: parse the (possibly hand-edited)
-        // HTML back into the editor (best-effort for custom markup).
-        const parsed = parseEmailHtml(htmlRef.current, syntax);
-        valueRef.current = parsed;
-        setInitialValue(parsed);
-        setEditorKey(key => key + 1);
-        setMode('wysiwyg');
-      }
+      // Hand the current HTML to the other editor and remount it.
+      setHtmlSource(htmlRef.current);
+      setEditorKey(key => key + 1);
+      setMode(next);
     },
-    [mode, syntax]
+    [mode]
   );
 
   const [fetchContent, { loading: contentLoading }] =
@@ -181,15 +130,11 @@ function MailTemplateEdit() {
         setExternalUrl(template.url);
         setRemoteMissing(template.remoteMissing);
 
-        const html =
-          template.content.html ||
-          serializeToEmailHtml(createEmptyDocument(), syntax);
+        const html = template.content.html || createEmptyEmailHtml();
         htmlRef.current = html;
-        valueRef.current = parseEmailHtml(html, syntax);
-        setInitialValue(valueRef.current);
         setHtmlSource(html);
-        setPreviewHtml(html);
         setEditorKey(key => key + 1);
+        setReady(true);
       },
     });
 
@@ -198,28 +143,6 @@ function MailTemplateEdit() {
       fetchContent({ variables: { id } });
     }
   }, [id, fetchContent]);
-
-  // Initial state for the create case.
-  useEffect(() => {
-    if (!isEdit) {
-      const empty = createEmptyDocument();
-      const html = serializeToEmailHtml(empty, syntax);
-      valueRef.current = empty;
-      htmlRef.current = html;
-      setHtmlSource(html);
-      setPreviewHtml(html);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(
-    () => () => {
-      if (previewTimeout.current) {
-        clearTimeout(previewTimeout.current);
-      }
-    },
-    []
-  );
 
   const [createMailTemplate, { loading: creating }] =
     useCreateMailTemplateMutation({
@@ -383,7 +306,7 @@ function MailTemplateEdit() {
             </Grid>
           </Grid>
 
-          {initialValue && (
+          {ready && (
             <Grid
               container
               spacing={2}
@@ -403,24 +326,16 @@ function MailTemplateEdit() {
                 xs={12}
                 md={9}
               >
-                <EditorColumn>
+                <Column>
                   <Box
                     sx={{
                       display: 'flex',
-                      justifyContent: 'space-between',
+                      justifyContent: 'flex-end',
                       alignItems: 'center',
                       mb: 1,
+                      flexShrink: 0,
                     }}
                   >
-                    <MuiButton
-                      variant="outlined"
-                      size="small"
-                      startIcon={<MdVisibility />}
-                      onClick={() => setPreviewOpen(true)}
-                    >
-                      {t('mailTemplates.editor.preview')}
-                    </MuiButton>
-
                     <ToggleButtonGroup
                       size="small"
                       exclusive
@@ -438,49 +353,28 @@ function MailTemplateEdit() {
                     </ToggleButtonGroup>
                   </Box>
 
-                  {mode === 'wysiwyg' ?
-                    <MailTemplateEditor
-                      key={editorKey}
-                      editor={editor}
-                      value={initialValue}
-                      onChange={handleEditorChange}
-                    />
-                  : <HtmlSourceEditor
-                      key={htmlKey}
-                      value={htmlSource}
-                      onChange={handleHtmlChange}
-                    />
-                  }
-                </EditorColumn>
+                  <EditorArea>
+                    {mode === 'wysiwyg' ?
+                      <HtmlVisualEditor
+                        ref={visualRef}
+                        key={`visual-${editorKey}`}
+                        value={htmlSource}
+                        onChange={handleHtmlChange}
+                      />
+                    : <HtmlSourceEditor
+                        ref={htmlEditorRef}
+                        key={`html-${editorKey}`}
+                        value={htmlSource}
+                        onChange={handleHtmlChange}
+                      />
+                    }
+                  </EditorArea>
+                </Column>
               </Grid>
             </Grid>
           )}
         </SingleViewContent>
       </Form>
-
-      <Dialog
-        open={previewOpen}
-        onClose={() => setPreviewOpen(false)}
-        fullWidth
-        maxWidth={false}
-        PaperProps={{
-          sx: { width: '95vw', height: '92vh', maxWidth: 'none', m: 0 },
-        }}
-      >
-        <DialogContent sx={{ p: 0, display: 'flex', flexDirection: 'column' }}>
-          <Box sx={{ flex: 1, minHeight: 0 }}>
-            <MailTemplatePreview
-              html={previewHtml}
-              providerType={providerType}
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <MuiButton onClick={() => setPreviewOpen(false)}>
-            {t('mailTemplates.edit.close')}
-          </MuiButton>
-        </DialogActions>
-      </Dialog>
 
       <Dialog
         open={deleteOpen}
