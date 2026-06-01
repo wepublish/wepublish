@@ -1612,6 +1612,7 @@ type MemberPlan implements HasImage {
   successPage: Page
   successPageId: String
   tags: [String!]
+  yearlyAmount: Int
 }
 
 input MemberPlanFilter {
@@ -1684,7 +1685,7 @@ type Mutation {
   createJWTForWebsiteLogin: SessionWithToken!
 
   """Creates a new memberplan."""
-  createMemberPlan(active: Boolean!, amountPerMonthMax: Int, amountPerMonthMin: Int!, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
+  createMemberPlan(active: Boolean!, amountPerMonthMax: Int, amountPerMonthMin: Int!, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!], yearlyAmount: Int): MemberPlan!
 
   """Creates a new navigation."""
   createNavigation(key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
@@ -1724,7 +1725,7 @@ type Mutation {
   createSessionWithJWT(jwt: String!, totpToken: String): SessionWithToken!
 
   """Creates a new subscription."""
-  createSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Int!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!
+  createSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Int!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, periodAmount: Int, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
@@ -1889,7 +1890,7 @@ type Mutation {
   importPeerArticle(articleId: String!, options: ImportArticleOptions! = {importAuthors: true, importContentImages: true, importTags: true}, peerId: String!): Article!
 
   """Imports a subscription."""
-  importSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Int!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!
+  importSubscription(autoRenew: Boolean!, extendable: Boolean!, memberPlanID: String!, monthlyAmount: Int!, paidUntil: DateTime, paymentMethodID: String!, paymentPeriodicity: PaymentPeriodicity!, periodAmount: Int, properties: [PropertyInput!]!, startsAt: DateTime!, userID: String!): PublicSubscription!
 
   """Likes an article."""
   likeArticle(id: String!): Article!
@@ -2021,7 +2022,7 @@ type Mutation {
   updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, webhookEndpointSecret: String): SettingMailProvider!
 
   """Updates an existing memberplan."""
-  updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
+  updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!], yearlyAmount: Int): MemberPlan!
 
   """Updates an existing navigation."""
   updateNavigation(id: String!, key: String!, links: [NavigationLinkInput!]!, name: String!): Navigation!
@@ -2059,7 +2060,7 @@ type Mutation {
   updateSetting(name: SettingName!, value: GraphQLSettingValueType): Setting!
 
   """Updates an existing subscription."""
-  updateSubscription(autoRenew: Boolean, extendable: Boolean, id: String!, memberPlanID: String, monthlyAmount: Int, paidUntil: DateTime, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, properties: [PropertyInput!], startsAt: DateTime, userID: String): PublicSubscription!
+  updateSubscription(autoRenew: Boolean, extendable: Boolean, id: String!, memberPlanID: String, monthlyAmount: Int, paidUntil: DateTime, paymentMethodID: String, paymentPeriodicity: PaymentPeriodicity, periodAmount: Int, properties: [PropertyInput!], startsAt: DateTime, userID: String): PublicSubscription!
 
   """Update an existing subscription flow"""
   updateSubscriptionFlow(autoRenewal: [Boolean!], id: String!, paymentMethodIds: [String!], periodicities: [PaymentPeriodicity!]): [SubscriptionFlowModel!]!
@@ -2831,6 +2832,7 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   paymentMethod: PaymentMethod!
   paymentMethodID: String!
   paymentPeriodicity: PaymentPeriodicity!
+  periodAmount: Int
   periods: [SubscriptionPeriod!]!
   properties: [Property!]!
   startsAt: DateTime!

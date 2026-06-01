@@ -14,6 +14,7 @@ fragment FullSubscription on PublicSubscription {
   }
   paymentPeriodicity
   monthlyAmount
+  periodAmount
   autoRenew
   startsAt
   paidUntil

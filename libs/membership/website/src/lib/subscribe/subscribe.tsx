@@ -128,6 +128,7 @@ export const usePaymentText = ({
   memberPlan,
   paymentPeriodicity,
   monthlyAmount,
+  periodAmount,
   currency,
   siteTitle,
   locale,
@@ -139,6 +140,7 @@ export const usePaymentText = ({
   productType: ProductType;
   paymentPeriodicity: PaymentPeriodicity;
   monthlyAmount: number;
+  periodAmount?: number | null;
   currency: Currency;
   siteTitle: string;
   locale: string;
@@ -153,7 +155,8 @@ export const usePaymentText = ({
       paymentPeriod: formatPaymentPeriod(paymentPeriodicity),
       paymentPeriodL: formatPaymentPeriod(paymentPeriodicity).toLowerCase(),
       formattedAmount: formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        (periodAmount ??
+          monthlyAmount * getPaymentPeriodicyMonths(paymentPeriodicity)) / 100,
         currency,
         locale
       ),
@@ -177,6 +180,7 @@ export const usePaymentText = ({
     extendable,
     locale,
     monthlyAmount,
+    periodAmount,
     paymentPeriodicity,
     productType,
     type,
@@ -366,6 +370,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     productType: selectedMemberPlan?.productType ?? ProductType.Subscription,
     paymentPeriodicity: selectedPaymentPeriodicity,
     monthlyAmount,
+    periodAmount:
+      selectedPaymentPeriodicity === PaymentPeriodicity.Yearly ?
+        selectedMemberPlan?.yearlyAmount
+      : undefined,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     siteTitle,
     locale,

@@ -1706,6 +1706,7 @@ export type MemberPlan = HasImage & {
   successPage?: Maybe<Page>;
   successPageId?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Scalars['String']>>;
+  yearlyAmount?: Maybe<Scalars['Int']>;
 };
 
 export type MemberPlanFilter = {
@@ -2222,6 +2223,7 @@ export type MutationCreateMemberPlanArgs = {
   slug: Scalars['String'];
   successPageId?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
+  yearlyAmount?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -2344,6 +2346,7 @@ export type MutationCreateSubscriptionArgs = {
   paidUntil?: InputMaybe<Scalars['DateTime']>;
   paymentMethodID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
+  periodAmount?: InputMaybe<Scalars['Int']>;
   properties: Array<PropertyInput>;
   startsAt: Scalars['DateTime'];
   userID: Scalars['String'];
@@ -2664,6 +2667,7 @@ export type MutationImportSubscriptionArgs = {
   paidUntil?: InputMaybe<Scalars['DateTime']>;
   paymentMethodID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
+  periodAmount?: InputMaybe<Scalars['Int']>;
   properties: Array<PropertyInput>;
   startsAt: Scalars['DateTime'];
   userID: Scalars['String'];
@@ -2994,6 +2998,7 @@ export type MutationUpdateMemberPlanArgs = {
   slug?: InputMaybe<Scalars['String']>;
   successPageId?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
+  yearlyAmount?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -3143,6 +3148,7 @@ export type MutationUpdateSubscriptionArgs = {
   paidUntil?: InputMaybe<Scalars['DateTime']>;
   paymentMethodID?: InputMaybe<Scalars['String']>;
   paymentPeriodicity?: InputMaybe<PaymentPeriodicity>;
+  periodAmount?: InputMaybe<Scalars['Int']>;
   properties?: InputMaybe<Array<PropertyInput>>;
   startsAt?: InputMaybe<Scalars['DateTime']>;
   userID?: InputMaybe<Scalars['String']>;
@@ -4066,6 +4072,7 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   paymentMethod: PaymentMethod;
   paymentMethodID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
+  periodAmount?: Maybe<Scalars['Int']>;
   periods: Array<SubscriptionPeriod>;
   properties: Array<Property>;
   startsAt: Scalars['DateTime'];
