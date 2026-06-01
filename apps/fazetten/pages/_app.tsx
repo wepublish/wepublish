@@ -25,7 +25,7 @@ import {
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
-  createWithV1ApiClient,
+  createWithApiClient,
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import {
@@ -42,6 +42,7 @@ import { PartialDeep } from 'type-fest';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
+import deOverriden from '../locales/deOverriden.json';
 import { FazettenArticle } from '../src/components/fazetten-article';
 import { FazettenTitleBlock } from '../src/components/fazetten-title-block';
 import { FazettenBaseTeaserSlots } from '../src/components/teaser-layouts/fazetten-base-teaser-slots';
@@ -53,7 +54,7 @@ setDefaultOptions({
   locale: de,
 });
 
-initWePublishTranslator();
+initWePublishTranslator(deOverriden);
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
@@ -216,7 +217,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 }
 
 const { publicRuntimeConfig } = getConfig();
-const withApollo = createWithV1ApiClient(getApiUrl(), [authLink, previewLink]);
+const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(

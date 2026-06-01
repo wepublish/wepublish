@@ -3300,8 +3300,8 @@ export type MutationUploadImageArgs = {
   description?: InputMaybe<Scalars['String']>;
   file: Scalars['Upload'];
   filename?: InputMaybe<Scalars['String']>;
-  focalPointX: Scalars['Float'];
-  focalPointY: Scalars['Float'];
+  focalPointX?: Scalars['Float'];
+  focalPointY?: Scalars['Float'];
   license?: InputMaybe<Scalars['String']>;
   link?: InputMaybe<Scalars['String']>;
   source?: InputMaybe<Scalars['String']>;
@@ -3314,8 +3314,8 @@ export type MutationUploadUserProfileImageArgs = {
   description?: InputMaybe<Scalars['String']>;
   file: Scalars['Upload'];
   filename?: InputMaybe<Scalars['String']>;
-  focalPointX: Scalars['Float'];
-  focalPointY: Scalars['Float'];
+  focalPointX?: Scalars['Float'];
+  focalPointY?: Scalars['Float'];
   license?: InputMaybe<Scalars['String']>;
   link?: InputMaybe<Scalars['String']>;
   source?: InputMaybe<Scalars['String']>;

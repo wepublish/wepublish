@@ -3,9 +3,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CircularProgress } from '@mui/material';
 import { articleToTeaser } from '@wepublish/article/website';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   Article,
-  getV1ApiClient,
+  getApiClient,
   NavigationListDocument,
   Page,
   PageTeaser,
@@ -185,7 +185,7 @@ export const SearchPage = ({
 };
 
 export const SearchPageGetServerSideProps = (async ({ query }) => {
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
   const { page, q: phraseQuery } = searchPageSchema.parse(query);
 
   await Promise.all([
@@ -207,7 +207,7 @@ export const SearchPageGetServerSideProps = (async ({ query }) => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {
+  const props = addClientCacheToProps(client, {
     query,
   });
 

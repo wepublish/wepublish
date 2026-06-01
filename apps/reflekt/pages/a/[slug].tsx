@@ -1,11 +1,15 @@
 import { ArticleContainer } from '@wepublish/article/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   ArticleDocument,
-  getV1ApiClient,
+  ArticleListDocument,
+  CommentItemType,
+  CommentListDocument,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
+  Tag,
 } from '@wepublish/website/api';
 import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
@@ -31,7 +35,7 @@ export const getStaticPaths = () => ({
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id, slug } = params || {};
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
 
   const [article] = await Promise.all([
     client.query({
@@ -60,7 +64,28 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     };
   }
 
-  const props = addClientCacheToV1Props(client, {});
+  if (article.data?.article) {
+    await Promise.all([
+      client.query({
+        query: ArticleListDocument,
+        variables: {
+          filter: {
+            tags: article.data.article.tags.map((tag: Tag) => tag.id),
+          },
+          take: 4,
+        },
+      }),
+      client.query({
+        query: CommentListDocument,
+        variables: {
+          itemId: article.data.article.id,
+          itemType: CommentItemType.Article,
+        },
+      }),
+    ]);
+  }
+
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

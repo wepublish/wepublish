@@ -2,8 +2,8 @@ import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import { LinkContext } from '@wepublish/website/builder';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   HotAndTrendingDocument,
   NavigationListDocument,
   PageDocument,
@@ -30,7 +30,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const now = new Date();
   now.setUTCHours(0, 0, 0, 0);
 
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
   await Promise.all([
     client.query({
       query: PageDocument,
@@ -53,7 +53,7 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,
