@@ -2,9 +2,9 @@ import { TagContainer } from '@wepublish/tag/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import { TagType } from '@wepublish/website/api';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   ArticleListDocument,
-  getV1ApiClient,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   TagDocument,
@@ -57,7 +57,7 @@ export const getStaticPaths = () => ({
 
 export const getStaticProps = (async ({ params }) => {
   const { tag } = params || {};
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
 
   const tagResult = await client.query({
     query: TagDocument,
@@ -95,7 +95,7 @@ export const getStaticProps = (async ({ params }) => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {
+  const props = addClientCacheToProps(client, {
     tag: tag as string,
   });
 
