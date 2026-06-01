@@ -46,7 +46,7 @@ export function CurrencyInput({
           }}
           onBlur={() => {
             if (amount) {
-              onChange(parseFloat(amount as string) * 100);
+              onChange(Math.round(parseFloat(amount as string) * 100));
             } else {
               onChange(null);
             }

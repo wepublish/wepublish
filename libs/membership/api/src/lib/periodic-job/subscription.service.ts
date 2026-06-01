@@ -261,8 +261,9 @@ export class SubscriptionService {
     deactivationDate: Date
   ) {
     const amount =
+      subscription.periodAmount ??
       subscription.monthlyAmount *
-      mapPaymentPeriodToMonths(subscription.paymentPeriodicity);
+        mapPaymentPeriodToMonths(subscription.paymentPeriodicity);
     const description = `${subscription.paymentPeriodicity} renewal of subscription ${subscription.memberPlan.name}`;
 
     return this.prismaService.invoice.create({

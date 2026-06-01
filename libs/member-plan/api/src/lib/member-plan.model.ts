@@ -98,6 +98,9 @@ export class MemberPlan extends HasImage {
   amountPerMonthTarget?: number;
 
   @Field(() => Int, { nullable: true })
+  yearlyAmount?: number;
+
+  @Field(() => Int, { nullable: true })
   maxCount?: number;
 
   @Field()
@@ -165,6 +168,7 @@ export class CreateMemberPlanInput extends PickType(
     'amountPerMonthMin',
     'amountPerMonthMax',
     'amountPerMonthTarget',
+    'yearlyAmount',
     'currency',
     'extendable',
     'productType',

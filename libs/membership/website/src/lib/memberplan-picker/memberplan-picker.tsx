@@ -86,6 +86,7 @@ export const MemberPlanPicker = forwardRef<
                     currency={memberPlan.currency}
                     amountPerMonthMin={memberPlan.amountPerMonthMin}
                     amountPerMonthMax={memberPlan.amountPerMonthMax}
+                    yearlyAmount={memberPlan.yearlyAmount}
                     extendable={memberPlan.extendable}
                     shortDescription={memberPlan.shortDescription}
                     tags={memberPlan.tags}

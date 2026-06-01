@@ -69,8 +69,9 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     }
 
     const amount =
+      props.subscription.periodAmount ??
       props.newAmount *
-      mapPaymentPeriodToMonths(props.subscription.paymentPeriodicity);
+        mapPaymentPeriodToMonths(props.subscription.paymentPeriodicity);
 
     await this.updateAmountUpstream(
       +isPayrexxExt.value,
@@ -175,9 +176,9 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
       const payedAmount = rawSubscription.invoice.amount;
       const minPayment =
-        subscription.monthlyAmount *
-          mapPaymentPeriodToMonths(subscription.paymentPeriodicity) -
-        100; // -1CHF to ensure that imported rounding differences are no issue
+        (subscription.periodAmount ??
+          subscription.monthlyAmount *
+            mapPaymentPeriodToMonths(subscription.paymentPeriodicity)) - 100; // -1CHF to ensure that imported rounding differences are no issue
       if (payedAmount < minPayment) {
         logger('payrexxSubscriptionPaymentProvider').warn(
           `Payrexx Subscription ${subscription.id} payment ${payedAmount} lower than min payment ${minPayment}`
