@@ -134,6 +134,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
   const [paymentPeriodicity, setPaymentPeriodicity] =
     useState<PaymentPeriodicity>(PaymentPeriodicity.Yearly);
   const [monthlyAmount, setMonthlyAmount] = useState<number>(500);
+  const [periodAmount, setPeriodAmount] = useState<number | null>(null);
   const [autoRenew, setAutoRenew] = useState<boolean>(false);
   const [startsAt, setStartsAt] = useState<Date>(new Date());
   const [paidUntil, setPaidUntil] = useState<Date | null>();
@@ -228,6 +229,7 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
     setMemberPlan(subscription.memberPlan);
     setPaymentPeriodicity(subscription.paymentPeriodicity);
     setMonthlyAmount(subscription.monthlyAmount);
+    setPeriodAmount(subscription.periodAmount ?? null);
     setAutoRenew(subscription.autoRenew);
     setStartsAt(new Date(subscription.startsAt));
     setPaidUntil(
@@ -805,6 +807,25 @@ function SubscriptionEditView({ onClose, onSave }: SubscriptionEditViewProps) {
                             }
                           />
                         </Col>
+
+                        {/* exact period amount (read-only; set via the member plan's yearly amount) */}
+                        {periodAmount != null && (
+                          <Col xs={12}>
+                            <ControlLabel>
+                              {t('userSubscriptionEdit.periodAmount')}
+                            </ControlLabel>
+                            <CurrencyInput
+                              name="periodAmount"
+                              currency={currency}
+                              centAmount={periodAmount}
+                              onChange={() => undefined}
+                              disabled
+                            />
+                            <HelpText>
+                              {t('userSubscriptionEdit.periodAmountHelpText')}
+                            </HelpText>
+                          </Col>
+                        )}
                       </RowPaddingTop>
                       <RowPaddingTop>
                         {/* payment method */}

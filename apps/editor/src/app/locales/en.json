@@ -1606,6 +1606,8 @@
       "editTitle": "Edit Subscription",
       "memberPlanMonthlyAmount": "Minimal Monthly Amount ({{currency}})",
       "monthlyAmount": "Monthly amount",
+      "periodAmount": "Exact period amount",
+      "periodAmountHelpText": "The exact amount charged per billing period (overrides monthly × period). Set via the member plan's yearly amount.",
       "paidUntil": "Paid Until",
       "paymentMethod": "Payment Method",
       "renewNow": "Renew now",

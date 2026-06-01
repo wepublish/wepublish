@@ -47,6 +47,7 @@ export const useUpgradeText = ({
   discount,
   paymentPeriodicity,
   monthlyAmount,
+  periodAmount,
   memberPlan,
   currency,
   locale,
@@ -55,6 +56,7 @@ export const useUpgradeText = ({
   productType: ProductType;
   paymentPeriodicity: PaymentPeriodicity;
   monthlyAmount: number;
+  periodAmount?: number | null;
   memberPlan: string;
   currency: Currency;
   locale: string;
@@ -65,7 +67,9 @@ export const useUpgradeText = ({
     const variables = {
       productType,
       formattedAmount: formatCurrency(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity) -
+        (periodAmount ??
+          monthlyAmount * getPaymentPeriodicyMonths(paymentPeriodicity)) /
+          100 -
           discount / 100,
         currency,
         locale
@@ -78,6 +82,7 @@ export const useUpgradeText = ({
   }, [
     productType,
     monthlyAmount,
+    periodAmount,
     paymentPeriodicity,
     discount,
     currency,
@@ -207,6 +212,10 @@ export const Upgrade = ({
     productType: subscriptionToUpgrade.memberPlan.productType,
     paymentPeriodicity: subscriptionToUpgrade.paymentPeriodicity,
     monthlyAmount,
+    periodAmount:
+      subscriptionToUpgrade.paymentPeriodicity === PaymentPeriodicity.Yearly ?
+        selectedMemberPlan?.yearlyAmount
+      : undefined,
     discount: upgradeInfo.data?.upgradeUserSubscriptionInfo.discountAmount ?? 0,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     locale,

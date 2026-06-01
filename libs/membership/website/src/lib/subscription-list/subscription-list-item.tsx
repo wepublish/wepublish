@@ -87,6 +87,7 @@ export function SubscriptionListItem({
   paidUntil,
   paymentPeriodicity,
   monthlyAmount,
+  periodAmount,
   deactivation,
   memberPlan: { image, name, currency, productType },
   extendable,
@@ -213,8 +214,10 @@ export function SubscriptionListItem({
 
           <SubscriptionListItemMetaItem>
             <MdAttachMoney /> Kostet{' '}
-            {formatCurrency(monthlyAmount / 100, currency, locale)}{' '}
-            {extendable ? 'pro Monat' : ''}
+            {periodAmount != null ?
+              `${formatCurrency(periodAmount / 100, currency, locale)} pro ${subscriptionDuration}`
+            : `${formatCurrency(monthlyAmount / 100, currency, locale)}${extendable ? ' pro Monat' : ''}`
+            }
           </SubscriptionListItemMetaItem>
 
           <SubscriptionListItemMetaItem>

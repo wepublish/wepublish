@@ -1557,6 +1557,8 @@
       "editTitle": "Abonnement bearbeiten",
       "memberPlanMonthlyAmount": "Minimaler monatlicher Betrag ({{currency}})",
       "monthlyAmount": "Monatlicher Betrag",
+      "periodAmount": "Exakter Periodenbetrag",
+      "periodAmountHelpText": "Der exakte Betrag pro Abrechnungsperiode (überschreibt Monatsbetrag × Periode). Wird über den Jahresbetrag des Mitgliedschaftsplans gesetzt.",
       "paidUntil": "Bezahlt bis",
       "paymentMethod": "Zahlungsmethode",
       "renewNow": "Jetzt verlängern",
