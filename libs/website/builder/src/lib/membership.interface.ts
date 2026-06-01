@@ -154,6 +154,7 @@ export type BuilderSubscribeProps<
     email: string;
     name: string;
     firstName: string;
+    voucher: string;
   }>;
   deactivateSubscriptionId?: string;
   termsOfServiceUrl?: string;
