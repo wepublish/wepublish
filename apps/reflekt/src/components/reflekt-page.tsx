@@ -4,6 +4,8 @@ import { ContentWidthProvider } from '@wepublish/content/website';
 import { Page } from '@wepublish/page/website';
 import { BuilderPageProps } from '@wepublish/website/builder';
 
+import { FlexBlockHeroWrapper } from './block-layouts/flex-block-hero';
+
 const fullWidthMainSpacer = (theme: Theme) => css`
   main > .MuiContainer-root {
     max-width: initial;
@@ -20,6 +22,11 @@ const StyledReflektPage = styled(Page)`
       ${({ theme }) => theme.breakpoints.values['lg']}px
     );
     justify-content: center;
+  }
+
+  & > .MuiContainer-root:has(${FlexBlockHeroWrapper}) {
+    grid-template-columns: 1fr;
+    justify-content: stretch;
   }
 `;
 
