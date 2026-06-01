@@ -133,6 +133,20 @@ export function calculateAmountForPeriodicity(
   }
 }
 
+export function getPeriodAmount(subscription: {
+  periodAmount?: number | null;
+  monthlyAmount: number;
+  paymentPeriodicity: PaymentPeriodicity;
+}): number {
+  return (
+    subscription.periodAmount ??
+    calculateAmountForPeriodicity(
+      subscription.monthlyAmount,
+      subscription.paymentPeriodicity
+    )
+  );
+}
+
 export class MemberContext implements MemberContextInterface {
   paymentProviders: PaymentProvider[];
   prisma: PrismaClient;
@@ -271,10 +285,12 @@ export class MemberContext implements MemberContextInterface {
         subscription.paymentPeriodicity as PaymentPeriodicity
       );
       const amount = Math.max(
-        calculateAmountForPeriodicity(
-          subscription.monthlyAmount,
-          subscription.paymentPeriodicity as PaymentPeriodicity
-        ) - (discount ?? 0),
+        getPeriodAmount({
+          periodAmount: subscription.periodAmount,
+          monthlyAmount: subscription.monthlyAmount,
+          paymentPeriodicity:
+            subscription.paymentPeriodicity as PaymentPeriodicity,
+        }) - (discount ?? 0),
         0 // in case discount is bigger than the amount
       );
 
@@ -899,6 +915,7 @@ export class MemberContext implements MemberContextInterface {
     paymentMethodID,
     paymentPeriodicity,
     monthlyAmount,
+    periodAmount,
     memberPlanID,
     properties,
     autoRenew,
@@ -910,6 +927,7 @@ export class MemberContext implements MemberContextInterface {
     paymentMethodID: string;
     paymentPeriodicity: PaymentPeriodicity;
     monthlyAmount: number;
+    periodAmount?: number | null;
     memberPlanID: string;
     properties: Pick<MetadataProperty, 'key' | 'value' | 'public'>[];
     autoRenew: boolean;
@@ -966,6 +984,7 @@ export class MemberContext implements MemberContextInterface {
         paymentPeriodicity,
         paidUntil,
         monthlyAmount,
+        periodAmount,
         memberPlanID,
         properties: {
           createMany: {
@@ -995,6 +1014,12 @@ export class MemberContext implements MemberContextInterface {
       const endsAt =
         paidUntil ?? getNextDateForPeriodicity(startsAt, paymentPeriodicity);
 
+      const importPeriodAmount = getPeriodAmount({
+        periodAmount,
+        monthlyAmount,
+        paymentPeriodicity,
+      });
+
       const user = await this.prisma.user.findUnique({
         where: {
           id: subscription.userID,
@@ -1018,7 +1043,7 @@ export class MemberContext implements MemberContextInterface {
             create: {
               name: 'Membership',
               description: `From ${startsAt.toISOString()} to ${endsAt.toISOString()}`,
-              amount: monthlyAmount,
+              amount: importPeriodAmount,
               quantity: 1,
             },
           },
@@ -1035,7 +1060,7 @@ export class MemberContext implements MemberContextInterface {
           periods: {
             create: {
               startsAt,
-              amount: monthlyAmount,
+              amount: importPeriodAmount,
               endsAt,
               paymentPeriodicity,
               invoiceID: invoice.id,

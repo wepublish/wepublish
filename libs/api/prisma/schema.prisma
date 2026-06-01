@@ -935,6 +935,7 @@ model Subscription {
   modifiedAt         DateTime                  @updatedAt
   paymentPeriodicity PaymentPeriodicity
   monthlyAmount      Float
+  periodAmount       Int?
   autoRenew          Boolean
   startsAt           DateTime
   paidUntil          DateTime?
