@@ -7,8 +7,8 @@ import {
 } from '@wepublish/authentication/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
@@ -62,7 +62,7 @@ export const getStaticProps: GetStaticProps = async () => {
     return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
   await Promise.all([
     client.query({
       query: NavigationListDocument,
@@ -72,7 +72,7 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

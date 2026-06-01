@@ -35,7 +35,7 @@ import {
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
-import { createWithV1ApiClient } from '@wepublish/website/api';
+import { createWithApiClient } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
 import { setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -203,7 +203,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
   );
 }
 
-const withApollo = createWithV1ApiClient(getApiUrl(), [authLink, previewLink]);
+const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(
