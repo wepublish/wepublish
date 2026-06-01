@@ -47,7 +47,7 @@ const SubmitBtn = styled(Link)`
     transform: unset;
   }
 
-  ${({ theme }) => theme.breakpoints.up('sm')} {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     margin: ${({ theme }) => theme.spacing(0, 0, 0, 2.5)};
   }
 ` as typeof Link;

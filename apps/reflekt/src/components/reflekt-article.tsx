@@ -95,6 +95,11 @@ export const ArticleWrapper = styled(ContentWrapper)<{
   & > :is(${FlexBlockHeroWrapper}, ${FlexBlockFullsizeImageWrapper}) {
     margin-left: -${({ theme }) => theme.spacing(2)};
     margin-right: -${({ theme }) => theme.spacing(2)};
+
+    ${({ theme }) => theme.breakpoints.up('sm')} {
+      margin-left: -${({ theme }) => theme.spacing(3)};
+      margin-right: -${({ theme }) => theme.spacing(3)};
+    }
   }
 
   ${HtmlBlockWrapper} {

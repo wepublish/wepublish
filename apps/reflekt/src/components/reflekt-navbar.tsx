@@ -277,7 +277,7 @@ export const NavbarMain = styled('div', {
   pointer-events: all;
   z-index: 30;
 
-  ${theme.breakpoints.up('md')} {
+  ${theme.breakpoints.up('sm')} {
     margin: 0 0 0 ${({ theme }) => theme.spacing(-3)};
   }
 
