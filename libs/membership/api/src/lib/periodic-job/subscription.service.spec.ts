@@ -309,6 +309,44 @@ describe('SubscriptionPaymentsService', () => {
     );
   });
 
+  it('invoice creation uses periodAmount when set (not monthlyAmount × months)', async () => {
+    const paidUntil = add(new Date(), { days: 14 });
+    const deactivationDate = add(paidUntil, { days: 10 });
+
+    const mockSubscription = {
+      id: 'sub-1',
+      monthlyAmount: 10,
+      periodAmount: 23000,
+      paymentPeriodicity: PaymentPeriodicity.yearly,
+      paidUntil,
+      startsAt: sub(paidUntil, { years: 3, days: -1 }),
+      periods: [],
+      memberPlan: mockMemberPlan,
+      user: mockUser,
+    };
+
+    prismaMock.invoice.create!.mockResolvedValue({ id: 'invoice-1' });
+    prismaMock.subscriptionPeriod.create!.mockResolvedValue({ id: 'period-1' });
+
+    await subscriptionService.createInvoice(
+      mockSubscription as any,
+      deactivationDate
+    );
+
+    expect(prismaMock.invoice.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          items: expect.objectContaining({
+            create: expect.objectContaining({ amount: 23000 }),
+          }),
+          subscriptionPeriods: expect.objectContaining({
+            create: expect.objectContaining({ amount: 23000 }),
+          }),
+        }),
+      })
+    );
+  });
+
   it('mark Invoice as paid (renewal)', async () => {
     const paidUntil = add(new Date(), { days: 5 });
     const mockSubscription = {
