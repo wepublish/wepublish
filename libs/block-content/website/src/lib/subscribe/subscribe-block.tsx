@@ -31,6 +31,7 @@ export const SubscribeBlock = ({
     resubscribe: [resubscribe],
     upgrade,
     upgradeInfo: [fetchUpgradeInfo, upgradeInfo],
+    subscribeInfo: [fetchSubscribeInfo, subscribeInfo],
     stripeClientSecret,
     redirectPages,
     ...subscribeProps
@@ -109,6 +110,8 @@ export const SubscribeBlock = ({
             memberPlanSlug: memberPlanBySlug as string | undefined,
             voucher: voucher as string | undefined,
           }}
+          fetchSubscribeInfo={fetchSubscribeInfo}
+          subscribeInfo={subscribeInfo}
           onSubscribe={async formData => {
             const selectedMemberplan = memberPlans.find(
               mb => mb.id === formData.memberPlanId

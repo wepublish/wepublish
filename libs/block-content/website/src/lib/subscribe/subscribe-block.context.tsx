@@ -17,8 +17,11 @@ export type SubscribeBlockContextProps = {
   userInvoices: BuilderSubscribeProps['userInvoices'];
   challenge: BuilderSubscribeProps['challenge'];
 
-  fetchSubscribeInfo: BuilderSubscribeProps['fetchSubscribeInfo'];
-  subscribeInfo: BuilderSubscribeProps['subscribeInfo'];
+  subscribeInfo: [
+    BuilderSubscribeProps['fetchSubscribeInfo'],
+    BuilderSubscribeProps['subscribeInfo'],
+  ];
+
   subscribe: ReturnType<typeof useSubscribe>[0];
   upgrade: ReturnType<typeof useUpgrade>[0];
   resubscribe: ReturnType<typeof useResubscribeMutation>;
