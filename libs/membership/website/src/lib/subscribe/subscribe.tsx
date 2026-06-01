@@ -129,6 +129,10 @@ export const SubscribeNarrowSection = styled(SubscribeSection)`
   gap: ${({ theme }) => theme.spacing(1)};
 `;
 
+export const VoucherSection = styled(SubscribeNarrowSection)`
+  display: none;
+`;
+
 export const usePaymentText = ({
   type = 'button',
   autoRenew,
