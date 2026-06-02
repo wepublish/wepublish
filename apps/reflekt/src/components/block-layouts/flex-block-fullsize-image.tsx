@@ -289,9 +289,26 @@ export const FlexBlockFullsizeImage = ({
       }
     };
 
+    let cachedLvh = 0;
+    const measureLvh = () => {
+      const m = document.createElement('div');
+      m.style.cssText =
+        'position:fixed;visibility:hidden;top:0;left:0;height:100lvh;pointer-events:none;';
+      document.body.appendChild(m);
+      const h = m.offsetHeight || window.innerHeight;
+      document.body.removeChild(m);
+      return h;
+    };
+    const getViewportHeight = () => {
+      if (!cachedLvh) {
+        cachedLvh = measureLvh();
+      }
+      return cachedLvh;
+    };
+
     const getHoldDistance = () => {
       const isDesktopNow = window.innerWidth >= MD_BREAKPOINT;
-      const vhNow = window.innerHeight;
+      const vhNow = getViewportHeight();
       const textHeight = textHeightRef.current;
       const imageHeight = imageHeightRef.current || vhNow;
       if (!textHeight) {
@@ -313,10 +330,9 @@ export const FlexBlockFullsizeImage = ({
       if (!imageHeight) {
         return;
       }
-      const vh = window.innerHeight;
       el.style.display = 'block';
       el.style.position = 'relative';
-      el.style.height = `${vh + getHoldDistance()}px`;
+      el.style.height = `calc(100lvh + ${getHoldDistance()}px)`;
     };
 
     const setFixed = (
@@ -360,7 +376,7 @@ export const FlexBlockFullsizeImage = ({
 
       const imageBlock = getActiveImageBlock();
       const textBlock = getTextBlock();
-      const vh = window.innerHeight;
+      const vh = getViewportHeight();
       const rect = el.getBoundingClientRect();
       const wrapperTop = rect.top + window.scrollY;
       const scrollY = window.scrollY;
@@ -419,16 +435,25 @@ export const FlexBlockFullsizeImage = ({
       }
     };
 
+    let lastViewportWidth = window.innerWidth;
+
     const handleResize = () => {
-      el.querySelectorAll<HTMLElement>('[data-image-block="true"]').forEach(b =>
-        b.removeAttribute('style')
-      );
-      getTextBlock()?.removeAttribute('style');
-      const activeImage = getActiveImageBlock();
-      if (activeImage) {
-        imageHeightRef.current = activeImage.offsetHeight;
+      const newVw = window.innerWidth;
+      const widthChanged = newVw !== lastViewportWidth;
+      lastViewportWidth = newVw;
+
+      if (widthChanged) {
+        cachedLvh = measureLvh();
+        el.querySelectorAll<HTMLElement>('[data-image-block="true"]').forEach(
+          b => b.removeAttribute('style')
+        );
+        getTextBlock()?.removeAttribute('style');
+        const activeImage = getActiveImageBlock();
+        if (activeImage) {
+          imageHeightRef.current = activeImage.offsetHeight;
+        }
+        measureTextHeight();
       }
-      measureTextHeight();
       applyLayout();
       handleScroll();
     };
