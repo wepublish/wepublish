@@ -13,6 +13,7 @@ import {
   RichTextBlockWrapper,
   YouTubeVideoBlockWrapper,
 } from '@wepublish/block-content/website';
+import { ImageContext } from '@wepublish/image/website';
 import {
   type FlexBlock as FlexBlockType,
   BlockContent,
@@ -421,120 +422,125 @@ export const FlexBlockHero = ({
   );
 
   return (
-    <FlexBlockHeroWrapper
-      className={className}
-      ref={ref}
+    <ImageContext.Provider
+      value={{ maxWidth: 1500, fetchPriority: 'high', loading: 'eager' }}
     >
-      {sortedBlocks.map((nestedBlock, index) => {
-        const isVimeoBlock =
-          nestedBlock.block?.__typename === 'VimeoVideoBlock';
-        const vimeoId =
-          isVimeoBlock ?
-            (nestedBlock.block as VimeoVideoBlockType).videoID
-          : null;
-        const isYouTube = nestedBlock.block?.__typename === 'YouTubeVideoBlock';
-        const isYouTubeIframe =
-          nestedBlock.block?.__typename === 'IFrameBlock' &&
-          isTrustedYouTubeUrl((nestedBlock.block as IFrameBlockType).url);
-        const nativeVideoUrl =
-          nestedBlock.block?.__typename === 'IFrameBlock' ?
-            getNativeVideoUrl((nestedBlock.block as IFrameBlockType).url)
-          : null;
-        const isNativeVideo = !!nativeVideoUrl;
-        const isHeroVideo =
-          isVimeoBlock || isYouTube || isYouTubeIframe || isNativeVideo;
-        const youtubeId =
-          isYouTube ? (nestedBlock.block as YouTubeVideoBlockType).videoID
-          : isYouTubeIframe ?
-            getYouTubeVideoId((nestedBlock.block as IFrameBlockType).url)
-          : null;
-        const videoUrl =
-          youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : '';
-        const isActiveBlock = index === 0 ? !isDesktop : isDesktop;
+      <FlexBlockHeroWrapper
+        className={className}
+        ref={ref}
+      >
+        {sortedBlocks.map((nestedBlock, index) => {
+          const isVimeoBlock =
+            nestedBlock.block?.__typename === 'VimeoVideoBlock';
+          const vimeoId =
+            isVimeoBlock ?
+              (nestedBlock.block as VimeoVideoBlockType).videoID
+            : null;
+          const isYouTube =
+            nestedBlock.block?.__typename === 'YouTubeVideoBlock';
+          const isYouTubeIframe =
+            nestedBlock.block?.__typename === 'IFrameBlock' &&
+            isTrustedYouTubeUrl((nestedBlock.block as IFrameBlockType).url);
+          const nativeVideoUrl =
+            nestedBlock.block?.__typename === 'IFrameBlock' ?
+              getNativeVideoUrl((nestedBlock.block as IFrameBlockType).url)
+            : null;
+          const isNativeVideo = !!nativeVideoUrl;
+          const isHeroVideo =
+            isVimeoBlock || isYouTube || isYouTubeIframe || isNativeVideo;
+          const youtubeId =
+            isYouTube ? (nestedBlock.block as YouTubeVideoBlockType).videoID
+            : isYouTubeIframe ?
+              getYouTubeVideoId((nestedBlock.block as IFrameBlockType).url)
+            : null;
+          const videoUrl =
+            youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : '';
+          const isActiveBlock = index === 0 ? !isDesktop : isDesktop;
 
-        return (
-          <BlockWithAlignment
-            key={index}
-            {...(nestedBlock.alignment as FlexAlignment)}
-          >
-            {isHeroVideo && mounted ?
-              <YouTubeVideoBlockWrapper>
-                {isNativeVideo && nativeVideoUrl ?
-                  <HeroNativeVideo
-                    src={nativeVideoUrl}
-                    noLoop={!!noLoop}
-                  />
-                : isVimeoBlock && vimeoId ?
-                  <HeroVimeoVideo videoId={vimeoId} />
-                : <HeroYouTubeVideo
-                    videoUrl={videoUrl}
-                    isActiveBlock={isActiveBlock}
-                    muted={muted}
-                    noLoop={!!noLoop}
-                  />
-                }
-                {false && (
-                  <MuteButton
-                    onClick={() => setMuted(m => !m)}
-                    aria-label={muted ? 'Unmute' : 'Mute'}
-                  >
-                    {muted ?
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                        <line
-                          x1="23"
-                          y1="9"
-                          x2="17"
-                          y2="15"
-                        />
-                        <line
-                          x1="17"
-                          y1="9"
-                          x2="23"
-                          y2="15"
-                        />
-                      </svg>
-                    : <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                      </svg>
-                    }
-                  </MuteButton>
-                )}
-              </YouTubeVideoBlockWrapper>
-            : <Renderer
-                block={nestedBlock.block as BlockContent}
-                type={
-                  (
-                    (type as unknown as BuilderBlockRendererProps['type']) ===
-                    'Article'
-                  ) ?
-                    'ArticleNested'
-                  : 'PageNested'
-                }
-                index={index}
-                count={sortedBlocks.length}
-              />
-            }
-          </BlockWithAlignment>
-        );
-      })}
-      {heroOffScreen(isIntersecting)}
-    </FlexBlockHeroWrapper>
+          return (
+            <BlockWithAlignment
+              key={index}
+              {...(nestedBlock.alignment as FlexAlignment)}
+            >
+              {isHeroVideo && mounted ?
+                <YouTubeVideoBlockWrapper>
+                  {isNativeVideo && nativeVideoUrl ?
+                    <HeroNativeVideo
+                      src={nativeVideoUrl}
+                      noLoop={!!noLoop}
+                    />
+                  : isVimeoBlock && vimeoId ?
+                    <HeroVimeoVideo videoId={vimeoId} />
+                  : <HeroYouTubeVideo
+                      videoUrl={videoUrl}
+                      isActiveBlock={isActiveBlock}
+                      muted={muted}
+                      noLoop={!!noLoop}
+                    />
+                  }
+                  {false && (
+                    <MuteButton
+                      onClick={() => setMuted(m => !m)}
+                      aria-label={muted ? 'Unmute' : 'Mute'}
+                    >
+                      {muted ?
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                          <line
+                            x1="23"
+                            y1="9"
+                            x2="17"
+                            y2="15"
+                          />
+                          <line
+                            x1="17"
+                            y1="9"
+                            x2="23"
+                            y2="15"
+                          />
+                        </svg>
+                      : <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                          <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                          <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                        </svg>
+                      }
+                    </MuteButton>
+                  )}
+                </YouTubeVideoBlockWrapper>
+              : <Renderer
+                  block={nestedBlock.block as BlockContent}
+                  type={
+                    (
+                      (type as unknown as BuilderBlockRendererProps['type']) ===
+                      'Article'
+                    ) ?
+                      'ArticleNested'
+                    : 'PageNested'
+                  }
+                  index={index}
+                  count={sortedBlocks.length}
+                />
+              }
+            </BlockWithAlignment>
+          );
+        })}
+        {heroOffScreen(isIntersecting)}
+      </FlexBlockHeroWrapper>
+    </ImageContext.Provider>
   );
 };
