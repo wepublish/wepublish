@@ -47,6 +47,9 @@ export class PageRevision implements HasBlockContent {
   publishedAt?: Date;
 
   @Field({ nullable: true })
+  archivedAt?: Date;
+
+  @Field({ nullable: true })
   title?: string;
 
   @Field({ nullable: true })
@@ -112,6 +115,9 @@ export class Page {
   @Field(() => PageRevision)
   latest!: PageRevision;
 
+  @Field(() => [PageRevision])
+  revisions!: PageRevision[];
+
   @Field(() => [Tag])
   tags!: Tag[];
 }
@@ -126,6 +132,7 @@ export class CreatePageInput extends OmitType(
     'id',
     'createdAt',
     'publishedAt',
+    'archivedAt',
     'image',
     'socialMediaImage',
     'blocks',

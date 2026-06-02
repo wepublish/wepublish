@@ -1597,3 +1597,77 @@ exports[`ArticleService should update an article 3`] = `
   ],
 ]
 `;
+
+exports[`ArticleService version history should restore a revision as a new draft 1`] = `
+[
+  {
+    "data": {
+      "modifiedAt": 2023-01-01T00:00:00.000Z,
+      "revisions": {
+        "create": {
+          "authors": {
+            "createMany": {
+              "data": [
+                {
+                  "authorId": "author-1",
+                },
+                {
+                  "authorId": "author-2",
+                },
+              ],
+            },
+          },
+          "blocks": [
+            {
+              "title": {
+                "lead": "Old",
+                "title": "Old",
+              },
+            },
+          ],
+          "breaking": true,
+          "canonicalUrl": "https://example.com/old",
+          "hideAuthor": false,
+          "imageID": "image-1",
+          "lead": "Old lead",
+          "preTitle": "Old preTitle",
+          "properties": [
+            {
+              "key": "key",
+              "public": true,
+              "value": "value",
+            },
+          ],
+          "seoTitle": "Old seo",
+          "socialMediaAuthors": {
+            "createMany": {
+              "data": [
+                {
+                  "authorId": "sm-author-1",
+                },
+              ],
+            },
+          },
+          "socialMediaDescription": "Old sm description",
+          "socialMediaImageID": "image-2",
+          "socialMediaTitle": "Old sm title",
+          "title": "Old title",
+          "userId": "new-user",
+        },
+        "updateMany": {
+          "data": {
+            "archivedAt": 2023-01-01T00:00:00.000Z,
+          },
+          "where": {
+            "archivedAt": null,
+            "publishedAt": null,
+          },
+        },
+      },
+    },
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;

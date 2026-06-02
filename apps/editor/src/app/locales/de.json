@@ -1,5 +1,43 @@
 {
   "translation": {
+    "versionHistory": {
+      "title": "Versionsverlauf",
+      "subtitle": "{{count}} Versionen",
+      "close": "Schliessen",
+      "empty": "Noch keine Versionen.",
+      "untitled": "Ohne Titel",
+      "created": "Erstellt {{date}}",
+      "published": "veröffentlicht {{date}}",
+      "currentVersion": "Aktuelle Version",
+      "restore": "Wiederherstellen",
+      "restored": "Version als neuer Entwurf wiederhergestellt",
+      "preview": "Vorschau",
+      "previewTitle": "Versionsvorschau",
+      "readOnly": "Schreibgeschützt",
+      "state": {
+        "published": "Aktuell veröffentlicht",
+        "pending": "Geplant",
+        "draft": "Entwurf",
+        "superseded": "Früher veröffentlicht",
+        "archived": "Archiviert"
+      },
+      "confirm": {
+        "title": "Diese Version wiederherstellen?",
+        "message": "Es wird ein neuer Entwurf aus der Version vom {{date}} erstellt. Ihr aktueller Entwurf wird archiviert. Es wird nichts veröffentlicht, bis Sie es veröffentlichen.",
+        "cancel": "Abbrechen",
+        "confirm": "Als Entwurf wiederherstellen"
+      }
+    },
+    "discardDraft": {
+      "button": "Entwurf verwerfen",
+      "success": "Entwurf verworfen — zur veröffentlichten Version zurückgekehrt",
+      "confirm": {
+        "title": "Aktuellen Entwurf verwerfen?",
+        "message": "Ihre unveröffentlichten Änderungen werden archiviert und der Editor kehrt zur aktuell veröffentlichten Version zurück. Dies kann nicht rückgängig gemacht werden, der verworfene Entwurf bleibt jedoch im Versionsverlauf verfügbar.",
+        "cancel": "Abbrechen",
+        "confirm": "Entwurf verwerfen"
+      }
+    },
     "articleEditor": {
       "overview": {
         "articlePending": "Artikel geplant",

@@ -1,5 +1,43 @@
 {
   "translation": {
+    "versionHistory": {
+      "title": "Version history",
+      "subtitle": "{{count}} versions",
+      "close": "Close",
+      "empty": "No versions yet.",
+      "untitled": "Untitled",
+      "created": "Created {{date}}",
+      "published": "published {{date}}",
+      "currentVersion": "Current version",
+      "restore": "Restore",
+      "restored": "Version restored as a new draft",
+      "preview": "Preview",
+      "previewTitle": "Version preview",
+      "readOnly": "Read-only",
+      "state": {
+        "published": "Currently published",
+        "pending": "Scheduled",
+        "draft": "Draft",
+        "superseded": "Previously published",
+        "archived": "Archived"
+      },
+      "confirm": {
+        "title": "Restore this version?",
+        "message": "This creates a new draft from the version of {{date}}. Your current draft will be archived. Nothing is published until you publish it.",
+        "cancel": "Cancel",
+        "confirm": "Restore as draft"
+      }
+    },
+    "discardDraft": {
+      "button": "Discard draft",
+      "success": "Draft discarded — reverted to the published version",
+      "confirm": {
+        "title": "Discard the current draft?",
+        "message": "Your unpublished changes will be archived and the editor will revert to the currently published version. This cannot be undone, but the discarded draft stays available in the version history.",
+        "cancel": "Cancel",
+        "confirm": "Discard draft"
+      }
+    },
     "articleEditor": {
       "overview": {
         "articlePending": "Article Pending",

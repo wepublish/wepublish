@@ -50,6 +50,9 @@ export class ArticleRevision implements HasBlockContent {
   publishedAt?: Date;
 
   @Field({ nullable: true })
+  archivedAt?: Date;
+
+  @Field({ nullable: true })
   preTitle?: string;
   @Field({ nullable: true })
   title?: string;
@@ -138,6 +141,9 @@ export class Article implements HasOptionalPeerLc, HasOptionalPaywall {
   @Field(() => ArticleRevision)
   latest!: ArticleRevision;
 
+  @Field(() => [ArticleRevision])
+  revisions!: ArticleRevision[];
+
   @Field(() => [Tag])
   tags!: Tag[];
 
@@ -164,6 +170,7 @@ export class CreateArticleInput extends OmitType(
     'id',
     'createdAt',
     'publishedAt',
+    'archivedAt',
     'image',
     'socialMediaImage',
     'authors',

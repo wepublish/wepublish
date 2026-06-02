@@ -91,6 +91,7 @@ export type Article = HasOptionalPaywall &
     previewUrl: Scalars['String'];
     published?: Maybe<ArticleRevision>;
     publishedAt?: Maybe<Scalars['DateTime']>;
+    revisions: Array<ArticleRevision>;
     shared: Scalars['Boolean'];
     slug?: Maybe<Scalars['String']>;
     tags: Array<Tag>;
@@ -141,6 +142,7 @@ export type ArticleNavigationLink = BaseNavigationLink &
 
 export type ArticleRevision = HasBlockContent & {
   __typename?: 'ArticleRevision';
+  archivedAt?: Maybe<Scalars['DateTime']>;
   authors: Array<Author>;
   blocks: Array<BlockContent>;
   breaking: Scalars['Boolean'];
@@ -1966,6 +1968,10 @@ export type Mutation = {
   deleteUserConsent: UserConsent;
   /** Deletes an existing userrole. */
   deleteUserRole: UserRole;
+  /** Discards the current draft and reverts to the latest published revision. */
+  discardArticleDraft: Article;
+  /** Discards the current draft and reverts to the latest published revision. */
+  discardPageDraft: Page;
   /** Dislikes an article. */
   dislikeArticle: Article;
   /** Simulates a mailchimp sync without making changes. Returns what would be updated. */
@@ -2017,6 +2023,10 @@ export type Mutation = {
   resetPasswordWithToken: Scalars['Boolean'];
   /** Resets the two-factor authentication configuration for a user. The user will need to set up 2FA again on next login. */
   resetUserTotp: Scalars['Boolean'];
+  /** Restores an older revision of an article as a new draft. */
+  restoreArticleRevision: Article;
+  /** Restores an older revision of a page as a new draft. */
+  restorePageRevision: Page;
   /** This mutation revokes and deletes the active session. */
   revokeActiveSession: Scalars['Boolean'];
   /** This mutation sends a login link to the email if the user exists. Method will always return email address */
@@ -2613,6 +2623,14 @@ export type MutationDeleteUserRoleArgs = {
   id: Scalars['String'];
 };
 
+export type MutationDiscardArticleDraftArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationDiscardPageDraftArgs = {
+  id: Scalars['String'];
+};
+
 export type MutationDislikeArticleArgs = {
   id: Scalars['String'];
 };
@@ -2734,6 +2752,16 @@ export type MutationResetPasswordWithTokenArgs = {
 
 export type MutationResetUserTotpArgs = {
   userId: Scalars['String'];
+};
+
+export type MutationRestoreArticleRevisionArgs = {
+  id: Scalars['String'];
+  revisionId: Scalars['String'];
+};
+
+export type MutationRestorePageRevisionArgs = {
+  id: Scalars['String'];
+  revisionId: Scalars['String'];
 };
 
 export type MutationSendJwtLoginArgs = {
@@ -3283,6 +3311,7 @@ export type Page = {
   previewUrl: Scalars['String'];
   published?: Maybe<PageRevision>;
   publishedAt?: Maybe<Scalars['DateTime']>;
+  revisions: Array<PageRevision>;
   slug?: Maybe<Scalars['String']>;
   tags: Array<Tag>;
   url: Scalars['String'];
@@ -3340,6 +3369,7 @@ export type PageNavigationLink = BaseNavigationLink &
 
 export type PageRevision = HasBlockContent & {
   __typename?: 'PageRevision';
+  archivedAt?: Maybe<Scalars['DateTime']>;
   blocks: Array<BlockContent>;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;

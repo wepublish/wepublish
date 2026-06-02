@@ -46,6 +46,7 @@ type Article implements HasOptionalPaywall & HasOptionalPeerLc {
   previewUrl: String!
   published: ArticleRevision
   publishedAt: DateTime
+  revisions: [ArticleRevision!]!
   shared: Boolean!
   slug: String
   tags: [Tag!]!
@@ -91,6 +92,7 @@ type ArticleNavigationLink implements BaseNavigationLink & HasArticle {
 }
 
 type ArticleRevision implements HasBlockContent {
+  archivedAt: DateTime
   authors: [Author!]!
   blocks: [BlockContent!]!
   breaking: Boolean!
@@ -1902,6 +1904,16 @@ type Mutation {
   """Deletes an existing userrole."""
   deleteUserRole(id: String!): UserRole!
 
+  """
+  Discards the current draft and reverts to the latest published revision.
+  """
+  discardArticleDraft(id: String!): Article!
+
+  """
+  Discards the current draft and reverts to the latest published revision.
+  """
+  discardPageDraft(id: String!): Page!
+
   """Dislikes an article."""
   dislikeArticle(id: String!): Article!
 
@@ -2007,6 +2019,12 @@ type Mutation {
   Resets the two-factor authentication configuration for a user. The user will need to set up 2FA again on next login.
   """
   resetUserTotp(userId: String!): Boolean!
+
+  """Restores an older revision of an article as a new draft."""
+  restoreArticleRevision(id: String!, revisionId: String!): Article!
+
+  """Restores an older revision of a page as a new draft."""
+  restorePageRevision(id: String!, revisionId: String!): Page!
 
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
@@ -2226,6 +2244,7 @@ type Page {
   previewUrl: String!
   published: PageRevision
   publishedAt: DateTime
+  revisions: [PageRevision!]!
   slug: String
   tags: [Tag!]!
   url: String!
@@ -2276,6 +2295,7 @@ type PageNavigationLink implements BaseNavigationLink & HasPage {
 }
 
 type PageRevision implements HasBlockContent {
+  archivedAt: DateTime
   blocks: [BlockContent!]!
   createdAt: DateTime!
   description: String

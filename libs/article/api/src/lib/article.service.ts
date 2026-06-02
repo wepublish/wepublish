@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import {
   ArticleFilter,
@@ -470,6 +474,153 @@ export class ArticleService {
         },
       },
     });
+  }
+
+  /**
+   * Returns every revision of an article (draft, pending, published and
+   * archived), ordered from newest to oldest. This is the full version history.
+   */
+  async getRevisions(articleId: string) {
+    return this.prisma.articleRevision.findMany({
+      where: {
+        articleId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  /**
+   * Restores an older revision by cloning its content into a brand new draft.
+   *
+   * This is non-destructive: no historic revision is mutated or deleted. Any
+   * currently open (unpublished, non-archived) draft is archived first, exactly
+   * like `updateArticle` does, so there is at most one draft at a time.
+   */
+  @PrimeDataLoader(ArticleDataloaderService)
+  async restoreArticleRevision(
+    articleId: string,
+    revisionId: string,
+    userId: string | null | undefined
+  ) {
+    const revision = await this.prisma.articleRevision.findUnique({
+      where: { id: revisionId },
+      include: {
+        authors: true,
+        socialMediaAuthors: true,
+      },
+    });
+
+    if (!revision || revision.articleId !== articleId) {
+      throw new NotFoundException(
+        `Revision with id ${revisionId} not found for article ${articleId}`
+      );
+    }
+
+    const {
+      id: _id,
+      createdAt: _createdAt,
+      publishedAt: _publishedAt,
+      archivedAt: _archivedAt,
+      userId: _userId,
+      articleId: _articleId,
+      properties,
+      authors,
+      socialMediaAuthors,
+      ...content
+    } = revision;
+
+    return this.prisma.article.update({
+      where: { id: articleId },
+      data: {
+        modifiedAt: new Date(),
+        revisions: {
+          updateMany: {
+            where: {
+              archivedAt: null,
+              publishedAt: null,
+            },
+            data: {
+              archivedAt: new Date(),
+            },
+          },
+          create: {
+            ...content,
+            userId,
+            blocks: (content.blocks ?? []) as any[],
+            properties: properties as any,
+            authors: {
+              createMany: {
+                data: authors.map(({ authorId }) => ({ authorId })),
+              },
+            },
+            socialMediaAuthors: {
+              createMany: {
+                data: socialMediaAuthors.map(({ authorId }) => ({ authorId })),
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  /**
+   * Discards the current draft and reverts the article to its latest published
+   * (or pending) revision. The draft is archived rather than deleted, so it
+   * stays available in the version history. Requires a non-draft revision to
+   * fall back to, otherwise the article would be left without a `latest`.
+   */
+  @PrimeDataLoader(ArticleDataloaderService)
+  async discardArticleDraft(id: string) {
+    const article = await this.prisma.article.findUnique({
+      where: { id },
+    });
+
+    if (!article) {
+      throw new NotFoundException(`Article with id ${id} not found`);
+    }
+
+    const draft = await this.prisma.articleRevision.findFirst({
+      where: {
+        articleId: id,
+        publishedAt: null,
+        archivedAt: null,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    if (!draft) {
+      throw new BadRequestException(
+        `Article with id ${id} has no draft to discard`
+      );
+    }
+
+    const fallback = await this.prisma.articleRevision.findFirst({
+      where: {
+        articleId: id,
+        archivedAt: null,
+        publishedAt: {
+          not: null,
+        },
+      },
+    });
+
+    if (!fallback) {
+      throw new BadRequestException(
+        `Cannot discard draft: article ${id} has no published version to revert to`
+      );
+    }
+
+    await this.prisma.articleRevision.update({
+      where: { id: draft.id },
+      data: { archivedAt: new Date() },
+    });
+
+    return article;
   }
 
   @PrimeDataLoader(ArticleDataloaderService)
