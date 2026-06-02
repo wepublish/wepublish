@@ -1636,6 +1636,7 @@
         "memberPlans": "Plans d'abonnement",
         "filter": "Filtrer les revenus",
         "additionalRevenue": "Revenus externes (par ex. via virement bancaire direct)",
+        "additionalSubscriptions": "Abonnements externes (par ex. via virement bancaire direct)",
         "selectMemberPlans": "Choisir des plans d'abonnement",
         "countSubscriptionsFrom": "Inclure uniquement les abonnements payés à partir de la date",
         "countSubscriptionsUntil": "Inclure uniquement les abonnements payés jusqu'à la date",
@@ -1651,6 +1652,7 @@
         "title": "Titre",
         "description": "Description",
         "amount": "Montant cible",
+        "amountSubscriptions": "Nombre d'abonnements cible",
         "remove": "Supprimer",
         "add": "Ajouter un objectif"
       }
