@@ -139,6 +139,13 @@ fragment FullInvoice on Invoice {
   total
 }
 
+query CreateSubscriptionInfo($memberPlanId: String!, $voucher: String) {
+  createSubscriptionInfo(memberPlanId: $memberPlanId, voucher: $voucher) {
+    voucherValid
+    discountPercent
+  }
+}
+
 mutation Subscribe(
   $memberPlanId: String
   $memberPlanSlug: Slug
@@ -151,6 +158,7 @@ mutation Subscribe(
   $successURL: String
   $failureURL: String
   $deactivateSubscriptionId: String
+  $voucher: String
 ) {
   createUserSubscription(
     memberPlanID: $memberPlanId
@@ -164,6 +172,7 @@ mutation Subscribe(
     successURL: $successURL
     failureURL: $failureURL
     deactivateSubscriptionId: $deactivateSubscriptionId
+    voucher: $voucher
   ) {
     ...FullPayment
   }
@@ -179,6 +188,7 @@ mutation Resubscribe(
   $paymentMethodId: String
   $paymentMethodSlug: Slug
   $subscriptionProperties: [PropertyInput!]
+  $voucher: String
 ) {
   createUserSubscriptionWithConfirmation(
     userId: $userId
@@ -190,6 +200,7 @@ mutation Resubscribe(
     paymentMethodID: $paymentMethodId
     paymentMethodSlug: $paymentMethodSlug
     subscriptionProperties: $subscriptionProperties
+    voucher: $voucher
   )
 }
 
@@ -340,5 +351,50 @@ query UpgradeSubscriptionInfo(
     subscriptionId: $subscriptionId
   ) {
     discountAmount
+  }
+}
+
+fragment FullVoucher on Voucher {
+  id
+  code
+  discountPercent
+  validFrom
+  validTo
+  memberPlanId
+
+  memberPlan {
+    id
+    name
+  }
+}
+
+query VoucherList(
+  $filter: VoucherFilter
+  $cursorId: String
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: VoucherSort
+) {
+  vouchers(
+    filter: $filter
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullVoucher
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
   }
 }

@@ -19,6 +19,7 @@
     "memberplan": {
       "price": "{amountPerMonthMin, select, 0 {Gratis} other {Ab {monthlyPrice} {extendable, select, true {pro Monat} other {}}}}"
     },
+    "discount": "{paymentPeriod} {monthlyAmount, select, 0 {gratis} other {für nur {formattedAmount}}}",
     "cancellable": "Jederzeit kündbar",
     "upgrade": {
       "infoTitle": "Dein Upgrade",
@@ -41,6 +42,10 @@
     },
     "transactionFee": {
       "label": "Ja, ich will die Bearbeitungsgebühren von 2% übernehmen und damit {siteTitle} zusätzlich unterstützen."
+    },
+    "voucher": {
+      "discountApplied": "{discountPercent}% Rabatt angewendet",
+      "invalid": "Gutscheincode ungültig"
     }
   },
   "login": {

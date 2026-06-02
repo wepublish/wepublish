@@ -1,4 +1,4 @@
-import { QueryResult } from '@apollo/client';
+import { LazyQueryExecFunction, QueryResult } from '@apollo/client';
 import { RadioProps } from '@mui/material';
 import {
   ChallengeQuery,
@@ -15,6 +15,8 @@ import {
   Currency,
   UpgradeMutationVariables,
   UpgradeSubscriptionInfoQuery,
+  CreateSubscriptionInfoQuery,
+  CreateSubscriptionInfoQueryVariables,
 } from '@wepublish/website/api';
 import { BuilderRegistrationFormProps } from './authentication.interface';
 import { BuilderUserFormFields } from './user.interface';
@@ -130,6 +132,10 @@ export type BuilderSubscribeProps<
     QueryResult<MemberPlanListQuery>,
     'data' | 'loading' | 'error'
   >;
+  subscribeInfo: Pick<
+    QueryResult<CreateSubscriptionInfoQuery>,
+    'data' | 'loading' | 'error'
+  >;
   className?: string;
   onSubscribeWithRegister?: (data: {
     subscribe: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>;
@@ -141,11 +147,16 @@ export type BuilderSubscribeProps<
   onResubscribe?: (
     data: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>
   ) => Promise<void>;
+  fetchSubscribeInfo: LazyQueryExecFunction<
+    CreateSubscriptionInfoQuery,
+    CreateSubscriptionInfoQueryVariables
+  >;
   defaults?: Partial<{
     memberPlanSlug: string | null;
     email: string;
     name: string;
     firstName: string;
+    voucher: string;
   }>;
   deactivateSubscriptionId?: string;
   termsOfServiceUrl?: string;

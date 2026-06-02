@@ -724,6 +724,12 @@ export type CreateExternalAppInput = {
   url: Scalars['String'];
 };
 
+export type CreateSubscriptionInfo = {
+  __typename?: 'CreateSubscriptionInfo';
+  discountPercent?: Maybe<Scalars['Float']>;
+  voucherValid?: Maybe<Scalars['Boolean']>;
+};
+
 export type Crowdfunding = {
   __typename?: 'Crowdfunding';
   activeGoal?: Maybe<CrowdfundingGoalWithProgress>;
@@ -1250,7 +1256,11 @@ export type HasImageLc = {
 export type HasMemberPlan = {
   memberPlan: MemberPlan;
   memberPlanID: Scalars['String'];
-  memberplan?: Maybe<MemberPlan>;
+};
+
+export type HasMemberPlanLc = {
+  memberPlan: MemberPlan;
+  memberPlanId: Scalars['String'];
 };
 
 export type HasOneBlockContent = {
@@ -1838,6 +1848,8 @@ export type Mutation = {
   createUserSubscription: Payment;
   /** Allows guests and authenticated users to create additional subscriptions */
   createUserSubscriptionWithConfirmation: Scalars['Boolean'];
+  /** Creates a new voucher. */
+  createVoucher: Voucher;
   /** Deletes all sync errors for a config so all contacts will be retried. */
   deleteAllMailchimpSyncErrors: Scalars['Boolean'];
   /** Deletes an article. */
@@ -1911,6 +1923,8 @@ export type Mutation = {
   deleteUserConsent: UserConsent;
   /** Deletes an existing userrole. */
   deleteUserRole: UserRole;
+  /** Deletes an existing voucher. */
+  deleteVoucher: Voucher;
   /** Dislikes an article. */
   dislikeArticle: Article;
   /** Simulates a mailchimp sync without making changes. Returns what would be updated. */
@@ -2069,6 +2083,8 @@ export type Mutation = {
   updateUserRole: UserRole;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
+  /** Updates an existing voucher. */
+  updateVoucher: Voucher;
   upgradeUserSubscription: Payment;
   /** Uploads a new document. */
   uploadDocument: Document;
@@ -2454,6 +2470,7 @@ export type MutationCreateUserSubscriptionArgs = {
   paymentPeriodicity: PaymentPeriodicity;
   subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
   successURL?: InputMaybe<Scalars['String']>;
+  voucher?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2467,6 +2484,16 @@ export type MutationCreateUserSubscriptionWithConfirmationArgs = {
   paymentPeriodicity: PaymentPeriodicity;
   subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
   userId?: InputMaybe<Scalars['String']>;
+  voucher?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationCreateVoucherArgs = {
+  code: Scalars['String'];
+  discountPercent: Scalars['Int'];
+  memberPlanId: Scalars['String'];
+  validFrom: Scalars['DateTime'];
+  validTo: Scalars['DateTime'];
 };
 
 
@@ -2631,6 +2658,11 @@ export type MutationDeleteUserConsentArgs = {
 
 
 export type MutationDeleteUserRoleArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteVoucherArgs = {
   id: Scalars['String'];
 };
 
@@ -3287,6 +3319,16 @@ export type MutationUpdateUserSubscriptionArgs = {
 };
 
 
+export type MutationUpdateVoucherArgs = {
+  code?: InputMaybe<Scalars['String']>;
+  discountPercent?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  memberPlanId?: InputMaybe<Scalars['String']>;
+  validFrom?: InputMaybe<Scalars['DateTime']>;
+  validTo?: InputMaybe<Scalars['DateTime']>;
+};
+
+
 export type MutationUpgradeUserSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>;
   memberPlanId: Scalars['String'];
@@ -3581,6 +3623,13 @@ export type PaginatedTags = {
 export type PaginatedUserRoles = {
   __typename?: 'PaginatedUserRoles';
   nodes: Array<UserRole>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedVouchers = {
+  __typename?: 'PaginatedVouchers';
+  nodes: Array<Voucher>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -4094,7 +4143,6 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   isActive: Scalars['Boolean'];
   memberPlan: MemberPlan;
   memberPlanID: Scalars['String'];
-  memberplan?: Maybe<MemberPlan>;
   modifiedAt: Scalars['DateTime'];
   monthlyAmount: Scalars['Int'];
   paidUntil?: Maybe<Scalars['DateTime']>;
@@ -4176,6 +4224,8 @@ export type Query = {
    *
    */
   consents: Array<Consent>;
+  /** Gives the user some information about the subscription they are about to create */
+  createSubscriptionInfo: CreateSubscriptionInfo;
   /** Get a single crowdfunding by id */
   crowdfunding: Crowdfunding;
   /** Returns a list of crowdfundings. */
@@ -4413,6 +4463,10 @@ export type Query = {
   /** Returns a paginated list of users based on the filters given. */
   users: PaginatedSensitiveDataUsers;
   versionInformation: VersionInformation;
+  /** Returns an voucher by id or voucher. */
+  voucher: Voucher;
+  /** This query returns a list of vouchers */
+  vouchers: PaginatedVouchers;
 };
 
 
@@ -4529,6 +4583,12 @@ export type QueryConsentArgs = {
 
 export type QueryConsentsArgs = {
   filter?: InputMaybe<ConsentFilter>;
+};
+
+
+export type QueryCreateSubscriptionInfoArgs = {
+  memberPlanId: Scalars['String'];
+  voucher?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -4986,6 +5046,21 @@ export type QueryUsersArgs = {
   order?: InputMaybe<SortOrder>;
   skip?: Scalars['Int'];
   sort?: UserSort;
+  take?: Scalars['Int'];
+};
+
+
+export type QueryVoucherArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryVouchersArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<VoucherFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int'];
+  sort?: VoucherSort;
   take?: Scalars['Int'];
 };
 
@@ -5980,6 +6055,31 @@ export type VimeoVideoBlockInput = {
   videoID?: InputMaybe<Scalars['String']>;
 };
 
+export type Voucher = HasMemberPlanLc & {
+  __typename?: 'Voucher';
+  code: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  discountPercent: Scalars['Int'];
+  id: Scalars['String'];
+  memberPlan: MemberPlan;
+  memberPlanId: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  validFrom: Scalars['DateTime'];
+  validTo: Scalars['DateTime'];
+};
+
+export type VoucherFilter = {
+  from?: InputMaybe<Scalars['DateTime']>;
+  memberPlans?: InputMaybe<Array<Scalars['String']>>;
+  to?: InputMaybe<Scalars['DateTime']>;
+};
+
+export enum VoucherSort {
+  CreatedAt = 'CreatedAt',
+  Discount = 'Discount',
+  ModifiedAt = 'ModifiedAt'
+}
+
 export type YouTubeVideoBlock = BaseBlock & {
   __typename?: 'YouTubeVideoBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -6391,6 +6491,14 @@ export type FullInvoiceItemFragment = { __typename?: 'InvoiceItem', createdAt: s
 
 export type FullInvoiceFragment = { __typename?: 'Invoice', id: string, createdAt: string, modifiedAt: string, mail: string, paidAt?: string | null, dueAt: string, canceledAt?: string | null, subscriptionID?: string | null, description?: string | null, total: number, subscription?: { __typename?: 'PublicSubscription', id: string, url: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, periodAmount?: number | null, autoRenew: boolean, startsAt: string, extendable: boolean, externalReward?: string | null, paidUntil?: string | null, canExtend: boolean, isActive: boolean, paymentMethod: { __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number, image?: { __typename?: 'Image', id: string, width: number, height: number, title?: string | null, description?: string | null, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, slug: string, name: string, tags?: Array<string> | null, description?: Descendant[] | null, shortDescription?: Descendant[] | null, amountPerMonthMin: number, amountPerMonthMax?: number | null, amountPerMonthTarget?: number | null, yearlyAmount?: number | null, currency: Currency, extendable: boolean, productType: ProductType, successPageId?: string | null, failPageId?: string | null, confirmationPageId?: string | null, image?: { __typename?: 'Image', id: string, width: number, height: number, title?: string | null, description?: string | null, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, paymentProviderID: string, name: string, slug: string, description: string, gracePeriod: number, image?: { __typename?: 'Image', id: string, width: number, height: number, title?: string | null, description?: string | null, source?: string | null, link?: string | null, license?: string | null, focalPointX: number, focalPointY: number, url: string, xxl?: string | null, xl?: string | null, l?: string | null, m?: string | null, s?: string | null, xs?: string | null, xxs?: string | null, xxlSquare?: string | null, xlSquare?: string | null, lSquare?: string | null, mSquare?: string | null, sSquare?: string | null, xsSquare?: string | null, xxsSquare?: string | null } | null }> }>, successPage?: { __typename?: 'Page', url: string } | null, failPage?: { __typename?: 'Page', url: string } | null, confirmationPage?: { __typename?: 'Page', url: string } | null }, properties: Array<{ __typename?: 'Property', key: string, value: string }> } | null, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> };
 
+export type CreateSubscriptionInfoQueryVariables = Exact<{
+  memberPlanId: Scalars['String'];
+  voucher?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type CreateSubscriptionInfoQuery = { __typename?: 'Query', createSubscriptionInfo: { __typename?: 'CreateSubscriptionInfo', voucherValid?: boolean | null, discountPercent?: number | null } };
+
 export type SubscribeMutationVariables = Exact<{
   memberPlanId?: InputMaybe<Scalars['String']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']>;
@@ -6403,6 +6511,7 @@ export type SubscribeMutationVariables = Exact<{
   successURL?: InputMaybe<Scalars['String']>;
   failureURL?: InputMaybe<Scalars['String']>;
   deactivateSubscriptionId?: InputMaybe<Scalars['String']>;
+  voucher?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -6418,6 +6527,7 @@ export type ResubscribeMutationVariables = Exact<{
   paymentMethodId?: InputMaybe<Scalars['String']>;
   paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
   subscriptionProperties?: InputMaybe<Array<PropertyInput> | PropertyInput>;
+  voucher?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -6523,6 +6633,20 @@ export type UpgradeSubscriptionInfoQueryVariables = Exact<{
 
 
 export type UpgradeSubscriptionInfoQuery = { __typename?: 'Query', upgradeUserSubscriptionInfo: { __typename?: 'UpgradeSubscription', discountAmount: number } };
+
+export type FullVoucherFragment = { __typename?: 'Voucher', id: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } };
+
+export type VoucherListQueryVariables = Exact<{
+  filter?: InputMaybe<VoucherFilter>;
+  cursorId?: InputMaybe<Scalars['String']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<VoucherSort>;
+}>;
+
+
+export type VoucherListQuery = { __typename?: 'Query', vouchers: { __typename?: 'PaginatedVouchers', totalCount: number, nodes: Array<{ __typename?: 'Voucher', id: string, code: string, discountPercent: number, validFrom: string, validTo: string, memberPlanId: string, memberPlan: { __typename?: 'MemberPlan', id: string, name: string } }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type FullNavigationFragment = { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename?: 'ArticleNavigationLink', label: string, article: { __typename?: 'Article', url: string } } | { __typename?: 'ExternalNavigationLink', label: string, url?: string | null } | { __typename?: 'PageNavigationLink', label: string, page: { __typename?: 'Page', url: string } }> };
 
@@ -7836,6 +7960,20 @@ export const FullInvoiceFragmentDoc = gql`
 }
     ${FullSubscriptionFragmentDoc}
 ${FullInvoiceItemFragmentDoc}`;
+export const FullVoucherFragmentDoc = gql`
+    fragment FullVoucher on Voucher {
+  id
+  code
+  discountPercent
+  validFrom
+  validTo
+  memberPlanId
+  memberPlan {
+    id
+    name
+  }
+}
+    `;
 export const FullNavigationFragmentDoc = gql`
     fragment FullNavigation on Navigation {
   id
@@ -8731,8 +8869,45 @@ export function useUploadImageMutation(baseOptions?: Apollo.MutationHookOptions<
 export type UploadImageMutationHookResult = ReturnType<typeof useUploadImageMutation>;
 export type UploadImageMutationResult = Apollo.MutationResult<UploadImageMutation>;
 export type UploadImageMutationOptions = Apollo.BaseMutationOptions<UploadImageMutation, UploadImageMutationVariables>;
+export const CreateSubscriptionInfoDocument = gql`
+    query CreateSubscriptionInfo($memberPlanId: String!, $voucher: String) {
+  createSubscriptionInfo(memberPlanId: $memberPlanId, voucher: $voucher) {
+    voucherValid
+    discountPercent
+  }
+}
+    `;
+
+/**
+ * __useCreateSubscriptionInfoQuery__
+ *
+ * To run a query within a React component, call `useCreateSubscriptionInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCreateSubscriptionInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCreateSubscriptionInfoQuery({
+ *   variables: {
+ *      memberPlanId: // value for 'memberPlanId'
+ *      voucher: // value for 'voucher'
+ *   },
+ * });
+ */
+export function useCreateSubscriptionInfoQuery(baseOptions: Apollo.QueryHookOptions<CreateSubscriptionInfoQuery, CreateSubscriptionInfoQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CreateSubscriptionInfoQuery, CreateSubscriptionInfoQueryVariables>(CreateSubscriptionInfoDocument, options);
+      }
+export function useCreateSubscriptionInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CreateSubscriptionInfoQuery, CreateSubscriptionInfoQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CreateSubscriptionInfoQuery, CreateSubscriptionInfoQueryVariables>(CreateSubscriptionInfoDocument, options);
+        }
+export type CreateSubscriptionInfoQueryHookResult = ReturnType<typeof useCreateSubscriptionInfoQuery>;
+export type CreateSubscriptionInfoLazyQueryHookResult = ReturnType<typeof useCreateSubscriptionInfoLazyQuery>;
+export type CreateSubscriptionInfoQueryResult = Apollo.QueryResult<CreateSubscriptionInfoQuery, CreateSubscriptionInfoQueryVariables>;
 export const SubscribeDocument = gql`
-    mutation Subscribe($memberPlanId: String, $memberPlanSlug: Slug, $autoRenew: Boolean!, $paymentPeriodicity: PaymentPeriodicity!, $monthlyAmount: Int!, $paymentMethodId: String, $paymentMethodSlug: Slug, $subscriptionProperties: [PropertyInput!], $successURL: String, $failureURL: String, $deactivateSubscriptionId: String) {
+    mutation Subscribe($memberPlanId: String, $memberPlanSlug: Slug, $autoRenew: Boolean!, $paymentPeriodicity: PaymentPeriodicity!, $monthlyAmount: Int!, $paymentMethodId: String, $paymentMethodSlug: Slug, $subscriptionProperties: [PropertyInput!], $successURL: String, $failureURL: String, $deactivateSubscriptionId: String, $voucher: String) {
   createUserSubscription(
     memberPlanID: $memberPlanId
     memberPlanSlug: $memberPlanSlug
@@ -8745,6 +8920,7 @@ export const SubscribeDocument = gql`
     successURL: $successURL
     failureURL: $failureURL
     deactivateSubscriptionId: $deactivateSubscriptionId
+    voucher: $voucher
   ) {
     ...FullPayment
   }
@@ -8776,6 +8952,7 @@ export type SubscribeMutationFn = Apollo.MutationFunction<SubscribeMutation, Sub
  *      successURL: // value for 'successURL'
  *      failureURL: // value for 'failureURL'
  *      deactivateSubscriptionId: // value for 'deactivateSubscriptionId'
+ *      voucher: // value for 'voucher'
  *   },
  * });
  */
@@ -8787,7 +8964,7 @@ export type SubscribeMutationHookResult = ReturnType<typeof useSubscribeMutation
 export type SubscribeMutationResult = Apollo.MutationResult<SubscribeMutation>;
 export type SubscribeMutationOptions = Apollo.BaseMutationOptions<SubscribeMutation, SubscribeMutationVariables>;
 export const ResubscribeDocument = gql`
-    mutation Resubscribe($userId: String, $memberPlanId: String, $memberPlanSlug: Slug, $autoRenew: Boolean!, $paymentPeriodicity: PaymentPeriodicity!, $monthlyAmount: Int!, $paymentMethodId: String, $paymentMethodSlug: Slug, $subscriptionProperties: [PropertyInput!]) {
+    mutation Resubscribe($userId: String, $memberPlanId: String, $memberPlanSlug: Slug, $autoRenew: Boolean!, $paymentPeriodicity: PaymentPeriodicity!, $monthlyAmount: Int!, $paymentMethodId: String, $paymentMethodSlug: Slug, $subscriptionProperties: [PropertyInput!], $voucher: String) {
   createUserSubscriptionWithConfirmation(
     userId: $userId
     memberPlanID: $memberPlanId
@@ -8798,6 +8975,7 @@ export const ResubscribeDocument = gql`
     paymentMethodID: $paymentMethodId
     paymentMethodSlug: $paymentMethodSlug
     subscriptionProperties: $subscriptionProperties
+    voucher: $voucher
   )
 }
     `;
@@ -8825,6 +9003,7 @@ export type ResubscribeMutationFn = Apollo.MutationFunction<ResubscribeMutation,
  *      paymentMethodId: // value for 'paymentMethodId'
  *      paymentMethodSlug: // value for 'paymentMethodSlug'
  *      subscriptionProperties: // value for 'subscriptionProperties'
+ *      voucher: // value for 'voucher'
  *   },
  * });
  */
@@ -9303,6 +9482,62 @@ export function useUpgradeSubscriptionInfoLazyQuery(baseOptions?: Apollo.LazyQue
 export type UpgradeSubscriptionInfoQueryHookResult = ReturnType<typeof useUpgradeSubscriptionInfoQuery>;
 export type UpgradeSubscriptionInfoLazyQueryHookResult = ReturnType<typeof useUpgradeSubscriptionInfoLazyQuery>;
 export type UpgradeSubscriptionInfoQueryResult = Apollo.QueryResult<UpgradeSubscriptionInfoQuery, UpgradeSubscriptionInfoQueryVariables>;
+export const VoucherListDocument = gql`
+    query VoucherList($filter: VoucherFilter, $cursorId: String, $take: Int, $skip: Int, $order: SortOrder, $sort: VoucherSort) {
+  vouchers(
+    filter: $filter
+    cursorId: $cursorId
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullVoucher
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    ${FullVoucherFragmentDoc}`;
+
+/**
+ * __useVoucherListQuery__
+ *
+ * To run a query within a React component, call `useVoucherListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useVoucherListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useVoucherListQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      cursorId: // value for 'cursorId'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      order: // value for 'order'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useVoucherListQuery(baseOptions?: Apollo.QueryHookOptions<VoucherListQuery, VoucherListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<VoucherListQuery, VoucherListQueryVariables>(VoucherListDocument, options);
+      }
+export function useVoucherListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<VoucherListQuery, VoucherListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<VoucherListQuery, VoucherListQueryVariables>(VoucherListDocument, options);
+        }
+export type VoucherListQueryHookResult = ReturnType<typeof useVoucherListQuery>;
+export type VoucherListLazyQueryHookResult = ReturnType<typeof useVoucherListLazyQuery>;
+export type VoucherListQueryResult = Apollo.QueryResult<VoucherListQuery, VoucherListQueryVariables>;
 export const NavigationListDocument = gql`
     query NavigationList {
   navigations {
@@ -10441,6 +10676,9 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
     ],
     "HasMemberPlan": [
       "PublicSubscription"
+    ],
+    "HasMemberPlanLc": [
+      "Voucher"
     ],
     "HasOneBlockContent": [
       "BlockWithAlignment"

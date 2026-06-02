@@ -2,6 +2,7 @@ import { SubscribeBlockContext } from '@wepublish/block-content/website';
 import { ComponentProps, ComponentType } from 'react';
 import { action } from '@storybook/addon-actions';
 import {
+  CreateSubscriptionInfoQueryResult,
   RegisterMutationResult,
   ResubscribeMutationResult,
   SubscribeMutationResult,
@@ -26,6 +27,10 @@ type SubscribeDecoratorProps = Partial<
       UpgradeSubscriptionInfoQueryResult,
       'data' | 'error'
     >;
+    subscribeInfoResult: Pick<
+      CreateSubscriptionInfoQueryResult,
+      'data' | 'error'
+    >;
   }
 >;
 
@@ -36,6 +41,7 @@ export const WithSubscribeBlockDecorators =
     registerResult = { data: undefined },
     upgradeResult = { data: undefined },
     upgradeInfoResult = { data: undefined },
+    subscribeInfoResult = { data: undefined },
     redirectPages,
     stripeClientSecret,
     challenge = { data: undefined, loading: true },
@@ -73,6 +79,12 @@ export const WithSubscribeBlockDecorators =
       return upgradeInfoResult || {};
     };
 
+    const fetchSubscribeInfo = async (...args: any[]): Promise<any> => {
+      action('fetchUpgradeInfo')(args);
+
+      return subscribeInfoResult || {};
+    };
+
     return (
       <SubscribeBlockContext.Provider
         value={{
@@ -81,6 +93,7 @@ export const WithSubscribeBlockDecorators =
           resubscribe: [resubscribe, resubscribeResult as any],
           register: [register, registerResult as any],
           upgradeInfo: [fetchUpgradeInfo, upgradeInfoResult as any],
+          subscribeInfo: [fetchSubscribeInfo, subscribeInfoResult as any],
           redirectPages,
           stripeClientSecret,
           challenge,
