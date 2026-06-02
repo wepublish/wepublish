@@ -39,7 +39,8 @@ export const ReflektSubscribe = styled(SubscribeBlock)`
   }
 
   ${SubscribeSection}[data-area='monthlyAmount'],
-  ${SubscribeSection}[data-area='returning'] {
+  ${SubscribeSection}[data-area='returning'],
+  ${SubscribeNarrowSection}[data-area='voucher'] {
     display: none;
   }
 
