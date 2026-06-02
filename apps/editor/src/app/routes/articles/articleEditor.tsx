@@ -446,7 +446,7 @@ function ArticleEditor() {
           header={t('articleEditor.overview.draftSaved')}
           duration={2000}
         />,
-        { placement: 'topEnd' }
+        { placement: 'bottomEnd' }
       );
       await refetch({ id: articleID });
     } else {
@@ -461,7 +461,7 @@ function ArticleEditor() {
           header={t('articleEditor.overview.draftCreated')}
           duration={2000}
         />,
-        { placement: 'topEnd' }
+        { placement: 'bottomEnd' }
       );
     }
   }
@@ -513,7 +513,7 @@ function ArticleEditor() {
           )}
           duration={2000}
         />,
-        { placement: 'topEnd' }
+        { placement: 'bottomEnd' }
       );
     }
     await refetch({ id: articleID });

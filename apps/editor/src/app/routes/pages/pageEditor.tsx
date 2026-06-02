@@ -309,7 +309,7 @@ function PageEditor() {
           header={t('pageEditor.overview.pageDraftSaved')}
           duration={2000}
         />,
-        { placement: 'topEnd' }
+        { placement: 'bottomEnd' }
       );
       await refetch({ id: pageID });
     } else {
@@ -325,7 +325,7 @@ function PageEditor() {
           header={t('pageEditor.overview.pageDraftCreated')}
           duration={2000}
         />,
-        { placement: 'topEnd' }
+        { placement: 'bottomEnd' }
       );
     }
   }
@@ -367,7 +367,7 @@ function PageEditor() {
         )}
         duration={2000}
       />,
-      { placement: 'topEnd' }
+      { placement: 'bottomEnd' }
     );
   }
 
