@@ -423,7 +423,7 @@ export const FlexBlockHero = ({
 
   return (
     <ImageContext.Provider
-      value={{ maxWidth: 1500, fetchPriority: 'high', loading: 'eager' }}
+      value={{ maxWidth: 2400, fetchPriority: 'high', loading: 'eager' }}
     >
       <FlexBlockHeroWrapper
         className={className}
