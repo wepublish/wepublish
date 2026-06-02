@@ -194,6 +194,13 @@ export class ImportPublicSubscriptionInput extends OmitType(
       'When true, suppress any subscription / invoice mail dispatched as part of this import. Useful for bulk migrations.',
   })
   skipMail?: boolean;
+
+  @Field(() => String, {
+    nullable: true,
+    description:
+      'Id of the subscription this one replaces (resubscribe). Used by bulk migrations to link a renewed signup back to the lapsed subscription it continues.',
+  })
+  replacesSubscriptionID?: string;
 }
 
 @ArgsType()

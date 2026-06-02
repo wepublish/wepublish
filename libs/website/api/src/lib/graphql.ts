@@ -2696,6 +2696,7 @@ export type MutationImportSubscriptionArgs = {
   paymentPeriodicity: PaymentPeriodicity;
   periodAmount?: InputMaybe<Scalars['Int']>;
   properties: Array<PropertyInput>;
+  replacesSubscriptionID?: InputMaybe<Scalars['String']>;
   skipMail?: InputMaybe<Scalars['Boolean']>;
   startsAt: Scalars['DateTime'];
   userID: Scalars['String'];

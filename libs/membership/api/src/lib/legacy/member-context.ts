@@ -925,6 +925,7 @@ export class MemberContext implements MemberContextInterface {
     extendable,
     startsAt = new Date(),
     paidUntil,
+    replacesSubscriptionID,
     skipMail,
   }: {
     userID: string;
@@ -938,6 +939,7 @@ export class MemberContext implements MemberContextInterface {
     extendable: boolean;
     startsAt?: Date | string;
     paidUntil?: Date | string;
+    replacesSubscriptionID?: string | null;
     /**
      * When true, suppress the SUBSCRIBE mail dispatched in the
      * "future-start, no paidUntil" branch. The IF branch (used by bulk
@@ -1000,6 +1002,7 @@ export class MemberContext implements MemberContextInterface {
         properties,
         autoRenew,
         extendable,
+        replacesSubscriptionID,
         currency: memberPlan.currency,
       },
       include: {
