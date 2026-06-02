@@ -97,8 +97,18 @@ export interface HtmlVisualEditorProps {
   onChange: (html: string) => void;
 }
 
+const EDITABLE_SELECTOR = '.mail-body';
+const EDITOR_STYLE_ID = '__wepublish_editor_only';
+
+// The contenteditable attribute and editor-only styles must never end up in the
+// saved/sent template HTML.
 const serializeDocument = (doc: Document): string =>
-  `<!DOCTYPE html>\n${doc.documentElement.outerHTML}`;
+  `<!DOCTYPE html>\n${doc.documentElement.outerHTML
+    .replace(
+      new RegExp(`<style id="${EDITOR_STYLE_ID}">[\\s\\S]*?</style>`, 'gi'),
+      ''
+    )
+    .replace(/\s*contenteditable="[^"]*"/gi, '')}`;
 
 const HtmlVisualEditorComponent = forwardRef<
   HtmlVisualEditorHandle,
@@ -110,6 +120,16 @@ const HtmlVisualEditorComponent = forwardRef<
 
   const getDoc = (): Document | null =>
     frameRef.current?.contentDocument ?? null;
+
+  // Prefer the dedicated body cell of our own shell; fall back to the document
+  // body for templates authored elsewhere (which have no `.mail-body`).
+  const getEditable = (): HTMLElement | null => {
+    const doc = getDoc();
+    if (!doc) {
+      return null;
+    }
+    return doc.querySelector<HTMLElement>(EDITABLE_SELECTOR) ?? doc.body;
+  };
 
   const emit = () => {
     const doc = getDoc();
@@ -123,10 +143,21 @@ const HtmlVisualEditorComponent = forwardRef<
     if (!doc) {
       return;
     }
-    // Make the rendered email directly editable and prefer tags (e.g. <b>)
-    // over inline styles so the output stays mail-client friendly.
-    doc.designMode = 'on';
+    // Only the body cell is editable — keeping the surrounding table/shell
+    // intact so backspacing at the start can't delete the email structure.
+    const editable = getEditable();
+    if (editable) {
+      editable.setAttribute('contenteditable', 'true');
+    }
+    // Editor-only styling (focus ring removal) — stripped before saving.
+    if (!doc.getElementById(EDITOR_STYLE_ID)) {
+      const style = doc.createElement('style');
+      style.id = EDITOR_STYLE_ID;
+      style.textContent = '[contenteditable]{outline:none;}';
+      doc.head.appendChild(style);
+    }
     try {
+      // Prefer tags (e.g. <b>) over inline styles for mail-friendly output.
       doc.execCommand('styleWithCSS', false, 'false');
     } catch {
       // ignore — not supported everywhere
@@ -139,7 +170,7 @@ const HtmlVisualEditorComponent = forwardRef<
     if (!doc) {
       return;
     }
-    frameRef.current?.contentWindow?.focus();
+    getEditable()?.focus();
     doc.execCommand(command, false, argument);
     emit();
   };
@@ -152,7 +183,7 @@ const HtmlVisualEditorComponent = forwardRef<
         if (!doc) {
           return;
         }
-        frameRef.current?.contentWindow?.focus();
+        getEditable()?.focus();
         doc.execCommand('insertText', false, text);
         emit();
       },
