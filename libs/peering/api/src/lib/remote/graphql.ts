@@ -722,6 +722,12 @@ export type CreateExternalAppInput = {
   url: Scalars['String'];
 };
 
+export type CreateSubscriptionInfo = {
+  __typename?: 'CreateSubscriptionInfo';
+  discountPercent?: Maybe<Scalars['Float']>;
+  voucherValid?: Maybe<Scalars['Boolean']>;
+};
+
 export type Crowdfunding = {
   __typename?: 'Crowdfunding';
   activeGoal?: Maybe<CrowdfundingGoalWithProgress>;
@@ -1248,7 +1254,11 @@ export type HasImageLc = {
 export type HasMemberPlan = {
   memberPlan: MemberPlan;
   memberPlanID: Scalars['String'];
-  memberplan?: Maybe<MemberPlan>;
+};
+
+export type HasMemberPlanLc = {
+  memberPlan: MemberPlan;
+  memberPlanId: Scalars['String'];
 };
 
 export type HasOneBlockContent = {
@@ -1835,6 +1845,8 @@ export type Mutation = {
   createUserSubscription: Payment;
   /** Allows guests and authenticated users to create additional subscriptions */
   createUserSubscriptionWithConfirmation: Scalars['Boolean'];
+  /** Creates a new voucher. */
+  createVoucher: Voucher;
   /** Deletes all sync errors for a config so all contacts will be retried. */
   deleteAllMailchimpSyncErrors: Scalars['Boolean'];
   /** Deletes an article. */
@@ -1908,6 +1920,8 @@ export type Mutation = {
   deleteUserConsent: UserConsent;
   /** Deletes an existing userrole. */
   deleteUserRole: UserRole;
+  /** Deletes an existing voucher. */
+  deleteVoucher: Voucher;
   /** Dislikes an article. */
   dislikeArticle: Article;
   /** Simulates a mailchimp sync without making changes. Returns what would be updated. */
@@ -2066,6 +2080,8 @@ export type Mutation = {
   updateUserRole: UserRole;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
+  /** Updates an existing voucher. */
+  updateVoucher: Voucher;
   upgradeUserSubscription: Payment;
   /** Uploads a new document. */
   uploadDocument: Document;
@@ -2449,6 +2465,7 @@ export type MutationCreateUserSubscriptionArgs = {
   paymentPeriodicity: PaymentPeriodicity;
   subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
   successURL?: InputMaybe<Scalars['String']>;
+  voucher?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -2462,6 +2479,16 @@ export type MutationCreateUserSubscriptionWithConfirmationArgs = {
   paymentPeriodicity: PaymentPeriodicity;
   subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
   userId?: InputMaybe<Scalars['String']>;
+  voucher?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationCreateVoucherArgs = {
+  code: Scalars['String'];
+  discountPercent: Scalars['Int'];
+  memberPlanId: Scalars['String'];
+  validFrom: Scalars['DateTime'];
+  validTo: Scalars['DateTime'];
 };
 
 
@@ -2626,6 +2653,11 @@ export type MutationDeleteUserConsentArgs = {
 
 
 export type MutationDeleteUserRoleArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteVoucherArgs = {
   id: Scalars['String'];
 };
 
@@ -3278,6 +3310,16 @@ export type MutationUpdateUserSubscriptionArgs = {
 };
 
 
+export type MutationUpdateVoucherArgs = {
+  code?: InputMaybe<Scalars['String']>;
+  discountPercent?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  memberPlanId?: InputMaybe<Scalars['String']>;
+  validFrom?: InputMaybe<Scalars['DateTime']>;
+  validTo?: InputMaybe<Scalars['DateTime']>;
+};
+
+
 export type MutationUpgradeUserSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>;
   memberPlanId: Scalars['String'];
@@ -3572,6 +3614,13 @@ export type PaginatedTags = {
 export type PaginatedUserRoles = {
   __typename?: 'PaginatedUserRoles';
   nodes: Array<UserRole>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedVouchers = {
+  __typename?: 'PaginatedVouchers';
+  nodes: Array<Voucher>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -4085,7 +4134,6 @@ export type PublicSubscription = HasMemberPlan & HasPaymentMethod & HasUser & {
   isActive: Scalars['Boolean'];
   memberPlan: MemberPlan;
   memberPlanID: Scalars['String'];
-  memberplan?: Maybe<MemberPlan>;
   modifiedAt: Scalars['DateTime'];
   monthlyAmount: Scalars['Int'];
   paidUntil?: Maybe<Scalars['DateTime']>;
@@ -4166,6 +4214,8 @@ export type Query = {
    *
    */
   consents: Array<Consent>;
+  /** Gives the user some information about the subscription they are about to create */
+  createSubscriptionInfo: CreateSubscriptionInfo;
   /** Get a single crowdfunding by id */
   crowdfunding: Crowdfunding;
   /** Returns a list of crowdfundings. */
@@ -4403,6 +4453,10 @@ export type Query = {
   /** Returns a paginated list of users based on the filters given. */
   users: PaginatedSensitiveDataUsers;
   versionInformation: VersionInformation;
+  /** Returns an voucher by id or voucher. */
+  voucher: Voucher;
+  /** This query returns a list of vouchers */
+  vouchers: PaginatedVouchers;
 };
 
 
@@ -4519,6 +4573,12 @@ export type QueryConsentArgs = {
 
 export type QueryConsentsArgs = {
   filter?: InputMaybe<ConsentFilter>;
+};
+
+
+export type QueryCreateSubscriptionInfoArgs = {
+  memberPlanId: Scalars['String'];
+  voucher?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -4976,6 +5036,21 @@ export type QueryUsersArgs = {
   order?: InputMaybe<SortOrder>;
   skip?: Scalars['Int'];
   sort?: UserSort;
+  take?: Scalars['Int'];
+};
+
+
+export type QueryVoucherArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryVouchersArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<VoucherFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int'];
+  sort?: VoucherSort;
   take?: Scalars['Int'];
 };
 
@@ -5970,6 +6045,31 @@ export type VimeoVideoBlockInput = {
   videoID?: InputMaybe<Scalars['String']>;
 };
 
+export type Voucher = HasMemberPlanLc & {
+  __typename?: 'Voucher';
+  code: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  discountPercent: Scalars['Int'];
+  id: Scalars['String'];
+  memberPlan: MemberPlan;
+  memberPlanId: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  validFrom: Scalars['DateTime'];
+  validTo: Scalars['DateTime'];
+};
+
+export type VoucherFilter = {
+  from?: InputMaybe<Scalars['DateTime']>;
+  memberPlans?: InputMaybe<Array<Scalars['String']>>;
+  to?: InputMaybe<Scalars['DateTime']>;
+};
+
+export enum VoucherSort {
+  CreatedAt = 'CreatedAt',
+  Discount = 'Discount',
+  ModifiedAt = 'ModifiedAt'
+}
+
 export type YouTubeVideoBlock = BaseBlock & {
   __typename?: 'YouTubeVideoBlock';
   blockStyle?: Maybe<Scalars['String']>;
@@ -6506,6 +6606,9 @@ export const PeerProfile = gql`
     ],
     "HasMemberPlan": [
       "PublicSubscription"
+    ],
+    "HasMemberPlanLc": [
+      "Voucher"
     ],
     "HasOneBlockContent": [
       "BlockWithAlignment"

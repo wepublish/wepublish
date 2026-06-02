@@ -7,15 +7,13 @@ import {
   useMemberPlanListQuery,
 } from '@wepublish/editor/api';
 import { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import {
   Divider as RDivider,
   Message,
   Pagination as RPagination,
-  TagPicker,
+  SelectPicker,
   toaster,
 } from 'rsuite';
-import { ItemDataType } from 'rsuite/esm/@types/common';
 
 import { DEFAULT_MAX_TABLE_PAGES } from '../../utility';
 
@@ -27,36 +25,25 @@ const Pagination = styled(RPagination)`
   margin: 0 12px 12px;
 `;
 
-interface SelectMemberPlansProps {
+interface SelectMemberPlanProps {
   className?: string;
   disabled?: boolean;
   name?: string;
-  defaultMemberPlans: Pick<MemberPlan, 'id' | 'name'>[];
-  selectedMemberPlans?: string[] | null;
-  setSelectedMemberPlans(memberplans: string[]): void;
+  defaultMemberPlan?: Pick<MemberPlan, 'id' | 'name'> | null;
+  selectedMemberPlan?: string | null;
+  setSelectedMemberPlan(memberPlanId: string | null): void;
 }
 
-export function SelectMemberPlans({
+export function SelectMemberPlan({
   className,
   disabled,
   name,
-  defaultMemberPlans,
-  selectedMemberPlans,
-  setSelectedMemberPlans,
-}: SelectMemberPlansProps) {
-  const { t } = useTranslation();
+  defaultMemberPlan,
+  selectedMemberPlan,
+  setSelectedMemberPlan,
+}: SelectMemberPlanProps) {
   const [page, setPage] = useState(1);
-  const [cacheData, setCacheData] = useState(
-    defaultMemberPlans.map(memberplan => ({
-      label: memberplan.name,
-      value: memberplan.id,
-    })) as ItemDataType<string | number>[]
-  );
 
-  /**
-   * Error handling
-   * @param error
-   */
   const showErrors = (error: ApolloError): void => {
     toaster.push(
       <Message
@@ -79,30 +66,35 @@ export function SelectMemberPlans({
     onError: showErrors,
   });
 
-  /**
-   * Prepare available memberplans
-   */
   const availableMemberPlans = useMemo(() => {
-    if (!memberplansData?.memberPlans?.nodes) {
-      return [];
-    }
-
-    return memberplansData.memberPlans.nodes.map(memberplan => ({
+    const nodes = memberplansData?.memberPlans?.nodes ?? [];
+    const items = nodes.map(memberplan => ({
       label: memberplan.name,
       value: memberplan.id,
     }));
-  }, [memberplansData]);
+
+    if (
+      defaultMemberPlan &&
+      !items.some(item => item.value === defaultMemberPlan.id)
+    ) {
+      items.unshift({
+        label: defaultMemberPlan.name,
+        value: defaultMemberPlan.id,
+      });
+    }
+
+    return items;
+  }, [memberplansData, defaultMemberPlan]);
 
   return (
-    <TagPicker
+    <SelectPicker
       block
       virtualized
       disabled={disabled}
       className={className}
       name={name}
-      value={selectedMemberPlans}
+      value={selectedMemberPlan}
       data={availableMemberPlans}
-      cacheData={cacheData}
       onSearch={word => {
         refetch({
           filter: word ? { name: word } : undefined,
@@ -111,12 +103,8 @@ export function SelectMemberPlans({
           take: 50,
         });
       }}
-      onSelect={(value, item, event) => {
-        setCacheData([...cacheData, item]);
-        refetch();
-      }}
-      onChange={(value, item) => {
-        setSelectedMemberPlans(value);
+      onChange={(value, event) => {
+        setSelectedMemberPlan(value);
       }}
       renderMenu={menu => {
         return (

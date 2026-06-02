@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Checkbox, FormControlLabel } from '@mui/material';
+import { Checkbox, FormControlLabel, FormHelperText } from '@mui/material';
 import styled from '@emotion/styled';
 import {
   Challenge,
@@ -32,6 +32,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { formatCurrency, roundUpTo5Cents } from '../formatters/format-currency';
 import {
+  formatFirstPaymentPeriod,
   formatPaymentPeriod,
   getPaymentPeriodicyMonths,
 } from '../formatters/format-payment-period';
@@ -40,6 +41,7 @@ import { ApolloError } from '@apollo/client';
 import { ApiAlert } from '@wepublish/errors/website';
 import { Modal } from '@wepublish/website/builder';
 import { useTranslation } from 'react-i18next';
+import { MdCheck, MdError } from 'react-icons/md';
 
 export const subscribeSchema = z.object({
   memberPlanId: z.string().min(1),
@@ -55,6 +57,7 @@ export const subscribeSchema = z.object({
     PaymentPeriodicity.Lifetime,
   ]),
   payTransactionFee: z.boolean(),
+  voucher: z.string().nullish(),
 });
 
 export const SubscribeWrapper = styled('form')`
@@ -116,8 +119,18 @@ export const SubscribeCancelable = styled('div')`
   justify-self: center;
 `;
 
+export const SubscribeWithDiscount = styled('div')`
+  text-align: center;
+  justify-self: center;
+  font-weight: 600;
+`;
+
 export const SubscribeNarrowSection = styled(SubscribeSection)`
   gap: ${({ theme }) => theme.spacing(1)};
+`;
+
+export const VoucherSection = styled(SubscribeNarrowSection)`
+  display: none;
 `;
 
 export const usePaymentText = ({
@@ -186,6 +199,37 @@ export const usePaymentText = ({
   ]);
 };
 
+export const useDiscountText = ({
+  memberPlan,
+  paymentPeriodicity,
+  monthlyAmount,
+  currency,
+  locale,
+}: {
+  memberPlan: string;
+  paymentPeriodicity: PaymentPeriodicity;
+  monthlyAmount: number;
+  currency: Currency;
+  locale: string;
+}) => {
+  const { t } = useTranslation();
+
+  return useMemo(() => {
+    const variables = {
+      paymentPeriod: formatFirstPaymentPeriod(paymentPeriodicity),
+      formattedAmount: formatCurrency(
+        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        currency,
+        locale
+      ),
+      monthlyAmount,
+      memberPlan,
+    };
+
+    return t(`subscribe.discount`, variables);
+  }, [currency, locale, monthlyAmount, paymentPeriodicity, memberPlan, t]);
+};
+
 export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   defaults,
   memberPlans,
@@ -203,10 +247,12 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   transactionFee = amount => roundUpTo5Cents((amount * 0.02) / 100) * 100,
   transactionFeeText,
   returningUserId,
+  fetchSubscribeInfo,
+  subscribeInfo,
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: { locale, siteTitle },
-    elements: { Alert, H5, Paragraph },
+    elements: { Alert, H5, Paragraph, TextField },
     MemberPlanPicker,
     PaymentMethodPicker,
     PeriodicityPicker,
@@ -295,6 +341,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     resolver: zodResolver(schem),
     defaultValues: {
       ...defaults,
+      voucher: '',
       monthlyAmount: 0,
       autoRenew: true,
       payTransactionFee: false,
@@ -315,6 +362,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     reValidateMode: 'onChange',
   });
 
+  const voucher = watch<'voucher'>('voucher');
   const selectedPaymentMethodId = watch<'paymentMethodId'>('paymentMethodId');
   const selectedPaymentPeriodicity =
     watch<'paymentPeriodicity'>('paymentPeriodicity');
@@ -359,6 +407,9 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     selectedMemberPlan?.amountPerMonthMin ===
     selectedMemberPlan?.amountPerMonthMax;
 
+  const discountPercent =
+    subscribeInfo.data?.createSubscriptionInfo.discountPercent ?? 0;
+
   const paymentText = usePaymentText({
     autoRenew,
     memberPlan: selectedMemberPlan?.name ?? '',
@@ -368,6 +419,14 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
     monthlyAmount,
     currency: selectedMemberPlan?.currency ?? Currency.Chf,
     siteTitle,
+    locale,
+  });
+
+  const discountText = useDiscountText({
+    memberPlan: selectedMemberPlan?.name ?? '',
+    paymentPeriodicity: selectedPaymentPeriodicity,
+    monthlyAmount: monthlyAmount * (1 - discountPercent),
+    currency: selectedMemberPlan?.currency ?? Currency.Chf,
     locale,
   });
 
@@ -385,12 +444,17 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
   });
 
   const onSubmit = handleSubmit(data => {
+    if (subscribeInfo.data?.createSubscriptionInfo.voucherValid === false) {
+      return;
+    }
+
     const subscribeData: SubscribeMutationVariables = {
       monthlyAmount,
       memberPlanId: data.memberPlanId,
       paymentMethodId: data.paymentMethodId,
       paymentPeriodicity: data.paymentPeriodicity,
       autoRenew: data.autoRenew,
+      voucher: data.voucher,
     };
 
     if (hasUser) {
@@ -486,6 +550,15 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       });
     }
   }, [selectedAvailablePaymentMethod, resetField, selectedPaymentPeriodicity]);
+
+  useEffect(() => {
+    fetchSubscribeInfo({
+      variables: {
+        memberPlanId: selectedMemberPlanId,
+        voucher,
+      },
+    });
+  }, [fetchSubscribeInfo, selectedMemberPlanId, voucher]);
 
   const alreadyHasSubscription = useMemo(() => {
     if (deactivateSubscriptionId) {
@@ -674,6 +747,64 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         </SubscribePayment>
       </SubscribeSection>
 
+      <SubscribeNarrowSection area="voucher">
+        <Controller
+          name={'voucher'}
+          control={control}
+          render={({ field, fieldState: { error } }) => (
+            <div>
+              <div
+                css={{
+                  display: 'flex',
+                  flexFlow: 'row',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
+                <TextField
+                  {...field}
+                  value={field.value ?? ''}
+                  label={'Gutscheincode'}
+                  error={!!error}
+                  autoComplete="voucher"
+                  sx={{ maxWidth: 200 }}
+                />
+
+                {!!subscribeInfo.data?.createSubscriptionInfo
+                  .discountPercent && (
+                  <Alert
+                    severity="success"
+                    icon={<MdCheck />}
+                  >
+                    {t('subscribe.voucher.discountApplied', {
+                      discountPercent:
+                        subscribeInfo.data?.createSubscriptionInfo
+                          .discountPercent * 100,
+                    })}
+                  </Alert>
+                )}
+
+                {subscribeInfo.data?.createSubscriptionInfo.voucherValid ===
+                  false && (
+                  <Alert
+                    severity="error"
+                    icon={<MdError />}
+                  >
+                    {t('subscribe.voucher.invalid')}
+                  </Alert>
+                )}
+              </div>
+
+              {!!error && (
+                <FormHelperText error={!!error}>
+                  {error?.message}
+                </FormHelperText>
+              )}
+            </div>
+          )}
+        />
+      </SubscribeNarrowSection>
+
       {!hasUserContext && (
         <SubscribeSection area="challenge">
           <H5 component="h2">Spam-Schutz</H5>
@@ -728,6 +859,10 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
       )}
 
       <SubscribeNarrowSection area="submit">
+        {!!subscribeInfo.data?.createSubscriptionInfo.discountPercent && (
+          <SubscribeWithDiscount>{discountText}</SubscribeWithDiscount>
+        )}
+
         <SubscribeButton
           size={'large'}
           disabled={

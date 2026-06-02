@@ -8,6 +8,7 @@ import {
   RegisterDocument,
   SubscribeDocument,
   SubscriptionsDocument,
+  CreateSubscriptionInfoDocument,
 } from '@wepublish/website/api';
 import { SubscribeContainer } from './subscribe-container';
 import * as registrationFormStories from './subscribe.stories';
@@ -208,6 +209,23 @@ export const Default: StoryObj<typeof SubscribeContainer> = {
             },
           },
         },
+        ...[memberPlan, memberPlan2, memberPlan3].map(mb => ({
+          request: {
+            query: CreateSubscriptionInfoDocument,
+            variables: {
+              memberPlanId: mb.id,
+              voucher: '',
+            },
+          },
+          result: {
+            data: {
+              createSubscriptionInfo: {
+                voucherValid: undefined,
+                discountPercent: undefined,
+              },
+            },
+          },
+        })),
       ],
     },
   },

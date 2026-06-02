@@ -92,6 +92,9 @@ import { TokenList } from './routes/tokens/tokenList';
 import { UserRoleList } from './routes/userRoles/userRoleList';
 import { UserEditView } from './routes/users/userEditView';
 import { UserList } from './routes/users/userList';
+import { VoucherCreateView } from './routes/voucher/voucherCreateView';
+import { VoucherEditView } from './routes/voucher/voucherEditView';
+import { VoucherList } from './routes/voucher/voucherList';
 import { SetNewPassword } from './setNewPassword';
 
 const LogoutMutation = gql`
@@ -883,6 +886,31 @@ export function App() {
               element={
                 <Base>
                   <PaymentMethodList />
+                </Base>
+              }
+            />
+            {/* Voucher routes */}
+            <Route
+              path="vouchers"
+              element={
+                <Base>
+                  <VoucherList />
+                </Base>
+              }
+            />
+            <Route
+              path="vouchers/edit/:id"
+              element={
+                <Base>
+                  <VoucherEditView />
+                </Base>
+              }
+            />
+            <Route
+              path="vouchers/create"
+              element={
+                <Base>
+                  <VoucherCreateView />
                 </Base>
               }
             />
