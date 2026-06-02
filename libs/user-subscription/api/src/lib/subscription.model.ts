@@ -1,8 +1,10 @@
 import {
   ArgsType,
   Field,
+  Float,
   InputType,
   Int,
+  ObjectType,
   OmitType,
   registerEnumType,
 } from '@nestjs/graphql';
@@ -36,8 +38,20 @@ export class UpdateUserSubscriptionInput {
   paymentMethodID: string;
 }
 
+@ObjectType()
+export class CreateSubscriptionInfo {
+  @Field(() => Float, { nullable: true })
+  discountPercent?: number;
+
+  @Field({ nullable: true })
+  voucherValid?: boolean;
+}
+
 @ArgsType()
 export class CreateSubscriptionArgs {
+  @Field({ nullable: true })
+  voucher?: string;
+
   @Field({ nullable: true })
   memberPlanID?: string;
 

@@ -38,6 +38,7 @@ export function SubscribePage(props: SubscribePageProps) {
       deactivateSubscriptionId,
       upgradeSubscriptionId,
       userId,
+      voucher,
     },
   } = useRouter();
 
@@ -64,6 +65,7 @@ export function SubscribePage(props: SubscribePageProps) {
             firstName: firstName as string | undefined,
             name: lastName as string | undefined,
             memberPlanSlug: memberPlanBySlug as string | undefined,
+            voucher: voucher as string | undefined,
             ...props.defaults,
           }}
           filter={memberPlans => {

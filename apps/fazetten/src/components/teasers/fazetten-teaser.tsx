@@ -76,7 +76,6 @@ export const TeaserImageWrapper = styled('figure')`
 
 export const TeaserImage = styled(Image)`
   max-height: 100%;
-  max-width:;
   height: 100%;
   width: 100%;
   object-fit: contain;
