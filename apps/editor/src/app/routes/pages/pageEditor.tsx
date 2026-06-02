@@ -151,7 +151,11 @@ function PageEditor() {
   const isNotFound = pageData && !pageData.page;
   const isDisabled =
     isLoading || isCreating || isUpdating || isPublishing || isNotFound;
-  const canPreview = Boolean(pageData?.page?.draft);
+  const canPreview = Boolean(
+    pageData?.page?.draft ||
+      pageData?.page?.published ||
+      pageData?.page?.pending
+  );
 
   const [hasChanged, setChanged] = useState(false);
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);

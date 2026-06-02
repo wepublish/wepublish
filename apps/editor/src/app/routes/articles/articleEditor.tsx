@@ -205,7 +205,11 @@ function ArticleEditor() {
   const isNotFound = articleData && !articleData.article;
   const isDisabled =
     isLoading || isCreating || isUpdating || isPublishing || isNotFound;
-  const canPreview = Boolean(articleData?.article?.draft);
+  const canPreview = Boolean(
+    articleData?.article?.draft ||
+      articleData?.article?.published ||
+      articleData?.article?.pending
+  );
 
   const [hasChanged, setChanged] = useState(false);
 
