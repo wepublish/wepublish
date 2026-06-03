@@ -532,6 +532,30 @@ export const CanCancelSubscription: Permission = {
   deprecated: false,
 };
 
+export const CanGetVoucher: Permission = {
+  id: 'CAN_GET_VOUCHER',
+  description: 'Allows to get a voucher',
+  deprecated: false,
+};
+
+export const CanCreateVoucher: Permission = {
+  id: 'CAN_CREATE_VOUCHER',
+  description: 'Allows to create a voucher',
+  deprecated: false,
+};
+
+export const CanUpdateVoucher: Permission = {
+  id: 'CAN_UPDATE_VOUCHER',
+  description: 'Allows to update a voucher',
+  deprecated: false,
+};
+
+export const CanDeleteVoucher: Permission = {
+  id: 'CAN_DELETE_VOUCHER',
+  description: 'Allows to delete a voucher',
+  deprecated: false,
+};
+
 export const CanLoginAsOtherUser: Permission = {
   id: 'CAN_LOGIN_AS_OTHER_USER',
   description: 'Allows to login as other user',
@@ -1161,6 +1185,10 @@ export const AllPermissions: Permission[] = [
   CanGetSubscription,
   CanGetSubscriptions,
   CanDeleteSubscription,
+  CanGetVoucher,
+  CanCreateVoucher,
+  CanUpdateVoucher,
+  CanDeleteVoucher,
   CanLoginAsOtherUser,
   CanGetSettings,
   CanUpdateSettings,

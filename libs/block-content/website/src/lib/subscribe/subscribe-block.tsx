@@ -31,13 +31,24 @@ export const SubscribeBlock = ({
     resubscribe: [resubscribe],
     upgrade,
     upgradeInfo: [fetchUpgradeInfo, upgradeInfo],
+    subscribeInfo: [fetchSubscribeInfo, subscribeInfo],
     stripeClientSecret,
     redirectPages,
     ...subscribeProps
   } = useSubscribeBlock();
   const { userSubscriptions } = subscribeProps;
   const {
-    query: { upgradeSubscriptionId, deactivateSubscriptionId, userId },
+    query: {
+      memberPlanBySlug,
+      additionalMemberPlans,
+      firstName,
+      mail,
+      lastName,
+      upgradeSubscriptionId,
+      deactivateSubscriptionId,
+      userId,
+      voucher,
+    },
   } = useContext(BuilderRouterContext);
 
   const subscriptionToUpgrade = useMemo(() => {
@@ -92,6 +103,15 @@ export const SubscribeBlock = ({
           className={className}
           memberPlans={memberPlansObj}
           fields={fields.map(lowercase) as BuilderSubscribeProps['fields']}
+          defaults={{
+            email: mail as string | undefined,
+            firstName: firstName as string | undefined,
+            name: lastName as string | undefined,
+            memberPlanSlug: memberPlanBySlug as string | undefined,
+            voucher: voucher as string | undefined,
+          }}
+          fetchSubscribeInfo={fetchSubscribeInfo}
+          subscribeInfo={subscribeInfo}
           onSubscribe={async formData => {
             const selectedMemberplan = memberPlans.find(
               mb => mb.id === formData.memberPlanId
@@ -156,6 +176,9 @@ export const SubscribeBlock = ({
           subscriptionToUpgrade={subscriptionToUpgrade}
           upgradeInfo={upgradeInfo}
           onSelect={handleOnSelect}
+          defaults={{
+            memberPlanSlug: memberPlanBySlug as string | undefined,
+          }}
           onUpgrade={async formData => {
             const selectedMemberplan = memberPlans.find(
               mb => mb.id === formData.memberPlanId

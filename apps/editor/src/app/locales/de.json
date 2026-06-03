@@ -1693,6 +1693,7 @@
         "memberPlans": "Abo Pläne",
         "filter": "Einnahmen filtern",
         "additionalRevenue": "Externe Einnamen (z.B. via direkte Banküberweisung)",
+        "additionalSubscriptions": "Externe Abos (z.B. via direkte Banküberweisung)",
         "selectMemberPlans": "Abo Pläne wählen",
         "countSubscriptionsFrom": "Nur Abos einrechnen, die bezahlt wurden ab Datum",
         "countSubscriptionsUntil": "Nur Abos einrechnen, die bezahlt wurden bis Datum",
@@ -1708,6 +1709,7 @@
         "title": "Titel",
         "description": "Beschreibung",
         "amount": "Zielbetrag",
+        "amountSubscriptions": "Ziel Anzahl Abos",
         "remove": "Entfernen",
         "add": "Ziel hinzufügen"
       }
@@ -1837,6 +1839,32 @@
         "active": "Aktiv",
         "memberPlans": "Abo-Pläne",
         "anyMemberPlan": "Alle Abo-Pläne"
+      }
+    },
+    "voucher": {
+      "navbar": "Gutscheine",
+      "form": {
+        "createTitle": "Gutschein erstellen",
+        "editTitle": "Gutschein \"{{ voucher }}\" bearbeiten",
+        "code": "Code",
+        "discountPercent": "Rabatt (%)",
+        "validFrom": "Gültig ab",
+        "validTo": "Gültig bis",
+        "memberPlan": "Abo-Plan"
+      },
+      "overview": {
+        "title": "Gutscheine",
+        "createVoucher": "Neuer Gutschein",
+        "active": "Aktiv",
+        "valid": "Gültig",
+        "code": "Code",
+        "discountPercent": "Rabatt",
+        "memberPlan": "Abo-Plan",
+        "validFrom": "Gültig ab",
+        "validTo": "Gültig bis",
+        "areYouSure": "Bist du sicher?",
+        "areYouSureBody": "Der Gutschein \"{{ voucher }}\" wird unwiderruflich gelöscht.",
+        "areYouSureConfirmation": "Gutschein löschen"
       }
     },
     "paymentMethodEditPanel": {

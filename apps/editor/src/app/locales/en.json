@@ -623,7 +623,7 @@
       "noCallToActionImageErrorMessage": "Please enter a call to action image",
       "noEmailErrorMessage": "Please enter an email address",
       "noImageErrorMessage": "Please enter an image",
-      "noMemberPlanErrorMessage": "Please enter a member plan",
+      "noMemberPlanErrorMessage": "Please enter a memberplan",
       "noNameErrorMessage": "Please enter a name",
       "noPasswordErrorMessage": "Please enter a password",
       "noPaymentMethodErrorMessage": "Please enter a paymentMethod",
@@ -909,7 +909,7 @@
       "loadingTitle": "Loading",
       "name": "Name",
       "nameRequired": "Name required",
-      "noMemberPlanName": "No name member plan",
+      "noMemberPlanName": "No name memberplan",
       "paymentConfigs": "Payment settings",
       "saveAndCloseBtnTitle": "Save & Close",
       "saveBtnTitle": "Save",
@@ -923,8 +923,8 @@
     },
     "memberPlanList": {
       "action": "Actions",
-      "createNew": "New Member Plan",
-      "deleteModalTitle": "Delete Member Plan",
+      "createNew": "New Memberplan",
+      "deleteModalTitle": "Delete Memberplan",
       "editFlow": "Edit communication flow",
       "editFlowShort": "Edit flow",
       "name": "Name",
@@ -939,7 +939,7 @@
         "lifetime": "Lifetime",
         "donationOnce": "One-time donation"
       },
-      "title": "Member Plans"
+      "title": "Memberplans"
     },
     "navbar": {
       "articles": "Articles",
@@ -1410,7 +1410,7 @@
         "deleted": "Deleted user",
         "downloadCsv": "Download CSV",
         "email": "Email",
-        "memberPlan": "Member Plan",
+        "memberPlan": "Memberplan",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Name",
         "newSubscription": "New Subscription",
@@ -1615,7 +1615,7 @@
       "paidUntil": "Paid Until",
       "paymentMethod": "Payment Method",
       "renewNow": "Renew now",
-      "selectMemberPlan": "Member Plan",
+      "selectMemberPlan": "Memberplan",
       "selectUser": "Select User",
       "startsAt": "Subscription Start",
       "uniqueSubscription": "Unique Subscription",
@@ -1676,8 +1676,8 @@
       "migratePMTitle": "Migration of subscriptions to target payment method",
       "migratePMHelptext": "Migrate the subscriptions of this plan to a new Payment Method. Subscriptions that are still debited automatically will not be migrated. The migration only takes place when a user takes action themselves and wants to pay an open invoice in their profile or renew a subscription early.",
       "amountPerMonthTarget": "Target amount / month",
-      "amountPerMonthTargetHelpText": "The monthly target amount defines the desired member plan price that users should pay. It must be higher than the minimum amount and typically defines the default setting in the payment form.",
-      "amountPerMonthMinHelpText": "The minimum monthly amount is the actual member plan price that must be paid as a minimum. However, users can voluntarily pay more when subscribing.",
+      "amountPerMonthTargetHelpText": "The monthly target amount defines the desired memberplan price that users should pay. It must be higher than the minimum amount and typically defines the default setting in the payment form.",
+      "amountPerMonthMinHelpText": "The minimum monthly amount is the actual memberplan price that must be paid as a minimum. However, users can voluntarily pay more when subscribing.",
       "amountPerMonthMaxHelpText": "The maximum monthly amount is the highest amount users can pay when subscribing.",
       "confirmationPage": "Redirect to page for existing users (retargeting)",
       "confirmationPageHelptext": "If the user ID is known when a subscription is ordered, the person will receive an e-mail to pay for the subscription. This could be indicated on this page.",
@@ -1754,6 +1754,7 @@
         "memberPlans": "Subscription Plans",
         "filter": "Revenue Filter",
         "additionalRevenue": "External Revenues (e.g.. via direct bank transfer)",
+        "additionalSubscriptions": "External Subscriptions (e.g.. via direct bank transfer)",
         "selectMemberPlans": "Select Subscription Plans",
         "countSubscriptionsFrom": "Include only subscriptions paid from date",
         "countSubscriptionsUntil": "Include only subscriptions paid until date",
@@ -1769,6 +1770,7 @@
         "title": "Title",
         "description": "Description",
         "amount": "Target amount",
+        "amountSubscriptions": "Target subscription count",
         "remove": "Remove",
         "add": "Add Target"
       }
@@ -1898,6 +1900,32 @@
         "active": "Active",
         "memberPlans": "Memberplans",
         "anyMemberPlan": "All memberplans"
+      }
+    },
+    "voucher": {
+      "navbar": "Voucher",
+      "form": {
+        "createTitle": "Create Voucher",
+        "editTitle": "Edit Voucher \"{{ voucher }}\"",
+        "code": "Code",
+        "discountPercent": "Discount (%)",
+        "validFrom": "Valid from",
+        "validTo": "Valid to",
+        "memberPlan": "Memberplan"
+      },
+      "overview": {
+        "title": "Vouchers",
+        "createVoucher": "New Voucher",
+        "active": "Active",
+        "valid": "Valid",
+        "code": "Code",
+        "discountPercent": "Discount",
+        "memberPlan": "Memberplan",
+        "validFrom": "Valid From",
+        "validTo": "Valid To",
+        "areYouSure": "Are you sure?",
+        "areYouSureBody": "The voucher \"{{ voucher }}\" will be deleted permanently and can not be reversed.",
+        "areYouSureConfirmation": "Delete voucher"
       }
     },
     "paymentMethodEditPanel": {

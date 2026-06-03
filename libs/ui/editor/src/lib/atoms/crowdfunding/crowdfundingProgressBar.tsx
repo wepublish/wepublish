@@ -18,7 +18,7 @@ export function CrowdfundingProgressBar({
   crowdfunding: Partial<FullCrowdfundingFragment>;
 }) {
   const { t } = useTranslation();
-  const progress = crowdfunding.activeGoal?.progress || 0;
+  const progress = Math.round(crowdfunding.activeGoal?.progress || 0);
 
   return (
     <>

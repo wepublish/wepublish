@@ -42,6 +42,10 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
 
   const memberPlans = memberPlanData?.memberPlans?.nodes ?? [];
 
+  const goalType =
+    props.crowdfunding.goalType ?? CrowdfundingGoalType.Subscription;
+  const isSubscriptionGoal = goalType === CrowdfundingGoalType.Subscription;
+
   return (
     <CrowdfundingFormWrapper>
       <Panel
@@ -64,17 +68,32 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
 
         <Form.Group controlId="additionalRevenue">
           <Form.ControlLabel>
-            {t('crowdfunding.form.additionalRevenue')}
+            {isSubscriptionGoal ?
+              t('crowdfunding.form.additionalSubscriptions')
+            : t('crowdfunding.form.additionalRevenue')}
           </Form.ControlLabel>
 
-          <CurrencyInput
-            name="additionalRevenue"
-            currency={'CHF'}
-            centAmount={props.crowdfunding.additionalRevenue || 0}
-            onChange={(additionalRevenue: number) =>
-              props.onChange({ ...props.crowdfunding, additionalRevenue })
-            }
-          />
+          {isSubscriptionGoal ?
+            <Form.Control
+              name="additionalRevenue"
+              type="number"
+              value={props.crowdfunding.additionalRevenue || 0}
+              onChange={value =>
+                props.onChange({
+                  ...props.crowdfunding,
+                  additionalRevenue: +(value || 0),
+                })
+              }
+            />
+          : <CurrencyInput
+              name="additionalRevenue"
+              currency={'CHF'}
+              centAmount={props.crowdfunding.additionalRevenue || 0}
+              onChange={(additionalRevenue: number) =>
+                props.onChange({ ...props.crowdfunding, additionalRevenue })
+              }
+            />
+          }
         </Form.Group>
       </Panel>
 
@@ -185,9 +204,7 @@ export const CrowdfundingForm = (props: CrowdfundingFormProps) => {
           </Form.Group>
 
           <CrowdfundingGoalList
-            goalType={
-              props.crowdfunding.goalType ?? CrowdfundingGoalType.Subscription
-            }
+            goalType={goalType}
             goals={props.crowdfunding.goals || []}
             onAdd={goal =>
               props.onChange({
