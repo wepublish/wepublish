@@ -112,16 +112,8 @@ export class UpgradeSubscriptionService {
       );
     }
 
-    const paymentMethods =
-      paymentMethodId ?
-        newMemberplan.availablePaymentMethods.filter(av =>
-          av.paymentMethodIDs.includes(paymentMethodId)
-        )
-      : newMemberplan.availablePaymentMethods;
-    const hasPeriodicity = paymentMethods.some(av => {
-      return av.paymentPeriodicities.includes(
-        oldSubscription.paymentPeriodicity
-      );
+    const hasPeriodicity = newMemberplan.periodAmountConfig.some(config => {
+      return config.periodicity === oldSubscription.paymentPeriodicity;
     });
 
     if (!hasPeriodicity) {
@@ -154,7 +146,7 @@ export class UpgradeSubscriptionService {
     paymentMethodId,
     successURL,
     failureURL,
-    monthlyAmount,
+    amount,
   }: {
     userId: string;
     subscriptionId: string;
@@ -162,7 +154,7 @@ export class UpgradeSubscriptionService {
     paymentMethodId: string;
     successURL?: string;
     failureURL?: string;
-    monthlyAmount: number;
+    amount: number;
   }) {
     const { oldSubscription, oldSubscriptionPeriods } =
       await this.validateForUpgrade({
@@ -176,7 +168,7 @@ export class UpgradeSubscriptionService {
       userID: userId,
       paymentMethodID: paymentMethodId,
       paymentPeriodicity: oldSubscription.paymentPeriodicity,
-      monthlyAmount,
+      amount,
       memberPlanID: memberPlanId,
       properties: [],
       autoRenew: true,

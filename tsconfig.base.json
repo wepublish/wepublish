@@ -143,5 +143,6 @@
       "@wepublish/kv-ttl-cache/api": ["libs/kv-ttl-cache/api/src/index.ts"]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": ["node_modules", "tmp"],
+  "files": ["./prisma.d.ts"]
 }

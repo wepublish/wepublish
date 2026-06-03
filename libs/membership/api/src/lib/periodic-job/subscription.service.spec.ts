@@ -266,7 +266,7 @@ describe('SubscriptionPaymentsService', () => {
 
     const mockSubscription = {
       id: 'sub-1',
-      monthlyAmount: 10,
+      amount: 120,
       paymentPeriodicity: PaymentPeriodicity.yearly,
       paidUntil,
       startsAt: sub(paidUntil, { years: 3, days: -1 }),

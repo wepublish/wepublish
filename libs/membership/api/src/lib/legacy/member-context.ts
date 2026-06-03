@@ -118,26 +118,6 @@ export function getNextDateForPeriodicity(
   }
 }
 
-export function calculateAmountForPeriodicity(
-  monthlyAmount: number,
-  periodicity: PaymentPeriodicity
-): number {
-  switch (periodicity) {
-    case PaymentPeriodicity.monthly:
-      return monthlyAmount;
-    case PaymentPeriodicity.quarterly:
-      return monthlyAmount * 3;
-    case PaymentPeriodicity.biannual:
-      return monthlyAmount * 6;
-    case PaymentPeriodicity.yearly:
-      return monthlyAmount * 12;
-    case PaymentPeriodicity.biennial:
-      return monthlyAmount * 24;
-    case PaymentPeriodicity.lifetime:
-      return monthlyAmount * 1200;
-  }
-}
-
 export class MemberContext implements MemberContextInterface {
   paymentProviders: PaymentProvider[];
   prisma: PrismaClient;
@@ -275,13 +255,7 @@ export class MemberContext implements MemberContextInterface {
         startDate,
         subscription.paymentPeriodicity as PaymentPeriodicity
       );
-      const amount = Math.max(
-        calculateAmountForPeriodicity(
-          subscription.monthlyAmount,
-          subscription.paymentPeriodicity as PaymentPeriodicity
-        ) - (discount ?? 0),
-        0 // in case discount is bigger than the amount
-      );
+      const amount = Math.max(subscription.amount - (discount ?? 0), 0);
 
       const user = await this.prisma.user.findUnique({
         where: {
@@ -637,10 +611,10 @@ export class MemberContext implements MemberContextInterface {
     }
 
     // update amount is possible
-    if (input.monthlyAmount !== originalSubscription.monthlyAmount) {
+    if (input.amount !== originalSubscription.amount) {
       await paymentProvider.updateRemoteSubscriptionAmount({
         subscription: originalSubscription,
-        newAmount: parseInt(`${input.monthlyAmount}`, 10),
+        newAmount: input.amount,
       });
     }
   }
@@ -720,11 +694,11 @@ export class MemberContext implements MemberContextInterface {
           return false;
         }
 
-        return (
-          apm.paymentPeriodicities.includes(paymentPeriodicity) &&
-          apm.paymentMethodIDs.includes(paymentMethodId)
-        );
-      })
+        return apm.paymentMethodIDs.includes(paymentMethodId);
+      }) ||
+      !memberPlan.periodAmountConfig.find(
+        config => config.periodicity === paymentPeriodicity
+      )
     ) {
       throw new BadRequestException(
         `Payment configuration not allowed. Check method, periodicity and auto renew flag`
@@ -750,7 +724,7 @@ export class MemberContext implements MemberContextInterface {
     userID,
     paymentMethodID,
     paymentPeriodicity,
-    monthlyAmount,
+    amount,
     memberPlanID,
     properties,
     autoRenew,
@@ -764,7 +738,7 @@ export class MemberContext implements MemberContextInterface {
     userID: string;
     paymentMethodID: string;
     paymentPeriodicity: PaymentPeriodicity;
-    monthlyAmount: number;
+    amount: number;
     memberPlanID: string;
     properties: Pick<Property, 'key' | 'value' | 'public'>[];
     autoRenew: boolean;
@@ -817,7 +791,7 @@ export class MemberContext implements MemberContextInterface {
         paymentMethodID,
         paymentPeriodicity,
         paidUntil: null,
-        monthlyAmount,
+        amount,
         memberPlanID,
         properties,
         replacesSubscriptionID: replacedSubscriptionId,
@@ -900,7 +874,7 @@ export class MemberContext implements MemberContextInterface {
     userID,
     paymentMethodID,
     paymentPeriodicity,
-    monthlyAmount,
+    amount,
     memberPlanID,
     properties,
     autoRenew,
@@ -912,7 +886,7 @@ export class MemberContext implements MemberContextInterface {
     userID: string;
     paymentMethodID: string;
     paymentPeriodicity: PaymentPeriodicity;
-    monthlyAmount: number;
+    amount: number;
     memberPlanID: string;
     properties: Pick<Property, 'key' | 'value' | 'public'>[];
     autoRenew: boolean;
@@ -975,7 +949,7 @@ export class MemberContext implements MemberContextInterface {
         paymentMethodID,
         paymentPeriodicity,
         paidUntil,
-        monthlyAmount,
+        amount,
         memberPlanID,
         properties,
         autoRenew,
@@ -1023,7 +997,7 @@ export class MemberContext implements MemberContextInterface {
             create: {
               name: 'Membership',
               description: `From ${startsAt.toISOString()} to ${endsAt.toISOString()}`,
-              amount: monthlyAmount,
+              amount,
               quantity: 1,
             },
           },
@@ -1040,7 +1014,7 @@ export class MemberContext implements MemberContextInterface {
           periods: {
             create: {
               startsAt,
-              amount: monthlyAmount,
+              amount,
               endsAt,
               paymentPeriodicity,
               invoiceID: invoice.id,

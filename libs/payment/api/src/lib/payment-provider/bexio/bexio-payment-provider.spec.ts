@@ -137,7 +137,7 @@ describe('BexioPaymentProvider', () => {
         subscription: {
           memberPlan: { name: 'Test Membership' },
           user: { email: 'test@example.com' },
-          monthlyAmount: 100,
+          amount: 100,
           paymentPeriodicity: 'monthly',
         },
         items: [
@@ -297,7 +297,7 @@ describe('BexioPaymentProvider', () => {
         memberPlan: {
           name: 'Plan Name',
         },
-        monthlyAmount: 10,
+        amount: 10,
         paymentPeriodicity: PaymentPeriodicity.yearly,
       },
     });
@@ -370,7 +370,7 @@ describe('BexioPaymentProvider', () => {
         memberPlan: {
           name: 'Plan Name',
         },
-        monthlyAmount: 10,
+        amount: 10,
         paymentPeriodicity: PaymentPeriodicity.yearly,
       },
     });

@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import {
-  PaymentPeriodicity,
   PrismaClient,
   Crowdfunding,
   CrowdfundingGoal,
@@ -77,11 +76,7 @@ export class CrowdfundingService {
 
     return (
       subscriptions.reduce((total, subscription) => {
-        const monthFactor = this.calcMonthFactor(
-          subscription.paymentPeriodicity
-        );
-
-        return total + subscription.monthlyAmount * monthFactor;
+        return total + subscription.amount;
       }, 0) + (crowdfunding.additionalRevenue || 0)
     );
   }
@@ -125,31 +120,11 @@ export class CrowdfundingService {
         invoices: invoiceFilter,
       },
       select: {
-        monthlyAmount: true,
-        paymentPeriodicity: true,
+        amount: true,
       },
     });
 
     return subscriptions;
-  }
-
-  calcMonthFactor(paymentPeriodicity: PaymentPeriodicity): number {
-    switch (paymentPeriodicity) {
-      case PaymentPeriodicity.monthly:
-        return 1;
-      case PaymentPeriodicity.quarterly:
-        return 3;
-      case PaymentPeriodicity.biannual:
-        return 6;
-      case PaymentPeriodicity.yearly:
-        return 12;
-      case PaymentPeriodicity.biennial:
-        return 24;
-      case PaymentPeriodicity.lifetime:
-        return 1200;
-      default:
-        return 0;
-    }
   }
 
   @PrimeDataLoader(CrowdfundingDataloaderService)

@@ -97,7 +97,7 @@ export class PublicSubscription
   paymentPeriodicity!: PaymentPeriodicity;
 
   @Field(() => Int)
-  monthlyAmount!: number;
+  amount!: number;
 
   @Field(() => Boolean)
   autoRenew!: boolean;
@@ -155,7 +155,7 @@ export class CreatePublicSubscriptionInput extends PickType(
   PublicSubscription,
   [
     'paymentPeriodicity',
-    'monthlyAmount',
+    'amount',
     'autoRenew',
     'startsAt',
     'paidUntil',

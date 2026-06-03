@@ -68,9 +68,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       );
     }
 
-    const amount =
-      props.newAmount *
-      mapPaymentPeriodToMonths(props.subscription.paymentPeriodicity);
+    const amount = props.newAmount;
 
     await this.updateAmountUpstream(
       +isPayrexxExt.value,
@@ -153,6 +151,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       }
 
       // Calculate new subscription valid until
+      // @TODO: getNextDateForPeriodicity duplicate?
       const newSubscriptionValidUntil = add(longestPeriod.endsAt, {
         months: mapPaymentPeriodToMonths(subscription.paymentPeriodicity),
       }).toISOString();
@@ -174,10 +173,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
         throw new Error('Member Plan in subscription not found!');
 
       const payedAmount = rawSubscription.invoice.amount;
-      const minPayment =
-        subscription.monthlyAmount *
-          mapPaymentPeriodToMonths(subscription.paymentPeriodicity) -
-        100; // -1CHF to ensure that imported rounding differences are no issue
+      const minPayment = subscription.amount - 100; // -1CHF to ensure that imported rounding differences are no issue
       if (payedAmount < minPayment) {
         logger('payrexxSubscriptionPaymentProvider').warn(
           `Payrexx Subscription ${subscription.id} payment ${payedAmount} lower than min payment ${minPayment}`

@@ -46,7 +46,7 @@ export function mapSubscriptionsAsCsv(subscriptions: CSVSubscription[]) {
       'memberPlan',
       'memberPlanID',
       'paymentPeriodicity',
-      'monthlyAmount',
+      'amount',
       'autoRenew',
       'extendable',
       'startsAt',
@@ -88,7 +88,7 @@ export function mapSubscriptionsAsCsv(subscriptions: CSVSubscription[]) {
         sanitizeCsvContent(memberPlan?.name),
         subscription?.memberPlanID ?? '',
         subscription?.paymentPeriodicity ?? '',
-        subscription?.monthlyAmount ?? '',
+        subscription?.amount ?? '',
         subscription?.autoRenew ?? '',
         subscription?.extendable ?? '',
         subscription?.startsAt ?

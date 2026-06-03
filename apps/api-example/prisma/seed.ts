@@ -499,9 +499,9 @@ async function seedPages(
                     },
                     teaser: {
                       type: TeaserType.Article,
-                      imageID: null,
-                      title: null,
-                      lead: null,
+                      imageID: undefined,
+                      title: undefined,
+                      lead: undefined,
                       articleID: shuffle(articleIds).at(0),
                     },
                   },
@@ -516,9 +516,9 @@ async function seedPages(
                     },
                     teaser: {
                       type: TeaserType.Article,
-                      imageID: null,
-                      title: null,
-                      lead: null,
+                      imageID: undefined,
+                      title: undefined,
+                      lead: undefined,
                       articleID: shuffle(articleIds).at(0),
                     },
                   },
@@ -533,9 +533,9 @@ async function seedPages(
                     },
                     teaser: {
                       type: TeaserType.Article,
-                      imageID: null,
-                      title: null,
-                      lead: null,
+                      imageID: undefined,
+                      title: undefined,
+                      lead: undefined,
                       articleID: shuffle(articleIds).at(0),
                     },
                   },
@@ -546,23 +546,23 @@ async function seedPages(
                 teasers: [
                   {
                     type: TeaserType.Article,
-                    imageID: null,
-                    title: null,
-                    lead: null,
+                    imageID: undefined,
+                    title: undefined,
+                    lead: undefined,
                     articleID: shuffle(articleIds).at(0),
                   },
                   {
                     type: TeaserType.Article,
-                    imageID: null,
-                    title: null,
-                    lead: null,
+                    imageID: undefined,
+                    title: undefined,
+                    lead: undefined,
                     articleID: shuffle(articleIds).at(0),
                   },
                   {
                     type: TeaserType.Article,
-                    imageID: null,
-                    title: null,
-                    lead: null,
+                    imageID: undefined,
+                    title: undefined,
+                    lead: undefined,
                     articleID: shuffle(articleIds).at(0),
                   },
                 ],
@@ -570,7 +570,7 @@ async function seedPages(
               } as TeaserGridBlock,
               {
                 type: BlockType.LinkPageBreak,
-                imageID: null,
+                imageID: undefined,
                 hideButton: false,
                 linkTarget: '',
                 linkText: capitalize(faker.lorem.words({ min: 2, max: 4 })),
@@ -593,9 +593,9 @@ async function seedPages(
                     },
                     teaser: {
                       type: TeaserType.Article,
-                      imageID: null,
-                      title: null,
-                      lead: null,
+                      imageID: undefined,
+                      title: undefined,
+                      lead: undefined,
                       articleID: shuffle(articleIds).at(0),
                     },
                   },
@@ -610,9 +610,9 @@ async function seedPages(
                     },
                     teaser: {
                       type: TeaserType.Article,
-                      imageID: null,
-                      title: null,
-                      lead: null,
+                      imageID: undefined,
+                      title: undefined,
+                      lead: undefined,
                       articleID: shuffle(articleIds).at(0),
                     },
                   },
@@ -627,9 +627,9 @@ async function seedPages(
                     },
                     teaser: {
                       type: TeaserType.Article,
-                      imageID: null,
-                      title: null,
-                      lead: null,
+                      imageID: undefined,
+                      title: undefined,
+                      lead: undefined,
                       articleID: shuffle(articleIds).at(0),
                     },
                   },
@@ -644,9 +644,9 @@ async function seedPages(
                     },
                     teaser: {
                       type: TeaserType.Article,
-                      imageID: null,
-                      title: null,
-                      lead: null,
+                      imageID: undefined,
+                      title: undefined,
+                      lead: undefined,
                       articleID: shuffle(articleIds).at(0),
                     },
                   },
@@ -762,7 +762,7 @@ async function seedArticles(
                   ...pickRandom(
                     {
                       type: BlockType.LinkPageBreak,
-                      imageID: null,
+                      imageID: undefined,
                       hideButton: false,
                       linkTarget: '',
                       linkText: capitalize(
@@ -794,7 +794,7 @@ async function seedArticles(
     articles.map(({ revisions }) =>
       prisma.articleRevisionAuthor.create({
         data: {
-          authorId: shuffle(authorIds).at(0),
+          authorId: shuffle(authorIds).at(0)!,
           revisionId: revisions[0].id,
         },
       })
@@ -822,7 +822,7 @@ async function seedComments(
               CommentState.approved,
               CommentState.pendingApproval,
               CommentState.rejected,
-            ]).at(0),
+            ]).at(0)!,
             guestUsername: faker.person.fullName(),
             guestUserImageID: shuffle(imageIds).at(0),
             revisions: {
@@ -870,14 +870,20 @@ async function seedMemberPlans(prisma: PrismaClient) {
       name: 'Test-Abo CHF',
       description: [],
       slug: 'test-abo-chf',
-      amountPerMonthMin: 1000,
+      periodAmountConfig: [
+        {
+          periodicity: PaymentPeriodicity.yearly,
+          min: 12000,
+          target: null,
+          max: null,
+        },
+      ],
       extendable: true,
       currency: 'CHF',
       availablePaymentMethods: {
         create: {
           forceAutoRenewal: true,
           paymentMethodIDs: ['payrexx'],
-          paymentPeriodicities: ['yearly'],
         },
       },
     },
@@ -889,14 +895,26 @@ async function seedMemberPlans(prisma: PrismaClient) {
       name: 'Test-Abo EUR',
       description: [],
       slug: 'test-abo-eur',
-      amountPerMonthMin: 2000,
+      periodAmountConfig: [
+        {
+          periodicity: PaymentPeriodicity.monthly,
+          min: 2000,
+          target: null,
+          max: null,
+        },
+        {
+          periodicity: PaymentPeriodicity.yearly,
+          min: 24000,
+          target: null,
+          max: null,
+        },
+      ],
       extendable: true,
       currency: 'EUR',
       availablePaymentMethods: {
         create: {
           forceAutoRenewal: false,
           paymentMethodIDs: ['stripe'],
-          paymentPeriodicities: ['yearly', 'monthly'],
         },
       },
     },

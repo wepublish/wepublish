@@ -46,9 +46,6 @@ export class AvailablePaymentMethod {
   @Field(() => [PaymentMethod])
   paymentMethods!: PaymentMethod[];
 
-  @Field(() => [PaymentPeriodicity])
-  paymentPeriodicities!: PaymentPeriodicity[];
-
   @Field()
   forceAutoRenewal!: boolean;
 }
@@ -57,6 +54,28 @@ export class AvailablePaymentMethod {
 export class AvailablePaymentMethodInput extends OmitType(
   AvailablePaymentMethod,
   ['paymentMethods'] as const,
+  InputType
+) {}
+
+@ObjectType()
+export class PeriodAmountConfig {
+  @Field(() => PaymentPeriodicity)
+  periodicity!: PaymentPeriodicity;
+
+  @Field(() => Int)
+  min!: number;
+
+  @Field(() => Int, { nullable: true })
+  max?: number;
+
+  @Field(() => Int, { nullable: true })
+  target?: number;
+}
+
+@InputType()
+export class PeriodAmountConfigInput extends OmitType(
+  PeriodAmountConfig,
+  [] as const,
   InputType
 ) {}
 
@@ -88,14 +107,8 @@ export class MemberPlan extends HasImage {
   @Field(() => Currency)
   currency!: Currency;
 
-  @Field(() => Int)
-  amountPerMonthMin!: number;
-
-  @Field(() => Int, { nullable: true })
-  amountPerMonthMax?: number;
-
-  @Field(() => Int, { nullable: true })
-  amountPerMonthTarget?: number;
+  @Field(() => [PeriodAmountConfig])
+  periodAmountConfig!: PrismaJson.PeriodAmountConfig;
 
   @Field(() => Int, { nullable: true })
   maxCount?: number;
@@ -162,9 +175,6 @@ export class CreateMemberPlanInput extends PickType(
     'shortDescription',
     'tags',
     'active',
-    'amountPerMonthMin',
-    'amountPerMonthMax',
-    'amountPerMonthTarget',
     'currency',
     'extendable',
     'productType',
@@ -177,6 +187,9 @@ export class CreateMemberPlanInput extends PickType(
   ] as const,
   ArgsType
 ) {
+  @Field(() => [PeriodAmountConfigInput])
+  periodAmountConfig!: PrismaJson.PeriodAmountConfig;
+
   @Field(() => [AvailablePaymentMethodInput])
   availablePaymentMethods!: AvailablePaymentMethodInput[];
 }

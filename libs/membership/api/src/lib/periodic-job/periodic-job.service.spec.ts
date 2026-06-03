@@ -221,7 +221,7 @@ describe('PeriodicJobService', () => {
       paymentPeriodicity: PaymentPeriodicity.yearly,
       paidUntil: renewalDate,
       autoRenew: true,
-      monthlyAmount: 200,
+      amount: 2400,
       startsAt: sub(renewalDate, { months: 12 }),
       currency: Currency.CHF,
       user: {
@@ -304,7 +304,7 @@ describe('PeriodicJobService', () => {
         paymentPeriodicity: PaymentPeriodicity.yearly,
         paidUntil: renewalDate,
         autoRenew: true,
-        monthlyAmount: 200,
+        amount: 2400,
         currency: Currency.CHF,
         paymentMethod: {
           id: 'stripe',
@@ -365,7 +365,7 @@ describe('PeriodicJobService', () => {
         paymentPeriodicity: PaymentPeriodicity.yearly,
         paidUntil: renewalDate,
         autoRenew: true,
-        monthlyAmount: 200,
+        amount: 2400,
         currency: Currency.CHF,
         paymentMethod: {
           id: 'payrexx',
@@ -417,7 +417,7 @@ describe('PeriodicJobService', () => {
         paymentMethodID: 'payrexx',
         paymentPeriodicity: PaymentPeriodicity.yearly,
         autoRenew: true,
-        monthlyAmount: 200,
+        amount: 2400,
         currency: Currency.CHF,
         user: {
           id: 'user-1',
@@ -455,7 +455,7 @@ describe('PeriodicJobService', () => {
       paymentPeriodicity: PaymentPeriodicity.yearly,
       paidUntil: renewalDate,
       autoRenew: true,
-      monthlyAmount: 200,
+      amount: 2400,
       currency: Currency.CHF,
       deactivation: null,
       user: {
@@ -531,7 +531,7 @@ describe('PeriodicJobService', () => {
       paymentPeriodicity: PaymentPeriodicity.yearly,
       paidUntil: renewalDate,
       autoRenew: true,
-      monthlyAmount: 200,
+      amount: 2400,
       startsAt: sub(renewalDate, { months: 12 }),
       user: { id: 'user-1', email: 'dev-mail@test.wepublish.com' },
       memberPlan: { name: 'yearly' },

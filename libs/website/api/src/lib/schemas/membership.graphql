@@ -14,7 +14,6 @@ fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
   paymentMethods {
     ...FullPaymentMethod
   }
-  paymentPeriodicities
   forceAutoRenewal
 }
 
@@ -29,16 +28,20 @@ fragment FullMemberPlan on MemberPlan {
   image {
     ...FullImage
   }
-
-  amountPerMonthMin
-  amountPerMonthMax
-  amountPerMonthTarget
   currency
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
   }
   extendable
   productType
+
+  periodAmountConfig {
+    periodicity
+    min
+    max
+    target
+  }
+
   successPageId
   successPage {
     url
@@ -76,7 +79,7 @@ fragment FullSubscription on PublicSubscription {
   url
 
   paymentPeriodicity
-  monthlyAmount
+  amount
   autoRenew
   startsAt
   extendable
@@ -149,7 +152,7 @@ mutation Subscribe(
   $memberPlanSlug: Slug
   $autoRenew: Boolean!
   $paymentPeriodicity: PaymentPeriodicity!
-  $monthlyAmount: Int!
+  $amount: Int!
   $paymentMethodId: String
   $paymentMethodSlug: Slug
   $subscriptionProperties: [PropertyInput!]
@@ -163,7 +166,7 @@ mutation Subscribe(
     memberPlanSlug: $memberPlanSlug
     autoRenew: $autoRenew
     paymentPeriodicity: $paymentPeriodicity
-    monthlyAmount: $monthlyAmount
+    amount: $amount
     paymentMethodID: $paymentMethodId
     paymentMethodSlug: $paymentMethodSlug
     subscriptionProperties: $subscriptionProperties
@@ -182,7 +185,7 @@ mutation Resubscribe(
   $memberPlanSlug: Slug
   $autoRenew: Boolean!
   $paymentPeriodicity: PaymentPeriodicity!
-  $monthlyAmount: Int!
+  $amount: Int!
   $paymentMethodId: String
   $paymentMethodSlug: Slug
   $subscriptionProperties: [PropertyInput!]
@@ -194,7 +197,7 @@ mutation Resubscribe(
     memberPlanSlug: $memberPlanSlug
     autoRenew: $autoRenew
     paymentPeriodicity: $paymentPeriodicity
-    monthlyAmount: $monthlyAmount
+    amount: $amount
     paymentMethodID: $paymentMethodId
     paymentMethodSlug: $paymentMethodSlug
     subscriptionProperties: $subscriptionProperties
@@ -206,7 +209,7 @@ mutation Upgrade(
   $subscriptionId: String!
   $memberPlanId: String!
   $paymentMethodId: String!
-  $monthlyAmount: Int!
+  $amount: Int!
   $successURL: String
   $failureURL: String
 ) {
@@ -214,7 +217,7 @@ mutation Upgrade(
     subscriptionId: $subscriptionId
     memberPlanId: $memberPlanId
     paymentMethodId: $paymentMethodId
-    monthlyAmount: $monthlyAmount
+    amount: $amount
     successURL: $successURL
     failureURL: $failureURL
   ) {
@@ -335,7 +338,7 @@ query Revenue($start: DateTime!, $end: DateTime) {
 
 query NewSubscribers($start: DateTime!, $end: DateTime) {
   newSubscribers(start: $start, end: $end) {
-    monthlyAmount
+    amount
     memberPlan
   }
 }

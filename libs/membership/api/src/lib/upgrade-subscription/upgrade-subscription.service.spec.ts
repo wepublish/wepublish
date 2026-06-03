@@ -169,7 +169,7 @@ describe('UpgradeSubscriptionService', () => {
         memberPlanId: 'memberPlanId',
         paymentMethodId: 'paymentMethodId',
         userId: 'userId',
-        monthlyAmount: 80,
+        amount: 80,
       });
 
       expect({
@@ -294,7 +294,7 @@ describe('UpgradeSubscriptionService', () => {
           memberPlanId: 'memberPlanId',
           paymentMethodId: 'paymentMethodId',
           userId: 'userId',
-          monthlyAmount: 100,
+          amount: 100,
         });
       }).rejects.toMatchSnapshot();
 
@@ -318,7 +318,7 @@ describe('UpgradeSubscriptionService', () => {
           memberPlanId: 'memberPlanId',
           paymentMethodId: 'paymentMethodId',
           userId: 'userId',
-          monthlyAmount: 100,
+          amount: 100,
         });
       }).rejects.toMatchSnapshot();
 
@@ -343,7 +343,7 @@ describe('UpgradeSubscriptionService', () => {
           memberPlanId: 'memberPlanId',
           paymentMethodId: 'paymentMethodId',
           userId: 'userId',
-          monthlyAmount: 100,
+          amount: 100,
         });
       }).rejects.toMatchSnapshot();
 
@@ -369,7 +369,7 @@ describe('UpgradeSubscriptionService', () => {
           memberPlanId: 'memberPlanId',
           paymentMethodId: 'paymentMethodId',
           userId: 'userId',
-          monthlyAmount: 100,
+          amount: 100,
         });
       }).rejects.toMatchSnapshot();
 
@@ -397,7 +397,7 @@ describe('UpgradeSubscriptionService', () => {
           memberPlanId: 'memberPlanId',
           paymentMethodId: 'paymentMethodId',
           userId: 'userId',
-          monthlyAmount: 100,
+          amount: 100,
         });
       }).rejects.toMatchSnapshot();
 
@@ -434,7 +434,7 @@ describe('UpgradeSubscriptionService', () => {
           memberPlanId: 'memberPlanId',
           paymentMethodId: 'paymentMethodId',
           userId: 'userId',
-          monthlyAmount: 100,
+          amount: 100,
         });
       }).rejects.toMatchSnapshot();
     });
@@ -461,7 +461,7 @@ describe('UpgradeSubscriptionService', () => {
           memberPlanId: 'memberPlanId',
           paymentMethodId: 'paymentMethodId',
           userId: 'userId',
-          monthlyAmount: 100,
+          amount: 100,
         });
       }).rejects.toMatchSnapshot();
 
@@ -500,7 +500,7 @@ describe('UpgradeSubscriptionService', () => {
           memberPlanId: 'memberPlanId',
           paymentMethodId: 'paymentMethodId',
           userId: 'userId',
-          monthlyAmount: 100,
+          amount: 100,
         });
       }).rejects.toMatchSnapshot();
 

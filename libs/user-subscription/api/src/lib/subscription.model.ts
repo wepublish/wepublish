@@ -26,16 +26,16 @@ export class UpdateUserSubscriptionInput {
   memberPlanID!: string;
 
   @Field(() => PaymentPeriodicity)
-  paymentPeriodicity: PaymentPeriodicityType;
+  paymentPeriodicity!: PaymentPeriodicityType;
 
   @Field(() => Int)
-  monthlyAmount: number;
+  amount!: number;
 
   @Field()
-  autoRenew: boolean;
+  autoRenew!: boolean;
 
   @Field()
-  paymentMethodID: string;
+  paymentMethodID!: string;
 }
 
 @ObjectType()
@@ -65,7 +65,7 @@ export class CreateSubscriptionArgs {
   paymentPeriodicity!: PaymentPeriodicity;
 
   @Field(() => Int)
-  monthlyAmount!: number;
+  amount!: number;
 
   @Field({ nullable: true })
   paymentMethodID?: string;

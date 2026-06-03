@@ -27,7 +27,6 @@ import { PaymentsService } from '@wepublish/payment/api';
 import { logger, PrimeDataLoader } from '@wepublish/utils/api';
 import { unselectPassword } from '@wepublish/authentication/api';
 import {
-  calculateAmountForPeriodicity,
   MemberContextService,
   VoucherDataloader,
 } from '@wepublish/membership/api';
@@ -90,19 +89,14 @@ export class UserSubscriptionService {
     if (voucher) {
       const voucherObj = await this.getValidVoucher(voucher, memberPlan.id);
 
-      discount =
-        calculateAmountForPeriodicity(
-          args.monthlyAmount,
-          args.paymentPeriodicity
-        ) *
-        (voucherObj.discountPercent / 100);
+      discount = args.amount * (voucherObj.discountPercent / 100);
       voucherId = voucherObj.id;
     }
 
     const {
       autoRenew,
       paymentPeriodicity,
-      monthlyAmount,
+      amount,
       subscriptionProperties,
       successURL,
       failureURL,
@@ -140,7 +134,7 @@ export class UserSubscriptionService {
         userID: userId,
         paymentMethodID: paymentMethod.id,
         paymentPeriodicity,
-        monthlyAmount,
+        amount,
         memberPlanID: memberPlan.id,
         properties,
         autoRenew,
@@ -184,12 +178,8 @@ export class UserSubscriptionService {
       const { memberPlan, paymentMethod } =
         await this.validateSubscriptionInput(args);
 
-      const {
-        autoRenew,
-        paymentPeriodicity,
-        monthlyAmount,
-        subscriptionProperties,
-      } = args;
+      const { autoRenew, paymentPeriodicity, amount, subscriptionProperties } =
+        args;
 
       const properties = await this.memberContext.processSubscriptionProperties(
         subscriptionProperties ?? []
@@ -200,7 +190,7 @@ export class UserSubscriptionService {
           userID: userId,
           paymentMethodID: paymentMethod.id,
           paymentPeriodicity,
-          monthlyAmount,
+          amount,
           memberPlanID: memberPlan.id,
           properties,
           autoRenew,
@@ -377,7 +367,7 @@ export class UserSubscriptionService {
       Prisma.SubscriptionUncheckedUpdateInput,
       | 'memberPlanID'
       | 'paymentPeriodicity'
-      | 'monthlyAmount'
+      | 'amount'
       | 'autoRenew'
       | 'paymentMethodID'
       | 'userID'
@@ -395,7 +385,7 @@ export class UserSubscriptionService {
     const {
       memberPlanID,
       paymentPeriodicity,
-      monthlyAmount,
+      amount,
       autoRenew,
       paymentMethodID,
       userID,
@@ -416,11 +406,13 @@ export class UserSubscriptionService {
       throw new NotFoundException('PaymentMethod', paymentMethodID as string);
     }
 
-    if (
-      !monthlyAmount ||
-      (monthlyAmount as number) < memberPlan.amountPerMonthMin
-    )
+    const paymentConfig = memberPlan.periodAmountConfig.find(
+      config => config.periodicity === paymentPeriodicity
+    );
+
+    if (!amount || !paymentConfig || (amount as number) < paymentConfig.min) {
       throw new BadRequestException(`Monthly amount is not enough`);
+    }
 
     if (subscription.deactivation) {
       throw new Error(
@@ -466,7 +458,7 @@ export class UserSubscriptionService {
         userID: subscription.userID ?? userID,
         memberPlanID,
         paymentPeriodicity,
-        monthlyAmount,
+        amount,
         autoRenew,
         paymentMethodID,
       },
@@ -532,7 +524,7 @@ export class UserSubscriptionService {
     memberPlanSlug,
     autoRenew,
     paymentPeriodicity,
-    monthlyAmount,
+    amount,
     paymentMethodID,
     paymentMethodSlug,
   }: Omit<
@@ -576,16 +568,20 @@ export class UserSubscriptionService {
       );
     }
 
-    if (monthlyAmount < memberPlan.amountPerMonthMin) {
-      throw new BadRequestException(`Monthly amount not enough`);
-    }
-
     await this.memberContext.validateSubscriptionPaymentConfiguration(
       memberPlan,
       autoRenew,
       paymentPeriodicity,
       paymentMethod.id
     );
+
+    const paymentConfig = memberPlan.periodAmountConfig.find(
+      config => config.periodicity === paymentPeriodicity
+    );
+
+    if (amount < (paymentConfig?.min ?? 0)) {
+      throw new BadRequestException(`Monthly amount not enough`);
+    }
 
     return {
       memberPlan,

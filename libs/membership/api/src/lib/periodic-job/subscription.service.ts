@@ -227,6 +227,8 @@ export class SubscriptionService {
     periods: SubscriptionPeriod[],
     periodicity: PaymentPeriodicity
   ): PeriodBounds {
+    // @TODO: getNextDateForPeriodicity duplicate?
+
     if (periods.length === 0) {
       return {
         startsAt: add(new Date(), { days: 1 }),
@@ -235,9 +237,11 @@ export class SubscriptionService {
         }),
       };
     }
+
     const latestPeriod = periods.reduce(function (prev, current) {
       return prev.endsAt > current.endsAt ? prev : current;
     });
+
     return {
       startsAt: add(latestPeriod.endsAt, { days: 1 }),
       endsAt: add(latestPeriod.endsAt, {
@@ -260,9 +264,7 @@ export class SubscriptionService {
     },
     deactivationDate: Date
   ) {
-    const amount =
-      subscription.monthlyAmount *
-      mapPaymentPeriodToMonths(subscription.paymentPeriodicity);
+    const amount = subscription.amount;
     const description = `${subscription.paymentPeriodicity} renewal of subscription ${subscription.memberPlan.name}`;
 
     return this.prismaService.invoice.create({

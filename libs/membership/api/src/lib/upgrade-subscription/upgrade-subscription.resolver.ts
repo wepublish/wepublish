@@ -20,10 +20,10 @@ export class UpgradeSubscriptionResolver {
     @CurrentUser() session: UserSession,
     @Args('subscriptionId') subscriptionId: string,
     @Args('memberPlanId') memberPlanId: string,
-    @Args('monthlyAmount', {
+    @Args('amount', {
       type: () => Int,
     })
-    monthlyAmount: number,
+    amount: number,
     @Args('paymentMethodId') paymentMethodId: string,
     @Args('successURL', { nullable: true }) successURL?: string,
     @Args('failureURL', { nullable: true }) failureURL?: string
@@ -33,7 +33,7 @@ export class UpgradeSubscriptionResolver {
       memberPlanId,
       subscriptionId,
       paymentMethodId,
-      monthlyAmount,
+      amount,
       failureURL,
       successURL,
     });

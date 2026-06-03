@@ -138,7 +138,7 @@ describe('UserSubscriptionService', () => {
       memberPlanID: 'memberPlanId',
       autoRenew: true,
       paymentPeriodicity: PaymentPeriodicity.monthly,
-      monthlyAmount: 100,
+      amount: 100,
       paymentMethodID: 'paymentMethodId',
     };
 
@@ -165,7 +165,7 @@ describe('UserSubscriptionService', () => {
           ...baseArgs,
           voucher: 'testvoucher',
           paymentPeriodicity: PaymentPeriodicity.monthly,
-          monthlyAmount: 100,
+          amount: 100,
         });
 
         // monthly: 100 * 1 = 100, 20% of 100 = 20
@@ -184,7 +184,7 @@ describe('UserSubscriptionService', () => {
           ...baseArgs,
           voucher: 'testvoucher',
           paymentPeriodicity: PaymentPeriodicity.yearly,
-          monthlyAmount: 100,
+          amount: 1200,
         });
 
         // yearly: 100 * 12 = 1200, 10% of 1200 = 120

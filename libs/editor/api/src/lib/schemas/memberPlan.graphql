@@ -22,9 +22,12 @@ fragment FullMemberPlan on MemberPlan {
   maxCount
   migrateToTargetPaymentMethodID
 
-  amountPerMonthMin
-  amountPerMonthMax
-  amountPerMonthTarget
+  periodAmountConfig {
+    periodicity
+    min
+    max
+    target
+  }
 
   successPageId
   failPageId
@@ -83,9 +86,7 @@ mutation CreateMemberPlan(
   $shortDescription: RichText
   $description: RichText
   $imageID: String
-  $amountPerMonthMax: Int
-  $amountPerMonthMin: Int!
-  $amountPerMonthTarget: Int
+  $periodAmountConfig: [PeriodAmountConfigInput!]!
   $confirmationPageId: String
   $failPageId: String
   $successPageId: String
@@ -107,9 +108,7 @@ mutation CreateMemberPlan(
     description: $description
     imageID: $imageID
 
-    amountPerMonthMax: $amountPerMonthMax
-    amountPerMonthMin: $amountPerMonthMin
-    amountPerMonthTarget: $amountPerMonthTarget
+    periodAmountConfig: $periodAmountConfig
 
     confirmationPageId: $confirmationPageId
     failPageId: $failPageId
@@ -137,9 +136,7 @@ mutation UpdateMemberPlan(
   $shortDescription: RichText
   $description: RichText
   $imageID: String
-  $amountPerMonthMax: Int
-  $amountPerMonthMin: Int
-  $amountPerMonthTarget: Int
+  $periodAmountConfig: [PeriodAmountConfigInput!]!
   $confirmationPageId: String
   $failPageId: String
   $successPageId: String
@@ -162,9 +159,7 @@ mutation UpdateMemberPlan(
     description: $description
     imageID: $imageID
 
-    amountPerMonthMax: $amountPerMonthMax
-    amountPerMonthMin: $amountPerMonthMin
-    amountPerMonthTarget: $amountPerMonthTarget
+    periodAmountConfig: $periodAmountConfig
 
     confirmationPageId: $confirmationPageId
     failPageId: $failPageId

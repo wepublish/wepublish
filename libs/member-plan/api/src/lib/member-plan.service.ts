@@ -99,11 +99,7 @@ export class MemberPlanService {
   }: UpdateMemberPlanInput) {
     const existingMemberPlan = await this.prisma.memberPlan.findUniqueOrThrow({
       where: { id },
-      select: {
-        extendable: true,
-        amountPerMonthMin: true,
-        amountPerMonthMax: true,
-        amountPerMonthTarget: true,
+      include: {
         availablePaymentMethods: true,
       },
     });
@@ -113,21 +109,8 @@ export class MemberPlanService {
         (input.extendable as boolean | undefined) ??
         existingMemberPlan.extendable,
 
-      amountPerMonthMin:
-        (input.amountPerMonthMin as number | undefined) ??
-        existingMemberPlan.amountPerMonthMin,
-
-      amountPerMonthMax:
-        input.amountPerMonthMax === null ?
-          null
-        : ((input.amountPerMonthMax as number | undefined) ??
-          existingMemberPlan.amountPerMonthMax),
-
-      amountPerMonthTarget:
-        input.amountPerMonthTarget === null ?
-          null
-        : ((input.amountPerMonthTarget as number | undefined) ??
-          existingMemberPlan.amountPerMonthTarget),
+      periodAmountConfig:
+        input.periodAmountConfig ?? existingMemberPlan.periodAmountConfig,
 
       availablePaymentMethods:
         availablePaymentMethods ?? existingMemberPlan.availablePaymentMethods,
@@ -166,9 +149,7 @@ export class MemberPlanService {
   }: CreateMemberPlanInput) {
     checkMemberPlanIntegrity({
       extendable: input.extendable ?? true,
-      amountPerMonthMin: input.amountPerMonthMin,
-      amountPerMonthMax: input.amountPerMonthMax ?? null,
-      amountPerMonthTarget: input.amountPerMonthTarget ?? null,
+      periodAmountConfig: input.periodAmountConfig,
       availablePaymentMethods,
     });
 
@@ -283,20 +264,13 @@ export const createMemberPlanFilter = (
 
 type MemberPlanIntegrityInput = {
   extendable: boolean;
-  amountPerMonthMin: number;
-  amountPerMonthMax: number | null;
-  amountPerMonthTarget: number | null;
+  periodAmountConfig: PrismaJson.PeriodAmountConfig;
   availablePaymentMethods: Prisma.AvailablePaymentMethodUncheckedCreateWithoutMemberPlanInput[];
 };
 
 function checkMemberPlanIntegrity(input: MemberPlanIntegrityInput): void {
-  const {
-    extendable,
-    amountPerMonthMin,
-    amountPerMonthMax,
-    amountPerMonthTarget,
-    availablePaymentMethods,
-  } = input;
+  const { extendable, periodAmountConfig, availablePaymentMethods } = input;
+
   const hasForceAutoRenew = !!availablePaymentMethods.find(
     apm => apm.forceAutoRenewal
   );
@@ -307,28 +281,27 @@ function checkMemberPlanIntegrity(input: MemberPlanIntegrityInput): void {
     );
   }
 
-  if (amountPerMonthMax != null && amountPerMonthMin > amountPerMonthMax) {
-    throw new BadRequestException(
-      `Memberplan amountPerMonthMax can not be lower than amountPerMonthMin`
-    );
-  }
+  for (const config of periodAmountConfig) {
+    if (config.max != null && config.min > config.max) {
+      throw new BadRequestException(
+        `Memberplan config.max can not be lower than config.min`
+      );
+    }
 
-  if (
-    amountPerMonthTarget != null &&
-    amountPerMonthTarget <= amountPerMonthMin
-  ) {
-    throw new BadRequestException(
-      `Memberplan amountPerMonthTarget can not be lower than amountPerMonthMin`
-    );
-  }
+    if (config.target != null && config.target <= config.min) {
+      throw new BadRequestException(
+        `Memberplan config.target can not be lower than config.min`
+      );
+    }
 
-  if (
-    amountPerMonthTarget != null &&
-    amountPerMonthMax != null &&
-    amountPerMonthTarget > amountPerMonthMax
-  ) {
-    throw new BadRequestException(
-      `Memberplan amountPerMonthTarget can not be higher than amountPerMonthMax`
-    );
+    if (
+      config.target != null &&
+      config.max != null &&
+      config.target > config.max
+    ) {
+      throw new BadRequestException(
+        `Memberplan config.target can not be higher than config.max`
+      );
+    }
   }
 }

@@ -3,6 +3,11 @@ generator client {
   previewFeatures = ["views"]
 }
 
+generator json {
+  provider = "prisma-json-types-generator"
+  allowAny = true
+}
+
 datasource db {
   provider = "postgresql"
 }
@@ -541,9 +546,8 @@ model AvailablePaymentMethod {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  paymentMethodIDs     String[]
-  paymentPeriodicities PaymentPeriodicity[]
-  forceAutoRenewal     Boolean
+  paymentMethodIDs String[]
+  forceAutoRenewal Boolean
 
   MemberPlan   MemberPlan? @relation(fields: [memberPlanId], references: [id], onDelete: Cascade)
   memberPlanId String?
@@ -566,16 +570,17 @@ model MemberPlan {
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 
-  name                           String
-  slug                           String                   @unique
-  tags                           String[]
-  shortDescription               Json?
-  description                    Json
-  active                         Boolean
-  currency                       Currency
-  amountPerMonthMin              Float
-  amountPerMonthMax              Float?
-  amountPerMonthTarget           Float?
+  name             String
+  slug             String   @unique
+  tags             String[]
+  shortDescription Json?
+  description      Json
+  active           Boolean
+  currency         Currency
+
+  /// [PeriodAmountConfig]
+  periodAmountConfig Json @default("[]")
+
   availablePaymentMethods        AvailablePaymentMethod[]
   migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
   migrateToTargetPaymentMethodID String?
@@ -904,7 +909,7 @@ model Subscription {
   createdAt          DateTime                  @default(now())
   modifiedAt         DateTime                  @updatedAt
   paymentPeriodicity PaymentPeriodicity
-  monthlyAmount      Float
+  amount             Float
   autoRenew          Boolean
   startsAt           DateTime
   paidUntil          DateTime?
