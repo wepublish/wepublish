@@ -8,8 +8,8 @@ import {
 } from '@wepublish/block-content/website';
 import {
   BlockContent,
-  TeaserGridBlock,
-  TeaserListBlock,
+  FullTeaserGridBlockFragment,
+  FullTeaserListBlockFragment,
 } from '@wepublish/website/api';
 import {
   BuilderTeaserListBlockProps,
@@ -23,8 +23,8 @@ import { BlueBox } from '../components/blue-box';
 import { NewsTeaser } from '../custom-teasers/news';
 
 export const isNewsTeasers = (
-  block: BlockContent
-): block is TeaserGridBlock | TeaserListBlock =>
+  block: Pick<BlockContent, '__typename'>
+): block is FullTeaserGridBlockFragment | FullTeaserListBlockFragment =>
   allPass([hasBlockStyle('News'), isTeaserListBlock])(block);
 
 export const NewsBlockStyle = ({

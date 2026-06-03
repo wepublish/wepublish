@@ -3,7 +3,7 @@ import { css, IconButton, LinearProgress, Theme, Tooltip } from '@mui/material';
 import { formatCurrency } from '@wepublish/membership/website';
 import {
   BlockContent,
-  CrowdfundingBlock as CrowdfundingBlockType,
+  FullCrowdfundingBlockFragment,
   CrowdfundingGoalType,
   Currency,
 } from '@wepublish/website/api';
@@ -17,7 +17,8 @@ import { formatNumber } from './format-number';
 
 export const isCrowdfundingBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is CrowdfundingBlockType => block.__typename === 'CrowdfundingBlock';
+): block is FullCrowdfundingBlockFragment =>
+  block.__typename === 'CrowdfundingBlock';
 
 export const CrowdfundingContainer = styled('div')``;
 
