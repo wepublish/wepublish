@@ -1,6 +1,6 @@
 import {
   BlockContent,
-  SubscribeBlock as SubscribeBlockType,
+  FullSubscribeBlockFragment,
 } from '@wepublish/website/api';
 import {
   BuilderRouterContext,
@@ -16,7 +16,7 @@ import { PaymentForm } from '@wepublish/payment/website';
 
 export const isSubscribeBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is SubscribeBlockType => block.__typename === 'SubscribeBlock';
+): block is FullSubscribeBlockFragment => block.__typename === 'SubscribeBlock';
 
 const lowercase = replace(/^./, toLower);
 

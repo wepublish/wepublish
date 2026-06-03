@@ -1,8 +1,5 @@
 import styled from '@emotion/styled';
-import {
-  BlockContent,
-  IFrameBlock as IFrameBlockType,
-} from '@wepublish/website/api';
+import { BlockContent, FullIFrameBlockFragment } from '@wepublish/website/api';
 import { BuilderIFrameBlockProps } from '@wepublish/website/builder';
 import { css } from '@emotion/react';
 import { useMemo } from 'react';
@@ -10,7 +7,7 @@ import IframeResizer from '@iframe-resizer/react';
 
 export const isIFrameBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is IFrameBlockType => block.__typename === 'IFrameBlock';
+): block is FullIFrameBlockFragment => block.__typename === 'IFrameBlock';
 
 export const IFrameBlockWrapper = styled('div')``;
 

@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { css, Typography } from '@mui/material';
-import { Article as ArticleType } from '@wepublish/website/api';
 import {
   BuilderArticleAuthorsProps,
   useWebsiteBuilder,
@@ -62,7 +61,8 @@ export const TsriArticleAuthors = ({
           ))}
         </AuthorChipNameJobWrapper>
       )}
-      <ArticleDate article={article as ArticleType} />
+
+      <ArticleDate article={article} />
     </Typography>
   );
 };

@@ -1,8 +1,8 @@
 import {
   BlockContent,
-  TeaserGridBlock,
-  TeaserListBlock,
-  TeaserSlotsBlock,
+  FullTeaserGridBlockFragment,
+  FullTeaserListBlockFragment,
+  FullTeaserSlotsBlockFragment,
 } from '@wepublish/website/api';
 import { allPass } from 'ramda';
 import { hasBlockStyle } from '../../has-blockstyle';
@@ -17,15 +17,15 @@ export const isAlternatingTeaser = (props: BuilderTeaserProps) =>
 
 export const isAlternatingTeaserGridBlockStyle = (
   block: Pick<BlockContent, '__typename'>
-): block is TeaserGridBlock =>
+): block is FullTeaserGridBlockFragment =>
   allPass([isAlternating, isTeaserGridBlock])(block);
 
 export const isAlternatingTeaserListBlockStyle = (
   block: Pick<BlockContent, '__typename'>
-): block is TeaserListBlock =>
+): block is FullTeaserListBlockFragment =>
   allPass([isAlternating, isTeaserListBlock])(block);
 
 export const isAlternatingTeaserSlotsBlockStyle = (
   block: Pick<BlockContent, '__typename'>
-): block is TeaserSlotsBlock =>
+): block is FullTeaserSlotsBlockFragment =>
   allPass([isAlternating, isTeaserSlotsBlock])(block);

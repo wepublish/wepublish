@@ -4,7 +4,7 @@ import { CircularProgress } from '@mui/material';
 import { articleToTeaser } from '@wepublish/article/website';
 import {
   addClientCacheToProps,
-  Article,
+  FullArticleTeaserFragment,
   getApiClient,
   NavigationListDocument,
   Page,
@@ -103,7 +103,7 @@ export const SearchPage = ({
     }
 
     const articleTeasers = phraseData.phrase.articles.nodes.map(node =>
-      articleToTeaser(node as Article)
+      articleToTeaser(node as FullArticleTeaserFragment['article'])
     );
     const pageTeasers = phraseData.phrase.pages.nodes.map(node =>
       pageToTeaser(node as Page)
