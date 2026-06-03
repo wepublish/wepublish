@@ -1754,6 +1754,7 @@
         "memberPlans": "Subscription Plans",
         "filter": "Revenue Filter",
         "additionalRevenue": "External Revenues (e.g.. via direct bank transfer)",
+        "additionalSubscriptions": "External Subscriptions (e.g.. via direct bank transfer)",
         "selectMemberPlans": "Select Subscription Plans",
         "countSubscriptionsFrom": "Include only subscriptions paid from date",
         "countSubscriptionsUntil": "Include only subscriptions paid until date",
@@ -1769,6 +1770,7 @@
         "title": "Title",
         "description": "Description",
         "amount": "Target amount",
+        "amountSubscriptions": "Target subscription count",
         "remove": "Remove",
         "add": "Add Target"
       }

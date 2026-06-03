@@ -1693,6 +1693,7 @@
         "memberPlans": "Abo Pläne",
         "filter": "Einnahmen filtern",
         "additionalRevenue": "Externe Einnamen (z.B. via direkte Banküberweisung)",
+        "additionalSubscriptions": "Externe Abos (z.B. via direkte Banküberweisung)",
         "selectMemberPlans": "Abo Pläne wählen",
         "countSubscriptionsFrom": "Nur Abos einrechnen, die bezahlt wurden ab Datum",
         "countSubscriptionsUntil": "Nur Abos einrechnen, die bezahlt wurden bis Datum",
@@ -1708,6 +1709,7 @@
         "title": "Titel",
         "description": "Beschreibung",
         "amount": "Zielbetrag",
+        "amountSubscriptions": "Ziel Anzahl Abos",
         "remove": "Entfernen",
         "add": "Ziel hinzufügen"
       }
