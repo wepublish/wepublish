@@ -16,7 +16,7 @@ import {
   TeaserTime,
   TeaserTitle,
   WepTeaser,
-} from './ganzgraz-teaser';
+} from './wep-teaser';
 
 export const isTeaserLogoWall = allPass([
   ({ blockStyle }: BuilderTeaserProps) =>

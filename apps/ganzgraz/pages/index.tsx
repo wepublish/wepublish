@@ -1,5 +1,10 @@
+import mailchimp, {
+  campaigns,
+  ErrorResponse,
+} from '@mailchimp/mailchimp_marketing';
+import { captureException } from '@sentry/react';
 import { PageContainer } from '@wepublish/page/website';
-import { getApiUrl } from '@wepublish/utils/website';
+import { DailyBriefingContext, getApiUrl } from '@wepublish/utils/website';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -10,20 +15,59 @@ import {
 import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
+import { ResponseError } from 'superagent';
 
-export default function Index() {
+type IndexProps = {
+  campaigns: campaigns.Campaigns[];
+};
+
+export default function Index({ campaigns }: IndexProps) {
   return (
     <LinkContext.Provider value={{ prefetch: true }}>
-      <PageContainer slug={''} />
+      <DailyBriefingContext.Provider value={campaigns}>
+        <PageContainer slug={''} />
+      </DailyBriefingContext.Provider>
     </LinkContext.Provider>
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
+export const getStaticProps = (async () => {
+  const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 
   if (!publicRuntimeConfig.env.API_URL) {
     return { props: {}, revalidate: 1 };
+  }
+
+  let mailchimpResponse:
+    | mailchimp.campaigns.CampaignsSuccessResponse
+    | ErrorResponse
+    | null = null;
+  try {
+    mailchimp.setConfig({
+      apiKey: serverRuntimeConfig.env.MAILCHIMP_API_KEY,
+      server: serverRuntimeConfig.env.MAILCHIMP_SERVER_PREFIX,
+    });
+
+    mailchimpResponse = await mailchimp.campaigns.list({
+      count: 4,
+      sortField: 'send_time',
+      status: 'sent',
+      sortDir: 'DESC',
+      folderId: '2faf509b27',
+      fields: [
+        'campaigns.id',
+        'campaigns.long_archive_url',
+        'campaigns.settings.subject_line',
+      ],
+    });
+  } catch (e) {
+    if (e && typeof e === 'object' && 'response' in e) {
+      console.error((e as ResponseError).response?.body);
+    } else {
+      console.error(e);
+    }
+
+    captureException(e);
   }
 
   const client = getV1ApiClient(getApiUrl(), []);
@@ -42,10 +86,13 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {});
+  const { campaigns = [] } =
+    (mailchimpResponse as campaigns.CampaignsSuccessResponse) ?? {};
+
+  const props = addClientCacheToV1Props(client, { campaigns });
 
   return {
     props,
     revalidate: 60, // every 60 seconds
   };
-};
+}) satisfies GetStaticProps;

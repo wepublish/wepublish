@@ -6,7 +6,6 @@ import { captureException } from '@sentry/nextjs';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
-import { LinkContext } from '@wepublish/website/builder';
 import {
   addClientCacheToV1Props,
   getV1ApiClient,
@@ -14,6 +13,7 @@ import {
   PageDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
+import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 import { ResponseError } from 'superagent';
@@ -70,6 +70,8 @@ export const getStaticProps: GetStaticProps = async () => {
   } catch (e) {
     if (e && typeof e === 'object' && 'response' in e) {
       console.error((e as ResponseError).response?.body);
+    } else {
+      console.error(e);
     }
 
     captureException(e);
