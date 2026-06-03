@@ -10,7 +10,15 @@ export type BuilderImageProviderProps = {
   maxWidth?: BuilderImageWidths;
 } & Pick<ImgHTMLAttributes<HTMLImageElement>, 'loading' | 'fetchPriority'>;
 
-export type BuilderImageWidths = 200 | 300 | 500 | 800 | 1000 | 1200 | 1500;
+export type BuilderImageWidths =
+  | 200
+  | 300
+  | 500
+  | 800
+  | 1000
+  | 1200
+  | 1500
+  | 2400;
 
 export type BuilderImageProps = {
   image: SlimImageFragment | FullImageFragment | FullPeerImageFragment;
