@@ -1874,6 +1874,9 @@ model WebsiteSettings {
   analyticsPAEnabled Boolean @default(false)
   analyticsPAId      String?
 
+  analyticsPiwikEnabled Boolean @default(false)
+  analyticsPiwikId      String?
+
   // Ads
   adsSparkLoopEnabled Boolean @default(false)
   adsSparkLoopId      String?

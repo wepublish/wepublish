@@ -6028,12 +6028,14 @@ export type WebsiteAnalytics = {
   __typename?: 'WebsiteAnalytics';
   googleAnalytics: KeyEnabled;
   googleTagManager: KeyEnabled;
+  piwik: KeyEnabled;
   plausible: KeyEnabled;
 };
 
 export type WebsiteAnalyticsInput = {
   googleAnalytics: KeyEnabledInput;
   googleTagManager: KeyEnabledInput;
+  piwik: KeyEnabledInput;
   plausible: KeyEnabledInput;
 };
 
@@ -6707,14 +6709,14 @@ export type SettingQueryVariables = Exact<{
 
 export type SettingQuery = { __typename?: 'Query', setting: { __typename?: 'Setting', id: string, name: SettingName, value?: any | null } };
 
-export type WebsiteSettingsFragment = { __typename?: 'WebsiteSettings', theme: any, analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, fonts: Array<{ __typename?: 'WebsiteRemoteFont', weight: Array<FontWeight>, style: Array<FontStyle>, name: string }> };
+export type WebsiteSettingsFragment = { __typename?: 'WebsiteSettings', theme: any, analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, piwik: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, fonts: Array<{ __typename?: 'WebsiteRemoteFont', weight: Array<FontWeight>, style: Array<FontStyle>, name: string }> };
 
 export type SensitiveWebsiteSettingsFragment = { __typename?: 'WebsiteSettings', mail: { __typename?: 'WebsiteMail', mailchimp?: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } | null } };
 
 export type WebsiteSettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type WebsiteSettingsQuery = { __typename?: 'Query', websiteSettings: { __typename?: 'WebsiteSettings', theme: any, analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, fonts: Array<{ __typename?: 'WebsiteRemoteFont', weight: Array<FontWeight>, style: Array<FontStyle>, name: string }> } };
+export type WebsiteSettingsQuery = { __typename?: 'Query', websiteSettings: { __typename?: 'WebsiteSettings', theme: any, analytics: { __typename?: 'WebsiteAnalytics', googleAnalytics: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, googleTagManager: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, plausible: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null }, piwik: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, ads: { __typename?: 'WebsiteAds', sparkLoop: { __typename?: 'KeyEnabled', enabled: boolean, key?: string | null } }, fonts: Array<{ __typename?: 'WebsiteRemoteFont', weight: Array<FontWeight>, style: Array<FontStyle>, name: string }> } };
 
 export type SensitiveWebsiteSettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -8028,6 +8030,10 @@ export const WebsiteSettingsFragmentDoc = gql`
       key
     }
     plausible {
+      enabled
+      key
+    }
+    piwik {
       enabled
       key
     }

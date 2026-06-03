@@ -14,6 +14,11 @@ fragment WebsiteSettings on WebsiteSettings {
       enabled
       key
     }
+
+    piwik {
+      enabled
+      key
+    }
   }
 
   ads {

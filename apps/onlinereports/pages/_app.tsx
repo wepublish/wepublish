@@ -41,6 +41,7 @@ import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
+import PlausibleProvider from 'next-plausible';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
@@ -187,111 +188,126 @@ function CustomApp({
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
   return (
-    <AppCacheProvider emotionCache={emotionCache}>
-      <AdsProvider>
-        <WebsiteProvider>
-          <WebsiteBuilderProvider
-            Head={Head}
-            Script={Script}
-            AuthorChip={OnlineReportsAuthorChip}
-            ArticleAuthors={OnlineReportsArticleAuthors}
-            ArticleList={OnlineReportsArticleList}
-            Navbar={OnlineReportsNavbar}
-            Footer={OnlineReportsFooter}
-            Article={OnlineReportsArticle}
-            CommentListItem={OnlineReportsCommentListItem}
-            Page={OnlineReportsPage}
-            RegistrationForm={OnlineReportsRegistrationForm}
-            PaymentAmount={OnlineReportsPaymentAmount}
-            richtext={{ RenderElement: OnlineReportsRenderElement }}
-            elements={{ Link: NextWepublishLink }}
-            blocks={{
-              BaseTeaser: OnlineReportsTeaser,
-              Renderer: OnlineReportsBlockRenderer,
-              TeaserList: OnlineReportsTeaserListBlock,
-              TeaserGridFlex: OnlineReportsTeaserGridFlexBlock,
-              TeaserGrid: OnlineReportsTeaserGridBlock,
-              Quote: OnlineReportsQuoteBlock,
-              Title: OnlineReportsTitle,
-            }}
-            date={{ format: dateFormatter }}
-            meta={{ siteTitle }}
-          >
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              <OnlineReportsGlobalStyles />
+    <PlausibleProvider
+      enabled={
+        settings?.analytics.plausible.enabled &&
+        !!settings?.analytics.plausible.key
+      }
+      src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
+    >
+      <AppCacheProvider emotionCache={emotionCache}>
+        <AdsProvider>
+          <WebsiteProvider>
+            <WebsiteBuilderProvider
+              Head={Head}
+              Script={Script}
+              AuthorChip={OnlineReportsAuthorChip}
+              ArticleAuthors={OnlineReportsArticleAuthors}
+              ArticleList={OnlineReportsArticleList}
+              Navbar={OnlineReportsNavbar}
+              Footer={OnlineReportsFooter}
+              Article={OnlineReportsArticle}
+              CommentListItem={OnlineReportsCommentListItem}
+              Page={OnlineReportsPage}
+              RegistrationForm={OnlineReportsRegistrationForm}
+              PaymentAmount={OnlineReportsPaymentAmount}
+              richtext={{ RenderElement: OnlineReportsRenderElement }}
+              elements={{ Link: NextWepublishLink }}
+              blocks={{
+                BaseTeaser: OnlineReportsTeaser,
+                Renderer: OnlineReportsBlockRenderer,
+                TeaserList: OnlineReportsTeaserListBlock,
+                TeaserGridFlex: OnlineReportsTeaserGridFlexBlock,
+                TeaserGrid: OnlineReportsTeaserGridBlock,
+                Quote: OnlineReportsQuoteBlock,
+                Title: OnlineReportsTitle,
+              }}
+              date={{ format: dateFormatter }}
+              meta={{ siteTitle }}
+            >
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <OnlineReportsGlobalStyles />
 
-              <Head>
-                <title key="title">{siteTitle}</title>
-              </Head>
+                <Head>
+                  <title key="title">{siteTitle}</title>
+                </Head>
 
-              <Script
-                src="//servedby.revive-adserver.net/asyncjs.php"
-                async
-              />
-
-              <AdblockOverlay />
-
-              <Spacer>
-                <NavBar
-                  categorySlugs={[['categories', 'about-us']]}
-                  slug="main"
-                  headerSlug="header"
-                  iconSlug="icons"
-                  loginBtn={{ href: '/login' }}
-                  profileBtn={{ href: '/profile' }}
+                <Script
+                  src="//servedby.revive-adserver.net/asyncjs.php"
+                  async
                 />
 
-                <MainContainer>
-                  <MainContent>
-                    <WideboardPlacer>
-                      <Advertisement type={'whiteboard'} />
-                    </WideboardPlacer>
-                    <Component {...pageProps} />
-                  </MainContent>
-                </MainContainer>
+                <AdblockOverlay />
 
-                <AdvertisementPlacer>
-                  <Advertisement type={'half-page'} />
-                </AdvertisementPlacer>
-
-                <FooterContainer
-                  slug="footer"
-                  categorySlugs={[['about-us']]}
-                  iconSlug="icons"
-                  wepublishLogo="hidden"
-                />
-              </Spacer>
-
-              <RoutedAdminBar />
-
-              {settings?.analytics.googleAnalytics.enabled &&
-                settings?.analytics.googleAnalytics.key && (
-                  <GoogleAnalytics
-                    gaId={settings.analytics.googleAnalytics.key}
+                <Spacer>
+                  <NavBar
+                    categorySlugs={[['categories', 'about-us']]}
+                    slug="main"
+                    headerSlug="header"
+                    iconSlug="icons"
+                    loginBtn={{ href: '/login' }}
+                    profileBtn={{ href: '/profile' }}
                   />
-                )}
 
-              {settings?.analytics.googleTagManager.enabled &&
-                settings?.analytics.googleTagManager.key && (
-                  <GoogleTagManager
-                    gtmId={settings.analytics.googleTagManager.key}
-                  />
-                )}
+                  <MainContainer>
+                    <MainContent>
+                      <WideboardPlacer>
+                        <Advertisement type={'whiteboard'} />
+                      </WideboardPlacer>
+                      <Component {...pageProps} />
+                    </MainContent>
+                  </MainContainer>
 
-              {settings?.ads.sparkLoop.enabled &&
-                settings?.ads.sparkLoop.key && (
-                  <Script
-                    src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
-                    strategy="lazyOnload"
-                    data-sparkloop
+                  <AdvertisementPlacer>
+                    <Advertisement type={'half-page'} />
+                  </AdvertisementPlacer>
+
+                  <FooterContainer
+                    slug="footer"
+                    categorySlugs={[['about-us']]}
+                    iconSlug="icons"
+                    wepublishLogo="hidden"
                   />
-                )}
-            </ThemeProvider>
-          </WebsiteBuilderProvider>
-        </WebsiteProvider>
-      </AdsProvider>
-    </AppCacheProvider>
+                </Spacer>
+
+                <RoutedAdminBar />
+
+                {settings?.analytics.googleAnalytics.enabled &&
+                  settings?.analytics.googleAnalytics.key && (
+                    <GoogleAnalytics
+                      gaId={settings.analytics.googleAnalytics.key}
+                    />
+                  )}
+
+                {settings?.analytics.googleTagManager.enabled &&
+                  settings?.analytics.googleTagManager.key && (
+                    <GoogleTagManager
+                      gtmId={settings.analytics.googleTagManager.key}
+                    />
+                  )}
+
+                {settings?.analytics.piwik.enabled &&
+                  settings?.analytics.piwik.key && (
+                    <Script id="piwik-pro">
+                      {`(function(window, document, dataLayerName, id) { window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script'); var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName);var qPString=qP.length>0?("?"+qP.join("&")):""; tags.async=!0,tags.src="https://flimmer.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts); !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]); })(window, document, 'dataLayer', '${settings.analytics.piwik.key}');`}
+                    </Script>
+                  )}
+
+                {settings?.ads.sparkLoop.enabled &&
+                  settings?.ads.sparkLoop.key && (
+                    <Script
+                      src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
+                      strategy="lazyOnload"
+                      data-sparkloop
+                    />
+                  )}
+              </ThemeProvider>
+            </WebsiteBuilderProvider>
+          </WebsiteProvider>
+        </AdsProvider>
+      </AppCacheProvider>
+    </PlausibleProvider>
   );
 }
 

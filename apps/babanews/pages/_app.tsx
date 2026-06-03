@@ -36,6 +36,7 @@ import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
+import PlausibleProvider from 'next-plausible';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
@@ -95,70 +96,86 @@ function CustomApp({
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
   return (
-    <AppCacheProvider emotionCache={cache}>
-      <WebsiteProvider>
-        <WebsiteBuilderProvider
-          Head={Head}
-          Script={Script}
-          elements={{ Link: NextWepublishLink }}
-          date={{ format: dateFormatter }}
-          blocks={{
-            Renderer: BabanewsBlockRenderer,
-            TeaserGrid: BabanewsTeaserGrid,
-          }}
-          blockStyles={{
-            Banner: BabanewsBanner,
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Head>
-              <title key="title">{siteTitle}</title>
-            </Head>
+    <PlausibleProvider
+      enabled={
+        settings?.analytics.plausible.enabled &&
+        !!settings?.analytics.plausible.key
+      }
+      src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
+    >
+      <AppCacheProvider emotionCache={cache}>
+        <WebsiteProvider>
+          <WebsiteBuilderProvider
+            Head={Head}
+            Script={Script}
+            elements={{ Link: NextWepublishLink }}
+            date={{ format: dateFormatter }}
+            blocks={{
+              Renderer: BabanewsBlockRenderer,
+              TeaserGrid: BabanewsTeaserGrid,
+            }}
+            blockStyles={{
+              Banner: BabanewsBanner,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <Head>
+                <title key="title">{siteTitle}</title>
+              </Head>
 
-            <NavBar
-              categorySlugs={[['categories', 'about-us']]}
-              slug="main"
-              headerSlug="header"
-              iconSlug="icons"
-            />
-
-            <ContentSpacer>
-              <Component {...pageProps} />
-            </ContentSpacer>
-
-            <Footer
-              slug="main"
-              categorySlugs={[['sonstiges', 'other'], ['about-us']]}
-            />
-
-            <RoutedAdminBar />
-
-            {settings?.analytics.googleAnalytics.enabled &&
-              settings?.analytics.googleAnalytics.key && (
-                <GoogleAnalytics
-                  gaId={settings.analytics.googleAnalytics.key}
-                />
-              )}
-
-            {settings?.analytics.googleTagManager.enabled &&
-              settings?.analytics.googleTagManager.key && (
-                <GoogleTagManager
-                  gtmId={settings.analytics.googleTagManager.key}
-                />
-              )}
-
-            {settings?.ads.sparkLoop.enabled && settings?.ads.sparkLoop.key && (
-              <Script
-                src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
-                strategy="lazyOnload"
-                data-sparkloop
+              <NavBar
+                categorySlugs={[['categories', 'about-us']]}
+                slug="main"
+                headerSlug="header"
+                iconSlug="icons"
               />
-            )}
-          </ThemeProvider>
-        </WebsiteBuilderProvider>
-      </WebsiteProvider>
-    </AppCacheProvider>
+
+              <ContentSpacer>
+                <Component {...pageProps} />
+              </ContentSpacer>
+
+              <Footer
+                slug="main"
+                categorySlugs={[['sonstiges', 'other'], ['about-us']]}
+              />
+
+              <RoutedAdminBar />
+
+              {settings?.analytics.googleAnalytics.enabled &&
+                settings?.analytics.googleAnalytics.key && (
+                  <GoogleAnalytics
+                    gaId={settings.analytics.googleAnalytics.key}
+                  />
+                )}
+
+              {settings?.analytics.googleTagManager.enabled &&
+                settings?.analytics.googleTagManager.key && (
+                  <GoogleTagManager
+                    gtmId={settings.analytics.googleTagManager.key}
+                  />
+                )}
+
+              {settings?.analytics.piwik.enabled &&
+                settings?.analytics.piwik.key && (
+                  <Script id="piwik-pro">
+                    {`(function(window, document, dataLayerName, id) { window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script'); var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName);var qPString=qP.length>0?("?"+qP.join("&")):""; tags.async=!0,tags.src="https://flimmer.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts); !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]); })(window, document, 'dataLayer', '${settings.analytics.piwik.key}');`}
+                  </Script>
+                )}
+
+              {settings?.ads.sparkLoop.enabled &&
+                settings?.ads.sparkLoop.key && (
+                  <Script
+                    src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
+                    strategy="lazyOnload"
+                    data-sparkloop
+                  />
+                )}
+            </ThemeProvider>
+          </WebsiteBuilderProvider>
+        </WebsiteProvider>
+      </AppCacheProvider>
+    </PlausibleProvider>
   );
 }
 

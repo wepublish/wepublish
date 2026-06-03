@@ -5857,12 +5857,14 @@ export type WebsiteAnalytics = {
   __typename?: 'WebsiteAnalytics';
   googleAnalytics: KeyEnabled;
   googleTagManager: KeyEnabled;
+  piwik: KeyEnabled;
   plausible: KeyEnabled;
 };
 
 export type WebsiteAnalyticsInput = {
   googleAnalytics: KeyEnabledInput;
   googleTagManager: KeyEnabledInput;
+  piwik: KeyEnabledInput;
   plausible: KeyEnabledInput;
 };
 

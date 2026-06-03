@@ -53,6 +53,16 @@ const analyticsSchema = z.object({
       .or(z.literal(''))
       .nullish(),
   }),
+  piwik: z.object({
+    enabled: z.boolean(),
+    key: z
+      .string({
+        message:
+          'Must be a valid Piwik ID (e.g., xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)',
+      })
+      .or(z.literal(''))
+      .nullish(),
+  }),
 });
 
 export const WebsiteAnalyticsWrapper = styled.form`
@@ -376,6 +386,81 @@ export const WebsiteAnalytics = () => {
                       ),
                     }}
                   />
+                )
+              }
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        fontFamily: 'monospace',
+                        fontWeight: 600,
+                        color: 'text.secondary',
+                        fontSize: '0.8rem',
+                      }}
+                    >
+                      ID
+                    </Typography>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          : <></>
+        }
+      />
+
+      <h3>{t('websiteSettings.analytics.piwik.title')}</h3>
+
+      <Controller
+        name="piwik.enabled"
+        control={control}
+        render={({ field }) => (
+          <div>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  {...field}
+                  checked={!!field.value}
+                />
+              }
+              label={t('websiteSettings.analytics.piwik.enable')}
+            />
+
+            <Typography
+              variant="body2"
+              component={Explainer}
+            >
+              <Trans
+                i18nKey="websiteSettings.analytics.piwik.pro"
+                components={{
+                  url: (
+                    <MuiLink
+                      href="https://piwik.pro"
+                      target="_blank"
+                      rel="noreferrer"
+                    />
+                  ),
+                }}
+              />
+            </Typography>
+          </div>
+        )}
+      />
+
+      <Controller
+        name="piwik.key"
+        control={control}
+        render={({ field, fieldState: { error } }) =>
+          watch('piwik.enabled') ?
+            <TextField
+              {...field}
+              label="piwik ID"
+              placeholder="xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+              error={!!error}
+              helperText={
+                error?.message || (
+                  <Trans i18nKey="websiteSettings.analytics.piwik.proLocator" />
                 )
               }
               InputProps={{

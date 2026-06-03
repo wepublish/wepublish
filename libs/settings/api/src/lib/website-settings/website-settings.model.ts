@@ -32,6 +32,8 @@ export class WebsiteAnalytics {
   googleTagManager!: KeyEnabled;
   @Field(() => KeyEnabled)
   plausible!: KeyEnabled;
+  @Field(() => KeyEnabled)
+  piwik!: KeyEnabled;
 }
 
 @InputType()
@@ -42,6 +44,8 @@ export class WebsiteAnalyticsInput {
   googleTagManager!: KeyEnabledInput;
   @Field(() => KeyEnabledInput)
   plausible!: KeyEnabledInput;
+  @Field(() => KeyEnabledInput)
+  piwik!: KeyEnabledInput;
 }
 
 @ObjectType()

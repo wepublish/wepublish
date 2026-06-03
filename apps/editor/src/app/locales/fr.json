@@ -1978,6 +1978,12 @@
           "enable": "Activer Plausible",
           "pa": "<url>Plausible Analytics</url> est une alternative respectueuse de la vie privée à Google Analytics.",
           "paLocator": "Tu le trouves dans les <url>paramètres du site</url> dans le tableau de bord admin"
+        },
+        "piwik": {
+          "title": "Piwik PRO",
+          "enable": "Activer Piwik PRO",
+          "pro": "<url>Piwik PRO</url> est une plateforme d'analyse respectueuse de la vie privée et une alternative à Google Analytics.",
+          "proLocator": "Tu le trouves dans le Menu > Administration > Site > ID de ton panneau d'administration"
         }
       },
       "mail": {

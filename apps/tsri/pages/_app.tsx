@@ -39,6 +39,7 @@ import { AppProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 import Script from 'next/script';
+import PlausibleProvider from 'next-plausible';
 import { ComponentType } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
@@ -136,109 +137,125 @@ function CustomApp({
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
   return (
-    <AppCacheProvider emotionCache={cache}>
-      <WebsiteProvider>
-        <WebsiteBuilderProvider
-          Head={Head}
-          Footer={TsriFooter}
-          Script={Script}
-          Navbar={TsriV2Navbar}
-          Article={TsriArticle}
-          AuthorChip={TsriAuthorChip}
-          ArticleDate={TsriArticleDate}
-          ArticleMeta={TsriArticleMeta}
-          ArticleList={TsriArticleList}
-          PaymentAmount={PaymentAmountPicker}
-          ArticleAuthor={TsriArticleAuthor}
-          ArticleAuthors={TsriArticleAuthors}
-          Author={TsriAuthor}
-          AuthorLinks={TsriAuthorLinks}
-          AuthorList={TsriAuthorList}
-          AuthorListItem={TsriAuthorListItem}
-          TextToIcon={TsriTextToIcon}
-          Tag={TsriTag}
-          CommentList={TsriCommentList}
-          elements={{ Link: TsriNextWepublishLink }}
-          blocks={{
-            BaseTeaser: TsriBaseTeaser,
-            TeaserSlots: TsriBaseTeaserSlots,
-            Break: TsriBreakBlock,
-            Quote: TsriQuoteBlock,
-            RichText: TsriRichText,
-            Title: TsriTitleBlock,
-            Renderer:
-              TsriBlockRenderer as ComponentType<BuilderBlockRendererProps>,
-            Blocks: TsriBlocks,
-            FlexBlock: TsriFlexBlock,
-            BildwurfAd: TsriBildwurfAdBlock,
-          }}
-          blockStyles={{
-            ContextBox: TsriContextBox,
-            ImageSlider: TsriImageSlider,
-          }}
-          date={{ format: dateFormatter }}
-          meta={{ siteTitle }}
-          thirdParty={{
-            stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY,
-          }}
-          Banner={TsriBanner}
-        >
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <TsriGlobalStyles />
+    <PlausibleProvider
+      enabled={
+        settings?.analytics.plausible.enabled &&
+        !!settings?.analytics.plausible.key
+      }
+      src={`https://plausible.io/js/${settings?.analytics.plausible.key}.js`}
+    >
+      <AppCacheProvider emotionCache={cache}>
+        <WebsiteProvider>
+          <WebsiteBuilderProvider
+            Head={Head}
+            Footer={TsriFooter}
+            Script={Script}
+            Navbar={TsriV2Navbar}
+            Article={TsriArticle}
+            AuthorChip={TsriAuthorChip}
+            ArticleDate={TsriArticleDate}
+            ArticleMeta={TsriArticleMeta}
+            ArticleList={TsriArticleList}
+            PaymentAmount={PaymentAmountPicker}
+            ArticleAuthor={TsriArticleAuthor}
+            ArticleAuthors={TsriArticleAuthors}
+            Author={TsriAuthor}
+            AuthorLinks={TsriAuthorLinks}
+            AuthorList={TsriAuthorList}
+            AuthorListItem={TsriAuthorListItem}
+            TextToIcon={TsriTextToIcon}
+            Tag={TsriTag}
+            CommentList={TsriCommentList}
+            elements={{ Link: TsriNextWepublishLink }}
+            blocks={{
+              BaseTeaser: TsriBaseTeaser,
+              TeaserSlots: TsriBaseTeaserSlots,
+              Break: TsriBreakBlock,
+              Quote: TsriQuoteBlock,
+              RichText: TsriRichText,
+              Title: TsriTitleBlock,
+              Renderer:
+                TsriBlockRenderer as ComponentType<BuilderBlockRendererProps>,
+              Blocks: TsriBlocks,
+              FlexBlock: TsriFlexBlock,
+              BildwurfAd: TsriBildwurfAdBlock,
+            }}
+            blockStyles={{
+              ContextBox: TsriContextBox,
+              ImageSlider: TsriImageSlider,
+            }}
+            date={{ format: dateFormatter }}
+            meta={{ siteTitle }}
+            thirdParty={{
+              stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY,
+            }}
+            Banner={TsriBanner}
+          >
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <TsriGlobalStyles />
 
-            <Head>
-              <title key="title">{siteTitle}</title>
-            </Head>
+              <Head>
+                <title key="title">{siteTitle}</title>
+              </Head>
 
-            <Spacer>
-              <NavbarContainer
-                categorySlugs={[['about-us', 'categories', 'main']]}
-                slug="main"
-                headerSlug="header"
-                iconSlug="icons"
-              />
-
-              <main>
-                <MainSpacer maxWidth="lg">
-                  <Component {...pageProps} />
-                </MainSpacer>
-              </main>
-
-              <FooterContainer
-                slug="footer"
-                categorySlugs={[['about-us', 'categories', 'main']]}
-                iconSlug="icons"
-              />
-            </Spacer>
-
-            <RoutedAdminBar />
-
-            {settings?.analytics.googleAnalytics.enabled &&
-              settings?.analytics.googleAnalytics.key && (
-                <GoogleAnalytics
-                  gaId={settings.analytics.googleAnalytics.key}
+              <Spacer>
+                <NavbarContainer
+                  categorySlugs={[['about-us', 'categories', 'main']]}
+                  slug="main"
+                  headerSlug="header"
+                  iconSlug="icons"
                 />
-              )}
 
-            {settings?.analytics.googleTagManager.enabled &&
-              settings?.analytics.googleTagManager.key && (
-                <GoogleTagManager
-                  gtmId={settings.analytics.googleTagManager.key}
+                <main>
+                  <MainSpacer maxWidth="lg">
+                    <Component {...pageProps} />
+                  </MainSpacer>
+                </main>
+
+                <FooterContainer
+                  slug="footer"
+                  categorySlugs={[['about-us', 'categories', 'main']]}
+                  iconSlug="icons"
                 />
-              )}
+              </Spacer>
 
-            {settings?.ads.sparkLoop.enabled && settings?.ads.sparkLoop.key && (
-              <Script
-                src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
-                strategy="lazyOnload"
-                data-sparkloop
-              />
-            )}
-          </ThemeProvider>
-        </WebsiteBuilderProvider>
-      </WebsiteProvider>
-    </AppCacheProvider>
+              <RoutedAdminBar />
+
+              {settings?.analytics.googleAnalytics.enabled &&
+                settings?.analytics.googleAnalytics.key && (
+                  <GoogleAnalytics
+                    gaId={settings.analytics.googleAnalytics.key}
+                  />
+                )}
+
+              {settings?.analytics.googleTagManager.enabled &&
+                settings?.analytics.googleTagManager.key && (
+                  <GoogleTagManager
+                    gtmId={settings.analytics.googleTagManager.key}
+                  />
+                )}
+
+              {settings?.analytics.piwik.enabled &&
+                settings?.analytics.piwik.key && (
+                  <Script id="piwik-pro">
+                    {`(function(window, document, dataLayerName, id) { window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script'); var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName);var qPString=qP.length>0?("?"+qP.join("&")):""; tags.async=!0,tags.src="https://flimmer.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts); !function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]); })(window, document, 'dataLayer', '${settings.analytics.piwik.key}');`}
+                  </Script>
+                )}
+
+              {settings?.ads.sparkLoop.enabled &&
+                settings?.ads.sparkLoop.key && (
+                  <Script
+                    src={`https://script.sparkloop.app/embed.js?publication_id=${settings.ads.sparkLoop.key}.js`}
+                    strategy="lazyOnload"
+                    data-sparkloop
+                  />
+                )}
+            </ThemeProvider>
+          </WebsiteBuilderProvider>
+        </WebsiteProvider>
+      </AppCacheProvider>
+    </PlausibleProvider>
   );
 }
 

@@ -67,6 +67,10 @@ export class WebsiteSettingsResolver {
         enabled: parent.analyticsPAEnabled,
         key: parent.analyticsPAId ?? undefined,
       },
+      piwik: {
+        enabled: parent.analyticsPiwikEnabled,
+        key: parent.analyticsPiwikId ?? undefined,
+      },
     };
   }
 

@@ -2034,6 +2034,12 @@
           "enable": "Plausible aktivieren",
           "pa": "<url>Plausible Analytics</url> ist eine datenschutzfreundliche Alternative zu Google Analytics.",
           "paLocator": "Du findest es in den <url>Website-Einstellungen</url> im Admin-Dashboard"
+        },
+        "piwik": {
+          "title": "Piwik PRO",
+          "enable": "Piwik PRO aktivieren",
+          "pro": "<url>Piwik PRO</url> ist eine datenschutzfreundliche Analyse-Plattform und eine Alternative zu Google Analytics.",
+          "proLocator": "Du findest es im Menü > Administration > Site > ID in deinem Verwaltungsbereich"
         }
       },
       "mail": {
