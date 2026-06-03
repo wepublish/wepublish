@@ -39,7 +39,11 @@ export const CrowdfundingGoalList = ({
         <Row>
           <Col xs={5}>{t('crowdfunding.goalsForm.title')}</Col>
           <Col xs={5}>{t('crowdfunding.goalsForm.description')}</Col>
-          <Col xs={5}>{t('crowdfunding.goalsForm.amount')}</Col>
+          <Col xs={5}>
+            {goalType === CrowdfundingGoalType.Subscription ?
+              t('crowdfunding.goalsForm.amountSubscriptions')
+            : t('crowdfunding.goalsForm.amount')}
+          </Col>
           <Col xs={4}>{t('crowdfunding.goalsForm.remove')}</Col>
         </Row>
         {goals.map((goal, index) => (
