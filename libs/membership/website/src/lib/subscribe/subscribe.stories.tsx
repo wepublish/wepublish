@@ -347,6 +347,21 @@ export const LoggedOut: StoryObj<typeof Subscribe> = {
       data: undefined,
       loading: false,
     },
+    subscribeInfo: {
+      data: {
+        createSubscriptionInfo: {},
+      },
+      loading: false,
+    },
+    fetchSubscribeInfo: async (...data) => {
+      action('fetchSubscribeInfo')(...data);
+
+      return {
+        data: {
+          createSubscriptionInfo: {},
+        },
+      } as any;
+    },
     onSubscribeWithRegister: async (...data) =>
       action('onSubscribeWithRegister')(...data),
     onSubscribe: async (...data) => action('onSubscribe')(...data),

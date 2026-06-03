@@ -44,7 +44,7 @@ const createSsrTimeoutFetch =
     );
   };
 
-const createV1ApiClient = (
+const createApiClient = (
   apiUrl: string,
   links: ApolloLink[],
   cacheConfig?: InMemoryCacheConfig,
@@ -120,7 +120,7 @@ const createV1ApiClient = (
   });
 };
 
-export const getV1ApiClient = (
+export const getApiClient = (
   apiUrl: string,
   links: ApolloLink[],
   cacheConfig?: InMemoryCacheConfig,
@@ -128,7 +128,7 @@ export const getV1ApiClient = (
 ) => {
   const client =
     !CACHED_CLIENT || typeof window === 'undefined' ?
-      (CACHED_CLIENT = createV1ApiClient(apiUrl, links, cacheConfig, cache))
+      (CACHED_CLIENT = createApiClient(apiUrl, links, cacheConfig, cache))
     : CACHED_CLIENT;
 
   if (cache) {
@@ -141,21 +141,21 @@ export const getV1ApiClient = (
   return client;
 };
 
-export const useV1ApiClient = (
+export const useApiClient = (
   apiUrl: string,
   links: ApolloLink[] = [],
   cacheConfig?: InMemoryCacheConfig,
   cache?: NormalizedCacheObject
 ) => {
   const client = useMemo(
-    () => getV1ApiClient(apiUrl, links, cacheConfig, cache),
+    () => getApiClient(apiUrl, links, cacheConfig, cache),
     [apiUrl, links, cache, cacheConfig]
   );
 
   return client;
 };
 
-export const createWithV1ApiClient =
+export const createWithApiClient =
   (
     apiUrl: string,
     links: ApolloLink[] = [],
@@ -171,7 +171,7 @@ export const createWithV1ApiClient =
     ControlledComponent: ComponentType<P>
   ) =>
     memo<P | NextPage>(props => {
-      const client = useV1ApiClient(
+      const client = useApiClient(
         apiUrl,
         links,
         cacheConfig,
@@ -185,7 +185,7 @@ export const createWithV1ApiClient =
       );
     });
 
-export function addClientCacheToV1Props<P extends object>(
+export function addClientCacheToProps<P extends object>(
   client: ApolloClient<NormalizedCacheObject>,
   pageProps: P
 ) {

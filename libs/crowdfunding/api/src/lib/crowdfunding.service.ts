@@ -62,7 +62,7 @@ export class CrowdfundingService {
 
     return {
       ...activeGoal,
-      progress: (value * 100) / activeGoal.amount,
+      progress: (value * 100) / Math.max(activeGoal.amount, 1),
     };
   }
 

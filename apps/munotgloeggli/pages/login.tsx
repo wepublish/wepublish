@@ -11,7 +11,7 @@ import {
   handleJwtLogin,
 } from '@wepublish/utils/website';
 import { SessionWithTokenWithoutUser } from '@wepublish/website/api';
-import { getV1ApiClient } from '@wepublish/website/api';
+import { getApiClient } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { NextPageContext } from 'next';
@@ -76,7 +76,7 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {};
   }
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
 
   const jwtSuccess = await handleJwtLogin(ctx, client);
 

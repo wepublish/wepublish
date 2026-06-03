@@ -10,12 +10,12 @@ import {
 } from '@wepublish/comments/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   ArticleDocument,
   ArticleListDocument,
   CommentItemType,
   CommentListDocument,
-  getV1ApiClient,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   Tag,
@@ -94,7 +94,7 @@ export const getStaticPaths = () => ({
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id, slug } = params || {};
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
 
   const [article] = await Promise.all([
     client.query({
@@ -143,7 +143,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     ]);
   }
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,

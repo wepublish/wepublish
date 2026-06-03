@@ -1,7 +1,7 @@
 import { PageContainer } from '@wepublish/page/website';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   NavigationListDocument,
   PageDocument,
   PageQuery,
@@ -17,7 +17,7 @@ export function FourOhFourPage() {
 }
 
 export const getFourOhFourStaticProps: GetStaticProps = async () => {
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
   const [page] = await Promise.all([
     client.query<PageQuery>({
       query: PageDocument,
@@ -33,7 +33,7 @@ export const getFourOhFourStaticProps: GetStaticProps = async () => {
     }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,
