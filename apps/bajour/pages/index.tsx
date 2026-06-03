@@ -1,9 +1,13 @@
 import styled from '@emotion/styled';
+import mailchimp, {
+  campaigns,
+  ErrorResponse,
+} from '@mailchimp/mailchimp_marketing';
+import { captureException } from '@sentry/react';
 import { SliderWrapper } from '@wepublish/block-content/website';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
-import { LinkContext } from '@wepublish/website/builder';
 import {
   addClientCacheToProps,
   CommentListDocument,
@@ -18,8 +22,10 @@ import {
   SortOrder,
   TeaserListBlock,
 } from '@wepublish/website/api';
+import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
+import { ResponseError } from 'superagent';
 
 import { BestOfWePublishWrapper } from '../src/components/best-of-wepublish/best-of-wepublish';
 import { isFrageDesTages } from '../src/components/frage-des-tages/is-frage-des-tages';
@@ -70,10 +76,40 @@ export default function Index() {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { publicRuntimeConfig } = getConfig();
+  const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 
   if (!publicRuntimeConfig.env.API_URL) {
     return { props: {}, revalidate: 1 };
+  }
+
+  let mailchimpResponse:
+    | mailchimp.campaigns.CampaignsSuccessResponse
+    | ErrorResponse
+    | null = null;
+  try {
+    mailchimp.setConfig({
+      apiKey: serverRuntimeConfig.env.MAILCHIMP_API_KEY,
+      server: serverRuntimeConfig.env.MAILCHIMP_SERVER_PREFIX,
+    });
+
+    mailchimpResponse = await mailchimp.campaigns.list({
+      count: 4,
+      sortField: 'send_time',
+      status: 'sent',
+      sortDir: 'DESC',
+      folderId: '25685',
+      fields: [
+        'campaigns.id',
+        'campaigns.long_archive_url',
+        'campaigns.settings.subject_line',
+      ],
+    });
+  } catch (e) {
+    if (e && typeof e === 'object' && 'response' in e) {
+      console.error((e as ResponseError).response?.body);
+    }
+
+    captureException(e);
   }
 
   const client = getApiClient(getApiUrl(), []);
@@ -132,7 +168,10 @@ export const getStaticProps: GetStaticProps = async () => {
     }
   }
 
-  const props = addClientCacheToProps(client, {});
+  const { campaigns = [] } =
+    (mailchimpResponse as campaigns.CampaignsSuccessResponse) ?? {};
+
+  const props = addClientCacheToProps(client, { campaigns });
 
   return {
     props,

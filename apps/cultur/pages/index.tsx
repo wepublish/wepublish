@@ -6,7 +6,6 @@ import { captureException } from '@sentry/react';
 import { ContentWidthProvider } from '@wepublish/content/website';
 import { PageContainer } from '@wepublish/page/website';
 import { getApiUrl } from '@wepublish/utils/website';
-import { LinkContext } from '@wepublish/website/builder';
 import {
   addClientCacheToProps,
   getApiClient,
@@ -14,6 +13,7 @@ import {
   PageDocument,
   PeerProfileDocument,
 } from '@wepublish/website/api';
+import { LinkContext } from '@wepublish/website/builder';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 import { ResponseError } from 'superagent';
@@ -43,11 +43,6 @@ export const getStaticProps: GetStaticProps = async () => {
     return { props: {}, revalidate: 1 };
   }
 
-  mailchimp.setConfig({
-    apiKey: serverRuntimeConfig.env.MAILCHIMP_API_KEY,
-    server: serverRuntimeConfig.env.MAILCHIMP_SERVER_PREFIX,
-  });
-
   const client = getApiClient(getApiUrl(), []);
 
   let mailchimpResponse:
@@ -55,6 +50,11 @@ export const getStaticProps: GetStaticProps = async () => {
     | ErrorResponse
     | null = null;
   try {
+    mailchimp.setConfig({
+      apiKey: serverRuntimeConfig.env.MAILCHIMP_API_KEY,
+      server: serverRuntimeConfig.env.MAILCHIMP_SERVER_PREFIX,
+    });
+
     mailchimpResponse = await mailchimp.campaigns.list({
       count: 4,
       sortField: 'send_time',
