@@ -24,6 +24,11 @@ export const isTeaserNoImage = allPass([
 export const TeaserNoImage = styled(TsriTeaser)`
   aspect-ratio: 2.06 !important;
   width: 100%;
+  container-type: normal;
+
+  ${({ theme }) => theme.breakpoints.up('md')} {
+    --tw: 32.5cqw;
+  }
 
   ${TeaserImageWrapper} {
     display: none;
@@ -42,15 +47,17 @@ export const TeaserNoImage = styled(TsriTeaser)`
   }
 
   ${TeaserPreTitle} {
-    padding: 0.65cqw 1.5cqw;
+    padding: calc(var(--tw, 100cqw) * 0.0065) calc(var(--tw, 100cqw) * 0.015);
   }
 
   ${TeaserTitle} {
-    padding: 2.2cqw 1.5cqw 4cqw;
+    padding: calc(var(--tw, 100cqw) * 0.022) calc(var(--tw, 100cqw) * 0.015)
+      calc(var(--tw, 100cqw) * 0.04);
   }
 
   ${TeaserMetadata} {
-    padding: 0 1.5cqw 1.5cqw 1.5cqw;
+    padding: 0 calc(var(--tw, 100cqw) * 0.015) calc(var(--tw, 100cqw) * 0.015)
+      calc(var(--tw, 100cqw) * 0.015);
     color: transparent;
   }
 
