@@ -166,7 +166,9 @@ export const FrageDesTages = ({
     },
   });
 
-  const pollToPass = article?.latest.blocks.find(isPollBlock)?.poll;
+  const pollToPass = article?.latest.blocks.find(block =>
+    isPollBlock(block)
+  )?.poll;
 
   const numberOfComments = useMemo(() => {
     return countComments(
