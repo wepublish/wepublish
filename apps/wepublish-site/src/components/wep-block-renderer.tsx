@@ -1,8 +1,5 @@
 import { css, useTheme } from '@emotion/react';
-import {
-  BlockRenderer,
-  collectSiblings,
-} from '@wepublish/block-content/website';
+import { BlockRenderer } from '@wepublish/block-content/website';
 import { ImageContext } from '@wepublish/image/website';
 import { BlockContent } from '@wepublish/website/api';
 import {
@@ -31,15 +28,10 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
       cond([
         [
           isAttentionCatcher,
-          (block: BuilderBreakBlockProps) => (
-            <AttentionCatcher
-              {...block}
-              siblings={props.siblings}
-            />
-          ),
+          (block: BuilderBreakBlockProps) => <AttentionCatcher {...block} />,
         ],
       ]) as (block: BlockContent) => JSX.Element | undefined,
-    [props.siblings]
+    []
   );
 
   const styles = useMemo(
@@ -71,24 +63,12 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
         maxWidth="lg"
         css={styles(props.block)}
       >
-        {extraBlockMap(props.block) ?? (
-          <BlockRenderer
-            {...props}
-            siblings={props.siblings}
-          />
-        )}
+        {extraBlockMap(props.block) ?? <BlockRenderer {...props} />}
       </MainSpacer>
     );
   }
 
-  return (
-    extraBlockMap(props.block) ?? (
-      <BlockRenderer
-        {...props}
-        siblings={props.siblings}
-      />
-    )
-  );
+  return extraBlockMap(props.block) ?? <BlockRenderer {...props} />;
 };
 
 // eslint-disable-next-line react/display-name
@@ -96,8 +76,6 @@ export const WepBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
   const {
     blocks: { Renderer },
   } = useWebsiteBuilder();
-
-  const siblings = collectSiblings(blocks);
 
   return (
     <>
@@ -118,7 +96,6 @@ export const WepBlocks = memo(({ blocks, type }: BuilderBlocksProps) => {
             block={block}
             index={index}
             count={blocks.length}
-            siblings={siblings}
             type={type}
           />
         </ImageContext.Provider>

@@ -1,95 +1,197 @@
 import {
-  BildwurfAdBlock,
-  BlockContent,
-  BreakBlock,
-  CommentBlock,
-  CrowdfundingBlock,
-  EventBlock,
-  FacebookPostBlock,
-  FacebookVideoBlock,
-  HtmlBlock,
-  IFrameBlock,
-  ImageBlock,
-  ImageGalleryBlock,
-  InstagramPostBlock,
-  ListicleBlock,
-  PolisConversationBlock,
-  PollBlock,
-  QuoteBlock,
-  RichTextBlock,
-  SoundCloudTrackBlock,
-  SubscribeBlock,
-  TeaserGridBlock,
-  TeaserGridFlexBlock,
-  TeaserListBlock,
-  TeaserSlotsBlock,
-  TikTokVideoBlock,
-  TitleBlock,
-  TwitterTweetBlock,
-  VimeoVideoBlock,
-  StreamableVideoBlock,
-  YouTubeVideoBlock,
-  FlexBlock,
+  FullImageGalleryBlockFragment,
+  FullBreakBlockFragment,
+  FullTitleBlockFragment,
+  FullFlexBlockFragment,
+  FullBildwurfAdBlockFragment,
+  FullCrowdfundingBlockFragment,
+  FullEventBlockFragment,
+  FullFacebookPostBlockFragment,
+  FullFacebookVideoBlockFragment,
+  FullHtmlBlockFragment,
+  FullIFrameBlockFragment,
+  FullInstagramPostBlockFragment,
+  FullListicleBlockFragment,
+  FullPolisConversationBlockFragment,
+  FullPollBlockFragment,
+  FullQuoteBlockFragment,
+  FullRichTextBlockFragment,
+  FullSoundCloudTrackBlockFragment,
+  FullStreamableVideoBlockFragment,
+  FullSubscribeBlockFragment,
+  FullTeaserGridFlexBlockFragment,
+  FullTeaserListBlockFragment,
+  FullTeaserSlotsBlockFragment,
+  FullTikTokVideoBlockFragment,
+  FullTwitterTweetBlockFragment,
+  FullVimeoVideoBlockFragment,
+  FullYouTubeVideoBlockFragment,
+  FullCommentBlockFragment,
+  FullImageBlockFragment,
+  FullTeaserGridBlockFragment,
+  FullBlockFragment,
 } from '@wepublish/website/api';
-
-export type BlockSibling = {
-  typeName: string;
-  blockStyle?: string;
-};
 
 export type BuilderBlockRendererProps = {
   className?: string;
-  siblings?: Array<BlockSibling>;
-  block: BlockContent;
+  block: FullBlockFragment;
   index: number;
   count: number;
-  type: 'Page' | 'Article' | 'PageNested' | 'ArticleNested';
+  type: 'Page' | 'Article';
 };
 
 export type BuilderBlocksProps = {
-  blocks: BlockContent[];
+  blocks: FullBlockFragment[];
   type: BuilderBlockRendererProps['type'];
 };
 
-export type BlockProps = {
+export type BuilderFlexBlockProps = FullFlexBlockFragment & {
   className?: string;
-  siblings?: Array<BlockSibling>;
 };
 
-type WithBlockProps<T extends { type?: unknown }> = Omit<T, 'type'> &
-  BlockProps;
-
-export type BuilderFlexBlockProps = WithBlockProps<FlexBlock>;
-export type BuilderTitleBlockProps = WithBlockProps<TitleBlock>;
-export type BuilderBreakBlockProps = WithBlockProps<BreakBlock>;
-export type BuilderImageBlockProps = WithBlockProps<ImageBlock>;
-export type BuilderImageGalleryBlockProps = WithBlockProps<ImageGalleryBlock>;
-export type BuilderQuoteBlockProps = WithBlockProps<QuoteBlock>;
-export type BuilderEventBlockProps = WithBlockProps<EventBlock>;
-export type BuilderRichTextBlockProps = WithBlockProps<RichTextBlock>;
-export type BuilderHTMLBlockProps = WithBlockProps<HtmlBlock>;
-export type BuilderFacebookPostBlockProps = WithBlockProps<FacebookPostBlock>;
-export type BuilderFacebookVideoBlockProps = WithBlockProps<FacebookVideoBlock>;
-export type BuilderInstagramPostBlockProps = WithBlockProps<InstagramPostBlock>;
-export type BuilderTwitterTweetBlockProps = WithBlockProps<TwitterTweetBlock>;
-export type BuilderVimeoVideoBlockProps = WithBlockProps<VimeoVideoBlock>;
-export type BuilderStreamableVideoBlockProps =
-  WithBlockProps<StreamableVideoBlock>;
-export type BuilderYouTubeVideoBlockProps = WithBlockProps<YouTubeVideoBlock>;
-export type BuilderSoundCloudTrackBlockProps =
-  WithBlockProps<SoundCloudTrackBlock>;
-export type BuilderPolisConversationBlockProps =
-  WithBlockProps<PolisConversationBlock>;
-export type BuilderTikTokVideoBlockProps = WithBlockProps<TikTokVideoBlock>;
-export type BuilderBildwurfAdBlockProps = WithBlockProps<BildwurfAdBlock>;
-export type BuilderIFrameBlockProps = WithBlockProps<IFrameBlock>;
-export type BuilderPollBlockProps = WithBlockProps<PollBlock>;
-export type BuilderCrowdfundingBlockProps = WithBlockProps<CrowdfundingBlock>;
-export type BuilderListicleBlockProps = WithBlockProps<ListicleBlock>;
-export type BuilderCommentBlockProps = WithBlockProps<CommentBlock>;
-export type BuilderSubscribeBlockProps = WithBlockProps<SubscribeBlock>;
+export type BuilderTitleBlockProps = Omit<FullTitleBlockFragment, 'type'> & {
+  className?: string;
+};
+export type BuilderBreakBlockProps = Omit<FullBreakBlockFragment, 'type'> & {
+  className?: string;
+};
+export type BuilderImageBlockProps = Omit<FullImageBlockFragment, 'type'> & {
+  className?: string;
+};
+export type BuilderImageGalleryBlockProps = Omit<
+  FullImageGalleryBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
+export type BuilderQuoteBlockProps = Omit<FullQuoteBlockFragment, 'type'> & {
+  className?: string;
+};
+export type BuilderEventBlockProps = Omit<FullEventBlockFragment, 'type'> & {
+  className?: string;
+};
+export type BuilderRichTextBlockProps = Omit<
+  FullRichTextBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
+export type BuilderHTMLBlockProps = Omit<FullHtmlBlockFragment, 'type'> & {
+  className?: string;
+};
+export type BuilderFacebookPostBlockProps = Omit<
+  FullFacebookPostBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
+export type BuilderFacebookVideoBlockProps = Omit<
+  FullFacebookVideoBlockFragment,
+  'type'
+> & { className?: string };
+export type BuilderInstagramPostBlockProps = Omit<
+  FullInstagramPostBlockFragment,
+  'type'
+> & { className?: string };
+export type BuilderTwitterTweetBlockProps = Omit<
+  FullTwitterTweetBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
+export type BuilderVimeoVideoBlockProps = Omit<
+  FullVimeoVideoBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
+export type BuilderStreamableVideoBlockProps = Omit<
+  FullStreamableVideoBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
+export type BuilderYouTubeVideoBlockProps = Omit<
+  FullYouTubeVideoBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
+export type BuilderSoundCloudTrackBlockProps = Omit<
+  FullSoundCloudTrackBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
+export type BuilderPolisConversationBlockProps = Omit<
+  FullPolisConversationBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
+export type BuilderTikTokVideoBlockProps = Omit<
+  FullTikTokVideoBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
+export type BuilderBildwurfAdBlockProps = Omit<
+  FullBildwurfAdBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
+export type BuilderIFrameBlockProps = Omit<FullIFrameBlockFragment, 'type'> & {
+  className?: string;
+};
+export type BuilderPollBlockProps = Omit<FullPollBlockFragment, 'type'> & {
+  className?: string;
+};
+export type BuilderCrowdfundingBlockProps = Omit<
+  FullCrowdfundingBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
+export type BuilderListicleBlockProps = Omit<
+  FullListicleBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
+export type BuilderCommentBlockProps = Omit<
+  FullCommentBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
+export type BuilderSubscribeBlockProps = Omit<
+  FullSubscribeBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
 export type BuilderTeaserGridFlexBlockProps =
-  WithBlockProps<TeaserGridFlexBlock>;
-export type BuilderTeaserGridBlockProps = WithBlockProps<TeaserGridBlock>;
-export type BuilderTeaserListBlockProps = WithBlockProps<TeaserListBlock>;
-export type BuilderTeaserSlotsBlockProps = WithBlockProps<TeaserSlotsBlock>;
+  FullTeaserGridFlexBlockFragment & {
+    className?: string;
+  };
+export type BuilderTeaserGridBlockProps = Omit<
+  FullTeaserGridBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
+
+export type BuilderTeaserListBlockProps = Omit<
+  FullTeaserListBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
+
+export type BuilderTeaserSlotsBlockProps = Omit<
+  FullTeaserSlotsBlockFragment,
+  'type'
+> & {
+  className?: string;
+};
