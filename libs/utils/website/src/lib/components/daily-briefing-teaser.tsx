@@ -15,7 +15,7 @@ export const isDailyBriefingTeaser = allPass([
 
 export const DailyBriefingContext = createContext<campaigns.Campaigns[]>([]);
 
-const DailyBriefingTeaserWrapper = styled('div')`
+export const DailyBriefingTeaserWrapper = styled('div')`
   display: grid;
   grid-auto-rows: min-content;
   gap: ${({ theme }) => theme.spacing(4)};
@@ -23,9 +23,9 @@ const DailyBriefingTeaserWrapper = styled('div')`
   padding: ${({ theme }) => theme.spacing(2)};
 `;
 
-const DailyBriefingTitle = styled('h1')``;
+export const DailyBriefingTitle = styled('h1')``;
 
-const DailyBriefingLinkList = styled('ul')`
+export const DailyBriefingLinkList = styled('ul')`
   list-style: none;
   margin: 0;
   padding: 0;
@@ -34,7 +34,7 @@ const DailyBriefingLinkList = styled('ul')`
   gap: ${({ theme }) => theme.spacing(2)};
 `;
 
-const DailyBriefingLink = styled('li')`
+export const DailyBriefingLink = styled('li')`
   padding-bottom: ${({ theme }) => theme.spacing(2)};
   border-bottom: currentColor 1px solid;
   font-size: ${({ theme }) => theme.typography.h6.fontSize};
