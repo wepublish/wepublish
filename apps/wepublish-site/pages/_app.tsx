@@ -45,6 +45,7 @@ import { WepGlobalStyles } from '../src/components/wep-global-styles';
 import { WepNavbar } from '../src/components/wep-navbar';
 import { WepPage } from '../src/components/wep-page';
 import { WepQuoteBlock } from '../src/components/wep-quote-block';
+import { localizeSlug } from '../src/localize-slug';
 import theme from '../src/theme';
 
 setDefaultOptions({
@@ -188,10 +189,10 @@ function CustomApp({ Component, pageProps }: CustomAppProps) {
 
           <Spacer>
             <NavBar
-              categorySlugs={[[`main-header-${locale}`]]}
-              slug={`main-${locale}`}
-              headerSlug={`header-${locale}`}
-              iconSlug={`icons-${locale}`}
+              categorySlugs={[[localizeSlug('main-header', locale)]]}
+              slug={localizeSlug('main', locale)}
+              headerSlug={localizeSlug('header', locale)}
+              iconSlug={localizeSlug('icons', locale)}
               profileBtn={null}
               subscribeBtn={null}
               loginBtn={null}
@@ -204,16 +205,16 @@ function CustomApp({ Component, pageProps }: CustomAppProps) {
             </main>
 
             <FooterContainer
-              slug={`footer-${locale}`}
+              slug={localizeSlug('footer', locale)}
               categorySlugs={[
                 [
-                  `main-footer-${locale}`,
-                  `categories-${locale}`,
-                  `ueber-uns-${locale}`,
+                  localizeSlug('main-footer', locale),
+                  localizeSlug('categories', locale),
+                  localizeSlug('ueber-uns', locale),
                   `sprachwahl`,
                 ],
               ]}
-              iconSlug={`icons-${locale}`}
+              iconSlug={localizeSlug('icons', locale)}
             />
           </Spacer>
 

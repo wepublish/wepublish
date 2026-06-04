@@ -11,6 +11,8 @@ import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { ComponentProps } from 'react';
 
+import { localizeSlug } from '../../src/localize-slug';
+
 export default function ArticleBySlugOrId() {
   const {
     query: { slug, id },
@@ -18,7 +20,7 @@ export default function ArticleBySlugOrId() {
   } = useRouter();
 
   const containerProps = {
-    slug: slug ? `${slug}-${locale}` : undefined,
+    slug: slug ? localizeSlug(slug, locale) : undefined,
     id,
   } as ComponentProps<typeof ArticleContainer>;
 
@@ -32,7 +34,7 @@ export const getStaticPaths = () => ({
 
 export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
   const { id, slug } = params || {};
-  const localizedSlug = slug ? `${slug}-${locale}` : undefined;
+  const localizedSlug = slug ? localizeSlug(slug, locale) : undefined;
   const client = getApiClient(getApiUrl(), []);
 
   const [article] = await Promise.all([

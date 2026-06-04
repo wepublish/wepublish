@@ -20,7 +20,10 @@ import {
 import { CommentListWrapper } from '@wepublish/comments/website';
 import { ContentWrapper } from '@wepublish/content/website';
 import { SubscribeWrapper } from '@wepublish/membership/website';
-import { Article as ArticleType, BlockContent } from '@wepublish/website/api';
+import {
+  Article as ArticleType,
+  FullBlockFragment,
+} from '@wepublish/website/api';
 import {
   BuilderArticleProps,
   PeerInformation,
@@ -171,7 +174,7 @@ export function WepArticle({
       {article && (
         <Blocks
           key={article.id}
-          blocks={(article.latest.blocks as BlockContent[]) ?? []}
+          blocks={(article.latest.blocks as FullBlockFragment[]) ?? []}
           type="Article"
         />
       )}

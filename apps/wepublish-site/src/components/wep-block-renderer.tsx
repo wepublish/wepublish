@@ -1,7 +1,7 @@
 import { css, useTheme } from '@emotion/react';
 import { BlockRenderer } from '@wepublish/block-content/website';
 import { ImageContext } from '@wepublish/image/website';
-import { BlockContent } from '@wepublish/website/api';
+import { FullBlockFragment } from '@wepublish/website/api';
 import {
   BuilderBlockRendererProps,
   BuilderBlocksProps,
@@ -30,7 +30,7 @@ export const WepBlockRenderer = (props: BuilderBlockRendererProps) => {
           isAttentionCatcher,
           (block: BuilderBreakBlockProps) => <AttentionCatcher {...block} />,
         ],
-      ]) as (block: BlockContent) => JSX.Element | undefined,
+      ]) as (block: FullBlockFragment) => JSX.Element | undefined,
     []
   );
 
