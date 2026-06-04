@@ -205,7 +205,11 @@ function ArticleEditor() {
   const isNotFound = articleData && !articleData.article;
   const isDisabled =
     isLoading || isCreating || isUpdating || isPublishing || isNotFound;
-  const canPreview = Boolean(articleData?.article?.draft);
+  const canPreview = Boolean(
+    articleData?.article?.draft ||
+      articleData?.article?.published ||
+      articleData?.article?.pending
+  );
 
   const [hasChanged, setChanged] = useState(false);
 
@@ -446,7 +450,7 @@ function ArticleEditor() {
           header={t('articleEditor.overview.draftSaved')}
           duration={2000}
         />,
-        { placement: 'topEnd' }
+        { placement: 'bottomEnd' }
       );
       await refetch({ id: articleID });
     } else {
@@ -461,7 +465,7 @@ function ArticleEditor() {
           header={t('articleEditor.overview.draftCreated')}
           duration={2000}
         />,
-        { placement: 'topEnd' }
+        { placement: 'bottomEnd' }
       );
     }
   }
@@ -513,7 +517,7 @@ function ArticleEditor() {
           )}
           duration={2000}
         />,
-        { placement: 'topEnd' }
+        { placement: 'bottomEnd' }
       );
     }
     await refetch({ id: articleID });
