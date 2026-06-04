@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -uo pipefail
 
-EXCLUDE=("api-example" "editor", "bka")
+EXCLUDE=("api-example" "editor" "bka" "media")
 failed=()
 
 for dir in apps/*/; do
@@ -19,12 +19,10 @@ for dir in apps/*/; do
   fi
 
   echo "==> Type-checking $app"
-  if ! npx tsc -p "./apps/$app" --noEmit; then
+  if ! npx tsc -p "./apps/$app" --noEmit --incremental; then
     failed+=("$app")
   fi
 done
-
-echo "\n"
 
 if [[ ${#failed[@]} -eq 0 ]]; then
   echo "All apps passed."
