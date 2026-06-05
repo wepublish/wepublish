@@ -58,7 +58,14 @@ export type BlockProps = {
 
 type WithBlockProps<T> = Omit<T, 'type'> & BlockProps;
 
-export type BuilderFlexBlockProps = WithBlockProps<FullFlexBlockFragment>;
+export const toNestedBlockType = (
+  type?: BuilderBlockRendererProps['type']
+): BuilderBlockRendererProps['type'] =>
+  type === 'Page' || type === 'PageNested' ? 'PageNested' : 'ArticleNested';
+
+export type BuilderFlexBlockProps = WithBlockProps<FullFlexBlockFragment> & {
+  type?: BuilderBlockRendererProps['type'];
+};
 export type BuilderTitleBlockProps = WithBlockProps<FullTitleBlockFragment>;
 export type BuilderBreakBlockProps = WithBlockProps<FullBreakBlockFragment>;
 export type BuilderImageBlockProps = WithBlockProps<FullImageBlockFragment>;

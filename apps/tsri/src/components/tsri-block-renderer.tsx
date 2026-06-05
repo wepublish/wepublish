@@ -26,7 +26,15 @@ export const TsriBlockRenderer = (props: BuilderBlockRendererProps) => {
   const extraBlockMap = useMemo(
     () =>
       cond([
-        [isTabbedContentBlockStyle, block => <TsriTabbedContent {...block} />],
+        [
+          isTabbedContentBlockStyle,
+          block => (
+            <TsriTabbedContent
+              {...block}
+              type={props.type}
+            />
+          ),
+        ],
         [
           isTsriSidebarContentAltColor,
           block => (
@@ -50,7 +58,7 @@ export const TsriBlockRenderer = (props: BuilderBlockRendererProps) => {
           ),
         ],
       ]),
-    [props.count, props.index, props.siblings]
+    [props.count, props.index, props.siblings, props.type]
   );
 
   const block = extraBlockMap(props.block) ?? <BlockRenderer {...props} />;

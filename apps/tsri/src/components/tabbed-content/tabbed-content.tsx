@@ -14,6 +14,7 @@ import {
 } from '@wepublish/website/api';
 import {
   BuilderFlexBlockProps,
+  toNestedBlockType,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
@@ -181,6 +182,7 @@ export const TabbedContent = ({
   blockStyle,
   blockStyleByIndex,
   cssByBlockStyle,
+  type,
 }: BuilderFlexBlockProps & {
   blockStyleByIndex?: (index: number) => string;
   cssByBlockStyle?: (
@@ -254,7 +256,7 @@ export const TabbedContent = ({
                   blockStyle,
               } as FullBlockFragment
             }
-            type="Article"
+            type={toNestedBlockType(type)}
             index={index}
             count={sortedBlocks.length}
           />
