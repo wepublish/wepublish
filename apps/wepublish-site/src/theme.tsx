@@ -126,6 +126,7 @@ const theme = createTheme(WePTheme, {
         fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
         backgroundColor: 'transparent',
         padding: 0,
+        letterSpacing: '0.02rem',
         ...mergeDeepAll([
           responsiveProperty({
             cssProperty: 'fontSize',
@@ -151,10 +152,12 @@ const theme = createTheme(WePTheme, {
         fontSize: '1.5rem',
         lineHeight: 1.2,
         fontStyle: 'normal',
+        letterSpacing: '0.01em',
       },
       subtitle2: {
         fontFamily: [interFont.style.fontFamily, 'sans-serif'].join(','),
         fontWeight: 400,
+        fontSize: '1.5rem',
         fontStyle: 'normal',
       },
     },

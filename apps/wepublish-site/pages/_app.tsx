@@ -1,6 +1,12 @@
 import { EmotionCache } from '@emotion/cache';
 import styled from '@emotion/styled';
-import { Container, css, CssBaseline, ThemeProvider } from '@mui/material';
+import {
+  Container,
+  createTheme,
+  css,
+  CssBaseline,
+  ThemeProvider,
+} from '@mui/material';
 import {
   AppCacheProvider,
   createEmotionCache,
@@ -36,6 +42,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import PlausibleProvider from 'next-plausible';
+import { useMemo } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
@@ -52,7 +59,7 @@ import { WepNavbar } from '../src/components/wep-navbar';
 import { WepPage } from '../src/components/wep-page';
 import { WepQuoteBlock } from '../src/components/wep-quote-block';
 import { localizeSlug } from '../src/localize-slug';
-import theme from '../src/theme';
+import wepTheme from '../src/theme';
 import { WepLink } from '../src/wep-link';
 
 setDefaultOptions({
@@ -111,6 +118,11 @@ function CustomApp({
   const settings =
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
+
+  const theme = useMemo(
+    () => createTheme(wepTheme, settings?.theme ?? {}),
+    [settings]
+  );
 
   return (
     <PlausibleProvider
