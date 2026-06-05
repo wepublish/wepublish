@@ -10,7 +10,6 @@ import {
   authLink,
   getApiUrl,
   initWePublishTranslator,
-  NextWepublishLink,
   RoutedAdminBar,
   withBuilderRouter,
   withJwtHandler,
@@ -47,6 +46,7 @@ import { WepPage } from '../src/components/wep-page';
 import { WepQuoteBlock } from '../src/components/wep-quote-block';
 import { localizeSlug } from '../src/localize-slug';
 import theme from '../src/theme';
+import { WepLink } from '../src/wep-link';
 
 setDefaultOptions({
   locale: de,
@@ -110,7 +110,7 @@ function CustomApp({ Component, pageProps }: CustomAppProps) {
           Quote: WepQuoteBlock,
           Break: WepBreakBlock,
         }}
-        elements={{ Link: NextWepublishLink }}
+        elements={{ Link: WepLink }}
         date={{ format: dateFormatter }}
         meta={{ siteTitle }}
       >

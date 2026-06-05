@@ -1,6 +1,7 @@
 import { generateFeed } from '@wepublish/feed/website';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
+  Article,
   ArticleListDocument,
   ArticleListQueryVariables,
   ArticleSort,
@@ -10,12 +11,14 @@ import {
 import { NextApiRequest } from 'next';
 import process from 'node:process';
 
+import { localizeUrl } from './localize-url';
+
 export const getFeed = async (req: NextApiRequest) => {
   const siteUrl = process.env.WEBSITE_URL || '';
 
   const generate = await generateFeed({
     id: `${siteUrl + req.url}`,
-    link: siteUrl,
+    link: `${siteUrl}/de`,
     title: 'We.Publish',
     ttl: 10, // in minutes
     copyright: 'We.Publish',
@@ -40,5 +43,10 @@ export const getFeed = async (req: NextApiRequest) => {
     } as ArticleListQueryVariables,
   });
 
-  return generate(data.articles.nodes ?? []);
+  const articles = (data.articles.nodes ?? []).map((article: Article) => ({
+    ...article,
+    url: localizeUrl(siteUrl, article.slug, 'article'),
+  }));
+
+  return generate(articles);
 };
