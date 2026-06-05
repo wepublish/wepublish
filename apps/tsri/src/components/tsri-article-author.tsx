@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { alpha } from '@mui/material';
 import {
   ArticleAuthor,
   ArticleAuthorImageWrapper,
@@ -8,11 +9,7 @@ import {
 } from '@wepublish/author/website';
 import { BuilderAuthorChipProps } from '@wepublish/website/builder';
 
-const PROMO_TAG = 'promotion';
-
-function isPromo(author: BuilderAuthorChipProps['author']): boolean {
-  return !!author.tags?.find(tag => tag.tag === PROMO_TAG);
-}
+import { getAdvertiserBio, useAdvertisers } from '../hooks/use-advertisers';
 
 const StyledArticleAuthor = styled(ArticleAuthor)`
   grid-column: -1 / 1;
@@ -26,6 +23,11 @@ const StyledArticleAuthor = styled(ArticleAuthor)`
 
     ${({ theme }) => theme.breakpoints.up('md')} {
       width: 140px;
+    }
+
+    img {
+      border: 1px solid ${({ theme }) => alpha(theme.palette.common.black, 0.2)};
+      border-radius: 99999px;
     }
   }
 
@@ -88,11 +90,16 @@ export function TsriArticleAuthor({
   author,
   ...props
 }: BuilderAuthorChipProps) {
-  const authorWithoutBio = isPromo(author) ? { ...author, bio: null } : author;
+  const advertisers = useAdvertisers([author]);
+
+  const authorWithAdvertiserBio =
+    advertisers && advertisers.length > 0 ?
+      { ...author, bio: getAdvertiserBio(author) }
+    : author;
 
   return (
     <StyledArticleAuthor
-      author={authorWithoutBio}
+      author={authorWithAdvertiserBio}
       {...props}
     />
   );
