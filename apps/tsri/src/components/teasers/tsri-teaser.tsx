@@ -11,11 +11,7 @@ import {
   selectTeaserUrl,
 } from '@wepublish/block-content/website';
 import {} from '@wepublish/block-content/website';
-import {
-  FlexAlignment,
-  FullImageFragment,
-  FullTeaserFragment,
-} from '@wepublish/website/api';
+import { FlexAlignment, FullTeaserFragment } from '@wepublish/website/api';
 import {
   BuilderTeaserProps,
   Image,
@@ -82,6 +78,7 @@ export const TeaserImage = styled(Image)`
   max-height: 100%;
   max-width: 100%;
   object-fit: cover;
+  object-position: left center;
 `;
 
 export const TeaserBreakingNewsBadge = styled('div')`
@@ -307,7 +304,7 @@ export const TsriTeaser = ({
                   STORY
                 </TeaserBreakingNewsBadge>
               )}
-              {image && <TeaserImage image={image as FullImageFragment} />}
+              {image && <TeaserImage image={image} />}
               {peerLogo && (
                 <TeaserPeerLogo
                   image={peerLogo}
@@ -327,12 +324,7 @@ export const TsriTeaser = ({
             <TeaserImageInnerWrapper>
               {image && authors && authors?.length && (
                 <TeaserAuthorImage
-                  image={
-                    authors.find(author => !!author.image) ?
-                      (authors.find(author => !!author.image)
-                        ?.image as FullImageFragment)
-                    : image
-                  }
+                  image={authors.find(author => !!author.image)?.image ?? image}
                 />
               )}
             </TeaserImageInnerWrapper>

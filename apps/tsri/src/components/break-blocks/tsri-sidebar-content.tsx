@@ -100,6 +100,7 @@ const richTextStyles = (theme: Theme) => css`
 
 export const SidebarContentImage = styled(Image)`
   object-fit: cover;
+  object-position: left center;
   width: 100%;
   margin: 0 auto;
   aspect-ratio: 1 / 1;
