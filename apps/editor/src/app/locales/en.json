@@ -2221,6 +2221,8 @@
           "body1": "Body 1",
           "body2": "Body 2",
           "caption": "Caption",
+          "subtitle1": "Subtitle 1",
+          "subtitle2": "Subtitle 2",
           "teaserPretitle": "Teaser Pre-title",
           "teaserTitle": "Teaser Title",
           "teaserLead": "Teaser Lead",

@@ -2159,6 +2159,8 @@
           "body1": "Fliesstext 1",
           "body2": "Fliesstext 2",
           "caption": "Bildunterschrift",
+          "subtitle1": "Untertitel 1",
+          "subtitle2": "Untertitel 2",
           "teaserPretitle": "Teaser Vortitel",
           "teaserTitle": "Teaser Titel",
           "teaserLead": "Teaser Lead",

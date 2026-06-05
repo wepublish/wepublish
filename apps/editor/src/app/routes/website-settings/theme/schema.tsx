@@ -147,6 +147,8 @@ export const typographySchema = z.object({
   body1: typographyItem,
   body2: typographyItem,
   caption: typographyItem,
+  subtitle1: typographyItem,
+  subtitle2: typographyItem,
 
   teaserPretitle: typographyItem,
   teaserTitle: typographyItem,
