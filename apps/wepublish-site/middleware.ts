@@ -21,10 +21,14 @@ const normalizePath = (pathname: string): string =>
     pathname.slice(0, -1)
   : pathname;
 
+const isDocumentRequest = (request: NextRequest): boolean =>
+  request.headers.get('sec-fetch-dest') === 'document' ||
+  (request.headers.get('accept') ?? '').includes('text/html');
+
 export async function middleware(request: NextRequest) {
   const { pathname, locale } = request.nextUrl;
 
-  if (!locales.includes(locale ?? '')) {
+  if (isDocumentRequest(request) && !locales.includes(locale ?? '')) {
     return NextResponse.redirect(
       new URL(`/de${pathname === '/' ? '' : pathname}`, request.url)
     );
