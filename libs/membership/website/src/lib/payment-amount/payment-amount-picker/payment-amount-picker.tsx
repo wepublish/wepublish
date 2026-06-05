@@ -134,7 +134,6 @@ export const PaymentAmountPicker = forwardRef<
     ref
   ) => {
     const {
-      elements: { TextField },
       meta: { locale },
     } = useWebsiteBuilder();
 

@@ -15,6 +15,7 @@ import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { withErrorSnackbar } from '@wepublish/errors/website';
 import { FooterContainer } from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
+import { minimalTheme } from '@wepublish/ui';
 import {
   authLink,
   getApiUrl,
@@ -39,6 +40,7 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
 import PlausibleProvider from 'next-plausible';
+import { mergeDeepRight } from 'ramda';
 import { useMemo } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
@@ -112,7 +114,11 @@ function CustomApp({
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
   const theme = useMemo(
-    () => createTheme(ganzgrazTheme, settings?.theme ?? {}),
+    () =>
+      createTheme(
+        minimalTheme,
+        mergeDeepRight(ganzgrazTheme, settings?.theme ?? {})
+      ),
     [settings]
   );
 
