@@ -125,7 +125,9 @@ const theme = createTheme(WePTheme, {
         fontSize: '22px',
       },
     },
-    fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
+    allVariants: {
+      fontFamily: [inter.style.fontFamily, 'sans-serif'].join(','),
+    },
   },
   components: {
     MuiLink: {

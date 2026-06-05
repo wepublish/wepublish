@@ -1113,6 +1113,24 @@ input FlexTeaserInput {
   teaser: TeaserInput
 }
 
+enum FontStyle {
+  italic
+  normal
+}
+
+enum FontWeight {
+  Black
+  Bold
+  ExtraBold
+  ExtraLight
+  Light
+  Medium
+  Regular
+  SemiBold
+  Thin
+  Variable
+}
+
 type FullPoll {
   answers: [PollAnswer!]!
   closedAt: DateTime
@@ -1495,6 +1513,16 @@ enum InvoiceSort {
 The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSONObject
+
+type KeyEnabled {
+  enabled: Boolean!
+  key: String
+}
+
+input KeyEnabledInput {
+  enabled: Boolean!
+  key: String
+}
 
 type ListicleBlock implements BaseBlock {
   blockStyle: String
@@ -2055,7 +2083,7 @@ type Mutation {
   unpublishPage(id: String!): Page!
 
   """Updates an existing AI provider setting."""
-  updateAISetting(apiKey: String, id: String, name: String, systemPrompt: String): SettingAIProvider!
+  updateAISetting(apiKey: String, id: String, name: String, systemPrompt: String, webhookEndpointSecret: String): SettingAIProvider!
 
   """Updates an existing analytics provider setting."""
   updateAnalyticsProviderSetting(articlePrefix: String, credentials: SettingAnalyticsCredentialsInput, id: String, name: String, property: String): SettingAnalyticsProvider!
@@ -2181,6 +2209,9 @@ type Mutation {
 
   """Updates an existing voucher."""
   updateVoucher(code: String, discountPercent: Int, id: String!, memberPlanId: String, validFrom: DateTime, validTo: DateTime): Voucher!
+
+  """Updates the website settings."""
+  updateWebsiteSettings(ads: WebsiteAdsInput, analytics: WebsiteAnalyticsInput, fonts: [WebsiteRemoteFontInput!], mail: WebsiteMailInput, theme: JSONObject): WebsiteSettings!
 
   """"""
   upgradeUserSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
@@ -3325,6 +3356,11 @@ type Query {
     """Number of items to fetch"""
     take: Int! = 10
   ): PaginatedVouchers!
+
+  """
+  Returns the website settings, requires authentication to get sensitive settings.
+  """
+  websiteSettings: WebsiteSettings!
 }
 
 type QuoteBlock implements BaseBlock & HasImage {
@@ -4307,6 +4343,56 @@ enum VoucherSort {
   CreatedAt
   Discount
   ModifiedAt
+}
+
+type WebsiteAds {
+  sparkLoop: KeyEnabled!
+}
+
+input WebsiteAdsInput {
+  sparkLoop: KeyEnabledInput!
+}
+
+type WebsiteAnalytics {
+  googleAnalytics: KeyEnabled!
+  googleTagManager: KeyEnabled!
+  piwik: KeyEnabled!
+  plausible: KeyEnabled!
+}
+
+input WebsiteAnalyticsInput {
+  googleAnalytics: KeyEnabledInput!
+  googleTagManager: KeyEnabledInput!
+  piwik: KeyEnabledInput!
+  plausible: KeyEnabledInput!
+}
+
+type WebsiteMail {
+  mailchimp: KeyEnabled
+}
+
+input WebsiteMailInput {
+  mailchimp: KeyEnabledInput!
+}
+
+type WebsiteRemoteFont {
+  name: String!
+  style: [FontStyle!]!
+  weight: [FontWeight!]!
+}
+
+input WebsiteRemoteFontInput {
+  name: String!
+  style: [FontStyle!]!
+  weight: [FontWeight!]!
+}
+
+type WebsiteSettings {
+  ads: WebsiteAds!
+  analytics: WebsiteAnalytics!
+  fonts: [WebsiteRemoteFont!]!
+  mail: WebsiteMail!
+  theme: JSONObject!
 }
 
 type YouTubeVideoBlock implements BaseBlock {

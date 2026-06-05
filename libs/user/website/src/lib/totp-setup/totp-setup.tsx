@@ -23,9 +23,11 @@ const SecretCode = styled('code')`
 const AppLinksText = styled('p')`
   font-size: 13px;
   color: ${({ theme }) => theme.palette.text.secondary};
+
   a {
     color: ${({ theme }) => theme.palette.primary.main};
     text-decoration: none;
+
     &:hover {
       text-decoration: underline;
     }

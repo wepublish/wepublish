@@ -1,5 +1,5 @@
 import NextScript from 'next/script';
-import { CssBaseline } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import {
   ComponentType,
   PropsWithChildren,
@@ -15,6 +15,7 @@ import { SessionTokenContext } from '@wepublish/authentication/website';
 
 import { WebsiteProvider } from '@wepublish/website';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
+import { theme } from '@wepublish/ui';
 
 const SessionProvider = memo<PropsWithChildren>(({ children }) => {
   const [token, setToken] = useState<SessionWithTokenWithoutUser | null>();
@@ -66,15 +67,17 @@ const Script = ({ children, ...data }: PropsWithChildren<any>) => (
 );
 
 export const WithWebsiteProviderDecorator = (Story: ComponentType) => (
-  <WebsiteProvider>
-    <WebsiteBuilderProvider
-      Head={Head}
-      Script={Script}
-    >
-      <SessionProvider>
-        <CssBaseline />
-        <Story />
-      </SessionProvider>
-    </WebsiteBuilderProvider>
-  </WebsiteProvider>
+  <ThemeProvider theme={theme}>
+    <WebsiteProvider>
+      <WebsiteBuilderProvider
+        Head={Head}
+        Script={Script}
+      >
+        <SessionProvider>
+          <CssBaseline />
+          <Story />
+        </SessionProvider>
+      </WebsiteBuilderProvider>
+    </WebsiteProvider>
+  </ThemeProvider>
 );

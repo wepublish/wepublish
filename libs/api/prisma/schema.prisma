@@ -1863,6 +1863,39 @@ model MailchimpSyncError {
   @@map("mailchimp_sync_errors")
 }
 
+model WebsiteSettings {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  // Analytics
+  analyticsGAEnabled Boolean @default(false)
+  analyticsGAId      String?
+
+  analyticsGTMEnabled Boolean @default(false)
+  analyticsGTMId      String?
+
+  analyticsPAEnabled Boolean @default(false)
+  analyticsPAId      String?
+
+  analyticsPiwikEnabled Boolean @default(false)
+  analyticsPiwikId      String?
+
+  // Ads
+  adsSparkLoopEnabled Boolean @default(false)
+  adsSparkLoopId      String?
+
+  // Mails
+  mailMailchimpEnabled Boolean @default(false)
+  mailMailchimpKey     String?
+
+  // Theme
+  theme Json @default("{}")
+  fonts Json @default("[]")
+
+  @@map("settings.website")
+}
+
 model Voucher {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
   createdAt  DateTime @default(now())
