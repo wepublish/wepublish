@@ -28,6 +28,13 @@ const nextConfig = {
     locales: ['default', 'de', 'fr'],
     localeDetection: false,
   },
+  async redirects() {
+    return [
+      ...((await wepNextConfig.redirects?.()) ?? []),
+      { source: '/home', destination: '/', permanent: true },
+      { source: '/das-projekt', destination: '/', permanent: true },
+    ];
+  },
 };
 
 const plugins = [
