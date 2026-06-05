@@ -1,4 +1,5 @@
 import {
+  BlockSibling,
   BuilderBlockRendererProps,
   BuilderBlocksProps,
   BuilderBreakBlockProps,
@@ -448,10 +449,18 @@ export const BlockRenderer = memo(
   }
 );
 
+export const collectSiblings = (blocks: BuilderBlocksProps['blocks']) =>
+  blocks.map(block => ({
+    typeName: block.__typename,
+    blockStyle: block.blockStyle,
+  })) as BlockSibling[];
+
 export const Blocks = memo(({ blocks, type }: BuilderBlocksProps) => {
   const {
     blocks: { Renderer },
   } = useWebsiteBuilder();
+
+  const siblings = collectSiblings(blocks);
 
   return (
     <>
@@ -472,6 +481,7 @@ export const Blocks = memo(({ blocks, type }: BuilderBlocksProps) => {
             block={block}
             index={index}
             count={blocks.length}
+            siblings={siblings}
             type={type}
           />
         </ImageContext.Provider>
