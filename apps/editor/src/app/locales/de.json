@@ -2090,6 +2090,12 @@
       },
       "theme": {
         "title": "Theme",
+        "expandAll": "Alle ausklappen",
+        "collapseAll": "Alle einklappen",
+        "exportTheme": "Theme exportieren",
+        "importTheme": "Theme importieren",
+        "importSuccess": "Theme importiert. Zum Speichern auf «Speichern» klicken.",
+        "importError": "Die Theme-Datei konnte nicht gelesen werden.",
         "palette": {
           "primary": "Primär",
           "primaryMain": "Hauptfarbe der Website. Wird für Links, Navigation, Buttons usw. verwendet.",
