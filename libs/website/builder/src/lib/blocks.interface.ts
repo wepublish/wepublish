@@ -32,12 +32,18 @@ import {
   FullYouTubeVideoBlockFragment,
 } from '@wepublish/website/api';
 
+export type BlockSibling = {
+  typeName: string;
+  blockStyle?: string;
+};
+
 export type BuilderBlockRendererProps = {
   className?: string;
+  siblings?: Array<BlockSibling>;
   block: FullBlockFragment;
   index: number;
   count: number;
-  type: 'Page' | 'Article' | 'PageNested' | 'ArticleNested';
+  type: 'Page' | 'Article' | 'PageNested' | 'ArticleNested' | 'Custom';
 };
 
 export type BuilderBlocksProps = {
@@ -47,6 +53,7 @@ export type BuilderBlocksProps = {
 
 export type BlockProps = {
   className?: string;
+  siblings?: Array<BlockSibling>;
 };
 
 type WithBlockProps<T> = Omit<T, 'type'> & BlockProps;
