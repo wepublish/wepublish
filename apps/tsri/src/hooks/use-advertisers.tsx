@@ -7,10 +7,10 @@ const SPONSOR_TAG = 'sponsor';
 const PROMO_TAG = 'promo';
 
 const PROMO_BIO_TEXT =
-  'Dieser Beitrag wurde von unserem Promo-Partner verfasst und durch Tsüri veröffentlicht – dem kritischen Zürcher Stadtmagazin für Lokaljournalismus.';
+  'Dieser Artikel entstand in Zusammenarbeit mit unserem Promo-Partner und wurde von Tsüri.ch, dem Zürcher Stadtmagazin, veröffentlicht.';
 
 const SPONSOR_BIO_TEXT =
-  'Dieser Beitrag wurde von unserem Sponsor verfasst und durch Tsüri veröffentlicht – dem kritischen Zürcher Stadtmagazin für Lokaljournalismus.';
+  'Dieser Artikel entstand in Zusammenarbeit mit unserem Sponsor und wurde von Tsüri.ch, dem Zürcher Stadtmagazin, veröffentlicht.';
 export function isPromo(author: FullAuthorFragment): boolean {
   return !!author.tags?.find(tag => tag.tag === PROMO_TAG);
 }
