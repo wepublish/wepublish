@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { alpha } from '@mui/material';
 import { ArticleWrapper } from '@wepublish/article/website';
 import { Image } from '@wepublish/image/website';
 import { Link } from '@wepublish/ui';
@@ -6,14 +7,20 @@ import { FullAuthorFragment } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
 import { useMemo } from 'react';
 
+const PromoArticleBeforeWrapper = styled(ArticleWrapper)`
+  grid-template-columns: var(--two-column-grid) !important;
+  padding: ${({ theme }) => theme.spacing(5, 0, 0, 0)};
+  margin: ${({ theme }) => theme.spacing(0, 0, -10, 0)};
+`;
+
 const TsriAdvertiserContainer = styled(Link)`
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: ${({ theme }) => theme.spacing(2)};
   align-items: center;
-  border-bottom: solid 1px ${({ theme }) => theme.palette.primary.main};
   text-decoration: none;
   color: ${({ theme }) => theme.palette.common.black};
+  grid-column: 1 / 2;
 `;
 const TsriAdvertiserImgContainer = styled('div')`
   padding-bottom: ${({ theme }) => theme.spacing(1)};
@@ -23,6 +30,8 @@ const TsriAdvertiserImgContainer = styled('div')`
 const AdImage = styled(Image)`
   max-height: 100px;
   max-width: 100px;
+  border-radius: 99999px;
+  border: 1px solid ${({ theme }) => alpha(theme.palette.common.black, 0.2)};
 
   ${({ theme }) => theme.breakpoints.up('md')} {
     max-height: 120px;
@@ -67,7 +76,7 @@ export default function TsriAdHeader({
   }
 
   return (
-    <ArticleWrapper>
+    <PromoArticleBeforeWrapper>
       {advertisers?.map(advertiser => (
         <TsriAdvertiserContainer
           key={advertiser.id}
@@ -89,6 +98,6 @@ export default function TsriAdHeader({
           </TsriAdvertiserContent>
         </TsriAdvertiserContainer>
       ))}
-    </ArticleWrapper>
+    </PromoArticleBeforeWrapper>
   );
 }

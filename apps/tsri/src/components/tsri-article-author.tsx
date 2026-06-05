@@ -6,8 +6,15 @@ import {
   ArticleAuthorName,
   AuthorLinksWrapper,
 } from '@wepublish/author/website';
+import { BuilderAuthorChipProps } from '@wepublish/website/builder';
 
-export const TsriArticleAuthor = styled(ArticleAuthor)`
+const PROMO_TAG = 'promotion';
+
+function isPromo(author: BuilderAuthorChipProps['author']): boolean {
+  return !!author.tags?.find(tag => tag.tag === PROMO_TAG);
+}
+
+const StyledArticleAuthor = styled(ArticleAuthor)`
   grid-column: -1 / 1;
   grid-template-rows: min-content auto;
   grid-template-columns: subgrid;
@@ -76,3 +83,17 @@ export const TsriArticleAuthor = styled(ArticleAuthor)`
     }
   }
 `;
+
+export function TsriArticleAuthor({
+  author,
+  ...props
+}: BuilderAuthorChipProps) {
+  const authorWithoutBio = isPromo(author) ? { ...author, bio: null } : author;
+
+  return (
+    <StyledArticleAuthor
+      author={authorWithoutBio}
+      {...props}
+    />
+  );
+}
