@@ -1,4 +1,4 @@
-import { css, GlobalStyles, TextField, ThemeProvider } from '@mui/material';
+import { css, GlobalStyles, TextField } from '@mui/material';
 import {
   Article,
   ArticleAuthors,
@@ -118,7 +118,6 @@ import {
   Paragraph,
   Rating,
   TextToIcon,
-  theme,
   UnorderedList,
 } from '@wepublish/ui';
 import { ImageUpload, PersonalDataForm } from '@wepublish/user/website';
@@ -131,6 +130,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { ContentWrapperStyled } from '@wepublish/content/website';
 import { Paywall } from '@wepublish/paywall/website';
 import { Tag, TagSEO } from '@wepublish/tag/website';
+import { FontStyleOptions } from '@mui/material/styles/createTypography';
 
 export type WebsiteProps = PropsWithChildren;
 
@@ -140,9 +140,13 @@ const dateFormatter = (date: Date, includeTime = true) =>
 const globalStyles = (
   <GlobalStyles
     styles={theme => css`
-      html {
+      html,
+      body {
         scroll-padding-top: ${theme.spacing(7)};
-        font-family: ${theme.typography.fontFamily};
+        font-family: ${(theme.typography as FontStyleOptions).allVariants
+          ?.fontFamily};
+        font-weight: ${(theme.typography as FontStyleOptions).allVariants
+          ?.fontWeight};
         hyphens: auto;
         word-break: break-word;
 
@@ -174,140 +178,138 @@ const globalStyles = (
 );
 
 export const WebsiteProvider = memo<WebsiteProps>(({ children }) => (
-  <ThemeProvider theme={theme}>
-    <IconContext.Provider value={{}}>
-      <LocalizationProvider
-        dateAdapter={AdapterDateFns}
-        adapterLocale={(getDefaultOptions() as { locale: Locale }).locale}
+  <IconContext.Provider value={{}}>
+    <LocalizationProvider
+      dateAdapter={AdapterDateFns}
+      adapterLocale={(getDefaultOptions() as { locale: Locale }).locale}
+    >
+      <WebsiteBuilderProvider
+        Author={Author}
+        AuthorLinks={AuthorLinks}
+        AuthorChip={AuthorChip}
+        AuthorList={AuthorList}
+        AuthorListItem={AuthorListItem}
+        ArticleAuthor={ArticleAuthor}
+        ArticleList={ArticleList}
+        Article={Article}
+        ArticleDate={ArticleDate}
+        ArticleAuthors={ArticleAuthors}
+        ArticleMeta={ArticleTags}
+        ArticleSEO={ArticleSEO}
+        Banner={PageBanner}
+        PeerInformation={PeerInformation}
+        Navbar={Navbar}
+        Footer={Footer}
+        Event={Event}
+        EventSEO={EventSEO}
+        EventList={EventList}
+        EventListItem={EventListItem}
+        CommentList={CommentList}
+        CommentListItem={CommentListItem}
+        CommentListItemShare={CommentListItemShare}
+        CommentListItemChild={CommentListItemChild}
+        Comment={Comment}
+        CommentEditor={CommentEditor}
+        CommentRatings={CommentRatings}
+        Page={Page}
+        PageSEO={PageSEO}
+        LoginForm={LoginForm}
+        RegistrationForm={RegistrationForm}
+        PersonalDataForm={PersonalDataForm}
+        SubscriptionList={SubscriptionList}
+        SubscriptionListItem={SubscriptionListItem}
+        InvoiceList={InvoiceList}
+        InvoiceListItem={InvoiceListItem}
+        MemberPlanPicker={MemberPlanPicker}
+        MemberPlanItem={MemberPlanItem}
+        PeriodicityPicker={PeriodicityPicker}
+        PaymentAmount={PaymentAmountSlider}
+        PaymentMethodPicker={PaymentMethodPicker}
+        TransactionFee={TransactionFee}
+        Subscribe={Subscribe}
+        Upgrade={Upgrade}
+        ContentWrapper={ContentWrapperStyled}
+        Paywall={Paywall}
+        Tag={Tag}
+        TagSEO={TagSEO}
+        TextToIcon={TextToIcon}
+        elements={{
+          TextField,
+          Rating,
+          Alert,
+          Button,
+          IconButton,
+          Pagination,
+          H1,
+          H2,
+          H3,
+          H4,
+          H5,
+          H6,
+          Paragraph,
+          Link,
+          UnorderedList,
+          ImageUpload,
+          OrderedList,
+          ListItem,
+          Image,
+          Modal,
+        }}
+        blocks={{
+          Blocks,
+          Renderer: BlockRenderer,
+          Title: TitleBlock,
+          Break: BreakBlock,
+          Image: ImageBlock,
+          ImageGallery: ImageGalleryBlock,
+          Comment: CommentBlock,
+          Quote: QuoteBlock,
+          HTML: HtmlBlock,
+          Poll: PollBlock,
+          Crowdfunding: CrowdfundingBlock,
+          RichText: RichTextBlock,
+          Event: EventBlock,
+          Subscribe: SubscribeBlock,
+          Listicle: ListicleBlock,
+          TeaserGridFlex: TeaserGridFlexBlock,
+          TeaserGrid: TeaserGridBlock,
+          TeaserList: TeaserListBlock,
+          BaseTeaser,
+          TeaserSlots: TeaserSlotsBlock,
+          Teaser,
+          BildwurfAd: BildwurfAdBlock,
+          IFrame: IFrameBlock,
+          FacebookPost: FacebookPostBlock,
+          FacebookVideo: FacebookVideoBlock,
+          InstagramPost: InstagramPostBlock,
+          PolisConversation: PolisConversationBlock,
+          SoundCloudTrack: SoundCloudTrackBlock,
+          TikTokVideo: TikTokVideoBlock,
+          TwitterTweet: TwitterTweetBlock,
+          VimeoVideo: VimeoVideoBlock,
+          StreamableVideo: StreamableVideoBlock,
+          YouTubeVideo: YouTubeVideoBlock,
+          FlexBlock,
+        }}
+        blockStyles={{
+          Banner,
+          ContextBox,
+          FocusTeaser,
+          ImageSlider,
+          TeaserSlider,
+          AlternatingTeaser,
+          AlternatingTeaserGrid: AlternatingTeaserGridBlock,
+          AlternatingTeaserList: AlternatingTeaserListBlock,
+          AlternatingTeaserSlots: AlternatingTeaserSlotsBlock,
+        }}
+        richtext={{ RenderElement, RenderLeaf, RenderRichtext }}
+        date={{
+          format: dateFormatter,
+        }}
       >
-        <WebsiteBuilderProvider
-          Author={Author}
-          AuthorLinks={AuthorLinks}
-          AuthorChip={AuthorChip}
-          AuthorList={AuthorList}
-          AuthorListItem={AuthorListItem}
-          ArticleAuthor={ArticleAuthor}
-          ArticleList={ArticleList}
-          Article={Article}
-          ArticleDate={ArticleDate}
-          ArticleAuthors={ArticleAuthors}
-          ArticleMeta={ArticleTags}
-          ArticleSEO={ArticleSEO}
-          Banner={PageBanner}
-          PeerInformation={PeerInformation}
-          Navbar={Navbar}
-          Footer={Footer}
-          Event={Event}
-          EventSEO={EventSEO}
-          EventList={EventList}
-          EventListItem={EventListItem}
-          CommentList={CommentList}
-          CommentListItem={CommentListItem}
-          CommentListItemShare={CommentListItemShare}
-          CommentListItemChild={CommentListItemChild}
-          Comment={Comment}
-          CommentEditor={CommentEditor}
-          CommentRatings={CommentRatings}
-          Page={Page}
-          PageSEO={PageSEO}
-          LoginForm={LoginForm}
-          RegistrationForm={RegistrationForm}
-          PersonalDataForm={PersonalDataForm}
-          SubscriptionList={SubscriptionList}
-          SubscriptionListItem={SubscriptionListItem}
-          InvoiceList={InvoiceList}
-          InvoiceListItem={InvoiceListItem}
-          MemberPlanPicker={MemberPlanPicker}
-          MemberPlanItem={MemberPlanItem}
-          PeriodicityPicker={PeriodicityPicker}
-          PaymentAmount={PaymentAmountSlider}
-          PaymentMethodPicker={PaymentMethodPicker}
-          TransactionFee={TransactionFee}
-          Subscribe={Subscribe}
-          Upgrade={Upgrade}
-          ContentWrapper={ContentWrapperStyled}
-          Paywall={Paywall}
-          Tag={Tag}
-          TagSEO={TagSEO}
-          TextToIcon={TextToIcon}
-          elements={{
-            TextField,
-            Rating,
-            Alert,
-            Button,
-            IconButton,
-            Pagination,
-            H1,
-            H2,
-            H3,
-            H4,
-            H5,
-            H6,
-            Paragraph,
-            Link,
-            UnorderedList,
-            ImageUpload,
-            OrderedList,
-            ListItem,
-            Image,
-            Modal,
-          }}
-          blocks={{
-            Blocks,
-            Renderer: BlockRenderer,
-            Title: TitleBlock,
-            Break: BreakBlock,
-            Image: ImageBlock,
-            ImageGallery: ImageGalleryBlock,
-            Comment: CommentBlock,
-            Quote: QuoteBlock,
-            HTML: HtmlBlock,
-            Poll: PollBlock,
-            Crowdfunding: CrowdfundingBlock,
-            RichText: RichTextBlock,
-            Event: EventBlock,
-            Subscribe: SubscribeBlock,
-            Listicle: ListicleBlock,
-            TeaserGridFlex: TeaserGridFlexBlock,
-            TeaserGrid: TeaserGridBlock,
-            TeaserList: TeaserListBlock,
-            BaseTeaser,
-            TeaserSlots: TeaserSlotsBlock,
-            Teaser,
-            BildwurfAd: BildwurfAdBlock,
-            IFrame: IFrameBlock,
-            FacebookPost: FacebookPostBlock,
-            FacebookVideo: FacebookVideoBlock,
-            InstagramPost: InstagramPostBlock,
-            PolisConversation: PolisConversationBlock,
-            SoundCloudTrack: SoundCloudTrackBlock,
-            TikTokVideo: TikTokVideoBlock,
-            TwitterTweet: TwitterTweetBlock,
-            VimeoVideo: VimeoVideoBlock,
-            StreamableVideo: StreamableVideoBlock,
-            YouTubeVideo: YouTubeVideoBlock,
-            FlexBlock,
-          }}
-          blockStyles={{
-            Banner,
-            ContextBox,
-            FocusTeaser,
-            ImageSlider,
-            TeaserSlider,
-            AlternatingTeaser,
-            AlternatingTeaserGrid: AlternatingTeaserGridBlock,
-            AlternatingTeaserList: AlternatingTeaserListBlock,
-            AlternatingTeaserSlots: AlternatingTeaserSlotsBlock,
-          }}
-          richtext={{ RenderElement, RenderLeaf, RenderRichtext }}
-          date={{
-            format: dateFormatter,
-          }}
-        >
-          {globalStyles}
-          {children}
-        </WebsiteBuilderProvider>
-      </LocalizationProvider>
-    </IconContext.Provider>
-  </ThemeProvider>
+        {globalStyles}
+        {children}
+      </WebsiteBuilderProvider>
+    </LocalizationProvider>
+  </IconContext.Provider>
 ));

@@ -4,7 +4,9 @@ const webpack = require('webpack');
 
 // Nx plugins for webpack.
 module.exports = composePlugins(
-  withNx(),
+  withNx({
+    memoryLimit: 5000000,
+  }),
   withReact(),
   (config, { options, context }) => {
     // Update the webpack config as needed here.
