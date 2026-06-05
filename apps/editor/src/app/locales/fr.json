@@ -2077,6 +2077,8 @@
           "dark": "Foncé",
           "contrastText": "Couleur du texte",
           "background": "Arrière-plan",
+          "default": "Par défaut",
+          "paper": "Papier",
           "backgroundDefault": "La couleur de fond du site",
           "backgroundPaper": "Couleur de fond des panneaux en relief comme les dialogues et les modals",
           "text": "Texte",

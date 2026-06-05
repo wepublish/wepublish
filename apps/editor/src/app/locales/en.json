@@ -2195,6 +2195,8 @@
           "dark": "Dark",
           "contrastText": "Text color",
           "background": "Background",
+          "default": "Default",
+          "paper": "Paper",
           "backgroundDefault": "The background color of the website",
           "backgroundPaper": "Background color of raised panels like dialogs and modals",
           "text": "Text",
