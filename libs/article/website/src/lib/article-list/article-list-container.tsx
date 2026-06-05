@@ -1,5 +1,5 @@
 import {
-  ArticleWithoutBlocksFragment,
+  SlimArticleFragment,
   useArticleListQuery,
 } from '@wepublish/website/api';
 import {
@@ -12,9 +12,7 @@ import { useMemo } from 'react';
 
 export type ArticleListContainerProps = BuilderContainerProps &
   Pick<BuilderArticleListProps, 'variables' | 'onVariablesChange'> & {
-    filter?: (
-      articles: ArticleWithoutBlocksFragment[]
-    ) => ArticleWithoutBlocksFragment[];
+    filter?: (articles: SlimArticleFragment[]) => SlimArticleFragment[];
   };
 
 export function ArticleListContainer({

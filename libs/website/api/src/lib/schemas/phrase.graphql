@@ -2,7 +2,7 @@ query Phrase($query: String!, $take: Int, $skip: Int) {
   phrase(query: $query, take: $take, skip: $skip) {
     articles {
       nodes {
-        ...ArticleWithoutBlocks
+        ...SlimArticle
       }
 
       pageInfo {
@@ -17,7 +17,7 @@ query Phrase($query: String!, $take: Int, $skip: Int) {
 
     pages {
       nodes {
-        ...PageWithoutBlocks
+        ...SlimPage
       }
 
       pageInfo {

@@ -68,6 +68,7 @@ export const GanzGrazTeaserSlots = ({
   return (
     <TeaserLayoutWrapper className={className}>
       {title && <Typography variant={'teaserSlotsTitle'}>{title}</Typography>}
+
       <TeaserSlotsTeasers>
         {filledTeasers.map((teaser, index) => (
           <Teaser

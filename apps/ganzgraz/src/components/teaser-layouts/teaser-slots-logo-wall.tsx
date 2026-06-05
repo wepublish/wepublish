@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { hasBlockStyle } from '@wepublish/block-content/website';
-import { createWithTheme } from '@wepublish/ui';
+import { createWithInheritedTheme } from '@wepublish/ui';
 import { BuilderTeaserSlotsBlockProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
 
@@ -34,7 +34,7 @@ export const StyledTeaserSlotsLogoWall = styled(GanzGrazTeaserSlots)`
   }
 `;
 
-export const TeaserSlotsLogoWall = createWithTheme(
+export const TeaserSlotsLogoWall = createWithInheritedTheme(
   StyledTeaserSlotsLogoWall,
   TeaserSlotsTheme
 );

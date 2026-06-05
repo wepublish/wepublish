@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Article, ArticleTeaser, TeaserType } from '@wepublish/website/api';
+import { FullArticleTeaserFragment, TeaserType } from '@wepublish/website/api';
 import {
   BuilderArticleListProps,
   useWebsiteBuilder,
@@ -8,7 +8,9 @@ import { useMemo } from 'react';
 
 export const ArticleListWrapper = styled('article')``;
 
-export const articleToTeaser = (article: Article): ArticleTeaser => ({
+export const articleToTeaser = (
+  article: FullArticleTeaserFragment['article']
+): FullArticleTeaserFragment => ({
   __typename: 'ArticleTeaser',
   type: TeaserType.Article,
   article,
@@ -16,8 +18,6 @@ export const articleToTeaser = (article: Article): ArticleTeaser => ({
   lead: null,
   preTitle: null,
   title: null,
-  articleID: null,
-  imageID: null,
 });
 
 export const ArticleList = ({ data, className }: BuilderArticleListProps) => {
@@ -28,7 +28,7 @@ export const ArticleList = ({ data, className }: BuilderArticleListProps) => {
   const teasers = useMemo(
     () =>
       data?.articles?.nodes.map(article =>
-        articleToTeaser(article as Article)
+        articleToTeaser(article as FullArticleTeaserFragment['article'])
       ) ?? [],
     [data?.articles?.nodes]
   );

@@ -58,7 +58,7 @@ const Panel = styled(RPanel)`
   width: 100%;
 `;
 
-export const PanelWrapper = styled.div<{ disabled: boolean }>`
+export const PanelWrapper = styled.div<{ disabled?: boolean }>`
   display: flex;
   width: 100%;
 

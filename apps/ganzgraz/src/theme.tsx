@@ -1,5 +1,5 @@
 import { createTheme, Theme, ThemeOptions } from '@mui/material';
-import { responsiveProperty, theme as WePTheme } from '@wepublish/ui';
+import { minimalTheme, responsiveProperty } from '@wepublish/ui';
 import { League_Spartan } from 'next/font/google';
 import { Montserrat } from 'next/font/google';
 import { mergeDeepRight, reduce } from 'ramda';
@@ -23,45 +23,25 @@ const montserrat = Montserrat({
   preload: true,
 });
 
-const colors = {
-  primary: {
-    main: '#4E2996', // Dunkellila
-  },
-  secondary: {
-    main: '#CDB9EE', // Flieder
-  },
-  accent: {
-    main: '#FF8900', // Orange
-  },
-  common: {
-    black: '#000000',
-    white: '#ffffff',
-  },
-};
-
 const {
   palette: { augmentColor },
-} = WePTheme;
+} = minimalTheme;
 
-const theme = createTheme(WePTheme, {
+const theme = createTheme(minimalTheme, {
   palette: {
-    common: {
-      black: colors.common.black,
-      white: colors.common.white,
-    },
     primary: augmentColor({
       color: {
-        main: colors.primary.main,
+        main: '#4E2996',
       },
     }),
     secondary: augmentColor({
       color: {
-        main: colors.secondary.main,
+        main: '#CDB9EE',
       },
     }),
     accent: augmentColor({
       color: {
-        main: colors.accent.main,
+        main: '#FF8900',
       },
     }),
   },
@@ -72,7 +52,7 @@ const theme = createTheme(WePTheme, {
         responsiveProperty({
           cssProperty: 'fontSize',
           unit: 'rem',
-          breakpoints: WePTheme.breakpoints.values,
+          breakpoints: minimalTheme.breakpoints.values,
           values: {
             xs: 24,
             md: 36,
@@ -86,7 +66,7 @@ const theme = createTheme(WePTheme, {
         responsiveProperty({
           cssProperty: 'fontSize',
           unit: 'rem',
-          breakpoints: WePTheme.breakpoints.values,
+          breakpoints: minimalTheme.breakpoints.values,
           values: {
             xs: 24,
             md: 36,
@@ -133,17 +113,19 @@ const theme = createTheme(WePTheme, {
       ...mergeDeepAll([
         responsiveProperty({
           cssProperty: 'fontSize',
-          breakpoints: WePTheme.breakpoints.values,
+          breakpoints: minimalTheme.breakpoints.values,
           unit: 'rem',
           values: {},
         }),
       ]),
     },
-    fontFamily: [montserrat.style.fontFamily, 'sans-serif'].join(','),
+    allVariants: {
+      fontFamily: [montserrat.style.fontFamily, 'sans-serif'].join(','),
+    },
   },
 } as PartialDeep<Theme> | ThemeOptions);
 
-export const TeaserSlotsTheme = createTheme(theme, {
+export const TeaserSlotsTheme = {
   typography: {
     teaserSlotsTitle: {
       fontFamily: [leagueSpartan.style.fontFamily, 'sans-serif'].join(','),
@@ -151,7 +133,7 @@ export const TeaserSlotsTheme = createTheme(theme, {
         responsiveProperty({
           cssProperty: 'fontSize',
           unit: 'rem',
-          breakpoints: WePTheme.breakpoints.values,
+          breakpoints: minimalTheme.breakpoints.values,
           values: {
             xs: 32,
             md: 60,
@@ -180,6 +162,6 @@ export const TeaserSlotsTheme = createTheme(theme, {
       },
     },
   } as ThemeOptions['components'],
-} as PartialDeep<Theme> | ThemeOptions);
+} as PartialDeep<Theme> | ThemeOptions;
 
 export { theme as default };

@@ -6,8 +6,8 @@ import { captureException } from '@sentry/react';
 import { PageContainer } from '@wepublish/page/website';
 import { DailyBriefingContext, getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   NavigationListDocument,
   PageDocument,
   PeerProfileDocument,
@@ -70,7 +70,7 @@ export const getStaticProps = (async () => {
     captureException(e);
   }
 
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
   await Promise.all([
     client.query({
       query: PageDocument,
@@ -89,7 +89,7 @@ export const getStaticProps = (async () => {
   const { campaigns = [] } =
     (mailchimpResponse as campaigns.CampaignsSuccessResponse) ?? {};
 
-  const props = addClientCacheToV1Props(client, { campaigns });
+  const props = addClientCacheToProps(client, { campaigns });
 
   return {
     props,

@@ -1,14 +1,15 @@
 import styled from '@emotion/styled';
 import {
   BlockContent,
-  TwitterTweetBlock as TwitterTweetBlockType,
+  FullTwitterTweetBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderTwitterTweetBlockProps } from '@wepublish/website/builder';
 import { Tweet } from 'react-tweet';
 
 export const isTwitterTweetBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is TwitterTweetBlockType => block.__typename === 'TwitterTweetBlock';
+): block is FullTwitterTweetBlockFragment =>
+  block.__typename === 'TwitterTweetBlock';
 
 export const TwitterTweetBlockWrapper = styled('div')``;
 

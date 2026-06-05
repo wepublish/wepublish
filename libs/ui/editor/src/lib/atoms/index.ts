@@ -1,12 +1,13 @@
 // directories
 export * from './comment';
-export { TeaserOverviewPanel } from './teaserOverview/TeaserOverviewPanel';
 export * from './dashboard';
 export * from './memberPlan/selectMemberPlan';
+export * from './memberPlan/selectMemberPlans';
 export * from './paywall/selectPaywall';
 export * from './poll';
 export * from './searchAndFilter';
 export * from './tag/selectTags';
+export { TeaserOverviewPanel } from './teaserOverview/TeaserOverviewPanel';
 export * from './user';
 
 // files

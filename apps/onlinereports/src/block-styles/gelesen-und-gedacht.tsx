@@ -7,8 +7,8 @@ import {
 } from '@wepublish/block-content/website';
 import {
   BlockContent,
-  TeaserGridBlock,
-  TeaserListBlock,
+  FullTeaserGridBlockFragment,
+  FullTeaserListBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderTeaserListBlockProps, Link } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
@@ -18,8 +18,8 @@ import { BlueBox } from '../components/blue-box';
 import { GelesenUndGedachtTeaserContent } from '../custom-teasers/gelesen-und-gedacht';
 
 export const isGelesenUndGedacthTeasers = (
-  block: BlockContent
-): block is TeaserGridBlock | TeaserListBlock =>
+  block: Pick<BlockContent, '__typename'>
+): block is FullTeaserGridBlockFragment | FullTeaserListBlockFragment =>
   allPass([hasBlockStyle('Gelesen und Gedacht'), isTeaserListBlock])(block);
 
 export const GelesenUndGedachtBlockStyle = ({

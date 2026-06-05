@@ -1,14 +1,15 @@
 import styled from '@emotion/styled';
 import {
   BlockContent,
-  YouTubeVideoBlock as YouTubeVideoBlockType,
+  FullYouTubeVideoBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderYouTubeVideoBlockProps } from '@wepublish/website/builder';
 import ReactPlayer from 'react-player';
 
 export const isYouTubeVideoBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is YouTubeVideoBlockType => block.__typename === 'YouTubeVideoBlock';
+): block is FullYouTubeVideoBlockFragment =>
+  block.__typename === 'YouTubeVideoBlock';
 
 export const YouTubeVideoBlockWrapper = styled('div')``;
 

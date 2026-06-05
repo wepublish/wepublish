@@ -7,7 +7,7 @@ import {
 } from '@wepublish/authentication/website';
 import { getApiUrl, handleJwtLogin } from '@wepublish/utils/website';
 import {
-  getV1ApiClient,
+  getApiClient,
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import { useWebsiteBuilder } from '@wepublish/website/builder';
@@ -74,7 +74,7 @@ Login.getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {};
   }
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
 
   await handleJwtLogin(ctx, client, undefined);
 

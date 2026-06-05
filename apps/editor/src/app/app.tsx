@@ -92,6 +92,11 @@ import { TokenList } from './routes/tokens/tokenList';
 import { UserRoleList } from './routes/userRoles/userRoleList';
 import { UserEditView } from './routes/users/userEditView';
 import { UserList } from './routes/users/userList';
+import { VoucherCreateView } from './routes/voucher/voucherCreateView';
+import { VoucherEditView } from './routes/voucher/voucherEditView';
+import { VoucherList } from './routes/voucher/voucherList';
+import { WebsiteSettingsItem } from './routes/website-settings/website-settings-item';
+import { WebsiteSettingsList } from './routes/website-settings/website-settings-list';
 import { SetNewPassword } from './setNewPassword';
 
 const LogoutMutation = gql`
@@ -886,6 +891,31 @@ export function App() {
                 </Base>
               }
             />
+            {/* Voucher routes */}
+            <Route
+              path="vouchers"
+              element={
+                <Base>
+                  <VoucherList />
+                </Base>
+              }
+            />
+            <Route
+              path="vouchers/edit/:id"
+              element={
+                <Base>
+                  <VoucherEditView />
+                </Base>
+              }
+            />
+            <Route
+              path="vouchers/create"
+              element={
+                <Base>
+                  <VoucherCreateView />
+                </Base>
+              }
+            />
             {/* Consents Routes */}
             <Route
               path="consents"
@@ -1049,6 +1079,22 @@ export function App() {
               element={
                 <Base>
                   <SettingList />
+                </Base>
+              }
+            />
+            <Route
+              path="settings/website"
+              element={
+                <Base>
+                  <WebsiteSettingsList />
+                </Base>
+              }
+            />
+            <Route
+              path="settings/website/:category"
+              element={
+                <Base>
+                  <WebsiteSettingsItem />
                 </Base>
               }
             />

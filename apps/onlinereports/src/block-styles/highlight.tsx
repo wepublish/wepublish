@@ -8,9 +8,9 @@ import {
 } from '@wepublish/block-content/website';
 import {
   BlockContent,
-  TeaserGridBlock,
-  TeaserListBlock,
-  TeaserSlotsBlock,
+  FullTeaserGridBlockFragment,
+  FullTeaserListBlockFragment,
+  FullTeaserSlotsBlockFragment,
 } from '@wepublish/website/api';
 import {
   BuilderTeaserGridBlockProps,
@@ -22,8 +22,11 @@ import { allPass, anyPass } from 'ramda';
 import { HighlightTeaser } from '../custom-teasers/highlight';
 
 export const isHighlightTeasers = (
-  block: BlockContent
-): block is TeaserGridBlock | TeaserListBlock | TeaserSlotsBlock =>
+  block: Pick<BlockContent, '__typename'>
+): block is
+  | FullTeaserGridBlockFragment
+  | FullTeaserListBlockFragment
+  | FullTeaserSlotsBlockFragment =>
   allPass([
     hasBlockStyle('Highlight'),
     anyPass([isTeaserGridBlock, isTeaserListBlock, isTeaserSlotsBlock]),

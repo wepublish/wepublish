@@ -19,7 +19,10 @@ import {
   useSlidesPadding,
   useSlidesPerView,
 } from '../teaser-slider/teaser-slider';
-import { BlockContent, ImageGalleryBlock } from '@wepublish/website/api';
+import {
+  BlockContent,
+  FullImageGalleryBlockFragment,
+} from '@wepublish/website/api';
 import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
 
 export const ImageSlider = ({
@@ -127,5 +130,5 @@ export const ImageSlider = ({
 
 export const isImageSliderBlockStyle = (
   block: Pick<BlockContent, '__typename'>
-): block is ImageGalleryBlock =>
+): block is FullImageGalleryBlockFragment =>
   allPass([hasBlockStyle('Slider'), isImageGalleryBlock])(block);

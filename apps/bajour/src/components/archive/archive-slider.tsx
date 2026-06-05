@@ -6,7 +6,7 @@ import {
   selectTeaserDate,
   selectTeaserImage,
 } from '@wepublish/block-content/website';
-import { Teaser } from '@wepublish/website/api';
+import { FullTeaserFragment } from '@wepublish/website/api';
 import {
   BuilderTeaserGridBlockProps,
   useWebsiteBuilder,
@@ -16,7 +16,7 @@ import { DOMAttributes, useState } from 'react';
 
 type ArchiveSliderProps = {
   teasers: BuilderTeaserGridBlockProps['teasers'];
-  setTeaser: (teaser: Teaser) => void;
+  setTeaser: (teaser: FullTeaserFragment) => void;
 };
 
 const SliderWrapper = styled('div')`
@@ -139,7 +139,7 @@ export const ArchiveSlider = ({ teasers, setTeaser }: ArchiveSliderProps) => {
 };
 
 type ArchiveSlideProps = {
-  teaser: Teaser;
+  teaser: FullTeaserFragment;
   isCurrent: boolean;
   onClick: DOMAttributes<HTMLDivElement>['onClick'];
 };
