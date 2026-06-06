@@ -12,6 +12,8 @@ import { paddingPlugin } from '../src/puck/plugins/padding';
 import { rawDataPlugin } from '../src/puck/plugins/raw-data';
 import { RevisionHistoryPlugin } from '../src/puck/plugins/revision-history/revision-history';
 import { seoPlugin } from '../src/puck/plugins/seo';
+import { SEOPreviewPlugin } from '../src/puck/plugins/seo-preview/seo-preview';
+import { StockImagePlugin } from '../src/puck/plugins/stock-image/stock-image';
 
 // Describe the initial data
 const initialData: Partial<Data> = {};
@@ -36,6 +38,8 @@ export default function Index() {
         borderPlugin,
         columnsPlugin,
         rawDataPlugin,
+        SEOPreviewPlugin,
+        StockImagePlugin,
       ]}
       onPublish={save}
       _experimentalFullScreenCanvas={true}
