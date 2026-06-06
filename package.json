@@ -294,6 +294,7 @@
     "immer": "^10.0.2",
     "jose": "^5.10.0",
     "js-cookie": "^3.0.1",
+    "jsoncrush": "^1.1.8",
     "keen-slider": "^6.8.6",
     "lodash": "^4.17.21",
     "mailgun.js": "^8.0.6",

@@ -36,14 +36,17 @@ import {
   SessionWithTokenWithoutUser,
   WebsiteSettingsFragment,
 } from '@wepublish/website/api';
-import { WebsiteBuilderProvider } from '@wepublish/website/builder';
+import {
+  BuilderRouterContext,
+  WebsiteBuilderProvider,
+} from '@wepublish/website/builder';
 import { format, setDefaultOptions } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
 import PlausibleProvider from 'next-plausible';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
@@ -104,9 +107,21 @@ function CustomApp({
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
 
+  const {
+    query: { PREVIEW_THEME },
+  } = useContext(BuilderRouterContext);
+
+  console.log(PREVIEW_THEME);
+
   const theme = useMemo(
-    () => createTheme(minimalTheme, settings?.theme ?? {}),
-    [settings]
+    () =>
+      createTheme(
+        minimalTheme,
+        PREVIEW_THEME ?
+          JSON.parse(PREVIEW_THEME as string)
+        : (settings?.theme ?? {})
+      ),
+    [settings, PREVIEW_THEME]
   );
 
   return (

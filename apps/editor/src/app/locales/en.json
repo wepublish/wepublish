@@ -2132,15 +2132,6 @@
           "proLocator": "You can find it in the Menu > Administration > Site > ID of your administration panel"
         }
       },
-      "mail": {
-        "title": "Mail",
-        "mailchimp": {
-          "title": "Mailchimp",
-          "enable": "Enable Mailchimp",
-          "mailchimp": "<url>Mailchimp</url> is an email marketing platform that lets you manage newsletters and subscriber lists. This allows the website access to your Newsletters and being able to display them.",
-          "apiKeyLocator": "You can find it in the <url>API keys section</url> of your Mailchimp account. Make sure that it is a Mailchimp and not Mandrill key."
-        }
-      },
       "ads": {
         "title": "Ads",
         "sparkLoop": {
