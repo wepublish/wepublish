@@ -19,10 +19,10 @@ import { ComponentProps } from 'react';
 
 import { SpaceProps } from './components/space';
 import { SubscribeConfigProps } from './components/subscribe.config';
-import { BorderField, BorderValue } from './plugins/border';
-import { ColumnsField, ColumnsValue } from './plugins/columns';
-import { DatasourceField, DatasourceValue } from './plugins/datasource';
-import { PaddingField, PaddingValue } from './plugins/padding';
+import { BorderField } from './plugins/border';
+import { ColumnsField } from './plugins/columns';
+import { DatasourceField } from './plugins/datasource';
+import { PaddingField } from './plugins/padding';
 import { SEOField, SEOValue } from './plugins/seo';
 
 declare module '@puckeditor/core' {
@@ -39,13 +39,6 @@ export type RootProps = {
 };
 
 export type Components = {
-  HeadingBlock: {
-    children: string;
-    source?: DatasourceValue;
-    padding?: PaddingValue;
-    border?: BorderValue;
-    columns?: ColumnsValue;
-  };
   Title: BuilderTitleBlockProps;
   Quote: BuilderQuoteBlockProps;
   Html: BuilderHTMLBlockProps;
@@ -63,7 +56,6 @@ export type Components = {
   Subscribe: SubscribeConfigProps;
 };
 
-// Custom field types registered with the editor. Keyed by the field's `type`.
 export type UserFields = {
   datasource: DatasourceField;
   seo: SEOField;
