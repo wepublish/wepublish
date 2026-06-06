@@ -57,28 +57,6 @@ export const config: UserConfig = {
     ),
   },
   components: {
-    HeadingBlock: {
-      fields: {
-        children: {
-          type: 'text',
-        },
-        source: {
-          type: 'datasource',
-        },
-        padding: {
-          type: 'padding',
-        },
-        border: {
-          type: 'border',
-        },
-        columns: {
-          type: 'columns',
-        },
-      },
-      render: ({ children }) => {
-        return <h1>{children}</h1>;
-      },
-    },
     Title: TitleConfig,
     Quote: QuoteConfig,
     Html: HtmlConfig,
