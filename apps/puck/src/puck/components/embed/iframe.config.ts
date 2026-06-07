@@ -2,7 +2,12 @@ import { ComponentConfig } from '@puckeditor/core';
 import { IFrameBlock } from '@wepublish/block-content/website';
 import { BuilderIFrameBlockProps } from '@wepublish/website/builder';
 
-export const IFrameConfig: ComponentConfig<BuilderIFrameBlockProps> = {
+import { UserFields } from '../../types';
+
+export const IFrameConfig: ComponentConfig<{
+  props: BuilderIFrameBlockProps;
+  fields: UserFields;
+}> = {
   fields: {
     url: {
       type: 'text',

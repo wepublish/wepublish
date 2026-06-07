@@ -6,16 +6,22 @@ import { UserConfig } from '../types';
 export type DatasourcesWithModel =
   | { type: 'list'; model: DatasourceModels }
   | { type: 'autofill'; model: DatasourceModels }
-  | { type: 'item'; model: DatasourceModels };
+  | { type: 'item'; model: DatasourceModels; id?: string | null }
+  | { type: 'items'; model: DatasourceModels; ids?: string[] };
 export type DatasourcesWithoutModel = { type: 'none' } | { type: 'slot' };
 export type DatasourceValue = DatasourcesWithoutModel | DatasourcesWithModel;
 
 export type DatasourceType = DatasourceValue['type'];
 
+export type DatasourceValueType<T extends DatasourceType> = DatasourceValue & {
+  type: T;
+};
+
 export const datasourceTypes = [
   'none',
   'slot',
   'list',
+  'lists',
   'autofill',
   'item',
 ] as DatasourceType[];
@@ -24,6 +30,7 @@ export const datasourcesWithModel = [
   'list',
   'autofill',
   'item',
+  'items',
 ] satisfies DatasourcesWithModel['type'][];
 export type ModelDatasourceType = DatasourcesWithModel['type'];
 
@@ -32,6 +39,7 @@ export type DatasourceModels = 'Article' | 'Page' | 'Memberplan' | 'Event';
 export type DatasourceField = BaseField & {
   type: 'datasource';
   models?: DatasourceModels[];
+  types?: DatasourceType[];
 };
 
 const useDatasourceLabels = () => {
@@ -43,6 +51,7 @@ const useDatasourceLabels = () => {
     list: t('', 'List'),
     autofill: t('', 'Autofill'),
     item: t('', 'Item'),
+    items: t('', 'Multiple items'),
   };
 };
 
@@ -66,8 +75,13 @@ const DatasourceFieldRender = ({
   readOnly,
 }: DatasourceFieldRenderProps) => {
   const datasourceLabels = useDatasourceLabels();
-  const current = value ?? { type: 'none' };
   const models = field.models ?? ['Article', 'Page', 'Event', 'Memberplan'];
+  const types = field.types ?? datasourceTypes;
+  let current = value ?? { type: types[0] };
+
+  if (requiresModel(current)) {
+    current = { ...current, model: models[0] };
+  }
 
   const handleTypeChange = (type: DatasourceType) => {
     let value = { ...current, type } as DatasourceValue;
@@ -84,30 +98,32 @@ const DatasourceFieldRender = ({
       label={field.label ?? 'Datasource'}
       readOnly={readOnly}
     >
-      <select
-        value={current.type}
-        disabled={readOnly}
-        onChange={event =>
-          handleTypeChange(event.currentTarget.value as DatasourceType)
-        }
-      >
-        {datasourceTypes.map(type => (
-          <option
-            key={type}
-            value={type}
-          >
-            {datasourceLabels[type]}
-          </option>
-        ))}
-      </select>
+      {types.length > 1 && (
+        <select
+          value={current.type}
+          disabled={readOnly}
+          onChange={event =>
+            handleTypeChange(event.currentTarget.value as DatasourceType)
+          }
+        >
+          {types.map(type => (
+            <option
+              key={type}
+              value={type}
+            >
+              {datasourceLabels[type]}
+            </option>
+          ))}
+        </select>
+      )}
 
-      {requiresModel(current) && (
+      {requiresModel(current) && models.length > 1 && (
         <select
           value={current.model}
           disabled={readOnly}
           onChange={event =>
             onChange({
-              type: current.type,
+              ...current,
               model: event.currentTarget.value as DatasourceModels,
             })
           }
