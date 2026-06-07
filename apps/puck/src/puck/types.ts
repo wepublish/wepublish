@@ -1,5 +1,4 @@
 import { Config } from '@puckeditor/core';
-import { TextField } from '@wepublish/ui';
 import {
   BuilderBreakBlockProps,
   BuilderFacebookPostBlockProps,
@@ -15,21 +14,18 @@ import {
   BuilderVimeoVideoBlockProps,
   BuilderYouTubeVideoBlockProps,
 } from '@wepublish/website/builder';
-import { ComponentProps } from 'react';
 
-import { SpaceProps } from './components/space';
+import { FlexProps } from './components/layout/flex';
+import { GridProps } from './components/layout/grid';
+import { SpaceProps } from './components/layout/space';
+import { WithColumnSpan } from './components/layout/with-column-span';
 import { SubscribeConfigProps } from './components/subscribe.config';
 import { BorderField } from './plugins/border';
 import { ColumnsField } from './plugins/columns';
 import { DatasourceField } from './plugins/datasource';
 import { PaddingField } from './plugins/padding';
 import { SEOField, SEOValue } from './plugins/seo';
-
-declare module '@puckeditor/core' {
-  interface TextField {
-    metadata?: ComponentProps<typeof TextField>;
-  }
-}
+import { WithDataSource } from './components/with-datasource';
 
 export type RootProps = {
   showNavigation: boolean;
@@ -38,12 +34,14 @@ export type RootProps = {
   socialMedia?: SEOValue;
 };
 
-export type Components = {
+type BaseComponents = {
   Title: BuilderTitleBlockProps;
   Quote: BuilderQuoteBlockProps;
   Html: BuilderHTMLBlockProps;
   Break: BuilderBreakBlockProps;
   Space: SpaceProps;
+  Grid: WithDataSource<GridProps>;
+  Flex: WithDataSource<FlexProps>;
   RichText: BuilderRichTextBlockProps;
   Listicle: BuilderListicleBlockProps;
   IFrame: BuilderIFrameBlockProps;
@@ -54,6 +52,10 @@ export type Components = {
   Facebook: BuilderFacebookPostBlockProps;
   Instagram: BuilderInstagramPostBlockProps;
   Subscribe: SubscribeConfigProps;
+};
+
+export type Components = {
+  [K in keyof BaseComponents]: WithColumnSpan<BaseComponents[K]>;
 };
 
 export type UserFields = {
@@ -68,5 +70,5 @@ export type UserConfig = Config<{
   components: Components;
   fields: UserFields;
   root: RootProps;
-  categories: ['recommended', 'blocks', 'layout', 'embed'];
+  categories: ['recommended', 'content', 'layout', 'embed'];
 }>;

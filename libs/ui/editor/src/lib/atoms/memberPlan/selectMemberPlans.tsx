@@ -7,7 +7,6 @@ import {
   useMemberPlanListQuery,
 } from '@wepublish/editor/api';
 import { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import {
   Divider as RDivider,
   Message,
@@ -44,7 +43,6 @@ export function SelectMemberPlans({
   selectedMemberPlans,
   setSelectedMemberPlans,
 }: SelectMemberPlansProps) {
-  const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [cacheData, setCacheData] = useState(
     defaultMemberPlans.map(memberplan => ({

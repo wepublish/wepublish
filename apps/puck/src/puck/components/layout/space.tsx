@@ -1,8 +1,13 @@
 import { ComponentConfig } from '@puckeditor/core';
 
+import { UserFields } from '../../types';
+
 export type SpaceProps = { size: number };
 
-export const Space: ComponentConfig<SpaceProps> = {
+export const Space: ComponentConfig<{
+  props: SpaceProps;
+  fields: UserFields;
+}> = {
   fields: {
     size: {
       type: 'select',

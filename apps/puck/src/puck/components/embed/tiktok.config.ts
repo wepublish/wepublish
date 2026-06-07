@@ -2,7 +2,12 @@ import { ComponentConfig } from '@puckeditor/core';
 import { TikTokVideoBlock } from '@wepublish/block-content/website';
 import { BuilderTikTokVideoBlockProps } from '@wepublish/website/builder';
 
-export const TikTokConfig: ComponentConfig<BuilderTikTokVideoBlockProps> = {
+import { UserFields } from '../../types';
+
+export const TikTokConfig: ComponentConfig<{
+  props: BuilderTikTokVideoBlockProps;
+  fields: UserFields;
+}> = {
   fields: {
     videoID: {
       type: 'text',

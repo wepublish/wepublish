@@ -1,20 +1,24 @@
 import { BreakConfig } from './components/break.config';
+import { ListicleConfig } from './components/content/listicle.config';
+import { QuoteConfig } from './components/content/quote.config';
+import { RichTextConfig } from './components/content/richtext.config';
+import { TitleConfig } from './components/content/title.config';
 import {
   FacebookConfig,
   FacebookVideoConfig,
   InstagramConfig,
-} from './components/facebook.config';
-import { HtmlConfig } from './components/html.config';
-import { IFrameConfig } from './components/iframe.config';
-import { ListicleConfig } from './components/listicle.config';
-import { QuoteConfig } from './components/quote.config';
-import { RichTextConfig } from './components/richtext.config';
-import { Space } from './components/space';
+} from './components/embed/facebook.config';
+import { HtmlConfig } from './components/embed/html.config';
+import { IFrameConfig } from './components/embed/iframe.config';
+import { TikTokConfig } from './components/embed/tiktok.config';
+import { VimeoConfig } from './components/embed/vimeo.config';
+import { YouTubeConfig } from './components/embed/youtube.config';
+import { Flex } from './components/layout/flex';
+import { Grid } from './components/layout/grid';
+import { Space } from './components/layout/space';
+import { withColumnSpan } from './components/layout/with-column-span';
 import { SubscribeConfig } from './components/subscribe.config';
-import { TikTokConfig } from './components/tiktok.config';
-import { TitleConfig } from './components/title.config';
-import { VimeoConfig } from './components/vimeo.config';
-import { YouTubeConfig } from './components/youtube.config';
+import { withDataSource } from './components/with-datasource';
 import { RootRender } from './root.component';
 import { UserConfig } from './types';
 
@@ -57,32 +61,42 @@ export const config: UserConfig = {
     ),
   },
   components: {
-    Title: TitleConfig,
-    Quote: QuoteConfig,
-    Html: HtmlConfig,
-    Break: BreakConfig,
-    Space,
-    RichText: RichTextConfig,
-    Listicle: ListicleConfig,
-    IFrame: IFrameConfig,
-    YouTube: YouTubeConfig,
-    Vimeo: VimeoConfig,
-    TikTok: TikTokConfig,
-    FacebookVideo: FacebookVideoConfig,
-    Facebook: FacebookConfig,
-    Instagram: InstagramConfig,
-    Subscribe: SubscribeConfig,
+    Title: withColumnSpan(TitleConfig),
+    Quote: withColumnSpan(QuoteConfig),
+    Html: withColumnSpan(HtmlConfig),
+    Break: withColumnSpan(BreakConfig),
+    Space: withColumnSpan(Space),
+    Grid: withColumnSpan(
+      withDataSource(Grid, undefined, {
+        types: ['autofill', 'list', 'items'],
+      })
+    ),
+    Flex: withColumnSpan(
+      withDataSource(Flex, undefined, {
+        types: ['autofill', 'list', 'items'],
+      })
+    ),
+    RichText: withColumnSpan(RichTextConfig),
+    Listicle: withColumnSpan(ListicleConfig),
+    IFrame: withColumnSpan(IFrameConfig),
+    YouTube: withColumnSpan(YouTubeConfig),
+    Vimeo: withColumnSpan(VimeoConfig),
+    TikTok: withColumnSpan(TikTokConfig),
+    FacebookVideo: withColumnSpan(FacebookVideoConfig),
+    Facebook: withColumnSpan(FacebookConfig),
+    Instagram: withColumnSpan(InstagramConfig),
+    Subscribe: withColumnSpan(SubscribeConfig),
   },
   categories: {
     recommended: {
       components: ['Title', 'RichText', 'Subscribe'],
     },
-    blocks: {
-      components: ['Title', 'Quote', 'Html', 'Break'],
+    content: {
+      components: ['Title', 'Quote', 'RichText'],
       defaultExpanded: false,
     },
     layout: {
-      components: ['Space'],
+      components: ['Space', 'Grid', 'Flex'],
       defaultExpanded: false,
     },
     embed: {
@@ -94,6 +108,7 @@ export const config: UserConfig = {
         'Instagram',
         'TikTok',
         'Vimeo',
+        'Html',
       ],
       defaultExpanded: false,
     },

@@ -2,7 +2,12 @@ import { ComponentConfig } from '@puckeditor/core';
 import { HtmlBlock } from '@wepublish/block-content/website';
 import { BuilderHTMLBlockProps } from '@wepublish/website/builder';
 
-export const HtmlConfig: ComponentConfig<BuilderHTMLBlockProps> = {
+import { UserFields } from '../../types';
+
+export const HtmlConfig: ComponentConfig<{
+  props: BuilderHTMLBlockProps;
+  fields: UserFields;
+}> = {
   fields: {
     html: {
       type: 'text',
