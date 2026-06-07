@@ -14,7 +14,6 @@ import {
   SortOrder,
 } from '@wepublish/editor/api';
 import { useCallback, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { humanizeError } from '../../humanizeError';
 import { Pagination } from '../../listView/pagination';
@@ -47,7 +46,6 @@ export function SelectMemberPlans({
   selectedMemberPlans,
   setSelectedMemberPlans,
 }: SelectMemberPlansProps) {
-  const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [cacheData, setCacheData] = useState(
     defaultMemberPlans.map(memberplan => ({

@@ -2,7 +2,12 @@ import { ComponentConfig } from '@puckeditor/core';
 import { BreakBlock } from '@wepublish/block-content/website';
 import { BuilderBreakBlockProps } from '@wepublish/website/builder';
 
-export const BreakConfig: ComponentConfig<BuilderBreakBlockProps> = {
+import { UserFields } from '../types';
+
+export const BreakConfig: ComponentConfig<{
+  props: BuilderBreakBlockProps;
+  fields: UserFields;
+}> = {
   fields: {
     text: {
       type: 'text',

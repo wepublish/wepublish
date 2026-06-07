@@ -3,29 +3,33 @@ import {
   SubscribeBlock,
   SubscribeBlockProvider,
 } from '@wepublish/block-content/website';
-import { SubscribeBlockField } from '@wepublish/website/api';
+import {
+  SubscribeBlockField,
+  useMemberPlanListQuery,
+} from '@wepublish/website/api';
 import { BuilderSubscribeBlockProps } from '@wepublish/website/builder';
+
+import { DatasourceValueType } from '../plugins/datasource';
+import { UserFields } from '../types';
 
 export type SubscribeConfigProps = Omit<
   BuilderSubscribeBlockProps,
   'memberPlans' | 'fields'
 > & {
-  memberPlans: { memberPlan?: string }[];
   fields: { field?: SubscribeBlockField | undefined }[];
+  datasource?: DatasourceValueType<'items'>;
 };
 
-export const SubscribeConfig: ComponentConfig<SubscribeConfigProps> = {
+export const SubscribeConfig: ComponentConfig<{
+  props: SubscribeConfigProps;
+  fields: UserFields;
+}> = {
   fields: {
-    memberPlans: {
-      type: 'array',
-      min: 1,
-      getItemSummary: item => item.memberPlan || 'Empty Memberplan',
-      arrayFields: {
-        memberPlan: {
-          type: 'text',
-        },
-      },
-      defaultItemProps: {},
+    datasource: {
+      type: 'datasource',
+      models: ['Memberplan'],
+      types: ['items'],
+      label: 'Memberplans',
     },
     fields: {
       type: 'array',
@@ -64,17 +68,32 @@ export const SubscribeConfig: ComponentConfig<SubscribeConfigProps> = {
     },
   },
   defaultProps: {
-    memberPlans: [],
     fields: [],
+    datasource: {
+      model: 'Memberplan',
+      type: 'items',
+    },
   },
 
-  render: ({ memberPlans, fields, ...props }) => (
-    <SubscribeBlockProvider>
-      <SubscribeBlock
-        memberPlans={[]}
-        fields={fields.flatMap(field => field.field ?? [])}
-        {...props}
-      />
-    </SubscribeBlockProvider>
-  ),
+  render: ({ fields, ...props }) => {
+    const { data } = useMemberPlanListQuery({
+      variables: {
+        take: 100,
+      },
+    });
+    const memberPlans = (data?.memberPlans.nodes ?? []).filter(
+      mb =>
+        !props.datasource?.ids || (props.datasource?.ids ?? []).includes(mb.id)
+    );
+
+    return (
+      <SubscribeBlockProvider>
+        <SubscribeBlock
+          memberPlans={memberPlans}
+          fields={fields.flatMap(field => field.field ?? [])}
+          {...props}
+        />
+      </SubscribeBlockProvider>
+    );
+  },
 };

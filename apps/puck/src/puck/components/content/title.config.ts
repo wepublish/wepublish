@@ -2,7 +2,12 @@ import { ComponentConfig } from '@puckeditor/core';
 import { TitleBlock } from '@wepublish/block-content/website';
 import { BuilderTitleBlockProps } from '@wepublish/website/builder';
 
-export const TitleConfig: ComponentConfig<BuilderTitleBlockProps> = {
+import { UserFields } from '../../types';
+
+export const TitleConfig: ComponentConfig<{
+  props: BuilderTitleBlockProps;
+  fields: UserFields;
+}> = {
   fields: {
     title: {
       type: 'text',
