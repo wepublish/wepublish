@@ -2,7 +2,12 @@ import { ComponentConfig } from '@puckeditor/core';
 import { ListicleBlock } from '@wepublish/block-content/website';
 import { BuilderListicleBlockProps } from '@wepublish/website/builder';
 
-export const ListicleConfig: ComponentConfig<BuilderListicleBlockProps> = {
+import { UserFields } from '../../types';
+
+export const ListicleConfig: ComponentConfig<{
+  props: BuilderListicleBlockProps;
+  fields: UserFields;
+}> = {
   fields: {
     items: {
       type: 'array',

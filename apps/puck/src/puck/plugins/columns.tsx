@@ -8,20 +8,16 @@ export type ColumnsField = BaseField & {
   type: 'columns';
 };
 
-type ColumnsPreset = {
-  columns: ColumnsValue;
-};
-
 export const columnsPresets = [
-  { columns: [1] },
-  { columns: [1, 1] },
-  { columns: [1, 1, 1] },
-  { columns: [1, 1, 1, 1] },
-  { columns: [1, 2] },
-  { columns: [2, 1] },
-  { columns: [1, 2, 1, 2] },
-  { columns: [2, 1, 2, 1] },
-] satisfies ColumnsPreset[];
+  [1],
+  [1, 1],
+  [1, 1, 1],
+  [1, 1, 1, 1],
+  [1, 2],
+  [2, 1],
+  [1, 2, 1, 2],
+  [2, 1, 2, 1],
+] satisfies ColumnsValue[];
 
 const columnsEqual = (a: ColumnsValue, b: ColumnsValue) => {
   return a.length === b.length && a.every((value, index) => value === b[index]);
@@ -56,15 +52,15 @@ const ColumnsFieldRender = ({
         }}
       >
         {columnsPresets.map((preset, index) => {
-          const selected = columnsEqual(current, preset.columns);
-          const total = preset.columns.reduce((sum, column) => sum + column, 0);
+          const selected = columnsEqual(current, preset);
+          const total = preset.reduce((sum, column) => sum + column, 0);
 
           return (
             <button
               key={index}
               type="button"
               disabled={readOnly}
-              onClick={() => onChange(preset.columns)}
+              onClick={() => onChange(preset)}
               style={{
                 display: 'flex',
                 gap: 4,
@@ -75,7 +71,7 @@ const ColumnsFieldRender = ({
                 cursor: readOnly ? 'default' : 'pointer',
               }}
             >
-              {preset.columns.map((column, index) => (
+              {preset.map((column, index) => (
                 <div
                   key={index}
                   css={{

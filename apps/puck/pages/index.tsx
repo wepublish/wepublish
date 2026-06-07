@@ -9,19 +9,15 @@ import { datasourcePlugin } from '../src/puck/plugins/datasource';
 import { EmotionPlugin } from '../src/puck/plugins/emotion';
 import { HeadingAnalyzerPlugin } from '../src/puck/plugins/heading-analyzer';
 import { paddingPlugin } from '../src/puck/plugins/padding';
-import { rawDataPlugin } from '../src/puck/plugins/raw-data';
+import { RawDataPlugin } from '../src/puck/plugins/raw-data';
 import { RevisionHistoryPlugin } from '../src/puck/plugins/revision-history/revision-history';
 import { seoPlugin } from '../src/puck/plugins/seo';
 import { SEOPreviewPlugin } from '../src/puck/plugins/seo-preview/seo-preview';
 import { StockImagePlugin } from '../src/puck/plugins/stock-image/stock-image';
+import { UserConfig } from '../src/puck/types';
 
 // Describe the initial data
-const initialData: Partial<Data> = {};
-
-// Save the data to your database
-const save = (data: Data) => {
-  // TODO: persist the page data
-};
+const initialData: Partial<Data<UserConfig['components']>> = {};
 
 export default function Index() {
   return (
@@ -30,18 +26,20 @@ export default function Index() {
       data={initialData}
       plugins={[
         EmotionPlugin,
-        RevisionHistoryPlugin,
-        HeadingAnalyzerPlugin,
         datasourcePlugin,
         seoPlugin,
         paddingPlugin,
         borderPlugin,
         columnsPlugin,
-        rawDataPlugin,
         SEOPreviewPlugin,
         StockImagePlugin,
+        RevisionHistoryPlugin,
+        HeadingAnalyzerPlugin,
+        RawDataPlugin,
       ]}
-      onPublish={save}
+      onPublish={data => {
+        console.warn(data);
+      }}
       _experimentalFullScreenCanvas={true}
     />
   );
