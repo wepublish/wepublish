@@ -2034,6 +2034,12 @@
       },
       "theme": {
         "title": "Thème",
+        "expandAll": "Tout déplier",
+        "collapseAll": "Tout replier",
+        "exportTheme": "Exporter le thème",
+        "importTheme": "Importer le thème",
+        "importSuccess": "Thème importé. Cliquez sur «Enregistrer» pour l'appliquer.",
+        "importError": "Le fichier de thème n'a pas pu être lu.",
         "palette": {
           "primary": "Primaire",
           "primaryMain": "Couleur principale du site. Utilisée pour les liens, la navigation, les boutons, etc.",
