@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { alpha } from '@mui/material';
 import {
   ArticleAuthor,
+  ArticleAuthorImage,
   ArticleAuthorImageWrapper,
   ArticleAuthorMetaWrapper,
   ArticleAuthorName,
@@ -25,9 +26,8 @@ const StyledArticleAuthor = styled(ArticleAuthor)`
       width: 140px;
     }
 
-    img {
+    ${ArticleAuthorImage} {
       border: 1px solid ${({ theme }) => alpha(theme.palette.common.black, 0.2)};
-      border-radius: 99999px;
     }
   }
 
