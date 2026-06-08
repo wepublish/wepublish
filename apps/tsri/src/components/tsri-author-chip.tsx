@@ -78,15 +78,50 @@ export const AuthorChipImageWrapper = styled(AuthorChipImageWrapperDefault)`
   }
 `;
 
+const TRANSPARENT_IMAGE =
+  'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
+const AuthorChipImagePlaceholder = styled('img')`
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  background-color: ${({ theme }) => theme.palette.grey[100]};
+`;
+
 export function TsriAuthorChip({
   className,
   author,
   isOneOfMultipleAuthors,
-}: BuilderAuthorChipProps & { isOneOfMultipleAuthors?: boolean }) {
+  hideInfo,
+}: BuilderAuthorChipProps & {
+  isOneOfMultipleAuthors?: boolean;
+  hideInfo?: boolean;
+}) {
   const {
     AuthorLinks,
     elements: { Image, Link },
   } = useWebsiteBuilder();
+
+  if (hideInfo) {
+    return (
+      <AuthorChipWrapper className={className}>
+        <AuthorChipImageWrapper>
+          <AuthorChipImagePlaceholder
+            src={TRANSPARENT_IMAGE}
+            alt=""
+            aria-hidden
+            css={imageStyles}
+          />
+        </AuthorChipImageWrapper>
+
+        <AuthorChipContent>
+          <AuthorChipNameJobWrapper>
+            <AuthorChipName>Publiziert</AuthorChipName>
+          </AuthorChipNameJobWrapper>
+        </AuthorChipContent>
+      </AuthorChipWrapper>
+    );
+  }
 
   return (
     <AuthorChipWrapper className={className}>
