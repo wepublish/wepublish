@@ -49,18 +49,6 @@ export class WebsiteAnalyticsInput {
 }
 
 @ObjectType()
-export class WebsiteMail {
-  @Field(() => KeyEnabled, { nullable: true })
-  mailchimp?: KeyEnabled;
-}
-
-@InputType()
-export class WebsiteMailInput {
-  @Field(() => KeyEnabledInput)
-  mailchimp!: KeyEnabledInput;
-}
-
-@ObjectType()
 export class WebsiteAds {
   @Field(() => KeyEnabled)
   sparkLoop!: KeyEnabled;
@@ -122,9 +110,6 @@ export class WebsiteSettings {
   @Field(() => WebsiteAnalytics)
   analytics!: WebsiteAnalytics;
 
-  @Field(() => WebsiteMail)
-  mail!: WebsiteMail;
-
   @Field(() => WebsiteAds)
   ads!: WebsiteAds;
 
@@ -139,8 +124,6 @@ export class WebsiteSettings {
 export class UpdateWebsiteSettingsInput {
   @Field(() => WebsiteAnalyticsInput, { nullable: true })
   analytics?: WebsiteAnalyticsInput;
-  @Field(() => WebsiteMailInput, { nullable: true })
-  mail?: WebsiteMailInput;
   @Field(() => WebsiteAdsInput, { nullable: true })
   ads?: WebsiteAdsInput;
   @Field(() => GraphQLJSONObject, { nullable: true })
