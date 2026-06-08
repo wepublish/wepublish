@@ -78,7 +78,7 @@ export const AuthorChipImageWrapper = styled(AuthorChipImageWrapperDefault)`
   }
 `;
 
-const TRANSPARENT_IMAGE =
+const PLACEHOLDER_IMAGE =
   'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 const AuthorChipImagePlaceholder = styled('img')`
@@ -107,7 +107,7 @@ export function TsriAuthorChip({
       <AuthorChipWrapper className={className}>
         <AuthorChipImageWrapper>
           <AuthorChipImagePlaceholder
-            src={TRANSPARENT_IMAGE}
+            src={PLACEHOLDER_IMAGE}
             alt=""
             aria-hidden
             css={imageStyles}
