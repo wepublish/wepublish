@@ -1,5 +1,9 @@
 import { Currency, Invoice, PaymentState, Subscription } from '@prisma/client';
-import { logger, mapPaymentPeriodToMonths } from '@wepublish/utils/api';
+import {
+  logger,
+  mapPaymentPeriodToMonths,
+  nodeFetchTimeoutSignal,
+} from '@wepublish/utils/api';
 import * as crypto from 'crypto';
 import add from 'date-fns/add';
 import parseISO from 'date-fns/parseISO';
@@ -69,8 +73,9 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     }
 
     const amount =
+      props.subscription.periodAmount ??
       props.newAmount *
-      mapPaymentPeriodToMonths(props.subscription.paymentPeriodicity);
+        mapPaymentPeriodToMonths(props.subscription.paymentPeriodicity);
 
     await this.updateAmountUpstream(
       +isPayrexxExt.value,
@@ -175,9 +180,9 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
       const payedAmount = rawSubscription.invoice.amount;
       const minPayment =
-        subscription.monthlyAmount *
-          mapPaymentPeriodToMonths(subscription.paymentPeriodicity) -
-        100; // -1CHF to ensure that imported rounding differences are no issue
+        (subscription.periodAmount ??
+          subscription.monthlyAmount *
+            mapPaymentPeriodToMonths(subscription.paymentPeriodicity)) - 100; // -1CHF to ensure that imported rounding differences are no issue
       if (payedAmount < minPayment) {
         logger('payrexxSubscriptionPaymentProvider').warn(
           `Payrexx Subscription ${subscription.id} payment ${payedAmount} lower than min payment ${minPayment}`
@@ -284,7 +289,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       {
         method: 'PUT',
         body: qs.stringify({ ...data, ApiSignature: signature }),
-        signal: AbortSignal.timeout(30_000),
+        signal: nodeFetchTimeoutSignal(30_000),
       }
     );
 
@@ -323,7 +328,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       {
         method: 'DELETE',
         body: qs.stringify({ ApiSignature: signature }),
-        signal: AbortSignal.timeout(30_000),
+        signal: nodeFetchTimeoutSignal(30_000),
       }
     );
 

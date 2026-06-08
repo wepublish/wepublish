@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import qs from 'qs';
 import fetch, { Response } from 'node-fetch';
+import { nodeFetchTimeoutSignal } from '@wepublish/utils/api';
 
 export type PayrexxSuccessResponse<Data = any> = {
   status: 'success';
@@ -46,7 +47,7 @@ export class PayrexxClient {
       baseUrl = `${this.buildBaseUrl(path)}&${queryStrSigned}`;
     const response = await fetch(baseUrl, {
       method,
-      signal: AbortSignal.timeout(30_000),
+      signal: nodeFetchTimeoutSignal(30_000),
     });
 
     return await this.validateResponse(response);
@@ -62,7 +63,7 @@ export class PayrexxClient {
     const response = await fetch(baseUrl, {
       method,
       body,
-      signal: AbortSignal.timeout(30_000),
+      signal: nodeFetchTimeoutSignal(30_000),
     });
 
     return await this.validateResponse(response);

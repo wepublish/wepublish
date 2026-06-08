@@ -10,6 +10,7 @@ import fetch from 'node-fetch';
 import { PrismaClient, SettingChallengeProvider } from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
+import { nodeFetchTimeoutSignal } from '@wepublish/utils/api';
 
 class TurnstileConfig {
   private readonly ttl = 21600; // 6h
@@ -120,7 +121,7 @@ export class CFTurnstileProvider extends ChallengeProvider {
     const result = await fetch(url, {
       body: formData as any,
       method: 'POST',
-      signal: AbortSignal.timeout(5_000),
+      signal: nodeFetchTimeoutSignal(5_000),
     });
 
     const outcome = await result.json();

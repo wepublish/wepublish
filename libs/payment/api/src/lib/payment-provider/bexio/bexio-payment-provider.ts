@@ -7,7 +7,7 @@ import {
   User,
   UserAddress,
 } from '@prisma/client';
-import { logger } from '@wepublish/utils/api';
+import { logger, nodeFetchTimeoutSignal } from '@wepublish/utils/api';
 import Bexio, { ContactsStatic, InvoicesStatic } from 'bexio';
 import { MappedReplacer } from 'mapped-replacer';
 import {
@@ -187,7 +187,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
     const response = await fetch(`${bexioBaseUrl}/kb_invoice/${intentID}`, {
       headers,
-      signal: AbortSignal.timeout(30_000),
+      signal: nodeFetchTimeoutSignal(30_000),
     });
 
     if (response.status !== 200) {

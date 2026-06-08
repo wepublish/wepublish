@@ -576,6 +576,7 @@ model MemberPlan {
   amountPerMonthMin              Float
   amountPerMonthMax              Float?
   amountPerMonthTarget           Float?
+  yearlyAmount                   Int?
   availablePaymentMethods        AvailablePaymentMethod[]
   migrateToTargetPaymentMethod   PaymentMethod?           @relation("PaymentMethodMigration", fields: [migrateToTargetPaymentMethodID], references: [id])
   migrateToTargetPaymentMethodID String?
@@ -905,6 +906,7 @@ model Subscription {
   modifiedAt         DateTime                  @updatedAt
   paymentPeriodicity PaymentPeriodicity
   monthlyAmount      Float
+  periodAmount       Int?
   autoRenew          Boolean
   startsAt           DateTime
   paidUntil          DateTime?

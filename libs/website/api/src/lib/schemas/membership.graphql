@@ -33,6 +33,7 @@ fragment FullMemberPlan on MemberPlan {
   amountPerMonthMin
   amountPerMonthMax
   amountPerMonthTarget
+  yearlyAmount
   currency
   availablePaymentMethods {
     ...FullAvailablePaymentMethod
@@ -77,6 +78,7 @@ fragment FullSubscription on PublicSubscription {
 
   paymentPeriodicity
   monthlyAmount
+  periodAmount
   autoRenew
   startsAt
   extendable

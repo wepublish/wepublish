@@ -502,6 +502,29 @@ export function MemberPlanForm({
                 {t('memberplanForm.amountPerMonthTargetHelpText')}
               </HelpText>
             </Col>
+
+            {/* exact yearly amount */}
+            <Col xs={12}>
+              <Form.ControlLabel>
+                {t('memberplanForm.yearlyAmount')}
+              </Form.ControlLabel>
+              <CurrencyInput
+                name="yearlyAmount"
+                currency={memberPlan?.currency ?? 'CHF'}
+                centAmount={memberPlan?.yearlyAmount ?? null}
+                disabled={loading}
+                onChange={centAmount => {
+                  if (!memberPlan) {
+                    return;
+                  }
+                  setMemberPlan({
+                    ...memberPlan,
+                    yearlyAmount: centAmount ?? null,
+                  });
+                }}
+              />
+              <HelpText>{t('memberplanForm.yearlyAmountHelpText')}</HelpText>
+            </Col>
           </Row>
         </Panel>
       </Col>

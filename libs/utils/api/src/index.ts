@@ -4,6 +4,7 @@ export * from './lib/module-options';
 export * from './lib/payment-period-to-months';
 export * from './lib/max-payload-size';
 export * from './lib/constants';
+export * from './lib/node-fetch-timeout-signal';
 
 export * from './lib/dataloader/create-optionals-array';
 export * from './lib/dataloader/prime-dataloaders.decorator';

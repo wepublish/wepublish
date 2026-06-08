@@ -138,6 +138,47 @@ export function calculateAmountForPeriodicity(
   }
 }
 
+export function getPeriodAmount(subscription: {
+  periodAmount?: number | null;
+  monthlyAmount: number;
+  paymentPeriodicity: PaymentPeriodicity;
+}): number {
+  return (
+    subscription.periodAmount ??
+    calculateAmountForPeriodicity(
+      subscription.monthlyAmount,
+      subscription.paymentPeriodicity
+    )
+  );
+}
+
+export function getMemberPlanPeriodAmount({
+  paymentPeriodicity,
+  monthlyAmount,
+  memberPlan,
+}: {
+  paymentPeriodicity: PaymentPeriodicity;
+  monthlyAmount: number;
+  memberPlan: Pick<
+    MemberPlan,
+    'amountPerMonthMin' | 'amountPerMonthTarget' | 'yearlyAmount'
+  >;
+}): number | null {
+  if (
+    paymentPeriodicity !== PaymentPeriodicity.yearly ||
+    memberPlan.yearlyAmount == null
+  ) {
+    return null;
+  }
+
+  const defaultMonthlyAmount =
+    memberPlan.amountPerMonthTarget ?? memberPlan.amountPerMonthMin;
+
+  return monthlyAmount === defaultMonthlyAmount ?
+      memberPlan.yearlyAmount
+    : null;
+}
+
 export class MemberContext implements MemberContextInterface {
   paymentProviders: PaymentProvider[];
   prisma: PrismaClient;
@@ -276,10 +317,12 @@ export class MemberContext implements MemberContextInterface {
         subscription.paymentPeriodicity as PaymentPeriodicity
       );
       const amount = Math.max(
-        calculateAmountForPeriodicity(
-          subscription.monthlyAmount,
-          subscription.paymentPeriodicity as PaymentPeriodicity
-        ) - (discount ?? 0),
+        getPeriodAmount({
+          periodAmount: subscription.periodAmount,
+          monthlyAmount: subscription.monthlyAmount,
+          paymentPeriodicity:
+            subscription.paymentPeriodicity as PaymentPeriodicity,
+        }) - (discount ?? 0),
         0 // in case discount is bigger than the amount
       );
 
@@ -810,6 +853,12 @@ export class MemberContext implements MemberContextInterface {
       );
     }
 
+    const periodAmount = getMemberPlanPeriodAmount({
+      paymentPeriodicity,
+      monthlyAmount,
+      memberPlan,
+    });
+
     const subscription = await this.prisma.subscription.create({
       data: {
         userID,
@@ -818,6 +867,7 @@ export class MemberContext implements MemberContextInterface {
         paymentPeriodicity,
         paidUntil: null,
         monthlyAmount,
+        periodAmount,
         memberPlanID,
         properties,
         replacesSubscriptionID: replacedSubscriptionId,
@@ -901,24 +951,28 @@ export class MemberContext implements MemberContextInterface {
     paymentMethodID,
     paymentPeriodicity,
     monthlyAmount,
+    periodAmount,
     memberPlanID,
     properties,
     autoRenew,
     extendable,
     startsAt = new Date(),
     paidUntil,
+    replacesSubscriptionID,
     skipMail,
   }: {
     userID: string;
     paymentMethodID: string;
     paymentPeriodicity: PaymentPeriodicity;
     monthlyAmount: number;
+    periodAmount?: number | null;
     memberPlanID: string;
     properties: Pick<Property, 'key' | 'value' | 'public'>[];
     autoRenew: boolean;
     extendable: boolean;
     startsAt?: Date | string;
     paidUntil?: Date | string;
+    replacesSubscriptionID?: string | null;
     /**
      * When true, suppress the SUBSCRIBE mail dispatched in the
      * "future-start, no paidUntil" branch. The IF branch (used by bulk
@@ -976,10 +1030,12 @@ export class MemberContext implements MemberContextInterface {
         paymentPeriodicity,
         paidUntil,
         monthlyAmount,
+        periodAmount,
         memberPlanID,
         properties,
         autoRenew,
         extendable,
+        replacesSubscriptionID,
         currency: memberPlan.currency,
       },
       include: {
@@ -999,6 +1055,12 @@ export class MemberContext implements MemberContextInterface {
     if (startsAt < now || paidUntil) {
       const endsAt =
         paidUntil ?? getNextDateForPeriodicity(startsAt, paymentPeriodicity);
+
+      const importPeriodAmount = getPeriodAmount({
+        periodAmount,
+        monthlyAmount,
+        paymentPeriodicity,
+      });
 
       const user = await this.prisma.user.findUnique({
         where: {
@@ -1023,7 +1085,7 @@ export class MemberContext implements MemberContextInterface {
             create: {
               name: 'Membership',
               description: `From ${startsAt.toISOString()} to ${endsAt.toISOString()}`,
-              amount: monthlyAmount,
+              amount: importPeriodAmount,
               quantity: 1,
             },
           },
@@ -1040,7 +1102,7 @@ export class MemberContext implements MemberContextInterface {
           periods: {
             create: {
               startsAt,
-              amount: monthlyAmount,
+              amount: importPeriodAmount,
               endsAt,
               paymentPeriodicity,
               invoiceID: invoice.id,
