@@ -4,13 +4,7 @@ import {
   isTitleBlock,
 } from '@wepublish/block-content/website';
 import { firstParagraphToPlaintext, toPlaintext } from '@wepublish/richtext';
-import {
-  Article,
-  FullImageFragment,
-  ImageBlock,
-  RichTextBlock,
-  TitleBlock,
-} from '@wepublish/website/api';
+import { Article, FullImageFragment } from '@wepublish/website/api';
 import {
   BuilderArticleSEOProps,
   useWebsiteBuilder,
@@ -18,18 +12,16 @@ import {
 import { Fragment, useMemo } from 'react';
 
 export const getArticleSEO = (article: Article) => {
-  const firstTitle = article.latest.blocks?.find((block): block is TitleBlock =>
-    isTitleBlock(block)
+  const firstTitle = article.latest.blocks?.find(block => isTitleBlock(block));
+  const firstRichText = article.latest.blocks?.find(block =>
+    isRichTextBlock(block)
   );
-  const firstRichText = article.latest.blocks?.find(
-    (block): block is RichTextBlock => isRichTextBlock(block)
-  );
-  const firstImageBlock = article.latest.blocks?.find(
-    (block): block is ImageBlock => isImageBlock(block)
+  const firstImageBlock = article.latest.blocks?.find(block =>
+    isImageBlock(block)
   );
 
   const articleBody = article.latest.blocks
-    ?.filter((block): block is RichTextBlock => isRichTextBlock(block))
+    ?.filter(block => isRichTextBlock(block))
     .reduce((body, richText) => {
       const text = toPlaintext(richText.richText);
 

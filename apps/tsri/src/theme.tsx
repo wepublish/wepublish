@@ -254,7 +254,9 @@ const theme = createTheme(WePTheme, {
     bannerCta: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
     },
-    fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    allVariants: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
   },
   components: {
     MuiButton: {

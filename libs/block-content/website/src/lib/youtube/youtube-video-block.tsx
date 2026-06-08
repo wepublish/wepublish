@@ -4,6 +4,7 @@ import {
   FullYouTubeVideoBlockFragment,
 } from '@wepublish/website/api';
 import { BuilderYouTubeVideoBlockProps } from '@wepublish/website/builder';
+import { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 
 export const isYouTubeVideoBlock = (
@@ -22,14 +23,22 @@ export function YouTubeVideoBlock({
   videoID,
   className,
 }: BuilderYouTubeVideoBlockProps) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <YouTubeVideoBlockWrapper className={className}>
-      <YouTubeVideoBlockPlayer
-        width={'auto'}
-        height={'auto'}
-        url={`https://www.youtube.com/watch?v=${videoID}`}
-        controls={true}
-      />
+      {isMounted && (
+        <YouTubeVideoBlockPlayer
+          width={'auto'}
+          height={'auto'}
+          url={`https://www.youtube.com/watch?v=${videoID}`}
+          controls={true}
+        />
+      )}
     </YouTubeVideoBlockWrapper>
   );
 }

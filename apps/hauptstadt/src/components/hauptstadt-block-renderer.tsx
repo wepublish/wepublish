@@ -5,7 +5,6 @@ import {
 import {
   BlockContent,
   FullTeaserGridBlockFragment,
-  TeaserGridBlock,
 } from '@wepublish/website/api';
 import { BuilderBlockRendererProps } from '@wepublish/website/builder';
 import { allPass } from 'ramda';
@@ -29,7 +28,7 @@ export const HauptstadtBlockRenderer = (props: BuilderBlockRendererProps) => {
 
   const block =
     isOldRelatedArticles(props.block) ?
-      ({ ...props.block, numColumns: 3 } as TeaserGridBlock)
+      { ...props.block, numColumns: 3 }
     : props.block;
 
   return (
