@@ -18,7 +18,6 @@ export const EventListItemContent = styled('div')`
   display: flex;
   flex-flow: column;
   gap: ${({ theme }) => theme.spacing(1)};
-
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   transition: border-color 0.3s;
 `;
@@ -76,8 +75,7 @@ const EventTags = styled('div')`
 const EventTag = styled('div')`
   background-color: ${({ theme }) => theme.palette.primary.light};
   color: ${({ theme }) => theme.palette.primary.contrastText};
-  padding: ${({ theme }) => theme.spacing(0.5)}
-    ${({ theme }) => theme.spacing(2)};
+  padding: ${({ theme }) => theme.spacing(0.5, 2)};
   border-radius: ${({ theme }) => theme.shape.borderRadius}px;
   font-size: 0.75rem;
 `;

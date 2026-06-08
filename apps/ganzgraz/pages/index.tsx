@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import mailchimp, {
   campaigns,
   ErrorResponse,
@@ -21,11 +22,21 @@ type IndexProps = {
   campaigns: campaigns.Campaigns[];
 };
 
+const StyledPageWrapper = styled(PageContainer)(
+  ({ theme }) => `
+  ${theme.breakpoints.up('md')} {
+    && > * {
+      grid-column: 2/12;
+    }
+  }
+`
+);
+
 export default function Index({ campaigns }: IndexProps) {
   return (
     <LinkContext.Provider value={{ prefetch: true }}>
       <DailyBriefingContext.Provider value={campaigns}>
-        <PageContainer slug={''} />
+        <StyledPageWrapper slug={''} />
       </DailyBriefingContext.Provider>
     </LinkContext.Provider>
   );

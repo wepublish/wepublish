@@ -56,9 +56,10 @@ import {
 } from '../src/components/ganzgraz-navbar';
 import { GanzGrazPaymentAmountPicker } from '../src/components/ganzgraz-payment-amount-picker';
 import { GanzGrazTransactionFee } from '../src/components/ganzgraz-transaction-fee';
-import { GanzGrazBaseTeaserSlots } from '../src/components/teaser-layouts/ganzgraz-base-teaser-slots';
+import { GanzGrazTeaserSlots } from '../src/components/teaser-layouts/ganzgraz-base-teaser-slots';
 import { GanzGrazBaseTeaser } from '../src/components/teasers/ganzgraz-base-teaser';
 import ganzgrazTheme from '../src/theme';
+import { GanzgrazBreakBlock } from '../src/components/ganzgraz-break-block';
 
 setDefaultOptions({
   locale: de,
@@ -142,8 +143,9 @@ function CustomApp({
             Event={GanzGrazEvent}
             elements={{ Link: NextWepublishLink }}
             blocks={{
-              TeaserSlots: GanzGrazBaseTeaserSlots,
+              TeaserSlots: GanzGrazTeaserSlots,
               BaseTeaser: GanzGrazBaseTeaser,
+              Break: GanzgrazBreakBlock,
             }}
             date={{ format: dateFormatter }}
             meta={{ siteTitle, locale: 'de-AT' }}

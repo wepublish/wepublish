@@ -166,8 +166,7 @@ const EventTags = styled('div')`
 const EventTag = styled('div')`
   background-color: ${({ theme }) => theme.palette.primary.light};
   color: ${({ theme }) => theme.palette.primary.contrastText};
-  padding: ${({ theme }) => theme.spacing(0.5)}
-    ${({ theme }) => theme.spacing(2)};
+  padding: ${({ theme }) => theme.spacing(0.5, 2)};
   border-radius: ${({ theme }) => theme.shape.borderRadius}px;
   font-size: 0.75rem;
 `;

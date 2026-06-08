@@ -8,6 +8,7 @@ export const GanzGrazTransactionFee = forwardRef<
   BuilderTransactionFeeProps
 >(({ text, ...props }, ref) => {
   const { t } = useTranslation();
+
   return (
     <TransactionFee
       ref={ref}

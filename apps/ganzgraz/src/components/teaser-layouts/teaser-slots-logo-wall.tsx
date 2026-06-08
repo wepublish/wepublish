@@ -20,6 +20,7 @@ export const StyledTeaserSlotsLogoWall = styled(GanzGrazTeaserSlots)`
   column-gap: ${({ theme }) => theme.spacing(6)};
   row-gap: ${({ theme }) => theme.spacing(3)};
   grid-template-rows: repeat(2, auto);
+
   ${({ theme }) => theme.breakpoints.up('xs')} {
     grid-template-columns: unset;
   }
