@@ -7,7 +7,6 @@ import {
 } from '@mui/material-nextjs/v15-pagesRouter';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { withErrorSnackbar } from '@wepublish/errors/website';
-import { PaymentAmountPicker } from '@wepublish/membership/website';
 import {
   FooterContainer,
   NavbarContainer,
@@ -72,6 +71,7 @@ import { TsriFooter } from '../src/components/tsri-footer';
 import { TsriGlobalStyles } from '../src/components/tsri-global-styles';
 import { TsriImageSlider } from '../src/components/tsri-image-slider';
 import { TsriNextWepublishLink } from '../src/components/tsri-next-wepublish-link';
+import { TsriPaymentAmountPicker } from '../src/components/tsri-payment-amount-picker';
 import { TsriQuoteBlock } from '../src/components/tsri-quote-block';
 import { TsriRichText } from '../src/components/tsri-richtext';
 import { TsriTag } from '../src/components/tsri-tag';
@@ -156,7 +156,7 @@ function CustomApp({
             ArticleDate={TsriArticleDate}
             ArticleMeta={TsriArticleMeta}
             ArticleList={TsriArticleList}
-            PaymentAmount={PaymentAmountPicker}
+            PaymentAmount={TsriPaymentAmountPicker}
             ArticleAuthor={TsriArticleAuthor}
             ArticleAuthors={TsriArticleAuthors}
             Author={TsriAuthor}

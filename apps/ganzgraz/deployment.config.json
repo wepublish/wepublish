@@ -6,19 +6,25 @@
   "website": {
     "production": {
       "deployment": true,
-      "env": {},
-      "secret_env": [],
+      "env": {
+        "MAILCHIMP_SERVER_PREFIX": "us18"
+      },
+      "secret_env": ["MAILCHIMP_API_KEY"],
       "custom_domain": "https://ganzgraz.at"
     },
     "staging": {
       "deployment": true,
-      "env": {},
-      "secret_env": []
+      "env": {
+        "MAILCHIMP_SERVER_PREFIX": "us18"
+      },
+      "secret_env": ["MAILCHIMP_API_KEY"]
     },
     "review": {
       "deployment": true,
-      "env": {},
-      "secret_env": []
+      "env": {
+        "MAILCHIMP_SERVER_PREFIX": "us18"
+      },
+      "secret_env": ["MAILCHIMP_API_KEY"]
     }
   }
 }

@@ -25,7 +25,8 @@
     "**/*.js",
     "**/*.jsx",
     "mui-augmentations.d.ts",
-    "next-env.d.ts"
+    "next-env.d.ts",
+    "../wnti/src/components/wnti-payment-amount-picker.tsx"
   ],
   "exclude": [
     "node_modules",

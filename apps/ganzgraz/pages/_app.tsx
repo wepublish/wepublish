@@ -1,17 +1,21 @@
 import { EmotionCache } from '@emotion/cache';
 import styled from '@emotion/styled';
-import { Container, css, CssBaseline, ThemeProvider } from '@mui/material';
+import {
+  Container,
+  createTheme,
+  css,
+  CssBaseline,
+  ThemeProvider,
+} from '@mui/material';
 import {
   AppCacheProvider,
   createEmotionCache,
 } from '@mui/material-nextjs/v15-pagesRouter';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { withErrorSnackbar } from '@wepublish/errors/website';
-import {
-  FooterContainer,
-  NavbarContainer,
-} from '@wepublish/navigation/website';
+import { FooterContainer } from '@wepublish/navigation/website';
 import { withPaywallBypassToken } from '@wepublish/paywall/website';
+import { minimalTheme } from '@wepublish/ui';
 import {
   authLink,
   getApiUrl,
@@ -36,17 +40,32 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
 import PlausibleProvider from 'next-plausible';
+import { mergeDeepRight } from 'ramda';
+import { useMemo } from 'react';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
-import { GGNavbar } from '../src/components/gg-navbar';
-import theme from '../src/theme';
+import deOverriden from '../locales/deOverriden.json';
+import { GanzGrazAuthor } from '../src/components/ganzgraz-author';
+import { GanzGrazEvent } from '../src/components/ganzgraz-event';
+import { GanzGrazEventListItem } from '../src/components/ganzgraz-event-list-item';
+import {
+  GanzGrazNavbar,
+  GanzGrazNavbarActions,
+  GanzGrazPaperActions,
+} from '../src/components/ganzgraz-navbar';
+import { GanzGrazPaymentAmountPicker } from '../src/components/ganzgraz-payment-amount-picker';
+import { GanzGrazTransactionFee } from '../src/components/ganzgraz-transaction-fee';
+import { GanzGrazBaseTeaserSlots } from '../src/components/teaser-layouts/ganzgraz-base-teaser-slots';
+import { GanzGrazBaseTeaser } from '../src/components/teasers/ganzgraz-base-teaser';
+import ganzgrazTheme from '../src/theme';
 
 setDefaultOptions({
   locale: de,
 });
 
-initWePublishTranslator();
+initWePublishTranslator(deOverriden);
+
 z.setErrorMap(zodI18nMap);
 
 const Spacer = styled('div')`
@@ -68,11 +87,6 @@ const MainSpacer = styled(Container)`
   `}
 `;
 
-const NavBar = styled(NavbarContainer)`
-  grid-column: -1/1;
-  z-index: 11;
-`;
-
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime ?
     `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
@@ -88,7 +102,7 @@ function CustomApp({
   emotionCache,
   websiteSettings,
 }: CustomAppProps) {
-  const siteTitle = 'We.Publish';
+  const siteTitle = 'Der Graz-Newsletter von ganzgraz';
 
   // Emotion cache from _document is not supplied when client side rendering
   // Compat removes certain warnings that are irrelevant to us
@@ -98,6 +112,15 @@ function CustomApp({
   const settings =
     websiteSettings ??
     (typeof window !== 'undefined' ? window.WEBSITE_SETTINGS : undefined);
+
+  const theme = useMemo(
+    () =>
+      createTheme(
+        minimalTheme,
+        mergeDeepRight(ganzgrazTheme, settings?.theme ?? {})
+      ),
+    [settings]
+  );
 
   return (
     <PlausibleProvider
@@ -112,10 +135,18 @@ function CustomApp({
           <WebsiteBuilderProvider
             Head={Head}
             Script={Script}
-            Navbar={GGNavbar}
+            Author={GanzGrazAuthor}
+            PaymentAmount={GanzGrazPaymentAmountPicker}
+            TransactionFee={GanzGrazTransactionFee}
+            EventListItem={GanzGrazEventListItem}
+            Event={GanzGrazEvent}
             elements={{ Link: NextWepublishLink }}
+            blocks={{
+              TeaserSlots: GanzGrazBaseTeaserSlots,
+              BaseTeaser: GanzGrazBaseTeaser,
+            }}
             date={{ format: dateFormatter }}
-            meta={{ siteTitle }}
+            meta={{ siteTitle, locale: 'de-AT' }}
           >
             <ThemeProvider theme={theme}>
               <CssBaseline />
@@ -125,11 +156,13 @@ function CustomApp({
               </Head>
 
               <Spacer>
-                <NavBar
+                <GanzGrazNavbar
                   categorySlugs={[['categories', 'about-us']]}
                   slug="main"
                   headerSlug="header"
                   iconSlug="icons"
+                  paperActions={<GanzGrazPaperActions />}
+                  navbarActions={<GanzGrazNavbarActions />}
                 />
 
                 <main>
