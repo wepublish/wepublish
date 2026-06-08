@@ -25,6 +25,7 @@ export const isTeaserTwoRow = allPass([
 export const StyledTeaserTwoRow = styled(TsriTeaser)`
   aspect-ratio: unset;
   container: unset;
+  --tw: 65cqw;
 
   ${TeaserContentWrapper} {
     align-self: flex-start;

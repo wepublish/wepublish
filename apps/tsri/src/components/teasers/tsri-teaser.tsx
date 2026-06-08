@@ -76,8 +76,8 @@ export const TeaserImageWrapper = styled('figure')`
 `;
 
 export const TeaserImage = styled(Image)`
-  max-height: 100%;
-  max-width: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: left center;
 `;
@@ -114,7 +114,11 @@ export const TeaserBreakingNewsBadge = styled('div')`
   }
 `;
 
-export const TeaserImageInnerWrapper = styled('picture')``;
+export const TeaserImageInnerWrapper = styled('picture')`
+  display: block;
+  width: 100%;
+  height: 100%;
+`;
 
 export const TeaserAuthorImageWrapper = styled('figure')`
   grid-row: 1 / 6;
@@ -136,7 +140,13 @@ export const TeaserPeerLogo = styled(Image)``;
 
 export const TeaserPreTitleNoContent = styled('div')``;
 
-export const TeaserPreTitle = styled('div')``;
+export const TeaserPreTitle = styled('div')`
+  ${({ theme }) => theme.breakpoints.up('xs')} {
+    && {
+      padding-bottom: calc(var(--tw, 100cqw) * 0.013);
+    }
+  }
+`;
 
 export const TeaserPreTitleWrapper = styled('div')`
   grid-row: 2;
@@ -174,6 +184,8 @@ export const TeaserContentWrapper = styled('article')`
 export const TeaserTitle = styled('h1')`
   grid-row: 3;
   grid-column: 2 / 3;
+  position: relative;
+  z-index: 1;
 `;
 
 export const TeaserLead = styled('p')``;
