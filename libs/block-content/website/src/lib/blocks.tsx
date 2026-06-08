@@ -15,6 +15,7 @@ import {
   BuilderTitleBlockProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
+import { collectSiblings } from './block-siblings';
 import { isFlexBlock } from './nested-blocks/flex-block';
 import { isHtmlBlock } from './html/html-block';
 import { isSubscribeBlock } from './subscribe/subscribe-block';
@@ -60,7 +61,7 @@ import {
 import { isTeaserSlotsBlock } from './teaser/teaser-slots-block';
 import { css } from '@emotion/react';
 export const BlockRenderer = memo(
-  ({ block, className }: BuilderBlockRendererProps) => {
+  ({ block, className, type }: BuilderBlockRendererProps) => {
     const { blocks, blockStyles } = useWebsiteBuilder();
 
     const emptyBlockCss = css`
@@ -444,6 +445,7 @@ export const BlockRenderer = memo(
             <blocks.FlexBlock
               {...(block as BuilderFlexBlockProps)}
               className={className}
+              type={type}
             />
           ),
         ],
@@ -452,10 +454,14 @@ export const BlockRenderer = memo(
   }
 );
 
+export { collectSiblings } from './block-siblings';
+
 export const Blocks = memo(({ blocks, type }: BuilderBlocksProps) => {
   const {
     blocks: { Renderer },
   } = useWebsiteBuilder();
+
+  const siblings = collectSiblings(blocks);
 
   return (
     <>
@@ -476,6 +482,7 @@ export const Blocks = memo(({ blocks, type }: BuilderBlocksProps) => {
             block={block}
             index={index}
             count={blocks.length}
+            siblings={siblings}
             type={type}
           />
         </ImageContext.Provider>

@@ -3,6 +3,7 @@ import { css, Theme, Typography, useTheme } from '@mui/material';
 import { hasBlockStyle, isBreakBlock } from '@wepublish/block-content/website';
 import { BlockContent, FullBreakBlockFragment } from '@wepublish/website/api';
 import {
+  BlockSibling,
   BuilderBreakBlockProps,
   Button,
   Image,
@@ -13,7 +14,6 @@ import { allPass } from 'ramda';
 import { useMemo } from 'react';
 import { Element } from 'slate';
 
-import { BlockSiblings } from '../tsri-block-renderer';
 import { TsriBreakBlockType } from './tsri-base-break-block';
 
 export const SidebarContentWrapper = styled('div')`
@@ -161,7 +161,7 @@ export const TsriSidebarContent = ({
 }: BuilderBreakBlockProps & {
   index: number;
   count: number;
-  siblings: BlockSiblings;
+  siblings: BlockSibling[];
 }) => {
   const {
     blocks: { RichText },

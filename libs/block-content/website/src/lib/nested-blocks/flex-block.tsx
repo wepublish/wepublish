@@ -6,10 +6,12 @@ import {
 } from '@wepublish/website/api';
 import {
   BuilderFlexBlockProps,
+  toNestedBlockType,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 import { FlexAlignment } from '@wepublish/website/api';
 import { css } from '@emotion/react';
+import { collectSiblings } from '../block-siblings';
 
 export const FlexBlockWrapper = styled('div')`
   display: grid;
@@ -44,13 +46,20 @@ export const isFlexBlock = (
   return block.__typename === 'FlexBlock';
 };
 
-export const FlexBlock = ({ className, blocks }: BuilderFlexBlockProps) => {
+export const FlexBlock = ({
+  className,
+  blocks,
+  type,
+}: BuilderFlexBlockProps) => {
   const {
     blocks: { Renderer },
   } = useWebsiteBuilder();
 
   const sortedBlocks = [...blocks].sort(
     (a, b) => a.alignment.y - b.alignment.y || a.alignment.x - b.alignment.x
+  );
+  const siblings = collectSiblings(
+    sortedBlocks.map(nestedBlock => nestedBlock.block as FullBlockFragment)
   );
 
   return (
@@ -63,9 +72,10 @@ export const FlexBlock = ({ className, blocks }: BuilderFlexBlockProps) => {
           >
             <Renderer
               block={nestedBlock.block as FullBlockFragment}
-              type="Article"
+              type={toNestedBlockType(type)}
               index={index}
               count={sortedBlocks.length}
+              siblings={siblings}
             />
           </BlockWithAlignment>
         );
