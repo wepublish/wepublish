@@ -350,6 +350,8 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
         return PaymentState.canceled;
       case 'declined':
         return PaymentState.declined;
+      case 'chargeback':
+        return PaymentState.chargeback;
       default:
         return null;
     }

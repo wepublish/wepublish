@@ -15,6 +15,7 @@ import { NextHandleFunction } from 'connect';
 import express from 'express';
 import DataLoader from 'dataloader';
 import { timingSafeEqual } from 'crypto';
+import { sub } from 'date-fns';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
 import { SecretCrypto } from '@wepublish/settings/api';
 
@@ -320,6 +321,36 @@ export abstract class BasePaymentProvider implements PaymentProvider {
           where: { subscriptionID: invoice.subscriptionID },
         });
       }
+    }
+
+    if (intentState.state === PaymentState.chargeback) {
+      await this.prisma.invoice.update({
+        where: { id: invoice.id },
+        data: {
+          paidAt: null,
+          canceledAt: new Date(),
+        },
+      });
+
+      await this.prisma.subscription.update({
+        where: { id: invoice.subscriptionID },
+        data: {
+          paidUntil: sub(invoicePeriod.startsAt, { days: 1 }),
+        },
+      });
+
+      await this.prisma.subscriptionDeactivation.upsert({
+        where: { subscriptionID: invoice.subscriptionID },
+        create: {
+          subscriptionID: invoice.subscriptionID,
+          reason: SubscriptionDeactivationReason.chargeback,
+          date: new Date(),
+        },
+        update: {
+          reason: SubscriptionDeactivationReason.chargeback,
+          date: new Date(),
+        },
+      });
     }
 
     // update payment provider

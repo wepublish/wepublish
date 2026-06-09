@@ -182,7 +182,7 @@ describe('PayrexxPaymentProvider', () => {
       const transaction = {
         id: 12345,
         amount: 200,
-        status: 'chargeback',
+        status: 'refunded',
         referenceId: 'subscription-1',
         subscription: null,
       } as Transaction;
@@ -198,6 +198,34 @@ describe('PayrexxPaymentProvider', () => {
       });
       expect(response.status).toEqual(200);
       expect(response.paymentStates).toEqual([]);
+    });
+
+    it('should report a chargeback transaction as a chargeback payment state', async () => {
+      const transaction = {
+        id: 12345,
+        amount: 200,
+        status: 'chargeback',
+        referenceId: 'subscription-1',
+        subscription: null,
+      } as Transaction;
+
+      const response = await payrexx.webhookForPaymentIntent({
+        req: {
+          headers: {
+            'content-type': 'application/json',
+          },
+          query: { apiKey: 'secret' },
+          body: { transaction },
+        } as unknown as express.Request,
+      });
+      expect(response.status).toEqual(200);
+      expect(response.paymentStates).toEqual([
+        {
+          paymentID: transaction.referenceId,
+          paymentData: JSON.stringify(transaction),
+          state: 'chargeback',
+        } as IntentState,
+      ]);
     });
   });
 
@@ -301,7 +329,7 @@ describe('PayrexxPaymentProvider', () => {
   describe('checkIntentStatus', () => {
     it('should throw on unmappable transaction status', async () => {
       const transaction = {
-        status: 'chargeback',
+        status: 'refunded',
       } as Transaction;
       transactionClient.retrieveTransaction = jest
         .fn()

@@ -609,4 +609,147 @@ describe('MolliePaymentProvider', () => {
       ).not.toHaveBeenCalled();
     });
   });
+
+  describe('chargeback detection', () => {
+    const chargedBackPayment = {
+      id: 'tr_1',
+      status: 'paid',
+      amountChargedBack: { value: '22.00', currency: 'EUR' },
+      metadata: { paymentID: '22' },
+      customerId: '23',
+    };
+
+    it('reports a chargeback from the webhook when the payment was charged back', async () => {
+      jest.spyOn(mollieOffSession, 'getMollieGateway').mockResolvedValue({
+        payments: { get: jest.fn().mockResolvedValue(chargedBackPayment) },
+      } as any);
+
+      const response = await mollieOffSession.webhookForPaymentIntent({
+        req: {
+          query: { key: 'secret' },
+          body: { id: 'tr_1' },
+        } as unknown as express.Request,
+      });
+
+      expect(response.paymentStates?.[0]?.state).toEqual(
+        PaymentState.chargeback
+      );
+    });
+
+    it('reports a chargeback from checkIntentStatus when the payment was charged back', async () => {
+      jest.spyOn(mollieOffSession, 'getMollieGateway').mockResolvedValue({
+        payments: { get: jest.fn().mockResolvedValue(chargedBackPayment) },
+      } as any);
+
+      const result = await mollieOffSession.checkIntentStatus({
+        intentID: 'tr_1',
+        paymentID: '22',
+      });
+
+      expect(result.state).toEqual(PaymentState.chargeback);
+    });
+  });
+
+  describe('updatePaymentWithIntentState chargeback', () => {
+    const buildPrismaMock = () => {
+      const periodStart = new Date('2026-01-02');
+      const periodEnd = new Date('2027-01-01');
+      return {
+        payment: {
+          findUnique: jest.fn().mockResolvedValue({
+            id: 'pay-1',
+            invoiceID: 'inv-1',
+            intentData: null,
+            intentSecret: null,
+            intentID: 'intent-1',
+            paymentMethodID: 'pm-1',
+          }),
+          update: jest.fn().mockResolvedValue({ id: 'pay-1' }),
+        },
+        invoice: {
+          findUnique: jest.fn().mockResolvedValue({
+            id: 'inv-1',
+            subscriptionID: 'sub-1',
+            paidAt: new Date('2026-01-02'),
+            canceledAt: null,
+          }),
+          update: jest.fn().mockResolvedValue({}),
+        },
+        subscription: {
+          findUnique: jest.fn().mockResolvedValue({
+            id: 'sub-1',
+            periods: [
+              { invoiceID: 'inv-1', startsAt: periodStart, endsAt: periodEnd },
+            ],
+            deactivation: null,
+          }),
+          update: jest.fn().mockResolvedValue({}),
+        },
+        subscriptionDeactivation: {
+          deleteMany: jest.fn().mockResolvedValue({ count: 0 }),
+          upsert: jest.fn().mockResolvedValue({}),
+        },
+      };
+    };
+
+    const buildProvider = (prismaMock: unknown) =>
+      new MolliePaymentProvider({
+        id: 'mollie',
+        incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
+        prisma: prismaMock as PrismaClient,
+        kv: {
+          getOrLoadNs: jest
+            .fn()
+            .mockResolvedValue({ offSessionPayments: true }),
+        } as unknown as KvTtlCacheService,
+      });
+
+    it('reverses the invoice and rolls the paid period back on a chargeback', async () => {
+      const prismaMock = buildPrismaMock();
+
+      await buildProvider(prismaMock).updatePaymentWithIntentState({
+        intentState: {
+          paymentID: 'pay-1',
+          state: PaymentState.chargeback,
+          paymentData: '{}',
+        } as IntentState,
+      });
+
+      expect(prismaMock.invoice.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 'inv-1' },
+          data: expect.objectContaining({ paidAt: null }),
+        })
+      );
+      expect(prismaMock.subscription.update).toHaveBeenCalledWith({
+        where: { id: 'sub-1' },
+        data: { paidUntil: new Date('2026-01-01') },
+      });
+    });
+
+    it('deactivates the subscription with the chargeback reason', async () => {
+      const prismaMock = buildPrismaMock();
+
+      await buildProvider(prismaMock).updatePaymentWithIntentState({
+        intentState: {
+          paymentID: 'pay-1',
+          state: PaymentState.chargeback,
+          paymentData: '{}',
+        } as IntentState,
+      });
+
+      expect(prismaMock.subscriptionDeactivation.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { subscriptionID: 'sub-1' },
+          create: expect.objectContaining({
+            subscriptionID: 'sub-1',
+            reason: SubscriptionDeactivationReason.chargeback,
+          }),
+          update: expect.objectContaining({
+            reason: SubscriptionDeactivationReason.chargeback,
+          }),
+        })
+      );
+    });
+  });
 });
