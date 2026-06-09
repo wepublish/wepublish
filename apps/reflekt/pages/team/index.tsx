@@ -8,7 +8,6 @@ import {
   AuthorListDocument,
   getApiClient,
   NavigationListDocument,
-  PageDocument,
   PeerProfileDocument,
   useAuthorListQuery,
 } from '@wepublish/website/api';
@@ -116,12 +115,6 @@ export const getStaticProps: GetStaticProps = async () => {
     }),
     client.query({
       query: PeerProfileDocument,
-    }),
-    client.query({
-      query: PageDocument,
-      variables: {
-        slug: 'team',
-      },
     }),
   ]);
 
