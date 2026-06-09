@@ -1,0 +1,68 @@
+fragment FullWebsiteSettings on WebsiteSettings {
+  analytics {
+    googleAnalytics {
+      enabled
+      key
+    }
+
+    googleTagManager {
+      enabled
+      key
+    }
+
+    plausible {
+      enabled
+      key
+    }
+
+    piwik {
+      enabled
+      key
+    }
+  }
+
+  mail {
+    mailchimp {
+      enabled
+      key
+    }
+  }
+
+  ads {
+    sparkLoop {
+      enabled
+      key
+    }
+  }
+
+  theme
+  fonts {
+    weight
+    style
+    name
+  }
+}
+
+query WebsiteSettings {
+  websiteSettings {
+    ...FullWebsiteSettings
+  }
+}
+
+mutation UpdateWebsiteSettings(
+  $analytics: WebsiteAnalyticsInput
+  $mail: WebsiteMailInput
+  $ads: WebsiteAdsInput
+  $theme: JSONObject
+  $fonts: [WebsiteRemoteFontInput!]
+) {
+  updateWebsiteSettings(
+    analytics: $analytics
+    mail: $mail
+    ads: $ads
+    theme: $theme
+    fonts: $fonts
+  ) {
+    ...FullWebsiteSettings
+  }
+}

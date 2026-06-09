@@ -759,7 +759,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
         </SubscribePayment>
       </SubscribeSection>
 
-      <SubscribeNarrowSection area="voucher">
+      <VoucherSection area="voucher">
         <Controller
           name={'voucher'}
           control={control}
@@ -815,7 +815,7 @@ export const Subscribe = <T extends Exclude<BuilderUserFormFields, 'flair'>>({
             </div>
           )}
         />
-      </SubscribeNarrowSection>
+      </VoucherSection>
 
       {!hasUserContext && (
         <SubscribeSection area="challenge">

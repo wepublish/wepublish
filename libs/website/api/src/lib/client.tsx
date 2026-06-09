@@ -18,6 +18,7 @@ import { ComponentType, memo, useMemo } from 'react';
 import { createUploadLink } from 'apollo-upload-client';
 import { absoluteUrlToRelative } from './absolute-url-to-relative';
 import { omitDisabledBlocks } from './omit-disabled-blocks';
+import { omitSensitiveData } from './omit-sensitive-data';
 
 export const V1_CLIENT_STATE_PROP_NAME = '__APOLLO_STATE_V1__';
 
@@ -108,7 +109,7 @@ const createApiClient = (
           absoluteUrlToRelative
         : ({} as TypePolicies),
         mergeDeepRight(
-          omitDisabledBlocks,
+          mergeDeepRight(omitDisabledBlocks, omitSensitiveData),
           cacheConfig?.typePolicies ?? ({} as TypePolicies)
         )
       ) as TypePolicies,

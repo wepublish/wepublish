@@ -1243,6 +1243,24 @@ export type FlexTeaserInput = {
   teaser?: InputMaybe<TeaserInput>;
 };
 
+export enum FontStyle {
+  Italic = 'italic',
+  Normal = 'normal',
+}
+
+export enum FontWeight {
+  Black = 'Black',
+  Bold = 'Bold',
+  ExtraBold = 'ExtraBold',
+  ExtraLight = 'ExtraLight',
+  Light = 'Light',
+  Medium = 'Medium',
+  Regular = 'Regular',
+  SemiBold = 'SemiBold',
+  Thin = 'Thin',
+  Variable = 'Variable',
+}
+
 export type FullPoll = {
   __typename?: 'FullPoll';
   answers: Array<PollAnswer>;
@@ -1633,6 +1651,17 @@ export enum InvoiceSort {
   ModifiedAt = 'ModifiedAt',
   PaidAt = 'PaidAt',
 }
+
+export type KeyEnabled = {
+  __typename?: 'KeyEnabled';
+  enabled: Scalars['Boolean'];
+  key?: Maybe<Scalars['String']>;
+};
+
+export type KeyEnabledInput = {
+  enabled: Scalars['Boolean'];
+  key?: InputMaybe<Scalars['String']>;
+};
 
 export type ListicleBlock = BaseBlock & {
   __typename?: 'ListicleBlock';
@@ -2140,6 +2169,8 @@ export type Mutation = {
   updateUserSubscription?: Maybe<PublicSubscription>;
   /** Updates an existing voucher. */
   updateVoucher: Voucher;
+  /** Updates the website settings. */
+  updateWebsiteSettings: WebsiteSettings;
   upgradeUserSubscription: Payment;
   /** Uploads a new document. */
   uploadDocument: Document;
@@ -2799,6 +2830,7 @@ export type MutationUpdateAiSettingArgs = {
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   systemPrompt?: InputMaybe<Scalars['String']>;
+  webhookEndpointSecret?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationUpdateAnalyticsProviderSettingArgs = {
@@ -3227,6 +3259,14 @@ export type MutationUpdateVoucherArgs = {
   memberPlanId?: InputMaybe<Scalars['String']>;
   validFrom?: InputMaybe<Scalars['DateTime']>;
   validTo?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type MutationUpdateWebsiteSettingsArgs = {
+  ads?: InputMaybe<WebsiteAdsInput>;
+  analytics?: InputMaybe<WebsiteAnalyticsInput>;
+  fonts?: InputMaybe<Array<WebsiteRemoteFontInput>>;
+  mail?: InputMaybe<WebsiteMailInput>;
+  theme?: InputMaybe<Scalars['JSONObject']>;
 };
 
 export type MutationUpgradeUserSubscriptionArgs = {
@@ -4370,6 +4410,8 @@ export type Query = {
   voucher: Voucher;
   /** This query returns a list of vouchers */
   vouchers: PaginatedVouchers;
+  /** Returns the website settings, requires authentication to get sensitive settings. */
+  websiteSettings: WebsiteSettings;
 };
 
 export type QueryAiSettingArgs = {
@@ -5895,6 +5937,61 @@ export enum VoucherSort {
   Discount = 'Discount',
   ModifiedAt = 'ModifiedAt',
 }
+
+export type WebsiteAds = {
+  __typename?: 'WebsiteAds';
+  sparkLoop: KeyEnabled;
+};
+
+export type WebsiteAdsInput = {
+  sparkLoop: KeyEnabledInput;
+};
+
+export type WebsiteAnalytics = {
+  __typename?: 'WebsiteAnalytics';
+  googleAnalytics: KeyEnabled;
+  googleTagManager: KeyEnabled;
+  piwik: KeyEnabled;
+  plausible: KeyEnabled;
+};
+
+export type WebsiteAnalyticsInput = {
+  googleAnalytics: KeyEnabledInput;
+  googleTagManager: KeyEnabledInput;
+  piwik: KeyEnabledInput;
+  plausible: KeyEnabledInput;
+};
+
+export type WebsiteMail = {
+  __typename?: 'WebsiteMail';
+  mailchimp?: Maybe<KeyEnabled>;
+};
+
+export type WebsiteMailInput = {
+  mailchimp: KeyEnabledInput;
+};
+
+export type WebsiteRemoteFont = {
+  __typename?: 'WebsiteRemoteFont';
+  name: Scalars['String'];
+  style: Array<FontStyle>;
+  weight: Array<FontWeight>;
+};
+
+export type WebsiteRemoteFontInput = {
+  name: Scalars['String'];
+  style: Array<FontStyle>;
+  weight: Array<FontWeight>;
+};
+
+export type WebsiteSettings = {
+  __typename?: 'WebsiteSettings';
+  ads: WebsiteAds;
+  analytics: WebsiteAnalytics;
+  fonts: Array<WebsiteRemoteFont>;
+  mail: WebsiteMail;
+  theme: Scalars['JSONObject'];
+};
 
 export type YouTubeVideoBlock = BaseBlock & {
   __typename?: 'YouTubeVideoBlock';

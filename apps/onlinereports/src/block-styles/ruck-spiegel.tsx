@@ -7,8 +7,8 @@ import {
 } from '@wepublish/block-content/website';
 import {
   BlockContent,
-  TeaserGridBlock,
-  TeaserListBlock,
+  FullTeaserGridBlockFragment,
+  FullTeaserListBlockFragment,
 } from '@wepublish/website/api';
 import {
   BuilderTeaserListBlockProps,
@@ -22,8 +22,8 @@ import { BlueBox } from '../components/blue-box';
 import { RuckSpiegelTeaserContent } from '../custom-teasers/ruck-spiegel';
 
 export const isRuckSpiegelTeasers = (
-  block: BlockContent
-): block is TeaserGridBlock | TeaserListBlock =>
+  block: Pick<BlockContent, '__typename'>
+): block is FullTeaserGridBlockFragment | FullTeaserListBlockFragment =>
   allPass([hasBlockStyle('RuckSpiegel'), isTeaserListBlock])(block);
 
 export const RuckSpiegelBlockStyle = ({

@@ -1,6 +1,6 @@
 import {
   BlockContent,
-  TeaserSlotsBlock as TeaserSlotsBlockType,
+  FullTeaserSlotsBlockFragment,
 } from '@wepublish/website/api';
 import {
   BuilderTeaserSlotsBlockProps,
@@ -12,7 +12,8 @@ import styled from '@emotion/styled';
 
 export const isTeaserSlotsBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is TeaserSlotsBlockType => block.__typename === 'TeaserSlotsBlock';
+): block is FullTeaserSlotsBlockFragment =>
+  block.__typename === 'TeaserSlotsBlock';
 
 export const TeaserSlotsBlockWrapper = styled('section')`
   display: grid;

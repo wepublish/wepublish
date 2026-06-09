@@ -12,12 +12,16 @@ import {
 import { Fragment, useMemo } from 'react';
 
 export const getArticleSEO = (article: Article) => {
-  const firstTitle = article.latest.blocks?.find(isTitleBlock);
-  const firstRichText = article.latest.blocks?.find(isRichTextBlock);
-  const firstImageBlock = article.latest.blocks?.find(isImageBlock);
+  const firstTitle = article.latest.blocks?.find(block => isTitleBlock(block));
+  const firstRichText = article.latest.blocks?.find(block =>
+    isRichTextBlock(block)
+  );
+  const firstImageBlock = article.latest.blocks?.find(block =>
+    isImageBlock(block)
+  );
 
   const articleBody = article.latest.blocks
-    ?.filter(isRichTextBlock)
+    ?.filter(block => isRichTextBlock(block))
     .reduce((body, richText) => {
       const text = toPlaintext(richText.richText);
 

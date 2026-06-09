@@ -1,9 +1,6 @@
 import styled from '@emotion/styled';
 import { truncateFirstParagraph } from '@wepublish/richtext';
-import {
-  BlockContent,
-  EventBlock as EventBlockType,
-} from '@wepublish/website/api';
+import { BlockContent, FullEventBlockFragment } from '@wepublish/website/api';
 import {
   BuilderEventBlockProps,
   useWebsiteBuilder,
@@ -11,7 +8,7 @@ import {
 
 export const isEventBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is EventBlockType => block.__typename === 'EventBlock';
+): block is FullEventBlockFragment => block.__typename === 'EventBlock';
 
 export const EventBlockWrapper = styled('aside')`
   display: grid;

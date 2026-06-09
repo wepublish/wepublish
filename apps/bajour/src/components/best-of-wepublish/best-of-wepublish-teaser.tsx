@@ -7,14 +7,14 @@ import {
   TeaserWrapper,
 } from '@wepublish/block-content/website';
 import { NextWepublishLink } from '@wepublish/utils/website';
-import { ArticleTeaser } from '@wepublish/website/api';
+import { FullArticleTeaserFragment } from '@wepublish/website/api';
 import {
   BuilderTeaserProps,
   useWebsiteBuilder,
 } from '@wepublish/website/builder';
 
 type BestOfWePublishTeaserProps = Omit<BuilderTeaserProps, 'teaser'> & {
-  teaser: ArticleTeaser;
+  teaser: FullArticleTeaserFragment;
 };
 
 const PeerLogoWrapper = styled('div')`

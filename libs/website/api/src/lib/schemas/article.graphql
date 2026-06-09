@@ -1,3 +1,10 @@
+fragment SlimPaywall on Paywall {
+  memberPlans {
+    name
+    tags
+  }
+}
+
 fragment FullPaywall on Paywall {
   id
   active
@@ -83,6 +90,11 @@ fragment SlimArticle on Article {
     ...SlimArticleRevision
   }
 
+  paywall {
+    ...SlimPaywall
+  }
+
+  peerId
   peer {
     ...FullPeer
   }

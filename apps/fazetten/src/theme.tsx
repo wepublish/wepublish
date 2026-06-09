@@ -320,7 +320,9 @@ const theme = createTheme(WePTheme, {
         }),
       ]),
     },
-    fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    allVariants: {
+      fontFamily: [fffAcidGrotesk.style.fontFamily, 'sans-serif'].join(','),
+    },
   },
   palette: {
     primary: augmentColor({

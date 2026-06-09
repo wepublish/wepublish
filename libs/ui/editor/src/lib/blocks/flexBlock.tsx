@@ -614,6 +614,7 @@ export function FlexBlock({ value, onChange }: BlockProps<FlexBlockValue>) {
               >
                 {t('blocks.flexBlock.close')}
               </Button>
+
               <BlockListItem
                 itemId={blockWithAlignment.alignment.i}
                 index={editIndex}

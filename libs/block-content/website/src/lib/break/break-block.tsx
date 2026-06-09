@@ -1,9 +1,6 @@
 import { Theme, Typography, css, useTheme } from '@mui/material';
 import styled from '@emotion/styled';
-import {
-  BlockContent,
-  BreakBlock as BreakBlockType,
-} from '@wepublish/website/api';
+import { BlockContent, FullBreakBlockFragment } from '@wepublish/website/api';
 import {
   BuilderBreakBlockProps,
   Button,
@@ -14,7 +11,7 @@ import {
 
 export const isBreakBlock = (
   block: Pick<BlockContent, '__typename'>
-): block is BreakBlockType => block.__typename === 'BreakBlock';
+): block is FullBreakBlockFragment => block.__typename === 'BreakBlock';
 
 export const BreakBlockWrapper = styled('div')`
   display: grid;

@@ -8,8 +8,8 @@ import {
 } from '@wepublish/block-content/website';
 import {
   BlockContent,
-  TeaserGridBlock,
-  TeaserListBlock,
+  FullTeaserGridBlockFragment,
+  FullTeaserListBlockFragment,
 } from '@wepublish/website/api';
 import {
   BuilderTeaserGridBlockProps,
@@ -20,8 +20,8 @@ import { allPass, anyPass } from 'ramda';
 import { HighlightTeaser } from '../custom-teasers/highlight';
 
 export const isHighlightTeasers = (
-  block: BlockContent
-): block is TeaserGridBlock | TeaserListBlock =>
+  block: Pick<BlockContent, '__typename'>
+): block is FullTeaserGridBlockFragment | FullTeaserListBlockFragment =>
   allPass([
     hasBlockStyle('Highlight'),
     anyPass([isTeaserGridBlock, isTeaserListBlock]),

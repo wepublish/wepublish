@@ -6,6 +6,7 @@ export * from './lib/next-wepublish-link';
 export * from './lib/session.provider';
 export * from './lib/async-session.provider';
 export * from './lib/user-country';
+
 export * from './lib/pages/profile/profile-page';
 export * from './lib/pages/profile/subscription/subscription-page';
 export * from './lib/pages/profile/subscription/deactivated-subscriptions-page';
@@ -14,9 +15,12 @@ export * from './lib/pages/author-page';
 export * from './lib/pages/subscribe-page';
 export * from './lib/pages/search-page';
 export * from './lib/pages/tag-page';
+export * from './lib/pages/document-page';
+
 export * from './lib/routed-admin-bar';
 export * from './lib/with-jwt-handler';
 export * from './lib/handle-jwt-login';
 export * from './lib/with-session-provider';
 export * from './lib/with-builder-router';
 export * from './lib/i18n-formatter';
+export * from './lib/website-token';
