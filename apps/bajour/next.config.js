@@ -20,6 +20,7 @@ const nextConfig = {
       STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || '',
       GA_ID: process.env.GA_ID || '',
       MAILCHIMP_POPUP_SCRIPT_URL: process.env.MAILCHIMP_POPUP_SCRIPT_URL || '',
+      GTM_ID: process.env.GTM_ID || '',
     },
   },
   async redirects() {
