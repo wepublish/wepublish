@@ -1,6 +1,7 @@
 import {
   Currency,
   PaymentPeriodicity,
+  PaymentState,
   PrismaClient,
   SubscriptionDeactivationReason,
   SubscriptionEvent,
@@ -159,6 +160,7 @@ describe('SubscriptionPaymentsService', () => {
         dueAt: sub(new Date(), { days: 1 }),
         paidAt: null,
         canceledAt: null,
+        payments: [],
         subscription: {
           confirmed: true,
         },
@@ -168,6 +170,7 @@ describe('SubscriptionPaymentsService', () => {
         dueAt: add(new Date(), { seconds: 10 }),
         paidAt: null,
         canceledAt: null,
+        payments: [],
         subscription: {
           confirmed: true,
         },
@@ -183,6 +186,40 @@ describe('SubscriptionPaymentsService', () => {
     expect(prismaMock.invoice.findMany).toHaveBeenCalled();
   });
 
+  it('does not re-charge an invoice whose in-flight payment is still within the grace period, but does once it goes stale', async () => {
+    const runDate = new Date('2026-06-15');
+    prismaMock.invoice.findMany!.mockResolvedValue([
+      {
+        id: 'fresh-in-flight',
+        subscription: { confirmed: true, paymentMethod: { gracePeriod: 14 } },
+        payments: [
+          { state: PaymentState.processing, createdAt: new Date('2026-06-14') },
+        ],
+      },
+      {
+        id: 'stale-in-flight',
+        subscription: { confirmed: true, paymentMethod: { gracePeriod: 14 } },
+        payments: [
+          { state: PaymentState.processing, createdAt: new Date('2026-05-01') },
+        ],
+      },
+      {
+        id: 'no-in-flight',
+        subscription: { confirmed: true, paymentMethod: { gracePeriod: 14 } },
+        payments: [
+          { state: PaymentState.requiresUserAction, createdAt: runDate },
+        ],
+      },
+    ]);
+
+    const result = await subscriptionService.findUnpaidDueInvoices(runDate);
+
+    expect(result.map(invoice => invoice.id)).toEqual([
+      'stale-in-flight',
+      'no-in-flight',
+    ]);
+  });
+
   it('skips unconfirmed invoices', async () => {
     const mockInvoices = [
       {
@@ -190,6 +227,7 @@ describe('SubscriptionPaymentsService', () => {
         dueAt: sub(new Date(), { days: 1 }),
         paidAt: null,
         canceledAt: null,
+        payments: [],
         subscription: {
           confirmed: true,
         },
@@ -199,6 +237,7 @@ describe('SubscriptionPaymentsService', () => {
         dueAt: sub(new Date(), { days: 1 }),
         paidAt: null,
         canceledAt: null,
+        payments: [],
         subscription: {
           confirmed: false,
         },
@@ -224,6 +263,7 @@ describe('SubscriptionPaymentsService', () => {
         paidAt: null,
         canceledAt: null,
         subscriptionID: 'sub-1',
+        payments: [],
         subscription: {
           confirmed: true,
         },
@@ -247,6 +287,7 @@ describe('SubscriptionPaymentsService', () => {
         scheduledDeactivationAt: sub(new Date(), { days: 1 }),
         paidAt: null,
         canceledAt: null,
+        payments: [],
       },
     ];
 
@@ -258,6 +299,33 @@ describe('SubscriptionPaymentsService', () => {
       );
     expect(invoicesToDeactivate.length).toEqual(1);
     expect(prismaMock.invoice.findMany).toHaveBeenCalled();
+  });
+
+  it('does not deactivate an invoice whose in-flight payment is still within the grace period, but does once it goes stale', async () => {
+    const runDate = new Date('2026-06-15');
+    prismaMock.invoice.findMany!.mockResolvedValue([
+      {
+        id: 'fresh-in-flight',
+        subscription: { paymentMethod: { gracePeriod: 14 } },
+        payments: [
+          { state: PaymentState.processing, createdAt: new Date('2026-06-10') },
+        ],
+      },
+      {
+        id: 'stale-in-flight',
+        subscription: { paymentMethod: { gracePeriod: 14 } },
+        payments: [
+          { state: PaymentState.processing, createdAt: new Date('2026-05-01') },
+        ],
+      },
+    ]);
+
+    const result =
+      await subscriptionService.findUnpaidScheduledForDeactivationInvoices(
+        runDate
+      );
+
+    expect(result.map(invoice => invoice.id)).toEqual(['stale-in-flight']);
   });
 
   it('invoice creation yearly', async () => {

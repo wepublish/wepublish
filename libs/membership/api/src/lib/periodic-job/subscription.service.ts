@@ -7,6 +7,7 @@ import {
   Invoice,
   InvoiceItem,
   MemberPlan,
+  Payment,
   PaymentMethod,
   PaymentPeriodicity,
   PaymentProviderCustomer,
@@ -20,13 +21,18 @@ import {
   User,
 } from '@prisma/client';
 import { PaymentProvider, PaymentsService } from '@wepublish/payment/api';
-import { add, endOfDay, startOfDay } from 'date-fns';
+import { add, endOfDay, startOfDay, sub } from 'date-fns';
 import { Action } from '../subscription-event-dictionary/subscription-event-dictionary.type';
 import { logger, mapPaymentPeriodToMonths } from '@wepublish/utils/api';
 
 export type SubscriptionControllerConfig = {
   subscription: Subscription;
 };
+
+const IN_FLIGHT_PAYMENT_STATES: PaymentState[] = [
+  PaymentState.submitted,
+  PaymentState.processing,
+];
 
 interface ChargeStatus {
   action: Action | undefined;
@@ -132,7 +138,7 @@ export class SubscriptionService {
    * @returns All invoices that are due.
    */
   public async findUnpaidDueInvoices(runDate: Date) {
-    return this.prismaService.invoice.findMany({
+    const invoices = await this.prismaService.invoice.findMany({
       where: {
         dueAt: {
           lte: endOfDay(runDate),
@@ -148,6 +154,7 @@ export class SubscriptionService {
         },
       },
       include: {
+        payments: true,
         subscription: {
           include: {
             paymentMethod: true,
@@ -163,6 +170,10 @@ export class SubscriptionService {
         items: true,
       },
     });
+
+    return invoices.filter(
+      invoice => !this.hasInFlightPaymentWithinGracePeriod(invoice, runDate)
+    );
   }
 
   /**
@@ -171,7 +182,7 @@ export class SubscriptionService {
    * @returns a list of invoices.
    */
   public async findUnpaidScheduledForDeactivationInvoices(runDate: Date) {
-    return this.prismaService.invoice.findMany({
+    const invoices = await this.prismaService.invoice.findMany({
       where: {
         scheduledDeactivationAt: {
           lte: startOfDay(runDate),
@@ -184,13 +195,43 @@ export class SubscriptionService {
         },
       },
       include: {
+        payments: true,
         subscription: {
           include: {
             user: true,
+            paymentMethod: true,
           },
         },
       },
     });
+
+    return invoices.filter(
+      invoice => !this.hasInFlightPaymentWithinGracePeriod(invoice, runDate)
+    );
+  }
+
+  /**
+   * Whether an invoice still has a payment that is being confirmed by the
+   * provider within the payment method's grace period. Async methods (e.g.
+   * SEPA direct debit via Mollie) stay in a processing state for several days;
+   * the invoice must not be re-charged or deactivated until the grace period
+   * elapses, after which a stuck payment no longer protects the invoice.
+   */
+  private hasInFlightPaymentWithinGracePeriod(
+    invoice: {
+      payments: Payment[];
+      subscription: { paymentMethod: PaymentMethod } | null;
+    },
+    runDate: Date
+  ): boolean {
+    const gracePeriod = invoice.subscription?.paymentMethod?.gracePeriod ?? 0;
+    const cutoff = sub(runDate, { days: gracePeriod });
+
+    return invoice.payments.some(
+      payment =>
+        IN_FLIGHT_PAYMENT_STATES.includes(payment.state) &&
+        payment.createdAt >= cutoff
+    );
   }
 
   /**

@@ -10,7 +10,7 @@ import {
   MolliePaymentProvider,
 } from './mollie-payment-provider';
 import bodyParser from 'body-parser';
-import { PaymentState } from '@prisma/client';
+import { PaymentState, SubscriptionDeactivationReason } from '@prisma/client';
 import { PaymentMethod } from '@mollie/api-client';
 import { PrismaClient } from '@prisma/client';
 import { KvTtlCacheService } from '@wepublish/kv-ttl-cache/api';
@@ -504,6 +504,109 @@ describe('MolliePaymentProvider', () => {
       await expect(mollieOffSession.checkIntentStatus(intent)).rejects.toThrow(
         'empty paymentID'
       );
+    });
+  });
+
+  describe('updatePaymentWithIntentState reactivation', () => {
+    const buildPrismaMock = (deactivationReason: string | null) => {
+      const periodEnd = new Date('2027-01-01');
+      return {
+        payment: {
+          findUnique: jest.fn().mockResolvedValue({
+            id: 'pay-1',
+            invoiceID: 'inv-1',
+            intentData: null,
+            intentSecret: null,
+            intentID: 'intent-1',
+            paymentMethodID: 'pm-1',
+          }),
+          update: jest.fn().mockResolvedValue({ id: 'pay-1' }),
+        },
+        invoice: {
+          findUnique: jest.fn().mockResolvedValue({
+            id: 'inv-1',
+            subscriptionID: 'sub-1',
+            canceledAt: new Date('2026-06-01'),
+          }),
+          update: jest.fn().mockResolvedValue({}),
+        },
+        subscription: {
+          findUnique: jest.fn().mockResolvedValue({
+            id: 'sub-1',
+            periods: [{ invoiceID: 'inv-1', endsAt: periodEnd }],
+            deactivation:
+              deactivationReason === null ? null : (
+                { reason: deactivationReason }
+              ),
+          }),
+          update: jest.fn().mockResolvedValue({}),
+        },
+        subscriptionDeactivation: {
+          deleteMany: jest.fn().mockResolvedValue({ count: 1 }),
+        },
+      };
+    };
+
+    it('reactivates a subscription deactivated for an unpaid invoice when the payment finally settles', async () => {
+      const prismaMock = buildPrismaMock(
+        SubscriptionDeactivationReason.invoiceNotPaid
+      );
+      const provider = new MolliePaymentProvider({
+        id: 'mollie',
+        incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
+        prisma: prismaMock as unknown as PrismaClient,
+        kv: {
+          getOrLoadNs: jest
+            .fn()
+            .mockResolvedValue({ offSessionPayments: true }),
+        } as unknown as KvTtlCacheService,
+      });
+
+      await provider.updatePaymentWithIntentState({
+        intentState: {
+          paymentID: 'pay-1',
+          state: PaymentState.paid,
+          paymentData: '{}',
+        } as IntentState,
+      });
+
+      expect(prismaMock.invoice.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 'inv-1' },
+          data: expect.objectContaining({ canceledAt: null }),
+        })
+      );
+      expect(
+        prismaMock.subscriptionDeactivation.deleteMany
+      ).toHaveBeenCalledWith({ where: { subscriptionID: 'sub-1' } });
+    });
+
+    it('does not reactivate a subscription the user deactivated themselves', async () => {
+      const prismaMock = buildPrismaMock(
+        SubscriptionDeactivationReason.userSelfDeactivated
+      );
+      const provider = new MolliePaymentProvider({
+        id: 'mollie',
+        incomingRequestHandler: bodyParser.urlencoded({ extended: true }),
+        prisma: prismaMock as unknown as PrismaClient,
+        kv: {
+          getOrLoadNs: jest
+            .fn()
+            .mockResolvedValue({ offSessionPayments: true }),
+        } as unknown as KvTtlCacheService,
+      });
+
+      await provider.updatePaymentWithIntentState({
+        intentState: {
+          paymentID: 'pay-1',
+          state: PaymentState.paid,
+          paymentData: '{}',
+        } as IntentState,
+      });
+
+      expect(
+        prismaMock.subscriptionDeactivation.deleteMany
+      ).not.toHaveBeenCalled();
     });
   });
 });

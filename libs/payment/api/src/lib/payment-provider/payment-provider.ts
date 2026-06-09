@@ -8,6 +8,7 @@ import {
   PrismaClient,
   SettingPaymentProvider,
   Subscription,
+  SubscriptionDeactivationReason,
 } from '@prisma/client';
 import bodyParser from 'body-parser';
 import { NextHandleFunction } from 'connect';
@@ -276,6 +277,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
       },
       include: {
         periods: true,
+        deactivation: true,
       },
     });
 
@@ -299,6 +301,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
         where: { id: invoice.id },
         data: {
           paidAt: new Date(),
+          canceledAt: null,
         },
       });
 
@@ -308,6 +311,15 @@ export abstract class BasePaymentProvider implements PaymentProvider {
           paidUntil: invoicePeriod.endsAt,
         },
       });
+
+      if (
+        subscription.deactivation?.reason ===
+        SubscriptionDeactivationReason.invoiceNotPaid
+      ) {
+        await this.prisma.subscriptionDeactivation.deleteMany({
+          where: { subscriptionID: invoice.subscriptionID },
+        });
+      }
     }
 
     // update payment provider
