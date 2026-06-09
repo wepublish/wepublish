@@ -3,6 +3,7 @@ import {
   AppBar,
   Box,
   Chip,
+  CircularProgress,
   Dialog,
   IconButton,
   Slide,
@@ -21,6 +22,7 @@ import { BlockValue } from '../blocks/types';
 export interface RevisionContentPreviewProps {
   open: boolean;
   onClose: () => void;
+  loading?: boolean;
   title?: string | null;
   subtitle?: string | null;
   blocks: BlockValue[];
@@ -60,6 +62,7 @@ const Header = styled.div`
 export function RevisionContentPreview({
   open,
   onClose,
+  loading = false,
   title,
   subtitle,
   blocks,
@@ -110,25 +113,40 @@ export function RevisionContentPreview({
         </Toolbar>
       </AppBar>
 
-      {subtitle && (
-        <Header>
-          <Typography
-            variant="subtitle1"
-            color="text.secondary"
-          >
-            {subtitle}
-          </Typography>
-        </Header>
-      )}
+      {loading ?
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flex: 1,
+            py: 8,
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      : <>
+          {subtitle && (
+            <Header>
+              <Typography
+                variant="subtitle1"
+                color="text.secondary"
+              >
+                {subtitle}
+              </Typography>
+            </Header>
+          )}
 
-      <ReadOnlyBlocks>
-        <BlockList
-          value={blocks}
-          onChange={() => undefined}
-          disabled
-          blockMap={BlockMap}
-        />
-      </ReadOnlyBlocks>
+          <ReadOnlyBlocks>
+            <BlockList
+              value={blocks}
+              onChange={() => undefined}
+              disabled
+              blockMap={BlockMap}
+            />
+          </ReadOnlyBlocks>
+        </>
+      }
     </Dialog>
   );
 }

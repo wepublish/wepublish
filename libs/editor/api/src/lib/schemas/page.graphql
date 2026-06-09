@@ -174,13 +174,55 @@ mutation DeletePage($id: String!) {
   deletePage(id: $id)
 }
 
-query PageRevisions($id: String!) {
-  page(id: $id) {
-    id
+fragment PageRevisionMeta on PageRevision {
+  id
+  createdAt
+  publishedAt
+  archivedAt
+  title
+  description
 
-    revisions {
-      ...FullPageRevision
+  user {
+    id
+    name
+    firstName
+  }
+}
+
+query PageRevisionList(
+  $id: String!
+  $take: Int
+  $skip: Int
+  $cursor: String
+  $filter: PageRevisionFilter
+  $order: SortOrder
+) {
+  pageRevisions(
+    pageId: $id
+    take: $take
+    skip: $skip
+    cursorId: $cursor
+    filter: $filter
+    order: $order
+  ) {
+    nodes {
+      ...PageRevisionMeta
     }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query PageRevisionPreview($id: String!) {
+  pageRevision(id: $id) {
+    ...FullPageRevision
   }
 }
 

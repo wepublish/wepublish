@@ -14,7 +14,8 @@ import {
   FullImageFragment,
   SettingName,
   useArticleQuery,
-  useArticleRevisionsQuery,
+  useArticleRevisionListQuery,
+  useArticleRevisionPreviewLazyQuery,
   useCreateArticleMutation,
   useCreateJwtForWebsiteLoginMutation,
   useDiscardArticleDraftMutation,
@@ -117,6 +118,8 @@ const InitialArticleBlocks: BlockValue[] = [
   },
 ];
 
+const REVISIONS_PAGE_SIZE = 20;
+
 function countRichtextChars(blocksCharLength: number, nodes: Node[]): number {
   return nodes.reduce((charLength: number, node) => {
     if (!Element.isElement(node) && !Text.isText(node)) {
@@ -159,6 +162,7 @@ function ArticleEditor() {
   const [isVersionHistoryRequested, setVersionHistoryRequested] =
     useState(false);
   const [isDiscardDialogOpen, setDiscardDialogOpen] = useState(false);
+  const [isLoadingMoreRevisions, setLoadingMoreRevisions] = useState(false);
   const [previewRevisionId, setPreviewRevisionId] = useState<string | null>(
     null
   );
@@ -237,31 +241,73 @@ function ArticleEditor() {
   const {
     data: revisionsData,
     refetch: refetchRevisions,
+    fetchMore: fetchMoreRevisions,
     loading: isRevisionsLoading,
-  } = useArticleRevisionsQuery({
+  } = useArticleRevisionListQuery({
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network',
-    variables: { id: articleID! },
+    notifyOnNetworkStatusChange: true,
+    variables: { id: articleID!, take: REVISIONS_PAGE_SIZE, skip: 0 },
     skip: !articleID || !isVersionHistoryRequested,
   });
 
-  const allRevisions = revisionsData?.article?.revisions ?? [];
+  const revisionNodes = revisionsData?.articleRevisions?.nodes ?? [];
 
-  const revisions: VersionHistoryRevision[] = allRevisions.map(revision => ({
+  const revisions: VersionHistoryRevision[] = revisionNodes.map(revision => ({
     id: revision.id,
     createdAt: revision.createdAt,
     publishedAt: revision.publishedAt,
     archivedAt: revision.archivedAt,
     title: revision.title,
     subtitle: revision.preTitle || revision.lead,
+    author: revision.user,
   }));
 
   const reloadRevisions = () =>
     isVersionHistoryRequested ? refetchRevisions() : Promise.resolve();
 
-  const previewRevision = allRevisions.find(
-    revision => revision.id === previewRevisionId
-  );
+  async function loadMoreRevisions() {
+    setLoadingMoreRevisions(true);
+
+    try {
+      await fetchMoreRevisions({
+        variables: { skip: revisionNodes.length },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult?.articleRevisions) {
+            return prev;
+          }
+
+          return {
+            ...prev,
+            articleRevisions: {
+              ...fetchMoreResult.articleRevisions,
+              nodes: [
+                ...(prev.articleRevisions?.nodes ?? []),
+                ...fetchMoreResult.articleRevisions.nodes,
+              ],
+            },
+          };
+        },
+      });
+    } finally {
+      setLoadingMoreRevisions(false);
+    }
+  }
+
+  const [
+    loadRevisionPreview,
+    { data: previewData, loading: isPreviewLoading },
+  ] = useArticleRevisionPreviewLazyQuery({ errorPolicy: 'all' });
+
+  function handlePreviewRevision(revisionId: string) {
+    setPreviewRevisionId(revisionId);
+    loadRevisionPreview({ variables: { id: revisionId } });
+  }
+
+  const previewRevision =
+    previewData?.articleRevision?.id === previewRevisionId ?
+      previewData?.articleRevision
+    : undefined;
 
   const isNotFound = articleData && !articleData.article;
   const isDisabled =
@@ -909,17 +955,22 @@ function ArticleEditor() {
         onClose={() => setVersionHistoryOpen(false)}
         loading={isRevisionsLoading && revisions.length === 0}
         revisions={revisions}
+        totalCount={revisionsData?.articleRevisions?.totalCount}
+        hasMore={!!revisionsData?.articleRevisions?.pageInfo?.hasNextPage}
+        loadingMore={isLoadingMoreRevisions}
+        onLoadMore={loadMoreRevisions}
         draftId={articleData?.article?.draft?.id}
         pendingId={articleData?.article?.pending?.id}
         publishedId={articleData?.article?.published?.id}
         restoringId={restoringRevisionId}
         canRestore={isAuthorized}
         onRestore={handleRestoreRevision}
-        onPreview={setPreviewRevisionId}
+        onPreview={handlePreviewRevision}
       />
 
       <RevisionContentPreview
-        open={!!previewRevision}
+        open={!!previewRevisionId}
+        loading={isPreviewLoading || !previewRevision}
         onClose={() => setPreviewRevisionId(null)}
         title={previewRevision?.title}
         subtitle={previewRevision?.preTitle || previewRevision?.lead}

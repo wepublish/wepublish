@@ -14,6 +14,9 @@
       "preview": "Preview",
       "previewTitle": "Version preview",
       "readOnly": "Read-only",
+      "loadMore": "Load more",
+      "showing": "Showing {{count}} of {{total}}",
+      "unknownAuthor": "Unknown",
       "state": {
         "published": "Currently published",
         "pending": "Scheduled",

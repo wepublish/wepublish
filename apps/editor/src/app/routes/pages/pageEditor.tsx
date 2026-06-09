@@ -13,7 +13,8 @@ import {
   useCreatePageMutation,
   useDiscardPageDraftMutation,
   usePageQuery,
-  usePageRevisionsQuery,
+  usePageRevisionListQuery,
+  usePageRevisionPreviewLazyQuery,
   usePublishPageMutation,
   useRestorePageRevisionMutation,
   useUpdatePageMutation,
@@ -110,6 +111,8 @@ const Tag = styled(RTag, {
   background-color: ${({ stateColor }) => stateColor};
 `;
 
+const REVISIONS_PAGE_SIZE = 20;
+
 function PageEditor() {
   const navigate = useNavigate();
   const params = useParams();
@@ -134,6 +137,7 @@ function PageEditor() {
   const [isVersionHistoryRequested, setVersionHistoryRequested] =
     useState(false);
   const [isDiscardDialogOpen, setDiscardDialogOpen] = useState(false);
+  const [isLoadingMoreRevisions, setLoadingMoreRevisions] = useState(false);
   const [previewRevisionId, setPreviewRevisionId] = useState<string | null>(
     null
   );
@@ -179,31 +183,73 @@ function PageEditor() {
   const {
     data: revisionsData,
     refetch: refetchRevisions,
+    fetchMore: fetchMoreRevisions,
     loading: isRevisionsLoading,
-  } = usePageRevisionsQuery({
+  } = usePageRevisionListQuery({
     errorPolicy: 'all',
     fetchPolicy: 'cache-and-network',
-    variables: { id: pageID! },
+    notifyOnNetworkStatusChange: true,
+    variables: { id: pageID!, take: REVISIONS_PAGE_SIZE, skip: 0 },
     skip: !pageID || !isVersionHistoryRequested,
   });
 
-  const allRevisions = revisionsData?.page?.revisions ?? [];
+  const revisionNodes = revisionsData?.pageRevisions?.nodes ?? [];
 
-  const revisions: VersionHistoryRevision[] = allRevisions.map(revision => ({
+  const revisions: VersionHistoryRevision[] = revisionNodes.map(revision => ({
     id: revision.id,
     createdAt: revision.createdAt,
     publishedAt: revision.publishedAt,
     archivedAt: revision.archivedAt,
     title: revision.title,
     subtitle: revision.description,
+    author: revision.user,
   }));
 
   const reloadRevisions = () =>
     isVersionHistoryRequested ? refetchRevisions() : Promise.resolve();
 
-  const previewRevision = allRevisions.find(
-    revision => revision.id === previewRevisionId
-  );
+  async function loadMoreRevisions() {
+    setLoadingMoreRevisions(true);
+
+    try {
+      await fetchMoreRevisions({
+        variables: { skip: revisionNodes.length },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult?.pageRevisions) {
+            return prev;
+          }
+
+          return {
+            ...prev,
+            pageRevisions: {
+              ...fetchMoreResult.pageRevisions,
+              nodes: [
+                ...(prev.pageRevisions?.nodes ?? []),
+                ...fetchMoreResult.pageRevisions.nodes,
+              ],
+            },
+          };
+        },
+      });
+    } finally {
+      setLoadingMoreRevisions(false);
+    }
+  }
+
+  const [
+    loadRevisionPreview,
+    { data: previewData, loading: isPreviewLoading },
+  ] = usePageRevisionPreviewLazyQuery({ errorPolicy: 'all' });
+
+  function handlePreviewRevision(revisionId: string) {
+    setPreviewRevisionId(revisionId);
+    loadRevisionPreview({ variables: { id: revisionId } });
+  }
+
+  const previewRevision =
+    previewData?.pageRevision?.id === previewRevisionId ?
+      previewData?.pageRevision
+    : undefined;
 
   const { t } = useTranslation();
 
@@ -751,17 +797,22 @@ function PageEditor() {
         onClose={() => setVersionHistoryOpen(false)}
         loading={isRevisionsLoading && revisions.length === 0}
         revisions={revisions}
+        totalCount={revisionsData?.pageRevisions?.totalCount}
+        hasMore={!!revisionsData?.pageRevisions?.pageInfo?.hasNextPage}
+        loadingMore={isLoadingMoreRevisions}
+        onLoadMore={loadMoreRevisions}
         draftId={pageData?.page?.draft?.id}
         pendingId={pageData?.page?.pending?.id}
         publishedId={pageData?.page?.published?.id}
         restoringId={restoringRevisionId}
         canRestore={isAuthorized}
         onRestore={handleRestoreRevision}
-        onPreview={setPreviewRevisionId}
+        onPreview={handlePreviewRevision}
       />
 
       <RevisionContentPreview
-        open={!!previewRevision}
+        open={!!previewRevisionId}
+        loading={isPreviewLoading || !previewRevision}
         onClose={() => setPreviewRevisionId(null)}
         title={previewRevision?.title}
         subtitle={previewRevision?.description}

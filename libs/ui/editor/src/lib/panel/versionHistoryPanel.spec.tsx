@@ -5,6 +5,7 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 
 import {
+  getAuthorName,
   getRevisionState,
   VersionHistory,
   VersionHistoryRevision,
@@ -186,5 +187,51 @@ describe('VersionHistory', () => {
     expect(onPreview).toHaveBeenCalledTimes(1);
     // first revision in the list is the draft
     expect(onPreview).toHaveBeenCalledWith('draft-1');
+  });
+
+  it('shows the author who made each change', () => {
+    renderPanel({
+      revisions: [{ ...published, author: { firstName: 'Jane', name: 'Doe' } }],
+      publishedId: 'pub-1',
+    });
+
+    expect(screen.getByText('Jane Doe')).toBeTruthy();
+  });
+
+  it('falls back to an unknown-author label when no author is set', () => {
+    renderPanel({ revisions: [published], publishedId: 'pub-1' });
+
+    expect(screen.getByText('versionHistory.unknownAuthor')).toBeTruthy();
+  });
+
+  it('does not render a load more control without more pages', () => {
+    renderPanel();
+
+    expect(screen.queryByText('versionHistory.loadMore')).toBeNull();
+  });
+
+  it('renders a load more control and triggers onLoadMore', () => {
+    const onLoadMore = jest.fn();
+    renderPanel({ hasMore: true, totalCount: 10, onLoadMore });
+
+    const loadMore = screen.getByText('versionHistory.loadMore');
+    fireEvent.click(loadMore);
+
+    expect(onLoadMore).toHaveBeenCalledTimes(1);
+    // "showing {count} of {total}" — count is the number of loaded revisions
+    expect(screen.getByText('versionHistory.showing:3')).toBeTruthy();
+    // header subtitle reflects the total, not the loaded count
+    expect(screen.getByText('versionHistory.subtitle:10')).toBeTruthy();
+  });
+});
+
+describe('getAuthorName', () => {
+  it('combines first name and name', () => {
+    expect(getAuthorName({ firstName: 'Jane', name: 'Doe' })).toBe('Jane Doe');
+  });
+
+  it('returns null when there is no author', () => {
+    expect(getAuthorName(null)).toBeNull();
+    expect(getAuthorName({})).toBeNull();
   });
 });

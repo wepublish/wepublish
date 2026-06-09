@@ -8,6 +8,7 @@ import {
   CreatePageInput,
   PageFilter,
   PageListArgs,
+  PageRevisionListArgs,
   PageSort,
   UpdatePageInput,
 } from './page.model';
@@ -425,17 +426,63 @@ export class PageService {
   }
 
   /**
-   * Returns every revision of a page (draft, pending, published and archived),
-   * ordered from newest to oldest. This is the full version history.
+   * Returns a paginated, lightweight slice of a page's revisions for the
+   * version history. Loading happens directly against the revisions table (not
+   * through the page) so that pages with a long history (e.g. a start page) can
+   * be paged through without fetching everything at once.
    */
-  async getRevisions(pageId: string) {
-    return this.prisma.pageRevision.findMany({
-      where: {
-        pageId,
+  async getPageRevisions({
+    pageId,
+    filter,
+    order = SortOrder.Descending,
+    take = 10,
+    skip,
+    cursorId,
+  }: PageRevisionListArgs) {
+    const where: Prisma.PageRevisionWhereInput = {
+      pageId,
+      ...(filter?.userId ? { userId: filter.userId } : {}),
+    };
+
+    const orderBy = {
+      createdAt: graphQLSortOrderToPrisma(order),
+    } satisfies Prisma.PageRevisionOrderByWithRelationInput;
+
+    const [totalCount, revisions] = await Promise.all([
+      this.prisma.pageRevision.count({ where }),
+      this.prisma.pageRevision.findMany({
+        where,
+        skip,
+        take: getMaxTake(take) + 1,
+        orderBy,
+        cursor: cursorId ? { id: cursorId } : undefined,
+      }),
+    ]);
+
+    const nodes = revisions.slice(0, getMaxTake(take));
+    const firstRevision = nodes[0];
+    const lastRevision = nodes[nodes.length - 1];
+
+    return {
+      nodes,
+      totalCount,
+      pageInfo: {
+        hasPreviousPage: Boolean(skip),
+        hasNextPage: revisions.length > nodes.length,
+        startCursor: firstRevision?.id,
+        endCursor: lastRevision?.id,
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
+    };
+  }
+
+  /**
+   * Returns a single revision with all of its content. Used to lazily load the
+   * full data of a past version (e.g. for the read-only preview), so the
+   * version history list itself can stay lightweight.
+   */
+  async getRevisionById(id: string) {
+    return this.prisma.pageRevision.findUnique({
+      where: { id },
     });
   }
 

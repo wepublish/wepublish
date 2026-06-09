@@ -260,13 +260,56 @@ mutation DeleteArticle($id: String!) {
   deleteArticle(id: $id)
 }
 
-query ArticleRevisions($id: String!) {
-  article(id: $id) {
-    id
+fragment ArticleRevisionMeta on ArticleRevision {
+  id
+  createdAt
+  publishedAt
+  archivedAt
+  preTitle
+  title
+  lead
 
-    revisions {
-      ...FullArticleRevision
+  user {
+    id
+    name
+    firstName
+  }
+}
+
+query ArticleRevisionList(
+  $id: String!
+  $take: Int
+  $skip: Int
+  $cursor: String
+  $filter: ArticleRevisionFilter
+  $order: SortOrder
+) {
+  articleRevisions(
+    articleId: $id
+    take: $take
+    skip: $skip
+    cursorId: $cursor
+    filter: $filter
+    order: $order
+  ) {
+    nodes {
+      ...ArticleRevisionMeta
     }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query ArticleRevisionPreview($id: String!) {
+  articleRevision(id: $id) {
+    ...FullArticleRevision
   }
 }
 

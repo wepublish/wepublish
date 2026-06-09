@@ -12,6 +12,8 @@ import {
   Page,
   PageListArgs,
   PageRevision,
+  PageRevisionListArgs,
+  PaginatedPageRevisions,
   PaginatedPages,
   UpdatePageInput,
 } from './page.model';
@@ -71,6 +73,23 @@ export class PageResolver {
     }
 
     throw new BadRequestException('Page id or slug required.');
+  }
+
+  @Permissions(CanGetPage)
+  @Query(() => PaginatedPageRevisions, {
+    description: `Returns a paginated list of revisions (version history) for a page.`,
+  })
+  public pageRevisions(@Args() args: PageRevisionListArgs) {
+    return this.pageService.getPageRevisions(args);
+  }
+
+  @Permissions(CanGetPage)
+  @Query(() => PageRevision, {
+    nullable: true,
+    description: `Returns a single page revision including its full content.`,
+  })
+  public pageRevision(@Args('id') id: string) {
+    return this.pageService.getRevisionById(id);
   }
 
   @Public()
@@ -207,12 +226,6 @@ export class PageResolver {
     const { published } = await this.pageRevisionsDataloader.load(pageId);
 
     return published;
-  }
-
-  @Permissions(CanGetPage)
-  @ResolveField(() => [PageRevision])
-  async revisions(@Parent() parent: PPage) {
-    return this.pageService.getRevisions(parent.id);
   }
 
   @ResolveField(() => String, { nullable: true })

@@ -7,6 +7,7 @@ import { Prisma, PrismaClient } from '@prisma/client';
 import {
   ArticleFilter,
   ArticleListArgs,
+  ArticleRevisionListArgs,
   ArticleSort,
   CreateArticleInput,
   UpdateArticleInput,
@@ -477,17 +478,63 @@ export class ArticleService {
   }
 
   /**
-   * Returns every revision of an article (draft, pending, published and
-   * archived), ordered from newest to oldest. This is the full version history.
+   * Returns a paginated, lightweight slice of an article's revisions for the
+   * version history. Loading happens directly against the revisions table (not
+   * through the article) so that articles with a long history (e.g. a start
+   * page) can be paged through without fetching everything at once.
    */
-  async getRevisions(articleId: string) {
-    return this.prisma.articleRevision.findMany({
-      where: {
-        articleId,
+  async getArticleRevisions({
+    articleId,
+    filter,
+    order = SortOrder.Descending,
+    take = 10,
+    skip,
+    cursorId,
+  }: ArticleRevisionListArgs) {
+    const where: Prisma.ArticleRevisionWhereInput = {
+      articleId,
+      ...(filter?.userId ? { userId: filter.userId } : {}),
+    };
+
+    const orderBy = {
+      createdAt: graphQLSortOrderToPrisma(order),
+    } satisfies Prisma.ArticleRevisionOrderByWithRelationInput;
+
+    const [totalCount, revisions] = await Promise.all([
+      this.prisma.articleRevision.count({ where }),
+      this.prisma.articleRevision.findMany({
+        where,
+        skip,
+        take: getMaxTake(take) + 1,
+        orderBy,
+        cursor: cursorId ? { id: cursorId } : undefined,
+      }),
+    ]);
+
+    const nodes = revisions.slice(0, getMaxTake(take));
+    const firstRevision = nodes[0];
+    const lastRevision = nodes[nodes.length - 1];
+
+    return {
+      nodes,
+      totalCount,
+      pageInfo: {
+        hasPreviousPage: Boolean(skip),
+        hasNextPage: revisions.length > nodes.length,
+        startCursor: firstRevision?.id,
+        endCursor: lastRevision?.id,
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
+    };
+  }
+
+  /**
+   * Returns a single revision with all of its content. Used to lazily load the
+   * full data of a past version (e.g. for the read-only preview), so the
+   * version history list itself can stay lightweight.
+   */
+  async getRevisionById(id: string) {
+    return this.prisma.articleRevision.findUnique({
+      where: { id },
     });
   }
 

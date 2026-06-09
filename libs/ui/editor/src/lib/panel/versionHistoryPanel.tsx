@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import {
+  Avatar,
   Box,
   Button,
   Chip,
@@ -25,6 +26,7 @@ import {
   MdClose,
   MdEdit,
   MdHistory,
+  MdPerson,
   MdPublic,
   MdRestore,
   MdSchedule,
@@ -38,6 +40,14 @@ const DATE_LOCALES: Record<string, Locale> = {
 };
 
 /**
+ * The user who created a revision, as needed to display authorship.
+ */
+export interface VersionHistoryAuthor {
+  name?: string | null;
+  firstName?: string | null;
+}
+
+/**
  * A single revision as needed to render the version history. Both article and
  * page revisions can be mapped to this shape.
  */
@@ -48,6 +58,24 @@ export interface VersionHistoryRevision {
   archivedAt?: string | null;
   title?: string | null;
   subtitle?: string | null;
+  author?: VersionHistoryAuthor | null;
+}
+
+export function getAuthorName(author?: VersionHistoryAuthor | null) {
+  if (!author) {
+    return null;
+  }
+
+  return [author.firstName, author.name].filter(Boolean).join(' ') || null;
+}
+
+function getAuthorInitials(name: string) {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(part => part[0]?.toUpperCase())
+    .join('');
 }
 
 export type RevisionState =
@@ -67,6 +95,10 @@ export interface VersionHistoryProps {
   loading?: boolean;
   restoringId?: string | null;
   canRestore?: boolean;
+  totalCount?: number;
+  hasMore?: boolean;
+  loadingMore?: boolean;
+  onLoadMore?: () => void;
   onRestore: (revisionId: string) => void | Promise<void>;
   onPreview?: (revisionId: string) => void;
 }
@@ -242,6 +274,10 @@ export function VersionHistory({
   loading = false,
   restoringId,
   canRestore = true,
+  totalCount,
+  hasMore = false,
+  loadingMore = false,
+  onLoadMore,
   onRestore,
   onPreview,
 }: VersionHistoryProps) {
@@ -289,7 +325,9 @@ export function VersionHistory({
               variant="body2"
               color="text.secondary"
             >
-              {t('versionHistory.subtitle', { count: revisions.length })}
+              {t('versionHistory.subtitle', {
+                count: totalCount ?? revisions.length,
+              })}
             </Typography>
           </Box>
 
@@ -403,6 +441,45 @@ export function VersionHistory({
                       <Box
                         sx={{
                           display: 'flex',
+                          alignItems: 'center',
+                          gap: 1,
+                          mt: 1,
+                        }}
+                      >
+                        <Avatar
+                          sx={{
+                            width: 22,
+                            height: 22,
+                            fontSize: 11,
+                            bgcolor: 'action.selected',
+                            color: 'text.secondary',
+                          }}
+                        >
+                          {(() => {
+                            const name = getAuthorName(revision.author);
+                            return name ?
+                                getAuthorInitials(name)
+                              : <MdPerson size={14} />;
+                          })()}
+                        </Avatar>
+
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {getAuthorName(revision.author) ??
+                            t('versionHistory.unknownAuthor')}
+                        </Typography>
+                      </Box>
+
+                      <Box
+                        sx={{
+                          display: 'flex',
                           justifyContent: 'space-between',
                           alignItems: 'center',
                           mt: 1,
@@ -449,6 +526,42 @@ export function VersionHistory({
                 );
               })}
             </Timeline>
+          )}
+
+          {!loading && hasMore && (
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 1,
+                pt: 1,
+              }}
+            >
+              <Button
+                fullWidth
+                variant="outlined"
+                disabled={loadingMore}
+                startIcon={
+                  loadingMore ? <CircularProgress size={14} /> : undefined
+                }
+                onClick={() => onLoadMore?.()}
+              >
+                {t('versionHistory.loadMore')}
+              </Button>
+
+              {totalCount != null && (
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                >
+                  {t('versionHistory.showing', {
+                    count: revisions.length,
+                    total: totalCount,
+                  })}
+                </Typography>
+              )}
+            </Box>
           )}
         </ScrollArea>
       </DrawerContent>

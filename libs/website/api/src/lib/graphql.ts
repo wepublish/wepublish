@@ -79,7 +79,6 @@ export type Article = HasOptionalPaywall & HasOptionalPeerLc & {
   previewUrl: Scalars['String'];
   published?: Maybe<ArticleRevision>;
   publishedAt?: Maybe<Scalars['DateTime']>;
-  revisions: Array<ArticleRevision>;
   shared: Scalars['Boolean'];
   slug?: Maybe<Scalars['String']>;
   tags: Array<Tag>;
@@ -126,7 +125,7 @@ export type ArticleNavigationLink = BaseNavigationLink & HasArticle & {
   type: NavigationLinkType;
 };
 
-export type ArticleRevision = HasBlockContent & {
+export type ArticleRevision = HasBlockContent & HasOptionalUserLc & {
   __typename?: 'ArticleRevision';
   archivedAt?: Maybe<Scalars['DateTime']>;
   authors: Array<Author>;
@@ -149,6 +148,12 @@ export type ArticleRevision = HasBlockContent & {
   socialMediaImageID?: Maybe<Scalars['String']>;
   socialMediaTitle?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
+  user?: Maybe<User>;
+  userId?: Maybe<Scalars['String']>;
+};
+
+export type ArticleRevisionFilter = {
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 export enum ArticleSort {
@@ -1302,6 +1307,11 @@ export type HasOptionalSubscription = {
 export type HasOptionalUser = {
   user?: Maybe<User>;
   userID?: Maybe<Scalars['String']>;
+};
+
+export type HasOptionalUserLc = {
+  user?: Maybe<User>;
+  userId?: Maybe<Scalars['String']>;
 };
 
 export type HasPage = {
@@ -3409,7 +3419,6 @@ export type Page = {
   previewUrl: Scalars['String'];
   published?: Maybe<PageRevision>;
   publishedAt?: Maybe<Scalars['DateTime']>;
-  revisions: Array<PageRevision>;
   slug?: Maybe<Scalars['String']>;
   tags: Array<Tag>;
   url: Scalars['String'];
@@ -3463,7 +3472,7 @@ export type PageNavigationLink = BaseNavigationLink & HasPage & {
   type: NavigationLinkType;
 };
 
-export type PageRevision = HasBlockContent & {
+export type PageRevision = HasBlockContent & HasOptionalUserLc & {
   __typename?: 'PageRevision';
   archivedAt?: Maybe<Scalars['DateTime']>;
   blocks: Array<BlockContent>;
@@ -3479,6 +3488,12 @@ export type PageRevision = HasBlockContent & {
   socialMediaImageID?: Maybe<Scalars['String']>;
   socialMediaTitle?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
+  user?: Maybe<User>;
+  userId?: Maybe<Scalars['String']>;
+};
+
+export type PageRevisionFilter = {
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 export enum PageSort {
@@ -3505,6 +3520,13 @@ export type PageTeaserInput = {
   pageID?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
+};
+
+export type PaginatedArticleRevisions = {
+  __typename?: 'PaginatedArticleRevisions';
+  nodes: Array<ArticleRevision>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
 };
 
 export type PaginatedArticles = {
@@ -3559,6 +3581,13 @@ export type PaginatedImages = {
 export type PaginatedMemberPlans = {
   __typename?: 'PaginatedMemberPlans';
   nodes: Array<MemberPlan>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedPageRevisions = {
+  __typename?: 'PaginatedPageRevisions';
+  nodes: Array<PageRevision>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -4164,6 +4193,10 @@ export type Query = {
   analyticsProviderSettings: Array<SettingAnalyticsProvider>;
   /** Returns an article by id or slug. */
   article: Article;
+  /** Returns a single article revision including its full content. */
+  articleRevision?: Maybe<ArticleRevision>;
+  /** Returns a paginated list of revisions (version history) for an article. */
+  articleRevisions: PaginatedArticleRevisions;
   /** Returns a paginated list of articles based on the filters given. */
   articles: PaginatedArticles;
   /** Get an author by ID or slug */
@@ -4315,6 +4348,10 @@ export type Query = {
   newSubscribers: Array<DashboardSubscription>;
   /** Returns an page by id or slug. */
   page: Page;
+  /** Returns a single page revision including its full content. */
+  pageRevision?: Maybe<PageRevision>;
+  /** Returns a paginated list of revisions (version history) for a page. */
+  pageRevisions: PaginatedPageRevisions;
   /** Returns a paginated list of pages based on the filters given. */
   pages: PaginatedPages;
   /** Returns a payment method by id */
@@ -4465,6 +4502,21 @@ export type QueryAnalyticsProviderSettingsArgs = {
 export type QueryArticleArgs = {
   id?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryArticleRevisionArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryArticleRevisionsArgs = {
+  articleId: Scalars['String'];
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<ArticleRevisionFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -4746,6 +4798,21 @@ export type QueryNewSubscribersArgs = {
 export type QueryPageArgs = {
   id?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryPageRevisionArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryPageRevisionsArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<PageRevisionFilter>;
+  order?: InputMaybe<SortOrder>;
+  pageId: Scalars['String'];
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -10461,6 +10528,10 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
     ],
     "HasOptionalUser": [
       "Comment"
+    ],
+    "HasOptionalUserLc": [
+      "ArticleRevision",
+      "PageRevision"
     ],
     "HasPage": [
       "PageNavigationLink"

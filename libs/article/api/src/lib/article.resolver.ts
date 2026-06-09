@@ -11,7 +11,9 @@ import {
   Article,
   ArticleListArgs,
   ArticleRevision,
+  ArticleRevisionListArgs,
   CreateArticleInput,
+  PaginatedArticleRevisions,
   PaginatedArticles,
   UpdateArticleInput,
 } from './article.model';
@@ -89,6 +91,23 @@ export class ArticleResolver {
     }
 
     throw new BadRequestException('Article id or slug required.');
+  }
+
+  @Permissions(CanGetArticle)
+  @Query(() => PaginatedArticleRevisions, {
+    description: `Returns a paginated list of revisions (version history) for an article.`,
+  })
+  public articleRevisions(@Args() args: ArticleRevisionListArgs) {
+    return this.articleService.getArticleRevisions(args);
+  }
+
+  @Permissions(CanGetArticle)
+  @Query(() => ArticleRevision, {
+    nullable: true,
+    description: `Returns a single article revision including its full content.`,
+  })
+  public articleRevision(@Args('id') id: string) {
+    return this.articleService.getRevisionById(id);
   }
 
   @Public()
@@ -256,12 +275,6 @@ export class ArticleResolver {
     const { published } = await this.articleRevisionsDataloader.load(articleId);
 
     return published;
-  }
-
-  @Permissions(CanGetArticle)
-  @ResolveField(() => [ArticleRevision])
-  async revisions(@Parent() parent: PArticle) {
-    return this.articleService.getRevisions(parent.id);
   }
 
   @ResolveField(() => String, { nullable: true })

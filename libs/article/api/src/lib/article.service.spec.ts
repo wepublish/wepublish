@@ -54,6 +54,7 @@ describe('ArticleService', () => {
         findUnique: jest.fn(),
         findFirst: jest.fn(),
         findMany: jest.fn(),
+        count: jest.fn(),
       },
       articleTrackingPixels: {
         createMany: jest.fn(),
@@ -506,14 +507,69 @@ describe('ArticleService', () => {
       ...overrides,
     });
 
-    it('should return all revisions ordered from newest to oldest', async () => {
+    it('should return a paginated, newest-first slice of revisions', async () => {
+      prismaMock.articleRevision.count?.mockResolvedValue(3);
+      prismaMock.articleRevision.findMany?.mockResolvedValue([
+        { id: 'r1' },
+        { id: 'r2' },
+      ]);
+
+      const result = await service.getArticleRevisions({
+        articleId: '1234',
+        take: 2,
+        skip: 0,
+      });
+
+      const findManyArg = prismaMock.articleRevision.findMany?.mock.calls[0][0];
+      expect(findManyArg.where).toEqual({ articleId: '1234' });
+      expect(findManyArg.orderBy).toEqual({ createdAt: 'desc' });
+      expect(result.totalCount).toBe(3);
+      expect(result.nodes).toHaveLength(2);
+      expect(result.pageInfo.hasNextPage).toBe(false);
+    });
+
+    it('should detect a next page by over-fetching one record', async () => {
+      prismaMock.articleRevision.count?.mockResolvedValue(5);
+      prismaMock.articleRevision.findMany?.mockResolvedValue([
+        { id: 'r1' },
+        { id: 'r2' },
+        { id: 'r3' },
+      ]);
+
+      const result = await service.getArticleRevisions({
+        articleId: '1234',
+        take: 2,
+        skip: 0,
+      });
+
+      expect(result.nodes).toHaveLength(2);
+      expect(result.pageInfo.hasNextPage).toBe(true);
+      expect(result.pageInfo.endCursor).toBe('r2');
+    });
+
+    it('should filter revisions by user when a filter is given', async () => {
+      prismaMock.articleRevision.count?.mockResolvedValue(0);
       prismaMock.articleRevision.findMany?.mockResolvedValue([]);
 
-      await service.getRevisions('1234');
+      await service.getArticleRevisions({
+        articleId: '1234',
+        filter: { userId: 'user-1' },
+        take: 10,
+        skip: 0,
+      });
 
-      expect(prismaMock.articleRevision.findMany?.mock.calls[0][0]).toEqual({
-        where: { articleId: '1234' },
-        orderBy: { createdAt: 'desc' },
+      expect(
+        prismaMock.articleRevision.findMany?.mock.calls[0][0].where
+      ).toEqual({ articleId: '1234', userId: 'user-1' });
+    });
+
+    it('should load a single revision by id (for preview)', async () => {
+      prismaMock.articleRevision.findUnique?.mockResolvedValue({ id: 'r1' });
+
+      await service.getRevisionById('r1');
+
+      expect(prismaMock.articleRevision.findUnique?.mock.calls[0][0]).toEqual({
+        where: { id: 'r1' },
       });
     });
 
