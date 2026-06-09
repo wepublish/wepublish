@@ -24,7 +24,7 @@ import {
 import { WebsiteProvider } from '@wepublish/website';
 import { previewLink } from '@wepublish/website/admin';
 import {
-  createWithV1ApiClient,
+  createWithApiClient,
   SessionWithTokenWithoutUser,
 } from '@wepublish/website/api';
 import { WebsiteBuilderProvider } from '@wepublish/website/builder';
@@ -39,6 +39,7 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 
 import deOverriden from '../locales/deOverriden.json';
+import { MunotgloeggliBaseTeaser } from '../src/components/website-builder-overwrites/blocks/teaser';
 import theme from '../src/theme';
 
 setDefaultOptions({
@@ -102,6 +103,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
             elements={{ Link: NextWepublishLink }}
             date={{ format: dateFormatter }}
             meta={{ siteTitle }}
+            blocks={{ BaseTeaser: MunotgloeggliBaseTeaser }}
           >
             <ThemeProvider theme={theme}>
               <CssBaseline />
@@ -200,7 +202,7 @@ function CustomApp({ Component, pageProps, emotionCache }: CustomAppProps) {
 }
 
 const { publicRuntimeConfig } = getConfig();
-const withApollo = createWithV1ApiClient(getApiUrl(), [authLink, previewLink]);
+const withApollo = createWithApiClient(getApiUrl(), [authLink, previewLink]);
 const ConnectedApp = withApollo(
   withBuilderRouter(
     withErrorSnackbar(

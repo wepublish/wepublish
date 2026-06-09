@@ -389,10 +389,12 @@ const TeaserContent = ({
   className,
   children,
   target,
+  title,
 }: PropsWithChildren<{
   href?: string;
   className?: string;
   target?: string;
+  title: string | null | undefined;
 }>) => {
   const {
     elements: { Link },
@@ -406,6 +408,7 @@ const TeaserContent = ({
         href={href}
         target={target}
         css={stretchToParentHeight}
+        aria-label={title ?? ''}
       >
         <TeaserContentWrapper className={className}>
           {children}
@@ -475,6 +478,7 @@ export const BaseTeaser = ({
   return (
     <TeaserWrapper {...alignment}>
       <TeaserContent
+        title={title}
         href={href}
         target={target}
         className={className}

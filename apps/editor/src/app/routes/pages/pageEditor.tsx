@@ -262,7 +262,11 @@ function PageEditor() {
     isRestoring ||
     isDiscarding ||
     isNotFound;
-  const canPreview = Boolean(pageData?.page?.draft);
+  const canPreview = Boolean(
+    pageData?.page?.draft ||
+      pageData?.page?.published ||
+      pageData?.page?.pending
+  );
 
   const [hasChanged, setChanged] = useState(false);
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged);
@@ -481,7 +485,7 @@ function PageEditor() {
           header={t('pageEditor.overview.pageDraftSaved')}
           duration={2000}
         />,
-        { placement: 'topEnd' }
+        { placement: 'bottomEnd' }
       );
       await Promise.all([refetch({ id: pageID }), reloadRevisions()]);
     } else {
@@ -497,7 +501,7 @@ function PageEditor() {
           header={t('pageEditor.overview.pageDraftCreated')}
           duration={2000}
         />,
-        { placement: 'topEnd' }
+        { placement: 'bottomEnd' }
       );
     }
   }
@@ -539,7 +543,7 @@ function PageEditor() {
         )}
         duration={2000}
       />,
-      { placement: 'topEnd' }
+      { placement: 'bottomEnd' }
     );
   }
 

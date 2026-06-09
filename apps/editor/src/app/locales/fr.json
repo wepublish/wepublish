@@ -914,12 +914,52 @@
     "mailTemplates": {
       "availableTemplates": "Modèles de courriels disponibles",
       "content": "Contenu",
+      "create": "Créer un modèle",
       "description": "Description",
       "explanation": "Tu peux utiliser ces modèles de {{provider}} pour envoyer des notifications..",
       "name": "Nom",
       "status": "Statut",
       "synchronize": "Synchroniser les modèles",
-      "view": "Voir sur {{provider}}"
+      "view": "Voir sur {{provider}}",
+      "edit": {
+        "createHeader": "Créer un modèle de courriel",
+        "editHeader": "Modifier le modèle de courriel",
+        "edit": "Modifier",
+        "subject": "Objet",
+        "subjectHint": "Objet du courriel. Les variables sont autorisées (p. ex. *|user_firstName|*). Enregistré par le fournisseur de messagerie (Mailchimp/Mandrill).",
+        "loading": "Chargement …",
+        "save": "Enregistrer",
+        "saveAndClose": "Enregistrer & fermer",
+        "nameRequired": "Veuillez saisir un nom.",
+        "delete": "Supprimer",
+        "deleteTitle": "Supprimer le modèle",
+        "deleteConfirm": "Veux-tu vraiment supprimer le modèle « {{name}} » ? Cette action est irréversible.",
+        "cancel": "Annuler",
+        "close": "Fermer"
+      },
+      "editor": {
+        "undo": "Annuler",
+        "redo": "Rétablir",
+        "bold": "Gras",
+        "italic": "Italique",
+        "underline": "Souligné",
+        "strikethrough": "Barré",
+        "bulletedList": "Liste à puces",
+        "numberedList": "Liste numérotée",
+        "horizontalRule": "Ligne horizontale",
+        "link": "Insérer un lien",
+        "linkPrompt": "Saisir l'URL",
+        "placeholder": "Rédige ici le contenu du courriel …",
+        "placeholders": "Variables",
+        "searchPlaceholders": "Rechercher des variables",
+        "generalPlaceholders": "Général (toujours disponible)",
+        "preview": "Aperçu",
+        "visual": "Visuel",
+        "desktop": "Ordinateur",
+        "tablet": "Tablette",
+        "mobile": "Mobile",
+        "exampleValue": "Valeur d'exemple : {{example}}"
+      }
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "pas d'envoi mail"
@@ -1677,6 +1717,7 @@
         "memberPlans": "Plans d'abonnement",
         "filter": "Filtrer les revenus",
         "additionalRevenue": "Revenus externes (par ex. via virement bancaire direct)",
+        "additionalSubscriptions": "Abonnements externes (par ex. via virement bancaire direct)",
         "selectMemberPlans": "Choisir des plans d'abonnement",
         "countSubscriptionsFrom": "Inclure uniquement les abonnements payés à partir de la date",
         "countSubscriptionsUntil": "Inclure uniquement les abonnements payés jusqu'à la date",
@@ -1692,6 +1733,7 @@
         "title": "Titre",
         "description": "Description",
         "amount": "Montant cible",
+        "amountSubscriptions": "Nombre d'abonnements cible",
         "remove": "Supprimer",
         "add": "Ajouter un objectif"
       }
@@ -1821,6 +1863,32 @@
         "active": "Actif",
         "memberPlans": "Plans d’abonnement",
         "anyMemberPlan": "Tous les plans d’abonnement"
+      }
+    },
+    "voucher": {
+      "navbar": "Bon de réduction",
+      "form": {
+        "createTitle": "Créer un bon de réduction",
+        "editTitle": "Modifier le bon de réduction \"{{ voucher }}\"",
+        "code": "Code",
+        "discountPercent": "Réduction (%)",
+        "validFrom": "Valable dès le",
+        "validTo": "Valable jusqu'au",
+        "memberPlan": "Plan d'abonnement"
+      },
+      "overview": {
+        "title": "Bons de réduction",
+        "createVoucher": "Nouveau bon de réduction",
+        "active": "Actif",
+        "valid": "Valide",
+        "code": "Code",
+        "discountPercent": "Réduction",
+        "memberPlan": "Plan d'abonnement",
+        "validFrom": "Valable dès le",
+        "validTo": "Valable jusqu'au",
+        "areYouSure": "Êtes-vous sûr(e) ?",
+        "areYouSureBody": "Le bon de réduction \"{{ voucher }}\" sera définitivement supprimé et cette action est irréversible.",
+        "areYouSureConfirmation": "Supprimer le bon de réduction"
       }
     },
     "paymentMethodEditPanel": {

@@ -675,6 +675,11 @@ input CreateExternalAppInput {
   url: String!
 }
 
+type CreateSubscriptionInfo {
+  discountPercent: Float
+  voucherValid: Boolean
+}
+
 type Crowdfunding {
   activeGoal: CrowdfundingGoalWithProgress
   additionalRevenue: Float
@@ -1185,7 +1190,11 @@ interface HasImageLc {
 interface HasMemberPlan {
   memberPlan: MemberPlan!
   memberPlanID: String!
-  memberplan: MemberPlan
+}
+
+interface HasMemberPlanLc {
+  memberPlan: MemberPlan!
+  memberPlanId: String!
 }
 
 interface HasOneBlockContent {
@@ -1536,8 +1545,21 @@ enum LoginStatus {
   UNSUBSCRIBED
 }
 
+type MailPlaceholderGroupModel {
+  event: String!
+  placeholders: [MailPlaceholderModel!]!
+}
+
+type MailPlaceholderModel {
+  example: String!
+  key: String!
+}
+
 type MailProviderModel {
   name: String!
+
+  """Provider type (e.g. MAILCHIMP, MAILGUN, SLACK)"""
+  type: String
 }
 
 enum MailProviderType {
@@ -1546,12 +1568,33 @@ enum MailProviderType {
   SLACK
 }
 
+type MailTemplateContentModel {
+  html: String!
+  subject: String
+}
+
+input MailTemplateCreateInput {
+  description: String
+  html: String!
+  name: String!
+  subject: String
+}
+
 type MailTemplateRef {
   id: String!
   name: String!
 }
 
+input MailTemplateUpdateInput {
+  description: String
+  html: String!
+  name: String!
+  subject: String
+}
+
 type MailTemplateWithUrlAndStatusModel {
+  """HTML content of the template fetched from the mail provider"""
+  content: MailTemplateContentModel!
   description: String
   externalMailTemplateId: String!
   id: String!
@@ -1726,6 +1769,7 @@ type Mutation {
 
   """Returns a JWT that is valid for 1min for the current logged in user."""
   createJWTForWebsiteLogin: SessionWithToken!
+  createMailTemplate(input: MailTemplateCreateInput!): MailTemplateWithUrlAndStatusModel!
 
   """Creates a new memberplan."""
   createMemberPlan(active: Boolean!, amountPerMonthMax: Int, amountPerMonthMin: Int!, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!]!, confirmationPageId: String, currency: Currency!, description: RichText, extendable: Boolean!, externalReward: String, failPageId: String, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String!, productType: ProductType!, shortDescription: RichText, slug: String!, successPageId: String, tags: [String!]): MemberPlan!
@@ -1812,12 +1856,15 @@ type Mutation {
   createUserRole(description: String, name: String!, permissionIDs: [String!]!): UserRole!
 
   """Allows authenticated users to create additional subscriptions"""
-  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String): Payment!
+  createUserSubscription(autoRenew: Boolean!, deactivateSubscriptionId: String, failureURL: String, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], successURL: String, voucher: String): Payment!
 
   """
   Allows guests and authenticated users to create additional subscriptions
   """
-  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String): Boolean!
+  createUserSubscriptionWithConfirmation(autoRenew: Boolean!, memberPlanID: String, memberPlanSlug: Slug, monthlyAmount: Int!, paymentMethodID: String, paymentMethodSlug: Slug, paymentPeriodicity: PaymentPeriodicity!, subscriptionProperties: [PropertyInput!], userId: String, voucher: String): Boolean!
+
+  """Creates a new voucher."""
+  createVoucher(code: String!, discountPercent: Int!, memberPlanId: String!, validFrom: DateTime!, validTo: DateTime!): Voucher!
 
   """Deletes all sync errors for a config so all contacts will be retried."""
   deleteAllMailchimpSyncErrors(configId: String!): Boolean!
@@ -1853,6 +1900,7 @@ type Mutation {
 
   """Deletes an existing invoice."""
   deleteInvoice(id: String!): Invoice!
+  deleteMailTemplate(id: ID!): MailTemplateWithUrlAndStatusModel!
 
   """Deletes a single sync error so the contact will be retried."""
   deleteMailchimpSyncError(id: String!): Boolean!
@@ -1913,6 +1961,9 @@ type Mutation {
 
   """Deletes an existing userrole."""
   deleteUserRole(id: String!): UserRole!
+
+  """Deletes an existing voucher."""
+  deleteVoucher(id: String!): Voucher!
 
   """
   Discards the current draft and reverts to the latest published revision.
@@ -2108,13 +2159,14 @@ type Mutation {
   updateExternalApp(description: String, icon: String, id: String!, name: String, target: ExternalAppsTarget, url: String): ExternalApp!
 
   """Updates an existing image."""
-  updateImage(description: String, filename: String, focalPointX: Float, focalPointY: Float, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
+  updateImage(description: String, filename: String, focalPointX: Float = 0.5, focalPointY: Float = 0.5, id: String!, license: String, link: String, source: String, tags: [String!], title: String): Image!
 
   """Updates an existing invoice."""
   updateInvoice(currency: Currency, description: String, dueAt: DateTime, id: String!, items: [InvoiceItemInput!], mail: String, manuallySetAsPaidByUserId: String, scheduledDeactivationAt: DateTime, subscriptionID: String): Invoice!
 
   """Updates an existing mail provider setting."""
   updateMailProviderSetting(apiKey: String, fromAddress: String, id: String, mailchimp_baseURL: String, mailgun_baseDomain: String, mailgun_mailDomain: String, name: String, replyToAddress: String, slack_webhookURL: String, webhookEndpointSecret: String): SettingMailProvider!
+  updateMailTemplate(id: ID!, input: MailTemplateUpdateInput!): MailTemplateWithUrlAndStatusModel!
 
   """Updates an existing memberplan."""
   updateMemberPlan(active: Boolean, amountPerMonthMax: Int, amountPerMonthMin: Int, amountPerMonthTarget: Int, availablePaymentMethods: [AvailablePaymentMethodInput!], confirmationPageId: String, currency: Currency, description: RichText, extendable: Boolean, externalReward: String, failPageId: String, id: String!, imageID: String, maxCount: Int, migrateToTargetPaymentMethodID: String, name: String, productType: ProductType, shortDescription: RichText, slug: String, successPageId: String, tags: [String!]): MemberPlan!
@@ -2192,6 +2244,9 @@ type Mutation {
   """
   updateUserSubscription(id: String!, input: UpdateUserSubscriptionInput!): PublicSubscription
 
+  """Updates an existing voucher."""
+  updateVoucher(code: String, discountPercent: Int, id: String!, memberPlanId: String, validFrom: DateTime, validTo: DateTime): Voucher!
+
   """"""
   upgradeUserSubscription(failureURL: String, memberPlanId: String!, monthlyAmount: Int!, paymentMethodId: String!, subscriptionId: String!, successURL: String): Payment!
 
@@ -2199,10 +2254,10 @@ type Mutation {
   uploadDocument(description: String, file: Upload!, filename: String, title: String): Document!
 
   """Uploads a new image."""
-  uploadImage(description: String, file: Upload!, filename: String, focalPointX: Float!, focalPointY: Float!, license: String, link: String, source: String, tags: [String!]!, title: String): Image!
+  uploadImage(description: String, file: Upload!, filename: String, focalPointX: Float! = 0.5, focalPointY: Float! = 0.5, license: String, link: String, source: String, tags: [String!]!, title: String): Image!
 
   """This mutation allows to upload and update the user's profile image."""
-  uploadUserProfileImage(description: String, file: Upload!, filename: String, focalPointX: Float!, focalPointY: Float!, license: String, link: String, source: String, tags: [String!]!, title: String): SensitiveDataUser
+  uploadUserProfileImage(description: String, file: Upload!, filename: String, focalPointX: Float! = 0.5, focalPointY: Float! = 0.5, license: String, link: String, source: String, tags: [String!]!, title: String): SensitiveDataUser
 
   """
   This mutation allows to vote on a poll (or update one's decision). Supports logged in and anonymous
@@ -2449,6 +2504,12 @@ type PaginatedTags {
 
 type PaginatedUserRoles {
   nodes: [UserRole!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PaginatedVouchers {
+  nodes: [Voucher!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -2937,7 +2998,6 @@ type PublicSubscription implements HasMemberPlan & HasPaymentMethod & HasUser {
   isActive: Boolean!
   memberPlan: MemberPlan!
   memberPlanID: String!
-  memberplan: MemberPlan
   modifiedAt: DateTime!
   monthlyAmount: Int!
   paidUntil: DateTime
@@ -3038,6 +3098,11 @@ type Query {
   "\n      Returns all consents.\n    "
   consents(filter: ConsentFilter): [Consent!]!
 
+  """
+  Gives the user some information about the subscription they are about to create
+  """
+  createSubscriptionInfo(memberPlanId: String!, voucher: String): CreateSubscriptionInfo!
+
   """Get a single crowdfunding by id"""
   crowdfunding(id: String!): Crowdfunding!
 
@@ -3106,6 +3171,12 @@ type Query {
 
   """Returns all mail provider settings."""
   mailProviderSettings(filter: SettingMailProviderFilter): [SettingMailProvider!]!
+
+  """Return a single mail template"""
+  mailTemplate(id: ID!): MailTemplateWithUrlAndStatusModel!
+
+  """Return all available mail placeholders grouped by event"""
+  mailTemplatePlaceholders: [MailPlaceholderGroupModel!]!
 
   """Return all mail templates"""
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
@@ -3334,6 +3405,30 @@ type Query {
     take: Int! = 10
   ): PaginatedSensitiveDataUsers!
   versionInformation: VersionInformation!
+
+  """Returns an voucher by id or voucher."""
+  voucher(id: String!): Voucher!
+
+  """This query returns a list of vouchers"""
+  vouchers(
+    """Cursor for pagination"""
+    cursorId: String
+
+    """Filter for vouchers"""
+    filter: VoucherFilter
+
+    """Sort order"""
+    order: SortOrder = Descending
+
+    """Number of items to skip"""
+    skip: Int! = 0
+
+    """Field to sort by"""
+    sort: VoucherSort! = CreatedAt
+
+    """Number of items to fetch"""
+    take: Int! = 10
+  ): PaginatedVouchers!
 }
 
 type QuoteBlock implements BaseBlock & HasImage {
@@ -4293,6 +4388,30 @@ input VimeoVideoBlockInput {
 
 """A valid vote value"""
 scalar VoteValue
+
+type Voucher implements HasMemberPlanLc {
+  code: String!
+  createdAt: DateTime!
+  discountPercent: Int!
+  id: String!
+  memberPlan: MemberPlan!
+  memberPlanId: String!
+  modifiedAt: DateTime!
+  validFrom: DateTime!
+  validTo: DateTime!
+}
+
+input VoucherFilter {
+  from: DateTime
+  memberPlans: [String!]
+  to: DateTime
+}
+
+enum VoucherSort {
+  CreatedAt
+  Discount
+  ModifiedAt
+}
 
 type YouTubeVideoBlock implements BaseBlock {
   blockStyle: String

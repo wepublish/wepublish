@@ -532,6 +532,30 @@ export const CanCancelSubscription: Permission = {
   deprecated: false,
 };
 
+export const CanGetVoucher: Permission = {
+  id: 'CAN_GET_VOUCHER',
+  description: 'Allows to get a voucher',
+  deprecated: false,
+};
+
+export const CanCreateVoucher: Permission = {
+  id: 'CAN_CREATE_VOUCHER',
+  description: 'Allows to create a voucher',
+  deprecated: false,
+};
+
+export const CanUpdateVoucher: Permission = {
+  id: 'CAN_UPDATE_VOUCHER',
+  description: 'Allows to update a voucher',
+  deprecated: false,
+};
+
+export const CanDeleteVoucher: Permission = {
+  id: 'CAN_DELETE_VOUCHER',
+  description: 'Allows to delete a voucher',
+  deprecated: false,
+};
+
 export const CanLoginAsOtherUser: Permission = {
   id: 'CAN_LOGIN_AS_OTHER_USER',
   description: 'Allows to login as other user',
@@ -760,6 +784,24 @@ export const CanGetMailTemplates: Permission = {
 export const CanSyncMailTemplates: Permission = {
   id: 'CAN_SYNC_MAIL-TEMPLATES',
   description: 'Allowed to synchronize mail templates from mail provider.',
+  deprecated: false,
+};
+
+export const CanCreateMailTemplates: Permission = {
+  id: 'CAN_CREATE_MAIL-TEMPLATES',
+  description: 'Allows to create mail templates.',
+  deprecated: false,
+};
+
+export const CanUpdateMailTemplates: Permission = {
+  id: 'CAN_UPDATE_MAIL-TEMPLATES',
+  description: 'Allows to edit and save mail templates.',
+  deprecated: false,
+};
+
+export const CanDeleteMailTemplates: Permission = {
+  id: 'CAN_DELETE_MAIL-TEMPLATES',
+  description: 'Allows to delete mail templates.',
   deprecated: false,
 };
 
@@ -1146,6 +1188,10 @@ export const AllPermissions: Permission[] = [
   CanGetSubscription,
   CanGetSubscriptions,
   CanDeleteSubscription,
+  CanGetVoucher,
+  CanCreateVoucher,
+  CanUpdateVoucher,
+  CanDeleteVoucher,
   CanLoginAsOtherUser,
   CanGetSettings,
   CanUpdateSettings,
@@ -1178,6 +1224,9 @@ export const AllPermissions: Permission[] = [
   CanGetMailTemplates,
   CanGetPeriodicJobLog,
   CanSyncMailTemplates,
+  CanCreateMailTemplates,
+  CanUpdateMailTemplates,
+  CanDeleteMailTemplates,
   CanGetSystemMails,
   CanUpdateSystemMails,
   CanTestSystemMails,

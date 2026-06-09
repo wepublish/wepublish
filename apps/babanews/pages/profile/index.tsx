@@ -9,8 +9,8 @@ import {
   withAuthGuard,
 } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
-  getV1ApiClient,
+  addClientCacheToProps,
+  getApiClient,
   MeDocument,
   NavigationListDocument,
 } from '@wepublish/website/api';
@@ -41,7 +41,7 @@ export { GuardedProfile as default };
   if (typeof window !== 'undefined') {
     return {};
   }
-  const client = getV1ApiClient(getApiUrl(), [
+  const client = getApiClient(getApiUrl(), [
     ssrAuthLink(
       async () => (await getSessionTokenProps(ctx)).sessionToken?.token
     ),
@@ -62,7 +62,7 @@ export { GuardedProfile as default };
     ]);
   }
 
-  const props = addClientCacheToV1Props(client, sessionProps);
+  const props = addClientCacheToProps(client, sessionProps);
 
   return props;
 };

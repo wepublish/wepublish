@@ -783,6 +783,12 @@ export type CreateExternalAppInput = {
   url: Scalars['String'];
 };
 
+export type CreateSubscriptionInfo = {
+  __typename?: 'CreateSubscriptionInfo';
+  discountPercent?: Maybe<Scalars['Float']>;
+  voucherValid?: Maybe<Scalars['Boolean']>;
+};
+
 export type Crowdfunding = {
   __typename?: 'Crowdfunding';
   activeGoal?: Maybe<CrowdfundingGoalWithProgress>;
@@ -1314,7 +1320,11 @@ export type HasImageLc = {
 export type HasMemberPlan = {
   memberPlan: MemberPlan;
   memberPlanID: Scalars['String'];
-  memberplan?: Maybe<MemberPlan>;
+};
+
+export type HasMemberPlanLc = {
+  memberPlan: MemberPlan;
+  memberPlanId: Scalars['String'];
 };
 
 export type HasOneBlockContent = {
@@ -1676,9 +1686,23 @@ export enum LoginStatus {
   Unsubscribed = 'UNSUBSCRIBED',
 }
 
+export type MailPlaceholderGroupModel = {
+  __typename?: 'MailPlaceholderGroupModel';
+  event: Scalars['String'];
+  placeholders: Array<MailPlaceholderModel>;
+};
+
+export type MailPlaceholderModel = {
+  __typename?: 'MailPlaceholderModel';
+  example: Scalars['String'];
+  key: Scalars['String'];
+};
+
 export type MailProviderModel = {
   __typename?: 'MailProviderModel';
   name: Scalars['String'];
+  /** Provider type (e.g. MAILCHIMP, MAILGUN, SLACK) */
+  type?: Maybe<Scalars['String']>;
 };
 
 export enum MailProviderType {
@@ -1687,14 +1711,36 @@ export enum MailProviderType {
   Slack = 'SLACK',
 }
 
+export type MailTemplateContentModel = {
+  __typename?: 'MailTemplateContentModel';
+  html: Scalars['String'];
+  subject?: Maybe<Scalars['String']>;
+};
+
+export type MailTemplateCreateInput = {
+  description?: InputMaybe<Scalars['String']>;
+  html: Scalars['String'];
+  name: Scalars['String'];
+  subject?: InputMaybe<Scalars['String']>;
+};
+
 export type MailTemplateRef = {
   __typename?: 'MailTemplateRef';
   id: Scalars['String'];
   name: Scalars['String'];
 };
 
+export type MailTemplateUpdateInput = {
+  description?: InputMaybe<Scalars['String']>;
+  html: Scalars['String'];
+  name: Scalars['String'];
+  subject?: InputMaybe<Scalars['String']>;
+};
+
 export type MailTemplateWithUrlAndStatusModel = {
   __typename?: 'MailTemplateWithUrlAndStatusModel';
+  /** HTML content of the template fetched from the mail provider */
+  content: MailTemplateContentModel;
   description?: Maybe<Scalars['String']>;
   externalMailTemplateId: Scalars['String'];
   id: Scalars['String'];
@@ -1855,6 +1901,7 @@ export type Mutation = {
   createJWTForUser: SessionWithToken;
   /** Returns a JWT that is valid for 1min for the current logged in user. */
   createJWTForWebsiteLogin: SessionWithToken;
+  createMailTemplate: MailTemplateWithUrlAndStatusModel;
   /** Creates a new memberplan. */
   createMemberPlan: MemberPlan;
   /** Creates a new navigation. */
@@ -1906,6 +1953,8 @@ export type Mutation = {
   createUserSubscription: Payment;
   /** Allows guests and authenticated users to create additional subscriptions */
   createUserSubscriptionWithConfirmation: Scalars['Boolean'];
+  /** Creates a new voucher. */
+  createVoucher: Voucher;
   /** Deletes all sync errors for a config so all contacts will be retried. */
   deleteAllMailchimpSyncErrors: Scalars['Boolean'];
   /** Deletes an article. */
@@ -1934,6 +1983,7 @@ export type Mutation = {
   deleteImage: Scalars['String'];
   /** Deletes an existing invoice. */
   deleteInvoice: Invoice;
+  deleteMailTemplate: MailTemplateWithUrlAndStatusModel;
   /** Deletes a single sync error so the contact will be retried. */
   deleteMailchimpSyncError: Scalars['Boolean'];
   /** Deletes an existing memberplan. */
@@ -1979,6 +2029,8 @@ export type Mutation = {
   deleteUserConsent: UserConsent;
   /** Deletes an existing userrole. */
   deleteUserRole: UserRole;
+  /** Deletes an existing voucher. */
+  deleteVoucher: Voucher;
   /** Discards the current draft and reverts to the latest published revision. */
   discardArticleDraft: Article;
   /** Discards the current draft and reverts to the latest published revision. */
@@ -2092,6 +2144,7 @@ export type Mutation = {
   updateInvoice: Invoice;
   /** Updates an existing mail provider setting. */
   updateMailProviderSetting: SettingMailProvider;
+  updateMailTemplate: MailTemplateWithUrlAndStatusModel;
   /** Updates an existing memberplan. */
   updateMemberPlan: MemberPlan;
   /** Updates an existing navigation. */
@@ -2145,6 +2198,8 @@ export type Mutation = {
   updateUserRole: UserRole;
   /** This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription. Updating user subscriptions will set deactivation to null */
   updateUserSubscription?: Maybe<PublicSubscription>;
+  /** Updates an existing voucher. */
+  updateVoucher: Voucher;
   upgradeUserSubscription: Payment;
   /** Uploads a new document. */
   uploadDocument: Document;
@@ -2284,6 +2339,10 @@ export type MutationCreateInvoiceArgs = {
 export type MutationCreateJwtForUserArgs = {
   expiresInMinutes: Scalars['Float'];
   userId: Scalars['String'];
+};
+
+export type MutationCreateMailTemplateArgs = {
+  input: MailTemplateCreateInput;
 };
 
 export type MutationCreateMemberPlanArgs = {
@@ -2488,6 +2547,7 @@ export type MutationCreateUserSubscriptionArgs = {
   paymentPeriodicity: PaymentPeriodicity;
   subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
   successURL?: InputMaybe<Scalars['String']>;
+  voucher?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationCreateUserSubscriptionWithConfirmationArgs = {
@@ -2500,6 +2560,15 @@ export type MutationCreateUserSubscriptionWithConfirmationArgs = {
   paymentPeriodicity: PaymentPeriodicity;
   subscriptionProperties?: InputMaybe<Array<PropertyInput>>;
   userId?: InputMaybe<Scalars['String']>;
+  voucher?: InputMaybe<Scalars['String']>;
+};
+
+export type MutationCreateVoucherArgs = {
+  code: Scalars['String'];
+  discountPercent: Scalars['Int'];
+  memberPlanId: Scalars['String'];
+  validFrom: Scalars['DateTime'];
+  validTo: Scalars['DateTime'];
 };
 
 export type MutationDeleteAllMailchimpSyncErrorsArgs = {
@@ -2552,6 +2621,10 @@ export type MutationDeleteImageArgs = {
 
 export type MutationDeleteInvoiceArgs = {
   id: Scalars['String'];
+};
+
+export type MutationDeleteMailTemplateArgs = {
+  id: Scalars['ID'];
 };
 
 export type MutationDeleteMailchimpSyncErrorArgs = {
@@ -2631,6 +2704,10 @@ export type MutationDeleteUserConsentArgs = {
 };
 
 export type MutationDeleteUserRoleArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationDeleteVoucherArgs = {
   id: Scalars['String'];
 };
 
@@ -2974,6 +3051,11 @@ export type MutationUpdateMailProviderSettingArgs = {
   webhookEndpointSecret?: InputMaybe<Scalars['String']>;
 };
 
+export type MutationUpdateMailTemplateArgs = {
+  id: Scalars['ID'];
+  input: MailTemplateUpdateInput;
+};
+
 export type MutationUpdateMemberPlanArgs = {
   active?: InputMaybe<Scalars['Boolean']>;
   amountPerMonthMax?: InputMaybe<Scalars['Int']>;
@@ -3229,6 +3311,15 @@ export type MutationUpdateUserSubscriptionArgs = {
   input: UpdateUserSubscriptionInput;
 };
 
+export type MutationUpdateVoucherArgs = {
+  code?: InputMaybe<Scalars['String']>;
+  discountPercent?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  memberPlanId?: InputMaybe<Scalars['String']>;
+  validFrom?: InputMaybe<Scalars['DateTime']>;
+  validTo?: InputMaybe<Scalars['DateTime']>;
+};
+
 export type MutationUpgradeUserSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>;
   memberPlanId: Scalars['String'];
@@ -3249,8 +3340,8 @@ export type MutationUploadImageArgs = {
   description?: InputMaybe<Scalars['String']>;
   file: Scalars['Upload'];
   filename?: InputMaybe<Scalars['String']>;
-  focalPointX: Scalars['Float'];
-  focalPointY: Scalars['Float'];
+  focalPointX?: Scalars['Float'];
+  focalPointY?: Scalars['Float'];
   license?: InputMaybe<Scalars['String']>;
   link?: InputMaybe<Scalars['String']>;
   source?: InputMaybe<Scalars['String']>;
@@ -3262,8 +3353,8 @@ export type MutationUploadUserProfileImageArgs = {
   description?: InputMaybe<Scalars['String']>;
   file: Scalars['Upload'];
   filename?: InputMaybe<Scalars['String']>;
-  focalPointX: Scalars['Float'];
-  focalPointY: Scalars['Float'];
+  focalPointX?: Scalars['Float'];
+  focalPointY?: Scalars['Float'];
   license?: InputMaybe<Scalars['String']>;
   link?: InputMaybe<Scalars['String']>;
   source?: InputMaybe<Scalars['String']>;
@@ -3545,6 +3636,13 @@ export type PaginatedTags = {
 export type PaginatedUserRoles = {
   __typename?: 'PaginatedUserRoles';
   nodes: Array<UserRole>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaginatedVouchers = {
+  __typename?: 'PaginatedVouchers';
+  nodes: Array<Voucher>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -4062,7 +4160,6 @@ export type PublicSubscription = HasMemberPlan &
     isActive: Scalars['Boolean'];
     memberPlan: MemberPlan;
     memberPlanID: Scalars['String'];
-    memberplan?: Maybe<MemberPlan>;
     modifiedAt: Scalars['DateTime'];
     monthlyAmount: Scalars['Int'];
     paidUntil?: Maybe<Scalars['DateTime']>;
@@ -4147,6 +4244,8 @@ export type Query = {
    *
    */
   consents: Array<Consent>;
+  /** Gives the user some information about the subscription they are about to create */
+  createSubscriptionInfo: CreateSubscriptionInfo;
   /** Get a single crowdfunding by id */
   crowdfunding: Crowdfunding;
   /** Returns a list of crowdfundings. */
@@ -4222,6 +4321,10 @@ export type Query = {
   mailProviderSetting: SettingMailProvider;
   /** Returns all mail provider settings. */
   mailProviderSettings: Array<SettingMailProvider>;
+  /** Return a single mail template */
+  mailTemplate: MailTemplateWithUrlAndStatusModel;
+  /** Return all available mail placeholders grouped by event */
+  mailTemplatePlaceholders: Array<MailPlaceholderGroupModel>;
   /** Return all mail templates */
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /** Fetches available interest groups for a Mailchimp list. */
@@ -4388,6 +4491,10 @@ export type Query = {
   /** Returns a paginated list of users based on the filters given. */
   users: PaginatedSensitiveDataUsers;
   versionInformation: VersionInformation;
+  /** Returns an voucher by id or voucher. */
+  voucher: Voucher;
+  /** This query returns a list of vouchers */
+  vouchers: PaginatedVouchers;
 };
 
 export type QueryAiSettingArgs = {
@@ -4500,6 +4607,11 @@ export type QueryConsentsArgs = {
   filter?: InputMaybe<ConsentFilter>;
 };
 
+export type QueryCreateSubscriptionInfoArgs = {
+  memberPlanId: Scalars['String'];
+  voucher?: InputMaybe<Scalars['String']>;
+};
+
 export type QueryCrowdfundingArgs = {
   id: Scalars['String'];
 };
@@ -4602,6 +4714,10 @@ export type QueryMailProviderSettingArgs = {
 
 export type QueryMailProviderSettingsArgs = {
   filter?: InputMaybe<SettingMailProviderFilter>;
+};
+
+export type QueryMailTemplateArgs = {
+  id: Scalars['ID'];
 };
 
 export type QueryMailchimpInterestGroupsArgs = {
@@ -4900,6 +5016,19 @@ export type QueryUsersArgs = {
   order?: InputMaybe<SortOrder>;
   skip?: Scalars['Int'];
   sort?: UserSort;
+  take?: Scalars['Int'];
+};
+
+export type QueryVoucherArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryVouchersArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<VoucherFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: Scalars['Int'];
+  sort?: VoucherSort;
   take?: Scalars['Int'];
 };
 
@@ -5896,6 +6025,31 @@ export type VimeoVideoBlockInput = {
   disabled?: InputMaybe<Scalars['Boolean']>;
   videoID?: InputMaybe<Scalars['String']>;
 };
+
+export type Voucher = HasMemberPlanLc & {
+  __typename?: 'Voucher';
+  code: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  discountPercent: Scalars['Int'];
+  id: Scalars['String'];
+  memberPlan: MemberPlan;
+  memberPlanId: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  validFrom: Scalars['DateTime'];
+  validTo: Scalars['DateTime'];
+};
+
+export type VoucherFilter = {
+  from?: InputMaybe<Scalars['DateTime']>;
+  memberPlans?: InputMaybe<Array<Scalars['String']>>;
+  to?: InputMaybe<Scalars['DateTime']>;
+};
+
+export enum VoucherSort {
+  CreatedAt = 'CreatedAt',
+  Discount = 'Discount',
+  ModifiedAt = 'ModifiedAt',
+}
 
 export type YouTubeVideoBlock = BaseBlock & {
   __typename?: 'YouTubeVideoBlock';
