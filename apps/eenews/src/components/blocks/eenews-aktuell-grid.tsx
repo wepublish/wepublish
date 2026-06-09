@@ -161,7 +161,6 @@ export const EenewsAktuellGrid = ({
                 y: 0,
                 w: 4,
                 h: 1,
-                static: false,
               }}
             />
           ))}

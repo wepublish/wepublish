@@ -197,7 +197,6 @@ export const EenewsTopNewsCarousel = ({
                       y: 0,
                       w: 4,
                       h: 1,
-                      static: false,
                     }}
                   />
                 ))}

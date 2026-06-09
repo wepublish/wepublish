@@ -1,4 +1,4 @@
-import type { Teaser } from '@wepublish/website/api';
+import type { FullTeaserFragment } from '@wepublish/website/api';
 
 export type EeNewsTag = { id: string; tag: string; color?: string | null };
 
@@ -34,7 +34,7 @@ const isFrenchArticlesTag = (tag: { tag?: string | null }): boolean =>
   FRENCH_ARTICLES_TAGS.includes(tag.tag?.toLowerCase().trim() ?? '');
 
 export const selectTeaserTag = (
-  teaser: Teaser | null | undefined,
+  teaser: FullTeaserFragment | null | undefined,
   priorityTagName?: string
 ): EeNewsTag | undefined => {
   if (teaser?.__typename !== 'ArticleTeaser') {
@@ -57,7 +57,7 @@ export const selectTeaserTag = (
 };
 
 export const selectTeaserTopic = (
-  teaser: Teaser | null | undefined
+  teaser: FullTeaserFragment | null | undefined
 ): EeNewsTag | undefined => {
   if (teaser?.__typename !== 'ArticleTeaser') {
     return undefined;
@@ -66,29 +66,10 @@ export const selectTeaserTopic = (
 };
 
 export const selectTeaserBreaking = (
-  teaser: Teaser | null | undefined
+  teaser: FullTeaserFragment | null | undefined
 ): boolean => {
   if (teaser?.__typename !== 'ArticleTeaser') {
     return false;
   }
-  return (
-    teaser.article?.latest?.properties?.find(p => p.key === 'breaking')
-      ?.value === 'true'
-  );
-};
-
-export const selectTeaserReadTime = (
-  teaser: Teaser | null | undefined
-): number | undefined => {
-  if (teaser?.__typename !== 'ArticleTeaser') {
-    return undefined;
-  }
-  const raw = teaser.article?.latest?.properties?.find(
-    p => p.key === 'readTimeMin'
-  )?.value;
-  if (!raw) {
-    return undefined;
-  }
-  const n = Number(raw);
-  return Number.isFinite(n) ? n : undefined;
+  return teaser.article?.latest?.breaking ?? false;
 };

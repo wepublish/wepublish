@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
-import { Teaser, useArticleListQuery } from '@wepublish/website/api';
+import {
+  FullTeaserFragment,
+  useArticleListQuery,
+} from '@wepublish/website/api';
 import {
   BuilderAuthorProps,
   useWebsiteBuilder,
@@ -175,7 +178,7 @@ export const EenewsAuthor = ({ data, className }: BuilderAuthorProps) => {
                       title: null,
                       lead: null,
                       article: relatedArticle,
-                    } as unknown as Teaser
+                    } as unknown as FullTeaserFragment
                   }
                   index={idx}
                   blockStyle="DossierGrid"
@@ -186,7 +189,6 @@ export const EenewsAuthor = ({ data, className }: BuilderAuthorProps) => {
                     y: 0,
                     w: 4,
                     h: 1,
-                    static: false,
                   }}
                 />
               ))}

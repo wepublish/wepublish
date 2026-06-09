@@ -2,8 +2,8 @@ import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { Blocks } from '@wepublish/block-content/website';
 import {
-  BlockContent,
-  Teaser,
+  FullBlockFragment,
+  FullTeaserFragment,
   useArticleListQuery,
 } from '@wepublish/website/api';
 import {
@@ -291,7 +291,7 @@ export const EenewsArticle = ({
         {!hideContent && (
           <Body>
             <Blocks
-              blocks={latest.blocks as unknown as BlockContent[]}
+              blocks={latest.blocks as unknown as FullBlockFragment[]}
               type="Article"
             />
           </Body>
@@ -330,7 +330,7 @@ export const EenewsArticle = ({
                       title: null,
                       lead: null,
                       article: relatedArticle,
-                    } as unknown as Teaser
+                    } as unknown as FullTeaserFragment
                   }
                   index={idx}
                   blockStyle="RelatedGrid"
@@ -341,7 +341,6 @@ export const EenewsArticle = ({
                     y: 0,
                     w: 4,
                     h: 1,
-                    static: false,
                   }}
                 />
               ))}

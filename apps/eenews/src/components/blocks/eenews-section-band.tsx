@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { BlockRenderer } from '@wepublish/block-content/website';
+import { FullBlockFragment } from '@wepublish/website/api';
 import { BuilderFlexBlockProps } from '@wepublish/website/builder';
 
 const Band = styled('section')`
@@ -32,7 +33,7 @@ export const EenewsSectionBand = ({
           return (
             <BlockRenderer
               key={idx}
-              block={item.block}
+              block={item.block as FullBlockFragment}
               count={wrapped.length}
               index={idx}
               type="Page"

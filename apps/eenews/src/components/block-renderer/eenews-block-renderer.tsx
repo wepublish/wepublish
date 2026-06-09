@@ -1,5 +1,5 @@
 import { BlockRenderer } from '@wepublish/block-content/website';
-import { BlockContent } from '@wepublish/website/api';
+import { FullBlockFragment } from '@wepublish/website/api';
 import { BuilderBlockRendererProps } from '@wepublish/website/builder';
 import { cond } from 'ramda';
 import { useMemo } from 'react';
@@ -29,7 +29,7 @@ export const EenewsBlockRenderer = (props: BuilderBlockRendererProps) => {
           isArticleSupportCallout,
           block => <EenewsArticleSupportCallout {...block} />,
         ],
-      ]) as (block: BlockContent) => JSX.Element | undefined,
+      ]) as (block: FullBlockFragment) => JSX.Element | undefined,
     []
   );
 

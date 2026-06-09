@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { Typography, useTheme } from '@mui/material';
 import {
   FullNavigationFragment,
-  Teaser,
+  FullTeaserFragment,
   useArticleListQuery,
   useNavigationListQuery,
   useTagListQuery,
@@ -282,7 +282,7 @@ export const EenewsTagPage = ({
           title: null,
           lead: null,
           article,
-        }) as unknown as Teaser
+        }) as unknown as FullTeaserFragment
     )
   );
   const totalCount = articlesData?.articles?.totalCount ?? 0;
@@ -381,7 +381,6 @@ export const EenewsTagPage = ({
                       y: 0,
                       w: 4,
                       h: 1,
-                      static: false,
                     }}
                   />
                 ))}
