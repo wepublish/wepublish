@@ -35,7 +35,7 @@ export const gilroy = localFont({
       style: 'normal',
     },
     {
-      path: '../public/fonts/gilroy/Gilroy-ExtraBold.woff2',
+      path: '../public/fonts/gilroy/Gilroy-Extrabold.woff2',
       weight: '800',
       style: 'normal',
     },
