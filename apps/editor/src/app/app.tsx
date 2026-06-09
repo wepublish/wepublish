@@ -1088,6 +1088,7 @@ export function App() {
             <Route
               path="seed"
               element={<Seed />}
+            />
             <Route
               path="settings/website"
               element={

@@ -1,11 +1,11 @@
 import { ApolloError, ApolloQueryResult } from '@apollo/client';
 import { getApiUrl } from '@wepublish/utils/website';
 import {
-  addClientCacheToV1Props,
+  addClientCacheToProps,
   ArticleListDocument,
   ArticleListQuery,
   ArticleListQueryVariables,
-  getV1ApiClient,
+  getApiClient,
   NavigationListDocument,
   PeerProfileDocument,
   TagQuery,
@@ -83,7 +83,7 @@ export const getStaticProps: GetStaticProps = async () => {
     return { props: {}, revalidate: 1 };
   }
 
-  const client = getV1ApiClient(getApiUrl(), []);
+  const client = getApiClient(getApiUrl(), []);
   await Promise.all([
     client.query({
       query: ArticleListDocument,
@@ -93,7 +93,7 @@ export const getStaticProps: GetStaticProps = async () => {
     client.query({ query: PeerProfileDocument }),
   ]);
 
-  const props = addClientCacheToV1Props(client, {});
+  const props = addClientCacheToProps(client, {});
 
   return {
     props,
